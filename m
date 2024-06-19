@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C94E763FD;
-	Wed, 19 Jun 2024 07:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D773770FA;
+	Wed, 19 Jun 2024 07:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718781802; cv=none; b=d32bCRjelUXJZxUdCYtG24PukAjc1IY+qjjwEm3NO+UmOyfcTYEekc2aWZ1vlwtGyIdJHYAcz0pQOVgVuNh1ZypKLMY8ARWKmJ82CA3pIXYdLzLJqen/PMvtL/17SE6xdF8KaGIpjtwD64vXRVBv5/IeuCskIYuPZGpO6q0+RsM=
+	t=1718781804; cv=none; b=lpDSfnIcZdCjpb0AyjAsKJLH2bLVQdlVd2IhEnuJDbsOFeyNnjDuLjp2NOItlty7HE/IF6Gj8ugbuTNuoumpSnv/jD9nujQx9VTasJCGhyupYuO+QnCKMpMWy4/KlB89gbkvfDlmFOay+pOHHtmiqfNR6YyA7VVPP+slE2KZlhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718781802; c=relaxed/simple;
-	bh=JY6ydblJxV3mkgvucOoAjw6D4clChvFMAFGtZ6EWhAg=;
+	s=arc-20240116; t=1718781804; c=relaxed/simple;
+	bh=9Lh6yED4JkBOgnEWhEg5MLGSkozpx3Dnb7sg4GUiXTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WHh8fwGudr2U37FhBCK6DnT4McRpWODsgidJLVzO8hJXlC184DHGn40dlUXnyg0JRTFoizughCNyClfnuW4V5KOSuGiwJ2Er0CnnweYvEPXVYYOtijUYOsuwfUmr4zUV8uKOG1Gtml6kwcL4FBAgg7xYu0jvx87S980seFdne5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LLpS/EWz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AZfT2aOg; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Z7FqqxxrYcTIJustO9ERUDaBUce5uf8t9cTfihVsFLZcheKJINRoA4R6zTIMPrxQS9Jk5q361QqaytBFplHQ+mGbut1TnzLMXmSJLGudzVmXpzxQSXFntNJpN4z3V+K64uJBCYuh1ZY5mSLhuD7o5it8fqhvx64tcZhW9EW7rZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tFLJgN4d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sLXl8Dia; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LLpS/EWz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AZfT2aOg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tFLJgN4d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sLXl8Dia"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718781799;
+	s=2020; t=1718781801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D7uoLiV1k+rI19wogyKAy82/pJLM3IfKwwDbBRQvfd8=;
-	b=LLpS/EWzw3WWLl6Dt1YG55fybefTJ7PF+g7YsLP5TWZUXF772zs3RLERhI32uXG4Z1qVOF
-	I09qiVp/wdB7w7K8ayV02oBBhuz/ccMi1IREcR31Mil8pOQ0I800qYhQw4VvjLpnnbVSkq
-	NzwmviKpsYZFtn8uKkF21lrXoHS7kqDV7+sVVzmCz1x+c8jsUvVnANhKnSqdk2dZf9xyB8
-	VE/R0ebHHlhnZk6Q+I+dkblBwiNGegy6wVUXtS6AFcf5M6lMeo7S/QQ3FUFQ2+ZPSF5Ua0
-	NCv3/L3FV33SVcwAbPb2n+CvW26kXwMr+DRwZW9yDERjD8yjz8Dioz+jWisoTg==
+	bh=jEgrAQzPM3pCkJrAWGRjvGTANpNXKbEZYpnc+bTSS/w=;
+	b=tFLJgN4dMeCPzkpu7pukDNsN8ZbPKwF+kNodfyHkSwlx5CNrnDErpqxZIe50y4f1j4q75U
+	EBvdQK2zUUtCxFhMaTr6m/9lx436udosSXRlZiLg5OaawU+Yyc2Th2L7wKjRkBC/imi6b8
+	F7ecRcpXQPNUfwJRGBgT9MpPV0rv6HO0iNLGoG7yDIWxY8rQBPrsnBcb8bPghMSN3SxHPW
+	si2E3nuYh5E3dQZpen/ZJsTZGDfrM1X0W/tgHNx52L2DdKYednxKUc0WWtq9gaDm9KrnIu
+	Yz5y1YQKLMknlXNm8UagpCGkFQ3l3ZTBiiFtaex7/HzgF9TQ2UuZnbth+oi2vA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718781799;
+	s=2020e; t=1718781801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D7uoLiV1k+rI19wogyKAy82/pJLM3IfKwwDbBRQvfd8=;
-	b=AZfT2aOgYCpVmCoItmLrZpQR8U6sa3lyVJ31NXnssXDHf5MQnk83Iy7XTj5mIDmGevZyit
-	ah7V5RGF74cZXgBQ==
+	bh=jEgrAQzPM3pCkJrAWGRjvGTANpNXKbEZYpnc+bTSS/w=;
+	b=sLXl8Dia9f3ciL/n27p94RrhwVmnz/Q+bMu58FdZgM+pqzaktvzZfIPt5hrRcLhlPobHbs
+	Ov3ekf9CbCBRz5Dw==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -55,9 +55,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v8 net-next 01/15] locking/local_lock: Introduce guard definition for local_lock.
-Date: Wed, 19 Jun 2024 09:16:52 +0200
-Message-ID: <20240619072253.504963-2-bigeasy@linutronix.de>
+Subject: [PATCH v8 net-next 03/15] net: Use __napi_alloc_frag_align() instead of open coding it.
+Date: Wed, 19 Jun 2024 09:16:54 +0200
+Message-ID: <20240619072253.504963-4-bigeasy@linutronix.de>
 In-Reply-To: <20240619072253.504963-1-bigeasy@linutronix.de>
 References: <20240619072253.504963-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -68,36 +68,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Introduce lock guard definition for local_lock_t. There are no users
-yet.
+The else condition within __netdev_alloc_frag_align() is an open coded
+__napi_alloc_frag_align().
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Use __napi_alloc_frag_align() instead of open coding it.
+Move fragsz assignment before page_frag_alloc_align() invocation because
+__napi_alloc_frag_align() also contains this statement.
+
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/local_lock.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/core/skbuff.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index e55010fa73296..82366a37f4474 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -51,4 +51,15 @@
- #define local_unlock_irqrestore(lock, flags)			\
- 	__local_unlock_irqrestore(lock, flags)
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index c8ac79851cd67..656b298255c5f 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -318,19 +318,15 @@ void *__netdev_alloc_frag_align(unsigned int fragsz, =
+unsigned int align_mask)
+ {
+ 	void *data;
 =20
-+DEFINE_GUARD(local_lock, local_lock_t __percpu*,
-+	     local_lock(_T),
-+	     local_unlock(_T))
-+DEFINE_GUARD(local_lock_irq, local_lock_t __percpu*,
-+	     local_lock_irq(_T),
-+	     local_unlock_irq(_T))
-+DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __percpu,
-+		    local_lock_irqsave(_T->lock, _T->flags),
-+		    local_unlock_irqrestore(_T->lock, _T->flags),
-+		    unsigned long flags)
-+
- #endif
+-	fragsz =3D SKB_DATA_ALIGN(fragsz);
+ 	if (in_hardirq() || irqs_disabled()) {
+ 		struct page_frag_cache *nc =3D this_cpu_ptr(&netdev_alloc_cache);
+=20
++		fragsz =3D SKB_DATA_ALIGN(fragsz);
+ 		data =3D __page_frag_alloc_align(nc, fragsz, GFP_ATOMIC,
+ 					       align_mask);
+ 	} else {
+-		struct napi_alloc_cache *nc;
+-
+ 		local_bh_disable();
+-		nc =3D this_cpu_ptr(&napi_alloc_cache);
+-		data =3D __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
+-					       align_mask);
++		data =3D __napi_alloc_frag_align(fragsz, align_mask);
+ 		local_bh_enable();
+ 	}
+ 	return data;
 --=20
 2.45.2
 
