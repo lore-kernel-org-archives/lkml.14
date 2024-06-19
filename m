@@ -1,138 +1,80 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001D66F2EF
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1DB6F2EF;
+	Wed, 19 Jun 2024 06:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718779953; cv=none; b=TqJ0HFVKb4cCMg5Ym9iKdHMJ+Apg2ZYYsr3MNoEc63Ldz+whIepXstaQ/OW64p7vI6AW2FRyGjsSD5eNtK+YYgLU0pv2einf7bPPo8/TBzFy45dpm7M2JNErc9wFg2fhf3P409jxQ6ygmM4UDwQavwTODkuclK2w3vjMHRU1sk4=
+	t=1718780146; cv=none; b=eR3kuHKfRzkDvvjVgr6RN/Mj0Cs1ArZ9p67Q9dtJikA++ytsl6XywI0LugvjACDNPDQ5W+MmHLv+hkljy1I6LN1wZHSO/kBZZvgQ3zYYeh0tzmY4DZwK3fguuNq78J2XmDjA0B0/+9AEe/JPuVGVtzeZJ5oEhHmBi7WFj432IpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718779953; c=relaxed/simple;
-	bh=IHNS0cwFfTFB8GAPBJ8+OB2d21FolnC+X3Mm4z1CDPw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Qqi2631lGQ9ts0gaDEHVYQUs3+DyeRP9AzUjEJRn/spWl9lMLehq/dikwPdqyBhTpUmzCbSCH73Vr8wyoT7oMx6BDci8olHc2ETu6tWtJew77hpr+mBD+RTbx/XzNQiAbyt76MdQw1tXjA/RkNJNl0nudUQ1Osqv/+HtQoMRovo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7eb80de5e7dso816122339f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 23:52:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718779951; x=1719384751;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IHNS0cwFfTFB8GAPBJ8+OB2d21FolnC+X3Mm4z1CDPw=;
-        b=DGvV7p/i4cGeeRFSFJsnKXUKEpAQ11gBmqIKfXBeKmvQBme+hUecahfmGe9fAq+tGd
-         D/D868dM3DDnBchUTXrg4/218atIbBEv2A4/VfMkqjlPd4Gou1LCEKOoAuKNWsakywQx
-         uobftTQ//cmNchNxPmMB1kJ4SDosQxOYK5INnCLcnjiSe9xTyr1O7ezr8tXFow17uE4t
-         lze6V8nipDTYd91foFSUlbqgV6cvdzC8iYFYbZcHrOuxnoYv4DTFJQfKfEGJ/6GlOABf
-         ht6SH+NGLMWlSuarGLp51W9kk1z4fQWOZyH3D2u65rGItRvR7MzVHikN5Gp/X8N9GXiR
-         j3Zg==
-X-Gm-Message-State: AOJu0YyWHKIr8WJtf7ZLxi275RMGbvVJ4S4zp/IZP5UK5oB64zDajmkG
-	fNW3Ponew7dkeW05zxhjZPi1drbaZ3tDWUJQD69n8CbvzNUFHTuviNYdRoejjKa97s+O8HOq/Uk
-	BeIDTv5mYxBXEiXX/E8rjGfey5vPzfUBcz13UGNvOTjCFUrnx0zMdcHQ=
-X-Google-Smtp-Source: AGHT+IFz0FthH9lIS7CNJgE/db2xuuxW5V1CEN1Qf0ebc5/opsmMyAP37faGpylPYEteMCUc5a6B3bNFGohzJM4UtIbYI8Wkq5f2
+	s=arc-20240116; t=1718780146; c=relaxed/simple;
+	bh=hgH4DDDvAA9kgOZ2n3TjfNXg8eHsBsoYv2LJciY4Ixw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ouJJbsuKZWTr9rxa1/hngkaOvo2C7TKzbFVTfjGmab5TKae/SFzvlFQUi3mYT76C4ryVxYHhbhjEuB5zz6Dv+jEj2VqCFzl7jzcdZ6Htb+2LyE/Nc83hsIOxlinUw4WQZKQzg0RdjzlrgSlmu0y3ISzswk8z0oBS++OPOI2mBHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=WTIOUwKR; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="WTIOUwKR"
+Received: from pecola.lan (unknown [159.196.93.152])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2112C20127;
+	Wed, 19 Jun 2024 14:55:35 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1718780136;
+	bh=hgH4DDDvAA9kgOZ2n3TjfNXg8eHsBsoYv2LJciY4Ixw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=WTIOUwKRVPebDE+XFoyICYbLin7nX/vvQXC3AKRpUd3b0uxE/GDSDvyMybgzRCTFA
+	 XWz7D6Xw+kLwrrsq0WgD0pMPLdJHz4DTMP8bbs11PjVC+k7Sii4vPzRlPB0jWfF0S4
+	 gVIs5drwwyCeUrJdGWsyE4eAGafdpf56kYUcLC/HBRRpCvCJg7MPf6Fap0yKMpyTeo
+	 I0Ladfm5LUXJWleJl40TjU5ek/Jj2Iwh7yq0Bc4qmzaavWU7NekEBhz+VReWH10Dvw
+	 AnuhpmvXCVf6T3oQXIMfPzcLqzRKGuNMoeSyEkej2v9OE2BvYVcO0EOz1TMcyMdNXa
+	 Urz5aAipwmYnQ==
+Message-ID: <bae054d217aa577838593244eda02b008e3749a5.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 2/2] i3c: i3c-hub: Add Renesas RG3MxxB12A1 I3C HUB driver
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+To: Steven Niu <steven.niu.uj@renesas.com>, alexandre.belloni@bootlin.com, 
+ linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+ robh+dt@kernel.org,  krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org,  devicetree@vger.kernel.org
+Cc: zbigniew.lukwinski@linux.intel.com
+Date: Wed, 19 Jun 2024 14:55:35 +0800
+In-Reply-To: <20240217131412.4145506-2-steven.niu.uj@renesas.com>
+References: <20240217131412.4145506-1-steven.niu.uj@renesas.com>
+	 <20240217131412.4145506-2-steven.niu.uj@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a68:b0:375:c9f0:527f with SMTP id
- e9e14a558f8ab-3761d717021mr977985ab.3.1718779951134; Tue, 18 Jun 2024
- 23:52:31 -0700 (PDT)
-Date: Tue, 18 Jun 2024 23:52:31 -0700
-In-Reply-To: <000000000000ea9fef05eb3621b6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006f4cc8061b38a491@google.com>
-Subject: Re: [syzbot] fs/ntfs3: Do copy_to_user out of run_lock
-From: syzbot <syzbot+36bb70085ef6edc2ebb9@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
 
-Rm9yIGFyY2hpdmFsIHB1cnBvc2VzLCBmb3J3YXJkaW5nIGFuIGluY29taW5nIGNvbW1hbmQgZW1h
-aWwgdG8KbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgc3l6a2FsbGVyLWJ1Z3NAZ29vZ2xl
-Z3JvdXBzLmNvbS4KCioqKgoKU3ViamVjdDogZnMvbnRmczM6IERvIGNvcHlfdG9fdXNlciBvdXQg
-b2YgcnVuX2xvY2sKQXV0aG9yOiBhbG1hei5hbGV4YW5kcm92aWNoQHBhcmFnb24tc29mdHdhcmUu
-Y29tCgojc3l6IHRlc3QNCg0KLS0tIGEvZnMvbnRmczMvZnJlY29yZC5jDQorKysgYi9mcy9udGZz
-My9mcmVjb3JkLmMNCkBAIC0xODk4LDYgKzE4OTgsNDcgQEAgZW51bSBSRVBBUlNFX1NJR04gbmlf
-cGFyc2VfcmVwYXJzZShzdHJ1Y3QgDQpudGZzX2lub2RlICpuaSwgc3RydWN0IEFUVFJJQiAqYXR0
-ciwNCiDCoMKgwqDCoCByZXR1cm4gUkVQQVJTRV9MSU5LOw0KIMKgfQ0KDQorLyoNCisgKiBmaWVt
-YXBfZmlsbF9uZXh0X2V4dGVudF9rIC0gYSBjb3B5IG9mIGZpZW1hcF9maWxsX25leHRfZXh0ZW50
-DQorICogYnV0IGl0IGFjY2VwdHMga2VybmVsIGFkZHJlc3MgZm9yIGZpX2V4dGVudHNfc3RhcnQN
-CisgKi8NCitzdGF0aWMgaW50IGZpZW1hcF9maWxsX25leHRfZXh0ZW50X2soc3RydWN0IGZpZW1h
-cF9leHRlbnRfaW5mbyAqZmllaW5mbywNCivCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDC
-oMKgwqAgdTY0IGxvZ2ljYWwsIHU2NCBwaHlzLCB1NjQgbGVuLCB1MzIgZmxhZ3MpDQorew0KK8Kg
-wqDCoCBzdHJ1Y3QgZmllbWFwX2V4dGVudCBleHRlbnQ7DQorwqDCoMKgIHN0cnVjdCBmaWVtYXBf
-ZXh0ZW50IF9fdXNlciAqZGVzdCA9IGZpZWluZm8tPmZpX2V4dGVudHNfc3RhcnQ7DQorDQorwqDC
-oMKgIC8qIG9ubHkgY291bnQgdGhlIGV4dGVudHMgKi8NCivCoMKgwqAgaWYgKGZpZWluZm8tPmZp
-X2V4dGVudHNfbWF4ID09IDApIHsNCivCoMKgwqAgwqDCoMKgIGZpZWluZm8tPmZpX2V4dGVudHNf
-bWFwcGVkKys7DQorwqDCoMKgIMKgwqDCoCByZXR1cm4gKGZsYWdzICYgRklFTUFQX0VYVEVOVF9M
-QVNUKSA/IDEgOiAwOw0KK8KgwqDCoCB9DQorDQorwqDCoMKgIGlmIChmaWVpbmZvLT5maV9leHRl
-bnRzX21hcHBlZCA+PSBmaWVpbmZvLT5maV9leHRlbnRzX21heCkNCivCoMKgwqAgwqDCoMKgIHJl
-dHVybiAxOw0KKw0KK8KgwqDCoCBpZiAoZmxhZ3MgJiBGSUVNQVBfRVhURU5UX0RFTEFMTE9DKQ0K
-K8KgwqDCoCDCoMKgwqAgZmxhZ3MgfD0gRklFTUFQX0VYVEVOVF9VTktOT1dOOw0KK8KgwqDCoCBp
-ZiAoZmxhZ3MgJiBGSUVNQVBfRVhURU5UX0RBVEFfRU5DUllQVEVEKQ0KK8KgwqDCoCDCoMKgwqAg
-ZmxhZ3MgfD0gRklFTUFQX0VYVEVOVF9FTkNPREVEOw0KK8KgwqDCoCBpZiAoZmxhZ3MgJiAoRklF
-TUFQX0VYVEVOVF9EQVRBX1RBSUwgfCBGSUVNQVBfRVhURU5UX0RBVEFfSU5MSU5FKSkNCivCoMKg
-wqAgwqDCoMKgIGZsYWdzIHw9IEZJRU1BUF9FWFRFTlRfTk9UX0FMSUdORUQ7DQorDQorwqDCoMKg
-IG1lbXNldCgmZXh0ZW50LCAwLCBzaXplb2YoZXh0ZW50KSk7DQorwqDCoMKgIGV4dGVudC5mZV9s
-b2dpY2FsID0gbG9naWNhbDsNCivCoMKgwqAgZXh0ZW50LmZlX3BoeXNpY2FsID0gcGh5czsNCivC
-oMKgwqAgZXh0ZW50LmZlX2xlbmd0aCA9IGxlbjsNCivCoMKgwqAgZXh0ZW50LmZlX2ZsYWdzID0g
-ZmxhZ3M7DQorDQorwqDCoMKgIGRlc3QgKz0gZmllaW5mby0+ZmlfZXh0ZW50c19tYXBwZWQ7DQor
-wqDCoMKgIG1lbWNweShkZXN0LCAmZXh0ZW50LCBzaXplb2YoZXh0ZW50KSk7DQorDQorwqDCoMKg
-IGZpZWluZm8tPmZpX2V4dGVudHNfbWFwcGVkKys7DQorwqDCoMKgIGlmIChmaWVpbmZvLT5maV9l
-eHRlbnRzX21hcHBlZCA9PSBmaWVpbmZvLT5maV9leHRlbnRzX21heCkNCivCoMKgwqAgwqDCoMKg
-IHJldHVybiAxOw0KK8KgwqDCoCByZXR1cm4gKGZsYWdzICYgRklFTUFQX0VYVEVOVF9MQVNUKSA/
-IDEgOiAwOw0KK30NCisNCiDCoC8qDQogwqAgKiBuaV9maWVtYXAgLSBIZWxwZXIgZm9yIGZpbGVf
-ZmllbWFwKCkuDQogwqAgKg0KQEAgLTE5MDgsNiArMTk0OSw4IEBAIGludCBuaV9maWVtYXAoc3Ry
-dWN0IG50ZnNfaW5vZGUgKm5pLCBzdHJ1Y3QgDQpmaWVtYXBfZXh0ZW50X2luZm8gKmZpZWluZm8s
-DQogwqDCoMKgwqAgwqDCoMKgwqDCoCBfX3U2NCB2Ym8sIF9fdTY0IGxlbikNCiDCoHsNCiDCoMKg
-wqDCoCBpbnQgZXJyID0gMDsNCivCoMKgwqAgc3RydWN0IGZpZW1hcF9leHRlbnQgX191c2VyICpm
-ZV91ID0gZmllaW5mby0+ZmlfZXh0ZW50c19zdGFydDsNCivCoMKgwqAgc3RydWN0IGZpZW1hcF9l
-eHRlbnQgKmZlX2sgPSBOVUxMOw0KIMKgwqDCoMKgIHN0cnVjdCBudGZzX3NiX2luZm8gKnNiaSA9
-IG5pLT5taS5zYmk7DQogwqDCoMKgwqAgdTggY2x1c3Rlcl9iaXRzID0gc2JpLT5jbHVzdGVyX2Jp
-dHM7DQogwqDCoMKgwqAgc3RydWN0IHJ1bnNfdHJlZSAqcnVuOw0KQEAgLTE5NTUsNiArMTk5OCwx
-OCBAQCBpbnQgbmlfZmllbWFwKHN0cnVjdCBudGZzX2lub2RlICpuaSwgc3RydWN0IA0KZmllbWFw
-X2V4dGVudF9pbmZvICpmaWVpbmZvLA0KIMKgwqDCoMKgIMKgwqDCoCBnb3RvIG91dDsNCiDCoMKg
-wqDCoCB9DQoNCivCoMKgwqAgLyoNCivCoMKgwqAgwqAqIFRvIGF2b2lkIGxvY2sgcHJvYmxlbXMg
-cmVwbGFjZSBwb2ludGVyIHRvIHVzZXIgbWVtb3J5IGJ5IHBvaW50ZXIgDQp0byBrZXJuZWwgbWVt
-b3J5Lg0KK8KgwqDCoCDCoCovDQorwqDCoMKgIGZlX2sgPSBrbWFsbG9jX2FycmF5KGZpZWluZm8t
-PmZpX2V4dGVudHNfbWF4LA0KK8KgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoMKgIHNpemVvZihz
-dHJ1Y3QgZmllbWFwX2V4dGVudCksDQorwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgwqAgR0ZQ
-X05PRlMgfCBfX0dGUF9aRVJPKTsNCivCoMKgwqAgaWYgKCFmZV9rKSB7DQorwqDCoMKgIMKgwqDC
-oCBlcnIgPSAtRU5PTUVNOw0KK8KgwqDCoCDCoMKgwqAgZ290byBvdXQ7DQorwqDCoMKgIH0NCivC
-oMKgwqAgZmllaW5mby0+ZmlfZXh0ZW50c19zdGFydCA9IGZlX2s7DQorDQogwqDCoMKgwqAgZW5k
-ID0gdmJvICsgbGVuOw0KIMKgwqDCoMKgIGFsbG9jX3NpemUgPSBsZTY0X3RvX2NwdShhdHRyLT5u
-cmVzLmFsbG9jX3NpemUpOw0KIMKgwqDCoMKgIGlmIChlbmQgPiBhbGxvY19zaXplKQ0KQEAgLTIw
-NDMsOCArMjA5OCw5IEBAIGludCBuaV9maWVtYXAoc3RydWN0IG50ZnNfaW5vZGUgKm5pLCBzdHJ1
-Y3QgDQpmaWVtYXBfZXh0ZW50X2luZm8gKmZpZWluZm8sDQogwqDCoMKgwqAgwqDCoMKgIMKgwqDC
-oCBpZiAodmJvICsgZGxlbiA+PSBlbmQpDQogwqDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAg
-ZmxhZ3MgfD0gRklFTUFQX0VYVEVOVF9MQVNUOw0KDQotwqDCoMKgIMKgwqDCoCDCoMKgwqAgZXJy
-ID0gZmllbWFwX2ZpbGxfbmV4dF9leHRlbnQoZmllaW5mbywgdmJvLCBsYm8sIGRsZW4sDQotwqDC
-oMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgwqDCoCBmbGFncyk7
-DQorwqDCoMKgIMKgwqDCoCDCoMKgwqAgZXJyID0gZmllbWFwX2ZpbGxfbmV4dF9leHRlbnRfayhm
-aWVpbmZvLCB2Ym8sIGxibywgZGxlbiwNCivCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDC
-oMKgIMKgwqDCoCDCoMKgwqAgZmxhZ3MpOw0KKw0KIMKgwqDCoMKgIMKgwqDCoCDCoMKgwqAgaWYg
-KGVyciA8IDApDQogwqDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgYnJlYWs7DQogwqDCoMKg
-wqAgwqDCoMKgIMKgwqDCoCBpZiAoZXJyID09IDEpIHsNCkBAIC0yMDY0LDcgKzIxMjAsOCBAQCBp
-bnQgbmlfZmllbWFwKHN0cnVjdCBudGZzX2lub2RlICpuaSwgc3RydWN0IA0KZmllbWFwX2V4dGVu
-dF9pbmZvICpmaWVpbmZvLA0KIMKgwqDCoMKgIMKgwqDCoCBpZiAodmJvICsgYnl0ZXMgPj0gZW5k
-KQ0KIMKgwqDCoMKgIMKgwqDCoCDCoMKgwqAgZmxhZ3MgfD0gRklFTUFQX0VYVEVOVF9MQVNUOw0K
-DQotwqDCoMKgIMKgwqDCoCBlcnIgPSBmaWVtYXBfZmlsbF9uZXh0X2V4dGVudChmaWVpbmZvLCB2
-Ym8sIGxibywgYnl0ZXMsIGZsYWdzKTsNCivCoMKgwqAgwqDCoMKgIGVyciA9IGZpZW1hcF9maWxs
-X25leHRfZXh0ZW50X2soZmllaW5mbywgdmJvLCBsYm8sIGJ5dGVzLA0KK8KgwqDCoCDCoMKgwqAg
-wqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIGZsYWdzKTsNCiDCoMKgwqDCoCDCoMKgwqAgaWYg
-KGVyciA8IDApDQogwqDCoMKgwqAgwqDCoMKgIMKgwqDCoCBicmVhazsNCiDCoMKgwqDCoCDCoMKg
-wqAgaWYgKGVyciA9PSAxKSB7DQpAQCAtMjA3Nyw3ICsyMTM0LDE5IEBAIGludCBuaV9maWVtYXAo
-c3RydWN0IG50ZnNfaW5vZGUgKm5pLCBzdHJ1Y3QgDQpmaWVtYXBfZXh0ZW50X2luZm8gKmZpZWlu
-Zm8sDQoNCiDCoMKgwqDCoCB1cF9yZWFkKHJ1bl9sb2NrKTsNCg0KK8KgwqDCoCAvKg0KK8KgwqDC
-oCDCoCogQ29weSB0byB1c2VyIG1lbW9yeSBvdXQgb2YgbG9jaw0KK8KgwqDCoCDCoCovDQorwqDC
-oMKgIGlmIChjb3B5X3RvX3VzZXIoZmVfdSwgZmVfaywNCivCoMKgwqAgwqDCoMKgIMKgwqDCoCDC
-oGZpZWluZm8tPmZpX2V4dGVudHNfbWF4ICoNCivCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAg
-wqBzaXplb2Yoc3RydWN0IGZpZW1hcF9leHRlbnQpKSkgew0KK8KgwqDCoCDCoMKgwqAgZXJyID0g
-LUVGQVVMVDsNCivCoMKgwqAgfQ0KKw0KIMKgb3V0Og0KK8KgwqDCoCAvKiBSZXN0b3JlIG9yaWdp
-bmFsIHBvaW50ZXIuICovDQorwqDCoMKgIGZpZWluZm8tPmZpX2V4dGVudHNfc3RhcnQgPSBmZV91
-Ow0KK8KgwqDCoCBrZnJlZShmZV9rKTsNCiDCoMKgwqDCoCByZXR1cm4gZXJyOw0KIMKgfQ0KDQo=
+Hi Steven,
+
+> RG3MxxB12A1 I3C HUB is smart device which provide multiple
+> functionality:
+> * Enabling voltage compatibility across I3C Controller and Target
+> Device.
+> * Enabling voltage compatibility across I3C Controller and Target
+> devices.
+> * Bus capacitance isolation.
+> * Address conflict isolation.
+> * I3C port expansion.
+> * Two controllers in a single I3C bus.
+> * I3C and SMBus device compatibility.
+> * GPIO expansion.
+
+Do you plan any more work on this driver? It would be great to have
+this included upstream, but looks like there's a fairly large amount of
+work required to get to that point, particularly in regards to using
+existing kernel infrastructure to support the device functions.
+
+Anything I can do to help there? Would a (further) review on this
+series be useful?
+
+Cheers,
+
+
+Jeremy
