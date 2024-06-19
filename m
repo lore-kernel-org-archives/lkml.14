@@ -1,121 +1,99 @@
-Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812CC13D265
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D01C13A263;
+	Wed, 19 Jun 2024 11:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796273; cv=none; b=aJtwMhc7o8WbmtwDoiqa7SwuimdMUTb3MbHFCNcyg3mUFmwMD5v2u30Dvu0N9Y3LJuMyUePv85d7leQKxmWUYvYqms/R9h2gp3jgndkLx00t/cSZWf08MPBq82N6zzAwZiLeOyH+/T4QQtSyCMDWdQ6GBtzeQRCmH+bF2blmUBc=
+	t=1718796330; cv=none; b=tclf3A4Sfu2h0yImarDDynnRNahRqgWXLETEQh6HwCk+BHG9GY7qTA6fL9TXCjQky15VuYx4r5Qfm6wzGqO1JnPhle0Xn4FSOUCnZW4A/UxprrEgrhZNxdqO3PoyNfQs7Y0NKcXADL7uHM2kNPFs9Z2SIfVLwI2HP8s63ROoYqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796273; c=relaxed/simple;
-	bh=NAutyFxSP4VjKXvLicjq/fyIJbqML+ZifForgpCt1b8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orFNSrt0LtBd1c2gkb32J+HAJb9/As5gc2U5ZpmX41ztT0VGO9ZmKYM51Ag6Xk37waflwyB6Fhe4tE058ZXtVKP4dwtn8AIvMnxz3J/u8NnkN4ozVZg3nvdYRCeMuZInpZZ7S5wj3gARhG7MFkZSPY32XluVsOoa/0TiT65zRSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=c7Q9QLop reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=VO7WaQDi; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ZZEmhqtw; arc=none smtp.client-ip=103.2.141.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
+	s=arc-20240116; t=1718796330; c=relaxed/simple;
+	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SYef2zjdyKcavrR8ShSqjW/HYcZwy3GUzXSJpbpuNe/V1Xf+LPFBVQzF/kiidF4Vyn7k67cZON6kqDrhUWzFGNeaixRUKqL7GBW7AOwhdW0CfJ7+bHBgtWSF9+Ukg6sraHExOO8xAmLvmwgVRsogfadykuWKArMVKrX7ctZ1bxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du+dh5j3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="c7Q9QLop";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="VO7WaQDi";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ZZEmhqtw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1718797161; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
-	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=yP8g0Jw2Gy5q84RTF1sYxILlGkYZB2hJ+cHDUm8IPUE=; b=c7Q9QLop80EMjgS7HDMJ3BrseU
-	ndnWuDvn9Sjr/3jdgjsRNX8PQ/xc9X1RB3giFThAvsDhsCDxQPn8Wq0j373fl8JrYPLltFaE3yxbR
-	Wp1/MfwIha0S+/DFHTohZvOErZK0yq7hacbaWd8bj1JZOVd/YqhzSSqBYLDhk2Ksv8B9bcQLoZL0y
-	xF9z00S2dW/qL97eP7bNWjEDmD917bW20ZI0jFp4I+RKtDNG4w3IrUwIvrk1uw86FbpGYzOLQgadD
-	F8gbI9x7iy5j51jwjfSmomnBJ4eJ734B7zB7f8i6GePdWQQ6ZXHidQXIX6IaQ+infDrI8a5Sb/+LY
-	9mTUStrA==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1718796261; h=from : subject :
- to : message-id : date;
- bh=yP8g0Jw2Gy5q84RTF1sYxILlGkYZB2hJ+cHDUm8IPUE=;
- b=VO7WaQDi50K25IxobvfCv/Cam2Zquz/b4d5nrqPsZeGG5U0NDjEuwF8q9edhosVOTBaMU
- zRkjj/bc0Di2GnHXkE8ss6fU+5gIdGmVr8qF3Lj5/V63vlYTMcyXhN0sww7IEMLCgePjUkm
- IjkwPSfBF+8tKoVJHbOEyF288QJrGlJQ8EVQEJrlL/QCOlpI8yFtQ79QGPF6svQlvKYQgXe
- OZZEWbitEe3y8po3MfYzTU+AP12DZ3gqh+IvQ8ICZKHE6LqBeJ0a4NVOXzwNvaLhJUmJ9xk
- 8btjS82/W2BImqYsSd7yN8Y8iayRXdH2SPk66IBE7GzYrvwn4IE3TYrtajPg==
-Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sJtOa-TRk6ya-D7; Wed, 19 Jun 2024 11:22:33 +0000
-Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
- by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sJtOb-4o5NDgrtWcB-kWHs; Wed, 19 Jun 2024 11:22:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1718796149; bh=NAutyFxSP4VjKXvLicjq/fyIJbqML+ZifForgpCt1b8=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=ZZEmhqtwqS2x5F5aTxHhkZ1xnS+1M6nDigDUWHMrfdZt9gqvWLN9Wi9VdXSBIJkRF
- Qu5CXSdmsmFde40Tmouy0mogaiiWWdoirTAkdhRE3zesg8nhzWwhiZ/FsTYf95GWQ2
- Gagqq2ObQW1vnQnDZ5s5AiEu7C3caxSlAbugzq8E=
-Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id 995503E76F; Wed, 19 Jun 2024 13:22:28 +0200 (CEST)
-Date: Wed, 19 Jun 2024 13:22:28 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
- Sami Tolvanen <samitolvanen@google.com>,
- Brian Norris <briannorris@chromium.org>,
- Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH] Makefile: add comment to discourage tools/* addition for
- kernel builds
-Message-ID: <ZnK_dHxuj9SNmH8u@fjasle.eu>
-References: <20240619062145.3967720-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du+dh5j3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BDFC4AF53;
+	Wed, 19 Jun 2024 11:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718796329;
+	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Du+dh5j3HHzpa9yey8zGx6MNBhRSP5yQXWuWgd8fZ+2wjMfn2vfuZQWDvD6mfzdDE
+	 ALVAAyypHvZYwZ7gQLIbC6J2/lDVDvJDeXsXPtcoshRW+qweIlKecxXE+xXw1latK0
+	 295u5iSD3QMCimGrhNLiv7f2uBLI/v0yKTZxlMS2mDfY2XsuKPrWFz/lrKGNnw2/fy
+	 OZvO4Q0gC+SetiNpSZ6ZN1vcJ9u8CRoSpaGcKqJJWIfIWAJlXkTRxzn/Dy8jeW38ee
+	 90nqDKny33ACfjWnYETbC+ZOw9mtfcELCdxvaLuYHAXfRzbVQOHsIXmGOzLsGvuq3b
+	 lRykQ6JA79PhQ==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	=?utf-8?q?Daire_McNamara_=3Cdaire=2Emcnamara=40microchip=2Ecom=3E=2C_Jam?=,
+	=?utf-8?q?ie_Gibbons_=3Cjamie=2Egibbons=40microchip=2Ecom=3E=2C_Valentina_F?=,
+	=?utf-8?q?ernandez_=3Cvalentina=2Efernandezalanis=40microchip=2Ecom=3E=2C_L?=,
+	=?utf-8?q?inus_Walleij_=3Clinus=2Ewalleij=40linaro=2Eorg=3E=2C_Bartosz_Gola?=,
+	=?utf-8?q?szewski_=3Cbrgl=40bgdev=2Epl=3E=2C_Rob_Herring_=3Crobh=40kernel?=,
+	=?utf-8?q?=2Eorg=3E=2C_Krzysztof_Kozlowski_=3Ckrzysztof=2Ekozlowski+dt=40li?=,
+	=?utf-8?q?naro=2Eorg=3E=2C_Lorenzo_Pieralisi_=3Clpieralisi=40kernel=2Eorg?=,
+	=?utf-8?q?=3E=2C_Krzysztof_Wilczy=C5=84ski_=3Ckw=40linux=2Ecom=3E=2C_Bjorn_?=,
+	=?utf-8?q?Helgaas_=3Cbhelgaas=40google=2Ecom=3E=2C_linux-gpio=40vger=2Ekern?=,
+	=?utf-8?q?el=2Eorg=2C_devicetree=40vger=2Ekernel=2Eorg=2C_linux-kernel=40vg?=,
+	=?utf-8?q?er=2Ekernel=2Eorg=2C_linux-pci=40vger=2Ekernel=2Eorg?=
+Subject: Re: (subset) [PATCH v1 0/5] BeagleV Fire support
+Date: Wed, 19 Jun 2024 12:24:48 +0100
+Message-ID: <20240619-tightly-stuffed-a91e32ae9fc3@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619062145.3967720-1-masahiroy@kernel.org>
-X-Smtpcorp-Track: XM4iittdWoiQ.PibnpsphkpdX.k8-UUwSVN-6
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sOfuMnkZRi
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=693; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=W31/LXvbm3p0gQHN+AHn/iS7bX0lEsjhbAHyFzbXYq0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGlFBxh8f6/zXfjC9NGcM4ltLn98vHsktk+Z/fxqdsDvr bOvnM6b3lHKwiDGwSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJfAxhZDga2nAq+VdN38M/ d2wvNudvOpjAbmnDcl+8d6Z2N5OBdx3DP+3M/hvHV+4K+s9a98Ofad+XBEtuwxk72msy7u6t2Li 7lREA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 19, 2024 at 03:21:42PM +0900 Masahiro Yamada wrote:
-> Kbuild provides scripts/Makefile.host to build host programs used for
-> building the kernel. Unfortunately, there are two exceptions that opt
-> out of Kbuild. The build system under tools/ is a cheesy replica, and
-> is always a disaster. I was recently poked about a problem in the tools
-> build issue, which I do not maintain (and nobody maintains). [1]
-> 
-> Without a comment, somebody might believe this is the right location
-> because that is where objtool lives, even when a more robust Kbuild
-> syntax satisfies their needs. [2]
-> 
-> [1]: https://lore.kernel.org/linux-kbuild/ZnIYWBgrJ-IJtqK8@google.com/T/#m8ece130dd0e23c6f2395ed89070161948dee8457
-> [2]: https://lore.kernel.org/all/20240618200501.GA1611012@google.com/
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  Makefile | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Makefile b/Makefile
-> index 471f2df86422..ba070596ad4e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1331,6 +1331,11 @@ prepare: tools/bpf/resolve_btfids
->  endif
->  endif
->  
-> +# README
-> +# The tools build system is not a part of Kbuild. Before adding yet another
-> +# tools/* here, please consider if the standard "hostprogs" syntax satisfies
-> +# your needs.
-> +
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Perhaps add a "See Documentation/kbuild/makefiles.rst for details." ?
+On Wed, 27 Mar 2024 12:24:35 +0000, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Yo,
+> 
+> Wee series adding support for the BeagleV Fire. I've had a dts sitting
+> locally for this for over a year for testing Auto Update and I meant to
+> submit something to mainline once the board got announced publicly, but
+> only got around to that now.
+> 
+> [...]
 
-I do understand the need for clarification.
+Applied to riscv-dt-for-next, thanks!
 
-Acked-by: Nicolas Schier <nicolas@fjasle.eu>
+[1/5] dt-bindings: riscv: microchip: document beaglev-fire
+      https://git.kernel.org/conor/c/76ed031dc750
+[5/5] riscv: dts: microchip: add an initial devicetree for the BeagleV Fire
+      https://git.kernel.org/conor/c/9e2569c28589
+
+I've applied this with the incorrect PCIe root port node removed.
+
+Cheers,
+Conor.
