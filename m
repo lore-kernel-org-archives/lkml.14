@@ -1,229 +1,121 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4644E13D625;
-	Wed, 19 Jun 2024 11:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812CC13D265
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796279; cv=none; b=RYXiWy+FRfh+1s4cEpUn3HIbZlRIiyI6tdNzdOWf0/A0KOaeXqpJI5nYDlyY3A6m/YB2Dx9A1et/LhvkZerT6DOmZdZPSAOdAYsnNS4EsaRBbTZPGxOsTICZ7V01JKmDpaKio3c6inN2M8LegxaitZmUZCkFJ/1690R80I/Tvf0=
+	t=1718796273; cv=none; b=aJtwMhc7o8WbmtwDoiqa7SwuimdMUTb3MbHFCNcyg3mUFmwMD5v2u30Dvu0N9Y3LJuMyUePv85d7leQKxmWUYvYqms/R9h2gp3jgndkLx00t/cSZWf08MPBq82N6zzAwZiLeOyH+/T4QQtSyCMDWdQ6GBtzeQRCmH+bF2blmUBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796279; c=relaxed/simple;
-	bh=8rfpGs7JzwTkpbq1mkSaDGKS7FWCrhFS/Qy7lFa2Q8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ptjYzVeQqkzak7fztFx70uA7qWYS9xk/xMpLxKRmM3gvNUinp1qDawuqTYyTA1tGxvEPHwS5Wei89isJewLm/y4qT//3fQeHL02O8ZYD1aXwaeMmHWi4j3zsF2qhOdAaLwu74asD1knLeQRdW5WRdtuO8pk3STPLcbF4xLkX5gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=op8WDozz; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ZmoiVL+S reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1718796273; c=relaxed/simple;
+	bh=NAutyFxSP4VjKXvLicjq/fyIJbqML+ZifForgpCt1b8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=orFNSrt0LtBd1c2gkb32J+HAJb9/As5gc2U5ZpmX41ztT0VGO9ZmKYM51Ag6Xk37waflwyB6Fhe4tE058ZXtVKP4dwtn8AIvMnxz3J/u8NnkN4ozVZg3nvdYRCeMuZInpZZ7S5wj3gARhG7MFkZSPY32XluVsOoa/0TiT65zRSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=c7Q9QLop reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=VO7WaQDi; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ZZEmhqtw; arc=none smtp.client-ip=103.2.141.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="op8WDozz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ZmoiVL+S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1718796276; x=1750332276;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iNCg5Yfxo+yi57fLJRdraGxrmBw0QNUTJqDZy4I2bmg=;
-  b=op8WDozzBzRo4hbRVfBJD83WooFg36cIoGCChkSUyMoBLRmxExgUG9Q2
-   /8SJ+qQ5o201uPR1BOQOzMGkL3owAefgAzmFgeszMh5yVbZr9nN+FMx8d
-   L5wG0eKDQNbdpcKShYyJp37KFhCgmF+OFPKktQw3MeIyCCLqxAPxCAYKD
-   1h5p3KgCX2PuV768PbXog4jUy98/f/yww+gxjheK9gqGaaGbq/YAmzWyo
-   x/2XBSDsVUa9SvsBwgFvcWdYC6FJTYTXsjj9htnCUepwlJYZ0gDMbtmHe
-   oWKuxeg1aL4IQQb05KgDuBi6QW0d/JWFWgskUWvO5YrK3cldcvhu761r7
-   Q==;
-X-CSE-ConnectionGUID: G/Nx2jDdTlGM5EJYS6yGFA==
-X-CSE-MsgGUID: 7EkOx4TqS6+QGeHHKVgvtw==
-X-IronPort-AV: E=Sophos;i="6.08,250,1712613600"; 
-   d="scan'208";a="37474781"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 19 Jun 2024 13:24:34 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 465E616697D;
-	Wed, 19 Jun 2024 13:24:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1718796269;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=iNCg5Yfxo+yi57fLJRdraGxrmBw0QNUTJqDZy4I2bmg=;
-	b=ZmoiVL+SI3BIRs898kH6F5sdnh1MGcHHcnf2GJs1NCkLtlEIJli+2tdp+o//xXhJWUS2Ht
-	qlN4wJjyLr88d1IoX5r4ySsk1e3qMTGsxYl14nvc6Fttj1ac6BgsVw62JTJOajnnm3rBcp
-	unVFTk986HB1hl3UPAGWwTuPF1lRUQY9ViRhyL766+lpPxfS1G+XA8/tTiLdAS+/27B8Kk
-	IRmFYrboYXu7tfNLyqW9PCOxUUSOqZZT1kE9bDhU3jQJfqy0vSF8uBefVEIyo9xf2ahsAI
-	QB9TaRJ7IJ+TtDbApB0E90RJ+sj8gLqQ+pWj015TP1gPzVRALnVhP0gjMK5VsQ==
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Suman Anna <s-anna@ti.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux@ew.tq-group.com,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am642-tqma64xxl-mbax4xxl: add PRU Ethernet support
-Date: Wed, 19 Jun 2024 13:24:06 +0200
-Message-ID: <20240619112406.106223-2-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240619112406.106223-1-matthias.schiffer@ew.tq-group.com>
-References: <20240619112406.106223-1-matthias.schiffer@ew.tq-group.com>
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="c7Q9QLop";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="VO7WaQDi";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ZZEmhqtw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1718797161; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=yP8g0Jw2Gy5q84RTF1sYxILlGkYZB2hJ+cHDUm8IPUE=; b=c7Q9QLop80EMjgS7HDMJ3BrseU
+	ndnWuDvn9Sjr/3jdgjsRNX8PQ/xc9X1RB3giFThAvsDhsCDxQPn8Wq0j373fl8JrYPLltFaE3yxbR
+	Wp1/MfwIha0S+/DFHTohZvOErZK0yq7hacbaWd8bj1JZOVd/YqhzSSqBYLDhk2Ksv8B9bcQLoZL0y
+	xF9z00S2dW/qL97eP7bNWjEDmD917bW20ZI0jFp4I+RKtDNG4w3IrUwIvrk1uw86FbpGYzOLQgadD
+	F8gbI9x7iy5j51jwjfSmomnBJ4eJ734B7zB7f8i6GePdWQQ6ZXHidQXIX6IaQ+infDrI8a5Sb/+LY
+	9mTUStrA==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1718796261; h=from : subject :
+ to : message-id : date;
+ bh=yP8g0Jw2Gy5q84RTF1sYxILlGkYZB2hJ+cHDUm8IPUE=;
+ b=VO7WaQDi50K25IxobvfCv/Cam2Zquz/b4d5nrqPsZeGG5U0NDjEuwF8q9edhosVOTBaMU
+ zRkjj/bc0Di2GnHXkE8ss6fU+5gIdGmVr8qF3Lj5/V63vlYTMcyXhN0sww7IEMLCgePjUkm
+ IjkwPSfBF+8tKoVJHbOEyF288QJrGlJQ8EVQEJrlL/QCOlpI8yFtQ79QGPF6svQlvKYQgXe
+ OZZEWbitEe3y8po3MfYzTU+AP12DZ3gqh+IvQ8ICZKHE6LqBeJ0a4NVOXzwNvaLhJUmJ9xk
+ 8btjS82/W2BImqYsSd7yN8Y8iayRXdH2SPk66IBE7GzYrvwn4IE3TYrtajPg==
+Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1sJtOa-TRk6ya-D7; Wed, 19 Jun 2024 11:22:33 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1sJtOb-4o5NDgrtWcB-kWHs; Wed, 19 Jun 2024 11:22:33 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1718796149; bh=NAutyFxSP4VjKXvLicjq/fyIJbqML+ZifForgpCt1b8=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=ZZEmhqtwqS2x5F5aTxHhkZ1xnS+1M6nDigDUWHMrfdZt9gqvWLN9Wi9VdXSBIJkRF
+ Qu5CXSdmsmFde40Tmouy0mogaiiWWdoirTAkdhRE3zesg8nhzWwhiZ/FsTYf95GWQ2
+ Gagqq2ObQW1vnQnDZ5s5AiEu7C3caxSlAbugzq8E=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id 995503E76F; Wed, 19 Jun 2024 13:22:28 +0200 (CEST)
+Date: Wed, 19 Jun 2024 13:22:28 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Brian Norris <briannorris@chromium.org>,
+ Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH] Makefile: add comment to discourage tools/* addition for
+ kernel builds
+Message-ID: <ZnK_dHxuj9SNmH8u@fjasle.eu>
+References: <20240619062145.3967720-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619062145.3967720-1-masahiroy@kernel.org>
+X-Smtpcorp-Track: XM4iittdWoiQ.PibnpsphkpdX.k8-UUwSVN-6
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sOfuMnkZRi
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-Add PRU Ethernet controller and PHY nodes, as it was previously done for
-the AM64x EVM Device Trees.
+On Wed, Jun 19, 2024 at 03:21:42PM +0900 Masahiro Yamada wrote:
+> Kbuild provides scripts/Makefile.host to build host programs used for
+> building the kernel. Unfortunately, there are two exceptions that opt
+> out of Kbuild. The build system under tools/ is a cheesy replica, and
+> is always a disaster. I was recently poked about a problem in the tools
+> build issue, which I do not maintain (and nobody maintains). [1]
+> 
+> Without a comment, somebody might believe this is the right location
+> because that is where objtool lives, even when a more robust Kbuild
+> syntax satisfies their needs. [2]
+> 
+> [1]: https://lore.kernel.org/linux-kbuild/ZnIYWBgrJ-IJtqK8@google.com/T/#m8ece130dd0e23c6f2395ed89070161948dee8457
+> [2]: https://lore.kernel.org/all/20240618200501.GA1611012@google.com/
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  Makefile | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Makefile b/Makefile
+> index 471f2df86422..ba070596ad4e 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1331,6 +1331,11 @@ prepare: tools/bpf/resolve_btfids
+>  endif
+>  endif
+>  
+> +# README
+> +# The tools build system is not a part of Kbuild. Before adding yet another
+> +# tools/* here, please consider if the standard "hostprogs" syntax satisfies
+> +# your needs.
+> +
 
-Differing from the EVM, we add the virtual ethernet controller device
-below &icssg1 instead of the top level. Besides being slighly more
-accurate, this has the advantage that the node is implicitly disabled
-when &icssg1 has status = "disabled" (which the TQMa64xxL bootloader
-adds as a fixup when running on an AM64x variant without ICSSG support),
-thus avoiding leaving the ethernet device in EPROBE_DEFER limbo forever.
+Perhaps add a "See Documentation/kbuild/makefiles.rst for details." ?
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
+I do understand the need for clarification.
 
-k3-am642-evm.dts uses "ti-pruss/am64x-sr2-*" filenames instead of
-"ti-pruss/am65x-sr2-*", however it is not clear to me where these would
-come from - I'm not aware of any firmwares named like that.
-
-So far, these firmwares are not in mainline linux-firmware; TI's
-reference BSPs include firmware from ti-linux-firmware [1], and the same
-"am65x-sr2" firmwares are used on AM65x and AM64x SoCs.
-
-[1] https://git.ti.com/gitweb?p=processor-firmware/ti-linux-firmware.git;a=tree;f=ti-pruss;h=a220bdc6dce5e11845b5c6337ff9b2d329aee196;hb=refs/heads/ti-linux-firmware
-
- .../dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts    | 100 ++++++++++++++++++
- 1 file changed, 100 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
-index 1f4dc5ad1696a..0eff392a29b00 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
-@@ -24,6 +24,8 @@ / {
- 
- 	aliases {
- 		ethernet0 = &cpsw_port1;
-+		ethernet1 = &icssg1_emac0;
-+		ethernet2 = &icssg1_emac1;
- 		i2c1 = &mcu_i2c0;
- 		mmc1 = &sdhci1;
- 		serial0 = &mcu_uart0;
-@@ -154,6 +156,104 @@ &epwm5 {
- 	status = "okay";
- };
- 
-+&icssg1 {
-+	icssg1_eth: ethernet {
-+		compatible = "ti,am642-icssg-prueth";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pru_icssg1_rgmii1_pins>, <&pru_icssg1_rgmii2_pins>;
-+		interrupt-parent = <&icssg1_intc>;
-+		interrupts = <24 0 2>, <25 1 3>;
-+		interrupt-names = "tx_ts0", "tx_ts1";
-+		dmas = <&main_pktdma 0xc200 15>, /* egress slice 0 */
-+		       <&main_pktdma 0xc201 15>, /* egress slice 0 */
-+		       <&main_pktdma 0xc202 15>, /* egress slice 0 */
-+		       <&main_pktdma 0xc203 15>, /* egress slice 0 */
-+		       <&main_pktdma 0xc204 15>, /* egress slice 1 */
-+		       <&main_pktdma 0xc205 15>, /* egress slice 1 */
-+		       <&main_pktdma 0xc206 15>, /* egress slice 1 */
-+		       <&main_pktdma 0xc207 15>, /* egress slice 1 */
-+		       <&main_pktdma 0x4200 15>, /* ingress slice 0 */
-+		       <&main_pktdma 0x4201 15>; /* ingress slice 1 */
-+		dma-names = "tx0-0", "tx0-1", "tx0-2", "tx0-3",
-+			    "tx1-0", "tx1-1", "tx1-2", "tx1-3",
-+			    "rx0", "rx1";
-+		sram = <&oc_sram>;
-+		firmware-name = "ti-pruss/am65x-sr2-pru0-prueth-fw.elf",
-+				"ti-pruss/am65x-sr2-rtu0-prueth-fw.elf",
-+				"ti-pruss/am65x-sr2-txpru0-prueth-fw.elf",
-+				"ti-pruss/am65x-sr2-pru1-prueth-fw.elf",
-+				"ti-pruss/am65x-sr2-rtu1-prueth-fw.elf",
-+				"ti-pruss/am65x-sr2-txpru1-prueth-fw.elf";
-+		ti,prus = <&pru1_0>, <&rtu1_0>, <&tx_pru1_0>, <&pru1_1>, <&rtu1_1>, <&tx_pru1_1>;
-+		ti,pruss-gp-mux-sel = <2>,	/* MII mode */
-+				      <2>,
-+				      <2>,
-+				      <2>,	/* MII mode */
-+				      <2>,
-+				      <2>;
-+		ti,mii-g-rt = <&icssg1_mii_g_rt>;
-+		ti,mii-rt = <&icssg1_mii_rt>;
-+		ti,iep = <&icssg1_iep0>,  <&icssg1_iep1>;
-+
-+		ethernet-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			icssg1_emac0: port@0 {
-+				reg = <0>;
-+				phy-handle = <&icssg1_phy0c>;
-+				phy-mode = "rgmii-id";
-+				/* Filled in by bootloader */
-+				local-mac-address = [00 00 00 00 00 00];
-+			};
-+
-+			icssg1_emac1: port@1 {
-+				reg = <1>;
-+				phy-handle = <&icssg1_phy03>;
-+				phy-mode = "rgmii-id";
-+				/* Filled in by bootloader */
-+				local-mac-address = [00 00 00 00 00 00];
-+			};
-+		};
-+	};
-+};
-+
-+&icssg1_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pru_icssg1_mdio_pins>;
-+	status = "okay";
-+
-+	/* phy-mode is fixed up to rgmii-rxid by prueth driver to account for
-+	 * the SoC integration, so the only rx-internal-delay and no
-+	 * tx-internal-delay is set for the PHYs.
-+	 */
-+
-+	icssg1_phy03: ethernet-phy@3 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0x3>;
-+		reset-gpios = <&main_gpio1 47 GPIO_ACTIVE_LOW>;
-+		reset-assert-us = <1000>;
-+		reset-deassert-us = <1000>;
-+		ti,rx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,clk-output-sel = <DP83867_CLK_O_SEL_OFF>;
-+	};
-+
-+	icssg1_phy0c: ethernet-phy@c {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0xc>;
-+		reset-gpios = <&main_gpio1 51 GPIO_ACTIVE_LOW>;
-+		reset-assert-us = <1000>;
-+		reset-deassert-us = <1000>;
-+		ti,rx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,clk-output-sel = <DP83867_CLK_O_SEL_OFF>;
-+	};
-+};
-+
-+
- &main_gpio0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&main_gpio0_digital_pins>,
--- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
-
+Acked-by: Nicolas Schier <nicolas@fjasle.eu>
