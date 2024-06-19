@@ -1,116 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E64143757;
-	Wed, 19 Jun 2024 13:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6571474C8;
+	Wed, 19 Jun 2024 13:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718803529; cv=none; b=XghMO7CKivUSK/DHleEqb1i4TfSKeVMDBW0vsIwMhWc4k0lvatJFvsCTVMSWjZIeGSB+BQF2/iBHf4WeSDX6Hv/panJuh4i0oyjs7BK6+e706VNrEWzG/8CYymn2NQ3wq7xELvcCKaZovvKYE21HwVgyWbtMuiL8Mc8zNO5VMss=
+	t=1718803603; cv=none; b=L+rUGuuqXYqrbDdYcJXoysqV9YUs+v7jekt1/Au2j187m2mgTOgEjMsQH6EBn0NFeZNE6VRq0m9xLiafK+ihF0jTzplYUVSiccMbJieHj6x0WmcurxkJlR9Ay0WHYodNuIncmJu1pgHR33UDSkO4B5OUYUD3X9xDNllbPGF6gas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718803529; c=relaxed/simple;
-	bh=CBl//lO4qFOL4+qF/5/XncehXiBwSbzhWClESpKygHg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p4ZesNmUfUUhc1h5bKgeQt8Z6eHUw8U1XM8URpnEcah99rbu+XEvTpWfxV/w2P3WFeyW1WFBQSbpoM0xBilkkYw0TSL6C0kCa4TAtVPLzGgummWdOpRW33jU+uHLFDLNNHu75H9C6VyUDoD/2tnd1Er0Z1MfDrDjLWtd3l4OsBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBxOc3rk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718803603; c=relaxed/simple;
+	bh=C6PXGPLhQ6WXKs28ePUEu19IYSvXFGFlJkjHxpNDXQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZCv81KD41FxdxIJvXLlgQm5+VQllUvpHbzCSDUhTQ/mm0oXghc/p0uLyiBbrLeJUxGCQL03hzpnfdjXU8eWNGtanfuoHIr31mo3eHSYA5JvazpxdTNa/bUUNivEzrlA7F99QMJTlR8HocS1y1Bfd/J36JuwpsaO/UP2dBKy6H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=anLEQSsl; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBxOc3rk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD87C2BBFC;
-	Wed, 19 Jun 2024 13:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718803529;
-	bh=CBl//lO4qFOL4+qF/5/XncehXiBwSbzhWClESpKygHg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KBxOc3rkLulVYUS/yi38GbU5HIewXsHaByRSrRPHh4yD1hEQfbs73Lyywsrqisjul
-	 W2K6j6Uuw6e23/aU60P5Wc7HUy5tYMxtfhKAL3mqj+NNOy3ilzxZXDKYa/c2yPQRvv
-	 mEaBUxPHk0hFbICXafyWFywDcHayO/W8QyDdIpjUVPJtyo8Qr397ZxjzRQIP0XN5Y9
-	 rtd6y2odW8P79RMndQ2WOeLLnhADrgXTkj5pgvtiahSENj044Psi88bgy7qomroEuX
-	 kQNlJIjY8ir0Q11Vq0b19w8G6xjEdctxL0qYBuVoxeHm33Tt3G7+h2WZjZnOkL8+id
-	 o6Fkfd9adLmRg==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: puranjay12@gmail.com
-Subject: [PATCH] bpf, arm64: inline bpf_get_current_task/_btf() helpers
-Date: Wed, 19 Jun 2024 13:13:34 +0000
-Message-Id: <20240619131334.4297-1-puranjay@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="anLEQSsl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id ADA212000F;
+	Wed, 19 Jun 2024 13:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718803598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bUv6jir4zxSpq9FsjWcgIlTaRYhkbm23dEzaKXrswo4=;
+	b=anLEQSsl9n3YR6eCFoQhaaww7I/37SqXyXL9rqbWpgrbPbZMicZA0bBwa/J5hvf/sC/gsk
+	QiBUJBuWLfdDYYH76dBBylJfr26oAfJagYrGFtmA9ZymCdpJ28YSbPfbp91TMYLRNXBCVB
+	Qa8mysxVnHc2eSEfSf7D0yGdIaoGp1SEaREPiYxS/23LStAqGvZEi3FX2fjpKEP0a/87+e
+	YdryoAKD40+Ny9C/2YLtF9+8Aw+E4bklS5g6157MB7HKBX+sO7BajQphEYSLtaXOjPAYdx
+	EJszuNopmt+pbMMBYZTzN9GVlVKikjg5/qswCQvN7dHJvNu6WfELEwP2qfDWxw==
+Date: Wed, 19 Jun 2024 15:26:38 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: =?iso-8859-1?B?Q3Pza+FzLA==?= Bence <csokas.bence@prolan.hu>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resubmit] rtc: interface: Add RTC offset to alarm after
+ fix-up
+Message-ID: <20240619132638b08dcc9d@mail.local>
+References: <20240619130115.2799118-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240619130115.2799118-1-csokas.bence@prolan.hu>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On ARM64, the pointer to task_struct is always available in the sp_el0
-register and therefore the calls to bpf_get_current_task() and
-bpf_get_current_task_btf() can be inlined into a single MRS instruction.
+On 19/06/2024 15:01:16+0200, Csókás, Bence wrote:
+> `rtc_add_offset()` is called by `__rtc_read_time()`
+> and `__rtc_read_alarm()` to add the RTC's offset to
+> the raw read-outs from the device drivers. However,
+> in the latter case, a fix-up algorithm is run if
+> the RTC device does not report a full `struct rtc_time`
+> alarm value. In that case, the offset was forgot to be
+> added.
+> 
+> Fixes: fd6792bb022e ("rtc: fix alarm read and set offset")
+> 
+> Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
+> ---
+>  drivers/rtc/interface.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+> index 1b63111cdda2..db8dffffed91 100644
+> --- a/drivers/rtc/interface.c
+> +++ b/drivers/rtc/interface.c
+> @@ -273,12 +273,11 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+>  		if (err)
+>  			return err;
+>  
+>  		/* full-function RTCs won't have such missing fields */
+>  		if (rtc_valid_tm(&alarm->time) == 0) {
+> -			rtc_add_offset(rtc, &alarm->time);
+> -			return 0;
+> +			goto done;
+>  		}
+>  
+>  		/* get the "after" timestamp, to detect wrapped fields */
+>  		err = rtc_read_time(rtc, &now);
+>  		if (err < 0)
+> @@ -378,10 +377,12 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+>  done:
+>  	if (err && alarm->enabled)
+>  		dev_warn(&rtc->dev, "invalid alarm value: %ptR\n",
+>  			 &alarm->time);
+>  
+> +	rtc_add_offset(rtc, &alarm->time);
+> +
 
-Here is the difference before and after this change:
+This must not be done when the tm is invalid.
 
-Before:
+>  	return err;
+>  }
+>  
+>  int rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+>  {
+> -- 
+> 2.34.1
+> 
+> 
 
-; struct task_struct *task = bpf_get_current_task_btf();
-  54:   mov     x10, #0xffffffffffff7978        // #-34440
-  58:   movk    x10, #0x802b, lsl #16
-  5c:   movk    x10, #0x8000, lsl #32
-  60:   blr     x10          -------------->    0xffff8000802b7978 <+0>:     mrs     x0, sp_el0
-  64:   add     x7, x0, #0x0 <--------------    0xffff8000802b797c <+4>:     ret
-
-After:
-
-; struct task_struct *task = bpf_get_current_task_btf();
-  54:   mrs     x7, sp_el0
-
-This shows around 1% performance improvement in artificial microbenchmark.
-
-Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
----
- arch/arm64/net/bpf_jit_comp.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 720336d28856..b838dab3bd26 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -1244,6 +1244,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 			break;
- 		}
- 
-+		/* Implement helper call to bpf_get_current_task/_btf() inline */
-+		if (insn->src_reg == 0 && (insn->imm == BPF_FUNC_get_current_task ||
-+					   insn->imm == BPF_FUNC_get_current_task_btf)) {
-+			emit(A64_MRS_SP_EL0(r0), ctx);
-+			break;
-+		}
-+
- 		ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass,
- 					    &func_addr, &func_addr_fixed);
- 		if (ret < 0)
-@@ -2581,6 +2588,8 @@ bool bpf_jit_inlines_helper_call(s32 imm)
- {
- 	switch (imm) {
- 	case BPF_FUNC_get_smp_processor_id:
-+	case BPF_FUNC_get_current_task:
-+	case BPF_FUNC_get_current_task_btf:
- 		return true;
- 	default:
- 		return false;
 -- 
-2.40.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
