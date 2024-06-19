@@ -1,126 +1,169 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8457EEFF;
-	Wed, 19 Jun 2024 09:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FC32139CD
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718788212; cv=none; b=SbkOYmATvm48XoA5NYMpI2TLFTTcCLoaEqV70w65c4yxd+bPfSFJnqMxJw3P1MM5LKVZLDpuxXxnhenRQBYpPNwoSHiRGyyxv5TDXTgiGz17CSs7Bf3hUWEpeIxugL4NWzGF+uMniA216u/zteejEPEAxuG9HLLR/0VyqxuZfUo=
+	t=1718788313; cv=none; b=fD311fzEaEpI+4rT33uKqIt0deiL6yFvNQuYoM21qntLOyMd53M8tVi837kfgDx155TrGLqh0cPuki1MaEMstmPA8Hc4Yrxtg7PGBjarDs3xH2Wm72YclKsB/ZJimxQq+DugxiZRnUBzMqo3lQ1RPFOGOjijRgDC/vUlnHuTpmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718788212; c=relaxed/simple;
-	bh=j9QHuK1sZ1p2aIuDGVpmJ7JI6mmRW3HX761dvuCIG1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nhnWwkaujn8eEvuwutjiF0t9ehIXl2RCugrudqhaj7tsUYNMGu/RlUgg0kDm5UxxPFvfrlVzjfCcpgtZ9xZZoVnLJn1liYUK2T88Dfuu7Qhlpd81rAp//wtz75qgPEkDKElwTIvMetjX29AiE3vvmz3T0eMo4KXCTnNAPFZqT48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=oX5LzuC2; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="oX5LzuC2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=XZPCE7bDbCBCJxvXyCnEG/PIPyH9SX836CQZUsB/9WE=; b=oX5LzuC2K6FLF5l89DJSwL40Iw
-	qRtT/Ti0Co6QpZ/PmYuNy93+M0pKDqqNhn93L1vV/WFvbEHF0zRZ2Uop2JUkJmSHKJwU0zsV/9Wdn
-	uZ+rIIwq4ob4+RhM0zLZqrGXu7ptaunWqZvePtiekwrIA8iS65EkpGc/xRB90Ezvjld+SA84W1r6v
-	hOa3ekJlt9Qgaoqy8qaq/ztMyOeo/S7jiF/jdjRYLCZhI3gF35BdS2Oj9QCfiaZ3ceZZKUWBISHuS
-	mPHk7G1G/oHlimw0qEkXW2MnCJW6GzTVDu/BGmCMwFCXt83iDNkiXSSp7AsPMgOyt8dyxEL/EThzt
-	2Te6fj7w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44894)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sJrKD-00083a-2i;
-	Wed, 19 Jun 2024 10:09:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sJrKE-0006dv-7S; Wed, 19 Jun 2024 10:09:54 +0100
-Date: Wed, 19 Jun 2024 10:09:53 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v7 5/5] net: phy: add driver for built-in 2.5G
- ethernet PHY on MT7988
-Message-ID: <ZnKgYSi81+JdAdhC@shell.armlinux.org.uk>
-References: <20240613104023.13044-1-SkyLake.Huang@mediatek.com>
- <20240613104023.13044-6-SkyLake.Huang@mediatek.com>
+	s=arc-20240116; t=1718788313; c=relaxed/simple;
+	bh=oFJSFMXpU5EZ7rZPZK1JRT8WtoWNFthtrmsxWh2R4Hg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nr3EkGad4ww8pmmsIpa+ftvzTWB2hrqJFMnMnYD+YGNNMmocTPuAcPGE5il/kpFEM8EExs2rWaEWZ0w0+jAL6dpY3+GwR6CGf0MmmG+ZVV7+4yqIHqhQ4p0xHftxfVq1dLytJ3KJfp8b4SoF/ChHGpR+kRJ10Crzljf0ArjvERg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4ee5662fde8so1562208e0c.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 02:11:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718788311; x=1719393111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4fIyHxlJcCCgl75LYMwqyMjmqzj6OP0aPwZGcOjx+O4=;
+        b=vhdS/HP9x2BF8JR8Ng27YqPWxpwHEZPWdee6eTt/b5JH5O16DbKi4NGGpqFP4z+4Ch
+         0bhkuSIGA6Ss+FZKpGTkma4ZG/zHaBhg1gPJ39JpVwiQPWEtjX9XEiZnar2BLLeuSIDl
+         UaNIYrTaaNyKswEwT2nWXJnEA98Tb+19hW1QEj2p2KVOd+EQcZ6AbllDxpk1n5Vq8MlQ
+         7nzo0UplDPF56QOORfyGIyhHF7MGbB1iaBWb6LKlebUj7FzGi3FYRpEFhdKu+VMeUs23
+         uvrMhtGiZpshQJhusNhaOdEsnBkIEFwwRfFJmk3wbmk0fj8/FF/r5vXmVeecMcA2Fwvg
+         Eyjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcprJxVZB1aoxIFHGExkxqduB1Zc9QHBzWzzEEJqZ0szZxpLYQs0qWx8ZH3jpIbWpd15g2nx0JobY0dByQ/7gyuIIBBdTAnerDbfMl
+X-Gm-Message-State: AOJu0Yx8R5JvaOdi51SiZ2R2K7cQg4jdYtXVycgXDHLFsWIi070cKsiM
+	DZY4Dn5LArD7gQKhLMBox9n8kiNb6RG5xLovgiQz8pHdms1tYXvLdd796RP3NLArVOQk8cPIni1
+	H3yDJ9yq925RYKsn83jbYWwZ6NSI=
+X-Google-Smtp-Source: AGHT+IFjnX+Hn3g+YYR3b1mFHL2xyW+Lwm+EvEdbA2lohRi2wird6psc1h8B1eaR1xSaWnFeTdkFtJ2P4fk43QoK2+U=
+X-Received: by 2002:a05:6122:c88:b0:4ec:f6f2:f1cd with SMTP id
+ 71dfb90a1353d-4ef276e5110mr2246166e0c.9.1718788310620; Wed, 19 Jun 2024
+ 02:11:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613104023.13044-6-SkyLake.Huang@mediatek.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20240618232648.4090299-1-ryan.roberts@arm.com>
+In-Reply-To: <20240618232648.4090299-1-ryan.roberts@arm.com>
+From: Barry Song <baohua@kernel.org>
+Date: Wed, 19 Jun 2024 21:11:39 +1200
+Message-ID: <CAGsJ_4wx2WD+Msjhqqy7CK1gNGAQ2LGjuM5x_bNdXUOeGsz3xw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/5] Alternative mTHP swap allocator improvements
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, "Huang, Ying" <ying.huang@intel.com>, 
+	Kalesh Singh <kaleshsingh@google.com>, Hugh Dickins <hughd@google.com>, 
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Shuai Yuan <yuanshuai@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 06:40:23PM +0800, Sky Huang wrote:
-> +static const unsigned long supported_triggers =
-> +	(BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
-> +	 BIT(TRIGGER_NETDEV_LINK)        |
-> +	 BIT(TRIGGER_NETDEV_LINK_10)     |
-> +	 BIT(TRIGGER_NETDEV_LINK_100)    |
-> +	 BIT(TRIGGER_NETDEV_LINK_1000)   |
-> +	 BIT(TRIGGER_NETDEV_LINK_2500)   |
-> +	 BIT(TRIGGER_NETDEV_RX)          |
-> +	 BIT(TRIGGER_NETDEV_TX));
+On Wed, Jun 19, 2024 at 11:27=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com=
+> wrote:
+>
+> Hi All,
+>
+> Chris has been doing great work at [1] to clean up my mess in the mTHP sw=
+ap
+> entry allocator. But Barry posted a test program and results at [2] showi=
+ng that
+> even with Chris's changes, there are still some fallbacks (around 5% - 25=
+% in
+> some cases). I was interested in why that might be and ended up putting t=
+his PoC
+> patch set together to try to get a better understanding. This series ends=
+ up
+> achieving 0% fallback, even with small folios ("-s") enabled. I haven't d=
+one
+> much testing beyond that (yet) but thought it was worth posting on the st=
+rength
+> of that result alone.
+>
+> At a high level this works in a similar way to Chris's series; it marks a
+> cluster as being for a particular order and if a new cluster cannot be al=
+located
+> then it scans through the existing non-full clusters. But it does it by s=
+canning
+> through the clusters rather than assembling them into a list. Cluster fla=
+gs are
+> used to mark clusters that have been scanned and are known not to have en=
+ough
+> contiguous space, so the efficiency should be similar in practice.
+>
+> Because its not based around a linked list, there is less churn and I'm
+> wondering if this is perhaps easier to review and potentially even get in=
+to
+> v6.10-rcX to fix up what's already there, rather than having to wait unti=
+l v6.11
+> for Chris's series? I know Chris has a larger roadmap of improvements, so=
+ at
+> best I see this as a tactical fix that will ultimately be superseeded by =
+Chris's
+> work.
+>
+> There are a few differences to note vs Chris's series:
+>
+> - order-0 fallback scanning is still allowed in any cluster; the argument=
+ in the
+>   past was that swap should always use all the swap space, so I've left t=
+his
+>   mechanism in. It is only a fallback though; first the the new per-order
+>   scanner is invoked, even for order-0, so if there are free slots in clu=
+sters
+>   already assigned for order-0, then the allocation will go there.
+>
+> - CPUs can steal slots from other CPU's current clusters; those clusters =
+remain
+>   scannable while they are current for a CPU and are only made unscannabl=
+e when
+>   no more CPUs are scanning that particular cluster.
+>
+> - I'm preferring to allocate a free cluster ahead of per-order scanning, =
+since,
+>   as I understand it, the original intent of a per-cpu current cluster wa=
+s to
+>   get pages for an application adjacent in the swap to speed up IO.
+>
+> I'd be keen to hear if you think we could get something like this into v6=
+.10 to
+> fix the mess - I'm willing to work quickly to address comments and do mor=
+e
+> testing. If not, then this is probably just a distraction and we should
+> concentrate on Chris's series.
 
-Absolutely no need for the outer parens around this.
+Ryan, thank you very much for accomplishing this.
 
-type foo assignment-operator expr;
+I am getting Shuai Yuan's (CC'd) help to collect the latency histogram of
+add_to_swap() for both your approach and Chris's. I will update you with
+the results ASAP.
 
-There is no reason to ever put parens around expr in this kind of thing.
-assignment-operator are things like =, |=, &=, <<=, >>=, and so forth.
+I am also anticipating Chris's V3, as V1 seems quite stable, but V2 has
+caused a couple of crashes.
 
-Excessive parens detracts from readability, and leads to mistakes. If
-operator precedence is a worry, then knowing the common C precedence
-rules rather than littering code with extra parens would be good so
-that code can remain readable.
+>
+> This applies on top of v6.10-rc4.
+>
+> [1] https://lore.kernel.org/linux-mm/20240614-swap-allocator-v2-0-2a513b4=
+a7f2f@kernel.org/
+> [2] https://lore.kernel.org/linux-mm/20240615084714.37499-1-21cnbao@gmail=
+.com/
+>
+> Thanks,
+> Ryan
+>
+> Ryan Roberts (5):
+>   mm: swap: Simplify end-of-cluster calculation
+>   mm: swap: Change SWAP_NEXT_INVALID to highest value
+>   mm: swap: Track allocation order for clusters
+>   mm: swap: Scan for free swap entries in allocated clusters
+>   mm: swap: Optimize per-order cluster scanning
+>
+>  include/linux/swap.h |  18 +++--
+>  mm/swapfile.c        | 164 ++++++++++++++++++++++++++++++++++++++-----
+>  2 files changed, 157 insertions(+), 25 deletions(-)
+>
+> --
+> 2.43.0
+>
 
-> +static struct phy_driver mtk_gephy_driver[] = {
-> +	{
-> +		PHY_ID_MATCH_MODEL(MTK_2P5GPHY_ID_MT7988),
-> +		.name		= "MediaTek MT7988 2.5GbE PHY",
-> +		.probe		= mt798x_2p5ge_phy_probe,
-> +		.config_init	= mt798x_2p5ge_phy_config_init,
-> +		.config_aneg    = mt798x_2p5ge_phy_config_aneg,
-> +		.get_features	= mt798x_2p5ge_phy_get_features,
-> +		.read_status	= mt798x_2p5ge_phy_read_status,
-> +		.get_rate_matching	= mt798x_2p5ge_phy_get_rate_matching,
-> +		.suspend	= genphy_suspend,
-> +		.resume		= genphy_resume,
-> +		.read_page	= mtk_phy_read_page,
-> +		.write_page	= mtk_phy_write_page,
-> +		.led_blink_set	= mt798x_2p5ge_phy_led_blink_set,
-> +		.led_brightness_set = mt798x_2p5ge_phy_led_brightness_set,
-> +		.led_hw_is_supported = mt798x_2p5ge_phy_led_hw_is_supported,
-> +		.led_hw_control_get = mt798x_2p5ge_phy_led_hw_control_get,
-> +		.led_hw_control_set = mt798x_2p5ge_phy_led_hw_control_set,
-
-I don't see the point of trying to align some of these method
-declarators but not others. Consistency is important.
-
-I know several PHY drivers do this, this will be because new methods
-with longer names have been added over time, and to reformat the
-tables of every driver would be noise. However, new implementations
-should at least make an effort to have consistency.
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks
+Barry
