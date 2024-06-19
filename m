@@ -1,127 +1,104 @@
-Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF718249ED;
-	Wed, 19 Jun 2024 21:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05F215A846;
+	Wed, 19 Jun 2024 21:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718831569; cv=none; b=YxjzzBP9ibF3JGQoGtLHEgdenAVsEUGVuLhAkIN7KLoX8Xigl/A2bIGAofOBdariXXR0vwZ+sqpAq2GMhfMq6a37AxLACVVh/J0pkixKi2LuySEqJCe/Z+A19RjjQ4t9UIkIx3YgzRcmUH7K1RwVcoF9Wiv/vS01QoWqh/gQ+Ow=
+	t=1718831606; cv=none; b=K3TXEa8+sFH1n6ntX8yFlcmSgnxYYwgrWUJbPjc419MhgA6NMRHbakH2pGTrCWkGFlPB3r0+jMJblCOCSBWr11TuvV4rWqhBUD8VHrozVe098doRAhS7NHnkdDSaWSfL2fwW/mxPaN6mjbdTOxTygYOimwdj7wa1kmFo+RVsvN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718831569; c=relaxed/simple;
-	bh=Yzq8tlLhy+Hs+OPsscHhYt5rgosZvrRijLnsOQOy4qo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=aBzNqeDe9KvZOuhPHhIetKNreWtuBbyjWZO6yfb3x3zcPKq0pn2tQl77IN0hA4VSpqxne+Mzz1XqzSIJhWoH6rWIQ6SthwWMa69QI5QTiFMd2oA4Vw7XuPAjSNaM4IXIMcBHkroPOxm0UcNxw0PJWuPd0wZSZJwMBbkFSdwixjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=mYKxzjdI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nkUGAZsa; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718831606; c=relaxed/simple;
+	bh=I/hTuc/zP+bvnQXWL0T7cIQLz1sFe7PWnKke4/qHAeA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YVvBjcMAJPOcYbcLmiEPg6JEAZw960Rydgw4lZ4mFmrsKUQXjtvmfZjN0KvU/iLMYvX1vkEEjD7o97QQ8RhFAgmshW5oMLlWzjfnb2nh7wr1fereCsDsZaHyDISfGZaE0WhkqVwzvxoEqo9ncERwta5E161gIKicaehxraarzoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQAdtsMe; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="mYKxzjdI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nkUGAZsa"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 03A1D1380105;
-	Wed, 19 Jun 2024 17:12:47 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 19 Jun 2024 17:12:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718831566; x=1718917966; bh=f1FTl8FPRm
-	88cU0dNzu5X9mEf0mO3ktMxGHVAswcrGc=; b=mYKxzjdIW/d5bfr+PGY2Tbt6S+
-	OAw0oGIrQXhy+vFQOIv3JRZM225QYKeQcgfO0RlykunBLzgkgeDFRVuTJuGO0gqD
-	P/xG9vG+Ss5H14Mh1MDVf6sOQZMi49xzT+xvPkd372n9R9VtDaoJ6pgiGk2Y1SxV
-	FRxdbymhlR1W4+mi/XheSCb92TgD1FUj5hHcVe0L7M6fT3Xkl2UEHxTQXvpBS2Q1
-	DZWNJWu3RPnxRHlLMLlWqi6Gk3IYDGYVoCwhM9pmYnRuci+9GcPBKNri6LNDPcse
-	m1lSwaF+gjybsIgt9xwILlaIKIw+gGfN8j6513PgQU8MKQ5iJ9gneI1cgKFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1718831566; x=1718917966; bh=f1FTl8FPRm88cU0dNzu5X9mEf0mO
-	3ktMxGHVAswcrGc=; b=nkUGAZsaySpnK5xf5sPKsO2Bqt+BF+JEEAq0MHj+yLWr
-	OX1YF8WkPOlvcy71hCvat5CjrsxTXFOpNeWW0jUQ6Az7JupJggDO3PKLfT+QUnnb
-	T19+ujHQHEmntpKkoEN0fPn7G1VEskrqYZSskOl+gx8B0N5catlwNp3YkWJNJ4u1
-	uh9Bggs70Do84+5cSyAh+aBCDh6LjTGbpcqkUd31BMX0xOf1eXABXwDQLfUmVWr3
-	PmETs2QlOtIa5SCC/07hPusPgX7XDcLoqbki8sQHiqhIFGUKxlA6PooWwLfZbYLB
-	B9bA5Z7pvl8zOrZo/vZ/wP8JjRMnJx3RXKig27bW6g==
-X-ME-Sender: <xms:zklzZrSbtCKv1pcGzrP7oAGEgfwWPs2Q9wnodpop6SojP8OWQr4JOQ>
-    <xme:zklzZswfsPQNNABFxV9yj1ccyLO7BWOwco_VynmAnuGtLsWPon3CPn4hB-A5yiy6T
-    JV6jNIzdKyt1pxvExo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeftddgudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeu
-    feehudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:zklzZg0q_5pWAuTzytzJbKxUZ7A3wlqd0uWWeEPcsHBjnRdR91nQLg>
-    <xmx:zklzZrABTI26EdxiFeGInD1Y1Xm226U-8O0EIqPs-ZfIxSWJzl5OrA>
-    <xmx:zklzZkicZN28Wy8W9DRld4MLKJqEGLJJKSQYAuPWjP4W3hoNtPA8gw>
-    <xmx:zklzZvrWhauXqIJ7coLzf0JqE40YJ1TD5jvZXj9gl8naRZ513_fLJw>
-    <xmx:zklzZtthkHoG-6FSPQbVgxbHKEkTsR2osXjyG4iY7Dam_SDvA5uw-sqt>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AF476B6008D; Wed, 19 Jun 2024 17:12:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQAdtsMe"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so3920831fa.0;
+        Wed, 19 Jun 2024 14:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718831603; x=1719436403; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tebfRDKDwaxkvRaUg9Ir9nQNTVbshwJLHwNpt88dOII=;
+        b=mQAdtsMeWJ8PO6XD7WN47RG5p9IP75Vl/QCymPfp1P9PcUMcgO+RaSici5nDRiJEtl
+         larr5+pkv6sUakJWCJVVhZ9r3cnnaGYkopohEBWBv5VyWSsISx+sFXv/767+jznReHba
+         jvvkGL6cbuFWwGj+k17SfG7naN5dYydkh9gsFzuPx4SMIDXg3XmNjkOKYNUkP+Zajzhb
+         MsZmJ6MLgXuaimI1zhmBhXSOyHV4XckCFB1PSO7RLkHYpvgoxW1goEyMwTGatGYvj34A
+         PffmsvFnOpqpjw1HRz5bj2maHyXt8HnEAROo4ICxOSPHhAsc+kQUPk1+vMxkDyGuN4cq
+         mu8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718831603; x=1719436403;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tebfRDKDwaxkvRaUg9Ir9nQNTVbshwJLHwNpt88dOII=;
+        b=xJ23/jlrjdfKidQ8qYbDp07FBqAWXtWqqPQHx0GpEEX7qWk2hN/oPpPIMNFfbuMKRa
+         bfJJVxj0ejMaAQTCM9szMHBcfsBLns1Q6vE6xS+8q5GAhFtYHCDWn35ps8JbI8mJ/C6F
+         CH64DvUCvzilcp+/Avj3Mn4q+H6BjG13KJYebufGDmkEciMQoe3W9KHAKqAgdD1tOKtF
+         1bO+jcWaUOz0x/7/XxSLwTQAFO6wo4xUgrehmVPgiFYfcuTrY2mw/+Wwl2pI3zKjuH4B
+         0cJpbbTQEDcUHHDFRD3bVuwjrsANQyq8pH2O1d2OdUmd+Zx+eaW5VGQbGH0OsXKIdkNm
+         sXXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMf41kR5/h84ml+82bbpabzT3gQ1EwwjlsBUK53gsOdbn+gybjfutqrYELT00RYI9ZWgFjA426zETcuaSsm/H42/OmhETbkhRrzcSPj5N0L5634BcGSfbq0NH2VMe78kQtdikzG1JpgW7MLmIy
+X-Gm-Message-State: AOJu0YxeaA3npvLgDFgVPK+t1aUzks9GCkb+/ouCMbpRn7rxVixVxBJS
+	43VjgA6VLUw0edj9PG3SPRDadBbgYyzffxOIkKmEyV2RqfN0Qfonk3vrtfy3
+X-Google-Smtp-Source: AGHT+IE7VDhOKX8nAICfRhzVRk8lM5uPHxAy0HhZ8N8AMg6Nt/WT5TPoj42A5OYCKdk4WjaAEsO6zg==
+X-Received: by 2002:a2e:98cf:0:b0:2ec:43fa:25ad with SMTP id 38308e7fff4ca-2ec43fa26cemr6643101fa.7.1718831602764;
+        Wed, 19 Jun 2024 14:13:22 -0700 (PDT)
+Received: from [127.0.1.1] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f41700sm698738166b.152.2024.06.19.14.13.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 14:13:22 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH 0/2] Input: ims-pcu - annotate struct ims_pcu_flash_fmt
+ with __counted_by
+Date: Wed, 19 Jun 2024 23:13:20 +0200
+Message-Id: <20240619-ims-pcu-counted_by-v1-0-3ee0ead2e57d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f1f08297-e8c7-4673-88b5-e9b6bff69371@app.fastmail.com>
-In-Reply-To: <202406191343.D361BC137@keescook>
-References: <563b8f82-9865-40ae-85d3-055b3bcda7d6@quicinc.com>
- <202406191343.D361BC137@keescook>
-Date: Wed, 19 Jun 2024 23:12:25 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Jeff Johnson" <quic_jjohnson@quicinc.com>
-Cc: linux-hardening@vger.kernel.org,
- "open list" <linux-kernel@vger.kernel.org>
-Subject: Re: mips gcc plugin issues
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPBJc2YC/x3MQQ5AMBBA0avIrE3Slmi4iohQU2ahpFUh4u4ay
+ 7f4/4FAnilAkz3g6eTAm0uQeQZmGdxMyFMyKKFKUckaeQ24m4hmi+6gqR9v1NaqctCFFLqAFO6
+ eLF//tO3e9wNMtTSNZAAAAA==
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718831601; l=776;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=I/hTuc/zP+bvnQXWL0T7cIQLz1sFe7PWnKke4/qHAeA=;
+ b=VT0L280BZkvMlEAERFyMG/5nvfVfexUCgDSHGhpjwX/h8hEkIG8tMhPlPWj7oP84sNRLuDTOc
+ hhIbbRzr9i1C7qQiKgMwxhoWVaMeELADy3KeHJ6rPW2seEwL8ddHofM
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-On Wed, Jun 19, 2024, at 22:50, Kees Cook wrote:
-> On Tue, Jun 18, 2024 at 04:41:01PM -0700, Jeff Johnson wrote:
->> I see the following in my .config:
->> CONFIG_HAVE_GCC_PLUGINS=y
->> CONFIG_GCC_PLUGINS=y
->> CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
->> CONFIG_GCC_PLUGIN_RANDSTRUCT=y
->> 
->> So I'll turn those off, but just want to flag that this issue exists.
->> Seems either the plugins should work or the allmodconfig should turn them off.
->
-> Well, the plugins work with all the other compiler versions all the
-> various CI systems use. :) For example, I don't see this with distro
-> cross compilers:
->
-> $ mipsel-linux-gnu-gcc --version
-> mipsel-linux-gnu-gcc (Ubuntu 12.3.0-1ubuntu1) 12.3.0
->
-> I suspect this is a problem with the kernel.org crosstool builds? I'm
-> CCing Arnd, who might know more about this.
+The length is assigned before the first reference to the data flexible
+array (see ims_pcu_flash_firmware()), which allows for a straightforward
+annotation without further modifications.
 
-Yes, this is a known problem, and I don't think there is a good
-solution for it, compiler plugins on cross-compilers are inherently
-fragile.
+When at it, I also fixed an error message that repeats the word "input".
 
-The problem here is that a gcc plugin links against the
-compiler, not against code produced by it. I'm linking the
-crosstool compilers statically against libraries as much as
-possible in order to make them more portable between distros,
-but the downside of that is that plugins will only work in
-the environment that I was using to build these toolchains.
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+Javier Carrasco (2):
+      Input: ims-pcu - annotate struct ims_pcu_flash_fmt with __counted_by
+      Input: ims-pcu - drop repeated "input" in error message
 
-My build environment is an older Debian (in order to be
-portable to old glibc versions), but with the system compiler
-updated to gcc-13 (since x86 libgcc cannot be cross-compiled
-with an older compiler).
+ drivers/input/misc/ims-pcu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+---
+base-commit: 2102cb0d050d34d50b9642a3a50861787527e922
+change-id: 20240619-ims-pcu-counted_by-7ff24a731073
 
-The long-term solution of course is to replace all the
-gcc plugins with some other way of getting the same
-features, but that will still take some time.
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-     Arnd
