@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8EE762D0;
-	Wed, 19 Jun 2024 07:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B92770E7;
+	Wed, 19 Jun 2024 07:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718782796; cv=none; b=PG0oij6eHr7IoNGl+CzzhajB03nCaAbUtkpDIdcq/O98Vwll0yAmzNyHdevPLW1L/dDuQ3z9PXKO5lovEba2sI/ocstyqgJ9Gzi6/Mjxi2uXJswXHXyyDTukXepwhlSFX6k6AyzmUx2P/gmGwnqYwhadL7V63PQgljg424wHhtk=
+	t=1718782831; cv=none; b=JoCnCUf9ntmbakCbmmKGNR271PiM4+3wWQerl8TBt+OpQ2WOwtWYCnZeoNZLhmauGgCyNUwSKGORWI8YHYo1GTILnsVhUs6FwRL6nfmliqLdMNWaSJ2YmpYCZfDqY8hhRVi7tpe6FZouV0UrIo2LxFPKJzDvtQzRESX33d8aFFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718782796; c=relaxed/simple;
-	bh=IVR10lNSTwT0IwXijlAD79+7iT5vPFrc6tLLZmezPqU=;
+	s=arc-20240116; t=1718782831; c=relaxed/simple;
+	bh=aWm2Zn/yfgkVk8K8GvJUjzKZiA6iKLuYwUOr0Zn0WXM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gpiO4j4Ul9VeKDz4tu/VKoDs3LOnRvZauKIa8ALq/Tvjsy7PpRezExXW8lb9vr3A0Aoqj5O6urD9UKiYw+s+LxUbP6mTd78UkMtYQ5ciWAYU3aJ3BvbPKeLK9HZYVsLpsPD9PHCCHgUlLeSCTZpfbtm8uTUFqVaKmrdNsVjgd2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q400jElA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=axCOHomRyY+11Hur0QaCH7eHNn/xiJgyj4rk1W6i/Ld1efcQ6xpY8ylT7pC9AI4Xd1YxMAbkr7qUSiBxgYMAhV7IttTjivRWicH9DOnQ7Iw9cmSI38uHWK7U7/uBqtKAGirkGkf71SUG19fCd5zE+5CkDIEClHjuOoO0iMC4G8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqCGOksC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q400jElA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2521AC2BBFC;
-	Wed, 19 Jun 2024 07:39:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqCGOksC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF9A8C32786;
+	Wed, 19 Jun 2024 07:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718782795;
-	bh=IVR10lNSTwT0IwXijlAD79+7iT5vPFrc6tLLZmezPqU=;
+	s=k20201202; t=1718782831;
+	bh=aWm2Zn/yfgkVk8K8GvJUjzKZiA6iKLuYwUOr0Zn0WXM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q400jElAKkato+jquvprXOSg0PYrmu/85+6izFHUYYcA5VPTEDMKd+xDrlefWFdQb
-	 cAitzfuF/9naVmh4RyhDThMI+ti14R1byuJgVP0sAKb/cJN+uXmArJq/CBJak7dM+g
-	 WznCxhoEjqtIe0BaXLMzIgyf9wokbf3y3Ue7DiPTrVwr/APIZdLTh7F6IYruCgXUn7
-	 GI/znWAgjn/VicVwgt7CSMq4nCR+0Ir/fTAhbWeGI/ybm7fgLqJVai6TyElzlCkac5
-	 qagIjo70z0BdAU/pfJQw247/PHwJu+Geq9/QLP98e8NXtaU3IDI3QJzOGjOiiDE0jA
-	 iDKDbbas0axRg==
-Message-ID: <a55524d8-40f0-44ba-a42f-c63a487ccb45@kernel.org>
-Date: Wed, 19 Jun 2024 09:39:46 +0200
+	b=YqCGOksCjbMPmB8GsElxBtcwcCQPRiW3iRocOO2ivqrwETXd4j7td50Xq9yl5+uKD
+	 4PilYSrUTRTeArfaeo3HYH/1DGA0VgFqB7GgRRxwevYo+hx6p9mYVDrL49eD/W7uyw
+	 MfPXti8HPqVwm+QSFG6gHtLBYBwQHBJynHMzMVF7FzMy0Zebv9xSLfSkFRrGaCOvBn
+	 Fcm/fJ0Z1k+9eDg/F/tsbMOuBAJ+07N6Pr+aq69P/GL/NUrjGmvCB/UTaGJc1YUqxH
+	 18Fqno+pDWH2xIYja1AlcQRsov7t0Es8nYxBW+wjLhQA96+n3iMC2w9VI7DHhtRZRi
+	 q0eC6U4aExtUQ==
+Message-ID: <ebd65254-c0bb-4c07-810a-e46ba7e0b929@kernel.org>
+Date: Wed, 19 Jun 2024 09:40:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,109 +35,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: i2c: dw: Document compatible
- thead,th1520-i2c
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
- Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
- Drew Fustini <dfustini@tenstorrent.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Conor Dooley <conor@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Conor Dooley <conor.dooley@microchip.com>
-References: <20240618-i2c-th1520-v3-0-3042590a16b1@bootlin.com>
- <20240618-i2c-th1520-v3-1-3042590a16b1@bootlin.com>
- <f427b28c-420b-4174-a670-70f626f8061e@linux.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: linux-next: build failure after merge of the mediatek tree
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Julien Panis <jpanis@baylibre.com>, Mark Brown <broonie@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Nicolas Pitre <npitre@baylibre.com>
+References: <ZnBn-vSj-ssrJFr2@sirena.org.uk>
+ <01f2ee94-f8b0-449c-aa19-3ee38a2e36a1@baylibre.com>
+ <d87b7376-5ba2-4810-90cb-76648d4a8080@kernel.org>
+ <be5a8b12-b042-48cc-9508-759a2a285a8b@kernel.org>
+ <99b7f55f-2909-450f-88ce-8cbe8f41c7f8@baylibre.com>
+ <9674d79f-83c0-44bf-bcf0-e78f8bdbfbd3@linaro.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <f427b28c-420b-4174-a670-70f626f8061e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <9674d79f-83c0-44bf-bcf0-e78f8bdbfbd3@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 19/06/2024 08:40, Jarkko Nikula wrote:
-> Hi
-> 
-> On 6/18/24 10:42 AM, Thomas Bonnefille wrote:
->> Add documentation for compatible string thead,th1520-i2c which can be
->> used specifically for the TH1520 SoC.
+Il 18/06/24 20:03, Daniel Lezcano ha scritto:
+> On 18/06/2024 18:45, Julien Panis wrote:
+>> On 6/18/24 12:20, AngeloGioacchino Del Regno wrote:
+>>> Il 18/06/24 12:03, AngeloGioacchino Del Regno ha scritto:
+>>>> Il 18/06/24 09:49, Julien Panis ha scritto:
+>>>>> On 6/17/24 18:44, Mark Brown wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> After merging the mediatek tree, today's linux-next build (arm64
+>>>>>> defconfig) failed like this:
+>>>>>>
+>>>>>> /tmp/next/build/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3: Warning (graph_port): /fragment@4/__overlay__: graph port node name should be 'port'
+>>>>>> Error: /tmp/next/build/arch/arm64/boot/dts/mediatek/mt8186.dtsi:2399.29-30 
+>>>>>> syntax error
+>>>>>> FATAL ERROR: Unable to parse input tree
+>>>>>> make[4]: *** [/tmp/next/build/scripts/Makefile.lib:431: 
+>>>>>> arch/arm64/boot/dts/mediatek/mt8186-corsola-magneton-sku393216.dtb] Error 1
+>>>>>>
+>>>>>> Caused by commit
+>>>>>>
+>>>>>>    d7c1bde38bf37a5 ("arm64: dts: mediatek: mt8186: add default thermal zones")
+>>>>>>
+>>>>>> I have used the last version of the mediatek tree from 20240613 instead.
+>>>>>
+>>>>> Hello Mark,
+>>>>>
+>>>>> Here is the explanation:
+>>>>> https://lore.kernel.org/all/71d53ff6-fdae-440d-b60d-3ae6f0c881d9@baylibre.com/
+>>>>> https://lore.kernel.org/all/6d9e0f19-9851-4f23-a8b8-6acc82ae7a3d@baylibre.com/
+>>>>>
+>>>>> For some reason, the 2 first commits of the series were not applied
+>>>>> with the dts. These commits are needed because they contain some
+>>>>> definitions used by the dts.
+>>>>>
+>>>>> Julien
+>>>>
+>>>> I'm not sure how should I proceed here.
+>>>>
+>>>
+>>> Reiterating, I'm sure how should I proceed.
+>>>
+>>> I'm removing those patches from mediatek for-next until further notice.
+>>>
+>>> Regards,
+>>> Angelo
 >>
->> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
->> Acked-by: Conor Dooley <conor.dooley@microchip.com>
->> ---
->>   Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
->> index d9293c57f573..60035a787e5c 100644
->> --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
->> +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
->> @@ -33,6 +33,10 @@ properties:
->>             - const: snps,designware-i2c
->>         - description: Baikal-T1 SoC System I2C controller
->>           const: baikal,bt1-sys-i2c
->> +      - description: T-HEAD TH1520 SoCs I2C controller
->> +        items:
->> +          - const: thead,th1520-i2c
->> +          - const: snps,designware-i2c
->>   
+>> Just for my information: Should we just wait for another maintainer
+>> to pick the 2 missing patches ? Who is in charge of doing it ?
 > 
-> Your comment below makes me thinking is this change needed? So is it 
-> enough to specify "snps,designware-i2c" for the compatible string in 
-> patch 2/3?
+> I've picked the 2 first patches but they are going through the validation process 
+> through our CI. They will be available in a couple of days in linux-next.
+> 
+> If you want me to drop them and let them go through the Mediatek tree, just let me 
+> know.
+> 
 
-SoC specific compatible is always required (see writing bindings doc).
+Thanks but no, thanks :-)
 
-Best regards,
-Krzysztof
+Please, keep them in the thermal trees where they belong.
+I will adjust accordingly.
 
+Cheers,
+Angelo
