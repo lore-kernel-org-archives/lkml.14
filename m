@@ -1,90 +1,74 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D7E1CA92;
-	Wed, 19 Jun 2024 16:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAAA1CA92;
+	Wed, 19 Jun 2024 16:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718815520; cv=none; b=UCovuaeCeJHSaZpPf49Oa0qqfDOA0asEh4swJZJhLRY21kqIHDCfYIBqklAjWBvozVOPq9oHLHyIU45CMwkOSaXj21HUhyn2MlYVUHJSVmHlUTKhlpIfGliRuJIwRCLBJ6xDKy8F+TEeKQh5FT6XsfuMc12UQ0mOAOg8who7rqc=
+	t=1718815552; cv=none; b=u07P+wNx2syUt5tmWDOjiLTc0yeyDMBmaxksHwaE06fZcS8LCr55AInDG4SFnGSYH7rCByPC5MkrRn+h5rpr0UI7VPsK9da5eOL32Wlc1OAVaVcp9VqMj6+1dXp64H+atCz5/T0JiJH3b37a3JuWjhPj3D3WCl1Z2BraE9DHhhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718815520; c=relaxed/simple;
-	bh=qvVridwWwQmob31TyZVDbjKXPWXa87Ibcv2ivGGEZoQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Jxowu8YJFbtXipWpJrpnWBWLeanArW7O6FzLnSrNe+g9QhrlVcqJ+ruCbrQbRJTY0D2i1Puy40zccZrYJBlgzbx5s6AuocyjzE/34EJTqhA+tRb0D/+6dBQHkzhItleuUZt6RKgvPcV0MITRUFeJ0RKPzxBpZZp0OaO/hrV8ED8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=bRc4s9TG; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1718815552; c=relaxed/simple;
+	bh=K8uYWHQVt5wnGOLTeizQh7FySqtxu5oVMkUG6y75JQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DNdQQI+uI4op2XsNDVlhVjZyTJra5q/xQKinBpbbSNTExKkNK4mCXMLK696t/Ia0loqpXlMEsQndS8JBDKFPrDGuuR/Llxlomp7iIeRD/46OF6tVv7FZEL1Z9Gw5hys5HGedLDFjnhfXyw3HV+9ybFHXccXwF+2I/qfwbhmw0P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UM1YHjgh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="bRc4s9TG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1718815510; bh=qvVridwWwQmob31TyZVDbjKXPWXa87Ibcv2ivGGEZoQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=bRc4s9TGmBdnvHyTSe1m0SNC5qq5gEodlXzjnVFL7lOwj25+wNWW1ptl4p2p/NwxT
-	 i56foqtE6oXSF/5aiIDOkuWvYGUkwsT3UKHcuFtb9BiZwVIsNFlnY7UVXjE6CKl1y1
-	 BzkhiU8A72XCwZUeGpaFQOEHwAhzPdEX62o3Vj7I=
-From: Luca Weiss <luca@lucaweiss.eu>
-Date: Wed, 19 Jun 2024 18:42:31 +0200
-Subject: [PATCH 5/5] arm64: dts: qcom: msm8976: Use mboxes in smsm node
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UM1YHjgh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798FDC32786;
+	Wed, 19 Jun 2024 16:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718815551;
+	bh=K8uYWHQVt5wnGOLTeizQh7FySqtxu5oVMkUG6y75JQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UM1YHjghpU8mmx0WQ80JK3tpB5rYEtG8qffkGASY4KfAADQNuJpHNBv9TCRrI63SJ
+	 2ZdNtFA5Lg+cGxfbrtxK5rueGtv3NlJl8u6EATbzdzfmsCXFtK+cKBQWn991o0jKw2
+	 eqZWP55RjvG97ECV6cVGYNq78LIkxfmzzfsuSW+xagY0neWU9L9Dyw87vAXeRvOmAA
+	 EUQmE3WSP3zdUXlRa7GqJTbKX9KdY/c4J2kkD6tuZxtBodYSy9znEaypOse6zRmh7u
+	 0XkK6oDY2PHUjRSuXj/87/GIw7Yde7lzDyeRDeD3Ai6qxaeknT1W8NVpRM1Dv5riX+
+	 u7nWuMGuYlv2g==
+Date: Wed, 19 Jun 2024 17:45:47 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] net: usb: ax88179_178a: improve link status logs
+Message-ID: <20240619164547.GM690967@kernel.org>
+References: <20240618115054.101577-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240619-smsm-mbox-dts-v1-5-268ab7eef779@lucaweiss.eu>
-References: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
-In-Reply-To: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=769; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=qvVridwWwQmob31TyZVDbjKXPWXa87Ibcv2ivGGEZoQ=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmcwsUDLw3yV8gKY79ruCKuzpYguejuRsxbBHOl
- xHzwilmhmSJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnMLFAAKCRBy2EO4nU3X
- VnXcD/9+mIzqYuSxhA4VBRwhVSVsoK/QkX06RzREXNuUvml0w4U1xc099Pnn3NJOQs/R/z2OnFN
- iFYm9WzFGE5VMSWOd3fzgwHzIGesUtm2gZnVkntoI8+a1yD0XBubXqxxJEybiavqLDuQXPWl42S
- jCnUX5U6rmKfHV7ZaD7UGAzwbZPBgxz37kP0MF0R6xOx08cspZlOCne4pV3BTFMxAun1FTFmCqM
- 1uEdaGAILohyrprMw9Sld0QqpiZJpTWRxt9kgmqMoS2hV+GpRhdjPBQulfAQxDL2t/Bj00XnCwq
- YL+JXKuudGYEo9AjYniybQSj3CvTtvMhuEK2ovvscA3GtmIwcQunk3UsH+13W3yW8BgjnLcv6Nx
- 6RSYX6RcJOiBtAkOb7wDnbnFkSBvsXrZugClXZQ3NYmlorVPYUBgKA1WhF8ntlYZEPLBPD1z8SG
- udPh899ddMdJnRqS/qbCnRovnvAmNpT5EiYGELD8mFq4rQHxgJBB6/XvWenjII/yTWQW2MrxUXX
- aS7v4y52StANLIqn14gmpgstC8R9lXlv0eBbF/roIgVrHa3WNJbIlXpt8lXfY2lo/F+GjetorlI
- xSigWcpB5/rBDenOi2CCDPwxx6J9foefJzdP30cWbNrNxtCBXu2POcnN4+u6P0vcvj7EtL4QVVo
- uQYKBpz+078/nXw==
-X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618115054.101577-1-jtornosm@redhat.com>
 
-With the smsm bindings and driver finally supporting mboxes, switch to
-that and stop using apcs as syscon.
+On Tue, Jun 18, 2024 at 01:50:40PM +0200, Jose Ignacio Tornos Martinez wrote:
+> Avoid spurious link status logs that may ultimately be wrong; for example,
+> if the link is set to down with the cable plugged, then the cable is
+> unplugged and after this the link is set to up, the last new log that is
+> appearing is incorrectly telling that the link is up.
+> 
+> In order to avoid errors, show link status logs after link_reset
+> processing, and in order to avoid spurious as much as possible, only show
+> the link loss when some link status change is detected.
+> 
+> cc: stable@vger.kernel.org
+> Fixes: e2ca90c276e1 ("ax88179_178a: ASIX AX88179_178A USB 3.0/2.0 to gigabit ethernet adapter driver")
+> Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+> ---
+> v2:
+>   - Fix the nits
+> v1: https://lore.kernel.org/netdev/20240617103405.654567-1-jtornosm@redhat.com/
 
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
----
- arch/arm64/boot/dts/qcom/msm8976.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Hi Jose,
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-index e299d42c5d98..d62dcb76fa48 100644
---- a/arch/arm64/boot/dts/qcom/msm8976.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-@@ -439,9 +439,7 @@ smsm {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		qcom,ipc-1 = <&apcs 8 13>;
--		qcom,ipc-2 = <&apcs 8 9>;
--		qcom,ipc-3 = <&apcs 8 19>;
-+		mboxes = <0>, <&apcs 13>, <&apcs 9>, <&apcs 19>;
- 
- 		apps_smsm: apps@0 {
- 			reg = <0>;
+Thanks for the updates.
+This version looks good to me.
 
--- 
-2.45.2
+Reviewed-by: Simon Horman <horms@kernel.org>
 
+...
