@@ -1,101 +1,120 @@
-Received: from mail02.habana.ai (habanamailrelay.habana.ai [213.57.90.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C8376413
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.57.90.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752066F315;
+	Wed, 19 Jun 2024 06:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718778903; cv=none; b=n3uO4wxX56868sMaaGza8RtMLERjSG0QIxCoxq1Ug2+Ul3cpfwMlSBfYVh+fWwSaHKf7yWnTKQrY9FSptCkTgdqft30iIxgcS5VuJOXs9gtZXPc19Qd+eRrC61eaZ3i9+4+cVZnWTXWWit9MzaGgsr3a8h2A2eThPkAg25plhmA=
+	t=1718778910; cv=none; b=ijundILy3YkmMyQbN6/3vVi5Ey6yIVuK/89eC+GmzHsJMcmoMJ5bp6iShkV4CuN3AYwD0wU2eVQ9jG6xoYOwtd9284mrWjrLZ4KZVl7D+ZpspyPWVrBFQb6J+hK4UM7oppAjK0XL9pPQ9e4+jBFEgQtAzKmr2Cq/8YlPNeJqnZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718778903; c=relaxed/simple;
-	bh=WmGwTdZ13Z8IYOL25S14t4gDqP3Y6eNfWVJIbC6SN+M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZUrRTJ2Q8B1rlaSaC3T3ZIMi8zQzLtU0e2clNkE2g0QkTmChfS/jdF457WmH8XipN25KUlIEsirk30KixtkPqry1Ljico8OcbXRqmM1tqjPcEpuqXTGCg3EqlUhqCeCvP5xOp7fCGrSkMDiXJ/dEItQ5gSKAgcTv96TJk7p8uLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=O8YH0G0k; arc=none smtp.client-ip=213.57.90.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
+	s=arc-20240116; t=1718778910; c=relaxed/simple;
+	bh=UDqcr8PsQ5epcKbuV5qSLh/aCNPCwA9b1ki+GensfqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r6rf1Y7+tLYTAK6HMUCfVkQJtEGJEfxCOngZgojo09ZocvU5WDH1inI9zQlEymxsj0mBLi5llMiTRznbmuoE6+jG/vPQGdge8RfevlJM3tSdjNajuejGfYMBPH5Qkk6ETHcNuIH/No99ZNMUWU2g908VuUI+9ElMkM60Tq69hF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJNscaX0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="O8YH0G0k"
-Received: internal info suppressed
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1718778906; bh=WmGwTdZ13Z8IYOL25S14t4gDqP3Y6eNfWVJIbC6SN+M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O8YH0G0kyvX/V85a+M29ZhwxTrsZOR6+qjlJgz1IbDCYaljs61qgao/LEpVrn1Gdp
-	 1uF2CSNK/I17BTFlZq1UFKxpiPW/7WR14oBg906VTWEGO/Uv6p6xHkfuXo1MN0KYF5
-	 Xn+N6wOrbrCF4V0rDwEBZ/5bRq+7NO6cXRPJHirNxuKZccM3gt/TiQJf/5vda3DSZG
-	 tHQfE6rfhUGeeQkHM4m5FtmGRe0VEy/yGEDRPeTvUJtJCHkv236iO/sV1tVmPaM8uF
-	 56UvbRgi3UnwH64So5Enh9TnGtC+Zrf3VNLFHDDTl+9MYhXLJAjIRpKiLLPWYoVPY3
-	 QHUsCVSj6YvOQ==
-Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 45J6YQB81377354;
-	Wed, 19 Jun 2024 09:34:33 +0300
-From: Ofir Bitton <obitton@habana.ai>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 8/9] accel/habanalabs: move heartbeat work initialization to early init
-Date: Wed, 19 Jun 2024 09:34:24 +0300
-Message-Id: <20240619063425.1377327-8-obitton@habana.ai>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619063425.1377327-1-obitton@habana.ai>
-References: <20240619063425.1377327-1-obitton@habana.ai>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJNscaX0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155AAC2BBFC;
+	Wed, 19 Jun 2024 06:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718778910;
+	bh=UDqcr8PsQ5epcKbuV5qSLh/aCNPCwA9b1ki+GensfqY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UJNscaX02fXkkgISd7PVEF9pJRuhG/hnRJtxHswIZBsqIzODDbBxm1b9QgFwjr/96
+	 bZvIRBfeGJLznjWkjtYobfcOcWPT35xVhLc8EgY4jbbUcydSi+NjCOCp4pBhGBLYCF
+	 p2mi1cyHchK3jaWI0W7ZReXJD1TVu5n9Ut6KHqUqzTt+XQZpkmVE4ZtXG3rD4CQgQh
+	 RJlCnQ9oSar8YSJQr+GDB3IV5dR8SzxliEOCRKBUWBKpL4kCh0R1hp89y9Ea83rQH7
+	 Dx/OiQzkKr1JSkpVGQTMUB9b3e/PnTGIWQJnSVpDOO+wNSFeoLf4xSRhvzpGn23cpg
+	 V2hoiHvSLpXgA==
+Message-ID: <fd9fea0a-c5ff-46ca-af12-7729f78f3768@kernel.org>
+Date: Wed, 19 Jun 2024 08:35:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] dt-bindings: net: Convert fsl-fman to yaml
+To: Frank Li <Frank.Li@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Richard Cochran <richardcochran@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Madalin Bucur <madalin.bucur@nxp.com>, Sean Anderson <sean.anderson@seco.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev
+References: <20240618-ls_fman-v2-0-f00a82623d8e@nxp.com>
+ <20240618-ls_fman-v2-2-f00a82623d8e@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240618-ls_fman-v2-2-f00a82623d8e@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Tomer Tayar <ttayar@habana.ai>
+On 18/06/2024 23:53, Frank Li wrote:
+> Convert fsl-fman from txt to yaml format and split it fsl,fman.yam,
+> fsl,fman-port.yaml, fsl-muram.yaml, fsl-mdio.yaml.
+> 
+> Addition changes:
+> fsl,fman.yaml:
+>   - Fixed interrupts in example.
+>   - Fixed ethernet@e8000 miss } in example.
+>   - ptp-timer add label in example.
+>   - Ref to new fsl,fman*.yaml.
+>   - Reorder property in example.
+>   - Keep only one example.
+>   - Add const for #address-cells and #size-cells.
+>   - Use defined interrupt type.
+>   - ptp example use node name phc.
+> 
 
-The device heartbeat work is currently initialized at
-device_heartbeat_schedule() which is called at the end of
-hl_device_init().
-However hl_device_init() can fail at a previous step, and in such a
-case, a subsequent call to hl_device_fini() will lead to calling
-cleanup_resources() and accessing this work uninitialized.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-As there is no real need to re-initialize this work every time it is
-rescheduled, move this initialization to device_early_init() to be done
-once and early enough.
-
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
-Reviewed-by: Ofir Bitton <obitton@habana.ai>
----
- drivers/accel/habanalabs/common/device.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index 050c278e5ddb..e0cf3b4343bb 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -30,6 +30,8 @@ enum dma_alloc_type {
- 
- #define MEM_SCRUB_DEFAULT_VAL 0x1122334455667788
- 
-+static void hl_device_heartbeat(struct work_struct *work);
-+
- /*
-  * hl_set_dram_bar- sets the bar to allow later access to address
-  *
-@@ -963,6 +965,8 @@ static int device_early_init(struct hl_device *hdev)
- 		goto free_cb_mgr;
- 	}
- 
-+	INIT_DELAYED_WORK(&hdev->work_heartbeat, hl_device_heartbeat);
-+
- 	INIT_DELAYED_WORK(&hdev->device_reset_work.reset_work, device_hard_reset_pending);
- 	hdev->device_reset_work.hdev = hdev;
- 	hdev->device_fini_pending = 0;
-@@ -1604,8 +1608,6 @@ static inline void device_heartbeat_schedule(struct hl_device *hdev)
- 	 */
- 	hdev->eq_heartbeat_received = true;
- 
--	INIT_DELAYED_WORK(&hdev->work_heartbeat, hl_device_heartbeat);
--
- 	schedule_delayed_work(&hdev->work_heartbeat,
- 			usecs_to_jiffies(HL_HEARTBEAT_PER_USEC));
- }
--- 
-2.34.1
+Best regards,
+Krzysztof
 
