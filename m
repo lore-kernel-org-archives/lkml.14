@@ -1,254 +1,134 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D09115381C
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B177114C580;
+	Wed, 19 Jun 2024 14:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718806160; cv=none; b=VTXsgXpE01SukJQN8XsGNqzMDYgSQWaoY74Y7eCIJpp9Nj8CXgYupnQA4DlnPbIYma8U+/reK59L0R4mbZIDJTKwHyS3GZ3geK8Eub/RBsoJP6MXWJhCa08e4ciydVhQ/8BDIfOBofXVsZKM70JM2bFCxfH4ylF7hq25PkyDNzU=
+	t=1718806174; cv=none; b=VvEqiQkylnZnrlDXi4Tdrto7t46Sl/k7UiA4JF9aLfCJXiDt+SFAm2T6ncFdvGjDyfMNDB5anQoeZhbltGvlFkfe7WOrCNAaAiS+/mXoHltmzsUMJYkEPsP9zSJG4JyiQCn23VDt14i9xReLF/wn8eW9oKHc3gRum1JDSIKKSTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718806160; c=relaxed/simple;
-	bh=UqitLzzPeo8+v+foWj/D1g1tTUg9dHcKK5jhxbU/5dc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ku0TgJ7LU4PNtSjNSDEQWzOrcmyGIS5WZs90wE/NUZz6XMLYtSXKAJuiUOz//ytgHwUenanSnIOGUn5eYQ8Mi4o6Sl9kPkyasuUCfDZZMEXPRVWRnwm8QkBIzK4L3szfK5vI34ZDcH+MFBqd8ADl6Z539f1ZNxaydhysgo9aHYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qs/GKz/5; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718806174; c=relaxed/simple;
+	bh=vNTWUvzvwPsimUHMwHuNMYFoXl+1mUAFJHC4OqY52U4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0GmzCtCf8Q/mlwxB4alEYPpBpzvqc4iCgc/ttZQRKlRk8qmp9yVu1XKSXtu34MAn7RhYTev0YKinAdzvsFzz3Q80QTMojRlg03O+y2kwFRO3S2WHxCokUb8k13RTPBDyDz+3JkiAhFQGESssSZVjg/AEsiJ91jrpaQloH2qsKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CfPSkKHk; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qs/GKz/5"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so68811861fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718806157; x=1719410957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jH7teSUneCZWfoVt/91/lHeZpMwu3/Yn++4TJjeU7NA=;
-        b=Qs/GKz/5laiNYvsjeBxiBkVMGf/5lX6TdCWc6ifXLOHgmafbxHh2zpaImHh9Aj7Z2y
-         TyThogMJ1kLkUrYNneisnVLk0Xo6zFuDgxy/H+IAcao0s98TKJrXJ+4812XNsNKFpvMr
-         Q4WH+vfDxF3QDnMROa3kDLorTNL2hG+0xoD+C/wUumglztuHan1jB5e1hvG/OxlbGnAk
-         iC3q199BeVgMRNPD9Buz20CPnxCc/mWExi6FmsV4hi6MZQ5wOlIrnSVeaGPeS6LO71Zb
-         0vZJoHp7bz4l7vpkJdZantaZNhc6nhoMXd39Fov9k1UcZeiceWknmsAaPpiZkv+S+agn
-         fBzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718806157; x=1719410957;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jH7teSUneCZWfoVt/91/lHeZpMwu3/Yn++4TJjeU7NA=;
-        b=TPTWziBqCJJRxgHn//Mx2VsSnOHDhebvkBfd30Epm3GMOv5onI+5na+BFo4dMuI+WO
-         A1L4ZISmZJoebHce2jpy+0b69KhL/4Oogz5aCSWijhfMtCXmpaBd2uKw40m3Ygn3Vpl1
-         YcpleMEhfv7yTZCaazRoPA4pitz8iPC40S6ZUhtDUKPvg+fTLtCElk6DbuFe368soKaz
-         dd6gpB/gUMzUB0/Xh/ngWRSMm11NdNf71SHvDa7X0H2xe4vujpVpwEQ8jyd3KvCOrivB
-         XFk6Alr9clFsKdgTJGbRRQFkhNTe4sd98i/Jmx7GLtmQBHP42NPDYGMcXz2ysq/3H47r
-         wZbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcF+4qFxZdK8QupGTcagkqF1R+lkayshiyME43ewfii0FaGD4IYO1aUDb1BDVODVHYIV52g5m0r+MVAPeArdH5/ltLTuzXt1YdlV9s
-X-Gm-Message-State: AOJu0YwH5Bdl5sUKqga7H8rK4+7XSGoC2xIGZYRbY7Olg6bk62BTJg+t
-	hIhyUp3iRLhASdKF+CskuBD5oLgJJvyUvOphQwzgZ+7JTQy8t3GGCK/UCfG9qF8=
-X-Google-Smtp-Source: AGHT+IGoJr5DuwJJ1A2TjVENIUslYHC6GqIXMmnq00+SVaUdczAOZsm6VolY8hrQoNfjsd/Xd4Uhig==
-X-Received: by 2002:a05:6512:3d0e:b0:52c:cda0:18bf with SMTP id 2adb3069b0e04-52ccda019d6mr967714e87.4.1718806156688;
-        Wed, 19 Jun 2024 07:09:16 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2872241sm1787003e87.124.2024.06.19.07.09.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 07:09:16 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Nikunj Kela <nkela@quicinc.com>,
-	Prasad Sodagudi <psodagud@quicinc.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] OPP/pmdomain: Set the required_dev for a required OPP during genpd attach
-Date: Wed, 19 Jun 2024 16:08:48 +0200
-Message-Id: <20240619140849.368580-7-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619140849.368580-1-ulf.hansson@linaro.org>
-References: <20240619140849.368580-1-ulf.hansson@linaro.org>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CfPSkKHk"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 4629887E06;
+	Wed, 19 Jun 2024 16:09:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1718806170;
+	bh=eQ6vqBt94joW7Ooa01IlSDqeWrqMQA+Hz1uPRPlEmGM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CfPSkKHkACfQ6hgJUgqu2RlNphNugjv79GL2XiDs1EYtKeTKiXb5IJoanlpGWfxDd
+	 NUauXk09BAtK+1vaUGjLUjvPLjXUxLk/issObN2e4envrlkJ+udHNGs44QO/v4SafL
+	 057n5R5ghAWEYIsxU3i4db/Sa8EzB7G3Fo3VcaDg8VuDSSHbU4J+6lqQA6neKzv0KX
+	 97Op4k+d4+C4a8jNuNRaqOjMxKk6veVOvj2QH3+4lrpkj3aika7+89RxnGxDBr3yl/
+	 +L923G6m86MDL47ag24C06g/1wVz1tJAdSbmwl/pwt9Fc+alnnl4FmOuyQGd29oTq1
+	 P1FQgYhcJ1qmA==
+Message-ID: <c74f393d-7d0a-4a34-8e72-553ccf273a41@denx.de>
+Date: Wed, 19 Jun 2024 15:14:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next,PATCH 2/2] net: stmmac: dwmac-stm32: stm32: add
+ management of stm32mp25 for stm32
+To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240614130812.72425-1-christophe.roullier@foss.st.com>
+ <20240614130812.72425-3-christophe.roullier@foss.st.com>
+ <4c2f1bac-4957-4814-bf62-816340bd9ff6@denx.de>
+ <09010b02-fb55-4c4b-9d0c-36bd0b370dc8@foss.st.com>
+ <39d35f6d-4f82-43af-883b-a574b8a67a1a@denx.de>
+ <8c3f1696-d67c-4960-ad3a-90461c896aa5@foss.st.com>
+ <3dee3c8a-12f0-42bd-acdf-8008da795467@denx.de>
+ <aee3f6d2-6a44-4de6-9348-f83c4107188f@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <aee3f6d2-6a44-4de6-9348-f83c4107188f@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Through dev_pm_opp_set_config() the _opp_attach_genpd() allows consumer
-drivers to hook up a device to its PM domains. This works for both a single
-and multiple PM domains. Their corresponding virtual devices that are
-created by genpd during attach, are later being assigned as the
-required_devs for the corresponding required OPPs.
+On 6/19/24 9:41 AM, Christophe ROULLIER wrote:
 
-In principle this works fine, but there are some problems. Especially as
-the index for a "required-opps" may not necessarily need to match the index
-for the "power-domain" in DT, in which case things gets screwed up.
+Hi,
 
-To improve the situation, let's instead assign the required_devs during
-device attach in genpd, by using _opp_set_required_dev(). At this point the
-genpd and the genpd's OPP table are known for the device in question, which
-then can be used to find the correct index for the required-dev.
+>>>>>>> +static int stm32mp2_configure_syscfg(struct plat_stmmacenet_data 
+>>>>>>> *plat_dat)
+>>>>>>> +{
+>>>>>>> +    struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+>>>>>>> +    u32 reg = dwmac->mode_reg;
+>>>>>>> +    int val = 0;
+>>>>>>> +
+>>>>>>> +    switch (plat_dat->mac_interface) {
+>>>>>>> +    case PHY_INTERFACE_MODE_MII:
+>>>>>>> +        break;
+>>>>>>
+>>>>>> dwmac->enable_eth_ck does not apply to MII mode ? Why ?
+>>>>>
+>>>>> It is like MP1 and MP13, nothing to set in syscfg register for case 
+>>>>> MII mode wo crystal.
+>>>>
+>>>> Have a look at STM32MP15xx RM0436 Figure 83. Peripheral clock 
+>>>> distribution for Ethernet.
+>>>>
+>>>> If RCC (top-left corner of the figure) generates 25 MHz MII clock 
+>>>> (yellow line) on eth_clk_fb (top-right corner), can I set 
+>>>> ETH_REF_CLK_SEL to position '1' and ETH_SEL[2] to '0' and feed ETH 
+>>>> (right side) clk_rx_i input with 25 MHz clock that way ?
+>>>>
+>>>> I seems like this should be possible, at least theoretically. Can 
+>>>> you check with the hardware/silicon people ?
+>>> No it is not possible (it will work if speed (and frequency) is fixed 
+>>> 25Mhz=100Mbps, but for speed 10Mbps (2,5MHz) it will not work.
+>>
+>> Could the pll4_p_ck or pll3_q_ck generate either 25 MHz or 2.5 MHz as 
+>> needed in that case ? Then it would work, right ?
+> 
+> Yes you can set frequency you want for pll4 or pll3, if you set 25MHz 
+> and auto-negotiation of speed is 100Mbps it should work (pad ETH_CK of 
+> 25MHz clock the PHY and eth_clk_fb set to 25MHz for clk_RX)
+> 
+> but if autoneg of speed is 10Mbps, then 2.5MHz is needed for clk_RX (you 
+> will provide 25Mhz)
 
-As a part of this change, genpd also starts to assign the required_devs
-even for the single PM domain case, as a way to align the behaviour.
-Furthermore, to maintain the existing behaviour for consumers of
-_opp_attach_genpd(), let's adapt it to the new genpd behaviour.
+What if:
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/opp/core.c      | 45 +--------------------------------
- drivers/pmdomain/core.c | 55 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 44 deletions(-)
+- Aneg is 10 Mbps
+- PLL4_P_CK/PLL3_Q_CK = 2.5 MHz
+- ETH_REF_CLK_SEL = 1
+- ETH_SEL[2] = 0
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index bc1ed1d3d60d..7e567b479c3d 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -2369,7 +2369,6 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
- 			continue;
- 
- 		dev_pm_domain_detach(opp_table->required_devs[index], false);
--		opp_table->required_devs[index] = NULL;
- 	}
- }
- 
-@@ -2393,8 +2392,7 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
- static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
- 			const char * const *names, struct device ***virt_devs)
- {
--	struct device *virt_dev, *gdev;
--	struct opp_table *genpd_table;
-+	struct device *virt_dev;
- 	int index = 0, ret = -EINVAL;
- 	const char * const *name = names;
- 
-@@ -2427,47 +2425,6 @@ static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
- 			goto err;
- 		}
- 
--		/*
--		 * The required_opp_tables parsing is not perfect, as the OPP
--		 * core does the parsing solely based on the DT node pointers.
--		 * The core sets the required_opp_tables entry to the first OPP
--		 * table in the "opp_tables" list, that matches with the node
--		 * pointer.
--		 *
--		 * If the target DT OPP table is used by multiple devices and
--		 * they all create separate instances of 'struct opp_table' from
--		 * it, then it is possible that the required_opp_tables entry
--		 * may be set to the incorrect sibling device.
--		 *
--		 * Cross check it again and fix if required.
--		 */
--		gdev = dev_to_genpd_dev(virt_dev);
--		if (IS_ERR(gdev))
--			return PTR_ERR(gdev);
--
--		genpd_table = _find_opp_table(gdev);
--		if (!IS_ERR(genpd_table)) {
--			if (genpd_table != opp_table->required_opp_tables[index]) {
--				dev_pm_opp_put_opp_table(opp_table->required_opp_tables[index]);
--				opp_table->required_opp_tables[index] = genpd_table;
--			} else {
--				dev_pm_opp_put_opp_table(genpd_table);
--			}
--		}
--
--		/*
--		 * Add the virtual genpd device as a user of the OPP table, so
--		 * we can call dev_pm_opp_set_opp() on it directly.
--		 *
--		 * This will be automatically removed when the OPP table is
--		 * removed, don't need to handle that here.
--		 */
--		if (!_add_opp_dev(virt_dev, opp_table->required_opp_tables[index])) {
--			ret = -ENOMEM;
--			goto err;
--		}
--
--		opp_table->required_devs[index] = virt_dev;
- 		index++;
- 		name++;
- 	}
-diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index 74ebb8a423be..a38d08862a61 100644
---- a/drivers/pmdomain/core.c
-+++ b/drivers/pmdomain/core.c
-@@ -2774,6 +2774,57 @@ static void genpd_dev_pm_sync(struct device *dev)
- 	genpd_queue_power_off_work(pd);
- }
- 
-+static struct opp_table *genpd_find_opp_table(struct generic_pm_domain *genpd,
-+					      unsigned int depth)
-+{
-+	struct opp_table *opp_table;
-+	struct gpd_link *link;
-+
-+	if (genpd->opp_table)
-+		return genpd->opp_table;
-+
-+	list_for_each_entry(link, &genpd->child_links, child_node) {
-+		struct generic_pm_domain *parent = link->parent;
-+
-+		genpd_lock_nested(parent, depth + 1);
-+		opp_table = genpd_find_opp_table(parent, depth + 1);
-+		genpd_unlock(parent);
-+
-+		if (opp_table)
-+			return opp_table;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int genpd_set_required_opp_dev(struct device *dev,
-+				      struct device *base_dev)
-+{
-+	struct generic_pm_domain *genpd = dev_to_genpd(dev);
-+	struct opp_table *opp_table;
-+	int ret = 0;
-+
-+	if (!dev_pm_opp_of_has_required_opp(base_dev))
-+		return 0;
-+
-+	genpd_lock(genpd);
-+	opp_table = genpd_find_opp_table(genpd, 0);
-+	genpd_unlock(genpd);
-+
-+	if (opp_table) {
-+		struct dev_pm_opp_config config = {
-+			.required_dev = dev,
-+			.required_opp_table = opp_table,
-+		};
-+
-+		ret = devm_pm_opp_set_config(base_dev, &config);
-+		if (ret < 0)
-+			dev_err(dev, "failed to set opp config %d\n", ret);
-+	}
-+
-+	return ret;
-+}
-+
- static int genpd_set_required_opp(struct device *dev, unsigned int index)
- {
- 	int ret, pstate;
-@@ -2830,6 +2881,10 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
- 	dev->pm_domain->detach = genpd_dev_pm_detach;
- 	dev->pm_domain->sync = genpd_dev_pm_sync;
- 
-+	ret = genpd_set_required_opp_dev(dev, base_dev);
-+	if (ret)
-+		goto err;
-+
- 	ret = genpd_set_required_opp(dev, index);
- 	if (ret)
- 		goto err;
--- 
-2.34.1
+?
 
+Then, clk_rx_i is 2.5 MHz, right ?
+
+Does this configuration work ?
+
+> . For RMII case, frequency from pll (eth_clk_fb) is 
+> automatically adjust in function of speed value, thanks to diviser /2, 
+> /20 with mac_speed_o.
