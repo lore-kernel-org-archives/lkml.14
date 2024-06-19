@@ -1,349 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D2A15FCF9
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 21:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5891115A845;
+	Wed, 19 Jun 2024 21:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718830890; cv=none; b=khaCqKHDkezWRQYqgyGRifTXq9yV7mi07N6+WNy6TV7xYjv6XItdlYT4twTXfAvwmkcFxz//oVn0VTilZ+/3+/mDz2F5KqRR3HDqfDShZP5aWaqFF0h4YnSk8Hy8xDqtWBd0RBW7CPDbpnraC2rL0fvEBfj12ePRM3NWsUXN00k=
+	t=1718830989; cv=none; b=FINZdNVJI4Hr++x7BaiO0wshThBpJv7GK51g+TJkTTklnC7L+YnP9F69pIUYKtKTB+fGgjrkLKKFlhmCuJFUOl9gX1j8LYs0ADIBnjQLetR/RHemsc13UCq62YBPOvXWF+frdUcSt0HigHWIQ6xTTjSqVIouFHs+bcbkAoQW3fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718830890; c=relaxed/simple;
-	bh=KV/Ip7SfvIP+ZIPGYiaJ2m/jXM/xAUkm0KRArWYB2GM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FcWlEucwM8f9v1s3fZQy7h4A5jTWDsLrKiHW7EdS9fnKGJk7jvnW9pBlIuCF7KO8+sYsgmWt9CCOyLNOA9x9sCZldeiFbEPxG+LLsAcUi27nuGVBbg9Jjgje7+ttrNYEF3BySt8fQWDNxkDRuQfSK265aUTeUhkOIWAvorlPszw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fkrDCmzN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718830989; c=relaxed/simple;
+	bh=yQBW8z4axysHiGN+e7i8nXPi1UBkcEmQK0mdRQbQ40Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gIPDSelBvVKF+zozRu60vA7zd0JTCuK4/mq2SH+s7ua+oNs3/1ZYw82k7q8I2VofYKtP/ZUZrihaIXnh4RiGTDu+tPTvFxQuY/AXVoyTX4KX2QvqOqWhSXbNerI//QPmzdxMeB1b37HPzO8ayMXxPlQdvYSamkftz5xauRCk2os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=VO0W1bOY; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fkrDCmzN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718830887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zzkKEa7BdE2/O+uVW9F5rPn2PjchdvcFkglI5xUOAfc=;
-	b=fkrDCmzN0eGNnFYm8ihARu+EKsQfN8J+bfNbWUmW342KLYoFynn+ocxtEIg7hsYQZC5v1U
-	v6BxB6cXrR/lhOT6jDFmZKUL3Yf4tuLAxPe5cHoPsGBze2zXh33v3YicCHCJeGv+gEuKDa
-	mr55Tnk6zeVvGgQMcOiaJSLik7FyptM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-UGR-sFqiPsGgLlV9YV9dgw-1; Wed,
- 19 Jun 2024 17:01:22 -0400
-X-MC-Unique: UGR-sFqiPsGgLlV9YV9dgw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C660319560B0;
-	Wed, 19 Jun 2024 21:01:20 +0000 (UTC)
-Received: from antares.redhat.com (unknown [10.39.193.189])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 213CE19560AE;
-	Wed, 19 Jun 2024 21:01:15 +0000 (UTC)
-From: Adrian Moreno <amorenoz@redhat.com>
-To: netdev@vger.kernel.org
-Cc: aconole@redhat.com,
-	echaudro@redhat.com,
-	horms@kernel.org,
-	i.maximets@ovn.org,
-	dev@openvswitch.org,
-	Adrian Moreno <amorenoz@redhat.com>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 10/10] selftests: openvswitch: add emit_sample test
-Date: Wed, 19 Jun 2024 23:00:11 +0200
-Message-ID: <20240619210023.982698-11-amorenoz@redhat.com>
-In-Reply-To: <20240619210023.982698-1-amorenoz@redhat.com>
-References: <20240619210023.982698-1-amorenoz@redhat.com>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="VO0W1bOY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1718830985; bh=yQBW8z4axysHiGN+e7i8nXPi1UBkcEmQK0mdRQbQ40Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=VO0W1bOYD4LKSXAnWaxjnNtauATSOP6y4Nhuk45OsHAXKWxoTWGIGsh4iM7ri4x6A
+	 Z8K46knseGue4T498sGUiRW2jdt13F+IGi/7tRTAa3W6gNsKl4oZsuSvbE33cX5rRN
+	 aRO6IkhXunAHob6gTm8iblN9DWzkICM/MHQHDVcU=
+From: Luca Weiss <luca@lucaweiss.eu>
+Date: Wed, 19 Jun 2024 23:02:45 +0200
+Subject: [PATCH 1/7] dt-bindings: mailbox: qcom: add compatible for MSM8226
+ SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240619-msm8226-cpufreq-v1-1-85143f5291d1@lucaweiss.eu>
+References: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
+In-Reply-To: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+ Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=866; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=yQBW8z4axysHiGN+e7i8nXPi1UBkcEmQK0mdRQbQ40Q=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmc0eCyg0B9hONg1K6PiEtWtpKJoZsDpD7XEbtb
+ d1l08wZ8K+JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnNHggAKCRBy2EO4nU3X
+ Vq40D/9fnWO1r3tYievE0u6euDNtlgexLtRgFSxWJ2hDxy/uurgYUjeQaXml5MvTuulLBhGh4vN
+ Jt+wh4Py3cexJO5YZbBeVLiGU341CR8Nb8Ik2Gn8VONx9mfX1sRLFR5PKw+e0eIqQsRsrkB0REm
+ YuesaHcN4CDXgdkK1tCMyiHfG58tsWTxJDatJ2tRCtlxy78oLD/WwOtmkGkHYztJ3YVU/Hly8C9
+ 6vqQpyqlXq/Kjs0zCdHw87ohx/Q0IANDgNLFSU4ZgdMqC5GMNQa9oajM1WZR9SzGSP+4OxPpPAq
+ Wa49RVYaM0PTC1ZfFM5PIYx9q0m/6DdAkW/OB7xcHONqrpBMxIwFpNksICslafDCkWf1vO4pIbv
+ MqiiJrUMs9+8xRnuiLvAif2E6xzlu5jtlFRuhXhA8sLOxhaPr21a/EcDvCTOtXunnzrY/Z8ygLR
+ 8BwpCUNzkh/yhMcpm3ks0bTtIrOYJGdNtv6NtP7dB7PjPc/K4M56kGELQTu7dSZ2vS8++AVxtYC
+ 2CD9pC3RVpm/KOmxkR1f4LefltepFPY6klgo4G6+9dvk0aWy5NJH9u3B3Fu3JRUACcdbI57YM9W
+ GbJ94bE2RDu8M4xgvub5eCYb+bdTCcm5f+bUAM1jdXb06tXJMa4vu721eRCSSYsoeJB5kzjEr4u
+ sVYHxCDw12nGNFQ==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Add a test to verify sampling packets via psample works.
+Add the mailbox compatible for MSM8226 SoC.
 
-In order to do that, create a subcommand in ovs-dpctl.py to listen to
-on the psample multicast group and print samples.
-
-Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- .../selftests/net/openvswitch/openvswitch.sh  | 110 +++++++++++++++++-
- .../selftests/net/openvswitch/ovs-dpctl.py    |  73 +++++++++++-
- 2 files changed, 177 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/openvswitch/openvswitch.sh b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-index 5cae53543849..4e5a1f252065 100755
---- a/tools/testing/selftests/net/openvswitch/openvswitch.sh
-+++ b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-@@ -20,7 +20,8 @@ tests="
- 	nat_related_v4				ip4-nat-related: ICMP related matches work with SNAT
- 	netlink_checks				ovsnl: validate netlink attrs and settings
- 	upcall_interfaces			ovs: test the upcall interfaces
--	drop_reason				drop: test drop reasons are emitted"
-+	drop_reason				drop: test drop reasons are emitted
-+	emit_sample 				emit_sample: Sampling packets with psample"
- 
- info() {
-     [ $VERBOSE = 0 ] || echo $*
-@@ -102,12 +103,21 @@ ovs_netns_spawn_daemon() {
- 	shift
- 	netns=$1
- 	shift
--	info "spawning cmd: $*"
--	ip netns exec $netns $*  >> $ovs_dir/stdout  2>> $ovs_dir/stderr &
-+	if [ "$netns" == "_default" ]; then
-+		$*  >> $ovs_dir/stdout  2>> $ovs_dir/stderr &
-+	else
-+		ip netns exec $netns $*  >> $ovs_dir/stdout  2>> $ovs_dir/stderr &
-+	fi
- 	pid=$!
- 	ovs_sbx "$sbx" on_exit "kill -TERM $pid 2>/dev/null"
- }
- 
-+ovs_spawn_daemon() {
-+	sbx=$1
-+	shift
-+	ovs_netns_spawn_daemon $sbx "_default" $*
-+}
-+
- ovs_add_netns_and_veths () {
- 	info "Adding netns attached: sbx:$1 dp:$2 {$3, $4, $5}"
- 	ovs_sbx "$1" ip netns add "$3" || return 1
-@@ -170,6 +180,19 @@ ovs_drop_reason_count()
- 	return `echo "$perf_output" | grep "$pattern" | wc -l`
- }
- 
-+ovs_test_flow_fails () {
-+	ERR_MSG="Flow actions may not be safe on all matching packets"
-+
-+	PRE_TEST=$(dmesg | grep -c "${ERR_MSG}")
-+	ovs_add_flow $@ &> /dev/null $@ && return 1
-+	POST_TEST=$(dmesg | grep -c "${ERR_MSG}")
-+
-+	if [ "$PRE_TEST" == "$POST_TEST" ]; then
-+		return 1
-+	fi
-+	return 0
-+}
-+
- usage() {
- 	echo
- 	echo "$0 [OPTIONS] [TEST]..."
-@@ -184,6 +207,87 @@ usage() {
- 	exit 1
- }
- 
-+
-+# emit_sample test
-+# - use emit_sample to observe packets
-+test_emit_sample() {
-+	sbx_add "test_emit_sample" || return $?
-+
-+	# Add a datapath with per-vport dispatching.
-+	ovs_add_dp "test_emit_sample" emit_sample -V 2:1 || return 1
-+
-+	info "create namespaces"
-+	ovs_add_netns_and_veths "test_emit_sample" "emit_sample" \
-+		client c0 c1 172.31.110.10/24 -u || return 1
-+	ovs_add_netns_and_veths "test_emit_sample" "emit_sample" \
-+		server s0 s1 172.31.110.20/24 -u || return 1
-+
-+	# Check if emit_sample actions can be configured.
-+	ovs_add_flow "test_emit_sample" emit_sample \
-+	'in_port(1),eth(),eth_type(0x0806),arp()' 'emit_sample(group=1)'
-+	if [ $? == 1 ]; then
-+		info "no support for emit_sample - skipping"
-+		ovs_exit_sig
-+		return $ksft_skip
-+	fi
-+
-+	ovs_del_flows "test_emit_sample" emit_sample
-+
-+	# Allow ARP
-+	ovs_add_flow "test_emit_sample" emit_sample \
-+		'in_port(1),eth(),eth_type(0x0806),arp()' '2' || return 1
-+	ovs_add_flow "test_emit_sample" emit_sample \
-+		'in_port(2),eth(),eth_type(0x0806),arp()' '1' || return 1
-+
-+	# Test action verification.
-+	OLDIFS=$IFS
-+	IFS='*'
-+	min_key='in_port(1),eth(),eth_type(0x0800),ipv4()'
-+	for testcase in \
-+		"cookie to large"*"emit_sample(group=1,cookie=1615141312111009080706050403020100)" \
-+		"no group with cookie"*"emit_sample(cookie=abcd)" \
-+		"no group"*"sample()";
-+	do
-+		set -- $testcase;
-+		ovs_test_flow_fails "test_emit_sample" emit_sample $min_key $2
-+		if [ $? == 1 ]; then
-+			info "failed - $1"
-+			return 1
-+		fi
-+	done
-+	IFS=$OLDIFS
-+
-+	# Sample first 14 bytes of all traffic.
-+	ovs_add_flow "test_emit_sample" emit_sample \
-+	"in_port(1),eth(),eth_type(0x0800),ipv4(src=172.31.110.10,proto=1),icmp()" "trunc(14),emit_sample(group=1,cookie=c0ffee),2"
-+
-+	# Sample all traffic. In this case, use a sample() action with both
-+	# emit_sample and an upcall emulating simultaneous local sampling and
-+	# sFlow / IPFIX.
-+	nlpid=$(grep -E "listening on upcall packet handler" $ovs_dir/s0.out | cut -d ":" -f 2 | tr -d ' ')
-+	ovs_add_flow "test_emit_sample" emit_sample \
-+	"in_port(2),eth(),eth_type(0x0800),ipv4(src=172.31.110.20,proto=1),icmp()" "sample(sample=100%,actions(emit_sample(group=2,cookie=eeff0c),userspace(pid=${nlpid},userdata=eeff0c))),1"
-+
-+	# Record emit_sample data.
-+	ovs_spawn_daemon "test_emit_sample" python3 $ovs_base/ovs-dpctl.py psample
-+
-+	# Send a single ping.
-+	sleep 1
-+	ovs_sbx "test_emit_sample" ip netns exec client ping -I c1 172.31.110.20 -c 1 || return 1
-+	sleep 1
-+
-+	# We should have received one userspace action upcall and 2 psample packets.
-+	grep -E "userspace action command" $ovs_dir/s0.out >/dev/null 2>&1 || return 1
-+
-+	# client -> server samples should only contain the first 14 bytes of the packet.
-+	grep -E "rate:4294967295,group:1,cookie:c0ffee data:[0-9a-f]{28}$" \
-+			 $ovs_dir/stdout >/dev/null 2>&1 || return 1
-+	grep -E "rate:4294967295,group:2,cookie:eeff0c" \
-+			 $ovs_dir/stdout >/dev/null 2>&1 || return 1
-+
-+	return 0
-+}
-+
- # drop_reason test
- # - drop packets and verify the right drop reason is reported
- test_drop_reason() {
-diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-index 6636833abe53..9764a840d88f 100644
---- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-+++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-@@ -27,8 +27,10 @@ try:
-     from pyroute2.netlink import genlmsg
-     from pyroute2.netlink import nla
-     from pyroute2.netlink import nlmsg_atoms
-+    from pyroute2.netlink.event import EventSocket
-     from pyroute2.netlink.exceptions import NetlinkError
-     from pyroute2.netlink.generic import GenericNetlinkSocket
-+    from pyroute2.netlink.nlsocket import Marshal
-     import pyroute2
- 
- except ModuleNotFoundError:
-@@ -2211,10 +2213,70 @@ class OvsFlow(GenericNetlinkSocket):
-         print("MISS upcall[%d/%s]: %s" % (seq, pktpres, keystr), flush=True)
- 
-     def execute(self, packetmsg):
--        print("userspace execute command")
-+        print("userspace execute command", flush=True)
- 
-     def action(self, packetmsg):
--        print("userspace action command")
-+        print("userspace action command", flush=True)
-+
-+
-+class psample_sample(genlmsg):
-+    nla_map = (
-+        ("PSAMPLE_ATTR_IIFINDEX", "none"),
-+        ("PSAMPLE_ATTR_OIFINDEX", "none"),
-+        ("PSAMPLE_ATTR_ORIGSIZE", "none"),
-+        ("PSAMPLE_ATTR_SAMPLE_GROUP", "uint32"),
-+        ("PSAMPLE_ATTR_GROUP_SEQ", "none"),
-+        ("PSAMPLE_ATTR_SAMPLE_RATE", "uint32"),
-+        ("PSAMPLE_ATTR_DATA", "array(uint8)"),
-+        ("PSAMPLE_ATTR_GROUP_REFCOUNT", "none"),
-+        ("PSAMPLE_ATTR_TUNNEL", "none"),
-+        ("PSAMPLE_ATTR_PAD", "none"),
-+        ("PSAMPLE_ATTR_OUT_TC", "none"),
-+        ("PSAMPLE_ATTR_OUT_TC_OCC", "none"),
-+        ("PSAMPLE_ATTR_LATENCY", "none"),
-+        ("PSAMPLE_ATTR_TIMESTAMP", "none"),
-+        ("PSAMPLE_ATTR_PROTO", "none"),
-+        ("PSAMPLE_ATTR_USER_COOKIE", "array(uint8)"),
-+    )
-+
-+    def dpstr(self):
-+        fields = []
-+        data = ""
-+        for (attr, value) in self["attrs"]:
-+            if attr == "PSAMPLE_ATTR_SAMPLE_GROUP":
-+                fields.append("group:%d" % value)
-+            if attr == "PSAMPLE_ATTR_SAMPLE_RATE":
-+                fields.append("rate:%d" % value)
-+            if attr == "PSAMPLE_ATTR_USER_COOKIE":
-+                value = "".join(format(x, "02x") for x in value)
-+                fields.append("cookie:%s" % value)
-+            if attr == "PSAMPLE_ATTR_DATA" and len(value) > 0:
-+                data = "data:%s" % "".join(format(x, "02x") for x in value)
-+
-+        return ("%s %s" % (",".join(fields), data)).strip()
-+
-+
-+class psample_msg(Marshal):
-+    PSAMPLE_CMD_SAMPLE = 0
-+    PSAMPLE_CMD_GET_GROUP = 1
-+    PSAMPLE_CMD_NEW_GROUP = 2
-+    PSAMPLE_CMD_DEL_GROUP = 3
-+    PSAMPLE_CMD_SET_FILTER = 4
-+    msg_map = {PSAMPLE_CMD_SAMPLE: psample_sample}
-+
-+
-+class Psample(EventSocket):
-+    genl_family = "psample"
-+    mcast_groups = ["packets"]
-+    marshal_class = psample_msg
-+
-+    def read_samples(self):
-+        while True:
-+            try:
-+                for msg in self.get():
-+                    print(msg.dpstr(), flush=True)
-+            except NetlinkError as ne:
-+                raise ne
- 
- 
- def print_ovsdp_full(dp_lookup_rep, ifindex, ndb=NDB(), vpl=OvsVport()):
-@@ -2274,7 +2336,7 @@ def main(argv):
-         help="Increment 'verbose' output counter.",
-         default=0,
-     )
--    subparsers = parser.add_subparsers()
-+    subparsers = parser.add_subparsers(dest="subcommand")
- 
-     showdpcmd = subparsers.add_parser("show")
-     showdpcmd.add_argument(
-@@ -2331,6 +2393,8 @@ def main(argv):
-     delfscmd = subparsers.add_parser("del-flows")
-     delfscmd.add_argument("flsbr", help="Datapath name")
- 
-+    subparsers.add_parser("psample")
-+
-     args = parser.parse_args()
- 
-     if args.verbose > 0:
-@@ -2345,6 +2409,9 @@ def main(argv):
- 
-     sys.setrecursionlimit(100000)
- 
-+    if args.subcommand == "psample":
-+        Psample().read_samples()
-+
-     if hasattr(args, "showdp"):
-         found = False
-         for iface in ndb.interfaces:
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+index 982c741e6225..dc75ea2383f1 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+@@ -25,6 +25,7 @@ properties:
+           - const: qcom,ipq6018-apcs-apps-global
+       - items:
+           - enum:
++              - qcom,msm8226-apcs-kpss-global
+               - qcom,qcs404-apcs-apps-global
+           - const: qcom,msm8916-apcs-kpss-global
+           - const: syscon
+
 -- 
-2.45.1
+2.45.2
 
