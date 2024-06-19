@@ -1,124 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A2F132100
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70E512FF64;
+	Wed, 19 Jun 2024 10:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718794619; cv=none; b=D5jd1afDhFzVRQaCwpzQGAgNgDtGEQIWPBuofwLNyQ4YZi9nEED6m8Y15YmolgBxXx1VsXUWfPxgpRyEYE/oT7Fd5bdRtTn/aQ4Z7cSPwsp62mq750QJl6cPSsOD8Bdoq1JeyNEKkgtyVxe82un+S7H0d/Jp+ED6qI+KVnMxm9I=
+	t=1718794637; cv=none; b=b3Nwnh7oA9AJVKL+3bZmLl9W1NNNDdSpto68QZppJr/N5CK1egeaRFa3vYbGCrJeeIbZXx1Fj2/eFOMcH7fZXwxkwQzrwFl9NZUHWiKqUJtdKEO+nREyhFyF/ZvfYBGrk96b/mhE68WRJKzJeEl4IZro8Qqnoi3hyYgXlM69/X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718794619; c=relaxed/simple;
-	bh=4smyqk//gciZ2tfr+0FYpp38iYLlwv1szyuA5ggeH4A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kXAmEsrYRlfQv3dLJQSyWfwe3wi748GQBUov8+ze8chbsFErCMxU6VRODfa8p4HKNX3rW2qR4gcMRx5Eh1fs8gtNReLd2Vfcy6ekHvol0RDoKpvG0GE2uYVPE3gzmASsKm98HDgHW+nw9ok44rlpYrePWbvJ94xuEDrgJIUGlFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VGmNlQfd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718794637; c=relaxed/simple;
+	bh=uj/2NtDFN60KENg4dlqpkC5POtuB01x5rjPuBdEDghE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q9IM77Zv2d4cF2XLZNLlHsMcodl23zHR8gAEdYTF6Li7o7EGL9lvxbjyijSRy8AGIe8yPpcbi6cuJSEReLAhC1Ok4/Lpyd9AOTR+QLYWRXQqJTJrtP36XGrm6ZdkV+MPoMCPB0p8t/BBPUKvHSU8Dol0ln5lg2VfKT9Qp1TK9Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Om7QNbqx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VGmNlQfd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718794617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VjZbrAKeWPPaFJmvloNszCVxus289ALpCaWtq/6RLHQ=;
-	b=VGmNlQfdae3s1lXGKpNCfo6UR5Nf3II/2ttFvRyQE20xyRK+7tBPPLLF8HPqt+QjoC8OUQ
-	wLqAd5s39apk14u81N7bwIFR3IJe1fGDuhGTtVcM5185F4kyI5bWL2Ggu4sJrT6H3OsbuI
-	5bF+o3KCSKhkLWaAzANeVR48LQPprfg=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-kK5IGzSlOT2ZX34CiDOA4w-1; Wed, 19 Jun 2024 06:56:56 -0400
-X-MC-Unique: kK5IGzSlOT2ZX34CiDOA4w-1
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-62f8a1b2969so132105937b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:56:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718794616; x=1719399416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VjZbrAKeWPPaFJmvloNszCVxus289ALpCaWtq/6RLHQ=;
-        b=Lxyy3GMOAYNV1oY4+IDf3yidnO4DmTUz8fga3UepqNdU6VMhjruDt080xXA/y4GpY3
-         0gvF1YrWwWBpendDvp/GGLKggbCvoqF+6XhtBctc2MNjBGJqKhuzS9nDvvEEV7wTJQdF
-         nVmSfV7O7yf4JzeCJeKCSaP1P6eROeJceEvm14EJTfXgn3Vg2B8RdqCHbZeW4w1gRd0c
-         6gNzDHk1LRQpOUGMRLQkHQmMmMV0co3yH9hWcSOBdsqzh1yT5qplzbodXA8XeeV/eSl8
-         FVE5VzPymrQ2CRC9WEkXGv+sEowRwQ/pi3H2ij2o0GLy5T2+gXDezXSGQfWlpr6nfdUA
-         ODuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXI/J2TX0zAVfRS/DztNxxnjwVrlESaaDD5xBngLqFyNwiZp/CWUtRX2qyOtPCHnKh+0MsB4CtBlCFWamFgfMpRopztV7EYL6sxyCi2
-X-Gm-Message-State: AOJu0Yz0J7jq/aTf2txCFVnHFv4TscJoyMSYjf24tPuDLLXP/6ZUW3dr
-	DfD2euxNGxDEay7iHKnMumn/g8jKZhah0ySOHfMMaZ3bauAbdodY2+H4rspIX1K5XeBgkUFqZGp
-	NoK6MTWtB7dv0EWGZqQMndnOZsTv8Ij4IK4VDGCI4oskBlTt5lfUmoJujddjEvd/yuKo950Tb2o
-	GQTtX0T6EakjrFNdlXdRVfrWqDk5WpCUsrlDBR
-X-Received: by 2002:a05:6902:18c8:b0:dff:2f78:a5e2 with SMTP id 3f1490d57ef6-e02be20b9fbmr3077318276.48.1718794615604;
-        Wed, 19 Jun 2024 03:56:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFBUNHSRsqjjtkqh3anCM1rUWgihsBSlpbQwcOBllw4ugAGeY3IlZgXoYdaWC9Vjxq0GasRjZJb7rLeAgR/w+0=
-X-Received: by 2002:a05:6902:18c8:b0:dff:2f78:a5e2 with SMTP id
- 3f1490d57ef6-e02be20b9fbmr3077292276.48.1718794615243; Wed, 19 Jun 2024
- 03:56:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Om7QNbqx"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9ABbE001115;
+	Wed, 19 Jun 2024 10:57:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=uj/2NtDFN60KENg4dlqpkC
+	5POtuB01x5rjPuBdEDghE=; b=Om7QNbqxGNI8GyQNvHU3SaaMabHE7e/pBbaXbb
+	cmqk0PAsWJMjgab00UjYay/WYuMPbn/rm8atKiyVrE8f/q59o5k6YoGHKunm7m0D
+	iGb0rLzeeJe8khEa4+4Z4Q0BAdcnX3LEg0fwkgTq5msujXn7ZK8ggFWZMRX/U6pC
+	xh1Y7tG/Fjk+kx60Rvt6jyan+noJ6KLIE1g9k5g+dKlvJ2ah8qK+Vhro6yEGePvr
+	WQmaBuj0dTIjxXlbTjutoSvnUvp+kBrXQJHkiSWJ0ErX8YFV9KxVVagh4V9xFHdD
+	HGggHLmNJy8vv31sGXPMHPcdMUaQL5uqrwRCuNJ7pkcIS7lA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuja29egr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 10:57:04 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JAv28l022589
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 10:57:02 GMT
+Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 19 Jun 2024 03:56:58 -0700
+From: Komal Bajaj <quic_kbajaj@quicinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <quic_mojha@quicinc.com>,
+        Komal Bajaj
+	<quic_kbajaj@quicinc.com>
+Subject: [PATCH] arm64: defconfig: Enable secure QFPROM driver
+Date: Wed, 19 Jun 2024 16:26:42 +0530
+Message-ID: <20240619105642.18947-1-quic_kbajaj@quicinc.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com> <20240617-stage-vdpa-vq-precreate-v1-4-8c0483f0ca2a@nvidia.com>
-In-Reply-To: <20240617-stage-vdpa-vq-precreate-v1-4-8c0483f0ca2a@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 19 Jun 2024 12:56:19 +0200
-Message-ID: <CAJaqyWe_ShF4HkhxsdHjgaBAMwCvw10_t9Wk_-A0QyPT+zFEbQ@mail.gmail.com>
-Subject: Re: [PATCH vhost 04/23] vdpa/mlx5: Drop redundant check in teardown_virtqueues()
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	Cosmin Ratiu <cratiu@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: AXcVSa1Ya3kZpHPg8HUzSRFr5L5g8Ogv
+X-Proofpoint-ORIG-GUID: AXcVSa1Ya3kZpHPg8HUzSRFr5L5g8Ogv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=700 suspectscore=0 clxscore=1011 impostorscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
+ phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406190081
 
-On Mon, Jun 17, 2024 at 5:08=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.com=
-> wrote:
->
-> The check is done inside teardown_vq().
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+Enable the secure QFPROM driver which is used by QDU1000
+platform for reading the secure qfprom region to get the
+DDR channel configuration.
 
-Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index b4d9ef4f66c8..96782b34e2b2 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -2559,16 +2559,10 @@ static int setup_virtqueues(struct mlx5_vdpa_dev =
-*mvdev)
->
->  static void teardown_virtqueues(struct mlx5_vdpa_net *ndev)
->  {
-> -       struct mlx5_vdpa_virtqueue *mvq;
->         int i;
->
-> -       for (i =3D ndev->mvdev.max_vqs - 1; i >=3D 0; i--) {
-> -               mvq =3D &ndev->vqs[i];
-> -               if (!mvq->initialized)
-> -                       continue;
-> -
-> -               teardown_vq(ndev, mvq);
-> -       }
-> +       for (i =3D ndev->mvdev.max_vqs - 1; i >=3D 0; i--)
-> +               teardown_vq(ndev, &ndev->vqs[i]);
->  }
->
->  static void update_cvq_info(struct mlx5_vdpa_dev *mvdev)
->
-> --
-> 2.45.1
->
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 838b4466d6f6..c940437ae1b3 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1575,6 +1575,7 @@ CONFIG_NVMEM_LAYERSCAPE_SFP=m
+ CONFIG_NVMEM_MESON_EFUSE=m
+ CONFIG_NVMEM_MTK_EFUSE=y
+ CONFIG_NVMEM_QCOM_QFPROM=y
++CONFIG_NVMEM_QCOM_SEC_QFPROM=y
+ CONFIG_NVMEM_RMEM=m
+ CONFIG_NVMEM_ROCKCHIP_EFUSE=y
+ CONFIG_NVMEM_ROCKCHIP_OTP=y
+--
+2.42.0
 
