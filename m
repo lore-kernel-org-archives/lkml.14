@@ -1,194 +1,90 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D162F156F5B
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 18:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB89E82495;
+	Wed, 19 Jun 2024 18:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718820428; cv=none; b=AtaLhD1pKTycFll5KrNpZwp3ocMdPUPt6w2vfS66u+VRtg0Wbmu18+DR0tWBZkR/7PN8zi4h2w7mJceu8+kH020gM/+eW37POhtNX8i3veHx4jbeQszApoA1PfvPIk2EHxH/eE0NqKifw/Xvv3Xrpv86uBPiMHJvMb7tZhwjuzw=
+	t=1718820458; cv=none; b=Lpov3sOBrAxxa45VzJYKr5FrGOxHOeFqr9TgRRDlYkovAFr1q5zrgP6Nx0f3Xz2eBrNQyP3RF0xVMYKxexiAmnD+QX7Rd7eX8ucvu/pUmo0vUFOR7DJj37YkMGg3VMgwzi7Cs1FiI5/AZlYTM7xyvGi8OAu6kvN5s3bA2n0/8Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718820428; c=relaxed/simple;
-	bh=BkLHYQs4IK59lmPyJ6OiHr71hrKs+r7G898hHMuwO0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fb5V0LS+voFcppKe83VB1HxlRJNzS/3lCuAiq8EIUkyvQUS00r1Zr6FyW25uAgb3/aX32jkq3whcvY+3plytDaYSywOe7754lgIdtErEeEgEUW0/0wV2lQg1G1vQI9mTgBEaI1Z7QhbB4aMDlwTUDM41+vOTrNlg2lnS/2bX0iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=XPlySN/P; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1718820458; c=relaxed/simple;
+	bh=WpG/N4n7weTtDgFu1xNBgVcm3zzjW8++gALi+2OvWb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXn7RM1WN7L6Ig+mxD8k6c30Rbaj4oTCx48v5qgAl+ewi7Si6Wb8eNFBnipfdpr65OKAbHPNOaxk3Ow8ZtwteAP7it3NIih3/SBAyvFkmpjJPdlh4Ivne5EPFfgImuMXzjaMn+ipEi5FwoWJktXK8n9aFcVvpDVFZ3Gyw7Y1AaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8tqlxfr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="XPlySN/P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1718820410;
- bh=XavrKDSs1iLysu/VoOW1lzmFXR6F1ISw3mOM/563aBs=;
- b=XPlySN/P0LWLFvOWOMQW2wRzXOYsLDAVjkBWJIDcdMEoI4bXhIaVR0Dv3Lc1thrBr0E8uDoCm
- 9IPbtSRfGhOhLb0gx8p3eH0GNZ2VffBLZhHSvg76EsmEk0L2IC7cTs0mbolKd6GT22seXTiX5JA
- vBsLkkv1aBuwlQPYl3vxtCILM9baa05Agln+9IiF6ns1GAAFvdM5c08XcI6SC/QozgZBVDyr+Wq
- /8a8z4AKJeT5Fm2JMhNKRPDPS7YKsq8Ldr9AUrRFsf4C7VZzHy5ZEj9Hl7/dXRK1NtsGgzlDrRD
- LCDhz0pUWaHQ5GBcKASZAgE83/8VZY6TKDUvwgFrwNgA==
-Message-ID: <e6e2e0f1-0b16-4a3d-ae7b-be5a04d7902b@kwiboo.se>
-Date: Wed, 19 Jun 2024 20:06:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8tqlxfr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D688C2BBFC;
+	Wed, 19 Jun 2024 18:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718820458;
+	bh=WpG/N4n7weTtDgFu1xNBgVcm3zzjW8++gALi+2OvWb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W8tqlxfrsI41R/48hIcaPq5WIQQmsEBbXcIiEBOIacHqvIGX1wNhnOXTWLt5Zjm1z
+	 nAHo/sgyV3Vvw7jljDE9VCiJ7etcVHx5Svxpk8BxNsDHgCuswSW1brYtdQtWrbM/2Y
+	 av7u01E57DDQBql11Ut5QyDNsWUaJQiYlHOKTaU97mFqoqsN+TL++3FzbBbufqSVWs
+	 kM2Ho6uxBeeqRnSUl0SDaA/yVEdCKGNXpuA8n3wk9sXgFlBdFzcFuZ2tX3c+Mk6jC7
+	 Yh0Uo02aqpKYqgN56D/KUJUuqoFSk+sij6gj46ont2Ykh2YKxHLIBMGVn7w3JnYt9L
+	 g6aJ77zY1dzKw==
+Date: Wed, 19 Jun 2024 19:07:33 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: renesas,wdt: Document
+ RZ/V2H(P) SoC
+Message-ID: <20240619-operator-species-3e1461c8fca5@spud>
+References: <20240618222403.464872-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240618222403.464872-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: Add rkvdec2 Video Decoder on
- rk3588(s)
-To: Alex Bee <knaerzche@gmail.com>, Detlev Casanova
- <detlev.casanova@collabora.com>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner
- <heiko@sntech.de>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>, Dragan Simic
- <dsimic@manjaro.org>, Diederik de Haas <didi.debian@cknow.org>, Andy Yan
- <andy.yan@rock-chips.com>, Boris Brezillon
- <boris.brezillon@collabora.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Daniel Almeida <daniel.almeida@collabora.com>, Paul Kocialkowski
- <paul.kocialkowski@bootlin.com>, Nicolas Dufresne
- <nicolas.dufresne@collabora.com>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240619150029.59730-1-detlev.casanova@collabora.com>
- <20240619150029.59730-5-detlev.casanova@collabora.com>
- <6e5ddd5c-340d-4474-a490-427a82db4a97@kwiboo.se>
- <052f2ea7-2ded-4d39-a513-3a47fee1bf02@gmail.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <052f2ea7-2ded-4d39-a513-3a47fee1bf02@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 66731e37e29fa10c39ba9bb6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XyJELvnlnScZvZ1t"
+Content-Disposition: inline
+In-Reply-To: <20240618222403.464872-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi Alex,
 
-On 2024-06-19 19:19, Alex Bee wrote:
-> 
-> Am 19.06.24 um 17:28 schrieb Jonas Karlman:
->> Hi Detlev,
->>
->> On 2024-06-19 16:57, Detlev Casanova wrote:
->>> Add the rkvdec2 Video Decoder to the RK3588s devicetree.
->>>
->>> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
->>> ---
->>>   arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 50 +++++++++++++++++++++++
->>>   1 file changed, 50 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->>> index 6ac5ac8b48ab..7690632f57f1 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->>> @@ -2596,6 +2596,16 @@ system_sram2: sram@ff001000 {
->>>   		ranges = <0x0 0x0 0xff001000 0xef000>;
->>>   		#address-cells = <1>;
->>>   		#size-cells = <1>;
->>> +
->>> +		vdec0_sram: rkvdec-sram@0 {
->>> +			reg = <0x0 0x78000>;
->>> +			pool;
->>> +		};
->>> +
->>> +		vdec1_sram: rkvdec-sram@1 {
->>> +			reg = <0x78000 0x77000>;
->>> +			pool;
->>> +		};
->>>   	};
->>>   
->>>   	pinctrl: pinctrl {
->>> @@ -2665,6 +2675,46 @@ gpio4: gpio@fec50000 {
->>>   			#interrupt-cells = <2>;
->>>   		};
->>>   	};
->>> +
->>> +	vdec0: video-decoder@fdc38100 {
->>> +		compatible = "rockchip,rk3588-vdec";
->>> +		reg = <0x0 0xfdc38100 0x0 0x500>;
->>> +		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +		clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>, <&cru CLK_RKVDEC0_CA>,
->>> +			 <&cru CLK_RKVDEC0_CORE>, <&cru CLK_RKVDEC0_HEVC_CA>;
->>> +		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
->>> +		assigned-clocks = <&cru ACLK_RKVDEC0>, <&cru CLK_RKVDEC0_CORE>,
->>> +				  <&cru CLK_RKVDEC0_CA>, <&cru CLK_RKVDEC0_HEVC_CA>;
->>> +		assigned-clock-rates = <800000000>, <600000000>,
->>> +				       <600000000>, <1000000000>;
->>> +		resets = <&cru SRST_A_RKVDEC0>, <&cru SRST_H_RKVDEC0>, <&cru SRST_RKVDEC0_CA>,
->>> +			 <&cru SRST_RKVDEC0_CORE>, <&cru SRST_RKVDEC0_HEVC_CA>;
->>> +		reset-names = "rst_axi", "rst_ahb", "rst_cabac",
->>> +			      "rst_core", "rst_hevc_cabac";
->>> +		power-domains = <&power RK3588_PD_RKVDEC0>;
->>> +		sram = <&vdec0_sram>;
->>> +		status = "okay";
->>> +	};
->>> +
->>> +	vdec1: video-decoder@fdc40100 {
->>> +		compatible = "rockchip,rk3588-vdec";
->>> +		reg = <0x0 0xfdc40100 0x0 0x500>;
->>> +		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +		clocks = <&cru ACLK_RKVDEC1>, <&cru HCLK_RKVDEC1>, <&cru CLK_RKVDEC1_CA>,
->>> +			 <&cru CLK_RKVDEC1_CORE>, <&cru CLK_RKVDEC1_HEVC_CA>;
->>> +		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
->>> +		assigned-clocks = <&cru ACLK_RKVDEC1>, <&cru CLK_RKVDEC1_CORE>,
->>> +				  <&cru CLK_RKVDEC1_CA>, <&cru CLK_RKVDEC1_HEVC_CA>;
->>> +		assigned-clock-rates = <800000000>, <600000000>,
->>> +				       <600000000>, <1000000000>;
->>> +		resets = <&cru SRST_A_RKVDEC1>, <&cru SRST_H_RKVDEC1>, <&cru SRST_RKVDEC1_CA>,
->>> +			 <&cru SRST_RKVDEC1_CORE>, <&cru SRST_RKVDEC1_HEVC_CA>;
->>> +		reset-names = "rst_axi", "rst_ahb", "rst_cabac",
->>> +			      "rst_core", "rst_hevc_cabac";
->>> +		power-domains = <&power RK3588_PD_RKVDEC1>;
->>> +		sram = <&vdec1_sram>;
->>> +		status = "okay";
->>> +	};
->> This is still missing the iommus, please add the iommus, they should be
->> supported/same as the one used for e.g. VOP2:
->>
->>    compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
->>
->> The VOP2 MMUs does have one extra mmu_cfg_mode flag in AUTO_GATING,
->> compared to the VDPU381 MMUs, however only the AV1D MMU should be
->> special on RK3588.
->>
->> Please add the iommus :-)
-> When looking add the vendor DT/iommu driver I'm seeing serval quirks
-> applied for vdec's iommus. Since it's rightly frowned upon adding such
-> boolean-quirk-properties to upstream devicetrees, we'd at least need
-> additional (fallback-) compatibles, even if it works with the iommu driver
-> as is (what I doubt, but haven't tested). We need to be able to apply those
-> quirks later without changing the devicetree (as usual) and I'm sure RK
-> devs haven't added these quirks for the personal amusement.
+--XyJELvnlnScZvZ1t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Based on what I investigated the hw should work similar, and the quirks
-mostly seem related to optimizations and sw quirks, like do not zap each
-line, keep it alive even when pm runtime say it is not in use and other
-quirks that seem to be more of sw nature on how to best utilize the hw.
+On Tue, Jun 18, 2024 at 11:24:02PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Add support for the Watchdog Timer (WDT) hardware found in the Renesas
+> RZ/V2H(P) SoC to the `renesas,wdt` device tree bindings. The RZ/V2H(P)
+> SoC features a WDT that is compatible with existing Renesas watchdog
+> drivers.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> If Detlev says
-> iommu is out of scope for this series (which is valid), I'd say it's fine
-> to leave them out for now (as no binding exists) and the HW works
-> (obviously) fine without them.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Sure, use of MMU can be added later.
+--XyJELvnlnScZvZ1t
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
-Jonas
+-----BEGIN PGP SIGNATURE-----
 
-> 
->> Regards,
->> Jonas
->>
->>>   };
->>>   
->>>   #include "rk3588s-pinctrl.dtsi"
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnMeZAAKCRB4tDGHoIJi
+0h8LAQCEHzUHsRWgDCslHOLKb9AD8wepaccM/cWws1tCOY0y1wEAg/fqrRdK4BW0
+M/m/yisdgfqFGfcCCiihOWBcIoNTDQ4=
+=bYDp
+-----END PGP SIGNATURE-----
 
+--XyJELvnlnScZvZ1t--
