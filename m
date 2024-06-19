@@ -1,131 +1,102 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D83322EED
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5ED1514D0
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718814615; cv=none; b=hMJPRGJZw9xrmICXn+nnhElihGUKyAGb9VXbn0J9+7SCEbE9ccsf68vZQfdo2rGGmWEP5767ZKpMYMPoIVhYYYkbqbuyCuAWPgzEX+t8gQHuACNVQwkIApoCuZTfEDQYRYKRY8ayMA7Z58ZYoJs0S7eEdr8YB5OeDTsZnmhHpuc=
+	t=1718814791; cv=none; b=AgXjBC30+k2GKeE526OzZ37Qkg3+SLApZT/b5h5bZe6C21CVlWqlEVR8/nxF69LIOkA6MHqBN6sswpuNx0IsFJmloTUvFnRKHWEP0o32GfdxZL3LiD2YI+5MCI1tI2KYDG50/q9Os1YjzZlHGQD935gNVuiiAFjPycmiKDpByWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718814615; c=relaxed/simple;
-	bh=dp25EsiBd11NszkiIn9GNJkF0HAneQLbCddpeo/HboA=;
+	s=arc-20240116; t=1718814791; c=relaxed/simple;
+	bh=FVFYCJ1EGfwnkU654yIVzNaWy+IFuApDG9DYERxXLt8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Idx55DzolLFKLF3TA+Cme23bEjZbge1Qr8t6H/ZIopbo5VIGMX/Z7OTXQoUTl+by0CHM9gWNXHyJ+EdRCVVTXtykq+Yix0TYHHk3xeax7EqTYUdkovHp70dpdA028mVXLYbY+Tl9J9N36phWbXZzOyO0HI0Eq2AVgrqMjcSqMss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=a15LrQ9z; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dCzDgLS2uzcf0iZ7I87xvtAZEzc9Rc9EK4CwRTBE06kdnEW+LQ/0vKzS8qEmlCC3lEnu2Vj+h2HOa9Jw4pFLcGergoGLF0B9nk3JesL5aeiirfcUTE2ZejbZ7ckWbXcGpOdYm9Yg5416GhbHKMRoIMRvkp45djUE2t1Yq8GUbyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Yo7W9KHX; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="a15LrQ9z"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7041053c0fdso14330b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Yo7W9KHX"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4403bb543a4so35700731cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718814613; x=1719419413; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1718814789; x=1719419589; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LFnXBBCEP1zENhQqFr7hAM7gxfLMtKTQ/XL+1dQ5OE4=;
-        b=a15LrQ9zUVhq+KE6uAlf2mXZUhFqQmucubCGMAfJzGOoY/+B/0mRoMqkEvyUUDtUzb
-         qY57aINsmYMkwvDmB1KnRm4nshqVpEgh8nc+7gl3D9mwfy7Xdh6kVH2Fkg3/k83mD64/
-         WT7Wq6csN39ORYpnCejRCykZUVaj7SYL3kok4K0vFw5qMG1n2ZfqdaF5VJBINIEuRbdj
-         zHTc0xnOwnC0+gV+q178VGWQHCEtAQ7edemRwKY1oyrk/BztW+m2h6rLNfmLaqKxjrs8
-         oWAyNTZIIE8bzk7Wa3u1zmu7cdcK9iElC25R/9fK3ohVO/j8yZJG2gX1HFHDdYIdV3SZ
-         W0hg==
+        bh=UxqMh14wh6rgt2Gb04HuzckvnrRRbYR5Yps3CaoDEDg=;
+        b=Yo7W9KHXCsjDk594noZE6DPWa68JqoR3ltK8oYZqYjbiw7nbO+F7ywwvgJKYDmJfNM
+         NFvVTm6aVXfypvEo/CAUlsbK9DwnRL69jNbNkwBZlroWJPW3xK2Pw5iGnvudi8/9ay73
+         1E8YAYpsqDvjFsWGDgg/Jc4TUSVdrQ1cOfMRJ/+3ySsqkXeTfi6p9frFfLfOD9I6RF6O
+         YXz59W+K07hVN9Exbh7Nf4SngTqZ6C7bEK+9FsiyWQn0+52CaNNeZNn3S/YijShLHbcF
+         rigOIsZbZjsl3MCEWEmynsrxOrFpyeoD82XunmYcppiYuRcdLrfKAcNJIfQAsv2mCp1c
+         mIEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718814613; x=1719419413;
+        d=1e100.net; s=20230601; t=1718814789; x=1719419589;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LFnXBBCEP1zENhQqFr7hAM7gxfLMtKTQ/XL+1dQ5OE4=;
-        b=HOfgmYqvk+ZSmjj3m/J1nPEQXydDx38xCKzodR85rg9jH6BuI8UVmFC/FELAJYUTvn
-         4BLpQiJzMXUUf9Pqrhrpxr3YevMsfETTGNWVwblfDvN94lTzHU8pNKTELHk1YABWbHmd
-         apoazkxG357r4wSFDuvrmq8hNpb6r70XVJZxYkfWcOwCuCjADcP+HewmglBN7tPJHeJA
-         9qL+li8p3d4mpTAWNI/v+e2s4fUgh4lJyc+xXNslEu37ryvZHlkHlpSvmsGNkB5WpIM8
-         9NdSs3/mP9Hj6hi3VqpRcgL5/pnUoy+G/ZViZTcPQH94GIjiMDVCQsinYD0Jk4t7cnBO
-         upxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVIaFKTddpdRh9TotJveqn8/FLfPu9uwDFhZPDY0UXsFxtrtGOvQyW3AYB5GwyTJw4pFJY38KHxJ0hMI6tFcbr0CyNnCwSNzquHV7o
-X-Gm-Message-State: AOJu0YxLlu37+bgxsAzKazfjaOHuWL7WRsI6jGcYmPe13V5a0JM/KngS
-	ySVRdQr911y0Nfh+2We8KBAG2eCVQgGOXc7bzbjmSooK/nRkqqCDWa79xqxhFWg=
-X-Google-Smtp-Source: AGHT+IHXKN8DL34VymsPnaJwN/SMjnVjtOibIBszp5LGFbCG2Rghjc6BQa/Sa/zE4+NekK/vXzWdfw==
-X-Received: by 2002:a05:6a00:2d89:b0:6f8:f020:af02 with SMTP id d2e1a72fcca58-70629d01686mr3766318b3a.34.1718814612752;
-        Wed, 19 Jun 2024 09:30:12 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7062cb0a402sm1665445b3a.33.2024.06.19.09.30.11
+        bh=UxqMh14wh6rgt2Gb04HuzckvnrRRbYR5Yps3CaoDEDg=;
+        b=ToCKjPRC/Sk5Zf8WAxDvQCv6cVT8U2V6qV194caJpi0vrLokYmufByxwXz2b5fHA5E
+         POvCIqssp9P+UqSyiko4+Nrgwj+tDN+3ZtfRY5qEHA1Zkt+wx2P7BfD58OW6c/OSmagd
+         0UkOcI2eXqQRsOWLOeAO82+OUMnxz4th5DlczqsVtdHemfUFsrU5cJeJOBNwXT1n0Oqg
+         MG5MPLeF7LSzbPeoT39Tdhw3Vw8r2E/xTct35lTveiXBQIst/aHyPxdCbnJtjFG9CS36
+         F7SO8cMRLn4LkLHSwo8s93/ma/3d+2W099VzOJEMvNRRpfFYJ7F8xv6NW43aFHmPXrcz
+         qNXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhUicA8NsuydCJelXdKb5s3SY/nkfMtRlEXmyK3DNfqJW7P/DvC2YOPAudVgz5aj9d0GwzElxWqtokfoC8q+CaDPKV46q0jVcXJg2Z
+X-Gm-Message-State: AOJu0YyInz5wtMC6sX96H9XWbK9qplZnzA1kexfHqsKvzA3dd3oV8LJZ
+	UUwxnejbdjmn+Gbar/7Z7gYp3j2C38IbO/cOJT7csRlbacofG6F0NogIp/3hYD8=
+X-Google-Smtp-Source: AGHT+IEi+7foZgh/9Z0anYpjxAAXArw1uJUHOfsFSQr7PUdyfMayYNr0/bYNAmiUhoW9f3jLzo/I0A==
+X-Received: by 2002:ad4:55e3:0:b0:6b2:1094:83bf with SMTP id 6a1803df08f44-6b501df81a9mr31902396d6.4.1718814788824;
+        Wed, 19 Jun 2024 09:33:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb4cf9sm78898276d6.97.2024.06.19.09.33.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 09:30:12 -0700 (PDT)
-Date: Wed, 19 Jun 2024 09:30:10 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] riscv: convert bottom half of exception handling to C
-Message-ID: <ZnMHku8LSGmuHZQS@debug.ba.rivosinc.com>
-References: <20240616170553.2832-1-jszhang@kernel.org>
+        Wed, 19 Jun 2024 09:33:07 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sJyF9-005AMj-BB;
+	Wed, 19 Jun 2024 13:33:07 -0300
+Date: Wed, 19 Jun 2024 13:33:07 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Will Deacon <will@kernel.org>,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	Rob Clark <robdclark@chromium.org>, Joerg Roedel <joro@8bytes.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	"moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>,
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 1/2] iommu/io-pgtable-arm: Add way to debug pgtable
+ walk
+Message-ID: <20240619163307.GL791043@ziepe.ca>
+References: <20240523175227.117984-1-robdclark@gmail.com>
+ <20240523175227.117984-2-robdclark@gmail.com>
+ <85f5250f-0d50-4aa3-93c9-2008c6ccb8fb@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240616170553.2832-1-jszhang@kernel.org>
+In-Reply-To: <85f5250f-0d50-4aa3-93c9-2008c6ccb8fb@arm.com>
 
-On Mon, Jun 17, 2024 at 01:05:47AM +0800, Jisheng Zhang wrote:
->For readability, maintainability and future scalability, convert the
->bottom half of the exception handling to C.
->
->During the conversion, I found Anton fixed a performance issue
->and my patches will touch the same exception asm code, so I include
->Anton's patch for completeness. I also cooked a similar patch to avoid
->corrupting the RAS in ret_from_fork() per the inspiration.
+On Mon, Jun 17, 2024 at 04:13:41PM +0100, Robin Murphy wrote:
+> On 23/05/2024 6:52 pm, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> > 
+> > Add an io-pgtable method to walk the pgtable returning the raw PTEs that
+> > would be traversed for a given iova access.
+> 
+> Have to say I'm a little torn here - with my iommu-dma hat on I'm not super
+> enthusiastic about adding any more overhead to iova_to_phys, but in terms of
+> maintaining io-pgtable I do like the overall shape of the implementation...
 
-nit: Probably corruption is wrong word here giving the notion that software
-got some capability to corrupt uarch structures. It's simply mismatched # of
-call and # of rets. Imbalance (instead of calling it corruption) in return
-address stack (RAS) leading to incorret predictions on return.
+If you mark arm_lpae_pgtable_walk() and the callbacks as
+__always_inline then the compiler should generate the same code as
+today for arm_lpae_iova_to_phys().
 
->
->Mostly the assembly code is converted to C in a relatively
->straightforward manner.
->
->However, there are two modifications I need to mention:
->
->1. the CSR_CAUSE reg reading and saving is moved to the C code
->because we need the cause to dispatch the exception handling,
->if we keep the cause reading and saving, we either pass it to
->do_traps() via. 2nd param or get it from pt_regs which an extra
->memory load is needed, I don't like any of the two solutions becase
->the exception handling sits in hot code path, every instruction
->matters.
->
->2.To cope with SIFIVE_CIP_453 errata, it looks like we don't need
->alternative mechanism any more after the asm->c convertion. Just
->replace the excp_vect_table two entries.
->
->
->
->Anton Blanchard (1):
->  riscv: Improve exception and system call latency
->
->Jisheng Zhang (5):
->  riscv: avoid corrupting the RAS
->  riscv: convert bottom half of exception handling to C
->  riscv: errata: remove ALT_INSN_FAULT and ALT_PAGE_FAULT
->  riscv: errata: sifive: remove NOMMU handling
->  riscv: remove asmlinkage from updated functions
->
-> arch/riscv/errata/sifive/errata.c         | 25 +++++++---
-> arch/riscv/errata/sifive/errata_cip_453.S |  4 --
-> arch/riscv/include/asm/asm-prototypes.h   |  7 +--
-> arch/riscv/include/asm/errata_list.h      | 21 ++------
-> arch/riscv/kernel/entry.S                 | 61 ++---------------------
-> arch/riscv/kernel/stacktrace.c            |  4 +-
-> arch/riscv/kernel/traps.c                 | 57 ++++++++++++++++++---
-> 7 files changed, 81 insertions(+), 98 deletions(-)
->
->-- 
->2.43.0
->
->
+Jason
