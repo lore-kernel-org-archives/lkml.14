@@ -1,168 +1,164 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F09913212E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0E776035
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718798226; cv=none; b=Bnan5pUDxi/dDY3P5vdDhZe0DM7rjKjwCVn0LL8LHI6TLeImygZp1XwAM3z8w2HYjoRcVd5yckqcLTt/W2ONSN5sra/5y29TsOkzYOHqyDf/gTj+GjF2vSfQhc7v1mzuW6mPLGkSpbSOBeBOcwBb6L/ZszQYJVS8AFn+YBEBI/A=
+	t=1718798234; cv=none; b=BLGTqWCHzwCVMtgcJntkmYNtWjl9wOsTW4k8L+7P+2mUurP3aerUEswp1xXdg3Ls3rtj4EvGL7Y1K2nLEWIuwdvYE+KidGr7Vw9Eu40vvxO4+3y2EII/l2Tbtqi7iguNh1rkLjlOltbi9hqIlr5PpSeXia7dDgqQsQgtxFnDI7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718798226; c=relaxed/simple;
-	bh=udx4D3ICBwxAkvohVia2osGF316tWCg5WoOL/Qsr8vA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ClMiou1D+O4W+odqC3mZ8+BRiwqaNmVbw5gQJwzhvQaIJaCk93AsqbXWEymif0z/Jbala2B1FLUAoGG6TuqDsd7v9CknXz6OhD9X0gX1Ei1bgPmJdR0s5XSCv4H2uB7cb0ovufJWEP07HCLGt3Imo2rz608ILWx1P49/HM3jCN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=k0W+7as6; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718798234; c=relaxed/simple;
+	bh=98v0QsjuhOFlSgXs59YI6oLQih9ErGbd498Z59dGdvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdlL9LqzwV1CWGyjC0ZX46Q9EAokCTRbKM1j2J89luD2bxZZSlqBsiTSCJBROV2VcUerdu4yTqfrlxe6PH7HpRJCWB+PDUgI6seMQ2yUzxZlJ3YrvVd98PuI5DY4v7yAjCpSCKNSIlIYCJrOkb80qXnxeA/iZZjYSOELwHY+Do8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=klr34nXX; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k0W+7as6"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45JBuO7Y107694;
-	Wed, 19 Jun 2024 06:56:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718798184;
-	bh=kYaOKx8VKBp41d22VvJ3euzGXc/iy+xf/Q65ZhDlRzQ=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=k0W+7as6Ecnd5mBxgOAMAxpvnO3nYNg1eWjUoDg/qml7jrS0Ikd9DpqTcQYItCHin
-	 YQwsI/fNY5XgJMJVlfjVGm7ku3Bl1W9eFxOs0fTAC10Lp4BVzNTzouLVND7DkHuFTI
-	 BetYrUEsgzuYJQfpvruyYoLwgK2GmlDzMgMz/TRs=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45JBuOgF117398
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Jun 2024 06:56:24 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
- Jun 2024 06:56:24 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 19 Jun 2024 06:56:24 -0500
-Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45JBuGat014422;
-	Wed, 19 Jun 2024 06:56:17 -0500
-Message-ID: <cfd32e8a-8dcf-43a8-9a1f-38b291fe7a75@ti.com>
-Date: Wed, 19 Jun 2024 17:26:16 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="klr34nXX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718798233; x=1750334233;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=98v0QsjuhOFlSgXs59YI6oLQih9ErGbd498Z59dGdvY=;
+  b=klr34nXXkQKUgGbNSCnWKPAZ/xGX+R9020XladBomZQvQT09tep1424P
+   BOkJtm5mKHMNgml6onqlKTOhMUjGuk6f6k4Jj9jBna4nRBQ5v49RbPP8d
+   K/z9IjqADkH2iPrS3HkVGMDOVcfwJWgtF40BB037TtfQ/IQcxvogHuAq2
+   u4ScHc0c/FJ7eW5FZsqezyqx4zUBNkqRgBEomlu1KDLMee+8oxsrg/ZXR
+   e+yI64KHwYZz4QVDfMzEL786Q6EGnigiqLXta+bU8LUZu6QTfaPN7M4aw
+   761vo6M2QXOffmcrw2xlQIAmeIGACHHT3PkxKSLUC2/8aCsuDAbyfwsfZ
+   w==;
+X-CSE-ConnectionGUID: vBA7m4mOT06UjZs+++NqYw==
+X-CSE-MsgGUID: SrRtlUxzSVW3BShkRpUR4A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="33278877"
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="33278877"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 04:57:12 -0700
+X-CSE-ConnectionGUID: tac/HbubTq2gjwPROTUcRQ==
+X-CSE-MsgGUID: ZLRsZ1yhTtWEXmZuK6lYZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="41851288"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by fmviesa008.fm.intel.com with SMTP; 19 Jun 2024 04:57:04 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 19 Jun 2024 14:57:03 +0300
+Date: Wed, 19 Jun 2024 14:57:03 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	kernel-dev@igalia.com, Melissa Wen <mwen@igalia.com>,
+	alexander.deucher@amd.com, christian.koenig@amd.com,
+	Simon Ser <contact@emersion.fr>,
+	Pekka Paalanen <ppaalanen@gmail.com>, daniel@ffwll.ch,
+	Daniel Stone <daniel@fooishbar.org>,
+	'Marek =?utf-8?B?T2zFocOhayc=?= <maraeo@gmail.com>,
+	Dave Airlie <airlied@gmail.com>, Xaver Hugl <xaver.hugl@gmail.com>,
+	Joshua Ashton <joshua@froggi.es>,
+	Michel =?iso-8859-1?Q?D=E4nzer?= <michel.daenzer@mailbox.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>
+Subject: Re: [PATCH v6 0/8] drm: Support per-plane async flip configuration
+Message-ID: <ZnLHj6riPiqVNc2T@intel.com>
+References: <20240614153535.351689-1-andrealmeid@igalia.com>
+ <lxfxqbax6azdpeamwm2qqv2tulgxrb7y3qzb4ir4myt6x5sqez@imd3yd5mbk7u>
+ <ea501920-7319-46f4-98ca-cea412abf8a9@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/10] drm/bridge: cdns-dsi: Fix the phy_initialized
- variable
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Jyri
- Sarha <jyri.sarha@iki.fi>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        DRI Development
- List <dri-devel@lists.freedesktop.org>,
-        Linux Kernel List
-	<linux-kernel@vger.kernel.org>,
-        Dominik Haller <d.haller@phytec.de>, Sam
- Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Kieran
- Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri
-	<praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
-        Devarsh Thakkar
-	<devarsht@ti.com>,
-        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
-	<j-luthra@ti.com>
-References: <20240617105311.1587489-1-a-bhatia1@ti.com>
- <20240617105311.1587489-3-a-bhatia1@ti.com>
- <fyxer3rl54uq7qemgjx7htykgsnwgg5ywda2d5f4fhzd6ksjfg@blvkbzdy6op5>
- <41fd6509-33fd-4e7f-9889-e7e9acd928d8@ti.com>
- <CAA8EJpqt5FVjP+MP6kf6KaMi_OtEXQ2FgoqVfJCxRuLGfMOkFg@mail.gmail.com>
-Content-Language: en-US
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-In-Reply-To: <CAA8EJpqt5FVjP+MP6kf6KaMi_OtEXQ2FgoqVfJCxRuLGfMOkFg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ea501920-7319-46f4-98ca-cea412abf8a9@igalia.com>
+X-Patchwork-Hint: comment
 
-
-
-On 18/06/24 01:04, Dmitry Baryshkov wrote:
-> On Mon, 17 Jun 2024 at 17:16, Aradhya Bhatia <a-bhatia1@ti.com> wrote:
->>
->> Hi Dmitry,
->>
->> Thanks for reviewing the patches!
->>
->> On 17/06/24 17:29, Dmitry Baryshkov wrote:
->>> On Mon, Jun 17, 2024 at 04:23:03PM GMT, Aradhya Bhatia wrote:
->>>> Update the Phy initialized state to "not initialized" when the driver
->>>> (and the hardware by extension) gets suspended. This will allow the Phy
->>>> to get initialized again after resume.
->>>>
->>>> Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
->>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
->>>> ---
->>>>  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->>>> index b016f2ba06bb..42565e253b2d 100644
->>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->>>> @@ -1153,6 +1153,7 @@ static int __maybe_unused cdns_dsi_suspend(struct device *dev)
->>>>      clk_disable_unprepare(dsi->dsi_p_clk);
->>>>      reset_control_assert(dsi->dsi_p_rst);
->>>>      dsi->link_initialized = false;
->>>
->>> Most likely you should also call phy_exit() here. And in _remove() too.
->>
->> I agree that phy_exit should be called here. But why in _remove()?
->> Wouldn't having phy_exit in 2 places mess up the internal ref count?
+On Fri, Jun 14, 2024 at 04:37:41PM -0300, André Almeida wrote:
+> Hi Dmitry,
 > 
-> If suspend() is going to be called in the teardown path, then it's
-> fine to have just one call here. Otherwise you might add one guarded
-> with if (phy_initialized) to _remove() too.
+> Em 14/06/2024 14:32, Dmitry Baryshkov escreveu:
+> > On Fri, Jun 14, 2024 at 12:35:27PM GMT, André Almeida wrote:
+> >> AMD hardware can do async flips with overlay planes, but currently there's no
+> >> easy way to enable that in DRM. To solve that, this patchset creates a new
+> >> drm_plane field, bool async_flip, that allows drivers to choose which plane can
+> >> or cannot do async flips. This is latter used on drm_atomic_set_property when
+> >> users want to do async flips.
+> >>
+> >> Patch 1 allows async commits with IN_FENCE_ID in any driver.
+> >>
+> >> Patches 2 to 7 have no function change. As per current code, every driver that
+> >> allows async page flips using the atomic API, allows doing it only in the
+> >> primary plane. Those patches then enable it for every driver.
+> >>
+> >> Patch 8 finally enables async flip on overlay planes for amdgpu.
+> >>
+> >> Changes from v5:
+> >> - Instead of enabling plane->async_flip in the common code, move it to driver
+> >> code.
+> >> - Enable primary plane async flip on every driver
+> >> https://lore.kernel.org/dri-devel/20240612193713.167448-1-andrealmeid@igalia.com/
+> >>
+> >> André Almeida (8):
+> >>    drm/atomic: Allow userspace to use explicit sync with atomic async
+> >>      flips
+> >>    drm: Support per-plane async flip configuration
+> >>    drm/amdgpu: Enable async flips on the primary plane
+> >>    drm: atmel-hlcdc: Enable async flips on the primary plane
+> >>    drm/i915: Enable async flips on the primary plane
+> >>    drm/nouveau: Enable async flips on the primary plane
+> >>    drm/vc4: Enable async flips on the primary plane
+> >>    drm/amdgpu: Make it possible to async flip overlay planes
+> >>
+> >>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c | 2 ++
+> >>   drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c         | 3 +++
+> >>   drivers/gpu/drm/drm_atomic_uapi.c                       | 8 +++++---
+> >>   drivers/gpu/drm/i915/display/i9xx_plane.c               | 3 +++
+> >>   drivers/gpu/drm/nouveau/dispnv04/crtc.c                 | 4 ++++
+> >>   drivers/gpu/drm/nouveau/dispnv50/wndw.c                 | 4 ++++
+> >>   drivers/gpu/drm/vc4/vc4_plane.c                         | 4 +++-
+> > 
+> > The main question is why only these drivers were updated.
+> > 
+> 
+> According to `git grep async_page_flip`, only those drivers supports 
+> async page flip. The only corner case is radeon, that does supports 
+> async but doesn't support planes.
 
-Since the _suspend() and _resume() hooks are registered for both, system
-sleep PM and runtime PM, the _suspend() hook does get called when I
-remove the cdns_dsi module using modprobe. Tested that on my setup.
+The primary plane will alwyas exist (drm_crtc_init() will create
+one for the old drivers that don't do it explicitly). So you
+should be able to convert radeon as well. And looks like some
+pre-dc amdgpu stuff is in a similar situation.
 
-I believe having phy_exit() only in  _suspend() would suffice for now.
+That should presumably allow the old flag to be removed entirely?
+Hmm, I suppose drm_getcap() would need a bit of work to eg. go
+through all the planes to see if any of them support async flips.
 
 > 
->>
->>>
->>>> +    dsi->phy_initialized = false;
->>>>      return 0;
->>>>  }
->>>>
->>>> --
->>>> 2.34.1
->>>>
->>>
->> --
->> Regards
->> Aradhya
+> Do you know any other driver that should be updated to?
 > 
-> 
-> 
+> >>   include/drm/drm_plane.h                                 | 5 +++++
+> >>   8 files changed, 29 insertions(+), 4 deletions(-)
+> >>
+> >> -- 
+> >> 2.45.2
+> >>
+> > 
 
---
-Regards
-Aradhya
+-- 
+Ville Syrjälä
+Intel
