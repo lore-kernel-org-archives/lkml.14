@@ -1,94 +1,127 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2103D4405
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADD94A1D;
+	Wed, 19 Jun 2024 06:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718777836; cv=none; b=Y3UM1FaBIZd6/NBbeSYcQF5pggPG2IiSisfbcJD17ADrsmqSlVF2Jnf4NaLhYs9r2nEZiulKiz5EaA1A/k92bPwO0bvPD60Ljko3FZeyO3LElzRlSB2Oc/ZCBGggqtYMbcfFTePsaLzeEYFTo0pq0K9h2ZWTwOsF7WUMtZKj2pw=
+	t=1718777837; cv=none; b=FDeNb0nrUuHpg/tTjAXTbZWk2r+OjdxTkFhA/ZPeWUoMiqYQafimZJedJZHVhYneqJWzp2A+vuBYN20UUyDjZekfca93rDhlYHPjrTGHwT6uIsTVXfLFb/7JolMDYnKMXptg8WwF2HcjyCuOSD6FDco+EyvWV7A7Oe8U6NQxF28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718777836; c=relaxed/simple;
-	bh=MKxcrhf954+h/fj5FUq0M2IEtC6vw+MEMrgGG2QiMQU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=qCR35t8Oz5n+MsiPpHoAXMV9agOov7K9HSxowjGodiIyi/QqBX18648OTmL8TfvG5cgAUVAzEXsdYHGJoPi5SEDXLU8+A6vRuSwR92tEMo8qli3gSec/YpndfILRGl3iVk3NQz+/ufLDppzz0PKfroM4cfAXO+78IYv0n3GAIlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=PD6IrU+9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1718777837; c=relaxed/simple;
+	bh=LoIqGOykk2UXL+ZK7/OphrS+2TckDBty1r/f11IDxv8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PD4WoLkE5hRluZgq7dLOVkIKEf5XIcY3dukj+6IZIhLxgAq6InXvTP/cRmSAK+Lt5igpPuJrpGI1zARr5ecqu5JnFDOAwTUel+xKNjbjsgobhxyReBldjA2tWm+bJk+lucRqO3v44MRjLJq0mhF3PnKxHKQrjGs02SRwEsT6HQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JhekWnd0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PD6IrU+9"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f9aeb96b93so2354745ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 23:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1718777834; x=1719382634; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gb8rf7B7CmynNMORS4ggh0oWZNT5/aYuLwEeCtSsvN8=;
-        b=PD6IrU+9ikS79E/2m8gZ5wwaARMrSIUqkj2q3bsI8XA0H5o47Ctn3WBhD4zR2b7eLY
-         HDyEx/Y3AiQcPp6Xg4yOWnZ0DfIklodmWrsxxMwBpSGf7GDPJuxNLkBbFU0WrqthVmAC
-         bmuS/O3H3oVHCSVsElbB1qcqAd7u2slGbWJnVFB0ajt4gcjHetmj23EsYjR1YMiuFB/2
-         rW83Uz+MQRklDWxuzPCa67u5SexOutJX7JIgszcwD0ikUVSfC6QWeY7WE+Fm8iTBKBtO
-         cHEHkU67owq5JkGBdIVnA0xZwhm3lUjxLQPfUZPArObi6+lypTzuMljVCkzBp3nbJpf0
-         6Mog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718777834; x=1719382634;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gb8rf7B7CmynNMORS4ggh0oWZNT5/aYuLwEeCtSsvN8=;
-        b=R7sn3OP1Okw2me9z6+aMR6lG3wcdVFbnHPcsMsz40OegvTccCbdKQX57C9NaUE+wVs
-         muAB9x6OmTg+COv8qM83SCnZP99So3ALB0ILc6RJcKzxonSZ9RuBF4R7F6IT4Nsy3UtD
-         McXiNNRclX0k57oeQpuQACtkzFgwWJWM5S37AYLAY4PYEkRMaFJrVppjk43GXZ+BR0lo
-         XDb1uq5XAcuNlJaQv1htfj1suGUbRVh/GFaJg0+XFEx/BSCPP5wQixFpHOlkVQX00CGP
-         kWaK6uiIC6pH2K3W3mgxOcchGhyejnFGAm4behPavplSIvbTQ1lbj14RkK9yGBGtQJJf
-         H0lA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWnXL/JQdWWNZpemOp/xJk6BQMKt01rRuwPXejGiJ0G5qH4/b67VxjYqrIUIYXenQQcynAiAWtjVp10wqtlO3bZo4H43ILLWR5Rmm1
-X-Gm-Message-State: AOJu0YzpIE4yqJ/z8y3Gbjnlap1VCPPznv264dpb0IESYxb1NPZc2DuI
-	BxJ5kGt/U3CwOIGwVzq0ViwmptS4Jjuw79bcnJr1QWgJIpNKI1IhOMykReqL+5Q=
-X-Google-Smtp-Source: AGHT+IHfUnljtY+OOkau2dxrbi5Qj6VW8lQGCO3kt0DXie9WHQ+0FBNLbj6+uVP1Jcbnh77enT4saQ==
-X-Received: by 2002:a17:902:b209:b0:1f6:51f5:540c with SMTP id d9443c01a7336-1f9aa3eda7bmr13953485ad.29.1718777834224;
-        Tue, 18 Jun 2024 23:17:14 -0700 (PDT)
-Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9a38f9ba2sm15952735ad.70.2024.06.18.23.17.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 23:17:13 -0700 (PDT)
-From: Zong Li <zong.li@sifive.com>
-To: apw@canonical.com,
-	joe@perches.com,
-	dwaipayanray1@gmail.com,
-	lukas.bulwahn@gmail.com,
-	robh@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Zong Li <zong.li@sifive.com>
-Subject: [PATCH] checkpatch: filter null file for dt-binding check
-Date: Wed, 19 Jun 2024 14:17:09 +0800
-Message-Id: <20240619061709.15236-1-zong.li@sifive.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JhekWnd0"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ILZuNx014357;
+	Wed, 19 Jun 2024 06:17:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MdltLJyWr2d/++TgrnCLgZ8QLltHMEJWcQ7hE0ydggU=; b=JhekWnd0tGPtE+y1
+	bzyX+KAWRTLh1EIgXXHxwGrI4m2fT3ggwXtp0gLjgjt1V1iMtbqA2IfZRjpL7LHd
+	JP4KQHzgRzhD5BUzyBMPnrTfWo8d+TBnE8ILREUVdyNiSgd7CJ7xtSiJjPRwsTic
+	A6abus7AOnly6zJ8zZjGrIPBJSqTWhcn4z5X6SFOKyEW7FJFxDstuoTvKE2hZ5JQ
+	K1ovQEhdpCZLohp6TNe1adDj3GmGYDKF2r7WFEFIq5oL3fDwqDMmCPD1WtG8aN3K
+	qc5eJfTgt7ZmO+HF0X77YyJaio2ojQjwJKvNqiVmq45s0/St+hUhrZgOUnRCU9tp
+	wTTaKQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuj9x0tg5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 06:17:13 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45J6HCxI003580
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 06:17:12 GMT
+Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Jun 2024 23:17:08 -0700
+From: Komal Bajaj <quic_kbajaj@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>,
+        "Komal
+ Bajaj" <quic_kbajaj@quicinc.com>
+Subject: [PATCH v2 1/2] arm64: dts: qcom: qdu1000: Fix LLCC reg property
+Date: Wed, 19 Jun 2024 11:46:40 +0530
+Message-ID: <20240619061641.5261-2-quic_kbajaj@quicinc.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240619061641.5261-1-quic_kbajaj@quicinc.com>
+References: <20240619061641.5261-1-quic_kbajaj@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: RUktb0nqjnEKQVeCvNN7QeEcZDfloMfV
+X-Proofpoint-GUID: RUktb0nqjnEKQVeCvNN7QeEcZDfloMfV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=733
+ impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406190044
 
-When removing a dt-bindings, checkpatch will catch the 'dev/null' file,
-and think there is a non-dt-binding file. It causes fail because
-/dev/null is not a dt-bindings
+The LLCC binding and driver was corrected to handle the stride
+varying between platforms. Switch to the new format to ensure
+accesses are done in the right place.
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
+Fixes: b0e0290bc47d ("arm64: dts: qcom: qdu1000: correct LLCC reg entries")
+Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- scripts/checkpatch.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/qdu1000.dtsi | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 2b812210b412..ac59a48162d2 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2896,7 +2896,7 @@ sub process {
- 			}
- 			$checklicenseline = 1;
- 
--			if ($realfile !~ /^MAINTAINERS/) {
-+			if (($realfile !~ /^MAINTAINERS/) && ($realfile !~ /^dev\/null$/)) {
- 				my $last_binding_patch = $is_binding_patch;
- 
- 				$is_binding_patch = () = $realfile =~ m@^(?:Documentation/devicetree/|include/dt-bindings/)@;
--- 
-2.17.1
+diff --git a/arch/arm64/boot/dts/qcom/qdu1000.dtsi b/arch/arm64/boot/dts/qcom/qdu1000.dtsi
+index 7a77f7a55498..3795ebb2d3d6 100644
+--- a/arch/arm64/boot/dts/qcom/qdu1000.dtsi
++++ b/arch/arm64/boot/dts/qcom/qdu1000.dtsi
+@@ -1579,9 +1579,23 @@ gem_noc: interconnect@19100000 {
+
+ 		system-cache-controller@19200000 {
+ 			compatible = "qcom,qdu1000-llcc";
+-			reg = <0 0x19200000 0 0xd80000>,
++			reg = <0 0x19200000 0 0x80000>,
++			      <0 0x19300000 0 0x80000>,
++			      <0 0x19600000 0 0x80000>,
++			      <0 0x19700000 0 0x80000>,
++			      <0 0x19a00000 0 0x80000>,
++			      <0 0x19b00000 0 0x80000>,
++			      <0 0x19e00000 0 0x80000>,
++			      <0 0x19f00000 0 0x80000>,
+ 			      <0 0x1a200000 0 0x80000>;
+ 			reg-names = "llcc0_base",
++				    "llcc1_base",
++				    "llcc2_base",
++				    "llcc3_base",
++				    "llcc4_base",
++				    "llcc5_base",
++				    "llcc6_base",
++				    "llcc7_base",
+ 				    "llcc_broadcast_base";
+ 			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+--
+2.42.0
 
