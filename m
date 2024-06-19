@@ -1,158 +1,98 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D161C15921D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 20:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82079FC0C;
+	Wed, 19 Jun 2024 20:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718828723; cv=none; b=YBebew4cfPyvduL0qPd/ki61DUCNCN1+DKjWVmfv1Vs2pJKLcDHF4pMvCXs9o0sBOwmKlBw0mj68RfDkMw9WnNE72TZ3PfDiE7OC+Js3NUy1sTvKnQNmlyShv/bBRADwO+AQP06SU+wSfHF5Nf0NQWIrfgnA5kNFsEROiJN+Oj8=
+	t=1718828821; cv=none; b=h7aQXeGapA4UaUZPDAA0K3wLzaTQRFI55BMH/NfEOc+PCOM3f0KFzbFcHKvjzCTOk59k7cUKaPWZ8AeVGmtbA8vk3Eidls50UwOdLDL3pRUOD4OSMjqA1goES5rkyjgNdm3Wh4wUBvNDjUZAbkLI2kiwOJHP8941kd+HfSppHUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718828723; c=relaxed/simple;
-	bh=rG9ENg+9n76Cn4HGc5+anyg5WiKL5Mt6eTESlfVDI8s=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fAL/1o0FnWWLeGjuflDNQHfViALmKNAiVGc37zBJ6jqcDS6theUCYrvofQrd4NW/s+v+LY3wetViGW++21VFSclbca+MjC/fuQcD0hui7Xhot5jjrDH5IPxevaxDdt9rR9WPgOq8SlUWwJ7nIyNlSQHndtTuUGBO0jeuPPj9Sbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L9KhGDI3; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718828821; c=relaxed/simple;
+	bh=g4F+MdqT/MVUcXKtNQAJg5HautTBfqFGsh7S/zXMJbg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p6WvFISjryGkl3+IKsUCdr0oIKehXsHhccRNAgaqefsDmHqJEEsLLJEJzgShl41yOgGCyr/pKtbHdE1u0ksbosiI6w+KfUc39XwB+2PWvzM3udpGXQG9MrQyyx/et8E0NvP93LiQBL0TVLnKKDiPFTJ/vWeCWccISd69TF8oLR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbDkk76X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L9KhGDI3"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-364b2f92388so51097f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 13:25:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718828720; x=1719433520; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NB9pQz873Cy2BI/A69NB2hPivapi5DfhwFSffll5JTM=;
-        b=L9KhGDI38mqoFcTGrQY5wbFSoZAOSeh8XowF3j72YNdHweUlxwUrdN7QZr0lQKlVmp
-         zPyAVF696AIh8kF/+6Kfv44XoNLhjlDgIUEZ78XnncBcCnvApRf3Rq0mg7/sLtsYTJN1
-         m7die/k0hgyVoOlhUlv1vBGgftRwv+aPg6mjM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718828720; x=1719433520;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NB9pQz873Cy2BI/A69NB2hPivapi5DfhwFSffll5JTM=;
-        b=L4rbTeCwWSfzlHK89F+GFiHQF51oxml08kG02/S/R5wU5kQw7jOnqWhAKSvwLYxVXE
-         w5ZbD9M/oIBSdBlb0FBo4vETND7ZXMJJn0w0Qjm1EmnWIotgoEI1wcRJm1GTM+aKYqKY
-         DYr/5m1TMTsVTDCHwKMzHXLWBE9BNLVGPyf5NYxUzgq0sLXjY5sWiCH+5kU+LA9zNMQv
-         B4KnRiPPaE+AGf1xeHEIacrziadiQhxNELGRBLS7HRrarNxuZ6SkD4nmhsCWK0hYHII2
-         i9l4lBRpgcjHF6RTzsXSWInRvUIsgQlCV3hidsx8VFwQhJsoDVW08QijKO+ZSRHM/V17
-         orNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKGQ9Ti79jF2fa3WfmTX3LNIemdNvDpsDa4TbHqSGVAj/8R9WxElwk9RPXVElGkGuGv71zDzhgvJ92zcimZtF86D/tLr98wipldSpF
-X-Gm-Message-State: AOJu0Yw0WNdBDrA75j+KWo+e55abx6VGujgFRJoSMuAFhH8IyaaRKxEn
-	yBrWgYBJ41hlcBnQZroq6GhXeWZgRUnNaqs9lUFT/1PblL4LApQW5Ke09ImjZNw9ioGrOvYLPor
-	Te8CB5Q==
-X-Google-Smtp-Source: AGHT+IEtctB5USxaXj4+r6HPBqKw1u1gAeAB26OynmmeVl8Ie7IxIhh9hRmSoN4n9u3FVCyWN4WeXg==
-X-Received: by 2002:a5d:63c7:0:b0:360:8f85:a5f1 with SMTP id ffacd0b85a97d-363170ecc19mr2740230f8f.5.1718828719843;
-        Wed, 19 Jun 2024 13:25:19 -0700 (PDT)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f4182fsm704117966b.178.2024.06.19.13.25.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 13:25:19 -0700 (PDT)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f176c5c10so15465666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 13:25:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW2h8sxws+M2ovPcBeKFm2B2CmPqUf3p1NKbR3NXz+bk/WYIbVsahio9BluICeOX+vG8uNTI0LNRl0XbohEH+vsXzxNszzPcJXH6m9O
-X-Received: by 2002:a17:906:d98:b0:a68:86b9:52e8 with SMTP id
- a640c23a62f3a-a6fab7d0449mr192966866b.68.1718828718630; Wed, 19 Jun 2024
- 13:25:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbDkk76X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177FAC2BBFC;
+	Wed, 19 Jun 2024 20:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718828821;
+	bh=g4F+MdqT/MVUcXKtNQAJg5HautTBfqFGsh7S/zXMJbg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lbDkk76XiVd3RQP2mZdFcK/b/3jG1KOgZE4qE5BJARZKzG885i4U7SUrYOdPSuUV+
+	 ZyP8Tb/rczN3iWQ+XlGybVllyCXWutfdf/14nDMqLj4wWDbQ6sPxE4XaIn9oRibqTK
+	 PiEyEunu5VyZDiA4uEyC0LT+LsVQ0h7BTK9AXSLSw1RKrXkcJL8nrRS2szwXnXxwEW
+	 Q0OZJl9b0T9oqRFZ4t4urkQsS/farPGb74OqUVSKMQfuPkPy64my905iIWM77muZsa
+	 DBgmarNlltQNCpGuue8ZJML8DJ1EbY4Y0GtbM9WklRThBs0xt5Qib8ttM3UUIIhOVi
+	 1LrB5lbvzKjnw==
+From: Kees Cook <kees@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] kunit/usercopy: Add missing MODULE_DESCRIPTION()
+Date: Wed, 19 Jun 2024 13:26:59 -0700
+Message-Id: <20240619202659.work.532-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 19 Jun 2024 13:25:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whHvMbfL2ov1MRbT9QfebO2d6-xXi1ynznCCi-k_m6Q0w@mail.gmail.com>
-Message-ID: <CAHk-=whHvMbfL2ov1MRbT9QfebO2d6-xXi1ynznCCi-k_m6Q0w@mail.gmail.com>
-Subject: FYI: path walking optimizations pending for 6.11
-To: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	"the arch/x86 maintainers" <x86@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1373; i=kees@kernel.org; h=from:subject:message-id; bh=TR+mnu+Vp3aO0Se1dthLMkaeQZNFS625VczsCknmmGU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmcz8TrS0NSRUqHvFAWAg35v8Vjkmd2YmjdFSJV K16Fe6uB0aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnM/EwAKCRCJcvTf3G3A JrU8D/95zyNv4qF5byvmaZbz8z8Y51857vLgHut7nNBsJoK1ksYWhf2TvONsuglT6Afq02lZKh+ taA4AM/nYxi/qT7v2vJk7joKANRsxRxKmO/3fQ1RSBujsKcIfZpQKYRztuxPGeGWId5nyE82+ra /srOP28M+wJaqSNpejTdwNoLayBjTvszodIrK2obJFTwNaQ15Xkm+lIwP4do5Wnc+jtQePQf9so HPuNoaYXelpLUrDLSzwCd048KDfyTzvCnYFG7pXA0eBNTM/YFGDkys3Da7MK4buG72n0egXr8kE QmSkN8QZWvuukMyvsXs1JKLII2d4ArGsM1huUfd3IGM9OEMKAYXoDXiw0Rh9SCOHlZ2cJbFPTfj IExFAt79/EjG7qEacM4PpIkZTOOJ9n52hXmoNNr8oA382+27VvNOKaHMNiymZcTs98he0TJKcvD 3DCs0pNzL0yatRbRmXATqBhwWjvimMrjZ9oAN4H+utSHuWqal2f88nmaCCxikozrBBKFc59e2rz KXyz8dqwj62WQnMUGTD7tukqXVEkz6yhhlbt5jsq8R0kbFcE8Bzb3txuzRhelrqZIxJvUsM6xfI ufy3Tw8VRIEsUketF05CLT+ZxJi9Bv7pRe5Dx1B2h8JeWmLPJKCDv6zC0W+XMQRFwNpLqorsjR/ DeitX033XPPVo
+ 6g==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-I already mentioned these to Al, so he has seen most of them, because
-I wanted to make sure he was ok with the link_path_walk updates. But
-since he was ok (with a few comments), I cleaned things up and
-separated things into branches, and here's a heads-up for a wider
-audience in case anybody cares.
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-This all started from me doing profiling on arm64, and just being
-annoyed by the code generation and some - admittedly mostly pretty
-darn minor - performance issues.
+Fix warning seen with:
 
-It started with the arm64 user access code, moved on to
-__d_lookup_rcu(), and then extended into link_path_walk(), which
-together end up being the most noticeable parts of path lookup.
+$ make allmodconfig && make W=1 C=1 lib/usercopy_kunit.ko
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/usercopy_kunit.o
 
-The user access code is mostly for strncpy_from_user() - which is the
-main way the vfs layer gets the pathnames. vfs people probably don't
-really care - arm people cc'd, although they've seen most of this in
-earlier iterations (the minor word-at-a-time tweak is new). Same goes
-for x86 people for the minor changes on that side.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+At Jeff's reminder, I've split this out of:
+https://lore.kernel.org/all/20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com/
+since the file got renamed.
+---
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: David Gow <davidgow@google.com>
+Cc: Rae Moar <rmoar@google.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ lib/usercopy_kunit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I've pushed out four branches based on 6.10-rc4, because I think it's
-pretty ready. But I'll rebase them if people have commentary that
-needs addressing, so don't treat them as some kind of stable base yet.
-My plan is to merge them during the next merge window unless somebody
-screams.
+diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
+index e819561a540d..77fa00a13df7 100644
+--- a/lib/usercopy_kunit.c
++++ b/lib/usercopy_kunit.c
+@@ -331,4 +331,5 @@ static struct kunit_suite usercopy_test_suite = {
+ 
+ kunit_test_suites(&usercopy_test_suite);
+ MODULE_AUTHOR("Kees Cook <kees@kernel.org>");
++MODULE_DESCRIPTION("Kernel module for testing copy_to/from_user infrastructure");
+ MODULE_LICENSE("GPL");
+-- 
+2.34.1
 
-The branches are:
-
-arm64-uaccess:
-    arm64: access_ok() optimization
-    arm64: start using 'asm goto' for put_user()
-    arm64: start using 'asm goto' for get_user() when available
-
-link_path_walk:
-    vfs: link_path_walk: move more of the name hashing into hash_name()
-    vfs: link_path_walk: improve may_lookup() code generation
-    vfs: link_path_walk: do '.' and '..' detection while hashing
-    vfs: link_path_walk: clarify and improve name hashing interface
-    vfs: link_path_walk: simplify name hash flow
-
-runtime-constants:
-    arm64: add 'runtime constant' support
-    runtime constants: add x86 architecture support
-    runtime constants: add default dummy infrastructure
-    vfs: dcache: move hashlen_hash() from callers into d_hash()
-
-word-at-a-time:
-    arm64: word-at-a-time: improve byte count calculations for LE
-    x86-64: word-at-a-time: improve byte count calculations
-
-The arm64-uaccess branch is just what it says, and makes a big
-difference in strncpy_from_user(). The "access_ok()" change is
-certainly debatable, but I think needs to be done for sanity. I think
-it's one of those "let's do it, and if it causes problems we'll have
-to fix things up" things.
-
-The link_path_walk branch is the one that changes the vfs layer the
-most, but it's really mostly just a series of "fix calling conventions
-of 'hash_name()' to be better".
-
-The runtime-constants thing most people have already seen, it just
-makes d_hash() avoid all indirect memory accesses.
-
-And word-at-a-time just fixes code generation for both arm64 and
-x86-64 to use better sequences.
-
-None of this should be a huge deal, but together they make the
-profiles for __d_lookup_rcu(), link_path_walk() and
-strncpy_from_user() look pretty much optimal.
-
-And by "optimal" I mean "within the confines of what they do".
-
-For example, making d_hash() avoid indirection just means that now
-pretty much _all_ the cost of __d_lookup_rcu() is in the cache misses
-on the hash table itself. Which was always the bulk of it. And on my
-arm64 machine, it turns out that the best optimization for the load I
-tested would be to make that hash table smaller to actually be a bit
-denser in the cache, But that's such a load-dependent optimization
-that I'm not doing this.
-
-Tuning the hash table size or data structure cacheline layouts might
-be worthwhile - and likely a bigger deal - but is _not_ what these
-patches are about.
-
-           Linus
