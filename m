@@ -1,40 +1,40 @@
-Received: from smtp.smtpout.orange.fr (smtp-29.smtpout.orange.fr [80.12.242.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A019015A875;
-	Wed, 19 Jun 2024 20:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59FCA29;
+	Wed, 19 Jun 2024 20:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718829944; cv=none; b=YymmAfXa6mMF9N+/ResEmJqx+Suds6mzyuVzpxzxgjpn2Rscm/lUGjhesdHlkPIaI1K1BQFtp9IQ4bubDSt9H4AFD7FesfSbm4/Wymh6yY+8biLl1r0GumvFsKHdng8wXgbWI4GGGDfzJBQWnPB9Pl8oJdzpWDFKb3ctrv9kGqw=
+	t=1718830125; cv=none; b=EZ5wOcx6tjpks8Y0FSq2gRtyMx9t5GAem3yDRvFMAAtaIOM9ETI9tIno0nkKITd3q9KzCNHwek415fFkpBBYVIql3Y6nLqbcVcLyPJpfZMl+s9hv5Gg+G8GGVprXsHum6+wUdEFRcOjYkAHQyX6B031aaSXuKzvVuaZdFoL4X98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718829944; c=relaxed/simple;
-	bh=pS8lzvJ4CpcgfQaJff8VtAHN+nKsoV7ysP4T1j49V98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KVKMKN73nKoY074w6Z81ydWVs1NNcJAwDidcBV0I3SVlvfuCC31e3Vr5F+O+CmccaiHk3BBIrIE15BGLZETMxUaPtI6sRslIC9J/pDbtdpWS8NqfFuIs2Vjg0zmgMy2TLVCDUqQ9XZJ+iRjzMrSCdIiiFbthnvW5RTP5Ykk3A0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=k/LdAn48; arc=none smtp.client-ip=80.12.242.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718830125; c=relaxed/simple;
+	bh=BwOtPCpk5WvqrRl9zBjzcE5O0zE6nZShSGAYhIz3sdk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WnMe48AvuZ5uTv6vZzxe/8lAKQWigrC3eMJUK0RTSp243KKzRPggGR+3Q+nj7NTa9JvA4VCybxStJAtwe3UxWZ+6SrxFOKGXhKlmddTK2h/wy/Y/KX3P21xmfrGNjLYBMsLd2wRVyLzcdPEmLp1MxdHlaMSerJXFYYFb4ySZrnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uN+VngO/; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="k/LdAn48"
-Received: from [192.168.1.37] ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id K2BMsLovPJk5EK2BMsLlKP; Wed, 19 Jun 2024 22:45:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718829934;
-	bh=BI0l24CYzwU9Qjet60SgYpejzTHPgIlrhe+10WvNaFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=k/LdAn48yWPg8B7gd4Cxhb1A7xM1ogt+/vJr9adNiZzIhxMLmNNnIfMZj4x5U8NY9
-	 Xx3AijbEKUXvpXbt/pO94zr54rcpzJbMffEDBKMkHdrlvd08gzw0zTxiMjuOpgP1AC
-	 rOrucKgnfER/GYheAN9nuUHjGpTddoHgkjC5VDq5ClmneN5YVpsneJzIer5LowCajM
-	 UZhKy/yaBDj+m058Ruqc1snQc2k7uTPDGiNCzvqHlEDr++PrHANAmkLXXqShLr0KDn
-	 ZWVOMu2iGceZlwq/rWcwjNornvarIBKBpwzsf81JSuePZcKt43v//hceCZDmLI3X9V
-	 qqCEEyPbkp9Ug==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 19 Jun 2024 22:45:34 +0200
-X-ME-IP: 86.243.222.230
-Message-ID: <09ea3565-9a0d-45ea-b12c-de79d3fb5efb@wanadoo.fr>
-Date: Wed, 19 Jun 2024 22:45:28 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uN+VngO/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718830107; x=1719434907; i=markus.elfring@web.de;
+	bh=BwOtPCpk5WvqrRl9zBjzcE5O0zE6nZShSGAYhIz3sdk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=uN+VngO/GYoooWhHhRApfvgn+EYn3SPZv1nogV5lNaz1m231wnTUsrU0rJOkCO6/
+	 ep+M8uaMHxuQgbn8zLyve1n2RxTG5UblSVtM/Qn8vCkNfRyt1CeGb9DoVR8wdXYCP
+	 NgyP8bm3CFSzK1YS2ayERAMcsF0akmS+dG5Ur0cpC+0xD9SFGyfNLlRg2KbDL9yJJ
+	 X1HnlDE512EA9PW9D1rmNUjApqBZsakFO4mlyAQXywK5l2BLNUzI2wAeuZgoO9DGz
+	 5kuCzuSye8Gvp3C/t+L9UAUV1fizdjhMAO6lV6Cdg7fGfh/5a5wK5IkLKMzNzMrE9
+	 BMFtG1F9K/HmDQjhaQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MqIFD-1sfOx62RcZ-00g40C; Wed, 19
+ Jun 2024 22:48:27 +0200
+Message-ID: <78ded683-9bf8-4f2d-9dd4-877aa86e0e0b@web.de>
+Date: Wed, 19 Jun 2024 22:48:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,71 +42,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/7] ASoC: codecs: wcd937x: add wcd937x codec driver
-To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
- Mark Brown <broonie@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
- linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_rohkumar@quicinc.com, quic_pkumpatl@quicinc.com,
- Konrad Dybcio <konrad.dybcio@linaro.org>
-References: <20240611074557.604250-1-quic_mohs@quicinc.com>
- <20240611074557.604250-4-quic_mohs@quicinc.com>
- <2b92c0f9-2595-4b73-8015-1abb825a61a1@wanadoo.fr>
- <f741630e-f9e8-45e1-b3e2-4866f0baeac2@sirena.org.uk>
- <288156b9-2f72-6929-3422-c3aecb9c2c07@quicinc.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <288156b9-2f72-6929-3422-c3aecb9c2c07@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Hongfu Li <lihongfu@kylinos.cn>, gfs2@lists.linux.dev,
+ Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240619050358.411888-1-lihongfu@kylinos.cn>
+Subject: Re: [PATCH] dlm: use KMEM_CACHE() in dlm_memory_init()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240619050358.411888-1-lihongfu@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:vK0eUEJAxgUDFnqpljS9QCoILTzvocES7UFEaaUgw8sZ4pLGt0k
+ tZPBuxK88lguW5frrCqm6I0hkE1dqxg02O3nM3n73kA1ltZCluyeLl+6eBjMHI3XWKoEsxu
+ MV6rvDTHdtu90DegnFO1ROeHdioyukmoCSxSIKcg+IGrHaSGMT5LEjjTNTp5DEQocXR4Z+R
+ LbG/YqD4W8va8u2eXeGbQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:S294w+tx91U=;gUc+2oNGeNpZcmYUwKfTDFz2dhm
+ tbf8wjaCcgrpTbPtDa4Gef2K4AXIAutSCdFFUpH6qf6EnmN3t8dtTjrenfc7aKurqaBpSpSik
+ gM1o22cpcAKXdGFK4AIEKpL0YBAje8U2OMi+dwqPLNSy9DZKFjMjhesDFrsOaEXuj0IT2l+e/
+ /q5w75qCne6IA6gYrfCDlDQNHY73QqSbOrzgjeS/CObsrsAhu6z235ZJU5WK4JsDLxaNyFewu
+ +1bV4Ml0Zl70n/LfM5CuD1HXiCygDFeiy6Zg96BjEe70rGUPXwavQBS1QQ2SthzEhfiC3IYUM
+ ohOosE4d+JBBnFenvRQE7PelUVyyOeXDA3oDxtrRhb/oLk5a2gq32GMX0GjSznTjeDy7M/7n8
+ nO7zptf+7dJJaE5Xm9TpIdtrl9UamUtu1GFuYVlSXN9Z/bNOrNvL5+oG1tkUN8QJ6SH4BZ5bF
+ WCo8o2Lr9VTzZz6qQW7IkFXfWsb+VbAGWHQYrHajI3FSZ9vy0zwzL4dNCCHjZPnMdD8Gjvbnu
+ 5R31Q8U3wO8IVKmjQMVb/YEkUSpJQxw1hsAPgLWoMEcE7ECVw3e5YIvKL2Aevzs5liTYjT4FD
+ 5P8K5wwLu9d+P1LMAGerFsnPzHoUWlWXiha1E0xUUV9ONqlUqxK4kTD/+VHO8Wkb3JpavWqvX
+ LKxXRj2QLqCQqUl5TFlgXKvTVMtP+cxseboP3meMmNBMHvdB67B9mjGAbHt0dN2h3R4+FGzjX
+ kzm2J4dfCpHX4kePuc7TPoz9M3ZB4ZZj/WRwNbkmGlBPOKbIrISsHfDM03xEXR09SrDwEttml
+ E0lkc9okKuQZI4wlDuxBFALSHngqhu53MlAnZK2fHwfkixlUIDcrA54tFtJDgfsV5T
 
-Le 19/06/2024 à 13:02, Mohammad Rafi Shaik a écrit :
-> On 6/17/2024 5:25 PM, Mark Brown wrote:
->> On Sun, Jun 16, 2024 at 04:54:58PM +0200, Christophe JAILLET wrote:
->>> Le 11/06/2024 à 09:45, Mohammad Rafi Shaik a écrit :
->>
->>>> +static void wcd937x_soc_codec_remove(struct snd_soc_component 
->>>> *component)
->>>> +{
->>>> +    struct wcd937x_priv *wcd937x = 
->>>> snd_soc_component_get_drvdata(component);
->>>> +
->>>> +    wcd937x_mbhc_deinit(component);
->>>> +    free_irq(wcd937x->aux_pdm_wd_int, wcd937x);
->>>> +    free_irq(wcd937x->hphl_pdm_wd_int, wcd937x);
->>>> +    free_irq(wcd937x->hphr_pdm_wd_int, wcd937x);
->>
->>> These irq have been requested wth devm_request_threaded_irq(), so either
->>> this free_irq should be removed, or devm_free_irq() should be used if 
->>> the
->>> order is important.
->>
->> Yes, this should be fixed.
-> 
-> okay, will check and provide the fix.
-> 
-> 
-> Thanks & Regards,
-> Rafi.
-> 
-> 
+> Using KMEM_CACHE() macro makes the code more concise and easy to read.
 
-Hi,
+Can the three passed name strings matter still for the identification
+of the created caches from this function implementation?
+https://elixir.bootlin.com/linux/v6.10-rc4/source/fs/dlm/memory.c#L27
+https://elixir.bootlin.com/linux/v6.10-rc4/source/mm/slab_common.c#L362
 
-just to make things explicit, in case you missed it: I sent 2 comments 
-in 2 different mails.
-
-   - the one above: 
-https://lore.kernel.org/all/2b92c0f9-2595-4b73-8015-1abb825a61a1@wanadoo.fr/
-
-   - and another one: 
-https://lore.kernel.org/all/834d31cc-f4bc-4db7-a25b-f9869e550eb6@wanadoo.fr/
-
-If you give it a look, could you please also check the 2nd one?
-
-CJ
+Regards,
+Markus
