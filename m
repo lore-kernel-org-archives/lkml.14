@@ -1,100 +1,97 @@
-Received: from lichtman.org (lichtman.org [149.28.33.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DDA15B0F4;
-	Wed, 19 Jun 2024 21:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A16C249ED;
+	Wed, 19 Jun 2024 21:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718831698; cv=none; b=Dxm45yNS0VLP9eFmyxUKDCJZqE3X9B+1BHohufe8Ts/kFsjT1aB9k4MHOwnrXl4vot3/0qMribvBUeoKcTJYmfMtHf1IbIFhyngBbo171Inn84dobFYMxXMaiCj0n6b98VbmvBKdAjjlcHMpbbO8scP1NBUylPncDAIfeIHyWSo=
+	t=1718831763; cv=none; b=r6kSoIhFudpFmL1n2vn/al3jE6AOWB/SYocOTU0iJBh43Gwnhsu3HTOadQEYeGYY6veivBKtIUuPuN/yg0YSl2xQrJYa6k4t8P4SzUGw1gLy49Y6ZHC7VSfSWI1uF8bBAW/tdSHU3XOtYtNoKLn6vXHcxa07kOjhjNtMFDaZtSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718831698; c=relaxed/simple;
-	bh=e9njVn5tHhWvauUvsgZfyqi32LDEaxaVi/NqWvh/EN4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hUi6N1JHH2SUClWvG3MdePZVg4tOBIKpO0XC/FGgt/j3lhOSarsGALf5AyUAmupKHpjtd8Tmr0nbgOfcAIVZZLmQ6TZ7jK4Cp5jQA+9D4AoqD/N2v0urslvt3uUorzwH93qksisqnxkITYeXsefmfJHEsgQN9tJ7ClDUEebqh6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=hXVgzZZQ; arc=none smtp.client-ip=149.28.33.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
+	s=arc-20240116; t=1718831763; c=relaxed/simple;
+	bh=C+KO6WOHrjxoga94KRP33XIx6lWs1G8zXZg+g0TEIXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f2dqrgnz/cWO6ctrhGp3yueIdP2IipI+3nXxV7sOUy44ErYUUZIxH515rgUe82TKYhG0gAFGE36AxRpvFvox8Iw9d7xbsr57tMlmSNSka198CoJDjs9++fCYuejcekESPyvn0pPaCX76uWhvmiNdACUB33yrihdeqXpLdY0nBh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1pzdkBD; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="hXVgzZZQ"
-Received: by lichtman.org (Postfix, from userid 1000)
-	id 6DF64177029; Wed, 19 Jun 2024 21:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
-	t=1718831227; bh=e9njVn5tHhWvauUvsgZfyqi32LDEaxaVi/NqWvh/EN4=;
-	h=Date:From:To:Subject:From;
-	b=hXVgzZZQM6+S9QAP3H0nKqDPwWHZcB1BqIJNpJyKzlzXtDlmb0RzF1GND+41lvtSW
-	 VOhfakPzz+iPH19IHBy+gbwmTYzpVmOSoMszMnW/RbBiv9i9x5lk9fRBS4C8qFh28K
-	 Jrbt0280646IUQzeEAPkawoIuKy5eTi8PVc/5yW8EMJtgJ/ac/7KI8renykVx7aY+M
-	 AhlIZ1L/12h6tjIKd0kS5rw49ewfJYhJnnXZvDAKfTlsflZadBoiw6OhacsbFWnGkS
-	 A7MpHRc+VFHzSKCG3qnH1Tk4/qqKQ5iIi/+gCqXJjBAf0x4nVIJGP7wHqEoq63ws4N
-	 o53FIjbQARjUA==
-Date: Wed, 19 Jun 2024 21:07:07 +0000
-From: Nir Lichtman <nir@lichtman.org>
-To: corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] English fixes in vmalloced kernel stacks documentation
-Message-ID: <20240619210707.GA3570474@lichtman.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1pzdkBD"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-48d9998787fso89999137.1;
+        Wed, 19 Jun 2024 14:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718831761; x=1719436561; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=P51anmAPzV9wYSDoUqP/bhaw8/p6FKuq0IY5YhnZqM0=;
+        b=h1pzdkBDJl7Q4gYvljzeS1aQWw2JjrDU49t8sc9iARAeyE10SlbIOY4M3XP4y2Ib5Y
+         04FdIuMu70/nJkSYfYOHq/wmbksg+ZOKvdjNKyVRFSxjeYZK2fSdXw2WxCI9nXmc/WOi
+         89TInDw/zSdnb/f7iD+QrxWQUReH/TXWKp9NV/F5K+Ac1ucxAmSvm9rt58zJkz9Ye6vm
+         7jN5mBGnyt3WenNKJ2tjgyHG1iubUcxbkvEJ+R1gHS4i4bA+JSpfHpr7/HRmC3lbjh7R
+         +CcPvhDGkppt3ShtCK3SoT98eDc497m7CcpSGWju4zbedANeJmrGy+ylVoKDolvbwtv5
+         5QPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718831761; x=1719436561;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P51anmAPzV9wYSDoUqP/bhaw8/p6FKuq0IY5YhnZqM0=;
+        b=TWus6vAxCYWo+z0F3k/kYGA4cMi6ORh1zdh8YQBYWKVUFfHYiSiQe7VQukquom6Di9
+         S3+4mPbqRKPwv+wg2+CxpFDX3GGO5HtK2wcrJ4m6XF+fm7txpxZCw2UIKT+YcE1v3YHa
+         UgFPl2n9J52x4WKSUelt5p4YnQh4Y3PY3pFzQeUK8ciN7sURP1z+kAHF89Q2xu6EEXte
+         JF3amfilEpI1LXYFqX8D6Gt7lihQPlWRuTG0VQ/5aitxxdGYT/nYI6C5ydgGkGbUadsR
+         wNecGwbuDXrdKgdLZJRu1Nbz2/HuA/2X/cnfEr8RgzdPUdS+8lLgrimJE9/6wdcZTnNh
+         3XEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsD9/WI9QpzbUqrPLBRVjWZIhDFvKx7iSj9FTsf7p9/+HwPCTY/ka5pDzx/HABrRNr7ni4fOZuCvRaLPd2ql8E+1vpSqt494fkXcyU
+X-Gm-Message-State: AOJu0YzRhI58Wf1M4AX7jbsEPRKw2/fG/sHFmwyE+sCBu0bFhF94Izqy
+	66RoSCJv4ETZDuahfqNQw7tfuCZ84kUI3uKRBT4qPElg5FuNEmXjzDhpqDjkIfzLE1lyWI7o/1c
+	FZcoecvMlXNKr3bix9eaNB1PYV18=
+X-Google-Smtp-Source: AGHT+IHUYhwn5CA+as4/BnMoW/s7G1P+1RaW4HbsMU7gltMXF/rPb1W5yXJHb/MReLCjSN3zDFFboHoNMbef0Ypr9iA=
+X-Received: by 2002:a05:6102:317:b0:48f:1674:f5b5 with SMTP id
+ ada2fe7eead31-48f1674f725mr2932551137.18.1718831761348; Wed, 19 Jun 2024
+ 14:16:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240619125609.836313103@linuxfoundation.org>
+In-Reply-To: <20240619125609.836313103@linuxfoundation.org>
+From: Allen <allen.lkml@gmail.com>
+Date: Wed, 19 Jun 2024 14:15:41 -0700
+Message-ID: <CAOMdWS+Vk5Mp_EWUpzZYZjXHeqFXLU_XNoyxXMyX+QboeQkq7w@mail.gmail.com>
+Subject: Re: [PATCH 6.9 000/281] 6.9.6-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From cdc9d82bad7111ab1f132d1264fa6ffa323c26b0 Mon Sep 17 00:00:00 2001
-From: Nir Lichtman <nir@lichtman.org>
-Date: Wed, 19 Jun 2024 23:57:11 +0300
-Subject: [PATCH] English fixes in vmalloced kernel stacks documentation
+> This is the start of the stable review cycle for the 6.9.6 release.
+> There are 281 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 21 Jun 2024 12:55:11 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.6-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
----
- Documentation/mm/vmalloced-kernel-stacks.rst | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Compiled and booted on my x86_64 and ARM64 test systems. No errors or
+regressions.
 
-diff --git a/Documentation/mm/vmalloced-kernel-stacks.rst b/Documentation/mm/vmalloced-kernel-stacks.rst
-index fc8c67833..b4ca3176e 100644
---- a/Documentation/mm/vmalloced-kernel-stacks.rst
-+++ b/Documentation/mm/vmalloced-kernel-stacks.rst
-@@ -20,9 +20,9 @@ Introduction
- 
- Kernel stack overflows are often hard to debug and make the kernel
- susceptible to exploits. Problems could show up at a later time making
--it difficult to isolate and root-cause.
-+it difficult to pinpoint their root cause.
- 
--Virtually-mapped kernel stacks with guard pages causes kernel stack
-+Virtually mapped kernel stacks with guard pages cause kernel stack
- overflows to be caught immediately rather than causing difficult to
- diagnose corruptions.
- 
-@@ -57,7 +57,7 @@ enable this bool configuration option. The requirements are:
- VMAP_STACK
- ----------
- 
--VMAP_STACK bool configuration option when enabled allocates virtually
-+When enabled, the VMAP_STACK bool configuration option allocates virtually
- mapped task stacks. This option depends on HAVE_ARCH_VMAP_STACK.
- 
- - Enable this if you want the use virtually-mapped kernel stacks
-@@ -83,7 +83,7 @@ the latest code base:
- Allocation
- -----------
- 
--When a new kernel thread is created, thread stack is allocated from
-+When a new kernel thread is created, a thread stack is allocated from
- virtually contiguous memory pages from the page level allocator. These
- pages are mapped into contiguous kernel virtual space with PAGE_KERNEL
- protections.
-@@ -104,7 +104,7 @@ with PAGE_KERNEL protections.
- 
- Thread stack allocation is initiated from clone(), fork(), vfork(),
- kernel_thread() via kernel_clone(). Leaving a few hints for searching
--the code base to understand when and how thread stack is allocated.
-+the code base to understand when and how a thread stack is allocated.
- 
- Bulk of the code is in:
- `kernel/fork.c <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/fork.c>`.
+Tested-by: Allen Pais <apais@linux.microsoft.com>
 
-base-commit: e5b3efbe1ab1793bb49ae07d56d0973267e65112
--- 
-2.39.2
-
+Thanks.
