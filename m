@@ -1,259 +1,362 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28557D07E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8047D07E;
+	Wed, 19 Jun 2024 08:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718787494; cv=none; b=dnKhJPLMot9tGynNmy37rr59gW0Dx+CUP8O2/e8b7K8wfbGaBd49t310/jDvVle/S0uXW1zDI+t8SBC2EjRAw7p+1rgBDethB59/AXt1VG9TvtZ+OssggIbhRlpfETmNVY9NZPjm7pikh7nrQFpreAesPSLnsEBqmzpizmoDs8U=
+	t=1718787539; cv=none; b=FZvc9+ryBupr6jtNwzwbbqF6EhYuZnnPj9Nhr7v3S7OzdUj/kGnr8jZ/aMc2xLA8qcfN5xh8pCdf139UE3mQ22HwIraQyZrL0FN5snVjkGkYd1+9Wu9/I6tkfKTYI+lsQyz5PHz1dsC81INjLmW8gIZRBiwpr673x35z0xgTJr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718787494; c=relaxed/simple;
-	bh=rv2HbQXJ+ZNOdIcmtLJ/tLCPs/V13RHkfTLZowlsMyM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EHjtEZKh3wbZM2XgpTsw5x4ttOMrKrcirF2Y3MggnUpOw8O8U373bIDT4Kk6tmmhgNsw74m0CRYso1eKAZOw5gqKxeaA3bN5UTZVLrKUSZeUC8kxnnbb+iT5opjz5c+nHL/A00sHGcEYxspTRlSqsNbor++15C0viAruvh90+Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=WbQG+LYQ; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1718787539; c=relaxed/simple;
+	bh=5e1tuKoSU4JhpFeu96V+Km2ar8/JJsNaywgKU242sD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZsjC4hMqdHaHLUqC6Wgs4kdA6KZ6s+stxsvY8tRUkrCyKx60MydP+X2luGmz3U72gHbmqUVKW8XWPaZHThKr1LpbwYqQ04FHH2icqnx46k5ASfynzF4VBPHLpxb9LrH1Jv8VAX/0atj+IcJUHT2uerYeKEOUAxI2sWjTM3CJHPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=sP0DbQlp; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="WbQG+LYQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=u5dtot3z6vh7vccjkdu25dkrbe.protonmail; t=1718787488; x=1719046688;
-	bh=HJEykIBQeAFrRfaX3nx6pvcdSxMvWpR/+b2SbLtreiU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=WbQG+LYQV4puXDcd0PP7gSq5EPjVsxcZ1kL8/Q+mZQm23LBa6AwH+qbkWgHnm34oX
-	 I6/t538tExx3qzzIoJx7lZf84T2/9Hc1nbH7wSGnL96n4REk5xMmNvIzTE8B05ieSp
-	 PeucHvhB8R0tNJgK1ZUJuplRUoyp5+NcErKnwf0De7Fg9ZkKfvpBx1O9NAESzU6Z9+
-	 4jLh7pkN28tRPWZtFgwGCK7S+JC3DvZahtQ+btD/J0IPB4mJjCMZVEkWb9/+rd7+xo
-	 BJfgC6S1bNyhQKlLMEIk25948/Ueurly2H8UN7YTjnvOPoCJUyDKMs+7yyrwp4ktlm
-	 miQEfed4r14pg==
-Date: Wed, 19 Jun 2024 08:58:02 +0000
-To: Danilo Krummrich <dakr@redhat.com>, gregkh@linuxfoundation.org, rafael@kernel.org, mcgrof@kernel.org, russ.weight@linux.dev, ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com, pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] rust: add firmware abstractions
-Message-ID: <8d6f98c2-afe2-4e94-b630-96a8fa0b39cf@proton.me>
-In-Reply-To: <20240618154841.6716-3-dakr@redhat.com>
-References: <20240618154841.6716-1-dakr@redhat.com> <20240618154841.6716-3-dakr@redhat.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 5591b58e96b9dc2c505922c5bd6d1cfc55f59249
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="sP0DbQlp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/5pPQjjaT4GK7Sd1WEXbIZE8WP645Hv92WIF4d4jgG0=; b=sP0DbQlpG3YXZpp5VKqHJo18KT
+	fH4jvQQiqoTCSl3BVCAbYkpM0e8qI0cWMoyg5imLG11ft1bZrFGqTqXJ2VH1fFVHWsq546vsDSR8/
+	+FitfR15qh/TiaCZbefaYEore6DkSPHaSaLFzNHv4YlVRYbNDALbOy/Z6BkQ6mXNe6NtP+0SYr/Bw
+	kFqGG6V5EEV7r0SbSelbjh6mXs5BVC9A1887dpknCR+9zS8byAS01Ah6Q6dnuliImhQ4swNEu/icO
+	vHBpMcjRZQe3zH6d1nqnQ9W04MzZg2csCJ/7Ddcpnr5/p9LQ+LuW2aksB/mUyaj9CQZjqn0Vf2/AK
+	MNdmlKlg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47872)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sJr9P-00082M-1X;
+	Wed, 19 Jun 2024 09:58:43 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sJr9Q-0006cr-Js; Wed, 19 Jun 2024 09:58:44 +0100
+Date: Wed, 19 Jun 2024 09:58:44 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v7 2/5] net: phy: mediatek: Move LED and
+ read/write page helper functions into mtk phy lib
+Message-ID: <ZnKdxOM/2/5WvZCJ@shell.armlinux.org.uk>
+References: <20240613104023.13044-1-SkyLake.Huang@mediatek.com>
+ <20240613104023.13044-3-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613104023.13044-3-SkyLake.Huang@mediatek.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 18.06.24 17:48, Danilo Krummrich wrote:
-> Add an abstraction around the kernels firmware API to request firmware
-> images. The abstraction provides functions to access the firmware's size
-> and backing buffer.
->=20
-> The firmware is released once the abstraction instance is dropped.
->=20
-> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> ---
->  drivers/base/firmware_loader/Kconfig |   7 ++
->  rust/bindings/bindings_helper.h      |   1 +
->  rust/kernel/firmware.rs              | 101 +++++++++++++++++++++++++++
->  rust/kernel/lib.rs                   |   2 +
->  4 files changed, 111 insertions(+)
->  create mode 100644 rust/kernel/firmware.rs
->=20
-> diff --git a/drivers/base/firmware_loader/Kconfig b/drivers/base/firmware=
-_loader/Kconfig
-> index 5ca00e02fe82..a03701674265 100644
-> --- a/drivers/base/firmware_loader/Kconfig
-> +++ b/drivers/base/firmware_loader/Kconfig
-> @@ -37,6 +37,13 @@ config FW_LOADER_DEBUG
->  =09  SHA256 checksums to the kernel log for each firmware file that is
->  =09  loaded.
->=20
-> +config RUST_FW_LOADER_ABSTRACTIONS
-> +=09bool "Rust Firmware Loader abstractions"
-> +=09depends on RUST
-> +=09depends on FW_LOADER=3Dy
-> +=09help
-> +=09  This enables the Rust abstractions for the firmware loader API.
-> +
->  if FW_LOADER
->=20
->  config FW_LOADER_PAGED_BUF
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
-per.h
-> index ddb5644d4fd9..18a3f05115cb 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -9,6 +9,7 @@
->  #include <kunit/test.h>
->  #include <linux/errname.h>
->  #include <linux/ethtool.h>
-> +#include <linux/firmware.h>
->  #include <linux/jiffies.h>
->  #include <linux/mdio.h>
->  #include <linux/phy.h>
-> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-> new file mode 100644
-> index 000000000000..b55ea1b45368
-> --- /dev/null
-> +++ b/rust/kernel/firmware.rs
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Firmware abstraction
-> +//!
-> +//! C header: [`include/linux/firmware.h`](srctree/include/linux/firmwar=
-e.h")
-> +
-> +use crate::{bindings, device::Device, error::Error, error::Result, str::=
-CStr};
-> +use core::ptr::NonNull;
-> +
-> +// One of the following: `bindings::request_firmware`, `bindings::firmwa=
-re_request_nowarn`,
-> +// `firmware_request_platform`, `bindings::request_firmware_direct`
-> +type FwFunc =3D
-> +    unsafe extern "C" fn(*mut *const bindings::firmware, *const i8, *mut=
- bindings::device) -> i32;
-> +
-> +/// Abstraction around a C `struct firmware`.
-> +///
-> +/// This is a simple abstraction around the C firmware API. Just like wi=
-th the C API, firmware can
-> +/// be requested. Once requested the abstraction provides direct access =
-to the firmware buffer as
-> +/// `&[u8]`. The firmware is released once [`Firmware`] is dropped.
-> +///
-> +/// # Invariants
-> +///
-> +/// The pointer is valid, and has ownership over the instance of `struct=
- firmware`.
-> +///
-> +/// Once requested, the `Firmware` backing buffer is not modified until =
-it is freed when `Firmware`
-> +/// is dropped.
+On Thu, Jun 13, 2024 at 06:40:20PM +0800, Sky Huang wrote:
+> @@ -342,7 +295,8 @@ static int cal_cycle(struct phy_device *phydev, int devad,
+>  	ret = phy_read_mmd_poll_timeout(phydev, MDIO_MMD_VEND1,
+>  					MTK_PHY_RG_AD_CAL_CLK, reg_val,
+>  					reg_val & MTK_PHY_DA_CAL_CLK, 500,
+> -					ANALOG_INTERNAL_OPERATION_MAX_US, false);
+> +					ANALOG_INTERNAL_OPERATION_MAX_US,
+> +					false);
 
-This can simply be "The `firmware`'s backing buffer is not modified."
-Since I interpret "Once requested" as "Once created" and you are allowed
-to break invariants as long as nobody can observe that.
+Again, this patch is moving code around. There should be no extraneous
+changes in such a patch - it should just move code around, fixing stuff
+up for the code move. Any other change (such as reformatting) should be
+done as a separate patch.
 
-> +///
-> +/// # Examples
-> +///
-> +/// ```
-> +/// # use kernel::{c_str, device::Device, firmware::Firmware};
-> +///
-> +/// # // SAFETY: *NOT* safe, just for the example to get an `ARef<Device=
->` instance
-> +/// # let dev =3D unsafe { Device::from_raw(core::ptr::null_mut()) };
-> +///
-> +/// let fw =3D Firmware::request(c_str!("path/to/firmware.bin"), &dev).u=
-nwrap();
-> +/// let blob =3D fw.data();
-> +/// ```
-> +pub struct Firmware(NonNull<bindings::firmware>);
-> +
-> +impl Firmware {
-> +    fn request_internal(name: &CStr, dev: &Device, func: FwFunc) -> Resu=
-lt<Self> {
-> +        let mut fw: *mut bindings::firmware =3D core::ptr::null_mut();
-> +        let pfw: *mut *mut bindings::firmware =3D &mut fw;
-> +
-> +        // SAFETY: `pfw` is a valid pointer to a NULL initialized `bindi=
-ngs::firmware` pointer.
-> +        // `name` and `dev` are valid as by their type invariants.
-> +        let ret =3D unsafe { func(pfw as _, name.as_char_ptr(), dev.as_r=
-aw()) };
-> +        if ret !=3D 0 {
-> +            return Err(Error::from_errno(ret));
-> +        }
-> +
-> +        // SAFETY: `func` not bailing out with a non-zero error code, gu=
-arantees that `fw` is a
-> +        // valid pointer to `bindings::firmware`.
-> +        Ok(Firmware(unsafe { NonNull::new_unchecked(fw) }))
-> +    }
-> +
-> +    /// Send a firmware request and wait for it. See also `bindings::req=
-uest_firmware`.
-> +    pub fn request(name: &CStr, dev: &Device) -> Result<Self> {
-> +        Self::request_internal(name, dev, bindings::request_firmware)
-> +    }
-> +
-> +    /// Send a request for an optional firmware module. See also
-> +    /// `bindings::firmware_request_nowarn`.
-> +    pub fn request_nowarn(name: &CStr, dev: &Device) -> Result<Self> {
-> +        Self::request_internal(name, dev, bindings::firmware_request_now=
-arn)
-> +    }
-> +
-> +    fn as_raw(&self) -> *mut bindings::firmware {
-> +        self.0.as_ptr()
-> +    }
-> +
-> +    /// Returns the size of the requested firmware in bytes.
-> +    pub fn size(&self) -> usize {
-> +        // SAFETY: Safe by the type invariant.
-> +        unsafe { (*self.as_raw()).size }
-> +    }
-> +
-> +    /// Returns the requested firmware as `&[u8]`.
-> +    pub fn data(&self) -> &[u8] {
-> +        // SAFETY: Safe by the type invariant. Additionally, `bindings::=
-firmware` guarantees, if
+>  	if (ret) {
+>  		phydev_err(phydev, "Calibration cycle timeout\n");
+>  		return ret;
+> @@ -351,7 +305,7 @@ static int cal_cycle(struct phy_device *phydev, int devad,
+>  	phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_AD_CALIN,
+>  			   MTK_PHY_DA_CALIN_FLAG);
+>  	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_AD_CAL_COMP) >>
+> -			   MTK_PHY_AD_CAL_COMP_OUT_SHIFT;
+> +	      MTK_PHY_AD_CAL_COMP_OUT_SHIFT;
 
-I would not write "Safe by ...", since it is important to know what is
-guaranteed by what. Instead I would write "self.as_raw() is valid by the
-type invariant.".
+I don't see a reason for this change, and it goes against established
+coding style.
 
-> +        // successfully requested, that `bindings::firmware::data` has a=
- size of
-> +        // `bindings::firmware::size` bytes.
-> +        unsafe { core::slice::from_raw_parts((*self.as_raw()).data, self=
-.size()) }
-> +    }
-> +}
-> +
-> +impl Drop for Firmware {
-> +    fn drop(&mut self) {
-> +        // SAFETY: Safe by the type invariant.
+>  	phydev_dbg(phydev, "cal_val: 0x%x, ret: %d\n", cal_val, ret);
+>  
+>  	return ret;
+> @@ -440,38 +394,46 @@ static int tx_amp_fill_result(struct phy_device *phydev, u16 *buf)
+>  	}
+>  
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TXVLD_DA_RG,
+> -		       MTK_PHY_DA_TX_I2MPB_A_GBE_MASK, (buf[0] + bias[0]) << 10);
+> +		       MTK_PHY_DA_TX_I2MPB_A_GBE_MASK,
+> +		       (buf[0] + bias[0]) << 10);
+
+Likewise, this is an extraneous change to the primary purpose of this
+patch which is to reorganise code to a new file. 
+
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TXVLD_DA_RG,
+>  		       MTK_PHY_DA_TX_I2MPB_A_TBT_MASK, buf[0] + bias[1]);
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_A2,
+> -		       MTK_PHY_DA_TX_I2MPB_A_HBT_MASK, (buf[0] + bias[2]) << 10);
+> +		       MTK_PHY_DA_TX_I2MPB_A_HBT_MASK,
+> +		       (buf[0] + bias[2]) << 10);
+
+Same again.
+
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_A2,
+>  		       MTK_PHY_DA_TX_I2MPB_A_TST_MASK, buf[0] + bias[3]);
+>  
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B1,
+> -		       MTK_PHY_DA_TX_I2MPB_B_GBE_MASK, (buf[1] + bias[4]) << 8);
+> +		       MTK_PHY_DA_TX_I2MPB_B_GBE_MASK,
+> +		       (buf[1] + bias[4]) << 8);
+
+And here.
+
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B1,
+>  		       MTK_PHY_DA_TX_I2MPB_B_TBT_MASK, buf[1] + bias[5]);
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B2,
+> -		       MTK_PHY_DA_TX_I2MPB_B_HBT_MASK, (buf[1] + bias[6]) << 8);
+> +		       MTK_PHY_DA_TX_I2MPB_B_HBT_MASK,
+> +		       (buf[1] + bias[6]) << 8);
+
+And here.
+
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B2,
+>  		       MTK_PHY_DA_TX_I2MPB_B_TST_MASK, buf[1] + bias[7]);
+>  
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C1,
+> -		       MTK_PHY_DA_TX_I2MPB_C_GBE_MASK, (buf[2] + bias[8]) << 8);
+> +		       MTK_PHY_DA_TX_I2MPB_C_GBE_MASK,
+> +		       (buf[2] + bias[8]) << 8);
 
 Ditto.
 
----
-Cheers,
-Benno
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C1,
+>  		       MTK_PHY_DA_TX_I2MPB_C_TBT_MASK, buf[2] + bias[9]);
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C2,
+> -		       MTK_PHY_DA_TX_I2MPB_C_HBT_MASK, (buf[2] + bias[10]) << 8);
+> +		       MTK_PHY_DA_TX_I2MPB_C_HBT_MASK,
+> +		       (buf[2] + bias[10]) << 8);
 
-> +        unsafe { bindings::release_firmware(self.as_raw()) };
-> +    }
-> +}
-> +
-> +// SAFETY: `Firmware` only holds a pointer to a C `struct firmware`, whi=
-ch is safe to be used from
-> +// any thread.
-> +unsafe impl Send for Firmware {}
-> +
-> +// SAFETY: `Firmware` only holds a pointer to a C `struct firmware`, ref=
-erences to which are safe to
-> +// be used from any thread.
-> +unsafe impl Sync for Firmware {}
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index dd1207f1a873..7707cb013ce9 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -30,6 +30,8 @@
->  mod build_assert;
->  pub mod device;
->  pub mod error;
-> +#[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
-> +pub mod firmware;
->  pub mod init;
->  pub mod ioctl;
->  #[cfg(CONFIG_KUNIT)]
-> --
-> 2.45.1
->=20
+Ditto.
 
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C2,
+>  		       MTK_PHY_DA_TX_I2MPB_C_TST_MASK, buf[2] + bias[11]);
+>  
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D1,
+> -		       MTK_PHY_DA_TX_I2MPB_D_GBE_MASK, (buf[3] + bias[12]) << 8);
+> +		       MTK_PHY_DA_TX_I2MPB_D_GBE_MASK,
+> +		       (buf[3] + bias[12]) << 8);
+
+Ditto.
+
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D1,
+>  		       MTK_PHY_DA_TX_I2MPB_D_TBT_MASK, buf[3] + bias[13]);
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D2,
+> -		       MTK_PHY_DA_TX_I2MPB_D_HBT_MASK, (buf[3] + bias[14]) << 8);
+> +		       MTK_PHY_DA_TX_I2MPB_D_HBT_MASK,
+> +		       (buf[3] + bias[14]) << 8);
+
+Ditto.
+
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D2,
+>  		       MTK_PHY_DA_TX_I2MPB_D_TST_MASK, buf[3] + bias[15]);
+>  
+> @@ -662,7 +624,8 @@ static int tx_vcm_cal_sw(struct phy_device *phydev, u8 rg_txreserve_x)
+>  		goto restore;
+>  
+>  	/* We calibrate TX-VCM in different logic. Check upper index and then
+> -	 * lower index. If this calibration is valid, apply lower index's result.
+> +	 * lower index. If this calibration is valid, apply lower index's
+> +	 * result.
+
+Ditto.
+
+>  	 */
+>  	ret = upper_ret - lower_ret;
+>  	if (ret == 1) {
+> @@ -691,7 +654,8 @@ static int tx_vcm_cal_sw(struct phy_device *phydev, u8 rg_txreserve_x)
+>  	} else if (upper_idx == TXRESERVE_MAX && upper_ret == 0 &&
+>  		   lower_ret == 0) {
+>  		ret = 0;
+> -		phydev_warn(phydev, "TX-VCM SW cal result at high margin 0x%x\n",
+> +		phydev_warn(phydev,
+> +			    "TX-VCM SW cal result at high margin 0x%x\n",
+
+Ditto.
+
+>  			    upper_idx);
+>  	} else {
+>  		ret = -EINVAL;
+> @@ -795,7 +759,8 @@ static void mt7981_phy_finetune(struct phy_device *phydev)
+>  
+>  	/* TR_OPEN_LOOP_EN = 1, lpf_x_average = 9 */
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_DEV1E_REG234,
+> -		       MTK_PHY_TR_OPEN_LOOP_EN_MASK | MTK_PHY_LPF_X_AVERAGE_MASK,
+> +		       MTK_PHY_TR_OPEN_LOOP_EN_MASK |
+> +		       MTK_PHY_LPF_X_AVERAGE_MASK,
+
+Ditto.
+
+>  		       BIT(0) | FIELD_PREP(MTK_PHY_LPF_X_AVERAGE_MASK, 0x9));
+>  
+>  	/* rg_tr_lpf_cnt_val = 512 */
+> @@ -864,7 +829,8 @@ static void mt7988_phy_finetune(struct phy_device *phydev)
+>  
+>  	/* TR_OPEN_LOOP_EN = 1, lpf_x_average = 10 */
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_DEV1E_REG234,
+> -		       MTK_PHY_TR_OPEN_LOOP_EN_MASK | MTK_PHY_LPF_X_AVERAGE_MASK,
+> +		       MTK_PHY_TR_OPEN_LOOP_EN_MASK |
+> +		       MTK_PHY_LPF_X_AVERAGE_MASK,
+
+Ditto.
+
+>  		       BIT(0) | FIELD_PREP(MTK_PHY_LPF_X_AVERAGE_MASK, 0xa));
+>  
+>  	/* rg_tr_lpf_cnt_val = 1023 */
+> @@ -976,7 +942,8 @@ static void mt798x_phy_eee(struct phy_device *phydev)
+>  	phy_restore_page(phydev, MTK_PHY_PAGE_STANDARD, 0);
+>  
+>  	phy_select_page(phydev, MTK_PHY_PAGE_EXTENDED_3);
+> -	__phy_modify(phydev, MTK_PHY_LPI_REG_14, MTK_PHY_LPI_WAKE_TIMER_1000_MASK,
+> +	__phy_modify(phydev, MTK_PHY_LPI_REG_14,
+> +		     MTK_PHY_LPI_WAKE_TIMER_1000_MASK,
+>  		     FIELD_PREP(MTK_PHY_LPI_WAKE_TIMER_1000_MASK, 0x19c));
+
+Ditto.
+
+>  
+>  	__phy_modify(phydev, MTK_PHY_LPI_REG_1c, MTK_PHY_SMI_DET_ON_THRESH_MASK,
+> @@ -986,7 +953,8 @@ static void mt798x_phy_eee(struct phy_device *phydev)
+>  	phy_modify_mmd(phydev, MDIO_MMD_VEND1,
+>  		       MTK_PHY_RG_LPI_PCS_DSP_CTRL_REG122,
+>  		       MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK,
+> -		       FIELD_PREP(MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK, 0xff));
+> +		       FIELD_PREP(MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK,
+> +				  0xff));
+
+Ditto.
+
+>  }
+>  
+>  static int cal_sw(struct phy_device *phydev, enum CAL_ITEM cal_item,
+> @@ -1130,57 +1098,13 @@ static int mt798x_phy_config_init(struct phy_device *phydev)
+>  	return mt798x_phy_calibration(phydev);
+>  }
+>  
+> -static int mt798x_phy_hw_led_on_set(struct phy_device *phydev, u8 index,
+> -				    bool on)
+> -{
+> -	unsigned int bit_on = MTK_PHY_LED_STATE_FORCE_ON + (index ? 16 : 0);
+> -	struct mtk_socphy_priv *priv = phydev->priv;
+> -	bool changed;
+> -
+> -	if (on)
+> -		changed = !test_and_set_bit(bit_on, &priv->led_state);
+> -	else
+> -		changed = !!test_and_clear_bit(bit_on, &priv->led_state);
+> -
+> -	changed |= !!test_and_clear_bit(MTK_PHY_LED_STATE_NETDEV +
+> -					(index ? 16 : 0), &priv->led_state);
+> -	if (changed)
+> -		return phy_modify_mmd(phydev, MDIO_MMD_VEND2, index ?
+> -				      MTK_PHY_LED1_ON_CTRL : MTK_PHY_LED0_ON_CTRL,
+
+If you're moving this code, don't even correct this formatting in the
+new file. If you correct the formatting in a patch _before_ this one,
+then do the move, the formatting will then be correct in the new file
+and the code move will be exactly that - just a code move.
+
+>  static int mt798x_phy_led_blink_set(struct phy_device *phydev, u8 index,
+>  				    unsigned long *delay_on,
+>  				    unsigned long *delay_off)
+>  {
+>  	bool blinking = false;
+>  	int err = 0;
+> +	struct mtk_socphy_priv *priv = phydev->priv;
+
+Netdev wants reverse Christmas-tree. Longest local variable declaration
+first, followed by next shorter and so on. So, in this case, it should
+be priv, blinking, then err in that order.
+
+>  static int mt798x_phy_led_brightness_set(struct phy_device *phydev,
+>  					 u8 index, enum led_brightness value)
+>  {
+>  	int err;
+> +	struct mtk_socphy_priv *priv = phydev->priv;
+
+Reverse Christmas tree please.
+
+>  static int mt798x_phy_led_hw_control_set(struct phy_device *phydev, u8 index,
+>  					 unsigned long rules)
+>  {
+> -	unsigned int bit_netdev = MTK_PHY_LED_STATE_NETDEV + (index ? 16 : 0);
+>  	struct mtk_socphy_priv *priv = phydev->priv;
+> -	u16 on = 0, blink = 0;
+> -	int ret;
+> -
+> -	if (index > 1)
+> -		return -EINVAL;
+> -
+> -	if (rules & BIT(TRIGGER_NETDEV_FULL_DUPLEX))
+> -		on |= MTK_PHY_LED_ON_FDX;
+> -
+> -	if (rules & BIT(TRIGGER_NETDEV_HALF_DUPLEX))
+> -		on |= MTK_PHY_LED_ON_HDX;
+> -
+> -	if (rules & (BIT(TRIGGER_NETDEV_LINK_10) | BIT(TRIGGER_NETDEV_LINK)))
+> -		on |= MTK_PHY_LED_ON_LINK10;
+> -
+> -	if (rules & (BIT(TRIGGER_NETDEV_LINK_100) | BIT(TRIGGER_NETDEV_LINK)))
+> -		on |= MTK_PHY_LED_ON_LINK100;
+> -
+> -	if (rules & (BIT(TRIGGER_NETDEV_LINK_1000) | BIT(TRIGGER_NETDEV_LINK)))
+> -		on |= MTK_PHY_LED_ON_LINK1000;
+>  
+> -	if (rules & BIT(TRIGGER_NETDEV_RX)) {
+> -		blink |= (on & MTK_PHY_LED_ON_LINK) ?
+> -			  (((on & MTK_PHY_LED_ON_LINK10) ? MTK_PHY_LED_BLINK_10RX : 0) |
+> -			   ((on & MTK_PHY_LED_ON_LINK100) ? MTK_PHY_LED_BLINK_100RX : 0) |
+> -			   ((on & MTK_PHY_LED_ON_LINK1000) ? MTK_PHY_LED_BLINK_1000RX : 0)) :
+> -			  MTK_PHY_LED_BLINK_RX;
+
+Now for this mess - and it should've been caught earlier... far too many
+parens. Too many parens make code unreadable. Also, we know "blink"
+starts off with the bits clear. So:
+
+	if (rules & BIT(TRIGGER_NETDEV_RX)) {
+		if (on & MTK_PHY_LED_ON_LINK) {
+			if (on & MTK_PHY_LED_ON_LINK10)
+				blink |= MTK_PHY_LED_BLINK_10RX;
+			if (on & MTK_PHY_LED_ON_LINK100)
+				blink |= MTK_PHY_LED_BLINK_100RX;
+			if (on & MTK_PHY_LED_ON_LINK1000)
+				blink |= MTK_PHY_LED_BLINK_1000RX;
+		} else {
+			blink |= MTK_PHY_LED_BLINK_RX;
+		}
+	}
+
+is a much nicer and easier to read formatting.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
