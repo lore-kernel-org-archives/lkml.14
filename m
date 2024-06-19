@@ -1,86 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from tretyak2.mcst.ru (tretyak2.mcst.ru [212.5.119.215])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B29A1D545;
-	Wed, 19 Jun 2024 14:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DC01CD18;
+	Wed, 19 Jun 2024 14:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.5.119.215
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807602; cv=none; b=a8OWXbnzdr+cbbfF2OnJZ0DdoF4MxyIQVClY+fIfNnLnpyeDJy+PdchGJXTZqUsUCiNyJGuzZaY0ijMJ4S4Mg9SHvQZaz8ss7RdxgwgI8EBU5yk6zs6oaEsHMINGWQyVw3X79UE5yBLIQ7hd8+yaB4ujAJ2y2mOkTsyndat4DEY=
+	t=1718807626; cv=none; b=hLOarTnQ5G7wAdQ/pULTrmM3BEUn198UtKKg/esYjMIvt/kkxiuUHExCL0V4Ks8osOF82meuVIZZjC2Ka529I578vtSBQhnjbdSus1I/mN7FUzokGDPB+U9Xs6L9rVQGfT0Q8qHas8cPcLmYHwp9bJE6D4DfNovzKN8zigk+IgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718807602; c=relaxed/simple;
-	bh=4J4/INqOxWh7C7XMEDneVXcBMfEaxAM3ar7OIpr3fVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TO3vhMgQx0V2EWRheyVWYClDVDqnDtrffoG90FbuNYZdJ9I4xxEHDaN7Bxf4rq6Jt0kiQPM6tDJ90aT87ymr00BZqhgZJHmMFAiPt/60lcnBtdO7kw1xTF2cGlNGU9JIq07MSZjr8L5Pun51DAJjlmxu1P+wxm1LaFFvmS6URKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adhV4Jb6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adhV4Jb6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CB4C2BBFC;
-	Wed, 19 Jun 2024 14:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718807602;
-	bh=4J4/INqOxWh7C7XMEDneVXcBMfEaxAM3ar7OIpr3fVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=adhV4Jb6uF72CggtYmqfNP+X1hMT85zC8IEycsra4hCoT3TrcZmXN5CVYJyzS/yBu
-	 aHt+LQNwWAoVE9QYygDEiiAVuV7pPvCbsNvGcMq0bY8D+U9X+OMb0TitCVLceyjr1Q
-	 QxnGeSi1O/PPc9jfEN2EeFjLtRUXMhMSq1GeoztNCJtlyaBqoZiHR/PLvKXicuRm4r
-	 6h/9f19pDfsSTgtPWgugZY9yE1kMrNuj2+mCjGa5eeW+a36ZEaVZQXUH1XetXBff2d
-	 f5NAdYecbPqwAjGc7nuwfsG8Qondmhb+cUpOgZ+Ew+2FdUEfxrEoiN+f/3XCQi/EN+
-	 bkOamhOnw9REA==
-Date: Wed, 19 Jun 2024 10:33:20 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Krishna Kurapati <quic_kriskura@quicinc.com>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.9 16/28] usb: dwc3: core: Access XHCI address
- space temporarily to read port info
-Message-ID: <ZnLsMLxMsKRUc3Lb@sashalap>
-References: <20240605114927.2961639-1-sashal@kernel.org>
- <20240605114927.2961639-16-sashal@kernel.org>
- <ZmBRsqiexF9-sHpk@hovoldconsulting.com>
+	s=arc-20240116; t=1718807626; c=relaxed/simple;
+	bh=FHoeYOO0rqWuQjykbGw6nHEWsET0aT9gakqCiFstsKs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EnMY8NJTXYUjvWQ2GISWOhmlBc/81li16hdwF+7WPtaEG5+H7Nl0+hcUk8m5i536y4iP/fWGioC1ZNCoVnoLePZ9luUPNB7koF7OuEIXDX6CeeHMwBV7gEfcMW9e9/X8uUbzL4VdHGAs26VqBNQ4aa1ie6ATKNiQAlG2W0GuNZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru; spf=pass smtp.mailfrom=mcst.ru; arc=none smtp.client-ip=212.5.119.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mcst.ru
+Received: from tretyak2.mcst.ru (localhost [127.0.0.1])
+	by tretyak2.mcst.ru (Postfix) with ESMTP id BC7B6102395;
+	Wed, 19 Jun 2024 17:29:30 +0300 (MSK)
+Received: from frog.lab.sun.mcst.ru (frog.lab.sun.mcst.ru [176.16.4.50])
+	by tretyak2.mcst.ru (Postfix) with ESMTP id B605010237A;
+	Wed, 19 Jun 2024 17:28:35 +0300 (MSK)
+Received: from artemiev-i.lab.sun.mcst.ru (avior-1 [192.168.63.223])
+	by frog.lab.sun.mcst.ru (8.13.4/8.12.11) with ESMTP id 45JESYbd005890;
+	Wed, 19 Jun 2024 17:28:34 +0300
+From: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
+To: Takashi Iwai <tiwai@suse.com>
+Cc: Igor Artemiev <Igor.A.Artemiev@mcst.ru>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvc-project@linuxtesting.org
+Subject: [lvc-project] [PATCH] ASoC: simple-card-utils: Fix error handling in simple_util_init_jack()
+Date: Wed, 19 Jun 2024 17:24:32 +0300
+Message-Id: <20240619142432.573338-1-Igor.A.Artemiev@mcst.ru>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZmBRsqiexF9-sHpk@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+	 bases: 20111107 #2745587, check: 20240619 notchecked
+X-AV-Checked: ClamAV using ClamSMTP
 
-On Wed, Jun 05, 2024 at 01:53:22PM +0200, Johan Hovold wrote:
->On Wed, Jun 05, 2024 at 07:48:45AM -0400, Sasha Levin wrote:
->> From: Krishna Kurapati <quic_kriskura@quicinc.com>
->>
->> [ Upstream commit 921e109c6200741499ad0136e41cca9d16431c92 ]
->>
->> All DWC3 Multi Port controllers that exist today only support host mode.
->> Temporarily map XHCI address space for host-only controllers and parse
->> XHCI Extended Capabilities registers to read number of usb2 ports and
->> usb3 ports present on multiport controller. Each USB Port is at least HS
->> capable.
->>
->> The port info for usb2 and usb3 phy are identified as num_usb2_ports
->> and num_usb3_ports and these are used as iterators for phy operations
->> and for modifying GUSB2PHYCFG/ GUSB3PIPECTL registers accordingly.
->>
->> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
->> Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
->> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
->> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
->> Tested-by: Johan Hovold <johan+linaro@kernel.org>
->> Link: https://lore.kernel.org/r/20240420044901.884098-3-quic_kriskura@quicinc.com
->> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->This is not a fix. Please drop.
+Currently, if snd_soc_card_jack_new_pins() or snd_soc_jack_add_gpios()
+fails, the function continues execution without handling the error.
+This can lead to unexpected behavior and potential crashes.
 
-Dropped, thanks!
+This patch fixes the problem by checking the return value 
+of these functions.
 
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
+---
+ sound/soc/generic/simple-card-utils.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index 81077d16d22f..5da0c13858ad 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -784,10 +784,14 @@ int simple_util_init_jack(struct snd_soc_card *card,
+ 		sjack->gpio.desc	= desc;
+ 		sjack->gpio.debounce_time = 150;
+ 
+-		snd_soc_card_jack_new_pins(card, pin_name, mask, &sjack->jack,
++		error = snd_soc_card_jack_new_pins(card, pin_name, mask, &sjack->jack,
+ 					   &sjack->pin, 1);
++		if (error)
++			return error;
+ 
+-		snd_soc_jack_add_gpios(&sjack->jack, 1, &sjack->gpio);
++		error = snd_soc_jack_add_gpios(&sjack->jack, 1, &sjack->gpio);
++		if (error)
++			return error;
+ 	}
+ 
+ 	return 0;
 -- 
-Thanks,
-Sasha
+2.39.2
+
