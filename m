@@ -1,173 +1,220 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DC2150984
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99CD150984
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811840; cv=none; b=gyCKM3WXTOMR1n7yDns6v42eGt0sZqYBZwxn/VXxoE8+TLzu6aTBdYZXmriX/eFVq1mLXb4aBRJx0hlHWVDFhOoSvQLd+pJ3C7LjS3Mw2VpO8b3a7zeTRR6BsMHqbcJQ6ULsRMFMWBLMxviFaG7Y1SEIZ75Zco0QnAfkwQ2HUfA=
+	t=1718811853; cv=none; b=BgkwJIGh2YpaHjKoZDpPWtn+IIdpF2j9hWaO/RqX45mXXrKcn89BLw8DyFQ4uGqA0wJ13FgiVj35YyKQK4mRvQXQJpzEt2fyJBG2wBfgA9i9ibuD7Z5UWB+SHKMqt/TA+L24/TmoqeOBbcvYTH8sqEkFkR0t4605jNY+IVrBu2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811840; c=relaxed/simple;
-	bh=gjIlVC0Qv56i7mNLzpX6QNyDh2wQBd29Qq8BecOvO84=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V0jl80xlrwZd+AZdf494TNIM3Z8ytKQHoQhpX23QQQwQatQoWvm0FiPvADPmypi+hq1WGdKttXjhdgvRSNIHiqV7I6siPi8WWQcyloejZlf20uJXV1IRsr3OPUJcq0sIC2LB3ZON/+oVBYVr31bsPnXB0MOSrFeCOkJ6WjsEF3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I1hCtMbX; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1718811853; c=relaxed/simple;
+	bh=8Mjv0ReOMw49FsSUkznGKWHpctFMfxGczyr14pY4ruw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a/q+ZDAPTJsBPQ37uwFHGGpLrWpmzi6awmNqMVZydTiK0UCuyw/2018hEwjn+WpE5H9i/Q3qZpf9DHrBrjkhVvdn+yiUnheG7h4vtyb/WGS0VkoHuvYOnoVDtNJxkW0Um1RpE2hQPvhGFhnkFx3BPztKIlx94xXgKbqwmP8lnDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g8VkWWUW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I1hCtMbX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g8VkWWUW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718811838;
+	s=mimecast20190719; t=1718811850;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3fKPssBEwyag1A5CHcVe8reEUsaYqb5YQavo355OrZo=;
-	b=I1hCtMbXNHdeXpNSZ9TcW6wQ4oF4/GLnR4mh/44GiC7pQ/6Ed1joM2Ahy/tqrepP8QO9Gu
-	Py/Gd4mTWTpZzoh0WEw2s3/LtK46TQL9JYoPTtc8tUNzzEGs701TekhKQAC1dDJ5JWy6W4
-	zAz6Jv4xz+X8pR6vjwsP2Ec3Ko9Fld0=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-T2Tmj-i-Nii8vjyvmbTzGg-1; Wed, 19 Jun 2024 11:43:57 -0400
-X-MC-Unique: T2Tmj-i-Nii8vjyvmbTzGg-1
-Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-dfeec5da777so11470098276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:43:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718811836; x=1719416636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3fKPssBEwyag1A5CHcVe8reEUsaYqb5YQavo355OrZo=;
-        b=Ugyj/Daoq6TtfGJKWrUI+K81BzoMdQFG4RUGdAz0SlOUoQo3qt2GS/1lnZSg/Zg521
-         I2/I8ptAYfKZK06XEuiWzdWxQb/ESB05hvJQnQ3ufOeMPmxskRL5yfZbqNNSHShYXlKt
-         +LjHlKisu4oiRY8OFawLiNJ33ncZg81BRbRMSrfpI4Rt9gV2+65sX8iWWuwjmb1pxIaz
-         UWc6E0rJaDp6z5VS200oDjlCaDhn2cNG1jJLcD9PRVKI+tL1rf0roifH/90bplH2t8Eq
-         ZcpeAYfo1HXVxfUsUtdAMq6aKUTKDix7kI9Qksk4wAdTIbqKEcGfUoqDQUDOSgbZ0Mxb
-         iJ6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXrRJGsILtOfiHrD3SoPsWxteL1TPDiTnqkbL5dmoFIHNUi0WyCn9ApUDGIR90zOBu2y8vxEtNfrI0uJf5Lb58BKR8Q4nZd81HUTNlN
-X-Gm-Message-State: AOJu0Yw3M9eC6IU2zOftPJm1GKJzNsZrgCKZY7jksmaen4r8jd7rpuCI
-	SLQnV6qXKKcw+G09ZJ6XU5LlCQYfN3axTLbSm61dvENhyAWMKjQV9uaNjz0dUvaswcR+vYBvDXE
-	qDZ4hb4cW+nrAceJqVtW3vjZkUbTFMqGULClZBcfpdFGNaNClmlHDFyrAjw9Z3w4j/yTmsQ1sHs
-	je2MtcFVQDEJu2qSlDjMGHuvHwO6RZCkm8zLft5d56yCXuqII=
-X-Received: by 2002:a25:ab90:0:b0:dff:3055:3c26 with SMTP id 3f1490d57ef6-e02be20b4b0mr3347991276.40.1718811836568;
-        Wed, 19 Jun 2024 08:43:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHuq/mg3ERM9FqZxfhIbhFa52BBDZJDga9awTj9rzgPpjCM8aGAm1pB6AklaTDW2TTBksgypWtCPQxl0ge9AZY=
-X-Received: by 2002:a25:ab90:0:b0:dff:3055:3c26 with SMTP id
- 3f1490d57ef6-e02be20b4b0mr3347976276.40.1718811836245; Wed, 19 Jun 2024
- 08:43:56 -0700 (PDT)
+	bh=crmfw9nGEYND9twKivZHUhF+pajzWUmsBYjoitLN7pk=;
+	b=g8VkWWUWXw5fHNe16r4kcR4XR+l+md0j4OhAEz0wdLmZ9VuaP4LEYpVp+6qa2cnHPpj0F1
+	BBp+2oZDcWPUpeJJLzWzbdXspq5lL2Y8kyVjSftVUpaUY8cnETAfNZAz+eJ95qsKX0hyk3
+	hYi0FlYe/GlFk1VMpwQQridlrVw0g/o=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-215-PkCrYSDMPjiv1lagfPOr2w-1; Wed,
+ 19 Jun 2024 11:44:07 -0400
+X-MC-Unique: PkCrYSDMPjiv1lagfPOr2w-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E23319560B4;
+	Wed, 19 Jun 2024 15:44:05 +0000 (UTC)
+Received: from [10.22.33.177] (unknown [10.22.33.177])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E593119560B3;
+	Wed, 19 Jun 2024 15:44:02 +0000 (UTC)
+Message-ID: <76f3ded6-7922-4c90-a650-7bbd08e442b4@redhat.com>
+Date: Wed, 19 Jun 2024 11:44:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com> <20240617-stage-vdpa-vq-precreate-v1-17-8c0483f0ca2a@nvidia.com>
-In-Reply-To: <20240617-stage-vdpa-vq-precreate-v1-17-8c0483f0ca2a@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 19 Jun 2024 17:43:20 +0200
-Message-ID: <CAJaqyWc3HZpyMj_LVq5nmDaDSijxcXiHAXtjSQMSuS2bZQV-aQ@mail.gmail.com>
-Subject: Re: [PATCH vhost 17/23] vdpa/mlx5: Consolidate all VQ modify to Ready
- to use resume_vq()
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	Cosmin Ratiu <cratiu@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/1] nvme-multipath: implement "queue-depth" iopolicy
+To: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ "kbusch@kernel.org" <kbusch@kernel.org>, "hch@lst.de" <hch@lst.de>,
+ "sagi@grimberg.me" <sagi@grimberg.me>, "emilne@redhat.com"
+ <emilne@redhat.com>
+Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "jrani@purestorage.com" <jrani@purestorage.com>,
+ "randyj@purestorage.com" <randyj@purestorage.com>,
+ "hare@kernel.org" <hare@kernel.org>
+References: <20240612002034.1299922-1-jmeneghi@redhat.com>
+ <20240612002034.1299922-2-jmeneghi@redhat.com>
+ <1307c447-65bb-430c-88e1-045191d8d8ba@nvidia.com>
+Content-Language: en-US
+From: John Meneghini <jmeneghi@redhat.com>
+Organization: RHEL Core Storge Team
+In-Reply-To: <1307c447-65bb-430c-88e1-045191d8d8ba@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, Jun 17, 2024 at 5:09=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.com=
-> wrote:
->
-> There are a few more places modifying the VQ to Ready directly. Let's
-> consolidate them into resume_vq().
->
-> The redundant warnings for resume_vq() errors can also be dropped.
->
-> There is one special case that needs to be handled for virtio-vdpa:
-> the initialized flag must be set to true earlier in setup_vq() so that
-> resume_vq() doesn't return early.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+On 6/11/24 21:44, Chaitanya Kulkarni wrote:
+> On 6/11/24 17:20, John Meneghini wrote:
+>> From: Thomas Song <tsong@purestorage.com>
+>>
 
-Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+>> +
+>> +	if ((nvme_req(rq)->flags & NVME_MPATH_CNT_ACTIVE)) {
+>> +		result = atomic_dec_if_positive(&ns->ctrl->nr_active);
+>> +		WARN_ON_ONCE(result < 0);
+>> +	}
+>>    
+>>    	if (!(nvme_req(rq)->flags & NVME_MPATH_IO_STATS))
+>>    		return;
+> 
+> can we remove result variable ? that is only used once,
+> how about something like this unless there is something wrong with
+> totally untested :-
 
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 18 ++++++------------
->  1 file changed, 6 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index e3a82c43b44e..f5d5b25cdb01 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -160,6 +160,7 @@ static void free_fixed_resources(struct mlx5_vdpa_net=
- *ndev);
->  static void init_mvqs(struct mlx5_vdpa_net *ndev);
->  static int setup_vq_resources(struct mlx5_vdpa_net *ndev, bool filled);
->  static void teardown_vq_resources(struct mlx5_vdpa_net *ndev);
-> +static int resume_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtqu=
-eue *mvq);
->
->  static bool mlx5_vdpa_debug;
->
-> @@ -1500,16 +1501,14 @@ static int setup_vq(struct mlx5_vdpa_net *ndev,
->         if (err)
->                 goto err_vq;
->
-> +       mvq->initialized =3D true;
-> +
->         if (mvq->ready) {
-> -               err =3D modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET=
-_Q_OBJECT_STATE_RDY);
-> -               if (err) {
-> -                       mlx5_vdpa_warn(&ndev->mvdev, "failed to modify to=
- ready vq idx %d(%d)\n",
-> -                                      idx, err);
-> +               err =3D resume_vq(ndev, mvq);
-> +               if (err)
->                         goto err_modify;
-> -               }
->         }
->
-> -       mvq->initialized =3D true;
->         return 0;
->
->  err_modify:
-> @@ -2422,7 +2421,6 @@ static void mlx5_vdpa_set_vq_ready(struct vdpa_devi=
-ce *vdev, u16 idx, bool ready
->         struct mlx5_vdpa_dev *mvdev =3D to_mvdev(vdev);
->         struct mlx5_vdpa_net *ndev =3D to_mlx5_vdpa_ndev(mvdev);
->         struct mlx5_vdpa_virtqueue *mvq;
-> -       int err;
->
->         if (!mvdev->actual_features)
->                 return;
-> @@ -2439,14 +2437,10 @@ static void mlx5_vdpa_set_vq_ready(struct vdpa_de=
-vice *vdev, u16 idx, bool ready
->         if (!ready) {
->                 suspend_vq(ndev, mvq);
->         } else {
-> -               err =3D modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET=
-_Q_OBJECT_STATE_RDY);
-> -               if (err) {
-> -                       mlx5_vdpa_warn(mvdev, "modify VQ %d to ready fail=
-ed (%d)\n", idx, err);
-> +               if (resume_vq(ndev, mvq))
->                         ready =3D false;
-> -               }
->         }
->
-> -
->         mvq->ready =3D ready;
->  }
->
->
-> --
-> 2.45.1
->
+Sure I can do that.
+
+>> +static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head)
+>>    {
+>> -	struct nvme_ns *ns, *found = NULL;
+>> +	struct nvme_ns *ns, *old, *found = NULL;
+>> +	int node = numa_node_id();
+>> +
+>> +	old = srcu_dereference(head->current_path[node], &head->srcu);
+>> +
+> 
+> nit:- no need for white-line above ?
+
+I sometimes add a line feed because I think it makes the code more readable, But everyone seems to dislike extra white lines so 
+I'll remove them.
+
+>> +inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
+>> +{
+>> +	switch (READ_ONCE(head->subsys->iopolicy)) {
+>> +	case NVME_IOPOLICY_QD:
+>> +		return nvme_queue_depth_path(head);
+>> +	case NVME_IOPOLICY_RR:
+>> +		return nvme_round_robin_path(head);
+>> +	default:
+>> +		return nvme_numa_path(head);
+>> +	}
+> 
+> should we use another case for NVME_IOPOLICY_NUMA that will call
+> nvme_numa_path() and report ratelimited error on the default lable
+> before settling on nvme_numa_path()?
+> 
+> something like this totally untested :-
+
+Actually, I don't think this is worth it. The likelihood that the iopolicy will get corrupted is almost NILL. The only way this 
+can happen is if there were a bug in the sysfs code that controls this variable. I've tested this enough to know there's not 
+going to be any problem here and I don't think adding a warning to a code path that can only be hit by a programming error is 
+needed.
+
+>> +}
+>> +
+>>    static bool nvme_available_path(struct nvme_ns_head *head)
+>>    {
+>>    	struct nvme_ns *ns;
+>> @@ -803,6 +870,28 @@ static ssize_t nvme_subsys_iopolicy_show(struct device *dev,
+>>    			  nvme_iopolicy_names[READ_ONCE(subsys->iopolicy)]);
+>>    }
+>>    
+>> +static void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys,
+>> +		int iopolicy)
+>> +{
+>> +	struct nvme_ctrl *ctrl;
+>> +	int old_iopolicy = READ_ONCE(subsys->iopolicy);
+>> +
+>> +	if (old_iopolicy == iopolicy)
+>> +		return;
+>> +
+>> +	WRITE_ONCE(subsys->iopolicy, iopolicy);
+>> +
+>> +	/* iopolicy changes clear the mpath by design */
+>> +	mutex_lock(&nvme_subsystems_lock);
+>> +	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry)
+>> +		nvme_mpath_clear_ctrl_paths(ctrl);
+>> +	mutex_unlock(&nvme_subsystems_lock);
+>> +
+>> +	pr_notice("%s: changed from %s to %s for subsysnqn %s\n", __func__,
+>> +			nvme_iopolicy_names[old_iopolicy], nvme_iopolicy_names[iopolicy],
+>> +			subsys->subnqn);
+>> +}
+>> +
+>>    static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
+>>    		struct device_attribute *attr, const char *buf, size_t count)
+>>    {
+>> @@ -812,7 +901,7 @@ static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
+>>    
+>>    	for (i = 0; i < ARRAY_SIZE(nvme_iopolicy_names); i++) {
+>>    		if (sysfs_streq(buf, nvme_iopolicy_names[i])) {
+>> -			WRITE_ONCE(subsys->iopolicy, i);
+>> +			nvme_subsys_iopolicy_update(subsys, i);
+>>    			return count;
+>>    		}
+>>    	}
+>> @@ -923,6 +1012,9 @@ int nvme_mpath_init_identify(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+>>    	    !(ctrl->subsys->cmic & NVME_CTRL_CMIC_ANA))
+>>    		return 0;
+>>    
+>> +	/* initialize this in the identify path to cover controller resets */
+> 
+> nit: If I'm not wrong, this function gets called from
+> |nvme_init_identify()|,
+> so it's pretty clear. That makes above comment kind of redundant ?
+> However, if others want that comment here, please ignore this message.
+
+Yes, but it's not clear that nvme_init_identify() is called in the controller reset path.
+
+Hannes asked for a comment here so I'd like to keep this.
+
+>> +	atomic_set(&ctrl->nr_active, 0);
+>> +
+>>    	if (!ctrl->max_namespaces ||
+>>    	    ctrl->max_namespaces > le32_to_cpu(id->nn)) {
+>>    		dev_err(ctrl->device,
+>> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+>> index 73442d3f504b..d6c1fe3e2832 100644
+>> --- a/drivers/nvme/host/nvme.h
+>> +++ b/drivers/nvme/host/nvme.h
+>> @@ -50,6 +50,8 @@ extern struct workqueue_struct *nvme_wq;
+>>    extern struct workqueue_struct *nvme_reset_wq;that 
+>>    extern struct workqueue_struct *nvme_delete_wq;
+>>    
+>> +extern struct mutex nvme_subsystems_lock;
+>> +
+>>    /*
+>>     * List of workarounds for devices that required behavior not specified in
+>>     * the standard.
+>> @@ -195,6 +197,7 @@ enum {
+>>    	NVME_REQ_CANCELLED		= (1 << 0),
+>>    	NVME_REQ_USERCMD		= (1 << 1),
+>>    	NVME_MPATH_IO_STATS		= (1 << 2),
+>> +	NVME_MPATH_CNT_ACTIVE	= (1 << 3),
+> 
+> nit:- please align above to existing code ...
+> 
+
+I changed my tab stop from 4 to 8 and fixed this.
+
+Thanks for your review. I will follow up with a v7 patch.
+
+/John
 
