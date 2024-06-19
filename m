@@ -1,98 +1,190 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98263152792;
-	Wed, 19 Jun 2024 16:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AD515382F;
+	Wed, 19 Jun 2024 16:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718816068; cv=none; b=O939UmxcuVFeEgrs3egot8J7sR9SVoVTeRIFy+N18o7tBWn2I8UW4qIzkdA9Ty50kuhnLic6u/Giw7RvO2Hikw9dsbvQyW6+yjlDsV0ioB2fI71hD6whxdxA+QcahyLQzDA1oVTIzUQeeEzHTPwHCVB1KGOQoM+DvEYCkreVHlA=
+	t=1718816389; cv=none; b=B1pZBA1aUZ3fho84tbbw7x7a1+WwICQFfZ6i1M2b81r99VsAu9rqD8mvEE8kvc4Ay8G1BPD5Xwf0lXhY6DGgAAi0rMLlp0SskgBh1PJgvhpfoPZATnEH6Cicx+xcrwJGCjhGyFTjgTAF64zSkYjEvfBPVtRl/f+Q7u/q+guhvrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718816068; c=relaxed/simple;
-	bh=Sjz3DIoq0Zh1oqp2UL91MkPA5irTCigjw/wM4v2Ete8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TI4eLSJ5HDx5T+nRfULUq+F0ysbbtf0uq40MpYEkp/lF8Ko4o1Iw5Cj/2fn+xhT22zbGPdRi+Xk6Xxp+gzuVLkMhxnEmaoh/+dkVInJeRfUSHtJoNCXAYdsPD+jyxtQ3LSmH0wVgElzTOQwhi2yLcC2Rplfq8ctk+4oUs6fu/uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=bElNTWFO; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1718816389; c=relaxed/simple;
+	bh=6YqZxcm83vpurH0rt6GpPHd/Crvf4o1d4oMnDTnOY1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ixSJn7MxbBlH2DVcAyYPys6cdZm9CfNqdrXVXqcR2RHGwReNR8FB7aSiiYaxzMeSKpU3GISDLgRaNYCyl+c9v8wuGBT6sIfQtj6W7w8vAmWbo/n/e/0AU+n0R1to3i82yB/TySm6YdWEheF5iMBTbZpVNG48SRXiTJOqlC9kdU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxMLdwT9; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="bElNTWFO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1718815509; bh=Sjz3DIoq0Zh1oqp2UL91MkPA5irTCigjw/wM4v2Ete8=;
-	h=From:Subject:Date:To:Cc;
-	b=bElNTWFOh5JZGMsnkhAZFdRe1VI7JexFIgS42n+cBE2eSJ/C7FvlQjFSmitwNzoj9
-	 flZALDLvdwonMvH8fhqXb5waBQrYLYQaMzN7e5v5cuiIF7rJRqkN8//r5RoBXOehcy
-	 5fqPd6fxyMHDZB1SnxOI/q5yDANvu9ORvclQp1yA=
-From: Luca Weiss <luca@lucaweiss.eu>
-Subject: [PATCH 0/5] Use mboxes in smsm node for all dtsi where possible
-Date: Wed, 19 Jun 2024 18:42:26 +0200
-Message-Id: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxMLdwT9"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-797a7f9b52eso1729585a.2;
+        Wed, 19 Jun 2024 09:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718816385; x=1719421185; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FDzwqJUNGpd3ExrB77/2J3f2Tep+iv1xzWugmtBOTOY=;
+        b=hxMLdwT9wgOVCroyJYaN0TzLWHsb3hTPMBs2scDAwPu+qXHwERCLfpIZZFeYjropH/
+         QVUUQ8Lge/I6G5SY/DtwntZRTum3h2+i7hpDp7CATx/HUnHGvH6kfvaa9e13Lo58cgZa
+         mndJ4TwDOC4LnuuONUGNKStS5sgeehmHlRBgRuvF1UAFW5vqoSOhk/qbm2WgEVvjIWdk
+         9kvHFO2Rw4T782ibNNdsQAYgzpWyCilq4P5uH6ZvPpDkqtXDBLju3UhOmiWLGHWQM4jG
+         BYdOvkWJe5urQbSRVCUlt9fpKIA9e0U6IYS+f5TTIUt7V/ay/SyL4Ak58MLX2vR8lPA6
+         kGCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718816385; x=1719421185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FDzwqJUNGpd3ExrB77/2J3f2Tep+iv1xzWugmtBOTOY=;
+        b=aV4K2nDszOvKh1hp/Ke1M0MS++pKjLWX2dRYma2wpewCZ7MgV7KbsEMBNErCqeO2Et
+         ghdBiA4QxTZkEXBf543DdfB5L9cHaPQBgngQJpYek8quFNKOGFzVXFwwgYeLLWgQCx4Y
+         CblxvGtphtbC4jkZXwULg8ZjVVIUd+mwI0zyumVMQu9yMMt8Sfs4XUMe/G9WZV4PsEzE
+         8demrvcr+fz8EVoSQfeNuibTlddCnJ5B9fKKuMJpH5BMy76ROHqPGBbdiXtSfs5E0fKm
+         Da8RtzPKj8FS3Sz2lvibn4ZhoCUBfOsUSW6uLajCj2s0L+ztnANlzcqQCCdZC6TPAQ5l
+         fkOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWchnoVfj9YuYDdmae4Fajd0sQ+h8cwvWQbuu2TeXKfE08RfeZbwSLWKVatiade2YJeLQYzxkBzrkuUi57+kGU7sWKW0auE7ZXNQSo2vUfKqLlL8zM9KCAxoDDib7i5YBZ+7YUzvYHtF3E=
+X-Gm-Message-State: AOJu0YwwoUsWqvTh+UUWhXKAVCI3wZN3GBK2RTbOVFw5Vga0psGV+hXY
+	BVutxH5EU7fnD5h5DCqwDy/sAIXD3l8PMqOzfOTy3EMRqV1TKqdUSEU34lruu06lqXF3ZLycTpL
+	lI8y0XgoL+lWjWPdUke8WbB8nFE8=
+X-Google-Smtp-Source: AGHT+IHgWZR86aet8NsFk6QADc3RY1LxeuyuNwE1KbtbYTnws2GoYWXftQeSoOkEBq6x4/iqOopzwgpA16mmiRZz1I4=
+X-Received: by 2002:a0c:e407:0:b0:6b4:f902:4ade with SMTP id
+ 6a1803df08f44-6b501e3f9c7mr32557086d6.29.1718816385281; Wed, 19 Jun 2024
+ 09:59:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHIKc2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDM0NL3eLc4lzd3KT8Ct2UkmJd49RUy5TExJQ0C8MkJaCegqLUtMwKsHn
- RsbW1ACJmDChfAAAA
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1358; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=Sjz3DIoq0Zh1oqp2UL91MkPA5irTCigjw/wM4v2Ete8=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmcwsGi+azjYtioTEK81ULklvONA/PxjCMDDJUo
- er2cAYmHEyJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnMLBgAKCRBy2EO4nU3X
- Vt+MEACggRg23I5azN9XXQOVy/+DAS9NOTRox5LbANDItnF5Z1ZQPSRS9ZLesA+zB0shlZYTcoF
- lCFl6Fz1/dsGV315xoOKbs+JeHmTVR8ASyt2ZIqgd2uigi34F1VBcC3Lu5lVb4uf1a5Vqa4DsD+
- Pj/Ur/OZdEoW3Q5pMKn2fIWdc9Xo5CAzLyG4dwTLdbr2kKAk22IW8Iouhi2ycBr1240rpjnMHVu
- LU4h0ZsX3UUGiYToEXNPXujyOXFewZo2CHxRtp4dWOQ7H5/jDoV370/JTXi9vwO/cYVpuACgSvY
- Sv0e5t5KgzrZKNpF3IwT40v8b8K6DUpwjqL7QXka1JGmjh17IWzk7sSqXKBhwHAF2D2u84wWd91
- 1a6ewjoBUyJ1U+NGLTvLNW2ncTLMYa5gsZ7gNM4XIwzetEPTqLv77XjhB8AVIaWKh3ecv4OWMqh
- wsGStZeBjqELYLJb1usgi5uiaUw2oSoUy0nK139XVJDDdpONvxeDOLxbSvhOTMfafKDEa2x/6qC
- kkzeMoTUfhq3lLhug4cw3fWrlLoU59e33BtBOsS4unv1I4lfW5NYWFmfqS0RQvuciUqDtQ/MzzX
- zvfPXkWP23HUy4T3PbDJ8sXDECnOP7gCxzguVotUIwizg6amnPlG4N0rmkcgXqyi9xU0DrmJJFc
- Izi9YSBxGTuGORw==
-X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+References: <000000000000dc2e3d061b3d519c@google.com>
+In-Reply-To: <000000000000dc2e3d061b3d519c@google.com>
+From: Santosh Pradhan <santosh.pradhan@gmail.com>
+Date: Wed, 19 Jun 2024 22:29:32 +0530
+Message-ID: <CAOuNp5n7qaZnZ_5+kjfA6MD3QO=XDhE01G1ofN3rp72um-D2+w@mail.gmail.com>
+Subject: Re: [syzbot] [block?] KCSAN: data-race in block_uevent / inc_diskseq (2)
+To: syzbot <syzbot+c147f9175ec6cc7bd73b@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With the binding and driver patches queued for 6.11[0][1], it's time to
-update the dtsi files to use the new binding.
+Hi All,
+I guess this can be fixed by READ_ONCE(disk->diskseq) while reading
+and WRITE_ONCE(disk->diskseq, atomic64_inc_return(&diskseq)) in
+inc_diskseq() to avoid data race.
 
-[0] https://lore.kernel.org/linux-arm-msm/171840533352.102487.9576671528001022676.b4-ty@kernel.org/
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/log/?h=drivers-for-6.11
+I can probably send a patch if my understanding is correct.
 
-@Bjorn: I think this makes sense to only apply these patches for 6.12 so
-that also in the arm64 tree the driver will exist already, so git bisect
-is not impeded by that.
+Best Regards,
+Santosh
 
-Patches are just compile-tested.
 
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
----
-Luca Weiss (5):
-      ARM: dts: qcom: msm8974: Use mboxes in smsm node
-      arm64: dts: qcom: msm8916: Use mboxes in smsm node
-      arm64: dts: qcom: msm8939: Use mboxes in smsm node
-      arm64: dts: qcom: msm8953: Use mboxes in smsm node
-      arm64: dts: qcom: msm8976: Use mboxes in smsm node
-
- arch/arm/boot/dts/qcom/qcom-msm8974.dtsi | 4 +---
- arch/arm64/boot/dts/qcom/msm8916.dtsi    | 3 +--
- arch/arm64/boot/dts/qcom/msm8939.dtsi    | 3 +--
- arch/arm64/boot/dts/qcom/msm8953.dtsi    | 3 +--
- arch/arm64/boot/dts/qcom/msm8976.dtsi    | 4 +---
- 5 files changed, 5 insertions(+), 12 deletions(-)
----
-base-commit: 2102cb0d050d34d50b9642a3a50861787527e922
-change-id: 20240619-smsm-mbox-dts-3ee9daadf81b
-
-Best regards,
--- 
-Luca Weiss <luca@lucaweiss.eu>
-
+On Wed, Jun 19, 2024 at 5:57=E2=80=AFPM syzbot
+<syzbot+c147f9175ec6cc7bd73b@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    3d54351c64e8 Merge tag 'lsm-pr-20240617' of git://git.ker=
+n..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D12426cfa98000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dcd45aedbb3f76=
+37b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dc147f9175ec6cc7=
+bd73b
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ba0a777cccff/dis=
+k-3d54351c.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/a78193318c92/vmlinu=
+x-3d54351c.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/54456f3d3bfe/b=
+zImage-3d54351c.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+c147f9175ec6cc7bd73b@syzkaller.appspotmail.com
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KCSAN: data-race in block_uevent / inc_diskseq
+>
+> write to 0xffff888101f05220 of 8 bytes by task 3101 on cpu 0:
+>  inc_diskseq+0x2c/0x40 block/genhd.c:1472
+>  disk_force_media_change+0x9f/0xf0 block/disk-events.c:297
+>  __loop_clr_fd+0x270/0x3f0 drivers/block/loop.c:1193
+>  loop_clr_fd drivers/block/loop.c:1276 [inline]
+>  lo_ioctl+0xea6/0x1330 drivers/block/loop.c:1578
+>  blkdev_ioctl+0x35f/0x450 block/ioctl.c:676
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:907 [inline]
+>  __se_sys_ioctl+0xd3/0x150 fs/ioctl.c:893
+>  __x64_sys_ioctl+0x43/0x50 fs/ioctl.c:893
+>  x64_sys_call+0x1581/0x2d70 arch/x86/include/generated/asm/syscalls_64.h:=
+17
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> read to 0xffff888101f05220 of 8 bytes by task 3091 on cpu 1:
+>  block_uevent+0x31/0x50 block/genhd.c:1206
+>  dev_uevent+0x2f3/0x380 drivers/base/core.c:2687
+>  uevent_show+0x11e/0x210 drivers/base/core.c:2745
+>  dev_attr_show+0x3a/0xa0 drivers/base/core.c:2437
+>  sysfs_kf_seq_show+0x17c/0x250 fs/sysfs/file.c:59
+>  kernfs_seq_show+0x7c/0x90 fs/kernfs/file.c:205
+>  seq_read_iter+0x2d7/0x940 fs/seq_file.c:230
+>  kernfs_fop_read_iter+0xc6/0x310 fs/kernfs/file.c:279
+>  new_sync_read fs/read_write.c:395 [inline]
+>  vfs_read+0x5e6/0x6e0 fs/read_write.c:476
+>  ksys_read+0xeb/0x1b0 fs/read_write.c:619
+>  __do_sys_read fs/read_write.c:629 [inline]
+>  __se_sys_read fs/read_write.c:627 [inline]
+>  __x64_sys_read+0x42/0x50 fs/read_write.c:627
+>  x64_sys_call+0x27e5/0x2d70 arch/x86/include/generated/asm/syscalls_64.h:=
+1
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> value changed: 0x0000000000000045 -> 0x0000000000000048
+>
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 PID: 3091 Comm: udevd Not tainted 6.10.0-rc4-syzkaller-00035-g3d54=
+351c64e8 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 06/07/2024
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
