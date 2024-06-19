@@ -1,359 +1,421 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E34E1741D3;
-	Wed, 19 Jun 2024 22:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718836596; cv=none; b=u4zRspcOzpmHoYimta8qbJJAHhSuMElkxrwi4EJes/YYep7DeC88jeR01MWXaPFSlP0PYxu79NKChxAhsfCT4LHCOHFQG08Uu61rSRH67p0o04ljPtFKVQG/OJ4ekH42rmpe9pnmi1usuE7liIK7kRLMY+mBTatxky1VxkMedGA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718836596; c=relaxed/simple;
-	bh=TetSbo2yV/unLujQkPcUQDzegmU+VGwsRxY7S/o/XrQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z85odlG64Nh/1uM02pacyiZ6s+0EpNo3oR5Nx31bKAvS3XeV1EJPKFOz5FbnkFejE0re0HQ+pDRRAuA1p+CpxZgT0Mgg5q+z3MHuj60JpylaI9/pQ9mEZwWjJFBx51XlxOIwi9lKXBd48mIETHm+78ED6glIO+RVAECnpirCSXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V1JMdO69; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA89215B142;
+	Wed, 19 Jun 2024 22:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718836708; cv=fail; b=M5fL7yY/QeWfPnr/fCsMv7JVf7Hp23lSijbswe5jtIiBXb7Bn1igpZNpVI2lHD3Z+ibiayADO0y9J4DMnZfCbuEwDdaa8d1V5KvxW2XPFZ6IfQhQGzwVWC2cJFNd1lBJOvDLymGS/1JoONG6lEYQSlIErjqeGXr55gqxf1Yljt8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718836708; c=relaxed/simple;
+	bh=B8924mSMlc/GrbFoo4mZu/DxdRqE+Gihx89QOtceGd0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=B+vSLZ6aS5lOoZZmq9NB2mlv4UM+g6m+YgJAlscPaw5VlK0S8lVgSQtOaxv2AMHxgdEP9n5Wa5faIuYKt71F9A70urhfx0aVAGqbWwprhapLPoKY26/7HfeG+t4n1HYsbeMn5TLDqU7lZJ8D8yKawnBQH2vetD2i5o9Xi3pOJSw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UXSUQkxR; arc=fail smtp.client-ip=40.107.243.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V1JMdO69"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718836594; x=1750372594;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TetSbo2yV/unLujQkPcUQDzegmU+VGwsRxY7S/o/XrQ=;
-  b=V1JMdO69wiVR3rGoiIO+JiY8no3Xs+338alnrL1e6kSI5IK3rnZdK6jM
-   ZEKp6lMDosPMogSykonMycyRt6MPw5o+NGOs/hoyMom0TLOvcgxXJZvpY
-   v1EZ9FZlbiDkI6+9eLdX6rhz0dlojmMxBp+uvC1n0rmZ/i+iTeedrdqme
-   awfzlV5c0age1965/cud7aYXT/mfXX1t8PcJYA0VB9sBgMP/ukNdIdEDn
-   EYUgHL67otQPx0TSSe8+iaCeLCxrCxaxtYvtG2d9B/9yc5fyQ55k7f/r2
-   rRf2igFZO8ACUpf1cfVPE3Yw13TfHmnC6hdE11nTKVcOmOa9XhyTzNkoj
-   A==;
-X-CSE-ConnectionGUID: qw2hZ6ZMQGeIRWlgnPGIJA==
-X-CSE-MsgGUID: legjCEB5Q/i7nAsOT9BYCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931996"
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15931996"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:24 -0700
-X-CSE-ConnectionGUID: T7053+CGT0S4tK6va8idFw==
-X-CSE-MsgGUID: K56O8va4QSKkrlz99PGolA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="72793373"
-Received: from ivsilic-mobl2.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.54.39])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:24 -0700
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
-To: seanjc@google.com,
-	pbonzini@redhat.com,
-	kvm@vger.kernel.org
-Cc: kai.huang@intel.com,
-	dmatlack@google.com,
-	erdemaktas@google.com,
-	isaku.yamahata@gmail.com,
-	linux-kernel@vger.kernel.org,
-	sagis@google.com,
-	yan.y.zhao@intel.com,
-	rick.p.edgecombe@intel.com,
-	Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH v3 15/17] KVM: x86/tdp_mmu: Propagate building mirror page tables
-Date: Wed, 19 Jun 2024 15:36:12 -0700
-Message-Id: <20240619223614.290657-16-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
-References: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UXSUQkxR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OoIFY59FyKIYjBXH71Lv6gBq+T3IsgBr5RIA4pun8nYeruX1SJybjt4bgpHtY//2CVqjAAP2PJ7wJg9qNmhjIeXZNVTbR+s/yVvN7bMUVx4T71mwWeSyBGI21g1RWk4M1bS8QB+rSFcD26JuGL4mAF+9jAX8VEu2n/Q0Rb3meXcaqitwnRod50h7pLGwUxhH/+hM3noXWmQ0eQUqLleWVhC1TU34L3+Ywn5TE0pvJmrrWqm/AuxnLNLj6Xt93a75824YebzRk6BRDFxv+MAYGuCjKXk1HVqmqWK8htclh21kBVWeWblAGM8I/yrgI42w/4AfvLo9p3dqK2iX3MJXZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qj1mK6xQcdVZ0HLoz18CVTMKDD04fButfHVnyTM9/S0=;
+ b=VI+cubnz2PfiOavX3w7jX1wNIKTgSUBqTE7R12B5D/GNNQyKkjD0LAEMjY0yTzgsNN3gY6fIz2e/vM2G08LX/KtPFfluaL6N6MqqALnpt2zop3nhpKFTIm97maLY51ePWGosHUMkzr8dHZCSJBDNY7VV9jxmH6HK71YRWJiLGnK0LZaAFqSVytuk8J+1v9UK0DIUWtFtYO2nUx50Q5g9nGjrsvOzhBa+RERxk9l2IH9UvgA5Zd5dlW8NdGgAP7FNGsHgyszBaduqyWsWI5IDQy+XAHTEXURc4+Q1SzgvggXQ4IXL05f23qbDTJMXAeQSiQ3HlhcGddKLJVdmVnyj5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qj1mK6xQcdVZ0HLoz18CVTMKDD04fButfHVnyTM9/S0=;
+ b=UXSUQkxRhdZHFY19D+tpm6jZn7FAmJcoU4zfer2Ml6YgYCV+sFl3mIU+p1oQBTGmTZFT5obLIewHj9qyxs1qXI11G0YYzTqg8YFBl6esh4vtVnUofl0bwnLuDW83S5PA0tyjcTCvuwLLqK7FX+pihuPZCV4l2emHRXxaYGgh2LQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by IA1PR12MB8588.namprd12.prod.outlook.com (2603:10b6:208:44f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.18; Wed, 19 Jun
+ 2024 22:38:24 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
+ 22:38:23 +0000
+Message-ID: <16b7768c-8f68-65fb-19a5-55a117dd0603@amd.com>
+Date: Wed, 19 Jun 2024 17:38:19 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Reply-To: babu.moger@amd.com
+Subject: Re: [PATCH v4 14/19] x86/resctrl: Add the interface to assign ABMC
+ counter
+Content-Language: en-US
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ Babu Moger <babu.moger@amd.com>, corbet@lwn.net, fenghua.yu@intel.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
+ tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
+ kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
+ jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
+ daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
+ ilpo.jarvinen@linux.intel.com, peternewman@google.com,
+ maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eranian@google.com, james.morse@arm.com
+References: <cover.1716552602.git.babu.moger@amd.com>
+ <631092558e7fe0ac2e6267070e40c4a97b300f57.1716552602.git.babu.moger@amd.com>
+ <e649a49f-344f-4dbd-be2f-d70f932a80f4@intel.com>
+From: "Moger, Babu" <bmoger@amd.com>
+In-Reply-To: <e649a49f-344f-4dbd-be2f-d70f932a80f4@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR13CA0071.namprd13.prod.outlook.com
+ (2603:10b6:806:23::16) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|IA1PR12MB8588:EE_
+X-MS-Office365-Filtering-Correlation-Id: 20a16d1b-7e54-4de1-2c7e-08dc90b08736
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|366013|376011|1800799021;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bzRKN2tkK1Q3aTZ3NFJJL29qNFJNU2VNUFl2WFhJN2FFK0Y2WFRPR1ZLalJB?=
+ =?utf-8?B?MnFjU3FQMHFjUnEvZ1V6elZWQ2kwcWFLbFVNTVkyZStuTmtIQlVKRmtkSkRI?=
+ =?utf-8?B?WDRKWmVQMk9QY05WMjRjcGFMN0psUE9jNDVaTWhueENwU2hCdzlyYkoyeDJC?=
+ =?utf-8?B?WUwyK2lvVGVPUVhHSkxKaUtXV3pobksrUENxQXdTOG0vZFpJMWlncmtaYTFq?=
+ =?utf-8?B?QVBOdlZ4UG1ZTGhHQVU4NjVERWkxVXNFZllNSDNHcU5pQjZCN2o5bEZYSXNp?=
+ =?utf-8?B?ajN2TERXMXlBMEFHQmhlemFpVUtOcW41TDNRUVpFcnBVMUxRTUdxMnlQb05B?=
+ =?utf-8?B?SWFVeDFVb0VyNGViUzJsd1JPYW4yenpoSkxVSlNGZjN2blIrN1c3SmpLUmUz?=
+ =?utf-8?B?bzVXS1QxdS9FRTlOeVFhaGZTZ2MrelJEWk1JVUNvOG51MkdCSC90QUhDcUxu?=
+ =?utf-8?B?VWV1cVJDRndnY2xMbklsU3VyeVFQQnUwendjYU5NcnNiNkxBVnVhTGtQTkxY?=
+ =?utf-8?B?SGloUCtLT1VPM0RKaEtDTEhrMXZKeXJCaTZwN084OVo5QWtWb3J0b2xVWXY1?=
+ =?utf-8?B?UWdtOW9FKzhIQUV5MWdldWRUQTUyRHUrWnVTWmNQQUpEMjZmd0tWYkFmNmE4?=
+ =?utf-8?B?aGZPYithVnVZNVVkVHgxdldrRTI1NXNQQjFhWm0zWldNdit5c0JqL3hoOGZl?=
+ =?utf-8?B?N0ltTS9vTHR3Q1ZscjlIaFpON0ZHN1ZZdWtuOU1mdmx4VGMrbktDS3YrQkNW?=
+ =?utf-8?B?cm9MNXNLd01zWVBLYk44enRmRDQrcVYrT3RxdytDR0Nsb3RtYUYzNFoyZjMw?=
+ =?utf-8?B?NW50YlBpTEJVUWpabHQwNzZXeCtLbVVvK1hyZmlDbHlYaTBoeGYzbUlrUXdr?=
+ =?utf-8?B?czMvWFYzd2poRURqaTcrS0ZTZ2NWUHg4VHI5UDZoY0dETEYyNHRrRU9LaVdR?=
+ =?utf-8?B?S25xb1BydWwybHJMUUpmTFFYdURSL0dkb01EZ3l2eWNKdmltT0hnL2F4UDBl?=
+ =?utf-8?B?K1RPNkx2cWFyZHkxZnV2MFRKVGUyVHRJcTJxdzA1STJiTk4vdXVkd214VXJ4?=
+ =?utf-8?B?MGp3TmJuSUxUdUhrbFZrN25aaS94ZSt6ZEJUVTBmS1l5Yk5nZGNmZk1UcE9P?=
+ =?utf-8?B?QnhpdUgwQnQxNktUb2JvL0YxSmZudTloZHBGRjcvZ1NwODlRSlVCdkN1SUpn?=
+ =?utf-8?B?NmMxZXlZOUpacEVwQ3FIVy9vSUxlV0FnN2ExZE94b3htUHlLaThGS0hjeTVw?=
+ =?utf-8?B?dGl3MjZWOFFyUExwKzNPRHF5eEttQkp5VnpMRnhuSm9vNldFc0ZDMVk0OW9Q?=
+ =?utf-8?B?NEYyTCtaOTBnYklmUnhQaFltUzJ6WUoxaHorVC9MWURJSXFTNXYwNE15aVlv?=
+ =?utf-8?B?NjBiWFZXM3JTYXVPWnoxdGVtTFhvVkQ1TXZHMG9wbHEzWTlQbEZZcTkvSEpO?=
+ =?utf-8?B?WTQvaE5kNHM3ZFJaa3E3OERqRnVmczltZmVPaGw4Yll6YkZ3OFc4YkVNSkdZ?=
+ =?utf-8?B?SmFqVnNsQ2VkYVFHZzRZR3czOTFscGxoNkRCV01xcXJkOTZhbmVsc1pwZlhi?=
+ =?utf-8?B?b3BpbDZwWFV3NTFPOW5nYWVNa2VMMW80aXk5dzJlZVRRYUUvSFZCZHdSNWZQ?=
+ =?utf-8?B?NWl0aGxvbW1Nc0RyeG53bGdPeG5PZ0w3eWsrZm9UNURmQ082cE94ejVhdm51?=
+ =?utf-8?Q?R67wndxKjMNKJnNTK6bT?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(366013)(376011)(1800799021);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NFluaTR2TTZZeVlqR2s4U1c3WitxMDNCMk5KVk1aT3loUWJqa1J4NStCTHFj?=
+ =?utf-8?B?RXNVTzdOdWlsVC92WW5CZ3ZFTnFwMnhlOUVvbGk0dEs4OW5GNTY4Z3dFM1FZ?=
+ =?utf-8?B?NWhiYXo0MnZYME9HRjdxRWw2MGtQZDBXc2NzNCt3Mkg2a0RweVQrTldRMkxN?=
+ =?utf-8?B?NnFQZ2plR0VucHlsY2NiM1hSVUNrb2c1WDFKUDM2clZkQkFyWjRObm9kcWsz?=
+ =?utf-8?B?c2xDWDRQT3U0NTF5Z0VxNWZaaEFMUFhpMGpPcnVFK3k5eVNUeStXY2JNcFVx?=
+ =?utf-8?B?NkYxSEk1dXlQR2ZHdStKazNUQmhXRzRWZ3htL0RXRlVqTmljWmo5dFFhUkZU?=
+ =?utf-8?B?ZzI4QWtWOElKTUtoakpLcHVuR2R0STlEQWFjbTd3VGVXL3NZU0h5YkM2Wkd0?=
+ =?utf-8?B?cXpHQXFrYTJJQkVkTW4zZnRCNU00djYxQlQzckxvb0EzbVd1cVVpV01uN01S?=
+ =?utf-8?B?WlF2WEhJMWRZOE01QUZvdHBPM0ltUGFWSEV2ZzFyNjhLQzVocWhOZlZSaXpL?=
+ =?utf-8?B?OG01YVVRZ1o4REVJc3Nobko1cGZ4NElWZk5pMzdyZFZQVWp2dFJwckJwY090?=
+ =?utf-8?B?QjdWSlZIeXF3TXEwaVpOSk8xaEpmSXlCQXgvcEk1ZTl0SnkzelJKYjdKek5a?=
+ =?utf-8?B?ODRNMThxYnRCcVM2emFEemU5eklqNWlPSGtucW1Ca3dpbWFpZ0lpekRGKzlw?=
+ =?utf-8?B?enNuVEhYVklQQWlYSVluUHFrNjdSUi9FbG53Q2l0M1FsS3BnRVBYWlEvUVI1?=
+ =?utf-8?B?WFdWNGZQd2Q0WmVyUWYvYVNNMzBTMzZRV2xLSWdIZXJGVlRzRjN3YXhjMk9z?=
+ =?utf-8?B?RmovSlBwOGYzMFdwYUk1TkxYRDJkekFJeHhuNG9uMFRWMm1ndVZmMlhpdE9T?=
+ =?utf-8?B?cWJ6ZE5jVjBkV0lNbXZqZWJUYWswbi9JZURhQ2t1N2UreUxBVWlrTWZRUkkv?=
+ =?utf-8?B?MDkwVU5RMGVrNVRIekthU2FiNUt6ZWNyanFnbWJzN3UzRytMVURkSzhocWJR?=
+ =?utf-8?B?aVBueEd3T1VKcVdKbkd4M09xOGlpcy9VMEs1QzgvTncrMHdaT2k3bEgzNWh2?=
+ =?utf-8?B?eUZiMm1XcHNVYlZ0bS9ua0l1L3lCc2tIbzQ5VXM5QTIxL0V0R2ZjSUJRWkxB?=
+ =?utf-8?B?RFhIYTYraDRoK1hTbml1YXVIeW81OEsyN3NKbDg0RUx2aXJQWk5sNG55ZEQ1?=
+ =?utf-8?B?czdWbG5iSzl6YUVIZEM0YnZHSmhqaVlnY0EyR1ZXTHpONnlNM2wwWFlKS1RE?=
+ =?utf-8?B?TExsanNJMGhnN3hCbHZxNWYycTd1UTlWMjJXSG45USt4MmQxQ29XRUtHY2NT?=
+ =?utf-8?B?SlRxL3FzbGtCdTJiTGp1NkVYTHZIanN1Nyt4WE1yVE1lYVRpYXNVTENRTytY?=
+ =?utf-8?B?UXRwZzRnYTNGSFdZZkE4UVZVbHRQaGkzSnJLNEUxRXZQdjAweE5pMXhTOTdX?=
+ =?utf-8?B?ekRKVG1KZ1Z4UTltenh4WnpCSFRsbCtVeDdHM2cyUUJxQmpKWW0raTkya3pK?=
+ =?utf-8?B?VVlndDRYY2RaN01yUWVHc200NTlyUERyOGlOUzZpWWtlZnZKbk9ta1N0eklR?=
+ =?utf-8?B?SFY5NjZuTDBDamxJOENGWkF4ZzNmYyt3aXRtMXVKa3RsbWtsTTExN2pRazEx?=
+ =?utf-8?B?NWNqd1FVMDIyYzFiWDhpbTZWU0FTV2czRVc4VUhPS050RzhoWlJVQUJKdkJq?=
+ =?utf-8?B?dGhJZFpvaDRpeklRWUZNR1lwTEtwVDNBYmZzeG1LKzk5bXVSeld2Nld3L3or?=
+ =?utf-8?B?N2xyS2hzT25wU0xOUVJwd25TVFM4U2hZbFdqbTdST3NTQktvNVRZRmI1cWwx?=
+ =?utf-8?B?K1FVREFFbHEyUVRzdzZCa2pMMVMvVS9yQnFjWUw2TkgrQ0xPYmxWSFN6ZGkw?=
+ =?utf-8?B?M0tiVEVTekxBQy95OUJlU0tycXRCZE1GREhPZHVWZ3lNVlN4RzByWHAxVWNv?=
+ =?utf-8?B?dVdPc3lselBOQU4zdm1XMEgyVDluOC9ZWWxZZXBwTkFvcnA4QTFIdUEwemdi?=
+ =?utf-8?B?ZW51U1VOWDZ0TkhqUVBlTXJYSXlMN0JKdzVFcitSNlAvNEx5b1owaForR2R6?=
+ =?utf-8?B?ZlFqK1hQUDVsNkM3MFRTVVRsUldaUDdsYzhFOVowRzhkcFVpRDRBOE4zb2s2?=
+ =?utf-8?Q?5R7piSJX4hTS8qIh+hzyD257q?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20a16d1b-7e54-4de1-2c7e-08dc90b08736
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 22:38:23.8391
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tGfrYEMnBnLkMGGd9Z9Gb3T+vXNTL/cAAJOgSQ5r8PwQYToHsAkqccY1xnr3cFDa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8588
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+Hi Reinette,
 
-Integrate hooks for mirroring page table operations for cases where TDX
-will set PTEs or link page tables.
+On 6/13/2024 8:48 PM, Reinette Chatre wrote:
+> Hi Babu,
+> 
+> On 5/24/24 5:23 AM, Babu Moger wrote:
+>> ABMC feature requires to users to assign a hardware counter to an RMID
+> 
+> "requires to users" -> "requires users"?
 
-Like other Coco technologies, TDX has the concept of private and shared
-memory. For TDX the private and shared mappings are managed on separate
-EPT roots. The private half is managed indirectly though calls into a
-protected runtime environment called the TDX module, where the shared half
-is managed within KVM in normal page tables.
+Sure.
 
-Since calls into the TDX module are relatively slow, walking private page
-tables by making calls into the TDX module would not be efficient. Because
-of this, previous changes have taught the TDP MMU to keep a mirror root,
-which is separate, unmapped TDP root that private operations can be
-directed to. Currently this root is disconnected from any actual guest
-mapping. Now add plumbing to propagate changes to the "external" page
-tables being mirrored. Just create the x86_ops for now, leave plumbing the
-operations into the TDX module for future patches.
+> 
+>> to monitor the events. Provide the interfaces to assign a counter.
+>>
+>> Individual counters are configured by writing to L3_QOS_ABMC_CFG MSR
+>> and specifying the counter id, bandwidth source, and bandwidth types.
+> 
+> Where is discription of what this patch does and why?
+> 
+> This and following patches seem to introduce building blocks that
+> are only used later in series. These building blocks are introduced
+> without any information about what they do and why and that makes it
+> difficult to understand how this work will fall into place.
 
-Add two operations for setting up external page tables, one for linking
-new page tables and one for setting leaf PTEs. Don't add any op for
-configuring the root PFN, as TDX handles this itself. Don't provide a
-way to set permissions on the PTEs also, as TDX doesn't support it.
+Ok. Will elaborate this.
 
-This results is MMU "mirroring" support that is very targeted towards TDX.
-Since it is likely there will be no other user, the main benefit of making
-the support generic is to keep TDX specific *looking* code outside of the
-MMU. As a generic feature it will make enough sense from TDX's
-perspective. For developers unfamiliar with TDX arch it can express the
-general concepts such that they can continue to work in the code.
 
-TDX MMU support will exclude certain MMU operations, so only plug in the
-mirroring x86 ops where they will be needed. For setting/linking, only
-hook tdp_mmu_set_spte_atomic() which is use used for mapping and linking
-PTs. Don't bother hooking tdp_mmu_iter_set_spte() as it is only used for
-setting PTEs in operations unsupported by TDX: splitting huge pages and
-write protecting. Sprinkle a KVM_BUG_ON()s to document as code that these
-paths are not supported for mirrored page tables. For zapping operations,
-leave those for near future changes.
+> 
+>>
+>> The feature details are documented in the APM listed below [1].
+>> [1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
+>>      Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable 
+>> Bandwidth
+>>      Monitoring (ABMC).
+>>
+>> Signed-off-by: Babu Moger <babu.moger@amd.com>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+>> ---
+>> v4: Commit message update.
+>>      User bitmap APIs where applicable.
+>>      Changed the interfaces considering MPAM(arm).
+>>      Added domain specific assignment.
+>>
+>> v3: Removed the static from the prototype of rdtgroup_assign_abmc.
+>>      The function is not called directly from user anymore. These
+>>      changes are related to global assignment interface.
+>>
+>> v2: Minor text changes in commit message.
+>> ---
+>>   arch/x86/kernel/cpu/resctrl/internal.h |   3 +
+>>   arch/x86/kernel/cpu/resctrl/rdtgroup.c | 101 +++++++++++++++++++++++++
+>>   2 files changed, 104 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h 
+>> b/arch/x86/kernel/cpu/resctrl/internal.h
+>> index 45ed33f4f0ff..a88c8fc5e4df 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+>> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+>> @@ -657,6 +657,9 @@ void rdt_domain_reconfigure_cdp(struct 
+>> rdt_resource *r);
+>>   void __init resctrl_file_fflags_init(const char *config,
+>>                        unsigned long fflags);
+>>   void arch_domain_mbm_evt_config(struct rdt_hw_domain *hw_dom);
+>> +int resctrl_arch_assign(struct rdt_domain *d, u32 evtid, u32 rmid,
+>> +            u32 ctr_id, u32 closid, bool enable);
+>> +int resctrl_grp_assign(struct rdtgroup *rdtgrp, u32 evtid);
+>>   void rdt_staged_configs_clear(void);
+>>   bool closid_allocated(unsigned int closid);
+>>   int resctrl_find_cleanest_closid(void);
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c 
+>> b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index 0e425c91fa46..48df76499a04 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -203,6 +203,19 @@ static void num_cntrs_init(void)
+>>       num_cntrs_free_map_len = r->mon.num_cntrs;
+>>   }
+>> +static int assign_cntrs_alloc(void)
+> 
+> Only one counter is allocated and "assign" is unexpected since it
+> seems to imply how this counter will be used.
+> It can just be "mon_cntr_alloc()"?
 
-Many operations in the TDP MMU depend on atomicity of the PTE update.
-While the mirror PTE on KVM's side can be updated atomically, the update
-that happens inside the external operations (S-EPT updates via TDX module
-call) can't happen atomically with the mirror update. The following race
-could result during two vCPU's populating private memory:
+Sure.
 
-* vcpu 1: atomically update 2M level mirror EPT entry to be present
-* vcpu 2: read 2M level EPT entry that is present
-* vcpu 2: walk down into 4K level EPT
-* vcpu 2: atomically update 4K level mirror EPT entry to be present
-* vcpu 2: set_exterma;_spte() to update 4K secure EPT entry => error
-          because 2M secure EPT entry is not populated yet
-* vcpu 1: link_external_spt() to update 2M secure EPT entry
+> 
+>> +{
+>> +    u32 ctr_id = find_first_bit(&num_cntrs_free_map,
+>> +                    num_cntrs_free_map_len);
+>> +
+>> +    if (ctr_id >= num_cntrs_free_map_len)
+>> +        return -ENOSPC;
+>> +
+>> +    __clear_bit(ctr_id, &num_cntrs_free_map);
+>> +
+>> +    return ctr_id;
+>> +}
+>> +
+>>   /**
+>>    * rdtgroup_mode_by_closid - Return mode of resource group with closid
+>>    * @closid: closid if the resource group
+>> @@ -1830,6 +1843,94 @@ static ssize_t 
+>> mbm_local_bytes_config_write(struct kernfs_open_file *of,
+>>       return ret ?: nbytes;
+>>   }
+>> +static void rdtgroup_abmc_cfg(void *info)
+>> +{
+>> +    u64 *msrval = info;
+>> +
+>> +    wrmsrl(MSR_IA32_L3_QOS_ABMC_CFG, *msrval);
+>> +}
+>> +
+> 
+> Please add comments to these functions to summarize what
+> they do.
 
-Prevent this by setting the mirror PTE to FROZEN_SPTE while the reflect
-operations are performed. Only write the actual mirror PTE value once the
-reflect operations has completed. When trying to set a PTE to present and
-encountering a removed SPTE, retry the fault.
+Sure.
 
-By doing this the race is prevented as follows:
-* vcpu 1: atomically update 2M level EPT entry to be FROZEN_SPTE
-* vcpu 2: read 2M level EPT entry that is FROZEN_SPTE
-* vcpu 2: find that the EPT entry is frozen
-          abandon page table walk to resume guest execution
-* vcpu 1: link_external_spt() to update 2M secure EPT entry
-* vcpu 1: atomically update 2M level EPT entry to be present (unfreeze)
-* vcpu 2: resume guest execution
-          Depending on vcpu 1 state, vcpu 2 may result in EPT violation
-          again or make progress on guest execution
+> 
+>> +int resctrl_arch_assign(struct rdt_domain *d, u32 evtid, u32 rmid,
+>> +            u32 ctr_id, u32 closid, bool enable)
+>> +{
+>> +    struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(d);
+>> +    union l3_qos_abmc_cfg abmc_cfg = { 0 };
+>> +    struct arch_mbm_state *arch_mbm;
+>> +
+>> +    abmc_cfg.split.cfg_en = 1;
+>> +    abmc_cfg.split.ctr_en = enable ? 1 : 0;
+>> +    abmc_cfg.split.ctr_id = ctr_id;
+>> +    abmc_cfg.split.bw_src = rmid;
+>> +
+>> +    /*
+>> +     * Read the event configuration from the domain and pass it as
+>> +     * bw_type.
+>> +     */
+>> +    if (evtid == QOS_L3_MBM_TOTAL_EVENT_ID) {
+>> +        abmc_cfg.split.bw_type = hw_dom->mbm_total_cfg;
+>> +        arch_mbm = &hw_dom->arch_mbm_total[rmid];
+>> +    } else {
+>> +        abmc_cfg.split.bw_type = hw_dom->mbm_local_cfg;
+>> +        arch_mbm = &hw_dom->arch_mbm_local[rmid];
+>> +    }
+>> +
+>> +    smp_call_function_any(&d->cpu_mask, rdtgroup_abmc_cfg, &abmc_cfg, 
+>> 1);
+>> +
+>> +    /* Reset the internal counters */
+> 
+> "internal counters"? This needs a definition ... but since this is not
+> a new data structure the comment can be more specific about what is done
+> and why.
 
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Co-developed-by: Kai Huang <kai.huang@intel.com>
-Signed-off-by: Kai Huang <kai.huang@intel.com>
-Co-developed-by: Yan Zhao <yan.y.zhao@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-Co-developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
----
-TDX MMU Prep v3:
- - Rename mirrored->external (Paolo)
- - Better comment on logic that bugs if doing tdp_mmu_set_spte() on
-   present PTE. (Paolo)
- - Move zapping KVM_BUG_ON() to proper patch
- - Use spte_to_child_sp() (Paolo)
- - Drop unnessary comment in __tdp_mmu_set_spte_atomic() (Paolo)
- - Rename pfn->pfn_for_gfn to match remove_external_pte in next patch.
- - Rename REMOVED_SPTE to FROZEN_SPTE (Paolo)
+How about?
+/* Reset internal mbm event counters. */
 
-TDX MMU Prep v2:
- - Split from "KVM: x86/tdp_mmu: Support TDX private mapping for TDP MMU"
- - Rename x86_ops from "private" to "reflect"
- - In response to "sp->mirrored_spt" rename helpers to "mirrored"
- - Drop unused old_pfn and new_pfn in handle_changed_spte()
- - Drop redundant is_shadow_present_pte() check in __tdp_mmu_set_spte_atomic
- - Adjust some warnings and KVM_BUG_ONs
----
- arch/x86/include/asm/kvm-x86-ops.h |  2 +
- arch/x86/include/asm/kvm_host.h    |  7 +++
- arch/x86/kvm/mmu/tdp_mmu.c         | 98 ++++++++++++++++++++++++++----
- 3 files changed, 94 insertions(+), 13 deletions(-)
+> 
+>> +    if (arch_mbm)
+>> +        memset(arch_mbm, 0, sizeof(struct arch_mbm_state));
+>> +
+>> +    return 0;
+> 
+> If this function always succeeds then it can just be void?
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 566d19b02483..3ef19fcb5e42 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -95,6 +95,8 @@ KVM_X86_OP_OPTIONAL_RET0(set_tss_addr)
- KVM_X86_OP_OPTIONAL_RET0(set_identity_map_addr)
- KVM_X86_OP_OPTIONAL_RET0(get_mt_mask)
- KVM_X86_OP(load_mmu_pgd)
-+KVM_X86_OP_OPTIONAL(link_external_spt)
-+KVM_X86_OP_OPTIONAL(set_external_spte)
- KVM_X86_OP(has_wbinvd_exit)
- KVM_X86_OP(get_l2_tsc_offset)
- KVM_X86_OP(get_l2_tsc_multiplier)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d67e88a69fc4..12ff04135a0e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1738,6 +1738,13 @@ struct kvm_x86_ops {
- 	void (*load_mmu_pgd)(struct kvm_vcpu *vcpu, hpa_t root_hpa,
- 			     int root_level);
- 
-+	/* Update external mapping with page table link */
-+	int (*link_external_spt)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
-+				void *mirrored_spt);
-+	/* Update the external page table from spte getting set */
-+	int (*set_external_spte)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
-+				 kvm_pfn_t pfn_for_gfn);
-+
- 	bool (*has_wbinvd_exit)(void);
- 
- 	u64 (*get_l2_tsc_offset)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 582e5a045bb7..bc1ad127046d 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -244,7 +244,7 @@ void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu, bool mirror)
- 	struct kvm_mmu_page *root;
- 
- 	if (mirror)
--		role.is_mirror = 1;
-+		role.is_mirror = true;
- 
- 	/*
- 	 * Check for an existing root before acquiring the pages lock to avoid
-@@ -440,6 +440,59 @@ static void handle_removed_pt(struct kvm *kvm, tdp_ptep_t pt, bool shared)
- 	call_rcu(&sp->rcu_head, tdp_mmu_free_sp_rcu_callback);
- }
- 
-+static void *get_external_spt(gfn_t gfn, u64 new_spte, int level)
-+{
-+	if (is_shadow_present_pte(new_spte) && !is_last_spte(new_spte, level)) {
-+		struct kvm_mmu_page *sp = spte_to_child_sp(new_spte);
-+
-+		WARN_ON_ONCE(sp->role.level + 1 != level);
-+		WARN_ON_ONCE(sp->gfn != gfn);
-+		return sp->external_spt;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int __must_check set_external_spte_present(struct kvm *kvm, tdp_ptep_t sptep,
-+						 gfn_t gfn, u64 old_spte,
-+						 u64 new_spte, int level)
-+{
-+	bool was_present = is_shadow_present_pte(old_spte);
-+	bool is_present = is_shadow_present_pte(new_spte);
-+	bool is_leaf = is_present && is_last_spte(new_spte, level);
-+	kvm_pfn_t new_pfn = spte_to_pfn(new_spte);
-+	int ret = 0;
-+
-+	KVM_BUG_ON(was_present, kvm);
-+
-+	lockdep_assert_held(&kvm->mmu_lock);
-+	/*
-+	 * We need to lock out other updates to the SPTE until the external
-+	 * page table has been modified. Use FROZEN_SPTE similar to
-+	 * the zapping case.
-+	 */
-+	if (!try_cmpxchg64(sptep, &old_spte, FROZEN_SPTE))
-+		return -EBUSY;
-+
-+	/*
-+	 * Use different call to either set up middle level
-+	 * external page table, or leaf.
-+	 */
-+	if (is_leaf) {
-+		ret = static_call(kvm_x86_set_external_spte)(kvm, gfn, level, new_pfn);
-+	} else {
-+		void *mirrored_spt = get_external_spt(gfn, new_spte, level);
-+
-+		KVM_BUG_ON(!mirrored_spt, kvm);
-+		ret = static_call(kvm_x86_link_external_spt)(kvm, gfn, level, mirrored_spt);
-+	}
-+	if (ret)
-+		__kvm_tdp_mmu_write_spte(sptep, old_spte);
-+	else
-+		__kvm_tdp_mmu_write_spte(sptep, new_spte);
-+	return ret;
-+}
-+
- /**
-  * handle_changed_spte - handle bookkeeping associated with an SPTE change
-  * @kvm: kvm instance
-@@ -548,7 +601,7 @@ static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
- 		kvm_set_pfn_accessed(spte_to_pfn(old_spte));
- }
- 
--static inline int __tdp_mmu_set_spte_atomic(struct tdp_iter *iter, u64 new_spte)
-+static inline int __tdp_mmu_set_spte_atomic(struct kvm *kvm, struct tdp_iter *iter, u64 new_spte)
- {
- 	u64 *sptep = rcu_dereference(iter->sptep);
- 
-@@ -560,15 +613,25 @@ static inline int __tdp_mmu_set_spte_atomic(struct tdp_iter *iter, u64 new_spte)
- 	 */
- 	WARN_ON_ONCE(iter->yielded || is_frozen_spte(iter->old_spte));
- 
--	/*
--	 * Note, fast_pf_fix_direct_spte() can also modify TDP MMU SPTEs and
--	 * does not hold the mmu_lock.  On failure, i.e. if a different logical
--	 * CPU modified the SPTE, try_cmpxchg64() updates iter->old_spte with
--	 * the current value, so the caller operates on fresh data, e.g. if it
--	 * retries tdp_mmu_set_spte_atomic()
--	 */
--	if (!try_cmpxchg64(sptep, &iter->old_spte, new_spte))
--		return -EBUSY;
-+	if (is_mirror_sptep(iter->sptep) && !is_frozen_spte(new_spte)) {
-+		int ret;
-+
-+		ret = set_external_spte_present(kvm, iter->sptep, iter->gfn,
-+						iter->old_spte, new_spte, iter->level);
-+		if (ret)
-+			return ret;
-+	} else {
-+		/*
-+		 * Note, fast_pf_fix_direct_spte() can also modify TDP MMU SPTEs
-+		 * and does not hold the mmu_lock.  On failure, i.e. if a
-+		 * different logical CPU modified the SPTE, try_cmpxchg64()
-+		 * updates iter->old_spte with the current value, so the caller
-+		 * operates on fresh data, e.g. if it retries
-+		 * tdp_mmu_set_spte_atomic()
-+		 */
-+		if (!try_cmpxchg64(sptep, &iter->old_spte, new_spte))
-+			return -EBUSY;
-+	}
- 
- 	return 0;
- }
-@@ -598,7 +661,7 @@ static inline int tdp_mmu_set_spte_atomic(struct kvm *kvm,
- 
- 	lockdep_assert_held_read(&kvm->mmu_lock);
- 
--	ret = __tdp_mmu_set_spte_atomic(iter, new_spte);
-+	ret = __tdp_mmu_set_spte_atomic(kvm, iter, new_spte);
- 	if (ret)
- 		return ret;
- 
-@@ -623,7 +686,8 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
- 	 * Delay processing of the zapped SPTE until after TLBs are flushed and
- 	 * the FROZEN_SPTE is replaced (see below).
- 	 */
--	ret = __tdp_mmu_set_spte_atomic(iter, FROZEN_SPTE);
-+	ret = __tdp_mmu_set_spte_atomic(kvm, iter, FROZEN_SPTE);
-+
- 	if (ret)
- 		return ret;
- 
-@@ -680,6 +744,14 @@ static u64 tdp_mmu_set_spte(struct kvm *kvm, int as_id, tdp_ptep_t sptep,
- 	old_spte = kvm_tdp_mmu_write_spte(sptep, old_spte, new_spte, level);
- 
- 	handle_changed_spte(kvm, as_id, gfn, old_spte, new_spte, level, false);
-+
-+	/*
-+	 * Users that do non-atomic setting of PTEs don't operate on mirror
-+	 * roots, so don't handle it and bug the VM if it's seen.
-+	 */
-+	if (is_mirror_sptep(sptep))
-+		KVM_BUG_ON(is_shadow_present_pte(new_spte), kvm);
-+
- 	return old_spte;
- }
- 
+Sure. We can do that.
+
+> 
+>> +}
+>> +
+>> +int resctrl_grp_assign(struct rdtgroup *rdtgrp, u32 evtid)
+> 
+> Please use consistent naming. Note how the filename is "rdtgroup.c" and 
+> this
+> function operates on "struct rdtgroup" and if you take a closer look at
+> the functions in this file and the header where you add this function you
+> will notice a distinct pattern of "rdtgroup_" used as prefix. There really
+> is no reason to start a new namespace for this.
+
+Sure.
+
+> 
+>> +{
+>> +    struct rdt_resource *r = 
+>> &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+>> +    int ctr_id = 0, index;
+>> +    struct rdt_domain *d;
+>> +    u32 mon_state;
+>> +
+>> +    index = mon_event_config_index_get(evtid);
+>> +    if (index == INVALID_CONFIG_INDEX) {
+>> +        rdt_last_cmd_puts("Invalid event id\n");
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    if (evtid == QOS_L3_MBM_TOTAL_EVENT_ID) {
+>> +        mon_state = ASSIGN_TOTAL;
+>> +    } else if (evtid == QOS_L3_MBM_LOCAL_EVENT_ID) {
+>> +        mon_state = ASSIGN_LOCAL;
+>> +    } else {
+>> +        rdt_last_cmd_puts("Invalid event id\n");
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    /* Nothing to do if event has been assigned already */
+>> +    if (rdtgrp->mon.mon_state & mon_state) {
+> 
+> Why is this mon_state needed? Is it not redundant when considering that
+> struct mongroup has an array of counter IDs that can already be used
+> to see if a counter is assigned or not?
+> What if there is a new:
+> #define MON_CNTR_UNSET U32_MAX
+> 
+> When cntr_id[index] == MON_CNTR_UNSET then it is not assigned.
+
+Yes. That can be done. That case mon_state is not required. We just need 
+the index. Also, we need to initialize the ctrl_id when the group is 
+created. Hope that should work.
+
+> 
+>> +        rdt_last_cmd_puts("ABMC counter is assigned already\n");
+>> +        return 0;
+>> +    }
+>> +
+>> +    /*
+>> +     * Allocate a new counter and update domains
+>> +     */
+>> +    ctr_id = assign_cntrs_alloc();
+>> +    if (ctr_id < 0) {
+>> +        rdt_last_cmd_puts("Out of ABMC counters\n");
+>> +        return -ENOSPC;
+>> +    }
+>> +
+>> +    rdtgrp->mon.ctr_id[index] = ctr_id;
+>> +
+>> +    list_for_each_entry(d, &r->domains, list)
+>> +        resctrl_arch_assign(d, evtid, rdtgrp->mon.rmid, ctr_id,
+>> +                    rdtgrp->closid, 1);
+>> +
+>> +    rdtgrp->mon.mon_state |= mon_state;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   /* rdtgroup information files for one cache resource. */
+>>   static struct rftype res_common_files[] = {
+>>       {
+> 
+> Reinette
+> 
+
 -- 
-2.34.1
-
+- Babu Moger
