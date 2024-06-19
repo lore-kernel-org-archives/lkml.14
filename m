@@ -1,41 +1,42 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0CE13959A;
-	Wed, 19 Jun 2024 11:24:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9101313CA92;
+	Wed, 19 Jun 2024 11:24:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796249; cv=none; b=IUBUhghJ2he3jP6LGNRww2OaHi71OH9lMwiA9fw7c5+1aVYQjeQPwcZmzc2+9AzIu505FJoaAIJAFon5xSrUrFEtYHIK9k4SlqGy4yQolfUY8nv7MmKj29SRUAu2XnVSVLmQcEEDFhuI/2CJqNIl3kQMIohnQxnvcWOpax1sQAw=
+	t=1718796250; cv=none; b=eegYWVz821JVPpz9gwDeeyfmb/sZLD8vlhJ476gWBBKtvoA7Jd/U0Us8PuKMGa1SXE0lp/5aGPz0RSc7BFd8+PFhvPsJLfE2EfafXPNjovnbRfHiV0KZBVJgNvZxz3J8dCjwfd+VtDSguhhCHj34eJyt4Zc5GN/oP1zAmfORG0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796249; c=relaxed/simple;
-	bh=NZn1OaraKPjXpPU/coZrv5VL2+1jqKHdG89pWwhTaAM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bm85vtJmZJFBda0z8wo89GhtZ/M7Z52wsMjbrnGvq3ZLWLR+owBcJMIw7WX6ukcbKIGk3vEjoMrlIVByHVmsLVkKV1aVx9OK68vxvo+klqMeqKhr/Lf/vCon4ImXhWtm+oImG+Nyp/r42fWZfMfODfubgwHsgwQNXdaNirBpGGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hVACol4f; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1718796250; c=relaxed/simple;
+	bh=GzRDLnuFoZMdH1hQlF6ojeOZvsWqIJBgLcgKRUN0xBw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WV462zO9PGDaVMp61czs4m5jL1W+qmcHOfjsy78cNdyO/AIPb7bJYs/9mDv+favDeCtn6VWkGDE37KaZtIhd5qCg4657YEJh2Km66mfFsbwAiFSqxW2ItoCtMxk43h6mGQ+LoihzqcNrQg6jOkU+wqQVd0rhqasRggeblLK4UB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=xp+rYdm1; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hVACol4f"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="xp+rYdm1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718796242;
-	bh=NZn1OaraKPjXpPU/coZrv5VL2+1jqKHdG89pWwhTaAM=;
-	h=From:Subject:Date:To:Cc:From;
-	b=hVACol4fYBAhiMS4dQgvIk00SBbH93pwx/FeHOeOWx1K0ufTjjZDBF3Q4dX/xLjYT
-	 6s5Z0g8/G0Z37jU2Lu9YnfZptdbNXiKBo+59XuFAxWbPmiJRcP6+goND9qgSOJCjCv
-	 +AHo6EGF9EkvWQy2hSpilYOIlRT7enUZzaMwO7xMOBojFjEPzO06XJ9BJaqR1qCRE8
-	 Fa39nieT/86STTrDDCFMXKHyf//HLkJgtM31h24PD05NfEU0ktmaMLF+TeSatBT/Vs
-	 V7U54GM2ir1d9Ry1Dc4S4eiJiLJNRXpTlZYIrl7dm+lyRbluXXcoOgOt2Q9NtFj9uL
-	 1aZd2lG4+aHLQ==
+	s=mail; t=1718796247;
+	bh=GzRDLnuFoZMdH1hQlF6ojeOZvsWqIJBgLcgKRUN0xBw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=xp+rYdm1YH+nboSfAZtAX6s/iXzFdiKjJH5gkZ0DCVDMVjCAy1YuntkUvZCXqhVrQ
+	 NtAssv1O5l8f8VYQ0/Vchpmb4BDqf3NAPni6h8ZOmEf9q6uf4u/u1eJoSB2Ncw5VbZ
+	 68iNYbjDljRoOwuTEGg+2RuB0PXVDJqUKD80byW7U5BtSw6UstP1aiOricV7BVeaI/
+	 SUpr7AEe9ZronJtk9fSoEagOot88qyaUmXV5cTWGmE80ZYbzkvRUwuC7Z1xtaMLu25
+	 4EQ7gxyLoWUeLVzF9u+lpCnOJuB4xwPQdaLRimN5jmmudpXHMR2pGTA4R6Li6m5HYG
+	 0wCjvu9/O4bfQ==
 Received: from localhost (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 20D8137804CF;
-	Wed, 19 Jun 2024 11:24:02 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E320E37821D3;
+	Wed, 19 Jun 2024 11:24:06 +0000 (UTC)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Subject: [PATCH 0/5] DT fixes for Rockchip RK809 audio codec support
-Date: Wed, 19 Jun 2024 14:23:29 +0300
-Message-Id: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
+Date: Wed, 19 Jun 2024 14:23:33 +0300
+Subject: [PATCH 4/5] arm64: dts: rockchip: Fix mic-in-differential usage on
+ rk3566-roc-pc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,9 +45,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALG/cmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDM0NL3aJsCwNL3bTMitRiXcNUY2MDc1OLVMO0NCWgjoKiVLAEUEN0bG0
- tABjxT91dAAAA
+Message-Id: <20240619-rk809-fixes-v1-4-fa93bc5313f4@collabora.com>
+References: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
+In-Reply-To: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
@@ -59,28 +60,35 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.0
 
-Rockchip RK809 MFD provides a RK817 compatible audio codec, supported by
-the rk817_codec driver.
+The 'mic-in-differential' DT property supported by the RK809/RK817 audio
+codec driver is actually valid if prefixed with 'rockchip,':
 
-This patch series fixes a few issues identified by dtbs_check for the
-boards making use of the codec: rk3566-quartz64-b, k3566-roc-pc,
-rk3568-evb1-v10, rk3568-lubancat-2, rk3568-odroid-m1, rk3568-rock-3a.
+  DTC_CHK arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dtb
+  rk3566-roc-pc.dtb: pmic@20: codec: 'mic-in-differential' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/mfd/rockchip,rk809.yaml#
 
+Make use of the correct property name.
+
+Fixes: a8e35c4bebe4 ("arm64: dts: rockchip: add audio nodes to rk3566-roc-pc")
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
-Cristian Ciocaltea (5):
-      dt-bindings: mfd: rk809: Use correct compatible in the example
-      dt-bindings: mfd: rk809: Add missing audio codec properties
-      arm64: dts: rockchip: Fix mic-in-differential usage on rk3568-rock-3a
-      arm64: dts: rockchip: Fix mic-in-differential usage on rk3566-roc-pc
-      arm64: dts: rockchip: Fix mic-in-differential usage on rk3568-evb1-v10
+ arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../devicetree/bindings/mfd/rockchip,rk809.yaml    | 38 ++++++++++++++++++----
- arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts     |  2 +-
- arch/arm64/boot/dts/rockchip/rk3568-evb1-v10.dts   |  2 +-
- arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts    |  2 +-
- 4 files changed, 34 insertions(+), 10 deletions(-)
----
-base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
-change-id: 20240619-rk809-fixes-1e330758e1ff
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts
+index 63eea27293fe..67e7801bd489 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts
+@@ -269,7 +269,7 @@ rk809: pmic@20 {
+ 		vcc9-supply = <&vcc3v3_sys>;
+ 
+ 		codec {
+-			mic-in-differential;
++			rockchip,mic-in-differential;
+ 		};
+ 
+ 		regulators {
+
+-- 
+2.45.2
 
