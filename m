@@ -1,113 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC41120B0F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F247D08F;
+	Wed, 19 Jun 2024 12:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718801170; cv=none; b=YqoCEnG883vjvI0kXBqIMvkt/ZkvEA7sKES1xT9dK8nkwJdWR9V7aNNPaKt2lBZNfLda160NWyGnbr2vSQkU5sA3c+I9wUKXuQ/0Hlznd8dlZRnC6At1tp6ij6suThieFqx1D5Iu/VmX/lz4OFVDYNftkOIWXJu7WnEZuinWlnU=
+	t=1718801171; cv=none; b=GJT4NBh5ZQAv0cz1qblPuGkUP7jjZN4BA+CqQpYWKpqjzygyw3zAZFoyHh+w9oCpxRjeokgqCQKkLlQWfdlL7G5NM+Vz5SjeuaJ1bfKfrG82CKv4yEAO17tUf2j7jBU9fZzGAnp2dqWDT1180aGzEDqgulyWWAiE2fcuKFb2l2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718801170; c=relaxed/simple;
-	bh=A18lYP5BdCr43fW19fZ/J/98CKMZ+MMqipWAn49xL+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T9WRSvHws8EBC1e7rarSWXFWmcrFhqrTenRByM7wkHUZ6KWeOgRle9LWivtIaYyQbIXvTot4jN85m1lss4AYXZ47qsBJRu5IB4TkjrF2YnBJFLrm8v1yuoU/yqLMYvgTPQNmmK68Vy+DGJQuSCESRX3HKEiAO+m3X1KDSrbLJCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2FB31042;
-	Wed, 19 Jun 2024 05:46:31 -0700 (PDT)
-Received: from [10.57.71.86] (unknown [10.57.71.86])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A92F43F6A8;
-	Wed, 19 Jun 2024 05:46:05 -0700 (PDT)
-Message-ID: <000bca96-dd66-49d2-a540-f4cf36d74ee8@arm.com>
-Date: Wed, 19 Jun 2024 13:46:03 +0100
+	s=arc-20240116; t=1718801171; c=relaxed/simple;
+	bh=hebDv46b3MaHt32RS5hfRVVyysKj69AGJz7Y2WOspOM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FvQzuGAe/eiF/MSD166c9GNua9bonN7BvrOXURQ8hwWQ/16Kx+hqlL/RUnNDd7EJMTS7qjsJgwJYVEqz39ZGlUHhburDvvCdSk/gWYqzx+3G1qsEb9MspnDmY2++u4kPja5Fb/MRihrIMTmQomshngsc/A1INTHa/3mGI6th+Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fhP9O6+1; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fhP9O6+1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718801169; x=1750337169;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hebDv46b3MaHt32RS5hfRVVyysKj69AGJz7Y2WOspOM=;
+  b=fhP9O6+1bsNnJ0JehHZfQXfQIQwzfbYlkiklX19BCH1vHpq1yOMvb/tC
+   Wie4Mzy77yRJzqRKy5DY6ihgHX+6/bGsk3U4Kom2TYkRVDUk8aYVM2Gz5
+   LXxqqmhv8pyyQ4I1XSuYC8ZZcxwp+O4dRvFoFbI9eIh9lc6EZZN3Vz7iv
+   VVRJmWea3v9qL0QWkMWwAG9ARtW6zkwbhyeXTHqjCJ7gk1Io6YRrLKNE5
+   AWCzl2idyklbOmLNhbcRyrXsnZAU7QfZnvjJawRmusC+eR2DAhW2y+Els
+   2W35CeqrtHunsOtgHl+MeW7IQ3GV2avB5XBkfTcC8CBRqgIUJ79QAieGA
+   Q==;
+X-CSE-ConnectionGUID: X7LQFekcTcydFPURj2/4JA==
+X-CSE-MsgGUID: 1zRd3ezFQ9OrqS6yznHDBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15449932"
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="15449932"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 05:46:08 -0700
+X-CSE-ConnectionGUID: nP+7Bh8xR7imHl+lkWotbg==
+X-CSE-MsgGUID: elB3EkApTuuQ6teGmDXy6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="46344337"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by fmviesa005.fm.intel.com with ESMTP; 19 Jun 2024 05:46:08 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: rafael@kernel.org,
+	daniel.lezcano@linaro.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/3] Lunar Lake DLVR support
+Date: Wed, 19 Jun 2024 05:45:57 -0700
+Message-ID: <20240619124600.491168-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] New config added to handle 64-bit systems with 32-bit DMA
- support
-To: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Cc: Alberto Secondi <albertosecondi@gmail.com>, hch@lst.de,
- m.szyprowski@samsung.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, alberto.secondi@abinsula.com,
- Davide Salaris <davide.salaris@abinsula.com>
-References: <20240619091737.669040-1-albertosecondi@gmail.com>
- <0e03afd6-46be-4fc7-a974-bf506d8e503c@arm.com>
- <CAOf5uwkU1qCxC=OamNHLq3d3SZGVuX8_eh1_MYt6TELT4C1j5Q@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAOf5uwkU1qCxC=OamNHLq3d3SZGVuX8_eh1_MYt6TELT4C1j5Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Support DLVR controls for Lunar Lake. The first two patches are preparatory
+changes to add DLVR support by the third patch.
 
-On 2024-06-19 12:43 pm, Michael Nazzareno Trimarchi wrote:
-> Hi Robin
-> 
-> On Wed, Jun 19, 2024 at 12:36 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 2024-06-19 10:17 am, Alberto Secondi wrote:
->>> ------ Tessian Warning ------
->>>
->>> Be careful, the email's sending address "albertosecondi@gmail[.]com" has never been seen on your company's network before today
->>>
->>> This warning message will be removed if you reply to or forward this email to a recipient outside of your organization.
->>>
->>> ---- Tessian Warning End ----
->>>
->>> From: Alberto Secondi <alberto.secondi@abinsula.com>
->>>
->>> The kernel assumes that 64-bit systems have 64-bit DMA support through
->>> CONFIG_ARCH_DMA_ADDR_T_64BIT. This is not always true; for example, several
->>> iMX8 systems (verified on iMX8MM and iMX8MP) have DMA with only 32-bit support.
->>> This results in several drivers requesting DMA_BIT_MASK(64), which causes
->>> malfunctions, particularly when systems have more than 3GB of DRAM (verified
->>> with the lan743x driver and iMX8 systems with 4GB of DRAM). Therefore, a new
->>> config ARCH_64BIT_HAS_DMA32_ONLY was added to manage 64-bit systems with 32-bit
->>> DMA, which adjusts DMA_BIT_MASK(n) accordingly.
->>
->> No. If a system has devices naturally capable of >32-bit DMA, and memory
->> at >32-bit system physical addresses, but only a 32-bit interconnect in
->> between, that needs to be described properly in Devicetree/ACPI, not
->> hacked around with completely non-portable kernel bodges.
->>
-> 
-> commit 4251a3ac4de9625a284a9c046cc915487e9b2a5e
-> Author: Lucas Stach <l.stach@pengutronix.de>
-> Date:   Tue May 4 10:20:51 2021 +0200
-> 
->      arm64: dts: imx8mm: specify dma-ranges
-> 
->      DMA addressing capabilities on i.MX8MM are limited by the interconnect,
->      same as on i.MX8MQ. Add dma-ranges to the the peripheral bus to let
->      the kernel know about this.
-> 
->      Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
->      Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
->      Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
->      Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 64aa38fd2b6e0..e7648c3b83905 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -261,6 +261,7 @@ soc@0 {
->                  #address-cells = <1>;
->                  #size-cells = <1>;
->                  ranges = <0x0 0x0 0x0 0x3e000000>;
-> +               dma-ranges = <0x40000000 0x0 0x40000000 0xc0000000>;
->                  nvmem-cells = <&imx8mm_uid>;
->                  nvmem-cell-names = "soc_unique_id";
-> 
-> 
-> Somenthing like this should already do it?
+Srinivas Pandruvada (3):
+  thermal: intel: int340x: Cleanup of DLVR sysfs on driver remove
+  thermal: intel: int340x: Capability to map user space to firmware
+    values
+  thermal: intel: int340x: Add DLVR support for Lunar Lake
 
-Hmm, indeed... so the question to dig into would be why that's 
-apparently not getting picked up by of_dma_get_range() for that device.
+ .../processor_thermal_device.c                |   3 +-
+ .../processor_thermal_device_pci.c            |   3 +-
+ .../int340x_thermal/processor_thermal_rfim.c  | 113 +++++++++++++++++-
+ 3 files changed, 111 insertions(+), 8 deletions(-)
 
-Thanks,
-Robin.
+-- 
+2.40.1
+
