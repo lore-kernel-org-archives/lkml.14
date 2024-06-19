@@ -1,118 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40BC153578
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B36152E03;
+	Wed, 19 Jun 2024 16:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718815202; cv=none; b=oLaSgl4v/sT+GIVC+4U0NP4+PlJkApteLp2IN3NPf2SsV6yf8I6FA7zvTiC/jB9QjVk5f0ukI2tCHx5KokcqPtaWFCEQqTwPVJKl7eAxa69WuMIMn5FWY7cOCR2be5euVq0E93RK9b076rGgDmohCOeqwSRZmOwKfo/DzOejub0=
+	t=1718815381; cv=none; b=ljAjIfZNYa+13JYs1+jLtxaF/HT1LNQnIAQ3el993s6ZIM3x5b85z+8dCIc/SZASVomTiZH7D1TbB0uVb1JE4W5YjaxEb1f6IRp6AYKBy9IMP9G6gLtCu5hYBcbbxmf7LqHPmkLmRKdud8Nqa15cCIVXZVX46MqnpBEGKzq9Cw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718815202; c=relaxed/simple;
-	bh=TLxDuDULv7mvnSpOlUw3zxuVhjTlDVDDw8EewhZA5MU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RDFti/O1GwJ7Ay4r9r2r/rjibkR4oqk2vFMhQNw8Vrx0XaUE6FRttIwCzyDLxYAtLE6UkXZ3tudYAJrrdpmvWBQBCcx7BRqI1zPkxpYvZ6E3kFOg4A4voAUaVgttcjsOlyPeAOKnz4QR+STJlO6WP7cUwAt3ePp58BgqO7rGyEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FM/6aQCr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718815381; c=relaxed/simple;
+	bh=HeFWIql8WvfKUjhc39BHLfpmBN+1hNgfOVuC7JkBEao=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H8hpHH/bDzboOyp89pUFt3j0ZVMV46XkGfVKX6GOCVb99n6FNpZ60V7QVat/GemqC5UMQqhpK0zQwoYMHklIlU/Hq6GzfMXxJNoXrkONIL0gdY4nSP33O40FTghSwwMqbibRKyky18e28GSsTbJWbdun/0PvHHt05dUzE3DzxCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZPXWmsbw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FM/6aQCr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718815199;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P60Z+qqKP/gxhy1fal8KOowFEF1s+YzH3edKw1gHlyU=;
-	b=FM/6aQCrgoL8qshur8rleJ3Qhz5i3MmMhcg1Rv7t2D4p8wear3fyrMXeAjOW9KjwdrnWew
-	Iz9LCpkgCFJdNdaBsyx7sh265A9WFZEJ0bjuMBUb8+nzzRn1wYcEXvWkV8a+9yjOn80gU6
-	6WakzzfrrFDAW+mNrYosX99OuAN/xrw=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-9c1IW2JEMkiVfNyxYrjwsg-1; Wed, 19 Jun 2024 12:39:57 -0400
-X-MC-Unique: 9c1IW2JEMkiVfNyxYrjwsg-1
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-62f8a1b2969so137922967b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:39:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718815197; x=1719419997;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P60Z+qqKP/gxhy1fal8KOowFEF1s+YzH3edKw1gHlyU=;
-        b=gD77Frc1c0jwcEd931ZKmpXyiEbMIg/5DgCnib/0D6+X0R6GAFUTf3vm3U4+ctukxV
-         HJBf/BhP8tQH1gm2OSFZChKbnS/wQEMVLlQXKgLZ2cfwuNtKa6l0OEGcPTP8FPQg9p73
-         om0mTBN6pENfW4yoBG6c44mnPWxHLCGERcDy0TT3D5DCeJTocFqRYadeLDiixaQ8BxNh
-         qj3DBt/S5xChcinw3/ow0qlXy1EPvYEIfFTG8spw+QMM21JoQ6k6QO1rXPpzlTztGDpt
-         Qg7CqsACU5/bLwz5zBlrsLyO03idqDKWpN7/YR067WXLbkqp3sTQWnwcPGfHJbl+7kWz
-         fOaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH8BtWqUgBBfSMD8JHZzOifmsL+paSVb3wxBYdZs+48/eArMeHwGgRHBqRRvcMy+2puIvzB9N7eIq5hTPNKHyr8P7zMSfuHcbmRVkM
-X-Gm-Message-State: AOJu0YyDtQm8po5FCTbIUsacOtDRX9Zv9AVVhLpBfsZoIw8bPQsdGpwO
-	IZCH6eHplzoOp64xMcI4Ik8qVa4rtktmnWLlyZObyAWd3CzxX5XKcZ01adinyw0F/xUBEmCotbA
-	ef60UavNX2hFtocE3x/YR+VZeNaiwzo8PTN9zhw1J1p95cXTLDlPYpEURvHhZzvYmUMhOywlXZT
-	0m1FWF+J31cVivwZQorvgvuo6BaMe6BpnzLDqr
-X-Received: by 2002:a05:690c:94d:b0:61a:b038:6d34 with SMTP id 00721157ae682-63a8e4bb5a1mr33219847b3.24.1718815197192;
-        Wed, 19 Jun 2024 09:39:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHOXaEuiFH0ecGWxfyNYKYA47piELvowHtDpjSC86sl6JvY/gqFtoIQ2677PkimEVq0gbLNOWpWdslhce2oYP0=
-X-Received: by 2002:a05:690c:94d:b0:61a:b038:6d34 with SMTP id
- 00721157ae682-63a8e4bb5a1mr33219687b3.24.1718815196917; Wed, 19 Jun 2024
- 09:39:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZPXWmsbw"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9iYT8006366;
+	Wed, 19 Jun 2024 16:42:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=BlarIrnp0GcxUr7gIYgWhp8w
+	dHKf+CCuGDcT7t8HYcM=; b=ZPXWmsbwJCncOzhDFXiCZOE1EJiFss2LeJCBqbv7
+	q1PseBdsbKXkMZqe5wZF4GIcS81FBZgFLeMpePSQpkREJRnoeu3DXInSWfUaEtj0
+	ZAKnk7E9nsskESEm0rv6JAw246UBvkejZJsmIV+rlTVN7qr/trxMD5PC6sSxxKAi
+	2s9uNZ3nfRcBHBwzCGIJlClzA0ASED5GYyfssOin54BdHNPvEzMjSDEatZL5hj0z
+	nNwHkOgv4NcXKNx1YRyKl2C4D0VVTEn8QGXaHY5iNhENQvH77SnYZX+YjYAIDwOZ
+	qvE+QnKfbsjxIQtaAWlhBtEBCIFavYyx6KqbAFdYneCbxQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuj9u2a6e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 16:42:51 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JGgnAv008085
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 16:42:50 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 19 Jun 2024 09:42:49 -0700
+Date: Wed, 19 Jun 2024 09:42:47 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Komal Bajaj
+	<quic_kbajaj@quicinc.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will
+ Deacon" <will@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Srinivas Kandagatla
+	<srinivas.kandagatla@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH] arm64: defconfig: Enable secure QFPROM driver
+Message-ID: <ZnMKh5X+Bm11L/T4@hu-bjorande-lv.qualcomm.com>
+References: <20240619105642.18947-1-quic_kbajaj@quicinc.com>
+ <5582a2a0-c772-4573-9d55-2f963cb87df1@linaro.org>
+ <ZnLKwqENxC4wzrUm@hu-mojha-hyd.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com> <20240617-stage-vdpa-vq-precreate-v1-23-8c0483f0ca2a@nvidia.com>
-In-Reply-To: <20240617-stage-vdpa-vq-precreate-v1-23-8c0483f0ca2a@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 19 Jun 2024 18:39:20 +0200
-Message-ID: <CAJaqyWc+bmWVU8Lu40bhxEatJ5y1f3n=AD2_UborSRa+Bf495g@mail.gmail.com>
-Subject: Re: [PATCH vhost 23/23] vdpa/mlx5: Don't enable non-active VQs in .set_vq_ready()
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	Cosmin Ratiu <cratiu@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZnLKwqENxC4wzrUm@hu-mojha-hyd.qualcomm.com>
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BlaNvEd8EWQquUAqknmpzG3imDrNALh9
+X-Proofpoint-ORIG-GUID: BlaNvEd8EWQquUAqknmpzG3imDrNALh9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxlogscore=604 clxscore=1011 mlxscore=0 phishscore=0
+ bulkscore=0 impostorscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406190125
 
-On Mon, Jun 17, 2024 at 5:09=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.com=
-> wrote:
->
-> VQ indices in the range [cur_num_qps, max_vqs) represent queues that
-> have not yet been activated. .set_vq_ready should not activate these
-> VQs.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+On Wed, Jun 19, 2024 at 05:40:42PM +0530, Mukesh Ojha wrote:
+> On Wed, Jun 19, 2024 at 01:08:48PM +0200, Krzysztof Kozlowski wrote:
+> > On 19/06/2024 12:56, Komal Bajaj wrote:
+> > > Enable the secure QFPROM driver which is used by QDU1000
+> > 
+> > Qualcomm QDU1000. You are changing kernel-wide defconfig, not some
+> > Qualcomm downstream stuff.
+> > 
+> > > platform for reading the secure qfprom region to get the
+> > > DDR channel configuration.
+> > > 
+> > > Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+> > > ---
+> > >  arch/arm64/configs/defconfig | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > > index 838b4466d6f6..c940437ae1b3 100644
+> > > --- a/arch/arm64/configs/defconfig
+> > > +++ b/arch/arm64/configs/defconfig
+> > > @@ -1575,6 +1575,7 @@ CONFIG_NVMEM_LAYERSCAPE_SFP=m
+> > >  CONFIG_NVMEM_MESON_EFUSE=m
+> > >  CONFIG_NVMEM_MTK_EFUSE=y
+> > >  CONFIG_NVMEM_QCOM_QFPROM=y
+> > > +CONFIG_NVMEM_QCOM_SEC_QFPROM=y
+> > 
+> > Module
+> 
+> Should not this be inline with what CONFIG_NVMEM_QCOM_QFPROM is having ?
+> Either both CONFIG_NVMEM_QCOM_QFPROM and CONFIG_NVMEM_QCOM_SEC_QFPROM
+> should be m or both y
+> 
 
-Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+While that would be a convenient guideline, you're adding runtime
+overhead to all other targets (Qualcomm and non-Qualcomm) so the desire
+to keep anything that can module outweigh such convenience.
 
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index 1a5ee0d2b47f..a969a7f105a6 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -1575,6 +1575,9 @@ static int resume_vq(struct mlx5_vdpa_net *ndev, st=
-ruct mlx5_vdpa_virtqueue *mvq
->         if (!mvq->initialized)
->                 return 0;
->
-> +       if (mvq->index >=3D ndev->cur_num_vqs)
-> +               return 0;
-> +
->         switch (mvq->fw_state) {
->         case MLX5_VIRTIO_NET_Q_OBJECT_STATE_INIT:
->                 /* Due to a FW quirk we need to modify the VQ fields firs=
-t then change state.
->
-> --
-> 2.45.1
->
+Based on the recent addition of llcc and qfprom nodes I'm _guessing_
+that LLCC is the one user of this today, and it is =m, so therefore
+SEC_QFPROM can be =m as well.
 
+
+By expanding the commit message slightly, we could have avoided the
+"why?" questions and the need for me to "guess" the actual dependency.
+
+Regards,
+Bjorn
+
+> -Mukesh
+> > 
+> > >  CONFIG_NVMEM_RMEM=m
+> > >  CONFIG_NVMEM_ROCKCHIP_EFUSE=y
+> > >  CONFIG_NVMEM_ROCKCHIP_OTP=y
+> > > --
+> > > 2.42.0
+> > > 
+> > 
+> > Best regards,
+> > Krzysztof
+> > 
