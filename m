@@ -1,107 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89901F956;
-	Wed, 19 Jun 2024 14:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E87B1CAB1
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807911; cv=none; b=Or5tIp8IbwET+9/wi7VY23jqYAjXVEU0V/g5k5oF5vOM+9OzrHxYxlLwzIx/wOoD0+HtMiIGnfms5eQ+o64qlLrS8qpBGS+TziU5VCyIjnKbkBWYtyWOXXsnuuxmSRG8JLdCe4eGQKIL0LEtCbtn1Vgbk5xtymbkPXv+mkIFeK4=
+	t=1718807975; cv=none; b=nv/c76KwnJsjaRDVblyxHOl4tLyXQPdXpKZbPSy/xvHUbG0609jjutixniPhwtYRR+bdTFs+MfyeWbFAQhpEvQglLzH6MBQLjFWYEF5nlwCSx6LeqYClEZQ1u6Ry4b1oSn834Z+SJlUcMxvugv8E/Eh4VvRFqO5u4+zn1xJYf2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718807911; c=relaxed/simple;
-	bh=KyV7B1VywTOUp9ZqRVcsjZOlVmb+A7T5edxwqZZjMV0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=UcD/jkr0TvCNCqIHqBoZUGS/blivrQHuReVg6IUPJ5CRTEcDvX/3meJcVYr6lKI9/P/NYWxzuR2r/Y1GyfKJ3a2BOvMHEm6KL4TG0EnxZKTP8tdzYtLMweSlBCSX+LpSx/KI9BTTpWSDyRCFujygsOkcOq1bmmfyYpXl587eVBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZSg6+qb6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718807975; c=relaxed/simple;
+	bh=R3guH+r22vxWZS45Xhn/5mcUPnpAYFt1nE1jSbf7vGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RJlEjWPoZ1G0hZyqrd9qrIjRFRpPAF5DIvsofpw9W/4Iwn4dpWaT9a8GZWzVdsRQOBVpvlwDJ1FFWXWbdNe8AhRD7ADUJG/mUHcLt8ierLZftU2yRJNPZPO1mAEbfZrqSlai8lYpjJMePhkHIwvF3AMophM1Pj67h4MKrqM+yVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=NydbKapE; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZSg6+qb6"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J94TpA028107;
-	Wed, 19 Jun 2024 14:38:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=pyRCJtYiaJBr7WjUnbFB21
-	yBWPmFzTLjG6+4n7Y79VQ=; b=ZSg6+qb6YkETxS/Wd1D5PoO+luPMx0gVUJvMkg
-	k5GNwzTHmutAe1rMHxhzawW5XXAj+nJYB3t00KBQEIFc1JPcfk6ngw/GiGvSB/tv
-	Q+Ldr4Avekf3A+Sw3NDrgea/UN724yo1XuXXw4k+bv36q3WHf49ViFenf0XhqEjt
-	gPBz14RZKpNq/eAYpBhpU2+ARi9kIoKPju+AiH7I9C5YxvUZX5q/Ui0CQJ49fVwZ
-	cGVf5T+PRSqHYLyIFasVESAxdLg719HIoYapXr/FshpKBAueX3vX7/ap70khZXp6
-	9Ta0Ej0jkXcnbY4dlyTFjqnc7E7tGOlDiLCL8UoztHfFGGHg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yujc4hyxa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 14:38:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JEcHm2026440
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 14:38:17 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Jun
- 2024 07:38:17 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 19 Jun 2024 07:38:14 -0700
-Subject: [PATCH] openpromfs: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NydbKapE"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44056295c8cso31680071cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1718807973; x=1719412773; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cokph3+KYsFeNsm+0akdDgXIRf+sbN6W33vmdBN3BV8=;
+        b=NydbKapEUNcvceJx8fdCnoVnbvfYMAEEGsQWdF9kl0K5NZ9gmlE7NmzYYCCCwZQarR
+         PTTKGa0s2Tgb1fMVVCz2Yeyt6biQf9KqoSS/hI/NdgzzltfIC9B5bihinI0WS2qlerk5
+         G3+AbAzoF3OHpLqwMdA5m27f0BhjuYWFebjxc3cEer17CrSAMjblF/uThOKZ4lxxXxoB
+         ysuw4iWCgIGYoagdUssaLd6fc9hnlABiHfRsNhQxPEKqQ8tJHm6iS6pNlygK8ox45mPJ
+         0tYTxoSm7Jk9pVJBhFo5zXit24DpG6OeXx24AhH6XwqXR48fPa4WMsf8BTS5y16q4VhL
+         CPrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718807973; x=1719412773;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cokph3+KYsFeNsm+0akdDgXIRf+sbN6W33vmdBN3BV8=;
+        b=J/QW5nOsXpevh+zwaUFxeHOkH1iGbBoNiB+cbxKMtwEDzKH0RrIgym95DYIgyb3bL6
+         Ef8pHe2tEDRn3iXOVTb5bpaAUR1UjmkcRl4szdU/cTeiqdNkwK4lm9tvSGXoxZM0jtlU
+         45qafB6rVkOK9WG+Dyk0D2UIpwygbQYzBA51qjo7+ZJi/szGZXsOz5PW/iBYWt17grUc
+         mnekpuPfwd2VXniYj/Q3tukfRWjR4lCRtYIAtAN1/c6FJ346syfFFmH7mN8Q91o45RYy
+         qZFJeAjU/1S3pQ6oGniIpsj/vg69PfLQnXL3SQdX/47I6AYdDIJKOKXHi8vWYb6L1hn7
+         Iyqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdRLa4KTg4zTgxe01vthk0ugVjV3y/Sor2WHa63NRUkc/Nj9jaIl/nYvZt6Runq6b8VTBQpMZ66ZqKmoIBI5XaR893MO9s2Uxe6y3Z
+X-Gm-Message-State: AOJu0YzNw1C3TwPMIS9/tOQ+R7Y46Fo95myqbQrXjLIM/OZ6mJmpY5TX
+	IcXmadPz9tKutAjt6iLhdMEQv3OjVhcLin2fxdbNLrpmD0YspFRT1X1A7PKyWEM=
+X-Google-Smtp-Source: AGHT+IG1XaOP45+fSUMkTGWH4nocXjjMBFeSWjsksr0Y1tefBQYZu2xLsBBhuOT4sOfHsJbLjtz4+A==
+X-Received: by 2002:ac8:5ac4:0:b0:440:5b49:2d63 with SMTP id d75a77b69052e-444a7a76f5amr34714511cf.66.1718807973466;
+        Wed, 19 Jun 2024 07:39:33 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441f2ffb37bsm65405151cf.90.2024.06.19.07.39.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 07:39:32 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sJwTE-004dqv-Em;
+	Wed, 19 Jun 2024 11:39:32 -0300
+Date: Wed, 19 Jun 2024 11:39:32 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
+	Jason Wang <jasowang@redhat.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	ath10k@lists.infradead.org, ath11k@lists.infradead.org,
+	iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 13/21] soc/fsl/qbman: Use iommu_paging_domain_alloc()
+Message-ID: <20240619143932.GH1091770@ziepe.ca>
+References: <20240610085555.88197-1-baolu.lu@linux.intel.com>
+ <20240610085555.88197-14-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240619-md-sparc-fs-openpromfs-v1-1-51c85ce90fa3@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAFXtcmYC/x2M3QrCMAxGX2Xk2sBW1KGvIl6kbeoC9odEZTD27
- lbvvsPHORsYq7DBddhA+SMmtXSYDgOEhcqDUWJncKM7jufpgjmiNdKAybA2Lk1r7nMO/Y0nSrN
- 30OWmnGT9h2/3zp6M0SuVsPxyTynvFTPZixX2/QtcJbPDhwAAAA==
-To: "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson
-	<andreas@gaisler.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Christian
- Brauner" <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        <linux-fsdevel@vger.kernel.org>
-CC: <sparclinux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.14.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Jo7YimzT4BRmNYbnx2Zs21d9nmIBd-LZ
-X-Proofpoint-GUID: Jo7YimzT4BRmNYbnx2Zs21d9nmIBd-LZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- priorityscore=1501 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
- mlxscore=0 bulkscore=0 impostorscore=0 spamscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406190109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610085555.88197-14-baolu.lu@linux.intel.com>
 
-With ARCH=sparc, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/openpromfs/openpromfs.o
+On Mon, Jun 10, 2024 at 04:55:47PM +0800, Lu Baolu wrote:
+> An iommu domain is allocated in portal_set_cpu() and is attached to
+> pcfg->dev in the same function.
+> 
+> Use iommu_paging_domain_alloc() to make it explicit.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/soc/fsl/qbman/qman_portal.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- fs/openpromfs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/openpromfs/inode.c b/fs/openpromfs/inode.c
-index a7b527ea50d3..26ecda0e4d19 100644
---- a/fs/openpromfs/inode.c
-+++ b/fs/openpromfs/inode.c
-@@ -471,4 +471,5 @@ static void __exit exit_openprom_fs(void)
- 
- module_init(init_openprom_fs)
- module_exit(exit_openprom_fs)
-+MODULE_DESCRIPTION("OpenPROM filesystem support");
- MODULE_LICENSE("GPL");
-
----
-base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
-change-id: 20240619-md-sparc-fs-openpromfs-7c061d5af7b2
-
+Jason
