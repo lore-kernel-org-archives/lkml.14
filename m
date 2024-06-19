@@ -1,38 +1,38 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87E875817;
-	Wed, 19 Jun 2024 10:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA3A12FB34;
+	Wed, 19 Jun 2024 10:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718792137; cv=none; b=XMO/1xfHzNY8FaOudRP+xisGTdraYNtMaCoyFWYftD1atDOGl/DTMRTPXK8OEATS6Tg1grW5g51dBdJpSXbj7+5s0fTLu5uBjYvX2NXpAQhAEYyvA/L7A7IrHz88iQbndd45sXvtOBeEC+MF/v1TaQADcg0Lf0vkjSNGRl/+FYI=
+	t=1718792139; cv=none; b=THgLSvt1uAfLk7xaX8e+9brhJZwsmxNtOIxoBULPpiL1tIXHYQvyBJNxS95Spign6+A2oavxrhaqSWfMf1xXEA+4OugrShsiRvSJvYnZzI7/ozUTRgNrZhXCOeAOfOvJ5qMiChmJZzy8zHFvNcLtUsPpBKWFuDXjLA25lpk7if0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718792137; c=relaxed/simple;
-	bh=D/mIw5PQXaVybV8q1M5tT5irn19bOqE7/C1r84b60EQ=;
+	s=arc-20240116; t=1718792139; c=relaxed/simple;
+	bh=SKxnqxqQTOu0V80tOrHg0VWiV3r/5d05UFM/bBwvo2w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t8Nq9P1iNpbjrsfb8nVsDcv4yhLVByQCMF5LGsc9CzPx9FLEWHxYqJJwmHGI7b2NzNNoE7EzFCQ3UErrUBLlxDvdqbWsLtYzjG6ecH3q1ZIMTb20l8266y156gxUW57o1da6HNS6zEWJNL+0BArxUftgXVjod9JZzcxdQCgmO0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=W5M4wPOX; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=OwkJp0EzLBJAe/1g2OU6qGLFOD0dD+lrG6LHmcu8RiE2FJ/S85O7aYysQNTP3ivjwfnjs7VxvfAgxOzZJtreWjiy1fAMMI7VBbuklbfZk5pvaUQFocgMd/Wc7xusIDF3WGokpX0pNdEn2VRFZXaWJJTt32dpD2LP9CcpCHW2gyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=J1hAsWDF; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="W5M4wPOX"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AE3D0E000A;
-	Wed, 19 Jun 2024 10:15:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="J1hAsWDF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4B636E000F;
+	Wed, 19 Jun 2024 10:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718792128;
+	t=1718792129;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pAhWJDZy3Qxtd03byX/QomLU+QUbXtxsEhEbMTufqk0=;
-	b=W5M4wPOXWxOTLOEwAxHu+CTCxE2tA8n6ghR599ny1MnK3w514SNIcnwA5EEbMN3NEEatTI
-	EUbF9ciieffB7yv0dWv+Cw4bFRdMjU/VK2TVwGGEPiXGKTnbOuG1LY3fimmMiWICAGbaja
-	I4onZNFEkyiIDafeOs//GLnKRjxxlWX8AgV6rOJ0ZRwSlnUxjbaSqlPv5BeiOCelKVlgcq
-	6t0z7FIIjqXyILsZWfW8I91CbaC+rTGQUkoWM3NWrgeG49VoCV1eAj8D6TvKmcIx0BUuUt
-	DIm7Hn05lP2AJG4vlJ+QW23u8Jdhbty0U3yhnbsP7p8c6ZCUpciNARdk/Itahg==
+	bh=lu3hCWyQRXgdKfpiur37ixVeu1808uQZIfDP+sU8AMA=;
+	b=J1hAsWDFqj+7ynRLDYFZGgLl95GcBS4OeQOfOs440ZlyXo/f6+U2u/VlmzOeQ9tEmCuIaH
+	yfQjkSrlXtLQCHcyjZoSQSsfH8PJriPGjdubJSAEhrNdfLYZkzHiAJMjUMPCQ2BPSJWQWP
+	MOX7rjPdlAOi+bO7Iiq7Z4jX9wrmq3pH8lwWzQmQXV07R8Bw9Ee7WRCJl1bCdzsUuQdevK
+	SPaq2ZRtLTCyefjE4Aaoo1zWefU9zXwUcxS9RQCpR8pmDcfMlopoetZbYM1yaWYXrV6n7y
+	JbKG9FmA7bCumiGCS+KdY0dcQHGFcCjFCx0cz/JN1t+lQLYIVxV6HLXnHfPnZQ==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 19 Jun 2024 12:15:12 +0200
-Subject: [PATCH v7 4/7] PCI: j721e: Add reset GPIO to struct j721e_pcie
+Date: Wed, 19 Jun 2024 12:15:14 +0200
+Subject: [PATCH v7 6/7] PCI: j721e: Use T_PERST_CLK_US macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,8 +40,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v7-4-a2f9156da6c3@bootlin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240102-j7200-pcie-s2r-v7-6-a2f9156da6c3@bootlin.com>
 References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
 In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -57,37 +57,27 @@ Cc: gregory.clement@bootlin.com, theo.lebrun@bootlin.com,
 X-Mailer: b4 0.12.0
 X-GND-Sasl: thomas.richard@bootlin.com
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+Use the T_PERST_CLK_US macro, and the fsleep() function instead of
+usleep_range().
 
-Add reset GPIO to struct j721e_pcie, so it can be used at suspend and
-resume stages.
-
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/cadence/pci-j721e.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 98484f001562..9af4fd64c1f9 100644
+index 9af4fd64c1f9..967a5bf38e26 100644
 --- a/drivers/pci/controller/cadence/pci-j721e.c
 +++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -52,6 +52,7 @@ struct j721e_pcie {
- 	u32			mode;
- 	u32			num_lanes;
- 	u32			max_lanes;
-+	struct gpio_desc	*reset_gpio;
- 	void __iomem		*user_cfg_base;
- 	void __iomem		*intd_cfg_base;
- 	u32			linkdown_irq_regfield;
-@@ -508,6 +509,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 			ret = dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get reset GPIO\n");
- 			goto err_get_sync;
+@@ -539,7 +539,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 		 * after 100 us.
+ 		 */
+ 		if (gpiod) {
+-			usleep_range(100, 200);
++			fsleep(PCIE_T_PERST_CLK_US);
+ 			gpiod_set_value_cansleep(gpiod, 1);
  		}
-+		pcie->reset_gpio = gpiod;
  
- 		ret = cdns_pcie_init_phy(dev, cdns_pcie);
- 		if (ret) {
 
 -- 
 2.39.2
