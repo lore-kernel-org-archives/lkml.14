@@ -1,105 +1,117 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3C02139B1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E592139B1;
+	Wed, 19 Jun 2024 08:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718787036; cv=none; b=DqJc39iuNsWYBqZs3C2WE5E1KLJwrW9BqdnjdT83a2WLORCLzIh0zhfJBsDZgQw89Kd0kVbwmkGY6tZ1+kRX5ViI8VWUpOeMR3GeHZZANqqQCT6bGKtTN2HbZ7npVkS3q449kyY7T8ELd8YMaoeYR7xOGB9jifsv8WIdUureFDE=
+	t=1718787052; cv=none; b=Hv2TlYhaWG7PlKpbZaWqezigfj+6RTBy4w2w/yWdg/CiRmkGwwEuRivNFPY8ruUVPpQc3SJmUnLn8jj+rShhgOijrJtlR1LwZlitK7InYG0ACeQxAxbiTBsD7mpJlKgPTHiG95zbG+yyh+mjtr8OoOA0MpEbFCFunWSbKPcHZiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718787036; c=relaxed/simple;
-	bh=6q1ZTtnzYg//bgAhA42Awnaa22+bcG/nj+xOuAg+m54=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZE8SH6B2FTQ3L2JPcWeVjyJFXnCqRx53pTzU6Cchgl54/D39wldkdMmGvGdE1WkALUNj4sqQR9NGQ7LpDJFUNupoVclJxxTRLj2AkJRzSKCE2+daYuDKs68EgPLEaVRQ3fCW9dvc7oIXQiplOG2HXu5oSrSqq20bASN92c/lgdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+ELKBCs; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718787052; c=relaxed/simple;
+	bh=ZCCMGl34xRrIKFTYqowJ46msSrObNO3g4OFsLbjVgBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNFEGQZM58fKi577pvnRiwl/C1dzJ9B2MbDw5lUfvBu4GB4n+NMq1S2bbFMDfFBq1aG/704v1MXaV3llMveHWFfGKA1X5JsJmMSIX0BGr5h0PIoxE7eF0128Z4ju2bOJQnpZwLL13XuKodD35GvhaktPiGCpLJyh8T9DtdVY4GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5IqqHzz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+ELKBCs"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-363826fbcdeso296139f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 01:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718787033; x=1719391833; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ngW8Gz5Cpl+0cBREyYz+8mH5KwITQlYSWHUF7QS7aAo=;
-        b=O+ELKBCsPDXCedH6SnPSX0R2DlReKZbblL/N2QFZj2bRmRlNAyGbiIRoX8+f9zQuEh
-         0DAYHTdFAItVj8PbeJba8X/Oyi4TQM8LP6QJZMguLHDbtLJdCXRgcBmrYKMJk97xRg4v
-         805KLPq8GoVuwvKyifBjFrcwCEpBbjt1TW2TI4TTLKfkwMLdTIffjByV/J8cCZwRfXi5
-         qz5/1JGXUAhHRp8jMjCapMJ0p6kYnLzra5n7+7ZpcnpNeeMdN3cpWRHhnPE6JgURyCkk
-         6qfNG0shmMbrOdLOH89GdJtMh2HXi0e1oZzg5e5XP9dqSYBy7bThpN9YVApQ4kjR5nlw
-         5FJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718787033; x=1719391833;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ngW8Gz5Cpl+0cBREyYz+8mH5KwITQlYSWHUF7QS7aAo=;
-        b=FeYHhs6EFY+bciU5TCE/n6g6+NJjLfoZ6PG/pWsz6uv/UAl4qCQtwTu+WhrjdMo+OO
-         A8v3LJXLDG0gFsm1hNyql5uaMYexARWa4QWX/NKh1m45Rh1jjSniaoI3Wswz6QvcZI/m
-         9JsVRo1DFtXvJKHTPMZ+zVosR4f4aJhTPtycUap84C3OFsEL4rJZaRO/P+bg0gR0OMQJ
-         90LSzqFoxU9W+3DxlFJwvBFUZcgYWzLfgn3lh2LFNJYX/2BjijCphXtmugQcJ1XwEq1N
-         MX2VWSjAy/VULFmR8JumUTn90kcJYN93HGjOu0nkYm7T+YBugAdHnWo21RCT/Ls3K/cC
-         4zRw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/m8dfjrEvO+94dFDMQ6PyS6RY0PN77lBs4KbyCrVbQjFiYGcU7KcxA0tzUDsL2qT/Z0wI7/3T7NisXmRlrX10UIQG1OTU9SlZdUg+
-X-Gm-Message-State: AOJu0YzzDT4heOIuAGeq97Fbs0ICOseLxo0gzGlBh1GZyJfsTJT2OHnz
-	MbP30XBDL7PgwYMCF3+Y7PEcKu49GOxmpZNxWwT+fewhcYYElHxaNBfFJUIT+ZY=
-X-Google-Smtp-Source: AGHT+IHahTvGL4fXPSvvP/+8qIZ6XuBPDuQY5McrWerDtkQ7poz6Oe4u9spv229aajpWrvHKw6bZdA==
-X-Received: by 2002:a5d:4351:0:b0:35f:20eb:cae3 with SMTP id ffacd0b85a97d-3631998ef04mr1344014f8f.67.1718787032663;
-        Wed, 19 Jun 2024 01:50:32 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:ea6c:d102:5e8f:d5a9? ([2a00:f41:9028:9df3:ea6c:d102:5e8f:d5a9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-363f7e62e6csm308966f8f.27.2024.06.19.01.50.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 01:50:32 -0700 (PDT)
-Message-ID: <699a3bec-bb43-4572-83bc-6efe514a6b13@linaro.org>
-Date: Wed, 19 Jun 2024 10:50:26 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5IqqHzz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C2D9C2BBFC;
+	Wed, 19 Jun 2024 08:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718787051;
+	bh=ZCCMGl34xRrIKFTYqowJ46msSrObNO3g4OFsLbjVgBs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i5IqqHzzyDvvOl6iLxEDIR5dMU74s6v2Y4FQ5uVlOuLUiiUQEkqvRWeVfyIC7XzW0
+	 LSe0P0Q91bQI3evoiNVkNgM+k81s2N6bhKzUZVpqsdcMt0dt948OKkIxsRkBopabvk
+	 ft4Fr0mVgNal3jNL5yVseCX+4FyOE5ui0YNo0UmxVecFAd8IDqO8XeGJcmgtp7MB5U
+	 dKjJZvfAGBODt7Y+t36+YK0RkrynGueLxL3lA45XhexXMgU0+KtT9ymog3h4qBpVNN
+	 4Pqs7iDuITxq/9wDCEqyCuNY49ITHpXtzWx/dGghtjg6TVm2luxTUxzz5bV7J5zZCl
+	 daMrlyGnuIVTQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sJr1m-000000003N9-3viY;
+	Wed, 19 Jun 2024 10:50:51 +0200
+Date: Wed, 19 Jun 2024 10:50:50 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	linux-arm-msm@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
+Subject: Re: [PATCH v4 0/8] serial: qcom-geni: Overhaul TX handling to fix
+ crashes/hangs
+Message-ID: <ZnKb6oMGcA-tWtxy@hovoldconsulting.com>
+References: <20240610222515.3023730-1-dianders@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Revert "dt-bindings: cache: qcom,llcc: correct
- QDU1000 reg entries"
-To: Komal Bajaj <quic_kbajaj@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mukesh Ojha <quic_mojha@quicinc.com>
-References: <20240619061641.5261-1-quic_kbajaj@quicinc.com>
- <20240619061641.5261-3-quic_kbajaj@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240619061641.5261-3-quic_kbajaj@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610222515.3023730-1-dianders@chromium.org>
 
+Hi Doug,
 
+and sorry about the late feedback on this (was out of office last
+week).
 
-On 6/19/24 08:16, Komal Bajaj wrote:
-> This reverts commit f0f99f371822c48847e02e56d6e7de507e18f186.
+On Mon, Jun 10, 2024 at 03:24:18PM -0700, Douglas Anderson wrote:
 > 
-> QDU1000 has 7 register regions. The earlier commit 8e2506d01231
-> ("dt-bindings: cache: qcom,llcc: Add LLCC compatible for QDU1000/QRU1000")
-> to add llcc compatible was reflecting the same, but dtsi change for
-> QDU1000 was not aligning with its binding. Later, commit f0f99f371822
-> ("dt-bindings: cache: qcom,llcc: correct QDU1000 reg entries") was merged
-> intended to fix this misalignment.
+> While trying to reproduce -EBUSY errors that our lab was getting in
+> suspend/resume testing, I ended up finding a whole pile of problems
+> with the Qualcomm GENI serial driver. I've posted a fix for the -EBUSY
+> issue separately [1]. This series is fixing all of the Qualcomm GENI
+> problems that I found.
 > 
-> After the LLCC driver refactor, each LLCC bank/channel need to be
-> represented as one register space to avoid mapping to the region where
-> access is not there. Hence, revert the commit f0f99f371822 ("dt-bindings:
-> cache: qcom,llcc: correct QDU1000 reg entries") to align QDU1000 llcc
-> binding with its dtsi node.
-> 
-> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-> ---
+> As far as I can tell most of the problems have been in the Qualcomm
+> GENI serial driver since inception, but it can be noted that the
+> behavior got worse with the new kfifo changes. Previously when the OS
+> took data out of the circular queue we'd just spit stale data onto the
+> serial port. Now we'll hard lockup. :-P
 
-For future reference, it would be good to have this as patch 1,
-to prevent the previous one introducing (fake) schema warnings
+Thanks for taking a stab at this. This is indeed a known issue that has
+been on my ever growing TODO list for over a year now. I worked around a
+related regression with:
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+	9aff74cc4e9e ("serial: qcom-geni: fix console shutdown hang")
 
-Konrad
+but noticed that the underlying bug can still easily be triggered, for
+example, using software flow control in a serial console.
+
+With 6.10-rc1 I started hitting this hang on every reboot. I was booting
+the new x1e80100 so wasn't sure at first what caused it, but after
+triggering the hang by interrupting a dmesg command I remembered the
+broken serial driver and indeed your (v2) series fixed the regression
+which was also present on sc8280xp.
+
+I did run a quick benchmark this morning to see if there was any
+significant performance penalty and I am seeing a 26% slow down (e.g.
+catting 544 kB takes 68 instead of 54 seconds at 115200).
+
+I've had a feeling that boot was slower with the series applied, but I
+haven't verified that (just printing dmesg takes an extra second,
+though).
+
+Correctness first, of course, but perhaps something can be done about
+that too.
+
+I'll comment on the individual patches as well, but for now:
+
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+
+(I did a quick test with Bluetooth / DMA as well.)
+
+Johan
