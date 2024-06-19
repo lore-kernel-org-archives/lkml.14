@@ -1,137 +1,215 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC878172D;
-	Wed, 19 Jun 2024 10:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD8A7EF10;
+	Wed, 19 Jun 2024 10:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718791266; cv=none; b=KXZUJBBO8hfTaDa1vbTCFvhSq1ysFEoZa6g2IxgFwpRbIHDabodKg0/QU52YynLGOdw1kNpxdmO+fyKpYbtx94H4K7YupwyjiFU5B+NBpil8cE6HtNlWgUFSZi1kwgsxKW3lKEsYRPNvGc4n7aMZahQPmOUGqcu7jyrEtzLszlY=
+	t=1718791446; cv=none; b=d4X/d7Aqdr5Phz5ln1I0YaywuvBmJt00uWEBRiY+olExANE0K0w8UTCLxPx0Q93du1JsDv8Rdm7X4E2Iih8q7WP25nRdGz+LPv6ifD0Je0tYvien+xSONy3wIwjqGsQu0zareEcPIyYsgMA3/Pa2l5pBWoRP4lmggPusJYwgSoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718791266; c=relaxed/simple;
-	bh=56gWdS0r3P034qfTC6dEx+ZsazGXwm3BzZXrHXMJoBo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=pXpMTGifVlmlezBht2wxDDgKrCKt7pYyO6/XtWnLS8oV3qJnl0D8GBFwggOGGiQTT0Gvq2Nrhbs2W6IZ2Ja+xVaBnK9AJDrrRBNZEnp7PJpX1sjuiiHupwOC55l8bZ00K41SPw7wtPMjwoWYx7xG1e1JuyPMfd8gtfWhm0gq2SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RFpGFGXD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BYGFFKPZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718791446; c=relaxed/simple;
+	bh=1jy39YZMTY/xo2Xcx2D3ihcV+xB/O1q/kuNvRc7QFu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PthwazUsWw5tD1guel1fxVgF50gvrd7qDBjjwv2qIOdpXLrYRPoMO9YM5rNPeHrpCcSCqIc5H+9YcZ9yPRCQJ3Y3g0ockbE8yoKiyVjDJ4FXjSAn0+GLvDIA+ZPKkgMCgqlJ/cDeQx7QdH2wtzrm4r5GYvZgYPe6HKIEveU+4Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=xqFCQkCs; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RFpGFGXD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BYGFFKPZ"
-Date: Wed, 19 Jun 2024 09:55:24 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718790924;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=39Ej7f2gzTXs2rXC0Yka/eWP1xrNbSB7cIs9Yf9GBIk=;
-	b=RFpGFGXDrgxrFyGvqlsaVfaJwMVlv00oo1E9gHsj+WEcApIOZy+rINvIGkooNBDW2EvlDS
-	S2FNEx9aT2qLc03CFbaDWOE57X9tory8M6ekORRjz3Qu2gfaO0b33zvTiXgp3MGaYuMYdo
-	nuTZx5UOztS+H4dV5GmeD5ImSAWI52W7SC3G6sn2dJWbgE+WvwNEb12f6MptaZRbeabLse
-	odYsxdw1BPxMA42s6ZyXALylaZP3oG9q1vOq1C9p5E2hikPY6eX5lqB3ra4pJsYeQ6qh2D
-	TWfsaBD4IJF06lAJeIoeKns9ookRIvHrXnURZbcjzSxcfRyJEKAahKcb9aZb2A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718790924;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=39Ej7f2gzTXs2rXC0Yka/eWP1xrNbSB7cIs9Yf9GBIk=;
-	b=BYGFFKPZFTmPF5UoRGB5zEsLLY+L4j3Wk6HnBuBh4Cq2CFp4ov09GI3rGgjs7RBbCIKfWE
-	tnCNDFTtMFaOPCAw==
-From: "tip-bot2 for Dave Martin" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/resctrl: Don't try to free nonexistent RMIDs
-Cc: Dave Martin <Dave.Martin@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240618140152.83154-1-Dave.Martin@arm.com>
-References: <20240618140152.83154-1-Dave.Martin@arm.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="xqFCQkCs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718791443;
+	bh=1jy39YZMTY/xo2Xcx2D3ihcV+xB/O1q/kuNvRc7QFu8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=xqFCQkCsIpMrEzpcF0IxEbzd6OHXGJq3FH9PM/lyvWAa2BStAnwwHgQmXIb641aDk
+	 zU3es9+UcmQOVru0Sf7mM5JNtcr94qWID1O6UKMzlU4ijhqUJWzwuE5IbuNhxH1tF7
+	 8reazt1X/m+XtFs2r1lRuDRhjDtlvdq7dTY0w2Pj6iWe1COkKqsyk1tephTMv+gdyW
+	 OpPLfR4oEiDeUOQQHDVxukgwpZyMTqS37b72UZZq0OodI/FSfazpuE1+JNIeTYIQS1
+	 5+CeO5IL0kChUJoNPf5yfGmyzab3CBwBKA5O5lrc40UTg8G0U66jjDLUbqxP+pugx/
+	 RzkEwjiazlkow==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E95213782163;
+	Wed, 19 Jun 2024 10:04:01 +0000 (UTC)
+Message-ID: <d09deba3-1687-4062-b8ad-7610a18a270e@collabora.com>
+Date: Wed, 19 Jun 2024 12:04:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171879092443.10875.1695191697085701044.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v5 16/16] arm64: dts: mediatek: add audio support
+ for mt8365-evk
+To: Alexandre Mergnat <amergnat@baylibre.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Lee Jones <lee@kernel.org>,
+ Flora Fu <flora.fu@mediatek.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20240226-audio-i350-v5-0-54827318b453@baylibre.com>
+ <20240226-audio-i350-v5-16-54827318b453@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240226-audio-i350-v5-16-54827318b453@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+Il 14/06/24 09:27, Alexandre Mergnat ha scritto:
+> Add the sound node which is linked to the MT8365 SoC AFE and
+> the MT6357 audio codec.
+> 
+> Update the file header.
+> 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 89 +++++++++++++++++++++++++++++
+>   1 file changed, 89 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> index 50cbaefa1a99..1d5457f9a4c2 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> @@ -4,6 +4,7 @@
+>    * Authors:
+>    * Fabien Parent <fparent@baylibre.com>
+>    * Bernhard Rosenkränzer <bero@baylibre.com>
+> + * Alexandre Mergnat <amergnat@baylibre.com>
+>    */
+>   
+>   /dts-v1/;
+> @@ -86,6 +87,28 @@ optee_reserved: optee@43200000 {
+>   			reg = <0 0x43200000 0 0x00c00000>;
+>   		};
+>   	};
+> +
+> +	sound: sound {
+> +		compatible = "mediatek,mt8365-mt6357";
+> +		pinctrl-names = "default",
+> +				"dmic",
+> +				"miso_off",
+> +				"miso_on",
+> +				"mosi_off",
+> +				"mosi_on";
+> +		pinctrl-0 = <&aud_default_pins>;
+> +		pinctrl-1 = <&aud_dmic_pins>;
+> +		pinctrl-2 = <&aud_miso_off_pins>;
+> +		pinctrl-3 = <&aud_miso_on_pins>;
+> +		pinctrl-4 = <&aud_mosi_off_pins>;
+> +		pinctrl-5 = <&aud_mosi_on_pins>;
+> +		mediatek,platform = <&afe>;
+> +	};
+> +};
+> +
+> +&afe {
+> +	mediatek,dmic-mode = <1>;
+> +	status = "okay";
+>   };
+>   
+>   &cpu0 {
+> @@ -178,9 +201,75 @@ &mt6357_pmic {
+>   	interrupts-extended = <&pio 145 IRQ_TYPE_LEVEL_HIGH>;
+>   	interrupt-controller;
+>   	#interrupt-cells = <2>;
+> +	vaud28-supply = <&mt6357_vaud28_reg>;
+> +	audio-codec {
+> +		mediatek,micbias0-microvolt = <1900000>;
+> +		mediatek,micbias1-microvolt = <1700000>;
+> +	};
+>   };
+>   
+>   &pio {
+> +	aud_default_pins: audiodefault-pins {
+> +		pins {
 
-Commit-ID:     739c9765793e5794578a64aab293c58607f1826a
-Gitweb:        https://git.kernel.org/tip/739c9765793e5794578a64aab293c58607f1826a
-Author:        Dave Martin <Dave.Martin@arm.com>
-AuthorDate:    Tue, 18 Jun 2024 15:01:52 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 19 Jun 2024 11:39:09 +02:00
+clk-dat-pins
 
-x86/resctrl: Don't try to free nonexistent RMIDs
+> +			pinmux = <MT8365_PIN_72_CMDAT4__FUNC_I2S3_BCK>,
+> +				 <MT8365_PIN_73_CMDAT5__FUNC_I2S3_LRCK>,
+> +				 <MT8365_PIN_74_CMDAT6__FUNC_I2S3_MCK>,
+> +				 <MT8365_PIN_75_CMDAT7__FUNC_I2S3_DO>;
+> +		};
+> +	};
+> +
+> +	aud_dmic_pins: audiodmic-pins {
+> +		pins {
 
-Commit
+clk-dat-pins
 
-  6791e0ea3071 ("x86/resctrl: Access per-rmid structures by index")
+> +			pinmux = <MT8365_PIN_117_DMIC0_CLK__FUNC_DMIC0_CLK>,
+> +				 <MT8365_PIN_118_DMIC0_DAT0__FUNC_DMIC0_DAT0>,
+> +				 <MT8365_PIN_119_DMIC0_DAT1__FUNC_DMIC0_DAT1>;
+> +		};
+> +	};
+> +
+> +	aud_miso_off_pins: misooff-pins {
+> +		pins {
 
-adds logic to map individual monitoring groups into a global index space used
-for tracking allocated RMIDs.
+clk-dat-pins
 
-Attempts to free the default RMID are ignored in free_rmid(), and this works
-fine on x86.
+and same for all the others.
 
-With arm64 MPAM, there is a latent bug here however: on platforms with no
-monitors exposed through resctrl, each control group still gets a different
-monitoring group ID as seen by the hardware, since the CLOSID always forms part
-of the monitoring group ID.
+> +			pinmux = <MT8365_PIN_53_AUD_CLK_MISO__FUNC_GPIO53>,
+> +				 <MT8365_PIN_54_AUD_SYNC_MISO__FUNC_GPIO54>,
+> +				 <MT8365_PIN_55_AUD_DAT_MISO0__FUNC_GPIO55>,
+> +				 <MT8365_PIN_56_AUD_DAT_MISO1__FUNC_GPIO56>;
+> +			input-enable;
+> +			bias-pull-down;
+> +			drive-strength = <MTK_DRIVE_2mA>;
+drive-strength = <2>;
 
-This means that when removing a control group, the code may try to free this
-group's default monitoring group RMID for real.  If there are no monitors
-however, the RMID tracking table rmid_ptrs[] would be a waste of memory and is
-never allocated, leading to a splat when free_rmid() tries to dereference the
-table.
+> +		};
+> +	};
+> +
+> +	aud_miso_on_pins: misoon-pins {
+> +		pins {
+> +			pinmux = <MT8365_PIN_53_AUD_CLK_MISO__FUNC_AUD_CLK_MISO>,
+> +				 <MT8365_PIN_54_AUD_SYNC_MISO__FUNC_AUD_SYNC_MISO>,
+> +				 <MT8365_PIN_55_AUD_DAT_MISO0__FUNC_AUD_DAT_MISO0>,
+> +				 <MT8365_PIN_56_AUD_DAT_MISO1__FUNC_AUD_DAT_MISO1>;
+> +			drive-strength = <MTK_DRIVE_6mA>;
 
-One option would be to treat RMID 0 as special for every CLOSID, but this would
-be ugly since bookkeeping still needs to be done for these monitoring group IDs
-when there are monitors present in the hardware.
+= <6>;
 
-Instead, add a gating check of resctrl_arch_mon_capable() in free_rmid(), and
-just do nothing if the hardware doesn't have monitors.
+> +		};
+> +	};
+> +
+> +	aud_mosi_off_pins: mosioff-pins {
+> +		pins {
+> +			pinmux = <MT8365_PIN_49_AUD_CLK_MOSI__FUNC_GPIO49>,
+> +				 <MT8365_PIN_50_AUD_SYNC_MOSI__FUNC_GPIO50>,
+> +				 <MT8365_PIN_51_AUD_DAT_MOSI0__FUNC_GPIO51>,
+> +				 <MT8365_PIN_52_AUD_DAT_MOSI1__FUNC_GPIO52>;
+> +			input-enable;
+> +			bias-pull-down;
+> +			drive-strength = <MTK_DRIVE_2mA>;
 
-This fix mirrors the gating checks already present in
-mkdir_rdt_prepare_rmid_alloc() and elsewhere.
+= <2>;
 
-No functional change on x86.
+> +		};
+> +	};
+> +
+> +	aud_mosi_on_pins: mosion-pins {
+> +		pins {
+> +			pinmux = <MT8365_PIN_49_AUD_CLK_MOSI__FUNC_AUD_CLK_MOSI>,
+> +				 <MT8365_PIN_50_AUD_SYNC_MOSI__FUNC_AUD_SYNC_MOSI>,
+> +				 <MT8365_PIN_51_AUD_DAT_MOSI0__FUNC_AUD_DAT_MOSI0>,
+> +				 <MT8365_PIN_52_AUD_DAT_MOSI1__FUNC_AUD_DAT_MOSI1>;
+> +			drive-strength = <MTK_DRIVE_6mA>;
 
-  [ bp: Massage commit message. ]
+= <6>;
 
-Fixes: 6791e0ea3071 ("x86/resctrl: Access per-rmid structures by index")
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Tested-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://lore.kernel.org/r/20240618140152.83154-1-Dave.Martin@arm.com
----
- arch/x86/kernel/cpu/resctrl/monitor.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 2345e68..366f496 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -519,7 +519,8 @@ void free_rmid(u32 closid, u32 rmid)
- 	 * allows architectures that ignore the closid parameter to avoid an
- 	 * unnecessary check.
- 	 */
--	if (idx == resctrl_arch_rmid_idx_encode(RESCTRL_RESERVED_CLOSID,
-+	if (!resctrl_arch_mon_capable() ||
-+	    idx == resctrl_arch_rmid_idx_encode(RESCTRL_RESERVED_CLOSID,
- 						RESCTRL_RESERVED_RMID))
- 		return;
- 
+Cheers,
+Angelo
