@@ -1,39 +1,43 @@
 Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A1B2582
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA141E529
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718778889; cv=none; b=HqbhW1c3+IecBGZRvRfVEZIC18QFJM9pWlYDuOIhNPKEB0x8eWmHdMBb9cOPi0S6uNnlVRg0xC+crnKhcamgM8Ub1sY1fZee9Eodce0kZc+mOG9/6Yflze5LZEHDbvi+9rBERIq7jNCuD3VOLmHvn7nAWK6iwvQxA6PA/tjnqlk=
+	t=1718778890; cv=none; b=odEq3VnL/ZrK2td4Md7PXu8wdEUWYcCcHBNurqLY5E6fFHgySCoSM2AvDmjpQININUNOI9djzByVJ2rkAvBANOHeUDTWQy8k3jM9khocDLbbVPxfne6CVwaSsI8eGS6ZJeMjF9a05o+kzyhvRY0/EfWIqNVcm9dPBICcREgrKtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718778889; c=relaxed/simple;
-	bh=7oYiZeDx+fTfe10HbMzhX8OPBVI3EpolpvrHlGHSnw4=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=r6PdR6pjvOjW02AkmHRreVJo9UF9rDStZ8jbHw+1AwoDqdUNWf10wTo9QYRqu7OILYUMdzkQkYtvc9S+U3lFNp7i/DAVtTmvEna+XF2X6r6n4GXZzPCHXMOcZnxbw00vipu/Gz0bpw7X0rFYtRLdZg7Dkc0oPBkjuB6cd8lX9FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=Fxv1iIJ4; arc=none smtp.client-ip=62.90.112.121
+	s=arc-20240116; t=1718778890; c=relaxed/simple;
+	bh=V0laHEgCDkAnpEzCKnp6J6owHCpEY1oftzaccgLL6p4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OZmYtF2lZVUa2fqBJQIUrjfhqUVKnEBR8JWybHPzRrQg7ox3c8yV79OtQK+t7mdxW4l61aTvtOaFVXojD7a8oliv9pCZJNMkD/tb6aam93i1Hh0mQFN1mRW/Opelqa8sCu/wKP/BX8D2ZG2/d42l98NVQ1hEE1dAuXbewwPRpcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=gqXxriyv; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="Fxv1iIJ4"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="gqXxriyv"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1718778876; bh=7oYiZeDx+fTfe10HbMzhX8OPBVI3EpolpvrHlGHSnw4=;
-	h=From:To:Subject:Date:From;
-	b=Fxv1iIJ4pkR2dIjIynHvrT4ANRzILengTWF9k3ehg2v9UvVrBb4muC/5+wXa1mc+D
-	 6vmTnwH5PcQ7aGiya32rfuT0wRbm4dez38+ZF9q+Vt180ZEU2PAy0VT5IqSBtzwYOe
-	 w4n215l7cErbm+9v9hh3Zbx4DFIgh8QiYdnxoq9HLWiKbIbhHvRz1e4EpE6mtemP5N
-	 DgAv1F5V9/jiFKO2uby7KlsNAzwF/NJRXOXFZW0L7vM9woUbZ2K7TSEou3tjbIbgVN
-	 z9QUGK/kJQpNw5KHvuCxcnaXI2gCBjLhrFoQrPbexb79TwJi9asc9VsEJEzRL4duUJ
-	 SzAg+Xje7kr6A==
+	t=1718778885; bh=V0laHEgCDkAnpEzCKnp6J6owHCpEY1oftzaccgLL6p4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gqXxriyvEY3yVo5fLCIpwkVDnvuLSi1f14SHtj+qZIOtZEZPMPDOWz503GMzjWWyv
+	 a7CGiWLg+Dxeq0ulihN/SeljTtLjNLqJMkCw6eRVw7Ipi2uN6iIbCN4j9hY8N2SOct
+	 OqvB0oQGqEl8eVABdQ8TFYfaRL3H3yDUHhCKesSqjQgDf+Idp7jXrCsKycP/TQYeOk
+	 E+HCjIXFWRPg4vWeJir/+Kwb9hloZLgzn/DOD9Wibz95OMS6qLZ6EJywSy4dfgKgsI
+	 vK8f2+uK+JuX4TCsZbXuginKU5F+YrLVOnV88pnsvK862tJRfCkY4a6jWa54f9K4PT
+	 In3W7Tw9HzhNg==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 45J6YQB11377354;
-	Wed, 19 Jun 2024 09:34:26 +0300
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 45J6YQB61377354;
+	Wed, 19 Jun 2024 09:34:33 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] accel/habanalbs/gaudi2: reduce interrupt count to 128
-Date: Wed, 19 Jun 2024 09:34:17 +0300
-Message-Id: <20240619063425.1377327-1-obitton@habana.ai>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 6/9] accel/habanalabs: dump the EQ entries headers on EQ heartbeat failure
+Date: Wed, 19 Jun 2024 09:34:22 +0300
+Message-Id: <20240619063425.1377327-6-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240619063425.1377327-1-obitton@habana.ai>
+References: <20240619063425.1377327-1-obitton@habana.ai>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,59 +46,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some systems allow a maximum number of 128 MSI-X interrupts.
-Hence we reduce the interrupt count to 128 instead of 512.
+From: Tomer Tayar <ttayar@habana.ai>
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Add a dump of the EQ entries headers upon a EQ heartbeat failure.
+
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/gaudi2/gaudi2P.h        | 8 ++++----
- drivers/accel/habanalabs/include/gaudi2/gaudi2.h | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/accel/habanalabs/common/device.c     |  2 ++
+ drivers/accel/habanalabs/common/habanalabs.h |  1 +
+ drivers/accel/habanalabs/common/irq.c        | 25 ++++++++++++++++++++
+ include/linux/habanalabs/cpucp_if.h          |  3 +++
+ 4 files changed, 31 insertions(+)
 
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2P.h b/drivers/accel/habanalabs/gaudi2/gaudi2P.h
-index eee41387b269..05117272cac7 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2P.h
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2P.h
-@@ -384,7 +384,7 @@ enum gaudi2_edma_id {
- /* User interrupt count is aligned with HW CQ count.
-  * We have 64 CQ's per dcore, CQ0 in dcore 0 is reserved for legacy mode
-  */
--#define GAUDI2_NUM_USER_INTERRUPTS 255
-+#define GAUDI2_NUM_USER_INTERRUPTS 64
- #define GAUDI2_NUM_RESERVED_INTERRUPTS 1
- #define GAUDI2_TOTAL_USER_INTERRUPTS (GAUDI2_NUM_USER_INTERRUPTS + GAUDI2_NUM_RESERVED_INTERRUPTS)
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index 3efc26dd9497..7bd7c2eb5dd2 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -1082,6 +1082,8 @@ static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
+ 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci),
+ 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci) & pq_pi_mask);
  
-@@ -416,11 +416,11 @@ enum gaudi2_irq_num {
- 	GAUDI2_IRQ_NUM_NIC_PORT_LAST = (GAUDI2_IRQ_NUM_NIC_PORT_FIRST + NIC_NUMBER_OF_PORTS - 1),
- 	GAUDI2_IRQ_NUM_TPC_ASSERT,
- 	GAUDI2_IRQ_NUM_EQ_ERROR,
-+	GAUDI2_IRQ_NUM_USER_FIRST,
-+	GAUDI2_IRQ_NUM_USER_LAST = (GAUDI2_IRQ_NUM_USER_FIRST + GAUDI2_NUM_USER_INTERRUPTS - 1),
- 	GAUDI2_IRQ_NUM_RESERVED_FIRST,
--	GAUDI2_IRQ_NUM_RESERVED_LAST = (GAUDI2_MSIX_ENTRIES - GAUDI2_TOTAL_USER_INTERRUPTS - 1),
-+	GAUDI2_IRQ_NUM_RESERVED_LAST = (GAUDI2_MSIX_ENTRIES - GAUDI2_NUM_RESERVED_INTERRUPTS - 1),
- 	GAUDI2_IRQ_NUM_UNEXPECTED_ERROR = RESERVED_MSIX_UNEXPECTED_USER_ERROR_INTERRUPT,
--	GAUDI2_IRQ_NUM_USER_FIRST = GAUDI2_IRQ_NUM_UNEXPECTED_ERROR + 1,
--	GAUDI2_IRQ_NUM_USER_LAST = (GAUDI2_IRQ_NUM_USER_FIRST + GAUDI2_NUM_USER_INTERRUPTS - 1),
- 	GAUDI2_IRQ_NUM_LAST = (GAUDI2_MSIX_ENTRIES - 1)
- };
++		hl_eq_dump(hdev, &hdev->event_queue);
++
+ 		return false;
+ 	}
  
-diff --git a/drivers/accel/habanalabs/include/gaudi2/gaudi2.h b/drivers/accel/habanalabs/include/gaudi2/gaudi2.h
-index 0231d6c55b4a..753d46a2836b 100644
---- a/drivers/accel/habanalabs/include/gaudi2/gaudi2.h
-+++ b/drivers/accel/habanalabs/include/gaudi2/gaudi2.h
-@@ -63,9 +63,9 @@
- #define RESERVED_VA_RANGE_FOR_ARC_ON_HOST_HPAGE_START	0xFFF0F80000000000ull
- #define RESERVED_VA_RANGE_FOR_ARC_ON_HOST_HPAGE_END	0xFFF0FFFFFFFFFFFFull
+diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
+index f4ac5e9b1974..ce78b331e244 100644
+--- a/drivers/accel/habanalabs/common/habanalabs.h
++++ b/drivers/accel/habanalabs/common/habanalabs.h
+@@ -3754,6 +3754,7 @@ int hl_eq_init(struct hl_device *hdev, struct hl_eq *q);
+ void hl_eq_fini(struct hl_device *hdev, struct hl_eq *q);
+ void hl_cq_reset(struct hl_device *hdev, struct hl_cq *q);
+ void hl_eq_reset(struct hl_device *hdev, struct hl_eq *q);
++void hl_eq_dump(struct hl_device *hdev, struct hl_eq *q);
+ irqreturn_t hl_irq_handler_cq(int irq, void *arg);
+ irqreturn_t hl_irq_handler_eq(int irq, void *arg);
+ irqreturn_t hl_irq_handler_dec_abnrm(int irq, void *arg);
+diff --git a/drivers/accel/habanalabs/common/irq.c b/drivers/accel/habanalabs/common/irq.c
+index 2caf2df4de08..7c9f2f6a2870 100644
+--- a/drivers/accel/habanalabs/common/irq.c
++++ b/drivers/accel/habanalabs/common/irq.c
+@@ -697,3 +697,28 @@ void hl_eq_reset(struct hl_device *hdev, struct hl_eq *q)
  
--#define RESERVED_MSIX_UNEXPECTED_USER_ERROR_INTERRUPT	256
-+#define RESERVED_MSIX_UNEXPECTED_USER_ERROR_INTERRUPT	127
+ 	memset(q->kernel_address, 0, q->size);
+ }
++
++void hl_eq_dump(struct hl_device *hdev, struct hl_eq *q)
++{
++	u32 eq_length, eqe_size, ctl, ready, mode, type, index;
++	struct hl_eq_header *hdr;
++	u8 *ptr;
++	int i;
++
++	eq_length = HL_EQ_LENGTH;
++	eqe_size = q->size / HL_EQ_LENGTH;
++
++	dev_info(hdev->dev, "Contents of EQ entries headers:\n");
++
++	for (i = 0, ptr = q->kernel_address ; i < eq_length ; ++i, ptr += eqe_size) {
++		hdr = (struct hl_eq_header *) ptr;
++		ctl = le32_to_cpu(hdr->ctl);
++		ready = FIELD_GET(EQ_CTL_READY_MASK, ctl);
++		mode = FIELD_GET(EQ_CTL_EVENT_MODE_MASK, ctl);
++		type = FIELD_GET(EQ_CTL_EVENT_TYPE_MASK, ctl);
++		index = FIELD_GET(EQ_CTL_INDEX_MASK, ctl);
++
++		dev_info(hdev->dev, "%02u: %#010x [ready: %u, mode %u, type %04u, index %05u]\n",
++				i, ctl, ready, mode, type, index);
++	}
++}
+diff --git a/include/linux/habanalabs/cpucp_if.h b/include/linux/habanalabs/cpucp_if.h
+index 1ed17887f1a8..7ed3fdd55dda 100644
+--- a/include/linux/habanalabs/cpucp_if.h
++++ b/include/linux/habanalabs/cpucp_if.h
+@@ -397,6 +397,9 @@ struct hl_eq_entry {
+ #define EQ_CTL_READY_SHIFT		31
+ #define EQ_CTL_READY_MASK		0x80000000
  
--#define GAUDI2_MSIX_ENTRIES	512
-+#define GAUDI2_MSIX_ENTRIES	128
- 
- #define QMAN_PQ_ENTRY_SIZE	16			/* Bytes */
++#define EQ_CTL_EVENT_MODE_SHIFT		28
++#define EQ_CTL_EVENT_MODE_MASK		0x70000000
++
+ #define EQ_CTL_EVENT_TYPE_SHIFT		16
+ #define EQ_CTL_EVENT_TYPE_MASK		0x0FFF0000
  
 -- 
 2.34.1
