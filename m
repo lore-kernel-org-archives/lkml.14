@@ -1,30 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588C778C71;
-	Wed, 19 Jun 2024 21:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA4D15B988;
+	Wed, 19 Jun 2024 21:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718830990; cv=none; b=pkNSXqSApwVe3ELDS9tU5dKqUwpXKz0ygsCi+cvNhoVRotAm7k5+w5zLyxZ/cT6bslrQNaBaLWn+Atbyfk1agersBxRChoMzHiqso2Wb97LQfxhUaNd+ZA3KI+3SSmoRSeDqt+m3p1C9e130TPTtq3POY6GDnWM2PvKqWvJWZb4=
+	t=1718830991; cv=none; b=qbQXEmvkiOIf614LxfTJbL5edLToFBXZn8QHe6eKmap4I1/7ZxOiK5DQuBES3iB2dPznznC7ycuNcbRbgpv12b4weqJyuOq8sLRGKotiRs9CH1m7cVsgTlLoeEjFPS6QmYIJC5Bf/a1gZjgqMJ0XJ0aOltZLEDgNeB3ZbLtl5J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718830990; c=relaxed/simple;
-	bh=4WOS+AvxaEa+0SC1/3K+gcJiiNNwidC9fY7Pa0VsfD4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HlfVPY5i8xqroYPcvapoMav/bVP/NWiNKpr4d8aLSlPQW9FySmmHGAojkN/j6LmJC6ZzosAIVw6ncjc31uwrQZ+mFENWn53wwSnEFW2ferKFG+zt+YLW1WefnM444l79RYOGOTYfLseLjfXe32CBf9l4HXvDGrC7Nkzp3fVvoAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=tmNyGCWU; arc=none smtp.client-ip=128.199.32.197
+	s=arc-20240116; t=1718830991; c=relaxed/simple;
+	bh=U4dGGEGpOOkzWqH8OuKBSW4honG4SMlwLIHbWnr5h9U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KUI6GiZKJzDlq7mnb1Z8jW1wrIWwe/Er4dmtmzv23rxoy71CyZkE+QDhFd9HrWwocM2B5uJ9b6Ps1k5yWP4wqJN5PAbd/A0/YBgv6pbAqpE7jh6XTraMNmTcXSs41s4kF579o97n8BJk6jo2ceb4g0LhYcr1arUZh96g65+3Qj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=oolKjNSe; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="tmNyGCWU"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="oolKjNSe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1718830985; bh=4WOS+AvxaEa+0SC1/3K+gcJiiNNwidC9fY7Pa0VsfD4=;
-	h=From:Subject:Date:To:Cc;
-	b=tmNyGCWUSi/Ht87O3WeKShW3PE4S+TSiz5EBYgYHSWOU536izOOpI6lwZx/HYCezI
-	 5N+/LmMAuGWOVeGns3nLhqSzr1QV5vSoLJLtdtEbMk+9ypAqXN+Zj2oRLZOcq+qhJ7
-	 v6bhOfg6yQIIWpmMp1lv/FCpyjVhgmhl4B4pJd6U=
+	t=1718830986; bh=U4dGGEGpOOkzWqH8OuKBSW4honG4SMlwLIHbWnr5h9U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=oolKjNSebElawBsh7OAlqEmfXluFhJe5GlHAShc108UluEOcA+ZjzXaCiFzNc83f5
+	 V2Kjy8OT/B8QYBC1f2X0QCrLTLsOdlgUodyQmnmdggvCzrCz3UIzi7+zog2ESUgnM4
+	 tzvI8p3PdCZvPN7wO6yWZmjSfuI4nwpMPGyeSz/k=
 From: Luca Weiss <luca@lucaweiss.eu>
-Subject: [PATCH 0/7] Add CPU frequency scaling support for MSM8226
-Date: Wed, 19 Jun 2024 23:02:44 +0200
-Message-Id: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
+Date: Wed, 19 Jun 2024 23:02:50 +0200
+Subject: [PATCH 6/7] ARM: dts: qcom: msm8226: Hook up CPU cooling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,9 +33,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHRHc2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDM0NL3dziXAsjIzPd5ILStKLUQl1zC4skg6Q0AyNTs0QloK6CotS0zAq
- widGxtbUA/htYi2EAAAA=
+Message-Id: <20240619-msm8226-cpufreq-v1-6-85143f5291d1@lucaweiss.eu>
+References: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
+In-Reply-To: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -46,51 +46,110 @@ Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
  Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1353; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=4WOS+AvxaEa+0SC1/3K+gcJiiNNwidC9fY7Pa0VsfD4=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmc0d2S5Un48OGVLTnxHEVLWjPEi8tuzfTqVhk3
- F5BniAFEdmJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnNHdgAKCRBy2EO4nU3X
- VkirD/wK2zGzeK5HkWUxhlhEViNepbpmeZXNM0yaAWRh5qp5J1VsPF7qt/YG8UYLLn1n2i9r76l
- YxZfKbbp7w0J1CglJVeb6D5KgCZz2Lco60TXgqT20xGjQ9Q8DVFM1cvgg4cLLLgiyyeiYQOtHKD
- oxGtXPBU1F3x3JfCplEHqJvqmZsBMGPu+9Dzr2sFkx4BAgHUBQe2JDAdlQqc3yiImbkwoYiPjvT
- 4c9URAAuSx2vTKVbBoWaZ2dUYKcgJwhYZUdF3yTSUji2JZSh7D8Oi/Fx9h5DoDMrvBgZp8/DaQS
- 0GKrgGGevHiSj5h42ZpZMDKIbo9zyCMBY4XMWAuOFIOuuptK8ZORlLQsqiK9QdCWBogVOuKiqI9
- zzboC180royI8zhoc+EFDf3jWFnf9n8KLFRLQ5Vu/NU3C4VPYMJ0CQm6togK8WI5waH/hIdmulF
- 0jcCUaHTP48MRrsIHepg2fD4i1MxQYr8RlzqY8Em4TlUdVIJhAfLdft3jCA7CRFe53VS7zsUb4/
- +0LD0NZejeJojuJiZ6XrY42sZT3yb5O/XgzVdYB7X8QMnDMvjRast0K0A0FWOwc8D+bpzwnZFki
- WDGdv4AuFWFKyHFV35G7YtMoW8aMyOlmCToorA440YYZ7ueniV1YK+lYN2bI2h7MRWXySziaq+A
- MZoGxVrSrbnviLA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2415; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=U4dGGEGpOOkzWqH8OuKBSW4honG4SMlwLIHbWnr5h9U=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmc0eH/VSYmnEAuPFnCi8s5pSvqXOFphEFVJYZd
+ xE0/IbhiCaJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnNHhwAKCRBy2EO4nU3X
+ VofcEACv1O36gtN/ndklBVQLJvXq7HkMWQffN6xpjveK+UqyMZx/Ql90KVjk8isYjE195qqV38z
+ S4o0Kysx55z7yGRoF5WH1xZ98rlaCxWlA/5lhECH1kcoLCLG865IfLyarJexxQM0Q4flTHgBp38
+ NfXu/82MaTdM3UrNhXPur1KTiMazVu97lSxCqh+9g37n0ZEuXmZkbC/GR62K3Uq62sTvg25gCmu
+ pyCuhGssvX7BnyUPYTV5tnxjyeB7+oXrNFSKb2FbU8v4Y3VYcgzSn7qGkp9/uHAhmvciqgU3XJH
+ cd2vH+IX+hEPVd97fxONBx9z3a2jUcjG5xeOnrHmsAs/VNd26ovYRK/bV34nBDOmqoN0j2xikGa
+ Msh9ac+LO3N1dAO9FHkfUS29U6YKtnQFEUYj8dxJYCEAbWB4eDFiV54k0I7lNMHuL2ETp36OxqJ
+ vgBbstiX/sFuoVOzPC16/g1jlltsW3WD0a9j/TuZCe5I+MYwQ1Ebi9TSwESGr1d9sTPudirz13h
+ 6osYA8Njhal0PRfLKdF2m6MILoFwAyUy0U6ZTN6FzC5XjWQru4obWa7srHvAnguX3FdTGgqFAJO
+ 9muFnMIltnSThnohibc1/soKZ+VsHcS0jct70cGeegU5zer1bvmUFf5FNbWOh/9FHXwhIYmDR36
+ vWIbLmNA1tomkMg==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Apart from a bunch of bindings updates, add support for the a7pll found
-on the SoC and wire up everything in the dtsi. And finally switch over
-to using apcs via mbox interface to stop using the apcs via syscon.
-
-Only a limited list of CPU frequencies are supported for now, higher
-ones require speedbin support which I plan to work on after this lands.
+Add cooling-maps for the CPU thermal zones so the driver can actually do
+something when the CPU temperature rises too much.
 
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
-Luca Weiss (7):
-      dt-bindings: mailbox: qcom: add compatible for MSM8226 SoC
-      dt-bindings: clock: qcom,a53pll: Allow opp-table subnode
-      dt-bindings: clock: qcom,a53pll: Add msm8226-a7pll compatible
-      clk: qcom: a53-pll: Add MSM8226 a7pll support
-      ARM: dts: qcom: msm8226: Add CPU frequency scaling support
-      ARM: dts: qcom: msm8226: Hook up CPU cooling
-      ARM: dts: qcom: msm8226: Convert APCS usages to mbox interface
+ arch/arm/boot/dts/qcom/qcom-msm8226.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
- .../devicetree/bindings/clock/qcom,a53pll.yaml     |   4 +
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml    |   1 +
- arch/arm/boot/dts/qcom/qcom-msm8226.dtsi           | 134 ++++++++++++++++++++-
- drivers/clk/qcom/a53-pll.c                         |   1 +
- 4 files changed, 134 insertions(+), 6 deletions(-)
----
-base-commit: 0efa3123a1658dbafdace0bfcdcc4f34eebc7f9f
-change-id: 20240619-msm8226-cpufreq-788b0bf0256a
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi
+index 6e9fbe2e7223..9deee34fc5ca 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/reset/qcom,gcc-msm8974.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	#address-cells = <1>;
+@@ -48,6 +49,7 @@ CPU0: cpu@0 {
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			qcom,acc = <&acc0>;
+ 			qcom,saw = <&saw0>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		CPU1: cpu@1 {
+@@ -60,6 +62,7 @@ CPU1: cpu@1 {
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			qcom,acc = <&acc1>;
+ 			qcom,saw = <&saw1>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		CPU2: cpu@2 {
+@@ -72,6 +75,7 @@ CPU2: cpu@2 {
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			qcom,acc = <&acc2>;
+ 			qcom,saw = <&saw2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		CPU3: cpu@3 {
+@@ -84,6 +88,7 @@ CPU3: cpu@3 {
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			qcom,acc = <&acc3>;
+ 			qcom,saw = <&saw3>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		L2: l2-cache {
+@@ -1256,6 +1261,16 @@ cpu0-thermal {
+ 
+ 			thermal-sensors = <&tsens 5>;
+ 
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert0>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
+ 			trips {
+ 				cpu_alert0: trip0 {
+ 					temperature = <75000>;
+@@ -1277,6 +1292,16 @@ cpu1-thermal {
+ 
+ 			thermal-sensors = <&tsens 2>;
+ 
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert1>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
+ 			trips {
+ 				cpu_alert1: trip0 {
+ 					temperature = <75000>;
 
-Best regards,
 -- 
-Luca Weiss <luca@lucaweiss.eu>
+2.45.2
 
