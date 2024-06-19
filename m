@@ -1,131 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E61B7F490;
-	Wed, 19 Jun 2024 08:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA27770F6;
+	Wed, 19 Jun 2024 08:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718787059; cv=none; b=syhqOXIGlr5s6KGSQ6UiQASsIt1Cbaede+IoQkYOpDudmPQwmSPS1Du7sP8pDQNpnBVr6X/NPYWCOwZ4N1HcSuaMR//I54TRy86ANkc4HW9ht+AIlJ68RvkItN64s5ESkfiGwnLCLZxWL7tn5XqI7jXNl18fu8Of4ca60/kSGow=
+	t=1718787122; cv=none; b=BpfzOwF0jfnzsMLNvjmP9f4pmD87pVaJCB1869bFu9bx9rNknnAjqYoX68H7jnOQsEIEJ1D9/YUmh8hBBVQsWCpspCq3vNBDOXm3zG/Ls6QnpfM7atnhw7Z/3kyp9isaCFroBdDYIx2oO4OKRvDX4YPiy0gSEh/86EsUqTh+82w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718787059; c=relaxed/simple;
-	bh=9pX7wwOZEam6xxkbsMASbU9Ysh/sQPw19k9MrZhyxq8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YCbT5rq0U6nkLHzDKFpBNbeWDcT/1HUlY70uZURfUF0fTneLroD/Z8SVC8Jkou9lxnRlXsqf6GKIrjTo9MXbxBADkOSXXDabvm2UxWqYI9eND4hfuK4YUbcd7VREJEzsyN0hh+rKTi0fSMnS2TI4tpZ1slWsZpKIYiX7clJbKW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6VA2mTw; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6VA2mTw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718787057; x=1750323057;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=9pX7wwOZEam6xxkbsMASbU9Ysh/sQPw19k9MrZhyxq8=;
-  b=a6VA2mTw3e776bH1pQo/MHUWqhtJ02yU5EfU47s82VhSFJ7u/+ww90g9
-   kw8tM9KH0OvnZ2tQAfD1xgkkNkkaIsKA0oRDTx0dNG1CaXOh/M5coPWRi
-   CKCcbB1wTArPyzvDW3Yrcu/N3wXyCpBBgup8QhqrC5VmTcpQPaqsyg/EQ
-   Ij8I1Jir04k+vmHoA1n93JcZYzxFDRKBub3M26WqE28388G1MCkExfzxF
-   LXJ35w78P9xFwyyg3tYPSx1euuBpgKLli25zkEkWtABp3Cca1UCN6/2eH
-   wAF8rFNpCbP54uBEZf3G8J5w1Pj0vCLRuClBf5VicvUPS/L0Q6wgEN2An
-   A==;
-X-CSE-ConnectionGUID: egqA1h0/QhOEm87uKPM9ng==
-X-CSE-MsgGUID: HKeyzdqBSf6t0VaJQ5T02A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="26392626"
-X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
-   d="scan'208";a="26392626"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 01:50:56 -0700
-X-CSE-ConnectionGUID: IC5YYstLQ+ikQtZG/ZzbJA==
-X-CSE-MsgGUID: 7cNsuLtiSUmLiLOmBS07yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
-   d="scan'208";a="42556513"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.249])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 01:50:51 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Jonathan Corbet
- <corbet@lwn.net>, Carlos Bilbao <carlos.bilbao.osdev@gmail.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Konstantin Ryabitsev
- <konstantin@linuxfoundation.org>, ksummit@lists.linux.dev
-Subject: Re: [PATCH 2/2] Documentation: best practices for using Link trailers
-In-Reply-To: <20240618-docs-patch-msgid-link-v1-2-30555f3f5ad4@linuxfoundation.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240618-docs-patch-msgid-link-v1-0-30555f3f5ad4@linuxfoundation.org>
- <20240618-docs-patch-msgid-link-v1-2-30555f3f5ad4@linuxfoundation.org>
-Date: Wed, 19 Jun 2024 11:50:48 +0300
-Message-ID: <87r0ctfh93.fsf@intel.com>
+	s=arc-20240116; t=1718787122; c=relaxed/simple;
+	bh=yTW84Rd3+jSNgbXyGVRddFr9tmJfm5gqMbMKa/I78l8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GmBTwscmCLunqECRlSXqep6wpAY9H2tHWNojk/wdUDLjk0J4yVSNLKs/gmVCFrjUvPVE4atpRjLLTBJstmS3/dznH9bnqLreej3iPPxY8nMTw6EYBECZzgfd/1qDN0ubRlK8nYaTcpf/xJPwoHVonsrYyskdjfs3SKaZ9lRjH9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 519BC1C00A4; Wed, 19 Jun 2024 10:51:52 +0200 (CEST)
+Date: Wed, 19 Jun 2024 10:51:51 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 5.10 000/770] 5.10.220-rc1 review
+Message-ID: <ZnKcJ0722Gn7nL1i@duo.ucw.cz>
+References: <20240618123407.280171066@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-On Tue, 18 Jun 2024, Konstantin Ryabitsev <konstantin@linuxfoundation.org> wrote:
-> Based on multiple conversations, most recently on the ksummit mailing
-> list [1], add some best practices for using the Link trailer, such as:
->
-> - how to use markdown-like bracketed numbers in the commit message to
-> indicate the corresponding link
-> - when to use lore.kernel.org vs patch.msgid.link domains
->
-> Cc: ksummit@lists.linux.dev
-> Link: https://lore.kernel.org/20240617-arboreal-industrious-hedgehog-5b84ae@meerkat # [1]
-> Signed-off-by: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-> ---
->  Documentation/process/maintainer-tip.rst | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/process/maintainer-tip.rst b/Documentation/process/maintainer-tip.rst
-> index 64739968afa6..57ffa553c21e 100644
-> --- a/Documentation/process/maintainer-tip.rst
-> +++ b/Documentation/process/maintainer-tip.rst
-> @@ -375,14 +375,26 @@ following tag ordering scheme:
->     For referring to an email on LKML or other kernel mailing lists,
->     please use the lore.kernel.org redirector URL::
->  
-> -     https://lore.kernel.org/r/email-message@id
-> +     Link: https://lore.kernel.org/email-message@id
->  
-> -   The kernel.org redirector is considered a stable URL, unlike other email
-> -   archives.
-> +   This URL should be used when referring to relevant mailing list
-> +   resources, related patch sets, or other notable discussion threads.
-> +   A convenient way to associate Link trailers with the accompanying
-> +   message is to use markdown-like bracketed notation, for example::
->  
-> -   Maintainers will add a Link tag referencing the email of the patch
-> -   submission when they apply a patch to the tip tree. This tag is useful
-> -   for later reference and is also used for commit notifications.
-> +     A similar approach was attempted before as part of a different
-> +     effort [1], but the initial implementation caused too many
-> +     regressions [2], so it was backed out and reimplemented.
-> +
-> +     Link: https://lore.kernel.org/some-msgid@here # [1]
-> +     Link: https://bugzilla.example.org/bug/12345  # [2]
-> +
-> +   When using the ``Link:`` trailer to indicate the provenance of the
-> +   patch, you should use the dedicated ``patch.msgid.link`` domain. This
-> +   makes it possible for automated tooling to establish which link leads
-> +   to the original patch submission. For example::
-
-Mostly highlighting my own ignorance here, but s/provenance/origin/
-would've felt more obvious to me, as a non-native speaker.
-
-BR,
-Jani.
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8F2IxwsITKFUDXt5"
+Content-Disposition: inline
+In-Reply-To: <20240618123407.280171066@linuxfoundation.org>
 
 
-> +
-> +     Link: https://patch.msgid.link/patch-source-msgid@here
->  
->  Please do not use combined tags, e.g. ``Reported-and-tested-by``, as
->  they just complicate automated extraction of tags.
+--8F2IxwsITKFUDXt5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jani Nikula, Intel
+Hi!
+
+> This is the start of the stable review cycle for the 5.10.220 release.
+> There are 770 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+
+Mentioning motivation behind 800 nfs patches would be welcome here.
+
+CIP testing did not find any problems here:
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+5.10.y
+
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--8F2IxwsITKFUDXt5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZnKcJwAKCRAw5/Bqldv6
+8m/2AKCr33N3KeC1NPRzbbrsLEZFIf7uXACdGm0mhK5L9yMH68fN4CgwKNoCIqU=
+=5noE
+-----END PGP SIGNATURE-----
+
+--8F2IxwsITKFUDXt5--
