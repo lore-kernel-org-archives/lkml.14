@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ECB15B541;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FE115B573;
 	Wed, 19 Jun 2024 22:36:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718836588; cv=none; b=HvQg4MIECV/PWP5OAxoDvV7mQWq7CU8YX9x0YnjG3Wu1gxWYA5ZOIKsz5eMRzji3CyeSpwMlU/+BiWNrg2BaQgviiDpBqTZI3Sr2a5MbdzZnkL/T0ZGJ8D9exJhC34zlGmPZzOx3uywq6mwzt9U1KJ2/iF08ngC8otxogLOTamE=
+	t=1718836588; cv=none; b=OXj16GSmGRPLflFv4MduOTrxbtHWZx1NTVkNmk2KztV8yiP6lrXVcOsdWfm04rbPSsFlOGnOm0bUzHXDUCdwdBkyCzg0C+vjF2TIb59a3gCbnDskyW/VfgntZSCTTPGM4VB4au33pDOqCTr8NuonSAqXk54EhcmtPEqxVS3PBaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718836588; c=relaxed/simple;
-	bh=yDbz8LgSURR5PSzpxuXHfQKkHmHCkhHdnFkVmC/D5YQ=;
+	bh=lqncN2do7NL+R425huiQkUvoZZdiNFBxemu6U6UT3ug=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aX+8GAiLpr8adKl+5v3ailpdQ63Z+UeyRLKCe5pcH6QDoP0tvLhxbCw8mHq2R9yb9WDDPb5YlnqmOEXpG9T2O3UdPvKrxMEwz/t0AjxuSsNAo8UltpIHjBXES+PIUc+SjqfKIzCI59n2/QR6DRoXbToRZf5QVQBIMpFFvTO7JAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z86INrjj; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=axJH+J5XH7HDFVq0I2+4KGXPiasDyH4MS+01lEfV1ZF/KvxChhjViTmNoPoDqFXm6kdidvL7irePcyxRHGIbFB85e0hVdzyZWtaTYx1AcX4H75BB/CFoNvIV5ctEcho+4xlAjYCTOba7hFTsa27dps4lng+KnQzyupqres9Kxss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmffDMEX; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z86INrjj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmffDMEX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718836586; x=1750372586;
+  t=1718836587; x=1750372587;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yDbz8LgSURR5PSzpxuXHfQKkHmHCkhHdnFkVmC/D5YQ=;
-  b=Z86INrjjh4bACaqE5HxiO63k5KGt34h69F/xoi0D7F3lSjt9UPXdS2IA
-   3CoBru11wDDRu4kSWfLjqJF01q4pUzoSXNahMvI0lkE9Fb5I/7hjZgDlp
-   GkSJyk8ceB4zmKh2J0tMrAcpAdqLdHnuEMQdtQrDJp4jgOu/QRfPQTy5t
-   6BNMnNqrTUDkUGt7SGE5nNRNkssJG0vKzr22HbKY6rdREwenF9X1pO5NX
-   5mH6sc9D8tWC1E3dog8zGo7dkgwHLlvGfhiJtScE/fzJJq/9cWcxGLzQn
-   cUXyxCokGnUhhcPboPB3SNSrALqmKhI2Ig6QZ0qKPDAQXmV2C3F5/ErHr
+  bh=lqncN2do7NL+R425huiQkUvoZZdiNFBxemu6U6UT3ug=;
+  b=fmffDMEXXxUGIG4MQGyWJw1H08HasuZw3lil5bRGK0R7UqP9hN2h4bjU
+   GDFX5vIW+OiullYBfSm9jdikHsysvRJNB/Pe4+uGicgie5puMPEJ8F8RF
+   4iZiNgSHc0uN05jruBXViK7oGZMg0yMsviaMfksDdtpqH69w9WjfO2SOT
+   57Lt0LRkWvGIks9IlPDBG7juLJ3JoXjHK+ycuEf4xxExFTE530UjNVoYT
+   C+4yyTAzdK4DYKmX0YAm+yYVNkS72MwSqYTqP0b1laUrqyqZwQPNCAM08
+   DR0rO98gEwZpn7g1ur/lTi6LYlj6amn5efuUdYKJbidktCX3SYfq4dIAm
    g==;
-X-CSE-ConnectionGUID: 1vA48aL3QeWYBZLpu8AJSw==
-X-CSE-MsgGUID: nADY+JWkTo2cf1jMhoIYrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931951"
+X-CSE-ConnectionGUID: S8GeqQcLSSGx5AnA/xHW0w==
+X-CSE-MsgGUID: BJ8mGLP1QlSZiLlSUq/PSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931963"
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15931951"
+   d="scan'208";a="15931963"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:21 -0700
-X-CSE-ConnectionGUID: lPtdsyU4TnK+1ZhKMJR2ug==
-X-CSE-MsgGUID: JLYqCEFJT0uUk3zALBZfSg==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:22 -0700
+X-CSE-ConnectionGUID: A7gpxV9sQFmySh6QDL16jQ==
+X-CSE-MsgGUID: i6E0d/UeTni7Wy7v2P0T7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="72793336"
+   d="scan'208";a="72793343"
 Received: from ivsilic-mobl2.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.54.39])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:21 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
@@ -55,9 +55,9 @@ Cc: kai.huang@intel.com,
 	sagis@google.com,
 	yan.y.zhao@intel.com,
 	rick.p.edgecombe@intel.com
-Subject: [PATCH v3 06/17] KVM: x86/mmu: Make kvm_tdp_mmu_alloc_root() return void
-Date: Wed, 19 Jun 2024 15:36:03 -0700
-Message-Id: <20240619223614.290657-7-rick.p.edgecombe@intel.com>
+Subject: [PATCH v3 08/17] KVM: x86/tdp_mmu: Take a GFN in kvm_tdp_mmu_fast_pf_get_last_sptep()
+Date: Wed, 19 Jun 2024 15:36:05 -0700
+Message-Id: <20240619223614.290657-9-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
 References: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
@@ -69,83 +69,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kvm_tdp_mmu_alloc_root() function currently always returns 0. This
-allows for the caller, mmu_alloc_direct_roots(), to call
-kvm_tdp_mmu_alloc_root() and also return 0 in one line:
-   return kvm_tdp_mmu_alloc_root(vcpu);
+Pass fault->gfn into kvm_tdp_mmu_fast_pf_get_last_sptep(), instead of
+passing fault->addr and then converting it to a GFN.
 
-So it is useful even though the return value of kvm_tdp_mmu_alloc_root()
-is always the same. However, in future changes, kvm_tdp_mmu_alloc_root()
-will be called twice in mmu_alloc_direct_roots(). This will force the
-first call to either awkwardly handle the return value that will always
-be zero or ignore it. So change kvm_tdp_mmu_alloc_root() to return void.
-Do it in a separate change so the future change will be cleaner.
+Future changes will make fault->addr and fault->gfn differ when running
+TDX guests. The GFN will be conceptually the same as it is for normal VMs,
+but fault->addr may contain a TDX specific bit that differentiates between
+"shared" and "private" memory. This bit will be used to direct faults to
+be handled on different roots, either the normal "direct" root or a new
+type of root that handles private memory. The TDP iterators will process
+the traditional GFN concept and apply the required TDX specifics depending
+on the root type. For this reason, it needs to operate on regular GFN and
+not the addr, which may contain these special TDX specific bits.
+
+Today kvm_tdp_mmu_fast_pf_get_last_sptep() takes fault->addr and then
+immediately converts it to a GFN with a bit shift. However, this would
+unfortunately retain the TDX specific bits in what is supposed to be a
+traditional GFN. Excluding TDX's needs, it is also is unnecessary to pass
+fault->addr and convert it to a GFN when the GFN is already on hand.
+
+So instead just pass the GFN into kvm_tdp_mmu_fast_pf_get_last_sptep() and
+use it directly.
 
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
 TDX MMU Prep v3:
- - Add Paolo's reviewed-by
-
-TDX MMU Prep:
  - New patch
 ---
- arch/x86/kvm/mmu/mmu.c     | 6 ++++--
+ arch/x86/kvm/mmu/mmu.c     | 2 +-
  arch/x86/kvm/mmu/tdp_mmu.c | 3 +--
  arch/x86/kvm/mmu/tdp_mmu.h | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8023cebeefaa..138e7bbcda1e 100644
+index 138e7bbcda1e..e9c1783a8743 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3700,8 +3700,10 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
- 	unsigned i;
- 	int r;
+@@ -3452,7 +3452,7 @@ static int fast_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+ 		u64 new_spte;
  
--	if (tdp_mmu_enabled)
--		return kvm_tdp_mmu_alloc_root(vcpu);
-+	if (tdp_mmu_enabled) {
-+		kvm_tdp_mmu_alloc_root(vcpu);
-+		return 0;
-+	}
+ 		if (tdp_mmu_enabled)
+-			sptep = kvm_tdp_mmu_fast_pf_get_last_sptep(vcpu, fault->addr, &spte);
++			sptep = kvm_tdp_mmu_fast_pf_get_last_sptep(vcpu, fault->gfn, &spte);
+ 		else
+ 			sptep = fast_pf_get_last_sptep(vcpu, fault->addr, &spte);
  
- 	write_lock(&vcpu->kvm->mmu_lock);
- 	r = make_mmu_pages_available(vcpu);
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 35249555b585..07b0b884e246 100644
+index 4a7518c9ba7e..067249dbbb5e 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.c
 +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -224,7 +224,7 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
- 	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
- }
- 
--int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
-+void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
+@@ -1801,12 +1801,11 @@ int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
+  *
+  * WARNING: This function is only intended to be called during fast_page_fault.
+  */
+-u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, u64 addr,
++u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 					u64 *spte)
  {
+ 	struct tdp_iter iter;
  	struct kvm_mmu *mmu = vcpu->arch.mmu;
- 	union kvm_mmu_page_role role = mmu->root_role;
-@@ -285,7 +285,6 @@ int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
- 	 */
- 	mmu->root.hpa = __pa(root->spt);
- 	mmu->root.pgd = 0;
--	return 0;
- }
+-	gfn_t gfn = addr >> PAGE_SHIFT;
+ 	tdp_ptep_t sptep = NULL;
  
- static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
+ 	tdp_mmu_for_each_pte(iter, vcpu->kvm, mmu, gfn, gfn + 1) {
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-index 58b55e61bd33..437ddd4937a9 100644
+index 437ddd4937a9..1ba84487f3b7 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.h
 +++ b/arch/x86/kvm/mmu/tdp_mmu.h
-@@ -10,7 +10,7 @@
- void kvm_mmu_init_tdp_mmu(struct kvm *kvm);
- void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm);
+@@ -64,7 +64,7 @@ static inline void kvm_tdp_mmu_walk_lockless_end(void)
  
--int kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
-+void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
+ int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
+ 			 int *root_level);
+-u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, u64 addr,
++u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 					u64 *spte);
  
- __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
- {
+ #ifdef CONFIG_X86_64
 -- 
 2.34.1
 
