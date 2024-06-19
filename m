@@ -1,161 +1,257 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B887A1514EF;
-	Wed, 19 Jun 2024 15:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED21E15217F
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811738; cv=none; b=kFIXMsQJ+8Cp6TUWjXUIbs2VtWvWyng06yfnYpBTIoeQgUkf/5Dg9TsXuOGBnJQiYYow1gPKxs8GuNnQrHh+3w1TRK08F6WY6g6C9UUfUhj34ZZResDv0YTAEE0TToIxUlIxU/gTcjGXN7OpoV2lv1e2gRrUiNP0jBYaXQSTnNs=
+	t=1718811763; cv=none; b=fgPf+1SsaJgKkG6NdGDeTj75OTUcbeVF0jADcCRNwZYEN7PsZn70guLa8lmiCCiJHrzyc4j16SYpnFvFbY9krKkce6nDZ79fRThRYoceHm2vREPjzUjpqIDVkjCcbydQcDMQi/6PTtqN8lJdShyemtLv5Jrm+4/BacjLinhXCIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811738; c=relaxed/simple;
-	bh=O9SvN5PDSrTOrdmyamPUNMeLQQeJVEqLKZx0ag1sbZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G+sZwhIcF7cSVhkLMTc95PGdX/uBxuP11I1Zotm9UkMqdq4XaBHv6aVPVN0lHLg7V6t9bqW44ZpowqILz+qxvlvAETN0lZsG9utpj3RVEaa+OarsJpdC1DN8edbYWM11/rgVzOZ2UyeMSopK0w83nUn6YPdrJkiGQMQ4ZMAkUqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eXGjNNvc; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718811763; c=relaxed/simple;
+	bh=r3S0o9Uy+b0Ct4Au4E+urxDBNo11gsW0f6e+kbvt6Lg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g4SFwDBL1mzvM5FrcueA1fNEAsxyt6qJkWZGOYwnAJbBDcuZx309YtIkOeXuFoHEn95r0B1dvAFKK6/9jA57nsirXHLVr4nCpxIx85j433y+dkP1pAlEeo1r+ziNccWCSXveBLXAes7W5HbntG8J7pv7HyD8eZNHr3eOs8VNRrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FOdrZtS6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eXGjNNvc"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JClcrJ002573;
-	Wed, 19 Jun 2024 17:41:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	67yqfpKh56AKrK0vIV+pIDS3OpXEowZR1XSlRO6rTac=; b=eXGjNNvcd2mXSjDp
-	UWD9btAjEvQpIl3yBRvUBR8hSvsWtCfce/5+b6ro9bOFl5YMg4SHSly61PaMmlRJ
-	odXbdM38FA9MQnHx/UanvJClFwxiKQX47XY00k3/x7CKZkzpOBmIcO40SyUZbVUS
-	/ky3ZwZux2w1aIex5ruBccs8nGwxx3GdDsHSuD4ONWtugWdwqbLiQRsLa0w1JTi5
-	Tsm80xBb93M5ZBA09XFjUv8RKa0Au8oHvjighR0Oj/jy1TpRwmyf/BmRFI/WnC/0
-	DNWoSnGRrO9H7Oqgv/zN0/UT0ND0IB2rUUhH6hoCKqFWilOP/j2xD2mFqpI712c3
-	qBPreg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuj9n4av8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 17:41:49 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 74ADE4004B;
-	Wed, 19 Jun 2024 17:41:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A446221EB2;
-	Wed, 19 Jun 2024 17:40:22 +0200 (CEST)
-Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 19 Jun
- 2024 17:40:21 +0200
-Message-ID: <01e435a5-3a69-49a5-9d5e-ab9af0a2af7b@foss.st.com>
-Date: Wed, 19 Jun 2024 17:40:21 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FOdrZtS6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718811757;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mWeCp7im8c0vN79ATol7MWl+xsx12ADLqXIpUJMFdcQ=;
+	b=FOdrZtS6OhNjn9zh1pR1htx96kLiM4LEQGmiEdLud0YmgThFBmpWjrwsZbsE2kSsmrSuEp
+	JB8UWW91QI1VfXchE7SIS5hPBwopCZkJf8kExjE2C+d0SwTs5gst2Up3vlKdEyJ49ATq5c
+	zlCh6AiWzHvU+tvV02nT5Upm+whZUXI=
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
+ [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-443-2pMIWkYwN--l0qQ_pXV9zg-1; Wed, 19 Jun 2024 11:42:36 -0400
+X-MC-Unique: 2pMIWkYwN--l0qQ_pXV9zg-1
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-63bca8ce79eso2376337b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:42:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718811755; x=1719416555;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mWeCp7im8c0vN79ATol7MWl+xsx12ADLqXIpUJMFdcQ=;
+        b=CjFy8ogsb3qGvN0Bhheto/gf3teYl6iOqxc8vjkQh6e5Q3HOiVmHNdUolKZRBA7/8I
+         jj9ce5RBb2uRsSo0D4E2W/QTu664O2dLHmaWMbpGzg0/TR8RtCH06TctFZvHmXBHKscZ
+         g69cR4GzE9V0Sx2VfKz4xS7iXz4ZyjfmAfYMPu5pdNdlx6uxWZwc18nDLv64uuFBVqql
+         a86EyEYZD8GRmIsWV0eBAjhXG3/uXaJUaRWNB6dEx0RnXzto31VD6L3i3/Dw+NpKVdwP
+         i8Vw/VslczlSfAXczVcCqZQG2JajNqL2GSZ5g/nwBw2AHAZFT+UPJFq7ZwsIfQhMC8Ae
+         iDfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVL/lztIK8EEmiExDMsg/ZOE+3PZt4QGSLZsLKzmg0iE/sMn1gWJbd2mYE9H5xpaC6UoCf3xjBjh8uTRWi2t7By72oy5wVp/B3n6Eid
+X-Gm-Message-State: AOJu0YzbBTUWWkmyL7vxFh5/VczUJ9kRO+VhuCRaUAQWQKYVv2UUiKsj
+	o97iJ317XZNbV0lSQJQyACmXuve6wmqFXOvtxbDep97JQwoBnA1/yFY6WlKFAPsS7e9XkkytOpL
+	qf6ckAqTF+dmPEEvd8iLzPCDtMZjRk5/d0bwpczT3ZKnonXiAEkivCDGyHNFWxS4znrmBxlf1nN
+	tZnRkqI2SGCnixCGgaR9Hc3FJ0CHWoYVPg87RG
+X-Received: by 2002:a25:5f48:0:b0:dfa:e6fc:f4f with SMTP id 3f1490d57ef6-e02be0ff385mr3237930276.3.1718811755577;
+        Wed, 19 Jun 2024 08:42:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYFnJHqbL6C9lWb1iUUgLw7ce3DxBh86jcwt8SSK5e/nf2ez29b1wrV7XJN9GS5D+7kcL73Lq48K7ceY8ocnE=
+X-Received: by 2002:a25:5f48:0:b0:dfa:e6fc:f4f with SMTP id
+ 3f1490d57ef6-e02be0ff385mr3237912276.3.1718811755205; Wed, 19 Jun 2024
+ 08:42:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next,PATCH 2/2] net: stmmac: dwmac-stm32: stm32: add
- management of stm32mp25 for stm32
-To: Marek Vasut <marex@denx.de>, "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Richard Cochran
-	<richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240614130812.72425-1-christophe.roullier@foss.st.com>
- <20240614130812.72425-3-christophe.roullier@foss.st.com>
- <4c2f1bac-4957-4814-bf62-816340bd9ff6@denx.de>
- <09010b02-fb55-4c4b-9d0c-36bd0b370dc8@foss.st.com>
- <39d35f6d-4f82-43af-883b-a574b8a67a1a@denx.de>
- <8c3f1696-d67c-4960-ad3a-90461c896aa5@foss.st.com>
- <3dee3c8a-12f0-42bd-acdf-8008da795467@denx.de>
- <aee3f6d2-6a44-4de6-9348-f83c4107188f@foss.st.com>
- <c74f393d-7d0a-4a34-8e72-553ccf273a41@denx.de>
-Content-Language: en-US
-From: Christophe ROULLIER <christophe.roullier@foss.st.com>
-In-Reply-To: <c74f393d-7d0a-4a34-8e72-553ccf273a41@denx.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
+References: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com> <20240617-stage-vdpa-vq-precreate-v1-16-8c0483f0ca2a@nvidia.com>
+In-Reply-To: <20240617-stage-vdpa-vq-precreate-v1-16-8c0483f0ca2a@nvidia.com>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Wed, 19 Jun 2024 17:41:58 +0200
+Message-ID: <CAJaqyWeoX8iPahvJutHi=r6UyB-z6gqp0QaYUyJz4GxNiORnfg@mail.gmail.com>
+Subject: Re: [PATCH vhost 16/23] vdpa/mlx5: Add error code for suspend/resume VQ
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
+	Cosmin Ratiu <cratiu@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 17, 2024 at 5:09=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.com=
+> wrote:
+>
+> Instead of blindly calling suspend/resume_vqs(), make then return error
+> codes.
+>
+> To keep compatibility, keep suspending or resuming VQs on error and
+> return the last error code. The assumption here is that the error code
+> would be the same.
+>
+> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
 
-On 6/19/24 15:14, Marek Vasut wrote:
-> On 6/19/24 9:41 AM, Christophe ROULLIER wrote:
+Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+
+> ---
+>  drivers/vdpa/mlx5/net/mlx5_vnet.c | 77 +++++++++++++++++++++++++++------=
+------
+>  1 file changed, 54 insertions(+), 23 deletions(-)
 >
-> Hi,
+> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
+x5_vnet.c
+> index e4d68d2d0bb4..e3a82c43b44e 100644
+> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> @@ -1526,71 +1526,102 @@ static int setup_vq(struct mlx5_vdpa_net *ndev,
+>         return err;
+>  }
 >
->>>>>>>> +static int stm32mp2_configure_syscfg(struct 
->>>>>>>> plat_stmmacenet_data *plat_dat)
->>>>>>>> +{
->>>>>>>> +    struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
->>>>>>>> +    u32 reg = dwmac->mode_reg;
->>>>>>>> +    int val = 0;
->>>>>>>> +
->>>>>>>> +    switch (plat_dat->mac_interface) {
->>>>>>>> +    case PHY_INTERFACE_MODE_MII:
->>>>>>>> +        break;
->>>>>>>
->>>>>>> dwmac->enable_eth_ck does not apply to MII mode ? Why ?
->>>>>>
->>>>>> It is like MP1 and MP13, nothing to set in syscfg register for 
->>>>>> case MII mode wo crystal.
->>>>>
->>>>> Have a look at STM32MP15xx RM0436 Figure 83. Peripheral clock 
->>>>> distribution for Ethernet.
->>>>>
->>>>> If RCC (top-left corner of the figure) generates 25 MHz MII clock 
->>>>> (yellow line) on eth_clk_fb (top-right corner), can I set 
->>>>> ETH_REF_CLK_SEL to position '1' and ETH_SEL[2] to '0' and feed ETH 
->>>>> (right side) clk_rx_i input with 25 MHz clock that way ?
->>>>>
->>>>> I seems like this should be possible, at least theoretically. Can 
->>>>> you check with the hardware/silicon people ?
->>>> No it is not possible (it will work if speed (and frequency) is 
->>>> fixed 25Mhz=100Mbps, but for speed 10Mbps (2,5MHz) it will not work.
->>>
->>> Could the pll4_p_ck or pll3_q_ck generate either 25 MHz or 2.5 MHz 
->>> as needed in that case ? Then it would work, right ?
->>
->> Yes you can set frequency you want for pll4 or pll3, if you set 25MHz 
->> and auto-negotiation of speed is 100Mbps it should work (pad ETH_CK 
->> of 25MHz clock the PHY and eth_clk_fb set to 25MHz for clk_RX)
->>
->> but if autoneg of speed is 10Mbps, then 2.5MHz is needed for clk_RX 
->> (you will provide 25Mhz)
+> -static void suspend_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virt=
+queue *mvq)
+> +static int suspend_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtq=
+ueue *mvq)
+>  {
+>         struct mlx5_virtq_attr attr;
+> +       int err;
 >
-> What if:
+>         if (!mvq->initialized)
+> -               return;
+> +               return 0;
 >
-> - Aneg is 10 Mbps
-> - PLL4_P_CK/PLL3_Q_CK = 2.5 MHz
-> - ETH_REF_CLK_SEL = 1
-> - ETH_SEL[2] = 0
+>         if (mvq->fw_state !=3D MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY)
+> -               return;
+> +               return 0;
 >
-> ?
+> -       if (modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_ST=
+ATE_SUSPEND))
+> -               mlx5_vdpa_warn(&ndev->mvdev, "modify to suspend failed\n"=
+);
+> +       err =3D modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJEC=
+T_STATE_SUSPEND);
+> +       if (err) {
+> +               mlx5_vdpa_warn(&ndev->mvdev, "modify to suspend failed, e=
+rr: %d\n", err);
+> +               return err;
+> +       }
 >
-> Then, clk_rx_i is 2.5 MHz, right ?
-Yes that right
+> -       if (query_virtqueue(ndev, mvq, &attr)) {
+> -               mlx5_vdpa_warn(&ndev->mvdev, "failed to query virtqueue\n=
+");
+> -               return;
+> +       err =3D query_virtqueue(ndev, mvq, &attr);
+> +       if (err) {
+> +               mlx5_vdpa_warn(&ndev->mvdev, "failed to query virtqueue, =
+err: %d\n", err);
+> +               return err;
+>         }
+> +
+>         mvq->avail_idx =3D attr.available_index;
+>         mvq->used_idx =3D attr.used_index;
+> +
+> +       return 0;
+>  }
 >
-> Does this configuration work ?
-For me no, because PHY Ethernet Oscillator/cristal need in PAD 25Mhz or 
-50Mhz, I think it is does not work if oscillator frequency provided is 
-2.5MHz (To my knowledge there is no Ethernet PHY which have oscillator 
-working to 2.5MHz)
+> -static void suspend_vqs(struct mlx5_vdpa_net *ndev)
+> +static int suspend_vqs(struct mlx5_vdpa_net *ndev)
+>  {
+> +       int err =3D 0;
+>         int i;
 >
->> . For RMII case, frequency from pll (eth_clk_fb) is automatically 
->> adjust in function of speed value, thanks to diviser /2, /20 with 
->> mac_speed_o.
+> -       for (i =3D 0; i < ndev->cur_num_vqs; i++)
+> -               suspend_vq(ndev, &ndev->vqs[i]);
+> +       for (i =3D 0; i < ndev->cur_num_vqs; i++) {
+> +               int local_err =3D suspend_vq(ndev, &ndev->vqs[i]);
+> +
+> +               err =3D local_err ? local_err : err;
+> +       }
+> +
+> +       return err;
+>  }
+>
+> -static void resume_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtq=
+ueue *mvq)
+> +static int resume_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtqu=
+eue *mvq)
+>  {
+> +       int err;
+> +
+>         if (!mvq->initialized)
+> -               return;
+> +               return 0;
+>
+>         switch (mvq->fw_state) {
+>         case MLX5_VIRTIO_NET_Q_OBJECT_STATE_INIT:
+>                 /* Due to a FW quirk we need to modify the VQ fields firs=
+t then change state.
+>                  * This should be fixed soon. After that, a single comman=
+d can be used.
+>                  */
+> -               if (modify_virtqueue(ndev, mvq, 0))
+> +               err =3D modify_virtqueue(ndev, mvq, 0);
+> +               if (err) {
+>                         mlx5_vdpa_warn(&ndev->mvdev,
+> -                               "modify vq properties failed for vq %u\n"=
+, mvq->index);
+> +                               "modify vq properties failed for vq %u, e=
+rr: %d\n",
+> +                               mvq->index, err);
+> +                       return err;
+> +               }
+>                 break;
+>         case MLX5_VIRTIO_NET_Q_OBJECT_STATE_SUSPEND:
+>                 if (!is_resumable(ndev)) {
+>                         mlx5_vdpa_warn(&ndev->mvdev, "vq %d is not resuma=
+ble\n", mvq->index);
+> -                       return;
+> +                       return -EINVAL;
+>                 }
+>                 break;
+>         case MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY:
+> -               return;
+> +               return 0;
+>         default:
+>                 mlx5_vdpa_warn(&ndev->mvdev, "resume vq %u called from ba=
+d state %d\n",
+>                                mvq->index, mvq->fw_state);
+> -               return;
+> +               return -EINVAL;
+>         }
+>
+> -       if (modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_ST=
+ATE_RDY))
+> -               mlx5_vdpa_warn(&ndev->mvdev, "modify to resume failed for=
+ vq %u\n", mvq->index);
+> +       err =3D modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJEC=
+T_STATE_RDY);
+> +       if (err)
+> +               mlx5_vdpa_warn(&ndev->mvdev, "modify to resume failed for=
+ vq %u, err: %d\n",
+> +                              mvq->index, err);
+> +
+> +       return err;
+>  }
+>
+> -static void resume_vqs(struct mlx5_vdpa_net *ndev)
+> +static int resume_vqs(struct mlx5_vdpa_net *ndev)
+>  {
+> -       for (int i =3D 0; i < ndev->cur_num_vqs; i++)
+> -               resume_vq(ndev, &ndev->vqs[i]);
+> +       int err =3D 0;
+> +
+> +       for (int i =3D 0; i < ndev->cur_num_vqs; i++) {
+> +               int local_err =3D resume_vq(ndev, &ndev->vqs[i]);
+> +
+> +               err =3D local_err ? local_err : err;
+> +       }
+> +
+> +       return err;
+>  }
+>
+>  static void teardown_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_vir=
+tqueue *mvq)
+>
+> --
+> 2.45.1
+>
+
