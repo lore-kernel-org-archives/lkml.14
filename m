@@ -1,167 +1,168 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10957FBBF;
-	Wed, 19 Jun 2024 09:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC90D7D07F
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718789097; cv=none; b=eXdF0/Dm8G2HgjBnxz8jcjCtlCUy5O3Z+tvANiJZ+7vvWh3ktyVfRi1TnKvVkdjkknWEO0wNe+5zVTWjoMw45eCj9Puff7OR47dIxeImoTkJX6VCREpWRWx9OV1JBlafW95aSsA9d5mrbdVaoU3rBSsswBDCkw865u8l/ExOG1w=
+	t=1718789142; cv=none; b=RH/OqHph9eWUP3BgsuokczgFxvjBXv9uYQ32zo4rWeodPMf85DzblQGfWI57oAjDNRjUpd+jMh/ZnaydlkReTOASNxZqEl9zlpb0KZ8ciNYhvbyqyU1gHc43b4g6Kfpft74NJ9/vO4aXJX8Q1vV1cy97ZyMJ9f6XnLCcIrRVDg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718789097; c=relaxed/simple;
-	bh=hN6kdnLBTquDXR9KrmJk7yIsGzVwE9lDcA2ZQdIL3wI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n+0kB3zeIUbZjWAWyAS+7j3llXhwajop4i56xoZEPYoExbQQJUqTW5BeEDOxj+1kY3oNx+/wHNI1UnU2mxFo07TdqRBBbiI9nEKUuL2URTeFZ9A0UsXLKIhPeH8GrWDaADPCW2ZAuMyouPds5HI1HjxxXnPGCOahKupO9+R7y6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W3yNw3MCqznWSR;
-	Wed, 19 Jun 2024 17:04:32 +0800 (CST)
-Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id CE6A518007A;
-	Wed, 19 Jun 2024 17:09:26 +0800 (CST)
-Received: from [10.67.120.108] (10.67.120.108) by
- dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 19 Jun 2024 17:09:26 +0800
-Message-ID: <df7b4ee6-0d75-9ed5-f147-3c180be6d4a5@huawei.com>
-Date: Wed, 19 Jun 2024 17:09:26 +0800
+	s=arc-20240116; t=1718789142; c=relaxed/simple;
+	bh=SJ5MjWa+kg4P31QsjkiYysOM7MxcX3F2b7YYfaZ041c=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=rY3dOMeC1MJFrsu7xYoOegx8RQQrdwwVJTgHZSlZdM0VvNxXD2CfbXXYBqftDEsy6NUK4VRMYyyMRpso2TXlWx/57QpTIf26hj/nl4KDMNLujC/Xb75YAawpmV26cyovxsslR/Vtv5AfLbXLLylKCQxt7PGmbI8rbYZnUafj078=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BnnY+FAE; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BnnY+FAE"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240619092537euoutp0103bdc661a388d28bb982e13fc79ebd95~aXZ1JqB-v1844518445euoutp01Y
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:25:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240619092537euoutp0103bdc661a388d28bb982e13fc79ebd95~aXZ1JqB-v1844518445euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1718789137;
+	bh=C7MUlZlbXbQr4FMlK3fzLH/GoaX9/kMf7dZJJ5mXoMI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=BnnY+FAEtR+19kI8WwkzyEVWmVs16dDRtv2WlyogNLEVPnhYHPMe6xT0JvQzDgVLE
+	 3s87CTjiC64z2rri1bEu7r3uoBnIraeagnlBDlQNxICDum+eGpIe3cIvjC9cKo4zZg
+	 xtLdzVaHyVmYMie9Xgf8G8vVDmwG/lCEfwbbWKRo=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240619092537eucas1p13e685ae3537564bd31c99a38bc77fd09~aXZ06Soem2953529535eucas1p1_;
+	Wed, 19 Jun 2024 09:25:37 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 53.9E.09624.114A2766; Wed, 19
+	Jun 2024 10:25:37 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240619092537eucas1p1564630b83ceb4990be6a7b63ceaa2c53~aXZ0qRCRd0106301063eucas1p1G;
+	Wed, 19 Jun 2024 09:25:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240619092537eusmtrp1cac2e927199573b3d9a841eb1488065d~aXZ0pt5qB1897818978eusmtrp17;
+	Wed, 19 Jun 2024 09:25:37 +0000 (GMT)
+X-AuditID: cbfec7f2-c11ff70000002598-ef-6672a411bdbc
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 81.5C.08810.114A2766; Wed, 19
+	Jun 2024 10:25:37 +0100 (BST)
+Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240619092536eusmtip1d4363510ce4f54eb14c36cec66c6a062~aXZ0QoJu60386803868eusmtip1I;
+	Wed, 19 Jun 2024 09:25:36 +0000 (GMT)
+Received: from localhost (106.110.32.44) by CAMSVWEXC01.scsc.local
+	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 19 Jun 2024 10:25:36 +0100
+Date: Wed, 19 Jun 2024 11:25:31 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+CC: Luis Chamberlain <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>,
+	Kees Cook <keescook@chromium.org>, <martin.lau@linux.dev>
+Subject: Re: Current state of the sysctl constification effort
+Message-ID: <20240619092531.ighb6pxh2ls4qjpu@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v4] scsi: libsas: Fix exp-attached end device cannot be
- scanned in again after probe failed
-Content-Language: en-CA
-To: John Garry <john.g.garry@oracle.com>, <yanaijie@huawei.com>,
-	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-	<damien.lemoal@opensource.wdc.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
-	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
-References: <20240619032815.3499-1-yangxingui@huawei.com>
- <45175ca4-d0da-42ca-97b9-f3891bf13c53@oracle.com>
-From: yangxingui <yangxingui@huawei.com>
-In-Reply-To: <45175ca4-d0da-42ca-97b9-f3891bf13c53@oracle.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggpemm500007.china.huawei.com (7.185.36.183) To
- dggpemd100001.china.huawei.com (7.185.36.94)
+In-Reply-To: <dd22004b-9bed-4537-b7d5-bc218ffc0087@t-8ch.de>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djP87qCS4rSDC7+ULU4051rcXnXHDaL
+	NZ0rWS1uTHjKaHHo7XQ2B1aP2Q0XWTw2repk81jYMJXZY/aSGywenzfJBbBGcdmkpOZklqUW
+	6dslcGVMejGTuWCSUMXbXp8Gxh18XYwcHBICJhKPlvt1MXJxCAmsYJRYtnktM4TzhVGi/ekX
+	FgjnM6PE7a4nQA4nWMeTk5dZIRLLGSX+bpnDCFfVMfMqO4SzmVHi4s0f7CAtLAKqEjO6z4DZ
+	bAI6Euff3GEGsUUEzCXuHJwNtpBZoJVR4t2TRWwgCWEBO4k9G5aDNfAKOEj0vNvIDGELSpyc
+	CXEHs4CexI2pU9hAvmAWkJZY/o8DIiwv0bx1Nlg5p4CNxJvuc+wQZytKfF18D+qFWom1x86A
+	HSoh8IJDYuvVHlaIhIvE7pszoIqEJV4d3wLVLCNxenIPC0TDZEaJ/f8+QHWvBoZZ41cmiCpr
+	iZYrT6A6HCVWPFzOBgljPokbbwUhruOTmLRtOjNEmFeio01oAqPKLCSvzULy2iyE12YheW0B
+	I8sqRvHU0uLc9NRiw7zUcr3ixNzi0rx0veT83E2MwIRz+t/xTzsY5776qHeIkYmD8RCjBAez
+	kgjv866iNCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8qinyqUIC6YklqdmpqQWpRTBZJg5OqQYm
+	samHE1vX/9rR+/dIKUe7vvdC96kX/jFoXtucZvbn9dsWlg9rsru3Z4jnBoqynXj9+o1HvHIT
+	f/5d/aaV1XNLNY+ILpXb1CH6tdlhRpb2ifSVRg9/x94qrW4N0zi/Zt0M6RmO2hYhdSsXBTJ0
+	GBwuklsz64sl7yV2pmLLI6vPHlLomdKZZDy7oWsrj5P/Ah73Jg2tAymupx3FA9Qzgsr3fLjP
+	vd6S47cOu665yIO+LSUCcbrZdyp4tzDI+pxMD/x3p/x2+e6IxQ7JRfsmCZqvmiAme/VznfyP
+	dLm9G18e/OX/XXVlodr11Yci31Wx3ezbuC3wmbzf+5qfB3wKQs4zTzgRzbBk61HjyCu6f94o
+	sRRnJBpqMRcVJwIArd+o5qcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsVy+t/xu7qCS4rSDE4t47c4051rcXnXHDaL
+	NZ0rWS1uTHjKaHHo7XQ2B1aP2Q0XWTw2repk81jYMJXZY/aSGywenzfJBbBG6dkU5ZeWpCpk
+	5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GVMejGTuWCSUMXbXp8G
+	xh18XYycHBICJhJPTl5mBbGFBJYySuxsKoCIy0hs/HKVFcIWlvhzrYuti5ELqOYjo8SZDW9Z
+	IZzNjBI72s4yg1SxCKhKzOg+ww5iswnoSJx/cwcsLiJgLnHn4GxmkAZmgVZGiR/3D7OAJIQF
+	7CT2bFgO1sAr4CDR824jM8TUh0wSXX17GSESghInZz4Ba2AW0JO4MXUK0B0cQLa0xPJ/HBBh
+	eYnmrbPBlnEK2Ei86T7HDnG2osTXxfdYIOxaiVf3dzNOYBSZhWTqLCRTZyFMnYVk6gJGllWM
+	IqmlxbnpucWGesWJucWleel6yfm5mxiB0bjt2M/NOxjnvfqod4iRiYPxEKMEB7OSCO/zrqI0
+	Id6UxMqq1KL8+KLSnNTiQ4ymwDCayCwlmpwPTAd5JfGGZgamhiZmlgamlmbGSuK8ngUdiUIC
+	6YklqdmpqQWpRTB9TBycUg1M+a/uPP7w6OlBp3155g+rPPObgi14NyR7Te/TvFDWdCX0zXVT
+	bSfbLd9ibA7McmKSm759zplG1vZlYl4q1W5uhyzS5aSWreZuZQ1gvZwTGsjb9zLFosywc7bl
+	a403q2at+Xh52RG9g1c+zPHVO6K/8aT0BJW5be8+2HNNz67cVfEx7Mi5M2Lit5+cm/r12yfn
+	jCW/tvf2vGGJL+9Rub3SIOTLnfrOMw++lrYsbn/0/3LTvJ6rLUntE5T0T72YfeOkj0ycyqP7
+	i2edqz59uGHuK42mafW2V/dzVIVMSSy/7PfW7Z1L25OVN1zXHRNP/vt7RcyR96++lkk3FJlc
+	PSjjqy97f9ObFWdMP97f+kz3nqASS3FGoqEWc1FxIgCwxQD0TwMAAA==
+X-CMS-MailID: 20240619092537eucas1p1564630b83ceb4990be6a7b63ceaa2c53
+X-Msg-Generator: CA
+X-RootMTR: 20240531105042eucas1p1bcf3ee22d224c8d88aca633e5f01e0d2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240531105042eucas1p1bcf3ee22d224c8d88aca633e5f01e0d2
+References: <CGME20240531105042eucas1p1bcf3ee22d224c8d88aca633e5f01e0d2@eucas1p1.samsung.com>
+	<7823ff95-1490-4c1b-b489-a9c05adad645@t-8ch.de>
+	<20240607094053.x3cmkhmrgaw6jqd3@joelS2.panther.com>
+	<37d5fd30-9327-4b57-8e4d-22af929d3fc4@t-8ch.de>
+	<20240610081036.bugf62o3y2wh2ugu@joelS2.panther.com>
+	<dd22004b-9bed-4537-b7d5-bc218ffc0087@t-8ch.de>
 
-Hi John,
+On Sat, Jun 15, 2024 at 10:18:48PM +0200, Thomas Wei�schuh wrote:
+> On 2024-06-10 10:10:36+0000, Joel Granados wrote:
+> > On Fri, Jun 07, 2024 at 03:54:01PM +0200, Thomas Wei�schuh wrote:
+> > > On 2024-06-07 11:40:53+0000, Joel Granados wrote:
+> > > > On Fri, May 31, 2024 at 12:50:32PM +0200, Thomas Wei�schuh wrote:
+> > ...
+> > > > Is there anything left to do besides
+> > > > what is being discussed in this mail, to start changing the ctl_tables
+> > > > to `static const`?
+> > > 
+> > > The changes to the tables also need (as per [0] and [1]):
+> > > 
+> > > * sysctl: move internal interfaces to const struct ctl_table
+> > > * sysctl: allow registration of const struct ctl_table
+> > > 
+> > > I think we do the handlers for v6.11, the rest of [0] and [1] for v6.12
+> > > and then we can go through the rest of the trees ctl_tables.
+> > 
+> > LGTM. Once you send "sysctl: move internal interfaces to const struct ctl_table" and
+> > "sysctl: allow registration of const struct ctl_table", I'll put them
+> > into sysctl-testing and have them there until they can go into sysctl-next
+> > (after the end of the next merge window). Please send both of them in one
+> > series and remember to work on the "what" and the "why" for the commit
+> > messages and cover letter.
+> 
+> IMO all of the remaining commits can go in as one series, as they all
+> belong to the sysctl core
+This sounds good to me. If everything is related to sysctl core, then it
+belongs in one series.
 
-On 2024/6/19 15:50, John Garry wrote:
-> On 19/06/2024 04:28, Xingui Yang wrote:
->> The expander phy will be treated as broadcast flutter in the next
->> revalidation after the exp-attached end device probe failed, as follows:
->>
->> [78779.654026] sas: broadcast received: 0
->> [78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
->> [78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
->> [78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated 
->> BROADCAST(CHANGE)
->> [78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
->> [78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 
->> 500e004aaaaaaa05 (stp)
->> [78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
->> [78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
->> [78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
->> ...
->> [78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 
->> tries: 1
->> [78835.171344] sas: sas_probe_sata: for exp-attached device 
->> 500e004aaaaaaa05 returned -19
->> [78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
->> [78835.187487] sas: broadcast received: 0
->> [78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
->> [78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
->> [78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated 
->> BROADCAST(CHANGE)
->> [78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
->> [78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 
->> 500e004aaaaaaa05 (stp)
->> [78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
->> [78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
->>
->> The cause of the problem is that the related ex_phy's 
->> attached_sas_addr was
->> not cleared after the end device probe failed, so reset it.
->>
->> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
-> 
-> Apart from a couple of comments, below:
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
-> 
->> ---
->> Changes since v3:
->> - Just manually clear the ex_phy's attached_sas_addr instead of calling
->>    sas_unregister_devs_sas_addr() and deleting the port.
->> - Update commit information.
->>
->> Changes since v2:
->> - Add a helper for calling sas_destruct_devices() and 
->> sas_destruct_ports(),
->>    and put the new call at the end of sas_probe_devices() based on John's
->>    suggestion.
->>
->> Changes since v1:
->> - Simplify the process of getting ex_phy id based on Jason's suggestion.
->> - Update commit information.
->> ---
->>   drivers/scsi/libsas/sas_internal.h | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/scsi/libsas/sas_internal.h 
->> b/drivers/scsi/libsas/sas_internal.h
->> index 85948963fb97..7c0931ccea23 100644
->> --- a/drivers/scsi/libsas/sas_internal.h
->> +++ b/drivers/scsi/libsas/sas_internal.h
->> @@ -145,6 +145,20 @@ static inline void sas_fail_probe(struct 
->> domain_device *dev, const char *func, i
->>           func, dev->parent ? "exp-attached" :
->>           "direct-attached",
->>           SAS_ADDR(dev->sas_addr), err);
->> +
->> +    /* if the device probe failed, the expander phy attached address
-> 
-> please use standard comment format, i.e. /* goes on a line on its own
-OK.
-> 
->> +     * need to be reset so that the phy will not be treated as flutter
-> 
-> /s/need to be reset/needs to be reset/OK.
-> 
->> +     * in the next revalidation
->> +     */
->> +    if (dev->parent && !dev_is_expander(dev->dev_type)) {
->> +        struct domain_device *parent = dev->parent;
->> +        struct expander_device *ex_dev = &parent->ex_dev;
->> +        struct sas_phy *phy = dev->phy;
->> +        struct ex_phy *ex_phy = &ex_dev->ex_phy[phy->number];
-> 
-> this could all be put on fewer lines, or even 1, like:
-OK. I'll update a new version.
-> 
-> struct ex_phy *ex_phy = &dev->ex_dev.ex_phy[phy->number];
-> 
-> you could even add a helper, like:
-> 
-> static inline struct ex_phy *sas_expander_ex_phy(struct domain_device
->   *parent, int phy_id)
->   {
->   struct expander_device *ex_dev = &parent->ex_dev;
-> 
->   return &ex_dev->ex_phy[phy_id];
->   }
-> 
-> However, I am not sure how helpful it will be, since we often require a 
-> struct expander_device pointer when we would be using that helper.
-> 
-Thanks,
-Xingui
+> (I can leave out "sysctl: constify standard sysctl tables")
+This also sounds good. You can push this through when you are actually
+changing all the static struct ctl_table occurances
 
+> 
+> FYI recent changes to the sysctl core introduced another prerequisite
+> for "sysctl: move internal interfaces to const struct ctl_table", which
+> is "bpf: Constify ctl_table argument of filter function".
+> 
+> See https://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linux.git/ sysctl-constfy
+I see it. This looks like something related to BPF [STORAGE & CGROUPS]
+(cc: martin.lau@linux.dev). We can push it ("bpf: Constify ctl_table
+argument of filter function") through sysctl-next, if Martin is OK with
+it. Otherwise you need to send a separate patch to bpf@vger.kernel.org.
 
+Best
+
+-- 
+
+Joel Granados
