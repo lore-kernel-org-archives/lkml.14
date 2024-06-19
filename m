@@ -1,128 +1,276 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B9084FAD
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DF86F2F8;
+	Wed, 19 Jun 2024 09:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718790978; cv=none; b=aA/Fi6+0OIyyuhkzkv0k+GxhNbPz+zPZHYlIVnpj1lQUbiJ/k+vW4NV2bR8CfMp+4ldD6WYBoVJrsCgZX1v9uSMSPqtuGLu+rP0oDMxT8nkMTCDWpPsFVnHVK1grKRTfsG2dBFFcx/spASlUkm78+aG5li4plYkK48MnKGj0bWc=
+	t=1718791011; cv=none; b=r8BKyzvohHJj4L5HEQXQKmpa401X1C7I9MA2mid33M/nk9Hs5nhkc03st2J0HcWSDnOYWEXKjWUVJSMO/VqPEEq/mzD4CqQE0Ws+KaKZ7hEBWnLw8O51hv2RQ+hELeHhruFTXywCFhWg42Ww140PFVGLuOsSHUj1zrN4kXWjsY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718790978; c=relaxed/simple;
-	bh=nNjrSgSeRfWnkJMdnUI9E0gWMw3vB/pCzNI+OqbllBw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AP1Xo7O2WEtPg+z5iWIi5uCNMi5J2VhYQlEdCA0T2QyG6j+iBwHDpGySr/P0DpUU0hojhB1ZyP1sBaRa1/N565RnJ/6lpARnwVYx2QpjDVMDzN1LY+1s9A8dK3ZwEPG76C/EeMJJp9L+Ma/HllO4RQKEXhSNHRNNRzX9ekSKY2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=aijsnspO; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1718791011; c=relaxed/simple;
+	bh=3b+AhgiDeU6IAw+CpzAdDH9WQMz/rhrEU3CNa/Rm0aI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l3ckVB25aJdTZcaPiX2u+NxEZofKG3Kp7pAEr+22njHGTeGN8A0UyUbjEL0oagB+kNAu6noqgZO56CEDuYvzLg63kjJVTFZ6k0eaGMcgw5twsnvyBm+V7ktgiTPTh7HL7Gcpp7/pga5yh57rzAyF+G42x7ppQtFiFjs30DvWdYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qofmvByi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gupKfMs7; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fm026ELG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mIDPKRxh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aijsnspO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1718790977; x=1750326977;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=raIEZpdgkW+RHfmC8vCCejhzjRvyZaw+50MAD0K0AN4=;
-  b=aijsnspOcj9IQ+XZZzFAh1sQjDaoXUv3mrOXDaZAVWoVe6ORs80Las3R
-   mIGNStPrC+GJ9daPtVoKBMdTKlLpiAxt/IfNFj4mmCmkpo3psBq8DLOHA
-   SfXGMhKX5Dx8cEpeJ5q5hi+0H9OaP2vapxDMIjHKToXUcoR1L6SPJscaZ
-   s=;
-X-IronPort-AV: E=Sophos;i="6.08,250,1712620800"; 
-   d="scan'208";a="97813385"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 09:56:14 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.43.254:12585]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.9.211:2525] with esmtp (Farcaster)
- id 65371dce-1daa-44d6-9e02-e86036a7bf71; Wed, 19 Jun 2024 09:56:14 +0000 (UTC)
-X-Farcaster-Flow-ID: 65371dce-1daa-44d6-9e02-e86036a7bf71
-Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 19 Jun 2024 09:56:13 +0000
-Received: from u5d18b891348c5b.ant.amazon.com (10.146.13.221) by
- EX19D014EUC004.ant.amazon.com (10.252.51.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 19 Jun 2024 09:56:10 +0000
-From: James Gowans <jgowans@amazon.com>
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-CC: James Gowans <jgowans@amazon.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, Alex Graf <graf@amazon.de>
-Subject: [PATCH v2] memblock: Move late alloc warning down to phys alloc
-Date: Wed, 19 Jun 2024 11:55:55 +0200
-Message-ID: <20240619095555.85980-1-jgowans@amazon.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qofmvByi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gupKfMs7";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fm026ELG";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mIDPKRxh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 38C1B21A68;
+	Wed, 19 Jun 2024 09:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718791006; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7HsdT/0BmhQCEN4xtZRZ/6IP2e/RgequrjnLXOsGUD4=;
+	b=qofmvByiwh9txghqFFaZHtHYcvvtoruECQKK85wgvUWpINzXKrxBDd3dIm6gWN8YbzwGgJ
+	A7L/Y2Pg3FyhCvXKAQLmT0G8T24tn1Aoa3XSVI+b0gzz97qsEc0lE2igwYoJdPqJUG5QGo
+	URb+LU6YpES8EPt056xGfNWxpKdhWjQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718791006;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7HsdT/0BmhQCEN4xtZRZ/6IP2e/RgequrjnLXOsGUD4=;
+	b=gupKfMs73Ln2FnpeGnuIiQSlwpm1BhXXq3wgjhS7GF/09X4fm86BQn8pwcU8nZLRrZ7NN7
+	hYqyTp2nv99+4sCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=fm026ELG;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=mIDPKRxh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718791005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7HsdT/0BmhQCEN4xtZRZ/6IP2e/RgequrjnLXOsGUD4=;
+	b=fm026ELGq6BkHmcELQZZCTQiX0MN4Inb1RMFy9azGsRfLytjbQTOGvgk5bIdqHJ8tlMosO
+	DDVto9qoiwdLmW+NWCaZveZnchc3OjsmUFEJiqIG69ieiVc0x3cPNWGJRnIE+3N73TYF7V
+	yJR0gWJjCN1izPKDljaRkv3rHPJLwQ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718791005;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7HsdT/0BmhQCEN4xtZRZ/6IP2e/RgequrjnLXOsGUD4=;
+	b=mIDPKRxhF2NZb5RgZhLf/KfA8bn7biMpB/GzGJynYW9bP8KrM+RbLs0FrJAsuOnd9d3uoJ
+	aH9dBJjbN+pTPTCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE1E013ABD;
+	Wed, 19 Jun 2024 09:56:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SkqIOVyrcmbCOAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 19 Jun 2024 09:56:44 +0000
+Message-ID: <c208e95d-9aa9-476f-9dee-0242a2d6a24f@suse.cz>
+Date: Wed, 19 Jun 2024 11:56:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
- EX19D014EUC004.ant.amazon.com (10.252.51.182)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Content-Language: en-US
+To: Uladzislau Rezki <urezki@gmail.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Jakub Kicinski <kuba@kernel.org>,
+ Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, kvm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+ wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+ ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ kasan-dev <kasan-dev@googlegroups.com>
+References: <Zmo9-YGraiCj5-MI@zx2c4.com>
+ <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
+ <Zmrkkel0Fo4_g75a@zx2c4.com> <e926e3c6-05ce-4ba6-9e2e-e5f3b37bcc23@suse.cz>
+ <3b6fe525-626c-41fb-8625-3925ca820d8e@paulmck-laptop>
+ <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz> <ZnCDgdg1EH6V7w5d@pc636>
+ <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz> <ZnFT1Czb8oRb0SE7@pc636>
+ <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
+ <ZnKqPqlPD3Rl04DZ@pc636>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <ZnKqPqlPD3Rl04DZ@pc636>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[zx2c4.com,kernel.org,inria.fr,vger.kernel.org,lists.linux.dev,efficios.com,lists.ozlabs.org,linux.ibm.com,csgroup.eu,gmail.com,lists.zx2c4.com,suse.de,netapp.com,oracle.com,talpey.com,netfilter.org,googlegroups.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 38C1B21A68
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
+X-Spam-Level: 
 
-If a driver/subsystem tries to do an allocation after the memblock
-allocations have been freed and the memory handed to the buddy
-allocator, it will not actually be legal to use that allocation: the
-buddy allocator owns the memory. Currently this mis-use is handled by
-the memblock function which does allocations and returns virtual
-addresses by printing a warning and doing a kmalloc instead. However
-the physical allocation function does not to do this check - callers of
-the physical alloc function are unprotected against mis-use.
+On 6/19/24 11:51 AM, Uladzislau Rezki wrote:
+> On Tue, Jun 18, 2024 at 09:48:49AM -0700, Paul E. McKenney wrote:
+>> On Tue, Jun 18, 2024 at 11:31:00AM +0200, Uladzislau Rezki wrote:
+>> > > On 6/17/24 8:42 PM, Uladzislau Rezki wrote:
+>> > > >> +
+>> > > >> +	s = container_of(work, struct kmem_cache, async_destroy_work);
+>> > > >> +
+>> > > >> +	// XXX use the real kmem_cache_free_barrier() or similar thing here
+>> > > > It implies that we need to introduce kfree_rcu_barrier(), a new API, which i
+>> > > > wanted to avoid initially.
+>> > > 
+>> > > I wanted to avoid new API or flags for kfree_rcu() users and this would
+>> > > be achieved. The barrier is used internally so I don't consider that an
+>> > > API to avoid. How difficult is the implementation is another question,
+>> > > depending on how the current batching works. Once (if) we have sheaves
+>> > > proven to work and move kfree_rcu() fully into SLUB, the barrier might
+>> > > also look different and hopefully easier. So maybe it's not worth to
+>> > > invest too much into that barrier and just go for the potentially
+>> > > longer, but easier to implement?
+>> > > 
+>> > Right. I agree here. If the cache is not empty, OK, we just defer the
+>> > work, even we can use a big 21 seconds delay, after that we just "warn"
+>> > if it is still not empty and leave it as it is, i.e. emit a warning and
+>> > we are done.
+>> > 
+>> > Destroying the cache is not something that must happen right away. 
+>> 
+>> OK, I have to ask...
+>> 
+>> Suppose that the cache is created and destroyed by a module and
+>> init/cleanup time, respectively.  Suppose that this module is rmmod'ed
+>> then very quickly insmod'ed.
+>> 
+>> Do we need to fail the insmod if the kmem_cache has not yet been fully
+>> cleaned up?  If not, do we have two versions of the same kmem_cache in
+>> /proc during the overlap time?
+>> 
+> No fail :) If same cache is created several times, its s->refcount gets
+> increased, so, it does not create two entries in the "slabinfo". But i
+> agree that your point is good! We need to be carefully with removing and
+> simultaneous creating.
 
-Improve the error catching here by moving the check into the physical
-allocation function which is used by the virtual addr allocation
-function.
+Note that this merging may be disabled or not happen due to various flags on
+the cache being incompatible with it. And I want to actually make sure it
+never happens for caches being already destroyed as that would lead to
+use-after-free (the workfn doesn't recheck the refcount in case a merge
+would happen during the grace period)
 
-Signed-off-by: James Gowans <jgowans@amazon.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Graf <graf@amazon.de>
----
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -150,9 +150,10 @@ int slab_unmergeable(struct kmem_cache *s)
+ #endif
 
-Notes:
-    Changes since v1: https://lore.kernel.org/all/20240614133016.134150-1-jgowans@amazon.com/
-    - Move this late usage check before alignment check
-    - Replace memblocks with memblock
+        /*
+-        * We may have set a slab to be unmergeable during bootstrap.
++        * We may have set a cache to be unmergeable during bootstrap.
++        * 0 is for cache being destroyed asynchronously
+         */
+-       if (s->refcount < 0)
++       if (s->refcount <= 0)
+                return 1;
 
- mm/memblock.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+        return 0;
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index d09136e040d3..dbb3d700247e 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1451,6 +1451,17 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
- 	if (WARN_ONCE(nid == MAX_NUMNODES, "Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead\n"))
- 		nid = NUMA_NO_NODE;
- 
-+	/*
-+	 * Detect any accidental use of these APIs after slab is ready, as at
-+	 * this moment memblock may be deinitialized already and its
-+	 * internal data may be destroyed (after execution of memblock_free_all)
-+	 */
-+	if (WARN_ON_ONCE(slab_is_available())) {
-+		void *vaddr = kzalloc_node(size, GFP_NOWAIT, nid);
-+
-+		return vaddr ? virt_to_phys(vaddr) : 0;
-+	}
-+
- 	if (!align) {
- 		/* Can't use WARNs this early in boot on powerpc */
- 		dump_stack();
-@@ -1576,13 +1587,6 @@ static void * __init memblock_alloc_internal(
- {
- 	phys_addr_t alloc;
- 
--	/*
--	 * Detect any accidental use of these APIs after slab is ready, as at
--	 * this moment memblock may be deinitialized already and its
--	 * internal data may be destroyed (after execution of memblock_free_all)
--	 */
--	if (WARN_ON_ONCE(slab_is_available()))
--		return kzalloc_node(size, GFP_NOWAIT, nid);
- 
- 	if (max_addr > memblock.current_limit)
- 		max_addr = memblock.current_limit;
--- 
-2.34.1
+> From the first glance, there is a refcounter and a global "slab_mutex"
+> which is used to protect a critical section. Destroying is almost fully
+> protected(as noted above, by a global mutex) with one exception, it is:
+> 
+> static void kmem_cache_release(struct kmem_cache *s)
+> {
+> 	if (slab_state >= FULL) {
+> 		sysfs_slab_unlink(s);
+> 		sysfs_slab_release(s);
+> 	} else {
+> 		slab_kmem_cache_release(s);
+> 	}
+> }
+> 
+> this one can race, IMO.
+> 
+> --
+> Uladzislau Rezki
 
