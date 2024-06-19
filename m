@@ -1,427 +1,157 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD2F1514D0
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7F51527BF
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718814816; cv=none; b=CWNN4uvL7FRhWsGboizA3Pab/miB+muHZtogk/9yO7vun5XV+chFrPjwNBT2ookepN02jIPj1EhTq++h+fG4mZ41Imx2oJnAE6JCqPiK1LT6tlE/+D3IgmHRzQXQWrEp3taH4OoZqFXGCiAEkM5Ik/Y993JBS3oqYYoie8NUmbk=
+	t=1718814862; cv=none; b=pw4qPTkWcdhDKFeyopcDaN5kJ64ciXSM6uNxlv7dp+VWco8eRWxvPlhWdaY3+9Dsg3wBVxTPMSzeITwUk7pUI1hEM61cHNyIMGHDScaKOVyeKxgq7gSkSf8B4qP+ccOTlR6OHKMXoRMFsXtEUM/j6Dfj2Z02Tf6a3kpQYBsg/MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718814816; c=relaxed/simple;
-	bh=Ta8Sp7Ef5wqCvaJKJzTkPbfoMX2m0YMCiZHVjpzF8UU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r3Ei6boISGkDnudIrbDiS0K1NcKULZ2eBwu4fA/LD3LOkiQvEMBkf4I7wG/QvDKvUw3oSi8ijYn+ka3hYavKKnhkU/NpM+esX9vHjh0Gspw1cj2cP+Ik1v2ZsdoyDNdnJRA/b0LncRtNnQqrXcNl6aoSHVt6DwaGXGLX3KK8mnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=xu2mTPt8; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1718814862; c=relaxed/simple;
+	bh=sWXfe3iROAv5nunMV/T4SIqsE90qqOYqjalWoYIQLNg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qNxiLOqevHKbV+xpCEUjtoUhxjGNgQBEDgx587una9HVfNdxzgRQzavboAAKlDYOjgdoH8Jpg6Ts8rnjACqVYBBD4ShKcu1BA5a9Nht+BU2YnTj8yhUsFzVMMMMFe6jXg10xv2n5wkpytLFtNGmwU+2v+RPZ8lqmOxBb/DNlMLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SODf2MPX; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="xu2mTPt8"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-421cd1e5f93so242735e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:33:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SODf2MPX"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-627e3368394so70417977b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1718814810; x=1719419610; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rIPz20UVm44Zy4ASydHzO2XhQDZwn0QGwAfzeXVt3zs=;
-        b=xu2mTPt8n9QBRwDCzpmBfTo0HBg2OlPmoW+xmwgFB0sQy54lDOtmhEKMbLk0CbsIgj
-         hM6F8oDL+imzBDVsTiQslHnRhELG+PTRebUwgqtwLLQf6aTMtQmouLYk2KPDl+i2jfwA
-         UeUX4P136N3GDfXLd8aUENmMoJPJe/tqbKvSc5E+r8y1zELKn1+8Ll2+HjmTNO+wbPqz
-         3MaJ+cHNSHwlD43gxB4kzbfMYvQxjd6eWileLD0yIREkjmQ7rccovat6AZ7t7IdsMIc4
-         XFcmZ1NQ3yo9JuxIhVorYcjMQcTCOLlAg9YmCspIeqJkFq1NlEuRE2uPlKnIe9zYAHC2
-         41dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718814810; x=1719419610;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1718814860; x=1719419660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rIPz20UVm44Zy4ASydHzO2XhQDZwn0QGwAfzeXVt3zs=;
-        b=cz7cqHbrGX6J/JIoILXmSSxhKEPGLy0v0V5YaU4UXkabq0v1OgC42+F7tVXBdqomHH
-         au6IoyftySfbjR9UtoZaXV+uMWxO4HehLtpKeUHBqZsrk8aZOFk0Lgar5jdw8UNpzf4a
-         LammV2r0cqfFJz3bPH4pwbutPmEsDFzsW2lV7Xw25bqtZIrPZB40025vs81wQqg026J5
-         FoJz7P29SaM+Y4PglkzudZrQk85akgvUtwWMkQd1xgHrrZL1sxjSm67F6nagg8904lo/
-         2wED221jWyrxRkbWY9H8+Y3/KjTGJm4Ua8ykIFdmgiEA5qnWpXXlhX190eD91Gjt7nl1
-         2AHA==
-X-Gm-Message-State: AOJu0YxVSzq51o1cnarf0tv5w8h+OnKIj/jP4X36IeDAhJ2PBvBngLit
-	EwCOmsc+95vHFNg2P0SRWBsp781hL8OkdwjzDACUVF9GmHDEBV+poHo+8OT2B2o=
-X-Google-Smtp-Source: AGHT+IEGFMuNQUPiXJTZBC5j75+qHJBgRGLwWzeeW7PaWPGcG+eLzWp6iK8F1zc/2O/Qj/r1TFhABg==
-X-Received: by 2002:adf:a1c3:0:b0:35f:22e3:1e0c with SMTP id ffacd0b85a97d-36319d686cbmr1902053f8f.69.1718814809864;
-        Wed, 19 Jun 2024 09:33:29 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3639a18bf5esm2085296f8f.88.2024.06.19.09.33.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 09:33:29 -0700 (PDT)
-Date: Wed, 19 Jun 2024 18:33:18 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Omer Shpigelman <oshpigelman@habana.ai>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	ogabbay@kernel.org, zyehudai@habana.ai
-Subject: Re: [PATCH 00/15] Introduce HabanaLabs network drivers
-Message-ID: <ZnMITvpbjHR3cHGY@nanopsycho.orion>
-References: <20240613082208.1439968-1-oshpigelman@habana.ai>
+        bh=eTFDXI3lmE89xsXWjsBu8Z87GpVx8y3WY9kndQ0G3Gg=;
+        b=SODf2MPXUD/inhB9ZtlYlD84hfxYzjhXeiikobWzaM1pcA77EfeDJmsH9zNNRBorOA
+         D9c0VQUciNOCB76tfq1s13vwYnnZ3f+akptgtsehgEgReJj6k8Ikl6VaaJpFSxZgM5Mg
+         Q1wkeg3JatlgRzSUDRAxEVemsSh7IvC7cuRh+ghj/2WyCid2KD9oubusgrm0ulSEzZ7v
+         KkGV3xHoVjWtuQsYQd4YcL5CciyIFTwGsKk7Vot+J/cRaSb2rNNxHj2OBc74/k5h4AC4
+         jKbakHk1uvegVzJorWizxtmA/st3BoFe4NFgOkBY/dz5ocOTZPYnXaVOn2Jw8EdpCxOD
+         IFZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718814860; x=1719419660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eTFDXI3lmE89xsXWjsBu8Z87GpVx8y3WY9kndQ0G3Gg=;
+        b=ryLMDvuWTVc0M0rafvxvjt0rO6CtJBwoo8BIoryp4m4GT+c41FaX94t3dYBlQgCUR+
+         FHamXoXU9db2sqXwyKefC2kGhhTvrNI/b/rT3yoLKIfsoUozsGvcxXKBa3cBFHOL9DSy
+         tpiUqQPZmJ9N3W4T88pnv8/1bNcmYDMqLVF6P7lOmUaHCMwKTUuozMmkpqoumvrxFdYv
+         JZN0VZXv5xusU8CDaYqbVz2RzNJXPKDhqpjqNR+xbNeGuo58NHUJXZnXPg0cw8tY4Bk3
+         gsq8bgL2LTWGrK/Zo1eynKfkkSZV4T2Y/t8vLzQjKE2A0YL7s2cLY0bdV+k0qMCLA65e
+         kPiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUH2a5uNxThjnsFgNcaXWnIUV+58yFRZi2VmKm/LbH1QyoY1yOYipizQ8Ag4xUfJqdYrcXaejeWcJOhCeUSGMYr8qkSrJkiFxmyRvXI
+X-Gm-Message-State: AOJu0YyFXZVWHby5AJR8ov4FaIkxEhtrM/BJ9Yu30Biq4S55EmmI2GCi
+	hN9D/Fx9UMY5VbUdNcb04nLyINovfB5vr4QHi0znS2vRf1TcOg1YNphmZH52nhLeoiZACMnGxvq
+	AY+0nK4gFsPZUOqKjyA7QGNp/J+a/y+VhS6AS
+X-Google-Smtp-Source: AGHT+IHu6b6GzxTUmoaKY8FCnkWOQQ5arRuKCg2OzKx7h+qxUq7WqX1BaUl/DWaLG0aZ1MBJukslwKHs4gsEbHoMAg4=
+X-Received: by 2002:a05:690c:80f:b0:617:fe2a:a0aa with SMTP id
+ 00721157ae682-63a8d736f33mr33957447b3.6.1718814860138; Wed, 19 Jun 2024
+ 09:34:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613082208.1439968-1-oshpigelman@habana.ai>
+References: <20240415142436.2545003-1-roberto.sassu@huaweicloud.com>
+ <CAHC9VhTs8p1nTUXXea2JmF0FCEU6w39gwQRMtwACqM=+EBj1jw@mail.gmail.com>
+ <7cf03a6ba8dbf212623aab2dea3dac39482e8695.camel@huaweicloud.com>
+ <CAHC9VhSCw6RweTs6whAu4v6t4n7gxUWJtjmzY-UXrdzW0H+YJA@mail.gmail.com> <520d2dc2ff0091335a280a877fa9eb004af14309.camel@huaweicloud.com>
+In-Reply-To: <520d2dc2ff0091335a280a877fa9eb004af14309.camel@huaweicloud.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 19 Jun 2024 12:34:09 -0400
+Message-ID: <CAHC9VhRD1kBwqtkF+_cxCUCeNPp+0PAiNP-rG06me6gRQyYcyg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/14] security: digest_cache LSM
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: corbet@lwn.net, jmorris@namei.org, serge@hallyn.com, 
+	akpm@linux-foundation.org, shuah@kernel.org, mcoquelin.stm32@gmail.com, 
+	alexandre.torgue@foss.st.com, mic@digikod.net, 
+	linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, 
+	linux-integrity@vger.kernel.org, wufan@linux.microsoft.com, 
+	pbrobinson@gmail.com, zbyszek@in.waw.pl, hch@lst.de, mjg59@srcf.ucam.org, 
+	pmatilai@redhat.com, jannh@google.com, dhowells@redhat.com, jikos@kernel.org, 
+	mkoutny@suse.com, ppavlu@suse.com, petr.vorel@gmail.com, mzerqung@0pointer.de, 
+	kgold@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thu, Jun 13, 2024 at 10:21:53AM CEST, oshpigelman@habana.ai wrote:
->This patch set implements the HabanaLabs network drivers for Gaudi2 ASIC
->which is designed for scaling of AI neural networks training.
->The patch set includes the common code which is shared by all Gaudi ASICs
->and the Gaudi2 ASIC specific code. Newer ASICs code will be followed.
->All of these network drivers are modeled as an auxiliary devices to the
->parent driver.
+On Wed, Jun 19, 2024 at 11:55=E2=80=AFAM Roberto Sassu
+<roberto.sassu@huaweicloud.com> wrote:
+> On Wed, 2024-06-19 at 11:49 -0400, Paul Moore wrote:
+> > On Wed, Jun 19, 2024 at 3:59=E2=80=AFAM Roberto Sassu
+> > <roberto.sassu@huaweicloud.com> wrote:
+> > > On Tue, 2024-06-18 at 19:20 -0400, Paul Moore wrote:
+> > > > On Mon, Apr 15, 2024 at 10:25=E2=80=AFAM Roberto Sassu
+> > > > <roberto.sassu@huaweicloud.com> wrote:
+> > > > >
+> > > > > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > > > >
+> > > > > Integrity detection and protection has long been a desirable feat=
+ure, to
+> > > > > reach a large user base and mitigate the risk of flaws in the sof=
+tware
+> > > > > and attacks.
+> > > > >
+> > > > > However, while solutions exist, they struggle to reach the large =
+user
+> > > > > base, due to requiring higher than desired constraints on perform=
+ance,
+> > > > > flexibility and configurability, that only security conscious peo=
+ple are
+> > > > > willing to accept.
+> > > > >
+> > > > > This is where the new digest_cache LSM comes into play, it offers
+> > > > > additional support for new and existing integrity solutions, to m=
+ake
+> > > > > them faster and easier to deploy.
+> > > > >
+> > > > > The full documentation with the motivation and the solution detai=
+ls can be
+> > > > > found in patch 14.
+> > > > >
+> > > > > The IMA integration patch set will be introduced separately. Also=
+ a PoC
+> > > > > based on the current version of IPE can be provided.
+> > > >
+> > > > I'm not sure we want to implement a cache as a LSM.  I'm sure it wo=
+uld
+> > > > work, but historically LSMs have provided some form of access contr=
+ol,
+> > > > measurement, or other traditional security service.  A digest cache=
+,
+> > > > while potentially useful for a variety of security related
+> > > > applications, is not a security service by itself, it is simply a f=
+ile
+> > > > digest storage mechanism.
+> > >
+> > > Uhm, currently the digest_cache LSM is heavily based on the LSM
+> > > infrastructure:
+> >
+> > I understand that, but as I said previously, I don't believe that we
+> > want to support a LSM which exists solely to provide a file digest
+> > cache.  LSMs should be based around the idea of some type of access
+> > control, security monitoring, etc.
+> >
+> > Including a file digest cache in IMA, or implementing it as a
+> > standalone piece of kernel functionality, are still options.  If you
+> > want to pursue this, I would suggest that including the digest cache
+> > as part of IMA would be the easier of the two options; if it proves to
+> > be generally useful outside of IMA, it can always be abstracted out to
+> > a general kernel module/subsystem.
 >
->The newly added drivers are Core Network (CN), Ethernet and InfiniBand.
->All of these drivers are based on the existing habanalabs driver which
->serves as the compute driver and the entire platform.
->The habanalabs driver probes the network drivers which configure the
->relevant NIC HW of the device. In addition, it continuously communicates
->with the CN driver for providing some services which are not NIC specific
->e.g. PCI, MMU, FW communication etc.
->
->See the drivers scheme at:
->Documentation/networking/device_drivers/ethernet/intel/hbl.rst
->
->The CN driver is both a parent and a son driver. It serves as the common
->layer of many shared operations that are required by both EN and IB
->drivers.
->
->The Gaudi2 NIC HW is composed of 48 physical lanes, 56Gbps each. Each pair
->of lanes represent a 100Gbps logical port.
+> Ok. I thought about IPE and eBPF as potential users. But if you think
+> that adding as part of IMA would be easier, I could try to pursue that.
 
-What do you mean by "logical port"? Is it a separate netdevice. So you
-have 24 netdevices visible on the system? How the physical port/ports
-look like? How do you model that in devlink? Do you support port
-splitting?
+It isn't clear to me how this would interact with IPE and/or eBPF, but
+if you believe there is value there I would encourage you to work with
+those subsystem maintainers.  If the consensus is that a general file
+digest cache is useful then you should pursue the digest cache as a
+kernel subsystem, just not a LSM.
 
->
->The NIC HW was designed specifically for scaling AI training.
->Hence it basically functions as a regular NIC device but it is tuned for
->its dedicated purpose. As a result, the NIC HW supports Ethernet traffic
->and RDMA over modified ROCEv2 protocol.
->For example, with respect to the IB driver, the HW supports a single
->context and a single PD. The reason for this is that the operational use
->case of AI training for Gaudi2 consists of a single user
->application/process.
->Another example related to the IB driver is the lack of MR since a single
->application/process can share the entire MMU with the compute device.
->Moreover, the memory allocation of user data buffers which are used for
->RDMA communication is done via the habanalabs compute driver uAPI.
->With respect to the Ethernet driver, since the Ethernet flow is used
->mainly for control, the HW is not performance tuned e.g. it assumes a
->contiguous memory for the Rx buffers. Thus the EN driver needs to copy the
->Rx packets from the Rx buffer into the skb memory.
->
->The first 8 patches implement the CN driver.
->The next 2 patches implement the EN driver.
->The next 2 patches implement the IB driver.
->The last 3 patches modify the compute driver to support the CN driver.
->
->The patches are rebased on v6.10-rc3 tag:
->https://github.com/torvalds/linux/releases/tag/v6.10-rc3
->
->The patches are also available at:
->https://github.com/HabanaAI/drivers.gpu.linux-nic.kernel/tree/hbl_next
->
->The user-mode of the driver is being reviewed at:
->https://github.com/linux-rdma/rdma-core/pull/1472
->
->Any feedback, comment or question is welcome.
->
->Thanks,
->Omer
->
->Omer Shpigelman (15):
->  net: hbl_cn: add habanalabs Core Network driver
->  net: hbl_cn: memory manager component
->  net: hbl_cn: physical layer support
->  net: hbl_cn: QP state machine
->  net: hbl_cn: memory trace events
->  net: hbl_cn: debugfs support
->  net: hbl_cn: gaudi2: ASIC register header files
->  net: hbl_cn: gaudi2: ASIC specific support
->  net: hbl_en: add habanalabs Ethernet driver
->  net: hbl_en: gaudi2: ASIC specific support
->  RDMA/hbl: add habanalabs RDMA driver
->  RDMA/hbl: direct verbs support
->  accel/habanalabs: network scaling support
->  accel/habanalabs/gaudi2: CN registers header files
->  accel/habanalabs/gaudi2: network scaling support
->
-> .../ABI/testing/debugfs-driver-habanalabs_cn  |   195 +
-> .../device_drivers/ethernet/index.rst         |     1 +
-> .../device_drivers/ethernet/intel/hbl.rst     |    82 +
-> MAINTAINERS                                   |    33 +
-> drivers/accel/habanalabs/Kconfig              |     1 +
-> drivers/accel/habanalabs/Makefile             |     3 +
-> drivers/accel/habanalabs/cn/Makefile          |     2 +
-> drivers/accel/habanalabs/cn/cn.c              |   815 +
-> drivers/accel/habanalabs/cn/cn.h              |   133 +
-> .../habanalabs/common/command_submission.c    |     2 +-
-> drivers/accel/habanalabs/common/device.c      |    23 +
-> drivers/accel/habanalabs/common/firmware_if.c |    20 +
-> drivers/accel/habanalabs/common/habanalabs.h  |    43 +-
-> .../accel/habanalabs/common/habanalabs_drv.c  |    37 +-
-> .../habanalabs/common/habanalabs_ioctl.c      |     2 +
-> drivers/accel/habanalabs/common/memory.c      |   123 +
-> drivers/accel/habanalabs/gaudi/gaudi.c        |    14 +-
-> drivers/accel/habanalabs/gaudi2/Makefile      |     2 +-
-> drivers/accel/habanalabs/gaudi2/gaudi2.c      |   440 +-
-> drivers/accel/habanalabs/gaudi2/gaudi2P.h     |    41 +-
-> drivers/accel/habanalabs/gaudi2/gaudi2_cn.c   |   424 +
-> drivers/accel/habanalabs/gaudi2/gaudi2_cn.h   |    42 +
-> .../habanalabs/gaudi2/gaudi2_coresight.c      |   145 +-
-> .../accel/habanalabs/gaudi2/gaudi2_security.c |    16 +-
-> drivers/accel/habanalabs/goya/goya.c          |     6 +
-> .../include/gaudi2/asic_reg/gaudi2_regs.h     |    10 +-
-> .../include/gaudi2/asic_reg/nic0_phy_regs.h   |    59 +
-> .../nic0_qm0_axuser_nonsecured_regs.h         |    61 +
-> .../include/gaudi2/asic_reg/nic0_qpc1_regs.h  |   905 +
-> .../include/gaudi2/asic_reg/nic0_rxe0_regs.h  |   725 +
-> .../include/gaudi2/asic_reg/nic0_rxe1_regs.h  |   725 +
-> .../include/gaudi2/asic_reg/nic0_txe0_regs.h  |   529 +
-> .../include/gaudi2/asic_reg/nic0_txs0_regs.h  |   289 +
-> .../include/hw_ip/nic/nic_general.h           |    15 +
-> drivers/infiniband/Kconfig                    |     1 +
-> drivers/infiniband/hw/Makefile                |     1 +
-> drivers/infiniband/hw/hbl/Kconfig             |    18 +
-> drivers/infiniband/hw/hbl/Makefile            |    12 +
-> drivers/infiniband/hw/hbl/hbl.h               |   326 +
-> drivers/infiniband/hw/hbl/hbl_encap.c         |   216 +
-> drivers/infiniband/hw/hbl/hbl_main.c          |   493 +
-> drivers/infiniband/hw/hbl/hbl_query_port.c    |    96 +
-> drivers/infiniband/hw/hbl/hbl_set_port_ex.c   |    96 +
-> drivers/infiniband/hw/hbl/hbl_usr_fifo.c      |   252 +
-> drivers/infiniband/hw/hbl/hbl_verbs.c         |  2686 +
-> drivers/net/ethernet/intel/Kconfig            |    38 +
-> drivers/net/ethernet/intel/Makefile           |     2 +
-> drivers/net/ethernet/intel/hbl_cn/Makefile    |    14 +
-> .../net/ethernet/intel/hbl_cn/common/Makefile |     3 +
-> .../net/ethernet/intel/hbl_cn/common/hbl_cn.c |  5984 ++
-> .../net/ethernet/intel/hbl_cn/common/hbl_cn.h |  1666 +
-> .../intel/hbl_cn/common/hbl_cn_debugfs.c      |  1457 +
-> .../ethernet/intel/hbl_cn/common/hbl_cn_drv.c |   240 +
-> .../intel/hbl_cn/common/hbl_cn_memory.c       |   368 +
-> .../ethernet/intel/hbl_cn/common/hbl_cn_phy.c |   234 +
-> .../ethernet/intel/hbl_cn/common/hbl_cn_qp.c  |   491 +
-> .../net/ethernet/intel/hbl_cn/gaudi2/Makefile |     3 +
-> .../asic_reg/arc_farm_kdma_ctx_axuser_masks.h |   135 +
-> .../asic_reg/dcore0_sync_mngr_objs_regs.h     | 43543 +++++++++++++++
-> .../asic_reg/gaudi2_blocks_linux_driver.h     | 45068 ++++++++++++++++
-> .../hbl_cn/gaudi2/asic_reg/gaudi2_regs.h      |    77 +
-> .../asic_reg/nic0_mac_ch0_mac_128_masks.h     |   339 +
-> .../asic_reg/nic0_mac_ch0_mac_128_regs.h      |   101 +
-> .../asic_reg/nic0_mac_ch0_mac_pcs_masks.h     |   713 +
-> .../asic_reg/nic0_mac_ch0_mac_pcs_regs.h      |   271 +
-> .../asic_reg/nic0_mac_ch1_mac_pcs_regs.h      |   271 +
-> .../asic_reg/nic0_mac_ch2_mac_pcs_regs.h      |   271 +
-> .../asic_reg/nic0_mac_ch3_mac_pcs_regs.h      |   271 +
-> .../nic0_mac_glob_stat_control_reg_masks.h    |    67 +
-> .../nic0_mac_glob_stat_control_reg_regs.h     |    37 +
-> .../asic_reg/nic0_mac_glob_stat_rx0_regs.h    |    93 +
-> .../asic_reg/nic0_mac_glob_stat_rx2_regs.h    |    93 +
-> .../asic_reg/nic0_mac_glob_stat_tx0_regs.h    |    75 +
-> .../asic_reg/nic0_mac_glob_stat_tx2_regs.h    |    75 +
-> .../gaudi2/asic_reg/nic0_mac_rs_fec_regs.h    |   157 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_phy_masks.h   |    77 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_phy_regs.h    |    59 +
-> .../nic0_qm0_axuser_nonsecured_regs.h         |    61 +
-> .../asic_reg/nic0_qpc0_axuser_cong_que_regs.h |    61 +
-> .../asic_reg/nic0_qpc0_axuser_db_fifo_regs.h  |    61 +
-> .../asic_reg/nic0_qpc0_axuser_err_fifo_regs.h |    61 +
-> .../nic0_qpc0_axuser_ev_que_lbw_intr_regs.h   |    61 +
-> .../asic_reg/nic0_qpc0_axuser_qpc_req_regs.h  |    61 +
-> .../asic_reg/nic0_qpc0_axuser_qpc_resp_regs.h |    61 +
-> .../asic_reg/nic0_qpc0_axuser_rxwqe_regs.h    |    61 +
-> .../nic0_qpc0_axuser_txwqe_lbw_qman_bp_regs.h |    61 +
-> .../nic0_qpc0_dbfifo0_ci_upd_addr_regs.h      |    27 +
-> .../nic0_qpc0_dbfifosecur_ci_upd_addr_regs.h  |    27 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_qpc0_masks.h  |   963 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_qpc0_regs.h   |   905 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_qpc1_regs.h   |   905 +
-> .../gaudi2/asic_reg/nic0_rxb_core_masks.h     |   459 +
-> .../gaudi2/asic_reg/nic0_rxb_core_regs.h      |   665 +
-> .../nic0_rxe0_axuser_axuser_cq0_regs.h        |    61 +
-> .../nic0_rxe0_axuser_axuser_cq1_regs.h        |    61 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_rxe0_masks.h  |   705 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_rxe0_regs.h   |   725 +
-> .../asic_reg/nic0_rxe0_wqe_aruser_regs.h      |    61 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_rxe1_regs.h   |   725 +
-> .../gaudi2/asic_reg/nic0_serdes0_masks.h      |  7163 +++
-> .../gaudi2/asic_reg/nic0_serdes0_regs.h       |  1679 +
-> .../gaudi2/asic_reg/nic0_serdes1_regs.h       |  1679 +
-> .../asic_reg/nic0_tmr_axuser_tmr_fifo_regs.h  |    61 +
-> .../nic0_tmr_axuser_tmr_free_list_regs.h      |    61 +
-> .../asic_reg/nic0_tmr_axuser_tmr_fsm_regs.h   |    61 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_tmr_masks.h   |   361 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_tmr_regs.h    |   183 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_txb_regs.h    |   167 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_txe0_masks.h  |   759 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_txe0_regs.h   |   529 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_txs0_masks.h  |   555 +
-> .../hbl_cn/gaudi2/asic_reg/nic0_txs0_regs.h   |   289 +
-> .../nic0_umr0_0_completion_queue_ci_1_regs.h  |    27 +
-> .../nic0_umr0_0_unsecure_doorbell0_regs.h     |    31 +
-> .../nic0_umr0_0_unsecure_doorbell1_regs.h     |    31 +
-> .../gaudi2/asic_reg/prt0_mac_core_masks.h     |   137 +
-> .../gaudi2/asic_reg/prt0_mac_core_regs.h      |    67 +
-> .../ethernet/intel/hbl_cn/gaudi2/gaudi2_cn.c  |  5689 ++
-> .../ethernet/intel/hbl_cn/gaudi2/gaudi2_cn.h  |   427 +
-> .../intel/hbl_cn/gaudi2/gaudi2_cn_debugfs.c   |   319 +
-> .../intel/hbl_cn/gaudi2/gaudi2_cn_eq.c        |   732 +
-> .../intel/hbl_cn/gaudi2/gaudi2_cn_phy.c       |  2743 +
-> drivers/net/ethernet/intel/hbl_en/Makefile    |    12 +
-> .../net/ethernet/intel/hbl_en/common/Makefile |     3 +
-> .../net/ethernet/intel/hbl_en/common/hbl_en.c |  1170 +
-> .../net/ethernet/intel/hbl_en/common/hbl_en.h |   208 +
-> .../intel/hbl_en/common/hbl_en_dcbnl.c        |   101 +
-> .../ethernet/intel/hbl_en/common/hbl_en_drv.c |   211 +
-> .../intel/hbl_en/common/hbl_en_ethtool.c      |   452 +
-> .../net/ethernet/intel/hbl_en/gaudi2/Makefile |     2 +
-> .../ethernet/intel/hbl_en/gaudi2/gaudi2_en.c  |   728 +
-> .../ethernet/intel/hbl_en/gaudi2/gaudi2_en.h  |    53 +
-> .../intel/hbl_en/gaudi2/gaudi2_en_dcbnl.c     |    32 +
-> include/linux/habanalabs/cpucp_if.h           |   125 +-
-> include/linux/habanalabs/hl_boot_if.h         |     9 +-
-> include/linux/net/intel/cn.h                  |   474 +
-> include/linux/net/intel/cn_aux.h              |   298 +
-> include/linux/net/intel/cni.h                 |   636 +
-> include/linux/net/intel/gaudi2.h              |   432 +
-> include/linux/net/intel/gaudi2_aux.h          |    94 +
-> include/trace/events/habanalabs_cn.h          |   116 +
-> include/uapi/drm/habanalabs_accel.h           |    10 +-
-> include/uapi/rdma/hbl-abi.h                   |   204 +
-> include/uapi/rdma/hbl_user_ioctl_cmds.h       |    66 +
-> include/uapi/rdma/hbl_user_ioctl_verbs.h      |   106 +
-> include/uapi/rdma/ib_user_ioctl_verbs.h       |     1 +
-> 146 files changed, 148514 insertions(+), 70 deletions(-)
-> create mode 100644 Documentation/ABI/testing/debugfs-driver-habanalabs_cn
-> create mode 100644 Documentation/networking/device_drivers/ethernet/intel/hbl.rst
-> create mode 100644 drivers/accel/habanalabs/cn/Makefile
-> create mode 100644 drivers/accel/habanalabs/cn/cn.c
-> create mode 100644 drivers/accel/habanalabs/cn/cn.h
-> create mode 100644 drivers/accel/habanalabs/gaudi2/gaudi2_cn.c
-> create mode 100644 drivers/accel/habanalabs/gaudi2/gaudi2_cn.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_phy_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_qm0_axuser_nonsecured_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_qpc1_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_rxe0_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_rxe1_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_txe0_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/gaudi2/asic_reg/nic0_txs0_regs.h
-> create mode 100644 drivers/accel/habanalabs/include/hw_ip/nic/nic_general.h
-> create mode 100644 drivers/infiniband/hw/hbl/Kconfig
-> create mode 100644 drivers/infiniband/hw/hbl/Makefile
-> create mode 100644 drivers/infiniband/hw/hbl/hbl.h
-> create mode 100644 drivers/infiniband/hw/hbl/hbl_encap.c
-> create mode 100644 drivers/infiniband/hw/hbl/hbl_main.c
-> create mode 100644 drivers/infiniband/hw/hbl/hbl_query_port.c
-> create mode 100644 drivers/infiniband/hw/hbl/hbl_set_port_ex.c
-> create mode 100644 drivers/infiniband/hw/hbl/hbl_usr_fifo.c
-> create mode 100644 drivers/infiniband/hw/hbl/hbl_verbs.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/Makefile
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/Makefile
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn_debugfs.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn_drv.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn_memory.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn_phy.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/common/hbl_cn_qp.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/Makefile
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/arc_farm_kdma_ctx_axuser_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/dcore0_sync_mngr_objs_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/gaudi2_blocks_linux_driver.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/gaudi2_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch0_mac_128_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch0_mac_128_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch0_mac_pcs_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch0_mac_pcs_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch1_mac_pcs_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch2_mac_pcs_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_ch3_mac_pcs_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_glob_stat_control_reg_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_glob_stat_control_reg_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_glob_stat_rx0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_glob_stat_rx2_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_glob_stat_tx0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_glob_stat_tx2_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_mac_rs_fec_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_phy_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_phy_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qm0_axuser_nonsecured_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_cong_que_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_db_fifo_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_err_fifo_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_ev_que_lbw_intr_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_qpc_req_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_qpc_resp_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_rxwqe_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_axuser_txwqe_lbw_qman_bp_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_dbfifo0_ci_upd_addr_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_dbfifosecur_ci_upd_addr_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_qpc1_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxb_core_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxb_core_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxe0_axuser_axuser_cq0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxe0_axuser_axuser_cq1_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxe0_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxe0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxe0_wqe_aruser_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_rxe1_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_serdes0_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_serdes0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_serdes1_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_tmr_axuser_tmr_fifo_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_tmr_axuser_tmr_free_list_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_tmr_axuser_tmr_fsm_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_tmr_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_tmr_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_txb_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_txe0_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_txe0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_txs0_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_txs0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_umr0_0_completion_queue_ci_1_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_umr0_0_unsecure_doorbell0_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/nic0_umr0_0_unsecure_doorbell1_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/prt0_mac_core_masks.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/asic_reg/prt0_mac_core_regs.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/gaudi2_cn.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/gaudi2_cn.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/gaudi2_cn_debugfs.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/gaudi2_cn_eq.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_cn/gaudi2/gaudi2_cn_phy.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/Makefile
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/common/Makefile
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/common/hbl_en.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/common/hbl_en.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/common/hbl_en_dcbnl.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/common/hbl_en_drv.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/common/hbl_en_ethtool.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/gaudi2/Makefile
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/gaudi2/gaudi2_en.c
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/gaudi2/gaudi2_en.h
-> create mode 100644 drivers/net/ethernet/intel/hbl_en/gaudi2/gaudi2_en_dcbnl.c
-> create mode 100644 include/linux/net/intel/cn.h
-> create mode 100644 include/linux/net/intel/cn_aux.h
-> create mode 100644 include/linux/net/intel/cni.h
-> create mode 100644 include/linux/net/intel/gaudi2.h
-> create mode 100644 include/linux/net/intel/gaudi2_aux.h
-> create mode 100644 include/trace/events/habanalabs_cn.h
-> create mode 100644 include/uapi/rdma/hbl-abi.h
-> create mode 100644 include/uapi/rdma/hbl_user_ioctl_cmds.h
-> create mode 100644 include/uapi/rdma/hbl_user_ioctl_verbs.h
->
->-- 
->2.34.1
->
->
+--=20
+paul-moore.com
