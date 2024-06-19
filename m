@@ -1,169 +1,215 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EB28627D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FA712D758
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793416; cv=none; b=aK/7oAcR+UVuPjzckieSaWn5JwG4jXEYThiTtiluPSO65Ndgy3sdcMmjv3woiFtrEwDZB3Mt/K60PQHdbJX5sf1VHby/U+R4oxKQXN+mEYkRQGSPSjmUGmI22Mo1gLMhJPsVSUFvyQjhOsQUulO1mgzfQYIj5EXAhD/mR8THo6Q=
+	t=1718793442; cv=none; b=HZaJwt0E4F9c4AREZLV0HqtveHu3+qjOk5pphw64ZlbCa/C5tXKKglWcAkj59DL97iM6fq7AHgLUmescscWQbLNXr4k4s0lLyfeujn6/K3AGFex9kQunKsEneXAaQivJgXbNQemINUXj0Ff8Sx6ztZCSC6/MehFmurEbDUwbPMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793416; c=relaxed/simple;
-	bh=V+zkefgG2yB/b4EnpDYiGPTNbaPWxrXT6lHEYgMVupg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S5WsKnQ5bjYUuAHI+hlZbCD8hWTyJhXXg7RlJrr7OxsgKFy5gKpNuYf6Z3IiwExss9DJKnqUHt8eU6DQx6NeBEpqOQVgH3JL/iigmya2e5ZyoKObYKgTTWFZa9FerRFjePreUXzGxEvtNIqWh0BsCUXrlIOVCOHSXpV5Mdlh8Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HR5JMDnP; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718793442; c=relaxed/simple;
+	bh=QVdS4EVmsiAqwh66v/dqZLx4zIuIgoTRsCFNS+51NNM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RRm/URawLbGVWaCly7VCvtAPkVOShfJUuvkY4exxpHhxCYA9wrrtkYPcD2GCDbwIq2NeKIfVjf+T/5YShx3b9Y0E1Xgo1LWPTiXblVz+NXdKc6JxxirHcpQWy/Iwesu9Q5pBJGHqimR53JS3kItLgZ7dpdr/PWvTI28CD8pzyHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=f5ifjXD1; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HR5JMDnP"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-250c0555a63so3132703fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:36:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="f5ifjXD1"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-44056295c8cso30743921cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718793413; x=1719398213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hurYq2hqrfaP8z7IMDpEb001Nq0f8ICX75CeBzd/9Fc=;
-        b=HR5JMDnPi7m82EF4c4ZaNL/gy1ER209UsTqa95VQ6cX2TXKBca1maAwKm9e4vuK/cy
-         PcXRVumtdDslawvlJyiCstlsYXccKJMOec9FlYg24TJwqo6lRV4QvIrbe8obMnPhEM72
-         hpcevxWnF14LuBY0qV56QALMRlBYeOLWRjBtkEihmaqAVBO3GchRLxaIZayYytvvvhDc
-         q0mwquLWI67mcVOCkcnVOmryL+dXPU7zflN8tHMrxdz7+SdK8HBkMUMMT2Ao3KaSPGXm
-         t6zP8p8GQtnx98/bd9J9m8mULksXwNcxuhx324UQG1ZjqgQTnT+A4qxwqADTqIZhk3zd
-         ihog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718793413; x=1719398213;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=broadcom.com; s=google; t=1718793439; x=1719398239; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hurYq2hqrfaP8z7IMDpEb001Nq0f8ICX75CeBzd/9Fc=;
-        b=TCb/9oyRHzuOLDVfobsmrnhYtw8UJmzAFHKzL9o/1aeatMbHeMpxWXmSRacI5HODo2
-         YsRD1Clr9isMZkmzqUXEC3iQSlSIYa3/zCja5uMN2uzCWvtzOxr3DewoAx0GQNGOqRA3
-         7YtpI3HLyXgapZOZ5ZdOJ49F6B3QWUhILyGUYaU1XaUPD2q+Pe70gLLqt54s6BUEBwsM
-         4GI6SVhCXgoLJScTmeATVBniZZyoDjANOj5ooXiwsWCKzU02pO3TKoXvknHh/OBT96g/
-         auIrkD8je1Oh5DndrxyUyBRVmUUPBs58eHTS7nfTCSm6tjTthEp69deqvm42imJD26Nc
-         zdyw==
-X-Gm-Message-State: AOJu0YxOjCXg74an2lkMB0Ho26QMr9oQkF+Y2GzTdnhNnvGUOItPsGOQ
-	JJGiPYoN/Gmc40W4bzOmOEZTSP7On/9x14rlwqN2y30TDuC4UIrHHXuAaw==
-X-Google-Smtp-Source: AGHT+IFiF5ZX/hZdd1S7dWVoxbV2R7P9VtDX+sdiklBpNbkJCa7s/4Ib+p8BbrWfXHuoHdoDstr/iA==
-X-Received: by 2002:a05:6870:b69e:b0:254:b0b0:9328 with SMTP id 586e51a60fabf-25c948eda87mr2399117fac.4.1718793412798;
-        Wed, 19 Jun 2024 03:36:52 -0700 (PDT)
-Received: from localhost ([198.11.176.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cc96aee8sm10357692b3a.73.2024.06.19.03.36.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2024 03:36:52 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH] workqueue: Avoid nr_active manipulation in grabbing inactive items
-Date: Wed, 19 Jun 2024 18:39:34 +0800
-Message-Id: <20240619103934.2701-1-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+        bh=616E1Ud3Jt3fbVRpync6wGXxThIQapq1aJuL8FcuV7w=;
+        b=f5ifjXD1A6imKy1N/GfMu+P93dHTtQphc7MqRqUgq95Of8S1tWJNV3wxND+7BEPgIK
+         G/57dHxmUvhBl28zrFWzBptezgBgGuJ9t/CpiVQkZ7pLN2XRCdmcgZG8qfdcjbS15xAT
+         PhDFX28XmEwD87hUhocXlWAExazUr6vsiMdTk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718793439; x=1719398239;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=616E1Ud3Jt3fbVRpync6wGXxThIQapq1aJuL8FcuV7w=;
+        b=LN4FBLVBG6DoPBmjhQbi+QEE9EjDPEmXMgbtq2Yi/95OdRtycV3AriyOUcfNQZvGWN
+         hyAgW+9gztA+gI2NM3DQULAILYQPcccGIhgagKNHMaNNgmaEYXlbSHowcXSDtl0dz0tg
+         KrM3GQmADg+qsD1WmS38oWG4vb130HtJTSnklHxJTG2m1rrcWhLoWGmams8bWoCuu1EN
+         EqcXUZipj08fSbUZ76Fj8G14di6kgH4dIVAPiULgNH7KHGsexHV0Mj06RPJEaMF2k2BZ
+         ROr6rE/G9V4IYwN/VxdBghI6ghBu1dPqML+boP8/3ADQVtuSIgnLhkja7qdJ2bPxYOJW
+         t/uA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOmnBgIQ2TkZ2XEI1+6Ja0yRSuAteVxGUXRwjVbAl4G0sdbTq0q+efU/LgAp9rdzi3itRxSa+HaTe1NL4rRGoPRlpu27Hu5eI8dwDK
+X-Gm-Message-State: AOJu0YyuV3qxjiUPz+AXdW8oD14+pwgLDwY9LgOak8l0nfZ8ltP5+LzA
+	VakXZXsAkKBHSAnHW5mAIiwhK0fbupBViz/cpz+TC7z7ZlfZ+x1Gax7DdNlDJQ==
+X-Google-Smtp-Source: AGHT+IETFw8XE3jjIGRxlworL/MIqx6CvVqqpkPzy8G8yJjvddTBNSrTwYpir8WwzZmLq4upwdcRzg==
+X-Received: by 2002:ac8:5984:0:b0:441:122b:8ef4 with SMTP id d75a77b69052e-444a79e1f8dmr27175781cf.37.1718793439128;
+        Wed, 19 Jun 2024 03:37:19 -0700 (PDT)
+Received: from [192.168.75.133] (mobile-166-172-56-136.mycingular.net. [166.172.56.136])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441f2fd020csm64125031cf.64.2024.06.19.03.37.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 03:37:18 -0700 (PDT)
+Message-ID: <daf9e1ad-0193-4775-95c2-d4cfe3edd3ba@broadcom.com>
+Date: Wed, 19 Jun 2024 11:37:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/4] dt-bindings: ethernet-phy: add optional brr-mode
+ flag
+To: =?UTF-8?Q?Kamil_Hor=C3=A1k_-_2N?= <kamilh@axis.com>,
+ bcm-kernel-feedback-list@broadcom.com, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240617113841.3694934-1-kamilh@axis.com>
+ <20240617113841.3694934-4-kamilh@axis.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20240617113841.3694934-4-kamilh@axis.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000006615ab061b3bc843"
+
+--0000000000006615ab061b3bc843
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Current try_to_grab_pending() activates the inactive item and
-subsequently treats it as though it were a standard activated item.
 
-This approach prevents duplicating handling logic for both active and
-inactive items, yet the premature activation of an inactive item
-triggers trace_workqueue_activate_work(), yielding an unintended user
-space visible side effect.
+On 6/17/2024 12:38 PM, Kamil Horák - 2N wrote:
+> There is a group of PHY chips supporting BroadR-Reach link modes in
+> a manner allowing for more or less identical register usage as standard
+> Clause 22 PHY.
+> These chips support standard Ethernet link modes as well, however, the
+> circuitry is mutually exclusive and cannot be auto-detected.
+> The link modes in question are 100Base-T1 as defined in IEEE802.3bw,
+> based on Broadcom's 1BR-100 link mode, and newly defined 10Base-T1BRR
+> (1BR-10 in Broadcom documents).
+> 
+> Add optional brr-mode flag to switch the PHY to BroadR-Reach mode.
+> 
+> Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
 
-And the unnecessary increment of the nr_active, which is not a simple
-counter now, followed by a counteracted decrement, is inefficient and
-complicates the code.
-
-Just remove the nr_active manipulation code in grabbing inactive items.
-
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- kernel/workqueue.c | 42 +++++++++---------------------------------
- 1 file changed, 9 insertions(+), 33 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 003474c9a77d..25a7d9a1a7ae 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1683,33 +1683,6 @@ static void __pwq_activate_work(struct pool_workqueue *pwq,
- 	__clear_bit(WORK_STRUCT_INACTIVE_BIT, wdb);
- }
- 
--/**
-- * pwq_activate_work - Activate a work item if inactive
-- * @pwq: pool_workqueue @work belongs to
-- * @work: work item to activate
-- *
-- * Returns %true if activated. %false if already active.
-- */
--static bool pwq_activate_work(struct pool_workqueue *pwq,
--			      struct work_struct *work)
--{
--	struct worker_pool *pool = pwq->pool;
--	struct wq_node_nr_active *nna;
--
--	lockdep_assert_held(&pool->lock);
--
--	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
--		return false;
--
--	nna = wq_node_nr_active(pwq->wq, pool->node);
--	if (nna)
--		atomic_inc(&nna->nr);
--
--	pwq->nr_active++;
--	__pwq_activate_work(pwq, work);
--	return true;
--}
--
- static bool tryinc_node_nr_active(struct wq_node_nr_active *nna)
- {
- 	int max = READ_ONCE(nna->max);
-@@ -2116,7 +2089,7 @@ static int try_to_grab_pending(struct work_struct *work, u32 cflags,
- 	 */
- 	pwq = get_work_pwq(work);
- 	if (pwq && pwq->pool == pool) {
--		unsigned long work_data;
-+		unsigned long work_data = *work_data_bits(work);
- 
- 		debug_work_deactivate(work);
- 
-@@ -2125,13 +2098,17 @@ static int try_to_grab_pending(struct work_struct *work, u32 cflags,
- 		 * pwq->inactive_works since a queued barrier can't be
- 		 * canceled (see the comments in insert_wq_barrier()).
- 		 *
--		 * An inactive work item cannot be grabbed directly because
-+		 * An inactive work item cannot be deleted directly because
- 		 * it might have linked barrier work items which, if left
- 		 * on the inactive_works list, will confuse pwq->nr_active
--		 * management later on and cause stall.  Make sure the work
--		 * item is activated before grabbing.
-+		 * management later on and cause stall.  Move the linked
-+		 * barrier work items to the worklist when deleting the grabbed
-+		 * item. Also keep WORK_STRUCT_INACTIVE in work_data, so that
-+		 * it doesn't participate in nr_active management in later
-+		 * pwq_dec_nr_in_flight().
- 		 */
--		pwq_activate_work(pwq, work);
-+		if (work_data & WORK_STRUCT_INACTIVE)
-+			move_linked_works(work, &pwq->pool->worklist, NULL);
- 
- 		list_del_init(&work->entry);
- 
-@@ -2139,7 +2116,6 @@ static int try_to_grab_pending(struct work_struct *work, u32 cflags,
- 		 * work->data points to pwq iff queued. Let's point to pool. As
- 		 * this destroys work->data needed by the next step, stash it.
- 		 */
--		work_data = *work_data_bits(work);
- 		set_work_pool_and_keep_pending(work, pool->id,
- 					       pool_offq_flags(pool));
- 
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.19.1.6.gb485710b
+Florian
 
+--0000000000006615ab061b3bc843
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIFeTqP7vu3zHqMsB
+X7pNkYbV+h87Tk+TjSV6H1aZg1tGMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDYxOTEwMzcxOVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQC4/LPx/O6wl6Mp1FHy1McM8i0C1jB/GwDC
+Tbiy2FrYIlVazWJy6DaSenFYfhkPlr+okeO99Spnpe/oFx7A3iMRm+ftcRE67h6mepV1QUV+Ygnq
+RQFt3nuw4K8AF+sinajg/tkCLgxd/AG+E5qGcv3VjX6j3QOHRRwhnAvJ2mRMeIbBGwNM1pD8JQ63
+7DUc6njewssL8khcYQHFPV6OFonF3XEOR3Zn8s+Niqh2hZXFuyWqvBt2GBQGX39mCDaARUeGxfIv
+jjCaEfjrxSQOofC2n0IhG+JxsLuA78PxFXnRHT8WebhtgNnw+u7dqR9NnJ517sU0wr6RsX0VVZc1
+oEgt
+--0000000000006615ab061b3bc843--
