@@ -1,157 +1,118 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188C179950;
-	Wed, 19 Jun 2024 12:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD9C1482F9;
+	Wed, 19 Jun 2024 12:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799827; cv=none; b=UT4Ep3GtF9KfBLiLNTvi8AGx0uY9odZPwzZi5S8+u/EUNmv8pCJ65/4y0fB/lTXW0v8Epjvj0KTg6KI4lmeEymmzOmVhYSeHC+/0u/noB4vX93LmfCb/XJj2TU+1eFav7pO3j+k9DZQwfvlMklNKxgYpf+U8Gnc+0GIc6q8MM5s=
+	t=1718799829; cv=none; b=do6XNl32te4m3kBxW6vw8oJxoQ+GqaDZqIcOOiESzccaf7WrS/fsGeMNM3NmynyRGnBtU+U5tThpXCB2jE8fNoDteB9CNOVVHEp3GedRFGq3bTb5f0XDRG/avqqfXXmsGctcIBdSE1vFYumr0UBPF3ZnT8nwNLxXrB5fHcWaU4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799827; c=relaxed/simple;
-	bh=Olzzvp24AOC4T+V7DJiEH5HUqYnKd+8BcbBEFc09ZE0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e/NVHX9CmfZg5C1rQpmEnxExFaPKIK63HIlKVkUwlEhFWcx+4ZxEpjP+kPqAQWaug/1KHpXj1+s5xVNC3hoee1pt0AlnTptv23FHvxFun84IgvqstdEzdtEzP9J9Z2XTmwQMp9edg/poTXEOPu757+zvsYN3tzUexlQDG2YIzlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=IHiDIbhY; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1718799829; c=relaxed/simple;
+	bh=0Wajh9hf8aQ4w6VBs7C1QP5+1bMP5jm1LhzQTcPPkGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OAcadCn6en6syb/Gj8AeWtg/+xqtDWYwiO+gp1o74yNP9RfIdCQqLQPjlUeQA69EsaO6NiFplv6T3qrEpsXc84EJUzN5PjCrqLb3t6xbpGWD/3yi/DBcb55F0tJdKGskUGw8S4uXXpNH5K4Xox9ypA5NhHYWy/3b0+wDCnr7yY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=AQ0a9Yip; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=MgJdwiPO reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="IHiDIbhY"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9Tife005209;
-	Wed, 19 Jun 2024 08:23:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=vNRa5Oiplrn2Xgjadf1n6RmThiC
-	4FkAUT3lbnFrTe1s=; b=IHiDIbhYhXUbFh02BxTRFqdV2aMnr1reWY6XSdLjFTh
-	uFXixAQHI37sJphLmIH6r7jmrIOj0YLYd6tLJgA/RyDgqxfSxAL1/i8ENxiCu6DA
-	hOJyhYyK0TEoOj7nc0EEQNEWXRq6NyrainPEHYZ3vKta8okBRnEU0xe/jHEefLWP
-	eDoUPSDI6JnoqP6EqP3TRClBSDbq91fWK/Ow1pkOaOHvKjsXegr2sKMH/6veNHEZ
-	mzPtYpGUUgqJGtsgYMJ8bOe0NrWeWTOQmADQAj2Zv8zXkkDts6Zug/HHWcl6yWzE
-	2pfoI0+o2J5GmxAixPeP6ibmrvgGPSr3kKzWJfq++2A==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yuj8qjugv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 08:23:25 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 45JCNOQS057286
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Jun 2024 08:23:24 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 19 Jun 2024 08:23:23 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 19 Jun 2024 08:23:23 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 19 Jun 2024 08:23:23 -0400
-Received: from HYB-hYN1yfF7zRm.ad.analog.com (HYB-hYN1yfF7zRm.ad.analog.com [10.48.65.166])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45JCN6iD017140;
-	Wed, 19 Jun 2024 08:23:09 -0400
-From: Ramona Alexandra Nechita <ramona.nechita@analog.com>
-To: <linux-iio@vger.kernel.org>
-CC: Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Cosmin Tanislav
-	<cosmin.tanislav@analog.com>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Andy
- Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Nuno Sa
-	<nuno.sa@analog.com>,
-        Marcelo Schmitt <marcelo.schmitt@analog.com>,
-        Maksim
- Kiselev <bigunclemax@gmail.com>,
-        Marius Cristea
-	<marius.cristea@microchip.com>,
-        "Mike Looijmans" <mike.looijmans@topic.nl>,
-        Ivan Mikhaylov <fr0st61te@gmail.com>,
-        Okan Sahin <okan.sahin@analog.com>,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Lee Jones <lee@kernel.org>, Liam Beguin <liambeguin@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 0/3] ad777x driver addressing patch comments
-Date: Wed, 19 Jun 2024 15:22:42 +0300
-Message-ID: <20240619122301.22737-1-ramona.nechita@analog.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="AQ0a9Yip";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="MgJdwiPO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1718799825; x=1750335825;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ub8TRoLtI7o1oH6Fs2P1jN0+GX8tw7Fve8YcIfkXSyM=;
+  b=AQ0a9YipNGB7OTTzb/+8KNS0LSdaSXn8SFW6ttDkzxaVDY9NngNqsLnU
+   Q6ThRibSGpXGdkDZ9Qd0rzLDSnlIgvV5WmFZD9mIraVylt6Uayz5qj1rl
+   VivYCYcrMHQemLjdexy8wGgRZksXG8FcZ3VzgFg16ETzddaxgm8MPf6ZE
+   y5QwTsksOoiYacJtYBl1cn+QV+X0sBmbqHWMe2A1Ll5LheFOsOkWLL4Ce
+   Y94mggeHnTeEtqho1Gi3BJoNcDflrBS61lrNcCVYZydzkQwnw2uNRiefg
+   E9VYOtRfaPH+Xne+6v9LyzcU9WaC8OszByhuLsjDH2ME2shcsjwBbnAgH
+   Q==;
+X-CSE-ConnectionGUID: 9a6ZSWGXShqdIhbpSqIRfA==
+X-CSE-MsgGUID: R/x2h4YiTs2phflBPKaF5w==
+X-IronPort-AV: E=Sophos;i="6.08,250,1712613600"; 
+   d="scan'208";a="37476347"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 19 Jun 2024 14:23:42 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 19F15160F3E;
+	Wed, 19 Jun 2024 14:23:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1718799818;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ub8TRoLtI7o1oH6Fs2P1jN0+GX8tw7Fve8YcIfkXSyM=;
+	b=MgJdwiPOdrEbVrl1cs9gD3S5VFR+66dGvAJzu9iYcHxKt95SqBKcw8R/bhq3mpOWbieqXV
+	zEiC9piBaHX0YPHqaYpXFiq5NtMK3+qGwb+quNGt9ImsSmg4BR/g5nZz50Mt77VLt5l9oE
+	NPWwHjwRceEUzFSCecoFpMjvQ0WnqVZaULik4DGVb5b1VJ/yD8XN6+yayMG91HFTSb9U7p
+	5hd8sKjnF7hKzXXaGOvW1gludMNbjDCo6JkDK6SHJe7NVODAl56/V9DZKKZP5aMjWJ3jRR
+	yxv1JgSL5ZVnSblnBGual/NlVtRri4h8pwcxMedsY3Pa6ZvNznJ/Y/K/tF6mHQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, Markus Niebel <Markus.Niebel@ew.tq-group.com>, Lee Jones <lee@kernel.org>, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1 resend] MAINTAINERS: Fix 32-bit i.MX platform paths
+Date: Wed, 19 Jun 2024 14:23:36 +0200
+Message-ID: <13561511.uLZWGnKmhe@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <2024061920-hardwired-pry-bb81@gregkh>
+References: <20240619115610.2045421-1-alexander.stein@ew.tq-group.com> <2024061920-hardwired-pry-bb81@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: LXzQioMqosGidwifod3GomlapAj5Cpah
-X-Proofpoint-GUID: LXzQioMqosGidwifod3GomlapAj5Cpah
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 clxscore=1015 phishscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406190092
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-This patch series is sent to address the comments received
-with regards to the ad7779 driver patch:
-v2-0001-drivers-iio-adc-add-support-for-ad777x-family.patch,
-as well as the dt-bindings patch:
-v3-0001-dt-bindings-iio-adc-add-a7779-doc.patch.
-The patches were initially sent separated, this has now
-been corrected with this patch series, along with soeme
-other issues such as the cover letter and author.
-The changes in the series:
-v3:
-	* drop spi-max-frequency from yaml and fix indent
-	* separate ABI doc into different patch, drop ad4130
-	 ABI doc file and combine the filter_mode/type properties
-	 in the sysfs-bus-iio file
-	* update Kconfig help section for the driver
-	* update driver commit message
-	* drop crc_enabled and check crc by default on all regs
-	  except GEN_ERR_REG_1_EN
-	* rename from "ad777x_*" to "ad7779_*"
-	* switch from kfifo to triggered buffer and send w/timestamp
-	* switched spidata_rx/tx buffer data type to u8 and declared
-	  channels as IIO_BE
-	* switched to fsleep and added comments for each of them
-	* changed "____cacheline_aligned" to "__aligned(IIO_DMA_MINALIGN)"
-	* fixed allignments and removed redundant variables
-	* removed local update_scan_mode in favor of iio active_scan_mask
-	* requested trigger as NO_AUTOEN and it is enabled/disabled only
-	  in preenable/postdisable functions
-	* removed separate ad777x_register function and moved the code
-	  in probe
-	* switched to get_clk_enabled
-	* check for irq earlier in probe
-	* misc code style / format changes, as suggested
+Am Mittwoch, 19. Juni 2024, 14:18:35 CEST schrieb Greg KH:
+> On Wed, Jun 19, 2024 at 01:56:10PM +0200, Alexander Stein wrote:
+> > The original patch was created way before the .dts movement on arch/arm.
+> > But it was patch merged after the .dts reorganization. Fix the arch/arm
+> > paths accordingly.
+> >=20
+> > Fixes: 7564efb37346a ("MAINTAINERS: Add entry for TQ-Systems device tre=
+es and drivers")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > ---
+> >  MAINTAINERS | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c36d72143b995..762e97653aa3c 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -22930,9 +22930,9 @@ TQ SYSTEMS BOARD & DRIVER SUPPORT
+> >  L:	linux@ew.tq-group.com
+> >  S:	Supported
+> >  W:	https://www.tq-group.com/en/products/tq-embedded/
+> > -F:	arch/arm/boot/dts/imx*mba*.dts*
+> > -F:	arch/arm/boot/dts/imx*tqma*.dts*
+> > -F:	arch/arm/boot/dts/mba*.dtsi
+> > +F:	arch/arm/boot/dts/nxp/imx/imx*mba*.dts*
+> > +F:	arch/arm/boot/dts/nxp/imx/imx*tqma*.dts*
+> > +F:	arch/arm/boot/dts/nxp/imx/mba*.dtsi
+> >  F:	arch/arm64/boot/dts/freescale/fsl-*tqml*.dts*
+> >  F:	arch/arm64/boot/dts/freescale/imx*mba*.dts*
+> >  F:	arch/arm64/boot/dts/freescale/imx*tqma*.dts*
+>=20
+> Why is a MAINTAINERS change needed for stable kernels?
 
-Ramona Alexandra Nechita (3):
-  dt-bindings: iio: adc: add a7779 doc
-  Documentation: ABI: added filter mode doc in sysfs-bus-iio
-  drivers: iio: adc: add support for ad777x family
+This fixes the original commit introducing these entries, mainlined in v6.6
+Unfortunately that got delayed so much it was merged after commit
+724ba67515320 ("ARM: dts: Move .dts files to vendor sub-directories"), which
+was merged in v6.5.
+Thus the (32-Bit) arm DT paths are incorrect from the very beginning.
 
- Documentation/ABI/testing/sysfs-bus-iio       |   7 +
- .../ABI/testing/sysfs-bus-iio-adc-ad4130      |  46 -
- .../bindings/iio/adc/adi,ad7779.yaml          |  84 ++
- drivers/iio/adc/Kconfig                       |  11 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/ad7779.c                      | 936 ++++++++++++++++++
- 6 files changed, 1039 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
- create mode 100644 drivers/iio/adc/ad7779.c
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
--- 
-2.43.0
 
