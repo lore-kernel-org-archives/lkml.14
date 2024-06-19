@@ -1,171 +1,234 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6B9135A6D;
-	Wed, 19 Jun 2024 11:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F3F80BFC
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796140; cv=none; b=AVD1eRwH6w9/Mftajmm2bWZnRBskPsBT/kVX73naDP6k1+C+F7JILlXg7qa0abPH6suGIwZuBEoIcoinkbs2D7kSzAyLSyiMO0x66UmzwQVHKW8rQJKWrwSnGfLGay8qdCNz120UgoprXpBJ87064LpaAufav5APVqA61fY8rMU=
+	t=1718796206; cv=none; b=MNRWxveIFGo1VPQlE5usbDxNI0LjpPoIQQq9pKg6/fVxWLeSUsThC8XXwCOgkW6jwnKxzKoHZUacPeITDi2tceYKESKyQvamXgAtSm58sUFlCeFET7dGQGzhCYRJkxNVoWetIwnXY9Jwqtu5+WVXNl6f4JJSB95SiB20NGEvw6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796140; c=relaxed/simple;
-	bh=75uxE1jIS7U/gZgImO3O5k1fhrGtDx8xK2bnlmud6ek=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e9hG8Mu+hUCukq50a22nZ4clt1cYa/BHXO9I51GTvI3Ga5K1cl/1dV22XOcIueUPCenTro/qOFo5Rmm4+9kYiVjPUZ/Y1K4BmP0o1ZpOE6bl1Ue6jFqF5kUdGGwM2DniBsGuIZ0DsQtOj2GkG58YiAbaKIMspM47IJ1zedLY7vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OE0RMUMW; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OE0RMUMW"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebdfe26217so60994721fa.2;
-        Wed, 19 Jun 2024 04:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718796136; x=1719400936; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1We8+J1M8/iGwbEuKq9QLdgleuBIYYNVC3Jie6+7WKQ=;
-        b=OE0RMUMWjmwTtHxwSC4/QTw7VP4UWIGmzyY3G60c8oHmQcSXvGGu4pU0Tj+aAk3yPj
-         /TTAdEwqMfUAFnC8a+YXBOoaNNU2iL3V+G05cF1LQiduL9icX43CyQlHITKJb2cABUJm
-         XArxR7y3DBv2aGz96LS77mX3BV3kyUvH3ykaQ5DsFurdylle+q3Mf4Q7Y9jXRnEfp0H5
-         oUoK5sxPkUDQashXt1x3+NJavosmhcA4V0IqUiYX2g4+lqFUhQqFC1o6uf6rvYyQRA5u
-         Y5X291yrUXOlSP2aish46TVfkHTTWuJsxujUSDNJ2fmAV+2Tqh1wFJDhltWJ3FxDWNU1
-         OScA==
+	s=arc-20240116; t=1718796206; c=relaxed/simple;
+	bh=NoxsAJFZgAA7YyUpfT9FrwfryJ9In0syuuErb0Xxuyo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=K8E61GJUNQJ8KM5Dxofoz1ixDtPWIsa4FLOhDIDDFCbOcw1ezYI1h+j0Qz4Njqw7qS85Dh7gRivO7w+AmwdUEa5lPR89HgmIljKAsgikcyAwTg4S/OxgiDjAQDYUzD+V+OxmveKE7GcDYMApm7TRh9ne8YlqnQWlMNud76x6xOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7eb9bf4d07aso832563439f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:23:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718796136; x=1719400936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1We8+J1M8/iGwbEuKq9QLdgleuBIYYNVC3Jie6+7WKQ=;
-        b=iT+cNrdnGcRfgzPtRn2eV6CNRohnYCP/dS28lW59LfiyTS6oEZ8nj74ajSp+0fN7Pw
-         EMLF7KcVmwDcpEMbWKeFWBOQAglIlDnAI7cW8XkEziOi5bF9yePwk2h5UaRcjsRJVup1
-         nH6HUSnbJ0+HWBzDA6dbKdFCmxiYab4ufS6welvZmEKPtiG96JA7y4SnXGSUTfdmwm2m
-         OcC5V3TMoXdhd9i8F/T8AM58whzxWEpvt41+KzPuCqRuN6H2c4aQUVWE4Cuu/JONj3gb
-         KhYE/B/5HCMUzbaj3UJ+Tq4ZwMGNAbdKmrD3/8g1uRn6vFrKjtq3bOOmOxeY9eYXJlG4
-         gvCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYzhSmLisSheX6vi4V6i7ZLOIh3wGQK+SM3YPSf4aA/fTa/6daYzDhhCc+TiesUBeLqcnymwAeDhKm6GmkA6yfU0whN3kjzDPhKmxCXwz9BzTSJgDVQU1H6QN4CXFVV5uxFkiE9Uip+LEkACdj9G3iBYs8K7IF0OLaezYgP6DRvyM3UdFP2s+LdhK9KawS0R/TAQV9de0uWp7uvPn+fsAxzuCJsGdMjadhm6UBOMJUPAxWWFOkoQibEhnCi6lnLouAg4m2cpZTSU4TILCsctSYqjYh68PK7PsyYepU+HoxiB7DDhYKPmIz2voRyAdbTkktwAYzfITCz5GLiANk+dksq9MmTN9imEIzQ8aoVn7zv3nZkTGvgiYSxeEzswzUY9SyMSfVCRsXPJc4XAt9zMV72HZW7cVa1FPToxn3RPlCqXEVrSqwzVCtlgKwjg==
-X-Gm-Message-State: AOJu0YxeHZ0KQJp3btvZ3dg98HpiQKlSe6dway4K/BCxRoQELEkVl9gy
-	x2QLEgvuw4dEAIX3Z2csXlkXaxYOHSckCCb6kYTP+DWyqnPcPc50
-X-Google-Smtp-Source: AGHT+IHY6I+1wjnfCL5bVO3aTBj0asX2DB6+TLCQy1IxnGK2EyJpAdTHcDYhDhl1lF4pI5isZiqATw==
-X-Received: by 2002:a2e:7818:0:b0:2ec:3bc4:3e36 with SMTP id 38308e7fff4ca-2ec3ceb6a56mr15076241fa.14.1718796136224;
-        Wed, 19 Jun 2024 04:22:16 -0700 (PDT)
-Received: from pc636 (host-90-233-216-238.mobileonline.telia.com. [90.233.216.238])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c78126sm19577951fa.81.2024.06.19.04.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 04:22:15 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 19 Jun 2024 13:22:12 +0200
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnK_ZLlFM6MrdEah@pc636>
-References: <Zmrkkel0Fo4_g75a@zx2c4.com>
- <e926e3c6-05ce-4ba6-9e2e-e5f3b37bcc23@suse.cz>
- <3b6fe525-626c-41fb-8625-3925ca820d8e@paulmck-laptop>
- <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
- <ZnCDgdg1EH6V7w5d@pc636>
- <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
- <ZnFT1Czb8oRb0SE7@pc636>
- <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
- <ZnKqPqlPD3Rl04DZ@pc636>
- <c208e95d-9aa9-476f-9dee-0242a2d6a24f@suse.cz>
+        d=1e100.net; s=20230601; t=1718796204; x=1719401004;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DbEA/BB59SSn3pEUYX6Qz+Ptd80c7I43WCP9OJ44Jtg=;
+        b=eH+pQxVFXvIlhxcSRuYzpn9vY5t0Gqh+fEGl81hDX+Kkl7uK9MLeVlq8en6uRaOyqv
+         ijuHzJ0P78IEp2YuzBi0j5OFUmxbn3qRzbyS2CBihX5JZgvoDRw+HWfrg42S6rEZ11wE
+         +lb/BoIgZf1BpBa1OnJAqzz9T4Tsb6XdYjBTwO0K+5bO1nv1wo60vgzaHxtiGhVX0Zu5
+         Uev921BdpftwpulF93yCFfzHnywVMIV7vx8zAMVgK9olynXGlmkJXVKLxTiby0VdA5Fb
+         98lHY2LuX1+OA9Pxc7y3GIXKrToXmrPzgyYSMAYtyoGSPxuv2LBgvo9cMj6P5Xivlc2g
+         Chfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWyLOQmtgqVSkypu2HPrpPjtqmPs2RbOaIq2qhG//Scp9OQX34llhKfbXnHv1Mb6UrC5L8LwFu9JniorvYJ4WViy29K7wF9lFQWQBc
+X-Gm-Message-State: AOJu0YzHUz/Tmb9QF8KWgPP+HA3JEKFqK7VdDHeHgVycJXeCMZ6WqIM6
+	uc65yQPhThxHpO3BuulE6rp6tuR3PiIeGXPKrlr4kKSX7/f26Nu0E32478X6TIPybFp/TSNXqm4
+	MFdlRovnzzFbn4DnE8JyAIh/nPJK2X/gLtep4ZRgntLXtX7YzadQRtz8=
+X-Google-Smtp-Source: AGHT+IGP9XPnocK/A6V3/9jcrSvDOXSfKC/NMErxRiWKHrm+7vONEzlMLtTswHif4TBleu5MjrPaNQQsk19xwsAzH9OmVCA+MyIN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c208e95d-9aa9-476f-9dee-0242a2d6a24f@suse.cz>
+X-Received: by 2002:a05:6638:40ac:b0:4b9:685d:7f2a with SMTP id
+ 8926c6da1cb9f-4b9abf98653mr65755173.4.1718796204347; Wed, 19 Jun 2024
+ 04:23:24 -0700 (PDT)
+Date: Wed, 19 Jun 2024 04:23:24 -0700
+In-Reply-To: <000000000000a380400616a9cfa2@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000033a6e8061b3c6d4a@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: invalid-free in hci_req_sync_complete
+From: syzbot <syzbot+35ebc808442df6420eae@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 19, 2024 at 11:56:44AM +0200, Vlastimil Babka wrote:
-> On 6/19/24 11:51 AM, Uladzislau Rezki wrote:
-> > On Tue, Jun 18, 2024 at 09:48:49AM -0700, Paul E. McKenney wrote:
-> >> On Tue, Jun 18, 2024 at 11:31:00AM +0200, Uladzislau Rezki wrote:
-> >> > > On 6/17/24 8:42 PM, Uladzislau Rezki wrote:
-> >> > > >> +
-> >> > > >> +	s = container_of(work, struct kmem_cache, async_destroy_work);
-> >> > > >> +
-> >> > > >> +	// XXX use the real kmem_cache_free_barrier() or similar thing here
-> >> > > > It implies that we need to introduce kfree_rcu_barrier(), a new API, which i
-> >> > > > wanted to avoid initially.
-> >> > > 
-> >> > > I wanted to avoid new API or flags for kfree_rcu() users and this would
-> >> > > be achieved. The barrier is used internally so I don't consider that an
-> >> > > API to avoid. How difficult is the implementation is another question,
-> >> > > depending on how the current batching works. Once (if) we have sheaves
-> >> > > proven to work and move kfree_rcu() fully into SLUB, the barrier might
-> >> > > also look different and hopefully easier. So maybe it's not worth to
-> >> > > invest too much into that barrier and just go for the potentially
-> >> > > longer, but easier to implement?
-> >> > > 
-> >> > Right. I agree here. If the cache is not empty, OK, we just defer the
-> >> > work, even we can use a big 21 seconds delay, after that we just "warn"
-> >> > if it is still not empty and leave it as it is, i.e. emit a warning and
-> >> > we are done.
-> >> > 
-> >> > Destroying the cache is not something that must happen right away. 
-> >> 
-> >> OK, I have to ask...
-> >> 
-> >> Suppose that the cache is created and destroyed by a module and
-> >> init/cleanup time, respectively.  Suppose that this module is rmmod'ed
-> >> then very quickly insmod'ed.
-> >> 
-> >> Do we need to fail the insmod if the kmem_cache has not yet been fully
-> >> cleaned up?  If not, do we have two versions of the same kmem_cache in
-> >> /proc during the overlap time?
-> >> 
-> > No fail :) If same cache is created several times, its s->refcount gets
-> > increased, so, it does not create two entries in the "slabinfo". But i
-> > agree that your point is good! We need to be carefully with removing and
-> > simultaneous creating.
-> 
-> Note that this merging may be disabled or not happen due to various flags on
-> the cache being incompatible with it. And I want to actually make sure it
-> never happens for caches being already destroyed as that would lead to
-> use-after-free (the workfn doesn't recheck the refcount in case a merge
-> would happen during the grace period)
-> 
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -150,9 +150,10 @@ int slab_unmergeable(struct kmem_cache *s)
->  #endif
-> 
->         /*
-> -        * We may have set a slab to be unmergeable during bootstrap.
-> +        * We may have set a cache to be unmergeable during bootstrap.
-> +        * 0 is for cache being destroyed asynchronously
->          */
-> -       if (s->refcount < 0)
-> +       if (s->refcount <= 0)
->                 return 1;
-> 
->         return 0;
-> 
-OK, i see such flags, SLAB_NO_MERGE. Then i was wrong, it can create two
-different slabs.
+syzbot has found a reproducer for the following issue on:
 
-Thanks!
+HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d61bca980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b8786f381e62940f
+dashboard link: https://syzkaller.appspot.com/bug?extid=35ebc808442df6420eae
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125874ea980000
 
---
-Uladzislau Rezki
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-2ccbdf43.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c40c1cd990d2/vmlinux-2ccbdf43.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a2a94050804e/bzImage-2ccbdf43.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+35ebc808442df6420eae@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: double-free in kfree_skbmem+0x10e/0x200 net/core/skbuff.c:1131
+Free of addr ffff888025dce280 by task kworker/u33:6/5317
+
+CPU: 2 PID: 5317 Comm: kworker/u33:6 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Workqueue: hci0 hci_rx_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc3/0x620 mm/kasan/report.c:488
+ kasan_report_invalid_free+0xaa/0xd0 mm/kasan/report.c:563
+ poison_slab_object+0x135/0x160 mm/kasan/common.c:232
+ __kasan_slab_free+0x32/0x50 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2196 [inline]
+ slab_free mm/slub.c:4437 [inline]
+ kmem_cache_free+0x12f/0x3a0 mm/slub.c:4512
+ kfree_skbmem+0x10e/0x200 net/core/skbuff.c:1131
+ __kfree_skb net/core/skbuff.c:1188 [inline]
+ kfree_skb_reason+0x138/0x210 net/core/skbuff.c:1223
+ kfree_skb include/linux/skbuff.h:1257 [inline]
+ hci_req_sync_complete+0x16c/0x270 net/bluetooth/hci_request.c:109
+ hci_event_packet+0x963/0x1170 net/bluetooth/hci_event.c:7479
+ hci_rx_work+0x2c4/0x1610 net/bluetooth/hci_core.c:4074
+ process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Allocated by task 5317:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:312 [inline]
+ __kasan_slab_alloc+0x89/0x90 mm/kasan/common.c:338
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3941 [inline]
+ slab_alloc_node mm/slub.c:4001 [inline]
+ kmem_cache_alloc_noprof+0x121/0x2f0 mm/slub.c:4008
+ skb_clone+0x190/0x3f0 net/core/skbuff.c:2052
+ hci_send_cmd_sync net/bluetooth/hci_core.c:4123 [inline]
+ hci_cmd_work+0x66a/0x710 net/bluetooth/hci_core.c:4143
+ process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Freed by task 5306:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
+ poison_slab_object+0xf7/0x160 mm/kasan/common.c:240
+ __kasan_slab_free+0x32/0x50 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2196 [inline]
+ slab_free mm/slub.c:4437 [inline]
+ kmem_cache_free+0x12f/0x3a0 mm/slub.c:4512
+ kfree_skbmem+0x10e/0x200 net/core/skbuff.c:1131
+ __kfree_skb net/core/skbuff.c:1188 [inline]
+ kfree_skb_reason+0x138/0x210 net/core/skbuff.c:1223
+ kfree_skb include/linux/skbuff.h:1257 [inline]
+ __hci_req_sync+0x61d/0x980 net/bluetooth/hci_request.c:184
+ hci_req_sync+0x97/0xd0 net/bluetooth/hci_request.c:206
+ hci_dev_cmd+0x634/0x960 net/bluetooth/hci_core.c:787
+ hci_sock_ioctl+0x4f3/0x880 net/bluetooth/hci_sock.c:1150
+ sock_do_ioctl+0x116/0x280 net/socket.c:1222
+ sock_ioctl+0x22e/0x6c0 net/socket.c:1341
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl fs/ioctl.c:893 [inline]
+ __x64_sys_ioctl+0x193/0x220 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888025dce280
+ which belongs to the cache skbuff_head_cache of size 240
+The buggy address is located 0 bytes inside of
+ 240-byte region [ffff888025dce280, ffff888025dce370)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x25dce
+head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffefff(slab)
+raw: 00fff00000000040 ffff888018ed8780 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000080190019 00000001ffffefff 0000000000000000
+head: 00fff00000000040 ffff888018ed8780 dead000000000122 0000000000000000
+head: 0000000000000000 0000000080190019 00000001ffffefff 0000000000000000
+head: 00fff00000000001 ffffea0000977381 ffffffffffffffff 0000000000000000
+head: 0000000000000002 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 1, migratetype Unmovable, gfp_mask 0x152820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_HARDWALL), pid 5306, tgid 5306 (syz-executor.3), ts 70131626595, free_ts 69503653671
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1468
+ prep_new_page mm/page_alloc.c:1476 [inline]
+ get_page_from_freelist+0x136a/0x2e50 mm/page_alloc.c:3420
+ __alloc_pages_noprof+0x22b/0x2460 mm/page_alloc.c:4678
+ __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+ alloc_slab_page+0x56/0x110 mm/slub.c:2265
+ allocate_slab mm/slub.c:2428 [inline]
+ new_slab+0x84/0x260 mm/slub.c:2481
+ ___slab_alloc+0xdac/0x1870 mm/slub.c:3667
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3757
+ __slab_alloc_node mm/slub.c:3810 [inline]
+ slab_alloc_node mm/slub.c:3989 [inline]
+ kmem_cache_alloc_node_noprof+0xed/0x310 mm/slub.c:4044
+ __alloc_skb+0x2b1/0x380 net/core/skbuff.c:656
+ alloc_skb include/linux/skbuff.h:1308 [inline]
+ bt_skb_alloc include/net/bluetooth/bluetooth.h:489 [inline]
+ hci_prepare_cmd+0x32/0x2b0 net/bluetooth/hci_request.c:221
+ hci_req_add_ev+0x11b/0x2b0 net/bluetooth/hci_request.c:255
+ hci_scan_req+0x87/0x150 net/bluetooth/hci_core.c:73
+ __hci_req_sync+0x142/0x980 net/bluetooth/hci_request.c:130
+ hci_req_sync+0x97/0xd0 net/bluetooth/hci_request.c:206
+ hci_dev_cmd+0x634/0x960 net/bluetooth/hci_core.c:787
+ hci_sock_ioctl+0x4f3/0x880 net/bluetooth/hci_sock.c:1150
+page last free pid 4688 tgid 4688 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1088 [inline]
+ free_unref_page+0x64a/0xe40 mm/page_alloc.c:2583
+ __put_partials+0x14c/0x170 mm/slub.c:2995
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x4e/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x192/0x1e0 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:322
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3941 [inline]
+ slab_alloc_node mm/slub.c:4001 [inline]
+ kmem_cache_alloc_noprof+0x121/0x2f0 mm/slub.c:4008
+ getname_flags.part.0+0x50/0x4f0 fs/namei.c:139
+ getname_flags+0x9b/0xf0 include/linux/audit.h:322
+ vfs_fstatat+0x9a/0x150 fs/stat.c:303
+ __do_sys_newfstatat+0xa6/0x130 fs/stat.c:468
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff888025dce180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888025dce200: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+>ffff888025dce280: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888025dce300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc
+ ffff888025dce380: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+==================================================================
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
