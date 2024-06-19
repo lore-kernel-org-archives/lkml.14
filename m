@@ -1,383 +1,228 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2040.outbound.protection.outlook.com [40.107.237.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC732139C7
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718768424; cv=none; b=bKOb07grj0ZWVZKA/ami2hkNMnEGthmgbxIeVFQ7L/0QE/sv7XeVOnZdORCdDvugYvRm4Kil9IiH00EveWP6vcA/uLBuPYwz4cxEpaTaATSI/NNqt2aeV4wMBXLjtIYmphSiLtIaXDqedadcbg/2e35ZTDlyzx1nK72uMFHcK4Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718768424; c=relaxed/simple;
-	bh=W0qX1firUtWHRYX/P6AUsb1Bq/tAev6Bu6nihu+dEGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oDqP2VRdiqERF2JOtOkDGsyaiRT/irL0eW7LGY6o5LX5qFN8jZcGrV2HSFazkhV9y453sW4vT6UH/aVRtbXRS3Zjknxu6uTROY2wgYOCg4gxeLbSxYntxqrc6P8wHp+HaUd0sY6tNpskK7lGHuuu0dnIcKnJMXiUuw3B7fd2ino=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ewDvbqVE; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394E32139C7;
+	Wed, 19 Jun 2024 03:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718768447; cv=fail; b=ASDmBUov8mpm57yTxzAJcck+cgjVyTR0FvS7yFsJ2WguL1FCXH1jsnY4jGbj68mz+iaU4+i0bBb6C//LfkNJJ9kiLeqlT/iEk5eWEShrk9XMe/JPJFZ++FoIZNOte/ICsIxCNZuohkQqvGQWd/DQ/Fg4LbmcW9EOejRABJgQzDw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718768447; c=relaxed/simple;
+	bh=ggNWFFjYIo2ZQKn2x3Sjlnl4Cq6FGqeYYk07gYAQv9E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=u9JLMhZ/B7nizu+0nPHLX6KD2kXqwi+kOq6gmYgY76Sog7fKTxLWIqUGjLnqBZ/x+18RQ+xfL0ntYEpLFHkOwwOxDRWfXvd6XEod4B2J/U0mDxjtfPEODg7tOAwaidhJ7iLWNCdZ68DiLKJrTlUjX45U0OtTt2BfDnr+BF8/uTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TosN0g1H; arc=fail smtp.client-ip=40.107.237.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ewDvbqVE"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dfb05bcc50dso5866415276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 20:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1718768421; x=1719373221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bU/xf2tVFP1Wv/KAvg/7L1SzSc5/sikagJsqouU0aT4=;
-        b=ewDvbqVEogC9KGfOEb7HCzzirFrRQh39xYSz8/HXRb8azy/IP+9elo+9VzgK6KHi3u
-         6Z5WWH1m9bEgsDmTx6ledFCQcyZxcNLGnTZUGG848C4JoLphu7q5X6Gtjge1K+jPocd8
-         QYrPABAsK+iEIiUj9atI0sARCZM4R2AQbcRtGLN4WYPaQ68YKRyCruuOMdoYx7VwP7Qq
-         tBmDo67eGznugcmONJ5UHg+dc7gAC1XDVipMHvHsw1dsFrfLVGzIbWnf3qWWTzzUSThF
-         2o5V5tQqpbyMVlx5EuB29IrI0Elsd/Th2SynyFYARRQQkcS3Yy4IDftzCsKk2Y2s3Sqz
-         l79w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718768421; x=1719373221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bU/xf2tVFP1Wv/KAvg/7L1SzSc5/sikagJsqouU0aT4=;
-        b=a9wxtNNKohcsv191Xhlnso2p3rh0/nded/p1C4WiFdXNrga/oR7XMBbgp7NTKjHjua
-         KS81TEM2WFxT/HMCIlAo/p6YolrZwGXlX0Rxaq7KypC2gA94pHzd5bvR83gLUMrExGRQ
-         OVxKMUkfu3VKQWtAoTHRmo4gCq+VjloUzQO1AXzZoRglEBvnoNdhMFzVYl9VK1yLUkxv
-         1zQM7LnGQQ9ZsPKxEAtJNkTkIxG0yTzJGLVUPNzRx+N3Nc8QugI0lYZ6w71Xqpjgbt53
-         Q8p8yvEiowCcsnK6UAy+i/F9+P4kkQ4LAcjwW4fjfwdSgVC6bN6HAFbZQunu6IMLSxC7
-         jq5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWtBrarUI0xCZOMNtb2+upz9JytzZ3INHKsyuqjrTcj/qe6xJvEeWBUFpmT08bN8U7Q8XtTdgALY+k75+6ZkSfBDWW4FYol3jaqPE8h
-X-Gm-Message-State: AOJu0YwWt5rIpnGoaWOmZe8VTC0iVtkjooIVL+ndAZDtjUPwucC9AcD1
-	0xmACkI+tRaSogRWlRBkkCU1Bw4w1HNPG/JVjKUAfXruouVUnnzZmB9y6SwQpHpJtQaM/mdB0k5
-	vEKhF7wXfSfnYvVD4FTB2sZ/aNzv0UUTF1VCT9A==
-X-Google-Smtp-Source: AGHT+IGK3F33Df+10aQdjoJr70xSP9c2GKPQCcPTBlwhZQiFKKM+t8XpJK57xDkPZniPwNMnHJ8Gbw9j/AMdwqX65v4=
-X-Received: by 2002:a25:b11d:0:b0:e02:6944:ecec with SMTP id
- 3f1490d57ef6-e02be1004b3mr1768077276.10.1718768421520; Tue, 18 Jun 2024
- 20:40:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TosN0g1H"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DdUBsTpRa/oyElheUvgwFFF9snyDIQwYPgbC8UImtynFBv0F24JXUCGVQD0EFEVna60jck4SUdI3glssBGZR+jKHvWgETnN4YunaMbA4lhZtZvNfI9xeXjDmBR+qFEwJHqHM8QIqHoEFidapIu+ZUtWbVgasFGh7NrMpd3NKaUR1bIgTl2GGieQpz9ECbFImiw+n+AdFtf+3KwXMmJGFZeDgaTCNWlnCfe2z2RqKTziB+3fTrd6XmKPKdZ6/ValQjsIonm9VDuNhPVQP1OZ0nLoQEdfNnqL/BSynpbQv+q/bimzJpzvrkbajKwQRCfiqN7Uj290FOMxM5HPojCiLaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ggNWFFjYIo2ZQKn2x3Sjlnl4Cq6FGqeYYk07gYAQv9E=;
+ b=KK5c0+9DJlM3XRcUXEwFMXTrG57BppAx00FclwHVmqnepbkr0Q1skSjpRpfKewcYIJLMuNX202vdC95oZiFKkNbgqkz53P9z8ISXX2JLXM+sUXrM3SUDLMTxtalHhyxdRPSLpIs9H4GL/hhwbRtmKaToF/sCeXosyv7T0Itt1OfyMRNNt7x3lA/MgD2yiFgv5ZdjQb/le+8eeC5kyJs832d3flf+AaDgFkd7Km806dUSzMMfMKn55ISQyuwzQqc3C+QMup/vof5njAVsLSBn0QS7JNA2SF4snB/2xdT2SBm6FN1deQJX3s4QQLyl+d+X3Auvg9RNJPS+FbizFsd/aA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ggNWFFjYIo2ZQKn2x3Sjlnl4Cq6FGqeYYk07gYAQv9E=;
+ b=TosN0g1HafcgZwBCnqB7ohTBwY3uUi9lH/Qd4+QXaypOaWY4o7uHXRg1XNYZloVCyGliWAv/1oBVzq3WKFz72RC8doabGkMYxGITmUgRGDJhcDy0Aqj8e1jfSqbGSHvS9Lh+eFjOwCaEGTjkjx8kebOlr48XeukHviutFLBkXhs=
+Received: from CYYPR12MB8655.namprd12.prod.outlook.com (2603:10b6:930:c4::19)
+ by CY8PR12MB8297.namprd12.prod.outlook.com (2603:10b6:930:79::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.18; Wed, 19 Jun
+ 2024 03:40:42 +0000
+Received: from CYYPR12MB8655.namprd12.prod.outlook.com
+ ([fe80::7fa2:65b3:1c73:cdbf]) by CYYPR12MB8655.namprd12.prod.outlook.com
+ ([fe80::7fa2:65b3:1c73:cdbf%6]) with mapi id 15.20.7677.030; Wed, 19 Jun 2024
+ 03:40:41 +0000
+From: "Yuan, Perry" <Perry.Yuan@amd.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "Limonciello,
+ Mario" <Mario.Limonciello@amd.com>, "viresh.kumar@linaro.org"
+	<viresh.kumar@linaro.org>, "Huang, Ray" <Ray.Huang@amd.com>, "Shenoy, Gautham
+ Ranjal" <gautham.shenoy@amd.com>, "Deucher, Alexander"
+	<Alexander.Deucher@amd.com>, "Huang, Shimmer" <Shimmer.Huang@amd.com>, "Du,
+ Xiaojian" <Xiaojian.Du@amd.com>, "Meng, Li (Jassmine)" <Li.Meng@amd.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 08/11] x86/cpufeatures: Add feature bits for AMD
+ heterogeneous processor
+Thread-Topic: [PATCH v4 08/11] x86/cpufeatures: Add feature bits for AMD
+ heterogeneous processor
+Thread-Index: AQHawIRo5KS01Fven06s+cavrEvZl7HLopMAgALNdXA=
+Date: Wed, 19 Jun 2024 03:40:41 +0000
+Message-ID:
+ <CYYPR12MB86550DC34EE07D11736E6A719CCF2@CYYPR12MB8655.namprd12.prod.outlook.com>
+References: <cover.1718606975.git.perry.yuan@amd.com>
+ <4416ff72ea5a33173b69561803f1578073baccae.1718606975.git.perry.yuan@amd.com>
+ <20240617083902.GEZm_2JjnNvHaT0Knq@fat_crate.local>
+In-Reply-To: <20240617083902.GEZm_2JjnNvHaT0Knq@fat_crate.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=edc2f60a-47bf-4c95-92fd-d240a9f989c4;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2024-06-19T03:26:54Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CYYPR12MB8655:EE_|CY8PR12MB8297:EE_
+x-ms-office365-filtering-correlation-id: 9428b590-4f8d-44e0-81a3-08dc9011980b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230037|366013|1800799021|376011|38070700015;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?THdHdStYaUpRdVhwenY5Mk9nYzczV0ljNlZEUjV5L1pXYTFybWFRTDA3WGF6?=
+ =?utf-8?B?Ui9TWGtJRlNPNVYxOG8wQW9DMWd1OEUwTXZmV0ljbXM0SnhtTWxVQzJMeU1z?=
+ =?utf-8?B?Mm9tNHRXRFkyczNrRjhocllUZWFEUEtBaUE2WmNQMWt6OUYzczRHRXdZb3dh?=
+ =?utf-8?B?UDNneUFhR1ZxZW1Bb28zRzhnNjZGYkJIY0k3MGlPM01NNGlWWWt0Sk54Ynpl?=
+ =?utf-8?B?WjNpb2xuSStkbVBaWE9BT3psdVhUbU1JUWxpaFVFVHdTS3F2TWFjYzRMWkRM?=
+ =?utf-8?B?OW4wSG9mMzhLOThFSDNsOUt5Uy9KYlRJYldIcGxBbndiZGtVdHA3bEJOcmhU?=
+ =?utf-8?B?K28xL1BDb0VJZGRZUzNPVFZDWUxnblA5LzZQQzQ3MFVOZTFRaUxtWVJlOFdx?=
+ =?utf-8?B?TGFQRU1DSEpLSUh3SGc0b2RCci9kQ04wcXQvNkNiWUZPUWhuY3JrQ3k0eDhG?=
+ =?utf-8?B?VGsrT25EY3ZxbDhtZThuSWtlUkpOSjh5Um5Fd21DQS82NFl3bzkzb05BaWhR?=
+ =?utf-8?B?d0JTWE4wRGQ5Nk1uc2hRWm9abTZySTdXNExJSWFrbVNLUThUYjlNYi9wWHJJ?=
+ =?utf-8?B?UDFFY2ZPZUgvbkh3TnNrTjNibjQyR3FPbkVjUFF5c1JCWndhZ254M2syeDBh?=
+ =?utf-8?B?NUZCeHdyOXM4bHl6cXg0b1RhR3BCbFVQNE1vdWRodzg5QUxSN2U5MUl5R1pv?=
+ =?utf-8?B?Y2hSWFlGYTNFb3p4NXJtckhFZlNHVGpzNW9QVmF6Nk1kU0pGdjVFSFVaTVFv?=
+ =?utf-8?B?eE5mYlk3UHlGSEplYmpiWXlwQURzbzR5b2NEM29oU2FHek5rWmFTd1lJY1d4?=
+ =?utf-8?B?SFJDdDdsc3ErY2oyUXJMNnF6N1Q4cnh6THprNzRnNUlCcUxVTCtUSFQzSUR3?=
+ =?utf-8?B?MEl0dEtWZThBekFZTy9VY0pXTjUvcHFTZlJWMUVVRThTU2FqSXBvbkVCQTdF?=
+ =?utf-8?B?Rnp1M0wrdEJKQmY1OFhsblAvMlU1MEtqdU90ZUNXcytKY2NLOElObEFiUEk2?=
+ =?utf-8?B?aXZRUkVpQkJXd0JZMDhURGZPd3NTeVJLaWZQRzZyMFNkY0hjTTV0ZG1aRkJo?=
+ =?utf-8?B?VWI1Mjd3VktGbi9LVVJhNFcvaUs5bEYwbVg4TU52ckpqVm9EMmF6aHI3N1kw?=
+ =?utf-8?B?eGwyY1FVaEFlV0czam1DU1FMSHUxWTA5UnhRVW5tejM4R3NKWTlhZXBmcndJ?=
+ =?utf-8?B?Wm4wcWpUbHpkMUpuQ25raVhSRTNnRVNiWDUrdmRuQ1FTbkFBQVZnbGtOcE0z?=
+ =?utf-8?B?UmduODEyRE5YUE5NOGs1YUlIazNqdUZCUjd0OUNoZ1pnWTVmRXpjZmRpajZs?=
+ =?utf-8?B?bXdqNGErdW85YTVZdnZjODZ6aTZLRUt5OTM2MXNtZmgvUVJ6VWZQbHFuaWZn?=
+ =?utf-8?B?b2M5eGE1eUgxelJieE8vbHRpMmozeTlwazlSR2diSVhtZUpnU1pxcmtPZ0Ny?=
+ =?utf-8?B?WjhnZktqSnorbVF6RnRhbXJpcktERWxCMWZrTlNJKzBkSitEQ2R2WkFrcEhp?=
+ =?utf-8?B?ZG9xdVpZTnk2NXY2THQ3TlAyRUtDZkRkN1lObTlVZWlMRGhIZGJ1V0djeWEw?=
+ =?utf-8?B?UUc0U0RaN1FBb2llNk5ONHRlY09qWTNCR3BtcFJ1YXBIZllFUzJrMTg1ZC9L?=
+ =?utf-8?B?VVh1a2J6Yk5ueVdWSWoyUWthNVdxdW9SMVhUeXNLSGZCcTlQYk5MT0gwT2FY?=
+ =?utf-8?B?d0g5TVVDSENUNzFvZ01OSjRtQkpBUFoyaGIvd2FGQ0hyUy8ydnpGVVkvaDhn?=
+ =?utf-8?Q?uoFIvBaNdRVHuFMqWB78bQaakJZNGdlZDOZwQul?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8655.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(1800799021)(376011)(38070700015);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WWVYcVZvS2ZudUdwZ0RzdnBvSVF3V21rZmZiRVZCdDZPOW4xMzEzMzg3Y2pR?=
+ =?utf-8?B?dHZETkxWRE1aVmc1VE4xQWRqVEtqRVQzVHVyT1RrRVN2WEMzSTk1N0lMdEFz?=
+ =?utf-8?B?VEpWc2pwSHNWTmFCT1dRdjVmaHdDeG02cnFkQ0hOTmlNUUZ6NEkvWW5rbzAx?=
+ =?utf-8?B?M2xYTmpLT2VSWFBuSnBlNmFBVU4veGR3bFpWNHFiUVJaeitqVDN5QVJ4emo3?=
+ =?utf-8?B?TmRjaGtyTzlsTWNUSXZnMzZ4SVJBalJFY0tYUkpWTU43QktCMU5MaVlDWTVH?=
+ =?utf-8?B?ZEx3bnBCczA2NTJyb29IYk1RRUNYVE9NakdpSmxMMFo1N0w3ckhDZHRITVZR?=
+ =?utf-8?B?WDUwaTNORFBFM3ZBMndydXBUQWdIZlZTVUFMWHdzMXBDMUpqTStwYTdCSGJE?=
+ =?utf-8?B?N3U5L1JNbXI0VHZvKzV5cGc2TE9XQVhBdUV1cnFHL3k1OGNOZ3ZvaUkwRHRp?=
+ =?utf-8?B?NHRyeFlLTFVCdGUydm5lY2JlTHozQmRQTkpQdjhrRUlzdFVML29HMzdONkg5?=
+ =?utf-8?B?UHFXdXgzcmZXRnM0ZnR2Smh1clpEZFAvV3d3S3laWWxncFBCMHpmaldnZmVN?=
+ =?utf-8?B?UHN2TEdxejF4c3Z1bEdEWjhVQ3A1cTM5blZTTFRwb3VIMkVOTnVMZnpPcXpS?=
+ =?utf-8?B?VnBaWGFSb3VDUXBRQUpmSDZSUTk2ekxRUnYzbDdteUlzaTh4a1F5NHVsdGFt?=
+ =?utf-8?B?cU5oT0tQKy9wTGRHUm93KzBnTEMyejNYM05aZnZlbmptODM1eFpLdUptbGRM?=
+ =?utf-8?B?MmhlY2w5NGw3Z2JUS1FpdjVDK2FYNWEvbVVyOHpZUVpDTkl6ZFRPeUhKUEMw?=
+ =?utf-8?B?SmdwOVB6R1lrcVJmQXVFRmlNSFhRQkJXdmVIaTdSNXJOVzNEKzNQdkUzS0o3?=
+ =?utf-8?B?R25FRU1YSHNiWm51Tmd2MFliSEF2RGowVzJXdEUvczVTNjdRTFlVdG9MQjF0?=
+ =?utf-8?B?azBBb2g5dytpcFpvcGwyQ1A4OTBMTWc4Z2hOdDR1TUhpQTNsOXFRa3AwZEM0?=
+ =?utf-8?B?YlpWQ1NyZ2dQbGhRNHJKcFpFcExKNU9ReVFLNFl6cUxNNDhxN0Y3ZDlMWGFI?=
+ =?utf-8?B?ckhjZVBuZkhPdDdmaXUweTVQWXZLdUJVUnIvYlpkckhLQVkvMXBOeklxVmVT?=
+ =?utf-8?B?OGFka3hKZVNuNHJqTCtiRGRwWTJIbzMzcWlkMEtRSndSdzhWU1dxcUVuWlgv?=
+ =?utf-8?B?UkJ0NXhiNXFyUlZhTUtZZEpYYTF5eGJ5OEZrK2FsRTYxODZzZW9Rd0VCMXU2?=
+ =?utf-8?B?RGVoWTR3cGxVblFOZEgvMTBBcVNCYzdoeUlIbmFYSlJBTEF2SzRGMG5VT0N2?=
+ =?utf-8?B?VDQ4aVZHQm5DUk41ZmRFRmE2VjFwKzlkM2xrekQxODlDenY5T09nbmFpTTRy?=
+ =?utf-8?B?WmFEUE1tTVQ4UUMvLzU1S3BZNWVtWFU3cnhYNlBWd3dPZ2NUYjh2bGFOdVE0?=
+ =?utf-8?B?RWFNNWZvZERDckM1Wm9TOExiSWYvYXRBY0NXZjJMamJXSk9QY0pjRTkrQ1Rw?=
+ =?utf-8?B?SnVvRVlRR0JEZUF6d29MV3gvWXU3ckVDcEhKVHRtOFhFLzlPNWpNZE00Q0Vq?=
+ =?utf-8?B?Y2kxK3RXVnRhUXprTnhmaytxZVM1Z2tqN3hDK3dZOWVvR2dXTTBIU2lrbzUy?=
+ =?utf-8?B?ZXJLV1pDN3REcE5BcGtoeFVoK08rOEYwZmYzenFKMGM3RXNvQUc0dUdPRmRh?=
+ =?utf-8?B?OXg3MjBTNHV3SmFLcVJKZWNmeTRxQVB2SkYxcEg3SUJkSE1NKzh4U1ZOVGVt?=
+ =?utf-8?B?cjV2MnRhRUFhOU5vNXlEbXRhOWpqN0RxSEdkTnpwQ0ZpUnJnL0xlYnE2WVFB?=
+ =?utf-8?B?ZkhvNFc1OGQ3c3NUZFQzM1pHZWZXSE53ZWYyemVhMWdRWXlkVmg1VFVyUG9X?=
+ =?utf-8?B?dHlTYkdUYWJPS0s4YWpUa2dhYVNaOEF5UmI3R1Vod0p6Wm1JR2s4OTBtdkpo?=
+ =?utf-8?B?R3MrRU1FL3FDbTdQM3pRcjFPamN5cHRLZDhBZjMvK3ZpY0ZKeUdOR0tSSGcy?=
+ =?utf-8?B?M3FVQVM3S3lZRlJpQkoxUFhaa0lQS2R2RXhBUzVicDBqajRiVk8rMXZmRGJz?=
+ =?utf-8?B?U3pZR2pYR2w1RVpPdGVyVWJYR2dtR2owR1lUUmV1RFgvUjRWR2w1RkhKZ3Nh?=
+ =?utf-8?Q?tWQk=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523115134.70380-1-alexghiti@rivosinc.com>
- <20240613-lubricant-breath-061192a9489a@wendy> <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
- <b603c8b5-3100-4ccf-b014-9274f980358d@ghiti.fr> <CABgGipU1tjFAJ+KD7fFabVmLoqNtmQagn2sREHVzZCZ3OxozzQ@mail.gmail.com>
- <CAHVXubiubf9oCHnFco19SReZRPELYJSRtZmwEnGQLR++N+aH-g@mail.gmail.com>
-In-Reply-To: <CAHVXubiubf9oCHnFco19SReZRPELYJSRtZmwEnGQLR++N+aH-g@mail.gmail.com>
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Wed, 19 Jun 2024 11:40:10 +0800
-Message-ID: <CABgGipWu2sL0EiKGUgksCZta5Ru3N5fqiNZVQ-5mrDt00puyyQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Conor Dooley <conor.dooley@microchip.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, puranjay Mohan <puranjay12@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8655.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9428b590-4f8d-44e0-81a3-08dc9011980b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2024 03:40:41.9243
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JnXgR9gEvuFEtqyBsVY6pcXV3k78FJ9TIFLyy2jVsTeTvaNKTA99TldtHX4pVLu4w0+ZHtR90BW964LKbzR55A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8297
 
-On Tue, Jun 18, 2024 at 9:40=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosinc=
-.com> wrote:
->
-> Hi Andy,
->
-> On Tue, Jun 18, 2024 at 2:48=E2=80=AFPM Andy Chiu <andy.chiu@sifive.com> =
-wrote:
-> >
-> > On Tue, Jun 18, 2024 at 8:02=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr>=
- wrote:
-> > >
-> > > Hi Conor,
-> > >
-> > > On 17/06/2024 15:23, Alexandre Ghiti wrote:
-> > > > Hi Conor,
-> > > >
-> > > > Sorry for the delay here.
-> > > >
-> > > > On 13/06/2024 09:48, Conor Dooley wrote:
-> > > >> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
-> > > >>> Commit c97bf629963e ("riscv: Fix text patching when IPI are used"=
-)
-> > > >>> converted ftrace_make_nop() to use patch_insn_write() which does =
-not
-> > > >>> emit any icache flush relying entirely on __ftrace_modify_code() =
-to do
-> > > >>> that.
-> > > >>>
-> > > >>> But we missed that ftrace_make_nop() was called very early direct=
-ly
-> > > >>> when
-> > > >>> converting mcount calls into nops (actually on riscv it converts =
-2B
-> > > >>> nops
-> > > >>> emitted by the compiler into 4B nops).
-> > > >>>
-> > > >>> This caused crashes on multiple HW as reported by Conor and Bj=C3=
-=B6rn since
-> > > >>> the booting core could have half-patched instructions in its icac=
-he
-> > > >>> which would trigger an illegal instruction trap: fix this by emit=
-ting a
-> > > >>> local flush icache when early patching nops.
-> > > >>>
-> > > >>> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used"=
-)
-> > > >>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > > >>> ---
-> > > >>>   arch/riscv/include/asm/cacheflush.h | 6 ++++++
-> > > >>>   arch/riscv/kernel/ftrace.c          | 3 +++
-> > > >>>   2 files changed, 9 insertions(+)
-> > > >>>
-> > > >>> diff --git a/arch/riscv/include/asm/cacheflush.h
-> > > >>> b/arch/riscv/include/asm/cacheflush.h
-> > > >>> index dd8d07146116..ce79c558a4c8 100644
-> > > >>> --- a/arch/riscv/include/asm/cacheflush.h
-> > > >>> +++ b/arch/riscv/include/asm/cacheflush.h
-> > > >>> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void=
-)
-> > > >>>       asm volatile ("fence.i" ::: "memory");
-> > > >>>   }
-> > > >>>   +static inline void local_flush_icache_range(unsigned long star=
-t,
-> > > >>> +                        unsigned long end)
-> > > >>> +{
-> > > >>> +    local_flush_icache_all();
-> > > >>> +}
-> > > >>> +
-> > > >>>   #define PG_dcache_clean PG_arch_1
-> > > >>>     static inline void flush_dcache_folio(struct folio *folio)
-> > > >>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrac=
-e.c
-> > > >>> index 4f4987a6d83d..32e7c401dfb4 100644
-> > > >>> --- a/arch/riscv/kernel/ftrace.c
-> > > >>> +++ b/arch/riscv/kernel/ftrace.c
-> > > >>> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struc=
-t
-> > > >>> dyn_ftrace *rec)
-> > > >>>       out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> > > >>>       mutex_unlock(&text_mutex);
-> > > >> So, turns out that this patch is not sufficient. I've seen some mo=
-re
-> > > >> crashes, seemingly due to initialising nops on this mutex_unlock()=
-.
-> > > >> Palmer suggested moving the if (!mod) ... into the lock, which fix=
-ed
-> > > >> the problem for me.
-> > > >
-> > > >
-> > > > Ok, it makes sense, I completely missed that. I'll send a fix for t=
-hat
-> > > > shortly so that it can be merged in rc5.
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Alex
-> > >
-> > >
-> > > So I digged a bit more and I'm afraid that the only way to make sure
-> > > this issue does not happen elsewhere is to flush the icache right aft=
-er
-> > > the patching. We actually can't wait to batch the icache flush since
-> > > along the way, we may call a function that has just been patched (the
-> > > issue that you encountered here).
-> >
-> > Trying to provide my thoughts, please let me know if I missed
-> > anything. I think what Conor suggested is safe for init_nop, as it
-> > would be called only when there is only one core (booting) and at the
-> > loading stage of kernel modules. In the first case we just have to
-> > make sure there is no patchable entry before the core executes
-> > fence.i. The second case is unconditionally safe because there is no
-> > read-side of the race.
-> >
-> > It is a bit tricky for the generic (runtime) case of ftrace code
-> > patching, but that is not because of the batch fence.i maintenance. As
-> > long as there exists a patchable entry for the stopping thread, it is
-> > possible for them to execute on a partially patched instruction. A
-> > solution for this is again to prevent any patchable entry in the
-> > stop_machine's stopping thread. Another solution is to apply the
-> > atomic ftrace patching series which aims to get rid of the race.
->
-> Yeah but my worry is that we can't make sure that functions called
-> between the patching and the fence.i are not the ones that just get
-> patched. At least today, patch_insn_write() etc should be marked as
-
-IIUC, the compiler does not generate a patchable entry for
-patch_insn_write, and so do all functions in patch.c. The entire file
-is not compiled with patchable entry because the flag is removed in
-riscv's Makefile. Please let me know if I misunderstand it.
-
-> noinstr. But even then, we call core functions that could be patchable
-> (I went through all and it *seems* we are safe *for now*, but this is
-> very fragile).
-
-Yes, functions in the "else" clause, atomic_read() etc, are safe for
-now. However, it is impossible to fix as long as there exists a
-patchable entry along the way. This is the problem that we cannot
-patch 2 instructions with a concurrent read-side. On the other hand,
-the path of ftrace_modify_all_code may experience the batch fence.i
-maintenance issue, and can be fixed via a local fence.i. This is
-because the path is executed by only one core. There does not exist a
-concurrent write-side. As a result, we just need to make sure it
-leaves each patch-site with a local fence.i to make sure code is
-up-to-date.
-
->
-> Then what do you think we should do to fix Conor's issue right now:
-> should we mark the riscv specific functions as noinstr, cross fingers
-> that the core functions are not (and don't become) patchable and wait
-> for your atomic patching? Or should we flush as soon as possible as I
-> proposed above (which to me fixes the issue but hurts performance)?
-
-Either way works for me. IMHO, the fix should include:
-
-1. move fence.i before mutex_unlock in init_nop
-2. do local fence.i in __ftrace_modify_call
-3. make sure the else clause does not happen to have a patchable entry
-
-Thanks,
-Andy
-
->
-> Thanks,
->
-> Alex
->
-> >
-> > >
-> > > I don't know how much it will impact the performance but I guess it w=
-ill.
-> > >
-> > > Unless someone has a better idea (I added Andy and Puranjay in cc), h=
-ere
-> > > is the patch that implements this, can you give it a try? Thanks
-> > >
-> > > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> > > index 87cbd86576b2..4b95c574fd04 100644
-> > > --- a/arch/riscv/kernel/ftrace.c
-> > > +++ b/arch/riscv/kernel/ftrace.c
-> > > @@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct
-> > > dyn_ftrace *rec)
-> > >          out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> > >          mutex_unlock(&text_mutex);
-> > >
-> > > -       if (!mod)
-> > > -               local_flush_icache_range(rec->ip, rec->ip +
-> > > MCOUNT_INSN_SIZE);
-> > > -
-> > >          return out;
-> > >   }
-> > >
-> > > @@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
-> > >          } else {
-> > >                  while (atomic_read(&param->cpu_count) <=3D num_onlin=
-e_cpus())
-> > >                          cpu_relax();
-> > > -       }
-> > >
-> > > -       local_flush_icache_all();
-> > > +               local_flush_icache_all();
-> > > +       }
-> > >
-> > >          return 0;
-> > >   }
-> > > diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-> > > index 4007563fb607..ab03732d06c4 100644
-> > > --- a/arch/riscv/kernel/patch.c
-> > > +++ b/arch/riscv/kernel/patch.c
-> > > @@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size=
-_t len)
-> > >
-> > >          memset(waddr, c, len);
-> > >
-> > > +       /*
-> > > +        * We could have just patched a function that is about to be
-> > > +        * called so make sure we don't execute partially patched
-> > > +        * instructions by flushing the icache as soon as possible.
-> > > +        */
-> > > +       local_flush_icache_range((unsigned long)waddr,
-> > > +                                (unsigned long)waddr + len);
-> > > +
-> > >          patch_unmap(FIX_TEXT_POKE0);
-> > >
-> > >          if (across_pages)
-> > > @@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const
-> > > void *insn, size_t len)
-> > >
-> > >          ret =3D copy_to_kernel_nofault(waddr, insn, len);
-> > >
-> > > +       /*
-> > > +        * We could have just patched a function that is about to be
-> > > +        * called so make sure we don't execute partially patched
-> > > +        * instructions by flushing the icache as soon as possible.
-> > > +        */
-> > > +       local_flush_icache_range((unsigned long)waddr,
-> > > +                                (unsigned long)waddr + len);
-> > > +
-> > >          patch_unmap(FIX_TEXT_POKE0);
-> > >
-> > >          if (across_pages)
-> > > @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_=
-t len)
-> > >
-> > >          ret =3D patch_insn_set(tp, c, len);
-> > >
-> > > -       if (!ret)
-> > > -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len=
-);
-> > > -
-> > >          return ret;
-> > >   }
-> > >   NOKPROBE_SYMBOL(patch_text_set_nosync);
-> > > @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *ins=
-ns,
-> > > size_t len)
-> > >
-> > >          ret =3D patch_insn_write(tp, insns, len);
-> > >
-> > > -       if (!ret)
-> > > -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + l=
-en);
-> > > -
-> > >          return ret;
-> > >   }
-> > >   NOKPROBE_SYMBOL(patch_text_nosync);
-> > > @@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
-> > >          } else {
-> > >                  while (atomic_read(&patch->cpu_count) <=3D num_onlin=
-e_cpus())
-> > >                          cpu_relax();
-> > > -       }
-> > >
-> > > -       local_flush_icache_all();
-> > > +               local_flush_icache_all();
-> > > +       }
-> > >
-> > >          return ret;
-> > >   }
-> > >
-> > >
-> > > >
-> > > >
-> > > >>
-> > > >>>   +    if (!mod)
-> > > >>> +        local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_=
-SIZE);
-> > > >>> +
-> > > >>>       return out;
-> > > >>>   }
-> > > >>>   --
-> > > >>> 2.39.2
-> > > >>>
-> > > >>>
-> > > >>> _______________________________________________
-> > > >>> linux-riscv mailing list
-> > > >>> linux-riscv@lists.infradead.org
-> > > >>> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> > > >
-> > > > _______________________________________________
-> > > > linux-riscv mailing list
-> > > > linux-riscv@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> >
-> > Cheers,
-> > Andy
+W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
+Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3Yg
+PGJwQGFsaWVuOC5kZT4NCj4gU2VudDogTW9uZGF5LCBKdW5lIDE3LCAyMDI0IDQ6MzkgUE0NCj4g
+VG86IFl1YW4sIFBlcnJ5IDxQZXJyeS5ZdWFuQGFtZC5jb20+DQo+IENjOiByYWZhZWwuai53eXNv
+Y2tpQGludGVsLmNvbTsgTGltb25jaWVsbG8sIE1hcmlvDQo+IDxNYXJpby5MaW1vbmNpZWxsb0Bh
+bWQuY29tPjsgdmlyZXNoLmt1bWFyQGxpbmFyby5vcmc7IEh1YW5nLCBSYXkNCj4gPFJheS5IdWFu
+Z0BhbWQuY29tPjsgU2hlbm95LCBHYXV0aGFtIFJhbmphbA0KPiA8Z2F1dGhhbS5zaGVub3lAYW1k
+LmNvbT47IERldWNoZXIsIEFsZXhhbmRlcg0KPiA8QWxleGFuZGVyLkRldWNoZXJAYW1kLmNvbT47
+IEh1YW5nLCBTaGltbWVyDQo+IDxTaGltbWVyLkh1YW5nQGFtZC5jb20+OyBEdSwgWGlhb2ppYW4g
+PFhpYW9qaWFuLkR1QGFtZC5jb20+OyBNZW5nLA0KPiBMaSAoSmFzc21pbmUpIDxMaS5NZW5nQGFt
+ZC5jb20+OyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
+ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMDgvMTFdIHg4Ni9jcHVmZWF0dXJl
+czogQWRkIGZlYXR1cmUgYml0cyBmb3IgQU1EDQo+IGhldGVyb2dlbmVvdXMgcHJvY2Vzc29yDQo+
+DQo+IE9uIE1vbiwgSnVuIDE3LCAyMDI0IGF0IDAyOjU5OjEwUE0gKzA4MDAsIFBlcnJ5IFl1YW4g
+d3JvdGU6DQo+ID4gQ1BVSUQgbGVhZiAweDgwMDAwMDI2IGFkdmVydGlzZXMgY29yZSB0eXBlcyB3
+aXRoIGRpZmZlcmVudCBlZmZpY2llbmN5DQo+ID4gcmFua2luZ3MNCj4gPg0KPiA+IEJpdCAzMCBp
+bmRpY2F0ZXMgdGhlIGhldGVyb2dlbmVvdXMgY29yZSB0b3BvbG9neSBmZWF0dXJlLCBpZiB0aGUg
+Yml0DQo+ID4gc2V0LCBpdCBtZWFucyBub3QgYWxsIGluc3RhbmNlcyBhdCB0aGUgY3VycmVudCBo
+aWVyYXJjaGljYWwgbGV2ZWwgaGF2ZQ0KPiA+IHRoZSBzYW1lIGNvcmUgdG9wb2xvZ3kuDQo+ID4N
+Cj4gPiBGb3IgYmV0dGVyIHV0aWxpemF0aW9uIG9mIGZlYXR1cmUgd29yZHMgYW5kIGhlbHAgdG8g
+aWRlbnRpZnkgY29yZQ0KPiA+IHR5cGUsIFg4Nl9GRUFUVVJFX0hFVEVST19DT1JFX1RPUE9MT0dZ
+IGlzIGFkZGVkIGFzIGEgZmV3IHNjYXR0ZXJlZA0KPiBmZWF0dXJlIGJpdHMuDQo+ID4NCj4gPiBS
+ZWZlcmVuY2U6DQo+ID4gU2VlIHRoZSBwYWdlIDExOSBvZiBQUFIgZm9yIEFNRCBGYW1pbHkgMTlo
+IE1vZGVsIDYxaCBCMSwgZG9jSUQgNTY3MTMNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBlcnJ5
+IFl1YW4gPHBlcnJ5Lnl1YW5AYW1kLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC94ODYvaW5jbHVk
+ZS9hc20vY3B1ZmVhdHVyZXMuaCB8IDEgKw0KPiA+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NjYXR0
+ZXJlZC5jICAgIHwgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vY3B1ZmVhdHVyZXMuaA0K
+PiA+IGIvYXJjaC94ODYvaW5jbHVkZS9hc20vY3B1ZmVhdHVyZXMuaA0KPiA+IGluZGV4IDZjMTI4
+ZDQ2M2ExNC4uZWNlYWEwZGYwMTM3IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gveDg2L2luY2x1ZGUv
+YXNtL2NwdWZlYXR1cmVzLmgNCj4gPiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcHVmZWF0
+dXJlcy5oDQo+ID4gQEAgLTQ3MSw2ICs0NzEsNyBAQA0KPiA+ICAjZGVmaW5lIFg4Nl9GRUFUVVJF
+X0NMRUFSX0JIQl9IVyAgICgyMSozMisgMykgLyogIiIgQkhJX0RJU19TDQo+IEhXIGNvbnRyb2wg
+ZW5hYmxlZCAqLw0KPiA+ICAjZGVmaW5lIFg4Nl9GRUFUVVJFX0NMRUFSX0JIQl9MT09QX09OX1ZN
+RVhJVCAoMjEqMzIrIDQpIC8qICIiDQo+IENsZWFyIGJyYW5jaCBoaXN0b3J5IGF0IHZtZXhpdCB1
+c2luZyBTVyBsb29wICovDQo+ID4gICNkZWZpbmUgWDg2X0ZFQVRVUkVfRkFTVF9DUFBDICAgICAg
+ICAgICAgICAoMjEqMzIgKyA1KSAvKiAiIiBBTUQgRmFzdA0KPiBDUFBDICovDQo+ID4gKyNkZWZp
+bmUgWDg2X0ZFQVRVUkVfSEVURVJPX0NPUkVfVE9QT0xPR1kgICAgICAgKDIxKjMyKyA2KSAvKiAi
+Ig0KPiBIZXRlcm9nZW5lb3VzIENvcmUgVG9wb2xvZ3kgKi8NCj4gPg0KPiA+ICAvKg0KPiA+ICAg
+KiBCVUcgd29yZChzKQ0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L3NjYXR0
+ZXJlZC5jDQo+ID4gYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L3NjYXR0ZXJlZC5jIGluZGV4IGM4NGMz
+MDE4OGZkZi4uNmIzNDc3NTAzZGQwDQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC94ODYva2Vy
+bmVsL2NwdS9zY2F0dGVyZWQuYw0KPiA+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvc2NhdHRl
+cmVkLmMNCj4gPiBAQCAtNTIsNiArNTIsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNwdWlkX2Jp
+dCBjcHVpZF9iaXRzW10gPSB7DQo+ID4gICAgIHsgWDg2X0ZFQVRVUkVfUEVSRk1PTl9WMiwgICAg
+ICAgQ1BVSURfRUFYLCAgMCwgMHg4MDAwMDAyMiwgMCB9LA0KPiA+ICAgICB7IFg4Nl9GRUFUVVJF
+X0FNRF9MQlJfVjIsICAgICAgIENQVUlEX0VBWCwgIDEsIDB4ODAwMDAwMjIsIDAgfSwNCj4gPiAg
+ICAgeyBYODZfRkVBVFVSRV9BTURfTEJSX1BNQ19GUkVFWkUsICAgICAgIENQVUlEX0VBWCwgIDIs
+DQo+IDB4ODAwMDAwMjIsIDAgfSwNCj4gPiArICAgeyBYODZfRkVBVFVSRV9IRVRFUk9fQ09SRV9U
+T1BPTE9HWSwgICAgIENQVUlEX0VBWCwgIDMwLA0KPiAweDgwMDAwMDI2LCAwIH0sDQo+ID4gICAg
+IHsgMCwgMCwgMCwgMCwgMCB9DQo+ID4gIH07DQo+ID4NCj4gPiAtLQ0KPg0KPiBOYWNrZWQtYnk6
+IEJvcmlzbGF2IFBldGtvdiAoQU1EKSA8YnBAYWxpZW44LmRlPg0KPg0KPiBVbnRpbCBhbGwgcmV2
+aWV3IGNvbW1lbnRzIGhhdmUgYmVlbiBhZGRyZXNzZWQ6DQo+DQo+IGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL3IvMjAyNDA2MTExMDUyMTYuR0FabWdzWUMtDQo+IEpfeUxmZHVwRkBmYXRfY3JhdGUu
+bG9jYWwNCj4NCj4gLS0NCj4gUmVnYXJkcy9HcnVzcywNCj4gICAgIEJvcmlzLg0KPg0KPiBodHRw
+czovL3Blb3BsZS5rZXJuZWwub3JnL3RnbHgvbm90ZXMtYWJvdXQtbmV0aXF1ZXR0ZQ0KDQpCb3Jp
+cywNCkkgSnVzdCBhY2NpZGVudGFsbHkgbWlzc2VkIHRoZSBvdGhlciBjb21tZW50cywgIHdpbGwg
+YWRkcmVzcyBpdCBpbiB2NS4NClRoYW5rcyBmb3IgeW91ciByZXZpZXcgIH4NCg0K
