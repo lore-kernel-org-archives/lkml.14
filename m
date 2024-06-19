@@ -1,121 +1,123 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B28146A85
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 13:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0AC146016
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 13:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718802669; cv=none; b=eOrQhXgq6SStf48Z4tomlvuk/UUz/l2x0rdLuKshMcJd4mDj0gmg0OxY0iPdLCX37wvY1cS6vP+1tv8NQQKIFvxx6gc7KzoIeaEuqRV3TrnkGrnvJqnZCvpI9LAZPyWEsd4EtsgzVRgTHIQJRakN+zNAAOSSSd9IzplAMZ3RyrI=
+	t=1718802686; cv=none; b=tdGUu9Hk7CZJvPo+3SDl9Rqwm1w7Bu8fMl5hiH9yez32Y2C/SJp+Y8t2eJK9FZjZ2ElKSN+iVaYuwUYjNWIWePvwzq0DHleoqsLdvof8XM+hGX7g+kmD6drcJeXaWieU4v+DJtybqxMQNhI5vnbKlsbM6/jp2BIXIQc4EV53cx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718802669; c=relaxed/simple;
-	bh=f8D/9s2CDW3GK+4dmcg1ylCC474S4Jkf25ughKFSwm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FgwB01DHHWhvVp5XGAPrye3SezWRVBFED9VreEqgRNRr+v+fVh6IY2Ql0V6Ysyk80IELjIuugdlEhMmd8Uoxv5qlFOxGjRUlZYmEkNP5wA5K4fXjBkx6yD0PN1RH0cIeC81bxn8jAN6vcKVI1X731DnPyfq4nNVyZddAqj/x5og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=d2W88XqF; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1718802686; c=relaxed/simple;
+	bh=6MMx9/E3X3W91ugE851hUdJfDhuyenBEGy36UVjDJ3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vBJ+5OHuLZ46pUZM8hEmjkQRuWRu5CCxOcAmNkSoapIPq6jkrXFPBerJhF+F0kU0MET57DIfd/Jw+Ng1JNrYzcEvTCGQwyf14npy7+6YexX6CVEBWVAp+4uT4Zf2RasLowMy9rTXxOiP5OWpFyhVYM69lzAkJNMlSF6s9qgan2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ojlevmjd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="d2W88XqF"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-795569eedcaso328089785a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1718802667; x=1719407467; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Kf9r27RNSYH+M0vPwe+rDP3evgG93CXIjp23HZ8WnCY=;
-        b=d2W88XqFhE2y/SDcMzT+0C0zYIMhNgK8ONGubqLwv1xRK2jb2ttXZhtsbb+JJahQa2
-         08ovHWMFjwdhUc8h1Zt6ppBnmkJSE+32wKmDmwaUZXfH9szggYb0EQJTXZw+DFCqXaLK
-         uc94N7k1ds0iPBqHw9f9npMfEp6jog0cbV4yJyJ/GrX8fCbVQrL0HEFhsXxVv8PB8a1z
-         QC+Z9qYOO9ULO0mnENQ6Y3Wdprdp6+uCSuta6myZr32riqjqk94cp/EMcJM27tu/CNB0
-         LQjHIrmUx1aIbOJ+FigU8qGTQBIbertr5xNXww2bgSnEWZuaYQHkFBgejbO2X0lO1GaE
-         qFug==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ojlevmjd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718802683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RNygLwLxnRl00trKraz6/piCD3IZTxeSu/NBGyrNrIo=;
+	b=OjlevmjdRki3yyQMPCBTTR5j/Mu7Yapb0HwttS6m63zV5Hku62GHP3ZFjozRxUCY0gBQtX
+	AJseLsUqnft8Gs2A0Taizf7itPYBl6NqmQtHL0W1SMZd5cs7Wnn/R696RBgWsaXJRIJN+B
+	o1nwFgS5FW+9VSyFagZWFtevl4qhmls=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-624-5HyqtDr8NTCupvPdNf8Kpw-1; Wed, 19 Jun 2024 09:11:22 -0400
+X-MC-Unique: 5HyqtDr8NTCupvPdNf8Kpw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6ec06ed579so357361466b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:11:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718802667; x=1719407467;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kf9r27RNSYH+M0vPwe+rDP3evgG93CXIjp23HZ8WnCY=;
-        b=M+pcRrkxayyM0K5s6nSxZCGi1CqjAchszdxZOqcMiFIN3pLtUyahYB2ZMrbjzWvkAu
-         ElRsE7lAfwYCt+urmcowdxstsuTiZexiSQOdO4QTXlISOMjCQ97My0ReQ9d89Cn/6046
-         4f6L2DMcSFLOfrnO+/WOQl03Sdpgc/zQxTLsZzhgxITUh3J7KBhoRF2/TFO18UJRnf/4
-         0hXN0YV7sj1qj4bLsw3rbrTP3RI+fP6ysVgUzF8eqxkxgvkCMQel+787FB+W+yc037k8
-         On2buCRiSM+DD4QcUP3rzTlRYV2Ax6k6rwQV/guPfWlmJUKOWN7OvlaU8KxOUpmO9wtW
-         bXdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXq5QiLk2DJJNiFOdJ2phbrILjMiTvhU9MHjlM41Eomjvw1JW0LYrQOzv1/wbwvHO8urEvwe/HX8ABOw6VwA2Vn6nzQkye+YY4/k9PA
-X-Gm-Message-State: AOJu0Yx++1BtOKRn35xHXigsWtGAya4qSZbrybwrTx+P7iEi015SW4mc
-	dsZhC4HoobkjwQQQcj5wGqHVMJg2qk+OypHyIgKVSn6OfxT24+EfQXxxmrU22eI=
-X-Google-Smtp-Source: AGHT+IFE11ASRWf4WYTH0x6XxeEds9PyEcIqeUwSrbCnNFW+6zWifwS2t6Yt+SRC48O2ptbYQuGPdQ==
-X-Received: by 2002:a05:620a:4308:b0:795:4e35:ea9c with SMTP id af79cd13be357-79bb3e2f4b6mr277089185a.29.1718802666926;
-        Wed, 19 Jun 2024 06:11:06 -0700 (PDT)
-Received: from sunil-laptop ([106.51.187.237])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aaee575fsm605502085a.40.2024.06.19.06.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 06:11:06 -0700 (PDT)
-Date: Wed, 19 Jun 2024 18:40:54 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org, bhelgaas@google.com,
-	james.morse@arm.com, jeremy.linton@arm.com,
-	Jonathan.Cameron@huawei.com, pierre.gondois@arm.com,
-	sudeep.holla@arm.com, tiantao6@huawei.com
-Subject: Re: [PATCH v6 3/3] RISC-V: Select ACPI PPTT drivers
-Message-ID: <ZnLY3mNxyv9QOmGn@sunil-laptop>
-References: <20240617131425.7526-1-cuiyunhui@bytedance.com>
- <20240617131425.7526-3-cuiyunhui@bytedance.com>
- <CAEEQ3wnkQsfmLbyMrG_YBvWvhHJdSTg7dG5W_mxv_wxCjatgCA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1718802681; x=1719407481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RNygLwLxnRl00trKraz6/piCD3IZTxeSu/NBGyrNrIo=;
+        b=VHCCGRc2m2JGWxG8603WMdLWHRHD/5wwu5mBGmFPWPb9YzP42Iqcsxjv7gdFXWeyqW
+         H0RHNn9NihOjWzLUNAtntfDm832F2ZlWRWyUAbGpZ27IrSB4o5Z3WMETRNByhxzUISKB
+         ugalkfm7v9Rl8cUUw9mRo/AeXATMp9E7T6t0v+N49csWeICqGU5K3JhF1SugUAoT+aIl
+         NwCmc+SsMWipQaitzJ5aoKFwcxtlYZ8r8yR3RdG592HI9RLOCsAjhdQdL0/LqA2LiPJF
+         RAB7tRq/9H7mCKNbHREaUNqhgkr/hYqzoWxE5/zFpRzvuOlvGj00GmdxkwjfXmjLZ4l4
+         4X+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVCiE1EmkU06zon3XCaHcehQQITGPRlsIFHoE/HpKqo3/emA40GuxjRs6NFiIZBLUVP3yReAmpxvxnl7/BK0ZPFCASewt5TItctf1+g
+X-Gm-Message-State: AOJu0Yxm9xkv7b3dL02YrY0YGrdU4rCWb1Zn+xrULweuQKooPeFsACQu
+	zinKesSOz3koQtnnxOBIw+r6Il6lNeZQ/Qws89lxgTGEHreSnqfeJZ4N4dFjoy1taiPovk4ohuP
+	v1o2gPL0XjfEhVc0UXDt2CovZ6J3dYGWW+ctgnAdoO5MlsM/njbtjsgroKomPBqvV6AKhSOHZ+A
+	PYGgO2A8O7MV65a3mLYKjghPBJhfw7cT0/XiBe
+X-Received: by 2002:a17:906:31cc:b0:a6e:fb9b:676c with SMTP id a640c23a62f3a-a6fab7dcf3dmr132240066b.68.1718802681425;
+        Wed, 19 Jun 2024 06:11:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEEEmubgGou+QZ+1kvAFjWIGTzn5KXKVv/pMwHZqrSCREnG5fUXo5Bg5YKnt2dpd+aruHL5m4QRsXhSoeJdF9M=
+X-Received: by 2002:a17:906:31cc:b0:a6e:fb9b:676c with SMTP id
+ a640c23a62f3a-a6fab7dcf3dmr132238166b.68.1718802680997; Wed, 19 Jun 2024
+ 06:11:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3wnkQsfmLbyMrG_YBvWvhHJdSTg7dG5W_mxv_wxCjatgCA@mail.gmail.com>
+References: <PH0PR12MB5481BAABF5C43F9500D2852CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
+ <ZnAETXPWG2BvyqSc@nanopsycho.orion> <PH0PR12MB5481F6F62D8E47FB6DFAD206DCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
+ <ZnAgefA1ge11bbFp@nanopsycho.orion> <PH0PR12MB548116966222E720D831AA4CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
+ <ZnAz8xchRroVOyCY@nanopsycho.orion> <20240617094314-mutt-send-email-mst@kernel.org>
+ <20240617082002.3daaf9d4@kernel.org> <20240617121929-mutt-send-email-mst@kernel.org>
+ <20240617094421.4ae387d7@kernel.org> <20240618063613-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240618063613-mutt-send-email-mst@kernel.org>
+From: Cindy Lu <lulu@redhat.com>
+Date: Wed, 19 Jun 2024 21:10:41 +0800
+Message-ID: <CACLfguWhi9P2ZJwRYiqUDUeCdihQtFFth9OZugXgiisSMaVzqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] vdpa: support set mac address from vdpa tool
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>, Parav Pandit <parav@nvidia.com>, 
+	Jason Wang <jasowang@redhat.com>, Dragos Tatulea <dtatulea@nvidia.com>, 
+	"virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 19, 2024 at 07:32:18PM +0800, yunhui cui wrote:
-> Hi Sunil,
-> 
-> On Mon, Jun 17, 2024 at 9:14 PM Yunhui Cui <cuiyunhui@bytedance.com> wrote:
+On Tue, Jun 18, 2024 at 6:39=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Mon, Jun 17, 2024 at 09:44:21AM -0700, Jakub Kicinski wrote:
+> > On Mon, 17 Jun 2024 12:20:19 -0400 Michael S. Tsirkin wrote:
+> > > > But the virtio spec doesn't allow setting the MAC...
+> > > > I'm probably just lost in the conversation but there's hypervisor s=
+ide
+> > > > and there is user/VM side, each of them already has an interface to=
+ set
+> > > > the MAC. The MAC doesn't matter, but I want to make sure my mental =
+model
+> > > > matches reality in case we start duplicating too much..
+> > >
+> > > An obvious part of provisioning is specifying the config space
+> > > of the device.
 > >
-> > After adding ACPI support to populate_cache_leaves(), RISC-V can build
-> > cacheinfo through the ACPI PPTT table, thus enabling the ACPI_PPTT
-> > configuration.
-> >
-> > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> > Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
-> > ---
-> >  arch/riscv/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 9f38a5ecbee3..1b4c310a59fb 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -13,6 +13,7 @@ config 32BIT
-> >  config RISCV
-> >         def_bool y
-> >         select ACPI_GENERIC_GSI if ACPI
-> > +       select ACPI_PPTT if ACPI
-> >         select ACPI_REDUCED_HARDWARE_ONLY if ACPI
-> >         select ARCH_DMA_DEFAULT_COHERENT
-> >         select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
-> > --
-> > 2.20.1
-> >
-> 
-> Gentle ping.
-> 
-Actually, my RB is still valid. Anyway, here again.
+> > Agreed, that part is obvious.
+> > Please go ahead, I don't really care and you clearly don't have time
+> > to explain.
+>
+> Thanks!
+> Just in case Cindy who is working on it is also confused,
+> here is what I meant:
+>
+> - an interface to provision a device, including its config
+>   space, makes sense to me
+> - default mac address is part of config space, and would thus be covered
+> - note how this is different from ability to tweak the mac of an existing
+>   device
+>
+Thanks Micheal, I will continue working in this
+thanks
+cindy
+>
+> --
+> MST
+>
 
-Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
-
-Thanks,
-Sunil
