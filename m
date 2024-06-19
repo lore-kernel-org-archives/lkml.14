@@ -1,57 +1,57 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8551586D3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 18:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF5F158DA5
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 18:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718822766; cv=none; b=lRa7R+UdoranHJt4D+PdqWRyPYV4dC+aKiGxzvmlNRamj6dWdMhngKH4lyUBLSW+6c8aL07WEYbjkPFDcPCXytsXx3nWKymSPWpb/f5i+4jZ4ZF1fNqYoSZU4AR72VV1qMDo0kCeWoR15MS8hZHLy9i9j/d+GRKFu9fv+QsCvIA=
+	t=1718822768; cv=none; b=XaZn2dDjIdzvZMBedB1Am0q0Ls6niNTYVhXITQS67zTPiVlMC3MoZyEjeviunPBDcpUSv+DOcCn6DLpc1ndzq3MqRVXMvfA1RnycXZKkTfOTsfa0AMbFln9Rwq9CpPC3L8nTMn63E7WvXAEuSEn4Z8VRCh+sigXrXQluqq4ZyyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718822766; c=relaxed/simple;
-	bh=xQZfBrjg8Y1IyEOd4VaZKMauy6Z5Ydh+j9RZPVg6KZk=;
+	s=arc-20240116; t=1718822768; c=relaxed/simple;
+	bh=Gb2AtUPIZLOqvCXJxTsfKyEo0Y1lWpbQs78ViEnJLxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nKLMFkZHuJVvQA0shj7/ku0tsPYZOXNIru2QWCuzfPZGMqpMNL8H7rUh/UAA8thwi3HmeF4r+vIw2tivANd6zoZmjAmmaYEJWKU9QygXmBq4maLDzj2wy/GvdgiBpPuO9af2JRRNh+Uzum8a+8I+5yh6Q0jpiNxyEeXk1a1zCgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gAL+o4vV; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=CvF/B3XliPlwU6RjPXJSxJNoxrhDDYQbBd4iZJHc2Z9kWlEX2TzcXfPaQ422AzUcscPke15lpTkbnZ6lWYnv6sWy5kL1CtIuTSRgZQ3j6SYsEn3RGdCVS4XyALD67uxURtR2waMC9TxCZ+bIYgatCQv9gw9cEg8Cg9iAK9MnCko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B7PTfcsD; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gAL+o4vV"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-421eab59723so934115e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:46:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B7PTfcsD"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3629c517da9so105892f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718822763; x=1719427563; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718822765; x=1719427565; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Of1uWBxSEjvKTQJleea6ZxhN8mHuCcwxXxdGI9uF93A=;
-        b=gAL+o4vVw3jcnhq4PUbRpC74aZANSxP2sHepAl477+dHyw3hIiYtKS9iQYOzNR/aZl
-         7jG7iLmV3Eq2lBLWWUnK6mwdZDiAlv/bi52N9kVh0HgIjWYLsLw9y/CplYlywGk3vr6y
-         jbwWpbF3OYq7oBGO3aLvdLCbprYHWo+51G/sASidqzssMBKA+L8kkhB6GGuyGhS9xZVE
-         JSaetH0dSnfHCJDTFQf5ZtPdDY0xzTK2pTGGYRjhj1zHxTUF4OPeFToRxOpMpNMHNNyK
-         pOO33h0IRjazGywi2++BR6mrtBlZK+3jLdtOMH6cxOopJbiuilV4xGuNYqMzbTENJT2D
-         5ItQ==
+        bh=i2ZaP1GIFake6LOudA2QCXAqpH6bV7MuTKm6aVLhChY=;
+        b=B7PTfcsDSXbyDcRg9LalOo7qedZye4tGXhCXAUYV48UBq4EeFq3zXLSEFXIFH15DwS
+         oUvk44dQT9R5xrlkPM3AKlXs9sB9kEJp0C18gHErO7vhZgQY2FW54XqJPWT7/sEZxPDk
+         84tI+EyOaLCtidTCer3PAnRXUD96FHMDoPjitlmfdVvdeveDCIzf7EFVVgxWut4H76Ml
+         u3RROOmLoFmhvd3KiZGk74KGk4MDKHTwEcbjxOfD8L2MvCX1dhiaD5A5DpTHIy41YyRA
+         oFhvWRb/VaA9lw+hYTCmWYtPUZ4987dm/73v5MXBsqPNMRANjE5dV5XIK7y64EP36h4Y
+         UFrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718822763; x=1719427563;
+        d=1e100.net; s=20230601; t=1718822765; x=1719427565;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Of1uWBxSEjvKTQJleea6ZxhN8mHuCcwxXxdGI9uF93A=;
-        b=t9aEEaNosbjE/fFVeZc8RUEnZ9HZMfdCkQ/5gtzBAsfoAek45Xqd5gv/yg6rY4ExXE
-         4UfeQoY8d3AeJllZY8kOgHgUj5oh4x05Y9Nhi/5KucdA/PgVYxtGwZTDwQFGTCFmFOw2
-         3SD+E2CGuBxy8Ua43zVzN8THkj9huyMKz45xRUcT5INxIuF3pAB88P/epKhWL6ZIp2Tq
-         OwXn3/qsgaQk3cUZpdJ/KviWlQxBQcPtACvks+kxqctQOgu9AItGvXWv6JYbbPvVbAnD
-         5y8psOGxprKVUuGuxnmbSk2PgFFWJJkpo8vj1puGFqBtLjZiEqp5h1EEtRmnCz36Bl+u
-         Q/rw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFFzIbhYjeQX/tm8+bmS7XM6AQyeM5lFzB5YVne9g3K4SzaEUW150UGdt+DFwnn2+f0atfZ+xETF49nJJDxQ5aWFQWtTbDXFd+IqAT
-X-Gm-Message-State: AOJu0YxWy6DNjiXApD23RgQj/u8H5Z8jbFERzRK1BxpFLJ9KYcrOvJG7
-	1a09xhGnc2R+ULsOCttFqUCUQpt++bdGXvU8T8EZQZFZj/oG3aixSKgMjz3f0oE=
-X-Google-Smtp-Source: AGHT+IG94KmlBI+1kAFW/XzI6UK2YpoCtdBNr/zZ39tySmt8Nx0B1Rz4PfJT6D+Bu6Uwl7ILTiqtkg==
-X-Received: by 2002:a7b:cc13:0:b0:424:784c:b13b with SMTP id 5b1f17b1804b1-424784cb209mr15137645e9.13.1718822763293;
-        Wed, 19 Jun 2024 11:46:03 -0700 (PDT)
+        bh=i2ZaP1GIFake6LOudA2QCXAqpH6bV7MuTKm6aVLhChY=;
+        b=Y3hAgq3j6QKeEz2aRUkCoGbuyOB5xkdrvoE1m/XLIC+YMYv+YkXYk/9xdRF0/f/Eio
+         Tb2wT9AeAi8vkiyvMdcOYnG02PPmp4MmdZ4DjRAQGLCwlkC0wQjAeZza5GGkANVtjIXt
+         nP95ZResw7/uscDkOJu9pRJVkO6mxLfzybbd9dcuk62qURcwYmzQwcMU5eN8mvdL72q4
+         8QnO6ofXgaR6snw89Dt918yi4ygZrtKZmkqW2UhfmvsiVCwn7IJ6q2mOg8QkjjmSx9+t
+         NMx1y7wpeGInKbathUlYKfY6dBFpz+FmdGHWMkoQbgFPgj2aQoipVvELZJ1dv1sIV2UP
+         LEwg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8gvGa9N5uAJqRI7x/e5b7KXEyuRgIykPMmVmbOw5aKWkXpULFwZoSBQhbQB9U3uqLr+FeNMnd9W+64UPzJgpWTruEJ6eNi5iw2/kj
+X-Gm-Message-State: AOJu0Yx/Ptj3mZWBwkjmiLzT6JXx0Yn4y5l0fCpBOGwpp5xur0jsyh8r
+	Og5EhQ6inrijLWpGdhVEBThqr+w3q9R75f/7oWZZ6g2/obcaHj39OxJCjasOG28=
+X-Google-Smtp-Source: AGHT+IFHpgEdcFxPeHRNEDbOoGGaHbIDTAIRX4vjn/KLZAdtQ8VVBfo3vmxuKjBv7nIHdarP5mwF1w==
+X-Received: by 2002:a5d:590c:0:b0:35f:1eba:cf66 with SMTP id ffacd0b85a97d-363199905dbmr3314238f8f.61.1718822765554;
+        Wed, 19 Jun 2024 11:46:05 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:991f:deb8:4c5d:d73d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36098c8c596sm7594156f8f.14.2024.06.19.11.46.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36098c8c596sm7594156f8f.14.2024.06.19.11.46.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 11:46:02 -0700 (PDT)
+        Wed, 19 Jun 2024 11:46:04 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Vinod Koul <vkoul@kernel.org>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
@@ -70,9 +70,9 @@ Cc: netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH net-next 1/8] net: phy: add support for overclocked SGMII
-Date: Wed, 19 Jun 2024 20:45:42 +0200
-Message-ID: <20240619184550.34524-2-brgl@bgdev.pl>
+Subject: [PATCH net-next 3/8] net: phy: aquantia: add missing include guards
+Date: Wed, 19 Jun 2024 20:45:44 +0200
+Message-ID: <20240619184550.34524-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240619184550.34524-1-brgl@bgdev.pl>
 References: <20240619184550.34524-1-brgl@bgdev.pl>
@@ -86,131 +86,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The Aquantia AQR115C PHY supports the Overlocked SGMII mode. In order to
-support it in the driver, extend the PHY core with the new mode bits and
-pieces.
+The header is missing the include guards so add them.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/net/phy/phy-core.c |  1 +
- drivers/net/phy/phylink.c  | 13 ++++++++++++-
- include/linux/phy.h        |  4 ++++
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/net/phy/aquantia/aquantia.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
-index 15f349e5995a..7cf87cae11f0 100644
---- a/drivers/net/phy/phy-core.c
-+++ b/drivers/net/phy/phy-core.c
-@@ -138,6 +138,7 @@ int phy_interface_num_ports(phy_interface_t interface)
- 	case PHY_INTERFACE_MODE_RXAUI:
- 	case PHY_INTERFACE_MODE_XAUI:
- 	case PHY_INTERFACE_MODE_1000BASEKX:
-+	case PHY_INTERFACE_MODE_OCSGMII:
- 		return 1;
- 	case PHY_INTERFACE_MODE_QSGMII:
- 	case PHY_INTERFACE_MODE_QUSGMII:
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 02427378acfd..ce07d41a233f 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -128,6 +128,7 @@ static const phy_interface_t phylink_sfp_interface_preference[] = {
- 	PHY_INTERFACE_MODE_5GBASER,
- 	PHY_INTERFACE_MODE_2500BASEX,
- 	PHY_INTERFACE_MODE_SGMII,
-+	PHY_INTERFACE_MODE_OCSGMII,
- 	PHY_INTERFACE_MODE_1000BASEX,
- 	PHY_INTERFACE_MODE_100BASEX,
- };
-@@ -180,6 +181,7 @@ static unsigned int phylink_interface_signal_rate(phy_interface_t interface)
- 	switch (interface) {
- 	case PHY_INTERFACE_MODE_SGMII:
- 	case PHY_INTERFACE_MODE_1000BASEX: /* 1.25Mbd */
-+	case PHY_INTERFACE_MODE_OCSGMII:
- 		return 1250;
- 	case PHY_INTERFACE_MODE_2500BASEX: /* 3.125Mbd */
- 		return 3125;
-@@ -231,6 +233,7 @@ static int phylink_interface_max_speed(phy_interface_t interface)
- 		return SPEED_1000;
+diff --git a/drivers/net/phy/aquantia/aquantia.h b/drivers/net/phy/aquantia/aquantia.h
+index c0e1fd9d7152..b8502793962e 100644
+--- a/drivers/net/phy/aquantia/aquantia.h
++++ b/drivers/net/phy/aquantia/aquantia.h
+@@ -6,6 +6,9 @@
+  * Author: Heiner Kallweit <hkallweit1@gmail.com>
+  */
  
- 	case PHY_INTERFACE_MODE_2500BASEX:
-+	case PHY_INTERFACE_MODE_OCSGMII:
- 		return SPEED_2500;
- 
- 	case PHY_INTERFACE_MODE_5GBASER:
-@@ -515,6 +518,10 @@ static unsigned long phylink_get_capabilities(phy_interface_t interface,
- 		caps |= MAC_1000HD | MAC_1000FD;
- 		fallthrough;
- 
-+	case PHY_INTERFACE_MODE_OCSGMII:
-+		caps |= MAC_2500FD;
-+		fallthrough;
++#ifndef AQUANTIA_H
++#define AQUANTIA_H
 +
- 	case PHY_INTERFACE_MODE_REVRMII:
- 	case PHY_INTERFACE_MODE_RMII:
- 	case PHY_INTERFACE_MODE_SMII:
-@@ -929,6 +936,7 @@ static int phylink_parse_mode(struct phylink *pl,
- 		case PHY_INTERFACE_MODE_10GKR:
- 		case PHY_INTERFACE_MODE_10GBASER:
- 		case PHY_INTERFACE_MODE_XLGMII:
-+		case PHY_INTERFACE_MODE_OCSGMII:
- 			caps = ~(MAC_SYM_PAUSE | MAC_ASYM_PAUSE);
- 			caps = phylink_get_capabilities(pl->link_config.interface, caps,
- 							RATE_MATCH_NONE);
-@@ -1357,7 +1365,8 @@ static void phylink_mac_initial_config(struct phylink *pl, bool force_restart)
+ #include <linux/device.h>
+ #include <linux/phy.h>
  
- 	case MLO_AN_INBAND:
- 		link_state = pl->link_config;
--		if (link_state.interface == PHY_INTERFACE_MODE_SGMII)
-+		if (link_state.interface == PHY_INTERFACE_MODE_SGMII ||
-+		    link_state.interface == PHY_INTERFACE_MODE_OCSGMII)
- 			link_state.pause = MLO_PAUSE_NONE;
- 		break;
- 
-@@ -3640,6 +3649,7 @@ void phylink_mii_c22_pcs_decode_state(struct phylink_link_state *state,
- 		break;
- 
- 	case PHY_INTERFACE_MODE_SGMII:
-+	case PHY_INTERFACE_MODE_OCSGMII:
- 	case PHY_INTERFACE_MODE_QSGMII:
- 		phylink_decode_sgmii_word(state, lpa);
- 		break;
-@@ -3715,6 +3725,7 @@ int phylink_mii_c22_pcs_encode_advertisement(phy_interface_t interface,
- 			adv |= ADVERTISE_1000XPSE_ASYM;
- 		return adv;
- 	case PHY_INTERFACE_MODE_SGMII:
-+	case PHY_INTERFACE_MODE_OCSGMII:
- 	case PHY_INTERFACE_MODE_QSGMII:
- 		return 0x0001;
- 	default:
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index e6e83304558e..73da0983d631 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -128,6 +128,7 @@ extern const int phy_10gbit_features_array[1];
-  * @PHY_INTERFACE_MODE_10GKR: 10GBASE-KR - with Clause 73 AN
-  * @PHY_INTERFACE_MODE_QUSGMII: Quad Universal SGMII
-  * @PHY_INTERFACE_MODE_1000BASEKX: 1000Base-KX - with Clause 73 AN
-+ * @PHY_INTERFACE_MODE_OCSGMII: Overclocked SGMII
-  * @PHY_INTERFACE_MODE_MAX: Book keeping
-  *
-  * Describes the interface between the MAC and PHY.
-@@ -168,6 +169,7 @@ typedef enum {
- 	PHY_INTERFACE_MODE_10GKR,
- 	PHY_INTERFACE_MODE_QUSGMII,
- 	PHY_INTERFACE_MODE_1000BASEKX,
-+	PHY_INTERFACE_MODE_OCSGMII,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
- 
-@@ -289,6 +291,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "100base-x";
- 	case PHY_INTERFACE_MODE_QUSGMII:
- 		return "qusgmii";
-+	case PHY_INTERFACE_MODE_OCSGMII:
-+		return "ocsgmii";
- 	default:
- 		return "unknown";
- 	}
+@@ -198,3 +201,5 @@ int aqr_phy_led_hw_control_set(struct phy_device *phydev, u8 index,
+ int aqr_phy_led_active_low_set(struct phy_device *phydev, int index, bool enable);
+ int aqr_phy_led_polarity_set(struct phy_device *phydev, int index,
+ 			     unsigned long modes);
++
++#endif /* AQUANTIA_H */
 -- 
 2.43.0
 
