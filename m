@@ -1,116 +1,166 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AC91DA24;
-	Wed, 19 Jun 2024 18:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37161DA24
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 18:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718820586; cv=none; b=rwsbcurF3bdHz+VmmJ4YATlNRSnrDDvCCS4TFMW00GIofg1dBrmCTdcb2jCFmZRtWU3xL59mDpAxm099hEvsdx+BwTLprgzTyW4DgY7OPC/IixXDDX0Jn+pALDph3tDHdd5/8ShXzFp9Mwz4B+SQn7FHXFySh9oSJosq2TZ6EKg=
+	t=1718820626; cv=none; b=nnxnyKKubB/L5CZ2WDtVt2EnYmKeFSrLHDhnCzyF8PzIQB3Uea5L2WGUHhI0QfUcWfrFIx5p4Oo6d8rpTdrRd4x1FlhD7hYTn/zAJnc9JaDePMq7WXJDcTaoDOLFdESK/q04lsAE8NUkNEwDaXjba3oqKoKc41oKX32/h3Xf+7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718820586; c=relaxed/simple;
-	bh=e1uybXOkF6pRw8DC5PXYWsYvoYWX7ig40cuY1jQC+2s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JQZFMIvF8fwRpAkDged9GZ+hx39fYmkBugUnRke5c5mZPlra3zDVjHXE5YWXf0sudMUKbq4+skCoJ7bsxQr+Y6BKa8QJuHwlowag8AO2Zi47ET5EtN0hqFrzHJKMrs3ozYGyzWliLGwZWCQaieosjmnHlSCkGHNXU5+HCeFQcxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jXLZEavk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718820626; c=relaxed/simple;
+	bh=0L4VujmjvSUQ8D/8+DlcznwaTpLuE26NtOHnp5kTabY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qeRk92FmjZxeVKQQjAUkY3NShrtCKj11nWeGb+u2nymVUP/+gGMDOczRF0JUsQZ9+J55tnv6RoG0auIDMzRMdavEiaysbm8YLXL6eu2/xKkwjyPpJ1AYBIloFrWhGsSAZ+MgAWj1AtPsfxZIdzxlIUWswuHLyDFRT3ZT/GPWsd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=g428By9w; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jXLZEavk"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JGXnqb019233;
-	Wed, 19 Jun 2024 18:09:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3DFMz1yDZygHSTY0eYqdWf8oZ2E55u7MPxXggmGszdk=; b=jXLZEavkUBHVBmo7
-	WHizc102VzbEOzjR/h/qr3g6C9pnwxS1VeId6ZgHRQSv18n/jY9xpmPIO04+9idm
-	TUQ4HoxB6nvUg7BARBHpWF1WkCffJB9TAFebmQJ5mRQ1EYL2DC1ZbxXMVIqABzFm
-	EoJ5/TI6CH+3NR2Hyybhq412U/baTt8B2XTPt7fUmQicjTb8K41UCVxKCDDjCLou
-	IfhNABF02yYNJP1mW6LK45aA8CKTxAtxk8DRXuSJEQ6LmlBbcbZJnnoBAXfapqLv
-	9/M9g27IaW8OhIel+KfIaaMwIaCOUCHus/73fiVEwqIF8F2OveNI2qNf0/hCLRfo
-	itMimQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yv2xu86p3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 18:09:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JI9X2h000617
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 18:09:33 GMT
-Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Jun
- 2024 11:09:33 -0700
-Message-ID: <dd58758a-7689-48a3-bc89-2cef3858c4b4@quicinc.com>
-Date: Wed, 19 Jun 2024 11:09:14 -0700
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="g428By9w"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4217990f997so709735e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718820623; x=1719425423; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ya2SP98G80gF4POSRdCxM06GYnHhJ1Zhxaj6yinM5hc=;
+        b=g428By9wpA6Ny9ZhvIz1DiUDpLUmvHOPpEuyHkKICqZj7jcfxDD4IQy7THWiqLRtbe
+         ZnJXwrqBuSroyhQIcut46tSwZ6uhVj7gpPYYQadICzkMULuN9B8u8NHI3cZRgxGaYYbN
+         +eAg907RKIvVmEYXdMoE1vPiguf/R7oT7U0loYR/JDsBpjsMihuNuaSnETGUsHn+O/GV
+         +Z87Z1nYfK2z2YiEFzzJmpzjpeVc986p/+Tga0jbruwKGed8QvwKB1JZS/ZfhDndLK0e
+         HzkYTVPN4kXnvIZUw+OH3H49fepR3pv9YF+8GRQUn3QVp6yAMbwqFJiEV0UfqOJnrgUk
+         GG8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718820623; x=1719425423;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ya2SP98G80gF4POSRdCxM06GYnHhJ1Zhxaj6yinM5hc=;
+        b=fqYMu+k7TKaGO/GB5zMNnr099UdHp4x3+bsvACNTls6a85eZTKe1K6m1o0MgXe9OAm
+         7KHqKZ7aggbNKp6isNJ7eVmb6xoc25i94Ii7mNGp5Zn4+Y0/OmQQV1vyMYFsy75kBkfA
+         BP2QiEalqyjOyQz4LEBg04/Dj/gWNc3czsz7K7mhhUZmAZQmAnVg+q9V4GU+CcyeOR5q
+         eb9qgKDx9jIlSM/SiFechR38UCiVtL0+u86mHbRksoOvsRQ56XmBU6f5Atj7tJ1foSqx
+         jHb71GUDl2srFY93BGjukKHZ6JVrBnPlV2glbYqDT3VKT60yiXMX/zXShNfd2kJaJ7uw
+         zHLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfAtxzBIqxNhJQpwaHFzsi5bp44rcJug7FKkmzGr1QoOMIEmZzEGgsecdM6hzLE2VTYumW53Pfdt68jgzyDUeRIUudxZJRl6/kj4TL
+X-Gm-Message-State: AOJu0Yz2hzwO81RTJug+vlIOH/M3HstBg7YCY0Snhb6xmhfohk4tvi2h
+	XAIFlRpuOluz2v4+y8uTweVk6vecXfaFjOM2/XNrwwUWMlI/7a0Xe6btiecMCiM=
+X-Google-Smtp-Source: AGHT+IH6d5gJc8B9ja8zpNVoAjR9hxoMamP6Brf+vsuomiK1MFsd/M3qYWReZRuunW4YBbsxpejGFw==
+X-Received: by 2002:a05:600c:211a:b0:416:7470:45ad with SMTP id 5b1f17b1804b1-42475182a8fmr22281335e9.17.1718820622993;
+        Wed, 19 Jun 2024 11:10:22 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a5b4sm237858165e9.41.2024.06.19.11.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 11:10:22 -0700 (PDT)
+Date: Wed, 19 Jun 2024 19:10:21 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	vincent.donnefort@arm.com, ke.wang@unisoc.com,
+	linux-kernel@vger.kernel.org, christian.loehle@arm.com
+Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding
+ actual_cpu_capacity
+Message-ID: <20240619181021.kxcjxaqe47fkve42@airbuntu>
+References: <20240606070645.3295-1-xuewen.yan@unisoc.com>
+ <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
+ <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
+ <20240616222003.agcz5osb2nkli75h@airbuntu>
+ <CAKfTPtBikWsyPon6HweEZg5qjSP+QX=WZDQu4NHs7PUcSCqDDA@mail.gmail.com>
+ <20240617105348.ebtony3ciwxhvj2w@airbuntu>
+ <CAKfTPtDPCPYvCi1c_Nh+Cn01ZVS7E=tAHQeNX-mArBt3BXdjYw@mail.gmail.com>
+ <20240618153931.ub5ezml3imd5mwu7@airbuntu>
+ <CAB8ipk86jmb6xnEUnv_Vs5=A5EnNfnHTy3FXYZRhKhuEFKhzDw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] kunit: string-stream-test: Make it a separate
- module
-To: Ivan Orlov <ivan.orlov0322@gmail.com>, <brendan.higgins@linux.dev>,
-        <davidgow@google.com>, <rmoar@google.com>
-CC: <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>, <skhan@linuxfoundation.org>
-References: <20240618170331.264851-1-ivan.orlov0322@gmail.com>
- <20240618170331.264851-4-ivan.orlov0322@gmail.com>
-Content-Language: en-US
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240618170331.264851-4-ivan.orlov0322@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vkPCN_1FJWj3eICRaYJA6h3vi0L0Mlsr
-X-Proofpoint-ORIG-GUID: vkPCN_1FJWj3eICRaYJA6h3vi0L0Mlsr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1011 adultscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406190136
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB8ipk86jmb6xnEUnv_Vs5=A5EnNfnHTy3FXYZRhKhuEFKhzDw@mail.gmail.com>
 
-On 6/18/24 10:03, Ivan Orlov wrote:
-> Currently, the only way to build string-stream-test is by setting
-> CONFIG_KUNIT_TEST=y. However, CONFIG_KUNIT_TEST is a config option for
-> a different test (`kunit-test.c`).
+On 06/19/24 11:05, Xuewen Yan wrote:
+> On Tue, Jun 18, 2024 at 11:39 PM Qais Yousef <qyousef@layalina.io> wrote:
+> >
+> > On 06/18/24 17:23, Vincent Guittot wrote:
+> > > On Mon, 17 Jun 2024 at 12:53, Qais Yousef <qyousef@layalina.io> wrote:
+> > > >
+> > > > On 06/17/24 11:07, Vincent Guittot wrote:
+> > > >
+> > > > > > And should effective_cpu_util() return a value higher than
+> > > > > > get_actual_cpu_capacity()?
+> > > > >
+> > > > > I don't think we should because we want to return the effective
+> > > > > utilization not the actual compute capacity.
+> > > > > Having an utilization of the cpu or group of cpus above the actual
+> > > > > capacity or the original capacity mainly means that we will have to
+> > > > > run longer
+> > > > >
+> > > > > By capping the utilization we filter this information.
+> > > > >
+> > > > > capacity orig = 800
+> > > > > util_avg = 700
+> > > > >
+> > > > > if we cap the capacity to 400 the cpu is expected to run twice longer
+> > > > > for the same amount of work to be done
+> > > >
+> > > > Okay makes sense. Wouldn't the util be 'wrong' (to what degree will depend on
+> > > > min/max freq ratio) though?
+> > > >
+> > > > We cap with arch_scale_capacity() still, I guess we know at this stage it is
+> > > > 100% wrong if we allow returning higher values?
+> > >
+> > > I think that capping utilization to max capacity generates some energy
+> > > estimation error because it filters the fact that we run longer in
+> > > some cases.
+> >
+> > Yes, I think so too and that was my first statement. But I think this is
+> > a bigger change to do separately.
 > 
-> Introduce a new Kconfig entry in order to be able to build the
-> string-stream-test test as a separate module. Import the KUnit namespace
-> in the test so we could have string-stream functions accessible.
-> 
-> Reviewed-by: David Gow <davidgow@google.com>
-> Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
-> ---
-> V1 -> V2:
-> - No changes
-> 
->   lib/kunit/Kconfig              | 8 ++++++++
->   lib/kunit/Makefile             | 2 +-
->   lib/kunit/string-stream-test.c | 2 ++
->   3 files changed, 11 insertions(+), 1 deletion(-)
-> 
-...
+> I saw the the sched_cpu_util() was used by teo.c and cpufreq_cooling.c
+> If we change the arch_scale_capacity() to actual_cpu_capacity(), it may cause
+> some errors?
 
-> diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
-> index 7511442ea98f..d03cac934e04 100644
-> --- a/lib/kunit/string-stream-test.c
-> +++ b/lib/kunit/string-stream-test.c
-> @@ -534,3 +534,5 @@ static struct kunit_suite string_stream_test_suite = {
->   	.init = string_stream_test_init,
->   };
->   kunit_test_suites(&string_stream_test_suite);
-> +MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);
-> +MODULE_LICENSE("GPL");
+The plan to revert this now.
 
-missing MODULE_DESCRIPTION()
-this will cause a warning with make W=1
+> 
+> For-example:
+> In teo:
+> 212 static bool teo_cpu_is_utilized(int cpu, struct teo_cpu *cpu_data)
+> 213 {
+> 214         return sched_cpu_util(cpu) > cpu_data->util_threshold;
+> 215 }
+> It may cause the teo_cpu_is_utilized() to return false forever if the
+> actual_cpu_capacity is smaller than util_threshold.
+> However, the util_threshold is frome actual_cpu_capacity.
+> 
+> In cpufreq_cooling.c:
+> May we should change:
+> 
+> diff --git a/drivers/thermal/cpufreq_cooling.c
+> b/drivers/thermal/cpufreq_cooling.c
+> index 280071be30b1..a8546d69cc10 100644
+> --- a/drivers/thermal/cpufreq_cooling.c
+> +++ b/drivers/thermal/cpufreq_cooling.c
+> @@ -164,7 +164,7 @@ static u32 get_load(struct cpufreq_cooling_device
+> *cpufreq_cdev, int cpu,
+>  {
+>         unsigned long util = sched_cpu_util(cpu);
+> 
+> -       return (util * 100) / arch_scale_cpu_capacity(cpu);
+> +       return (util * 100) / get_actual_cpu_capacity(cpu);
+>  }
+>  #else /* !CONFIG_SMP */
+>  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
+> 
+> 
+> Because if still use arch_scale_cpu_capacity(), the load pct may be decreased,
+> It may affect the thermal-IPA-governor's power consideration.
 
+I am not sure about this one. But looks plausible. Vincent?
