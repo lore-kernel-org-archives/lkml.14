@@ -1,36 +1,36 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44EFCA40;
-	Wed, 19 Jun 2024 02:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D6BE541;
+	Wed, 19 Jun 2024 02:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718762721; cv=none; b=ERNeSRHs4/FebWIXhiWNwiGdpBPWMGbLxjFO5T23jJljicRaeG2zmzvfZ1EIsQ7d/ZsgTwFO8kwL2ZubzdxWhx7eoGQy9NGpgl3u084WCHXFYakFJ9lmJ3GU7DD3iBJKPJ9SK2ml5tVpLYyFI6raPB6dkMG/srLAjS9UvhFz07A=
+	t=1718762878; cv=none; b=uJQ9RjntckK/Iqm49+FNGmVlq9o7BslsPMa7pHS/fmKBNZ82MknMXioKCXuuR4XMMXhpIHdZF3DU8/Iz1KMZ+MFGEmayMtSZArYNMHZns+sxd0doo4STD8jQqevyenyV13w5CgfHpmO6MR5gDCjE0Z0PHms3tbTC3hZJEiiugLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718762721; c=relaxed/simple;
-	bh=6hfhcRfORR1MPZG5dinZMM37Ch6col2tLUEnp/EQ41g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U1WXwemg8yBmtQJWfE06LY4wxCfsLIEMSbouEeyJm6cDrcnK33ML3v8jWOJ5uNLf10wx0To2K7uLW5dMwhEAUkHyW+UE7IL91DSVDH82U5TtAonRCbajTWDD8piB3/su1lr34M4tRZDZJQvzYMPETxNydJ+9gE0UFxUqMjFRyPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W3n0N5Z8czPrf6;
-	Wed, 19 Jun 2024 10:01:08 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 261911403D1;
-	Wed, 19 Jun 2024 10:04:41 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 19 Jun 2024 10:04:40 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
-	<akpm@linux-foundation.org>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <sj@kernel.org>, <m.szyprowski@samsung.com>
-Subject: [PATCH v3 -next] mm/hugetlb_cgroup: register lockdep key for cftype
-Date: Wed, 19 Jun 2024 01:55:27 +0000
-Message-ID: <20240619015527.2212698-1-xiujianfeng@huawei.com>
+	s=arc-20240116; t=1718762878; c=relaxed/simple;
+	bh=meFezo5W5aHSV7AeLtOxr2/C/HpnBtJlUo16/5qvthw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zuwu7d8uSIm6vZO/9wUQ+/b8q4byt8xLTOa8RvXwg2ORgKW8nqfOHPxriCybssIA+yDarIGK49ZpSEnADqR3PQ4XV8jJK2nbXVxjLH1tmjZGbnjV3/i1gHhCRqzgp8mOkVioCRwZv7lKt+J1xDFCR+AJPN2akdjrNazLz9xVSwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from ThinkPad-T480s.. (unknown [121.237.44.152])
+	by APP-05 (Coremail) with SMTP id zQCowACnr+fFO3Jmjn6bEQ--.46102S2;
+	Wed, 19 Jun 2024 10:00:38 +0800 (CST)
+From: zhouquan@iscas.ac.cn
+To: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: oleg@redhat.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	andy.chiu@sifive.com,
+	shuah@kernel.org,
+	charlie@rivosinc.com,
+	zhouquan@iscas.ac.cn
+Subject: [RFC PATCH 0/2] riscv: Expose orig_a0 to userspace for ptrace to set the actual a0
+Date: Wed, 19 Jun 2024 10:00:37 +0800
+Message-Id: <cover.1718693532.git.zhouquan@iscas.ac.cn>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,115 +39,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+X-CM-TRANSID:zQCowACnr+fFO3Jmjn6bEQ--.46102S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF43Ar1fXryUtFW7Zw4rGrg_yoW8Cw4rpa
+	95KwnYk3W8JFy2ya1xXw4UXr4rAa4fWrW3G3WxZry3ZrW8tryvqr4xKa1Yqr93CayxWryf
+	ZF1Ikr15C3WUZa7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+	628vn2kIc2xKxwAKzVCY07xG64k0F24lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjRpBDUUUUU==
+X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiCRANBmZyBxOZHgAAsV
 
-When CONFIG_DEBUG_LOCK_ALLOC is enabled, the following commands can
-trigger a bug,
+From: Quan Zhou <zhouquan@iscas.ac.cn>
 
-mount -t cgroup2 none /sys/fs/cgroup
-cd /sys/fs/cgroup
-echo "+hugetlb" > cgroup.subtree_control
+Due to the path that modifies a0 in syscall_enter_from_user_mode before the
+actual execution of syscall_handler [1], the kernel currently saves a0 to
+orig_a0 at the entry point of do_trap_ecall_u as an original copy of a0.
+Once the syscall is interrupted and later resumed, the restarted syscall
+will use orig_a0 to continue execution.
 
-The log is as below:
+The above rules generally apply except for ptrace(PTRACE_SETREGSET,),
+where the kernel will ignore the tracer's setting of tracee/a0 and
+will restart with the tracee's original a0 value. For the current
+kernel implementation of ptrace, projects like CRIU/Proot will
+encounter issues where the a0 setting becomes ineffective when
+performing ptrace(PTRACE_{SET/GET}REGSET,).
 
-BUG: key ffff8880046d88d8 has not been registered!
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 3 PID: 226 at kernel/locking/lockdep.c:4945 lockdep_init_map_type+0x185/0x220
-Modules linked in:
-CPU: 3 PID: 226 Comm: bash Not tainted 6.10.0-rc4-next-20240617-g76db4c64526c #544
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:lockdep_init_map_type+0x185/0x220
-Code: 00 85 c0 0f 84 6c ff ff ff 8b 3d 6a d1 85 01 85 ff 0f 85 5e ff ff ff 48 c7 c6 21 99 4a 82 48 c7 c7 60 29 49 82 e8 3b 2e f5
-RSP: 0018:ffffc9000083fc30 EFLAGS: 00000282
-RAX: 0000000000000000 RBX: ffffffff828dd820 RCX: 0000000000000027
-RDX: ffff88803cd9cac8 RSI: 0000000000000001 RDI: ffff88803cd9cac0
-RBP: ffff88800674fbb0 R08: ffffffff828ce248 R09: 00000000ffffefff
-R10: ffffffff8285e260 R11: ffffffff828b8eb8 R12: ffff8880046d88d8
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880067281c0
-FS:  00007f68601ea740(0000) GS:ffff88803cd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005614f3ebc740 CR3: 000000000773a000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- ? __warn+0x77/0xd0
- ? lockdep_init_map_type+0x185/0x220
- ? report_bug+0x189/0x1a0
- ? handle_bug+0x3c/0x70
- ? exc_invalid_op+0x18/0x70
- ? asm_exc_invalid_op+0x1a/0x20
- ? lockdep_init_map_type+0x185/0x220
- __kernfs_create_file+0x79/0x100
- cgroup_addrm_files+0x163/0x380
- ? find_held_lock+0x2b/0x80
- ? find_held_lock+0x2b/0x80
- ? find_held_lock+0x2b/0x80
- css_populate_dir+0x73/0x180
- cgroup_apply_control_enable+0x12f/0x3a0
- cgroup_subtree_control_write+0x30b/0x440
- kernfs_fop_write_iter+0x13a/0x1f0
- vfs_write+0x341/0x450
- ksys_write+0x64/0xe0
- do_syscall_64+0x4b/0x110
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7f68602d9833
-Code: 8b 15 61 26 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 01 00 00 00 08
-RSP: 002b:00007fff9bbdf8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000009 RCX: 00007f68602d9833
-RDX: 0000000000000009 RSI: 00005614f3ebc740 RDI: 0000000000000001
-RBP: 00005614f3ebc740 R08: 000000000000000a R09: 0000000000000008
-R10: 00005614f3db6ba0 R11: 0000000000000246 R12: 0000000000000009
-R13: 00007f68603bd6a0 R14: 0000000000000009 R15: 00007f68603b8880
+Here is a suggested solution, expose orig_a0 to userspace so that ptrace
+can choose whether to set orig_a0 based on the actual scenario. In fact,
+x86/orig_eax and loongArch/orig_a0 have adopted similar solutions.
 
-For lockdep, there is a sanity check in lockdep_init_map_type(), the
-lock-class key must either have been allocated statically or must
-have been registered as a dynamic key. However the commit e18df2889ff9
-("mm/hugetlb_cgroup: prepare cftypes based on template") has changed
-the cftypes from static allocated objects to dynamic allocated objects,
-so the cft->lockdep_key must be registered proactively.
+[1] link: https://lore.kernel.org/lkml/20230403-crisping-animosity-04ed8a45c625@spud/T/
 
-Fixes: e18df2889ff9 ("mm/hugetlb_cgroup: prepare cftypes based on template")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202406181046.8d8b2492-oliver.sang@intel.com
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+Quan Zhou (2):
+  riscv: Expose orig_a0 in the user_regs_struct structure
+  riscv: selftests: Add a ptrace test to check a0 of restarted syscall
 
----
-v3: remove #ifdef CONFIG_DEBUG_LOCK_ALLOC in struct cftype
-v2: add bug log to commit message
----
- include/linux/cgroup-defs.h | 2 --
- mm/hugetlb_cgroup.c         | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/ptrace.h               |   4 +-
+ arch/riscv/include/uapi/asm/ptrace.h          |   2 +
+ tools/testing/selftests/riscv/Makefile        |   2 +-
+ tools/testing/selftests/riscv/abi/.gitignore  |   1 +
+ tools/testing/selftests/riscv/abi/Makefile    |  12 ++
+ .../riscv/abi/ptrace_restart_syscall.c        | 148 ++++++++++++++++++
+ 6 files changed, 166 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/riscv/abi/.gitignore
+ create mode 100644 tools/testing/selftests/riscv/abi/Makefile
+ create mode 100644 tools/testing/selftests/riscv/abi/ptrace_restart_syscall.c
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index b36690ca0d3f..293af7f8a694 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -681,9 +681,7 @@ struct cftype {
- 	__poll_t (*poll)(struct kernfs_open_file *of,
- 			 struct poll_table_struct *pt);
- 
--#ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	struct lock_class_key	lockdep_key;
--#endif
- };
- 
- /*
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 2b899c4ae968..4ff238ba1250 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -836,6 +836,8 @@ hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
- 			cft->file_offset = MEMFILE_OFFSET0(offset) +
- 					   MEMFILE_FIELD_SIZE(offset) * idx;
- 		}
-+
-+		lockdep_register_key(&cft->lockdep_key);
- 	}
- }
- 
+
+base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
 -- 
 2.34.1
 
