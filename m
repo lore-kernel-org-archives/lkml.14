@@ -1,116 +1,155 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA09282495;
-	Wed, 19 Jun 2024 10:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E786D40879;
+	Wed, 19 Jun 2024 10:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718792080; cv=none; b=G+RKz9jD8HxIJCNsiy//4KH+PvoJ7VC1+smMQ55URutp2oDCWNEjgWkAo7T5AACwa+0yuyNBqeX4RznCArYOKdzy0ZkVfsczdW1XtGYaJFVA4BgNbGLDf0Ow+PN6/bUPmuReWlzzYOiD5TtfGJ8nBK6IDc0nOFO0NwhcfPBCIao=
+	t=1718792136; cv=none; b=Ilf8JNpg6wuw44OYaRAmn61cHIFT05j4cJrVpECR7f8NlLB8teMKmKXEx6gpTGMfXQDG1G/E7hDsyw7qVfjHs8c270vMvQNmHz10qA5a5EnDAmHnAo6IkLdo9nSzyH9u6M5EOHVsIEb41cq+LiKAm8AgkhZVfGmDdF6G/2ybtX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718792080; c=relaxed/simple;
-	bh=/5lsOClEjTTiqIX0EKnwOr/nLlBBkUQDOTvZJquLTe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbHoeZT/QBSWXUtiJReU3B/R4Oa0VU9SsJB5avP2XYqF3G0D/4LKaZaCgKOqZ/3Yr5dEyTUgvRqAVl1QOb9Y6Q7qYxL9gsAQxtdigwbShaBeGXocHtTnnrAfoBilF8KbenlWX/fYns17r0TmyvdMT42TH4RnAjz+QBZwY1oZRYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0abrkew; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718792136; c=relaxed/simple;
+	bh=jCHXzfxyA3cVRfcENK9qyg8NQxzPtrBSSYd3Ot8KwRo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=suhQcmjIqS3uRzZdHMsCSObos9NeBeFxpcniI5Z9Pkr8lH+ugLYIHa9bmLSufaL4/kSgFu6VKZS8AKcguNyEsJTOfPKXFq5wm8om50bdFvG6VgwchFXzUf5tSXkkwupdStUGWnfgVxhv5fu/eNDplth1xGOkRRozv6qycD9c6Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hoXHesme; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0abrkew"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4217a96de38so46407505e9.1;
-        Wed, 19 Jun 2024 03:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718792077; x=1719396877; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OWj4qqqcVIxCNyRZ2DfdgkNb1wGK6bSkCctArSODDZg=;
-        b=i0abrkew2IHTI9Qk06UxvswNafj0EDe0n2oAP+tqiADtS4wd5/UEGh6ttH1oaLstsb
-         Uj/feb08gfVDbnJ+5jjhOuPwDMWx5vGgEBCPDVlACEQsw/q4fRQ+OPD4eIrfxQfi6qbF
-         xWMLDcxrTJzp0D/m4bixlj7HFGZjKJ06SIWbwKmt1Of/YpCF2vhSsDIttd5yEqX9FzXc
-         mMPdJDReAdtJdCVaM1M03lz32q064RJM2v9/vbev+MdLPRf2VRVYSubsejy70CAkoDTu
-         /sHu1O1evKVn/0Xc8sqZyouHwGkd05Y7IPiWZfvFVsZpGc+iESeXZkpkr6tL1yY8SgzZ
-         dZmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718792077; x=1719396877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OWj4qqqcVIxCNyRZ2DfdgkNb1wGK6bSkCctArSODDZg=;
-        b=IXO1x2nxUXy/drjWWuOzpNz7cXfHot16L55OjqxL3S5PlD/05z7KM6Rm3iL9qSTdZZ
-         6Xle67Hzf49yYVCREcSWqbKYB1BTV8gI+LG6Ehk1JXjdLTEbgu3b+LoPlTDFBTr88Nse
-         8LVoj9MMEyKxGm7OCgNlmbSKXrkgK/Z9UVPexW6rf1LOhm8Y4RPZg0Q0CKad/WkOp7Sg
-         0obexOWlgAbS2BDtxnUZXUoV/yExfLqLoeQBLU6B69w/M/UOVHxXPgclW01xrRhqTdax
-         kB1Yepwfr9DlRaXpFCJ0YkIHLKMqyTO7NlkWeYi89GRb1Qz1ZoWiCFGr++8W/eag2XGt
-         9OUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPxcReMoYo+uSEYLi+TqeakamMzGMuCXRSwn1ilMCgTbe1VW7v4mnv5kUv2/OKQuLNXc1rXLxA1z1bSkhIHI7wmQhrEnJEA0Crftm9KKnINqJxEh9Q534HIfmVeOymXPGJ
-X-Gm-Message-State: AOJu0YyUExtK2wj1Ui/aVESWFAg2vK3SuEUStfRZI8AzAIAGk5l2B6M9
-	u3vPQVkbzLG/eZggR4uFICwfrp3yp9EkKDKdyxkhJ/P+ak+C1MY=
-X-Google-Smtp-Source: AGHT+IGUS7OckNuAZosynBKA8uInq63efrk9sBC2i2lWzzzmjRF94hBF+hTm9Du2LZrcQOQBPKM6Vw==
-X-Received: by 2002:a05:600c:4213:b0:421:aace:7a94 with SMTP id 5b1f17b1804b1-4247529c841mr11626615e9.40.1718792076991;
-        Wed, 19 Jun 2024 03:14:36 -0700 (PDT)
-Received: from p183 ([46.53.254.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3641788cf4fsm235849f8f.90.2024.06.19.03.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 03:14:36 -0700 (PDT)
-Date: Wed, 19 Jun 2024 13:14:34 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	gregkh@linuxfoundation.org, linux-mm@kvack.org,
-	liam.howlett@oracle.com, surenb@google.com, rppt@kernel.org
-Subject: Re: [PATCH v5 3/6] fs/procfs: add build ID fetching to PROCMAP_QUERY
- API
-Message-ID: <984d7898-d86a-4cea-9cdf-262b9ec4bc84@p183>
-References: <20240618224527.3685213-1-andrii@kernel.org>
- <20240618224527.3685213-4-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hoXHesme"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 895F0E0005;
+	Wed, 19 Jun 2024 10:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718792126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=miPb/e5NuKGB8qP7OIDdVZ0YjYkj1W+eBv5Jcf20cUo=;
+	b=hoXHesmeIGYW0/XyzfOVW0myeg6/l85iWfR/WV0nET2gN0rZQrq/KcMddLvGMY7aDabht0
+	j+lKqBNhsF0TEWLiyD9eaMwGuLYmlcYLOFWrBBFNMYlElKvgguZx/TppvOA7fduu5gUMUR
+	FTjGkOKjDyuLbQl0aewshKustBCOQ27y7myVIJ05Poi/fcMAhm3gcvbrym7Wv9DpLJekC2
+	nbis74FsjzEL6ghqmoFwGbZNz7BGUGDz3Z/C1JlcS98C2XkD1qxFxkBMmGQFAg2A6zaKFq
+	7kEXTEhzln6zNNdB0wVkd9hESZ3DXA7Yt/y/BV28eLlb4bsXu5SgjqQV1Oog2g==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Wed, 19 Jun 2024 12:15:09 +0200
+Subject: [PATCH v7 1/7] PCI: cadence: Extract link setup sequence from
+ cdns_pcie_host_setup()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240618224527.3685213-4-andrii@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240102-j7200-pcie-s2r-v7-1-a2f9156da6c3@bootlin.com>
+References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+ thomas.petazzoni@bootlin.com, u-kumar1@ti.com, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Tue, Jun 18, 2024 at 03:45:22PM -0700, Andrii Nakryiko wrote:
-> The need to get ELF build ID reliably is an important aspect when
-> dealing with profiling and stack trace symbolization, and
-> /proc/<pid>/maps textual representation doesn't help with this.
+The function cdns_pcie_host_setup() mixes probe structure and link setup.
 
-> @@ -539,6 +543,21 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
->  		}
->  	}
->  
-> +	if (karg.build_id_size) {
-> +		__u32 build_id_sz;
-> +
-> +		err = build_id_parse(vma, build_id_buf, &build_id_sz);
+The link setup must be done during the resume sequence. So extract it from
+cdns_pcie_host_setup() and create a dedicated function.
 
-This is not your bug but build_id_parse() assumes program headers
-immediately follow ELF header which is not guaranteed.
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 39 ++++++++++++++--------
+ drivers/pci/controller/cadence/pcie-cadence.h      |  6 ++++
+ 2 files changed, 32 insertions(+), 13 deletions(-)
 
-> +	 * If this field is set to non-zero value, build_id_addr should point
-> +	 * to valid user space memory buffer of at least build_id_size bytes.
-> +	 * If set to zero, build_id_addr should be set to zero as well
-> +	 */
-> +	__u32 build_id_size;		/* in/out */
->  	/*
->  	 * User-supplied address of a buffer of at least vma_name_size bytes
->  	 * for kernel to fill with matched VMA's name (see vma_name_size field
-> @@ -519,6 +539,14 @@ struct procmap_query {
->  	 * Should be set to zero if VMA name should not be returned.
->  	 */
->  	__u64 vma_name_addr;		/* in */
-> +	/*
-> +	 * User-supplied address of a buffer of at least build_id_size bytes
-> +	 * for kernel to fill with matched VMA's ELF build ID, if available
-> +	 * (see build_id_size field description above for details).
-> +	 *
-> +	 * Should be set to zero if build ID should not be returned.
-> +	 */
-> +	__u64 build_id_addr;		/* in */
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 5b14f7ee3c79..93d9922730af 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
+ 	return cdns_pcie_host_init_address_translation(rc);
+ }
+ 
++int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	struct device *dev = rc->pcie.dev;
++	int ret;
++
++	if (rc->quirk_detect_quiet_flag)
++		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
++
++	cdns_pcie_host_enable_ptm_response(pcie);
++
++	ret = cdns_pcie_start_link(pcie);
++	if (ret) {
++		dev_err(dev, "Failed to start link\n");
++		return ret;
++	}
++
++	ret = cdns_pcie_host_start_link(rc);
++	if (ret)
++		dev_dbg(dev, "PCIe link never came up\n");
++
++	return 0;
++}
++
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct device *dev = rc->pcie.dev;
+@@ -533,20 +557,9 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 		return PTR_ERR(rc->cfg_base);
+ 	rc->cfg_res = res;
+ 
+-	if (rc->quirk_detect_quiet_flag)
+-		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+-
+-	cdns_pcie_host_enable_ptm_response(pcie);
+-
+-	ret = cdns_pcie_start_link(pcie);
+-	if (ret) {
+-		dev_err(dev, "Failed to start link\n");
+-		return ret;
+-	}
+-
+-	ret = cdns_pcie_host_start_link(rc);
++	ret = cdns_pcie_host_link_setup(rc);
+ 	if (ret)
+-		dev_dbg(dev, "PCIe link never came up\n");
++		return ret;
+ 
+ 	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
+ 		rc->avail_ib_bar[bar] = true;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 7a66a2f815dc..1d37d5f9f811 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -521,10 +521,16 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+ }
+ 
+ #ifdef CONFIG_PCIE_CADENCE_HOST
++int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+ void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 			       int where);
+ #else
++static inline int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
++{
++	return 0;
++}
++
+ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	return 0;
 
-Can this be simplified to 512-bit buffer in ioctl structure?
-BUILD_ID_SIZE_MAX is 20 which is sha1.
+-- 
+2.39.2
+
