@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCC147779
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AA82261D
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807535; cv=none; b=CmyFzcUC0r5wV4H3AAyPLynuVWX3pSl9xTvBqXpGd37gqNonllaxEGxCDvqwWwrxPtZ0NtGZqVHh1UOnHB3nBJo0mb3s9BldBDwRAMcXoK4nwS1bLvlK/TnzQS5M7V1P2GNyqlPaWwgOaO60tzpUk7n+X+WRNdFlZjPFGjk55UY=
+	t=1718807534; cv=none; b=Q0WvhIIHsRbpMDtLI6zlcnw+y6r1JYQjaZUSOQrhhPSYf0FXM5ZKhCb8LFqADkV4nBlCwyM7vOaVnxZiQ4EDpbyl9mJsOspk57ZoqE4mWtCfsCWdtWsHgGs07np/oEPMFDL8whSHnQKWg1v0ykEwOdfe3fI8gWVny+cTDnV5unk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718807535; c=relaxed/simple;
-	bh=683XBBTcCjvNlqsnqsvC5qU2ha2+uSLRYzWNbExOTr8=;
+	s=arc-20240116; t=1718807534; c=relaxed/simple;
+	bh=3aWzivexV5OnPdHVvbgtL9q6cZA0n9TwnH6JwwcATE4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YTq8AS0nQXU/2aFiX92HvJnw/8LysLpUg64n04aC071wzG4rW/NRZQIU/jEZIMV2PsKZvrzq2kAE3mpUMyFgftS1ekRlY94+j+Q4KNadZ8z+hGhI6C3UvR/+Ip/RmqlLP3kinNBqUAM7prcU3o4dZ1RI0KpTQ9kPN5IWCmq74xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txRLZHMw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=rUMpMG6tRx3yIYDUTXyrN9qaRKgttVJi2txzXyZcADa0RCt718Qf50V5LBQb7SF9yUwxAqYhP8gdGDzErDDHU8ZJcnbXkvu8bHJvWOlQzqOfLZIGcG590RIWKNy7bmEAOvOqaZvkGccD64aNwfLp4+jAYJHHDNbSuaqslfQvJXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULgFEi/I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txRLZHMw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E9F4C4AF61;
-	Wed, 19 Jun 2024 14:32:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULgFEi/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A662BC4AF0E;
+	Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718807535;
-	bh=683XBBTcCjvNlqsnqsvC5qU2ha2+uSLRYzWNbExOTr8=;
+	s=k20201202; t=1718807534;
+	bh=3aWzivexV5OnPdHVvbgtL9q6cZA0n9TwnH6JwwcATE4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=txRLZHMwbTzif/kI0RBsVhAlpzzjw9EWMOsJ9pKS338xPVGTcpoHA9P92VGa1x8pe
-	 edXEu1CoLeViLtW9T21Wpt5qvUz0HiFNnsWx7wUV2ZD8knp6Dce+ndPKqpw7mL3DP4
-	 Q82EvBG/TZJ0OPYK+ilzq2ltYFU3jD/mNXFNTA1r/AWG09f4kiwiCBqowERGpsJ6A2
-	 ZxN7jNjBpuCt8Doq9GFQGyYaitABO7OH8pujajqz+aV++tlNEV6YmGXBPRIHuU1/WK
-	 KiTq8jlqyML52lKrIXYFW/bJVv5mA+gRmF0YqoF7n6GlQZN6e2e2y1NPooMLZjFxV0
-	 l4uDZkimFW3eQ==
+	b=ULgFEi/IAO27gYLvrIVQrMwdiwXE5ksvrBvLu3yVvdX6PRPWdFcOctdW6q45Fewkg
+	 mxbCO24QwntMSjIu8QbCxp7FmNmkAJuHqyxQeQpRGhnZzvKy5NBlfSa4d4hfzmB0yR
+	 0wk7ZLD6N4IjU2/82Es+XEVq/b91WC3s2v3MSiPz2Br5nTQrTTTLmOM3maA9SH9cy5
+	 iJ4YAck6+kR33FAt0XT6Y9ejZ1xJ+kTjFg8HWwk2CjYBPmzH4XHUBAYNu/R/Zmf5za
+	 5z8JJI7W+/e/9I0N/yxqREdqhqHdvCtkGNFIhTEg/vdB8dowaIyFkml2bCH5qznJec
+	 bDdWT7Wz3KUyg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2743AC27C53;
-	Wed, 19 Jun 2024 14:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEF2C27C79;
+	Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Wed, 19 Jun 2024 22:30:55 +0800
-Subject: [PATCH v2 14/14] drm/mediatek: Fix XRGB setting error in OVL
+Date: Wed, 19 Jun 2024 22:30:48 +0800
+Subject: [PATCH v2 07/14] drm/mediatek: Add DRM_MODE_ROTATE_0 to rotation
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240619-mediatek-drm-next-v2-14-abf68f46f8d2@mediatek.com>
+Message-Id: <20240619-mediatek-drm-next-v2-7-abf68f46f8d2@mediatek.com>
 References: <20240619-mediatek-drm-next-v2-0-abf68f46f8d2@mediatek.com>
 In-Reply-To: <20240619-mediatek-drm-next-v2-0-abf68f46f8d2@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -54,11 +55,11 @@ Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718807531; l=1547;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718807531; l=3032;
  i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=N+q+J8F01q3+w5AJm23nX2Ta3bBWa72KPt0JkxnFDyM=;
- b=UGkb80MLoatE4rhTH91SKYMfduSoEsuHwJOGEjgG5YhEsMiyJ77CyrZu85rwXyMZq3lSE0pKP
- BuGab+SbGDVCkdRv1qaDjrNhTvABHv31tqQubuZZIXknz7+ZNzsYWPw
+ bh=Rr3Cn0zcHA1tgf1aiwUMCaOAX6oP85JESJH6W+QO72g=;
+ b=X89nl0hoD9/fxKLIjA9LXFs1fIXdKluqoGGwHoFrQZBrBCJIcnaoO9Y3h78jYD05f3OBcoyQl
+ qYLesDX019rAOtwzWEl8wD/sEsN/BhOWVltvLMMBytdVIgz+qWA85IP
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
@@ -68,37 +69,85 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-CONST_BLD must be enabled for XRGB formats although the alpha channel
-can be ignored, or OVL will still read the value from memory.
-This error only affects CRC generation.
+Always add DRM_MODE_ROTATE_0 to rotation property to meet
+IGT's (Intel GPU Tools) requirement.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.h |  6 +++++-
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 17 +++++------------
+ drivers/gpu/drm/mediatek/mtk_plane.c    |  2 +-
+ 3 files changed, 11 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
+index 26236691ce4c..f7fe2e08dc8e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
+@@ -192,7 +192,11 @@ unsigned int mtk_ddp_comp_supported_rotations(struct mtk_ddp_comp *comp)
+ 	if (comp->funcs && comp->funcs->supported_rotations)
+ 		return comp->funcs->supported_rotations(comp->dev);
+ 
+-	return 0;
++	/*
++	 * In order to pass IGT tests, DRM_MODE_ROTATE_0 is required when
++	 * rotation is not supported.
++	 */
++	return DRM_MODE_ROTATE_0;
+ }
+ 
+ static inline unsigned int mtk_ddp_comp_layer_nr(struct mtk_ddp_comp *comp)
 diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index f358dbfed5e3..6abefc338045 100644
+index bd00e5e85deb..880ef61ccc92 100644
 --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
 +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -455,6 +455,14 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
- 		con |= state->base.alpha & OVL_CON_ALPHA;
+@@ -297,27 +297,20 @@ int mtk_ovl_layer_check(struct device *dev, unsigned int idx,
+ 			struct mtk_plane_state *mtk_state)
+ {
+ 	struct drm_plane_state *state = &mtk_state->base;
+-	unsigned int rotation = 0;
+ 
+-	rotation = drm_rotation_simplify(state->rotation,
+-					 DRM_MODE_ROTATE_0 |
+-					 DRM_MODE_REFLECT_X |
+-					 DRM_MODE_REFLECT_Y);
+-	rotation &= ~DRM_MODE_ROTATE_0;
+-
+-	/* We can only do reflection, not rotation */
+-	if ((rotation & DRM_MODE_ROTATE_MASK) != 0)
++	/* check if any unsupported rotation is set */
++	if (state->rotation & ~mtk_ovl_supported_rotations(dev))
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * TODO: Rotating/reflecting YUV buffers is not supported at this time.
+ 	 *	 Only RGB[AX] variants are supported.
++	 *	 Since DRM_MODE_ROTATE_0 means "no rotation", we should not
++	 *	 reject layers with this property.
+ 	 */
+-	if (state->fb->format->is_yuv && rotation != 0)
++	if (state->fb->format->is_yuv && (state->rotation & ~DRM_MODE_ROTATE_0))
+ 		return -EINVAL;
+ 
+-	state->rotation = rotation;
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
+index a74b26d35985..1723d4333f37 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_plane.c
+@@ -338,7 +338,7 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ 		return err;
  	}
  
-+	/* CONST_BLD must be enabled for XRGB formats although the alpha channel
-+	 * can be ignored, or OVL will still read the value from memory.
-+	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
-+	 * affect the result. Therefore we use !has_alpha as the condition.
-+	 */
-+	if (state->base.fb && !state->base.fb->format->has_alpha)
-+		ignore_pixel_alpha = OVL_CONST_BLEND;
-+
- 	/* CONST_BLD must be enabled for XRGB formats although the alpha channel
- 	 * can be ignored, or OVL will still read the value from memory.
- 	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
+-	if (supported_rotations & ~DRM_MODE_ROTATE_0) {
++	if (supported_rotations) {
+ 		err = drm_plane_create_rotation_property(plane,
+ 							 DRM_MODE_ROTATE_0,
+ 							 supported_rotations);
 
 -- 
 Git-146)
