@@ -1,203 +1,145 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F1B78C91;
-	Wed, 19 Jun 2024 10:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3862D78C91;
+	Wed, 19 Jun 2024 10:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793265; cv=none; b=MK/5+m85Qp1hoO+lafZ3E5ESsq4JBcwOiIhc6T/PyMl3/zvwpkWhE8kZJQzAbCjXHACouff4tJnGyxuh0nwGpAMVLxiKf/xiQ+BY4vEb/dVFfof8ru4K2UhC2K8/K7v3E8b0VpMb4kPpe6qBZuC+YKkYDN5Qi4HD4WJyd8cXhWo=
+	t=1718793307; cv=none; b=ZfgfRLZ1E25/jWjReKG6RVwACb9VBXDqTeutwt8KwPJWDGfvO0aBndWXyRxSJN2yg7XgY61KOWMpsOMx1dYPyQSCq4kL30zfY7H2DY1bdAsC63kWuJVMqt+vBdfDb+Xnp0rDTRb9/MgpSSrCRfoC8E9s/bay+vvtc1diF43nK3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793265; c=relaxed/simple;
-	bh=PhPqKYQCQkwNWu5LZ8dFzl8sb446Y/Jiz4a2i59MxrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eg94QS9IQlCtFp7Xw7St2QumriiC/Kiuppid3jK3kci6/CArJt19gYZrAsnswCnWt34x+Tt19mc2s7KZo5Bu2i/9JgkQmp45qhYEMiHxSO4SVMGsz5liNy/I7TGneuB4bJ8Sv6YFAgCrnQ97oXV3E3fRSqN2Ee3duL7wGBXjMAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=r2Su73Gb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1718793307; c=relaxed/simple;
+	bh=rAkZoulyRqoWcGhfxv3cdCzwzCQF6KLQPe1hqhtmVBQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QG14v0lWeLtGBU0QwUAKsSKQ+WRvd3jggRebdRwD85ACGj05GWd/vfnO+oueinW8NWbH1MhCsHO7Z1vw48zgFvJMHdYGq1Dzxqardl+3at2lz9wGhbkMm8zNHB99FbPKScRhy++kW0pdjQ0qR6fZxxBII0acTIS37Em68Nxk+vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LwmLBZ/H; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="r2Su73Gb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=21JYkOIbkZLNfZaVuKtNV1fZ9lm08Q1ez/4bhTivuJs=; b=r2Su73GbRCbIlY2/iqWB7driHX
-	quxDMxWk0YUthRbIbspUrjyzRjLCaZv0QhdewwLqfW9gLF4ZJoP9ZBbY42LSHcRiF3e+lo0Xi9b2S
-	TDuG1upXycLH5eUOyPoLXxKevZX+gQFopQ2Vj6AqfDNWrtlMfMAFRECg15evJJCctN0PGU9iykGgt
-	if+JD5Qy8b/edoWAldiQ4tbPgIiQ27+LNPbljowhZ6nDxNFrq0x6cqtUVaRaV94OHw6GHkWfkOF49
-	o33FgEI8pig5WgD5Ab2Cdh8vUp34FKwbY1HoBNklTD2lMHZTL8XW+N0QUypd5L0fKGLdcK5GlFN+D
-	ju6zndKg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42498)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sJsdh-0008CM-1M;
-	Wed, 19 Jun 2024 11:34:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sJsdg-0006g3-Tz; Wed, 19 Jun 2024 11:34:04 +0100
-Date: Wed, 19 Jun 2024 11:34:04 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/4] net: phy: bcm-phy-lib: Implement BroadR-Reach
- link modes
-Message-ID: <ZnK0HL+pO9/2ZMKz@shell.armlinux.org.uk>
-References: <20240617113841.3694934-1-kamilh@axis.com>
- <20240617113841.3694934-5-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LwmLBZ/H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718793305; x=1750329305;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=rAkZoulyRqoWcGhfxv3cdCzwzCQF6KLQPe1hqhtmVBQ=;
+  b=LwmLBZ/HEG9lGlSclIZO8jMiiiWYz93rs4LcgDjNiryfzciSu8vq3Wl3
+   SuCtXbX/YwjyI8qQ8LFUPPVyQiCZFjxiIaivkkSpRa5mZImkGroNRkHux
+   RTEBRWeuygOxxcfjrc6UYYPwaV/hFzYN3HRkhFiYVsXdMvOpBE0eOo/3A
+   7L7g3mBnjxWjxvvlGZRsvkxPmbE/0644wnX798zBAkZU8dsfr1aTUpMO8
+   HSCPFMcGA/2a8SoF+Wx+c8R3IhODWsJ9aZyP7p4bp8Tf4ZHy4BkvilSdR
+   xGtaQ5HVYNdfRMdIOSBJNdr1Qt/ELLv0P0OGHUD0/Ntje7UfHrOGmTqOp
+   g==;
+X-CSE-ConnectionGUID: cK4+lQJPRzOFUFxuu7z+Zg==
+X-CSE-MsgGUID: 6EnvEt65QY6ERkurd+lspg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="19596813"
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="19596813"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:35:04 -0700
+X-CSE-ConnectionGUID: UjQFZ2qzTJ6GiLj/nm1kiA==
+X-CSE-MsgGUID: oN9ZG3u6TViQwpUipDLVZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="41987288"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:34:47 -0700
+Message-ID: <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Brice Goglin
+	 <brice.goglin@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,  daniel.sneddon@linux.intel.com, tony.luck@intel.com, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Ricardo Neri
+ <ricardo.neri-calderon@linux.intel.com>,  "Liang, Kan"
+ <kan.liang@linux.intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>
+Date: Wed, 19 Jun 2024 03:34:46 -0700
+In-Reply-To: <20240619015315.3ei5f6rovzdnxovo@desk>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+	 <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+	 <20240619015315.3ei5f6rovzdnxovo@desk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240617113841.3694934-5-kamilh@axis.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Jun 17, 2024 at 01:38:41PM +0200, Kamil Horák - 2N wrote:
-> +int bcm_config_lre_advert(struct phy_device *phydev)
-> +{
-> +	int err;
-> +	u32 adv;
-> +
-> +	/* Only allow advertising what this PHY supports */
-> +	linkmode_and(phydev->advertising, phydev->advertising,
-> +		     phydev->supported);
+On Tue, 2024-06-18 at 18:53 -0700, Pawan Gupta wrote:
+> On Tue, Jun 18, 2024 at 02:49:10PM +0200, Brice Goglin wrote:
+> > Le 17/06/2024 =C3=A0 11:11, Pawan Gupta a =C3=A9crit=C2=A0:
+> > > Hi,
+> > >=20
+> > > This series adds support for CPU-type (CPUID.1A.EAX[31-24] on
+> > > Intel) to
+> > > differentiate between hybrid variants P+E, P-only, E-only that
+> > > share the
+> > > same Family/Model/Stepping. One of the use case for CPU-type is
+> > > the
+> > > affected CPU table for CPU vulnerabilities, which can now use the
+> > > CPU-type
+> > > to filter the unaffected variants.
+> > >=20
+> > > * Patch 1 adds cpu-type to CPU topology structure and introduces
+> > > =C2=A0=C2=A0 topology_cpu_type() to get the CPU-type.
+> > >=20
+> > > * Patch 2-4 replaces usages of get_this_hybrid_cpu_type() with
+> > > =C2=A0=C2=A0 topology_cpu_type().
+> > >=20
+> > > * Patch 5-7 Updates CPU-matching infrastructure to use CPU-type.
+> > >=20
+> > > * Patch 8 cleans up the affected CPU list.
+> > >=20
+> > > * Patch 9 uses the CPU-type to exclude P-only parts from the RFDS
+> > > affected
+> > > =C2=A0=C2=A0 list.
+> >=20
+> >=20
+> > Hello
+> >=20
+> > Is there still a plan to expose this info in sysfs?
+>=20
+> Sure, if it helps userspace.
+>=20
+> > Userspace currently uses frequencies to guess which cores are E or
+> > P.
+> > Intel sent some patches several years ago [1], but they got
+> > abandoned
+> > nowhere as far as I know. There was also some discussion about
+> > using a
+> > "capacity" field like ARM does, but IIRC Intel didn't like the idea
+> > in
+> > the end.
+>=20
+> There can be many ways to expose this information in sysfs. Like this
+> ...
+>=20
+> > [1] https://lkml.org/lkml/2020/10/2/1208
+>=20
+> ... exposes /sys/devices/system/cpu/types which, in hybrid parts,
+> creates a
+> subdirectory for each type of CPU. Each subdirectory contains a CPU
+> list
+> and a CPU map that user space can query.
+>=20
+> The other way is to expose the CPU-type in a file:
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/sys/devices/system/cpu/c=
+puN/type
+>=20
+> that could return the CPU-type of the CPU N. Is there a preference?
 
-Isn't this already done by phy_ethtool_ksettings_set() ?
+But you still have to look at frequency or caches as there are Low
+power E-cores which will have same type but different capabilities.
 
-        linkmode_copy(advertising, cmd->link_modes.advertising);
-...
-        /* We make sure that we don't pass unsupported values in to the PHY */
-        linkmode_and(advertising, advertising, phydev->supported);
-...
-        linkmode_copy(phydev->advertising, advertising);
+Thanks,
+Srinivas
 
-> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-> index 370e4ed45098..5e590c8f82c4 100644
-> --- a/drivers/net/phy/broadcom.c
-> +++ b/drivers/net/phy/broadcom.c
-> @@ -5,6 +5,9 @@
->   *	Broadcom BCM5411, BCM5421 and BCM5461 Gigabit Ethernet
->   *	transceivers.
->   *
-> + *	Broadcom BCM54810, BCM54811 BroadR-Reach transceivers.
-> + *
-> + *
 
-Nit: why two blank lines?
 
-> +static int bcm54811_read_abilities(struct phy_device *phydev)
-> +{
-> +	static const int modes_array[] = { ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
-> +					   ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
-> +					   ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-> +					   ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
-> +					   ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
-> +					   ETHTOOL_LINK_MODE_100baseT_Full_BIT,
-> +					   ETHTOOL_LINK_MODE_100baseT_Half_BIT,
-> +					   ETHTOOL_LINK_MODE_10baseT_Full_BIT,
-> +					   ETHTOOL_LINK_MODE_10baseT_Half_BIT };
-
-Formatting...
-
-	static const int modes_array[] = {
-		ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
-		...
-		ETHTOOL_LINK_MODE_10baseT_Half_BIT
-	};
-
-please. This avoids wrapping beyond column 80, and is to kernel coding
-standards.
-
-> +	int i, val, err;
-> +	u8 brr_mode;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(modes_array); i++)
-> +		linkmode_clear_bit(modes_array[i], phydev->supported);
-> +
-> +	err = bcm5481x_get_brrmode(phydev, &brr_mode);
-> +	if (err)
-> +		return err;
-> +
-> +	if (brr_mode) {
-> +		linkmode_set_bit_array(phy_basic_ports_array,
-> +				       ARRAY_SIZE(phy_basic_ports_array),
-> +				       phydev->supported);
-> +
-> +		val = phy_read(phydev, MII_BCM54XX_LRESR);
-> +		if (val < 0)
-> +			return val;
-> +
-> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +				 phydev->supported, 1);
-
-		linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-				 phydev->supported);
-
-...
-> +	/* Ensure LRE or IEEE register set is accessed according to the brr on/off,
-> +	 *  thus set the override
-> +	 */
-> +	return bcm_phy_write_exp(phydev, BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL,
-> +		BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_EN |
-> +		(on ? 0 : BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_OVERRIDE_VAL));
-
-Needless parens, wrong formatting. Consider a local variable:
-
-	val = BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_EN;
-	if (!on)
-		val |= BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_OVERRIDE_VAL;
-
-	return bcm_phy_write_exp(phydev,
-				 BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL, val);
-
-would be much nicer to read.
-
-> +	if (phydev->autoneg != AUTONEG_ENABLE) {
-> +		if (!phydev->autoneg_complete) {
-> +			/* aneg not yet done, reset all relevant bits */
-> +			static const int br_bits[] = { ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +						       ETHTOOL_LINK_MODE_Pause_BIT,
-> +						       ETHTOOL_LINK_MODE_Asym_Pause_BIT,
-> +						       ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
-> +						       ETHTOOL_LINK_MODE_100baseT1_Full_BIT };
-
-More formatting issues. Maybe consider moving these out of the function?
-
-> +			for (i = 0; i < ARRAY_SIZE(br_bits); i++)
-> +				linkmode_clear_bit(br_bits[i], phydev->lp_advertising);
-
-Formatting issue...
-
-...
-> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
-> +				 phydev->lp_advertising, lrelpa & LRELPA_PAUSE_ASYM);
-> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Pause_BIT,
-> +				 phydev->lp_advertising, lrelpa & LRELPA_PAUSE);
-> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
-> +				 phydev->lp_advertising, lrelpa & LRELPA_100_1PAIR);
-> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
-> +				 phydev->lp_advertising, lrelpa & LRELPA_10_1PAIR);
-
-More formatting issues.
-
-> +static int bcm54811_read_status(struct phy_device *phydev)
-> +{
-> +	int err;
-> +	u8 brr_mode;
-
-Reverse Christmas tree please.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
