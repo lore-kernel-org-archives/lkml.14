@@ -1,145 +1,242 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2120.outbound.protection.outlook.com [40.107.7.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A536473514;
-	Wed, 19 Jun 2024 07:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718783013; cv=none; b=Q8Yq0vrY1tb1FxNoyKwoLDu4bv07TPsiV4KcNR5FjG2dp2l9YSTmHMAufJ+K9XXCBQyakz22H5ikt7mHy2ZPy5+9xgtnmRd36WzFHObYpVasV/z/5xjatZB1UKcnqf6Uj4O4a+4n4J+bwrb2YxJsEx21xU35BsreHLiy7xjU2Us=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718783013; c=relaxed/simple;
-	bh=Kk0tvkTiO2T3b876bdyv7dDPKT0iSXVPQDtbWjD4hA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UNlGJRx30w08sRVb/s4i15Vb7gmjmVDBO8k8cAE29UklDzEuohkUEsCuG1S0zRaawUTNIdj+m9pDNcYESlHSDM3O8RuEVVo58hdSr1y56FxyX8BjG1s+ly2njiK3oHx7ShlRVtC1BxVC6d/2Mbi/RUS3y5AUReW92G1AS3uarIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bQYIK2BV; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D04F2139DD;
+	Wed, 19 Jun 2024 07:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718783156; cv=fail; b=JZQsYDdCP+YvUYmJwTN68533S/7OmZuJ3QfCaV0jRJgwDTOuzRt4Ccu7XxJXYOzPZMIMG3LeecgAaLWn0yxT7qNe6DKuvmdS91uYwh4NqFx+xSbtaWaoG3OPNMgzhw9Vkf6m+Gu6SeRVexvR5pu40qAMAPDoeUbRozXwWH/YDSQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718783156; c=relaxed/simple;
+	bh=qDOpBqwQ/sbegpwhQNDP+LOU+k/grHlLmXE8T5lmsQ0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hyf7VR1uUQZHEFrO1vPEj8dUbZo0agiGw0Z1gjckKZVPKvSvAcrpqZGNmqW8js14lTKDx/OkLgRNH9dU3LA1uc71yTMbOaF+Axtc4tsreWnqF6sDvrWdfQ4q2KVGPvpYVVqpTuAbz/9hOOf3hLtJReNutwU34muyrljbSYKNoqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=Kytfgaor; arc=fail smtp.client-ip=40.107.7.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bQYIK2BV"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J7QKhf006854;
-	Wed, 19 Jun 2024 09:43:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	di+SFQRmDgPvKMWT6Avy9+LOTjR2HwG3kwmIyd/HWss=; b=bQYIK2BVaJri3TYl
-	Mx9sEnwEywh9t7P2P9uEBpVr9z0M2NJ8+BqVkU4DX3Yd0O4nuuiuiN/gbbsujcmz
-	PFJMEPSU1RyqjHdHjVrOQl6Wi/nwyh6rpyhcZ1+ojawgwQ2NSXo+9LoumV7TaG+n
-	kPuvrorX22uMVDsct3j7jaW9F+qOeCdYWylExJKWRhE4vJs/K3lv4aqWVUkbG0yI
-	CSL1HfPRS9vRRPN5CJIwwiO/m6g45zD8TQ2qHY9O9hOEBHIwhQcTwdBHqWtYLYH5
-	DpIjOLBgrNUc1P0abkwJ53f7R1W9NL4JGDbt0yfTxlKjeqjKx3onsE/EWHlABaz3
-	4crI/Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuj9t1u0k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 09:43:00 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9017D40048;
-	Wed, 19 Jun 2024 09:42:54 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C3253210F6D;
-	Wed, 19 Jun 2024 09:41:42 +0200 (CEST)
-Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 19 Jun
- 2024 09:41:39 +0200
-Message-ID: <aee3f6d2-6a44-4de6-9348-f83c4107188f@foss.st.com>
-Date: Wed, 19 Jun 2024 09:41:38 +0200
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="Kytfgaor"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jmroO0rpqC/+D9A/P30CTf9KhjjllYN7zJ5f0Bo1s/88PB5lHI9LGE/pCRmvWRqb8g+s/Fjf1ZvVb85EDLzWT1L/mW3X6ursAtsxzWw54YXZ/UyFxN5wlgKWNmUGHNdWMyO7m6IXXuK+LUnOuTfGIQY6VlCelEkufH0Sm3+xUguD6VKbtCfBgS73HA4UPWGMn1FhiKkT8J6Ep7K/PhdnFuBcdz4z2MCplGNX04FD8vBukPJWIRZ23mPTvs+Ho3k3cSBa1Ql2VG+12FTXXzvgeeHe367nc4JpMF/mMAXOksllaBQ1ifsnJ7APqSZ9yTvIx37qNUR14nCqqZd+LF5sAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QGe85ViECbRmnepNhmjowAJLyKInoz7lcSR2N944/AE=;
+ b=cFZKukAYIWkA+q9uiUcvROdd46qmNBTdOPO65N46/43G0Yq4TDiupirdSvn+fz8iAItv6F98AHAkQKJQGv01aiLt3DB7cdtw5zaVUfBTdt2xz9SDozrL7cqOuv/PlFpBeW/XHAF1YgJ0JTGHf8kSHdBroar0U4iANVEJz3WtI6RRI4VnEbuR4PGEoKUQt8K5rmZMZ1v8S6p9yYrHlS9A4d1N8ijnBWUzT6If+5r1Iudfi36tv1ZXB2iJ7ch3QVLpX5PvL8HZX+2+4ENtkrbu7jas2Ogs1fHi/4MPLcRzJtoKoIoPE7aczCuED+NTiq4ALZdEDjApFaX7rAkiFLwfhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QGe85ViECbRmnepNhmjowAJLyKInoz7lcSR2N944/AE=;
+ b=Kytfgaoro47mXXyVhOw5ESyOw08wMoxUhmbuGjzGjFhMoZGcDHwHWOYRqidfPrAotE0CGITYO4siDGp5UeD4qwqiTiF6Hc/Ez3UQm3/cjFlAK7AAKM+3CPOjstaNBMLlOO68PBhF2whPIdZVNrj21j4aDnekroclKqQJN2gI+xk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com (2603:10a6:803:122::31)
+ by PAXPR04MB8376.eurprd04.prod.outlook.com (2603:10a6:102:1bf::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Wed, 19 Jun
+ 2024 07:45:47 +0000
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::2a24:328:711:5cd6]) by VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::2a24:328:711:5cd6%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
+ 07:45:47 +0000
+Message-ID: <19ee521d-298d-4718-bdc6-f282666de371@cherry.de>
+Date: Wed, 19 Jun 2024 09:45:44 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/9] Add Mule MFD support
+To: Guenter Roeck <linux@roeck-us.net>,
+ Quentin Schulz <quentin.schulz@cherry.de>, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Peter Rosin <peda@axentia.se>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20240618-dev-mule-i2c-mux-v4-0-5462d28354c8@cherry.de>
+ <fdeea79f-4568-4e70-9b49-0c02abc91170@roeck-us.net>
+ <4f92528b-8311-4c0b-998b-f0221d7bd474@cherry.de>
+ <c2803eed-b4f4-44cf-a7f7-9557d05e798e@roeck-us.net>
+Content-Language: en-US
+From: Farouk Bouabid <farouk.bouabid@cherry.de>
+In-Reply-To: <c2803eed-b4f4-44cf-a7f7-9557d05e798e@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0288.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e7::19) To VE1PR04MB6382.eurprd04.prod.outlook.com
+ (2603:10a6:803:122::31)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next,PATCH 2/2] net: stmmac: dwmac-stm32: stm32: add
- management of stm32mp25 for stm32
-To: Marek Vasut <marex@denx.de>, "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Richard Cochran
-	<richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240614130812.72425-1-christophe.roullier@foss.st.com>
- <20240614130812.72425-3-christophe.roullier@foss.st.com>
- <4c2f1bac-4957-4814-bf62-816340bd9ff6@denx.de>
- <09010b02-fb55-4c4b-9d0c-36bd0b370dc8@foss.st.com>
- <39d35f6d-4f82-43af-883b-a574b8a67a1a@denx.de>
- <8c3f1696-d67c-4960-ad3a-90461c896aa5@foss.st.com>
- <3dee3c8a-12f0-42bd-acdf-8008da795467@denx.de>
-Content-Language: en-US
-From: Christophe ROULLIER <christophe.roullier@foss.st.com>
-In-Reply-To: <3dee3c8a-12f0-42bd-acdf-8008da795467@denx.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6382:EE_|PAXPR04MB8376:EE_
+X-MS-Office365-Filtering-Correlation-Id: 488620a1-4cdf-4669-8139-08dc9033d4b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|366013|7416011|1800799021|376011|921017;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?M2R0OWNuQktrTUJaV0o4ZjU3WVFVNG5OaWErdW9QRE9HanB4Wm5mTVBwY1FU?=
+ =?utf-8?B?UGdhdXVramhPRVo3SkhLZEFDemI2M1phYkFEd2FISE9IR2g3V1dDeStCQVJS?=
+ =?utf-8?B?VGlPUDRHV1NBVUNEdmhCNGtKemVSelYvNng3VEREQWpWaTJLUmloMWUyOW1O?=
+ =?utf-8?B?MmU4ZUxBMFRLRGpQL2ZWam5leXFidjZXaWtyVDlEaGZ5TjE4c2VjR0F6OU5L?=
+ =?utf-8?B?cXJGMVYwc1N2VGtqQll4Q2kycTZjWXhGRXdmOXBmYmNIUDJLSzdMOFhadk92?=
+ =?utf-8?B?anNZM2EwZ2tWS1pYZSt2K2ZpQlgxbDBOVDZUVmZROGhRWG1wTDVPWnVwREhE?=
+ =?utf-8?B?WnZOc1pjY1l2dWFZT05ycjVnbm04bG1CTHdMNmw0L25Bcm4zREZVN1hKTWo4?=
+ =?utf-8?B?WFg5V3VpcURGUjFPWkF6eEpFTzVMRWovTE83WGs3ZmVsbW5zbzJUaDY3UEJO?=
+ =?utf-8?B?cDFKdVhYd0ViZVV3eVRkQUhMYlhFNHprYUdzVGE4MUFKbXR6R010ZzlmRVM2?=
+ =?utf-8?B?WEREMU1MbDI2Vk14TWNOT1NSZThhc1dvMVdNeEhPNnc3VFRUaU96c21tUFZD?=
+ =?utf-8?B?aWV0Ni9FajA4elFFeFFDWGhXZnJoU0dnNVJlR1VoVTlWNmcxM3pBb0ViZW9s?=
+ =?utf-8?B?eTFzMjFKMUcrNmRrSitrR2FtMnNqcWw2cURVbC96RDdzODBvVDRWdEtPM3Fj?=
+ =?utf-8?B?NlA2U3BubU5yQ1ppNEFwenZTczI0WUZvRTRYUVRHK2dncTRCb0NqeWRYU2xz?=
+ =?utf-8?B?ckVCQjNJbUJmcGYzOXZMMHc4ZXhPQnJnOGtCSUR6RzhSaXZiZlBISkxWVHZN?=
+ =?utf-8?B?bjlsaVo2aEplRjVSSHFnN0tFblRoV1RlYWVtNVBIODZ3TGhLTUNZZWVodGZn?=
+ =?utf-8?B?SXpqT0ExZGdVc0t1bWRlQzJuTGgrNDd4dEpoT1NnRDFCV0Q4ZGcvUjJhOTM1?=
+ =?utf-8?B?K1FGeUZ0TWE0dWUrcmhER0RIdmVBY0xPTmRMMG5sNUp6dDIvYnhJdFFyekNr?=
+ =?utf-8?B?eEZuZVJ3aHFnUnNtb1ZKWEVjN2VGYlVySlBYNC80M1NjTzBRSXpiQW1YeG53?=
+ =?utf-8?B?enJEd1llanVsbisyWXF3cTc3Q0wrUUFCeXlObkhQc293ZElzZ2x0MWduUCs5?=
+ =?utf-8?B?bVN2MFhBWXRMTWl4R2dCdUY5V3pjUllISkdnSk51Vk45Rlc5YzRoNDFoalVQ?=
+ =?utf-8?B?ak5ZTEZIV3pCVzNwWkxzalJaOVVWR09uNUYxa1hxRG9wWm5VYkk0Q2hrRTkr?=
+ =?utf-8?B?Rm05SWpEbFdhNEg3TTJMVGR1bUdBTmY1MlFFMm5nZjFLOEVPYjJIZmlSUks3?=
+ =?utf-8?B?V1dZcjIwMkhSdVk1VytNV3hkekJGcjVJQW1xakFPMEhYTWpTNTltUTY5c0pG?=
+ =?utf-8?B?c3BqOFV1QUJCdUROQXpqdnByaHR2RGZtY3BoWDVSLzIwZ25QZVRyMm91dWg2?=
+ =?utf-8?B?VU9TNkFjeCszODNISk1UVlIvcmpxQnZVc3UvOXMzRWd1TmhyejhBVHRTd3Ez?=
+ =?utf-8?B?dnZOSFhPYUdoQnZ5d01rMkl1enZqWThjbmRyMi9iU0paclU1Qk9aTG84V1Uw?=
+ =?utf-8?B?d1JDenFHTmlJMU9JaDRIUVZ5dGZZcWdrVWVUUFdMSUNaUmpobjludUVVVFg3?=
+ =?utf-8?B?NGlmMEdRcW1lc0RxOGRabkxiWnJyVjFMVFA3TnlJZENmcmFmelpxeUFZdm1v?=
+ =?utf-8?B?eXA1RndtWmNqdGtDNE51QUY3QWdHWll1aU91Q1UwN0o1WGhheTRUeUFwcFE2?=
+ =?utf-8?B?VnZ1cEp2VWNjcVJRKzRYc2dZZFNMVnB5cE8vV3JoQ1FLVWMxNlVaWTRkMmVi?=
+ =?utf-8?Q?RAAOT/1ODlhG8Z/xAsoeVJAGjA19/k6fpUifM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6382.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(7416011)(1800799021)(376011)(921017);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SjR2K0lGNmRlZy9qOHovcXdVZi92NjhUR2k4dHdGT2RNV0lweEt0Y2hQR3VK?=
+ =?utf-8?B?M2VJSExDVUpYdW5TZG0vbWJtMklJWWcxb1V0R2tXek9OV3FnME5DdVU4VGJF?=
+ =?utf-8?B?ZTFoYkpoaUtkbHZTV25oNy9aU0ZPRDVaQnhMc1d4Y2xCcUIybXhvRE5DWlMy?=
+ =?utf-8?B?anB1TlJETzFBVmphbmlDQzJDVE8vSERobEx0ckw2K2VsV2JkUHpDbHJMZUNv?=
+ =?utf-8?B?d3cvTTAvWGRBbndwSVBIUHAyWVQyVXNiSmpjUzFLSVFTcjYyVDI5c0hkcmJ1?=
+ =?utf-8?B?ZFYrc1VqQkpLajhoQ21oNnRmRG1pSjN6alo4TS9abnRDNzFjQTRrVjgzbENw?=
+ =?utf-8?B?Nnl1VWFpSnFVaU16LytLNTZ4U2d1ZWFBblJjeVF1UXRSQytQdDJ3cGtMcytI?=
+ =?utf-8?B?WTdDZlNZdDRWRlRiN0VTdzBsT3hFVnlCOC8vTnNPaXFtV2Q0SEpLYmphVFo3?=
+ =?utf-8?B?akF5bzhETzZ1ZnAvRkJvRHBUblJmdDUxalBHM21DMmZFc2QzcnUyV1AvaUxN?=
+ =?utf-8?B?dmdJcDhpaHRPQWxLYVR0QVZ4SUFLMEoxN0NyOFlGQ0JJcHZKQnZZb0Y1aklC?=
+ =?utf-8?B?TnBFWWhpZlBFSit6Y0RjM2cweHNBRjV0ajZVNklNUmZmUENoNHgxazhjRXQ3?=
+ =?utf-8?B?cThmb3kxeVBqdE5sWW9NMUovclYzeU1sOEFVVkpqRVMxOVliQzZoSGo1RE5w?=
+ =?utf-8?B?Q1lPaG1KY1o0M0pqYzVhVmZTRTRaaWhuVEVQOWZJclJtbFZRKzRQUkxwSzM0?=
+ =?utf-8?B?RVNSR2lFRlFjQm5wU3lDQzkwT2s4NUVOV1lQa0tjUm1OODNTVVNtSGdUREFy?=
+ =?utf-8?B?SDcrSHVmQTVFS1NuckhaaHFuNXJDZEl5azdWOW5HTnorYyswWWhxY1FFRita?=
+ =?utf-8?B?UzErc1JyN3hocU1MRitBTno0aS9YdUVKVXpmME15YkV0cEFZSzdpcmRiK0Jq?=
+ =?utf-8?B?RTdSeCs5dlZMK2NidkJPKyszeDJldklmT2Fwb0EyMDFMSFROOElyM2FscVZD?=
+ =?utf-8?B?emQ4MHNhKzhVMDlya2hVRDN5L08xeDRvOWcycEI5c2ppdk5RemErWFV5K3lm?=
+ =?utf-8?B?WWRQUFJZZm8zcDFGdkVibnd2TGtvd2hNcHZxalh0Yk9ZTWR0eDdTa3p4SUt2?=
+ =?utf-8?B?cnhmemVVZ21DeE1pSUVIQzhuTHZkU1dja2YzZWVIdWNMYmlaQkREcXl4QjJk?=
+ =?utf-8?B?clZHRGZaU2s3anladGFwcXlEZFZwdWM2dlNKME5ldFZCb2VCKzN0cDB3eUs5?=
+ =?utf-8?B?T0x4Zk5iMnRmYytOWkhUN3l2T2U2WDVFRTUvdk82QklIb3JhVTlVck9Hbkhx?=
+ =?utf-8?B?RklGZTZYT2FiT0ZORkJIQ05GU24rcGdqVTBJMm9hbWlnN2tVQXhoOEZES2NR?=
+ =?utf-8?B?TkRCQlpDci92TU91eUF4TDZSVnhuTXdwbTFOUkdRY0dZWm5MT3QvS210a24x?=
+ =?utf-8?B?Z2JnS1VkbGlGOUE3dkRPdWJxMlBSZE80aWFtWENobzRIck5UbjJ6L2E1K3Vp?=
+ =?utf-8?B?WERRZFkydW04YUM0RjRxdjFqbUZub2ViTnYyVUNKVllRNVJsV00rVGZqSTd4?=
+ =?utf-8?B?bGxiZlo2azJhNkRJd1BwMzdmTFlkMXZiUW1FT3p0ZW9ZRlg0V21heUliUis3?=
+ =?utf-8?B?L0xJN3pwQ3R0VVg4MlMyWHk2NDh2bHpoZGJwS3dLSXVvcTExMDVLRWxLcmlx?=
+ =?utf-8?B?Q0lXc2plMk9BZWQxb0M2SDVPVkJCU2UzMVY0UERvOUJDTEE3LzQrWnlzazJE?=
+ =?utf-8?B?Mm5hbXJBUlp6Q2tiR1l5a1d4eUh6eE9VNE9sVy9VR0tFQWpObnFlWlJqMkVO?=
+ =?utf-8?B?VngzTzJYdGlNcmt1enVKRUlDRUs4ZWRYNDhKN2dhRThOWThEbzd4WXY5bXd5?=
+ =?utf-8?B?WFU0eGZIQ1lKaCt1cmpUZmIvRk4vdVNJMGNnT3VEZE1EeVkweW1wSU52VUhL?=
+ =?utf-8?B?Um52VzRPbXUyMUF2NkN3T2p3L0pxcGtHWmIvRnlKZzN0QUhsZTZaMTFFNXVl?=
+ =?utf-8?B?MENHTU9GMmwzc1NNLzJEMEFuSWd2ZTE3NG5nbGthTGlRb2J2Q3FOcXIrUjRB?=
+ =?utf-8?B?VFFMVzZDZURhdG03ZkhZSmgvOG9jYWtkNGF2eVJSNTUwSERyaW1aeUw4MGNw?=
+ =?utf-8?B?VCtBN01WMjdaanNndVNEM25zTTRZcE1GQVhvYit6cm9IOGxVbUtQblptWlps?=
+ =?utf-8?B?b1E9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 488620a1-4cdf-4669-8139-08dc9033d4b7
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6382.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 07:45:47.0673
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: l+CMURJs3y4wjpLWqbsqA+or1ORIFQL87ddUo9Y3DiOmCuKOWSAIdgetlCQ32D5i9QeJdvdOLjRj5pGIvd1BsgXv1c1znH3/iYIcI6/Mo8c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8376
 
-Hi Marek,
+Hi Guenter,
 
-On 6/18/24 17:00, Marek Vasut wrote:
-> On 6/18/24 11:09 AM, Christophe ROULLIER wrote:
->
-> Hi,
->
->>>>>> +static int stm32mp2_configure_syscfg(struct plat_stmmacenet_data 
->>>>>> *plat_dat)
->>>>>> +{
->>>>>> +    struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
->>>>>> +    u32 reg = dwmac->mode_reg;
->>>>>> +    int val = 0;
->>>>>> +
->>>>>> +    switch (plat_dat->mac_interface) {
->>>>>> +    case PHY_INTERFACE_MODE_MII:
->>>>>> +        break;
->>>>>
->>>>> dwmac->enable_eth_ck does not apply to MII mode ? Why ?
+On 18.06.24 19:30, Guenter Roeck wrote:
+> On 6/18/24 09:51, Quentin Schulz wrote:
+>> Hi Guenter,
+>>
+>> On 6/18/24 6:29 PM, Guenter Roeck wrote:
+>>> On 6/18/24 09:06, Farouk Bouabid wrote:
+>>>> Mule is an MCU that emulates a set of I2C devices which are reachable
+>>>> through an I2C-mux.
 >>>>
->>>> It is like MP1 and MP13, nothing to set in syscfg register for case 
->>>> MII mode wo crystal.
+>>>> The mux and amc6821 combined make the Mule multi-function device 
+>>>> (@0x18)
+>>>>
 >>>
->>> Have a look at STM32MP15xx RM0436 Figure 83. Peripheral clock 
->>> distribution for Ethernet.
+>>> I don't think that is appropriate. Those devices should all have 
+>>> separate
+>>> devicetree entries and be modeled as individual i2c devices.
 >>>
->>> If RCC (top-left corner of the figure) generates 25 MHz MII clock 
->>> (yellow line) on eth_clk_fb (top-right corner), can I set 
->>> ETH_REF_CLK_SEL to position '1' and ETH_SEL[2] to '0' and feed ETH 
->>> (right side) clk_rx_i input with 25 MHz clock that way ?
->>>
->>> I seems like this should be possible, at least theoretically. Can 
->>> you check with the hardware/silicon people ?
->> No it is not possible (it will work if speed (and frequency) is fixed 
->> 25Mhz=100Mbps, but for speed 10Mbps (2,5MHz) it will not work.
+>>
+>> I think there is a misunderstanding around the wording. They all have 
+>> separate devicetree entries and they all are individual i2c devices 
+>> (from the PoV of the kernel, they all are emulated within the same MCU).
+>>
+>> - AMC6821 on address 0x18 for registers from 0x00 to 0xfe.
+>> - Mux (paging, however you want to call it) on address 0x18 for 
+>> register 0xff.
+>>
+>> Note that AMC6821 is **emulated** in the MCU so this is not some HW 
+>> trickery here.
+>>
+>> This MCU also emulates ISL1208 on 0x6f, as well as a PWM controller 
+>> (merge request pending) and two small AT24 "protocol" EEPROMs, on 
+>> that same address. Those are behind a paging/muxing mechanism. You 
+>> access ISL1208 through page 0, PWM controller through page 1, etc...
+>>
+>> So basically, the point is:
+>> - 0x18 on i2c is now MFD Mule
+>>    - two platform devices behind MFD = AMC6821 (reg 0x00 to 0xfe) + 
+>> Mux (reg 0xff)
+>> - 0x6f for devices "behind" the Mux
+>>    - page 0 for device behind adapter 0
+>>    - page 1 for device behind adapter 1
+>>    - ...
+>>
+>> All of the above are part of the same MCU.
+>>
+>> Mule MFD is a simple-mfd-i2c device with its own devicetree entry.
+>> Child nodes of the Mule MFD are AMC6821 as a platform device (but 
+>> operates over i2c) and Mule Mux. That's what was meant as "The mux 
+>> and amc6821 combined make the Mule multi-function device (@0x18)".
+>>
+>> The Mule Mux then creates N i2c adapters representing the mux/pages, 
+>> all of those being represented in DT. Each of those have one device 
+>> on address 0x6f, all represented in DT as well.
+>>
+>> Nothing hidden or hardcoded, everything in DT.
+>>
+>> Did I miss something here?
+>>
 >
-> Could the pll4_p_ck or pll3_q_ck generate either 25 MHz or 2.5 MHz as 
-> needed in that case ? Then it would work, right ?
+> If it is properly defined in devicetree, the emulated AMC6821 should be
+> an i2c device, possibly sitting behind an i2c multiplexer, not a
+> platform device.
 
-Yes you can set frequency you want for pll4 or pll3, if you set 25MHz 
-and auto-negotiation of speed is 100Mbps it should work (pad ETH_CK of 
-25MHz clock the PHY and eth_clk_fb set to 25MHz for clk_RX)
 
-but if autoneg of speed is 10Mbps, then 2.5MHz is needed for clk_RX (you 
-will provide 25Mhz). For RMII case, frequency from pll (eth_clk_fb) is 
-automatically adjust in function of speed value, thanks to diviser /2, 
-/20 with mac_speed_o.
+The emulated AMC6821 and the Mule I2C mux are both reachable using I2C 
+address (0x18), and hence the use of MFD as the mux only uses one I2C 
+register that is not used by AMC6821.
 
->
->> (you can see than diviser are only for RMII mode)
->
-> Do you refer to /2 and /20 dividers to the left of mac_speed_o[0] ?
+
+Cheers,
+
+Farouk
+
