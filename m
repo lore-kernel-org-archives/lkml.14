@@ -1,57 +1,57 @@
 Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F18A153582
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920F5153BFC
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718806159; cv=none; b=YpMPlNHyUw1XbhoyjH6jfiAthLG+lU13WQkUwI3Csft9N0tIiBa2u0meJVfv8Y3yU4q+2b7mQUsLHsro7w9QzLnAxzbHMfWsiKkBfiTyoU/xrTSbXUEMRVmKHsgsOQC8ZdibwJCf6P7BcI/9sBAhjUH2ed+QtyD9TeZNTbJfy5w=
+	t=1718806161; cv=none; b=TGiVd+hmCukbK5/oK7PoWUYY/dZKfKeaapkKMA4XTigpz62k4LnnWo3967u/QQRhtXdo3tOwGcghiTQu8PI8sBAMyJbzsuxuFdx7qAL/bbx0jCgHhEB5aHr9PZX5MiU/9vBf8+tERPlEfM/Rsf5lssOYmttx+AdENy1n9cSuFU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718806159; c=relaxed/simple;
-	bh=BCICaCFGMmLOmUyHekQXCYwkgEJHZLXP9WCwg2mTagk=;
+	s=arc-20240116; t=1718806161; c=relaxed/simple;
+	bh=tMkKP1j3bPuCq4pIK6nHgDfdOCxrfuXOdv1IXJAZ2JI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F28lb6520Orn1kvAFN/tY3XvZu9JNwfIJnH583X/Xk6NvZkvCkwG2+kMDZ11reOkvL3sTT4u881oYF1U5c3hBE9Tv4TiQuu9IkLez4qhe7iXuXzr8WvjyZQJv7YzrSheA/SzSZTp1CNzogAwuCV2FEhK2Mx4aEEkaCHT+J9uJ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cDMuDzVA; arc=none smtp.client-ip=209.85.167.54
+	 MIME-Version; b=MNocW8InXCT2HqiivcHubqnWlRX8389Rgo/cPe35QUNHS7+859haMlvwvYx7W3xcu72JFltb5ofQ10mdh8SNZ+cULQS4AGwSzTFg+xogOXzPVzqIPOHfGZADxMCo8JePXJrW9aMxwNYhtmrvc8QvAm3reMBGT3v2MtQjiJ43YwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uXlD6olg; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDMuDzVA"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5295e488248so7162568e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:09:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uXlD6olg"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52c84a21c62so7187184e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:09:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718806155; x=1719410955; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718806158; x=1719410958; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=htFpAgDo306pFLyFNLJIsFnxeXuNDgJdkPPYgP2iQ3A=;
-        b=cDMuDzVAxB+RkzVufgRrgeI2dN1yf80nzlXdJ8BvBTplY9O2Kkl6UF9iHJcc312xEZ
-         poLY6VOqX0xoyAY9s4xEDNVkvW9zd24fOFvOI9lUPwML6daw5exQ0KdYDqdQNhDPzmXn
-         CbNwCqTXf+DW4AnUoWECdnfMr2RWgfVQ1cNH3g24Tv5x7/ajuu57yJHDY0lXilC8xy1G
-         U9GlBK/16ZTlRhiYA+oTOBt9kQXiC2PXejwNqt/10pqmpF0hK0smeZoXu7V9PFtT6Xwl
-         /m+sHbW+LLk6JfV+27cadEMkw0KPl5pvA1dl0HQ95MJvyMsxUANTyYTJoxs0UlrIFndP
-         qlyw==
+        bh=8CngIhS3kRulmGpU0Rg5JrWUuRc/630k552QGhg/cDY=;
+        b=uXlD6olgAX1XYnFHcIuNNjtrSHiXI4DaZY3yL2t5QT2XfkplFCnxbZdJTviVhc39fR
+         3K9D01pwUPEg28oXcKRIjlNSrZK1yk9a5kaMp2BhqMV8SgPN7OIdzAdwC8uY0PLBK3wh
+         5+HcyOU+scfZ7ICiiqPrrOiIl0jnd3c9eT5uFm9NwBZasV3zdQEWlP/1Ox/PUsxH/b4l
+         Obso2qXO+lpG1WymmtK4ktMsg6iVtpdKh1gVh6S7rpsae5dovkiark6HMxNSXvKwJKu2
+         wMq45yGBQxehJ2KV3pxHmG35I3OOsIFf219XluuRanpdLwi7FnGV40N/wC53m8h9aV4p
+         Wlsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718806155; x=1719410955;
+        d=1e100.net; s=20230601; t=1718806158; x=1719410958;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=htFpAgDo306pFLyFNLJIsFnxeXuNDgJdkPPYgP2iQ3A=;
-        b=h1PHSqPYDb7IR+lEwQg+S3RMyHueTvwg6jLCYaMbktpmucRtmbOXkqJZXL/S2BYJQy
-         giurkH85CB59e5Rrx0QsuX59XhdJ0shUgIjGbOimHHpXBrs1SG2PJJlgYdecq0AI1Hmq
-         SWC788seANRAQZSzLFGQZDfYyAZbmigIeOurZeFMNt6oo71beAFk4pTkwR7OoAXdAPS9
-         gawS4PFuAjL6U2N3eUkPy42cOmYVFXuwo5SBmZW12cZXbrWOCMN+HLswgHoNzwVghRz/
-         RXObig+92TgalIabz9W+6wu4P3y4Gh9WA7+lSS+/QIPpkJ6mtA+GakPP7eA+kboj/Nmb
-         abAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZotNu91YWdj5CrkH3dLrtnY4XUfe60gIHCAKTvCpGx9f+IZFfTmS5ioWmXSUcRYO4a4Kc2G8eDuRgqwLdigF/cmnf2cx+bpZz7r7/
-X-Gm-Message-State: AOJu0YxHf0U7t7RZpyaTzgbm8Lz09nQi853or+VBo0JuJmM9uc7YRATy
-	JFKDjD0rtY1PkesvK5CJ49cGGm9j0NTzH6B6hbUCMKcSvpX5TnQ0sbQSTCOW/OY=
-X-Google-Smtp-Source: AGHT+IHfAlr5DrpIAaWiiNsj4x6QaAAeJHHW2gKvh16J7kuwaVsds0u8zDkuPraMr/WEHw60Qa+NSw==
-X-Received: by 2002:ac2:44b6:0:b0:52c:893c:6c2c with SMTP id 2adb3069b0e04-52ccaa3756amr1415929e87.40.1718806153456;
-        Wed, 19 Jun 2024 07:09:13 -0700 (PDT)
+        bh=8CngIhS3kRulmGpU0Rg5JrWUuRc/630k552QGhg/cDY=;
+        b=W1sJ7GTBdTsWV8VFJ28vW08AMhfEE+B11+U+3QRkBDhJ0YKVLgmeADr00snut4VQpZ
+         ryj1m7bYvaCYYGIt2vM1nPFJ1AhLD9YsRsvDU51kbQWRG8bhZ+NllPsD7gXohmjhen1r
+         t+Y/kMVXusFKcicmceXHcUaRztPiD7w/N5UwfIVrTgGldmxUjJxxbPnJJHn/TsYqxRMV
+         fjXZmifrKrwijZQaDFDrWxoTO/IBilm4v1b5K8A2+NwMwf6lB7IB367bv0zH6RSHmhZa
+         L41711XJeusgpMVAD4YHv+jlySR5gTszXYwBTaomcxG3JqwemswwAHHxFCZG/zMFb/A5
+         6FrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgLdNeRHHahAPcU+uOgOC1vmlCxYUX527+dKK7mGOC+aOK7oWy3duydqSwIIpBoby4EBeMAS0qgQ9WsJVJa4Y3RiBj3KIQ+75BEgaw
+X-Gm-Message-State: AOJu0YyleepcOolflIARlozQmsUHafzz0zLEsW3tR1tiy6OKT3AAvuhW
+	PfrFC9XixboORP0DBd93+8j/6WDHW8NZBAAFeiXUMPnk5DLNjU3WrGDQL/vPbR0=
+X-Google-Smtp-Source: AGHT+IGtMjaVRxqwME3U7CGrSptN6JfejN8F/ypK0frJbXiy1thTIGiCDNeAXU2vN4DLOqXBQiFdNw==
+X-Received: by 2002:a05:6512:3ca1:b0:52c:8b03:99d6 with SMTP id 2adb3069b0e04-52ccaa585e9mr2256803e87.6.1718806157835;
+        Wed, 19 Jun 2024 07:09:17 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2872241sm1787003e87.124.2024.06.19.07.09.12
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2872241sm1787003e87.124.2024.06.19.07.09.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 07:09:13 -0700 (PDT)
+        Wed, 19 Jun 2024 07:09:17 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Viresh Kumar <vireshk@kernel.org>,
 	Nishanth Menon <nm@ti.com>,
@@ -66,9 +66,9 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	linux-pm@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] pmdomain: core: Manage the default required OPP from a separate function
-Date: Wed, 19 Jun 2024 16:08:47 +0200
-Message-Id: <20240619140849.368580-6-ulf.hansson@linaro.org>
+Subject: [PATCH 7/7] pmdomain: core: Drop the redundant dev_to_genpd_dev()
+Date: Wed, 19 Jun 2024 16:08:49 +0200
+Message-Id: <20240619140849.368580-8-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619140849.368580-1-ulf.hansson@linaro.org>
 References: <20240619140849.368580-1-ulf.hansson@linaro.org>
@@ -80,83 +80,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To improve the readability of the code in __genpd_dev_pm_attach(), let's
-move out the required OPP handling into a separate function.
+There's no longer any users of dev_to_genpd_dev(), hence let's drop it.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/pmdomain/core.c | 38 +++++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+ drivers/pmdomain/core.c   | 10 ----------
+ include/linux/pm_domain.h |  6 ------
+ 2 files changed, 16 deletions(-)
 
 diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index 83d978743659..74ebb8a423be 100644
+index a38d08862a61..4abedbb65354 100644
 --- a/drivers/pmdomain/core.c
 +++ b/drivers/pmdomain/core.c
-@@ -2774,12 +2774,34 @@ static void genpd_dev_pm_sync(struct device *dev)
- 	genpd_queue_power_off_work(pd);
+@@ -184,16 +184,6 @@ static struct generic_pm_domain *dev_to_genpd(struct device *dev)
+ 	return pd_to_genpd(dev->pm_domain);
  }
  
-+static int genpd_set_required_opp(struct device *dev, unsigned int index)
-+{
-+	int ret, pstate;
-+
-+	/* Set the default performance state */
-+	pstate = of_get_required_opp_performance_state(dev->of_node, index);
-+	if (pstate < 0 && pstate != -ENODEV && pstate != -EOPNOTSUPP) {
-+		ret = pstate;
-+		goto err;
-+	} else if (pstate > 0) {
-+		ret = dev_pm_genpd_set_performance_state(dev, pstate);
-+		if (ret)
-+			goto err;
-+		dev_gpd_data(dev)->default_pstate = pstate;
-+	}
-+
-+	return 0;
-+err:
-+	dev_err(dev, "failed to set required performance state for power-domain %s: %d\n",
-+		dev_to_genpd(dev)->name, ret);
-+	return ret;
-+}
-+
- static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
- 				 unsigned int index, bool power_on)
+-struct device *dev_to_genpd_dev(struct device *dev)
+-{
+-	struct generic_pm_domain *genpd = dev_to_genpd(dev);
+-
+-	if (IS_ERR(genpd))
+-		return ERR_CAST(genpd);
+-
+-	return &genpd->dev;
+-}
+-
+ static int genpd_stop_dev(const struct generic_pm_domain *genpd,
+ 			  struct device *dev)
  {
- 	struct of_phandle_args pd_args;
- 	struct generic_pm_domain *pd;
--	int pstate;
- 	int ret;
- 
- 	ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
-@@ -2808,17 +2830,9 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
- 	dev->pm_domain->detach = genpd_dev_pm_detach;
- 	dev->pm_domain->sync = genpd_dev_pm_sync;
- 
--	/* Set the default performance state */
--	pstate = of_get_required_opp_performance_state(dev->of_node, index);
--	if (pstate < 0 && pstate != -ENODEV && pstate != -EOPNOTSUPP) {
--		ret = pstate;
-+	ret = genpd_set_required_opp(dev, index);
-+	if (ret)
- 		goto err;
--	} else if (pstate > 0) {
--		ret = dev_pm_genpd_set_performance_state(dev, pstate);
--		if (ret)
--			goto err;
--		dev_gpd_data(dev)->default_pstate = pstate;
--	}
- 
- 	if (power_on) {
- 		genpd_lock(pd);
-@@ -2840,8 +2854,6 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
- 	return 1;
- 
- err:
--	dev_err(dev, "failed to set required performance state for power-domain %s: %d\n",
--		pd->name, ret);
- 	genpd_remove_device(pd, dev);
- 	return ret;
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index f24546a3d3db..772d3280d35f 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -260,7 +260,6 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
+ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		  struct dev_power_governor *gov, bool is_off);
+ int pm_genpd_remove(struct generic_pm_domain *genpd);
+-struct device *dev_to_genpd_dev(struct device *dev);
+ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
+ int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb);
+ int dev_pm_genpd_remove_notifier(struct device *dev);
+@@ -308,11 +307,6 @@ static inline int pm_genpd_remove(struct generic_pm_domain *genpd)
+ 	return -EOPNOTSUPP;
  }
+ 
+-static inline struct device *dev_to_genpd_dev(struct device *dev)
+-{
+-	return ERR_PTR(-EOPNOTSUPP);
+-}
+-
+ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+ 						     unsigned int state)
+ {
 -- 
 2.34.1
 
