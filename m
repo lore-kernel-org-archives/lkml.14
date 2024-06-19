@@ -1,82 +1,82 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4437F7C7;
-	Wed, 19 Jun 2024 22:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE9C80C15;
+	Wed, 19 Jun 2024 22:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718837386; cv=none; b=igiavJmjvBAlIDCJ4bV1xv9JzLIRC0NjjVnwwpn6mBQf3tSVUTwgVLifI8WSGLULXpgPxxkn5UbmUDPMTdbClv+dofLb6hkh3/CVHn331TlNI4OrJ9AxhRWu9JQnNehWX/spqqjfBS4nx+jeE0V9Xt+BqeSFOsazLWLDB/PgtQM=
+	t=1718837387; cv=none; b=arnBbHzdkOa6E3iTraKNCzH3zl5LctpUbHVSpv2gqfQAUg2loF8RXAUaz7QB4cO0LUPvTRt+1NiJUiZZPL+t7niNrXi8BwnGyRwWskQUF+pEeB1BUXIUSs54rkJAj8i3yja7WajnlzcqwzsEH05Ap0bCXce3mnEd/sSI1keTHoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718837386; c=relaxed/simple;
-	bh=RHlcQH9C6ly4CbQFrHL5k0pueBGzmfFJHg6uosgSnqE=;
+	s=arc-20240116; t=1718837387; c=relaxed/simple;
+	bh=/cKM1m+IMVDzuJzFS+1fl48bPoWvR2tEgzVaVUXVT8A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N0pvB+lUsDQbQfv7zdCVF6OW2dgywUije4PuDqEHQPoSokWxOxfM5/TCxUdPg3ShXvyKBTDAf0UPtpSp3VUH8oUyWqoogz9kQDCZh/j/yhCsV1v5iHPLqDyv2sHmRJUM6578oqBjGgmcQohumF7M9Yu0Ly+OAgSw+ZPEq2m0WYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mtxCY5NO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2+cvj+i4; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mtxCY5NO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2+cvj+i4; arc=none smtp.client-ip=195.135.223.130
+	 In-Reply-To:To:Cc; b=MUzScgJFsBHOY4IOyTTKkV3zuNI1ZIIOY/8FyxDM9/ZuOZ+mcrHFKMsQ8y6Evp3bRmmAIqnYLX76euApKKrCLqtT9rMnfiVSTdNGRjTDLPkIaBlWlac+DCY3TkF5bseUJlXTCnAi33TSwHCN4KWlyADOqZO756rAvH3S5trC/u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=smRbBT/c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g3E3XRzi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=smRbBT/c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g3E3XRzi; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mtxCY5NO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2+cvj+i4";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mtxCY5NO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2+cvj+i4"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="smRbBT/c";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g3E3XRzi";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="smRbBT/c";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g3E3XRzi"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5C51F21A5C;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 25D261F7F5;
 	Wed, 19 Jun 2024 22:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
 	t=1718837383; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GJmQfB+SFKwkGljPkMoSf+PzrKg2yTJDdkhioKlFbR0=;
-	b=mtxCY5NOZUMLeNOQo2490WnZzrZz5lK6g9Qm7Ex4Shmq2UVpwBxwZP+nWMnZFY2Qk8nBs1
-	siLzlqttayrh4IykYENtS8rfrWC8ksDwhasAHMwn4I+ihPTkA8zNMcN6XlS3RF8s2wohXI
-	U+CXOQeOPkjiu8wHU+JqsGy5rejV9nA=
+	bh=r7eLs3qWVHkCYzNUctfASvMgvFekhPcbd8a5b9Uty8M=;
+	b=smRbBT/csZSGJtlsJ4JN3oklSIC7vbquyuWyYFQK4X7uOph5tB+4a752AntXvJy1S6SyqH
+	IS3Q3mHFdaV3Nuk7YxxoaL7OyDll3aJ5H4tMiqF2zEByxywgSPn6DUWnsDAtqd2l0oVEwI
+	Ih3Y7GYugjJN390WQpBeTcoBGFUj6Z4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
 	s=susede2_ed25519; t=1718837383;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GJmQfB+SFKwkGljPkMoSf+PzrKg2yTJDdkhioKlFbR0=;
-	b=2+cvj+i4DhZ6XKrKA7se2fWikyWEQBDFIpBjv+eA7nIqPwGQ03LS2LkiZhUbMyFqEGyfvQ
-	qHnQkg3JJUtkfiDQ==
-Authentication-Results: smtp-out1.suse.de;
+	bh=r7eLs3qWVHkCYzNUctfASvMgvFekhPcbd8a5b9Uty8M=;
+	b=g3E3XRziF6HgkAAPS88wKQ5lNo4texbHFNeFeEwV0v4mYHhP+i771BZm1quZ/kUsnkbfs9
+	f1WTtAqzsMR7PdDw==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
 	t=1718837383; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GJmQfB+SFKwkGljPkMoSf+PzrKg2yTJDdkhioKlFbR0=;
-	b=mtxCY5NOZUMLeNOQo2490WnZzrZz5lK6g9Qm7Ex4Shmq2UVpwBxwZP+nWMnZFY2Qk8nBs1
-	siLzlqttayrh4IykYENtS8rfrWC8ksDwhasAHMwn4I+ihPTkA8zNMcN6XlS3RF8s2wohXI
-	U+CXOQeOPkjiu8wHU+JqsGy5rejV9nA=
+	bh=r7eLs3qWVHkCYzNUctfASvMgvFekhPcbd8a5b9Uty8M=;
+	b=smRbBT/csZSGJtlsJ4JN3oklSIC7vbquyuWyYFQK4X7uOph5tB+4a752AntXvJy1S6SyqH
+	IS3Q3mHFdaV3Nuk7YxxoaL7OyDll3aJ5H4tMiqF2zEByxywgSPn6DUWnsDAtqd2l0oVEwI
+	Ih3Y7GYugjJN390WQpBeTcoBGFUj6Z4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
 	s=susede2_ed25519; t=1718837383;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GJmQfB+SFKwkGljPkMoSf+PzrKg2yTJDdkhioKlFbR0=;
-	b=2+cvj+i4DhZ6XKrKA7se2fWikyWEQBDFIpBjv+eA7nIqPwGQ03LS2LkiZhUbMyFqEGyfvQ
-	qHnQkg3JJUtkfiDQ==
+	bh=r7eLs3qWVHkCYzNUctfASvMgvFekhPcbd8a5b9Uty8M=;
+	b=g3E3XRziF6HgkAAPS88wKQ5lNo4texbHFNeFeEwV0v4mYHhP+i771BZm1quZ/kUsnkbfs9
+	f1WTtAqzsMR7PdDw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3D08413AAA;
-	Wed, 19 Jun 2024 22:49:43 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0152E13ABD;
+	Wed, 19 Jun 2024 22:49:42 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SCSeDodgc2aFIAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 19 Jun 2024 22:49:43 +0000
+	id 0PuTO4Zgc2aFIAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 19 Jun 2024 22:49:42 +0000
 From: Vlastimil Babka <vbabka@suse.cz>
-Date: Thu, 20 Jun 2024 00:48:57 +0200
-Subject: [PATCH v2 3/7] bpf: support error injection static keys for
- perf_event attached progs
+Date: Thu, 20 Jun 2024 00:48:55 +0200
+Subject: [PATCH v2 1/7] fault-inject: add support for static keys around
+ fault injection sites
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,7 +85,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240620-fault-injection-statickeys-v2-3-e23947d3d84b@suse.cz>
+Message-Id: <20240620-fault-injection-statickeys-v2-1-e23947d3d84b@suse.cz>
 References: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz>
 In-Reply-To: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz>
 To: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
@@ -101,15 +101,15 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
  linux-mm@kvack.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  Vlastimil Babka <vbabka@suse.cz>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4256; i=vbabka@suse.cz;
- h=from:subject:message-id; bh=RHlcQH9C6ly4CbQFrHL5k0pueBGzmfFJHg6uosgSnqE=;
- b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBmc2B4jX+g3Xf4kDO7RN55ImULUpPLAS31+cJIL
- VWj6k4LZzmJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCZnNgeAAKCRC74LB10kWI
- mk8pCACesvfkTPT71qvqKXfyLJtHc/HZ29/KezJP030k0GlFWTkG41XeSOf+Jc9jxoC1871A4SK
- EWFDuN7tbL8sEOdT7cBJU0MBEXQSDEYNDcoGyZxl98cLsAJ9XHVdkhNOzgJJgPRwcnPT10ejR6X
- Eb39gdyBoKUdHWD8IoRYiCpG6/Wx8PRQUjK59shva6E514qQRimzOvre6ZR5OQrcynjumq8WrVE
- n12/Bf0XbXqhrgaM1emVNUHExQn1U7iCYwHGEzlGPNvC8Mi+wQG9Xsq7xvjA5OSOUmmmDusj3eC
- 3soz/74FQINFipML/55CmhoPIFrOsjPyQbm5FZDYbWm25i7L
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4698; i=vbabka@suse.cz;
+ h=from:subject:message-id; bh=/cKM1m+IMVDzuJzFS+1fl48bPoWvR2tEgzVaVUXVT8A=;
+ b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBmc2Byf1V3Bpp5LNGsY/c7Mzv3/GsPZ55FjBkLd
+ LX7xvgBpSWJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCZnNgcgAKCRC74LB10kWI
+ mrooB/987gBj0pha0dvAhFXZiGUJdrVCDtQ6t2BV/SIlkveQM37wjVIcJKlT46POmu0EAVLbGts
+ rfVWVX5e4aCI80nZ5KpkSs0COyqzR+4Eym09R0s0Mm29ctQ8BJYXISybtjvacF6lT2sDF1PvZG8
+ i3JzV58YERvX5BU+hxW2HjtgpEHgCzBBjFK/t/heKLFCeork00ZpNgQXER2fUDtpVCd4m62wTb9
+ aJr4p+K+XdUOvo164UnmBjTbqVN9BjUYA1laDaYyZ5+8942w7HBeyumYAqx3oJBarTi3ujoosjc
+ 1Yyw2OhX6svXSoURISrllNMod+BTK/2jVgFrBLmcWyLPRwOW
 X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
  fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
 X-Spamd-Result: default: False [-6.80 / 50.00];
@@ -142,125 +142,147 @@ X-Spam-Flag: NO
 X-Spam-Score: -6.80
 X-Spam-Level: 
 
-Functions marked for error injection can have an associated static key
-that guards the callsite(s) to avoid overhead of calling an empty
-function when no error injection is in progress.
+Some fault injection sites are placed in hotpaths and incur overhead
+even if not enabled, due to one or more function calls leading up to
+should_fail_ex() that returns false due to attr->probability == 0.
 
-Outside of the error injection framework itself, bpf programs can be
-atteched to perf events and override results of error-injectable
-functions. To make sure these functions are actually called, attaching
-such bpf programs should control the static key accordingly.
+This overhead can be eliminated if the outermost call into the checks is
+guarded with a static key, so add support for that. The framework should
+be told that such static key exist for a fault_attr, by initializing
+fault_attr->active with the static key address. When it's not NULL,
+enable the static key from setup_fault_attr() when the fault probability
+is non-zero.
 
-Therefore, add the static key's address to struct trace_kprobe and fill
-it in trace_kprobe_error_injectable(), using get_injection_key() instead
-of within_error_injection_list(). Introduce
-trace_kprobe_error_injection_control() to control the static key and
-call the control function when attaching or detaching programs with
-kprobe_override to perf events.
+Also wire up writing into debugfs "probability" file to enable or
+disable the static key when transitioning between zero and non-zero
+probability.
+
+For now, do not add configfs interface support as the immediate plan is
+to leverage this for should_failslab() and should_fail_alloc_page()
+after other necessary preparatory changes, and not for any of the
+configfs based fault injection users.
 
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- kernel/trace/bpf_trace.c    |  6 ++++++
- kernel/trace/trace_kprobe.c | 30 ++++++++++++++++++++++++++++--
- kernel/trace/trace_probe.h  |  5 +++++
- 3 files changed, 39 insertions(+), 2 deletions(-)
+ include/linux/fault-inject.h |  7 ++++++-
+ lib/fault-inject.c           | 43 ++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 48 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index f5154c051d2c..944de1c41209 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2283,6 +2283,9 @@ int perf_event_attach_bpf_prog(struct perf_event *event,
- 	rcu_assign_pointer(event->tp_event->prog_array, new_array);
- 	bpf_prog_array_free_sleepable(old_array);
+diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
+index 6d5edef09d45..cfe75cc1bac4 100644
+--- a/include/linux/fault-inject.h
++++ b/include/linux/fault-inject.h
+@@ -9,6 +9,7 @@
+ #include <linux/configfs.h>
+ #include <linux/ratelimit.h>
+ #include <linux/atomic.h>
++#include <linux/jump_label.h>
  
-+	if (prog->kprobe_override)
-+		trace_kprobe_error_injection_control(event->tp_event, true);
-+
- unlock:
- 	mutex_unlock(&bpf_event_mutex);
- 	return ret;
-@@ -2299,6 +2302,9 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
- 	if (!event->prog)
- 		goto unlock;
- 
-+	if (event->prog->kprobe_override)
-+		trace_kprobe_error_injection_control(event->tp_event, false);
-+
- 	old_array = bpf_event_rcu_dereference(event->tp_event->prog_array);
- 	ret = bpf_prog_array_copy(old_array, event->prog, NULL, 0, &new_array);
- 	if (ret == -ENOENT)
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 16383247bdbf..1c1ee95bd5de 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -61,6 +61,7 @@ struct trace_kprobe {
- 	unsigned long __percpu *nhit;
- 	const char		*symbol;	/* symbol name */
- 	struct trace_probe	tp;
-+	struct static_key	*ei_key;
+ /*
+  * For explanation of the elements of this struct, see
+@@ -30,13 +31,14 @@ struct fault_attr {
+ 	unsigned long count;
+ 	struct ratelimit_state ratelimit_state;
+ 	struct dentry *dname;
++	struct static_key *active;
  };
  
- static bool is_trace_kprobe(struct dyn_event *ev)
-@@ -235,9 +236,34 @@ bool trace_kprobe_on_func_entry(struct trace_event_call *call)
- bool trace_kprobe_error_injectable(struct trace_event_call *call)
- {
- 	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
-+	struct static_key *ei_key;
+ enum fault_flags {
+ 	FAULT_NOWARN =	1 << 0,
+ };
  
--	return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
--	       false;
-+	if (!tk)
-+		return false;
+-#define FAULT_ATTR_INITIALIZER {					\
++#define FAULT_ATTR_INITIALIZER_KEY(_key) {				\
+ 		.interval = 1,						\
+ 		.times = ATOMIC_INIT(1),				\
+ 		.require_end = ULONG_MAX,				\
+@@ -44,8 +46,11 @@ enum fault_flags {
+ 		.ratelimit_state = RATELIMIT_STATE_INIT_DISABLED,	\
+ 		.verbose = 2,						\
+ 		.dname = NULL,						\
++		.active = (_key),					\
+ 	}
+ 
++#define FAULT_ATTR_INITIALIZER		FAULT_ATTR_INITIALIZER_KEY(NULL)
 +
-+	ei_key = get_injection_key(trace_kprobe_address(tk));
-+	if (IS_ERR(ei_key))
-+		return false;
+ #define DECLARE_FAULT_ATTR(name) struct fault_attr name = FAULT_ATTR_INITIALIZER
+ int setup_fault_attr(struct fault_attr *attr, char *str);
+ bool should_fail_ex(struct fault_attr *attr, ssize_t size, int flags);
+diff --git a/lib/fault-inject.c b/lib/fault-inject.c
+index d608f9b48c10..de9552cb22d0 100644
+--- a/lib/fault-inject.c
++++ b/lib/fault-inject.c
+@@ -35,6 +35,9 @@ int setup_fault_attr(struct fault_attr *attr, char *str)
+ 	atomic_set(&attr->times, times);
+ 	atomic_set(&attr->space, space);
+ 
++	if (probability != 0 && attr->active)
++		static_key_slow_inc(attr->active);
 +
-+	tk->ei_key = ei_key;
-+	return true;
+ 	return 1;
+ }
+ EXPORT_SYMBOL_GPL(setup_fault_attr);
+@@ -166,6 +169,12 @@ EXPORT_SYMBOL_GPL(should_fail);
+ 
+ #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
+ 
++/*
++ * Protect updating probability from debugfs as that may trigger static key
++ * changes when changing between zero and non-zero.
++ */
++static DEFINE_MUTEX(probability_mutex);
++
+ static int debugfs_ul_set(void *data, u64 val)
+ {
+ 	*(unsigned long *)data = val;
+@@ -186,6 +195,38 @@ static void debugfs_create_ul(const char *name, umode_t mode,
+ 	debugfs_create_file(name, mode, parent, value, &fops_ul);
+ }
+ 
++static int debugfs_prob_set(void *data, u64 val)
++{
++	struct fault_attr *attr = data;
++
++	mutex_lock(&probability_mutex);
++
++	if (attr->active) {
++		if (attr->probability != 0 && val == 0) {
++			static_key_slow_dec(attr->active);
++		} else if (attr->probability == 0 && val != 0) {
++			static_key_slow_inc(attr->active);
++		}
++	}
++
++	attr->probability = val;
++
++	mutex_unlock(&probability_mutex);
++
++	return 0;
 +}
 +
-+void trace_kprobe_error_injection_control(struct trace_event_call *call,
-+					  bool enable)
++static int debugfs_prob_get(void *data, u64 *val)
 +{
-+	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
++	struct fault_attr *attr = data;
 +
-+	if (!tk)
-+		return;
++	*val = attr->probability;
 +
-+	if (!tk->ei_key)
-+		return;
++	return 0;
++}
 +
-+	if (enable)
-+		static_key_slow_inc(tk->ei_key);
-+	else
-+		static_key_slow_dec(tk->ei_key);
- }
++DEFINE_SIMPLE_ATTRIBUTE(fops_prob, debugfs_prob_get, debugfs_prob_set, "%llu\n");
++
+ #ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
  
- static int register_kprobe_event(struct trace_kprobe *tk);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 5803e6a41570..d9ddcabb9f97 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -212,6 +212,8 @@ DECLARE_BASIC_PRINT_TYPE_FUNC(symbol);
- #ifdef CONFIG_KPROBE_EVENTS
- bool trace_kprobe_on_func_entry(struct trace_event_call *call);
- bool trace_kprobe_error_injectable(struct trace_event_call *call);
-+void trace_kprobe_error_injection_control(struct trace_event_call *call,
-+					  bool enabled);
- #else
- static inline bool trace_kprobe_on_func_entry(struct trace_event_call *call)
- {
-@@ -222,6 +224,9 @@ static inline bool trace_kprobe_error_injectable(struct trace_event_call *call)
- {
- 	return false;
- }
-+
-+static inline void trace_kprobe_error_injection_control(struct trace_event_call *call,
-+							bool enabled) { }
- #endif /* CONFIG_KPROBE_EVENTS */
+ static int debugfs_stacktrace_depth_set(void *data, u64 val)
+@@ -218,7 +259,7 @@ struct dentry *fault_create_debugfs_attr(const char *name,
+ 	if (IS_ERR(dir))
+ 		return dir;
  
- struct probe_arg {
+-	debugfs_create_ul("probability", mode, dir, &attr->probability);
++	debugfs_create_file("probability", mode, dir, attr, &fops_prob);
+ 	debugfs_create_ul("interval", mode, dir, &attr->interval);
+ 	debugfs_create_atomic_t("times", mode, dir, &attr->times);
+ 	debugfs_create_atomic_t("space", mode, dir, &attr->space);
 
 -- 
 2.45.2
