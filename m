@@ -1,40 +1,35 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9216620B34;
-	Wed, 19 Jun 2024 12:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BC113FD95;
+	Wed, 19 Jun 2024 12:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799577; cv=none; b=qs2UQ8KIXc+h/h9+oObPGggY53yiIJ6uhAkn7hycDw888IlkgCM2oo/3PABStl8CESEFk1hcLk13565Iqtb8sc9T9qQ97Frq0o5BKNbZBqQndvCTUiKkAPWdnphtcw+hu6EzX9u7vx4GoCYOIS0QqAGLc05hlHxqD39HuX9pn9Q=
+	t=1718799629; cv=none; b=It+xAISMPa9FQh5EJqV+cfuXG79sG/EFCYXKKJKk/KTDDrJf3074iK2Yu1UbkL8uK4dzQixYM9BlN+l2BjGyVSoLPDK1PwbiFGwJqrRHXtHVFAACGZjpqvUDwuPBMAZjDm947T3BKo0YVvrrls3kwbkAO7KMttfuEggwOB7eSCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799577; c=relaxed/simple;
-	bh=C19NRnBVmI5ItD3+g3/xEnxerKXG3ag9MUgJp67rJH4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T5CL7oj+jJQtOVeXa7mLzYxJWKgO3XHBoQ/eskb2BdL6slnqmbzzWOc8uR5AClzeVHcRVKYLR3fMZ/kBMZt0NEdizA511CaKZtTDOmMvsX4gLgkeXlKeVXi+JIOn+rBB8hs4XvRu9sAAruo+hD0asBjIrfnHwTJxxEQs6oVRByU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45JCJNVE01676424, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45JCJNVE01676424
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Jun 2024 20:19:23 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 19 Jun 2024 20:19:23 +0800
-Received: from localhost.localhost (172.21.132.53) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 19 Jun
- 2024 20:19:22 +0800
-From: Hilda Wu <hildawu@realtek.com>
-To: <marcel@holtmann.org>
-CC: <luiz.dentz@gmail.com>, <linux-bluetooth@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <alex_lu@realsil.com.cn>,
-        <max.chou@realtek.com>, <kidman@realtek.com>
-Subject: [PATCH v2] Bluetooth: btrtl: Set MSFT_EXT_ADDRESS_FILTER quirk for RTL8852B
-Date: Wed, 19 Jun 2024 20:19:18 +0800
-Message-ID: <20240619121918.3273270-1-hildawu@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718799629; c=relaxed/simple;
+	bh=67uiRKjRxfjxp4Hfyr6l4u8S8EnHSg2ftC1VpGFi5OA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Af49ub6sHJ+0UarFx6cJky/0MEOfQit3a/k2Gz1vfloJaSiIjV0Eco+3fqsW2zrYBy5wEt1phRoZ1XB2FNuKh8fbgemSbwMz5vlgaMa44twEHiPTLrZ89UaxTog9qTnz/6lCpjId1xnvXMgcju1BRAUEs67wDcF0OnvIu/i3oGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1AOlkB5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1AOlkB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 61B9DC4AF49;
+	Wed, 19 Jun 2024 12:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718799628;
+	bh=67uiRKjRxfjxp4Hfyr6l4u8S8EnHSg2ftC1VpGFi5OA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=V1AOlkB57E/hyTVOMzi98x5gGkiu5B77CC9Ne+zTj4t7ENRHrjz/j5x6phGH2Z0ku
+	 gqcZG4x8FkPncbvNSFeePYzAh9Ytwn07U+TG9HzsVWTT3IP5puWSpxj00bQJgQRy2K
+	 PlchVpt7x2NPsSS7bLvZdigcxz3s5Z3P/23eCUMXCa52+bYGzisYkuorKAYk4veCKi
+	 rsO/j3SFv9l5Pj6opP7wBY7/n+Cx3lD5v2kKdE9uO1gm4wPETGT0QIB0XvPdfdVS9h
+	 JK+gzf1XE0bAyVCRXvdkaYWzGmFxBpCU+ibGvyk8n7BQowDQdx7MyFkveubIR27Lce
+	 5ENSusS7BJU+w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4D138C4361A;
+	Wed, 19 Jun 2024 12:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,43 +37,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Subject: Re: [PATCH v2] selftests: openvswitch: Set value to nla flags.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171879962830.21133.9093342001596634456.git-patchwork-notify@kernel.org>
+Date: Wed, 19 Jun 2024 12:20:28 +0000
+References: <20240618072922.218757-1-amorenoz@redhat.com>
+In-Reply-To: <20240618072922.218757-1-amorenoz@redhat.com>
+To: =?utf-8?q?Adri=C3=A1n_Moreno_=3Camorenoz=40redhat=2Ecom=3E?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, aconole@redhat.com, pshelar@ovn.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ shuah@kernel.org, dev@openvswitch.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-Set HCI_QUIRK_USE_MSFT_EXT_ADDRESS_FILTER quirk for RTL8852B.
+Hello:
 
-The quirk to support tracking multiple devices concurrently.
-Commit 9e14606d8f38 ("Bluetooth: msft: Extended monitor tracking by
-address filter")
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-With this setting, when a pattern monitor detects the device, this
-feature issues an address monitor for tracking that device. Let
-pattern monitor can keep monitor new devices.
+On Tue, 18 Jun 2024 09:29:21 +0200 you wrote:
+> Netlink flags, although they don't have payload at the netlink level,
+> are represented as having "True" as value in pyroute2.
+> 
+> Without it, trying to add a flow with a flag-type action (e.g: pop_vlan)
+> fails with the following traceback:
+> 
+> Traceback (most recent call last):
+>   File "[...]/ovs-dpctl.py", line 2498, in <module>
+>     sys.exit(main(sys.argv))
+>              ^^^^^^^^^^^^^^
+>   File "[...]/ovs-dpctl.py", line 2487, in main
+>     ovsflow.add_flow(rep["dpifindex"], flow)
+>   File "[...]/ovs-dpctl.py", line 2136, in add_flow
+>     reply = self.nlm_request(
+>             ^^^^^^^^^^^^^^^^^
+>   File "[...]/pyroute2/netlink/nlsocket.py", line 822, in nlm_request
+>     return tuple(self._genlm_request(*argv, **kwarg))
+>                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>   File "[...]/pyroute2/netlink/generic/__init__.py", line 126, in
+> nlm_request
+>     return tuple(super().nlm_request(*argv, **kwarg))
+>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>   File "[...]/pyroute2/netlink/nlsocket.py", line 1124, in nlm_request
+>     self.put(msg, msg_type, msg_flags, msg_seq=msg_seq)
+>   File "[...]/pyroute2/netlink/nlsocket.py", line 389, in put
+>     self.sendto_gate(msg, addr)
+>   File "[...]/pyroute2/netlink/nlsocket.py", line 1056, in sendto_gate
+>     msg.encode()
+>   File "[...]/pyroute2/netlink/__init__.py", line 1245, in encode
+>     offset = self.encode_nlas(offset)
+>              ^^^^^^^^^^^^^^^^^^^^^^^^
+>   File "[...]/pyroute2/netlink/__init__.py", line 1560, in encode_nlas
+>     nla_instance.setvalue(cell[1])
+>   File "[...]/pyroute2/netlink/__init__.py", line 1265, in setvalue
+>     nlv.setvalue(nla_tuple[1])
+>                  ~~~~~~~~~^^^
+> IndexError: list index out of range
+> 
+> [...]
 
-Verified by Chromebook and Raspberry Pis.
+Here is the summary with links:
+  - [v2] selftests: openvswitch: Set value to nla flags.
+    https://git.kernel.org/netdev/net/c/a8763466669d
 
-Signed-off-by: Hilda Wu <hildawu@realtek.com>
----
-Change in v2:
- - Add reference commit, commit description and verification devices.
----
----
- drivers/bluetooth/btrtl.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index f2f37143c454..baa0c6119b51 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -1297,6 +1297,7 @@ void btrtl_set_quirks(struct hci_dev *hdev, struct btrtl_device_info *btrtl_dev)
- 			btrealtek_set_flag(hdev, REALTEK_ALT6_CONTINUOUS_TX_CHIP);
- 
- 		if (btrtl_dev->project_id == CHIP_ID_8852A ||
-+		    btrtl_dev->project_id == CHIP_ID_8852B ||
- 		    btrtl_dev->project_id == CHIP_ID_8852C)
- 			set_bit(HCI_QUIRK_USE_MSFT_EXT_ADDRESS_FILTER, &hdev->quirks);
- 
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
