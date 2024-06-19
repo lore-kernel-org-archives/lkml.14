@@ -1,147 +1,249 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879D214A615;
-	Wed, 19 Jun 2024 15:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9434514A615
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811332; cv=none; b=HHC5nU5Rzw+SOD65JEtAamFa+IT9PEtSacTjpS86XtrZ3OA3qhY/3riGMSX7AwiUL36a2ay98Vd6oNpUSkyeMFHB3z6B30XCccCTfAXclUUyYDeS9fw/mU780blxOPSICfI6tERCShho/NnLoO9wnfgq6M933e0NrnB99LuKtf0=
+	t=1718811391; cv=none; b=YPfv0IlKLCy8UEXmLAz+E5SXMcn8Y6soMD6OjqyANomcmkYufFEjhmiEBW9aAYqfP5vFyGZZ8ydJOkinHl51jMx5xEh8DYi2S6gY8Ca6FgHcFVMJaFS1pO5YmcjE1LynukIERBEpcfB8tvTkAETEvXo3PvZfNh6CBcOQ97NzGuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811332; c=relaxed/simple;
-	bh=BPtgPXEQiiuawM/+sV4u73JRNY2yrOfHMDvL02Wxe9U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OVgnsopiJKVGgopJg5FnNmDWrhA/JjEQJiP4ai+eMBkIh2R3vVK7ai1E1jviBSiJ8mb0ZW74XfiDI4uEsnWEYDOL9dhc7thVcEz6mLaNdhkwhMQnfkdrRCDHmBqeu+2mtaAEDkeY3Ira00JLg21xau6JspYqnpbm4brBqNc9UTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e8616dc.versanet.de ([94.134.22.220] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sJxL1-00061d-Ji; Wed, 19 Jun 2024 17:35:07 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: linux-kernel@vger.kernel.org,
- Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Dragan Simic <dsimic@manjaro.org>, Diederik de Haas <didi.debian@cknow.org>,
- Andy Yan <andy.yan@rock-chips.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Jonas Karlman <jonas@kwiboo.se>, Alex Bee <knaerzche@gmail.com>,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-staging@lists.linux.dev,
- Detlev Casanova <detlev.casanova@collabora.com>
-Subject:
- Re: [PATCH v2 4/4] arm64: dts: rockchip: Add rkvdec2 Video Decoder on
- rk3588(s)
-Date: Wed, 19 Jun 2024 17:34:51 +0200
-Message-ID: <2379859.OYXXYNVTWy@diego>
-In-Reply-To: <20240619150029.59730-5-detlev.casanova@collabora.com>
-References:
- <20240619150029.59730-1-detlev.casanova@collabora.com>
- <20240619150029.59730-5-detlev.casanova@collabora.com>
+	s=arc-20240116; t=1718811391; c=relaxed/simple;
+	bh=h6MgagA99h9M17VDUn3raqNdhywE/8ih/YaQJdAXwhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gce6qVuB5HpGVxftDGuIo3WvxJGKfTJXgDJYo3q7QmVlDjIET9S9kGN7iCI+vKxPdE7yi8JiSbQcT0lXDQJSrSGpTacVlzBb4DlZNjbfLMrJrDs13UACfdD/vEX2HZbl5IvlToIy3uhq0RnQqUswV/fcPKROL260c3oY1Xu7huY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aqBlvTrM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aqBlvTrM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1C7D940E021A;
+	Wed, 19 Jun 2024 15:36:26 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id T6R-gzp3PD7w; Wed, 19 Jun 2024 15:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718811381; bh=Dp9c3VbgKlI0JLzOI5wg5M39BAK9rpGebv+GuBJFzvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aqBlvTrMZqQDv3OPr+LjdaMa4ankmtjjkRbLTXEVjPOs9Ebko1x2tSIcsSgrBzBWo
+	 9Orc3PGZlpnaQe1UpLx3fMNPU/oKD0b41+JF7be/pED9SV/n/Tw4xs0Fj/kIdLbuUZ
+	 7wK4UvQhx/NOM5lsxmw1QJW7/v8VUO1KXPhMULdT4kF1Gbx6cALNZT+rmMWXeut5Vz
+	 DE1/WHHb6x24tROORjf62PWSX5ykK173V7zK6oCP4jnyjZ/xwts36sDBOljwTBwXKL
+	 G5rCCPc+rDh7wrqXN6JoC3CnPhGCX1s6gAgH8p/lRN7Z6Tx/dirq8YSR3QVcnoTy4L
+	 P3MnyGlrBIA0R+I60w1i6EjUh8OZthC6Sh4cjS7oAAEDDVRnZAUerYAhMFmGRhgbL5
+	 CCWXS3eUIxUvxjmGTy3CtCM9fF8zcIChu+GbxaoogulKR0QFb5QV1ksY0mgyGcjBqD
+	 FE1YvtanYBVEcC+rK87Qk1FTpl0p7f2RQViD9wX89kXpIy1cyssF3B1gWIRWRgMWuI
+	 BT8q5vBSKPtd/ADVaQVgk6zW8yxOgDRJk5gMxwG89msZQAiy0J0I3mQf0uj9VRXRrK
+	 JzVTUbfp1VgaPW1K6Il6uU7gktsNqMvq1Qgb2VgGeVjPaF4OaTpjfnAjdCrvN++d5B
+	 GgWmNiWqYsIMAFbXgZo2/1Dk=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A430540E0177;
+	Wed, 19 Jun 2024 15:36:12 +0000 (UTC)
+Date: Wed, 19 Jun 2024 17:36:06 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [GIT PULL] x86 fixes
+Message-ID: <20240619153606.GDZnL65ui-X_bFxYtD@fat_crate.local>
+References: <Zm1NIOnj0NR3U8om@gmail.com>
+ <CAHk-=whYb2L_atsRk9pBiFiVLGe5wNZLHhRinA69yu6FiKvDsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whYb2L_atsRk9pBiFiVLGe5wNZLHhRinA69yu6FiKvDsw@mail.gmail.com>
 
-Am Mittwoch, 19. Juni 2024, 16:57:21 CEST schrieb Detlev Casanova:
-> Add the rkvdec2 Video Decoder to the RK3588s devicetree.
+On Sat, Jun 15, 2024 at 11:36:33AM -0700, Linus Torvalds wrote:
+> Something ENTIRELY UNTESTED like this, IOW.
 > 
-> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 50 +++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> index 6ac5ac8b48ab..7690632f57f1 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> @@ -2596,6 +2596,16 @@ system_sram2: sram@ff001000 {
->  		ranges = <0x0 0x0 0xff001000 0xef000>;
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> +
-> +		vdec0_sram: rkvdec-sram@0 {
-> +			reg = <0x0 0x78000>;
-> +			pool;
-> +		};
-> +
-> +		vdec1_sram: rkvdec-sram@1 {
-> +			reg = <0x78000 0x77000>;
-> +			pool;
-> +		};
->  	};
->  
->  	pinctrl: pinctrl {
-> @@ -2665,6 +2675,46 @@ gpio4: gpio@fec50000 {
->  			#interrupt-cells = <2>;
->  		};
->  	};
-> +
-> +	vdec0: video-decoder@fdc38100 {
-> +		compatible = "rockchip,rk3588-vdec";
-> +		reg = <0x0 0xfdc38100 0x0 0x500>;
-> +		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>, <&cru CLK_RKVDEC0_CA>,
-> +			 <&cru CLK_RKVDEC0_CORE>, <&cru CLK_RKVDEC0_HEVC_CA>;
-> +		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
-> +		assigned-clocks = <&cru ACLK_RKVDEC0>, <&cru CLK_RKVDEC0_CORE>,
-> +				  <&cru CLK_RKVDEC0_CA>, <&cru CLK_RKVDEC0_HEVC_CA>;
-> +		assigned-clock-rates = <800000000>, <600000000>,
-> +				       <600000000>, <1000000000>;
-> +		resets = <&cru SRST_A_RKVDEC0>, <&cru SRST_H_RKVDEC0>, <&cru SRST_RKVDEC0_CA>,
-> +			 <&cru SRST_RKVDEC0_CORE>, <&cru SRST_RKVDEC0_HEVC_CA>;
-> +		reset-names = "rst_axi", "rst_ahb", "rst_cabac",
-> +			      "rst_core", "rst_hevc_cabac";
-> +		power-domains = <&power RK3588_PD_RKVDEC0>;
-> +		sram = <&vdec0_sram>;
-> +		status = "okay";
+> I did check that it seemed to generate sane code on both 32-bit and
+> 64-bit, but no _actual_ testing.
 
-okay is the default status, so is not needed when the node is always-on
+Hohumm, looks ok to me. And running it a bit with selftests looks good too.
 
-> +	};
-> +
-> +	vdec1: video-decoder@fdc40100 {
-> +		compatible = "rockchip,rk3588-vdec";
-> +		reg = <0x0 0xfdc40100 0x0 0x500>;
-> +		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks = <&cru ACLK_RKVDEC1>, <&cru HCLK_RKVDEC1>, <&cru CLK_RKVDEC1_CA>,
-> +			 <&cru CLK_RKVDEC1_CORE>, <&cru CLK_RKVDEC1_HEVC_CA>;
-> +		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
-> +		assigned-clocks = <&cru ACLK_RKVDEC1>, <&cru CLK_RKVDEC1_CORE>,
-> +				  <&cru CLK_RKVDEC1_CA>, <&cru CLK_RKVDEC1_HEVC_CA>;
-> +		assigned-clock-rates = <800000000>, <600000000>,
-> +				       <600000000>, <1000000000>;
-> +		resets = <&cru SRST_A_RKVDEC1>, <&cru SRST_H_RKVDEC1>, <&cru SRST_RKVDEC1_CA>,
-> +			 <&cru SRST_RKVDEC1_CORE>, <&cru SRST_RKVDEC1_HEVC_CA>;
-> +		reset-names = "rst_axi", "rst_ahb", "rst_cabac",
-> +			      "rst_core", "rst_hevc_cabac";
-> +		power-domains = <&power RK3588_PD_RKVDEC1>;
-> +		sram = <&vdec1_sram>;
-> +		status = "okay";
+I productized it like this:
 
-same
+---
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 19 Jun 2024 14:54:23 +0200
+Subject: [PATCH] x86/uaccess: Improve the 8-byte getuser() case
 
-> +	};
->  };
->  
->  #include "rk3588s-pinctrl.dtsi"
-> 
+Streamline the 8-byte case and drop the special handling. Use a macro
+which hides the exception handling.
 
+No functional changes.
 
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/lib/getuser.S | 69 ++++++++++++------------------------------
+ 1 file changed, 20 insertions(+), 49 deletions(-)
 
+diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
+index a1cb3a4e6742..a314622aa093 100644
+--- a/arch/x86/lib/getuser.S
++++ b/arch/x86/lib/getuser.S
+@@ -44,21 +44,23 @@
+ 	or %rdx, %rax
+ .else
+ 	cmp $TASK_SIZE_MAX-\size+1, %eax
+-.if \size != 8
+ 	jae .Lbad_get_user
+-.else
+-	jae .Lbad_get_user_8
+-.endif
+ 	sbb %edx, %edx		/* array_index_mask_nospec() */
+ 	and %edx, %eax
+ .endif
+ .endm
+ 
++.macro UACCESS op src dst
++1:	\op \src,\dst
++	_ASM_EXTABLE_UA(1b, __get_user_handle_exception)
++.endm
++
++
+ 	.text
+ SYM_FUNC_START(__get_user_1)
+ 	check_range size=1
+ 	ASM_STAC
+-1:	movzbl (%_ASM_AX),%edx
++	UACCESS movzbl (%_ASM_AX),%edx
+ 	xor %eax,%eax
+ 	ASM_CLAC
+ 	RET
+@@ -68,7 +70,7 @@ EXPORT_SYMBOL(__get_user_1)
+ SYM_FUNC_START(__get_user_2)
+ 	check_range size=2
+ 	ASM_STAC
+-2:	movzwl (%_ASM_AX),%edx
++	UACCESS movzwl (%_ASM_AX),%edx
+ 	xor %eax,%eax
+ 	ASM_CLAC
+ 	RET
+@@ -78,7 +80,7 @@ EXPORT_SYMBOL(__get_user_2)
+ SYM_FUNC_START(__get_user_4)
+ 	check_range size=4
+ 	ASM_STAC
+-3:	movl (%_ASM_AX),%edx
++	UACCESS movl (%_ASM_AX),%edx
+ 	xor %eax,%eax
+ 	ASM_CLAC
+ 	RET
+@@ -89,10 +91,11 @@ SYM_FUNC_START(__get_user_8)
+ 	check_range size=8
+ 	ASM_STAC
+ #ifdef CONFIG_X86_64
+-4:	movq (%_ASM_AX),%rdx
++	UACCESS movq (%_ASM_AX),%rdx
+ #else
+-4:	movl (%_ASM_AX),%edx
+-5:	movl 4(%_ASM_AX),%ecx
++	xor %ecx,%ecx
++	UACCESS movl (%_ASM_AX),%edx
++	UACCESS movl 4(%_ASM_AX),%ecx
+ #endif
+ 	xor %eax,%eax
+ 	ASM_CLAC
+@@ -104,7 +107,7 @@ EXPORT_SYMBOL(__get_user_8)
+ SYM_FUNC_START(__get_user_nocheck_1)
+ 	ASM_STAC
+ 	ASM_BARRIER_NOSPEC
+-6:	movzbl (%_ASM_AX),%edx
++	UACCESS movzbl (%_ASM_AX),%edx
+ 	xor %eax,%eax
+ 	ASM_CLAC
+ 	RET
+@@ -114,7 +117,7 @@ EXPORT_SYMBOL(__get_user_nocheck_1)
+ SYM_FUNC_START(__get_user_nocheck_2)
+ 	ASM_STAC
+ 	ASM_BARRIER_NOSPEC
+-7:	movzwl (%_ASM_AX),%edx
++	UACCESS movzwl (%_ASM_AX),%edx
+ 	xor %eax,%eax
+ 	ASM_CLAC
+ 	RET
+@@ -124,7 +127,7 @@ EXPORT_SYMBOL(__get_user_nocheck_2)
+ SYM_FUNC_START(__get_user_nocheck_4)
+ 	ASM_STAC
+ 	ASM_BARRIER_NOSPEC
+-8:	movl (%_ASM_AX),%edx
++	UACCESS movl (%_ASM_AX),%edx
+ 	xor %eax,%eax
+ 	ASM_CLAC
+ 	RET
+@@ -135,10 +138,11 @@ SYM_FUNC_START(__get_user_nocheck_8)
+ 	ASM_STAC
+ 	ASM_BARRIER_NOSPEC
+ #ifdef CONFIG_X86_64
+-9:	movq (%_ASM_AX),%rdx
++	UACCESS movq (%_ASM_AX),%rdx
+ #else
+-9:	movl (%_ASM_AX),%edx
+-10:	movl 4(%_ASM_AX),%ecx
++	xor %ecx,%ecx
++	UACCESS movl (%_ASM_AX),%edx
++	UACCESS movl 4(%_ASM_AX),%ecx
+ #endif
+ 	xor %eax,%eax
+ 	ASM_CLAC
+@@ -154,36 +158,3 @@ SYM_CODE_START_LOCAL(__get_user_handle_exception)
+ 	mov $(-EFAULT),%_ASM_AX
+ 	RET
+ SYM_CODE_END(__get_user_handle_exception)
+-
+-#ifdef CONFIG_X86_32
+-SYM_CODE_START_LOCAL(__get_user_8_handle_exception)
+-	ASM_CLAC
+-.Lbad_get_user_8:
+-	xor %edx,%edx
+-	xor %ecx,%ecx
+-	mov $(-EFAULT),%_ASM_AX
+-	RET
+-SYM_CODE_END(__get_user_8_handle_exception)
+-#endif
+-
+-/* get_user */
+-	_ASM_EXTABLE_UA(1b, __get_user_handle_exception)
+-	_ASM_EXTABLE_UA(2b, __get_user_handle_exception)
+-	_ASM_EXTABLE_UA(3b, __get_user_handle_exception)
+-#ifdef CONFIG_X86_64
+-	_ASM_EXTABLE_UA(4b, __get_user_handle_exception)
+-#else
+-	_ASM_EXTABLE_UA(4b, __get_user_8_handle_exception)
+-	_ASM_EXTABLE_UA(5b, __get_user_8_handle_exception)
+-#endif
+-
+-/* __get_user */
+-	_ASM_EXTABLE_UA(6b, __get_user_handle_exception)
+-	_ASM_EXTABLE_UA(7b, __get_user_handle_exception)
+-	_ASM_EXTABLE_UA(8b, __get_user_handle_exception)
+-#ifdef CONFIG_X86_64
+-	_ASM_EXTABLE_UA(9b, __get_user_handle_exception)
+-#else
+-	_ASM_EXTABLE_UA(9b, __get_user_8_handle_exception)
+-	_ASM_EXTABLE_UA(10b, __get_user_8_handle_exception)
+-#endif
+-- 
+2.43.0
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
