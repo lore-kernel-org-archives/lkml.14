@@ -1,111 +1,115 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1B137747
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD8B13C8F0
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796751; cv=none; b=cyRENAVIdszEZdkikOxDUIk/HSAHpslR3Bugcp/TY/FSL6kcqhQ7HKWHbR3YzIVKlhHOooDnW9QhtQdQUhsEiSKIVCbTVD8S/rHHp9ocW07nHbaMQU9JuX4X48l6WpyMw/LTTLcVINhwUGzp0PYDLcQp6d5EAdV/YATrIkS2wqk=
+	t=1718796792; cv=none; b=nhPy6ZJweQPkvLHrzo5RzTnFRLAWl2VbfWnsa9JrXaDGf7Q+Q/x9Uv1YU1aaeSHNSVQO9rAOqMdJyNmMoLb8/MZvSd2DEEWlpNb+cq6rnHKAsbTYoLrdmYWnU6stN66SXmv3Y5VW83oaFiHmY88uFGySsp67l7/xG76HQVt1WsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796751; c=relaxed/simple;
-	bh=ep+bcQ9KIBL3Ur4LJps7I1N9rQ6T3o1g4+RjR962b+0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=SxQM5GBmIs7KtfVbpckxFPMDWrCPtRNBbrDToNtbZcf0Jv4USmc6/P6V5rU+XEJlGh/WmjrHUmm7Ll4xaUazWWKQUOzin0qf6R7NYa0PoipsVu/gStIoFaKXjmlRd+JQ6P/EdCCjHKlJ4CVucEO2mnOH5ta+HnMuotxEQCBFxeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=LWkC4J/i; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1718796792; c=relaxed/simple;
+	bh=zu1vs7ZdDVtFoE38c70rrqDEqtDlY34Ku3fCysJmNdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tE6n5aoOL98sQm4belHGKsxpq9M3fDbCPOgye771T0ck08pPPHtGZhDlXF+uqBJYYkI6m7fs79QTyVKfVZKMDwVu8JNKjDDGNvASy14s6b66Tz0qmKq3loXRt/GjF/VYf3Z48OMlzPwKWlM7Go7hvD8lEYoYAKl/oqJ61NgJsuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M23GDzaQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="LWkC4J/i"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-24c9f91242dso2689127fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1718796749; x=1719401549; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2pWZByJHXQuXqyJwb/jU6Cx4D/ezIf4+3nq/sxOvdo4=;
-        b=LWkC4J/iXumglmKU/NFNi1MwfKSKj4b7vm3Ji/h+MbXZsEnRg1GV2cP8erBxpTQN3H
-         ztsdrHCyTHvMdnYd0g0N13U2zjDAHXbqQ6GV17qGKIkbjOxxawZh81pGFRG6liQh0HDN
-         XhagqEOwcjQojBgAcAyS6P8T9NzXapi9NWQWy48FHYt6yUZj4hXVVQ+R+bI4Hgz1VZ/q
-         r08G9wPAiA5Hg/oYHfGy1sE3mB2ieESzl8+KsPMvaM3Qm0KDiqeNw+/IIh3UHAhGJp1l
-         xKEw1WgQ4faaRFwOKbQ7vLIu1jpGmV+MvaRycpWy1FKA83Hx2J4FOYqgX6bD2wSKU4s0
-         QQWA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M23GDzaQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718796789;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X/Q2VF9fZ8HK87tEqiSr0MKzekbPaQnI9QQW+NcCAq8=;
+	b=M23GDzaQVd0aEulsh6z844yaxGWTHIczNb4/eCGdAPqCQ6/jXZqmRr2V2dtSmO670oWmJK
+	1oWu4TVT96nt3cxvR3Rymri7jHlcL0qpn10gIsPjnR7d/7PRUry+rNuWET+PeL63DPZyZ+
+	3O0R1E3SLYu+gKhi1rFE7QbQGaFmQXs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-519-e2Xme3woNHCcH5E5wnYjQg-1; Wed, 19 Jun 2024 07:33:08 -0400
+X-MC-Unique: e2Xme3woNHCcH5E5wnYjQg-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-421f3b7b27eso57336285e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:33:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718796749; x=1719401549;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2pWZByJHXQuXqyJwb/jU6Cx4D/ezIf4+3nq/sxOvdo4=;
-        b=TTTGru7jkso17E3L7xp79pfHqi3rZTdsrJD5CLGpQKtWpdDHi36PewFaFcGKefYPwv
-         qQe3zWQkAxuqJTVXu2ngMr2VmjVH0sDTnOKueZ58sH7J3cNOnzICTHvmGtO6Z0Ody7OG
-         crd6hMGjGhOVln2qdb1BoUhxZvHWasUVe66E9pgaDsbYdrSbSbt8Tz5XDwpcm4WgADW0
-         vmceo1sD3hWQRIeHxp2b2YQT0T8PV1fTUf7DbRAAARAX+qfY/Guuw7pDbKNuZByGvNrf
-         BgIOQQFy2yCoUlod/e3yssb+jFwgilUGcvlUjONZ8tA8prz5SxoCXV/xD33vN5j7zlf4
-         S+Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9c1lcp0GM3Znj1jFkranlu/LEGZ4rJjbZfA3YBEA+YagkLbFYHdPwbQf357VQCtLi4EYfFRmH6nRcxps6OiCWBGM6qlZbINz/TjTR
-X-Gm-Message-State: AOJu0YxChE/GIZqAM5OygvGT7HQfx6JJs7vNEm03qV+SVM7QpOBQxmJ4
-	04gtkTsf9cKDMO0PeYGIdyBMt3nT5jsfH2Ot7WoSjpBkD5g0j4GpvuQL2UAZdraAne1vYgJS2i/
-	MHisx0O8RhWKIcILtFAm6X+EQdpRXFy56hwI8TA==
-X-Google-Smtp-Source: AGHT+IFDTJPJUvt5MDx8yXoy50LjAmUvtMJn2QjJIM1rsP4eAxrwxGqnbfFwaWVFBzqTW1RnUYiLxwgToBAi2U6CAmM=
-X-Received: by 2002:a05:6870:c0ce:b0:254:783d:aeb4 with SMTP id
- 586e51a60fabf-25c94ade8d7mr2582738fac.35.1718796749303; Wed, 19 Jun 2024
- 04:32:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718796787; x=1719401587;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X/Q2VF9fZ8HK87tEqiSr0MKzekbPaQnI9QQW+NcCAq8=;
+        b=nMnEf2BJNjxbt2qITBzhLeYmgPuIM94b5hRBvwl47V3vAHZf6Jgv+Ud4K4QRwNggnj
+         IgR6F5z9CcnW8VhRcZcnDfg8OIEJgExsBp5ZuJDQlwO1wFhzMY+EOCKcJKI/X+CucKlq
+         RPMqLqXCDpXyq9i1l0E2YIiFGlCNjG4wLCnf4No8+gUsgiGZiDUNQYtLUdz7HXNHAupi
+         tskDsfMrzbxEN27R4bI6DA5FtcQXe8H7UAUeg4CDoVAIEPmJTo8h+zJR9NGJCrIWmBhM
+         X5oC0RYGBn9Qd95SjSpX9utr1kzWRAJRukGXFvv67lfU0njlTWiFqK7tQ/dNfOOp+fAs
+         xDpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNG5082FJjDbBwCpnuy4LdKSmmIeDEyO1bAKDnAqKJdr3T7AfGlkYnMlQ8EtCVEO1pgsRGwRKv9geLNFnVj/BHQ8aRu58M086tzi/u
+X-Gm-Message-State: AOJu0YxebX/5sEpi8syp7UmPXoNWISGZp22ZlnX7FQ+fpqDzaEHtEo6J
+	v8juUQibdyxDeyCtF+IeAuCroPBmf4JXoG3Xk292d2cvckVNTLCKGmPkbUtCHm6o8aYPHVtv03p
+	MeNh7OX9oD8zy5f+4DFSIJ0qk/3fC16kGXjqwaUSIFekbKlDrkLSUpTus9XnTiA==
+X-Received: by 2002:a05:600c:4244:b0:421:f43d:dadd with SMTP id 5b1f17b1804b1-4247529bce6mr20527155e9.33.1718796787221;
+        Wed, 19 Jun 2024 04:33:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHqpVPfgWKKcRncsnLWODxvfCBzAlT7douK77Cb12ZP17mu8jO7pgfL+qWICCltVabK5jaTcQ==
+X-Received: by 2002:a05:600c:4244:b0:421:f43d:dadd with SMTP id 5b1f17b1804b1-4247529bce6mr20526775e9.33.1718796786850;
+        Wed, 19 Jun 2024 04:33:06 -0700 (PDT)
+Received: from pollux ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f6320bf2sm225835235e9.31.2024.06.19.04.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 04:33:06 -0700 (PDT)
+Date: Wed, 19 Jun 2024 13:33:04 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Benno Lossin <benno.lossin@proton.me>, rafael@kernel.org,
+	mcgrof@kernel.org, russ.weight@linux.dev, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@samsung.com,
+	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] rust: add firmware abstractions
+Message-ID: <ZnLB8KfIFpN5dlid@pollux>
+References: <20240618154841.6716-1-dakr@redhat.com>
+ <20240618154841.6716-3-dakr@redhat.com>
+ <8d6f98c2-afe2-4e94-b630-96a8fa0b39cf@proton.me>
+ <ZnKod6Wn5louhPu8@pollux>
+ <2024061900-outspoken-blast-a391@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617131425.7526-1-cuiyunhui@bytedance.com> <20240617131425.7526-3-cuiyunhui@bytedance.com>
-In-Reply-To: <20240617131425.7526-3-cuiyunhui@bytedance.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Wed, 19 Jun 2024 19:32:18 +0800
-Message-ID: <CAEEQ3wnkQsfmLbyMrG_YBvWvhHJdSTg7dG5W_mxv_wxCjatgCA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] RISC-V: Select ACPI PPTT drivers
-To: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	sunilvl@ventanamicro.com, aou@eecs.berkeley.edu, 
-	linux-riscv@lists.infradead.org, bhelgaas@google.com, james.morse@arm.com, 
-	jeremy.linton@arm.com, Jonathan.Cameron@huawei.com, pierre.gondois@arm.com, 
-	sudeep.holla@arm.com, tiantao6@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024061900-outspoken-blast-a391@gregkh>
 
-Hi Sunil,
+On Wed, Jun 19, 2024 at 12:43:55PM +0200, Greg KH wrote:
+> On Wed, Jun 19, 2024 at 11:44:23AM +0200, Danilo Krummrich wrote:
+> > Greg,
+> > 
+> > Benno's comments provide some nice hints to further improve the safety comments.
+> > Since I was notified that those patches hit your tree already, how do you want
+> > to proceed?
+> 
+> Please start by not top-posting :)
 
-On Mon, Jun 17, 2024 at 9:14=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com=
-> wrote:
->
-> After adding ACPI support to populate_cache_leaves(), RISC-V can build
-> cacheinfo through the ACPI PPTT table, thus enabling the ACPI_PPTT
-> configuration.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
-> ---
->  arch/riscv/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 9f38a5ecbee3..1b4c310a59fb 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -13,6 +13,7 @@ config 32BIT
->  config RISCV
->         def_bool y
->         select ACPI_GENERIC_GSI if ACPI
-> +       select ACPI_PPTT if ACPI
->         select ACPI_REDUCED_HARDWARE_ONLY if ACPI
->         select ARCH_DMA_DEFAULT_COHERENT
->         select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATIO=
-N
-> --
-> 2.20.1
->
+Well, I guess it kinda made sense in this case, since I wasn't replying to any
+of the comments specifically.
 
-Gentle ping.
+> 
+> Anyway, patches on top of what is in my tree is fine, these are just
+> comment updates, not any real broken issue to prevent the existing stuff
+> from existing.
 
-Thanks,
-Yunhui
+Ok, I'll send you another series for this including the changes for the
+MAINTAINERS file.
+
+- Danilo
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
