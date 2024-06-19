@@ -1,120 +1,111 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0864413C90D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1B137747
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796723; cv=none; b=SFl5HN7fTVoYseo/sDld9gtaGLnICrID/vHUReWtmIcT+nvB1tygRP9P+jCuVvEcd0wft/IsAOcWSs6/hb/E5GZC+kz8LOcw+qSFAhP1YV0DlFoHaFx5KSNQrJZhQH3uWCA7BricYxZjxglr9qOSMFP97tFj8t0DMw0bblQ9C7Y=
+	t=1718796751; cv=none; b=cyRENAVIdszEZdkikOxDUIk/HSAHpslR3Bugcp/TY/FSL6kcqhQ7HKWHbR3YzIVKlhHOooDnW9QhtQdQUhsEiSKIVCbTVD8S/rHHp9ocW07nHbaMQU9JuX4X48l6WpyMw/LTTLcVINhwUGzp0PYDLcQp6d5EAdV/YATrIkS2wqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796723; c=relaxed/simple;
-	bh=G9s7/39SAaCha/Gb6/TvfL2LDBIFo42TdwmiOE0eSbM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pbHapWdB7trcUynoVC660q/es7xcWPBMBKQQ6VRnifp1bLN3Sqo/9GgY41MH/EXajTmIDa9Y8H5BU/2yp/uM1b/SZWtsVF0D5WaLYC8a8HrpRE4pe/10KlyjaX75jZWYrT3f5XPl8D37IDpG1QOX9tc7bvxWb+GYOt8G08biPNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fG9mzoR3; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718796751; c=relaxed/simple;
+	bh=ep+bcQ9KIBL3Ur4LJps7I1N9rQ6T3o1g4+RjR962b+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=SxQM5GBmIs7KtfVbpckxFPMDWrCPtRNBbrDToNtbZcf0Jv4USmc6/P6V5rU+XEJlGh/WmjrHUmm7Ll4xaUazWWKQUOzin0qf6R7NYa0PoipsVu/gStIoFaKXjmlRd+JQ6P/EdCCjHKlJ4CVucEO2mnOH5ta+HnMuotxEQCBFxeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=LWkC4J/i; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fG9mzoR3"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c1cb35ea3so744008e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:32:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="LWkC4J/i"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-24c9f91242dso2689127fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:32:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718796720; x=1719401520; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hrZJ+jfag4mrs/6y3l9PMepTZEbpXG78/iWf/2590xE=;
-        b=fG9mzoR3B4ekZ9z6tVZuejBOMltyEaRRUuAqsLBzubLSN/k0FWwYvZzk8deQwZjOJO
-         4LtYILPsxgPp9JQZg8J5RM/7BsK0K24GpHHB8xARitNZiVLvO+udKrkSNzWVPnZt65VM
-         piiEpyYnqisw9LWyqjcHE1tGA0Y0eyi+kQ6gvzOOrh7NSuCWFtTj557wroTt4SyxIrou
-         dKBXtw7xsgx0KevcJ0Ju1eDfDytG7tFVt7TmwpuysxobW18a9JLOQhFaT0nnXipzkyO9
-         9yKmySvoL9kQzETLBrbIGc0FYSQrY+W4kiHrJewdmROnrIVRyxMfRZJIlcNc2LWLYjrp
-         UG5A==
+        d=bytedance.com; s=google; t=1718796749; x=1719401549; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2pWZByJHXQuXqyJwb/jU6Cx4D/ezIf4+3nq/sxOvdo4=;
+        b=LWkC4J/iXumglmKU/NFNi1MwfKSKj4b7vm3Ji/h+MbXZsEnRg1GV2cP8erBxpTQN3H
+         ztsdrHCyTHvMdnYd0g0N13U2zjDAHXbqQ6GV17qGKIkbjOxxawZh81pGFRG6liQh0HDN
+         XhagqEOwcjQojBgAcAyS6P8T9NzXapi9NWQWy48FHYt6yUZj4hXVVQ+R+bI4Hgz1VZ/q
+         r08G9wPAiA5Hg/oYHfGy1sE3mB2ieESzl8+KsPMvaM3Qm0KDiqeNw+/IIh3UHAhGJp1l
+         xKEw1WgQ4faaRFwOKbQ7vLIu1jpGmV+MvaRycpWy1FKA83Hx2J4FOYqgX6bD2wSKU4s0
+         QQWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718796720; x=1719401520;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hrZJ+jfag4mrs/6y3l9PMepTZEbpXG78/iWf/2590xE=;
-        b=EMxQVgFNBoKnBVujmbBYICzN2zlR/bb/TKYB6ne/ItXYHY9grq56fVvpnK3id4k22O
-         DfX7earZI9n3zchsyznEMQPPEbnwIhIhWAjSx7uv/FNOaH+FiVS9axwoPh7dEVoiw4Fn
-         jPY2aBpvQ3YYJLmgD6J8sAMuthgkbc2WcUk5tekkgoMpxjj7pT+eR4OlVXULidBLdU7k
-         sR+hI1af/K+iI6GELcLYiNd0KVF1diFiyAOkRYi4sslmDcsX8ccEENiabCeMK9shlugG
-         ImwEk2gk6jhBbLSpXRs8bo1gXqk4sFKCfm7wfpXflg4X0DuLbHs7RPGevuDYOr2EGo67
-         SQLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYqoQQ+s4ndnxFVTJX13xTJ1HezvR81bthpSVJ6yGd5TXxW7Kj+EgLefg+h69ccebaP9LY96+jCAelz2AzeHfDqe20MZRSiCERECWi
-X-Gm-Message-State: AOJu0Yxdtb8yHy+o6UAAigkS9E9nZTXpXU+YEAKY3ci3kWskOr5C+onA
-	IOt6Ll4Q10NywNU15H5PvourcUO7mUMC2RFfZE0WrChgKLolXn8CBONwa7DKR2o=
-X-Google-Smtp-Source: AGHT+IFqSpuJazzXtIXmixGX1v6zw4GP/mYamPi/L5REMZv7WfliRiZz68u0QlFghzrjcLt4hlfqpQ==
-X-Received: by 2002:a05:6512:2389:b0:51f:8ad:673f with SMTP id 2adb3069b0e04-52ccaa7ae43mr1356015e87.5.1718796720170;
-        Wed, 19 Jun 2024 04:32:00 -0700 (PDT)
-Received: from [192.168.1.3] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca288cd87sm1738309e87.304.2024.06.19.04.31.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 04:31:59 -0700 (PDT)
-Message-ID: <3b723807-44f9-40da-9d61-215395637064@linaro.org>
-Date: Wed, 19 Jun 2024 14:31:51 +0300
+        d=1e100.net; s=20230601; t=1718796749; x=1719401549;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2pWZByJHXQuXqyJwb/jU6Cx4D/ezIf4+3nq/sxOvdo4=;
+        b=TTTGru7jkso17E3L7xp79pfHqi3rZTdsrJD5CLGpQKtWpdDHi36PewFaFcGKefYPwv
+         qQe3zWQkAxuqJTVXu2ngMr2VmjVH0sDTnOKueZ58sH7J3cNOnzICTHvmGtO6Z0Ody7OG
+         crd6hMGjGhOVln2qdb1BoUhxZvHWasUVe66E9pgaDsbYdrSbSbt8Tz5XDwpcm4WgADW0
+         vmceo1sD3hWQRIeHxp2b2YQT0T8PV1fTUf7DbRAAARAX+qfY/Guuw7pDbKNuZByGvNrf
+         BgIOQQFy2yCoUlod/e3yssb+jFwgilUGcvlUjONZ8tA8prz5SxoCXV/xD33vN5j7zlf4
+         S+Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9c1lcp0GM3Znj1jFkranlu/LEGZ4rJjbZfA3YBEA+YagkLbFYHdPwbQf357VQCtLi4EYfFRmH6nRcxps6OiCWBGM6qlZbINz/TjTR
+X-Gm-Message-State: AOJu0YxChE/GIZqAM5OygvGT7HQfx6JJs7vNEm03qV+SVM7QpOBQxmJ4
+	04gtkTsf9cKDMO0PeYGIdyBMt3nT5jsfH2Ot7WoSjpBkD5g0j4GpvuQL2UAZdraAne1vYgJS2i/
+	MHisx0O8RhWKIcILtFAm6X+EQdpRXFy56hwI8TA==
+X-Google-Smtp-Source: AGHT+IFDTJPJUvt5MDx8yXoy50LjAmUvtMJn2QjJIM1rsP4eAxrwxGqnbfFwaWVFBzqTW1RnUYiLxwgToBAi2U6CAmM=
+X-Received: by 2002:a05:6870:c0ce:b0:254:783d:aeb4 with SMTP id
+ 586e51a60fabf-25c94ade8d7mr2582738fac.35.1718796749303; Wed, 19 Jun 2024
+ 04:32:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 8/8] arm64: dts: qcom: sm8650: Add video and camera
- clock controllers
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, neil.armstrong@linaro.org
-Cc: Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>
-References: <20240602114439.1611-1-quic_jkona@quicinc.com>
- <20240602114439.1611-9-quic_jkona@quicinc.com>
- <3ad2d00f-6b5f-46c5-b95c-c8d68e8be736@linaro.org>
- <fr4j6gignu7ll4nhur65asj35rbsbzr3w4xtxq55jxcfcmb5nh@l6l3qyhk7qmw>
-From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-In-Reply-To: <fr4j6gignu7ll4nhur65asj35rbsbzr3w4xtxq55jxcfcmb5nh@l6l3qyhk7qmw>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240617131425.7526-1-cuiyunhui@bytedance.com> <20240617131425.7526-3-cuiyunhui@bytedance.com>
+In-Reply-To: <20240617131425.7526-3-cuiyunhui@bytedance.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Wed, 19 Jun 2024 19:32:18 +0800
+Message-ID: <CAEEQ3wnkQsfmLbyMrG_YBvWvhHJdSTg7dG5W_mxv_wxCjatgCA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] RISC-V: Select ACPI PPTT drivers
+To: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	sunilvl@ventanamicro.com, aou@eecs.berkeley.edu, 
+	linux-riscv@lists.infradead.org, bhelgaas@google.com, james.morse@arm.com, 
+	jeremy.linton@arm.com, Jonathan.Cameron@huawei.com, pierre.gondois@arm.com, 
+	sudeep.holla@arm.com, tiantao6@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmitry,
+Hi Sunil,
 
-On 6/18/24 17:33, Dmitry Baryshkov wrote:
-> On Tue, Jun 18, 2024 at 02:17:23PM GMT, neil.armstrong@linaro.org wrote:
->> On 02/06/2024 13:44, Jagadeesh Kona wrote:
->>> Add device nodes for video and camera clock controllers on Qualcomm
->>> SM8650 platform.
->>>
->>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->>> Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
->>> ---
->>>    arch/arm64/boot/dts/qcom/sm8650.dtsi | 26 ++++++++++++++++++++++++++
->>>    1 file changed, 26 insertions(+)
->>>
-> 
-> [...]
-> 
->>
->> And add the missing required-opps for the clock controllers like
->> dispcc.
-> 
-> Unless the opps is required because cmd-db has lower level than
-> required for the functioning of the device, there should be no need to
-> add the required-opps.
-> 
+On Mon, Jun 17, 2024 at 9:14=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com=
+> wrote:
+>
+> After adding ACPI support to populate_cache_leaves(), RISC-V can build
+> cacheinfo through the ACPI PPTT table, thus enabling the ACPI_PPTT
+> configuration.
+>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  arch/riscv/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 9f38a5ecbee3..1b4c310a59fb 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -13,6 +13,7 @@ config 32BIT
+>  config RISCV
+>         def_bool y
+>         select ACPI_GENERIC_GSI if ACPI
+> +       select ACPI_PPTT if ACPI
+>         select ACPI_REDUCED_HARDWARE_ONLY if ACPI
+>         select ARCH_DMA_DEFAULT_COHERENT
+>         select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATIO=
+N
+> --
+> 2.20.1
+>
 
-this is totally fine, but then 'required-opps' property shall be removed
-from the list of required properties in device tree bindings description.
+Gentle ping.
 
---
-Best wishes,
-Vladimir
+Thanks,
+Yunhui
