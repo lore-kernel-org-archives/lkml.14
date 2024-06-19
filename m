@@ -1,451 +1,213 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BBD224D4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718785256; cv=none; b=ANfg5Dzd5WPq7WuCcYBY8sVJdzdmHFMRJFeDsqW3I/27FqaNKQkoIa3BtPQPggFHB52KwHDNqVH3iPi4BLGR7cssnV0MBokIxVW4rPBSh1q2gwl1gN2LAbwmh48Xils9E4pGsmJxEt8Lo098mAiivNeWJMgvkYgeKsdPi0UL5fk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718785256; c=relaxed/simple;
-	bh=1XzMdBx9KiZ5Y3DFOztoYlLG5dQMfkCSdbxeEzHCg3I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s9SnMFbs4TL67y+exx1JsRt9Tv2rvu47PmWX1+Rp+ODQcIWTauYfTmzS1yz8f5obagHwdFL7gOW45b/ob9T5gPngKnwEHO4aIGVZBTUd3kswjJ1l3UYypfxHxTC+Ilnrq/EdEzH162LPOEpeHTdjQIo1YS4rRrQOqJIQpzRyeA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=criy/wC7; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC9078C71;
+	Wed, 19 Jun 2024 08:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718785316; cv=fail; b=kkNvpJ47xI+Y0jP5rYmkJQP6y4+tWHT/t1f0r0lKrzYg9mimjfhaTAsoXxXjBnTqIz/RYLQ9oeuR3p9ztghIVXgHr9frQa8B3w18audB/N2fVVPUT+ehfuMFcsNNwWZlsehGph+pnO3LP3JBJjtIjbUf9gPJQkaERRwFvH57N50=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718785316; c=relaxed/simple;
+	bh=5q1/0R5KLGBTQA0MOT+oUF6pMTi3UN4xZRLiHj+fbKs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Zsy+lRN6vlQQ7nmh4nOYeFsoNb8SMhkCmkfT18wgbKvGWKasYOo3xR93s1jLUei9qnwkriN+7Xx7hPv22UZrSlVlsASs7ICTQ2yzq+7D29LvZ/YZwbC1CQtQPC/lpAKZ8GJ8MmSCPzBi4IzNT2pEchk47UR44IxrEJokqD42/sc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gancKDfm; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gSUA+pTp; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="criy/wC7"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-80f4f1e7cc3so433606241.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 01:20:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gancKDfm";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gSUA+pTp"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J1tW7g031296;
+	Wed, 19 Jun 2024 08:21:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=+1p7adT6Z971bILDbpTQx/IWYgATyubey+yJVEAkFfc=; b=
+	gancKDfm4qBVGo/qHDp/uW5l7T7C+HaXhA39fzDYdq4JOZ1khiSNPUmL3+lDHB3S
+	IcVd5MPhNJgcfi3FKIoMyjKlsmnS2ZewiQxmcYfEh0xo7/5DVPGrile1kLwVkZvx
+	gA5zrkkb3jvCnp+4toa2L8wvozrl6C+D3bQF1hlA6N7nU6GpQ2aEXouZhkaWG/6C
+	X1U2hwK2pKe0xbz45zb+sVBbZ6uPIK2TTd7qvNy21L/WKHXt6QMruL3EFxTaEeUQ
+	ji1C7MMB//PR+uQkY4ET8AriH5OLbPEvVfLU0wVQFKcxytfKRNJ8rLcysD1UK1D3
+	FYcbur9hMdi6JqVBafMd6g==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yuja00qrh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Jun 2024 08:21:38 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45J8HVK6030653;
+	Wed, 19 Jun 2024 08:21:38 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2046.outbound.protection.outlook.com [104.47.70.46])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ys1d90q9v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Jun 2024 08:21:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L7NaKDz6SZgcnZb4JDgbSDrVTwNVEAhLmCpi0B+0ZiMX21tGgT6AcnkdQ1VC5wUm7aJgSxq/cafa/9vdRr7uLKl+qZl+LZIGzb6dBveam/Edy/i+1EYV8FzmDymsvHmWcX2pCwTcH6QodhmWjy1TJsjZbsXhOsgSTzqkE8NhmCBRSDMRExEWVFP2q9ok8lKzbS8CK/qO7kLXt3s9v2JNF0+/JVwI415++dPi9M1vxar7y+GLg/ZmwhmFcoACR0hsVf8qrIRYmlvxqAvUvqbeHWQbQGYxKdYiUEd43IuGQCoIOQ1331I7e/BIoUoyNimCOThhZSKSHJaUov2IZKzrxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+1p7adT6Z971bILDbpTQx/IWYgATyubey+yJVEAkFfc=;
+ b=BA9CeW9H6uW+POa22kV6oad2+koy0TDYw6IpYAFVq6Sl9dLVgmJ/M5lmovEzask8PfdUlhOW7M3d5bvE9jAwzsmvj3A7QDriqs2zNG74/6Nv3GjKFkgDBSUOatFqIGmwjATDsokpdxcXrirHSsB5U7AZmBuO5Wbecs52e5h9AXChWfSxN62q6Y6n9NScnEVeExQt4t0gIAY8mZzj6EVxTgNWm9Cb+jgYXkTZ91U5vczX02ZDyUjcVd1FqZMHBWUkGHbd9b+9zRib9sgVrbhvNQgoZwdGMQ2JYEd+kKSwfaFDTsjVXPjI7xIr+zxuLgEgnlJ4HdpmxBbXoPmQQsCDEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718785253; x=1719390053; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=He+zo0Tp/RNYugMKckmaumklLbi/HraZr7oLDXy9GoY=;
-        b=criy/wC7fudJesIPqrmNt7CnkbRul9oFVKz/5CfPQHZ7+ea7fdRmyMqPgoWJsdSfY6
-         b5DbigwFD9/hdrvdzyj5H02KZff21F44/um+5xTQ9OQGS9O1nGjYSAIDfjr50yxtT6K/
-         frsrw745ppZJVdXPh/i6HJHrbd6893DSEw9ZB0E723PZCUd4F7stCokc8oGNo+lVpE14
-         OcTbDDrjIAXD51nFR/74x8uApbg/mjB88gtH9u9IRnSR4A9WLMeTbm7vw3B8n6eU/T6A
-         DFlvitlMD8B+HPMvzupmPxQI8fA1RPNNC1oEKCEUzzfa9W9l8bSBDxLeQOPES4etHh2n
-         AKMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718785253; x=1719390053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=He+zo0Tp/RNYugMKckmaumklLbi/HraZr7oLDXy9GoY=;
-        b=iF9s+e4C7IzdX0249D0MrLwm/OXiW4hSp59NvJLSJM5/FE+vnMPbkJxdWO3okT3DnR
-         3T07zwJU/lxva5punSLF66SN6YjTPcr22osyzeo/bq0U2LIGnF3SNZFtO8QbqoQI9VjR
-         7lEsLGsTOGtFmyusN/s9DquLQBOB8ff8z8XA6ySM1CQf97D3xDyXQFhMYgPdFxHXE3Ih
-         D+DSRZT2Jlqoewkoz+UP+YqoKHLgOwPq/9v9fbau5C3tr/gqvGdQgaZGmHTQrvGt/ccV
-         pQ2eWQ7NObdBbRBK8xEww8UcigtW5jhReXjuKZVaIb01InNiAFndBovT6rA4XQeOPgyH
-         ztOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiHn95IGzlRA/zrpMH0O7uQsBWgU8vYoRCYk2ytnK+CVXugcOkDcvWygYLogS4nCITpYP+U3QLv1JIa3A38H9x+RtbmVUQ//bYiXEF
-X-Gm-Message-State: AOJu0Yx687iwAyYp3hlI3laZ6L9rPI5/9NEVogIJ3fN46UpS0B95gcDV
-	w7lK8g4Ewyup8p2N324635+Uvef5UDy4Ah6DF+EAwz/1tbLFToXRVsBvQitm1l9kAZa0m5PTGRy
-	bJMSN1sgoEVnoOsdkPZbZyP5pnByXmUsT
-X-Google-Smtp-Source: AGHT+IED0gDtzjRvMQIpWzZyTu8UVlVPUsyrecgQhzqb2lDXDEQzZ1IHEjrloriju+gLcFWUfpsXPzrdjfC0I9qAeUw=
-X-Received: by 2002:a05:6102:3a76:b0:48d:4dc2:9b18 with SMTP id
- ada2fe7eead31-48f130d06e4mr1987402137.33.1718785253366; Wed, 19 Jun 2024
- 01:20:53 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+1p7adT6Z971bILDbpTQx/IWYgATyubey+yJVEAkFfc=;
+ b=gSUA+pTplKv+vnjpRrZ/RdgNSnNvwkff6e3O7aW0Fo1vIFiBfJviqZWZ/yhE/YGdvw1N4GadtP2RiTtN3tX4k6mqeAEB7/y4JJO0X0hwfpAWxeBVKTpr/feOgkAFkEx3Q4+brsVD4cODnH2txasOQUuUz8TVhDypyF/1mBMAEQ0=
+Received: from IA1PR10MB7240.namprd10.prod.outlook.com (2603:10b6:208:3f5::9)
+ by LV8PR10MB7941.namprd10.prod.outlook.com (2603:10b6:408:1fc::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33; Wed, 19 Jun
+ 2024 08:21:36 +0000
+Received: from IA1PR10MB7240.namprd10.prod.outlook.com
+ ([fe80::962f:da30:466c:6a1]) by IA1PR10MB7240.namprd10.prod.outlook.com
+ ([fe80::962f:da30:466c:6a1%2]) with mapi id 15.20.7677.030; Wed, 19 Jun 2024
+ 08:21:36 +0000
+From: Gulam Mohamed <gulam.mohamed@oracle.com>
+To: Christoph Hellwig <hch@lst.de>
+CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yukuai1@huaweicloud.com" <yukuai1@huaweicloud.com>,
+        "axboe@kernel.dk"
+	<axboe@kernel.dk>
+Subject: RE: [PATCH V6 for-6.11/block] loop: Fix a race between loop detach
+ and loop open
+Thread-Topic: [PATCH V6 for-6.11/block] loop: Fix a race between loop detach
+ and loop open
+Thread-Index: AQHawiDxSOf+1W/UnkG1CxXEGa2wWbHOvoGw
+Date: Wed, 19 Jun 2024 08:21:35 +0000
+Message-ID: 
+ <IA1PR10MB7240896628D86A86E91DE9E798CF2@IA1PR10MB7240.namprd10.prod.outlook.com>
+References: <20240618164042.343777-1-gulam.mohamed@oracle.com>
+ <20240619081601.GA5434@lst.de>
+In-Reply-To: <20240619081601.GA5434@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR10MB7240:EE_|LV8PR10MB7941:EE_
+x-ms-office365-filtering-correlation-id: bf2359c9-3b0f-48fd-d46d-08dc9038d5df
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230037|1800799021|366013|376011|38070700015;
+x-microsoft-antispam-message-info: 
+ =?us-ascii?Q?bCYm73/RVw4HVBkBbKeKLMEOjGqyHmORK3BFYwOfIEB/ANmW/I9RVVk7QE2P?=
+ =?us-ascii?Q?wEemcE4TmDaWGgc9m64zRDJjuaEKoZamxR5q94NgBgpRUjrIlB7ZaAT/3CgN?=
+ =?us-ascii?Q?HpG+k2zSR/cyZjTnJsRCbb9NKRcTFnIV+2s/2L1lqXpqbBIl1YfP1dNtKIrQ?=
+ =?us-ascii?Q?/kQ2a82zROP0CkpyW6ds+9LZ2O+2mlBtWCHyxipCEIGRQRXf9ZHkq7jxgLj1?=
+ =?us-ascii?Q?rKMj3LffpwgMicZR7YL4NXYepxQfsF79rzOkhbLiL1Zmk4oSERHOMu7O65U/?=
+ =?us-ascii?Q?ZqE4ehKctvEOGXwOPqM4Om9jVffSlbX1dQLXosIlD7t/drmvCKdAXGpinazi?=
+ =?us-ascii?Q?SRuRvdiJlhPpAhpioekwkNvQ9v+gdhCm8QHmveiNFau/6zp22XhSek12boY1?=
+ =?us-ascii?Q?nNFOAIilES6V/vmtruxz0BTOZ/pQ4ttdMm5G1o/AK0f7TCpEC50moX5CBaKM?=
+ =?us-ascii?Q?iD6H3+4QFOI3eLnIoDjBvxh/q9nlwOHlXgCnkk9ZnPKrtkt1JCFo6wqEXyhI?=
+ =?us-ascii?Q?HCrBEZkrviA2wGTkWcofSap5+EwVQRjcO7GDVl48splknI2ysa5tfuMrzcel?=
+ =?us-ascii?Q?H1xGhLw18ADGHXzJwI2YoB7wTvqFdoU3dXSu3zi/Ip4VqsOXIvD2RfJlWOEU?=
+ =?us-ascii?Q?ztP8tz0fTibRCUnxHF94uCYeoMmAMgxdX+0BOGPx9Fcv5eXCQ8c9Uv8UT/kP?=
+ =?us-ascii?Q?7QdcQwrg8h+MLwtzV9Qbch1U3KkZhlKNpgFSmEWsV59XGZRs71cil3PXud9F?=
+ =?us-ascii?Q?9JUBB97Uyjv5qIqsbmU7iS9153dYnEQK2FaaA54N/+IIiUnzeeqIyCXokNnJ?=
+ =?us-ascii?Q?Ap5QuFwg0ktSK1QLjPbb9IEeAMD8E1NgrXCgPEz5eW9D3p+friYu0GNxYHyx?=
+ =?us-ascii?Q?lce9hJ/hiBIetUsSROdiHG9vJYTXPyMusF2ZoZ4/+wFUqO3luerdzPkPS2dx?=
+ =?us-ascii?Q?qkic+1+BDm805aTbTE1KERtnds0nmzHJI4RtalyIfP38GKX+snumKqs5/wgm?=
+ =?us-ascii?Q?hYMeEnPG117WxeCeNJoG9kpXBeZVUfT6GuL+2g5IzamnX98eQO3+DFOhmA9c?=
+ =?us-ascii?Q?ch6+Jfg1LI48gTS2J3xrz04StEeHUbqVnC2GboI1pNyuUZLmQ+cbqSbdAEts?=
+ =?us-ascii?Q?NpGVm9lDiLRHoLrD0ZVR8uYgqposQ6AmIYYniV/s6Vev5h594SdUjRpCus8m?=
+ =?us-ascii?Q?04ovgLbkFMcLNlqNtuyX/CpAqHmQEZcjiD/KyvfEkHslqlU5t+AO5lUnJbUn?=
+ =?us-ascii?Q?LCkH2f/cv/RlRhHsYh2+KH+rF85HLow8TbYUHH6OArIWaKt6ohQVtp8sF8rR?=
+ =?us-ascii?Q?ylKKx5jiHbPETbn29Rn3YGrAeNknz+fYiZYmUooQLsXSM6TpFFsYGQCGLO84?=
+ =?us-ascii?Q?AhlGRGE=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR10MB7240.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(38070700015);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?Qcx0bBiQ/LdA+ZbDIgwf4+PeRUjsdsp0x0yrOPSM38gMQb0wFTBxK6PGQ+oU?=
+ =?us-ascii?Q?o7x9U3X//gMCEHp/qLycVJfSMy7D5XiM2t7fHys/ZIjefTBGPeJicABnKFn8?=
+ =?us-ascii?Q?QKz2jkPq57QN7Gy1X8jgCpZcdD+aNyR5uhh8qJ+0muI7ejiICrKwe9b0oUro?=
+ =?us-ascii?Q?RGsXq+Pja8b6YvjeMdjKioG4p2ITB5YlYCtpdesL7ehqFpiKqr8tF4YCyxo6?=
+ =?us-ascii?Q?1VtsS44kFmawmKPZFRlLHyHcJXh2A2PxDjXLmNavN7IOIRmTBpkIUMuacZgf?=
+ =?us-ascii?Q?lRTej0sEuBVXvlpLlAUfK6y/fx0aP5t1HKBtTKNxkj8pXMbI11oejJLCw8qT?=
+ =?us-ascii?Q?uDRJK5qoDujJSFBv1l30zW86fSWZnJK04ozNcJTWd1wYBAC4DsqWBAgzxbw5?=
+ =?us-ascii?Q?KTFxry/ESzouILxI4W9AMLFQWEi60HJ3AEFU928uLJSC+bJz0Zm09th3qvzH?=
+ =?us-ascii?Q?atBYPBjJ9c/tigc5hYTXf3crlVDVfBZ0XkCAH1Hsuh4LCvKXihHhYh/RdUwx?=
+ =?us-ascii?Q?4vkEaUZpF0gPTVgwGoP5vDXjQZPN6I+kjlt11CwNYVWWRWsk3NbzpdSiTJTe?=
+ =?us-ascii?Q?zvdIJ+hhKURu1uXoX2oLzC3W5QJXfi+LbO7t/EmAZffn5+fkVQbdDzgPI7y5?=
+ =?us-ascii?Q?VTnusAl1rhTBuY7MhkXynq39beMlQDAnf/H5LzBxLpmX7W+z47Qchy08za57?=
+ =?us-ascii?Q?iUKUVnS9eDSciF1RqWTnyO1avB1mbHTjocPy29EBXUwe1Z6Cs2gw49yeyXdm?=
+ =?us-ascii?Q?YrCzsgmxdK8DvzJX+GiZJS2jMfEoKT7FDgdMFmAJjPXUaz8oFWSY5U0Ed6pf?=
+ =?us-ascii?Q?SH9gS9PBimLNlJ4kUc4o3hs3AkKuexVsQM8ykiOD7tLS9Osh6YYSTC24hLt/?=
+ =?us-ascii?Q?sCVasKQhuRHY1hC+ESNDlIdz0/cQbgPM39ZJq7hM2BU8/t30T2NUcWj1m17a?=
+ =?us-ascii?Q?c0YofVPjDpwI5IDqGEMs6XrNZvYXGne3Kp4ifOonOxURArjcKaEu+/QcTmIH?=
+ =?us-ascii?Q?7WBuI0DrCAuP9Lm17fab0BFo4x1bMomdsqJgjFD8g9P0Rr/0uLWGSJk3CAEH?=
+ =?us-ascii?Q?DUJEQMtVgLbY1fr4+UKeQu5u3TZ/cEyIT969cT7ku1ShAxbKAsNABZtheLcM?=
+ =?us-ascii?Q?tDjE8MxdrA1n7VLKrLF4/hzxPpurFvk00rj7QKF5uaY0tPfjGyb+fx6Dv/ni?=
+ =?us-ascii?Q?9jvwqDYH8ya4wHla6HsLxcbaE0/TTKB8+E5hWiPG9Te+aOtg+omoup+MRqUc?=
+ =?us-ascii?Q?2Jh7oePOrejsVuyzBitD6T2UcT1bomJYu2IjhTLfgU1ktliI1GnXh0T7dnXh?=
+ =?us-ascii?Q?SS8KqjGlS+x7JYTq/9hP349xoxJFunIkjAjSCHj6FYkKhsQfOVYalQ0TSuwD?=
+ =?us-ascii?Q?IDA505elougSdDdt5+bJ/peT/oCwbPojmKtrq+3NN77zE3sK63IUDVIpRQus?=
+ =?us-ascii?Q?bORCo6KFrcwb3WK38AFp76SxMISx+fdMrlALz5XMcz+s/O9KFSa0ij1C/EIz?=
+ =?us-ascii?Q?Lyk5nRt40DQeeVpi1qtlDro7kxpD/6oKokxSyDcV6rEirqUmOTxX8xAuDxzq?=
+ =?us-ascii?Q?bcmL9y+634lC5+6MwDFNZMcP3Q4wFrFwNSYW2uNl?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
- <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com> <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
- <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
- <4482bf69-eb07-0ec9-f777-28ce40f96589@126.com> <CAGsJ_4ytYTpvRVgR1EoazsH=QxZCDE2e8H0BeXrY-6zWFD0kCg@mail.gmail.com>
- <69414410-4e2d-c04c-6fc3-9779f9377cf2@126.com> <CAGsJ_4xHpHVKwqcSFqRQ_DxsehNh0Wp=P-MTGA2b_iy=KUW1Bw@mail.gmail.com>
- <d082f7e0-cbb9-f21a-e08d-47b5abd9e91d@126.com> <b1b108d5-0008-4681-97cc-253992e18c3b@126.com>
-In-Reply-To: <b1b108d5-0008-4681-97cc-253992e18c3b@126.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 19 Jun 2024 20:20:40 +1200
-Message-ID: <CAGsJ_4xh3Bsd8RZ9v8Am=TmFWPfo_T4UVgptq4gVH9=QOHnDvw@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
- non-CMA THP-sized page
-To: Ge Yang <yangge1116@126.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com, 
-	liuzixing@hygon.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	I28/IAIWbqlcKN+OFI2A40M1kkvOhAa11Oyw0fuv258kiJ3AqonwtprLenhvyxnNzWTTPZaCoDhAZD9ynh0E8xUdCn0Ybb3w1PfPxzHhQdxVCUBORNwd0grpgwk2st7HetS2+D1dCGnqNit8fhK4KEZiMLeWplT0TFycV5sj6A8w07U4qASKYNfz5OpXUnlwgyTyMFpxkUOOCUUcnRCBHPU3NBSaMSL6QB0TnM6ORKdNi8GGfploI5GTRwR2/Ko+LeQbDumgMTc+oUddApFBZO7Mzn4MOSG0hrXNac7BJheoClDFEJESw2r2BdTrVwOs6mywuXw5fESzj4XExaEwqa2yGSiLG1qlTqceB2LMkl+eeipE/X/2pZYMRSyic+S+zIiMsstfCs4YtcxoQoR7t7hHCV/j7RPawS1eTkuajUYjG9xPPfu6VxYLUl3z+PFnox70VtofPxZWKcBCUR4PUXIJ0tCiYJcjaJ03SwBQI3i5iemdtLCRlbeDoGy+KpydlgGz21xhOhT3t4Pc+B/nrcbphVuNBTedPGLsaG519YxmWGJRRn83SQXW0628KbZ7+OYZdTtGYtdnP4DADgXjgeQ5zDADo5PjNPnRgzCk18Q=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR10MB7240.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf2359c9-3b0f-48fd-d46d-08dc9038d5df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2024 08:21:36.0180
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o3yxpbGF7inPi71NyuYhIhg/vQNOQYlh0waDacJ/JaOqPYzpItlyzCEzAGbHWK6TY5DWE9nHA8y82RoxFbfwWtIyoR7GTsDUnFbKSZUQ6t4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR10MB7941
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2406190060
+X-Proofpoint-ORIG-GUID: ewnQqIXmRUvjDMh8nY07QESutQlteNOi
+X-Proofpoint-GUID: ewnQqIXmRUvjDMh8nY07QESutQlteNOi
 
-On Wed, Jun 19, 2024 at 5:35=E2=80=AFPM Ge Yang <yangge1116@126.com> wrote:
->
->
->
-> =E5=9C=A8 2024/6/18 15:51, yangge1116 =E5=86=99=E9=81=93:
-> >
-> >
-> > =E5=9C=A8 2024/6/18 =E4=B8=8B=E5=8D=882:58, Barry Song =E5=86=99=E9=81=
-=93:
-> >> On Tue, Jun 18, 2024 at 6:56=E2=80=AFPM yangge1116 <yangge1116@126.com=
-> wrote:
-> >>>
-> >>>
-> >>>
-> >>> =E5=9C=A8 2024/6/18 =E4=B8=8B=E5=8D=8812:10, Barry Song =E5=86=99=E9=
-=81=93:
-> >>>> On Tue, Jun 18, 2024 at 3:32=E2=80=AFPM yangge1116 <yangge1116@126.c=
-om> wrote:
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> =E5=9C=A8 2024/6/18 =E4=B8=8A=E5=8D=889:55, Barry Song =E5=86=99=E9=
-=81=93:
-> >>>>>> On Tue, Jun 18, 2024 at 9:36=E2=80=AFAM yangge1116 <yangge1116@126=
-.com>
-> >>>>>> wrote:
-> >>>>>>>
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> =E5=9C=A8 2024/6/17 =E4=B8=8B=E5=8D=888:47, yangge1116 =E5=86=99=
-=E9=81=93:
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> =E5=9C=A8 2024/6/17 =E4=B8=8B=E5=8D=886:26, Barry Song =E5=86=99=
-=E9=81=93:
-> >>>>>>>>> On Tue, Jun 4, 2024 at 9:15=E2=80=AFPM <yangge1116@126.com> wro=
-te:
-> >>>>>>>>>>
-> >>>>>>>>>> From: yangge <yangge1116@126.com>
-> >>>>>>>>>>
-> >>>>>>>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP
-> >>>>>>>>>> list for
-> >>>>>>>>>> THP-sized allocations") no longer differentiates the migration
-> >>>>>>>>>> type
-> >>>>>>>>>> of pages in THP-sized PCP list, it's possible to get a CMA
-> >>>>>>>>>> page from
-> >>>>>>>>>> the list, in some cases, it's not acceptable, for example,
-> >>>>>>>>>> allocating
-> >>>>>>>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
-> >>>>>>>>>>
-> >>>>>>>>>> The patch forbids allocating non-CMA THP-sized page from
-> >>>>>>>>>> THP-sized
-> >>>>>>>>>> PCP list to avoid the issue above.
-> >>>>>>>>>
-> >>>>>>>>> Could you please describe the impact on users in the commit log=
-?
-> >>>>>>>>
-> >>>>>>>> If a large number of CMA memory are configured in the system (fo=
-r
-> >>>>>>>> example, the CMA memory accounts for 50% of the system memory),
-> >>>>>>>> starting
-> >>>>>>>> virtual machine with device passthrough will get stuck.
-> >>>>>>>>
-> >>>>>>>> During starting virtual machine, it will call
-> >>>>>>>> pin_user_pages_remote(...,
-> >>>>>>>> FOLL_LONGTERM, ...) to pin memory. If a page is in CMA area,
-> >>>>>>>> pin_user_pages_remote() will migrate the page from CMA area to
-> >>>>>>>> non-CMA
-> >>>>>>>> area because of FOLL_LONGTERM flag. If non-movable allocation
-> >>>>>>>> requests
-> >>>>>>>> return CMA memory, pin_user_pages_remote() will enter endless
-> >>>>>>>> loops.
-> >>>>>>>>
-> >>>>>>>> backtrace:
-> >>>>>>>> pin_user_pages_remote
-> >>>>>>>> ----__gup_longterm_locked //cause endless loops in this function
-> >>>>>>>> --------__get_user_pages_locked
-> >>>>>>>> --------check_and_migrate_movable_pages //always check fail and
-> >>>>>>>> continue
-> >>>>>>>> to migrate
-> >>>>>>>> ------------migrate_longterm_unpinnable_pages
-> >>>>>>>> ----------------alloc_migration_target // non-movable allocation
-> >>>>>>>>
-> >>>>>>>>> Is it possible that some CMA memory might be used by non-movabl=
-e
-> >>>>>>>>> allocation requests?
-> >>>>>>>>
-> >>>>>>>> Yes.
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>> If so, will CMA somehow become unable to migrate, causing
-> >>>>>>>>> cma_alloc()
-> >>>>>>>>> to fail?
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> No, it will cause endless loops in __gup_longterm_locked(). If
-> >>>>>>>> non-movable allocation requests return CMA memory,
-> >>>>>>>> migrate_longterm_unpinnable_pages() will migrate a CMA page to
-> >>>>>>>> another
-> >>>>>>>> CMA page, which is useless and cause endless loops in
-> >>>>>>>> __gup_longterm_locked().
-> >>>>>>
-> >>>>>> This is only one perspective. We also need to consider the impact =
-on
-> >>>>>> CMA itself. For example,
-> >>>>>> when CMA is borrowed by THP, and we need to reclaim it through
-> >>>>>> cma_alloc() or dma_alloc_coherent(),
-> >>>>>> we must move those pages out to ensure CMA's users can retrieve th=
-at
-> >>>>>> contiguous memory.
-> >>>>>>
-> >>>>>> Currently, CMA's memory is occupied by non-movable pages, meaning =
-we
-> >>>>>> can't relocate them.
-> >>>>>> As a result, cma_alloc() is more likely to fail.
-> >>>>>>
-> >>>>>>>>
-> >>>>>>>> backtrace:
-> >>>>>>>> pin_user_pages_remote
-> >>>>>>>> ----__gup_longterm_locked //cause endless loops in this function
-> >>>>>>>> --------__get_user_pages_locked
-> >>>>>>>> --------check_and_migrate_movable_pages //always check fail and
-> >>>>>>>> continue
-> >>>>>>>> to migrate
-> >>>>>>>> ------------migrate_longterm_unpinnable_pages
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
-> >>>>>>>>>> THP-sized allocations")
-> >>>>>>>>>> Signed-off-by: yangge <yangge1116@126.com>
-> >>>>>>>>>> ---
-> >>>>>>>>>>      mm/page_alloc.c | 10 ++++++++++
-> >>>>>>>>>>      1 file changed, 10 insertions(+)
-> >>>>>>>>>>
-> >>>>>>>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >>>>>>>>>> index 2e22ce5..0bdf471 100644
-> >>>>>>>>>> --- a/mm/page_alloc.c
-> >>>>>>>>>> +++ b/mm/page_alloc.c
-> >>>>>>>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
-> >>>>>>>>>> *preferred_zone,
-> >>>>>>>>>>             WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order
-> >>>>>>>>>> > 1));
-> >>>>>>>>>>
-> >>>>>>>>>>             if (likely(pcp_allowed_order(order))) {
-> >>>>>>>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> >>>>>>>>>> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags &
-> >>>>>>>>>> ALLOC_CMA ||
-> >>>>>>>>>> +                                               order !=3D
-> >>>>>>>>>> HPAGE_PMD_ORDER) {
-> >>>>>>>>>> +                       page =3D rmqueue_pcplist(preferred_zon=
-e,
-> >>>>>>>>>> zone,
-> >>>>>>>>>> order,
-> >>>>>>>>>> +                                               migratetype,
-> >>>>>>>>>> alloc_flags);
-> >>>>>>>>>> +                       if (likely(page))
-> >>>>>>>>>> +                               goto out;
-> >>>>>>>>>> +               }
-> >>>>>>>>>
-> >>>>>>>>> This seems not ideal, because non-CMA THP gets no chance to use
-> >>>>>>>>> PCP.
-> >>>>>>>>> But it
-> >>>>>>>>> still seems better than causing the failure of CMA allocation.
-> >>>>>>>>>
-> >>>>>>>>> Is there a possible approach to avoiding adding CMA THP into
-> >>>>>>>>> pcp from
-> >>>>>>>>> the first
-> >>>>>>>>> beginning? Otherwise, we might need a separate PCP for CMA.
-> >>>>>>>>>
-> >>>>>>>
-> >>>>>>> The vast majority of THP-sized allocations are GFP_MOVABLE, avoid=
-ing
-> >>>>>>> adding CMA THP into pcp may incur a slight performance penalty.
-> >>>>>>>
-> >>>>>>
-> >>>>>> But the majority of movable pages aren't CMA, right?
-> >>>>>
-> >>>>>> Do we have an estimate for
-> >>>>>> adding back a CMA THP PCP? Will per_cpu_pages introduce a new
-> >>>>>> cacheline, which
-> >>>>>> the original intention for THP was to avoid by having only one
-> >>>>>> PCP[1]?
-> >>>>>>
-> >>>>>> [1]
-> >>>>>> https://patchwork.kernel.org/project/linux-mm/patch/20220624125423=
-.6126-3-mgorman@techsingularity.net/
-> >>>>>>
-> >>>>>
-> >>>>> The size of struct per_cpu_pages is 256 bytes in current code
-> >>>>> containing
-> >>>>> commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
-> >>>>> THP-sized
-> >>>>> allocations").
-> >>>>> crash> struct per_cpu_pages
-> >>>>> struct per_cpu_pages {
-> >>>>>        spinlock_t lock;
-> >>>>>        int count;
-> >>>>>        int high;
-> >>>>>        int high_min;
-> >>>>>        int high_max;
-> >>>>>        int batch;
-> >>>>>        u8 flags;
-> >>>>>        u8 alloc_factor;
-> >>>>>        u8 expire;
-> >>>>>        short free_count;
-> >>>>>        struct list_head lists[13];
-> >>>>> }
-> >>>>> SIZE: 256
-> >>>>>
-> >>>>> After revert commit 5d0a661d808f ("mm/page_alloc: use only one PCP
-> >>>>> list
-> >>>>> for THP-sized allocations"), the size of struct per_cpu_pages is
-> >>>>> 272 bytes.
-> >>>>> crash> struct per_cpu_pages
-> >>>>> struct per_cpu_pages {
-> >>>>>        spinlock_t lock;
-> >>>>>        int count;
-> >>>>>        int high;
-> >>>>>        int high_min;
-> >>>>>        int high_max;
-> >>>>>        int batch;
-> >>>>>        u8 flags;
-> >>>>>        u8 alloc_factor;
-> >>>>>        u8 expire;
-> >>>>>        short free_count;
-> >>>>>        struct list_head lists[15];
-> >>>>> }
-> >>>>> SIZE: 272
-> >>>>>
-> >>>>> Seems commit 5d0a661d808f ("mm/page_alloc: use only one PCP list fo=
-r
-> >>>>> THP-sized allocations") decrease one cacheline.
-> >>>>
-> >>>> the proposal is not reverting the patch but adding one CMA pcp.
-> >>>> so it is "struct list_head lists[14]"; in this case, the size is sti=
-ll
-> >>>> 256?
-> >>>>
-> >>>
-> >>> Yes, the size is still 256. If add one PCP list, we will have 2 PCP
-> >>> lists for THP. One PCP list is used by MIGRATE_UNMOVABLE, and the oth=
-er
-> >>> PCP list is used by MIGRATE_MOVABLE and MIGRATE_RECLAIMABLE. Is that
-> >>> right?
-> >>
-> >> i am not quite sure about MIGRATE_RECLAIMABLE as we want to
-> >> CMA is only used by movable.
-> >> So it might be:
-> >> MOVABLE and NON-MOVABLE.
-> >
-> > One PCP list is used by UNMOVABLE pages, and the other PCP list is used
-> > by MOVABLE pages, seems it is feasible. UNMOVABLE PCP list contains
-> > MIGRATE_UNMOVABLE pages and MIGRATE_RECLAIMABLE pages, and MOVABLE PCP
-> > list contains MIGRATE_MOVABLE pages.
-> >
->
-> Is the following modification feasiable?
->
-> #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -#define NR_PCP_THP 1
-> +#define NR_PCP_THP 2
-> +#define PCP_THP_MOVABLE 0
-> +#define PCP_THP_UNMOVABLE 1
->   #else
->   #define NR_PCP_THP 0
->   #endif
->
->   static inline unsigned int order_to_pindex(int migratetype, int order)
->   {
-> +       int pcp_type =3D migratetype;
-> +
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->          if (order > PAGE_ALLOC_COSTLY_ORDER) {
->                  VM_BUG_ON(order !=3D HPAGE_PMD_ORDER);
-> -               return NR_LOWORDER_PCP_LISTS;
-> +
-> +               if (migratetype !=3D MIGRATE_MOVABLE)
-> +                       pcp_type =3D PCP_THP_UNMOVABLE;
-> +               else
-> +                       pcp_type =3D PCP_THP_MOVABLE;
-> +
-> +               return NR_LOWORDER_PCP_LISTS + pcp_type;
->          }
->   #else
->          VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
->   #endif
->
-> -       return (MIGRATE_PCPTYPES * order) + migratetype;
-> +       return (MIGRATE_PCPTYPES * order) + pcp_type;
->   }
->
+Hi Christoph,
 
-a minimum change might be, then you can drop most new code.
+> -----Original Message-----
+> From: Christoph Hellwig <hch@lst.de>
+> Sent: Wednesday, June 19, 2024 1:46 PM
+> To: Gulam Mohamed <gulam.mohamed@oracle.com>
+> Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org;
+> yukuai1@huaweicloud.com; hch@lst.de; axboe@kernel.dk
+> Subject: Re: [PATCH V6 for-6.11/block] loop: Fix a race between loop deta=
+ch
+> and loop open
+>=20
+> Do we need the re-addition of the open method to fix the ltp test case?  =
+I
+> kinda hate it, but if that is what it takes:
+>=20
+I don't think its needed but I kept it because your following comment in th=
+e suggested change says " switch the state to roundown here to prevent new =
+openers from coming in":
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 120a317d0938..cfe1e0625e38 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -588,6 +588,7 @@ static void bad_page(struct page *page, const char *rea=
-son)
++	 * Mark the device for removing the backing device on last close.
++	 * If we are the only opener, also switch the state to roundown here to
++	 * prevent new openers from coming in.
+ 	 */
+Please suggest.
 
- static inline unsigned int order_to_pindex(int migratetype, int order)
- {
-+       bool __maybe_unused movable;
- #ifdef CONFIG_CMA
-        /*
-         * We shouldn't get here for MIGRATE_CMA if those pages don't
-@@ -600,7 +601,8 @@ static inline unsigned int order_to_pindex(int
-migratetype, int order)
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-        if (order > PAGE_ALLOC_COSTLY_ORDER) {
-                VM_BUG_ON(order !=3D pageblock_order);
--               return NR_LOWORDER_PCP_LISTS;
-+               movable =3D migratetype =3D=3D MIGRATE_MOVABLE;
-+               return NR_LOWORDER_PCP_LISTS + movable;
-        }
- #else
-        VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
+Regards,
+Gulam Mohamed.
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-
->
->
-> @@ -521,7 +529,7 @@ static inline int pindex_to_order(unsigned int pindex=
-)
->          int order =3D pindex / MIGRATE_PCPTYPES;
->
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -       if (pindex =3D=3D NR_LOWORDER_PCP_LISTS)
-> +       if (order > PAGE_ALLOC_COSTLY_ORDER)
->                  order =3D HPAGE_PMD_ORDER;
->   #else
->          VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
->
->
->
-> >>
-> >>>
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>>> Commit 1d91df85f399 takes a similar approach to filter, and I mai=
-nly
-> >>>>>>> refer to it.
-> >>>>>>>
-> >>>>>>>
-> >>>>>>>>>> +#else
-> >>>>>>>>>>                     page =3D rmqueue_pcplist(preferred_zone,
-> >>>>>>>>>> zone, order,
-> >>>>>>>>>>                                            migratetype,
-> >>>>>>>>>> alloc_flags);
-> >>>>>>>>>>                     if (likely(page))
-> >>>>>>>>>>                             goto out;
-> >>>>>>>>>> +#endif
-> >>>>>>>>>>             }
-> >>>>>>>>>>
-> >>>>>>>>>>             page =3D rmqueue_buddy(preferred_zone, zone, order=
-,
-> >>>>>>>>>> alloc_flags,
-> >>>>>>>>>> --
-> >>>>>>>>>> 2.7.4
-> >>>>>>>>>
-> >>>>>>>>> Thanks
-> >>>>>>>>> Barry
-> >>>>>>>>>
-> >>>>>>>
-> >>>>>>>
-> >>>>>
-> >>>
->
