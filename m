@@ -1,127 +1,76 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20D212F5A3;
-	Wed, 19 Jun 2024 09:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F49280C1C;
+	Wed, 19 Jun 2024 09:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718790797; cv=none; b=XrTkeuYo2dDsTnA3cspM2HaPb2btntCyEJtIqDli7TtWYUOWWJbHdfSEvvcaHtsfTeqRakeCp7HaFq5NMJ1a2d3YPRHeC+dcxlALCNJZspNL8BM70h2zkvAAHG7yzMhcwbYD7rfbWstrj8RehsJZpa6QgpVKGPqJOf/VHeYc0Ho=
+	t=1718790938; cv=none; b=BpeWoVJRXI/NgM7PqLq3MXQXwnwwTked+mOnuisHG1vyV0OM+NWOsQybo54FSYrUXPeKAh7lE0fO72WjlzU0eCfnj5VS4YBTP+sQ/GStplM/p5+1rVS027atD+kzTp6xXcSckb3hA43U/2WKm/qAIiHE+/nFl2AO6C6hj2TsvVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718790797; c=relaxed/simple;
-	bh=dVrwD7uw4uJsaUdCw7eAhv6muIxu9goQfIIzeVlq7gE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpFdXoBJd0w4yi/3+qJ+Id00NWjyjV5S0XU5tAiLRJiz742J3puSXqtPra1eTD1xLe1b19m0ir5f3UOjafsVzcPq7zH2bhnMO1d7J2wB34ZyqAQKZUTVUGhnh1aeUfitowdzGaZU5iiEMvnKkCG6DY4DdgFaAmSMEC0eMBgYXgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9B94DA7;
-	Wed, 19 Jun 2024 02:53:38 -0700 (PDT)
-Received: from arm.com (e127648.arm.com [10.1.27.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 907AE3F64C;
-	Wed, 19 Jun 2024 02:53:13 -0700 (PDT)
-Date: Wed, 19 Jun 2024 10:53:12 +0100
-From: Christian Loehle <christian.loehle@arm.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Qais Yousef <qyousef@layalina.io>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rafael@kernel.org,
-	vincent.guittot@linaro.org, peterz@infradead.org,
-	daniel.lezcano@linaro.org, anna-maria@linutronix.de,
-	kajetan.puchalski@arm.com, lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com
-Subject: Re: [PATCH 1/6] cpuidle: teo: Increase util-threshold
-Message-ID: <20240619095312.hsessn7layxpeyzj@e127648.arm.com>
-References: <20240606090050.327614-1-christian.loehle@arm.com>
- <20240606090050.327614-2-christian.loehle@arm.com>
- <20240609224701.pc6om2o5ep6btywe@airbuntu>
- <CAPDyKFoHc6Zcg8i-y3HxUp0=S_N2GhmKcT0w2e-NkzR498mp2Q@mail.gmail.com>
+	s=arc-20240116; t=1718790938; c=relaxed/simple;
+	bh=RgR7pL3q6FdzPNPxMoHYHj3+d6yEDIjf4KWYmXODHlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q8ryNKrg/gmjDB3Tln6nAtK7G4a+MobKoFFKeTX0Z6ASbB1b//XPBem6Z5M+7Xy41sL/yp8HoaW14bej5fvsdgIC206eqlWGLXApc2yYqkE1/GrzmwMZ89PkRHB85Rprd3YWPpUnUJCaC0wVDAC5pJ34Kc178VyQM9T0fZNHoWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OTUCVd1S; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OTUCVd1S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718790934;
+	bh=RgR7pL3q6FdzPNPxMoHYHj3+d6yEDIjf4KWYmXODHlY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OTUCVd1SLJQ05t+OduwXHaRfIRbVoR5/XhgVJb9HsZShVz1HbDbckPUqXRF+PN2bM
+	 XmZAq3vM/JSReGHz0ARFMXKO0Al8gXt9Neo6lckyi6icceTkt0bdoEPJIP3gwoBH7Z
+	 J7tn0XyQinzdIGi3KEuYvZwt9A+byQtNSDm8jUPNxeVbBtITfnSPEl3NmrqapokyqH
+	 g1EycX1z3VbO0s2EJbt/n4Fw4dLip+Ff9EB3lwQP7TJX0ROqfxw+bcurna5Ey6MQVk
+	 Si1ZrDtvbPetpAPc8neh+R8Xr9YSigY3AKlcc+8MLiaem81Gf6dI5ufk/5rsexYzaE
+	 1uCvV+6kWR2sA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CFF413782163;
+	Wed, 19 Jun 2024 09:55:32 +0000 (UTC)
+Message-ID: <0942a9d3-fca4-4c59-9a3a-47717111233a@collabora.com>
+Date: Wed, 19 Jun 2024 11:55:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoHc6Zcg8i-y3HxUp0=S_N2GhmKcT0w2e-NkzR498mp2Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v5 08/16] ASoC: mediatek: mt8365: Add DMIC DAI
+ support
+To: Alexandre Mergnat <amergnat@baylibre.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Lee Jones <lee@kernel.org>,
+ Flora Fu <flora.fu@mediatek.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20240226-audio-i350-v5-0-54827318b453@baylibre.com>
+ <20240226-audio-i350-v5-8-54827318b453@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240226-audio-i350-v5-8-54827318b453@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 11:57:55AM +0200, Ulf Hansson wrote:
-> On Mon, 10 Jun 2024 at 00:47, Qais Yousef <qyousef@layalina.io> wrote:
-> >
-> > On 06/06/24 10:00, Christian Loehle wrote:
-> > > Increase the util-threshold by a lot as it was low enough for some
-> > > minor load to always be active, especially on smaller CPUs.
-> > >
-> > > For small cap CPUs (Pixel6) the util threshold is as low as 1.
-> > > For CPUs of capacity <64 it is 0. So ensure it is at a minimum, too.
-> > >
-> > > Fixes: 9ce0f7c4bc64 ("cpuidle: teo: Introduce util-awareness")
-> > > Reported-by: Qais Yousef <qyousef@layalina.io>
-> > > Reported-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > > Suggested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
-> > > Signed-off-by: Christian Loehle <christian.loehle@arm.com>
-> > > ---
-> > >  drivers/cpuidle/governors/teo.c | 11 +++++------
-> > >  1 file changed, 5 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-> > > index 7244f71c59c5..45f43e2ee02d 100644
-> > > --- a/drivers/cpuidle/governors/teo.c
-> > > +++ b/drivers/cpuidle/governors/teo.c
-> > > @@ -146,13 +146,11 @@
-> > >   * The number of bits to shift the CPU's capacity by in order to determine
-> > >   * the utilized threshold.
-> > >   *
-> > > - * 6 was chosen based on testing as the number that achieved the best balance
-> > > - * of power and performance on average.
-> > > - *
-> > >   * The resulting threshold is high enough to not be triggered by background
-> > > - * noise and low enough to react quickly when activity starts to ramp up.
-> > > + * noise.
-> > >   */
-> > > -#define UTIL_THRESHOLD_SHIFT 6
-> > > +#define UTIL_THRESHOLD_SHIFT 2
-> > > +#define UTIL_THRESHOLD_MIN 50
-> > >
-> > >  /*
-> > >   * The PULSE value is added to metrics when they grow and the DECAY_SHIFT value
-> > > @@ -671,7 +669,8 @@ static int teo_enable_device(struct cpuidle_driver *drv,
-> > >       int i;
-> > >
-> > >       memset(cpu_data, 0, sizeof(*cpu_data));
-> > > -     cpu_data->util_threshold = max_capacity >> UTIL_THRESHOLD_SHIFT;
-> > > +     cpu_data->util_threshold = max(UTIL_THRESHOLD_MIN,
-> > > +                             max_capacity >> UTIL_THRESHOLD_SHIFT);
-> >
-> > Thanks for trying to fix this. But I am afraid this is not a solution. There's
-> > no magic number that can truly work here - we tried. As I tried to explain
-> > before, a higher util value doesn't mean long idle time is unlikely. And
-> > blocked load can cause problems where a decay can take too long.
-> >
-> > We are following up with the suggestions I have thrown back then and we'll
-> > share results if anything actually works.
-> >
-> > For now, I think a revert is more appropriate. There was some perf benefit, but
-> > the power regressions were bad and there's no threshold value that actually
-> > works. The thresholding concept itself is incorrect and flawed - it seemed the
-> > correct thing back then, yes. But in a hindsight now it doesn't work.
-> >
->
-> For the record, I fully agree with the above. A revert seems to be the
-> best option in my opinion too.
->
-> Besides for the above reasons; when using cpuidle-psci with PSCI OSI
-> mode, the approach leads to disabling *all* of cluster's idle-states
-> too, as those aren't even visible for the teo governor. I am sure,
-> that was not the intent with commit 9ce0f7c4bc64.
->
+Il 14/06/24 09:27, Alexandre Mergnat ha scritto:
+> Add Digital Micro Device Audio Interface support for MT8365 SoC.
+> 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Just for my understanding, what does OSI mode have to do with this?
-My understanding is that util-awareness (and also intercepts) will
-disable cluster idle for the entire cluster of the affected CPU.
-Why would this not be the commit's intent? The assumption of
-util-awareness is that this CPU will a) be woken up early anyway
-and b) the exit latency of cluster idle will affect performance (of
-the utilized CPU).
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-We can argue if the assumption of util-awareness is true, but I don't
-quite follow your argument with OSI. The behavior is the same with PC
-mode, isn't it?
