@@ -1,112 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F8F1869;
-	Wed, 19 Jun 2024 09:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA3E1869;
+	Wed, 19 Jun 2024 09:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718788563; cv=none; b=ZMEZaDk4z4YKhVM8wLeuKRxUZ9ma/nqex4ko0KmIhcChSgirpz9JxxiFMFX+5dUAPePQhrs+DHLywWdKNja7ZsPt4mNNUF4TOUkwSAyu6PX1bVFGes8N/iK6QlZ151SH6oGkv9dURRnU+KMn1sm8HBhkd6E9vM/ZeTztnd2Ue+Y=
+	t=1718788630; cv=none; b=fGjxXRs1YyEyOGRa2m0/oBFIw18eK9TkKAUrVo/HJuGK1GzR1Js5W14PYBpMkm/p2q0t7x9v9nd7BYJYXpEUkAhWvObCRPf14nEp2qwY4Rmi1XO+9n9WDEJZ0KGcFDkYdFlrpIFYH+hGVi+jiaameQ3Bn0Kbbqav7S+wj61MVmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718788563; c=relaxed/simple;
-	bh=5rI/dFrzsUqaLUt8JrqSdOI5dNvwE7OblGdrys9bbbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r5T8wsr1sKpfCCYQCC8tpnOqiStwH+URWVJbK9yZCYVz7jwLPg/PknXrSqT0wKf4kOiOyj9IyoqlDSdI8acOG5PlE5eNK8WYCKGZIyiGgowaIR4BBZ+xNhoCJvsrG+veWnc2UhR//HE3t1cdv2ln1G/slSafknfSXdeZIDmK4GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGZIrx7I; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGZIrx7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F312C32786;
-	Wed, 19 Jun 2024 09:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718788562;
-	bh=5rI/dFrzsUqaLUt8JrqSdOI5dNvwE7OblGdrys9bbbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pGZIrx7IlbzyvOqcjXG9ki0emtFYuW4mgBOrYQTyANOxtv/1KFF9SxOXPhD+za3Mj
-	 T1NWxO272unRBz+RVcb9stYD5qe9ewd+HM+j1VL/iZ+bQDWjUCrkIfRFdpclLkOV/5
-	 Q5SmeSaqFDpMnOu02BJpHY3/QWYrMayLvd8c3mEIQ1qLLkqwxtigqz5xbJmMWsPouB
-	 2nZ2xrsKmgIQZcXRi6ViK5nfpuzeCcOSYB2tg4Oo06FEET7xy5s+wyvSMErjWX0aB6
-	 4M2IOdLj12FSz/8y3OqclbWXm3akf03yEXxriOeCYLVAqwSqPYnwU1AIwhSPPujTys
-	 lzSLIMY9unQew==
-Date: Wed, 19 Jun 2024 12:15:57 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: syzbot <syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com>,
-	jgg@ziepe.ca
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [rdma?] WARNING in ib_uverbs_release_dev
-Message-ID: <20240619091557.GM4025@unreal>
-References: <000000000000057e4c061b386e23@google.com>
+	s=arc-20240116; t=1718788630; c=relaxed/simple;
+	bh=kjYWE/vd5NcfKU3j65rdo2hEULktE2RsGogJoHxpzVg=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=GK9ohQ+tF1H03K+deehFOD2u3s1d2hRLVgX72YKG1jqjUkLcQbyehQlpYgzdfZ5ZW7tozEnXebTuBJB0H+MFMoKIUrEHeV++ZRal4zC+tIkqdyUKTuX1OzAdRG5VZbBtlcb8zeIFKEV3nOAntqK99HNsTbrlm0hDIV+CPYOMEqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (31.173.87.162) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 19 Jun
+ 2024 12:16:47 +0300
+Subject: Re: [PATCH] drm: Remove unused function rcar_cmm_write
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	<laurent.pinchart@ideasonboard.com>
+CC: <kieran.bingham+renesas@ideasonboard.com>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Abaci
+ Robot <abaci@linux.alibaba.com>
+References: <20240619075436.86407-1-jiapeng.chong@linux.alibaba.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <bd98f345-5c71-188a-b3af-a8ef9d205ce6@omp.ru>
+Date: Wed, 19 Jun 2024 12:16:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000057e4c061b386e23@google.com>
+In-Reply-To: <20240619075436.86407-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 06/19/2024 08:59:50
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 186000 [Jun 19 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 20 0.3.20
+ 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.87.162 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.87.162 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	bugzilla.openanolis.cn:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.87.162
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 06/19/2024 09:04:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 6/19/2024 6:00:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Tue, Jun 18, 2024 at 11:37:18PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=179e93fe980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-> dashboard link: https://syzkaller.appspot.com/bug?extid=19ec7595e3aa1a45f623
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com
-> 
-> smc: removing ib device syz0
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 51 at kernel/rcu/srcutree.c:653 cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
-> Modules linked in:
-> CPU: 0 PID: 51 Comm: kworker/u8:3 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-> Workqueue: ib-unreg-wq ib_unregister_work
-> RIP: 0010:cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
-> Code: 12 80 00 48 c7 03 00 00 00 00 48 83 c4 48 5b 41 5c 41 5d 41 5e 41 5f 5d e9 14 67 34 0a 90 0f 0b 90 eb e7 90 0f 0b 90 eb e1 90 <0f> 0b 90 eb db 90 0f 0b 90 eb 0a 90 0f 0b 90 eb 04 90 0f 0b 90 48
-> RSP: 0018:ffffc90000bb7970 EFLAGS: 00010202
-> RAX: 0000000000000001 RBX: ffff88802a1bc980 RCX: 0000000000000002
-> RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffe8ffffd74c58
-> RBP: 0000000000000001 R08: ffffe8ffffd74c5f R09: 1ffffd1ffffae98b
-> R10: dffffc0000000000 R11: fffff91ffffae98c R12: dffffc0000000000
-> R13: ffff88802285b5f0 R14: ffff88802285b000 R15: ffff88802a1bc800
-> FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fa3852cae10 CR3: 000000000e132000 CR4: 0000000000350ef0
-> Call Trace:
->  <TASK>
->  ib_uverbs_release_dev+0x4e/0x80 drivers/infiniband/core/uverbs_main.c:136
->  device_release+0x9b/0x1c0
->  kobject_cleanup lib/kobject.c:689 [inline]
->  kobject_release lib/kobject.c:720 [inline]
->  kref_put include/linux/kref.h:65 [inline]
->  kobject_put+0x231/0x480 lib/kobject.c:737
->  remove_client_context+0xb9/0x1e0 drivers/infiniband/core/device.c:776
->  disable_device+0x13b/0x360 drivers/infiniband/core/device.c:1282
->  __ib_unregister_device+0x6d/0x170 drivers/infiniband/core/device.c:1475
->  ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1586
->  process_one_work kernel/workqueue.c:3231 [inline]
->  process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
->  worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
->  kthread+0x2f2/0x390 kernel/kthread.c:389
->  ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->  </TASK>
+On 6/19/24 10:54 AM, Jiapeng Chong wrote:
 
-I see that this is caused by call to ib_unregister_device_queued() as a
-response to NETDEV_UNREGISTER event, but we don't flush anything before.
-How can we be sure that ib_device is not used anymore?
+> The function are defined in the rcar_cmm.c file, but not called
 
-Thanks
+   s/are/is/.
+
+> elsewhere, so delete the unused function.
+
+   Anywhere, maybe?
+
+> drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c:35:19: warning: unused function 'rcar_cmm_read'.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9364
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+
+[...]
+
+MBR, Sergey
