@@ -1,382 +1,165 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFAF155759;
-	Wed, 19 Jun 2024 19:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41360155759;
+	Wed, 19 Jun 2024 19:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718824220; cv=none; b=aY5Q1K9fEuKbYsYAU8hyfxp52aOnYR2zI794kciKBzWHDFuPbWL4hNlJBZ8Bs6klVnS89S0uSx+MFqh1d3A5bSIRTV3IZfOTfSV0ZPNiKolp8+aEJtOYweHp939qTUrwaMcnnuSWSgRCmqrtYaaBO+P791958sXrkvicwVbyVzg=
+	t=1718824261; cv=none; b=QP3r1sy2LBviC/LFUP/3wqfcoePqt2CT9YXf8ETaRDwf1zrd1EVXN+pxM5+bHr1vpp9VWnLPF4vySH9Yyqn9/NUlXZZfCdYxn3Wz6T5OOApZDEyZp6FjiNn9U4vXnuA37ya5bw4q1vh1F4b3GyG662JWu94xbCJzX2GgVf/+EI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718824220; c=relaxed/simple;
-	bh=WAmFx+ZAhBE6QYFnuAIgPCTyeKlQ0c2u0P1mZZ6eo2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pE58gKPtYolM4LR4gTx1tZoP1ZQFKrKQLiuSHQ6stQO5mdbDCIlyXgTZw0jwTJK8RtYytj0J8lJ9wkl1l5x0dW9fQ2naVmrx5EANIZtduMU4L7sNaeA8okH0Fy5ybNzz4f3Rsygj+orduftSeDGqouL7+kN+MROMdHnp3+dzqJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wf1XOlcW; arc=none smtp.client-ip=209.85.218.41
+	s=arc-20240116; t=1718824261; c=relaxed/simple;
+	bh=JKW2nPoX2X2ixRz7pyFwqsv9YNVEIIHz4xhzfHpO/eI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jAFfHxG2ck7hcTyXoGgOW2Zo68n9Vg0IeQW78wtlHokGQfLRTW129NjILaZR8T3ufGYzQ1rg1lzxOfcO1CBLTkEXR/ug71HR1YodMBxt0025lWlRowwWrasCa+yJjW7a11AdiPhQJX1Q03N8e4I3X5+XXhPGgC1KgWSkuDTFi7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W/xikShP; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wf1XOlcW"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6fb696d2d8so8958266b.1;
-        Wed, 19 Jun 2024 12:10:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/xikShP"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9aeb96b93so655235ad.3;
+        Wed, 19 Jun 2024 12:11:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718824217; x=1719429017; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ahlND5Zmd1zch0hsIJlAQEvMAiC/XZH76a69+Fwt53Q=;
-        b=Wf1XOlcWsbSG9aBaqeoXp3/VT/rXDkYi/ghPnCEP/RH7rgYdV72/nP80pkt1P+vVNf
-         +fhDPN6yGX99ZInJKxoWBx/FsEMyW0KiN0HUqOL8JV45LYWcTkcWesYI+JFV7K2/XsVJ
-         wKUllft9iIMK9/854hnjW8yxZiK6u95kVmGcAd9uzRTqwO3dDyqiM7FV03Cv0g2Mt0mc
-         suXb36ptvec8L1K3+cHN3dMAyemtvN7VHC8rFZFHhygrdUhoCO7btO6aYcWS5AaJPt4v
-         VcRFj+CMgo2D8mJMtiVHKmK3VZuBpCc6nYqXjgVvREjx3dSlaKMxrbFUYkwXx1KoG8vP
-         B1zQ==
+        d=gmail.com; s=20230601; t=1718824259; x=1719429059; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hUGdZMjZzoHYGKKUGNyDbK2J+i2WH4vetBoEX5oj4xo=;
+        b=W/xikShPU8KwwMUASYJS4iiOO6+BsIPWGYv5EMh6/pFxLCD1aJJTxHlWfrWpZ5q3kl
+         44XXLG9T82ktYjG5sSo18adsU0l1nI0WCybHDSns/Fl4n7IilIZGgrdIp+qqLcoWIpTQ
+         VtDkuBGO1V43lYFCAg/7ShE2uzKerVpK4dj4c5/W6L3R61Uca/Pwwb9s/yPiiH9sPn6k
+         FphcwqX1nwiVwEMIAd5S3rNkKl8VXI//w3UnhMuGdvikEtcurLys1XZ+b5O7CgMefjQM
+         LRCfk/Au7qMpbuiAlKQ5I6gS0h4K5M30ym0cprvP/AArbAUduHCBYZee9l9sGwiYiqAr
+         Fk1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718824217; x=1719429017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ahlND5Zmd1zch0hsIJlAQEvMAiC/XZH76a69+Fwt53Q=;
-        b=DrkmFZ8kuHuLGyJFtkZLq07KFuFhiOpC0wUWoXgy+ODR1ubT+IdNXjUbFAeVFvmh5Q
-         n63g3O3DVgmacdvCY5aeOYiFcKsvwTyjkamuI710b5NP3BPWeCzSN+6vFMVAFKjR4ez7
-         8/dUTqQXc0des1qNGd3oJlmkncGHUllLCduHa8qtgDCyXJQSBGXlhPN77dtKODgYwDJK
-         Kropz4ILyFUKmHppj2Utb6pS/JXGrx7Pq+zHj6ZtG5N1z+Tltwlo/uIkT92QEgP2p6sU
-         0cMOvcu8ldujqh8a4WGhRaLmcQ3LkWlHzNjKzfGtoMMmMRyS5HnFQXKKo3TfEn0FSFSx
-         glQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZNkP2B/3RuLwegjtZuvBR7kzdDPZnYzitSQf659HL5C9qD6RxLkwCFwon7cfy5aUdE8iOqqAqDKlKZjnudmYYg2qPDv23UZALYBVGSY5Iiv3rYzwnw9I9NlGVz9YMRs4j8ctKAXzck53MmCaOTBrVWUtkgtCN31C8o3akFj3YBcW0QQ==
-X-Gm-Message-State: AOJu0YyyriPeWgtFNsumEUQKigc7apfQ5dy9kk05B0s1qbBgazcWqLly
-	gsbvQc538Xgh452r3vG2EYJyoBEgsrn3EJlAatg+kuuAzwzYPQZAtlIbLlwv15Fu0uphe3YVGUY
-	fvj0wIZEl2WRaw37+LBnqi2jioXA=
-X-Google-Smtp-Source: AGHT+IG4EwmKdtxr3rqPxduBQKlfNFGX/bVsYbwYUwt0xso+kVroPnVAVQiWZQJtFZGOfOIImTMOT+FeU9/N8iQIJas=
-X-Received: by 2002:a17:906:3112:b0:a6e:f793:461f with SMTP id
- a640c23a62f3a-a6fab6459b0mr207708666b.38.1718824216746; Wed, 19 Jun 2024
- 12:10:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718824259; x=1719429059;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hUGdZMjZzoHYGKKUGNyDbK2J+i2WH4vetBoEX5oj4xo=;
+        b=SpKugucKUdD2yHLzSy6Xuw1QB1G3cJkciG0hGk9t4/Wg/JiEqVj/TvNJHrQApsH5jI
+         yPuJhBwKlcw7ZC2jGHINGQfadsu6N/R5ZdHf7jktFrWO8Pr1ZixJZ5iMfwFEfNv/D122
+         ThKTVVM5cBhpBekC/MhMwNQIow+3Vlm/rJsWy+BQJdjP1z/RZdqrH7T0yPEkRdgFYzl+
+         lfz5ot+4L3Afp3X8mRKu4X7BTeCAaVvS9ULTmha2imMHy50q0Y5s9WUZftynQuVe8I3L
+         B35cQEVaWq2sAFyArhK+7Ux05D9OVlsXjV47mbn07XCxpLpvomMSOS8+XqeyGz+fHm62
+         eh6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKKN8yOimLbdjMMyWnyG+8Q+yt0umM0JxjRHLOk/mC1CvO7P8QdRz/gLFsTdsNFr15/xzVuiEIzE2NRgygQtM4tGBiSJ/5MBPbmzJBcbRqtG3XRs59OQ5AJdV1YWqVTE3+u2riA2r7sLzCVN/8kQ==
+X-Gm-Message-State: AOJu0YwTafBC15u6z7PfK/kMhZ3KK7nRsJ7r1KbeYXdJpXZtlU//VPpw
+	xwTWgPbvhu9mqiqC7vhiGhbE8xOrckO0AYHL6/oUGJRO9T95it3J
+X-Google-Smtp-Source: AGHT+IEcexetf6hadylHwrbQObZoy+JCEiQ1uOfbi2F+xopKplHeVr/OBJsC/CdDC2h+xNB0MFcDmg==
+X-Received: by 2002:a17:902:a507:b0:1f8:46c9:c96f with SMTP id d9443c01a7336-1f9aa4729b7mr32007575ad.61.1718824259539;
+        Wed, 19 Jun 2024 12:10:59 -0700 (PDT)
+Received: from [192.168.50.95] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855efea73sm120492015ad.182.2024.06.19.12.10.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 12:10:59 -0700 (PDT)
+Message-ID: <5c1f3b54-da71-47b7-a30c-0011a23195c8@gmail.com>
+Date: Thu, 20 Jun 2024 04:10:53 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619054641.277062-1-shanchun1218@gmail.com> <20240619054641.277062-3-shanchun1218@gmail.com>
-In-Reply-To: <20240619054641.277062-3-shanchun1218@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 19 Jun 2024 21:09:39 +0200
-Message-ID: <CAHp75VcJGoDaAbD7vWin8yTGarrLZbVQqucHs+M9rAAS0BZd9g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: sdhci-of-ma35d1: Add Novoton MA35D1 SDHCI driver
-To: Shan-Chun Hung <shanchun1218@gmail.com>
-Cc: ulf.hansson@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, adrian.hunter@intel.com, p.zabel@pengutronix.de, 
-	pbrobinson@gmail.com, serghox@gmail.com, mcgrof@kernel.org, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, forbidden405@outlook.com, 
-	tmaimon77@gmail.com, linux-arm-kernel@lists.infradead.org, 
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 19, 2024 at 7:47=E2=80=AFAM Shan-Chun Hung <shanchun1218@gmail.=
-com> wrote:
->
-> This adds the SDHCI driver for the MA35 series SoC. It is based upon the
-> SDHCI interface, but requires some extra initialization.
->
-> Signed-off-by: schung <schung@nuvoton.com>
-
-Even I agree with Markus' remarks, so please correct your SoB by using
-something similar to the From line.
-
-...
-
-> +config MMC_SDHCI_OF_MA35D1
-> +       tristate "SDHCI OF support for the MA35D1 SDHCI controller"
-> +       depends on ARCH_A35 || COMPILE_TEST
-> +       depends on MMC_SDHCI_PLTFM
-
-> +       depends on OF && COMMON_CLK
-
-OF is not compile dependency AFAICS, if you want make it functional, use
-
-  depends on OF || COMPILE_TEST
-
-...
-
-You are missing a lot of header inclusions, please follow IWYU principle.
-
-+ array_size.h
-+ bits.h
-
-> +#include <linux/clk.h>
-
-+ device.h
-
-> +#include <linux/dma-mapping.h>
-
-+ err.h
-
-> +#include <linux/mfd/syscon.h>
-
-+ math.h
-+ mod_devicetable.h
-
-> +#include <linux/module.h>
-> +#include <linux/mmc/mmc.h>
-> +#include <linux/pinctrl/consumer.h>
-
-+ platform_device.h
-
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-
-+ types.h
-
-...
-
-> +#define BOUNDARY_OK(addr, len) \
-> +       ((addr | (SZ_128M - 1)) =3D=3D ((addr + len - 1) | (SZ_128M - 1))=
-)
-
-Besides sizes.h being missed, this can be done with help of ALIGN()
-macro (or alike). So, kill this and use the globally defined macro
-inline.
-
-...
-
-> +       /* If the clock frequency exceeds MMC_HIGH_52_MAX_DTR,
-> +        *      disable command conflict check.
-> +        */
-
-  /*
-   * The comment style is wrong and
-   * the indentation in the second line.
-   * Fix it as in this example.
-   */
-
-...
-
-> +static void ma35_voltage_switch(struct sdhci_host *host)
-> +{
-> +       /* Wait for 5ms after set 1.8V signal enable bit */
-> +       usleep_range(5000, 5500);
-
-Use fsleep()
-
-> +}
-> +
-> +static int ma35_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> +{
-> +       struct sdhci_host *host =3D mmc_priv(mmc);
-> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct ma35_priv *priv =3D sdhci_pltfm_priv(pltfm_host);
-> +
-> +       /* Limitations require a reset SD/eMMC before tuning. */
-> +       if (!IS_ERR(priv->rst)) {
-
-It's way too big for indentation, moreover it uses an unusual pattern,
-usually we check for an error case first. So, invert the conditional
-and this all code will become much better.
-
-> +               int idx;
-> +               u32 *val;
-> +
-> +               val =3D kmalloc(ARRAY_SIZE(restore_data), GFP_KERNEL);
-> +               for (idx =3D 0; idx < ARRAY_SIZE(restore_data); idx++) {
-> +                       if (restore_data[idx].width =3D=3D 32)
-
-sizeof(u32) ?
-
-> +                               val[idx] =3D sdhci_readl(host, restore_da=
-ta[idx].reg);
-> +                       else if (restore_data[idx].width =3D=3D 8)
-
-sizeof(u8) ?
-
-> +                               val[idx] =3D sdhci_readb(host, restore_da=
-ta[idx].reg);
-> +               }
-> +
-> +               reset_control_assert(priv->rst);
-> +               reset_control_deassert(priv->rst);
-> +
-> +               for (idx =3D 0; idx < ARRAY_SIZE(restore_data); idx++) {
-> +                       if (restore_data[idx].width =3D=3D 32)
-> +                               sdhci_writel(host, val[idx], restore_data=
-[idx].reg);
-> +                       else if (restore_data[idx].width =3D=3D 8)
-> +                               sdhci_writeb(host, val[idx], restore_data=
-[idx].reg);
-
-As per above?
-
-> +               }
-> +
-> +               kfree(val);
-> +       }
-> +
-> +       return sdhci_execute_tuning(mmc, opcode);
-> +}
-
-...
-
-> +static int ma35_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-
-Since you have it, use it!
-
-> +       struct sdhci_pltfm_host *pltfm_host;
-> +       struct sdhci_host *host;
-> +       struct ma35_priv *priv;
-> +       int err;
-> +       u32 extra, ctl;
-> +
-> +       host =3D sdhci_pltfm_init(pdev, &sdhci_ma35_pdata,
-> +                               sizeof(struct ma35_priv));
-
-One line?
-
-> +       if (IS_ERR(host))
-> +               return PTR_ERR(host);
-> +
-> +       /*
-> +        * extra adma table cnt for cross 128M boundary handling.
-> +        */
-
-Wrong comment style.
-
-> +       extra =3D DIV_ROUND_UP_ULL(dma_get_required_mask(&pdev->dev), SZ_=
-128M);
-> +       if (extra > SDHCI_MAX_SEGS)
-> +               extra =3D SDHCI_MAX_SEGS;
-
-min() ? clamp() ?
-
-> +       host->adma_table_cnt +=3D extra;
-> +       pltfm_host =3D sdhci_priv(host);
-> +       priv =3D sdhci_pltfm_priv(pltfm_host);
-
-> +       if (dev->of_node) {
-
-Why?
-
-> +               pltfm_host->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +               if (IS_ERR(pltfm_host->clk)) {
-
-> +                       err =3D PTR_ERR(pltfm_host->clk);
-> +                       dev_err(&pdev->dev, "failed to get clk: %d\n", er=
-r);
-
-Use
-
-  return dev_err_probe(...);
-
-> +                       goto free_pltfm;
-
-This is wrong. You may not call non-devm before devm ones, otherwise
-it makes a room for subtle mistakes on remove-probe or unbind-bind
-cycles. Have you tested that?
-
-> +               }
-> +               err =3D clk_prepare_enable(pltfm_host->clk);
-> +               if (err)
-> +                       goto free_pltfm;
-
-Use _enabled variant of devm_clk_get() instead.
-
-> +       }
-> +
-> +       err =3D mmc_of_parse(host->mmc);
-> +       if (err)
-> +               goto err_clk;
-> +
-> +       priv->rst =3D devm_reset_control_get(&pdev->dev, NULL);
-
-No error check?!
-
-> +       sdhci_get_of_property(pdev);
-> +
-> +       priv->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-> +       if (!IS_ERR(priv->pinctrl)) {
-> +               priv->pins_default =3D pinctrl_lookup_state(priv->pinctrl=
-, "default");
-> +               priv->pins_uhs =3D pinctrl_lookup_state(priv->pinctrl, "s=
-tate_uhs");
-> +               pinctrl_select_state(priv->pinctrl, priv->pins_default);
-> +       }
-> +
-> +       if (!(host->quirks2 & SDHCI_QUIRK2_NO_1_8_V)) {
-> +               u32 reg;
-> +
-> +               priv->regmap =3D syscon_regmap_lookup_by_phandle(
-> +                               pdev->dev.of_node, "nuvoton,sys");
-
-dev_of_node(dev)
-
-> +
-> +               if (!IS_ERR(priv->regmap)) {
-> +                       /* Enable SDHCI voltage stable for 1.8V */
-> +                       regmap_read(priv->regmap, MA35_SYS_MISCFCR0, &reg=
-);
-> +                       reg |=3D BIT(17);
-> +                       regmap_write(priv->regmap, MA35_SYS_MISCFCR0, reg=
-);
-> +               }
-> +
-> +               host->mmc_host_ops.start_signal_voltage_switch =3D
-> +                                       ma35_start_signal_voltage_switch;
-> +       }
-> +
-> +       host->mmc_host_ops.execute_tuning =3D ma35_execute_tuning;
-> +
-> +       err =3D sdhci_add_host(host);
-> +       if (err)
-> +               goto err_clk;
-> +
-> +       /* Enable INCR16 and INCR8 */
-> +       ctl =3D sdhci_readw(host, MA35_SDHCI_MBIUCTL);
-> +       ctl &=3D ~MA35_SDHCI_INCR_MSK;
-> +       ctl |=3D MA35_SDHCI_INCR16|MA35_SDHCI_INCR8;
-> +       sdhci_writew(host, ctl, MA35_SDHCI_MBIUCTL);
-> +
-> +       return 0;
-
-> +err_clk:
-> +       clk_disable_unprepare(pltfm_host->clk);
-
-This will go with the _enabled variant being used.
-
-> +free_pltfm:
-> +       sdhci_pltfm_free(pdev);
-
-This should go to be correct in ordering.
-
-> +       return err;
-> +}
-> +
-> +static int ma35_remove(struct platform_device *pdev)
-
-Use remove_new callback.
-
-> +{
-> +       struct sdhci_host *host =3D platform_get_drvdata(pdev);
-> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +
-> +       sdhci_remove_host(host, 0);
-
-> +       clk_disable_unprepare(pltfm_host->clk);
-> +       sdhci_pltfm_free(pdev);
-
-At least these two will go away as per probe error path.
-
-> +       return 0;
-> +}
-
-...
-
-> +MODULE_AUTHOR("shanchun1218@google.com");
-
-Needs to be fixed as Markus said.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] util: constant -1 with expression of type char and
+ allocation failure handling
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Yang Jihong <yangjihong1@huawei.com>, Ze Gao <zegao2021@gmail.com>,
+ Leo Yan <leo.yan@linux.dev>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Austin Kim <austindh.kim@gmail.com>, shjy180909@gmail.com,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240619183857.4819-2-yskelg@gmail.com>
+ <CAP-5=fWm-Tij+vjqOa-18RsiO+1_ytWnKkDvp3vz5hv1O9aMCw@mail.gmail.com>
+Content-Language: en-US
+From: Yunseong Kim <yskelg@gmail.com>
+In-Reply-To: <CAP-5=fWm-Tij+vjqOa-18RsiO+1_ytWnKkDvp3vz5hv1O9aMCw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi Ian,
+
+On 6/20/24 4:03 오전, Ian Rogers wrote:
+> 
+> 
+> On Wed, Jun 19, 2024, 11:39 AM <yskelg@gmail.com
+> <mailto:yskelg@gmail.com>> wrote:
+> 
+>     From: Yunseong Kim <yskelg@gmail.com <mailto:yskelg@gmail.com>>
+> 
+>     This patch resolve this warning.
+> 
+>     tools/perf/util/evsel.c:1620:9: error: result of comparison of constant
+>     -1 with expression of type 'char' is always false
+>      -Werror,-Wtautological-constant-out-of-range-compare
+>      1620 |                 if (c == -1)
+>           |                     ~ ^  ~~
+> 
+>     Add handling on unread_unwind_spec_debug_frame().
+>     This make caller find_proc_info() works well when the allocation
+>     failure.
+> 
+>     Signed-off-by: Yunseong Kim <yskelg@gmail.com <mailto:yskelg@gmail.com>>
+> 
+> 
+> 
+> Both changes look good. Could you make them 2 commits? If so add my: 
+
+No problem! I'll send it right away.
+
+Thank you for the code review.
+
+> Reviewed-by: Ian Rogers <irogers@google.com <mailto:irogers@google.com>>
+> 
+> Thanks, 
+> Ian
+> 
+>     ---
+>      tools/perf/util/evsel.c                  | 2 +-
+>      tools/perf/util/unwind-libunwind-local.c | 5 +++++
+>      2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+>     diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>     index 25857894c047..bc603193c477 100644
+>     --- a/tools/perf/util/evsel.c
+>     +++ b/tools/perf/util/evsel.c
+>     @@ -1620,7 +1620,7 @@ static int evsel__read_group(struct evsel
+>     *leader, int cpu_map_idx, int thread)
+> 
+>      static bool read_until_char(struct io *io, char e)
+>      {
+>     -       char c;
+>     +       int c;
+> 
+>             do {
+>                     c = io__get_char(io);
+>     diff --git a/tools/perf/util/unwind-libunwind-local.c
+>     b/tools/perf/util/unwind-libunwind-local.c
+>     index cde267ea3e99..a424eae6d308 100644
+>     --- a/tools/perf/util/unwind-libunwind-local.c
+>     +++ b/tools/perf/util/unwind-libunwind-local.c
+>     @@ -390,6 +390,11 @@ static int read_unwind_spec_debug_frame(struct
+>     dso *dso,
+>                             char *debuglink = malloc(PATH_MAX);
+>                             int ret = 0;
+> 
+>     +                       if (debuglink == NULL) {
+>     +                               pr_err("unwind: Can't read unwind
+>     spec debug frame.\n");
+>     +                               return -ENOMEM;
+>     +                       }
+>     +
+>                             ret = dso__read_binary_type_filename(
+>                                     dso, DSO_BINARY_TYPE__DEBUGLINK,
+>                                     machine->root_dir, debuglink, PATH_MAX);
+>     -- 
+>     2.44.0
+> 
+
+Warm Regards,
+Yunseong Kim
