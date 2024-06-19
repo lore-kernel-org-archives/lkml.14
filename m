@@ -1,115 +1,178 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAA31DDD1;
-	Wed, 19 Jun 2024 14:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FD41E520
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718805980; cv=none; b=txWudITYL2kCZ2qsTmzZQ6efbqE/H0WjRBqeS8dW0g0iDEyjuN+3RA+XCrIO4H2+wjBZVvmR3jVEiv0k0sSbgMQHnTSKpuolV2XKXDJEXgtForkPB5V5oWsr9YOvOQJKwmqUcK4beq5DBKqGu6FXBU7PvSCKiZdw8ysO9HyWBUo=
+	t=1718806019; cv=none; b=OMMQAL2SF6ZXW+/vSeqTKXg7lpzVhyyCTIpCNC96DtbgiVcBk6hu3HsVmMSCo/hQalNhxr6EPbCgbn6HQWAmY+Z3cjrpiq38Gfji4stDalvtCwg475f2Bu3uxpYn51MjA2L5nDq1OZBWRKksP5+wlNil0bBJ5h5rGkDv2c268s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718805980; c=relaxed/simple;
-	bh=ahSL1WyTl3cJXialu5fedyaGFKTnP0EwJfAW8b8qtDQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A34PSYDU7M8kDDDB608B/ESBq+/u4ubOxj3fpriWNpdLuL1TrFVBwcZyJWbNjkhre5HdJx2NxXDiFHeb6QsmME1YMuwA650Ie+BZzy5AStJBXAvnUFTqhmngpKke1sktTC5YDXrYIJTj7zt4m74xiEpKrV1/3vG2FHQbiwHgJPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=H9mjke0j; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1718806019; c=relaxed/simple;
+	bh=4zrEjddbae3HIZuiTuoumTh2ZF1woXfdiz/FwqUp/iQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=irLDcB9G5pEeHQnC6n9KSttZNLE5McK+ut/z+qT6Ef+ulkXtQWjznQ/xHJlTFK2/eXutwdal5KMiFF27ApPVVItg2bQwOREK3tTQV0X1SHkiC2WtGtJY8638a63dI5ZUMjD9lK4EApwmWHjVnF7h7IXb2F1huhcMIBKDMApXxOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p8Zx8E98; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="H9mjke0j"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 69379A00ED;
-	Wed, 19 Jun 2024 16:06:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=8KCtIFk5Jn2HULoa1bshxqf0/aEGts2U2h/0kblk5Ug=; b=
-	H9mjke0jaGcOwQkFUrqDivrKt18yWQ+RR5hNM1tApJ23cp9x+bmmVrbRnecHazlz
-	ca8H5YiGDUTyNSV+DYvjihUGQDm1x1aU6k/ZuMKvMPAtnoayuheociC4jzVctOxk
-	KOsU9yFrDIJtuz9iNoztZokSikWgNc+uXQwv+Qc6nqoBiGE8XQW1a7t3uGN6NYI0
-	dx3ax9Nl5Spi4f/j9pvp8ovesDomDIt8I6gt1PS7TvGVKE9Pq+aWEM5hKb+D3njJ
-	Ht0Rjhjcc8XEoE9nIQOQg5g2LdQpwd2FF83l1RP3HwXmjjOFahTve12+7AdIellq
-	69Uvxf7Lm1fbKBfMmT+MFGXfgUVKjAlYhhtYKWeVBLSfsQPsRBdyaeeYZ9KgaP2X
-	xa7GO/mubc3JhOel633jHHFbyxAPzVBwa5+kgs/HH3er3CJxfRLOPuk7CCUxl+Qw
-	+dPBuMefs35baSI5u9M0VksWuM4twQD7RnFN4AABsAFuShvtZ1CQmdgWgIEYL+PU
-	1mGm/N9k2GQqHVfo3cFCycokUgHoc+qWBz/+lhEKG4yLHM0oVuQWwV+YHWKS8pjO
-	DGklf/rTjTsFakIME4DuH2uR0iRAStvqxi6J9dRRb+LQRex0dKpnDexZEAPhRkMA
-	++k3KD+xUcqwY4ObGZcvcvAhdfax4DfAe7vkTbzplSo=
-From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	<linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
-Subject: [PATCH v2] rtc: interface: Add RTC offset to alarm after fix-up
-Date: Wed, 19 Jun 2024 16:04:52 +0200
-Message-ID: <20240619140451.2800578-1-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p8Zx8E98"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52c815e8e9eso6377838e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718806014; x=1719410814; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QOr4iu6teVpsHNPWQXbJiEP6o5tokwgekB7kWz6BuxI=;
+        b=p8Zx8E98VFl3fyJWc+thfgmGktY9cXIQLV4HsLTkIZ8x4DcQrn3eVC7HViNEGHXedN
+         htEurqDSjI0zyXzrfq3/k4MdGYVCkJjri+SwyfhICbr7REQ3PmjFUDij5mx7yHwGXYh7
+         2Oz02AS9cr5uxvZhaBjy1Gdyn+MscWqclVSAYjUfNkrgtwpyEwElR6+0EgdBvdb4RR7O
+         PI5Y6q/OSq30s8xq2g7M5yoS/hH34Bm2SfbZsJNa//XSDLJWV/V6CzL9u+BsReEdESCn
+         HtlnlPydH9fvbHYf+mOvtu42fhwm7+nbzMvkRaJNCmpiIk9h9AOoqubrzD6BANkSdAaf
+         H2ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718806014; x=1719410814;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QOr4iu6teVpsHNPWQXbJiEP6o5tokwgekB7kWz6BuxI=;
+        b=wwXs4Ai8C7PJf7l7m3o372IIVQbBysTjojUU98nEXVrNzeTxEUwttyU6SNTs1vxLfY
+         Mo0L4rfzehQItZhHp2qP+bXwh3vFRXnEc5gcb1NHwNjpUI1oXkdu1jgxiT05reoyAveb
+         hbMzw7pz8czwODhw0kOx+I+++H6G1SypfsTebw/B89Wh3kbmVluivDe5uhw6IOEH2tuQ
+         ESplPE5SW99z6fH+ikR0gfKb/VEIfNEqty/XKCCzhPCvmTqSwFylM0bUUqwncpGO4WbK
+         iirAs1LdSh7HWDJM7SETdIzxpo7GqlzTNvUVYMHrIsn0Nd/1xx3u88VJaeiuvu6RPnNo
+         ulSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEFCtrZUpTZ7KJAvCblaSgttsoHHRMqE26lRvNLR1zdpVn1QgBwSRDz+4F+Y2UR6jJnFINMPVW97rJvwcq/X/guc5p7l88suw8l7lc
+X-Gm-Message-State: AOJu0YxVkmPRkSDthzIRnyFpcuauwrMjD8+zo2bu++YSaMgDq5gu094Y
+	l28SxS4gIFipR1G6VEyO74oHlt2G1K5RXk8FY6m10mZgQXfpmZZ/ayUPdSujbF5l0RnXOSfxmRH
+	9+Wo=
+X-Google-Smtp-Source: AGHT+IGZzKxZqU0gSKtpTGhR7ZeeSkZb8RiSot2BWwH0rwzLtW6i8tLMVFpt5/T6tnzm3UjlTpvVAQ==
+X-Received: by 2002:a19:f60b:0:b0:52c:dbc:643d with SMTP id 2adb3069b0e04-52ccaa343bbmr1485260e87.27.1718806013488;
+        Wed, 19 Jun 2024 07:06:53 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:ed45:cb25:b4fd:b1fa? ([2a01:e0a:982:cbb0:ed45:cb25:b4fd:b1fa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874e73b1sm269729675e9.45.2024.06.19.07.06.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 07:06:52 -0700 (PDT)
+Message-ID: <39d1c5e1-e27b-4736-87e0-ca42ccf8885a@linaro.org>
+Date: Wed, 19 Jun 2024 16:06:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 3/3] arm64: dts: meson: add initial support for Dreambox
+ One/Two
+To: Christian Hewitt <christianshewitt@gmail.com>,
+ kernel test robot <lkp@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ devicetree <devicetree@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, AML
+ <linux-amlogic@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>,
+ oe-kbuild-all@lists.linux.dev
+References: <20240606094513.3949323-3-christianshewitt@gmail.com>
+ <202406071527.fnfhnkUL-lkp@intel.com>
+ <FB2C9481-FCA2-496D-B916-E429BB8C0C82@gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <FB2C9481-FCA2-496D-B916-E429BB8C0C82@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1718805974;VERSION=7972;MC=1526577659;ID=844469;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29916D3B546D7D67
 
-`rtc_add_offset()` is called by `__rtc_read_time()`
-and `__rtc_read_alarm()` to add the RTC's offset to
-the raw read-outs from the device drivers. However,
-in the latter case, a fix-up algorithm is run if
-the RTC device does not report a full `struct rtc_time`
-alarm value. In that case, the offset was forgot to be
-added.
+On 07/06/2024 10:31, Christian Hewitt wrote:
+>> On 7 Jun 2024, at 12:10 PM, kernel test robot <lkp@intel.com> wrote:
+>>
+>> Hi Christian,
+>>
+>> kernel test robot noticed the following build warnings:
+>>
+>> [auto build test WARNING on robh/for-next]
+>> [also build test WARNING on krzk/for-next linus/master v6.10-rc2 next-20240606]
+>> [cannot apply to krzk-dt/for-next krzk-mem-ctrl/for-next]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use '--base' as documented in
+>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Hewitt/dt-bindings-arm-amlogic-add-support-for-Dreambox-One-Two/20240606-175427
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+>> patch link:    https://lore.kernel.org/r/20240606094513.3949323-3-christianshewitt%40gmail.com
+>> patch subject: [PATCH 3/3] arm64: dts: meson: add initial support for Dreambox One/Two
+>> compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
+>> dtschema version: 2024.6.dev1+g833054f
+>> reproduce: (https://download.01.org/0day-ci/archive/20240607/202406071527.fnfhnkUL-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202406071527.fnfhnkUL-lkp@intel.com/
+>>
+>> dtcheck warnings: (new ones prefixed by >>)
+>>    arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7: Warning (unit_address_vs_reg): /soc/bus@ff600000/bus@34400/pinctrl@40: node has a unit name, but no reg or ranges property
+>>      also defined at arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7
+>>    arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7: Warning (simple_bus_reg): /soc/bus@ff600000/bus@34400/pinctrl@40: missing or empty reg/ranges property
+>>      also defined at arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7
+>>    arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:2220.23-2260.6: Warning (avoid_unnecessary_addr_size): /soc/bus@ffd00000/dsi@7000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+>>      also defined at arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:2220.23-2260.6
+>>>> arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-one.dtb: /soc/bus@ff600000/bus@42000/clock-controller@0: failed to match any schema with compatible: ['amlogic,g12a-audio-clkc']
+>>    arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-one.dtb: /soc/bus@ff600000/bus@42000/audio-controller@744: failed to match any schema with compatible: ['amlogic,g12a-tohdmitx']
+>>>> arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-one.dtb: sys-ctrl@0: '#address-cells', '#size-cells', 'ranges' do not match any of the regexes: 'pinctrl-[0-9]+'
+>>     from schema $id: http://devicetree.org/schemas/soc/amlogic/amlogic,meson-gx-hhi-sysctrl.yaml#
+>> --
+>>    arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7: Warning (unit_address_vs_reg): /soc/bus@ff600000/bus@34400/pinctrl@40: node has a unit name, but no reg or ranges property
+>>      also defined at arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7
+>>    arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7: Warning (simple_bus_reg): /soc/bus@ff600000/bus@34400/pinctrl@40: missing or empty reg/ranges property
+>>      also defined at arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:266.33-1540.7
+>>    arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:2220.23-2260.6: Warning (avoid_unnecessary_addr_size): /soc/bus@ffd00000/dsi@7000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+>>      also defined at arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi:2220.23-2260.6
+>>>> arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-two.dtb: /soc/bus@ff600000/bus@42000/clock-controller@0: failed to match any schema with compatible: ['amlogic,g12a-audio-clkc']
+>>    arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-two.dtb: /soc/bus@ff600000/bus@42000/audio-controller@744: failed to match any schema with compatible: ['amlogic,g12a-tohdmitx']
+>>>> arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-two.dtb: sys-ctrl@0: '#address-cells', '#size-cells', 'ranges' do not match any of the regexes: 'pinctrl-[0-9]+'
+>>     from schema $id: http://devicetree.org/schemas/soc/amlogic/amlogic,meson-gx-hhi-sysctrl.yaml#
+> 
+> Nothing to fix. The patch just depends on Neil’s binding fixes here:
+> 
+> https://patchwork.kernel.org/project/linux-amlogic/cover/20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org/
 
-Fixes: fd6792bb022e ("rtc: fix alarm read and set offset")
+Can you resent but keeping the assigned-clocks in the sound card node ?
 
-Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
----
+BTW keep the reviewed-by.
 
-Notes:
-    Changes in v2:
-    * don't try to add offset to an invalid tm
+Thanks,
+Neil
 
- drivers/rtc/interface.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-index 1b63111cdda2..0b23706d9fd3 100644
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -272,14 +272,13 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
- 		err = rtc_read_alarm_internal(rtc, alarm);
- 		if (err)
- 			return err;
- 
- 		/* full-function RTCs won't have such missing fields */
--		if (rtc_valid_tm(&alarm->time) == 0) {
--			rtc_add_offset(rtc, &alarm->time);
--			return 0;
--		}
-+		err = rtc_valid_tm(&alarm->time);
-+		if (!err)
-+			goto done;
- 
- 		/* get the "after" timestamp, to detect wrapped fields */
- 		err = rtc_read_time(rtc, &now);
- 		if (err < 0)
- 			return err;
-@@ -377,10 +376,12 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
- 
- done:
- 	if (err && alarm->enabled)
- 		dev_warn(&rtc->dev, "invalid alarm value: %ptR\n",
- 			 &alarm->time);
-+	else
-+		rtc_add_offset(rtc, &alarm->time);
- 
- 	return err;
- }
- 
- int rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
--- 
-2.34.1
-
+> 
+> Christian
+> 
 
