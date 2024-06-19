@@ -1,88 +1,71 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F8F20B34;
-	Wed, 19 Jun 2024 12:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5F8142E96;
+	Wed, 19 Jun 2024 12:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799918; cv=none; b=QkkPIVfJYA1amcxqlfxugRE80p9pI6TwNXWDv+FPWZxsIbNolfNrWIlYECFkcZ95tU6GkSYCTWkTRs0I3NEHyFugdJQdMSwGAqg7Sd5Uegahq7pXegYwMTseBqtxSsr0KzYnEucVn79UYHWyIgM2CjK6Q8B9j9670k5ff3EGQOY=
+	t=1718799931; cv=none; b=EEL55amw4xZZNmjSzjTZWiqE7qxrGNv6BEvki/JfZqmcGXcrxd2cJMAURo+s9jGgFuCDpu3u+ywUsieBs/OSE71TZcMXFQjx6kKQ89rwLDDbsBSKZJ7Dy7Hx08NmPYNR2XU+Ae4V5YRq8ff30rNOTPUJN8rm8bxluWef0xXRBY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799918; c=relaxed/simple;
-	bh=Olzzvp24AOC4T+V7DJiEH5HUqYnKd+8BcbBEFc09ZE0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dOPNgohrLKVTmnVqbvs/JBmobuX4Ea0YzoADVZgnNbZRAOarfIUkR6eXDWw7sCp2qIX5a+LQCVRhWdPJnOe83el2XomxEHlIqVgPx8PUiaH0G0ij1K4N6M0OPYnzxuCNW7xhVQdr7r2RRHchniv2ZQBw8IUXWinazvoZKDr/QVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=NoFEWc1g; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1718799931; c=relaxed/simple;
+	bh=hQNDan+UFqR9ttiAhh9GsVYNs82AvEXxBGvx1OpaPW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RIFn6C2Q8tWS0XsefiDh7sHrl+G0nzxJfjSLGJ3DKhgsLyttyeeLxHjIJkTAq5decdbCaMwT0dLzzalVfSqSwNV0p9HOWZDg5omCOOggGx0X0M064sa9KCn+WoB4tQlkzRwYKkqozUhmw/ITF2NMqiwPieJ0SPZs3BgMDO8Zirg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M3B1OpPj; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="NoFEWc1g"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JB7bKF001244;
-	Wed, 19 Jun 2024 08:24:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=vNRa5Oiplrn2Xgjadf1n6RmThiC
-	4FkAUT3lbnFrTe1s=; b=NoFEWc1g3YMgMJ4Z8mcEMlmY37GpkNb4X4W/jXZ1YG+
-	OFFKTEWq0sNHaF+bRbQR+JDUagRRQS067XtEJkY+v48NgI3GeQSWucoHioaqJV9M
-	uTPYdDalWqrI/ZX9PznpUtQunBOyq7JOwyZ9VUD6a578shCwAyMzZOURZzGPmOZo
-	QlvGOqtaA1vxwgkdDEhvOE+r5B1xfOIiQ6wlMwsYzG24RiaiyIbLLk3MMIOfdvG3
-	XtEroVdi8W9WkAQNJNlJlxA/8uj5K2t+FULIPbEpvow3N5D9EJQvO+2toaGsn8AH
-	ZOd+xpq4U4PMkgkNjDrFQGOXp2uFCRLco+aa81arcow==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3yut929783-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 08:24:58 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 45JCOuB8018426
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Jun 2024 08:24:56 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 19 Jun 2024 08:24:56 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 19 Jun 2024 08:24:55 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 19 Jun 2024 08:24:55 -0400
-Received: from HYB-hYN1yfF7zRm.ad.analog.com (HYB-hYN1yfF7zRm.ad.analog.com [10.48.65.166])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45JCOdBb017161;
-	Wed, 19 Jun 2024 08:24:41 -0400
-From: Ramona Alexandra Nechita <ramona.nechita@analog.com>
-To: <linux-iio@vger.kernel.org>
-CC: Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Cosmin Tanislav
-	<cosmin.tanislav@analog.com>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Andy
- Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Nuno Sa
-	<nuno.sa@analog.com>,
-        Marius Cristea <marius.cristea@microchip.com>,
-        Maksim
- Kiselev <bigunclemax@gmail.com>,
-        Marcelo Schmitt
-	<marcelo.schmitt@analog.com>,
-        "Okan Sahin" <okan.sahin@analog.com>,
-        Mike
- Looijmans <mike.looijmans@topic.nl>,
-        Marcus Folkesson
-	<marcus.folkesson@gmail.com>,
-        Liam Beguin <liambeguin@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH v3 0/3] ad777x driver addressing patch comments
-Date: Wed, 19 Jun 2024 15:24:13 +0300
-Message-ID: <20240619122431.22829-1-ramona.nechita@analog.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3B1OpPj"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-705fff50de2so563137b3a.1;
+        Wed, 19 Jun 2024 05:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718799929; x=1719404729; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z0Ug2g/wIn4Acp6+WRdmoDjC1CjnDCEohkjBAJAA0nk=;
+        b=M3B1OpPjMfyYSchdw3dZLip852jfJboKKIbsxreIO2DtQRZ2u6dt8WG4o1vRd9g2l9
+         xeyFTp+uYWIIqQ7bcJVdnwb1sVQISlkujXOqw0pPKc6gSRX6WPMlg6S2RLk+Zgw8CqOt
+         SitnlohNSZ8xu7bQL7tpc9zoxoMWC42GT+rnIKLV62RMwUhXbs5GnuVbBWxc2THOqMHz
+         Regf3R+eiY16Uq/N4DhIOU19EytysOTqZJQi5tXCu9wxm7+oPQqxuxOmqH8JNTITaOqR
+         MXwvcz4ioUVLHZLtx4YQMTubjSftv348sLBi6i9bmgxuO399NjFSlJCuhf9I4SEeEz5o
+         EMwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718799929; x=1719404729;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z0Ug2g/wIn4Acp6+WRdmoDjC1CjnDCEohkjBAJAA0nk=;
+        b=Kcy4x/EYTHm9zUkcwfKg2wei6vcb92N094YU0pHRSatCv14TVBBi9I4qWcn7GMgL+q
+         sPHMT9PCfZmhPlt2L/VUYuFHLPmigNrzsvwkRjVTxPX+Xbirqe8DR/OKJ4eLZhlqW09I
+         wxYumFeOgsa+ymiKceXONi1sP/6LwIBQpzg7+pXULm+4yZ+D7Mz6YfgiZpPy+ZMV8gKn
+         aqcrL9a2Ui4DHl8zVStT6ywCJVIo46fxQhUpTgolbMvtxjNfvBjbfifS+Ik/bUNe5gCg
+         kYUdSAdj6OnQh6MCCwtlWICiw0SaK1JPU9VHEgXiemmD5J9YGnGbCIDlFkbU3Ig61vvO
+         nXyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXATus8DDEG9j7fitje79dL5LuN5lUke+fnqkWomkiiVfSNnzoqczdTarKr7KdvdMkTYU9zRksgnwdrwrt6P/9M3Sx59hiVPWNBn9y3dZHpGxpI1z6273w1FkqAaiIYSrHu
+X-Gm-Message-State: AOJu0Yzu4HSHtJ3kofbRkq/r2Van0HpveySwB2g2zKcW5xIEkriNfR9Q
+	0QnLcfDWh/gb/yrvvfEEMznoVjhnd2eCN+6lp19agFm+m/kXw8mM
+X-Google-Smtp-Source: AGHT+IE1n3e6J5vtH+XvnHz0Hcn1RKaFgUkqBTz8l9pQyCzGnMO9k0LxvqsUebPcdoSuJ03qhAwsaQ==
+X-Received: by 2002:a62:ee11:0:b0:704:3580:8e16 with SMTP id d2e1a72fcca58-7061ac34763mr7365753b3a.17.1718799929303;
+        Wed, 19 Jun 2024 05:25:29 -0700 (PDT)
+Received: from ubuntu.localdomain ([124.126.129.60])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3d19esm10500824b3a.122.2024.06.19.05.25.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 05:25:28 -0700 (PDT)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: alan.maguire@oracle.com,
+	eddyz87@gmail.com
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	song@kernel.org,
+	andrii@kernel.org,
+	haoluo@google.com,
+	yonghong.song@linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donglin Peng <dolinux.peng@gmail.com>
+Subject: [PATCH v2] libbpf: checking the btf_type kind when fixing variable offsets
+Date: Wed, 19 Jun 2024 05:23:55 -0700
+Message-Id: <20240619122355.426405-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,69 +73,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: -XlXrot83oJtbzU6RWIwdGvZzFdNrwCu
-X-Proofpoint-ORIG-GUID: -XlXrot83oJtbzU6RWIwdGvZzFdNrwCu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 clxscore=1015 suspectscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406190092
 
-This patch series is sent to address the comments received
-with regards to the ad7779 driver patch:
-v2-0001-drivers-iio-adc-add-support-for-ad777x-family.patch,
-as well as the dt-bindings patch:
-v3-0001-dt-bindings-iio-adc-add-a7779-doc.patch.
-The patches were initially sent separated, this has now
-been corrected with this patch series, along with soeme
-other issues such as the cover letter and author.
-The changes in the series:
-v3:
-	* drop spi-max-frequency from yaml and fix indent
-	* separate ABI doc into different patch, drop ad4130
-	 ABI doc file and combine the filter_mode/type properties
-	 in the sysfs-bus-iio file
-	* update Kconfig help section for the driver
-	* update driver commit message
-	* drop crc_enabled and check crc by default on all regs
-	  except GEN_ERR_REG_1_EN
-	* rename from "ad777x_*" to "ad7779_*"
-	* switch from kfifo to triggered buffer and send w/timestamp
-	* switched spidata_rx/tx buffer data type to u8 and declared
-	  channels as IIO_BE
-	* switched to fsleep and added comments for each of them
-	* changed "____cacheline_aligned" to "__aligned(IIO_DMA_MINALIGN)"
-	* fixed allignments and removed redundant variables
-	* removed local update_scan_mode in favor of iio active_scan_mask
-	* requested trigger as NO_AUTOEN and it is enabled/disabled only
-	  in preenable/postdisable functions
-	* removed separate ad777x_register function and moved the code
-	  in probe
-	* switched to get_clk_enabled
-	* check for irq earlier in probe
-	* misc code style / format changes, as suggested
+I encountered an issue when building the test_progs from the repository[1]:
 
-Ramona Alexandra Nechita (3):
-  dt-bindings: iio: adc: add a7779 doc
-  Documentation: ABI: added filter mode doc in sysfs-bus-iio
-  drivers: iio: adc: add support for ad777x family
+$ pwd
+/work/Qemu/x86_64/linux-6.10-rc2/tools/testing/selftests/bpf/
 
- Documentation/ABI/testing/sysfs-bus-iio       |   7 +
- .../ABI/testing/sysfs-bus-iio-adc-ad4130      |  46 -
- .../bindings/iio/adc/adi,ad7779.yaml          |  84 ++
- drivers/iio/adc/Kconfig                       |  11 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/ad7779.c                      | 936 ++++++++++++++++++
- 6 files changed, 1039 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
- create mode 100644 drivers/iio/adc/ad7779.c
+$ make test_progs V=1
+...
+./tools/sbin/bpftool gen object ./ip_check_defrag.bpf.linked2.o ./ip_check_defrag.bpf.linked1.o
+libbpf: failed to find symbol for variable 'bpf_dynptr_slice' in section '.ksyms'
+Error: failed to link './ip_check_defrag.bpf.linked1.o': No such file or directory (2)
+...
 
+Upon investigation, I discovered that the btf_types referenced in the '.ksyms'
+section had a kind of BTF_KIND_FUNC instead of BTF_KIND_VAR:
+
+$ bpftool btf dump file ./ip_check_defrag.bpf.linked1.o
+...
+[2] DATASEC '.ksyms' size=0 vlen=2
+        type_id=16 offset=0 size=0 (FUNC 'bpf_dynptr_from_skb')
+        type_id=17 offset=0 size=0 (FUNC 'bpf_dynptr_slice')
+...
+[16] FUNC 'bpf_dynptr_from_skb' type_id=82 linkage=extern
+[17] FUNC 'bpf_dynptr_slice' type_id=85 linkage=extern
+...
+
+For a detailed analysis, please refer to [2]. We can add a kind checking to
+fix the issue.
+
+[1] https://github.com/eddyz87/bpf/tree/binsort-btf-dedup
+[2] https://lore.kernel.org/all/0c0ef20c-c05e-4db9-bad7-2cbc0d6dfae7@oracle.com/
+
+Fixes: 8fd27bf69b86 ("libbpf: Add BPF static linker BTF and BTF.ext support")
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
+---
+v2:
+ - Refactored the code using btf_is_var
+ - Improved the comment to be more reasonable
+---
+ tools/lib/bpf/linker.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/tools/lib/bpf/linker.c b/tools/lib/bpf/linker.c
+index 0d4be829551b..5a583053e311 100644
+--- a/tools/lib/bpf/linker.c
++++ b/tools/lib/bpf/linker.c
+@@ -2213,10 +2213,17 @@ static int linker_fixup_btf(struct src_obj *obj)
+ 		vi = btf_var_secinfos(t);
+ 		for (j = 0, m = btf_vlen(t); j < m; j++, vi++) {
+ 			const struct btf_type *vt = btf__type_by_id(obj->btf, vi->type);
+-			const char *var_name = btf__str_by_offset(obj->btf, vt->name_off);
+-			int var_linkage = btf_var(vt)->linkage;
++			const char *var_name;
++			int var_linkage;
+ 			Elf64_Sym *sym;
+ 
++			/* could be a variable or function */
++			if (!btf_is_var(vt))
++				continue;
++
++			var_name = btf__str_by_offset(obj->btf, vt->name_off);
++			var_linkage = btf_var(vt)->linkage;
++
+ 			/* no need to patch up static or extern vars */
+ 			if (var_linkage != BTF_VAR_GLOBAL_ALLOCATED)
+ 				continue;
 -- 
-2.43.0
+2.25.1
 
