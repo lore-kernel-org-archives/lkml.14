@@ -1,97 +1,161 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C28F7A724;
-	Wed, 19 Jun 2024 21:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEBF15A864;
+	Wed, 19 Jun 2024 21:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718831513; cv=none; b=DVWnjlsUYuezw/ANoFYn78YwsSXeJfzHtoT+f5/PlB/LauCfUviCansWS+gnbttgGE7/j/QjLU1BgXhUi+5Iw6jr07qK4sW5lo3uXEP+xk8sAnfkjlAE2PqRlIktMYRs3CFNa2tA4SYVZk2SXx4jwuMEN4OUQjfEyjOkWw+rKGQ=
+	t=1718831570; cv=none; b=CX2h6KPDXgQu25Lme9bgoDLMFySsz1vOT1FPFURKZYArS44Hup2KDk9/SDD+v7VyrvFDzhWS/tZmiM7v4Gq4PpmR+rxKcEqx/j14NP/3aEwLoQDq1fQD3JLXK0vwQj/Qos6yOm8SyButxm7w8VOJfScpWJnmZf3GbhVe48lf0AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718831513; c=relaxed/simple;
-	bh=JonIJaq3OZKtX2IdWUeB2L72zt1Pa52H9/4Dlgj3xoM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ds0taG/KehMFARMVBlAIdUfmHSHRBXqaYDiazu53o7tNd0TGCriu9gpp6hoZ8iQthZb7F31UkVcqNFYxmSosaN5o9Y8fbUMzlRbjzOQ53GXvNyl0ECYRJlrDNpEUaUwsSD/pBRS9mBrevJ11gvz31931Xcs/Qso8/2OPkf7g6/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JlsBqu2N; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718831570; c=relaxed/simple;
+	bh=VhvaB5BCvNV/7ItMlUKCyJLkhBGaN1WYVCzerkxhHBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EsyjRcchTSpmnzn+73oUCQ2x9woR2+AdanGP0C2HTrQ2AkPXLeqsOn+oU4sXKkC1OCGnBw7cRP/oorpdwXBzTauqo6WAULfWNsLU3PHwwZYcwdbR2dgq4TksiyPmAR36VQXieQihUls6kf1Z5niUgH1F6gNxMXngD7nbKz+qiCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3L4Gs0Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlsBqu2N"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-80f4f7e6856so71786241.2;
-        Wed, 19 Jun 2024 14:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718831511; x=1719436311; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G1Wf/koZbFW9IPk/YrluCkWzg9WkxM+rq1aaZRjZ11M=;
-        b=JlsBqu2NswBGPwEs59iK+zePqFmQa80TN7XEScK6ZrGuBuvjssNo1OylWsWk85tvr7
-         Iawa2jud0OoroKiDtN2LKAsdauoW2Iw2cpaq9a2MqhReUiSfBSP+evAFk9RG5aYUPTj1
-         prxfkIT2OraSSmkmtA6xXU6OEEflzaQ2geiFcBOTrYubQasPz0OGlpWhA/92Sp2DGX9m
-         PSBhn8CTC1p4abH/L+toVAEgflwjcyk13BI7oGcSl0Xj/V9RKanM1f1P3AM9IpAXakTy
-         HMkeJ2n5TDMVtXJ01PC2n2LNtwS/FzvHtISkMUcfIRfIwiTmI2DrG0Lc7LEcm3kLHPrq
-         G/Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718831511; x=1719436311;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G1Wf/koZbFW9IPk/YrluCkWzg9WkxM+rq1aaZRjZ11M=;
-        b=ToRUhaTeXJFbDER6bPzVAKat7D6HX4PHamETPEO56/7w5tLspJcWIVDtU6Nc+7jxhT
-         khE6mGye5yAoQc0ERicBApnq4iRSPmxv9ZaxG6hVx70MyQ13t7wBgLsQ3mLKisXBUnJZ
-         IhIpFX1Vy/0mJtf9OYrvVos4bjnNZrLlqo/zD8Sj6u2aRO7ZhbZ3+uuJwH+aiYRaGAe5
-         pMv1PElNIs2oXoRrmh6gs7IJ9MdiHxQN1wtfxDUu9kfyYT2ltpu3OAKYgbL9NPbR8Sji
-         GGqtliUX/AHtAMg/vGipj7axi2cIX2mT4nyj7ju58c8r/Ia+G15xXQC/I96JGls6i0aj
-         vnfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWKhrxE+p2ZeIKNfT++PJizGyM48aPaES3RnWRcvffkz7nsr6rdVC4jzpKKjmaBAm8B3bakVX9na6C3RSARts+IZ7vLiLPfIoXSmA5
-X-Gm-Message-State: AOJu0Yw9VbMLhRKlUdyMwCYiXlp8B1e/+Ji8mUMujj0dlLSLPDyPwEGZ
-	LYXg2GKgFu0EvuFcqCK+JWsFzZkC9wgY7MJqKAKcWUUtj8MpugMmneHVn6wCGhvQ21sINJ5cgI5
-	ebAVEWTT5mT5TO53wso0iUfLCXOM=
-X-Google-Smtp-Source: AGHT+IGjyujEK+bHyLZHGQKjMkIjxvDNm29uWhTBhACl6IcDhQiGcoLcjOlh9JO/lLGeoXMwIZaOtHEreRocNL6N4n8=
-X-Received: by 2002:a05:6122:920:b0:4e4:e90f:6749 with SMTP id
- 71dfb90a1353d-4ef277dd297mr4205321e0c.10.1718831510898; Wed, 19 Jun 2024
- 14:11:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3L4Gs0Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7ABC4AF08;
+	Wed, 19 Jun 2024 21:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718831570;
+	bh=VhvaB5BCvNV/7ItMlUKCyJLkhBGaN1WYVCzerkxhHBw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P3L4Gs0QlChkUuo1QBHJaK/flrUElZ+KaSTcZ4frLteSfcDzMnN7yFLJJcs47xL0Z
+	 i+Y4f5uj9sK4tdvftb7AvTQ3vdmcXhjYp59Gh5Eu/in27JyaQe3iTgFapgYSLQiaVM
+	 W6+WV9yuXTC4FsgFrlHTMtgcPTsj4puvrzCAaRG4cZL9V7iEUWTU8ZXxdWNVlHlEsI
+	 +5U5lX9UJ9iZlIncU1/Wh+fG3XCac7nqHD9ix04ZNV6Nv+9+JolqawqewWa+uobOvH
+	 98RVza7BvOFt+1MbUMmlMEcTOuqKbLshDzEnHoIGHQ/kJbO+9zwonPX3GRd/yNBVpm
+	 tRtPInq4+LItA==
+From: Kees Cook <kees@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Luca Coelho <luciano.coelho@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Haim Dreyfuss <haim.dreyfuss@intel.com>,
+	linux-wireless@vger.kernel.org,
+	Shaul Triebitz <shaul.triebitz@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in cfg80211_wowlan_nd_*
+Date: Wed, 19 Jun 2024 14:12:45 -0700
+Message-Id: <20240619211233.work.355-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619125606.345939659@linuxfoundation.org>
-In-Reply-To: <20240619125606.345939659@linuxfoundation.org>
-From: Allen <allen.lkml@gmail.com>
-Date: Wed, 19 Jun 2024 14:11:30 -0700
-Message-ID: <CAOMdWSKYu2f5Pz_CNVktWQonknPOOskdp9Jxj+xBJgp_JdsdnQ@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/267] 6.6.35-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4538; i=kees@kernel.org; h=from:subject:message-id; bh=VhvaB5BCvNV/7ItMlUKCyJLkhBGaN1WYVCzerkxhHBw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmc0nNQq/TPpPwGi/dcbLKQg7pM3dYduoJRnrEc 9b2bi/VJ3yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnNJzQAKCRCJcvTf3G3A JipeEACLsBS4IKYSggSdsDiaoVdZGiEWdHgktl+fWWYFyGZFS/mm40ZAKDIhC93qTfGA64t7mKz ZumswcVRdDpGwG3hPg2A3ZVIGeU1KL+/0uzAUrkZmMUpzvRx+uDH4x+JfekHG6VOpMnT7rvjuM7 5GHZe2MOlZcxffAutHv6sWps17rC3v6g8a6/mwcwFRvwepN0UJmaMsugPXgV/gqxQSvgn9pizdC HpShJhoK+KtpJ3BmvQx/5qdplCQ3fuQXM+iRCLNb4CVkFg8LC8w88xWRZsvK8VVKJt/BWdtIyI2 /y5XlVV7AgV/57d/iCUZeowXYGmX412+lN2Ha0ra7I3rNmmKaC08t/jifsEzr00bt8CEsLmdLVi UaFUMa0O87QSXcqTSz3qHukdVOFuxfXR2wSY0Mm7vqOx3JrCMPMcRi7prEfiqYOgpQqEvaPKBxc IeN1mxGVPVW5JD6V2XWdKAFzKhwt9OUQJCENDWCsvaqDZso1DlI6+M0Qb9YP37gQQiXW5NENViG UZDZaUvvvjkvIDIl3yjRl8jWC+RMLHPx2AbnsNZYWaPIAuLCEwEM8o5HBvinzPGZSrR6ln75+VY MENyn9vSCJ/QQprEW/f4GeF/NHDH+n0IgPcazJqYIUmdwJQY1Wqrdy8rUU4UE6iON/wGQhgX3q7 lJYBhKw6LGP+l
+ CA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-> This is the start of the stable review cycle for the 6.6.35 release.
-> There are 267 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 21 Jun 2024 12:55:11 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.35-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Both struct cfg80211_wowlan_nd_match and struct cfg80211_wowlan_nd_info
+pre-allocate space for channels and matches, but then may end up using
+fewer that the full allocation. Shrink the associated counter
+(n_channels and n_matches) after counting the results. This avoids
+compile-time (and run-time) warnings from __counted_by. (The counter
+member needs to be updated _before_ accessing the array index.)
 
-Compiled and booted on my x86_64 and ARM64 test systems. No errors or
-regressions.
+Seen with coming GCC 15:
 
-Tested-by: Allen Pais <apais@linux.microsoft.com>
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_set_freqs':
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2877:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+ 2877 |                                 match->channels[match->n_channels++] =
+      |                                                 ~~~~~~~~~~~~~~~~~^~
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2885:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+ 2885 |                                 match->channels[match->n_channels++] =
+      |                                                 ~~~~~~~~~~~~~~~~~^~
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_netdetect_reasons':
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2982:58: warning: operation on 'net_detect->n_matches' may be undefined [-Wsequence-point]
+ 2982 |                 net_detect->matches[net_detect->n_matches++] = match;
+      |                                     ~~~~~~~~~~~~~~~~~~~~~^~
 
-Thanks.
+Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Gregory Greenman <gregory.greenman@intel.com>
+Cc: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+Cc: Haim Dreyfuss <haim.dreyfuss@intel.com>
+Cc: linux-wireless@vger.kernel.org
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 54f4acbbd05b..9cd03ea4680d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -2866,6 +2866,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 				    int idx)
+ {
+ 	int i;
++	int n_channels = 0;
+ 
+ 	if (fw_has_api(&mvm->fw->ucode_capa,
+ 		       IWL_UCODE_TLV_API_SCAN_OFFLOAD_CHANS)) {
+@@ -2874,7 +2875,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 
+ 		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN * 8; i++)
+ 			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+-				match->channels[match->n_channels++] =
++				match->channels[n_channels++] =
+ 					mvm->nd_channels[i]->center_freq;
+ 	} else {
+ 		struct iwl_scan_offload_profile_match_v1 *matches =
+@@ -2882,9 +2883,11 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 
+ 		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN_V1 * 8; i++)
+ 			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+-				match->channels[match->n_channels++] =
++				match->channels[n_channels++] =
+ 					mvm->nd_channels[i]->center_freq;
+ 	}
++	/* We may have ended up with fewer channels than we allocated. */
++	match->n_channels = n_channels;
+ }
+ 
+ /**
+@@ -2965,6 +2968,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 			     GFP_KERNEL);
+ 	if (!net_detect || !n_matches)
+ 		goto out_report_nd;
++	net_detect->n_matches = n_matches;
++	n_matches = 0;
+ 
+ 	for_each_set_bit(i, &matched_profiles, mvm->n_nd_match_sets) {
+ 		struct cfg80211_wowlan_nd_match *match;
+@@ -2978,8 +2983,9 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 				GFP_KERNEL);
+ 		if (!match)
+ 			goto out_report_nd;
++		match->n_channels = n_channels;
+ 
+-		net_detect->matches[net_detect->n_matches++] = match;
++		net_detect->matches[n_matches++] = match;
+ 
+ 		/* We inverted the order of the SSIDs in the scan
+ 		 * request, so invert the index here.
+@@ -2994,6 +3000,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 
+ 		iwl_mvm_query_set_freqs(mvm, d3_data->nd_results, match, i);
+ 	}
++	/* We may have fewer matches than we allocated. */
++	net_detect->n_matches = n_matches;
+ 
+ out_report_nd:
+ 	wakeup.net_detect = net_detect;
+-- 
+2.34.1
+
