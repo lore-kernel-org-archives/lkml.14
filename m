@@ -1,156 +1,178 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE8FD224D4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.7
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49B078C9C
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718785326; cv=none; b=n4J77bMg8hxZRTPcHpXcsPwO8BxU98Dtmwa/GQ4XDgvTZ1vzEFr8l86vBO3AK7G+86dxoO7TwkJ2SvrcFAT+bPgBsASU2i0Ca/IIcEf9VSgg4JBMfl+pPzR1S3VXvfMRhLeptDIlzb47OVNmMsQ1Z0UVheEznKuIZfb5j+meBCY=
+	t=1718785517; cv=none; b=uN+t1bCBTNfkXhU0e+hVi/Go9mGiN7TZd95x1GqB2MckxtQWjfc3bD6290v7YWKVDNrLxBQhDm6GMqONrVli5FBTSPmWE0MyuFdmwCHw4nCoqMlMO853Pr+NXDAtGborjRM05TJvaKszmYr9NadCJ7UU4tgshu7/7yurJbTFLKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718785326; c=relaxed/simple;
-	bh=9YrFkyQZ7Pkv9wm+cg1dZgrrMxhRuwnou748YHmzYA8=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=s99WnRW9Irbe6waswNZzaAdHZLhmXGPXk5Bp+KQiUYMjvVtBVQJmT+MQMJjzFpdBDmHI+saitgmjcULds2gUkhPUzMhLKlBH9nDH01/k+BO9zXN0TQE089AqvDrA5j0fUk5GQSFP5oENyWYvCz0uix+kcy6345DVyBBOyxF8DrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Iw19GNkp; arc=none smtp.client-ip=220.197.31.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1718785517; c=relaxed/simple;
+	bh=2b/kOalqvvEh0PQENNSxzh2JaUI1Y8hXPaMbFQ6OvkY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NMJZbOTYON8c32FBU23u+r0GXWwUZGiPQTq2l9hZtS7g6ubWzKZVmUHtjIbnDZsPqdBNK2daW+hY6bFsAwTk/tNLI/tix1wriwZM/AzMLsh13hlFRiE1IvgRsgi82OyZuPKFcjhoabiU2LWxwvayd3q3dClPqDvGRqchG99k3tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EYCh8ls7; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Iw19GNkp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=Ljn9sb++6gHyMC40Zg
-	cwaQQrbP0466Fkz3naK5umj9I=; b=Iw19GNkpgFYNrkCpmHa21ZN1ZmbKDyU1w8
-	mrCjNemCxv17fI7g8xLIAyeNMJO0FOe7pOSCRH1fuBaqC7Dm3qmkpkOO2lYxXakp
-	OPN+ltkXmL62wu2ycBubve3NBInFBAyHne7spl6gdOQlVgev/DS/9SqzRttLI/GK
-	spbNNdMas=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [118.242.3.34])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wDnV80SlXJmFM7xAw--.9288S2;
-	Wed, 19 Jun 2024 16:21:40 +0800 (CST)
-From: yangge1116@126.com
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	21cnbao@gmail.com,
-	baolin.wang@linux.alibaba.com,
-	liuzixing@hygon.cn,
-	yangge <yangge1116@126.com>
-Subject: [PATCH] mm/page_alloc: add one PCP list for THP
-Date: Wed, 19 Jun 2024 16:21:34 +0800
-Message-Id: <1718785294-26713-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wDnV80SlXJmFM7xAw--.9288S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAFWUtF17Xw18JF1UuFWDXFb_yoWrWw17pF
-	Wxtw4Syayjq343Aw18A3Wqkr1rCasxGFsrCr1fuw18ZwsxXFWS9a4fKFnFvFyrZrWUAFWx
-	Xr9rt34fCF4DA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Umg4DUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQkDG2VLa0vv-QAAsU
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EYCh8ls7"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-362b32fbb3bso829265f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 01:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718785514; x=1719390314; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F55+nnwPqNHPPaJdOqugGb9tOF+zMoH4pqOyNlk1h1A=;
+        b=EYCh8ls7zKBhT7B20hMi6Jagblfxbe/K8PZzw4RzHDvhPRVQAbI6lP02d9R9K0XRTF
+         ALA2ivQu3mnvxnnulZPfV00wyvnjTFMFgEkDShaGrBxGPSywPgJ3TfoOH3/f7061AM0p
+         tft3i0bp8R05mlsO8re2rOqCJFaJUCOU23xcQJEqg8+XsuQAiOMkWtLx7a/o/HV6vXkz
+         SZEmHR/hWsZOQiW2rZrvAO/kF0gnjM69+UTLzV6fK0rnBWb0H/D1Dwiv6j/kk6lg7ycH
+         7VIL6swT8qHWAHFGsMM9qMVBbzUvlg6GN1r/Ohd0cBB767udn1mYgKggSH7E9Cg+Mscg
+         3PkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718785514; x=1719390314;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=F55+nnwPqNHPPaJdOqugGb9tOF+zMoH4pqOyNlk1h1A=;
+        b=jzFFAgREw5Bz2nLEwXipxB3WBly+ye0raFxbDNMIMKLQyDkCLF+DqAjVQcr2IJXXub
+         MvWtlkhDY0hzkuX3Yy6WJ/FQZTXqbJg0SrPEPyL5Uj/VpYavS813PoYaiWOrCQpc0g2e
+         Oe3GooRyJMoHavQbwfWBNunMetj8U5O8XBxfDBoO0a45nP1FeijF0E6QnEw7JEHVJe0t
+         JvYAgiwNfyklO0UYi8gUlNJaNRGog4xu15aG5Y/pE1RM81Ye3KjW+hRqSbYpHw/+bzd5
+         m8judKQFNzdDTTjkGXO4hHaU+7/NzJNWNLw6K5CXZA4Wv7DyD6ZvUZZF9vsP8GV3oY0K
+         JyqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhOQZL5UdEgNgJT4/0Umu3AHhSbJTi4VSwMNkBtNmWWuhgPKsTT2NC9PS8+e0tYOgtlE1DrbFE6xSqNGAK7LOQeKEnqsoKwaRZnWUK
+X-Gm-Message-State: AOJu0YzRNgGHXeUpy+kcs4lVdCy1uKbXTCEIOwMG3VhkY8Kx4GJBeIba
+	AqmyPYGHtnw2Zn3owhQ8EKCUL+zJ12BPUvak8zOJBEJLlsxD5CSXaYYGeM48oGQ=
+X-Google-Smtp-Source: AGHT+IEP+PNa8W01AM9rOTtoS+vcnvncRhzezJE0YF/DMXlpp6q+MCVB7npKy32RSW+Sv+peRt24EQ==
+X-Received: by 2002:adf:b189:0:b0:354:fc65:39d6 with SMTP id ffacd0b85a97d-363175b8055mr1515876f8f.26.1718785513489;
+        Wed, 19 Jun 2024 01:25:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:ed45:cb25:b4fd:b1fa? ([2a01:e0a:982:cbb0:ed45:cb25:b4fd:b1fa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36098c8c596sm6197735f8f.14.2024.06.19.01.25.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 01:25:13 -0700 (PDT)
+Message-ID: <fd49ed95-bea8-40a4-b493-377fafadcdb3@linaro.org>
+Date: Wed, 19 Jun 2024 10:25:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v4 0/8] serial: qcom-geni: Overhaul TX handling to fix
+ crashes/hangs
+To: Douglas Anderson <dianders@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: Yicong Yang <yangyicong@hisilicon.com>, Tony Lindgren <tony@atomide.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Johan Hovold <johan+linaro@kernel.org>,
+ John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
+References: <20240610222515.3023730-1-dianders@chromium.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240610222515.3023730-1-dianders@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: yangge <yangge1116@126.com>
+On 11/06/2024 00:24, Douglas Anderson wrote:
+> 
+> While trying to reproduce -EBUSY errors that our lab was getting in
+> suspend/resume testing, I ended up finding a whole pile of problems
+> with the Qualcomm GENI serial driver. I've posted a fix for the -EBUSY
+> issue separately [1]. This series is fixing all of the Qualcomm GENI
+> problems that I found.
+> 
+> As far as I can tell most of the problems have been in the Qualcomm
+> GENI serial driver since inception, but it can be noted that the
+> behavior got worse with the new kfifo changes. Previously when the OS
+> took data out of the circular queue we'd just spit stale data onto the
+> serial port. Now we'll hard lockup. :-P
+> 
+> I've tried to break this series up as much as possible to make it
+> easier to understand but the final patch is still a lot of change at
+> once. Hopefully it's OK.
+> 
+> [1] https://lore.kernel.org/r/20240530084841.v2.1.I2395e66cf70c6e67d774c56943825c289b9c13e4@changeid
+> 
+> Changes in v4:
+> - Add GP_LENGTH field definition.
+> - Fix indentation.
+> - GENMASK(31, 0) -> GP_LENGTH.
+> - Use uart_fifo_timeout_ms() for timeout.
+> - tty: serial: Add uart_fifo_timeout_ms()
+> 
+> Changes in v3:
+> - 0xffffffff => GENMASK(31, 0)
+> - Reword commit message.
+> - Use uart_fifo_timeout() for timeout.
+> 
+> Changes in v2:
+> - Totally rework / rename patch to handle suspend while active xfer
+> - serial: qcom-geni: Fix arg types for qcom_geni_serial_poll_bit()
+> - serial: qcom-geni: Fix the timeout in qcom_geni_serial_poll_bit()
+> - serial: qcom-geni: Introduce qcom_geni_serial_poll_bitfield()
+> - serial: qcom-geni: Just set the watermark level once
+> - serial: qcom-geni: Rework TX in FIFO mode to fix hangs/lockups
+> - soc: qcom: geni-se: Add GP_LENGTH/IRQ_EN_SET/IRQ_EN_CLEAR registers
+> 
+> Douglas Anderson (8):
+>    soc: qcom: geni-se: Add GP_LENGTH/IRQ_EN_SET/IRQ_EN_CLEAR registers
+>    tty: serial: Add uart_fifo_timeout_ms()
+>    serial: qcom-geni: Fix the timeout in qcom_geni_serial_poll_bit()
+>    serial: qcom-geni: Fix arg types for qcom_geni_serial_poll_bit()
+>    serial: qcom-geni: Introduce qcom_geni_serial_poll_bitfield()
+>    serial: qcom-geni: Just set the watermark level once
+>    serial: qcom-geni: Fix suspend while active UART xfer
+>    serial: qcom-geni: Rework TX in FIFO mode to fix hangs/lockups
+> 
+>   drivers/tty/serial/qcom_geni_serial.c | 322 +++++++++++++++-----------
+>   include/linux/serial_core.h           |  15 +-
+>   include/linux/soc/qcom/geni-se.h      |   9 +
+>   3 files changed, 206 insertions(+), 140 deletions(-)
+> 
 
-Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
-THP-sized allocations") no longer differentiates the migration type
-of pages in THP-sized PCP list, it's possible that non-movable
-allocation requests may get a CMA page from the list, in some cases,
-it's not acceptable.
+Indeed no more lockup when killing a process on the serial debug console
 
-If a large number of CMA memory are configured in system (for
-example, the CMA memory accounts for 50% of the system memory),
-starting a virtual machine with device passthrough will get stuck.
-During starting the virtual machine, it will call
-pin_user_pages_remote(..., FOLL_LONGTERM, ...) to pin memory. Normally
-if a page is present and in CMA area, pin_user_pages_remote() will
-migrate the page from CMA area to non-CMA area because of
-FOLL_LONGTERM flag. But if non-movable allocation requests return
-CMA memory, migrate_longterm_unpinnable_pages() will migrate a CMA
-page to another CMA page, which will fail to pass the check in
-check_and_migrate_movable_pages() and cause migration endless.
-Call trace:
-pin_user_pages_remote
---__gup_longterm_locked // endless loops in this function
-----_get_user_pages_locked
-----check_and_migrate_movable_pages
-------migrate_longterm_unpinnable_pages
---------alloc_migration_target
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
 
-To fix the problem above, we add one PCP list for THP, which will
-not introduce a new cacheline. THP will have 2 PCP lists, one PCP
-list is used by MOVABLE allocation, and the other PCP list is used
-by UNMOVABLE allocation. MOVABLE allocation contains GPF_MOVABLE,
-and UNMOVABLE allocation contains GFP_UNMOVABLE and GFP_RECLAIMABLE.
-
-Link: https://lore.kernel.org/all/1717492460-19457-1-git-send-email-yangge1116@126.com/
-Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for THP-sized allocations")
-Signed-off-by: yangge <yangge1116@126.com>
----
- include/linux/mmzone.h | 11 ++++++-----
- mm/page_alloc.c        | 14 +++++++++++---
- 2 files changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index b7546dd..7e6989d 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -656,13 +656,14 @@ enum zone_watermarks {
- };
- 
- /*
-- * One per migratetype for each PAGE_ALLOC_COSTLY_ORDER. One additional list
-- * for THP which will usually be GFP_MOVABLE. Even if it is another type,
-- * it should not contribute to serious fragmentation causing THP allocation
-- * failures.
-+ * One per migratetype for each PAGE_ALLOC_COSTLY_ORDER. Two additional lists
-+ * are added for THP. One PCP list is used by GPF_MOVABLE, and the other PCP list
-+ * is used by GFP_UNMOVABLE and GFP_RECLAIMABLE.
-  */
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--#define NR_PCP_THP 1
-+#define NR_PCP_THP 2
-+#define PCP_THP_MOVABLE 0
-+#define PCP_THP_UNMOVABLE 1
- #else
- #define NR_PCP_THP 0
- #endif
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 8f416a0..5eac18e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -504,16 +504,24 @@ static void bad_page(struct page *page, const char *reason)
- 
- static inline unsigned int order_to_pindex(int migratetype, int order)
- {
-+	int pcp_type = migratetype;
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	if (order > PAGE_ALLOC_COSTLY_ORDER) {
- 		VM_BUG_ON(order != HPAGE_PMD_ORDER);
--		return NR_LOWORDER_PCP_LISTS;
-+
-+		if (migratetype != MIGRATE_MOVABLE)
-+			pcp_type = PCP_THP_UNMOVABLE;
-+		else
-+			pcp_type = PCP_THP_MOVABLE;
-+
-+		return NR_LOWORDER_PCP_LISTS + pcp_type;
- 	}
- #else
- 	VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
- #endif
- 
--	return (MIGRATE_PCPTYPES * order) + migratetype;
-+	return (MIGRATE_PCPTYPES * order) + pcp_type;
- }
- 
- static inline int pindex_to_order(unsigned int pindex)
-@@ -521,7 +529,7 @@ static inline int pindex_to_order(unsigned int pindex)
- 	int order = pindex / MIGRATE_PCPTYPES;
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (pindex == NR_LOWORDER_PCP_LISTS)
-+	if (order > PAGE_ALLOC_COSTLY_ORDER)
- 		order = HPAGE_PMD_ORDER;
- #else
- 	VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
--- 
-2.7.4
-
+Thanks !
+Neil
