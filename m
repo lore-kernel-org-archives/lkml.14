@@ -1,82 +1,43 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0D9770ED
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EBF770ED;
+	Wed, 19 Jun 2024 07:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718783689; cv=none; b=fTtGD9mYO+eq8EmcxIb05BeoiFPJzn7cOY/Yg5bjrp5XTwKznW/OMMaqJbOYgy5otnwXk14yiaCdrGPrVfA3jaZMtfihQ760iz/lx7yIp+fBfTU8WZupgp3XqebEfC63B893djihul2BizO0+XR7B6Qlo0a0OldW+dT7Ijo+jTo=
+	t=1718783696; cv=none; b=XGt5KT6d06IFQ4sqaZsxzN80iCb5HK5UsqVGzBLriPH89EhoCA1JvNOKsJgv0VOD+D2WYPkkFeSWBLQq3tDzQA2dyikXD7JJS902QeRDgsi+YOFN5/836EMPkyj+seMGxYH2Y3OQtc4rpeGlN408ESkxnYF962dsSVazK4CEkp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718783689; c=relaxed/simple;
-	bh=iq0Po46MttQB5ZXI3wwLnZW/QZWc+/jk0VVwxEntq0Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d77zcnSEk8tZ/QdH3E/Vk80KuzqRMyKNk5KAJ0oqxm5rRrtaqXUFz/k/GPCEPaqFuC+3SQuws1NBXXY93kzVlAeQ5P2hZKPfLM1cjbRYiEZojzumqCu6Ccr6d7Ya9veSvjQ9Nb+T6EN376nExZZDcZg8YijJ0lG+Inhp/NRo2/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=fMH3FnHx; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1718783696; c=relaxed/simple;
+	bh=OLxeNNNbPVf41iNIEfzu7xIT7b6aiF/XEAM7WfvJUDw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L8tnmjPDss/p2IJHxterYeZ15XQPNQVSInlOl3gpYw0uOSypNRsUjBuSoPii5wQhF7/+P2Osp/4wwmcgGJdKP2FD2TXzhDiZ26kxDOlUYeh4ku9ciE3AwxuZN4TCuuPxszVBpGQfRai7RwePBmgld7xoQZaDcxsweoEEm22y3mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aexp/nWf; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="fMH3FnHx"
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 299BB4061D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1718783382;
-	bh=B30QvcofR9KiWrZLYpcmSs9yQbLcW6coRoJpHxt3rTM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version;
-	b=fMH3FnHxYovYnAvcb7DZxOm6Z3+vMPTY9DEzWSl+PTQmrgag7Dm0yjUSvZut+C7lh
-	 0Lra7UCukvy7F3fYIhGgwPcF5UhDPX2rvS4xpmkvSHSSE90FkA+1X4Ig84YaEhc+vM
-	 D3bJJy1BO85qVFb1jd+123G52X4I4IAYGeP9MDwqhTh0LxI2MEy2bArjAsGb0TlFEI
-	 Av99nNDoYuIrqrwp4ortrCYW//pfTBKw5MMwVkoG3sn7uZmU0p3QBLXNPRiiFKDRWA
-	 N9t+Q7z3YTRbiH3uPWJpMb0nT6J9X0/i2lPRDwABTqUO0xRlZXs1eCbbFlSIRJHX88
-	 yBaXkmHGm6jCA==
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-705f9efa07aso3988023b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 00:49:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718783380; x=1719388180;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B30QvcofR9KiWrZLYpcmSs9yQbLcW6coRoJpHxt3rTM=;
-        b=A8MykkFVVW2gwhferTtzGGmnqM+Sv8oB01XoH+fiGNpxatI4CrhOTJ4X0TLKQAcLRW
-         u3n0oRWSuSRXaaOrtbYMpvb3sRwYhK5ZxQJh/1uaclhyk6GkUuLV7+nlUk8NUhNIOfEx
-         Vwf927pgR0AR/QXqrd16ShFPQLErlyfThqcrK/yzLXOYQPlQTBFmuCUoQToGTKnEMSWN
-         2tHJE5FxAu2d2EKjXhHpHhPs1erHb9h8oQ5656aHOJcywAyTkhzM7A3lbmhTQutKsx9v
-         0sHfm9ZwMyts6yXTPjgmuQjdIi0G7CAJA+3lDYiiNyhQLC26UXlPLZ5nYs65KXUE5Y1S
-         7b6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUs5ZZpSQXUXEg3Av/yNYtX7dTq6kuZEBhSs0yb6LFuLLr3qOo40YtyiSsB7guaQH/7DnQXqgYO3ZOaPvBuz7bB3wCDXPfUzjLIXQxk
-X-Gm-Message-State: AOJu0YzlqGQE6l/sXt4MRyDysWUdAbq7tzKnOIvcFYX9jXpJNhBQ4+Cc
-	NqCfKqHOgwR2oJ1IOes7WmwMt4dpaEx1IeoGFWAu5VwmqvFIV7NM2XwNjdL1OICt4kdDTGIj5Z2
-	n5rcYuOGhU7kef/a1hr93NhrM+1/+1IrpM7FkB6+PBChzwmfU8K/4AKXRe1SekrWpc6s9T4K2he
-	VwcQ==
-X-Received: by 2002:a05:6a00:11df:b0:706:29e6:2ed2 with SMTP id d2e1a72fcca58-70629e639efmr1635528b3a.5.1718783380569;
-        Wed, 19 Jun 2024 00:49:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHp2ee+jTm37JUPAalohhD7m060pnacLcLav948WEvUrYPHLjCwC2idv1NnXncRv5b8z3MMUg==
-X-Received: by 2002:a05:6a00:11df:b0:706:29e6:2ed2 with SMTP id d2e1a72fcca58-70629e639efmr1635520b3a.5.1718783380213;
-        Wed, 19 Jun 2024 00:49:40 -0700 (PDT)
-Received: from kylee-ThinkPad-E16-Gen-1.. ([122.147.171.160])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3cdc6sm10076908b3a.138.2024.06.19.00.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 00:49:40 -0700 (PDT)
-From: Kuan-Ying Lee <kuan-ying.lee@canonical.com>
-To: kuan-ying.lee@canonical.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] scripts/gdb: change the layout of vmemmap
-Date: Wed, 19 Jun 2024 15:49:08 +0800
-Message-Id: <20240619074911.100434-4-kuan-ying.lee@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619074911.100434-1-kuan-ying.lee@canonical.com>
-References: <20240619074911.100434-1-kuan-ying.lee@canonical.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aexp/nWf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718783685; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=153sJGUDwz+Ma4rWOSNrBYcbULlbrmUWxTCNDx3aNXY=;
+	b=aexp/nWfTB7Go0zPz7AUd0fqBnWyBiEaMKuGeHTlTHMigc3AkTVp5zfjL+HTUe+KK3eIWsHHOEO3JeKJhXistWa9IKT+++tflCHXAQG1eUCXpVtsMTGxB33nMdBY5vUM81cNypG1LwyrrZPmH0MalaewveqYtSTTJJd470kxbIw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W8nMtNe_1718783676;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W8nMtNe_1718783676)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Jun 2024 15:54:44 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: laurent.pinchart@ideasonboard.com
+Cc: kieran.bingham+renesas@ideasonboard.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] drm: Remove unused function rcar_cmm_write
+Date: Wed, 19 Jun 2024 15:54:36 +0800
+Message-Id: <20240619075436.86407-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,35 +46,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We need to change the layout of vmemmap in gdb scripts after
-commit 32697ff38287 ("arm64: vmemmap: Avoid base2 order of
-struct page size to dimension region") changed it.
+The function are defined in the rcar_cmm.c file, but not called
+elsewhere, so delete the unused function.
 
-Fixes: 32697ff38287 ("arm64: vmemmap: Avoid base2 order of struct page size to dimension region")
-Signed-off-by: Kuan-Ying Lee <kuan-ying.lee@canonical.com>
+drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c:35:19: warning: unused function 'rcar_cmm_read'.
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9364
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- scripts/gdb/linux/mm.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/scripts/gdb/linux/mm.py b/scripts/gdb/linux/mm.py
-index e0461248abe2..f8b9be3f43e8 100644
---- a/scripts/gdb/linux/mm.py
-+++ b/scripts/gdb/linux/mm.py
-@@ -89,10 +89,10 @@ class aarch64_page_ops():
-         self.MODULES_VADDR = self._PAGE_END(self.VA_BITS_MIN)
-         self.MODULES_END = self.MODULES_VADDR + self.MODULES_VSIZE
+diff --git a/drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c b/drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c
+index 26a2f5ad8ee5..883b960e9acc 100644
+--- a/drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c
++++ b/drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c
+@@ -32,11 +32,6 @@ struct rcar_cmm {
+ 	} lut;
+ };
  
--        self.VMEMMAP_SHIFT = (self.PAGE_SHIFT - self.STRUCT_PAGE_MAX_SHIFT)
--        self.VMEMMAP_SIZE = ((self._PAGE_END(self.VA_BITS_MIN) - self.PAGE_OFFSET) >> self.VMEMMAP_SHIFT)
--        self.VMEMMAP_START = (-(1 << (self.VA_BITS - self.VMEMMAP_SHIFT))) & 0xffffffffffffffff
--        self.VMEMMAP_END = self.VMEMMAP_START + self.VMEMMAP_SIZE
-+        self.VMEMMAP_RANGE = self._PAGE_END(self.VA_BITS_MIN) - self.PAGE_OFFSET
-+        self.VMEMMAP_SIZE = (self.VMEMMAP_RANGE >> self.PAGE_SHIFT) * self.struct_page_size
-+        self.VMEMMAP_END = (-(1 * 1024 * 1024 * 1024)) & 0xffffffffffffffff
-+        self.VMEMMAP_START = self.VMEMMAP_END - self.VMEMMAP_SIZE
- 
-         self.VMALLOC_START = self.MODULES_END
-         self.VMALLOC_END = self.VMEMMAP_START - 256 * 1024 * 1024
+-static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
+-{
+-	return ioread32(rcmm->base + reg);
+-}
+-
+ static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
+ {
+ 	iowrite32(data, rcmm->base + reg);
 -- 
-2.34.1
+2.20.1.7.g153144c
 
