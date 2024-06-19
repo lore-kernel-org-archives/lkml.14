@@ -1,299 +1,137 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAED74062;
-	Wed, 19 Jun 2024 07:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30257441A
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718780739; cv=none; b=eg78WOsxulXs8rQJFlKC2J7L9EUiZF4wpAgBunbIzncjtR0AeIiBM4GtGxJQ0w+GCZRjsANUGAaUinWJL7nUiCey215JVAq4+QvFhFQlOGG1kCfR+tQMS+wXnxIIohFuKkbNPMQhabwNeTQvX7UgcCNLKW6ncanFsHIu7+rqbfk=
+	t=1718780916; cv=none; b=LYor96ApCHPcmbK8SasgEfwehHqlFOXOeMnrisUE82GA26TspB7KS78k0/pgt+XDR88UNoxv9FigLJxedXmfKW2gz+5N/7eLy2KomwgHuNWUUIRr0p12bEJgwQhAxIQV1Z72S2+WF3TBb26S+ymIarM0Bp8X4bsPnG2AxzEUoc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718780739; c=relaxed/simple;
-	bh=vLxu3OkivXxxVVRVE1Q0z6iD753lqUyM5EL3Hr3aS3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RtsjtKKuq4r2IJY7+OSw7DWIWPplSya0oAC7bW4ZMKMyBc0p7gPS8j1nYITQseSG36Pg7db9qDfMomnxoV21b8ND/KTCr5fM5pB3fOI4Kn9emlOuy/s9HODSqQ9HeY9g86oIg3mAbiGvY2mBZh6omu0noyMeC4cBwQwu0edmGKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d07e09bc2e0811ef9305a59a3cc225df-20240619
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:35f24287-7864-4234-86c4-6d70ba1bc597,IP:20,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:5
-X-CID-INFO: VERSION:1.1.38,REQID:35f24287-7864-4234-86c4-6d70ba1bc597,IP:20,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-META: VersionHash:82c5f88,CLOUDID:41f3b6aba82db87615039219a6aad05c,BulkI
-	D:240617193145NAFL2O91,BulkQuantity:2,Recheck:0,SF:66|24|17|19|44|64|102,T
-	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: d07e09bc2e0811ef9305a59a3cc225df-20240619
-Received: from node2.com.cn [(39.156.73.10)] by mailgw.kylinos.cn
-	(envelope-from <luoxuanqiang@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1811458425; Wed, 19 Jun 2024 14:54:46 +0800
-Received: from node2.com.cn (localhost [127.0.0.1])
-	by node2.com.cn (NSMail) with SMTP id 18E77B80758A;
-	Wed, 19 Jun 2024 14:54:46 +0800 (CST)
-X-ns-mid: postfix-667280B5-9150993
-Received: from [10.42.12.252] (unknown [10.42.12.252])
-	by node2.com.cn (NSMail) with ESMTPA id 37A2DB80758A;
-	Wed, 19 Jun 2024 06:54:41 +0000 (UTC)
-Message-ID: <f1e13509-9544-0fa5-4cb4-520c068bde6a@kylinos.cn>
-Date: Wed, 19 Jun 2024 14:54:15 +0800
+	s=arc-20240116; t=1718780916; c=relaxed/simple;
+	bh=Cwc8S8zSetAxGH10fTCvAlXE173zRw+qacuruXD0Xp0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nvGe8ezjs5apK8spSldsLbskHCzfv2N+plzEGekhAxIP3i6zGYWmuoBaaKrZjHqI/0eudnGRdkXnXiCAT6iC3DinqrkhlCPcbHdMY2RaefT+ZEq+i2JHnYXY7Yi5MVdZ1px68oxmn3jUEC6KWvbYja2tdZeDjxQ7owu54pdOTNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sJpQk-0001ZF-Bv; Wed, 19 Jun 2024 09:08:30 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sJpQj-003PY5-Dv; Wed, 19 Jun 2024 09:08:29 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sJpQj-002Gg3-0z;
+	Wed, 19 Jun 2024 09:08:29 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: linux-wireless@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	David Lin <yu-hao.lin@nxp.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Brian Norris <briannorris@chromium.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] [RFC] mwifiex: Fix NULL pointer deref
+Date: Wed, 19 Jun 2024 09:08:24 +0200
+Message-Id: <20240619070824.537856-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH net v3] Fix race for duplicate reqsk on identical SYN
-Content-Language: en-US
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: alexandre.ferrieux@orange.com, davem@davemloft.net, dccp@vger.kernel.org,
- dsahern@kernel.org, edumazet@google.com, fw@strlen.de, kuba@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com
-References: <20240617075640.207570-1-luoxuanqiang@kylinos.cn>
- <20240617175907.60655-1-kuniyu@amazon.com>
-From: luoxuanqiang <luoxuanqiang@kylinos.cn>
-In-Reply-To: <20240617175907.60655-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+When an Access Point is repeatedly started it happens that the
+interrupts handler is called with priv->wdev.wiphy being NULL, but
+dereferenced in mwifiex_parse_single_response_buf() resulting in:
 
-=E5=9C=A8 2024/6/18 01:59, Kuniyuki Iwashima =E5=86=99=E9=81=93:
-> From: luoxuanqiang <luoxuanqiang@kylinos.cn>
-> Date: Mon, 17 Jun 2024 15:56:40 +0800
->> When bonding is configured in BOND_MODE_BROADCAST mode, if two identic=
-al
->> SYN packets are received at the same time and processed on different C=
-PUs,
->> it can potentially create the same sk (sock) but two different reqsk
->> (request_sock) in tcp_conn_request().
->>
->> These two different reqsk will respond with two SYNACK packets, and si=
-nce
->> the generation of the seq (ISN) incorporates a timestamp, the final tw=
-o
->> SYNACK packets will have different seq values.
->>
->> The consequence is that when the Client receives and replies with an A=
-CK
->> to the earlier SYNACK packet, we will reset(RST) it.
->>
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>
->> This behavior is consistently reproducible in my local setup,
->> which comprises:
->>
->>                    | NETA1 ------ NETB1 |
->> PC_A --- bond --- |                    | --- bond --- PC_B
->>                    | NETA2 ------ NETB2 |
->>
->> - PC_A is the Server and has two network cards, NETA1 and NETA2. I hav=
-e
->>    bonded these two cards using BOND_MODE_BROADCAST mode and configure=
-d
->>    them to be handled by different CPU.
->>
->> - PC_B is the Client, also equipped with two network cards, NETB1 and
->>    NETB2, which are also bonded and configured in BOND_MODE_BROADCAST =
-mode.
->>
->> If the client attempts a TCP connection to the server, it might encoun=
-ter
->> a failure. Capturing packets from the server side reveals:
->>
->> 10.10.10.10.45182 > localhost: Flags [S], seq 320236027,
->> 10.10.10.10.45182 > localhost: Flags [S], seq 320236027,
->> localhost > 10.10.10.10.45182: Flags [S.], seq 2967855116,
->> localhost > 10.10.10.10.45182: Flags [S.], seq 2967855123, <=3D=3D
->> 10.10.10.10.45182 > localhost: Flags [.], ack 4294967290,
->> 10.10.10.10.45182 > localhost: Flags [.], ack 4294967290,
->> localhost > 10.10.10.10.45182: Flags [R], seq 2967855117, <=3D=3D
->> localhost > 10.10.10.10.45182: Flags [R], seq 2967855117,
->>
->> Two SYNACKs with different seq numbers are sent by localhost,
->> resulting in an anomaly.
->>
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>
->> The attempted solution is as follows:
->> In the tcp_conn_request(), while inserting reqsk into the ehash table,
->> it also checks if an entry already exists. If found, it avoids
->> reinsertion and releases it.
->>
->> Simultaneously, In the reqsk_queue_hash_req(), the start of the
->> req->rsk_timer is adjusted to be after successful insertion.
->>
->> Signed-off-by: luoxuanqiang <luoxuanqiang@kylinos.cn>
->> ---
->>   include/net/inet_connection_sock.h |  4 ++--
->>   net/dccp/ipv4.c                    |  2 +-
->>   net/dccp/ipv6.c                    |  2 +-
->>   net/ipv4/inet_connection_sock.c    | 19 +++++++++++++------
->>   net/ipv4/tcp_input.c               |  9 ++++++++-
->>   5 files changed, 25 insertions(+), 11 deletions(-)
->>
->> diff --git a/include/net/inet_connection_sock.h b/include/net/inet_con=
-nection_sock.h
->> index 7d6b1254c92d..8ebab6220dbc 100644
->> --- a/include/net/inet_connection_sock.h
->> +++ b/include/net/inet_connection_sock.h
->> @@ -263,8 +263,8 @@ struct dst_entry *inet_csk_route_child_sock(const =
-struct sock *sk,
->>   struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
->>   				      struct request_sock *req,
->>   				      struct sock *child);
->> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_so=
-ck *req,
->> -				   unsigned long timeout);
->> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_so=
-ck *req,
->> +				   unsigned long timeout, bool *found_dup_sk);
->>   struct sock *inet_csk_complete_hashdance(struct sock *sk, struct soc=
-k *child,
->>   					 struct request_sock *req,
->>   					 bool own_req);
->> diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
->> index ff41bd6f99c3..13aafdeb9205 100644
->> --- a/net/dccp/ipv4.c
->> +++ b/net/dccp/ipv4.c
->> @@ -657,7 +657,7 @@ int dccp_v4_conn_request(struct sock *sk, struct s=
-k_buff *skb)
->>   	if (dccp_v4_send_response(sk, req))
->>   		goto drop_and_free;
->>  =20
->> -	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT);
->> +	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT, NULL);
->>   	reqsk_put(req);
->>   	return 0;
->>  =20
->> diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
->> index 85f4b8fdbe5e..493cdb12ce2b 100644
->> --- a/net/dccp/ipv6.c
->> +++ b/net/dccp/ipv6.c
->> @@ -400,7 +400,7 @@ static int dccp_v6_conn_request(struct sock *sk, s=
-truct sk_buff *skb)
->>   	if (dccp_v6_send_response(sk, req))
->>   		goto drop_and_free;
->>  =20
->> -	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT);
->> +	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT, NULL);
->>   	reqsk_put(req);
->>   	return 0;
->>  =20
->> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connectio=
-n_sock.c
->> index d81f74ce0f02..2fa9b33ae26a 100644
->> --- a/net/ipv4/inet_connection_sock.c
->> +++ b/net/ipv4/inet_connection_sock.c
->> @@ -1122,25 +1122,32 @@ static void reqsk_timer_handler(struct timer_l=
-ist *t)
->>   	inet_csk_reqsk_queue_drop_and_put(oreq->rsk_listener, oreq);
->>   }
->>  =20
->> -static void reqsk_queue_hash_req(struct request_sock *req,
->> -				 unsigned long timeout)
->> +static bool reqsk_queue_hash_req(struct request_sock *req,
->> +				 unsigned long timeout, bool *found_dup_sk)
->>   {
-> Given any changes here in reqsk_queue_hash_req() conflicts with 4.19
-> (oldest stable) and DCCP does not check found_dup_sk, you can define
-> found_dup_sk here, then you need not touch DCCP at all.
+| Unable to handle kernel NULL pointer dereference at virtual address 0000000000000140
+| Mem abort info:
+|   ESR = 0x0000000096000004
+|   EC = 0x25: DABT (current EL), IL = 32 bits
+|   SET = 0, FnV = 0
+|   EA = 0, S1PTW = 0
+|   FSC = 0x04: level 0 translation fault
+| Data abort info:
+|   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+|   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+|   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+| user pgtable: 4k pages, 48-bit VAs, pgdp=0000000046d96000
+| [0000000000000140] pgd=0000000000000000, p4d=0000000000000000
+| Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+| Modules linked in: caam_jr caamhash_desc spidev caamalg_desc crypto_engine authenc libdes mwifiex_sdio mwifiex crct10dif_ce cdc_acm onboard_usb_hub fsl_imx8_ddr_perf imx8m_ddrc rtc_ds1307 lm75 rtc_snvs imx_sdma caam imx8mm_thermal spi_imx error imx_cpufreq_dt fuse ip_tables x_tables ipv6
+| CPU: 0 PID: 8 Comm: kworker/0:1 Not tainted 6.9.0-00007-g937242013fce-dirty #18
+| Hardware name: somemachine (DT)
+| Workqueue: events sdio_irq_work
+| pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+| pc : mwifiex_get_cfp+0xd8/0x15c [mwifiex]
+| lr : mwifiex_get_cfp+0x34/0x15c [mwifiex]
+| sp : ffff8000818b3a70
+| x29: ffff8000818b3a70 x28: ffff000006bfd8a5 x27: 0000000000000004
+| x26: 000000000000002c x25: 0000000000001511 x24: 0000000002e86bc9
+| x23: ffff000006bfd996 x22: 0000000000000004 x21: ffff000007bec000
+| x20: 000000000000002c x19: 0000000000000000 x18: 0000000000000000
+| x17: 000000040044ffff x16: 00500072b5503510 x15: ccc283740681e517
+| x14: 0201000101006d15 x13: 0000000002e8ff43 x12: 002c01000000ffb1
+| x11: 0100000000000000 x10: 02e8ff43002c0100 x9 : 0000ffb100100157
+| x8 : ffff000003d20000 x7 : 00000000000002f1 x6 : 00000000ffffe124
+| x5 : 0000000000000001 x4 : 0000000000000003 x3 : 0000000000000000
+| x2 : 0000000000000000 x1 : 0001000000011001 x0 : 0000000000000000
+| Call trace:
+|  mwifiex_get_cfp+0xd8/0x15c [mwifiex]
+|  mwifiex_parse_single_response_buf+0x1d0/0x504 [mwifiex]
+|  mwifiex_handle_event_ext_scan_report+0x19c/0x2f8 [mwifiex]
+|  mwifiex_process_sta_event+0x298/0xf0c [mwifiex]
+|  mwifiex_process_event+0x110/0x238 [mwifiex]
+|  mwifiex_main_process+0x428/0xa44 [mwifiex]
+|  mwifiex_sdio_interrupt+0x64/0x12c [mwifiex_sdio]
+|  process_sdio_pending_irqs+0x64/0x1b8
+|  sdio_irq_work+0x4c/0x7c
+|  process_one_work+0x148/0x2a0
+|  worker_thread+0x2fc/0x40c
+|  kthread+0x110/0x114
+|  ret_from_fork+0x10/0x20
+| Code: a94153f3 a8c37bfd d50323bf d65f03c0 (f940a000)
+| ---[ end trace 0000000000000000 ]---
 
-Apologies for not fully understanding your advice. If we cannot modify
-the content of reqsk_queue_hash_req() and should avoid touching the DCCP
-part, it seems the issue requires reworking some interfaces. Specifically=
-:
+Fix this by adding a NULL check before dereferencing this pointer.
 
-The call flow to add reqsk to ehash is as follows:
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-tcp_conn_request()
+---
 
-dccp_v4(6)_conn_request()
+This is the most obvious fix for this problem, but I am not sure if we
+might want to catch priv->wdev.wiphy being NULL earlier in the call
+chain.
+---
+ drivers/net/wireless/marvell/mwifiex/scan.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- =C2=A0=C2=A0=C2=A0 -> inet_csk_reqsk_queue_hash_add()
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 0326b121747cb..6211ae97da4b2 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1843,6 +1843,9 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
+ 			return 0;
+ 		}
+ 
++		if (!priv->wdev.wiphy)
++			return 0;
++
+ 		band = BAND_G;
+ 		if (radio_type)
+ 			band = mwifiex_radio_type_to_band(*radio_type &
+-- 
+2.39.2
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 -> reqsk_queue_hash_req()
-
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 -> inet_ehash_i=
-nsert()
-
-tcp_conn_request() needs to call the same interface inet_csk_reqsk_queue_=
-hash_add()
-as dccp_v4(6)_conn_request(), but the critical section for installation c=
-heck and
-insertion into ehash is within inet_ehash_insert().
-If reqsk_queue_hash_req() should not be modified, then we need to rewrite
-the interfaces to distinguish them. I don't see how redefining found_dup_=
-sk
-alone can resolve this conflict point. I may be lacking a more holistic
-perspective on this matter. I sincerely hope to receive further guidance
-from you. Thanks! ORZ
-
->
->> +	if (!inet_ehash_insert(req_to_sk(req), NULL, found_dup_sk))
->> +		return false;
->> +
->> +	/* The timer needs to be setup after a successful insertion. */
->>   	timer_setup(&req->rsk_timer, reqsk_timer_handler, TIMER_PINNED);
->>   	mod_timer(&req->rsk_timer, jiffies + timeout);
->>  =20
->> -	inet_ehash_insert(req_to_sk(req), NULL, NULL);
->>   	/* before letting lookups find us, make sure all req fields
->>   	 * are committed to memory and refcnt initialized.
->>   	 */
->>   	smp_wmb();
->>   	refcount_set(&req->rsk_refcnt, 2 + 1);
->> +	return true;
->>   }
->>  =20
->> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_so=
-ck *req,
->> -				   unsigned long timeout)
->> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_so=
-ck *req,
->> +				   unsigned long timeout, bool *found_dup_sk)
->>   {
->> -	reqsk_queue_hash_req(req, timeout);
->> +	if (!reqsk_queue_hash_req(req, timeout, found_dup_sk))
->> +		return false;
->> +
->>   	inet_csk_reqsk_queue_added(sk);
->> +	return true;
->>   }
->>   EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
->>  =20
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index 9c04a9c8be9d..e006c374f781 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -7255,8 +7255,15 @@ int tcp_conn_request(struct request_sock_ops *r=
-sk_ops,
->>   	} else {
->>   		tcp_rsk(req)->tfo_listener =3D false;
->>   		if (!want_cookie) {
->> +			bool found_dup_sk =3D false;
->> +
->>   			req->timeout =3D tcp_timeout_init((struct sock *)req);
->> -			inet_csk_reqsk_queue_hash_add(sk, req, req->timeout);
->> +			if (unlikely(!inet_csk_reqsk_queue_hash_add(sk, req, req->timeout,
->> +								    &found_dup_sk))) {
->> +				reqsk_free(req);
->> +				return 0;
->> +			}
->> +
->>   		}
->>   		af_ops->send_synack(sk, dst, &fl, req, &foc,
->>   				    !want_cookie ? TCP_SYNACK_NORMAL :
->> --=20
->> 2.25.1
