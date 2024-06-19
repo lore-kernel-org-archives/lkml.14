@@ -1,63 +1,85 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698C413D242;
-	Wed, 19 Jun 2024 12:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E89F20B34;
+	Wed, 19 Jun 2024 12:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718798756; cv=none; b=JeOcrXUqT0uPL1xwfC0n+jehVX1P2OL5MOawojLMTJ9/JZEQnRrFz6mYfSo8biqbX621SD9FYlyYQXQrJBoTFPdu3bxvs+u6asv9Gk46pgkG4ZG50euh60e36Ns+IftX8Z4Ugh4AzKYP5wdusEP1EvIQTm7uBmhlttqiptAZDr4=
+	t=1718798885; cv=none; b=ofpufYozXaIrj2vHHO19xzEILOYhJJr1chUR+o9rWHIFAIPLM7eifVvjQo8nJbYs/r+TJOno8adGSRfBENMXs2uH2wjWYTyeoSGTvXStk6asOFl7QiUm4V/5U7jizU5+BdCk9+pb/s9hvep6RgITI1NuY60ZbELLVViDKrNEMeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718798756; c=relaxed/simple;
-	bh=a/dGg86bA0m+Ua7DIL6U5Hh65Z7ekXcYCH9oCM0fDtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bjPqfnQx2lJXGRS28EV7sGCqDCtttRdU6CHufo2tiO5uFkSHYN7gG1EqJW2MCSbXxO4mdwtF42ZNNXpibiLKqFuPy45p7WbX5mja/pFA14V0pYmw5sVdBZDESbbz2HEj9p0CnDAPZtaqtK8VFLHCkpRZKWAktiQgEaFnmcV/LRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e8616dc.versanet.de ([94.134.22.220] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sJu4D-0003Np-2n; Wed, 19 Jun 2024 14:05:33 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
- Chris Morgan <macromorgan@hotmail.com>,
- Furkan Kardame <f.kardame@manjaro.org>,
- Michael Riesch <michael.riesch@wolfvision.net>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 1/5] dt-bindings: mfd: rk809: Use correct compatible in the
- example
-Date: Wed, 19 Jun 2024 14:05:31 +0200
-Message-ID: <10483007.DAOxP5AVGn@diego>
-In-Reply-To: <20240619-rk809-fixes-v1-1-fa93bc5313f4@collabora.com>
-References:
- <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
- <20240619-rk809-fixes-v1-1-fa93bc5313f4@collabora.com>
+	s=arc-20240116; t=1718798885; c=relaxed/simple;
+	bh=SehDOVj0xcMmEoe78u3jDOta+JmRt6fmwneR9FCzK7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OOWsxM0qWdSC9dOyeJi0IbQjNj7YJ9FR0b93206Y7KIAEIBPbx5Hf+2OpUx53sn7Y6GYCsmH6K4i0qiLqLOLZeWQG/dZP3/Zh5/99lcCruu2sN6iIWJEr7ajt6jxJeU7rPbMQ8J6zIcERyou5VERdYXNaxwt3tthZNcnMgAV9LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iew0RSTw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iew0RSTw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A48DDC2BBFC;
+	Wed, 19 Jun 2024 12:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718798884;
+	bh=SehDOVj0xcMmEoe78u3jDOta+JmRt6fmwneR9FCzK7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Iew0RSTwct1BQsvJDNOLo9Xi4avPrBNVX4Mom0A5+ovGuO/6i/Fdvcc/21VqQOdRG
+	 Po3Xnxk6cfOytUfhqJRAsgOMZKJSOhAwXumb6HX3chubWZ/AnDLVtd4rm2fKMser2P
+	 lxUtKY9vwF8yiWEbip1vtalrze9EU+YSlgKvbaRrN14lL8UwaYRbefCm3WqdZBkj5b
+	 7D+4TULE5IXxENs+y4U0mxBRtXNmw5x4S5Pp0+AeuGpIwkn7Ou6GLm0oNdyCGwpdSv
+	 viV8jesakSxfU313MWCQZhAjyMjCjnsSN+qFK2gJsgomm+1pNfltQZXUY0OJCU/KHq
+	 hSCVnsoVKM6KA==
+Date: Wed, 19 Jun 2024 13:07:58 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nuno.sa@analog.com, dlechner@baylibre.com,
+	marcelo.schmitt1@gmail.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] spi: Enable controllers to extend the SPI
+ protocol with MOSI idle configuration
+Message-ID: <5f89baeb-c95a-4ad9-adc7-769fb124c0d4@sirena.org.uk>
+References: <cover.1718749981.git.marcelo.schmitt@analog.com>
+ <36eefb860f660e2cadb13b00aca04b5a65498993.1718749981.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-Am Mittwoch, 19. Juni 2024, 13:23:30 CEST schrieb Cristian Ciocaltea:
-> The example is not able to actually test the schema since it uses a
-> wrong compatible 'rockchip,rk808' instead of 'rockchip,rk809'.
-> 
-> Use the correct compatible and drop the wrong properties in the
-> example section so that dt_binding_check passes.
-> 
-> Fixes: 6c38ca03406e ("dt-bindings: mfd: rk808: Convert bindings to yaml")
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="QH6J6xih8fp6IIfc"
+Content-Disposition: inline
+In-Reply-To: <36eefb860f660e2cadb13b00aca04b5a65498993.1718749981.git.marcelo.schmitt@analog.com>
+X-Cookie: Don't I know you?
 
 
+--QH6J6xih8fp6IIfc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 18, 2024 at 08:10:44PM -0300, Marcelo Schmitt wrote:
+
+> First replies to v3 brought the idea of having a feature detection mechan=
+ism.
+> I didn't really get how to do that. If feature detection is required, can
+> somebody please provide some pointers on how to implement that?
+
+Look at the checks in spi_setup() for bad_bits. =20
+
+--QH6J6xih8fp6IIfc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZyyh0ACgkQJNaLcl1U
+h9ABLgf/XM3S8vAY2xtIjPhw+56Z159aXWzIYnT0IGXhhosxN+39kKViSxaSuO+W
+5xpbfrztdw+y//xbq8xYwOXL8o8/k9s6PCXjJgPJ0pqTWdsXUWNB8ofaPQPZO+Bx
+F/vaxzGc2Rv42MGjSjAp9bMck8a7UCGTxPQRjlhEIcT8fsRGuy+nuYngKekxgz7b
+NI4gBSAnRjYhS8GII4iMdNMqeUuAfLE2d4bwgekJ20E+m28HZWlL86+gwwqCNk6n
+6WSesT5eGGJXaxSm4JJ8UnQTbP/qAWtN9FTFq5riu9APPnXmzvfXHGajMwpEpS6w
+5wS5FeRNgr5EKM5cng2zcjnT8E6a0Q==
+=shHL
+-----END PGP SIGNATURE-----
+
+--QH6J6xih8fp6IIfc--
