@@ -1,143 +1,92 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B256F2E2
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E726F2F1
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718779244; cv=none; b=rfgBhEGWAMyjVdEx6yNRrSVECV5ZjjrCN5SbFNewlhyLFlzC0b9Yz+lCNIXMtB2O/Ow+Z1hhFNssaG7Gzfw5Occa4jTIXy+u8mgIbjKc1nS/rrjqkJnBqIrZvWi1mzHKJc+LAhkcBRN0q1b1UU39PcksbOoIeYsAkE32qNwCy+c=
+	t=1718779259; cv=none; b=BfQwljPwYs/tjLQbu7vLyoq6tv5xJz+HzB3TJRecQww2EMq79wSAXEJ47fyddlhnGe8k+8AbQLqEZ2ynHcfc9fdPgny6T2RgQUlHDItFc6xNy4GA4ufRVTC4DjjPrQpRHrYEkF46gV0PTYGzmK7GfrPHu9ZrdTiiAOZYtoX9Y40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718779244; c=relaxed/simple;
-	bh=STW330cWe99Pche2sdfTP7cbUeC0jxLPrB02JUX1kCQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=ex7RZVsjeobcfDdVjb5b9wiuUaBq4eEoYMaH1z+4PFhZWeg3c17R4Jq5v+LIeNxch6veuLXS+TkAA2C7hfxg2sdHJYUZDDaArmBJP2wNOJzu0qPUzd7NDp/MCTjXiXfDWo04Ib6nyeQSZC13WEpAFZX2F0uSTaHcQWSci3qVJxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cLYq8ZZa; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1718779259; c=relaxed/simple;
+	bh=Amm5o9HpN/p9e2dXb3SmI0c+zPL4yvUSzbUR12Jkknw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kp0KheTCWbfCYIgGbO7BTCZ28Wdx5NL4u2fxXqBJqrb+Gz1q4ZXV+7TUuzZHdESo5+X8fOKMrkUz7116elaF3+W32yWK71AlhvRNGygijtbrQ/66+GYKZEegiASw3LSoVpEcbVxC9sH+iYkt7EDE/qc4JlnEzkd5T2QQGzX/bHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HkQIOB33; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cLYq8ZZa"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240619064034epoutp023df654604f252a6ca92f4d84b2f3dfd3~aVJtsNw-w2571925719epoutp02-
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:40:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240619064034epoutp023df654604f252a6ca92f4d84b2f3dfd3~aVJtsNw-w2571925719epoutp02-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1718779234;
-	bh=Wxu+W8g/EmXfv0ETPHjj9NJMUXWZg033DcwmRKYmwGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cLYq8ZZa18XWKmw2INKMxW67YflQ/vSrbETavFCyMrJHv7QAqZvl7DRaKYbSctLxW
-	 U2+1aeIqVfSFLDlM7oRANLLTueMcUDh2+/YPCLl1vhKyHZJdID1r0FABE5yDdUDYgm
-	 JYas2dFhinC5lK/1A4km9dHKx8pyVfVL1o8PqZJk=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240619064034epcas5p44be878f430423954023f921f7310a575~aVJtdSLjC0248402484epcas5p4Y;
-	Wed, 19 Jun 2024 06:40:34 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4W3vBl0jKNz4x9Q1; Wed, 19 Jun
-	2024 06:40:31 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2D.B0.10047.E5D72766; Wed, 19 Jun 2024 15:40:30 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240619063854epcas5p2d20a854d5e73a5f68f899dad45900cc0~aVIQiw8nc1860218602epcas5p2C;
-	Wed, 19 Jun 2024 06:38:54 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240619063854epsmtrp22949e38c1c7697d118ce69eece13fde0~aVIQiEFKd0989509895epsmtrp2u;
-	Wed, 19 Jun 2024 06:38:54 +0000 (GMT)
-X-AuditID: b6c32a49-1d5fa7000000273f-30-66727d5e6876
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	25.84.18846.EFC72766; Wed, 19 Jun 2024 15:38:54 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240619063853epsmtip1e5e76735e46653f78953f3af3adea342~aVIPvWxc10048100481epsmtip1a;
-	Wed, 19 Jun 2024 06:38:53 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: hch@infradead.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] block: Avoid polling configuration errors
-Date: Wed, 19 Jun 2024 14:38:47 +0800
-Message-Id: <20240619063847.588031-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <693af28d-5e25-432b-ab1b-37eb9026c7cd@kernel.dk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HkQIOB33"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c819f6146so8194673e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 23:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718779255; x=1719384055; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xWG25TSy/I1an8iywuQb5G515alr24rVW8FaitaN0eE=;
+        b=HkQIOB33cdCGu/K9qfu6OK/B55xzQhzAzj10NG6Z2Jof5H1DTZ5hwXzEwdZUXgAgi7
+         /KNVYKvpP5RJTGZVkj0fSNIzF3kYRdtpIwa87Zr2SEgTIDP2JKGmZqrKMNTCgGr+tpeO
+         7/y2VHitLADDcOk8quzzt+yuuvgMBndV1aBfFHJzNpnpvfCbzsEMQ08NlDYi4BREcAAz
+         b3Xra271LiJcFcEV/Q1xl2qkR4sGfZonEo+LT0xn6JuwAW79xwZ9UqbkJiWWyGV/Waay
+         aVk3QgFrdn4aAbHT+nBoJqIalFMkmD03jYlVY2aVbJ20Jw2UiODlnJ+yglKQIO6mVlKN
+         O5Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718779255; x=1719384055;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xWG25TSy/I1an8iywuQb5G515alr24rVW8FaitaN0eE=;
+        b=YAO2c8UvdoWOdkkYP0eCM4L8xcn4G6X/h/VBt4CJO6iv3WVQfYyx5Xo200aH1i7oxt
+         MUE5fbOyI6fGJVkpJvNmLV8aZ1N3CmtlHY5jun8MmDLev2vture67G+vezWYm+NCK4VY
+         FWFD9PslU7n0AohgsnunQ1j2XL3F8ZSqlbpwI6x3yBITBveV+9ORuSQr7eWJ4XdY7D1V
+         bTpWzebXlM6B3Z+tbOVzp66FDH6XLom1s0qezWZCTH/2D9uxAuUpgYnpRrsIpApgCTCA
+         w+kzsTbZkDpTv0Qd+39aPy95Z9RmHqzYhKObQ14HfW5ReSyhOSKHyrVJAIM4fue9aDmr
+         tqrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKfm/AX16AAQxoBkAB5ifPKWCSr8x6nl45b2Fgmr+ih7miJ/WgJhzXGFeasrOg5QEE2TA4oyWLiTU9c6oxkKE3KOR2Guxw1M2Dqo/0
+X-Gm-Message-State: AOJu0YwFwLheIgMrJh5zcOH53FgVeIOjTaw/gkxieoyf4Ih3qx/lxRK5
+	tHkdrSQoUi2X+I8r3TroBHuwoshzUDobLTJnoVUMsFPnv2TzEcCKR6TQ0XLnWkE=
+X-Google-Smtp-Source: AGHT+IGk6IXrWafiMpJhwJp502XVXsfcrZRSyivv/fv5wSqT4lGqJPeuk+T7bbUxsXGwqLVteywdtQ==
+X-Received: by 2002:a19:ca55:0:b0:52c:b239:5719 with SMTP id 2adb3069b0e04-52ccaa6284cmr1005490e87.33.1718779254701;
+        Tue, 18 Jun 2024 23:40:54 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282dd55sm1730660e87.65.2024.06.18.23.40.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 23:40:54 -0700 (PDT)
+Date: Wed, 19 Jun 2024 09:40:52 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, Vikash Garodia <quic_vgarodia@quicinc.com>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5 00/10] media: Fix the last set of coccinelle warnings
+Message-ID: <4fsxowdpaeaxcnu7aewif6yqqk3jdgsjtksbznv2arnmmtiaq6@ibzf2qcel5lc>
+References: <20240618-cocci-flexarray-v5-0-6a8294942f48@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgk+LIzCtJLcpLzFFi42LZdlhTXTeutijNYNoqK4vVd/vZLE5PWMRk
-	8av7LqPF3lvaFpd3zWGzODvhA6sDm8fmFVoel8+WevRtWcXo8XmTXABLVLZNRmpiSmqRQmpe
-	cn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtBmJYWyxJxSoFBAYnGxkr6d
-	TVF+aUmqQkZ+cYmtUmpBSk6BSYFecWJucWleul5eaomVoYGBkSlQYUJ2xp+LjxgL+ngqHvxs
-	Zm1gfMjZxcjJISFgIvF+23nGLkYuDiGB3YwSexZNZQFJCAl8YpSY99ACzr58NQem4camZ2wQ
-	DTsZJZrWtDFDOD8YJb5M2soGUsUmoCSxf8sHRhBbREBYYn9HK9hUZoEgifau9WA1wgJOEi/m
-	HGcCsVkEVCWmPuxjBbF5Bawkrm48zA6xTV7iZtd+oAUcHJwCthJ/jhVClAhKnJz5BGqkvETz
-	1tnMEOXn2CWWH3KHsF0kem8uZ4GwhSVeHd8CNVJK4vO7vWwQdr7E5O/rGSHsGol1m99B1VtL
-	/LuyhwVkLbOApsT6XfoQYVmJqafWMUGs5ZPo/f2ECSLOK7FjHoytJLHkyAqokRISvycsYoWw
-	PSSevX0HDegJjBLn99xnm8CoMAvJO7OQvDMLYfUCRuZVjJKpBcW56anFpgWGeanl8ChOzs/d
-	xAhOilqeOxjvPvigd4iRiYPxEKMEB7OSCK/TtLw0Id6UxMqq1KL8+KLSnNTiQ4ymwOCeyCwl
-	mpwPTMt5JfGGJpYGJmZmZiaWxmaGSuK8r1vnpggJpCeWpGanphakFsH0MXFwSjUwpdz7Nn9W
-	1p3nWsyzqgO7X6XUXJD83xOUmqm5f+pOjvWFXDJHJmfUajU85u/LlNfzlRYsO3jse+8MyUT7
-	wvzYo/sFC24839XO9G/VnJg4a3f5C1nbj3Iv8bKNbTnhfPpfm6v+teYnT7csc5ToEwrPffcw
-	45FF4P6lceIMrJmvo5may04+zP7yPmL3xRQ5N4adX+T5FJfzrA58yDzp9PM1TdsnyK1TWd98
-	+9gemV2CyzM2flwRobNjivLyIzrrXFeLz2ve/lPG8K/O4fM1Cz2Yv4V9upvSp9E94QtPwEPl
-	B2cPucX/d1iqr/nh9A6+f+b8c5znyUQdM1gW9HTu9SP+WfE272OcT4hPnX9IeQ+TvhJLcUai
-	oRZzUXEiAIoxMssTBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnO6/mqI0g/5GbovVd/vZLE5PWMRk
-	8av7LqPF3lvaFpd3zWGzODvhA6sDm8fmFVoel8+WevRtWcXo8XmTXABLFJdNSmpOZllqkb5d
-	AlfGn4uPGAv6eCoe/GxmbWB8yNnFyMkhIWAicWPTM7YuRi4OIYHtjBKL/01ihkhISOx49IcV
-	whaWWPnvOTtE0TdGiY19c8CK2ASUJPZv+cAIYosAFe3vaGUBsZkFQiQmn33OBGILCzhJvJhz
-	HMxmEVCVmPqwD2wor4CVxNWNh9khFshL3OzaDzSTg4NTwFbiz7FCkLCQgI3EnOapzBDlghIn
-	Zz6BGi8v0bx1NvMERoFZSFKzkKQWMDKtYhRNLSjOTc9NLjDUK07MLS7NS9dLzs/dxAgOWa2g
-	HYzL1v/VO8TIxMF4iFGCg1lJhNdpWl6aEG9KYmVValF+fFFpTmrxIUZpDhYlcV7lnM4UIYH0
-	xJLU7NTUgtQimCwTB6dUA9Ne3n3nHaODzm6Om7b+H8OLEydeG+1g0j4+/fq5B8cCd6yWn3bO
-	TNXFsuB794tD1cJme4L5qmYwRk8RlJ7zW4PN3rzBQttoYcbH+PdNaUfCHhyZf9pxz8pzmn+X
-	ximeL+0secJ/Iurhmb8bLaQrvgvvq4luWB371aQ35WkoU/ebj8cOv/zg6BC0o2SdppHRde9s
-	PfuJ+43rGJd2tnkcOby1yFvhmHnIrWX2dQ4ff51S8fvIt6X451ruKo3ozP5nJf9d65vvfCtf
-	+txG4cfpXjmh6H3JIfsmbCtpn/itodbvWfLqT0pn/hlkLzt0bK3C0UOXFWMsBfy+XM2a0NHc
-	IFw6u0Ig0cEk7nnnxCkHbM2VWIozEg21mIuKEwHn3ZK7yAIAAA==
-X-CMS-MailID: 20240619063854epcas5p2d20a854d5e73a5f68f899dad45900cc0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240619063854epcas5p2d20a854d5e73a5f68f899dad45900cc0
-References: <693af28d-5e25-432b-ab1b-37eb9026c7cd@kernel.dk>
-	<CGME20240619063854epcas5p2d20a854d5e73a5f68f899dad45900cc0@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618-cocci-flexarray-v5-0-6a8294942f48@chromium.org>
 
-On 6/16/24 2:39 AM,, Jens Axboe wrote:
->On 6/13/24 2:07 AM, Christoph Hellwig wrote:
->>> We happily allow polled IO for async polled IO, even if the destination
->>> queue isn't polled (or it doesn't exist). This is different than the old
->>> sync polled support.
->> 
->> Yes, and for that to work we can't start returning -EOPNOTSUPP as in
->> this patch, as BLK_QC_T_NONE an be cleared for all kinds of reasons.
->> 
->> So if we want some kind of error handling that people don't even
->> bother to poll for devices where it is not supported we need that
->> check much earlier (probably in io_uring).
->
->There's just no way we can do that, who knows if you'll run into a
->polled queue or not further down the stack.
->
->IMHO there's nothing wrong with the current code. If you do stupid
->things (do polled IO without having polled queues), then you get to
->collect stupid prizes (potentially excessive CPU usage).
+On Tue, Jun 18, 2024 at 01:37:43PM GMT, Ricardo Ribalda wrote:
+> With this set we are done with all the cocci warning/errors.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+> Changes in v5: Thanks Vikash
+> - Remove patches already merged
+> - Fix typos and remove hfi_resource_ocmem_requirement
+> - Link to v4: https://lore.kernel.org/r/20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org
+> 
 
-I think the problem is that when the user makes this incorrect configuration,
-but doesn't have any error feedback, user is unware and easy to get some wrong
-performance information. So I hope to add some feedback for the user to help
-them more easily modify the configuration.
+Just for the clarfification: does the driver build without errors
+if only a part of the patchset is applied? I have the feeling that first
+patches introduce a build error which is fixed in a later patch. If
+that's the case, it's a no-go.
 
-I got your point, therefore, I'm considering whether it would be more
-resonable to not return -EOPNOTSUPP directly to stop the operation.
-Instead, we could detect this information and provide a prompt (like 
-warining?), allowing user to be aware without disrupting the original
-flow. Do you think this approach is more reasonable?
+-- 
+With best wishes
+Dmitry
