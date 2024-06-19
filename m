@@ -1,92 +1,112 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E726F2F1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEA750280;
+	Wed, 19 Jun 2024 06:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718779259; cv=none; b=BfQwljPwYs/tjLQbu7vLyoq6tv5xJz+HzB3TJRecQww2EMq79wSAXEJ47fyddlhnGe8k+8AbQLqEZ2ynHcfc9fdPgny6T2RgQUlHDItFc6xNy4GA4ufRVTC4DjjPrQpRHrYEkF46gV0PTYGzmK7GfrPHu9ZrdTiiAOZYtoX9Y40=
+	t=1718779512; cv=none; b=EzsHEf+P9LtQa5Shi4dH2n39MUZCnyRIq4LGsZn0pLcQG1f9stwxwszOHsyssB0Q4S2Dj+qLrCsl0zPKobI26x/j9cPTUKVsTK5rlt5qxUaHM3Y3Eqo3PJv19oDP2Ma16oHAJNL9aaNX//aNsrMdYVZ+NOwO4lzQcF4ABfbHlMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718779259; c=relaxed/simple;
-	bh=Amm5o9HpN/p9e2dXb3SmI0c+zPL4yvUSzbUR12Jkknw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kp0KheTCWbfCYIgGbO7BTCZ28Wdx5NL4u2fxXqBJqrb+Gz1q4ZXV+7TUuzZHdESo5+X8fOKMrkUz7116elaF3+W32yWK71AlhvRNGygijtbrQ/66+GYKZEegiASw3LSoVpEcbVxC9sH+iYkt7EDE/qc4JlnEzkd5T2QQGzX/bHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HkQIOB33; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718779512; c=relaxed/simple;
+	bh=P/NG24g5CSvJ6QZhArAef5FhFBYfQFIbCbKT0+9eQ4Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UowsUrizGFnC4ZhdpOgZ75LdzDsIP11F+HaSVbiTvki2WFYOb4liPMiGg08ku87Ytqggpiza/pVUaKv7fqq3e39S+0yrNEI64kpmpz91rcIdnmSEAUFLHXj1y+2xpi+mggebI0rhX8YMg6Q17mMsFFrgHaXVqhMSsPk/914O9Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=YmmKJhhy; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HkQIOB33"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c819f6146so8194673e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 23:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718779255; x=1719384055; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xWG25TSy/I1an8iywuQb5G515alr24rVW8FaitaN0eE=;
-        b=HkQIOB33cdCGu/K9qfu6OK/B55xzQhzAzj10NG6Z2Jof5H1DTZ5hwXzEwdZUXgAgi7
-         /KNVYKvpP5RJTGZVkj0fSNIzF3kYRdtpIwa87Zr2SEgTIDP2JKGmZqrKMNTCgGr+tpeO
-         7/y2VHitLADDcOk8quzzt+yuuvgMBndV1aBfFHJzNpnpvfCbzsEMQ08NlDYi4BREcAAz
-         b3Xra271LiJcFcEV/Q1xl2qkR4sGfZonEo+LT0xn6JuwAW79xwZ9UqbkJiWWyGV/Waay
-         aVk3QgFrdn4aAbHT+nBoJqIalFMkmD03jYlVY2aVbJ20Jw2UiODlnJ+yglKQIO6mVlKN
-         O5Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718779255; x=1719384055;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xWG25TSy/I1an8iywuQb5G515alr24rVW8FaitaN0eE=;
-        b=YAO2c8UvdoWOdkkYP0eCM4L8xcn4G6X/h/VBt4CJO6iv3WVQfYyx5Xo200aH1i7oxt
-         MUE5fbOyI6fGJVkpJvNmLV8aZ1N3CmtlHY5jun8MmDLev2vture67G+vezWYm+NCK4VY
-         FWFD9PslU7n0AohgsnunQ1j2XL3F8ZSqlbpwI6x3yBITBveV+9ORuSQr7eWJ4XdY7D1V
-         bTpWzebXlM6B3Z+tbOVzp66FDH6XLom1s0qezWZCTH/2D9uxAuUpgYnpRrsIpApgCTCA
-         w+kzsTbZkDpTv0Qd+39aPy95Z9RmHqzYhKObQ14HfW5ReSyhOSKHyrVJAIM4fue9aDmr
-         tqrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKfm/AX16AAQxoBkAB5ifPKWCSr8x6nl45b2Fgmr+ih7miJ/WgJhzXGFeasrOg5QEE2TA4oyWLiTU9c6oxkKE3KOR2Guxw1M2Dqo/0
-X-Gm-Message-State: AOJu0YwFwLheIgMrJh5zcOH53FgVeIOjTaw/gkxieoyf4Ih3qx/lxRK5
-	tHkdrSQoUi2X+I8r3TroBHuwoshzUDobLTJnoVUMsFPnv2TzEcCKR6TQ0XLnWkE=
-X-Google-Smtp-Source: AGHT+IGk6IXrWafiMpJhwJp502XVXsfcrZRSyivv/fv5wSqT4lGqJPeuk+T7bbUxsXGwqLVteywdtQ==
-X-Received: by 2002:a19:ca55:0:b0:52c:b239:5719 with SMTP id 2adb3069b0e04-52ccaa6284cmr1005490e87.33.1718779254701;
-        Tue, 18 Jun 2024 23:40:54 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282dd55sm1730660e87.65.2024.06.18.23.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 23:40:54 -0700 (PDT)
-Date: Wed, 19 Jun 2024 09:40:52 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, Vikash Garodia <quic_vgarodia@quicinc.com>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v5 00/10] media: Fix the last set of coccinelle warnings
-Message-ID: <4fsxowdpaeaxcnu7aewif6yqqk3jdgsjtksbznv2arnmmtiaq6@ibzf2qcel5lc>
-References: <20240618-cocci-flexarray-v5-0-6a8294942f48@chromium.org>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YmmKJhhy"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ILbj6E025049;
+	Tue, 18 Jun 2024 23:44:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=r
+	zNPxCMXvXFQ/XPnxovAj2nPmInvtEMcPu2BzcZ+63Y=; b=YmmKJhhyy/3JpcuYB
+	N5ytcahIWKuYr/mwlNKcVB9oRpLIfMjZ2rEaZDhloUe9pLmeSbUIoRNSfc1zDhr6
+	rKhPaRNFOEaXP9eIrY4x8mK6P5vL4QpMzzDasYKbSuTyRm29z/WtSxw/kVXW6Ufi
+	WjItoYNH48GZgc5LulIrRu6KNmib1MkZUBAPp0+LyjcgyEeauqTqcC/hKgXaLhsJ
+	MkvGjFttm1YzVVG2XVkJpBvdFlsQW3qGVMvU1yTxA2rvsa2Nk70kVSxvokKJTmZd
+	Xk8MS9jy1OYpKF2GrynXRTNH+w0bGbFcXDEJoP0WRjJqbtUxAIPmbtspdOZ9fq2b
+	AJ7AQ==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yujap9dyy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 23:44:44 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 18 Jun 2024 23:44:42 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 18 Jun 2024 23:44:42 -0700
+Received: from maili.marvell.com (unknown [10.28.36.165])
+	by maili.marvell.com (Postfix) with ESMTP id 208FB3F706F;
+	Tue, 18 Jun 2024 23:44:37 -0700 (PDT)
+Date: Wed, 19 Jun 2024 12:14:36 +0530
+From: Ratheesh Kannoth <rkannoth@marvell.com>
+To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
+CC: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+        <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 4/4] net: phy: bcm-phy-lib: Implement BroadR-Reach
+ link modes
+Message-ID: <20240619064436.GA1191293@maili.marvell.com>
+References: <20240617113841.3694934-1-kamilh@axis.com>
+ <20240617113841.3694934-5-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20240618-cocci-flexarray-v5-0-6a8294942f48@chromium.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240617113841.3694934-5-kamilh@axis.com>
+X-Proofpoint-GUID: TB8XUTCyNFihKLoM0VgCZ_pfK25VIJm4
+X-Proofpoint-ORIG-GUID: TB8XUTCyNFihKLoM0VgCZ_pfK25VIJm4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
 
-On Tue, Jun 18, 2024 at 01:37:43PM GMT, Ricardo Ribalda wrote:
-> With this set we are done with all the cocci warning/errors.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
-> Changes in v5: Thanks Vikash
-> - Remove patches already merged
-> - Fix typos and remove hfi_resource_ocmem_requirement
-> - Link to v4: https://lore.kernel.org/r/20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org
-> 
+On 2024-06-17 at 17:08:41, Kamil Horák - 2N (kamilh@axis.com) wrote:
+> +
+> +	if (brr_mode) {
+> +		linkmode_set_bit_array(phy_basic_ports_array,
+> +				       ARRAY_SIZE(phy_basic_ports_array),
+> +				       phydev->supported);
+> +
+> +		val = phy_read(phydev, MII_BCM54XX_LRESR);
+> +		if (val < 0)
+> +			return val;
+> +
+> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +				 phydev->supported, 1);
+> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
+> +				 phydev->supported,
+> +				 val & LRESR_100_1PAIR);
+> +		linkmode_mod_bit(ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
+> +				 phydev->supported,
+> +				 val & LRESR_10_1PAIR);
+> +	} else {
+> +		return genphy_read_abilities(phydev);
+> +	}
+> +
+> +	return 0;
+nit: Could you move this return to "if" statement and get rid of else part ?
 
-Just for the clarfification: does the driver build without errors
-if only a part of the patchset is applied? I have the feeling that first
-patches introduce a build error which is fixed in a later patch. If
-that's the case, it's a no-go.
+> +static int bcm5481_config_aneg(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +	u8 brr_mode;
+nit: Reverse xmas-tree.
 
--- 
-With best wishes
-Dmitry
+> +static int bcm54811_config_aneg(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +	u8 brr_mode;
+nit: Please apply reverse xmas-tree comment everywhere applicable.
