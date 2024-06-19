@@ -1,80 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DD315667E;
-	Wed, 19 Jun 2024 17:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D1184FAD
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 17:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718817692; cv=none; b=EDEGAqNyt0UqzTbVXuLOSEcITnvh5pYkix/d/nDKha/Rfr8fkGUAyqaNRZc3nZPdjgTBpN8rKsGyZ4vF1XgEKwZo8cUSaFUEF76Zo0E6Xh01ERefkDzHPUacM/Ni6LohM8RRA8j4AjAwwtwb/LGnNA7AMqh/Xx5afjSKGzOL1g4=
+	t=1718817873; cv=none; b=UKwVoE2RRLsoF8/5oE+tQfnBAsGAFwCI7vv4I2G9+LPX/WsatTgISX1fPLgAM77/hYxEdFU1qldbBnMjSs55Zmk18bvTUqAxq7XwEVoOKa0ROD8Cw46zwV6vgGAAp+ZQmYlEJn3FiJE8V5TO2C4ZtCIDMuZ/mFdCpEYgqv2zlqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718817692; c=relaxed/simple;
-	bh=GOMfOjGpPzbqQerwH2FiS5nJKmYDeC/Xq1XiQ6rFh1U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=suSArAfaBr5YcKfQ4afp43yEU3r474aJdrlFpc5UPfiBSTf90IUgPY045W3z4mZU7e6LNKfgH42d0fGItTZqn92s7WpcILVNCt+pLTHl7wHV0Jr3XEeqI1vd1snQM/hz8OE8Yp46raeMwxu2DJ2YMqdpvSJkEmltAFYcCiAZ8DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4jS/Hux; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718817873; c=relaxed/simple;
+	bh=pHGHrMlLeKjI1/up7Rrmj+CZx30fzhzHLvJvS34Vm1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZoDbXnD+Fj4uKpiwyim1zU/3gusve84Dz08jtQ3HpEdpV0mYFIwaUQFwOQuzMRVGFZXZUExdJX8+a7TjkyEELfsfUdZvUiBFJY/ZdDzByEWXk984RGLmUgup/uqJTag8CWOa6kGlsSsoLc+c5Zv3JzetsxhbhWWGtxw0I4SCG9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Dor1pG4Q; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4jS/Hux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718817690; x=1750353690;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GOMfOjGpPzbqQerwH2FiS5nJKmYDeC/Xq1XiQ6rFh1U=;
-  b=Z4jS/Hux1/cWORn8Lus5xdzazajGxc99Uds9Y89RJb4rfqrBDB7kUPHD
-   3NFO0adKGMxS3+mixrFSnJiHycbrtJgl3WUPZgTzdeW7apOa0FZlu29e1
-   uimj6CHDeXKsIdDSM4r1GWtjvx5w2PkHf+gXNOMIvTymlxcHHZorRHe7Q
-   f6PNaNBJJnvY4A7BGI3XK5crmDHplKsoO7A7wi21gm2ch/TW3QJ24GpRC
-   98miLV5Ich/z/u2H2lR6iRh6FaVhNKj+lOwyxLNMVZDzKE7IYBgP/ypW5
-   SGuOdT58aCLbgpqETmdCP2PGQeoFxJI7iBu8zGyBk6lNhdFEcu6yUzyuh
-   g==;
-X-CSE-ConnectionGUID: 5ADrdKX+Tdu4KgaDo1iiSA==
-X-CSE-MsgGUID: DLYHAE9NTdCuBvf7oAldqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15531161"
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15531161"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 10:21:25 -0700
-X-CSE-ConnectionGUID: uHcdJ619RfqVzqPHGjxVIQ==
-X-CSE-MsgGUID: 4yxtOL11QhCVCeL43q6PjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="41840025"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by fmviesa007.fm.intel.com with ESMTP; 19 Jun 2024 10:21:25 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: rafael@kernel.org,
-	daniel.lezcano@linaro.org,
-	rui.zhang@intel.com,
-	lukasz.luba@arm.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 0/3] Processor thermal interrupts for Lunar Lake
-Date: Wed, 19 Jun 2024 10:21:06 -0700
-Message-ID: <20240619172109.497639-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Dor1pG4Q"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2547e1c7bbeso44574fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718817870; x=1719422670; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WW/sGpONNf0gL3cR4b4skPpNC8NQNbXJ/sZFcTqP6DY=;
+        b=Dor1pG4Qu+/1feuIJb5xH9E1dRiL/pF4P/tuzZCw02844zQYFW4t6pejHri09PnSsg
+         ZYh6A4QbVIO9g16Dt4sVW3/owtrYOfO8G9q0gaKu3Q0hcuFATbB+mL/k/bhbU+0xhKWk
+         gYpkAhSQ5dJfyhQgHPtmFafJkfXDOVqXGS1GOnY/n/5EQjW7PYxnGZ9AqZJs1R7XRcx2
+         PM+1Ja2iZ5eE0HrUe+8K3T6/qCMggorIBLkI6wrsbuBfpzKjq0MxLd65PULuFYa2UDVm
+         vrpqYZKVg21F38RWVaJjqqmU7xWJxbahWaFamP6Q6XtJoScqsoV2i8dnwZ75SgrYupD/
+         gdsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718817870; x=1719422670;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WW/sGpONNf0gL3cR4b4skPpNC8NQNbXJ/sZFcTqP6DY=;
+        b=EBE7DhFrm9vQddUeXfDywxA5kOzh7dT74DC+7sWf37eDJ1od1jV94UHaXZM1fxo1AM
+         OdV3JJ3+hM4Q5bw6ukpl6fzLQJet3Vd338q7ZfV5QWU+RH2etXyxV5BVcDf+LO+IyaJ0
+         7G/QU8USTvDhESW5h8QoY8bElcIcu0g4A5W2kJW4S3K1QOObeFdesy44XLAXL0n/kUB3
+         WttJ8uXljqkofhhp25IVREgiXlQV0c/Uhk61Cb9WncQORKB4RooYaSe7X8p7BamapQP1
+         1YAwRj8TS21KG6u12mZm9cTL1W+Yjcs1pdmzI/J1VzljV7ucBmDOVG2pYuTsYMUisYYP
+         I8ig==
+X-Forwarded-Encrypted: i=1; AJvYcCXR/jV/yEtukrZptZkhAsDDL7AdvvHpt4iOOgMrVeoz16aID0ecqHTiLlDsfwkM0QBvnVw1wx+tZUZbJBpMvA5eLUZdx3Tmhhr48i/u
+X-Gm-Message-State: AOJu0YxPmHPHCrB+pD//xAN0wT8T0Y9buXkyYk66RfyDdoazNjdiFUBM
+	KkKEvqJqTLnH0S5/UKe1axMU4+8Eaznx+gXBmGoUlSfluryw2jjy8xc3MmgYQNo=
+X-Google-Smtp-Source: AGHT+IHR54HXcr7/yjcrsiJmtUghksi74ROiI+fCbYFFhArdAwoof+CXH2w8urjUZ7OSSXvEzQS16w==
+X-Received: by 2002:a05:6870:1716:b0:258:44b7:b842 with SMTP id 586e51a60fabf-25c94991633mr3524648fac.13.1718817870065;
+        Wed, 19 Jun 2024 10:24:30 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2567a94e375sm3804185fac.4.2024.06.19.10.24.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 10:24:29 -0700 (PDT)
+Message-ID: <e3c12062-9bb3-40fd-8b55-5cecbd2fda4b@baylibre.com>
+Date: Wed, 19 Jun 2024 12:24:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/6] spi: Enable controllers to extend the SPI protocol
+ with MOSI idle configuration
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ nuno.sa@analog.com, marcelo.schmitt1@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1718749981.git.marcelo.schmitt@analog.com>
+ <36eefb860f660e2cadb13b00aca04b5a65498993.1718749981.git.marcelo.schmitt@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <36eefb860f660e2cadb13b00aca04b5a65498993.1718749981.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Enable MSI interrupts for Lunar Lake. Also enable Workload hint and power
-floor support.
+On 6/18/24 6:10 PM, Marcelo Schmitt wrote:
 
-Srinivas Pandruvada (3):
-  thermal: intel: int340x: Remove unnecessary calls to free irq
-  thermal: intel: int340x: Support MSI interrupt for Lunar Lake
-  thermal: intel: int340x: Enable WLT and power floor support for Lunar
-    Lake
+...
 
- .../processor_thermal_device.h                |   1 +
- .../processor_thermal_device_pci.c            | 116 ++++++++++++++----
- 2 files changed, 91 insertions(+), 26 deletions(-)
+> @@ -3928,7 +3934,8 @@ int spi_setup(struct spi_device *spi)
+>  	 * so it is ignored here.
+>  	 */
+>  	bad_bits = spi->mode & ~(spi->controller->mode_bits | SPI_CS_WORD |
+> -				 SPI_NO_TX | SPI_NO_RX);
+> +				 SPI_NO_TX | SPI_NO_RX | SPI_MOSI_IDLE_LOW |
+> +				 SPI_MOSI_IDLE_HIGH);
 
--- 
-2.40.1
+This looks wrong to me. Adding flags here causes them to be ignored
+rather than to be checked.
+
+I also did a runtime check with a random driver and a SPI controller
+that does not have the flag.
+
+	spi->mode |= SPI_MOSI_IDLE_LOW;
+	ret = spi_setup(spi);
+	if (ret)
+		return ret;
+
+It incorrectly passes when used with this change but correctly fails
+without this change.
+
+>  	ugly_bits = bad_bits &
+>  		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
+>  		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL);
 
