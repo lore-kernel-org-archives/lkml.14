@@ -1,99 +1,101 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.208])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C141D54A;
-	Wed, 19 Jun 2024 14:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629831D54A;
+	Wed, 19 Jun 2024 14:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718809061; cv=none; b=d5K2SYUQ03HLWb6Y45zDrppCLimVGm2xOa7GjroGRrxrLpQObx0YVQZQLVrN5ve0L5hW9WaHTjHlDKf0rrszFe3259mPzALWeDj98W7mMjrt0EwM1NK2jXxEqFPn1t6/4Uta5rYf8+j+RZdM7gN+1lAb+DRpj61dCdmF5GcxSW8=
+	t=1718809071; cv=none; b=Ti5h2K2YFh186lqx2TuoWUxBhOqk5hsPvHW8pn4pNGeyk2bhFlaUIsUh4sk9T62s3Uvx6ugN/6ZGpHqKVofDAlr/8sm1atOaw2SDE/t9C57Sa0dMkbP7a5PiYpD7IJuMDhVprOhDspkVfRW3BbKzUfl4qViHJmftFVgLjbNsHLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718809061; c=relaxed/simple;
-	bh=iZbm6EdAbJzUiVO4UtD9tGvM+sfX52gde6b5TpOe++k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZsG3j2+QwsNmkSZjEAdKCrV5upaLYZFkD2CBfwIV5Sw39LNDxTDFP2PrAZ1UJa3pt/3FQSkAEiNrnBYPWX4h0TPUwmIXuRdI/0Md20OCPKUGRUvkjIubrDZTUXxfSRuuh2WtHVYRNQnsmA8ZvOn8WoPw9waI5TironcDxitnYQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DeO5eaTa; arc=none smtp.client-ip=192.19.144.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1718809071; c=relaxed/simple;
+	bh=ZkMHEgPxztw8pKKbY0XOy/xm8b5k/AZM4TZxny+/PJw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XB1ngE60VCkLoTHUjy5mfj/ZAooZqPa47JN1EDoOyOxqwL3yMTYPZY0TJSll+8rLhzpnC+e6jnSaYa7AlOj7XZ8b6PqjVCmhVk6m5Ip44xyEUmgkb/4UGCspx3Bxqy5I7hU99TogvCuNto3xAiKp/Pr5gUbinZ/+B7r4THnAylQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8ycIJZa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DeO5eaTa"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id AB7DFC0000EC;
-	Wed, 19 Jun 2024 07:48:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com AB7DFC0000EC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1718808507;
-	bh=iZbm6EdAbJzUiVO4UtD9tGvM+sfX52gde6b5TpOe++k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DeO5eaTaP/IqjtEVHu6D/Jn3oveijOQfNlLsWIqsuRN7nhkd+h4aDCZsf2sGzM1H2
-	 pVGZLgtd9GzaFxTZAcz7T/41Vmb/74cfkIo/V5WJlS9vq6ammieC/s3dkmJCzvM+xW
-	 sbL5fTI1UjsKRzRFie8rG4TsDSG/TmCzABQjXZ3M=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 763BA18041CAC4;
-	Wed, 19 Jun 2024 07:48:25 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: stable@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH stable 6.1] MIPS: dts: bcm63268: Add missing properties to the TWD node
-Date: Wed, 19 Jun 2024 07:48:25 -0700
-Message-Id: <20240619144825.4052589-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8ycIJZa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E985C32786;
+	Wed, 19 Jun 2024 14:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718809071;
+	bh=ZkMHEgPxztw8pKKbY0XOy/xm8b5k/AZM4TZxny+/PJw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=C8ycIJZagzNnNSA+hC1cRBGft8bjUMJJJNDCtyWe+er+1VmrnAdMkX/y2QINJe2E1
+	 Morft4ce9ZM45q9RlD+idaF9h1DH/mc/4yXgkWaD+GWIFyQDEy4DZXWn/xTUMQWX8G
+	 dJ/qgsByJzU0GmHmGaGiJLTJEPmYU9SSLmzdgc+56L/dUukihp7Tn90vDfRojJ+Fx+
+	 el3iGGx/7Fzmzv423Oi2iqo5N1S0WjxKJcu7RUkmrO1a/40QJx9MFKRigXfp0RohMv
+	 QYysRrpEfOyeMhV2XE238/ge4fW5UVdk4ads9jy6pvuZ1ntwgBsjC+AkUJ1u3d+rqO
+	 NhbsfPkAo7OxQ==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5bad4e45863so240571eaf.3;
+        Wed, 19 Jun 2024 07:57:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVI46MCO0l/rToRJ7OHdF/6S2Uye2McgAmCd6qp3x0y8hLBu4ryPwMkSAanxIdSei4ttecHCWQvcQ89GZkIdCFQxLH/YRouJUAs2KlInmZk6EqVMbjbKchqBwXPw1WxmZBY1YGxMulYrA==
+X-Gm-Message-State: AOJu0Yz2b4XU7mpENx35HHVCvP2mxRlIgCJuLh7Vul/raDrFnz/30B3X
+	9AahFzC7HXB+9p7PIYlsEdQwz0Jw1hk5f+cLzkPvjDWejs1Ynk7Mtm9O/GFH5+12kF0P+tUNOth
+	4eLqptudmFNx5horaKpc7riVEfx4=
+X-Google-Smtp-Source: AGHT+IGlpxlBrETuifBLsq18z7u9FT21s8dDGcIjFPkGNfc0Cnok6+3k27UncVRS6CwnMyMIXet28xE49ro39s40OV8=
+X-Received: by 2002:a4a:c60f:0:b0:5bd:af39:c9d9 with SMTP id
+ 006d021491bc7-5c1ad9093ebmr3302786eaf.0.1718809070470; Wed, 19 Jun 2024
+ 07:57:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240618214225.50953-1-mario.limonciello@amd.com>
+In-Reply-To: <20240618214225.50953-1-mario.limonciello@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 19 Jun 2024 16:57:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hJaF16OT03V_8YAmRwQWgtQohTTw6pDKFS2hk0nDg59A@mail.gmail.com>
+Message-ID: <CAJZ5v0hJaF16OT03V_8YAmRwQWgtQohTTw6pDKFS2hk0nDg59A@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: Downgrade Intel _OSC and _PDC messages to debug
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: rafael@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, PradeepVineshReddy.Kodamati@amd.com, 
+	clin41@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+On Tue, Jun 18, 2024 at 11:42=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> commit 95272641338a ("ACPI: processor: Use _OSC to convey OSPM processor
+> support information") introduced messages related to determining processo=
+r
+> support from the firmware.
+>
+> The UUID 4077A616-290C-47BE-9EBD-D87058713953 and _PDC methods are
+> only used on Intel platforms, but all X86 platforms emit the messages.
+>
+> Attempting to evaluate them and showing messages on which are used is
+> unnecessary for most users.  Downgrade the messages to debug instead.
+>
+> Cc: PradeepVineshReddy (Pradeep Vinesh Reddy) Kodamati <PradeepVineshRedd=
+y.Kodamati@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/acpi/acpi_processor.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.=
+c
+> index 7a0dd35d62c9..e82ec4f126bc 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -598,9 +598,9 @@ static bool __init acpi_early_processor_osc(void)
+>  void __init acpi_early_processor_control_setup(void)
+>  {
+>         if (acpi_early_processor_osc()) {
+> -               pr_info("_OSC evaluated successfully for all CPUs\n");
+> +               pr_debug("_OSC evaluated successfully for all CPUs\n");
+>         } else {
+> -               pr_info("_OSC evaluation for CPUs failed, trying _PDC\n")=
+;
+> +               pr_debug("_OSC evaluation for CPUs failed, trying _PDC\n"=
+);
+>                 acpi_early_processor_set_pdc();
+>         }
+>  }
+> --
 
-commit 24b333a866a10d4be47b9968b9c05a3e9f326ff5 upstream
-
-We currently have a DTC warning with the current DTS due to the lack of
-a suitable #address-cells and #size-cells property:
-
-  DTC     arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dtb
-arch/mips/boot/dts/brcm/bcm63268.dtsi:115.5-22: Warning (reg_format): /ubus/timer-mfd@10000080/timer@0:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-arch/mips/boot/dts/brcm/bcm63268.dtsi:120.5-22: Warning (reg_format): /ubus/timer-mfd@10000080/watchdog@1c:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
-arch/mips/boot/dts/brcm/bcm63268.dtsi:111.4-35: Warning (ranges_format): /ubus/timer-mfd@10000080:ranges: "ranges" property has invalid length (12 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 1)
-
-Fixes: d3db4b96ab7f ("mips: dts: bcm63268: add TWD block timer")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
-The Fixes tag was partially incorrect which is why this change should
-have been applied to the 6.1 stable tree, but it was not.
-
- arch/mips/boot/dts/brcm/bcm63268.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-index 8926417a8fbc..87c75faf4a3b 100644
---- a/arch/mips/boot/dts/brcm/bcm63268.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-@@ -109,6 +109,8 @@ timer-mfd@10000080 {
- 			compatible = "brcm,bcm7038-twd", "simple-mfd", "syscon";
- 			reg = <0x10000080 0x30>;
- 			ranges = <0x0 0x10000080 0x30>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 
- 			wdt: watchdog@1c {
- 				compatible = "brcm,bcm7038-wdt";
--- 
-2.34.1
-
+Applied as 6.11 material, thanks!
