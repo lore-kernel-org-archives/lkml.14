@@ -1,105 +1,105 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5624A14B96E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91B01DFFB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807874; cv=none; b=B32yfnOcUh41m5lZBIYpI0VPG3B3WjcizbX244CHOiCOLLUilQ21KFQa48d9WHhacHK2P0UA97M1b7ERpQCvqXnG8K+J/Lzjtg0KKEZH6W8UP5GnXVvEM2ExxLlNklcBBKS16E/D9vql8l1nV0RgKfAsx2e+U+0CXbSdfiE7Rys=
+	t=1718807884; cv=none; b=hOU0x8rXetBqQQn8MMvIC6XIvRoUrTmySB2edFD9bTHGMT7OM0iIdt+6rf56XNeuc123CHEKu7Ke2p47b3buTJ5ifHAO0zvEmswyR8n8sYadTw8NKmDmxJPu0uXhCzWFrziFqWaMmcOpUc/QnHwyFAliMWphbKu0+hJBueF42hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718807874; c=relaxed/simple;
-	bh=xz8466KeS3kFFR0h/8XeCqzSrxi1hZ75OsH8Tv9FjPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s4WtApZRf0WQrsnI57wQ4BBfhH8IMat+l1o4GgnSlU+wDvCE8ZPuzu82ZlLCCvtUzcqSCuqH5g7HzXXa4cns0CFZuinpkgjNyml3L8z3oFpmODM0c5/ILiEWGoPdz7DNB2Z3PrBlbydDDowt4mJ6zslNWNx2JfMYp+vL596d2MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EJaiHwHp; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718807884; c=relaxed/simple;
+	bh=HgRd+PsG2Fckv+DtGDkxGSQtGswJ37qAbmLorPvU8rQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CH0ghab2J3KOZ4XCRYWXucGDVRGLNVderawSdepvAraH6x6wm622jG3Li3PYeusQtZKXmMbY2gz7JA+H3+59aSly0K6Ux4WX3iFJDqxhjhBy+dPfrYyKnYvseLm9qy71LeXcmSnjtwbMXHZl3qRSltnQFurZEXnAkJN2QWXA8Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=hG8ZOFqY; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJaiHwHp"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so540580a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:37:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hG8ZOFqY"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4405e343dd8so27439331cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718807870; x=1719412670; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mW6qIwgaMhv1Ukx6IUSceUqe9uJpeRHrbJHiEQy9EwE=;
-        b=EJaiHwHprRqUXvGvwRBw5AcTvT/Qwd758d8F1zyOXd//VDqQphHziP4K96uf9N8337
-         q3Un43RAtXDTkVE9XbcbNo3n2e2Y5ZsTExjxncHstu2VLXiYmKOe7adTi2iSBJMkSWgL
-         VCuTLibikSimhZDssQQZCyV7XC9yFLPT1O2nkkPDY4FOg9rGGudFjwv17R7B32+FWC+h
-         8tZLRqA31RohYeZzc3CKHmLX8rhqskC9t8IjQsXqJR/S3EKR756zKwx14J7fewvUQtx9
-         ylJyCz7vk5PLewX4f+D28tNuj0qIJuXE6UAtjOUJcb3C68cZJCqYVZ3Vbb3gHYIZmaa5
-         N7IQ==
+        d=ziepe.ca; s=google; t=1718807882; x=1719412682; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6pJIKfjLvugpNiyWUPkn81xpwGb7zZV1Mhqp6qTkwpU=;
+        b=hG8ZOFqYKsuD6uxQvkScqtq6JjKE6zeqlEHXHxrXP6FYCb5gni/cKPVzcaJavK/ThI
+         6Y7PZxddNNSGMl2u6GUwBQZSyyp40G+A9LsWEJDRBBlrX05lmn+FYdiYXPk5oPXiLySX
+         JunEr6sbxt6JQBIGAscHr+93uRJ0Nyme3un/4H5nv6nLR2vNs4zvx8L+v4QdyzXBk9zh
+         pLCNUsQHGVC1VyHEHug3fhbC6PuCpUQF/c17jUiqZMYdS46KNDtpTxbCXJm7AOiqK8hD
+         /gKCyZk6R1+AbjouwfLrjlSiTq/+oOT8vzg5IR51EM2FUU9tpUxmN+c8wJzHZOcpspiY
+         ESNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718807870; x=1719412670;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mW6qIwgaMhv1Ukx6IUSceUqe9uJpeRHrbJHiEQy9EwE=;
-        b=lvSOx5p1RLFXrTIO7YHq/Ev/tvO1cRbVN7A4HWgTV2ypwrEALfYX42ooGqFRsT11lU
-         lsLfsOLD+X6SsuWMJGD1rTSH29m7F52r6rWxT2azroEh3YOM159D4SJIRZspPG9ht7lO
-         WnFgSlQPQ5SjXSXSHk2+98bSgm6eC1N1E9XUe/jtD/IrGTuw4wdXMh5kBRz/BLcTq/Pz
-         4PfEMtJCm+vG/obTC+PPeRdgvY1TeP+IkmQ1Jf7B6a+QcNbbZWFi24OOK66Ka0kOn58j
-         1q+vGrSw4F2LeYQt6v7RBKz4u7DTSKfAudh9pByDaIkw4Lx8u4Xjm7rpcWVk1R3NZ5v6
-         28AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVw+Yg8Fa2FT/a3Y8jMGlDsJUy6N6gycPBiU0c9UbHsiDWOj1CgIK8zl3ZdmFCDIg1ZBDUUbiixGOw35pzyY0ZYSfNSs5i+L0vd3idp
-X-Gm-Message-State: AOJu0YxxcQIvd2MmZQJ46NrwF4LopdCdOIgpw13kCJkssNVuRZep2eRx
-	VTIcb4UM5VHXgjKWGrqyUCwCf3Dx1251j6nsjoZtzFiUXZz6NxpTPHhhR3eNtzdjm1gXdMpbbh6
-	3ze0gA1D4sOnl5NYjwn3yUYRFZ/ajCHZb/7I4Sg==
-X-Google-Smtp-Source: AGHT+IHuis2PWxnbeePb9S0U1LQ2x2sGfOwuZsNdXB0g7qlMm761qcR5dMpoqfdYtNv6UIguJ9ZLskZKA13dNPaiPkc=
-X-Received: by 2002:a50:d4da:0:b0:57c:b82e:884b with SMTP id
- 4fb4d7f45d1cf-57d06ade10bmr1620556a12.19.1718807870558; Wed, 19 Jun 2024
- 07:37:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718807882; x=1719412682;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6pJIKfjLvugpNiyWUPkn81xpwGb7zZV1Mhqp6qTkwpU=;
+        b=d71HjWJTnTOxGrKZ/1o6A4wnXXCYdpOkL67m7zYD+o0oCeOls66VNUeVMW0mhmEpe+
+         bUmNBJjMJIgli886tZLPluKX9wo8naW3cpwUVU8G9AW1qWdMsp/9YXUJC1nGTvuGVrLM
+         wpdducDfia7V6z+HhiJ2nzeCNsWKiEZq6rrwWqDYaJa5d82fxa9W5KwGtSElyf5TLSN/
+         y0bQPY/J9IG2adetYSD4ffXDz3h9zBw2l370sU7ovOhWjzgEHNYTaSkxiQiAGoH3LmiO
+         IkZORtrM0rVEx6mqD37sqHv+gKopizp4S7Us9tjK6odhuAOtIHlL987wDG1f6OqEERHk
+         MGSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXu2nDMDWJcksJqGTjZdE9fTHOoegJgw0mPf68NPzIHvktANUFqko32Vnl3bazy0j1ZDygqkqYyP140RzAWP+UG9wrFVfML54YE6Aax
+X-Gm-Message-State: AOJu0Yxe8r0p6EzWGEtjMpu/vLobxzF878SRLIexDtn5GhE6g7rhSRz9
+	JK+tX0UxNBHVUx/uzBXt3rLyV0SQqKmC2AQRQUNeA/WoTRqmYWEug4XerwE+zAw=
+X-Google-Smtp-Source: AGHT+IHTB/lZ0M/byP4dE3kOpURatwyTsEaDzd7ugkc+m0b4VPnnl9e+XLcLWm6PxgGLzUpaixUT/Q==
+X-Received: by 2002:ac8:5896:0:b0:440:645a:a209 with SMTP id d75a77b69052e-444a7a49c90mr31210081cf.49.1718807881767;
+        Wed, 19 Jun 2024 07:38:01 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef3d89c7sm65749961cf.20.2024.06.19.07.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 07:38:01 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sJwRk-004dPo-Se;
+	Wed, 19 Jun 2024 11:38:00 -0300
+Date: Wed, 19 Jun 2024 11:38:00 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
+	Jason Wang <jasowang@redhat.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	ath10k@lists.infradead.org, ath11k@lists.infradead.org,
+	iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/21] wifi: ath11k: Use iommu_paging_domain_alloc()
+Message-ID: <20240619143800.GF1091770@ziepe.ca>
+References: <20240610085555.88197-1-baolu.lu@linux.intel.com>
+ <20240610085555.88197-12-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606020213.49854-1-21cnbao@gmail.com> <ZmctTwAuzkObaXLi@google.com>
-In-Reply-To: <ZmctTwAuzkObaXLi@google.com>
-From: Sumit Semwal <sumit.semwal@linaro.org>
-Date: Wed, 19 Jun 2024 20:07:38 +0530
-Message-ID: <CAO_48GE_YHFFjKBb6hhZQ4--3j3H3+AUTaPkZWfHTGgBa=b78Q@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf/heaps: Correct the types of fd_flags and heap_flags
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Barry Song <21cnbao@gmail.com>, linaro-mm-sig@lists.linaro.org, 
-	linux-media@vger.kernel.org, Brian.Starkey@arm.com, 
-	benjamin.gaignard@collabora.com, christian.koenig@amd.com, 
-	dri-devel@lists.freedesktop.org, jstultz@google.com, 
-	linux-kernel@vger.kernel.org, tjmercier@google.com, v-songbaohua@oppo.com, 
-	hailong.liu@oppo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610085555.88197-12-baolu.lu@linux.intel.com>
 
-Hi Barry,
+On Mon, Jun 10, 2024 at 04:55:45PM +0800, Lu Baolu wrote:
+> An iommu domain is allocated in ath11k_ahb_fw_resources_init() and is
+> attached to ab_ahb->fw.dev in the same function.
+> 
+> Use iommu_paging_domain_alloc() to make it explicit.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+>  drivers/net/wireless/ath/ath11k/ahb.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Mon, 10 Jun 2024 at 22:14, Carlos Llamas <cmllamas@google.com> wrote:
->
-> On Thu, Jun 06, 2024 at 02:02:13PM +1200, Barry Song wrote:
-> > From: Barry Song <v-songbaohua@oppo.com>
-> >
-> > dma_heap_allocation_data defines the UAPI as follows:
-> >
-> >  struct dma_heap_allocation_data {
-> >         __u64 len;
-> >         __u32 fd;
-> >         __u32 fd_flags;
-> >         __u64 heap_flags;
-> >  };
-> >
-> > But dma heaps are casting both fd_flags and heap_flags into
-> > unsigned long. This patch makes dma heaps - cma heap and
-> > system heap have consistent types with UAPI.
-> >
-> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Thanks for this cleanup; pushed to drm-misc-next.
-
-> > ---
->
-> Looks good to me, thanks!
->
-> Reviewed-by: Carlos Llamas <cmllamas@google.com>
-
-
-Best,
-Sumit.
+Jason
