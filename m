@@ -1,29 +1,29 @@
 Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09FE2A8D3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E935588E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718770380; cv=none; b=rfhif6l9ew3/20WhYEuappVplefSDzobEBm/Uoy/uGEbO1DhsdOGI/h2F7rY0qQF9YmCK3kh2HYRGgWyyUG5wN0y3M5G6KBBuTtxy3Yz6Bx2ftk5odAF5Vy19JW0pvXm6U+BJtTMHSLK1ZVaxDqHJZA5KcsdLZspTQ9ESh2roHw=
+	t=1718770387; cv=none; b=Gg61vlImK5gl5FzB3GgZWO5barehTn47NM4ubtG1M4xLWshzMI1mBj2oWNw+bEI58r3h96Nf2GyNuohJ2yamrS9EZ3Ve2z9FxzPUf+KvBXN+3ABcz5TzM1HklGB77PX+l7Tsss8YgYjgCGFAaTHtx4LYu5HpuK+Be6XjHMXHGq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718770380; c=relaxed/simple;
-	bh=hcUFQAxueVB1U7SwcYYc/DV9YG48AAloDLiW68bjzsI=;
+	s=arc-20240116; t=1718770387; c=relaxed/simple;
+	bh=N5xqzhHiMn5sjodiwTiMky0jNsveAIIw19AeHh9JrSw=;
 	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=NuryD2mLB3b604aDyp1D2I7kb6GNbZgFsCZ3UmM7p/tSel9H5BF7kbJrGnI+r2o0ro+aGi7pv8csVL67S92QypM51Khc3mU7nEx+HM5i4kMoJvD4MeiIT1ghwSqlIv2rL61VPwerlQfOLuVmMLixBl1cMFnV+tlbo6I8gs07Fxw=
+	 Content-Type:Subject; b=dzAhpnXUxnOzN58mHCShZpeUTQ0frseEEKbH4wVfqjCpNEuImdS2KJpT5Y8ETvM2BE2oF7O6BXQ3IaVaVLSalihSXK3uFAkY42wGLa3eeaR5uORP8SZpg1ea+8CTPlIKI5834K/lGyHpo5NKt5xo79Sxdye+dWnNzjig7y7C4o4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in01.mta.xmission.com ([166.70.13.51]:34508)
+Received: from in01.mta.xmission.com ([166.70.13.51]:42776)
 	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.93)
 	(envelope-from <ebiederm@xmission.com>)
-	id 1sJmaP-004PJ4-LG; Tue, 18 Jun 2024 22:06:18 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:56746 helo=email.froward.int.ebiederm.org.xmission.com)
+	id 1sJmgy-004PYQ-G3; Tue, 18 Jun 2024 22:13:04 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:56222 helo=email.froward.int.ebiederm.org.xmission.com)
 	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.93)
 	(envelope-from <ebiederm@xmission.com>)
-	id 1sJmaO-009RUo-Nc; Tue, 18 Jun 2024 22:06:17 -0600
+	id 1sJmgx-009SKN-DK; Tue, 18 Jun 2024 22:13:04 -0600
 From: "Eric W. Biederman" <ebiederm@xmission.com>
 To: Oleg Nesterov <oleg@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,  Tejun Heo <tj@kernel.org>,
@@ -36,10 +36,10 @@ References: <20240609142342.GA11165@redhat.com>
 	<20240617183758.GB10753@redhat.com>
 	<87iky5k2yi.fsf@email.froward.int.ebiederm.org>
 	<87o77xinmt.fsf_-_@email.froward.int.ebiederm.org>
-Date: Tue, 18 Jun 2024 23:06:08 -0500
+Date: Tue, 18 Jun 2024 23:12:56 -0500
 In-Reply-To: <87o77xinmt.fsf_-_@email.froward.int.ebiederm.org> (Eric
 	W. Biederman's message of "Tue, 18 Jun 2024 23:04:42 -0500")
-Message-ID: <877celinkf.fsf_-_@email.froward.int.ebiederm.org>
+Message-ID: <87y171efjr.fsf_-_@email.froward.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,107 +48,168 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1sJmaO-009RUo-Nc;;;mid=<877celinkf.fsf_-_@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1+Szj+jOI9RXNy+Sb3fEgssCDHScSg1/yA=
+X-XM-SPF: eid=1sJmgx-009SKN-DK;;;mid=<87y171efjr.fsf_-_@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/Jyv22mqBP7c5a8A8XIKv6TJOQkl6JrFY=
 X-SA-Exim-Connect-IP: 68.227.168.167
 X-SA-Exim-Mail-From: ebiederm@xmission.com
 X-Spam-Level: **
+X-Spam-Virus: No
 X-Spam-Report: 
 	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
 	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.5000]
-	*  0.7 XMSubLong Long Subject
+	*      [score: 0.4894]
 	*  1.5 XMNoVowels Alpha-numberic number with no vowels
+	*  0.7 XMSubLong Long Subject
 	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa06 1397; Body=1 Fuz1=1 Fuz2=1]
+	*      [sa03 1397; Body=1 Fuz1=1 Fuz2=1]
 	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-	*  1.0 XMMoneyMeta_00 Subject Contains Money Spam
-X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa03 1397; Body=1 Fuz1=1 Fuz2=1 
 X-Spam-Combo: **;Oleg Nesterov <oleg@redhat.com>
 X-Spam-Relay-Country: 
-X-Spam-Timing: total 350 ms - load_scoreonly_sql: 0.05 (0.0%),
-	signal_user_changed: 11 (3.2%), b_tie_ro: 10 (2.8%), parse: 0.98
-	(0.3%), extract_message_metadata: 12 (3.5%), get_uri_detail_list: 1.55
-	(0.4%), tests_pri_-2000: 13 (3.7%), tests_pri_-1000: 2.4 (0.7%),
-	tests_pri_-950: 1.25 (0.4%), tests_pri_-900: 1.03 (0.3%),
-	tests_pri_-90: 52 (15.0%), check_bayes: 51 (14.6%), b_tokenize: 7
-	(2.0%), b_tok_get_all: 6 (1.7%), b_comp_prob: 2.1 (0.6%),
-	b_tok_touch_all: 33 (9.3%), b_finish: 0.89 (0.3%), tests_pri_0: 243
-	(69.4%), check_dkim_signature: 0.61 (0.2%), check_dkim_adsp: 3.0
-	(0.9%), poll_dns_idle: 1.12 (0.3%), tests_pri_10: 2.1 (0.6%),
-	tests_pri_500: 8 (2.3%), rewrite_mail: 0.00 (0.0%)
-Subject: [PATCH 03/17] coredump: Consolidate the work to allow SIGKILL
- during coredumps
+X-Spam-Timing: total 443 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 4.5 (1.0%), b_tie_ro: 3.1 (0.7%), parse: 1.30
+	(0.3%), extract_message_metadata: 11 (2.5%), get_uri_detail_list: 2.8
+	(0.6%), tests_pri_-2000: 11 (2.4%), tests_pri_-1000: 1.80 (0.4%),
+	tests_pri_-950: 1.06 (0.2%), tests_pri_-900: 0.78 (0.2%),
+	tests_pri_-90: 55 (12.5%), check_bayes: 54 (12.3%), b_tokenize: 7
+	(1.6%), b_tok_get_all: 7 (1.6%), b_comp_prob: 1.60 (0.4%),
+	b_tok_touch_all: 36 (8.0%), b_finish: 0.75 (0.2%), tests_pri_0: 342
+	(77.4%), check_dkim_signature: 0.43 (0.1%), check_dkim_adsp: 3.8
+	(0.9%), poll_dns_idle: 1.49 (0.3%), tests_pri_10: 2.8 (0.6%),
+	tests_pri_500: 8 (1.8%), rewrite_mail: 0.00 (0.0%)
+Subject: [PATCH 16/17] signal: Record the exit_code when an exit is scheduled
 X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
 X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
 
-Consolidate all of the work to allow SIGKILL during coredumps in
-zap_threads.  Move the comment explaning what is happening from
-zap_process.  Clear the per task pending SIGKILL to ensure that
-__fatal_signal_pending returns false, and that interruptible waits
-continue to wait during coredump generation.  Move the atomic_set
-before the comment as setting nr_threads has nothing to do with
-allowing SIGKILL.
+With ptrace_stop no longer using task->exit_code it is safe
+to set task->exit_code when an exit is scheduled.
 
-With the work of allowing SIGKILL consolidated in zap_threads make the
-process tear-down in zap_process as much like the other places that
-set SIGKILL as possible.
+Use the bit JOBCTL_WILL_EXIT to detect when a exit is first scheduled
+and only set exit_code the first time.  Only use the code provided
+to do_exit if the task has not yet been schedled to exit.
 
-Include current in the set of processes being asked to exit.
-With the per task SIGKILL cleared in zap_threads the current process
-remains killable as it performs the coredump.  Removing the
-only reason I know of for not current to exit.
-
-Separately count the tasks that will stop in coredump_task_exit that
-coredump_wait needs to wait for.  Which tasks to count is different
-from which tasks to signal, and the logic need to remain even when
-task exiting is unified.
+In get_signal and do_grup_exit when JOBCTL_WILL_EXIT is set read the
+recored exit_code from current->exit_code, instead of assuming
+exit_code will always be 0.
 
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/coredump.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/exec.c                    | 2 +-
+ include/linux/sched/signal.h | 2 +-
+ kernel/exit.c                | 9 +++++----
+ kernel/signal.c              | 7 ++++---
+ 4 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index a57a06b80f57..be0405346882 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -366,18 +366,17 @@ static int zap_process(struct task_struct *start, int exit_code)
- 	struct task_struct *t;
- 	int nr = 0;
+diff --git a/fs/exec.c b/fs/exec.c
+index 57d617917b1c..99ee1a850c37 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1097,7 +1097,7 @@ static int de_thread(struct task_struct *tsk)
+ 		if (t == tsk)
+ 			continue;
+ 		sig->notify_count++;
+-		schedule_task_exit_locked(t);
++		schedule_task_exit_locked(t, 0);
+ 	}
  
--	/* Allow SIGKILL, see prepare_signal() */
- 	start->signal->flags = SIGNAL_GROUP_EXIT;
- 	start->signal->group_exit_code = exit_code;
- 	start->signal->group_stop_count = 0;
+ 	while (sig->notify_count) {
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 54b2b924aaea..bc702fd94a1f 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -461,7 +461,7 @@ static inline void ptrace_signal_wake_up(struct task_struct *t, bool resume)
+ 	signal_wake_up_state(t, state);
+ }
  
- 	for_each_thread(start, t) {
- 		task_clear_jobctl_pending(t, JOBCTL_PENDING_MASK);
--		if (t != current && !(t->flags & PF_POSTCOREDUMP)) {
-+		if (!(t->flags & PF_POSTCOREDUMP)) {
- 			sigaddset(&t->pending.signal, SIGKILL);
- 			signal_wake_up(t, 1);
--			nr++;
+-void schedule_task_exit_locked(struct task_struct *task);
++void schedule_task_exit_locked(struct task_struct *task, int exit_code);
+ void schedule_group_exit_locked(struct signal_struct *signal, int exit_code);
+ 
+ void task_join_group_stop(struct task_struct *task);
+diff --git a/kernel/exit.c b/kernel/exit.c
+index dc944e3c1493..2b4e57ff02a1 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -795,13 +795,14 @@ static void check_stack_usage(void)
+ static inline void check_stack_usage(void) {}
+ #endif
+ 
+-static void synchronize_group_exit(struct task_struct *tsk, long code)
++static int synchronize_group_exit(struct task_struct *tsk, long code)
+ {
+ 	struct sighand_struct *sighand = tsk->sighand;
+ 	struct signal_struct *signal = tsk->signal;
+ 
+ 	spin_lock_irq(&sighand->siglock);
+-	schedule_task_exit_locked(tsk);
++	schedule_task_exit_locked(tsk, code);
++	code = tsk->exit_code;
+ 	signal->quick_threads--;
+ 	if ((signal->quick_threads == 0) &&
+ 	    !(signal->flags & SIGNAL_GROUP_EXIT)) {
+@@ -810,6 +811,7 @@ static void synchronize_group_exit(struct task_struct *tsk, long code)
+ 		signal->group_stop_count = 0;
+ 	}
+ 	spin_unlock_irq(&sighand->siglock);
++	return code;
+ }
+ 
+ void __noreturn do_exit(long code)
+@@ -819,7 +821,7 @@ void __noreturn do_exit(long code)
+ 
+ 	WARN_ON(irqs_disabled());
+ 
+-	synchronize_group_exit(tsk, code);
++	code = synchronize_group_exit(tsk, code);
+ 
+ 	WARN_ON(tsk->plug);
+ 
+@@ -856,7 +858,6 @@ void __noreturn do_exit(long code)
+ 		tty_audit_exit();
+ 	audit_free(tsk);
+ 
+-	tsk->exit_code = code;
+ 	taskstats_exit(tsk, group_dead);
+ 
+ 	exit_mm();
+diff --git a/kernel/signal.c b/kernel/signal.c
+index dc9ab998fa15..c8b896bc84bb 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1013,7 +1013,7 @@ void schedule_group_exit_locked(struct signal_struct *signal, int exit_code)
+ 	signal->group_exit_code = exit_code;
+ 	signal->group_stop_count = 0;
+ 	__for_each_thread(signal, t)
+-		schedule_task_exit_locked(t);
++		schedule_task_exit_locked(t, exit_code);
+ }
+ 
+ static void complete_signal(int sig, struct task_struct *p, enum pid_type type)
+@@ -1373,11 +1373,12 @@ int force_sig_info(struct kernel_siginfo *info)
+ 	return force_sig_info_to_task(info, current, HANDLER_CURRENT);
+ }
+ 
+-void schedule_task_exit_locked(struct task_struct *task)
++void schedule_task_exit_locked(struct task_struct *task, int exit_code)
+ {
+ 	if (!(task->jobctl & JOBCTL_WILL_EXIT)) {
+ 		task_clear_jobctl_pending(task, JOBCTL_PENDING_MASK);
+ 		task->jobctl |= JOBCTL_WILL_EXIT;
++		task->exit_code = exit_code;
+ 		signal_wake_up(task, true);
+ 	}
+ }
+@@ -2749,7 +2750,7 @@ bool get_signal(struct ksignal *ksig)
+ 			if (signal->flags & SIGNAL_GROUP_EXIT)
+ 				exit_code = signal->group_exit_code;
+ 			else
+-				exit_code = 0;
++				exit_code = current->exit_code;
+ 			goto fatal;
  		}
-+		nr += (t != current) && !(t->flags & PF_POSTCOREDUMP);
- 	}
  
- 	return nr;
-@@ -393,9 +392,12 @@ static int zap_threads(struct task_struct *tsk,
- 	if (!(signal->flags & SIGNAL_GROUP_EXIT) && !signal->group_exec_task) {
- 		signal->core_state = core_state;
- 		nr = zap_process(tsk, exit_code);
-+		atomic_set(&core_state->nr_threads, nr);
-+
-+		/* Allow SIGKILL, see prepare_signal() */
- 		clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
-+		sigdelset(&tsk->pending.signal, SIGKILL);
- 		tsk->flags |= PF_DUMPCORE;
--		atomic_set(&core_state->nr_threads, nr);
- 	}
- 	spin_unlock_irq(&tsk->sighand->siglock);
- 	return nr;
 -- 
 2.41.0
 
