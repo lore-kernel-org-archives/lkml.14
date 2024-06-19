@@ -1,30 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD11B15530B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98263152792;
 	Wed, 19 Jun 2024 16:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718816068; cv=none; b=BU9Gs2lZPsmae0v0XWkL4ppVPTKLtdqk6txxVuwsKevE7MuayMdZlz7q+MaxXVzJLsQzv7RKqNOghGPXJqF5USX+xtReed0QvrzBYfa8mSM2H0uocOA4Ldx9P/kqpBltMPka3lf18nxOzA//odKFqzNwAgxPaxcgzxW/zqm8LVk=
+	t=1718816068; cv=none; b=O939UmxcuVFeEgrs3egot8J7sR9SVoVTeRIFy+N18o7tBWn2I8UW4qIzkdA9Ty50kuhnLic6u/Giw7RvO2Hikw9dsbvQyW6+yjlDsV0ioB2fI71hD6whxdxA+QcahyLQzDA1oVTIzUQeeEzHTPwHCVB1KGOQoM+DvEYCkreVHlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718816068; c=relaxed/simple;
-	bh=Ekl8nsWE1QqQW0cy53Cm/B/0aYqmX5RnlMjgQQIQf/8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RTe16eGo3elbCK7yMX6kbpKUXX3gvazJ/unU9hiwDu2q8lMGRLAUOjN3FAtIJGI+ODEi83MkUdsVDqWtCrBO6EcC3l8pgWODoUSFT0dMmSH2ndlC16nO9N68K/aYFyVWFoPOfaloMbBd+mXC748HV4vWLZhRHrsiw9kZAF8rO30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=4xeZFVYJ; arc=none smtp.client-ip=128.199.32.197
+	bh=Sjz3DIoq0Zh1oqp2UL91MkPA5irTCigjw/wM4v2Ete8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TI4eLSJ5HDx5T+nRfULUq+F0ysbbtf0uq40MpYEkp/lF8Ko4o1Iw5Cj/2fn+xhT22zbGPdRi+Xk6Xxp+gzuVLkMhxnEmaoh/+dkVInJeRfUSHtJoNCXAYdsPD+jyxtQ3LSmH0wVgElzTOQwhi2yLcC2Rplfq8ctk+4oUs6fu/uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=bElNTWFO; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="4xeZFVYJ"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="bElNTWFO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1718815509; bh=Ekl8nsWE1QqQW0cy53Cm/B/0aYqmX5RnlMjgQQIQf/8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=4xeZFVYJPBgvWIjUT9p4+VeY9NdRJWm9CJziKmk+agSG9jjuHK3JeyP45FVJKFHYz
-	 jVprD3fScmIjUCrblDyMgrm28OdYCLS7HUOc0yytvn5ymGlA/ExrckXwutieyLrSyQ
-	 WZCWVJzKVILLP8MlDUAeQ4mGzxOE+A8kqCU8okM8=
+	t=1718815509; bh=Sjz3DIoq0Zh1oqp2UL91MkPA5irTCigjw/wM4v2Ete8=;
+	h=From:Subject:Date:To:Cc;
+	b=bElNTWFOh5JZGMsnkhAZFdRe1VI7JexFIgS42n+cBE2eSJ/C7FvlQjFSmitwNzoj9
+	 flZALDLvdwonMvH8fhqXb5waBQrYLYQaMzN7e5v5cuiIF7rJRqkN8//r5RoBXOehcy
+	 5fqPd6fxyMHDZB1SnxOI/q5yDANvu9ORvclQp1yA=
 From: Luca Weiss <luca@lucaweiss.eu>
-Date: Wed, 19 Jun 2024 18:42:28 +0200
-Subject: [PATCH 2/5] arm64: dts: qcom: msm8916: Use mboxes in smsm node
+Subject: [PATCH 0/5] Use mboxes in smsm node for all dtsi where possible
+Date: Wed, 19 Jun 2024 18:42:26 +0200
+Message-Id: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,9 +33,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240619-smsm-mbox-dts-v1-2-268ab7eef779@lucaweiss.eu>
-References: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
-In-Reply-To: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
+X-B4-Tracking: v=1; b=H4sIAHIKc2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDM0NL3eLc4lzd3KT8Ct2UkmJd49RUy5TExJQ0C8MkJaCegqLUtMwKsHn
+ RsbW1ACJmDChfAAAA
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -44,46 +44,55 @@ To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=732; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=Ekl8nsWE1QqQW0cy53Cm/B/0aYqmX5RnlMjgQQIQf/8=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmcwsRnJcv5+5wGplQBfoX/3tp3XF1hcc3dm2ZS
- K624W1mRnuJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnMLEQAKCRBy2EO4nU3X
- Vsb8EACibiO7lDVUy/mVlqbXbQ2W/aBt1pw8lviUItdiQaFPAno4e/5LCSJbJIi+W+Z/WAUJFXC
- mIrB08YDaWT4Q+Lskhmr8dheZgGc2SikoBu7L981y+1QhdXUVLBKRUZsjBOj0/o/4BYR8nAHwXg
- ftBPjWdFR00g80sGtk4FzYL+6HIqe4UxPpijTm59PF3Cf0Dt013ZZpX/2rD7MRDLVpwguLNKXbx
- TU3mkljlGkapz+siOS+phOndNHBTaL0Qjszd525zx7fIKdxaFgVfmL/s1+hzZvtgK0ifrwP6Y0Q
- I2Aoetj7aZGRRlag2adLhWKfe7hnsVEn7yAnFrcpc6goRPTsmJn12NBcpzdlt+qGBsWw6EWiHCr
- exZT7/iLHP6QBQ0/EB6Z/pysKQch1xrm6bbAjYLytGVDjoy+oFKoT43U/oKBFmL/EYLL857HFbC
- w4eJRfF4HvPOSbHfPr91bVZtJNs+hTM7IZjtutXyw7SEdaN6gCT4/Gxguu/2pQrMNYkjVy+TNho
- Sr/gSBnjHgijUibdL1Q+Yfkjj0OlrcU9E0RPOZ42IqGdYUfCRbpTd9vMH9H9H3ibxC6uAxTcTHq
- hZBbtuv3bszTtcEMG2rYSPYB7dljO2XIotYpOhyXUuFPmQT2prrZPYO08m8NHn7nB0uvkJfbkR/
- JRpZQ5LTHUTvVMw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1358; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=Sjz3DIoq0Zh1oqp2UL91MkPA5irTCigjw/wM4v2Ete8=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmcwsGi+azjYtioTEK81ULklvONA/PxjCMDDJUo
+ er2cAYmHEyJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZnMLBgAKCRBy2EO4nU3X
+ Vt+MEACggRg23I5azN9XXQOVy/+DAS9NOTRox5LbANDItnF5Z1ZQPSRS9ZLesA+zB0shlZYTcoF
+ lCFl6Fz1/dsGV315xoOKbs+JeHmTVR8ASyt2ZIqgd2uigi34F1VBcC3Lu5lVb4uf1a5Vqa4DsD+
+ Pj/Ur/OZdEoW3Q5pMKn2fIWdc9Xo5CAzLyG4dwTLdbr2kKAk22IW8Iouhi2ycBr1240rpjnMHVu
+ LU4h0ZsX3UUGiYToEXNPXujyOXFewZo2CHxRtp4dWOQ7H5/jDoV370/JTXi9vwO/cYVpuACgSvY
+ Sv0e5t5KgzrZKNpF3IwT40v8b8K6DUpwjqL7QXka1JGmjh17IWzk7sSqXKBhwHAF2D2u84wWd91
+ 1a6ewjoBUyJ1U+NGLTvLNW2ncTLMYa5gsZ7gNM4XIwzetEPTqLv77XjhB8AVIaWKh3ecv4OWMqh
+ wsGStZeBjqELYLJb1usgi5uiaUw2oSoUy0nK139XVJDDdpONvxeDOLxbSvhOTMfafKDEa2x/6qC
+ kkzeMoTUfhq3lLhug4cw3fWrlLoU59e33BtBOsS4unv1I4lfW5NYWFmfqS0RQvuciUqDtQ/MzzX
+ zvfPXkWP23HUy4T3PbDJ8sXDECnOP7gCxzguVotUIwizg6amnPlG4N0rmkcgXqyi9xU0DrmJJFc
+ Izi9YSBxGTuGORw==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-With the smsm bindings and driver finally supporting mboxes, switch to
-that and stop using apcs as syscon.
+With the binding and driver patches queued for 6.11[0][1], it's time to
+update the dtsi files to use the new binding.
+
+[0] https://lore.kernel.org/linux-arm-msm/171840533352.102487.9576671528001022676.b4-ty@kernel.org/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/log/?h=drivers-for-6.11
+
+@Bjorn: I think this makes sense to only apply these patches for 6.12 so
+that also in the arm64 tree the driver will exist already, so git bisect
+is not impeded by that.
+
+Patches are just compile-tested.
 
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Luca Weiss (5):
+      ARM: dts: qcom: msm8974: Use mboxes in smsm node
+      arm64: dts: qcom: msm8916: Use mboxes in smsm node
+      arm64: dts: qcom: msm8939: Use mboxes in smsm node
+      arm64: dts: qcom: msm8953: Use mboxes in smsm node
+      arm64: dts: qcom: msm8976: Use mboxes in smsm node
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index bdedbcdc36d3..7383bcc603ab 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -410,8 +410,7 @@ smsm {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		qcom,ipc-1 = <&apcs 8 13>;
--		qcom,ipc-3 = <&apcs 8 19>;
-+		mboxes = <0>, <&apcs 13>, <0>, <&apcs 19>;
- 
- 		apps_smsm: apps@0 {
- 			reg = <0>;
+ arch/arm/boot/dts/qcom/qcom-msm8974.dtsi | 4 +---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi    | 3 +--
+ arch/arm64/boot/dts/qcom/msm8939.dtsi    | 3 +--
+ arch/arm64/boot/dts/qcom/msm8953.dtsi    | 3 +--
+ arch/arm64/boot/dts/qcom/msm8976.dtsi    | 4 +---
+ 5 files changed, 5 insertions(+), 12 deletions(-)
+---
+base-commit: 2102cb0d050d34d50b9642a3a50861787527e922
+change-id: 20240619-smsm-mbox-dts-3ee9daadf81b
 
+Best regards,
 -- 
-2.45.2
+Luca Weiss <luca@lucaweiss.eu>
 
