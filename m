@@ -1,221 +1,128 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69277824B2;
-	Wed, 19 Jun 2024 09:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B9084FAD
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718790977; cv=none; b=NqyGgQQ0PTPAlv2RSXbxClft7iW05bjLxH9I1TAPo21+2AaMSC/1zfsP33eKBXy5gKHq5wkj4yE7pZMBId2KmZH5qUKT5EOu2CJlenMXEFaFXsxVUUjLubOPPybfdiRokcdxQ/VfVhwYLt2v4HhMw1BS5oK1n9ffS/NtQVFqjzo=
+	t=1718790978; cv=none; b=aA/Fi6+0OIyyuhkzkv0k+GxhNbPz+zPZHYlIVnpj1lQUbiJ/k+vW4NV2bR8CfMp+4ldD6WYBoVJrsCgZX1v9uSMSPqtuGLu+rP0oDMxT8nkMTCDWpPsFVnHVK1grKRTfsG2dBFFcx/spASlUkm78+aG5li4plYkK48MnKGj0bWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718790977; c=relaxed/simple;
-	bh=tkiOYw0eqhfAoX/D0XNFeQSiPHu0lcAvizVef5/AGeQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AYOksyhsp1c6TBVhjydNLe0Vx84mM0/AsdSPxY1fh/Dh3jYTpUiLqSKZjz/Qka7WBGpNv4JgFzb+AxpgptadsUzNOeqtr3BCSrVFRHmRZPn04P/i+ILZfAAxfRUKcwNnLDEU/piAi851Cxu1COR2+tenTsdjlvdyuXhF+A3HCGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Xl9tcqIB; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718790978; c=relaxed/simple;
+	bh=nNjrSgSeRfWnkJMdnUI9E0gWMw3vB/pCzNI+OqbllBw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AP1Xo7O2WEtPg+z5iWIi5uCNMi5J2VhYQlEdCA0T2QyG6j+iBwHDpGySr/P0DpUU0hojhB1ZyP1sBaRa1/N565RnJ/6lpARnwVYx2QpjDVMDzN1LY+1s9A8dK3ZwEPG76C/EeMJJp9L+Ma/HllO4RQKEXhSNHRNNRzX9ekSKY2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=aijsnspO; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Xl9tcqIB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718790973;
-	bh=tkiOYw0eqhfAoX/D0XNFeQSiPHu0lcAvizVef5/AGeQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xl9tcqIB9kCQUbIu61a+gI584SUMFbXK5vMZW1Ne2z9NB9ZDNFr1ukxIFTS1ePq6t
-	 FI33J3UP6XUOmnkZdKtpQmLvYpMIxXSeRqmGBqL3vdpSvBLQd5uRYE9jcziRnU6Y5T
-	 ncjtl2haOgXwVahYD+s9ZaG2BiSh1sXb0wjBnBia9srSgo/cScxwrKal+BYczxK4nP
-	 xyoaR7RWRqVV+EfnA/tMjMA5gfNvvQTLmCL0FkmgaDJU6mZIasMahQ+izXciHa350M
-	 hg0xanxGVUVafyR81PBKsbat/D6CWpZZ91dc+uNX58jq+dC8q9DBXv+Ia5LUWjNvHl
-	 nWuXQ7sKLbiCQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 646883782163;
-	Wed, 19 Jun 2024 09:56:12 +0000 (UTC)
-Message-ID: <966d5c3d-0595-4113-a507-4b8348ac4a77@collabora.com>
-Date: Wed, 19 Jun 2024 11:56:11 +0200
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aijsnspO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1718790977; x=1750326977;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=raIEZpdgkW+RHfmC8vCCejhzjRvyZaw+50MAD0K0AN4=;
+  b=aijsnspOcj9IQ+XZZzFAh1sQjDaoXUv3mrOXDaZAVWoVe6ORs80Las3R
+   mIGNStPrC+GJ9daPtVoKBMdTKlLpiAxt/IfNFj4mmCmkpo3psBq8DLOHA
+   SfXGMhKX5Dx8cEpeJ5q5hi+0H9OaP2vapxDMIjHKToXUcoR1L6SPJscaZ
+   s=;
+X-IronPort-AV: E=Sophos;i="6.08,250,1712620800"; 
+   d="scan'208";a="97813385"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 09:56:14 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.43.254:12585]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.9.211:2525] with esmtp (Farcaster)
+ id 65371dce-1daa-44d6-9e02-e86036a7bf71; Wed, 19 Jun 2024 09:56:14 +0000 (UTC)
+X-Farcaster-Flow-ID: 65371dce-1daa-44d6-9e02-e86036a7bf71
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 19 Jun 2024 09:56:13 +0000
+Received: from u5d18b891348c5b.ant.amazon.com (10.146.13.221) by
+ EX19D014EUC004.ant.amazon.com (10.252.51.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 19 Jun 2024 09:56:10 +0000
+From: James Gowans <jgowans@amazon.com>
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+CC: James Gowans <jgowans@amazon.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, Alex Graf <graf@amazon.de>
+Subject: [PATCH v2] memblock: Move late alloc warning down to phys alloc
+Date: Wed, 19 Jun 2024 11:55:55 +0200
+Message-ID: <20240619095555.85980-1-jgowans@amazon.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v5 04/16] ASoC: mediatek: mt8365: Add common header
-To: Alexandre Mergnat <amergnat@baylibre.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Lee Jones <lee@kernel.org>,
- Flora Fu <flora.fu@mediatek.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-References: <20240226-audio-i350-v5-0-54827318b453@baylibre.com>
- <20240226-audio-i350-v5-4-54827318b453@baylibre.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240226-audio-i350-v5-4-54827318b453@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
+ EX19D014EUC004.ant.amazon.com (10.252.51.182)
 
-Il 14/06/24 09:27, Alexandre Mergnat ha scritto:
-> Add header files for register definition and structure.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->   sound/soc/mediatek/mt8365/mt8365-afe-common.h | 491 +++++++++++++
->   sound/soc/mediatek/mt8365/mt8365-reg.h        | 991 ++++++++++++++++++++++++++
->   2 files changed, 1482 insertions(+)
-> 
-> diff --git a/sound/soc/mediatek/mt8365/mt8365-afe-common.h b/sound/soc/mediatek/mt8365/mt8365-afe-common.h
-> new file mode 100644
-> index 000000000000..4d8f8c4b19e3
-> --- /dev/null
-> +++ b/sound/soc/mediatek/mt8365/mt8365-afe-common.h
-> @@ -0,0 +1,491 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Mediatek 8365 audio driver common definitions
-> + *
-> + * Copyright (c) 2024 MediaTek Inc.
-> + * Authors: Jia Zeng <jia.zeng@mediatek.com>
-> + *          Alexandre Mergnat <amergnat@baylibre.com>
-> + */
-> +
-> +#ifndef _MT8365_AFE_COMMON_H_
-> +#define _MT8365_AFE_COMMON_H_
-> +
-> +#define COMMON_CLOCK_FRAMEWORK_API
-> +#define IDLE_TASK_DRIVER_API
-> +#define ENABLE_AFE_APLL_TUNER
+If a driver/subsystem tries to do an allocation after the memblock
+allocations have been freed and the memory handed to the buddy
+allocator, it will not actually be legal to use that allocation: the
+buddy allocator owns the memory. Currently this mis-use is handled by
+the memblock function which does allocations and returns virtual
+addresses by printing a warning and doing a kmalloc instead. However
+the physical allocation function does not to do this check - callers of
+the physical alloc function are unprotected against mis-use.
 
-Those three definitions do not exist upstream. Please remove.
+Improve the error catching here by moving the check into the physical
+allocation function which is used by the virtual addr allocation
+function.
 
-> +
-> +#include <linux/clk.h>
-> +#include <linux/list.h>
-> +#include <linux/regmap.h>
-> +#include <sound/soc.h>
-> +#include <sound/asound.h>
-> +#include "../common/mtk-base-afe.h"
-> +#include "mt8365-reg.h"
-> +
-> +#define ENUM_TO_STR(enum) #enum
+Signed-off-by: James Gowans <jgowans@amazon.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alex Graf <graf@amazon.de>
+---
 
-Unused definition
+Notes:
+    Changes since v1: https://lore.kernel.org/all/20240614133016.134150-1-jgowans@amazon.com/
+    - Move this late usage check before alignment check
+    - Replace memblocks with memblock
 
-> +
-> +#define snd_soc_dai_stream_active_playback(dai) \
-> +		snd_soc_dai_stream_active(dai, SNDRV_PCM_STREAM_PLAYBACK)
-> +#define snd_soc_dai_stream_active_capture(dai) \
-> +		snd_soc_dai_stream_active(dai, SNDRV_PCM_STREAM_CAPTURE)
-> +
+ mm/memblock.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-Those are used only once and only in mt8365-dai-pcm.c, and I just noticed that.
+diff --git a/mm/memblock.c b/mm/memblock.c
+index d09136e040d3..dbb3d700247e 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1451,6 +1451,17 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 	if (WARN_ONCE(nid == MAX_NUMNODES, "Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead\n"))
+ 		nid = NUMA_NO_NODE;
+ 
++	/*
++	 * Detect any accidental use of these APIs after slab is ready, as at
++	 * this moment memblock may be deinitialized already and its
++	 * internal data may be destroyed (after execution of memblock_free_all)
++	 */
++	if (WARN_ON_ONCE(slab_is_available())) {
++		void *vaddr = kzalloc_node(size, GFP_NOWAIT, nid);
++
++		return vaddr ? virt_to_phys(vaddr) : 0;
++	}
++
+ 	if (!align) {
+ 		/* Can't use WARNs this early in boot on powerpc */
+ 		dump_stack();
+@@ -1576,13 +1587,6 @@ static void * __init memblock_alloc_internal(
+ {
+ 	phys_addr_t alloc;
+ 
+-	/*
+-	 * Detect any accidental use of these APIs after slab is ready, as at
+-	 * this moment memblock may be deinitialized already and its
+-	 * internal data may be destroyed (after execution of memblock_free_all)
+-	 */
+-	if (WARN_ON_ONCE(slab_is_available()))
+-		return kzalloc_node(size, GFP_NOWAIT, nid);
+ 
+ 	if (max_addr > memblock.current_limit)
+ 		max_addr = memblock.current_limit;
+-- 
+2.34.1
 
-Can you please just remove those two and directly call snd_soc_dai_stream_active()
-with the right params in function mt8365_dai_pcm1_prepare()?
-
-> +enum {
-> +	MT8365_AFE_MEMIF_DL1,
-> +	MT8365_AFE_MEMIF_DL2,
-> +	MT8365_AFE_MEMIF_TDM_OUT,
-
-..snip..
-
-> +
-> +#ifdef CONFIG_MTK_HIFIXDSP_SUPPORT
-
-This configuration option doesn't exist.
-
-Please remove the ifdef and the enclosed code entirely, as it's unused.
-
-> +struct mt8365_adsp_data {
-> +	/* information adsp supply */
-> +	bool adsp_on;
-> +	int (*hostless_active)(void);
-> +	/* information afe supply */
-> +	int (*set_afe_memif)(struct mtk_base_afe *afe,
-> +			     int memif_id,
-> +			     unsigned int rate,
-> +			     unsigned int channels,
-> +			     snd_pcm_format_t format);
-> +	int (*set_afe_memif_enable)(struct mtk_base_afe *afe,
-> +				    int memif_id,
-> +				    unsigned int rate,
-> +				    unsigned int period_size,
-> +				    int enable);
-> +	void (*get_afe_memif_sram)(struct mtk_base_afe *afe,
-> +				   int memif_id,
-> +				   unsigned int *paddr,
-> +				   unsigned int *size);
-> +	void (*set_afe_init)(struct mtk_base_afe *afe);
-> +	void (*set_afe_uninit)(struct mtk_base_afe *afe);
-> +};
-> +#endif
-> +
-> +struct mt8365_afe_private {
-> +	struct clk *clocks[MT8365_CLK_NUM];
-> +	struct regmap *topckgen;
-> +	struct mt8365_fe_dai_data fe_data[MT8365_AFE_MEMIF_NUM];
-> +	struct mt8365_be_dai_data be_data[MT8365_AFE_BACKEND_NUM];
-> +	struct mt8365_control_data ctrl_data;
-> +	struct mt8365_gasrc_data gasrc_data[MT8365_TDM_ASRC_NUM];
-> +#ifdef CONFIG_MTK_HIFIXDSP_SUPPORT
-> +	struct mt8365_adsp_data adsp_data;
-
-ditto
-
-> +#endif
-> +	int afe_on_ref_cnt;
-> +	int top_cg_ref_cnt[MT8365_TOP_CG_NUM];
-> +	void __iomem *afe_sram_vir_addr;
-> +	unsigned int afe_sram_phy_addr;
-> +	unsigned int afe_sram_size;
-> +	/* locks */
-> +	spinlock_t afe_ctrl_lock;
-> +	struct mutex afe_clk_mutex;	/* Protect & sync APLL TUNER registers access*/
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct dentry *debugfs_dentry[MT8365_AFE_DEBUGFS_NUM];
-> +#endif
-> +	int apll_tuner_ref_cnt[MT8365_AFE_APLL_NUM];
-> +	unsigned int tdm_out_mode;
-> +	unsigned int cm2_mux_input;
-> +
-> +	/* dai */
-> +	bool dai_on[MT8365_AFE_BACKEND_END];
-> +	void *dai_priv[MT8365_AFE_BACKEND_END];
-> +};
-> +
-
-....
-
-> +#ifdef CONFIG_MTK_HIFIXDSP_SUPPORT
-
-same
-
-> +struct mtk_base_afe *mt8365_afe_pcm_get_info(void);
-> +#endif
-> +
-> +int mt8365_dai_i2s_register(struct mtk_base_afe *afe);
-> +int mt8365_dai_set_priv(struct mtk_base_afe *afe,
-> +			int id,
-> +			int priv_size,
-> +			const void *priv_data);
-> +
-
-Everything else looks good.
-
-After applying the proposed cleanups,
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Cheers,
-Angelo
