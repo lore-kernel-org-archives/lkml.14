@@ -1,141 +1,153 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF7011CA1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4ED125C1;
+	Wed, 19 Jun 2024 14:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718806595; cv=none; b=LhOEn344b3YysumY5jU6ol7e3Kl62nrGA9YOJWNKE59gtB5QW7/4ykkyPCgADZTLsqUIM4a/bH/okjBwQjdUUr0IvhN0qdlax8ErrRnB1OaeYdh3IiA1hgk6lJel+1z3hInWLjBLDpeqs8AnylSjie4RN+zahHRCZMM7DsFurL0=
+	t=1718806648; cv=none; b=cFC0TOXk9CdylH6/DUnwwC3TNBLWjrNcB2cma9/Xk8TcGCJ16hjs+UyZx3pWBh3EJOQQiMxet+U76E8Ww+o33HnTwHnvQEgH83RCe93znnf2cUXX8Z3INX9xdrHfaY3Mc67+twcxFmn+bXa5XFI7SnvwAjWDZAfkBc1MM+lyd3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718806595; c=relaxed/simple;
-	bh=j8hnpKSgdsPwZhLgHwzSQMYWcXcujLvM0S2A4+l+rpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AVxES4FlqqiCKqHcfkBu5EETkEHD8dyeiWFf63QTJt/bLpkNvm9PGEmfbsfV4nSpht/iSwD77c4FYK9m57+I8RKJ+/kX12d2TYZkGzB2Z1Ti2E54YuEFRlYMTdr+uK12s6VZVaWz50mxyZoTFCaeZSd0qPLUsXsM1M6YHEPUgmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VEiUsVF8; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718806648; c=relaxed/simple;
+	bh=cHicvuNsB6FBsP+p24Oei7cf3LE105dI1jDELbVa/L8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XRxa3gCySGYUkTf1exGYIJ8rZEWnhU0zBdliaAEZyIcIQY26iQ0DUHWL2XbZt7eK5xp6mmUku7SfVyJ6sJpVyS0Gt5DmOrjjUK9NnUdjJHmOcK5/Fqf3O3foQ1Px2syW7BClYDhq7BOkyv6EzTMV993+ukHmSSRc45kmJaP7o0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=hftA4bA1; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VEiUsVF8"
-X-Envelope-To: leon@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718806591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D7YB9+PQ0z1j6tWHwXjxGAjgSnoPcuX+AMvafJbdH/Y=;
-	b=VEiUsVF8H2cuXxGHYJXKR6rFCC6a1/RQ8mqASAwIwniKHLP05IqkvUzy9+HVAHseCmSwmS
-	IjkE0ZYFaN9tAk2tH1m3xpg+S/gKfrAlcENIrm624/D7xmsgNlkrhrHIs+aLbopn/9gFOF
-	C51OxOTobHtDWYLcTaTydtiYI9cwaWI=
-X-Envelope-To: syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com
-X-Envelope-To: jgg@ziepe.ca
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-rdma@vger.kernel.org
-X-Envelope-To: netdev@vger.kernel.org
-X-Envelope-To: syzkaller-bugs@googlegroups.com
-Message-ID: <94d36dd5-313b-46b3-8d43-95016175d273@linux.dev>
-Date: Wed, 19 Jun 2024 22:16:20 +0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="hftA4bA1"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9l8ie011743;
+	Wed, 19 Jun 2024 07:17:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=q
+	HWv3FV88gHLyPrpIGGB1AAf2zkoSjgvgaCyZbzsiAY=; b=hftA4bA1qkvWHcHxj
+	HAvyT6I5rx7SFaZ9r8gk6Csww0W5nMSaUyQ5Bfbacn0w5BueiSoc14rlPtvq8iiF
+	2IqeUbEGXbTrPUw1oBfJL5T3PIfP9FCboVn8FKCKmntLXin/xnFpAGQzkau4zXtN
+	nQJ6PXBhfYuUR47473rdHR4QKRzawgPYZtfL84662J6muRUzAvz+BbPtrrTY7qbR
+	y2BKAxog2hRuf5GmskorLfBInC8TqWw0hZni5QpelJmBDkXsS1K0Zxjy01GO9ZaE
+	hi4uh3BbfyxYvKfyE+SSjdJ6FbfVEoG2EuCBXi2JNpdYRVMuyzdBdsCuwS0rpXFc
+	lNv+Q==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yuw0jrudr-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 07:17:22 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 19 Jun 2024 07:17:20 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 19 Jun 2024 07:17:20 -0700
+Received: from Dell2s-9.sclab.marvell.com (unknown [10.110.150.250])
+	by maili.marvell.com (Postfix) with ESMTP id 91B5A3F7086;
+	Wed, 19 Jun 2024 07:17:20 -0700 (PDT)
+From: Witold Sadowski <wsadowski@marvell.com>
+To: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: <broonie@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <pthombar@cadence.com>, Witold Sadowski <wsadowski@marvell.com>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v9 1/9] spi: dt-bindings: cadence: Add Marvell overlay bindings documentation for Cadence XSPI
+Date: Wed, 19 Jun 2024 07:17:07 -0700
+Message-ID: <20240619141716.1785467-2-wsadowski@marvell.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240619141716.1785467-1-wsadowski@marvell.com>
+References: <20240619141716.1785467-1-wsadowski@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] WARNING in ib_uverbs_release_dev
-To: Leon Romanovsky <leon@kernel.org>,
- syzbot <syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com>, jgg@ziepe.ca
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <000000000000057e4c061b386e23@google.com>
- <20240619091557.GM4025@unreal>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20240619091557.GM4025@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-Proofpoint-GUID: _EifKludXePhvf18yQ58BHnSt7YQD7mN
+X-Proofpoint-ORIG-GUID: _EifKludXePhvf18yQ58BHnSt7YQD7mN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
 
-在 2024/6/19 17:15, Leon Romanovsky 写道:
-> On Tue, Jun 18, 2024 at 11:37:18PM -0700, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=179e93fe980000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
->> dashboard link: https://syzkaller.appspot.com/bug?extid=19ec7595e3aa1a45f623
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->>
->> Unfortunately, I don't have any reproducer for this issue yet.
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com
->>
->> smc: removing ib device syz0
->> ------------[ cut here ]------------
->> WARNING: CPU: 0 PID: 51 at kernel/rcu/srcutree.c:653 cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
->> Modules linked in:
->> CPU: 0 PID: 51 Comm: kworker/u8:3 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
->> Workqueue: ib-unreg-wq ib_unregister_work
->> RIP: 0010:cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
->> Code: 12 80 00 48 c7 03 00 00 00 00 48 83 c4 48 5b 41 5c 41 5d 41 5e 41 5f 5d e9 14 67 34 0a 90 0f 0b 90 eb e7 90 0f 0b 90 eb e1 90 <0f> 0b 90 eb db 90 0f 0b 90 eb 0a 90 0f 0b 90 eb 04 90 0f 0b 90 48
->> RSP: 0018:ffffc90000bb7970 EFLAGS: 00010202
->> RAX: 0000000000000001 RBX: ffff88802a1bc980 RCX: 0000000000000002
->> RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffe8ffffd74c58
->> RBP: 0000000000000001 R08: ffffe8ffffd74c5f R09: 1ffffd1ffffae98b
->> R10: dffffc0000000000 R11: fffff91ffffae98c R12: dffffc0000000000
->> R13: ffff88802285b5f0 R14: ffff88802285b000 R15: ffff88802a1bc800
->> FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007fa3852cae10 CR3: 000000000e132000 CR4: 0000000000350ef0
->> Call Trace:
->>   <TASK>
->>   ib_uverbs_release_dev+0x4e/0x80 drivers/infiniband/core/uverbs_main.c:136
->>   device_release+0x9b/0x1c0
->>   kobject_cleanup lib/kobject.c:689 [inline]
->>   kobject_release lib/kobject.c:720 [inline]
->>   kref_put include/linux/kref.h:65 [inline]
->>   kobject_put+0x231/0x480 lib/kobject.c:737
->>   remove_client_context+0xb9/0x1e0 drivers/infiniband/core/device.c:776
->>   disable_device+0x13b/0x360 drivers/infiniband/core/device.c:1282
->>   __ib_unregister_device+0x6d/0x170 drivers/infiniband/core/device.c:1475
->>   ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1586
->>   process_one_work kernel/workqueue.c:3231 [inline]
->>   process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
->>   worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
->>   kthread+0x2f2/0x390 kernel/kthread.c:389
->>   ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
->>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->>   </TASK>
-> 
-> I see that this is caused by call to ib_unregister_device_queued() as a
-> response to NETDEV_UNREGISTER event, but we don't flush anything before.
-> How can we be sure that ib_device is not used anymore?
+Add new bindings for the v2 Marvell xSPI overlay: marvell,cn10-xspi-nor
+compatible string. This new compatible string distinguishes between the
+original and modified xSPI block.
 
-Hi, Leon
+Also add an optional base for the xfer register set with an additional
+reg field to allocate the xSPI Marvell overlay XFER block.
 
-This is the console output:
+Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/spi/cdns,xspi.yaml    | 32 ++++++++++++++++---
+ 1 file changed, 28 insertions(+), 4 deletions(-)
 
-https://syzkaller.appspot.com/x/log.txt?x=179e93fe980000
-
- From the above link, it seems that other devices or subsystems failed 
-firstly, then caused this call trace to appear. When other problem 
-occurred, the whole kernel system was in mess state.So it is not weird 
-that some problems occurred.
-
-To be simple, the root cause is not in RDMA subsystem.
-
-I will continue to delve into this problem.
-
-Zhu Yanjun
-> 
-> Thanks
+diff --git a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+index eb0f92468185..38a5795589de 100644
+--- a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
++++ b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+@@ -15,24 +15,27 @@ description: |
+   single, dual, quad or octal wire transmission modes for
+   read/write access to slaves such as SPI-NOR flash.
+ 
+-allOf:
+-  - $ref: spi-controller.yaml#
+-
+ properties:
+   compatible:
+-    const: cdns,xspi-nor
++    enum:
++      - cdns,xspi-nor
++      - marvell,cn10-xspi-nor
+ 
+   reg:
+     items:
+       - description: address and length of the controller register set
+       - description: address and length of the Slave DMA data port
+       - description: address and length of the auxiliary registers
++      - description: address and length of the xfer registers
++    minItems: 3
+ 
+   reg-names:
+     items:
+       - const: io
+       - const: sdma
+       - const: aux
++      - const: xfer
++    minItems: 3
+ 
+   interrupts:
+     maxItems: 1
+@@ -42,6 +45,27 @@ required:
+   - reg
+   - interrupts
+ 
++allOf:
++  - $ref: spi-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - marvell,cn10-xspi-nor
++    then:
++      properties:
++        reg:
++          minItems: 4
++        reg-names:
++          minItems: 4
++    else:
++      properties:
++        reg:
++          maxItems: 3
++        reg-names:
++          maxItems: 3
++
+ unevaluatedProperties: false
+ 
+ examples:
+-- 
+2.43.0
 
