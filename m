@@ -1,128 +1,191 @@
-Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A6D80C04
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9BB82495
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718791813; cv=none; b=s/O37CcOLkTjwqwNTV9uR1NpTI5stB+VO7n6Y9mnHRh9/87k0axpUPI8R2tyw5X+ofGULfrBz3bxPjBAMBCCwZtFd9QTWsufFts8kS/Fdea3GuEcTUjHmpD6Z/F2I9xyof/l/8BVRHeswnK95nf/1ERpr7eOt8QD2NAPnov3JOg=
+	t=1718791830; cv=none; b=bLVYdKBuhB5Rj6XPgUVUOEaFmSWcX0nxBOn0aZ1UYb5M0DXJNUCRvX3zpvpmUtEcHDfaIPVvNS/7ge96BFWUDFwI6PacVC5rf4hv4UZl+dzMVYMeKah90WIEsHrR40g9EOLfoUNmTEoSuIkK8HmD+gRM/dUtSI25GNOOtQWRW/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718791813; c=relaxed/simple;
-	bh=squliK7jr0NC6xXWsIbFQ48EcsRgBrMr7MO6MWuF8wE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k3x4jeBD9MppGcCmwLQStYBWI2Ba5Rmgi1iqFYN+RZiSwgexNGd3UVGPGk8O7W81JMnHPzP1Jk6JvHL47qK8KvQ1jMbcS2R8JKLLH4yXrltLLGafLuXXxVtYKC0iylkpS1UETbp1Up8dUhDv8vfglof4He4MkfCAgoJCT4oa+w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=bLKbaH/p; arc=none smtp.client-ip=211.125.140.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1718791830; c=relaxed/simple;
+	bh=N45zKq2aQKCCGMd0eceleGJKTr4y8XnnRwYHdmGOExo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kLuva8iZ+6L6Nqkd4QxifNq0VTiA6BWOaqmlFq2liiwPggNaqiWg2bX/kEe8E3Bx9qnq1JCFLfa1D/ni+WI3ng7rxgwrF8EvlddPnQEHm09i/3ssXoROVcA4e1TDPTjFyvZ7x/9TEM6+T68dvUxHIX3DasKfQ+T+0/Fi2EIBQDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ehBWRCi+; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="bLKbaH/p"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ehBWRCi+"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-48c458b9aa7so2085257137.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1718791810; x=1750327810;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SwEPVkX3dmPP3UFXdzAhYNE6buV92cORmitwcIWuV0I=;
-  b=bLKbaH/p3qMfjZUq9aD1JImYvRGHpJ1uQcnLIhtJh3JFiWoutiITeBqo
-   1TPCvUjz1P4G4M4P/ZHaCuXF5tsOsyOOMnydCFmy6eRuTliET3RXReRts
-   v8JirbUCN5ps6hyHu2hN0+Wj+lonaQdYHP9/ATxmvn9Rb7P2QxrUagyaW
-   y7lrCN+Uc2Fql0YvVopqbcjvF9conU+cFwxzys9YVF8TBjWQaYy2CHA/y
-   3ZB1IRBWZAFD4gv+sidUtGYdDxETIKU4bl13TrOC51ZsNncQy+fonMH0g
-   WBEv2RhvVSNJCtt2/v4yttiqDg3BCCxMOnpolK70lEs5LBOo+liAJ5pxx
-   A==;
-Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
-  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 19:00:00 +0900
-X-IronPort-AV: E=Sophos;i="6.08,250,1712588400"; 
-   d="scan'208";a="425625442"
-Received: from unknown (HELO LXJ00013166) ([IPv6:2001:cf8:2:f100:2ef0:5dff:fe04:1f0f])
-  by jpmta-ob1.noc.sony.co.jp with ESMTP; 19 Jun 2024 19:00:00 +0900
-Date: Wed, 19 Jun 2024 10:00:00 +0000
-From: Khasnis Soumya <soumya.khasnis@sony.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, gregkh@linuxfoundation.org
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org,
-	daniel.lezcano@linaro.org, festevam@denx.de, lee@kernel.org,
-	benjamin.bara@skidata.com, dmitry.osipenko@collabora.com,
-	ldmldm05@gmail.com, soumya.khasnis@sony.com,
-	srinavasa.nagaraju@sony.com, Madhusudan.Bobbili@sony.com,
-	shingo.takeuchi@sony.com, keita.aihara@sony.com,
-	masaya.takahashi@sony.com
-Subject: Re: [PATCH v5] driver core: Add timeout for device shutdown
-Message-ID: <20240619100000.GA10362@sony.com>
-References: <20240613083226.GA8191@sony.com>
- <2024061326-moonlit-protozoan-61f8@gregkh>
- <ecf55d97-363d-4731-bcfa-81cb4e58f2c7@linaro.org>
+        d=chromium.org; s=google; t=1718791827; x=1719396627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8ngPGc/hFtGsrMMFvI2VR8EgB+U9LeNzTYZovoR1s9s=;
+        b=ehBWRCi+0KP036/rL1p8XKV1xDGAHhwiE2S8APRBabMVBxveD1a5Qrzs/6PabL+XdX
+         rxd97tkBLRaoG/y6J932gZ5zU5L1/+csk587cc3WKfd0ThkyBV+gpAYX65BAUtX/Y2pR
+         re7Ufk+z15r8H/F0a/2Fk5EWV45ZbD0M4K57w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718791827; x=1719396627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8ngPGc/hFtGsrMMFvI2VR8EgB+U9LeNzTYZovoR1s9s=;
+        b=Jj878Eaqgljtduq95d8gVWac07SNrTrh2vQkihrjq5QeAxdltzWasqqHPSHXJRCJFv
+         CpTgMMcog9s6qNkhQcnkkWrIicMpsdGRrVVIBOQUFgBx4c/Q5u8ILFIxp9/uCxVEdk2C
+         0OUkrlga6Psr4VWvENYUrQ81clXw75N7CPdYwnXIKZLuyFFH7EHwwaav12tpuGBKWYaG
+         s877I9rJ5pbOkCb/YKRQVxIpHef9qUOouCG9LmFMJDhd2sVccOvpDUycOWZ8NcdbiucD
+         YdhjZs98KQH2V0CU4Bu/VFAdgzMbvJATFm/+mLP63aux8aIX5OADH4XyI1q0oAX3STjc
+         NIaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXoM4y8nHd+uknO/fUge1Gun1E1vSqgJXvIooTIqBqL2lMm4kDIyc6q3ool/jAN8hK5oHBogk3XxRp11UcGL3PimiGZtorvjGsO354o
+X-Gm-Message-State: AOJu0YyOheefXhJClkKgLtK0MRP7NX6IeP74NLHYQy5evIBbCB9k7eki
+	+yNlv6VflcPSpA5B/CgH4TF+/M3weXXjYJLABWO3CRyA8JTeYIWv3XNT2I6BIBJCR7/iObUfJGI
+	=
+X-Google-Smtp-Source: AGHT+IEcd153Da045sE1VhnnVnmoaw+o+jnkJmyMriKSbUA8cOy5dLc+6LS1xR3uiXogI0abCjUayg==
+X-Received: by 2002:a05:6102:180d:b0:48a:36b0:87ab with SMTP id ada2fe7eead31-48f130bac0cmr2128101137.31.1718791827418;
+        Wed, 19 Jun 2024 03:10:27 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-48da43ff4f3sm2494826137.18.2024.06.19.03.10.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 03:10:26 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-80f5a2af017so171755241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:10:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUX/T/jslx/nZd8KgevLJNUYP30pTnQ6LhvvKCelXjLATyR45x5iJPzgfZ5ChidpGGxhUDMv3FE43L+q/NLEHVcNArRRp2oWoPtTW/s
+X-Received: by 2002:a67:f80e:0:b0:48c:397b:3996 with SMTP id
+ ada2fe7eead31-48f13007867mr2130877137.8.1718791825452; Wed, 19 Jun 2024
+ 03:10:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ecf55d97-363d-4731-bcfa-81cb4e58f2c7@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20240322092845.381313-1-angelogioacchino.delregno@collabora.com> <20240322092845.381313-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240322092845.381313-3-angelogioacchino.delregno@collabora.com>
+From: Fei Shao <fshao@chromium.org>
+Date: Wed, 19 Jun 2024 18:09:47 +0800
+X-Gmail-Original-Message-ID: <CAC=S1niaYZ=NNTwfSrJPdj79uG_hmqGm=cz_Sis3Zrf9octsnw@mail.gmail.com>
+Message-ID: <CAC=S1niaYZ=NNTwfSrJPdj79uG_hmqGm=cz_Sis3Zrf9octsnw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] soc: mediatek: mtk-mutex: Add support for MT8188 VPPSYS
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-media@vger.kernel.org, mchehab@kernel.org, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	matthias.bgg@gmail.com, amergnat@baylibre.com, moudy.ho@mediatek.com, 
+	hverkuil-cisco@xs4all.nl, sebastian.fricke@collabora.com, 
+	u.kleine-koenig@pengutronix.de, chunkuang.hu@kernel.org, 
+	p.zabel@pengutronix.de, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 01:51:57PM +0200, Daniel Lezcano wrote:
-> On 13/06/2024 10:43, Greg KH wrote:
-> > On Thu, Jun 13, 2024 at 08:32:26AM +0000, Soumya Khasnis wrote:
-> >> The device shutdown callbacks invoked during shutdown/reboot
-> >> are prone to errors depending on the device state or mishandling
-> >> by one or more driver. In order to prevent a device hang in such
-> >> scenarios, we bail out after a timeout while dumping a meaningful
-> >> call trace of the shutdown callback to kernel logs, which blocks
-> >> the shutdown or reboot process.
-> > 
-> > Again, this is not a "device shutdown" timeout, it is a "the whole
-> > system has not shutdown this fast" timeout.
-> > 
-> > And in looking at my system, it doesn't shutdown in 10 seconds as it is
-> > madly flushing a ton of stuff out to the disks, and they are slow
-> > beasts.  So your 10 second default would cause me data loss on my
-> > workstation, not good!
-> 
-> Thanks for pointing this out. It is exactly what I was worried about ...
-Thank you for comments Daniel and Greg, let me explain.
+Hi Angelo,
 
-Typically reboot/shutdown sequence involves following steps in User land before kernel restart/shutdown sequence is entered.
+On Fri, Mar 22, 2024 at 5:29=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Add MT8188 VPPSYS0 and VPPSYS1 mutex info to driver data
+>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
+>  drivers/soc/mediatek/mtk-mutex.c | 41 ++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>
+> diff --git a/drivers/soc/mediatek/mtk-mutex.c b/drivers/soc/mediatek/mtk-=
+mutex.c
+> index 73c256d3950b..b5af1fb5847e 100644
+> --- a/drivers/soc/mediatek/mtk-mutex.c
+> +++ b/drivers/soc/mediatek/mtk-mutex.c
+> @@ -496,6 +496,39 @@ static const unsigned int mt8188_mutex_mod[DDP_COMPO=
+NENT_ID_MAX] =3D {
+>         [DDP_COMPONENT_MERGE5] =3D MT8188_MUTEX_MOD_DISP1_VPP_MERGE4,
+>  };
+>
+> +static const unsigned int mt8188_mdp_mutex_table_mod[MUTEX_MOD_IDX_MAX] =
+=3D {
+> +       [MUTEX_MOD_IDX_MDP_RDMA0] =3D MT8195_MUTEX_MOD_MDP_RDMA0,
+> +       [MUTEX_MOD_IDX_MDP_RDMA2] =3D MT8195_MUTEX_MOD_MDP_RDMA2,
+> +       [MUTEX_MOD_IDX_MDP_RDMA3] =3D MT8195_MUTEX_MOD_MDP_RDMA3,
+> +       [MUTEX_MOD_IDX_MDP_FG0] =3D MT8195_MUTEX_MOD_MDP_FG0,
+> +       [MUTEX_MOD_IDX_MDP_FG2] =3D MT8195_MUTEX_MOD_MDP_FG2,
+> +       [MUTEX_MOD_IDX_MDP_FG3] =3D MT8195_MUTEX_MOD_MDP_FG3,
+> +       [MUTEX_MOD_IDX_MDP_HDR0] =3D MT8195_MUTEX_MOD_MDP_HDR0,
+> +       [MUTEX_MOD_IDX_MDP_HDR2] =3D MT8195_MUTEX_MOD_MDP_HDR2,
+> +       [MUTEX_MOD_IDX_MDP_HDR3] =3D MT8195_MUTEX_MOD_MDP_HDR3,
+> +       [MUTEX_MOD_IDX_MDP_AAL0] =3D MT8195_MUTEX_MOD_MDP_AAL0,
+> +       [MUTEX_MOD_IDX_MDP_AAL2] =3D MT8195_MUTEX_MOD_MDP_AAL2,
+> +       [MUTEX_MOD_IDX_MDP_AAL3] =3D MT8195_MUTEX_MOD_MDP_AAL3,
+> +       [MUTEX_MOD_IDX_MDP_RSZ0] =3D MT8195_MUTEX_MOD_MDP_RSZ0,
+> +       [MUTEX_MOD_IDX_MDP_RSZ2] =3D MT8195_MUTEX_MOD_MDP_RSZ2,
+> +       [MUTEX_MOD_IDX_MDP_RSZ3] =3D MT8195_MUTEX_MOD_MDP_RSZ3,
+> +       [MUTEX_MOD_IDX_MDP_MERGE2] =3D MT8195_MUTEX_MOD_MDP_MERGE2,
+> +       [MUTEX_MOD_IDX_MDP_MERGE3] =3D MT8195_MUTEX_MOD_MDP_MERGE3,
+> +       [MUTEX_MOD_IDX_MDP_TDSHP0] =3D MT8195_MUTEX_MOD_MDP_TDSHP0,
+> +       [MUTEX_MOD_IDX_MDP_TDSHP2] =3D MT8195_MUTEX_MOD_MDP_TDSHP2,
+> +       [MUTEX_MOD_IDX_MDP_TDSHP3] =3D MT8195_MUTEX_MOD_MDP_TDSHP3,
+> +       [MUTEX_MOD_IDX_MDP_COLOR0] =3D MT8195_MUTEX_MOD_MDP_COLOR0,
+> +       [MUTEX_MOD_IDX_MDP_COLOR2] =3D MT8195_MUTEX_MOD_MDP_COLOR2,
+> +       [MUTEX_MOD_IDX_MDP_COLOR3] =3D MT8195_MUTEX_MOD_MDP_COLOR3,
+> +       [MUTEX_MOD_IDX_MDP_OVL0] =3D MT8195_MUTEX_MOD_MDP_OVL0,
+> +       [MUTEX_MOD_IDX_MDP_PAD0] =3D MT8195_MUTEX_MOD_MDP_PAD0,
+> +       [MUTEX_MOD_IDX_MDP_PAD2] =3D MT8195_MUTEX_MOD_MDP_PAD2,
+> +       [MUTEX_MOD_IDX_MDP_PAD3] =3D MT8195_MUTEX_MOD_MDP_PAD3,
 
-1.	Terminate all services (except shutdown critical tasks)
-2.	Sync File systems
-3.	Unmount File systems
-4.	Trigger kernel reboot(LINUX_REBOOT_CMD_RESTART/LINUX_REBOOT_CMD_POWER_OFF) system call
+I know it's too late since this is in the tree already, but I noticed
+that MDP_COMP_TCC0 is added in the 4th patch but not here.
+Is that expected?
 
-A userspace watchdog can be setup for above as exists on Android system.
-This needs large timeout value because it involves syncing data to disks.  
+Everything else looks nice, so just a record in the mailing list:
+Reviewed-by: Fei Shao <fshao@chromium.org>
 
-Below is the kernel restart sequence after control moves to kernel in step 4).
-The issue we intend to address here is that the device driver shutdown callbacks may hang
-due to unresponsive device or a broken driver.
-
-|-kernel_restart()
-              |- kernel_restart_prepare()
-                     |- device_shutdown() // Iterates over the device hierarchy and invokes the shutdown callbacks (class/bus/driver->shutdown)
-              |- syscore_shutdown()
-              |- machine_restart()
-
-I still believe a 10 sec timeout as default is reasonable for the device_shutdown().
-Not all drivers necessarily implement a shutdown callback and the timeout can be configured for large systems as needed.
+Regards,
+Fei
 
 
-> 
-> [ ... ]
-> 
-> > Isn't this just a bug in your drivers?  Why not fix them?  Or if you
-> > really have to have 10 seconds to shut down, use a watchdog timer that
-> > you trigger from userspace and stop petting once you want to shut down.
-> > Then, if it expires it will reset the machine, all of your policy
-> > decisions would have been done in userspace, no need to get the kernel
-> > involved at all.
-> 
-> +1
-> 
-> 
-> -- 
-> <https://urldefense.com/v3/__http://www.linaro.org/__;!!JmoZiZGBv3RvKRSx!_c6dCsrFBbO_ivlpLdqDvkFPd2bIFgHN48Xbjt4dqXVv5_QYeLwNMJOuy_jh5vBfqDUbNuCQ23qnLmHmRRCvtllhT_Uq$ [linaro[.]org]> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro:  <https://urldefense.com/v3/__http://www.facebook.com/pages/Linaro__;!!JmoZiZGBv3RvKRSx!_c6dCsrFBbO_ivlpLdqDvkFPd2bIFgHN48Xbjt4dqXVv5_QYeLwNMJOuy_jh5vBfqDUbNuCQ23qnLmHmRRCvtqiO2qBL$ [facebook[.]com]> Facebook |
-> <https://urldefense.com/v3/__http://twitter.com/*!/linaroorg__;Iw!!JmoZiZGBv3RvKRSx!_c6dCsrFBbO_ivlpLdqDvkFPd2bIFgHN48Xbjt4dqXVv5_QYeLwNMJOuy_jh5vBfqDUbNuCQ23qnLmHmRRCvtrJS5bNz$ [twitter[.]com]> Twitter |
-> <https://urldefense.com/v3/__http://www.linaro.org/linaro-blog/__;!!JmoZiZGBv3RvKRSx!_c6dCsrFBbO_ivlpLdqDvkFPd2bIFgHN48Xbjt4dqXVv5_QYeLwNMJOuy_jh5vBfqDUbNuCQ23qnLmHmRRCvthplPsVl$ [linaro[.]org]> Blog
-> 
+> +       [MUTEX_MOD_IDX_MDP_WROT0] =3D MT8195_MUTEX_MOD_MDP_WROT0,
+> +       [MUTEX_MOD_IDX_MDP_WROT2] =3D MT8195_MUTEX_MOD_MDP_WROT2,
+> +       [MUTEX_MOD_IDX_MDP_WROT3] =3D MT8195_MUTEX_MOD_MDP_WROT3,
+> +};
+> +
+>  static const unsigned int mt8192_mutex_mod[DDP_COMPONENT_ID_MAX] =3D {
+>         [DDP_COMPONENT_AAL0] =3D MT8192_MUTEX_MOD_DISP_AAL0,
+>         [DDP_COMPONENT_CCORR] =3D MT8192_MUTEX_MOD_DISP_CCORR0,
+> @@ -735,6 +768,13 @@ static const struct mtk_mutex_data mt8188_mutex_driv=
+er_data =3D {
+>         .mutex_sof_reg =3D MT8183_MUTEX0_SOF0,
+>  };
+>
+> +static const struct mtk_mutex_data mt8188_vpp_mutex_driver_data =3D {
+> +       .mutex_sof =3D mt8188_mutex_sof,
+> +       .mutex_mod_reg =3D MT8183_MUTEX0_MOD0,
+> +       .mutex_sof_reg =3D MT8183_MUTEX0_SOF0,
+> +       .mutex_table_mod =3D mt8188_mdp_mutex_table_mod,
+> +};
+> +
+>  static const struct mtk_mutex_data mt8192_mutex_driver_data =3D {
+>         .mutex_mod =3D mt8192_mutex_mod,
+>         .mutex_sof =3D mt8183_mutex_sof,
+> @@ -1089,6 +1129,7 @@ static const struct of_device_id mutex_driver_dt_ma=
+tch[] =3D {
+>         { .compatible =3D "mediatek,mt8186-disp-mutex", .data =3D &mt8186=
+_mutex_driver_data },
+>         { .compatible =3D "mediatek,mt8186-mdp3-mutex", .data =3D &mt8186=
+_mdp_mutex_driver_data },
+>         { .compatible =3D "mediatek,mt8188-disp-mutex", .data =3D &mt8188=
+_mutex_driver_data },
+> +       { .compatible =3D "mediatek,mt8188-vpp-mutex",  .data =3D &mt8188=
+_vpp_mutex_driver_data },
+>         { .compatible =3D "mediatek,mt8192-disp-mutex", .data =3D &mt8192=
+_mutex_driver_data },
+>         { .compatible =3D "mediatek,mt8195-disp-mutex", .data =3D &mt8195=
+_mutex_driver_data },
+>         { .compatible =3D "mediatek,mt8195-vpp-mutex",  .data =3D &mt8195=
+_vpp_mutex_driver_data },
+> --
+> 2.44.0
+>
+>
