@@ -1,114 +1,112 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4758585285
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC3E285285
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793320; cv=none; b=hfAHMzLdL11jXoldStMhO/IIZxlq2QSScwHMXUICBWdhN+/6kfnhLD3qaOznSaEt0cjXwcYv/G+22cnVxSFuxB4WdXRmn4o7QrdHscnsZUONA14aiC1Ev49xgcfqwmvX19MQofKt/Z+JhESxhmHSmNoNx5wj7541xaNhybAB+vA=
+	t=1718793356; cv=none; b=b9u5FqK1HoCdzWjXztpXloBKrthSjMnFdzvfUaEhvvwAXHyVm6wXwuPKBgb1PIapm9gE8p+zUnGRVEiAC17r2+lKTjAbIWA2m6Eu09oFXbTufDJ49FFUXy9Ta+J0Rb/u4sss15s+oM1xDLx/m1YICrLFiXpOrcCNO/nXQnswxR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793320; c=relaxed/simple;
-	bh=0GKpp7Tj8rmrANzPpFFyYQDQk5Nc6/mSbfS5ot7teh8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KhNQ3VqdVEacTif6Cz8sFWZyRyTyLNGbPQeloxbqd5Dewx0d7PCP6fNmUPKRbKO9Tmnd6ER4xQHwV2nCSgrUAodjz6zRTcrS+bWT8YUlE9u8lTHisRQ4b1IjatHZG3yu+TDo5cAxoDoHWUJqTXwKxVbAbKF6VUZXF4F7shjO2fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UOUoSeBB; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UOUoSeBB"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-48d75899a88so2060398137.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718793318; x=1719398118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oQeGra2iBmmyFMexo3SqyeNsqV++ufvz/AJLf19SFYk=;
-        b=UOUoSeBBkgBEqKJIEChXJ6Qnd2NBxfhw2uJecO4kBuWd7QPvH/chpP8HxLYXOeuVid
-         VEYPcMKCCxufwPspiBV+gqiJA5l1CyHdjvPWZIly4BUaZ6UG9lR0MpOvsPtwGyZnB1r5
-         jxHXWqo+CBTScDjwV8PBFyKXCZbIoxYxRg3go=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718793318; x=1719398118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQeGra2iBmmyFMexo3SqyeNsqV++ufvz/AJLf19SFYk=;
-        b=uDysyvXDq0eK+3u0BNaIXBbxCiD9yDH9Iu8xxQke2OwcIDcP9H6hGhz9Tjy+3515Zx
-         6RyLDbGnFHrCMCBiOipE/A26mY1UYvB9WedUQxXa2JvSJJauNlZLDZ2UZjtTazG7xm4O
-         pYCLRc8BlPcwvLBn5xmBgyTzdGdEjTM7tk34MjSpcrnIaou72gtD4W9Z/jTuAKimTmxg
-         aIxIQsO98eQq8R48k0LthauCG3ZNKBb3Od7pAE9h5P/xlFNi/DOQY+KQ5v7BA65yHoc7
-         sr3bhmiZwouYcwGgH3TNMRMBhpQKnD/CWjf8Ij1AjFarTG23C96CUY1l4ACjLrRG+ao0
-         nmJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXeLZnGh1d1IvNrbUcYrOdVLAwY5Msxb6OPpLizt5ovB7XqvvHP0SO98GjG1EtJisvjEXKvZTyaEM4YLCjHnGKVZkF/gbVs/Y+uLEvT
-X-Gm-Message-State: AOJu0Yw/EjIZqaSJ10/QZwEVTVynzEcYH1ndbuP7ijp7gRdDRyztuGZ8
-	6lgpF9Y1bD1XFYi6TeXMZ70xm2TU6bCmlTnglGJhFMehPkwngf997Z9exS1czIT9aLqEek1cpZM
-	=
-X-Google-Smtp-Source: AGHT+IEZqJXfAyxxRpWG7q0ZHdry1TiKm+aMMN4yAio20QinMhBC2rf/vxZEDnlT6jamfzYrisuBGg==
-X-Received: by 2002:a05:6102:1887:b0:48d:89e2:8ff6 with SMTP id ada2fe7eead31-48f130ade13mr2294093137.23.1718793318038;
-        Wed, 19 Jun 2024 03:35:18 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-48da4483626sm2621080137.21.2024.06.19.03.35.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 03:35:17 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-48d75899a88so2060389137.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:35:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUcnx6hqTqTUkNfd2pxrSjnEf65YSziYAd9w+4iEp+SC2YSK1rJQtS/Dm/nu/8Ny1YqGnSsvCQ30+cBZEdBVjIlz7s6bqo25HyY8Spg
-X-Received: by 2002:a05:6102:2926:b0:48f:19b5:2685 with SMTP id
- ada2fe7eead31-48f19b52895mr915741137.26.1718793317187; Wed, 19 Jun 2024
- 03:35:17 -0700 (PDT)
+	s=arc-20240116; t=1718793356; c=relaxed/simple;
+	bh=fgyCnP3qXShl7wfpqmt+wRPrDUtyovAtEM7NSslvPQ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M/Erz83vdcLLqxWyqaO6V3VETNp0JISD303BPT3CsTExcG6p+riQH9Q9xyMnLYEDPiiNOmCS6mNF8Jd4HsTP2wm1vobJwSuGZtU0X8ElJGET5hQeoftzqD3a7rbzraSoqmyMXoTR3nzTv9w6IRJOJOLuTSkIRW795ZSOvFWfsgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7F3FDA7;
+	Wed, 19 Jun 2024 03:36:17 -0700 (PDT)
+Received: from [10.57.71.86] (unknown [10.57.71.86])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCDE43F64C;
+	Wed, 19 Jun 2024 03:35:51 -0700 (PDT)
+Message-ID: <0e03afd6-46be-4fc7-a974-bf506d8e503c@arm.com>
+Date: Wed, 19 Jun 2024 11:35:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619103034.110377-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240619103034.110377-1-angelogioacchino.delregno@collabora.com>
-From: Fei Shao <fshao@chromium.org>
-Date: Wed, 19 Jun 2024 18:34:41 +0800
-X-Gmail-Original-Message-ID: <CAC=S1nikgOVAqwHDEv5yQAQAKT4pBDwcC3zCduwf64nwtATY7Q@mail.gmail.com>
-Message-ID: <CAC=S1nikgOVAqwHDEv5yQAQAKT4pBDwcC3zCduwf64nwtATY7Q@mail.gmail.com>
-Subject: Re: [PATCH] soc: mediatek: mtk-mutex: Add MDP_TCC0 mod to MT8188
- mutex table
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] New config added to handle 64-bit systems with 32-bit DMA
+ support
+To: Alberto Secondi <albertosecondi@gmail.com>, hch@lst.de,
+ m.szyprowski@samsung.com
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ alberto.secondi@abinsula.com, Davide Salaris <davide.salaris@abinsula.com>
+References: <20240619091737.669040-1-albertosecondi@gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20240619091737.669040-1-albertosecondi@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 19, 2024 at 6:30=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> MT8188's MDP3 is able to use MDP_TCC0, this mutex_mod bit does
-> actually exist and it's the same as MT8195: add it to the table.
->
-> Fixes: 26bb17dae6fa ("soc: mediatek: mtk-mutex: Add support for MT8188 VP=
-PSYS")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
+On 2024-06-19 10:17 am, Alberto Secondi wrote:
+> ------ Tessian Warning ------
+> 
+> Be careful, the email's sending address "albertosecondi@gmail[.]com" has never been seen on your company's network before today
+> 
+> This warning message will be removed if you reply to or forward this email to a recipient outside of your organization.
+> 
+> ---- Tessian Warning End ----
+> 
+> From: Alberto Secondi <alberto.secondi@abinsula.com>
+> 
+> The kernel assumes that 64-bit systems have 64-bit DMA support through
+> CONFIG_ARCH_DMA_ADDR_T_64BIT. This is not always true; for example, several
+> iMX8 systems (verified on iMX8MM and iMX8MP) have DMA with only 32-bit support.
+> This results in several drivers requesting DMA_BIT_MASK(64), which causes
+> malfunctions, particularly when systems have more than 3GB of DRAM (verified
+> with the lan743x driver and iMX8 systems with 4GB of DRAM). Therefore, a new
+> config ARCH_64BIT_HAS_DMA32_ONLY was added to manage 64-bit systems with 32-bit
+> DMA, which adjusts DMA_BIT_MASK(n) accordingly.
 
-Reviewed-by: Fei Shao <fshao@chromium.org>
+No. If a system has devices naturally capable of >32-bit DMA, and memory 
+at >32-bit system physical addresses, but only a 32-bit interconnect in 
+between, that needs to be described properly in Devicetree/ACPI, not 
+hacked around with completely non-portable kernel bodges.
 
+Thanks,
+Robin.
+
+> Signed-off-by: Alberto Secondi <alberto.secondi@abinsula.com>
+> Co-developed-by: Davide Salaris <davide.salaris@abinsula.com>
 > ---
->  drivers/soc/mediatek/mtk-mutex.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/soc/mediatek/mtk-mutex.c b/drivers/soc/mediatek/mtk-=
-mutex.c
-> index b5af1fb5847e..01b129caf1eb 100644
-> --- a/drivers/soc/mediatek/mtk-mutex.c
-> +++ b/drivers/soc/mediatek/mtk-mutex.c
-> @@ -524,6 +524,7 @@ static const unsigned int mt8188_mdp_mutex_table_mod[=
-MUTEX_MOD_IDX_MAX] =3D {
->         [MUTEX_MOD_IDX_MDP_PAD0] =3D MT8195_MUTEX_MOD_MDP_PAD0,
->         [MUTEX_MOD_IDX_MDP_PAD2] =3D MT8195_MUTEX_MOD_MDP_PAD2,
->         [MUTEX_MOD_IDX_MDP_PAD3] =3D MT8195_MUTEX_MOD_MDP_PAD3,
-> +       [MUTEX_MOD_IDX_MDP_TCC0] =3D MT8195_MUTEX_MOD_MDP_TCC0,
->         [MUTEX_MOD_IDX_MDP_WROT0] =3D MT8195_MUTEX_MOD_MDP_WROT0,
->         [MUTEX_MOD_IDX_MDP_WROT2] =3D MT8195_MUTEX_MOD_MDP_WROT2,
->         [MUTEX_MOD_IDX_MDP_WROT3] =3D MT8195_MUTEX_MOD_MDP_WROT3,
-> --
-> 2.45.2
->
+>   include/linux/dma-mapping.h | 4 ++++
+>   kernel/dma/Kconfig          | 8 ++++++++
+>   2 files changed, 12 insertions(+)
+> 
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index f693aafe221f..629220a777e3 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -74,7 +74,11 @@
+>    */
+>   #define DMA_MAPPING_ERROR		(~(dma_addr_t)0)
+>   
+> +#ifdef CONFIG_ARCH_64BIT_HAS_DMA32_ONLY
+> +#define DMA_BIT_MASK(n)	(((n) > 32) ? ((1ULL<<(32))-1) : ((1ULL<<(n))-1))
+> +#else
+>   #define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+> +#endif
+>   
+>   #ifdef CONFIG_DMA_API_DEBUG
+>   void debug_dma_mapping_error(struct device *dev, dma_addr_t dma_addr);
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index c06e56be0ca1..0a27eafed808 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -36,6 +36,14 @@ config NEED_DMA_MAP_STATE
+>   config ARCH_DMA_ADDR_T_64BIT
+>   	def_bool 64BIT || PHYS_ADDR_T_64BIT
+>   
+> +config ARCH_64BIT_HAS_DMA32_ONLY
+> +        bool "64bit System has DMA32 only"
+> +        depends on ARCH_DMA_ADDR_T_64BIT
+> +        default n
+> +	help
+> +	  This enables forcing the maximum DMA_BIT_MASK to 32 bits for
+> +	  64-bit systems that have DMA support limited to 32 bits.
+> +
+>   config ARCH_HAS_DMA_SET_MASK
+>   	bool
+>   
