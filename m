@@ -1,162 +1,146 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2188062E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73A57E11E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718789362; cv=none; b=pwHsIl+JbMgxPCC6STo0C19VXIGLvKsVokryNuq6p8z85jKcrElrrneBPQFTpfntRijejU83N2jYMstRSF4w9HqXhREGYk0ugUtWbDvdUcWP/thTOJVbV5JWAlifPPAKwFO7XSvgkcQ1nU67SflM2LNBurplyrM4t6dUyP3+sis=
+	t=1718789419; cv=none; b=uSZfvb8WZTQTVeIyFfh1J4Rg8ga22jgBxU8ku1m1gAN7fI8SlUrvERx7KvW0krjAAPRR2/iTvnZrj5dWX2pg2m0SgYYEFxnOvz8pLGnE1V/FtGn+zsJ6aIimAuYljmxMsY2LXcRqdo2XFQHscEz8nVM2ACMjYjDgdzJ3ZcOA3NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718789362; c=relaxed/simple;
-	bh=cv7531rMfIX0TJSEu7BFmlypNRmwdNE0oRm/RjGb3/Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iPdG1y0VV9rCiTvtfCxIUiVDgMOeXUUQWvnHxiwmpqYEwpmELc97PxhosAnUPPseUSPerOhW4mElBmQB6TRY3BioMzVcwSGaqwQaDgUzaZqP1pacsHtxU7FUhVLKFZL6Q9IZJ3paOq4IvgKUCAPxTyQ/4fwS81XIcmloaF4+DaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=OqRSsbuR; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1718789419; c=relaxed/simple;
+	bh=/52i2IEcPby05hVZRiaMOtNwyTw57B3DcrTt2iGDjtI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NSQuHCm5LKORILW+tEiKe6eRvFx2Uwga8RPWektqrrmsorEsyrpODQG96A3J1jT8Oi7rGfYcmnm9uVsdMdUlnEgEqNYK4+ftN4f9D6jsTIxLbIeYzKvwQLObHMois5S1BKZwDdYDX99M7Q/YvoxCFcgyskeKzSXkPRJN07vAfjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQuAYBh3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OqRSsbuR"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso844745566b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 02:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1718789359; x=1719394159; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V60tWSEyq0vsAXnVJoNACpk/lcgOsGBfMMUaz3AVbmM=;
-        b=OqRSsbuRDJw5jBxjPZ0FKr4x0fKvRkLKlvDIAEqGzmXFysf2LiAuts6opGqaPE75ec
-         DLwWk5UkJUmW6bXdMrMlT42Booprj+xSXjNWAZy4DeTXqPEBVD2WiEV6vuwFaSkcriFk
-         jteyvBpJ4aC/4+sS/3zzZiedmCBcoHO2IQO0s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718789359; x=1719394159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V60tWSEyq0vsAXnVJoNACpk/lcgOsGBfMMUaz3AVbmM=;
-        b=ial5t7ydJ9eozPeECBboIeXdgDi2uCir8m3FUBMG4KVLZenJv8tJCQQTic3m1DDkFw
-         n3MKMiKSewxjf/rbOrL7mJHDm/Yn0gMgzP3sm9v1TcCfRR9sL8nADISZl9zfa5feEvnR
-         nKGQk0RNbnkj1qfZqgO9i0GRkui5GWaADSx6St+K5pBKv3TMyxrct2wxsEmT5/ZBRI5d
-         3myunA48GJ1motbQo5VL2t4xMidgnLoFUjaIxYdWK1uuoKpTSKj0FlIJDb7lxbDq5rHD
-         KO/7PQUt+9wm6AwFbJoKAdlxFy49EQNJK85H+1iICqPnaZn0gve/JR6pLTVeC/wk94lj
-         UmSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZTB8xGRN0DcqnRHDRN/s9/8tDqfoodrBhcBvyoy44sbsQhmUo186wEaXbFUISMpIxUSOKWKZCD0VnXw5Qrz9MXd3mqklskwjmEH+d
-X-Gm-Message-State: AOJu0YzMtVcUSCxDfFRP/5wwuEynxiWlwgoVS6LB+h6lXtPODfzXKoG3
-	G/WQuyNEPQuzGmzNSwwsynER6I7xrvQ1KgYuvXu4lQvhw0mgkhTMYL5Jm1MA0w4ymtUJ3VUVKJZ
-	LtNFkEDAzP2yN5YCDfFxMYZ1V61CMvk1X6eS8TA==
-X-Google-Smtp-Source: AGHT+IFb76x7Pucfvd16pWEowxfrmojNsl7zxPiv/9dMvlT25uSbZQ+OJ1X3ubz+svkccGvvchtJv/7pS3EQVnBm5Bk=
-X-Received: by 2002:a17:907:a809:b0:a6f:86fe:c495 with SMTP id
- a640c23a62f3a-a6fab7718aemr117097866b.49.1718789359465; Wed, 19 Jun 2024
- 02:29:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQuAYBh3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B4EC2BBFC;
+	Wed, 19 Jun 2024 09:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718789419;
+	bh=/52i2IEcPby05hVZRiaMOtNwyTw57B3DcrTt2iGDjtI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bQuAYBh3hxaaLl5V6OZzaOk2lZmF39uMsWuo909unPVFm/qTzSD7fPnqqBaPZreNc
+	 edioBnoYgYSGoxdli6YGjWovvx3oyv0+ZpfUl5SdhTDIE5EkckIG5hcvdCKtBVdeiL
+	 mylzvyxKgCzeVuFg3RUfQxQi93NsjL+rT8Xc+f9c2A9/koJHQr+JTVNHG0FCZJ9NYU
+	 b6GzDj7QS49uUIDMySWZe+OA0S8PkRypaNqnOiZ13fXnqx95Ag1/gkV5tUVdzM8wPv
+	 zxM9oBXumIVhBbBJ2Bwrgcc7BQA0cP+AAxfdEeee6XciTTA2CQg8co3WEi5HYJhswT
+	 TLYCG2aahiDyw==
+From: Borislav Petkov <bp@kernel.org>
+To: X86 ML <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ashish Kalra <Ashish.Kalra@amd.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH] x86/sev: Move SEV compilation units
+Date: Wed, 19 Jun 2024 11:30:14 +0200
+Message-ID: <20240619093014.17962-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619091737.669040-1-albertosecondi@gmail.com> <CAOf5uwk_i5yA+K=riMcP9r4V9FynRBv2+=P98xUMvmvBtJr4Mg@mail.gmail.com>
-In-Reply-To: <CAOf5uwk_i5yA+K=riMcP9r4V9FynRBv2+=P98xUMvmvBtJr4Mg@mail.gmail.com>
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date: Wed, 19 Jun 2024 11:29:08 +0200
-Message-ID: <CAOf5uwkJxpge=JdtQv_nu7zWaN4weD43kBKqM1qAR4h5tuRjfw@mail.gmail.com>
-Subject: Re: [PATCH] New config added to handle 64-bit systems with 32-bit DMA support
-To: Alberto Secondi <albertosecondi@gmail.com>
-Cc: hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	alberto.secondi@abinsula.com, Davide Salaris <davide.salaris@abinsula.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Alberto
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-On Wed, Jun 19, 2024 at 11:23=E2=80=AFAM Michael Nazzareno Trimarchi
-<michael@amarulasolutions.com> wrote:
->
-> Hi Alberto
->
-> On Wed, Jun 19, 2024 at 11:20=E2=80=AFAM Alberto Secondi
-> <albertosecondi@gmail.com> wrote:
-> >
-> > From: Alberto Secondi <alberto.secondi@abinsula.com>
-> >
-> > The kernel assumes that 64-bit systems have 64-bit DMA support through
-> > CONFIG_ARCH_DMA_ADDR_T_64BIT. This is not always true; for example, sev=
-eral
-> > iMX8 systems (verified on iMX8MM and iMX8MP) have DMA with only 32-bit =
-support.
-> > This results in several drivers requesting DMA_BIT_MASK(64), which caus=
-es
-> > malfunctions, particularly when systems have more than 3GB of DRAM (ver=
-ified
-> > with the lan743x driver and iMX8 systems with 4GB of DRAM). Therefore, =
-a new
-> > config ARCH_64BIT_HAS_DMA32_ONLY was added to manage 64-bit systems wit=
-h 32-bit
-> > DMA, which adjusts DMA_BIT_MASK(n) accordingly.
-> >
-> > Signed-off-by: Alberto Secondi <alberto.secondi@abinsula.com>
-> > Co-developed-by: Davide Salaris <davide.salaris@abinsula.com>
-> > ---
-> >  include/linux/dma-mapping.h | 4 ++++
-> >  kernel/dma/Kconfig          | 8 ++++++++
-> >  2 files changed, 12 insertions(+)
-> >
-> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> > index f693aafe221f..629220a777e3 100644
-> > --- a/include/linux/dma-mapping.h
-> > +++ b/include/linux/dma-mapping.h
-> > @@ -74,7 +74,11 @@
-> >   */
-> >  #define DMA_MAPPING_ERROR              (~(dma_addr_t)0)
-> >
-> > +#ifdef CONFIG_ARCH_64BIT_HAS_DMA32_ONLY
-> > +#define DMA_BIT_MASK(n)        (((n) > 32) ? ((1ULL<<(32))-1) : ((1ULL=
-<<(n))-1))
-> > +#else
-> >  #define DMA_BIT_MASK(n)        (((n) =3D=3D 64) ? ~0ULL : ((1ULL<<(n))=
--1))
-> > +#endif
-> >
->
-> How can this fit configuration where you want to have one Kernel image
-> for several arm64 machine?
->
+A long time ago we said that we're going to move the coco stuff where it
+belongs
 
-I'm not an expert here but:
+  https://lore.kernel.org/all/Yg5nh1RknPRwIrb8@zn.tnic
 
- @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not a=
-ll
- *         hardware supports 64-bit addresses for consistent allocations
- *         such descriptors.
+and not keep it in arch/x86/kernel. TDX did that and SEV can't find time
+to do so. So lemme do it. If people have trouble converting their
+ongoing featuritis patches, ask me for a sed script.
 
-This looks more connected to what you are looking for.
+No functional changes.
 
-Michael
+Cc: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Michael Roth <michael.roth@amd.com>
+Cc: Nikunj A Dadhania <nikunj@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/boot/compressed/sev.c                      | 2 +-
+ arch/x86/coco/Makefile                              | 1 +
+ arch/x86/coco/sev/Makefile                          | 3 +++
+ arch/x86/{kernel/sev.c => coco/sev/core.c}          | 2 +-
+ arch/x86/{kernel/sev-shared.c => coco/sev/shared.c} | 0
+ arch/x86/kernel/Makefile                            | 2 --
+ 6 files changed, 6 insertions(+), 4 deletions(-)
+ create mode 100644 arch/x86/coco/sev/Makefile
+ rename arch/x86/{kernel/sev.c => coco/sev/core.c} (99%)
+ rename arch/x86/{kernel/sev-shared.c => coco/sev/shared.c} (100%)
 
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 697057250faa..cd44e120fe53 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -127,7 +127,7 @@ static bool fault_in_kernel_space(unsigned long address)
+ #include "../../lib/insn.c"
+ 
+ /* Include code for early handlers */
+-#include "../../kernel/sev-shared.c"
++#include "../../coco/sev/shared.c"
+ 
+ static struct svsm_ca *svsm_get_caa(void)
+ {
+diff --git a/arch/x86/coco/Makefile b/arch/x86/coco/Makefile
+index c816acf78b6a..eabdc7486538 100644
+--- a/arch/x86/coco/Makefile
++++ b/arch/x86/coco/Makefile
+@@ -6,3 +6,4 @@ CFLAGS_core.o		+= -fno-stack-protector
+ obj-y += core.o
+ 
+ obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx/
++obj-$(CONFIG_AMD_MEM_ENCRYPT)   += sev/
+diff --git a/arch/x86/coco/sev/Makefile b/arch/x86/coco/sev/Makefile
+new file mode 100644
+index 000000000000..b89ba3fba343
+--- /dev/null
++++ b/arch/x86/coco/sev/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-y += core.o
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/coco/sev/core.c
+similarity index 99%
+rename from arch/x86/kernel/sev.c
+rename to arch/x86/coco/sev/core.c
+index 726d9df505e7..082d61d85dfc 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/coco/sev/core.c
+@@ -613,7 +613,7 @@ static __always_inline void vc_forward_exception(struct es_em_ctxt *ctxt)
+ }
+ 
+ /* Include code shared with pre-decompression boot stage */
+-#include "sev-shared.c"
++#include "shared.c"
+ 
+ static inline struct svsm_ca *svsm_get_caa(void)
+ {
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/coco/sev/shared.c
+similarity index 100%
+rename from arch/x86/kernel/sev-shared.c
+rename to arch/x86/coco/sev/shared.c
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 20a0dd51700a..b22ceb9fdf57 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -142,8 +142,6 @@ obj-$(CONFIG_UNWINDER_ORC)		+= unwind_orc.o
+ obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
+ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
+ 
+-obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
+-
+ obj-$(CONFIG_CFI_CLANG)			+= cfi.o
+ 
+ obj-$(CONFIG_CALL_THUNKS)		+= callthunks.o
+-- 
+2.43.0
 
-> Michael
->
-> >  #ifdef CONFIG_DMA_API_DEBUG
-> >  void debug_dma_mapping_error(struct device *dev, dma_addr_t dma_addr);
-> > diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> > index c06e56be0ca1..0a27eafed808 100644
-> > --- a/kernel/dma/Kconfig
-> > +++ b/kernel/dma/Kconfig
-> > @@ -36,6 +36,14 @@ config NEED_DMA_MAP_STATE
-> >  config ARCH_DMA_ADDR_T_64BIT
-> >         def_bool 64BIT || PHYS_ADDR_T_64BIT
-> >
-> > +config ARCH_64BIT_HAS_DMA32_ONLY
-> > +        bool "64bit System has DMA32 only"
-> > +        depends on ARCH_DMA_ADDR_T_64BIT
-> > +        default n
-> > +       help
-> > +         This enables forcing the maximum DMA_BIT_MASK to 32 bits for
-> > +         64-bit systems that have DMA support limited to 32 bits.
-> > +
-> >  config ARCH_HAS_DMA_SET_MASK
-> >         bool
-> >
-> > --
-> > 2.34.1
-> >
-> >
