@@ -1,95 +1,77 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127803FF1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBA03FF1;
+	Wed, 19 Jun 2024 15:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718812360; cv=none; b=nbUTbsUSpJebXxXDc4aNvrB+V/R1spaWSi/SVQ6x6p7QQwo2jzvxxkAh9otLzghlLCT27dQ7r12f6P1/ElYHAs/q/Rrm+gzJnybZmFhBiKPMXSQWuVH8051afNZRjLC3Rv7Po7RXYnxfdfrd8IiDKp2f6A7nPFW7ldGq2eqy2Mw=
+	t=1718812389; cv=none; b=NbRBxAhUwqB+xIGo91B9Gvob96onIY0OvYV08zwe6MzT3e1oHdq57VPUif5hmlUSjG18nQzwpeQlH9yRGAZtEuRwgLai4pCOD9PTmZH94BtskJwKA2Qt1XBdoaorvXPNVXgV73RWpvf5liHUJC4fLtRCs3f8q62NWd2rAkWoYA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718812360; c=relaxed/simple;
-	bh=YmvkiFWQ5tx/t+/IL4OgZ+0ERFSZhMVDmzA19FQbB78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nb8s2Ih6tk2zzE/sOIsZuddEcNuEUWOzpHNp3gWmMIXGXJ1hoBAt6YMh8oO6+wJEjh/DhmaIgNJFy2+DFzR4ecnbuPLMTJA5taI/l3g6uu5DyCFb3KsUnHDM/EbKurDhBFO5xV8Ho4HifTBlIR4VnBMc3z2Psi6Jr/zjTWnxH9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VqH2/Fhq; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718812389; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=dq9dzGbczenGlIXMKjfwP+loUW8hjtFOA4sgzr9v/qj9Rk0WJpoITetkGurehGgX+MF1TXJaA02sykmFlZM0Pc5bhWwl69YWKAO10TNYB11A0xGPQm9rVjM5aTwx5WUipf6dKhNV9BJh0fiypAlad54koTYZTANnb1ZVOhgwZ7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=HWEhxZid; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VqH2/Fhq"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c9034860dso8520830e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718812357; x=1719417157; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8s71NdX52Gwd8z+763rRphKSP2eeZm9/nzW3853+Qw=;
-        b=VqH2/FhqjRLNDLh348FNLRuRRV/kDfiJYqk2RtIXT9qhL+fGEwDtzCgk+RSQZtJlh6
-         jWi5Qw/A0u2ewGYlmnv122AMWcdr0qlJD6Z7XVkflKcv6UDNMtXAdkrFTNk9sqapDaib
-         YV22EVRwlgQGbXC/xXuY8+YktEPbZRqfZUzjs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718812357; x=1719417157;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B8s71NdX52Gwd8z+763rRphKSP2eeZm9/nzW3853+Qw=;
-        b=c/I+r6rwbcgmCbfhUxeR9Npd2d8w5/ciZHrTEFnEZYHi0nPB0A67sUW//Iazjxmen7
-         c9ZLSXOmGdOXad9rH03fRewCEiEb4qYBt58J0sk2U0+DZrFTL4XWLLJEQYr6TdN1JDCY
-         ZSEDBkdOY1kIwzBO7IxnP36i8WoH0QDKxNnGYxUz//NhB2PynP1YaziU+LH8vjPwvb2m
-         O6fXJ+S0hTDQLLINWMRBhTlZ0mDNPjtjD/U7olIFAy8H7V/52lUYgyVL88I1ZH/KwKpr
-         HWAlz+1slDgCS9JuqLY8MAEeb8C1SuJixpEMT1VT3djkQ1dFW4zMDeeQgHSnHK6CwPq7
-         brig==
-X-Forwarded-Encrypted: i=1; AJvYcCVzhfnINqlbhPFxtAXc+TpmeyZv7GjR4OelYkf80bthGWHe8898qYIEzz3bHUfteT/KimoCVRKEJJyaFI1gZTowb8Ak5RnAFgMjlOWC
-X-Gm-Message-State: AOJu0Yz8HG3RAK+YbS+tk1y+j9ZQ+9FEjkqORnhT7yVlQCT5Wbqjo4mT
-	1fgeGGEjPRUMwI/LS0B+NgkhAYQwko/DDn0VIuEZGOTsF1zLrFoQg/TKEFHg3RK1LgNF4711Nwn
-	cYdxSyg==
-X-Google-Smtp-Source: AGHT+IGcseous7XkA5SJyOS040CMkzP4ge5ff5l85ehVajRkxRQDyYJPF5j7vRofsF9pDhNNL7TTuw==
-X-Received: by 2002:a05:6512:3c97:b0:52c:a2e8:dc71 with SMTP id 2adb3069b0e04-52ccaa595eemr2847585e87.64.1718812355074;
-        Wed, 19 Jun 2024 08:52:35 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2825905sm1800052e87.53.2024.06.19.08.52.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 08:52:34 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c9034860dso8520746e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:52:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV+5GwBsoy+KS7ZXP3QWGO5PXrIvBTR1BjCJ9pkHWjZx6EHTg+2GvKWUC40Jhy6KfTipESBjdtquaWIyE70SlOcajkw0unGGGHO8sZM
-X-Received: by 2002:ac2:5466:0:b0:52c:8075:4f3 with SMTP id
- 2adb3069b0e04-52ccaa36996mr1970072e87.36.1718812354107; Wed, 19 Jun 2024
- 08:52:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="HWEhxZid"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1718812384; x=1719417184; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HWEhxZidUyDb61BMCpECbxu0jmVSQcepqfEso2FHaHXFcAzj7jDvtvvE4NJep337
+	 vTo9+tGXlIeYQrqGMsvoNGf41UKQ1LcqerZ/jQhSluIa2yFOG9wB6qVAt4r5Uvjvj
+	 wJu2THyXBmJP89kgtgBCnI73xHl7YJ1OMDAIXnF93jouasuanpI6CpBg7BCE/YD67
+	 HVFu/1exzczqmlQSer9H1SgvEMv4Awj2S0OLU6FvLRWPr55iamCscf5l/Lg/RWQgX
+	 GOtwUuuYgPRmEG/h/wUwknI1do3+kiSGLLqGNbGLP3meSnNPJVgQYBmtpqHMN4w9q
+	 +VOqWzAUolRKW5heCg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.100.20] ([46.142.32.141]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacOW-1suewf3pr0-00cbyg; Wed, 19
+ Jun 2024 17:53:03 +0200
+Message-ID: <c81b02c2-9222-4f1b-822b-974c75408bbf@gmx.de>
+Date: Wed, 19 Jun 2024 17:53:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjQv_CSPzhjOMoOjGO3FmuHe5hzm6Ds69zZSFPa4PeuCA@mail.gmail.com>
- <ZmrTZozoi0t/tuva@duo.ucw.cz> <CAHk-=wjqHL7KjOWYBVKFewcKPWL7CJxddWfJnvL3AfOqfR8vMg@mail.gmail.com>
- <ZmwHGviv/6J6FQLf@duo.ucw.cz> <CAHk-=wigB-wVK+4=NuYJxoKLnoUXB52J5WU2hpKj2de6vGuY7g@mail.gmail.com>
- <CAHk-=wjcdUUip96PnfC+iRjAwPHn3XKsgcohk1ad5VcckCFVKA@mail.gmail.com>
- <ZnABbKrIzmmEoFEV@duo.ucw.cz> <ZnK2bmDFuwX8E5rY@duo.ucw.cz>
-In-Reply-To: <ZnK2bmDFuwX8E5rY@duo.ucw.cz>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 19 Jun 2024 08:52:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgnwBE=n_K9q7x6R-bzQ-vRiLeYUciWTJtMokLC_1a7gw@mail.gmail.com>
-Message-ID: <CAHk-=wgnwBE=n_K9q7x6R-bzQ-vRiLeYUciWTJtMokLC_1a7gw@mail.gmail.com>
-Subject: Re: Linux 6.10-rc1
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dave Airlie <airlied@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Rafael Wysocki <rafael@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, intel-gfx <intel-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.9 000/281] 6.9.6-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:KkYLWqajPsFAzWMo9i5hTzoVqT+0OLWrt4ql18tjuKF5FpasL0l
+ 7FLiL0im0GM/ufioxxjCE2dofI01riXsnKNa30v0isx4H7n+P9Knx/5+Ku5RIWpG9OWjXDm
+ sStkGDm2LTMPP6p1CMgWtu0vL/ZOlE3m/Oq2H+mnEZ2F2yFsBD/O+7YpLXoemWPAq87WkKg
+ 1ni52Sa9+XroDCThcdh3w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SVvc5PLfhvs=;oxMkguzMTPv2xhWtZODp/BzHDZA
+ xxQfKvebN7PSZfBP0QqmoqIPyACkROxSWRaD22ZAIKI8Ajiqo13T5Q+mwHj62TdRLTt5vnwk2
+ abUY7aSBro6c+ibPqH8h0DQmWTJVKH2zlv1OXrkTS36gs1SPLuP8QT6PoE5J7Yk6/tW52/2ob
+ GNJej1LZGL/dVoddNqxYdEevQtZ7bjGA5qM6JGrfDj+wwjcieDTDuxI+aoRqjBVgF05106uuL
+ IDUwgYy9gmTTa2HNKaHKfrGIEtdjdCDzlU+7nwz6ZSCY4rf4T+4O65N6JWNMjrBtLUEuTT6kS
+ XKns/bh5Fs42JnYs3R6hD74prO+SXOXokH7HawNCfsRfxkZuLyjECHrKuy/EZ1FTgHbmAXqZB
+ +oP0ocijhs/M6nJtEje3tCKr8gXZkSAwsp7zViVRFcExWXOuorInX/DrEIXOlFby/Nox4Nk1v
+ TjCvbxB6eXqxFZiXpI8c/Li9081RzQWpl3qd71F47W8dv/VeHLFO3K+crD81/VaB+GEDkWkEj
+ lg2QDSiSiTpZ6d7YZnGv7wbiQQWtY2JrVLr4Ajpe3OwkyIlpLG+RGByMMy+OSVxVKs0uVFBdr
+ 8YOSiy8+3xSnuJ8Ogt1HEK9bReVgNKDuu6B2QkhJrLLUVIE7ycuL0y1mW1lUldYAyzXZMOWPq
+ S+7RiE+blMH/1wD2C6GtMIg1qi0ruuxRGKBtVOej0PUux8SVzqGn3GsRd4+OIRPg9PuHQ4Tk4
+ jGxtKvSGeqMgMZN56A06qLNp3/hxPeoWmhIGjznDykJHU2oNAbHiZodwqg+vy2tVexr2OYpnH
+ QucMQ1a91kflfGgGmsSAlxNDvj2xFUrCZgBItcdUf/+e8=
 
-On Wed, 19 Jun 2024 at 03:44, Pavel Machek <pavel@ucw.cz> wrote:
->
-> Ok, so machine is ready to be thrown out of window, again. Trying to
-> play 29C3 video should not make machine completely unusable ... as in
-> keyboard looses keystrokes in terminal.
+Hi Greg
 
-Well, that at least sounds like you can bisect it with a very clear test-case?
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-Even if you don't bisect all the way, just doing a handful of
-bisections tends to narrow things down enough that we can at least
-guess at what general kind of area it is...
+Thanks
 
-                Linus
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
+
