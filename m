@@ -1,441 +1,279 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24A01802E;
-	Wed, 19 Jun 2024 15:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718810537; cv=none; b=LvbV3wFNDDe0nsMfEOEgsowr/kimm8AQnvjlRjvqJ9Lb7ISuJOQRDDY2RwSyg3jq2zC3zD8ton1CiGrea/bq2OL7VrkaQcYsYn28y4imAyS38gG2Ut7LCzOv9eEwBiA0L0JiNHe0uDsUMuasJW4Q8LlyHQxxltDnDUH/M8yKO0k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718810537; c=relaxed/simple;
-	bh=MGKmSIw7EsYVNabyzicNT4POfLFnZAdLFhQGQsw5tVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FY3vQuuZu2WFETMqCKj7r5+mHdzVAQeJgHkUo9gQtfj5axeXN60ERqW8Wio6NQOAMxZUxDL93hoBSE+6a6pajI3otrUeGc5ai9+hNLb+GueG52jNnL6Mvd9O9terqkrcMmLtKwoltbIkWN58Lm47Nc+q26b40coyWoxsW7wFQcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VT/oUT09; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7342182B5
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718810729; cv=fail; b=rL6ApiXxksozpia6xPhnHYPoXUurD2GlrBLjAv46pfhg7nqLEZtVmvoD5JpuYkd0Fvla1gs8OeDUHKIIiMpfn2TtDd1Xe1kEcNTPdmxCMJrez4coaV2K3VRvgSzIndfL0dJTtGXr6WUWp84HnuBRDvY9DEwLmsbUXUMo/480Ao8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718810729; c=relaxed/simple;
+	bh=s9ogkwBmoZa+HQNiW8J3Zp1fc3C+82JClJ5Hcw31n7k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MO8fK0aMGD+OF8ucUz1D6jmWSySawRkXnaInXqjmznCD4DSWHxb/cux9fBNuhFrYkGCmyoEygWZEhVQ0mNw1APxdD65ITSWOZF04etOJ5iXk80cS6OdQ0RrIiTn34JpfcVorKTggh4yWKO6dJ8ML/nDrMpKnl02L5rU+xmj06Rc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ElmLhetE; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VT/oUT09"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6ef793f4b8so686217866b.1;
-        Wed, 19 Jun 2024 08:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718810533; x=1719415333; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ywdo7DX3PIPmahM/CSRsqNOz0oRxENLDMIF01HBcJoY=;
-        b=VT/oUT09IHf5jEw61SIo7CwtTvA6WBPb/u9wppWsuFALvUOvd8Xi93+ZZE6G0EYAY3
-         Pbj4qCxY+rmFleaCXYC6xj0oivp2Ewm+/jfd99JczzK2UzZk+ng3VfmM7JHiwVfIW1Vc
-         6TwU4mF3ms9d8dF9ExEdaQ+AiwiUVctLtYPZ/L5gI0U3jrHueI9NV3CPIwVSrywDFA1d
-         MrDBIp6EhIk1FszH1h4aQwIjLyuIVhUaHm/k2PUghnxVK2Cyd8t/wvFUoPHycc0XjBoo
-         IppvPF48VJYwa6yx/2gouJeWajHxD4k7+0uD5+9U1DudyEKtS2t59Z5CBnQZ9S0eLGpq
-         27MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718810533; x=1719415333;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ywdo7DX3PIPmahM/CSRsqNOz0oRxENLDMIF01HBcJoY=;
-        b=giK0dc96QwrIAo7imK3WsZlknvuNgVv3OEDlpLPksLE8dCpG2o6xmn+PgjGSqE8LDm
-         7WZ/P/biiGwFLqc9VKJjEebrvlIrX0zRPrnaRyyWT2UzQm59gDzB1KeTrEIewrPdeHx5
-         MZb7lRwDixaZQumS1rKUoh7t2wYzuOThTJDGQJyx8SFm44BwqQ86jB5VSXJG+dWfgYTc
-         xrFKEQLBXLzUknBM+u9lHlbYnIkM63QE6by1ASgJ8fxUD3/DEto9mYx31b+m9YzWC+UV
-         aHnp1463z2k2u+0p6quGRQQyw/0iZHtTbQ8Jbo68s6OiiktRyhl8Ays3qTskwb2LV1jL
-         XPEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxr+/vFoXXbFukL5Vp8KVWTYtkexaLOueqtlZPhP/CcxYZnI+H+4kPn6G5zNyL68irJSYZd+SpGlyHaocAMQDIDw3Cwqc7tFZvTwZD
-X-Gm-Message-State: AOJu0Ywy1uXWOPk10KzcPAKbyCQ/vGAl7MCEOWFL3rGMjcEFNqY1xCb5
-	M8Yq8gmCcuDbZXxw9tZR2yr9jlaEcqzQWP5q7GvJjyAuDHhHyQm4
-X-Google-Smtp-Source: AGHT+IEDQI/Eq6fVlcVAiMR9XjPDWCL2BcEu3Q3AqoDE+3RPn0H41VIyRyiPW5Wth0AmBDI9dd3mQg==
-X-Received: by 2002:a17:907:c5c7:b0:a6f:b5ff:a6eb with SMTP id a640c23a62f3a-a6fb5ffaafemr110153766b.24.1718810532889;
-        Wed, 19 Jun 2024 08:22:12 -0700 (PDT)
-Received: from [192.168.42.75] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ed0f2asm677483266b.131.2024.06.19.08.22.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 08:22:12 -0700 (PDT)
-Message-ID: <c6b297ae-b1a9-4500-966e-9a0ea192d46b@gmail.com>
-Date: Wed, 19 Jun 2024 16:22:17 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ElmLhetE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718810728; x=1750346728;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=s9ogkwBmoZa+HQNiW8J3Zp1fc3C+82JClJ5Hcw31n7k=;
+  b=ElmLhetEgQwT1TYwIZ38OORNaeQvVoxB7T+vte9SajH4i/m3F49j72NO
+   QVx9aXlxFSt8wL+p3q2TZu++eEyIXI2Uc4KZQ4QRX4Yv7lrf0guk3cwwe
+   kxhLtb7O671t0mQMFu6Yw8FniSEkPaOk6+UEO+oayaeQWzef+Pgy5xla7
+   VAN5XmqvgzylHl0Jet0hCNMHWiAnjtdu1kIvP8dxQE3GEH0D64lmjbSkq
+   hl5SD8YCK6Sza+HKAUCClDSuWqgoobensWHIIaQXS1hY2WYkIJ2AFriCM
+   GH9QHunfAZrlLiNQ9qemd3GG+/D/DA94CNqswmyTOGXVwatxd45n+QSoF
+   g==;
+X-CSE-ConnectionGUID: FTwC0DHFQX2GA3u/pQNrhw==
+X-CSE-MsgGUID: ZOzHd+3TRuaBjBcnYoMTBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="41159913"
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="41159913"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 08:25:27 -0700
+X-CSE-ConnectionGUID: BZMzjppCTka6ABscimKM7Q==
+X-CSE-MsgGUID: wbtlh00VSYuBRkMqkGrz0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="42656267"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Jun 2024 08:25:27 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 19 Jun 2024 08:25:26 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 19 Jun 2024 08:25:26 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.173)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 19 Jun 2024 08:25:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ftIIEaC97/JP0Ev7tr3EUHU/XmZbJ8CkaQHlq34nbTXNBrUrxEIlqso1DBAi/eDYvrR+ncBf0tmbCU9WLe7wi9IIxSX0FBl7+EKLj4wRXr6wS1tRM8Bxnd+0VO1fw4rjjWhB3zgBdGouXvEj/3BcAGVJudT6aB/s1g40T5qwWmgMTj+9ms4/U5K55NYXHkPZsYypwgoJ7LfYNDxsgttIyO8YrtUEQHgY5Tiv81IJd2ky/MOD+RzPjOAPdmiQb+JUSyYi9NOZnhrdMOvEHSeNOQB9Ho9gJI/ZXIF9OrkMp30C7TL8t2El1B4HmJaaznD2Hm2ZQpxHm95uS9sc0ND2KQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AmcwoD2u4BuB2U+5LxcGoiFs0kYQNKSSAWxog/K2EKc=;
+ b=Isb1y4h9mL6fB+OpfD17eBA/sJSbHkQDq/hGXWsonARMAVZF+axActFdYjQaIzyQVso+8U8IurkMHxfqCkyY/XGn1dz6JIWC+8fnMmHjQBu3WIFaSgaza2vSdS9Y4Q+uGCMC57+62wqxtiW7G2IfKuVmgzCkauHuV9kjt3U9ZCL60WINZXd33PLuacgNoyPvrUaPqqcnQRBCzWuQIrXnz+92XpZIbdqOcWjkVFaE98FlVgS3iMAq15JaW8gFXFGk7rl+ACT5G5lSZw5oFyyx2Z6LG+0U2Rzo378k02WLO1EBIE5Cg5XjWEGMLxEukzHU/9xoV+UBEvjc7agzBXMxsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
+ SJ2PR11MB7548.namprd11.prod.outlook.com (2603:10b6:a03:4cb::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.18; Wed, 19 Jun
+ 2024 15:25:24 +0000
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::4af6:d44e:b6b0:fdce]) by DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::4af6:d44e:b6b0:fdce%7]) with mapi id 15.20.7633.036; Wed, 19 Jun 2024
+ 15:25:24 +0000
+Date: Wed, 19 Jun 2024 23:25:09 +0800
+From: Chen Yu <yu.c.chen@intel.com>
+To: Nikolay Borisov <nik.borisov@suse.com>
+CC: Dave Hansen <dave.hansen@linux.intel.com>, Juergen Gross
+	<jgross@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Ajay Kaher
+	<ajay.kaher@broadcom.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	<virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Qiuxu Zhuo
+	<qiuxu.zhuo@intel.com>, Prem Nath Dey <prem.nath.dey@intel.com>, "Xiaoping
+ Zhou" <xiaoping.zhou@intel.com>
+Subject: Re: [PATCH v2] x86/paravirt: Disable virt spinlock on bare metal
+Message-ID: <ZnL4VRwPNd58Ccl+@chenyu5-mobl2>
+References: <20240526015847.14142-1-yu.c.chen@intel.com>
+ <c83127de-b59a-4475-8d20-e3582ee2e6f8@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c83127de-b59a-4475-8d20-e3582ee2e6f8@suse.com>
+X-ClientProxiedBy: SI1PR02CA0050.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::12) To DM4PR11MB6020.namprd11.prod.outlook.com
+ (2603:10b6:8:61::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] Subject: io_uring: releasing CPU resources when
- polling
-To: hexue <xue01.he@samsung.com>, axboe@kernel.dk
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20240619071833epcas5p274ddb249a75e4b3006b48d1378071923@epcas5p2.samsung.com>
- <20240619071826.1553543-1-xue01.he@samsung.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20240619071826.1553543-1-xue01.he@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|SJ2PR11MB7548:EE_
+X-MS-Office365-Filtering-Correlation-Id: 751ae410-bdc4-417b-5d2d-08dc90740a33
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|376011|366013|1800799021;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MnpLYnZrMlRweXdiK2JoZHFlZEhUb1hJTThIOGxKaURTWlprYU84cy93VTg4?=
+ =?utf-8?B?QW1VWTFTZUNUTDBXaW5CTW5BYTBrRWhkZU5BU2VCMDhOZHhWZHVHZzF4TkVn?=
+ =?utf-8?B?b3BUN1NkZ3pKMDh2QkUycDhLOU0vZ2QrK0lSK0llN2t1ZFZVY2M1aDdDRmg1?=
+ =?utf-8?B?WTg5SUtyY2UzcHVlOWY2em9ETGQwNmgyMWJaRkt4NUlIQmR1OTl6SGdPSnJv?=
+ =?utf-8?B?Y3BGZ1lwa3U4cHN0YmdPTCsvWGZyLzBMc2dTWTJ6QngyVkNOUk5sMVB5OEda?=
+ =?utf-8?B?dlNWUTY5dkhlVC9FRXhYWWpsZk03U3pGbHZ3L0ZPcVhIekRWNXVvSHczakU1?=
+ =?utf-8?B?Smo0QUtMVCsxd21xWEwwWEFsZVQvWGlaZ1hKUnZaNEh5RkFTVE41TWI3QUQx?=
+ =?utf-8?B?STczMVp1cHdyOFczdEI4U212b0YvbkhTdXJZMjI4eWpaUVJMbVJObGI2Z08r?=
+ =?utf-8?B?R0ZFZjJwRjdkVGxvb3NDcWd0Z1Zac29zYUJJaEEzTTFIQW9pRUtqbEw2THlY?=
+ =?utf-8?B?R0lxR3RRTzdMbThVWUlDeUk4dWplQ1JtLzQwV2VEYXdISVNOV2I1NGhnV0kw?=
+ =?utf-8?B?dU11U0NMNXB0SkRhVFFpNE9OMVBVQ3RaV1ZaRDB6YlZ1QkxWOWg3MEN4QU9H?=
+ =?utf-8?B?eDlwa1BzRGtjODdDbXR0TTB2MXQxcC9nelRtM3BSYlZLenR2elFCSisvU2ts?=
+ =?utf-8?B?RWlvQ09pNFF6L1VSNWpQRE1GTDZrZzl3VmNFQStvbTlmQ0hnQmM5S051ZU8w?=
+ =?utf-8?B?NjY3MzZMY1BnL2R2bGpKUXVqOUMrclJ2b0FKVmV3MFVocE9wYlNSdWVQdXVF?=
+ =?utf-8?B?RUhjeE8wa284clFkK1BILzVDaEJTK2t1cU5mNVovUzNYQzE1VEtWQnpUK084?=
+ =?utf-8?B?OXkyVHoxZlF4cnU3UlFnSUNJTmtLZTVOUVBna04vOE1mOHd6VmRYUEhUdXBq?=
+ =?utf-8?B?SmlpdWlvZkhhTzdMd011QmxHSktIUk03cXM1alI3Q1ZZZnYyNnVPNHpZODRR?=
+ =?utf-8?B?MWJuWHlGSlpmQ0U2NGpYYi82NmxFNWp4VmRlZ0NqdTYzRmZhc3EyTnlHV1Ar?=
+ =?utf-8?B?Ym80dUtwRDY4Q0RvTXhtVkIvbThvZ3BaWGhtc04wRWRxekFBNXVlMXhkUE1O?=
+ =?utf-8?B?SWtCbFBkekdXUWQwZ25pcDN6Szg4RWNEWTV6R3hsL1ZSclBmWXhYQmZLZUF0?=
+ =?utf-8?B?VVJxWXJEb3RrT0k5Y01RZmdldHZIZ3ZHVkZENThnakJpRmhzOFhmeGlWUmV6?=
+ =?utf-8?B?VDZIMlpEbkh5eHY0cmpkT3d6ZHNzTWZ3YkFvQzd0bm90cHFhaXVtTElQa050?=
+ =?utf-8?B?eU43bFRHNVFiRVJIWTFCcjJaZFJxMHg5TTMzaHJ0VjYvOWR6SGhNNEFUaFU4?=
+ =?utf-8?B?eFJXeUZZWSt6VXVjb1JjcTJFcXZwTUhPcjNHd3FDYVlwUFYrelZDZ2wxZm9Y?=
+ =?utf-8?B?cWxwb0NobzRWOWFmNzM5WmFpdGwxNGVzbkRXOUJOVXdybmdzNW9sKzhubEFQ?=
+ =?utf-8?B?ZDg4OEx4QmlLMFN6QS9xUHJQWkdJZ1FpU3JOZkdDc1IrVzRCK28yOGs5K0E3?=
+ =?utf-8?B?d0RvakhBZTZVNzFpY3pkeForZjZETlhCbW1KRG4xeGszODhFNmc1OS8vWU8x?=
+ =?utf-8?B?N3hHYUVVdnlrVTFGaUs1NVZCY0Q0NGZHNUlmRVgzOVd4c0JHNjJLcVZHa0pG?=
+ =?utf-8?B?akt6Ty9NWG4wd3ozVkcrSmtsTmNKc0lqeHRkbkorR1g2cHdPUVlPVU16OTRm?=
+ =?utf-8?Q?HY6bCzbAbDLJUt9j4Bu94F6h2IMqPx+WH5ve0Lx?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(376011)(366013)(1800799021);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SExGM3VFR0JZODQzcFFNbWM3K1VVUVJOZTFBWGpYY3U3QWZpeVYzMlZpYm1S?=
+ =?utf-8?B?elJjZVhZRUl3TFd0azhPVWVMT3U2am83dU5sTHlFdUhWcVlnL2t4YzlrNGMz?=
+ =?utf-8?B?cm1wdG9EMWh5Ykc3R2NhVFBOVW55eTRaY3VBVDBoMVVmdkVSOUJkanpRWGE2?=
+ =?utf-8?B?RmRKb3hhQXM2bTRmT2QwZlljbnBYWGgzaDZZejAra3ZETFYzSCt0RmZ1OHNk?=
+ =?utf-8?B?WXJZdXJZc0F1UEM1UGpnV2xGSy9DKzgzN2JpcDVVQ0JpSFJ3OHBidEUwZmVN?=
+ =?utf-8?B?VU5HeklOcGhjQWVodyt5VElnYkhkQ3NJN05BcXh1NUhUczRkOFpxYXFQSTlG?=
+ =?utf-8?B?aUxNQjRVYllVL1ErZjlsNHJ4WnNoU2xrTTZ6VFE1MEM2RXIxRzQ3K1RkMXM3?=
+ =?utf-8?B?NEJqR294SE5TSEFDbGVUK3lIdTZsQjZoaWNVQzJhNzNmcjdwZERJTlZBNlJM?=
+ =?utf-8?B?RG5ZZ1J4WHdrYVd0WUU5SU0wR0p1Wjk2Vk9CRHhQbzF4MWNOVHlhSVFkWHFN?=
+ =?utf-8?B?T3hVNmxSa0JnU1JxckxNWElsamhia1NXT1hyZnRlOVEyQkY2dmFlNHF2Y283?=
+ =?utf-8?B?a29XVGhZZFB4YVpsaXI1UVB6WFlKQkVYU3U0R1hCM2J5YjVyWGcrZTNNZEo4?=
+ =?utf-8?B?OGgrWmJZcGJPd1lSci9ZS3Zlb21KYVROaWk3ZWR0N1JVN3pTZmVpbXVrZGto?=
+ =?utf-8?B?dEVENXNrV0xob2ZlTWlPbXJRTmFHWHN4MDBBWitzNmxDbVJjVURaOVhlazE2?=
+ =?utf-8?B?eTdRSnpvOGd2c3FFdHYzNERCbWY0YlNzcFNZS254Skswa0MzQzdWRlJkazlM?=
+ =?utf-8?B?K3Z5Z01KWEs5ZGdPT0RJMERzaVpFcjFKRUtKcEd4d3Y1ZWRFQWZCTEZRRUx2?=
+ =?utf-8?B?ekxIZFBWRVVRN0NHV1VDVFVveVFjV3dzWFRnTFN1Rk9VQjd6bDVQMnN1aVVN?=
+ =?utf-8?B?bVltazFNc240Qm50QUUxVVF2MzMwYkdOTElFUlFxQjRlUSswRkRZTkw0Umhy?=
+ =?utf-8?B?d3lDbFVsMEJkS1VTU0JxR1FLTkhEczQ5YzVFN3ZGRGxjVWhUcUtBanJLS3Q1?=
+ =?utf-8?B?N3grcU1wMm9ia1NNbVF2R2JTWHJuTS9LRVAwWFNXTmxYd2ZaL014SERnbExu?=
+ =?utf-8?B?U1pEM0l2Sys3RWtPOWZNM3YwbDVyQU80NzR3cFdNRnplYmoyNXBVZEFnNjNH?=
+ =?utf-8?B?TXlZQThPcVBoMTNhcUIzZE4xS2RVYTFHKyt5cEZHMCtQcWJDZUNnU0Q3aXZu?=
+ =?utf-8?B?N2xVZXVKZ3lYT0FONitpUEtsamJnSjQ4ckttQzhGWkgwellzemJPU2h6VHl2?=
+ =?utf-8?B?L1V4Skl6N3F5NDVSNmxUcHVJV016MFg2KytUY0djTC8xeFFpOC9Xd21qaCt0?=
+ =?utf-8?B?Q1VIdmxHSjA5NlpLSHVETitHN1FFcE1TOThsUU9vMmRzT1pLb0U3NWZDZ2ln?=
+ =?utf-8?B?TlJNNURESjF6MWF6cVJ2ZTNiMWR2MGVYZzNqcTgzVmx2VUJJTjZCMk9OMjA5?=
+ =?utf-8?B?cHNNU1dHRExmU0pCemNIbmR6b3JhOS9NY2tnUTNySlNGOFI0MUdzNkNnNUhN?=
+ =?utf-8?B?ZVhWQXBKM2tKbERWbG11aXRnTVkxc2lQUXBVa25yMXFIbjIwNFhLZ0NKL0Y0?=
+ =?utf-8?B?UnFLMjJjSlJFaVV5RFlhbTlSMzlScnNSeHZBZ0dUYm5KUkFYcDJjaGNWalZz?=
+ =?utf-8?B?c1B1T3ZMdFNWM0dFbzhQMmZtMjByMS9kTEJQclB3eDV2T1F4TlVBMk41VEs3?=
+ =?utf-8?B?M0wyQmpZTnErZGhhNlRHYW9lMVJ2Yy8zdFR5K1h5ZDgzc2hrZlZ6ZEYwWlBJ?=
+ =?utf-8?B?OVN1MnAwL0N0bm5qOVI1eVo3WVRISEhQTis5TXhkWnphaXlYRU5LTlNadFM0?=
+ =?utf-8?B?N2xnTzJPZjd0eDBUUVRnWjRnbWNlelI2VUhiVG03cllmOFUvcUxmeldrSE1T?=
+ =?utf-8?B?VGdNcWxMVVNydTdqNGZaWXVXSUJlME9vTGh1RzVZckhTMzRUSUl2eTlwbHkr?=
+ =?utf-8?B?OEFxVE5BVmZESWVEdWtRT2o2QTJlazBpNmRmTVBSRzhESjlpK2NzVkNUampj?=
+ =?utf-8?B?aFlOMVpMcTFlOWh5RGJhRnZrL01PeUw0L0ZuNEQ5NHBqUzNDMVNDZTh1TzlR?=
+ =?utf-8?Q?Pd1MTj1Z35B17PV7+V6hNRbH+?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 751ae410-bdc4-417b-5d2d-08dc90740a33
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 15:25:24.3251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cYVZm1fQvzVB0EAPWirO7m/teiajUozmvFoMIo+KksO2OSRMpgORTEuApVyoBbYizZc2KJ8tRrNLvvBm+yx3EQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7548
+X-OriginatorOrg: intel.com
 
-On 6/19/24 08:18, hexue wrote:
-> io_uring use polling mode could improve the IO performence, but it will
-> spend 100% of CPU resources to do polling.
+Hi Nikolay,
+
+On 2024-06-18 at 11:24:42 +0300, Nikolay Borisov wrote:
 > 
-> This set a signal "IORING_SETUP_HY_POLL" to application, aim to provide
-> a interface for user to enable a new hybrid polling at io_uring level.
 > 
-> A new hybrid poll is implemented on the io_uring layer. Once IO issued,
-> it will not polling immediately, but block first and re-run before IO
-> complete, then poll to reap IO. This poll function could keep polling
-> high performance and free up some CPU resources.
+> On 26.05.24 г. 4:58 ч., Chen Yu wrote:
+> > The kernel can change spinlock behavior when running as a guest. But
+> > this guest-friendly behavior causes performance problems on bare metal.
+> > So there's a 'virt_spin_lock_key' static key to switch between the two
+> > modes.
+> > 
+> > The static key is always enabled by default (run in guest mode) and
+> > should be disabled for bare metal (and in some guests that want native
+> > behavior).
+> > 
+> > Performance drop is reported when running encode/decode workload and
+> > BenchSEE cache sub-workload.
+> > Bisect points to commit ce0a1b608bfc ("x86/paravirt: Silence unused
+> > native_pv_lock_init() function warning"). When CONFIG_PARAVIRT_SPINLOCKS
+> > is disabled the virt_spin_lock_key is incorrectly set to true on bare
+> > metal. The qspinlock degenerates to test-and-set spinlock, which
+> > decrease the performance on bare metal.
+> > 
+> > Fix this by disabling virt_spin_lock_key if it is on bare metal,
+> > regardless of CONFIG_PARAVIRT_SPINLOCKS.
+> > 
 > 
-> we considered about complex situations, such as multi-concurrency,
-> different processing speed of multi-disk, etc.
+> nit:
 > 
-> Test results:
-> set 8 poll queues, fio-3.35, Gen5 SSD, 8 CPU VM
-> 
-> per CPU utilization:
->      read(128k, QD64, 1Job)     53%   write(128k, QD64, 1Job)     45%
->      randread(4k, QD64, 16Job)  70%   randwrite(4k, QD64, 16Job)  16%
-> performance reduction:
->      read  0.92%     write  0.92%    randread  1.61%    randwrite  0%
+> This bug wouldn't have happened if the key was defined FALSE by default and
+> only enabled in the appropriate case. I think it makes more sense to invert
+> the logic and have the key FALSE by default and only enable it iff the
+> kernel is running under a hypervisor... At worst only the virtualization
+> case would suffer if the lock is falsely not enabled.
 
-What are numbers for normal / non-IOPOLL runs?
-
+Thank you for your review. I agree, initializing the key to FALSE by default seems
+to be more readable. Could this change be the subsequent adjustment based
+on current fix, which could be more bisectible?
 
 
-> --
-> 
-> changes since v4:
-> - Rewrote the commit
-> - Update the test results
-> - Reorganized the code basd on 6.11
-> 
-> changes since v3:
-> - Simplified the commit
-> - Add some comments on code
-> 
-> changes since v2:
-> - Modified some formatting errors
-> - Move judgement to poll path
-> 
-> changes since v1:
-> - Extend hybrid poll to async polled io
-> 
-> Signed-off-by: hexue <xue01.he@samsung.com>
-> ---
->   include/linux/io_uring_types.h |  14 ++++
->   include/uapi/linux/io_uring.h  |   1 +
->   io_uring/io_uring.c            |   4 +-
->   io_uring/io_uring.h            |   3 +
->   io_uring/rw.c                  | 115 ++++++++++++++++++++++++++++++++-
->   5 files changed, 135 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
-> index 91224bbcfa73..8eab99c4122e 100644
-> --- a/include/linux/io_uring_types.h
-> +++ b/include/linux/io_uring_types.h
-> @@ -226,6 +226,11 @@ struct io_alloc_cache {
->   	size_t			elem_size;
->   };
->   
-> +struct iopoll_info {
-> +	long		last_runtime;
-> +	long		last_irqtime;
-> +};
+Set the default key to false. If booting in a VM, enable this key. Later during
+the VM initialization, if other high-efficient spinlock is preferred, like
+paravirt-spinlock, the virt_spin_lock_key will be disabled accordingly.
 
-Please follow the naming convention for all types you
-add: "io_...".
-
-> +
->   struct io_ring_ctx {
->   	/* const or read-mostly hot data */
->   	struct {
-> @@ -428,6 +433,7 @@ struct io_ring_ctx {
->   	unsigned short			n_sqe_pages;
->   	struct page			**ring_pages;
->   	struct page			**sqe_pages;
-> +	struct xarray		poll_array;
->   };
->   
->   struct io_tw_state {
-> @@ -591,6 +597,12 @@ static inline void io_kiocb_cmd_sz_check(size_t cmd_sz)
->   )
->   #define cmd_to_io_kiocb(ptr)	((struct io_kiocb *) ptr)
->   
-> +struct hy_poll_time {
-> +	int		poll_state;
-> +	struct timespec64		iopoll_start;
-> +	struct timespec64		iopoll_end;
-
-why not u64 and ktime_get_ns()?
-
-> +};
-> +
->   struct io_kiocb {
->   	union {
->   		/*
-> @@ -665,6 +677,8 @@ struct io_kiocb {
->   		u64			extra1;
->   		u64			extra2;
->   	} big_cqe;
-> +    /* for hybrid iopoll */
-> +	struct hy_poll_time		*hy_poll;
->   };
->   
->   struct io_overflow_cqe {
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> index 994bf7af0efe..ef32ec319d1f 100644
-> --- a/include/uapi/linux/io_uring.h
-> +++ b/include/uapi/linux/io_uring.h
-> @@ -199,6 +199,7 @@ enum io_uring_sqe_flags_bit {
->    * Removes indirection through the SQ index array.
->    */
->   #define IORING_SETUP_NO_SQARRAY		(1U << 16)
-> +#define IORING_SETUP_HY_POLL	(1U << 17)
->   
->   enum io_uring_op {
->   	IORING_OP_NOP,
-> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-> index 816e93e7f949..a1015ce6dde7 100644
-> --- a/io_uring/io_uring.c
-> +++ b/io_uring/io_uring.c
-> @@ -299,6 +299,7 @@ static __cold struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
->   		goto err;
->   
->   	ctx->flags = p->flags;
-> +	xa_init(&ctx->poll_array);
->   	atomic_set(&ctx->cq_wait_nr, IO_CQ_WAKE_INIT);
->   	init_waitqueue_head(&ctx->sqo_sq_wait);
->   	INIT_LIST_HEAD(&ctx->sqd_list);
-> @@ -2679,6 +2680,7 @@ static __cold void io_ring_ctx_free(struct io_ring_ctx *ctx)
->   	kfree(ctx->cancel_table.hbs);
->   	kfree(ctx->cancel_table_locked.hbs);
->   	xa_destroy(&ctx->io_bl_xa);
-> +	xa_destroy(&ctx->poll_array);
->   	kfree(ctx);
->   }
->   
-> @@ -3637,7 +3639,7 @@ static long io_uring_setup(u32 entries, struct io_uring_params __user *params)
->   			IORING_SETUP_SQE128 | IORING_SETUP_CQE32 |
->   			IORING_SETUP_SINGLE_ISSUER | IORING_SETUP_DEFER_TASKRUN |
->   			IORING_SETUP_NO_MMAP | IORING_SETUP_REGISTERED_FD_ONLY |
-> -			IORING_SETUP_NO_SQARRAY))
-> +			IORING_SETUP_NO_SQARRAY | IORING_SETUP_HY_POLL))
->   		return -EINVAL;
->   
->   	return io_uring_create(entries, &p, params);
-> diff --git a/io_uring/io_uring.h b/io_uring/io_uring.h
-> index 624ca9076a50..665093c048ba 100644
-> --- a/io_uring/io_uring.h
-> +++ b/io_uring/io_uring.h
-> @@ -148,6 +148,9 @@ static inline void io_submit_flush_completions(struct io_ring_ctx *ctx)
->   		__io_submit_flush_completions(ctx);
->   }
->   
-> +/* if sleep time less than 1us, then do not do the schedule op */
-> +#define MIN_SCHETIME 1000
-
-Add prefix IO_, and name should be less ambiguous.
-
-e.g. IO_HYBRID_POLL_MIN_SLEEP
-
-> +
->   #define io_for_each_link(pos, head) \
->   	for (pos = (head); pos; pos = pos->link)
->   
-> diff --git a/io_uring/rw.c b/io_uring/rw.c
-> index 1a2128459cb4..48b162becfa2 100644
-> --- a/io_uring/rw.c
-> +++ b/io_uring/rw.c
-> @@ -772,6 +772,46 @@ static bool need_complete_io(struct io_kiocb *req)
->   		S_ISBLK(file_inode(req->file)->i_mode);
->   }
->   
-> +static void init_hybrid_poll(struct io_ring_ctx *ctx, struct io_kiocb *req)
-> +{
-> +	/*
-> +	 * In multiple concurrency, a thread may operate several files
-> +	 * under different file systems, the inode numbers may be
-> +	 * duplicated. Each device has a different IO command processing
-> +	 * capability, so using device number to record the running time
-> +	 * of device
-> +	 */
-> +	u32 index = req->file->f_inode->i_rdev;
-> +	struct iopoll_info *entry = xa_load(&ctx->poll_array, index);
-> +	struct hy_poll_time *hpt = kmalloc(sizeof(struct hy_poll_time), GFP_KERNEL);
-
-Just a note, it's a performance hazard for anything running
-fast enough. Per IO allocation + xarray + ktime...
-
-> +
-> +	/* if alloc fail, go to regular poll */
-> +	if (!hpt) {
-> +		ctx->flags &= ~IORING_SETUP_HY_POLL;
-
-Please don't modify ctx->flags, if you want to fall back
-to normal polling do it per IO.
-
-> +		return;
-> +	}
-> +	hpt->poll_state = 0;
-
-What's 0/1? Just turn it into a bool with the right name
-or add named constants for states.
-
-> +	req->hy_poll = hpt;
-> +
-> +	if (!entry) {
-> +		entry = kmalloc(sizeof(struct iopoll_info), GFP_KERNEL);
-> +		if (!entry) {
-> +			ctx->flags &= ~IORING_SETUP_HY_POLL;
-> +			return;
-> +		}
-> +		entry->last_runtime = 0;
-> +		entry->last_irqtime = 0;
-> +		xa_store(&ctx->poll_array, index, entry, GFP_KERNEL);
-> +	}
-> +
-> +	/*
-> +	 * Here we need nanosecond timestamps, some ways of reading
-> +	 * timestamps directly are only accurate to microseconds, so
-> +	 * there's no better alternative here for now
-> +	 */
-> +	ktime_get_ts64(&hpt->iopoll_start);
-> +}
-> +
->   static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
->   {
->   	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
-> @@ -809,6 +849,8 @@ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
->   		kiocb->ki_flags |= IOCB_HIPRI;
->   		kiocb->ki_complete = io_complete_rw_iopoll;
->   		req->iopoll_completed = 0;
-> +		if (ctx->flags & IORING_SETUP_HY_POLL)
-> +			init_hybrid_poll(ctx, req);
->   	} else {
->   		if (kiocb->ki_flags & IOCB_HIPRI)
->   			return -EINVAL;
-> @@ -1106,6 +1148,75 @@ void io_rw_fail(struct io_kiocb *req)
->   	io_req_set_res(req, res, req->cqe.flags);
->   }
->   
-> +static void io_delay(struct hy_poll_time *hpt, struct iopoll_info *entry)
-> +{
-> +	struct hrtimer_sleeper timer;
-> +	struct timespec64 tc, oldtc;
-> +	enum hrtimer_mode mode;
-> +	ktime_t kt;
-> +	long sleep_ti;
-> +
-> +	if (hpt->poll_state == 1)
-> +		return;
-> +
-> +	if (entry->last_runtime <= entry->last_irqtime)
-> +		return;
-> +
-> +	/*
-> +	 * Avoid excessive scheduling time affecting performance
-> +	 * by using only 25 per cent of the remaining time
-> +	 */
-> +	sleep_ti = (entry->last_runtime - entry->last_irqtime) / 4;
-
-Let's say you've got a new entry, which sets both to 0. Then
-user does sleep(8 min) and iopolls it once, which will update
-last_runtime=8 min. Next time it tries to iopoll,
-(8 min - 0) / 4 = 2 min. It'll try to sleep for 2 minutes,
-with UNINTERRUBTIBLE (below) at that.
-
-Extreme, but shows there can be all kinds of fun with this scheme.
-
-> +
-> +	/*
-> +	 * If the time available for sleep is too short, i.e. the
-> +	 * totle running time and the context switching loss time
-> +	 * are very close to each other, the scheduling operation
-> +	 * is not performed to avoid increasing latency
-> +	 */
-> +	if (sleep_ti < MIN_SCHETIME)
-> +		return;
-> +
-> +	ktime_get_ts64(&oldtc);
-> +	kt = ktime_set(0, sleep_ti);
-> +	hpt->poll_state = 1;
-> +
-> +	mode = HRTIMER_MODE_REL;
-> +	hrtimer_init_sleeper_on_stack(&timer, CLOCK_MONOTONIC, mode);
-> +	hrtimer_set_expires(&timer.timer, kt);
-> +	set_current_state(TASK_UNINTERRUPTIBLE);
-
-TASK_INTERRUPTIBLE, we don't want it to make userspace
-unresponsive.
-
-> +	hrtimer_sleeper_start_expires(&timer, mode);
-> +
-> +	if (timer.task)
-> +		io_schedule();
-> +
-> +	hrtimer_cancel(&timer.timer);
-> +	mode = HRTIMER_MODE_ABS;
-
-What's this for? It's a local variable.
-
-> +	__set_current_state(TASK_RUNNING);
-> +	destroy_hrtimer_on_stack(&timer.timer);
-> +
-> +	ktime_get_ts64(&tc);
-> +	entry->last_irqtime = tc.tv_nsec - oldtc.tv_nsec - sleep_ti
-Where did seconds go? And can also get negative values and all
-kinds of inconsistent timings.
-
-Why is it even called irq time? Anyone would think it's an interrupt
-from the IO, but it's rather from the timer.
-
-> +}
-> +
-> +static int io_uring_hybrid_poll(struct io_kiocb *req,
-> +				struct io_comp_batch *iob, unsigned int poll_flags)
-> +{
-> +	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
-> +	struct io_ring_ctx *ctx = req->ctx;
-> +	struct hy_poll_time *hpt = req->hy_poll;
-> +	u32 index = req->file->f_inode->i_rdev;
-> +	struct iopoll_info *entry = xa_load(&ctx->poll_array, index);
-
-Why is it per file/device/etc instead of globally per ring?
-It'd make some sense if you caluculate an aggregate, e.g.
-minimum sleep time for all of them, but otherwise not much.
-Take one slow device, one fast device, while sleeping for the
-slow one, you can get lots of completions from the fast one.
-
-> +	int ret;
-
-Why it's even per inode but not per ring? Take one very
-slow device,
-
-> +
-> +	io_delay(hpt, entry);
-> +	ret = req->file->f_op->iopoll(&rw->kiocb, iob, poll_flags);
-
-IORING_OP_URING_CMD uses uring_cmd_iopoll
-
-> +
-> +	ktime_get_ts64(&hpt->iopoll_end);
-> +	entry->last_runtime = hpt->iopoll_end.tv_nsec - hpt->iopoll_start.tv_nsec;
-> +	return ret;
-> +}
-> +
->   int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
->   {
->   	struct io_wq_work_node *pos, *start, *prev;
-> @@ -1133,7 +1244,9 @@ int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
->   		if (READ_ONCE(req->iopoll_completed))
->   			break;
->   
-> -		if (req->opcode == IORING_OP_URING_CMD) {
-> +		if (ctx->flags & IORING_SETUP_HY_POLL) {
-> +			ret = io_uring_hybrid_poll(req, &iob, poll_flags);
-> +		} else if (req->opcode == IORING_OP_URING_CMD) {
->   			struct io_uring_cmd *ioucmd;
->   
->   			ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
-
+diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+index cde8357bb226..a7d3ba00e70e 100644
+--- a/arch/x86/include/asm/qspinlock.h
++++ b/arch/x86/include/asm/qspinlock.h
+@@ -66,13 +66,13 @@ static inline bool vcpu_is_preempted(long cpu)
+ 
+ #ifdef CONFIG_PARAVIRT
+ /*
+- * virt_spin_lock_key - enables (by default) the virt_spin_lock() hijack.
++ * virt_spin_lock_key - disables (by default) the virt_spin_lock() hijack.
+  *
+  * Native (and PV wanting native due to vCPU pinning) should disable this key.
+  * It is done in this backwards fashion to only have a single direction change,
+  * which removes ordering between native_pv_spin_init() and HV setup.
+  */
+-DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
++DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+ 
+ /*
+  * Shortcut for the queued_spin_lock_slowpath() function that allows
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index c193c9e60a1b..fec381533555 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -51,12 +51,12 @@ DEFINE_ASM_FUNC(pv_native_irq_enable, "sti", .noinstr.text);
+ DEFINE_ASM_FUNC(pv_native_read_cr2, "mov %cr2, %rax", .noinstr.text);
+ #endif
+ 
+-DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
++DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
+ 
+ void __init native_pv_lock_init(void)
+ {
+-	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+-		static_branch_disable(&virt_spin_lock_key);
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		static_branch_enable(&virt_spin_lock_key);
+ }
+ 
+ static void native_tlb_remove_table(struct mmu_gather *tlb, void *table)
 -- 
-Pavel Begunkov
+2.25.1
+
