@@ -1,126 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33ED156237
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 17:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FAE339A8;
+	Wed, 19 Jun 2024 17:27:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718818032; cv=none; b=cObTmCDUotS/necfM9bPgWjvuhACJCbGAWUxqjYVO6Y+eQvKguH5Il7zce5uweihaHvGKoR5R5ZvPJGQGocdMxh8WVosX2U2cKWIfrS8dGUzT6eJ6AWQY9RUgSiFi4pTHO4AALwtcZxHP0VtxziseYbcP0Y/lAO3oHqCfJ6MYdo=
+	t=1718818051; cv=none; b=aqTcYUQXM3ao9/aSguUT7roih040MrA4BjrjeZ+06B44S59hg5LcMJJWds+wdfmDjrOe0cGkKz86xkdgqwnZCkjRV6DjjGT57ZpTPtSHLWFD7LVNTI1sEx/QOH0gcWXlOu+c+FAiBB7cFS6C5/MSWwOuDWLQPsEz72L0hUSv1Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718818032; c=relaxed/simple;
-	bh=jv4d4Oqc5NFEU23JiIU4PcDVItnFp27R9cyRY1Vnzh0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Hoze8hw37iHBMDhEtQLAs2U8TY87vtq30bMEoPmjoOauQoxZmwyFJRtXyFrySG3JKVrwWKO/2vw/nDNdSZ8aUMljLaMkOdWL0WtGDcMPrVDErpr3hXNIlSANDhy6/+rsltDqehFob4rrsUfpbBY4WPLp2GSOkKoyCxjMzW/c+BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVxn9UF3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718818051; c=relaxed/simple;
+	bh=Rnex5JNhxKQCf5yHFRYCGEwnY7umcsl6iVUbeibuU4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SS0OzkUZUu3s7KJdq8vEcZ7c/aYmOUrrdnzsuqjsxKELAXjnoZA2gJygMaCtTdv1ZusV0Q8gOvEn+e/KDpXkl8bKQbRnEZP1/tN6f2e7tsl77n/DOnVb0hjrakvg88QDfj77Q8nZra+tJiyxPiyETiO7/dxLVCxtrn1QMbiVPSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXJb9Pcj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVxn9UF3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6BBFFC4AF0D;
-	Wed, 19 Jun 2024 17:27:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXJb9Pcj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0590C32786;
+	Wed, 19 Jun 2024 17:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718818032;
-	bh=jv4d4Oqc5NFEU23JiIU4PcDVItnFp27R9cyRY1Vnzh0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dVxn9UF3ZCDJ7hmqWCGoH64f9+8D3FG6Hn7aJSlGePexeuo+7vGEHn/yh+tyQ7UlE
-	 if3dreFQ9aR5ax5K4LntNvbyYJ6tUG8Kf5xZnirTOx6bTlR5vhgqE71x+Vd9bFHdDk
-	 l4aWR6gKRIGzd0Rzv449PZnQxy8iNCBqTbw9mvamy1Zv3cs7yntmmVLVkpjGpFBFB1
-	 qosAh52qS7MjEIeg91mOL0HuceLUw8xYw4ILF21/ZVaAewoZBfS+JcK9lEmQtNFAz3
-	 1q78fV7qhCSoC/oRg2raFONuMkXfSYqzih8PcsNz8c8nzJtxM21D9cBrpkBP3ihx3k
-	 sU2yo7tzpJ/VA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F3EC2BD05;
-	Wed, 19 Jun 2024 17:27:12 +0000 (UTC)
-From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Thu, 20 Jun 2024 01:27:10 +0800
-Subject: [PATCH 5/5] drm/mediatek: Support alpha blending in display driver
+	s=k20201202; t=1718818050;
+	bh=Rnex5JNhxKQCf5yHFRYCGEwnY7umcsl6iVUbeibuU4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VXJb9PcjkY2X1Fqqmt8e/n7x1YemeoPPoWMO1Z1jq+u8gQ6qCAK3dIB+WByTnBcJ7
+	 D+EKEDfKHkfHDOoH7N9hhC53d6YaSD16alIqwYFV6O23mlePAZQluA4Pr12/OEds91
+	 4Yh2P19ekSo3vKJO4dcsyV1UFdO8bD4AhiGkq/4UlZNO1TrwHn/obVZsJsg5H4j6lS
+	 YE2xip64WqQCU3BquM6/p6V/AldfYXE+HSogTM9/72ACoM+G4TnxscIUldNNwggpHP
+	 JZuGXDahiv6TdZ3BLu7Rqbc+mYLZVqExu6Qyb+a6B3JO9pT/L+8E3KfWjwH3nQtB4J
+	 po47kbRiRbZTw==
+Date: Wed, 19 Jun 2024 18:27:26 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kanak Shilledar <kanakshilledar@gmail.com>
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: i2c: convert to dt schema
+Message-ID: <20240619-exemplify-tabloid-9d15e5005513@spud>
+References: <20240619154941.144011-2-kanakshilledar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240620-blend-v1-5-72670072ca20@mediatek.com>
-References: <20240620-blend-v1-0-72670072ca20@mediatek.com>
-In-Reply-To: <20240620-blend-v1-0-72670072ca20@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Hsiao Chien Sung <shawn.sung@mediatek.com>, CK Hu <ck.hu@mediatek.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718818030; l=2212;
- i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=ZXEEgZdYr6sFLsFE3tObHfLlq5Jjp3gd57RSpJwiaWk=;
- b=cpty0i5L97fiTXnZ0dYhFyfpl2UpFSYmEhpFLKHWC0s/PCJdwNQEYos4jPVBR/lcE9LJuActy
- ELMxdETYKawBFMZNbBHIXqs2vYwFTAh2OPJP9YZv98dfNiHvIeaE98j
-X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
- pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
-X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
- auth_id=172
-X-Original-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
-Reply-To: shawn.sung@mediatek.com
-
-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
-
-Support "Pre-multiplied" and "None" blend mode on MediaTek's chips by
-adding correct blend mode property when the planes init.
-Before this patch, only the "Coverage" mode (default) is supported.
-
-For more information, there are three pixel blend modes in DRM driver:
-"None", "Pre-multiplied", and "Coverage".
-
-To understand the difference between these modes, let's take a look at
-the following two approaches to do alpha blending:
-
-1. Straight:
-dst.RGB = src.RGB * src.A + dst.RGB * (1 - src.A)
-This is straightforward and easy to understand, when the source layer is
-compositing with the destination layer, it's alpha will affect the
-result. This is also known as "post-multiplied", or "Coverage" mode.
-
-2. Pre-multiplied:
-dst.RGB = src.RGB + dst.RGB * (1 - src.A)
-Since the source RGB have already multiplied its alpha, only destination
-RGB need to multiply it. This is the "Pre-multiplied" mode in DRM.
-
-For the "None" blend mode in DRM, it means the pixel alpha is ignored
-when compositing the layers, only the constant alpha for the composited
-layer will take effects.
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_plane.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
-index 1723d4333f37..5bf757a3ef20 100644
---- a/drivers/gpu/drm/mediatek/mtk_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_plane.c
-@@ -346,6 +346,17 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 			DRM_INFO("Create rotation property failed\n");
- 	}
- 
-+	err = drm_plane_create_alpha_property(plane);
-+	if (err)
-+		DRM_ERROR("failed to create property: alpha\n");
-+
-+	err = drm_plane_create_blend_mode_property(plane,
-+						   BIT(DRM_MODE_BLEND_PREMULTI) |
-+						   BIT(DRM_MODE_BLEND_COVERAGE) |
-+						   BIT(DRM_MODE_BLEND_PIXEL_NONE));
-+	if (err)
-+		DRM_ERROR("failed to create property: blend_mode\n");
-+
- 	drm_plane_helper_add(plane, &mtk_plane_helper_funcs);
- 
- 	return 0;
-
--- 
-Git-146)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RH7b0jy6yN7Cw144"
+Content-Disposition: inline
+In-Reply-To: <20240619154941.144011-2-kanakshilledar@gmail.com>
 
 
+--RH7b0jy6yN7Cw144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 19, 2024 at 09:19:36PM +0530, Kanak Shilledar wrote:
+
+$subject is missing a prefix for the device in question.
+
+> diff --git a/Documentation/devicetree/bindings/i2c/nxp,lpc1788-i2c.yaml b=
+/Documentation/devicetree/bindings/i2c/nxp,lpc1788-i2c.yaml
+> new file mode 100644
+> index 000000000000..79d6774dd54f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/nxp,lpc1788-i2c.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i2c/nxp,lpc1788-i2c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP I2C controller for LPC2xxx/178x/18xx/43xx
+> +
+> +maintainers:
+> +  - Vladimir Zapolskiy <vz@mleia.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/i2c/i2c-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,lpc1788-i2c
+> +
+> +  reg:
+> +    description: physical address and length of the device registers
+
+Drop all of these descriptions as they're obvious, other than...
+
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: a single interrupt specifier
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: clock for the device
+> +    maxItems: 1
+> +
+> +  clock-frequency:
+> +    description: the desired I2C bus clock frequency in Hz
+
+=2E.maybe this one. Otherwise this looks okay to me.
+
+Thanks,
+Conor.
+
+> +    default: 100000
+> +
+> +  resets:
+> +    description: reset for the device
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+
+These two come for free with the ref to i2c-controller.yaml :)
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include "dt-bindings/clock/lpc18xx-ccu.h"
+> +
+> +    i2c@400a1000 {
+> +        compatible =3D "nxp,lpc1788-i2c";
+> +        reg =3D <0x400a1000 0x1000>;
+> +        interrupts =3D <18>;
+> +        clocks =3D <&ccu1 CLK_APB1_I2C0>;
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +    };
+> --=20
+> 2.45.2
+>=20
+
+--RH7b0jy6yN7Cw144
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnMU/gAKCRB4tDGHoIJi
+0sGHAP4g3+hIwfKb7xaf7XuqndD2LwEcQZhcfUAKlFVfZeUqewD/flKPkwXSVu1E
+dmuDqAz/Gr5I39tTkIGwN/fx38BMvAY=
+=Ntw3
+-----END PGP SIGNATURE-----
+
+--RH7b0jy6yN7Cw144--
