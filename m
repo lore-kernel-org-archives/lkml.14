@@ -1,140 +1,123 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43BB13DDAF;
-	Wed, 19 Jun 2024 13:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731221DFF7;
+	Wed, 19 Jun 2024 13:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718805281; cv=none; b=K36lAcImUUKLmIB/8HGxHEMqavwDWiwkR/lmYmUJYFZDUxjaUbquX8X++L60uetrBjZVhrax6lD8Cy1olPyN+rCd+CAv+VUeMvdvRwMg4lGiiKT1L7yS2j1yS5SKn32aEcvtqZnBhLCuq8DXGYXrpXeTSA6DwABc8CnAgsIQSMo=
+	t=1718805304; cv=none; b=g1pwxgDaj1uqeTBhYevSxn2/dPCOV16Huq5qx2H6HXX/I1pdCsFnq7Cd8QuEqgspQlMC2DCflzDa/LtyxhADu+gTTMHIO51lKx0hC0A2N9xm6Wn+FVxhmT4fsjp8NNJYUiiXmOC3Jn4+j5X9uk5h6uE8xme42w8MN6wkuoXPlJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718805281; c=relaxed/simple;
-	bh=8tp1QSFBMsXZUbXqCUgU3l8SNPJguQQ7YIftu2+43Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tZ7JuhSPxPd7b4G3SFjJy/1clYRMT7G0vjAPT7oQgbZE7fBQrUZgYZ2bQHVhBcs17i9zhwTbhS8LnUG492hXu5OKMWsy0oc9RmHPk43EMjz9GmTM00DEyXZ6sNObw7lpt/igd/+6Y9xxg7RuQr9J0mUUx3jrD53TMdWWoGdc9fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=UX9CqLh/; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1718805304; c=relaxed/simple;
+	bh=2L+1+gYamAC+cVSHQFSO0PZ1BNdypHQRZrJb2/vZugA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Jm+9YFo0yip9Pe/UZDRMoZlAckBeTZRqD9a75Lf6kUtto6MlbqggJ+jT1lCWMrQLAg+0xzGojJ4wIf12X8MGpKG3vpoa26y3y522rhWRB7rDa97xlLExFsabBoDVjXHFUkrMQcTSBL9t/q+nrRa+1SG99977iR0AmbkRxzxGuhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLDfWOkJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="UX9CqLh/"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 5C441A0FF8;
-	Wed, 19 Jun 2024 15:54:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=CO4WJxHdc4bkWVTqpv79
-	7ASJULZ8I3A6J8/1LBONMNI=; b=UX9CqLh/m+VTg514QIlm2Bh75Mjh7E+xLYpr
-	i1bs6LKksVc0a5m9Gruj6piLhSkDgpjuJxL7SAA2EuwbvRKLhXCytZrGuvKEnxRw
-	jgP6u7tRD/Jid9TWbYYgVXpB2B/fTNatjjHyZWykqwmLMXPqN3adGzl6XZF9YmxR
-	n4HlJrlpWvBGWuiYA+DAjRnMFgiHJy2RbxptxnA/fD0cPEkSKUwf4a75XZQaQlsu
-	5zFUJs9G4w291pp34BUoFGuMEfThF5Ku+kO+i79aUTJDPNAhhUZPyfuDpNGpWk+y
-	fvME3i/3MBg91MXIktiZbRRJen5F4J4oihWxEgMfueUkQjR8EG2aD7yYEqmHdEWt
-	ZZiP4QtsynkDp9+JV6iRDKkIMeEnM6FATECAN8zeywnlSOG4lYJWgajGi+oF8Jts
-	MF2fnZjbRwh3dW0YPhtOhuWbfF2NBSanhg1uNIPvQpcTpsTE1tFUQWdoBkyhPxlL
-	mXucfY7Go66tplAmHjl2AvjvMjIN47y1FMjc+OzHtHt8z9QMX79cMYwT5qNbz0GH
-	R4LfYFMOLOALg7r0Qd0CmnzQcti7BAsyHBMkvkGVDSCsIUpdCz2lK3w9UikbGphO
-	orgxOlSBuQM/DSTHU+Lc+Z0CzVFqjHMOgqDr6W21GLl8xjMEz2/hRQjCE1DV5mvw
-	WuppH2Q=
-Message-ID: <cb7bbf45-033e-41dd-88cb-9937e19989e6@prolan.hu>
-Date: Wed, 19 Jun 2024 15:54:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLDfWOkJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB5BC2BBFC;
+	Wed, 19 Jun 2024 13:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718805304;
+	bh=2L+1+gYamAC+cVSHQFSO0PZ1BNdypHQRZrJb2/vZugA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=eLDfWOkJs16coIdHaDXkWEYi4Ygwc7SSM9NMfot3FR8z4eYvk5oGV0UWLHh2CRWYk
+	 eO4+M4u6nMa4C0pWij/NKtp8q2GAKl1h29Rbv+2dQ74MNYrVJpPUBZ012KJZpxgWwY
+	 jwV/SQQUEO3QSPTg22SLHPP3MiJ9ExIa26+nSf/j+1uAg6v9aqJ15MX9MIUXi70RUl
+	 bNi0B8NLH+YgUn7xh2zs+Wk4wlMlUdcoAbJUztUxrxWHrM/kRVW4bVXRZfQ34R+1Qu
+	 wZ4T/bcd+1beBKR2+b0e55vjHMJAlvD9E+D2bqk1+7fWz/J85xPLMuexQ3jphpKJ0X
+	 g3Eu2NxKJveQw==
+Date: Wed, 19 Jun 2024 14:54:59 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
+Cc: Ashish Kalra <ashish.kalra@amd.com>, Borislav Petkov <bp@alien8.de>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: linux-next: manual merge of the kvm tree with the tip tree
+Message-ID: <ZnLjMxzFE6UCPhqi@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drivers: rtc: Add driver for SD2405AL.
-To: <gomba007@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-References: <20240619-rtc-sd2405al-v2-1-39bea29bd2a5@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <20240619-rtc-sd2405al-v2-1-39bea29bd2a5@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2945A129576D7D67
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nQUwDpK7LRDpRSib"
+Content-Disposition: inline
 
-Hi!
 
-On 6/19/24 13:48, Tóth János via B4 Relay wrote:
-> Changes in v2:
-> - Refactored based on reviewer's suggestions.
-> - I couldn't get the I2C IRQ to work on Raspberry Pi 4, so alarm is
->    skipped.
+--nQUwDpK7LRDpRSib
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's sad to see, but I guess better not to include untested code into 
-the kernel.
+Hi all,
 
-> +/* Control registers */
-> +#define	SD2405AL_REG_CTR_BASE	0x0F
-> +#define SD2405AL_REG_CTR1	0x00
+Today's linux-next merge of the kvm tree got a conflict in:
 
-> +	/* enable write, order is important */
-> +	reg = SD2405AL_REG_CTR_BASE + SD2405AL_REG_CTR2;
-> +	val = SD2405AL_BIT_WRTC1;
+  arch/x86/include/asm/sev-common.h
 
-Here I wouldn't do CTR_BASE + REG_CTRx, just leave it as in v1. I only 
-suggested the base+offset for the alarm registers, because their layout 
-is the same as the time registers, i.e. REG_ALARM_SEC = ALARM_BASE + 
-REG_SEC.
+between commit:
 
-> +	/*
-> +	 * CTR2.IM = 0, single event alarm
-> +	 * CTR2.S{1,0} = 0, disable INT pin
-> +	 * CTR2.FOBAT = 0, interrupt enabled during battery backup mode
-> +	 * CTR2.INTDE = 0, countdown interrupt disabled
-> +	 * CTR2.INTAE = 0, alarm interrupt disabled
-> +	 * CTR2.INTFE = 0, frequency interrupt disabled
-> +	 */
-> +	ret = regmap_write(sd2405al->regmap, reg, val);
+  34ff659017359 ("x86/sev: Use kernel provided SVSM Calling Areas")
 
-Maybe you could #define all these? Just a suggestion though. And even 
-`reg` and `val` are not really needed, you could just as easily use:
+=66rom the tip tree and commit:
 
-+ regmap_write(sd2405al->regmap, SD2405AL_REG_CTR2,
-+ 	SD2405AL_BIT_WRTC1);
+  d46b7b6a5f9ec ("KVM: SEV: Add support to handle MSR based Page State Chan=
+ge VMGEXIT")
 
-> +	w32 = data[SD2405AL_REG_CTR1];
-> +	w32 &= (SD2405AL_BIT_WRTC2 | SD2405AL_BIT_WRTC3);
-> +
-> +	w1 = data[SD2405AL_REG_CTR2];
-> +	w1 &= SD2405AL_BIT_WRTC1;
-> +
-> +	return (w32 != 0) && (w1 != 0);
+=66rom the kvm tree.
 
-Here you could also do away with `w1` and `w32`.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
- > +static int sd2405al_read_time(struct device *dev, struct rtc_time *time)
- > +{
- > +	u8 hour;
- > +	u8 data[SD2405AL_NUM_T_REGS] = { 0 };
- > +	struct sd2405al *sd2405al = dev_get_drvdata(dev);
- > +	int ret;
- > +
- > +	/* check if the device is powered on/working */
- > +	ret = sd2405al_check_writable(sd2405al);
- > +	if (ret == 0) {
- > +		dev_err(sd2405al->dev, "invalid device status\n");
+diff --cc arch/x86/include/asm/sev-common.h
+index e90d403f2068b,8647cc05e2f49..0000000000000
+--- a/arch/x86/include/asm/sev-common.h
++++ b/arch/x86/include/asm/sev-common.h
+@@@ -98,19 -109,9 +109,22 @@@ enum psc_op=20
+  	/* GHCBData[63:32] */				\
+  	(((u64)(val) & GENMASK_ULL(63, 32)) >> 32)
+ =20
+ +/* GHCB Run at VMPL Request/Response */
+ +#define GHCB_MSR_VMPL_REQ		0x016
+ +#define GHCB_MSR_VMPL_REQ_LEVEL(v)			\
+ +	/* GHCBData[39:32] */				\
+ +	(((u64)(v) & GENMASK_ULL(7, 0) << 32) |		\
+ +	/* GHCBDdata[11:0] */				\
+ +	GHCB_MSR_VMPL_REQ)
+ +
+ +#define GHCB_MSR_VMPL_RESP		0x017
+ +#define GHCB_MSR_VMPL_RESP_VAL(v)			\
+ +	/* GHCBData[63:32] */				\
+ +	(((u64)(v) & GENMASK_ULL(63, 32)) >> 32)
+ +
++ /* Set highest bit as a generic error response */
++ #define GHCB_MSR_PSC_RESP_ERROR (BIT_ULL(63) | GHCB_MSR_PSC_RESP)
++=20
+  /* GHCB Hypervisor Feature Request/Response */
+  #define GHCB_MSR_HV_FT_REQ		0x080
+  #define GHCB_MSR_HV_FT_RESP		0x081
 
-Do you really need the RTC to be writable for read_time()?
+--nQUwDpK7LRDpRSib
+Content-Type: application/pgp-signature; name="signature.asc"
 
- > +static int sd2405al_set_time(struct device *dev, struct rtc_time *time)
- > +{
- > +	u8 data[SD2405AL_NUM_T_REGS];
- > +	struct sd2405al *sd2405al = dev_get_drvdata(dev);
- > +	int ret;
- > +
- > +	ret = sd2405al_check_writable(sd2405al);
- > +	if (ret == 0) {
- > +		dev_err(sd2405al->dev, "device is not writable\n");
+-----BEGIN PGP SIGNATURE-----
 
-Couldn't you set it writable here? Instead of doing it in probe()?
-Also, you could rename sd2405al_setup() to sd2405al_set_writable() so it 
-is clear that that's what it does.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZy4zIACgkQJNaLcl1U
+h9Ac1ggAgkntQi6/mci/5sPhuewuaPr/pC/ZfJHq+36pfpdyL6J13Tq30j1ZVnr5
+h9WfzGd8g4wyOUN0jfXJRunOtDbYDNi/B2r+rLikhtUW0VKPKsPl1xQX2pODRvYN
+Zg9+Nj4WQ+Ir5zslNjNF97+4IExUaxSDkqeja8LlZ5PEzOPGpuLriYJEAH9D7svp
+I9BFrGeOG87IKfRS+skYEwDFTiTTcsgDuZ4S8GeYA1M4tDJXSLiVT1aDWhTKbnhT
+KS0/2KwhngcdcSDR6xlhs/xvzwkTtsTVza1IpGG10r8rOp53LRNRa39pG9kDKGn2
+qmBgRuJFC8jL3/XDNnlNKzk2kuxdAQ==
+=cDeN
+-----END PGP SIGNATURE-----
 
-Bence
-
+--nQUwDpK7LRDpRSib--
