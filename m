@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA9844384
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16E538FB0
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807535; cv=none; b=QxeizmXWNZF8EvsLN44ib54JrDxtsmJ80GgZt9BBzF3GZVPLLzcGwjCcXNk/8om1Un5NnldqTgCBWm4f8Wlmducmf4+O9IG9bZ3lPsVLa8PMDqemI5zbbOePsaFh2l6jggzSXu6gr7pZk3B2JOAv/wv5xvZGaZdj9xj0js+weC8=
+	t=1718807534; cv=none; b=Z2qGIiducOzxY7H2p9Za8iqR3cB3sgxhIbIvUeGzoY1FbMpCNNdFXhkMevcCsN3osQZXaXIwvYJS0tSSfsYjAZBbSbOU4Fd9ydN6ZaUsSKhIr+ciFobNWeoG3DXbc9UbiMijCkpmQZWL8Yw7L9mYkdLb4FIR6wdV9z9ek8T9THA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718807535; c=relaxed/simple;
-	bh=bC3Si/6VjKUhWZGnhO1+v4RCNXyIdUIMDytgGFUCEeI=;
+	s=arc-20240116; t=1718807534; c=relaxed/simple;
+	bh=w4HhvErl0+9KBEyLNkAXO343a8rNSOMKg9ZlSA5XdCM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sjzRY5Sesg2Dv3DYMljWnYOQsKEDxD2EvKbFJugiFa+SPcOqrIg7Z40s6agJTRlsTuQ7QqUukPvZzjOBGsBRP8cBt8jSGQv2weN+fVK5Vraqt3l3oV0rESxEFf8yBYcPjgLCGz6tpeDnwWDoTTt1iVgCrhnXvOxpXq0bgq69Gwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMFTBPV1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Q9rohGpEn66+WZcSXg6LRYyORu3QMd7pG1EzELnJ2an5l70bbW39gPnkmsxjk/zefwxnrEYOwiyfyYPCy74qzFUVusVNtMJVuDwYlWjKyhNVkQeG76f8fhidVLpf9+ZuKYq9XB2vNTOI/yOnQhxVicd/B5UrQxF6KmtrlqYNZMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oA31hkud; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMFTBPV1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F2512C4AF17;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oA31hkud"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 91EC0C4AF07;
 	Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718807535;
-	bh=bC3Si/6VjKUhWZGnhO1+v4RCNXyIdUIMDytgGFUCEeI=;
+	s=k20201202; t=1718807534;
+	bh=w4HhvErl0+9KBEyLNkAXO343a8rNSOMKg9ZlSA5XdCM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=LMFTBPV1mkQReAs2Y7JRnpH+i1/6Jdh4qXzFjvnNoLxBLzzoJDrmaIySOFimXunCi
-	 GQ6MoJP9iZ0Zbuz+ivx5uSIaARq4UCCJCnn44l05w4haQS08HAp7mrPaEjzZIDQGZ4
-	 3RaGMWZLYMSiI2p1/HirRaZKPeTVHjPI/23sBd6ZLi+hslUXlcGKlsiZCv+bAO4G8+
-	 vuvX8ma7WYi3ZC8rozqz7/EhIOOwgQOIvDkv38Se6muViVg+mHW5W7n56+8OZGGV8b
-	 aqjT1cIJJwXpVHqId+iXTnBnZ5ZqeLeTprkOmhS3WKRebkXlRckTCzpXS9EmuZKyI3
-	 j45otqXdmSbkA==
+	b=oA31hkudzbjKhpSIxSL3fLWyFoHT1tsNFvy51lFWDbheca++vg7ermsMWTIpkrWOw
+	 hxWqoSi1K056X9eZGwVZbMU9eB1ZJ4OoIFnwWJS3zyZ/Fox1pWjShiLnaFINfbxtP4
+	 l0WSYcbh+mEBf2aCS7qJzHVqpX4c1nCWJ4gudBrSMv/F2wRv3Shc2phneX74BchaB7
+	 r/ZkxlUKh8rN1fXI9XmeFtrK65MZXnRJB6YD4O1UpbZIGMPZxH8+SMIGC7gIH4jTgu
+	 xkrjwj0t0XQzyHcnwbbMU+Udm+8EiUyfZPu6unMQo9AkTYnOKc3RdpsXgmHSQ/85Z+
+	 sX+yCMeiE36Gw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B57C27C79;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6CAC2BA15;
 	Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Wed, 19 Jun 2024 22:30:52 +0800
-Subject: [PATCH v2 11/14] drm/mediatek: Support RGBA8888 and RGBX8888 in
- OVL on MT8195
+Date: Wed, 19 Jun 2024 22:30:47 +0800
+Subject: [PATCH v2 06/14] drm/mediatek: Add OVL compatible name for MT8195
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240619-mediatek-drm-next-v2-11-abf68f46f8d2@mediatek.com>
+Message-Id: <20240619-mediatek-drm-next-v2-6-abf68f46f8d2@mediatek.com>
 References: <20240619-mediatek-drm-next-v2-0-abf68f46f8d2@mediatek.com>
 In-Reply-To: <20240619-mediatek-drm-next-v2-0-abf68f46f8d2@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -55,11 +54,11 @@ Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718807531; l=841;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718807531; l=1050;
  i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=UFfbnC0Pk+UyDIilXA9CBuArzD2VEBaxjen+ZQRfSQA=;
- b=PSTLyTlCrPco9xY23+obmFFokEvg7Hv7ZDW/+98AnpFtFaL1N2wbvIJpIUrm41sonE2UBa7Wp
- 39Ay5MhUleDCvuEHdepP3AugZ4dlViRy1hq7lnDwbtUfaLoZ1Qc+EsM
+ bh=BgdlkkD28fU8kVaiXpAjJEsbIm8CSiJsfkQTGRrkbL8=;
+ b=nrDkN0T+6iVl3vSI8cuh8yGey8rxcZiI+R/SBD2LO/UWpIp5k8KvBn9DoKkxLtnGXScDdjCdR
+ 9WiQWMBlLzyB7oKGHHKHZ8uTDkqxcfl5HpKekKi7m+2sPczpep5f8HX
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
@@ -69,28 +68,29 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Support RGBA8888 and RGBX8888 formats in OVL on MT8195.
+Add OVL compatible name for MT8195.
+Without this commit, DRM won't work after modifying the device tree.
 
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 2 ++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 671b1258d9c8..33b58da15ba4 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -117,6 +117,8 @@ static const u32 mt8195_formats[] = {
- 	DRM_FORMAT_XBGR8888,
- 	DRM_FORMAT_XBGR2101010,
- 	DRM_FORMAT_ABGR2101010,
-+	DRM_FORMAT_RGBX8888,
-+	DRM_FORMAT_RGBA8888,
- 	DRM_FORMAT_RGBX1010102,
- 	DRM_FORMAT_RGBA1010102,
- 	DRM_FORMAT_RGB888,
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index b5f605751b0a..8e047043202b 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -743,6 +743,8 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+ 	  .data = (void *)MTK_DISP_OVL },
+ 	{ .compatible = "mediatek,mt8192-disp-ovl",
+ 	  .data = (void *)MTK_DISP_OVL },
++	{ .compatible = "mediatek,mt8195-disp-ovl",
++	  .data = (void *)MTK_DISP_OVL },
+ 	{ .compatible = "mediatek,mt8183-disp-ovl-2l",
+ 	  .data = (void *)MTK_DISP_OVL_2L },
+ 	{ .compatible = "mediatek,mt8192-disp-ovl-2l",
 
 -- 
 Git-146)
