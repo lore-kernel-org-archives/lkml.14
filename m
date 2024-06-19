@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FE115B573;
-	Wed, 19 Jun 2024 22:36:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02C615D5AA;
+	Wed, 19 Jun 2024 22:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718836588; cv=none; b=OXj16GSmGRPLflFv4MduOTrxbtHWZx1NTVkNmk2KztV8yiP6lrXVcOsdWfm04rbPSsFlOGnOm0bUzHXDUCdwdBkyCzg0C+vjF2TIb59a3gCbnDskyW/VfgntZSCTTPGM4VB4au33pDOqCTr8NuonSAqXk54EhcmtPEqxVS3PBaw=
+	t=1718836590; cv=none; b=QzDD9vLO5h914LbqEOlND2Bhc1Sc/VgA+VJLApDBMODNDy3gSNaGCunx3ZchZHs5N/Kisg+TGAAQ6KDz/BkKAaq78UL1pPtQ74RObRFBIipi6RvWa7ngjJTZ3YSp/goN4VN0KpTIhZWd+SVHRjYpid4EUMDSXY/bMM64D0qhBEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718836588; c=relaxed/simple;
-	bh=lqncN2do7NL+R425huiQkUvoZZdiNFBxemu6U6UT3ug=;
+	s=arc-20240116; t=1718836590; c=relaxed/simple;
+	bh=P/xpmJ/VWG0UWqXBQ4LtNLyFz/OomrsM9WB8JXsA3Wo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=axJH+J5XH7HDFVq0I2+4KGXPiasDyH4MS+01lEfV1ZF/KvxChhjViTmNoPoDqFXm6kdidvL7irePcyxRHGIbFB85e0hVdzyZWtaTYx1AcX4H75BB/CFoNvIV5ctEcho+4xlAjYCTOba7hFTsa27dps4lng+KnQzyupqres9Kxss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmffDMEX; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=s3wDnDgEap50HBbJghqaaQfrVHeeYBFk/ZhkQl0UfgCH7xpHEq5AmIsjq5f/KJ5qBnm9bJh2GbAFdjblopwFPlUeSGW7smSIkxnl6xBCuRqnOFqxzy4hZ9ezaNswdpdOBQx2wIMBK93OwvnSvbpUkfLiTxigtS09L973T3FY4vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUBav+Bk; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmffDMEX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUBav+Bk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718836587; x=1750372587;
+  t=1718836588; x=1750372588;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lqncN2do7NL+R425huiQkUvoZZdiNFBxemu6U6UT3ug=;
-  b=fmffDMEXXxUGIG4MQGyWJw1H08HasuZw3lil5bRGK0R7UqP9hN2h4bjU
-   GDFX5vIW+OiullYBfSm9jdikHsysvRJNB/Pe4+uGicgie5puMPEJ8F8RF
-   4iZiNgSHc0uN05jruBXViK7oGZMg0yMsviaMfksDdtpqH69w9WjfO2SOT
-   57Lt0LRkWvGIks9IlPDBG7juLJ3JoXjHK+ycuEf4xxExFTE530UjNVoYT
-   C+4yyTAzdK4DYKmX0YAm+yYVNkS72MwSqYTqP0b1laUrqyqZwQPNCAM08
-   DR0rO98gEwZpn7g1ur/lTi6LYlj6amn5efuUdYKJbidktCX3SYfq4dIAm
+  bh=P/xpmJ/VWG0UWqXBQ4LtNLyFz/OomrsM9WB8JXsA3Wo=;
+  b=fUBav+Bklyjo85LJ8JiqraZZhQ/lLtNoXKPXLnXiGsD5wLxx6LYpAYo9
+   3MUNukFxAXyiPu+VO92jA6JKcQY4fdd81lm6TMmYHqOFHghVuYO3rFYTi
+   htJt1yPhdabkQJJTJpu2l/ADM3hZAjXeGnX+sy5t4ZwAnaM1UkemkQwiJ
+   0kK/rCD6MZSi+SoFSBlSUftu0o+ayCnzyAeQylAU3SF0ylg5mZuC01/Cr
+   +FqkKd7MRABNyK+sfqSgpbF4SmjAFQgnN7Gmhib3E//hOpTwPFeXqygwV
+   sCB/YozeyhiHqOE/Z3Fio0fYYWklmM1njTQD0VJVKUQI6v8ZwZeLyLIVj
    g==;
-X-CSE-ConnectionGUID: S8GeqQcLSSGx5AnA/xHW0w==
-X-CSE-MsgGUID: BJ8mGLP1QlSZiLlSUq/PSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931963"
+X-CSE-ConnectionGUID: zFvf2pIISo6e5U7luqJuNw==
+X-CSE-MsgGUID: WCrzS4qxRUyQM5vzJ0DeUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931946"
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15931963"
+   d="scan'208";a="15931946"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:22 -0700
-X-CSE-ConnectionGUID: A7gpxV9sQFmySh6QDL16jQ==
-X-CSE-MsgGUID: i6E0d/UeTni7Wy7v2P0T7Q==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:21 -0700
+X-CSE-ConnectionGUID: 8KXdDHpEQ0ueMFUHnC/GZw==
+X-CSE-MsgGUID: 6rrnuRMASUGhnqUZTSA8Jw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="72793343"
+   d="scan'208";a="72793333"
 Received: from ivsilic-mobl2.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.54.39])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:21 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
@@ -54,10 +54,11 @@ Cc: kai.huang@intel.com,
 	linux-kernel@vger.kernel.org,
 	sagis@google.com,
 	yan.y.zhao@intel.com,
-	rick.p.edgecombe@intel.com
-Subject: [PATCH v3 08/17] KVM: x86/tdp_mmu: Take a GFN in kvm_tdp_mmu_fast_pf_get_last_sptep()
-Date: Wed, 19 Jun 2024 15:36:05 -0700
-Message-Id: <20240619223614.290657-9-rick.p.edgecombe@intel.com>
+	rick.p.edgecombe@intel.com,
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Subject: [PATCH v3 05/17] KVM: x86/mmu: Add an is_mirror member for union kvm_mmu_page_role
+Date: Wed, 19 Jun 2024 15:36:02 -0700
+Message-Id: <20240619223614.290657-6-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
 References: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
@@ -69,82 +70,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pass fault->gfn into kvm_tdp_mmu_fast_pf_get_last_sptep(), instead of
-passing fault->addr and then converting it to a GFN.
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Future changes will make fault->addr and fault->gfn differ when running
-TDX guests. The GFN will be conceptually the same as it is for normal VMs,
-but fault->addr may contain a TDX specific bit that differentiates between
-"shared" and "private" memory. This bit will be used to direct faults to
-be handled on different roots, either the normal "direct" root or a new
-type of root that handles private memory. The TDP iterators will process
-the traditional GFN concept and apply the required TDX specifics depending
-on the root type. For this reason, it needs to operate on regular GFN and
-not the addr, which may contain these special TDX specific bits.
+Introduce a "is_mirror" member to the kvm_mmu_page_role union to identify
+SPTEs associated with the mirrored EPT.
 
-Today kvm_tdp_mmu_fast_pf_get_last_sptep() takes fault->addr and then
-immediately converts it to a GFN with a bit shift. However, this would
-unfortunately retain the TDX specific bits in what is supposed to be a
-traditional GFN. Excluding TDX's needs, it is also is unnecessary to pass
-fault->addr and convert it to a GFN when the GFN is already on hand.
+The TDX module maintains the private half of the EPT mapped in the TD in
+its protected memory. KVM keeps a copy of the private GPAs in a mirrored
+EPT tree within host memory. This "is_mirror" attribute enables vCPUs to
+find and get the root page of mirrored EPT from the MMU root list for a
+guest TD. This also allows KVM MMU code to detect changes in mirrored EPT
+according to the "is_mirror" mmu page role and propagate the changes to
+the private EPT managed by TDX module.
 
-So instead just pass the GFN into kvm_tdp_mmu_fast_pf_get_last_sptep() and
-use it directly.
-
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
 TDX MMU Prep v3:
- - New patch
----
- arch/x86/kvm/mmu/mmu.c     | 2 +-
- arch/x86/kvm/mmu/tdp_mmu.c | 3 +--
- arch/x86/kvm/mmu/tdp_mmu.h | 2 +-
- 3 files changed, 3 insertions(+), 4 deletions(-)
+ - Rename role mirror_pt -> is_mirror (Paolo)
+ - Remove unnessary helpers that just access a member (Paolo)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 138e7bbcda1e..e9c1783a8743 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3452,7 +3452,7 @@ static int fast_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
- 		u64 new_spte;
+TDX MMU Prep v2:
+ - Rename private -> mirrored
+
+TDX MMU Prep:
+- Remove warning and NULL check in is_private_sptep() (Rick)
+- Update commit log (Yan)
+
+v19:
+- Fix is_private_sptep() when NULL case.
+- drop CONFIG_KVM_MMU_PRIVATE
+---
+ arch/x86/include/asm/kvm_host.h | 3 ++-
+ arch/x86/kvm/mmu/mmu_internal.h | 5 +++++
+ arch/x86/kvm/mmu/spte.h         | 5 +++++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9e35fe32f500..6c59b129f382 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -351,7 +351,8 @@ union kvm_mmu_page_role {
+ 		unsigned ad_disabled:1;
+ 		unsigned guest_mode:1;
+ 		unsigned passthrough:1;
+-		unsigned :5;
++		unsigned is_mirror:1;
++		unsigned :4;
  
- 		if (tdp_mmu_enabled)
--			sptep = kvm_tdp_mmu_fast_pf_get_last_sptep(vcpu, fault->addr, &spte);
-+			sptep = kvm_tdp_mmu_fast_pf_get_last_sptep(vcpu, fault->gfn, &spte);
- 		else
- 			sptep = fast_pf_get_last_sptep(vcpu, fault->addr, &spte);
+ 		/*
+ 		 * This is left at the top of the word so that
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index d2837f796f34..5a2c9be23627 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -157,6 +157,11 @@ static inline int kvm_mmu_page_as_id(struct kvm_mmu_page *sp)
+ 	return kvm_mmu_role_as_id(sp->role);
+ }
  
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 4a7518c9ba7e..067249dbbb5e 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -1801,12 +1801,11 @@ int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
-  *
-  * WARNING: This function is only intended to be called during fast_page_fault.
-  */
--u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, u64 addr,
-+u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, gfn_t gfn,
- 					u64 *spte)
++static inline bool is_mirror_sp(const struct kvm_mmu_page *sp)
++{
++	return sp->role.is_mirror;
++}
++
+ static inline void kvm_mmu_alloc_external_spt(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
  {
- 	struct tdp_iter iter;
- 	struct kvm_mmu *mmu = vcpu->arch.mmu;
--	gfn_t gfn = addr >> PAGE_SHIFT;
- 	tdp_ptep_t sptep = NULL;
+ 	/*
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index 86e5259aa824..4883d139761b 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -265,6 +265,11 @@ static inline struct kvm_mmu_page *root_to_sp(hpa_t root)
+ 	return spte_to_child_sp(root);
+ }
  
- 	tdp_mmu_for_each_pte(iter, vcpu->kvm, mmu, gfn, gfn + 1) {
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-index 437ddd4937a9..1ba84487f3b7 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.h
-+++ b/arch/x86/kvm/mmu/tdp_mmu.h
-@@ -64,7 +64,7 @@ static inline void kvm_tdp_mmu_walk_lockless_end(void)
- 
- int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
- 			 int *root_level);
--u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, u64 addr,
-+u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, gfn_t gfn,
- 					u64 *spte);
- 
- #ifdef CONFIG_X86_64
++static inline bool is_mirror_sptep(u64 *sptep)
++{
++	return is_mirror_sp(sptep_to_sp(sptep));
++}
++
+ static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
+ {
+ 	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
 -- 
 2.34.1
 
