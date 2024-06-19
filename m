@@ -1,104 +1,85 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72181FC1F;
-	Wed, 19 Jun 2024 12:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91C06FC1F
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718801629; cv=none; b=ugrOa6as7ZbsGqyB12zUcGKnD/eYkSRegPN7hQmZOe/TUDpRj0zHcNlvK07rSeykPzGeDdqEA6dzWX/QfsYariBPoyacmSak0dIPb63BlAMx3QLcucDHcyH9v+KyDp4TnmHcbTe18cLQ+RtfBOnZpRh8r6XdyJd2KNANWK6VXAo=
+	t=1718801680; cv=none; b=LzKICKOca8wevUWkoeN8WHV7k13iWqznXOwDgN6D72X5P81D55yFJm7rLlVhtpN7DVgDpOTsdECSkNA6A54bg35SmOFwBcb08CL/ePlD9wALJGCgkKn8q9fkWjeO/LM22BWca4uWef5t+AYNBIm8Jrpi207NQSHrBgo1BXwi+hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718801629; c=relaxed/simple;
-	bh=lD62iizMar9i2A5WdIk3Mt84R3BsDRplqxsUenKolds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HZ6HwuCa5gmDuPhmCCJz/EeJaDcC7m91va/wDuXX7yprjz8t/PV/yZN6EbugFHtE5KygzwLgWeSJV4gMVo5chR9fRbIU863iJStIJlbt/3bw5k2Qee0k8NF+a2GJiRVoh+vYEeYzsOCbqcPc1KKAq5y+9sluxFOum7Dtjw+S51E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SFpKWLv/; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SFpKWLv/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718801625;
-	bh=lD62iizMar9i2A5WdIk3Mt84R3BsDRplqxsUenKolds=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SFpKWLv//Welw3dMliy5cQLiOOwJERVpjfB7lU0MV9VpxlR4xx/W1h8CJ1j6Pb1Si
-	 cVzi+6P9+Z+L8b4BDZC1UxSJ91Y0wW6nzjO06n8Us24i160m6qCFIolDSN4sowuFte
-	 1G54mE7p3wmA/ONG2QzllX3jG3ZPbwmcAROPhEMFlxnaxEi6JZ4YyPlmSUvKudUcPg
-	 pXQEL5ImN3Ir3sGpAw7/MITaP2r3pRsD7VLbGhtl5uGirG7jyoNKMk7ra+ar03hMY3
-	 +Cwz7UX9aW7KsAofYk38ckIF9Vjqozil8YC8y2EYTyHs36XT9/j9/IsW5wsUhxGKhN
-	 koMh3M5vvOk3w==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 62DA73782159;
-	Wed, 19 Jun 2024 12:53:44 +0000 (UTC)
-Message-ID: <f6fcbca9-a5cd-42a6-a911-9515d131d992@collabora.com>
-Date: Wed, 19 Jun 2024 15:53:43 +0300
+	s=arc-20240116; t=1718801680; c=relaxed/simple;
+	bh=RntI/0TdKoLCLMlqDzvPcVr40RqcqOzFflQWDwxtsTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aCv+ehy/vm+GM33badDrDQSna/jx9g84UzQrjikZAat3/KVVFIehRGMjQWy4YbADwmgpAMSlcvPw94lQXdpBeJro0IuMNKAaEi05I6C2u4DlscNQz703BLJdxeHsND5QSe8bHo6O+rb1qBvSJSQ7/jTpT9gub6o0306RBl33D2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BCD31042;
+	Wed, 19 Jun 2024 05:55:02 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A0CA3F6A8;
+	Wed, 19 Jun 2024 05:54:34 -0700 (PDT)
+Date: Wed, 19 Jun 2024 13:54:31 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	James Morse <james.morse@arm.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	"Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	Peter Newman <peternewman@google.com>, dfustini@baylibre.com,
+	amitsinght@marvell.com, David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH] x86/resctrl: Don't try to free nonexistent RMIDs
+Message-ID: <ZnLVB1Cvy8PXhaMv@e133380.arm.com>
+References: <20240614160843.11006-1-Dave.Martin@arm.com>
+ <1e3bba2e-5cf6-4a77-b92d-5c7ab1661d17@intel.com>
+ <ZnAkOhFWzDqhlSyt@e133380.arm.com>
+ <a37917d2-8ad9-4192-a3f8-9789193d53d6@intel.com>
+ <ZnFTnzm/jctgN2wf@e133344.arm.com>
+ <d476585b-3cfb-494d-b25c-4aeb6244e21d@intel.com>
+ <ZnGy8B4FA+q3YkhC@e133380.arm.com>
+ <f30c9a16-27b5-44ab-a55d-b2f9f3e4258e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: rk809: Add missing audio codec
- properties
-To: Jonas Karlman <jonas@kwiboo.se>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
- Chris Morgan <macromorgan@hotmail.com>,
- Furkan Kardame <f.kardame@manjaro.org>,
- Michael Riesch <michael.riesch@wolfvision.net>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
- <20240619-rk809-fixes-v1-2-fa93bc5313f4@collabora.com>
- <dc71686e-a3fa-48f7-83a9-34d0f365ff07@kwiboo.se>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <dc71686e-a3fa-48f7-83a9-34d0f365ff07@kwiboo.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f30c9a16-27b5-44ab-a55d-b2f9f3e4258e@intel.com>
 
-Hi Jonas,
+Hi,
 
-On 6/19/24 3:20 PM, Jonas Karlman wrote:
-> Hi Cristian,
+On Tue, Jun 18, 2024 at 10:08:47AM -0700, Reinette Chatre wrote:
+> Hi Dave,
 > 
-> On 2024-06-19 13:23, Cristian Ciocaltea wrote:
->> The RK809 MFD provides a RK817 compatible audio codec, supported by the
->> rk817_codec driver.
->>
->> This has been already in use by several boards: rk3566-quartz64-b,
->> k3566-roc-pc, rk3568-evb1-v10, rk3568-lubancat-2, rk3568-odroid-m1,
->> rk3568-rock-3a.  However, dtbs_check fails for all of them:
->>
->>   DTC_CHK arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dtb
->>   rk3568-rock-3a.dtb: pmic@20: '#sound-dai-cells', 'assigned-clock-parents', 'assigned-clocks', 'clock-names', 'clocks', 'codec' do not match any of the regexes: 'pinctrl-[0-9]+'
->>     from schema $id: http://devicetree.org/schemas/mfd/rockchip,rk809.yaml#
->>
->> Document the missing audio codec properties as found on the
->> rockchip,rk817 schema.
+> On 6/18/24 9:16 AM, Dave Martin wrote:
 > 
-> This is duplicate of "dt-bindings: mfd: rk809: Add audio codec properties"
-> part of "arm64: dts: rockchip: Add Radxa ROCK 3B" series.
+> > 
+> > Either way, I don't think this impacts the tested-ness of this patch,
+> > but please shout if you have concerns.
+> > 
 > 
-> https://lore.kernel.org/all/20240505134120.2828885-3-jonas@kwiboo.se/
+> I agree. The submission stated that it was tested on x86
+> "for the monitors-present case". When booting with
+> "rdt=!cmt,!mbmtotal,!mbmlocal" (as I did in my test) resctrl
+> is not able to discover monitoring support and it
+> thus tested the "monitors _not_ present case".
 > 
-> A v2 of that series with fixes for reported issues is imminent.
-> How do you want me to preceded with such v2 series?
+> Reinette
 
-Oh, it seems both of us made the same mistake and wrongly assumed the
-rockchip,rk817 schema is good enough to be used as a reference. :-)
+Ah, right.  I missed the significance of the options.
 
-Since both rockchip,rk817 and rockchip,rk809 files share most of the
-content, I also think this might be a good opportunity to get them
-merged into a single schema.
-
-I can do this in v2, unless you prefer to handle it as part of your series.
-
-Thanks,
-Cristian
+Thanks again!
+---Dave
+> 
+> 
