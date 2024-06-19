@@ -1,89 +1,168 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63F41BF37;
-	Wed, 19 Jun 2024 18:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9965A1BF37;
+	Wed, 19 Jun 2024 18:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718822737; cv=none; b=lm1nteGgoFuqg6BqfIt3Jq9g8mBznEe9HrHgEX12FPsQ6DFCeNmu6x0tlzmpEMswHipawVoeS70qwsHMbJUYrCXgsAE7aauCyNuDoF2gGr8D8RvMo0Bl+mKEsir3ehMoZwfQMHsT/sFP69Rqn2KNre+tWsVmT5NImfQu64IWCVw=
+	t=1718822754; cv=none; b=JNZPgJsggcpcfrYZWKBaqsCORaYiPx25hSytz24D90E5UzLBDgYQtGu2dOcIz+BadOjmsMkJmzS0XTpGG4TlpI7rjZKnBEGGQX953FF+Av2lVYkDBJ4IT+NP/F07VgR4eVlNq0UWe/9eN+QqJ3u6TBYbtSf/MlJoDlI+GdKBswk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718822737; c=relaxed/simple;
-	bh=Ia3hqiNFJjrEXiQLZriShD9u1T5BdMwUVMDQ+Wmny2k=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=kFBBKgnrStCHGrTnbDHbt93jbnqEnECysVDejS+grjVZ4zYdj4QZWtifvlVSwEYzWWhD7bb1ll0hu6g/GE8i+HRjgArvvtwwmp8YuyPS1HzvmVjnxh/jAeAv0Q4zxo4QOG1rSZQFYT89MnNUs2FlpkodpKsoiYkLqE3h8Om5ROo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=fx0sCGta; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718822754; c=relaxed/simple;
+	bh=LnvttFyoAWSkuawVy/9codAPfnxNDkMkJ4iJyuXHu4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L1G9Q0Q9EwO38rEHdE/tL6qYfa1mIAWNEOeLh+53J1/ZxITLBZiqXm4aSKhEgVo8N9qJ60AXzdcKDdJYV3QK7Y2FstU+3xeLoneN8ZZrZFYjSki0AsZ0raa0jP0ZsPT3TCsQMUx1LmOIBIYIL5PaaYXBwEwkpAqVejQKuqtYpQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=olp51VWv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="fx0sCGta"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718822711; x=1719427511; i=markus.elfring@web.de;
-	bh=Ia3hqiNFJjrEXiQLZriShD9u1T5BdMwUVMDQ+Wmny2k=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=fx0sCGta6wM1+wii9V3eUgyxCtjBUIfUM5OxdgpvpkUc3R3AHQglTFwm1T9qzFQN
-	 F+vAsB6Yo654bs/oJdh7KmmoX5po1zi+B6lwOY0JGnJ3SDFlBte7G+qkmiK555htg
-	 xUfM4JpH0lG0MWjrwIRPbwv6TlbzmYCnrpY/ZvVWcggJOT9bTXL2CnNwyLTIZtX/t
-	 n5b103luIz00AtrNIzKG6G9+6FZYuQM7uSYCSZl1KCSDnccXmvkrlM1rIl7Jo4Fk0
-	 KYbnkFTERFShM2hI3yQkbyoHgoBrvBrLDWCUBR/Us7FQPvvEqtosX2sobZVnCnbIq
-	 hXnvLN7Opg6xBwwk/g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MGgNS-1s6EeC3v5m-006zeE; Wed, 19
- Jun 2024 20:45:10 +0200
-Message-ID: <053f4c3b-6eb4-43cc-b424-e91c047c90d5@web.de>
-Date: Wed, 19 Jun 2024 20:45:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="olp51VWv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08E48C4AF09;
+	Wed, 19 Jun 2024 18:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718822754;
+	bh=LnvttFyoAWSkuawVy/9codAPfnxNDkMkJ4iJyuXHu4U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=olp51VWvhKIb+U3wldz9Dp/v31KChoierAHu85CMI/y69b52vQxdiddvOFMTAVKHR
+	 u01IegGbZbnVg6ULCnZup6NSJ/4RtdzmYXGJd2ybRDIb9O5o4GsUXDmIn8z/fGXZcS
+	 JceBYxafdv0jhPYHZkgb9/Qyr5z67HAyssWXSVf4xRpa0LlTP2jHsS3pwDmyBqP3ha
+	 HAv0SZ5mPqfMgW+gpv1sW89Z2fj/1DWiI7WX8szW8eNkzS8klqdhB8EHVv+MxN2MMx
+	 4C3ROaSBWvx7Uextb8O26EZUDkeUHrXZasPHsd2+RH6NOrI0UK/r5JXSmj5IEGADII
+	 rfaflBhmNyOyQ==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5bae827df63so1502eaf.3;
+        Wed, 19 Jun 2024 11:45:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/9F/e3UV3XIByQINNb8Hgdn/pzKaW73bkCMPMoWgTxH2Q4h2eiIm9MzbzrN0gR43OerPBY/ZETO8wc3saFeibbTwIHaMJSK6J0tbphevGZ0hF8VDoBhVHEH0hEk2jsgzLG+6le6g=
+X-Gm-Message-State: AOJu0YwWBtGSCTp/cgfptqkcCl3nHGyq466fav9wP8TSO21MSXPARAph
+	xdQdhe7g2/oVvSKVatlBUYQBjA1MF1hgegw/FZSkoITBuvofYvVpYmzyt55sxQ/ETy61dd82Vdq
+	b5vTTgHr0sW4jD6YYjwQSEf5ePOE=
+X-Google-Smtp-Source: AGHT+IGNKmtp8sSF77RfefKSh6NOj/ZLCbev2ggM8c8woGdyv9hH/XPACV482/vYzxoqoRVOJefsJJaAYygHx0ECG9g=
+X-Received: by 2002:a4a:bc8f:0:b0:5be:9981:bb69 with SMTP id
+ 006d021491bc7-5c1adbed14dmr3732672eaf.1.1718822753279; Wed, 19 Jun 2024
+ 11:45:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Mario Limonciello <mario.limonciello@amd.com>, linux-pci@vger.kernel.org,
- linux-usb@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mathias Nyman <mathias.nyman@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Drake <drake@endlessos.org>,
- Gary Li <Gary.Li@amd.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <20240613054204.5850-3-mario.limonciello@amd.com>
-Subject: Re: [PATCH 2/4] PCI: Verify functions currently in D3cold have
- entered D0
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240613054204.5850-3-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20240619031250.2936087-1-tj@kernel.org> <20240619031250.2936087-2-tj@kernel.org>
+In-Reply-To: <20240619031250.2936087-2-tj@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 19 Jun 2024 20:45:42 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i=0QqkvjA9mnqcX6Yv-T+rQ7ZKvuF1HPJL8pG2kqicGQ@mail.gmail.com>
+Message-ID: <CAJZ5v0i=0QqkvjA9mnqcX6Yv-T+rQ7ZKvuF1HPJL8pG2kqicGQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] cpufreq_schedutil: Refactor sugov_cpu_is_busy()
+To: Tejun Heo <tj@kernel.org>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, 
+	void@manifault.com, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	mingo@redhat.com, peterz@infradead.org, David Vernet <dvernet@meta.com>, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rnNxF5G4QYP/6L2i8MaVyV9+0yWW+TyhrKaYj7hua4EV7HPhGFV
- nrlAKJl4EWi8uK/xARtFI1NBQjoLF7CrC/PKeYNs+i2PIvKcxOX/H7TTjlTObGij8r7UAFa
- RncsdbG3nwVSNfm00Thj7kyPAinVdm7XIqKugi3JnNWKL22TVgsSCddacyQyIVbq5gMkCh8
- J68ze+R/t3kMo6ShM0f8g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:IuDUojp5BH8=;lBcI3nKy3SGwl7xI+quO+0HdJ+Z
- +OSVW8Vpc+QsEmy5TvgVh91UPrXmGd2+CJjomn4s4ABEr62uTX/aSIENZe3+3rAsbasLCkVAa
- VbcoCfVorpcyBiVPD5+yDgV6owlDMuPfSmUgn2bJPl2asQI1BcKj37W6oimJ5cvoJ1O0c0xPU
- VEmZ83NZgBlD4onucJgRmpZvEenlJ369E0nIssRUeqQHymTXcXZCNa7JHWb14+V+NHKulJa4I
- cAwSX5AukXGktOEXE6z/peJ4p6sbF5ecpQln/cGYhQxmzMeWZqHFpd9tfz61R9wHv08iZhy41
- /ewTEKDVkavQWCdxfp9EVjAUjzo1K6Gy5pPrt/eAhwoMFhnE80Qv9UmUBs/DMVuuinfdFd5q/
- uB7M8IRNoRJEME4cmQQg1NO1ekKdeVtSTYuosnq5EDuKLuHYPNj6ls+arxlleSoarR63MiTHs
- aoguk1xv08ZLootMHb4EYGw5IGIWxnFJgCaP9nqLHozNEnG7WkultX4VWOWAHaZbO4Rr7CDn9
- yRuiukVf8QuxLGErdOFcH85K2yKJSipg4NH8uQoN/ZgMtXGMtCqKlfpZDbzgIIplwezI0voRu
- idaI5/N5PYmk1T20pW2De5rIc4xKF1vLYsTTn+JMLLHFaEorQ4LBTOsex+ny8z3ruhvjdFAYX
- 3IOEXQ+yefewZMgSb15ctqrd8gLL8HvhUdz4s5QTrL9SveuyBTDf/2BtCsrz8Kxz1gs+cl+XN
- OFegjdPiv/d5bA75ORweTmtOMP+iwnjfuyg1kSMFdxQP/W2V/E2JxZApBaiDxzREMZ8z2Vk/O
- hKAsJ1m6MTfO+p1n79c/LhUxJhE6lkNwwl1vBr45cQ3m/SSomMLdXGcXXeDOf4dtrA
 
-=E2=80=A6
-> As PCIe r6.0 sec 5.8 specifies that the device will have gone
-> through a conventional reset it may take some time for the
-> device to be ready.
+On Wed, Jun 19, 2024 at 5:13=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
 >
-> Wait up to 1 sec as specified in PCIe r6.0 sec 6.6.1 for a device
-> in D3cold to return to D0.
+> sugov_cpu_is_busy() is used to avoid decreasing performance level while t=
+he
+> CPU is busy and called by sugov_update_single_freq() and
+> sugov_update_single_perf(). Both callers repeat the same pattern to first
+> test for uclamp and then the business. Let's refactor so that the tests
+> aren't repeated.
+>
+> The new helper is named sugov_hold_freq() and tests both the uclamp
+> exception and CPU business. No functional changes. This will make adding
+> more exception conditions easier.
+>
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: David Vernet <dvernet@meta.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-Regards,
-Markus
+for this particular change.
+
+> ---
+>  kernel/sched/cpufreq_schedutil.c | 38 +++++++++++++++-----------------
+>  1 file changed, 18 insertions(+), 20 deletions(-)
+>
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_sche=
+dutil.c
+> index eece6244f9d2..972b7dd65af2 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -325,16 +325,27 @@ static unsigned long sugov_iowait_apply(struct sugo=
+v_cpu *sg_cpu, u64 time,
+>  }
+>
+>  #ifdef CONFIG_NO_HZ_COMMON
+> -static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
+> +static bool sugov_hold_freq(struct sugov_cpu *sg_cpu)
+>  {
+> -       unsigned long idle_calls =3D tick_nohz_get_idle_calls_cpu(sg_cpu-=
+>cpu);
+> -       bool ret =3D idle_calls =3D=3D sg_cpu->saved_idle_calls;
+> +       unsigned long idle_calls;
+> +       bool ret;
+> +
+> +       /* if capped by uclamp_max, always update to be in compliance */
+> +       if (uclamp_rq_is_capped(cpu_rq(sg_cpu->cpu)))
+> +               return false;
+> +
+> +       /*
+> +        * Maintain the frequency if the CPU has not been idle recently, =
+as
+> +        * reduction is likely to be premature.
+> +        */
+> +       idle_calls =3D tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
+> +       ret =3D idle_calls =3D=3D sg_cpu->saved_idle_calls;
+>
+>         sg_cpu->saved_idle_calls =3D idle_calls;
+>         return ret;
+>  }
+>  #else
+> -static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return =
+false; }
+> +static inline bool sugov_hold_freq(struct sugov_cpu *sg_cpu) { return fa=
+lse; }
+>  #endif /* CONFIG_NO_HZ_COMMON */
+>
+>  /*
+> @@ -382,14 +393,8 @@ static void sugov_update_single_freq(struct update_u=
+til_data *hook, u64 time,
+>                 return;
+>
+>         next_f =3D get_next_freq(sg_policy, sg_cpu->util, max_cap);
+> -       /*
+> -        * Do not reduce the frequency if the CPU has not been idle
+> -        * recently, as the reduction is likely to be premature then.
+> -        *
+> -        * Except when the rq is capped by uclamp_max.
+> -        */
+> -       if (!uclamp_rq_is_capped(cpu_rq(sg_cpu->cpu)) &&
+> -           sugov_cpu_is_busy(sg_cpu) && next_f < sg_policy->next_freq &&
+> +
+> +       if (sugov_hold_freq(sg_cpu) && next_f < sg_policy->next_freq &&
+>             !sg_policy->need_freq_update) {
+>                 next_f =3D sg_policy->next_freq;
+>
+> @@ -436,14 +441,7 @@ static void sugov_update_single_perf(struct update_u=
+til_data *hook, u64 time,
+>         if (!sugov_update_single_common(sg_cpu, time, max_cap, flags))
+>                 return;
+>
+> -       /*
+> -        * Do not reduce the target performance level if the CPU has not =
+been
+> -        * idle recently, as the reduction is likely to be premature then=
+.
+> -        *
+> -        * Except when the rq is capped by uclamp_max.
+> -        */
+> -       if (!uclamp_rq_is_capped(cpu_rq(sg_cpu->cpu)) &&
+> -           sugov_cpu_is_busy(sg_cpu) && sg_cpu->util < prev_util)
+> +       if (sugov_hold_freq(sg_cpu) && sg_cpu->util < prev_util)
+>                 sg_cpu->util =3D prev_util;
+>
+>         cpufreq_driver_adjust_perf(sg_cpu->cpu, sg_cpu->bw_min,
+> --
+> 2.45.2
+>
+>
