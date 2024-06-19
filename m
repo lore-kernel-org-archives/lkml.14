@@ -1,393 +1,254 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95C880C09;
-	Wed, 19 Jun 2024 10:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBA880BFE;
+	Wed, 19 Jun 2024 10:52:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718794345; cv=none; b=CB3zieowgZqcvHXKqT/IydWJGiO+N3YRbMzoSFSjgnr9hqnPFMi5VD50EdpPlnmx8ZC95E51DQs0EZOvoVFNjuxHqGFzsRf4tPqMgWZmhY3FizL3MSE5ixd5lUpWjt/odu1PpTqUH9vdLvypsSTY6qMM2IzkALdUJMAZKq6z1DY=
+	t=1718794365; cv=none; b=sBWODt+jvxUGt6ixsdJ8ncfA48Pec7nw7SqkAF+33huPqmH4evBtdNqP9iISMkargRJQTngKSWeLA7LJAqbvOZc2osJN2pH9wViYjRlLcqVrEIEbpMGlxVxxSBBzKgwhnVPoQPcBdoEoElQRBEID3gB9Qjr5OiFfPjiSYC4anCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718794345; c=relaxed/simple;
-	bh=vSTwOnkpOhjoLPdYXhsbyxycs4+sgyR1OWKUT+yuANg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+zOBIuw0vRFKW8Xj4Jttwui1ToTlzzUFxJgVK/CIOCZVIoxgZmMjk5+bXqrvSatAimI8BW/f+xIYTVnN7dTmJJAEYjL0jaJGxK9yPjSU9jvS9V4DYcVZjy3T+7MZQetMhu6Qv5lQ/gCh41FZvnJGdcp8j7r+Stohgj3aV2MqvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtDpb8Q5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718794365; c=relaxed/simple;
+	bh=TM2APJ9dOMlOxdvv98RuQfiGsNBEIbK4yFqXQtB5xJM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UYfM52BxXBOo1s1mYhYAvvrFBT+qDui0bP34BQF555HZBgwc1OGjUpNVHw3vP7bRMBHSRxhtTwl/6/kdFzjxomjPSWBdGZSvbnD6rcgtNax3igvsmKaXBAHlVvE3zhKGfTzKY/uYnaeutdEuGcyrYvYtUlS2mvzf8X0lSpTdxNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhwjYXnp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtDpb8Q5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E1DC2BBFC;
-	Wed, 19 Jun 2024 10:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhwjYXnp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3397C2BBFC;
+	Wed, 19 Jun 2024 10:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718794345;
-	bh=vSTwOnkpOhjoLPdYXhsbyxycs4+sgyR1OWKUT+yuANg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CtDpb8Q5lHuHaZ7f9f8roz12g1h3DQNFWWqxZGyjAAf4b9z6g7zLjhIPXuLxXWU3m
-	 IW5VTcS8iESaT0h8QBsq59Lq2yHtioePjg7bFGuw+TLiCeJrGNf3MBzizu6shUm6Xe
-	 hrlFioBpc9T7JD/DH3AxNa5eogB0KF7lztKKZJWTWxfc2ZQCzXfaXa9wQ9uOVccnDf
-	 QGJomdvHrpGizBCOy/itPCvicbmfp9GNrnoxAJf5SDwAfmVZjefznHDICaL3klChWa
-	 oCcE9PH8NF/cVIknlJl3unJT97G6Ezf/7oVoUAxYOjeNDLNckWXEPzLflVu45vHs0/
-	 nkZovwRM6i6jQ==
-Date: Wed, 19 Jun 2024 13:52:19 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Omer Shpigelman <oshpigelman@habana.ai>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"ogabbay@kernel.org" <ogabbay@kernel.org>,
-	Zvika Yehudai <zyehudai@habana.ai>
-Subject: Re: [PATCH 11/15] RDMA/hbl: add habanalabs RDMA driver
-Message-ID: <20240619105219.GO4025@unreal>
-References: <20240613082208.1439968-1-oshpigelman@habana.ai>
- <20240613082208.1439968-12-oshpigelman@habana.ai>
- <20240613191828.GJ4966@unreal>
- <fbb34afa-8a38-4124-9384-9b858ce2c4e5@habana.ai>
- <20240617190429.GB4025@unreal>
- <461bf44e-fd2f-4c8b-bc41-48d48e5a7fcb@habana.ai>
- <20240618125842.GG4025@unreal>
- <b4bda963-7026-4037-83e6-de74728569bd@habana.ai>
+	s=k20201202; t=1718794364;
+	bh=TM2APJ9dOMlOxdvv98RuQfiGsNBEIbK4yFqXQtB5xJM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qhwjYXnpgEIzEzAQcXxxMFe7rDUzF1PzOhTD2iczlBVOrZ+Xliuq7xe3W5BkX0zeD
+	 HmTRnKinKWdviQBixgjE3A8hmaFl2oPgRvKkgoNREuSXKq2vuqMJooqYOqfA3HI/qs
+	 Imar2loBGidtoipigGtVLirSM7Rl3H7QrTZCNmUxhdji2xhnC2kWGEa6aMfWvVBiZZ
+	 BbBjMDcpovQcTT96uRU4gFhGaTA8/aVKxLEGHfioaxXZvzZRC7wO5SprOFFMzZW3eR
+	 5mR+304xnCNrlELXWbmDKUr2Em1rL/Qnm7jqxT+ducj0bGgcDNf3J5mLjtjJdLQC2j
+	 s0hAdt6QnZDlg==
+Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
+	(envelope-from <mchehab@kernel.org>)
+	id 1sJsvi-00000003Iup-0MqR;
+	Wed, 19 Jun 2024 12:52:42 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: 
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Borislav Petkov" <bp@alien8.de>,
+	"James Morse" <james.morse@arm.com>,
+	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"Shiju Jose" <shiju.jose@huawei.com>,
+	"Tony Luck" <tony.luck@intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	linux-acpi@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] efi/cper: align ARM CPER type with UEFI 2.9A/2.10 specs
+Date: Wed, 19 Jun 2024 12:52:38 +0200
+Message-ID: <60da74c80a0b05ea4a5b4b7f2eda1b58d555edce.1718794335.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4bda963-7026-4037-83e6-de74728569bd@habana.ai>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-On Wed, Jun 19, 2024 at 09:27:54AM +0000, Omer Shpigelman wrote:
-> On 6/18/24 15:58, Leon Romanovsky wrote:
-> > On Tue, Jun 18, 2024 at 11:08:34AM +0000, Omer Shpigelman wrote:
-> >> On 6/17/24 22:04, Leon Romanovsky wrote:
-> >>> [Some people who received this message don't often get email from leon@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> >>>
-> >>> On Mon, Jun 17, 2024 at 05:43:49PM +0000, Omer Shpigelman wrote:
-> >>>> On 6/13/24 22:18, Leon Romanovsky wrote:
-> >>>>> [Some people who received this message don't often get email from leon@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> >>>>>
-> >>>>> On Thu, Jun 13, 2024 at 11:22:04AM +0300, Omer Shpigelman wrote:
-> >>>>>> Add an RDMA driver of Gaudi ASICs family for AI scaling.
-> >>>>>> The driver itself is agnostic to the ASIC in action, it operates according
-> >>>>>> to the capabilities that were passed on device initialization.
-> >>>>>> The device is initialized by the hbl_cn driver via auxiliary bus.
-> >>>>>> The driver also supports QP resource tracking and port/device HW counters.
-> >>>>>>
-> >>>>>> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-> >>>>>> Co-developed-by: Abhilash K V <kvabhilash@habana.ai>
-> >>>>>> Signed-off-by: Abhilash K V <kvabhilash@habana.ai>
-> >>>>>> Co-developed-by: Andrey Agranovich <aagranovich@habana.ai>
-> >>>>>> Signed-off-by: Andrey Agranovich <aagranovich@habana.ai>
-> >>>>>> Co-developed-by: Bharat Jauhari <bjauhari@habana.ai>
-> >>>>>> Signed-off-by: Bharat Jauhari <bjauhari@habana.ai>
-> >>>>>> Co-developed-by: David Meriin <dmeriin@habana.ai>
-> >>>>>> Signed-off-by: David Meriin <dmeriin@habana.ai>
-> >>>>>> Co-developed-by: Sagiv Ozeri <sozeri@habana.ai>
-> >>>>>> Signed-off-by: Sagiv Ozeri <sozeri@habana.ai>
-> >>>>>> Co-developed-by: Zvika Yehudai <zyehudai@habana.ai>
-> >>>>>> Signed-off-by: Zvika Yehudai <zyehudai@habana.ai>
-> >>>>>
-> >>>>> I afraid that you misinterpreted the "Co-developed-by" tag. All these
-> >>>>> people are probably touch the code and not actually sit together at
-> >>>>> the same room and write the code together. So, please remove the
-> >>>>> extensive "Co-developed-by" tags.
-> >>>>>
-> >>>>> It is not full review yet, but simple pass-by-comments.
-> >>>>>
-> >>>>
-> >>>> Actually except of two, all of the mentioned persons sat in the same room
-> >>>> and developed the code together.
-> >>>> The remaining two are located on a different site (but also together).
-> >>>> Isn't that what "Co-developed-by" tag for?
-> >>>> I wanted to give them credit for writing the code but I can remove if it's
-> >>>> not common.
-> >>>
-> >>> Signed-off-by will be enough to give them credit.
-> >>>
-> >>
-> >> Ok, good enough.
-> >>
-> >>>>
-> >>>>>> ---
-> >>>>>>  MAINTAINERS                              |   10 +
-> >>>>>>  drivers/infiniband/Kconfig               |    1 +
-> >>>>>>  drivers/infiniband/hw/Makefile           |    1 +
-> >>>>>>  drivers/infiniband/hw/hbl/Kconfig        |   17 +
-> >>>>>>  drivers/infiniband/hw/hbl/Makefile       |    8 +
-> >>>>>>  drivers/infiniband/hw/hbl/hbl.h          |  326 +++
-> >>>>>>  drivers/infiniband/hw/hbl/hbl_main.c     |  478 ++++
-> >>>>>>  drivers/infiniband/hw/hbl/hbl_verbs.c    | 2686 ++++++++++++++++++++++
-> >>>>>>  include/uapi/rdma/hbl-abi.h              |  204 ++
-> >>>>>>  include/uapi/rdma/hbl_user_ioctl_cmds.h  |   66 +
-> >>>>>>  include/uapi/rdma/hbl_user_ioctl_verbs.h |  106 +
-> >>>>>>  include/uapi/rdma/ib_user_ioctl_verbs.h  |    1 +
-> >>>>>>  12 files changed, 3904 insertions(+)
-> >>>>>>  create mode 100644 drivers/infiniband/hw/hbl/Kconfig
-> >>>>>>  create mode 100644 drivers/infiniband/hw/hbl/Makefile
-> >>>>>>  create mode 100644 drivers/infiniband/hw/hbl/hbl.h
-> >>>>>>  create mode 100644 drivers/infiniband/hw/hbl/hbl_main.c
-> >>>>>>  create mode 100644 drivers/infiniband/hw/hbl/hbl_verbs.c
-> >>>>>>  create mode 100644 include/uapi/rdma/hbl-abi.h
-> >>>>>>  create mode 100644 include/uapi/rdma/hbl_user_ioctl_cmds.h
-> >>>>>>  create mode 100644 include/uapi/rdma/hbl_user_ioctl_verbs.h
-> >>>>>
-> >>>>> <...>
-> >>>>>
-> >>>>>> +#define hbl_ibdev_emerg(ibdev, format, ...)  ibdev_emerg(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_alert(ibdev, format, ...)  ibdev_alert(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_crit(ibdev, format, ...)   ibdev_crit(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_err(ibdev, format, ...)    ibdev_err(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_warn(ibdev, format, ...)   ibdev_warn(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_notice(ibdev, format, ...) ibdev_notice(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_info(ibdev, format, ...)   ibdev_info(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_dbg(ibdev, format, ...)    ibdev_dbg(ibdev, format, ##__VA_ARGS__)
-> >>>>>> +
-> >>>>>> +#define hbl_ibdev_emerg_ratelimited(ibdev, fmt, ...)         \
-> >>>>>> +     ibdev_emerg_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_alert_ratelimited(ibdev, fmt, ...)         \
-> >>>>>> +     ibdev_alert_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_crit_ratelimited(ibdev, fmt, ...)          \
-> >>>>>> +     ibdev_crit_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_err_ratelimited(ibdev, fmt, ...)           \
-> >>>>>> +     ibdev_err_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_warn_ratelimited(ibdev, fmt, ...)          \
-> >>>>>> +     ibdev_warn_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_notice_ratelimited(ibdev, fmt, ...)                \
-> >>>>>> +     ibdev_notice_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_info_ratelimited(ibdev, fmt, ...)          \
-> >>>>>> +     ibdev_info_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +#define hbl_ibdev_dbg_ratelimited(ibdev, fmt, ...)           \
-> >>>>>> +     ibdev_dbg_ratelimited(ibdev, fmt, ##__VA_ARGS__)
-> >>>>>> +
-> >>>>>
-> >>>>> Please don't redefine the existing macros. Just use the existing ones.
-> >>>>>
-> >>>>>
-> >>>>> <...>
-> >>>>>
-> >>>>
-> >>>> That's a leftover from some debug code. I'll remove.
-> >>>>
-> >>>>>> +     if (hbl_ib_match_netdev(ibdev, netdev))
-> >>>>>> +             ib_port = hbl_to_ib_port_num(hdev, netdev->dev_port);
-> >>>>>> +     else
-> >>>>>> +             return NOTIFY_DONE;
-> >>>>>
-> >>>>> It is not kernel coding style. Please write:
-> >>>>> if (!hbl_ib_match_netdev(ibdev, netdev))
-> >>>>>     return NOTIFY_DONE;
-> >>>>>
-> >>>>> ib_port = hbl_to_ib_port_num(hdev, netdev->dev_port);
-> >>>>>
-> >>>>
-> >>>> I'll fix the code, thanks.
-> >>>>
-> >>>>>> +
-> >>>>>
-> >>>>> <...>
-> >>>>>
-> >>>>>> +static int hbl_ib_probe(struct auxiliary_device *adev, const struct auxiliary_device_id *id)
-> >>>>>> +{
-> >>>>>> +     struct hbl_aux_dev *aux_dev = container_of(adev, struct hbl_aux_dev, adev);
-> >>>>>> +     struct hbl_ib_aux_ops *aux_ops = aux_dev->aux_ops;
-> >>>>>> +     struct hbl_ib_device *hdev;
-> >>>>>> +     ktime_t timeout;
-> >>>>>> +     int rc;
-> >>>>>> +
-> >>>>>> +     rc = hdev_init(aux_dev);
-> >>>>>> +     if (rc) {
-> >>>>>> +             dev_err(&aux_dev->adev.dev, "Failed to init hdev\n");
-> >>>>>> +             return -EIO;
-> >>>>>> +     }
-> >>>>>> +
-> >>>>>> +     hdev = aux_dev->priv;
-> >>>>>> +
-> >>>>>> +     /* don't allow module unloading while it is attached */
-> >>>>>> +     if (!try_module_get(THIS_MODULE)) {
-> >>>>>
-> >>>>> This part makes wonder, what are you trying to do here? What doesn't work for you
-> >>>>> in standard driver core and module load mechanism?
-> >>>>>
-> >>>>
-> >>>> Before auxiliary bus was introduced, we used EXPORT_SYMBOLs for inter
-> >>>> driver communication. That incremented the refcount of the used module so
-> >>>> it couldn't be removed while it is in use.
-> >>>> Auxiliary bus usage doesn't increment the used module refcount and hence
-> >>>> the used module can be removed while it is in use and that's something
-> >>>> we don't want to allow.
-> >>>> We could solve it by some global locking or in_use atomic but the most
-> >>>> simple and clean way is just to increment the used module refcount on
-> >>>> auxiliary device probe and decrement it on auxiliary device removal.
-> >>>
-> >>> No, you was supposed to continue to use EXPORT_SYMBOLs and don't
-> >>> invent auxiliary ops structure (this is why you lost module
-> >>> reference counting).
-> >>>
-> >>
-> >> Sorry, but according to the auxiliary bus doc, a domain-specific ops
-> >> structure can be used.
-> >> We followed the usage example described at drivers/base/auxiliary.c.
-> >> What am I missing? 
-> > 
-> > Being the one who implemented auxiliary bus in the kernel and converted
-> > number of drivers to use it, I strongly recommend do NOT follow the example
-> > provided there.
-> > 
-> > So you are missing "best practice", and "best practice" is to use
-> > EXPORT_SYMBOLs and rely on module reference counting.
-> >
-> 
-> It is not just the usage example but also the general feature doc before
-> it:
-> "The generic behavior can be extended and specialized as needed by
-> encapsulating an auxiliary_device within other domain-specific structures
-> and the use of .ops callbacks."
-> It is also mentioned there that the ops structure are used for specific
-> auxiliary device operations while EXPORT_SYMBOLs should be used for common
-> infrastrucure the parent driver exposes:
-> "Note that ops are intended as a way to augment instance behavior within a
-> class of auxiliary devices, it is not the mechanism for exporting common
-> infrastructure from the parent."
-> All of our ops callbacks are meant to provide functionality related to the
-> auxiliary device, they are not just general/common infrastructure.
+Up to UEFI spec, the type byte of CPER struct was defined simply
+as:
 
-Of course they are common, otherwise why did you put them in common code?
-For example, you have callbacks to lock and unlock internal HW access,
-how is it not common?
+Type at byte offset 4:
 
-> 
-> Why do we have this doc if we should ignore it? why wasn't the doc
-> modified according to the "best practice" you described? the doc is
-> misleading.
+	- Cache error
+	- TLB Error
+	- Bus Error
+	- Micro-architectural Error
+	All other values are reserved
 
-Because this is how upstream kernel development works. We are trying to
-come to the agreement and get the best solution for the problem. Sometimes,
-the outcome of the discussion is not "the best solution", but "good
-enough". This doc can be served as an example. Everyone involved in the
-development of auxbus and later usage of it, were focused on implementation,
-documentation was good enough as it didn't limit anyone who actually
-used it.
+Yet, there was no information about how this would be encoded.
 
-> 
-> Adding gregkh here as he requested the auxiliary bus feature IIRC.
-> Greg - isn't the doc legit? should EXPORT_SYMBOLs necessarily be used
-> together with auxiliary bus rather than ops structure?
+Spec 2.9A corrected it by defining:
 
-This is not what you are doing here. You completely ditched EXPORT_SYMBOLs
-and reinvented module reference counting which overcomplicated the code
-just to avoid using standard kernel mechanism.
+	- Bit 1 - Cache Error
+	- Bit 2 - TLB Error
+	- Bit 3 - Bus Error
+	- Bit 4 - Micro-architectural Error
+	All other values are reserved
 
-> As we saw it, auxiliary bus gives us the flexibility to choose which
-> modules will be loaded while EXPORT_SYMBOLs enforces the dependencies
-> which might not be needed in some cases.
->  
-> >> Moreover, we'd like to support the mode where the IB or the ETH driver is
-> >> not loaded at all. But this cannot be achieved if we use EXPORT_SYMBOLs
-> >> exclusively for inter driver communication.
-> > 
-> > It is not true and not how the kernel works. You can perfectly load core
-> > driver without IB and ETH, at some extent this is how mlx5 driver works.
-> > 
-> 
-> mlx5 IB driver doesn't export any symbol that is used by the core driver,
-> that's why the core driver can be loaded without the IB driver (althought
-> you'll get circular dependency if you would export).
+Spec 2.10 also preserve the same encoding as 2.9A
 
-Yes, IB and ETH drivers are "users" of core driver. As RDMA maintainer,
-I'm reluctant to accept code that exports symbols from IB drivers to
-other subsystems. We have drivers/infiniband/core/ for that.
+See: https://uefi.org/specs/UEFI/2.10/Apx_N_Common_Platform_Error_Record.html#arm-processor-error-information
 
-> If relying on exported symbols only, then our IB and ETH drivers will need
-> to export symbols too because the core driver accesses them post probing.
+Adjust CPER handling code for ARM to properly handle UEFI 2.9A and
+2.10 encoding.
 
-So you should fix your core driver. This is exactly what auxbus model
-proposes.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/acpi/apei/ghes.c        | 19 +++++++++++---
+ drivers/firmware/efi/cper-arm.c | 44 ++++++++++++++-------------------
+ include/linux/cper.h            |  9 +++----
+ 3 files changed, 37 insertions(+), 35 deletions(-)
 
-> Hence we won't be able to load the core driver without both of them (or
-> loading anything due to circular dependency).
-> Unless we'll use dynamic symbol lookup and I don't think that's your
-> intention.
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index ed32bbecb4a3..365de4115508 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -546,9 +546,12 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
+ 	p = (char *)(err + 1);
+ 	for (i = 0; i < err->err_info_num; i++) {
+ 		struct cper_arm_err_info *err_info = (struct cper_arm_err_info *)p;
+-		bool is_cache = (err_info->type == CPER_ARM_CACHE_ERROR);
++		bool is_cache = (err_info->type & CPER_ARM_CACHE_ERROR);
+ 		bool has_pa = (err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR);
+-		const char *error_type = "unknown error";
++		char error_type[120] = "";
++		char *s = error_type;
++		int len = 0;
++		int i;
+ 
+ 		/*
+ 		 * The field (err_info->error_info & BIT(26)) is fixed to set to
+@@ -562,8 +565,16 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
+ 			continue;
+ 		}
+ 
+-		if (err_info->type < ARRAY_SIZE(cper_proc_error_type_strs))
+-			error_type = cper_proc_error_type_strs[err_info->type];
++		for (i = 0; i < ARRAY_SIZE(cper_proc_error_type_strs); i++) {
++			if (!(err_info->type & (1U << i)))
++				continue;
++
++			len += snprintf(s, sizeof(err_info->type) - len, "%s ", cper_proc_error_type_strs[i]);
++			s += len;
++		}
++
++		if (!*error_type)
++			strscpy(error_type, "unknown error", sizeof(error_type));
+ 
+ 		pr_warn_ratelimited(FW_WARN GHES_PFX
+ 				    "Unhandled processor error type: %s\n",
+diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-arm.c
+index fa9c1c3bf168..f57641eb548a 100644
+--- a/drivers/firmware/efi/cper-arm.c
++++ b/drivers/firmware/efi/cper-arm.c
+@@ -93,15 +93,11 @@ static void cper_print_arm_err_info(const char *pfx, u32 type,
+ 	bool proc_context_corrupt, corrected, precise_pc, restartable_pc;
+ 	bool time_out, access_mode;
+ 
+-	/* If the type is unknown, bail. */
+-	if (type > CPER_ARM_MAX_TYPE)
+-		return;
+-
+ 	/*
+ 	 * Vendor type errors have error information values that are vendor
+ 	 * specific.
+ 	 */
+-	if (type == CPER_ARM_VENDOR_ERROR)
++	if (type & CPER_ARM_VENDOR_ERROR)
+ 		return;
+ 
+ 	if (error_info & CPER_ARM_ERR_VALID_TRANSACTION_TYPE) {
+@@ -116,43 +112,38 @@ static void cper_print_arm_err_info(const char *pfx, u32 type,
+ 	if (error_info & CPER_ARM_ERR_VALID_OPERATION_TYPE) {
+ 		op_type = ((error_info >> CPER_ARM_ERR_OPERATION_SHIFT)
+ 			   & CPER_ARM_ERR_OPERATION_MASK);
+-		switch (type) {
+-		case CPER_ARM_CACHE_ERROR:
++		if (type & CPER_ARM_CACHE_ERROR) {
+ 			if (op_type < ARRAY_SIZE(arm_cache_err_op_strs)) {
+-				printk("%soperation type: %s\n", pfx,
++				printk("%scache error: %s\n", pfx,
+ 				       arm_cache_err_op_strs[op_type]);
+ 			}
+-			break;
+-		case CPER_ARM_TLB_ERROR:
++		}
++		if (type & CPER_ARM_TLB_ERROR) {
+ 			if (op_type < ARRAY_SIZE(arm_tlb_err_op_strs)) {
+-				printk("%soperation type: %s\n", pfx,
++				printk("%sTLB error: %s\n", pfx,
+ 				       arm_tlb_err_op_strs[op_type]);
+ 			}
+-			break;
+-		case CPER_ARM_BUS_ERROR:
++		}
++		if (type & CPER_ARM_BUS_ERROR) {
+ 			if (op_type < ARRAY_SIZE(arm_bus_err_op_strs)) {
+-				printk("%soperation type: %s\n", pfx,
++				printk("%sbus error: %s\n", pfx,
+ 				       arm_bus_err_op_strs[op_type]);
+ 			}
+-			break;
+ 		}
+ 	}
+ 
+ 	if (error_info & CPER_ARM_ERR_VALID_LEVEL) {
+ 		level = ((error_info >> CPER_ARM_ERR_LEVEL_SHIFT)
+ 			 & CPER_ARM_ERR_LEVEL_MASK);
+-		switch (type) {
+-		case CPER_ARM_CACHE_ERROR:
++		if (type & CPER_ARM_CACHE_ERROR)
+ 			printk("%scache level: %d\n", pfx, level);
+-			break;
+-		case CPER_ARM_TLB_ERROR:
++
++		if (type & CPER_ARM_TLB_ERROR)
+ 			printk("%sTLB level: %d\n", pfx, level);
+-			break;
+-		case CPER_ARM_BUS_ERROR:
++
++		if (type & CPER_ARM_BUS_ERROR)
+ 			printk("%saffinity level at which the bus error occurred: %d\n",
+ 			       pfx, level);
+-			break;
+-		}
+ 	}
+ 
+ 	if (error_info & CPER_ARM_ERR_VALID_PROC_CONTEXT_CORRUPT) {
+@@ -289,9 +280,10 @@ void cper_print_proc_arm(const char *pfx,
+ 				       newpfx);
+ 		}
+ 
+-		printk("%serror_type: %d, %s\n", newpfx, err_info->type,
+-			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
+-			cper_proc_error_type_strs[err_info->type] : "unknown");
++		printk("%s""error_type: 0x%02x\n", pfx, err_info->type);
++		cper_print_bits(pfx, err_info->type,
++				cper_proc_error_type_strs,
++				ARRAY_SIZE(cper_proc_error_type_strs));
+ 		if (err_info->validation_bits & CPER_ARM_INFO_VALID_ERR_INFO) {
+ 			printk("%serror_info: 0x%016llx\n", newpfx,
+ 			       err_info->error_info);
+diff --git a/include/linux/cper.h b/include/linux/cper.h
+index 265b0f8fc0b3..afc6d41b4e67 100644
+--- a/include/linux/cper.h
++++ b/include/linux/cper.h
+@@ -293,11 +293,10 @@ enum {
+ #define CPER_ARM_INFO_FLAGS_PROPAGATED		BIT(2)
+ #define CPER_ARM_INFO_FLAGS_OVERFLOW		BIT(3)
+ 
+-#define CPER_ARM_CACHE_ERROR			0
+-#define CPER_ARM_TLB_ERROR			1
+-#define CPER_ARM_BUS_ERROR			2
+-#define CPER_ARM_VENDOR_ERROR			3
+-#define CPER_ARM_MAX_TYPE			CPER_ARM_VENDOR_ERROR
++#define CPER_ARM_CACHE_ERROR			BIT(1)
++#define CPER_ARM_TLB_ERROR			BIT(2)
++#define CPER_ARM_BUS_ERROR			BIT(3)
++#define CPER_ARM_VENDOR_ERROR			BIT(4)
+ 
+ #define CPER_ARM_ERR_VALID_TRANSACTION_TYPE	BIT(0)
+ #define CPER_ARM_ERR_VALID_OPERATION_TYPE	BIT(1)
+-- 
+2.45.2
 
-No it is not.
 
-> 
-> >>
-> >>>>
-> >>>>>> +             dev_err(hdev->dev, "Failed to increment %s module refcount\n",
-> >>>>>> +                     module_name(THIS_MODULE));
-> >>>>>> +             rc = -EIO;
-> >>>>>> +             goto module_get_err;
-> >>>>>> +     }
-> >>>>>> +
-> >>>>>> +     timeout = ktime_add_ms(ktime_get(), hdev->pending_reset_long_timeout * MSEC_PER_SEC);
-> >>>>>> +     while (1) {
-> >>>>>> +             aux_ops->hw_access_lock(aux_dev);
-> >>>>>> +
-> >>>>>> +             /* if the device is operational, proceed to actual init while holding the lock in
-> >>>>>> +              * order to prevent concurrent hard reset
-> >>>>>> +              */
-> >>>>>> +             if (aux_ops->device_operational(aux_dev))
-> >>>>>> +                     break;
-> >>>>>> +
-> >>>>>> +             aux_ops->hw_access_unlock(aux_dev);
-> >>>>>> +
-> >>>>>> +             if (ktime_compare(ktime_get(), timeout) > 0) {
-> >>>>>> +                     dev_err(hdev->dev, "Timeout while waiting for hard reset to finish\n");
-> >>>>>> +                     rc = -EBUSY;
-> >>>>>> +                     goto timeout_err;
-> >>>>>> +             }
-> >>>>>> +
-> >>>>>> +             dev_notice_once(hdev->dev, "Waiting for hard reset to finish before probing IB\n");
-> >>>>>> +
-> >>>>>> +             msleep_interruptible(MSEC_PER_SEC);
-> >>>>>> +     }
-> >>>>>
-> >>>>> The code above is unexpected.
-> >>>>>
-> >>>>
-> >>>> We have no control on when the user insmod the IB driver.
-> >>>
-> >>> It is not true, this is controlled through module dependencies
-> >>> mechanism.
-> >>>
-> >>
-> >> Yeah, if we would use EXPORT_SYMBOLs for inter driver communication but
-> >> we don't.
-> > 
-> > So please use it and don't add complexity where it is not needed.
-> > 
-> >>
-> >>>> As a result it is possible that the IB auxiliary device will be probed
-> >>>> while the compute device is under reset (due to some HW error).
-> >>>
-> >>> No, it is not possible. If you structure your driver right.
-> >>>
-> >>
-> >> Again, it is not possible if we would use EXPORT_SYMBOLs.
-> >> Please let me know if we misunderstood something because AFAIU we followed
-> >> the auxiliary bus doc usage example.
-> > 
-> > It is better to follow actual drivers that use auxiliary bus and see how
-> > they implemented it and not rely on examples in the documentation.
-> > 
-> 
-> But isn't that what the doc for? to explain the guidelines? and it's not
-> that there is a big red note there of "this example should not be taken as
-> is, please look at your subsystem guidelines".
-
-At the beginning that doc was located in Documentation/ folder and no one
-really cared about it. After moving from Documentation/ to drivers/base/auxiliary.c,
-it became more visible, but still no one relied on it. You are first one
-who read.
-
-There is no subsystem rules here. Everyone relied on EXPORT_SYMBOLs and didn't
-use ops structure. Kernel is evolving project, there is no need to find a rule
-for everything.
-
-Thanks
-
-> 
-> > Thanks
-> > 
-> >>
-> >>> Thanks
