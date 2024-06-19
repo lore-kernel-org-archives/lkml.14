@@ -1,106 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81680157A4D;
-	Wed, 19 Jun 2024 18:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC9D22611
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 18:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718821660; cv=none; b=XEMcDg5rXouaiY6Yn2x++O31UjDOLbBJjUthXASfUQqseQOblwaW89TWcpdhbljrhDJf9TawjExWxJd61se7iH9Cf68atZOunoduiWLk5GXvz5PIvZWsqnOKqvEjnirJ/Uc65XIGEdrBNH/HdSpD4POZrEYUEi9LsOZ9tp5W6Bc=
+	t=1718821996; cv=none; b=Cbtcqh/KEKojraonJiMaU1tMjU8AYKJIGMg0ABUKwB+YRIKXBEsGfn8vSG+SgiHsLrsaDRhJK2f1fWbL72oY5A1/1NqQi7evGFUwYH5Fj4jqAnT9eqi4Z/lvevNY7EI4yEi7tJ6Pah41o9vh+Ho+T+OmeKC9kcSNX7CjLxrtGMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718821660; c=relaxed/simple;
-	bh=ePMdXyYG5VP9699OyXIjL4DJdrxVOUDFWzBVFuvKuew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I8Uin40rSTuFLEvQiyZ0Gv8ROrZIFEoegauLkl5vFtVntASELbr7ubUTeC5WFgPg8lcNdx6hgTGEmQcupyizAtHYYCKna6lB+30oRevmq3AFrmCmDXi8TDbEH3bYcOQilED536yCgEoXO4nV6R+WM37Rs1YrdfDF+gExK/Wz+mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fKPo7ey+; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718821996; c=relaxed/simple;
+	bh=92mU/xikCqLLaH2DVhreKySC6u9LEezQMALGQAdfOZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RMnkgUUDKuM/CP32BJvRmXuqdIvGFLuXFKjMXkj253C8mSvNEMjRXFr8jD2+S3tJLnRCuTy4sEG7iHBYgwDLbsPfEI2fSp0HqyGEb2wchFxIJi51nO+F31EssqJZj2r4iS/wKS8CqMEXb7xdGoMHH0mU/L2WTvbtUtVDpZHX+TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pBO03XKQ; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fKPo7ey+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718821659; x=1750357659;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ePMdXyYG5VP9699OyXIjL4DJdrxVOUDFWzBVFuvKuew=;
-  b=fKPo7ey+64mhRqh0LZG8q3hHTtaABkBsorDxkDUrlPc0nyMZNq4qSlsi
-   vWItodCl5Vhs4tXAcyPuOiy6pXzj8OfKtVgif5kwSFg9eHsWoAd92de8t
-   q7ICPYWNl1GGRdtgSluqQjx3vhyV2cyzgOoiy0jitNFIPVYqxyfQ7Qg/W
-   pA/zaK7Cb7ht9Q8GbY4S7Ub8oEDju2glkHVCCTL9StL3ZmtAZkVtlDuyO
-   4J8jh77gZz5uOUOMSLnhwD9i9TO0/sC+I+Xv0Tz1ydcdlFHcbbnzylxVY
-   +F53aUIzZT5GZu3HbJ1T8K1inlvcOuZCGhWYZQ9K32WWO9T08C0ZmpwC+
-   A==;
-X-CSE-ConnectionGUID: 5fFY+98JSWSE79vfkipGyw==
-X-CSE-MsgGUID: GTmAuOeVRzyDYMzk0emgWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="41178780"
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="41178780"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 11:27:38 -0700
-X-CSE-ConnectionGUID: ILNZl8P+Q3GMl7+ZHFDZUg==
-X-CSE-MsgGUID: nrkcKSQpRwmJ/hGixWRnVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="42697044"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 19 Jun 2024 11:27:35 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sK01s-0006s6-2H;
-	Wed, 19 Jun 2024 18:27:32 +0000
-Date: Thu, 20 Jun 2024 02:26:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kanak Shilledar <kanakshilledar@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Kanak Shilledar <kanakshilledar@gmail.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: i2c: convert to dt schema
-Message-ID: <202406200223.QexMAKqr-lkp@intel.com>
-References: <20240619154941.144011-2-kanakshilledar@gmail.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pBO03XKQ"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-421d32fda86so1447025e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718821993; x=1719426793; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KoU88YQ9ly0f7ZJ/ZbHDiM2tCrY3AmT4ahDXIv2paYY=;
+        b=pBO03XKQL093hITRvjZoSgp+NIreIOgMhIL8TvLnVjopYiGMEIWFfyFsWjNuc+8LTt
+         RGFnGpPBV739l44pes+fkp+QDDMxStBGUVJJ29r3zCKvNH+bgEymvVcWJHl5wlkL4RgL
+         HARaR6x/jkvFBVCVLN/goyGdxQe8DEN12p3IxoCj94uLswM1aq/jxkL11ExdqqhEYi3y
+         lSZaK77fvXxvuJfw7kO8eRWo0FfRYbGb8vr07SEdvnhertQ2ktknDc3n1TiJ8C37P7Or
+         9miQy95CTCS+NEUSp9i06UccQh3AW32L4aqHUUsg9vi6GsZvX+SghZRswcOratuJDlW+
+         Sltw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718821993; x=1719426793;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KoU88YQ9ly0f7ZJ/ZbHDiM2tCrY3AmT4ahDXIv2paYY=;
+        b=G8T81IfjaXs/QtsOHmPY45Wb/ojCVSslowed18hIZ/SoLKdp1dDCVhEd3z/WdeIqWO
+         Sb2T2E1/VyIK5YwzGKT8k0scBJsDSHAgTOYXonDbkyR/wKn8JhObzb6xRriHZnIF/is1
+         RmqW+Zwa8HsIjID52I/rwLMrm+si9lHK1zHoT++SW5aa2a4mv9eKcQsrPYt4fp/krsN2
+         8nMLz67Fc5mTBpOft0qD/64SSGb9tMVUTvwF4IwlyuKL36NLS79/EKrMJT+7wP80NISE
+         UyzPczds/f+oib89eB+ybkHWjh4oO5y9n/aqoez+1K1JFg66ix8EVaeBBAqgm1SqJ/Je
+         wbtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhwJh5B+it/pFxRQ1gWHs0yR67zTmizzMp8wyXEJE8SPrqk7djkxYsgCA0kWFb5lhd5+XGh9hgXyAHkxE/Jax+aXxO/qgT6fufn2KX
+X-Gm-Message-State: AOJu0YwVmi2pG1yCEXbpJ6EPLlkm88/LhJEQITnsorPtzSSEhreROt4k
+	N5YGMIZkkckRxFIkRA/HOO9EoySLllJBwunJ5FUQ3w7XG6evi3/ACu7apFjL2nM=
+X-Google-Smtp-Source: AGHT+IETG5LcNQbiEWNnEhPt09r+tCBRtoPh1Vb+eCZeeGLMwJUAbUmHsRulZ4D1s8qUlB6O94y7CQ==
+X-Received: by 2002:a5d:6945:0:b0:361:1ef3:71d7 with SMTP id ffacd0b85a97d-363170ed44bmr2922036f8f.3.1718821992776;
+        Wed, 19 Jun 2024 11:33:12 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:991f:deb8:4c5d:d73d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36262f77ad9sm4603238f8f.109.2024.06.19.11.33.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 11:33:12 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 0/2] arm64: dts: qcom: sa8775p-ride: support both board variants
+Date: Wed, 19 Jun 2024 20:32:52 +0200
+Message-ID: <20240619183255.34107-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619154941.144011-2-kanakshilledar@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Kanak,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-kernel test robot noticed the following build warnings:
+Split the current .dts into two: the existing one keeps the name and
+supports revision 2 of the board while patch 2 adds a .dts for revision 3.
 
-[auto build test WARNING on andi-shyti/i2c/i2c-host]
-[also build test WARNING on linus/master v6.10-rc4 next-20240619]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Bartosz Golaszewski (2):
+  arm64: dts: qcom: move common parts for sa8775p-ride variants into a
+    .dtsi
+  arm64: dts: qcom: sa8775p-ride-r3: add new board file
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kanak-Shilledar/dt-bindings-i2c-convert-to-dt-schema/20240620-000339
-base:   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20240619154941.144011-2-kanakshilledar%40gmail.com
-patch subject: [PATCH] dt-bindings: i2c: convert to dt schema
-reproduce: (https://download.01.org/0day-ci/archive/20240620/202406200223.QexMAKqr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406200223.QexMAKqr-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   Warning: Documentation/devicetree/bindings/power/wakeup-source.txt references a file that doesn't exist: Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/i2c/i2c-lpc2k.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/reserved-memory/qcom
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/display/exynos/
-   Using alabaster theme
+ arch/arm64/boot/dts/qcom/Makefile            |   1 +
+ arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts |  42 +
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dts    | 841 +------------------
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi   | 817 ++++++++++++++++++
+ 4 files changed, 882 insertions(+), 819 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
