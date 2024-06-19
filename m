@@ -1,220 +1,60 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7277E15ADB3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEBC524B4;
+	Wed, 19 Jun 2024 19:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718825642; cv=none; b=Kyahhx9VT/zFrrbUldwbBNT1tcHKuFp45Bhm6TK7ia9Z+X4o9gQYxwPR2rRjt5g/nXBxh7102uN8JavDABjN/fPd2A4ZPhMUBZQk4yIoAP7G3djR6Xl9tIflctAzxi8Gec7LjU0JSvF6cpqaRQYTBzS6tFUf+Fn/XkK8jSngWx4=
+	t=1718825855; cv=none; b=SgNRCT+F3kKsVKuUgOQPxhaF2ZqasKc35JysKWHFEvDv9uIdxYxcQi5KE4O/fqFULPIliSXothg2L5Z20qP9sJvBU+uNEgUIAyli7hqNX8YLS45RZPXx7po4mlQe8p3i6bRkz/h64XiCV1BH9xF/uQi2ESdb2XkTXJ4u8JoAVP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718825642; c=relaxed/simple;
-	bh=nJhUYmrgF8khp038rH7E0vBosSYGyEPbRCtSDy5hfRk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FVD/0GgxY4hpNkIRXng4p/MpDrzu8ShUIhgi1stHTYDpAZDBGqAmeWokHiMD2S/72Lvwe0TIb13OwYHEn+zmfjh+gI3N5MIQs1m7TOYUfIlV/PMC/FBQvpq8iv3dzmAonbkrPY32aWQs88r4NggkHOfIVnTDrM4Ek5oIDuNsvTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=inQXRDYO; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1718825855; c=relaxed/simple;
+	bh=7ZPs3tYloFOklfomR6gjf1ojP8TvvwuSW5jDnGW2zVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rzWYGpkSUOeZWjBnUYRUGR8fv/iAd4s4NvqMhXx33MQUCAURJsQxHOThHMqiis6pWcmb/CLmxuZdbs1sWF+w+xOGdnAmxtZkRunGsTeQoeFLEVfLaHt/EMYjGmorgmwKgzbQCytGA6EofVB0yY5LXlzjWWrI3FU77ZGXfBZqMsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTQvHTYx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="inQXRDYO"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso164747e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718825638; x=1719430438; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2rGUjDMYzm7lFpUwAY5iZvI8fijhYwMrH7RYSZjeZEU=;
-        b=inQXRDYOFIhYsrTKtCMzRobUh+zh/GvRqecGnewBpBFbeXmF3OXBvXKXCvSxQ62wHX
-         7JKQKoGfW33UrMopeFE4oia2NC4F0hyGnjxqbV+6ev+rr05GEr6TSkaH805CgQaI1J+V
-         m5P+TBDbMkJV9gps3Um/4iX/obTU+oFDmnBlFNLZk+goHrNy/KbLkZ13IFp5t08v4ZBf
-         jjkNmn2Tdb+ekmcD0cBjqybQe0RwpMJagA5Kwog/hV9OquKiZx5SbXGKCaICmI0sA4eW
-         DEA2lLPTr3VARUFENgRVXF1GYZWREZnJ+AE9csuw0KOTOAzBBN/DKXQ1bnkF4QSWir6x
-         YCrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718825638; x=1719430438;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2rGUjDMYzm7lFpUwAY5iZvI8fijhYwMrH7RYSZjeZEU=;
-        b=rri/ZqLiUXgAdueS/C1xd+Vh7IQ4l8nE/8UWHgtLHaRyy5hgCB/tnylL1va6QljKrD
-         w7hqbozb1kPMDspU5heBRes01ZcO1N/GM7Ggpv6AxvsgCJqoWjtVl9YRPg+jQIaHMx+4
-         1MemfzlCU/XPWkxyPZeHTObJYCPVuQqfQEwmENha0UeCWzw/njMTX46aNZQf1gyUHi6R
-         fSB19g3lnvFylle7S4BA/+U39RCr9eEDxtqvrfUbS5Fp432j772zgKhXFVGA/igtPf9g
-         7Kl5tHPOryyLpM/zu2T5lPKnPC1moA/WtiuKkXC6SxoWhdfqq8FL44C+eoJda7JbPdsX
-         IoYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvVW5634kaVJRY0hNbK/VzV/1hMxF8SCXf8qnU7dGtJhfIy78K6Dr79pizPFL+asEpYlUnFTXJbE4ZzcEWcSMtY+rTkEKIEu4Pspps
-X-Gm-Message-State: AOJu0YxYIX+u1Xv9qe8fESePEpEut0nHLBRMXG4dWNJUcVZDqWFRf0S7
-	szGFYpi5d4W/4H6mSLzqFLn8d0Y2Q5kTKsLaXRB9QNZozyUV/WNBP730rYGFYcoz9IKxCEy3riY
-	U/q+kBr54+SdvrjukoelRbqzcJRfQvkGCC3bf2g==
-X-Google-Smtp-Source: AGHT+IE91ezuO/TQwQfm8V42ORY0PMsANSYBITfPybm0WqpQNZwrx4Oib/yIen6E1DuqgRrLDQH+dcE2vHWlSPILDjI=
-X-Received: by 2002:a05:6512:489a:b0:52c:c9b6:8f4e with SMTP id
- 2adb3069b0e04-52ccaa5a0a0mr2136538e87.59.1718825637613; Wed, 19 Jun 2024
- 12:33:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTQvHTYx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3346BC4AF08;
+	Wed, 19 Jun 2024 19:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718825855;
+	bh=7ZPs3tYloFOklfomR6gjf1ojP8TvvwuSW5jDnGW2zVo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PTQvHTYxmZaU2tGTprqeMPMiyLd9eVQRh9F/JtEkTDM3KCOzWqPzVwpgtEvMYXOhL
+	 8PXC2331ipOw8EV9+yH8zlLUQLHArm/ZDnNXcQpsKoyivoqlXO2dk6EDqtfI1x3ZgT
+	 1+9Ifgkrkydy7OrxejBVVNx9/o5Xr2U8RNgodhyBVMIpgYXVbpUncJ3jDZtMFQXF+y
+	 MMfeAcfsyCiBWjaOMTwjoBAhmPtmwLkWILG4BoHVX5qU3syB3A/bzlwA+bolHMEz/p
+	 6Ff8BArQY2/a/pYgzRrVuzx8Nzhj8H7TGog6/BjHapCMoY39XeP4LJOA3WGiOXDL0E
+	 8n4pb/xyMArug==
+Date: Wed, 19 Jun 2024 20:37:30 +0100
+From: Simon Horman <horms@kernel.org>
+To: Johan Jonker <jbx6244@gmail.com>
+Cc: heiko@sntech.de, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] net: ethernet: arc: remove emac_arc driver
+Message-ID: <20240619193730.GW690967@kernel.org>
+References: <0b889b87-5442-4fd4-b26f-8d5d67695c77@gmail.com>
+ <10d8576f-a5da-4445-b841-98ceb338da0d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612075829.18241-1-brgl@bgdev.pl> <CABBYNZLrwgj848w97GP+ijybt-yU8yMNnW5UWhb2y5Zq6b5H9A@mail.gmail.com>
- <CAMRc=Mdb31YGUUXRWACnx55JawayFaRjEPYSdjOCMrYr5xDYag@mail.gmail.com>
- <CABBYNZLPv3zk_UX67yPetQKWiQ-g+Dv9ZjZydhwG3jfaeV+48w@mail.gmail.com>
- <CAMRc=Mdsw5c_BDwUwP2Ss4Bogz-d+waZVd8LLaZ5oyc9dWS2Qg@mail.gmail.com>
- <CAMRc=Mf2koxQH8Pw--6g5O3FTFn_qcyfwTVQjUqxwJ5qW1nzjw@mail.gmail.com> <CABBYNZ+7SrLSDeCLF0WDM01prRgAEHMD=9mhu5MfWOuGwoAkNQ@mail.gmail.com>
-In-Reply-To: <CABBYNZ+7SrLSDeCLF0WDM01prRgAEHMD=9mhu5MfWOuGwoAkNQ@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 19 Jun 2024 21:33:46 +0200
-Message-ID: <CAMRc=MdozeAzWJCSrDdxVBZ=fwP2yn_j-KZaTDT2Dp7YjKP8-g@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable tag between the Bluetooth and pwrseq
- branches for v6.11-rc1
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10d8576f-a5da-4445-b841-98ceb338da0d@gmail.com>
 
-On Wed, Jun 19, 2024 at 8:59=E2=80=AFPM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
->
-> Hi Bartosz,
->
-> On Wed, Jun 19, 2024 at 3:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> >
-> > On Wed, Jun 12, 2024 at 5:00=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-> > >
-> > > On Wed, Jun 12, 2024 at 4:54=E2=80=AFPM Luiz Augusto von Dentz
-> > > <luiz.dentz@gmail.com> wrote:
-> > > >
-> > > > Hi Bartosz,
-> > > >
-> > > > On Wed, Jun 12, 2024 at 10:45=E2=80=AFAM Bartosz Golaszewski <brgl@=
-bgdev.pl> wrote:
-> > > > >
-> > > > > On Wed, Jun 12, 2024 at 4:43=E2=80=AFPM Luiz Augusto von Dentz
-> > > > > <luiz.dentz@gmail.com> wrote:
-> > > > > >
-> > > > > > Hi Bartosz,
-> > > > > >
-> > > > > > On Wed, Jun 12, 2024 at 3:59=E2=80=AFAM Bartosz Golaszewski <br=
-gl@bgdev.pl> wrote:
-> > > > > > >
-> > > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > > > >
-> > > > > > > Hi Marcel, Luiz,
-> > > > > > >
-> > > > > > > Please pull the following power sequencing changes into the B=
-luetooth tree
-> > > > > > > before applying the hci_qca patches I sent separately.
-> > > > > > >
-> > > > > > > Link: https://lore.kernel.org/linux-kernel/20240605174713.GA7=
-67261@bhelgaas/T/
-> > > > > > >
-> > > > > > > The following changes since commit 83a7eefedc9b56fe7bfeff13b6=
-c7356688ffa670:
-> > > > > > >
-> > > > > > >   Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
-> > > > > > >
-> > > > > > > are available in the Git repository at:
-> > > > > > >
-> > > > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.gi=
-t tags/pwrseq-initial-for-v6.11
-> > > > > > >
-> > > > > > > for you to fetch changes up to 2f1630f437dff20d02e4b3f07e836f=
-42869128dd:
-> > > > > > >
-> > > > > > >   power: pwrseq: add a driver for the PMU module on the QCom =
-WCN chipsets (2024-06-12 09:20:13 +0200)
-> > > > > > >
-> > > > > > > -------------------------------------------------------------=
----
-> > > > > > > Initial implementation of the power sequencing subsystem for =
-linux v6.11
-> > > > > > >
-> > > > > > > -------------------------------------------------------------=
----
-> > > > > > > Bartosz Golaszewski (2):
-> > > > > > >       power: sequencing: implement the pwrseq core
-> > > > > > >       power: pwrseq: add a driver for the PMU module on the Q=
-Com WCN chipsets
-> > > > > >
-> > > > > > Is this intended to go via bluetooth-next or it is just because=
- it is
-> > > > > > a dependency of another set? You could perhaps send another set
-> > > > > > including these changes to avoid having CI failing to compile.
-> > > > > >
-> > > > >
-> > > > > No, the pwrseq stuff is intended to go through its own pwrseq tre=
-e
-> > > > > hence the PR. We cannot have these commits in next twice.
-> > > >
-> > > > Not following you here, why can't we have these commits on differen=
-t
-> > > > next trees? If that is the case how can we apply the bluetooth
-> > > > specific ones without causing build regressions?
-> > > >
-> > >
-> > > We can't have the same commits twice with different hashes in next
-> > > because Stephen Rothwell will yell at us both.
-> > >
-> > > Just pull the tag I provided and then apply the Bluetooth specific
-> > > changes I sent on top of it. When sending to Linus Torvalds/David
-> > > Miller (not sure how your tree gets upstream) mention that you pulled
-> > > in the pwrseq changes in your PR cover letter.
->
-> By pull the tag you mean using merge commits to merge the trees and
-> not rebase, doesn't that lock us down to only doing merge commits
-> rather than rebases later on? I have never used merge commits before.
-> There is some documentation around it that suggests not to use merges:
->
-> 'While merges from downstream are common and unremarkable, merges from
-> other trees tend to be a red flag when it comes time to push a branch
-> upstream. Such merges need to be carefully thought about and well
-> justified, or there=E2=80=99s a good chance that a subsequent pull reques=
-t
-> will be rejected.'
-> https://docs.kernel.org/maintainer/rebasing-and-merging.html#merging-from=
--sibling-or-upstream-trees
->
-> But then looking forward in that documentation it says:
->
-> 'Another reason for doing merges of upstream or another subsystem tree
-> is to resolve dependencies. These dependency issues do happen at
-> times, and sometimes a cross-merge with another tree is the best way
-> to resolve them; as always, in such situations, the merge commit
-> should explain why the merge has been done. Take a moment to do it
-> right; people will read those changelogs.'
->
-> So I guess that is the reason we want to merge the trees, but what I'm
-> really looking forward to is for the 'proper' commands and commit
-> message to use to make sure we don't have problems in the future.
->
+On Tue, Jun 18, 2024 at 06:14:14PM +0200, Johan Jonker wrote:
+> The last real user nSIM_700 of the "snps,arc-emac" compatible string in
+> a driver was removed in 2019. The use of this string in the combined DT of
+> rk3066a/rk3188 as place holder has also been replaced, so
+> remove emac_arc.c to clean up some code.
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-You shouldn't really need to rebase your branch very often anyway.
-This is really for special cases. But even then you can always use:
-`git rebase --rebase-merges` to keep the merge commits.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-The commands you want to run are:
-
-git pull git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-tags/pwrseq-initial-for-v6.11
-git am or b4 shazam on the patches targeting the Bluetooth subsystem
-git push
-
-That's really it, there's not much else to it.
-
-Bart
-
-> > > Bart
-> >
-> > Gentle ping.
-> >
-> > Bart
->
->
->
-> --
-> Luiz Augusto von Dentz
