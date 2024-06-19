@@ -1,92 +1,127 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BE084D2A;
-	Wed, 19 Jun 2024 09:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20D212F5A3;
+	Wed, 19 Jun 2024 09:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718790792; cv=none; b=c53FdgC2qPnPD2AyOlf/q6Lqzv5ekZ59mAIcJ13ZDj3cJzBM2ewwTKjwdtOpak00RMxAVTVlbl5YtwxTehfFN2SlQ+QZZL2hMkpmTjNcEbbH1mJ/29it7FpfZPH/FXzWEGnU5o8d/mue6Kz7EyBClPD1yw6zhrnDmMrGU8jBhVI=
+	t=1718790797; cv=none; b=XrTkeuYo2dDsTnA3cspM2HaPb2btntCyEJtIqDli7TtWYUOWWJbHdfSEvvcaHtsfTeqRakeCp7HaFq5NMJ1a2d3YPRHeC+dcxlALCNJZspNL8BM70h2zkvAAHG7yzMhcwbYD7rfbWstrj8RehsJZpa6QgpVKGPqJOf/VHeYc0Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718790792; c=relaxed/simple;
-	bh=UalK4FgyHTnNoyXIEwzKYcVxWmkuOK/O7WrYkoFllRo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sI32PhWvOcxVCf/e8JQiVrbK2/4jYcTaOsFPQhbyUokqiaolRdQzT2hH2yBFL8BW3A329y3tYsDqWh5OdUN9XunSiLY9q8Irk+LH51MT75nWU5NBjkq8eieE4OjSdt1kuwIcqH3f1PRqFM9eTXPR24MHdUqHmk88Ps01MNwQ6oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fq82Bogv; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fq82Bogv"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45J9qswF077162;
-	Wed, 19 Jun 2024 04:52:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718790774;
-	bh=EoejE/w5WmUZVOHtPE0B8+G2g4Xuaq7ZSJdNB5/KtMk=;
-	h=From:To:CC:Subject:Date;
-	b=fq82Bogvb87pMBQ/MUc5hwLwxF/rzzmrMTO76SF0G5L+u7DBsqhhLCyo9IMts7YGW
-	 8707m1MHd/iNqtY1NiUzmfpxNzWIB1zeMrwpu+XkLzNbnqiw5Fx1w8I5qkFObAE4Ek
-	 Jty8ajpvQ3x6636Rmzptyba4SA7mvt5nQsMPqKZc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45J9qsis070647
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Jun 2024 04:52:54 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
- Jun 2024 04:52:54 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 19 Jun 2024 04:52:54 -0500
-Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.55])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45J9qrpK089878;
-	Wed, 19 Jun 2024 04:52:54 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <linux-kernel@vger.kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
-        <j-luthra@ti.com>, <j-choudhary@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <u-kumar1@ti.com>
-Subject: [PATCH 0/3] Enable audio for J784S4-EVM platform
-Date: Wed, 19 Jun 2024 15:22:50 +0530
-Message-ID: <20240619095253.290552-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1718790797; c=relaxed/simple;
+	bh=dVrwD7uw4uJsaUdCw7eAhv6muIxu9goQfIIzeVlq7gE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpFdXoBJd0w4yi/3+qJ+Id00NWjyjV5S0XU5tAiLRJiz742J3puSXqtPra1eTD1xLe1b19m0ir5f3UOjafsVzcPq7zH2bhnMO1d7J2wB34ZyqAQKZUTVUGhnh1aeUfitowdzGaZU5iiEMvnKkCG6DY4DdgFaAmSMEC0eMBgYXgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9B94DA7;
+	Wed, 19 Jun 2024 02:53:38 -0700 (PDT)
+Received: from arm.com (e127648.arm.com [10.1.27.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 907AE3F64C;
+	Wed, 19 Jun 2024 02:53:13 -0700 (PDT)
+Date: Wed, 19 Jun 2024 10:53:12 +0100
+From: Christian Loehle <christian.loehle@arm.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Qais Yousef <qyousef@layalina.io>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rafael@kernel.org,
+	vincent.guittot@linaro.org, peterz@infradead.org,
+	daniel.lezcano@linaro.org, anna-maria@linutronix.de,
+	kajetan.puchalski@arm.com, lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com
+Subject: Re: [PATCH 1/6] cpuidle: teo: Increase util-threshold
+Message-ID: <20240619095312.hsessn7layxpeyzj@e127648.arm.com>
+References: <20240606090050.327614-1-christian.loehle@arm.com>
+ <20240606090050.327614-2-christian.loehle@arm.com>
+ <20240609224701.pc6om2o5ep6btywe@airbuntu>
+ <CAPDyKFoHc6Zcg8i-y3HxUp0=S_N2GhmKcT0w2e-NkzR498mp2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoHc6Zcg8i-y3HxUp0=S_N2GhmKcT0w2e-NkzR498mp2Q@mail.gmail.com>
 
-Hello All,
+On Mon, Jun 10, 2024 at 11:57:55AM +0200, Ulf Hansson wrote:
+> On Mon, 10 Jun 2024 at 00:47, Qais Yousef <qyousef@layalina.io> wrote:
+> >
+> > On 06/06/24 10:00, Christian Loehle wrote:
+> > > Increase the util-threshold by a lot as it was low enough for some
+> > > minor load to always be active, especially on smaller CPUs.
+> > >
+> > > For small cap CPUs (Pixel6) the util threshold is as low as 1.
+> > > For CPUs of capacity <64 it is 0. So ensure it is at a minimum, too.
+> > >
+> > > Fixes: 9ce0f7c4bc64 ("cpuidle: teo: Introduce util-awareness")
+> > > Reported-by: Qais Yousef <qyousef@layalina.io>
+> > > Reported-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > Suggested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
+> > > Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+> > > ---
+> > >  drivers/cpuidle/governors/teo.c | 11 +++++------
+> > >  1 file changed, 5 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+> > > index 7244f71c59c5..45f43e2ee02d 100644
+> > > --- a/drivers/cpuidle/governors/teo.c
+> > > +++ b/drivers/cpuidle/governors/teo.c
+> > > @@ -146,13 +146,11 @@
+> > >   * The number of bits to shift the CPU's capacity by in order to determine
+> > >   * the utilized threshold.
+> > >   *
+> > > - * 6 was chosen based on testing as the number that achieved the best balance
+> > > - * of power and performance on average.
+> > > - *
+> > >   * The resulting threshold is high enough to not be triggered by background
+> > > - * noise and low enough to react quickly when activity starts to ramp up.
+> > > + * noise.
+> > >   */
+> > > -#define UTIL_THRESHOLD_SHIFT 6
+> > > +#define UTIL_THRESHOLD_SHIFT 2
+> > > +#define UTIL_THRESHOLD_MIN 50
+> > >
+> > >  /*
+> > >   * The PULSE value is added to metrics when they grow and the DECAY_SHIFT value
+> > > @@ -671,7 +669,8 @@ static int teo_enable_device(struct cpuidle_driver *drv,
+> > >       int i;
+> > >
+> > >       memset(cpu_data, 0, sizeof(*cpu_data));
+> > > -     cpu_data->util_threshold = max_capacity >> UTIL_THRESHOLD_SHIFT;
+> > > +     cpu_data->util_threshold = max(UTIL_THRESHOLD_MIN,
+> > > +                             max_capacity >> UTIL_THRESHOLD_SHIFT);
+> >
+> > Thanks for trying to fix this. But I am afraid this is not a solution. There's
+> > no magic number that can truly work here - we tried. As I tried to explain
+> > before, a higher util value doesn't mean long idle time is unlikely. And
+> > blocked load can cause problems where a decay can take too long.
+> >
+> > We are following up with the suggestions I have thrown back then and we'll
+> > share results if anything actually works.
+> >
+> > For now, I think a revert is more appropriate. There was some perf benefit, but
+> > the power regressions were bad and there's no threshold value that actually
+> > works. The thresholding concept itself is incorrect and flawed - it seemed the
+> > correct thing back then, yes. But in a hindsight now it doesn't work.
+> >
+>
+> For the record, I fully agree with the above. A revert seems to be the
+> best option in my opinion too.
+>
+> Besides for the above reasons; when using cpuidle-psci with PSCI OSI
+> mode, the approach leads to disabling *all* of cluster's idle-states
+> too, as those aren't even visible for the teo governor. I am sure,
+> that was not the intent with commit 9ce0f7c4bc64.
+>
 
-These three patches enable audio on J784S4-EVM platform.
-- First patch adds the McASP nodes.
-- Second patch adds the audio_refclk1 node that is required
-  to configure the CTRL_MMR register for the external clock
-- Third patch enables the analog audio
+Just for my understanding, what does OSI mode have to do with this?
+My understanding is that util-awareness (and also intercepts) will
+disable cluster idle for the entire cluster of the affected CPU.
+Why would this not be the commit's intent? The assumption of
+util-awareness is that this CPU will a) be woken up early anyway
+and b) the exit latency of cluster idle will affect performance (of
+the utilized CPU).
 
-For audio to work, the ti-dm firmware that should be picked
-for uboot is now publically available and will be shortly
-merged to the ti-linux-firmware branch:
-<https://git.ti.com/cgit/processor-firmware/ti-linux-firmware/tree/ti-dm/j784s4/ipc_echo_testb_mcu1_0_release_strip.xer5f?h=ti-linux-firmware-next>
-
-For testing, ~/.asoundrc file was created in root partition
-which can be seen in the test logs:
-<https://gist.github.com/Jayesh2000/3ca38cbac2f37842b1010af79dfe9b4c>
-
-
-Jayesh Choudhary (3):
-  arm64: dts: ti: k3-j784s4-main: Add McASP nodes
-  arm64: dts: ti: k3-j784s4-main: Add audio_refclk node
-  arm64: dts: ti: k3-j784s4-evm: Enable analog audio support
-
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts   | 112 +++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi |  89 ++++++++++++++++
- 2 files changed, 201 insertions(+)
-
--- 
-2.25.1
-
+We can argue if the assumption of util-awareness is true, but I don't
+quite follow your argument with OSI. The behavior is the same with PC
+mode, isn't it?
