@@ -1,133 +1,111 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12619568A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122984C98;
+	Wed, 19 Jun 2024 06:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718779040; cv=none; b=TkZvDkUr1LGy7vLoqquSjeDRkNDRSO/+RjqhHkCi0O1lGP6ec0yj1lqWWptDjb3l+l3Ug/8EOBwPAB4ZsSoAOXjFYzgmXfVO+S/IYpS0hMZR9K9GeqsPC3x8hdWVum7OXHJQwU9XIXk0rBsESUxTWMPuxGDC05uIbd9l8JLCeGk=
+	t=1718779215; cv=none; b=Lpi3aEBHu9nXDA5tcmGjgLkzk0xOh3YEjMKdqLN2FPn+ypEc9nLa5MHlUozYvEEaeFib5TTIRH8Su9FsBn0UoU9NgI5Y8w5MYrF2rM+6I4PmLjVFVqUsCSg+GdQKqhCxxOJTq7GdH7CJfkGKxBkf85s2g660iDSfpydO6xtYK/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718779040; c=relaxed/simple;
-	bh=0z64VV3tdxabQq7QXHNJZwW0mSURlemtbgmNNUvtcqc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PMCeG+STE2SkJKR1UGoYSu4qQ4qtNkw5gxMwARF80rCEtb07e+9lp3jajEIs4dvQgtAf/bOfI9YAK4cG6gsHDWvDFMU+jeAtU7UKDaAHnnNksCslM5mSIkbzu8/IwkRClcAoIlhckPzzU5A1wX6yD2Bdu39aDxilWBfaJR+6n4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-37596e877e9so89654505ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 23:37:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718779038; x=1719383838;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lKRR7Pu4ur95ahqOkWUJajla0ZS5PHik9EHx/Q1niso=;
-        b=YjX0MfdqIqVrfp4B68ZoenLUhNRq6TI+9dlS5mtkhj8v2pK1D4oFJzqzfSzO8zURTx
-         ufPcb6ePhKLzlEK3EeZOrg6jCyjX7AlpdLubmcfREd6ETZpGmQGJWqZWcjsTX6RdHl2P
-         nkGtd/eNYXB6Gv/gleqchVWUKQsCKKqqqFrzNCZ5HlxlsntVQqAGGbrIEXRU9BxmOtqr
-         UhN4LwUSGyLpQ9hkqiOOveq0/ZLiXCseF8TMRLM8fwyA8iCP/kp11SWzr7qnNcPsF0NS
-         R2xUG6uUpsKrmkg3C1hnC/d6N6Ki2xjKS9dK/ZPsN1n/v6Lm+P86rOqq0AwqqWoe47AG
-         72DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX01RqETthdTDwUVK9RmkeMkk4ChrVSPhprs+YZN7BN1igaG+IbcG5MU5pFE0tCa8oEtMGzOSUHgRuiC9B8oTHPtUVBi7UW51dyn9HS
-X-Gm-Message-State: AOJu0Yy9JB9DTHIpVjW011G/XwogKw8gvlvg1oBJ/8bfnOwAAN04CNlP
-	8+aURbMxW4ZLOuVaqUepxCZfc3sTjJCIHriHhz9dzIhygqQRMON1FBHnryyIvFmVdkLABTR6PnQ
-	G63NAesZcB894CsTkJkvC4lhK2aIijUmc7ouacpuuYE8NRAVDLho2Xx8=
-X-Google-Smtp-Source: AGHT+IFVjj07L1AdLCCar8TpedvGivk7nJb+5deA/qD8EzAkCU8m/tTFpv4F88j0t+6hmFG8svdjcnlN9922Vb353k5um2B5lnhh
+	s=arc-20240116; t=1718779215; c=relaxed/simple;
+	bh=BWCauMt68vFjBRrLNx3G2KlJT+7wCHlFSe+2GGiOfq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IpdOmvg7d419dhO21WZb2C55qpMBjIthTMRuy7eY4GVNO2TTXj2dJp9sp6D5IQ7qDIwQJMoWHWwA0WiLJ40k6QIot8rW+eQ+3zOJBVAZjI3jKx2vtkOxZi+QX9nTUC36gMkcbNhCHXmea6jrc+zXi4w8XUzlW/m6IoPd36ITZoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WkpyGp97; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WkpyGp97"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718779214; x=1750315214;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BWCauMt68vFjBRrLNx3G2KlJT+7wCHlFSe+2GGiOfq8=;
+  b=WkpyGp97rfKd3E61mx+S1I44VdWjv0+vu5edxhU7k/zh/DOSuNgIY1Fd
+   uaukhot9qsZuhh8vh48iaTZwNf7FyY9EECf/LBKOBdBN3sL3UkNFTCc1g
+   xZKtsujHcBPwb12jX0L6637PSRfO9CNFnaHQB8+1MzSlXLGkuQbSUlZdU
+   +TK9SyrUimSarUn2aqg0/ve5QgL6Eijlepu2CsXGXx5IhcHIdQe458iTZ
+   IZJjKcxVpsmb0N28fAJPYCzeEl2/N9994BmJBw79aLH4Ig6/7hhWgLB08
+   KWYnsoPCpbUCjY32fqRwQGnWm1x//JWT8GGAlZBW0/DkXcmr+Zr2ERlDH
+   w==;
+X-CSE-ConnectionGUID: IA7CVRFwRQ6IIG/fzxG4sQ==
+X-CSE-MsgGUID: JgY/uaYNQsOkfBczoaGVgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="27102379"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="27102379"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 23:40:14 -0700
+X-CSE-ConnectionGUID: j25NWx8hS6GtZnxJJ/Z/UQ==
+X-CSE-MsgGUID: p6/cW7vCSMW49szzklmGNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="65045346"
+Received: from marquiz-s-2.fi.intel.com (HELO [10.237.72.58]) ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP; 18 Jun 2024 23:40:09 -0700
+Message-ID: <f427b28c-420b-4174-a670-70f626f8061e@linux.intel.com>
+Date: Wed, 19 Jun 2024 09:40:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20ed:b0:375:e04f:55d0 with SMTP id
- e9e14a558f8ab-3761d6665aemr1055475ab.2.1718779038231; Tue, 18 Jun 2024
- 23:37:18 -0700 (PDT)
-Date: Tue, 18 Jun 2024 23:37:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000057e4c061b386e23@google.com>
-Subject: [syzbot] [rdma?] WARNING in ib_uverbs_release_dev
-From: syzbot <syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com>
-To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: i2c: dw: Document compatible
+ thead,th1520-i2c
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
+ Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+ Drew Fustini <dfustini@tenstorrent.com>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Conor Dooley <conor@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Conor Dooley <conor.dooley@microchip.com>
+References: <20240618-i2c-th1520-v3-0-3042590a16b1@bootlin.com>
+ <20240618-i2c-th1520-v3-1-3042590a16b1@bootlin.com>
+Content-Language: en-US
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+In-Reply-To: <20240618-i2c-th1520-v3-1-3042590a16b1@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi
 
-syzbot found the following issue on:
+On 6/18/24 10:42 AM, Thomas Bonnefille wrote:
+> Add documentation for compatible string thead,th1520-i2c which can be
+> used specifically for the TH1520 SoC.
+> 
+> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>   Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> index d9293c57f573..60035a787e5c 100644
+> --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> @@ -33,6 +33,10 @@ properties:
+>             - const: snps,designware-i2c
+>         - description: Baikal-T1 SoC System I2C controller
+>           const: baikal,bt1-sys-i2c
+> +      - description: T-HEAD TH1520 SoCs I2C controller
+> +        items:
+> +          - const: thead,th1520-i2c
+> +          - const: snps,designware-i2c
+>   
 
-HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=179e93fe980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-dashboard link: https://syzkaller.appspot.com/bug?extid=19ec7595e3aa1a45f623
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Your comment below makes me thinking is this change needed? So is it 
+enough to specify "snps,designware-i2c" for the compatible string in 
+patch 2/3?
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com
-
-smc: removing ib device syz0
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 51 at kernel/rcu/srcutree.c:653 cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
-Modules linked in:
-CPU: 0 PID: 51 Comm: kworker/u8:3 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Workqueue: ib-unreg-wq ib_unregister_work
-RIP: 0010:cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
-Code: 12 80 00 48 c7 03 00 00 00 00 48 83 c4 48 5b 41 5c 41 5d 41 5e 41 5f 5d e9 14 67 34 0a 90 0f 0b 90 eb e7 90 0f 0b 90 eb e1 90 <0f> 0b 90 eb db 90 0f 0b 90 eb 0a 90 0f 0b 90 eb 04 90 0f 0b 90 48
-RSP: 0018:ffffc90000bb7970 EFLAGS: 00010202
-RAX: 0000000000000001 RBX: ffff88802a1bc980 RCX: 0000000000000002
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffe8ffffd74c58
-RBP: 0000000000000001 R08: ffffe8ffffd74c5f R09: 1ffffd1ffffae98b
-R10: dffffc0000000000 R11: fffff91ffffae98c R12: dffffc0000000000
-R13: ffff88802285b5f0 R14: ffff88802285b000 R15: ffff88802a1bc800
-FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa3852cae10 CR3: 000000000e132000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- ib_uverbs_release_dev+0x4e/0x80 drivers/infiniband/core/uverbs_main.c:136
- device_release+0x9b/0x1c0
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x231/0x480 lib/kobject.c:737
- remove_client_context+0xb9/0x1e0 drivers/infiniband/core/device.c:776
- disable_device+0x13b/0x360 drivers/infiniband/core/device.c:1282
- __ib_unregister_device+0x6d/0x170 drivers/infiniband/core/device.c:1475
- ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1586
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
- kthread+0x2f2/0x390 kernel/kthread.c:389
- ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+"It appears that the TH1520 I2C is already supported in the upstream 
+kernel through the Synopsis Designware I2C adapter driver."
