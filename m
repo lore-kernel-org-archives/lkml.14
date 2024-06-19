@@ -1,181 +1,130 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2170.outbound.protection.outlook.com [40.92.62.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3479584D13
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718792575; cv=none; b=VP8e1l1H59Er803dO++3oCvPSys5PZCy4/w6yhpMGXHIhdlc8ErBw1nCFbeoRurZm+5N8nj6rbt0ni3SSrIoRGLK1KybYxFK3uoF9UPA0cyRtfAwJruoPStBtJf8G9Og2VNf6NA7rgflw/wIXACJrKPMoWJj9q3ssrnumBhFG0Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718792575; c=relaxed/simple;
-	bh=QScjpbzi7rqiIkTrgEY+2oqbyEGd2BFcveDkAaTYcJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TobyvUo0pJqArafsA1EjQUCqvI1baauLSsBhUgzvetE6LEv6tm6bguPKgsdgLaJJ/Q6K6yS/Tmz9x1C5zCMmk6fuC6P9IevFWcwIFTzaBXqxZdQ1jleJ/V0pPQCJjceLeVBmh4mTe224eC4/Uf0DvtbPguizSpAxT2PTfmJ94Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NEH71NAN; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250FB77F0B;
+	Wed, 19 Jun 2024 10:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718792650; cv=fail; b=qO+kojQeKDO5dAmFiy7cacv3K2JYQFOz87KcoDgZtyEOK6hrkFZ8SeEqNG5qDOpoPuAtfYq8y+DH2fNOEfHO+8qDgXNwYb7vc9l+FP8NDe7NMxqpNSnfuwoxytM8/hAB8TpB54QjqN86H1Veb/5DOEo3oss/a/l45JKL8SZxDlY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718792650; c=relaxed/simple;
+	bh=FB+RwikCDM90CmBbeSKDFEONJbjGX53eIV7ZlFM76Tk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Mfmwruu1rZFEjF9okDqci14HrpJHdIdQGmGmaj32Gu/gerEjrAnucyATY5qeXs9Lrdn+tyzHCSUPWcm8u3lo7N9vmCzwJyR3it8wOfdolfMeL3LHUgoexPbSrL4gbqH3Bw7FTqCNjI3+QZPgo6yDqTTnEmR1uGKgxrR/w6U1qsE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=lEeqdc6V; arc=fail smtp.client-ip=40.92.62.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NEH71NAN"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4143140E01A5;
-	Wed, 19 Jun 2024 10:22:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tqsSqcqMWpEs; Wed, 19 Jun 2024 10:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718792561; bh=NtIsvmuAB5lmdfcT3XAT/v26mliNMhCSNzj+OQIz5tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NEH71NANb/E51X70+ikDKU6tmHUoKWInDWTo3zpEvrAGRrmaRZfo6SSfDrj9/q8NC
-	 fWtI/14idZ2pllxb2IfZF/f8eND1uFlpZKN/jXK7MQB52Aaxnq4TbvYRsq9646JgmH
-	 vQ9IWVVC/YP5QWoi/fdsLTYT9m9Tmsd8ZCQiOHHrF+uVXjc3/6Sh0bSHdj+JfQF5AT
-	 DUo7bi3dDz3I37UXduIQn8L3gIZ9tbDjh6WRaadjNfTOIHuYLmpWA8tmocgpfHpmTL
-	 AYwuj3wtLhO4as6xQmFQtOvmDMy9FmDOIoD9HiHJdo++ER0CgLBn9QM5XcGUP3DPbb
-	 mVbAKRwJ37subPuO2yULPAku+kZa+Pmzw2ZPtwejl1KKq1cRwj/FmnIpu8O+CYmlmD
-	 faL/KvFRvbBCcZjYRdsw3H53Z3DxiO/EYxzSdRSUPb7AmnCNtAg6Gp65uR8b1pcYHk
-	 BQDOhy+SmkxLfEi+Sv+RMYauFr9+UGISmgz349M47mCTPP2ZMlPuHPzvbNDRUhf+Ms
-	 WRnVObtmgdWVKMK4Dq2w8Ci+JHSRzhjs5C+KuYtoHSloEric2dCPS0cBW6PSpDEJNJ
-	 MwieToCG5XS5swFuvIepnKb3pjUSy0aUhd4fLJ/33Z9ccI2h/sNX6KKYDbqoLZkZ7h
-	 DMeYTDph41w6KTINsm60HCFc=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92C2640E0219;
-	Wed, 19 Jun 2024 10:22:12 +0000 (UTC)
-Date: Wed, 19 Jun 2024 12:22:06 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, ardb@kernel.org, dyoung@redhat.com,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/2] x86/boot/compressed: Skip Video Memory access in
- Decompressor for SEV-ES/SNP.
-Message-ID: <20240619102206.GGZnKxTv-nE88Omvwb@fat_crate.local>
-References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com>
- <cover.1718657194.git.ashish.kalra@amd.com>
- <ff99398317efde228d3632b3876832676d11cd01.1718657194.git.ashish.kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="lEeqdc6V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B7ymeknlNh9n4ezMPAK3iB1xeQsaGUVxmsvTEWjRSBj/06Z7Wf/1YzelhzPeLXVUF2xmc6WDgkJZboMWFdKdGCKIlSlAQLvX9PxhlfSq2N2G+VWebeds5dOtAdJvxLP4G8Cozt8CZSVucee2AMdCHbVzS+fT8i+M6c8fT7yH9VU/Ox7fv07pxsQIXkhg5kYTySPuFxNoEOSJ8UEp5RrXVRy07Jd52Ev1AjG+F1TMBbBmsgiOm43Jdu6HhI7ESI1MalbCjtF2gFdJPmstq8BwkCDU56/MY5BMrDMR6NE4rwgVRDAg1eSJr0expHC+jVyR9QpEqYyW/ZYgZO8ttIV7iQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GKmIK3V1mKadhgiOUtmQI9YtAGcTrv8xYmVnkn7Sv4w=;
+ b=JKhm4BjAhrIXUI5ta1KDPucgWdUgr72Iw6AzrWZqtV9UV4rVdwUDtabv1ESzxzaf9q0eaBc3eyq72JvZe6p0R+LjatFbIOwV/n4f2R7yU8HEbKDiKQ1SndK/mKWKi4X3ccGTfl65AzBTDI5bXHaTzYgwZ1BMtKwnXACeahrt1HoEa2LdMjgsA0/gb0884MmEvMNrwVO/Nso12iRDrGSMwFoUynat148UZvA3pRxluNY1p8s88XWpLeiU7efi01rMTOl3cj4/l1zxqO8VGr2+IU0VktweXzlEKURzZygACEqSHq813JtjtC3hDEE8D41BCfVDppNm/vRSEvI7nyZ5cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GKmIK3V1mKadhgiOUtmQI9YtAGcTrv8xYmVnkn7Sv4w=;
+ b=lEeqdc6VcW/4d+wTWJMH2UIZtzuoxNKuj3VwBS3DvaoiV9p8JEqKmdvkF3CO+EcBOinYaFkFtqfKKbk0exTufZF8NpW6CW5QgY2TkuwAnRkQDufqFU1hcO14yAVeFAarIe+pifO8xRAYPV+JPl6z8MY1NB59y9LDOHah0cLBXcPrgaK/j/WffAWypF83RlI2DFAA0wEnlNb/MtD9LPDHSS1nwmcJCb3iydX1F1qK1b5uSgxm86RWQ1lc0XcWJz8xGqaKs3AoztFFB3PvClUtKiwTwKJRLW5C4+17uZfgUxftMR41bPXzkAp1hrYOPnN110QCoNq0MR+amA7IHrdr6g==
+Received: from SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:1b3::6) by
+ SY6P282MB3991.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:1da::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7698.19; Wed, 19 Jun 2024 10:24:02 +0000
+Received: from SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::a8e8:3859:c279:c289]) by SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::a8e8:3859:c279:c289%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
+ 10:24:02 +0000
+From: Jinjian Song <songjinjian@hotmail.com>
+To: ryazanov.s.a@gmail.com,
+	Vanillan Wang <songjinjian@hotmail.com>
+Cc: chandrashekar.devegowda@intel.com,
+	chiranjeevi.rapolu@linux.intel.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	haijun.liu@mediatek.com,
+	jinjian.song@fibocom.com,
+	johannes@sipsolutions.net,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loic.poulain@linaro.org,
+	m.chetan.kumar@linux.intel.com,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	ricardo.martinez@linux.intel.com
+Subject: Re: [net-next v1] net: wwan: t7xx: Add debug port
+Date: Wed, 19 Jun 2024 18:23:40 +0800
+Message-ID:
+ <SYBP282MB3528E219E1B7A579EE58A2B1BBCF2@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <9f934dc7-bfd6-4f3f-a52c-a33f7a662cae@gmail.com>
+References: <9f934dc7-bfd6-4f3f-a52c-a33f7a662cae@gmail.com>
+Precedence: bulk
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [ucemGbQ3PF/uJf2rom3mWg87qjNvwAe9]
+X-ClientProxiedBy: SG2PR02CA0116.apcprd02.prod.outlook.com
+ (2603:1096:4:92::32) To SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:1b3::6)
+X-Microsoft-Original-Message-ID:
+ <20240619102340.5308-1-songjinjian@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ff99398317efde228d3632b3876832676d11cd01.1718657194.git.ashish.kalra@amd.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SYBP282MB3528:EE_|SY6P282MB3991:EE_
+X-MS-Office365-Filtering-Correlation-Id: a467297a-c7ab-43e9-e7d1-08dc9049f04e
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199025|440099025|3412199022|2406899036|1710799023;
+X-Microsoft-Antispam-Message-Info:
+	KwGsrji5tatnoPF8iCa+4GmRqco2UpemrQWdkpEE7m4V0FrRA/gF1lzNhGPX7qeYn2WYIfTiWEluJYBOoZI9cr3LBA0GU7Jnf4OS7bHIvLku9QZmsw+1Ys+wZ4SKD3VXFfb1neR3qDdeZsVPAi5zbVNKkVJ+6cIgtNjg+Z45BA07xWiw1TnWMbmmH/aQIXWWkGrsjOm+p7IdLCTpK2H6d8Xb2Ne6nnwyH8T1FzNxKbHzIH98zQ4pOtqrlVQwAl/Df1JPXXDHmmhGN+kZlAh2uKICgDhYXWbraQxUsdGp4D4AIz8uvwTfSKY3uvVlhXhzSGgJ/WGvL528HqQhy4QT5nsZM9KJS026ub9uZFu1BG3r2Zxksl1Z6jPUzwWAKRR6t9pQFu9V3wcbBiZXMTo1yXdB2l2ddpSm7E6jagBSRq2TNelvVJ0xJDQbqiZUbj5XwT3yx6JZi366lo78bMW8pCPMmLGLl8Tik4ca0qqVyKPviuj5nqlP89I6mXG9p/TSyUhIY2M8PiWB2GK3sY/JYB4eqJN49SFUohiKCXkGhkHmNWJ9bx9Kmgt4fPM0mEvNw0vgMDBGw7dZSDHWkDZTNKe308xApe5nyhUGW0R+cIftkDDiZufy9Y7MicPd3dF4
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?H3srS8oA0wY7YHFbOO9MvSwPSttbBIoUID6z7txy5vDwurMpsa52i+AZeF3p?=
+ =?us-ascii?Q?KxXCgEnbxm5z87qfXqLnx8Cr1qJAhEol4BihExN4L7/Eh5lzkJOcPcv60knB?=
+ =?us-ascii?Q?25HE3DNWBG3AMgP4LpFE4ipCJN5wfwdSgzO3tPq3jVeUOoFdZ8kwgndsQIdN?=
+ =?us-ascii?Q?zcdptKMOStx/FPX+NYSGimJ4Q3hd2yHP1b9hD9t/ZWseZe+AXexiHQ8/Ts4U?=
+ =?us-ascii?Q?0LUdS9Q9lM4tGyPvAMm6GDyuXQkXkn/ycvaKmbL5BHi93NuZi314sDeR6rkN?=
+ =?us-ascii?Q?YzglxGzaeqo00Oulwfg8bmhSx/pzm9i98bhMIjOUsYA0P3W+VktfOECku6JV?=
+ =?us-ascii?Q?DEfSQjobUmUT5X3OTDFLbwmONVEDcgsuDVIM0mCQch7FIfx3Evk4z+EZfVEP?=
+ =?us-ascii?Q?eiZ11P0Hyg4VfCcwOeuuRLWYBm/yYrhLXwIEPVUhxDIO9LG1zRkMdbgvYHza?=
+ =?us-ascii?Q?ho1XnCcI/96yehyE68HJoThFZ4pGg7UwR/c0B6PPVRD+g9xJSzpxN87qArKF?=
+ =?us-ascii?Q?o4tny11B9bO3Dl2aOUnZxOIoBrVKdZhs5jfZ/UPaYsbXpVqd8okGCFk9q/TZ?=
+ =?us-ascii?Q?ZplAYQEmg3iXCy88T2CU2w1AfU2VyO73ZI6gP6k0hIx+oMWVpth4iJAWKz5Q?=
+ =?us-ascii?Q?PkQyI+03FKjd9kCx+5GJxxFTlxCWx/7RfcZVT81MpDFcLcQdJ8RZqP6ObtN/?=
+ =?us-ascii?Q?IabduZKkkVdDoQYwaKWaqN2Cv81US8d1ww4qBNicflm+OxkhQ912TTnkHhHi?=
+ =?us-ascii?Q?d2slvCy2wrNHpyRidAAgvrYk8KPI6eALpHkplPrxktcwMZGc+fxGzX8byREv?=
+ =?us-ascii?Q?QtyfDSeSMg+T0zdqOWnaBseZcTj+5UjCG/XiK5kqxjSk72xpZ3aL/pgIOTZN?=
+ =?us-ascii?Q?sOPPjOxpZb/FGu14srrsEbDQpYBLa3jVu/+mYRa/YYYRjr5YIXYkVAJt2aoU?=
+ =?us-ascii?Q?uqSMiJrPs1e+bw+4zCQnUi32JdLOEPeJKNe6RVr4MG3KGpGXtEdUiVdNVp7u?=
+ =?us-ascii?Q?DdEy0XqPSqsNRqWGa8y/1bVtdIUQsw2lFjzoDKyvYmSUc5QTiaWWeKs3Khpn?=
+ =?us-ascii?Q?6dIPiCH990JFAHlvcF5VzntQYt6S0BPD0yEWf0xBD45kWhRo9zoYZMzzoHap?=
+ =?us-ascii?Q?lsCXwoz15YQvdRZUaZpNLCn84Bfa8HG0Mt0ENeqCMoxlA8TPwe4XedNv2O9o?=
+ =?us-ascii?Q?FyZkOTNqE4QkTpmFSUpvFlWDQWT+gdoh35lkx+aNwcGEuKFZWOSKK7I6NNvp?=
+ =?us-ascii?Q?SKANoFaPAag27aqPLSgF?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: a467297a-c7ab-43e9-e7d1-08dc9049f04e
+X-MS-Exchange-CrossTenant-AuthSource: SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 10:24:02.2216
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY6P282MB3991
 
-On Mon, Jun 17, 2024 at 09:15:12PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> Accessing guest video memory/RAM during kernel decompressor
-> causes guest termination as boot stage2 #VC handler for
-> SEV-ES/SNP systems does not support MMIO handling.
-> 
-> This issue is observed with SEV-ES/SNP guest kexec as
-> kexec -c adds screen_info to the boot parameters
-> passed to the kexec kernel, which causes console output to
-> be dumped to both video and serial.
-> 
-> As the decompressor output gets cleared really fast, it is
-> preferable to get the console output only on serial, hence,
-> skip accessing video RAM during decompressor stage to
-> prevent guest termination.
-> 
-> Add early_sev_detect() to detect SEV-ES/SNP guest and skip
-> accessing video RAM during decompressor stage.
-> 
-> Serial console output during decompressor stage works as
-> boot stage2 #VC handler already supports handling port I/O.
-> 
-> Suggested-by: Borislav Petkov <Borislav.Petkov@amd.com>
-> Suggested-by: Thomas Lendacy <thomas.lendacky@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  arch/x86/boot/compressed/misc.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+I think I need add an ADB(Android Debug Bridge) port and a MIPC port
+(debug for antenna tuner and noise profile) to WWAN. 
 
-Use this massaged version for your next submission:
-
-From: Ashish Kalra <ashish.kalra@amd.com>
-Date: Mon, 17 Jun 2024 21:15:12 +0000
-Subject: [PATCH] x86/boot: Skip video memory access in the decompressor for SEV-ES/SNP
-
-Accessing guest video memory/RAM in the decompressor causes guest
-termination as the boot stage2 #VC handler for SEV-ES/SNP systems does
-not support MMIO handling.
-
-This issue is observed during a SEV-ES/SNP guest kexec as kexec -c adds
-screen_info to the boot parameters passed to the second kernel, which
-causes console output to be dumped to both video and serial.
-
-As the decompressor output gets cleared really fast, it is preferable to
-get the console output only on serial, hence, skip accessing the video
-RAM during decompressor stage to prevent guest termination.
-
-Serial console output during decompressor stage works as boot stage2 #VC
-handler already supports handling port I/O.
-
-  [ bp: Massage. ]
-
-Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
-Suggested-by: Thomas Lendacy <thomas.lendacky@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- arch/x86/boot/compressed/misc.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 944454306ef4..826b4d5cb1f0 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -385,6 +385,19 @@ static void parse_mem_encrypt(struct setup_header *hdr)
- 		hdr->xloadflags |= XLF_MEM_ENCRYPTION;
- }
- 
-+static void early_sev_detect(void)
-+{
-+	/*
-+	 * Accessing video memory causes guest termination because
-+	 * the boot stage2 #VC handler of SEV-ES/SNP guests does not
-+	 * support MMIO handling and kexec -c adds screen_info to the
-+	 * boot parameters passed to the kexec kernel, which causes
-+	 * console output to be dumped to both video and serial.
-+	 */
-+	if (sev_status & MSR_AMD64_SEV_ES_ENABLED)
-+		lines = cols = 0;
-+}
-+
- /*
-  * The compressed kernel image (ZO), has been moved so that its position
-  * is against the end of the buffer used to hold the uncompressed kernel
-@@ -440,6 +453,8 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
- 	 */
- 	early_tdx_detect();
- 
-+	early_sev_detect();
-+
- 	console_init();
- 
- 	/*
--- 
-2.43.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jinjian,
+Best Regards.
