@@ -1,111 +1,359 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4784B40879
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB55440879;
+	Wed, 19 Jun 2024 10:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718792365; cv=none; b=nm0bU3AjJHSileR2EBIzowRZPQ4VFaD3GvJZbyVIc8HWmC/AF3+d4h0/r3ZMjCyJWmNxOkdgbth7OOOZsbfc+qeAlYKNYpxov9f2VGQd40Jkho/8PaI8YgFr0/xDBX8vJ9FWHFWxuuuW5bWGzLOY8c1xG37tNHH0asBQxxByZ2c=
+	t=1718792484; cv=none; b=jamvrjnwtes8/3rHEDobXdDQH7dfPvxw+ajjKaCPTF/hT+BP1+tZUuOWfRRbe4wkgCyJ3T8USPTTgyxREMofyFZ/e9slLTt9GQPRIlOLNZPHcBxW6gk7A9xaJTsPNPQ1vGZfBdKoy9joYFY6rmVTlOPhDGJ0PiFXknYMK4OAYbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718792365; c=relaxed/simple;
-	bh=MbUeaa2LZLaNTE5kZ2SLNoA2hdABUPU/FjsRj6mUvFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HjwiiBGmLZ3kIe3A6Xlza8IaacmFhgY2LAbmDiAAAKWqWOvnmFr7zS9I4eM/82kVKUHyAjVizq4KPG04J+3hlqBTtAC7ebNec9hDSYxrIIVXdVF67EkLFkF0H7s3D/nYx1emitYkNxkXCNtwARkw0LPEPIz8j+GARyH7YLPzyJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AQzOgtHP; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718792484; c=relaxed/simple;
+	bh=P7BVwrlPu5JLfPjoFAsx3EZJBuN98wCr8B57Z2OIK8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u5GtNwGvawIaexZIbz0QKYp3nJQkb73TTQyD5NmdUa2B9moNv/DtL/lIJie1h3nrx9ExJrP9WmnOCVaZwuQN3JCJv3wjwiNiUEPAiE+mA2GvelNCa6Fy1K4A4JTKYrELSstE00VGvEwKzctccLhyur1BKl96fMIpz3b/x4usmck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4l+f3Og; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AQzOgtHP"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6f9923df5dbso3615716a34.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718792363; x=1719397163; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KE8h2jNNZ6vFW2z7uotyBC53nGYQN5vB31WOkuARonw=;
-        b=AQzOgtHPRluMjBQdG0F4m8pZZqU4fhb/bYy2NyLcUDm8iJgjByu7CSCxb3fBKbXrwT
-         utoeFE129X5JJ4t4FO10RDaFCB/1A5BsAtiVp7PBH2lB2/LXm+MTYv9TIHb5dXX2o2sp
-         mBO4q32IlwjOad4dnGDdt/HokKPEXCXcyc9Ks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718792363; x=1719397163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KE8h2jNNZ6vFW2z7uotyBC53nGYQN5vB31WOkuARonw=;
-        b=ihw/0w2kco+/Gfry7EoB5QqF/zkLfO8wIxQBBlioPS6j3LsrZXfYLIBLbiEn+TcWgn
-         MMtgZmXPbUsefPOw3MId2DpShuZdYTcxc4qLHr197lKRO1J2mipSgObv1bH6pPoJbyuX
-         bVlm1kG5HTexFgbXpJWdIQynKv6s7tBYLRbHBTZ2ohXOx/0N6njs0qZpD3OivtlPHi1Y
-         N8bm2uECC+PPrT5728Ft8HT+86co4qZsSaqLd204zJaHum9FOLH/rD6JohE6kLYxHfgw
-         EUoqc/w7OaBBAD9ii7TuNnR5vk9k9IC1KGzNS2pC0hcBxE3P9iUak0mX+5t4CrnemmCx
-         uTgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlPGzKjGMiC85RgoGLA9/XgxtXTMxp7ljI8F6mT30H9Vakq9v5NNP6FsXbR2BI2f5naAnRf622YcfqaQUj4EIqYeMGCDSpAjMO0aW5
-X-Gm-Message-State: AOJu0YyWRQmmgf1G1QHQVbLDyAoNKcTv6kbqRKobll5bb39E/DB6QblU
-	6p0WxZGWGjnT341+GGpXsZ040EJIFjuxVOug+PfIIHnF+hzote/hJ5S61wd4uSqqCOajTGvO4Fw
-	=
-X-Google-Smtp-Source: AGHT+IGMtzBYauL+ikNQE3HoFJcNa20r99mJ2YAGRD64FTwPdgM6oelv91TKueP+bc+Mm4gM1cQ+2w==
-X-Received: by 2002:a9d:7409:0:b0:6fc:15e9:c3ed with SMTP id 46e09a7af769-7007549908dmr2737381a34.18.1718792363131;
-        Wed, 19 Jun 2024 03:19:23 -0700 (PDT)
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com. [209.85.161.49])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6fb5b1b14f5sm2162043a34.26.2024.06.19.03.19.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 03:19:22 -0700 (PDT)
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5bae81effd1so3366976eaf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 03:19:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUXRgPMRkZei98Udt4WZrQDiZgnTBnL+umAVVKJUkgW09w4/eS53AJxkWX8Utb5NG4P9FNP5haEyn8XhBoqXNVlVdn9oBaoKY0PxmBJ
-X-Received: by 2002:a05:6122:250e:b0:4d3:45a2:ae53 with SMTP id
- 71dfb90a1353d-4ef27845548mr2420871e0c.16.1718792011586; Wed, 19 Jun 2024
- 03:13:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4l+f3Og"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32FE7C32786;
+	Wed, 19 Jun 2024 10:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718792483;
+	bh=P7BVwrlPu5JLfPjoFAsx3EZJBuN98wCr8B57Z2OIK8w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u4l+f3OgZGiRgcrI9V1lttiQ8oOOKmdVmGbM5rAXXz5SlJ182Tsbt/AalMKT0gGCP
+	 t9N2p6DfZntt3f3WYM5QDpnvKW9F5ZRcyc3qfQrbAhLQFBTZImsu7F+7QzqpLSlKWN
+	 MHOHSGwPml1OMmgnMDSAGeDbC3AQIwvu0RY/vC9wPPeHJGvkXpOwIzv2wDTUotdrvJ
+	 vm2+QWd+WvrUugXpTmtbnSIbfkeeKZiKDAghT87udxpfy9smNitz1J+jwvRkFmkEPl
+	 qS7KGazXyFalD2PsGOg1+xVn2X2gL58hSU3rSB/6+nIDpUbjg6DWin7gIPJfcL0AMS
+	 x7l8vhsvcArag==
+Message-ID: <a4ae575c-9eee-47fe-b49d-c71737022d24@kernel.org>
+Date: Wed, 19 Jun 2024 18:21:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322092845.381313-1-angelogioacchino.delregno@collabora.com> <20240322092845.381313-5-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240322092845.381313-5-angelogioacchino.delregno@collabora.com>
-From: Fei Shao <fshao@chromium.org>
-Date: Wed, 19 Jun 2024 18:12:55 +0800
-X-Gmail-Original-Message-ID: <CAC=S1niC5ZePFFbEM6Fhr4q7kNqv45uSQNnTp1U8pesfe5f_Aw@mail.gmail.com>
-Message-ID: <CAC=S1niC5ZePFFbEM6Fhr4q7kNqv45uSQNnTp1U8pesfe5f_Aw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] media: platform: mtk-mdp3: Add support for MT8188
- MDP3 components
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-media@vger.kernel.org, mchehab@kernel.org, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, amergnat@baylibre.com, moudy.ho@mediatek.com, 
-	hverkuil-cisco@xs4all.nl, sebastian.fricke@collabora.com, 
-	u.kleine-koenig@pengutronix.de, chunkuang.hu@kernel.org, 
-	p.zabel@pengutronix.de, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] f2fs: add support single node mode
+To: daejun7.park@samsung.com, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+ "corbet@lwn.net" <corbet@lwn.net>,
+ "linux-f2fs-devel@lists.sourceforge.net"
+ <linux-f2fs-devel@lists.sourceforge.net>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Seokhwan Kim <sukka.kim@samsung.com>,
+ Dongjin Kim <dongjin_.kim@samsung.com>,
+ Yonggil Song <yonggil.song@samsung.com>,
+ Jaeyoon Choi <j_yoon.choi@samsung.com>, Nayeon Kim
+ <nayeoni.kim@samsung.com>, Siwoo Jung <siu.jung@samsung.com>
+References: <CGME20240617045134epcms2p3f2f82336438f636b3f1ad58fd0c1cd29@epcms2p3>
+ <20240617045134epcms2p3f2f82336438f636b3f1ad58fd0c1cd29@epcms2p3>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20240617045134epcms2p3f2f82336438f636b3f1ad58fd0c1cd29@epcms2p3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Angelo,
+On 2024/6/17 12:51, Daejun Park wrote:
+> The amount of node writes is small compared to the amount of user data
+> writes in most workloads. Therefore, even if there is enough free space
+> in the node section, it cannot be used by another type because the type
+> for its section is fixed. When using zoned storage, the free space in
+> node section issue can be a problem due to the large section.
+> 
+> This patch can avoid the problem by using a single node section without
+> considering the hotness of the node section. For particularly high file
+> system usage, two sections can be used as free sections, which makes it
+> more efficient.
+> 
+> To use single node section, add the 'single_node_sec' in mount option.
+> The single node section mode can be activated when the number of active
+> logs is equal to 6.
 
-On Fri, Mar 22, 2024 at 5:29=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> MT8195 and MT8188 share a similar MDP3 macro-block, with minor
-> differences - as in, the latter supports a subset of the number
-> of components supported by the former, but are otherwise handled
-> in the same way.
->
-> Add driver data for MT8188, reusing the already present MT8195
-> data where possible.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
+This patch is out-of-format due to tab is replaced as blanks.
+
+> 
+> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 > ---
->  .../platform/mediatek/mdp3/mdp_cfg_data.c     | 280 ++++++++++++++++++
->  .../platform/mediatek/mdp3/mtk-img-ipi.h      |   1 +
->  .../platform/mediatek/mdp3/mtk-mdp3-cfg.h     |   1 +
->  .../platform/mediatek/mdp3/mtk-mdp3-core.c    |   3 +
->  4 files changed, 285 insertions(+)
+>   Documentation/filesystems/f2fs.rst |  2 +
+>   fs/f2fs/f2fs.h                     |  3 ++
+>   fs/f2fs/recovery.c                 |  3 ++
+>   fs/f2fs/segment.c                  | 78 ++++++++++++++++++++++++++++++
+>   fs/f2fs/segment.h                  |  2 +
+>   fs/f2fs/super.c                    | 12 +++++
+>   6 files changed, 100 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
+> index 68a0885fb5e6..ba26b2ce4fa4 100644
+> --- a/Documentation/filesystems/f2fs.rst
+> +++ b/Documentation/filesystems/f2fs.rst
+> @@ -134,6 +134,8 @@ noacl                        Disable POSIX Access Control List. Note: acl is enabled
+>   active_logs=%u          Support configuring the number of active logs. In the
+>                           current design, f2fs supports only 2, 4, and 6 logs.
+>                           Default number is 6.
+> +single_node_sec         Support single node section mode, it enables single active
+> +                        log for hot/warm/cold nodes. This is disabled by default.
 
-Reviewed-by: Fei Shao <fshao@chromium.org>
+Do we allow changing this config during remount?
 
-Regards,
-Fei
+>   disable_ext_identify    Disable the extension list configured by mkfs, so f2fs
+>                           is not aware of cold files such as media files.
+>   inline_xattr            Enable the inline xattrs feature.
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 1974b6aff397..90f13a6b64ce 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -116,6 +116,7 @@ extern const char *f2fs_fault_name[FAULT_MAX];
+>   #define        F2FS_MOUNT_GC_MERGE             0x02000000
+>   #define F2FS_MOUNT_COMPRESS_CACHE      0x04000000
+>   #define F2FS_MOUNT_AGE_EXTENT_CACHE    0x08000000
+> +#define F2FS_MOUNT_SINGLE_NODE_SEC     0x10000000
+> 
+>   #define F2FS_OPTION(sbi)       ((sbi)->mount_opt)
+>   #define clear_opt(sbi, option) (F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
+> @@ -1655,6 +1656,8 @@ struct f2fs_sb_info {
+> 
+>          struct f2fs_mount_info mount_opt;       /* mount options */
+> 
+> +       bool single_node_sec;                   /* single node section */
+
+Better to move it into struct f2fs_mount_info?
+
+> +
+>          /* for cleaning operations */
+>          struct f2fs_rwsem gc_lock;              /*
+>                                                   * semaphore for GC, avoid
+> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+> index 496aee53c38a..b5cdb0845ac7 100644
+> --- a/fs/f2fs/recovery.c
+> +++ b/fs/f2fs/recovery.c
+> @@ -414,6 +414,9 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+> 
+>          /* get node pages in the current segment */
+>          curseg = CURSEG_I(sbi, CURSEG_WARM_NODE);
+> +       /* check hot node if single node section mode is enabled */
+> +       if (sbi->single_node_sec && curseg->segno == NULL_SEGNO)
+> +               curseg = CURSEG_I(sbi, CURSEG_HOT_NODE);
+
+If we turn off single_node_sec mode, fsynced data may be lost since warm node
+chain is empty?
+
+>          blkaddr = NEXT_FREE_BLKADDR(sbi, curseg);
+>          blkaddr_fast = blkaddr;
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index a0ce3d080f80..81b4d52b25c0 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -394,6 +394,9 @@ int f2fs_commit_atomic_write(struct inode *inode)
+>          return err;
+>   }
+> 
+> +static int new_curseg(struct f2fs_sb_info *sbi, int type, bool new_sec);
+> +static void locate_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno);
+> +
+>   /*
+>    * This function balances dirty node and dentry pages.
+>    * In addition, it controls garbage collection.
+> @@ -420,6 +423,59 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+>          if (has_enough_free_secs(sbi, 0, 0))
+>                  return;
+> 
+> +       if (test_opt(sbi, SINGLE_NODE_SEC) && !sbi->single_node_sec &&
+> +           F2FS_OPTION(sbi).active_logs == 6) {
+> +               int type, segno, left_blocks = 0;
+> +
+> +               for (type = CURSEG_HOT_NODE; type <= CURSEG_COLD_NODE; type++) {
+> +                       segno = CURSEG_I(sbi, type)->segno;
+> +                       left_blocks += CAP_BLKS_PER_SEC(sbi) -
+> +                                       get_ckpt_valid_blocks(sbi, segno, true);
+> +               }
+> +
+> +               /* enable single node section mode if we get 2 free sections */
+> +               if (left_blocks < CAP_BLKS_PER_SEC(sbi) * 2)
+> +                       goto do_gc;
+> +
+> +               f2fs_down_read(&SM_I(sbi)->curseg_lock);
+> +               down_write(&SIT_I(sbi)->sentry_lock);
+> +
+> +               /* it can be enabled by others */
+> +               if (sbi->single_node_sec)
+> +                       goto unlock;
+> +
+> +               /* leave current zone by allocating new section */
+> +               for (type = CURSEG_WARM_NODE; type <= CURSEG_COLD_NODE; type++) {
+> +                       struct curseg_info *curseg = CURSEG_I(sbi, type);
+> +
+> +                       mutex_lock(&curseg->curseg_mutex);
+> +                       segno = curseg->segno;
+> +                       if (new_curseg(sbi, type, true)) {
+
+It looks dangerous to allocate new section here for the case there
+is heavy fragment and no available user space, because free section
+may be exhausted during latter FGGC.
+
+> +                               mutex_unlock(&curseg->curseg_mutex);
+> +                               goto unlock;
+> +                       }
+> +                       locate_dirty_segment(sbi, segno);
+> +                       mutex_unlock(&curseg->curseg_mutex);
+> +               }
+> +
+> +               /* clear warm node, cold node information */
+> +               for (type = CURSEG_WARM_NODE; type <= CURSEG_COLD_NODE; type++) {
+> +                       struct curseg_info *curseg = CURSEG_I(sbi, type);
+> +
+> +                       mutex_lock(&curseg->curseg_mutex);
+> +                       segno = curseg->segno;
+> +                       curseg->segno = NULL_SEGNO;
+> +                       curseg->inited = false;
+> +                       __set_test_and_free(sbi, segno, false);
+> +                       mutex_unlock(&curseg->curseg_mutex);
+> +               }
+> +               f2fs_notice(sbi, "single node section mode enabled");
+> +               sbi->single_node_sec = true;
+
+It looks complicated to enable single_node_sec mode dynamically, what do
+you think of making this as a feature which can only be eanbled by mkfs?
+
+Thanks,
+
+> +unlock:
+> +               up_write(&SIT_I(sbi)->sentry_lock);
+> +               f2fs_up_read(&SM_I(sbi)->curseg_lock);
+> +       }
+> +do_gc:
+>          if (test_opt(sbi, GC_MERGE) && sbi->gc_thread &&
+>                                  sbi->gc_thread->f2fs_gc_task) {
+>                  DEFINE_WAIT(wait);
+> @@ -3502,6 +3558,9 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
+>                  return f2fs_rw_hint_to_seg_type(F2FS_I_SB(inode),
+>                                                  inode->i_write_hint);
+>          } else {
+> +               if (fio->sbi->single_node_sec)
+> +                       return CURSEG_HOT_NODE;
+> +
+>                  if (IS_DNODE(fio->page))
+>                          return is_cold_node(fio->page) ? CURSEG_WARM_NODE :
+>                                                  CURSEG_HOT_NODE;
+> @@ -4116,6 +4175,15 @@ static int read_normal_summaries(struct f2fs_sb_info *sbi, int type)
+>                                                          CURSEG_HOT_NODE]);
+>                  blk_off = le16_to_cpu(ckpt->cur_node_blkoff[type -
+>                                                          CURSEG_HOT_NODE]);
+> +               if (segno == NULL_SEGNO && type != CURSEG_HOT_NODE) {
+> +                       if (!test_opt(sbi, SINGLE_NODE_SEC)) {
+> +                               f2fs_err(sbi, "single_node_sec option required");
+> +                               return -EFAULT;
+> +                       }
+> +                       sbi->single_node_sec = true;
+> +                       return 0;
+> +               }
+> +
+>                  if (__exist_node_summaries(sbi))
+>                          blk_addr = sum_blk_addr(sbi, NR_CURSEG_NODE_TYPE,
+>                                                          type - CURSEG_HOT_NODE);
+> @@ -4884,6 +4952,8 @@ static void init_free_segmap(struct f2fs_sb_info *sbi)
+>                  struct curseg_info *curseg_t = CURSEG_I(sbi, type);
+> 
+>                  __set_test_and_inuse(sbi, curseg_t->segno);
+> +               if (sbi->single_node_sec && type == CURSEG_HOT_NODE)
+> +                       break;
+>          }
+>   }
+> 
+> @@ -5027,6 +5097,10 @@ static int sanity_check_curseg(struct f2fs_sb_info *sbi)
+>                          f2fs_handle_error(sbi, ERROR_INVALID_CURSEG);
+>                          return -EFSCORRUPTED;
+>                  }
+> +
+> +               /* in single node section mode, WARM/COLD NODE are invalid */
+> +               if (sbi->single_node_sec && i == CURSEG_HOT_NODE)
+> +                       break;
+>          }
+>          return 0;
+>   }
+> @@ -5153,6 +5227,10 @@ static int fix_curseg_write_pointer(struct f2fs_sb_info *sbi, int type)
+>          if (!zbd)
+>                  return 0;
+> 
+> +       /* in single node section mode, WARM/COLD node are not valid */
+> +       if (sbi->single_node_sec && type > CURSEG_HOT_NODE)
+> +               return 0;
+> +
+>          /* report zone for the sector the curseg points to */
+>          zone_sector = (sector_t)(cs_zone_block - zbd->start_blk)
+>                  << log_sectors_per_block;
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index e1c0f418aa11..152a07e61b5f 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -570,6 +570,8 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+>                                  get_ckpt_valid_blocks(sbi, segno, true);
+>                  if (node_blocks > left_blocks)
+>                          return false;
+> +               if (sbi->single_node_sec) /* check only hot node */
+> +                       break;
+>          }
+> 
+>          /* check current data section for dentry blocks. */
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 1f1b3647a998..7e1e80fe58dd 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -129,6 +129,7 @@ enum {
+>          Opt_acl,
+>          Opt_noacl,
+>          Opt_active_logs,
+> +       Opt_single_node_sec,
+>          Opt_disable_ext_identify,
+>          Opt_inline_xattr,
+>          Opt_noinline_xattr,
+> @@ -207,6 +208,7 @@ static match_table_t f2fs_tokens = {
+>          {Opt_acl, "acl"},
+>          {Opt_noacl, "noacl"},
+>          {Opt_active_logs, "active_logs=%u"},
+> +       {Opt_single_node_sec, "single_node_sec"},
+>          {Opt_disable_ext_identify, "disable_ext_identify"},
+>          {Opt_inline_xattr, "inline_xattr"},
+>          {Opt_noinline_xattr, "noinline_xattr"},
+> @@ -803,6 +805,9 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+>                                  return -EINVAL;
+>                          F2FS_OPTION(sbi).active_logs = arg;
+>                          break;
+> +               case Opt_single_node_sec:
+> +                       set_opt(sbi, SINGLE_NODE_SEC);
+> +                       break;
+>                  case Opt_disable_ext_identify:
+>                          set_opt(sbi, DISABLE_EXT_IDENTIFY);
+>                          break;
+> @@ -2039,6 +2044,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
+>                                          F2FS_OPTION(sbi).s_resuid),
+>                                  from_kgid_munged(&init_user_ns,
+>                                          F2FS_OPTION(sbi).s_resgid));
+> +       if (test_opt(sbi, SINGLE_NODE_SEC))
+> +               seq_puts(seq, ",single_node_sec");
+>   #ifdef CONFIG_F2FS_FAULT_INJECTION
+>          if (test_opt(sbi, FAULT_INJECTION)) {
+>                  seq_printf(seq, ",fault_injection=%u",
+> @@ -3675,6 +3682,9 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+>          blocks_per_seg = BLKS_PER_SEG(sbi);
+> 
+>          for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
+> +               /* bypass single node section mode */
+> +               if (le32_to_cpu(ckpt->cur_node_segno[i]) == NULL_SEGNO)
+> +                       goto check_data;
+>                  if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+>                          le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+>                          return 1;
+> @@ -3823,6 +3833,8 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
+>          init_f2fs_rwsem(&sbi->io_order_lock);
+>          spin_lock_init(&sbi->cp_lock);
+> 
+> +       sbi->single_node_sec = false;
+> +
+>          sbi->dirty_device = 0;
+>          spin_lock_init(&sbi->dev_lock);
+> 
+> --
+> 2.25.1
