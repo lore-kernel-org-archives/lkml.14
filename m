@@ -1,124 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D73818E20;
-	Wed, 19 Jun 2024 01:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22A018E20
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 01:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718762005; cv=none; b=tGz7cGeWO8v3Rg2EniQgJROLhMYc6JgVhaiVu4Y3oseA+UKg3//VKdvKLGWiLA+dauopblpqyJdEpyLTAVA1Q3863a7gzmkIJE+wMJnVkhY9WdStvjHe50AfabPtJ1ah1Y36i6pIO3tF6KlnhkXO6USZ/++UUTfUAz8u2rsupLM=
+	t=1718762107; cv=none; b=JVPs7q15bcfdLf4phHnBKghRRXEV132qdH4Z0oUqFH42cvARrSOqPQbR9khXzhNzdtnv0fss8dZmvmEeCML4dr2POtKiX6UmyU4nouO4TU2Sa+wfV3YfraJBG3ggXTLw5Zk8KWId0IVETU1sXbWyZLJj4WRFNiT4uU6/ZNbjvys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718762005; c=relaxed/simple;
-	bh=y4h/IiEH9QhlxPRAVfEhG72ug8DRAf2ofzXJM2sJ1qM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeQyHsIH23PL4dW27TTjXWSbiBIibT1oQrJigz2YbMM7NsxR1McWtVQXo+rC636k2DzvzFH/uLpXfM28LT/9qmWUaH+C6STxwYZgQa70LFFvvINvsVC2+s1rsg/hMQjOHP6x6brQdZf5Wezw00itijcl2DzcqGXeZEbgfrz8dbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lDGSa2+B; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718762107; c=relaxed/simple;
+	bh=Pkpd4+S3BY2qrvFQaZoy8qIgcC32R5QZew/HhAUrk/w=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=Dpkg9qcCxCQD2z3fI6Q0su/QzJSfz+XWV5ROpGeqcsUU8UxYpqmDoDg57wRMQYW65VJwxaIKk18gMKvhD6EAPRoqslOhv5r5d1jlNZBx2UIpicTUJ9GfVYUzCm3LtM5cq4PDPYmv4dqARwai5qRXAL3efgdr5jZdVEF9GM60VoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R1PIDjbL; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lDGSa2+B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718762004; x=1750298004;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=y4h/IiEH9QhlxPRAVfEhG72ug8DRAf2ofzXJM2sJ1qM=;
-  b=lDGSa2+BTjeRlCO7QZBVk9jvT/m+L6mSOOx+kaMYYdzGKmmyCbg0WW4g
-   /op5LaQxaNl03nT974jJEJmbG8ieZLTKHIrTkcnmuw14/RQFYDGNYSHMH
-   nY5SC/xuTmaCH+cuD+SqCasdrEU43pJC5edlOv17ByAVf6OBqwebUbFDp
-   3Jdnx2p39OBF2HXmVj7bwXkv6BEWjf5s+SPf6C1Zyf95QEwR3vxEtFBS/
-   vTvuoFTXjQ17pRuyK0hnE3gLqh7Bcza7sfsYnf9xpatdBOSpO6OBxEiiU
-   K7yQff5vDm9FL6TnNVXCkTATlqmVFvHdi+x8MWRqMjN4WPffzp9pYP+pD
-   Q==;
-X-CSE-ConnectionGUID: G3UI+FqiQSKdITeppl7nxA==
-X-CSE-MsgGUID: t78bVsbRRNWZ5mWeeM5fSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="19461672"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="19461672"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 18:53:23 -0700
-X-CSE-ConnectionGUID: 2/1oZ4ocRuGCLo1eL49vLg==
-X-CSE-MsgGUID: jtHcrt+CSm6csXi6+iqLjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="41672159"
-Received: from cgroden-mobl.amr.corp.intel.com (HELO desk) ([10.209.70.214])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 18:53:22 -0700
-Date: Tue, 18 Jun 2024 18:53:15 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Brice Goglin <brice.goglin@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH 0/9] Add CPU-type to topology
-Message-ID: <20240619015315.3ei5f6rovzdnxovo@desk>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R1PIDjbL"
+X-Envelope-To: kuba@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718762102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pkpd4+S3BY2qrvFQaZoy8qIgcC32R5QZew/HhAUrk/w=;
+	b=R1PIDjbL9kVMhK5WbV+BUDmGvq7ED8WgDnf7ouWxPplxO4vMMLZh1GY9URty+hsmva/IQQ
+	6mKc6x2PtsgbIrJS9Ha0Z6BEPJDHkiBz9+uMgYWu3p9SdzRStww958jPsTYCD8YecfRusU
+	SwykivlJw5rpiFbnWcOOLfAIMsCFc6s=
+X-Envelope-To: davem@davemloft.net
+X-Envelope-To: edumazet@google.com
+X-Envelope-To: pabeni@redhat.com
+X-Envelope-To: netdev@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+Date: Wed, 19 Jun 2024 01:55:00 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yajun Deng" <yajun.deng@linux.dev>
+Message-ID: <077a532cb112d296b6cfb7692ed25bf9dd64f199@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net-next] net: core: Remove the dup_errno parameter in
+ dev_prep_valid_name()
+To: "Jakub Kicinski" <kuba@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240618074840.536600bb@kernel.org>
+References: <20240618131743.2690-1-yajun.deng@linux.dev>
+ <20240618074840.536600bb@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 18, 2024 at 02:49:10PM +0200, Brice Goglin wrote:
-> Le 17/06/2024 à 11:11, Pawan Gupta a écrit :
-> > Hi,
-> > 
-> > This series adds support for CPU-type (CPUID.1A.EAX[31-24] on Intel) to
-> > differentiate between hybrid variants P+E, P-only, E-only that share the
-> > same Family/Model/Stepping. One of the use case for CPU-type is the
-> > affected CPU table for CPU vulnerabilities, which can now use the CPU-type
-> > to filter the unaffected variants.
-> > 
-> > * Patch 1 adds cpu-type to CPU topology structure and introduces
-> >    topology_cpu_type() to get the CPU-type.
-> > 
-> > * Patch 2-4 replaces usages of get_this_hybrid_cpu_type() with
-> >    topology_cpu_type().
-> > 
-> > * Patch 5-7 Updates CPU-matching infrastructure to use CPU-type.
-> > 
-> > * Patch 8 cleans up the affected CPU list.
-> > 
-> > * Patch 9 uses the CPU-type to exclude P-only parts from the RFDS affected
-> >    list.
-> 
-> 
-> Hello
-> 
-> Is there still a plan to expose this info in sysfs?
+June 18, 2024 at 10:48 PM, "Jakub Kicinski" <kuba@kernel.org> wrote:
 
-Sure, if it helps userspace.
 
-> Userspace currently uses frequencies to guess which cores are E or P.
-> Intel sent some patches several years ago [1], but they got abandoned
-> nowhere as far as I know. There was also some discussion about using a
-> "capacity" field like ARM does, but IIRC Intel didn't like the idea in
-> the end.
 
-There can be many ways to expose this information in sysfs. Like this ...
+>=20
+>=20On Tue, 18 Jun 2024 21:17:43 +0800 Yajun Deng wrote:
+>=20
+>=20>=20
+>=20> netdev_name_in_use() return -EEXIST makes more sense if it's not NU=
+LL.
+> >=20
+>=20
+> netdev_name_in_use() returns bool.
+>=20
 
-> [1] https://lkml.org/lkml/2020/10/2/1208
+I=20should say the netdev_name_in_use() in dev_prep_valid_name() return -=
+EEXIST.=20
 
-... exposes /sys/devices/system/cpu/types which, in hybrid parts, creates a
-subdirectory for each type of CPU. Each subdirectory contains a CPU list
-and a CPU map that user space can query.
+>=20>=20
+>=20> But dev_alloc_name() should keep the -ENFILE errno.
+> >=20
+>=20
+> And it does.
+>=20
+>=20I don't understand what problem you're trying to fix.
+>=20
+>=20The code is fine as is.
+>
 
-The other way is to expose the CPU-type in a file:
+This is not a fix.=20
 
-	/sys/devices/system/cpu/cpuN/type
+There=20are three callers to dev_prep_valid_name(), only dev_alloc_name()=
+ needs
+to replace -EEXIST with -ENFILE. We shouldn't add an extra parameter for =
+this,
+because it's not necessary for the other callers.
 
-that could return the CPU-type of the CPU N. Is there a preference?
+If we do it in dev_alloc_name(), the other callers can save a parameter.
