@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02C615D5AA;
-	Wed, 19 Jun 2024 22:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4D615F412;
+	Wed, 19 Jun 2024 22:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718836590; cv=none; b=QzDD9vLO5h914LbqEOlND2Bhc1Sc/VgA+VJLApDBMODNDy3gSNaGCunx3ZchZHs5N/Kisg+TGAAQ6KDz/BkKAaq78UL1pPtQ74RObRFBIipi6RvWa7ngjJTZ3YSp/goN4VN0KpTIhZWd+SVHRjYpid4EUMDSXY/bMM64D0qhBEo=
+	t=1718836591; cv=none; b=dxt7h5AFyJiugBgwPeWXQ1zAmgMKVywPOVrBYYPd8uiPev+jSHnRSR9r+sy+SfD5xUddFVbfHsCnUQl5lj/2mSYO0mrUZWKCt29sN2qZshlfvvE99wpqHuK/LjKmJ4VBf32mhg53lb4caSUu/CfvTJkiVFz+G41sMeHIemUDdJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718836590; c=relaxed/simple;
-	bh=P/xpmJ/VWG0UWqXBQ4LtNLyFz/OomrsM9WB8JXsA3Wo=;
+	s=arc-20240116; t=1718836591; c=relaxed/simple;
+	bh=ZlIb92BMB80InpzZaKVXT9xYdBdfZ5FxKMSdfWqrTw0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s3wDnDgEap50HBbJghqaaQfrVHeeYBFk/ZhkQl0UfgCH7xpHEq5AmIsjq5f/KJ5qBnm9bJh2GbAFdjblopwFPlUeSGW7smSIkxnl6xBCuRqnOFqxzy4hZ9ezaNswdpdOBQx2wIMBK93OwvnSvbpUkfLiTxigtS09L973T3FY4vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUBav+Bk; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=j/RPK+oVvHw7XlfK36/Bgnkp/7CDrXGFgd7palcPXzB2ONYwrOpvE+tLr0CLaylSgOqEzZEyxwHO6viLPX4u15XVYwzs126NBp4r/b3Bykn4HAaKkxeFNZh0HFx7m7LI/1AIGkdV9KQuyz5D0yh/AzLkZCHw4/Ul86KfJIvUMSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPefVl+f; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUBav+Bk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPefVl+f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718836588; x=1750372588;
+  t=1718836590; x=1750372590;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=P/xpmJ/VWG0UWqXBQ4LtNLyFz/OomrsM9WB8JXsA3Wo=;
-  b=fUBav+Bklyjo85LJ8JiqraZZhQ/lLtNoXKPXLnXiGsD5wLxx6LYpAYo9
-   3MUNukFxAXyiPu+VO92jA6JKcQY4fdd81lm6TMmYHqOFHghVuYO3rFYTi
-   htJt1yPhdabkQJJTJpu2l/ADM3hZAjXeGnX+sy5t4ZwAnaM1UkemkQwiJ
-   0kK/rCD6MZSi+SoFSBlSUftu0o+ayCnzyAeQylAU3SF0ylg5mZuC01/Cr
-   +FqkKd7MRABNyK+sfqSgpbF4SmjAFQgnN7Gmhib3E//hOpTwPFeXqygwV
-   sCB/YozeyhiHqOE/Z3Fio0fYYWklmM1njTQD0VJVKUQI6v8ZwZeLyLIVj
-   g==;
-X-CSE-ConnectionGUID: zFvf2pIISo6e5U7luqJuNw==
-X-CSE-MsgGUID: WCrzS4qxRUyQM5vzJ0DeUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931946"
+  bh=ZlIb92BMB80InpzZaKVXT9xYdBdfZ5FxKMSdfWqrTw0=;
+  b=cPefVl+fW59IQ5q5mC7IGQVjdskdo0qr9Sml5GjBI5D9fYF+atlSmQUv
+   cakNLy8TwEluKjMGVh8stYQEToq6p7ezrkPw+a6m3vcQ2zGtIvGr68NBd
+   0iqeYN4WhzCrsL3CnH0UJUhW2o4X/MFmsKDnXJV0R/lANHaNUoTI7DAYx
+   UFq1h3qegoAg5BFsZrZS1hKAJ7J7S3K3N5sXP5jGsXZMOfIm1khnSB7kV
+   PZyELG/Kny34RhJFnjbD3UsvKYYP6iyrGM9QMKkAAyw1qSRLWErzg5Z5W
+   mvk5meDnVoFmaYT16fzmOfOLpvRagmzdeDO077wkBJaeuTX0VMNbM8bWB
+   Q==;
+X-CSE-ConnectionGUID: LF/NTc8JRPG/Eg/CiDrsXw==
+X-CSE-MsgGUID: KW91Jr0QTx26814zL5+Nrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931973"
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15931946"
+   d="scan'208";a="15931973"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:21 -0700
-X-CSE-ConnectionGUID: 8KXdDHpEQ0ueMFUHnC/GZw==
-X-CSE-MsgGUID: 6rrnuRMASUGhnqUZTSA8Jw==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:22 -0700
+X-CSE-ConnectionGUID: ITPKL5KXQ7+OcmjS+VqW2A==
+X-CSE-MsgGUID: SCJ2EYcbQ9e+D1Whi5+gyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="72793333"
+   d="scan'208";a="72793353"
 Received: from ivsilic-mobl2.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.54.39])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:21 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:22 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -56,9 +56,9 @@ Cc: kai.huang@intel.com,
 	yan.y.zhao@intel.com,
 	rick.p.edgecombe@intel.com,
 	Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH v3 05/17] KVM: x86/mmu: Add an is_mirror member for union kvm_mmu_page_role
-Date: Wed, 19 Jun 2024 15:36:02 -0700
-Message-Id: <20240619223614.290657-6-rick.p.edgecombe@intel.com>
+Subject: [PATCH v3 10/17] KVM: x86/tdp_mmu: Extract root invalid check from tdx_mmu_next_root()
+Date: Wed, 19 Jun 2024 15:36:07 -0700
+Message-Id: <20240619223614.290657-11-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
 References: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
@@ -72,86 +72,64 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Introduce a "is_mirror" member to the kvm_mmu_page_role union to identify
-SPTEs associated with the mirrored EPT.
+Extract tdp_mmu_root_match() to check if the root has given types and use
+it for the root page table iterator.  It checks only_invalid now.
 
-The TDX module maintains the private half of the EPT mapped in the TD in
-its protected memory. KVM keeps a copy of the private GPAs in a mirrored
-EPT tree within host memory. This "is_mirror" attribute enables vCPUs to
-find and get the root page of mirrored EPT from the MMU root list for a
-guest TD. This also allows KVM MMU code to detect changes in mirrored EPT
-according to the "is_mirror" mmu page role and propagate the changes to
-the private EPT managed by TDX module.
+TDX KVM operates on a shared page table only (Shared-EPT), a mirrored page
+table only (Secure-EPT), or both based on the operation.  KVM MMU notifier
+operations only on shared page table.  KVM guest_memfd invalidation
+operations only on mirrored page table, and so on.  Introduce a centralized
+matching function instead of open coding matching logic in the iterator.
+The next step is to extend the function to check whether the page is shared
+or private
 
+Link: https://lore.kernel.org/kvm/ZivazWQw1oCU8VBC@google.com/
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
-TDX MMU Prep v3:
- - Rename role mirror_pt -> is_mirror (Paolo)
- - Remove unnessary helpers that just access a member (Paolo)
-
-TDX MMU Prep v2:
- - Rename private -> mirrored
-
 TDX MMU Prep:
-- Remove warning and NULL check in is_private_sptep() (Rick)
-- Update commit log (Yan)
-
-v19:
-- Fix is_private_sptep() when NULL case.
-- drop CONFIG_KVM_MMU_PRIVATE
+ - New patch
 ---
- arch/x86/include/asm/kvm_host.h | 3 ++-
- arch/x86/kvm/mmu/mmu_internal.h | 5 +++++
- arch/x86/kvm/mmu/spte.h         | 5 +++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/tdp_mmu.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9e35fe32f500..6c59b129f382 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -351,7 +351,8 @@ union kvm_mmu_page_role {
- 		unsigned ad_disabled:1;
- 		unsigned guest_mode:1;
- 		unsigned passthrough:1;
--		unsigned :5;
-+		unsigned is_mirror:1;
-+		unsigned :4;
- 
- 		/*
- 		 * This is left at the top of the word so that
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index d2837f796f34..5a2c9be23627 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -157,6 +157,11 @@ static inline int kvm_mmu_page_as_id(struct kvm_mmu_page *sp)
- 	return kvm_mmu_role_as_id(sp->role);
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 067249dbbb5e..cecc25947001 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -92,6 +92,14 @@ void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root)
+ 	call_rcu(&root->rcu_head, tdp_mmu_free_sp_rcu_callback);
  }
  
-+static inline bool is_mirror_sp(const struct kvm_mmu_page *sp)
++static bool tdp_mmu_root_match(struct kvm_mmu_page *root, bool only_valid)
 +{
-+	return sp->role.is_mirror;
++	if (only_valid && root->role.invalid)
++		return false;
++
++	return true;
 +}
 +
- static inline void kvm_mmu_alloc_external_spt(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
- {
- 	/*
-diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
-index 86e5259aa824..4883d139761b 100644
---- a/arch/x86/kvm/mmu/spte.h
-+++ b/arch/x86/kvm/mmu/spte.h
-@@ -265,6 +265,11 @@ static inline struct kvm_mmu_page *root_to_sp(hpa_t root)
- 	return spte_to_child_sp(root);
- }
+ /*
+  * Returns the next root after @prev_root (or the first root if @prev_root is
+  * NULL).  A reference to the returned root is acquired, and the reference to
+@@ -125,7 +133,7 @@ static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
+ 						   typeof(*next_root), link);
  
-+static inline bool is_mirror_sptep(u64 *sptep)
-+{
-+	return is_mirror_sp(sptep_to_sp(sptep));
-+}
-+
- static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
- {
- 	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
+ 	while (next_root) {
+-		if ((!only_valid || !next_root->role.invalid) &&
++		if (tdp_mmu_root_match(next_root, only_valid) &&
+ 		    kvm_tdp_mmu_get_root(next_root))
+ 			break;
+ 
+@@ -176,7 +184,7 @@ static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
+ 	list_for_each_entry(_root, &_kvm->arch.tdp_mmu_roots, link)		\
+ 		if (kvm_lockdep_assert_mmu_lock_held(_kvm, false) &&		\
+ 		    ((_as_id >= 0 && kvm_mmu_page_as_id(_root) != _as_id) ||	\
+-		     ((_only_valid) && (_root)->role.invalid))) {		\
++		     !tdp_mmu_root_match((_root), (_only_valid)))) {		\
+ 		} else
+ 
+ #define for_each_tdp_mmu_root(_kvm, _root, _as_id)			\
 -- 
 2.34.1
 
