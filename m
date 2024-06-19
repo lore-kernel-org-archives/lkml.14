@@ -1,93 +1,65 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0C31878;
-	Wed, 19 Jun 2024 01:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3ABCA40;
+	Wed, 19 Jun 2024 01:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718761333; cv=none; b=SSHQj4NHHzoP4nn2OAQTcas51ZXtdWMmpvmqY0IanvDDNMts2ueEd0Cn+MsMUZNYHPrS4F2MLFRfjHKD2nP4kttc9ObVQDqw7ndBKEiyYVUvO12bS5RSzHUFniwobECxdMyKWhw0GfYO47wiOQcHXNdKJMkXXpPSFdaoW473dQk=
+	t=1718761398; cv=none; b=GBEHN85cXxOhOypam4iu5kGAZJWnW+rEkNdxSpajRCtU1EDQJ6fX+Di+NELiJU4YeWlt8alVcKUzYGIJVSS9IGI2CY0H90ppqiH9PKyfgqcLcMXimdo6F0lzFF1G7wfUP83FDWQ9unw+K3VPdQZTEsGNZajrC2iTsCPEZVCIycc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718761333; c=relaxed/simple;
-	bh=cQHrcDumL6vgjlnTK8i0kB5JaMupkPaj19PCYsvzV3Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dvsz6HbbgomolMKSOA8ex8RSf0Ok497NKDTTrL49KJYS9Qi4sBHUDTsttOYd71FwaOaJ7UXmJR/FYmJO1T8yuCZPruq/0WYX43Ed2LrmsKA0gJVHf9ThlVcApodeH2w3Xvil/qOQKQAFXg7kPSbnGp11q9iKpkMMWIydO9/4Jfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W3mVK48MZzPrdZ;
-	Wed, 19 Jun 2024 09:38:33 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id E03C6140257;
-	Wed, 19 Jun 2024 09:42:05 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 19 Jun
- 2024 09:42:05 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <jolsa@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<oleg@redhat.com>, <ast@kernel.org>, <daniel@iogearbox.net>,
-	<andrii@kernel.org>, <nathan@kernel.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <mark.rutland@arm.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-Subject: [PATCH bpf-next] uprobes: Fix the xol slots reserved for uretprobe trampoline
-Date: Wed, 19 Jun 2024 01:34:11 +0000
-Message-ID: <20240619013411.756995-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718761398; c=relaxed/simple;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	h=Message-ID:From:Content-Type:Mime-Version:Subject:Date:Cc:To; b=fjmb1Sj/9cFud3FhIPf6EfCO8rO1OZozxxe/xrvsxkvgwnW2U+qG0NFiVy+tN+GRfLq4aW7nuIxg1loXKq0VXHOqKmdUGxzVl3uzbxiSm7oGqA89sKXjaasa9k9lF19viVCbyrtgswwqF2ZaVv8BTHLS8rxBoVVMpVcHgKFmYvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=xsCcz3WG; arc=none smtp.client-ip=203.205.221.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="xsCcz3WG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1718761086;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	h=From:Subject:Date:Cc:To;
+	b=xsCcz3WGEC0jUtG/OFZH/2SrmfktfMqk5UZGZ8Ju2HUKQfZXszAf6CWELwu0VuYHI
+	 KABoQxrguE+mjo5HG3nRL819gv+Gt7z/W2NzWwuqYOzNJGtbErdpHd7n73ilx4RHQn
+	 aZlu/4eizveWZABH3TZL7Mh1GXnFU0dC2ja+tXMo=
+Received: from smtpclient.apple ([2401:b180:9000:0:1051:934d:1051:934d])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 983B581C; Wed, 19 Jun 2024 09:38:03 +0800
+X-QQ-mid: xmsmtpt1718761083tq8lqe0wo
+Message-ID: <tencent_33256C08A57BF8870600614ECB9602004405@qq.com>
+X-QQ-XMAILINFO: MVKy59SpMLfUV+b8Y0xW1uUo8WDMtRWsdFPbHcJ4FQkUYMHE4Pz+nsCp2U6G4o
+	 EtSbApYCfO7AKa6H+hQrPINoIaL6DaD4l3oedMvCXzRN7WgGqDU5af8d7s/tjrvmjDlHXFw35O6T
+	 Zv6eRN0RalLM6CS++3IGCEE/weCjXGGiX3xUEKvEnWRgzTEkSH2C1UzlT43A7HJZfwhwLVgdbJOS
+	 9gmNS5+i4Pqbd9k5EHhFDREbaOxXGJddvVNy/+jBfzvsMv+fLDhtMgEXR6bucoRgWYtSrsB0wTjw
+	 ia8EzpqqybDeF1z7BWiFBc2QTG74v4g0o1VoIeney7l4tT7xLc7zyB85kK+ZgTL6oPLXChp+FNXG
+	 LBzIEdvI220fTtA8bUYFijxrMnKaGL1N2j2c5/VDxgoZRlPp+MdZmNWNgeMK2Zl16VM7I8pzZjU0
+	 tsBXTfRlLtt4UJjPGIAiIwh6aR0Qg1K97pKJ6hgPt4FPIjlulTuc1Vw+FfJK43ecJQpWprHpGZCE
+	 13UnGg6ESum2oJyH5J9GW0XWdiCPS+/vaz8MWRLuvEVjBKNpYGDwb4QcgAjsjVuVdC7/NbnOGKME
+	 YE+ScgHNiHbpZVARcCp30ZjkfGUzp5+OjNDdIoaajW911B7jjyiEPsglPEsWsUPf7wUqC84NaPYV
+	 yDAPzCmdgGOdVGiZpNwBYhc02YAYQtQLXebk3ZIpafUOZn4u44YOhtRH5ft9WuS0upg0hePfVsIt
+	 fHQYzwtI9v99oFIzDxe9LGlHvLhEDKC5Fgzu/ykoBMzW2p/VHb5sJ9gIN20p1nUMk0XRsqPxD/1P
+	 4TiRj16pGxXIUkVK3ET30Dq4DwLdmbSRbN1//wxzLmA7HyTCX4vr7bgzda8QNtLBz8ErKwCbkNvn
+	 Q9N0znxTqE5tZjZNx6yHYP2oM+KzVhuLrS/R+Tyw4t
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: =?utf-8?B?6YK55rab?= <wodemia@foxmail.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200013.china.huawei.com (7.221.188.133)
-
-When the new uretprobe system call was added [1], the xol slots reserved
-for the uretprobe trampoline might be insufficient on some architecture.
-For example, on arm64, the trampoline is consist of three instructions
-at least. So it should mark enough bits in area->bitmaps and
-and area->slot_count for the reserved slots.
-
-[1] https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
-
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- kernel/events/uprobes.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2816e65729ac..efd2d7f56622 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1485,7 +1485,7 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
- static struct xol_area *__create_xol_area(unsigned long vaddr)
- {
- 	struct mm_struct *mm = current->mm;
--	unsigned long insns_size;
-+	unsigned long insns_size, slot_nr;
- 	struct xol_area *area;
- 	void *insns;
- 
-@@ -1508,10 +1508,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 
- 	area->vaddr = vaddr;
- 	init_waitqueue_head(&area->wq);
--	/* Reserve the 1st slot for get_trampoline_vaddr() */
--	set_bit(0, area->bitmap);
--	atomic_set(&area->slot_count, 1);
- 	insns = arch_uprobe_trampoline(&insns_size);
-+	/* Reserve enough slots for the uretprobe trampoline */
-+	for (slot_nr = 0;
-+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
-+	     slot_nr++)
-+		set_bit(slot_nr, area->bitmap);
-+	atomic_set(&area->slot_count, slot_nr);
- 	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
- 
- 	if (!xol_add_vma(mm, area))
--- 
-2.34.1
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH V1 RESEND 1/1] zh_CN/admin-guide: Add
+ zh_CN/admin-guide/numastat.rst translation document
+X-OQ-MSGID: <F7159148-EA2E-4BDB-B689-C6DD75C1D3CC@foxmail.com>
+Date: Wed, 19 Jun 2024 09:37:53 +0800
+Cc: alexs@kernel.org,
+ corbet@lwn.net,
+ linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ wodemia@foxmail.com,
+ wodemia@linux.alibaba.com
+To: Yanteng Si <siyanteng@loongson.cn>
+X-Mailer: Apple Mail (2.3774.600.62)
 
