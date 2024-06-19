@@ -1,133 +1,90 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705318563F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F53012D758
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793453; cv=none; b=tQ6dxHbdb3uEDlmsKYCu5HFWsKxzZLOsZO8fA5x2HPrsNAEiOsE3ayq/4Af2tzrBvDeFW7QSIT6tRMf/qRM5v/YuMA99v9zonSolh9ZYOWA4Lr9EHHAlJUu+C/9tGl+9RT/7Wkb0oDcYrg2fm027h36JrqGyn/MV53FwfyftWrk=
+	t=1718793474; cv=none; b=bLnLSX6esB+/v6/KzM2wRf1iQYKV7kY+qygX79BVWLcjfDAnJj8JjtAZwIYXPdWxQMUkAZ7ZoUIrWwfhEQiQMtWVGbiqiGg0IxZNPWIWD775N/LyqjDshdUdSBQ+rx206VSubxmuNAn9OGD8nnzLIrhD8RPJTnV/yU2ekZjuiK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793453; c=relaxed/simple;
-	bh=kmFVtHxCbleRMg0X45QgC4I/XGM1q4Zua3nvzV1l484=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=YEsnM9iJUKljuPIADuzKGF8R6HiFkJYuAJTIGQuccMB6XbXJOeeq0v/hcY4o3BF94ji9OdFEG2+LZvNpNkI3vSZlDQuUrV+yEBv7bNluBrzUZRTvMgCfsj7BQ0VvU1zcePm39WXSXTkDHG394T4+5x07IEV/NnFryMQ+0CcwjWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-166-rn-eowsVOI6XUZV4F8yriw-1; Wed, 19 Jun 2024 11:37:22 +0100
-X-MC-Unique: rn-eowsVOI6XUZV4F8yriw-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 19 Jun
- 2024 11:36:47 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 19 Jun 2024 11:36:47 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Yu Ma' <yu.ma@intel.com>, "viro@zeniv.linux.org.uk"
-	<viro@zeniv.linux.org.uk>, "brauner@kernel.org" <brauner@kernel.org>,
-	"jack@suse.cz" <jack@suse.cz>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
-	"tim.c.chen@intel.com" <tim.c.chen@intel.com>, "pan.deng@intel.com"
-	<pan.deng@intel.com>, "tianyou.li@intel.com" <tianyou.li@intel.com>
-Subject: RE: [PATCH 1/3] fs/file.c: add fast path in alloc_fd()
-Thread-Topic: [PATCH 1/3] fs/file.c: add fast path in alloc_fd()
-Thread-Index: AQHavnVDuhejvw+BWkmfgba3ixog57HO6lAA
-Date: Wed, 19 Jun 2024 10:36:47 +0000
-Message-ID: <218ccf06e7104eb580023fb69c395d3e@AcuMS.aculab.com>
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240614163416.728752-2-yu.ma@intel.com>
-In-Reply-To: <20240614163416.728752-2-yu.ma@intel.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1718793474; c=relaxed/simple;
+	bh=6+ZzL6rs2GfKv3zWcepskLbzkzrPZs+F7QCln1TKk/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WxAQBCKZo38bjTr/Zgx2MiFjlSEzaiZfQfJo57FRsd0ceTYQ8Hq/2aCTySu7yM+z3iRLC4tgnQF/HiNxjY6t0WIHlNLFnmbwRgvaXpD5AbqlXYuRmgdEv05R8VxsPGm3/1yfudKfz45MI4SnKH4hSyLC+mKacgKfSg+4eRmG0fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cMiBtqbr; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cMiBtqbr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718793471; x=1750329471;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6+ZzL6rs2GfKv3zWcepskLbzkzrPZs+F7QCln1TKk/c=;
+  b=cMiBtqbrlq8yNLeV8HaJfSLbEI+uWNJP16tDYflqWjPq+QSLV6eQi0x6
+   7sKSG+r1bhaBFgytDupTByimDttV/0d5+bDy6PtFi7QuXmNMs8RB15SEV
+   YVMzcUADuxsr6okSTHEwT+AECb4ggiiFHDLiBpDN+xTRXOJrFty8/lADE
+   OQ3xRaztNGu2zE4ylmaGk2Ov+sUfKnhm2+/2U42Uius+TwET382zum4pJ
+   Q4cbeBlc0hW1c85Dh0zBcCyHg1evUC6q9bPnV5uJ1xuqaBIC/MqZN7U5Y
+   8TVL7aUs9GEAC2KIyNVSwm5Ru3L6ynsLi6JKkL6vguE32ynxNueSwO2lQ
+   g==;
+X-CSE-ConnectionGUID: H3P73Um/SUC7JR5A4UW3dA==
+X-CSE-MsgGUID: pBzD9F/zQJq8b67Y+K0YTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15691564"
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="15691564"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:37:51 -0700
+X-CSE-ConnectionGUID: 8Vpr9nH1TsWxW/5cZ2/IkA==
+X-CSE-MsgGUID: wyO5WjNOSV2v72V2AJeNGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="41832687"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 19 Jun 2024 03:37:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 24F5A241; Wed, 19 Jun 2024 13:37:48 +0300 (EEST)
+Date: Wed, 19 Jun 2024 13:37:48 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Li RongQing <lirongqing@baidu.com>
+Cc: dave.hansen@linux.intel.com, x86@kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, rick.p.edgecombe@intel.com
+Subject: Re: [PATCH][v3] virt: tdx-guest: Don't free decrypted memory
+Message-ID: <uggd72vugduczhkifii57aflkv4hxsija5iwyqvxdr24tbysus@nq4xx7putbxg>
+References: <20240619084750.9207-1-lirongqing@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619084750.9207-1-lirongqing@baidu.com>
 
-From: Yu Ma <yu.ma@intel.com>
-> Sent: 14 June 2024 17:34
->
-> There is available fd in the lower 64 bits of open_fds bitmap for most ca=
-ses
-> when we look for an available fd slot. Skip 2-levels searching via
-> find_next_zero_bit() for this common fast path.
->=20
-> Look directly for an open bit in the lower 64 bits of open_fds bitmap whe=
-n a
-> free slot is available there, as:
-> (1) The fd allocation algorithm would always allocate fd from small to la=
-rge.
-> Lower bits in open_fds bitmap would be used much more frequently than hig=
-her
-> bits.
-> (2) After fdt is expanded (the bitmap size doubled for each time of expan=
-sion),
-> it would never be shrunk. The search size increases but there are few ope=
-n fds
-> available here.
-> (3) There is fast path inside of find_next_zero_bit() when size<=3D64 to =
-speed up
-> searching.
->=20
-> With the fast path added in alloc_fd() through one-time bitmap searching,
-> pts/blogbench-1.1.0 read is improved by 20% and write by 10% on Intel ICX=
- 160
-> cores configuration with v6.8-rc6.
->=20
-> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Signed-off-by: Yu Ma <yu.ma@intel.com>
-> ---
->  fs/file.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/file.c b/fs/file.c
-> index 3b683b9101d8..e8d2f9ef7fd1 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -510,8 +510,13 @@ static int alloc_fd(unsigned start, unsigned end, un=
-signed flags)
->  =09if (fd < files->next_fd)
->  =09=09fd =3D files->next_fd;
->=20
-> -=09if (fd < fdt->max_fds)
-> +=09if (fd < fdt->max_fds) {
-> +=09=09if (~fdt->open_fds[0]) {
-> +=09=09=09fd =3D find_next_zero_bit(fdt->open_fds, BITS_PER_LONG, fd);
-> +=09=09=09goto success;
-> +=09=09}
->  =09=09fd =3D find_next_fd(fdt, fd);
-> +=09}
+On Wed, Jun 19, 2024 at 04:47:50PM +0800, Li RongQing wrote:
+> In CoCo VMs it is possible for the untrusted host to cause
+> set_memory_decrypted() to fail such that an error is returned
+> and the resulting memory is shared. Callers need to take care
+> to handle these errors to avoid returning decrypted (shared)
+> memory to the page allocator, which could lead to functional
+> or security issues. So leak the decrypted memory when
+> set_memory_decrypted fails, and don't need to print an error
+> since set_memory_decrypted will call WARN_ONCE.
 
-Hmm...
-How well does that work when the initial fd is > 64?
+Add "()" for set_memory_decrypted() and WARN_ONCE().
 
-Since there is exactly one call to find_next_fd() and it is static and shou=
-ld
-be inlined doesn't this optimisation belong inside find_next_fd().
+And put the solution into a separate paragraph:
 
-Plausibly find_next_fd() just needs rewriting.
+s/ So leak/\n\nLeak/
 
-Or, possibly. even inside an inlinable copy of find_next_zero-bit()
-(although a lot of callers won't be 'hot' enough for the inlined bloat
-being worth while).
+> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 
-=09David
+Otherwise, looks good:
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
