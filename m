@@ -1,60 +1,52 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ECC6F303;
-	Wed, 19 Jun 2024 15:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC59513D525
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 15:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718810758; cv=none; b=k6VflZ+mXzV/tQKpmTTxsMWwz31WbuF2PDv61xqoJ5RJjA6EZFl7ib9zvPXlvxLXUCAJ/HNSvv4XZbswAYDLCIfYGcibygytu14QLqCyoYPXSFYKx6mRCwcwieROgB3hQCQhyDaHFZD9j84rQd75X/xvS/wqrttUzKx6wVPDIzA=
+	t=1718810861; cv=none; b=VR8RqrNx5kAHQe7p3ljoGc0CzOspw+lr6WcFtApr8fKGg8KT/9Lhy+3EjdHRM2mL34iTVGtZQYO4x8PlJtdTzfmjAXacoatwO5yS5TokNomS1R2+1uG9AfZ+KuDCtx1yD6iVfuw2OBLX+uGBwtmOqSdG4g5c9ien6oQwNGyifcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718810758; c=relaxed/simple;
-	bh=lObePiRYmjF41juMObfnbKFWNcUSV+MtB32rdSUSagg=;
+	s=arc-20240116; t=1718810861; c=relaxed/simple;
+	bh=dlVW0Zt+yD0AYF7FVIAwlp8E7GCLYrxCPZlP2ToeyWw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5oowsxzTdtVZnBM0mHNNCcg5JaLTmemPWHXx6mbo30mYKqr/pMIqhIJK3t8v/P+xE/lPxIv3Te7D/rlNYJGw8FfJX217ywhA4P4XU75imppPzk+IHqTbfeGl7y0+qR241bkV83I73XRz/qkzsgFT9nnR1b1aeQg5DCSnFaNM+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1z35w1e; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=TZYUXEW8qR5AW8/0T/I2mWbJvzea/7RkPsZKeO4/aTYUyq8E5lgW67cbHyf48s9ebyZ8ObVA3HxFP0FG2wavJ+hloyVDFc1L25n8uFwAP+wnSxyrcjEhfDdTTe3NmIxz7T7nWzwPT1INbvh+N3uoOnizxkoCThNlFPucw+Fz9+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=XPW+p68K; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1z35w1e"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-632843cff4fso51711927b3.3;
-        Wed, 19 Jun 2024 08:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718810756; x=1719415556; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WBW1O2idp2gCEdyEFquLkwCIznqvaLy0Pot5Ug+i2Hg=;
-        b=E1z35w1eKGRB53lzx4ygd6Bq6uSn/dafo+UZIATQLzcyuf1hjgZ0mBR31c4EVFnHjy
-         Rf1POTn9xGvLNLLwg/3bu5IaN8TEb+NezRltPLixUehFkopIlQClpiPKcm+/H5dG+cEb
-         dGkhT2bPSQbLvvt8Qfqla87k/6EO5621YahlG+7iV7GXZxEXJ9e/5ZqPiHSWssDS+6RK
-         3ealh664NQoQha62GEDKej1MO0omiCWL5acAoUQjTp9dkFlgQnNh1Yqhh0o7V/E46BBi
-         nr9xBdwDX2RMFgdqfqxVmv5FEV0PUJpVYaRQswbea1fumXDB+M2Sm1RyPCNygN8HYZrg
-         3zHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718810756; x=1719415556;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WBW1O2idp2gCEdyEFquLkwCIznqvaLy0Pot5Ug+i2Hg=;
-        b=cPK/pLLmxz6Wzf2joRjAxKEzrtN6wscCIOvb0ZMMOBcKD8KeqLVpZc7coDwot1gUZB
-         9i4q+1NrQ6HhHUBsaiD9uNv4JQdCcVjz651bKX8qa/YsBAtMdLPgQYVzQtd7PUyUEGSs
-         fRN8fpmPeWSlf1wrZC2qeQAk/eBorOvlj6IpI1AVACCdHlRNKsxXbSwkeEFxqPPGn7xG
-         0BUPWc83vdiLp0lOgxEhh6SKHydxQvGKLk8e81kYbFvUD3AepN222BeBRDvWWfOMzwyP
-         MDt0HdkWkr67FvNy6Dskb9vcd50dEsPgADQGX0cbE3aDcXyjRQbkT36R+J9iKT/+Y2HZ
-         +xfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUB3dghLuiGD8UzF1Xk9PPGDN9Mig3YGUYzqDDHhLiqPsEhFesxMbxlHN6I4Tb5L1nRJJIGpe05mnWyoHH+ochlvTmnPOf8mBsVmKIZZI/RlciHW+fHKHzCPUQsOP+rf1QcDRTv
-X-Gm-Message-State: AOJu0Yyw1ene62oIQG0J2gAZrv3/hvmU6ySAfzCZLAHmFXZY+T9+EkEK
-	008E4VdDlwp3ROPOlB2YBBPJ45ScFpOmBA3mmNB/spZ9r+maidGK
-X-Google-Smtp-Source: AGHT+IGLeYLzu/pwXLZC+cishiNJ064fDhbucXwTiaDWgZCkm3UWK6+CQL7WUdWfGFifGmsdl+bLgw==
-X-Received: by 2002:a05:690c:fd5:b0:630:8fe1:b626 with SMTP id 00721157ae682-63a8ffc98b4mr31376877b3.48.1718810755915;
-        Wed, 19 Jun 2024 08:25:55 -0700 (PDT)
-Received: from [192.168.1.114] ([160.177.57.59])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb4835sm78723276d6.99.2024.06.19.08.25.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 08:25:31 -0700 (PDT)
-Message-ID: <b76a1dc8-f4b2-46b0-84af-b46e5cf6acab@gmail.com>
-Date: Wed, 19 Jun 2024 16:25:23 +0100
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XPW+p68K"
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTPS
+	id Jw4rsbG9gJXoqJxDhs9eKy; Wed, 19 Jun 2024 15:27:33 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id JxDgswmJEy2LPJxDgspnoj; Wed, 19 Jun 2024 15:27:32 +0000
+X-Authority-Analysis: v=2.4 cv=CZoO5qrl c=1 sm=1 tr=0 ts=6672f8e4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=pGLkceISAAAA:8
+ a=VwQbUJbxAAAA:8 a=UpB2q-s9SAH0Zd9J5qsA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=FvJxBu1YSpxd+/VCWen78+JSc56VIImOsnuc2H9+pC4=; b=XPW+p68KqNViATw/50CcjHJeqs
+	iR2t1LTnsYC15yhdO/6Fs2o5FFz1iYsshhRXKp91gEHnzuzG49JRq9oNz+qAMy/B7EKh7SCV6vLs9
+	v4owBH/rD+Hzilp6/lvwFZRmj+W/3PAsVpnebS2jBhbLhaWUOqmBg+YmEWJfS1qtMAs8S53K9IfKt
+	OkoOkXnB5UtyR6dn5J8w2FvyDKyvJ+bmyJmC1L/cRYa29FUs1/bANOzGAeADkgz0DQmv2jJQfi0nl
+	I1vueRgsGmax2jLhEBxyo8Q+0vlZed2Yu9pVplQsaE14TU7B6CUV+uhum1KYQDECKwwH+u5zh5dZp
+	iDT0/O/w==;
+Received: from [201.172.173.139] (port=49740 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sJxDe-000rOz-1I;
+	Wed, 19 Jun 2024 10:27:30 -0500
+Message-ID: <5832065e-d998-4dc7-9df9-9186d3d26d9b@embeddedor.com>
+Date: Wed, 19 Jun 2024 09:27:28 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,94 +54,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 net-next] net: dsa: ksz_common: Allow only up to two
- HSR HW offloaded ports for KSZ9477
-To: Lukasz Majewski <lukma@denx.de>, Vladimir Oltean <olteanv@gmail.com>,
- Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Eric Dumazet <edumazet@google.com>, "David S. Miller"
- <davem@davemloft.net>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Tristram.Ha@microchip.com, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Simon Horman <horms@kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- "Ricardo B. Marliere" <ricardo@marliere.net>,
- Casper Andersson <casper.casan@gmail.com>, linux-kernel@vger.kernel.org,
- Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
- Andrew Lunn <andrew@lunn.ch>
-References: <20240619145809.1252915-1-lukma@denx.de>
+Subject: Re: [PATCH] USB: serial: garmin_gps: annotate struct garmin_packet
+ with __counted_by
+To: Nathan Chancellor <nathan@kernel.org>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+References: <20240619-garmin_gps_counted_by-v1-1-d8d816f085d9@gmail.com>
+ <20240619144320.GA2091442@thelio-3990X>
 Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- HGuUuzv+GKZ6nsysJw==
-In-Reply-To: <20240619145809.1252915-1-lukma@denx.de>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240619144320.GA2091442@thelio-3990X>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sJxDe-000rOz-1I
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:49740
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLGhq3DtVAfqAUfCWy3v7/hGNt20Vj8W1ukHg74ftmp7gPtBLxy1gS5cH2CS19KU/QsiYvE+cdX9nXqobrvZ4I6H8Y/rIU5KyTc/E8SnqPoYDmhUVDHY
+ MqoF67mV9SfDwrJexSVQP8DM1bWrq2rhpiOk60l6brWDlMSI+t07ckuZhoJkNBe8HDvqG4ZUJhuZcUiV2nzLrQg3mYL8L3nbAD9Gc7L3fndZsRR/hnFhwldv
 
 
 
-On 6/19/2024 3:58 PM, Lukasz Majewski wrote:
-> The KSZ9477 allows HSR in-HW offloading for any of two selected ports.
-> This patch adds check if one tries to use more than two ports with
-> HSR offloading enabled.
+On 19/06/24 16:43, Nathan Chancellor wrote:
+> On Wed, Jun 19, 2024 at 11:40:57AM +0200, Javier Carrasco wrote:
+>> Use the __counted_by compiler attribute for the data[] flexible array member
+>> to improve the results of array bound sanitizers.
+>>
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+>> ---
+>> The size is assigned before the first reference to the flexible array
+>> (see pkt_add()), which allows for a straightforward annotation without
+>> further modifications.
 > 
-> The problem is with RedBox configuration (HSR-SAN) - when configuring:
-> ip link add name hsr0 type hsr slave1 lan1 slave2 lan2 interlink lan3 \
-> 	supervision 45 version 1
+> Agreed, this seems like a reasonable patch in and of itself that should
+> work:
 > 
-> The lan1 (port0) and lan2 (port1) are correctly configured as ports, which
-> can use HSR offloading on ksz9477.
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 > 
-> However, when we do already have two bits set in hsr_ports, we need to
-> return (-ENOTSUPP), so the interlink port (lan3) would be used with
-> SW based HSR RedBox support.
-> 
-> Otherwise, I do see some strange network behavior, as some HSR frames are
-> visible on non-HSR network and vice versa.
-> 
-> This causes the switch connected to interlink port (lan3) to drop frames
-> and no communication is possible.
-> 
-> Moreover, conceptually - the interlink (i.e. HSR-SAN port - lan3/port2)
-> shall be only supported in software as it is also possible to use ksz9477
-> with only SW based HSR (i.e. port0/1 -> hsr0 with offloading, port2 ->
-> HSR-SAN/interlink, port4/5 -> hsr1 with SW based HSR).
-> 
-> Fixes: 5055cccfc2d1 ("net: hsr: Provide RedBox support (HSR-SAN)")
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+> It might also make sense to change the pkt allocation to use
+> struct_size() instead of open coding it?
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
++1 :)
+
+Thanks
+--
+Gustavo
