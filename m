@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EDA1662F0;
-	Wed, 19 Jun 2024 22:36:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD8B1684AC;
+	Wed, 19 Jun 2024 22:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718836593; cv=none; b=s0twCo+I/UR+jTBcdNq9GPfyrL0N/6RSy1CQZe4wQRl8FN0FWf4XaEmQ+3qwGwUYIH7XuXr7ZklKVdVV6wy7fo0KGJzGFpeKPcFOtOGf1BHyFO8qv7JjTGltva9Wvmdvg+t2YqP6iK6o8mSCmEiGkfgqKne/vel7ZPUj1Kvz2Sw=
+	t=1718836594; cv=none; b=fTAh+3qSMl753yVGMobjCzDWEn69pbHQf5wMuwNfrzHOyAhA7SvPCP3dfGkg+5EaArh5eZjCI9TMnfbIHE0QidZNvw5xuxw+lxp4HP7KTv3JqXnK/wxk16WGpc7lhjdhhf7VWKhmSLMcwIVgt/Xbk619wcoFjw6VEVgealwxuwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718836593; c=relaxed/simple;
-	bh=9j4VFn1eGwXgbBvfyH5uFmdbNPqNr34zzJ/r5P5TDOs=;
+	s=arc-20240116; t=1718836594; c=relaxed/simple;
+	bh=pQpRxoD/bBZfiYxgtVnfsfU0R1AIIwksKAjwrmd0eJY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IgUU81K0+mfHtevn/lNn1M+d0FoVvMM3/dL0DtMQKGioIW2xRnpdS6GxWgtiJUql74GUYSY1q8DNM8+aZjW1fjr4IzF2l+rfuvfDwBtvB/08e1CJ3mkbSeYtWwhAYCQv+/5AwcQ8G7sUhv2Yuqdi+tP+d96Ttn8fs74dPnmwK7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LyR0JExx; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=f7Tgb6gj8bQNIEJwKjprC8iKITgDxCcXe+WxY/TTaI6rda9MeYfzTeBCDpVDbfTvDttNogGoswoqNzesJhDSKJH++0mYRTMLWWUHJup+WXO2jeg7MVfRswG1kbOVEDuouPBCngwAb4VWMxC/jImmIBd4XG73kBeZM5l8kNTvm14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kr2dRD6y; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LyR0JExx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kr2dRD6y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718836591; x=1750372591;
+  t=1718836592; x=1750372592;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9j4VFn1eGwXgbBvfyH5uFmdbNPqNr34zzJ/r5P5TDOs=;
-  b=LyR0JExxRac8LxU88eQ/BBun71BurbVImqQvj6NXGd3S1cHl4gpjCDQY
-   4lA9C6HrjuET45Y4kRxAM3NXvIzAiI+9zzsGKjK9+NjQNt8O0RlBTXSsX
-   6T8ixSpS/rww9lJu4ESZN38pcFkyA4pTfvkPKBWHakGZelDSvZToMYJRL
-   h4FjLuuz8a5V6x3GB8uGdATqNBvZ74sts0z8FBfyJMOqaoo2e0d1NZWVo
-   t7ERvvj0C0b8OMhqNqr1YwU++3gNUr0JW/rwPAKpwMt5p+7kW9e6mVbC/
-   5xXfqup/WOVuxJgwmCtupYk/QeUtiG6Nh5s1eLtcd/oMfC71gE+CtZFii
-   g==;
-X-CSE-ConnectionGUID: cDjtVetcQjODLejyRQOQJA==
-X-CSE-MsgGUID: eOzy5BasQEqVsc3FvplO8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931980"
+  bh=pQpRxoD/bBZfiYxgtVnfsfU0R1AIIwksKAjwrmd0eJY=;
+  b=kr2dRD6yHg1uqnqoIiNp5DMzSHw0vCSpzHNLwkATkdUBUjwcOT1yBDH8
+   uJltiJJKivrT3m5hyIOsM8AfESB82O8lTYC9IVN4FJdqo96smKEc/3Pr2
+   4HAHC+56McIuwLFHpASldkfIvL4e7WqZ0axx/AcG2f+fgZwlCn0eAOeFb
+   xKqs2zTIJhYCHBhX3joRfx4MHlxnPd1EQCMP51jN825v1Ae1pl8wCN5p8
+   BZQmOSwOz0P+X1tJjz5dwVHdTMtC8KCP3loc9H5jKYaT25deKfpZ+o/Vu
+   8N0WlGnrm6EgMyllagNYx5+kzyjK0mkWcIEL0C89Cp8PePG95rLAY5dSm
+   A==;
+X-CSE-ConnectionGUID: 3l7MH1FnQpWBWZtR+D44pQ==
+X-CSE-MsgGUID: SAs1MIAqSVWaiZXjp1XIlA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15931988"
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15931980"
+   d="scan'208";a="15931988"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:23 -0700
-X-CSE-ConnectionGUID: Dsp3EQeSS2yjrqEtmYjVjg==
-X-CSE-MsgGUID: DBdN5H7zRQeGPtKTrtE5tg==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:24 -0700
+X-CSE-ConnectionGUID: xlsPyDZNTqat0+uZLyUM2w==
+X-CSE-MsgGUID: p95uEyk6TYSiqqMIoaMzIw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="72793359"
+   d="scan'208";a="72793369"
 Received: from ivsilic-mobl2.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.54.39])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 15:36:23 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
@@ -56,9 +56,9 @@ Cc: kai.huang@intel.com,
 	yan.y.zhao@intel.com,
 	rick.p.edgecombe@intel.com,
 	Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH v3 12/17] KVM: x86/tdp_mmu: Take root in tdp_mmu_for_each_pte()
-Date: Wed, 19 Jun 2024 15:36:09 -0700
-Message-Id: <20240619223614.290657-13-rick.p.edgecombe@intel.com>
+Subject: [PATCH v3 14/17] KVM: x86/tdp_mmu: Propagate attr_filter to MMU notifier callbacks
+Date: Wed, 19 Jun 2024 15:36:11 -0700
+Message-Id: <20240619223614.290657-15-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
 References: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
@@ -72,88 +72,103 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Take the root as an argument of tdp_mmu_for_each_pte() instead of looking
-it up in the mmu. With no other purpose of passing the mmu, drop it.
+Teach the MMU notifier callbacks how to check kvm_gfn_range.process to
+filter which KVM MMU root types to operate on.
 
-Future changes will want to change which root is used based on the context
-of the MMU operation. So change the callers to pass in the root currently
-used, mmu->root.hpa in a preparatory patch to make the later one smaller
-and easier to review.
+The private GPAs are backed by guest memfd. Such memory is not subjected
+to MMU notifier callbacks because it can't be mapped into the host user
+address space. Now kvm_gfn_range conveys info about which root to operate
+on. Enhance the callback to filter the root page table type.
+
+The KVM MMU notifier comes down to two functions.
+kvm_tdp_mmu_unmap_gfn_range() and kvm_tdp_mmu_handle_gfn().
+
+For VM's without a private/shared split in the EPT, all operations
+should target the normal(direct) root.
+
+invalidate_range_start() comes into kvm_tdp_mmu_unmap_gfn_range().
+invalidate_range_end() doesn't come into arch code.
+
+With the switch from for_each_tdp_mmu_root() to
+__for_each_tdp_mmu_root() in kvm_tdp_mmu_handle_gfn(), there are no
+longer any users of for_each_tdp_mmu_root(). Remove it.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
 TDX MMU Prep v3:
- - Split from "KVM: x86/mmu: Support GFN direct mask" (Paolo)
+ - Change subject from "Make mmu notifier callbacks to check
+   kvm_process" to "Propagate attr_filter to MMU notifier callbacks"
+   (Paolo)
+ - Remove no longer used for_each_tdp_mmu_root() (Binbin)
+
+TDX MMU Prep v2:
+ - Use newly added kvm_process_to_root_types()
+
+TDX MMU Prep:
+ - Remove warning (Rick)
+ - Remove confusing mention of mapping flags (Chao)
+ - Re-write coverletter
+
+v19:
+ - type: test_gfn() => test_young()
+
 ---
- arch/x86/kvm/mmu/tdp_mmu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/kvm/mmu/tdp_mmu.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index c8e5e779967e..2200bdc7681f 100644
+index a0010c62425f..582e5a045bb7 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.c
 +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -693,8 +693,8 @@ static inline void tdp_mmu_iter_set_spte(struct kvm *kvm, struct tdp_iter *iter,
- 			continue;					\
- 		else
+@@ -193,9 +193,6 @@ static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
+ 		     !tdp_mmu_root_match((_root), (_types)))) {			\
+ 		} else
  
--#define tdp_mmu_for_each_pte(_iter, _kvm, _mmu, _start, _end)		\
--	for_each_tdp_pte(_iter, _kvm, root_to_sp(_mmu->root.hpa), _start, _end)
-+#define tdp_mmu_for_each_pte(_iter, _kvm, _root, _start, _end)	\
-+	for_each_tdp_pte(_iter, _kvm, _root, _start, _end)
+-#define for_each_tdp_mmu_root(_kvm, _root, _as_id)			\
+-	__for_each_tdp_mmu_root(_kvm, _root, _as_id, KVM_ALL_ROOTS)
+-
+ #define for_each_valid_tdp_mmu_root(_kvm, _root, _as_id)		\
+ 	__for_each_tdp_mmu_root(_kvm, _root, _as_id, KVM_VALID_ROOTS)
  
- /*
-  * Yield if the MMU lock is contended or this thread needs to return control
-@@ -1113,8 +1113,8 @@ static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
-  */
- int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+@@ -1210,12 +1207,16 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+ 	return ret;
+ }
+ 
++/* Used by mmu notifier via kvm_unmap_gfn_range() */
+ bool kvm_tdp_mmu_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range,
+ 				 bool flush)
  {
--	struct kvm_mmu *mmu = vcpu->arch.mmu;
- 	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
- 	struct tdp_iter iter;
- 	struct kvm_mmu_page *sp;
- 	int ret = RET_PF_RETRY;
-@@ -1125,7 +1125,7 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
++	enum kvm_tdp_mmu_root_types types;
+ 	struct kvm_mmu_page *root;
  
- 	rcu_read_lock();
+-	__for_each_tdp_mmu_root_yield_safe(kvm, root, range->slot->as_id, KVM_ALL_ROOTS)
++	types = kvm_gfn_range_filter_to_root_types(kvm, range->attr_filter);
++
++	__for_each_tdp_mmu_root_yield_safe(kvm, root, range->slot->as_id, types)
+ 		flush = tdp_mmu_zap_leafs(kvm, root, range->start, range->end,
+ 					  range->may_block, flush);
  
--	tdp_mmu_for_each_pte(iter, kvm, mmu, fault->gfn, fault->gfn + 1) {
-+	tdp_mmu_for_each_pte(iter, kvm, root, fault->gfn, fault->gfn + 1) {
- 		int r;
- 
- 		if (fault->nx_huge_page_workaround_enabled)
-@@ -1784,14 +1784,14 @@ bool kvm_tdp_mmu_write_protect_gfn(struct kvm *kvm,
- int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
- 			 int *root_level)
+@@ -1229,15 +1230,18 @@ static __always_inline bool kvm_tdp_mmu_handle_gfn(struct kvm *kvm,
+ 						   struct kvm_gfn_range *range,
+ 						   tdp_handler_t handler)
  {
-+	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
++	enum kvm_tdp_mmu_root_types types;
+ 	struct kvm_mmu_page *root;
  	struct tdp_iter iter;
--	struct kvm_mmu *mmu = vcpu->arch.mmu;
- 	gfn_t gfn = addr >> PAGE_SHIFT;
- 	int leaf = -1;
+ 	bool ret = false;
  
- 	*root_level = vcpu->arch.mmu->root_role.level;
++	types = kvm_gfn_range_filter_to_root_types(kvm, range->attr_filter);
++
+ 	/*
+ 	 * Don't support rescheduling, none of the MMU notifiers that funnel
+ 	 * into this helper allow blocking; it'd be dead, wasteful code.
+ 	 */
+-	for_each_tdp_mmu_root(kvm, root, range->slot->as_id) {
++	__for_each_tdp_mmu_root(kvm, root, range->slot->as_id, types) {
+ 		rcu_read_lock();
  
--	tdp_mmu_for_each_pte(iter, vcpu->kvm, mmu, gfn, gfn + 1) {
-+	tdp_mmu_for_each_pte(iter, vcpu->kvm, root, gfn, gfn + 1) {
- 		leaf = iter.level;
- 		sptes[leaf] = iter.old_spte;
- 	}
-@@ -1813,11 +1813,11 @@ int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
- u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, gfn_t gfn,
- 					u64 *spte)
- {
-+	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
- 	struct tdp_iter iter;
--	struct kvm_mmu *mmu = vcpu->arch.mmu;
- 	tdp_ptep_t sptep = NULL;
- 
--	tdp_mmu_for_each_pte(iter, vcpu->kvm, mmu, gfn, gfn + 1) {
-+	tdp_mmu_for_each_pte(iter, vcpu->kvm, root, gfn, gfn + 1) {
- 		*spte = iter.old_spte;
- 		sptep = iter.sptep;
- 	}
+ 		tdp_root_for_each_leaf_pte(iter, kvm, root, range->start, range->end)
 -- 
 2.34.1
 
