@@ -1,79 +1,95 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD317A158
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 08:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFDC56448;
+	Wed, 19 Jun 2024 08:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718785867; cv=none; b=jD5mSZ1XZl8BkLwNkkFoC91/tKXIxQsbhJpudQZAvIqk/wihP1UZ12W0cwPR81NicYmsDrUBHP8/YJrq9ULZM71NvTUaY05Ex/ZYw3ROkxu4Yp8EajDaaT9fy/XgmSGUwCQ3xR8bnoh+dGq4B7VgI7VxnFjLOLFvEl3/TqxTtwc=
+	t=1718785935; cv=none; b=nj7MESDHs4+D2y45cpg0J1vyvH8mLi7TqxCdLHoBDHhLoDVqlQ/ukNhUqEIYrxg1DsXrYFUZXJYuXPlXegzwQBb0xACmaJggx2S86TXZRD2835k4MBmAJdTz2luf+CbQ7bbymHGvGRYQT8UdpTq4RTu+oSH3DM2QNxm4aYn9Bd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718785867; c=relaxed/simple;
-	bh=77UgR2xivnvEyej3LXAy8J36h9jQCajS3QuIEZO4cMw=;
+	s=arc-20240116; t=1718785935; c=relaxed/simple;
+	bh=6L3CLgqlPBPjLasxNnLwmXiP78gx+9LhlT39CmIA30k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hr8wuChXDiDyOse+adDAvCettTz8ugXVvVHeSgpkwrqhEkIRfMmESEZpqSWCyuFR0yjK/5Z6ApDDc6E8ErHLt8yjnI3V/qLQpyO0gMEFn7KEv3wCscWgmOMc5/fk4KLFiNsg73f8W9oqVVTa3UPd99Tw5UD9Mhn6NQ7zjzg+tOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ft4oiK4a; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=mztcUrmSFqPIAigNgonl7lhq8W9uxd375/y9gZTW1s8VPj+EHBsVhLFNjyoA6fi7WJGQeSTPkr1LFDCRn6blhjmGYXuoMiHEaC6lAiVIe1VLe92vOw8BgHga1kWBCvu/77I51ep+vgsurDugDrpOeB7vYBPxO1l2JH97i/zo1S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=l8+eKRfN; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ft4oiK4a"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5E82340E0219;
-	Wed, 19 Jun 2024 08:31:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id y76HJXVC0076; Wed, 19 Jun 2024 08:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718785856; bh=nrHGuJZQSf6Emehlq57OfsJQaGAjXLph2bW1wMyJzlU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ft4oiK4aeUhblaeM8VwL8s8RdoxfkxAPhrHNYfI4XfW/pF0Z4tUeIlzfCzXh90MlK
-	 cJ2ghkJLffjBK/HirIPBspxqro3+rLZYVso+9KevU6pDlu6zkg/tB/pJYoye0X3/XS
-	 B9Q37pNbEPSanF/nimHrxWeRQvjiH13p+XFwNjVS75sYZlOeB8syTPkt+Jc8MIfV15
-	 laIKUKwls5VJKtXAqeTkkLetxXcDKRSf/opljgdQsNo9g9zF5vcERKM/H4biEmv4jy
-	 qCG+t4++sSsXQJavSlXF/6eZ9N5BOhDxmGsyiM5/82mCau/gRncHsM1M0yw+AGrN9X
-	 7VQK1NPAUNKhbzR3uJfKn0u9ntmPbgWRrvBUaIwk9V39bxvklWuwFuKIxxMwkqdhcA
-	 SnatbAERNpq4wFRX+0BoKQqski1vAsAVLdhux6BaEhasQJcS4MEs9103OF9qbNg+Hx
-	 kWRohsrH37j3KIx8n68ejeUfX0E1H5xLR0s3TTNwEfW+eVoihiTYFw6svANr9fZyOi
-	 KHq4ehUpBymZgw+NgZVTaGoy6KXFHEdGDbrmAUir5qKZVeVrDPx4SixCn6P+ltWzdH
-	 4kyVK2oMryDX4oCpu8fEzigEQwyCigDU6uLkOTHVKsBZOpVPngnNvcJges68BeHSg5
-	 54jd7ICAvKce4ekJxS6II0Ig=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E786E40E01F9;
-	Wed, 19 Jun 2024 08:30:44 +0000 (UTC)
-Date: Wed, 19 Jun 2024 10:30:39 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller@googlegroups.com, elver@google.com, glider@google.com,
-	nogikh@google.com, tarasmadan@google.com
-Subject: Re: [PATCH v2 0/4] KCOV fixes
-Message-ID: <20240619083039.GAZnKXL8euon1-hHIR@fat_crate.local>
-References: <cover.1718092070.git.dvyukov@google.com>
- <CACT4Y+Z=U+Y8gKBgaU76=zg=rAdq=AQ=epAq+RxDfdXsaqO_0w@mail.gmail.com>
- <CACT4Y+Zq3t2JXEbGDzYU61Rs5KH3mhCDiZ4GP9OacKuyocnYHQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="l8+eKRfN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=R2yscDCF3+dfP4Cs8Q0wqLUEmaZApVG8aLFF5tCrBu0=; b=l8+eKRfNIsFXfp/wyZ3/k43Fll
+	UNDwT6Xcx37V3IP7XEq0A2mnLZLe7Ki00Ay8C0YLUVFt4SjyYlb1gtwH2DDZ6ZlF8NSsaelTpalOe
+	d0JmJZys/ARESp+k7XtoeVaNxRISbwI1gf9tOg75zt+8QmPXW5auJfxbGIy7q3T+7WUhzhENUC0mZ
+	4qNom5NPKYWHSHEiz0G3y7V3KCF5wpFI6t7JvI5SrGhsRZ3to0SbBhU1M7To9be38P54WonUN9YCE
+	s2jtXSIB/2t9mrAsjf936r3j8NGS200YJR40vm3VOTZicERw+4glf6dCDzVHUQkwq5oiIcS4kMohm
+	WnLhmwrA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48842)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sJqjM-0007zd-1N;
+	Wed, 19 Jun 2024 09:31:48 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sJqjL-0006bp-Ee; Wed, 19 Jun 2024 09:31:47 +0100
+Date: Wed, 19 Jun 2024 09:31:47 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v7 1/5] net: phy: mediatek: Re-organize MediaTek
+ ethernet phy drivers
+Message-ID: <ZnKXc/UglBxayJtv@shell.armlinux.org.uk>
+References: <20240613104023.13044-1-SkyLake.Huang@mediatek.com>
+ <20240613104023.13044-2-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+Zq3t2JXEbGDzYU61Rs5KH3mhCDiZ4GP9OacKuyocnYHQ@mail.gmail.com>
+In-Reply-To: <20240613104023.13044-2-SkyLake.Huang@mediatek.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Jun 19, 2024 at 07:20:56AM +0200, Dmitry Vyukov wrote:
-> Or is it OK to take this via mm tree (where KCOV changes usually go)?
+On Thu, Jun 13, 2024 at 06:40:19PM +0800, Sky Huang wrote:
+> diff --git a/drivers/net/phy/mediatek-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
+> similarity index 99%
+> rename from drivers/net/phy/mediatek-ge-soc.c
+> rename to drivers/net/phy/mediatek/mtk-ge-soc.c
+> index f4f9412..47af872 100644
+> --- a/drivers/net/phy/mediatek-ge-soc.c
+> +++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
+> @@ -1415,7 +1415,7 @@ static int mt7988_phy_probe_shared(struct phy_device *phydev)
+>  	 * LED_C and LED_D respectively. At the same time those pins are used to
+>  	 * bootstrap configuration of the reference clock source (LED_A),
+>  	 * DRAM DDRx16b x2/x1 (LED_B) and boot device (LED_C, LED_D).
+> -	 * In practise this is done using a LED and a resistor pulling the pin
+> +	 * In practice this is done using a LED and a resistor pulling the pin
 
-Be patient, pls, you're on the TODO list.
+If you are moving files around, there should be no extraneous changes
+in the commit that is doing the move. This is a spelling fix, and that
+should be a separate patch (and probably should be done as the first
+patch.)
+
+Thanks.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
