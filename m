@@ -1,70 +1,157 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C11A13FD84;
-	Wed, 19 Jun 2024 12:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3241411D7
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799441; cv=none; b=oLZkaT5I2VnDikuwdUxK/dewyI8dlfHnzEKVBpN0BdVoEaMO8fnzYhptBafy9yV/seUn+tRJknsUtu93lSyqv7CKP9/yIsZmMwj6efa/GRmNBU3GNhXM29nOrN3yJi+oaczWHGD3eDorpD1RDP+hhE/i0QhI70fAGvO9nhUcI7g=
+	t=1718799450; cv=none; b=HJJsMkm3PguFFN8EGjFWNYswVauTVfw/2R/GN6U41Lzl2RUoFoifQB11+NCYwuZJRETJ5fJbvew5+9RPHsdfur78yAvE7IwchyATFGGe9P3omer29H9GMZ7BwfXaEL2o2oG7+/otXcyzyk2d8pBjN+IDmJ9DfTgzh2UmEko3Lwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799441; c=relaxed/simple;
-	bh=/UmQ/7T9QyLIP/83V0+8xsTLFB88h5IhU6qz1+7bvmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvcJM8e5yyP/EfVfn4/pvcFhytrwHZeiTqlipHTu7QVqQbo8+Gcy1SE/6RQ+1xBDlrkUsqkD5qGm3yDGU7DIUXq+sIGDkvW98yiRoSbHHCV9+g+5QosguhO+CeKwalb5oY0UNbLNsvbXa+3X0ytfEpvxMFybuEv6lB+NEFlTLb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B3D1DA7;
-	Wed, 19 Jun 2024 05:17:42 -0700 (PDT)
-Received: from bogus (unknown [10.57.89.235])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D40A33F6A8;
-	Wed, 19 Jun 2024 05:17:12 -0700 (PDT)
-Date: Wed, 19 Jun 2024 13:17:11 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-pm@vger.kernel.org, kvm@vger.kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-	pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
-	rafael@kernel.org, daniel.lezcano@linaro.org, peterz@infradead.org,
-	arnd@arndb.de, lenb@kernel.org, mark.rutland@arm.com,
-	harisokn@amazon.com, joao.m.martins@oracle.com,
-	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH 8/9] arm64: support cpuidle-haltpoll
-Message-ID: <20240619121711.jid3enfzak7vykyn@bogus>
-References: <20240430183730.561960-1-ankur.a.arora@oracle.com>
- <20240430183730.561960-9-ankur.a.arora@oracle.com>
+	s=arc-20240116; t=1718799450; c=relaxed/simple;
+	bh=VedNq7jAWhCJczFirkEeMN3CFznq2DMq9bNcALqh9BE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UT/TOmlPaMpjYP1dZRRwwzEziCC+r0bRrVL6SoU1mDbRy3+OkXKHqhb10djtt1rj6WMrWpErbyUY1c/YkDcHr9h9O4INrKxmuGE6TqG0cNNzzrUYrhrQtYXFRUHUpIrw49fUOd87gUxQG8OpKxk2nVKcwHRHcZbOb+nBV2zFk9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I0Wz+6UD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I0Wz+6UD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718799448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=lZ1lipemd3G7go03yyEVao/dwpQoR8YSEVZm+xRYvig=;
+	b=I0Wz+6UDSexB8TbphxIIme2qCbOI6L9hxhy1CnZ1dOWEsubm0SCFaufitg3Bkee+GJVotP
+	Xyy4UzJFZq5jrr2tVP6A92Oobm8qupMJa/DSGWFBzVjLJAWdAc4wu4SPmzzKfJ86Gv5keU
+	zNQTjJxnGgBX3cq5gS2qMWD8Ep2vTsM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-425-eQ1SWQ-_MZWxEEkcdfDD6Q-1; Wed, 19 Jun 2024 08:17:27 -0400
+X-MC-Unique: eQ1SWQ-_MZWxEEkcdfDD6Q-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-421e17ae038so47685445e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 05:17:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718799446; x=1719404246;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lZ1lipemd3G7go03yyEVao/dwpQoR8YSEVZm+xRYvig=;
+        b=m2qk50DPgqIP4e01Rw6CB3sxQLZ31jNpxGRRtzURE71EWJG68qF2ATlvY/KZMLmz4I
+         I0ZgJ4Ebyh19inEzZhFqaOdn1HYh9CGoLoQ+HsfeTiKP1Q3DxLD2YyGcCZ1AqpXnuzOb
+         XfjgCJvFpE5jC5wJ2O1S/Vgl8MVdJFa1tQUvnp/4nJUnCYBIwmnkkKL3YYkOQJGUd4Nm
+         N49aWhnfVDfmmP/vkUd6982kFDdDEuU+8QDs4JfJKhAqvw1qfqG5YYth7NcLk3zHuBSI
+         2bSKZ/ikbqfq5KtTEsVitqLjdwDRWn9Bu4Z/Xs6pE6ly/2IzuOoRuPsjPaVgpuy2cE+y
+         uGdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrlTFX/bAmKzMT+9Xqfw/R8ZszL/hXOMaSrAJrNx1UZneMfDuLqzrew4GL/fUrXacW5GRggQEJqu0TpW6MDxf89/7NxcVDm5wjK4gu
+X-Gm-Message-State: AOJu0YxH63z18ANClg0TKG+Mju8XZHXM/wOmvmLLrvZ5DnQw7dZypuRB
+	104gM/2qkh0fZnycrSNklbVXh1KRqYBjAQRGNiBW9XagwgiQCf8t/tOvmy2LmziYyXDXf6+CsLn
+	2FZy99qVjTyUp69q4ey6VWxySQSOduTYaiDC8AT/ng59XoaBsHwJx9SEJMr+MJQ==
+X-Received: by 2002:a05:6000:1146:b0:360:9d23:67f8 with SMTP id ffacd0b85a97d-3631998f12dmr1750065f8f.69.1718799446096;
+        Wed, 19 Jun 2024 05:17:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG15+go0m6xYcMCYjQISUCMDOIqOUeXuwWm3aQLyIfQuja4/fwqu/Zl6QauD/uzXJPMT0keww==
+X-Received: by 2002:a05:6000:1146:b0:360:9d23:67f8 with SMTP id ffacd0b85a97d-3631998f12dmr1750038f8f.69.1718799445689;
+        Wed, 19 Jun 2024 05:17:25 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c705:ab00:f9b6:da12:cad4:6642? (p200300cbc705ab00f9b6da12cad46642.dip0.t-ipconnect.de. [2003:cb:c705:ab00:f9b6:da12:cad4:6642])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36394d5ef0dsm1579567f8f.64.2024.06.19.05.17.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 05:17:24 -0700 (PDT)
+Message-ID: <095dd4fb-956b-40f4-984d-14544d726f97@redhat.com>
+Date: Wed, 19 Jun 2024 14:17:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430183730.561960-9-ankur.a.arora@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
+To: Jason Gunthorpe <jgg@nvidia.com>, Fuad Tabba <tabba@google.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+ Elliot Berman <quic_eberman@quicinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, maz@kernel.org, kvm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ pbonzini@redhat.com
+References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
+ <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com>
+ <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
+ <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
+ <20240619115135.GE2494510@nvidia.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240619115135.GE2494510@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024 at 11:37:29AM -0700, Ankur Arora wrote:
-> Add architectural support for the cpuidle-haltpoll driver by defining
-> arch_haltpoll_*(). Also select ARCH_HAS_OPTIMIZED_POLL since we have
-> an optimized polling mechanism via smp_cond_load*().
+> If the memory can't be accessed by the CPU then it shouldn't be mapped
+> into a PTE in the first place. The fact you made userspace faults
+> (only) work is nifty but still an ugly hack to get around the fact you
+> shouldn't be mapping in the first place.
 > 
-> Add the configuration option, ARCH_CPUIDLE_HALTPOLL to allow
-> cpuidle-haltpoll to be selected.
+> We already have ZONE_DEVICE/DEVICE_PRIVATE to handle exactly this
+> scenario. "memory" that cannot be touched by the CPU but can still be
+> specially accessed by enlightened components.
 > 
-> Note that we limit cpuidle-haltpoll support to when the event-stream is
-> available. This is necessary because polling via smp_cond_load_relaxed()
-> uses WFE to wait for a store which might not happen for an prolonged
-> period of time. So, ensure the event-stream is around to provide a
-> terminating condition.
->
+> guest_memfd, and more broadly memfd based instead of VMA based, memory
+> mapping in KVM is a similar outcome to DEVICE_PRIVATE.
+> 
+> I think you need to stay in the world of not mapping the memory, one
+> way or another.
 
-Currently the event stream is configured 10kHz(1 signal per 100uS IIRC).
-But the information in the cpuidle states for exit latency and residency
-is set to 0(as per drivers/cpuidle/poll_state.c). Will this not cause any
-performance issues ?
+Fully agreed. Private memory shall not be mapped.
 
 -- 
-Regards,
-Sudeep
+Cheers,
+
+David / dhildenb
+
