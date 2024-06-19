@@ -1,146 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858C015921D;
-	Wed, 19 Jun 2024 19:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7277E15ADB3
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718825638; cv=none; b=k57D+O9B8kun7RBMxFIBOWM00CsT837xceeZ3ALtWULwCeXF55OQWFYZ0lbIFadcHzGNuPTj2h9lOBYy6Hmux4WYPBe2ooKrm9wdLZn1Br4Ai85X27QTROuEnN78DCs+rfFnwjmYzTim9jsnMQUqy1rl1OPshs015c1t75e6M/o=
+	t=1718825642; cv=none; b=Kyahhx9VT/zFrrbUldwbBNT1tcHKuFp45Bhm6TK7ia9Z+X4o9gQYxwPR2rRjt5g/nXBxh7102uN8JavDABjN/fPd2A4ZPhMUBZQk4yIoAP7G3djR6Xl9tIflctAzxi8Gec7LjU0JSvF6cpqaRQYTBzS6tFUf+Fn/XkK8jSngWx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718825638; c=relaxed/simple;
-	bh=LrnolFNHWclGZ9p3hY/QGRuJsr6+6G+8GF/8xJCY8DU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sYG+zqaNvNblG7g8GGyaUT99qmzktI1gyGulXz17l8oSZ8oe3QW6i37E0F6zUz9XFwgfhwfkqdhBWhxVmzN8JVFP4Fx+r/scDYvHlA9kH+lyNtDg0nM8NsySbZm/GTEAec5x5ECqKmOOJpF9nmOxxxQ/d8YX1qjKKiwe/JR/D+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pc6m2Jyd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718825642; c=relaxed/simple;
+	bh=nJhUYmrgF8khp038rH7E0vBosSYGyEPbRCtSDy5hfRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FVD/0GgxY4hpNkIRXng4p/MpDrzu8ShUIhgi1stHTYDpAZDBGqAmeWokHiMD2S/72Lvwe0TIb13OwYHEn+zmfjh+gI3N5MIQs1m7TOYUfIlV/PMC/FBQvpq8iv3dzmAonbkrPY32aWQs88r4NggkHOfIVnTDrM4Ek5oIDuNsvTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=inQXRDYO; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pc6m2Jyd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6FAC4AF0A;
-	Wed, 19 Jun 2024 19:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718825638;
-	bh=LrnolFNHWclGZ9p3hY/QGRuJsr6+6G+8GF/8xJCY8DU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pc6m2JydDigHX1wPdvV7BSO6pjR4OiuefHdkKa1fdpttENlQLKGuUfbGFFSu2l4Lm
-	 lQD5iAks3gvBoAIfaXZXsbn9df6WJYs3vBKiEbv3bJ4PaaLahoIa4QSNZ1SYfuLbBH
-	 EC/g9SUx1BXID0KIUyOFIJTu1RoIyozImXz+TkjeVy0SusKmCLRASggim94z6rYRCM
-	 tO4C6jMpK8ZWUlJKguJ9sfCfZZJc1MVWVRiBXSV+GO5TXMdXWOzrdcFw/b8i8cgg7U
-	 lBK0Q0+bcSuO5G7slNZJMYU9DBvzN/fxnRHAqOvcn3r1IAoqVZP9OzadrVNBk/NTEU
-	 Fodm/pnVMavLA==
-From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kees Cook <kees@kernel.org>,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	jvoisin <julien.voisin@dustri.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v5 6/6] mm/util: Use dedicated slab buckets for memdup_user()
-Date: Wed, 19 Jun 2024 12:33:54 -0700
-Message-Id: <20240619193357.1333772-6-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619192131.do.115-kees@kernel.org>
-References: <20240619192131.do.115-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="inQXRDYO"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso164747e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718825638; x=1719430438; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2rGUjDMYzm7lFpUwAY5iZvI8fijhYwMrH7RYSZjeZEU=;
+        b=inQXRDYOFIhYsrTKtCMzRobUh+zh/GvRqecGnewBpBFbeXmF3OXBvXKXCvSxQ62wHX
+         7JKQKoGfW33UrMopeFE4oia2NC4F0hyGnjxqbV+6ev+rr05GEr6TSkaH805CgQaI1J+V
+         m5P+TBDbMkJV9gps3Um/4iX/obTU+oFDmnBlFNLZk+goHrNy/KbLkZ13IFp5t08v4ZBf
+         jjkNmn2Tdb+ekmcD0cBjqybQe0RwpMJagA5Kwog/hV9OquKiZx5SbXGKCaICmI0sA4eW
+         DEA2lLPTr3VARUFENgRVXF1GYZWREZnJ+AE9csuw0KOTOAzBBN/DKXQ1bnkF4QSWir6x
+         YCrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718825638; x=1719430438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2rGUjDMYzm7lFpUwAY5iZvI8fijhYwMrH7RYSZjeZEU=;
+        b=rri/ZqLiUXgAdueS/C1xd+Vh7IQ4l8nE/8UWHgtLHaRyy5hgCB/tnylL1va6QljKrD
+         w7hqbozb1kPMDspU5heBRes01ZcO1N/GM7Ggpv6AxvsgCJqoWjtVl9YRPg+jQIaHMx+4
+         1MemfzlCU/XPWkxyPZeHTObJYCPVuQqfQEwmENha0UeCWzw/njMTX46aNZQf1gyUHi6R
+         fSB19g3lnvFylle7S4BA/+U39RCr9eEDxtqvrfUbS5Fp432j772zgKhXFVGA/igtPf9g
+         7Kl5tHPOryyLpM/zu2T5lPKnPC1moA/WtiuKkXC6SxoWhdfqq8FL44C+eoJda7JbPdsX
+         IoYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvVW5634kaVJRY0hNbK/VzV/1hMxF8SCXf8qnU7dGtJhfIy78K6Dr79pizPFL+asEpYlUnFTXJbE4ZzcEWcSMtY+rTkEKIEu4Pspps
+X-Gm-Message-State: AOJu0YxYIX+u1Xv9qe8fESePEpEut0nHLBRMXG4dWNJUcVZDqWFRf0S7
+	szGFYpi5d4W/4H6mSLzqFLn8d0Y2Q5kTKsLaXRB9QNZozyUV/WNBP730rYGFYcoz9IKxCEy3riY
+	U/q+kBr54+SdvrjukoelRbqzcJRfQvkGCC3bf2g==
+X-Google-Smtp-Source: AGHT+IE91ezuO/TQwQfm8V42ORY0PMsANSYBITfPybm0WqpQNZwrx4Oib/yIen6E1DuqgRrLDQH+dcE2vHWlSPILDjI=
+X-Received: by 2002:a05:6512:489a:b0:52c:c9b6:8f4e with SMTP id
+ 2adb3069b0e04-52ccaa5a0a0mr2136538e87.59.1718825637613; Wed, 19 Jun 2024
+ 12:33:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2799; i=kees@kernel.org; h=from:subject; bh=LrnolFNHWclGZ9p3hY/QGRuJsr6+6G+8GF/8xJCY8DU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmczKhEAWYa/Ji7QXOW1GAYZ9rnB+j1DB6dbkqF TcWKMWXK8GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnMyoQAKCRCJcvTf3G3A Jna9D/9jn8FgmhtJGIsF1k6FXqxnOb5H/Edjil/UGnza0ThNC5KYFYysA7NmGEt75u5Ul8yTo/m mPSLD5BsKR+jO9ra+Jb1otzerSK7RPkiM6Imdxr4fUVqJRDIyZfow5kmiqU9kP3XohZkW6L9tCf Gg3Gf3IyVqjtN6r7kMQfjfEwb0asp7l19n+RBG+Y+rCjuwW9f0zVuora95LsN+puXykCTSHPd8l triyydYzJHXgpSTHex+MpUFovzc22Spf+qmwDTaHqtewlJLtF0Yv2hU8zovuwGlpfr8ByOElpfK Vk+S54XYZnxOLQ67p3popKVW0MElvIx5m8o5iUKZDmwhhLvPBOzUH1bT6we+7qxY02Rjs8l7tcq 2WQdGuzFjXnYo2mAqRN7l7S7Cq1nPwRpwtPoUinjqbvdFIV/NRq9GABynRSpDqxH5qrbas9689/ gvJkHTXbL+PSnY6Qs32jdRqdMuCqHzXkPa02gx1uuVpAPC8z9C0JsTzVOz30ZPQ9b0RmeBt9pE6 lT0nq+2zyjP5Wa+1oEckM/FhVlBq0s4VsGGABVI6DWi7oWRyz/ZZfn5gV0N4qWgfnHJalyM3cFC 3O6fBUVeH3zAlDMwpz+DEypq18nKLYt6AtEq5WMurqTQR+ES3H6DKAtjc5xSYw6hrbgAMWMSOLR smdpkS6OJkKmNzw==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20240612075829.18241-1-brgl@bgdev.pl> <CABBYNZLrwgj848w97GP+ijybt-yU8yMNnW5UWhb2y5Zq6b5H9A@mail.gmail.com>
+ <CAMRc=Mdb31YGUUXRWACnx55JawayFaRjEPYSdjOCMrYr5xDYag@mail.gmail.com>
+ <CABBYNZLPv3zk_UX67yPetQKWiQ-g+Dv9ZjZydhwG3jfaeV+48w@mail.gmail.com>
+ <CAMRc=Mdsw5c_BDwUwP2Ss4Bogz-d+waZVd8LLaZ5oyc9dWS2Qg@mail.gmail.com>
+ <CAMRc=Mf2koxQH8Pw--6g5O3FTFn_qcyfwTVQjUqxwJ5qW1nzjw@mail.gmail.com> <CABBYNZ+7SrLSDeCLF0WDM01prRgAEHMD=9mhu5MfWOuGwoAkNQ@mail.gmail.com>
+In-Reply-To: <CABBYNZ+7SrLSDeCLF0WDM01prRgAEHMD=9mhu5MfWOuGwoAkNQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 19 Jun 2024 21:33:46 +0200
+Message-ID: <CAMRc=MdozeAzWJCSrDdxVBZ=fwP2yn_j-KZaTDT2Dp7YjKP8-g@mail.gmail.com>
+Subject: Re: [GIT PULL] Immutable tag between the Bluetooth and pwrseq
+ branches for v6.11-rc1
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Both memdup_user() and vmemdup_user() handle allocations that are
-regularly used for exploiting use-after-free type confusion flaws in
-the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
-respectively).
-
-Since both are designed for contents coming from userspace, it allows
-for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
-buckets so these allocations do not share caches with the global kmalloc
-buckets.
-
-After a fresh boot under Ubuntu 23.10, we can see the caches are already
-in active use:
-
- # grep ^memdup /proc/slabinfo
- memdup_user-8k         4      4   8192    4    8 : ...
- memdup_user-4k         8      8   4096    8    8 : ...
- memdup_user-2k        16     16   2048   16    8 : ...
- memdup_user-1k         0      0   1024   16    4 : ...
- memdup_user-512        0      0    512   16    2 : ...
- memdup_user-256        0      0    256   16    1 : ...
- memdup_user-128        0      0    128   32    1 : ...
- memdup_user-64       256    256     64   64    1 : ...
- memdup_user-32       512    512     32  128    1 : ...
- memdup_user-16      1024   1024     16  256    1 : ...
- memdup_user-8       2048   2048      8  512    1 : ...
- memdup_user-192        0      0    192   21    1 : ...
- memdup_user-96       168    168     96   42    1 : ...
-
-Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
-Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
-Link: https://etenal.me/archives/1336 [3]
-Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
-Signed-off-by: Kees Cook <kees@kernel.org>
+On Wed, Jun 19, 2024 at 8:59=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Bartosz,
+>
+> On Wed, Jun 19, 2024 at 3:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > On Wed, Jun 12, 2024 at 5:00=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> > >
+> > > On Wed, Jun 12, 2024 at 4:54=E2=80=AFPM Luiz Augusto von Dentz
+> > > <luiz.dentz@gmail.com> wrote:
+> > > >
+> > > > Hi Bartosz,
+> > > >
+> > > > On Wed, Jun 12, 2024 at 10:45=E2=80=AFAM Bartosz Golaszewski <brgl@=
+bgdev.pl> wrote:
+> > > > >
+> > > > > On Wed, Jun 12, 2024 at 4:43=E2=80=AFPM Luiz Augusto von Dentz
+> > > > > <luiz.dentz@gmail.com> wrote:
+> > > > > >
+> > > > > > Hi Bartosz,
+> > > > > >
+> > > > > > On Wed, Jun 12, 2024 at 3:59=E2=80=AFAM Bartosz Golaszewski <br=
+gl@bgdev.pl> wrote:
+> > > > > > >
+> > > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > > > >
+> > > > > > > Hi Marcel, Luiz,
+> > > > > > >
+> > > > > > > Please pull the following power sequencing changes into the B=
+luetooth tree
+> > > > > > > before applying the hci_qca patches I sent separately.
+> > > > > > >
+> > > > > > > Link: https://lore.kernel.org/linux-kernel/20240605174713.GA7=
+67261@bhelgaas/T/
+> > > > > > >
+> > > > > > > The following changes since commit 83a7eefedc9b56fe7bfeff13b6=
+c7356688ffa670:
+> > > > > > >
+> > > > > > >   Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
+> > > > > > >
+> > > > > > > are available in the Git repository at:
+> > > > > > >
+> > > > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.gi=
+t tags/pwrseq-initial-for-v6.11
+> > > > > > >
+> > > > > > > for you to fetch changes up to 2f1630f437dff20d02e4b3f07e836f=
+42869128dd:
+> > > > > > >
+> > > > > > >   power: pwrseq: add a driver for the PMU module on the QCom =
+WCN chipsets (2024-06-12 09:20:13 +0200)
+> > > > > > >
+> > > > > > > -------------------------------------------------------------=
 ---
- mm/util.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+> > > > > > > Initial implementation of the power sequencing subsystem for =
+linux v6.11
+> > > > > > >
+> > > > > > > -------------------------------------------------------------=
+---
+> > > > > > > Bartosz Golaszewski (2):
+> > > > > > >       power: sequencing: implement the pwrseq core
+> > > > > > >       power: pwrseq: add a driver for the PMU module on the Q=
+Com WCN chipsets
+> > > > > >
+> > > > > > Is this intended to go via bluetooth-next or it is just because=
+ it is
+> > > > > > a dependency of another set? You could perhaps send another set
+> > > > > > including these changes to avoid having CI failing to compile.
+> > > > > >
+> > > > >
+> > > > > No, the pwrseq stuff is intended to go through its own pwrseq tre=
+e
+> > > > > hence the PR. We cannot have these commits in next twice.
+> > > >
+> > > > Not following you here, why can't we have these commits on differen=
+t
+> > > > next trees? If that is the case how can we apply the bluetooth
+> > > > specific ones without causing build regressions?
+> > > >
+> > >
+> > > We can't have the same commits twice with different hashes in next
+> > > because Stephen Rothwell will yell at us both.
+> > >
+> > > Just pull the tag I provided and then apply the Bluetooth specific
+> > > changes I sent on top of it. When sending to Linus Torvalds/David
+> > > Miller (not sure how your tree gets upstream) mention that you pulled
+> > > in the pwrseq changes in your PR cover letter.
+>
+> By pull the tag you mean using merge commits to merge the trees and
+> not rebase, doesn't that lock us down to only doing merge commits
+> rather than rebases later on? I have never used merge commits before.
+> There is some documentation around it that suggests not to use merges:
+>
+> 'While merges from downstream are common and unremarkable, merges from
+> other trees tend to be a red flag when it comes time to push a branch
+> upstream. Such merges need to be carefully thought about and well
+> justified, or there=E2=80=99s a good chance that a subsequent pull reques=
+t
+> will be rejected.'
+> https://docs.kernel.org/maintainer/rebasing-and-merging.html#merging-from=
+-sibling-or-upstream-trees
+>
+> But then looking forward in that documentation it says:
+>
+> 'Another reason for doing merges of upstream or another subsystem tree
+> is to resolve dependencies. These dependency issues do happen at
+> times, and sometimes a cross-merge with another tree is the best way
+> to resolve them; as always, in such situations, the merge commit
+> should explain why the merge has been done. Take a moment to do it
+> right; people will read those changelogs.'
+>
+> So I guess that is the reason we want to merge the trees, but what I'm
+> really looking forward to is for the 'proper' commands and commit
+> message to use to make sure we don't have problems in the future.
+>
 
-diff --git a/mm/util.c b/mm/util.c
-index 28c5356b9f1c..6f0fcc5f4243 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -198,6 +198,16 @@ char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
- }
- EXPORT_SYMBOL(kmemdup_nul);
- 
-+static kmem_buckets *user_buckets __ro_after_init;
-+
-+static int __init init_user_buckets(void)
-+{
-+	user_buckets = kmem_buckets_create("memdup_user", 0, 0, 0, INT_MAX, NULL);
-+
-+	return 0;
-+}
-+subsys_initcall(init_user_buckets);
-+
- /**
-  * memdup_user - duplicate memory region from user space
-  *
-@@ -211,7 +221,7 @@ void *memdup_user(const void __user *src, size_t len)
- {
- 	void *p;
- 
--	p = kmalloc_track_caller(len, GFP_USER | __GFP_NOWARN);
-+	p = kmem_buckets_alloc_track_caller(user_buckets, len, GFP_USER | __GFP_NOWARN);
- 	if (!p)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -237,7 +247,7 @@ void *vmemdup_user(const void __user *src, size_t len)
- {
- 	void *p;
- 
--	p = kvmalloc(len, GFP_USER);
-+	p = kmem_buckets_valloc(user_buckets, len, GFP_USER);
- 	if (!p)
- 		return ERR_PTR(-ENOMEM);
- 
--- 
-2.34.1
+You shouldn't really need to rebase your branch very often anyway.
+This is really for special cases. But even then you can always use:
+`git rebase --rebase-merges` to keep the merge commits.
 
+The commands you want to run are:
+
+git pull git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+tags/pwrseq-initial-for-v6.11
+git am or b4 shazam on the patches targeting the Bluetooth subsystem
+git push
+
+That's really it, there's not much else to it.
+
+Bart
+
+> > > Bart
+> >
+> > Gentle ping.
+> >
+> > Bart
+>
+>
+>
+> --
+> Luiz Augusto von Dentz
