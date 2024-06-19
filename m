@@ -1,46 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2075.outbound.protection.outlook.com [40.107.100.75])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2049.outbound.protection.outlook.com [40.107.223.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4FF14F9F1;
-	Wed, 19 Jun 2024 15:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BF6155730;
+	Wed, 19 Jun 2024 15:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811658; cv=fail; b=VoRukNUXr5WgmntaeXXa6KpTb2UX+XA+feuhq3g+5B7RAUhRsmO2mvDHdyGiawbLv1BnxoF9wTbpxzKF4Ri4zeXxhTj7w9lgflfba+4EoIQ4loh7776fXb1V7/yxiPlHWpBA21Vlemcs06qncdbmrkD/fz/ORI09lBe1FU0RRH8=
+	t=1718811660; cv=fail; b=M2B0U6bZDJUe/kbtQfL2MLhk1T0cpkeom1DR919yEU8kGBYVHR68pwR9N+lLnyr8SktpFvtNrnHBDyBJopAbgSmfSSgT12VzOEhoAkuIKpzwC20Mv6X8zvpYAT9R/mh287U/BuSGkJ+RQn+3WP+w2U1BQ5ELd2v0zMji8t9W4qI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811658; c=relaxed/simple;
-	bh=Ny0uF5aZ/FeQsrJblVc03pDhAKlF0YUxpi5V+fC9JQA=;
+	s=arc-20240116; t=1718811660; c=relaxed/simple;
+	bh=i8eqsDNdLSbpX0zvtYrlJ6MLMAVOl6GOjlMan/f6Ycg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SOn5EM5v5c+mOQ3K2a2AA7WOC7DmpOwSGO2LFdPF7FSQtfsl58DUy9Ut0n4N5n3u+5hWulpwRWTiKkik/F/P2ihkfBzIC+FZp7DBDyfN+UKqwxXKeMkld6FnAGEbyA4Z3tWIGILnVUj2qe6wjZoKw6ewea4mcKLWl6DJyzbdIhI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PbiXQAwR; arc=fail smtp.client-ip=40.107.100.75
+	 MIME-Version:Content-Type; b=uqUzdVkl5tQoa/tDZM0+71DNCiSUx658T1te9GDv8Ddw2olYD49xJ+BCRRFvqNJfoLWgE4cwnryD5596QX6tOv2s6AHMqRMcX+Tkdp5B9M2otPqGVfmOyw+B6/0tg3+w0U07AUqIE+dkaTEixlC3/lhTUHPiRv1oMavd4M4K/mo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aOOy1Ls8; arc=fail smtp.client-ip=40.107.223.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PbiXQAwR"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aOOy1Ls8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=itLnPfLQdhEVMo2ker5dTv4xF33MCRMKquSH8aeVGxCU20nzN2RjRv+04+Z2kR2GTDo/Q9kWwMTEuh3rvWWyM59N0AIhgwCkr0gxgZUAxeqj67O7qxN/feQTkFZ1K9GvpOqPKRXvnp7gydjHOx3ZlbNkXtd+okfCGfHAvJo2xOGNsAaHtga/4RgKVCurl728yr89FuRbDN+UXD66okD1NfIQ0jxP6Y+gt76OCawxAMqs6gC5bzKePyuTO7csR2bmxSvDF0WFkpZJ/rcdb/9hRM39mDbMBvnIEY7o+VewI7BSCfmNz4NlSUDiTQjOp0T0ZgDv4nnTQb2DqoyAvJb6aw==
+ b=NAY1KLRiiTX0qlDvoG6COHcS8cPqYB90gjgDNXGEbnwW3TDFFClkbQTtAyG47mdC/b2GqPPPrmTZYBRwp3tQ8bRu4ETmCXzln7TYM00G39zGWaXEaizzQt5z6yP0Oo+0Lvi7CC7njjwhFhfNFZqw8urPTLDdpyfZhQj4E5qfWulnWBGjV3SyaiZSqvwUYpaALQeg04or9nHiVjkic2AshLXi+a6e5E5XEniyFrH70iE3H8zjIzcSEgeXCxzyh4MocSVFFNzpKodYz6bo4i++8J2Eu+UqhKwndzgWlOZ6PZs9LXUjX4CUnBUBXbNOYiWF/MiwPoC09NtUpw25aGcGLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a2k7rycL6MnzZVLP8tEfnjfQzvvGfryfV/i9jWa2Jxc=;
- b=QJwGYoRi+WdOrjwQYdHx9cNqBcKQswsmhXK60tUhHgLIbfo82lImFf4FoFFhEX65TsStWraoCZBCthHVtKLEuvkQeuD3Of/sV1TuGMwCOIDJPZRDp8UczC6WM9dRGUxce2cx8KUFvbSFY7/afD3ktkk4L40DrLiNq6boFxr3ay6RtyUIIv7MD9/bBqWm7Vfk761D7gbCX95o84W+/xJ2VeD35HZ2jKB2GQIQpe+mLbq1jLXUvVHpU3k5GOckfiw4sFxY4aDQcC+XoL37uyNGy9JTM6iR0iELPnxPT67RZFO4ENiUa7EsEFxgVkk1eZPzzIGLykanZadT1bMkH4w9+Q==
+ bh=a3+50qrB4Yad92PLxPRpV9Koc3tSgHyYMSSXzrds6l8=;
+ b=PMwZ8mo0ZvG6eJUSg6lMtAGoggVESHpT1t6/0xTHFd6p+bIP9kDnVl14Y8zrWu3SJCASGfq0MoX7QwfeVLWjacCihCB0Hf4vcq6OlleOteeHcC1zPyuTog8/mqIEZr1lreYt+BXtdmD2+ePlJdEHFgKJ260G/mTxPVct4iW7Tm0lmvkATIrHRa4kS2ObRsMTFTmhOFx0AQ5TITuamuOmCn9tQaMPa5xByiFm92kWHhEWYoD/e1bnAnnpUuSov3ML7ZKDXgAOby9iilhEHj5NeY3EauIp3UgjS779AHU7TAaFzKFTwcRNnRh0W9zew3gwjpX6k3OP3NMdoUHTYkU2HQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a2k7rycL6MnzZVLP8tEfnjfQzvvGfryfV/i9jWa2Jxc=;
- b=PbiXQAwR3ekaDNWSgH41vBbX4Y6z1pLDQIOmpLtRU04BVR07HxqdN4AOuS/q7tdZWHGLyPH204vYBnLYfra/AeI6EtuCt7hqIafBXTXTXW+8gEwWs4ETBPpUd469bnv5I2RHZgXcKq9Qh+c5FOim8dPcBpm1Z0U0nNAE7RowTm8=
-Received: from CH2PR02CA0009.namprd02.prod.outlook.com (2603:10b6:610:4e::19)
- by BL3PR12MB9050.namprd12.prod.outlook.com (2603:10b6:208:3b9::13) with
+ bh=a3+50qrB4Yad92PLxPRpV9Koc3tSgHyYMSSXzrds6l8=;
+ b=aOOy1Ls8d7I+BnQYddVwYWMtI92j3e6cfjNVD9lQbPx8KZpzwa7WLzWe6lnx5ovZAJbQ+9Ii2XizMpl/ELWpz7Du/E54C4VuqXKBW3K4N7Fl6qjYbaQ+ot2HtOokuQ4pU4RJEdgzbqD9ZmtNRe1vn2mZTnO0IjYJiGVEqXVCL0g=
+Received: from CH0PR13CA0015.namprd13.prod.outlook.com (2603:10b6:610:b1::20)
+ by SA1PR12MB8724.namprd12.prod.outlook.com (2603:10b6:806:38b::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Wed, 19 Jun
- 2024 15:40:51 +0000
-Received: from CH2PEPF000000A0.namprd02.prod.outlook.com
- (2603:10b6:610:4e:cafe::1f) by CH2PR02CA0009.outlook.office365.com
- (2603:10b6:610:4e::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33 via Frontend
- Transport; Wed, 19 Jun 2024 15:40:50 +0000
+ 2024 15:40:56 +0000
+Received: from CH2PEPF0000009F.namprd02.prod.outlook.com
+ (2603:10b6:610:b1:cafe::4b) by CH0PR13CA0015.outlook.office365.com
+ (2603:10b6:610:b1::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31 via Frontend
+ Transport; Wed, 19 Jun 2024 15:40:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,22 +48,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF000000A0.mail.protection.outlook.com (10.167.244.26) with Microsoft
+ CH2PEPF0000009F.mail.protection.outlook.com (10.167.244.21) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Wed, 19 Jun 2024 15:40:50 +0000
+ 15.20.7677.15 via Frontend Transport; Wed, 19 Jun 2024 15:40:56 +0000
 Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
  SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 19 Jun 2024 10:40:47 -0500
+ 15.1.2507.39; Wed, 19 Jun 2024 10:40:52 -0500
 From: Perry Yuan <perry.yuan@amd.com>
 To: <Mario.Limonciello@amd.com>
 CC: <rafael.j.wysocki@intel.com>, <viresh.kumar@linaro.org>,
 	<gautham.shenoy@amd.com>, <Alexander.Deucher@amd.com>,
 	<Xinmei.Huang@amd.com>, <Xiaojian.Du@amd.com>, <Li.Meng@amd.com>,
 	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 4/8] cpufreq: amd-pstate: add debug message while CPPC is supported and disabled by SBIOS
-Date: Wed, 19 Jun 2024 23:40:15 +0800
-Message-ID: <42c953616ac121bd1e5c329e83d015a02e6b32c7.1718811234.git.perry.yuan@amd.com>
+Subject: [PATCH v5 6/8] cpufreq: amd-pstate: switch boot_cpu_has() to cpu_feature_enabled()
+Date: Wed, 19 Jun 2024 23:40:17 +0800
+Message-ID: <f1567593ac5e1d38343067e9c681a8c4b0707038.1718811234.git.perry.yuan@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1718811234.git.perry.yuan@amd.com>
 References: <cover.1718811234.git.perry.yuan@amd.com>
@@ -79,108 +79,176 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF000000A0:EE_|BL3PR12MB9050:EE_
-X-MS-Office365-Filtering-Correlation-Id: d141c250-e215-465f-f0fa-08dc90763289
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000009F:EE_|SA1PR12MB8724:EE_
+X-MS-Office365-Filtering-Correlation-Id: 01c01729-3c93-4163-65e2-08dc907635ac
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|36860700010|1800799021|82310400023|376011;
+	BCL:0;ARA:13230037|376011|36860700010|1800799021|82310400023;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FQgY31eGcr4cBhO1fyylmjF2fHc/33x51NKKw5xv3EC5P8XfQ6MdDLfQRWyA?=
- =?us-ascii?Q?mBk2lTgHuFdkGrse11CcLpkpYRGwc0QFO7UTJORdLUWEO73MGM9RW6BV2i+J?=
- =?us-ascii?Q?tJEyp8VkoWbcQfDYoBa+yq4mII64TM85d/NbXI6ffjR/y63Q9UhdEMghiRyk?=
- =?us-ascii?Q?dL2Qo7zBVIV3+7+K4Y1ndhtFUtxYs4oaYy4KL8fYHOt4MR84NST1sSPB+M32?=
- =?us-ascii?Q?VUDjuYAhEF0h97+ipG3hNDzkQudo8a8YLmBCwOxF4NR+gCyCg00ml9UGwcJx?=
- =?us-ascii?Q?fgB/U+lyz4VotbyUFfSQVmA9OnNbuuuQ9tDFRoS+yc9Vvs98vExJlUfb56OJ?=
- =?us-ascii?Q?yN6I6Eg95rLgGm42SmRCnS9UAkeCOtNd+qma1E6EJ0eZMXzm4HKibjJSMMit?=
- =?us-ascii?Q?R725C/+V9UJqA6uZuJ/pxXGryG4gwDD53qfQqhjauO5BJx9CewyqoOjL/xtT?=
- =?us-ascii?Q?RUsgVJSZVDgnPiBWFSzWXi+cBVOlpW4Y/3dZnFvoBi2x4+ItSyzvOC5+iXHX?=
- =?us-ascii?Q?AZQrSh8ntNLL5dZNvLR9xyHECbukS4GdITxl+WqQ2OYJcR8pfll0coiQd81T?=
- =?us-ascii?Q?MPguZblJjxrKtFnQVC1fGNP8iQFPD+mDV/91Ow0sqQcb2gmdUmZxILvwjJkE?=
- =?us-ascii?Q?R1O+k0Qqn/kJFtDWlO/7yTeI5GQlC6uYxCbGoIJZyL1w4wX9sDlQ46uZaeK/?=
- =?us-ascii?Q?uFefKtlIDoeyx3kbMEugZLyJefeZk7aOj8yYYLSpm2y+z4MSfWwPDZ2rKNaq?=
- =?us-ascii?Q?pyUppeF4Q75x63l1nIWruRqIAgBxcm1f5423YRbFWIGu4jgXw9+jQ6crP/To?=
- =?us-ascii?Q?qexzcduqnLf6o+lABb7jX6xQutAcgDG0oIKpGzgk4vQzruHsu9kHFM64vGja?=
- =?us-ascii?Q?gNyNhStxZZTqZ0JGxthzVgSCO0T864/2GV+umGvEsVpy0k5j6pE+ym20c5zq?=
- =?us-ascii?Q?l+jklONe5M45grR5sUDpdSDvtaarrLxAkqUmgUGBuQmq3xKaEgOhS6KqVCRa?=
- =?us-ascii?Q?9YMwHOxWAvCwhyDcO4Y+GBLOmAHva7cMZLx0KPWWvmv1Ld8YX3zL2+Qcq+mB?=
- =?us-ascii?Q?J9a8hnIC8Rk2gcAa801ee8CXWmkjS9dvt+g0DEjkdFG06tyxLw5jVDcUfu7L?=
- =?us-ascii?Q?pEHc/7hp5F36NLM7i5t15cArMKQf5/mKdkQIPeBKnvCVQ2hAz3Qe0cZERXiV?=
- =?us-ascii?Q?gzOn6tBiDRbWQpSXW8hcOL76xv3+Yo0efLCeofEqwyIuGHLbWQtmoDJhvrFn?=
- =?us-ascii?Q?LJVUoFRqXDFcmPT74nKDYbcybql309jOdiPTWJdQIdQo4Z22/MvRMb+ovfFW?=
- =?us-ascii?Q?5EjFXm/zDENQBi0Mc0bvFAlJQaPPTp0zI8LyjC0K8CgzLPLGacyQfE0GgUc0?=
- =?us-ascii?Q?nGA1nyM=3D?=
+	=?us-ascii?Q?/LeNAZX2crznG70aWyWDsVoTLg3GTLxBvkwxYhoWhsCtTqpZeRdf5BFgfwPM?=
+ =?us-ascii?Q?CpJdC4odAgZoNhnov1QynC8s+OdxOEVwKsrCq8uOGppB8crgDUFrttH8lLuz?=
+ =?us-ascii?Q?4S2ehCu4dnsi4zBNX+Yl4Q/2kh9nLpKhErhgByKlt8DN89+KahvdVgM4Zx/V?=
+ =?us-ascii?Q?i2TC+oTaglfA4bi8fK8JSyfbXmvQMtZq3kGtTy2buu22O6rwgo69r+Nxcc01?=
+ =?us-ascii?Q?3RlRQ46nnWdU63CoaAVQRXz3HZNSHOgTOx3Iu4OOJNiXQoiZkUivnJWScN71?=
+ =?us-ascii?Q?5MWq6nEdRkkey3xsF6BvgGscTIkpYJUlJjnk85drqwKwGIHXM/Swdt0bnSAU?=
+ =?us-ascii?Q?hK1OhRb0YEAj7WtGv2dhc4bZno9uTcObZfTMwCSkE5osLCFgUI0z+Zf+IXOD?=
+ =?us-ascii?Q?MpWUuWotV/x+04kRpCZtBhEG/NfDiNU4aPSom7HYXeuP5YujAks7aFUgOK6/?=
+ =?us-ascii?Q?WGl+FiZ9DtezoGEXFwBJL5ZNmsjXHpFG7X8GhCnSuPpcJHgn2UXTvlXJ9Ndr?=
+ =?us-ascii?Q?tZ2uIqUz0iQDxESgOcAE0rrSKl/FaxNs1Xyz7fqIHaT5bFRhUBRLaPwhVsHD?=
+ =?us-ascii?Q?IEycGHE9468XF4RyO9Me32hS+6iSHvu3r2AhGNaNWMbihjEIsN/9r+HnNQgX?=
+ =?us-ascii?Q?UwSMBEMXJ9M/9t4WGdnadUHvFf6BAGaf80KPkixEVEpiMmswy5eiv+VcMJbp?=
+ =?us-ascii?Q?BuVS0m6/aSzb9lbenP9J8HlmVcU8yfDfNfOg1Zl6SHVu7OCu8AGwsf31uVs8?=
+ =?us-ascii?Q?g3UJSiNRvT73ZinbCS4+A1M9jLUhcW2g4+ApHi1Uw7RmrdUb8ymiZxI5aM7F?=
+ =?us-ascii?Q?0NiL2IM3Tqo3EIzOPSJUBx82GNLGU//dEj7KKYNKynaem59kM1r+nD6Gw0hI?=
+ =?us-ascii?Q?TtHLFrsywwEiXfalM6+TQeo9a0EyD2TMVuEgJ/zvi+RMTsIvkz18QZMwOmLf?=
+ =?us-ascii?Q?NSaDbyz05CV5odl7zGeyQyR7KwRa8R81yysmOlc2c5LsKghy0Cl4j23AucIE?=
+ =?us-ascii?Q?++OnkB1wPscU7N2tLhlbSq3R7AL2JUMZB1IKha0vCN/VsiV2j/cA8vGgYfJg?=
+ =?us-ascii?Q?hjSUZFvUJC4hunXRpocmyIiA8a2Qx88Jj+S3CKC7pE1JNN0Sa/d7aF3bKVZL?=
+ =?us-ascii?Q?zAPf+UKzCOGScbOlVQmPIyN5LQelS0r3JFYWpTGNTA8U4OyVnvFOsxTWeLmp?=
+ =?us-ascii?Q?HxqVso8DjK7OY9zAQxFm/0GfsKjhIerv3xJevsMHcewNhb8rmSZYieUYh6e0?=
+ =?us-ascii?Q?XT9xr9eKfahry74oHLDUNWfn9lrBBXBKBd+IcMgPypa1LgtrlgEr2Fm+Z7wc?=
+ =?us-ascii?Q?TrgDAipfgQs2KoWSALvZ92rWSuKwlarDzapJ5Z+hw6vzxRpTEaFmbnUacx06?=
+ =?us-ascii?Q?j7wlhagOU27LrCKbys64bERA5Gi5IncLjcg75Jm1iMRlM36RAw=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(1800799021)(82310400023)(376011);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(36860700010)(1800799021)(82310400023);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 15:40:50.7428
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 15:40:56.0017
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d141c250-e215-465f-f0fa-08dc90763289
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01c01729-3c93-4163-65e2-08dc907635ac
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF000000A0.namprd02.prod.outlook.com
+	CH2PEPF0000009F.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB9050
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8724
 
-If CPPC feature is supported by the CPU however the CPUID flag bit is not
-set by SBIOS, the `amd_pstate` will be failed to load while system
-booting.
-So adding one more debug message to inform user to check the SBIOS setting,
-The change also can help maintainers to debug why amd_pstate driver failed
-to be loaded at system booting if the processor support CPPC.
+replace the usage of the deprecated boot_cpu_has() function with
+the modern cpu_feature_enabled() function. The switch to cpu_feature_enabled()
+ensures compatibility with the latest CPU feature detection mechanisms and
+improves code maintainability.
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218686
+Acked-by: Mario Limonciello <mario.limonciello@amd.com>
+Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Perry Yuan <perry.yuan@amd.com>
 Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-Acked-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/cpufreq/amd-pstate.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/cpufreq/amd-pstate.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 76419762c04f..9aa220a0e3fe 100644
+index 9aa220a0e3fe..cb750ef305fe 100644
 --- a/drivers/cpufreq/amd-pstate.c
 +++ b/drivers/cpufreq/amd-pstate.c
-@@ -1749,11 +1749,37 @@ static int __init amd_pstate_set_driver(int mode_idx)
-  */
- static bool amd_cppc_supported(void)
+@@ -158,7 +158,7 @@ static int __init dmi_matched_7k62_bios_bug(const struct dmi_system_id *dmi)
+ 	 * broken BIOS lack of nominal_freq and lowest_freq capabilities
+ 	 * definition in ACPI tables
+ 	 */
+-	if (boot_cpu_has(X86_FEATURE_ZEN2)) {
++	if (cpu_feature_enabled(X86_FEATURE_ZEN2)) {
+ 		quirks = dmi->driver_data;
+ 		pr_info("Overriding nominal and lowest frequencies for %s\n", dmi->ident);
+ 		return 1;
+@@ -200,7 +200,7 @@ static s16 amd_pstate_get_epp(struct amd_cpudata *cpudata, u64 cppc_req_cached)
+ 	u64 epp;
+ 	int ret;
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		if (!cppc_req_cached) {
+ 			epp = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ,
+ 					&cppc_req_cached);
+@@ -253,7 +253,7 @@ static int amd_pstate_set_epp(struct amd_cpudata *cpudata, u32 epp)
+ 	int ret;
+ 	struct cppc_perf_ctrls perf_ctrls;
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		u64 value = READ_ONCE(cpudata->cppc_req_cached);
+ 
+ 		value &= ~GENMASK_ULL(31, 24);
+@@ -752,7 +752,7 @@ static int amd_pstate_get_highest_perf(int cpu, u32 *highest_perf)
  {
-+	struct cpuinfo_x86 *c = &cpu_data(0);
-+	bool warn = false;
-+
- 	if ((boot_cpu_data.x86 == 0x17) && (boot_cpu_data.x86_model < 0x30)) {
- 		pr_debug_once("CPPC feature is not supported by the processor\n");
- 		return false;
+ 	int ret;
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		u64 cap1;
+ 
+ 		ret = rdmsrl_safe_on_cpu(cpu, MSR_AMD_CPPC_CAP1, &cap1);
+@@ -991,7 +991,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+ 	/* It will be updated by governor */
+ 	policy->cur = policy->cpuinfo.min_freq;
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC))
++	if (cpu_feature_enabled(X86_FEATURE_CPPC))
+ 		policy->fast_switch_possible = true;
+ 
+ 	ret = freq_qos_add_request(&policy->constraints, &cpudata->req[0],
+@@ -1224,7 +1224,7 @@ static int amd_pstate_change_mode_without_dvr_change(int mode)
+ 
+ 	cppc_state = mode;
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC) || cppc_state == AMD_PSTATE_ACTIVE)
++	if (cpu_feature_enabled(X86_FEATURE_CPPC) || cppc_state == AMD_PSTATE_ACTIVE)
+ 		return 0;
+ 
+ 	for_each_present_cpu(cpu) {
+@@ -1453,7 +1453,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+ 	else
+ 		policy->policy = CPUFREQ_POLICY_POWERSAVE;
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
+ 		if (ret)
+ 			return ret;
+@@ -1543,7 +1543,7 @@ static void amd_pstate_epp_update_limit(struct cpufreq_policy *policy)
+ 		epp = 0;
+ 
+ 	/* Set initial EPP value */
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		value &= ~GENMASK_ULL(31, 24);
+ 		value |= (u64)epp << 24;
+ 	}
+@@ -1582,7 +1582,7 @@ static void amd_pstate_epp_reenable(struct amd_cpudata *cpudata)
+ 	value = READ_ONCE(cpudata->cppc_req_cached);
+ 	max_perf = READ_ONCE(cpudata->highest_perf);
+ 
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		wrmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, value);
+ 	} else {
+ 		perf_ctrls.max_perf = max_perf;
+@@ -1616,7 +1616,7 @@ static void amd_pstate_epp_offline(struct cpufreq_policy *policy)
+ 	value = READ_ONCE(cpudata->cppc_req_cached);
+ 
+ 	mutex_lock(&amd_pstate_limits_lock);
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		cpudata->epp_policy = CPUFREQ_POLICY_UNKNOWN;
+ 
+ 		/* Set max perf same as min perf */
+@@ -1819,7 +1819,7 @@ static int __init amd_pstate_init(void)
+ 		 */
+ 		if (amd_pstate_acpi_pm_profile_undefined() ||
+ 		    amd_pstate_acpi_pm_profile_server() ||
+-		    !boot_cpu_has(X86_FEATURE_CPPC)) {
++		    !cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 			pr_info("driver load is disabled, boot with specific mode to enable this\n");
+ 			return -ENODEV;
+ 		}
+@@ -1838,7 +1838,7 @@ static int __init amd_pstate_init(void)
  	}
  
-+	/*
-+	 * If the CPPC feature is disabled in the BIOS for processors that support MSR-based CPPC,
-+	 * the AMD Pstate driver may not function correctly.
-+	 * Check the CPPC flag and display a warning message if the platform supports CPPC.
-+	 * Note: below checking code will not abort the driver registeration process because of
-+	 * the code is added for debugging purposes.
-+	 */
-+	if (!cpu_feature_enabled(X86_FEATURE_CPPC)) {
-+		if (cpu_feature_enabled(X86_FEATURE_ZEN1) || cpu_feature_enabled(X86_FEATURE_ZEN2)) {
-+			if (c->x86_model > 0x60 && c->x86_model < 0xaf)
-+				warn = true;
-+		} else if (cpu_feature_enabled(X86_FEATURE_ZEN3) || cpu_feature_enabled(X86_FEATURE_ZEN4)) {
-+			if ((c->x86_model > 0x10 && c->x86_model < 0x1F) ||
-+					(c->x86_model > 0x40 && c->x86_model < 0xaf))
-+				warn = true;
-+		} else if (cpu_feature_enabled(X86_FEATURE_ZEN5)) {
-+			warn = true;
-+		}
-+	}
-+
-+	if (warn)
-+		pr_warn_once("The CPPC feature is supported but currently disabled by the BIOS.\n"
-+					"Please enable it if your BIOS has the CPPC option.\n");
- 	return true;
- }
- 
+ 	/* capability check */
+-	if (boot_cpu_has(X86_FEATURE_CPPC)) {
++	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+ 		pr_debug("AMD CPPC MSR based functionality is supported\n");
+ 		if (cppc_state != AMD_PSTATE_ACTIVE)
+ 			current_pstate_driver->adjust_perf = amd_pstate_adjust_perf;
 -- 
 2.34.1
 
