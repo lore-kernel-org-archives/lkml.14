@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919B91F956
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0E61DA23
 	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718807534; cv=none; b=WzYjbxzwBJchIBeiVjbUnJtkZSQzpQ8qPz1OeuXF1HOAaJpcUOKN3bt8PVxVPk7piVJO+GPbQZg2ztcBWw10b2vzeut/07owtwznKQo1Fl5s/Vt3xpLGm4gBlWKCaHDc32iWTvoCHX0tPSFlz77yhK3cIcJNkzXZojh5zpViFrI=
+	t=1718807534; cv=none; b=W3PfMvVtImBLllcmU8Krh6TNYQc5NS4pwvNFDOLWx5Fj3FMJddD5GjKRNSzSCPFHODjMSRuRFK3BxqxRYCJoi/ZR27JEsuTTZbxMqNyJ3qJsT77zhn151gykjeXnqt7XQbnbY3xiGzek9CG6W5adNs2A/lJLyGbnv1DuaLQzQZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718807534; c=relaxed/simple;
-	bh=GMUTsruzzAYn0n7hmwAGt8zwytpi3KhL2H6cMAMOTwM=;
+	bh=nDauC53RPLl+Q/BbbOdZCjz+Z3uB4YVnDVwiZtsyjyI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IpYBVRpoYH36rxzedojh//lQE3Hrwk8f+YiXFMr9YfiKtsmcdWhOWwrUU8D140ojKte0yYKmitONLkf8dadV/baH3SanqtSZ3aww0pqvAZ1F2rFDZxjEIztaAxFvzF3efqrOuKIi/ly9jKMsVlna8HjTR9s5SUk/IusUATYUoF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwtOrjFp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=uZbwJp/tP7KEY/zzhQR9BxD30fbZFpFwNCU3b6JxmaEBXjyHpEyMdhc/BT3Sjku61OYVGYuEkRw/vD8ZHLqjXX842YPv3hYuJL9G4+zrCauiDIu8VwSEfLnaToqCp+crrKI4wAqezNI+ASukfj8tUCHBBjfDK13FIYDbwy0/Xc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLZP0Nm3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwtOrjFp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B26CC4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLZP0Nm3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B557C4AF08;
 	Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718807534;
-	bh=GMUTsruzzAYn0n7hmwAGt8zwytpi3KhL2H6cMAMOTwM=;
+	bh=nDauC53RPLl+Q/BbbOdZCjz+Z3uB4YVnDVwiZtsyjyI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=AwtOrjFpZGTO8bfHqaprHnw7Wv1EhZUdblvMILrHdpEYGJsHjWokHIXklVLecdbmV
-	 u0zSHy/mnth9/Y4D41yk0CKFSYK00IVp79AuoTC9J8LDcC8ziZNbTOfh2p48hRxll3
-	 MVFhFSqLnDhrdoR13eSxdcY6RBf0wTbM0GQjImMR3MGNrmLXjwzFhnn8w0t8+JcXL4
-	 LdgQ8/sK6NdVmjsEkvT6r2BjaX0XkekDEGOagNIWsYk80zWFuU+VsPgQ5Q5eZ/g3+l
-	 abmfBzAn0Qde9eZ4YNfkVr2raVmVh4RUhpi7FBXCcIHVlJIodUQzttzjMxBuhdK3Wi
-	 LcF/fm49U/e3Q==
+	b=hLZP0Nm3CCq7u0QNm3dsEW6z2DfRBa4g1HvFboR76ytNF+Lf3bDUBJnEyzTtZSKYX
+	 G7z8Hfxcemm9E56oC+CgocLU5ErVpwz+ntcnofBdG2IUz706CfRS8lAvr0jZlsKlWg
+	 OxZ7l2ib0vBgis4ziP2aA1fKGFDoio6CwFOyadttTks4UZ4caHJAAhvLPzgKJ2Gq2W
+	 0cn0EPe7ke/2rfugJ6Eif+w3Kq2J+N0/5MJs6uSwgn8xrROgpFPhttsSD1Bt9DmMhP
+	 1lBaht3NEKN1aUove0+jsCix8WMRqGEUFrp+5RYfp2t9mTnnTRKrnZIOqJHCUoi+w9
+	 xjsYcFw+90hSQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D999C2BC81;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C325C2BB85;
 	Wed, 19 Jun 2024 14:32:14 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Wed, 19 Jun 2024 22:30:45 +0800
-Subject: [PATCH v2 04/14] drm/mediatek: Fix XRGB setting error in Mixer
+Date: Wed, 19 Jun 2024 22:30:43 +0800
+Subject: [PATCH v2 02/14] drm/mediatek: Disable 9-bit alpha in ETHDR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240619-mediatek-drm-next-v2-4-abf68f46f8d2@mediatek.com>
+Message-Id: <20240619-mediatek-drm-next-v2-2-abf68f46f8d2@mediatek.com>
 References: <20240619-mediatek-drm-next-v2-0-abf68f46f8d2@mediatek.com>
 In-Reply-To: <20240619-mediatek-drm-next-v2-0-abf68f46f8d2@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -54,11 +54,11 @@ Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718807531; l=1806;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718807531; l=1465;
  i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=iVCN8PnNVHs904I6AJ55kOr+V0K7XkkYFUBoVjBPemw=;
- b=zbO/9yDD3WrlwV9aQXD6T+LzL1cDtdTW68MZGIuRnNbMqkjeBif3cfxVoBAvkCBbMTkAfPGVb
- Mu0y7+d2FJ9CemdbDBflMXCNL+97grlHDtu7EiQ0+/4OM90yy+o56jq
+ bh=6fbUX6KRvCRN0DJcJEcVUjxpKT4VpT1Y9qernMaYSKY=;
+ b=rAjWRftMXK7ta3qYwsbvYnPDZglASvzGpDwQeQXLRflRp641iLxiTpYr355ls8TTAKEmmQQOi
+ HUcBl+QvWPICO6GFX5hgSHOQYglYtF6BCNYAltDFsfJv+eHhahwnzPi
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
@@ -68,47 +68,40 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Although the alpha channel in XRGB formats can be ignored, ALPHA_CON
-must be configured accordingly when using XRGB formats or it will still
-affects CRC generation.
+When 9-bit alpha is enabled, its value will be converted from 0-255 to
+0-256 (255 = not defined). This is designed for special HDR related
+calculation, which should be disabled by default, otherwise, alpha
+blending will not work correctly.
 
-Fixes: d886c0009bd0 ("drm/mediatek: Add ETHDR support for MT8195")
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_ethdr.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_ethdr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-index d7d16482c947..5c52e514ae30 100644
+index 156c6ff547e8..d7d16482c947 100644
 --- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
 +++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-@@ -153,6 +153,7 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 	unsigned int offset = (pending->x & 1) << 31 | pending->y << 16 | pending->x;
- 	unsigned int align_width = ALIGN_DOWN(pending->width, 2);
- 	unsigned int alpha_con = 0;
-+	bool replace_src_a = false;
+@@ -50,7 +50,6 @@
  
- 	dev_dbg(dev, "%s+ idx:%d", __func__, idx);
- 
-@@ -167,7 +168,15 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 	if (state->base.fb && state->base.fb->format->has_alpha)
+ #define MIXER_INX_MODE_BYPASS			0
+ #define MIXER_INX_MODE_EVEN_EXTEND		1
+-#define DEFAULT_9BIT_ALPHA			0x100
+ #define	MIXER_ALPHA_AEN				BIT(8)
+ #define	MIXER_ALPHA				0xff
+ #define ETHDR_CLK_NUM				13
+@@ -169,7 +168,7 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
  		alpha_con = MIXER_ALPHA_AEN | MIXER_ALPHA;
  
--	mtk_mmsys_mixer_in_config(priv->mmsys_dev, idx + 1, alpha_con ? false : true,
-+	if (state->base.fb && !state->base.fb->format->has_alpha) {
-+		/*
-+		 * Mixer doesn't support CONST_BLD mode,
-+		 * use a trick to make the output equivalent
-+		 */
-+		replace_src_a = true;
-+	}
-+
-+	mtk_mmsys_mixer_in_config(priv->mmsys_dev, idx + 1, replace_src_a,
- 				  MIXER_ALPHA,
+ 	mtk_mmsys_mixer_in_config(priv->mmsys_dev, idx + 1, alpha_con ? false : true,
+-				  DEFAULT_9BIT_ALPHA,
++				  MIXER_ALPHA,
  				  pending->x & 1 ? MIXER_INX_MODE_EVEN_EXTEND :
  				  MIXER_INX_MODE_BYPASS, align_width / 2 - 1, cmdq_pkt);
+ 
 
 -- 
 Git-146)
