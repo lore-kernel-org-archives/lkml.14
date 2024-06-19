@@ -1,99 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D01C13A263;
-	Wed, 19 Jun 2024 11:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9058A13A3E7
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796330; cv=none; b=tclf3A4Sfu2h0yImarDDynnRNahRqgWXLETEQh6HwCk+BHG9GY7qTA6fL9TXCjQky15VuYx4r5Qfm6wzGqO1JnPhle0Xn4FSOUCnZW4A/UxprrEgrhZNxdqO3PoyNfQs7Y0NKcXADL7uHM2kNPFs9Z2SIfVLwI2HP8s63ROoYqE=
+	t=1718796358; cv=none; b=TZcouHtComh8/dq1iFiJ1rSdnKi8FPqYiE6DsQH7HU+0TOlStuOKQGCnWDzUGRJ+dB9m/HmZkq8cylgXB2zpkUTJqWG39a/RXsuC1VE3cL9RqcO51CWcUO0U3bZR7rflLMX2iR4PS3lemPNhxoX+zuBhuZn+qZhWWudCW0HuR/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796330; c=relaxed/simple;
-	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SYef2zjdyKcavrR8ShSqjW/HYcZwy3GUzXSJpbpuNe/V1Xf+LPFBVQzF/kiidF4Vyn7k67cZON6kqDrhUWzFGNeaixRUKqL7GBW7AOwhdW0CfJ7+bHBgtWSF9+Ukg6sraHExOO8xAmLvmwgVRsogfadykuWKArMVKrX7ctZ1bxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du+dh5j3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718796358; c=relaxed/simple;
+	bh=zMNJY4JjcBq/I5iScuiawuQ46bXABJDkunpWXhzv/hA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OCxWzoICeX79uWC6GJLh1NDN3K3a1+/WjWaYC7UVmVd9pi36cg6CzcONP23IiD4SwjbAwWWFPLoBj+85QKlzMmEZrlobXt9J6e4LoCHBi5qqccSuJPDBDm4UTGG5Oafs8BM+PIgbJJ1p6YDPNoNiOqILlWrSjVMrD5i8cG4aKXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=f38Jovt6; arc=none smtp.client-ip=220.197.31.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du+dh5j3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BDFC4AF53;
-	Wed, 19 Jun 2024 11:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718796329;
-	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Du+dh5j3HHzpa9yey8zGx6MNBhRSP5yQXWuWgd8fZ+2wjMfn2vfuZQWDvD6mfzdDE
-	 ALVAAyypHvZYwZ7gQLIbC6J2/lDVDvJDeXsXPtcoshRW+qweIlKecxXE+xXw1latK0
-	 295u5iSD3QMCimGrhNLiv7f2uBLI/v0yKTZxlMS2mDfY2XsuKPrWFz/lrKGNnw2/fy
-	 OZvO4Q0gC+SetiNpSZ6ZN1vcJ9u8CRoSpaGcKqJJWIfIWAJlXkTRxzn/Dy8jeW38ee
-	 90nqDKny33ACfjWnYETbC+ZOw9mtfcELCdxvaLuYHAXfRzbVQOHsIXmGOzLsGvuq3b
-	 lRykQ6JA79PhQ==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org,
-	Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Jamie Gibbons <jamie.gibbons@microchip.com>,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	=?utf-8?q?Daire_McNamara_=3Cdaire=2Emcnamara=40microchip=2Ecom=3E=2C_Jam?=,
-	=?utf-8?q?ie_Gibbons_=3Cjamie=2Egibbons=40microchip=2Ecom=3E=2C_Valentina_F?=,
-	=?utf-8?q?ernandez_=3Cvalentina=2Efernandezalanis=40microchip=2Ecom=3E=2C_L?=,
-	=?utf-8?q?inus_Walleij_=3Clinus=2Ewalleij=40linaro=2Eorg=3E=2C_Bartosz_Gola?=,
-	=?utf-8?q?szewski_=3Cbrgl=40bgdev=2Epl=3E=2C_Rob_Herring_=3Crobh=40kernel?=,
-	=?utf-8?q?=2Eorg=3E=2C_Krzysztof_Kozlowski_=3Ckrzysztof=2Ekozlowski+dt=40li?=,
-	=?utf-8?q?naro=2Eorg=3E=2C_Lorenzo_Pieralisi_=3Clpieralisi=40kernel=2Eorg?=,
-	=?utf-8?q?=3E=2C_Krzysztof_Wilczy=C5=84ski_=3Ckw=40linux=2Ecom=3E=2C_Bjorn_?=,
-	=?utf-8?q?Helgaas_=3Cbhelgaas=40google=2Ecom=3E=2C_linux-gpio=40vger=2Ekern?=,
-	=?utf-8?q?el=2Eorg=2C_devicetree=40vger=2Ekernel=2Eorg=2C_linux-kernel=40vg?=,
-	=?utf-8?q?er=2Ekernel=2Eorg=2C_linux-pci=40vger=2Ekernel=2Eorg?=
-Subject: Re: (subset) [PATCH v1 0/5] BeagleV Fire support
-Date: Wed, 19 Jun 2024 12:24:48 +0100
-Message-ID: <20240619-tightly-stuffed-a91e32ae9fc3@spud>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
-References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="f38Jovt6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=aG/vx2BDuqsQqUPEZ8hVa2/sJkJ0MxkksOjRduMcktM=;
+	b=f38Jovt6Dpp8AVGlqTbgw8GZKwlmaxEh7S5+mn9SNzcECo/fNZP3gZBGijWeeU
+	8YkmwQeFsYnHRe8L1ym0wEz7+KQuO7GuxiXWJhD1Pr5YLWm/EE70ha+sYNKmrVR6
+	qrMP6czA06SLFSTrVChrA3OeislhDyl5Tzk8RFDvKpnwg=
+Received: from [172.21.22.210] (unknown [118.242.3.34])
+	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wCHv9VgvHJmqdiPBA--.21500S2;
+	Wed, 19 Jun 2024 19:09:21 +0800 (CST)
+Message-ID: <86e39cc3-cae9-485a-9854-c998fb906cc2@126.com>
+Date: Wed, 19 Jun 2024 19:09:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=693; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=W31/LXvbm3p0gQHN+AHn/iS7bX0lEsjhbAHyFzbXYq0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGlFBxh8f6/zXfjC9NGcM4ltLn98vHsktk+Z/fxqdsDvr bOvnM6b3lHKwiDGwSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJfAxhZDga2nAq+VdN38M/ d2wvNudvOpjAbmnDcl+8d6Z2N5OBdx3DP+3M/hvHV+4K+s9a98Ofad+XBEtuwxk72msy7u6t2Li 7lREA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/page_alloc: add one PCP list for THP
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com,
+ liuzixing@hygon.cn, Mel Gorman <mgorman@techsingularity.net>
+References: <1718790499-28151-1-git-send-email-yangge1116@126.com>
+ <CAGsJ_4zAg_Ui3uNUz6rwRPeERo6PskthGUB2V=4Yr+c+AU8iqA@mail.gmail.com>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <CAGsJ_4zAg_Ui3uNUz6rwRPeERo6PskthGUB2V=4Yr+c+AU8iqA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCHv9VgvHJmqdiPBA--.21500S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxArW3Kr1rGrW5KrWkKw4Durg_yoWrury3pF
+	WxJF4YvayjqryUCw1xJwn0krna93sxGFn7Cr1I9348ZrsxXFyS9a47KFnF9FykZrW7Cr1x
+	Xryqq3sxuF4qy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRTrW7UUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQYDG2VLa09vDwAAst
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-On Wed, 27 Mar 2024 12:24:35 +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+
+在 2024/6/19 18:13, Barry Song 写道:
+> +Mel, the original author of commit 5d0a661d808f
+> ('mm/page_alloc: use only one PCP list..."
 > 
-> Yo,
 > 
-> Wee series adding support for the BeagleV Fire. I've had a dts sitting
-> locally for this for over a year for testing Auto Update and I meant to
-> submit something to mainline once the board got announced publicly, but
-> only got around to that now.
+> On Wed, Jun 19, 2024 at 9:48 PM <yangge1116@126.com> wrote:
+>>
+>> From: yangge <yangge1116@126.com>
+>>
+>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+>> THP-sized allocations") no longer differentiates the migration type
+>> of pages in THP-sized PCP list, it's possible that non-movable
+>> allocation requests may get a CMA page from the list, in some cases,
+>> it's not acceptable.
+>>
+>> If a large number of CMA memory are configured in system (for
+>> example, the CMA memory accounts for 50% of the system memory),
+>> starting a virtual machine with device passthrough will get stuck.
+>> During starting the virtual machine, it will call
+>> pin_user_pages_remote(..., FOLL_LONGTERM, ...) to pin memory. Normally
+>> if a page is present and in CMA area, pin_user_pages_remote() will
+>> migrate the page from CMA area to non-CMA area because of
+>> FOLL_LONGTERM flag. But if non-movable allocation requests return
+>> CMA memory, migrate_longterm_unpinnable_pages() will migrate a CMA
+>> page to another CMA page, which will fail to pass the check in
+>> check_and_migrate_movable_pages() and cause migration endless.
+>> Call trace:
+>> pin_user_pages_remote
+>> --__gup_longterm_locked // endless loops in this function
+>> ----_get_user_pages_locked
+>> ----check_and_migrate_movable_pages
+>> ------migrate_longterm_unpinnable_pages
+>> --------alloc_migration_target
+>>
 > 
-> [...]
+> Please also describe its potential negative impact to cma_alloc().
+> 
+>> To fix the problem above, we add one PCP list for THP, which will
+>> not introduce a new cacheline. THP will have 2 PCP lists, one PCP
+> 
+> not introduce a new cacheline for struct per_cpu_pages.
+> 
+>> list is used by MOVABLE allocation, and the other PCP list is used
+>> by UNMOVABLE allocation. MOVABLE allocation contains GPF_MOVABLE,
+>> and UNMOVABLE allocation contains GFP_UNMOVABLE and GFP_RECLAIMABLE.
+>>
+>> Link: https://lore.kernel.org/all/1717492460-19457-1-git-send-email-yangge1116@126.com/
+> 
+> no this tag.
+> 
+>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for THP-sized allocations")
+> 
+> Cc: <stable@vger.kernel.org> ?
+> 
 
-Applied to riscv-dt-for-next, thanks!
+Thanks, I will prepare the next version.
 
-[1/5] dt-bindings: riscv: microchip: document beaglev-fire
-      https://git.kernel.org/conor/c/76ed031dc750
-[5/5] riscv: dts: microchip: add an initial devicetree for the BeagleV Fire
-      https://git.kernel.org/conor/c/9e2569c28589
+>> Signed-off-by: yangge <yangge1116@126.com>
+>> ---
+>>   include/linux/mmzone.h | 9 ++++-----
+>>   mm/page_alloc.c        | 9 +++++++--
+>>   2 files changed, 11 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>> index b7546dd..cb7f265 100644
+>> --- a/include/linux/mmzone.h
+>> +++ b/include/linux/mmzone.h
+>> @@ -656,13 +656,12 @@ enum zone_watermarks {
+>>   };
+>>
+>>   /*
+>> - * One per migratetype for each PAGE_ALLOC_COSTLY_ORDER. One additional list
+>> - * for THP which will usually be GFP_MOVABLE. Even if it is another type,
+>> - * it should not contribute to serious fragmentation causing THP allocation
+>> - * failures.
+>> + * One per migratetype for each PAGE_ALLOC_COSTLY_ORDER. Two additional lists
+>> + * are added for THP. One PCP list is used by GPF_MOVABLE, and the other PCP list
+>> + * is used by GFP_UNMOVABLE and GFP_RECLAIMABLE.
+>>    */
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> -#define NR_PCP_THP 1
+>> +#define NR_PCP_THP 2
+>>   #else
+>>   #define NR_PCP_THP 0
+>>   #endif
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 8f416a0..0ecbde3 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -504,10 +504,15 @@ static void bad_page(struct page *page, const char *reason)
+>>
+>>   static inline unsigned int order_to_pindex(int migratetype, int order)
+>>   {
+>> +       bool __maybe_unused movable;
+>> +
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>          if (order > PAGE_ALLOC_COSTLY_ORDER) {
+>>                  VM_BUG_ON(order != HPAGE_PMD_ORDER);
+>> -               return NR_LOWORDER_PCP_LISTS;
+>> +
+>> +               movable = migratetype == MIGRATE_MOVABLE;
+>> +
+>> +               return NR_LOWORDER_PCP_LISTS + movable;
+>>          }
+>>   #else
+>>          VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
+>> @@ -521,7 +526,7 @@ static inline int pindex_to_order(unsigned int pindex)
+>>          int order = pindex / MIGRATE_PCPTYPES;
+>>
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> -       if (pindex == NR_LOWORDER_PCP_LISTS)
+>> +       if (order > PAGE_ALLOC_COSTLY_ORDER)
+> 
+> pindex >= NR_LOWORDER_PCP_LISTS
+> 
+>>                  order = HPAGE_PMD_ORDER;
+>>   #else
+>>          VM_BUG_ON(order > PAGE_ALLOC_COSTLY_ORDER);
+>> --
+>> 2.7.4
+>>
+> 
+> Thanks
+> Barry
 
-I've applied this with the incorrect PCIe root port node removed.
-
-Cheers,
-Conor.
