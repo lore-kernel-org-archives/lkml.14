@@ -1,422 +1,243 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A852739FD9;
-	Wed, 19 Jun 2024 14:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844F81CF8D;
+	Wed, 19 Jun 2024 14:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718806656; cv=none; b=EEXm0ZyB/y6r7eZal997VTl87uw6N4QwB2OagBoJ7Tjn8bvIVh3ApoaX9cPYS4BQ73sp4dEY/g6cIJNZKH0sajY5c/u0Q4qn/hvl7NWN5YBjKQb6oBHb0erVK3UHYdo0y5JT85UXcWMsowQF/TGUaGQMKN1mh5ubgAc5OJ4U6jc=
+	t=1718806688; cv=none; b=Kszq8J13LUC+Tx+cU+/hcfS5Ms0bmZCQOkhnl8HNb6Yoc69IhEkO6wolKTeOAUGGjg7cO9FSevJNu0Hljfx4fCJeY6erzcg+uhgYUqxpxusxsSaGe/oZaTkuMLKCNo/dwilmUTRae8AY4jJ7wGOLd0VuPy+VxWcxEPXxEBK8o2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718806656; c=relaxed/simple;
-	bh=Lcw92CjwaBVnv7EgxDmyzwT2GvDr2qGI5LBVWok8vYk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dlm68UJPBmmGDbAKQxINA29p0sviW4BuXFIOklU+MvgEmaVwTlV9SqC8wsSwnbDk5jZXfQVNdE8lbTqm2SXptWSpbX+B5FQYCzgJj9Z8OdIWn0DqiuYwTDiVco0D9tvIolMDn9Bf7wvH3b2QuMsD+6vfPzlLQoFScR+2QcLdcic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=K/atfWQl; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1718806688; c=relaxed/simple;
+	bh=RGSHa7sfaiEy5D4a/j1wrv+LOR9Q1Itk+/bpvv3EMrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TlAVWiHN94tBjJuDVdmjZfQlvViSUPvNTso6JmJiTtMExc8iRpmClV1Dp2/cFKaHJqgjbUTE8EEJVigkbTBJ5xVgaW5C4IwNkQXud3QQMarxEN+PL1HEbGRT8uLVwoKf8lJpbNs+mFFmlIWC9W5bp3KUaKUhXwHXDZMewaSYb54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApBt96rQ; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K/atfWQl"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J7Rs9A022901;
-	Wed, 19 Jun 2024 07:17:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=g
-	XJMJ7tWWehU3UvgrpFNxoF8G8cwk8H8L5fE1yLSnDI=; b=K/atfWQlzkppGe//c
-	iyst+QF43RPMw6EUG/eFPf2CYMZjTDpIFMGdpL+hOPumL10TcMVQic8jvq+1paS7
-	6pvXcdSP48hy4cCG/7dBXnaXCQHxptfdThgiNO8tZgsHl0+n55OThY+cWUMEu9Cf
-	0dDr7HGQmzJnVqgDtFkaAB2adW9h4ZraiF3uko9Tv/kRX05Izvc93Xz4GGe6rr4Y
-	VFMGDY/59vegW8ZGpU4bJBDnWqfNgzvjoWt4ZvwjWBtsHe4cQ6SY3Cm2y2l8L5GZ
-	YL/1WO/vJa8cGKKmhs6aAiLXugVHl1wLWB0nVGHOTgkxfkexRqVcempnaW2L4rj0
-	/pdlw==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3yutyc1602-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 07:17:22 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 19 Jun 2024 07:17:22 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 19 Jun 2024 07:17:21 -0700
-Received: from Dell2s-9.sclab.marvell.com (unknown [10.110.150.250])
-	by maili.marvell.com (Postfix) with ESMTP id 9A56B3F7082;
-	Wed, 19 Jun 2024 07:17:21 -0700 (PDT)
-From: Witold Sadowski <wsadowski@marvell.com>
-To: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC: <broonie@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <pthombar@cadence.com>, Witold Sadowski <wsadowski@marvell.com>
-Subject: [PATCH v9 6/9] spi: cadence: Add Marvell xfer operation support
-Date: Wed, 19 Jun 2024 07:17:12 -0700
-Message-ID: <20240619141716.1785467-7-wsadowski@marvell.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240619141716.1785467-1-wsadowski@marvell.com>
-References: <20240619141716.1785467-1-wsadowski@marvell.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApBt96rQ"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-70a365a4532so2876849a12.1;
+        Wed, 19 Jun 2024 07:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718806686; x=1719411486; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=logi2V8osBzXhzd35gF5npZIF3ONa+VvHKEUDyy2HCQ=;
+        b=ApBt96rQqEvbqton4MbNvsCGZXNaGHeaBKI/EpmaN258rLVSJbOK4ks5uq+ajaZPmg
+         RaFeS7he4I/lyZ4SzCV+WlnVx0UIlgjVJg2KGAeObMmnPQlHr//r5zom17SeYu8dpIze
+         LpezjzSnZhegBs9QEv7UCq+0DtDZT4opQQBkllYZcNLZXCFI6ESn9BzHgoq2NWdgvido
+         gmb8dnmayjoijHdlDRWSiQcit0i5hNAxC7zw9MB4BibR6EpqdNcQjMmv5dAkW2/6aXUs
+         orRnB1fQg/XmIIilGAdxlqzQCYqKqjllKtUeEPR+j6he3RGdngKDjN6qpttHUWaCKhJ+
+         FnIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718806686; x=1719411486;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=logi2V8osBzXhzd35gF5npZIF3ONa+VvHKEUDyy2HCQ=;
+        b=koPqU8TkCUc12g84gUwJj/vyyC1jTHlnAy4P54s70v9tWC3NLFFgdWt03niXMcMYNS
+         pTQWF9vjTfec1JqPK0W8sD9voKT5c4ZK3co/BEmFEoO/0LZ70pZnnfTyGH/PVExGTbth
+         VnMfuQXuT7WdQNJbNEB/jRIlphbtQ1pL6o0qHyi0+FjMKrliHSdwtFpLIIR5WBSMM+tN
+         39XqzdlgEE1Sk1pwD05HA3u7xrscdDDStcL4cFmD22WSATPrmunjfqlHC/yZUPJWIc87
+         ivenGwjsdrj+Yyk1s9IiWuqz2K2XCyKbWjzembnGe5NtDHJiZhg/OpGUOee6tMzQrdV5
+         8hOw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+rc2GAi3hPyabHadgtJ5iP6eNM45nJssgv+oCvquzgiM/Dfe68vTkQTj1h9WcnXyZ0Mfo5G9P/M8cSzGRSiV20rLTz/Cno5R38odSQlGERqLyr0CP0TiN9Y/I+6doxvoqbxln9Ow1zGQ=
+X-Gm-Message-State: AOJu0YzdlAQw0YpOlyNRtlJxGoDxQjb5Ox6v09Cd0w6bOHJlkfoThkp9
+	wLZXfpqMbOPtN4spiurvwERGAZkralBCRT+KP0NQqzWcfwHwnd+C
+X-Google-Smtp-Source: AGHT+IEWg9UInkYQIxfsa4v520A/FhV/0j9YrrqxpE2GgK7xvcCxFUZIcPus6ZaDoqLvMHsbspm+9Q==
+X-Received: by 2002:a17:90b:a44:b0:2c3:40b6:293b with SMTP id 98e67ed59e1d1-2c7b5da95d0mr2617806a91.39.1718806685579;
+        Wed, 19 Jun 2024 07:18:05 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c77ba5b202sm3120071a91.36.2024.06.19.07.18.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 07:18:04 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <52d9ec36-2ac8-427a-8631-c7730c979bd0@roeck-us.net>
+Date: Wed, 19 Jun 2024 07:18:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT PATCH v2 2/3] hwmon: (spd5118) Use spd5118 specific
+ read/write operations
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Armin Wolf <W_Armin@gmx.de>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Ren=C3=A9_Rebe?=
+ <rene@exactcode.de>, Stephen Horvath <s.horvath@outlook.com.au>,
+ Sasha Kozachuk <skozachuk@google.com>, John Hamrick <johnham@google.com>,
+ Chris Sarra <chrissarra@google.com>, linux-hwmon@vger.kernel.org,
+ Jean Delvare <jdelvare@suse.com>, Heiner Kallweit <hkallweit1@gmail.com>
+References: <20240618195348.1670547-1-linux@roeck-us.net>
+ <20240618195348.1670547-3-linux@roeck-us.net>
+ <a7f208df-4c9e-4fa2-9d17-80895db51182@molgen.mpg.de>
+ <661def21-b0a9-49c1-937e-8526008f529c@roeck-us.net>
+ <omsjeb6zbkcdhh4a3urjdrdeyj2kczb734tbhxwdcvngzlm7pe@dzdphvmm6asq>
+ <4755d088-7eab-47ca-923c-db1fdf3611ab@gmx.de>
+ <6845cc2d-c50b-415b-af49-bf57333ee939@molgen.mpg.de>
+ <f437519f-97c3-4811-ac04-0695a27d9b37@roeck-us.net>
+ <0b8ae7fa-e3d3-4d31-9b4b-657b15c2d19c@t-8ch.de>
+ <a682ab44-d623-40fe-8fee-af2a3ae5590a@roeck-us.net>
+ <879b15c1-d924-41d9-a41d-da785b943d26@t-8ch.de>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <879b15c1-d924-41d9-a41d-da785b943d26@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: SkQlI_dKseGkJFMToLcaCntEopFI9NpG
-X-Proofpoint-GUID: SkQlI_dKseGkJFMToLcaCntEopFI9NpG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
 
-Marvell Xfer overlay extends xSPI capabilities to support non-memory SPI
-operations. The Marvell overlay, combined with a generic command, allows
-for full-duplex SPI transactions. It also enables transactions with
-undetermined lengths using the cs_hold parameter and the ability to
-extend CS signal assertion, even if the xSPI block requests CS signal
-de-assertion.
-Marvell overlay is using part of xSPI for writing data into device, and
-additional hardware block to read data from the device. To do that xSPI
-will trigger 1 byte generic command followed by data sequence. In same
-time overlay block will monitor MISO pin to read data from the device.
-Due to that SDMA data start will be shifted by 1 byte.
+On 6/19/24 02:13, Thomas Weißschuh wrote:
+> On 2024-06-18 18:02:51+0000, Guenter Roeck wrote:
+>> On 6/18/24 17:50, Thomas Weißschuh wrote:
+>>> On 2024-06-18 17:23:44+0000, Guenter Roeck wrote:
+>>>> On 6/18/24 16:39, Paul Menzel wrote:
+>>>>> [Cc: +Heiner]
+>>>>>
+>>>>>
+>>>>> Dear Armin,
+>>>>>
+>>>>>
+>>>>> Am 19.06.24 um 01:28 schrieb Armin Wolf:
+>>>>>> Am 19.06.24 um 00:28 schrieb Wolfram Sang:
+>>>>>>
+>>>>>>>> to 86 degrees C. If that doesn't work, we'll be really out of luck
+>>>>>>>> with that controller (or at least I don't have an idea what else to try).
+>>>>>>>
+>>>>>>> Try CCing Heiner Kallweit for ideas about the i801 controller.
+>>>>>
+>>>>>> i am not Heiner Kallweit, but i found something interesting in
+>>>>>> commit ba9ad2af7019 ("i2c: i801: Fix I2C Block Read on 8-Series/C220 and later").
+>>>>>>
+>>>>>> Basically, it seems that the i802 i2c controller indeed features a SPD write disable bit which blocks all writes for slave addresses 0x50-0x57.
+>>>>>>
+>>>>>> Does the i801 i2c controller driver print something like "SPD Write Disable is set" during boot?
+>>>>>
+>>>>> Nice find. Yes, it does:
+>>>>>
+>>>>
+>>>> Yes, definitely. I didn't have any recent datasheets, so I missed that flag.
+>>>> Oh well :-(.
+>>>>
+>>>>>        [    5.462605] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+>>>>>        [    5.468399] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+>>>>>
+>>>>
+>>>> Bummer. That explains the problem. It means that the BIOS effectively
+>>>> blocks reading the eeprom on your system (because that would require writing
+>>>> the page register), as well as changing temperature limits. That is really
+>>>> annoying, but there is nothing we can do about it. Maybe the BIOS has a
+>>>> configuration flag to enable or disable write protect, but I doubt it.
+>>>
+>>> What about using 16bit addressing mode?
+>>>
+>>>       Alternatively, at initial power on, the host can set the Table 112, “MR11” [3] = ‘1’ to address the entire 1024 bytes of
+>>>       non-volatile memory with 2 bytes of address and hence not required to go through page selection to address entire
+>>>       non-volatile memory.
+>>>
+>>> regmap-i2c allows 16bit addresses when I2C_FUNC_SMBUS_I2C_BLOCK is supported,
+>>> which to me looks like it should be the case on i801 for ICH5.
+>>>
+>>
+>> Good idea, but it doesn't work. I can get write operations with
+>> 16-bit register addresses to work even on piix4, but read operations
+>> require writing a 16-bit register address followed by byte reads (see
+>> regmap_i2c_smbus_i2c_read_reg16). Unfortunately, spd5118 devices
+>> don't auto-increment the address on byte read operations, meaning
+>> each byte read returns data from address 0x00 (i.e., it returns
+>> 0x51). Try "i2cdump -y -f 0 0x50 c" and you'll see what I mean.
+>> Maybe there is a way around it, but I have not found it.
+> 
+> Thanks for the pointer to regmap_i2c_smbus_i2c_read_reg16().
+> I'm not really familiar with I2C/SMBUS ...
+> 
+> Did you look into "2.6.8.3 Default Read Address Pointer Mode"?
+> 
+Yes, I did, and, yes, setting that for each planned read operation
+might do the trick, but even that would not work here since writes
+are blocked. On top of that, it would be extremely expensive (one
+would have to write the address into the default address registers
+before starting a read). The reason to use 16-bit access mode would
+be to simplify access, not to make it more expensive.
 
-Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
----
- drivers/spi/spi-cadence-xspi.c | 271 +++++++++++++++++++++++++++++++++
- 1 file changed, 271 insertions(+)
+> I am failing to understand how that address pointer mode would ever make
+> sense without address auto-increment.
 
-diff --git a/drivers/spi/spi-cadence-xspi.c b/drivers/spi/spi-cadence-xspi.c
-index eb9293e8d708..fd40f00c3ab0 100644
---- a/drivers/spi/spi-cadence-xspi.c
-+++ b/drivers/spi/spi-cadence-xspi.c
-@@ -19,6 +19,7 @@
- #include <linux/bitfield.h>
- #include <linux/limits.h>
- #include <linux/log2.h>
-+#include <linux/bitrev.h>
- 
- #define CDNS_XSPI_MAGIC_NUM_VALUE	0x6522
- #define CDNS_XSPI_MAX_BANKS		8
-@@ -193,6 +194,34 @@
- 		((op)->data.dir == SPI_MEM_DATA_IN) ? \
- 		CDNS_XSPI_STIG_CMD_DIR_READ : CDNS_XSPI_STIG_CMD_DIR_WRITE))
- 
-+/* Helper macros for GENERIC and GENERIC-DSEQ instruction type */
-+#define CMD_REG_LEN (6*4)
-+#define INSTRUCTION_TYPE_GENERIC 96
-+#define CDNS_XSPI_CMD_FLD_P1_GENERIC_CMD (\
-+	FIELD_PREP(CDNS_XSPI_CMD_INSTR_TYPE, INSTRUCTION_TYPE_GENERIC))
-+
-+#define GENERIC_NUM_OF_BYTES GENMASK(27, 24)
-+#define CDNS_XSPI_CMD_FLD_P3_GENERIC_CMD(len) (\
-+	FIELD_PREP(GENERIC_NUM_OF_BYTES, len))
-+
-+#define GENERIC_BANK_NUM GENMASK(14, 12)
-+#define GENERIC_GLUE_CMD BIT(28)
-+#define CDNS_XSPI_CMD_FLD_P4_GENERIC_CMD(cs, glue) (\
-+	FIELD_PREP(GENERIC_BANK_NUM, cs) | FIELD_PREP(GENERIC_GLUE_CMD, glue))
-+
-+#define CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_1 (\
-+	FIELD_PREP(CDNS_XSPI_CMD_INSTR_TYPE, CDNS_XSPI_STIG_INSTR_TYPE_DATA_SEQ))
-+
-+#define CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_2(nbytes) (\
-+	FIELD_PREP(CDNS_XSPI_CMD_DSEQ_R2_DCNT_L, nbytes & 0xffff))
-+
-+#define CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_3(nbytes) ( \
-+	FIELD_PREP(CDNS_XSPI_CMD_DSEQ_R3_DCNT_H, (nbytes >> 16) & 0xffff))
-+
-+#define CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_4(dir, chipsel) ( \
-+	FIELD_PREP(CDNS_XSPI_CMD_DSEQ_R4_BANK, chipsel) | \
-+	FIELD_PREP(CDNS_XSPI_CMD_DSEQ_R4_DIR, dir))
-+
- /* Marvell PHY default values */
- #define MARVELL_REGS_DLL_PHY_CTRL		0x00000707
- #define MARVELL_CTB_RFILE_PHY_CTRL		0x00004000
-@@ -226,6 +255,37 @@
- #define MRVL_XSPI_CLOCK_DIVIDED(div) ((MRVL_XSPI_CLOCK_IO_HZ) / (div))
- #define MRVL_DEFAULT_CLK	     25000000
- 
-+/* Marvell overlay registers - xfer */
-+#define MRVL_XFER_FUNC_CTRL		 0x210
-+#define MRVL_XFER_FUNC_CTRL_READ_DATA(i) (0x000 + 8 * (i))
-+#define MRVL_XFER_SOFT_RESET		 BIT(11)
-+#define MRVL_XFER_CS_N_HOLD		 GENMASK(9, 6)
-+#define MRVL_XFER_RECEIVE_ENABLE	 BIT(4)
-+#define MRVL_XFER_FUNC_ENABLE		 BIT(3)
-+#define MRVL_XFER_CLK_CAPTURE_POL	 BIT(2)
-+#define MRVL_XFER_CLK_DRIVE_POL		 BIT(1)
-+#define MRVL_XFER_FUNC_START		 BIT(0)
-+#define MRVL_XFER_QWORD_COUNT		 32
-+#define MRVL_XFER_QWORD_BYTECOUNT	 8
-+
-+#define MRVL_XSPI_POLL_TIMEOUT_US	1000
-+#define MRVL_XSPI_POLL_DELAY_US		10
-+
-+/* Macros for calculating data bits in generic command
-+ * Up to 10 bytes can be fit into cmd_registers
-+ * least significant is placed in cmd_reg[1]
-+ * Other bits are inserted after it in cmd_reg[1,2,3] register
-+ */
-+#define GENERIC_CMD_DATA_REG_3_COUNT(len)	(len >= 10 ? 2 : len - 8)
-+#define GENERIC_CMD_DATA_REG_2_COUNT(len)	(len >= 7 ? 3 : len - 4)
-+#define GENERIC_CMD_DATA_REG_1_COUNT(len)	(len >= 3 ? 2 : len - 1)
-+#define GENERIC_CMD_DATA_3_OFFSET(position)	(8*(position))
-+#define GENERIC_CMD_DATA_2_OFFSET(position)	(8*(position))
-+#define GENERIC_CMD_DATA_1_OFFSET(position)	(8 + 8*(position))
-+#define GENERIC_CMD_DATA_INSERT(data, pos)	((data) << (pos))
-+#define GENERIC_CMD_REG_3_NEEDED(len)		(len > 7)
-+#define GENERIC_CMD_REG_2_NEEDED(len)		(len > 3)
-+
- enum cdns_xspi_stig_instr_type {
- 	CDNS_XSPI_STIG_INSTR_TYPE_0,
- 	CDNS_XSPI_STIG_INSTR_TYPE_1,
-@@ -294,6 +354,7 @@ struct cdns_xspi_dev {
- 	void __iomem *iobase;
- 	void __iomem *auxbase;
- 	void __iomem *sdmabase;
-+	void __iomem *xferbase;
- 
- 	int irq;
- 	int cur_cs;
-@@ -312,6 +373,9 @@ struct cdns_xspi_dev {
- 	const struct cdns_xspi_driver_data *driver_data;
- 	void (*sdma_handler)(struct cdns_xspi_dev *cdns_xspi);
- 	void (*set_interrupts_handler)(struct cdns_xspi_dev *cdns_xspi, bool enabled);
-+
-+	bool xfer_in_progress;
-+	int current_xfer_qword;
- };
- 
- static void cdns_xspi_reset_dll(struct cdns_xspi_dev *cdns_xspi)
-@@ -780,6 +844,203 @@ static void cdns_xspi_print_phy_config(struct cdns_xspi_dev *cdns_xspi)
- 		 readl(cdns_xspi->auxbase + CDNS_XSPI_CCP_PHY_DLL_SLAVE_CTRL));
- }
- 
-+static int cdns_xspi_prepare_generic(int cs, const void *dout, int len, int glue, u32 *cmd_regs)
-+{
-+	u8 *data = (u8 *)dout;
-+	int i;
-+	int data_counter = 0;
-+
-+	memset(cmd_regs, 0x00, CMD_REG_LEN);
-+
-+	if (GENERIC_CMD_REG_3_NEEDED(len)) {
-+		for (i = GENERIC_CMD_DATA_REG_3_COUNT(len); i >= 0 ; i--)
-+			cmd_regs[3] |= GENERIC_CMD_DATA_INSERT(data[data_counter++],
-+							       GENERIC_CMD_DATA_3_OFFSET(i));
-+	}
-+	if (GENERIC_CMD_REG_2_NEEDED(len)) {
-+		for (i = GENERIC_CMD_DATA_REG_2_COUNT(len); i >= 0; i--)
-+			cmd_regs[2] |= GENERIC_CMD_DATA_INSERT(data[data_counter++],
-+							       GENERIC_CMD_DATA_2_OFFSET(i));
-+	}
-+	for (i = GENERIC_CMD_DATA_REG_1_COUNT(len); i >= 0 ; i--)
-+		cmd_regs[1] |= GENERIC_CMD_DATA_INSERT(data[data_counter++],
-+						       GENERIC_CMD_DATA_1_OFFSET(i));
-+
-+	cmd_regs[1] |= CDNS_XSPI_CMD_FLD_P1_GENERIC_CMD;
-+	cmd_regs[3] |= CDNS_XSPI_CMD_FLD_P3_GENERIC_CMD(len);
-+	cmd_regs[4] |= CDNS_XSPI_CMD_FLD_P4_GENERIC_CMD(cs, glue);
-+
-+	return 0;
-+}
-+
-+static void marvell_xspi_read_single_qword(struct cdns_xspi_dev *cdns_xspi, u8 **buffer)
-+{
-+	u64 d = readq(cdns_xspi->xferbase +
-+		      MRVL_XFER_FUNC_CTRL_READ_DATA(cdns_xspi->current_xfer_qword));
-+	u8 *ptr = (u8 *)&d;
-+	int k;
-+
-+	for (k = 0; k < 8; k++) {
-+		u8 val = bitrev8((ptr[k]));
-+		**buffer = val;
-+		*buffer = *buffer + 1;
-+	}
-+
-+	cdns_xspi->current_xfer_qword++;
-+	cdns_xspi->current_xfer_qword %= MRVL_XFER_QWORD_COUNT;
-+}
-+
-+static void cdns_xspi_finish_read(struct cdns_xspi_dev *cdns_xspi, u8 **buffer, u32 data_count)
-+{
-+	u64 d = readq(cdns_xspi->xferbase +
-+		      MRVL_XFER_FUNC_CTRL_READ_DATA(cdns_xspi->current_xfer_qword));
-+	u8 *ptr = (u8 *)&d;
-+	int k;
-+
-+	for (k = 0; k < data_count % MRVL_XFER_QWORD_BYTECOUNT; k++) {
-+		u8 val = bitrev8((ptr[k]));
-+		**buffer = val;
-+		*buffer = *buffer + 1;
-+	}
-+
-+	cdns_xspi->current_xfer_qword++;
-+	cdns_xspi->current_xfer_qword %= MRVL_XFER_QWORD_COUNT;
-+}
-+
-+static int cdns_xspi_prepare_transfer(int cs, int dir, int len, u32 *cmd_regs)
-+{
-+	memset(cmd_regs, 0x00, CMD_REG_LEN);
-+
-+	cmd_regs[1] |= CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_1;
-+	cmd_regs[2] |= CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_2(len);
-+	cmd_regs[4] |= CDNS_XSPI_CMD_FLD_GENERIC_DSEQ_CMD_4(dir, cs);
-+
-+	return 0;
-+}
-+
-+static bool cdns_xspi_is_stig_ready(struct cdns_xspi_dev *cdns_xspi, bool sleep)
-+{
-+	u32 ctrl_stat;
-+
-+	return !readl_relaxed_poll_timeout
-+		(cdns_xspi->iobase + CDNS_XSPI_CTRL_STATUS_REG,
-+		ctrl_stat,
-+		((ctrl_stat & BIT(3)) == 0),
-+		sleep ? MRVL_XSPI_POLL_DELAY_US : 0,
-+		sleep ? MRVL_XSPI_POLL_TIMEOUT_US : 0);
-+}
-+
-+static bool cdns_xspi_is_sdma_ready(struct cdns_xspi_dev *cdns_xspi, bool sleep)
-+{
-+	u32 ctrl_stat;
-+
-+	return !readl_relaxed_poll_timeout
-+		(cdns_xspi->iobase + CDNS_XSPI_INTR_STATUS_REG,
-+		ctrl_stat,
-+		(ctrl_stat & CDNS_XSPI_SDMA_TRIGGER),
-+		sleep ? MRVL_XSPI_POLL_DELAY_US : 0,
-+		sleep ? MRVL_XSPI_POLL_TIMEOUT_US : 0);
-+}
-+
-+static int cdns_xspi_transfer_one_message_b0(struct spi_controller *controller,
-+					   struct spi_message *m)
-+{
-+	struct cdns_xspi_dev *cdns_xspi = spi_controller_get_devdata(controller);
-+	struct spi_device *spi = m->spi;
-+	struct spi_transfer *t = NULL;
-+
-+	const int max_len = MRVL_XFER_QWORD_BYTECOUNT * MRVL_XFER_QWORD_COUNT;
-+	int current_cycle_count;
-+	int cs = spi_get_chipselect(spi, 0);
-+	int cs_change = 0;
-+
-+	/* Enable xfer state machine */
-+	if (!cdns_xspi->xfer_in_progress) {
-+		u32 xfer_control = readl(cdns_xspi->xferbase + MRVL_XFER_FUNC_CTRL);
-+
-+		cdns_xspi->current_xfer_qword = 0;
-+		cdns_xspi->xfer_in_progress = true;
-+		xfer_control |= (MRVL_XFER_RECEIVE_ENABLE |
-+				 MRVL_XFER_CLK_CAPTURE_POL |
-+				 MRVL_XFER_FUNC_START |
-+				 MRVL_XFER_SOFT_RESET |
-+				 FIELD_PREP(MRVL_XFER_CS_N_HOLD, (1 << cs)));
-+		xfer_control &= ~(MRVL_XFER_FUNC_ENABLE | MRVL_XFER_CLK_DRIVE_POL);
-+		writel(xfer_control, cdns_xspi->xferbase + MRVL_XFER_FUNC_CTRL);
-+	}
-+
-+	list_for_each_entry(t, &m->transfers, transfer_list) {
-+		u8 *txd = (u8 *) t->tx_buf;
-+		u8 *rxd = (u8 *) t->rx_buf;
-+		u8 data[10];
-+		u32 cmd_regs[6];
-+
-+		if (!txd)
-+			txd = data;
-+
-+		cdns_xspi->in_buffer = txd + 1;
-+		cdns_xspi->out_buffer = txd + 1;
-+
-+		while (t->len) {
-+
-+			current_cycle_count = t->len > max_len ? max_len : t->len;
-+
-+			if (current_cycle_count < 10) {
-+				cdns_xspi_prepare_generic(cs, txd, current_cycle_count,
-+							  false, cmd_regs);
-+				cdns_xspi_trigger_command(cdns_xspi, cmd_regs);
-+				if (!cdns_xspi_is_stig_ready(cdns_xspi, true))
-+					return -EIO;
-+			} else {
-+				cdns_xspi_prepare_generic(cs, txd, 1, true, cmd_regs);
-+				cdns_xspi_trigger_command(cdns_xspi, cmd_regs);
-+				cdns_xspi_prepare_transfer(cs, 1, current_cycle_count - 1,
-+							   cmd_regs);
-+				cdns_xspi_trigger_command(cdns_xspi, cmd_regs);
-+				if (!cdns_xspi_is_sdma_ready(cdns_xspi, true))
-+					return -EIO;
-+				cdns_xspi->sdma_handler(cdns_xspi);
-+				if (!cdns_xspi_is_stig_ready(cdns_xspi, true))
-+					return -EIO;
-+
-+				cdns_xspi->in_buffer += current_cycle_count;
-+				cdns_xspi->out_buffer += current_cycle_count;
-+			}
-+
-+			if (rxd) {
-+				int j;
-+
-+				for (j = 0; j < current_cycle_count / 8; j++)
-+					marvell_xspi_read_single_qword(cdns_xspi, &rxd);
-+				cdns_xspi_finish_read(cdns_xspi, &rxd, current_cycle_count);
-+			} else {
-+				cdns_xspi->current_xfer_qword += current_cycle_count /
-+								 MRVL_XFER_QWORD_BYTECOUNT;
-+				if (current_cycle_count % MRVL_XFER_QWORD_BYTECOUNT)
-+					cdns_xspi->current_xfer_qword++;
-+
-+				cdns_xspi->current_xfer_qword %= MRVL_XFER_QWORD_COUNT;
-+			}
-+			cs_change = t->cs_change;
-+			t->len -= current_cycle_count;
-+		}
-+	}
-+
-+	if (!cs_change) {
-+		u32 xfer_control = readl(cdns_xspi->xferbase + MRVL_XFER_FUNC_CTRL);
-+
-+		xfer_control &= ~(MRVL_XFER_RECEIVE_ENABLE |
-+				  MRVL_XFER_SOFT_RESET);
-+		writel(xfer_control, cdns_xspi->xferbase + MRVL_XFER_FUNC_CTRL);
-+		cdns_xspi->xfer_in_progress = false;
-+	}
-+
-+	m->status = 0;
-+	spi_finalize_current_message(controller);
-+
-+	return 0;
-+}
-+
- static int cdns_xspi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -803,6 +1064,7 @@ static int cdns_xspi_probe(struct platform_device *pdev)
- 
- 	if (cdns_xspi->driver_data->mrvl_hw_overlay) {
- 		host->mem_ops = &marvell_xspi_mem_ops;
-+		host->transfer_one_message = cdns_xspi_transfer_one_message_b0;
- 		cdns_xspi->sdma_handler = &marvell_xspi_sdma_handle;
- 		cdns_xspi->set_interrupts_handler = &marvell_xspi_set_interrupts;
- 	} else {
-@@ -845,6 +1107,15 @@ static int cdns_xspi_probe(struct platform_device *pdev)
- 		return PTR_ERR(cdns_xspi->auxbase);
- 	}
- 
-+	if (cdns_xspi->driver_data->mrvl_hw_overlay) {
-+		cdns_xspi->xferbase = devm_platform_ioremap_resource_byname(pdev, "xfer");
-+		if (IS_ERR(cdns_xspi->xferbase)) {
-+			dev_info(dev, "XFER register base not found, set it\n");
-+			// For compatibility with older firmware
-+			cdns_xspi->xferbase = cdns_xspi->iobase + 0x8000;
-+		}
-+	}
-+
- 	cdns_xspi->irq = platform_get_irq(pdev, 0);
- 	if (cdns_xspi->irq < 0)
- 		return -ENXIO;
--- 
-2.43.0
+Oh, it kind of does, as long as each access is a single i2c operation.
+One would have to use a SMBus read word operation to read two bytes
+with a single SMBus command. I guess one could also use something similar
+to an i2c block operation - start a read with no command byte and just
+keep going.
+
+> 
+>> On top of that, configuring 16-bit mode requires a write operation
+>> into the page register, and that is blocked.
+> 
+> ... this one on the other hand is really obvious.
+> 
+
+There is actually another problem: When I tried enabling 16-bit mode
+in my system, I initially had trouble clearing it. When I rebooted,
+I got a BIOS error telling me that the configuration changed, and
+it gave me the option to either enter setup or continue. A soft
+reset did not clear the bit. Power cycle did, but I got the
+"configuration changed" message again.
+
+So even if we would get 16-bit mode to work, it would not be a good idea
+because it would expose people to the "configuration changed" BIOS
+message. Resetting the bit on shutdown and when unloading the driver
+would not help because that would not happen when the system crashes.
+
+So, in summary, 16-bit mode is just not usable. If some BIOS actually
+enables it, we might have to disable it or figure out how to use it
+without depending on "Default Read Address Pointer Mode".
+
+Thanks,
+Guenter
 
