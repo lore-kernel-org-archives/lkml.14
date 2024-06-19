@@ -1,52 +1,66 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8FD15A4AE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D754FAD
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718827046; cv=none; b=YoKoPKH84bQF+zx2X6mF3+/ciVdKQpJL0FPXWoVZ8u9kttIFX749C9AKix89sdWeAeul11nblo0XFrvX+CB58UjqyvJK4qFKcnP5ExkCfFnsshkHqRWEYp5w3FWU+8SHqcziWIsUYWPleUQNQ1oVRGnl75zW1lkVwdPP2Ktig4E=
+	t=1718827143; cv=none; b=gQd4DmzbHLNwcJx51RuYGDQf6tJZyJF8WbObiBOvN49ffWctV7Agv5apB3ffH8svse4xr0e99YIw9FBgNspP7p2Ygj/SHKP+9y9xZfYFUH4iTLVrPd5RxWUJQBrcPnOlVj2dClr7q+SUrF4rAG+32gUGT7lqxLaTeqSO97rftHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718827046; c=relaxed/simple;
-	bh=Ih3HoKeM+JivQUDjkQOQSsTb5IqA8OMRYT3a/x38Moo=;
+	s=arc-20240116; t=1718827143; c=relaxed/simple;
+	bh=duBAs5gzjFgfPQCOjhdXawsgFb18NaldwHTBPH1/ZTI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oULr5Zh1pAPP3GUYDWgQMUukn4cbIR+H8vAuk+dKglRvySK6mmUQ/zWrQqmsxLhjDFMNABYbjE3Gf+4nB1szESl1H2kGMqL1VXDq8OvPTbrEwSBa4adeJ2bHspYEJHyRwDOvvNYLiKa7LDLHfPC8b9trT5iiQcpBgiZgTxQBVx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=p9CSOebo; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=p+ArG5ond+4tzbogtiv+XgJNCspwswQQM9AJg7ICijFUm19tqIPo9q2NymZylVjFD6ushYrvjF20IXbl2Ks7fLA2qIWwjVoHWZ02uKUeMVld/UhPktvCKM00ya7XuR2D79XjaNdOTI6uhl08YWFO5DyJb5TcFFbfjjd2Cbv99ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CV5BdIP/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="p9CSOebo"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id JxkCsSQA5AidIK1PIsbqPu; Wed, 19 Jun 2024 19:55:48 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id K1PHsCihPHHoAK1PIsbMF7; Wed, 19 Jun 2024 19:55:48 +0000
-X-Authority-Analysis: v=2.4 cv=dskQCEg4 c=1 sm=1 tr=0 ts=667337c4
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=pGLkceISAAAA:8 a=H_ziCM4yXGDOzRzd5GwA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3MFAG9hxEjQwa+Na4espi9g8ae3vk8uExQTWwRlZqnQ=; b=p9CSOeboBafi7eCrr10QNnYEXc
-	Q6NqxD/i9F0BtG5dZYvyKu76/i/e5IhgIq5jRzPV66krblfk0/b3DpvpZBQIdJkUE2Pfr3h8XYBaL
-	uR6+gPMErJMZ8evBgXbRuLNUYhtG1gIoRHB/6JdL8+guy92sR/d/TrqQkgtsISvA6JhWb20Bd93q+
-	9oNzscGrmUs02R/4vro+OZyCjWWUvctfgu0kSJwmsLMzbGfQnVY9MuhKQAqaUF+Z41HSt3Hx2YS5S
-	Ll6hG8O971aN8VPK7TgYONCE35fCgEj9767yQCEsfqdDGoh0Ih9RrkQuaxgnBBqoMBjP1kTUDCA5b
-	rAdcY4og==;
-Received: from [201.172.173.139] (port=50738 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sK1PF-000xWO-3D;
-	Wed, 19 Jun 2024 14:55:46 -0500
-Message-ID: <d3c2ac49-b8c3-4add-98ad-d06924b33d65@embeddedor.com>
-Date: Wed, 19 Jun 2024 13:55:43 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CV5BdIP/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718827140;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RF16d+mc/aQfj+ax5CELrMPG6TejS0N3t5cXY8n35Iw=;
+	b=CV5BdIP/JOKmVRABw6lhTZQoLWwOUf3Bayol+tVWVMOdeuhOFic7A3iGXseI7K9oaqH9Fe
+	O0VXJBw8W3iVEM7i+QhIizor9be1kUtY0PI9qFtOt4e2J5kTLv3XQ0MfXLdeRGCDIgv+9a
+	Wqpv1loOXP4Ayv5W8T0yYx+p6pitpZ0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-517-hcz3ZJdzPFer6IGOMxFiSw-1; Wed, 19 Jun 2024 15:58:58 -0400
+X-MC-Unique: hcz3ZJdzPFer6IGOMxFiSw-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4217f941ca8so1174075e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:58:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718827137; x=1719431937;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RF16d+mc/aQfj+ax5CELrMPG6TejS0N3t5cXY8n35Iw=;
+        b=Q8ZIdO+gMYeimMuMCFxrSFPfQ2DZ/wSod2+gHNTXV4XslJiJaGpbkT3KUP9117nGpf
+         up9F6SlouamiCQ9AbUCldTCA7Auej8xD3HkhJguFsi3eXjxLRjeFejACz8iqB3O8XgML
+         dcTfEUcxOXYChjK/mNZa3C7nE+GaJhyGu+B/WKykHFBBEcDQq5jCTWs64o7lzax41RkP
+         K9RljC+Hd4gOVyKVpg+RzTGZMVypM88P+pAFIOr5m4LwVnFRMpbUrvmae6FeE2msgqJz
+         NF8dV0r71nXkgyIqyAeWXMGKF9NUaChmk1GcFRjZjZ+wNnRD4SL2Rh/R+9cASM9oJDXN
+         yrjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwsWCiuNfqPgoaS/1L+IvStc8QifYQTcYHEJehaxjKPlXNerVdQbOPqh4s6+MLC22dqyB7f/eo+BYjZR1JCelEIt40g0YNY/Jl9Umh
+X-Gm-Message-State: AOJu0Yy6naWhNFtR5YWomrxIo6X0zcm6T65MAjsXfRbaMre9GLKvEQp5
+	VM1j9gt2HA81iKrCY0ICw+cH4E0DAveL3Eu9EQb3LCemWCjA8zu9RZLvYwnoaY2Y9hkfEYiBruc
+	2RWRtlkMfxXSoXC51HzQA527bFZ6XD0rv/4bP82xNzdojSNCXTPkhvAPXrV104w==
+X-Received: by 2002:a5d:494f:0:b0:363:1a1:10d1 with SMTP id ffacd0b85a97d-36319a85dbfmr2465007f8f.58.1718827137393;
+        Wed, 19 Jun 2024 12:58:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGvvpq6xSJeHz1RTg0F73mLCmRqdckSJzJJiZSAhv6hEadDizab5847wMQY9j2IhyerzAz7SQ==
+X-Received: by 2002:a5d:494f:0:b0:363:1a1:10d1 with SMTP id ffacd0b85a97d-36319a85dbfmr2464996f8f.58.1718827136997;
+        Wed, 19 Jun 2024 12:58:56 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c705:ab00:f9b6:da12:cad4:6642? (p200300cbc705ab00f9b6da12cad46642.dip0.t-ipconnect.de. [2003:cb:c705:ab00:f9b6:da12:cad4:6642])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-363c795febfsm2138938f8f.104.2024.06.19.12.58.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 12:58:56 -0700 (PDT)
+Message-ID: <75c1936b-bb08-423d-9a17-0da133cbee01@redhat.com>
+Date: Wed, 19 Jun 2024 21:58:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,76 +68,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] USB: serial: garmin_gps: use struct_size to
- allocate pkt
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Johan Hovold <johan@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-References: <20240619-garmin_gps_counted_by-v2-0-f82f10ebbf28@gmail.com>
- <20240619-garmin_gps_counted_by-v2-2-f82f10ebbf28@gmail.com>
+Subject: Re: Endless calls to xas_split_alloc() due to corrupted xarray entry
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>
+Cc: Gavin Shan <gshan@redhat.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+ Zhenyu Zhang <zhenyzha@redhat.com>, Linux XFS <linux-xfs@vger.kernel.org>,
+ Linux Filesystems Development <linux-fsdevel@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Shaoqin Huang <shahuang@redhat.com>, Chandan Babu R
+ <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <CAJFLiB+J4mKGDOppp=1moMe2aNqeJhM9F2cD4KPTXoM6nzb5RA@mail.gmail.com>
+ <ZRFbIJH47RkQuDid@debian.me> <ZRci1L6qneuZA4mo@casper.infradead.org>
+ <91bceeda-7964-2509-a1f1-4a2be49ebc60@redhat.com>
+ <6d3687fd-e11b-4d78-9944-536bb1d731de@redhat.com>
+ <ZnLrq4vJnfSNZ0wg@casper.infradead.org>
+ <CAHk-=who82OKiXyTiCG3rUaiicO_OB9prVvZQBzg6GDGhdp+Ew@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240619-garmin_gps_counted_by-v2-2-f82f10ebbf28@gmail.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAHk-=who82OKiXyTiCG3rUaiicO_OB9prVvZQBzg6GDGhdp+Ew@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sK1PF-000xWO-3D
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:50738
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfN3HDQliyoaq3h2VFHCyYz86j4mm97iUVV1xgo/N77S7rSJKhZFDKYHoT+Lgr03hNa0dFxmag80j4VEDBWCOV8ReDW7OR9vDhGg9e5DOIzZW1f2a4g2+
- r+/f0axR0Rfi2WfBjecYhE85OAJWbPcPBOP4/NY518ptss40wcEY3v4S/PDDImHur6wP0M0cXqmUGFhpTzQWS4cemCTRDMWdDtvQQu8H4XgBUtKw9vlq4dhv
 
-
-
-On 19/06/24 21:42, Javier Carrasco wrote:
-> Use the struct_size macro to calculate the size of the pkt, which
-> includes a trailing flexible array.
+On 19.06.24 17:48, Linus Torvalds wrote:
+> On Wed, 19 Jun 2024 at 07:31, Matthew Wilcox <willy@infradead.org> wrote:
+>>
+>> Actually, it's 11.  We can't split an order-12 folio because we'd have
+>> to allocate two levels of radix tree, and I decided that was too much
+>> work.  Also, I didn't know that ARM used order-13 PMD size at the time.
+>>
+>> I think this is the best fix (modulo s/12/11/).
 > 
-> Suggested-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->   drivers/usb/serial/garmin_gps.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
+> Can we use some more descriptive thing than the magic constant 11 that
+> is clearly very subtle.
 > 
-> diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
-> index 57df6ad183ff..6d6ec7eed87c 100644
-> --- a/drivers/usb/serial/garmin_gps.c
-> +++ b/drivers/usb/serial/garmin_gps.c
-> @@ -267,8 +267,7 @@ static int pkt_add(struct garmin_data *garmin_data_p,
->   
->   	/* process only packets containing data ... */
->   	if (data_length) {
-> -		pkt = kmalloc(sizeof(struct garmin_packet)+data_length,
-> -								GFP_ATOMIC);
-> +		pkt = kmalloc(struct_size(pkt, data, data_length), GFP_ATOMIC);
->   		if (!pkt)
->   			return 0;
->   
+> Is it "XA_CHUNK_SHIFT * 2 - 1"
+
+That's my best guess as well :)
+
 > 
+> IOW, something like
+> 
+>     #define MAX_XAS_ORDER (XA_CHUNK_SHIFT * 2 - 1)
+>     #define MAX_PAGECACHE_ORDER min(HPAGE_PMD_ORDER,12)
+> 
+> except for the non-TRANSPARENT_HUGEPAGE case where it currently does
+> 
+>    #define MAX_PAGECACHE_ORDER    8
+> 
+> and I assume that "8" is just "random round value, smaller than 11"?
+
+Yes, that matches my understanding.
+
+Maybe to be safe for !THP as well, something ike:
+
++++ b/include/linux/pagemap.h
+@@ -354,11 +354,18 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
+   * a good order (that's 1MB if you're using 4kB pages)
+   */
+  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-#define MAX_PAGECACHE_ORDER	HPAGE_PMD_ORDER
++#define WANTED_MAX_PAGECACHE_ORDER	HPAGE_PMD_ORDER
+  #else
+-#define MAX_PAGECACHE_ORDER	8
++#define WANTED_MAX_PAGECACHE_ORDER	8
+  #endif
+  
++/*
++ * xas_split_alloc() does not support arbitrary orders yet. This implies no
++ * 512MB THP on arm64 with 64k.
++ */
++#define MAX_XAS_ORDER		(XA_CHUNK_SHIFT * 2 - 1)
++#define MAX_PAGECACHE_ORDER	min(MAX_XAS_ORDER, WANTED_MAX_PAGECACHE_ORDER)
++
+  /**
+   * mapping_set_large_folios() - Indicate the file supports large folios.
+   * @mapping: The file.
+-- 
+2.45.2
+
+
+@Gavin, do you have capacity to test+prepare an official patch? Also,
+please double-check whether shmem must be fenced as well (very likely).
+
+This implies no PMD-sized THPs in the pagecache/shmem on arm64 with 64k.
+Could be worse, because as Willy said, they are rather rare and extremely
+unpredictable.
+
+-- 
+Cheers,
+
+David / dhildenb
+
