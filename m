@@ -1,68 +1,127 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEF317583;
-	Wed, 19 Jun 2024 07:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B9617583
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718780566; cv=none; b=ldWrKKLcPEathILF/aMaAoVKoaaGZj21cx068f4vIyokXBAwHtsGdOUJAvN32UAbww6KnE9EATKGMmPYPjdsU2EChf32622TT7tz3lMJvV3OCNsD0qYI5FwcfFHSCKcU1RlQgAHNQ6gqeDfRzRZjVoJToWKXxpPV1zQMe23sq+Q=
+	t=1718780714; cv=none; b=QTxA4rYoPsteXq3zb8VeWAmAdbnGr5+gFoJLRBqW0zfrCcOzTCAeYrVr/F9XTWduGBd52kcPwjGcBVpGOXHg/THeaSn3JDy8+S7SLS9nNDIR2UzvlOxHDaneWHFyx65cRzimjcqacDEX5zSlG483juMpsO0xy1CRy60rqJdVBqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718780566; c=relaxed/simple;
-	bh=dUNP9Ol2VyAVm1aRcQaJGpbIe3MfLQCb3nWMRCVFtnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mhWJvEbNznUdqWctNL2gUReiQ9Z2FsAI+dh1Evi78T2SsvDa7zQ/8DixsLBwiHaCslqlfoNRbLmNor2/oFtj0FYpxn/Hxv1breqlQkSmz6lUdhLs7oHrRT/kC61c4UeqJXTscsLC74fiX0QPc5jkWl+xm9aChfAbwPHxU06ohdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BZHQhyRG; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1718780714; c=relaxed/simple;
+	bh=x5nGr+EAONrqkj6P9t/dtlrL61on+Chcpa2cnnYxLKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hISCDKelPs29via7W2EMBDvzKPO5E69GbK2g4xMh8Io3Tx9vIuXVWhHDStZV3TyeJ8kHxUnaosRSqOhQ94R0MnndX9hfUoMkvFKl3qVmgCK1hiOqGkXoIJqcxpaf15xZMx0ljvpkYdlKVBmlrLveMaeOLIs277FUKPRyhOAsDLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QlC/PQzr; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BZHQhyRG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=plYxsWD5L8tm0Ptr4xv4Jqx8qmNNccPpaLnHJW+sbTE=; b=BZHQhyRGN3A38qmtdXgzHabPu9
-	+2KL/nHwn7tTqGGO3x2ZVslvJIaHLgSVBHsKkopridiQSlAIzUJjIPcKncHNpf+zuk9zGyCFhUhXl
-	n/2cgRV6jE/q/MkfSUlqVgGqBmWw1L5k85UM5xsu4pb7bJ8DuH0jMXIREb4qy0c2u3VL2aczEawmE
-	DPk8TChWLsH9EJSl4W8TeeCmt62vOiFUD1iAeBEPFY75Ih5cT2J8baxGUoDSrPGdlyAFCPiJSx0FK
-	gjY+MQfqKtGojNw/feZliFaqtyGavzyO2e7IdP2TA6TPC+Lb0w4Np3OuaL75XmgkCd8pfPkEWHuwf
-	H/NGbcTQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJpLA-0000000083R-2MmO;
-	Wed, 19 Jun 2024 07:02:44 +0000
-Date: Wed, 19 Jun 2024 00:02:44 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Li Feng <fengli@smartx.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] scsi: sd: Keep the discard mode stable
-Message-ID: <ZnKClE0RimoZFQSB@infradead.org>
-References: <20240614160350.180490-1-fengli@smartx.com>
- <Zm_U_ZA96u2K6a6S@infradead.org>
- <44BCFE4F-AB66-4E6A-A181-E7D93847EF98@smartx.com>
- <ZnEsDHOAjODOS6HJ@infradead.org>
- <D8A1CB7B-7DE5-4078-9640-8674278E34C8@smartx.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QlC/PQzr"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dfab5f7e749so6037643276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 00:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718780712; x=1719385512; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fkApUyq4661XB0S5M024vzKYelC21nq0nL2JJnK6W80=;
+        b=QlC/PQzrSJ8sFhB9MBR/MrHzeR2KShS83G7rv9xa+IRxbtbCkIHllY7NlVS3kv7RWV
+         QBVVsfMXS+QBTV1qjeMrvAJlzLfcSzHYmg748pC97Q2J4z+XnkX9ygQn9x1WPgRQsB4x
+         /mdi53o29jqz0OU00qpYAgDQ9tBV/PpsM2FAtWZ2nLBkKw90FiEUZoWzhHTHXgrEBodc
+         j7eiDyhbOtnwjDj2+C/KFTfkvHnQGAY0AAtiQCGnPVdhZhxpOS1Ac9TFya9unKhddrMQ
+         MYi9+hDXERXc1UAgA7RzvRZK4Y724lymAhkDee/4f7VpP/XSJ2oft1qDXWBxHpFt4cwi
+         lvTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718780712; x=1719385512;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fkApUyq4661XB0S5M024vzKYelC21nq0nL2JJnK6W80=;
+        b=XNof2a2432zjRle0rrs5DYDagKzFzmOoFUdcQz/qLAS3Mhokhx/Sj9JENsQyomGEIz
+         XcWJjHs2GjljsUUhwl09qY9VqCZLHrW/C5nTpEBbWXiOoOZGrjO2ZyxJwuZUT/XAu/zn
+         rXm20CL8DhlyyT94W3hhLy0mtggR3PGI8fqwJHpAkKbr0o64asSfZWo0B1wr2Kga0tF9
+         i9LJ0eAK8Qii5eztP9KozznJxaoPK7hMI6xDAIkMw+U+iilm6vkW+AKNHxkS2UutnPKG
+         Mvmt5w8jJ/PiF81kJhzW31hrW32PP+7UK04M3TOJEKUGvNdt/haYAOab3OJQb/rtYgZo
+         EtLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyxVAGuIcaUwwM+fNPD4eYKFxiMoFZVvrpXKCbp9ltK1VB/7UFY98WMZ2kRqbdbXbdnUsn+Vhm8Bc/paqtyh/lXrzSv9LhYIS9nzPv
+X-Gm-Message-State: AOJu0Yy4SPY7DX1G8pXzAX843m1OiGZXlNjm1NSFxyxDsK2Sfqr6+5rr
+	sSXWbOxBfSNpEUBqE6iQHgniM8TfOiMQxkVb/dCfJXd7ancxIb6nMO75raN9H/ftWJw6gWziaAm
+	bhhT2lDXJ68Krx4CTDJ2+c9DIZTJuImT6E0qu2Q==
+X-Google-Smtp-Source: AGHT+IG4sbbowz2oRR6gmRouJDUmd7eUdivK4bF3a5N6Vmj6voe6Jh1AZr4utLY6DC/DcbpG2kflee5f733GsJK83/w=
+X-Received: by 2002:a25:81c6:0:b0:e02:b580:d0b with SMTP id
+ 3f1490d57ef6-e02be203e4dmr2083486276.40.1718780712294; Wed, 19 Jun 2024
+ 00:05:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8A1CB7B-7DE5-4078-9640-8674278E34C8@smartx.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20240612064731.25651-1-quic_ekangupt@quicinc.com>
+ <zbpia232dh4ojfsvhcqxrp6cwfygaalu5cycdrs47pqmnrisvk@dq24nww26gkm>
+ <00b2c65e-c00e-48bf-b118-4785d216cd19@quicinc.com> <CAA8EJprOf9vvdBcdX=Xem3UMFo2pmh37ooreqRX0Bzvadv_yTQ@mail.gmail.com>
+ <9fc370be-89f4-4006-a4c0-1040dadfe4cd@quicinc.com>
+In-Reply-To: <9fc370be-89f4-4006-a4c0-1040dadfe4cd@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 19 Jun 2024 10:05:00 +0300
+Message-ID: <CAA8EJpoqWvL5z4cG0EBEm1eXWUQ=qP0RmedfLbqiFaOjYX7kWQ@mail.gmail.com>
+Subject: Re: [PATCH v1] misc: fastrpc: Move fastrpc driver to misc/fastrpc/
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: Oded Gabbay <ogabbay@kernel.org>, srinivas.kandagatla@linaro.org, 
+	linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org, 
+	quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
+	quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 19, 2024 at 02:56:18PM +0800, Li Feng wrote:
-> +               sd_config_discard(sdkp, &lim, sd_discard_mode(sdkp));
-> 
->               sd_print_capacity(sdkp, old_capacity);
-> 
-> 
-> If it's OK, I'll submit v2.
+On Wed, 19 Jun 2024 at 10:01, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
+>
+>
+>
+> On 6/19/2024 12:21 PM, Dmitry Baryshkov wrote:
+> > On Wed, 19 Jun 2024 at 09:45, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
+> >>
+> >>
+> >> On 6/12/2024 11:58 PM, Dmitry Baryshkov wrote:
+> >>> On Wed, Jun 12, 2024 at 12:17:28PM +0530, Ekansh Gupta wrote:
+> >>>> Move fastrpc.c from misc/ to misc/fastrpc/. New C files are planned
+> >>>> to be added for PD notifications and other missing features. Adding
+> >>>> and maintaining new files from within fastrpc directory would be easy.
+> >>>>
+> >>>> Example of feature that is being planned to be introduced in a new C
+> >>>> file:
+> >>>> https://lore.kernel.org/all/20240606165939.12950-6-quic_ekangupt@quicinc.com/
+> >>>>
+> >>>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> >>>> ---
+> >>>>  MAINTAINERS                          |  2 +-
+> >>>>  drivers/misc/Kconfig                 | 13 +------------
+> >>>>  drivers/misc/Makefile                |  2 +-
+> >>>>  drivers/misc/fastrpc/Kconfig         | 16 ++++++++++++++++
+> >>>>  drivers/misc/fastrpc/Makefile        |  2 ++
+> >>>>  drivers/misc/{ => fastrpc}/fastrpc.c |  0
+> >>>>  6 files changed, 21 insertions(+), 14 deletions(-)
+> >>>>  create mode 100644 drivers/misc/fastrpc/Kconfig
+> >>>>  create mode 100644 drivers/misc/fastrpc/Makefile
+> >>>>  rename drivers/misc/{ => fastrpc}/fastrpc.c (100%)
+> >>> Please consider whether it makes sense to move to drivers/accel instead
+> >>> (and possibly writing a better Kconfig entry, specifying that the driver
+> >>> is to be used to offload execution to the DSP).
+> >> Planning to keep the driver to misc/ only as part of this patch. Moving to accel/ might
+> >> introduce some conventions to be followed which might require significant changes
+> >> in driver.
+> > To me this sounds like "we are trying to avoid following the
+> > conventions by hiding in the shadows".
+> Not trying to avoid, just trying to look into this separately as the need to take ABI also in account which
+> includes current device nodes and the uapi header which is present in uapi/misc/fastrpc.h whereas I see all
+> accel driver uapi headers are part of uapi/drm/.
 
-Except for the whitespace damage in the moved call this looks good
-to me.
+I'd say this depends on the accel/ maintainer's opinion.
 
+>
+> Will be taking inputs from fastrpc maintainers also.
+> >> I'll write more meaningful Kconfig entry in next spin.
+> >>
+>
+
+
+-- 
+With best wishes
+Dmitry
