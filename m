@@ -1,162 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C9931494A6;
-	Wed, 19 Jun 2024 12:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B7D1411D5;
+	Wed, 19 Jun 2024 12:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799632; cv=none; b=O9mn/CPw3Qd/urdOP0SW11Uzc+ujL5tNAPku/mMimuplmVVntJNNtwnQUi0hk216sqB1ckg4HD3oTeNE1dAZqwllJLfRHNHAxxpHCNMeBPAe1YNKhKAl1wQ3/u1CdMvPOsAYxXOrlHVg6Dvb115BJvG9Tga1SOe/oVC1ESZgkPo=
+	t=1718799720; cv=none; b=bMKqoGXaWc2xujqXMozBxN7r0zHWqezhnClYFU3lbtq4oFroiuTsw3bP/uz0RnAv2RmcwApDp/17eYFC1bGduZa7o2qG09JnyuNNGsBTN7vUaj7Snh9bSDsFH349UlV8eqcRZudfdHtAiXIEJ38qtPHofy3Ke/Dd6Mf2ZTNpLtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799632; c=relaxed/simple;
-	bh=txPCvjL+WnJutH59PsF5sZ5h3sut4eHWQz8KbcyhNno=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gTLcYU+05PyVFYSEmRaCkLGQf2gs5PDdISwovpR3UKuYRV778CTVtRWCjVTV9fyFl/TYqYxqxjGLAyd9dLGGruax2Mbe+ks715qqov3RS+O7iOE2KjrS0UHdYTKsAhghEgIxXpLZrh2dcye4p6Yot/piYXtw5s7SB8WZnx5Dwak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1512A150C;
-	Wed, 19 Jun 2024 05:20:54 -0700 (PDT)
-Received: from [10.57.69.141] (unknown [10.57.69.141])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35E8F3F6A8;
-	Wed, 19 Jun 2024 05:20:27 -0700 (PDT)
-Message-ID: <4439aa79-64d1-48f4-ba5f-fc794fc274d3@arm.com>
-Date: Wed, 19 Jun 2024 13:20:37 +0100
+	s=arc-20240116; t=1718799720; c=relaxed/simple;
+	bh=FVGqOE3wiRlvOnwpW+plbu90wTtSXAmdw/o00wdPQQk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OWeMMse9bid7nOt8X+XXbBwho5ejsFvmw5BrUU3afbrZdqyuVWhfc1rkYw1q7/RKwcJIIjCNIN8mu4679KUpIVugkXoN0NcNp3qSyJYb63mijWA3SLmvoSAcvTwuDKrVLGaHJF1xvDMhfG6KNhF+AgnCB9sUfZxydIB+Q3CfeYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=H5QlHj5b; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="H5QlHj5b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718799717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FVGqOE3wiRlvOnwpW+plbu90wTtSXAmdw/o00wdPQQk=;
+	b=H5QlHj5b47jmWWPmYrEyBk2CLjfodSkuNO3iFqDQL3q9TAKryupn+V75JTiH8WmGI/eIFy
+	0Zjifr0r4dCWg3FWwIzaMp3bxyNBFP/hFECEP7HFZpj/jn85MK8NLAlzARSlcjHxvvWIqv
+	zj3xrSSMAXdnhmkQLs0rsmnmfWLPh7o=
+Message-ID: <15edbedcac80961ec9b7834041e54143657cd48b.camel@crapouillou.net>
+Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
+From: Paul Cercueil <paul@crapouillou.net>
+To: Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Jonathan Cameron
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+	 <rdunlap@infradead.org>
+Date: Wed, 19 Jun 2024 14:21:55 +0200
+In-Reply-To: <41fa9904-28a8-46fa-bf2a-014875409b83@web.de>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+	 <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
+	 <d452ecc4fc703a1f98aa4f243c6ded7fbfe54b0e.camel@crapouillou.net>
+	 <cbcfb64a-e5c2-41a7-8847-227d4f6872de@web.de>
+	 <e948cd137da8e4f97bfbf7ef68a5450476aeee0c.camel@crapouillou.net>
+	 <41fa9904-28a8-46fa-bf2a-014875409b83@web.de>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] cpuidle: teo: Introduce util-awareness
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Kajetan Puchalski <kajetan.puchalski@arm.com>, rafael@kernel.org,
- daniel.lezcano@linaro.org, Dietmar.Eggemann@arm.com, dsmythies@telus.net,
- yu.chen.surf@gmail.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Qais Yousef <qyousef@layalina.io>
-References: <20230105145159.1089531-1-kajetan.puchalski@arm.com>
- <20230105145159.1089531-3-kajetan.puchalski@arm.com>
- <20230711175814.zfavcn7xn3ia5va4@airbuntu>
- <ZLZ/btJw5LNVxVy8@e126311.manchester.arm.com>
- <20230718132432.w5xoxbqm54jmu6n5@airbuntu>
- <20230917010516.54dgcmms44wyfrvx@airbuntu>
- <CAKfTPtA6ZzRR-zMN7sodOW+N_P+GqwNv4tGR+aMB5VXRT2b5bg@mail.gmail.com>
- <d54d6115-a4d6-466b-a4a2-9c064194f06e@arm.com>
- <CAKfTPtB21aY9cgi5dSHB0jRp6pE85AfGcHrHjrcpMwi3fJL0FA@mail.gmail.com>
- <286d4cf8-814b-41a2-8d5f-2673dc737f45@arm.com>
- <CAKfTPtBh6ZDv7=1Tst1kjQjD=UjDG1DAaQOUCXvzP4ZhD94iTg@mail.gmail.com>
- <7ba09d9e-61dc-4d36-a401-0f89915fadfb@arm.com>
-Content-Language: en-US
-In-Reply-To: <7ba09d9e-61dc-4d36-a401-0f89915fadfb@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi Vincent,
+Le mercredi 19 juin 2024 =C3=A0 13:56 +0200, Markus Elfring a =C3=A9crit=C2=
+=A0:
+> =E2=80=A6
+> > https://lore.kernel.org/linux-iio/219abc43b4fdd4a13b307ed2efaa0e6869e68=
+e3f.camel@gmail.com/T/#eefd360069c4261aec9621fafde30924706571c94
+> >=20
+> > (and responses below)
+> >=20
+> > It's more nuanced than I remembered.
+> =E2=80=A6
+>=20
+>=20
+> > > * Will the desire grow for further collateral evolution according
+> > > to
+> > > =C2=A0 affected software components?
+> >=20
+> > Not sure what you mean by that.
+>=20
+> Advanced programming interfaces were added a while ago.
+>=20
+> Example:
+> https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup.h=
+#L8
+>=20
+> Corresponding attempts for increasing API usage need to adapt to
+> remaining change reluctance,
+> don't they?
 
-On 6/12/24 10:17, Lukasz Luba wrote:
-> 
-> 
-> On 6/12/24 10:04, Vincent Guittot wrote:
->> On Wed, 12 Jun 2024 at 09:25, Lukasz Luba <lukasz.luba@arm.com> wrote:
->>>
->>> Hi Vincent,
->>>
->>> My apologies for delay, I was on sick leave.
->>>
->>> On 5/28/24 15:07, Vincent Guittot wrote:
->>>> On Tue, 28 May 2024 at 11:59, Lukasz Luba <lukasz.luba@arm.com> wrote:
->>>>>
->>>>> Hi Vincent,
->>>>>
->>>>> On 5/28/24 10:29, Vincent Guittot wrote:
->>>>>> Hi All,
->>>>>>
->>>>>> I'm quite late on this thread but this patchset creates a major
->>>>>> regression for psci cpuidle driver when using the OSI mode (OS
->>>>>> initiated mode).  In such a case, cpuidle driver takes care only of
->>>>>> CPUs power state and the deeper C-states ,which includes cluster and
->>>>>> other power domains, are handled with power domain framework. In such
->>>>>> configuration ,cpuidle has only 2 c-states : WFI and cpu off states
->>>>>> and others states that include the clusters, are managed by genpd and
->>>>>> its governor.
->>>>>>
->>>>>> This patch selects cpuidle c-state N-1 as soon as the utilization is
->>>>>> above CPU capacity / 64 which means at most a level of 16 on the big
->>>>>> core but can be as low as 4 on little cores. These levels are very 
->>>>>> low
->>>>>> and the main result is that as soon as there is very little activity
->>>>>> on a CPU, cpuidle always selects WFI states whatever the estimated
->>>>>> sleep duration and which prevents any deeper states. Another 
->>>>>> effect is
->>>>>> that it also keeps the tick firing every 1ms in my case.
->>>>>
->>>>> Thanks for reporting this.
->>>>> Could you add what regression it's causing, please?
->>>>> Performance or higher power?
->>>>
->>>> It's not a perf but rather a power regression. I don't have a power
->>>> counter so it's difficult to give figures but I found it while running
->>>> a unitary test below on my rb5:
->>>> run 500us every 19457ms on medium core (uclamp_min: 600).
->>>
->>> Mid cores are built differently, they have low static power (leakage).
->>> Therefore, for them the residency in deeper idle state should be
->>> longer than for Big CPU. When you power off the CPU you loose your
->>> cache data/code. The data needs to be stored in the L3 or
->>> further memory. When the cpu is powered on again, it needs code & data.
->>> Thus, it will transfer that data/code from L3 or from DDR. That
->>> information transfer has energy cost (it's not for free). The cost
->>> of data from DDR is very high.
->>> Then we have to justify if the energy lost while sleeping in shallower
->>> idle state can be higher than loading data/code from outside.
->>> For different CPU it would be different.
->>
->> I'm aware of these points and the residency time of an idle state is
->> set to reflect this cost. In my case, the idle time is far above the
->> residency time which means that we should get some energy saving.
->> cpu off 4.488ms
->> cluster off 9.987ms
->> vs
->> sleep duration 18.000ms
->>
->> Also, the policy of selecting a shallower idle state than the final
->> selected one doesn't work with PSCI OSI because cpuidle is only aware
->> of per CPU idle states but it is not aware of the cluster or
->> deeper/wider idle states so cpuidle doesn't know what will be the
->> final selected idle state. This is a major problem, in addition to
->> keep the tick firing
-> 
-> I think we are aligned with this.
-> Something has to change in this implementation of idle gov.
-> 
-> I'm a bit more skeptical about your second point with PSCI.
-> That standard might be to strong to change.
-> 
+Sure, I guess.
 
-I'm coming back to you with some public information about our WFI
-idle state. WFI can be not only the clock-gating thing, it can
-automatically put the CPU into retention mode, which saves the
-static power.
+But that does not change the fact that I cannot use cleanup.h magic in
+this patchset, yet, as the required changes would have to be done in a
+separate one.
 
-That's why I said WFI can be really efficient and we can/should
-leverage that. That's also why we shouldn't assume power numbers
-based on statistics of idle states (especially available in kernel).
-
-Please check TRM for Cortex-X1, section:
-A4.6.4 Core dynamic retention mode [1].
-
-The period after which the HW can decide to enter retention mode
-is configurable via registers. It's up to our vendors to experiment
-and implement the right configuration.
-
-It's up to the vendor to try that and some of them do this AFAIK.
-We should really talk based on the data including power from experiments
-and also investigate deeper if the right configurations are
-used in HW.
-
-Regards,
-Lukasz
-
-[1] 
-https://developer.arm.com/documentation/101433/0102/Functional-description/Power-management-/Core-power-modes/Core-dynamic-retention-mode
+Cheers,
+-Paul
