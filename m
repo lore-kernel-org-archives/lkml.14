@@ -1,164 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D3F1474B9;
-	Wed, 19 Jun 2024 12:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0110FFC1F;
+	Wed, 19 Jun 2024 12:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718801174; cv=none; b=k3ngL976BO7HwTctIGXt6a/hpry5akgIF3hID8/Vs29NAwjQTtTRDb+iLE8PY0hKduZwhzTkzuvsIGpoctUDXB5frFef7BHOLpSI07Ex1lUyr56jHgU8qfHA2SVYY2xpMsmtTYjIlDwfkcUy5uIod8hJrthLOeEeHOMQF1gohaU=
+	t=1718801321; cv=none; b=Pgp7feQpSz7ajhApiPGbhLJv33ua2/MHD7BjQY7aweUC3JqzG2zS+bhIdobxLm0gztmLycTKk3tTDSreISgYPQdv4F+ejBihYJsSGTGQxaCcQDxXA/1viEJkoa2M3BXYWTzsLl1ydN5vAzvjAvbDRC112ACy99OihV5BY6U2Oxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718801174; c=relaxed/simple;
-	bh=zHrdmRn3vT/3yPX4SIXso4Q7h68C/2nf1+jDZ31aq7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CL9PBCfnmX4CpSFdFaR2v1AxM6VBEpcLuavdP/aI2sePT9Gj8pYwjV8w0jGlzUwWsspxgnLfzP1ERLD+1VlfNkwtJJLILEh6x2j2nadI67laU/I+L2xCSfJ1sYW5cbC+jc/I+AyWX/yhIoxRBz+PkpHPD7Zx99j9ujhX0Co0zB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFmyU1UD; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718801321; c=relaxed/simple;
+	bh=OHWOIOBjBCRQuNAj7n83ud8v2xOnjViAJG4kcJYodFs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TwHZiz/BvX9sOfSye1RsjZCYkIIIrZTQ/yMXXhl39xHl/Wk/yufHYmlMBkGyKQEDmqonyIE9h7/PJOXfM0PHBakBvJ6VrcZnzTE1Gfm6hjoGZYMwkiYYh0+FvhoqzF4mqlR41Qg++T08j0TLp2HNqZimDEun7zuKpWe3scks7eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=k/Diwtyi; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFmyU1UD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718801173; x=1750337173;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zHrdmRn3vT/3yPX4SIXso4Q7h68C/2nf1+jDZ31aq7E=;
-  b=aFmyU1UD6S6A8/ldlD6upBQiUYjaiKwwBO6OmEd48FRomHAFmOEBndp7
-   uc/2GPqji03Q5hc4IrbSnaV6uPKvqLE7fOIO+lk+L8+4fFH7Sj0ZIPR+2
-   nnZJaK26t3aQ6mwjes56/iCSSA4q2N7Wf0/JhlJ8VXeaNLEnThrp1eldF
-   X+j9MT8Wx/mSFAhC3/YKVZf6jzK2qWG4G1509i9/b5iYd0rSO5/lIYPVG
-   KNFI2+uaSEcMupVZbx7xOgKzHkC8Ul/xkymxDgk2FrXG3Ylu3gfGw3der
-   48Jcam5++S2ZFquk+giqQHBosbfsptKOhqZ20VGoyEXksg1uq9pdGg4Lw
-   Q==;
-X-CSE-ConnectionGUID: RvNyLOkdTTG3KU1cxEToOw==
-X-CSE-MsgGUID: i3DQ0QKTSDqM93QoG57L2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15449944"
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="15449944"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 05:46:09 -0700
-X-CSE-ConnectionGUID: 6rWS8J3JQWqnjVcKA+PfWw==
-X-CSE-MsgGUID: QypkMPpGQe+WsmUyk30ccw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="46344349"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by fmviesa005.fm.intel.com with ESMTP; 19 Jun 2024 05:46:08 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: rafael@kernel.org,
-	daniel.lezcano@linaro.org,
-	rui.zhang@intel.com,
-	lukasz.luba@arm.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 3/3] thermal: intel: int340x: Add DLVR support for Lunar Lake
-Date: Wed, 19 Jun 2024 05:46:00 -0700
-Message-ID: <20240619124600.491168-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240619124600.491168-1-srinivas.pandruvada@linux.intel.com>
-References: <20240619124600.491168-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="k/Diwtyi"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BCF25A0A2C;
+	Wed, 19 Jun 2024 14:48:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=vn9iUUr/8QwXG6yTcmlk+IU9py0tW4G8ZSAvItkMwdI=; b=
+	k/DiwtyifUT2AY1Z1yow8AcFpF2Iq+hyYODzy2IwHY4JgJaVC3kuREIgCKqV+f45
+	h/9ZGvqYTIL0G4Ir46OteKv9FnJPGy5qSP4txc9rFnTwhXzF0p/Nl1GtwVSZ2tpp
+	JVudIeeAmPC3oqyueUnZcMIosJYLysgkwrYyG7JD6xskhgYpuXuruQLTU31nWGPD
+	B9CqK6ASWM1ZIzJ1ZBLlLU49jaQ0ShMPuOctQ9EgzZU3BQ3LYZiuoWlTcFCZKOUk
+	ru1SEhy82WSBH2Ua6yOxEXraBdzGjra+Wu+lkZFYSvNnyAxXuDN3AvAVuWJ9zrXp
+	xUO3zp+2qnxdFtFgLzcDZeeEpfCZxkYPY+VrJgEhCFKG/lENQetmiKBAHzqw3WmC
+	jb+oPySDLLicc3piivetT9jlky9+txAcbcYYZdagrgM2z9cXzq/JpqhR9TMV6LJE
+	9/ExuilKmLRTPe7yc2F0GGZWrbMGPSGGuJfI8KqwjMpqvL8MImfmyoFAqk6PtKkF
+	Kg9/8MqLo+gY3c1fJQ9n4eeHm1Qc24SvoNBVTOxTnxPa95ijU1YPU/qLr6eWk5Cp
+	ae3JvLj3SYGVB3fx0vYNxSar+vg7C7WCL/Q9mVP+agudJh4X+NSB4io83HNB4j9c
+	+l+NKJy4qGBsrWKnLFEqNEJhnRO3MhLiWwtDL0Fb6nE=
+From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>,
+	"Vladimir Oltean" <olteanv@gmail.com>, <trivial@kernel.org>, Andrew Lunn
+	<andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+	<linux@armlinux.org.uk>
+Subject: [PATCH v2 resub 1/2] net: include: mii: Refactor: Define LPA_* in terms of ADVERTISE_*
+Date: Wed, 19 Jun 2024 14:46:22 +0200
+Message-ID: <20240619124622.2798613-1-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1718801315;VERSION=7972;MC=3731793439;ID=564823;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2945A129576D7D61
 
-Add support for DLVR (Digital Linear Voltage Regulator) for Lunar Lake.
-There are no new sysfs attributes or difference in operation compared
-to prior generations.
+Ethernet specification mandates that these bits will be equal.
+To reduce the amount of magix hex'es in the code, just define
+them in terms of each other.
 
-MMIO offset and bit positions are changed compared to Meteor Lake
-processors. Also for two attributes dlvr_frequency_mhz and
-dlvr_frequency_select, the value presented or accepted by the firmware
-is not raw frequency value but an index.
-For example:
-RFI_FREQ_SELECT and RFI_FREQ
-	: 0 DLVR freq point 2227.2 MHz
-	: 1 DLVR freq point 2140 MHz
+Cc: trivial@kernel.org
 
-Hence create a mapping table for Lunar Lake to map user space values
-to the firmware accepted values.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
 ---
- .../processor_thermal_device_pci.c            |  3 +-
- .../int340x_thermal/processor_thermal_rfim.c  | 33 +++++++++++++++++--
- 2 files changed, 33 insertions(+), 3 deletions(-)
+ include/uapi/linux/mii.h | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-index 4a1bfebb1b8e..b6bb96d07ce2 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-@@ -408,7 +408,8 @@ static SIMPLE_DEV_PM_OPS(proc_thermal_pci_pm, proc_thermal_pci_suspend,
- static const struct pci_device_id proc_thermal_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, ADL_THERMAL, PROC_THERMAL_FEATURE_RAPL |
- 	  PROC_THERMAL_FEATURE_FIVR | PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_WT_REQ) },
--	{ PCI_DEVICE_DATA(INTEL, LNLM_THERMAL, PROC_THERMAL_FEATURE_RAPL) },
-+	{ PCI_DEVICE_DATA(INTEL, LNLM_THERMAL, PROC_THERMAL_FEATURE_RAPL |
-+	  PROC_THERMAL_FEATURE_DLVR) },
- 	{ PCI_DEVICE_DATA(INTEL, MTLP_THERMAL, PROC_THERMAL_FEATURE_RAPL |
- 	  PROC_THERMAL_FEATURE_FIVR | PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_DLVR |
- 	  PROC_THERMAL_FEATURE_WT_HINT | PROC_THERMAL_FEATURE_POWER_FLOOR) },
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-index c9c77bca2014..0e2dc1426282 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-@@ -68,6 +68,25 @@ static const struct mmio_reg dlvr_mmio_regs[] = {
- 	{ 1, 0x15A10, 1, 0x1, 16}, /* dlvr_pll_busy */
- };
+diff --git a/include/uapi/linux/mii.h b/include/uapi/linux/mii.h
+index 39f7c44baf53..33e1b0c717e4 100644
+--- a/include/uapi/linux/mii.h
++++ b/include/uapi/linux/mii.h
+@@ -93,22 +93,22 @@
+ 				  ADVERTISE_100HALF | ADVERTISE_100FULL)
  
-+static const struct mmio_reg lnl_dlvr_mmio_regs[] = {
-+	{ 0, 0x5A08, 5, 0x1F, 0}, /* dlvr_spread_spectrum_pct */
-+	{ 0, 0x5A08, 1, 0x1, 5}, /* dlvr_control_mode */
-+	{ 0, 0x5A08, 1, 0x1, 6}, /* dlvr_control_lock */
-+	{ 0, 0x5A08, 1, 0x1, 7}, /* dlvr_rfim_enable */
-+	{ 0, 0x5A08, 2, 0x3, 8}, /* dlvr_freq_select */
-+	{ 1, 0x5A10, 2, 0x3, 30}, /* dlvr_hardware_rev */
-+	{ 1, 0x5A10, 2, 0x3, 0}, /* dlvr_freq_mhz */
-+	{ 1, 0x5A10, 1, 0x1, 23}, /* dlvr_pll_busy */
-+};
-+
-+static const struct mapping_table lnl_dlvr_mapping[] = {
-+	{"dlvr_freq_select", 0, "2227.2"},
-+	{"dlvr_freq_select", 1, "2140"},
-+	{"dlvr_freq_mhz", 0, "2227.2"},
-+	{"dlvr_freq_mhz", 1, "2140"},
-+	{NULL, 0, NULL},
-+};
-+
- static int match_mapping_table(const struct mapping_table *table, const char *attr_name,
- 			       bool match_int_value, const u32 value, const char *value_str,
- 			       char **result_str, u32 *result_int)
-@@ -167,7 +186,12 @@ static ssize_t suffix##_show(struct device *dev,\
- 		mmio_regs = adl_dvfs_mmio_regs;\
- 	} else if (table == 2) { \
- 		match_strs = (const char **)dlvr_strings;\
--		mmio_regs = dlvr_mmio_regs;\
-+		if (pdev->device == PCI_DEVICE_ID_INTEL_LNLM_THERMAL) {\
-+			mmio_regs = lnl_dlvr_mmio_regs;\
-+			mapping = lnl_dlvr_mapping;\
-+		} else {\
-+			mmio_regs = dlvr_mmio_regs;\
-+		} \
- 	} else {\
- 		match_strs = (const char **)fivr_strings;\
- 		mmio_regs = tgl_fivr_mmio_regs;\
-@@ -206,7 +230,12 @@ static ssize_t suffix##_store(struct device *dev,\
- 		mmio_regs = adl_dvfs_mmio_regs;\
- 	} else if (table == 2) { \
- 		match_strs = (const char **)dlvr_strings;\
--		mmio_regs = dlvr_mmio_regs;\
-+		if (pdev->device == PCI_DEVICE_ID_INTEL_LNLM_THERMAL) {\
-+			mmio_regs = lnl_dlvr_mmio_regs;\
-+			mapping = lnl_dlvr_mapping;\
-+		} else {\
-+			mmio_regs = dlvr_mmio_regs;\
-+		} \
- 	} else {\
- 		match_strs = (const char **)fivr_strings;\
- 		mmio_regs = tgl_fivr_mmio_regs;\
+ /* Link partner ability register. */
+-#define LPA_SLCT		0x001f	/* Same as advertise selector  */
+-#define LPA_10HALF		0x0020	/* Can do 10mbps half-duplex   */
+-#define LPA_1000XFULL		0x0020	/* Can do 1000BASE-X full-duplex */
+-#define LPA_10FULL		0x0040	/* Can do 10mbps full-duplex   */
+-#define LPA_1000XHALF		0x0040	/* Can do 1000BASE-X half-duplex */
+-#define LPA_100HALF		0x0080	/* Can do 100mbps half-duplex  */
+-#define LPA_1000XPAUSE		0x0080	/* Can do 1000BASE-X pause     */
+-#define LPA_100FULL		0x0100	/* Can do 100mbps full-duplex  */
+-#define LPA_1000XPAUSE_ASYM	0x0100	/* Can do 1000BASE-X pause asym*/
+-#define LPA_100BASE4		0x0200	/* Can do 100mbps 4k packets   */
+-#define LPA_PAUSE_CAP		0x0400	/* Can pause                   */
+-#define LPA_PAUSE_ASYM		0x0800	/* Can pause asymetrically     */
+-#define LPA_RESV		0x1000	/* Unused...                   */
+-#define LPA_RFAULT		0x2000	/* Link partner faulted        */
+-#define LPA_LPACK		0x4000	/* Link partner acked us       */
+-#define LPA_NPAGE		0x8000	/* Next page bit               */
++#define LPA_SLCT		ADVERTISE_SLCT   /* Same as advertise selector */
++#define LPA_10HALF		ADVERTISE_10HALF
++#define LPA_1000XFULL		ADVERTISE_1000XFULL
++#define LPA_10FULL		ADVERTISE_10FULL
++#define LPA_1000XHALF		ADVERTISE_1000XHALF
++#define LPA_100HALF		ADVERTISE_100HALF
++#define LPA_1000XPAUSE		ADVERTISE_1000XPAUSE
++#define LPA_100FULL		ADVERTISE_100FULL
++#define LPA_1000XPAUSE_ASYM	ADVERTISE_1000XPSE_ASYM
++#define LPA_100BASE4		ADVERTISE_100BASE4
++#define LPA_PAUSE_CAP		ADVERTISE_PAUSE_CAP
++#define LPA_PAUSE_ASYM		ADVERTISE_PAUSE_ASYM
++#define LPA_RESV		ADVERTISE_RESV
++#define LPA_RFAULT		ADVERTISE_RFAULT /* Link partner faulted       */
++#define LPA_LPACK		ADVERTISE_LPACK  /* Link partner acked us      */
++#define LPA_NPAGE		ADVERTISE_NPAGE
+ 
+ #define LPA_DUPLEX		(LPA_10FULL | LPA_100FULL)
+ #define LPA_100			(LPA_100FULL | LPA_100HALF | LPA_100BASE4)
 -- 
-2.40.1
+2.34.1
+
 
