@@ -1,46 +1,46 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF5621345;
-	Wed, 19 Jun 2024 15:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B26615217F;
+	Wed, 19 Jun 2024 15:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811302; cv=none; b=IOD1gd2I5hg56lNvI9OoVRH8avWI72Tjejiuu1/NwoOyB88lrbIxCDBHmmLNLSQg0g3Bb5fac7JY6K7DdgJBKxrmrt4ZvM4GnDKumC1FQEkTPgo7uvtn4QcU3r/XXZ9eShX18jWwhVeZLQ2G0olg8b2jdQHUWogwspFC7xiy3A4=
+	t=1718811306; cv=none; b=nuueFtTDqlzsCUUa8Kwb/pkWeNsHZW+ZxCsqztMZf70sD/wyWVhY36sE1fjlSlpJDOkNawp0yAC/eAx4ycV9G5q/Ytgu14YLuaxVoVAu004JMmlgqlqFxmyXNJZLW/gwi6LEIrcEAYINOhulZSDokpnFvZvGp+7e2W0i/J1IUmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811302; c=relaxed/simple;
-	bh=8Sj/sfIq0DqAipfp8q/x2Yhr2FOucgns8h820VpArjs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=afzJE5PJ+mCbsWaarRd851OTxWbkDymejbjxDi3IMS7ckOZVii+Z2UTN+gwF1SaK5BAr6SmHOoaiwOnpf4utMKbfK8wKxU0D/TXmi0owjwgQR1Bx7BmDw6ZxNtBhbWleAl7DT992hB6WVpfmjmnffZjypRtNHI+bzhalIDH+ECg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1718811306; c=relaxed/simple;
+	bh=pdLAdw8AbZIIIqEbHF3B9lATObRLtWTBZcl4cyl+jVA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H+ZDbrZEG94FkBizrtHsw7fweIGxsF6TLkV5d6WoM6B3kx+knGv2AEtrlgjl9U0C4ozHP9+xqikAhQVhryRsspuMwrCWyDnhKEhqAog8bZAFFTvdv4sdIjRofSn55GMsw1Lh8YinM8ScsXVPyb6Ql5P29WjM7WQF+vOlnvWuRjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-421bb51d81aso51779585e9.3;
-        Wed, 19 Jun 2024 08:35:00 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4217926991fso60251035e9.3;
+        Wed, 19 Jun 2024 08:35:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718811299; x=1719416099;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/IbJBDc9fMWWKBCXNiLbufouO1Jc0DPFGGRKeM11Ktw=;
-        b=gHc/ouk9HiQN8LEE/FIjgQ1MY5RJl5kk62OtDcnuGbwrhVzrAGyptxzxZAkPP5jPB5
-         utsr9TjFo6z/hYgLqGUIC0GpoClNhXw6unjnf7twc2a6dQbwZwEFAA8pREV4KNqFHadj
-         nzr5bzpm8qiRSb2VGXvCdrj/lLmVVrX3ThnCwuLhgwmu6l72/LU6+9Xl8Zf5zLxlWMQK
-         a7roDP6VtOkb6duWmTV2u+2/5qJDkt4KiFaYkpswozYsFxEDu0LmSKRMHFQ38K4UeJ5D
-         U0rkt3DSPrHqUycFWqzQI4XvppsQ/7ApuQRt8g9UBhWs/8mciD6caWtXUJ9WgSqLH3ao
-         +7LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWe6Za/3KBzezWovWwyOfB9qZJHy3KQPKp87gLkohEwbsnEaQNvI0Df9nUBkODclhCKCmWXwdITdQiTCn1GVhBTgMszGDJwlPTUvggL
-X-Gm-Message-State: AOJu0YzMWb4IDL8QKmCjJxSA21SBHDU9m8kGK2jPqhVVj2qyNr8Rf2ol
-	WOcZeplGLEaLYZbqdmIEaE8jwQDEEuYSJ7Q+mtdla7s/XpOaGngM5zyQ2Q==
-X-Google-Smtp-Source: AGHT+IFatbXodFriOCDmjeXXw55Q8EQ98EJmL63Z3UivMQzTQ3sFlzgLpEfcko3EwOv8HpQIpn5v3A==
-X-Received: by 2002:a05:600c:78a:b0:421:5609:115d with SMTP id 5b1f17b1804b1-424752a6722mr18812795e9.41.1718811298815;
-        Wed, 19 Jun 2024 08:34:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718811303; x=1719416103;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c3M8GIwcTP2w6CaI85iIBf+6uE7YDXide+uxJUTmFVs=;
+        b=J5jPl8xcJwd8C287XXY+A9hnc4H6bEVinnkBAvQyVBBUZpfVV7uuj1fSF0wxE8B+FT
+         i7bJIcQKg+XNKcAuTm1iAV1cA976AS7H68rBEyRLs/tO9ggXH2bU3DOHNjO3bolpdPsc
+         znvt8YXbAf4xDNgcnRAf6U2TfxdVYqNdYsR6+z2Z1N2OWXQzKdQLiRoDT4XSbZhRFySG
+         9wuNCrP8LEDhvMFR8kGTlm3GUzDVXy5HrhCjDHPUMVj4WDv75coCnGPh4RKl937urgtm
+         tUhcUt4MiZaLxMAaVV6Za4SHB1fGgKZyLskcQ+xcXcZvuidDquHrgpxikkb3knBbLbHq
+         ix0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXIDu1bhspjygtIYH73mnt6eXW8WMzTf8ylVRH1+52hjaCU6YtiwhlfIUo88totB/I8/BxyTULYIYYNNhHVyj7GAlT9dGUNgEeXd9Zd
+X-Gm-Message-State: AOJu0YylhBYkIreEfIXkgO5YtGLGQoRwLgYpGEC7fhPCreCpxwkwGUtn
+	+jq8wvWS4MVwwaeRVD0UT282xri2wGl5yTK002xS5oOunZO8G4qDV/qgRA==
+X-Google-Smtp-Source: AGHT+IHH7PwUv8S1iCYF3J3uQVXx9HoQ7MA56Uvt4zifcynRnlfRoYPhwNv5yEMIHiW0MsMCat1ZWw==
+X-Received: by 2002:a05:600c:6a9a:b0:422:50d7:ff0 with SMTP id 5b1f17b1804b1-4247507a6f6mr19328995e9.3.1718811302938;
+        Wed, 19 Jun 2024 08:35:02 -0700 (PDT)
 Received: from [127.0.0.1] (p200300f6f7110500fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f711:500:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe9263sm268882135e9.15.2024.06.19.08.34.57
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe9263sm268882135e9.15.2024.06.19.08.35.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 08:34:58 -0700 (PDT)
+        Wed, 19 Jun 2024 08:35:02 -0700 (PDT)
 From: Johannes Thumshirn <jth@kernel.org>
-Subject: [PATCH v2 0/4] btrfs: rst: updates for RAID stripe tree
-Date: Wed, 19 Jun 2024 17:34:50 +0200
-Message-Id: <20240619-b4-rst-updates-v2-0-89c34d0d5298@kernel.org>
+Date: Wed, 19 Jun 2024 17:34:52 +0200
+Subject: [PATCH v2 2/4] btrfs: replace stripe extents
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,65 +49,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJr6cmYC/3XMQQ7CIBCF4as0s3YMkIriynuYLihMW6KhzYCNp
- uHuYvcu/5e8b4NEHCjBtdmAaQ0pzLGGOjTgJhtHwuBrgxKqFVoK7FvklPG1eJspoRfWaqN7408
- W6mlhGsJ7B+9d7SmkPPNn91f5W/9Sq0SB8mycJHLiMqjbgzjS8zjzCF0p5Qv6cPmxrQAAAA==
+Message-Id: <20240619-b4-rst-updates-v2-2-89c34d0d5298@kernel.org>
+References: <20240619-b4-rst-updates-v2-0-89c34d0d5298@kernel.org>
+In-Reply-To: <20240619-b4-rst-updates-v2-0-89c34d0d5298@kernel.org>
 To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
  David Sterba <dsterba@suse.com>
 Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Johannes Thumshirn <johannes.thumshirn@wdc.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1744; i=jth@kernel.org;
- h=from:subject:message-id; bh=8Sj/sfIq0DqAipfp8q/x2Yhr2FOucgns8h820VpArjs=;
- b=owGbwMvMwCV2ad4npfVdsu8YT6slMaQV/VrwMcnclaF9C7fYFN5X2j9ntkxsLuSYuVabbYHtZ
- XXrH29kO0pZGMS4GGTFFFmOh9rulzA9wj7l0GszmDmsTCBDGLg4BWAifRsY/seXTkwsakib9Ozw
- 461CIlm3X2X+3FH2o7G8O/C054HlH7oZGSZLbZI0eD3z8cSC07NfMLH8/PfUcdXRwA8PzPc8N9S
- /qcMFAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2025; i=jth@kernel.org;
+ h=from:subject:message-id; bh=3H78qr1E4CM/iN5I9YPMUD81FD/yCQ/9SOrHfoxgDzI=;
+ b=owGbwMvMwCV2ad4npfVdsu8YT6slMaQV/Vp42zFll1rEtHOZSd9WFFpP5PXRvBQR9kSLKWj9x
+ +t72DJUO0pZGMS4GGTFFFmOh9rulzA9wj7l0GszmDmsTCBDGLg4BWAifUGMDIeENGJCQlsnLTJZ
+ 8uNwMMN1no72mjK1Ny1q+9PPXmdv82NkmPT5prngw4k/9Y/uP3360z31eH+Bm5b+5W+epr6LmS5
+ 5mRsA
 X-Developer-Key: i=jth@kernel.org; a=openpgp;
  fpr=EC389CABC2C4F25D8600D0D00393969D2D760850
 
-Three independent updates for RAID stripe tree.
-The 1st one removes pointless space from the on-disk format. As the
-feature itself is still experimental I'd like to get rid of that as early
-as possible.
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-Patch 2 replaces stripe extents in case we hit a EEXIST when inserting a
-stripe extent on a write. This can happen i.e. on device-replace.
+If we can't insert a stripe extent in the RAID stripe tree, because
+the key that points to the specific position in the stripe tree is
+already existing, we have to remove the item and then replace it by a
+new item.
 
-Patch 3 splits a stripe extent on partial delete of a stripe.
+This can happen for example on device replace operations.
 
-Patch 4 adds selftests for the stripe-tree delete code, these selftests
-can and will be extended to cover insert and get as well
-
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
-Changes in v2:
-- Added selftests for delete code
-- Link to v1: https://lore.kernel.org/r/20240610-b4-rst-updates-v1-0-179c1eec08f2@kernel.org
+ fs/btrfs/raid-stripe-tree.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
----
-Johannes Thumshirn (4):
-      btrfs: rst: remove encoding field from stripe_extent
-      btrfs: replace stripe extents
-      btrfs: split RAID stripes on deletion
-      btrfs: stripe-tree: add selftests
+diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
+index e6f7a234b8f6..3020820dd6e2 100644
+--- a/fs/btrfs/raid-stripe-tree.c
++++ b/fs/btrfs/raid-stripe-tree.c
+@@ -73,6 +73,37 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
+ 	return ret;
+ }
+ 
++static int replace_raid_extent_item(struct btrfs_trans_handle *trans,
++				    struct btrfs_key *key,
++				    struct btrfs_stripe_extent *stripe_extent,
++				    const size_t item_size)
++{
++	struct btrfs_fs_info *fs_info = trans->fs_info;
++	struct btrfs_root *stripe_root = fs_info->stripe_root;
++	struct btrfs_path *path;
++	int ret;
++
++	path = btrfs_alloc_path();
++	if (!path)
++		return -ENOMEM;
++
++	ret = btrfs_search_slot(trans, stripe_root, key, path, -1, 1);
++	if (ret)
++		goto err;
++
++	ret = btrfs_del_item(trans, stripe_root, path);
++	if (ret)
++		goto err;
++
++	btrfs_free_path(path);
++
++	return btrfs_insert_item(trans, stripe_root, key, stripe_extent,
++				 item_size);
++ err:
++	btrfs_free_path(path);
++	return ret;
++}
++
+ static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
+ 					struct btrfs_io_context *bioc)
+ {
+@@ -112,6 +143,9 @@ static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
+ 
+ 	ret = btrfs_insert_item(trans, stripe_root, &stripe_key, stripe_extent,
+ 				item_size);
++	if (ret == -EEXIST)
++		ret = replace_raid_extent_item(trans, &stripe_key,
++					       stripe_extent, item_size);
+ 	if (ret)
+ 		btrfs_abort_transaction(trans, ret);
+ 
 
- fs/btrfs/Makefile                       |   3 +-
- fs/btrfs/accessors.h                    |   3 -
- fs/btrfs/ctree.c                        |   1 +
- fs/btrfs/print-tree.c                   |   5 -
- fs/btrfs/raid-stripe-tree.c             | 150 ++++++++++++++-----
- fs/btrfs/raid-stripe-tree.h             |   8 +-
- fs/btrfs/tests/btrfs-tests.c            |   3 +
- fs/btrfs/tests/btrfs-tests.h            |   1 +
- fs/btrfs/tests/raid-stripe-tree-tests.c | 258 ++++++++++++++++++++++++++++++++
- fs/btrfs/tree-checker.c                 |  19 ---
- include/uapi/linux/btrfs_tree.h         |  14 +-
- 11 files changed, 384 insertions(+), 81 deletions(-)
----
-base-commit: 7f5983607be0823e94c20f565915faf9074a370d
-change-id: 20240610-b4-rst-updates-d0aa696b9d5a
-
-Best regards,
 -- 
-Johannes Thumshirn <jth@kernel.org>
+2.43.0
 
