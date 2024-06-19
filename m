@@ -1,61 +1,61 @@
 Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBCF3CF4F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B581146D6E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718808413; cv=none; b=h/D5mJv9eOrQ8fBKRFV3uYjfpaDjspbs/9dZHyelIWo0Ea/25VQSKy3Y6Vbj6VGqkAlJatJaj0mFpebeFlu971dizLnrOJgk++RKmbZ4enUo2xO5/YRL9BJkmOSN2zXWlrqv6TytlsA8ELmSuXt4lt06ZpQu0I0HJjfaB5Q1CpI=
+	t=1718808417; cv=none; b=tzuQVIxTZv2nY7wI2+2ae3yXwnNlOColHyNhyn6Zzm6VyFYRdMSCtjmf/SBMF/Q1JJY7jk3QfcGfDkdQN0Bx47zPLiwWKQ6Jt1vzGMoYekvhYpAaEGAToXFHApOFKB1LWihHXcVdl4mxhOLTca5SOGSMnOry5Runn70MDfLN8WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718808413; c=relaxed/simple;
-	bh=7RiTz7/DbEcpnGh40/G/GiZJyYiXWSGAGW7k/Ludygk=;
+	s=arc-20240116; t=1718808417; c=relaxed/simple;
+	bh=+92eNIvAAAybYp47SPGTo0cCCMJCyrJhdH+MPYWpyDg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CKI76UsCASKV8Tq5lPSUhdXbD1c/tkp8JILFRWyWKa/BgyEfC+19bKR2W6FlJQQ/HIZ5d5ug+CBBZam2r7vtMrItjznwwA2fcI7IA2Ke3WZ4k+mc6pK1Cd2W901VplLuTEEC7Gqz/xVyDGR5rA6/49gsBuGy+BmwnblgdtN6SgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rdrCSNIN; arc=none smtp.client-ip=209.85.218.49
+	 In-Reply-To:To:Cc; b=sd0KO0CgKBSvR9sM51Tucrg6AVa8HISrJnkk4DnpUvdyHbLq9Ani6LckVBzWFjJfi3qHXc+HUCODrgAJDNkv/v1xFE9Ry6dTCUF5qtr8ML2rCcI8nAZ/SjmJa9TEmsSOEjWf2jVd1EhnevQ6Pw9aiIOyUU71LQUY1Z3yidGQpg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XSanD9t8; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rdrCSNIN"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6efae34c83so809226466b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:46:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XSanD9t8"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f13dddf7eso826056166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718808407; x=1719413207; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718808413; x=1719413213; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a+Cj7XwFFzAC2R+vJ+C1jfJoPbZ6EO8weZS6/aNxaN8=;
-        b=rdrCSNIN0fkyzJpA9BhVwy4ZaVrPqMdzO+4wOfN1MGU2MUlCcdh12nsVikqPwJC2b1
-         a7nBRTVQcGMFyJ6yNN8gmPYYFNErKQYTgIZfFi9tjC5XMZ2NEOvHpJh1AdLdtvlyMxRX
-         7JbFYQWcmmP6odkCWqkv7lAKI5Ue/5vMJECt8jvZ2DS85PKGYm+r7qbQ6pStthSChKdV
-         s7f/qGT/J9l0NOd5mqmrnbLGK0hPJ9SksS1gZLPrWEsiMInKza2SgUZm8epqrAcEzl7u
-         QlkhO/HUcnRYLyXvkFF2Rs7/k615jfNZtnTEME0ZKtbxMUroBqXMTrTCsZIKtXyXV5FH
-         o0Dg==
+        bh=7cjZB7E5PD4Fhd2qBNjQJ/L49jjwfMuKxTYdDplhFzc=;
+        b=XSanD9t8WwX8l4+0r+7OvVgI+xQg9jBwjlDPBcyfFBgMlKqYgSZFjNC1fz6EqGe1Z9
+         raXANWbpxonZPXXbTt+g/ZAknHf3wgJF0b6C88l4I7bVfmR0IWnfxgSAKQiRSzwapBRI
+         OPWVnROYCeYRAjwn+3/uSEkbnyBIP09Xcm9TODv6d+JqGsJFz5y8RGkxvoQULW6CUJ0E
+         6W+a84k1hUdWWAJEpy2TOT9q7dSNLMRZgWpCT7vawq+9GeT0tFy6Rm95LpFlxCgWC1Hh
+         Le//vsdY5CE7RxBc3tA360rde75llCzhnRtWU3eTtIrLEyRpxkVuYowIPkTTQZmndpUA
+         RROw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718808407; x=1719413207;
+        d=1e100.net; s=20230601; t=1718808413; x=1719413213;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a+Cj7XwFFzAC2R+vJ+C1jfJoPbZ6EO8weZS6/aNxaN8=;
-        b=I6l1fljlyva1icrVYbevOnJ+xVzTh9I4bC+5B9H5xKJdfIRM5VYRriV1ANHxWbOaac
-         np6gnwwOrPEnjAfOUDIt9ZYIjopNdXhEg8+qGqWNKNKZIBqMQluazHI3rWKDNdxbsOiK
-         sxxFDdwMczIZSrmhWHKs7UhiLh79RwHC2IKwsWYvX1sIkbgYlU+FhPj3hGoN2azTJ6up
-         NHOU0XmgCg2ywnddzVCvEiYhfA8TpoFKBr8tkO8WO2KGrOtLD7cHikfMUNOgYZJL8wii
-         2D/2KzCazR9jPbk6jXq+YFNxR/Bf39j8kbgs6OvWhUZ6zFAJX2UNrj+94UU++i/EQm2G
-         qsKA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8RzdINMZtNsOCSQM6fYrRKKXXA6WtZce5pHSrJ+JISE6tpiGlFAUzMHfmb5p45/QkDV6A8sowLLsI2d/Ligb66HNsiyFV8SxcoZvd
-X-Gm-Message-State: AOJu0Yyhc9hYzV0B0Xlc4KaeN/HSPh0wz4v2X34gfXxy7LEhhTB8agEq
-	U9ZdBbACeiS4JOFJJ75nSB7cpmP6IdDqPeiP6ZILGV/a477w/fD2z9b8ZIS8BeM=
-X-Google-Smtp-Source: AGHT+IHcCmx7Ff8tzRoEcvYhXCGLLgXDhdg9nu2xhwYLgjSrSDM8l07iQA9nCSrJZspZpj+ivPtIBQ==
-X-Received: by 2002:a17:907:d30e:b0:a6f:ad2c:af7 with SMTP id a640c23a62f3a-a6fad2c0b2emr133975466b.2.1718808407460;
-        Wed, 19 Jun 2024 07:46:47 -0700 (PDT)
+        bh=7cjZB7E5PD4Fhd2qBNjQJ/L49jjwfMuKxTYdDplhFzc=;
+        b=P4AfkOoyDneniw1FtUwEtbyd5i6xq8FEWc/hi6Gm8nInR/5pA5qaKGbw4qmQh34571
+         lJylgtzKe/O7QN2C5lmuiozIps19FzcfiDzjrXJ6B33onR+kRiYDr4+Q7Dwgz4JWTh5G
+         FMhM52LA948qPIyRlp/yUjoLKMrfyU3z7UqHFIfvVuaA2P0zWH5Z3intMt9PWd8vnnFr
+         1rX0mpq4W2oW+Fi9b/gQL81ChZQvAX0yHNxSpvZRXp2Pt2YDxsm3o5iuZ+Qacdb9UmuV
+         LOztpi2CFlMS8wOZT6VAR5+4PLo1VzP2axOWLEKS2bRv4tCFbZZEdUp8fk/B++PfDC+t
+         Yc1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUvoTqjM5pc0+FIJ+9UkxCCRoz5fZkvRldOH6f7nA/nBXuHDM9dn3SqFAWAjRDNh1wQJXmNBstKWuKamtVRd4rmfl74FYgrIJMdQPQT
+X-Gm-Message-State: AOJu0YxSF4STUwZKNmaXrFeU3e//CL3uDb7qGSXqLcoBUuXt4CHRL8Vs
+	wqR4KiwbWAdAoT4c4+i83fnZa90UzOxHc3VB149D3PR2vRMmm+JzA2JhkOXPmQg=
+X-Google-Smtp-Source: AGHT+IEchb5BfllEplqmbetjJ+Jv3JjlBGsK/pLS5yI5L0JKKvblsNxyu1iGW30W8LSbSEgphq+h4w==
+X-Received: by 2002:a17:907:8e89:b0:a6f:4bf2:daa2 with SMTP id a640c23a62f3a-a6fab6071c4mr224282466b.15.1718808412742;
+        Wed, 19 Jun 2024 07:46:52 -0700 (PDT)
 Received: from [127.0.1.1] ([93.5.22.158])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a6f56da32c3sm679787566b.13.2024.06.19.07.46.45
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a6f56da32c3sm679787566b.13.2024.06.19.07.46.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 07:46:47 -0700 (PDT)
+        Wed, 19 Jun 2024 07:46:52 -0700 (PDT)
 From: Alexandre Mergnat <amergnat@baylibre.com>
-Date: Wed, 19 Jun 2024 16:46:38 +0200
-Subject: [PATCH v6 02/16] ASoC: dt-bindings: mediatek,mt8365-mt6357: Add
- audio sound card document
+Date: Wed, 19 Jun 2024 16:46:41 +0200
+Subject: [PATCH v6 05/16] ASoC: mediatek: mt8365: Add audio clock control
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240226-audio-i350-v6-2-f754ec1a7634@baylibre.com>
+Message-Id: <20240226-audio-i350-v6-5-f754ec1a7634@baylibre.com>
 References: <20240226-audio-i350-v6-0-f754ec1a7634@baylibre.com>
 In-Reply-To: <20240226-audio-i350-v6-0-f754ec1a7634@baylibre.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -83,147 +83,499 @@ Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
  dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
- Alexandre Mergnat <amergnat@baylibre.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Alexandre Mergnat <amergnat@baylibre.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3413; i=amergnat@baylibre.com;
- h=from:subject:message-id; bh=7RiTz7/DbEcpnGh40/G/GiZJyYiXWSGAGW7k/Ludygk=;
- b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBmcu9Q9mYV/1gwD0pQWXgPg9ZCCRvxvauWGrJdzOCY
- y5vA3fmJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZnLvUAAKCRArRkmdfjHURQSnD/
- 94gbG0RfwOzk2vV/DQ2Mi4eaIlctK9Ci7QgWmylYBzMF0+zC2iwidba/XQrrgwSFmDuZURHpT1BIy7
- LVH98riHY/GqlWi5W8wX6Q3k+gleAi2QZMN3rX/M6kNVJo+mIqHHmAZih60nlBO/tE0ger7D99TRIL
- jiv9Ne2ogeBTfazyPGE+O4EsAXtV8Jd9k7zK3dnIfj8hu/10Ws8d+74N+Ju9KLSi7q+utZjrWMkrk4
- 5LilLfcR9V+9ISirGv7VGX43Gc1bRm4F0+p8mdIrroIc0bYgph+zCEQkaApbofS9m2aAnGvBwwPfCa
- i+JvY69OA3yXVlyRpRb9s3LJnbm6F4sGVNLTZAGp26LC57lUo9VGOU98K+POtbebxtFE1iD6yp/dMs
- X2YIRBBtUvtJuGv6C2jmHa888JFy4oqgd3JTztsw2+PyIie/u/alyC5jDrfqCdjHwtuBnamjyVjCu9
- /YkcZ+9PqDIim1RpYWZ0SDA586Qs+CPPfRQuxfgbKa5EjR8HryaL6FpFL+lRkpuYGUVuGYGJaV51yF
- U6I4XwRqeZlsQpuV7B2GD8Zh+o0O9gBBDKwB0Qgeb+92mAaYR+H62ZUIZNIP08xqjIlq7YDSbcNJL3
- ZdsSeT5KhRcVCmEtIR4AB+MzztsprHemSgHEuXmkW1QESmP44XupmymOCpkQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=14703;
+ i=amergnat@baylibre.com; h=from:subject:message-id;
+ bh=+92eNIvAAAybYp47SPGTo0cCCMJCyrJhdH+MPYWpyDg=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBmcu9QHu4dZi9BBX6puFO6w9FOYqSjJyPHXkd3ct0K
+ VPxBwRGJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZnLvUAAKCRArRkmdfjHURZ7mD/
+ 4latqbIQg2QT50vBlY4NYlZB/Ga+MVmk39MOrBrNSXhPpbIwqfcjG/jQ6KXAda3RPhlBj2yq2/qfho
+ 0QuBGtn3PHh7BBYMAMiilawpPrQL6d871FM7q6sX5bwI/kZJ3ZSSLbt8ESoGTL3DQHDo/extFT6t0q
+ qtPi4c7EtfyMopvPGOl00gqQ7riK7Cz5hHEixnrxv2USKKgYFyJtxr1e1V9hTgpjAfvFfiz80HHb7q
+ Nq3EUxNYzsRgOpT8FjzYhdURSWdhoD4bfI3nLPLAsCsZy4HVOMvQwVNDjB3FkxvhgJul7ohpVNK67D
+ w/gPM6WRy0XTfxww128mpNyXS/hewidi2s3AhtqTpxYZNFhhUkvSYqrCTzMrGOKhXHK9/iBjZJx26p
+ TPVQkk9eokIKYyF1YOJDDojG2fOVkWyL9KVR3njNhwqqfHkeu+3+64OlIT2ta8ZiZ/QPh7JnK49/Y6
+ FJAOo/xJg9Ye+GWOkjzXofYpzlpUkFrgA4Nzc+Dfq0XwXx23bKRB37noQln2r06nWkkesuMS+BqPo1
+ 0wbvIKVFbCiugh/Hp2Bh89vIIBboBl/Z/2HO67+kI6FiwCd9bs46T6Xf9SFyXwqDrMbdgkQkhQgp/H
+ n1GRVVadujwH3zWHEs8rSEmuU+he1jTMKoh/HtiMXtF90yt/lfa5HnQDlSow==
 X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
  fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-Add soundcard bindings for the MT8365 SoC with the MT6357 audio codec.
+Add audio clock wrapper and audio tuner control.
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
- .../bindings/sound/mediatek,mt8365-mt6357.yaml     | 107 +++++++++++++++++++++
- 1 file changed, 107 insertions(+)
+ sound/soc/mediatek/mt8365/mt8365-afe-clk.c | 421 +++++++++++++++++++++++++++++
+ sound/soc/mediatek/mt8365/mt8365-afe-clk.h |  32 +++
+ 2 files changed, 453 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8365-mt6357.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8365-mt6357.yaml
+diff --git a/sound/soc/mediatek/mt8365/mt8365-afe-clk.c b/sound/soc/mediatek/mt8365/mt8365-afe-clk.c
 new file mode 100644
-index 000000000000..ff9ebb63a05f
+index 000000000000..300d1f0ae660
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8365-mt6357.yaml
-@@ -0,0 +1,107 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8365-mt6357.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/mediatek/mt8365/mt8365-afe-clk.c
+@@ -0,0 +1,421 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * MediaTek 8365 AFE clock control
++ *
++ * Copyright (c) 2024 MediaTek Inc.
++ * Authors: Jia Zeng <jia.zeng@mediatek.com>
++ *          Alexandre Mergnat <amergnat@baylibre.com>
++ */
 +
-+title: MediaTek MT8365 ASoC sound card
++#include "mt8365-afe-clk.h"
++#include "mt8365-afe-common.h"
++#include "mt8365-reg.h"
++#include "../common/mtk-base-afe.h"
++#include <linux/device.h>
++#include <linux/mfd/syscon.h>
 +
-+maintainers:
-+  - Alexandre Mergnat <amergnat@baylibre.com>
++static const char *aud_clks[MT8365_CLK_NUM] = {
++	[MT8365_CLK_TOP_AUD_SEL] = "top_audio_sel",
++	[MT8365_CLK_AUD_I2S0_M] = "audio_i2s0_m",
++	[MT8365_CLK_AUD_I2S1_M] = "audio_i2s1_m",
++	[MT8365_CLK_AUD_I2S2_M] = "audio_i2s2_m",
++	[MT8365_CLK_AUD_I2S3_M] = "audio_i2s3_m",
++	[MT8365_CLK_ENGEN1] = "engen1",
++	[MT8365_CLK_ENGEN2] = "engen2",
++	[MT8365_CLK_AUD1] = "aud1",
++	[MT8365_CLK_AUD2] = "aud2",
++	[MT8365_CLK_I2S0_M_SEL] = "i2s0_m_sel",
++	[MT8365_CLK_I2S1_M_SEL] = "i2s1_m_sel",
++	[MT8365_CLK_I2S2_M_SEL] = "i2s2_m_sel",
++	[MT8365_CLK_I2S3_M_SEL] = "i2s3_m_sel",
++	[MT8365_CLK_CLK26M] = "top_clk26m_clk",
++};
 +
-+properties:
-+  compatible:
-+    const: mediatek,mt8365-mt6357
++int mt8365_afe_init_audio_clk(struct mtk_base_afe *afe)
++{
++	size_t i;
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
 +
-+  pinctrl-names:
-+    minItems: 1
-+    items:
-+      - const: default
-+      - const: dmic
-+      - const: miso_off
-+      - const: miso_on
-+      - const: mosi_off
-+      - const: mosi_on
++	for (i = 0; i < ARRAY_SIZE(aud_clks); i++) {
++		afe_priv->clocks[i] = devm_clk_get(afe->dev, aud_clks[i]);
++		if (IS_ERR(afe_priv->clocks[i])) {
++			dev_err(afe->dev, "%s devm_clk_get %s fail\n",
++				__func__, aud_clks[i]);
++			return PTR_ERR(afe_priv->clocks[i]);
++		}
++	}
++	return 0;
++}
 +
-+  mediatek,platform:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of MT8365 ASoC platform.
++void mt8365_afe_disable_clk(struct mtk_base_afe *afe, struct clk *clk)
++{
++	if (clk)
++		clk_disable_unprepare(clk);
++}
 +
-+patternProperties:
-+  "^dai-link-[0-9]+$":
-+    type: object
-+    description:
-+      Container for dai-link level properties and CODEC sub-nodes.
++int mt8365_afe_set_clk_rate(struct mtk_base_afe *afe, struct clk *clk,
++			    unsigned int rate)
++{
++	int ret;
 +
-+    properties:
-+      codec:
-+        type: object
-+        description: Holds subnode which indicates codec dai.
++	if (clk) {
++		ret = clk_set_rate(clk, rate);
++		if (ret) {
++			dev_err(afe->dev, "Failed to set rate\n");
++			return ret;
++		}
++	}
++	return 0;
++}
 +
-+        properties:
-+          sound-dai:
-+            maxItems: 1
-+            description: phandle of the codec DAI
++int mt8365_afe_set_clk_parent(struct mtk_base_afe *afe, struct clk *clk,
++			      struct clk *parent)
++{
++	int ret;
 +
-+        additionalProperties: false
++	if (clk && parent) {
++		ret = clk_set_parent(clk, parent);
++		if (ret) {
++			dev_err(afe->dev, "Failed to set parent\n");
++			return ret;
++		}
++	}
++	return 0;
++}
 +
-+      link-name:
-+        description: Indicates dai-link name and PCM stream name
-+        enum:
-+          - I2S_IN_BE
-+          - I2S_OUT_BE
-+          - PCM1_BE
-+          - PDM1_BE
-+          - PDM2_BE
-+          - PDM3_BE
-+          - PDM4_BE
-+          - SPDIF_IN_BE
-+          - SPDIF_OUT_BE
-+          - TDM_IN_BE
-+          - TDM_OUT_BE
++static unsigned int get_top_cg_reg(unsigned int cg_type)
++{
++	switch (cg_type) {
++	case MT8365_TOP_CG_AFE:
++	case MT8365_TOP_CG_I2S_IN:
++	case MT8365_TOP_CG_22M:
++	case MT8365_TOP_CG_24M:
++	case MT8365_TOP_CG_INTDIR_CK:
++	case MT8365_TOP_CG_APLL2_TUNER:
++	case MT8365_TOP_CG_APLL_TUNER:
++	case MT8365_TOP_CG_SPDIF:
++	case MT8365_TOP_CG_TDM_OUT:
++	case MT8365_TOP_CG_TDM_IN:
++	case MT8365_TOP_CG_ADC:
++	case MT8365_TOP_CG_DAC:
++	case MT8365_TOP_CG_DAC_PREDIS:
++	case MT8365_TOP_CG_TML:
++		return AUDIO_TOP_CON0;
++	case MT8365_TOP_CG_I2S1_BCLK:
++	case MT8365_TOP_CG_I2S2_BCLK:
++	case MT8365_TOP_CG_I2S3_BCLK:
++	case MT8365_TOP_CG_I2S4_BCLK:
++	case MT8365_TOP_CG_DMIC0_ADC:
++	case MT8365_TOP_CG_DMIC1_ADC:
++	case MT8365_TOP_CG_DMIC2_ADC:
++	case MT8365_TOP_CG_DMIC3_ADC:
++	case MT8365_TOP_CG_CONNSYS_I2S_ASRC:
++	case MT8365_TOP_CG_GENERAL1_ASRC:
++	case MT8365_TOP_CG_GENERAL2_ASRC:
++	case MT8365_TOP_CG_TDM_ASRC:
++		return AUDIO_TOP_CON1;
++	default:
++		return 0;
++	}
++}
 +
-+      sound-dai:
-+        maxItems: 1
-+        description: phandle of the CPU DAI
++static unsigned int get_top_cg_mask(unsigned int cg_type)
++{
++	switch (cg_type) {
++	case MT8365_TOP_CG_AFE:
++		return AUD_TCON0_PDN_AFE;
++	case MT8365_TOP_CG_I2S_IN:
++		return AUD_TCON0_PDN_I2S_IN;
++	case MT8365_TOP_CG_22M:
++		return AUD_TCON0_PDN_22M;
++	case MT8365_TOP_CG_24M:
++		return AUD_TCON0_PDN_24M;
++	case MT8365_TOP_CG_INTDIR_CK:
++		return AUD_TCON0_PDN_INTDIR;
++	case MT8365_TOP_CG_APLL2_TUNER:
++		return AUD_TCON0_PDN_APLL2_TUNER;
++	case MT8365_TOP_CG_APLL_TUNER:
++		return AUD_TCON0_PDN_APLL_TUNER;
++	case MT8365_TOP_CG_SPDIF:
++		return AUD_TCON0_PDN_SPDIF;
++	case MT8365_TOP_CG_TDM_OUT:
++		return AUD_TCON0_PDN_TDM_OUT;
++	case MT8365_TOP_CG_TDM_IN:
++		return AUD_TCON0_PDN_TDM_IN;
++	case MT8365_TOP_CG_ADC:
++		return AUD_TCON0_PDN_ADC;
++	case MT8365_TOP_CG_DAC:
++		return AUD_TCON0_PDN_DAC;
++	case MT8365_TOP_CG_DAC_PREDIS:
++		return AUD_TCON0_PDN_DAC_PREDIS;
++	case MT8365_TOP_CG_TML:
++		return AUD_TCON0_PDN_TML;
++	case MT8365_TOP_CG_I2S1_BCLK:
++		return AUD_TCON1_PDN_I2S1_BCLK;
++	case MT8365_TOP_CG_I2S2_BCLK:
++		return AUD_TCON1_PDN_I2S2_BCLK;
++	case MT8365_TOP_CG_I2S3_BCLK:
++		return AUD_TCON1_PDN_I2S3_BCLK;
++	case MT8365_TOP_CG_I2S4_BCLK:
++		return AUD_TCON1_PDN_I2S4_BCLK;
++	case MT8365_TOP_CG_DMIC0_ADC:
++		return AUD_TCON1_PDN_DMIC0_ADC;
++	case MT8365_TOP_CG_DMIC1_ADC:
++		return AUD_TCON1_PDN_DMIC1_ADC;
++	case MT8365_TOP_CG_DMIC2_ADC:
++		return AUD_TCON1_PDN_DMIC2_ADC;
++	case MT8365_TOP_CG_DMIC3_ADC:
++		return AUD_TCON1_PDN_DMIC3_ADC;
++	case MT8365_TOP_CG_CONNSYS_I2S_ASRC:
++		return AUD_TCON1_PDN_CONNSYS_I2S_ASRC;
++	case MT8365_TOP_CG_GENERAL1_ASRC:
++		return AUD_TCON1_PDN_GENERAL1_ASRC;
++	case MT8365_TOP_CG_GENERAL2_ASRC:
++		return AUD_TCON1_PDN_GENERAL2_ASRC;
++	case MT8365_TOP_CG_TDM_ASRC:
++		return AUD_TCON1_PDN_TDM_ASRC;
++	default:
++		return 0;
++	}
++}
 +
-+    required:
-+      - link-name
-+      - sound-dai
++static unsigned int get_top_cg_on_val(unsigned int cg_type)
++{
++	return 0;
++}
 +
-+    additionalProperties: false
++static unsigned int get_top_cg_off_val(unsigned int cg_type)
++{
++	return get_top_cg_mask(cg_type);
++}
 +
-+required:
-+  - compatible
-+  - pinctrl-names
-+  - mediatek,platform
++int mt8365_afe_enable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++	unsigned int reg = get_top_cg_reg(cg_type);
++	unsigned int mask = get_top_cg_mask(cg_type);
++	unsigned int val = get_top_cg_on_val(cg_type);
++	unsigned long flags;
 +
-+additionalProperties: false
++	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
 +
-+examples:
-+  - |
-+    sound {
-+        compatible = "mediatek,mt8365-mt6357";
-+        pinctrl-names = "default",
-+                        "dmic",
-+                        "miso_off",
-+                        "miso_on",
-+                        "mosi_off",
-+                        "mosi_on";
-+        pinctrl-0 = <&aud_default_pins>;
-+        pinctrl-1 = <&aud_dmic_pins>;
-+        pinctrl-2 = <&aud_miso_off_pins>;
-+        pinctrl-3 = <&aud_miso_on_pins>;
-+        pinctrl-4 = <&aud_mosi_off_pins>;
-+        pinctrl-5 = <&aud_mosi_on_pins>;
-+        mediatek,platform = <&afe>;
++	afe_priv->top_cg_ref_cnt[cg_type]++;
++	if (afe_priv->top_cg_ref_cnt[cg_type] == 1)
++		regmap_update_bits(afe->regmap, reg, mask, val);
 +
-+        /* hdmi interface */
-+        dai-link-0 {
-+            link-name = "I2S_OUT_BE";
-+            sound-dai = <&afe>;
++	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
 +
-+            codec {
-+                sound-dai = <&it66121hdmitx>;
-+            };
-+        };
-+    };
++	return 0;
++}
++
++int mt8365_afe_disable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++	unsigned int reg = get_top_cg_reg(cg_type);
++	unsigned int mask = get_top_cg_mask(cg_type);
++	unsigned int val = get_top_cg_off_val(cg_type);
++	unsigned long flags;
++
++	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
++
++	afe_priv->top_cg_ref_cnt[cg_type]--;
++	if (afe_priv->top_cg_ref_cnt[cg_type] == 0)
++		regmap_update_bits(afe->regmap, reg, mask, val);
++	else if (afe_priv->top_cg_ref_cnt[cg_type] < 0)
++		afe_priv->top_cg_ref_cnt[cg_type] = 0;
++
++	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
++
++	return 0;
++}
++
++int mt8365_afe_enable_main_clk(struct mtk_base_afe *afe)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++
++	clk_prepare_enable(afe_priv->clocks[MT8365_CLK_TOP_AUD_SEL]);
++	mt8365_afe_enable_top_cg(afe, MT8365_TOP_CG_AFE);
++	mt8365_afe_enable_afe_on(afe);
++
++	return 0;
++}
++
++int mt8365_afe_disable_main_clk(struct mtk_base_afe *afe)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++
++	mt8365_afe_disable_afe_on(afe);
++	mt8365_afe_disable_top_cg(afe, MT8365_TOP_CG_AFE);
++	mt8365_afe_disable_clk(afe, afe_priv->clocks[MT8365_CLK_TOP_AUD_SEL]);
++
++	return 0;
++}
++
++int mt8365_afe_emi_clk_on(struct mtk_base_afe *afe)
++{
++	return 0;
++}
++
++int mt8365_afe_emi_clk_off(struct mtk_base_afe *afe)
++{
++	return 0;
++}
++
++int mt8365_afe_enable_afe_on(struct mtk_base_afe *afe)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++	unsigned long flags;
++
++	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
++
++	afe_priv->afe_on_ref_cnt++;
++	if (afe_priv->afe_on_ref_cnt == 1)
++		regmap_update_bits(afe->regmap, AFE_DAC_CON0, 0x1, 0x1);
++
++	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
++
++	return 0;
++}
++
++int mt8365_afe_disable_afe_on(struct mtk_base_afe *afe)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++	unsigned long flags;
++
++	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
++
++	afe_priv->afe_on_ref_cnt--;
++	if (afe_priv->afe_on_ref_cnt == 0)
++		regmap_update_bits(afe->regmap, AFE_DAC_CON0, 0x1, 0x0);
++	else if (afe_priv->afe_on_ref_cnt < 0)
++		afe_priv->afe_on_ref_cnt = 0;
++
++	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
++
++	return 0;
++}
++
++int mt8365_afe_hd_engen_enable(struct mtk_base_afe *afe, bool apll1)
++{
++	if (apll1)
++		regmap_update_bits(afe->regmap, AFE_HD_ENGEN_ENABLE,
++				   AFE_22M_PLL_EN, AFE_22M_PLL_EN);
++	else
++		regmap_update_bits(afe->regmap, AFE_HD_ENGEN_ENABLE,
++				   AFE_24M_PLL_EN, AFE_24M_PLL_EN);
++
++	return 0;
++}
++
++int mt8365_afe_hd_engen_disable(struct mtk_base_afe *afe, bool apll1)
++{
++	if (apll1)
++		regmap_update_bits(afe->regmap, AFE_HD_ENGEN_ENABLE,
++				   AFE_22M_PLL_EN, ~AFE_22M_PLL_EN);
++	else
++		regmap_update_bits(afe->regmap, AFE_HD_ENGEN_ENABLE,
++				   AFE_24M_PLL_EN, ~AFE_24M_PLL_EN);
++
++	return 0;
++}
++
++int mt8365_afe_enable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apll)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++
++	mutex_lock(&afe_priv->afe_clk_mutex);
++
++	afe_priv->apll_tuner_ref_cnt[apll]++;
++	if (afe_priv->apll_tuner_ref_cnt[apll] != 1) {
++		mutex_unlock(&afe_priv->afe_clk_mutex);
++		return 0;
++	}
++
++	if (apll == MT8365_AFE_APLL1) {
++		regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG,
++				   AFE_APLL_TUNER_CFG_MASK, 0x432);
++		regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG,
++				   AFE_APLL_TUNER_CFG_EN_MASK, 0x1);
++	} else {
++		regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG1,
++				   AFE_APLL_TUNER_CFG1_MASK, 0x434);
++		regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG1,
++				   AFE_APLL_TUNER_CFG1_EN_MASK, 0x1);
++	}
++
++	mutex_unlock(&afe_priv->afe_clk_mutex);
++	return 0;
++}
++
++int mt8365_afe_disable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apll)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++
++	mutex_lock(&afe_priv->afe_clk_mutex);
++
++	afe_priv->apll_tuner_ref_cnt[apll]--;
++	if (afe_priv->apll_tuner_ref_cnt[apll] == 0) {
++		if (apll == MT8365_AFE_APLL1)
++			regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG,
++					   AFE_APLL_TUNER_CFG_EN_MASK, 0x0);
++		else
++			regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG1,
++					   AFE_APLL_TUNER_CFG1_EN_MASK, 0x0);
++
++	} else if (afe_priv->apll_tuner_ref_cnt[apll] < 0) {
++		afe_priv->apll_tuner_ref_cnt[apll] = 0;
++	}
++
++	mutex_unlock(&afe_priv->afe_clk_mutex);
++	return 0;
++}
++
++int mt8365_afe_enable_apll_associated_cfg(struct mtk_base_afe *afe, unsigned int apll)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++
++	if (apll == MT8365_AFE_APLL1) {
++		if (clk_prepare_enable(afe_priv->clocks[MT8365_CLK_ENGEN1])) {
++			dev_info(afe->dev, "%s Failed to enable ENGEN1 clk\n",
++				 __func__);
++			return 0;
++		}
++		mt8365_afe_enable_top_cg(afe, MT8365_TOP_CG_22M);
++		mt8365_afe_hd_engen_enable(afe, true);
++		mt8365_afe_enable_top_cg(afe, MT8365_TOP_CG_APLL_TUNER);
++		mt8365_afe_enable_apll_tuner_cfg(afe, MT8365_AFE_APLL1);
++	} else {
++		if (clk_prepare_enable(afe_priv->clocks[MT8365_CLK_ENGEN2])) {
++			dev_info(afe->dev, "%s Failed to enable ENGEN2 clk\n",
++				 __func__);
++			return 0;
++		}
++		mt8365_afe_enable_top_cg(afe, MT8365_TOP_CG_24M);
++		mt8365_afe_hd_engen_enable(afe, false);
++		mt8365_afe_enable_top_cg(afe, MT8365_TOP_CG_APLL2_TUNER);
++		mt8365_afe_enable_apll_tuner_cfg(afe, MT8365_AFE_APLL2);
++	}
++
++	return 0;
++}
++
++int mt8365_afe_disable_apll_associated_cfg(struct mtk_base_afe *afe, unsigned int apll)
++{
++	struct mt8365_afe_private *afe_priv = afe->platform_priv;
++
++	if (apll == MT8365_AFE_APLL1) {
++		mt8365_afe_disable_apll_tuner_cfg(afe, MT8365_AFE_APLL1);
++		mt8365_afe_disable_top_cg(afe, MT8365_TOP_CG_APLL_TUNER);
++		mt8365_afe_hd_engen_disable(afe, true);
++		mt8365_afe_disable_top_cg(afe, MT8365_TOP_CG_22M);
++		clk_disable_unprepare(afe_priv->clocks[MT8365_CLK_ENGEN1]);
++	} else {
++		mt8365_afe_disable_apll_tuner_cfg(afe, MT8365_AFE_APLL2);
++		mt8365_afe_disable_top_cg(afe, MT8365_TOP_CG_APLL2_TUNER);
++		mt8365_afe_hd_engen_disable(afe, false);
++		mt8365_afe_disable_top_cg(afe, MT8365_TOP_CG_24M);
++		clk_disable_unprepare(afe_priv->clocks[MT8365_CLK_ENGEN2]);
++	}
++
++	return 0;
++}
+diff --git a/sound/soc/mediatek/mt8365/mt8365-afe-clk.h b/sound/soc/mediatek/mt8365/mt8365-afe-clk.h
+new file mode 100644
+index 000000000000..a6fa653f2183
+--- /dev/null
++++ b/sound/soc/mediatek/mt8365/mt8365-afe-clk.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * MediaTek 8365 AFE clock control definitions
++ *
++ * Copyright (c) 2024 MediaTek Inc.
++ * Authors: Jia Zeng <jia.zeng@mediatek.com>
++ *          Alexandre Mergnat <amergnat@baylibre.com>
++ */
++
++#ifndef _MT8365_AFE_UTILS_H_
++#define _MT8365_AFE_UTILS_H_
++
++struct mtk_base_afe;
++struct clk;
++
++int mt8365_afe_init_audio_clk(struct mtk_base_afe *afe);
++void mt8365_afe_disable_clk(struct mtk_base_afe *afe, struct clk *clk);
++int mt8365_afe_set_clk_rate(struct mtk_base_afe *afe, struct clk *clk, unsigned int rate);
++int mt8365_afe_set_clk_parent(struct mtk_base_afe *afe, struct clk *clk, struct clk *parent);
++int mt8365_afe_enable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type);
++int mt8365_afe_disable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type);
++int mt8365_afe_enable_main_clk(struct mtk_base_afe *afe);
++int mt8365_afe_disable_main_clk(struct mtk_base_afe *afe);
++int mt8365_afe_emi_clk_on(struct mtk_base_afe *afe);
++int mt8365_afe_emi_clk_off(struct mtk_base_afe *afe);
++int mt8365_afe_enable_afe_on(struct mtk_base_afe *afe);
++int mt8365_afe_disable_afe_on(struct mtk_base_afe *afe);
++int mt8365_afe_enable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apll);
++int mt8365_afe_disable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apll);
++int mt8365_afe_enable_apll_associated_cfg(struct mtk_base_afe *afe, unsigned int apll);
++int mt8365_afe_disable_apll_associated_cfg(struct mtk_base_afe *afe, unsigned int apll);
++#endif
 
 -- 
 2.25.1
