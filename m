@@ -1,139 +1,102 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761AA339A8;
-	Wed, 19 Jun 2024 17:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BCB155756
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 17:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718817961; cv=none; b=X+Wgsz3y3R/t5i3/JdvtEnUD4NXKdJbf7Af3VkilV9U9WGEsgCs25OJROivttPSkSk4r0NwDWQFhPRTUCC8g8k52KAQccNtwzCIoj+udh3twMnzW7s5GfKyoUog4luDOU8bZopngsBMdEjzYMg4JqfkkxY6VnAjEEjjlchOumuA=
+	t=1718818032; cv=none; b=PFYLCpGL6MuvHdZmSF45RyIZCJMmwEX8e8REimUFmxHDlc5CAW2JLBJqmR+0sUiUEMYh+pLqodaA5bW90/qQOW4ev0kc55mBqbab74gdh0m2wpKa1chlyMWVONRLNgburPNxUy+MJzUBwBicsIrw3d7XXnY5H7iKrVkjROcGtu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718817961; c=relaxed/simple;
-	bh=1PyvFsSzXeMYA/yXgCcy8zJG0wnlXUA8w2TkCdy6z58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yg1GrQehZevxj4In1nfGOM9uzPwDpeKWV3eFe3hujCrtppEay4fRXlU0lLsYOaatk3RXBj3FqyvA9+NeZffyXXyLCNxbnq/bSIlnyFNvMEiIosdVMPlucOyQidUBCn8hlbMg6eJnIGsPQ6aN6AI5NGZEq+DkPwlAQb5HtRev38k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BiSWRv0K; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718818032; c=relaxed/simple;
+	bh=ETsnlL8B7SX5GDU+JpS9dzXyLldBHM/ahdNPF8Smk6o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Gidlm+qvZc/fn0YMkdWMMuxbVasyHk1gjLH09X0AiNQylcO9e2MGeZFKSAP02z7QmteOZo895drd8RwKm8TIkVyRQp0lJ3zrIV5XYJe0OwxdawFtkmaCm6X6kQe1BaKkMTp0FsW7tZv4GA9sI55zNBs2O6MFlAy6p94aEjD/M68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2/PTasX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiSWRv0K"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f9bf484d9fso2469875ad.1;
-        Wed, 19 Jun 2024 10:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718817960; x=1719422760; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sXGOM3JdNbdgfTFKvIqjEPXAgH0KOOCR0kXzcNVRFZU=;
-        b=BiSWRv0KvrthedX3IfVuDFydjGvdEwAg0TRQorOoGtxeTygAE9tqra4r9YlgfejMeN
-         NIO7eDCTd4bMwST7ba4kkhdakR+5e+ULf+JTGtPKjB8i7coEK7IabCET/tORSkFXzEfX
-         6eBOtpc10PRFrXhypQmtcj/nmL1nfO3GwSH473omBzex+xQRlFGYZq40xp/mhWxdm0uA
-         V99xk8P9+6b5MJo3uII691aAo2t6UF29D3q82I8gOVqN11w9XYWQU0N+QpJ/yyJC1vA7
-         9HV8zj4NEVO+2n5ModNHvf1j8Bgpe91z4w78xoHkE01MxHd83eBPSJPQGfLysnv4QkfP
-         t/TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718817960; x=1719422760;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sXGOM3JdNbdgfTFKvIqjEPXAgH0KOOCR0kXzcNVRFZU=;
-        b=a95iB3bImFDasiwIsGIYixZ8e5UWq4r6ldVqvWoKJ7MbXpaQRWxS++3QZUq3siXODD
-         oCX/rEb+Hi/R6Xl2atK+u37oWc9rw06pczRg+zmBbRgzhfZCENt/FduFXtGZnUu5dUka
-         fRYJCdo1A97EoNuS6fCgtPClUGP5W/aWtIuG6+yGUuYIfJCliWkh/z+gQ0BkyoCbfxmH
-         fX90IyrKGKOt0fQkRcLWxJiFfsrZgfO3ayvPaAVLPoOWVhRaTAWZAmZsGYbdxBEYnVHx
-         hgG++a+lpzdxRR1RCSdwZuggzoMe1VguTl94Zp5+TaWW8hjVAmJW6Xy6UjKLX531sqKm
-         Keuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsv/WZLswqtWNkREP5SYqZWJwLzjkJXlSlviQ4U7oJ6gkWrnVU0I8UBvSfFRvfGRxLgVbHdiWyZUb3KP4fil+SEkKbg/MMIh/r6jqfL5cHSgGOFWJMekwylf2A99t+o3QJxa0EOetYn5QxCphK6yDA6rnr9Sv/qRKJaGHsIRW62egIrgZsOJBIRHiK4YK5Lg+lkgX0DrHNChSQrFUw5g==
-X-Gm-Message-State: AOJu0YyuHJJoLYFuhfbh7OvomH6FdlhW1LTpblbUeYOrnDJcTur//4Fp
-	+qrdOPigdVDbHYaH34qlTFBdMavYollizBL+8PXkH0aEM2/b10H7
-X-Google-Smtp-Source: AGHT+IHuV4oGtzd9Wf54j/9UST/kzIl8G/wnBWGC1cMTWlztDFJDGRRTGQYT/Wn2nkMGh1SgdC/J7g==
-X-Received: by 2002:a17:902:db05:b0:1f9:a242:c3a9 with SMTP id d9443c01a7336-1f9a242c7demr59091835ad.24.1718817957624;
-        Wed, 19 Jun 2024 10:25:57 -0700 (PDT)
-Received: from localhost ([2804:30c:96b:f700:cc1d:c0ae:96c9:c934])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f4ad2bsm119664875ad.285.2024.06.19.10.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 10:25:56 -0700 (PDT)
-Date: Wed, 19 Jun 2024 14:27:20 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nuno.sa@analog.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] spi: spi-axi-spi-engine: Add support for MOSI
- idle configuration
-Message-ID: <ZnMU-OUV2DCpS3mu@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1718749981.git.marcelo.schmitt@analog.com>
- <ead669c15db7cfad4034df1d743fd4088f1c2253.1718749981.git.marcelo.schmitt@analog.com>
- <6f945701-cac0-4a56-9ca7-1daceccc5efd@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2/PTasX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 33453C4AF07;
+	Wed, 19 Jun 2024 17:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718818032;
+	bh=ETsnlL8B7SX5GDU+JpS9dzXyLldBHM/ahdNPF8Smk6o=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=E2/PTasXCBWk9IAIfsSs/M2PYBon5dLDwCeslZDAyfVnt+g2aKt9xRS9haB20xnEQ
+	 azRyjtdZ5SURnoDWtyVmRgAHKI+bDYVi2IFHLO+EIEi8qYm6towYYnUaztlCDMRB+8
+	 GaCNU9luqtNusqMs8bL17hAXsSCjwnOSXgpN26SdjdqD7bNtkLM/tuhty14vszZ7so
+	 D3Ukmz8eskxHe2IlJ8568H5JHn8yyDdVHCb7ubzHkeuDjlMZjopM7ISbyqo510rcD2
+	 Ps2LN3COcdgy0+L5cyzd6xrlV3I/loDkWxRnmvmWqK1SyjKAUfAYaNiegOXXBVn8W7
+	 XiH5M65MIi/Sg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E41AC2BB85;
+	Wed, 19 Jun 2024 17:27:12 +0000 (UTC)
+From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
+Date: Thu, 20 Jun 2024 01:27:06 +0800
+Subject: [PATCH 1/5] drm/mediatek: Support "None" blending in OVL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f945701-cac0-4a56-9ca7-1daceccc5efd@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240620-blend-v1-1-72670072ca20@mediatek.com>
+References: <20240620-blend-v1-0-72670072ca20@mediatek.com>
+In-Reply-To: <20240620-blend-v1-0-72670072ca20@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Hsiao Chien Sung <shawn.sung@mediatek.com>, CK Hu <ck.hu@mediatek.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718818030; l=1454;
+ i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
+ bh=rtWSUov4PpFb4hd8Tt3oJveJfjjyY029CEOcPjNOX6c=;
+ b=KpJUZeS7WEff+MEihA4MdIy0tY9hjb36UjuTGYAVOGH4tGwjeZ7PvX9T2RQh9WvxFAcPEPxOE
+ 4ztaAk9cHA2AwkAaKKCB54EtlLjv9UUQ3Whapw0cgfuK2rSBXYHc9Bl
+X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
+ pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
+X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
+ auth_id=172
+X-Original-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
+Reply-To: shawn.sung@mediatek.com
 
-On 06/19, David Lechner wrote:
-> On 6/18/24 6:11 PM, Marcelo Schmitt wrote:
-> > Implement MOSI idle low and MOSI idle high to better support peripherals
-> > that request specific MOSI behavior.
-> > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > ---
-> >  drivers/spi/spi-axi-spi-engine.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-> > index 0aa31d745734..787e22ae80c0 100644
-> > --- a/drivers/spi/spi-axi-spi-engine.c
-> > +++ b/drivers/spi/spi-axi-spi-engine.c
-> > @@ -41,6 +41,7 @@
-> >  #define SPI_ENGINE_CONFIG_CPHA			BIT(0)
-> >  #define SPI_ENGINE_CONFIG_CPOL			BIT(1)
-> >  #define SPI_ENGINE_CONFIG_3WIRE			BIT(2)
-> > +#define SPI_ENGINE_CONFIG_SDO_IDLE		BIT(3)
-> 
-> Calling this SPI_ENGINE_CONFIG_SDO_IDLE_HIGH would make it more
-> clear what happens when the bit is enabled.
+From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Yeah, agreed. Changing to SPI_ENGINE_CONFIG_SDO_IDLE_HIGH.
+Support "None" alpha blending mode on MediaTek's chips.
 
-> 
-> >  
-> >  #define SPI_ENGINE_INST_TRANSFER		0x0
-> >  #define SPI_ENGINE_INST_ASSERT			0x1
-> > @@ -132,6 +133,10 @@ static unsigned int spi_engine_get_config(struct spi_device *spi)
-> >  		config |= SPI_ENGINE_CONFIG_CPHA;
-> >  	if (spi->mode & SPI_3WIRE)
-> >  		config |= SPI_ENGINE_CONFIG_3WIRE;
-> > +	if (spi->mode & SPI_MOSI_IDLE_HIGH)
-> > +		config |= SPI_ENGINE_CONFIG_SDO_IDLE;
-> > +	if (spi->mode & SPI_MOSI_IDLE_LOW)
-> > +		config &= ~SPI_ENGINE_CONFIG_SDO_IDLE;
-> >  
-> >  	return config;
-> >  }
-> > @@ -646,6 +651,9 @@ static int spi_engine_probe(struct platform_device *pdev)
-> >  
-> >  	host->dev.of_node = pdev->dev.of_node;
-> >  	host->mode_bits = SPI_CPOL | SPI_CPHA | SPI_3WIRE;
-> > +	if (ADI_AXI_PCORE_VER_MAJOR(version) >= 1 &&
-> 
-> Currently, the major version is required to be 1, so this check is not
-> strictly needed.
-> 
-This is expecting the MOSI idle feature to be available on all versions from 1.3 on.
-Will SPI-Engine always be major version 1?
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > +	    ADI_AXI_PCORE_VER_MINOR(version) >= 3)
-> > +		host->mode_bits |=  SPI_MOSI_IDLE_LOW | SPI_MOSI_IDLE_HIGH;
-> 
-> 
-> 
-> >  	host->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
-> >  	host->max_speed_hz = clk_get_rate(spi_engine->ref_clk) / 2;
-> >  	host->transfer_one_message = spi_engine_transfer_one_message;
-> 
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 4b370bc0746d..ad9228fc4dd9 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -439,6 +439,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	unsigned int fmt = pending->format;
+ 	unsigned int offset = (pending->y << 16) | pending->x;
+ 	unsigned int src_size = (pending->height << 16) | pending->width;
++	unsigned int blend_mode = state->base.pixel_blend_mode;
+ 	unsigned int ignore_pixel_alpha = 0;
+ 	unsigned int con;
+ 	bool is_afbc = pending->modifier != DRM_FORMAT_MOD_LINEAR;
+@@ -468,7 +469,8 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
+ 	 * affect the result. Therefore we use !has_alpha as the condition.
+ 	 */
+-	if (state->base.fb && !state->base.fb->format->has_alpha)
++	if ((state->base.fb && !state->base.fb->format->has_alpha) ||
++	    blend_mode == DRM_MODE_BLEND_PIXEL_NONE)
+ 		ignore_pixel_alpha = OVL_CONST_BLEND;
+ 
+ 	if (pending->rotation & DRM_MODE_REFLECT_Y) {
+
+-- 
+Git-146)
+
+
