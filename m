@@ -1,204 +1,105 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F511411D5;
-	Wed, 19 Jun 2024 12:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6347A79950
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799770; cv=none; b=LF4MUS55XS6mS5s5kKXRyJc1cAeoxoZ/AU2f3yjxZBpn1HURmTJt+ReMhDJ7qTfh149DiW0E1Q915D/pNzjEJSHfelU+9Na93amXPCJVsNmjXoss1Mmi1SjJRgB/nj30FQOSVsnvsUgisJdZEN/rvjJwQuTHAY9+4sl66oWIp/g=
+	t=1718799821; cv=none; b=YQolm4O/fcl83l3ELi9cjifmBox2PUXY9XX26joNAyhEdybNY9qZmqg4igT+M3zuY5YzytugJ0BccuPTkwAUAIglxkURWkUR1g6PyeqUqeCIPoAJwMrWSE1nELQIlr36IGb96Z8Dky0UtBc5Omspq8h2KLnNRjlJ4+Is8PxFHGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799770; c=relaxed/simple;
-	bh=p/TXh0Cc0A8idBflT14MkDr+diErp80p0XLgANjOJkI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qKzlkPinz41jxaK5DiHIYldHIO5YB3KqwGQD9dX+OhtlP8Ofkw2h1AfCNbL7GW/X4wHNjIu6PpkLKzN0VgEa2EV3zI5l3jiL1vylULq+NtjN+qXpSCudYpc2ZwdQ0gUxKN/+4W3OfXzonzw8lX0eV+CDvS3QdH6XgBtt2Iw+v2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=KbJlBMIT; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1718799821; c=relaxed/simple;
+	bh=ECwtTKkG8N7tTK8m2s1f2Esiy24uhI/tGsBhH57UQZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ai9nkxRR9j/IS37CYDj2RP0KHVLy0QY/eBtMpp3LWqKxZTO52sUxfyZR1aNot37xlguS39WpLoeM6hu8+N7hmvBZlzehduQMcXCas6gJErDgB3lhE6IMoG8uQHExqrmaTKzFcHL9uhXEkKkeIlDhDQ3z3ki28+4MRb9itylR6vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=lrfv5qeW; arc=none smtp.client-ip=167.172.40.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="KbJlBMIT"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9PBg4028427;
-	Wed, 19 Jun 2024 08:22:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=MdzwG
-	0VEmRocAsqibCKJjSDOfApOYxQOfvUxRnuDpCU=; b=KbJlBMITXHuLzvT/3F4nS
-	euLHkOxyXxClnjFFDdL4ub7ZG+7o0RalGyrYKO3Ird8drsJqzO24fvphHpBNWNXd
-	hAtFxd/PK9+20//wfTMEjPc1kOVpwG2QkFnmC/x/ZzN6yrb9KrOTRuAdDEmw/wSX
-	MgM6vVmWdWiLpl/iTwlAD7gsU8PxHDhlDUiVPERiYG9mbwEMru/wwFo5cvRdv0wP
-	NX45AUmX0EwTmi+C/QEbIKZsTBirs2LXaUM4+DSwoXfw79MI9HUaKkMKC+CuXkuS
-	Z6qt499Crz2aSgK4l+P/7gCxGBDzLV6G2qajYLAYXkEEZprZn1NFPlu/ZbLgkbJJ
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yuj8satjx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 08:22:28 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 45JCMRPj057252
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Jun 2024 08:22:27 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Wed, 19 Jun
- 2024 08:22:26 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 19 Jun 2024 08:22:26 -0400
-Received: from HYB-hYN1yfF7zRm.ad.analog.com (HYB-hYN1yfF7zRm.ad.analog.com [10.48.65.166])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45JCLWwA017121;
-	Wed, 19 Jun 2024 08:22:18 -0400
-From: Ramona Alexandra Nechita <ramona.nechita@analog.com>
-To: <linux-iio@vger.kernel.org>
-CC: Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Cosmin Tanislav
-	<cosmin.tanislav@analog.com>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Nuno Sa <nuno.sa@analog.com>, Maksim Kiselev <bigunclemax@gmail.com>,
-        Marius Cristea
-	<marius.cristea@microchip.com>,
-        Marcelo Schmitt <marcelo.schmitt@analog.com>,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Okan Sahin
-	<okan.sahin@analog.com>,
-        Ivan Mikhaylov <fr0st61te@gmail.com>,
-        Liam Beguin
-	<liambeguin@gmail.com>,
-        Mike Looijmans <mike.looijmans@topic.nl>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 1/3] dt-bindings: iio: adc: add a7779 doc
-Date: Wed, 19 Jun 2024 15:20:44 +0300
-Message-ID: <20240619122105.22642-2-ramona.nechita@analog.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240619122105.22642-1-ramona.nechita@analog.com>
-References: <20240619122105.22642-1-ramona.nechita@analog.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="lrfv5qeW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1718799788;
+ bh=lTFCC7hkkc+0C50PCDKrHMDGubmjU2AxMieUbdYQarc=;
+ b=lrfv5qeWyP+BvF0pDksfgs8RhJdzrCTt0WvcqD+CnIZI/EyCIN6giHlf5Up9KK4mvGI3hiDod
+ h8VgR/uua0gdxYadYy8tunC8Tj7vAahhrRTeIX4jZKlXmq8bQsVsYxrLZoMG7geC4WOsnh7BX7A
+ lH7uVjtWQgkjNJs2z1LbdNDaXG96nGSQfdgkxd1iG+2huBqXkSl9ybKs313N/0WAIRgi6qqDC4M
+ Vwiu5uIaGrv/Ynvv5iGwDzZUMsB3aHZY+o60hDlvMvs2UDYfRDArxXDaamV/yq3hryAcIhVIXb0
+ K438OTMEgG/EDAj5C/OnGAG7bVHbPVq7YEwU2h9e6WEQ==
+Message-ID: <c35b3e80-7889-473d-8365-88436c3cb9a9@kwiboo.se>
+Date: Wed, 19 Jun 2024 14:22:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: AomYQTzuoR_BJrjENTjqShqK-Yh_kBDZ
-X-Proofpoint-ORIG-GUID: AomYQTzuoR_BJrjENTjqShqK-Yh_kBDZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406190092
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] arm64: dts: rockchip: Fix mic-in-differential usage
+ on rk3568-rock-3a
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Lee Jones
+ <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner
+ <heiko@sntech.de>, Chris Zhong <zyw@rock-chips.com>, Zhang Qing
+ <zhangqing@rock-chips.com>, Chris Morgan <macromorgan@hotmail.com>, Furkan
+ Kardame <f.kardame@manjaro.org>, Michael Riesch
+ <michael.riesch@wolfvision.net>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
+ <20240619-rk809-fixes-v1-3-fa93bc5313f4@collabora.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20240619-rk809-fixes-v1-3-fa93bc5313f4@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 167.172.40.54
+X-ForwardEmail-ID: 6672cda75f5eef29994e8ae0
 
-Add dt bindings for adc ad7779.
+Hi Cristian,
 
-Signed-off-by: Ramona Alexandra Nechita <ramona.nechita@analog.com>
----
- .../bindings/iio/adc/adi,ad7779.yaml          | 84 +++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
+On 2024-06-19 13:23, Cristian Ciocaltea wrote:
+> The 'mic-in-differential' DT property supported by the RK809/RK817 audio
+> codec driver is actually valid if prefixed with 'rockchip,':
+> 
+>   DTC_CHK arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dtb
+>   rk3568-rock-3a.dtb: pmic@20: codec: 'mic-in-differential' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	from schema $id: http://devicetree.org/schemas/mfd/rockchip,rk809.yaml#
+> 
+> Make use of the correct property name.
+> 
+> Fixes: a84ffd2ef1ff ("arm64: dts: rockchip: Fix mic-in-differential usage on rock-3a")
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts b/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
+> index ebdedea15ad1..0b54dfe92d6e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
+> @@ -533,7 +533,7 @@ regulator-state-mem {
+>  		};
+>  
+>  		codec {
+> -			mic-in-differential;
+> +			rockchip,mic-in-differential;
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
-new file mode 100644
-index 000000000000..f1eec656acec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7779.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD777X family 8-Channel, 24-Bit, Simultaneous Sampling ADCs
-+
-+maintainers:
-+  - Ramona Nechita <ramona.nechita@analog.com>
-+
-+description: |
-+  The AD777X family consist of 8-channel, simultaneous sampling analog-to-
-+  digital converter (ADC). Eight full Σ-Δ ADCs are on-chip. The
-+  AD7771 provides an ultralow input current to allow direct sensor
-+  connection. Each input channel has a programmable gain stage
-+  allowing gains of 1, 2, 4, and 8 to map lower amplitude sensor
-+  outputs into the full-scale ADC input range, maximizing the
-+  dynamic range of the signal chain.
-+
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7770.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7771.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7779.pdf
-+
-+$ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7770
-+      - adi,ad7771
-+      - adi,ad7779
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description:
-+      ADC reference voltage supply
-+
-+  start-gpios:
-+    description:
-+      Pin that controls start synchronization pulse.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+- |
-+  #include <dt-bindings/gpio/gpio.h>
-+  spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      adc@0 {
-+        compatible = "adi,ad7779";
-+        reg = <0>;
-+        vref-supply = <&vref>;
-+        start-gpios = <&gpio0 87 GPIO_ACTIVE_LOW>;
-+        reset-gpios = <&gpio0 93 GPIO_ACTIVE_LOW>;
-+        clocks = <&adc_clk>;
-+      };
-+  };
-+...
--- 
-2.43.0
+If I understand the schematics correctly, only one wire is connected so
+this board cannot really use differential signaling, and this should
+probably instead be dropped.
+
+Regards,
+Jonas
+
+>  		};
+>  	};
+>  };
+> 
 
