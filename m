@@ -1,102 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E86F1422A2
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC41120B0F
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718801004; cv=none; b=uDPwGQ+r7dZoe4/DyDkdxmGx/LShTyJ6+E+uhfh7W//jYJxRx/K7QQgn2VnUDTDVJjoAki8o9FLf4WExXiJ4Ywmi2vosQDfptPR9Wph+UKoxpqN/mv5Au4E4Txi6Uf/26hrq/RpxRUz6eyhy8l4zAUaaKm5tgBnQoA7Lw7t08Bs=
+	t=1718801170; cv=none; b=YqoCEnG883vjvI0kXBqIMvkt/ZkvEA7sKES1xT9dK8nkwJdWR9V7aNNPaKt2lBZNfLda160NWyGnbr2vSQkU5sA3c+I9wUKXuQ/0Hlznd8dlZRnC6At1tp6ij6suThieFqx1D5Iu/VmX/lz4OFVDYNftkOIWXJu7WnEZuinWlnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718801004; c=relaxed/simple;
-	bh=8DOB/d48t2pWusmnExKrkeBR1xLBOr5S97SWCqbn0EY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKgDb5KSYyO1FVmY72pVhmSr1AIu4+EqhKsK6RgRT8d2g7kTHsWDeD7ShOq+s35PL3NLnKSTFEcWPEvOaGfNQzPHUZOepBBubhfX9hvv1s4v59wWsciCiZgCyz49K799trG4mZJzhVoSHEf0hklxX+lNcyo3epidwXoZdzo+0Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPB+k6o2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPB+k6o2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA87AC2BBFC;
-	Wed, 19 Jun 2024 12:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718801003;
-	bh=8DOB/d48t2pWusmnExKrkeBR1xLBOr5S97SWCqbn0EY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tPB+k6o2hGcwArkCZuQakYDAFr5Z2cZPY/zv61ozbCT867EPZ0fppVD1vjoaUNQmN
-	 +NCkkjlqN94dzLQ9+Jw7e8pnP7XzZJs0lL8hSbjhtx/6mLtYDFGjBgv51oqH+m8+1k
-	 KCxyknyoOZSJ3RYTY3o8KD53OvAmGDjcVi+sxPBX880sc4TIKoPY+d70BwaiIiG8Hl
-	 K0VOj3SgIWgpyaHigMdAbUIoUZXsIIHOsiIIf1sMHaU3Wmc4CvTPQZEwkgGMrxS3GI
-	 +4kjzlsASwuRgmJn3MXDkL6CuwjqadD2kMrAZrfES9vuZdi9tfXuch3PsBHPrSmDuO
-	 r1gRBFbv5VJog==
-Date: Wed, 19 Jun 2024 13:43:18 +0100
-From: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Puranjay Mohan <puranjay@kernel.org>, rostedt@goodmis.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	chenqiwu <qiwuchen55@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	puranjay12@gmail.com
-Subject: Re: [PATCH] arm64: stacktrace: fix the usage of
- ftrace_graph_ret_addr()
-Message-ID: <20240619124318.GA3410@willie-the-truck>
-References: <20240618162342.28275-1-puranjay@kernel.org>
- <ZnHHHmEv-oqaXmq0@J2N7QTR9R3>
+	s=arc-20240116; t=1718801170; c=relaxed/simple;
+	bh=A18lYP5BdCr43fW19fZ/J/98CKMZ+MMqipWAn49xL+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T9WRSvHws8EBC1e7rarSWXFWmcrFhqrTenRByM7wkHUZ6KWeOgRle9LWivtIaYyQbIXvTot4jN85m1lss4AYXZ47qsBJRu5IB4TkjrF2YnBJFLrm8v1yuoU/yqLMYvgTPQNmmK68Vy+DGJQuSCESRX3HKEiAO+m3X1KDSrbLJCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2FB31042;
+	Wed, 19 Jun 2024 05:46:31 -0700 (PDT)
+Received: from [10.57.71.86] (unknown [10.57.71.86])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A92F43F6A8;
+	Wed, 19 Jun 2024 05:46:05 -0700 (PDT)
+Message-ID: <000bca96-dd66-49d2-a540-f4cf36d74ee8@arm.com>
+Date: Wed, 19 Jun 2024 13:46:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnHHHmEv-oqaXmq0@J2N7QTR9R3>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] New config added to handle 64-bit systems with 32-bit DMA
+ support
+To: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Cc: Alberto Secondi <albertosecondi@gmail.com>, hch@lst.de,
+ m.szyprowski@samsung.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, alberto.secondi@abinsula.com,
+ Davide Salaris <davide.salaris@abinsula.com>
+References: <20240619091737.669040-1-albertosecondi@gmail.com>
+ <0e03afd6-46be-4fc7-a974-bf506d8e503c@arm.com>
+ <CAOf5uwkU1qCxC=OamNHLq3d3SZGVuX8_eh1_MYt6TELT4C1j5Q@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <CAOf5uwkU1qCxC=OamNHLq3d3SZGVuX8_eh1_MYt6TELT4C1j5Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 06:42:54PM +0100, Mark Rutland wrote:
-> On Tue, Jun 18, 2024 at 04:23:42PM +0000, Puranjay Mohan wrote:
-> > diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-> > index 6b3258860377..2729faaee4b4 100644
-> > --- a/arch/arm64/kernel/stacktrace.c
-> > +++ b/arch/arm64/kernel/stacktrace.c
-> > @@ -25,6 +25,7 @@
-> >   *
-> >   * @common:      Common unwind state.
-> >   * @task:        The task being unwound.
-> > + * @graph_idx:   Used by ftrace_graph_ret_addr() for optimized stack unwinding.
-> >   * @kr_cur:      When KRETPROBES is selected, holds the kretprobe instance
-> >   *               associated with the most recently encountered replacement lr
-> >   *               value.
-> > @@ -32,6 +33,7 @@
-> >  struct kunwind_state {
-> >  	struct unwind_state common;
-> >  	struct task_struct *task;
-> > +	int graph_idx;
-> 
-> Minor nit, but could we make that:
-> 
-> #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> 	int graph_idx;
-> #endif
-> 	
-> Regardless, this looks good to me, and I've tested it with a few
-> stacktrace scenarios including the example from commit:
-> 
->   c6d3cd32fd0064af ("arm64: ftrace: use HAVE_FUNCTION_GRAPH_RET_ADDR_PTR")
-> 
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> Tested-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> Steve, what's your plan for merging the ftrace bits, and how should we
-> stage this relative to that? e.g. would it make sense for this to go
-> through the ftrace tree along with those changes so that this doesn't
-> end up transiently broken during the merge window?
-> 
-> Catalin, Will, do you have any preference?
 
-I think it makes most sense if this patch travels together with
-29c1c24a2707 ("function_graph: Fix up ftrace_graph_ret_addr()"), so that
-would be via Steve's tree. In which case:
+On 2024-06-19 12:43 pm, Michael Nazzareno Trimarchi wrote:
+> Hi Robin
+> 
+> On Wed, Jun 19, 2024 at 12:36 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 2024-06-19 10:17 am, Alberto Secondi wrote:
+>>> ------ Tessian Warning ------
+>>>
+>>> Be careful, the email's sending address "albertosecondi@gmail[.]com" has never been seen on your company's network before today
+>>>
+>>> This warning message will be removed if you reply to or forward this email to a recipient outside of your organization.
+>>>
+>>> ---- Tessian Warning End ----
+>>>
+>>> From: Alberto Secondi <alberto.secondi@abinsula.com>
+>>>
+>>> The kernel assumes that 64-bit systems have 64-bit DMA support through
+>>> CONFIG_ARCH_DMA_ADDR_T_64BIT. This is not always true; for example, several
+>>> iMX8 systems (verified on iMX8MM and iMX8MP) have DMA with only 32-bit support.
+>>> This results in several drivers requesting DMA_BIT_MASK(64), which causes
+>>> malfunctions, particularly when systems have more than 3GB of DRAM (verified
+>>> with the lan743x driver and iMX8 systems with 4GB of DRAM). Therefore, a new
+>>> config ARCH_64BIT_HAS_DMA32_ONLY was added to manage 64-bit systems with 32-bit
+>>> DMA, which adjusts DMA_BIT_MASK(n) accordingly.
+>>
+>> No. If a system has devices naturally capable of >32-bit DMA, and memory
+>> at >32-bit system physical addresses, but only a 32-bit interconnect in
+>> between, that needs to be described properly in Devicetree/ACPI, not
+>> hacked around with completely non-portable kernel bodges.
+>>
+> 
+> commit 4251a3ac4de9625a284a9c046cc915487e9b2a5e
+> Author: Lucas Stach <l.stach@pengutronix.de>
+> Date:   Tue May 4 10:20:51 2021 +0200
+> 
+>      arm64: dts: imx8mm: specify dma-ranges
+> 
+>      DMA addressing capabilities on i.MX8MM are limited by the interconnect,
+>      same as on i.MX8MQ. Add dma-ranges to the the peripheral bus to let
+>      the kernel know about this.
+> 
+>      Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>      Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+>      Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+>      Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index 64aa38fd2b6e0..e7648c3b83905 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -261,6 +261,7 @@ soc@0 {
+>                  #address-cells = <1>;
+>                  #size-cells = <1>;
+>                  ranges = <0x0 0x0 0x0 0x3e000000>;
+> +               dma-ranges = <0x40000000 0x0 0x40000000 0xc0000000>;
+>                  nvmem-cells = <&imx8mm_uid>;
+>                  nvmem-cell-names = "soc_unique_id";
+> 
+> 
+> Somenthing like this should already do it?
 
-Acked-by: Will Deacon <will@kernel.org>
+Hmm, indeed... so the question to dig into would be why that's 
+apparently not getting picked up by of_dma_get_range() for that device.
 
-Will
+Thanks,
+Robin.
