@@ -1,137 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C82428EC
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 05:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09D228EC;
+	Wed, 19 Jun 2024 05:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718774148; cv=none; b=EY8PGyWrQ1zpVjx7N/XtSF4b8BuSH7NfmDwNWKo/GdbhrtoA05FKAVjg8u8TslJZix8Q3a6zdOClpaQvp5giUW1WQH3ZRVhyy/5dUhtuAxXbOhDS3eOwfUyTbV62k+JSIomwmkgd2fqbz5eUUkfSXiFX8lFyHiZxIIpjbyyL+Ls=
+	t=1718774470; cv=none; b=bZAvl6DUwCkNZCURnT47jOeEeWUUchmrbrEl3e7ToivuC1zaj6i8ayo5sfu2nPOv5yRndsIRTIdA/AhzudLZXoxpzFgzdWP2T0rnLMwWMiu05/4GrZmuVI54/hMdhmBn7582UEkfZJkCt5TAS78VHaPWDlriYGEqpzQIO41YQLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718774148; c=relaxed/simple;
-	bh=TL1LD2iCTY2phX4axZb2rSAcIuxvrdQ6F7zmXGItjHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=W96N82+FAnxRFSoUHOfBS4JSORAsErhj3AkCeB+LodtHja3lBLct6MxvjBbTpxxjbYMBrwlCsC00XEhvntozXg9nRQMzGmO+hptibERF93Tz4ELbnMjhCDBV1hpNsETP2TV1p6obvMtRQfGNUecWuIA1ZtXbP/83cj9h14rnVeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fx1zwz01; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718774470; c=relaxed/simple;
+	bh=3fhxlCy9Vz8ZybVo7OOz3mT1ven3q+ULsCnER4N4Jms=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PmZl8cxow1A2teoBhQS7JEUzxea+OsbyelptPQaA4eruyKT2OdcNRn1bTickt04e32PeRZdayo6VwvoIJs5+tDHTOJYxjcawWH4kAukISEkifDUSsOgLlPTgitVJEvw6xk6trDM+HecnmHQYtTQJopcnJyx27RBXFUDKAjk1K1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SWggAkHD; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fx1zwz01"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718774145; x=1750310145;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=TL1LD2iCTY2phX4axZb2rSAcIuxvrdQ6F7zmXGItjHE=;
-  b=Fx1zwz01h6LeLeHeLXVX4k2div8tVZbUSWZyWhOk6M/h67fCFy8zqy08
-   SWPYE8/MKB/TaA7H/8uNuOG0ZrrJlqqtFfkgBuTiKUBb4TnpPWKgKSdqO
-   jVhUoH6tzaOU0cpopfNmtsEQ8r4LogORcLsAxlzf2Kgv2lxBJTDOvQCdz
-   HUTpgsOFolM8NjSdvo/808cbjLyYVJAOBULxguvNySfP0dA1T6lxD/o3I
-   GYdzadmiPRRx1PJn4we9dzOuXAIQNJ3yQam7DhLtnqkCbub3+cdxMHhaZ
-   syucTDctXC4oGeGluvQj/yCuSM/tZn4v4SN5d12q6eYk7CeL7r/0qSNMO
-   Q==;
-X-CSE-ConnectionGUID: b4L9cIXmSlmFbG8P9hDVdA==
-X-CSE-MsgGUID: wJEBKGbKStGMrly149kWag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="19563865"
-X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
-   d="scan'208";a="19563865"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 22:15:44 -0700
-X-CSE-ConnectionGUID: +NIkGp8LQR2PpvdyxUNVGg==
-X-CSE-MsgGUID: w+e0CqctSNu7OyoRcudklQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
-   d="scan'208";a="72536611"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 18 Jun 2024 22:15:42 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sJnfY-0006JO-2G;
-	Wed, 19 Jun 2024 05:15:40 +0000
-Date: Wed, 19 Jun 2024 13:15:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts:127.20-161.4:
- Warning (avoid_unnecessary_addr_size): /soc@0/i2c@78b6000/led-controller@30:
- unnecessary #address-cells/#size-cells without "ranges" or child "reg"
- property
-Message-ID: <202406191339.vptigQww-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWggAkHD"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35f1bc2ab37so5553576f8f.1;
+        Tue, 18 Jun 2024 22:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718774467; x=1719379267; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Qwp3G2wkgfWztC1WiEcAvtKbcMmGeeZKMaO+Raf4cOc=;
+        b=SWggAkHDcEwiWYhEeY9I8XjHp3/FhgMT3R4TRCVxa8Y9ZosRqpEEKXaPZDXm/8C+f7
+         bbILypTMAcHzVN4tDsCxTWuLYqtnfaWagooKvybK2ksJvKCdST3SpyzdzgpnerX9jy2c
+         BTFSeUmeDYOqRCiCc78CIUq8aqRqpfUMBv8lLBORfiTmkMl0cC5Jx6uODdcGB8dGIIqu
+         SLiDhUWq4s3Wv4la9GdCq6aV9hd80Li34ItSSmGhppqBshL4fLh1t6fzlnrp3Hz2CCZa
+         RQVL9nMe8MH0io9qlFyKuo3DokMcYUQkVoOME1zhE3iqIFfoRXAqcl2mUfTU/SFTuFDd
+         fP3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718774467; x=1719379267;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qwp3G2wkgfWztC1WiEcAvtKbcMmGeeZKMaO+Raf4cOc=;
+        b=nBoyfT6ZNCOSf6r80FuGUHZTrSnu3PByUaxQGP1TER1F1rRp1rRH39XGvEST6VfHAk
+         xU6NPY4TsL14NxO//DnpRoXuer5XkSE6q6fNhI6DgsZd5aXUaXEHj1nDSeWXC98E+IRm
+         CKXCCHmNx6pqdylQ5fwXe3B4XEGSMxVHtLJgAVIeG+f/8aSMkezTtIG1F3dwLfsxU1rW
+         yq9jIYX4pDbjS4uAue7IL8KN44LO9XNjvyRriKPs6lxc99bMcSbJKcf+UgtyHQ8C30/O
+         iGlWXsgmQLI0F10CZL2NU3VwEh3riW/hi5jrJ9LLc1DA0lnR+prRiGjiAWqjYpqckRAr
+         dzZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3kZKMA3yf7RbJ9gvu15zR1pAC+H6nvj6xFVbiOROfqEqBefiUb0j3b9OTNuqS3VZ1B28pweDeQVXgDwJYT/sQ+oGo4uMahlFBMzca
+X-Gm-Message-State: AOJu0YxbNXVO0SCvQkYFXvJWeUu8m2w0t/YorpXybRAPOV4X9BBfMl15
+	JjbKUDbGyjkSoC/9cKb6ZRzdokciyzYcDoaHP4J326Fi0LQhc30+
+X-Google-Smtp-Source: AGHT+IFj8N/tYTeh5HIsrNsSRhmMsWBORvW0ufQGbGhkqZvMrK95BBDNOYgO7F76PX0O5jwKLu2TpQ==
+X-Received: by 2002:a05:6000:12c1:b0:362:bbd8:229d with SMTP id ffacd0b85a97d-363176ad606mr915492f8f.27.1718774466762;
+        Tue, 18 Jun 2024 22:21:06 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36289a4faeasm2607189f8f.95.2024.06.18.22.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 22:21:06 -0700 (PDT)
+Message-ID: <5b7b8a7132934b77b43ffde0650c68c1dd9a5b7e.camel@gmail.com>
+Subject: Re: [PATCH 2/8] iio: add enable and disable services to iio backend
+ framework
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Olivier Moysan <olivier.moysan@foss.st.com>, Nuno Sa
+ <nuno.sa@analog.com>,  Jonathan Cameron <jic23@kernel.org>, Lars-Peter
+ Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 19 Jun 2024 07:21:06 +0200
+In-Reply-To: <20240618160836.945242-3-olivier.moysan@foss.st.com>
+References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
+	 <20240618160836.945242-3-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   92e5605a199efbaee59fb19e15d6cc2103a04ec2
-commit: a21796c631734ea5cf62507e63a2479261880514 arm64: dts: qcom: msm8939-longcheer-l9100: Enable RGB LED
-date:   8 months ago
-config: arm64-randconfig-r113-20240606 (https://download.01.org/0day-ci/archive/20240619/202406191339.vptigQww-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-reproduce: (https://download.01.org/0day-ci/archive/20240619/202406191339.vptigQww-lkp@intel.com/reproduce)
+On Tue, 2024-06-18 at 18:08 +0200, Olivier Moysan wrote:
+> Add iio_backend_disable() and iio_backend_enable() APIs to allow
+> IIO backend consumer to request backend disabling and enabling.
+>=20
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> ---
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406191339.vptigQww-lkp@intel.com/
+Hi Olivier,
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/qcom/msm8939.dtsi:1284.27-1333.6: Warning (avoid_unnecessary_addr_size): /soc@0/display-subsystem@1a00000/dsi@1a98000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
->> arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts:127.20-161.4: Warning (avoid_unnecessary_addr_size): /soc@0/i2c@78b6000/led-controller@30: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
-   arch/arm64/boot/dts/qcom/msm8939.dtsi:496.26-499.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s6-p1@a1: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s6-p2@a1)
-   arch/arm64/boot/dts/qcom/msm8939.dtsi:516.26-519.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s8-p1@a4: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s8-p2@a4)
-   arch/arm64/boot/dts/qcom/msm8939.dtsi:541.24-544.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/mode@d0: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s0-p1@d0)
-   arch/arm64/boot/dts/qcom/msm8939.dtsi:551.26-554.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s0-p1@d1: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s1-p1@d1)
-   arch/arm64/boot/dts/qcom/msm8939.dtsi:571.26-574.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s2-p2@d4: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s3-p1@d4)
+small notes from me...
 
-vim +127 arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
+> =C2=A0drivers/iio/industrialio-backend.c | 26 ++++++++++++++++++++++++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 2 ++
+> =C2=A02 files changed, 28 insertions(+)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index b950e30018ca..d3db048c086b 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -166,6 +166,32 @@ int devm_iio_backend_enable(struct device *dev, stru=
+ct
+> iio_backend *back)
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_NS_GPL(devm_iio_backend_enable, IIO_BACKEND);
+> =C2=A0
+> +/**
+> + * iio_backend_enable - Backend enable
+> + * @dev: Consumer device for the backend
+> + * @back: Backend device
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_enable(struct device *dev, struct iio_backend *back)
+> +{
+> +	return iio_backend_op_call(back, enable);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_enable, IIO_BACKEND);
 
-   123	
-   124	&blsp_i2c2 {
-   125		status = "okay";
-   126	
- > 127		led-controller@30 {
-   128			compatible = "kinetic,ktd2026";
-   129			reg = <0x30>;
-   130			#address-cells = <1>;
-   131			#size-cells = <0>;
-   132	
-   133			vin-supply = <&pm8916_l17>;
-   134			vio-supply = <&pm8916_l6>;
-   135	
-   136			pinctrl-0 = <&status_led_default>;
-   137			pinctrl-names = "default";
-   138	
-   139			multi-led {
-   140				color = <LED_COLOR_ID_RGB>;
-   141				function = LED_FUNCTION_STATUS;
-   142	
-   143				#address-cells = <1>;
-   144				#size-cells = <0>;
-   145	
-   146				led@0 {
-   147					reg = <0>;
-   148					color = <LED_COLOR_ID_RED>;
-   149				};
-   150	
-   151				led@1 {
-   152					reg = <1>;
-   153					color = <LED_COLOR_ID_GREEN>;
-   154				};
-   155	
-   156				led@2 {
-   157					reg = <2>;
-   158					color = <LED_COLOR_ID_BLUE>;
-   159				};
-   160			};
-   161		};
-   162	};
-   163	
+We do already have devm_iio_backend_enable(). From a correctness stand poin=
+t and even
+scalability, that API should now call your new iio_backend_enable() instead=
+ of
+directly call iio_backend_op_call(). I guess that change could be in this p=
+atch.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+> +/**
+> + * iio_backend_disable - Backend disable
+> + * @dev: Consumer device for the backend
+> + * @back: Backend device
+> + *
+> + */
+> +void iio_backend_disable(struct device *dev, struct iio_backend *back)
+> +{
+> +	iio_backend_void_op_call(back, disable);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_disable, IIO_BACKEND);
+> +
+
+We also have __iio_backend_disable() which is static since all users were u=
+sing
+devm_iio_backend_enable(). I understand that's not suitable for you but I w=
+ould
+instead rename the existing function to iio_backend_disable() and export it=
+.
+
+With the above changes:
+
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
+- Nuno S=C3=A1
+
