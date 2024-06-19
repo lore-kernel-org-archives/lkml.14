@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD6879DC7
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16C67FBBF
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718788836; cv=none; b=f+I+h3UhNtCsuSMB6YQWza6yzmTpyqO5muMxRLz77nvhlE3E4rkSt4n0O4Gz5hqhbLzNcnLLTjafueNQGzNGEeSqOFa/LgWse0s5haDgecGOK/IuLqUuXZIyAG4N6vHeX2ZohR4cPsBtjrGm86WxlwCxOdSkVdhAPtjXA6cKmsU=
+	t=1718788836; cv=none; b=nOUWyXOcrsPtz09f0DgaZqwFj6Cd+Aqxl+NELwJcFPhTqnqsBoQy1enJC+YgJJNgfpWXXFQwZ68VJ9uIt3bL5vmN71BWFNu2/CGfxj5UgPia0NDxomOi+zb73Fa9+1DMdRBCZUR+M2TAeQbXFzzQ0ZcOYtrb4jOnirf5wjp7+Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718788836; c=relaxed/simple;
-	bh=COkjaeKz8fplJ2Dg3wgX4Wj7712CRaMzdyemxxKURNA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OWlSsqkDPoYKMt6bD5pzwm3E+4LMdU2Tmiw2tne80SYsGzhSufRNDbSUm49PYY6rGngQT1XhfefwX7bg/u5bnRGfNS9kEKaF4l0sIyRLD3Gtzdpb65uB+bcdl8AGBeaSHU0E8vzi1CVgn3Wxtp6QjXfkWRF8nfMKwsxk1KlRES8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkJEyVUb; arc=none smtp.client-ip=10.30.226.201
+	bh=FKmZEOOj+8xe3zO8a1V3U71PZl7D+ukIzZ+enpM2r0A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H9xqQ68XKNtRDfz0TiA3RTzEejbCsdHjXTB2Ar1f8FBE3piPnj6N/8WGTMiXwuqBGyYaRYgSZW2NcCgwWwVTM2CLAXZI52wuplAbEdcJeYT3dhOYfPPCAuKsdGlAhEA8QfLb5eVaiueztLQxtzLcFhBqEDqCN0kAkTKrtDSJ69w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqt/s8BR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkJEyVUb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74094C2BBFC;
-	Wed, 19 Jun 2024 09:20:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqt/s8BR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AFE4C4AF49;
+	Wed, 19 Jun 2024 09:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718788835;
-	bh=COkjaeKz8fplJ2Dg3wgX4Wj7712CRaMzdyemxxKURNA=;
-	h=From:Subject:Date:To:Cc:From;
-	b=BkJEyVUbJYJggEbKPHubYTt8uEq+AnhSxxHyyE9szcog0Mhldx0glFjUUTioi0a3/
-	 VF3YC7aAEOrhQZMfnftIR7hY6RO42Gl9txADrlIDHAtGeIRdjzcMbiUBKhqqO9PWpE
-	 tnqmpl3l+rT4CRUCh3AKGAiy4mMiJEngj3iQEzJQtnx6ZqkCO3tuUW5b5DMRDVk1u/
-	 VssPNiWuuCEmSCV0uGORAVu5WbA+vN8aGrT8aB+NKXT7Lx4HTMajtu3R/yqE4YfuuP
-	 eLxyOVI8UbllFLuzSFUsgVpzgiKLbn8zR27YTyHH+BQG4bVYHLrHyxukQbbXPXzWeB
-	 vQ98F8NlsMIeg==
+	s=k20201202; t=1718788836;
+	bh=FKmZEOOj+8xe3zO8a1V3U71PZl7D+ukIzZ+enpM2r0A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=aqt/s8BRPJSS1M01V9JHeMII64IVR1p02doAtxRFDlR/L+DPjSim/Pqt13AvzEHD9
+	 dh3CcggMBedVDbdEC0Agp3EnRQ0dlwlCZQXKrGJul8lPzNpfEml1ggoyc2REh08bDh
+	 fpeupgIz/feW1X98iKCWGIteeJVzmdCNfFePwBtSX16RUkBgq/tCo7be9T5hdJJiDx
+	 KI1cQi2WgByDXQMUDYVnwpw/5EzJOnvEjngE+fSozFZc+RAiIdBjNCWchUHYDCUW5C
+	 CNH7JgKsN3F3cCd3XTw3C9nm0YRJyLOpXKMN+tlrET2ToGJx3a0Ryk10wXY8qAKEfq
+	 waMXB9N+j//OQ==
 From: Chris Li <chrisl@kernel.org>
-Subject: [PATCH v3 0/2] mm: swap: mTHP swap allocator base on swap cluster
- order
-Date: Wed, 19 Jun 2024 02:20:28 -0700
-Message-Id: <20240619-swap-allocator-v3-0-e973a3102444@kernel.org>
+Date: Wed, 19 Jun 2024 02:20:30 -0700
+Subject: [PATCH v3 2/2] mm: swap: mTHP allocate swap entries from nonfull
+ list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,11 +37,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANyicmYC/2WMwQ6CMBAFf4X0bE273QLx5H8YD6Uu0EgoaU3VE
- P7dQmKMepyXNzOzSMFRZIdiZoGSi86PGdSuYLY3Y0fcXTIzEIBCg+LxbiZuhsFbc/OBS63QYi3
- IErIsTYFa99iCp3Pm3sV8e279JNf1ncLfVJJccKzqUjYIqoHyeKUw0rD3oWNrK8HHL+W/D9kHo
- 6Vq0FQttF/+siwvADQUQ+0AAAA=
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240619-swap-allocator-v3-2-e973a3102444@kernel.org>
+References: <20240619-swap-allocator-v3-0-e973a3102444@kernel.org>
+In-Reply-To: <20240619-swap-allocator-v3-0-e973a3102444@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Kairui Song <kasong@tencent.com>, Ryan Roberts <ryan.roberts@arm.com>, 
  "Huang, Ying" <ying.huang@intel.com>, Kairui Song <kasong@tencent.com>, 
@@ -50,122 +49,134 @@ Cc: Kairui Song <kasong@tencent.com>, Ryan Roberts <ryan.roberts@arm.com>,
  Barry Song <baohua@kernel.org>
 X-Mailer: b4 0.13.0
 
-This is the short term solutiolns "swap cluster order" listed
-in my "Swap Abstraction" discussion slice 8 in the recent
-LSF/MM conference.
+Track the nonfull cluster as well as the empty cluster
+on lists. Each order has one nonfull cluster list.
 
-When commit 845982eb264bc "mm: swap: allow storage of all mTHP
-orders" is introduced, it only allocates the mTHP swap entries
-from new empty cluster list.  It has a fragmentation issue
-reported by Barry.
+The cluster will remember which order it was used during
+new cluster allocation.
 
-https://lore.kernel.org/all/CAGsJ_4zAcJkuW016Cfi6wicRr8N9X+GJJhgMQdSMp+Ah+NSgNQ@mail.gmail.com/
+When the cluster has free entry, add to the nonfull[order]
+list.  When the free cluster list is empty, also allocate
+from the nonempty list of that order.
 
-The reason is that all the empty cluster has been exhausted while
-there are planty of free swap entries to in the cluster that is
-not 100% free.
+This improves the mTHP swap allocation success rate.
 
-Remember the swap allocation order in the cluster.
-Keep track of the per order non full cluster list for later allocation.
+There are limitations if the distribution of numbers of
+different orders of mTHP changes a lot. e.g. there are a lot
+of nonfull cluster assign to order A while later time there
+are a lot of order B allocation while very little allocation
+in order A. Currently the cluster used by order A will not
+reused by order B unless the cluster is 100% empty.
 
-User impact: For users that allocate and free mix order mTHP swapping,
-It greatly improves the success rate of the mTHP swap allocation after the
-initial phase.
-
-Barry provides a test program to show the effect:
-https://lore.kernel.org/linux-mm/20240615084714.37499-1-21cnbao@gmail.com/
-
-Without:
-$ mthp-swapout                                                          
-Iteration 1: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%   
-Iteration 2: swpout inc: 219, swpout fallback inc: 0, Fallback percentage: 0.00%                                                    
-Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%   
-Iteration 4: swpout inc: 219, swpout fallback inc: 0, Fallback percentage: 0.00%            
-Iteration 5: swpout inc: 110, swpout fallback inc: 117, Fallback percentage: 51.54%                                                 
-Iteration 6: swpout inc: 0, swpout fallback inc: 230, Fallback percentage: 100.00%          
-Iteration 7: swpout inc: 0, swpout fallback inc: 229, Fallback percentage: 100.00% 
-Iteration 8: swpout inc: 0, swpout fallback inc: 223, Fallback percentage: 100.00%                                                  
-Iteration 9: swpout inc: 0, swpout fallback inc: 224, Fallback percentage: 100.00%                                                  
-Iteration 10: swpout inc: 0, swpout fallback inc: 216, Fallback percentage: 100.00%                                                 
-Iteration 11: swpout inc: 0, swpout fallback inc: 212, Fallback percentage: 100.00%                                                 
-Iteration 12: swpout inc: 0, swpout fallback inc: 224, Fallback percentage: 100.00%                                                 
-Iteration 13: swpout inc: 0, swpout fallback inc: 214, Fallback percentage: 100.00%        
-
-$ mthp-swapout -s
-Iteration 1: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 2: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 4: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 5: swpout inc: 33, swpout fallback inc: 197, Fallback percentage: 85.65%
-Iteration 6: swpout inc: 0, swpout fallback inc: 229, Fallback percentage: 100.00%
-Iteration 7: swpout inc: 0, swpout fallback inc: 223, Fallback percentage: 100.00%
-Iteration 8: swpout inc: 0, swpout fallback inc: 219, Fallback percentage: 100.00%
-Iteration 9: swpout inc: 0, swpout fallback inc: 212, Fallback percentage: 100.00%
-
-With:
-$ mthp-swapout       
-Iteration 1: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%                                                    
-Iteration 2: swpout inc: 219, swpout fallback inc: 0, Fallback percentage: 0.00%                                                    
-Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%                                                    
-Iteration 4: swpout inc: 219, swpout fallback inc: 0, Fallback percentage: 0.00%       
-Iteration 5: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: 0.00% 
-Iteration 6: swpout inc: 230, swpout fallback inc: 0, Fallback percentage: 0.00%            
-...
-Iteration 94: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 95: swpout inc: 221, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 96: swpout inc: 229, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 97: swpout inc: 219, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 98: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 99: swpout inc: 223, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 100: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
-
-$ mthp-swapout -s
-Iteration 1: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 2: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 4: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 5: swpout inc: 230, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 6: swpout inc: 229, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 7: swpout inc: 223, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 8: swpout inc: 219, swpout fallback inc: 0, Fallback percentage: 0.00%
-...
-Iteration 94: swpout inc: 223, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 95: swpout inc: 212, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 96: swpout inc: 220, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 97: swpout inc: 220, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 98: swpout inc: 216, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 99: swpout inc: 223, swpout fallback inc: 0, Fallback percentage: 0.00%
-Iteration 100: swpout inc: 225, swpout fallback inc: 0, Fallback percentage: 0.00%
-
-Reported-by: Barry Song <21cnbao@gmail.com>
 Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
-Changes in v3:
-- Using V1 as base.
-- Rename "next" to "list" for the list field, suggested by Ying.
-- Update comment for the locking rules for cluster fields and list,
-  suggested by Ying.
-- Allocate from the nonfull list before attempting free list, suggested
-  by Kairui.
-- Link to v2: https://lore.kernel.org/r/20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org
+ include/linux/swap.h |  4 ++++
+ mm/swapfile.c        | 27 ++++++++++++++++++++++++---
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-Changes in v2:
-- Abandoned.
-- Link to v1: https://lore.kernel.org/r/20240524-swap-allocator-v1-0-47861b423b26@kernel.org
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 690a04f06674..92613bb4a87b 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -254,9 +254,11 @@ struct swap_cluster_info {
+ 				 */
+ 	u16 count;
+ 	u8 flags;
++	u8 order;
+ 	struct list_head list;
+ };
+ #define CLUSTER_FLAG_FREE 1 /* This cluster is free */
++#define CLUSTER_FLAG_NONFULL 2 /* This cluster is on nonfull list */
+ 
+ 
+ /*
+@@ -295,6 +297,8 @@ struct swap_info_struct {
+ 	unsigned char *swap_map;	/* vmalloc'ed array of usage counts */
+ 	struct swap_cluster_info *cluster_info; /* cluster info. Only for SSD */
+ 	struct list_head free_clusters; /* free clusters list */
++	struct list_head nonfull_clusters[SWAP_NR_ORDERS];
++					/* list of cluster that contains at least one free slot */
+ 	unsigned int lowest_bit;	/* index of first free in swap_map */
+ 	unsigned int highest_bit;	/* index of last free in swap_map */
+ 	unsigned int pages;		/* total of usable pages of swap */
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 0b11c437f9cc..ba6676a4a8ef 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -361,8 +361,11 @@ static void swap_cluster_schedule_discard(struct swap_info_struct *si,
+ 
+ static void __free_cluster(struct swap_info_struct *si, struct swap_cluster_info *ci)
+ {
++	if (ci->flags & CLUSTER_FLAG_NONFULL)
++		list_move_tail(&ci->list, &si->free_clusters);
++	else
++		list_add_tail(&ci->list, &si->free_clusters);
+ 	ci->flags = CLUSTER_FLAG_FREE;
+-	list_add_tail(&ci->list, &si->free_clusters);
+ }
+ 
+ /*
+@@ -485,7 +488,12 @@ static void dec_cluster_info_page(struct swap_info_struct *p, struct swap_cluste
+ 	ci->count--;
+ 
+ 	if (!ci->count)
+-		free_cluster(p, ci);
++		return free_cluster(p, ci);
++
++	if (!(ci->flags & CLUSTER_FLAG_NONFULL)) {
++		list_add_tail(&ci->list, &p->nonfull_clusters[ci->order]);
++		ci->flags |= CLUSTER_FLAG_NONFULL;
++	}
+ }
+ 
+ /*
+@@ -542,10 +550,18 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 	cluster = this_cpu_ptr(si->percpu_cluster);
+ 	tmp = cluster->next[order];
+ 	if (tmp == SWAP_NEXT_INVALID) {
+-		if (!list_empty(&si->free_clusters)) {
++		if (!list_empty(&si->nonfull_clusters[order])) {
++			ci = list_first_entry(&si->nonfull_clusters[order], struct swap_cluster_info, list);
++			list_del(&ci->list);
++			spin_lock(&ci->lock);
++			ci->flags = 0;
++			spin_unlock(&ci->lock);
++			tmp = (ci - si->cluster_info) * SWAPFILE_CLUSTER;
++		} else if (!list_empty(&si->free_clusters)) {
+ 			ci = list_first_entry(&si->free_clusters, struct swap_cluster_info, list);
+ 			list_del(&ci->list);
+ 			spin_lock(&ci->lock);
++			ci->order = order;
+ 			ci->flags = 0;
+ 			spin_unlock(&ci->lock);
+ 			tmp = (ci - si->cluster_info) * SWAPFILE_CLUSTER;
+@@ -576,6 +592,7 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 				break;
+ 			tmp += nr_pages;
+ 		}
++		WARN_ONCE(ci->order != order, "expecting order %d got %d", order, ci->order);
+ 		unlock_cluster(ci);
+ 	}
+ 	if (tmp >= max) {
+@@ -954,6 +971,7 @@ static void swap_free_cluster(struct swap_info_struct *si, unsigned long idx)
+ 	ci = lock_cluster(si, offset);
+ 	memset(si->swap_map + offset, 0, SWAPFILE_CLUSTER);
+ 	ci->count = 0;
++	ci->order = 0;
+ 	ci->flags = 0;
+ 	free_cluster(si, ci);
+ 	unlock_cluster(ci);
+@@ -2898,6 +2916,9 @@ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 	INIT_LIST_HEAD(&p->free_clusters);
+ 	INIT_LIST_HEAD(&p->discard_clusters);
+ 
++	for (i = 0; i < SWAP_NR_ORDERS; i++)
++		INIT_LIST_HEAD(&p->nonfull_clusters[i]);
++
+ 	for (i = 0; i < swap_header->info.nr_badpages; i++) {
+ 		unsigned int page_nr = swap_header->info.badpages[i];
+ 		if (page_nr == 0 || page_nr > swap_header->info.last_page)
 
----
-Chris Li (2):
-      mm: swap: swap cluster switch to double link list
-      mm: swap: mTHP allocate swap entries from nonfull list
-
- include/linux/swap.h |  30 +++----
- mm/swapfile.c        | 248 +++++++++++++++++----------------------------------
- 2 files changed, 95 insertions(+), 183 deletions(-)
----
-base-commit: 19b8422c5bd56fb5e7085995801c6543a98bda1f
-change-id: 20240523-swap-allocator-1534c480ece4
-
-Best regards,
 -- 
-Chris Li <chrisl@kernel.org>
+2.45.2.627.g7a2c4fd464-goog
 
