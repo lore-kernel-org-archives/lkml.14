@@ -1,76 +1,68 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2059.outbound.protection.outlook.com [40.107.223.59])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F3A22339;
-	Wed, 19 Jun 2024 15:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8761802E;
+	Wed, 19 Jun 2024 15:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811486; cv=fail; b=ChlBpcN1Q0BwCKgFp0sTLxH2do36vKGvQSCuE9vWwPnOfa9WTc8owxCIMsX5fedFFmpOCA/8UcMfjBcLUHbOqFcT3HWUtQnJJIbMy19XmufoZoqGigugxeyegYrOKbFvoKMX8F6pnc8JYAzF/67fTO8iaVd/nsw27pcw7TWJv0c=
+	t=1718811578; cv=fail; b=TIsZc/GEPOdbgWNmEFJCjvwYHzaO8fhCVkta0a8VIMWdBOWxnmCP/f0Oq9RD1ruUP8yvdrqWZiKt7s0nUKHHk+eIEimN9vYv7q4PmfP/NoEP6Wv3R/iGDo7otHRRQNqghDGYP15EWsRn1BeBE/poZ5ZCzpyLoUbUTYU769mMv1s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811486; c=relaxed/simple;
-	bh=zdzaNYRRuRLYwikxL5nPd15QuNIOhp0ENu694ilQ4rs=;
+	s=arc-20240116; t=1718811578; c=relaxed/simple;
+	bh=c2DHLGIb/zhHwzSrMGMTzE1on99HlD/ESyiEZkZFtF8=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rVpqRZhjvg/RsFMPyufC1R8/sfxZ4vTrSZQrbxDp3XC5MyejxcfqPxIvMBJkZkWb30cadTxuofG1zMqaXJsz7MSAvVp5yB3jfh1urSG1KeSaFBh3JPrPNg0gjSM9k0lM4wl8rP0/rVl9i9RO4nRKvZVT2DkTKV7j5li5UCfqP1E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bDHMo8vb; arc=fail smtp.client-ip=40.107.223.59
+	 Content-Type:MIME-Version; b=qUQpp319m90o+Pn9JR9PfkvbCFmzz/5SBDEM5n2L49lB/fRcDBe6ezeIV/NnrZzbTFixRVCv4PNmPOsW6qu9uMLvX7XNyOLqO23b4ejw4S1ppy6V/SkE74HKn+TuBwaBflX9iWmkv1IvgqAVzpIZiM2Erb00uJlo7tg9OI8/mwE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Smdx+JDE; arc=fail smtp.client-ip=40.107.94.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bDHMo8vb"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Smdx+JDE"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iB/neHhyVrYYj7EAQqzBlRwhGQRaZ0XMzvZ7CBpS8eCp+aYno+YQeemtFJUqzBXbyHE5rKJgoQYf8SZx+pwyR83QdZhGbORgRiLvcFX3yEIiiiOze0sj+XDx9Nwz+13EZNZSQJX5x4TN6Jja4gW8QA5ZJFF786JFUvvLuYHjOe8AG1GYrrPrE+0yLG+KVpKxQw7BQH4ZRGCQtxba3W+AIcU/jUEX1QDFhRXnDp6ouN00uppEj1o1RUT0E7Za/xc0+KxHSe+QV0Wjm4unhhiL0/FIAuqz6SnkcUB8a36OHkA7KkQOZSZuGEcFTyN6AsuRL/qniiTA5nyqW5BSFrwSSA==
+ b=WtIqq2wvV2OBghqC6XsVJaFa/t5Lk6PSX65RJOGIeYBt5mmFAYZEH5EjZ4daXJTxflOQqaHgmwl8By4I/rLi5TUmA6UoBvjHiIMASaLixD4p1U8UdEESZZAco4CakWzfoKqcjpdQOyr6XDJ1gtJEanC/5U6FIwlLwesZTz/H7ox7maWqRo7YEryy1Z8W9Ayhtm8aJZZnDG4uLIph82WyxUWDui3Cmv29Gtxxahi3a8NeQVy/gRPRuGmAsqnS7ssbdHrJFrKzQIiIo3MPPpSN+NvwBaK9yo3Ce1Kr4G5yROntWZNjme04zXVEc4BYfdQturObOua17DbLH65AJOYOxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AcwQa0rlriHzpAYfcd06Xox80II3JiatjTGrfV41LHk=;
- b=bleWNTgdm3BWBVBck2sQaluZv6iwvDHklniVAw9sEjOHdkdwEid1fwnBq0RBuwD1ukFkZqjvu6l9ixoYT2lT+/sn8qtz/qyLJnbE+Fuwj9poa2KjobBKDREFloO1kuTBoJ2YKXA+F1ciMjQfMQns3k3gTPyZQmpKZWVwvq48aiiuwJP5ChcAk9bFRs86nom2btAYDGph37/wrOe2W18rCT74G3MMyUwkFFaxww/yXaaRo8/U4lApwHYIKoEdP3jUP9aFo1rNW9BhC9UtQaBaIMnnN/2AtH9m5hXqo69/L2gUItcogEjz5rOHhy2aHNX0odTUOJ84vTmbKOPevRlNGw==
+ bh=45wpxSmLYMPs8D2jevrrzbe6p78f7FTDgKV9nyiaBsE=;
+ b=W6l/fSqP6IrzO3ClYublK4cNKydSnAELmz19R6rLLPZkGhqNnXYRoETM8NjeL8W8nrZ3rGpJOtnGK0i7dRyY9qwFi6C3pClgDad7YS0DnROKyEqBRATQ9UsY76Kq4scgV6Kk81blZKSSqioaeJv4IQ8WD/kxWO65CV3maw6KqMNFYuRGA8h77U/w3P/vIe7RHoaUTuhSjt8ZXrTSP6ymL7LRcIT4v0QOilQ3FtI3Cgx3YZUtXGNes/Dh2LbVqs6yPiR2MZQzlJC/fjCPhzoVS3AHrlSYaRAk+yqc7aiOx9Az4xisgR1VdUr3pqV5QOpz4M9Ptip+fskD2t+11NeeLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AcwQa0rlriHzpAYfcd06Xox80II3JiatjTGrfV41LHk=;
- b=bDHMo8vbPkEBmqxwYKd44+e+3mf5y1Ielo0fTXHsEg+2BZjqSYLSHagu9RNsiLARxoEbZ+AVhm7wBHcs9/zRTtyF1BG8d/EAnZvk49e/80tlqhorC5k9gZojP1fXeg+6ZSyq3SjT5HhMGoYc/VSTHLxjiN6y8afUwruvYj6sxPA=
+ bh=45wpxSmLYMPs8D2jevrrzbe6p78f7FTDgKV9nyiaBsE=;
+ b=Smdx+JDEHi2KoivlXgM9M7FiTz33bXOCCd1Wd3mw96DSbiftlSsBW+7PIbbFTsZ/JIZ5IdqYo+4aB69HirmxLDaJIoV7Ey//quWNCXoUutAEsTQ+dOm9+prS8ahwpoGC0ZtuaZ3emjm1lDRcDcaeWljFktN5QI0Z08MowlZ5568=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by PH0PR12MB7080.namprd12.prod.outlook.com (2603:10b6:510:21d::20) with
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Wed, 19 Jun
- 2024 15:37:58 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
- 15:37:58 +0000
-Message-ID: <a08d4234-651c-4ac5-9cf8-96a4461c71ce@amd.com>
-Date: Wed, 19 Jun 2024 10:37:54 -0500
+ 2024 15:39:34 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
+ 15:39:34 +0000
+Message-ID: <abbf2ec4-c25d-4cc8-8ec7-a86c8de8be7a@amd.com>
+Date: Wed, 19 Jun 2024 21:09:22 +0530
 User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v4 07/19] x86/resctrl: Add support to enable/disable ABMC
- feature
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
- tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
- kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
- jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
- rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
- jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
- daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
- ilpo.jarvinen@linux.intel.com, peternewman@google.com,
- maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, eranian@google.com, james.morse@arm.com
-References: <cover.1716552602.git.babu.moger@amd.com>
- <e4edf1794852cff132b17c8f061f24799d9e79ad.1716552602.git.babu.moger@amd.com>
- <28cd2683-2ab5-4772-8597-6aaf0aec1f0e@intel.com>
+Subject: Re: [PATCH] perf doc: Add AMD IBS usage document
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: namhyung@kernel.org, irogers@google.com, peterz@infradead.org,
+ mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ yangjihong1@huawei.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, sandipan.das@amd.com,
+ ananth.narayan@amd.com, santosh.shukla@amd.com,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20240619092234.1165-1-ravi.bangoria@amd.com>
+ <ZnLc9V9UHBFvuqRg@x1>
 Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <28cd2683-2ab5-4772-8597-6aaf0aec1f0e@intel.com>
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <ZnLc9V9UHBFvuqRg@x1>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN1PR12CA0081.namprd12.prod.outlook.com
- (2603:10b6:802:21::16) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0053.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:98::14) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,353 +70,170 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|PH0PR12MB7080:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72f367ec-8c12-4d48-0d94-08dc9075cb80
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA1PR12MB9031:EE_
+X-MS-Office365-Filtering-Correlation-Id: 037d2bf2-bf09-4902-6a61-08dc907604b0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|7416011|1800799021;
+X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|7416011|366013|1800799021;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R1paNDh5TUdKVEUra3pkU2U1WHRpMVRGSk9CZGR0cjRjbXgrOGo3aktwLzB1?=
- =?utf-8?B?Y1ZVZEhraWxuRHg2L3FlNW5DcElUL1NZQkNqMDNPUkZIejA0Mm1rNTY2R2cz?=
- =?utf-8?B?Ym9lVHVJNkdPQTFhR0E3WndOTmRac0NDTG9QcTV1eU5ZV1VHUDkvbThYRGNQ?=
- =?utf-8?B?TkI2YzRLK3FqR3FCYTlxTnB3aFZRY1gzTmJnL3pnUC9MZXRJaFhJUk03bkh4?=
- =?utf-8?B?cVhma0ljK0wzMnF2YUtqVlhvRllaeXRiZW9WaW5pb0VES3Z6a2tLQjN0VHo4?=
- =?utf-8?B?TVJhSFU4WnNTNkpSTWpoc3hJdnJUczQ3TzQ5STk2RGVWV1pOWkFwNWpibnVa?=
- =?utf-8?B?Yno5djdzTDQ5MU5kTG5VaGFmWEhNWjIvbkR4M1VRaHhqTFpYU3NyR09mYmxI?=
- =?utf-8?B?UDlqWTlQN1RTSnJWQW5CMXZlQ2VIb1pyam1aaXlEWWJSMVd2TVlCdmxXVHJ1?=
- =?utf-8?B?eUdRY0wzcEN1azhMWkUvYzBRVzFXREtFSmdRVHEvek4rT0ZDdWR2cUVlY2g2?=
- =?utf-8?B?aGJlUGxoZDN6eFVZcXd6OGd4U2xyZVFMdElic1gzRUlxaitCak1kZkJVRGxH?=
- =?utf-8?B?OFN3VXl2dldzSDdGYmxVczNWb085QW4wNjhZbnczTmh3NXQ0UW83ZHBqTHdW?=
- =?utf-8?B?VFExYzByM1FFQVAxNXdpQ0NSemFndW90bXdob29vWitySU9BNW40Q25rL1I3?=
- =?utf-8?B?NWRDUWV5SFc4RjQrclU4dFlBSXh4WFJodGNJdFgwYmxkV1E1YXh2TkNsSWFY?=
- =?utf-8?B?TEo4QllHdzBxbHVOM2Y2K1BRMEVMZkltR0NGRzd1b0owVnJMbWpaejJxeWI5?=
- =?utf-8?B?dGVSaTRCNFhZWnAvR05tTnRzTm5uSFpDVWx5Smd6NG55aTAzS0hMSUs5WmZW?=
- =?utf-8?B?d3dHeUg2aWVGSFI1NmhvMTd6U0lDd21rTXhyMFZjcDZvbVdremg4clhtWFpU?=
- =?utf-8?B?YmQ0aGFmRXpLNFFYL2NLR29XWGt5UkpzVVVud1FVbUlQV214QXlpai8xSWI3?=
- =?utf-8?B?WnY1U3QxMExCQWdtM0g3N2I4elVCbDZic0RrMnlxYUgvOXJQRzZmR2RXQWlr?=
- =?utf-8?B?RGpwY0pCcnI3dTQ4TGhGNmVvVHRoZ2xwUjVTc3lZUTErc3VYQ0lwOHBPSjR3?=
- =?utf-8?B?bkFWMllubnFMalpDc081SmRIekdDODNEQXVUc0huT0t1Um15czhzRk8zWUhv?=
- =?utf-8?B?Sk50c3g4S0dQZXZwL05TMDlIT1VuZzJkRTlxUjRxN3dieTRWWGM5My9ZeUg5?=
- =?utf-8?B?QXhoME9ncFBhOEFaU0xVaU9RSTNjNmVYWGFlNGFtclE2RXBUc3FDZzdRczZP?=
- =?utf-8?B?d08xbnhQamltRVBEZGZMVjRkaVFMOExWOWtMTDYwVWRqd0RWaU9LYVdqaGpT?=
- =?utf-8?B?ZFpqMmpERGM1NWtkSlVGbmdkV2pXY2lXbVFMRkVqaG1hUEJCT1M3ZmphZlBZ?=
- =?utf-8?B?enhtdm1SY2tjcTZOaGk0OS9mRC9TeUJSL3FRc1Z0aGMvczVVcWZzQ1VFejJk?=
- =?utf-8?B?dlZWL0JOL3d1SDZjdlR5UTVjWHp3UTBPd0ZFaTZhNXZmWFpZZkFOLzZKV2R0?=
- =?utf-8?B?ZkFPcFMvUC9Kc3BDb1B5Nk5QbEd5UjBVOWZwdjBHd3VZWWJZOEVNN2JwcUlo?=
- =?utf-8?B?b1pMQlpqR1VpLzU3Wjd4UzBYZjQrckJGYjkwOGVZL3JaY1FhM2NWQWYwQWdQ?=
- =?utf-8?Q?c38ZLjEqWh9gOXIYaMV3?=
+	=?utf-8?B?TWR4ZytqMk5vQVg5Q1ZkOUY1dFRQSjBtL3h1T2o0OVlLK2g1bnluRG9xN1Bi?=
+ =?utf-8?B?R3l4WjNuaTZmM3lTektVQlpBRytDcVBCK1l1OFYwSXhuRG1pZm5zaDVhbGZk?=
+ =?utf-8?B?U05HbTB4anBvSjd0bFhJdFhhTVFDUFZrWFdYQ3pDYVIxcStUS2t3TzJydVYx?=
+ =?utf-8?B?MGJKT1BKRXV1NEwraXZPZ0ZNUVA5WHJTZExMc1MxUndod0dqd3BaWGpkZ055?=
+ =?utf-8?B?YUtEVUY3NVdvN1dtTUpIVlhIclIzSUpIWjRvcjR1QXI4RWJUZHpxdHgzOGlY?=
+ =?utf-8?B?NSt0K1RaWkFwOUdmbU5aTU1CUjdLa2VSR2dUSlVPNlk0NEE5UnVIQW5DM0FM?=
+ =?utf-8?B?TlViZWY4TE1lUEwxbW4wbllMdzRzcXhMRU1TTHlBVWVBUHo3VGtKZDhhTkx2?=
+ =?utf-8?B?Z21sWm9TNzdWUEIwNVFiMDBJSU1kNGhicE9BSTFZcnE2RlNmKzNCb08xTjZU?=
+ =?utf-8?B?N3gyZmxIVTNGa0loQWJzMjY2THVUYkNUZWZZcFNFSWVQYndHYTlCRXRwV0Vy?=
+ =?utf-8?B?aFBieDN4eUVhVkJRNko4eDdUcTZjV29kRDh0OThlUzJoRnVUcTNyTU1iWUhj?=
+ =?utf-8?B?cmxyL0dNS2lPY1JHWVZqcktYUWpuOTAzSkRpYUY0RDNjODNwMWZNelpmUVFj?=
+ =?utf-8?B?Q3YzdlhheWVwZHlnOThocTlVTU1HaVpZZlNMU2NySi93dW16ZlppNG1XeWJ1?=
+ =?utf-8?B?UTJFQW04MEVSZEpaWm4rSkNRVWErNGVqSFBVRnpLVFdFWkZBZTV0TVlmQ3RK?=
+ =?utf-8?B?SUJTQXNFSHZRb3ZyMzJXYk53THRuOGdjSGtNSnhXY1UzdGowaXZRMUp5ZElR?=
+ =?utf-8?B?UUt6RmkweDFjUHRrNjh2dGR2aTdGLzhMOW9lclphWituNkhodEh1aytzMEhN?=
+ =?utf-8?B?c21DeENyK1Nob2ZVLzNZdkQrMTRKdVI2R0RqNmtTNmwrWWNKZjJYOWpDMVZY?=
+ =?utf-8?B?cUNCT2gwNldwMis5V29EcE1GQ3NzQVRTRFVLY1dncnZtY09SZjZ4Lzc4Qm4v?=
+ =?utf-8?B?dzdmRzBjUlNVSEt3RlUwVkdLVDBxcXJSSnpvUHMvRWZ0Q1Fub2ZTb1BnaW5u?=
+ =?utf-8?B?OFMzWmE0bHh6L1FNS2xQWWowWWRROEZHOWtvTURRR1kxM05nSU5hb3lnbDRE?=
+ =?utf-8?B?eGxsYVNtL0VRMk5DMFdmMWJZWUNrRkJoNFFPTG80MUVJdVVMM1VGa3dXT25a?=
+ =?utf-8?B?WklLbkgxcTV2OEVrUFJUbXRuZDB1OGJZZFpaT05wU1Z4MVQ5YWEwZUxuc0Nt?=
+ =?utf-8?B?bXR3RVpPaU1yOVdzVEhjMG4vYllldW4xdC9EYWFiaUNEYVR2YzN1MWRpZENq?=
+ =?utf-8?B?ZmQ2bDMxNUJuVlFjeE5KK0JvNy91V0p5TWZCMnl3d3A4MGIxdnpTWlVmRjVw?=
+ =?utf-8?B?c3ltMFJRQUZEa1FVVEpkWFFRdWZ5dGZGMFMrZkpUQzYyc0toTHBQdU83Y1hQ?=
+ =?utf-8?B?Qkpvb0tJTmRHNkYxODRjTSt3MERaZUFucHNCd3hDRWhxZDNaYU9vNmlRVEpm?=
+ =?utf-8?B?Z1ZJVnlTTHpsUHJwenJXUnBzRG95bWZYWlR4L2RTNnhBOS9xWEFSZzR1OTJI?=
+ =?utf-8?B?dHptR0wvSW1Ea1llbGZNbDhIQnVPMG5KSi9CVVlXbkZobGVERkw4b2ZLNDQ4?=
+ =?utf-8?B?Q3dJcXlCVkZQa0o0N3hzeENVTXdiUXptUit5TnlxSFU1S2Q5WENHcVN6UjVp?=
+ =?utf-8?B?d1BZOWhGRXp3Ujg2QWtMTmVMYWE4NEV2Q3JuYkIwOWFwVHNEN0hoMFRBPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(1800799021);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(7416011)(366013)(1800799021);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFczekNyVktwYmhTUzNoKzhDQXNWeUdBNE9PV0hUZmVDYkdVcWVHeDExSTdn?=
- =?utf-8?B?VGlTSVBia09YWFVISXhnL3Z0YS9BOFE0L1VkMjVydEtoYzBjTzhQL000OG9E?=
- =?utf-8?B?bm9HTG1EVkpxUHpYL1ArcDkwQ0VkWFh0Qi9GTFcrN1dsdmRCeXRjc2pFUmN6?=
- =?utf-8?B?bkVDS1dOMHAyYjd5WDZZTWFBRm0yNFMwa1E1M2NrVXREQlF3K0tpaGJPWmhk?=
- =?utf-8?B?NjdEWGZiTWorVCs1V2hVb3pNcFBrY1BVaVZvNEU5dnBKWkRoL3d6VnZjMlIw?=
- =?utf-8?B?QUc0alRVdjF1VTUwRWlZdFQ1VkhkeTRKMndObGVVQlhuUDFaQlBnUXJvb0ti?=
- =?utf-8?B?SldjWXFIc3J0ejBWNy9IRDVENkpPMTNxdGlGMVhUdXFsazVsN3hYbWl6Nm5x?=
- =?utf-8?B?MERKcFRWVUgwVi9iM1RCWVRsQkVqNWJHZUwvbEx6NjNySDd4aW94Z3d6S1Bv?=
- =?utf-8?B?SkZ3RkVCWTltdzV3WXhMNG9uOUw4emgrNGIwUUlLYXZ4bkoxdzlmLzdHU1Q1?=
- =?utf-8?B?aTNJTXVjeVg2Q0hkaktBNmJSanRwaDBTODc5TGlUWHpkUUF6ZldsZ2Fjb2cx?=
- =?utf-8?B?UFlyQ29SY01wZWl2U0tHYU9rSDNzeVducWpYOGJRU2gyVEk1SC82K0lLZ2ph?=
- =?utf-8?B?WTlBQmhlL0RnWlBvcmVxelNtb3NjQ0tOWXh2SHdVYTUvK2NCemZIOGV4RGxP?=
- =?utf-8?B?L08wYXJSU1hVNEJBVjFzaDFaSDcvK3FlcC9OSlRCQnU1VDhiUElyR3BONTRJ?=
- =?utf-8?B?WmJHTUQ3VTJsSGtydjZNT3ZOcnJ5TUZPZXlqZElZMm9TQXpHdmZySWZyblZH?=
- =?utf-8?B?b21TRkF2bmthak9SL2xPNUVkcURtbzBIbkpORHVHTWlaQUhaTnFIZ0tub0xo?=
- =?utf-8?B?ZnQyQU5NTGxZWm8wVUh6SFcvS3VNMGhrdFYwU2VxWElITlBSYUVzbE1XbmJp?=
- =?utf-8?B?WHVSN25UVkh5WE5FTDBhcHk0RkVVMVpxaGpPMGxZbUpLTFg1MFBVbTg3RHFj?=
- =?utf-8?B?a1RFYXk5eHVZWGFuWElLOEFkdjQ0THpuWUU3RkZtekpielhUVDZoMWpRaFZ4?=
- =?utf-8?B?d0xnWWwyY0d1UzRWNFdKcEZvS1JSNlNFOUFIaVVscndFaHJTSU1qNFJuSlp6?=
- =?utf-8?B?OXkxdVVTSEJ1NWNxTFJvQkxuL0pzVmliWlpvQTlMWHRqSGtKd04rR2pPbVBQ?=
- =?utf-8?B?NUJOL0JiOWRTQWpNQm1lYXdYOTJFN0lFdEdIWW1aUDl0MnB5ejcvTFlHTnlN?=
- =?utf-8?B?TFpKVXFXVkNDdlNXUmh2Y3RpKzFTaldiM2NVSE81MzZFbVhxL3R6UE1ESFlZ?=
- =?utf-8?B?M09lYm9ENkhZcjR4SDVuK0tRS1NwOVVNZ2t5WUZKdWJvRElvelpqeDFWS3ky?=
- =?utf-8?B?V05zOFBrRlJUOWZnZytMbDc3c01wMC9ZYTZaV05taFpqOEc0ZzVpWGh5TlRt?=
- =?utf-8?B?Q0xkZjM0Sk5YMDUvOGdhMWdxTWtuT001aUxaSlRTUGRmRnVsdGR1TjVFc09L?=
- =?utf-8?B?d0lpd0tyTGVFTnkrWDdET3A3Rm5XQzRDL3ZVc0VYWkF0Z3lTQ08xWlZrRGNS?=
- =?utf-8?B?Z3ppRWxYenlxTnVOVnFERityQU12blBabzg4UXNGOWxLT3RnaFJHRnpBV3dC?=
- =?utf-8?B?b0ZWK2VoSGJZcEgrelhjWWJabHI0ZUpkbGE0d1RSYktrL3RPREdQK0xuQzYv?=
- =?utf-8?B?L29VNE90dnZQNlZNTXhkVVRUeDFJdVVnKzdZYVVSNVBaTUlYbXVsZUg4NVJE?=
- =?utf-8?B?a3d4UjQvQjhuMVFoK0FrekVuVTVWV3U1NkNxV1JabTB1UjloNWJGZFpMSnc5?=
- =?utf-8?B?MkFrQ25ydzBJWmZZckt2aXFuMnFFTjhZai9sWTdGcmNjdnhHcEF5WXdmQzh0?=
- =?utf-8?B?TjlYM1duVlVaUFUrRWxGcXk1N0JDUGpMVFFjTWJUcm5XVk5yTjNQQldaSjNx?=
- =?utf-8?B?K0dHZFhOZkg3ODFyMy9RZFZ6K01tM2RsS1ZudGs0dEJuYXdJU2djWWFLcDUw?=
- =?utf-8?B?V2EyamphRThwWGUwYitMNWZDcS92T1h5bzlNL1hnNjBOazFTU2NHZjIxYjha?=
- =?utf-8?B?VUdVakVvUjY3OHJyTGNOT3BJbmVuRit0anU3cjMvRWJxbU50VUNLdXJhcXJx?=
- =?utf-8?Q?7VBc=3D?=
+	=?utf-8?B?M3Rtak5TR1BsaEE2VVIzeHkwZjBrNXRwUVBxWkFpM3p5Q0xsMldQckIrYlBI?=
+ =?utf-8?B?amFhbWxJRkZlZ1loQ0VlakR6Q1A5U252bUNLWmdlY210OE94RkNkaTUvZUFp?=
+ =?utf-8?B?alBjcXlaOEtRLzY1YUhaYXpJZnZWMHU4R05tVkd5ZGQ5OXFUZksyRVVFdkNX?=
+ =?utf-8?B?cmtYeFRuTXdhbk9nVXQwcUFJcCtmV0hqaFdKd1BWcENmQUNDWDQvaGd6MmVY?=
+ =?utf-8?B?dTd1aFhwUk1xbnZJN3BhVjNKeVk0b2dmSWFvTTVrUTU2ekQwVUNsSUdCVlhH?=
+ =?utf-8?B?U1dtZUU1WFI1RWs1TXZBMGc5VXRtTzNhMkM4K2k2RjhPN21GemdnWksybVRO?=
+ =?utf-8?B?L2FKbk44bHpheTYxRm1iMWVRS0o1TU1tM2JUOUNwSXZBWGN3QmUvdHo3OURr?=
+ =?utf-8?B?NHFnZHlCUCs3WTBJRWV5V0pVaUxBekNpQ0dWc3EzUkU5eGRMcmF5QlUzNFB1?=
+ =?utf-8?B?dEprOWtibnpzTnhIWDQydVpQZGc1YndSdlR3UytzaS8zYmc0N0NwWHhhc1JN?=
+ =?utf-8?B?NUZUTGY2TDl2Vlc2UVhLcElpVzZLSnM0ZmZza3U3cnFTSFprSUlEQlVzY3dC?=
+ =?utf-8?B?T0hma1RScmRySFRwSE5DK3h5UFZwaTRLWjV3ZVlPV1BZZFllZGNHL21wd0Rv?=
+ =?utf-8?B?VXo5aXZYSG5xYkliWVFoRjdZNmx2dFRjakdOQktBRFNjLytSMnRZcHFEdVR4?=
+ =?utf-8?B?OU9FcHF0bFZ3ZHdtTVBQdHlBd1hLbVJMUXQ3T0pLc2t1S3JDMFppUzhKZENB?=
+ =?utf-8?B?R05POTJTQ3NwVXFCbzRNZVJuUzJaQTFZYXFKOWNXQzNjdEpHam95UUFhY0JF?=
+ =?utf-8?B?NkRYb04waHdITGJhUzd5b0Jwd2JKS2NFTGxGUnN6dThyS3BrUmhLckJYRkY4?=
+ =?utf-8?B?VWZ5cXJNek9OWVB5b1phVEIwRTJoWlVodVBiTVV5MVZ4dzVmWTJ4UVYxOThm?=
+ =?utf-8?B?Z2tRUzh0KzJ6ZWF0Z3RsSXFoUWQweG1lSjRiaWxaeExXR2lzakliQUNaR2dV?=
+ =?utf-8?B?c2wra2dqOXZmY3cvV1ExZzZNTEg0b3k1OFNyRWNlTHlsK2hNaHBzY1FLcDlU?=
+ =?utf-8?B?eWV6OUpjdGtac01RMGZ3REZDTkYvbHM0TDE5REJLdENBaVIxWXRTQ01CNWVr?=
+ =?utf-8?B?TUdGejhldGZsc2tNZkprQmJFdVRuMXIwcU02NjFkVTMyZnRGVFA2QmFvOWlC?=
+ =?utf-8?B?NnlVQ1h5bHRsRVdGdGtLa0s2ZVJXaUlIT1JDVklmYVBBRnozbXgwYWtOYTJ6?=
+ =?utf-8?B?N2x4QS9WOUlJTTVwSk1rUTEzWjdLdEJ1QlAvRkNuY1R0cHZ5a1YrMUZyWS9q?=
+ =?utf-8?B?amQyaTdCODJGT3pvUjRUU21jM3VJZDYyczNZK3liYkZMSTJ3OFVjd1htN2t4?=
+ =?utf-8?B?U0hTTEpGVFg2TXNPc3JLVHRqZlpNN1g1MjNVRWt5R1E1YjZaaU0zYVJyUGVM?=
+ =?utf-8?B?TnFRMnJqcFMzZDNxNm9aRGRDKytFL0xtOU5aRnVYZEFtd1pBMTRwZkZKWWY2?=
+ =?utf-8?B?WElHVlRSNmJKYWdIMkJ0T1orNjlyQ1VzYm5VV1ZyWGFFOHRUbUVxdFBCS2lu?=
+ =?utf-8?B?YW9ldk9SMXJzYXVQSUM3K2I4c3R1TXd6V2pVNldPWkFVbFVoTnMwaUpXUjdr?=
+ =?utf-8?B?V2JITXFCYm5uMkdEZ1AxYTF4TFVPanh1VVZMVWNiNnZUV3RMUlJjWWdQRUkx?=
+ =?utf-8?B?dkVtVm1OczBKSERtODloNllIenZWQVQ1MS9lL202bExDRXo4bnJpNCtrVURt?=
+ =?utf-8?B?S0o1QWhBekxEZEhSeUd5TlJBTXp6VWV2dkFUajRZRXlGcEZKRHhmMGNRZUk2?=
+ =?utf-8?B?L1dpRWlScm83UmlDMnYxaHova0drL2J6TDU4VFFSdHk5d3J3RHZjSVhNWFVy?=
+ =?utf-8?B?dUJQU0JjZTByVGZmSEhqaVdHVUdkM3duczBJQkFGRDRhU3dpbCtqbG1rZDRa?=
+ =?utf-8?B?dlRmVlJQakM2N3NMeFhDb05TUEF0alF2T1VIdDI4bWtPY29DYkxTSkVQdTlz?=
+ =?utf-8?B?VDhHZnVFSWJRanMxbit5dndrOWxBdFVUVXlMTzdiNDFrNHpKMlVxTkpJd3V0?=
+ =?utf-8?B?SUIvZFUwUkpReU1tQzhRSU9YK21CYkFEVm02ZkZ2WitBQ0NKdGJmMFVTWWVJ?=
+ =?utf-8?Q?0iy6j+AVTYq2gGWYLl+XY7RI7?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72f367ec-8c12-4d48-0d94-08dc9075cb80
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 037d2bf2-bf09-4902-6a61-08dc907604b0
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 15:37:58.1357
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 15:39:34.0144
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bPtzBhQBKB6tWxJLdTZ3a8e3CvGpBLrLZH1joctC0lZm7PiZqzKX0uHy+d5i0a0d
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7080
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5KXwwgU/GePSf+QWIOHBbyaWS+NNCMEEK8yToe6oaI3YOKd6UkLKgsMAlxj6zTvfO07MqGY01BgVA0ZuJQ7gJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9031
 
-Hi Reinette,
+> IIRC if one does:
+> 
+>    perf record -e cycles:P
+> 
+> on AMD systems it maps it to 
+> 
+>    ibs_op//
+> 
+> No?
 
-On 6/13/24 19:59, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 5/24/24 5:23 AM, Babu Moger wrote:
->> Add the functionality to enable/disable ABMC feature.
->>
->> ABMC feature is enabled by setting enabled bit(0) in MSR L3_QOS_EXT_CFG.
->> When the state of ABMC is changed, the MSR needs to be updated on all
->> the logical processors in the QOS Domain.
->>
->> Hardware counters will reset when ABMC state is changed. Kernel internal
->> counters need to be reset to avoid overflow condition in the next update.
-> 
-> Please note that there are two "ABMC" features introduced in this series.
-> First, there is the "abmc" resctrl fs feature that just happens to have
-> the same name as AMD's "ABMC" (which may be a good motivation to change
-> this name). Second, there is the architecture (AMD) specific "ABMC" feature
-> that is enabled in response to user's request to enable the
-> resctrl "abmc" feature.
-> 
-> Other architectures need to support resctrl fs "abmc" feature with something
-> entirely different.
-> 
-> Please consider this distinction during this series because it is often
-> blurred.
+Correct. man perf-list already covers that under event modifier section
+but will add brief detail here as well.
 
-I was explainaing the enablement of  AMD's ABMC feature here. I can add
-text about it.
-
+> I don't have access right now to my 5950X, so its from memory, about
+> "IBS invocation from core PMUs with precise_ip set"
 > 
->>
->> The ABMC feature details are documented in APM listed below [1].
->> [1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
->> Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
->> Monitoring (ABMC).
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
->> ---
->> v4: Removed resctrl_arch_set_abmc_enabled and
->> resctrl_arch_get_abmc_enabled.
->>      Directly calling resctrl_abmc_enable and resctrl_abmc_disable.
->>      Renamed couple of functions.
->>      resctrl_abmc_msrwrite() -> resctrl_abmc_set_one()
->>      resctrl_abmc_setup() -> resctrl_abmc_set_all()
->>      Added rdtgroup_mutex lockdep asserts.
->>      Updated commit log and code comments.
->>
->> v3: No changes.
->>
->> v2: Few text changes in commit message.
->> ---
->>   arch/x86/include/asm/msr-index.h       |  1 +
->>   arch/x86/kernel/cpu/resctrl/internal.h |  8 ++++
->>   arch/x86/kernel/cpu/resctrl/rdtgroup.c | 62 ++++++++++++++++++++++++++
->>   3 files changed, 71 insertions(+)
->>
->> diff --git a/arch/x86/include/asm/msr-index.h
->> b/arch/x86/include/asm/msr-index.h
->> index e022e6eb766c..5f9a0139e98c 100644
->> --- a/arch/x86/include/asm/msr-index.h
->> +++ b/arch/x86/include/asm/msr-index.h
->> @@ -1171,6 +1171,7 @@
->>   #define MSR_IA32_MBA_BW_BASE        0xc0000200
->>   #define MSR_IA32_SMBA_BW_BASE        0xc0000280
->>   #define MSR_IA32_EVT_CFG_BASE        0xc0000400
->> +#define MSR_IA32_L3_QOS_EXT_CFG        0xc00003ff
->>     /* MSR_IA32_VMX_MISC bits */
->>   #define MSR_IA32_VMX_MISC_INTEL_PT                 (1ULL << 14)
->> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h
->> b/arch/x86/kernel/cpu/resctrl/internal.h
->> index d566251094b2..fabe40304798 100644
->> --- a/arch/x86/kernel/cpu/resctrl/internal.h
->> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
->> @@ -97,6 +97,9 @@ cpumask_any_housekeeping(const struct cpumask *mask,
->> int exclude_cpu)
->>       return cpu;
->>   }
->>   +/* Setting bit 0 in L3_QOS_EXT_CFG enables the ABMC feature */
->> +#define ABMC_ENABLE            BIT(0)
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=78075d947534013b4575687d19ebcbbb6d3addcd
+> 
+> One other thing to mention is 'perf mem record' that will use ibs_op//
+> as we can see in the cover letter for this perf-tools merge commit
+> upstream:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9d64bf433c53cab2f48a3fff7a1f2a696bc5229a
+> 
+>          # perf mem record -a --filter 'mem_op == load || mem_op == store, ip > 0x8000000000000000'
+>          ^C[ perf record: Woken up 1 times to write data ]
+>          [ perf record: Captured and wrote 2.199 MB perf.data (2913 samples) ]
+>          #
+>          # ls -la perf.data
+>          -rw-------. 1 root root 2346486 Jan  9 18:36 perf.data
+>          # perf evlist
+>          ibs_op//
+>          dummy:u
+>          # perf evlist -v
+>          ibs_op//: type: 11, size: 136, config: 0, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT, read_format: ID, disabled: 1, inherit: 1, freq: 1, sample_id_all: 1
+> 
+> Another examples available in the merge commit of when ibs_op support
+> was added to 'perf c2c' and 'perf mem':
+
+Correct. Will add brief detail about perf mem and c2c here.
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d465bff130bf4ca17b6980abe51164ace1e0cba4
+> 
+> Showing how you can use 'perf report -D' to extract info about these
+> samples should be interesting as well:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0429796e45ec17eee26d7a59de92271c275d7666
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291dcb98d7ee5cd719f4c5991d977794b1829c16
+
+Sure. Will add that in the example below.
+
+>> +To go over each sample
 >> +
->>   struct rdt_fs_context {
->>       struct kernfs_fs_context    kfc;
->>       bool                enable_cdpl2;
->> @@ -436,6 +439,7 @@ struct rdt_parse_data {
->>    * @mbm_cfg_mask:    Bandwidth sources that can be tracked when Bandwidth
->>    *            Monitoring Event Configuration (BMEC) is supported.
->>    * @cdp_enabled:    CDP state of this resource
->> + * @abmc_enabled:    ABMC feature is enabled
->>    *
->>    * Members of this structure are either private to the architecture
->>    * e.g. mbm_width, or accessed via helpers that provide abstraction. e.g.
->> @@ -450,6 +454,7 @@ struct rdt_hw_resource {
->>       unsigned int        mbm_width;
->>       unsigned int        mbm_cfg_mask;
->>       bool            cdp_enabled;
->> +    bool            abmc_enabled;
->>   };
->>   
+>> +	$ sudo perf script
 > 
-> ok, so here by making "abmc_enabled" a member of struct rdt_hw_resource
-> this is
-> an architecture specific property. This is reasonable since every
-> architecture
-> will look different. What is _not_ ok is that this causes the rest of the
-> series to change resctrl fs to reach into the architecture code. For example,
-> this work causes mbm_config_show() to now need to peek into struct
-> rdt_hw_resource
-> to see this value. That is not ok. All of the interactions between this
-> field and resctrl fs needs to be via arch helpers:
-> resctrl_arch_abmc_enable()/
-> resctrl_arch_abmc_disable() and
-> resctrl_arch_get_abmc_enabled()/resctrl_arch_set_abmc_enabled().
+> Here I think it would be to have an example of such output.
 
-Sure. Will change it.
+This would be a normal perf script output but raw dump contains IBS
+specific raw values. I'll add a sample output in below command.
 
-> 
->>   static inline struct rdt_hw_resource *resctrl_to_arch_res(struct
->> rdt_resource *r)
->> @@ -493,6 +498,9 @@ static inline bool resctrl_arch_get_cdp_enabled(enum
->> resctrl_res_level l)
->>     int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool
->> enable);
->>   +int resctrl_abmc_enable(enum resctrl_res_level l);
->> +void resctrl_abmc_disable(enum resctrl_res_level l);
-> 
-> Why do these need enum resctrl_res_level parameter?
-
-It is really not required. It is always "RDT_RESOURCE_L3".
-I can remove it.
-
-> 
+>> +Raw dump of IBS registers when profiled with --raw-samples
 >> +
->>   /*
->>    * To return the common struct rdt_resource, which is contained in struct
->>    * rdt_hw_resource, walk the resctrl member of struct rdt_hw_resource.
->> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> index ca692712b393..9148d1234ede 100644
->> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> @@ -2416,6 +2416,68 @@ int resctrl_arch_set_cdp_enabled(enum
->> resctrl_res_level l, bool enable)
->>       return 0;
->>   }
->>   +static void resctrl_abmc_set_one(void *arg)
->> +{
->> +    bool *enable = arg;
->> +    u64 msrval;
->> +
->> +    rdmsrl(MSR_IA32_L3_QOS_EXT_CFG, msrval);
->> +
->> +    if (*enable)
->> +        msrval |= ABMC_ENABLE;
->> +    else
->> +        msrval &= ~ABMC_ENABLE;
->> +
->> +    wrmsrl(MSR_IA32_L3_QOS_EXT_CFG, msrval);
->> +}
->> +
->> +static int resctrl_abmc_set_all(enum resctrl_res_level l, bool enable)
+>> +	$ sudo perf report -D
+>> +	/* Look for PERF_RECORD_SAMPLE */
 > 
-> Should this function and resctrl_abmc_set_one() perhaps have "amd" in the
-> name just to enforce that this is not filesystem code at all and specific
-> and unique to AMD.
+> Ditto
 
-Sure.
+...
 
-> 
->> +{
->> +    struct rdt_resource *r = &rdt_resources_all[l].r_resctrl;
->> +    struct rdt_domain *d;
+>> +SEE ALSO
+>> +--------
 >> +
->> +    /*
->> +     * Update QOS_CFG MSR on all the CPUs associated with the resource
+>> +linkperf:perf-record[1], linkperf:perf-script[1], linkperf:perf-report[1]
 > 
-> end of sentence needs "."
+> perf-mem, perf-c2c
 
-Sure.
+Ack.
 
-> 
-> This comment about the specific register seems more appropriate to
-> resctrl_abmc_set_one() though. This function is a higher level
-> enable/disable of the hardware feature.
-
-Ok.
-
-> 
->> +     * Hardware counters will reset after switching the monotor mode.
-> 
-> monotor -> monitor
-
-Sure.
-
-> 
->> +     * Reset the internal counters so that it is not considered as
->> +     * an overflow in next update.
-> 
-> For the first time the term "internal counters" is introduced. What does it
-> mean?
-
-How about "mbm counters"?
-
-> 
->> +     */
->> +    list_for_each_entry(d, &r->domains, list) {
->> +        on_each_cpu_mask(&d->cpu_mask, resctrl_abmc_set_one, &enable, 1);
->> +        resctrl_arch_reset_rmid_all(r, d);
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +int resctrl_abmc_enable(enum resctrl_res_level l)
->> +{
->> +    struct rdt_hw_resource *hw_res = &rdt_resources_all[l];
->> +    int ret = 0;
->> +
->> +    lockdep_assert_held(&rdtgroup_mutex);
->> +
->> +    if (!hw_res->abmc_enabled) {
->> +        ret = resctrl_abmc_set_all(l, true);
->> +        if (!ret)
->> +            hw_res->abmc_enabled = true;
-> 
-> This error handling seems useless since resctrl_abmc_set_all() always returns
-> 0 ... perhaps it should return void instead and this error handling dropped?
-> With that this function can never fail either and it can just return void,
-> but this is probably not what we want as the architecture call since other
-> architectures may fail.
-
-Understood.
-
-> 
->> +    }
->> +
->> +    return ret;
->> +}
->> +
->> +void resctrl_abmc_disable(enum resctrl_res_level l)
->> +{
->> +    struct rdt_hw_resource *hw_res = &rdt_resources_all[l];
->> +
->> +    lockdep_assert_held(&rdtgroup_mutex);
->> +
->> +    if (hw_res->abmc_enabled) {
->> +        resctrl_abmc_set_all(l, false);
->> +        hw_res->abmc_enabled = false;
->> +    }
->> +}
->> +
->>   /*
->>    * We don't allow rdtgroup directories to be created anywhere
->>    * except the root directory. Thus when looking for the rdtgroup
-> 
-> Reinette
-> 
-
--- 
-Thanks
-Babu Moger
+Thanks for the review,
+Ravi
