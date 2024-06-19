@@ -1,99 +1,125 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB66B46433
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 05:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1589A28EC;
+	Wed, 19 Jun 2024 05:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718774471; cv=none; b=pltNtr1EnaMSnw/ulIMEFboCyc0JzqcMeWEFlGfV21TrzdTkJWvhH+GzbUkn+2+uugjJtxW1EUuxfIZcnwRj7yHX7FEVHuhzK0/E+s67xWzCj8vpS3ZIhfJAhu/ZaIT69UCYJYVOQJDixxTU/d2pmipKWV0IaFTh16Ma0+zbNaU=
+	t=1718774734; cv=none; b=uOGuPNvnIWnWqdy1yh96wvj4kgdmuEmRbsifoC7rlhUT2awZO+C5r3EEqvHfjeorVT9e6O5Tor6V/YNYEtYQixBY/nLCOwG3PdvY8130L8O0GGncRBC+J9pKX3/wkM8GeYCKBt3ZxIfCw3Wzcr/X3SUhv6w6nQPC4aiddDkcdKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718774471; c=relaxed/simple;
-	bh=HPwAkIjCMCtyaHAN9mZhtVAFPxZ7yV3F8HsoSGgFVuQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TbpcQIE1GUqeXrXp0iiiwc+FRZw279B93nJWNVATFZ71r0PLns344ClJ9IuFMCt8eYpiNuKxl/zaqI/J2iOVtUZ4p98l/NFTiosZQU93+vlh0Uvxh2A6wFmI5NT7VojDznAX2A3xkvMx+pDkFi7WZV0pzGi3+QeAPLWcPCC5U5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bbizCot0; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718774734; c=relaxed/simple;
+	bh=AeIuahDzMS/b+fTT/ZxbWMZ9XXQ1v7mt3kt4KzWvtiI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jDmx0/duC78teIYaqeyia+L0okwKbv1h2O0VXEmeapmDYXxBDPoyQl44Jya6EVTjG3IiNeobat3rcVrrSfDM3gr+TLFgk545nBF+su3mtMKYASINRyjWngC/ApOh+q60+XwHcgMe3kPLHLISzLC5OjVgCHhY5tfHtFwUI7Wzxg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhukkK4J; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bbizCot0"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57a16f4b8bfso8820a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 22:21:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhukkK4J"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52c89d6b4adso5571210e87.3;
+        Tue, 18 Jun 2024 22:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718774468; x=1719379268; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3k194h42+AL5905GXUgisOm1fqGa03CLUfEe2tpgoV8=;
-        b=bbizCot0dX6if40Wgqm1xHHXReL8A1sDoUT1dXHdMHyStWyYGvPTD7NV3Q4zoGEGqE
-         QR0DsAv8fiifuVLSo9C7E4BXVFj40LQm2XS5h4ekjJ4RGEnet0Dy7dfab/0JQTl4Ayo4
-         hFDEdu29KoDsdBALjXWZ5N6D+J1fEkHbCIsNBk6SxLPOH7ROQVQsThKuhmhNGtBdxTUG
-         dfhiaVT/R21QFM4LVbTBoE5osXeIkAKtvBr4Ezq4zb7uvKj7Om2e0GsY6OF5XsE1Qug0
-         hga6hPXpVVdPjWXZr2ibZfxABPndCPwR30jAMkM1N4tF2oC5V8Q3HlbHcsVfahT3PsFY
-         xCBA==
+        d=gmail.com; s=20230601; t=1718774731; x=1719379531; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c1F6xnAHauvFOYcCq0J2XUnG69uZBs3ONBdp6Omh+cI=;
+        b=FhukkK4J00GFjR3Lfvigll0oubuVNEskmNkvk0kWN8+6dlzkTgrDiHxCbMD/ZrL+px
+         UJZkUxiSVLnyI+eNjx//MQJLimfIWN8HANoDes1bUGu+HkhL73St9z1BKxAKNjljxfHB
+         Ha4Dp4lRmGt7jZCfrBH0U+0xeWmF35+EQ0ft9HGG7159ncR/hqOnJcj8AwX0wcPip9ut
+         lBkhsgdKq5ameKK5eKFNYFG9J2NE6S9/6jWvFa5FywQCb4HIcJGRJIFdE5UFr78jWKhb
+         J0OTkffBOZ+O7Iel7h75P+eYBGKeHyeF8/XBdxCnGUNdONdehtwdsElbnmpKFOBRe3Bo
+         qWYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718774468; x=1719379268;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3k194h42+AL5905GXUgisOm1fqGa03CLUfEe2tpgoV8=;
-        b=rxc4GqFpiZxLn3qJAHua5RnZtfYCf/eWm578o8L1lqWBIwZcAvF4WoAvdfl5kvg7VI
-         OA1pU7AGKMzr4pBmWC5uFnm87XpzKHohzN8PBQjyPPadElEQotxnyIIWwPd8mG83gW8H
-         TM6fIX4I6GzrqzcFStMsMxWWTC4w8lXJZ0K6YWKj1r5S04Z3s81boVX+wwNr7/acl/xV
-         UB5MS0cnuHxqvLCbYtC4BYq2xG5iPgBdsuFlMxgO9MS63AhvTS+NPoEAV9w/0fp9t6iU
-         YJSLdRjXWNjx5oN0OzYqyPuqTC9Q34DCYiXEr6qDlZxDYMvQmg4aHNBN6C5730sqqbTk
-         fvew==
-X-Gm-Message-State: AOJu0Yxh1PNbWPllmHgJzVJ2jBuL9ikO/VjJpbKvPZAmyyTW0mwaIQXa
-	H8kHEBTby0eQCq3+MtUPLFWbU71UdTfTG4j0C7171DUNr4mohEjI3C4CQ2Z7N5KVhJUAIpUL0kE
-	tGnG4L3jspp0XcXgehJxj0yEsqUg5UV1EgTVr
-X-Google-Smtp-Source: AGHT+IG8dQ4X7CFXHfXruoTw56f5zrnQJknmdxZt/3Pyr9uPyZ3b7NIAPGRrH0vwwAo/9kibsCTfCTppzIYy4o2RpDE=
-X-Received: by 2002:a05:6402:278f:b0:57c:bb0d:5e48 with SMTP id
- 4fb4d7f45d1cf-57d0d3428admr141190a12.2.1718774467850; Tue, 18 Jun 2024
- 22:21:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718774731; x=1719379531;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c1F6xnAHauvFOYcCq0J2XUnG69uZBs3ONBdp6Omh+cI=;
+        b=Kp3N3drjbjy25BjY+po17izRG/6HJVr9LSHS1jOU+xdgKOdUpRjDz7MA0vjyDwsz3l
+         Rl8DoEjslD6pYdsJJHEbw1cyrsRkVGkwocBa+9mq/OQLAnBUWZs/f5BfRIaNhFtlRn+c
+         u02w2wOpnOFC2gXQeTrJxiE6+aB4YIOqDsDYb84wmw4KNOXdVEVSLcJFz2u93mu0bru/
+         mpTEKVAeghpDS9+qvR+lNYCTZVuB+m2+H8LWzGyfLjv1ra6bpApaukYa2LD4ARo7GmGc
+         t3LsdUNaG5b2wgSb4AWcxXRNilz9fj14p8g4hfZsGYZPFrZU++o5A7IiT8Yc0jWRdYRo
+         +BKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXO7Z5Xnj4q3MswIN3eEGf5M9ZtOMFh8W+V4sRP7Z8gX734WjG4v6rB8mPerCfMbGdVkImFy9wOdxEEO1hA1mHDVxnqgh89NomMBFud
+X-Gm-Message-State: AOJu0YyNYdNDRl0467MqR+uVK4PgybXoWJot6JlVYOXzQ1CmkamGZdpK
+	77ZAugnsWpcWqJWJdirN5tlakSdfqWOTcpfWL/X2boEVYZjv6sMf
+X-Google-Smtp-Source: AGHT+IG/DVGkXmAEqGDh5KUjebygMtvE1/mxLvCU5d9hK36jehlgvx2HL6PsTaAOe9mI8TQRqUaFRA==
+X-Received: by 2002:ac2:5b12:0:b0:52b:c244:c27a with SMTP id 2adb3069b0e04-52ccaaa8605mr760156e87.58.1718774730724;
+        Tue, 18 Jun 2024 22:25:30 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a6c1sm215198855e9.40.2024.06.18.22.25.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 22:25:30 -0700 (PDT)
+Message-ID: <36729a039fb1c19cf0e6d5f85df4d774b40a8334.camel@gmail.com>
+Subject: Re: [PATCH 1/8] iio: add read raw service to iio backend framework
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Olivier Moysan <olivier.moysan@foss.st.com>, Nuno Sa
+ <nuno.sa@analog.com>,  Jonathan Cameron <jic23@kernel.org>, Lars-Peter
+ Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 19 Jun 2024 07:25:30 +0200
+In-Reply-To: <20240618160836.945242-2-olivier.moysan@foss.st.com>
+References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
+	 <20240618160836.945242-2-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1718092070.git.dvyukov@google.com> <CACT4Y+Z=U+Y8gKBgaU76=zg=rAdq=AQ=epAq+RxDfdXsaqO_0w@mail.gmail.com>
-In-Reply-To: <CACT4Y+Z=U+Y8gKBgaU76=zg=rAdq=AQ=epAq+RxDfdXsaqO_0w@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 19 Jun 2024 07:20:56 +0200
-Message-ID: <CACT4Y+Zq3t2JXEbGDzYU61Rs5KH3mhCDiZ4GP9OacKuyocnYHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] KCOV fixes
-To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, syzkaller@googlegroups.com, elver@google.com, 
-	glider@google.com, nogikh@google.com, tarasmadan@google.com
-Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 11 Jun 2024 at 11:31, Dmitry Vyukov <dvyukov@google.com> wrote:
-> > Fix spurious KCOV coverage from interrupts and add a test.
-> > Ignore some additional files that lead to large amounts
-> > of uninteresting coverage.
-> > As a reference point, tracing a simple open system call
-> > produces ~10K PCs with these changes instead of ~45K PCs.
-> >
-> > Dmitry Vyukov (4):
-> >   x86/entry: Remove unwanted instrumentation in common_interrupt()
-> >   kcov: add interrupt handling self test
-> >   module: Fix KCOV-ignored file name
-> >   x86: Ignore stack unwinding in KCOV
-> >
-> >  arch/x86/include/asm/hardirq.h  |  8 ++++++--
-> >  arch/x86/include/asm/idtentry.h |  6 +++---
-> >  arch/x86/kernel/Makefile        |  8 ++++++++
-> >  kernel/kcov.c                   | 31 +++++++++++++++++++++++++++++++
-> >  kernel/module/Makefile          |  2 +-
-> >  lib/Kconfig.debug               |  8 ++++++++
-> >  6 files changed, 57 insertions(+), 6 deletions(-)
-> >
-> >
-> > base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-> > --
-> > 2.45.2.505.gda0bf45e8d-goog
->
-> Thomas, Ingo, Borislav, Dave,
->
-> Can you take this via x86 tree please?
+On Tue, 2024-06-18 at 18:08 +0200, Olivier Moysan wrote:
+> Add iio_backend_read_raw() service to support attributes read
+> from an IIO backend.
+>=20
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> ---
 
-Or is it OK to take this via mm tree (where KCOV changes usually go)?
+Small note. With it:
+
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
+> =C2=A0drivers/iio/industrialio-backend.c | 16 ++++++++++++++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 3 +++
+> =C2=A02 files changed, 19 insertions(+)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index 929aff4040ed..b950e30018ca 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -357,6 +357,22 @@ int devm_iio_backend_request_buffer(struct device *d=
+ev,
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_NS_GPL(devm_iio_backend_request_buffer, IIO_BACKEND);
+> =C2=A0
+> +/**
+> + * iio_backend_read_raw - Request a value from the backend.
+> + * @back:	Backend device
+> + * @val:	First element of the returned value
+> + * @val2:	Second element of the returned value
+> + * @mask:	Specify value to retrieve
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_read_raw(struct iio_backend *back, int *val, int *val2, =
+long mask)
+> +{
+> +	return iio_backend_op_call(back, read_raw, val, val2, mask);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_read_raw, IIO_BACKEND);
+> +
+
+I would completely mimic the IIO API (only change being indio_dev -> back).=
+ Meaning
+that 'struct iio_chan_spec const *chan' is missing.
+
+- Nuno S=C3=A1
