@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BBD154C10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C35154C16
 	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718815125; cv=none; b=umzA3b9CEKRCk44KmUoCm71Q8dnXpmHLnfU4Raqt5u36stL4OLY6AzzR9ZgDv7wetKJleWbxXzGEL1QSUlLgA/RAOb1XneZyMk7zh1dsIrQJxZFgruxNs2eoqN8WQYNs206E3SFy3ZpWYdjyjiXMc9JnTP0p6kLEtlEPayTmB5A=
+	t=1718815125; cv=none; b=LtpRfib5zTQvS1vibLFBGkP6LRVJ4TPOb8U53THTIT/RUgLe64PIfx39XtwZlMUJ2PiyStFH0ie6kY7loqFkj4IQeM0ZCxeAYV/fYXi9YrQFwQ2eK38Jj2UoBPnfwaqo14hx4KP0BKMz2d6ti5hx6MhQmm80f7oUMtb1QUebFiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718815125; c=relaxed/simple;
-	bh=LoleMKilOwuPwLmC/LdhgUqITJ/pdSPdbm3/goCl4Zk=;
+	bh=EtQ1Ljp0e0PGTRkBm4qGcollTC1guPOqORbt4l0xNrc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rM0RLCbuPxWP3W/MBPwe05KgPXW4V6akg21Sg1xHGAZnW1BswB5ZzviBJ9Jy6y0Ig0ZrJFa4TU3x6NFaygwwdoR/cLoSP0ue2ndQ0X/dmf7tsC2OBIGaR4l9s+PB3858MR1e73wibs++xhXBuTHXtUFHnzAxibCt+rc5kzdxiFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiA6dQAK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=K0qKng3JOBta70Wq7A5u5B0bNoM3rjrIRiVOlSO5kXPz9DMjpDw1DlxL6I3DmNTQfS60U285lUW6Z4lJWB7299M71b7Fmh82W5QazfrCFb1rASK+uGKY25A2+0p3KqJMgc4xrNt2jjn/Z52GSBxw/IwSP3wb5ITFs+ZUnrZeVko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxzNB/Zu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiA6dQAK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 240FCC4AF10;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxzNB/Zu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D9B6C4AF14;
 	Wed, 19 Jun 2024 16:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718815125;
-	bh=LoleMKilOwuPwLmC/LdhgUqITJ/pdSPdbm3/goCl4Zk=;
+	bh=EtQ1Ljp0e0PGTRkBm4qGcollTC1guPOqORbt4l0xNrc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=MiA6dQAKKFE8/L8GOp2PbbOl8Fqn0D1m7JPy8I3B3yTgSTS10Sp0Ky8jAXG6fLDnc
-	 CtGUFz25JpC1DTghM49DGLmVD/e/czO0TaoZrzJDVzus4xnacfiaPu9uS105ogwztY
-	 mjv6nbSoeEkDNV4+YeEmvRrlyodDYeB0JHw59zsJ2pj5g0UuEJv6o/tVMT3u4uJzLg
-	 K4pEAeu59wmhMeyAhMUteYSEwWp+fRmxaqKDEa6VXkw7tCN31BMYFoF/O6k9o6oT2G
-	 H7ftSS6aiEuIRdCRmT1Qw5VO12K/5UybrYhh+9VE2uD6Zz1jNXHFsnY9J0cgqLzYmo
-	 svdo0axjSQHqQ==
+	b=JxzNB/ZuybPVoPtKTj9TW9j8qgJB27fuXFGS1oQA5/KBwpCKt8XzVTwiHuR5H9Tt2
+	 SFxl8/NZw2PF51FOM8Q0pTCjmUZcY2gKqQm9/ks9S7arl/95hV8Uk+TgSZx3KlN87B
+	 XGNzptPXWXIRTec20UGsT4xvyaWsNbF7ZtE2N5HmyUDrC+8FqUCOK/6puv/U8WWJcw
+	 t/mYbozXt5Hl8LBQhexeThaVfuQKCMwUomGteQ1MaEpBvBuHo3ly+K2U/09VqsbPNw
+	 aY6qIk23gNWbiDQFDKkGPP6Qmhg0K57c4OC6A5y794AWKa5DwS7Y/xhNkvSuxutf+B
+	 Td8C6nupfEYVw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A899C27C79;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B87C2BB85;
 	Wed, 19 Jun 2024 16:38:45 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Thu, 20 Jun 2024 00:38:46 +0800
-Subject: [PATCH v3 06/14] drm/mediatek: Turn off the layers with zero width
- or height
+Date: Thu, 20 Jun 2024 00:38:49 +0800
+Subject: [PATCH v3 09/14] drm/mediatek: Add new color format MACROs in OVL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240620-igt-v3-6-a9d62d2e2c7e@mediatek.com>
+Message-Id: <20240620-igt-v3-9-a9d62d2e2c7e@mediatek.com>
 References: <20240620-igt-v3-0-a9d62d2e2c7e@mediatek.com>
 In-Reply-To: <20240620-igt-v3-0-a9d62d2e2c7e@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -56,11 +55,11 @@ Cc: YT Shen <yt.shen@mediatek.com>, dri-devel@lists.freedesktop.org,
  linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718815123; l=2189;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718815123; l=2232;
  i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=wGHwMPExiceXXoh5WbQFEgnsqBfWnXpyjjWHNk3Kpkw=;
- b=XLNnzT6sqJHD1GumwbjFvt3T+b65qyk5B+bXwuAWyhxztROzKHD+0bf1dU8PKsfSTpvbdzePO
- 6CCsO4BZCufBmajDGJWy8xG1fvCAQuag6Fq0HEhYoLiHQaWAbYMDPG9
+ bh=KGjuxOTeaeQJ/coPucc6FKKJb8sUdPSBSXtke+B/fBI=;
+ b=mJ+gW1gLHwshZkTbNUY0XOFyBs9HlcB+VSxqO8CA7iGj7RSicbr/TuWM20n/lxPNEDWvsxfVy
+ O55Q/YzWXewAUBMR/GanirV+8UZWJ5+iI4MiPExVovcW6LwyokP7FIl
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
@@ -70,52 +69,57 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-We found that IGT (Intel GPU Tool) will try to commit layers with
-zero width or height and lead to undefined behaviors in hardware.
-Disable the layers in such a situation.
+Define new color formats to hide the bit operation in the MACROs to make
+the switch statement more concise.
+Change the MACROs to align the naming rule in DRM.
 
-Fixes: 453c3364632a ("drm/mediatek: Add ovl_adaptor support for MT8195")
-Fixes: d886c0009bd0 ("drm/mediatek: Add ETHDR support for MT8195")
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c | 2 +-
- drivers/gpu/drm/mediatek/mtk_ethdr.c            | 7 ++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-index 02dd7dcdfedb..2b62d6475918 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-@@ -158,7 +158,7 @@ void mtk_ovl_adaptor_layer_config(struct device *dev, unsigned int idx,
- 	merge = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_MERGE0 + idx];
- 	ethdr = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_ETHDR0];
- 
--	if (!pending->enable) {
-+	if (!pending->enable || !pending->width || !pending->height) {
- 		mtk_merge_stop_cmdq(merge, cmdq_pkt);
- 		mtk_mdp_rdma_stop(rdma_l, cmdq_pkt);
- 		mtk_mdp_rdma_stop(rdma_r, cmdq_pkt);
-diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-index 5c52e514ae30..bf5826b7e776 100644
---- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
-+++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-@@ -160,7 +160,12 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 	if (idx >= 4)
- 		return;
- 
--	if (!pending->enable) {
-+	if (!pending->enable || !pending->width || !pending->height) {
-+		/*
-+		 * instead of disabling layer with MIX_SRC_CON directly
-+		 * set the size to 0 to avoid screen shift due to mixer
-+		 * mode switch (hardware behavior)
-+		 */
- 		mtk_ddp_write(cmdq_pkt, 0, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_SIZE(idx));
- 		return;
- 	}
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 26b598b9f71f..33c332b29381 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -55,8 +55,10 @@
+ #define OVL_CON_BYTE_SWAP	BIT(24)
+ #define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
+ #define OVL_CON_CLRFMT_RGB	(1 << 12)
+-#define OVL_CON_CLRFMT_RGBA8888	(2 << 12)
+-#define OVL_CON_CLRFMT_ARGB8888	(3 << 12)
++#define OVL_CON_CLRFMT_ARGB8888	(2 << 12)
++#define OVL_CON_CLRFMT_RGBA8888	(3 << 12)
++#define OVL_CON_CLRFMT_ABGR8888	(OVL_CON_CLRFMT_RGBA8888 | OVL_CON_BYTE_SWAP)
++#define OVL_CON_CLRFMT_BGRA8888	(OVL_CON_CLRFMT_ARGB8888 | OVL_CON_BYTE_SWAP)
+ #define OVL_CON_CLRFMT_UYVY	(4 << 12)
+ #define OVL_CON_CLRFMT_YUYV	(5 << 12)
+ #define OVL_CON_CLRFMT_RGB565(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
+@@ -377,18 +379,18 @@ static unsigned int ovl_fmt_convert(struct mtk_disp_ovl *ovl, unsigned int fmt)
+ 		return OVL_CON_CLRFMT_RGB888(ovl) | OVL_CON_BYTE_SWAP;
+ 	case DRM_FORMAT_RGBX8888:
+ 	case DRM_FORMAT_RGBA8888:
+-		return OVL_CON_CLRFMT_ARGB8888;
++		return OVL_CON_CLRFMT_RGBA8888;
+ 	case DRM_FORMAT_BGRX8888:
+ 	case DRM_FORMAT_BGRA8888:
+ 	case DRM_FORMAT_BGRA1010102:
+-		return OVL_CON_CLRFMT_ARGB8888 | OVL_CON_BYTE_SWAP;
++		return OVL_CON_CLRFMT_BGRA8888;
+ 	case DRM_FORMAT_XRGB8888:
+ 	case DRM_FORMAT_ARGB8888:
+ 	case DRM_FORMAT_ARGB2101010:
+-		return OVL_CON_CLRFMT_RGBA8888;
++		return OVL_CON_CLRFMT_ARGB8888;
+ 	case DRM_FORMAT_XBGR8888:
+ 	case DRM_FORMAT_ABGR8888:
+-		return OVL_CON_CLRFMT_RGBA8888 | OVL_CON_BYTE_SWAP;
++		return OVL_CON_CLRFMT_ABGR8888;
+ 	case DRM_FORMAT_UYVY:
+ 		return OVL_CON_CLRFMT_UYVY | OVL_CON_MTX_YUV_TO_RGB;
+ 	case DRM_FORMAT_YUYV:
 
 -- 
 Git-146)
