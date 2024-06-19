@@ -1,136 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA59814F9F1
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334171369BB;
+	Wed, 19 Jun 2024 14:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718806460; cv=none; b=iHA5bGkh3Utp7uNGlOf87bIF7WINOZ+L25kYvMcwIIpu8b4/lpv5cF5ctuLN3yIigfE9kASlRVEOlU9q3lYPiqNzaqKb3la2bCpZ8Ye2RngQhVPCS90BRXQCfgU97QhMwvP1v14AQ+sqgP9zogDmWhEakBmp5sCGokySfkq5ukg=
+	t=1718806460; cv=none; b=DWTYOnNlzfQ5kRSeCceYJUIwMtvKuZuxxKOs4oEbipTFM6w007RDDiJiCMApU2Wj9rDot3mtrQ+koVmzJFvzpW2GwB7bWfJbE1mYg8NS7dP7AxxHdiFdulnQdSl40nG0i65k8npo3odYbrzLwUa66ihPBqLz8XmT74sjzco5B/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718806460; c=relaxed/simple;
-	bh=5mGGDm0HnkYWrCDF9AkhkQYTTIQdgfo19VKts2ac/jM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Sui77jcLIQ3jTAU6kekOLAWb7ppph6AVgxu2Db3Vd4NR2mhGOwnlWzzTIEN0Lg2piRyvwf6zK0L2CkLWfouX5vvClwvuIDV9RkT7Q6gApbRqoy4Gzi0eeXXLMbJORHKaiqKxi3+DKOlR157MabXC+IaIuig1nMrZeaBOI8mmaS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeNNPO0n; arc=none smtp.client-ip=10.30.226.201
+	bh=zpRor5o8seRH1rrrqANiimySX1ZFehCBeLGhHXD+kEI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=py2LyvITrUK7a0WTZ3UZ2/fYc3+TCTM/gGHBTFTvDGNaRL9fk/uNUlt5P/bh42hw0LkDiPbZt+eWPmxvoK181HvITBlEafMmO1BMPkANE4MUVzpT0CNolP/GEer6ziwDNMgGgT5hGkDqb5vclASIlcCpov8+AutFF9rNrs+6EUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ma7rT9HF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeNNPO0n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC672C32786;
-	Wed, 19 Jun 2024 14:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718806460;
-	bh=5mGGDm0HnkYWrCDF9AkhkQYTTIQdgfo19VKts2ac/jM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=NeNNPO0nUjIEgjC6MYiKT+1DS9ui2kMTYwEWveMbiLA0KtNLJVVd9QOk5aT1jxVgK
-	 SzcEIzgkn7qaFR0SCMeoIh/GOjO2XPOVEbQmIcF0jWBRk9Az9b6iCui22aTX6IL0fx
-	 HuF4nCkp7EBlu2GcQDL+3efngTFLXeivIpdkSVTQZfpL2OwfS71w0xazNGbRsgzzHK
-	 Jq4aH27X19A2ivEKahR+nJkPf9+EJ+Z39S7roKfwZPVwwmn9gOGE3v072/eqPMTFpw
-	 g2C26h41cQJvOkJ6lpYFPFDnZKncS7r9lRfw+658L1LpQmGBxMUD+yBA3SbC3Qsw8e
-	 RY5jzpZ2yiLvA==
-Message-ID: <3c262735-accf-41a8-aa74-a96a7ae05945@kernel.org>
-Date: Wed, 19 Jun 2024 22:14:18 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ma7rT9HF"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9LgDo016142;
+	Wed, 19 Jun 2024 14:14:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=0+wfIXGd2KDcuUHv8J0Jpb
+	o2J2z2nWCl15tSQ1b9UxQ=; b=ma7rT9HFc2KfU9lSjw+2nvedgTep5/3iNRnlsA
+	b/mspuDKicp6xWC3v6XNCbKAVFOwqiGItOx/YxoxczDjJ0gklzofjQbXY8ZPKli+
+	GR3wAUsd67D2Oj66tV4yyw4qrVRvo8N1kvoRT348ewqiblfVdWgFV9NdTwJwOXlq
+	PDLe02Q4QK3goYsKQKrf9+RjmKyqbr3/NazDHDTF0NodJpyx+bzUTdi9osJzCU+o
+	/20QglSarsYfXG4kBjRa2TIwxO1ZF7DZGeD8ydbh3o6q34tEGeG8zpSs2Wz454o9
+	F1SqOxKz5UMEisyh0LPR7ksoE4ehnCAHajtJgDIbEaX59GZA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuja51wfs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 14:14:14 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JEEDdk019682
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 14:14:13 GMT
+Received: from hu-kshivnan-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 19 Jun 2024 07:14:11 -0700
+From: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_rgottimu@quicinc.com>,
+        Shivnandan Kumar <quic_kshivnan@quicinc.com>
+Subject: [PATCH] soc: qcom: icc-bwmon: Add tracepoints in bwmon_intr_thread
+Date: Wed, 19 Jun 2024 19:21:40 +0530
+Message-ID: <20240619135140.3581119-1-quic_kshivnan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: fix to use sb_{start,
- end}_intwrite{_trylock, }() in gc_thread_func()
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
-References: <20240606095213.4087668-1-chao@kernel.org>
- <20240606095213.4087668-2-chao@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=chao@kernel.org; keydata=
- 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
-In-Reply-To: <20240606095213.4087668-2-chao@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: aSs72N7S48wph9N-QKTy8icDBSAlFChy
+X-Proofpoint-GUID: aSs72N7S48wph9N-QKTy8icDBSAlFChy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 clxscore=1011 mlxscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406190106
 
-On 2024/6/6 17:52, Chao Yu wrote:
-> Since background GC is f2fs inner operation, so, let's use
-> sb_{start,end}_intwrite{_trylock,}() instead of
-> sb_{start,end}_write{_trylock,}() in gc_thread_func().
+Add tracepoint for tracing the measured traffic in kbps,
+up_kbps and down_kbps in bwmon. This information is valuable
+for understanding what bwmon hw measures at the system cache
+level and at the DDR level which is helpful in debugging
+bwmon behavior.
 
-It may cause racing in between gc_thread and freeze_super(), result in
-writeback of dirty page after ->freeze, so please ignore this patch.
+Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+---
+ MAINTAINERS                        |  1 +
+ drivers/soc/qcom/icc-bwmon.c       |  7 +++--
+ drivers/soc/qcom/trace_icc-bwmon.h | 49 ++++++++++++++++++++++++++++++
+ 3 files changed, 55 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/soc/qcom/trace_icc-bwmon.h
 
-- sb_wait_write(sb, SB_FREEZE_WRITE)
-- sync_filesystem(sb)
-				- sb_start_intwrite_trylock
-				 - f2fs_gc
-				  : dirty pages
-- sb_wait_write(sb, SB_FREEZE_FS)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 242fc612fbc5..1b410c0183bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18573,6 +18573,7 @@ M:	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
++F:	drivers/soc/qcom/trace_icc-bwmon.h
+ F:	drivers/soc/qcom/icc-bwmon.c
 
-Thanks,
+ QUALCOMM IOMMU
+diff --git a/drivers/soc/qcom/icc-bwmon.c b/drivers/soc/qcom/icc-bwmon.c
+index fb323b3364db..9b5ac1e62673 100644
+--- a/drivers/soc/qcom/icc-bwmon.c
++++ b/drivers/soc/qcom/icc-bwmon.c
+@@ -17,6 +17,8 @@
+ #include <linux/pm_opp.h>
+ #include <linux/regmap.h>
+ #include <linux/sizes.h>
++#define CREATE_TRACE_POINTS
++#include "trace_icc-bwmon.h"
 
-> 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->   fs/f2fs/gc.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index ef667fec9a12..004587ac5530 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -76,7 +76,7 @@ static int gc_thread_func(void *data)
->   			f2fs_stop_checkpoint(sbi, false,
->   					STOP_CP_REASON_FAULT_INJECT);
->   
-> -		if (!sb_start_write_trylock(sbi->sb)) {
-> +		if (!sb_start_intwrite_trylock(sbi->sb)) {
->   			stat_other_skip_bggc_count(sbi);
->   			continue;
->   		}
-> @@ -163,7 +163,7 @@ static int gc_thread_func(void *data)
->   			}
->   			spin_unlock(&sbi->gc_remaining_trials_lock);
->   		}
-> -		sb_end_write(sbi->sb);
-> +		sb_end_intwrite(sbi->sb);
->   
->   	} while (!kthread_should_stop());
->   	return 0;
+ /*
+  * The BWMON samples data throughput within 'sample_ms' time. With three
+@@ -645,9 +647,9 @@ static irqreturn_t bwmon_intr_thread(int irq, void *dev_id)
+ 	struct icc_bwmon *bwmon = dev_id;
+ 	unsigned int irq_enable = 0;
+ 	struct dev_pm_opp *opp, *target_opp;
+-	unsigned int bw_kbps, up_kbps, down_kbps;
++	unsigned int bw_kbps, up_kbps, down_kbps, meas_kbps;
+
+-	bw_kbps = bwmon->target_kbps;
++	meas_kbps = bw_kbps = bwmon->target_kbps;
+
+ 	target_opp = dev_pm_opp_find_bw_ceil(bwmon->dev, &bw_kbps, 0);
+ 	if (IS_ERR(target_opp) && PTR_ERR(target_opp) == -ERANGE)
+@@ -679,6 +681,7 @@ static irqreturn_t bwmon_intr_thread(int irq, void *dev_id)
+ 	bwmon_clear_irq(bwmon);
+ 	bwmon_enable(bwmon, irq_enable);
+
++	trace_qcom_bwmon_update(dev_name(bwmon->dev), meas_kbps, up_kbps, down_kbps);
+ 	if (bwmon->target_kbps == bwmon->current_kbps)
+ 		goto out;
+
+diff --git a/drivers/soc/qcom/trace_icc-bwmon.h b/drivers/soc/qcom/trace_icc-bwmon.h
+new file mode 100644
+index 000000000000..5bdba0b77b72
+--- /dev/null
++++ b/drivers/soc/qcom/trace_icc-bwmon.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icc_bwmon
++
++#if !defined(_TRACE_ICC_BWMON_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICC_BWMON_H
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(qcom_bwmon_update,
++
++	TP_PROTO(const char *name,
++		 unsigned int meas_kbps, unsigned int up_kbps, unsigned int down_kbps),
++
++	TP_ARGS(name, meas_kbps, up_kbps, down_kbps),
++
++	TP_STRUCT__entry(
++		__string(name, name)
++		__field(unsigned int, meas_kbps)
++		__field(unsigned int, up_kbps)
++		__field(unsigned int, down_kbps)
++	),
++
++	TP_fast_assign(
++		__assign_str(name);
++		__entry->meas_kbps = meas_kbps;
++		__entry->up_kbps = up_kbps;
++		__entry->down_kbps = down_kbps;
++	),
++
++	TP_printk("name=%s meas_kbps=%u up_kbps=%u down_kbps=%u",
++		__get_str(name),
++		__entry->meas_kbps,
++		__entry->up_kbps,
++		__entry->down_kbps)
++);
++
++#endif /* _TRACE_ICC_BWMON_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH ../../drivers/soc/qcom/
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE trace_icc-bwmon
++
++#include <trace/define_trace.h>
+--
+2.25.1
+
