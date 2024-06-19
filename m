@@ -1,96 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3014142E78;
-	Wed, 19 Jun 2024 12:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DC614262C
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718800632; cv=none; b=o5MRFsRltqfj7yVglHpzqK7VCqlowjV/ZQ+as2PwrziqEj46tbEl/KqYSYHbxploXaSQ4qkIkGzbzMzi6XbZeWy/31RPIhIY2j4SfIqpdpg17FAn3zlZhEE+Yi+zNuYOLM7Pw2Jcs1dY1W4av1I2m0YLg426kCl9NYLMsao/xHA=
+	t=1718800661; cv=none; b=rIfyt6IVVPoeQTK6WRYdDl3U4/pl0OW/BZOLGEB+Ps57CO7Jd+8qiG66uX/s4S1coObLwUgMVlZ9DSv09rBlqfPYAwi+ZG2DcL6Xd5C43UyOaRWKrEh5gnBBsJ88Ji92vr6mcAZSznHUEv/IX5JANSMDko/T/MsK7+P8VDvaUkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718800632; c=relaxed/simple;
-	bh=dBJk2Fwp++g9s39OW0eqqIitJXyhOULuxCgpgtVAJII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvmaIcSUYs6IPNGOIumSECao6i957tYfL2H5i/Nd1cgWuPhYx6H1dQDnadczzOrlNXbt7DRyVmUKE25hWEql1xg0G6xMf8XKvKMyJMK0T7mNZmXgqr+D3NYWsbRZ4rhOm6lavoEwyYEOvoaYgwS6atzL12m7uFJxkS1A12DYv5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aIlwj8X1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718800661; c=relaxed/simple;
+	bh=C98l63zLvMtVSAel73Q2HeZYeiWlY3niBgI2rKAn8dE=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=j7oD8buxJJ5X6SRgXm4Y9I7BZ8be0M6+Mk5ptdpifQ6u4bPYo45cGGZCYkX11vZ5UTNOJSDxQAfHq43UYRuxo0EO3cLd1BE+DY9a0zJvAxvSBsHIPYsLd2YjqE+i21YH6JmptIlVbROyinhQ9ES4ALLaGWe8DW0M0MICAYV0UZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tr9Ckg7u; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aIlwj8X1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D731C2BBFC;
-	Wed, 19 Jun 2024 12:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718800632;
-	bh=dBJk2Fwp++g9s39OW0eqqIitJXyhOULuxCgpgtVAJII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aIlwj8X1YC7m1uoV/26kgYpGBwhHu8WVI0MS8VnfZ4Ppe6Cdqc7qg0s+1Vx6xa9TL
-	 XWVAd1ssfdYxVgeoazWiEtiSnjmk6LIwZgEd0mRPh9pmCIHxVanKSOaxIE3LRTy9Xy
-	 DSGI4o9EvUZVkyYDLu5yjzZKvXVIcyA6ZzinvuaQ=
-Date: Wed, 19 Jun 2024 14:37:09 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-	Lee Jones <lee@kernel.org>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1 resend] MAINTAINERS: Fix 32-bit i.MX platform paths
-Message-ID: <2024061933-oxidizing-backspin-8c4e@gregkh>
-References: <20240619115610.2045421-1-alexander.stein@ew.tq-group.com>
- <2024061920-hardwired-pry-bb81@gregkh>
- <13561511.uLZWGnKmhe@steina-w>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tr9Ckg7u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1718800347; bh=3tr1aoIrnxc7KAny8fOwZJpfb3wKnMB//QLthIi/rvs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=tr9Ckg7udf6deunTXWU0uXAB3vaNzazK5x+SMfrBGZsEr19IWHnQ52ncKnzVTh2o1
+	 TFUHCO5RTxZKdLVJop2jhhPTd93Cuv+euTdiA6rm/01hEgDoDgY5BrTES6cbvye2HT
+	 jg8W8sxRwBYV3dnPa5i5rm8wUW50GN9WQivrpxzk=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
+	id 81982A79; Wed, 19 Jun 2024 20:32:25 +0800
+X-QQ-mid: xmsmtpt1718800345t1w2eeuva
+Message-ID: <tencent_E56D8C9494EB5EEE52CDB8797A6E742CA10A@qq.com>
+X-QQ-XMAILINFO: NDgMZBR9sMmaP+1mcOH883u0lEt9zf5/vPzK8732fT7RtFloE6aaXm4dHC87/c
+	 qPu9chOlJzfzkxjJUs9p4f6q1erIBxwcsjAYNP+jWmObeLFMMs5CHrj3cjhVhdpLYmHfU5hfXkPV
+	 JmcsPWhF7PHkFcQB6tStjNpsjPQbXfoXCECtevrIUYbGvxR1vtzgltHKMlTDZ3GUgAI3EGH5xlAp
+	 GkkwoVBgPTRphyA6cTYzgoS6d5volQxmwICuwqajXYsT5ojahPykPknfKNno6g4IpMxhZYfOTwc6
+	 XXkyZ5vbLw0EQ1gG8rRe2JaEqq10lMhvhVeZ+qhV2IIRBGIDkl6RNE83E1DraC3iP8HwdVJxCItK
+	 +9swmEjNBl36CgCLykEgiU2QsBPDWQ1zbe/epZ/SAV/AXX/wrt0pjfmgJvUCBxwG1+IVhWCCZr6a
+	 NIioEAmOVaVh4wMEiihV4LrRquN97lnFGdJLOaSIC9e54YK93KNkKqCplV59M02OKyeeIII5NpAz
+	 Ww5UOBTwe0vlgif3wJ0zUqBHqjx23LAStbmWtPtxIMFHlMGzUNiYGdUefNkFeVQ6ibQ5ahdYyzwA
+	 N/PekBFjiVM6uQeZYIkOKmkHai4e33GSKwMvRK7iQT5r1btx/ZOtZbDA9eamokVZzSsGdG1xHw5E
+	 Ant9cyweVaktSBvMAqPBkY20gvlvyjDfL+Annzj2NhmXNPut4KqKmjuazXOT4Fo+6cCrkV0dY+aw
+	 O/VWhK8yGWTjUYR6XMsIeLBNBqrP2RUJ6Sl+1sxz1w+ldDmCGiyGRVMVKfeIg3pm4La972mQ+8pt
+	 3VMpZLX4foqVdwyJC1cU854mAQtTySbA7vPnsq1f3Xbh6ysbqH0A+nMF417w4k0HzQOwdVKN1GDk
+	 5pFfHY42wgc9JCiP4we1VL7jOea70Xh2wZiNZpZkYfnrBZ/6DgWJPwmJjmeqMaXg==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+35ebc808442df6420eae@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] KASAN: invalid-free in hci_req_sync_complete
+Date: Wed, 19 Jun 2024 20:32:26 +0800
+X-OQ-MSGID: <20240619123225.2305462-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000033a6e8061b3c6d4a@google.com>
+References: <00000000000033a6e8061b3c6d4a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13561511.uLZWGnKmhe@steina-w>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 19, 2024 at 02:23:36PM +0200, Alexander Stein wrote:
-> Am Mittwoch, 19. Juni 2024, 14:18:35 CEST schrieb Greg KH:
-> > On Wed, Jun 19, 2024 at 01:56:10PM +0200, Alexander Stein wrote:
-> > > The original patch was created way before the .dts movement on arch/arm.
-> > > But it was patch merged after the .dts reorganization. Fix the arch/arm
-> > > paths accordingly.
-> > > 
-> > > Fixes: 7564efb37346a ("MAINTAINERS: Add entry for TQ-Systems device trees and drivers")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > > ---
-> > >  MAINTAINERS | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index c36d72143b995..762e97653aa3c 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -22930,9 +22930,9 @@ TQ SYSTEMS BOARD & DRIVER SUPPORT
-> > >  L:	linux@ew.tq-group.com
-> > >  S:	Supported
-> > >  W:	https://www.tq-group.com/en/products/tq-embedded/
-> > > -F:	arch/arm/boot/dts/imx*mba*.dts*
-> > > -F:	arch/arm/boot/dts/imx*tqma*.dts*
-> > > -F:	arch/arm/boot/dts/mba*.dtsi
-> > > +F:	arch/arm/boot/dts/nxp/imx/imx*mba*.dts*
-> > > +F:	arch/arm/boot/dts/nxp/imx/imx*tqma*.dts*
-> > > +F:	arch/arm/boot/dts/nxp/imx/mba*.dtsi
-> > >  F:	arch/arm64/boot/dts/freescale/fsl-*tqml*.dts*
-> > >  F:	arch/arm64/boot/dts/freescale/imx*mba*.dts*
-> > >  F:	arch/arm64/boot/dts/freescale/imx*tqma*.dts*
-> > 
-> > Why is a MAINTAINERS change needed for stable kernels?
-> 
-> This fixes the original commit introducing these entries, mainlined in v6.6
-> Unfortunately that got delayed so much it was merged after commit
-> 724ba67515320 ("ARM: dts: Move .dts files to vendor sub-directories"), which
-> was merged in v6.5.
-> Thus the (32-Bit) arm DT paths are incorrect from the very beginning.
+please test db free in hci_req_sync_complete
 
-That's fine, who is using these paths on older kernels anyway?  You
-should always be doing development on the latest kernel tree, so they
-shouldn't matter here.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 2ccbdf43d5e7
 
-or am I missing something?
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index efea25eb56ce..ac27ea24844c 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -106,7 +106,8 @@ void hci_req_sync_complete(struct hci_dev *hdev, u8 result, u16 opcode,
+ 		hdev->req_result = result;
+ 		hdev->req_status = HCI_REQ_DONE;
+ 		if (skb) {
+-			kfree_skb(hdev->req_skb);
++			if (skb != hdev->req_skb)
++				kfree_skb(hdev->req_skb);
+ 			hdev->req_skb = skb_get(skb);
+ 		}
+ 		wake_up_interruptible(&hdev->req_wait_q);
 
-thanks,
-
-greg k-h
