@@ -1,123 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6258E8175E;
-	Wed, 19 Jun 2024 10:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC507F499;
+	Wed, 19 Jun 2024 10:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718791247; cv=none; b=CHWqC7dLjHrGtB6rlqIx7t7PU0B1ty4PbK+STXkbLmG9YdJ2x1GJpdUgYp4DQqR2gKyeOkuOzovIwZrC5nkwAGGrrH+h2BBXI9lJsPJ8TJtIoQbMzPiFUVUzJZBEeFfMy1hpKdZlGpIEe7GX/qh2bQwZHnR4VeQLgbb1mHs5TQ0=
+	t=1718791266; cv=none; b=tNmgY1pVfNZhhLKpiMKmqnsHJJOT/8sz4XOeyZutCJYaUNF/BzknV7rNhEEUoEk4fJS6g1GAbfUO16zlCF3DNDkCmjsI/U/W81BjZhdCOTVBSJJtI2bEUer8QNQZlFe0KJw3cp0VuWKu4EFTHf2UkhNwg57PkhcMdzgZq2Y8w9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718791247; c=relaxed/simple;
-	bh=eayWKS6Wu7Bqf8vNh/QlnwnY/rDj8Fs1l2UlPp8StoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r84Nt1fdAKPXw8/CB9vEBJWpSc2mP8xUoL5EUDLeWXZtEEZrLhhLJBt7lEnwBUBBQtFRYOBOqfQCTFiElCc9w++rMP0+8KA3nw/5fF3Aa9B8qdabRX/pZlhZaN/MHi+IE6DBuvkHzmzwTOlWnnBDh2Uc/d65Rga87intDiPC4A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcihEThj; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718791266; c=relaxed/simple;
+	bh=Wm/1DXdgrsIuYW/DNjSL+D1Os1YV437MCiADeIZ66KU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=IfncwFNld4IM/rZgyorAXtII/wU9r3wnD1ArClvHyN0EUGWqEPtcA9fbMVVqDUDZJ6te0bov0hu6DJUE8dRcHlUyk5Qgd1kfKVRZCHPVDMRhqtrkGLQFsIwHGdl3+ZRo0n7dWVx9yDRqaoKKqQPi6fjzdPNM2MSCPig+rHhQnWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PJ65iu5N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YK/Giufw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcihEThj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718791246; x=1750327246;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eayWKS6Wu7Bqf8vNh/QlnwnY/rDj8Fs1l2UlPp8StoI=;
-  b=TcihEThjv4rH4R0OOdBrrZW+V4YUoLT6jlMmYwqS7fHGJbJVpqNarJqT
-   5fwosxa5HqyYIw9YyyKaCBGWFxfo4Wd6ccwcaX1XR1rJc586cSPCLgjN5
-   Sfi6pthmk5qMPbIjF5mh3sk25TOGeQBcTNKZ/OaGMWca+ot65bxi5KDJf
-   yff/i0atcNMV+dQtQ9Y71fa7xEjU1dpcU+coktbqFagoQf5KUmtak4EZG
-   cQG2l3/DsP1YJaAS/t82CTFyF7/VWyp5R/QCtJrsMylG8B/L6K9l/YL8X
-   2E1/HGR0l5Pt0SkBJcRq82ysiRue7VXTufzWldZe0hMXhym+c4+U2VJRT
-   g==;
-X-CSE-ConnectionGUID: qSjihEZMQNeYs1RXfNxrBw==
-X-CSE-MsgGUID: niW3AjgcT/ykYgZc+eGY2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15849381"
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="15849381"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:00:45 -0700
-X-CSE-ConnectionGUID: wc5mkL1JRqyiNrZZRxpFrw==
-X-CSE-MsgGUID: IL9k4KU/R9iAllvTymSjlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="72608683"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:00:40 -0700
-Message-ID: <6ab8c7fd-c718-49ff-bbbb-9241293127f7@intel.com>
-Date: Wed, 19 Jun 2024 13:00:34 +0300
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PJ65iu5N";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YK/Giufw"
+Date: Wed, 19 Jun 2024 09:55:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718790925;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L2db0G14BN/K7mzZrfNzyKeXNII4EP/lVlDQRePxKkA=;
+	b=PJ65iu5NQgqtOjgvO/zWlRR04PJ4+ISKICPbbGTt+Ak2z6TG+irayA74lHu2KY7CH+1fOR
+	S22YDLBGll1rdvzBrQ9y8G4nl2VxJyelhe5CqgM8RE6F2NrryYqzm4fC+FLW3h8G+pRZQb
+	o4WIWZ/G0+lfNq+DN7LImzdD0hvK+cmVyIO4qDy7urPdchkTkiGAi0e0CaszIbTD3OiMVf
+	w9KYf53TSYrwwWglziMWVtzOqtfNtl43YvsgyYJ4rvrnYRw1ORPpU0yIRxI3Kiw5c6gDCi
+	6YYhrciQ/aBdNDZsfFO9QAi1bRKxgGj91ekgl//cuHuLp3xgOJ3X43ebZPBd0w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718790925;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L2db0G14BN/K7mzZrfNzyKeXNII4EP/lVlDQRePxKkA=;
+	b=YK/GiufwKUHxvrH8kyF0l5wUL4f5xA1hh3byeQ7B3kiuCyZ6PDlaXPRUBoJS8DoPUG3apl
+	RgXAOVWyy+G+BBCg==
+From: "tip-bot2 for Alexey Makhalov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] drm/vmwgfx: Fix missing HYPERVISOR_GUEST dependency
+Cc: kernel test robot <lkp@intel.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240616012511.198243-1-alexey.makhalov@broadcom.com>
+References: <20240616012511.198243-1-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/pt: Update topa_entry base len to support
- 52-bit physical addresses
-To: Dave Hansen <dave.hansen@intel.com>,
- Marco Cavenati <cavenati.marco@gmail.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com, jolsa@kernel.org,
- irogers@google.com, kan.liang@linux.intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com
-References: <20240618110617.22626-1-cavenati.marco@gmail.com>
- <efc3a224-27b3-4259-a9a3-0296ccbf3e8d@intel.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <efc3a224-27b3-4259-a9a3-0296ccbf3e8d@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <171879092484.10875.16127804390885200858.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 18/06/24 20:59, Dave Hansen wrote:
-> On 6/18/24 04:06, Marco Cavenati wrote:
->> Increase topa_entry base to 40 bits to accommodate page addresses in
->> systems with 52-bit physical addresses.
->> The Base Physical Address field (base) has a length of MAXPHYADDR - 12 as
->> stated in Intel's SDM chapter 33.2.7.2.
->> The maximum MAXPHYADDR is 52 as stated in SDM 4.1.4.
->> Therefore, the maximum base bit length is 40.
-> 
-> This makes it sound like it's _adding_ support for larger physical
-> addresses.  It really was a bug from day one.  MAXPHYADDR has been
-> defined to be "at most 52" for a long, long time.  I think it was well
-> before 5-level paging came on the scene and actual MAXPHYADDR=52 systems
-> came along.
-> 
-> It probably needs to say something more along the lines of:
-> 
-> 	topa_entry->base needs to store a pfn.  It obviously needs to be
-> 	large enough to store the largest possible x86 pfn which is
-> 	MAXPHYADDR-PAGE_SIZE (52-12).  So it is 4 bits too small.
-> 
-> This isn't the only bug in the area:
-> 
->> static void *pt_buffer_region(struct pt_buffer *buf)
->> {
->>         return phys_to_virt(TOPA_ENTRY(buf->cur, buf->cur_idx)->base << TOPA_SHIFT);
->> }
-> 
-> At this point, ->base is still a 40-bit (or 36-bit before this patch)
-> type.  If it has anything in the high 12 bits, a <<TOPA_SHIFT will just
-> lose those bits.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Yes
+Commit-ID:     8c4d6945fe5bd04ff847c3c788abd34ca354ecee
+Gitweb:        https://git.kernel.org/tip/8c4d6945fe5bd04ff847c3c788abd34ca354ecee
+Author:        Alexey Makhalov <alexey.makhalov@broadcom.com>
+AuthorDate:    Sat, 15 Jun 2024 18:25:10 -07:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 17 Jun 2024 11:56:54 +02:00
 
-> 
-> But maybe I'm reading it wrong.  If I'm right, this malfunctions at pfns
-> over 36-12=24 bits, or 64GB of RAM.  Is it possible nobody has ever
-> allocated a 'struct pt_buffer' over 64GB?  Or is this somehow tolerant
-> of reading garbage?
+drm/vmwgfx: Fix missing HYPERVISOR_GUEST dependency
 
-Yes, it will go wrong with any physical address above 64GB - 1.
-i.e. the machine just needs more than 64GB of memory.
+VMWARE_HYPERCALL alternative will not work as intended without VMware guest code
+initialization.
 
-However that code is used only in one place which is conditional on
-!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries) which is true
-only for Broadwell.  Also "snapshot" (and sampling) modes are
-unaffected.
+  [ bp: note that this doesn't reproduce with newer gccs so it must be
+    something gcc-9-specific. ]
 
-Testing on a Broadwell with 400GB of memory confirmed the issue.
+Closes: https://lore.kernel.org/oe-kbuild-all/202406152104.FxakP1MB-lkp@intel.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20240616012511.198243-1-alexey.makhalov@broadcom.com
+---
+ drivers/gpu/drm/vmwgfx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/vmwgfx/Kconfig b/drivers/gpu/drm/vmwgfx/Kconfig
+index faddae3..6f1ac94 100644
+--- a/drivers/gpu/drm/vmwgfx/Kconfig
++++ b/drivers/gpu/drm/vmwgfx/Kconfig
+@@ -2,7 +2,7 @@
+ config DRM_VMWGFX
+ 	tristate "DRM driver for VMware Virtual GPU"
+ 	depends on DRM && PCI && MMU
+-	depends on X86 || ARM64
++	depends on (X86 && HYPERVISOR_GUEST) || ARM64
+ 	select DRM_TTM
+ 	select DRM_TTM_HELPER
+ 	select MAPPING_DIRTY_HELPERS
