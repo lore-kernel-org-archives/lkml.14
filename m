@@ -1,61 +1,48 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1459C80C0A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346F175817
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 11:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718795335; cv=none; b=UoxprKIoxLIhZMrRDdgOSSQp25QqnfzbGg1Lc/R4dP0l4ifvDKe3IouRnW69/6yTdyPF/R88jEk7C07UslwG8Zb9OkfbNq18XX5QY4aUvZd/44+Yd0NOWAAbnTZ1qonXrP65VkWjpluD1lHMW37grq0dEdmQqniLxdTBs+MN090=
+	t=1718795396; cv=none; b=lSVQjRBOL+txE2awwo5JdOD5yqVE4aP20/8iHPAbuwSvXPfXmxHx4TMOXjvzeuFIQZB9h69BiBBbRIvvndbFPqWJ3/IjyHGNGZ3uibO14x15yTZ3MaLh1lwCtZRwXfLG8uzPEORixWAYQQIiL6lT0cvpWDzmmUXf5pUsua/fMmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718795335; c=relaxed/simple;
-	bh=Wa9liY7UYT1W4mthRgUm7kBXDmsIy3Uwq8VbteeX8FM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t5/V9V8ql8x3lUpx56JMZse5FVOliNpTSL2TKeQ6J26kNqwCw1gqom+jBg5CAGa63WrBhGVEAenhABv6D8jmwnbCMHdK1mzBtDlG7bV2hYTPYjJZmNnLb0Xln3rL7jPBsq+P+CoHD1jBauI+RgCox2c45awfAaRJcoywDvAFbLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vsMScft1; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718795396; c=relaxed/simple;
+	bh=Aftmxka0peBR0pWaoqsSOoEY42ivJvNWC/DQjOwuVF0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=duALqtScgXorHDJbR41DpoawgUWefRIlEPbEAX33ukPFg3Xrm8VDlyhVutXYoCGgT7Ojn9bGzCis3lK9W8GfYWEAkALBU9z69GefR7Y6LtmpGFDcB/j+lkERto5ke2su80yU1pawj4IG9ni3VL7sfQJyArb0JGMVoF64+z1/5Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oxBU6YUU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vsMScft1"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5295e488248so6987076e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 04:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718795332; x=1719400132; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=F5ly1HC/fbJsWu6eak7uii+X1EeTcnEn2a9gVs9okUI=;
-        b=vsMScft16QGxgDRU6u/zBbItVRVR/+l3NncSmkpOHdqF41pACzwInmjv134RLynK8X
-         GLmtsg8zByxbdyhhOHpbkhxGxRCXchJ3ZdplSZIYfAyNpWLOqMIhDAyfqa9gBfKM926v
-         6vJdLt6tutwBpqzjQiedbkak7U34iQbb5lsC4OWZefvQteU+PeVBbB2oJ8I4JTxZ7llp
-         ytVNImpsYUjOCSDWLdEBnBpcIIAb5Sfu3uWyiXcoUQ+Fs0CifiaGUxnXpODtaZF7vP2E
-         /WzTTt0C47CuAY2hQNEBCjUamg7B3kU8KCoafh5vyVFaB536u/FqXetXDWcf5WMjCk71
-         UpjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718795332; x=1719400132;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F5ly1HC/fbJsWu6eak7uii+X1EeTcnEn2a9gVs9okUI=;
-        b=TR2Cyq0HnnXGM9zHAANOOUpBT/chN8Jchbpy93SfFSTivFj+Fvs6hJpRyrzKbngVSp
-         F8rBAjZez4NY9UZYMg1iOnPnsdwZPiadK5koQhmEqglL6PtezD4oVxzSQHAX5NR2t5dE
-         8aD4PE6EikqZfy3NVBKFID+yltartDgJWB1zY4ojgUlhwuLQSGLItIuT3159QNrpZtkl
-         Kl23JFVYqVMcmCc4uE9bIoWPWLH14sUJIdoUgtulMTT3BaGpNFF+jQOKFFo4lZ1j3zAs
-         qwvJHGCSbRhFa88Q8B7Yl8GkXI/iBeb+nsVIJswYESGlGVh7erKwuHqKAHa31rGpkqgh
-         W/CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVf1E0kGy9o5t3v3gdBcMsUf2iWxq093zWpft7M72l1/hInczq4vzRncIgqcUK2nIcnbRHc3iaaMMLzTYNZORQ31TaVkC0OPA+dj8wU
-X-Gm-Message-State: AOJu0YzTjOPhd8d3xqO5Ubq8ArJQ5PrJCR6CMf6uplXo/6a8pBNDijKS
-	Ae8Zi2HgJoN94BsOFRAAyGVgvt812LFq4SXOTWxgb8C/ZlIzuiD8NMv5G5QPE+0T0Tc6/x8ClD0
-	T
-X-Google-Smtp-Source: AGHT+IHD0/h6L3YGVj9VPM6Yr1X3VpwlZgnL8Kv5bkfcP4PuPFdC9pD5cb5DrpBTdYMeiuZKqLK1qw==
-X-Received: by 2002:a05:6512:3102:b0:52c:7fc9:954e with SMTP id 2adb3069b0e04-52ccaa375admr1178633e87.41.1718795330142;
-        Wed, 19 Jun 2024 04:08:50 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075104a3dsm16910407f8f.112.2024.06.19.04.08.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 04:08:49 -0700 (PDT)
-Message-ID: <5582a2a0-c772-4573-9d55-2f963cb87df1@linaro.org>
-Date: Wed, 19 Jun 2024 13:08:48 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oxBU6YUU"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JB3mQs003373;
+	Wed, 19 Jun 2024 11:09:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	AH5DtsEnAs0v6SD7FrhfZA197Dlut/nFuVdUAitOViw=; b=oxBU6YUUOUs8GRcd
+	UojJzDZWgFRjMMejeHQAXakO0GYbb9D5RSRyiLpI5k1HbpCBAiM/pmPK6ZxKUs9y
+	vWFIQZ8at7IYohQcXEx41rGm2LfGFixQSzyWuCYCBh5F/pZJ8XOmp25y9sUKo6qb
+	rnNl0oy5MIO7oVYq+qkLEoUL8HDN7l/Krax09F8gTKVmGeJhr2U/fqcWJYck92hC
+	QquoeZlWeQPZR6QGuygswbK8gtPpQnrIARqvg5HRcqw+7iWzIhEku968zhl3qk7g
+	kOMvIl7YGLpO1Be9/XboqftDlo/J283F4KmQckz5twhQAuQGlA2j1RCfsAMi58O2
+	Nqdu3Q==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yujah9f4b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 11:09:35 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JB9YNI027632
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 11:09:34 GMT
+Received: from [10.218.26.168] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Jun
+ 2024 04:09:30 -0700
+Message-ID: <066a05ca-e2e8-4cfe-8d33-60a665495cdf@quicinc.com>
+Date: Wed, 19 Jun 2024 16:39:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,99 +50,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable secure QFPROM driver
-To: Komal Bajaj <quic_kbajaj@quicinc.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Bjorn Andersson <quic_bjorande@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, quic_mojha@quicinc.com
-References: <20240619105642.18947-1-quic_kbajaj@quicinc.com>
+Subject: Re: [PATCH] kernel/reboot: enhance dmesg logging for system restart
+To: =?UTF-8?B?7J2064+Z66+8?= <ldmldm05@gmail.com>
+CC: <benjamin.bara@skidata.com>, <dmitry.osipenko@collabora.com>,
+        <lee@kernel.org>, <daniel.lezcano@linaro.org>,
+        <j.granados@samsung.com>, <linux-kernel@vger.kernel.org>,
+        <dongmin.lee@linux.dev>
+References: <20240607105906.4192924-1-quic_faiyazm@quicinc.com>
+ <CACmEs-4mntpn8SQVgx5Qv9W8cmWQ__=1ds_j=vXxcDp27=SXLA@mail.gmail.com>
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240619105642.18947-1-quic_kbajaj@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Faiyaz Mohammed <quic_faiyazm@quicinc.com>
+In-Reply-To: <CACmEs-4mntpn8SQVgx5Qv9W8cmWQ__=1ds_j=vXxcDp27=SXLA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 9v9_EXcuf6jMpJIJ_5iGeTst5ytMaDlF
+X-Proofpoint-GUID: 9v9_EXcuf6jMpJIJ_5iGeTst5ytMaDlF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=830
+ clxscore=1011 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
+ phishscore=0 adultscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406190082
 
-On 19/06/2024 12:56, Komal Bajaj wrote:
-> Enable the secure QFPROM driver which is used by QDU1000
+Sorry for the delayed response.
 
-Qualcomm QDU1000. You are changing kernel-wide defconfig, not some
-Qualcomm downstream stuff.
-
-> platform for reading the secure qfprom region to get the
-> DDR channel configuration.
+On 6/7/2024 7:35 PM, 이동민 wrote:
+> On Fri, Jun 7, 2024 at 7:59 PM Faiyaz Mohammed <quic_faiyazm@quicinc.com> wrote:
+>>
+>> It is useful to add the PID and Comm information along with command info.
+>>
+>> Currently, when system reboot kernel logs don not print PID and Comm:
+>>
+>> reboot: Restarting system with command 'reboot,scheduled_reboot'
+>> reboot: Restarting system with command 'RescueParty'
+>> reboot: Restarting system with command 'bootloader'
+>> reboot: Restarting system with command 'recovery'
+>> reboot: Restarting system with command 'userrequested,recovery’
+>>
+>> For Example after adding PID and Comm:
+>>
+>> reboot: PID: 1 Comm: init Restarting system with command 'shell'
+>> reboot: PID: 1 Comm: init Restarting system with command 'bootloader'
 > 
-> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+> Printing out PID and COMM information might be useful for getting
+> which task is triggered system reboot. However, It's never a critical
+> information that deserves printed with pr_emerg() to whoever want the
+> system to be rebooted, unless the kernel is in a problematic
+> situation.
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 838b4466d6f6..c940437ae1b3 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -1575,6 +1575,7 @@ CONFIG_NVMEM_LAYERSCAPE_SFP=m
->  CONFIG_NVMEM_MESON_EFUSE=m
->  CONFIG_NVMEM_MTK_EFUSE=y
->  CONFIG_NVMEM_QCOM_QFPROM=y
-> +CONFIG_NVMEM_QCOM_SEC_QFPROM=y
+Agreed, It's not critical to print the process name which trigger reboot 
+with pr_emerg(), so should it be OK if we add additional logging with 
+reduced log level?
 
-Module
+> If reboot is called by user space via reboot system call, reboot is
+> never a problematic situation because it's user's intend in the
+> kernel's view. Other kernel codes which invokes involuntary restart
+> such as temperature overheat (drivers/memory/emif.c:622), already
+> prints out the situation before invoking system_reboot(), hence, there
+> is no reason to print out who called system_reboot().
+> 
+Agreed in kernel view user's space reboot is intended but if system is 
+silently rebooting due to any user process(vendor specific user process 
+or even a OS specific user deamon) meeting any error condition then a 
+developer debugging the system need to know which user process is 
+issuing reboot system call to debug further, so in humble opinion it is 
+helpful for system debug perspective.
 
->  CONFIG_NVMEM_RMEM=m
->  CONFIG_NVMEM_ROCKCHIP_EFUSE=y
->  CONFIG_NVMEM_ROCKCHIP_OTP=y
+> Again, system reboot is not kernel panic, oops nor bug. If your intend
+> is to debug the reboot handler's behavior more easily, just set a
+> breakpoint for kernel_restart() function with gdb.
+> 
 > --
-> 2.42.0
+> Best Regards,
+> Dongmin Lee
 > 
-
-Best regards,
-Krzysztof
-
+> https://ldmsys.net/
