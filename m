@@ -1,51 +1,53 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79B225569;
-	Wed, 19 Jun 2024 14:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C141D54A;
+	Wed, 19 Jun 2024 14:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718808988; cv=none; b=Cy17fpB5Y95WpCeOXCIic9hETa8gH7x95cW7UNnWf603P31nd3gKGVqbaLa1TWCPlTVDXl8L4iN6wPiXBuywcHbX7Nk8J7ZoL2B6xDCNtINVkk0gQS62e/WZ6mlh6NDYL0a2Jjo1v7ZNimMQD/giKtfVaa30xuPRQSexZIjyYCI=
+	t=1718809061; cv=none; b=d5K2SYUQ03HLWb6Y45zDrppCLimVGm2xOa7GjroGRrxrLpQObx0YVQZQLVrN5ve0L5hW9WaHTjHlDKf0rrszFe3259mPzALWeDj98W7mMjrt0EwM1NK2jXxEqFPn1t6/4Uta5rYf8+j+RZdM7gN+1lAb+DRpj61dCdmF5GcxSW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718808988; c=relaxed/simple;
-	bh=y/UdKFKcgLnAIRi0wBJ3ETmdbPUHMwGLr7VarrPAZ5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rtILishGmLeyZcZSWAw01yaGiqQYb4cXnhGDXQzVWEnJBlYeZ3b2k4d60ztR0h7NiU38o0Pn3qMdimZ9D3QitYzB6J8IqjyyUZL6J0x4mm9g3B7ZzNGTIdpJCmSb8zHxvLFAeXH7/tECXKRcRek6tYrMuKAj9et7Ps0HAJjdxxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YevCTLL6; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718809061; c=relaxed/simple;
+	bh=iZbm6EdAbJzUiVO4UtD9tGvM+sfX52gde6b5TpOe++k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZsG3j2+QwsNmkSZjEAdKCrV5upaLYZFkD2CBfwIV5Sw39LNDxTDFP2PrAZ1UJa3pt/3FQSkAEiNrnBYPWX4h0TPUwmIXuRdI/0Md20OCPKUGRUvkjIubrDZTUXxfSRuuh2WtHVYRNQnsmA8ZvOn8WoPw9waI5TironcDxitnYQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DeO5eaTa; arc=none smtp.client-ip=192.19.144.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YevCTLL6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 20EE21BF20F;
-	Wed, 19 Jun 2024 14:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718808983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U4r2NhB2aVVss31PwXJ4X94RcPSjCC+jeEtPQDmEoOo=;
-	b=YevCTLL6/e6zQUGcdIUyodbofzSVTQzJKfiUYLDgqO6jJj2XXNxL4uXWfmFw3Bv2P9Ftsp
-	6kNhYCeaI3iDdEWEmXBFxw38/213Br61ySK5M80hcR09JWxuA6Q9JKcxQbb0tNIbeyIzTQ
-	G2JT+m90V9SA2e/21+koiBaS8oJB1omYYfXfYTccDnlzEU/qPBR0SptCpOpEs2I7JPX2LU
-	ednKoigNF0aDr0HQvvIW8cGmZ6CV9xLQtjSa8Bh2cXrWHJ8wAfEVa1x4Q5py/AEcUKJjTn
-	ffFTvP4JQF76j6niwxQ2/FOIAnLduavSsxAVV4NCeJAuv3IwbTEEK5JAJoqq7w==
-Date: Wed, 19 Jun 2024 16:56:21 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
-Cc: Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Kuninori
- Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij
- <linus.walleij@linaro.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <u.kleine-koenig@pengutronix.de>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [lvc-project] [PATCH] ASoC: simple-card-utils: Fix error
- handling in simple_util_init_jack()
-Message-ID: <20240619165621.47f2b3b2@bootlin.com>
-In-Reply-To: <20240619142432.573338-1-Igor.A.Artemiev@mcst.ru>
-References: <20240619142432.573338-1-Igor.A.Artemiev@mcst.ru>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DeO5eaTa"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id AB7DFC0000EC;
+	Wed, 19 Jun 2024 07:48:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com AB7DFC0000EC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1718808507;
+	bh=iZbm6EdAbJzUiVO4UtD9tGvM+sfX52gde6b5TpOe++k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DeO5eaTaP/IqjtEVHu6D/Jn3oveijOQfNlLsWIqsuRN7nhkd+h4aDCZsf2sGzM1H2
+	 pVGZLgtd9GzaFxTZAcz7T/41Vmb/74cfkIo/V5WJlS9vq6ammieC/s3dkmJCzvM+xW
+	 sbL5fTI1UjsKRzRFie8rG4TsDSG/TmCzABQjXZ3M=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 763BA18041CAC4;
+	Wed, 19 Jun 2024 07:48:25 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: stable@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH stable 6.1] MIPS: dts: bcm63268: Add missing properties to the TWD node
+Date: Wed, 19 Jun 2024 07:48:25 -0700
+Message-Id: <20240619144825.4052589-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,52 +56,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Igor,
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-On Wed, 19 Jun 2024 17:24:32 +0300
-Igor Artemiev <Igor.A.Artemiev@mcst.ru> wrote:
+commit 24b333a866a10d4be47b9968b9c05a3e9f326ff5 upstream
 
-> Currently, if snd_soc_card_jack_new_pins() or snd_soc_jack_add_gpios()
-> fails, the function continues execution without handling the error.
-> This can lead to unexpected behavior and potential crashes.
-> 
-> This patch fixes the problem by checking the return value 
-> of these functions.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Signed-off-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
-> ---
->  sound/soc/generic/simple-card-utils.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-> index 81077d16d22f..5da0c13858ad 100644
-> --- a/sound/soc/generic/simple-card-utils.c
-> +++ b/sound/soc/generic/simple-card-utils.c
-> @@ -784,10 +784,14 @@ int simple_util_init_jack(struct snd_soc_card *card,
->  		sjack->gpio.desc	= desc;
->  		sjack->gpio.debounce_time = 150;
->  
-> -		snd_soc_card_jack_new_pins(card, pin_name, mask, &sjack->jack,
-> +		error = snd_soc_card_jack_new_pins(card, pin_name, mask, &sjack->jack,
->  					   &sjack->pin, 1);
-> +		if (error)
-> +			return error;
->  
-> -		snd_soc_jack_add_gpios(&sjack->jack, 1, &sjack->gpio);
-> +		error = snd_soc_jack_add_gpios(&sjack->jack, 1, &sjack->gpio);
-> +		if (error)
-> +			return error;
->  	}
->  
->  	return 0;
+We currently have a DTC warning with the current DTS due to the lack of
+a suitable #address-cells and #size-cells property:
 
-Looks correct for me.
+  DTC     arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dtb
+arch/mips/boot/dts/brcm/bcm63268.dtsi:115.5-22: Warning (reg_format): /ubus/timer-mfd@10000080/timer@0:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
+arch/mips/boot/dts/brcm/bcm63268.dtsi:120.5-22: Warning (reg_format): /ubus/timer-mfd@10000080/watchdog@1c:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
+arch/mips/boot/dts/brcm/bcm63268.dtsi:111.4-35: Warning (ranges_format): /ubus/timer-mfd@10000080:ranges: "ranges" property has invalid length (12 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 1)
 
-Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+Fixes: d3db4b96ab7f ("mips: dts: bcm63268: add TWD block timer")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+The Fixes tag was partially incorrect which is why this change should
+have been applied to the 6.1 stable tree, but it was not.
 
-Best regards,
-Hervé
+ arch/mips/boot/dts/brcm/bcm63268.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+index 8926417a8fbc..87c75faf4a3b 100644
+--- a/arch/mips/boot/dts/brcm/bcm63268.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+@@ -109,6 +109,8 @@ timer-mfd@10000080 {
+ 			compatible = "brcm,bcm7038-twd", "simple-mfd", "syscon";
+ 			reg = <0x10000080 0x30>;
+ 			ranges = <0x0 0x10000080 0x30>;
++			#address-cells = <1>;
++			#size-cells = <1>;
+ 
+ 			wdt: watchdog@1c {
+ 				compatible = "brcm,bcm7038-wdt";
+-- 
+2.34.1
+
