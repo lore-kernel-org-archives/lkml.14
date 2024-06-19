@@ -1,43 +1,39 @@
 Received: from mail02.habana.ai (habanamailrelay02.habana.ai [62.90.112.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A514C98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A1B2582
 	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.90.112.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718778888; cv=none; b=S3LARE1RY6TrFdo7hKRUtFKk/UGa6zbKUqCDYkUEtnogxP0ZZO2dPNJaL6DsHnXzNuTn3n/tshb5d4dSl7NZRAD8n32+avHamvIRTRKN67vxSDu8NZgJgQfTQ+UAl8RxO3RLNsIqNjOvkttVm9omzRe8jL6vLwfP2e3l+jCE6ng=
+	t=1718778889; cv=none; b=HqbhW1c3+IecBGZRvRfVEZIC18QFJM9pWlYDuOIhNPKEB0x8eWmHdMBb9cOPi0S6uNnlVRg0xC+crnKhcamgM8Ub1sY1fZee9Eodce0kZc+mOG9/6Yflze5LZEHDbvi+9rBERIq7jNCuD3VOLmHvn7nAWK6iwvQxA6PA/tjnqlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718778888; c=relaxed/simple;
-	bh=5ump6eTLOwqBw/KiRuccbtl0IWfZ6Ud4eHUp0djojrs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=doqP8u3TEY616EdL0UK92Ah8gpC/gJ6Dg3nTkitPQ/Y/EwjcFUEgpUaauZFBEVLlgZseB0xMMJQF0HvB8cm+6DCQi8dAyygwvK6RSXjxk4fFEwttZZuzb9VlYaQ3azU1Zia5e8cFK1tYHGCqHfxUNRjxPkcHmXKuEzZx9ERb+uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=MnY6i1PS; arc=none smtp.client-ip=62.90.112.121
+	s=arc-20240116; t=1718778889; c=relaxed/simple;
+	bh=7oYiZeDx+fTfe10HbMzhX8OPBVI3EpolpvrHlGHSnw4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=r6PdR6pjvOjW02AkmHRreVJo9UF9rDStZ8jbHw+1AwoDqdUNWf10wTo9QYRqu7OILYUMdzkQkYtvc9S+U3lFNp7i/DAVtTmvEna+XF2X6r6n4GXZzPCHXMOcZnxbw00vipu/Gz0bpw7X0rFYtRLdZg7Dkc0oPBkjuB6cd8lX9FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=Fxv1iIJ4; arc=none smtp.client-ip=62.90.112.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="MnY6i1PS"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="Fxv1iIJ4"
 Received: internal info suppressed
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=habana.ai; s=default;
-	t=1718778884; bh=5ump6eTLOwqBw/KiRuccbtl0IWfZ6Ud4eHUp0djojrs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MnY6i1PSqvaA9TQQuARbAu1bYcyotWLFA2uZ3I9aZP3TrCP1jPAJxdkA+9PNjAOsR
-	 a8s7Ap7CNLGGtLCAHfF4x2xYBA+2/vqgNg+/tqKKgt5W0FbJrBKDuGiUmnUuA6H60S
-	 ywqNoCELtYlEQc3TgY9HJORW568ZjE/06PcLRKMFMWrumDgt6L9tP+hEuXAguIUGgG
-	 768m2EKncDYnwCIbLCXACgZVC+ubkUODpQDYga4m5AlPTN1vrUy0Q0T7p3mzmN/Yc0
-	 rQhMs9kJ3xkn+xRtaXxr8eI5u/M2aRqPRDRBdlOLQAD7T1iyykv0G7uxcEb0FmVRfg
-	 7NMUWLU8+Xzqw==
+	t=1718778876; bh=7oYiZeDx+fTfe10HbMzhX8OPBVI3EpolpvrHlGHSnw4=;
+	h=From:To:Subject:Date:From;
+	b=Fxv1iIJ4pkR2dIjIynHvrT4ANRzILengTWF9k3ehg2v9UvVrBb4muC/5+wXa1mc+D
+	 6vmTnwH5PcQ7aGiya32rfuT0wRbm4dez38+ZF9q+Vt180ZEU2PAy0VT5IqSBtzwYOe
+	 w4n215l7cErbm+9v9hh3Zbx4DFIgh8QiYdnxoq9HLWiKbIbhHvRz1e4EpE6mtemP5N
+	 DgAv1F5V9/jiFKO2uby7KlsNAzwF/NJRXOXFZW0L7vM9woUbZ2K7TSEou3tjbIbgVN
+	 z9QUGK/kJQpNw5KHvuCxcnaXI2gCBjLhrFoQrPbexb79TwJi9asc9VsEJEzRL4duUJ
+	 SzAg+Xje7kr6A==
 Received: from obitton-vm-u22.habana-labs.com (localhost [127.0.0.1])
-	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 45J6YQB41377354;
-	Wed, 19 Jun 2024 09:34:33 +0300
+	by obitton-vm-u22.habana-labs.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 45J6YQB11377354;
+	Wed, 19 Jun 2024 09:34:26 +0300
 From: Ofir Bitton <obitton@habana.ai>
 To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Farah Kassabri <fkassabri@habana.ai>
-Subject: [PATCH 4/9] accel/habanalabs: add more info upon cpu pkt timeout
-Date: Wed, 19 Jun 2024 09:34:20 +0300
-Message-Id: <20240619063425.1377327-4-obitton@habana.ai>
+Subject: [PATCH 1/9] accel/habanalbs/gaudi2: reduce interrupt count to 128
+Date: Wed, 19 Jun 2024 09:34:17 +0300
+Message-Id: <20240619063425.1377327-1-obitton@habana.ai>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619063425.1377327-1-obitton@habana.ai>
-References: <20240619063425.1377327-1-obitton@habana.ai>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,44 +42,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Farah Kassabri <fkassabri@habana.ai>
+Some systems allow a maximum number of 128 MSI-X interrupts.
+Hence we reduce the interrupt count to 128 instead of 512.
 
-In order to have better debuggability upon encountering FW issues,
-We are adding additional info once CPU packet timeout expires.
-
-Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
 Reviewed-by: Ofir Bitton <obitton@habana.ai>
 ---
- drivers/accel/habanalabs/common/firmware_if.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/accel/habanalabs/gaudi2/gaudi2P.h        | 8 ++++----
+ drivers/accel/habanalabs/include/gaudi2/gaudi2.h | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/firmware_if.c b/drivers/accel/habanalabs/common/firmware_if.c
-index 6f0c40b12072..3cd8a1f69980 100644
---- a/drivers/accel/habanalabs/common/firmware_if.c
-+++ b/drivers/accel/habanalabs/common/firmware_if.c
-@@ -460,11 +460,19 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
- 		/* If FW performed reset just before sending it a packet, we will get a timeout.
- 		 * This is expected behavior, hence no need for error message.
- 		 */
--		if (!hl_device_operational(hdev, NULL) && !hdev->reset_info.in_compute_reset)
-+		if (!hl_device_operational(hdev, NULL) && !hdev->reset_info.in_compute_reset) {
- 			dev_dbg(hdev->dev, "Device CPU packet timeout (0x%x) due to FW reset\n",
- 					tmp);
--		else
--			dev_err(hdev->dev, "Device CPU packet timeout (status = 0x%x)\n", tmp);
-+		} else {
-+			struct hl_bd *bd = queue->kernel_address;
-+
-+			bd += hl_pi_2_offset(queue->pi);
-+
-+			dev_err(hdev->dev, "Device CPU packet timeout (status = 0x%x)\n"
-+					"Pkt info: dma_addr: 0x%llx, kernel_addr: %p, len:0x%x, ctl: 0x%x, ptr:0x%llx, dram_bd:%u\n",
-+					tmp, pkt_dma_addr, (void *)pkt, bd->len, bd->ctl, bd->ptr,
-+					queue->dram_bd);
-+		}
- 		hdev->device_cpu_disabled = true;
- 		goto out;
- 	}
+diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2P.h b/drivers/accel/habanalabs/gaudi2/gaudi2P.h
+index eee41387b269..05117272cac7 100644
+--- a/drivers/accel/habanalabs/gaudi2/gaudi2P.h
++++ b/drivers/accel/habanalabs/gaudi2/gaudi2P.h
+@@ -384,7 +384,7 @@ enum gaudi2_edma_id {
+ /* User interrupt count is aligned with HW CQ count.
+  * We have 64 CQ's per dcore, CQ0 in dcore 0 is reserved for legacy mode
+  */
+-#define GAUDI2_NUM_USER_INTERRUPTS 255
++#define GAUDI2_NUM_USER_INTERRUPTS 64
+ #define GAUDI2_NUM_RESERVED_INTERRUPTS 1
+ #define GAUDI2_TOTAL_USER_INTERRUPTS (GAUDI2_NUM_USER_INTERRUPTS + GAUDI2_NUM_RESERVED_INTERRUPTS)
+ 
+@@ -416,11 +416,11 @@ enum gaudi2_irq_num {
+ 	GAUDI2_IRQ_NUM_NIC_PORT_LAST = (GAUDI2_IRQ_NUM_NIC_PORT_FIRST + NIC_NUMBER_OF_PORTS - 1),
+ 	GAUDI2_IRQ_NUM_TPC_ASSERT,
+ 	GAUDI2_IRQ_NUM_EQ_ERROR,
++	GAUDI2_IRQ_NUM_USER_FIRST,
++	GAUDI2_IRQ_NUM_USER_LAST = (GAUDI2_IRQ_NUM_USER_FIRST + GAUDI2_NUM_USER_INTERRUPTS - 1),
+ 	GAUDI2_IRQ_NUM_RESERVED_FIRST,
+-	GAUDI2_IRQ_NUM_RESERVED_LAST = (GAUDI2_MSIX_ENTRIES - GAUDI2_TOTAL_USER_INTERRUPTS - 1),
++	GAUDI2_IRQ_NUM_RESERVED_LAST = (GAUDI2_MSIX_ENTRIES - GAUDI2_NUM_RESERVED_INTERRUPTS - 1),
+ 	GAUDI2_IRQ_NUM_UNEXPECTED_ERROR = RESERVED_MSIX_UNEXPECTED_USER_ERROR_INTERRUPT,
+-	GAUDI2_IRQ_NUM_USER_FIRST = GAUDI2_IRQ_NUM_UNEXPECTED_ERROR + 1,
+-	GAUDI2_IRQ_NUM_USER_LAST = (GAUDI2_IRQ_NUM_USER_FIRST + GAUDI2_NUM_USER_INTERRUPTS - 1),
+ 	GAUDI2_IRQ_NUM_LAST = (GAUDI2_MSIX_ENTRIES - 1)
+ };
+ 
+diff --git a/drivers/accel/habanalabs/include/gaudi2/gaudi2.h b/drivers/accel/habanalabs/include/gaudi2/gaudi2.h
+index 0231d6c55b4a..753d46a2836b 100644
+--- a/drivers/accel/habanalabs/include/gaudi2/gaudi2.h
++++ b/drivers/accel/habanalabs/include/gaudi2/gaudi2.h
+@@ -63,9 +63,9 @@
+ #define RESERVED_VA_RANGE_FOR_ARC_ON_HOST_HPAGE_START	0xFFF0F80000000000ull
+ #define RESERVED_VA_RANGE_FOR_ARC_ON_HOST_HPAGE_END	0xFFF0FFFFFFFFFFFFull
+ 
+-#define RESERVED_MSIX_UNEXPECTED_USER_ERROR_INTERRUPT	256
++#define RESERVED_MSIX_UNEXPECTED_USER_ERROR_INTERRUPT	127
+ 
+-#define GAUDI2_MSIX_ENTRIES	512
++#define GAUDI2_MSIX_ENTRIES	128
+ 
+ #define QMAN_PQ_ENTRY_SIZE	16			/* Bytes */
+ 
 -- 
 2.34.1
 
