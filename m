@@ -1,163 +1,87 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEB81E4A1;
-	Wed, 19 Jun 2024 16:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9D01553AB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 16:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718812822; cv=none; b=laCTTSPyyLQJDPcii2TBTI3rSS8DzSB0WAeGX4VNWq8XCk0INVu7+a5fzZzAApGzz9pjBCUdpAQW22dwGQ1sAmFBIUDpn6KeHFC/34PIsJJ4pLiz6WOvTS25CqIq+JKUlnfYo5IvG5nQknoZ5BVC6x4E+Un4pmLKzbKrFkRDkeM=
+	t=1718812850; cv=none; b=oxO0mYai/SjEhos5ELggGSpfl1zym7frtH1T14KFi9pM4QLENat9Br1ZPD65dsvhHLK0GO2nwKvoKFVfnn1tsASfCwngJSQQv37gHaMyNrc91K8SM0s4w8MeMkNHUA/Y1u7jDUUIsjJ34zhw/OTK7gX9wx6+SyujT27uKU0+L1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718812822; c=relaxed/simple;
-	bh=lsQELVPlsQAcUQYMeUHH/b3zV6m6tBZUonHzjKQKzk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RDzknp25+twwHzsbTwca4jAzQFLQ6F+u1v+HoAxh6THa09u/cwxUPG56phpCx02Arh0aCa6LuoD1e/Uf4xv4FffMkOjueNMFZwHD1OCRmrGEvM/BkXuTjDtZpHV7/PVrUJZpysjyK8gsHa0jgRNu8HEwxbIN+AhPKdoqzW4of/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=M/8ixEAf; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="M/8ixEAf"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JCejEg024133;
-	Wed, 19 Jun 2024 18:00:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	b5I09re8UijZNQJy+2SehYcQsyJFUcqURWXJ6ZBkaI8=; b=M/8ixEAfgdzHtMR+
-	N8TAh1MnQt+6Q1wSgaIk0MsWHHff+eg/0Q3bDzDX4/WUX3QwZXwfqU5btGRjsrXQ
-	MlzIfkPsD+3zvkcHUvmfTAsXImBAsJVvL9IHs+C/4OmpHmc4XSAhVgN8kYAMMnHQ
-	rY8+O27uMpxhgCAb7Z3C03tB+BXYQmCm0yYhvBpD9FghVeQm6ux2wfyhl8X08/B+
-	Nho/lgWmpdVAouKiCTGFimgg4ynUDLriaK9rtPadjtMSuoFFTsgel7qThiqCpvHj
-	DBttaPtVA47oHb1wqE6ZvgiWkHNEkPp5foG/J3AJRq3PCeRwvdym5xSNMYgc9XkR
-	xPQsvQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuj9n46ut-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 18:00:03 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1FAAA4002D;
-	Wed, 19 Jun 2024 17:59:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3B777221940;
-	Wed, 19 Jun 2024 17:59:27 +0200 (CEST)
-Received: from [10.252.1.130] (10.252.1.130) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 19 Jun
- 2024 17:59:26 +0200
-Message-ID: <8c3de47c-bd72-4560-a43b-5275f2f7a059@foss.st.com>
-Date: Wed, 19 Jun 2024 17:59:26 +0200
+	s=arc-20240116; t=1718812850; c=relaxed/simple;
+	bh=w8fNo5SUYq1kqvuVh0RHrw1MQvqBLwMzkGScmxAbDvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uuLeD5Z4O9d87sPrHRx2HrZSqP8Yhr0yU925o834YdXxdxHDawY7e+lLjPjUyqQgTgSmUaZDg1s1JfM/AafhM0y3Qsa5syGb5L6X9UVdDejJIajTJvXJVJfnBv20hO9/nPlwPBTOG9v/knfSJFFI5h1zD+5pD6m4R5XtcoX3uAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57c68682d1aso7784996a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:00:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718812846; x=1719417646;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kQkaOWcGgmjLOBMuaajUORGl3KqAhb4Dsm8xYw+be5o=;
+        b=AZ3YOHMreKagFBk4MMnQ9ADuLDIga0ko5aLJv/mPoMHuRBhDqnlCP0qyG/WR0MLK9p
+         xCz51zyWTR34xpbxsSsFHRjN68Ic3GmxiaxkJxD2PgSa1VU2i4aiXZ4EzvKmcCHvO8VT
+         K29o7etcBSjVdsCCFGGDBM5RGI41benw0ZQ76CEpGBm9TR/ZXxxWyI/dLQnSI6+8ViwJ
+         xqCL34GK/0VDtDtJsix7FeyKtLwB6LhZyIprg1bLXAI0ygD5R0dJBS2IksvXv614SENK
+         Fox8tDvkIBfCW37JffThfGvEv0+7vWVrdqel+gU/FE7QrX0KLKw5loHaRkXe51s8e+yM
+         6Zug==
+X-Forwarded-Encrypted: i=1; AJvYcCXtTeF6pdUOGxbhqsIk1joeTIBEU3s1HunD9ySH1kfYe34tulWt/6W5PAGGiM/xfzoelH21p7bP1tzZiaa0QIxGZTkpqqWiDSYGPMY1
+X-Gm-Message-State: AOJu0YyvTa5XXRM4K+kSWdhGBnr/AMjP239W4zU/hge5LZYFXG9mzlNp
+	ha0iUyDKpJQD/Xd4cUcMtYr9fwC7gDmX2K0xwrAFPibG0WhXFrnV
+X-Google-Smtp-Source: AGHT+IEnmBrzj7nuqFSWhr44EboeJ4eE+DIbOXghJnLvvWlqGAmQ78SoqeCxaIPvSgrrvWNsUw15/g==
+X-Received: by 2002:a50:d79e:0:b0:57c:7f0d:304c with SMTP id 4fb4d7f45d1cf-57d07e2732cmr1425984a12.1.1718812846266;
+        Wed, 19 Jun 2024 09:00:46 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-114.fbsv.net. [2a03:2880:30ff:72::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72cdfc4sm8442482a12.19.2024.06.19.09.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 09:00:45 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: leit@meta.com,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] iov_iter: Update direction initializers to new naming convention
+Date: Wed, 19 Jun 2024 08:49:50 -0700
+Message-ID: <20240619154950.819859-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] iio: add enable and disable services to iio backend
- framework
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
-        Nuno Sa
-	<nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen
-	<lars@metafoo.de>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
- <20240618160836.945242-3-olivier.moysan@foss.st.com>
- <5b7b8a7132934b77b43ffde0650c68c1dd9a5b7e.camel@gmail.com>
-Content-Language: en-US
-From: Olivier MOYSAN <olivier.moysan@foss.st.com>
-In-Reply-To: <5b7b8a7132934b77b43ffde0650c68c1dd9a5b7e.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
 
-Hi Nuno,
+Commit de4eda9de2d95 ("use less confusing names for iov_iter direction
+initializers") updated the direction initializers from READ/WRITE to the
+more intuitive ITER_DEST and ITER_SOURCE.
 
-On 6/19/24 07:21, Nuno Sá wrote:
-> On Tue, 2024-06-18 at 18:08 +0200, Olivier Moysan wrote:
->> Add iio_backend_disable() and iio_backend_enable() APIs to allow
->> IIO backend consumer to request backend disabling and enabling.
->>
->> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
->> ---
-> 
-> Hi Olivier,
-> 
-> small notes from me...
-> 
->>   drivers/iio/industrialio-backend.c | 26 ++++++++++++++++++++++++++
->>   include/linux/iio/backend.h        |  2 ++
->>   2 files changed, 28 insertions(+)
->>
->> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-
->> backend.c
->> index b950e30018ca..d3db048c086b 100644
->> --- a/drivers/iio/industrialio-backend.c
->> +++ b/drivers/iio/industrialio-backend.c
->> @@ -166,6 +166,32 @@ int devm_iio_backend_enable(struct device *dev, struct
->> iio_backend *back)
->>   }
->>   EXPORT_SYMBOL_NS_GPL(devm_iio_backend_enable, IIO_BACKEND);
->>   
->> +/**
->> + * iio_backend_enable - Backend enable
->> + * @dev: Consumer device for the backend
->> + * @back: Backend device
->> + *
->> + * RETURNS:
->> + * 0 on success, negative error number on failure.
->> + */
->> +int iio_backend_enable(struct device *dev, struct iio_backend *back)
->> +{
->> +	return iio_backend_op_call(back, enable);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(iio_backend_enable, IIO_BACKEND);
-> 
-> We do already have devm_iio_backend_enable(). From a correctness stand point and even
-> scalability, that API should now call your new iio_backend_enable() instead of
-> directly call iio_backend_op_call(). I guess that change could be in this patch.
->
+However, the function iov_iter_ubuf() is still using the old READ/WRITE
+names, which could confuse readers who might expect the new
+ITER_DEST/ITER_SOURCE arguments.
 
-Sure. I have updated the patch.
+Update iov_iter_ubuf() to use the new ITER_DEST/ITER_SOURCE macros,
+removing the old and confusing READ/WRITE macros.
 
->> +
->> +/**
->> + * iio_backend_disable - Backend disable
->> + * @dev: Consumer device for the backend
->> + * @back: Backend device
->> + *
->> + */
->> +void iio_backend_disable(struct device *dev, struct iio_backend *back)
->> +{
->> +	iio_backend_void_op_call(back, disable);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(iio_backend_disable, IIO_BACKEND);
->> +
-> 
-> We also have __iio_backend_disable() which is static since all users were using
-> devm_iio_backend_enable(). I understand that's not suitable for you but I would
-> instead rename the existing function to iio_backend_disable() and export it.
-> 
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ include/linux/uio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Just renaming is not sufficient. The reason is that 
-devm_add_action_or_reset() require an action with action(void *) 
-prototype. So the prototype of iio_backend_disable() has to be changed 
-to void iio_backend_disable(void *back).
-I placed the same arguments in enable and disable for symmetry, but *dev 
-is not required for time being in disable API. So it can make sense to 
-change iio_backend_disable() prototype.
-alternatively, we can call __iio_backend_disable() through this API.
-Please, let me know is you have a preference.
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 7020adedfa08..aa1ca69febaa 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -347,7 +347,7 @@ int import_ubuf(int type, void __user *buf, size_t len, struct iov_iter *i);
+ static inline void iov_iter_ubuf(struct iov_iter *i, unsigned int direction,
+ 			void __user *buf, size_t count)
+ {
+-	WARN_ON(direction & ~(READ | WRITE));
++	WARN_ON(direction & ~(ITER_DEST | ITER_SOURCE));
+ 	*i = (struct iov_iter) {
+ 		.iter_type = ITER_UBUF,
+ 		.data_source = direction,
+-- 
+2.43.0
 
-Thanks
-Olivier
-
-> With the above changes:
-> 
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> 
-> - Nuno Sá
-> 
