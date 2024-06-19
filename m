@@ -1,198 +1,91 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0B8156C6A;
-	Wed, 19 Jun 2024 19:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718826065; cv=fail; b=JCwCF+3WQpg2jbfOEkKFntvpUZyv2vkAoryYvxcxZBzKCb2LbASyuyLSjGUP+C1y1Lklc0Eyxx48zXVNMuBqIhvQ2S7qDIdD3FWHqr8aPNhq2ICOtEYlQdhqEFB7vDWxVHEWG6+3pIYLPWGlw/QQ6p+mL+lNA0/l37To4WfoBJI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718826065; c=relaxed/simple;
-	bh=1Pz4HXVJuaJ32aCupZNqtp2X0iECgxG8XSfLPyu4X8Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pMZ/SLQZ8NA1NbFuU493aFBtugvaVpbPMttSc5tymRocJ564ejOH1qjNHeKnHEN+0ZdWDPpVLPvPt0HVyu0R6OfUh5t9zgzjOA9KNtLs44DlvY8y29Gir5hmkF9z3Df45cjMFM428pSgP2juCzZDOLoephdV+p1XT5TdNi5BGuk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uA0oh6RX; arc=fail smtp.client-ip=40.107.223.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60026156C6A;
+	Wed, 19 Jun 2024 19:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718826159; cv=none; b=paBuw7yK5rdfurjd7EDcDfMTdLgpCEnGDqUXraJim625s/HIj5Ul8+jXIeUBl4DeyFKenIBSmjr+2cWgzh8M2CR22fM5wpgWVKdw2xXQQULT+cjWSKJW+N4kQ24LFnDRwjRkwTIBno35PuFyvDTuOsbaOVVj+YaCDOebC9kHmic=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718826159; c=relaxed/simple;
+	bh=lQJgX2kqtpucEStoylm9bVUxglT3Ct/aEDAVENKWZwY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vEFFHvKvmY1ZDEZjz4cRfrdbJoqDTFP5Bgsql39g9P3uHLRWXIq+h166mUzWcKj7ABzt8AfCGCyz3XvKmpx1KUxJP1USdcj7/2tjFKGtH9Cb0uCiGBR9Cj8jzZFNbtXL8giW+4spNkg7KfxEdhwtrNxkGB2KSZ2V0UKEjhabSHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQ2whtI5; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uA0oh6RX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P0B2muxWlpF6x6yFwluhj6qeTzUVub6M1yigzWcT434P3R+vqsJ0oKFe9EUTzqPUeZpJQ+sFMWhiwrSuQnJlOeJUHJ1Exxw/sCLlSY+7ldV33DSrAf/tbphAmn0dZGsFZ6HXtPxbhEkmzA3eEJfZoaI9cVdG8UerKadAy8ipL7fEuPPhg/M4vjuWHBHzMci9v8aTDUAn+YAr7EGhnpJ9lgFhmwLvVYp4vzawHx/iAVlTWXIjY80QqU9dut4CgNTDDjXez0Pm+GxaTpOh+MtstknJpdhoe3XCmyMxR0t2OQmSBbNeGm3a1u7v+igXLeo6aOfVlMTfOP/uTtiIANJqYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QK89dYM8EpB4hXBtOstWyJdzq/4W2wIiCm2kt9nEMAg=;
- b=KDNL2J4x/+BHDViBOMmSA12HBiqWipEw8aPoaVG7TFrXDusHU5CAnFcOlYtNJ6WTLdcSRYmCnd4/c5FJwvkTYxxaTmNpIRzUMga8JW28TKDFDvxGIizKyllrQgKXShyvmjhAEo9Q/CcfsBDAbPeGJN1fKqfOkW90W81ZeGyWfwazp2vqjfkEw815I14otgVdlO8IiBb02Ph4CCHroVIUN2Q7zB3OyCuEHxu1vFb5JosB9UXgtRZ4n6TErZBZetzuITVyQyXcbaV4Hm2TvPLLhU1Vp0VrxOtiAb5DL0bFwtpA+CwCFM5DX/SPWRyxCZOPgYRGRANqArqx4RCMGCtOsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QK89dYM8EpB4hXBtOstWyJdzq/4W2wIiCm2kt9nEMAg=;
- b=uA0oh6RXijdvz+XG5pouVNNK29ugq3iMwdAMWkovEg7p6nf2nY7RO0JPciE+qaREz/H3L2hEN8u3RtWBH+vjD80SFVqct2zvxv5TId1LVM8t5sUh1tFsoGs9F6ZL56aT0VLIEGVr6Ivj19bvsdpYztcbaiTqUtlK4UxMKwnkxDg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW4PR12MB6755.namprd12.prod.outlook.com (2603:10b6:303:1ea::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Wed, 19 Jun
- 2024 19:41:00 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.7677.030; Wed, 19 Jun 2024
- 19:41:00 +0000
-Message-ID: <a1389e59-e1e9-4280-a4a2-fd2f8050dab8@amd.com>
-Date: Wed, 19 Jun 2024 14:40:57 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 8/9] Documentation: cpufreq: amd-pstate: introduce the
- new cpu boost control method
-To: Perry Yuan <perry.yuan@amd.com>, rafael.j.wysocki@intel.com,
- viresh.kumar@linaro.org, gautham.shenoy@amd.com
-Cc: Xinmei.Huang@amd.com, Xiaojian.Du@amd.com, Li.Meng@amd.com,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1718787627.git.perry.yuan@amd.com>
- <933b90997624cf7dd788ea770e5529b77ba7be0c.1718787627.git.perry.yuan@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <933b90997624cf7dd788ea770e5529b77ba7be0c.1718787627.git.perry.yuan@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0056.namprd11.prod.outlook.com
- (2603:10b6:806:d0::31) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQ2whtI5"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4218008c613so1551715e9.2;
+        Wed, 19 Jun 2024 12:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718826157; x=1719430957; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1/mbiCPrwheVnyKx6Tn1g8ggM05xq8FHv37NW2n7TXw=;
+        b=mQ2whtI51oWtLJRn+bEoyoE8891+P91EIGuL4LezIYh3/0+v9AGVKa4g0hO6R535k+
+         bCuWkWCPRdho1/DkerVj1PRtDoPYMvWBV2B//8ObceCZKGVPaxC52eWR/lGjjU1D8Jse
+         CCQ1eGGBf2w+INaqxBj/Ur3CWoVfC5EGhq1mNJSyplEinq4QXWw83HaT7eGv2MpZu3F7
+         uPglPy2/iG3mG0YXxuPDHhlP+fRE3ZOoK4Z6RC4ppY99e+UL0E35yq140H/DFtSlLu3f
+         JdZQILagxapwQTLG2HhDvfAdKf1w1sp909Sx0EAw5E0QPGTlhELQf5DXgKh64Z2h+ypT
+         lpzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718826157; x=1719430957;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1/mbiCPrwheVnyKx6Tn1g8ggM05xq8FHv37NW2n7TXw=;
+        b=fjiCqk6+pFwx5s+8MJ2LXwGayPY/deTZLZItol3+3iRyStFKr/EcDgvzneMKc+6zsX
+         fE0JkdBbsJ1BewcGuf0DqVkkKU11lsW8LxbhraiyapHiP6KfQhQfZBC/s/STzSit2UWC
+         c+ovK1aNqkeP1/iftOhVp49RuUGFNxpFHITq+RluqarINpg2gT8Du0ERK6jIoTrldRU7
+         xYib1z6MtE8vXxjSeDOS35B0q8w5IasYZK6LL4tN+SEnGcShOMWdmAny/aNoEKpPTj5Z
+         OcSa/18pQ4QPAdLXmhbrJnvuV3qAI/ldeuz20iJ5wh16EBJ9x34DspOhVeBu+LYlbubv
+         UltA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIicP9LcwSY7RXj/oSthqDqn60QNKufNquFqf15MtmnEI/Py2aE14mHpIlwgB2BpA3ttYnkOCJYyMHDzjPZs+0+AOt1mdvjGi6uuKTniznrQm1Vjhuy4RmR6wJte309DXl0oTd
+X-Gm-Message-State: AOJu0Yz5XJ3UqbDT2JEUlrcPAbeufTK2SoI0OkC7G5JQ+t0IiYMr1UV7
+	elVSuCffui7M9SFcvreZTz0qBDEVibQT0HB0mGBsMAPXdT33I6So
+X-Google-Smtp-Source: AGHT+IF2IxtLOJA3h18fOwP9xgKYFMBwoIc2Z3TKZGsCnjv0rzAia+DYIAtwysGmCydG9zU41wq9jw==
+X-Received: by 2002:a05:600c:2252:b0:424:798a:f808 with SMTP id 5b1f17b1804b1-424798afec4mr15726325e9.5.1718826156363;
+        Wed, 19 Jun 2024 12:42:36 -0700 (PDT)
+Received: from [192.168.0.5] ([69.6.8.124])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d1f6dbasm341025e9.43.2024.06.19.12.42.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 12:42:35 -0700 (PDT)
+Message-ID: <98ca94c3-d37c-4145-95a8-b2d9a36775c8@gmail.com>
+Date: Wed, 19 Jun 2024 22:43:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW4PR12MB6755:EE_
-X-MS-Office365-Filtering-Correlation-Id: e53e21c0-2690-4485-e224-08dc9097bf4e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|1800799021;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T3NmTWJYazZNVnFCZGhvbFpWc2QvY1UraCsxbWdkcGo3Vm1FRExaSVN6Q3ox?=
- =?utf-8?B?bkk3TTZxRVMwR3lOdXMvSmcxSjVkNUhIYXp1TDFmbFZ3MVo1dUhIcS9RLzl3?=
- =?utf-8?B?QmpxMWFwN3V5Zm1jUGpTeTJtOVRyQ01wUHVIeGZGZHhWWHg0cFZKNTUvdTdD?=
- =?utf-8?B?RVV0dDlOTnJ4bmN2Y3ZhY1BmYlpZWmFYM2JHZGpRQVpXRElhM1NLSDBtUlFy?=
- =?utf-8?B?NEhDcDIwdFJGdmlDbkhtZjg1aFFNblBLclpaanBLdXZlemt1c2oxeHUvbGpP?=
- =?utf-8?B?SDQxb09NdWdxL294NjZtRGpZdDd2Smg4Ym90VXJ1cXN0QTlPcENKdVI2ZEVH?=
- =?utf-8?B?cWcxQ2tBNWw3SFFGNEJKMUFQV284V29OVFYxNHV2aUhsTlJHMm1CbzdUR1hR?=
- =?utf-8?B?NDZoYzAvdUREOWp4ZjdrQXFkK2l4K2JsSWJUYTdleGJjalNJQ2h2VE05SWl1?=
- =?utf-8?B?cmIrUXcxWTZrdGN2Wlp1VUZOTXhtWDFHbXBKQWJ5OUpHdGluSEpDc3Z5NFZl?=
- =?utf-8?B?SmpzVzlzZ3MvRU0zcGVTdytUdktGYzJDMi9xZkxiZS9vNnRhamhTU1ppZ1Nz?=
- =?utf-8?B?Y2lqZXVjZEs1VXMrQkprVnJIeDRjbnlCampIWDVYS1U4eG91NHpNT2ZEZjcx?=
- =?utf-8?B?LzlwbzJRemNUb0pHSEw1eklCalRMaGpkSlBQY3VnVXorbXpFd0VBUVY1UDhE?=
- =?utf-8?B?RGFJN2w4YmtTVC9tYzVMS1pOcG92OGlkYWliazBTaUNncitwdDdGT0dNWUtj?=
- =?utf-8?B?eXlMaDlUVzhjSDZEMjJWVVQwQWRLZTQxUVU2V1grQXo3cWpOMjB0dDFDbUVM?=
- =?utf-8?B?dGNaYllvMFlRK292L0xQR1NRSjN4MFJNWUtLdHBXOHNXL1Jxb3B3UXpLdlF5?=
- =?utf-8?B?WGRQOGJwZkVIWVBUTmF3SW9sMEl2QWdrV1FnbS9RcVMzcVBkVEJtUzVReXcv?=
- =?utf-8?B?NDhwZGZITFliUlAybXdqU1F3NnRVQVhQZXhjbXQyZWRBVnNJamxZeVRKR3pW?=
- =?utf-8?B?Z1JRdU1DeTRPOHVOZGJqNG1ibWVKVWpKS3dMK1d1MmVEd0cvb1JzRmlhQzRs?=
- =?utf-8?B?djJEVmlTNFRDdzU0WFF5eSs1eVVyNDVBdm1Qb3ZXa2RhVEh5SFVKV213bG5Q?=
- =?utf-8?B?NlBYR1BWOUQrdDlDSHBpMGRNOEtnS1BHODVNd1FIN1FhYitOTnhjRUtYNFhE?=
- =?utf-8?B?SmtLMkVvanYvWW13blBLUGZ5b2xEOHNBNHErY0xEQVl0VlBFSWdCUFhNMXls?=
- =?utf-8?B?SkN0eTZnZVdyRTJSMTZnVTVqYTBVaEQxdWZXM2hGWSsvdEJTNVFEejBhMm9o?=
- =?utf-8?B?R3llR1VnNUJlYm8zUFFnQ3UwZVJML09UMFRoc2VmWjFtY051NTQ2VlIwMTd0?=
- =?utf-8?B?TjZac1IwQlVIcXFqV2l6QVlmaXFLWDZBZXBVNDQvOTM4ZWg0eisvWWhGajU4?=
- =?utf-8?B?cmR4eTJWZnNOL2hhdTFPMEJxSnQ5TjZBL1UxSjE3MzJKZzUwdkhsZDhnWjZ5?=
- =?utf-8?B?ZkdIMkZlaHVsNW5pMythRVlNaWgzWm9Bb0RrWXVDa1NueUhxV09nVFdPQVlR?=
- =?utf-8?B?VlFxWjRxalBYUkNIeXNneHo0b0djMFdXa1dHY2VGKzREUzdFMFNza0dzZWVG?=
- =?utf-8?B?enR1WTkyYy96dmFVNDJ6Y3dnV005RjVaSkoyMWEyUTZHWVFSblhpTWdYVHBP?=
- =?utf-8?B?M3lmYmdYSWVVZVBnelp3OW5maXA1bnI5WkFBNjNEK3FpUzRiejhka3VJNTA0?=
- =?utf-8?Q?Udovd9MmcXPqpQe+s6ztZpuJizdNjVcb+8wjhvA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(1800799021);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZXRSMTJNdGZZUTF3YmhOSXE4ZVQyays0cldxcCtRbm42cUlrZVJCaS9QSzNF?=
- =?utf-8?B?S05PdC9KTklMNTRWYUsxbXpvZEIyTUIzVklvVVcxSGlqeW1RTGhYL3Jsd1NZ?=
- =?utf-8?B?MEM0WWE0Z25oTVBrOStFcWt5MnpQb1ZwQlhhR1hvRWJDcllWaFN6N0RaVUhw?=
- =?utf-8?B?aGZVemtzdGFPL08vNkZYSEtSQmlUWHJiSlFBRWJVM2kxcDRybklKcFErM054?=
- =?utf-8?B?RGhsVTZlV0h3ZDhlaDlmOUZZT3RPL3B1UGJmRVF2K2pzUWJDSjVOcnlxdDh1?=
- =?utf-8?B?bndwVWZJcjNUajN0MjZOV1NQRUhWWmptL2w2S2xRWlNBWTIxMDJOMEQyTW8v?=
- =?utf-8?B?WkZBTUZyWjBkdDlSalRVL1FsamlFNmdiYWR4azlGZ0Zvb3dXc0haTmVESXQ1?=
- =?utf-8?B?L0JsemFoM1Jnd0t4T3dLRllYQnJxbXZ1WGdvRFA4Q3p2eEhGNUJnUE9KMkVj?=
- =?utf-8?B?VkN2NHZyTHFlQnZ0bitKZkZtNk9tdTNEbGNNN3kzSWRCWVNTNHZmMlF1RE5D?=
- =?utf-8?B?QzN1M2sxakhVVkRZUHhlTlREcVF6MWJGTFFTcGxyV1MxaW1XeWQ2RlkxUzM2?=
- =?utf-8?B?NmphV1l5dHRraVdreTJZV0xXcmtWK0hSQjdmckFJL3ZCSjBpYmx3SkExZGZs?=
- =?utf-8?B?USsrUDdRYk1CNkRsUk51SHJPVUVoak1BOFJacHY2cmVMOWo4RElubkdzTmtt?=
- =?utf-8?B?S0JHT1V3VGJrSmhWQ2phL0F2K0JtcGUxZHE4bUhCQTAzZnBWL3BYWlpJZFVE?=
- =?utf-8?B?Ykp5cVU2M0FmMkJLeXAyQU4yYTd1V0pQdUdXNTNhQ0JueWlULzhwdW00TFVi?=
- =?utf-8?B?cUdsbFpGZEdlNitvZTVoS1dtS2J0N3RhTHhFck1Cd3ZuMWhBb2lsMU8wMEZW?=
- =?utf-8?B?eWhJK1dmcnFGTnA1Vm9rUHB0QmRiYjFQL056T0dkWXpTL253MlBGSnJEQzdW?=
- =?utf-8?B?dmtvT01lNXBRZk5mR3FHNUZzZndVSW9ERlJuTStLdDZNR29xR2FnK1A0bEFD?=
- =?utf-8?B?NHZFSFg2NWl0OEsySXJ3K0lDN0NvMFBmbjIweFlsZ2JzdlhmWDZGMEFacDZX?=
- =?utf-8?B?ZnhwS1N0cjJjSGlnVVNFNFkyTWlPdllvSWM4dnc0NE5raTRhN0ZwMHl5V1dM?=
- =?utf-8?B?R0t1MmZRa1UyNlZIVG5CaTRqbVc2aTU1bkNTbXBRRmcvTVFmeElybUZoa3Bo?=
- =?utf-8?B?WkRuZWs4VUpUSG5pUGdIR0tSOHNxaHJ5RkRTeUkzb1JLRnRyL2FYTGh3WkRm?=
- =?utf-8?B?L0pLZ2pqbUFZS085dlJMOFZ6Qm1CQ1Z6MVozYTd1UnNPVkZGR2FWdjF0NUlR?=
- =?utf-8?B?QWFsNlRDbm5qRjJKY1lYbW5TdnlOdE9uTlNEd0ppSyt3WmN1bEY1NlBtZ21k?=
- =?utf-8?B?Q1JXcTNFZ0JxWG5KNzhwUDFZdGZzMm1xdVdkMHhpUzB2Y25tSEZ4UjBaWVIy?=
- =?utf-8?B?cFNNcXh4ektYcElTSW5IZmZxK0hFdlRGbnp3bTZWM1ZLbVZhQTIwSytYS1V3?=
- =?utf-8?B?UDBvcklEaFVZVUtZVnMwbks5YkdsNEtIMkJKeDNtbDJuZmRpT3VEbml5UkNt?=
- =?utf-8?B?Tzd2blJzTlFnaEpkUmlzMk50ZTJwZ1lCNnlNQ1dlTGR3SVFWRzZTTU8vR3ZR?=
- =?utf-8?B?YXcyMlUvNjBabWx1NVdDellhYWZKNzliRnprdS9KYWg0VzZVeVBMdVdwWVNx?=
- =?utf-8?B?ZzVIbmJDWGdJazFKVDlCUWxYdFlCVTUyZVpWTFYvWGpOOGZmdklCQ0RxbExN?=
- =?utf-8?B?bU5oRWhNUW53ZWptQ3dSaHg5MG56cHVDYTV1K0dMWGsrSmR2cGNnTzlNSTVK?=
- =?utf-8?B?OXZxLzhkVmNSWi9FaFhLeVFOM0xpNS9xUEwzSE5MbTViVXJSejdPSzlDQ0lj?=
- =?utf-8?B?QWR0QTZkZ1VnNXlWN201WlBZYnFBa1pkckxuUzFBaGorcEZYYThUT216MmNU?=
- =?utf-8?B?RnkzZUR3YngwamI2MXZRTXdyY0pDbitBZzg1K1hRWDZzZGF5ZVI2WWRmZTJ3?=
- =?utf-8?B?R2x0VTFqOTM2WEtzd1IyQzR5SmsvSTRLeUlsMVJ0WGx2S3BFV1VDbUFOaFc5?=
- =?utf-8?B?T2o0VVk5NFRCV2FWdFBEK1lNa241eUxOTEFOQkJNM0thaXg3enlKdHozU01G?=
- =?utf-8?Q?su/GSJdXQco9Xmm0YauqzmJKe?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e53e21c0-2690-4485-e224-08dc9097bf4e
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 19:41:00.5088
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z4SfCO1xYruzbEEOZJLZEjKypIJ6jLOJ2NYKuaOn3M2yD9tMHXpfNTRodWPa9W8nUbIXJjxncHfoIR1qofBWMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6755
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next v1] net: wwan: t7xx: Add debug port
+To: Jinjian Song <songjinjian@hotmail.com>
+Cc: chandrashekar.devegowda@intel.com, chiranjeevi.rapolu@linux.intel.com,
+ davem@davemloft.net, edumazet@google.com, haijun.liu@mediatek.com,
+ jinjian.song@fibocom.com, johannes@sipsolutions.net, kuba@kernel.org,
+ linux-kernel@vger.kernel.org, loic.poulain@linaro.org,
+ m.chetan.kumar@linux.intel.com, netdev@vger.kernel.org, pabeni@redhat.com,
+ ricardo.martinez@linux.intel.com
+References: <9f934dc7-bfd6-4f3f-a52c-a33f7a662cae@gmail.com>
+ <SYBP282MB3528E219E1B7A579EE58A2B1BBCF2@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+In-Reply-To: <SYBP282MB3528E219E1B7A579EE58A2B1BBCF2@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 6/19/2024 04:16, Perry Yuan wrote:
-> From: Perry Yuan <Perry.Yuan@amd.com>
-> 
-> Introduce AMD CPU frequency boosting control sysfs entry which used for
-> switching boost on and boost off.
-> 
-> If core performance boost is disabled while a core is in a boosted P-state,
-> the core automatically transitions to the highest performance non-boosted P-state
-> The highest perf and frequency will be limited by the setting value.
-> 
-> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   Documentation/admin-guide/pm/amd-pstate.rst | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
-> index 1e0d101b020a..bcc0d9404c18 100644
-> --- a/Documentation/admin-guide/pm/amd-pstate.rst
-> +++ b/Documentation/admin-guide/pm/amd-pstate.rst
-> @@ -440,6 +440,16 @@ control its functionality at the system level.  They are located in the
->           This attribute is read-only to check the state of preferred core set
->           by the kernel parameter.
->   
-> +``cpb_boost``
-> +        Specifies whether core performance boost is requested to be enabled or disabled
-> +        If core performance boost is disabled while a core is in a boosted P-state, the
-> +        core automatically transitions to the highest performance non-boosted P-state.
-> +        AMD Core Performance Boost(CPB) is controlled by this attribute file which allows
-> +        user to change all cores frequency boosting state. It supports all amd-pstate modes.
-> +
-> +        "0" Disable Core Performance Boosting
-> +        "1" Enable  Core Performance Boosting
-> +
+Hello Jinjian,
 
-Please switch to disabled/enabled as suggested in patch 5.
+On 19.06.2024 13:23, Jinjian Song wrote:
+> I think I need add an ADB(Android Debug Bridge) port and a MIPC port
+> (debug for antenna tuner and noise profile) to WWAN.
 
->   ``cpupower`` tool support for ``amd-pstate``
->   ===============================================
->   
+Yep. For now it is a best option what we have. You can do this in a 
+similar way as you already introduced the fastboot port type. And a bit 
+of documentation would be a good option as already suggested by Jakub.
 
+--
+Sergey
