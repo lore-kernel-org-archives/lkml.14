@@ -1,190 +1,261 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4D457C9F;
-	Wed, 19 Jun 2024 05:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718776700; cv=fail; b=s8AHlHNyIQOrhghfZ+lScPQ/rE/pW0ccxt8ruSrMZyDaE94frk4io4KnsMLFhbeVV8faII+664diKW92BsYmHrLF8C8qbdfNxI9cqnsDXbXbgiSr7E4PyMA0Au1PkZUvGHlig/AVHCgn7gPw4zO/vu1WsWjGonAQQi4Q7I/aBbs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718776700; c=relaxed/simple;
-	bh=NdubEcfh/213v7THyhYK91ju26cuYxd/pVLhxSe7Ej8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bXiZncVJm72qDsjyihwr4BIillM4Hane2NILkPgyx4jFJmmwU4yeUgPzb105//1Be3PolohIlbBmuFM62vER40N6w1TkhbNh+7cHu70uY/xRZcMQd32sfsFy6NJvvtLybabmqJV3OEjjyZwKvbpP8EzwfJNmtaM7aIH2fn0rfqk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5sYXhZM8; arc=fail smtp.client-ip=40.107.237.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB8B47796
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718777150; cv=none; b=hyA0QXXGIT21BnMFoyMjOu2eHt2wdS76lv9U7BJaZmXiovSr0IicRpgIMT0sYeskqz4toA176/RuizZJv3N5r176qo2xMJHiN72oTu8irQDQOroYxeolVYBsxyHqObQlw0eDXh/mZBrJDyh7GJe4PcP5OwmyYNdByTrtn6jXYP4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718777150; c=relaxed/simple;
+	bh=l0mNs/FsDmY5dBfAxFirPNKQAqbJFE+jk9p6H27x4nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fAgJBk+PkGp84LnWQ7IXCWtiydPNlnJG1jgFYnHL6uTO/lSa2dcYOsviLx/pbYPtGw7HBWMoMzONCdqp/bT1GHUG6Alzq928W7bUIdjc0/O0vAo5vBfRosbiPAqUgEp1Z0wdtivFC0IcGq4eme9/Kb/36308BNy4a4DAzd0he2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=rubDcka9; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5sYXhZM8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hpnm3a2rjm2ltI1978bZXMTbTdDSfHf0N1brbcSjGIh2vGHItWlPrYYzQnftkQ+sireF2co1hp6RCE4y1CUOfFC5YHv4DqD+kPaTGNzOX/IvP6WwzeZvHYSK7tVgWc59HMevx7CG9EnmyKF42LrcQCCmxWKZFPq4RmfOm2wU+wwCgRGq2FRQsBVwgOfqQ+oxKw09GJSbPWhqk7sZDUGhPJ6894kBW2icnbWfEUmcVHlZUxZ2KaV6oEChGbk5L0FhI0a3MuU6diYs0qo5XUsg4Vkz7Kc2bXLML0jyDvioRUvoaTZcsKcON/3HrJF6vIlkvT2VdbG9hijhJ7k0AWS0Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p60fwGzOOBDJu1YSybedJvBxXWu8Pcn5jBSZsavgdt4=;
- b=HY9DR0dTKPmVutSB3ct1zdrsh9zfqnarlo3U4EZ7tNVRhdd3LtAChkQ5dxWAR4rt98eVmYxiehvEHRX113jqi7kslwfAWQzaNjPiLC2cyd9qL3FEoxH8FKn5aTaYkmGi9gFH870ErjGAdqKjNki9dTJddQ4wplPR7NGvSuAMVqbZxIHRphsB0XXz3lbgRnctDkGT9OjE7swG3VkaHOwasrVlWRpZT2twX9bU1QhUfuj4OdinD6DHCs70XNDgjItdhGcYrUFy1ngwQDX9G54B5NKyyrqmTgTkb2HdfR+ARFOY+ixWy3dqjGWegOdq/dDyuFCkyymVHB37J7YxnF6Ezw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p60fwGzOOBDJu1YSybedJvBxXWu8Pcn5jBSZsavgdt4=;
- b=5sYXhZM8ehKd2uQ8R454NOxYSebil2uJpJFBGm/xGJ8vp4UrzmfNIKiuyszo8h5RyM3Ja1dTG1S1fJQVUgzaNX5R/TFJmxJ33LLNeWYnYlAIIZjXfWapgubD9D7BP00etkADZObHrdCRJMRRJMD89leHs5Bmhm1vBoUcE48JOfk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6309.namprd12.prod.outlook.com (2603:10b6:8:96::19) by
- SN7PR12MB7132.namprd12.prod.outlook.com (2603:10b6:806:2a4::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Wed, 19 Jun
- 2024 05:58:16 +0000
-Received: from DS7PR12MB6309.namprd12.prod.outlook.com
- ([fe80::b890:920f:cf3b:5fec]) by DS7PR12MB6309.namprd12.prod.outlook.com
- ([fe80::b890:920f:cf3b:5fec%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
- 05:58:16 +0000
-Message-ID: <57a570e0-b58f-8f56-569e-eb8f6091c94d@amd.com>
-Date: Wed, 19 Jun 2024 11:28:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Subject: Re: [PATCH v9 05/24] virt: sev-guest: Fix user-visible strings
-To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
- bp@alien8.de, x86@kernel.org, kvm@vger.kernel.org
-Cc: mingo@redhat.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
- pgonda@google.com, seanjc@google.com, pbonzini@redhat.com
-References: <20240531043038.3370793-1-nikunj@amd.com>
- <20240531043038.3370793-6-nikunj@amd.com>
- <b4da8dc1-17ea-52da-c8f4-76a8bb6acb16@amd.com>
-From: "Nikunj A. Dadhania" <nikunj@amd.com>
-In-Reply-To: <b4da8dc1-17ea-52da-c8f4-76a8bb6acb16@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MAXP287CA0002.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a00:49::23) To DS7PR12MB6309.namprd12.prod.outlook.com
- (2603:10b6:8:96::19)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="rubDcka9"
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 0A65340CBB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 06:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718777140;
+	bh=6Nv2YnUXwNhwZtcnR0l2iX9oZx8TMUNIK8n7g+2X8A0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=rubDcka99JK/9in+OTGFGfYGoumxjXi0kMZvJWAQjqfQHA2iqTtgcwRTasPzVoIu6
+	 NiPw4EdlaRPPVWSv9YM9lcJulCOIfQ+ohOQf5hG3Mx+qTi5ETHEhxqN8E47NAW5uhq
+	 Nc3H0vjtdBXiB0tZPEQw4RNH+edZnhFAWzW/B/WFl+tA3UBvNgMUlyCQemcIavzqhB
+	 ttdI/aegEHtAAzFZaxtI/7xGPHpCG1bJMLzWMPTTKpNUvDoKkoaNgPikPZErrn+xyz
+	 jmJIHehu8j9ZH49WUhRQXKWo3q8wN13fLFDg8v10HUGStIVoCcb8sjp5V5zXv+tzs6
+	 atwIfUMoz6xKw==
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-6e231ed9e5aso5667567a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 23:05:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718777138; x=1719381938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Nv2YnUXwNhwZtcnR0l2iX9oZx8TMUNIK8n7g+2X8A0=;
+        b=CE3kTBMhREio7Kbp4m3GNQDo9jcY0udRhLhu478B/gRXD70EjgNxrlnWCRws0XX9mM
+         ocORKLwcYeWPbMrsllAWVkg1LYm1bceA3uZVfwq6c+bm4NLpHmEpAYNOL/sAwqg3GlHb
+         UVhU19kAbuTo7tPd2xunq68pG2UYDTX1+1GfQ+uHTTMp39797+OJ3XNEc8sK/NE+3ZKa
+         QF4bZRhqEfOeInkiqiaQ2/g20Is7/1gmhffrb/owdqEkvcM5brIgoHrC6e4asT9f1OiA
+         lydPOc6IiNP9HulHqGX3QhwcOGbXrnSQyQpg62Ll6NGJ3TW4qtp8QQ8sOWn9QD9yqAG6
+         X4sA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2YwoUJtbL26L1u3FNAFcalI6Nh6SAp9N+1OdgnvDAklGuBLaqyTQxKIoYn3C4i7+8HuKaMv9ZP0GMLA20AiIl/7AGdLIUNeJ7iSRG
+X-Gm-Message-State: AOJu0Yy4svUmIqSY9LHKnEEMcSKQ00lW45LXqeDDMZzSctUsBQb8IFLt
+	1ATIwxG1hPlBI5EpB2ImrRF2nmp/QBIcL10YffnkrQgFGM9DBF8ZbZum6vZV1HwHENqLqxGuPkK
+	E1Bzp4+rHq7bsQ/z9tE41i2tbwYwB9PwuXKVa2LEAQpf3KcNW7XUSxW+g+4AGWKUOAXNPa9gofO
+	t2KzFUdGSvMwslzgjr+3clXd3aEgkKhpbL1U5zlHPSO68hXcga/feG
+X-Received: by 2002:a05:6a20:a8a5:b0:1b2:a94d:4eca with SMTP id adf61e73a8af0-1bcbb5f705dmr1512749637.41.1718777138511;
+        Tue, 18 Jun 2024 23:05:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmoBDk3wuIfStUvPkgN/DsQ3AqL87wGvMpH6BdkD1tmYIyQo/0+ajiApdNg790feEKy+jeMAf9CLNezX3NDog=
+X-Received: by 2002:a05:6a20:a8a5:b0:1b2:a94d:4eca with SMTP id
+ adf61e73a8af0-1bcbb5f705dmr1512734637.41.1718777138116; Tue, 18 Jun 2024
+ 23:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6309:EE_|SN7PR12MB7132:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78ac87a1-0bd5-4e7a-39c1-08dc9024d00b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|7416011|1800799021;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aVlzRnF3U2Noa2ZnUlMvY3hUTmhqTnk2dnk2a2VmTVgvUWFadTltUTBubXJj?=
- =?utf-8?B?NGlNK2ZCNjRUMVA0UE5kMzBmeXYvOGg2eFgrSmJ5RmhpYTk1MC9wd0kyQTRx?=
- =?utf-8?B?UTViMHZNQ1VHRTJmV05FaW9kdWdnSUdwQlNWK1hzOFJnam1XU0c0Y2Z0Zkpw?=
- =?utf-8?B?VUgvM2tMcEhIT2NWWkdYRlU4dVNsWXMyYVhzL3g2cU9KeGRSMFAzSGNtVFBH?=
- =?utf-8?B?ZHBNTnVneDFvcmxhbktOWCtlUFE0VkFkU0dIc0dGQ0wzTmFXR0o5dHp3bU40?=
- =?utf-8?B?cHgwNWJIZ3N0VWc0TlptL2FTUHhaRVQ4VjMzR1V0MnNJNC9Yb1p4YUIrN01k?=
- =?utf-8?B?bjFicEJYdldlZit5Szh3S1E3aThjSENzNERPaHVUeGZ4YlRFRlZQZy9Wd3NZ?=
- =?utf-8?B?OFlTUXhGOUwzSkZIM2NDUzcwanVzdVNhZXdsaUhXWUw5a3REWCtlL2hPdzRw?=
- =?utf-8?B?dksrQkM5di92emRNSktPWnhhcVoyNTNBaTVSR0xnYnAvdnBSZm1uMVl0eGhF?=
- =?utf-8?B?ejNCYlVZYjdCcXo3VmIrVTRxMmFDNTVlMVlyRHNYUmZzSUxYc2JUWDc3RFRV?=
- =?utf-8?B?b0pRQityUm0zUXdQY1RFOEd4REdjSGtpQVlVdmg4MnBNQk9qWmIxTHk4OW0w?=
- =?utf-8?B?d29QTUZEcmFQL3pLOU1iL2VONFhqenNLNEtuNjNIWWhTT0pGcllqU01lVzVB?=
- =?utf-8?B?MWZaNE5ndnFHQVZyVUZBSkpYN1IrN2NIZlc4b0hhVVZkRFp2WDB5cmFNdENG?=
- =?utf-8?B?TFIyQWdMSHIvRW1VaUdpSjB2STVjdW9QOHdmdHJmYkY4RFNJQTl4TnVjR3lO?=
- =?utf-8?B?RkhBeXJKVWxDYTlKclNtMTY4UWJ6Z2dNVVU2VVNoYmdUOWxiNkc2Ukpzclln?=
- =?utf-8?B?MTBiNVlmTkIyNVpmRm1Uc3hhbVFId21JSkpRd1B1VmRvU1pOaElkZWhFcFJE?=
- =?utf-8?B?OWo5QXR2Tm0zaGxCaWVyeGI2c2Z0TWliOGU0VVl6VnVGaWZBNEF4d3FneGFX?=
- =?utf-8?B?UTEvY3FhSGxWLzVqMS9pb1hvMzRMdFZFNmtTT2dQc0JUcERCTnAvdTVPcEor?=
- =?utf-8?B?bUsrY1FJMzI2a05LWTVFUjdDQU1GbnpTQ3hzcXI3aUZSUEZGSURiMkszWE5K?=
- =?utf-8?B?V0t6K1N5Um9FeUdZSUowSEZUcjlPbkJ3UEdsWTk1dDAxWjdvMElpSzNPeFpu?=
- =?utf-8?B?NzcxM2l5UE5FeG4wb0loZkFuWkROMTE0TDhMZURXZ1RIcG1UdVhiaXpzVW5n?=
- =?utf-8?B?M0t3STJIOXEvcjNwZzUxRkFYMjg4eE83a0tzRmxpM1cxbDFHQnkrWEt1TW1S?=
- =?utf-8?B?NHNCSjQ5Q2g2MDFkRExmQytzWTF1blhlZ1UyQlo3cVpvVHFrc2w2QXVrMXcv?=
- =?utf-8?B?d1dtKzNQcDg5UUM5TkxFLzRwUFNhMkJXVnRod3REU3lRUjFEMjlFV2Uvb1A2?=
- =?utf-8?B?Q3pPUCsvclpzaEduMTRkV2l3ZXBCV2pjS2JWcHhTeHNSWlhZaVJJN2svRDYy?=
- =?utf-8?B?Wk1zNk1PWDM1OGVkanpTUFVrTi9XQkdXbHFENnIyRFhvc2ZnRGhSa1FLUUYz?=
- =?utf-8?B?ZVh6a2JEZjVmbjI5Y25EcFJwRERqdlhxUnl3YTBCb2hGTnZOQVg0TTliendI?=
- =?utf-8?B?RXdiajUvOHpoZXUra1g3NGtxUHJFSXRTTmtJYmJLTzUzc2dvM1EwUmVtOUJ3?=
- =?utf-8?B?eVRLdmVVcDVyVHIzbWYzU0Z6TmFiVUI4RW5ldkFGTHJKZzdIWXNQS2VDNWdk?=
- =?utf-8?Q?lFXDUxzDUfay+rkXQHkqdUWAhFRZ+608TuSGfY/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6309.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(1800799021);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZzFGYm5YNzJneXZmOEdMemZROUN4NVdxK0FmS0hiLzFQbWF4Z1JibnIrYkVi?=
- =?utf-8?B?WlhITVBwaUpTcHNIMVN4a3ZFanpqUW1vdHZCSXd3bk1oSkhvMTBwK2N3MzdB?=
- =?utf-8?B?L1FTdjMvSWpvb0NmdnBOQWFwUDVXRzF1Y01GNkxPaGczSHpDTTgxNUtXbHZy?=
- =?utf-8?B?Rk9rVURrUW9uUEpwRDhPT2MyYnkySmVSd2MzQ1JPZ091NGJnL2xJOC8yQnR0?=
- =?utf-8?B?Q0w0WFhBNEFLSnZiWjZmaXFkbWhGY0ZqUTZXZHp5ZnQxZG8vUVAwMkNYUVBO?=
- =?utf-8?B?SGFzQ2RMblJaWVJSaStFb1V1bGMrWDJNS3UybE1DWktCaUVBOWoyNUZpcTdh?=
- =?utf-8?B?REhHMENKNm1UZFR2bjJ5a200N0lxOGtBeEtQSDlLcjFhbXBPVSttY2tWKzdM?=
- =?utf-8?B?VzcvNXFkN09QNnFEa0UzUFRrZjE0MXNpN0lKUnZ1eUFPRDZjWHh1Y0RqbTAy?=
- =?utf-8?B?a1NwS3RpSGpFN0NRSFlmVHBlL1paMGcwZjJkUXVva3I4dnFOMEpjcjIwWUs0?=
- =?utf-8?B?Q3paRmdoTHAzZFBmYTlhcXJYUEh0VTVVRzc0UlZKK2VQSmQxSHN3Ly91clBY?=
- =?utf-8?B?ejdNemNQZzhEdC90aDhaL2Qvck1MMHJVK042dFBBbzVCVXFzTjcyL2pFZ21Y?=
- =?utf-8?B?SnRZOHRPdU5lMUZHSXRKYy9laVo4anBDS2ErTmhHdzcxaFNqeFhwZnFqRTNK?=
- =?utf-8?B?cHI3aGJ0UlpMbTJmTFR1K2FMSnF2SmVEZEVzRUhwM3puUzVqbmlYc3hJU04r?=
- =?utf-8?B?MHorWmxQMWRQOTNLN0pheTJVZ1Jyd3BXaTM2SkJaNWNLUit1S1J1b094OWV5?=
- =?utf-8?B?TWUwVVNBRHNVb2NzWVNzVkRsL2tqenJnTVhRa0krajhwbUFMak9nUUVMYzFr?=
- =?utf-8?B?NjRqWDQ5aWxXUVR0N0ZvK2ExZE1OdHF1YS9Fb0hJcDdmeFY4em55ZTVEMCth?=
- =?utf-8?B?NUpVSFBHUjBOY0JCQXNtL05WblFLSWlKaHZHQnoxdks3RXRwcFYwZUJIU0pp?=
- =?utf-8?B?N3I3bDBXQklnTEdKRFFtMUIweFVaNW1tbVlhTGI3eUYxYUhIWG5CWk5rOHpF?=
- =?utf-8?B?ZnBuUHRzaEw1dGwrd2M0SEUvNzUxb2R6U3NBVmRZVHNWaFl0a0E4cXlLY3Bv?=
- =?utf-8?B?czBuL2twcVBoNm5QdndLajRPVHNGMHJtZUVOTjRnd3VrL3c1aWVCaUlZUGtT?=
- =?utf-8?B?RDVkUERHZ1R4K25GMlBCSUVGRm9nS3Z3V002RU5tNkRFekJZVURwU2o3dlBL?=
- =?utf-8?B?d1BHSU1wQnh3ZTZ5RjV1SjcrWGFQV21HOTJkbmZMNmMxT08yMENWL2VVa05O?=
- =?utf-8?B?QmVOeEVEVXZ1MDJITCtZcFF2RHplTC9JRkNTKzhTbnVTVmVvQTNWbURwQjd1?=
- =?utf-8?B?L2p4NU1iRDk2RXJVekFFNTFkVlpJNjh3OFNrVE8rS2c3blBaTG13Wlkra3l5?=
- =?utf-8?B?amNONm1pYkNYNHBmOUp4WWZqTzVqVzd4a3V4N05KYndETnhMRHJPd2dwYUNj?=
- =?utf-8?B?RHFNTnQwSDJyR1ZXb294SGNUbVhqV1BnYTFMWTlFK0g5MFF5b0cyc0JKa2tl?=
- =?utf-8?B?c0JLQVVzV3hmd1NKSjBSMXVweWRGenVVRnQ4YjFxT0dwQXhQcXo3d1l3ZXNm?=
- =?utf-8?B?KzhJQ0VtanJDRithTm9KRzRvc2Q0aWRqdm1GYm5KeW5IMjdKSzBMeVd2Wm5v?=
- =?utf-8?B?TkpiSzR0TGE1bllUeUlrSEZoT0lqbUdROVVrYzdMUHNhUkIwcld3YjEvcm0w?=
- =?utf-8?B?VXhhYzhHWS9Ob3l1eUJoaVBULy90NWF0eUtnNDQ3bDBqR3ZEYlpiNzNRK3VU?=
- =?utf-8?B?S0VKL2VBRWx2dWgyRGt5VXlpdHBwZ1QwUTVBZ2RTZ09mTkJWYmhDOUtNMEJj?=
- =?utf-8?B?eG5EalIrUkNmUnFvSUdSYTVBT0xuKzhITHAwQTBTbkN1ZG1MNWp3WkNqUFE0?=
- =?utf-8?B?MXVIaVd2OFFrendoVUV2UVlkSzVZU0syYTd6VVg5RUp0ZzlhUWhYZVh6VzFl?=
- =?utf-8?B?RXl6SEh0eEhxajM2Nk14ZkJoOGVwRGZieVpFY0R0QkF3MWVSSGhYQWhyMzVO?=
- =?utf-8?B?QW9sYmZKWEx5bHQxTWtnSWNTb2FyZDJoV1Q3cUFWOW9aeG9QZTdBSHZHK1p3?=
- =?utf-8?Q?GASZtIJRfmHGkovWu9MAshibI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78ac87a1-0bd5-4e7a-39c1-08dc9024d00b
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6309.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 05:58:16.7260
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TZ6P7/3wtqXDfdL9qnguX2a0zrF1DuMg6tGAZGdQHvXp7/AaQppskLzCJXmlDqI5/cz5+0mP/xgkOvQJqy4Buw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7132
+References: <CAAd53p7O51mG7LMrEobEgGrD8tsDFO3ZFSPAu02Dk-R0W3mkvg@mail.gmail.com>
+ <20240618204837.GA1262769@bhelgaas>
+In-Reply-To: <20240618204837.GA1262769@bhelgaas>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Wed, 19 Jun 2024 14:05:26 +0800
+Message-ID: <CAAd53p4gHQeyDkusDW7rkjVKjTnyi+RjHZLbPU5CqfsuVRtodQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com, 
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org, kch@nvidia.com, 
+	hch@lst.de, gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, 
+	hare@suse.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 19, 2024 at 4:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, Apr 25, 2024 at 03:33:01PM +0800, Kai-Heng Feng wrote:
+> > On Fri, Apr 19, 2024 at 4:35=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > >
+> > > On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> > > > When the power rail gets cut off, the hardware can create some elec=
+tric
+> > > > noise on the link that triggers AER. If IRQ is shared between AER w=
+ith
+> > > > PME, such AER noise will cause a spurious wakeup on system suspend.
+> > > >
+> > > > When the power rail gets back, the firmware of the device resets it=
+self
+> > > > and can create unexpected behavior like sending PTM messages. For t=
+his
+> > > > case, the driver will always be too late to toggle off features sho=
+uld
+> > > > be disabled.
+> > > >
+> > > > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> > > > Management", TLP and DLLP transmission are disabled for a Link in L=
+2/L3
+> > > > Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. S=
+o if
+> > > > the power will be turned off during suspend process, disable AER se=
+rvice
+> > > > and re-enable it during the resume process. This should not affect =
+the
+> > > > basic functionality.
+> > > >
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D209149
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218090
+> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > >
+> > > Thanks for reviving this series.  I tried follow the history about
+> > > this, but there are at least two series that were very similar and I
+> > > can't put it all together.
+> > >
+> > > > ---
+> > > > v8:
+> > > >  - Add more bug reports.
+> > > >
+> > > > v7:
+> > > >  - Wording
+> > > >  - Disable AER completely (again) if power will be turned off
+> > > >
+> > > > v6:
+> > > > v5:
+> > > >  - Wording.
+> > > >
+> > > > v4:
+> > > > v3:
+> > > >  - No change.
+> > > >
+> > > > v2:
+> > > >  - Only disable AER IRQ.
+> > > >  - No more check on PME IRQ#.
+> > > >  - Use helper.
+> > > >
+> > > >  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+> > > >  1 file changed, 25 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > > index ac6293c24976..bea7818c2d1b 100644
+> > > > --- a/drivers/pci/pcie/aer.c
+> > > > +++ b/drivers/pci/pcie/aer.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/kfifo.h>
+> > > >  #include <linux/slab.h>
+> > > > +#include <linux/suspend.h>
+> > > >  #include <acpi/apei.h>
+> > > >  #include <acpi/ghes.h>
+> > > >  #include <ras/ras_event.h>
+> > > > @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev=
+)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > +static int aer_suspend(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > > > +     struct pci_dev *pdev =3D rpc->rpd;
+> > > > +
+> > > > +     if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware=
+())
+> > > > +             aer_disable_rootport(rpc);
+> > >
+> > > Why do we check pci_ancestor_pr3_present(pdev) and
+> > > pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+> > > to disable AER interrupts on suspend in general.  I think it will be
+> > > better if we do that consistently on all platforms, not special cases
+> > > based on details of how we suspend.
+> >
+> > Sure. Will change in next revision.
+> >
+> > > Also, why do we use aer_disable_rootport() instead of just
+> > > aer_disable_irq()?  I think it's the interrupt that causes issues on
+> > > suspend.  I see that there *were* some versions that used
+> > > aer_disable_irq(), but I can't find the reason it changed.
+> >
+> > Interrupt can cause system wakeup, if it's shared with PME.
+> >
+> > The reason why aer_disable_rootport() is used over aer_disable_irq()
+> > is that when the latter is used the error still gets logged during
+> > sleep cycle. Once the pcieport driver resumes, it invokes
+> > aer_root_reset() to reset the hierarchy, while the hierarchy hasn't
+> > resumed yet.
+> >
+> > So use aer_disable_rootport() to prevent such issue from happening.
+>
+> I think the issue is more likely on the resume side.
+>
+> aer_disable_rootport() disables AER interrupts, then clears
+> PCI_ERR_ROOT_STATUS, so the path looks like this:
+>
+>   aer_suspend
+>     aer_disable_rootport
+>       aer_disable_irq()
+>       pci_write_config_dword(PCI_ERR_ROOT_STATUS)    # clear
+>
+> This happens during suspend, so at this point I think the link is
+> still active and the spurious AER errors haven't happened yet and it
+> probably doesn't matter that we clear PCI_ERR_ROOT_STATUS *here*.
+>
+> My guess is that what really matters is that we disable the AER
+> interrupt so it doesn't happen during suspend, and then when we
+> resume, we probably want to clear out the status registers before
+> re-enabling the AER interrupt.
 
+Thanks for catching this. Clearing status registers does the trick for
+my cases here.
 
-On 6/19/2024 2:41 AM, Tom Lendacky wrote:
-> On 5/30/24 23:30, Nikunj A Dadhania wrote:
->> User-visible abbreviations should be in capitals, ensure messages are
->> readable and clear.
->>
->> No functional change.
->>
->> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
->> ---
->>  drivers/virt/coco/sev-guest/sev-guest.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
->> index b6be676f82be..5c0cbdad9fa2 100644
->> --- a/drivers/virt/coco/sev-guest/sev-guest.c
->> +++ b/drivers/virt/coco/sev-guest/sev-guest.c
->> @@ -95,7 +95,7 @@ static bool is_vmpck_empty(struct snp_guest_dev *snp_dev)
->>   */
->>  static void snp_disable_vmpck(struct snp_guest_dev *snp_dev)
->>  {
->> -	dev_alert(snp_dev->dev, "Disabling vmpck_id %d to prevent IV reuse.\n",
->> +	dev_alert(snp_dev->dev, "Disabling VMPCK%d to prevent IV reuse.\n",
-> 
-> You use "communication key" after each VMPCK%d below. I prefer this
-> shorter notation, but whichever way it goes, they should all be the same.
+>
+> In any event, I think we need to push this forward.  I'll post a v9
+> based on this but dropping the pci_ancestor_pr3_present(pdev) and
+> pm_suspend_via_firmware() tests so we do this unconditionally.
 
-No particular preference, I had added "communication key" from more clarity to user
-strings. I will add the same to the above string as well.
+Thanks for the v9.
 
-Regards
-Nikunj
+Kai-Heng
+
+>
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int aer_resume(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > > > +     struct pci_dev *pdev =3D rpc->rpd;
+> > > > +
+> > > > +     if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware(=
+))
+> > > > +             aer_enable_rootport(rpc);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> > > >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > > > @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdri=
+ver =3D {
+> > > >       .service        =3D PCIE_PORT_SERVICE_AER,
+> > > >
+> > > >       .probe          =3D aer_probe,
+> > > > +     .suspend        =3D aer_suspend,
+> > > > +     .resume         =3D aer_resume,
+> > > >       .remove         =3D aer_remove,
+> > > >  };
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
