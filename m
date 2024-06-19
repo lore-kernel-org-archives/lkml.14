@@ -1,149 +1,258 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE13574077
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3D2757F3;
+	Wed, 19 Jun 2024 07:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718781784; cv=none; b=gGnMsZeSBSQVrbMzVnYQRdWCIy1k6Tt4k0NPAYQjN9Pos41CUa+0gsRnd4aV7cmQCgsBkK3ToQnCCgG5uAvfHpwI12iA5MwlypvPddX/CJTRJI1LFmTc4sSw260KOGkmRM5ueG5cYOlrgYMJ8ikCZZez0buJQ81yEJWQLUu9Rac=
+	t=1718781799; cv=none; b=dU9ZXtj2Dj4IrVE6yrABohSVd5i26shNBKS1WI8bXk05rSqEOFJICzsqJmpCNRjtgNyq0jE2Wk9MxmHYqfCF7SvEacExpmga6XYuXOBHlPXVu76eoJtASOIvuW2dGuyImW9Lhz7od4i8jUAokfU50OKLGE9UzTo8LBwr5xJbpQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718781784; c=relaxed/simple;
-	bh=ngpHcCrM1X7mc4wPm38zxIOXVRlcC6KG0uGmx9lUIiE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lppm37IP/vy/FJGHY74ubzhBnq3GdoQUPu9FD6pJUUr0azfATruvZzh4d1VlGXq5XJu9OKF7biUjqR0+BaDm0tHr7He8cTFrTMtjtvbt3bHeXIzkTxUwAiF1I3CZiwmgks+anQurpAW+YwSJq3OY1tgBHuh6x8su7A/v6kP8oIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ME1MvefH; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718781799; c=relaxed/simple;
+	bh=KMckKeU+BkOAvXI9vFw3n/q7atvOxre1wUBnkLR+y4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mcAkPiEWjpj9NjDSqiEQ6+01JOxg4TmPoTwV32Yl8mb7ZEOdXOGQJaTUyqjtWGpA/bmDHRsYibE43CcBBf2OWRu2EvzjfU0rDLft4OTejZsrCuVm9VdmYHaObzh0kqXD/JgkmqjXuf+xmIkDCC8PUfPyet9uwsc5KAIldX7auMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QM/5QQ/Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wk1dnrIq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME1MvefH"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c2ecd25e5aso4914371a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 00:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718781782; x=1719386582; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+FveVfxPudO0I6HFCr6cHBBWBZ89yS/VFWEzd7gyK5w=;
-        b=ME1MvefHFlAFccC5i4aO7p6JHEZIKhL8ZlZHrhNwlHPH1xSGocEJNr1F4LrZhMeWuN
-         c1gFlusQr1h/WPVzkwAQjC9YN7CguoUMEnzTu6pUYaespqLT81f0KZwm5YFVNOWQkVU8
-         g3FQCTc2q0OLnqyqNT6wCLjk3hQBTIcLS2L/ldhd9NDpp9Z9OQu/QA8Vki2zkGOhxEf2
-         KkQ4AqO19XU+U1jRz1VlnNvsqwbdAcA4DbYleQMf0HxVSLCcW8z8c/crZKWPXZV9VUU7
-         RbPDw6jbzaQqvdWPhHpXhCjCw2UnzEY4KP6JDGyYUJhlwvqnQV01grG03EFjG6wFqucJ
-         DrVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718781782; x=1719386582;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+FveVfxPudO0I6HFCr6cHBBWBZ89yS/VFWEzd7gyK5w=;
-        b=HEJwtW9Kxa8kEnV724aU/6f3JNPJ8ZZlj4UUISZQtCCPHfIc/MQrcZn17euLapblgA
-         72KS5UTvNhrj3EeC9Xf2QIVYcebD2riSlRqTHZnCMgYZNJYgjWuSQuEzoM3+XyEjqn+f
-         D05Jc/RGcBSmwPK3iNq7C2uv69kW8jZqQiFf+3RXnTw8UycL6XmZqjw9yIVeLTz0mbQ2
-         nM19SCxZDTt12v1WJNwlzjT+rY7Nk2DWX0wvBFrge++F43+dHMr+NFA7ZiMapMvtcedy
-         RD60vvadGpZ+uhadJYK/xe+NEhAVLGCpWrhiwI2r0NDuoRv9Od5AhfxYUbDs0Tvmpwnd
-         ZYeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvGGcDfnk14E9rU8xMGf4hN9n01MfCGhTHlRSN/Lf5wy2B13jk6CpjxlYkefxvqifv5Rw1eZ/5+q+awNlCaHOCO0exES5bXHaMFDoP
-X-Gm-Message-State: AOJu0Yy9jUmVPfssusG0+GhZpeFCDvOzeXfOvclo0ShZhin+OjC0nYwK
-	R4Tr4WxAYIRF8BnuMs0F3KNW171Fs5Gn1EkLXetguxVKRgljGgfR
-X-Google-Smtp-Source: AGHT+IFktMVASJzQCiDMim5aegxCPE0SwjlCRAhAZzOnDGvYTZRFtUSmGK2jeUmrQXz/C8k/0mlWag==
-X-Received: by 2002:a17:90b:1107:b0:2c2:f26a:59d4 with SMTP id 98e67ed59e1d1-2c7b5d57cf7mr1753675a91.32.1718781781989;
-        Wed, 19 Jun 2024 00:23:01 -0700 (PDT)
-Received: from [10.0.0.19] ([122.172.85.149])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c466bf5fsm12085934a91.35.2024.06.19.00.22.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 00:23:01 -0700 (PDT)
-Message-ID: <a9312102-44c1-4529-b3ef-a7831392c42f@gmail.com>
-Date: Wed, 19 Jun 2024 12:52:57 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QM/5QQ/Y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wk1dnrIq"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718781794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uV1j7vKtZPFqBsHytj/ai5JbgtY1eWdikZojdeDt5vk=;
+	b=QM/5QQ/Yx2nOLZPKjfWy0JDqB43Nj4gUHA0SMSeR94LrgrwaUflou/MiDC6vZB/3U7DTfm
+	DKF3QWqFD23YECCdX6AYcInhcgjgS8eYWKmg5YDVMaMtdab1PLQ3ykrsx+DTLfmLnvr5JL
+	3FDEcBJFF0iSUH0o/7GHRuNIOujzqcbL20o5H4LbizfJqc7RdZ9yyvIFNQHOCdBbKenWDl
+	ySHV/J9+HOFvXvotR5n73gps7u5tATPufzPB7P7vDtQRz4LSA40QS8P/zkD9pMXV8VYfKH
+	Vw6bmgailDXnMWLbaRsPZr3wTgjMFsI1srVfL98bFjPSGjo5q6SFiD3eigweEA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718781794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uV1j7vKtZPFqBsHytj/ai5JbgtY1eWdikZojdeDt5vk=;
+	b=Wk1dnrIqDEjiP3XZAyk/wL5m2Gj0lAvBXLJAq0QxtMeCTtLyWJknH3RNrOBLjFUEgV1YbC
+	iNS/EZ8cdBWNqmBg==
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>
+Subject: [PATCH v8 net-next 00/15] locking: Introduce nested-BH locking.
+Date: Wed, 19 Jun 2024 09:16:51 +0200
+Message-ID: <20240619072253.504963-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/panel: raydium-rm692e5: transition to mipi_dsi
- wrapped functions
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com,
- dianders@chromium.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240619033351.230929-1-tejasvipin76@gmail.com>
- <mozxxkpqlboh2w7bf55bezgcy5b2jfgepmgullgd24dtmwfva2@mghwg3c5an5y>
-Content-Language: en-US
-From: Tejas Vipin <tejasvipin76@gmail.com>
-In-Reply-To: <mozxxkpqlboh2w7bf55bezgcy5b2jfgepmgullgd24dtmwfva2@mghwg3c5an5y>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+Disabling bottoms halves acts as per-CPU BKL. On PREEMPT_RT code within
+local_bh_disable() section remains preemtible. As a result high prior
+tasks (or threaded interrupts) will be blocked by lower-prio task (or
+threaded interrupts) which are long running which includes softirq
+sections.
 
+The proposed way out is to introduce explicit per-CPU locks for
+resources which are protected by local_bh_disable() and use those only
+on PREEMPT_RT so there is no additional overhead for !PREEMPT_RT builds.
 
-On 6/19/24 12:06 PM, Dmitry Baryshkov wrote:
-> On Wed, Jun 19, 2024 at 09:03:49AM GMT, Tejas Vipin wrote:
->> Use functions introduced in commit 966e397e4f60 ("drm/mipi-dsi: Introduce
->> mipi_dsi_*_write_seq_multi()") and commit f79d6d28d8fe
->> ("drm/mipi-dsi: wrap more functions for streamline handling") for the
->> raydium rm692e5 panel.
->>
->> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
->> ---
->> Changes in v2:
->>     - Change rm692e5_on to return void and take mipi_dsi_multi_context
->>       as an argument.
->>     - Remove unnecessary warnings.
->>     - More efficient error handling in rm692e5_prepare
->>
->> v1: https://lore.kernel.org/all/20240615093758.65431-1-tejasvipin76@gmail.com/
->> ---
->>  drivers/gpu/drm/panel/panel-raydium-rm692e5.c | 237 ++++++++----------
->>  1 file changed, 99 insertions(+), 138 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm692e5.c b/drivers/gpu/drm/panel/panel-raydium-rm692e5.c
->> index 21d97f6b8a2f..9936bda61af2 100644
->> --- a/drivers/gpu/drm/panel/panel-raydium-rm692e5.c
->> +++ b/drivers/gpu/drm/panel/panel-raydium-rm692e5.c
-> 
->>  static int rm692e5_prepare(struct drm_panel *panel)
->>  {
->>  	struct rm692e5_panel *ctx = to_rm692e5_panel(panel);
->>  	struct drm_dsc_picture_parameter_set pps;
->> -	struct device *dev = &ctx->dsi->dev;
->> -	int ret;
->> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
->>  
->> -	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
->> -	if (ret < 0) {
->> -		dev_err(dev, "Failed to enable regulators: %d\n", ret);
->> -		return ret;
->> -	}
->> +	dsi_ctx.accum_err = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
->> +	if (dsi_ctx.accum_err)
->> +		return dsi_ctx.accum_err;
-> 
-> int ret, please. Let's leave dsi_ctx.accum_err for DSI errors only.
-> LGTM otherwise.
+The series introduces the infrastructure and converts large parts of
+networking which is largest stake holder here. Once this done the
+per-CPU lock from local_bh_disable() on PREEMPT_RT can be lifted.
 
-Is this really necessary seeing how regulator_bulk_enable returns
-0 on success anyways? It saves creating a new variable for a single
-check. In case you do think its necessary, should it be changed in
-himax_hx83102 too?
+Performance testing. Baseline is net-next as of commit 93bda33046e7a
+("Merge branch'net-constify-ctl_table-arguments-of-utility-functions'")
+plus v6.10-rc1. A 10GiG link is used between two hosts. The command
+   xdp-bench redirect-cpu --cpu 3 --remote-action drop eth1 -e
 
-> 
->>  
->>  	rm692e5_reset(ctx);
->>  
->> -	ret = rm692e5_on(ctx);
->> -	if (ret < 0) {
->> -		dev_err(dev, "Failed to initialize panel: %d\n", ret);
->> -		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
->> -		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
->> -		return ret;
->> -	}
->> +	rm692e5_on(&dsi_ctx);
->>  
-> 
-> 
+was invoked on the receiving side with a ixgbe. The sending side uses
+pktgen_sample03_burst_single_flow.sh on i40e.
 
--- 
----
-Tejas Vipin
+Baseline:
+| eth1->?                 9,018,604 rx/s                  0 err,drop/s
+|   receive total         9,018,604 pkt/s                 0 drop/s         =
+       0 error/s
+|     cpu:7               9,018,604 pkt/s                 0 drop/s         =
+       0 error/s
+|   enqueue to cpu 3      9,018,602 pkt/s                 0 drop/s         =
+    7.00 bulk-avg
+|     cpu:7->3            9,018,602 pkt/s                 0 drop/s         =
+    7.00 bulk-avg
+|   kthread total         9,018,606 pkt/s                 0 drop/s         =
+ 214,698 sched
+|     cpu:3               9,018,606 pkt/s                 0 drop/s         =
+ 214,698 sched
+|     xdp_stats                   0 pass/s        9,018,606 drop/s         =
+       0 redir/s
+|       cpu:3                     0 pass/s        9,018,606 drop/s         =
+       0 redir/s
+|   redirect_err                  0 error/s
+|   xdp_exception                 0 hit/s
+
+perf top --sort cpu,symbol --no-children:
+|   18.14%  007  [k] bpf_prog_4f0ffbb35139c187_cpumap_l4_hash
+|   13.29%  007  [k] ixgbe_poll
+|   12.66%  003  [k] cpu_map_kthread_run
+|    7.23%  003  [k] page_frag_free
+|    6.76%  007  [k] xdp_do_redirect
+|    3.76%  007  [k] cpu_map_redirect
+|    3.13%  007  [k] bq_flush_to_queue
+|    2.51%  003  [k] xdp_return_frame
+|    1.93%  007  [k] try_to_wake_up
+|    1.78%  007  [k] _raw_spin_lock
+|    1.74%  007  [k] cpu_map_enqueue
+|    1.56%  003  [k] bpf_prog_57cd311f2e27366b_cpumap_drop
+
+With this series applied:
+| eth1->?                10,329,340 rx/s                  0 err,drop/s
+|   receive total        10,329,340 pkt/s                 0 drop/s         =
+       0 error/s
+|     cpu:6              10,329,340 pkt/s                 0 drop/s         =
+       0 error/s
+|   enqueue to cpu 3     10,329,338 pkt/s                 0 drop/s         =
+    8.00 bulk-avg
+|     cpu:6->3           10,329,338 pkt/s                 0 drop/s         =
+    8.00 bulk-avg
+|   kthread total        10,329,321 pkt/s                 0 drop/s         =
+  96,297 sched
+|     cpu:3              10,329,321 pkt/s                 0 drop/s         =
+  96,297 sched
+|     xdp_stats                   0 pass/s       10,329,321 drop/s         =
+       0 redir/s
+|       cpu:3                     0 pass/s       10,329,321 drop/s         =
+       0 redir/s
+|   redirect_err                  0 error/s
+|   xdp_exception                 0 hit/s
+
+perf top --sort cpu,symbol --no-children:
+|   20.90%  006  [k] bpf_prog_4f0ffbb35139c187_cpumap_l4_hash
+|   12.62%  006  [k] ixgbe_poll
+|    9.82%  003  [k] page_frag_free
+|    8.73%  003  [k] cpu_map_bpf_prog_run_xdp
+|    6.63%  006  [k] xdp_do_redirect
+|    4.94%  003  [k] cpu_map_kthread_run
+|    4.28%  006  [k] cpu_map_redirect
+|    4.03%  006  [k] bq_flush_to_queue
+|    3.01%  003  [k] xdp_return_frame
+|    1.95%  006  [k] _raw_spin_lock
+|    1.94%  003  [k] bpf_prog_57cd311f2e27366b_cpumap_drop
+
+This diff appears to be noise.
+
+v7=E2=80=A6v8 https://lore.kernel.org/all/20240618072526.379909-1-bigeasy@l=
+inutronix.de/:
+- Rebase on top of net-next
+
+- Collect Acked-by from Jesper Dangaard Brouer.
+
+v6=E2=80=A6v7 https://lore.kernel.org/all/20240612170303.3896084-1-bigeasy@=
+linutronix.de/:
+- The softnet_data::xmit (08/15) is moved completely for RT and not
+  limited to one member. During the review it has been noticed that the
+  `more' member requires same protection.
+  After some cleanup this might also be considered conditionally for !RT.
+
+v5=E2=80=A6v6 https://lore.kernel.org/all/20240607070427.1379327-1-bigeasy@=
+linutronix.de/:
+- bpf_redirect_info and the lists (cpu, dev, xsk map_flush_list) is now
+  initialized on first usage instead during setup time
+  (bpf_net_ctx_set()). bpf_redirect_info::kern_flags is used as
+  status to note which member require an init.
+  The bpf_redirect_info::kern_flags is moved to the end of the struct
+  (after nh) in order to be excluded from the memset() which clears
+  everything upto the the nh member.
+  This whole lazy init performed to save cycles and not to waste them to
+  memset bpf_redirect_info and init the three lists on each
+  net_rx_action()/ NAPI invocation even if BPF/redirect is not used.
+  Suggested by Jesper Dangaard Brouer.
+
+- Collect Acked-by/Review-by from PeterZ/ tglx
+
+v4=E2=80=A6v5 https://lore.kernel.org/all/20240604154425.878636-1-bigeasy@l=
+inutronix.de/:
+- Remove the guard() notation as well as __free() within the patches.
+  Patch #1 and #2 add the guard definition for local_lock_nested_bh()
+  but it remains unused with the series.
+  The __free() notation for bpf_net_ctx_clear has been removed entirely.
+
+- Collect Toke's Reviewed-by.
+
+v3=E2=80=A6v4 https://lore.kernel.org/all/20240529162927.403425-1-bigeasy@l=
+inutronix.de/:
+- Removed bpf_clear_redirect_map(), moved the comment to the caller.
+  Suggested by Toke.
+
+- The bpf_redirect_info structure is memset() each time it is assigned.
+  Suggested by Toke.
+
+- The bpf_net_ctx_set() in __napi_busy_loop() has been moved from the
+  top of the function to begin/ end of the BH-disabled section. This has
+  been done to remain in sync with other call sites.
+  After adding the memset() I've been looking at the perf-numbers in my
+  test-case and I haven't noticed an impact, the numbers are in the same
+  range with and without the change. Therefore I kept the numbers from
+  previous posting.
+
+- Collected Alexei's Acked-by.
+
+v2=E2=80=A6v3 https://lore.kernel.org/all/20240503182957.1042122-1-bigeasy@=
+linutronix.de/:
+- WARN checks checks for bpf_net_ctx_get() have been dropped and all
+  NULL checks around it. This means bpf_net_ctx_get_ri() assumes the
+  context has been set and will segfault if it is not the case.
+  Suggested by Alexei and Jesper. This should always work or always
+  segfault.
+
+- It has been suggested by Toke to embed struct bpf_net_context into
+  task_struct instead just a pointer to it. This would increase the size
+  of task_struct by 112 bytes instead just eight and Alexei didn't like
+  it due to the size impact with 1m threads. It is a pointer again.
+
+v1=E2=80=A6v2 https://lore.kernel.org/all/20231215171020.687342-1-bigeasy@l=
+inutronix.de/:
+- Jakub complained about touching networking drivers to make the
+  additional locking work. Alexei complained about the additional
+  locking within the XDP/eBFP case.
+  This led to a change in how the per-CPU variables are accessed for the
+  XDP/eBPF case. On PREEMPT_RT the variables are now stored on stack and
+  the task pointer to the structure is saved in the task_struct while
+  keeping every for !RT unchanged. This was proposed as a RFC in
+  	v1: https://lore.kernel.org/all/20240213145923.2552753-1-bigeasy@linutro=
+nix.de/
+
+  and then updated
+
+        v2: https://lore.kernel.org/all/20240229183109.646865-1-bigeasy@lin=
+utronix.de/
+	  - Renamed the container struct from xdp_storage to bpf_net_context.
+            Suggested by Toke H=C3=B8iland-J=C3=B8rgensen.
+	  - Use the container struct also on !PREEMPT_RT builds. Store the
+	    pointer to the on-stack struct in a per-CPU variable. Suggested by
+            Toke H=C3=B8iland-J=C3=B8rgensen.
+
+  This reduces the initial queue from 24 to 15 patches.
+
+- There were complains about the scoped_guard() which shifts the whole
+  block and makes it harder to review because the whole gets removed and
+  added again. The usage has been replaced with local_lock_nested_bh()+
+  its unlock counterpart.
+
+Sebastian
+
