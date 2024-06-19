@@ -1,118 +1,128 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E895C745E4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 07:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17D86139;
+	Wed, 19 Jun 2024 07:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718780981; cv=none; b=MLEuXZEv7+9cM13493Bn328sy0vatwB24cFYQmyAEmBsYffwCEy5iY82RMbk6UCib4l7Wk53jQzhm93Mg5yIREsQKWyFlHnYx9Ffi4uu9KN9YKsCD4Qy5sitPnJDnduv/V2Dg62my0FW3J5cz76T1QkrS58zMFbeDMQlo16pDqw=
+	t=1718781012; cv=none; b=UVDwrvW1jblPpgTgjWh+yLf+pXV5ss48LWUKZ9KHAEzyniZ1+Dv/ncSMx5R6VcGktippxbauten11MywGx9T0C6vgcodYarlBc+YDwhLlVlwV+1lBO4eWVaEBUL7adYs/VDLPNwf6Oq+YxKosJDYnaQtsDPEKuCuPnO8Fqhuyrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718780981; c=relaxed/simple;
-	bh=rFJdqYszRYReFAsTQw9Y1DHKIAJKdXnVrova/6d3nWY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dYkLAdmvsRHjBj0u+AYTbda8fdte72b/2Wg87HonMgMoBJWKiR8PfQcSyD7CPqzp/vptG3BStOf1v88tFE4jam/KIXBzVtRT7JUamoQojRCI74uzoNQDsTykzOb9RwSqSSDpmhqYau2K4X9LG/16bvimXmdfCTYS1rZMhtwk9s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfe43dca3bfso6948972276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 00:09:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718780977; x=1719385777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1rOhArqBAHo+GTM+mMAn9uukwJ20fEVD7yV9+CYBKLY=;
-        b=erZToTSDm+t1S4IuOFIZR6hjm7QAn+CEMZcJruWMv3itoY0OngXPjUw8TChq1gmFXD
-         wUkZLqd/EtTYROn75qOGPwXRvM55RCUbK9C3ztsvahsjlmhbF/+E7d/5Y2CrreZvZPiX
-         GEZNlsPzOG3pYFiTXtlt3vQhRC1W/b9mPqhAATS2rb4hjq8nHXaKpZxrgewo41Hbv/LS
-         /UECHTtRi/Z6oALoyVclK+xjImIym7Q4UL2DPqR1b5/ZLmEFi51OixmiqJJUuQ45Qw3X
-         nkmA3ov8PghgbDSoqlo2yWhrf+HRVlSDCxTbR0Fu111j5vpuERfxiNrdhoJfRg3zgVDs
-         qe/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+H/3nm3FpFiXFKCToLDcwFmxzW5Hi4UHBsgFdNyLX9GZO381gTulyU9Sxv5VZXwGYz4u6UoymD7Kpd0K59TaAV7yfc4ZHxmuwQryt
-X-Gm-Message-State: AOJu0Yzh2VRPK8fyFdKTPS/14+JqkU3IF9gj1+yseNzp1Hx19bKjL3Ji
-	gF97mBQ+bhQTJQdTK+PdvTGcsZDB8PZjkpXMPOwaCcj7IOMSeWRyoPw+E3HN
-X-Google-Smtp-Source: AGHT+IH7PawmUHXux5ZkYdbTinJiFOFjqNkDAHKzmqTUchrhcxWLHHZT9t9G6rY3cRxfOlI8F6bPtQ==
-X-Received: by 2002:a25:ad06:0:b0:dff:2ef1:e3d5 with SMTP id 3f1490d57ef6-e02be227615mr1827715276.63.1718780976723;
-        Wed, 19 Jun 2024 00:09:36 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dff0475ded0sm2581955276.1.2024.06.19.00.09.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 00:09:36 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-63152a07830so52893157b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 00:09:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrzuy9lqvGWyHJmriAg/CiqyqR8jbD/5YZ5lvuqlTF8C5bZ7jzYcjT0FeMCRIhsDxqe6m7boKWPoRGBmE+phuHIYwZiD8RtqnpZXsk
-X-Received: by 2002:a81:8845:0:b0:61b:3348:34c0 with SMTP id
- 00721157ae682-63a8faf12fcmr17482047b3.50.1718780976284; Wed, 19 Jun 2024
- 00:09:36 -0700 (PDT)
+	s=arc-20240116; t=1718781012; c=relaxed/simple;
+	bh=M1GIqjd/Va7JmJ6t/tSwtO2lOn9qIFlIljq6R10ThiA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jegwn1bFb9BMVkr1EEkYrY00LsoGp+ZFthttWOMyeh3Key5kKEkdxy/a3im5Icr5EmqBMks9U+21LQFSVkldZugH6bTbfhmR5rnurBDYCoEx5yQ36dd7MMh5xc5hm7ehDqwWBCdRYeKn4spzmXa74LEXkJ8ipuukuMqyG4ebkmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KiuYjfU7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KiuYjfU7"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ILb5pq000495;
+	Wed, 19 Jun 2024 07:09:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=M1GIqjd/Va7JmJ6t/tSwtO2l
+	On9qIFlIljq6R10ThiA=; b=KiuYjfU7YS/uT5L5ZzYH7c/ZjB8G/HI/rpwBdSVW
+	HFK0OtzGDuWMh01m7waf2eDDVNvAA/mqc+J+ZlW1iFSd2DOFp7kKJz1se6imykFc
+	TOfVX4+UWrJqXghzP6JU0uOBH5KiLUiM29WihsQvH4F1kmmUc9NtK/RwhV+aBJgR
+	3vtx/8n7UADAHzT0xxgfSV0/luTyOpEw+wTkKOTeAiPzBL4FDPNL764fYD5LGi19
+	wqgV2QM4niW7Yjom8rIxyN6aXz2jGLSL0fbJHo2LA1P/NbDZN+8ypq3+X/da+18t
+	nMukR51JxSqy5I7pWRlkbES6N7EfmEwxHx3ysJ67RXK9fA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yujag0wtc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 07:09:56 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45J79sr8029269
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 07:09:54 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 19 Jun 2024 00:09:47 -0700
+Date: Wed, 19 Jun 2024 12:39:43 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        "Andy Gross" <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, Niklas Cassel
+	<nks@flawful.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Rafael J. Wysocki"
+	<rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>,
+        Robert Marko <robimarko@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, Jeffrey Hugo
+	<quic_jhugo@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v14 0/9] Add support for Core Power Reduction v3, v4 and
+ Hardened
+Message-ID: <ZnKEN6vWBPwvILlB@hu-varada-blr.qualcomm.com>
+References: <20230217-topic-cpr3h-v14-0-9fd23241493d@linaro.org>
+ <ZmlUElvlOPBdfn61@hu-varada-blr.qualcomm.com>
+ <106cd2a2-42de-41ec-8d2b-f4cd6ff9165c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618073205.65303-1-jiapeng.chong@linux.alibaba.com>
-In-Reply-To: <20240618073205.65303-1-jiapeng.chong@linux.alibaba.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 19 Jun 2024 09:09:24 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX4+hhav7U3ORdUuNj3+Hgwh754dU41SWOTeALXd_vEjQ@mail.gmail.com>
-Message-ID: <CAMuHMdX4+hhav7U3ORdUuNj3+Hgwh754dU41SWOTeALXd_vEjQ@mail.gmail.com>
-Subject: Re: [PATCH] zorro: Use str_plural() in amiga_zorro_probe()
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
-	Abaci Robot <abaci@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <106cd2a2-42de-41ec-8d2b-f4cd6ff9165c@linaro.org>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vtQoxNXYwPn6KnFa5Zxf4IXT8qZvW0TK
+X-Proofpoint-ORIG-GUID: vtQoxNXYwPn6KnFa5Zxf4IXT8qZvW0TK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 adultscore=0 spamscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406190051
 
-Hi Jiapeng,
-
-On Tue, Jun 18, 2024 at 9:32=E2=80=AFAM Jiapeng Chong
-<jiapeng.chong@linux.alibaba.com> wrote:
-> Use existing str_plural() function rather than duplicating its
-> implementation.
+On Wed, Jun 19, 2024 at 01:58:04AM +0200, Konrad Dybcio wrote:
 >
-> ./drivers/zorro/zorro.c:155:22-39: opportunity for str_plural(zorro_num_a=
-utocon).
 >
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9350
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-
-Thanks for your patch!
-
-> --- a/drivers/zorro/zorro.c
-> +++ b/drivers/zorro/zorro.c
-> @@ -152,7 +152,7 @@ static int __init amiga_zorro_probe(struct platform_d=
-evice *pdev)
->         platform_set_drvdata(pdev, bus);
+> On 6/12/24 09:53, Varadarajan Narayanan wrote:
+> > Konrad,
+> >
+> > > Changes in v14:
+> > > - Rebase
+> > > - Drop cpufreq probing block (merged)
+> > > - Pick up tags
+> > > - Drop quotes from CPR3 bindings $id:
+> > > - Drop useless description: under compatible:
+> > > - Link to v13: https://lore.kernel.org/r/20230217-topic-cpr3h-v13-0-d01cff1c54cf@linaro.org
+> >
+> > This patch series is needed for IPQ9574 CPR support. Do you plan
+> > to post a new version or can I try to address the comments and
+> > post a new version?
 >
->         pr_info("Zorro: Probing AutoConfig expansion devices: %u device%s=
-\n",
-> -                zorro_num_autocon, zorro_num_autocon =3D=3D 1 ? "" : "s"=
-);
-> +                zorro_num_autocon, str_plural(zorro_num_autocon));
+> I'll resubmit it soon
 
-Missing #include <linux/string_choices.h>
+Thanks very much.
 
-I will fix that up while applying.
+Can you please refer to [1] for some minor changes that
+I have done on top of V9 to rebase to latest linux tree
+and CPR4 compliance.
 
-Please try to at least compile-test your patches.
-Thanks!
+[1] https://github.com/quic-varada/cpr/commits/konrad/
 
->
->         /* First identify all devices ... */
->         for (i =3D 0; i < zorro_num_autocon; i++) {
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-Varada
