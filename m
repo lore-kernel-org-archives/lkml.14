@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EC285624;
-	Wed, 19 Jun 2024 09:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58953134402;
+	Wed, 19 Jun 2024 09:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718790942; cv=none; b=L9+0RcqZTFPA+ADFcHCz7AeTG+IXcSCNQdEDSBPpGx5eYLQ3RI5nzxKfqVVOhIl96jdFHXwhcVDWJ6qDHEPhU2JHJ+Z3eg09v+70NX6oZ46VSLvmKd6qv0ENIVc2du/yHLkPULkHHAd4UL/jnDSwEPdJKXpCmStrdCKbU5pZ8zY=
+	t=1718790946; cv=none; b=dk5SoW+i6fPfM/efMF8rmyc5w/RCVkCgv6lXYAGEDlUCFUjHWAuVLtsXP0rC1cAEb9Aer+dFs1rvB+xdGBd5z9PhaLXCogIttUKPwCOXMlydZxr2D0FYzLh0D0yyAZGrdpMI1ZEZ8jgFqjpgyCOpDBuJuVyTO5VMQwgdvc5yzaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718790942; c=relaxed/simple;
-	bh=8QGSAxGqICnLWou/+L9cSLfTKbqC10cxA2/R2kml4NY=;
+	s=arc-20240116; t=1718790946; c=relaxed/simple;
+	bh=8Fb5oLq+wj7onkMLOYYldQHhtPuVpDgA5L+9vUTFoUc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cy2auLZi+VFhtiyJhF7PBztly3lu66aXprfMEwVt9hGJcI5JBPNnuvjQRdrrGwvFhomujxGeeL8lMp8I45wKnjAMUZlxtbUhVbge3rLkgwa9qqTHor7Vh8usXoF3ot4D2RJhO7yf516WoAm2r8KlpmJ6dCubzuDI+gFSglEmBdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4U1iitXc; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=HK+y1vHkOIuAgkbb1sX0s83VpYfXXIXny+uvTid7LqxjWGDZMDi6GUtGk5aPPcezcPaQjncRtZoWuJnU1UTEOsNR1hg0mtReZNdsR2+Y6+FaHs2/PuD7atMBqe7TKDr8FGQta6qTOvSZqC5dub5a9Of7V16dv0GDDQvf1uX5Qeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NqEf3yl5; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4U1iitXc"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NqEf3yl5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718790939;
-	bh=8QGSAxGqICnLWou/+L9cSLfTKbqC10cxA2/R2kml4NY=;
+	s=mail; t=1718790943;
+	bh=8Fb5oLq+wj7onkMLOYYldQHhtPuVpDgA5L+9vUTFoUc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=4U1iitXcT54VVgOPURfpPAJlRUnl+Mu0calqzUgSc4HAoH0DDYbQWWumz20KyvBON
-	 WrVA0o6Jt+J/nRBEN5/4UrG4GVE+58+GN26GVI+sSbuHb3plsz2KbRGu3XDPHkmk4d
-	 9qjKMbQLinGy1pj9vByeTkdTGC3htSHi0b6G0voDtArQJBE932rF0dsJvrajvAe9YK
-	 f6v9dDNhpWoIUWSlrJVzTrxupXi5pCp7aLKPMqlaZ3YGcN8VnzGTi6Mx/UJAKnkv4a
-	 wXhK1QFxT4hMR3ac8i1u09mcBizCCq+5TGVaupwQId2CDlFJWWWH3yshdZ0JH1p3OR
-	 nELPCN848J/kA==
+	b=NqEf3yl5Mez/C70kftx/epL79UnYIMK1Sorzh+2wYsAOzJT73u+d4gL443z4PN+hH
+	 69TRr5FYO1lJ01RL021soEJQJM0CH1LI2j/xwZAPmEEtPF3xdOiCb/NCaL15guWLtv
+	 K4e1cpESaw87RbulnDMyue+D75P2NqZzpKwd00o/h9POlLdS9IkB0N0ptLxTLJ4qBF
+	 hksf+ALzOiMVsrGNqeLsWZ00hqkuemZV0uK+A3pgV4mpf/X/ny+cQ3H6TWT3OxLUzL
+	 dggsQ3PFTAcHaoDVb/i33HPpadNWuc81jRxfpaAmk19FwItHMRcPnzS4YimGgzb9Ts
+	 jibMHxsUirvCw==
 Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1CD9537821C7;
-	Wed, 19 Jun 2024 09:55:38 +0000 (UTC)
-Message-ID: <cef36b0a-eb50-43c2-9a28-252502fba99a@collabora.com>
-Date: Wed, 19 Jun 2024 11:55:36 +0200
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0EB5937821D1;
+	Wed, 19 Jun 2024 09:55:42 +0000 (UTC)
+Message-ID: <584857e3-a1b9-4dd2-9d3b-f4d76ccf1cbd@collabora.com>
+Date: Wed, 19 Jun 2024 11:55:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,8 +42,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v5 05/16] ASoC: mediatek: mt8365: Add audio clock
- control support
+Subject: Re: [PATCH RESEND v5 01/16] ASoC: dt-bindings: mediatek,mt8365-afe:
+ Add audio afe document
 To: Alexandre Mergnat <amergnat@baylibre.com>,
  Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
  Rob Herring <robh+dt@kernel.org>,
@@ -58,20 +58,21 @@ To: Alexandre Mergnat <amergnat@baylibre.com>,
 Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 References: <20240226-audio-i350-v5-0-54827318b453@baylibre.com>
- <20240226-audio-i350-v5-5-54827318b453@baylibre.com>
+ <20240226-audio-i350-v5-1-54827318b453@baylibre.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20240226-audio-i350-v5-5-54827318b453@baylibre.com>
+In-Reply-To: <20240226-audio-i350-v5-1-54827318b453@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 14/06/24 09:27, Alexandre Mergnat ha scritto:
-> Add audio clock wrapper and audio tuner control.
+> Add MT8365 audio front-end bindings
 > 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
 
