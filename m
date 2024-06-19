@@ -1,48 +1,46 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB687CF25;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94AB7C6DF;
 	Wed, 19 Jun 2024 08:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718786248; cv=none; b=RF0SdpVszohgs2G+SiDprZereHfflJMrnmD29w3SlB8NQzKLlHkDi3XUE9X3v69bClokQixA3055MAHCux9U6L7AFHKXC7tzuLubBOU/Uxl5zQkE25b5BaVXn/3vyr+lW8//d51iLZYdA6iVKz3Rxi0zY8JJgrTsplPmq5PZyyw=
+	t=1718786249; cv=none; b=aY5rZdGZIm8KFGfIuPAguCieZGwKWYXhKfvv5ZeCWGq+MenYtKLHaEMzVcolr8MaQgabs4aDgwhnAU+GnRUPRc26JhnuWeFfBMiD731BUhlm44UE91Qc+eK6EvrnBmf64mxW7/C+4go3oTIbfEPm1gNV+6qUiWLmiJBsAtKshXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718786248; c=relaxed/simple;
-	bh=nFKs7XfUvvbg1x9MrRmHrc2hxXu3H/G1BGEZiOFAh5U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sv6eze8RHteFctzmLFrc1M4mzSGsglmOx0izraV2BdaptjzTDNdX4UqfLeCf+6pufwiwrl0Bl4F5JY4NBpo9dOOb233LodgTf9F8QxY7L6vmSpnOf0mf6xH5+TblIYNGOnIjuJUqANiLhFaiYUwV2nIc8QxzcOpDK/Sz4uKNXjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=iyY9kohw; arc=none smtp.client-ip=91.207.212.93
+	s=arc-20240116; t=1718786249; c=relaxed/simple;
+	bh=A6CcOSt5OgXTngZLoT07YHKknaUK/Q9MAttPeiHJhgE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WW3vWP3sPhTu4v9tZ/lnmWL9q7BTkqmiM5QWKDWxrrdjLKvqlscsT070FOWUtPbXMEnqIqOs5XWauRXxb4ZSufWayEQUUcLCWYkV+X2mp4gtN2uOOFpv4V1worSg9GzjBT1z7WQ45rIK5SPffiKq6UP2kahp+cENE/mN22RENiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FDU2sbFS; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="iyY9kohw"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J7V3bG030750;
-	Wed, 19 Jun 2024 10:37:06 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FDU2sbFS"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J7Ruge002275;
+	Wed, 19 Jun 2024 10:37:05 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	jSkBEJRoXh8EzDoRBrIacJqbFlqlu5She/THheywmOI=; b=iyY9kohwE/7ow2ta
-	jkpPgR89iDefxuJWnRKHhwuEk+oyBjdelxbFGKNq66lQW0vs38OOk2F8PJnaTKoG
-	6jRnoBXwoayGOBDZwahI4Wwr5aX8fZleOPcIg1RorntjhDbyjMPJr0PjzNdZ/Ak1
-	YHFxkqHS1S6T5VmjmJ2Tl6ZUby/Zw2dPqtgGlvlwZ4uApNPBofWuPFRn3osYrqk2
-	GPsmxVIBU6Z7bOzpish3q12z7GvQ1hneu6CsdBpWKuwB1VabSdB4VmFl872G0MX7
-	OKNsL2CvAJVA1R/PHYogyvbjUPEQX7wwNE2AGVZECUMsOO1smDOZtvD8Q9sgSeKX
-	kUT84g==
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=XOCbwETXxIA+0drv6fkuip
+	MY97pF222Z5qC+mHznX5k=; b=FDU2sbFS45KDSNH8SvVgN+ls58xYX5umz53A6A
+	f7RC9K65Wciv2NUsMZJDOkd5iPmLLOXFGJofGfBUQeulQoXNpiHHa7Bobh+sFdOG
+	jpLmgcZ3OQ5x1s2t4DAyCrYz9SIcWodmqp0NCnEygrgfADE9qekV0OthuAuYqSSK
+	bKHCmqM0X/zYuGCILK4pPoM6u6Qztg6Ru+tr+rAEcjo429/x4ytTvExvcp0b7mwu
+	lnuE0Eeh0yFJhbav8/7lzIbxp1xM693BUZw/vs0sTYsU4ReQ6NDsv5lo7I+ddjEN
+	JmvZSvHR8mKfJDqxtcCT5mjxw/UCh3vZQMNKtHbO99GuVvmA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuja1a356-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuj9n23rh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 10:37:06 +0200 (MEST)
+	Wed, 19 Jun 2024 10:37:05 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4128C40044;
-	Wed, 19 Jun 2024 10:37:02 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D426B4002D;
+	Wed, 19 Jun 2024 10:37:01 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C0503210728;
-	Wed, 19 Jun 2024 10:36:13 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2C80620E1D0;
+	Wed, 19 Jun 2024 10:36:10 +0200 (CEST)
 Received: from localhost (10.48.86.232) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 19 Jun
- 2024 10:36:12 +0200
+ 2024 10:36:09 +0200
 From: Pascal Paillet <p.paillet@foss.st.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
         Rob Herring <robh@kernel.org>,
@@ -56,12 +54,10 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
         <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
 CC: <p.paillet@foss.st.com>, Etienne Carriere <etienne.carriere@foss.st.com>
-Subject: [PATCH 4/4] arm64: stm32: enable scmi regulator for stm32
-Date: Wed, 19 Jun 2024 10:36:02 +0200
-Message-ID: <20240619083602.33007-5-p.paillet@foss.st.com>
+Subject: [PATCH 0/4] Add SCMI regulators desciption on STM32MP25
+Date: Wed, 19 Jun 2024 10:35:58 +0200
+Message-ID: <20240619083602.33007-1-p.paillet@foss.st.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240619083602.33007-1-p.paillet@foss.st.com>
-References: <20240619083602.33007-1-p.paillet@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,25 +72,23 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
 
-Add SCMI ARM REGULATOR configuration for stm32.
+Add the description for SCMI regulators provided by OP-TEE firmware.
+The binding file named st,stm32mp25-regulator.h will be also used in
+the OP-TEE firmware.
 
-Signed-off-by: Pascal Paillet <p.paillet@foss.st.com>
----
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+Pascal Paillet (4):
+  dt-bindings: add STM32MP25 regulator bindings
+  arm64: dts: st: add scmi regulators on stm32mp25
+  arm64: dts: st: describe power supplies for stm32mp257f-ev1 board
+  arm64: stm32: enable scmi regulator for stm32
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a52618073de2..dab964bc70ca 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -312,6 +312,7 @@ config ARCH_STM32
- 	select STM32_EXTI
- 	select ARM_SMC_MBOX
- 	select ARM_SCMI_PROTOCOL
-+	select REGULATOR_ARM_SCMI
- 	select COMMON_CLK_SCMI
- 	select STM32_FIREWALL
- 	help
+ arch/arm64/Kconfig.platforms                  |  1 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        | 35 ++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 43 +++++++++++++----
+ .../regulator/st,stm32mp25-regulator.h        | 48 +++++++++++++++++++
+ 4 files changed, 118 insertions(+), 9 deletions(-)
+ create mode 100644 include/dt-bindings/regulator/st,stm32mp25-regulator.h
+
 -- 
 2.34.1
 
