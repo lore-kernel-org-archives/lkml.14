@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEB876025;
-	Wed, 19 Jun 2024 07:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6327603A;
+	Wed, 19 Jun 2024 07:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718781805; cv=none; b=tkYiGskl3DXljf/N3F/wnwMnJS51NagpdnunC0hsMTOcTbJPYX8EM9Gl2GjIBOPnQGwLamGFOTyGDPcJwu41FaYa59kda9iRv4fgisWIw30AhqXORoejGYrIrZZMgn1Hvw8RttHCFr4CukAJAfMFRkYs2Ih0guyUoUpQkUXvW0k=
+	t=1718781806; cv=none; b=LraUn9TQENUxB3cc27oH0Nuimd7lSrkltOCr8c6UsPctXv96F+r1hFno69rRNsHdLAOjaEFdYxwQcRumlBEcBYDXK5QmsoWzVVv4RoBS1PxV4rSNttsMjQ6KRdA4fZqacYbGUCHfSRD3x2EWoqekVkroKPuQjfvTissaA/yOjzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718781805; c=relaxed/simple;
-	bh=0tDt6dndm3G+sNUSXkkpHRLf5liVs4gyYGuZT2hGejw=;
+	s=arc-20240116; t=1718781806; c=relaxed/simple;
+	bh=LIlnRdFChcWrskshA2uHWa9ibTblCvtjpr5uMO8mOMw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CWU1gE3LFU7YAASCQqyMYtWOV40PeQlSIYCxGjgCXyyHemhs+HxL2QROIDPMexjL4T+HLIjN30NjCTAquwPeFntcOreQrQFhHLHAl10qYqLqcb1Q6yj40P9IHOZPrsrpH1kFWhEqmwYlgxpTlXAuDZ3AqLvnBR0y2emV7tF6r84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=23AU+xpm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ejs3rgk0; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=RWI+Rle0BUJiL0b1p9ZRzy90Mh/5a3lIHr6Gdf4Qd7KlSACgFyQocQosdmrzNtvKrW5Lr/KThsUesNtqUdTGMO6xR/AynGHkpSBUfvkC53zX1mHdIrE8oJmInG40yCOaqk7pqd3omNloRZ4/0jWTV5U9tPjdBe+5tV95n+CvcTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4n8qIIbt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ego/3/i8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="23AU+xpm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ejs3rgk0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4n8qIIbt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ego/3/i8"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718781801;
+	s=2020; t=1718781802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GruW12PU2Ogt+fndrHHiAUjJt1cIYrbQg9Rnf7vvA4s=;
-	b=23AU+xpmIz++w29piNp844Stgjajmi7bxz+vUtn5MwFJDlMoMvXnY908erB1p3YYjp3VqZ
-	ywXbj7DU9d6HxwdVNk4DWlUy1yvffRXG+0QvEb74Cb0too4kjeBCjganKiDIf+4MmhdBoe
-	Ol9dD3Qfi3g71BF7g4Jj9jr7f5vHJmXHLNIKK5M4tWuK25ZWYac50EjlHCbkD6BnQPckmk
-	2Gqv0V0IpcoBW1M4CX7MhosD+xtKcEH48iSqHZJu+HVA9IEziD2RIY6TQRhhuesjRLXP8z
-	7+hNjcN4PO2nGzh8m+x8j2hbSykMGmo37T+SDDUn8zNs230YXRFoHSyaxtvhpQ==
+	bh=6g1GPYi+I136Cqy2m8SrkrLrDF9fK7B/YVAMV5OHSck=;
+	b=4n8qIIbtjRctRz6J4ZL834HhsofsYEqRlq5/OqJfMlCw196qSk4eC2N+5Q5vDwbb6opiD1
+	tEWKpCIlTwXlohF6AgfayZmFpSKfjdWPaNBWdSSwRKMKzsOdUSSyYTQt7hJwK6Yfs/kAuM
+	C4XaB4M5CZ4NSoEvMn+pR5TFNxTyzOCtHb9fcapdqe7MW5Q5/xFROZFFJutB3o5jGbbx7Q
+	BHoryr99ZTfo5cOUx4ZgP3cPNF6nzCSxYb5cvUhKFeMBY+yDWoGQ1qt3pATb4w0iQulljA
+	LOnjelXmcHFeUleyMPUv6twv/QafZrTiEVK697VZ+CzV6UwUW2tKIbbGskhk6g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718781801;
+	s=2020e; t=1718781802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GruW12PU2Ogt+fndrHHiAUjJt1cIYrbQg9Rnf7vvA4s=;
-	b=Ejs3rgk0DWLukYzzDDLHj+xQD++qbKHOmtcISWMNdWyjW9ewJYP1TGoWZvqEzqz/Q51px/
-	wV+PBVE7FaWbvCCw==
+	bh=6g1GPYi+I136Cqy2m8SrkrLrDF9fK7B/YVAMV5OHSck=;
+	b=Ego/3/i8VIi2OYkflJp60BaA6uOWX89aZEckhOSHYXgVV7N/JWKJsBagLR+u10nZw3JPB6
+	kIuqfGZIKI/4UABA==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -54,10 +54,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v8 net-next 04/15] net: Use nested-BH locking for napi_alloc_cache.
-Date: Wed, 19 Jun 2024 09:16:55 +0200
-Message-ID: <20240619072253.504963-5-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	David Ahern <dsahern@kernel.org>
+Subject: [PATCH v8 net-next 06/15] net/ipv4: Use nested-BH locking for ipv4_tcp_sk.
+Date: Wed, 19 Jun 2024 09:16:57 +0200
+Message-ID: <20240619072253.504963-7-bigeasy@linutronix.de>
 In-Reply-To: <20240619072253.504963-1-bigeasy@linutronix.de>
 References: <20240619072253.504963-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -68,139 +69,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-napi_alloc_cache is a per-CPU variable and relies on disabled BH for its
+ipv4_tcp_sk is a per-CPU variable and relies on disabled BH for its
 locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
 this data structure requires explicit locking.
 
-Add a local_lock_t to the data structure and use local_lock_nested_bh()
-for locking. This change adds only lockdep coverage and does not alter
-the functional behaviour for !PREEMPT_RT.
+Make a struct with a sock member (original ipv4_tcp_sk) and a
+local_lock_t and use local_lock_nested_bh() for locking. This change
+adds only lockdep coverage and does not alter the functional behaviour
+for !PREEMPT_RT.
 
+Cc: David Ahern <dsahern@kernel.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- net/core/skbuff.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ include/net/sock.h  |  5 +++++
+ net/ipv4/tcp_ipv4.c | 15 +++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 656b298255c5f..0c13cfa20658f 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -277,6 +277,7 @@ static void *page_frag_alloc_1k(struct page_frag_1k *nc=
-, gfp_t gfp_mask)
- #endif
-=20
- struct napi_alloc_cache {
-+	local_lock_t bh_lock;
- 	struct page_frag_cache page;
- 	struct page_frag_1k page_small;
- 	unsigned int skb_count;
-@@ -284,7 +285,9 @@ struct napi_alloc_cache {
+diff --git a/include/net/sock.h b/include/net/sock.h
+index b30ea0c342a65..cce23ac4d5148 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -544,6 +544,11 @@ struct sock {
+ 	netns_tracker		ns_tracker;
  };
 =20
- static DEFINE_PER_CPU(struct page_frag_cache, netdev_alloc_cache);
--static DEFINE_PER_CPU(struct napi_alloc_cache, napi_alloc_cache);
-+static DEFINE_PER_CPU(struct napi_alloc_cache, napi_alloc_cache) =3D {
++struct sock_bh_locked {
++	struct sock *sock;
++	local_lock_t bh_lock;
++};
++
+ enum sk_pacing {
+ 	SK_PACING_NONE		=3D 0,
+ 	SK_PACING_NEEDED	=3D 1,
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index de0c8f43448ab..318bdd9b8f27c 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -93,7 +93,9 @@ static int tcp_v4_md5_hash_hdr(char *md5_hash, const stru=
+ct tcp_md5sig_key *key,
+ struct inet_hashinfo tcp_hashinfo;
+ EXPORT_SYMBOL(tcp_hashinfo);
+=20
+-static DEFINE_PER_CPU(struct sock *, ipv4_tcp_sk);
++static DEFINE_PER_CPU(struct sock_bh_locked, ipv4_tcp_sk) =3D {
 +	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
 +};
 =20
- /* Double check that napi_get_frags() allocates skbs with
-  * skb->head being backed by slab, not a page fragment.
-@@ -306,11 +309,16 @@ void napi_get_frags_check(struct napi_struct *napi)
- void *__napi_alloc_frag_align(unsigned int fragsz, unsigned int align_mask)
+ static u32 tcp_v4_init_seq(const struct sk_buff *skb)
  {
- 	struct napi_alloc_cache *nc =3D this_cpu_ptr(&napi_alloc_cache);
-+	void *data;
-=20
- 	fragsz =3D SKB_DATA_ALIGN(fragsz);
-=20
--	return __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
-+	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
-+	data =3D __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
- 				       align_mask);
-+	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
-+	return data;
+@@ -882,7 +884,9 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
+ruct sk_buff *skb,
+ 	arg.tos =3D ip_hdr(skb)->tos;
+ 	arg.uid =3D sock_net_uid(net, sk && sk_fullsock(sk) ? sk : NULL);
+ 	local_bh_disable();
+-	ctl_sk =3D this_cpu_read(ipv4_tcp_sk);
++	local_lock_nested_bh(&ipv4_tcp_sk.bh_lock);
++	ctl_sk =3D this_cpu_read(ipv4_tcp_sk.sock);
 +
- }
- EXPORT_SYMBOL(__napi_alloc_frag_align);
+ 	sock_net_set(ctl_sk, net);
+ 	if (sk) {
+ 		ctl_sk->sk_mark =3D (sk->sk_state =3D=3D TCP_TIME_WAIT) ?
+@@ -907,6 +911,7 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
+ruct sk_buff *skb,
+ 	sock_net_set(ctl_sk, &init_net);
+ 	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
+ 	__TCP_INC_STATS(net, TCP_MIB_OUTRSTS);
++	local_unlock_nested_bh(&ipv4_tcp_sk.bh_lock);
+ 	local_bh_enable();
 =20
-@@ -338,16 +346,20 @@ static struct sk_buff *napi_skb_cache_get(void)
- 	struct napi_alloc_cache *nc =3D this_cpu_ptr(&napi_alloc_cache);
- 	struct sk_buff *skb;
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -1002,7 +1007,8 @@ static void tcp_v4_send_ack(const struct sock *sk,
+ 	arg.tos =3D tos;
+ 	arg.uid =3D sock_net_uid(net, sk_fullsock(sk) ? sk : NULL);
+ 	local_bh_disable();
+-	ctl_sk =3D this_cpu_read(ipv4_tcp_sk);
++	local_lock_nested_bh(&ipv4_tcp_sk.bh_lock);
++	ctl_sk =3D this_cpu_read(ipv4_tcp_sk.sock);
+ 	sock_net_set(ctl_sk, net);
+ 	ctl_sk->sk_mark =3D (sk->sk_state =3D=3D TCP_TIME_WAIT) ?
+ 			   inet_twsk(sk)->tw_mark : READ_ONCE(sk->sk_mark);
+@@ -1017,6 +1023,7 @@ static void tcp_v4_send_ack(const struct sock *sk,
 =20
-+	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 	if (unlikely(!nc->skb_count)) {
- 		nc->skb_count =3D kmem_cache_alloc_bulk(net_hotdata.skbuff_cache,
- 						      GFP_ATOMIC,
- 						      NAPI_SKB_CACHE_BULK,
- 						      nc->skb_cache);
--		if (unlikely(!nc->skb_count))
-+		if (unlikely(!nc->skb_count)) {
-+			local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 			return NULL;
-+		}
- 	}
-=20
- 	skb =3D nc->skb_cache[--nc->skb_count];
-+	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 	kasan_mempool_unpoison_object(skb, kmem_cache_size(net_hotdata.skbuff_cac=
-he));
-=20
- 	return skb;
-@@ -740,9 +752,13 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *=
-dev, unsigned int len,
- 		pfmemalloc =3D nc->pfmemalloc;
- 	} else {
- 		local_bh_disable();
-+		local_lock_nested_bh(&napi_alloc_cache.bh_lock);
-+
- 		nc =3D this_cpu_ptr(&napi_alloc_cache.page);
- 		data =3D page_frag_alloc(nc, len, gfp_mask);
- 		pfmemalloc =3D nc->pfmemalloc;
-+
-+		local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
- 		local_bh_enable();
- 	}
-=20
-@@ -806,11 +822,11 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *na=
-pi, unsigned int len)
- 		goto skb_success;
- 	}
-=20
--	nc =3D this_cpu_ptr(&napi_alloc_cache);
--
- 	if (sk_memalloc_socks())
- 		gfp_mask |=3D __GFP_MEMALLOC;
-=20
-+	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
-+	nc =3D this_cpu_ptr(&napi_alloc_cache);
- 	if (NAPI_HAS_SMALL_PAGE_FRAG && len <=3D SKB_WITH_OVERHEAD(1024)) {
- 		/* we are artificially inflating the allocation size, but
- 		 * that is not as bad as it may look like, as:
-@@ -832,6 +848,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi=
-, unsigned int len)
- 		data =3D page_frag_alloc(&nc->page, len, gfp_mask);
- 		pfmemalloc =3D nc->page.pfmemalloc;
- 	}
-+	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
-=20
- 	if (unlikely(!data))
- 		return NULL;
-@@ -1429,6 +1446,7 @@ static void napi_skb_cache_put(struct sk_buff *skb)
- 	if (!kasan_mempool_poison_object(skb))
- 		return;
-=20
-+	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
- 	nc->skb_cache[nc->skb_count++] =3D skb;
-=20
- 	if (unlikely(nc->skb_count =3D=3D NAPI_SKB_CACHE_SIZE)) {
-@@ -1440,6 +1458,7 @@ static void napi_skb_cache_put(struct sk_buff *skb)
- 				     nc->skb_cache + NAPI_SKB_CACHE_HALF);
- 		nc->skb_count =3D NAPI_SKB_CACHE_HALF;
- 	}
-+	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ 	sock_net_set(ctl_sk, &init_net);
+ 	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
++	local_unlock_nested_bh(&ipv4_tcp_sk.bh_lock);
+ 	local_bh_enable();
  }
 =20
- void __napi_kfree_skb(struct sk_buff *skb, enum skb_drop_reason reason)
+@@ -3615,7 +3622,7 @@ void __init tcp_v4_init(void)
+=20
+ 		sk->sk_clockid =3D CLOCK_MONOTONIC;
+=20
+-		per_cpu(ipv4_tcp_sk, cpu) =3D sk;
++		per_cpu(ipv4_tcp_sk.sock, cpu) =3D sk;
+ 	}
+ 	if (register_pernet_subsys(&tcp_sk_ops))
+ 		panic("Failed to create the TCP control socket.\n");
 --=20
 2.45.2
 
