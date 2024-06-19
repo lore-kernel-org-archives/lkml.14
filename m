@@ -1,48 +1,48 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EDB7C6C1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB687CF25;
 	Wed, 19 Jun 2024 08:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718786248; cv=none; b=Y4pMmfkrsRD3EC6uTrF53Vehj48LzovQqrfg4WHzgJrEHhr3Dj7J8dQt3BWIGt1fbzN9mDx0i7xH8gLkqlbMeE4b1ZeD7OXIoXgvWQyvAa/L5kALjn6giBXvYebQDwEbYxRarQFz1Ulo5y/w3POTWYVlGdkXYgKG/yBDFEjRTCM=
+	t=1718786248; cv=none; b=RF0SdpVszohgs2G+SiDprZereHfflJMrnmD29w3SlB8NQzKLlHkDi3XUE9X3v69bClokQixA3055MAHCux9U6L7AFHKXC7tzuLubBOU/Uxl5zQkE25b5BaVXn/3vyr+lW8//d51iLZYdA6iVKz3Rxi0zY8JJgrTsplPmq5PZyyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718786248; c=relaxed/simple;
-	bh=3n4ybvOboaWmCPxPYF9JaDhbuBNKJSiOEOAlF18cCao=;
+	bh=nFKs7XfUvvbg1x9MrRmHrc2hxXu3H/G1BGEZiOFAh5U=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XNoAEfaKUERq9X8ZlYLfbZnd9r3+dzx0fZZKPUpExiTmBMCnaQ+UCsQXQKoqeYF8dAVRtxCsLrTAFlmqbfYJuvv9kMBDkZ4XyMY06Z5iGzHDtzZ/OAJ7EWkKXL1ebgVbrbl8rJ/LUp35mNAybJRAnsWJ7xyHJWk+L4TmEsPcK08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qfALhzJL; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=Sv6eze8RHteFctzmLFrc1M4mzSGsglmOx0izraV2BdaptjzTDNdX4UqfLeCf+6pufwiwrl0Bl4F5JY4NBpo9dOOb233LodgTf9F8QxY7L6vmSpnOf0mf6xH5+TblIYNGOnIjuJUqANiLhFaiYUwV2nIc8QxzcOpDK/Sz4uKNXjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=iyY9kohw; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qfALhzJL"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J7SgTo013430;
-	Wed, 19 Jun 2024 10:37:09 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="iyY9kohw"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J7V3bG030750;
+	Wed, 19 Jun 2024 10:37:06 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	wRMG4qwA9Dbv46xH+h26yQBQYduRI5IcnQPPuE4Kx50=; b=qfALhzJLj+lkQZum
-	5lNSNIROaUM38QCtFBIeSo+ceMxPCMGDXc/D1aqxMFzZs8069SrzuadFxVsM9UI9
-	1p24QSoSfn9FUlS4nBStSz7LdvXCRip5NXjQz6adwKNbxr7atzNaTVZg2s6AsQha
-	IaTo3KqpAOIonqfayXSmIyzGu6aSTjx69st9n17XeDaNW6Vvf9oXwxheSmwX0cus
-	+mSvLx2tGMWJcUiSkkTmaytGGLg/Bd3gdbhxD7DxF9TQTrR9u0gpPW08Y0M724R2
-	f+iquYLWsnJaaR+QPzbLxZ5QPG38K1a8Av/WoiuJ5kXMR37koHh7lxnVIdnm79Bi
-	OA1QhQ==
+	jSkBEJRoXh8EzDoRBrIacJqbFlqlu5She/THheywmOI=; b=iyY9kohwE/7ow2ta
+	jkpPgR89iDefxuJWnRKHhwuEk+oyBjdelxbFGKNq66lQW0vs38OOk2F8PJnaTKoG
+	6jRnoBXwoayGOBDZwahI4Wwr5aX8fZleOPcIg1RorntjhDbyjMPJr0PjzNdZ/Ak1
+	YHFxkqHS1S6T5VmjmJ2Tl6ZUby/Zw2dPqtgGlvlwZ4uApNPBofWuPFRn3osYrqk2
+	GPsmxVIBU6Z7bOzpish3q12z7GvQ1hneu6CsdBpWKuwB1VabSdB4VmFl872G0MX7
+	OKNsL2CvAJVA1R/PHYogyvbjUPEQX7wwNE2AGVZECUMsOO1smDOZtvD8Q9sgSeKX
+	kUT84g==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuj9ua3b3-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yuja1a356-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 10:37:09 +0200 (MEST)
+	Wed, 19 Jun 2024 10:37:06 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CE1E840048;
-	Wed, 19 Jun 2024 10:37:05 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4128C40044;
+	Wed, 19 Jun 2024 10:37:02 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E873320F554;
-	Wed, 19 Jun 2024 10:36:10 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C0503210728;
+	Wed, 19 Jun 2024 10:36:13 +0200 (CEST)
 Received: from localhost (10.48.86.232) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 19 Jun
- 2024 10:36:10 +0200
+ 2024 10:36:12 +0200
 From: Pascal Paillet <p.paillet@foss.st.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
         Rob Herring <robh@kernel.org>,
@@ -56,9 +56,9 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
         <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
 CC: <p.paillet@foss.st.com>, Etienne Carriere <etienne.carriere@foss.st.com>
-Subject: [PATCH 1/4] dt-bindings: add STM32MP25 regulator bindings
-Date: Wed, 19 Jun 2024 10:35:59 +0200
-Message-ID: <20240619083602.33007-2-p.paillet@foss.st.com>
+Subject: [PATCH 4/4] arm64: stm32: enable scmi regulator for stm32
+Date: Wed, 19 Jun 2024 10:36:02 +0200
+Message-ID: <20240619083602.33007-5-p.paillet@foss.st.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619083602.33007-1-p.paillet@foss.st.com>
 References: <20240619083602.33007-1-p.paillet@foss.st.com>
@@ -76,68 +76,25 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-19_02,2024-06-17_01,2024-05-17_01
 
-These bindings will be used for the SCMI voltage domain.
+Add SCMI ARM REGULATOR configuration for stm32.
 
 Signed-off-by: Pascal Paillet <p.paillet@foss.st.com>
 ---
- .../regulator/st,stm32mp25-regulator.h        | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 include/dt-bindings/regulator/st,stm32mp25-regulator.h
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/regulator/st,stm32mp25-regulator.h b/include/dt-bindings/regulator/st,stm32mp25-regulator.h
-new file mode 100644
-index 000000000000..3c3d30911dd0
---- /dev/null
-+++ b/include/dt-bindings/regulator/st,stm32mp25-regulator.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (C) 2024, STMicroelectronics - All Rights Reserved
-+ */
-+
-+#ifndef __DT_BINDINGS_REGULATOR_ST_STM32MP25_REGULATOR_H
-+#define __DT_BINDINGS_REGULATOR_ST_STM32MP25_REGULATOR_H
-+
-+/* SCMI voltage domains identifiers */
-+
-+/* SOC Internal regulators */
-+#define VOLTD_SCMI_VDDIO1		0
-+#define VOLTD_SCMI_VDDIO2		1
-+#define VOLTD_SCMI_VDDIO3		2
-+#define VOLTD_SCMI_VDDIO4		3
-+#define VOLTD_SCMI_VDDIO		4
-+#define VOLTD_SCMI_UCPD			5
-+#define VOLTD_SCMI_USB33		6
-+#define VOLTD_SCMI_ADC			7
-+#define VOLTD_SCMI_GPU			8
-+#define VOLTD_SCMI_VREFBUF		9
-+
-+/* STPMIC2 regulators */
-+#define VOLTD_SCMI_STPMIC2_BUCK1	10
-+#define VOLTD_SCMI_STPMIC2_BUCK2	11
-+#define VOLTD_SCMI_STPMIC2_BUCK3	12
-+#define VOLTD_SCMI_STPMIC2_BUCK4	13
-+#define VOLTD_SCMI_STPMIC2_BUCK5	14
-+#define VOLTD_SCMI_STPMIC2_BUCK6	15
-+#define VOLTD_SCMI_STPMIC2_BUCK7	16
-+#define VOLTD_SCMI_STPMIC2_LDO1		17
-+#define VOLTD_SCMI_STPMIC2_LDO2		18
-+#define VOLTD_SCMI_STPMIC2_LDO3		19
-+#define VOLTD_SCMI_STPMIC2_LDO4		20
-+#define VOLTD_SCMI_STPMIC2_LDO5		21
-+#define VOLTD_SCMI_STPMIC2_LDO6		22
-+#define VOLTD_SCMI_STPMIC2_LDO7		23
-+#define VOLTD_SCMI_STPMIC2_LDO8		24
-+#define VOLTD_SCMI_STPMIC2_REFDDR	25
-+
-+/* External regulators */
-+#define VOLTD_SCMI_REGU0		26
-+#define VOLTD_SCMI_REGU1		27
-+#define VOLTD_SCMI_REGU2		28
-+#define VOLTD_SCMI_REGU3		29
-+#define VOLTD_SCMI_REGU4		30
-+
-+#endif /*__DT_BINDINGS_REGULATOR_ST_STM32MP25_REGULATOR_H */
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index a52618073de2..dab964bc70ca 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -312,6 +312,7 @@ config ARCH_STM32
+ 	select STM32_EXTI
+ 	select ARM_SMC_MBOX
+ 	select ARM_SCMI_PROTOCOL
++	select REGULATOR_ARM_SCMI
+ 	select COMMON_CLK_SCMI
+ 	select STM32_FIREWALL
+ 	help
 -- 
 2.34.1
 
