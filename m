@@ -1,138 +1,128 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FC91876
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C281422A2
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718826894; cv=none; b=eE1QeUnaTuaYKN2jiKAdwVneBOboyOpPFQtlb1nCQTKTEH46NpuIS9ES47Ws6msa7juP42EuwLykCc5xNvpKcGqoJeeWFCgLuC7CBz4jXHowVToNH9z6G148/6CvKxoM+dJL7NRAqpojex2PNvFpZfoym/dX/e9t8CDBuHXZ6nE=
+	t=1718826983; cv=none; b=tjK+luOacbT2im5UD2hiQls6cZwFiLcyidc+DqQqu1xuAhirjSd2ETuopiAXPS8XNBOzF07eM+4xIE7yN/smfdOLVDindmL0/BZu3dn/rbilCGgWLUzHs4Y9WdKbKV8TaJcsy776Wo+3deBN4Qk5lsrrjrxMVked896glfrZn64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718826894; c=relaxed/simple;
-	bh=jpQtD/db0pmjbS5p1djOR0Ntw8Lzd/wA0QE9Cm14fSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhNLZ5KsKv+2DxQitZFkt14pBZys8N05GqQV3ZGo3/erYgUzYFiFyhCSZUGtcpR8lbG8z6ULz3VMllHTQWyAD6kl8Bex9D88e4yOHcqslD+SsdyGvOhp6IIooum+8BsrqDEdo5lP6xSbmrqc0uTtpBygGBSUeGJJYZsJVNTvveM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=g2jq7otu; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=g2jq7otu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1718826983; c=relaxed/simple;
+	bh=7CwnBP+4cGwZQuJJW8YWaPRddYGkYIrG+c5Kwn0f9Kc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JN8e/ZW0woVXxO6CCfjGlpYWF2IMhsAWyTBebOxLIlX28YNQaFXsudN8URVK/iQmt7H1CBFRHRVNwO9blAScACuyGJGLr5/pb2VAbdD+cNB8zUSmXc1ILMXL/VLgfULhFLzscQEhX/HkDvLKYzIBwVcgUISS+Ugqd6jsZLLsaWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cUMIEkC5; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="g2jq7otu";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="g2jq7otu"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AA4911F7D2;
-	Wed, 19 Jun 2024 19:54:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1718826889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vvPxvXNf8zuYWdKZlteUBeJJW5m05KwucRi2QZhjROQ=;
-	b=g2jq7otuPH8lGW2UWyXzZQldU9CjsEl0R1MsMmgW92a44eQZgQNJdoBgM4Tq0qR4LvV7KR
-	tJXTDkFn7OIAYGXeDt2YpcQ41O2aVPcsGzWzLrJ86hHKUL+BEBjA09rIBLjpzNryWfSszW
-	mM0JbY9v6zgaa2IEqn3aT+XEpcveK04=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=g2jq7otu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1718826889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vvPxvXNf8zuYWdKZlteUBeJJW5m05KwucRi2QZhjROQ=;
-	b=g2jq7otuPH8lGW2UWyXzZQldU9CjsEl0R1MsMmgW92a44eQZgQNJdoBgM4Tq0qR4LvV7KR
-	tJXTDkFn7OIAYGXeDt2YpcQ41O2aVPcsGzWzLrJ86hHKUL+BEBjA09rIBLjpzNryWfSszW
-	mM0JbY9v6zgaa2IEqn3aT+XEpcveK04=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91B6013668;
-	Wed, 19 Jun 2024 19:54:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hAWKIIk3c2bDcQAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 19 Jun 2024 19:54:49 +0000
-Date: Wed, 19 Jun 2024 21:54:48 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@meta.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Kyle McMartin <kyle@infradead.org>
-Subject: Re: [PATCH] mm: ratelimit oversized kvmalloc warnings instead of once
-Message-ID: <ZnM3iFLPtFVVmCpR@tiehlicka>
-References: <20240618213421.282381-1-shakeel.butt@linux.dev>
- <ZnKGjdw8xkMZG0oX@tiehlicka>
- <ajp536dpkss32kmjihcfbl4ulunfho2odzw4ghwfekw2yv3ctt@fh62fmyxwwcs>
- <ZnKXNuuQRwNxRe4z@tiehlicka>
- <ZnKbR7IOd0b6GDBI@tiehlicka>
- <20240619174751.7r2s7iojxbaxpqlw@linux.dev>
- <CAHk-=whXL32xG1HWGaVaOkHf+g407upYbvZeZgmhnsxn2R+JRQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cUMIEkC5"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id K1Bvs23TjSLKxK1PpsNkLp; Wed, 19 Jun 2024 19:56:21 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id K1PosRWDYDoe7K1Pos3shA; Wed, 19 Jun 2024 19:56:21 +0000
+X-Authority-Analysis: v=2.4 cv=Gq1E+F1C c=1 sm=1 tr=0 ts=667337e5
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=KW3gg0Ai8grSkJK8CL4A:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eaO3vrXA39/v4UfFM5hBURpZQ31SpLg2lD0Yrk2pD1U=; b=cUMIEkC5zHTWZZXiy0tXc7hYzi
+	OWyMSq9Scd1Ksz9HwbsYhLsOQNK/EcnsZgXSyY38ZGdg67fnNGp3gBYYzjPZhM9r/s1Dm0iZP8afv
+	uBXklAcALPZKj8P0TB1+YA6Fl/S+ZI7b5UnsBDmd4jseLOvwh9X+vYpN2lnP9U87OEi0e89IhV0/N
+	381JtgxVJjsvJfde3UYI0pgoAV0ExYNgaH8QI9IG7X4DZYrlyMsbc8olXLkJ8bznehXyeDwcSFy+T
+	gJ5pnjUe8OIZe6vF3tGFjOUx12XcmxPU9SniQBMTDhhLWEHINNsOCAjMNVqN5Ndogndnukp7EsQ24
+	zHcfqa6Q==;
+Received: from [201.172.173.139] (port=46726 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sK1Pn-000y00-0f;
+	Wed, 19 Jun 2024 14:56:19 -0500
+Message-ID: <62ab07f5-3d09-4f84-b917-f7e16fdfd32d@embeddedor.com>
+Date: Wed, 19 Jun 2024 13:56:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whXL32xG1HWGaVaOkHf+g407upYbvZeZgmhnsxn2R+JRQ@mail.gmail.com>
-X-Rspamd-Queue-Id: AA4911F7D2
-X-Spam-Score: -6.01
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-6.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.com:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] USB: serial: garmin_gps: annotate struct
+ garmin_packet with __counted_by
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Johan Hovold <johan@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+References: <20240619-garmin_gps_counted_by-v2-0-f82f10ebbf28@gmail.com>
+ <20240619-garmin_gps_counted_by-v2-1-f82f10ebbf28@gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240619-garmin_gps_counted_by-v2-1-f82f10ebbf28@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sK1Pn-000y00-0f
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:46726
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDK6+IgmatiGvTMrEM+5VjCpVwhEhLMxLsivITqIGcrxS31ZtlfdMqhkRafSCeCtlkOV98iy3YcGFiVTNojq4d86lIFSSmVAK8hmbYGtuEnUBLpJAf/C
+ x5adCrPKcZBAuXWsMOt4S3eD5tA2i9lagHKWHDW3a2BJw+TgMOLUwTf8aV6DDmUblw/A6fXF1uWDFBBN7WPoQaMcf4uZMtZm5d2Icc3IKgZH6IBv9q0KeeAq
 
-On Wed 19-06-24 12:30:42, Linus Torvalds wrote:
-> On Wed, 19 Jun 2024 at 10:47, Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> >
-> > Linus, please let me know if you have any concerns on the approach
-> > Michal is suggesting i.e. a variant for warn once for unique call stack.
-> 
-> I think we should just try to change the existing WARN_ONCE(), and see
-> if it causes any issues.
-> 
-> A new "WARN_UNIQUE()" might be the borign and safe approach, but
-> 
->  (a) it won't actually be unique if you don't have stackdepot anyway,
-> and will just be WARN_ONCE
-> 
->  (b) I suspect most WARN_ONCE users really do want WARN_UNIQUE
-> 
-> so let's at least _start_ with just changing semantics of the existing
-> "once", and then if it causes problems we'll have to revisit this.
-> 
-> I doubt it will cause problems,
 
-I would be careful about the WARN_ONCE used from stackdepot itself. It's
-been some time since I have looked into that code but a quick grep tells
-there is some usage.
 
--- 
-Michal Hocko
-SUSE Labs
+On 19/06/24 21:42, Javier Carrasco wrote:
+> Use the __counted_by compiler attribute for the data[] flexible array
+> member to improve the results of array bound sanitizers.
+> 
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
+> ---
+>   drivers/usb/serial/garmin_gps.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
+> index 670e942fdaaa..57df6ad183ff 100644
+> --- a/drivers/usb/serial/garmin_gps.c
+> +++ b/drivers/usb/serial/garmin_gps.c
+> @@ -104,7 +104,7 @@ struct garmin_packet {
+>   	int               seq;
+>   	/* the real size of the data array, always > 0 */
+>   	int               size;
+> -	__u8              data[];
+> +	__u8              data[] __counted_by(size);
+>   };
+>   
+>   /* structure used to keep the current state of the driver */
+> 
