@@ -1,265 +1,134 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AB07F460
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 09:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05ED12139CD;
+	Wed, 19 Jun 2024 09:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718788336; cv=none; b=OceKeTJOmzgr54aCPeSj6BRUU0Uz+dJ2Tu0I2Hl1OhMU7KvoOfsF3U2+k9B8CCo3xU3llMi/COfkd1qtmf2wheh2DIEvwWifc0wpx0yMMCCpn4St86LVEf2zKBwziptLbLpqVFVXB3JRewyo6emB+kRJZm7/X4GK2mPmR8Ed6yk=
+	t=1718788431; cv=none; b=FicPsia0BEpg//0gdfSHUdFvZuKXkTW0hsyiKymDV99ddKPNOcNzTAqu50RtSnQnqdIQIoIXfi12zA97Vn6k8NZZW+SZqawHrClBQloKesH0K6cJk+esUmdRIgXYSFxsgMtylwLLA72tDQCRit4SUf8prHl/YEYlCoNGc1G8LIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718788336; c=relaxed/simple;
-	bh=devHkRkV7shlB9En5cc49p7lL4U/8UsLhV/aO+tvt60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CtFEpqRC6YlgGfSj4V29EPCFAhJ/VAfHV+MJQX+6Xr/QNDWWy2WBQkbfP3PE8eG+xlNqs4Tff0+lRFWDEqWRsOeeyzpEgP5zbw8f5ucrk53pRW5aOwHYLGBLOxjMT7RKLUNwWPze0EA7vsCf3KS9WKR1ZyhB2t5gVz+tplZJMGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zhnxfwmF; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718788431; c=relaxed/simple;
+	bh=q+XfqHWHnHG9dPoLpb2HceC7HbczpwzlQ4lh+dAYWmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mqeNx7wZwSERrDsaYz6BOEzifc+u6QcwPvLpIZ/aX9sOXotoTVfgfzFyj+ua4CfhiAcF03IEckE+HSO2XKZgNrVFN5GLvPN4qnUjF45/e37hN0Ekn6B9CcVSwehMZz553JtKgMjGRzQvVY+Yl0KW1xSqNTbhI03rOko0wyfxeGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=sp6ICYgO; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zhnxfwmF"
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-48c50e74fe6so2285405137.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 02:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718788333; x=1719393133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wYkYh6+hMVb+fOYqcnMpeJBX33GChbsvZ+EqmJ1i9Cw=;
-        b=zhnxfwmFWaNH7Hos+1tqrH8ezXV2ludv7BsjJvDRtXVXZP/PkYpPbovOp3Ys0+D6Dj
-         8rhAHj1d4XPoJdrsziss9kx6dgvOcwxMoSzNRDySWhjhOitTyc+7oXHukZsG0PzcWNnu
-         eaDbYfHyRjEnY2uQ7zCEdRx5obbr3+1xDF6JBOFQjpSsXjJZjqtvToZoutYbO3HiIAOa
-         7QmrsKH2TUuJ9WqSKrA93N7eo5nut4WDCtvuWFMrBNh53ok7CY4uAv2c1dHRjK4h6Iiu
-         xBZupjo7QhzeDSkR/4ageeJzY31yjauTXU5PtfSVgBTBwQVwYUxx5WVm9MrupW5WgLKp
-         WvGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718788333; x=1719393133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wYkYh6+hMVb+fOYqcnMpeJBX33GChbsvZ+EqmJ1i9Cw=;
-        b=XDD0mSamG8MOrdCt9ggRLlzJqDjQF2cfnPa79bZ+ABB9j3bMiW8HH15uCsbC/LWMmP
-         y1f2ttg8Z2WvQbYvOLQvy9FzMSzsDLENx+RqFlYxbOqekpld8GkbxcREn1I6GgVq/YYG
-         Deyvk6HFIHSABfojdqxJwetTZD0j13oZF5UhWZGOLnRvi4M57pNdGxW20rNoVspf3Yil
-         E5VPjZTUVZHBHAK5SrtZuFUTC1gsUJfAlnjgGdpXYPHuxZ11uDDTRQT4nhW3Y/F0MRRv
-         +p8ao18RTbnhzDPkDwvn3a/cRuqUTQdG0Gy6uQMryPg8MD2Lu5eOzTDDVkQHOJCvl6NV
-         qKnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUA76JI2CUTRcZPde9ckNal0Ch6eAcZlHbGDeyXp9yZHMfYeOq3bolG+/VbLyRdHH6NPv7B9d4IufHqalYyKNWzYtnMXmgzggh6DBbB
-X-Gm-Message-State: AOJu0YzDz0dTj7QYFixmOcy0nfJU1orYmkaoSRsBwVEz6yOoSdTvmyCN
-	gtrunfT4nl85jYbBJEMcL+lQ1q595FLOC5s1SOZPDmYzsirtiF3AdHHqK/rBmJKMDtAeqe7Q+UN
-	6ToVaNwWA1RfKPUWnYN8LFiD+B44MNKBoHQsO
-X-Google-Smtp-Source: AGHT+IFULFV5uhgABgZzBXYJqHVOU0QqocPAW9nYgm8HwHd5Y1v9lYw0r20cKwTG9sBBXkjoh+WhigVT8vp4bpfmLgc=
-X-Received: by 2002:a67:ef8e:0:b0:48c:3c3f:3696 with SMTP id
- ada2fe7eead31-48f13015e86mr2161505137.10.1718788332754; Wed, 19 Jun 2024
- 02:12:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="sp6ICYgO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718788422;
+	bh=q+XfqHWHnHG9dPoLpb2HceC7HbczpwzlQ4lh+dAYWmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sp6ICYgOcJ8iScUVFBxl9cz3Vib023vDk+h6aunriBT/SQ8cn2b0LPmZKsKEFeTup
+	 fWMLuBpM8XAow1TE1dg/GE1JyvXvbW9cbq1sU0sTJEuYTMtOKefixyCfYWMTNMZWaZ
+	 lW++brAMr8ZKPqUsx5loArodZIZcTOieh6xgBF18=
+Date: Wed, 19 Jun 2024 11:13:41 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Armin Wolf <W_Armin@gmx.de>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-kernel@vger.kernel.org, 
+	=?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>, Stephen Horvath <s.horvath@outlook.com.au>, 
+	Sasha Kozachuk <skozachuk@google.com>, John Hamrick <johnham@google.com>, 
+	Chris Sarra <chrissarra@google.com>, linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFT PATCH v2 2/3] hwmon: (spd5118) Use spd5118 specific
+ read/write operations
+Message-ID: <879b15c1-d924-41d9-a41d-da785b943d26@t-8ch.de>
+References: <20240618195348.1670547-1-linux@roeck-us.net>
+ <20240618195348.1670547-3-linux@roeck-us.net>
+ <a7f208df-4c9e-4fa2-9d17-80895db51182@molgen.mpg.de>
+ <661def21-b0a9-49c1-937e-8526008f529c@roeck-us.net>
+ <omsjeb6zbkcdhh4a3urjdrdeyj2kczb734tbhxwdcvngzlm7pe@dzdphvmm6asq>
+ <4755d088-7eab-47ca-923c-db1fdf3611ab@gmx.de>
+ <6845cc2d-c50b-415b-af49-bf57333ee939@molgen.mpg.de>
+ <f437519f-97c3-4811-ac04-0695a27d9b37@roeck-us.net>
+ <0b8ae7fa-e3d3-4d31-9b4b-657b15c2d19c@t-8ch.de>
+ <a682ab44-d623-40fe-8fee-af2a3ae5590a@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
- <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com> <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
-In-Reply-To: <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Wed, 19 Jun 2024 10:11:35 +0100
-Message-ID: <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
-To: David Hildenbrand <david@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>, Elliot Berman <quic_eberman@quicinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, maz@kernel.org, kvm@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	pbonzini@redhat.com, Jason Gunthorpe <jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a682ab44-d623-40fe-8fee-af2a3ae5590a@roeck-us.net>
 
-Hi John and David,
+On 2024-06-18 18:02:51+0000, Guenter Roeck wrote:
+> On 6/18/24 17:50, Thomas Weißschuh wrote:
+> > On 2024-06-18 17:23:44+0000, Guenter Roeck wrote:
+> > > On 6/18/24 16:39, Paul Menzel wrote:
+> > > > [Cc: +Heiner]
+> > > > 
+> > > > 
+> > > > Dear Armin,
+> > > > 
+> > > > 
+> > > > Am 19.06.24 um 01:28 schrieb Armin Wolf:
+> > > > > Am 19.06.24 um 00:28 schrieb Wolfram Sang:
+> > > > > 
+> > > > > > > to 86 degrees C. If that doesn't work, we'll be really out of luck
+> > > > > > > with that controller (or at least I don't have an idea what else to try).
+> > > > > > 
+> > > > > > Try CCing Heiner Kallweit for ideas about the i801 controller.
+> > > > 
+> > > > > i am not Heiner Kallweit, but i found something interesting in
+> > > > > commit ba9ad2af7019 ("i2c: i801: Fix I2C Block Read on 8-Series/C220 and later").
+> > > > > 
+> > > > > Basically, it seems that the i802 i2c controller indeed features a SPD write disable bit which blocks all writes for slave addresses 0x50-0x57.
+> > > > > 
+> > > > > Does the i801 i2c controller driver print something like "SPD Write Disable is set" during boot?
+> > > > 
+> > > > Nice find. Yes, it does:
+> > > > 
+> > > 
+> > > Yes, definitely. I didn't have any recent datasheets, so I missed that flag.
+> > > Oh well :-(.
+> > > 
+> > > >       [    5.462605] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+> > > >       [    5.468399] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+> > > > 
+> > > 
+> > > Bummer. That explains the problem. It means that the BIOS effectively
+> > > blocks reading the eeprom on your system (because that would require writing
+> > > the page register), as well as changing temperature limits. That is really
+> > > annoying, but there is nothing we can do about it. Maybe the BIOS has a
+> > > configuration flag to enable or disable write protect, but I doubt it.
+> > 
+> > What about using 16bit addressing mode?
+> > 
+> >      Alternatively, at initial power on, the host can set the Table 112, “MR11” [3] = ‘1’ to address the entire 1024 bytes of
+> >      non-volatile memory with 2 bytes of address and hence not required to go through page selection to address entire
+> >      non-volatile memory.
+> > 
+> > regmap-i2c allows 16bit addresses when I2C_FUNC_SMBUS_I2C_BLOCK is supported,
+> > which to me looks like it should be the case on i801 for ICH5.
+> > 
+> 
+> Good idea, but it doesn't work. I can get write operations with
+> 16-bit register addresses to work even on piix4, but read operations
+> require writing a 16-bit register address followed by byte reads (see
+> regmap_i2c_smbus_i2c_read_reg16). Unfortunately, spd5118 devices
+> don't auto-increment the address on byte read operations, meaning
+> each byte read returns data from address 0x00 (i.e., it returns
+> 0x51). Try "i2cdump -y -f 0 0x50 c" and you'll see what I mean.
+> Maybe there is a way around it, but I have not found it.
 
-Thank you for your comments.
+Thanks for the pointer to regmap_i2c_smbus_i2c_read_reg16().
+I'm not really familiar with I2C/SMBUS ...
 
-On Wed, Jun 19, 2024 at 8:38=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> Hi,
->
-> On 19.06.24 04:44, John Hubbard wrote:
-> > On 6/18/24 5:05 PM, Elliot Berman wrote:
-> >> In arm64 pKVM and QuIC's Gunyah protected VM model, we want to support
-> >> grabbing shmem user pages instead of using KVM's guestmemfd. These
-> >> hypervisors provide a different isolation model than the CoCo
-> >> implementations from x86. KVM's guest_memfd is focused on providing
-> >> memory that is more isolated than AVF requires. Some specific examples
-> >> include ability to pre-load data onto guest-private pages, dynamically
-> >> sharing/isolating guest pages without copy, and (future) migrating
-> >> guest-private pages.  In sum of those differences after a discussion i=
-n
-> >> [1] and at PUCK, we want to try to stick with existing shmem and exten=
-d
-> >> GUP to support the isolation needs for arm64 pKVM and Gunyah.
->
-> The main question really is, into which direction we want and can
-> develop guest_memfd. At this point (after talking to Jason at LSF/MM), I
-> wonder if guest_memfd should be our new target for guest memory, both
-> shared and private. There are a bunch of issues to be sorted out though .=
-..
->
-> As there is interest from Red Hat into supporting hugetlb-style huge
-> pages in confidential VMs for real-time workloads, and wasting memory is
-> not really desired, I'm going to think some more about some of the
-> challenges (shared+private in guest_memfd, mmap support, migration of
-> !shared folios, hugetlb-like support, in-place shared<->private
-> conversion, interaction with page pinning). Tricky.
->
-> Ideally, we'd have one way to back guest memory for confidential VMs in
-> the future.
+Did you look into "2.6.8.3 Default Read Address Pointer Mode"?
 
-As you know, initially we went down the route of guest memory and
-invested a lot of time on it, including presenting our proposal at LPC
-last year. But there was resistance to expanding it to support more
-than what was initially envisioned, e.g., sharing guest memory in
-place migration, and maybe even huge pages, and its implications such
-as being able to conditionally mmap guest memory.
+I am failing to understand how that address pointer mode would ever make
+sense without address auto-increment.
 
-To be honest, personally (speaking only for myself, not necessarily
-for Elliot and not for anyone else in the pKVM team), I still would
-prefer to use guest_memfd(). I think that having one solution for
-confidential computing that rules them all would be best. But we do
-need to be able to share memory in place, have a plan for supporting
-huge pages in the near future, and migration in the not-too-distant
-future.
+> On top of that, configuring 16-bit mode requires a write operation
+> into the page register, and that is blocked.
 
-We are currently shipping pKVM in Android as it is, warts and all.
-We're also working on upstreaming the rest of it. Currently, this is
-the main blocker for us to be able to upstream the rest (same probably
-applies to Gunyah).
+... this one on the other hand is really obvious.
 
-> Can you comment on the bigger design goal here? In particular:
 
-At a high level: We want to prevent a misbehaving host process from
-crashing the system when attempting to access (deliberately or
-accidentally) protected guest memory. As it currently stands in pKVM
-and Gunyah, the hypervisor does prevent the host from accessing
-(private) guest memory. In certain cases though, if the host attempts
-to access that memory and is prevented by the hypervisor (either out
-of ignorance or out of malice), the host kernel wouldn't be able to
-recover, causing the whole system to crash.
-
-guest_memfd() prevents such accesses by not allowing confidential
-memory to be mapped at the host to begin with. This works fine for us,
-but there's the issue of being able to share memory in place, which
-implies mapping it conditionally (among others that I've mentioned).
-
-The approach we're taking with this proposal is to instead restrict
-the pinning of protected memory. If the host kernel can't pin the
-memory, then a misbehaving process can't trick the host into accessing
-it.
-
->
-> 1) Who would get the exclusive PIN and for which reason? When would we
->     pin, when would we unpin?
-
-The exclusive pin would be acquired for private guest pages, in
-addition to a normal pin. It would be released when the private memory
-is released, or if the guest shares that memory.
-
-> 2) What would happen if there is already another PIN? Can we deal with
->     speculative short-term PINs from GUP-fast that could introduce
->     errors?
-
-The exclusive pin would be rejected if there's any other pin
-(exclusive or normal). Normal pins would be rejected if there's an
-exclusive pin.
-
-> 3) How can we be sure we don't need other long-term pins (IOMMUs?) in
->     the future?
-
-I can't :)
-
-> 4) Why are GUP pins special? How one would deal with other folio
->     references (e.g., simply mmap the shmem file into a different
->     process).
-
-Other references would crash the userspace process, but the host
-kernel can handle them, and shouldn't cause the system to crash. The
-way things are now in Android/pKVM, a userspace process can crash the
-system as a whole.
-
-> 5) Why you have to bother about anonymous pages at all (skimming over s
->     some patches), when you really want to handle shmem differently only?
-
-I'm not sure I understand the question. We use anonymous memory for pKVM.
-
-> >> To that
-> >> end, we introduce the concept of "exclusive GUP pinning", which enforc=
-es
-> >> that only one pin of any kind is allowed when using the FOLL_EXCLUSIVE
-> >> flag is set. This behavior doesn't affect FOLL_GET or any other folio
-> >> refcount operations that don't go through the FOLL_PIN path.
->
-> So, FOLL_EXCLUSIVE would fail if there already is a PIN, but
-> !FOLL_EXCLUSIVE would succeed even if there is a single PIN via
-> FOLL_EXCLUSIVE? Or would the single FOLL_EXCLUSIVE pin make other pins
-> that don't have FOLL_EXCLUSIVE set fail as well?
-
-A FOLL_EXCLUSIVE would fail if there's any other pin. A normal pin
-(!FOLL_EXCLUSIVE) would fail if there's a FOLL_EXCLUSIVE pin. It's the
-PIN to end all pins!
-
-> >>
-> >> [1]: https://lore.kernel.org/all/20240319143119.GA2736@willie-the-truc=
-k/
-> >>
-> >
-> > Hi!
-> >
-> > Looking through this, I feel that some intangible threshold of "this is
-> > too much overloading of page->_refcount" has been crossed. This is a ve=
-ry
-> > specific feature, and it is using approximately one more bit than is
-> > really actually "available"...
->
-> Agreed.
-
-We are gating it behind a CONFIG flag :)
-
-Also, since pin is already overloading the refcount, having the
-exclusive pin there helps in ensuring atomic accesses and avoiding
-races.
-
-> >
-> > If we need a bit in struct page/folio, is this really the only way? Wil=
-ly
-> > is working towards getting us an entirely separate folio->pincount, I
-> > suppose that might take too long? Or not?
->
-> Before talking about how to implement it, I think we first have to learn
-> whether that approach is what we want at all, and how it fits into the
-> bigger picture of that use case.
->
-> >
-> > This feels like force-fitting a very specific feature (KVM/CoCo handlin=
-g
-> > of shmem pages) into a more general mechanism that is running low on
-> > bits (gup/pup).
->
-> Agreed.
->
-> >
-> > Maybe a good topic for LPC!
->
-> The KVM track has plenty of guest_memfd topics, might be a good fit
-> there. (or in the MM track, of course)
-
-We are planning on submitting a proposal for LPC (see you in Vienna!) :)
-
-Thanks again!
-/fuad (and elliot*)
-
-* Mistakes, errors, and unclear statements in this email are mine alone tho=
-ugh.
-
-> --
-> Cheers,
->
-> David / dhildenb
->
+Thanks,
+Thomas
