@@ -1,234 +1,197 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2A348CCD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1C51A3BD3;
+	Thu, 20 Jun 2024 13:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718891136; cv=none; b=u9SZW2UUllF0oJ9zyGODZDjECE5dU7eM61PNkrMOHFbdXzUC62fkEq7I/gb2Lc+WuvHi0AdC8jBEXngHyQ0uLSkKc53S9dXUqIUwRVtQCvEC6Ev6WmtuN+0EYEGCBgDdJNMrHBxnfRYkJsZlNDqlh7D6WP+3tJstoaSEqPO7iz8=
+	t=1718891176; cv=none; b=WEcb4eF3eoGz9r+MMnJ1kPQpcMjJG8wZbV2E/TR/hUlF27ZUzGuHBA7VZ6UqqJtqv4qYypeWayt9gSQYZKR199DEJGbUyLKDR6JRByr4L1xkk7RGq9mNI1QjPpj43FQB3F7VFAZ8ngm+WTtAZur/KxNOK1nTD2RkjUcU4g4awAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718891136; c=relaxed/simple;
-	bh=HOjfoGYreKZnZpmuXZ6Au7dPhxY8jwB/HRh9r1yOKuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PqENaUxohGbOa05C3/S+WQAmqZnBeP8wQnUWs4W0Z4Zj+QlMEY+gF7Qw556jc1HmTvFQdcSUO/H4aRBdWFlzEghD3TMkzliITvDaE3eW4EKH8pPVC0ssnEtKE+HTSKWNSqPmKeUDxrWcGAP0ctxy0W/8dRD7e5PYPag/4WcpIdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uA+M7Iz5; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718891176; c=relaxed/simple;
+	bh=dJnp2EW+2R3q8xyoX0QitfjOP8taMkV4+hsyCujZ1e8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:References; b=HNSGxjIcFjZZVlikoV47FJQgRduB0DrRBVl7ZfcBh8ZSzi7qJa/msfKDMiO/Z3mtz1K2LvFeNe/YgFeZbuJ57b2Vs3g5ZtV0p6FaqiONa8p0aLsC/ryYb2x8CNeJ54trAdAeu7lU0OxsWSG5jobWS79yX0fNnix91sJnKqlGX1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pfFi5h+H; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uA+M7Iz5"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2c8062f9097so219325a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718891134; x=1719495934; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+AyU6deXfzId3iNKD+aWWyaHFp57zQswubmQIVn5Jzc=;
-        b=uA+M7Iz5FNwrCHyvli96A1wDFgR/3cNVOY3r9/c6TYYPwGdcWT+ztuyZk8E4ubOC49
-         UE3caoFXse4Lodc0ugwh0tK3xffJMNwqnT7AnXsanxqpEYaC/MdqInziyRXNsILGrmg9
-         F1j9Lq5D8pi+t8Hmgev0MwEfT1pyjtPDUZuNhHWLHDeZLhyX7qbeuZsfx3kMhZG50iBi
-         2OTaSvpRlXSgUgmgIIXqxa9IErBGfxCzCgEMWjf32RIYNwzZqRBu3SusUr1MBkyI35sU
-         OfftVIoGtk2J+5EFXiWYhbN1pGG3MmVIRyJGATW6FJTUuWzjZDnSPHzBsuhb1COTVHJM
-         nT4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718891134; x=1719495934;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+AyU6deXfzId3iNKD+aWWyaHFp57zQswubmQIVn5Jzc=;
-        b=S04/vNgRCNO6pYvkDj+UgLozuTyRuHPueNlJ+m5yo6rmECrzfkULE+2TJeEyOq86h5
-         NFsWb7K/1HgytIWUneqKxQ1eay85RSAbO/qfcdRDmM7z0803ADoOz24/HoZ+ujbD5Hdp
-         ZT/wVk6R7NVZD/t+J7LxoXZqVigQ30HJLLYL92PKX/gs9N7BjP6MYiEY0INCrPIZ2bX6
-         nk5mfF/VsswVzjAeMd0pMNhJrNWye69I1aKunAw0iqyHMDxfsG5oGxU2zT6WzSUMGOF7
-         udTVlppCO0lAv3HAKpIh1YHU2yybpG+JUkEOzpFOOZB+8LcZ+d8iUT1CCzd0J+lwDh2h
-         mW3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVnIx8I99BJlT/Y9glNDNo/WfUYFdir68/1MbiZx6D5omtjkaS/ZQ0dBy817u0jGbssSMGxtVm6bjWrHS7S34ULdliili2zKUzsP5Hs
-X-Gm-Message-State: AOJu0YzwWPHqKsVUmtNcFr+wk4aKrS426NG7E4LY8mN5Gg3x6Qnph0aC
-	buxK6yDCsAoBBYa5IiNdI1f38NUXVAHoA4V/eHKzDL9fCZ0yHmJ31DuZ5nqdwbnqAH+loUVaNrC
-	f5A7sCg8fbRkLW0wWxHg5IS3xMck24cHJVIF8bA==
-X-Google-Smtp-Source: AGHT+IEkbgWtIlRKsROVwMbvn+u4Dmp8R8VC3/t3xQgVOWqEyZY+N2hzOnvpDO7pwbuCzv9Q70Ne5sdfjJ1A5HhtY00=
-X-Received: by 2002:a17:90a:f402:b0:2c3:11fb:a163 with SMTP id
- 98e67ed59e1d1-2c7b57f374cmr5673149a91.6.1718891134163; Thu, 20 Jun 2024
- 06:45:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pfFi5h+H"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240620134611euoutp02a96cd9ca107e37de619283a51f669cae~aumm3LN8t2421724217euoutp02B;
+	Thu, 20 Jun 2024 13:46:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240620134611euoutp02a96cd9ca107e37de619283a51f669cae~aumm3LN8t2421724217euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1718891171;
+	bh=iFqp3Vmg2kXZw5nz0hjIfH1Vkk6Dw440kokEiE+YTgA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pfFi5h+H8lPp007wsRqpVpZNLS5nLEMCmpdUAME44CgSbKH9/QtZXkJlFLIPUqU27
+	 fzMFL4P/MJyv9BkFP+rGX07Citxen2F4/63K3Zqq1dPcsd4/wXOsfofmnAJ2Ez5sxL
+	 eXR5Kv9RbPSXgeXtkkuoF/hWYvXT+bzb5DJ2EDM0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240620134610eucas1p26751fca5e1265a5eb54a3aad17522d62~aummjdKZ83240632406eucas1p2R;
+	Thu, 20 Jun 2024 13:46:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id A8.E4.09620.2A234766; Thu, 20
+	Jun 2024 14:46:10 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240620134610eucas1p2fbcd7218bc220bf568ea117acf2f4781~aummJRJA03240632406eucas1p2P;
+	Thu, 20 Jun 2024 13:46:10 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240620134610eusmtrp10775d1c759a9d9dc121cf4e65390464b~aummIap1-0536305363eusmtrp1V;
+	Thu, 20 Jun 2024 13:46:10 +0000 (GMT)
+X-AuditID: cbfec7f5-d31ff70000002594-53-667432a2088e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 85.35.09010.2A234766; Thu, 20
+	Jun 2024 14:46:10 +0100 (BST)
+Received: from localhost (unknown [106.120.51.111]) by eusmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240620134609eusmtip229d220fbda7a358d93723c417de4002e~auml6JyNF2776327763eusmtip2Q;
+	Thu, 20 Jun 2024 13:46:09 +0000 (GMT)
+From: Lukasz Stelmach <l.stelmach@samsung.com>
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,  Rob Herring
+	<robh@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Anand Moon
+	<linux.amoon@gmail.com>,  Olivia Mackall <olivia@selenic.com>,  Herbert Xu
+	<herbert@gondor.apana.org.au>,  Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-samsung-soc@vger.kernel.org,  linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] hwrng: exynos: Add SMC based TRNG operation
+Date: Thu, 20 Jun 2024 15:46:02 +0200
+In-Reply-To: <20240618204523.9563-6-semen.protsenko@linaro.org> (Sam
+	Protsenko's message of "Tue, 18 Jun 2024 15:45:21 -0500")
+Message-ID: <oypijdbk3vu3qd.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508223456.4189689-1-joshdon@google.com>
-In-Reply-To: <20240508223456.4189689-1-joshdon@google.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 20 Jun 2024 15:45:23 +0200
-Message-ID: <CAKfTPtAVg7_p4rXXfiO1=F1pjvAbL9V26qjHvtp2S6qBpp6LuQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: prevent unbounded task iteration in load balance
-To: Josh Don <joshdon@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, 
-	Zhang Qiao <zhangqiao22@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+	protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7djPc7qLjErSDHa/V7R4MG8bm8WaveeY
+	LOYfOcdq0f1KxuLlrHtsFpseX2O1uH/vJ5PF5V1z2CxmnN/HZLFu4y12i/tnehgt/u/ZwW7x
+	vG8fkwOvx85Zd9k9th1Q9di0qpPN4861PWwem5fUe/RtWcXo0fdyA6PH501yARxRXDYpqTmZ
+	ZalF+nYJXBmXp/xkLmgVq+i6s5K1gfGEUBcjJ4eEgInEpqdTmLoYuTiEBFYwSuy9cIURwvnC
+	KPF65jY2COczo8TatVsZYVr2H7wC1bKcUaKzaT4rSEJI4AWjxILNsl2MHBxsAnpADREgYREg
+	c93MV+wgNrPAPmaJTX8DQWxhAXeJiWdmMIPYLAKqEjufn2UGmckp0MAoceZ9GzPIHF4Bc4mJ
+	DdkgNaIClhLHt7azgdi8AoISJ2c+YYGYmSsx8/wbsKslBDZzSpw79Ikd4lAXiReP1kIdLSzx
+	6vgWqLiMxOnJPSwQDe2MEk1XFrJCOBMYJT53NDFBVFlL3Dn3iw3CdpR4+e4rE8hFEgJ8Ejfe
+	CkJs5pOYtG06M0SYV6KjDRqmKhLr+vewQNhSEr2vVkDd4CGx7O5ZaPBOYpRYuesv8wRGhVlI
+	HpqF5KFZQGOZBTQl1u/ShwhrSyxb+JoZwraVWLfuPcsCRtZVjOKppcW56anFxnmp5XrFibnF
+	pXnpesn5uZsYgSnv9L/jX3cwrnj1Ue8QIxMH4yFGFaDmRxtWX2CUYsnLz0tVEuF93lWUJsSb
+	klhZlVqUH19UmpNafIhRmoNFSZxXNUU+VUggPbEkNTs1tSC1CCbLxMEp1cC0rPql/MSjTPJr
+	731ZznVu5XTB9f/PzFi1VGLuRaOwrzNm25xk7S4WncX2I41pf2/qDKtAqeOZq3blXz74geml
+	+zTFJQvSpy7l1lJxru+Y42LTp/R4beEP9XWHVyl5Ltz0dl3Rdffj38TZ4rrtfL/GBysZBWnn
+	C9nkzJZb2dS7WCnuccDbhGkKpkeDedUfn//Soj49pOrMqfLoT212AovUo73M2mNMTbWfnnf6
+	5ZTxZcrHCM/0G6aOCcG/bAXWsL64N6Gk+I5m4x8ZnSkq2kcv/X9XafNk7vHlnVcn7blR3KYa
+	cGpx4O2OlfMOdnssO/hpT6CxwpEEg3UK/PzLlBTnbbRYpr9dPXOqqeSkY3KhSizFGYmGWsxF
+	xYkA6W9K/vQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xe7qLjErSDDZ2sFk8mLeNzWLN3nNM
+	FvOPnGO16H4lY/Fy1j02i02Pr7Fa3L/3k8ni8q45bBYzzu9jsli38Ra7xf0zPYwW//fsYLd4
+	3rePyYHXY+esu+we2w6oemxa1cnmcefaHjaPzUvqPfq2rGL06Hu5gdHj8ya5AI4oPZui/NKS
+	VIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYzLU34yF7SKVXTd
+	WcnawHhCqIuRk0NCwERi/8ErTCC2kMBSRonmFs8uRg6guJTEyrnpECXCEn+udbF1MXIBlTxj
+	lDhyrpcZpIZNQE9i7doIkBoRIHPdzFfsIDXMAgeZJS497gGbKSzgLjHxzAxmiPl2Egc/LWYD
+	sVkEVCV2Pj/LDNLAKdDAKHHmfRvYUF4Bc4mJDdkgNaIClhLHt7aD1fMKCEqcnPmEBcRmFsiW
+	+Lr6OfMERoFZSFKzkKRmAU1iFtCUWL9LHyKsLbFs4WtmCNtWYt269ywLGFlXMYqklhbnpucW
+	G+kVJ+YWl+al6yXn525iBMbqtmM/t+xgXPnqo94hRiYOxkOMKkCdjzasvsAoxZKXn5eqJML7
+	vKsoTYg3JbGyKrUoP76oNCe1+BCjKdBrE5mlRJPzgUkkryTe0MzA1NDEzNLA1NLMWEmc17Og
+	I1FIID2xJDU7NbUgtQimj4mDU6qByWjXoWv6/6yc2i32+Kvu7vqen5/Cxn/Mm7OI+4RP58Rn
+	grsVqq8EnrtQM/NUmVrA2WdXX6/fd8up+azD/JnB/3qlH1+fuF0oP/xqoUuXX7XnHOvL0qlN
+	NqVawcvsuYS3cT5y/xidmOddMeVNUEzV9fvtVzzm8QjOcfazv5+QP9GOed6D3Zkzqys8z6y8
+	xySatbCxcNriB5a3kpYlaXxmzjkTv39Nv9r54ns7G0RU9iR+jl37zusj5wTGqsd2U82vqq1/
+	dDj39ZTeCg0bpYLHL3qni/MFxS+TUHjLqxIm7OYl3yt+55Vh8LbDTxZcubyl/u9tI8m/Wtb/
+	NjSxrZxtn6TVfoHToCpG9szWcxseKrEUZyQaajEXFScCAE/S1AZqAwAA
+X-CMS-MailID: 20240620134610eucas1p2fbcd7218bc220bf568ea117acf2f4781
+X-Msg-Generator: CA
+X-RootMTR: 20240620134610eucas1p2fbcd7218bc220bf568ea117acf2f4781
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240620134610eucas1p2fbcd7218bc220bf568ea117acf2f4781
+References: <20240618204523.9563-6-semen.protsenko@linaro.org>
+	<CGME20240620134610eucas1p2fbcd7218bc220bf568ea117acf2f4781@eucas1p2.samsung.com>
 
-Hi Josh,
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-sorry for the delay
-
-On Thu, 9 May 2024 at 00:35, Josh Don <joshdon@google.com> wrote:
+It was <2024-06-18 wto 15:45>, when Sam Protsenko wrote:
+> On some Exynos chips like Exynos850 the access to Security Sub System
+> (SSS) registers is protected with TrustZone, and therefore only possible
+> from EL3 monitor software. The Linux kernel is running in EL1, so the
+> only way for the driver to obtain TRNG data is via SMC calls to EL3
+> monitor. Implement such SMC operation and use it when EXYNOS_SMC flag is
+> set in the corresponding chip driver data.
 >
-> b0defa7ae03ec changed the load balancing logic to ignore env.max_loop if
-> all tasks examined to that point were pinned. The goal of the patch was
-> to make it more likely to be able to detach a task buried in a long list
-> of pinned tasks. However, this has the unfortunate side effect of
-> creating an O(n) iteration in detach_tasks(), as we now must fully
-> iterate every task on a cpu if all or most are pinned. Since this load
-> balance code is done with rq lock held, and often in softirq context, it
-> is very easy to trigger hard lockups. We observed such hard lockups with
-> a user who affined O(10k) threads to a single cpu.
->
-> My initial suggestion to Vincent was to revert the original patch and
-> instead bump sched_nr_migrate. However, he pointed out that we do still
-> want to have a limit on the number of tasks we actually detach (which is
-> an expensive operation), but still allow a deeper search.
->
-> As a result of the above, this patch now separates the number of tasks
-> we migrate from the number of tasks we can search. Now, the search limit
-> can be raised while keeping the nr_migrate fixed.
-
-Thanks for your patch.
-
-I went back in the archive to remember how I came up with this patch.
-I thought that it was fixing a problem raised by
-zhangqiao22@huawei.com but my memory was wrong and it isn't. Instead
-it's fixing a theoretical case described in the email thread:
-https://lore.kernel.org/lkml/20220818083133.GA536@vingu-book/
-
-So I wonder if it's worth adding a new debugfs entry for a case that
-nobody might have ever faced or at least complained about. I know that
-I asked you to go in this direction whereas you were originally
-proposing a revert. After more time to think about this, I'm no longer
-convinced that it's worth adding a new debugfs interface finally.
-
-I put some comments below but maybe it would be better to simply
-revert b0defa7ae03ec as nobody yet complains with this problem so far.
-Let see what other will say or if someone finally faced the problem
-but a revert may finally be a better option.
-
->
-> Signed-off-by: Josh Don <joshdon@google.com>
+> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  kernel/sched/core.c  |  3 ++-
->  kernel/sched/debug.c |  1 +
->  kernel/sched/fair.c  | 19 ++++++++++++++-----
->  kernel/sched/sched.h |  1 +
->  4 files changed, 18 insertions(+), 6 deletions(-)
+> Changes in v2:
+>   - Used the "reversed Christmas tree" style in the variable declaration
+>     block in exynos_trng_do_read_smc()
+>   - Renamed .quirks to .flags in the driver structure
+>   - Added Krzysztof's R-b tag
 >
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index db4be4921e7f..820ffa9bbcfe 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -144,10 +144,11 @@ __read_mostly int sysctl_resched_latency_warn_once = 1;
->  #endif /* CONFIG_SCHED_DEBUG */
+>  drivers/char/hw_random/exynos-trng.c | 133 +++++++++++++++++++++++++--
+>  1 file changed, 123 insertions(+), 10 deletions(-)
 >
->  /*
-> - * Number of tasks to iterate in a single balance run.
-> + * Max number of tasks we can move/iterate in a single balance run.
->   * Limited because this is done with IRQs disabled.
+> diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_rando=
+m/exynos-trng.c
+> index 99a0b271ffb7..497d6018c6ba 100644
+> --- a/drivers/char/hw_random/exynos-trng.c
+> +++ b/drivers/char/hw_random/exynos-trng.c
+> @@ -10,6 +10,7 @@
+>   * Krzysztof Koz=C5=82owski <krzk@kernel.org>
 >   */
->  const_debug unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
-> +const_debug unsigned int sysctl_sched_migrate_search_depth = SCHED_NR_MIGRATE_BREAK;
->
->  __read_mostly int scheduler_running;
->
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index 168eecc209b4..d1701c98f996 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -356,6 +356,7 @@ static __init int sched_init_debug(void)
->         debugfs_create_file("tunable_scaling", 0644, debugfs_sched, NULL, &sched_scaling_fops);
->         debugfs_create_u32("migration_cost_ns", 0644, debugfs_sched, &sysctl_sched_migration_cost);
->         debugfs_create_u32("nr_migrate", 0644, debugfs_sched, &sysctl_sched_nr_migrate);
-> +       debugfs_create_u32("migrate_search_depth", 0644, debugfs_sched, &sysctl_sched_migrate_search_depth);
->
->         mutex_lock(&sched_domains_mutex);
->         update_sched_domain_debugfs();
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 34fe6e9490c2..b4b26f39dd45 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8764,6 +8764,9 @@ struct lb_env {
->         unsigned int            loop_break;
->         unsigned int            loop_max;
->
-> +       unsigned int            num_detached;
-> +       unsigned int            detach_max;
+
+[...]
+
+> +static int exynos_trng_init_smc(struct hwrng *rng)
+> +{
+> +	struct arm_smccc_res res;
 > +
->         enum fbq_type           fbq_type;
->         enum migration_type     migration_type;
->         struct list_head        tasks;
-> @@ -9044,11 +9047,11 @@ static int detach_tasks(struct lb_env *env)
->
->                 env->loop++;
->                 /*
-> -                * We've more or less seen every task there is, call it quits
-> -                * unless we haven't found any movable task yet.
-> +                * Call it quits if we're going to exceed our search limit;
-> +                * we can't search indefinitely even if we've not found a
-> +                * migratable task yet.
->                  */
-> -               if (env->loop > env->loop_max &&
-> -                   !(env->flags & LBF_ALL_PINNED))
-> +               if (env->loop > env->loop_max)
->                         break;
->
->                 /* take a breather every nr_migrate tasks */
-> @@ -9116,6 +9119,9 @@ static int detach_tasks(struct lb_env *env)
->                 list_add(&p->se.group_node, &env->tasks);
->
->                 detached++;
-> +               env->num_detached++;
-
-Do we really need env->num_detached field ? Can't we save remove it
-and set env->detach_max = sysctl_sched_nr_migrate - ld_moved
-
-> +               if (env->num_detached >= env->detach_max)
-> +                       break;
->
->  #ifdef CONFIG_PREEMPTION
->                 /*
-> @@ -11287,6 +11293,9 @@ static int load_balance(int this_cpu, struct rq *this_rq,
->         env.src_cpu = busiest->cpu;
->         env.src_rq = busiest;
->
-> +       env.num_detached = 0;
-> +       env.detach_max = sysctl_sched_nr_migrate;
+> +	arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_INIT, 0, 0, 0, 0, 0, 0, &res);
+> +	if (res.a0 !=3D HWRNG_RET_OK)
+> +		return -EIO;
 > +
->         ld_moved = 0;
->         /* Clear this flag as soon as we find a pullable task */
->         env.flags |= LBF_ALL_PINNED;
-> @@ -11297,7 +11306,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
->                  * still unbalanced. ld_moved simply stays zero, so it is
->                  * correctly treated as an imbalance.
->                  */
-> -               env.loop_max  = min(sysctl_sched_nr_migrate, busiest->nr_running);
-> +               env.loop_max  = min(sysctl_sched_migrate_search_depth, busiest->nr_running);
->
->  more_balance:
+> +	return 0;
+> +}
+> +
 
- +               env->detach_max = sysctl_sched_nr_migrate - ld_moved
+Does this driver requiers some vendor-specifig bootloading code?
+I am testing the code on a WinLink E850-96 board booted with the
+upstream u-boot and it fails during init (res0.a is -1).
 
->                 rq_lock_irqsave(busiest, &rf);
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index e58a54bda77d..1597175d5f0b 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2539,6 +2539,7 @@ extern void wakeup_preempt(struct rq *rq, struct task_struct *p, int flags);
->
->  extern const_debug unsigned int sysctl_sched_nr_migrate;
->  extern const_debug unsigned int sysctl_sched_migration_cost;
-> +extern const_debug unsigned int sysctl_sched_migrate_search_depth;
->
->  extern unsigned int sysctl_sched_base_slice;
->
-> --
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
->
+[    1.883413] exynos-trng 12081400.rng: Could not register hwrng device
+[    1.893394] exynos-trng 12081400.rng: probe with driver exynos-trng fail=
+ed with error -5
+
+If an additional code outside the kernel is required for this to run,
+then maybe the error message should reflect that.
+
+Kind regards,
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAmZ0MpoACgkQsK4enJil
+gBBttwgAiuVydgU5PyyNzMPe0P1nzHAgaj19otvTg/m/h3TtY895/ILzYjSZ15x1
+DO9Mb2tlW3z1F7f2y1xUcOWT/zcam6fga074wnx5llsPe6+burPhrt40r09Fy2hF
+U1CpvLyEVuuFnifaSOLKfxUptC5d0daB/3dXgrPaieIk96JSi18rZZejmb+BRcQ+
+6sVwrnm6MM+H0UsZ1o8QydCVAdO7l/v+cOa/ix9yEJtCDFPqQyqJR8LEA6TaXlxH
+icXzjvhMqiwYo62HGl48W97hkuP/AATqBqil8CT5kuYDEN+gq5/2UHPsQPYDciki
+FDuJ3bFCfH8VTAGb0EvBC+UAadOY5g==
+=Dl6f
+-----END PGP SIGNATURE-----
+--=-=-=--
