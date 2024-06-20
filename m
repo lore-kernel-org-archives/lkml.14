@@ -1,33 +1,29 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D448176255;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D4011E497;
 	Thu, 20 Jun 2024 14:45:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718894759; cv=none; b=Ve+wY+CXoYWXaAVRdsgpgAL9Mm8V43e1SjHkG83xIZ7SzLRHj89wSWOlgfmu2fOmP52Y5+hn57KIKGBDqqniVVKFKOW6jkfDzSWGusqjiqcJaPh+RvuS1BpYf1m1243hhSewDNOl1+4lo0LKhcGkkxMfcrLyAF/bMvw+bW1gxjA=
+	t=1718894761; cv=none; b=HDsB+jgH3qD0gufEcRrEi+xMhJb5ishgU5t8FrtzdAbxuLj5QVq07abmUPKN/e6eHwS0j3zDxZqZQZbKEor+/0LY7nur2XR6vDxSoQ0iW1VtqrlvZyBpcaMSVAC39FCAldqo9YkHdZUBvqoJuRLDVnJQG/6YyCQmLJUnb0DpZH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718894759; c=relaxed/simple;
-	bh=uL73iW/sBxwetobM0anVhjrpZe0qhCcB/4/aFNL5+ok=;
+	s=arc-20240116; t=1718894761; c=relaxed/simple;
+	bh=qDGnScQ7WuPpwcBEvsp6QgrvUYW/bjdBDuuaefI7n1o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwn5+3u6Ut+jkPwayZj6Dz4e+BEL+vBJJRRdeLeA2Z9A07twFD8BysCdBEEvGsKfFnSyEUmvJlf6AdFu+d5V4ENitjg6xDEF7whVct/wJzmIXV9AHlcmmsNzAaRoLa99FR23y9yu3W7P3fvtetyvqGgZSUGRd/9st6lBGDyj6Ik=
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnqiqqEEEA2zdYSlRoMLpHh/8joVqzYg3idOy1Jgr081+Ct5iLrXPgqh1oRR2uXGrNuHCY9fS9sZtyDvpSYm2N7cH3FWLw8Q3zC0d1hm308QzdjH2IfqpQOOQIYm2AqVUGL0lH0iuVluVO+RfyW31PK22ALd5c8qsZeY8m/SdBk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sKJ2m-0000tN-00; Thu, 20 Jun 2024 16:45:44 +0200
+	id 1sKJ2m-0000tH-00; Thu, 20 Jun 2024 16:45:44 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id BEB89C031A; Thu, 20 Jun 2024 16:43:31 +0200 (CEST)
-Date: Thu, 20 Jun 2024 16:43:31 +0200
+	id 661D3C0120; Thu, 20 Jun 2024 16:31:15 +0200 (CEST)
+Date: Thu, 20 Jun 2024 16:31:15 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH fixes 1/4] MIPS: mipsmtregs: Fix target register for MFTC0
-Message-ID: <ZnRAEzRQpfm7yHHc@alpha.franken.de>
-References: <20240616-mips-mt-fixes-v1-0-83913e0e60fc@flygoat.com>
- <20240616-mips-mt-fixes-v1-1-83913e0e60fc@flygoat.com>
- <859402a6-4e31-4029-a6ad-87c3be4d3fdd@app.fastmail.com>
- <14cc8572-406e-47c4-a590-540d6c69466b@app.fastmail.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH fixes] MIPS: ip30: ip30-console: Add missing include
+Message-ID: <ZnQ9M4Q/TTZi13Sg@alpha.franken.de>
+References: <20240616-ip30-buildfix-v1-1-0ab2b9aec9f5@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,32 +33,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <14cc8572-406e-47c4-a590-540d6c69466b@app.fastmail.com>
+In-Reply-To: <20240616-ip30-buildfix-v1-1-0ab2b9aec9f5@flygoat.com>
 
-On Wed, Jun 19, 2024 at 12:37:48PM +0100, Jiaxun Yang wrote:
+On Sun, Jun 16, 2024 at 06:54:24PM +0100, Jiaxun Yang wrote:
+> Include linux/processor.h to fix build error:
 > 
+> arch/mips/sgi-ip30/ip30-console.c: In function ‘prom_putchar’:
+> arch/mips/sgi-ip30/ip30-console.c:21:17: error: implicit declaration of function ‘cpu_relax’ [-Werror=implicit-function-declaration]
+>    21 |                 cpu_relax();
 > 
-> 在2024年6月19日六月 下午12:32，Jiaxun Yang写道：
-> > 在2024年6月16日六月 下午2:25，Jiaxun Yang写道：
-> >> Target register of mftc0 should be __res instead of $1, this is
-> >> a leftover from old .insn code.
-> >>
-> >> Fixes: dd6d29a61489 ("MIPS: Implement microMIPS MT ASE helpers")
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >
-> > Hi Thomas,
-> >
-> > I saw you sent mips-fixes_6.10_1 pull request but this series is
-> > not included in that PR while one of my later patch is included.
-> >
-> > If you think the whole series is not fit for fixes tree then please
-> > at least let this series go through fixes tree. There are many MT
->                     ^ Sorry I meant patch.
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/sgi-ip30/ip30-console.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/mips/sgi-ip30/ip30-console.c b/arch/mips/sgi-ip30/ip30-console.c
+> index 7c6dcf6e73f7..a5f10097b985 100644
+> --- a/arch/mips/sgi-ip30/ip30-console.c
+> +++ b/arch/mips/sgi-ip30/ip30-console.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  
+>  #include <linux/io.h>
+> +#include <linux/processor.h>
+>  
+>  #include <asm/sn/ioc3.h>
+>  #include <asm/setup.h>
+> 
+> ---
+> base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+> change-id: 20240616-ip30-buildfix-20d62f2d6186
 
-sorry I've missed the fixes tag. As the rest looks like a lot of re-shuffling
-I'd prefer to just place the first patch to mips-fixes and the rest to
-mips-next.
+applied to mips-next.
 
 Thomas.
 
