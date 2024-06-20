@@ -1,205 +1,236 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2061.outbound.protection.outlook.com [40.107.21.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6611CD3D;
-	Thu, 20 Jun 2024 16:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900130; cv=none; b=lwPuU1YdtweQs/hEgpuypQol/udHnF/Mf1gKmcxg9ULJcmyZSXP3Bj4rAjKdG28hu8E1KOXphKGySWGBmrqCAHJV8BZrOh4mqOoE66N3xeXhdY+mcZ4XJ/20kWcLX+gGjin2xIXAMIfzTjZVl0eZoLUR0/xEQYjfNW6SZhLka/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900130; c=relaxed/simple;
-	bh=iblHSi10AuILwtDWFYWrNs420fLs8WQLdO1dzegU+mo=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bAW7w1ENINCCtMpXoCcGopCF/C3iouL5m/CutkaHip2kveT//D1mZFbfiJCuQovWfznbC/eIw8D5zSM9CvkyRhUnqFKQF1TPKO6BPUFKDHBwyCXHmU+Gu7ukcCRjBDNGrsE8+6t0NbvhLfeufCkvyrvrbxYSBf9egNwipb9pqK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rkscq9RF; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2451CD3D;
+	Thu, 20 Jun 2024 16:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718900203; cv=fail; b=GINchZy42IMdGVE4YexByBB31HeZRXaJgluSO14xDLWtt8CEQzZtPGo/flYvjMV7e4gHpnvdUPLqD6LFh2H8kvEGRetQMcqk0IvR4JyOhC0W3e+EYulEPG0X7UmQzDI37TnbiY3tS7DACoMbtKVk8aVGI2I0xFRolDptuZd8iCU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718900203; c=relaxed/simple;
+	bh=+Zh3XCVpXyhdJju3l6eo6jL6LRWL/TTc40Dy9Wo5S0Y=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lW4akDPeU9irryEOlivAOLJv273SlqRqjS7fT1zx7LotGGGcmm2cJXaTnKVED3gJT9wP5bOKtLeBBYJjr8Tdeer0E4peW4pFMTBuaBsxnk3i5lUp+HY470A4Wz4K/HyAOq7MZaxlUoiT9iIAVFt7HenJHRdVukGPJaz0A18bjXM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=mjRKfJo8; arc=fail smtp.client-ip=40.107.21.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rkscq9RF"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42121d27861so10849425e9.0;
-        Thu, 20 Jun 2024 09:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718900127; x=1719504927; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BstTnchL1g9WNRv1yB6FmVexKMDI5/7ZXs3DFkUlV0E=;
-        b=Rkscq9RFNY4H1IZ7DPejsdIf3HO0DWQ8pHm8oI6EJFGONyLQQPeEN6o4lzZwjx/aHJ
-         7Las/rIgwOGnwufDO/s4JZcxncVm6Y1ExzU0kcqExmP2uxkAxTM71f0b61S8Xi3CMZ3F
-         UKldZxEhvKELx/dfAwxTXcnU0IkLP9/Jy86OhkxlqUgwytZZwCgE5LKv0cbCP2XKMInl
-         tua/2Q0IkkkcUEDDsL1E3D5V/+gt3LESmLqv2D3EWg/8meXi/JfcIDqgQ1bxnbkCUyQ/
-         LsGeYzbiWpBtNi+l8yIBJH38x80B/b9d20P2l3LxB+SNUL7o4KuFEUBfgP8+s1T3kbDv
-         PvwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718900127; x=1719504927;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BstTnchL1g9WNRv1yB6FmVexKMDI5/7ZXs3DFkUlV0E=;
-        b=kbqR1URhvret1N7a1g+Khz7k5kwefrNb1lhKEoZDeXZXTtXUTWyHC9Dl8JmH3UOg4y
-         0UO7cRJ8wLnz/Xb2Jf27SWFKyz4GQtvYpdK1UiOHtl5hg97YFjpFuJWq4SAqUGHb4iDa
-         bbPzseXQ5gkPCNEX7SsmP/lhYrEo6D9OJSPjyaB8bDRc/XRM3I94MUt/PdtAfjH1ty/r
-         zICkxEeNj8re/uoujxsUdUJV0WTjvB9Sqq0GSPs6ykTaxG0rbqyRsGh6+UDD19hFpQX1
-         y+x6fEtKiwnT5Mx81TbOrcX1sxGdMsjzCu1VtQnhUBekoas0Lyqo2PTaCNJhd7PIW2g5
-         2BCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNpC3Is+oshgKiSu7MW2dqkan0FV8uWIqkJsaoG6cQOJyZpnEY0vxHctOgzIzCkhlCFynEGPAWsS1nOAr3fiIDP9Ynd97gUa6+MZ4Wy7K+FQkTQF84teK/FNMQMxHCT526DpXhXQZm/XlNlbnNKEM3hx8823L5wCG+Fl5RqAsD1zcINkY=
-X-Gm-Message-State: AOJu0YwU2sbvOFJ9AfvlAUOCF7jujs+lTfhQUUe0d7p0TtbwnADxCzwt
-	ZZHSVd4xOMuCKQloYs9CLYYU7eY8zSv8ygx0p0BbEzIjINpbDzlC
-X-Google-Smtp-Source: AGHT+IHotOeTmi3cx/hKnhyyOXPzVz9w8/VmYgvuqZQkugAEyPeKDfhQGXLD4K9BaiGXtaQxTTH11A==
-X-Received: by 2002:a05:600c:314b:b0:421:7fe5:12a with SMTP id 5b1f17b1804b1-4247529a9c1mr49600905e9.35.1718900126775;
-        Thu, 20 Jun 2024 09:15:26 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d1f6dbasm29676695e9.43.2024.06.20.09.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 09:15:26 -0700 (PDT)
-Message-ID: <6674559e.050a0220.14848.cb8f@mx.google.com>
-X-Google-Original-Message-ID: <ZnRHm5eF6P2VCoiz@Ansuel-XPS.>
-Date: Thu, 20 Jun 2024 17:15:39 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mjRKfJo8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TO7qCbkl5BGZbUn2BUh4xgMzSGQHkdO1fp9nKUBxqplktMGvhOXUt841zwmSgl+KMKyGKOFHaQ0lJXOuQN1Nm7esBHlNCp6bGjA8HuNTAIwZUFqqWUfwZjUTcifc8ddp3ZWaDqzyTj8QMjklSz7Nm9AJ8urwCHRjpfZL/aUVLiesTUqpSGhRvQEe8fqjGZBZ3bwon1bAAKMHTQVJFg1sGBpnVya3n2WDU/1T8pJEHhzdeQkHaei//7GO0TnoZABCwHIypqewt27/a9DmETX+3CjLORDICMp6XKoUbTlWSj8d8elq1rMoGIpTq+E6ujHevycCR6FdPaaOTjNcumRrpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i0anTbJF5zATUNBmiHQqKVN1Zfm8xzJn9ma7xELzOZE=;
+ b=Ly8vSPk44TPno6M8K2NEow/mZYQUPQsE/PBDrkFu1Tr83LFzfvwQoe9MdXYDhfO65EEqgKB0v5RD2PWXuImatMZRvDjmyJg5i9pzAVxHtuU5n5rg0/SX1WsSiSlFP6mTZdSrDpNF1RLCwxraUfE/miiA6ysv9zqv/nN4/OA1zml4FOainArQg0tBnCljO2UgFiMRCpXz1PNoNvti6gQMgNWadHmXwOvUl9nZdNpLezMKVWIrPxOp/1HfFHUHbzgYwjTV2DQNoBsTFuEM1GTk6llreOBNsLE4GjnYCFx405RyM4arK8435Cm3SMossRUUKPyiZg2k6M2oQDnlO8rX+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i0anTbJF5zATUNBmiHQqKVN1Zfm8xzJn9ma7xELzOZE=;
+ b=mjRKfJo8YodKgl+69NmIOJxA0K3Y8QzyoCXsVdD52Kiq12nZPTuCtJUoagtT5qFTYUwSzvRI5LwPU2zQffxN3+Qj0f+v54ofhOE62c47kr7h/6pvdpHBRMQ4RVh3Roq7glKGwCMgnnsAl35crCjTRR8krfpiBfK+eDKuP+huxvA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GV1PR04MB10582.eurprd04.prod.outlook.com (2603:10a6:150:211::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Thu, 20 Jun
+ 2024 16:16:38 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.020; Thu, 20 Jun 2024
+ 16:16:37 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/20] leds: leds-lp55xx: overhaul driver
-References: <20240616215226.2112-1-ansuelsmth@gmail.com>
- <20240620160907.GP3029315@google.com>
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/4] arm64: dts: imx95: add '#address-cells' and '#size-cells' for all i2c
+Date: Thu, 20 Jun 2024 12:16:19 -0400
+Message-Id: <20240620161622.3986692-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0197.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::22) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240620160907.GP3029315@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10582:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2469edd0-acf4-4bf3-68fe-08dc91445c87
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|366013|376011|7416011|52116011|1800799021|921017|38350700011;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7oTtYmVB3QbGJF2BRDtTeLklolxp1iJVzRQBdJqNPBFtTRto77Bo7DPofDZk?=
+ =?us-ascii?Q?ilTJwHpq5+zlHgZKk9NegxO3HgMAaVH+lc3HnMx5TzWle6DH0GAqx3jMrWdR?=
+ =?us-ascii?Q?XPzj3ScA+r1cP1ISdhyIwwh1i20xVZjpYOnIGtulRfbIp9x5r5F23tYxlWyU?=
+ =?us-ascii?Q?4b5YHDmZwIKH2eHwUs9wj+roVzX4F8/RJJGVk+0SVUJx5vQQdpxkiE3K2yGE?=
+ =?us-ascii?Q?0u20aHOkW0GSHSYri+vPEDvP42QeZPlc0eJiky4aWC00z6z6rFK3G146tBhm?=
+ =?us-ascii?Q?QHy6qih8Sq3RGvmNXI2TvZLF6qb+1mP4piJlaC21AKqyzq+b/EkzaQvesfbQ?=
+ =?us-ascii?Q?j+mE1o+0IayA/nQGxR0UwzKKYjCFhP88rMgD1EhV43SjJ1wop0F/5tOtNuRq?=
+ =?us-ascii?Q?4ziS3bYyyiiAb/adlJ4pSiIZirVvXkXzZ/FYWoE9d17kR0Bra/QJR7FXyL47?=
+ =?us-ascii?Q?dNCoeUP/wSWJDCTIIR0yj6/6QDdn3dbkjndgmhKYLjLhE0ETkGhNwkJgunEg?=
+ =?us-ascii?Q?h+76x0CjzK3p9ijkfKQqdukKbcj8DU448GHEuBLfNTOHL+a8MNv4dRoULyMz?=
+ =?us-ascii?Q?LdbwTcU42efFiCwcpHW1GbqRqhvoYvqbiTusaTmMhxUdmPmET3vdaMSsKOd4?=
+ =?us-ascii?Q?d46wZgaZg3uGOH/xFqayxj7N0KTjoBnZBlJQPvp8DZLYBo2uwjlZuI2xPJST?=
+ =?us-ascii?Q?UePoHp7HE/hEeaTdblw03XnZAeX/hL/1da5xkQZ5JaER4lkp3Uv6D/Lbte5Z?=
+ =?us-ascii?Q?nHLnFHL2GPv307noPxqGYbSmE4IJGpiJrcWKMdAKyz1pe7yg7vNlqNO1puPi?=
+ =?us-ascii?Q?ujjaSQglTUvJlTPKDXjmesDlPr4bNYMYshFVUzu4Z8U6ZuvCitdOxr5H3vhp?=
+ =?us-ascii?Q?EPVu84laxRT1BnnACCk25Ip6EdzYosCJB+VQ5uhnCwsVOgClAyKJYl/HMyge?=
+ =?us-ascii?Q?bUNWXabvJAyVu0mJyGhQLkoSdOgYYLL77Vlz0Oygzwh2VY7ISxBYD99biAiP?=
+ =?us-ascii?Q?mDxf4QXMFZrjQbyShO5KQC6Aw+zkdyGfx4HyYoWH86j9CI4DD2jufqXNN0cV?=
+ =?us-ascii?Q?SFr5bdJ3MCCF4A5FygMEZhz2o2fEmZrkBYCEUJfBjCAOtisu6nQPxmnLXpzw?=
+ =?us-ascii?Q?/uctc8ElBhuH/v3U6ezc3I0T0ywM+ZX/fJQn02DoY34I2fvCeKhF1KR8IN4l?=
+ =?us-ascii?Q?h9X/iwffGQZTkbYhfX21vJanjJqswGLmEq6oGAWzrNId2f5sYSFJWsBEm9e2?=
+ =?us-ascii?Q?keALuTReetnh6Q37nU/ueE9xBI8VZkj7Z8XP4T1nEai0UU11rVQOmxIzwEr6?=
+ =?us-ascii?Q?z110owwY5iE11LmIsQ0766Y3evpYoFNhJ0Gqvku4U4JYj8mOyl3txZgdv0UL?=
+ =?us-ascii?Q?i3IdFknCpReQH3f7ULg7/1g7UfEe?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(52116011)(1800799021)(921017)(38350700011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FbHwUyVdojeyDzwsOFPNY54pszhghCmK1OPfYoZInU3NzuKlsfc1Rh4SxXgo?=
+ =?us-ascii?Q?8oStTk9N3NAOFDevLfAmtsS6hjffRiGKBwVKRf9vQgttVHmXWAbTZU2YKQpg?=
+ =?us-ascii?Q?gKKpKlNr7rmBRbpzZvOt2M4YH2RP/8apnglowr5a4PI+zwtvGJj3X7a3HX3i?=
+ =?us-ascii?Q?EnheGhxudh9ULthAGl9pZbUsjejbUdMBQQKLjjXGoviPhDC1IFaLE3fI7p7Q?=
+ =?us-ascii?Q?aYNby+sIO3iyWKkEggpk3bJU9WJJYD16wfh+Hwp5bFLLiL5qlhF9jKvbwMTw?=
+ =?us-ascii?Q?r08DK7tOA5nezSnKaztPZNxBj6Nzvzn1/t/NaysIwyYdQzbokhMSXP7Ceqs2?=
+ =?us-ascii?Q?mCXzDqs2Sd2j1D7HYMAwZ2yi4VRO0R4+mwT4xY0mK4fJEw47c1aLk645p+EO?=
+ =?us-ascii?Q?9NDGrfrh8j+sHuQ7q1d9dIHpBhfNdacozUgxnGlILUKi2DJ0otb0vLQ6yXRM?=
+ =?us-ascii?Q?zSyVrVDp7j9jgEfmulgJByuF6E5Gy8W4Nb+IicMhekrM2t/632oTfBuU7flN?=
+ =?us-ascii?Q?KQuqzzQ6gAmo7bJ22wms11x6oHrCKZ4oPD3FuOCIdmljbXKTKl7qy+OXbXq1?=
+ =?us-ascii?Q?2JgogN9v1p1QVrww+3u+vgpfpKGnfbQCFZ8bHLZmwExoUGmcbCE+pjMjiRr0?=
+ =?us-ascii?Q?yb//ZE3gomv5rZJfZAYBCwY3NihKJvHrPe8udtxtj5oSGrpNscsh7bk2LnSw?=
+ =?us-ascii?Q?sQNQ3gzt7g869M9XuX3mh8M4pvDYnrnPow4NMLF1IX/LF9ljoTcK6yOUtQiM?=
+ =?us-ascii?Q?iVriQmmm0Dns6q/ZnlsiPQ8MWLCj7sUFurEUh0tcvFtBNfrgJKSnOdJTpDZj?=
+ =?us-ascii?Q?c+RrvN9s7i5+tG2Y2MT2Qp52wNgRl5sy12wSs2m14+QGOjgZ500ZF+kDeMww?=
+ =?us-ascii?Q?N3pv8cjeARnyojBgZyfeWv2csaV8Pl3iOQ2KvTVbFIH7QyZ4c/5JOdjFgu7T?=
+ =?us-ascii?Q?hgjzgrp0/3Rw9GCnlQTIOiMZv8EVJlXE/OXvFCln5Sl3mPVs+LaxTwgTPQ7Z?=
+ =?us-ascii?Q?NwpaUsjwAimEVn9HaxfXkZV6ycI6sbbhezUZFIgef6lCLALUg7ft22e8cw8v?=
+ =?us-ascii?Q?QOuq0AHDuCXaLuBhB7YUg6w8jxPTUdkwHHGWJZHjQA/3z6cFLGjmej76tdkx?=
+ =?us-ascii?Q?WQCZDIOtIh5kdi9lRBlPsV/9GAvhLWtXmPxtGSmWtyfgwlDvdlqbRIemLTU7?=
+ =?us-ascii?Q?Ut5ls3XL7QvtWJ9CF1vjKF7ymDyrJkBk989OVI2LNFVHv20D3WQMFIgpcv2Z?=
+ =?us-ascii?Q?lX2Oh+NaKgEqbiIa6bb6U4XJ4GUjcyM74sqg1U9f865ZMHgvuOr06/NxPf3H?=
+ =?us-ascii?Q?PNuTqmW2I68FMA9EFXMm0PS/9FNFNwKRQDpTyp8DmH1qQKFRc8jv5HAOgLqQ?=
+ =?us-ascii?Q?NuPOMx0sCkfyjoJV68KXg02UmK5zMOYzbBFaLujVgDmLFO9l67ZROoSyLEBg?=
+ =?us-ascii?Q?wImjIOLWNXW2tQRqIDgqShJXV/8wH/culzEX6Ag6isRVc0wY03JklYgW5jLr?=
+ =?us-ascii?Q?Xv7v2Jf+Dm9sNReJSo0iGzh8h7HXJ7l479hNrlVOdkpxfEue+1HdJanD2XK7?=
+ =?us-ascii?Q?LOARmzFF4G16i1hUFB8=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2469edd0-acf4-4bf3-68fe-08dc91445c87
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 16:16:37.7367
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3t1QCNLqX1+wLci/zfPDsskCM8Zj5Vr4assNE92FbwHCBVi7c/9Mief8N0i9nHoEoSTFpW7NG4YLoxbTh+HloA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10582
 
-On Thu, Jun 20, 2024 at 05:09:07PM +0100, Lee Jones wrote:
-> On Sun, 16 Jun 2024, Christian Marangi wrote:
-> 
-> > This long series is (as requested) a big overhaul of the lp55xx based
-> > LED driver.
-> > 
-> > As notice for these kind of LED chip there was the bad habit of copy
-> > the old driver and just modify it enough to make it work with the new
-> > model. Till v4 I was also doing the same by following the pattern and
-> > the code format of previous driver.
-> > 
-> > Since Lee didn't like this, here is the BIG series that generalize
-> > pretty much anything in the 4 model currently supported.
-> > 
-> > Indeed, although the LED chip have fundamental difference (page
-> > support), things can be generalized and produce slimmer drivers by
-> > putting everything in the lp55xx-common shared module.
-> > 
-> > This result in the new model lp5569 being very small with only the
-> > selftest portion to be custom.
-> > 
-> > Lee also wasn't clear by the meaning of ENGINE in these LED driver,
-> > so here some simple explaination. This is very common on these TI LED
-> > chip. The ENGINE (there are always 3) is just some kind of processor
-> > that execute a program (precompiled code ASM like) loaded in the SRAM.
-> > Sysfs is used to load the pattern, and to start and stop the engine.
-> > 
-> > These pattern can do all kind of complex thing with LEDs. Old LED chip
-> > had 32bytes of space for the pattern but newer one (like lp5569) have
-> > pages and if correctly configured can have massive pattern.
-> > These pattern can do all kind of magic like loops that make the LED
-> > pulse, change color and all kind of stuff.
-> > 
-> > (For Lee, sorry if you will have to repeat some review that I might
-> >  have missed in the lp5569 driver)
-> > 
-> > Changes v6:
-> > - Fix compilation warning for ret unused in read_poll_timeout
-> >   (no idea why this is flagged only on some particular arch...)
-> > - Fix missing bitfield.h in lp55x-common.c (again it seems this
-> >   header gets included in the flow if the arch use them or not...)
-> > Changes v5:
-> > - Big generalization patch
-> > - Rework lp5569 driver with new generalized functions
-> > - Drop all copyright header in lp5569 as the driver got reworked
-> >   entirely and it's not based on previous one anymore.
-> > Changes v4:
-> > - Fix reported buffer overflow due to a copypaste error
-> > - Add comments to describe fw size logic
-> > Changes v3:
-> > - Add ACK tag to DT patch
-> > - Enlarge and support program size up to 128bytes
-> > Changes v2:
-> > - Add ACK tag to DT patch
-> > - Fix compilation error with target that doesn't
-> >   include bitfield.h
-> > 
-> > Christian Marangi (20):
-> >   dt-bindings: leds-lp55xx: limit pwr-sel property to ti,lp8501
-> >   dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
-> >   leds: leds-lp55xx: generalize stop_all_engine OP
-> >   leds: leds-lp55xx: generalize probe/remove functions
-> >   leds: leds-lp55xx: generalize load_engine function
-> >   leds: leds-lp55xx: generalize load_engine_and_select_page function
-> >   leds: leds-lp55xx: generalize run_engine function
-> >   leds: leds-lp55xx: generalize update_program_memory function
-> >   leds: leds-lp55xx: generalize firmware_loaded function
-> >   leds: leds-lp55xx: generalize led_brightness function
-> >   leds: leds-lp55xx: generalize multicolor_brightness function
-> >   leds: leds-lp55xx: generalize set_led_current function
-> >   leds: leds-lp55xx: generalize turn_off_channels function
-> >   leds: leds-lp55xx: generalize stop_engine function
-> >   leds: leds-lp55xx: generalize sysfs engine_load and engine_mode
-> >   leds: leds-lp55xx: generalize sysfs engine_leds
-> >   leds: leds-lp55xx: generalize sysfs master_fader
-> >   leds: leds-lp55xx: support ENGINE program up to 128 bytes
-> >   leds: leds-lp55xx: drop deprecated defines
-> >   leds: leds-lp5569: Add support for Texas Instruments LP5569
-> > 
-> >  .../devicetree/bindings/leds/leds-lp55xx.yaml |  11 +
-> >  drivers/leds/Kconfig                          |  16 +-
-> >  drivers/leds/Makefile                         |   1 +
-> >  drivers/leds/leds-lp5521.c                    | 405 +---------
-> >  drivers/leds/leds-lp5523.c                    | 728 ++---------------
-> >  drivers/leds/leds-lp5562.c                    | 261 +------
-> >  drivers/leds/leds-lp5569.c                    | 542 +++++++++++++
-> >  drivers/leds/leds-lp55xx-common.c             | 730 +++++++++++++++++-
-> >  drivers/leds/leds-lp55xx-common.h             | 133 +++-
-> >  drivers/leds/leds-lp8501.c                    | 313 +-------
-> >  10 files changed, 1523 insertions(+), 1617 deletions(-)
-> >  create mode 100644 drivers/leds/leds-lp5569.c
-> 
-> Generally, I love it - what a difference!
-> 
-> Couple of small things within the patches and few general points.
-> 
-> * Ensure scripts/checkpatch.pl is happy before resubmitting.
+Add '#address-cells' and '#size-cells' for all I2C to avoid duplicate these
+at every board files.
 
-Eh I always run patch with checkpatch.pl --strict but this time is quite
-problematic to fix the single error for the complex macro.
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-I will check what I can do but I think I'm really stretching the C
-precompiler there... That is really one of the very few case where error
-might be acceptable.
+---
+Change from v1 to v2
+- Add Peng Fan's review tag
+---
+ arch/arm64/boot/dts/freescale/imx95.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-If I manage to mute that error, it might result in very bad code...
-
-If you are referring to other warning and check just tell me.
-
-> * Please place my Suggested-by in all of the consolidation patches.
-
-Ok will add the suggested in all the generalization patch
-
-> * Subject titles should always match that of the subsystem
->   - In our case the first letter of the description should be uppercase
-
-Ok missed that.
-
-> 
-> Thanks for doing this, it's great work.
-> 
-> -- 
-> Lee Jones [李琼斯]
-
+diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
+index f98cec944eeed..cc5e829e76cc5 100644
+--- a/arch/arm64/boot/dts/freescale/imx95.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
+@@ -462,6 +462,8 @@ lpi2c3: i2c@42530000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C3>,
+ 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -472,6 +474,8 @@ lpi2c4: i2c@42540000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C4>,
+ 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -566,6 +570,8 @@ lpi2c5: i2c@426b0000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C5>,
+ 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -576,6 +582,8 @@ lpi2c6: i2c@426c0000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C6>,
+ 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -586,6 +594,8 @@ lpi2c7: i2c@426d0000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C7>,
+ 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -596,6 +606,8 @@ lpi2c8: i2c@426e0000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C8>,
+ 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -816,6 +828,8 @@ lpi2c1: i2c@44340000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C1>,
+ 					 <&scmi_clk IMX95_CLK_BUSAON>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -826,6 +840,8 @@ lpi2c2: i2c@44350000 {
+ 				clocks = <&scmi_clk IMX95_CLK_LPI2C2>,
+ 					 <&scmi_clk IMX95_CLK_BUSAON>;
+ 				clock-names = "per", "ipg";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
-	Ansuel
+2.34.1
+
