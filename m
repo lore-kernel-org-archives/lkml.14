@@ -1,99 +1,139 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C421AD9D3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EAA1AD4B2;
+	Thu, 20 Jun 2024 14:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718893527; cv=none; b=EQlC3F1wSUQ9DcbrgY4pg7Au87RojNsiVA06iEzuBiiiCy3gfoZag3ZLOu81MxTrEUs9qqgglTt68/d6xUrc8268dmzORwjzyDx2FMmF5nmbCh7zOA/fsEeu8YisyU9ZjmvTFBarlAeygyV1dtN8nXqjIjAaZFXlPHMbkAfDXWU=
+	t=1718893570; cv=none; b=ibddsNpZxYEYrFha3AMqVSZY1+yK5yf6Rjns9duTQEmuUNVWgEAMgbrocKlRV/rgA77Zq6818JgWYQ5Ej/yFMvjnohmdKvv3erlXB0AwZGbL1aR/0rv918Ko2CiD08H6W65soKhJ9LfPl3noGt6I8vEaf4Zj/0DRqCHn3yo2Rvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718893527; c=relaxed/simple;
-	bh=SQMNm/Wgloa85H/6Ml/z+UyGgCgN9Pm78Q6nwvCTYt0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yu41Nl1za7yqbJZW55uNPjbaAHh4P4Vrmt8URgBo0Iv+pIa2M/aCuJ8CVDh8upjnbl1XecbSDufeaMxXYmMVQjrYunQgIM2fG2LZ7U+qnjeA5kdCrdMfmTMVwqRYB9MwbFlkvO7hsCceVGgcMzvKnYPZN2Mub9qTMm9oDUPC/bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OL5Nao81; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718893570; c=relaxed/simple;
+	bh=0/FfAt3cSYRx0NHA0nqVIaLGkcN+3itJkOw3CRTTXcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FHmL92uY7Mrmd0w4LObZLhge7lclMb8Q7YvrU227zF4CikWgAhvkDAYpxXGmMavE7yHJda5Pmt+sQ4K9IeztSrH+h7yN7fh7QPDvlfhBdR7YGqGialjSQpkjWI5DxkI4OXQdpeT3Rv33fJlHr0Mchi8XhLgG1+7IhB51SPD17VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3av3fyJ8; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OL5Nao81"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e02b571b0f6so960178276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718893525; x=1719498325; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SQMNm/Wgloa85H/6Ml/z+UyGgCgN9Pm78Q6nwvCTYt0=;
-        b=OL5Nao81oJKls2x2xNXV9G/VLUWSItD0Hd5yBzxZJLJGqX9SgVyy8wVwhM+yLR3Pt6
-         VOmNxrF+DkaYmKE/3PIJU7OlYgDBiw5J32MA5T3egKvH3nwuOu17c3OpzwWVC+/Sr/Wc
-         +uoGBWMVqX4jjUQoWheH+2bByYekd5OpcBXVzVVCajXw8b1o7GFQxrPzuEQYQhUZTgpk
-         Ia3I60JHSstYsf12I4wXrEnQJwSSVFXLhBlkltpMs9G2RDxnNbwIk7cspOMP5/LnCP4O
-         y+o9oVIEFY5qGPvpEZQw9/MRcgpz+EMbDnxh6ZGVZtMDSs0mf9ZTmOvQGBml8eRBw/aU
-         6CNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718893525; x=1719498325;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SQMNm/Wgloa85H/6Ml/z+UyGgCgN9Pm78Q6nwvCTYt0=;
-        b=p46yJ+0kypSdr48wxCCAyGhWDlIsc5URgHduWx8VF7H51fSMxTR4B4MG/uzk4siO95
-         F9hH1OYOiRh5zkS4KTbg4TYn9ztYYL6OVzdsEmc+ahjhyU4/OZrrZlpKrFmGE2V+y16g
-         xKSaBuVJ7MnrVM/tIGIZIQm7nsySt1HQLgPIbh/jzxkHEdDnu70WFzN5RAZHyLnd/L5/
-         DoaVJNVr1qN7i9ql/EAe/ezBSItKE4WAjlOFvl0hKxpbTkbDm7jBTUzWuuEaKb5sE52t
-         R58lFrQY7z+2PiGvayvDCQigX22FXGl4Iwp6sOJq0EzwVNRKZ3EjlgJxdX7M1hnzONJK
-         oKiA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1koLpHEp0Y0eURCgp+0rZzJXddEGx/UfriwQQhUKOWXugn+4ejokgCJeIhg3FlJmZ97Ss4nfg1PLJ1FSdcGCAd2nqNebHX70ZdiLU
-X-Gm-Message-State: AOJu0YxpN5OesbLGSYixjQ3FTeTj+Vcj7c9CYseoAkdSHPy65vt8mUZ1
-	itaemPYgLArLvoO/6xrO4Ik/TEmoBRSSWLPn84Qy4wcnVu/FT+KsoqbnDl9YjjgNUXNUirBonc8
-	aEFhc/8pzRGN/eyMNztylnoVDpRXJidpMy0GJlA==
-X-Google-Smtp-Source: AGHT+IHR7fpKdExIeayYO8J71ywzwR+4VpYOIFbdfii6VoqwkxcVhItB0QotOZnRgehcLXlgkNKGKaigbbl58w+Xms0=
-X-Received: by 2002:a25:8188:0:b0:dfb:1ea:23ee with SMTP id
- 3f1490d57ef6-e02be17b1bamr6168497276.37.1718893524724; Thu, 20 Jun 2024
- 07:25:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3av3fyJ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718893567;
+	bh=0/FfAt3cSYRx0NHA0nqVIaLGkcN+3itJkOw3CRTTXcw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=3av3fyJ8qpK83vb7XS+AGaXwQBHXIG10nU980ofHt7F9LVF2Hy6yHyhJzZLnGFwEM
+	 8n8PLMhF9+6mD2MItdoiawBvntnqlYBljLsFlu8bznzfo0e2YNr2LRTTQAHby9zSYQ
+	 k5Pn1sWlnPW+VIEGj6CAXgfB73Qy0Lcs6wWiaigCHOqFq+SBz2aulYLVHlY+TVgF/l
+	 Zc6hiPUU6LuGcJh7ABTk4BCEgDGcVBjIYZtF9lDBho9Q9HjnDYxv9iBuXOSD3AMZiI
+	 8Dx4mjz7nT1sXsudtboOi906aNj9X4x8mT20MIhMG+R1DwUSYraFkCb3fOPjeIqPfP
+	 Fj2rfyJthY7JQ==
+Received: from arisu.hitronhub.home (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C90283782159;
+	Thu, 20 Jun 2024 14:26:03 +0000 (UTC)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Alex Bee <knaerzche@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: [PATCH v3 0/4] media: rockchip: Add rkvdec2 driver
+Date: Thu, 20 Jun 2024 10:19:42 -0400
+Message-ID: <20240620142532.406564-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612-brigade-shell-1f626e7e592f@spud> <20240612-dense-resample-563f07c30185@spud>
- <CAPDyKFozcUPuMooDHVSBZomHTGKzseVf9F=YBY_uQejh9o3x7g@mail.gmail.com> <20240620-sabbath-ambulance-b8764fb386e9@spud>
-In-Reply-To: <20240620-sabbath-ambulance-b8764fb386e9@spud>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 20 Jun 2024 16:24:49 +0200
-Message-ID: <CAPDyKFre12rqqwar8sfoWyc6duS3psp4OT=W5ToG9r_EdqH89w@mail.gmail.com>
-Subject: Re: [RFC v1 1/3] mmc: mmc_spi: allow for spi controllers incapable of
- getting as low as 400k
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-mmc@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
-	cyril.jean@microchip.com, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Jun 2024 at 16:12, Conor Dooley <conor@kernel.org> wrote:
->
-> On Thu, Jun 20, 2024 at 02:50:15PM +0200, Ulf Hansson wrote:
-> > On Wed, 12 Jun 2024 at 17:48, Conor Dooley <conor@kernel.org> wrote:
-> > >
-> > > From: Conor Dooley <conor.dooley@microchip.com>
-> > >
-> > > Some controllers may not be able to reach a bus clock as low as 400 KHz
-> > > due to a lack of sufficient divisors. In these cases, the SD card slot
-> > > becomes non-functional as Linux continuously attempts to set the bus
-> > > clock to 400 KHz. If the controller is incapable of getting that low,
-> > > set its minimum frequency instead. While this may eliminate some SD
-> > > cards, it allows those capable of operating at the controller's minimum
-> > > frequency to be used.
-> > >
-> > > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> >
-> > Looks reasonable to me. I assume you intend to send a non-RFC for
-> > this, that I can pick up?
->
-> I do intend doing that. How soon depends on whether or not you are
-> willing to take it on its own, or require it to come in a series with
-> the spi driver changes.
+Add a rkvdec2 driver for newer video decoder found on rk3588 based SoC.
 
-I can pick it separately, if that makes sense to you.
+It is also found on other hardware like the RK356x, but not tested yet,
+so it will be added later.
 
-Kind regards
-Uffe
+Support for yuv 4:2:2 and 10 bits streams will also be added later, when the
+https://lore.kernel.org/linux-media/20240618194647.742037-1-jonas@kwiboo.se
+patch set is merged.
+
+The support for IOMMU will be added later as preliminary tests show that
+the current rockchip iommu driver fails to allocate pages for the video
+decoder iommu.
+
+See the second commit message for more details.
+
+Changes since v2:
+- doc: Disable resets and sram for other platforms, add maxItems for
+  clocks
+- Fix h264 spec equation number in comment
+- Remove superfluous status field in dtsi
+- Add TODO item for IOMMU
+
+Changes since v1:
+- Add support for RCB in SRAM
+- Move bindings to rockchip,vdec.yaml
+- Add resets bindings
+- Add second core and enable them from dtsi file
+- Only expose one video device to userspace (but don't support multicore yet)
+- Share CABAC table with rkvdec
+- Fix iowrite32 call and add preliminary support for arm
+- Remove unused code
+- Improve registers naming and code style
+- Remove DMA_ATTR_ALLOC_SINGLE_PAGES flag
+
+Detlev Casanova (4):
+  media: rockchip: Move H264 CABAC table to header file
+  media: rockchip: Introduce the rkvdec2 driver
+  media: dt-bindings: rockchip: Document RK3588 Video Decoder bindings
+  arm64: dts: rockchip: Add rkvdec2 Video Decoder on rk3588(s)
+
+ .../bindings/media/rockchip,vdec.yaml         |   55 +
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi     |   48 +
+ drivers/staging/media/Kconfig                 |    1 +
+ drivers/staging/media/Makefile                |    1 +
+ .../staging/media/rkvdec/rkvdec-h264-cabac.h  |  509 +++++++
+ drivers/staging/media/rkvdec/rkvdec-h264.c    |  500 +------
+ drivers/staging/media/rkvdec2/Kconfig         |   15 +
+ drivers/staging/media/rkvdec2/Makefile        |    3 +
+ drivers/staging/media/rkvdec2/TODO            |    9 +
+ drivers/staging/media/rkvdec2/rkvdec2-h264.c  |  739 ++++++++++
+ drivers/staging/media/rkvdec2/rkvdec2-regs.h  |  345 +++++
+ drivers/staging/media/rkvdec2/rkvdec2.c       | 1253 +++++++++++++++++
+ drivers/staging/media/rkvdec2/rkvdec2.h       |  130 ++
+ 13 files changed, 3109 insertions(+), 499 deletions(-)
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264-cabac.h
+ create mode 100644 drivers/staging/media/rkvdec2/Kconfig
+ create mode 100644 drivers/staging/media/rkvdec2/Makefile
+ create mode 100644 drivers/staging/media/rkvdec2/TODO
+ create mode 100644 drivers/staging/media/rkvdec2/rkvdec2-h264.c
+ create mode 100644 drivers/staging/media/rkvdec2/rkvdec2-regs.h
+ create mode 100644 drivers/staging/media/rkvdec2/rkvdec2.c
+ create mode 100644 drivers/staging/media/rkvdec2/rkvdec2.h
+
+-- 
+2.44.2
+
