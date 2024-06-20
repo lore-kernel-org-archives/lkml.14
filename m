@@ -1,98 +1,77 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819231C9EDF
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AD51CCCA5;
+	Thu, 20 Jun 2024 17:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906303; cv=none; b=dwsSgVP0qn6p8zuhSvz3Y46WZtkt/jXOTT+c2FrYscsRCRSprLMt8+ijPZy7JI04hkOE3ZcmIMKLiu3DatoDiCPZuGT+PfIXCuJB6kM9+x1S/ZTf/hGJXTMx3HluLeNzdPwhbda1SoLitKUjR9wzZAZklGE/hbQcpg84CIasGzc=
+	t=1718906306; cv=none; b=Jiv6ZMxUMQHZO56erfKSCitcqnobr5Xtphw36L3fhL/fzhHM2jp/6T3VmdYzyWSkZkJrda1oYqijHw1QLNoWHv7GpP2g1RS/4P/TqqTiRnuc9PcsHY0JuSZQbLcDlyMBxfBMiyZZczJ8ykOVFqLNVqx671cu9q2vcXhw01/X36c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906303; c=relaxed/simple;
-	bh=qFS8dbUIltaliP34b4s9iOYNBl/H/n7Qhca0kv+Esfk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VsRLL8hW/LWGnExSnClvX3z5/GfoXuE+jLnrQ2GPSgbUn/aCJHQL1n9xaJ9u3oMDU11WoFERNsZCNRaga+yrElxOG4AtbGVaTfFUpdXAI8ITqhEKlzLp8sWSq7ElwKpw4yKXTIm+Tr6QkAM5cuAX/8/Ry/RltmDJZuOJXCHIGOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=cFhihpqE; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1718906306; c=relaxed/simple;
+	bh=JZiYOORmljoK1sw2ane9GWAOBNpWFrHsg6e0OWJ8vSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t3+OpDNxvhlse8w6M6ItVukiFyBm1GVud4FILQ45j8qPTQguMhW7ZYAuMMwaJaKHDwFbK+bMLgwIauC1+fmp1cXy+NGIk9upAM1q5GLFXrDNqtMl7Txd00BAc5bSUM3i25AaQy2pIyaPlduGOaHys7ulxw8+0o0nCVNlLSUS6zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q7tf5tcQ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="cFhihpqE"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f11a2d18aso133138566b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:58:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7tf5tcQ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f99fe4dc5aso10187265ad.0;
+        Thu, 20 Jun 2024 10:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906300; x=1719511100; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718906303; x=1719511103; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dj3DX12QYavc1OOQJN+Lhj+prqOyJf9zJxwWhTZ5aE8=;
-        b=cFhihpqEGSNaDlRMjYIJJTJjiUfXMDt8wlISE1cdQN6o8aLt7JcEnbBwLJYm+MzkjB
-         aMRm9e2UVA2H0OcRC/SXhT1JbDDQZLt2PdAwqORJ4GQTwimbp8fd4Y3hnpe0ImpJlICU
-         KsLyycXIsU0m1O9wegcwMXBPUMwH99id/ixXP1LZC7xvWb5B1BmJSSEX+0OD3/fIBe4a
-         M3fHOCAIWgzazbcTTsce+XJAgqvzbR4pn7pkvGslaytZB/LtQhyYEcx/OXb6RUOT/4JY
-         c32cltnnt4RhIo8A8Gas6qRcvWv7hE6rFo651SmNsqjJoCnkGmcxxqCqaqealzbUQTfl
-         l69w==
+        bh=ML3sp6993QhuntHDiwMgBg5++AU4tTHxgPTWBrSRxD4=;
+        b=Q7tf5tcQdUK5OwNm3iP6c/cOYh+E6F12X6Gf7qGvh9OYF4/XrLJM84inLbVIg+OdSX
+         89SX6RwCZEzVjLevRLmx8LRMSzsVtmX+Ne4AdcsoYjIBl9ZJzhzoKVp1aUx40Ehlf1wm
+         h6pV4691kzAsmp5s2YEeh4y9sn0LRcgBXhKepxtGPnN0lmza/AsRZKOdxSgPXnPUYr2K
+         s1rLdrmHTv+3pEFsqR7P1pFo38BKXeK+p0S+dnFklkWjMbXcxIR13mMnLQS/X6DLvlOk
+         xyKyzcT0TKzsrkOnUXmkOrUsTkgsIjFkkw4iRA6ULusGW/IQi8Qls4uKEj8NYwicujCU
+         aweg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906300; x=1719511100;
+        d=1e100.net; s=20230601; t=1718906303; x=1719511103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dj3DX12QYavc1OOQJN+Lhj+prqOyJf9zJxwWhTZ5aE8=;
-        b=JONju3aYJCSN6zbeRidW4XXIf7k9+qTpt5fjgAGpet7/RFLNdW7M2YXNJ+957ZuJnM
-         zmu2R2iU0JFMP/GB9Fv4/a7khVjlPrwpHHLSTgPh8p4AsyCKnxgBtoY2MV/otA6Q/iyq
-         6av+KHpzJ8FWf3oJsG7woO3X4NZsA+JR4sRrTeba8+AxwjZUa1G8uAUHQHTlKUXRNfJw
-         8QwWPVQlXl3cWrCh+IDgjX11rjYTxKjqiZbzE3VDFeFiCqmS6olLPPCQeI6kHx8MIwtt
-         MXdoQ+HzL4e9wLAWuO9K4ZkBu+U0bM1DEsjosvcD55B5TlnANk32+1Ra1JXRxOOCHq3w
-         hpbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQvB2HkT8uRikCzSfeQab7wmSF1RlEmQwqOMmIIN8ArahMU4k3YYiwMaCO3LE9ke20oA3Xsv6eYCnIT5ruXvpNjYPZuezomyRL93+h
-X-Gm-Message-State: AOJu0YySiEbIrYcsGnwgLUMWXBCGYhhbryVn0P2UtJDca72b/PWf1I/1
-	wzBl9oevX1BEMr9FQBfWiWEzTPBP3yHkufu8PiVjyOCsyRg5hMNjmirYbS4dp9o=
-X-Google-Smtp-Source: AGHT+IEhPPFEKagTHzQMOwX7NrYh9+xyhRsxpQErqvlswtZC5Lb/tm5y+kINO8slxfzNDjQFWUOp4Q==
-X-Received: by 2002:a17:907:a646:b0:a6f:5192:6f4d with SMTP id a640c23a62f3a-a6fab60321fmr428721866b.8.1718906299800;
-        Thu, 20 Jun 2024 10:58:19 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.58.18
+        bh=ML3sp6993QhuntHDiwMgBg5++AU4tTHxgPTWBrSRxD4=;
+        b=URNvW+8R0iOXQCezgzQT8uZPKtDJjLRhYrYWQBiTCw87qL1CCqpLADDCWjw6BSE42G
+         iH3JdupvyVJBV8/1EqSfn/Q/thiZm0KUrVFoufKOv7AYxfgQFXCb+ShVrlhyX0UpTKIh
+         NlcgLB0eQAYjCtR4q9cQ0xYEhukXZR+tsiNX3HASI+GG3343IrWMjSl/dOjcrityRLh4
+         XfgwbKJoEPDInquozllB1F9OlSnwpv7SiS1G+l88eQqtszQR6jO1Ykswtj1MOtSGwCXB
+         TL9pK4XpBeg5iJZO6k6Dq6eHq+ohjNWpTNwrMrp0yvn/BvQIfYz3gnGYbxmA8VBSvM/z
+         Erlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoNGf7L2LzKEQPiTB51EcpeuW7pnXwWG59+d7NAN6+nbG08IWqOpIysWdY990KIsHpSMnK0z/IGU+7ZP0kV+4vPGNRcCmdBYJ7wh8=
+X-Gm-Message-State: AOJu0YwtItbCBdbJKbujhs82kTjZRHsjiygGgmSZj9xxelIZNcipTUPv
+	gvts/Pwu2oByT8jyFcomRhEtfR42l7BC2brAiKkBF9mOXnHqXtrLQiZhmTtuMF0=
+X-Google-Smtp-Source: AGHT+IFBQBMGehB+oQoKQYHD/qYtBbqhxOtOkxopDaJNky+s/Sb/aQTrReWOcCKSQ26MccV2yDTi7g==
+X-Received: by 2002:a17:902:cf11:b0:1f3:1061:60fe with SMTP id d9443c01a7336-1f9aa3d24f7mr77142485ad.18.1718906303339;
+        Thu, 20 Jun 2024 10:58:23 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9c81f48e3sm19719915ad.230.2024.06.20.10.58.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:58:19 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Yangtao Li <frank.li@vivo.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Li Zetao <lizetao1@huawei.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Subject: [Patch v4 02/10] dt-bindings: dma: Add lpc32xx DMA mux binding
-Date: Thu, 20 Jun 2024 19:56:33 +0200
-Message-Id: <20240620175657.358273-3-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+        Thu, 20 Jun 2024 10:58:22 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	linux-media@vger.kernel.org
+Cc: Alexey Klimov <alexey.klimov@linaro.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: [PATCH v4 26/40] media: em28xx: cx231xx: optimize drivers by using find_and_set_bit()
+Date: Thu, 20 Jun 2024 10:56:49 -0700
+Message-ID: <20240620175703.605111-27-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
+References: <20240620175703.605111-1-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -101,102 +80,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-LPC32XX SoCs use pl080 dma controller which have few request signals
-multiplexed between peripherals. This binding describes how devices can
-use the multiplexed request signals.
+Functions in the media/usb drivers opencode find_and_set_bit(). Simplify
+them by using the function.
 
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 ---
-Changes for v4:
-- This patch is new in v4
+ drivers/media/usb/cx231xx/cx231xx-cards.c | 17 +++++-----
+ drivers/media/usb/em28xx/em28xx-cards.c   | 38 ++++++++++-------------
+ 2 files changed, 23 insertions(+), 32 deletions(-)
 
- .../bindings/dma/nxp,lpc3220-dmamux.yaml      | 56 +++++++++++++++++++
- MAINTAINERS                                   |  9 +++
- 2 files changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
-
-diff --git a/Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml b/Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
-new file mode 100644
-index 000000000000..a5384b6c67fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/nxp,lpc3220-dmamux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DMA multiplexer for LPC32XX SoC (DMA request router)
-+
-+maintainers:
-+  - J.M.B. Downing <jonathan.downing@nautel.com>
-+  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-+
-+allOf:
-+  - $ref: dma-router.yaml#
-+
-+properties:
-+  "#dma-cells":
-+    const: 3
-+    description: |
-+      First two cells same as for device pointed in dma-masters.
-+      Third cell represents mux value for the request.
-+
-+  compatible:
-+    const: nxp,lpc3220-dmamux
-+
-+  dma-masters:
-+    description: phandle to a dma node compatible with arm,pl080
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - dma-masters
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    syscon@40004000 {
-+      compatible = "nxp,lpc3220-creg", "syscon", "simple-mfd";
-+      reg = <0x40004000 0x114>;
-+      ranges = <0 0x40004000 0x114>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      dma-router@7c {
-+        compatible = "nxp,lpc3220-dmamux";
-+        reg = <0x7c 0x8>;
-+        #dma-cells = <3>;
-+        dma-masters = <&dma>;
-+      };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aacccb376c28..f7adf9f66dfa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2396,6 +2396,15 @@ F:	drivers/usb/host/ohci-nxp.c
- F:	drivers/watchdog/pnx4008_wdt.c
- N:	lpc32xx
+diff --git a/drivers/media/usb/cx231xx/cx231xx-cards.c b/drivers/media/usb/cx231xx/cx231xx-cards.c
+index 92efe6c1f47b..8bdfbc4454f1 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-cards.c
++++ b/drivers/media/usb/cx231xx/cx231xx-cards.c
+@@ -9,6 +9,7 @@
+  */
  
-+ARM/LPC32XX DMAMUX SUPPORT
-+M:	J.M.B. Downing <jonathan.downing@nautel.com>
-+M:	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-+R:	Vladimir Zapolskiy <vz@mleia.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
-+N:	lpc32xx
-+
- ARM/Marvell Dove/MV78xx0/Orion SOC support
- M:	Andrew Lunn <andrew@lunn.ch>
- M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+ #include "cx231xx.h"
++#include <linux/find_atomic.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -1708,16 +1709,12 @@ static int cx231xx_usb_probe(struct usb_interface *interface,
+ 		return -ENODEV;
+ 
+ 	/* Check to see next free device and mark as used */
+-	do {
+-		nr = find_first_zero_bit(&cx231xx_devused, CX231XX_MAXBOARDS);
+-		if (nr >= CX231XX_MAXBOARDS) {
+-			/* No free device slots */
+-			dev_err(d,
+-				"Supports only %i devices.\n",
+-				CX231XX_MAXBOARDS);
+-			return -ENOMEM;
+-		}
+-	} while (test_and_set_bit(nr, &cx231xx_devused));
++	nr = find_and_set_bit(&cx231xx_devused, CX231XX_MAXBOARDS);
++	if (nr >= CX231XX_MAXBOARDS) {
++		/* No free device slots */
++		dev_err(d, "Supports only %i devices.\n", CX231XX_MAXBOARDS);
++		return -ENOMEM;
++	}
+ 
+ 	udev = usb_get_dev(interface_to_usbdev(interface));
+ 
+diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+index bae76023cf71..59e6d7f894ad 100644
+--- a/drivers/media/usb/em28xx/em28xx-cards.c
++++ b/drivers/media/usb/em28xx/em28xx-cards.c
+@@ -11,6 +11,7 @@
+ 
+ #include "em28xx.h"
+ 
++#include <linux/find_atomic.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -3684,17 +3685,14 @@ static int em28xx_duplicate_dev(struct em28xx *dev)
+ 		return -ENOMEM;
+ 	}
+ 	/* Check to see next free device and mark as used */
+-	do {
+-		nr = find_first_zero_bit(em28xx_devused, EM28XX_MAXBOARDS);
+-		if (nr >= EM28XX_MAXBOARDS) {
+-			/* No free device slots */
+-			dev_warn(&dev->intf->dev, ": Supports only %i em28xx boards.\n",
+-				 EM28XX_MAXBOARDS);
+-			kfree(sec_dev);
+-			dev->dev_next = NULL;
+-			return -ENOMEM;
+-		}
+-	} while (test_and_set_bit(nr, em28xx_devused));
++	nr = find_and_set_bit(em28xx_devused, EM28XX_MAXBOARDS);
++	if (nr >= EM28XX_MAXBOARDS) {
++		/* No free device slots */
++		dev_warn(&dev->intf->dev, ": Supports only %i em28xx boards.\n", EM28XX_MAXBOARDS);
++		kfree(sec_dev);
++		dev->dev_next = NULL;
++		return -ENOMEM;
++	}
+ 	sec_dev->devno = nr;
+ 	snprintf(sec_dev->name, 28, "em28xx #%d", nr);
+ 	sec_dev->dev_next = NULL;
+@@ -3827,17 +3825,13 @@ static int em28xx_usb_probe(struct usb_interface *intf,
+ 	udev = usb_get_dev(interface_to_usbdev(intf));
+ 
+ 	/* Check to see next free device and mark as used */
+-	do {
+-		nr = find_first_zero_bit(em28xx_devused, EM28XX_MAXBOARDS);
+-		if (nr >= EM28XX_MAXBOARDS) {
+-			/* No free device slots */
+-			dev_err(&intf->dev,
+-				"Driver supports up to %i em28xx boards.\n",
+-			       EM28XX_MAXBOARDS);
+-			retval = -ENOMEM;
+-			goto err_no_slot;
+-		}
+-	} while (test_and_set_bit(nr, em28xx_devused));
++	nr = find_and_set_bit(em28xx_devused, EM28XX_MAXBOARDS);
++	if (nr >= EM28XX_MAXBOARDS) {
++		/* No free device slots */
++		dev_err(&intf->dev, "Driver supports up to %i em28xx boards.\n", EM28XX_MAXBOARDS);
++		retval = -ENOMEM;
++		goto err_no_slot;
++	}
+ 
+ 	/* Don't register audio interfaces */
+ 	if (intf->altsetting[0].desc.bInterfaceClass == USB_CLASS_AUDIO) {
 -- 
-2.25.1
+2.43.0
 
