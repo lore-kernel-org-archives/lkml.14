@@ -1,57 +1,57 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E831AAE0F;
-	Thu, 20 Jun 2024 10:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408B180617;
+	Thu, 20 Jun 2024 10:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718880299; cv=none; b=C9stu1mD5oxoG17EuCADksN9KFtZwBnV0DmECCCHCfcDdPO4GzOKjy1qFiD1/0F4c68+US2C492fQTMJ5ntq97Y5G40rpjYDKW4oeDegCJK++g1d64TA8JuFjef465L1jx0XKLAtm5dsAFjxU9XHf0mEqWpXX4QOQmLjDCUu+uo=
+	t=1718880306; cv=none; b=SIoyqXtB3/IGk2NJMg5Sj791zbAJ3cP3RFh2jaDaVkAdrWCqxHB+Ftz7vLrjWMmf3TBJtrWrlZP87pn3gyhi/WOAgupS1OPBuV2VPdoaDs60fE8nXESo+LtrWLmE/Berw5faoPw6ibMQmVO3OY7FmehDYhQS47b/ZbDdthVaQ5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718880299; c=relaxed/simple;
-	bh=IQAZUlNPZoWpHJGkIKUhv6elpxjgoL6OEDDw8Puqvbs=;
+	s=arc-20240116; t=1718880306; c=relaxed/simple;
+	bh=/r3ihupXukcVISswAY9xfhq7UtI47LcaapaG3/yujwc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GYh5svBSn2OXWmOx8qm9GpdPf0VkAL0nnGpZLSzdOYg6ewaYbK0wvIxpFdewAwGlN+rKKJPgTclFzOLrkunSccLkQr1VNSxVnfzFerxNd4fBT3nf/ZujnkeQfd1LT/OfpKEJ0qtF25hplXfRPsDaliDT83TFcfPcH/U4/v62Yec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HbpUOD6p; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=V9nKDdWzYDovz+jTVOHPflCB3+R2ScpOe0kVtFaz9i+WXXNSMheAMOKrrSEv/DwDemp4BRVXaA3xBe1w/BtsbEONDccpx6bUYv1yxe6XbmoAS0HnTGLsjkq26smsv/qujviejtlaK43+a1em8RpqUTlM7Xee4sBLh98V8pNm/lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EIRh32+6; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbpUOD6p"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f9a78c6c5dso6554465ad.1;
-        Thu, 20 Jun 2024 03:44:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIRh32+6"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f9b364faddso6165975ad.3;
+        Thu, 20 Jun 2024 03:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718880297; x=1719485097; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718880304; x=1719485104; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=21XTRS6Hwv0Mc2USbIbApfyvP84+Xjin/dyUCVlMQQw=;
-        b=HbpUOD6pgb95y1sARCeRamoCkOnMwQoRpE/TJL0+nZZTcoHy9xw5J9cuflf5ijQsYR
-         nMNJ/DpBqHW0nT7niMSOeK/yGdJYQyhwYYdAn9E7zaDha42IXM+k7vJ91LiZSUQ9OEnO
-         ZR4DHEUf7+Fc6duejV4gcrfmwRQpGMhkkSjF44uAKF9du6sfPaPYHDY0iGrTC1oEZgxL
-         pN4qFv0I3sTl5/0uSs800wco4DIwdsfWtw5rI/DMh9vFYSKJA76aIO2Zv5X/sxFDc/kk
-         piLYThEGzgFAnD+ZJfRyznsG3d3XJ8TthfM9xNqDQKGt1IYkKEnPuaq/zrKhRhoVS95q
-         FD/A==
+        bh=dSv/ViTvfqX7lB/6JXrxBSUt+tEYItM1Aj5/L2UcPAA=;
+        b=EIRh32+6Tk0dqc1HKEWDEGtmDdtyC0ZWoNqYX0HAIDq3/HRcOhGjdNR5rpJUuzrxL3
+         Zg/ha4hYr8n6MNu/mQd71nAUyf208jdPuubO3sh9klTEBv92hNsfAed3B3KVXhTOPj3L
+         vTBQD5Ci0xrj33v9tPfFgFsk6MN2C+G5mwrLAkS0tAC5HqY6FBMUz6pMqUBrGZnkdXe3
+         RLu69mOTrFjsEXeC8pyhBezIImeRNCP+uJyKcxJ/E7KeLHm0abr+FnY2DEpRIUEMilVa
+         6tQMntoop75Iots0GjKh0k3G57X5wfQb3PwgwhkGZPRXD5USqCgLm/B1yBhzW/6n/lR/
+         W1vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718880297; x=1719485097;
+        d=1e100.net; s=20230601; t=1718880304; x=1719485104;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=21XTRS6Hwv0Mc2USbIbApfyvP84+Xjin/dyUCVlMQQw=;
-        b=RDqQcvfrfredIjsUmHh9qBpZpV9E53pFVzJe/RJuHpP7Vwu7D14DjX5LTfcETFh5ru
-         1LLc0y+MDMw4/Y7HMM61OAGVaL0cXjB9iQCEoraGj6nU9DaU2V2HLDuT9JPJmCxNVueF
-         ot/5bkiNeli/3ZDg/bPNpsrPDLKLvA/mFV73i/NYf4XXFgQulzz8HgcRpaOYp7Tz1BdA
-         MhkA64T046MdZ+egKww5twJA7bctWYKTqvUbCOsetov8YIaofz6Hg64OmSsRI7hMTANT
-         OxS2d6CvsJTgLBeqP/1me1mucZIK68Gbpo3L97FzPfdLVA3p4Xz5+v/hDe8dHrwydZrc
-         pR2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUIRTPbD7YjVCtYBgpJiIZ1MICwAKpMYG73BDfop6GxkVRj1Dr9xHek5EfW8HBSHqgUsWtwGbRxzJzRVsv9+QaZ7k0NZURkrI+MSwkP
-X-Gm-Message-State: AOJu0YyalToSMwUCRjrFihOr6nM0vCr7WJfFJffY4DBwos36ztSgdAvw
-	ACxWt04oniSIAP+zW6LytRa6NH9HmCCwxGA2+EMz5G9SX5+5/RNo
-X-Google-Smtp-Source: AGHT+IEXAR38DTkt/T0+IqxDNSCo7vL4OV0PQH4pTSZRWQo55l+OQ//jLWqk4Hb0nJMLYpOcvYyyUw==
-X-Received: by 2002:a17:902:e88a:b0:1f8:67e4:3983 with SMTP id d9443c01a7336-1f9aa3ecf7dmr51434855ad.4.1718880297387;
-        Thu, 20 Jun 2024 03:44:57 -0700 (PDT)
+        bh=dSv/ViTvfqX7lB/6JXrxBSUt+tEYItM1Aj5/L2UcPAA=;
+        b=BYxK5F8LXZC5pMi8V9htu3KpzTNakbddKADK8mGK7QNtCdCfoVb0QcRVL6HVPop6N/
+         VuPeBzgnJj4quDV+HNoVMNjncF8upMSHVZjLmB8Ii6ge5pWhXWbzcwG51tMHSJwJM5nU
+         v72Lt2KOanChHCs5TIUzRJOqUaujw7g/wkQBA5qiIzU/e5xz7IDxYdCIvWnqhUSX02rI
+         SFTYy7hKQPH71sWT5jR0zBDPOsffeJOdiES+8Z4eJ2G5j6eyPt8iE3X86BfuYmuzYM5+
+         6KHPSRWkHtNsfIY0rzBG39PEf3yNmy+UtsKoegpVWSCTP5HKSNWcut+Zuko57rGVRZkD
+         tQ1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVKoWpSASJyxMDlGhwYqxu3aZV3gYCrBrU4Rsnk3+STyBj3GxC6kSCv+zmdleM0UiNiH/+iXeGE1Oz3hwGwmYGaTFqxKdL8axNn0WUp
+X-Gm-Message-State: AOJu0YyAEiDKpkbSFRK8sYvYvgs/2in3aywJLCniM6MG65GQ6Bigb7aA
+	RybFEd6O0Ee1CcQ8dkfnMJpNktfE5SS9kTtXIbhM5ILTfDGldH9L
+X-Google-Smtp-Source: AGHT+IHnzjsmE8MwAs7tWc16/trGOmnVEWY1i5vc1HMa92bbCV7HwzYJmQfSxAHoxpdEmYO5iEBEhg==
+X-Received: by 2002:a17:902:c404:b0:1f8:904a:d6f3 with SMTP id d9443c01a7336-1f9aa41202fmr57282755ad.40.1718880304456;
+        Thu, 20 Jun 2024 03:45:04 -0700 (PDT)
 Received: from localhost.localdomain (2001-b400-e28a-abbc-b19b-27f2-8368-202e.emome-ip6.hinet.net. [2001:b400:e28a:abbc:b19b:27f2:8368:202e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55ca1sm134007805ad.49.2024.06.20.03.44.54
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55ca1sm134007805ad.49.2024.06.20.03.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 03:44:56 -0700 (PDT)
+        Thu, 20 Jun 2024 03:45:04 -0700 (PDT)
 From: Victor Shih <victorshihgli@gmail.com>
 To: ulf.hansson@linaro.org,
 	adrian.hunter@intel.com
@@ -63,9 +63,9 @@ Cc: linux-mmc@vger.kernel.org,
 	takahiro.akashi@linaro.org,
 	dlunev@chromium.org,
 	Victor Shih <victorshihgli@gmail.com>
-Subject: [PATCH V17 01/22] mmc: core: Cleanup printing of speed mode at card insertion
-Date: Thu, 20 Jun 2024 18:44:23 +0800
-Message-Id: <20240620104444.5862-2-victorshihgli@gmail.com>
+Subject: [PATCH V17 03/22] mmc: core: Announce successful insertion of an SD UHS-II card
+Date: Thu, 20 Jun 2024 18:44:25 +0800
+Message-Id: <20240620104444.5862-4-victorshihgli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240620104444.5862-1-victorshihgli@gmail.com>
 References: <20240620104444.5862-1-victorshihgli@gmail.com>
@@ -79,75 +79,72 @@ Content-Transfer-Encoding: 8bit
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-The current print of the bus speed mode in mmc_add_card() has grown over
-the years and is now difficult to parse. Let's clean up the code and also
-take the opportunity to properly announce "DDR" for eMMCs as
-"high speed DDR", which is according to the eMMC spec.
+To inform the users about SD UHS-II cards, let's extend the print at card
+insertion with a "UHS-II" substring. Within this change, it seems
+reasonable to convert from using "ultra high speed" into "UHS-I speed", for
+the UHS-I type, as it should makes it more clear.
+
+Note that, the new print for UHS-II cards doesn't include the actual
+selected speed mode. Instead, this is going to be added from subsequent
+change.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/mmc/core/bus.c | 36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
+
+Updates in V14:
+ - Move mmc_card_uhs2() to include/linux/mmc/host.h, so that
+   mmc_card_uhs2() can be available for host drivers.
+
+Updates in V10:
+ - Modify the commit message.
+
+Updates in V7:
+ - Drop MMC_TIMING_SD_UHS2 in favor of MMC_TIMING_UHS2_SPEED_A in
+   mmc_card_uhs2 function.
+
+Updates in V4:
+ - Make mmc_card_uhs2() take struct mmc_host* as in-param.
+
+---
+
+ drivers/mmc/core/bus.c   | 4 +++-
+ include/linux/mmc/host.h | 8 ++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-index 0ddaee0eae54..6731b46e855f 100644
+index 6731b46e855f..f9a67beb68f0 100644
 --- a/drivers/mmc/core/bus.c
 +++ b/drivers/mmc/core/bus.c
-@@ -299,6 +299,7 @@ int mmc_add_card(struct mmc_card *card)
- {
- 	int ret;
- 	const char *type;
-+	const char *speed_mode = "";
- 	const char *uhs_bus_speed_mode = "";
- 	static const char *const uhs_speeds[] = {
- 		[UHS_SDR12_BUS_SPEED] = "SDR12 ",
-@@ -340,27 +341,30 @@ int mmc_add_card(struct mmc_card *card)
- 		break;
- 	}
+@@ -344,7 +344,9 @@ int mmc_add_card(struct mmc_card *card)
+ 	if (mmc_card_hs(card))
+ 		speed_mode = "high speed ";
+ 	else if (mmc_card_uhs(card))
+-		speed_mode = "ultra high speed ";
++		speed_mode = "UHS-I speed ";
++	else if (mmc_card_uhs2(card->host))
++		speed_mode = "UHS-II speed ";
+ 	else if	(mmc_card_ddr52(card))
+ 		speed_mode = "high speed DDR ";
+ 	else if (mmc_card_hs200(card))
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 1779910b3c46..a744440bc276 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -661,6 +661,14 @@ static inline int mmc_card_uhs(struct mmc_card *card)
+ 		card->host->ios.timing <= MMC_TIMING_UHS_DDR50;
+ }
  
-+	if (mmc_card_hs(card))
-+		speed_mode = "high speed ";
-+	else if (mmc_card_uhs(card))
-+		speed_mode = "ultra high speed ";
-+	else if	(mmc_card_ddr52(card))
-+		speed_mode = "high speed DDR ";
-+	else if (mmc_card_hs200(card))
-+		speed_mode = "HS200 ";
-+	else if (mmc_card_hs400es(card))
-+		speed_mode = "HS400 Enhanced strobe ";
-+	else if (mmc_card_hs400(card))
-+		speed_mode = "HS400 ";
++static inline bool mmc_card_uhs2(struct mmc_host *host)
++{
++	return host->ios.timing == MMC_TIMING_UHS2_SPEED_A ||
++	       host->ios.timing == MMC_TIMING_UHS2_SPEED_A_HD ||
++	       host->ios.timing == MMC_TIMING_UHS2_SPEED_B ||
++	       host->ios.timing == MMC_TIMING_UHS2_SPEED_B_HD;
++}
 +
- 	if (mmc_card_uhs(card) &&
- 		(card->sd_bus_speed < ARRAY_SIZE(uhs_speeds)))
- 		uhs_bus_speed_mode = uhs_speeds[card->sd_bus_speed];
+ void mmc_retune_timer_stop(struct mmc_host *host);
  
--	if (mmc_host_is_spi(card->host)) {
--		pr_info("%s: new %s%s%s card on SPI\n",
--			mmc_hostname(card->host),
--			mmc_card_hs(card) ? "high speed " : "",
--			mmc_card_ddr52(card) ? "DDR " : "",
--			type);
--	} else {
--		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
--			mmc_hostname(card->host),
--			mmc_card_uhs(card) ? "ultra high speed " :
--			(mmc_card_hs(card) ? "high speed " : ""),
--			mmc_card_hs400(card) ? "HS400 " :
--			(mmc_card_hs200(card) ? "HS200 " : ""),
--			mmc_card_hs400es(card) ? "Enhanced strobe " : "",
--			mmc_card_ddr52(card) ? "DDR " : "",
-+	if (mmc_host_is_spi(card->host))
-+		pr_info("%s: new %s%s card on SPI\n",
-+			mmc_hostname(card->host), speed_mode, type);
-+	else
-+		pr_info("%s: new %s%s%s card at address %04x\n",
-+			mmc_hostname(card->host), speed_mode,
- 			uhs_bus_speed_mode, type, card->rca);
--	}
- 
- 	mmc_add_card_debugfs(card);
- 	card->dev.of_node = mmc_of_find_child_device(card->host, 0);
+ static inline void mmc_retune_needed(struct mmc_host *host)
 -- 
 2.25.1
 
