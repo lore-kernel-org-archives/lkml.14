@@ -1,98 +1,151 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206B9159571
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4B5628;
+	Thu, 20 Jun 2024 09:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718874078; cv=none; b=A4Hvo4bYGY/FXWsLel37kbqHPw6HzBP4Gr1xL3GpkMF2LGAhidFbWuT8XpSRv6G+BHL8uMVK51BCnV5kMgYjchvBf0n+hfmIKGNV2We70Snixs7y9mp1BlSk/Hsh1CwCzcWBABHoaxwMk2dVY0RNfCgy24O9FT6n44nyxrW8UKk=
+	t=1718874137; cv=none; b=ibhUtGZjAReu4seLssfvPQwdYwbZnWgy95J53WdorqYaLeEcSbUNbbeUPD5Nx7gWW+OZ9vEcl3yOyIf5hk69AyKpw+sUsbYjAIGz4qKyQ3f1FKfg1jbfGlzRj4AJoKWMsfD9DOna0FNvgieypus0U7xzDduz8TAO5Yn/jnDzfoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718874078; c=relaxed/simple;
-	bh=wvjuFU7W414jubVBbYupAK//Gvt1g9N5iqVrvVU/lM8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kFDTyCDG8T+v7plhjxNAWr34XwZWPC1jmxUHuAUKdnXxOBavtkmyazlviIbsFT80UMl04Y90IVL8ln0pMWkojPtOXTkCf0N1XoDrFfjBbfrvqnVcSFwCSFV4YjI/60cyZdt4E1E5aDX4vlfAEJvanDa2W44D+5/TIUJupzHoAcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XnLui9VW; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718874137; c=relaxed/simple;
+	bh=DcaHCutLUcucdupDruVjpYkFp5GMrRUdppVUXPcovpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjTk5uXMIvzDCoeFnptrA0QHIz2cUQ9Jb6A3ksOvaGVaNuQh9PSk8ycFA0BtASR830srpZ+ICiRqZqS/a5T+UfnVSlix0Au2+icX6Zsxvf7zKsk/rBgceX+3oUD/Bc0E89nx+h1oeJ7fFf+AnirAm7xXb8VBh7V/5Ul9TdYergA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K6BntdGI; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XnLui9VW"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-24c9f892aeaso344414fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 02:01:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6BntdGI"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso111610866b.1;
+        Thu, 20 Jun 2024 02:02:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718874076; x=1719478876; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wvjuFU7W414jubVBbYupAK//Gvt1g9N5iqVrvVU/lM8=;
-        b=XnLui9VWTe1N11xn3OXvZYAM3HMsKklvlHKph5Ei28zTpbjcPSOqxbilJ84OARqbnK
-         2IToaYZFHnFBA1q+K236pT3qjBCBAMttuXkpTg/a/MDI6KIv1it1QrlwOAxWEuzl+ZyL
-         C2PBhXyQbBWyS+L41HcJI4U5pQSZQ7GOlGsHGjOX1DAkUm7TmiJ6rTCYpawcUgCuTfEB
-         1KkFuPf5PS3f3+Ra+oqIij/s59mRY5AhQXQlWxY8JfHXDbh9c9RugimCQmlnhzBPkB4d
-         44SY6dhutzp+MtfR238JdYjzuqCWBHqVXoMuBi2m6YmNcwUmb/iTUh2zrgAHhL5Lse/I
-         h4Mw==
+        d=gmail.com; s=20230601; t=1718874134; x=1719478934; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=reqi4o36mn4qzlSpM+6S4dwkZbNZu42ZTuDIZ+8NfZw=;
+        b=K6BntdGIb5ZcK1eceWEIpguIQRg/QnF1PNYTzc9f/q1KzaVGpfhmxDw4bfJQHv2U8k
+         eRUE3IARQ8Ud40afix6vHroi1e1pHUN5Tsg2yIGj/bVUL0nCdFJbC1OMUKOZ0QPqteOU
+         toEW39xJVbHJMn9NOmFEI5MaPoMY/vhcUD4gBFErCXrYVCqb3KdBMPSXuSXvJ0kZWMsD
+         xl9x4Boyf0F55v+OUmvI3IKYy9AIY9uqs0OD79C2F7JB3ptNM7oHvWrup9jxGjZ/x5cD
+         aaNbcGbggLo5M4IBO5YmhTCtRXBluMuhAz86TU2L8o28pQBlJbqYnsrVoVLRZr+F+DrD
+         hb+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718874076; x=1719478876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wvjuFU7W414jubVBbYupAK//Gvt1g9N5iqVrvVU/lM8=;
-        b=qr/38nyNJ58c5/WPvsY6YMAd1+svvOmLVT+Q9Q6rhE4iEdocP7UbGS0ZLWOPFY1jWC
-         QhlPQDI9FO8rNozgWhv3ZjycZUYUtF2IS/w2p1u/Ma2qypbLL2iTjnSyKJnyqILxpPda
-         +w3+WUnVS/nHmkveaHq3T+wv/zLA36cHO9+4IGyxEbNrrlPvjlgEQv4254AvwaA10uUF
-         9gIHjP2IiVLsFsObq/EktTIQNMLmUM2su4R1tPc9hXfxKj55lJIFtyc7V8Z+0lR5chDd
-         olZbImGLydE8FnYbd1QEAkqA3VyEBFiECcWe/Gn9TaR66Mls/+icfOHTrXF13Q3jGQI9
-         7zWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcHDmmzkq1F/mvkVYTo7mNWEdKiDWBQcmdD16hh7o1wJLl6DkI2AkaDjkw12s3ty1fozgBvaYWq5mwd3De51rD7qYzyjF3f8qVm8N1
-X-Gm-Message-State: AOJu0YzkeKOMTtUloL93Z8XC+Jng/BqJgJ71LCCfZav4WFgXWit+/SiU
-	A1mjpTD7+bOGluheP10iUGz04ZLkzlFjrQdL79sgLOCwbU4ZslylQmfSIUv2ACdpy2j4KPVLl+a
-	iwuLvkC1uxzN5GSMqOCAoFzSegu6VxWkgJ3fC
-X-Google-Smtp-Source: AGHT+IEdmrRM4Gbu+d4I3hoRKq+4aL4Fg6hfbxGg0ziYrJZB/rZ9bgxi2fl+hGtqtzvIL6W2TRHW+Qf+Zm5AY3puluQ=
-X-Received: by 2002:a05:6870:3a0f:b0:259:f03c:4e91 with SMTP id
- 586e51a60fabf-25c949cd968mr4093311fac.8.1718874075898; Thu, 20 Jun 2024
- 02:01:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718874134; x=1719478934;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=reqi4o36mn4qzlSpM+6S4dwkZbNZu42ZTuDIZ+8NfZw=;
+        b=ZFpSLc90BJIzrrUjUZ8tq020xJvTDfm4qEKHqGWqnX8C1El/9QhBPGrnDf8tm9I18b
+         H2efKVQ7TVsZM9jxjgnAiWH1KUBSsGtDwGOf1no2YzeCvNIbXBhJoDCFlE+08svbuWMy
+         Qgd/P6deXvl8lYV0lfen3AoHjJtKZs7P0fjL2K5mrM/RfzEx/lmD+BzcFJFQ9V9fMR80
+         GEoysYR+4zs2nc3TeuKUJsN+RbNlP8OP3NW6cWCMQcNeECeuO/zqlzciPIZg6rWckbCF
+         11V+RWvPHslOMjtXmJFuRtL3h6QBzfWCsoGynMQJccLT/Tbx+DvDD8phjHMLCRHysCvh
+         1eIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVe60lByYhdD28m5PA1BpKUCV2w6xRkzhCML0EoCPdpHFh4E9INUuoHbd8FeVrkucwvx7BCfGK3OqbkdDu29batWDWXmQ2XtRDRz3vjUGcWkca4uwABDFy1HQROirWNWCqZcI9R
+X-Gm-Message-State: AOJu0YwqbrDcXq3k4pjS6zAPYTlgzVWpTjUR/H/Og/ZENXPi6kbFvXlJ
+	mhFWA6T4dt6pvYCCYa6c3PYHZl8uIlfcVJLGOkQdW019QVc9N06W
+X-Google-Smtp-Source: AGHT+IGwq23nKii9zi5kusaPYSdgYJYSMCNAoo2+QGm3mZizaU2pqisyJqgmA7CUbFPyDyPc9iVDmQ==
+X-Received: by 2002:a17:907:a706:b0:a6f:1600:62cb with SMTP id a640c23a62f3a-a6fa40d42eamr331477966b.3.1718874133969;
+        Thu, 20 Jun 2024 02:02:13 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f41a85sm752988366b.179.2024.06.20.02.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 02:02:13 -0700 (PDT)
+Date: Thu, 20 Jun 2024 12:02:10 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Casper Andersson <casper.casan@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Woojung Huh <woojung.huh@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 net-next] net: dsa: Allow only up to two HSR HW
+ offloaded ports for KSZ9477
+Message-ID: <20240620090210.drop6jwh7e5qw556@skbuf>
+References: <20240619134248.1228443-1-lukma@denx.de>
+ <20240619134248.1228443-1-lukma@denx.de>
+ <20240619144243.cp6ceembrxs27tfc@skbuf>
+ <20240619171057.766c657b@wsk>
+ <20240619154814.dvjcry7ahvtznfxb@skbuf>
+ <20240619155928.wmivi4lckjq54t3w@skbuf>
+ <20240620095920.6035022d@wsk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619154530.163232-1-iii@linux.ibm.com> <20240619154530.163232-18-iii@linux.ibm.com>
-In-Reply-To: <20240619154530.163232-18-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 20 Jun 2024 11:00:39 +0200
-Message-ID: <CAG_fn=VbO5m18MU6v4-YCbC03dBuBGBRTzi7sEvZCL6vSDG=9w@mail.gmail.com>
-Subject: Re: [PATCH v5 17/37] mm: slub: Disable KMSAN when checking the
- padding bytes
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620095920.6035022d@wsk>
 
-On Wed, Jun 19, 2024 at 5:45=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> Even though the KMSAN warnings generated by memchr_inv() are suppressed
-> by metadata_access_enable(), its return value may still be poisoned.
->
-> The reason is that the last iteration of memchr_inv() returns
-> `*start !=3D value ? start : NULL`, where *start is poisoned. Because of
-> this, somewhat counterintuitively, the shadow value computed by
-> visitSelectInst() is equal to `(uintptr_t)start`.
->
-> One possibility to fix this, since the intention behind guarding
-> memchr_inv() behind metadata_access_enable() is to touch poisoned
-> metadata without triggering KMSAN, is to unpoison its return value.
-> However, this approach is too fragile. So simply disable the KMSAN
-> checks in the respective functions.
->
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+On Thu, Jun 20, 2024 at 09:59:20AM +0200, Lukasz Majewski wrote:
+> > It will return -EOPNOTSUPP for port 0, 
+> 
+> This comment is for xrs700x_hsr_join()?
+
+Yes.
+
+> For the ksz_hsr_join() we do explicitly check for the KSZ9477_CHIP_ID.
+> 
+> I do regard this fix as a ksz9477 specific one, as there are some
+> issues (IMHO - this is the "unexpected behaviour" case for this IC) when
+> we add interlink to SoC VLAN.
+> 
+> I don't understand why you bring up xrs700x case here? Is it to get a
+> "broader context"?
+
+You have the Fixes: tag set to a HSR driver change, the fix to which
+you provide in an offloading device driver. What I'm trying to tell you
+is to look around and see that KSZ9477 is not the only one which is
+confused by the addition of an interlink port. So is XRS700X, yet for
+another reason.
+
+> > falling back to
+> > software mode for the first ring port, then accept offload for ring
+> > ports 1 and 2. But it doesn't match what user space requested, because
+> > port 2 should be interlink...
+> 
+> Please correct me if I'm wrong, but this seems to not be the case for
+> ksz9477 - as I stated in the other mail - the ordering is correct (I've
+> checked it).
+
+I was never claiming it to be about KSZ9477.
+
+> > I think you really should pass the port type down to drivers and
+> > reject offloading interlink ports...
+> 
+> As stated above - IMHO I do provide a fix for this particular IC
+> (KSZ9477). With xrs700x we do have fixed ports supporting HSR (port
+> 1,2), so there is no other choice. As a result the HSR Interlink would
+> be supporting only SW emulation.
+
+But there is another choice, and I think I've already explained it.
+
+        HSR_PT_SLAVE_A    HSR_PT_SLAVE_B      HSR_PT_INTERLINK
+ ----------------------------------------------------------------
+ user
+ space        0                 1                   2
+ requests
+ ----------------------------------------------------------------
+ XRS700X
+ driver       1                 2                   -
+ understands
+
+I am bringing this as an argument for the fact that you should pass the
+port type explicitly from HSR to the offload, and use it throughout the
+offloading drivers. The hweight(ports) >= 2 happens to work for KSZ9477,
+but IMO misidentifies the problem as having to do with the number of
+ports rather than the port type. Because of this, a largely similar
+issue introduced by the same blamed commit but in XRS700X is left
+unaddressed and unidentified (the fixed ports check which is already
+present masks the fact that it's not really about the ports, but their
+type, which must still be checked, otherwise the driver has no idea what
+HSR wants from it).
