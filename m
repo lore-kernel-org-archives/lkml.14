@@ -1,92 +1,53 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDC943ABC;
-	Thu, 20 Jun 2024 23:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859EA1459F2
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718926930; cv=none; b=ntXGK1RzjEQSfckpj+j5qUFfdaKIQD0Ug8JYZfiSvqhHxmSXVUXjVXv/49saBxNG8TyIBAuZhCzB9BI3HyfyQp89ZqfE8bHrwq/NcAEwHPl1VYhLmt7CoEAVtjmZTGzyRozjWftXRgVDbqYKn1L/B2nswBtWeQ6mPjnY6rr9DEI=
+	t=1718927040; cv=none; b=e1H0TKUQS8OJPYbtEwKWV3dhV6SXugzpfDo0ZXEFx8NiyJGD6SVqYOa0KCc9b2KdQ1k7LK8CpT06mJC85l00VlzIkGPWjyaBVjlQ9hRkQ2GRcFn1b53JZcihM7TQSjdrxpMvdKmg7Kp/TF1LLybJGGLXmI2fKSgv+DaLN6h+xKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718926930; c=relaxed/simple;
-	bh=ZUy9KkXRtxbe3yLApS1C4yViX20c0hmWF1eeEmohgAY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fv3FfCAXhFzhn1xsbwa+AdKMeY7ErokJiXW4qWG9idEi3qzNYOYM7zYNZ5YDIUr5Epk+2fxrQKnlOpMoX+2+3z7QynZ6Q4HDUHZRWCBbGN3w4eIFl9OqZeU7udn0QSl0j9Fk7gPUB3ikqQ8LFtt8aSl5//bBOOQpNZpbLPL2rY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be; spf=pass smtp.mailfrom=krisman.be; dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b=dRy3d1Xo; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=krisman.be
+	s=arc-20240116; t=1718927040; c=relaxed/simple;
+	bh=m6vq7fMNbPJ8y49RfcxdJ9XHAaMwQ/nP8IlMPwhiy7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YBQFqa/PrtAQM341qMLqjE0Zj9mAlYf/0NKVb/UEouGJWs9fiJbabSVrBdt0Avrf+PiFiHYC/CRPIZ3aPUX4jVYsoQUEtFeTKzo9aA44qun7RBn0kZRB/Dci6yIEFwVQ03XunbT7yMzZrea14wbscrKfVAK8BZuYPJuu37Gd4fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mmh1XHes; arc=none smtp.client-ip=95.215.58.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b="dRy3d1Xo"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6EA4AC0002;
-	Thu, 20 Jun 2024 23:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=krisman.be; s=gm1;
-	t=1718926919;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mmh1XHes"
+X-Envelope-To: syzbot+8992fc10a192067b8d8a@syzkaller.appspotmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718927036;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JqyvJ/RXIDEJ6K5Q9ZLLPg4KNgiAv+nZHrmU+1Tftb0=;
-	b=dRy3d1XoSgAirW+QpGaX2TNhVencRtlnrIXx9Xf35BbaDkKTW4IQyDB0iewlvhjLdAlXb7
-	ghff9GPto4i60+8ixXPrfuUv3CyicNfzGXD8XUPSOxwlzYBRl8cJtsg7NKFXu3gw7wUTvm
-	MSPH0q5ELASiyAarb6iK1THAc3B7yUoxABNQ1C/me9guRNGgpLIHjUJ/xDq95keW9WkZFx
-	XuexQhIE1ZDZHQRK4qK9QSVJuF4FmJgNcG3SVEZAweNHA9gWYkrYdIRSb786OdBS+v8m5o
-	8LBVhAWAwNrL7SUAha5Qfl3s637zGLy7zFA3JGAQ96xQlSp9z71k/ounmr6zVg==
-From: Gabriel Krisman Bertazi <gabriel@krisman.be>
-To: Gabriel Krisman Bertazi <gabriel@krisman.be>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
-  <linux-fsdevel@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] unicode: add MODULE_DESCRIPTION() macros
-In-Reply-To: <87y17vng34.fsf@mailhost.krisman.be> (Gabriel Krisman Bertazi's
-	message of "Mon, 27 May 2024 16:40:47 -0400")
-References: <20240524-md-unicode-v1-1-e2727ce8574d@quicinc.com>
-	<87y17vng34.fsf@mailhost.krisman.be>
-Date: Thu, 20 Jun 2024 19:41:50 -0400
-Message-ID: <87v823npvl.fsf@mailhost.krisman.be>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	bh=m6vq7fMNbPJ8y49RfcxdJ9XHAaMwQ/nP8IlMPwhiy7o=;
+	b=Mmh1XHesQifgS91BCVHa3GlWWJQRpOszPdw/wgvlAEYm6xq6bSO6MAxZJsOUdp1XwwFBnh
+	kiJ6qr2dmXOnrXci1El0Y98ZjBig3LwmDD2SrGNDrHj08ud1/sNS1qO/kEyoKixGvjyEcr
+	i1XByYncCl4wuIz9gxxwvm3f5laLLP0=
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: syzkaller-bugs@googlegroups.com
+Date: Thu, 20 Jun 2024 19:43:52 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: syzbot <syzbot+8992fc10a192067b8d8a@syzkaller.appspotmail.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bcachefs?] KASAN: slab-use-after-free Read in
+ bch2_fs_recovery
+Message-ID: <udyg4sx7bwsbtaj2nfnkvqtgdhprdymdpghelimpnxcft3scnd@c3ccejbtq5ze>
+References: <00000000000090adbc061b5acfd9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-GND-Sasl: gabriel@krisman.be
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000090adbc061b5acfd9@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-
-> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
->
->> Currently 'make W=1' reports:
->> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/unicode/utf8data.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/unicode/utf8-selftest.o
->>
->> Add a MODULE_DESCRIPTION() to utf8-selftest.c and utf8data.c_shipped,
->> and update mkutf8data.c to add a MODULE_DESCRIPTION() to any future
->> generated utf8data file.
->>
->> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
->> ---
->> Note that I verified that REGENERATE_UTF8DATA creates a file with
->> the correct MODULE_DESCRIPTION(), but that file has significantly
->> different contents than utf8data.c_shipped using the current:
->> https://www.unicode.org/Public/UNIDATA/UCD.zip
->
-> Thanks for reporting this.  I'll investigate and definitely regenerate
-> the file.
-
-Now that I investigated it, I realized there is perhaps a
-misunderstanding and not an issue. I just tried regenerating utf8data.c
-and the file is byte-per-byte equal utf8data_shipped.c, so all is
-good.
-
-Considering the link you posted, I suspect you used the latest
-unicode version and not version 12.1, which we support.  So there is no
-surprise the files won't match.
-
-> The patch is good, I'll apply it to the unicode code tree
-> following the fix to the above issue.
-
-Applied!
-
-ty,
-
--- 
-Gabriel Krisman Bertazi
+#syz fix: bcachefs: Fix a UAF after write_super()
