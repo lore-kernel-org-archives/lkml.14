@@ -1,238 +1,120 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BE817C20E;
-	Thu, 20 Jun 2024 08:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE5617C7B1;
+	Thu, 20 Jun 2024 08:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718871327; cv=none; b=UcXZUvNH2xyya9Q3jxbK2oDcaV5Twsoyvy/QENuodHdK+RhzDCSODz+U/gPiM0d5YSnE05APYi/jT67m8OEnH3LGRoxuO+tQc7wz3iwpVpn4rrFube4oL+MQ+zAB9QqyuRga8yiZJVHoigNgqJIi7ngQU+9yyblo4Ey0KVjKLuk=
+	t=1718871329; cv=none; b=JyhEi6ZKA+UNM+EUmAk9fhgIY1eY35nnHtTpousjUnUQlsmgFOsPFaiMeselcpgCYOO86QLUo8jUJ8a4fULlDKWWc8R0shG3AhQIrJt/d5xxjxDgTY4emO5IeD/hyWK8LDX3QgArbZ8puLwkFDtYJO5WQvR4AFUH9IuO8xyVeW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718871327; c=relaxed/simple;
-	bh=QoBdvFlgD+GxqQfKbtckHEldF3KPTKZGhO7MM8rrU2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AzeSi4BFY/DkMEQTjU8vrTTEDd6oB644fHtrLVVHfxoROB5YlL+2ss1I/tOa+Xtm7eKmddYh0NtBSXZggENszO2hq4ASrUx9H+SFdoZPksJ7hHKXe44+FPY645IQkEMszu+Ks8zS+sLWOl564oDDBcDngooSiSdTUdQmr8BsQ9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eQhJKfA0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qzwhm4Ss; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eQhJKfA0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qzwhm4Ss; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1718871329; c=relaxed/simple;
+	bh=wj3aHk6IHnlYPNTRtgDSbqdxlPkCc4x7y1ohrg50Y8w=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ICG3vFXPlUL6M96oKoNLisvRTIqJ2TVcYuAWF8ClfBFGcwCGyFOvUkU2iTvaIIMUttWPQ9mxldyoQDYqts3ZBkK7ZblTwpX5dL56kEJihGzgbEiTBBVJ6XgIqMcw35/rzSoB1WdfJZlJ+RhA+I5YlwSuKZso14+lZlg9R6Kv9Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JecD4y9F; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eQhJKfA0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qzwhm4Ss";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eQhJKfA0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qzwhm4Ss"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7473421A82;
-	Thu, 20 Jun 2024 08:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718871323; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Fvlm3C5vCJy0iEYaOW+YAnAFu3fK55puTAJQWNbdkm8=;
-	b=eQhJKfA07fvgSF2znsRBUXYjn6epcJCX/c1rMfIPmrVVEmCNk/8ysqfzX3alyoirCZciLd
-	1XbUodF49yiurilr6AAci7zKf0vseDpg63ioux95o59Gb0Gy/IYTgwekG23XaCmcnqxiAy
-	sXvZQHWYmlPK/dcnq5dzlLRerauiDIU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718871323;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Fvlm3C5vCJy0iEYaOW+YAnAFu3fK55puTAJQWNbdkm8=;
-	b=qzwhm4SsbhIOIRVqjyQtt07xqic8p3Z6buw21YU+1BxhxQSwiW+8SBdbyRqFhMy75Km5r+
-	KmZ1rFxhzQ2j8QDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=eQhJKfA0;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=qzwhm4Ss
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718871323; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Fvlm3C5vCJy0iEYaOW+YAnAFu3fK55puTAJQWNbdkm8=;
-	b=eQhJKfA07fvgSF2znsRBUXYjn6epcJCX/c1rMfIPmrVVEmCNk/8ysqfzX3alyoirCZciLd
-	1XbUodF49yiurilr6AAci7zKf0vseDpg63ioux95o59Gb0Gy/IYTgwekG23XaCmcnqxiAy
-	sXvZQHWYmlPK/dcnq5dzlLRerauiDIU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718871323;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Fvlm3C5vCJy0iEYaOW+YAnAFu3fK55puTAJQWNbdkm8=;
-	b=qzwhm4SsbhIOIRVqjyQtt07xqic8p3Z6buw21YU+1BxhxQSwiW+8SBdbyRqFhMy75Km5r+
-	KmZ1rFxhzQ2j8QDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 51A4213AC1;
-	Thu, 20 Jun 2024 08:15:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id f06QExvlc2aMXQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 20 Jun 2024 08:15:23 +0000
-Message-ID: <08b38709-16f1-44d5-9808-b135e290d2b7@suse.cz>
-Date: Thu, 20 Jun 2024 10:15:23 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JecD4y9F"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JKckQf023894;
+	Thu, 20 Jun 2024 08:15:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1OcHAXKnKPWdLBaQZAFv15S86mrw4FuJ7eCoMlXHEQE=; b=JecD4y9F20t2gbJb
+	EGA2szi5gy7vXYdEOnakJ2rn73v2zE/FKwlp4e81J0JQGXLD/zXp8ijeI7/hSk81
+	8HLInI21wzxOn7M55I7HPgKdW7S9ojs5kXpTkp6ypqKxZy1gwS0oHMbcY0MUlqKG
+	bIiP5FEDA3oGTC6/dI/a6x8PbSPIDAznBQk5VBu9OrI76GK2zNhat887TKEaYIrJ
+	jbnJ46PFCtsLYCyui+xzKtO/G8MuFFSdMhJ2DXpBLXIqRfctiKiw1BM1jqelyQrc
+	Yx884YpJGiL0rLT0FvF2IhTNFgO6F/HGyE+4jEzUfKE7diXK3sPmocOb27E66ETQ
+	UGiiQg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yv6hn16k8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 08:15:15 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45K8FEBr009589
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 08:15:14 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Jun 2024 01:15:08 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
+        <quic_rjendra@quicinc.com>, <luca@z3ntu.xyz>, <abel.vesa@linaro.org>,
+        <quic_varada@quicinc.com>, <quic_rohiagar@quicinc.com>,
+        <danila@jiaxyga.com>, <otto.pflueger@abscue.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+Subject: [PATCH v1 1/7] dt-bindings: power: rpmpd: Add IPQ9574 power domains
+Date: Thu, 20 Jun 2024 13:44:21 +0530
+Message-ID: <20240620081427.2860066-2-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240620081427.2860066-1-quic_varada@quicinc.com>
+References: <20240620081427.2860066-1-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/7] bpf: do not create bpf_non_sleepable_error_inject
- list when unnecessary
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
- David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
- linux-mm <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-References: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz>
- <20240620-fault-injection-statickeys-v2-5-e23947d3d84b@suse.cz>
- <CAADnVQLKRAa5_-JUEZwwbrbySDekVdSgEp0UqgqbVfqsgfYjQg@mail.gmail.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAADnVQLKRAa5_-JUEZwwbrbySDekVdSgEp0UqgqbVfqsgfYjQg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,linux.com,google.com,kernel.org,iogearbox.net,linux.ibm.com,intel.com,davemloft.net,goodmis.org,arm.com,linux.dev,vger.kernel.org,kvack.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 7473421A82
-X-Spam-Flag: NO
-X-Spam-Score: -3.00
-X-Spam-Level: 
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gkclqC8Xje2CFsLn_lhVrqiF2lVd5goE
+X-Proofpoint-GUID: gkclqC8Xje2CFsLn_lhVrqiF2lVd5goE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_04,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ mlxlogscore=973 impostorscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406200058
 
-On 6/20/24 3:18 AM, Alexei Starovoitov wrote:
-> On Wed, Jun 19, 2024 at 3:49 PM Vlastimil Babka <vbabka@suse.cz> wrote:
->>
->> When CONFIG_FUNCTION_ERROR_INJECTION is disabled,
->> within_error_injection_list() will return false for any address and the
->> result of check_non_sleepable_error_inject() denylist is thus redundant.
->> The bpf_non_sleepable_error_inject list thus does not need to be
->> constructed at all, so #ifdef it out.
->>
->> This will allow to inline functions on the list when
->> CONFIG_FUNCTION_ERROR_INJECTION is disabled as there will be no BTF_ID()
->> reference for them.
->>
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->> ---
->>  kernel/bpf/verifier.c | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
->> index 77da1f438bec..5cd93de37d68 100644
->> --- a/kernel/bpf/verifier.c
->> +++ b/kernel/bpf/verifier.c
->> @@ -21044,6 +21044,8 @@ static int check_attach_modify_return(unsigned long addr, const char *func_name)
->>         return -EINVAL;
->>  }
->>
->> +#ifdef CONFIG_FUNCTION_ERROR_INJECTION
->> +
->>  /* list of non-sleepable functions that are otherwise on
->>   * ALLOW_ERROR_INJECTION list
->>   */
->> @@ -21061,6 +21063,19 @@ static int check_non_sleepable_error_inject(u32 btf_id)
->>         return btf_id_set_contains(&btf_non_sleepable_error_inject, btf_id);
->>  }
->>
->> +#else /* CONFIG_FUNCTION_ERROR_INJECTION */
->> +
->> +/*
->> + * Pretend the denylist is empty, within_error_injection_list() will return
->> + * false anyway.
->> + */
->> +static int check_non_sleepable_error_inject(u32 btf_id)
->> +{
->> +       return 0;
->> +}
->> +
->> +#endif
-> 
-> The comment reads like this is an optimization, but it's a mandatory
-> ifdef since should_failslab() might not be found by resolve_btfid
-> during the build.
-> Please make it clear in the comment.
+Add the compatibles and indexes for the rpmpd in IPQ9574.
 
-The comment just tried to explain why the return value is 0 and not 1 (which
-would be also somewhat logical) but ok, will make it more clear.
+Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+---
+ Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 1 +
+ include/dt-bindings/power/qcom-rpmpd.h                  | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+index 929b7ef9c1bc..e20ba25fa094 100644
+--- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
++++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+@@ -17,6 +17,7 @@ properties:
+   compatible:
+     oneOf:
+       - enum:
++          - qcom,ipq9574-rpmpd
+           - qcom,mdm9607-rpmpd
+           - qcom,msm8226-rpmpd
+           - qcom,msm8909-rpmpd
+diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+index 608087fb9a3d..0538370bfbb4 100644
+--- a/include/dt-bindings/power/qcom-rpmpd.h
++++ b/include/dt-bindings/power/qcom-rpmpd.h
+@@ -402,6 +402,9 @@
+ #define QCM2290_VDD_LPI_CX	6
+ #define QCM2290_VDD_LPI_MX	7
+ 
++/* IPQ9574 Power Domains */
++#define IPQ9574_VDDAPC		0
++
+ /* RPM SMD Power Domain performance levels */
+ #define RPM_SMD_LEVEL_RETENTION       16
+ #define RPM_SMD_LEVEL_RETENTION_PLUS  32
+-- 
+2.34.1
+
