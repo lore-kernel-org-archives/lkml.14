@@ -1,287 +1,265 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4785A1B151D
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78621B151A;
+	Thu, 20 Jun 2024 16:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900761; cv=none; b=BKaBUM3KFp9werDTQgKC+3BfFrEX51q37TkGhVjHRspbk98KFzpvl+2PWKqSVvborB2YJJZNkvMEqNAuQ8uNZmQVs0/IJa2AXhA9dqi0/qwbcmaZ9DIc31SnS0mGnnX+n+2yb19fz8120cRKsvz3R/1jj6bFLkVHoE2fFzu2wp4=
+	t=1718900762; cv=none; b=tcXrf8WoRkiCtxpw3LSdUW5Zfi3TIN9jp4g1KyH1fyDY02ApY2uvffvOv0kMJwcsa1qz6eRGIuSjp3Jh2842uM8hS47RPXXH4A7nD/8DS+jOZyPgovtj9x9ZujzeZ3YEYZXHz3A/jPCZwIGwT00/nmXzWvP/UFyTybZHP1i6bPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900761; c=relaxed/simple;
-	bh=IEbK275dZGdX1r5WehYrzNJpO82iroodmypGqB6CcPg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fW4efKcZWHyJKW4erOfrOfwXFZ08kTrMYyP7qjBbuRGltXDwlU8+LONgynpWYDh5CGADNSta6LhPDiByMn4oCysvKyWPesAU2Hn623xJm88rJ6uIf2+JoKOclCO8sakmdmquDL3JaGGredXuUmoYDDXxnRte9xrWTL67CfFg9u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=KPDKIqlz; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1718900762; c=relaxed/simple;
+	bh=MviNpR3aK5Gz1QquXDWunj9d8vTGrQ+axuC9Ulxt1JA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TYH6fXkVu5/9Pm3TgCInBZzUA0pkSi5dlGviSybmlYPUry4ejCGUKBbSG/JAK89RwiMKS0wapNW+boO1z19GzLF7/okALHbrqJ4sTetHNME8qHX0E41HbylXl5etiitgkQKgC4oRdstKb7nxIIrBMVHEWLcaJqemoO/X+gPkxG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SNIsZI6f; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="KPDKIqlz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FF501C0005;
-	Thu, 20 Jun 2024 16:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1718900757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sMAaUukcd0doO0dRRodMLTypr1iYWufXt8C9e7HTtwg=;
-	b=KPDKIqlzYu0VBtYoga+w6FHQyMQKEJyYfelR/j1Tb+6ObzKdKGSqbhtIWEICOmFe7pSTPT
-	Qnpy/SWdynNPjIQTFhKl4wWoDmXxiE5aMnDSeLr0nNoJdLOVHpH7DMVBzs34LwjwAsl8G9
-	sstAH1nbnfaDsVyo6MhU8cxjOIyIB5M5wMVABFOIDEYy2eQQUbvYcNLmq1540Fpzu46jkq
-	qizPlI7c8MwKjT3GivBlw2lM9P3/UHOujIToYcE2hFydEA73Y+W2U0jSAtGyOtIvkyVJaW
-	/7h+72rbrBjVzNRkdxWI51wvM0WcT+qVUN/lUm2vDHvzVwamN1b/oyi6/OUT+g==
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Date: Thu, 20 Jun 2024 18:25:48 +0200
-Subject: [PATCH] mtd: nand: Add support for M5441x NFC
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNIsZI6f"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-364c9ec17d1so504005f8f.0;
+        Thu, 20 Jun 2024 09:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718900759; x=1719505559; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YoTnvQmuBao+3YXJl2nlRcQGv0kKohL+uyfhgWDzW9Y=;
+        b=SNIsZI6f5SQcacHV+tP7llN21moMkcaRrsM9lruG2W7wfcPXf+8fbRs/wiUNpo3etu
+         mQa32E6Iolpg3+d+Av+VoyDwqvcHIz/4phfnFClahZM1S3GZeMDJf91l/1mBqFQ7bqqP
+         GomyYIY5gsyISP0IDh46p14JMJjiE4T6llURa8ZEfoxLN/B8d3tXeAQjfOzhwoBuCx1h
+         nBz64KC9wJyaYSOhZsQyYSTvPZOxXaSLDyY0Ue07XhDWVaelgJN6KxErUO4LSDQa9A5z
+         pXynDkM99iIG0gtLTjsMUY0HGltsrEV0qM61YuIBrH5Tpq0cz9Ed+W9sHWsv0NLMy3O9
+         tnww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718900759; x=1719505559;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YoTnvQmuBao+3YXJl2nlRcQGv0kKohL+uyfhgWDzW9Y=;
+        b=Y0IVyCpHiqz+IQZkwhsmFYTDMCnpiU3TcLX/GLaTK68MapwWpNboIJFIIRUs/hBsG3
+         tzp3i1cBulsQTimvokGUwix/61N98KdtX+Pvt2TSqjS8B1Ko05LJcVrxbXp6X4SYToVf
+         k/x67Zkjzoj6TLS1GNWhTD/OQ/1d6YsNBqWKRXVRv7OCNnsQlb2woKLYxkYFsQf9+xBo
+         gFMtjzEaGroHyz5wR20oKcAkoNAdbjeXEYoKiKrdGKzOkgvMuySf8IgMF6pTiDX3DguU
+         xLnz7CnGUdu6nt/j4ocAvcrczuFe37RAiTxq24mbkTLOoLwc/Dq0EBtUaPkcbXIVFlT8
+         7dkw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8M7te+22JGzRQAxsqaNp1Q9+uXTHdjwNZOal19gJCO2zzmWcS/IPYwyOgFV+FQlgZfm7JRI2sbRffZYgHIZzd/1dPjMqV1sQ1q9Bah3HZgQAbG6JpT+VC9434OQl2SoWn4mQ8CcyjaJ4bJ3Hbt0lvH77wFR4A3sQN8WpZL5M1m5Xb3Ek=
+X-Gm-Message-State: AOJu0Yw6crIsDGy8NPcKVr0tsSHSx6IjBfpvkZicHrsQWhk4hKBxJs4E
+	MIcTmheIB/oxlbcA6ROMk+PtDi0jUmbFvTVMNyFRuxwBF/gIYURQ
+X-Google-Smtp-Source: AGHT+IEk6hoF1ip0n2JwxrBn3fu3YwWvxNCUfLMQlradgJUyxNbflhltr9n5cc5U1mQcPwUfFQjQkw==
+X-Received: by 2002:a5d:6783:0:b0:35f:22ac:410d with SMTP id ffacd0b85a97d-3631989a785mr4442208f8f.56.1718900758806;
+        Thu, 20 Jun 2024 09:25:58 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-362c7c2dffdsm6277480f8f.35.2024.06.20.09.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:25:58 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Hauke Mehrtens <hauke@hauke-m.de>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 1/4] mips: bmips: rework and cache CBR addr handling
+Date: Thu, 20 Jun 2024 17:26:42 +0200
+Message-ID: <20240620152649.994-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240620152649.994-1-ansuelsmth@gmail.com>
+References: <20240620152649.994-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240620-upstream-nfc-mcf5441x-v1-1-69b64807d7a6@yoseli.org>
-X-B4-Tracking: v=1; b=H4sIAAtYdGYC/x3MQQ5AMBBA0avIrE1So23EVcSCmjILJS0iEXfXW
- L7F/w8kjsIJ2uKByJck2UJGVRbgliHMjDJlAynSypLCc09H5GHF4B2uzhutqxsbYqpHbZgaC7n
- dI3u5/2/Xv+8HeMI+4GcAAAA=
-To: Geert Uytterhoeven <geert@linux-m68k.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Stefan Agner <stefan@agner.ch>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
- linux-mtd@lists.infradead.org, 
- Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718900756; l=7211;
- i=jeanmichel.hautbois@yoseli.org; s=20240608; h=from:subject:message-id;
- bh=IEbK275dZGdX1r5WehYrzNJpO82iroodmypGqB6CcPg=;
- b=67/+Hf4fKek2/mcNRdpGlE6XDLZN2U/PfRRY3vL1azQDxGyJG8iz0wGEuo+o6a8IQI28REv+F
- IjWOCVQ4xZMCT5s0+GznJjKauh5vRDpAtZiYWh7gg3dag+/5MQR0wQh
-X-Developer-Key: i=jeanmichel.hautbois@yoseli.org; a=ed25519;
- pk=oMZuYhJzT0j5MI73RlNUVYaA8VdWpFR/Sao0JKz1D2I=
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Transfer-Encoding: 8bit
 
-The vf610_nfc driver is also the one which should be used for the
-coldfire series. Sadly, these device don't support device-tree and so we
-need to do a few modifications:
-- Adapt the probe to use pdata if available
-- Add a new variant as there is a small part to adapt in
-  vf610_nfc_select_target()
-- Add the corresponding missing register definitions
+Rework the handling of the CBR address and cache it. This address
+doesn't change and can be cached instead of reading the register every
+time.
 
-Tested successfully on a 54418 custom board with a raw NAND:
-[    2.640000] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
-[    2.650000] nand: Micron MT29F4G08ABADAWP
-[    2.650000] nand: 512 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
+This is in preparation of permitting to tweak the CBR address in DT with
+broken SoC or bootloader.
 
-Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+bmips_cbr_addr is defined in setup.c for each arch to keep compatibility
+with legacy brcm47xx/brcm63xx and generic BMIPS target.
+
+Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- arch/m68k/include/asm/m5441xsim.h |  7 ++++
- drivers/mtd/nand/raw/Kconfig      |  2 +-
- drivers/mtd/nand/raw/vf610_nfc.c  | 79 ++++++++++++++++++++++++++++++++++-----
- 3 files changed, 77 insertions(+), 11 deletions(-)
+ arch/mips/bcm47xx/prom.c      | 3 +++
+ arch/mips/bcm47xx/setup.c     | 4 ++++
+ arch/mips/bcm63xx/prom.c      | 3 +++
+ arch/mips/bcm63xx/setup.c     | 4 ++++
+ arch/mips/bmips/dma.c         | 2 +-
+ arch/mips/bmips/setup.c       | 7 ++++++-
+ arch/mips/include/asm/bmips.h | 1 +
+ arch/mips/kernel/smp-bmips.c  | 4 ++--
+ 8 files changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/arch/m68k/include/asm/m5441xsim.h b/arch/m68k/include/asm/m5441xsim.h
-index f48cf63bd782..d4ee1eab7c4a 100644
---- a/arch/m68k/include/asm/m5441xsim.h
-+++ b/arch/m68k/include/asm/m5441xsim.h
-@@ -99,6 +99,7 @@
- #define MCFINT2_PIT1		14
- #define MCFINT2_PIT2		15
- #define MCFINT2_PIT3		16
-+#define MCFINT2_NFC		25
- #define MCFINT2_RTC		26
+diff --git a/arch/mips/bcm47xx/prom.c b/arch/mips/bcm47xx/prom.c
+index 58fb7c2dc3b8..66e3ee2b04e6 100644
+--- a/arch/mips/bcm47xx/prom.c
++++ b/arch/mips/bcm47xx/prom.c
+@@ -32,6 +32,7 @@
+ #include <linux/ssb/ssb_driver_chipcommon.h>
+ #include <linux/ssb/ssb_regs.h>
+ #include <linux/smp.h>
++#include <asm/bmips.h>
+ #include <asm/bootinfo.h>
+ #include <bcm47xx.h>
+ #include <bcm47xx_board.h>
+@@ -110,6 +111,8 @@ static __init void prom_init_mem(void)
  
- /*
-@@ -333,4 +334,10 @@
- #define MCF_IRQ_BOFF1		(MCFINT1_VECBASE + MCFINT1_FLEXCAN1_BOFF)
- #define MCF_IRQ_ERR1		(MCFINT1_VECBASE + MCFINT1_FLEXCAN1_ERR)
- 
-+/*
-+ * Flash module
-+ */
-+#define MCF_NFC_BASE		0xfc0fc000
-+#define MCF_NFC_SIZE		(0xfc0fff3b - 0xfc0fc000)
-+#define MCF_NFC_ISR		(MCFINT2_VECBASE + MCFINT2_NFC)
- #endif /* m5441xsim_h */
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index cbf8ae85e1ae..2ea3ee32a540 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -252,7 +252,7 @@ config MTD_NAND_FSL_UPM
- 
- config MTD_NAND_VF610_NFC
- 	tristate "Freescale VF610/MPC5125 NAND controller"
--	depends on (SOC_VF610 || COMPILE_TEST)
-+	depends on (SOC_VF610 || COMPILE_TEST || M5441x)
- 	depends on HAS_IOMEM
- 	help
- 	  Enables support for NAND Flash Controller on some Freescale
-diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
-index f31d23219f91..06f1ed5433c8 100644
---- a/drivers/mtd/nand/raw/vf610_nfc.c
-+++ b/drivers/mtd/nand/raw/vf610_nfc.c
-@@ -146,6 +146,7 @@
- 
- enum vf610_nfc_variant {
- 	NFC_VFC610 = 1,
-+	NFC_M54418 = 2,
- };
- 
- struct vf610_nfc {
-@@ -486,10 +487,24 @@ static void vf610_nfc_select_target(struct nand_chip *chip, unsigned int cs)
- 	if (nfc->variant != NFC_VFC610)
- 		return;
- 
--	tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
--	tmp &= ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
--	tmp |= 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
--	tmp |= BIT(cs) << ROW_ADDR_CHIP_SEL_SHIFT;
-+	if (nfc->variant == NFC_M54418) {
-+		/*
-+		 * According to the Reference Manual:
-+		 * bit 24: Reserved, must be set (ROW_ADDR_CHIP_SEL_SHIFT)
-+		 * bit 25-27: Reserved, must be cleared
-+		 * bit 28: Reserved, must be set (ROW_ADDR_CHIP_SEL_RB_SHIFT)
-+		 * bit 29-31: Reserved, must be cleared
-+		 */
-+		tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
-+		tmp &= ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
-+		tmp |= 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
-+		tmp |= 1 << ROW_ADDR_CHIP_SEL_SHIFT;
-+	} else {
-+		tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
-+		tmp &= ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
-+		tmp |= 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
-+		tmp |= BIT(cs) << ROW_ADDR_CHIP_SEL_SHIFT;
-+	}
- 
- 	vf610_nfc_write(nfc, NFC_ROW_ADDR, tmp);
- }
-@@ -700,11 +715,26 @@ static int vf610_nfc_write_oob(struct nand_chip *chip, int page)
- 	return nand_prog_page_end_op(chip);
- }
- 
-+#ifdef CONFIG_OF
- static const struct of_device_id vf610_nfc_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-nfc", .data = (void *)NFC_VFC610 },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, vf610_nfc_dt_ids);
-+#endif
-+
-+static const struct platform_device_id vf610_nfc_id_table[] = {
-+	{
-+		.name = "mcf5441x-nfc",
-+		.driver_data = (kernel_ulong_t)NFC_M54418,
-+	}, {
-+		.name = "vf610-nfc",
-+		.driver_data = (kernel_ulong_t)NFC_VFC610,
-+	}, {
-+		/* sentinel */
-+	},
-+};
-+MODULE_DEVICE_TABLE(platform, vf610_nfc_id_table);
- 
- static void vf610_nfc_preinit_controller(struct vf610_nfc *nfc)
+ void __init prom_init(void)
  {
-@@ -810,6 +840,7 @@ static int vf610_nfc_probe(struct platform_device *pdev)
- 	struct vf610_nfc *nfc;
- 	struct mtd_info *mtd;
- 	struct nand_chip *chip;
-+	struct nand_chip *pdata;
- 	struct device_node *child;
- 	int err;
- 	int irq;
-@@ -820,30 +851,53 @@ static int vf610_nfc_probe(struct platform_device *pdev)
++	/* Cache CBR addr before CPU/DMA setup */
++	bmips_cbr_addr = BMIPS_GET_CBR();
+ 	prom_init_mem();
+ 	setup_8250_early_printk_port(CKSEG1ADDR(BCM47XX_SERIAL_ADDR), 0, 0);
+ }
+diff --git a/arch/mips/bcm47xx/setup.c b/arch/mips/bcm47xx/setup.c
+index 94bf839576c1..2f1ee0560aba 100644
+--- a/arch/mips/bcm47xx/setup.c
++++ b/arch/mips/bcm47xx/setup.c
+@@ -37,6 +37,7 @@
+ #include <linux/ssb/ssb.h>
+ #include <linux/ssb/ssb_embedded.h>
+ #include <linux/bcma/bcma_soc.h>
++#include <asm/bmips.h>
+ #include <asm/bootinfo.h>
+ #include <asm/idle.h>
+ #include <asm/prom.h>
+@@ -45,6 +46,9 @@
+ #include <bcm47xx.h>
+ #include <bcm47xx_board.h>
  
- 	nfc->dev = &pdev->dev;
- 	chip = &nfc->chip;
-+	pdata = dev_get_platdata(&pdev->dev);
-+	if (pdata)
-+		*chip = *pdata;
++/* CBR addr doesn't change and we can cache it */
++void __iomem *bmips_cbr_addr __read_mostly;
 +
- 	mtd = nand_to_mtd(chip);
+ union bcm47xx_bus bcm47xx_bus;
+ EXPORT_SYMBOL(bcm47xx_bus);
  
- 	mtd->owner = THIS_MODULE;
- 	mtd->dev.parent = nfc->dev;
--	mtd->name = DRV_NAME;
+diff --git a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
+index c3a2ea62c5c3..f21dd168171a 100644
+--- a/arch/mips/bcm63xx/prom.c
++++ b/arch/mips/bcm63xx/prom.c
+@@ -22,6 +22,9 @@ void __init prom_init(void)
+ {
+ 	u32 reg, mask;
+ 
++	/* Cache CBR addr before CPU/DMA setup */
++	bmips_cbr_addr = BMIPS_GET_CBR();
 +
-+	/*
-+	 * We keep the MTD name unchanged to avoid breaking platforms
-+	 * where the MTD cmdline parser is used and the bootloader
-+	 * has not been updated to use the new naming scheme.
-+	 */
-+	if (!nfc->dev->of_node)
-+		mtd->name = "NAND";
-+	else
-+		mtd->name = DRV_NAME;
+ 	bcm63xx_cpu_init();
  
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
- 		return irq;
+ 	/* stop any running watchdog */
+diff --git a/arch/mips/bcm63xx/setup.c b/arch/mips/bcm63xx/setup.c
+index c13ddb544a23..16ea8945ae3a 100644
+--- a/arch/mips/bcm63xx/setup.c
++++ b/arch/mips/bcm63xx/setup.c
+@@ -12,6 +12,7 @@
+ #include <linux/memblock.h>
+ #include <linux/ioport.h>
+ #include <linux/pm.h>
++#include <asm/bmips.h>
+ #include <asm/bootinfo.h>
+ #include <asm/time.h>
+ #include <asm/reboot.h>
+@@ -22,6 +23,9 @@
+ #include <bcm63xx_io.h>
+ #include <bcm63xx_gpio.h>
  
- 	nfc->regs = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(nfc->regs))
-+	if (IS_ERR(nfc->regs)) {
-+		dev_err(nfc->dev, "Unable to map registers!\n");
- 		return PTR_ERR(nfc->regs);
-+	}
++/* CBR addr doesn't change and we can cache it */
++void __iomem *bmips_cbr_addr __read_mostly;
++
+ void bcm63xx_machine_halt(void)
+ {
+ 	pr_info("System halted\n");
+diff --git a/arch/mips/bmips/dma.c b/arch/mips/bmips/dma.c
+index 3779e7855bd7..2bc9c0d4402f 100644
+--- a/arch/mips/bmips/dma.c
++++ b/arch/mips/bmips/dma.c
+@@ -9,7 +9,7 @@ bool bmips_rac_flush_disable;
  
-+#ifdef CONFIG_OF
- 	nfc->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(nfc->clk)) {
- 		dev_err(nfc->dev, "Unable to get and enable clock!\n");
- 		return PTR_ERR(nfc->clk);
- 	}
+ void arch_sync_dma_for_cpu_all(void)
+ {
+-	void __iomem *cbr = BMIPS_GET_CBR();
++	void __iomem *cbr = bmips_cbr_addr;
+ 	u32 cfg;
  
--	nfc->variant = (enum vf610_nfc_variant)device_get_match_data(&pdev->dev);
--	if (!nfc->variant)
--		return -ENODEV;
-+	const void *data = device_get_match_data(&pdev->dev);
+ 	if (boot_cpu_type() != CPU_BMIPS3300 &&
+diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+index 66a8ba19c287..6dd166c3d643 100644
+--- a/arch/mips/bmips/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -34,6 +34,9 @@
+ #define REG_BCM6328_OTP		((void __iomem *)CKSEG1ADDR(0x1000062c))
+ #define BCM6328_TP1_DISABLED	BIT(9)
  
-+	nfc->variant = (enum vf610_nfc_variant)data;
-+	if (!nfc->variant) {
-+		dev_err(nfc->dev, "No variant data found!\n");
-+		return -ENODEV;
-+	}
-+#else
-+	nfc->variant = (enum vf610_nfc_variant)platform_get_device_id(pdev)->driver_data;
-+#endif
-+#ifdef CONFIG_OF
- 	for_each_available_child_of_node(nfc->dev->of_node, child) {
- 		if (of_device_is_compatible(child, "fsl,vf610-nfc-nandcs")) {
++/* CBR addr doesn't change and we can cache it */
++void __iomem *bmips_cbr_addr __read_mostly;
++
+ extern bool bmips_rac_flush_disable;
  
-@@ -862,6 +916,10 @@ static int vf610_nfc_probe(struct platform_device *pdev)
- 		dev_err(nfc->dev, "NAND chip sub-node missing!\n");
- 		return -ENODEV;
- 	}
-+#else
-+	nfc->clk = NULL;
-+	mtd->dev.parent = &pdev->dev;
-+#endif
+ static const unsigned long kbase = VMLINUX_LOAD_ADDRESS & 0xfff00000;
+@@ -111,7 +114,7 @@ static void bcm6358_quirks(void)
+ 	 * because the bootloader is not initializing it properly.
+ 	 */
+ 	bmips_rac_flush_disable = !!(read_c0_brcm_cmt_local() & (1 << 31)) ||
+-				  !!BMIPS_GET_CBR();
++				  !!bmips_cbr_addr;
+ }
  
- 	chip->options |= NAND_NO_SUBPAGE_WRITE;
+ static void bcm6368_quirks(void)
+@@ -144,6 +147,8 @@ static void __init bmips_init_cfe(void)
  
-@@ -937,11 +995,12 @@ static SIMPLE_DEV_PM_OPS(vf610_nfc_pm_ops, vf610_nfc_suspend, vf610_nfc_resume);
- static struct platform_driver vf610_nfc_driver = {
- 	.driver		= {
- 		.name	= DRV_NAME,
--		.of_match_table = vf610_nfc_dt_ids,
-+		.of_match_table = of_match_ptr(vf610_nfc_dt_ids),
- 		.pm	= &vf610_nfc_pm_ops,
- 	},
- 	.probe		= vf610_nfc_probe,
- 	.remove_new	= vf610_nfc_remove,
-+	.id_table = vf610_nfc_id_table,
- };
+ void __init prom_init(void)
+ {
++	/* Cache CBR addr before CPU/DMA setup */
++	bmips_cbr_addr = BMIPS_GET_CBR();
+ 	bmips_init_cfe();
+ 	bmips_cpu_setup();
+ 	register_bmips_smp_ops();
+diff --git a/arch/mips/include/asm/bmips.h b/arch/mips/include/asm/bmips.h
+index 581a6a3c66e4..3a1cdfddb987 100644
+--- a/arch/mips/include/asm/bmips.h
++++ b/arch/mips/include/asm/bmips.h
+@@ -81,6 +81,7 @@ extern char bmips_smp_movevec[];
+ extern char bmips_smp_int_vec[];
+ extern char bmips_smp_int_vec_end[];
  
- module_platform_driver(vf610_nfc_driver);
-
----
-base-commit: e5b3efbe1ab1793bb49ae07d56d0973267e65112
-change-id: 20240620-upstream-nfc-mcf5441x-82e23b45e286
-
-Best regards,
++extern void __iomem *bmips_cbr_addr;
+ extern int bmips_smp_enabled;
+ extern int bmips_cpu_offset;
+ extern cpumask_t bmips_booted_mask;
+diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+index b3dbf9ecb0d6..a4f84667a901 100644
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -518,7 +518,7 @@ static void bmips_set_reset_vec(int cpu, u32 val)
+ 		info.val = val;
+ 		bmips_set_reset_vec_remote(&info);
+ 	} else {
+-		void __iomem *cbr = BMIPS_GET_CBR();
++		void __iomem *cbr = bmips_cbr_addr;
+ 
+ 		if (cpu == 0)
+ 			__raw_writel(val, cbr + BMIPS_RELO_VECTOR_CONTROL_0);
+@@ -591,7 +591,7 @@ asmlinkage void __weak plat_wired_tlb_setup(void)
+ 
+ void bmips_cpu_setup(void)
+ {
+-	void __iomem __maybe_unused *cbr = BMIPS_GET_CBR();
++	void __iomem __maybe_unused *cbr = bmips_cbr_addr;
+ 	u32 __maybe_unused cfg;
+ 
+ 	switch (current_cpu_type()) {
 -- 
-Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+2.45.1
 
