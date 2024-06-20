@@ -1,88 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCABF14E2E4
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 21:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F70D7C6EB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 21:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718918712; cv=none; b=QHipIQ+yIZdtxK0BNLeDH9iyAYKFzW/uG3S505cQVze5R0HhXDSxxQZn4anUmFyra6MxQkqQksdQA0jqnaEhboOR8UWbbFv6JJnehHmFK5pxfC+cQMjZ0GRQT3i3EqxABb8jAXZ5j9Js78jafhpo4NyyKAIQJTYmlHEw2O4vsOA=
+	t=1718918747; cv=none; b=et9b4yxmcEax6XDpTNK8Ypkm1mJiJ3WW8DrXRhyawrl4f3hJlYg+MKKZzvHKiA7z/4zYuru3HyUBB17cOGW4LlcYHRW3ysHs9sT6GNjfve35mSYwtcabmX4ys/uQOnMTfYhsbtscDgWog2sjU5NP+4BV8+d2VBV3DWKX1hJOYcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718918712; c=relaxed/simple;
-	bh=f9JJShizHW6+26Nm609dCnIBkr7rhSHsiUz2a74VNgo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oYNyBb3BZi5rEblLABmzh4qvNUGJ2TJXNVYMrvHWI0SWpXmqLOUwESxp38C1sAIMeaGbgX1JC2tGFHs8sTZihyfhAeWPjoKX1/AguI4D9ffVcLlh+NRqLmQjT+YF49DKjGs8S3HjR2NmKkaked1LNNi4snQUc2KWFRedZNmh7s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HpwQRGPH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718918747; c=relaxed/simple;
+	bh=OxeQKVTXyQS/Xgpay+YF5X74W4mt9PgTnQB8cBVznqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2Kh7iI4JvT3FZN3dZd0CH3h3jqUFbvPf0L+VMAHooQH6xx8b+NlfbhAk4Z/J/Ol1oP+BmDuq4ziQgP/xFKxxpdfHhwIudAmw/2BdvtoZzvIvUrqM/E7ftKP5iI8oywVZV3VFHEUz3FlP7L/1SdZBaeouPvZvmNBgxk4cgiDFX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E+2i/0qw; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HpwQRGPH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718918709;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f9JJShizHW6+26Nm609dCnIBkr7rhSHsiUz2a74VNgo=;
-	b=HpwQRGPHg1pzbwbxTH55iyMKRd3bku8K2JJ/pBQ89ttjEmTh4KN2zmhuapIPnWYfG1b03N
-	tdEUMIZTCObGgSE5EQC4xxTyOcDdyzN9CoMvd/+3RPpxcCVZP4V5iP1grNiTmIp+ZFY/qS
-	SMGaHJKojlZ9LujLL+DGw6n7abV3Ai0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-279-xkx0CxNlOTW-a0rW8tpU0Q-1; Thu, 20 Jun 2024 17:25:08 -0400
-X-MC-Unique: xkx0CxNlOTW-a0rW8tpU0Q-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4217104c425so10994895e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:25:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E+2i/0qw"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52c7f7fdd24so1648651e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718918744; x=1719523544; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8YnLuthclIELme3uHvt8bLySS7kvqN+pPrqFOsjhanM=;
+        b=E+2i/0qwWlI8TuYwefjpwZw6q/PkT98Flkj1NyiIUmxnc0CXv5cFBjHjjznX5m6iar
+         6Pk0EYlWHHCw+rnWntVx2PRF/5l8zLror6XtwuwTJGSttPQeHE8gCX4xt38mD/2Yb16i
+         1E+m48QDZNzkYgMazI3tSphoBG1M+41ZigwOlAnpLkn1bwFQgPiHWlSaWLjgBLhM0dKu
+         XkQHygxjWLiOb44kIuWuM5ND7XcCL/JkuYxBI6DX4HDE5gnhyKnFjSuNfvo9e/XuJqpy
+         PP39wlFPlFDrpILtu9o5/Cy/4tySytmxiy+ktkDPbANlxjnkFrJBoODzvCcIAvNDheW/
+         UTsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718918707; x=1719523507;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f9JJShizHW6+26Nm609dCnIBkr7rhSHsiUz2a74VNgo=;
-        b=PXbJQfXj9A5WRh7F1Ta2MLCx74b9scwSDQE5yStjLnB1SNjrsnCBWYSqtvbQsgGqK+
-         Yp+aquZ9eP+rsq2VrU+8j2bWqKlflu7/OWctZ8bmUMJW+jf9eO7q5z2QOx7AQtgA9kx7
-         BsO/pNFe8JcCPMcoUjd+qozck4w9YuUdZT8hYZS89T/t4b1TVlriLMlZ+IFT+nTYYe6O
-         6sugZ9hOLlHjoic9ufYtROHH0HMiZ5Cl9CLMvswAUXPMpHMfs7TTgsGlpbqI3NmxlAH0
-         DxK1FmCY9XUyCVWoy9+OR2uThNNTA9OyGoo4ER3YY2F1FARoKssy4vOMSXBy0VVmifGk
-         6zbA==
-X-Forwarded-Encrypted: i=1; AJvYcCU85oNy5+3g8BIXEL9UzMyHNgdRJa0RU8CoHz1s0Miai7zMu7vKJR30JC6x0V27Rv5hbg+5LKNiVNtzPIWX8A0NGsKe2+m8Y0xCktED
-X-Gm-Message-State: AOJu0YwTg9H3/g+513klZgXsxbO+nGegVFg7sm7pvmRYdCwmEguZLZP3
-	nzGzQfZSzG2XPgRshBAS+nwwufLkfVbuqvyBr4152J7d2Sih3RxrtJlW5dchW6FlzWLOHkLFa6X
-	KdP+9WX1M+KUzoT7OSGr5jSX1kbMZPM2X8Ne/B1OvfL1P07TQce6rrz1c6EcW5v5dBaxKDVOuV1
-	n6HmhN+m+pED+Kuuk2syEnahglyPuT0Cw9ifl0
-X-Received: by 2002:a05:600c:258:b0:423:3f3:ba9d with SMTP id 5b1f17b1804b1-4247517db46mr50211485e9.17.1718918707011;
-        Thu, 20 Jun 2024 14:25:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFaBsjAt7HYoRlIFrc5qpLHiI59NGO2TVUO9sqzR9IetjhlwXnL5MlgKewv4Xldk70LZ3RNqpOnHHSjyM9x5BM=
-X-Received: by 2002:a05:600c:258:b0:423:3f3:ba9d with SMTP id
- 5b1f17b1804b1-4247517db46mr50211335e9.17.1718918706671; Thu, 20 Jun 2024
- 14:25:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718918744; x=1719523544;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8YnLuthclIELme3uHvt8bLySS7kvqN+pPrqFOsjhanM=;
+        b=sE8r+efik4IuDk+1btjepecJbCHBHMMxLQHNH3QDZBfwdOm/0S6UXdXPthJcbmoM7V
+         MDrDmnKNweIQKwKBaposDcrdeGif8VhCqLlNwvD0tQwsXiJkklrHoGgSpSKQCTPY+ft6
+         jw3V62kHSu07ROLKPLsnf0AuHJZAaIUFcQX3pL7AfsZ5+0ed3Q6prxM01oWg05hcHGf0
+         2MM3xzkJP7ORaJ1HXdg013mVol0M1z6LkHEWC6fWYhWPE0HvYp3wIMxFqzBbhSENCNWa
+         DDt73DOc8UMvz8LU+caDYdxAQBXRgIJHUMITnfByKoRcZ03TbevvCnmas1/mH2ykNpa+
+         ES8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUtYaGo8z1mZ6VCKLIn2zzdA+RPFHLlZHyshUZIH2PHnlHiNcFbEgiGD7EGsxM9Z4VSVqDNsj+2Ddk6CV88KouVOHItVLOGUBpKrGZ+
+X-Gm-Message-State: AOJu0YwUxPqPktKhBhKqs8imgqz1HtTXUCX4OQgOVxBw7Sv8lE/q9F2/
+	tSfQapOp8tV9qXzLdzrlXhjs39wVUbQJLy7G+GfwcxSswy1xTo/q9RRi7Zp5xLk=
+X-Google-Smtp-Source: AGHT+IGuplv7CeSz9VzLQNcyU85+4p3xt8hAwVg59l+yNKY9rhLoFCTX0VD2nUc76EsF6sF3XzoEkQ==
+X-Received: by 2002:ac2:505a:0:b0:52c:c156:15c5 with SMTP id 2adb3069b0e04-52ccaa65800mr4341702e87.41.1718918743618;
+        Thu, 20 Jun 2024 14:25:43 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd63bcecfsm2049e87.64.2024.06.20.14.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 14:25:43 -0700 (PDT)
+Date: Fri, 21 Jun 2024 00:25:41 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH 7/7] ARM: dts: qcom: msm8226: Convert APCS usages to mbox
+ interface
+Message-ID: <pfltjzuqsyetcjcseoaopkhvljfduwmldyx2rtcrhpwbkhkstc@dqw63ajpq37n>
+References: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
+ <20240619-msm8226-cpufreq-v1-7-85143f5291d1@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620054708.2230665-1-wenst@chromium.org> <20240620212142.461771-1-pbonzini@redhat.com>
-In-Reply-To: <20240620212142.461771-1-pbonzini@redhat.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Thu, 20 Jun 2024 23:24:54 +0200
-Message-ID: <CABgObfZTbszy8ruotPCA4O+u5C2wDXSfnaWo0mBNF3RbJwUNhA@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: select DRM_GEM_DMA_HELPER if DRM_FBDEV_EMULATION=y
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619-msm8226-cpufreq-v1-7-85143f5291d1@lucaweiss.eu>
 
-On Thu, Jun 20, 2024 at 11:21=E2=80=AFPM Paolo Bonzini <pbonzini@redhat.com=
-> wrote:
-> Queued, thanks.
+On Wed, Jun 19, 2024 at 11:02:51PM GMT, Luca Weiss wrote:
+> Since we now have the apcs set up as a mailbox provider, let's use the
+> interface for all drivers where possible.
+> 
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
+>  arch/arm/boot/dts/qcom/qcom-msm8226.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
 
-Oops, a script started sending "queued" messages for everything that
-had "y" in the subject. Sorry about that.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Paolo
 
+-- 
+With best wishes
+Dmitry
