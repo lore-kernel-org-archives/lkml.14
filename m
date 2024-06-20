@@ -1,230 +1,156 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F282C2D05D;
-	Thu, 20 Jun 2024 08:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EA52D05D;
+	Thu, 20 Jun 2024 08:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873711; cv=none; b=hHb3gnO8ky92uN3dIJLGYaytf0G/6wyC0EzIef88UoyUtbsYQ0c3uazFABvcQGP83k4yidlm7b1uDyV72WXXCfSsfplOa7Iv8suCcFkdwWs0wjk86BPz2sqVENRRj8e0KQTLn3qBZ7Wbby0m3LvknjKGwQTwAKnlLDYgNZcHYqU=
+	t=1718873797; cv=none; b=c68R4aogBO0KUuEbfd+xiXjdwi5Q67M8j84kkYHda3uXUnFjfA8A/Pyn/9prfxbEdeMP8BdFCmRG39K7NSTft/X6SVQ1iRegiQP6SW8AOG2rsXjbcD7tJqal6+6aU4R//yGS5crS3gcme1Q3nTa+OS2qWsRJkMIkWdfJw6a/TcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873711; c=relaxed/simple;
-	bh=Zte5JUNqWfYMzsUShAtYW3hHHTnmNIinQoLo7kExpMU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GtG8cK/C837sqeZR9DdBToo5bUxPY0cjCoEksrJQHobg3k0/KSElqTibHDw6deFgkFBsCpwSqVhOu85WJIySs4KeHfdrf/6933qPlYTQKfWFV/Kb56xUpVktEOxr+46FpNuNJuWD0JlS2kffBXODINI/Vq/KHRUQ7nqh/MSCiiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BZf2uBSZ; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1718873797; c=relaxed/simple;
+	bh=QlL4f7uAlCxHMvZhXgxAGFYV9KwkcOkyql3sPbp7knA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AZMZ/tijpN2FnkbPQH9aQpm5E9Yij2SPimcK4/lRk490KDwK09J1GijcjANfFNdcz619/KJOH7VGSDO3i8+g/uFA12Rf/9zuYTXoj2O/7oBsWO5yahFU1Q/Y+Jf765yaRdS6fWFkFbYe5aUg6dMxilmI4qnF4n2inAl7MPQMXbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=COc42nn2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BZf2uBSZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=f4H86
-	bcCOfTgkY5Xt2BTUJ/8giKcEdQStQuqAfO5dp8=; b=BZf2uBSZXrBHtEgFYvLkO
-	nVgboCNiFOQHEnRh0IDaI9uvdRMjLNQRHr8wVn0h5+NMF24f7KjCdhpH9rrf/AnX
-	1tqNoUnjJhEphMmmFo5UUhejiLXjck4cBmhG65OLhIU0cXTLnqFs4nRoKi7uaUUE
-	c0+AOWFqk9kJPXT6Hy66Rg=
-Received: from localhost (unknown [101.132.132.191])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wDn5JjV7XNmrecAJA--.9351S2;
-	Thu, 20 Jun 2024 16:52:38 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: longman@redhat.com,
-	mkoutny@suse.com
-Cc: lizefan.x@bytedance.com,
-	tj@kernel.org,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xavier <xavier_qy@163.com>
-Subject: [PATCH v4 v4 2/2] cpuset: use Union-Find to optimize the merging of cpumasks
-Date: Thu, 20 Jun 2024 16:52:33 +0800
-Message-Id: <20240620085233.205690-3-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240620085233.205690-1-xavier_qy@163.com>
-References: <20240603123101.590760-1-ghostxavier@sina.com>
- <20240620085233.205690-1-xavier_qy@163.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="COc42nn2"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K3BH8Z028488;
+	Thu, 20 Jun 2024 08:56:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XHzNJ459cj6SDZFGX4hm2DSP8m7fdo5A6UULRep+CCw=; b=COc42nn2qjraAmeE
+	g8XskAw+Xn2tXc0QzYLSZwiy5uK+fck7JWPM/IJby94Ve7HMuu3yPFmG/jL7d7Zg
+	9phn2ktMTniEUWV59NFtkWwbZeC+XTkCGU/MsVQUmAevpUBFJvlBMu5zHHjBHzCm
+	JU0Bl/7nv6tqovwlO1Z39cLZJDVgq6uEhWRJY3Ypkt1lGN4knjUs4EEzN+3Wva4N
+	h6ZHCxQNr/RCJhIoFy7xJ97tFwBBsT31JRzdugdlxnQCziyt044lJuUjOSp02n95
+	TlPdClGE/Ve7T6J8v1sNwqzhR9dqtEtWBXIzjTPSnxzO5T5oeKtnoOIk87WbsTYV
+	79nYwg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvba30sfs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 08:56:31 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45K8uUNJ013870
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 08:56:30 GMT
+Received: from [10.214.20.240] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
+ 2024 01:56:27 -0700
+Message-ID: <461966ee-11ce-45e7-8ea8-abbb71431458@quicinc.com>
+Date: Thu, 20 Jun 2024 14:25:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: qcom: icc-bwmon: Add tracepoints in
+ bwmon_intr_thread
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_rgottimu@quicinc.com>
+References: <20240619135140.3581119-1-quic_kshivnan@quicinc.com>
+ <a30fb728-d832-4309-8415-a28fed301e27@linaro.org>
+Content-Language: en-US
+From: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+In-Reply-To: <a30fb728-d832-4309-8415-a28fed301e27@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn5JjV7XNmrecAJA--.9351S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAFWfur4kKFyUZFWUJrW3Awb_yoWrurW5pF
-	s3Cay2qrWrJryUGwsYk3y8Z34SkaykJa1Utw13Gw1fArnrA3Z29a40qFs5KayUuFyDCr1U
-	uF9xKr47Wr1UKFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UadgZUUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiZRYEEGXAmg963wABsz
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 8esNfmx153UOE0FQsE12Lhk-F2t-GynN
+X-Proofpoint-ORIG-GUID: 8esNfmx153UOE0FQsE12Lhk-F2t-GynN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_06,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406200062
 
-The process of constructing scheduling domains
- involves multiple loops and repeated evaluations, leading to numerous
- redundant and ineffective assessments that impact code efficiency.
 
-Here, we use Union-Find to optimize the merging of cpumasks. By employing
-path compression and union by rank, we effectively reduce the number of
-lookups and merge comparisons.
 
-Signed-off-by: Xavier <xavier_qy@163.com>
----
- kernel/cgroup/cpuset.c | 95 +++++++++++++++---------------------------
- 1 file changed, 34 insertions(+), 61 deletions(-)
+On 6/20/2024 12:46 AM, Konrad Dybcio wrote:
+> 
+> 
+> On 6/19/24 15:51, Shivnandan Kumar wrote:
+>> Add tracepoint for tracing the measured traffic in kbps,
+>> up_kbps and down_kbps in bwmon. This information is valuable
+>> for understanding what bwmon hw measures at the system cache
+>> level and at the DDR level which is helpful in debugging
+>> bwmon behavior.
+>>
+>> Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+>> ---
+>>   MAINTAINERS                        |  1 +
+>>   drivers/soc/qcom/icc-bwmon.c       |  7 +++--
+>>   drivers/soc/qcom/trace_icc-bwmon.h | 49 ++++++++++++++++++++++++++++++
+>>   3 files changed, 55 insertions(+), 2 deletions(-)
+>>   create mode 100644 drivers/soc/qcom/trace_icc-bwmon.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 242fc612fbc5..1b410c0183bb 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -18573,6 +18573,7 @@ M:    Krzysztof Kozlowski 
+>> <krzysztof.kozlowski@linaro.org>
+>>   L:    linux-arm-msm@vger.kernel.org
+>>   S:    Maintained
+>>   F:    
+>> Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
+>> +F:    drivers/soc/qcom/trace_icc-bwmon.h
+>>   F:    drivers/soc/qcom/icc-bwmon.c
+>>
+>>   QUALCOMM IOMMU
+>> diff --git a/drivers/soc/qcom/icc-bwmon.c b/drivers/soc/qcom/icc-bwmon.c
+>> index fb323b3364db..9b5ac1e62673 100644
+>> --- a/drivers/soc/qcom/icc-bwmon.c
+>> +++ b/drivers/soc/qcom/icc-bwmon.c
+>> @@ -17,6 +17,8 @@
+>>   #include <linux/pm_opp.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/sizes.h>
+>> +#define CREATE_TRACE_POINTS
+>> +#include "trace_icc-bwmon.h"
+>>
+>>   /*
+>>    * The BWMON samples data throughput within 'sample_ms' time. With 
+>> three
+>> @@ -645,9 +647,9 @@ static irqreturn_t bwmon_intr_thread(int irq, void 
+>> *dev_id)
+>>       struct icc_bwmon *bwmon = dev_id;
+>>       unsigned int irq_enable = 0;
+>>       struct dev_pm_opp *opp, *target_opp;
+>> -    unsigned int bw_kbps, up_kbps, down_kbps;
+>> +    unsigned int bw_kbps, up_kbps, down_kbps, meas_kbps;
+>>
+>> -    bw_kbps = bwmon->target_kbps;
+>> +    meas_kbps = bw_kbps = bwmon->target_kbps;
+>>
+>>       target_opp = dev_pm_opp_find_bw_ceil(bwmon->dev, &bw_kbps, 0);
+> 
+> This breaks bwmon, as dev_pm_opp_find_bw_ceil is now fed a random
+> (uninitialized variable) value
+> 
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index fe76045aa5..7e527530f8 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -45,6 +45,7 @@
- #include <linux/cgroup.h>
- #include <linux/wait.h>
- #include <linux/workqueue.h>
-+#include <linux/union_find.h>
- 
- DEFINE_STATIC_KEY_FALSE(cpusets_pre_enable_key);
- DEFINE_STATIC_KEY_FALSE(cpusets_enabled_key);
-@@ -172,9 +173,6 @@ struct cpuset {
- 	 */
- 	int attach_in_progress;
- 
--	/* partition number for rebuild_sched_domains() */
--	int pn;
--
- 	/* for custom sched domain */
- 	int relax_domain_level;
- 
-@@ -1007,7 +1005,7 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	struct cpuset *cp;	/* top-down scan of cpusets */
- 	struct cpuset **csa;	/* array of all cpuset ptrs */
- 	int csn;		/* how many cpuset ptrs in csa so far */
--	int i, j, k;		/* indices for partition finding loops */
-+	int i, j;		/* indices for partition finding loops */
- 	cpumask_var_t *doms;	/* resulting partition; i.e. sched domains */
- 	struct sched_domain_attr *dattr;  /* attributes for custom domains */
- 	int ndoms = 0;		/* number of sched domains in result */
-@@ -1015,6 +1013,8 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	struct cgroup_subsys_state *pos_css;
- 	bool root_load_balance = is_sched_load_balance(&top_cpuset);
- 	bool cgrpv2 = cgroup_subsys_on_dfl(cpuset_cgrp_subsys);
-+	struct uf_node *nodes;
-+	int nslot_update;
- 
- 	doms = NULL;
- 	dattr = NULL;
-@@ -1102,40 +1102,31 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	if (root_load_balance && (csn == 1))
- 		goto single_root_domain;
- 
--	for (i = 0; i < csn; i++)
--		csa[i]->pn = i;
--	ndoms = csn;
-+	nodes = uf_nodes_alloc(csn);
-+	if (!nodes)
-+		goto done;
- 
--restart:
--	/* Find the best partition (set of sched domains) */
-+	/* Merge overlapping cpusets */
- 	for (i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		int apn = a->pn;
--
--		for (j = 0; j < csn; j++) {
--			struct cpuset *b = csa[j];
--			int bpn = b->pn;
--
--			if (apn != bpn && cpusets_overlap(a, b)) {
--				for (k = 0; k < csn; k++) {
--					struct cpuset *c = csa[k];
--
--					if (c->pn == bpn)
--						c->pn = apn;
--				}
--				ndoms--;	/* one less element */
--				goto restart;
--			}
-+		for (j = i + 1; j < csn; j++) {
-+			if (cpusets_overlap(csa[i], csa[j]))
-+				uf_union(&nodes[i], &nodes[j]);
- 		}
- 	}
- 
-+	/* Count the total number of domains */
-+	for (i = 0; i < csn; i++) {
-+		if ((nodes[i].parent == &nodes[i]) || !nodes[i].parent)
-+			ndoms++;
-+	}
-+
- 	/*
- 	 * Now we know how many domains to create.
- 	 * Convert <csn, csa> to <ndoms, doms> and populate cpu masks.
- 	 */
- 	doms = alloc_sched_domains(ndoms);
- 	if (!doms)
--		goto done;
-+		goto free;
- 
- 	/*
- 	 * The rest of the code, including the scheduler, can deal with
-@@ -1159,47 +1150,29 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	}
- 
- 	for (nslot = 0, i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		struct cpumask *dp;
--		int apn = a->pn;
--
--		if (apn < 0) {
--			/* Skip completed partitions */
--			continue;
--		}
--
--		dp = doms[nslot];
--
--		if (nslot == ndoms) {
--			static int warnings = 10;
--			if (warnings) {
--				pr_warn("rebuild_sched_domains confused: nslot %d, ndoms %d, csn %d, i %d, apn %d\n",
--					nslot, ndoms, csn, i, apn);
--				warnings--;
--			}
--			continue;
--		}
--
--		cpumask_clear(dp);
--		if (dattr)
--			*(dattr + nslot) = SD_ATTR_INIT;
-+		nslot_update = 0;
- 		for (j = i; j < csn; j++) {
--			struct cpuset *b = csa[j];
--
--			if (apn == b->pn) {
--				cpumask_or(dp, dp, b->effective_cpus);
-+			if (uf_find(&nodes[j]) == &nodes[i]) {
-+				struct cpumask *dp = doms[nslot];
-+
-+				if (i == j) {
-+					nslot_update = 1;
-+					cpumask_clear(dp);
-+					if (dattr)
-+						*(dattr + nslot) = SD_ATTR_INIT;
-+				}
-+				cpumask_or(dp, dp, csa[j]->effective_cpus);
- 				cpumask_and(dp, dp, housekeeping_cpumask(HK_TYPE_DOMAIN));
- 				if (dattr)
--					update_domain_attr_tree(dattr + nslot, b);
--
--				/* Done with this partition */
--				b->pn = -1;
-+					update_domain_attr_tree(dattr + nslot, csa[j]);
- 			}
- 		}
--		nslot++;
-+		if (nslot_update)
-+			nslot++;
- 	}
- 	BUG_ON(nslot != ndoms);
--
-+free:
-+	uf_nodes_free(nodes);
- done:
- 	kfree(csa);
- 
--- 
-2.45.2
+Thank you for reviewing the patch.
+I didn't get it, still the variable "bw_kbps" is being initialized along 
+with "meas_kbps". Which variable are you referring to as being fed to 
+dev_pm_opp_find_bw_ceil  with an uninitialized value?
 
+Thanks
+Shivnandan
+
+> Konrad
