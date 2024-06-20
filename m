@@ -1,147 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4741B4C47;
-	Thu, 20 Jun 2024 17:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F721B29C7
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904751; cv=none; b=QFdmjSZknJRCSO9EElh/MyHrJG/s8v80IJTtE65SUpF43wFgEkwC7LTWO14EQphCIaqny5SZGGYe2yEkdC6YoVRTatpSYBcnovwBu2ImFLulvh5SBPU8stSSQVWYtPaFiuu8vGoUfZi6c5VK6hAceKw9IYBLgeiGcSK9rMx+pxY=
+	t=1718904752; cv=none; b=K6ib/OJ3GlzgcuwDQsndnK/mMhTDH2Nf59AwZ2qY7jtrWMXB69BNT9DfdsQPb5ipvcV8hcgomWbaSCEOeI1O4a7zPF0m63BwzmT9zE1lPQvr9sWS3U+sEAsUN0cJNuNHbV8gwp7DGYwBgIu4i+kO2Z60j3v7OfupL+iiE42BwrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904751; c=relaxed/simple;
-	bh=oFO9G2nRTwhWJIbyUtKnqB3LSa7KnG7okU5Gl/bU6lk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HFrmxAfdg0AoCdS768suNqyjpL18jE3QtgNcMNO2x+z8VlVfU7n7Eb7IWRYYqn9CbHnYyZyE6RyB4tkVGqYCnVuhk4PlxRbzNY6EF4IQphXLcbVr7VTt9CYWGtEpZYOp1gIudLSBZghfl6qAurF5SzjzaKe9VAMyv+82D/rguGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCWdw6au; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718904752; c=relaxed/simple;
+	bh=uqr+c6TSD+IA6jAqPedpS4BUZPZmSd7r1lKskAQEvlI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pxilcJxGgG7Xp+ekxe+NuOEoH6obQ/qLnk2XW5WmE5jLcDL1EhFdmfONnT7ldnBofO9MfvnHjRnoAgZlQ/SDkvYGs5O5NFu79S5SnzN1DmdpFfEKlHPnqIv56/z5+iNoAUu45hKSed5wFoA+gVQbEHz9bIzKaSjiWw8G4a9TVyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bWbuJCtj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCWdw6au"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718904750; x=1750440750;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oFO9G2nRTwhWJIbyUtKnqB3LSa7KnG7okU5Gl/bU6lk=;
-  b=TCWdw6auSASFpv9dDQhhDPwllLUYzk64BJrniHpCjiqym5ET+Tl9GqK9
-   y4HnQLQpRUBaMQDGkSnYIOCD5081rrlSTTgcI/2WJ9fQJ57hENqRd/P7g
-   3kJcsJ19fNimW97ofkDsgnkgcCXH142eLeu7B9tEyFH3aWH8kgo2GEfg+
-   miiUmYpQGkMSaaS2wRTUzidb3Ajp2egyQdCe6jZZT3uSDd/QxiBUkYcxG
-   e+8nNz5pGrY/0k7QMFCv6QDqi/1+ReZunQtiLGTJ7Zf/PqTsuDgd2FWa8
-   eFjkuMdYLVLaBEl3el89hCiVMVl94v98qsdem1VAO7X970s601fTrd3Bq
-   Q==;
-X-CSE-ConnectionGUID: kMB6VdBgTvWuUIF+dZyRaw==
-X-CSE-MsgGUID: mPSaakP5T0yoMtaxZUyT8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="19684105"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="19684105"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 10:32:29 -0700
-X-CSE-ConnectionGUID: 718kP6xuREe79HcLq81ntA==
-X-CSE-MsgGUID: cdf+326NRLmYXOBmkXIRiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="47268510"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 20 Jun 2024 10:32:15 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sKLds-0007nc-1O;
-	Thu, 20 Jun 2024 17:32:12 +0000
-Date: Fri, 21 Jun 2024 01:31:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Anand Moon <linux.amoon@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] PCI: rockchip: Simplify clock handling by using
- clk_bulk*() function
-Message-ID: <202406210131.rxenHeBG-lkp@intel.com>
-References: <20240618164133.223194-2-linux.amoon@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bWbuJCtj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718904749;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Za3sI46DNoDRS2zLMaVKKAo5577Q7Mj2mbpphqJpg8=;
+	b=bWbuJCtjBSe16YrY1PhW64apgpHONEWD6qlM0yKaAxGssSM22k8CjYlRUxrhT6Riup7ftF
+	x/ygLHZuNkOQlkJz6CcpbrAs/0DYLVmDudsWgaCx+AAaykCstuSek8S9QiBobU/b2IepxE
+	WF6HzncpdcGHUqrSB1iAx2jsnxMAOsk=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-lamvqmTDOOq2ya95QZA4mQ-1; Thu,
+ 20 Jun 2024 13:32:23 -0400
+X-MC-Unique: lamvqmTDOOq2ya95QZA4mQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 270E61956068;
+	Thu, 20 Jun 2024 17:32:16 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.39.195.156])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7215F3000602;
+	Thu, 20 Jun 2024 17:32:08 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Steve French <sfrench@samba.org>
+Subject: [PATCH 03/17] netfs: Fix early issue of write op on partial write to folio tail
+Date: Thu, 20 Jun 2024 18:31:21 +0100
+Message-ID: <20240620173137.610345-4-dhowells@redhat.com>
+In-Reply-To: <20240620173137.610345-1-dhowells@redhat.com>
+References: <20240620173137.610345-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618164133.223194-2-linux.amoon@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi Anand,
+During the writeback procedure, at the end of netfs_write_folio(), pending
+write operations are flushed if the amount of write-streaming data stored
+in a page is less than the size of the folio because if we haven't modified
+a folio to the end, it cannot be contiguous with the following folio...
+except if the dirty region of the folio is right at the end of the folio
+space.
 
-kernel test robot noticed the following build errors:
+Fix the test to take the offset into the folio into account as well, such
+that if the dirty region runs right up to the end of the folio, we leave
+the flushing for later.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.10-rc4 next-20240619]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Eric Van Hensbergen <ericvh@kernel.org>
+cc: Latchesar Ionkov <lucho@ionkov.net>
+cc: Dominique Martinet <asmadeus@codewreck.org>
+cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com> (DFS, global name space)
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/netfs/write_issue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anand-Moon/PCI-rockchip-Simplify-reset-control-handling-by-using-reset_control_bulk-function/20240619-014145
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240618164133.223194-2-linux.amoon%40gmail.com
-patch subject: [PATCH v1 1/3] PCI: rockchip: Simplify clock handling by using clk_bulk*() function
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240621/202406210131.rxenHeBG-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240621/202406210131.rxenHeBG-lkp@intel.com/reproduce)
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 3aa86e268f40..ec6cf8707fb0 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -483,7 +483,7 @@ static int netfs_write_folio(struct netfs_io_request *wreq,
+ 	if (!debug)
+ 		kdebug("R=%x: No submit", wreq->debug_id);
+ 
+-	if (flen < fsize)
++	if (foff + flen < fsize)
+ 		for (int s = 0; s < NR_IO_STREAMS; s++)
+ 			netfs_issue_write(wreq, &wreq->io_streams[s]);
+ 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406210131.rxenHeBG-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/pcie-rockchip-ep.c:20:
->> drivers/pci/controller/pcie-rockchip.h:311:28: error: array has incomplete element type 'struct clk_bulk_data'
-     311 |         struct  clk_bulk_data clks[ROCKCHIP_NUM_CLKS];
-         |                                   ^
-   drivers/pci/controller/pcie-rockchip.h:311:10: note: forward declaration of 'struct clk_bulk_data'
-     311 |         struct  clk_bulk_data clks[ROCKCHIP_NUM_CLKS];
-         |                 ^
-   1 error generated.
-
-
-vim +311 drivers/pci/controller/pcie-rockchip.h
-
-   298	
-   299	struct rockchip_pcie {
-   300		void	__iomem *reg_base;		/* DT axi-base */
-   301		void	__iomem *apb_base;		/* DT apb-base */
-   302		bool    legacy_phy;
-   303		struct  phy *phys[MAX_LANE_NUM];
-   304		struct	reset_control *core_rst;
-   305		struct	reset_control *mgmt_rst;
-   306		struct	reset_control *mgmt_sticky_rst;
-   307		struct	reset_control *pipe_rst;
-   308		struct	reset_control *pm_rst;
-   309		struct	reset_control *aclk_rst;
-   310		struct	reset_control *pclk_rst;
- > 311		struct  clk_bulk_data clks[ROCKCHIP_NUM_CLKS];
-   312		struct	regulator *vpcie12v; /* 12V power supply */
-   313		struct	regulator *vpcie3v3; /* 3.3V power supply */
-   314		struct	regulator *vpcie1v8; /* 1.8V power supply */
-   315		struct	regulator *vpcie0v9; /* 0.9V power supply */
-   316		struct	gpio_desc *ep_gpio;
-   317		u32	lanes;
-   318		u8      lanes_map;
-   319		int	link_gen;
-   320		struct	device *dev;
-   321		struct	irq_domain *irq_domain;
-   322		int     offset;
-   323		void    __iomem *msg_region;
-   324		phys_addr_t msg_bus_addr;
-   325		bool is_rc;
-   326		struct resource *mem_res;
-   327	};
-   328	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
