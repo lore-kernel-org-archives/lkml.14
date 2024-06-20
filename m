@@ -1,115 +1,126 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284391AD3F5
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3141ACE9C;
+	Thu, 20 Jun 2024 14:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718894101; cv=none; b=ts2+D7JRiTP7CRymzTz8STfHp3pGSgPHSWUZk/gAm2O9ZjefS5/guwMyEWWRWbP3zBwoGou51o59FseRd2Dyi23k2ZjyxjviTlTengPtmn2+a7Rd7OR6jgXLhrRxk8hjR+FJWaF0rDU9aZattnIUY1ZiKegHkmYNwbFHmwf2eqQ=
+	t=1718894122; cv=none; b=kS4EJjQ+Yvjprseh0NyryC5uuRxy6rCkQR7YwFdYNKisltomrcxmKNgDL450AhB918Sv4ltm7XEsdxhB5osMaHexvXJWu4lRPI4M05W08RD7IIgmhQMAJxQA9ylwKaQ4k4w0yYoYhiNXdXlFVEuAFwHw1Dg48nZeQ0yAy+Qydj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718894101; c=relaxed/simple;
-	bh=RVThDafy3uo4pg7emhG9LvZxYfFJ576f9DT/KxUruuk=;
-	h=Subject:To:Cc:References:From:In-Reply-To:Message-ID:Date:
-	 MIME-Version:Content-Type; b=sp29629kE7auaZ//a+rvtj5ooHUGDOyYkTLqqcXguYXmzKyWVElZ2GxSRZY8aDiOXyGUTMUAa7/RqoMk+WSnYyXXOiow7BXvhAbbz9Pks7uAsi+piY06vhynVZPPbWsGaAUBy1bZD9c+e31IUBAwN+p7AjmkMxuMd0RZJcwBmiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=xpVpg/rH; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1718894122; c=relaxed/simple;
+	bh=npqeh05ryDsyIjjm50F0c9LzhQy62vbv2Gkiq4GYZ/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqJO3AwzoI9fQHzYIC/pihYwRf/RTIGwRdEcaiua3bczp4AoI9KHVPTym2KAMRCW6itmOCPriBxHzkJ0Pd13xxHmUm2F2e9FffhhHpCBzFphOisruFkp0h6flVv+fufM+GpQUzKSJfE5VJF4UTBuMtWEYnzmab0PqORydbpykpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWw+JMX/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="xpVpg/rH"
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
-	by cmsmtp with ESMTPS
-	id KIKisr42vjfBAKIsGs3jzh; Thu, 20 Jun 2024 14:34:52 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id KIsFsg6AfDoe7KIsFsHPIB; Thu, 20 Jun 2024 14:34:51 +0000
-X-Authority-Analysis: v=2.4 cv=Gq1E+F1C c=1 sm=1 tr=0 ts=66743e0b
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:In-Reply-To:From:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tMc74o+tTpNs+4XE+x0fYcX611m4Lf2fIXT5GrOocLY=; b=xpVpg/rHvOCoLG8blbg2M9c0rj
-	8CJpTBvQZarZrZYoltKU1NwXQhcfiNaN98OoTAYqnT9TmPDTU7w2Ud9TyioPvVdrrrybOVXkhwCWD
-	h0p77YiUn0Dbyc1ruIH5cd1LVbBhlCJXNAujYO0ZX2aZmjdQUkDhhulY4J/C40GflD8bSz8zhGEaQ
-	LOesGHphfKC2Te39nmC9wv6P2b6Qz6Ij6vlDYUGj9Wrk6mIbyPN66ZovQBsy5tHYn7KUH/Wxgt2QJ
-	1Hhr8ee2ieFsNzTwSJuv8yx9RPJBf3wPARHiQC4DeCDsbGonemPPRcHRih99x0g6TvaIjBk6lIoXV
-	sRsaGQCA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:44958 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1sKIsD-001k5i-0L;
-	Thu, 20 Jun 2024 08:34:49 -0600
-Subject: Re: [PATCH 6.1 000/217] 6.1.95-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240619125556.491243678@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20240619125556.491243678@linuxfoundation.org>
-Message-ID: <3e96b216-383f-6e0b-b62f-6fccbe45b0ba@w6rz.net>
-Date: Thu, 20 Jun 2024 07:34:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWw+JMX/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D83C2BD10;
+	Thu, 20 Jun 2024 14:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718894122;
+	bh=npqeh05ryDsyIjjm50F0c9LzhQy62vbv2Gkiq4GYZ/0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pWw+JMX/pZBbZERiMYq8jt3mLMHCNeyw2n+rsNU8yzEc1RmCWw7SL5IklwlwDvLyy
+	 CcpvEsCvzu/nuxvROzR45QPxqjZ5WRnuTE9Dv/2lc7T0+nx/tbSl4O9bFlDXVJrgyw
+	 nwuTpvrvfzG9UNGZloYjIX90dsxygDKlOq1MgyKy28fg3pzxGc1RC2iGsjWetEoHzX
+	 9ogBU6Je4NnmbnXz/Y8Eb15JTQ6RddyLShb/mu7w617r9GdQh4fFVIFVgeJiUlYe70
+	 /N7Sfisn8kBZj0nYGRkRJrQS/HL3p1xCyPUOlmHzvCdypvawyYWLwFQHsQoIi7oLV6
+	 GxTNCa6u5JOiA==
+Message-ID: <8d6af7e2-76f8-4daa-a751-a1abe29af103@kernel.org>
+Date: Thu, 20 Jun 2024 16:35:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] Immutable tag between the Bluetooth and pwrseq
+ branches for v6.11-rc1
+To: patchwork-bot+bluetooth@kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ luiz.dentz@gmail.com
+Cc: marcel@holtmann.org, krzk+dt@kernel.org, linux-bluetooth@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bartosz.golaszewski@linaro.org
+References: <20240612075829.18241-1-brgl@bgdev.pl>
+ <171889385052.4585.15983645082672209436.git-patchwork-notify@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1sKIsD-001k5i-0L
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.47]) [73.223.253.157]:44958
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 42
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOiuNGRC4rxt23AM+GD3IsX3AY5jeGfzrXru4JyJ9n1xZm6t3Iuu5LOiM7iaD2TUIgDk3qlOHVzV5NnAc4NM6SxaovOhfzDzy5wNWUbUzwbfjkpx+lXu
- K6h/p7Yok8jGNcqwYEiMWra0qiPgYIpFwOlIOTlVylaJo+TdYHJm/q/Fr5/vk/AlL+YRGzti1SJriaW8Evv389OcOSocPvWzOVg=
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <171889385052.4585.15983645082672209436.git-patchwork-notify@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6/19/24 5:54 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.95 release.
-> There are 217 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 21 Jun 2024 12:55:11 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.95-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 20/06/2024 16:30, patchwork-bot+bluetooth@kernel.org wrote:
+> Hello:
+> 
+> This pull request was applied to bluetooth/bluetooth-next.git (master)
+> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+> 
+> On Wed, 12 Jun 2024 09:58:29 +0200 you wrote:
+>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> Hi Marcel, Luiz,
+>>
+>> Please pull the following power sequencing changes into the Bluetooth tree
+>> before applying the hci_qca patches I sent separately.
+>>
+>> [...]
+> 
+> Here is the summary with links:
+>   - [GIT,PULL] Immutable tag between the Bluetooth and pwrseq branches for v6.11-rc1
+>     https://git.kernel.org/bluetooth/bluetooth-next/c/4c318a2187f8
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Tested-by: Ron Economos <re@w6rz.net>
+Luiz,
+
+This pulls looks wrong. Are you sure you have correct base? The diffstat
+suggests you are merging into rc2, not rc3. This will be confusing in
+merge commit. It is much safer, including possible feedback from Linus,
+if you use exactly the same base.
+
+Best regards,
+Krzysztof
 
