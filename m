@@ -1,112 +1,119 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF8F1CFA9;
-	Thu, 20 Jun 2024 06:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8DE1CFA9;
+	Thu, 20 Jun 2024 06:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718864960; cv=none; b=rD3H1tuUSTVB2ct/IVHYVx1Oj6huU/cyvOAL/K5/m/q/oKrsw+gTnBqGWreHi5OldxDtOSCIqVbd8/TB7MhTqyUx80os+UknaYwbvfmIamnfzC26N1+V3DSXrGi0/EJ0c629ZrViUIvRC1HVxs59MSYV4cvfjLVob8RmBLbG6y8=
+	t=1718864979; cv=none; b=dXFNG5XBmXQ5ho+9CBA9zt8HXkBNdesm3UbaNr37+Nvz2QjuS960EHnlGwBdxsEgcJtZ9hxDx/XLzTRaSIjMIKloJsaqIuh147AUZJn5RBc8q79Ge3WT25bIPF8I/xAHZ0ikkyNRzoDA3ftueAw9czCJl9ABMFSdx62uac8SWuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718864960; c=relaxed/simple;
-	bh=AJU+IcQK9TNFEQT1vsa902xQ13yY9qya1GOcSpNF5Ec=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=cb0rdK/WoNYkhzjQGQdgezkLfNd7Ty+wSWzXxnkvrY354Oh4mXXATPLNCq+U4TMhqcOYszrVwuXxiUq3JENZMTDEYYWWVQJx4EsadbzuQxX/8Ys888Pgq6rwHLW1GQ8dBTL5WxiMkqZlxkSKgk9H7/hCwyMQYIbqZsmz+PXVBw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W+wzj8Qw; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718864979; c=relaxed/simple;
+	bh=DM47QfH0OnPYYsBaUwpgRf2+2jamsLzfAMfcSGpafHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I/w9KmSVKAx7Wpn5canLJPbLfFxtjrOmXHbNa3fbC3f9QxxRm1znkr6FNvYTR0eG9/l1IYvpj3WvE6Oj0/RayGPUZDEm3cIDewWfHtuD2RBItrg8ZZ6Jlyt7Mr4XNn7YJ/z+nwMguYbWbaDq1JG+sfqfOhE6b0sv8VPaNxjdFmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=dE+amQ/j; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W+wzj8Qw"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K1NcKF024459;
-	Thu, 20 Jun 2024 06:29:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=+iJ+ZcNNMMRRyKHxGbCQrp
-	ouL0wP99StKm757wGOd9o=; b=W+wzj8QwzY3J/GDwd0vsGFgW4scH805NqRnJSB
-	MsmUkG83WXzVzdP7nbtRtp5Lg+et3hgdYiUZuOsC2XkVfs7QO/snt5BaC1X00Thd
-	5uGjI7HAnqNotM1GDqoCs62YLqexpOF1YmOZu03qdec+LwU1IkYNTphl7YblNV+k
-	JQhG/GA8WZ8IIwNmrpf34rSOZ9r2L5pdaeUEEW56IjW+7heuFwmbgUAIWV1RGN/g
-	Fvp3uzpFrW8JlvdnakDzrc/fDwTUSfJqkswl3dkcxi5POihq/xLwHClA3EibSjAD
-	nurLevnkk0AKDhwKkNYikEHPlrhhYNPbilpQu1BGpE1Pq9Hg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvaqbrhee-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 06:29:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45K6T4Um007576
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 06:29:04 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Jun
- 2024 23:29:03 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 19 Jun 2024 23:29:02 -0700
-Subject: [PATCH] drm/tests: add drm_hdmi_state_helper_test
- MODULE_DESCRIPTION()
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="dE+amQ/j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1718864576; bh=DM47QfH0OnPYYsBaUwpgRf2+2jamsLzfAMfcSGpafHw=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=dE+amQ/jE6lb3989A+35c/U3LqF132QheJhXd10NoItHaxRBfUhoeGHT0lblb9E2T
+	 pA5e9M1yj19xOBnJ3b0OjVfVBRqNsfy6BPeKzCB0jQ3gxHnWIqmBV/n4hCsrfuGVrv
+	 miTwGm2CzbESi2Rbz/zySAaZbccXaiQedMnHUqf0=
+Date: Thu, 20 Jun 2024 08:22:54 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Jacobe Zang <jacobe.zang@wesion.com>
+Cc: arend.vanspriel@broadcom.com, kvalo@kernel.org, duoming@zju.edu.cn, 
+	bhelgaas@google.com, minipli@grsecurity.net, linux-wireless@vger.kernel.org, 
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, nick@khadas.com, 
+	efectn@protonmail.com, jagan@edgeble.ai, dsimic@manjaro.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] net: wireless: brcmfmac: Add optional 32k clock
+ enable support
+Message-ID: <4ynke3hcrkzowv63u43b55zidr55gzlnca6vvwrndvvpb5r57y@iberusehts5q>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Jacobe Zang <jacobe.zang@wesion.com>, arend.vanspriel@broadcom.com, kvalo@kernel.org, 
+	duoming@zju.edu.cn, bhelgaas@google.com, minipli@grsecurity.net, 
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, 
+	nick@khadas.com, efectn@protonmail.com, jagan@edgeble.ai, dsimic@manjaro.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240620020015.4021696-1-jacobe.zang@wesion.com>
+ <20240620020015.4021696-3-jacobe.zang@wesion.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240619-md-drm-tests-drm_hdmi_state_helper_test-v1-1-41c5fe2fdb4a@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAC3Mc2YC/x2NUQrDIBAFrxL2uwvRlqT2KqWIiWsVGhN2pQRC7
- l7t3xsezBwgxIkEHt0BTN8kac0V1KWDObr8Jky+Muhe3/pBGVw8el6wkBRpy0a/JCvFFbKRPhu
- xbR+OehxIm3C/KgPVtjGFtP9Lz1flyQnhxC7PsfmbM6yMmfYC5/kDtF1hyZgAAAA=
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Dave Stevenson
-	<dave.stevenson@raspberrypi.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.14.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: gx46bUwopQ1zNNN4zwehclrcZ-GSZXR_
-X-Proofpoint-ORIG-GUID: gx46bUwopQ1zNNN4zwehclrcZ-GSZXR_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_04,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200045
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620020015.4021696-3-jacobe.zang@wesion.com>
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_hdmi_state_helper_test.o
+Hi,
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+On Thu, Jun 20, 2024 at 10:00:14AM GMT, Jacobe Zang wrote:
+> WiFi modules often require 32kHz clock to function. Add support to
+> enable the clock to PCIe driver.
 
-Fixes: eb66d34d793e ("drm/tests: Add output bpc tests")
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 1 +
- 1 file changed, 1 insertion(+)
+There's also this approach https://lore.kernel.org/lkml/20240117160748.37682-1-brgl@bgdev.pl/
 
-diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-index 2d3abc71dc16..34ee95d41f29 100644
---- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-@@ -1740,4 +1740,5 @@ kunit_test_suites(
- );
- 
- MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
-+MODULE_DESCRIPTION("Kunit test for drm_hdmi_state_helper functions");
- MODULE_LICENSE("GPL");
+> Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
+> ---
+>  .../net/wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+> index 06698a714b523..f241e1757d7e3 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2014 Broadcom Corporation
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/firmware.h>
+> @@ -2411,6 +2412,7 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct brcmf_pciedev *pcie_bus_dev;
+>  	struct brcmf_core *core;
+>  	struct brcmf_bus *bus;
+> +	struct clk *clk;
+>  
+>  	if (!id) {
+>  		id = pci_match_id(brcmf_pcie_devid_table, pdev);
+> @@ -2422,6 +2424,14 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	brcmf_dbg(PCIE, "Enter %x:%x\n", pdev->vendor, pdev->device);
+>  
+> +	clk = devm_clk_get_optional_enabled(&pdev->dev, "32k");
 
----
-base-commit: b9578c49456340ca4d3c7ddbaca054ffc2b51bc1
-change-id: 20240619-md-drm-tests-drm_hdmi_state_helper_test-7276e29f8319
+If you do this, you need to update the DT bindings. Current ones don't have 32k
+clock.
 
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +	if (clk) {
+> +		dev_info(&pdev->dev, "enabling 32kHz clock\n");
+
+The driver has its own debug logging infrastructure (brcmf_dbg).
+
+Kind regards,
+	o.
+
+> +		clk_set_rate(clk, 32768);
+> +	}
+> +
+>  	ret = -ENOMEM;
+>  	devinfo = kzalloc(sizeof(*devinfo), GFP_KERNEL);
+>  	if (devinfo == NULL)
+> -- 
+> 2.34.1
+> 
