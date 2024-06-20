@@ -1,189 +1,198 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12C91B1422;
-	Thu, 20 Jun 2024 15:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA641ACE94;
+	Thu, 20 Jun 2024 15:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718897866; cv=none; b=Yq51XR3RQD9kZR+7psLACSmuIqe8FL/KZjmHxfM0qjT7uriwmYclzhpc23mNOfv5VRq4gLXC4RIqhvIS824BidoTEyTsGY+hmwApnGB9uX/7CS1Pj3biViDbt8yNfExcJJjXv+wPOTiCU6EeIcJuzoM5lTByv5xY9jGfJ0FK7fg=
+	t=1718897931; cv=none; b=aN+L5dAaXrr+9J+i8QUmee18hyy0c5c8dPQIWYCLIV2SqHUmnjY4rO7a8NJ1TOb8P8A5dWKss5AhWmdwO8gvSXh2SOJMigwsoRfTyEnlFtEYJ1OMd4O+kvNtucIWq0AjPeaz25YRZqqGUXMkTqPApsAKRVjJ1XfVPGJYG/7577M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718897866; c=relaxed/simple;
-	bh=RsIlLBhJcyE3XwRqtVP46pxZY2iyfW8Fw1s+960Es2w=;
+	s=arc-20240116; t=1718897931; c=relaxed/simple;
+	bh=gIGt6nQrz3liDlRiYwAFDqmb/cxCjQJDPRDrDirgIIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbYhhAXx/McBP61pvs66XIPlTuXg6AmlF7/ZNBNKYHpjEIubmPmuGinJqCGHBFuGwk786cIw894bMX4WIXSmVOtGD2kDwwKQi2XkSnmr8D4NECHDgPe8YkT6n3hX0Oq3uicDdbZdYzzo4CZA1DC9Y8Q8N/S3CsZIGAJE+mUVvPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yv6aWu0u; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=p+FZYLg5R106zMZH6asYZgYPT0OQPz/LUEXeullMSmkUeS/dCFxFgrdirGoDLleJWVqZXwHAUu7uYgZFVJqsrOgtafQ0F9iwnFzLrHQFsC3QcDlhOM+40/TNlzKXz7qVkadN2mbXV96o5mx6b4qABI3ww+DHE6bL9ltpX2kughA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5lC8AtR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yv6aWu0u"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70633f0812dso948513b3a.0;
-        Thu, 20 Jun 2024 08:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718897864; x=1719502664; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+h387lf4ounMi+iVhkJYXBLUErzSRJimx+T0EIiAWQ=;
-        b=Yv6aWu0umi75kF+yz3Ur3Wo2+DRG0PU621TduJ+cqqIN6cq4qRDX5KlayaO/lQopvA
-         IqeCCc8LrQZ5JrSlrYL1TpVHH8Q7AIZH7JRoZfcO03uJlatIQWsBnoXhWNAwV37Aqr4g
-         nvXPKUDlCHeEX7HEN/BTGXHtnwNIvXggWWUew1OGqTZybPZRLI9+Ks9Nj0Vlbwhcs5MG
-         vgo9E60l5Ci/gzIiD9PlfWI4kVovAfBF2y07JeVrygM0ocZVTHsFfWdf3nuEve26K42o
-         lw4tSjVOYYWXJNSqFrgKNvopdRFEy1y9Cm0wdcsllKD9LFWG0Z3GayVJJRmRrgWwMCeg
-         aD/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718897864; x=1719502664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s+h387lf4ounMi+iVhkJYXBLUErzSRJimx+T0EIiAWQ=;
-        b=P2gRBpdKPxG4+3aJ+Oyq8JHs/LNemjQTs2Bn5XMQ1VMshpXowdXd8ee/elG6+Kc1wS
-         O20hIgms4dFpvnRP4UZ6wkM+/S1tTMh1DNUw+D5kgqf/m1PvEkSUVZIGlxjmFyZRK/bY
-         Uu4TwfyHkLlCknXHsSHALsjnl1/U1gwODsTr3QltyLnLazVAM7TTGv8AJpAwS3UsKjwV
-         87Okqj+XbTMOM2aD5346pfz7FG/1s4biAh9UPA+PEpn5MRVH99Xa8sHDJ+PKf1hf+LBt
-         rukZyrEtlo3isbs76VAVOr+gYFDbgDXgKJJc5J8uboai7Djub8W2bWgrH1flA5kW9F8p
-         3eMA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0BizlvR+v9XOp/Ky5Gififq+TN+naABANcMgjRFGszUQT4v+7ZWaIxt4yCVaS21MSxZC/fCm9xPdGRMpVb1z8Tzx5J6aPp8p1aoLR4bMJrQhv9NNwO5WOCQjDmGkQhlLcj+6Dqtf9Ttv1zDI1Z7iL/li26ok7XdbrccMt4y2tehhUxyhk
-X-Gm-Message-State: AOJu0YyCiSZPe+9OfS6YUov4ATKxnO5DaLl5O2n7gCPtmWndmYnpxklD
-	OohW27qZBFcSw9jQhcdD0bgnz/yFh7QBeaWi2ld3jZGEbX/Y7u5h
-X-Google-Smtp-Source: AGHT+IEdhGZIHUC59cCIO/mixYH72/cV9kIvYVpyNXHNqjJuo4SpZGFWObBqJtoJBrKvWs1VeIZvuQ==
-X-Received: by 2002:a05:6a00:189b:b0:705:cade:1f50 with SMTP id d2e1a72fcca58-70629d012c0mr7919791b3a.34.1718897863773;
-        Thu, 20 Jun 2024 08:37:43 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:36d9:2b1f:59f:8e9e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cc91e133sm12441315b3a.24.2024.06.20.08.37.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 08:37:43 -0700 (PDT)
-Date: Thu, 20 Jun 2024 08:37:40 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Stefan Eichenberger <eichest@gmail.com>
-Cc: nick@shmanahar.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	linus.walleij@linaro.org, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: Re: [PATCH v4 1/4] Input: atmel_mxt_ts - add power off and power on
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5lC8AtR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34AE2C2BD10;
+	Thu, 20 Jun 2024 15:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718897931;
+	bh=gIGt6nQrz3liDlRiYwAFDqmb/cxCjQJDPRDrDirgIIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X5lC8AtRacT76ZEG4zMfuEZUKEKTpekECOHpU5MY2I/EZO1QL2vUnvXBcqGV/n1Ac
+	 WvclRPE1115f0kXPVsOy0KRv07fTVLr3ptVLBSoaeW2WtfWMz3wAJippdXgvsyQ318
+	 kML1endfmYR5n7zy2ZTCutzmR637HsCeGr8T9sJpAeo4FsL+DzgyGTiSB2RZtECxf4
+	 8NTZj383zMt/xV0LgbVvnPIX4Y+2LObBFCatwHSLZpoL/D0UHiyN+z9VCOnZ1JjSqy
+	 qNVsO3HY+6apV1zIP1hyzPaViP5XdIK4YbuWhjqlUQ4WszJuGpnzPSwJDQK8YgCTDy
+	 ycyS48jIwgzJQ==
+Date: Thu, 20 Jun 2024 16:38:46 +0100
+From: Lee Jones <lee@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 04/20] leds: leds-lp55xx: generalize probe/remove
  functions
-Message-ID: <ZnRMxONryyi5uZ8a@google.com>
-References: <20240417090527.15357-1-eichest@gmail.com>
- <20240417090527.15357-2-eichest@gmail.com>
+Message-ID: <20240620153846.GN3029315@google.com>
+References: <20240616215226.2112-1-ansuelsmth@gmail.com>
+ <20240616215226.2112-5-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240417090527.15357-2-eichest@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240616215226.2112-5-ansuelsmth@gmail.com>
 
-Hi Stefan,
+On Sun, 16 Jun 2024, Christian Marangi wrote:
 
-On Wed, Apr 17, 2024 at 11:05:24AM +0200, Stefan Eichenberger wrote:
-> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> Now that stop_all_engine is generalized, probe and remove function are
+> the same across every lp55xx based LED driver and can be generalized.
 > 
-> Add a separate function for power off and power on instead of calling
-> regulator_bulk_enable and regulator_bulk_disable directly.
+> To permit to use a common probe, make use of the OF match_data and i2c
+> driver_data value to store the device_config struct specific for the
+> LED.
 > 
-> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> Also drop the now unused exported symbol in lp55xx-common and make them
+> static.
+> 
+> Update any lp55xx based LED driver to use the new generic probe/remove.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
->  drivers/input/touchscreen/atmel_mxt_ts.c | 59 +++++++++++++++---------
->  1 file changed, 37 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 542a31448c8f..52867ce3b9b6 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -1307,6 +1307,38 @@ static int mxt_soft_reset(struct mxt_data *data)
->  	return 0;
->  }
+>  drivers/leds/leds-lp5521.c        |  81 +-------------------
+>  drivers/leds/leds-lp5523.c        |  85 ++-------------------
+>  drivers/leds/leds-lp5562.c        |  80 +------------------
+>  drivers/leds/leds-lp55xx-common.c | 123 +++++++++++++++++++++++-------
+>  drivers/leds/leds-lp55xx-common.h |  21 +----
+>  drivers/leds/leds-lp8501.c        |  81 +-------------------
+>  6 files changed, 119 insertions(+), 352 deletions(-)
+
+[...]
+
+> diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+> index 2cbc5b302fd4..7e623e4e565c 100644
+> --- a/drivers/leds/leds-lp55xx-common.c
+> +++ b/drivers/leds/leds-lp55xx-common.c
+> @@ -32,6 +32,8 @@
+>  /* External clock rate */
+>  #define LP55XX_CLK_32K			32768
 >  
-> +static int mxt_power_on(struct mxt_data *data)
-> +{
-> +	int error;
+> +static void lp55xx_deinit_device(struct lp55xx_chip *chip);
+
+No forward declarations please.  Move the function.
 > +
-> +	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
-> +				      data->regulators);
-> +	if (error) {
-> +		dev_err(&data->client->dev, "failed to enable regulators: %d\n",
-> +			error);
-> +		return error;
-> +	}
-> +
-> +	msleep(MXT_BACKUP_TIME);
-> +
-> +	if (data->reset_gpio) {
-> +		/* Wait a while and then de-assert the RESET GPIO line */
-> +		msleep(MXT_RESET_GPIO_TIME);
-> +		gpiod_set_value(data->reset_gpio, 0);
-> +		msleep(MXT_RESET_INVALID_CHG);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void mxt_power_off(struct mxt_data *data)
-> +{
-> +	if (data->reset_gpio)
-> +		gpiod_set_value(data->reset_gpio, 1);
-> +
-> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
-> +}
-> +
->  static void mxt_update_crc(struct mxt_data *data, u8 cmd, u8 value)
+>  static struct lp55xx_led *cdev_to_lp55xx_led(struct led_classdev *cdev)
 >  {
->  	/*
-> @@ -3305,25 +3337,9 @@ static int mxt_probe(struct i2c_client *client)
->  		return error;
->  	}
+>  	return container_of(cdev, struct lp55xx_led, cdev);
+> @@ -49,7 +51,7 @@ static struct lp55xx_led *mcled_cdev_to_led(struct led_classdev_mc *mc_cdev)
 >  
-> -	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
-> -				      data->regulators);
-> -	if (error) {
-> -		dev_err(&client->dev, "failed to enable regulators: %d\n",
-> -			error);
-> +	error = mxt_power_on(data);
-> +	if (error)
->  		return error;
-> -	}
-> -	/*
-> -	 * The device takes 40ms to come up after power-on according
-> -	 * to the mXT224 datasheet, page 13.
-> -	 */
-> -	msleep(MXT_BACKUP_TIME);
-> -
-> -	if (data->reset_gpio) {
-> -		/* Wait a while and then de-assert the RESET GPIO line */
-> -		msleep(MXT_RESET_GPIO_TIME);
-> -		gpiod_set_value(data->reset_gpio, 0);
-> -		msleep(MXT_RESET_INVALID_CHG);
-> -	}
+>  static void lp55xx_wait_opmode_done(struct lp55xx_chip *chip)
+>  {
+> -	struct lp55xx_device_config *cfg = chip->cfg;
+> +	const struct lp55xx_device_config *cfg = chip->cfg;
+>  	int __always_unused ret;
+>  	u8 val;
 >  
->  	/*
->  	 * Controllers like mXT1386 have a dedicated WAKE line that could be
-> @@ -3361,8 +3377,8 @@ static int mxt_probe(struct i2c_client *client)
->  	mxt_free_input_device(data);
->  	mxt_free_object_table(data);
->  err_disable_regulators:
-> -	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-> -			       data->regulators);
-> +	mxt_power_off(data);
-> +
->  	return error;
+> @@ -69,7 +71,7 @@ static void lp55xx_wait_opmode_done(struct lp55xx_chip *chip)
+>  
+>  void lp55xx_stop_all_engine(struct lp55xx_chip *chip)
+>  {
+> -	struct lp55xx_device_config *cfg = chip->cfg;
+> +	const struct lp55xx_device_config *cfg = chip->cfg;
+>  
+>  	lp55xx_write(chip, cfg->reg_op_mode.addr, LP55xx_MODE_DISABLE_ALL_ENG);
+>  	lp55xx_wait_opmode_done(chip);
+> @@ -78,7 +80,7 @@ EXPORT_SYMBOL_GPL(lp55xx_stop_all_engine);
+>  
+>  static void lp55xx_reset_device(struct lp55xx_chip *chip)
+>  {
+> -	struct lp55xx_device_config *cfg = chip->cfg;
+> +	const struct lp55xx_device_config *cfg = chip->cfg;
+>  	u8 addr = cfg->reset.addr;
+>  	u8 val  = cfg->reset.val;
+>  
+> @@ -88,7 +90,7 @@ static void lp55xx_reset_device(struct lp55xx_chip *chip)
+>  
+>  static int lp55xx_detect_device(struct lp55xx_chip *chip)
+>  {
+> -	struct lp55xx_device_config *cfg = chip->cfg;
+> +	const struct lp55xx_device_config *cfg = chip->cfg;
+>  	u8 addr = cfg->enable.addr;
+>  	u8 val  = cfg->enable.val;
+>  	int ret;
+> @@ -111,7 +113,7 @@ static int lp55xx_detect_device(struct lp55xx_chip *chip)
+>  
+>  static int lp55xx_post_init_device(struct lp55xx_chip *chip)
+>  {
+> -	struct lp55xx_device_config *cfg = chip->cfg;
+> +	const struct lp55xx_device_config *cfg = chip->cfg;
+>  
+>  	if (!cfg->post_init_device)
+>  		return 0;
+> @@ -176,7 +178,7 @@ static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
+>  {
+>  	struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
+>  	struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
+> -	struct lp55xx_device_config *cfg = led->chip->cfg;
+> +	const struct lp55xx_device_config *cfg = led->chip->cfg;
+>  
+>  	led_mc_calc_color_components(&led->mc_cdev, brightness);
+>  	return cfg->multicolor_brightness_fn(led);
+> @@ -187,7 +189,7 @@ static int lp55xx_set_brightness(struct led_classdev *cdev,
+>  			     enum led_brightness brightness)
+>  {
+>  	struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
+> -	struct lp55xx_device_config *cfg = led->chip->cfg;
+> +	const struct lp55xx_device_config *cfg = led->chip->cfg;
+>  
+>  	led->brightness = (u8)brightness;
+>  	return cfg->brightness_fn(led);
+> @@ -197,7 +199,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+>  			struct lp55xx_chip *chip, int chan)
+>  {
+>  	struct lp55xx_platform_data *pdata = chip->pdata;
+> -	struct lp55xx_device_config *cfg = chip->cfg;
+> +	const struct lp55xx_device_config *cfg = chip->cfg;
+>  	struct device *dev = &chip->cl->dev;
+>  	int max_channel = cfg->max_channel;
+>  	struct mc_subled *mc_led_info;
+> @@ -459,10 +461,10 @@ bool lp55xx_is_extclk_used(struct lp55xx_chip *chip)
 >  }
+>  EXPORT_SYMBOL_GPL(lp55xx_is_extclk_used);
 >  
-> @@ -3374,8 +3390,7 @@ static void mxt_remove(struct i2c_client *client)
->  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
->  	mxt_free_input_device(data);
->  	mxt_free_object_table(data);
-> -	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-> -			       data->regulators);
-> +	mxt_power_off(data);
-
-This change means that on unbind we will leave with GPIO line asserted.
-Won't this potentially cause some current leakage? Why do we need to
-have reset asserted here?
-
-Thanks.
+> -int lp55xx_init_device(struct lp55xx_chip *chip)
+> +static int lp55xx_init_device(struct lp55xx_chip *chip)
+>  {
+>  	struct lp55xx_platform_data *pdata;
+> -	struct lp55xx_device_config *cfg;
+> +	const struct lp55xx_device_config *cfg;
+>  	struct device *dev = &chip->cl->dev;
+>  	int ret = 0;
+>  
+> @@ -512,9 +514,8 @@ int lp55xx_init_device(struct lp55xx_chip *chip)
+>  err:
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL_GPL(lp55xx_init_device);
+>  
+> -void lp55xx_deinit_device(struct lp55xx_chip *chip)
+> +static void lp55xx_deinit_device(struct lp55xx_chip *chip)
+>  {
+>  	struct lp55xx_platform_data *pdata = chip->pdata;
+>  
+> @@ -524,12 +525,11 @@ void lp55xx_deinit_device(struct lp55xx_chip *chip)
+>  	if (pdata->enable_gpiod)
+>  		gpiod_set_value(pdata->enable_gpiod, 0);
+>  }
+> -EXPORT_SYMBOL_GPL(lp55xx_deinit_device);
 
 -- 
-Dmitry
+Lee Jones [李琼斯]
