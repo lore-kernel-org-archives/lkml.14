@@ -1,135 +1,147 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8F21A4F17
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA45B19AD82
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873398; cv=none; b=rz4LAaMkIxphZsU+V3kgcN2BJFFIxZFT9shgaTa5qSgAYzAprLJcji4meWVyX6wj0XppokUL4sO6YyI2qyqIngeVmu3Hp5uHU4613cawXYgApfYbYCBu7gmMxnLeYyElJMmlT0ZB1iITy2Rq0r1IBK2zhyePnfr4IVnSbddsYng=
+	t=1718873401; cv=none; b=HW3waFOZBgOQzavAclcUMQg/fLxp+SRld9pO1RUV9CbzXbYDEhn9hClea4WE6R7uOyeMziso2c02Yn4Cko2apnwXZEMO2+AYgKcjvT2nxL+whzqH0z/ZtNUnVj1iRpFHKFO2sY4l3+8HZB4csfRPs0Vd2D2p1jqCvcqOnKtbSlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873398; c=relaxed/simple;
-	bh=2CIj8Y9AUmvIjg+JAcqcZ+r+tVIYJcXIr4N0cIi9dVU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ci9TS4SCX0rtYR6gqbm0QUUXvSQc5OILKTq3gWwC2cm+XaNiAY7RXkL2zikYdcPLuaoKjCDKxnr9vG+jHSSETf+BlhoESAj7KbDsjuXk3EAKxZtXLwpONYuxc0Z6yYjlhG0WIbuxrrctPu2EhQfLDuGlnTZpTFJkzGp/GmmDO2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VMx6jyOA; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718873401; c=relaxed/simple;
+	bh=bzculCUZfSMGCYqXnDb6dR+6gSGS8cxRKKu9enu6sOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRMyhFmVY7qZGDr0vrFB4L/pgPVQRYC6yp7YPKIBdWTvCJWnC0Dx1FxI+FXncIQ7h5VYgzQze0NsfSfLqtVSSKqagheoTEoSVlB8WZKuaeZlB1oqc+4ZSA+iRyOnc5Ha8hOug5dFepjerfpyBDhaEmkw0VDfo3vncwj2BfDSqKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G7Gj16yM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VMx6jyOA"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-80f67420dadso121154241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718873395; x=1719478195; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wnzPQkY7olrxeTisghk4ynlDr11qeA45cqHLGGh55Sg=;
-        b=VMx6jyOAEKOX8z2b0EXx2+mh5v4QPkZkGlLiyFjMQDAoN/Cq87cRfe9iFaCDjghauj
-         +zKLm42RmUH62NF96b9b7k/AfNd54XtjzpQSy7WIVEv00q006838UnLIE5swpx5198Ju
-         8IJhlJV1F8/6IicVr80KePG3uv9M48wJHlnUU=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G7Gj16yM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718873398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=11iF2QK5flj/EkneGZ7Z1E7DadmY5aiwT25VCdi5z3s=;
+	b=G7Gj16yMTHkmOBMjn/GM5krT2BCuCTxV38q4LuASQpPgEpBbjMbSKcyPO+xefxX3NQmqBW
+	S7iyhZX/qLy6+GmgOre8D06graMraQGMh5DMAdenNEQLLBpzxg/kmM2J6qdQ7r4kBzGDti
+	+J095+YLa2LVl6W8ajaD1PaDbUxjTWQ=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-687-R8wVTYEPOEGiqmE2rt59XA-1; Thu, 20 Jun 2024 04:49:57 -0400
+X-MC-Unique: R8wVTYEPOEGiqmE2rt59XA-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-795589ae41fso112706685a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:49:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718873395; x=1719478195;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wnzPQkY7olrxeTisghk4ynlDr11qeA45cqHLGGh55Sg=;
-        b=dzDteymVaHK27aKO9zpJCBQ6SufFSK1vriHyBFFYkhDYg2T3BbuouJm86nmmxE77d0
-         SR79hQ8+KFGGwLkpwTUxWXDi2aII+wroTNd+l7WubdC/BAQUsaluAswV6PFPL5f/0t4r
-         mSh9AOvUmivyup7aUpmRuQCIvReQ5zuSri9vPqoS1eW92/nN7qokML3HdeJ4l+zI7tR/
-         /Mebp6sH41e4J1DHwe4RZL6VAVEbJw2CTc2r+limeml6kS4w29sw1GJjwjlLVvavsW5b
-         k0QAJW+69h36EyPX1hhhWu5zWnfhWDQVlLfH6bTmG5jOYk2+5Jfo4Rvtvr3AibZ0IiIe
-         dgbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtomMX/EnrmHsPsnbZn5rk9qcOM9Ff1KgQgwD9CPclL9FlCjlbd740ADhHt1gr+xfxtuUulj4HeeEiurzDgFyq36gCDfFJuyteLui9
-X-Gm-Message-State: AOJu0YyZi2fROIWFbjP31cBJqTz10VWmyE8yPquj1v9F3ebykZXLK5BU
-	NsqBzQ+bRfXERen6BZu5T94B/qoTrfdEfajdihqd2kfmu4G77umiuoirrSfEDektv4Yb9Bnz6y0
-	=
-X-Google-Smtp-Source: AGHT+IGtP+7YK4pOEc1mdetgxRQ2f/yjuWLXjlXqkDcCip0sDXDBrRWrI+A0lop+sYa2sCDhoMNmFA==
-X-Received: by 2002:a05:6102:4a4a:b0:48f:1337:fa70 with SMTP id ada2fe7eead31-48f1337fc83mr5181695137.26.1718873394872;
-        Thu, 20 Jun 2024 01:49:54 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-80d78a6fd95sm2929451241.29.2024.06.20.01.49.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 01:49:54 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-80f4b2b8c9eso184565241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:49:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQK1GUyWtNYZCabvSllAPa7wSQfoQfs0z3+3JJnb9UWDvCtgda6zHYqb49Kb5gVyYcULQaHHsiz76bGLK39P3TsAMAGSbwu99mJe9X
-X-Received: by 2002:a05:6102:1889:b0:48d:7692:51ba with SMTP id
- ada2fe7eead31-48f1304d706mr4853217137.4.1718873393626; Thu, 20 Jun 2024
- 01:49:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718873396; x=1719478196;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=11iF2QK5flj/EkneGZ7Z1E7DadmY5aiwT25VCdi5z3s=;
+        b=rDt6NuOQkAF8AL9eGSuJJqqpMc3o82mUPMrPISVr8k+pTk0+rDLXHVu+QCW0VvI+HD
+         UTRFf0tdpXcBn0+SFarBuWCSijAnj7BFJBslSHonB3at+bXA579om+6Ws6KY9d4kMuDi
+         ZSa+tdCyrAthzneLgXGayGhJCqAt23DQzYZ134pXGj1FsNK+tQgKDB+WKEf/ddNr1Frx
+         cMaQKr66674G7oeIUceUeVEQWuyYtch6WcL7BxZFUyPMDW1d23Tzp1QyMyrCBZaEzott
+         c4iCjkm/23wfxh8gdm3Kk9ScQMpVUrlsdrjvCkRpzfmkBc0D9ky9IMaa/L1Zt6Bn6PfE
+         8YZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQko0yPkI9q/nsusGrGCUY+jDtizhseNKjpL6knslbkfTImhcQooFIR/ox0G2Izo7xLyid9nFhUwmum33CoGPvcM5QlUk1rXZFD7JG
+X-Gm-Message-State: AOJu0Yxb2Z3MttqkE0/0BaoyU5oZNKV7zwm8cyq0n5dhYX3QvBwpPBvJ
+	/8lE9eb5iVrHWcrwm3VXppSPT1ueZQxnutaii7GDsvrcDNIKxQCXml8fexyibuSpF/guKjBW4ID
+	4javN134shmd8M3MOLCNYaSuUvCuKf+Ut9WIzKKN90a8hxiAI6jVAQFL/ku5WQg==
+X-Received: by 2002:a05:620a:4016:b0:795:5ab3:ba5b with SMTP id af79cd13be357-79bb3e3acc9mr487928985a.32.1718873396709;
+        Thu, 20 Jun 2024 01:49:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEMWNNkzfAixl8czMPiKE9yMZGywPk4gvxEmIU6adP1ZFuF5GVoBwIIFYUdC+82dqVjHbKhFA==
+X-Received: by 2002:a05:620a:4016:b0:795:5ab3:ba5b with SMTP id af79cd13be357-79bb3e3acc9mr487927185a.32.1718873396388;
+        Thu, 20 Jun 2024 01:49:56 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.3.168])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aacae6e3sm677075785a.10.2024.06.20.01.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 01:49:55 -0700 (PDT)
+Date: Thu, 20 Jun 2024 10:49:51 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"open list:SCHEDULER" <linux-kernel@vger.kernel.org>,
+	rrendec@redhat.com
+Subject: Re: [PATCH] sched/deadline: fix task_struct reference leak
+Message-ID: <ZnPtL055-NxMwMKl@jlelli-thinkpadt14gen4.remote.csb>
+References: <20240618201940.94955-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619085322.66716-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240619085322.66716-1-angelogioacchino.delregno@collabora.com>
-From: Fei Shao <fshao@chromium.org>
-Date: Thu, 20 Jun 2024 16:49:16 +0800
-X-Gmail-Original-Message-ID: <CAC=S1njt1tEH-S2YYKvewRmqta468DuteZFCXKgC02vMUoiBdA@mail.gmail.com>
-Message-ID: <CAC=S1njt1tEH-S2YYKvewRmqta468DuteZFCXKgC02vMUoiBdA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: mediatek: mt8188: Fix VPPSYS0/1 node name/compatibles
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: krzk+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com, 
-	jassisinghbrar@gmail.com, garmin.chang@mediatek.com, houlong.wei@mediatek.com, 
-	Jason-ch.Chen@mediatek.com, amergnat@baylibre.com, Elvis.Wang@mediatek.com, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618201940.94955-1-wander@redhat.com>
 
-On Wed, Jun 19, 2024 at 4:53=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Like VDOSYS0/1, the VPPSYS0 and VPPSYS1 are syscon nodes, as
-> described by the mediatek,mmsys binding: fix the node name to
-> be syscon@address and add "syscon" to the list of compatible
-> strings for both VPPSYS0 and VPPSYS1.
->
-> Fixes: 9461e0caac9e ("arm64: dts: Add MediaTek MT8188 dts and evaluation =
-board and Makefile")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
+Hi Wander,
 
-Reviewed-by: Fei Shao <fshao@chromium.org>
-
+On 18/06/24 17:19, Wander Lairson Costa wrote:
+> During the execution of the following stress test with linux-rt:
+> 
+> stress-ng --cyclic 30 --timeout 30 --minimize --quiet
+> 
+> kmemleak frequently reported a memory leak concerning the task_struct:
+> 
+> unreferenced object 0xffff8881305b8000 (size 16136):
+>   comm "stress-ng", pid 614, jiffies 4294883961 (age 286.412s)
+>   object hex dump (first 32 bytes):
+>     02 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00  .@..............
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   debug hex dump (first 16 bytes):
+>     53 09 00 00 00 00 00 00 00 00 00 00 00 00 00 00  S...............
+>   backtrace:
+>     [<00000000046b6790>] dup_task_struct+0x30/0x540
+>     [<00000000c5ca0f0b>] copy_process+0x3d9/0x50e0
+>     [<00000000ced59777>] kernel_clone+0xb0/0x770
+>     [<00000000a50befdc>] __do_sys_clone+0xb6/0xf0
+>     [<000000001dbf2008>] do_syscall_64+0x5d/0xf0
+>     [<00000000552900ff>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
+> 
+> The issue occurs in start_dl_timer(), which increments the task_struct
+> reference count and sets a timer. The timer callback, dl_task_timer,
+> is supposed to decrement the reference count upon expiration. However,
+> if enqueue_task_dl() is called before the timer expires and cancels it,
+> the reference count is not decremented, leading to the leak.
+> 
+> This patch fixes the reference leak by ensuring the task_struct
+> reference count is properly decremented when the timer is canceled.
+> 
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 > ---
->  arch/arm64/boot/dts/mediatek/mt8188.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt8188.dtsi
-> index 3b02170562ae..77c4f2d104cd 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-> @@ -1331,8 +1331,8 @@ mfgcfg: clock-controller@13fbf000 {
->                         #clock-cells =3D <1>;
->                 };
->
-> -               vppsys0: clock-controller@14000000 {
-> -                       compatible =3D "mediatek,mt8188-vppsys0";
-> +               vppsys0: syscon@14000000 {
-> +                       compatible =3D "mediatek,mt8188-vppsys0", "syscon=
-";
->                         reg =3D <0 0x14000000 0 0x1000>;
->                         #clock-cells =3D <1>;
->                 };
-> @@ -1349,8 +1349,8 @@ wpesys_vpp0: clock-controller@14e02000 {
->                         #clock-cells =3D <1>;
->                 };
->
-> -               vppsys1: clock-controller@14f00000 {
-> -                       compatible =3D "mediatek,mt8188-vppsys1";
-> +               vppsys1: syscon@14f00000 {
-> +                       compatible =3D "mediatek,mt8188-vppsys1", "syscon=
-";
->                         reg =3D <0 0x14f00000 0 0x1000>;
->                         #clock-cells =3D <1>;
->                 };
-> --
-> 2.45.2
->
->
+>  kernel/sched/deadline.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index c75d1307d86d..5953f89bfa96 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1805,7 +1805,9 @@ static void enqueue_task_dl(struct rq *rq, struct task_struct *p, int flags)
+>  			 * problem if it fires concurrently: boosted threads
+>  			 * are ignored in dl_task_timer().
+>  			 */
+> -			hrtimer_try_to_cancel(&p->dl.dl_timer);
+> +			if (hrtimer_try_to_cancel(&p->dl.dl_timer) == 1 &&
+> +			    !dl_server(&p->dl))
+> +				put_task_struct(p);
+
+Wonder if this deserves a little comment saying that if the timer
+callback was running (hrtimer_try_to_cancel() returns -1) it will
+eventually call put_task_struct(). Other than that, the fix makes sense
+to me.
+
+Oh, another thing is that I believe we should add 'Fixes: feff2e65efd8d
+("sched/deadline: Unthrottle PI boosted threads while enqueuing")' in
+the changelog, shouldn't we?
+
+Thanks,
+Juri
+
