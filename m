@@ -1,163 +1,195 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550961AC24B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372D1AB8F0;
 	Thu, 20 Jun 2024 17:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903740; cv=none; b=j2qeDS/mf7OjP09ts+i6cAws8NXYJL5M+Yj/S3gw7zqZWIMwKinUuaA8U0+0wT0qqnOgIIr75+u9yDPQzAMMOxppueoaN2nFEka9JYPNZT4YBQmwEuoAhCZkBwFVV2yTJnY4QBLicdgvR+a3vudVlZswtTbJuZt6oeEH1d9s7WY=
+	t=1718903742; cv=none; b=WqRylWPoej/J+bRvqabTlW3zPIyJL1w53cqpNHo+eze0vsYzUESw4bh4MiXixCI957HtWDfiVfFWabr53AIUKep7IZA20wViwycv2gwoEheELjH36hnhQfAdF42nnBLPsgtJ4ilKy7aatf9UfSImFbn4WeGAumpPCwWWosD4rBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903740; c=relaxed/simple;
-	bh=gT12HUOyeQpAnsBYlpUmtkBdVmuOFZO12M6sDqqDb+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jrVYMDU+hyb8GE6yHXNmcSDJXmJq1J6BzjqyaY4If3YCnbYeeNbv24NHheNSW3yW3GC3i4F25s1lHvsXD5c52aDj126QkEdRoFjQS/b1g0xnSpCVg+o45Cl68d/lsBeCwEeXwu8wRTayU69F2Y/moSGN5aaYzghMKEMl5+YAob0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/OpYAIs; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718903742; c=relaxed/simple;
+	bh=MibYtPaStOyNmJ/MnE3IBHd0ESHqLBiFr2K5NuHSgVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l3YdO2xDUpmtU6QXV5qs11BLYeBhIX9QcmyVVo1089/HTeM8mYeVNnQOuVXvjHhRwsbEo2FmZmyifOxrKAQvor0pXX3SJwdYtabVj3np7OpJbzIPFZqGyX44iCR22rkP8orRegu0AtXgxzrIsOZt9rNyYbUAcQ/TyHthf7s8E7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EYy8taYz; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/OpYAIs"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so13639901fa.0;
-        Thu, 20 Jun 2024 10:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718903736; x=1719508536; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYg/fQs2+kuc4laJDOi7nR98E30rR5KMEuEzLwwwI/U=;
-        b=S/OpYAIs/m0mdvCc+QXDihYLMUiqTThV1kJQZs3aE1DPZf22eKQ+rVk31M6E4fy+sV
-         cO3c3DatQXr4dnj9rgbobYzzChnzd5X8dAn0gjpLxJ97H5KR5r3Lw+9Jo7Hhw2+vW1tD
-         szpt7+D8WjPeeatuo3nQY75U1mZhTpwIL3FCyo+4CZ+5riFVEc05VvFHlFfPy4Vatkfu
-         jAEcb/QpTXKb5NoRzA/nRch1hdYJWpts2SiEoRW3i2+z/oDcFQAtSWJ3KSLhB8pF8dqZ
-         Qcsq8hfAd6Umk2DINpouN/bweSAzxLfCgHsQaPcDqqjcuoyJktgKutF5sqDV7xVn6+f8
-         H6dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718903736; x=1719508536;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aYg/fQs2+kuc4laJDOi7nR98E30rR5KMEuEzLwwwI/U=;
-        b=KqndabjuTSVd/HkKLfbSQXVYyZJYcLz8TLfzXfrrosTKxHDfiqvOY/cqzH+w1wkA6K
-         gPc13VrT5hCp6W7rJcsD51d985EcBh6f4NrAaj9Sc74QgqyISIGN/nj7VT1F5OysXcYS
-         OLMAmLMI9AYwXH7HnX1tk9j/tNmlFC1FeB9xQ1tCSaVSnRzHPI/yBpOx4dBKsgPjuyu+
-         Ht3qDASrHoDjZ9PR9WTRfGN1G9QiiOUtJ56TcsTLybsiVq42VL/lV7KXuVjDR2h40D+q
-         0YWJMCORD6c62rRgseREeM2na1Zg7L2yqWOMuGPErRtQjre1xKN6CPus5CwhItAVQRoU
-         OOew==
-X-Forwarded-Encrypted: i=1; AJvYcCXWV059kN5Im4nymDlUP5DC2X94mttlrK1urOx4iReUhWscbA074dEjoOUYBVeswcmk4fk9vgzRrBv+/DeG5GtjeT/WseuQwbeRbSQ/sVFXcTaSMaLtUdEtEWpypDqZpa2q3fcLpQ/chxtVvfAqYjjFCKYs
-X-Gm-Message-State: AOJu0YxkXYdQ0UzuJCvWH/bnVtYWfltFbfkoFevMpxMpVVPWOItVH/kp
-	6LwsvtL206RYGHm3XShb7j7aatXk+TTl81r4Q6TjQUc+4PqSNUTe
-X-Google-Smtp-Source: AGHT+IEiryEnHRn0pakoC9f3F0xz4DDlqEixJnJvkaTjsTfaWq0cDwBI+U6mRxj1AIyUk52rmV5xKg==
-X-Received: by 2002:a2e:80c9:0:b0:2eb:1ac4:c9cc with SMTP id 38308e7fff4ca-2ec3cfe1c38mr35389951fa.52.1718903736064;
-        Thu, 20 Jun 2024 10:15:36 -0700 (PDT)
-Received: from f.. (cst-prg-30-39.cust.vodafone.cz. [46.135.30.39])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cd449efd6sm6333746a12.45.2024.06.20.10.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:15:35 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: john.johansen@canonical.com
-Cc: paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	linux-kernel@vger.kernel.org,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	Neeraj.Upadhyay@amd.com,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v2] apparmor: try to avoid refing the label in apparmor_file_open
-Date: Thu, 20 Jun 2024 19:15:27 +0200
-Message-ID: <20240620171528.167997-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EYy8taYz"
+Received: from [192.168.1.37] ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id KLF0sqSvNx6E7KLF0sBJHQ; Thu, 20 Jun 2024 19:06:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718903195;
+	bh=C7PXgcuFIHuLhO89QKhX4IoMZb6JJQMXMgrBnFVa6K0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=EYy8taYzxscAZ/nfXzuE05IHjV1wE94kbgEBcZDGz5+FWe/YDPfhdc49k10obex64
+	 X8VT60CZnkmXGOoRd9m5BB+/Hjb7GuUAgqwM9Ei9TXqB3nowye0SEmAGOjfJaxe8QM
+	 3C5cxaIZ0d+dw6XS769GdxpIuajWQd0YRjLjfYsgbcGcsPz9iVfHSRZmSFAx7e/LN/
+	 J/ccclUPyqWqaJpQ9dbIJfnuwIFB3uIzeZfncLwk9lEijU59qhRCK+9nBKPVLZasC7
+	 oYddT+lM/YtEoXHdi1ZH10lfgZI944NwdNM32CRWMJL0+Cl30nNmROaxE7LBCgUT68
+	 nuX6Q0ClPxyGw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 20 Jun 2024 19:06:35 +0200
+X-ME-IP: 86.243.222.230
+Message-ID: <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
+Date: Thu, 20 Jun 2024 19:06:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
+ cfg80211_wowlan_nd_*
+To: Kees Cook <kees@kernel.org>
+Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
+ gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
+ kvalo@kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
+ shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
+References: <20240619211233.work.355-kees@kernel.org>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240619211233.work.355-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-apparmor: try to avoid refing the label in apparmor_file_open
+Le 19/06/2024 à 23:12, Kees Cook a écrit :
+> Both struct cfg80211_wowlan_nd_match and struct cfg80211_wowlan_nd_info
+> pre-allocate space for channels and matches, but then may end up using
+> fewer that the full allocation. Shrink the associated counter
+> (n_channels and n_matches) after counting the results. This avoids
+> compile-time (and run-time) warnings from __counted_by. (The counter
+> member needs to be updated _before_ accessing the array index.)
+> 
+> Seen with coming GCC 15:
+> 
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_set_freqs':
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2877:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+>   2877 |                                 match->channels[match->n_channels++] =
+>        |                                                 ~~~~~~~~~~~~~~~~~^~
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2885:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+>   2885 |                                 match->channels[match->n_channels++] =
+>        |                                                 ~~~~~~~~~~~~~~~~~^~
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_netdetect_reasons':
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2982:58: warning: operation on 'net_detect->n_matches' may be undefined [-Wsequence-point]
+>   2982 |                 net_detect->matches[net_detect->n_matches++] = match;
+>        |                                     ~~~~~~~~~~~~~~~~~~~~~^~
+> 
+> Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
+> Signed-off-by: Kees Cook <kees-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Cc: Miri Korenblit <miriam.rachel.korenblit-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Kalle Valo <kvalo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Johannes Berg <johannes.berg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Gustavo A. R. Silva <gustavoars-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Gregory Greenman <gregory.greenman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Yedidya Benshimol <yedidya.ben.shimol-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Haim Dreyfuss <haim.dreyfuss-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>   drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 14 +++++++++++---
+>   1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> index 54f4acbbd05b..9cd03ea4680d 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> @@ -2866,6 +2866,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+>   				    int idx)
+>   {
+>   	int i;
+> +	int n_channels = 0;
+>   
+>   	if (fw_has_api(&mvm->fw->ucode_capa,
+>   		       IWL_UCODE_TLV_API_SCAN_OFFLOAD_CHANS)) {
+> @@ -2874,7 +2875,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+>   
+>   		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN * 8; i++)
+>   			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+> -				match->channels[match->n_channels++] =
+> +				match->channels[n_channels++] =
+>   					mvm->nd_channels[i]->center_freq;
+>   	} else {
+>   		struct iwl_scan_offload_profile_match_v1 *matches =
+> @@ -2882,9 +2883,11 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+>   
+>   		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN_V1 * 8; i++)
+>   			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+> -				match->channels[match->n_channels++] =
+> +				match->channels[n_channels++] =
+>   					mvm->nd_channels[i]->center_freq;
+>   	}
+> +	/* We may have ended up with fewer channels than we allocated. */
+> +	match->n_channels = n_channels;
 
-If the label is not stale (which is the common case), the fact that the
-passed file object holds a reference can be leverged to avoid the
-ref/unref cycle. Doing so reduces performance impact of apparmor on
-parallel open() invocations.
 
-When benchmarking on a 24-core vm using will-it-scale's open1_process
-("Separate file open"), the results are (ops/s):
-before: 6092196
-after:  8309726 (+36%)
+Hi,
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
+I'm sorry but I don't understand the patch.
 
-v2:
-- reword the commit message
+You state that "The counter member needs to be updated _before_ 
+accessing the array index.". I agree with it.
 
-If you want any changes made to it can you just do them on your own
-accord? :) Will be faster for both of us than another mail trip.
+But this patch seems to steel update it *after*.
 
- security/apparmor/include/cred.h | 20 ++++++++++++++++++++
- security/apparmor/lsm.c          |  5 +++--
- 2 files changed, 23 insertions(+), 2 deletions(-)
+My understanding is that 'match', is allocated by :
+	match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
 
-diff --git a/security/apparmor/include/cred.h b/security/apparmor/include/cred.h
-index 58fdc72af664..7265d2f81dd5 100644
---- a/security/apparmor/include/cred.h
-+++ b/security/apparmor/include/cred.h
-@@ -63,6 +63,26 @@ static inline struct aa_label *aa_get_newest_cred_label(const struct cred *cred)
- 	return aa_get_newest_label(aa_cred_raw_label(cred));
- }
- 
-+static inline struct aa_label *aa_get_newest_cred_label_condref(const struct cred *cred,
-+								bool *needput)
-+{
-+	struct aa_label *l = aa_cred_raw_label(cred);
-+
-+	if (unlikely(label_is_stale(l))) {
-+		*needput = true;
-+		return aa_get_newest_label(l);
-+	}
-+
-+	*needput = false;
-+	return l;
-+}
-+
-+static inline void aa_put_label_condref(struct aa_label *l, bool needput)
-+{
-+	if (unlikely(needput))
-+		aa_put_label(l);
-+}
-+
- /**
-  * aa_current_raw_label - find the current tasks confining label
-  *
-diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-index 2cea34657a47..4bf87eac4a56 100644
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@ -461,6 +461,7 @@ static int apparmor_file_open(struct file *file)
- 	struct aa_file_ctx *fctx = file_ctx(file);
- 	struct aa_label *label;
- 	int error = 0;
-+	bool needput;
- 
- 	if (!path_mediated_fs(file->f_path.dentry))
- 		return 0;
-@@ -477,7 +478,7 @@ static int apparmor_file_open(struct file *file)
- 		return 0;
- 	}
- 
--	label = aa_get_newest_cred_label(file->f_cred);
-+	label = aa_get_newest_cred_label_condref(file->f_cred, &needput);
- 	if (!unconfined(label)) {
- 		struct mnt_idmap *idmap = file_mnt_idmap(file);
- 		struct inode *inode = file_inode(file);
-@@ -494,7 +495,7 @@ static int apparmor_file_open(struct file *file)
- 		/* todo cache full allowed permissions set and state */
- 		fctx->allow = aa_map_file_to_perms(file);
- 	}
--	aa_put_label(label);
-+	aa_put_label_condref(label, needput);
- 
- 	return error;
- }
--- 
-2.43.0
+So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
+
+So the __counted_by() mechanism should complain when doing
+	match->channels[n_channels++] = mvm->nd_channels[i]->center_freq;
+whatever n_channels value is.
+
+
+I would expect the solution to be related to pre-increment instead of 
+post-increment. Something like:
+ > -				match->channels[match->n_channels++] =
+ > +				match->channels[++match->n_channels] =
+ >   					mvm->nd_channels[i]->center_freq;
+
+
+Did I miss something obvious or I don't understand how __counted_by() works?
+
+CJ
+
+
+>   }
+>   
+>   /**
+> @@ -2965,6 +2968,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+>   			     GFP_KERNEL);
+>   	if (!net_detect || !n_matches)
+>   		goto out_report_nd;
+> +	net_detect->n_matches = n_matches;
+> +	n_matches = 0;
+>   
+>   	for_each_set_bit(i, &matched_profiles, mvm->n_nd_match_sets) {
+>   		struct cfg80211_wowlan_nd_match *match;
+> @@ -2978,8 +2983,9 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+>   				GFP_KERNEL);
+>   		if (!match)
+>   			goto out_report_nd;
+> +		match->n_channels = n_channels;
+>   
+> -		net_detect->matches[net_detect->n_matches++] = match;
+> +		net_detect->matches[n_matches++] = match;
+>   
+>   		/* We inverted the order of the SSIDs in the scan
+>   		 * request, so invert the index here.
+> @@ -2994,6 +3000,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+>   
+>   		iwl_mvm_query_set_freqs(mvm, d3_data->nd_results, match, i);
+>   	}
+> +	/* We may have fewer matches than we allocated. */
+> +	net_detect->n_matches = n_matches;
+>   
+>   out_report_nd:
+>   	wakeup.net_detect = net_detect;
 
