@@ -1,51 +1,66 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8DE1CFA9;
-	Thu, 20 Jun 2024 06:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C91E3D3B8;
+	Thu, 20 Jun 2024 06:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718864979; cv=none; b=dXFNG5XBmXQ5ho+9CBA9zt8HXkBNdesm3UbaNr37+Nvz2QjuS960EHnlGwBdxsEgcJtZ9hxDx/XLzTRaSIjMIKloJsaqIuh147AUZJn5RBc8q79Ge3WT25bIPF8I/xAHZ0ikkyNRzoDA3ftueAw9czCJl9ABMFSdx62uac8SWuM=
+	t=1718864984; cv=none; b=hYwL3i0v5gWxzKICIhGKbe5NcZLWZpE0ppFdskaILtFR5N2vXtjbF7SQ7a1MLdEsoMz/KjjtywgUWHUF2hvwbV0KLOOuNcPdY1ZcgK6M8rfqjass2wEzJ5O0g2631rcqaDtpvY2uz8je9VCfijV1MVZkvaDc29r8+90kTm6zlsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718864979; c=relaxed/simple;
-	bh=DM47QfH0OnPYYsBaUwpgRf2+2jamsLzfAMfcSGpafHw=;
+	s=arc-20240116; t=1718864984; c=relaxed/simple;
+	bh=+ifqHEMdiknxEzGlwAtc+V5/msMnN6CtvpwhXeolp3Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/w9KmSVKAx7Wpn5canLJPbLfFxtjrOmXHbNa3fbC3f9QxxRm1znkr6FNvYTR0eG9/l1IYvpj3WvE6Oj0/RayGPUZDEm3cIDewWfHtuD2RBItrg8ZZ6Jlyt7Mr4XNn7YJ/z+nwMguYbWbaDq1JG+sfqfOhE6b0sv8VPaNxjdFmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=dE+amQ/j; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=iPyQu9pPPwZ5rkc6mKf9beH+uSpdLzo9+I/jPPELXuhy865PpIaXh0/J56lSSAn/Z+MQs7oLaR1z/cPJzzTV1ZW6X4TtRwci8ab0P7F4kdEhGrM1ioLUneMeYMj2nFxRfuzG+W0jBtAXY8pAU63MTfgTIBxiUm8g05f3URvreV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LiB0GFQO; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="dE+amQ/j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1718864576; bh=DM47QfH0OnPYYsBaUwpgRf2+2jamsLzfAMfcSGpafHw=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=dE+amQ/jE6lb3989A+35c/U3LqF132QheJhXd10NoItHaxRBfUhoeGHT0lblb9E2T
-	 pA5e9M1yj19xOBnJ3b0OjVfVBRqNsfy6BPeKzCB0jQ3gxHnWIqmBV/n4hCsrfuGVrv
-	 miTwGm2CzbESi2Rbz/zySAaZbccXaiQedMnHUqf0=
-Date: Thu, 20 Jun 2024 08:22:54 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Jacobe Zang <jacobe.zang@wesion.com>
-Cc: arend.vanspriel@broadcom.com, kvalo@kernel.org, duoming@zju.edu.cn, 
-	bhelgaas@google.com, minipli@grsecurity.net, linux-wireless@vger.kernel.org, 
-	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, nick@khadas.com, 
-	efectn@protonmail.com, jagan@edgeble.ai, dsimic@manjaro.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] net: wireless: brcmfmac: Add optional 32k clock
- enable support
-Message-ID: <4ynke3hcrkzowv63u43b55zidr55gzlnca6vvwrndvvpb5r57y@iberusehts5q>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Jacobe Zang <jacobe.zang@wesion.com>, arend.vanspriel@broadcom.com, kvalo@kernel.org, 
-	duoming@zju.edu.cn, bhelgaas@google.com, minipli@grsecurity.net, 
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, 
-	nick@khadas.com, efectn@protonmail.com, jagan@edgeble.ai, dsimic@manjaro.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240620020015.4021696-1-jacobe.zang@wesion.com>
- <20240620020015.4021696-3-jacobe.zang@wesion.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LiB0GFQO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718864981; x=1750400981;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+ifqHEMdiknxEzGlwAtc+V5/msMnN6CtvpwhXeolp3Y=;
+  b=LiB0GFQOrXez3xszeeSDRirftem/YgJfmk5hi6L3jXq7QfLqJHKTO3cR
+   3RwCQ1NfOKIkjSk+Q5xgl4W9kyjp9V7qTNPs0ku3VFjVc5j2Ua2Ur/+Ye
+   JGmwwBhiByg5USFhEAMQd8F/xECOqBNQdC1wLSRikZnXQtPYbRT+V0bf/
+   Pq0GAOznB3EB3cyf2vWX2Jec8/c1hPnxCludQQ0mQWVwfgKG+QlZEH4wk
+   y6dySlNIgorSCF+aV5iRY0xj0+kUzd0yrVszKVIF3LM3E1F2oIKH7EYKE
+   kEYOTRmP3VT5O2840NLAqXDwzZZFPwiybWBTf1AwgTtYPaqIbTolwnnWh
+   w==;
+X-CSE-ConnectionGUID: QPeoLFMvSYC0BAkxDzbSIA==
+X-CSE-MsgGUID: PMVNZATbQLykaAeR0hIThg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15795363"
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="15795363"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 23:29:40 -0700
+X-CSE-ConnectionGUID: NtJzaDOFRCCIzXGdFcXiJw==
+X-CSE-MsgGUID: dcWuGTf9ROOwgMy3GGFnlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="42800402"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 19 Jun 2024 23:29:36 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sKBIc-0007O9-07;
+	Thu, 20 Jun 2024 06:29:34 +0000
+Date: Thu, 20 Jun 2024 14:28:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrei Simion <andrei.simion@microchip.com>, brgl@bgdev.pl,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
+	Andrei Simion <andrei.simion@microchip.com>
+Subject: Re: [PATCH 2/3] ARM: dts: at91: at91-sama7g5ek: add EEPROMs
+Message-ID: <202406201413.tFxSruVt-lkp@intel.com>
+References: <20240619072231.6876-3-andrei.simion@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,66 +69,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240620020015.4021696-3-jacobe.zang@wesion.com>
+In-Reply-To: <20240619072231.6876-3-andrei.simion@microchip.com>
 
-Hi,
+Hi Andrei,
 
-On Thu, Jun 20, 2024 at 10:00:14AM GMT, Jacobe Zang wrote:
-> WiFi modules often require 32kHz clock to function. Add support to
-> enable the clock to PCIe driver.
+kernel test robot noticed the following build warnings:
 
-There's also this approach https://lore.kernel.org/lkml/20240117160748.37682-1-brgl@bgdev.pl/
+[auto build test WARNING on 0c52056d9f77508cb6d4d68d3fc91c6c08ec71af]
 
-> Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
-> ---
->  .../net/wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-> index 06698a714b523..f241e1757d7e3 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2014 Broadcom Corporation
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/firmware.h>
-> @@ -2411,6 +2412,7 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct brcmf_pciedev *pcie_bus_dev;
->  	struct brcmf_core *core;
->  	struct brcmf_bus *bus;
-> +	struct clk *clk;
->  
->  	if (!id) {
->  		id = pci_match_id(brcmf_pcie_devid_table, pdev);
-> @@ -2422,6 +2424,14 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  
->  	brcmf_dbg(PCIE, "Enter %x:%x\n", pdev->vendor, pdev->device);
->  
-> +	clk = devm_clk_get_optional_enabled(&pdev->dev, "32k");
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrei-Simion/eeprom-at24-avoid-adjusting-offset-for-24AA025E-48-64/20240619-153030
+base:   0c52056d9f77508cb6d4d68d3fc91c6c08ec71af
+patch link:    https://lore.kernel.org/r/20240619072231.6876-3-andrei.simion%40microchip.com
+patch subject: [PATCH 2/3] ARM: dts: at91: at91-sama7g5ek: add EEPROMs
+config: arm-randconfig-004-20240620 (https://download.01.org/0day-ci/archive/20240620/202406201413.tFxSruVt-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240620/202406201413.tFxSruVt-lkp@intel.com/reproduce)
 
-If you do this, you need to update the DT bindings. Current ones don't have 32k
-clock.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406201413.tFxSruVt-lkp@intel.com/
 
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +	if (clk) {
-> +		dev_info(&pdev->dev, "enabling 32kHz clock\n");
+dtcheck warnings: (new ones prefixed by >>)
+>> arch/arm/boot/dts/microchip/at91-sama7g5ek.dts:407.22-425.5: Warning (avoid_unnecessary_addr_size): /soc/flexcom@e2818000/i2c@600/eeprom@52: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+   arch/arm/boot/dts/microchip/at91-sama7g5ek.dts:427.22-445.5: Warning (avoid_unnecessary_addr_size): /soc/flexcom@e2818000/i2c@600/eeprom@53: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-The driver has its own debug logging infrastructure (brcmf_dbg).
+vim +407 arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
 
-Kind regards,
-	o.
+   394	
+   395	&flx8 {
+   396		atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_TWI>;
+   397		status = "okay";
+   398	
+   399		i2c8: i2c@600 {
+   400			pinctrl-names = "default";
+   401			pinctrl-0 = <&pinctrl_i2c8_default>;
+   402			i2c-analog-filter;
+   403			i2c-digital-filter;
+   404			i2c-digital-filter-width-ns = <35>;
+   405			status = "okay";
+   406	
+ > 407			eeprom0: eeprom@52 {
+   408				compatible = "atmel,24mac02e4";
+   409				reg = <0x52>;
+   410				#address-cells = <1>;
+   411				#size-cells = <1>;
+   412				size = <256>;
+   413				pagesize = <16>;
+   414				vcc-supply = <&vdd_3v3>;
+   415	
+   416				nvmem-layout {
+   417					compatible = "fixed-layout";
+   418					#address-cells = <1>;
+   419					#size-cells = <1>;
+   420	
+   421					eeprom0_eui48: eui48@fa {
+   422						reg = <0xfa 0x6>;
+   423					};
+   424				};
+   425			};
+   426	
+   427			eeprom1: eeprom@53 {
+   428				compatible = "atmel,24mac02e4";
+   429				reg = <0x53>;
+   430				#address-cells = <1>;
+   431				#size-cells = <1>;
+   432				size = <256>;
+   433				pagesize = <16>;
+   434				vcc-supply = <&vdd_3v3>;
+   435	
+   436				nvmem-layout {
+   437					compatible = "fixed-layout";
+   438					#address-cells = <1>;
+   439					#size-cells = <1>;
+   440	
+   441					eeprom1_eui48: eui48@fa {
+   442						reg = <0xfa 0x6>;
+   443					};
+   444				};
+   445			};
+   446		};
+   447	};
+   448	
 
-> +		clk_set_rate(clk, 32768);
-> +	}
-> +
->  	ret = -ENOMEM;
->  	devinfo = kzalloc(sizeof(*devinfo), GFP_KERNEL);
->  	if (devinfo == NULL)
-> -- 
-> 2.34.1
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
