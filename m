@@ -1,163 +1,178 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBDC1EB44
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 02:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3CC171A1;
+	Thu, 20 Jun 2024 02:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718852120; cv=none; b=TpH/9o3F4bPawtb+s7LeEluDBU6pIERFBNtSCyV7maa946kkkR2KI3Yg/rXngdGz9ZCd/dm3lDEvipvVx9ryHuzY6uoPT/pGSjJPokcQXyPZfkdVX2ciP8rVdoMJG8xCBmlvlXyY7q3Hfe9yvWBxjX4VQgxT1MfwsOuGLpS8JX0=
+	t=1718852191; cv=none; b=fb7bSi18O5dDJ/Vx68WgnZyLru/my6PwEej6KV6NbJR/ca7XgDJh+3rU62xG78H3DM7Y3xuRAtDZ2tswTXdC1j2KKc1IVBYDa0g0NTXSF2Idvu1o3yjFM2swEBaadwkSyB/RSNvTTcc+4oJq1S30Is8gBafpRovqur3D54h6LZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718852120; c=relaxed/simple;
-	bh=8ZAYadfQMP3kgVVXbb9DEbzHJ8kYAfE38F9eOtCv1EU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=B8/Yr+07vZf1ebvwrBYJaqqQqciwIrFsNSxijvPCUVFdzkvyl2vZtlPuvOwX/Cb8yNzyXiHbJyTYFSeU/ohnaRpwjD4Q3sAFv586Mtsg9ZygKJDuwRonEvjh95xK2mPF2+VNm5VUKWd+lMjfTD1AGJUtF2IyCYR8be4DvA3jfrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7e1fe2ba2e1so51716939f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:55:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718852118; x=1719456918;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Lj58J19YIpPfhu4V4a/LLJxDtQkTPli6j+7LhpVu/0s=;
-        b=l7BC6f00/XswgBh5m0UsHNl+EOvb6XfcF86ZBRmHHhwPU908AvAN2O30teyriaWC3C
-         qwJE++YQ1Jbcpq0/B6SOr4is5uhzo7AKB3ZrM727zfDMqu17sJbLYdJ7+wodPpQ8dknX
-         PqEGGlEZwN0H7FPDQARecVpkzmhbnCVEbSqBsxxFpacjVJsYNvVVgLEYPAhbOrcn9+l1
-         b+zcxX1GwpCpj6m1+vDdbFGSxH1PcLO6GketibAV2TIgTMijOqTFmbYTdR+YUYVdzSd1
-         v3Sc9mcKjhX5V6XZyEbYbySeu53ImXHyAVcWH1FkCbiDScEvgNVBeW0UvC/SYpq4NA/e
-         0Mkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOZLDZfpdX+4EchJrWu48yPYvS+MLA1duhAgTssNiWJd3/PqBc0jq+sqXT+IeR8K/AVizkwXDzp4XFHBHx76IVpbJ+0Av9gRJEJYDl
-X-Gm-Message-State: AOJu0YxQtpDdoBzsFISKQmW95NmJgq/TrzUFFCASQP2vvOCWtq8gUQz5
-	KUAiijjW20kfcYsc2UQEqCb2RTYeQwvz/yciFNYG0XkwqP6DbJuFSlp93kl5+X8QwwvD1lSh/KS
-	FLQtl7Nf/Jo6QQJtKiig0M7yNpuWtylUSEGlaCuV2JD9SjVMMOD19s+0=
-X-Google-Smtp-Source: AGHT+IFDKmHYSdoqqrWcihJVQmFeiJeeByqLhXP5SfqmK45w/mgBHFfUUXhyqlp48Edo+VtkDkao4newadT7GAhAhUilnqkGIHBu
+	s=arc-20240116; t=1718852191; c=relaxed/simple;
+	bh=1Xmnfgp1ItF0jRXSWd8jcVkwr7/r+9fxi3baqS1IOtM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qI3x4NDVS65XdQ3gwLwv4sST4JBPaxr3iUKZ52eJNOv6iz32btqk4qHRunEaiPRFZ7IFWSgcVlXGcX2yd7gw7jZ0GtG3ItrP8EkEMUwCYSGbtULDGWwKJXaDWnN92cgHMTpggJOrLrq9BzSbDJ5DDxX6hVeCztAyQkG0T+J2s8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W4Pj972xmz2Ck5J;
+	Thu, 20 Jun 2024 10:35:09 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5AEC91A016C;
+	Thu, 20 Jun 2024 10:39:04 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 20 Jun 2024 10:39:03 +0800
+Message-ID: <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
+Date: Thu, 20 Jun 2024 10:39:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2394:b0:4b9:afd1:d4f8 with SMTP id
- 8926c6da1cb9f-4b9afd1f309mr74034173.2.1718852118501; Wed, 19 Jun 2024
- 19:55:18 -0700 (PDT)
-Date: Wed, 19 Jun 2024 19:55:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1ed2e061b4971d2@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_bucket_alloc_trans
-From: syzbot <syzbot+24a867cb90d8315cccff@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
+ uretprobe trampoline
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <jolsa@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<mark.rutland@arm.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
+References: <20240619013411.756995-1-liaochang1@huawei.com>
+ <20240619143852.GA24240@redhat.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <20240619143852.GA24240@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Hello,
+Hi, Oleg
 
-syzbot found the following issue on:
+在 2024/6/19 22:38, Oleg Nesterov 写道:
+> On 06/19, Liao Chang wrote:
+>>
+>> When the new uretprobe system call was added [1], the xol slots reserved
+>> for the uretprobe trampoline might be insufficient on some architecture.
+> 
+> Confused... this doesn't depend on the change above?
 
-HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13315dde980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c79815c08cc14227
-dashboard link: https://syzkaller.appspot.com/bug?extid=24a867cb90d8315cccff
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+You are right, the uretprobe syscall is specifc to x86_64. This patch wouldn't
+address that issue. However, when i asm porting uretprobe trampoline to arm64
+to explore its benefits on that architecture, i discovered the problem that
+single slot is not large enought for trampoline code.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> 
+>> For example, on arm64, the trampoline is consist of three instructions
+>> at least. So it should mark enough bits in area->bitmaps and
+>> and area->slot_count for the reserved slots.
+> 
+> Do you mean that on arm64 UPROBE_SWBP_INSN_SIZE > UPROBE_XOL_SLOT_BYTES ?
+> 
+>>From arch/arm64/include/asm/uprobes.h
+> 
+> 	#define MAX_UINSN_BYTES		AARCH64_INSN_SIZE
+> 
+> 	#define UPROBE_SWBP_INSN	cpu_to_le32(BRK64_OPCODE_UPROBES)
+> 	#define UPROBE_SWBP_INSN_SIZE	AARCH64_INSN_SIZE
+> 	#define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
+> 
+> 	typedef __le32 uprobe_opcode_t;
+> 
+> 	struct arch_uprobe_task {
+> 	};
+> 
+> 	struct arch_uprobe {
+> 		union {
+> 			u8 insn[MAX_UINSN_BYTES];
+> 			u8 ixol[MAX_UINSN_BYTES];
+> 
+> So it seems that UPROBE_SWBP_INSN_SIZE == MAX_UINSN_BYTES and it must
+> be less than UPROBE_XOL_SLOT_BYTES, otherwise
+> 
+> arch_uprobe_copy_ixol(..., uprobe->arch.ixol, sizeof(uprobe->arch.ixol))
+> in xol_get_insn_slot() won't fit the slot as well?
+This real reason is that the current implmentation seems to assume the
+ixol slot has enough space for the uretprobe trampoline. This assumption
+is true for x86_64, since the ixol slot is size of 128 bytes.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/35e32e9073a7/disk-2ccbdf43.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6c6e34658d16/vmlinux-2ccbdf43.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4417e7ef76ed/bzImage-2ccbdf43.xz
+From arch/x86/include/asm/uprobes.h
+	#define UPROBE_XOL_SLOT_BYTES	128
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+24a867cb90d8315cccff@syzkaller.appspotmail.com
+However, it is not large enough for arm64, the size of which is MAX_UINSN_BYTES
+(4bytes).
 
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/alloc_foreground.c:489!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 PID: 5956 Comm: syz-executor.2 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-RIP: 0010:bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:489 [inline]
-RIP: 0010:bch2_bucket_alloc_trans+0x3ac8/0x3b30 fs/bcachefs/alloc_foreground.c:649
-Code: 4e f6 f4 fd e9 07 c7 ff ff 44 89 f1 80 e1 07 38 c1 0f 8c fe fd ff ff 4c 89 f7 e8 e3 f4 f4 fd e9 f1 fd ff ff e8 69 7a 92 fd 90 <0f> 0b e8 61 7a 92 fd 90 0f 0b e8 29 3b 7a 07 f3 0f 1e fa e8 50 7a
-RSP: 0018:ffffc900048f5c80 EFLAGS: 00010287
-RAX: ffffffff8403aba7 RBX: 0000000000000019 RCX: 0000000000040000
-RDX: ffffc90014c00000 RSI: 000000000000da04 RDI: 000000000000da05
-RBP: ffffc900048f63b0 R08: ffffffff84037d73 R09: 0000000000000000
-R10: ffffc900048f6268 R11: fffff5200091ec52 R12: 0000000000000037
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007efeb1dc06c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b30d26000 CR3: 000000002336e000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_bucket_alloc_set_trans+0x4f9/0xcf0 fs/bcachefs/alloc_foreground.c:810
- __open_bucket_add_buckets+0x11ed/0x1c80 fs/bcachefs/alloc_foreground.c:1058
- open_bucket_add_buckets+0x174/0x230 fs/bcachefs/alloc_foreground.c:1102
- bch2_alloc_sectors_start_trans+0xcaf/0x1f60
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:333 [inline]
- bch2_btree_reserve_get+0x5f5/0x18d0 fs/bcachefs/btree_update_interior.c:547
- bch2_btree_update_start+0xe84/0x1500 fs/bcachefs/btree_update_interior.c:1245
- bch2_btree_split_leaf+0x12c/0x810 fs/bcachefs/btree_update_interior.c:1851
- bch2_trans_commit_error+0x200/0x1210 fs/bcachefs/btree_trans_commit.c:918
- __bch2_trans_commit+0x6e6c/0x88e0 fs/bcachefs/btree_trans_commit.c:1138
- bch2_trans_commit fs/bcachefs/btree_update.h:170 [inline]
- bch2_logged_op_start+0x1c8/0x310 fs/bcachefs/logged_ops.c:83
- bch2_truncate+0x1a4/0x2c0 fs/bcachefs/io_misc.c:291
- bchfs_truncate+0x80f/0xc80 fs/bcachefs/fs-io.c:476
- notify_change+0xb9d/0xe70 fs/attr.c:497
- do_truncate+0x220/0x310 fs/open.c:65
- vfs_truncate+0x2e1/0x3b0 fs/open.c:111
- do_sys_truncate+0xde/0x190 fs/open.c:134
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7efeb107cf29
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007efeb1dc00c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004c
-RAX: ffffffffffffffda RBX: 00007efeb11b3f80 RCX: 00007efeb107cf29
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000340
-RBP: 00007efeb10ec074 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007efeb11b3f80 R15: 00007ffdd551b608
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:489 [inline]
-RIP: 0010:bch2_bucket_alloc_trans+0x3ac8/0x3b30 fs/bcachefs/alloc_foreground.c:649
-Code: 4e f6 f4 fd e9 07 c7 ff ff 44 89 f1 80 e1 07 38 c1 0f 8c fe fd ff ff 4c 89 f7 e8 e3 f4 f4 fd e9 f1 fd ff ff e8 69 7a 92 fd 90 <0f> 0b e8 61 7a 92 fd 90 0f 0b e8 29 3b 7a 07 f3 0f 1e fa e8 50 7a
-RSP: 0018:ffffc900048f5c80 EFLAGS: 00010287
-RAX: ffffffff8403aba7 RBX: 0000000000000019 RCX: 0000000000040000
-RDX: ffffc90014c00000 RSI: 000000000000da04 RDI: 000000000000da05
-RBP: ffffc900048f63b0 R08: ffffffff84037d73 R09: 0000000000000000
-R10: ffffc900048f6268 R11: fffff5200091ec52 R12: 0000000000000037
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007efeb1dc06c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc6b66ca628 CR3: 000000002336e000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+From arch/arm64/include/asm/uprobes.h
 
+ 	#define MAX_UINSN_BYTES		AARCH64_INSN_SIZE // 4bytes
+ 	...
+ 	#define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Here is an exmample of the uretprobe trampoline code used for arm64:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+uretprobe_trampoline_for_arm64:
+	str x8, [sp, #-8]!
+	mov x8, __NR_uretprobe
+	svc #0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Above code is 12 bytes in size, exceeding the capacity of single ixol slot
+on arm64, so three slots are necessary to be reserved for the entire trampoline.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Thanks.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+> 
+> OTOH, it look as if UPROBE_SWBP_INSN_SIZE == UPROBE_XOL_SLOT_BYTES, so
+> I don't understand the problem...
+> 
+> Oleg.
+> 
+>> [1] https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
+>>
+>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>> ---
+>>  kernel/events/uprobes.c | 11 +++++++----
+>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+>> index 2816e65729ac..efd2d7f56622 100644
+>> --- a/kernel/events/uprobes.c
+>> +++ b/kernel/events/uprobes.c
+>> @@ -1485,7 +1485,7 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
+>>  static struct xol_area *__create_xol_area(unsigned long vaddr)
+>>  {
+>>  	struct mm_struct *mm = current->mm;
+>> -	unsigned long insns_size;
+>> +	unsigned long insns_size, slot_nr;
+>>  	struct xol_area *area;
+>>  	void *insns;
+>>  
+>> @@ -1508,10 +1508,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>>  
+>>  	area->vaddr = vaddr;
+>>  	init_waitqueue_head(&area->wq);
+>> -	/* Reserve the 1st slot for get_trampoline_vaddr() */
+>> -	set_bit(0, area->bitmap);
+>> -	atomic_set(&area->slot_count, 1);
+>>  	insns = arch_uprobe_trampoline(&insns_size);
+>> +	/* Reserve enough slots for the uretprobe trampoline */
+>> +	for (slot_nr = 0;
+>> +	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
+>> +	     slot_nr++)
+>> +		set_bit(slot_nr, area->bitmap);
+>> +	atomic_set(&area->slot_count, slot_nr);
+>>  	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
+>>  
+>>  	if (!xol_add_vma(mm, area))
+>> -- 
+>> 2.34.1
+>>
+> 
+> 
 
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+BR
+Liao, Chang
