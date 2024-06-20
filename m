@@ -1,209 +1,162 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E248348CCD;
-	Thu, 20 Jun 2024 13:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718891748; cv=fail; b=skB3CmB8hkHz1hmNgu+ixohR9O3sD368jH2nzpBv3wWJLrMegkqJm8OjmjysthyzDRH/eMIn7Bi+U9DS7iYgIVnasR8GgFUxx2EjGaJSSf2DOs4f3aJd51v8D7ddyGP0MJ0gi0oko6xzLSs60kTTQbog1iGz8tLFySsyHnF1wDM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718891748; c=relaxed/simple;
-	bh=nI15mm40W7zMyr7NZlfXOB1PNXbWIH5RM1mA0Or4Yok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rha1Q4KYQsEOjzD292yAGle07m+jeGPN3HlZSJyhKPBEMXNAvu/o0P2wxfXya4327PqP9wYscK0ftubjRy/sGPnR4XZxd1FWTYTiWLD8uvl3SjfQJKNWK3Cq1UVaCz5KzZ4j/FqnC/zNWUpJmyvRtv+Cig8RsYY591wnvc2uDWo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BBlbmiTA; arc=fail smtp.client-ip=40.107.93.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480131AC782;
+	Thu, 20 Jun 2024 13:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718891784; cv=none; b=C3uRtDDPJdpeJ2IeJDI4XW9v7GNJbZfrx2NBM8yiCwF0TgPKBDY8eQyL9xp4HFjvDp1Q7/jxsc6hMFv3xfUFJoT5S+oGmDM5dDPtoCqXh8a00NqAsGhT5pn55e30COsXb0ojCIiPnj7657pNKma/vBDW6OcmmL8wEv34frHjveY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718891784; c=relaxed/simple;
+	bh=l5CCEC9MovHn87sutgB7KfaIHIgWDh73rpUM0x5SHjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WD8zLDsVl3dKamPVuBk5tSO7U1EfW15d2rjmj8KE0/fe+Sjc+6M6LGYaGZKbCmKo1hW5kaODxqVAyo1meuUaVv7pL1crv+G+fppqCcWrmGT+4H2r2/P4C3ujdkvJ0yvBcajumZ6V6P8RO3KHveAclaTyyYyfruFETO/FnH8L5Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bcvhT40C; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BBlbmiTA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T9fMiN9cvdkp5C+V647OdRHi7WqjXAk1F/Y70vjLnFijE5FfQXGjO99JgShO7TVjG2Ftr5JZzG6joHz5gobVBsp3R9pBJ1R4mM7aE2SI9PnrSobJ6zP6QnCl4Op+RDWYxdMZHGB8PDznH598cMKZCISHLPYk/xOZZh971LGNEKeZwlbmbjPynXi4AtQSIrubcQkFi3Q/WorZ48ukzkeM5fKECF1V9ZYYEdC2FAL1UhOYgxeJODBZQQR/H6OSGzFdmG7q4AXteMYg8FLOGqvCPW8NFkSjHQOP9hqktE/ivzIH18eD4wVpsaVaSNgY8IORoq7PF9jtpXtVV7xsDYzRlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/IsWb3NVnOr8uUFvzDtaqHlzaVg9d+GNRRJgkOyoth4=;
- b=knW9ReQ7MEbcyrTyzU2cT4jTESwiaDssb/1cQOwcp7Jmre8Rud8ROxp5ymgT1RKRoXzN7TQS/ukLUIr9gINIOHLqyAjEedF+AoUGH88BfRVaUeIho4ll+babSQrLCh+IY0g2iDyGKUYGltgiNxN3ysr3tT9eWqlgh+4asSVbcxq3tCNc1QxEHL1mcwfG97AR6UGkf7+/r2XmcpHvnMGR5ruXY3nm3sr9ba9V5gTckhO8csmG++LOirv1PwD5pIe0oSPm5ZTQVn02PLJnvxpJVfz1OAmE1rsYY2imb04sn9ioATdVkIlcklV1AGnmvg6gEiqpAsKxueLvqToBRxNbZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/IsWb3NVnOr8uUFvzDtaqHlzaVg9d+GNRRJgkOyoth4=;
- b=BBlbmiTAOkrDYo1f0gIHGLjGOMmmYzfKmRrpCia6RnQtishkjNvZAWYfO4HzGzpWaILM/Pu2yU7er+wz3aIsDX1w42t8mfiEAe1L3BQO8XGc9QWNB+Aersccsl0X+2jDIJLgD271ZsKojBqWDlET/9avvMxx7I2pkTfo0M55LSdLPVqF9s6a+Ky0u/ivvSAImdaGbyAGu4r+z8HX7ijI/iDmmA3kwZEGQmHklKQEQyQJ6p4kiXcEJzz9oQuvDiZ3uJg38/vSPzFLVvWUMwTU/O8lCqbHR8OVpyIi/RtFmUiNHQlUjUEXq4OOhm2RkL+PMslmuqDbLzvRnFCtMQotqA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by PH7PR12MB9256.namprd12.prod.outlook.com (2603:10b6:510:2fe::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Thu, 20 Jun
- 2024 13:55:43 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%5]) with mapi id 15.20.7677.030; Thu, 20 Jun 2024
- 13:55:43 +0000
-Date: Thu, 20 Jun 2024 10:55:40 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Fuad Tabba <tabba@google.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	maz@kernel.org, kvm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, pbonzini@redhat.com
-Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
-Message-ID: <20240620135540.GG2494510@nvidia.com>
-References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
- <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com>
- <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
- <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
- <20240619115135.GE2494510@nvidia.com>
- <ZnOsAEV3GycCcqSX@infradead.org>
- <CA+EHjTxaCxibvGOMPk9Oj5TfQV3J3ZLwXk83oVHuwf8H0Q47sA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+EHjTxaCxibvGOMPk9Oj5TfQV3J3ZLwXk83oVHuwf8H0Q47sA@mail.gmail.com>
-X-ClientProxiedBy: BL1PR13CA0292.namprd13.prod.outlook.com
- (2603:10b6:208:2bc::27) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bcvhT40C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718891783; x=1750427783;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=l5CCEC9MovHn87sutgB7KfaIHIgWDh73rpUM0x5SHjk=;
+  b=bcvhT40CHtBl6PpB1lCcAhffoZcJ6ARETHjS6fd4hAnwARkMJge0fv4g
+   cirJRv258Q00FDUTSunzRCEA0jr/ZXJZrrUjy8P2I5tm1/IAS7v2FHEja
+   oBvOpmYkITaS7Qkyf0D0UWrRu0/KUlc0PgrDCDAVa6V4LOrTktZG9WQUS
+   uVHw4z6druDsVOLEgJyqE8R9CFaJNHgljIVroN38ZIX6zzeKtKsKAeA68
+   KojOzCT9V7mEUH/CKhFQwuMSZn9PkwJlcJJFjrR22NZFEBpBFiFjc42iQ
+   +ButB2Zw+Rrxe5XnXEm572BN3ftnjzoWv7F5iaTlG4FW1W6Fr+hTYlbw2
+   A==;
+X-CSE-ConnectionGUID: swKrtWD/RZmJzIypXFmQZw==
+X-CSE-MsgGUID: 9/eKUE9YRsWA4vp2uPuufw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15987766"
+X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
+   d="scan'208";a="15987766"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 06:56:22 -0700
+X-CSE-ConnectionGUID: LgJEYDKKSF+XcN9BD0ATpA==
+X-CSE-MsgGUID: DzuNFawVSnGs6JO2uwcUWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
+   d="scan'208";a="46772031"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa004.fm.intel.com with ESMTP; 20 Jun 2024 06:56:18 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Mina Almasry <almasrymina@google.com>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH iwl-next v2 00/14] idpf: XDP chapter I: convert Rx to libeth
+Date: Thu, 20 Jun 2024 15:53:33 +0200
+Message-ID: <20240620135347.3006818-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|PH7PR12MB9256:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6332ba6-6459-4dba-0462-08dc9130acda
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|376011|7416011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UEtnMjNjU21BSXBqSUdsKzhDVXd1TVNPbmlENlA4bVJ3eDM4bUV5K2NmWkNv?=
- =?utf-8?B?S2hQT2ZNK2thLzkyb2V3U1lRcEQ1eTEyek9LS29uem1iclhQT3dTbGZlenpT?=
- =?utf-8?B?c29GTk9JRmlnUGh0Uk96TFRDZ2F3WnJaR2lqR0Zoc1g5aUl4bkRTRWtuRS8v?=
- =?utf-8?B?SzFMemdlc2wxU3Bqb0dsbFhBWnhKVjlDTCs0dlZTbHJZb1ZtRGFlY1FGVlo4?=
- =?utf-8?B?WElad1pnNlRmZjNkRkxaQnRPK21FZUZtTDdHRWh1RUxiYlNySVZ3bGlSR3dF?=
- =?utf-8?B?NXBSSTlna0p3Z2k2aldqSk5GSWRqL0ozcWxYQlFtL09UMTQrY1UvVVoxWUs3?=
- =?utf-8?B?bWhERGFmci90RTR6NUJnYmkwY1lFMWRWdUkvemtIYW4vaGl6Y21lWFFXVHpk?=
- =?utf-8?B?dzJIWnJNWTJ3bEpRV0pnYWZkZ0hKaHBMeitUUlRPSWpwYVVjZEZQdVBCbzFQ?=
- =?utf-8?B?MTlpY004UXdJRXhINGRnT21nV3RMVHlIZHR4a3prR3dTUndudjVnR1VCam5m?=
- =?utf-8?B?UlZjbWFsVVIvcU5FdW50bytIMnhoVXFOUlBwM0YvQmZvVHRnK0Uvbk1DVXhD?=
- =?utf-8?B?a0tIbDZNUHZHbXlweU9mcXRMWWsxUDY2VWUrQ2FsSFVaM2pYYnlBUkVwS01P?=
- =?utf-8?B?c053TVliZE5hZUQzcXQxL2Z1bEhQTmk4Y05NTWxZN1NESWJkL21zblNubXBF?=
- =?utf-8?B?aXliWFRmbmlKc1R0TU44SEVPZW5yQ3FLZlRheVk5dmpxdWoreEVHZXNWbG95?=
- =?utf-8?B?VnE1Y3B2MktaWTdmQ1JMLzRETllxRnpEbngwc25tYlN4MU5PdzFBZkZXMWps?=
- =?utf-8?B?WEVUMkRiUDhiZWl5M0poV2x6YXFSN2ljcG45MnlVWEVmQXlHRVhZOXF0MUUy?=
- =?utf-8?B?alM5S3YwNlVReTZwbTFBMnBGRFBoM09VOW9wM0l0V2lNUlpndkdTWDNNZHhj?=
- =?utf-8?B?d1JCNC9UN3ZEdktqd3htdjdiemVhS2lGNkN3VDdoaUJTUGtWVWoveTFyTit3?=
- =?utf-8?B?TVhTc1lKWEg3YTJJUWtJQ0I0bVdiMlNnVGQrZFMyOFFvTmtUdjA1WGhxYk9O?=
- =?utf-8?B?akE0eVo4MTFGMkdIZGJkZ1h6aVlxNWI2WTFYa3lKOFNkMUFGS2pPVVF6dVBV?=
- =?utf-8?B?SEpFY2lmb1BoTXBFMUdzZkMyWmdyR0sxa0w1Q3lmcXBrY2tQWnVoSlFIWFR0?=
- =?utf-8?B?Z0MzNUpoTVcrdUpnR2hUNllLWlNnNHV3eFIrUFdubWw1b3VMN2VGTWlmSWNr?=
- =?utf-8?B?Z1JRRjFlMDZwMEN5QmFDalZ1ZHdjaUlleE01dUxxemprOCt2UjZkV3NzVXJQ?=
- =?utf-8?B?OEROTnBLaHdXeks5THpnOGJlVFZuTGZJZ0FlTWZJUVI2UVJXR25DN2Nvck1B?=
- =?utf-8?B?b21xNmkxOHlUTEJIamxtb0JjZFBtRlk3bGNMSTdlWHlZaEtnMUdlaUhmRHlm?=
- =?utf-8?B?MzVZUFh3ejNsTnUyMUI4OXVPMkJDdzhlY1VMcHhOZ0JqV1E3bHgvZTZ2c3pN?=
- =?utf-8?B?ekhTam4wWlZFbTMwMy9OMHR0UWpRNWZSVEVYKytiMk1RcE1zekU1TTd3Wnll?=
- =?utf-8?B?NWJWT0NZbEdBc01Db0tFYUhsbFV4bGFIVU1IL0FxQmlpZFRRT0VCZzdaZnQ4?=
- =?utf-8?B?NmxjMHRUZ0g2dWdLSG5nNUl6VnZvbzhBTTk2RW1Od1NubDVIT3VpSDRneUhS?=
- =?utf-8?B?ZGpRTEw4eEVHN25xNkxWcEo5ZWpDT0RpZTNVMjVrM25KYzF6eWNodFN0VWZy?=
- =?utf-8?Q?3kZchIMpqiOdmNsHQ4ABU1/FqyYIQn+8VX+qzg+?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(7416011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SnFXY1BHQWZUaEhwbGg0TjdQRndtZ1B5YytJUFRXV2MyMTRYVzdyRTBPTFcy?=
- =?utf-8?B?NXlFTVRVdnZVbUtYVlRFdmNueGFBZU1IUzQ0QTAyalRNUFRLUkJxM3NBMTBO?=
- =?utf-8?B?cnV2WnJiUk9neW40YzdaOUtVYm5CdkQ5L0VBN1gyWkJMOVhwSVo3WUtYbjEz?=
- =?utf-8?B?bG9BN2Q1RjFWVVdxbUdHK3ZwVlI3cGRBWkhHS3VDZzVhMFZkaFJyY1FEM2Ew?=
- =?utf-8?B?K2dkakJyMTBrd1VoY3BKd2ZSZlYwNDNIL2UxQk1YVkFwelJZQXdNcDdYaUdY?=
- =?utf-8?B?ejhFSGlqSDlmMzRtWW5rMmowZnc2a21TWHNsQmtBTTlrNzVmTGlIWlJDNVp4?=
- =?utf-8?B?MmpNNGs4ZmZHMVl4NDk0by9UU2NhcnhnNmJRL2QwY1UwN1N3OWptbzFZbXor?=
- =?utf-8?B?WkdZdGRjT2NMWVhIVG5nWFQzMXBXUjMrcjhXOE4rREFsU0RvVDF6WDhJemRw?=
- =?utf-8?B?NDJOOEU3K0tlc1AxQngzcmRIYy9CVldaclFQb21aejR6enJSWk5OS054VVlZ?=
- =?utf-8?B?S3FUbGQxbVl5QWlOQ0MwYld6UTAyRmZUZFNGS29NYmhEYmNsSFM2aW9sdE9G?=
- =?utf-8?B?ZW5ya3AvaGwxbXpYVXJodFhRN25IMTRVRDVqNExaN3hmYXFQNklWMFI5a1FC?=
- =?utf-8?B?QnEyQWZkMHNwRDlhSkR0SlNuSTcrcTRqcDNXS2dESHFnSm9lc0N2aGhNRzMv?=
- =?utf-8?B?c0tMcjMwSFFYK2UvMWdkRzVpTXowQ2pMQnc4WHRGNjMyWWU5MDhSaVlSejJz?=
- =?utf-8?B?REdsOVU0L1VRTVRYOEZPK3BPSHVpcnZuR0duc1g5Rng2YnZBOFU3MGhudloy?=
- =?utf-8?B?NytFakZxd0NzaEw3SkZWaVZXaXBoaEpjcGRwWC9UY2syY0MveFpuMXdOOXRW?=
- =?utf-8?B?OGdEUnhRVEszdU9GUWFxbDhaNGloVDk3UVVJNGVHTm50ZWlkT3BuUFdjVEZF?=
- =?utf-8?B?QzhtWkJNSkVrQW5lRlkvQkxNYko0cnYxUHVhTmNOYnNuNHlPWUtEL1JYNEhR?=
- =?utf-8?B?Ly80ZmZMdWw5czRYMFRNYjMyR0RMVDJrb3lDQVQ5V2JwUGxFMU9YSEN4QmVu?=
- =?utf-8?B?bzdhVS9Uc3lJVTRMSzNPQ1BZTnNyeHJSQnVGY3JXekpVK0U5Z3lPM3VDUUUx?=
- =?utf-8?B?RDJFTGtaODdMT1IyaHo4amZUR3pxdExJQitxK2FZSXQ0ZTQvaUZXZG4vRjl3?=
- =?utf-8?B?cnpJUjFWODlVRHhkejFGMmI1YVdMZ1R1MjlmSTlmUlBZeWNBYkI0aWtHMzls?=
- =?utf-8?B?TGJiK21Bd3hJRUJ2VHpBZVFJdmlmZVp2Nzh3bVBFY20vcjM2UHRrdlhUWitV?=
- =?utf-8?B?cHFBeUQrRVYxYlhoUVUzV1Z6cHpuRmJKZ1M5TVFvRk5BcFJXN2FtQ1VYaXdJ?=
- =?utf-8?B?aFJkbVBqSG1kZEdpdzVLdDA3WWJQZVQ1cHNGdlRhRkxPTHdwUHBNekJkMGVl?=
- =?utf-8?B?eVpiZEx0V2VZdnhNWEtQU3dnekpBV25VVDc5UkZLSGVZcWJzdGtKMEV4Y3Va?=
- =?utf-8?B?ZE5iVUlmeWcwa0Fwc3pJUnZURkJQSXo0dTZvbE1YdXVEd1krK0dCKzFWTzlT?=
- =?utf-8?B?ekJseFFkZCtJUlhJZ1ZFYzR5U2VHcENXa0lpU3VTQnBXS2RpVjJaMXFPMFpG?=
- =?utf-8?B?V0JYMGp6bmxLL0RZU003eEcvNy9zNDVJTzZha2Vra0JCQ0FZbmdPYk4zaFNX?=
- =?utf-8?B?TkYwVmtwU29pUTM5OFJwb0kyeU4rZTRPQkJ0Q3pGYlg5M2hBKzlTTXptb1l6?=
- =?utf-8?B?ZGRRYS9qV2ROZGsrK0g0Z0VUZW9kUGZVRU8ybUMwbk5MdytNL04yRFJOb1BM?=
- =?utf-8?B?WkZSalV2am5qeUpWRysyMTNrM25YR25NRHd4L0ZnUnd2RTRLN2NhdWJvMDJU?=
- =?utf-8?B?ZFZJVmhHRzU1M1J2cXhLQTdnb0lENWQvVTNBTEt5K1R2ZFVBRCtYaSsvd2hU?=
- =?utf-8?B?MHRUZDJHUjl1TjVnSkh2QWVINnpJRTYxZ0tIZ2JySjIyeUM2ZFRBZStvWmkz?=
- =?utf-8?B?M1R5cUd5d25nR2toMmxmZDk4UnZKVXRMR0RSZC9NcU1hT1E2WmhlMUd2REdO?=
- =?utf-8?B?NE1iU25aT2xlS2hKd2RXUmRWenVPM3l1dTYxTlR2MTYwZ2E4c0laN05wUWx4?=
- =?utf-8?Q?B9Z0=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6332ba6-6459-4dba-0462-08dc9130acda
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 13:55:42.9243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gS2b0uF2ZOS/nrxSpAg3wV9EXjNTPUHFJR65jWGL7ukrFJ32z3GcreGvfh97s56X
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9256
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 20, 2024 at 09:32:11AM +0100, Fuad Tabba wrote:
-> Hi,
-> 
-> On Thu, Jun 20, 2024 at 5:11 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Wed, Jun 19, 2024 at 08:51:35AM -0300, Jason Gunthorpe wrote:
-> > > If you can't agree with the guest_memfd people on how to get there
-> > > then maybe you need a guest_memfd2 for this slightly different special
-> > > stuff instead of intruding on the core mm so much. (though that would
-> > > be sad)
-> >
-> > Or we're just not going to support it at all.  It's not like supporting
-> > this weird usage model is a must-have for Linux to start with.
-> 
-> Sorry, but could you please clarify to me what usage model you're
-> referring to exactly, and why you think it's weird? It's just that we
-> have covered a few things in this thread, and to me it's not clear if
-> you're referring to protected VMs sharing memory, or being able to
-> (conditionally) map a VM's memory that's backed by guest_memfd(), or
-> if it's the Exclusive pin.
+XDP for idpf is currently 5 chapters:
+* convert Rx to libeth (this);
+* convert Tx and stats to libeth;
+* generic XDP and XSk code changes, libeth_xdp;
+* actual XDP for idpf via libeth_xdp;
+* XSk for idpf (^).
 
-Personally I think mapping memory under guest_memfd is pretty weird.
+Part I does the following:
+* splits &idpf_queue into 4 (RQ, SQ, FQ, CQ) and puts them on a diet;
+* ensures optimal cacheline placement, strictly asserts CL sizes;
+* moves currently unused/dead singleq mode out of line;
+* reuses libeth's Rx ptype definitions and helpers;
+* uses libeth's Rx buffer management for both header and payload;
+* eliminates memcpy()s and coherent DMA uses on hotpath, uses
+  napi_build_skb() instead of in-place short skb allocation.
 
-I don't really understand why you end up with something different than
-normal CC. Normal CC has memory that the VMM can access and memory it
-cannot access. guest_memory is supposed to hold the memory the VMM cannot
-reach, right?
+Most idpf patches, except for the queue split, removes more lines
+than adds.
+Expect far better memory utilization and +5-8% on Rx depending on
+the case (+17% on skb XDP_DROP :>).
 
-So how does normal CC handle memory switching between private and
-shared and why doesn't that work for pKVM? I think the normal CC path
-effectively discards the memory content on these switches and is
-slow. Are you trying to make the switch content preserving and faster?
+Alexander Lobakin (14):
+  cache: add __cacheline_group_{begin,end}_aligned() (+ couple more)
+  page_pool: use __cacheline_group_{begin,end}_aligned()
+  libeth: add cacheline / struct layout assertion helpers
+  idpf: stop using macros for accessing queue descriptors
+  idpf: split &idpf_queue into 4 strictly-typed queue structures
+  idpf: avoid bloating &idpf_q_vector with big %NR_CPUS
+  idpf: strictly assert cachelines of queue and queue vector structures
+  idpf: merge singleq and splitq &net_device_ops
+  idpf: compile singleq code only under default-n CONFIG_IDPF_SINGLEQ
+  idpf: reuse libeth's definitions of parsed ptype structures
+  idpf: remove legacy Page Pool Ethtool stats
+  libeth: support different types of buffers for Rx
+  idpf: convert header split mode to libeth + napi_build_skb()
+  idpf: use libeth Rx buffer management for payload buffer
 
-If yes, why? What is wrong with the normal CC model of slow and
-non-preserving shared memory? Are you trying to speed up IO in these
-VMs by dynamically sharing pages instead of SWIOTLB?
+ drivers/net/ethernet/intel/Kconfig            |   13 +-
+ drivers/net/ethernet/intel/idpf/Kconfig       |   26 +
+ drivers/net/ethernet/intel/idpf/Makefile      |    3 +-
+ include/net/page_pool/types.h                 |   22 +-
+ drivers/net/ethernet/intel/idpf/idpf.h        |   11 +-
+ .../net/ethernet/intel/idpf/idpf_lan_txrx.h   |    2 +
+ drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  734 +++++----
+ include/linux/cache.h                         |   59 +
+ include/net/libeth/cache.h                    |   66 +
+ include/net/libeth/rx.h                       |   19 +
+ .../net/ethernet/intel/idpf/idpf_ethtool.c    |  152 +-
+ drivers/net/ethernet/intel/idpf/idpf_lib.c    |   88 +-
+ drivers/net/ethernet/intel/idpf/idpf_main.c   |    1 +
+ .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  306 ++--
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 1412 +++++++++--------
+ .../net/ethernet/intel/idpf/idpf_virtchnl.c   |  178 ++-
+ drivers/net/ethernet/intel/libeth/rx.c        |  132 +-
+ net/core/page_pool.c                          |    3 +-
+ 18 files changed, 1824 insertions(+), 1403 deletions(-)
+ create mode 100644 drivers/net/ethernet/intel/idpf/Kconfig
+ create mode 100644 include/net/libeth/cache.h
 
-Maybe this was all explained, but I reviewed your presentation and the
-cover letter for the guest_memfd patches and I still don't see the why
-in all of this.
+---
+From v1[0]:
+*  *: pick Reviewed-bys from Jake;
+* 01: new, add generic __cacheline_group_{begin,end}_aligned() and
+      a couple more cache macros;
+* 02: new, make use of new macros from 01;
+* 03: use macros from 01 (no more struct_group()), leave only
+      aggressive assertions here;
+* 07: adjust to the changes made in 01 and 03;
+      fix typos in the kdocs;
+* 13: fix typos in the commit message (Jakub);
+* 14: fix possible unhandled null skb (Simon, static checker).
 
-Jason
+From RFC[1]:
+*  *: add kdocs where needed and fix the existing ones to build cleanly;
+      fix minor checkpatch and codespell warnings;
+      add RBs from Przemek;
+* 01: fix kdoc script to understand new libeth_cacheline_group() macro;
+      add an additional assert for queue struct alignment;
+* 02: pick RB from Mina;
+* 06: make idpf_chk_linearize() static as it's now used only in one file;
+* 07: rephrase the commitmsg: HW supports it, but never wants;
+* 08: fix crashes on some configurations (Mina);
+* 11: constify header buffer pointer in idpf_rx_hsplit_wa().
+
+Testing hints: basic Rx regression tests (+ perf and memory usage
+before/after if needed).
+
+[0] https://lore.kernel.org/netdev/20240528134846.148890-1-aleksander.lobakin@intel.com
+[1] https://lore.kernel.org/netdev/20240510152620.2227312-1-aleksander.lobakin@intel.com
+-- 
+2.45.2
+
