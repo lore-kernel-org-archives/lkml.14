@@ -1,130 +1,99 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9601AC765;
-	Thu, 20 Jun 2024 12:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC641AC229;
+	Thu, 20 Jun 2024 12:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718886529; cv=none; b=AmWl7n388rIK32GhbIVpPROir897tCBLrTfk/ht1HSBrGP5naPSyZrDfxwXKovopcMasg9d3iUPJxqg1VSnJrM0TTYkZNjl17DanWqPM9mCeXoUOcCbSZNYbjfe61q433CUgZsSp2JzI8dBX+sGVCsYP2Sc6yyIZHVJZUbvNpvQ=
+	t=1718886575; cv=none; b=YQqatdgdw5S+/j5cgKWSyjyUpH3icJpe60a3PGcOnGUgwqQ2fXvGEqfM4BH17BFV+S/AiHc1Qd5bRNhOr8ldHLpPD0yrd3B+2fO89Gy3u1bi9zrD3zTo8/XEbufxr48aMWCxbari3O69qGuuexMpK3wkpaT3AILI7gx2Y3R/JmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718886529; c=relaxed/simple;
-	bh=X7I9QTXjWXLV5adf+VLzAIKVei/MuLCImpBgdp5MFW0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VJm4QqVvSbDSffl1kMYhJQ0ANJWaZX3IImdkQ9+W80V410nLF3KyZC4xmxws9TK0Dw5T4ZL15tTskCJGZX+BQ/NOz+CFwi5tMF2M4UMxVna6pjtW4A3TGnX/XgVAFlnFzcdN7au33Rze6kH4V5I3ndJqZbWZEk2NaZqwRvYjTvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=M26+S+ZB; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1718886575; c=relaxed/simple;
+	bh=ibC0N7fxSpSAAhPJAwhOTFvUbcqn9SqOfy80AyMA53M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MPOR2cOaSyhS0LZLrRUPXOls2TW9fAzvuRCYY1Z0CJc9kbuSmsBDzxFojHGqp/zNplSJydhFPb/Ot1RVJ+KtOY+Lv7jwct7KAiIIvF4QCHQuV9ZE21k7OpbKSCxMIItwP+69OOS/jpal5pX+Bl++2jcfF9ZsGDWXmmpcpWqxxVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSbry0ec; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="M26+S+ZB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1718886469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3ohuxApLNdhOX7LZ/v+Xu3NNVbPIJcpf85Dd0wZ/o3s=;
-	b=M26+S+ZB7da4Tf54WshO20DXN4NdDv+ZKNPYgCJbP05fpECQBaQS+sxffHumo5a5Xd9qMC
-	G9142wxy8t61XicEf4R3sQHKLHGiLjHDjMniZjQLfiiAlQ1OUy5Uf6ay2EA46BBPV8ZUXi
-	zzC1qP6ig5jK22F+tbIrOI4l/Si+H8I=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Nuno Sa <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH v12 7/7] Documentation: dmaengine: Document new dma_vec API
-Date: Thu, 20 Jun 2024 14:27:26 +0200
-Message-ID: <20240620122726.41232-8-paul@crapouillou.net>
-In-Reply-To: <20240620122726.41232-1-paul@crapouillou.net>
-References: <20240620122726.41232-1-paul@crapouillou.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSbry0ec"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f177b78dcso87593666b.1;
+        Thu, 20 Jun 2024 05:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718886571; x=1719491371; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JY+P5MQtBDn+YB4D/IW/nR3xzmRxBb9d5dLTB5FBko=;
+        b=DSbry0eceB7XyuyO/cp4FCQOx+bWokdWOUXf1Qu+y37PM1WbW7tpZF5bCcjEjl638H
+         ntTOwKIyzden/tr3/r8+ZNM3DLyNcm74b7XjRhNvY4a+VhBetf/RXKxesrfQarEDJi4l
+         yqgK2tIQpve9FUcQt7Csrmv3/zvG9xCiG+VmxSY0c+ybRLeCP1HIGoJsgjoVe5De+dVr
+         2PrUIhB+VbNJWci8hNuLoH4JCl4QURWhTRJDu9M7jmR7qY3vgj2wsTqvmzA+9ApVKENC
+         1L6JQuKikfYP5uyKStwv4oihBPXJho2lzwEDQjZExMXy1IDvcs8VCYfl4WfQEeIz+fad
+         +MrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718886572; x=1719491372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7JY+P5MQtBDn+YB4D/IW/nR3xzmRxBb9d5dLTB5FBko=;
+        b=EDGZ8noUMmfsxFSYPFuXBsQEEpOm5AFcmdSCeTuZKL+GlGkEbAsx5cNvzPm+ll0Lcp
+         RKsoNmj2Q+0R8F0v6UYWxTBw79rUnSYT8S1h3LtOHqSY215wEXv7MeQTgBRbpREt85iE
+         bHm2lYf2wrRj7SvmnjIE8B5NAtXwzPft2evcVD8cZeJf7CESsT71gZ1hL4c2qDEs0aqn
+         035Iwrm7s35X3WLH4AEWlzk1z4268z4xWV89nrkWWWFC7IsFzQZ94F+e6nqSX9HXr5Xx
+         2iBORAbplMH77hh9pfQRsy1doLxCdU12uim2dRQ5K9HODBLnGqQeBuonOdFAN2IRMvlc
+         bJHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV03z2u489UEGmBOB8QZH/i8GsOzA5tngaqrZlv2cqMjJioIxxBr+sRu/uLUdZseoZWRm4dvBauUHvxs8NbuRfgPaojxmW3J1kSiiyl
+X-Gm-Message-State: AOJu0YwevnGMNT2MpIXtn8uuEOYILDKqxWHrNUFWHQZbNWcMmjmQ7iIg
+	Ua67DysAUNALkbgN2xeNQLjO2gpKX/hV5B9GWIG85fWjZOnnp0PA
+X-Google-Smtp-Source: AGHT+IEbbn1htXoG3AL6WdhY6qa5YPWuh5xJr6b7zTna2jFp7Md/ENX++Wbq3F/XQFRZB4A99DmQgQ==
+X-Received: by 2002:a17:907:cbc4:b0:a6f:ae08:2ce6 with SMTP id a640c23a62f3a-a6fae0830cemr244512766b.68.1718886571472;
+        Thu, 20 Jun 2024 05:29:31 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f5f8f6eb3sm711995566b.143.2024.06.20.05.29.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 05:29:30 -0700 (PDT)
+Date: Thu, 20 Jun 2024 15:29:28 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 09/12] net: dsa: Define max num of bridges in
+ tag8021q implementation
+Message-ID: <20240620122928.nbxshrh2jd5wnfis@skbuf>
+References: <20240619205220.965844-1-paweldembicki@gmail.com>
+ <20240619205220.965844-1-paweldembicki@gmail.com>
+ <20240619205220.965844-10-paweldembicki@gmail.com>
+ <20240619205220.965844-10-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619205220.965844-10-paweldembicki@gmail.com>
+ <20240619205220.965844-10-paweldembicki@gmail.com>
 
-Document the dmaengine_prep_peripheral_dma_vec() API function, the
-device_prep_peripheral_dma_vec() backend function, and the dma_vec
-struct.
+On Wed, Jun 19, 2024 at 10:52:15PM +0200, Pawel Dembicki wrote:
+> Max number of bridges in tag8021q implementation is strictly limited
+> by VBID size: 3 bits. But zero is reserved and only 7 values can be used.
+> 
+> This patch adds define which describe maximum possible value.
+> 
+> Suggested-by: Vladimir Oltean <olteanv@gmail.com>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
----
-v11: New patch
----
- Documentation/driver-api/dmaengine/client.rst   |  9 +++++++++
- Documentation/driver-api/dmaengine/provider.rst | 10 ++++++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-index ecf139f73da4..d491e385d61a 100644
---- a/Documentation/driver-api/dmaengine/client.rst
-+++ b/Documentation/driver-api/dmaengine/client.rst
-@@ -80,6 +80,10 @@ The details of these operations are:
- 
-   - slave_sg: DMA a list of scatter gather buffers from/to a peripheral
- 
-+  - peripheral_dma_vec: DMA an array of scatter gather buffers from/to a
-+    peripheral. Similar to slave_sg, but uses an array of dma_vec
-+    structures instead of a scatterlist.
-+
-   - dma_cyclic: Perform a cyclic DMA operation from/to a peripheral till the
-     operation is explicitly stopped.
- 
-@@ -102,6 +106,11 @@ The details of these operations are:
- 		unsigned int sg_len, enum dma_data_direction direction,
- 		unsigned long flags);
- 
-+     struct dma_async_tx_descriptor *dmaengine_prep_peripheral_dma_vec(
-+		struct dma_chan *chan, const struct dma_vec *vecs,
-+		size_t nents, enum dma_data_direction direction,
-+		unsigned long flags);
-+
-      struct dma_async_tx_descriptor *dmaengine_prep_dma_cyclic(
- 		struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
- 		size_t period_len, enum dma_data_direction direction);
-diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-index ceac2a300e32..3085f8b460fa 100644
---- a/Documentation/driver-api/dmaengine/provider.rst
-+++ b/Documentation/driver-api/dmaengine/provider.rst
-@@ -433,6 +433,12 @@ supported.
-     - residue: Provides the residue bytes of the transfer for those that
-       support residue.
- 
-+- ``device_prep_peripheral_dma_vec``
-+
-+  - Similar to ``device_prep_slave_sg``, but it takes a pointer to a
-+    array of ``dma_vec`` structures, which (in the long run) will replace
-+    scatterlists.
-+
- - ``device_issue_pending``
- 
-   - Takes the first transaction descriptor in the pending queue,
-@@ -544,6 +550,10 @@ dma_cookie_t
- - Not really relevant any more since the introduction of ``virt-dma``
-   that abstracts it away.
- 
-+dma_vec
-+
-+- A small structure that contains a DMA address and length.
-+
- DMA_CTRL_ACK
- 
- - If clear, the descriptor cannot be reused by provider until the
--- 
-2.43.0
-
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
