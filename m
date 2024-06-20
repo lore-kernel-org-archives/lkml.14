@@ -1,100 +1,112 @@
-Received: from mx0a-00176a03.pphosted.com (mx0b-00176a03.pphosted.com [67.231.157.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2245418EBF;
-	Thu, 20 Jun 2024 04:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.157.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715C41EA71;
+	Thu, 20 Jun 2024 04:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718859228; cv=none; b=RYS6FBe5bCSTVgjGNEt71wN1XI+WCbbwGWQIr4ZMbjX6WDZqmhBOPZnNUJgCCWxMgjTEymwdzyjRZsHw6A+XA8U3ZSK74rNeHAQyRZRiHbCz94L9Bm3CJcnw+MBiOQRcx0z23yiNSN2RorK5KyYzvmm6dLkLTdgNVGWxFAGdi6g=
+	t=1718859371; cv=none; b=L31msqQjuP16uc81E4s2vBiOVNyZ/qkhhwlInUZgY4HEM4zOeebgSsiQJNduKbbdc9zIPRMBBQc2tlJrgmcOwtxm8KJ1Il8XTGW1R1xZ310mUbGR6428vMvotjyN7pfED8K6R5Dip1ac+jeju2l+dZJpzcafrLDEiAtevD4i4Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718859228; c=relaxed/simple;
-	bh=ps1EQme9Za+9oV+doWsBcMNAJHRJD+o/bSmKq/ZmNeM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BWPxV6rJDB7Yj36yRTJ+moS0tq+lfD64zFptV32TNBmV5h8qzxjsPfwRXQ0sYYuEF2cacUTG6mYndAJVfc8cE4bo2rd8TLwgtuZoz3Occ+sj4QybskEzXqlzw8NRRWTyRvMzOu9oOyyzGQUEguKU17/nXPaxMss3DxslVNyoTk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=sIvtjV9V; arc=none smtp.client-ip=67.231.157.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gehealthcare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
+	s=arc-20240116; t=1718859371; c=relaxed/simple;
+	bh=rVDIQAc9vjhMOZPIPBM4LIv8Mccbp+xBGtcT29Kj1HA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l0RdU4jSk6D9xdMBaBLHbWXL4dufjAPPX94RGoCGOJtCdHCG0r7KJCizHWRPz0gy+WaLOSVBdwVOAeHIBll1hx/mQc0+z5PR1ftYWWgmpg0449lbpIVKtn1bIQITdupv5GLnhi7JJCzD7MpmWv4i0MIDE898jo6xt+LIy5xTE8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHIm6FWq; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="sIvtjV9V"
-Received: from pps.filterd (m0048300.ppops.net [127.0.0.1])
-	by m0048300.ppops.net-00176a03. (8.18.1.2/8.18.1.2) with ESMTP id 45K3MsRF029745;
-	Thu, 20 Jun 2024 00:29:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	gehealthcare.com; h=cc:content-transfer-encoding:date:from
-	:message-id:mime-version:subject:to; s=outbound; bh=j1pYCW2DIFQa
-	Oc9Tpva6qgWX48ZWEqZARYmhzcYTGlo=; b=sIvtjV9VQlPm0rM/XfWNVzbv78km
-	UWNMaw+vVDPXD5ojoo1mp6wj0drUIiMWNwbYOJCmQ/hk986GdKa/NAGDnVDI4akl
-	JPZkB/KuKOlnPDt/5hE+HlIaz+Cg1WHHuOQq20M9s5X8WaRT6zdbpLno/5MBFibG
-	hcapMuuEotRuDmrikboxZifrcDI7/tMQkoCLpnIecGLX2mABKbJHorQs2tBEP7T8
-	VLEmbLgHIMUwmjCanRiDs27hLCz5JWKxxM1TnrpU4tZB48Iwq68P7k9RtiabKeFz
-	BGXWISFk3sB+yOd8ebWLFoWxH8Z5Kep84Gn71/pD3c7QDSzxJ8hqC2bpKg==
-From: Ian Ray <ian.ray@gehealthcare.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ian Ray <ian.ray@gehealthcare.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: pca953x: fix pca953x_irq_bus_sync_unlock race
-Date: Thu, 20 Jun 2024 07:29:15 +0300
-Message-Id: <20240620042915.2173-1-ian.ray@gehealthcare.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHIm6FWq"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f44b45d6abso3968765ad.0;
+        Wed, 19 Jun 2024 21:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718859368; x=1719464168; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KAXM/BEJGp3eeIPmRiUCt+sE2+R+WUmpjHtlnzxQA6o=;
+        b=LHIm6FWqDkoa1FDea7lfCnVoOXd+DR9jqwqMXeen1K2fRdXg8Cgo76dYdzZ/zAwTAL
+         Zg8qZcKlq6uTzQcuI59I/50MRGupKki7tuXNoH5MZkqFSQrHDNSkS5RnS7vNnCXxtUQZ
+         RIJFVY8hkMUXgjq23EFMuB2NvPegKuReOqn1ufGNTAt9wYXaf15+4frIOumytPiR79bu
+         veuA8HHy2m3onbUsXj5tWwp/KPk8SUWnS3YpJgT3mJ7uZ/sDluUvGOQ6rJI1ireFp+OW
+         Jtuo2C3SX9f636FMsjnWgHv+dLUzw6trwiz6lekUJfkTDMEZpE0zzkYBekU3XMcp7uOo
+         IeNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718859368; x=1719464168;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KAXM/BEJGp3eeIPmRiUCt+sE2+R+WUmpjHtlnzxQA6o=;
+        b=RyMfB2VfQNs5rc5fP+NdAnF7SD4FhfH01dF0mArb/KInnE1IhgJu9U8Sk7jQo0FqjP
+         8Bv4OZyW0JfV7AyPKdyuYmONgO5QNiglBF2OYPmXsBNEF9VdQeHr7G/kypLQb/BV75/6
+         nAo3GTOQu2GETUNM65G3UzgGJHLuQPwHH9gRIkEzpaYDbIJSbAtuE53aVE0rQ66k9Frd
+         UeaCdBKM+RbjYVmvu7pvQtgrLAoe4wn51BJ+Pk4nCdZRk8DJowVSlTBsxzP4mRKlKnjk
+         hjYoiMEGMG0kkjzi1n2hiLX0WuS4bj9i8S2RS1+1+7LCm/ZhZLPgF03aLoDzjquYwsBh
+         8Ptg==
+X-Forwarded-Encrypted: i=1; AJvYcCVukE+22r4IKRxfMEcEY/XrZIHYoxnyhtGl0B+tY0KCpGpu1XM294tVmARO4bk+9HIcjaFtvVufLfY9TE5VYj2XCKTAxqpsGSj+EJ8Rt30ynyp50Px6CgnFlvRx24y+vIi8JUTd
+X-Gm-Message-State: AOJu0Yy4QWB3x1nCI/GlhjWL/DPsZQ/QFRnOYBBmFx3sdsHdHVRtg6PV
+	P7M/wxrl/BpltyMcOhIeYU5JIfA1nhjumGvBincDQgDlANPIflv1
+X-Google-Smtp-Source: AGHT+IGL3dntDRBlrzjs5w7kuOREiPO+yFKeVR8D6K5ki/cB+QXlUmkYICKqlN4JJk97p5uqYH6xFg==
+X-Received: by 2002:a17:903:120d:b0:1f8:3f13:196a with SMTP id d9443c01a7336-1f9aa44fc82mr49269515ad.45.1718859367530;
+        Wed, 19 Jun 2024 21:56:07 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55eb0sm127560575ad.18.2024.06.19.21.56.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 21:56:07 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id D7AA118462BA1; Thu, 20 Jun 2024 11:56:03 +0700 (WIB)
+Date: Thu, 20 Jun 2024 11:56:03 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.9 000/281] 6.9.6-rc1 review
+Message-ID: <ZnO2Y1AVvR6zsJET@archie.me>
+References: <20240619125609.836313103@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: xlB3O7y49raH92gZG56nf2fQy7ntqn9V
-X-Proofpoint-ORIG-GUID: xlB3O7y49raH92gZG56nf2fQy7ntqn9V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200030
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HHnYLKCUkPdXYh/d"
+Content-Disposition: inline
+In-Reply-To: <20240619125609.836313103@linuxfoundation.org>
 
-Ensure that `i2c_lock' is held when setting interrupt latch and mask in
-pca953x_irq_bus_sync_unlock() in order to avoid races.
 
-The other (non-probe) call site pca953x_gpio_set_multiple() ensures the
-lock is held before calling pca953x_write_regs().
+--HHnYLKCUkPdXYh/d
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The problem occurred when a request raced against irq_bus_sync_unlock()
-approximately once per thousand reboots on an i.MX8MP based system.
+On Wed, Jun 19, 2024 at 02:52:39PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.9.6 release.
+> There are 281 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
 
- * Normal case
+Successfully compiled and installed the kernel on my computer (Acer
+Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
 
-   0-0022: write register AI|3a {03,02,00,00,01} Input latch P0
-   0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
-   0-0022: write register AI|08 {ff,00,00,00,00} Output P3
-   0-0022: write register AI|12 {fc,00,00,00,00} Config P3
+Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
- * Race case
+--=20
+An old man doll... just what I always wanted! - Clara
 
-   0-0022: write register AI|08 {ff,00,00,00,00} Output P3
-   0-0022: write register AI|08 {03,02,00,00,01} *** Wrong register ***
-   0-0022: write register AI|12 {fc,00,00,00,00} Config P3
-   0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
+--HHnYLKCUkPdXYh/d
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
----
- drivers/gpio/gpio-pca953x.c | 2 ++
- 1 file changed, 2 insertions(+)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 77a2812f2974..732a6964748c 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -758,6 +758,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	int level;
- 
- 	if (chip->driver_data & PCA_PCAL) {
-+		guard(mutex)(&chip->i2c_lock);
-+
- 		/* Enable latch on interrupt-enabled inputs */
- 		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
- 
--- 
-2.39.2
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZnO2XwAKCRD2uYlJVVFO
+o0BZAP9VnGEX2jdauijbtQv78ZO9JOEAy7J0zC4a5bSdnU1yQQD/RaTw7cwNufhh
+GhUTFq1Airetl4uqBwhLZZyq1yOudQU=
+=LzJt
+-----END PGP SIGNATURE-----
 
+--HHnYLKCUkPdXYh/d--
