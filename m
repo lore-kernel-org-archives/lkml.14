@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629FA156256;
-	Thu, 20 Jun 2024 19:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C661BA86F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718913008; cv=none; b=nu5/C2MDJdsfjY9Og906PUHI5bRIqZPFd4+eOr/Hwm7BYbIkVm5gjg5HaJW00JBbMEJBuGa2yMnWgemHe2qu0MLt43MOdkijkdbmKoh5bXsAouSZVckbfrlaOzkky+rouHrZP7W3GlssCXjAkLvfhjj40bj4RMRgBbulh0V/+PM=
+	t=1718913010; cv=none; b=IJZIvOcU+CrvM4RqvL1gdKnGjNIwT9Oa9vLxOp7GBULf38RzAtc41Wt+f6MfK4cN21PkPpfcjXxFUBpK6qurFxrR4bp547GGhSz/A2lLh0dkGxLsgySXL/3X9n5tbs4zzgnKOlP5tJVB15ZgKWhmyoi+yOW0ng/JbLKqnkYNs9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718913008; c=relaxed/simple;
-	bh=cqaHQJ/bDLwzr7N3x3FQyJiJw1p7zFcv38LHOowa4tQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=uxkyDBXtrapmunUgxFc7ot3aObn9FNFC4w7uqtUUH2zbdGB3H7+YFsX4Nsokb6q+/12RIPCftuGpoNugVgnvwcfrTd+jWX2Tm+bEiCGhooPAN0xkr8rezWNeXYh5+2Lvylng1RglLW+TBTlSX6zz9W4Q2IxkTYjT7HeJMx62N7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uG/7peWs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718913010; c=relaxed/simple;
+	bh=1lQHrG718T7vMkVyokOHrbmi03nKM3TCSMmzoYw04ao=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GJsXG3YxjKfDnJpJPl+F8LMDhwTfs/Jvie6HHt+/7YFZDwbeUGH6/5jZX6vxE7omPg8oNgSvjAkHEGghZWZmhsMrkjM9fbUu5GvAy9mLOUzfKThi+yzfwfRL8f9lmUAiEEG4tuB02PD3/gFFMfeS9lu5PVZY5IZSjYn4jSP+5yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sG1hCZJp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uG/7peWs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 381F1C4AF09;
-	Thu, 20 Jun 2024 19:50:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sG1hCZJp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 28432C2BD10;
+	Thu, 20 Jun 2024 19:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718913008;
-	bh=cqaHQJ/bDLwzr7N3x3FQyJiJw1p7zFcv38LHOowa4tQ=;
+	s=k20201202; t=1718913010;
+	bh=1lQHrG718T7vMkVyokOHrbmi03nKM3TCSMmzoYw04ao=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=uG/7peWsk6S8xx48NOuyzMIfNKioRCcH+X9SLL+cQe96hLMPJsnUsCmXitJqW5kib
-	 csNXqO71rTif4SXi2ydGDHi456+dQUOrDVwUl+4Rb3HCt4jGViPIf5EYs72BkGuyFu
-	 G98jY2YEOnroFXIUql951AZL4Q3GRoRWxoBTiNTMKwkyBQgdwRZEp/vsjfVEzRjV3B
-	 0v/2KHY2/2hLVwzUh7GK4bYLT9Lvxyt/cc8vu4Znioxjh2aRxlOSYy7YYxFhX1DixK
-	 ZFDXMIjid+i6voZ+2CfSPxsHPS6mv+45iQDYVnb1MmlKCJ+YHNTu3s+hC877PRS4DV
-	 WrPqyMSd233Fg==
+	b=sG1hCZJpTkbQJVx7w6/9axoKxUlNtzsfHrmcafZGD92OWZSabFe76jEE7WiU3oV5r
+	 e+h8ARnUgIPEzyP+qp6eFzgFAflCoDylIJIbLmlvVQSoQUdV6YrWj45lpo9dskTD1o
+	 DcbU3Frh91HqgE4YnpCadzUfYVRd58jMbq43Y3XaMKBmrFa6EgMRMC3ylyC19n1PLW
+	 KM6OR1eSAA40u7ync6oHWIZLBk5kngGL8djWIFPqOKAinV6ADVAjaKptRSYmWjoDfs
+	 nXxMbUqQs5p/gMyFD5/wcnJ1NEXJ3kqDvFUvFaSHvThEP+i5URrovY9UZznjB3IW6K
+	 WC/HNKkAGPrBg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 27AB7CF3B9A;
-	Thu, 20 Jun 2024 19:50:08 +0000 (UTC)
-Subject: Re: [GIT PULL] sound fixes for 6.10-rc5
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1E41BCF3B99;
+	Thu, 20 Jun 2024 19:50:10 +0000 (UTC)
+Subject: Re: [GIT PULL] MFD fixes for v6.10 
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <87jzij21nc.wl-tiwai@suse.de>
-References: <87jzij21nc.wl-tiwai@suse.de>
-X-PR-Tracked-List-Id: <linux-sound.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87jzij21nc.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.10-rc5
-X-PR-Tracked-Commit-Id: 9b1effff19cdf2230d3ecb07ff4038a0da32e9cc
+In-Reply-To: <20240620092719.GF3029315@google.com>
+References: <20240620092719.GF3029315@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240620092719.GF3029315@google.com>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/mfd tags/mfd-fixes-6.10
+X-PR-Tracked-Commit-Id: 68f860426d500cfb697b505799244c7dfff604b1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 042742a1ff1f37ca88c303a9e61afc8c56b23657
-Message-Id: <171891300814.2247.12326381694846789482.pr-tracker-bot@kernel.org>
-Date: Thu, 20 Jun 2024 19:50:08 +0000
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 3a7b3836bbaa25d3ee3d6c1d336991fbec8d8ed8
+Message-Id: <171891301011.2247.7728237739770207792.pr-tracker-bot@kernel.org>
+Date: Thu, 20 Jun 2024 19:50:10 +0000
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 20 Jun 2024 15:18:31 +0200:
+The pull request you sent on Thu, 20 Jun 2024 10:27:19 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.10-rc5
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/mfd tags/mfd-fixes-6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/042742a1ff1f37ca88c303a9e61afc8c56b23657
+https://git.kernel.org/torvalds/c/3a7b3836bbaa25d3ee3d6c1d336991fbec8d8ed8
 
 Thank you!
 
