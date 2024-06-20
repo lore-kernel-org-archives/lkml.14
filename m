@@ -1,136 +1,103 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24DA1C007E;
-	Thu, 20 Jun 2024 17:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075371C0DC7;
+	Thu, 20 Jun 2024 17:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906279; cv=none; b=rJXMwiavEGLrNR5XPWLrWxBMEQ4ck5iimJHiSTV9YKFstZeVorwltw+Dg0J6wW58OGP5eZOUJbzHIRNwNNVo8KUboioBCmcO6wwN6IJxjMPA8RofcyG5c1KkrA4Zj8hU4yDFcr3dY6DL49fKa4uy0dcjp8H0s3ScnFJ9HQoKabE=
+	t=1718906280; cv=none; b=PoTjZXD3B3ZfdhGzN4ZiY8WCpJrw8Xr6awG47961Tkmh1snm2OcrzOzkjPBWYGVIZXDbIBrnxJqfUEmPnf7mvHwMSLpjxMd5WQJM/tdloHuUajtpe9fkXW1Vhmr8jkFH+ED4/0oWliqDDvO2GQJEf2WUZAYHpaln9xqAZBU1UTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906279; c=relaxed/simple;
-	bh=FZM6CosxQTAEV5PQ+/KRibOjH9YQS1OMFOTTqUFKpt0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c3oiB6K01w4kVVpykEAqRvOK5xgqAF5+uoM55C06nGXFG41Kt/uSx2Sgn9yKRewHVGQD5danNOdfcGuX480051LhLxoQ7yA9geDJmhc0+jGJair1ehs66WKe1jPV7aX80CY5wYGpf95ZP0k5NdBberd/qNvUyJpGAhzPTiCMBHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7UlnWPU; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718906280; c=relaxed/simple;
+	bh=4bCyXtthAFkbsH2+NEQwplsuZeRsrS5uPvYZ7QzNVVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LtAUFnAo5LVFEVWzjiuoq162YKtPEAovusUtVGkxUyDDZLzCdXs/CDO0UR/W0LrhU2C4EOBuTCFqZJtSCM3ry5Cu6BbLfwWNibqG/iyhST2lrkRGLyiPorAUH8nzdZS6AD26icd0ZKy97L5i5Wffow4PbF2Re3xNmG8cEpGhcj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mKDWfyzm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7UlnWPU"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7041e39a5beso983263b3a.3;
-        Thu, 20 Jun 2024 10:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718906278; x=1719511078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jBNHO7SGyRYGtIlT3hp756CkWMYdfL+ybrdFx5N+b+g=;
-        b=c7UlnWPUUeUtVJwNjx5kaf5cEPYr8gJT/g6NqoxuM2c8u99lOEM7WG946Gmskbsixe
-         ET3g/tjhaRsHUgUTXKZs9j/joP73X4itynY146LlhwPyg0+LSquleQy5t6PaLOxtJWej
-         1kchOVnLY85P2W2EOiYOD9Uku3EvaDNtES7wQWoS7sSGn70Dl9Omk86BwdgIIe6pOT4T
-         RxY8ywVw0F76TUrExceypvNASojCuWxPH2NYV9qzM3nrMZ810vAHWMrYqv+q1saNAJDG
-         mKHw876SetKlhauXdG1+VfIyCKyNzV4KrqsOTrnGB3aScpVHnkhXjcufYy54ElKDH/DM
-         9PpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906278; x=1719511078;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jBNHO7SGyRYGtIlT3hp756CkWMYdfL+ybrdFx5N+b+g=;
-        b=i2B7aQ2weAwynSUoCNN7YXTcMU5Ofn+hDZkh+J+zCRZzEY7sRCUq+OhANb/SzXxnOE
-         y+G1TLWqfGaUr+Yfn6sJ+vIC852ENSjJm2tKgBPv7QyGCOmE6xlZ3OyjO450sXCGi6Tp
-         RDZ/SbRgMdwiX1MPJwn5v6drEUwxTfnuaJ7zDQlCBSTzSoCxFU/rO3VIQNVrJTFLxxgY
-         W3jHzR+cKCOvyQ/X5pAYni0BczdN7c/MPVsEgDS5t/4+q8+HpVdZ37fstrl6sP/NbeOj
-         86gaIespaql+Mz8Y5fv9uh7FE+nfRvQUWBOauDIpbY9HQRVlaKvRx6R1rg7nukHRxxE5
-         CW1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXzy5klCf48bSgj1DFSs9kihsjUnUfiPg8JS1P7HapQbvMJH0S5nBUrljyu1osodXcGgb4MN420V9DQfHMEI1IxFu7412E1k/pL5A==
-X-Gm-Message-State: AOJu0YxnekfiQOsxHeLfImEok8UecXoWHD7Hmguo3XEiK95lVTgEBo2M
-	u8k50saptDA/I6XVAwCQQZMODnKyjNnAYM330giPZDRyy2Gp+G/QvMeCB192gJI=
-X-Google-Smtp-Source: AGHT+IEkRJptF+yJLHlQoKp30dUDbXDqMnSMJA9iS2RvxoRFsvlFT1i8S85A1astV7Xk0uWHBXz5XA==
-X-Received: by 2002:a05:6a20:c120:b0:1b6:dffa:d6e4 with SMTP id adf61e73a8af0-1bcbb451678mr5750153637.4.1718906277953;
-        Thu, 20 Jun 2024 10:57:57 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb92c89sm12586864b3a.213.2024.06.20.10.57.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:57:57 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nilesh Javali <njavali@marvell.com>,
-	Manish Rangankar <mrangankar@marvell.com>,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	mpi3mr-linuxdrv.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH v4 17/40] scsi: qedi: optimize qedi_get_task_idx() by using find_and_set_bit()
-Date: Thu, 20 Jun 2024 10:56:40 -0700
-Message-ID: <20240620175703.605111-18-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
-References: <20240620175703.605111-1-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mKDWfyzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914A0C4AF0A;
+	Thu, 20 Jun 2024 17:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718906279;
+	bh=4bCyXtthAFkbsH2+NEQwplsuZeRsrS5uPvYZ7QzNVVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mKDWfyzmoySPRsK4BfM0ik7ZlzIpDCjTm79qOemh5QGGBIGoinZCBXjXUwtXPX9Cp
+	 2RtVFa+wunfQoPW/Ufk1jcHwoTEBYYWei87GDBrnCpj5xy1t2sBNKwy0Pzrt4DUDtB
+	 Uqknktmw3oX2E6It1SJqc4nDTxZWq+T1z2lrsuQ1gD79hfdx1iC79PIjxbP8DCPk3Q
+	 gNAovXZBvC1dkyc2mySJX3g7MIIBXrOXBrLGShhAaJ065IPwrjbSayrBdpdPSaoGSJ
+	 P0nMUwMMeqjY6szxFo8/XtFU/Nr0imv2RSN7BCeUDf3KqcQIIoRxePce3avQKYr3oa
+	 khjompqVmly2A==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5baf76164fbso142084eaf.1;
+        Thu, 20 Jun 2024 10:57:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUPBbJ52qAcYnbzxSDkLHn9Yz/DBItw7LpxvbRm00TaqMsUchc/zTvvhZgU+Daq0GwlVaa2eNqI4u+IvfU+0vgdy9UC2WSxzueWdbh5rixEqxyezyol5W788+FRGJ30+/zJ4hC4i0g=
+X-Gm-Message-State: AOJu0YxiISLMISrG8qDOMCjzCF/7HhRF269x0/NpSZXxIENwhiVvD/J0
+	rlKjmOsjqUGHwlmyT1xH9pxWlLE/A7J2PAmsgGNOtUickIOWunP16IkG5zLnwdQEE5ZPMpczvvg
+	vQ6xuoTXOiBUzX7QiJhLzTuRH6FI=
+X-Google-Smtp-Source: AGHT+IFh4bYzrqWPFf1eR/+oQK7fNO6ATrGARpU3u98/IV984+MFgS814jByg/N7OUIIur719jePuK9i+Y+A5ZflHvA=
+X-Received: by 2002:a4a:c60f:0:b0:5bd:af39:c9d9 with SMTP id
+ 006d021491bc7-5c1ad9093ebmr6990270eaf.0.1718906278917; Thu, 20 Jun 2024
+ 10:57:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240619031250.2936087-1-tj@kernel.org> <20240619031250.2936087-2-tj@kernel.org>
+ <CAJZ5v0i=0QqkvjA9mnqcX6Yv-T+rQ7ZKvuF1HPJL8pG2kqicGQ@mail.gmail.com> <ZnM3J7pvg6fyksby@slm.duckdns.org>
+In-Reply-To: <ZnM3J7pvg6fyksby@slm.duckdns.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 20 Jun 2024 19:57:47 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hSZSExp=h3=V9=41BkAX2d9nxjVd+ZhENETSJ-hg9Seg@mail.gmail.com>
+Message-ID: <CAJZ5v0hSZSExp=h3=V9=41BkAX2d9nxjVd+ZhENETSJ-hg9Seg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] cpufreq_schedutil: Refactor sugov_cpu_is_busy()
+To: Tejun Heo <tj@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, 
+	void@manifault.com, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	mingo@redhat.com, peterz@infradead.org, David Vernet <dvernet@meta.com>, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-qedi_get_task_idx() opencodes find_and_set_bit(). Simplify it and make the
-whole function a simiple almost one-liner.
+Hi Tejun,
 
-CC: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- drivers/scsi/qedi/qedi_main.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+On Wed, Jun 19, 2024 at 9:53=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello, Rafael.
+>
+> On Wed, Jun 19, 2024 at 08:45:42PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jun 19, 2024 at 5:13=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote=
+:
+> > >
+> > > sugov_cpu_is_busy() is used to avoid decreasing performance level whi=
+le the
+> > > CPU is busy and called by sugov_update_single_freq() and
+> > > sugov_update_single_perf(). Both callers repeat the same pattern to f=
+irst
+> > > test for uclamp and then the business. Let's refactor so that the tes=
+ts
+> > > aren't repeated.
+> > >
+> > > The new helper is named sugov_hold_freq() and tests both the uclamp
+> > > exception and CPU business. No functional changes. This will make add=
+ing
+> > > more exception conditions easier.
+> > >
+> > > Signed-off-by: Tejun Heo <tj@kernel.org>
+> > > Reviewed-by: David Vernet <dvernet@meta.com>
+> > > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> >
+> > Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> >
+> > for this particular change.
+>
+> If the cpufreq_schedutil part of the second patch looks good to you, woul=
+d
+> it be okay to route together with this patch through the sched_ext tree?
 
-diff --git a/drivers/scsi/qedi/qedi_main.c b/drivers/scsi/qedi/qedi_main.c
-index cd0180b1f5b9..a6e63a6c25fe 100644
---- a/drivers/scsi/qedi/qedi_main.c
-+++ b/drivers/scsi/qedi/qedi_main.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/find_atomic.h>
- #include <linux/pci.h>
- #include <linux/kernel.h>
- #include <linux/if_arp.h>
-@@ -1824,20 +1825,13 @@ int qedi_get_task_idx(struct qedi_ctx *qedi)
- {
- 	s16 tmp_idx;
- 
--again:
--	tmp_idx = find_first_zero_bit(qedi->task_idx_map,
--				      MAX_ISCSI_TASK_ENTRIES);
-+	tmp_idx = find_and_set_bit(qedi->task_idx_map, MAX_ISCSI_TASK_ENTRIES);
- 
- 	if (tmp_idx >= MAX_ISCSI_TASK_ENTRIES) {
- 		QEDI_ERR(&qedi->dbg_ctx, "FW task context pool is full.\n");
- 		tmp_idx = -1;
--		goto err_idx;
- 	}
- 
--	if (test_and_set_bit(tmp_idx, qedi->task_idx_map))
--		goto again;
--
--err_idx:
- 	return tmp_idx;
- }
- 
--- 
-2.43.0
+Please feel free to pick up the $subject patch (with my ACK).
 
+As for the [2/2], I don't think I'm sufficiently familiar with the
+scx_* stuff to make any comments on it, either way.
+
+Cheers, Rafael
