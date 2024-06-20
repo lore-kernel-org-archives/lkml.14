@@ -1,102 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8600B1AC24E;
-	Thu, 20 Jun 2024 12:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F001AC43A;
+	Thu, 20 Jun 2024 12:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718886466; cv=none; b=fzRlPE2OZ5YE1UIYkQLrZb5Dx9xB0OSUxiYs1zD5PaqshDu0iM7zjPhOl6jrFnLdZuuVCAUhWnbP4mqmShrgfNmqBYRKtRDDH+LUki1xeBa6ZKYa75pADfV+9nt4h6dUIIU9qeiog73qPpSo+2FqKAhseEvpZNZZlqC2NH+HO+0=
+	t=1718886471; cv=none; b=p6nMIZTdhPMu4KSgKd8wvaX+oJgNrMQ1pFvyPZsXjetlCOrOmKYhzBMm8Eogeyr4JXyc62PkmvjMpkWwfhVg3ejMTC+OKvy+6j2SSdz2tm+08sAKIv6GB8EDX+kUqYVI2geYL6Im+apqGLd43RRKImwl3Zl0NxSQvXfGb0EBvKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718886466; c=relaxed/simple;
-	bh=d3uDdynGfOkk0mbmcQ+FLr+9NUSGH+fNkufeZ4WI608=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ao+vlcj7C2NBdHUOEkFyDpM8qvnXWD8evhSeiRgbv+WBaSnAE/gh9nzuxfBxS0qc4ZD9/jj7NBrkUU69gYWupdCiThN22+DHX7vLu6fhBvc+HTzINH2/xo4aWajwvo9noGlsQEB84nzbKpH2rdnpZ2z0HDJPmrPgbEzy2r+tW/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTlRBJ0c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718886471; c=relaxed/simple;
+	bh=IVri826X6pjvmhvTPcELbF/pb2ND/lJ9NsEDK/hpclw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o+wVlu5dE6CeY3YxgXaXXFrEHW9vov5Knb5FrLFsP9j+tDrSKelDc4Y/aGoPhFwxh/FS04YbiG6vt+DhZGGnxx0dd3Vb3dciYkDul2whgg6MJmpINE+iTBiy+yLHUmIw1DN5EaDMCEsB8q/nqAtYt+5y0tqTU01Knl4trKU13c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=lqyoE7Lh; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTlRBJ0c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E84DC2BD10;
-	Thu, 20 Jun 2024 12:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718886466;
-	bh=d3uDdynGfOkk0mbmcQ+FLr+9NUSGH+fNkufeZ4WI608=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DTlRBJ0cwfOGL9atmnuGvX1/fnNlWgOZTnTN+9Xv6uyX2sMavDNKzoHmXcYysq376
-	 n4/+EkLTlHwV2wuRwOwG8uoT132+MBWOBSP1NkzPpLbwwdmhJwDajVSeScevsW20pR
-	 xhuiSmi3hc6tOVQYqSxHapmVlzJONBjxYnPhIufj7Pz0LKhBcyB0bNKX0OE7rx3JW7
-	 /w7xtvjISIL/BXtsr5Cp2sg/qRHZL1AoA7ILhz4b5LX77OIcsih83QmnfB/6vFxiKe
-	 krQqJmHxTfuRCNBFeUibI/eVD5YH7eC6SVAr6j43vQsqMeXd19kgZwS6iXAqQu+v58
-	 vC0lNTaNoZBUg==
-Date: Thu, 20 Jun 2024 13:27:41 +0100
-From: Lee Jones <lee@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Pavel Machek <pavel@ucw.cz>, Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, linux-leds@vger.kernel.org,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leds: cros_ec: Implement review comments from Lee
-Message-ID: <20240620122741.GL3029315@google.com>
-References: <20240614-cros_ec-led-review-v1-1-946f2549fac2@weissschuh.net>
- <20240620093114.GH3029315@google.com>
- <5708f5c6-65fe-4bf9-8d08-6dbb77e21a9d@t-8ch.de>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="lqyoE7Lh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718886461;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Phdke2IFP5DcYdJ0p7PW2PSRcousUzjTQIkIha9HQSc=;
+	b=lqyoE7LhGfv+iomk4eTa9NEiOz1RYXGYKWnWtmg0TLRMwz3ZwT5U4Q1tiD3BbLWC7jd1gd
+	wvR7Cn975V5ErvS3+B/VzBl9ndkSmmj8f4FUb3xv3z9aE/TKsnvtI/iW13i70tQlXiJFk3
+	stFWt0d2tKtU1RCBJSvdUg2aBvZBX2s=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Nuno Sa <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v12 0/7] iio: new DMABUF based API v12
+Date: Thu, 20 Jun 2024 14:27:19 +0200
+Message-ID: <20240620122726.41232-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5708f5c6-65fe-4bf9-8d08-6dbb77e21a9d@t-8ch.de>
 
-On Thu, 20 Jun 2024, Thomas Weißschuh wrote:
+Hi Jonathan,
 
-> Hi Lee,
-> 
-> On 2024-06-20 10:31:14+0000, Lee Jones wrote:
-> > Definitely not seen a commit message like that before
-> 
-> I assumed that this patch would be squashed into the original commit.
-> 
-> My question in which form you wanted the changes should have included
-> "incremental series".
+Here's the v12 of my patchset that introduces DMABUF support to IIO.
 
-Incremental means on top.
+Apart from a small documentation fix, it reverts to using
+mutex_lock/mutex_unlock in one particular place, which used cleanup
+GOTOs (which don't play well with scope-managed cleanups).
 
-A lot of maintainers don't support history re-writes, but I've reserved
-that right since forever, so I can squash it if you like.
+Changelog:
+- [3/7]:
+    - Revert to mutex_lock/mutex_unlock in iio_buffer_attach_dmabuf(),
+      as it uses cleanup GOTOs
+- [6/7]:
+    - "obtained using..." -> "which can be obtained using..."
 
-> > > Implement review comments from Lee as requested in [0] for
-> > > "leds: Add ChromeOS EC driver".
-> > > 
-> > > Changes:
-> > > * Inline DRV_NAME string constant.
-> > > * Use dev_err() instead of dev_warn() to report errors.
-> > > * Rename cros_ec_led_probe_led() to cros_ec_led_probe_one().
-> > > * Make loop variable "int" where they belong.
-> > > * Move "Unknown LED" comment to where it belongs.
-> > > * Register trigger during _probe().
-> > > * Use module_platform_driver() and drop all the custom boilerplate.
-> > 
-> > If you're fixing many things, then I would expect to receive many
-> > patches.  One patch for functional change please.  If you can reasonably
-> > group fixes of similar elk, then please do.  However one patch that does
-> > a bunch of different things is a no-go from me, sorry.
-> 
-> Absolutely, if these changes are to end up as actual commits then they
-> need to look different.
-> I'll resend them as proper series.
-> 
-> > > [0] https://lore.kernel.org/lkml/20240614093445.GF3029315@google.com/T/#m8750abdef6a968ace765645189170814196c9ce9
-> > > 
-> > > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> > > ---
-> > >  drivers/leds/leds-cros_ec.c | 50 +++++++++++++--------------------------------
-> > >  1 file changed, 14 insertions(+), 36 deletions(-)
-> 
-> <snip>
-> 
-> Sorry for the confusion,
-> Thomas
+This is based on next-20240619.
+
+Cheers,
+-Paul
+
+Paul Cercueil (7):
+  dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()
+  dmaengine: dma-axi-dmac: Implement device_prep_peripheral_dma_vec
+  iio: core: Add new DMABUF interface infrastructure
+  iio: buffer-dma: Enable support for DMABUFs
+  iio: buffer-dmaengine: Support new DMABUF based userspace API
+  Documentation: iio: Document high-speed DMABUF based API
+  Documentation: dmaengine: Document new dma_vec API
+
+ Documentation/driver-api/dmaengine/client.rst |   9 +
+ .../driver-api/dmaengine/provider.rst         |  10 +
+ Documentation/iio/iio_dmabuf_api.rst          |  54 +++
+ Documentation/iio/index.rst                   |   1 +
+ drivers/dma/dma-axi-dmac.c                    |  40 ++
+ drivers/iio/Kconfig                           |   1 +
+ drivers/iio/buffer/industrialio-buffer-dma.c  | 178 ++++++-
+ .../buffer/industrialio-buffer-dmaengine.c    |  62 ++-
+ drivers/iio/industrialio-buffer.c             | 459 ++++++++++++++++++
+ include/linux/dmaengine.h                     |  33 ++
+ include/linux/iio/buffer-dma.h                |  31 ++
+ include/linux/iio/buffer_impl.h               |  33 ++
+ include/uapi/linux/iio/buffer.h               |  22 +
+ 13 files changed, 913 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/iio/iio_dmabuf_api.rst
 
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
