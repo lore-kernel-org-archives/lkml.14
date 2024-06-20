@@ -1,337 +1,107 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52B414F9EE
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699A213777F;
+	Thu, 20 Jun 2024 23:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718925228; cv=none; b=b/p41gRcWhinIEPDOJgkHQIfV0lVlnuu4EqvVyzgcj4hupJlJXEMzuP0+wzVJQ5Wm/8smTU35/QOTVkzlUxkKURpfReHWnz/WkXdObVeCYKcUVnUSf9nfdmzsNUmTKUiLx2vhidyTNJjnaZeLdWj07xmYrXcCPyUk1J9XBMccJ8=
+	t=1718925238; cv=none; b=cJHSvzpchC8+Z2TDOTyt9InAvYmaMWiHFfXNgG6Onmq6ZQCpTQDYxyGZKOeeWmB9ASnxSYbWegc8BpJYMDSQ+ibzO/uDfZyIhl+Jo2tvtmyg9Uhqpb1G7T7MGLtkShOWawN3lfSUN17Jy26ZmWHBMHZzTVPcn0r3H68/YxKZ1Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718925228; c=relaxed/simple;
-	bh=30eDQdfMwhvrBKYWwgNh+8f2Q3FWPQHYNWjPpfke1EQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uAS3c9PSIuw0NDBlSd+PWamrO0ltSysCXIiijDT6yda78uMPkrJPNEnBjClQCpXnFKpA4OJF2E/FgnOTgVMe1HaemiT8jVZJBVIaFUcZk9UEKdNv9fQxHNEeUPEwttg2LUdyTOZDMg5XsxFPt3F0+KwJF/ga3sPqaSbmEqTD+V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cCzDoFSP; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718925238; c=relaxed/simple;
+	bh=9HzkK7C6QP0wU1bz0WqLU2lp3y7wTd1ilGjTm87GnD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXTrRRyHM79QtF8GI/gBtpkn7IibIH2akcLxYD8JxknXwbB+oZvEVwZW6XJtCw8JTxMzrqamz+qiJHQ/HM6iuwg5WVQv8WToYbM24IBnOy1bvDa6ss9vGZOeFlwZGmZhnnRibkR/AeBBmfKLz0+BmF1mopz7Tf4jzlDm4k6IYfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hTvJBcuw; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cCzDoFSP"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5c1acd482e4so767276eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718925224; x=1719530024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RkNkM6mewnoLT1ZDzP6dyIrgO4uv3nwMETptakYX1vA=;
-        b=cCzDoFSP6+D5BsEC9SIaxTQhlpqYQCpV3n3eczsiT+cJne7c48L6cwBIgKEt8ugvI9
-         B4v+WlscflbHPTPoWTKQEFQOheQZJCiqRP1xXLH2kDmy1RPBooZ+wUwe1L2w3Qw8gsga
-         uVHG93d7eBvFthDCJuxEUsG66vopvqseznf1dvXK8MMoE+U6QBSxf5YjjtEl1Vy7OGYL
-         gu1Ymz3M2e+yOVCrzrU2DBqrR+mM7yVqH/8gLF0EaOrMvypK8vriEIag7zL6DVBBJ+O3
-         TkqK9B+sgBVwgRmxslZbBi+TNM1WzVNVfGqW8umdkfOsp9UVDlTfuPQkXmKqdvDGfqMI
-         9j/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718925224; x=1719530024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RkNkM6mewnoLT1ZDzP6dyIrgO4uv3nwMETptakYX1vA=;
-        b=tOKmR2yxD2BfdSL4RA1QirFbjsU2P+SMtwXaabJI5whX4qCx6U2Odv59BfI6kAtH/g
-         JNfK5fW36drze/r8jzF40x9XjM1khm635XPQKlB6S5cJRCHyLwkOR1NTAPYqHS2rwDMh
-         ivARIo3FCumdKz0gUEIJgOa6ymH4s/ce+EDwaMgX5k2S1mnjzgtgCPkmb/YG0vxXR809
-         TTQxklvKxJRnfhuSStUk6FpilqL7HqbyHVIbUe/e1D6F1rQGWDkSRf0LIu8ch+wkNZ1i
-         zJ9/O4Izeh29o41E4yvYZtKXWGL/2asrMBoajlDz92wStie7c4M5WjOwCTHiYr9evXt1
-         vnMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsIO21wKI/NZCw1mvlIdu90q9UI/oJB/dLnoxnadeqyFnVC/MEK26JPc27QxzsLcVw/cUh/mSG7/udhNbi4/WyGh6faEPioXJBwDuF
-X-Gm-Message-State: AOJu0YwHIdC52Tv0s+/fqs0bZoyOzDxBLvxtr01O5dIdKevomHqmqVwi
-	xJlVy8rlDEDJCB9FBunHLvRVXJcugvOKnhWRUmmfBiFVjOGv0qReXVzlbdddGMw=
-X-Google-Smtp-Source: AGHT+IGfkOlBFdyPdZRGs6qV8pLK9RhP7EnEMBcc7d5J9xrNECGWhpxHFFlYHN0jJINI3/NMS9s1qA==
-X-Received: by 2002:a4a:3c11:0:b0:5bb:1ae0:17f0 with SMTP id 006d021491bc7-5c1ba65aa73mr5170181eaf.6.1718925223835;
-        Thu, 20 Jun 2024 16:13:43 -0700 (PDT)
-Received: from localhost ([136.62.192.75])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5c1d6b7d691sm22699eaf.4.2024.06.20.16.13.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 16:13:43 -0700 (PDT)
-From: Sam Protsenko <semen.protsenko@linaro.org>
-To: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-samsung-soc@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] hwrng: exynos: Add SMC based TRNG operation
-Date: Thu, 20 Jun 2024 18:13:38 -0500
-Message-Id: <20240620231339.1574-6-semen.protsenko@linaro.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240620231339.1574-1-semen.protsenko@linaro.org>
-References: <20240620231339.1574-1-semen.protsenko@linaro.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hTvJBcuw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718925234;
+	bh=9HzkK7C6QP0wU1bz0WqLU2lp3y7wTd1ilGjTm87GnD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hTvJBcuwQluvJb6oWZQw82YRvsdGMW08czC0IhEoBELreca39SSJrIS9dbUgnd+E/
+	 Ua3QHIXMFiXvuHOjsciB3C7Kk3QB5hQTfuuaS9JWgIqea2IbL826GqFS9QjBdTjOvx
+	 9Z9np1yOnjQCtKzptaVN4GQE7+nijeikrO6Y5pGLR+OosSszB2+uPUcTWwst/i6Mcw
+	 tsJNu1K9/sf8vz8blusGs9JJo7uJz6X3/UA89vfMk8IGIijuZTst4YdYRnGctEv4j8
+	 ooaf77QS7Wg3GoThF6tfrk/4ap/VMg82vtpuDam54f3xzeukKXd7y80PfGbwPEY0X5
+	 y71iPD8cArRvQ==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4F48B37820FA;
+	Thu, 20 Jun 2024 23:13:51 +0000 (UTC)
+Date: Thu, 20 Jun 2024 19:13:49 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	linux-arm-msm@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
+Subject: Re: [PATCH v4 0/8] serial: qcom-geni: Overhaul TX handling to fix
+ crashes/hangs
+Message-ID: <46f57349-1217-4594-85b2-84fa3a365c0c@notapiano>
+References: <20240610222515.3023730-1-dianders@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240610222515.3023730-1-dianders@chromium.org>
 
-On some Exynos chips like Exynos850 the access to Security Sub System
-(SSS) registers is protected with TrustZone, and therefore only possible
-from EL3 monitor software. The Linux kernel is running in EL1, so the
-only way for the driver to obtain TRNG data is via SMC calls to EL3
-monitor. Implement such SMC operation and use it when EXYNOS_SMC flag is
-set in the corresponding chip driver data.
+On Mon, Jun 10, 2024 at 03:24:18PM -0700, Douglas Anderson wrote:
+> 
+> While trying to reproduce -EBUSY errors that our lab was getting in
+> suspend/resume testing, I ended up finding a whole pile of problems
+> with the Qualcomm GENI serial driver. I've posted a fix for the -EBUSY
+> issue separately [1]. This series is fixing all of the Qualcomm GENI
+> problems that I found.
+> 
+> As far as I can tell most of the problems have been in the Qualcomm
+> GENI serial driver since inception, but it can be noted that the
+> behavior got worse with the new kfifo changes. Previously when the OS
+> took data out of the circular queue we'd just spit stale data onto the
+> serial port. Now we'll hard lockup. :-P
+> 
+> I've tried to break this series up as much as possible to make it
+> easier to understand but the final patch is still a lot of change at
+> once. Hopefully it's OK.
+> 
+> [1] https://lore.kernel.org/r/20240530084841.v2.1.I2395e66cf70c6e67d774c56943825c289b9c13e4@changeid
 
-Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Changes in v3:
-  - Added appropriate error messages for the case when init SMC command fails
+Hi,
 
-Changes in v2:
-  - Used the "reversed Christmas tree" style in the variable declaration
-    block in exynos_trng_do_read_smc()
-  - Renamed .quirks to .flags in the driver structure
-  - Added Krzysztof's R-b tag
+we've experienced issues with missing kernel messages in the serial on the
+sc7180 based platforms in our lab for a while now.
 
- drivers/char/hw_random/exynos-trng.c | 140 +++++++++++++++++++++++++--
- 1 file changed, 130 insertions(+), 10 deletions(-)
+I've just run a batch of jobs that just boot and write some messages to
+/dev/kmsg on sc7180-trogdor-lazor-limozeen. Before the patch, in 18 out of
+20 runs the first message would be missing in the logs causing the test to fail.
+After the patch all 20 runs passed. So this is a clear fix, and I'm very happy
+to say goodbye to this issue. Thank you!
 
-diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
-index 6ef2ee6c9804..9fa30583cc86 100644
---- a/drivers/char/hw_random/exynos-trng.c
-+++ b/drivers/char/hw_random/exynos-trng.c
-@@ -10,6 +10,7 @@
-  * Krzysztof Koz≈Çowski <krzk@kernel.org>
-  */
- 
-+#include <linux/arm-smccc.h>
- #include <linux/clk.h>
- #include <linux/crypto.h>
- #include <linux/delay.h>
-@@ -22,6 +23,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- 
- #define EXYNOS_TRNG_CLKDIV		0x0
- 
-@@ -44,16 +46,41 @@
- #define EXYNOS_TRNG_FIFO_LEN		8
- #define EXYNOS_TRNG_CLOCK_RATE		500000
- 
-+/* Driver feature flags */
-+#define EXYNOS_SMC			BIT(0)
-+
-+#define EXYNOS_SMC_CALL_VAL(func_num)			\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,		\
-+			   ARM_SMCCC_SMC_32,		\
-+			   ARM_SMCCC_OWNER_SIP,		\
-+			   func_num)
-+
-+/* SMC command for DTRNG access */
-+#define SMC_CMD_RANDOM			EXYNOS_SMC_CALL_VAL(0x1012)
-+
-+/* SMC_CMD_RANDOM: arguments */
-+#define HWRNG_INIT			0x0
-+#define HWRNG_EXIT			0x1
-+#define HWRNG_GET_DATA			0x2
-+#define HWRNG_RESUME			0x3
-+
-+/* SMC_CMD_RANDOM: return values */
-+#define HWRNG_RET_OK			0x0
-+#define HWRNG_RET_RETRY_ERROR		0x2
-+
-+#define HWRNG_MAX_TRIES			100
-+
- struct exynos_trng_dev {
- 	struct device	*dev;
- 	void __iomem	*mem;
- 	struct clk	*clk;	/* operating clock */
- 	struct clk	*pclk;	/* bus clock */
- 	struct hwrng	rng;
-+	unsigned long	flags;
- };
- 
--static int exynos_trng_do_read(struct hwrng *rng, void *data, size_t max,
--			       bool wait)
-+static int exynos_trng_do_read_reg(struct hwrng *rng, void *data, size_t max,
-+				   bool wait)
- {
- 	struct exynos_trng_dev *trng = (struct exynos_trng_dev *)rng->priv;
- 	int val;
-@@ -70,7 +97,40 @@ static int exynos_trng_do_read(struct hwrng *rng, void *data, size_t max,
- 	return max;
- }
- 
--static int exynos_trng_init(struct hwrng *rng)
-+static int exynos_trng_do_read_smc(struct hwrng *rng, void *data, size_t max,
-+				   bool wait)
-+{
-+	struct arm_smccc_res res;
-+	unsigned int copied = 0;
-+	u32 *buf = data;
-+	int tries = 0;
-+
-+	while (copied < max) {
-+		arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_GET_DATA, 0, 0, 0, 0, 0, 0,
-+			      &res);
-+		switch (res.a0) {
-+		case HWRNG_RET_OK:
-+			*buf++ = res.a2;
-+			*buf++ = res.a3;
-+			copied += 8;
-+			tries = 0;
-+			break;
-+		case HWRNG_RET_RETRY_ERROR:
-+			if (!wait)
-+				return copied;
-+			if (++tries >= HWRNG_MAX_TRIES)
-+				return copied;
-+			cond_resched();
-+			break;
-+		default:
-+			return -EIO;
-+		}
-+	}
-+
-+	return copied;
-+}
-+
-+static int exynos_trng_init_reg(struct hwrng *rng)
- {
- 	struct exynos_trng_dev *trng = (struct exynos_trng_dev *)rng->priv;
- 	unsigned long sss_rate;
-@@ -103,6 +163,24 @@ static int exynos_trng_init(struct hwrng *rng)
- 	return 0;
- }
- 
-+static int exynos_trng_init_smc(struct hwrng *rng)
-+{
-+	struct exynos_trng_dev *trng = (struct exynos_trng_dev *)rng->priv;
-+	struct arm_smccc_res res;
-+	int ret = 0;
-+
-+	arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_INIT, 0, 0, 0, 0, 0, 0, &res);
-+	if (res.a0 != HWRNG_RET_OK) {
-+		dev_err(trng->dev, "SMC command for TRNG init failed (%d)\n",
-+			(int)res.a0);
-+		ret = -EIO;
-+	}
-+	if ((int)res.a0 == -1)
-+		dev_info(trng->dev, "Make sure LDFW is loaded by your BL\n");
-+
-+	return ret;
-+}
-+
- static int exynos_trng_probe(struct platform_device *pdev)
- {
- 	struct exynos_trng_dev *trng;
-@@ -112,21 +190,29 @@ static int exynos_trng_probe(struct platform_device *pdev)
- 	if (!trng)
- 		return ret;
- 
-+	platform_set_drvdata(pdev, trng);
-+	trng->dev = &pdev->dev;
-+
-+	trng->flags = (unsigned long)device_get_match_data(&pdev->dev);
-+
- 	trng->rng.name = devm_kstrdup(&pdev->dev, dev_name(&pdev->dev),
- 				      GFP_KERNEL);
- 	if (!trng->rng.name)
- 		return ret;
- 
--	trng->rng.init = exynos_trng_init;
--	trng->rng.read = exynos_trng_do_read;
- 	trng->rng.priv = (unsigned long)trng;
- 
--	platform_set_drvdata(pdev, trng);
--	trng->dev = &pdev->dev;
-+	if (trng->flags & EXYNOS_SMC) {
-+		trng->rng.init = exynos_trng_init_smc;
-+		trng->rng.read = exynos_trng_do_read_smc;
-+	} else {
-+		trng->rng.init = exynos_trng_init_reg;
-+		trng->rng.read = exynos_trng_do_read_reg;
- 
--	trng->mem = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(trng->mem))
--		return PTR_ERR(trng->mem);
-+		trng->mem = devm_platform_ioremap_resource(pdev, 0);
-+		if (IS_ERR(trng->mem))
-+			return PTR_ERR(trng->mem);
-+	}
- 
- 	pm_runtime_enable(&pdev->dev);
- 	ret = pm_runtime_resume_and_get(&pdev->dev);
-@@ -170,12 +256,31 @@ static int exynos_trng_probe(struct platform_device *pdev)
- 
- static void exynos_trng_remove(struct platform_device *pdev)
- {
-+	struct exynos_trng_dev *trng = platform_get_drvdata(pdev);
-+
-+	if (trng->flags & EXYNOS_SMC) {
-+		struct arm_smccc_res res;
-+
-+		arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_EXIT, 0, 0, 0, 0, 0, 0,
-+			      &res);
-+	}
-+
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- }
- 
- static int exynos_trng_suspend(struct device *dev)
- {
-+	struct exynos_trng_dev *trng = dev_get_drvdata(dev);
-+	struct arm_smccc_res res;
-+
-+	if (trng->flags & EXYNOS_SMC) {
-+		arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_EXIT, 0, 0, 0, 0, 0, 0,
-+			      &res);
-+		if (res.a0 != HWRNG_RET_OK)
-+			return -EIO;
-+	}
-+
- 	pm_runtime_put_sync(dev);
- 
- 	return 0;
-@@ -183,6 +288,7 @@ static int exynos_trng_suspend(struct device *dev)
- 
- static int exynos_trng_resume(struct device *dev)
- {
-+	struct exynos_trng_dev *trng = dev_get_drvdata(dev);
- 	int ret;
- 
- 	ret = pm_runtime_resume_and_get(dev);
-@@ -191,6 +297,20 @@ static int exynos_trng_resume(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (trng->flags & EXYNOS_SMC) {
-+		struct arm_smccc_res res;
-+
-+		arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_RESUME, 0, 0, 0, 0, 0, 0,
-+			      &res);
-+		if (res.a0 != HWRNG_RET_OK)
-+			return -EIO;
-+
-+		arm_smccc_smc(SMC_CMD_RANDOM, HWRNG_INIT, 0, 0, 0, 0, 0, 0,
-+			      &res);
-+		if (res.a0 != HWRNG_RET_OK)
-+			return -EIO;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.39.2
+Tested-by: NÌcolas F. R. A. Prado <nfraprado@collabora.com>
 
+FTR, this is the issue ticket in KernelCI:
+https://github.com/kernelci/kernelci-project/issues/380
+
+Thanks,
+NÌcolas
