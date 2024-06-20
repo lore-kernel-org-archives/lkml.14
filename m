@@ -1,78 +1,98 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0EB1C0DED
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085EF1C2305
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906282; cv=none; b=NkUVJXCv4y+2x0t+1ssofwxH3wMTRbHbERMmSKMq2ox7mGiQvncwY2GtfAfFsGZzAZYx7uxnMX8B4DjXYjJHP0rG8yvFH3g6iVgulwBZNIxApCVweEJXd8wtvWp8EZUCyrIhqa2WjDRExe6D8h8K1B2Wr+YO5W95KCYItQUZKkk=
+	t=1718906284; cv=none; b=pM1Mrp9V5Sbh+JrTGK0y13AHmo28v8Pa+VTYFib10JvgPkXM1S1jwx6VYKL+ugJ1VoT1bEopE3W1J3QQG9A5nX1bvwsQtidBga8AUN0vzYvf7+lD107vdqobQgoZtMbgrDCk78P6fSFAKPMpa+iO/YbVq0rqOrpAkcWgASkP5j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906282; c=relaxed/simple;
-	bh=CvUGneMbBEz1yZXc0tmhKn1m4dEY/czL5W1N3gs4WcA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tAxytrvi3+ilnI+xl4l2qfeIzKkq6UpZSjV0GmkCZNdwIupDTuo9TWci3hqnR9jPEYW7JPQxL9071zzg9qJUnJxeCM+TV/FmrUUgDbPwgXENpaznNVXhPw8WKWd4qwMHwRM2YgmY2H9gYsIM55LfLKlXlOvO2sGr6NYNaWW8sP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJ6Gl21+; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718906284; c=relaxed/simple;
+	bh=57mSqvK5F8icDZvtosz8MW5pSg98mK2P/IkbkOYFjBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bb9iFGhzjJ/QtTwCJ2XyU86nqALJQVubD5z4yJE5j7Gh/ryhDvOYHoyFOlj9JSSbckPsTjxshcuCPW7UOFWDHO7DpwMoOUkBoeLZW+SXmFpN1IfJt1LD2fAfcFdmA5F+V0pHh3hB0TdEXe6FCEg1NpOQhCkhbbZlKTX2qwUTB/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=Z1WAPFAm; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJ6Gl21+"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9b364faddso10597805ad.3
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="Z1WAPFAm"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6f0e153eddso158137566b.0
         for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718906280; x=1719511080; darn=vger.kernel.org;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906280; x=1719511080; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gJqqXRh/eOzPQsK99Bb/yzPgqho23i5/Ws9ra3QtPAE=;
-        b=dJ6Gl21+0wH00d6JQcnBxXFXKmuV4DFYgxvewtSSzCaAkCI2W2V+Sv0O+pu6zt2hpC
-         Lp87kcGrONgZAPQlg0aDNqgqlKz6p4ndDRQ2UC4k6JWYofAi0XP/uBL/V8iLLX/Afsuw
-         u7wlkJ/xZYu/wGnQuvyugBhDFkkGX2tMpan6w7g7NY2nJ8EhiTLt6TVswbuWjZ6vs+Rs
-         Bh7sbLpctQMvb6x1ZnT1jqvK2QTqWiy04uYErsjIyn47M6UgfPpO7BF50M8VgZ4kENuq
-         /wq/XBg6/U46KTynkUb5lxS/IdZCgLWnJHLXQkNfWSp0bWf2Vhd78UoVvg2rPNv3xqWT
-         3VEQ==
+        bh=LLJSsUsQJimHeyehvy4obxzFbfnPiiocs4Of944Xm3I=;
+        b=Z1WAPFAmggyZXgLQQ8xHRVLJyIdVqTm6EFiZQkqU98DYk6IGKMtR0IbCNv8eef7YzJ
+         4U5udbizQMs46zEqIFLLcbKD6EtEnSEv7giK2XYYh7iwjvYnoT/O3BVQt6wbbJy8D2jR
+         WvPVWf5OPR+9R73AdLBwFo6uXDNiyz4Q0GVRQbP4JgqR6vr1DSMg7WEOq3R+k69zaT5i
+         VDWjNunvXVyqv5ZGr2lZ8ZG4qGUrUJEnTdNpG1agdy5Rp1xak0eQNgAdsOXgyqale1hO
+         FHt1JdLhWZ4fm+JxXSREDbBVDzEf+viVWyUTEj8FpRgGHT6Fa0Ul950C885uZOllMtUi
+         WA6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1718906280; x=1719511080;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gJqqXRh/eOzPQsK99Bb/yzPgqho23i5/Ws9ra3QtPAE=;
-        b=W4pAsImt59syVRzGK+pOMueySwaqCiPIvFg2R1twQwz6g6b57fKWinfdDYlVlYd7zc
-         nnscdHST1sYtoy568GJijFBpwt+AneOvlQ8UDNpqIQDqxgREQJPVwUX5Z980Zat2czL7
-         i8tPPdChQiQbc4JGLis59dcMlKgFjGpE0HF+9X8HeGUrmQUZt6Jz0LcYp5pL5G0bVHCc
-         EX7l48VgfWCqSVwucBxc7xsxkCTeDaU7MRW7O07DjkVlzF33cqkbaOXzE8R2lTyQLv0V
-         AGrap+A3G/U05z3Yj29EXat0/yVeZ34dSnX5oyKeXtpLO0icJH86x0onwjySE3NzSIRB
-         e80g==
-X-Gm-Message-State: AOJu0YyPc1v+/UOoykYwZoTW5+Q+1IvVtK/zxrsrrAsnO0Vabm14A4uX
-	pd1GAl9kO/zBM/YYChjo8nba/X23wB7st06VL3ElX0vZn/e520zBoubmQ1W0pJo=
-X-Google-Smtp-Source: AGHT+IF4qTXDJh2dmu7C8j7KbrNKpNe1traR1hBaJSEqONmhCH9MELk4yXOVD6L7Rof1XKmaGu/wKA==
-X-Received: by 2002:a17:903:1211:b0:1f8:3c9e:3ba8 with SMTP id d9443c01a7336-1f9aa3b50b0mr70367035ad.10.1718906280486;
+        bh=LLJSsUsQJimHeyehvy4obxzFbfnPiiocs4Of944Xm3I=;
+        b=YIzTjzdTrO5p7t8cwG03+ShfNdiUm7Ji6WymEjD83Ycc778RtTfesqwIVonRoJXJPu
+         z2r7FuV+aOmu270y+zxhDRZ3QiZkyqoayLT3XwMSGDqCbwptpLSLp+K075DRWkdNVTFG
+         YrLhjwQAd1QMXuqwA5BkG2f3KS/cjk/BX0nSx7oQ69vwPOj6zw2feVViNRIg+b11oXlf
+         33wddX1kfZEjTY45wWLipEFi0rVBAnr4vAzUdTgD2wNZ6IJ0GJOJZbvN1PpacKSCA9ce
+         nRR2DIciTX/LJkJr32110o5lz1LQwFcig0KYhdy5a70H0ybIm2Am8mX2DKUYca9q1cE8
+         88NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMMEnoJubR5eqA5xI+z50j/L+KB443IcWGlTwzOWUxMFquBUVRHORG7eS3tyBRbh8q2ZpmVjWekccO4dI2fv6kWUGdztHb3PcPoaYa
+X-Gm-Message-State: AOJu0Ywod8EMWu4S6cwsJsQyU+/gCRf4mQ6cOMQOCRLq6dLvx5ivuZIL
+	Dp6voTT2K4sXrgGG38JVLGr2lfJ+1B7XwU1FBTgTe1O90aSgrTjlhifkCsXQ/mM=
+X-Google-Smtp-Source: AGHT+IGXtwYdokrlfBxhK8FxTp2sWYE+r/rA8OXrz8ajsAvjdcVPMUue0BkFzpXPCbEPXWGLdile5Q==
+X-Received: by 2002:a17:907:8025:b0:a6f:147f:7d06 with SMTP id a640c23a62f3a-a6fab7de093mr273780966b.77.1718906280266;
         Thu, 20 Jun 2024 10:58:00 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f339fbsm139710805ad.262.2024.06.20.10.57.59
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.57.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:58:00 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
+        Thu, 20 Jun 2024 10:57:59 -0700 (PDT)
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Li Zetao <lizetao1@huawei.com>,
+	Chancel Liu <chancel.liu@nxp.com>,
 	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	linuxppc-dev@lists.ozlabs.org
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH v4 18/40] powerpc: optimize arch code by using atomic find_bit() API
-Date: Thu, 20 Jun 2024 10:56:41 -0700
-Message-ID: <20240620175703.605111-19-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
-References: <20240620175703.605111-1-yury.norov@gmail.com>
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Subject: [Patch v4 01/10] dt-bindings: dma: pl08x: Add dma-cells description
+Date: Thu, 20 Jun 2024 19:56:32 +0200
+Message-Id: <20240620175657.358273-2-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,166 +101,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use find_and_{set,clear}_bit() where appropriate and simplify the logic.
+Recover dma-cells description from the legacy DT binding.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 ---
- arch/powerpc/mm/book3s32/mmu_context.c     | 11 +++---
- arch/powerpc/platforms/pasemi/dma_lib.c    | 46 ++++++----------------
- arch/powerpc/platforms/powernv/pci-sriov.c | 13 ++----
- 3 files changed, 20 insertions(+), 50 deletions(-)
+Changes for v4:
+- This patch is new in v4
 
-diff --git a/arch/powerpc/mm/book3s32/mmu_context.c b/arch/powerpc/mm/book3s32/mmu_context.c
-index 1922f9a6b058..ece7b55b6cdb 100644
---- a/arch/powerpc/mm/book3s32/mmu_context.c
-+++ b/arch/powerpc/mm/book3s32/mmu_context.c
-@@ -17,6 +17,7 @@
-  *    Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
-  */
+ Documentation/devicetree/bindings/dma/arm-pl08x.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+index ab25ae63d2c3..191215d36c85 100644
+--- a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
++++ b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+@@ -52,6 +52,13 @@ properties:
+   clock-names:
+     maxItems: 1
  
-+#include <linux/find_atomic.h>
- #include <linux/mm.h>
- #include <linux/init.h>
- #include <linux/export.h>
-@@ -50,13 +51,11 @@ static unsigned long context_map[LAST_CONTEXT / BITS_PER_LONG + 1];
- 
- unsigned long __init_new_context(void)
- {
--	unsigned long ctx = next_mmu_context;
-+	unsigned long ctx;
- 
--	while (test_and_set_bit(ctx, context_map)) {
--		ctx = find_next_zero_bit(context_map, LAST_CONTEXT+1, ctx);
--		if (ctx > LAST_CONTEXT)
--			ctx = 0;
--	}
-+	ctx = find_and_set_next_bit(context_map, LAST_CONTEXT + 1, next_mmu_context);
-+	if (ctx > LAST_CONTEXT)
-+		ctx = 0;
- 	next_mmu_context = (ctx + 1) & LAST_CONTEXT;
- 
- 	return ctx;
-diff --git a/arch/powerpc/platforms/pasemi/dma_lib.c b/arch/powerpc/platforms/pasemi/dma_lib.c
-index 1be1f18f6f09..db008902e5f3 100644
---- a/arch/powerpc/platforms/pasemi/dma_lib.c
-+++ b/arch/powerpc/platforms/pasemi/dma_lib.c
-@@ -5,6 +5,7 @@
-  * Common functions for DMA access on PA Semi PWRficient
-  */
- 
-+#include <linux/find_atomic.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/pci.h>
-@@ -118,14 +119,9 @@ static int pasemi_alloc_tx_chan(enum pasemi_dmachan_type type)
- 		limit = MAX_TXCH;
- 		break;
- 	}
--retry:
--	bit = find_next_bit(txch_free, MAX_TXCH, start);
--	if (bit >= limit)
--		return -ENOSPC;
--	if (!test_and_clear_bit(bit, txch_free))
--		goto retry;
--
--	return bit;
++  "#dma-cells":
++    const: 2
++    description: |
++      First cell should contain the DMA request,
++      second cell should contain either 1 or 2 depending on
++      which AHB master that is used.
 +
-+	bit = find_and_clear_next_bit(txch_free, MAX_TXCH, start);
-+	return bit < limit ? bit : -ENOSPC;
- }
- 
- static void pasemi_free_tx_chan(int chan)
-@@ -136,15 +132,9 @@ static void pasemi_free_tx_chan(int chan)
- 
- static int pasemi_alloc_rx_chan(void)
- {
--	int bit;
--retry:
--	bit = find_first_bit(rxch_free, MAX_RXCH);
--	if (bit >= MAX_TXCH)
--		return -ENOSPC;
--	if (!test_and_clear_bit(bit, rxch_free))
--		goto retry;
--
--	return bit;
-+	int bit = find_and_clear_bit(rxch_free, MAX_RXCH);
-+
-+	return bit < MAX_TXCH ? bit : -ENOSPC;
- }
- 
- static void pasemi_free_rx_chan(int chan)
-@@ -374,16 +364,9 @@ EXPORT_SYMBOL(pasemi_dma_free_buf);
-  */
- int pasemi_dma_alloc_flag(void)
- {
--	int bit;
-+	int bit = find_and_clear_bit(flags_free, MAX_FLAGS);
- 
--retry:
--	bit = find_first_bit(flags_free, MAX_FLAGS);
--	if (bit >= MAX_FLAGS)
--		return -ENOSPC;
--	if (!test_and_clear_bit(bit, flags_free))
--		goto retry;
--
--	return bit;
-+	return bit < MAX_FLAGS ? bit : -ENOSPC;
- }
- EXPORT_SYMBOL(pasemi_dma_alloc_flag);
- 
-@@ -439,16 +422,9 @@ EXPORT_SYMBOL(pasemi_dma_clear_flag);
-  */
- int pasemi_dma_alloc_fun(void)
- {
--	int bit;
--
--retry:
--	bit = find_first_bit(fun_free, MAX_FLAGS);
--	if (bit >= MAX_FLAGS)
--		return -ENOSPC;
--	if (!test_and_clear_bit(bit, fun_free))
--		goto retry;
-+	int bit = find_and_clear_bit(fun_free, MAX_FLAGS);
- 
--	return bit;
-+	return bit < MAX_FLAGS ? bit : -ENOSPC;
- }
- EXPORT_SYMBOL(pasemi_dma_alloc_fun);
- 
-diff --git a/arch/powerpc/platforms/powernv/pci-sriov.c b/arch/powerpc/platforms/powernv/pci-sriov.c
-index cc7b1dd54ac6..e33e57c559f7 100644
---- a/arch/powerpc/platforms/powernv/pci-sriov.c
-+++ b/arch/powerpc/platforms/powernv/pci-sriov.c
-@@ -3,6 +3,7 @@
- #include <linux/kernel.h>
- #include <linux/ioport.h>
- #include <linux/bitmap.h>
-+#include <linux/find_atomic.h>
- #include <linux/pci.h>
- 
- #include <asm/opal.h>
-@@ -397,18 +398,12 @@ static int64_t pnv_ioda_map_m64_single(struct pnv_phb *phb,
- 
- static int pnv_pci_alloc_m64_bar(struct pnv_phb *phb, struct pnv_iov_data *iov)
- {
--	int win;
-+	int win = find_and_set_bit(&phb->ioda.m64_bar_alloc, phb->ioda.m64_bar_idx + 1);
- 
--	do {
--		win = find_next_zero_bit(&phb->ioda.m64_bar_alloc,
--				phb->ioda.m64_bar_idx + 1, 0);
--
--		if (win >= phb->ioda.m64_bar_idx + 1)
--			return -1;
--	} while (test_and_set_bit(win, &phb->ioda.m64_bar_alloc));
-+	if (win >= phb->ioda.m64_bar_idx + 1)
-+		return -1;
- 
- 	set_bit(win, iov->used_m64_bar_mask);
--
- 	return win;
- }
- 
+   lli-bus-interface-ahb1:
+     type: boolean
+     description: if AHB master 1 is eligible for fetching LLIs
 -- 
-2.43.0
+2.25.1
 
