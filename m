@@ -1,235 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFCF482ED;
-	Thu, 20 Jun 2024 22:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718921117; cv=fail; b=fa977GfOQ26PbiUbcjiceTYeLwEzuK9A6QmhJSAlXG3Hxuz8ZG1+oIupaRSnDFn0lV1fa11sue2PR1AjlBgdAiXEdhikdFbHkE5K8r3Sy+kQGcerUvbfJC6B0tMlVLoI9c+PhoYu7xguFUw9uggolTXaS1clEhVWCB/AG1Rbfmk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718921117; c=relaxed/simple;
-	bh=r+XjqaRrmoGfzMIDuM5Eo1zQR3kbAP+5tfgASnEO5l8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XCgxk1gckNj7q+Cdb/6RYM5FvSCE/RfSuL4w9KyJt8Nx4rCoRy+SdChNkJgX8/05be4JnN23LZoTnMqWsqHfWxSSkqv6Qbn0CkbCdMjqeCEPDex0XrQE2R/3kbd3baZy9D3srHGnOzcOQcrZObE3uEco2AJDsNPkLZ0Rl4lrcjE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2hIhVOX; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E1A823DC;
+	Thu, 20 Jun 2024 22:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718921147; cv=none; b=BjmghetAlnj7wOkEZszARz9Jq0z0nvjo72Gq7+QsBEoNPF1y0jA/qQfUrYtNHMy7/2t+XRf9FQjZRrxF3zwzJZUHGhCNYs/Wgg3kBOL99k0MmpqmQjdqb43cP5g6giyE971eGvX19sNiJuJ4oiwqAvhoQHQosDvQFC5DMR8e8Fc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718921147; c=relaxed/simple;
+	bh=hT6s//pTSX0YwHlp3kMXXaoxOWF+HvSw6JDW4O5VWLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TdK1lNeY1l/3txEVmw4k8hO1T3ywsBH+z/JD0XWlDG7u3UUaaHg72hczadYmy+8JcxUHCjQFNc8TbZryPU3+mxy50hHniApnTb/3YXoct9TgrSl0mD9MSxiRMLGPzewYjVb4HIrgjjVrnd+h6k5NHc+dSWH6b2HccQP4NzjpaRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K14IK04R; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2hIhVOX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718921116; x=1750457116;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=r+XjqaRrmoGfzMIDuM5Eo1zQR3kbAP+5tfgASnEO5l8=;
-  b=k2hIhVOXTaylRAObILwh/c2c2EEIcOxrW8Ht4nCYurEFxUvaikjlNzvH
-   +lMuqpFjIBm66qy8lqNLkcJ53s5NtIgQ2Yn//a2467fBaKa7jmbSEKKO0
-   TIWMCGmHyze0zmKPDtV7jsZmGSvA1MqwgIt2Jo8tHp6/OsTLN/xz9QC8V
-   u70JTYXcFxlxJWNxFCtytM0rnzdRLTe83t4nFuQN5pIJu9mwDx9TZLPPQ
-   ZM9JM4K4igag9qeH1X9HuP/LaKa/LTjDSKeVGdC8oRZOr1HDeA88a5y8L
-   mgKbn/YW3N1de2cZxRCGHv0g8EyTzPMz3LN3S479jvXB313r3aSA5tNBJ
-   A==;
-X-CSE-ConnectionGUID: IXlIn6J4QNSet7On3Q+JEg==
-X-CSE-MsgGUID: MIjKe/u6Qm2zDN/ut/YDRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="15767275"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="15767275"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 15:05:14 -0700
-X-CSE-ConnectionGUID: 06ALTHyCQW6X5sRdQL2uKg==
-X-CSE-MsgGUID: svPobaT7T7azY2n6YlDhkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="47340087"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Jun 2024 15:05:12 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 20 Jun 2024 15:05:12 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 20 Jun 2024 15:05:12 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 20 Jun 2024 15:05:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XTFR54F2QIZIfIXCvaMxZgUKs8n3OQapXjfsFHWEOWZwnrcRkT9wSqfzsNPOPQSLg47gXbrZR9ApBJ1FLdquzKhvpg03CZ5WbV3wrTekLLNt6HvYrfjsbaksorRJfEwAwyr5lk1suEPVs0Tas34IslBkiE+nYaOQXNoKPaVQk+0OP6kx2X44p3pnDEAeLEfh8APyppIgEqT/XJN0q5mp0L08s9n3d/yQDEupwKbjOJbK2bhEO8kn47xbOR8bE4BsvsUl6fU7Sa2fehT4pfEjK05RCcTxrMPVnCd/SyfYAPLMqPWQ5SMKaS+zs8dw8IHjUan10WvczkZaQiZGOdd45g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+WlUqV92FbCQb/obNF6tZVhMRaOUi2edkIwRXGFcnG0=;
- b=CiJckYXVTgmhDV80F0nVLFhV0HQYAIJ+woHsSu62tKT6e2J55+fM2CQ5Lgfs8OaRmSEOx5gBETKuG8lwOzjPsmHDnr5655p+guQ+pWQqU1yqTv7L3CkE7QbPQbeUThQ7v+h8CcD8QfBRgr7+vVTaxl2a75B0qZY49qx4UojOkijnZpoo7AXqAhvXQNVHP0TGcpK/TPf9Xf7eGMlYaSgwYJv6tRucdR+In+fl1VHNYNM0CxRsGWzz35Zd7NUiLGn48hbXlivt7LOcvsIM2gZheUFjOV33nIAdO4opCyXhitJR3+c+8wGLxcxHSjgFGepIrmPx2K1Ejok49Uc9MG6sVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by MW4PR11MB6691.namprd11.prod.outlook.com (2603:10b6:303:20f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33; Thu, 20 Jun
- 2024 22:05:09 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.7698.017; Thu, 20 Jun 2024
- 22:05:09 +0000
-Message-ID: <a14ac6eb-0ffd-4c11-9c9e-ea70f8d4a70d@intel.com>
-Date: Thu, 20 Jun 2024 15:05:05 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/19] x86/resctrl: Introduce the interface to display
- monitor mode
-To: <babu.moger@amd.com>, <corbet@lwn.net>, <fenghua.yu@intel.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>
-CC: <x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
-	<rdunlap@infradead.org>, <tj@kernel.org>, <peterz@infradead.org>,
-	<yanjiewtw@gmail.com>, <kim.phillips@amd.com>, <lukas.bulwahn@gmail.com>,
-	<seanjc@google.com>, <jmattson@google.com>, <leitao@debian.org>,
-	<jpoimboe@kernel.org>, <rick.p.edgecombe@intel.com>,
-	<kirill.shutemov@linux.intel.com>, <jithu.joseph@intel.com>,
-	<kai.huang@intel.com>, <kan.liang@linux.intel.com>,
-	<daniel.sneddon@linux.intel.com>, <pbonzini@redhat.com>,
-	<sandipan.das@amd.com>, <ilpo.jarvinen@linux.intel.com>,
-	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<eranian@google.com>, <james.morse@arm.com>
-References: <cover.1716552602.git.babu.moger@amd.com>
- <3b9ef8bc03c1004794a087537c6f2f051760402d.1716552602.git.babu.moger@amd.com>
- <a453b19b-a909-49a5-9512-ae69c48db6c2@intel.com>
- <b792d729-669b-4785-bdbb-23230f2e993e@amd.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <b792d729-669b-4785-bdbb-23230f2e993e@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MW4PR03CA0181.namprd03.prod.outlook.com
- (2603:10b6:303:b8::6) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K14IK04R"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KHBOib019765;
+	Thu, 20 Jun 2024 22:05:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1YAP8zPHKHo0Y24mJ/ad0S4D7m/z8Aj5tDFRDH8bKX8=; b=K14IK04RhBXHiBZX
+	nAvp6Vz2WQfRNswEWLUnPyO0qKc12eh3ps0dYIXF2OFqKNnHT5zNWSRS1oct2hnB
+	/E0aEangx4eKrGRpyaLKr6HfFP3MwC0CEDsw776eFkwx8ON2kaoWs6McS9PNuLgf
+	xHM5ITczFTcWB6YGsVdNphTot6MkE+j6hHNWM+8+wRpDIWzHmjN4LAZlE3cIFRLR
+	lWTwVuFR/OcX8xzsLc+GuAx3jOKbDU2LabIwfYBuv6WC1+yg7GQPnMhLMeP1+xm8
+	el4JTp2We449tTNKv0AeDOWV2pgWkvL402Piz2r6OY8yKK0CiDr7vOwM781KvNz2
+	bys1Nw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvrkw8rfp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 22:05:24 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KM5MoV023845
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 22:05:22 GMT
+Received: from [10.110.82.141] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
+ 2024 15:05:18 -0700
+Message-ID: <8dd4a43e-d83c-1f36-21ff-61e13ff751e7@quicinc.com>
+Date: Thu, 20 Jun 2024 15:05:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|MW4PR11MB6691:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62194f43-74ee-4df0-c4ee-08dc91750ccc
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|376011|7416011|366013;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QmloaDB5UHBIeThROUpmaTVUWm5kRFMrTi9Pa1hSRGFCSEpuelJua0xaMkxF?=
- =?utf-8?B?MXhGd0pCeERIL3pBc0JPL2dDYXF5aXFFWkxuMTUrZytDeHlzWXZJM2xXczll?=
- =?utf-8?B?djBUb08xZm5Gc0F2NWNacnVzMmZDTzNtbytwcnZOYUFzZTFJRkpWN2lXcFBY?=
- =?utf-8?B?ZWpGSkt6T2U3bzkvQ3FkRlRRZ3dTK2xla2F0cmhKdCtPTHdycG5nZUlCVWlG?=
- =?utf-8?B?ek9GWjJ6eDBnU3RmUEpnQWNNTWtCdHJzY3V1WlNoY05UYjZYeDVwTUFCdXVs?=
- =?utf-8?B?S3hJNFo1RzNVUXR2ZVJoT2Q4dGJWRDYxNUpzeFFkTjUxYkZFMGFrbXZsM3pR?=
- =?utf-8?B?QUpIMndBU3lURHRRRjhUaHFYL0xUVHdVeEpMbDAxaGlKa0REYlJiUmVncEdY?=
- =?utf-8?B?VElJcVBJNk5nbWpka25aaEtQRDYvcmJKTFB2akJXMkw5emlwMDk1bGlGYzhT?=
- =?utf-8?B?cnh2TGlJekRpUjRaRE50cFRBYkdzRVpvMUNYQnhPWDNMM05tVCs1OE1JY05S?=
- =?utf-8?B?c3NRMWdHS1VlcXFHTFE2N2x2V1pCcDFreW5PTG5nMHRmUlA2UnpnZjRMUkM1?=
- =?utf-8?B?QjdkQ0JMa29NaXZyenlCUzN3RkVaczZhNGlYbSt4ZHFaOE82MlRUeHNnRS8x?=
- =?utf-8?B?aXVndnV4ZGpkNEZIdE1NYkZqVm5nVWE4VXk4bWJWQzRDWkV0ZUMxeGNYZ0VD?=
- =?utf-8?B?K1pUWEhCT2srMjU1bEJmNEpHWHRNT1lLbXJ0bFdjRjIvUFV6bGI0NXIxaE1E?=
- =?utf-8?B?YWVrcUxLV05YTVVJd0duLzM0WkhvTWhXUXJ3MURPTFdBQzN0cHkxNHczU1BV?=
- =?utf-8?B?YkUvWFVaSGpGNzVxa0hrVlRoaWxQUzdtbE1JUHphMEJxSnFadnprQm5TamQ4?=
- =?utf-8?B?M2x5MERlTUExdnUrNExkTTN3bjc4QlcvOWFlUDhEUDNOYTJ3OVZmWU1INlh1?=
- =?utf-8?B?SzY2YkhDb2E5U3d3WHNCT0gzOUo3U2YwV2QxS3psR2VvaUpYM25oOVBpcUtv?=
- =?utf-8?B?QVhKcnhUR0tHdEF0MGJxNU9LakEyQklEdTFxY04wa0laMzJzZlp3ZWg5Y3lM?=
- =?utf-8?B?K3ZMWWlrb0dLdHJ3VGh3VER1bVhoQmJGTUxORnc4V2FhQjNuYkxMQUNTcFpJ?=
- =?utf-8?B?dm4zQVM1UzM5alZvMkJwTktRaGxGSlNGMkVzQ3VQVG9RdkZ3dTVGT2NZVDIv?=
- =?utf-8?B?d1dwVDBvQitUK0JvQzlXZzZSV2w3WUlrTlhCWjFlajZkdVVmVHpLbExQbVl5?=
- =?utf-8?B?eE9ROFo3ZWYwS0c1dkVxaW9Jbm1SaTZDQm92R2RRdklVNk5TaXpIMVY3MzFi?=
- =?utf-8?B?UUJKTGZ5R3l2NW44UmR5UVFDOE9CNmMxYUk4MUtpWFgyZ1pFUVA2MjVLTFY3?=
- =?utf-8?B?bFdUcTJlVEZCRWRpUTZ4THVzc012ZHhBREp4MkVqdkRpemlGelhUNlFvU2RV?=
- =?utf-8?B?ZmVHbElGSDVNbUtHYjQrTG00bnVjWnRPTXZFWlNQYUU3b3BZZXNkRG5IVElu?=
- =?utf-8?B?Y3ArZU4xSjd5bC8zVWVYcTBuRXE2cHZlUGU4NHZhdXRRZE1KZWJYS3k3VVlq?=
- =?utf-8?B?NEo3UmFkQUxZVnpza3Y4ZERBdVQ5RlFOVjQ4VElhUWlWVjZvOXR6eEdRREh0?=
- =?utf-8?B?RzMvemZ3ZXltMU9sTU9abWUxcWFhZnZTeUg2NWRzRnNkTHpuMzhaMGx3SDFw?=
- =?utf-8?B?TlRxbzViQnBnV3FFZXN6SmF3MEFGQktwREFmS25mQWFSRVNXSUFkWXRLT0V5?=
- =?utf-8?Q?FGvWEZldecudw1D8FsSeC9LL8mowXe+xWys/3jX?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(376011)(7416011)(366013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZkxNQk5TbFdPUzlKR3lRbENUQ05USW53bDEwenZWZklRNVlHVzVpRnpDeEZv?=
- =?utf-8?B?V0kvTjJ3dGNESFVCQkZQOWoxZmRpWkxJY1FFUW1weHpaQ1kyM09UQjc4UGFZ?=
- =?utf-8?B?TzNDL25ha3ZUckhKbXNpSE83dVYrRmtoL09MdHlCM3pFY0dqNFFCNTdYMlc1?=
- =?utf-8?B?ZVVPRWtZaCtvSnBZY1grTWR0aTBnT3FteFJtQTlGT0lmdEJzTXNVclhXS3RT?=
- =?utf-8?B?VVcxcGtnV0F0cE4zQ3dMN1ZWTVFXRUZGeVJyMnAwRGsydVdkaWpkQjMwQzhP?=
- =?utf-8?B?V1dad3RVeUpjbGFGVlp1Z2NvdUg1blZEN21hcHFKZlVrbVY1eUwzSysvTmk2?=
- =?utf-8?B?TC8xZWFFWjMrLzB3T0JBdnl6b1ZveVo1Mm1pQ3Y5ZFpKYUR1b1Z5Y2lTdnBK?=
- =?utf-8?B?OS9VTDdCeVQ1c3lxMjhmb0ZaaUNBSG5obUdsUTB5YkFxMHNReWdGMzdWaHdG?=
- =?utf-8?B?c0N1Y1JMRzJmT3p1emljNy9xLzRmK0YySEp0UzdhbGlsUWNKNjJ4NUExMkJS?=
- =?utf-8?B?aGYzckx4RlEzMkRtb1Z3aGMvWmtteGR5bTJwb0VyelZxOTNLNHlQYTdWZ1Rk?=
- =?utf-8?B?ak5YTy9sR2RPcTdRbXNxU29wRG9MaE93SEJJZDVHemNmTVpxZG9GWTI5ckVJ?=
- =?utf-8?B?TWlFQk95QmhwVHFtS3dpY2g4ZUtJRXdEalc3MU5kS29kdlFNcWx4QUx3dXBB?=
- =?utf-8?B?SkZHclZGNjNNcXErbUNnWDdkWmJOZkc2ampCQ0VmMVdGUnQ4cC9mZEpPVzNX?=
- =?utf-8?B?cHFqZDlFdkN6ZXBzbHpEUTMxMFpRVUNpZzhDcDdLN1c0Q3FZVUhtTmlBYjR3?=
- =?utf-8?B?Y0hndGtGSUVDN0IxcEZ3MWZZMWRGRmVrRWFtWVludGdBcFQrdy92cExsbE5Y?=
- =?utf-8?B?QTdKSHI4QkI5amJVZERkNkErNno2cHZscFJ3UEYwVG8vTExTcmtCL2cvMSt2?=
- =?utf-8?B?aVdFQmJLN0FvTjRVVUQ4R01makJSeUtKZWMxdVNqSUZQdHlreUo1cUMyTHJH?=
- =?utf-8?B?L3Q2SEovM1VubkM1YktuMGlhVzc4cm1WMWNpbm5ZZEI0cXh6U2dCMFFVby9h?=
- =?utf-8?B?a1ozUThmTXg2ZmVNQ3VxK2MyTWdBUU1RUHc3WEsyNkZjYytRRzNhbUc3VWdt?=
- =?utf-8?B?U2xMZDR2U1pNcDVWckNCT0Y2SVhCMVczSCtEdVlSR0lOczhBcVpaeWlDWkhW?=
- =?utf-8?B?Skd6VXZrKy9FdlBPSjZuQ2IzQnVCMG9UMEhWQit2eTNDa21yZEt2NWMvc1VU?=
- =?utf-8?B?Skw3UVBubitIOXJtdFlDTHhnejZIOFNVbGVTQ3drdXg1cisxSE83NGtxQmw3?=
- =?utf-8?B?S0lGWW91c1hjUGFoZ3hNL3FIcTQ2YzhrdUpJNW5sMklSTzUvSzdyQkR1Q2wr?=
- =?utf-8?B?VDRuSUdzajZhQXNYWm5jdmM5QjlOd0lFRkdxeC9IMFYva29EMWlkYWNtRmJy?=
- =?utf-8?B?TDF0dDlWZTJqV1AzZ1M2UTZHN1FYcmlvOGY2anB4SlVhcFNYeCtYTTgyZ2xt?=
- =?utf-8?B?THN4VDQ4Y29NQ2ZsRmxpeWxpemNDZjl3VWEvR0lSQ1hUcVVQT2U5ZFhOSVRL?=
- =?utf-8?B?alpOdWU5aG9tbjlVVHEyRTIyZzJpY0V1Wjg1OHJyQWpaVnJQVlpxaEJMalBo?=
- =?utf-8?B?cVJ3NjNVUElJTTRDSUVHZUY2OGJoUXlpQXZ3dU9YYjQvd05tL0FsU3hvK2VP?=
- =?utf-8?B?SEhSVXkrbWh2aUEwa1dHVnNjSW1hSmVzRXNCYklRNzQ2WmZlbzdOVS9zcFF6?=
- =?utf-8?B?Q2NNTDJzVGJDcmtFVERKSjBMMExXSEU3SDhobXVUU3ZmWkt3U3NtTllCTWtv?=
- =?utf-8?B?Tk1NNFhrdit5ZW1QQlk2SS9ZcSs0U1B0aDB2T0wxWEM3SmhuZ1RTOE1MdDIw?=
- =?utf-8?B?RjF2am5xQlh0eFhRcklmQjFWVE1ZMHNPRTNSTDhwQ0QraURwazJxcDdleTNk?=
- =?utf-8?B?b0hVQ3I0Sm5jS2kxZ2xKbG1Sc2FFUG11U2ZUY3BIWmd4ZDQyMXprWDVONzl1?=
- =?utf-8?B?ZjYzS2VtWDcvVG5TeWJyOUpJVTFJVVUvYXBCUXV5REo3cnhzeXJhM0phNVdr?=
- =?utf-8?B?VkdxYnBmNHlxWldTQzBkTUtQVnVtQUhuc3ZHNllvZFF5a0g2dzUvRFZkWi9x?=
- =?utf-8?B?YUFxbVVaWDFiRnNicFlNS0dIZWZRWHRRekVVVzNzUFYwdHRpa2dsemxxZWU3?=
- =?utf-8?B?UkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62194f43-74ee-4df0-c4ee-08dc91750ccc
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 22:05:09.3294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P95N9p9edp2iiGJe2ImP4h1SASw3OkRks02qxtzlnjotiRzdM9iuZZZw31f32ti9ZNpFb7Ozr4iBZk9QsYsCsi9KKBDF+jRqr3JPaYFxCtQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6691
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v5 5/9] drm/msm/hdmi: turn mode_set into atomic_enable
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej
+ Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20240607-bridge-hdmi-connector-v5-0-ab384e6021af@linaro.org>
+ <20240607-bridge-hdmi-connector-v5-5-ab384e6021af@linaro.org>
+ <f34c4210-fd59-9d27-0987-3345631c9e35@quicinc.com>
+ <xymopystyfjj3hpqes3uiw2g3dqynxzvz23snrbfzf2judgxnt@j4nmpcbuy7a4>
+ <6d416e1a-1069-8355-e9f3-d2732df081a3@quicinc.com>
+ <il2bg6bsu4nu4lpztzwo2rfonttiy64grxcsn7n4uybn3eui77@jxyzd744ksva>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <il2bg6bsu4nu4lpztzwo2rfonttiy64grxcsn7n4uybn3eui77@jxyzd744ksva>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 46wqhs0be5KKmtJK3ZXUKY61neLK-sdU
+X-Proofpoint-ORIG-GUID: 46wqhs0be5KKmtJK3ZXUKY61neLK-sdU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_10,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ clxscore=1015 malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406200162
 
-Hi Babu,
 
-On 6/19/24 9:25 AM, Moger, Babu wrote:
-> On 6/13/24 20:40, Reinette Chatre wrote:
->> On 5/24/24 5:23 AM, Babu Moger wrote:
 
->>> --- a/Documentation/arch/x86/resctrl.rst
->>> +++ b/Documentation/arch/x86/resctrl.rst
->>> @@ -261,6 +261,16 @@ with the following files:
->>>        Available when ABMC feature is supported. The number of ABMC counters
->>>        available for configuration.
->>>    +"mbm_assign":
+On 6/20/2024 2:24 PM, Dmitry Baryshkov wrote:
+> On Thu, Jun 20, 2024 at 01:49:33PM GMT, Abhinav Kumar wrote:
 >>
->> This name is not ideal but I am having trouble finding a better one ... I
->> have
->> seen you use "monitor mode" a couple of times (even in shortlog), so maybe
->> that
->> could be the start of a more generic name? "mbm_mode"?
+>>
+>> On 6/20/2024 1:32 PM, Dmitry Baryshkov wrote:
+>>> On Thu, Jun 20, 2024 at 01:27:15PM GMT, Abhinav Kumar wrote:
+>>>>
+>>>>
+>>>> On 6/7/2024 6:23 AM, Dmitry Baryshkov wrote:
+>>>>> The mode_set callback is deprecated, it doesn't get the
+>>>>> drm_bridge_state, just mode-related argumetns. Turn it into the
+>>>>> atomic_enable callback as suggested by the documentation.
+>>>>>
+>>>>
+>>>> mode_set is deprecated but atomic_mode_set is not.
+>>>
+>>> There is no atomic_mode_set() in drm_bridge_funcs. Also:
+>>>
+>>
+>> Please excuse me. I thought since encoder has atomic_mode_set(), bridge has
+>> one too.
+>>
+>>> * This is deprecated, do not use!
+>>> * New drivers shall set their mode in the
+>>> * &drm_bridge_funcs.atomic_enable operation.
+>>>
+>>
+>> Yes I saw this note but it also says "new drivers" and not really enforcing
+>> migrating existing ones which are using modeset to atomic_enable.
 > 
-> mbm_mode sounds good. Like this.
-> 
-> $cat /sys/fs/resctrl/info/L3_MON/mbm_mode
-> [abmc]
-> legacy
-> 
-> Keeping just "legacy" vs mbm_legacy.
+> Well, deprecated functions are supposed to be migrated.
 > 
 
-Looks good to me. This sounds generic enough to build on.
+Along with rest of the pieces of the driver :)
 
-Reinette
+>> My concern is that today the timing engine setup happens in encoder's
+>> enable() and the hdmi's timing is programmed in mode_set().
+>>
+>> Ideally, we should program hdmi's timing registers first before the
+>> encoder's timing.
+>>
+>> Although timing engine is not enabled yet, till post_kickoff, this is
+>> changing the sequence.
+>>
+>> If this really required for rest of this series?
+> 
+> No, it was just worth doing it as I was doing conversion to atomic_*
+> anyway. I can delay this patch for now.
+> 
+> Two questions:
+> 
+> 1) Are you sure regarding the HDMI timing registers vs INTF order? I
+> observe the underrun issues while changing modes on db820c.
+> 
+
+Yes this is the order I see in the docs:
+
+1) setup HDMI PHY and PLL
+2) setup HDMI video path correctly (HDMI timing registers)
+3) setup timing generator to match the HDMI video in (2)
+4) Enable timing engine
+
+This change is mixing up the order of (2) and (3).
+
+> 2) What should be the order between programming of the HDMI timing
+> engine and HDMI PHY?
+> 
+
+Mentioned above.
+
+> What would be your opinion on moving HDMI timing programming to
+> atomic_pre_enable? (the exact place depends on the answer on the second
+> question).
+> 
+
+So
+
+-> bridge->pre_enable() : Do HDMI timing programming
+-> encoder->atomic_enable() : Do timing engine programming
+-> post_kickoff() does timing engine enable
+
+This matches the steps I wrote above.
+
+Hence this is fine from my PoV.
+
+>>
+>>>>
+>>>> I would rather use atomic_mode_set because moving to atomic_enable() would
+>>>> be incorrect.
+>>>>
+>>>> That would be called after encoder's enable and hence changes the sequence.
+>>>> That was not the intention of this patch.
+>>>>
+>>>> NAK.
+>>>>
+>>>>> Acked-by: Maxime Ripard <mripard@kernel.org>
+>>>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>>>> ---
+>>>>>     drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 33 ++++++++++++++++++++++++++-------
+>>>>>     1 file changed, 26 insertions(+), 7 deletions(-)
+>>>
+>>>
+> 
