@@ -1,57 +1,113 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EF61AC245;
-	Thu, 20 Jun 2024 12:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39621AC792
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718887849; cv=none; b=OyB05LQM2VJnkhboAdnyD/DsL0qoy6OJX3rpLyKj0FINpj9MnfwMS+gCy/mQSgnF0ohVLgniGqro/sdxyuQHidLqHwvmfeam8ljgo3nXWg+4WoClBPw5D6SJxwbYKutrMpTHzbS2lBmzRrnuM1Wle8DokjGZOO0oQHXGnwM+njo=
+	t=1718887855; cv=none; b=TMRxjGJkS1YJfs3YT21jVgXDUfdVz7gky3D04Ft6sZ7TFnbEjj+zYDxWBG10mX9Bs+lY8vVITgoC0qOihfGgt3UCG2Cl2y+7AJ4i2yGabyMOC5zV0+FxuwZzgITaMYAMWqEHw5TDrMbxd4w4uh7FFBN34FhSin9IT2xtT12EQ0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718887849; c=relaxed/simple;
-	bh=BmOXLgEXDNK3XzYgemEnaUei+aYuQImVVsZC8ih6laM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eJtDsKlX27TxGpZRG7nOCaoho2A8QlhmKkMkBPPI3DFffBZzAqsBIaLs7MUQDk51eOfEj0QAwco8cgVbbOBDMY5llc+01oVZSSyINWCq2eHW/T5tbkVyqq49ngBNk8kED21t/+E7tphAng1VY2qb9+lokkeJmLN1dybwQrGBcRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W4gMM5BHnz4wcJ;
-	Thu, 20 Jun 2024 22:50:39 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Anup Patel <anup@brainfault.org>, Guo Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, Paul Walmsley <paul.walmsley@sifive.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Théo Lebrun <theo.lebrun@bootlin.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Sven Joachim <svenjoac@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom internal kernel review list <b
- cm-kernel-feedback-list@broadcom.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Mykola Lysenko <mykolal@fb.com>, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, Celeste Liu <coelacanthushex@gmail.com>
-Cc: linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>, Icenowy Zheng <uwu@icenowy.me>, Celeste Liu <CoelacanthusHex@gmail.com>
-In-Reply-To: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
-References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
-Subject: Re: (subset) [PATCH 0/6] defconfig: drop RT_GROUP_SCHED=y
-Message-Id: <171888775124.806750.6633317613524015778.b4-ty@ellerman.id.au>
-Date: Thu, 20 Jun 2024 22:49:11 +1000
+	s=arc-20240116; t=1718887855; c=relaxed/simple;
+	bh=2HmyC/8aoZ2nPJoKWEKLwCfkQSZpd1ixf1AoMQ48fKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nEqd3GNss6CGZve4DVkPEYpiWdDZ6aFLvDryKLPcd0yKT8itmcrOTxqvG4kG2EZMG2L04UuWrcmu/jXkbYpXPxm0A6KXKUk40KFALvnaDBUjL7QipNooJt3TyXXBgfHgtqPzPged8UsHJuZH8DZUYqXeCtSP0+gePhcqZZvicRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VA1Nm0sg; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VA1Nm0sg"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dfef5980a69so824918276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 05:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718887852; x=1719492652; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=V7Ui2B3eiuQfY6kcWseFEWEENplZ5Qoq4XUDUnDKk3A=;
+        b=VA1Nm0sg5UJAsKD6JV6BkbBZ5eCWivY8rCu8G5tU3I07UHRKOBMejLNz5Fq0Hsc0ZU
+         CiiCC1bKRnIbRZ0tiFie+ov6PhsWVAhr/oEcUNQ1crM9vT068Wg1W4F0ZjBv8ilqb/Kn
+         PS5QSWnd8/uhqydzS+J0rFpE8AhErg6QozuQf776qnWhkCc1vNKuzuvqJn95YgPAMJjm
+         AY+3je9Y+6vCdVh9z/OM53FH3PEPPaFcLK3MT0cD+Fk90htAUTn9NXNTbZjhYukmx1ni
+         aG537yNuavJ8wKetDfo+d3iG0/S8ckBm2Uxnjpx3Ean9djNdFyaS0MDnCcG8N5k/Gt5d
+         G+0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718887852; x=1719492652;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V7Ui2B3eiuQfY6kcWseFEWEENplZ5Qoq4XUDUnDKk3A=;
+        b=DgiwmW4KCZruGCvg14muZA60L9Yo6+HumPLKXnbWamdj42fAyHlFKtGJgOYYtlAyR0
+         l7cZIsEsTaDuOTGa3Ix+NP3D5SGGZFOzF5dNVrP7/13cuibNnv1XzFSe5IkjWCnu288l
+         T1b0IsvRaWwgLKRLfSjBcWWYQzHv7q/zqUnc1e2tjOS24yK0edUORhfWSnWApYLcXv02
+         Qjw/7r+BdpFrk3Pspa+gkQw7c5F0aYjIZSIBwR7kKfxWs0HTMwquzsVQmICg5q/b4ijj
+         D6LeuGqb+MCYC9G8IkoPz7N2+FVACv74qW95NP/ycEJsqva3wxRjbIRFrXO6ddEt12RS
+         /Flw==
+X-Forwarded-Encrypted: i=1; AJvYcCWht5mE17cmjMELX48u09lYhZQVp0/1XGGM6VcZA44hq5XjGvvNbylm5RsF6ceBydNmqk7vGQQFDJ1wjyROVyZsDDbq2JgwUg/GZ+Rv
+X-Gm-Message-State: AOJu0YzZ6XGlsut8XjzqBR1xgPWV4LQKYZuLSLocVTHKRJFbQyEaEWnp
+	3RDA4cV9uRxwX4GICDKfRwEFeiHRL9eDqniT3fD45NZeyf4cyeOwqqZyMsO9Wg3ZeOC6GRFZZDY
+	8GPukFeJM3i3QFzH436COXVIa+9g7hbWUuWQbFA==
+X-Google-Smtp-Source: AGHT+IFzwmTlSm83S3zIQ/NDj8ijWnvuzYb+Ls9TCG0adu2HJouriCBzHm65cuenwHGzeYmKw4gbmsjLNgVHCs5ygNw=
+X-Received: by 2002:a25:81c6:0:b0:e02:b580:d0b with SMTP id
+ 3f1490d57ef6-e02be203e4dmr5411315276.40.1718887852518; Thu, 20 Jun 2024
+ 05:50:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20240612-brigade-shell-1f626e7e592f@spud> <20240612-dense-resample-563f07c30185@spud>
+In-Reply-To: <20240612-dense-resample-563f07c30185@spud>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 20 Jun 2024 14:50:15 +0200
+Message-ID: <CAPDyKFozcUPuMooDHVSBZomHTGKzseVf9F=YBY_uQejh9o3x7g@mail.gmail.com>
+Subject: Re: [RFC v1 1/3] mmc: mmc_spi: allow for spi controllers incapable of
+ getting as low as 400k
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-mmc@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
+	cyril.jean@microchip.com, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 30 May 2024 19:19:48 +0800, Celeste Liu wrote:
-> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
-> needs an RT budget assigned, otherwise the processes in it will not be able to
-> get RT at all. The problem with RT group scheduling is that it requires the
-> budget assigned but there's no way we could assign a default budget, since the
-> values to assign are both upper and lower time limits, are absolute, and need to
-> be sum up to < 1 for each individal cgroup. That means we cannot really come up
-> with values that would work by default in the general case.[1]
-> 
-> [...]
+On Wed, 12 Jun 2024 at 17:48, Conor Dooley <conor@kernel.org> wrote:
+>
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> Some controllers may not be able to reach a bus clock as low as 400 KHz
+> due to a lack of sufficient divisors. In these cases, the SD card slot
+> becomes non-functional as Linux continuously attempts to set the bus
+> clock to 400 KHz. If the controller is incapable of getting that low,
+> set its minimum frequency instead. While this may eliminate some SD
+> cards, it allows those capable of operating at the controller's minimum
+> frequency to be used.
+>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
-Patch 4 applied to powerpc/next.
+Looks reasonable to me. I assume you intend to send a non-RFC for
+this, that I can pick up?
 
-[4/6] powerpc: defconfig: drop RT_GROUP_SCHED=y from ppc6xx_defconfig
-      https://git.kernel.org/powerpc/c/2bac6caee94e25f59ee47e2d365d7e07465089ba
+Kind regards
+Uffe
 
-cheers
+> ---
+>  drivers/mmc/host/mmc_spi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+> index 09d7a6a0dc1a..c9caa1ece7ef 100644
+> --- a/drivers/mmc/host/mmc_spi.c
+> +++ b/drivers/mmc/host/mmc_spi.c
+> @@ -1208,7 +1208,10 @@ static int mmc_spi_probe(struct spi_device *spi)
+>          * that's the only reason not to use a few MHz for f_min (until
+>          * the upper layer reads the target frequency from the CSD).
+>          */
+> -       mmc->f_min = 400000;
+> +       if (spi->controller->min_speed_hz > 400000)
+> +               dev_warn(&spi->dev,"Controller unable to reduce bus clock to 400 KHz\n");
+> +
+> +       mmc->f_min = max(spi->controller->min_speed_hz, 400000);
+>         mmc->f_max = spi->max_speed_hz;
+>
+>         host = mmc_priv(mmc);
+> --
+> 2.43.0
+>
