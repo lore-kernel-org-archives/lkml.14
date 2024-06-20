@@ -1,76 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C1F2139D7
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6F319AD7E;
+	Thu, 20 Jun 2024 08:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873594; cv=none; b=MLqklTXhd91yalYCty37g1TtWYt5V2ByziFgI+/LiYvzHRoZwraG8yDY8xJ1oMKjA3D41JuU73Xzmiq1Xw/NutHzb3wJ6UzGQk9qhQmEPUYgFAvP8yMBSnhwgs7Eo6KSY1FO4rki19RgbmpqgK+uCkPEn0s1Uq3NwVfd1QHWjs0=
+	t=1718873602; cv=none; b=OnSMIYQVyUkhpFX0ZQcKZiU/leMtYKuSVi0bdaldYy32dPk/azjgUsqa6B1xsHZ6GO+jMkc7uoynTakSTBMEK/roI5ql3PZ4Cp0rsa5q8b2U89atFVCWZVXYtrevewU1vU0X1E/GUIZkNkJmCYhd6QXdTTL6W3LiZvf5cg+mHXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873594; c=relaxed/simple;
-	bh=hRpD2oSJk3bfMnna+VloVB0FekUlFFz8OfKZw12xrRU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=d/HzVA2T/aLri1uFOb3jGrQ3OvECosoVGXCYE4uSnibef8Af6q7JZQtUd8oHHjn7ZzD8i5pqhsBjCp/F8FcyhIjqzA3CGo2IyTofM6Ff/QOyuK7/0P3Oc/i/tVIuJPB2mYuZWeF33rZ9UOxTDXE8U5gxcL4XDRgHmaA5Oua7aCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXVBFWFk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718873602; c=relaxed/simple;
+	bh=bwpHiqfV3NR9ZNI5PhU7nc3iTqkQEhyq1Z4buAeV7pE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=trTT2ARx7u89gdTe+16DRTbTOYbWA+RYwgwBcxDPsMP+RZTswQdAbA7IZQKnW2lRXmI23rxiqsymjCse7Q8G9WXqTM2ASMy6fmlDOZ5tRR8OtiuYFkyJtIjHfOSmCWQCl/OB0onnQJlzUYuSGvACf7u8+dM1m1xGnWWXI4Uwkhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=oK0gWrkh; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXVBFWFk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750ACC2BD10;
-	Thu, 20 Jun 2024 08:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718873594;
-	bh=hRpD2oSJk3bfMnna+VloVB0FekUlFFz8OfKZw12xrRU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=oXVBFWFkXYMboO01m5otd0aUgNt+XduBzRcoZwzQzUUsguH91kQLxHK72/Di9yUu2
-	 NtML8B0Lo01QCAElbiyt3DmLcvo4Nr2sWqA866m/A/OY4cYOHyNTIJsFtFpPVngQzF
-	 IfWECGvvHGJJbsJ3PYv1V9X63T6Jv/E6nYWS7nd/fPBZCf8gaOIrE4KfrJTZu1ulFh
-	 DPk9GkKoVJFfnhPDDpS+sB/CjLtXtlNPHpfheZ4bGvmAW7BHniyk9avJ3wdw74C8hX
-	 3ePOuNj2TdTfmh5jHKBJQf13CbmIdRWk28jS5gZBZJF6W9l6YNzh1Bvhyb6Rmh6ByU
-	 PfD5IXSeGkpAg==
-From: Maxime Ripard <mripard@kernel.org>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Amaranath Somalapuram <Amaranath.Somalapuram@amd.com>, 
- Andi Shyti <andi.shyti@linux.intel.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Boqun Feng <boqun.feng@gmail.com>, 
- Christian Koenig <christian.koenig@amd.com>, 
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Huang Rui <ray.huang@amd.com>, Ingo Molnar <mingo@redhat.com>, 
- Karolina Stolarek <karolina.stolarek@intel.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Waiman Long <longman@redhat.com>, 
- Will Deacon <will@kernel.org>
-In-Reply-To: <20240619144630.4DliKOmr@linutronix.de>
-References: <20240619144630.4DliKOmr@linutronix.de>
-Subject: Re: (subset) [PATCH REPOST^2] drm/ttm/tests: Let ttm_bo_test
- consider different ww_mutex implementation.
-Message-Id: <171887359115.3857922.3484081720728678081.b4-ty@kernel.org>
-Date: Thu, 20 Jun 2024 10:53:11 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="oK0gWrkh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=5sH8h
+	xhoOeNYDft5EdEon6W33nt0SARFkjDRTog6ETM=; b=oK0gWrkhZmY56FLE4hy9w
+	MbFVSwYh4ABTgF2LZa2y+DpTHVASdeTd07Ka+gNhjV1TjW6JS5dVH4eQBldVcdem
+	e4OlET5vEKBeUdShS5U3DJfXngb42WOV9EW6yF2FbJAUI393s/7iPewcvCPg4Z2g
+	/ot+dnBv7mTRXUeJC64PO4=
+Received: from localhost (unknown [101.132.132.191])
+	by gzga-smtp-mta-g2-1 (Coremail) with SMTP id _____wDnLxfS7XNmCTWKBg--.31671S2;
+	Thu, 20 Jun 2024 16:52:34 +0800 (CST)
+From: Xavier <xavier_qy@163.com>
+To: longman@redhat.com,
+	mkoutny@suse.com
+Cc: lizefan.x@bytedance.com,
+	tj@kernel.org,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xavier <xavier_qy@163.com>
+Subject: [PATCH v4 v4 0/2] cpuset: use Union-Find to optimize
+Date: Thu, 20 Jun 2024 16:52:31 +0800
+Message-Id: <20240620085233.205690-1-xavier_qy@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240603123101.590760-1-ghostxavier@sina.com>
+References: <20240603123101.590760-1-ghostxavier@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnLxfS7XNmCTWKBg--.31671S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtw43WF18tw47Kr4xtFyUAwb_yoW3Xrg_Xa
+	48Za4qk3WjgFn2gayrKF9IqFW2k3y0gwn5C3WDJF4UXF17JrsxGw1kJFZrZry7XF1kJr43
+	JF15tr4Fqr1qgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xREgAwJUUUUU==
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiYwEEEGV4I1gq4AABsb
 
-On Wed, 19 Jun 2024 16:46:30 +0200, Sebastian Andrzej Siewior wrote:
-> PREEMPT_RT has a different locking implementation for ww_mutex. The
-> base mutex of struct ww_mutex is declared as struct WW_MUTEX_BASE. The
-> latter is defined as `mutex' for non-PREEMPT_RT builds and `rt_mutex'
-> for PREEMPT_RT builds.
-> 
-> Using mutex_lock() directly on the base mutex in
-> ttm_bo_reserve_deadlock() leads to compile error on PREEMPT_RT.
-> 
-> [...]
+Hi all,
 
-Applied to misc/kernel.git (drm-misc-next).
+According to Michal's suggestion, I have divided the patch into two
+ separate submissions.
+Kindly review.
 
-Thanks!
-Maxime
+By the way,I changed my email from "ghostxavier@sina.com" to "xavier_qy@163.com"
+because the previous one was inconvenient to use.
+
+Best Regards,
+Xavier
+
+patch (2):
+  Union-Find: add a new module in kernel library
+  cpuset: use Union-Find to optimize the merging of cpumasks
+
+ MAINTAINERS                |  7 +++
+ include/linux/union_find.h | 30 ++++++++++++
+ kernel/cgroup/cpuset.c     | 95 ++++++++++++++------------------------
+ lib/Makefile               |  2 +-
+ lib/union_find.c           | 38 +++++++++++++++
+ 5 files changed, 110 insertions(+), 62 deletions(-)
+ create mode 100644 include/linux/union_find.h
+ create mode 100644 lib/union_find.c
+
+-- 
+2.45.2
 
