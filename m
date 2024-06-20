@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3E01AB8E0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B38622616
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899252; cv=none; b=PbLI4J75bLulAoRv22/xF03LP0k3Ki5YlKgzTbxUkxluKEkcIfxGsd9akGW0fattBzeB7EIF+UFJYCP/D3+5A8DvXgPUqOk9lJv310uu+U0fBbQpoQ+RhWwMsTwxvnzyueb3DOsNiNZm98XRVL+kwHVTyMDUN4/edXI+0zG6kZI=
+	t=1718899252; cv=none; b=Be1gjR1PkAeU8BxAN1lvbSJ4sViQmAnRxLoQU+hTWOThTVNWwKh1riVlx4YML17kdGNiP2BK0k4LqCmfWY0YG30JnPUrKpMUFYHS3O7EIv8LLaaTLsf5uuuOh6KNb1nf5EPrZhWOh6Tly6HNYOShn+59k/00eAB/S558We7OzcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718899252; c=relaxed/simple;
-	bh=N/VZfFN6kZVrxoszRPwVjrlv9D+r7XRzwq1GlkpJB5Q=;
+	bh=Gcc362eWY4n7cee3vta15eZnYNy4hpzoodN7rfnx8iQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rGUMQGtGTBaGc3WndVg7jazwwVUHMHFeo0tCQqAXEuEZYSyRnM8W1HTuT81iOGI5Hjh5YcCsnqeFyDWTG63Rc+jVwBps7dHcHfXqtJQQX8NamOSpOAPOUSoEGVFAUuO3oIIbMWBj5WJolBkvk8AO4slXumehaPyxnxpNz9pI+/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=g0XlvPs9; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=V/6ZLokfQ8pqxOb651rT1sWiO4W++mBFEUiEpZXAbsqZ/TuNPB/docz3qBbXZqI+lyDvIO1U8MHNeTjgq4vTfB4tFrH0X2f8t5sP/dWVOCzKR7n7qM5kQDx0x7aNewhCblq/QJ865PY79+BqUNticr0FpH9pRvxOzaAwITRv/V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=FRLLkwlp; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="g0XlvPs9"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="FRLLkwlp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1718899248;
-	bh=N/VZfFN6kZVrxoszRPwVjrlv9D+r7XRzwq1GlkpJB5Q=;
+	bh=Gcc362eWY4n7cee3vta15eZnYNy4hpzoodN7rfnx8iQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=g0XlvPs9AXa9H7LVGo4+11T0Z8D0DiBxmtiK/8thbXQ1gLM7dW372zhZ5SwD7R0fa
-	 TKqn7C+T1TJeqkSCREdIUp0OfQeI3aukbIw1RMd4Tme9dAZ0sfESfd/BszdGRJyiDY
-	 VoQNi6YgcpdLDIYjLshpjXpFhOgbzD85qLop9Jvg=
+	b=FRLLkwlpcpslOZukBJLio5kOSWuu5xS/87GPBRpd6/b3i/JW3C72uUDBRO2IhEl59
+	 YDOJBQFQS9PJklSIlZua3ktboEP9UgVSrm6K55XeVZGskRghK/qqJ91tO3He9+u908
+	 ix3rp5UEo0PhCIt0+F4MGXWZU86BVJcZi8GMYG9A=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 20 Jun 2024 18:00:36 +0200
-Subject: [PATCH 4/5] nvmem: core: remove global nvmem_cells_group
+Date: Thu, 20 Jun 2024 18:00:35 +0200
+Subject: [PATCH 3/5] nvmem: core: add single sysfs group
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240620-nvmem-compat-name-v1-4-700e17ba3d8f@weissschuh.net>
+Message-Id: <20240620-nvmem-compat-name-v1-3-700e17ba3d8f@weissschuh.net>
 References: <20240620-nvmem-compat-name-v1-0-700e17ba3d8f@weissschuh.net>
 In-Reply-To: <20240620-nvmem-compat-name-v1-0-700e17ba3d8f@weissschuh.net>
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
@@ -43,85 +43,44 @@ Cc: linux-kernel@vger.kernel.org,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718899247; l=2306;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718899247; l=1061;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=N/VZfFN6kZVrxoszRPwVjrlv9D+r7XRzwq1GlkpJB5Q=;
- b=TtReZlujBvg3HGVHYyMJYKG/n4kcvHbufhUhT6l65J56AfPOkvcyG9F9ZsjWoIeCigt54GSzE
- +/f+SIDCv19DoxRvb0O3QPEkJRKyoCOVQVoQzpzcNiu/elRtAE+D1S4
+ bh=Gcc362eWY4n7cee3vta15eZnYNy4hpzoodN7rfnx8iQ=;
+ b=k5tPyOOf3DWI19Iaj7k9jRfYSvnjEW9m0Bul67LGz+mlhIeeJFyl4nQrHuaRqQfyOvA+09nF1
+ JrgPEHQtEAlB5ZAB2GwgxCygWFIJUppkz/5lFI3BfqDDiYnetAXfKQl
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-nvmem_cells_groups is a global variable that is also mutated.
-This is complicated and error-prone.
-
-Instead use a normal stack variable.
+The sysfs core provides a function to easily register a single group.
+Use it and remove the now unnecessary nvmem_cells_groups array.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/nvmem/core.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+ drivers/nvmem/core.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 4c250f0e55ef..ed077d7e3998 100644
+index d74297d10631..4c250f0e55ef 100644
 --- a/drivers/nvmem/core.c
 +++ b/drivers/nvmem/core.c
-@@ -357,11 +357,6 @@ static const struct attribute_group nvmem_bin_group = {
- 	.is_bin_visible = nvmem_bin_attr_is_visible,
+@@ -367,11 +367,6 @@ static const struct attribute_group *nvmem_dev_groups[] = {
+ 	NULL,
  };
  
--/* Cell attributes will be dynamically allocated */
--static struct attribute_group nvmem_cells_group = {
--	.name		= "cells",
+-static const struct attribute_group *nvmem_cells_groups[] = {
+-	&nvmem_cells_group,
+-	NULL,
 -};
 -
- static const struct attribute_group *nvmem_dev_groups[] = {
- 	&nvmem_bin_group,
- 	NULL,
-@@ -423,23 +418,24 @@ static void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
+ static const struct bin_attribute bin_attr_nvmem_eeprom_compat = {
+ 	.attr	= {
+ 		.name	= "eeprom",
+@@ -477,7 +472,7 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
  
- static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
- {
--	struct bin_attribute **cells_attrs, *attrs;
-+	struct attribute_group group = {
-+		.name	= "cells",
-+	};
- 	struct nvmem_cell_entry *entry;
-+	struct bin_attribute *attrs;
- 	unsigned int ncells = 0, i = 0;
- 	int ret = 0;
+ 	nvmem_cells_group.bin_attrs = cells_attrs;
  
- 	mutex_lock(&nvmem_mutex);
- 
--	if (list_empty(&nvmem->cells) || nvmem->sysfs_cells_populated) {
--		nvmem_cells_group.bin_attrs = NULL;
-+	if (list_empty(&nvmem->cells) || nvmem->sysfs_cells_populated)
- 		goto unlock_mutex;
--	}
- 
- 	/* Allocate an array of attributes with a sentinel */
- 	ncells = list_count_nodes(&nvmem->cells);
--	cells_attrs = devm_kcalloc(&nvmem->dev, ncells + 1,
--				   sizeof(struct bin_attribute *), GFP_KERNEL);
--	if (!cells_attrs) {
-+	group.bin_attrs = devm_kcalloc(&nvmem->dev, ncells + 1,
-+				       sizeof(struct bin_attribute *), GFP_KERNEL);
-+	if (!group.bin_attrs) {
- 		ret = -ENOMEM;
- 		goto unlock_mutex;
- 	}
-@@ -466,13 +462,11 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
- 			goto unlock_mutex;
- 		}
- 
--		cells_attrs[i] = &attrs[i];
-+		group.bin_attrs[i] = &attrs[i];
- 		i++;
- 	}
- 
--	nvmem_cells_group.bin_attrs = cells_attrs;
--
--	ret = device_add_group(&nvmem->dev, &nvmem_cells_group);
-+	ret = device_add_group(&nvmem->dev, &group);
+-	ret = device_add_groups(&nvmem->dev, nvmem_cells_groups);
++	ret = device_add_group(&nvmem->dev, &nvmem_cells_group);
  	if (ret)
  		goto unlock_mutex;
  
