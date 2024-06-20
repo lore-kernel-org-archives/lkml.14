@@ -1,99 +1,201 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825C01AE87B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F1C1AB91B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 15:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718895561; cv=none; b=AiEJgUBiekeKVfvhUuzyxmn4sGj+HlWsN379cnCA1xNmEw0LLieDuc0hFPhDmxKcmuXWSGqfmjb2zFOOcfntvs2A4M/SfkZp5ULHbRxNzvukoDPHMjZ1PbKX8LS+5DSS0Ju7bL/EpMxSbYIzkePpht47qavz4F3ZKmhRPqJLfps=
+	t=1718895688; cv=none; b=lzp1nb2s4a2AeI4WKcBnUzq7iThembYGnVoa9XpYIafqDJNGyPxFRVr2nd3h1/OhkM2C742sZRDFFOdQwKxRfAt0HJh+od40dlHrZblDKdKXy6ZO0AzPiCmN8Dxoio/4xnlPtclpj5T20ryEI3QMQXT0P2+Xynj6PFev9OkTJ3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718895561; c=relaxed/simple;
-	bh=wQFe7+FoQAQ/Ej8PGtCjqCQeTZhNJNzpwjveIE3kwow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qmcMVFAyNudKzgXAdleQcDI33pfNSMpApiP0fYwClJ07yPnQznMcCpTyA+oBW4TPtrys9vgZg7S3P4jFmXWf/CSVbodqbSzOlQzr69caJlCCce87FS3uutbdoW9sCzkwf/VIXOAPRRM12f9glVvPM5M6cdDKbStOtABxYM0p/fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sguj/13v; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718895688; c=relaxed/simple;
+	bh=GVeOn2xdOEFI+aM+1f6+E6tbMdNuyMiU3KhFIESuj+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BFm5hvaJLzOBFPF1gZoiGOU7DHjDwE7GVqMHew3tM7nf3q61lBsCj5ObtYS6KHrLliEvsPLgXnPZo4QKwOxeBWaGUddSNAihlJBmXk3hwiK0FifvhBSOMpo/wd+ZrhJIxVQ7yY3EHFVFLOzD63mKtdlprXcVr127bCYGDeUFNh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=eXIql/8Z; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sguj/13v"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-795482e114cso88148685a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718895558; x=1719500358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wQFe7+FoQAQ/Ej8PGtCjqCQeTZhNJNzpwjveIE3kwow=;
-        b=sguj/13vZL7ZJZO5z8sfE8DrKVERNW1EI60r5Q0WJ9TVYC6W4m34sdO+iOboFKkfQ+
-         +Z0qBYrCevIxss2U6ib2gKp6C/8ayxteSLNgQLdIXa+DmtZ8ETGf67wOliFCGRmjU854
-         GtQ68KVtCjwZkAbaLx4tUOII3g+agxv9tzSq4ccANHhir7PyNwHR2DsZD2gK2OjiJIJj
-         6a//RI74MW5DaByoXfw+CG/c6dxOmGPbBK6IJtyMrECTBEJiiKB7tpGCQ6VPlo3MT2Fv
-         vvTF/SV9DrVOY/S3TAq+BuSw2OYFpYjUTaNfi6mG2+3tHOvCnOUngqGL9N1oU3gy64K8
-         7wJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718895558; x=1719500358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wQFe7+FoQAQ/Ej8PGtCjqCQeTZhNJNzpwjveIE3kwow=;
-        b=lUSBMEM8HRQXXOTRByWs4VggTsDWehhaBVDI30QvMd6Hwo6BytWZW2ykmsGnTpHc/v
-         1ekCUOowY5ynrS4zZefx1H1atL2+gzE1mPVitni0yDEf2d9bz9bBPCMMTzM73K4d3M/C
-         spmFHF+gQPSt7DzOvQm6WWR2fKyi7qnI9vqz/7EOpf8njttKfx6ztKJhvNu/16ZzNY0u
-         qkSzb4Jxj0oCcDRvWSgU15L4xLedhLkx3eNMJZSZIZaDyXYG8352pNgogz0poXylkhDz
-         gjEmLw+HVmFvFsznpfY0v3CQWyAbzOxeF20lViXD63J0FkfqxoTtGHtcXllAs2OGrZ+9
-         sUuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrPfZwkG+t+loyox4UomDKDCkzePtVoInJylLQXz+Mz/IMg1lRRkXBo2pgFq4XvQlVr4U1H9MIeIR7z3B1tigjyylBBKFpVj0nyV7a
-X-Gm-Message-State: AOJu0YxEdxhZ4o5prhTrkEnMRwzKIDInsUaEkg1rAYlAraqI5Ng9dlqs
-	K23+ilsLaZhTI4ENxzerVfQ/mEc1ENDG6ybVFZqqV8NortJbRRFn1baQJoluLgb655+uTj/2ktS
-	c1vzxWpUZ1D7nYdSoPRtdwUCaqTJ7ZRvP78uV
-X-Google-Smtp-Source: AGHT+IGeRuqV+cE/BwKBYEq3GJ1OZf5EGVZmjN41sQI94tB6oOMgdyEKTDLMRa7DT6aOW38eJ9+FxzAOQmbOR+cC/uI=
-X-Received: by 2002:a05:6214:14e3:b0:6b0:914d:4a56 with SMTP id
- 6a1803df08f44-6b501e9f7e5mr56738086d6.40.1718895558286; Thu, 20 Jun 2024
- 07:59:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="eXIql/8Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1718895660;
+ bh=13pdcRskJFNi9XMxOGxfDEs3htWYtGPvGt7ceE5Lg0Y=;
+ b=eXIql/8ZTuBT1dxVZxPaSQIqC7kn0zIBK2fXkrirx2CvMvjsNgvuDgVqkBhPjoA5p08Puj2Xb
+ BhyQsOePA0/9ugdJNfrRGEROt3KNWkte/ROClbvW1L3myLT44fuY7hz06DaxttH60d3g1a0u/K3
+ 6gO37Fa2h6Q1Q4E4CJ7KFrFONc4iL6X3f7TASxg4kMSLgDKotZXnfx/b/3TIEYrk3ePB7UR5Y2R
+ x5/wgQe3nOhucLMOvVsEoQYfDILDDBP2G37wCWi517YqcK0x3MiX1z7VRZz8J95VHqZAcFdOO2V
+ /CS77qgr/4hJaabOg6V+vWY17iDNLhhm2A81Zv4TMRNA==
+Message-ID: <311770c3-d3ea-4650-ae11-7c278e043d0a@kwiboo.se>
+Date: Thu, 20 Jun 2024 17:00:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619154530.163232-1-iii@linux.ibm.com> <20240619154530.163232-14-iii@linux.ibm.com>
-In-Reply-To: <20240619154530.163232-14-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 20 Jun 2024 16:58:37 +0200
-Message-ID: <CAG_fn=V2n_pwdKBK1jwvZ9Aw_M9-UgZ7xho2KS0uUddHWe6H+w@mail.gmail.com>
-Subject: Re: [PATCH v5 13/37] kmsan: Support SLAB_POISON
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Add rkvdec2 Video Decoder on
+ rk3588(s)
+To: Detlev Casanova <detlev.casanova@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Ezequiel Garcia
+ <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner
+ <heiko@sntech.de>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>, Dragan Simic
+ <dsimic@manjaro.org>, Diederik de Haas <didi.debian@cknow.org>, Andy Yan
+ <andy.yan@rock-chips.com>, Boris Brezillon
+ <boris.brezillon@collabora.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Daniel Almeida <daniel.almeida@collabora.com>, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>, Nicolas Dufresne
+ <nicolas.dufresne@collabora.com>, Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, Alex Bee <knaerzche@gmail.com>,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-staging@lists.linux.dev
+References: <20240620142532.406564-1-detlev.casanova@collabora.com>
+ <20240620142532.406564-5-detlev.casanova@collabora.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20240620142532.406564-5-detlev.casanova@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 6674442892323c181dc311b2
 
-On Wed, Jun 19, 2024 at 5:45=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> Avoid false KMSAN negatives with SLUB_DEBUG by allowing
-> kmsan_slab_free() to poison the freed memory, and by preventing
-> init_object() from unpoisoning new allocations by using __memset().
->
-> There are two alternatives to this approach. First, init_object()
-> can be marked with __no_sanitize_memory. This annotation should be used
-> with great care, because it drops all instrumentation from the
-> function, and any shadow writes will be lost. Even though this is not a
-> concern with the current init_object() implementation, this may change
-> in the future.
->
-> Second, kmsan_poison_memory() calls may be added after memset() calls.
-> The downside is that init_object() is called from
-> free_debug_processing(), in which case poisoning will erase the
-> distinction between simply uninitialized memory and UAF.
->
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+Hi Detlev,
+
+On 2024-06-20 16:19, Detlev Casanova wrote:
+> Add the rkvdec2 Video Decoder to the RK3588s devicetree.
+> 
+> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 48 +++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> index 6ac5ac8b48ab..9c44c99125b4 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> @@ -2596,6 +2596,16 @@ system_sram2: sram@ff001000 {
+>  		ranges = <0x0 0x0 0xff001000 0xef000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +
+> +		vdec0_sram: rkvdec-sram@0 {
+> +			reg = <0x0 0x78000>;
+> +			pool;
+> +		};
+> +
+> +		vdec1_sram: rkvdec-sram@1 {
+> +			reg = <0x78000 0x77000>;
+> +			pool;
+> +		};
+>  	};
+>  
+>  	pinctrl: pinctrl {
+> @@ -2665,6 +2675,44 @@ gpio4: gpio@fec50000 {
+>  			#interrupt-cells = <2>;
+>  		};
+>  	};
+> +
+> +	vdec0: video-decoder@fdc38100 {
+
+This and the vdec1 node should probably be added between
+
+  pmu: power-management@fd8d8000
+
+and
+
+  av1d: video-codec@fdc70000
+
+to follow reg order.
+
+Also I am wondering if the nodes should be named
+
+  video-codec@fdc38000
+
+and
+
+  video-codec@fdc40000
+
+to match "1.1 Address Mapping" in TRM and the actual base address for
+the VDPU381 IP and video-codec is used for other codec nodes.
+
+> +		compatible = "rockchip,rk3588-vdec";
+> +		reg = <0x0 0xfdc38100 0x0 0x500>;
+
+For existing rkvdec1 devices the cache regs is also included in the
+range, should cache regs also be included for rkvdec2?, e.g.:
+
+  reg = <0x0 0xfdc38100 0x0 0x600>;
+
+And maybe it also should include the link list regs, e.g.:
+
+  reg = <0x0 0xfdc38000 0x0 0x700>;
+
+or possible:
+
+  reg = <0x0 0xfdc38000 0x0 0x100>,
+        <0x0 0xfdc38100 0x0 0x500>,
+        <0x0 0xfdc38600 0x0 0x100>;
+
+Something like that may be a better description of the hw.
+
+> +		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>, <&cru CLK_RKVDEC0_CA>,
+> +			 <&cru CLK_RKVDEC0_CORE>, <&cru CLK_RKVDEC0_HEVC_CA>;
+> +		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
+> +		assigned-clocks = <&cru ACLK_RKVDEC0>, <&cru CLK_RKVDEC0_CORE>,
+> +				  <&cru CLK_RKVDEC0_CA>, <&cru CLK_RKVDEC0_HEVC_CA>;
+> +		assigned-clock-rates = <800000000>, <600000000>,
+> +				       <600000000>, <1000000000>;
+> +		resets = <&cru SRST_A_RKVDEC0>, <&cru SRST_H_RKVDEC0>, <&cru SRST_RKVDEC0_CA>,
+> +			 <&cru SRST_RKVDEC0_CORE>, <&cru SRST_RKVDEC0_HEVC_CA>;
+> +		reset-names = "rst_axi", "rst_ahb", "rst_cabac",
+> +			      "rst_core", "rst_hevc_cabac";
+
+Do we need to include the rst prefix in the reset name?, does not look
+like other DT/bindings normally include rst in their name.
+
+> +		power-domains = <&power RK3588_PD_RKVDEC0>;
+> +		sram = <&vdec0_sram>;
+> +	};
+> +
+> +	vdec1: video-decoder@fdc40100 {
+
+Same as above.
+
+> +		compatible = "rockchip,rk3588-vdec";
+> +		reg = <0x0 0xfdc40100 0x0 0x500>;
+
+Same as above.
+
+Regards,
+Jonas
+
+> +		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru ACLK_RKVDEC1>, <&cru HCLK_RKVDEC1>, <&cru CLK_RKVDEC1_CA>,
+> +			 <&cru CLK_RKVDEC1_CORE>, <&cru CLK_RKVDEC1_HEVC_CA>;
+> +		clock-names = "axi", "ahb", "cabac", "core", "hevc_cabac";
+> +		assigned-clocks = <&cru ACLK_RKVDEC1>, <&cru CLK_RKVDEC1_CORE>,
+> +				  <&cru CLK_RKVDEC1_CA>, <&cru CLK_RKVDEC1_HEVC_CA>;
+> +		assigned-clock-rates = <800000000>, <600000000>,
+> +				       <600000000>, <1000000000>;
+> +		resets = <&cru SRST_A_RKVDEC1>, <&cru SRST_H_RKVDEC1>, <&cru SRST_RKVDEC1_CA>,
+> +			 <&cru SRST_RKVDEC1_CORE>, <&cru SRST_RKVDEC1_HEVC_CA>;
+> +		reset-names = "rst_axi", "rst_ahb", "rst_cabac",
+> +			      "rst_core", "rst_hevc_cabac";
+> +		power-domains = <&power RK3588_PD_RKVDEC1>;
+> +		sram = <&vdec1_sram>;
+> +	};
+>  };
+>  
+>  #include "rk3588s-pinctrl.dtsi"
+
