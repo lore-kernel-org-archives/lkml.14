@@ -1,125 +1,71 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFB540848;
-	Thu, 20 Jun 2024 06:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81D32BAF3;
+	Thu, 20 Jun 2024 06:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718865661; cv=none; b=at7bhvoCDWO9tgqaJxHs/HYzt5b95DE63MFEAOcuWg7a6ODvtqh8vfQTygy4e3UAB0RAxaEIhS4oonGH/n9+o/lriJHoQQObpqZyYqqW0f/BcBr6Rv1rOrbK6MSMmlHAtCSU249bsMKh9twu6Pg9VCUpcMihJrCMRWdjaJOqEvs=
+	t=1718865711; cv=none; b=a2yZvo61W+kYAyc9DeKqx8WUNXFAilUAWVrwgth7fh15WLtOqw6anIiWSC/0oSvUtgGR4R3gLVsA4d3q0MCwpoKZZj1+cVWhrHDobtIyeRnoM+0Y2z5/ynMzYEUfn1Zpyko7+TJErUTePZOEAK0QYLkuSdjTvwzvjG8es56ZOek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718865661; c=relaxed/simple;
-	bh=UzzGZvEE5qzqnyqLhkrTBSAmBpUlFkIi/FE1mJkkpJ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GpKu7lJH25TNj7sFmxpgrDpVJXphqXFQhswxL4poLFQ0qUFBh1Ugpy+6/l5AbWqPfQJCr37D0wc3QNVvenqG6U0UKvJl42ick7y3TfgkL2P2fZc57tFsmbAZruMHE8fKdk+sJMNJWKEbSNJbw+9RGXtQV1WGjUu3ndU+TZuQz6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m4/+uca+; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718865711; c=relaxed/simple;
+	bh=X61PCRgIY2z6sVnDZpOzsWgDtdDJ6JoE4ZcWzPPwAAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P2vutDtsbkgXkeMpKg8KxCM3PspWBbrbQMWPWHr5Jtq5pypdO4VmR30xe0+66dl3cXaRqaT9xnHbok+x+PWP4247EXZgbpIsidTpSb6zPcSuMitgmzB03g9eJJrXf/sGNWcWCAwnzBOBeOgwdLac2eSkASPkKjDwD+gVq+QDCIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egBVVmC7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4/+uca+"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2bfffa3c748so485945a91.3;
-        Wed, 19 Jun 2024 23:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718865659; x=1719470459; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dj4QZeFx+AVC51p11hlg4kzbDA2elF0sWu+Rp1qJlwA=;
-        b=m4/+uca+AsSkt+BVHgBimm7KSElcOqANLihePTNielo5FZ0d9s5hbpRRN5nHcBuymj
-         p5pfrYRGa03XsSn8eIG85PhEs3e3TxgZez2THKDQFL4h01kDvz9BthfZIT4pn+Prcp9c
-         eQ7PWKXnDqlBnB6jiHo7fcwfkhCEv0ph1nbQRRdCec4DHpRcrVbY+obgihPzafMPXRsb
-         DTWqBhfGxLRWeN90l7RNosipbSEDCQTe7sGX4dXJOLwIdHYXbwVdj+gJrJDSHhLWneN3
-         K/2KODzptlfO/QbKby7vYDbyzWYid2AZDW7bJ0w7Og/3uNcr2FYBOm4Wj7FmNHIjHmKr
-         K/zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718865659; x=1719470459;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Dj4QZeFx+AVC51p11hlg4kzbDA2elF0sWu+Rp1qJlwA=;
-        b=IxhTxfJlSngvWUZMM77Z78ipuUa7yyfhVZb7417oKrkkPnUOJ0pTSxvSQOZPQnMCaW
-         JY+ORA9vcViNafkbOcPwN+0U9OVMoMSHB3yFrG5xEQdH3HbH1UMZR2uEqPZervBURaJG
-         tvYE7z6z+YSoZmFa0fRkPQRm9lnJcVQR99c3wJYM8JVemqGrV+a2p+bPjojQV/YaL1+F
-         Wczadj2WV71+DF4959Mugz+dwgkiXGHIuJUYTaGrJBvOyKaUmFtX2j6NPCpuHkrWpGn0
-         UDrTvsVCuL5Iyl37hFjwp4eAcS7LQAxT7FPY7mB19AjJbJJfrPDf0JhhaThU12stfuTO
-         5b3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXpmkVo2KM4FPVZL0s4XLmwH90+t4QI18RIJOraHZN5hqFWPcBi0Ri2koElGD7IVqbvw/u8QAQGBf8/6Bi11Op8SlR4wGQFlk2hqPkZ
-X-Gm-Message-State: AOJu0YwGWhSrvVETK7x6k9Kw0RhbKEAn54bmVIrXuaOb8IK0iLgGULrw
-	scH/msDNxdNReUbrv35TCF426OjxsaNOteTQSmDF9PZihYVBM90M
-X-Google-Smtp-Source: AGHT+IFNC7FgO9HSN1gJ1UcHOVjndxJnOiiessKD+THr8O0UlSmH6s/UeMfmg86hakwBC98pUI/Xuw==
-X-Received: by 2002:a17:90a:ea92:b0:2c4:b300:1b4c with SMTP id 98e67ed59e1d1-2c7b5cc49f5mr4163646a91.24.1718865659045;
-        Wed, 19 Jun 2024 23:40:59 -0700 (PDT)
-Received: from localhost.localdomain ([129.146.253.192])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c7e50f7c90sm862442a91.9.2024.06.19.23.40.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 23:40:58 -0700 (PDT)
-From: Furong Xu <0x1207@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Joao Pinto <jpinto@synopsys.com>,
-	Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	xfr@outlook.com,
-	rock.xu@nio.com,
-	Furong Xu <0x1207@gmail.com>
-Subject: [PATCH net-next v1] net: stmmac: init more plat members from DT
-Date: Thu, 20 Jun 2024 14:40:04 +0800
-Message-Id: <20240620064004.573280-1-0x1207@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egBVVmC7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35AAFC4AF07;
+	Thu, 20 Jun 2024 06:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718865711;
+	bh=X61PCRgIY2z6sVnDZpOzsWgDtdDJ6JoE4ZcWzPPwAAo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=egBVVmC7rmD3cF6lMTryq5aipxeu3PDtseK5AQEBmEARZxW0ZayrNcaFfkN35JACX
+	 02U0BcWvH4kzEqF3fdqDJSwYUQ8L45NzIaDLml6hixGzYmQRt3oONKhvH+g8Cb/4I8
+	 vqhSGizhS80ZCb/GCF+nzx40ekxgZ5jVm0OZjHIZwUdp5/scKIjUbqyR1A6dGIGs0F
+	 vhSyPY5IdMG8SE0Sqmbis9s850+79/4ArqUMSgtimicEVCesQA/WvEnXhzmktC+yDZ
+	 1RaQN1xQfk0CaXWw55Utw7NqU/6iZVEuWScdYJVNTirLhNTnAt+3m0APpFrtCBi8T/
+	 wxoJthQTC1LAg==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52cc671f170so1391791e87.1;
+        Wed, 19 Jun 2024 23:41:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUf4TSgosDg9bLvlapoBTyNlzc4m3qjSpRK9dpCEHfE2MQ3pizMyHrOUiJ76G0Q0SCM7o8fpZn6dDerjmEfXQpo0BlDcwJ+stes/s5O
+X-Gm-Message-State: AOJu0YynUTMd7JWWg9iSooFJNFAXLGPC7bqkSTVK8lPizOD6YWch7IV+
+	bac6gin1YLb1rACFcmPWnEj3JhuriOaS9iqjsMCCVmzjMqsoAbU8Rz2s7NWM6pA+UbOx7gR2XUw
+	6jIuDD6SuXy8+xnMmOGZqJg655qU=
+X-Google-Smtp-Source: AGHT+IG01DDjEcI34PxmR+Fo+pVV5qbIp5dvfYnUUJoOsoVen5OkcHRV6/R9dYZG9lEYx18JHXmzT8B0P//1qfo3sn4=
+X-Received: by 2002:a05:6512:3049:b0:52c:a88e:945e with SMTP id
+ 2adb3069b0e04-52cca1f35bcmr1326522e87.31.1718865709626; Wed, 19 Jun 2024
+ 23:41:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAH2r5mterW6Qqyz=oirYr1iV5jLRAvfU5yGGd2MOqpkwaE0qhQ@mail.gmail.com>
+In-Reply-To: <CAH2r5mterW6Qqyz=oirYr1iV5jLRAvfU5yGGd2MOqpkwaE0qhQ@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 20 Jun 2024 08:41:36 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHYWKeGJvkPWVmOmOq8w4xCdx2DwxuGV1YoRxDubKh68g@mail.gmail.com>
+Message-ID: <CAMj1kXHYWKeGJvkPWVmOmOq8w4xCdx2DwxuGV1YoRxDubKh68g@mail.gmail.com>
+Subject: Re: how to verify which crypto driver is loaded by crypto_alloc_shash
+ when more than one available for the algorithm
+To: Steve French <smfrench@gmail.com>
+Cc: "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-A new option to init some useful members of plat_stmmacenet_data from DT.
+On Thu, 20 Jun 2024 at 00:03, Steve French <smfrench@gmail.com> wrote:
+>
+> Was trying to see which driver was loaded by:
+>
+>    crypto_alloc_shash(hmac(md5), ...);
+>
+> and it was confusing because it looked like there were at least five
+> drivers that export that cra_name (most presumably hardware specific),
+> so was wondering what is the "default" that would be chosen and how to
+> tell which of the five ended up being used.
+>
 
-Signed-off-by: Furong Xu <0x1207@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+You could check the cra_driver_name of the shash's underlying crypto_alg
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 54797edc9b38..b86cfb2570ab 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -497,6 +497,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- 
- 	of_property_read_u32(np, "rx-fifo-depth", &plat->rx_fifo_size);
- 
-+	of_property_read_u32(np, "host-dma-width", &plat->host_dma_width);
-+
- 	plat->force_sf_dma_mode =
- 		of_property_read_bool(np, "snps,force_sf_dma_mode");
- 
-@@ -561,6 +563,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- 		plat->pmt = 1;
- 		if (of_property_read_bool(np, "snps,tso"))
- 			plat->flags |= STMMAC_FLAG_TSO_EN;
-+		if (of_property_read_bool(np, "snps,no-sph"))
-+			plat->flags |= STMMAC_FLAG_SPH_DISABLE;
- 	}
- 
- 	if (of_device_is_compatible(np, "snps,dwmac-3.610") ||
-@@ -573,8 +577,11 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- 	if (of_device_is_compatible(np, "snps,dwxgmac")) {
- 		plat->has_xgmac = 1;
- 		plat->pmt = 1;
-+		of_property_read_u32(np, "max-frame-size", &plat->maxmtu);
- 		if (of_property_read_bool(np, "snps,tso"))
- 			plat->flags |= STMMAC_FLAG_TSO_EN;
-+		if (of_property_read_bool(np, "snps,no-sph"))
-+			plat->flags |= STMMAC_FLAG_SPH_DISABLE;
- 	}
- 
- 	dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*dma_cfg),
--- 
-2.34.1
-
+crypto_alloc_shash(hmac(md5), ...)->base.alg->cra_driver_name
