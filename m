@@ -1,137 +1,110 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5A343AD7
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D792C44366
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718868289; cv=none; b=CafBJbbSSw45bcZKnsOTPqfCEsv/2MJGDjvq76/4U8WWdGu6ZmKcE82UnHg1S2RmGDMO5rGtaLvGVmF5+grWrFBF7MidJmQJL2OiicfDdZqcUcbkAi1gP5XD3umeu6fBjvkgZLfZIh/xmfqxMKfDo/Ae/wkkUp050nrkGXC5l6U=
+	t=1718868314; cv=none; b=m7eUgBhwYPKcxTEM8W4QGePwYtWlVSxm/CFYvTsrExuTIYn+M+V3oMztrDJcljLRsIygfxHX3V9lXw6Y1gdHb6Lncy/6iAwJdHNqpaQS02HAQ9ban+WoAH1f5bPjzeyJFcwQWzIoAxrzcYfPFzftrfPxPRAfqHaxR9d9chkFWLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718868289; c=relaxed/simple;
-	bh=IbrkkFZWWTxxP6bNNA097pRVO/TYakHzhCNen4t71Ak=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=trppWY0Gx9ppQV0ioF3TAS6Pbi8rjwMD8RGGIHiSPhKNXpeDnYW9vuuv5JLHZmcSUVkrfZg0ABbpUnkgtPJvCGnk/LZKYUmKk1uCWBAc6nm1GNHJTfF4o3Fy+FeYT8BHLJkNelqO8Kp6vXyfzZRWeogrzhPRTtEFj9C2ULRlZGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (178.205.54.237) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 20 Jun
- 2024 10:24:36 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Jan Kara <jack@suse.com>, <linux-kernel@vger.kernel.org>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH v2] udf: balloc: prevent integer overflow in udf_bitmap_free_blocks()
-Date: Thu, 20 Jun 2024 10:24:13 +0300
-Message-ID: <20240620072413.7448-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718868314; c=relaxed/simple;
+	bh=jSwahG1fUc4nuo9lDEw9TRn4gAVc7Sv8Lfe1Q7iPXNQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BJZiHsfTy3EcB7ZMyvXppzRTk5528xEItJvP78iQLO0OzjHTTwgOUWiwMln0uH1rJ4R5uYFov2tQuaytNTmOO2wWgm7OAPkvW5ipyPiClfFgbk6/blFpAFUj8Eq+t6NQTN9/2+ZkRLEe86/OPEWuAmj8MocyORxt/6bcgTZhnMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Rql91ceP; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Rql91ceP"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52bc0a9cea4so518773e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 00:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718868311; x=1719473111; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yRH5412s3wX0CB4KIXqQXWuDqJc61xtQQ1UqcTmYbLs=;
+        b=Rql91cePriLwtxiq4n/1I2OAgbYmoN3CqoOuEPIEgDiAfvJlW2u2G2uw9Vz2saoT+A
+         0gs2VRfIbQJs7bAex9J3TASgHuBSEpoSDpkv/3zWRrogIn8dbSgioD6zQ6Ttf2fyI9DL
+         Szq1dftbfmzU4hmFNQ8eM6v3BkD8s4+ceMzPREzMxQUbWFWT7Ic84mtz6gZPFikN0b3y
+         vIBNI3neNx9kX+Fv1urTCpvdm9r13BgT3PHqRjwjNLREBzxiOrGuBGVW+7a5hgHFiF/0
+         1A3fU8YEuWlKaVNnER8kEtA28f2NJTqfCBYRYLinICkE81L3Klyqzh/J5JE2SGhdj4KQ
+         9AEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718868311; x=1719473111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yRH5412s3wX0CB4KIXqQXWuDqJc61xtQQ1UqcTmYbLs=;
+        b=DHPpznuFr55auwCOVe4c5cmY715h7pkP/n5NG7ykvAiCiLOCCaTeJ7VdMqRZKbEJGY
+         VFFeBBQCrLlq4niNe2F7LJwOaZKJbJVdmU8BTw11iMxn9OlB1GivfRN6GMQ6fb7kHUDH
+         NRTmH8GspulkNAcB4lRy5J8yWx5vZYqQmIhgXACb0pbSNqToJH0o2kXGn7uiNLgkBdOm
+         0Qu+4kyZs48mul1OGVhk+60MSX1CKflb9pR/4SEQvoMnQGyKY+uHeNOgG4sYyyyA587a
+         KfVenYKKKgN+P3yDGTASmi77nQTEnhRGfyIqEHcOe4dTPO1hlweQKdEVlBrsizEPAl3i
+         hgnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhrdU1V3X46hGI7L/odo86MqQu2O3xYmS/tEP2Zw61IciEg9NeK0Cubo03ynvr4K30WXmbwtFEYIAYYClsGNXEghneS29XtrcunHue
+X-Gm-Message-State: AOJu0YxnkuuMDJU57MeK7SBn67GgKe7AoQVlK8LiiDkRnQYuNvJAbVgb
+	vFjlHHxh5PZxqtmrUsWizFygXGPrlAD7JkrFC2xUwYqTSSCL4jE7Xl9Ynku9UTRuPdOaYVfxE+Z
+	59QC2PFlQJdUFL7G3ot6D4VXW+5We+FrEIRE2Mg==
+X-Google-Smtp-Source: AGHT+IEdeM9R3n/NNtQDYZHx3TkVh4Vr7+gb+bkwvyCIBlqBU2TmaHrNNS+3vlKpjGfCJsXmfuuse+wN8rhE8KzDejs=
+X-Received: by 2002:a05:6512:ad5:b0:52c:86e0:97b5 with SMTP id
+ 2adb3069b0e04-52cca1c57b8mr1464365e87.16.1718868310875; Thu, 20 Jun 2024
+ 00:25:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 06/20/2024 06:58:34
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 186022 [Jun 20 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 20 0.3.20
- 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	178.205.54.237:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.205.54.237
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 06/20/2024 07:03:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 6/20/2024 1:26:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+References: <20240619184550.34524-1-brgl@bgdev.pl> <20240619184550.34524-6-brgl@bgdev.pl>
+ <44cf011b-ec81-4826-b7c2-1a8d57594fca@lunn.ch>
+In-Reply-To: <44cf011b-ec81-4826-b7c2-1a8d57594fca@lunn.ch>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 20 Jun 2024 09:24:59 +0200
+Message-ID: <CAMRc=Mc0wN=zkduCnKetXyMsuY2k-BzrZ19ehPDntZRDu_o6fA@mail.gmail.com>
+Subject: Re: [PATCH net-next 5/8] net: phy: aquantia: wait for FW reset before
+ checking the vendor ID
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Vinod Koul <vkoul@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-An overflow may occur if the function is called with the last
-block and an offset greater than zero. It is necessary to add
-a check to avoid this.
+On Wed, Jun 19, 2024 at 9:27=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Wed, Jun 19, 2024 at 08:45:46PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Checking the firmware register before it boots makes no sense, it will
+> > report 0 even if FW is loaded. Always wait for FW to boot before
+> > continuing.
+>
+> Please split this patch up. One patch which renames the method to the
+> more generic aqr_ since it is used by more than aqr107. Then add the
+> new use of it.
+>
 
-Overflow is also possible when we sum offset and
-sizeof(struct spaceBitmapDesc) << 3. For this reason it
-is necessary to check overflow of this too. The result is
-stored in total_offset.
+Will do.
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+> Is this actually a fix? What happens to the firmware if you try to
+> download it while it is still booting? Or do you end up downloading
+> firmware when it is not actually needed? Please expand the commit
+> message.
+>
 
-Suggested-by: Jan Kara <jack@suse.com>
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
----
- V1 -> V2: Overflow checks have been replaced by functions
+It says '0' and the driver tries to load it from nvmem, then the
+filesystem and bails-out after these two fail. I'll extend the commit
+message.
 
- fs/udf/balloc.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+Bart
 
-diff --git a/fs/udf/balloc.c b/fs/udf/balloc.c
-index ab3ffc355949..4bf2720111f1 100644
---- a/fs/udf/balloc.c
-+++ b/fs/udf/balloc.c
-@@ -18,6 +18,7 @@
- #include "udfdecl.h"
- 
- #include <linux/bitops.h>
-+#include <linux/overflow.h>
- 
- #include "udf_i.h"
- #include "udf_sb.h"
-@@ -133,6 +134,7 @@ static void udf_bitmap_free_blocks(struct super_block *sb,
- 	unsigned long block;
- 	unsigned long block_group;
- 	unsigned long bit;
-+	unsigned int total_offset;
- 	unsigned long i;
- 	int bitmap_nr;
- 	unsigned long overflow;
-@@ -140,17 +142,20 @@ static void udf_bitmap_free_blocks(struct super_block *sb,
- 	mutex_lock(&sbi->s_alloc_mutex);
- 	partmap = &sbi->s_partmaps[bloc->partitionReferenceNum];
- 	if (bloc->logicalBlockNum + count < count ||
--	    (bloc->logicalBlockNum + count) > partmap->s_partition_len) {
--		udf_debug("%u < %d || %u + %u > %u\n",
-+	    (bloc->logicalBlockNum + count) > partmap->s_partition_len ||
-+	    check_add_overflow(offset,
-+			       sizeof(struct spaceBitmapDesc) << 3, &total_offset) ||
-+	    check_add_overflow(bloc->logicalBlockNum, total_offset, &block)) {
-+		udf_debug("%u < %d || %u + %u > %u || %u + %zu > %u || %u + %u + %zu > %u\n",
- 			  bloc->logicalBlockNum, 0,
- 			  bloc->logicalBlockNum, count,
--			  partmap->s_partition_len);
-+			  partmap->s_partition_len,
-+			  offset, sizeof(struct spaceBitmapDesc) << 3, UINT_MAX,
-+			  bloc->logicalBlockNum, offset,
-+			  sizeof(struct spaceBitmapDesc) << 3, UINT_MAX);
- 		goto error_return;
- 	}
- 
--	block = bloc->logicalBlockNum + offset +
--		(sizeof(struct spaceBitmapDesc) << 3);
--
- 	do {
- 		overflow = 0;
- 		block_group = block >> (sb->s_blocksize_bits + 3);
--- 
-2.34.1
-
+>     Andrew
+>
+> ---
+> pw-bot: cr
