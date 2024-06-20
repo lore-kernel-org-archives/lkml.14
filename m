@@ -1,149 +1,209 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB2617721;
-	Thu, 20 Jun 2024 02:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE37E63C;
+	Thu, 20 Jun 2024 03:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718852351; cv=none; b=mKnJsdacpKyHjOeCRVIaI5D4MkZGhqAVX6t7ejEVpdIJmn3ow2fw1p8aLxkZVPkfsOPz96SZOS8ACGMYR2wLL+qtaLu2HcMGeCthDauaKTOMmdHiWB3oW/ZyBeSVfu8tP8XHRikuwIYO2ExffshEqs0pCQa83nsW78Xy5s+FWd4=
+	t=1718852515; cv=none; b=ko3aFimRqWeAtoNmxfN8C+EaK+0f3qjrbmWBKdT9b0IQlJ3Luf2hL94RxypTvFqzFZrHfZW2cmj5lalHG4EMRGyh/W6Qz3kMh/Tu+pgmIuObzexOn2iX+4uDXIG+KAO482K/cIYWRYlWkedwP/OEQinMfCdQ/RtU1GB61a3abbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718852351; c=relaxed/simple;
-	bh=vuTW9cPwOPrJ7ddPWRGrsEOT4sKaReYqjycgd8vf8ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rrW24zCCxdcOcb9nmDAyFK4tlEc0THPsAURfXcZvjZ+6mJHoM7NRPWQTPXhxfNs3zfSIyYZQe7UxhO/1i5mjH703yaCUbIg7CS4C8d4yBgSo37C5IXrEohhSxcJGP7vpXVAZ03yQdktyp1/v1cQPfZb5aHdA9laBGTO1egle0Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4W4Q8851z6z1X3tr;
-	Thu, 20 Jun 2024 10:55:04 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 690F2140153;
-	Thu, 20 Jun 2024 10:58:59 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 20 Jun 2024 10:58:58 +0800
-Message-ID: <5cb622c9-46f4-c1e4-9932-774be4ed0735@huawei.com>
-Date: Thu, 20 Jun 2024 10:58:58 +0800
+	s=arc-20240116; t=1718852515; c=relaxed/simple;
+	bh=EIVXR1Drz5ZwlD3T4VwTfooVVhT2SxMV7lr93B1iMIg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iPfmhix/GS9ZfVdlYSE9AiAZb0weDZ05sonaSr9SklOgYNvZiH3OcBP2ERHpg1scCtcELVVbs1/17FXuUdcM4xG3R7eWtPgpBU/TyDNhMEnBDVpkD5GZTFKOthllIwn7MP5viqbASNKmqLqUjjABJG+vyMVHD0Es/vBUazHkB9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9xNRFYD; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9xNRFYD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718852513; x=1750388513;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EIVXR1Drz5ZwlD3T4VwTfooVVhT2SxMV7lr93B1iMIg=;
+  b=L9xNRFYDNG/RU4cwBwoEO7alZhI+NLCgItNop79wuEqWQyX3E3cpI2Za
+   8o4JBqM1HOGGrOx4ECDBGjJYb0R/s6vLKSfk6WdG+xXewe4w16xiAEMN3
+   m/1CILuDPekFomkygWvY5gkQyoTf8K9Bxv8wGkHFYjcp38NhPBlxHhtss
+   CqKiC8mw0EuULCbf3ntjzGu68h96VMt0HUcRXLa+TxwyiqHE7/ZdAWIAb
+   cTFJQTDlRYndmz0dh/zldSDrRUpOxOFikutrjbK2Hd7C6r7Ivw1GLfAeQ
+   h5xbM/cxC+XjV4GutqJf8GypNkU2K0TvvqpGcevt0xxuJLUS37SdEMXd5
+   A==;
+X-CSE-ConnectionGUID: 93BSlk5HS8KrTmXA/pMLLA==
+X-CSE-MsgGUID: hiVqABXRQN+aPvu7Z05gWQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="26444191"
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="26444191"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 20:01:52 -0700
+X-CSE-ConnectionGUID: GsV7gGC6RDm/wd79OQ/n6A==
+X-CSE-MsgGUID: I3E8fsj0QnmEqr/RNB1usw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="42049389"
+Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.127])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 20:01:45 -0700
+From: Zhenzhong Duan <zhenzhong.duan@intel.com>
+To: linux-pci@vger.kernel.org
+Cc: bhelgaas@google.com,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	james.morse@arm.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	helgaas@kernel.org,
+	linmiaohe@huawei.com,
+	shiju.jose@huawei.com,
+	adam.c.preble@intel.com,
+	lukas@wunner.de,
+	Smita.KoralahalliChannabasappa@amd.com,
+	rrichter@amd.com,
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	erwin.tsaur@intel.com,
+	sathyanarayanan.kuppuswamy@intel.com,
+	dan.j.williams@intel.com,
+	feiting.wanyan@intel.com,
+	yudong.wang@intel.com,
+	chao.p.peng@intel.com,
+	qingshun.wang@linux.intel.com,
+	Zhenzhong Duan <zhenzhong.duan@intel.com>
+Subject: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+Date: Thu, 20 Jun 2024 10:58:55 +0800
+Message-Id: <20240620025857.206647-1-zhenzhong.duan@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-To: Jiri Olsa <olsajiri@gmail.com>
-CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <oleg@redhat.com>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<nathan@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<mark.rutland@arm.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
- <ZnMFtCsRCVZ6pkp8@krava>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZnMFtCsRCVZ6pkp8@krava>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-Hi, Jiri
+Hi,
 
-在 2024/6/20 0:22, Jiri Olsa 写道:
-> On Wed, Jun 19, 2024 at 01:34:11AM +0000, Liao Chang wrote:
->> When the new uretprobe system call was added [1], the xol slots reserved
->> for the uretprobe trampoline might be insufficient on some architecture.
-> 
-> hum, uretprobe syscall is x86_64 specific, nothing was changed wrt slots
-> or other architectures.. could you be more specific in what's changed?
+This is a relay work of Qingshun's v2 [1], but changed to focus on ANFE
+processing as subject suggests and drops trace-event for now. I think it's
+a bit heavy to do extra IOes to get PCIe registers only for trace purpose
+and not see it a community request for now.
 
-I observed a significant performance degradation when using uprobe to trace Redis
-on arm64 machine. redis-benchmark showed a decrease of around 7% with uprobes
-attached to two hot functions, and a much worse result with uprobes on more hot
-functions. Here is a samll snapshot of benchmark result.
+According to PCIe Base Specification Revision 6.1, Sections 6.2.3.2.4 and
+6.2.4.3, certain uncorrectable errors will signal ERR_COR instead of
+ERR_NONFATAL, logged as Advisory Non-Fatal Error(ANFE), and set bits in
+both Correctable Error(CE) Status register and Uncorrectable Error(UE)
+Status register. Currently, when handling AER events the kernel will only
+look at CE status or UE status, but never both. In the ANFE case, bits set
+in the UE status register will not be reported and cleared until the next
+FE/NFE arrives.
 
-No uprobe
----------
-SET: 73686.54 rps
-GET: 73702.83 rps
+For instance, previously, when the kernel receives an ANFE with Poisoned
+TLP in OS native AER mode, only the status of CE will be reported and
+cleared:
 
-Uprobes on two hot functions
-----------------------------
-SET: 68441.59 rps, -7.1%
-GET: 68951.25 rps, -6.4%
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
 
-Uprobes at three hot functions
-------------------------------
-SET: 40953.39 rps，-44.4%
-GET: 41609.45 rps，-43.5%
+If the kernel receives a Malformed TLP after that, two UEs will be
+reported, which is unexpected. The Malformed TLP Header is lost since
+the previous ANFE gated the TLP header logs:
 
-To investigate the potential improvements, i ported the uretprobe syscall and
-trampoline feature for arm64. The trampoline code used on arm64 looks like this:
+  PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00041000/00180020
+     [12] TLP                    (First)
+     [18] MalfTLP
 
-uretprobe_trampoline_for_arm64:
-	str x8, [sp, #-8]!
-	mov x8, __NR_uretprobe
-	svc #0
+To handle this case properly, calculate potential ANFE related status bits
+and save in aer_err_info. Use this information to determine the status bits
+that need to be cleared.
 
-Due to arm64 uses fixed-lenghth instruction of 4 bytes, the total size of the trampoline
-code is 12 bytes, since the ixol slot size is typical 4 bytes, the misfit bewteen the
-slot size of trampoline size requires more than one slot to reserve.
+Now, for the previous scenario, both CE status and related UE status will
+be reported and cleared after ANFE:
 
-Thanks.
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
+    Uncorrectable errors that may cause Advisory Non-Fatal:
+     [12] TLP
 
-> 
-> thanks,
-> jirka
-> 
->> For example, on arm64, the trampoline is consist of three instructions
->> at least. So it should mark enough bits in area->bitmaps and
->> and area->slot_count for the reserved slots.
->>
->> [1] https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
->>
->> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->> ---
->>  kernel/events/uprobes.c | 11 +++++++----
->>  1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index 2816e65729ac..efd2d7f56622 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -1485,7 +1485,7 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
->>  static struct xol_area *__create_xol_area(unsigned long vaddr)
->>  {
->>  	struct mm_struct *mm = current->mm;
->> -	unsigned long insns_size;
->> +	unsigned long insns_size, slot_nr;
->>  	struct xol_area *area;
->>  	void *insns;
->>  
->> @@ -1508,10 +1508,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->>  
->>  	area->vaddr = vaddr;
->>  	init_waitqueue_head(&area->wq);
->> -	/* Reserve the 1st slot for get_trampoline_vaddr() */
->> -	set_bit(0, area->bitmap);
->> -	atomic_set(&area->slot_count, 1);
->>  	insns = arch_uprobe_trampoline(&insns_size);
->> +	/* Reserve enough slots for the uretprobe trampoline */
->> +	for (slot_nr = 0;
->> +	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
->> +	     slot_nr++)
->> +		set_bit(slot_nr, area->bitmap);
->> +	atomic_set(&area->slot_count, slot_nr);
->>  	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
->>  
->>  	if (!xol_add_vma(mm, area))
->> -- 
->> 2.34.1
->>
+Note:
+checkpatch.pl will produce following warnings on PATCH1&2:
+
+WARNING: 'UE' may be misspelled - perhaps 'USE'?
+#22:
+uncorrectable error(UE) status should be cleared. However, there is no
+
+...similar warnings omitted...
+
+This is a false-positive, so not fixed.
+
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+#10:
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+
+...similar warnings omitted...
+
+For readability reasons, these warnings are not fixed.
+
+
+
+[1] https://lore.kernel.org/linux-pci/20240125062802.50819-1-qingshun.wang@linux.intel.com
+
+Thanks
+Qingshun, Zhenzhong
+
+Changelog:
+v5:
+ - squash patch 1 and 3 (Kuppuswamy)
+ - add comment about avoiding race and fix typo error (Kuppuswamy)
+ - collect Jonathan and Kuppuswamy's R-b
+
+v4:
+  - Fix a race in anfe_get_uc_status() (Jonathan)
+  - Add a comment to explain side effect of processing ANFE as NFE (Jonathan)
+  - Drop the check for PCI_EXP_DEVSTA_NFED
+
+v3:
+  - Split ANFE print and processing to two patches (Bjorn)
+  - Simplify ANFE handling, drop trace event
+  - Polish comments and patch description
+  - Add Tested-by
+
+v2:
+  - Reference to the latest PCIe Specification in both commit messages
+    and comments, as suggested by Bjorn Helgaas.
+  - Describe the reason for storing additional information in
+    aer_err_info in the commit message of PATCH 1, as suggested by Bjorn
+    Helgaas.
+  - Add more details of behavior changes in the commit message of PATCH
+    2, as suggested by Bjorn Helgaas.
+
+v4: https://lkml.org/lkml/2024/5/9/247
+v3: https://lore.kernel.org/lkml/20240417061407.1491361-1-zhenzhong.duan@intel.com
+v2: https://lore.kernel.org/linux-pci/20240125062802.50819-1-qingshun.wang@linux.intel.com
+v1: https://lore.kernel.org/linux-pci/20240111073227.31488-1-qingshun.wang@linux.intel.com
+
+
+Zhenzhong Duan (2):
+  PCI/AER: Clear UNCOR_STATUS bits that might be ANFE
+  PCI/AER: Print UNCOR_STATUS bits that might be ANFE
+
+ drivers/pci/pci.h      |  1 +
+ drivers/pci/pcie/aer.c | 79 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 79 insertions(+), 1 deletion(-)
 
 -- 
-BR
-Liao, Chang
+2.34.1
+
