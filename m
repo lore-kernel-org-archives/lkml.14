@@ -1,157 +1,61 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D7C482C8;
-	Thu, 20 Jun 2024 07:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20695101A
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718870366; cv=none; b=q8UBHfX33epPK8GjKwmX6ItAZqkOTEJjGej302zkxmGnzMUeayt0jEAjsyMyr4gYkWk/fHckAFEzcEDfgswQVA0Bw7UifsM63o4FONOic9hCFDEUwyfURAoKwwH111KrD91kDW7FhU4syUtSc+l+4802csuGpzJfcyLGHRRYP7k=
+	t=1718870406; cv=none; b=AscAVNERqIxh5N8OLxNA8vQybbmOIQpdJy6Kxvp6XbMb4VZVpxFCRS66zC3Pk22pPNTyKtES5QLhR0sgPL8/P+QERYB6nhbCZmc9dVOlzVFafUnDk1LqmOWcwQKVSy6mbh/CufGrJ+tueaItLWNvvz8TzB8tITrIoToEXEEpcw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718870366; c=relaxed/simple;
-	bh=dzzZTbj+3nIanx4kJLX9W85fpB4mfwv7gZtKTDcQpZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ov+fR1fgG2gOOqJi2AohjeMmMFd55NPHMscLXtM9ZfkZNMA4UxT9No9y9uMi+jgO3Mwpkg8jOgHU33/zFQs3o5nG0QBNKCCYxmHTFg3ZlJJ6FMB5zdMkg9khEjHzS1wpXNm2MgWvoUJ5IDUvALuEatb+mcfHX/s9Rj45JzLL1g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=wuz8FPLd; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="wuz8FPLd"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 722BA87C69;
-	Thu, 20 Jun 2024 09:59:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1718870362;
-	bh=KTkD1fNt44Ouv47/6lXydN4bYu7m2SKRrnp+lNDnGMI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=wuz8FPLdkeIjHVNt2YruCxFp52hbgip6+fywecLYmmsgDB4P7t4TwKykiPsn5jgd+
-	 yYhzPCDDU+vrjlTapVYJXLjd7GGOvmF0U+tI1JFDQvENKoTngyvy7TcrillsFOAoEq
-	 EVP/G9gPdjYdQuDVaCYBAK2GsE4LB2rwAOr2InXqu2wZfJsGyXWAxMla8ncNzgyWaq
-	 6zCCcWBccBD70trEmjpcWQojIgOkeXyyYqIU2V9TiMUR3LGXw2LNo7JWjGAr9Gfirx
-	 JzvmYFdjxr3GYjn52U4pYEvIkStTnGxEwHcZxmeI76IhFybz3Wu4FoOiE1yzYhiyv/
-	 4qpq3UYMpryDg==
-Date: Thu, 20 Jun 2024 09:59:20 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Paolo Abeni
- <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "David S. Miller"
- <davem@davemloft.net>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Tristram.Ha@microchip.com, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Simon Horman <horms@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, "Ricardo B. Marliere" <ricardo@marliere.net>,
- Casper Andersson <casper.casan@gmail.com>, linux-kernel@vger.kernel.org,
- Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
- Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 net-next] net: dsa: Allow only up to two HSR HW
- offloaded ports for KSZ9477
-Message-ID: <20240620095920.6035022d@wsk>
-In-Reply-To: <20240619155928.wmivi4lckjq54t3w@skbuf>
-References: <20240619134248.1228443-1-lukma@denx.de>
-	<20240619134248.1228443-1-lukma@denx.de>
-	<20240619144243.cp6ceembrxs27tfc@skbuf>
-	<20240619171057.766c657b@wsk>
-	<20240619154814.dvjcry7ahvtznfxb@skbuf>
-	<20240619155928.wmivi4lckjq54t3w@skbuf>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718870406; c=relaxed/simple;
+	bh=fknTa8a8xDipkCYrePSsQTLagTPC4FM5VAA/rgPzynU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=omQNCTQe8smo0TcKphScz6CVq77iDynUqejJusnif3VZzdzNFD8WvR7MsfB7qrm2/SAi7r9k91VZItHYsBtbEu6U2ro4z1rWgLXDAe89126QuaN8gdSHMsitrlJnVO70ILw5moRYAJSDv6SDv6mm4/XbBaauKxIQ+CsMBqyvU48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-37624b27e27so6191805ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:00:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718870404; x=1719475204;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6QhX9JfzOe0jyuZyP+4YKY9K8LKwJP5t7uxyVlFjHVM=;
+        b=U2w0BM7/HC29oV5JZMLoohYrcRUbp4+1MVbEWoMrWa9+KDkAaf1GxL34x5vXIz/gcb
+         Qvv5uzlsPC08PBQJnWFStMSUoDYEB3zYkfruhzzQmwzGjMjXMl7AKQMAXtTM31ePgovS
+         RI3DC+M4sMDzafZLlOt2USMB5ZciqVnLYenMNDJBpm6TvD49sBUtSdr+z18Pa7S230yU
+         Fn+ennHsJ+LWo2jA3H448m32iSM1yue/C8YCC8UU253FG8Q8rvhjAwif5euf1Z+my3OV
+         tiVrbjjFaFvC29m6pNe5zPTP9iXgTIxZHPpRx7Teb9mzsemMKTWbKwVIwZzMWiJuGes/
+         y8aQ==
+X-Gm-Message-State: AOJu0YyfquooyXoZtrQ4/mUI+r53B7yib5Sa48pLxl6k3Cpqxd3VrzTT
+	z1aHV5sEw6LFoL4OkbDwJRBBqQajKLDLTjOel+LZhbqfCjP2Ek3y4jDp7JMaDkoKqsFOTCfzdK7
+	cRs1yde5Y9MoiJA9lSvh6fZLJg4l6RoMPTOEYGohTHF5q068nc2Ob3So=
+X-Google-Smtp-Source: AGHT+IHAZUNwMzMQNXm7lH0Ouqp4qbrGILzvf5gTGogUSd1HAENj0E82RIZwTbye4CxigcIU/YTnqtU2dzoz+v+bXiGFuQ1KijZm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bJVD9HQ4bWNjw6GY_e=zb/k";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+X-Received: by 2002:a05:6e02:1c27:b0:36c:5520:9597 with SMTP id
+ e9e14a558f8ab-3761d786a0dmr2507565ab.6.1718870403860; Thu, 20 Jun 2024
+ 01:00:03 -0700 (PDT)
+Date: Thu, 20 Jun 2024 01:00:03 -0700
+In-Reply-To: <000000000000297920060ec54fbf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d662e9061b4db387@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+aec7bcbf48a6073f3591@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/bJVD9HQ4bWNjw6GY_e=zb/k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Hi Vladimir,
+***
 
-> On Wed, Jun 19, 2024 at 06:48:14PM +0300, Vladimir Oltean wrote:
-> > Granted, this isn't an actual functional problem, but given that you
-> > are fixing a newly developed feature for net-next, and that this is
-> > API that gets progressively harder to change as more devices
-> > implement offloads, I would expect a more obvious signaling
-> > mechanism to exist for this, and now seems a good time to do it,
-> > rather than opting for the most minimal fix. =20
->=20
-> Actually I'm not even so sure about this basic fact, that it isn't a
-> functional problem already.
->=20
-> xrs700x_hsr_join() has explicit checks for port 1 and 2. Obviously it
-> expects those ports to be ring ports.
+Subject: 
+Author: nogikh@google.com
 
-Yes.
-
->=20
-> But if you configure from user space ports 0 and 1 to be ring ports,
-> and port 2 to be an interlink port, the kernel will accept that
-> configuration.=20
-
-Yes.
-
-> It will return -EOPNOTSUPP for port 0,=20
-
-This comment is for xrs700x_hsr_join()?
-
-For the ksz_hsr_join() we do explicitly check for the KSZ9477_CHIP_ID.
-
-I do regard this fix as a ksz9477 specific one, as there are some
-issues (IMHO - this is the "unexpected behaviour" case for this IC) when
-we add interlink to SoC VLAN.
-
-I don't understand why you bring up xrs700x case here? Is it to get a
-"broader context"?
-
-> falling back to
-> software mode for the first ring port, then accept offload for ring
-> ports 1 and 2. But it doesn't match what user space requested, because
-> port 2 should be interlink...
-
-Please correct me if I'm wrong, but this seems to not be the case for
-ksz9477 - as I stated in the other mail - the ordering is correct (I've
-checked it).
-
->=20
-> I think you really should pass the port type down to drivers and
-> reject offloading interlink ports...
-
-As stated above - IMHO I do provide a fix for this particular IC
-(KSZ9477). With xrs700x we do have fixed ports supporting HSR (port
-1,2), so there is no other choice. As a result the HSR Interlink would
-be supporting only SW emulation.
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/bJVD9HQ4bWNjw6GY_e=zb/k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmZz4VgACgkQAR8vZIA0
-zr2kawgAwwaDitXI7l/t+aUeXBWcTmg89+6VWM7pz2V3qhSCY/+umdf6Wun5pwZd
-KBHfXjbVsKAOczCEa24Urq6jVJoopHZGk7H3VzkCDaBWKkCKtaOhwvYxS2rU2Q99
-/+lMpBipwzW6DoalZbalssP2ipsElfzPOV3fCfJTZ1LkY9lu0jHZfbUWx0BwZzgd
-tHnFyp8mXi1VUP6RKpn+bu1lACMOG6C2Vbbnio16pFP9kZonDGFAk7Yb81De31AW
-KBuXBME+Ebw8DCSc3a/V09ORYwmCntZKpS85037lOxnUNnn/qh0fd97z5ihvlTTZ
-mneGGFFo3XJq1eLBGyFiSqp+5vnUTw==
-=SFKE
------END PGP SIGNATURE-----
-
---Sig_/bJVD9HQ4bWNjw6GY_e=zb/k--
+#syz invalid
