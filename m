@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357141B0133;
-	Thu, 20 Jun 2024 13:27:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9521AE0A5;
+	Thu, 20 Jun 2024 13:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718890057; cv=none; b=mjcrOQTwYAgjfyoNy+PmDUFaS6N6R9GUWD/qwW1NcRsA+JXHHV5MAu1aEbqRBMc7Cmd6HoSxzoxZV838xgE6NK2VKlHU8qdmFIPOlRdVVc3EvQsPyme3dmQuozNrZvQw7vgaE4MGDV/hE8iYTKaYxMTI1c8qok00eJFDUPOA8Ko=
+	t=1718890059; cv=none; b=Hr74wCoyS815PRVgou3FBJ2sBTei9DtZC8b0OKGkrqvYD9OYCzeM7qA1zB/OIgIkiqBKr1UBoyxQFmrHBM3zIs/gNSIalzIr8JJ/5XbYPmvtVX8yU23lPOEX6OerWXfAUBnv/aZHD4yaeuAFDhFzLSnz+w5/UJinEfNDH72jW4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718890057; c=relaxed/simple;
-	bh=1vLGuywkKXgAITcXqnFVZDkwztcMBbiNTnJd4tFAyYw=;
+	s=arc-20240116; t=1718890059; c=relaxed/simple;
+	bh=mmb/n5Zpp12YZ/miCg0qq3L4AeVcYXceQP9aeoru8uM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YtIJCuELh5TWo+rDk1kmK73j9O7HoKaA8OPSSsf/wzIHFymdtAIcdqsaEgCjQb7MOwe/bUEPv8xow3zM24Qk7kaAVQyeYFjuy4KGvjF5EXCEayP0fbjjVCXNWT2lq5RbiH01KS9hyBjLAXlJ5HwsXp2NbrpSZeFMRN3KIZq0qk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mDck/gTw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=twD7uYx2; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=XcaWk0KDztYUvbGz6qvRKGmxuRdXCjziQvD7VRtycPNMmn5hF5hK0s37ZblabKCeNFvlOXrHajrvmVQ9ll6d521H8CBYVksalg31ECSp7Q7ulmFCX0Q1gf8ZQP7VMmzL5xevqpr3zaE/xDVmz+EWbL54UHI0hER2CSGfFp/ynF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DNz4OG6a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3ymlR7JR; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mDck/gTw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="twD7uYx2"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DNz4OG6a";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3ymlR7JR"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718890053;
+	s=2020; t=1718890056;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bhjueB/Zw+st/p0jwSxRVntltx2CtPizCDSJU2xaKnU=;
-	b=mDck/gTw1kmE3u0xoNApi6XY6MJ++cp/Ik/QpcT+id68ciyDT/6m2MwV2g9lGI3c6Ytm57
-	HZwQ3azh46DKpuuniM3PNH/oomMAt3f8xcd/5WihIq125ZdsYkgH4vkzm/S8HM32iKSnjv
-	73eqY+oAgmN49xny1OAFHRxU0jZHcQ2ln1u8SeFaDjXQsmfg9ush2V7yu8YKybaGS1Po7K
-	79mpjFtrOUnbe9Kga3LsOBS6kk1ct9jzoNwnwagHZEBHPoPZvbrwg6y24aDtqtB2VW/9K/
-	oAFPSc36OT9mnR65w0SqLhhUP94BX1PHoDxCLgwPvCyBIZPkZ1+xQMK6QF9i4g==
+	bh=2sNhpYc6Zhv5uHBsgsP2eGCPDInHSPpYVSlYr9BEPkY=;
+	b=DNz4OG6aRuZjCTCGrx+cbR/r+tImEPpe4wq84hqsT1Y5E7U4jyVNwQue8nqtXxR4m08PnC
+	ySg3bCMgXym2zn8TuBrocZLyRUgjOKcUUri8bW4u4IvEWZrkeu2VxSNBNGluNc/rPAe2jj
+	CwORC7Mos6CUGv90/s2sI+MJjQcwah/w6IZiYAlsA0lggj/4zBxHLjeIAgGcj3ezJ/sRUO
+	X10AEGRH5LjRhDN2oYA1U68KrYJucBVDLlydyUBQwClxHPLcPuofe7Xe2zI8hALw0TIcUS
+	fuGDTgaDRBP4zegocXKnPACGpTQdL/GCKQKx7NqQO7t8hXtApootCQoGvt22ig==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718890053;
+	s=2020e; t=1718890056;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bhjueB/Zw+st/p0jwSxRVntltx2CtPizCDSJU2xaKnU=;
-	b=twD7uYx2DmX6vPUj2NNU3bmMvuvaKQQSYDtHmVVnsxHTMCkJ3UUhaW3NMPgMd768wPC8cR
-	OqlarP5iwZ+iuOAQ==
+	bh=2sNhpYc6Zhv5uHBsgsP2eGCPDInHSPpYVSlYr9BEPkY=;
+	b=3ymlR7JRXyXarzkCfFWMcRb+f4kvlRhEK3jJw8bwCWQ4TYQvMS5CcX3rtiz14Nht6YPfkj
+	aaTCUgSedkJx0xDw==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -55,17 +55,20 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ben Segall <bsegall@google.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v9 net-next 08/15] net: softnet_data: Make xmit per task.
-Date: Thu, 20 Jun 2024 15:21:58 +0200
-Message-ID: <20240620132727.660738-9-bigeasy@linutronix.de>
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	bpf@vger.kernel.org
+Subject: [PATCH v9 net-next 13/15] net: Use nested-BH locking for bpf_scratchpad.
+Date: Thu, 20 Jun 2024 15:22:03 +0200
+Message-ID: <20240620132727.660738-14-bigeasy@linutronix.de>
 In-Reply-To: <20240620132727.660738-1-bigeasy@linutronix.de>
 References: <20240620132727.660738-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -76,245 +79,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Softirq is preemptible on PREEMPT_RT. Without a per-CPU lock in
-local_bh_disable() there is no guarantee that only one device is
-transmitting at a time.
-With preemption and multiple senders it is possible that the per-CPU
-`recursion' counter gets incremented by different threads and exceeds
-XMIT_RECURSION_LIMIT leading to a false positive recursion alert.
-The `more' member is subject to similar problems if set by one thread
-for one driver and wrongly used by another driver within another thread.
+bpf_scratchpad is a per-CPU variable and relies on disabled BH for its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
+this data structure requires explicit locking.
 
-Instead of adding a lock to protect the per-CPU variable it is simpler
-to make xmit per-task. Sending and receiving skbs happens always
-in thread context anyway.
+Add a local_lock_t to the data structure and use local_lock_nested_bh()
+for locking. This change adds only lockdep coverage and does not alter
+the functional behaviour for !PREEMPT_RT.
 
-Having a lock to protected the per-CPU counter would block/ serialize two
-sending threads needlessly. It would also require a recursive lock to
-ensure that the owner can increment the counter further.
-
-Make the softnet_data.xmit a task_struct member on PREEMPT_RT. Add
-needed wrapper.
-
-Cc: Ben Segall <bsegall@google.com>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Yonghong Song <yonghong.song@linux.dev>
+Cc: bpf@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/netdevice.h      | 42 +++++++++++++++++++++++++---------
- include/linux/netdevice_xmit.h | 13 +++++++++++
- include/linux/sched.h          |  5 +++-
- net/core/dev.c                 | 14 ++++++++++++
- net/core/dev.h                 | 18 +++++++++++++++
- 5 files changed, 80 insertions(+), 12 deletions(-)
- create mode 100644 include/linux/netdevice_xmit.h
+ net/core/filter.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index c83b390191d47..f6fc9066147d2 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -43,6 +43,7 @@
+diff --git a/net/core/filter.c b/net/core/filter.c
+index ba1a739a9bedc..fbcfd563dccfd 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -1658,9 +1658,12 @@ struct bpf_scratchpad {
+ 		__be32 diff[MAX_BPF_STACK / sizeof(__be32)];
+ 		u8     buff[MAX_BPF_STACK];
+ 	};
++	local_lock_t	bh_lock;
+ };
 =20
- #include <linux/netdev_features.h>
- #include <linux/neighbour.h>
-+#include <linux/netdevice_xmit.h>
- #include <uapi/linux/netdevice.h>
- #include <uapi/linux/if_bonding.h>
- #include <uapi/linux/pkt_cls.h>
-@@ -3223,13 +3224,7 @@ struct softnet_data {
- 	struct sk_buff_head	xfrm_backlog;
- #endif
- 	/* written and read only by owning cpu: */
--	struct {
--		u16 recursion;
--		u8  more;
--#ifdef CONFIG_NET_EGRESS
--		u8  skip_txqueue;
--#endif
--	} xmit;
-+	struct netdev_xmit xmit;
- #ifdef CONFIG_RPS
- 	/* input_queue_head should be written by cpu owning this struct,
- 	 * and only read by other cpus. Worth using a cache line.
-@@ -3257,10 +3252,18 @@ struct softnet_data {
-=20
- DECLARE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
-=20
-+#ifndef CONFIG_PREEMPT_RT
- static inline int dev_recursion_level(void)
- {
- 	return this_cpu_read(softnet_data.xmit.recursion);
- }
-+#else
-+static inline int dev_recursion_level(void)
-+{
-+	return current->net_xmit.recursion;
-+}
-+
-+#endif
-=20
- void __netif_schedule(struct Qdisc *q);
- void netif_schedule_queue(struct netdev_queue *txq);
-@@ -4872,18 +4875,35 @@ static inline ktime_t netdev_get_tstamp(struct net_=
-device *dev,
- 	return hwtstamps->hwtstamp;
- }
-=20
--static inline netdev_tx_t __netdev_start_xmit(const struct net_device_ops =
-*ops,
--					      struct sk_buff *skb, struct net_device *dev,
--					      bool more)
-+#ifndef CONFIG_PREEMPT_RT
-+static inline void netdev_xmit_set_more(bool more)
- {
- 	__this_cpu_write(softnet_data.xmit.more, more);
--	return ops->ndo_start_xmit(skb, dev);
- }
-=20
- static inline bool netdev_xmit_more(void)
- {
- 	return __this_cpu_read(softnet_data.xmit.more);
- }
-+#else
-+static inline void netdev_xmit_set_more(bool more)
-+{
-+	current->net_xmit.more =3D more;
-+}
-+
-+static inline bool netdev_xmit_more(void)
-+{
-+	return current->net_xmit.more;
-+}
-+#endif
-+
-+static inline netdev_tx_t __netdev_start_xmit(const struct net_device_ops =
-*ops,
-+					      struct sk_buff *skb, struct net_device *dev,
-+					      bool more)
-+{
-+	netdev_xmit_set_more(more);
-+	return ops->ndo_start_xmit(skb, dev);
-+}
-=20
- static inline netdev_tx_t netdev_start_xmit(struct sk_buff *skb, struct ne=
-t_device *dev,
- 					    struct netdev_queue *txq, bool more)
-diff --git a/include/linux/netdevice_xmit.h b/include/linux/netdevice_xmit.h
-new file mode 100644
-index 0000000000000..38325e0702968
---- /dev/null
-+++ b/include/linux/netdevice_xmit.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _LINUX_NETDEVICE_XMIT_H
-+#define _LINUX_NETDEVICE_XMIT_H
-+
-+struct netdev_xmit {
-+	u16 recursion;
-+	u8  more;
-+#ifdef CONFIG_NET_EGRESS
-+	u8  skip_txqueue;
-+#endif
+-static DEFINE_PER_CPU(struct bpf_scratchpad, bpf_sp);
++static DEFINE_PER_CPU(struct bpf_scratchpad, bpf_sp) =3D {
++	.bh_lock	=3D INIT_LOCAL_LOCK(bh_lock),
 +};
-+
-+#endif
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 61591ac6eab6d..5187486c25222 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -36,6 +36,7 @@
- #include <linux/signal_types.h>
- #include <linux/syscall_user_dispatch_types.h>
- #include <linux/mm_types_task.h>
-+#include <linux/netdevice_xmit.h>
- #include <linux/task_io_accounting.h>
- #include <linux/posix-timers_types.h>
- #include <linux/restart_block.h>
-@@ -975,7 +976,9 @@ struct task_struct {
- 	/* delay due to memory thrashing */
- 	unsigned                        in_thrashing:1;
- #endif
--
-+#ifdef CONFIG_PREEMPT_RT
-+	struct netdev_xmit		net_xmit;
-+#endif
- 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
 =20
- 	struct restart_block		restart_block;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 093d82bf0e288..95b9e4cc17676 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3940,6 +3940,7 @@ netdev_tx_queue_mapping(struct net_device *dev, struc=
-t sk_buff *skb)
- 	return netdev_get_tx_queue(dev, netdev_cap_txqueue(dev, qm));
+ static inline int __bpf_try_make_writable(struct sk_buff *skb,
+ 					  unsigned int write_len)
+@@ -2016,6 +2019,7 @@ BPF_CALL_5(bpf_csum_diff, __be32 *, from, u32, from_s=
+ize,
+ 	struct bpf_scratchpad *sp =3D this_cpu_ptr(&bpf_sp);
+ 	u32 diff_size =3D from_size + to_size;
+ 	int i, j =3D 0;
++	__wsum ret;
+=20
+ 	/* This is quite flexible, some examples:
+ 	 *
+@@ -2029,12 +2033,15 @@ BPF_CALL_5(bpf_csum_diff, __be32 *, from, u32, from=
+_size,
+ 		     diff_size > sizeof(sp->diff)))
+ 		return -EINVAL;
+=20
++	local_lock_nested_bh(&bpf_sp.bh_lock);
+ 	for (i =3D 0; i < from_size / sizeof(__be32); i++, j++)
+ 		sp->diff[j] =3D ~from[i];
+ 	for (i =3D 0; i <   to_size / sizeof(__be32); i++, j++)
+ 		sp->diff[j] =3D to[i];
+=20
+-	return csum_partial(sp->diff, diff_size, seed);
++	ret =3D csum_partial(sp->diff, diff_size, seed);
++	local_unlock_nested_bh(&bpf_sp.bh_lock);
++	return ret;
  }
 =20
-+#ifndef CONFIG_PREEMPT_RT
- static bool netdev_xmit_txqueue_skipped(void)
- {
- 	return __this_cpu_read(softnet_data.xmit.skip_txqueue);
-@@ -3950,6 +3951,19 @@ void netdev_xmit_skip_txqueue(bool skip)
- 	__this_cpu_write(softnet_data.xmit.skip_txqueue, skip);
- }
- EXPORT_SYMBOL_GPL(netdev_xmit_skip_txqueue);
-+
-+#else
-+static bool netdev_xmit_txqueue_skipped(void)
-+{
-+	return current->net_xmit.skip_txqueue;
-+}
-+
-+void netdev_xmit_skip_txqueue(bool skip)
-+{
-+	current->net_xmit.skip_txqueue =3D skip;
-+}
-+EXPORT_SYMBOL_GPL(netdev_xmit_skip_txqueue);
-+#endif
- #endif /* CONFIG_NET_EGRESS */
-=20
- #ifdef CONFIG_NET_XGRESS
-diff --git a/net/core/dev.h b/net/core/dev.h
-index 58f88d28bc994..5654325c5b710 100644
---- a/net/core/dev.h
-+++ b/net/core/dev.h
-@@ -150,6 +150,8 @@ struct napi_struct *napi_by_id(unsigned int napi_id);
- void kick_defer_list_purge(struct softnet_data *sd, unsigned int cpu);
-=20
- #define XMIT_RECURSION_LIMIT	8
-+
-+#ifndef CONFIG_PREEMPT_RT
- static inline bool dev_xmit_recursion(void)
- {
- 	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
-@@ -165,6 +167,22 @@ static inline void dev_xmit_recursion_dec(void)
- {
- 	__this_cpu_dec(softnet_data.xmit.recursion);
- }
-+#else
-+static inline bool dev_xmit_recursion(void)
-+{
-+	return unlikely(current->net_xmit.recursion > XMIT_RECURSION_LIMIT);
-+}
-+
-+static inline void dev_xmit_recursion_inc(void)
-+{
-+	current->net_xmit.recursion++;
-+}
-+
-+static inline void dev_xmit_recursion_dec(void)
-+{
-+	current->net_xmit.recursion--;
-+}
-+#endif
-=20
- int dev_set_hwtstamp_phylib(struct net_device *dev,
- 			    struct kernel_hwtstamp_config *cfg,
+ static const struct bpf_func_proto bpf_csum_diff_proto =3D {
 --=20
 2.45.2
 
