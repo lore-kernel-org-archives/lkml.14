@@ -1,38 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325181B4C43;
-	Thu, 20 Jun 2024 17:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1F91B29BC;
+	Thu, 20 Jun 2024 17:31:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904711; cv=none; b=UHjH6CMCFVQq8SVeFOHh7KRCfblpy1Fk00YulkIqU6C2m8emnknumB2WHuAAQA2z5hm4A7XlIdOOPEE0UbEZKQ0d1pzKksyD1sse/Qo0Jhd58OCYQXUxml/dZoBwsv4XgWENv7vPuKPpQIVAyN904ixbH3ilfFvNN9Yafh1am50=
+	t=1718904713; cv=none; b=OkE7umKZ7B7cIGr/yROxUikl77v+CjQv4A+pmfCaVK0FGn6mZTj1K3PasmhUa/xhepvFCE5eUwJgwlBHC2aDqVWDi/rKAI/65vQ+1EAgvMtPN4t8FZ/NUnukpvkJYwPlA59d1pJIkVipBoGOKLrg7Jx6Pyye9uqF1FBx4UyGjBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904711; c=relaxed/simple;
-	bh=pxLT839/qtIiYSR6kEcF2XLVFIsupXMgC5Uc7iUFgLg=;
+	s=arc-20240116; t=1718904713; c=relaxed/simple;
+	bh=ar3Cpi6cUVAILNqN1ssf7gW4KvXgGUIvD8f5OZtp2Yk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Plft3wQT/tZo2j++Bbf4Or18cc/s2tyXsidE37BXCseK08MysI1z2MtbUhVWqfpExIQJOsqpta1isB+DWVJ3hxjRro7deQ3VV+8lOGjFXITAVbzFR9qiKpU2AUQC9aYg4d1Oci1KmP6qUdFniQvQWAc/bX7cuujQn+YvJDj30jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eXUpBmyf; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=mNfkkIQwg0ae1LOZJPB4buMuBWMcmzKSTI/yA85HHZX0WDGaxiEqRIdVXM4HftPlNFTZkffCPKbaZGG8ua/CPR/Uu+dWVsNhzXmWwPRQ9X5UYrB6pX6n2z8rzueFEfCY/sz3Y3SnU1sRZwdkIt/+LwThHJLf0aAjhv/uLbe1AhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ApRkzPYg; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eXUpBmyf"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B7B041C0007;
-	Thu, 20 Jun 2024 17:31:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ApRkzPYg"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AF1AF1C000A;
+	Thu, 20 Jun 2024 17:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718904706;
+	t=1718904708;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MoSKLxtZs/RbiGoA3+nhkLigmm9+prA+5eu7d4o1HtQ=;
-	b=eXUpBmyfaNQHD/QroZns+m5HjGnAGgT4d4qTUT5RR1QUxpHmrSFbZfe/AcGxgpoO2t6XVQ
-	cAmLux1yUQwxY29Dn8oFzb4hpl1dQLI541LllNl61Gz/xd931prgR0lNtTVWMfLzmimjNj
-	1wdePgff5ft2JOBqfPg7YpwKwj8YTRBWeXDJ0nbRhbLVHaVvQVPVt5R8YIobChgbon8BKc
-	DMQlC0/rNPIDmDUTtP58h5RqUgqqwmGXybqmYkLelDvq2F+6hFTk0rTvtqqY6I0DguC1kN
-	tOyvsTutGSDUZqOXF/FR+Fkb2ZoVIPVdWWDnqXL1rHSKiO+nEovx3lZpEPIIqQ==
+	bh=gL1OUyk3Tz8rdtmT+uUcJgwYzule/7rkDExvOoIwBuQ=;
+	b=ApRkzPYgr4n7wR3eMmK8x715+Qnd0yo4KJsXGLL7hkdSHt+W2f4iER1+kLuxUhEGJR3gEQ
+	c04PIceVPQtmz0fGyguUUtkLlKeFGkexufI0uMnT+JzV0LZ7SY/kDhU8CynyZogPQZNPlm
+	gu3BwpVa1FLGt9nMNZUoqsmiH7blXYhWKOsqNPI2r1ebjacTxJCObzcvlHMqZlbz94U6ng
+	3BLwkGFrwHHwnXwfCrrRNgCR3Zt9tdZKRfe+wLp1I79BG3xuuqY6jBzgfjAyiusQme5x2+
+	36dML8ZM15VviFMNX0iDUXlHef6n8XxHstQWx3T3EjRRlkTgQV0EErtssG431A==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Thu, 20 Jun 2024 19:30:58 +0200
-Subject: [PATCH v3 6/9] clk: eyeq: add driver
+Date: Thu, 20 Jun 2024 19:31:00 +0200
+Subject: [PATCH v3 8/9] pinctrl: eyeq5: add platform driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240620-mbly-olb-v3-6-5f29f8ca289c@bootlin.com>
+Message-Id: <20240620-mbly-olb-v3-8-5f29f8ca289c@bootlin.com>
 References: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
 In-Reply-To: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -64,874 +64,654 @@ Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.14.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add Mobileye EyeQ5, EyeQ6L and EyeQ6H clock controller driver. It is
-both a platform driver and a hook onto of_clk_init() used for clocks
-required early (GIC timer, UARTs).
+Add the Mobileye EyeQ5 pin controller driver. It belongs to a syscon
+region called OLB and gets spawned as auxiliary device to the platform
+driver for clock.
 
-For some compatible, it is both at the same time. eqc_init() initialises
-early PLLs and stores clock array in a static linked list. It marks
-other clocks as deferred. eqc_probe() retrieves the clock array and
-adds all remaining clocks.
+Existing pins and their function live statically in the driver code
+rather than in the devicetree, see compatible match data.
 
-It exposes read-only PLLs derived from the main crystal on board. It
-also exposes another type of clocks: divider clocks. They always have
-even divisors and have one PLL as parent.
-
-This driver also bears the responsability for optional reset and pinctrl
-auxiliary devices. The match data attached to the devicetree node
-compatible indicate if such devices should be created. They all get
-passed a pointer to the start of the OLB region.
-
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- MAINTAINERS            |   1 +
- drivers/clk/Kconfig    |  12 +
- drivers/clk/Makefile   |   1 +
- drivers/clk/clk-eyeq.c | 789 +++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 803 insertions(+)
+ MAINTAINERS                     |   1 +
+ drivers/pinctrl/Kconfig         |  15 ++
+ drivers/pinctrl/Makefile        |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c | 576 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 593 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index fcc9f4364a5d..f386e9da2cd0 100644
+index 36f4001c7f51..09c3b05035d2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -14930,6 +14930,7 @@ F:	Documentation/devicetree/bindings/soc/mobileye/
- F:	arch/mips/boot/dts/mobileye/
+@@ -14931,6 +14931,7 @@ F:	arch/mips/boot/dts/mobileye/
  F:	arch/mips/configs/eyeq5_defconfig
  F:	arch/mips/mobileye/board-epm5.its.S
-+F:	drivers/clk/clk-eyeq5.c
+ F:	drivers/clk/clk-eyeq5.c
++F:	drivers/pinctrl/pinctrl-eyeq5.c
+ F:	drivers/reset/reset-eyeq5.c
  F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
  
- MODULE SUPPORT
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 50af5fc7f570..c29615eec4af 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -218,6 +218,18 @@ config COMMON_CLK_EN7523
- 	  This driver provides the fixed clocks and gates present on Airoha
- 	  ARM silicon.
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index d45657aa986a..de112a3ae079 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -213,6 +213,21 @@ config PINCTRL_EQUILIBRIUM
+ 	  desired pin functions, configure GPIO attributes for LGM SoC pins.
+ 	  Pin muxing and pin config settings are retrieved from device tree.
  
-+config COMMON_CLK_EYEQ
-+	bool "Clock driver for the Mobileye EyeQ platform"
-+	depends on OF || COMPILE_TEST
-+	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
-+	select AUXILIARY_BUS
-+	default MACH_EYEQ5 || MACH_EYEQ6H
++config PINCTRL_EYEQ5
++	bool "Mobileye EyeQ5 pinctrl driver"
++	depends on COMMON_CLK_EYEQ
++	depends on MACH_EYEQ5 || COMPILE_TEST
++	select PINMUX
++	select GENERIC_PINCONF
++	select MFD_SYSCON
++	default MACH_EYEQ5
 +	help
-+	  This driver provides clocks found on Mobileye EyeQ5, EyeQ6L and Eye6H
-+	  SoCs. Controllers live in shared register regions called OLB. Driver
-+	  provides read-only PLLs, derived from the main crystal clock (which
-+	  must be constant). It also exposes some divider clocks.
++	  Pin controller driver for the Mobileye EyeQ5 platform. It does both
++	  pin config & pin muxing. It does not handle GPIO.
 +
- config COMMON_CLK_FSL_FLEXSPI
- 	tristate "Clock driver for FlexSPI on Layerscape SoCs"
- 	depends on ARCH_LAYERSCAPE || COMPILE_TEST
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 14fa8d4ecc1f..52de92309aa8 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
- obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
- obj-$(CONFIG_ARCH_SPARX5)		+= clk-sparx5.o
- obj-$(CONFIG_COMMON_CLK_EN7523)		+= clk-en7523.o
-+obj-$(CONFIG_COMMON_CLK_EYEQ)		+= clk-eyeq.o
- obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
- obj-$(CONFIG_COMMON_CLK_FSL_FLEXSPI)	+= clk-fsl-flexspi.o
- obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
-diff --git a/drivers/clk/clk-eyeq.c b/drivers/clk/clk-eyeq.c
++	  Pin muxing supports two functions for each pin: first is GPIO, second
++	  is pin-dependent. Pin config is about bias & drive strength.
++
+ config PINCTRL_GEMINI
+ 	bool
+ 	depends on ARCH_GEMINI
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 2152539b53d5..6113e980cdb2 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
+ obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
+ obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
+ obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
++obj-$(CONFIG_PINCTRL_EYEQ5)	+= pinctrl-eyeq5.o
+ obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
+ obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
+ obj-$(CONFIG_PINCTRL_K210)	+= pinctrl-k210.o
+diff --git a/drivers/pinctrl/pinctrl-eyeq5.c b/drivers/pinctrl/pinctrl-eyeq5.c
 new file mode 100644
-index 000000000000..5b5b11a4edb2
+index 000000000000..bac2b5d74d7e
 --- /dev/null
-+++ b/drivers/clk/clk-eyeq.c
-@@ -0,0 +1,789 @@
++++ b/drivers/pinctrl/pinctrl-eyeq5.c
+@@ -0,0 +1,576 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * PLL clock driver for the Mobileye EyeQ5, EyeQ6L and EyeQ6H platforms.
++ * Pinctrl driver for the Mobileye EyeQ5 platform.
 + *
-+ * This controller handles read-only PLLs, all derived from the same main
-+ * crystal clock. It also exposes divider clocks, those are children to PLLs.
-+ * Parent clock is expected to be constant. This driver's registers live in
-+ * a shared region called OLB. Some PLLs are initialised early by of_clk_init().
++ * The registers are located in a syscon region called OLB. There are two pin
++ * banks, each being controlled by 5 registers (see enum eq5p_regs) for
++ * pull-down, pull-up, drive strength and muxing.
 + *
-+ * We use eqc_ as prefix, as-in "EyeQ Clock", but way shorter.
++ * For each pin, muxing is between two functions: (0) GPIO or (1) another one
++ * that is pin-dependent. Functions are declared statically in this driver.
++ *
++ * We create pinctrl groups that are 1:1 equivalent to pins: each group has a
++ * single pin, and its index/selector is the pin number.
++ *
++ * We use eq5p_ as prefix, as-in "EyeQ5 Pinctrl", but way shorter.
 + *
 + * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
 + */
 +
-+/*
-+ * Set pr_fmt() for printing from eqc_init().
-+ * It is called at of_clk_init() stage (read: really early).
-+ */
-+#define pr_fmt(fmt) "clk-eyeq: " fmt
-+
 +#include <linux/array_size.h>
 +#include <linux/auxiliary_bus.h>
-+#include <linux/bitfield.h>
 +#include <linux/bits.h>
-+#include <linux/clk-provider.h>
++#include <linux/bug.h>
 +#include <linux/device.h>
 +#include <linux/err.h>
 +#include <linux/errno.h>
-+#include <linux/init.h>
 +#include <linux/io.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/overflow.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/platform_device.h>
-+#include <linux/printk.h>
++#include <linux/seq_file.h>
 +#include <linux/slab.h>
-+#include <linux/spinlock.h>
 +#include <linux/types.h>
 +
-+#include <dt-bindings/clock/mobileye,eyeq5-clk.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
 +
-+#define EQC_MAX_DIV_COUNT		4
++#include "core.h"
++#include "pinctrl-utils.h"
 +
-+/* In frac mode, it enables fractional noise canceling DAC. Else, no function. */
-+#define PCSR0_DAC_EN			BIT(0)
-+/* Fractional or integer mode */
-+#define PCSR0_DSM_EN			BIT(1)
-+#define PCSR0_PLL_EN			BIT(2)
-+/* All clocks output held at 0 */
-+#define PCSR0_FOUTPOSTDIV_EN		BIT(3)
-+#define PCSR0_POST_DIV1			GENMASK(6, 4)
-+#define PCSR0_POST_DIV2			GENMASK(9, 7)
-+#define PCSR0_REF_DIV			GENMASK(15, 10)
-+#define PCSR0_INTIN			GENMASK(27, 16)
-+#define PCSR0_BYPASS			BIT(28)
-+/* Bits 30..29 are reserved */
-+#define PCSR0_PLL_LOCKED		BIT(31)
++struct eq5p_pinctrl {
++	struct pinctrl_desc	desc;
++	void __iomem		*base;
++};
 +
-+#define PCSR1_RESET			BIT(0)
-+#define PCSR1_SSGC_DIV			GENMASK(4, 1)
-+/* Spread amplitude (% = 0.1 * SPREAD[4:0]) */
-+#define PCSR1_SPREAD			GENMASK(9, 5)
-+#define PCSR1_DIS_SSCG			BIT(10)
-+/* Down-spread or center-spread */
-+#define PCSR1_DOWN_SPREAD		BIT(11)
-+#define PCSR1_FRAC_IN			GENMASK(31, 12)
++enum eq5p_bank {
++	EQ5P_BANK_A,
++	EQ5P_BANK_B,
 +
-+/*
-+ * Driver might register clock provider from eqc_init() if PLLs are required
-+ * early (before platform bus is ready). Store struct eqc_priv inside linked
-+ * list to pass clock provider from eqc_init() to eqc_probe() and register
-+ * remaining clocks from platform device probe.
-+ *
-+ * Clock provider is NOT created by eqc_init() if no early clock is required.
-+ * Store as linked list because EyeQ6H has multiple clock controller instances.
-+ * Matching is done based on devicetree node pointer.
-+ */
-+static DEFINE_SPINLOCK(eqc_list_slock);
-+static LIST_HEAD(eqc_list);
++	EQ5P_BANK_COUNT,
++};
 +
-+struct eqc_pll {
-+	unsigned int	index;
-+	const char	*name;
-+	unsigned int	reg64;
++enum eq5p_regs {
++	EQ5P_PD,
++	EQ5P_PU,
++	EQ5P_DS_LOW,
++	EQ5P_DS_HIGH,
++	EQ5P_IOCR,
++
++	EQ5P_REG_COUNT,
++};
++
++static const unsigned int eq5p_regs[EQ5P_BANK_COUNT][EQ5P_REG_COUNT] = {
++	[EQ5P_BANK_A] = {0x0C0, 0x0C4, 0x0D0, 0x0D4, 0x0B0},
++	[EQ5P_BANK_B] = {0x0C8, 0x0CC, 0x0D8, 0x0DC, 0x0B4},
 +};
 +
 +/*
-+ * Divider clock. Divider is 2*(v+1), with v the register value.
-+ * Min divider is 2, max is 2*(2^width).
++ * Drive strength; two bits per pin.
 + */
-+struct eqc_div {
-+	unsigned int	index;
-+	const char	*name;
-+	unsigned int	parent;
-+	unsigned int	reg;
-+	u8		shift;
-+	u8		width;
-+};
-+
-+struct eqc_match_data {
-+	unsigned int		pll_count;
-+	const struct eqc_pll	*plls;
-+
-+	unsigned int		div_count;
-+	const struct eqc_div	*divs;
-+
-+	const char		*reset_auxdev_name;
-+	const char		*pinctrl_auxdev_name;
-+};
-+
-+struct eqc_early_match_data {
-+	unsigned int		early_pll_count;
-+	const struct eqc_pll	*early_plls;
-+	/* Information required to init properly clk HW cells. */
-+	unsigned int		nb_late_clks;
-+};
-+
-+struct eqc_priv {
-+	struct clk_hw_onecell_data	*cells;
-+	const struct eqc_early_match_data *early_data;
-+	const struct eqc_match_data	*data;
-+	void __iomem			*base;
-+	struct device_node		*np;
-+	struct list_head		list;
-+};
++#define EQ5P_DS_MASK	GENMASK(1, 0)
 +
 +/*
-+ * Both factors (mult and div) must fit in 32 bits. When an operation overflows,
-+ * this function throws away low bits so that factors still fit in 32 bits.
-+ *
-+ * Precision loss depends on amplitude of mult and div. Worst theorical
-+ * loss is: (UINT_MAX+1) / UINT_MAX - 1 = 2.3e-10.
-+ * This is 1Hz every 4.3GHz.
++ * Comments to the right of each pin are the "signal name" in the datasheet.
 + */
-+static void eqc_pll_downshift_factors(unsigned long *mult, unsigned long *div)
++static const struct pinctrl_pin_desc eq5p_pins[] = {
++	/* Bank A */
++	PINCTRL_PIN(0,  "PA0"),  /* A0_TIMER0_CK */
++	PINCTRL_PIN(1,  "PA1"),  /* A1_TIMER0_EOC */
++	PINCTRL_PIN(2,  "PA2"),  /* A2_TIMER1_CK */
++	PINCTRL_PIN(3,  "PA3"),  /* A3_TIMER1_EOC */
++	PINCTRL_PIN(4,  "PA4"),  /* A4_TIMER2_CK */
++	PINCTRL_PIN(5,  "PA5"),  /* A5_TIMER2_EOC */
++	PINCTRL_PIN(6,  "PA6"),  /* A6_TIMER5_EXT_INCAP1 */
++	PINCTRL_PIN(7,  "PA7"),  /* A7_TIMER5_EXT_INCAP2 */
++	PINCTRL_PIN(8,  "PA8"),  /* A8_TIMER5_EXT_OUTCMP1 */
++	PINCTRL_PIN(9,  "PA9"),  /* A9_TIMER5_EXT_OUTCMP2 */
++	PINCTRL_PIN(10, "PA10"), /* A10_UART_0_TX */
++	PINCTRL_PIN(11, "PA11"), /* A11_UART_0_RX */
++	PINCTRL_PIN(12, "PA12"), /* A12_UART_1_TX */
++	PINCTRL_PIN(13, "PA13"), /* A13_UART_1_RX */
++	PINCTRL_PIN(14, "PA14"), /* A14_CAN_0_TX */
++	PINCTRL_PIN(15, "PA15"), /* A15_CAN_0_RX */
++	PINCTRL_PIN(16, "PA16"), /* A16_CAN_1_TX */
++	PINCTRL_PIN(17, "PA17"), /* A17_CAN_1_RX */
++	PINCTRL_PIN(18, "PA18"), /* A18_SPI_0_DO */
++	PINCTRL_PIN(19, "PA19"), /* A19_SPI_0_DI */
++	PINCTRL_PIN(20, "PA20"), /* A20_SPI_0_CK */
++	PINCTRL_PIN(21, "PA21"), /* A21_SPI_0_CS0 */
++	PINCTRL_PIN(22, "PA22"), /* A22_SPI_0_CS1 */
++	PINCTRL_PIN(23, "PA23"), /* A23_SPI_1_DO */
++	PINCTRL_PIN(24, "PA24"), /* A24_SPI_1_DI */
++	PINCTRL_PIN(25, "PA25"), /* A25_SPI_1_CK */
++	PINCTRL_PIN(26, "PA26"), /* A26_SPI_1_CS0 */
++	PINCTRL_PIN(27, "PA27"), /* A27_SPI_1_CS1 */
++	PINCTRL_PIN(28, "PA28"), /* A28_REF_CLK0 */
++
++#define EQ5P_PIN_OFFSET_BANK_B	29
++
++	/* Bank B */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 0,  "PB0"),  /* B0_TIMER3_CK */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 1,  "PB1"),  /* B1_TIMER3_EOC */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 2,  "PB2"),  /* B2_TIMER4_CK */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 3,  "PB3"),  /* B3_TIMER4_EOC */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 4,  "PB4"),  /* B4_TIMER6_EXT_INCAP1 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 5,  "PB5"),  /* B5_TIMER6_EXT_INCAP2 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 6,  "PB6"),  /* B6_TIMER6_EXT_OUTCMP1 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 7,  "PB7"),  /* B7_TIMER6_EXT_OUTCMP2 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 8,  "PB8"),  /* B8_UART_2_TX */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 9,  "PB9"),  /* B9_UART_2_RX */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 10, "PB10"), /* B10_CAN_2_TX */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 11, "PB11"), /* B11_CAN_2_RX */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 12, "PB12"), /* B12_SPI_2_DO */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 13, "PB13"), /* B13_SPI_2_DI */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 14, "PB14"), /* B14_SPI_2_CK */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 15, "PB15"), /* B15_SPI_2_CS0 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 16, "PB16"), /* B16_SPI_2_CS1 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 17, "PB17"), /* B17_SPI_3_DO */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 18, "PB18"), /* B18_SPI_3_DI */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 19, "PB19"), /* B19_SPI_3_CK */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 20, "PB20"), /* B20_SPI_3_CS0 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 21, "PB21"), /* B21_SPI_3_CS1 */
++	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 22, "PB22"), /* B22_MCLK0 */
++};
++
++static const char * const gpio_groups[] = {
++	/* Bank A */
++	"PA0",  "PA1",  "PA2",  "PA3",  "PA4",  "PA5",  "PA6",  "PA7",
++	"PA8",  "PA9",  "PA10", "PA11", "PA12", "PA13", "PA14", "PA15",
++	"PA16", "PA17", "PA18", "PA19", "PA20", "PA21", "PA22", "PA23",
++	"PA24", "PA25", "PA26", "PA27", "PA28",
++
++	/* Bank B */
++	"PB0",  "PB1",  "PB2",  "PB3",  "PB4",  "PB5",  "PB6",  "PB7",
++	"PB8",  "PB9",  "PB10", "PB11", "PB12", "PB13", "PB14", "PB15",
++	"PB16", "PB17", "PB18", "PB19", "PB20", "PB21", "PB22",
++};
++
++/* Groups of functions on bank A */
++static const char * const timer0_groups[] = { "PA0", "PA1" };
++static const char * const timer1_groups[] = { "PA2", "PA3" };
++static const char * const timer2_groups[] = { "PA4", "PA5" };
++static const char * const timer5_groups[] = { "PA6", "PA7", "PA8", "PA9" };
++static const char * const uart0_groups[] = { "PA10", "PA11" };
++static const char * const uart1_groups[] = { "PA12", "PA13" };
++static const char * const can0_groups[] = { "PA14", "PA15" };
++static const char * const can1_groups[] = { "PA16", "PA17" };
++static const char * const spi0_groups[] = { "PA18", "PA19", "PA20", "PA21", "PA22" };
++static const char * const spi1_groups[] = { "PA23", "PA24", "PA25", "PA26", "PA27" };
++static const char * const refclk0_groups[] = { "PA28" };
++
++/* Groups of functions on bank B */
++static const char * const timer3_groups[] = { "PB0", "PB1" };
++static const char * const timer4_groups[] = { "PB2", "PB3" };
++static const char * const timer6_groups[] = { "PB4", "PB5", "PB6", "PB7" };
++static const char * const uart2_groups[] = { "PB8", "PB9" };
++static const char * const can2_groups[] = { "PB10", "PB11" };
++static const char * const spi2_groups[] = { "PB12", "PB13", "PB14", "PB15", "PB16" };
++static const char * const spi3_groups[] = { "PB17", "PB18", "PB19", "PB20", "PB21" };
++static const char * const mclk0_groups[] = { "PB22" };
++
++static const struct pinfunction eq5p_functions[] = {
++	/* GPIO having a fixed index is depended upon, see GPIO_FUNC_SELECTOR. */
++	PINCTRL_PINFUNCTION("gpio", gpio_groups, ARRAY_SIZE(gpio_groups)),
++#define GPIO_FUNC_SELECTOR 0
++
++	/* Bank A functions */
++	PINCTRL_PINFUNCTION("timer0", timer0_groups, ARRAY_SIZE(timer0_groups)),
++	PINCTRL_PINFUNCTION("timer1", timer1_groups, ARRAY_SIZE(timer1_groups)),
++	PINCTRL_PINFUNCTION("timer2", timer2_groups, ARRAY_SIZE(timer2_groups)),
++	PINCTRL_PINFUNCTION("timer5", timer5_groups, ARRAY_SIZE(timer5_groups)),
++	PINCTRL_PINFUNCTION("uart0", uart0_groups, ARRAY_SIZE(uart0_groups)),
++	PINCTRL_PINFUNCTION("uart1", uart1_groups, ARRAY_SIZE(uart1_groups)),
++	PINCTRL_PINFUNCTION("can0", can0_groups, ARRAY_SIZE(can0_groups)),
++	PINCTRL_PINFUNCTION("can1", can1_groups, ARRAY_SIZE(can1_groups)),
++	PINCTRL_PINFUNCTION("spi0", spi0_groups, ARRAY_SIZE(spi0_groups)),
++	PINCTRL_PINFUNCTION("spi1", spi1_groups, ARRAY_SIZE(spi1_groups)),
++	PINCTRL_PINFUNCTION("refclk0", refclk0_groups, ARRAY_SIZE(refclk0_groups)),
++
++	/* Bank B functions */
++	PINCTRL_PINFUNCTION("timer3", timer3_groups, ARRAY_SIZE(timer3_groups)),
++	PINCTRL_PINFUNCTION("timer4", timer4_groups, ARRAY_SIZE(timer4_groups)),
++	PINCTRL_PINFUNCTION("timer6", timer6_groups, ARRAY_SIZE(timer6_groups)),
++	PINCTRL_PINFUNCTION("uart2", uart2_groups, ARRAY_SIZE(uart2_groups)),
++	PINCTRL_PINFUNCTION("can2", can2_groups, ARRAY_SIZE(can2_groups)),
++	PINCTRL_PINFUNCTION("spi2", spi2_groups, ARRAY_SIZE(spi2_groups)),
++	PINCTRL_PINFUNCTION("spi3", spi3_groups, ARRAY_SIZE(spi3_groups)),
++	PINCTRL_PINFUNCTION("mclk0", mclk0_groups, ARRAY_SIZE(mclk0_groups)),
++};
++
++static void eq5p_update_bits(const struct eq5p_pinctrl *pctrl,
++			     enum eq5p_bank bank, enum eq5p_regs reg,
++			     u32 mask, u32 val)
 +{
-+	unsigned long biggest;
-+	unsigned int shift;
++	void __iomem *ptr = pctrl->base + eq5p_regs[bank][reg];
 +
-+	/* This function can be removed if mult/div switch to unsigned long. */
-+	static_assert(sizeof_field(struct clk_fixed_factor, mult) == sizeof(unsigned int));
-+	static_assert(sizeof_field(struct clk_fixed_factor, div) == sizeof(unsigned int));
-+
-+	/* No overflow, nothing to be done. */
-+	if (*mult <= UINT_MAX && *div <= UINT_MAX)
-+		return;
-+
-+	/*
-+	 * Compute the shift required to bring the biggest factor into unsigned
-+	 * int range. That is, shift its highest set bit to the unsigned int
-+	 * most significant bit.
-+	 */
-+	biggest = max(*mult, *div);
-+	shift = __fls(biggest) - (BITS_PER_BYTE * sizeof(unsigned int)) + 1;
-+
-+	*mult >>= shift;
-+	*div >>= shift;
++	writel((readl(ptr) & ~mask) | (val & mask), ptr);
 +}
 +
-+static int eqc_pll_parse_registers(u32 r0, u32 r1, unsigned long *mult,
-+				   unsigned long *div, unsigned long *acc)
++static bool eq5p_test_bit(const struct eq5p_pinctrl *pctrl,
++			  enum eq5p_bank bank, enum eq5p_regs reg, int offset)
 +{
-+	if (r0 & PCSR0_BYPASS) {
-+		*mult = 1;
-+		*div = 1;
-+		*acc = 0;
-+		return 0;
-+	}
++	u32 val = readl(pctrl->base + eq5p_regs[bank][reg]);
 +
-+	if (!(r0 & PCSR0_PLL_LOCKED))
-+		return -EINVAL;
++	if (WARN_ON(offset > 31))
++		return false;
 +
-+	*mult = FIELD_GET(PCSR0_INTIN, r0);
-+	*div = FIELD_GET(PCSR0_REF_DIV, r0);
-+	if (r0 & PCSR0_FOUTPOSTDIV_EN)
-+		*div *= FIELD_GET(PCSR0_POST_DIV1, r0) * FIELD_GET(PCSR0_POST_DIV2, r0);
++	return (val & BIT(offset)) != 0;
++}
 +
-+	/* Fractional mode, in 2^20 (0x100000) parts. */
-+	if (r0 & PCSR0_DSM_EN) {
-+		*div *= 0x100000;
-+		*mult = *mult * 0x100000 + FIELD_GET(PCSR1_FRAC_IN, r1);
-+	}
++static enum eq5p_bank eq5p_pin_to_bank(unsigned int pin)
++{
++	if (pin < EQ5P_PIN_OFFSET_BANK_B)
++		return EQ5P_BANK_A;
++	else
++		return EQ5P_BANK_B;
++}
 +
-+	if (!*mult || !*div)
-+		return -EINVAL;
++static unsigned int eq5p_pin_to_offset(unsigned int pin)
++{
++	if (pin < EQ5P_PIN_OFFSET_BANK_B)
++		return pin;
++	else
++		return pin - EQ5P_PIN_OFFSET_BANK_B;
++}
 +
-+	/* Spread spectrum. */
-+	if (!(r1 & (PCSR1_RESET | PCSR1_DIS_SSCG))) {
-+		/*
-+		 * Spread is 1/1000 parts of frequency, accuracy is half of
-+		 * that. To get accuracy, convert to ppb (parts per billion).
-+		 */
-+		u32 spread = FIELD_GET(PCSR1_SPREAD, r1);
++static int eq5p_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(eq5p_pins);
++}
 +
-+		*acc = spread * 500000;
-+		if (r1 & PCSR1_DOWN_SPREAD) {
-+			/*
-+			 * Downspreading: the central frequency is half a
-+			 * spread lower.
-+			 */
-+			*mult *= 2000 - spread;
-+			*div *= 2000;
++static const char *eq5p_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++					       unsigned int selector)
++{
++	return pctldev->desc->pins[selector].name;
++}
 +
-+			/*
-+			 * Previous operation might overflow 32 bits. If it
-+			 * does, throw away the least amount of low bits.
-+			 */
-+			eqc_pll_downshift_factors(mult, div);
++static int eq5p_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++				       unsigned int selector,
++				       const unsigned int **pins,
++				       unsigned int *num_pins)
++{
++	*pins = &pctldev->desc->pins[selector].number;
++	*num_pins = 1;
++	return 0;
++}
++
++static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
++			    unsigned long *config)
++{
++	enum pin_config_param param = pinconf_to_config_param(*config);
++	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	unsigned int offset = eq5p_pin_to_offset(pin);
++	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
++	u32 val_ds, arg;
++	bool pd, pu;
++
++	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
++	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		arg = !(pd || pu);
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		arg = pd;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		arg = pu;
++		break;
++	case PIN_CONFIG_DRIVE_STRENGTH:
++		offset *= 2; /* two bits per pin */
++		if (offset >= 32) {
++			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_HIGH]);
++			offset -= 32;
++		} else {
++			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_LOW]);
 +		}
++		arg = (val_ds >> offset) & EQ5P_DS_MASK;
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++	return 0;
++}
++
++static void eq5p_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
++				      struct seq_file *s,
++				      unsigned int pin)
++{
++	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const char *pin_name = pctrl->desc.pins[pin].name;
++	unsigned int offset = eq5p_pin_to_offset(pin);
++	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
++	const char *func_name, *bias;
++	unsigned long ds_config;
++	u32 drive_strength;
++	bool pd, pu;
++	int i, j;
++
++	/*
++	 * First, let's get the function name. All pins have only two functions:
++	 * GPIO (IOCR == 0) and something else (IOCR == 1).
++	 */
++	if (eq5p_test_bit(pctrl, bank, EQ5P_IOCR, offset)) {
++		func_name = NULL;
++		for (i = 0; i < ARRAY_SIZE(eq5p_functions); i++) {
++			if (i == GPIO_FUNC_SELECTOR)
++				continue;
++
++			for (j = 0; j < eq5p_functions[i].ngroups; j++) {
++				/* Groups and pins are the same thing for us. */
++				const char *x = eq5p_functions[i].groups[j];
++
++				if (strcmp(x, pin_name) == 0) {
++					func_name = eq5p_functions[i].name;
++					break;
++				}
++			}
++
++			if (func_name)
++				break;
++		}
++
++		/*
++		 * We have not found the function attached to this pin, this
++		 * should never occur as all pins have exactly two functions.
++		 */
++		if (!func_name)
++			func_name = "unknown";
 +	} else {
-+		*acc = 0;
++		func_name = eq5p_functions[GPIO_FUNC_SELECTOR].name;
++	}
++
++	/* Second, we retrieve the bias. */
++	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
++	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
++	if (pd && pu)
++		bias = "both";
++	else if (pd && !pu)
++		bias = "pulldown";
++	else if (!pd && pu)
++		bias = "pullup";
++	else
++		bias = "none";
++
++	/* Third, we get the drive strength. */
++	ds_config = pinconf_to_config_packed(PIN_CONFIG_DRIVE_STRENGTH, 0);
++	eq5p_pinconf_get(pctldev, pin, &ds_config);
++	drive_strength = pinconf_to_config_argument(ds_config);
++
++	seq_printf(s, "function=%s bias=%s drive_strength=%d",
++		   func_name, bias, drive_strength);
++}
++
++static const struct pinctrl_ops eq5p_pinctrl_ops = {
++	.get_groups_count	= eq5p_pinctrl_get_groups_count,
++	.get_group_name		= eq5p_pinctrl_get_group_name,
++	.get_group_pins		= eq5p_pinctrl_get_group_pins,
++	.pin_dbg_show		= eq5p_pinctrl_pin_dbg_show,
++	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map		= pinctrl_utils_free_map,
++};
++
++static int eq5p_pinmux_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(eq5p_functions);
++}
++
++static const char *eq5p_pinmux_get_function_name(struct pinctrl_dev *pctldev,
++						 unsigned int selector)
++{
++	return eq5p_functions[selector].name;
++}
++
++static int eq5p_pinmux_get_function_groups(struct pinctrl_dev *pctldev,
++					   unsigned int selector,
++					   const char * const **groups,
++					   unsigned int *num_groups)
++{
++	*groups = eq5p_functions[selector].groups;
++	*num_groups = eq5p_functions[selector].ngroups;
++	return 0;
++}
++
++static int eq5p_pinmux_set_mux(struct pinctrl_dev *pctldev,
++			       unsigned int func_selector, unsigned int pin)
++{
++	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const char *func_name = eq5p_functions[func_selector].name;
++	const char *group_name = pctldev->desc->pins[pin].name;
++	bool is_gpio = func_selector == GPIO_FUNC_SELECTOR;
++	unsigned int offset = eq5p_pin_to_offset(pin);
++	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
++	u32 mask, val;
++
++	dev_dbg(pctldev->dev, "func=%s group=%s\n", func_name, group_name);
++
++	mask = BIT(offset);
++	val = is_gpio ? 0 : mask;
++	eq5p_update_bits(pctrl, bank, EQ5P_IOCR, mask, val);
++	return 0;
++}
++
++static int eq5p_pinmux_gpio_request_enable(struct pinctrl_dev *pctldev,
++					   struct pinctrl_gpio_range *range,
++					   unsigned int pin)
++{
++	/* Pin numbers and group selectors are the same thing in our case. */
++	return eq5p_pinmux_set_mux(pctldev, GPIO_FUNC_SELECTOR, pin);
++}
++
++static const struct pinmux_ops eq5p_pinmux_ops = {
++	.get_functions_count	= eq5p_pinmux_get_functions_count,
++	.get_function_name	= eq5p_pinmux_get_function_name,
++	.get_function_groups	= eq5p_pinmux_get_function_groups,
++	.set_mux		= eq5p_pinmux_set_mux,
++	.gpio_request_enable	= eq5p_pinmux_gpio_request_enable,
++	.strict			= true,
++};
++
++static int eq5p_pinconf_set_drive_strength(struct pinctrl_dev *pctldev,
++					   unsigned int pin, u32 arg)
++{
++	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	unsigned int offset = eq5p_pin_to_offset(pin);
++	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
++	unsigned int reg;
++	u32 mask, val;
++
++	if (arg & ~EQ5P_DS_MASK) {
++		dev_err(pctldev->dev, "Unsupported drive strength: %u\n", arg);
++		return -EINVAL;
++	}
++
++	offset *= 2; /* two bits per pin */
++
++	if (offset >= 32) {
++		reg = EQ5P_DS_HIGH;
++		offset -= 32;
++	} else {
++		reg = EQ5P_DS_LOW;
++	}
++
++	mask = EQ5P_DS_MASK << offset;
++	val = arg << offset;
++	eq5p_update_bits(pctrl, bank, reg, mask, val);
++	return 0;
++}
++
++static int eq5p_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			    unsigned long *configs, unsigned int num_configs)
++{
++	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const char *pin_name = pctldev->desc->pins[pin].name;
++	unsigned int offset = eq5p_pin_to_offset(pin);
++	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
++	struct device *dev = pctldev->dev;
++	u32 val = BIT(offset);
++	unsigned int i;
++
++	for (i = 0; i < num_configs; i++) {
++		enum pin_config_param param = pinconf_to_config_param(configs[i]);
++		u32 arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_DISABLE:
++			dev_dbg(dev, "pin=%s bias_disable\n", pin_name);
++
++			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
++			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
++			break;
++
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			dev_dbg(dev, "pin=%s bias_pull_down arg=%u\n",
++				pin_name, arg);
++
++			if (arg == 0) /* cannot connect to GND */
++				return -ENOTSUPP;
++
++			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, val);
++			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
++			break;
++
++		case PIN_CONFIG_BIAS_PULL_UP:
++			dev_dbg(dev, "pin=%s bias_pull_up arg=%u\n",
++				pin_name, arg);
++
++			if (arg == 0) /* cannot connect to VDD */
++				return -ENOTSUPP;
++
++			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
++			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, val);
++			break;
++
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			dev_dbg(dev, "pin=%s drive_strength arg=%u\n",
++				pin_name, arg);
++
++			eq5p_pinconf_set_drive_strength(pctldev, pin, arg);
++			break;
++
++		default:
++			dev_err(dev, "Unsupported pinconf %u\n", param);
++			return -ENOTSUPP;
++		}
 +	}
 +
 +	return 0;
 +}
 +
-+static unsigned int eqc_compute_clock_count(const struct eqc_early_match_data *early_data,
-+					    const struct eqc_match_data *data)
++static const struct pinconf_ops eq5p_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_get = eq5p_pinconf_get,
++	.pin_config_set = eq5p_pinconf_set,
++	/* Pins and groups are equivalent in this driver. */
++	.pin_config_group_get = eq5p_pinconf_get,
++	.pin_config_group_set = eq5p_pinconf_set,
++};
++
++static int eq5p_probe(struct auxiliary_device *adev,
++		      const struct auxiliary_device_id *id)
 +{
-+	unsigned int i, nb_clks = 0, sum = 0;
-+
-+	if (early_data) {
-+		sum += early_data->early_pll_count;
-+
-+		for (i = 0; i < early_data->early_pll_count; i++)
-+			if (early_data->early_plls[i].index >= nb_clks)
-+				nb_clks = early_data->early_plls[i].index + 1;
-+	}
-+
-+	if (data) {
-+		sum += data->pll_count + data->div_count;
-+
-+		for (i = 0; i < data->pll_count; i++)
-+			if (data->plls[i].index >= nb_clks)
-+				nb_clks = data->plls[i].index + 1;
-+
-+		for (i = 0; i < data->div_count; i++)
-+			if (data->divs[i].index >= nb_clks)
-+				nb_clks = data->divs[i].index + 1;
-+	}
-+
-+	/* We expect the biggest clock index to be 1 below the clock count. */
-+	WARN_ON(nb_clks != sum);
-+
-+	return nb_clks;
-+}
-+
-+static void eqc_probe_init_plls(struct device *dev, struct eqc_priv *priv)
-+{
-+	const struct eqc_match_data *data = priv->data;
-+	unsigned long mult, div, acc;
-+	const struct eqc_pll *pll;
-+	struct clk_hw *hw;
-+	unsigned int i;
-+	u32 r0, r1;
-+	u64 val;
++	struct device *dev = &adev->dev;
++	struct pinctrl_dev *pctldev;
++	struct eq5p_pinctrl *pctrl;
 +	int ret;
 +
-+	for (i = 0; i < data->pll_count; i++) {
-+		pll = &data->plls[i];
-+
-+		val = readq(priv->base + pll->reg64);
-+		r0 = val;
-+		r1 = val >> 32;
-+
-+		ret = eqc_pll_parse_registers(r0, r1, &mult, &div, &acc);
-+		if (ret) {
-+			dev_warn(dev, "failed parsing state of %s\n", pll->name);
-+			priv->cells->hws[pll->index] = ERR_PTR(ret);
-+			continue;
-+		}
-+
-+		hw = clk_hw_register_fixed_factor_with_accuracy_fwname(dev,
-+				dev->of_node, pll->name, "ref", 0, mult, div, acc);
-+		priv->cells->hws[pll->index] = hw;
-+		if (IS_ERR(hw))
-+			dev_warn(dev, "failed registering %s: %pe\n", pll->name, hw);
-+	}
-+}
-+
-+static void eqc_probe_init_divs(struct platform_device *pdev, struct device *dev,
-+				struct eqc_priv *priv)
-+{
-+	const struct eqc_match_data *data = priv->data;
-+	const struct eqc_div *div;
-+	struct clk_hw *parent;
-+	void __iomem *reg;
-+	struct clk_hw *hw;
-+	unsigned int i;
-+
-+	for (i = 0; i < data->div_count; i++) {
-+		div = &data->divs[i];
-+		reg = priv->base + div->reg;
-+		parent = priv->cells->hws[div->parent];
-+
-+		hw = clk_hw_register_divider_table_parent_hw(dev, div->name,
-+				parent, 0, reg, div->shift, div->width,
-+				CLK_DIVIDER_EVEN_INTEGERS, NULL, NULL);
-+		priv->cells->hws[div->index] = hw;
-+		if (IS_ERR(hw))
-+			dev_warn(dev, "failed registering %s: %pe\n",
-+				 div->name, hw);
-+	}
-+}
-+
-+static void eqc_auxdev_release(struct device *dev)
-+{
-+	struct auxiliary_device *adev = to_auxiliary_dev(dev);
-+
-+	kfree(adev);
-+}
-+
-+static void eqc_auxdev_unregister(void *arg)
-+{
-+	struct auxiliary_device *adev = arg;
-+
-+	auxiliary_device_delete(adev);
-+	auxiliary_device_uninit(adev);
-+}
-+
-+static int eqc_auxdev_create(struct device *dev, void __iomem *base,
-+			     const char *name, u32 id)
-+{
-+	struct auxiliary_device *adev;
-+	int ret;
-+
-+	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-+	if (!adev)
++	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
++	if (!pctrl)
 +		return -ENOMEM;
 +
-+	adev->name = name;
-+	adev->dev.parent = dev;
-+	adev->dev.platform_data = base;
-+	adev->dev.release = eqc_auxdev_release;
-+	adev->id = id;
++	pctrl->base = dev_get_platdata(dev);
++	pctrl->desc.name = dev_name(dev);
++	pctrl->desc.pins = eq5p_pins;
++	pctrl->desc.npins = ARRAY_SIZE(eq5p_pins);
++	pctrl->desc.pctlops = &eq5p_pinctrl_ops;
++	pctrl->desc.pmxops = &eq5p_pinmux_ops;
++	pctrl->desc.confops = &eq5p_pinconf_ops;
++	pctrl->desc.owner = THIS_MODULE;
 +
-+	ret = auxiliary_device_init(adev);
++	ret = devm_pinctrl_register_and_init(dev, &pctrl->desc, pctrl, &pctldev);
 +	if (ret)
-+		return ret;
++		return dev_err_probe(dev, ret, "failed registering pinctrl device\n");
 +
-+	ret = auxiliary_device_add(adev);
-+	if (ret) {
-+		auxiliary_device_uninit(adev);
-+		return ret;
-+	}
-+
-+	return devm_add_action_or_reset(dev, eqc_auxdev_unregister, adev);
-+}
-+
-+static int eqc_probe(struct platform_device *pdev)
-+{
-+	const struct eqc_match_data *data;
-+	struct device *dev = &pdev->dev;
-+	struct eqc_priv *priv = NULL;
-+	struct eqc_priv *entry;
-+	unsigned int nb_clks;
-+	void __iomem *base;
-+	int ret;
-+
-+	data = device_get_match_data(dev);
-+	if (!data)
-+		return 0; /* No clocks nor auxdevs, we are done. */
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	/* Init optional reset auxiliary device. */
-+	if (data->reset_auxdev_name) {
-+		ret = eqc_auxdev_create(dev, base, data->reset_auxdev_name, 0);
-+		if (ret)
-+			dev_warn(dev, "failed creating auxiliary device %s.%s: %d\n",
-+				 KBUILD_MODNAME, data->reset_auxdev_name, ret);
-+	}
-+
-+	/* Init optional pinctrl auxiliary device. */
-+	if (data->pinctrl_auxdev_name) {
-+		ret = eqc_auxdev_create(dev, base, data->pinctrl_auxdev_name, 0);
-+		if (ret)
-+			dev_warn(dev, "failed creating auxiliary device %s.%s: %d\n",
-+				 KBUILD_MODNAME, data->pinctrl_auxdev_name, ret);
-+	}
-+
-+	if (data->pll_count + data->div_count == 0)
-+		return 0; /* Zero clocks, we are done. */
-+
-+	/* Try retrieving early init private data. */
-+	spin_lock(&eqc_list_slock);
-+	list_for_each_entry(entry, &eqc_list, list) {
-+		if (entry->np == dev->of_node) {
-+			priv = entry;
-+			break;
-+		}
-+	}
-+	spin_unlock(&eqc_list_slock);
-+
-+	if (!priv) {
-+		/* Device did not get init early. Do it now. */
-+
-+		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+		if (!priv)
-+			return -ENOMEM;
-+
-+		priv->np = dev->of_node;
-+
-+		nb_clks = eqc_compute_clock_count(NULL, data);
-+		priv->cells = devm_kzalloc(dev, struct_size(priv->cells, hws, nb_clks),
-+					   GFP_KERNEL);
-+		if (!priv->cells)
-+			return -ENOMEM;
-+
-+		priv->cells->num = nb_clks;
-+	} else {
-+		/*
-+		 * Device got init early. Check clock count.
-+		 *
-+		 * eqc_init() should already know the exact clk count using
-+		 * nb_late_clks field. We ensure computation was right and fix
-+		 * clk cells if not.
-+		 */
-+		nb_clks = eqc_compute_clock_count(priv->early_data, data);
-+		if (WARN_ON(nb_clks != priv->cells->num))
-+			priv->cells->num = nb_clks;
-+	}
-+
-+	priv->base = base;
-+	priv->data = data;
-+
-+	eqc_probe_init_plls(dev, priv);
-+
-+	eqc_probe_init_divs(pdev, dev, priv);
-+
-+	/* Clock provider has not been registered by eqc_init(). Do it now. */
-+	if (!priv->early_data) {
-+		/* When providing a single clock, require no cell. */
-+		if (priv->cells->num == 1)
-+			ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-+							  priv->cells->hws[0]);
-+		else
-+			ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-+							  priv->cells);
-+
-+		if (ret)
-+			return ret;
-+	}
++	ret = pinctrl_enable(pctldev);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed enabling pinctrl device\n");
 +
 +	return 0;
 +}
 +
-+static const struct eqc_pll eqc_eyeq5_plls[] = {
-+	{ .index = EQ5C_PLL_VMP,  .name = "pll-vmp",  .reg64 = 0x034 },
-+	{ .index = EQ5C_PLL_PMA,  .name = "pll-pma",  .reg64 = 0x03C },
-+	{ .index = EQ5C_PLL_VDI,  .name = "pll-vdi",  .reg64 = 0x044 },
-+	{ .index = EQ5C_PLL_DDR0, .name = "pll-ddr0", .reg64 = 0x04C },
-+	{ .index = EQ5C_PLL_PCI,  .name = "pll-pci",  .reg64 = 0x054 },
-+	{ .index = EQ5C_PLL_PMAC, .name = "pll-pmac", .reg64 = 0x064 },
-+	{ .index = EQ5C_PLL_MPC,  .name = "pll-mpc",  .reg64 = 0x06C },
-+	{ .index = EQ5C_PLL_DDR1, .name = "pll-ddr1", .reg64 = 0x074 },
-+};
-+
-+static const struct eqc_div eqc_eyeq5_divs[] = {
-+	{
-+		.index = EQ5C_DIV_OSPI,
-+		.name = "div-ospi",
-+		.parent = EQ5C_PLL_PER,
-+		.reg = 0x11C,
-+		.shift = 0,
-+		.width = 4,
-+	},
-+};
-+
-+static const struct eqc_match_data eqc_eyeq5_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq5_plls),
-+	.plls		= eqc_eyeq5_plls,
-+
-+	.div_count	= ARRAY_SIZE(eqc_eyeq5_divs),
-+	.divs		= eqc_eyeq5_divs,
-+
-+	.reset_auxdev_name = "reset",
-+	.pinctrl_auxdev_name = "pinctrl",
-+};
-+
-+static const struct eqc_pll eqc_eyeq6l_plls[] = {
-+	{ .index = EQ6LC_PLL_DDR, .name = "pll-ddr", .reg64 = 0x02C },
-+	{ .index = EQ6LC_PLL_CPU, .name = "pll-cpu", .reg64 = 0x034 }, /* also acc */
-+	{ .index = EQ6LC_PLL_PER, .name = "pll-per", .reg64 = 0x03C },
-+	{ .index = EQ6LC_PLL_VDI, .name = "pll-vdi", .reg64 = 0x044 },
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6l_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq6l_plls),
-+	.plls		= eqc_eyeq6l_plls,
-+
-+	.reset_auxdev_name = "reset",
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6h_west_match_data = {
-+	.reset_auxdev_name = "reset_west",
-+};
-+
-+static const struct eqc_pll eqc_eyeq6h_east_plls[] = {
-+	{ .index = 0, .name = "pll-east", .reg64 = 0x074 },
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6h_east_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq6h_east_plls),
-+	.plls		= eqc_eyeq6h_east_plls,
-+
-+	.reset_auxdev_name = "reset_east",
-+};
-+
-+static const struct eqc_pll eqc_eyeq6h_south_plls[] = {
-+	{ .index = EQ6HC_SOUTH_PLL_VDI,  .name = "pll-vdi",  .reg64 = 0x000 },
-+	{ .index = EQ6HC_SOUTH_PLL_PCIE, .name = "pll-pcie", .reg64 = 0x008 },
-+	{ .index = EQ6HC_SOUTH_PLL_PER,  .name = "pll-per",  .reg64 = 0x010 },
-+	{ .index = EQ6HC_SOUTH_PLL_ISP,  .name = "pll-isp",  .reg64 = 0x018 },
-+};
-+
-+static const struct eqc_div eqc_eyeq6h_south_divs[] = {
-+	{
-+		.index = EQ6HC_SOUTH_DIV_EMMC,
-+		.name = "div-emmc",
-+		.parent = EQ6HC_SOUTH_PLL_PER,
-+		.reg = 0x070,
-+		.shift = 4,
-+		.width = 4,
-+	},
-+	{
-+		.index = EQ6HC_SOUTH_DIV_OSPI_REF,
-+		.name = "div-ospi-ref",
-+		.parent = EQ6HC_SOUTH_PLL_PER,
-+		.reg = 0x090,
-+		.shift = 4,
-+		.width = 4,
-+	},
-+	{
-+		.index = EQ6HC_SOUTH_DIV_OSPI_SYS,
-+		.name = "div-ospi-sys",
-+		.parent = EQ6HC_SOUTH_PLL_PER,
-+		.reg = 0x090,
-+		.shift = 8,
-+		.width = 1,
-+	},
-+	{
-+		.index = EQ6HC_SOUTH_DIV_TSU,
-+		.name = "div-tsu",
-+		.parent = EQ6HC_SOUTH_PLL_PCIE,
-+		.reg = 0x098,
-+		.shift = 4,
-+		.width = 8,
-+	},
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6h_south_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq6h_south_plls),
-+	.plls		= eqc_eyeq6h_south_plls,
-+
-+	.div_count	= ARRAY_SIZE(eqc_eyeq6h_south_divs),
-+	.divs		= eqc_eyeq6h_south_divs,
-+};
-+
-+static const struct eqc_pll eqc_eyeq6h_ddr0_plls[] = {
-+	{ .index = 0, .name = "pll-ddr0", .reg64 = 0x074 },
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6h_ddr0_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq6h_ddr0_plls),
-+	.plls		= eqc_eyeq6h_ddr0_plls,
-+};
-+
-+static const struct eqc_pll eqc_eyeq6h_ddr1_plls[] = {
-+	{ .index = 0, .name = "pll-ddr1", .reg64 = 0x074 },
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6h_ddr1_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq6h_ddr1_plls),
-+	.plls		= eqc_eyeq6h_ddr1_plls,
-+};
-+
-+static const struct eqc_pll eqc_eyeq6h_acc_plls[] = {
-+	{ .index = EQ6HC_ACC_PLL_XNN, .name = "pll-xnn", .reg64 = 0x040 },
-+	{ .index = EQ6HC_ACC_PLL_VMP, .name = "pll-vmp", .reg64 = 0x050 },
-+	{ .index = EQ6HC_ACC_PLL_PMA, .name = "pll-pma", .reg64 = 0x05C },
-+	{ .index = EQ6HC_ACC_PLL_MPC, .name = "pll-mpc", .reg64 = 0x068 },
-+	{ .index = EQ6HC_ACC_PLL_NOC, .name = "pll-noc", .reg64 = 0x070 },
-+};
-+
-+static const struct eqc_match_data eqc_eyeq6h_acc_match_data = {
-+	.pll_count	= ARRAY_SIZE(eqc_eyeq6h_acc_plls),
-+	.plls		= eqc_eyeq6h_acc_plls,
-+
-+	.reset_auxdev_name = "reset_acc",
-+};
-+
-+static const struct of_device_id eqc_match_table[] = {
-+	{ .compatible = "mobileye,eyeq5-olb", .data = &eqc_eyeq5_match_data },
-+	{ .compatible = "mobileye,eyeq6l-olb", .data = &eqc_eyeq6l_match_data },
-+	{ .compatible = "mobileye,eyeq6h-west-olb", .data = &eqc_eyeq6h_west_match_data },
-+	{ .compatible = "mobileye,eyeq6h-east-olb", .data = &eqc_eyeq6h_east_match_data },
-+	{ .compatible = "mobileye,eyeq6h-south-olb", .data = &eqc_eyeq6h_south_match_data },
-+	{ .compatible = "mobileye,eyeq6h-ddr0-olb", .data = &eqc_eyeq6h_ddr0_match_data },
-+	{ .compatible = "mobileye,eyeq6h-ddr1-olb", .data = &eqc_eyeq6h_ddr1_match_data },
-+	{ .compatible = "mobileye,eyeq6h-acc-olb", .data = &eqc_eyeq6h_acc_match_data },
++static const struct auxiliary_device_id eq5p_id_table[] = {
++	{ .name = "clk_eyeq.pinctrl" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, eqc_match_table);
++MODULE_DEVICE_TABLE(auxiliary, eq5p_id_table);
 +
-+static struct platform_driver eqc_driver = {
-+	.probe = eqc_probe,
-+	.driver = {
-+		.name = "clk-eyeq",
-+		.of_match_table = eqc_match_table,
-+	},
++static struct auxiliary_driver eq5p_driver = {
++	.probe = eq5p_probe,
++	.id_table = eq5p_id_table,
 +};
-+builtin_platform_driver(eqc_driver);
-+
-+/* Required early for GIC timer (pll-cpu) and UARTs (pll-per). */
-+static const struct eqc_pll eqc_eyeq5_early_plls[] = {
-+	{ .index = EQ5C_PLL_CPU, .name = "pll-cpu",  .reg64 = 0x02C },
-+	{ .index = EQ5C_PLL_PER, .name = "pll-per",  .reg64 = 0x05C },
-+};
-+
-+static const struct eqc_early_match_data eqc_eyeq5_early_match_data = {
-+	.early_pll_count	= ARRAY_SIZE(eqc_eyeq5_early_plls),
-+	.early_plls		= eqc_eyeq5_early_plls,
-+	.nb_late_clks = eqc_eyeq5_match_data.pll_count + eqc_eyeq5_match_data.div_count,
-+};
-+
-+/* Required early for GIC timer. */
-+static const struct eqc_pll eqc_eyeq6h_central_early_plls[] = {
-+	{ .index = 0, .name = "pll-cpu", .reg64 = 0x02C },
-+};
-+
-+static const struct eqc_early_match_data eqc_eyeq6h_central_early_match_data = {
-+	.early_pll_count	= ARRAY_SIZE(eqc_eyeq6h_central_early_plls),
-+	.early_plls		= eqc_eyeq6h_central_early_plls,
-+	.nb_late_clks = 0,
-+};
-+
-+/* Required early for UART. */
-+static const struct eqc_pll eqc_eyeq6h_west_early_plls[] = {
-+	{ .index = 0, .name = "pll-west", .reg64 = 0x074 },
-+};
-+
-+static const struct eqc_early_match_data eqc_eyeq6h_west_early_match_data = {
-+	.early_pll_count	= ARRAY_SIZE(eqc_eyeq6h_west_early_plls),
-+	.early_plls		= eqc_eyeq6h_west_early_plls,
-+	.nb_late_clks = 0,
-+};
-+
-+static const struct of_device_id eqc_early_match_table[] = {
-+	{
-+		.compatible = "mobileye,eyeq5-olb",
-+		.data = &eqc_eyeq5_early_match_data,
-+	},
-+	{
-+		.compatible = "mobileye,eyeq6h-central-olb",
-+		.data = &eqc_eyeq6h_central_early_match_data,
-+	},
-+	{
-+		.compatible = "mobileye,eyeq6h-west-olb",
-+		.data = &eqc_eyeq6h_west_early_match_data,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, eqc_early_match_table);
-+
-+static void __init eqc_init(struct device_node *np)
-+{
-+	const struct eqc_early_match_data *early_data;
-+	unsigned int nb_clks = 0;
-+	struct eqc_priv *priv;
-+	void __iomem *base;
-+	unsigned int i;
-+	int ret;
-+
-+	early_data = of_match_node(eqc_early_match_table, np)->data;
-+
-+	/* No reason to early init this clock provider. Delay until probe. */
-+	if (!early_data || early_data->early_pll_count == 0)
-+		return;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	priv->np = np;
-+	priv->early_data = early_data;
-+
-+	nb_clks = early_data->early_pll_count + early_data->nb_late_clks;
-+	priv->cells = kzalloc(struct_size(priv->cells, hws, nb_clks), GFP_KERNEL);
-+	if (!priv->cells) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	priv->cells->num = nb_clks;
-+
-+	/*
-+	 * Mark all clocks as deferred; some are registered here, the rest at
-+	 * platform device probe.
-+	 */
-+	for (i = 0; i < nb_clks; i++)
-+		priv->cells->hws[i] = ERR_PTR(-EPROBE_DEFER);
-+
-+	/* Offsets (reg64) of early PLLs are relative to OLB block. */
-+	base = of_iomap(np, 0);
-+	if (!base) {
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	for (i = 0; i < early_data->early_pll_count; i++) {
-+		const struct eqc_pll *pll = &early_data->early_plls[i];
-+		unsigned long mult, div, acc;
-+		struct clk_hw *hw;
-+		u32 r0, r1;
-+		u64 val;
-+
-+		val = readq(base + pll->reg64);
-+		r0 = val;
-+		r1 = val >> 32;
-+
-+		ret = eqc_pll_parse_registers(r0, r1, &mult, &div, &acc);
-+		if (ret) {
-+			pr_err("failed parsing state of %s\n", pll->name);
-+			goto err;
-+		}
-+
-+		hw = clk_hw_register_fixed_factor_with_accuracy_fwname(NULL,
-+				np, pll->name, "ref", 0, mult, div, acc);
-+		priv->cells->hws[pll->index] = hw;
-+		if (IS_ERR(hw)) {
-+			pr_err("failed registering %s: %pe\n", pll->name, hw);
-+			ret = PTR_ERR(hw);
-+			goto err;
-+		}
-+	}
-+
-+	/* When providing a single clock, require no cell. */
-+	if (nb_clks == 1)
-+		ret = of_clk_add_hw_provider(np, of_clk_hw_simple_get, priv->cells->hws[0]);
-+	else
-+		ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, priv->cells);
-+	if (ret) {
-+		pr_err("failed registering clk provider: %d\n", ret);
-+		goto err;
-+	}
-+
-+	spin_lock(&eqc_list_slock);
-+	list_add_tail(&priv->list, &eqc_list);
-+	spin_unlock(&eqc_list_slock);
-+
-+	return;
-+
-+err:
-+	/*
-+	 * We are doomed. The system will not be able to boot.
-+	 *
-+	 * Let's still try to be good citizens by freeing resources and print
-+	 * a last error message that might help debugging.
-+	 */
-+
-+	if (priv && priv->cells) {
-+		of_clk_del_provider(np);
-+
-+		for (i = 0; i < early_data->early_pll_count; i++) {
-+			const struct eqc_pll *pll = &early_data->early_plls[i];
-+			struct clk_hw *hw = priv->cells->hws[pll->index];
-+
-+			if (!IS_ERR_OR_NULL(hw))
-+				clk_hw_unregister_fixed_factor(hw);
-+		}
-+
-+		kfree(priv->cells);
-+	}
-+
-+	kfree(priv);
-+
-+	pr_err("failed clk init: %d\n", ret);
-+}
-+
-+CLK_OF_DECLARE_DRIVER(eqc_eyeq5, "mobileye,eyeq5-olb", eqc_init);
-+CLK_OF_DECLARE_DRIVER(eqc_eyeq6h_central, "mobileye,eyeq6h-central-olb", eqc_init);
-+CLK_OF_DECLARE_DRIVER(eqc_eyeq6h_west, "mobileye,eyeq6h-west-olb", eqc_init);
++module_auxiliary_driver(eq5p_driver);
 
 -- 
 2.45.2
