@@ -1,175 +1,91 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3790D17C7BE;
-	Thu, 20 Jun 2024 08:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D535B05E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718871578; cv=none; b=YeuzuarELu31pXG+QbkR942J2O72oqLxHeDiX/62PekkZzclxqdnW688NwSUR9lubJnmQHAU6//V3D1aaItcfijVhyPJgfnEsnGmG3sQnikUiUGXWEzwvv19MtgC/yVRbIQKSyliTgjlrpBf3HVJytIpPLqTL+P4t2kAVzNE3TY=
+	t=1718871622; cv=none; b=ji7WhVDABqMZc79uHOIIn99EdH1tkQJZQBhpvD/J/8grJkfE7aoUs69kE/i85/A/G/zzZW5evVuN2f9eOoduBx4XkjJdgip2VdQyEDDCU90/LdQkiM6RmR6oF1i6WQylnWrbT0AmKuHk1XOgoFO5cNa+0A2nGWCp7M8hQ9dPiIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718871578; c=relaxed/simple;
-	bh=ogti5RvgXrKJYpGa8r9DIIr/6eDafdzHtCOOnJYD6Aw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DHLuOoa9QI7j016FQ8cyxz1jKYQp/OwPLgGBXCwg8xnSfAmUtVbKekumyQ6H/wIxXTDJhBn1G0FbcquD+OxXlxw63jnuT4gM3rVwsumnQF32nhQ2Q0t40Qyc3FkRokWCRkIGgkyXimasniB58cQ/CmJqD/MPUqYj/f4xMKd0puk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=h0VVb5z/; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="h0VVb5z/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718871576; x=1750407576;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ogti5RvgXrKJYpGa8r9DIIr/6eDafdzHtCOOnJYD6Aw=;
-  b=h0VVb5z/OdRBXscf3yveqtV7hZoqdb1u2UEETkBDlm8t+eO2BLKtb/1S
-   Jm+JS9Hd49Y7HC2p5gW5yD9ZYnHRHxI4I9aX5rUHtsnws1bnsKniaq/nD
-   kBs+u6zSg7HxKeUaLUoIO50Se+69nyI9l560q+VBZ7FwTWLSp+2vErElT
-   T/2R0kY7l+8luO/0YbAHp1sPxJi7bXV4TAqFRT7N8bIkCDaoyZ2Sm4Qck
-   tvN9TyQLr80IKE7GjkMVz9tYQTVYccC+j1lBjpBovZgsjCWdShpyfzNuZ
-   5oroW/jvPVvEsSMLP52NMmrHpZ8VStqDKE+AOfuKLASwEX+A2xz/A/OAP
-   Q==;
-X-CSE-ConnectionGUID: TJufhWwaQoyNOaHETkFUAg==
-X-CSE-MsgGUID: VcPZEXqWQmmibClzYtLFKA==
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="asc'?scan'208";a="28908925"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Jun 2024 01:19:31 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 20 Jun 2024 01:18:32 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 20 Jun 2024 01:18:29 -0700
-Date: Thu, 20 Jun 2024 09:18:11 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Conor Dooley <conor@kernel.org>
-CC: Viacheslav <adeep@lexina.in>, Rob Herring <robh@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 3/4] dt-bindings: arm: amlogic:
- amlogic,meson-gx-ao-secure: add secure-monitor property
-Message-ID: <20240620-sprinkled-manor-cce42d587578@wendy>
-References: <20240610084032.3096614-1-adeep@lexina.in>
- <20240610084032.3096614-4-adeep@lexina.in>
- <20240610-dropout-compress-6d6a9b749524@spud>
- <4866f6d4-2e3c-40c7-a8cb-ba4e422ffef6@lexina.in>
- <20240611-undying-earthy-00236ac251aa@spud>
- <20240613164244.GA1999034-robh@kernel.org>
- <c0d18fef-be65-461e-948f-c25e757199a5@lexina.in>
- <20240617-sulfate-posture-1619f1cdf090@spud>
+	s=arc-20240116; t=1718871622; c=relaxed/simple;
+	bh=c/wAhG39HQIP7rKsTimE3KHvTHGY6Ujr1nmu3llTxUw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=seCkuK2GqSQaKA8/nB/8mTMD4vSKo1dMP7MwF3mj8IILR1Bc7DfXa4XyOoS0xOJirhvoErsaqIKfpdyEnR46XexcQYxiScUl2SEot5MYwE7cpsJSLaVccZ+HOZgxbF3NYs+amSb8EJrCSEatugwbhOsQagHy5BtBkSDFzjUAZIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAD3_uYt5nNmhTHMEQ--.23651S2;
+	Thu, 20 Jun 2024 16:19:58 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: richard@nod.at,
+	chengzhihao1@huawei.com,
+	s.hauer@pengutronix.de
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH v2] ubifs: add check for crypto_shash_tfm_digest
+Date: Thu, 20 Jun 2024 16:19:26 +0800
+Message-Id: <20240620081926.1135571-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZQkocubyAqYBA3MR"
-Content-Disposition: inline
-In-Reply-To: <20240617-sulfate-posture-1619f1cdf090@spud>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAD3_uYt5nNmhTHMEQ--.23651S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xry5CryxCF4fGr18tF4ktFb_yoWDJFX_Cr
+	48Ar1fGrW8GF1kAF13Gw48Cw12g3yq9FWkWFW0vFZY9rW5CFykWwn3XrZ5GFWUuryxZFnr
+	CayvkryUGry3XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8ZwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUY_MsUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
---ZQkocubyAqYBA3MR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add check for the return value of crypto_shash_tfm_digest() and return
+the error if it fails in order to catch the error.
 
-On Mon, Jun 17, 2024 at 05:57:53PM +0100, Conor Dooley wrote:
-> On Mon, Jun 17, 2024 at 11:21:30AM +0300, Viacheslav wrote:
-> > Thanks for review.
-> >=20
-> > 13/06/2024 19.42, Rob Herring wrote:
-> > > On Tue, Jun 11, 2024 at 07:07:28PM +0100, Conor Dooley wrote:
-> > > > On Tue, Jun 11, 2024 at 01:25:11PM +0300, Viacheslav wrote:
-> > > > > Hi!
-> > > > >=20
-> > > > > 10/06/2024 19.08, Conor Dooley wrote:
-> > > > > > On Mon, Jun 10, 2024 at 11:39:49AM +0300, Viacheslav Bocharov w=
-rote:
-> > > > > > > Add secure-monitor property to schema for meson-gx-socinfo-sm=
- driver.
-> > > > > >=20
-> > > > > > "bindings are for hardware, not drivers". Why purpose does the =
-"secure
-> > > > > > monitor" serve that the secure firmware needs a reference to it?
-> > > > >=20
-> > > > > This driver is an extension to the meson-gx-socinfo driver: it su=
-pplements
-> > > > > information obtained from the register with information from the
-> > > > > SM_GET_CHIP_ID secure monitor call. Due to the specifics of the m=
-odule
-> > > > > loading order, we cannot do away with meson-gx-socinfo, as it is =
-used for
-> > > > > platform identification in some drivers. Therefore, the extended =
-information
-> > > > > is formatted as a separate driver, which is loaded after the secu=
-re-monitor
-> > > > > driver.
-> > > >=20
-> > > > Please stop talking about drivers, this is a binding which is about
-> > > > hardware. Please provide, in your next version, a commit message th=
-at
-> > > > justifies adding this property without talking about driver probing
-> > > > order etc, and instead focuses on what service the "secure monitor"
-> > > > provides etc.
-> > >=20
-> > > To put it another way, how many secure monitors does 1 system have?
-> >=20
-> > One per system in current device tree.
->=20
-> One per system, or one is currently described per system, but more might
-> be added later?
->=20
-> > > What do you do if the property is not present? You didn't make it
-> > > required which is good because that would be an ABI break.
-> >=20
-> > We need an indication of the ability to use the secure-monitor to obtain
-> > additional information within the soc driver. It seemed to me that usin=
-g an
-> > explicit reference to the secure-monitor is the best choice.
-> >=20
-> > >=20
-> > > You only need a link in DT if there are different possible providers =
-or
-> > > some per consumer information to describe (e.g. an interrupt number or
-> > > clock ID). You don't have the latter and likely there is only 1 possi=
-ble
-> > > provider.
-> >=20
-> > Would replacing the reference to sm with an option, for example,
-> > use-secure-monitor =3D <1>; look more appropriate in this case?
->=20
-> Perhaps a silly question, but (provided there's only one per system, why
-> can't the secure-monitor driver expose a function that you can call to get
-> a reference to the system-monitor? I did something similar before with
-> a call to in mpfs_sys_controller_get() mpfs_rng_probe(). Granted,
-> mpfs-rng is probed from software so it's slightly different to your
-> case, but the principle is the same and it's not unheard of for code in
-> drivers/soc to expose interfaces to other drivers like this. You can
-> just call a function like that, and know whether there's a secure
-> monitor, without having to retrofit a DT property.
+Fixes: 817aa094842d ("ubifs: support offline signed images")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+Changelog:
 
-Another thing, without having a driver expose an API, is calling
-of_find_compatible_node() to find the node. That also doesn't require
-retrofitting properties.
+v1 -> v2:
 
---ZQkocubyAqYBA3MR
-Content-Type: application/pgp-signature; name="signature.asc"
+1. Update fix tag.
+---
+ fs/ubifs/master.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/fs/ubifs/master.c b/fs/ubifs/master.c
+index 7adc37c10b6a..a148760fa49e 100644
+--- a/fs/ubifs/master.c
++++ b/fs/ubifs/master.c
+@@ -67,10 +67,13 @@ static int mst_node_check_hash(const struct ubifs_info *c,
+ {
+ 	u8 calc[UBIFS_MAX_HASH_LEN];
+ 	const void *node = mst;
++	int ret;
+ 
+-	crypto_shash_tfm_digest(c->hash_tfm, node + sizeof(struct ubifs_ch),
++	ret = crypto_shash_tfm_digest(c->hash_tfm, node + sizeof(struct ubifs_ch),
+ 				UBIFS_MST_NODE_SZ - sizeof(struct ubifs_ch),
+ 				calc);
++	if (ret)
++		return ret;
+ 
+ 	if (ubifs_check_hash(c, expected, calc))
+ 		return -EPERM;
+-- 
+2.25.1
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnPlwwAKCRB4tDGHoIJi
-0r0uAP0XyqVo9SKftA8ejE3Fu+0lCIC+uQhySWm9eWN0WAAtvQD+POqtfbe5hEQx
-p0IbGE65UCeaR18GC+u0dYXgSIES5ws=
-=G8k+
------END PGP SIGNATURE-----
-
---ZQkocubyAqYBA3MR--
