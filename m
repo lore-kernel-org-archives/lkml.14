@@ -1,85 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653161A4F3B;
-	Thu, 20 Jun 2024 12:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ACB1AC767
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718887831; cv=none; b=m62t0jZ4RtoAxifKVjnkzZXg2d6R7xN17XOa7XSQIpACjonJV2beHORCg/s8Tb3tN3rvJbcXQpQUknfMnXRoPEeQeGseqAF6e1HEZRKl7mpoHUAYD9WfPBv6jOI7SAimllzO7M2JBFditiCGGQm3+itmoEDF6aTYKCqCJFWjZiE=
+	t=1718887849; cv=none; b=aSgwaqnqobVOtA8fAi3QM1NUejBGx1mEghaENyntO8N55rxzMcco80tD2GAdWdw5izdLdrOQ3bRBAr18WUZr3nGAC1c3gVkl7+Yr/+bHFgeufYmHnOGUHvfXjVMNKpFXW+69VYcqlOi+tSKCCwHYp6hGVjqSPxzso/G/M5ASOHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718887831; c=relaxed/simple;
-	bh=pnzHV/VL+7issGfjvpn7r2EeeIOdQV7ajaj5sS9hrlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERh9yTpRkjxBQu6CBMLjNe8FQ0nJagvRD1Vj9sDgvxQhZZvgWpA8Lnwd8+EUwkDO8qYX7wV0ZCSgQ6zVC82BtM0eX0ngo5mpwdQCNWc/z2z+drH/GAXsX6hDJ8Zh0tZolfNUG866i/iYIfqOtW6+uUAhw3yI05vclwNFikMSzKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnmpJxTW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnmpJxTW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD5BC2BD10;
-	Thu, 20 Jun 2024 12:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718887831;
-	bh=pnzHV/VL+7issGfjvpn7r2EeeIOdQV7ajaj5sS9hrlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WnmpJxTWdOsv+o+wjwPtUtMv4SHQ5BcoaZ2fFBPuPQ7wFg7Iq0rJK2fT0RDDSLq/m
-	 vkeDsy+ZEtUIXSLW2I/wZn/Ht/lchOs2u9hLUazLx8DObROExrwYsS/iAQ0KOmLkFI
-	 g/1FfSIhjOHOaE/suzLOxkx1O5GOAWVrwHZLlVwNdyKWjR7PYC7waLBIyMDgrABDeq
-	 GO71uPOPJyLGBr00wz09uqSQJINS2ipMUB3JE3y55Ps96odNMtOKg1YTlbLNfwAPB+
-	 f/Eb26Uz+NIjZcFMJRWQ/qprYK87b4V5prvZxpnysQzeYubPP4WZ60+LAMdNhzURf2
-	 8e/jCFmBDOo1A==
-Date: Thu, 20 Jun 2024 13:50:26 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	NeilBrown <neilb@suse.de>
-Subject: Re: linux-next: manual merge of the vfs-brauner tree with the
- vfs-brauner-fixes tree
-Message-ID: <80a7d335-690b-491e-9b55-d0d1f75fda29@sirena.org.uk>
-References: <ZnQTtD_d-egGzooR@sirena.org.uk>
+	s=arc-20240116; t=1718887849; c=relaxed/simple;
+	bh=hd23P3AHr//PBfB5UtyTv08Hw4j/j8+cjgNQoagL2G4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HkZUpg044JLk1G+2Via9Bt0z6TzRV/0u3x4HKbW03SGlJWfOMb2ntF8JH5uEncgEOu9iAvNPZUqgU4GipHH3r7FmnaRmpF4rb/FCwi34DlfnYERmZ3gNNzdxqml8FrkrtKfoE++2jaofL/qG49afX/lAIkRo9hmZsR4kUmeXAoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W4gMV0jP8z4wcg;
+	Thu, 20 Jun 2024 22:50:46 +1000 (AEST)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen.n.rao@linux.ibm.com, Gautam Menghani <gautam@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, aboorvad@linux.ibm.com
+In-Reply-To: <20240514132457.292865-1-gautam@linux.ibm.com>
+References: <20240514132457.292865-1-gautam@linux.ibm.com>
+Subject: Re: [PATCH v2] arch/powerpc: Remove unused cede related functions
+Message-Id: <171888775095.806750.18022878075319680310.b4-ty@ellerman.id.au>
+Date: Thu, 20 Jun 2024 22:49:10 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zBzHP251PFU9WPg2"
-Content-Disposition: inline
-In-Reply-To: <ZnQTtD_d-egGzooR@sirena.org.uk>
-X-Cookie: You're already carrying the sphere!
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+On Tue, 14 May 2024 18:54:55 +0530, Gautam Menghani wrote:
+> Remove extended_cede_processor() and its helpers as
+> extended_cede_processor() has no callers since
+> commit 48f6e7f6d948("powerpc/pseries: remove cede offline state for CPUs")
+> 
+> 
 
---zBzHP251PFU9WPg2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to powerpc/next.
 
-On Thu, Jun 20, 2024 at 12:34:17PM +0100, Mark Brown wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the vfs-brauner tree got a conflict in:
->=20
->   fs/open.c
->=20
-> between commit:
+[1/1] arch/powerpc: Remove unused cede related functions
+      https://git.kernel.org/powerpc/c/214f33fcf656bf1be3f9f03d58fda067cdf7eecc
 
-Sorry, the scripting got confused and didn't start the merge properly so
-this should just be noise.
-
---zBzHP251PFU9WPg2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ0JZIACgkQJNaLcl1U
-h9C+Agf/ajb6KzqTKEo8UJWpqUYyr6nTGRsJVZ8lK1f4b4QMF/hmw6xy8VKrK7Qu
-H8XaW/8j8q6EgNXrwtKuxJJH+SlInjJL3YDNLGCvheQ3k/hqTI9dxuV1v/aIGHJE
-smP9OyjzMOQ7cm2bD0ThPZdCpWwbEqhZYcv8ecQPhm2hngr4NqjWnGsmVQ/QkpsH
-pqvqOLCcyzSSyy0DQUIc8IDcSol1zeSOU0k/atz4NermxYx+Sb7636q6GEG0zw3V
-wdR93642keqpGuULXjOWpKUqnaiCNy7k4RIVKF5M8wvGylvT9M0DOvJEp95vpYce
-uiOCSHWZ4PQUqj6g8WZG8PM7iFHBDw==
-=gYEM
------END PGP SIGNATURE-----
-
---zBzHP251PFU9WPg2--
+cheers
