@@ -1,348 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD2D22616;
-	Thu, 20 Jun 2024 16:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DABA22616
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899433; cv=none; b=tQlXFIJ+EOHz0tbSVpxH0UgYjByN7zW9/2zkhonNDt6NAw2d+0x/oKC4BTg2aIq3GVnXYn8zA+VXCDWlyCdwF5eplaGgce7S9aXAmiZWRCb08ZcYmL191pZJ5n9ivj1u0Ejwxth0JzVujMP/gr1q3ASqDmWpApAsqkdQCGSfsmk=
+	t=1718899446; cv=none; b=D1YfOm7fUB8G15F6iQ8KRPOu9/Gbecz+mw1bMJB70Nm0aKSVzEa0FEpovCOQJIqHI/ivGTFW/dARjITo0kUbg8uP2DYy8Vxs+1jLAKoleySsTM1NSND6TPWhpbKRbNMDelF6hx8pDht9Tk/n+d8kSEzLh3WlfjG8G1XVNh3Nxjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899433; c=relaxed/simple;
-	bh=7449aXzYn9bX0ZnucChb+HyWRYsC5+qU2hWIlqqwN5E=;
+	s=arc-20240116; t=1718899446; c=relaxed/simple;
+	bh=sQzq/TKljZMD4pKsJgwfiUeJ9tPpo+3DV47u3VvC5mA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NxHjXsp+CDBTy7anzUa8dkPANqv8VJS/9KNZn/iiJS2B17g5joY/O6vx10R4/6vPU2dR55rQGLM+tZt5C1o4WgbKBz/cF8Md+X7RURQKlan9xWaWyeUnHKbgSO2aZuV+r+hVsruNqu1vR1P6XAhA0S0+Ur8ojVnLnZeZb5VlaGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrfoLKiR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJSokP0BbFX/y9tw4qkXdAKc7vKLpsj5fLlt34cGOsutQPFK/0ZdTf7K3df9udr2PFGGN2JQeU9bHb8yubm21lyVUVzdziUSVZavQHwESpjk0+HrttZraqrYtl8aqYvS+DqUJ9VNsYLkfic7QvKg6ihI4J9LtkxzbA2LE0g/9dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NIaCFUrw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrfoLKiR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 121F4C2BD10;
-	Thu, 20 Jun 2024 16:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718899432;
-	bh=7449aXzYn9bX0ZnucChb+HyWRYsC5+qU2hWIlqqwN5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BrfoLKiRMMIOXw0LZ59ayrDOnm//nmM8xdghnUjxRxZdKWuCmlMxqMuUdjfE9JQw+
-	 YqTInOHFpAVh72PFRuA1bXv9DCGW7gFdZXW4Wqbb+w3G4UO+xHj2ElVnpav/CVv7xs
-	 mZgifmdilcURRP3PjMhrvTcdkpxzzY6Z/KhEEyoOwRHHftxdUI59h5gdVSZ8+3kohC
-	 hq8+SD7SCswHnSwKXWYYM2NK31XAwc4zehdGc90gptGj/W8LEwr2HEIvOU2aUa0gnX
-	 TN8D0id4CPHo+Xw5VZYG4d+YZ2QCrU0lRW95h1yeneKXhmRq0TyVsH9enjb4NQEgsZ
-	 etFQi9jdsqLdg==
-Date: Thu, 20 Jun 2024 17:03:48 +0100
-From: Lee Jones <lee@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 20/20] leds: leds-lp5569: Add support for Texas
- Instruments LP5569
-Message-ID: <20240620160348.GO3029315@google.com>
-References: <20240616215226.2112-1-ansuelsmth@gmail.com>
- <20240616215226.2112-21-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIaCFUrw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718899442;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iDqQrPGd42O44YfWw+IRXhYqcC8xwDaLQyCUqbKdOfM=;
+	b=NIaCFUrwiKTKZwwmOfDWDwRT8pz2quqQizr/z7x5FaFaa5PvBpTOpxl0N7TshrGSBwug37
+	9+3ky3cy4+M0YzuF9qBOAqMUVOrIQYn7l3RthRbZ85UUJhgSUvMusuvBse6HuX4N9I7GOz
+	DOYJAy5Gprxt/qfhUJg4yWGH15LZ3bY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-257-2G-oAVgeMq25OuuHHPCZSA-1; Thu, 20 Jun 2024 12:04:01 -0400
+X-MC-Unique: 2G-oAVgeMq25OuuHHPCZSA-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-44212083709so21836071cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:03:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718899439; x=1719504239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iDqQrPGd42O44YfWw+IRXhYqcC8xwDaLQyCUqbKdOfM=;
+        b=NmQjjd4KZJmHlPVWu/9uz1rW+rPNd7Rp4EQgIDwU8r0W0O4uhyZXt5wWUQlL2uFgUn
+         +stP53qnInrudEL72HJAF/bn5S2BG8CE+tn9dXDUv8IE7YsCV7lfM9fkaxU4WQ4bb04i
+         peNjNXqzYk9dOS9eVsahfsqd6BzHdddteSsmlWjMAEViYVvrht6vNAU/PBJmJ9Xa90UB
+         VKXFWb50Ac0fEoQv3rPmEtj2AhTMMutoAO3u/OUVs7ti2FLvub5ACYq4e1wt7Xz/b1X7
+         P3lvFiM6F2goW1aoZy9ssmREyqDde2wOtXWByg9z3F+F7lTDI7l5w1U4jm7b1n0figs9
+         MVHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVG95hSkqZooy45MLOhAVIUEMvA9IJs2S40R4op9/UvTO63eeJedstajedMxm1SeV8cP5iZ397KuHmwaNmH3vn4Bcd/B0RBaBCHJoxp
+X-Gm-Message-State: AOJu0YwtmUIT1ExL9uzYacsMRGd5x7vLbMblDswp6j4l0MZhel0QrS9f
+	P8dMJSGRt99vBO9BSlRUwkCeQplA9M79Mi+xYsGAOJ3nkD6mBSMO5niiHCR6zs2MS+xECTvWmOI
+	zAirmdEZNW2TRjFs1o6PdqSuCbqLOnUN75r8UwzFqyoWQUkTJMArobaJVRtoK0s/ETPK5ow==
+X-Received: by 2002:ac8:574f:0:b0:440:e39:372a with SMTP id d75a77b69052e-4449b8cc771mr147429531cf.3.1718899439062;
+        Thu, 20 Jun 2024 09:03:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhB1DYbQ7e1+d1lc5JGo+U74y4WtMNDo+mQhkOQObAXNZnPDXfG8If9cx7sbaD1+JFxdxvwQ==
+X-Received: by 2002:ac8:574f:0:b0:440:e39:372a with SMTP id d75a77b69052e-4449b8cc771mr147429061cf.3.1718899438587;
+        Thu, 20 Jun 2024 09:03:58 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::13])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-442198f6160sm66411891cf.45.2024.06.20.09.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:03:58 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:03:55 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sa8775p-ride-r3: add new board file
+Message-ID: <henuash23dwkj5fcmub6sabygwo4kam7fgots2pp2j3eu4asuk@cn3o7a62lo74>
+References: <20240619183255.34107-1-brgl@bgdev.pl>
+ <20240619183255.34107-3-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240616215226.2112-21-ansuelsmth@gmail.com>
+In-Reply-To: <20240619183255.34107-3-brgl@bgdev.pl>
 
-On Sun, 16 Jun 2024, Christian Marangi wrote:
-
-> Add support for Texas Instruments LP5569 LED driver.
+On Wed, Jun 19, 2024 at 08:32:54PM GMT, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Texas Instruments LP5569 is 9 channels chip with programmable engines.
+> Revision 3 of the sa8775p-ride board uses a different PHY for the two
+> ethernet ports and supports 2.5G speed. Create a new file for the board
+> reflecting the changes.
 > 
-> It almost a copy of LP5523 with fundamental changes to regs order and
-> regs content.
-> 
-> Has difference in how the clock is handled and doesn't support detecting
-> clock time automatically, different handling for selftest and different
-> scheme for the status regs.
-> 
-> LED chip supports ENGINE and MUX to group LED and run precompiled code
-> with magic values to run patterns. This is loaded via the sysfs entry
-> and it's passed as a string of ASCII HEX char.
-> 
-> One some devices using this LED Controller (a NBG7815 Router) it was
-> found loading big precompiled pattern with up to 96 bytes of code. To
-> have support for this "extended" scenario, hardcode each engine to
-> support 4 pages of precompiled pattern (128 bytes of code) and 1 page
-> for each MUX. This gives plenty of space for any kind precompiled
-> pattern keeping simple logic for page handling of each engine and mux.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  drivers/leds/Kconfig       |  16 +-
->  drivers/leds/Makefile      |   1 +
->  drivers/leds/leds-lp5569.c | 542 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 556 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/leds/leds-lp5569.c
-Pretty good, just a couple of tiny nits.
-
-[...]
-
-> +static ssize_t lp5569_led_short_test(struct lp55xx_led *led, char *buf)
-> +{
-> +	struct lp55xx_chip *chip = led->chip;
-> +	struct lp55xx_platform_data *pdata = chip->pdata;
-> +	bool leds_fault[LP5569_MAX_LEDS];
-> +	struct lp55xx_led *led_tmp = led;
-> +	int i, ret, pos = 0;
-> +	u8 status;
-> +
-> +	/* Set in STANDBY state */
-> +	ret = lp55xx_write(chip, LP5569_REG_ENABLE, 0);
-> +	if (ret)
-> +		goto exit;
-> +
-> +	/* Wait 1ms for device to enter STANDBY state */
-> +	usleep_range(1000, 2000);
-> +
-> +	/* Set Charge Pump to 1x */
-> +	ret = lp55xx_update_bits(chip, LP5569_REG_MISC,
-> +				 FIELD_PREP(LP5569_CP_MODE_MASK, LP55XX_CP_BYPASS),
-> +				 LP5569_CP_MODE_MASK);
-> +	if (ret)
-> +		goto exit;
-> +
-> +	/* Enable LED and set to 100% brightness and current to 100% (25.5mA) */
-> +	for (i = 0; i < pdata->num_channels; i++) {
-> +		ret = lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led_tmp->chan_nr,
-> +				   LED_FULL);
-> +		if (ret)
-> +			goto exit;
-> +
-> +		ret = lp55xx_write(chip, LP5569_REG_LED_CURRENT_BASE + led_tmp->chan_nr,
-> +				   LED_FULL);
-> +		if (ret)
-> +			goto exit;
-> +
-> +		led_tmp++;
-> +	}
-> +
-> +	/* Put Device in NORMAL state */
-> +	ret = lp55xx_write(chip, LP5569_REG_ENABLE, LP5569_ENABLE);
-> +	if (ret)
-> +		goto exit;
-> +
-> +	/* Wait 500 us for device to enter NORMAL state */
-> +	usleep_range(500, 750);
-> +
-> +	/* Enable LED Shorted Test */
-> +	ret = lp55xx_update_bits(chip, LP5569_REG_MISC2, LP5569_LED_OPEN_TEST,
-> +				 LP5569_LED_SHORT_TEST);
-> +	if (ret)
-> +		goto exit;
-> +
-> +	/* Wait 500 us for device to fill status regs */
-> +	usleep_range(500, 750);
-> +
-> +	/* Parse status led fault 1 regs */
-> +	ret = lp55xx_read(chip, LP5569_REG_LED_FAULT1, &status);
-> +	if (ret < 0)
-> +		goto exit;
-> +
-> +	for (i = 0; i < 8; i++)
-> +		leds_fault[i] = !!LEDn_STATUS_FAULT(i, status);
-> +
-> +	/* Parse status led fault 2 regs */
-> +	ret = lp55xx_read(chip, LP5569_REG_LED_FAULT2, &status);
-> +	if (ret < 0)
-> +		goto exit;
-> +
-> +	for (i = 0; i < 1; i++)
-> +		leds_fault[i + 8] = !!LEDn_STATUS_FAULT(i, status);
-> +
-> +	/* Report LED fault */
-> +	led_tmp = led;
-> +	for (i = 0; i < pdata->num_channels; i++) {
-> +		if (leds_fault[led_tmp->chan_nr])
-> +			pos += sprintf(buf + pos, "LED %d SHORTED FAIL\n",
-> +				       led_tmp->chan_nr);
-> +
-> +		led_tmp++;
-> +	}
-> +
-> +	ret = pos;
-> +
-> +exit:
-> +	/* Disable LED Shorted Test */
-> +	lp55xx_update_bits(chip, LP5569_REG_MISC2, LP5569_LED_SHORT_TEST,
-> +			   0);
-
-Nit: This line break seems unnecessary.
-
-> +
-> +	led_tmp = led;
-> +	for (i = 0; i < pdata->num_channels; i++) {
-> +		lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led_tmp->chan_nr,
-> +			     0);
-
-Nit: This too.
-
-> +
-> +		led_tmp++;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t lp5569_selftest(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       char *buf)
-> +{
-> +	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
-> +	struct lp55xx_chip *chip = led->chip;
-> +	int i, pos = 0;
-> +
-> +	mutex_lock(&chip->lock);
-> +
-> +	/* Test LED Open */
-> +	pos = lp5569_led_open_test(led, buf);
-> +	if (pos < 0)
-> +		goto fail;
-> +
-> +	/* Test LED Shorted */
-> +	pos = lp5569_led_short_test(led, buf);
-> +	if (pos < 0)
-> +		goto fail;
-> +
-> +	for (i = 0; i < chip->pdata->num_channels; i++) {
-> +		/* Restore current */
-> +		lp55xx_write(chip, LP5569_REG_LED_CURRENT_BASE + led->chan_nr,
-> +			     led->led_current);
-> +
-> +		/* Restore brightness */
-> +		lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led->chan_nr,
-> +			     led->brightness);
-> +		led++;
-> +	}
-> +
-> +	if (pos == 0)
-> +		pos = sprintf(buf, "OK\n");
-> +	goto release_lock;
-> +fail:
-> +	pos = sprintf(buf, "FAIL\n");
-> +
-> +release_lock:
-> +	mutex_unlock(&chip->lock);
-> +
-> +	return pos;
-> +}
-> +
-> +LP55XX_DEV_ATTR_ENGINE_MODE(1);
-> +LP55XX_DEV_ATTR_ENGINE_MODE(2);
-> +LP55XX_DEV_ATTR_ENGINE_MODE(3);
-> +LP55XX_DEV_ATTR_ENGINE_LEDS(1);
-> +LP55XX_DEV_ATTR_ENGINE_LEDS(2);
-> +LP55XX_DEV_ATTR_ENGINE_LEDS(3);
-> +LP55XX_DEV_ATTR_ENGINE_LOAD(1);
-> +LP55XX_DEV_ATTR_ENGINE_LOAD(2);
-> +LP55XX_DEV_ATTR_ENGINE_LOAD(3);
-> +static LP55XX_DEV_ATTR_RO(selftest, lp5569_selftest);
-> +LP55XX_DEV_ATTR_MASTER_FADER(1);
-> +LP55XX_DEV_ATTR_MASTER_FADER(2);
-> +LP55XX_DEV_ATTR_MASTER_FADER(3);
-> +static LP55XX_DEV_ATTR_RW(master_fader_leds, lp55xx_show_master_fader_leds,
-> +			  lp55xx_store_master_fader_leds);
-> +
-> +static struct attribute *lp5569_attributes[] = {
-> +	&dev_attr_engine1_mode.attr,
-> +	&dev_attr_engine2_mode.attr,
-> +	&dev_attr_engine3_mode.attr,
-> +	&dev_attr_engine1_load.attr,
-> +	&dev_attr_engine2_load.attr,
-> +	&dev_attr_engine3_load.attr,
-> +	&dev_attr_engine1_leds.attr,
-> +	&dev_attr_engine2_leds.attr,
-> +	&dev_attr_engine3_leds.attr,
-> +	&dev_attr_selftest.attr,
-> +	&dev_attr_master_fader1.attr,
-> +	&dev_attr_master_fader2.attr,
-> +	&dev_attr_master_fader3.attr,
-> +	&dev_attr_master_fader_leds.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group lp5569_group = {
-> +	.attrs = lp5569_attributes,
-> +};
-> +
-> +/* Chip specific configurations */
-> +static struct lp55xx_device_config lp5569_cfg = {
-> +	.reg_op_mode = {
-> +		.addr = LP5569_REG_OP_MODE,
-> +		.shift = LP5569_MODE_ENG_SHIFT,
-> +	},
-> +	.reg_exec = {
-> +		.addr = LP5569_REG_EXEC_CTRL,
-> +		.shift = LP5569_EXEC_ENG_SHIFT,
-> +	},
-> +	.reset = {
-> +		.addr = LP5569_REG_RESET,
-> +		.val  = LP5569_RESET,
-> +	},
-> +	.enable = {
-> +		.addr = LP5569_REG_ENABLE,
-> +		.val  = LP5569_ENABLE,
-> +	},
-> +	.prog_mem_base = {
-> +		.addr = LP5569_REG_PROG_MEM,
-> +	},
-> +	.reg_led_pwm_base = {
-> +		.addr = LP5569_REG_LED_PWM_BASE,
-> +	},
-> +	.reg_led_current_base = {
-> +		.addr = LP5569_REG_LED_CURRENT_BASE,
-> +	},
-> +	.pages_per_engine   = LP5569_PAGES_PER_ENGINE,
-> +	.max_channel  = LP5569_MAX_LEDS,
-> +	.post_init_device   = lp5569_post_init_device,
-> +	.brightness_fn      = lp55xx_led_brightness,
-> +	.multicolor_brightness_fn = lp55xx_multicolor_brightness,
-> +	.set_led_current    = lp55xx_set_led_current,
-> +	.firmware_cb        = lp55xx_firmware_loaded_cb,
-> +	.run_engine         = lp5569_run_engine,
-> +	.dev_attr_group     = &lp5569_group,
-> +};
-> +
-> +static const struct i2c_device_id lp5569_id[] = {
-> +	{ "lp5569",  .driver_data = (kernel_ulong_t)&lp5569_cfg, },
-> +	{ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, lp5569_id);
-> +
-> +static const struct of_device_id of_lp5569_leds_match[] = {
-> +	{ .compatible = "ti,lp5569", .data = &lp5569_cfg, },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_lp5569_leds_match);
-> +
-> +static struct i2c_driver lp5569_driver = {
-> +	.driver = {
-> +		.name	= "lp5569x",
-> +		.of_match_table = of_lp5569_leds_match,
-> +	},
-> +	.probe		= lp55xx_probe,
-> +	.remove		= lp55xx_remove,
-> +	.id_table	= lp5569_id,
-> +};
-> +
-> +module_i2c_driver(lp5569_driver);
-> +
-> +MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
-> +MODULE_DESCRIPTION("LP5569 LED engine");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.43.0
+>  arch/arm64/boot/dts/qcom/Makefile            |  1 +
+>  arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts | 42 ++++++++++++++++++++
+>  2 files changed, 43 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
 > 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0c1cebd16649..916fbdbf5631 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -112,6 +112,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+> new file mode 100644
+> index 000000000000..d7f0a25c1fc4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+> @@ -0,0 +1,42 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2023, Linaro Limited
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sa8775p-ride.dtsi"
+> +
+> +&ethernet0 {
+> +	phy-mode = "ocsgmii";
+> +};
+> +
+> +&ethernet1 {
+> +	phy-mode = "ocsgmii";
+> +};
+> +
+> +&mdio {
+> +	compatible = "snps,dwmac-mdio";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	sgmii_phy0: phy@8 {
+> +		compatible = "ethernet-phy-id31c3.1c33";
+> +		reg = <0x8>;
+> +		device_type = "ethernet-phy";
+> +		interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
+> +		reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
+> +		reset-assert-us = <11000>;
+> +		reset-deassert-us = <70000>;
 
--- 
-Lee Jones [李琼斯]
+I need to read your other series still wrt "ocsgmii", but any chance you
+have access to docs indicating the reset timing? I've never had docs for
+the specific Marvell phy on the prior board or the Aquantia one on the
+new board...
+
+Boot time is something automotive is always concerned over, so I just
+want to make sure that this timing isn't any longer than it needs to be.
+Right now it looks the same as the Marvell phy's in the "v2" boards etc
+and that made me raise my eyebrows.
+
+Thanks,
+Andrew
+
