@@ -1,162 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380CF1B3759
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD81B3F25;
+	Thu, 20 Jun 2024 12:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718888186; cv=none; b=C8ojnv1/bv6js91v0r5DZqKXMCnAfbM8K05gi4D0sKkdH9V0VQynTRQ6J9sS989JMnJULFdsuYqVMCEV78MfZYE71YiRa7wON6OzpOzDNxO/kzGo1GDB39wTa9+8S5oviV9Kn3LB0yneiEOdcLvQRu6efPzTQDte7EEPL3XuoRo=
+	t=1718888189; cv=none; b=qmLZ7iawBspBnpVeku158oHrMbqEugZB+KYj+5BN4fl49gaj73PZAh0i7Ib7KxjE0THfMYX8P7JARKVNGmjez37jC/6YR8m9rartj0xH9CYEafFHGcTpk0cKW/HetkbPJKXoyDJOz33YHMtTZWSIhmKhLm265s/4SydRqkN14AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718888186; c=relaxed/simple;
-	bh=v2RLB6gYzEDX+VCX5LHy5PgJ4jOX5BIh4g4psyqxrzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I+QvlTWCEBkjzlhlDMP2Hhnuag3+53bw3JVSNHE83vzUQLRktEQ0WlkfU/MLP6lz6CScOx4QbN8GyoJ9DmsGEc0Xxt/ig4UN12xrAg3vZHHRTj8Z9vbjD+OH5ASj60YASTUdFDIfoddgFpxHpz5PV5ORusVHOnywSi1ckrpCad8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a3Q9VrdN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718888189; c=relaxed/simple;
+	bh=XxOGHy5sn3zZ32+a9hXAFXf9fhelQMqz0kS5bb7MRmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O5C69c2t3Q7CwO0NsBmd2OmFk5XyYi5THP8bGEUGyG3IcKOLrj9yoqcXB4fZe50GHV3+43qyP1CK2y9xeHtgniswLMT06ZMQxG03av5npaQt/SGeBTS6YmmWSzPm/t/Nyo0pwwAjyluof6bzC8wZhiIM67lCi/N2ePHLdyLwLq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caCx3fKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a3Q9VrdN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718888184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8XDaQsqwAgS9Ix3vAlEwU82EinwRpR6JSa/aEwAYx6g=;
-	b=a3Q9VrdNHtV4VmCkSruRcENGrGTBIAlxXpi84K+vTyYqsShLOpS6ezfwgBo+dVkuQm7l7d
-	bJqUgW5YI5Lnie33i0p7YIReWosSW4ha7TR3k8KDfFBs8iezGqqTCA5IDM7xzhaXIuDcBU
-	EmieB7IvsqPe8oK25bmApaXPrlzAFzk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-68-CMtZq9mkO_aFrXbix3so4Q-1; Thu,
- 20 Jun 2024 08:56:17 -0400
-X-MC-Unique: CMtZq9mkO_aFrXbix3so4Q-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 43ABF1955F21;
-	Thu, 20 Jun 2024 12:56:16 +0000 (UTC)
-Received: from RHTRH0061144.redhat.com (unknown [10.22.9.58])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1DE5B1956087;
-	Thu, 20 Jun 2024 12:56:12 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: netdev@vger.kernel.org
-Cc: dev@openvswitch.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Stefano Brivio <sbrivio@redhat.com>,
-	=?UTF-8?q?Adri=C3=A1n=20Moreno?= <amorenoz@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH v2 net-next 3/7] selftests: openvswitch: Add set() and set_masked() support.
-Date: Thu, 20 Jun 2024 08:55:57 -0400
-Message-ID: <20240620125601.15755-4-aconole@redhat.com>
-In-Reply-To: <20240620125601.15755-1-aconole@redhat.com>
-References: <20240620125601.15755-1-aconole@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caCx3fKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7614C4AF09;
+	Thu, 20 Jun 2024 12:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718888188;
+	bh=XxOGHy5sn3zZ32+a9hXAFXf9fhelQMqz0kS5bb7MRmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=caCx3fKPe+SHuWsEw3WTxV6Zix9eTHDdh4wWCz0UW4viNkZEyW70TJsPwr0I0iej0
+	 9XFFWOS7EF0Pqe3jpHyC6SDX3TrMtZwcLGYnvUFH6S1ROD388/Ugy4RmNcqRUYME7+
+	 HuNBXNRxgBD8rUX55iVT3PsOlJ3wzMjB3VlzynPhfKgwWtq4wd0zhPv/lhS1IonsIk
+	 KO3UD8YCXWYFxOPFZvYryN4vB3ex4NneSWYy0av6S0JfKall1Ioy4cSPIrvHBlBBzl
+	 7cUHBZrOUE560ojkjSDIs9roNhJqvW0TgxFR7dXZ6fRyRY1YLCy+Qm5GsJdhhbwZUv
+	 BHd0qMtYT0owA==
+Date: Thu, 20 Jun 2024 13:56:24 +0100
+From: Simon Horman <horms@kernel.org>
+To: Geetha sowjanya <gakula@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
+	davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
+	sgoutham@marvell.com, sbhatta@marvell.com, hkelam@marvell.com
+Subject: Re: [net-next PATCH v5 06/10] octeontx2-pf: Get VF stats via
+ representor
+Message-ID: <20240620125624.GG959333@kernel.org>
+References: <20240611162213.22213-1-gakula@marvell.com>
+ <20240611162213.22213-7-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611162213.22213-7-gakula@marvell.com>
 
-These will be used in upcoming commits to set specific attributes for
-interacting with tunnels.  Since set() will use the key parsing routine, we
-also make sure to prepend it with an open paren, for the action parsing to
-properly understand it.
+On Tue, Jun 11, 2024 at 09:52:09PM +0530, Geetha sowjanya wrote:
+> This patch add support to export VF port statistics via representor
+> netdev. Defines new mbox "NIX_LF_STATS" to fetch VF hw stats.
+> 
+> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 
 Reviewed-by: Simon Horman <horms@kernel.org>
-Tested-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Aaron Conole <aconole@redhat.com>
----
- .../selftests/net/openvswitch/ovs-dpctl.py    | 37 +++++++++++++++++--
- 1 file changed, 34 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-index 4db20b38b481..4c235ff07aeb 100644
---- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-+++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-@@ -284,7 +284,7 @@ class ovsactions(nla):
-         ("OVS_ACTION_ATTR_UNSPEC", "none"),
-         ("OVS_ACTION_ATTR_OUTPUT", "uint32"),
-         ("OVS_ACTION_ATTR_USERSPACE", "userspace"),
--        ("OVS_ACTION_ATTR_SET", "none"),
-+        ("OVS_ACTION_ATTR_SET", "ovskey"),
-         ("OVS_ACTION_ATTR_PUSH_VLAN", "none"),
-         ("OVS_ACTION_ATTR_POP_VLAN", "flag"),
-         ("OVS_ACTION_ATTR_SAMPLE", "none"),
-@@ -292,7 +292,7 @@ class ovsactions(nla):
-         ("OVS_ACTION_ATTR_HASH", "none"),
-         ("OVS_ACTION_ATTR_PUSH_MPLS", "none"),
-         ("OVS_ACTION_ATTR_POP_MPLS", "flag"),
--        ("OVS_ACTION_ATTR_SET_MASKED", "none"),
-+        ("OVS_ACTION_ATTR_SET_MASKED", "ovskey"),
-         ("OVS_ACTION_ATTR_CT", "ctact"),
-         ("OVS_ACTION_ATTR_TRUNC", "uint32"),
-         ("OVS_ACTION_ATTR_PUSH_ETH", "none"),
-@@ -469,6 +469,18 @@ class ovsactions(nla):
-                     print_str += "clone("
-                     print_str += datum.dpstr(more)
-                     print_str += ")"
-+                elif field[0] == "OVS_ACTION_ATTR_SET" or \
-+                     field[0] == "OVS_ACTION_ATTR_SET_MASKED":
-+                    print_str += "set"
-+                    field = datum
-+                    mask = None
-+                    if field[0] == "OVS_ACTION_ATTR_SET_MASKED":
-+                        print_str += "_masked"
-+                        field = datum[0]
-+                        mask = datum[1]
-+                    print_str += "("
-+                    print_str += field.dpstr(mask, more)
-+                    print_str += ")"
-                 else:
-                     try:
-                         print_str += datum.dpstr(more)
-@@ -547,6 +559,25 @@ class ovsactions(nla):
-                 self["attrs"].append(("OVS_ACTION_ATTR_CLONE", subacts))
-                 actstr = actstr[parsedLen:]
-                 parsed = True
-+            elif parse_starts_block(actstr, "set(", False):
-+                parencount += 1
-+                k = ovskey()
-+                actstr = actstr[len("set("):]
-+                actstr = k.parse(actstr, None)
-+                self["attrs"].append(("OVS_ACTION_ATTR_SET", k))
-+                if not actstr.startswith(")"):
-+                    actstr = ")" + actstr
-+                parsed = True
-+            elif parse_starts_block(actstr, "set_masked(", False):
-+                parencount += 1
-+                k = ovskey()
-+                m = ovskey()
-+                actstr = actstr[len("set_masked("):]
-+                actstr = k.parse(actstr, m)
-+                self["attrs"].append(("OVS_ACTION_ATTR_SET_MASKED", [k, m]))
-+                if not actstr.startswith(")"):
-+                    actstr = ")" + actstr
-+                parsed = True
-             elif parse_starts_block(actstr, "ct(", False):
-                 parencount += 1
-                 actstr = actstr[len("ct(") :]
-@@ -1312,7 +1343,7 @@ class ovskey(nla):
-                 mask["attrs"].append([field[0], m])
-             self["attrs"].append([field[0], k])
- 
--            flowstr = flowstr[strspn(flowstr, "),") :]
-+            flowstr = flowstr[strspn(flowstr, "), ") :]
- 
-         return flowstr
- 
--- 
-2.45.1
 
