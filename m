@@ -1,71 +1,75 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D4011E497;
-	Thu, 20 Jun 2024 14:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15ED1AC42B;
+	Thu, 20 Jun 2024 14:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718894761; cv=none; b=HDsB+jgH3qD0gufEcRrEi+xMhJb5ishgU5t8FrtzdAbxuLj5QVq07abmUPKN/e6eHwS0j3zDxZqZQZbKEor+/0LY7nur2XR6vDxSoQ0iW1VtqrlvZyBpcaMSVAC39FCAldqo9YkHdZUBvqoJuRLDVnJQG/6YyCQmLJUnb0DpZH0=
+	t=1718894762; cv=none; b=g4B9oV6hue1XX+NDiesPEvu5Hu4sxRVGNJ2bkfU8w/cYYFdgfKdXpY2ScP/pHefp7GPEfmgo9OkYvDkbHPEAK652ovm96wAOKcaUIvwzsQAlqH+kFjAh3h6Bj2W4OIH8g0dttZLOes9Om5q9PWqhNtjYJUMCyCEK7BVqmQ28Fq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718894761; c=relaxed/simple;
-	bh=qDGnScQ7WuPpwcBEvsp6QgrvUYW/bjdBDuuaefI7n1o=;
+	s=arc-20240116; t=1718894762; c=relaxed/simple;
+	bh=9SWSdO9QAB7Azh3TzzyctLHLDP8tNGxckstEzvhXeyU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tnqiqqEEEA2zdYSlRoMLpHh/8joVqzYg3idOy1Jgr081+Ct5iLrXPgqh1oRR2uXGrNuHCY9fS9sZtyDvpSYm2N7cH3FWLw8Q3zC0d1hm308QzdjH2IfqpQOOQIYm2AqVUGL0lH0iuVluVO+RfyW31PK22ALd5c8qsZeY8m/SdBk=
+	 Content-Type:Content-Disposition:In-Reply-To; b=mjyqyf3b6tkOo/q+wPd2GjkrfXPxdKiHJhbol8sxGuDtzurIgjEWsdrmMYRVk503nhW3/X9hOadzagKi7NrEtQYEJOVfK8q2EcMRWOOeZHP2C/2I1I0YsOEzvvORaASTOrLgvpl8WZcDhoBMOoRTOdomZ/4tsufWoWLZx/kSXeo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sKJ2m-0000tH-00; Thu, 20 Jun 2024 16:45:44 +0200
+	id 1sKJ2m-0000tL-00; Thu, 20 Jun 2024 16:45:44 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 661D3C0120; Thu, 20 Jun 2024 16:31:15 +0200 (CEST)
-Date: Thu, 20 Jun 2024 16:31:15 +0200
+	id ED40EC031A; Thu, 20 Jun 2024 16:40:42 +0200 (CEST)
+Date: Thu, 20 Jun 2024 16:40:42 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH fixes] MIPS: ip30: ip30-console: Add missing include
-Message-ID: <ZnQ9M4Q/TTZi13Sg@alpha.franken.de>
-References: <20240616-ip30-buildfix-v1-1-0ab2b9aec9f5@flygoat.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	=?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
+	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] mips: bmips: rework and cache CBR addr handling
+Message-ID: <ZnQ/auhuPWb1SGjb@alpha.franken.de>
+References: <20240611113538.9004-1-ansuelsmth@gmail.com>
+ <20240611113538.9004-3-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240616-ip30-buildfix-v1-1-0ab2b9aec9f5@flygoat.com>
+In-Reply-To: <20240611113538.9004-3-ansuelsmth@gmail.com>
 
-On Sun, Jun 16, 2024 at 06:54:24PM +0100, Jiaxun Yang wrote:
-> Include linux/processor.h to fix build error:
+On Tue, Jun 11, 2024 at 01:35:34PM +0200, Christian Marangi wrote:
+> Rework the handling of the CBR address and cache it. This address
+> doesn't change and can be cached instead of reading the register every
+> time.
 > 
-> arch/mips/sgi-ip30/ip30-console.c: In function ‘prom_putchar’:
-> arch/mips/sgi-ip30/ip30-console.c:21:17: error: implicit declaration of function ‘cpu_relax’ [-Werror=implicit-function-declaration]
->    21 |                 cpu_relax();
+> This is in preparation of permitting to tweak the CBR address in DT with
+> broken SoC or bootloader.
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> bmips_cbr_addr is defined in smp-bmips.c to keep compatibility with
+> legacy brcm47xx/brcm63xx and generic BMIPS target.
+> 
+> Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
->  arch/mips/sgi-ip30/ip30-console.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/mips/sgi-ip30/ip30-console.c b/arch/mips/sgi-ip30/ip30-console.c
-> index 7c6dcf6e73f7..a5f10097b985 100644
-> --- a/arch/mips/sgi-ip30/ip30-console.c
-> +++ b/arch/mips/sgi-ip30/ip30-console.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
->  #include <linux/io.h>
-> +#include <linux/processor.h>
->  
->  #include <asm/sn/ioc3.h>
->  #include <asm/setup.h>
-> 
-> ---
-> base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
-> change-id: 20240616-ip30-buildfix-20d62f2d6186
+>  arch/mips/bcm47xx/prom.c      | 3 +++
+>  arch/mips/bcm63xx/prom.c      | 3 +++
+>  arch/mips/bmips/dma.c         | 2 +-
+>  arch/mips/bmips/setup.c       | 4 +++-
+>  arch/mips/include/asm/bmips.h | 1 +
+>  arch/mips/kernel/smp-bmips.c  | 6 ++++--
+>  6 files changed, 15 insertions(+), 4 deletions(-)
 
-applied to mips-next.
+still problems on a bcm47xx build:
+
+mips64-linux-gnu-ld: arch/mips/bcm47xx/prom.o: in function `prom_init':
+/local/tbogendoerfer/korg/linux/arch/mips/bcm47xx/prom.c:(.init.text+0x3c): undefined reference to `bmips_cbr_addr'
+mips64-linux-gnu-ld: /local/tbogendoerfer/korg/linux/arch/mips/bcm47xx/prom.c:(.init.text+0x44): undefined reference to `bmips_cbr_addr'
 
 Thomas.
 
