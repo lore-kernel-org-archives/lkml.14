@@ -1,195 +1,139 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891BB5D8F0
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F951C6AF;
+	Thu, 20 Jun 2024 07:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718870266; cv=none; b=MJKzFnhVaDw3tAmpYcKU6zAhKunM8rtJxKBnkqXpo8Y4Ji+PMGTSMa5G2q7AirSICKv2l/tGMfefCy+oqX+/hrzih+APGLMTr9aM7EWpQhlZGG8GSUsNOdNw8rG0ewEydVmHVjUCdl5GnReJb2tvXLnfK4l+3ABY66QR76P/wmE=
+	t=1718870321; cv=none; b=clNoi5reY62QppAwO+9+kQ5gZultsY75b1+Q8XdaR+s11xlSKguUE7KKl/YSf9f/ku4m6uU+X/O4ih9+e32zscTc79NDTlc80Jm2sqJRohROldNJMMhpc9Vr2q+3DwuSmWT3NtC1sfncICgapw6ewzzCHTEwSKz1Tbl6/S4jBUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718870266; c=relaxed/simple;
-	bh=VsPlIU7z0WQN6dg2eoLZqUdIRcUYZOwLQUQxBDukr0Y=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=oaRkSQTtIAAft8+8P7Db6IRfX+AR3cUVt7KgXVkQEVOPk4bzjqQqv8getX4q9ZP+6hkSKueIS8gAxEqckr1BQJntBEuX9qhcMj1VAtdeIFOQSHIzxjCbUe32kxIMvTLBYDadnAXVjnYyEwurwgN8g2bR1xwLKYDjWphxZ9TvvtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=XZOCJOrU; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1718870321; c=relaxed/simple;
+	bh=ss1+EZEKro2sZjXPDmzIZh1iD2THxjhpN0tqtg7dODk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GXbnPP9EeVgribjhP1wbX+Pv3rl0xrpVelFrWh62SxWwFXqafmJGO5qfh0zfwKYXePhFIR5SzcAKeDWtTrR6Bf6DpTVWj4JsQ+ssKq5O3a293gQozy4tV+uF4WiBZeTRlOIu6GDWFPLoN4ZZus/A497y3mciUwld48F1Kwo9kOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eSI3kgrX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=U0TFmWih; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aiVC72NL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GD3Cmcsr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XZOCJOrU"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240620075736epoutp017c7a32cf734a388bbdf228f5a0aece46~ap2Qgv8390772907729epoutp01O
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:57:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240620075736epoutp017c7a32cf734a388bbdf228f5a0aece46~ap2Qgv8390772907729epoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1718870256;
-	bh=VsPlIU7z0WQN6dg2eoLZqUdIRcUYZOwLQUQxBDukr0Y=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=XZOCJOrUJU4oTwe98SqmcCOZMT2orLjDD2CRD48hcryKbu4UZ7ekbnuyz8pPcGbQJ
-	 vUesmcNgN5QenwKuQIztxKaj3LilOclXiyTXFK4jpNWsTnqGx9hCnEFseE0eKMu+/c
-	 iPmQh9iKI6c8nDmtuGBB+9KNCAhmlFzZw1+GuiyA=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20240620075735epcas2p42abbc68a264c94163020bcc386ccd3e5~ap2QJLKgP1106411064epcas2p4J;
-	Thu, 20 Jun 2024 07:57:35 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.92]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4W4XsC223zz4x9QL; Thu, 20 Jun
-	2024 07:57:35 +0000 (GMT)
-X-AuditID: b6c32a4d-001ff700000262f0-7d-6673e0eff6ad
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	22.C5.25328.FE0E3766; Thu, 20 Jun 2024 16:57:35 +0900 (KST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eSI3kgrX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="U0TFmWih";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aiVC72NL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GD3Cmcsr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E662E2175B;
+	Thu, 20 Jun 2024 07:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718870318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EyrXaIdP3ULci40nIjouHmuwVCbTd4pFecrGu85K7I8=;
+	b=eSI3kgrXJleHkiIdP/2m6XxnZcWfn+zH0RKAHxObCYQqi4LGMg9iKlzaMxWBdclGF1+sku
+	FxyU2GUEdb2WLUTzm1XhV4TO6WwpBB4sxs/KaTaym16EUAAGHoytYgfhaaPZHnTgNIr7br
+	+zXzlWqd9Cce1IU5ZWdkMyQS/zmnxL4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718870318;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EyrXaIdP3ULci40nIjouHmuwVCbTd4pFecrGu85K7I8=;
+	b=U0TFmWihW0QiE6iZQPyFE6bYxQQB1y4OOkh9m0tkg8VNKxBxyoSMB1Sk95kHaSDjV26kyl
+	dCILQw3AF17rhFCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aiVC72NL;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GD3Cmcsr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718870317; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EyrXaIdP3ULci40nIjouHmuwVCbTd4pFecrGu85K7I8=;
+	b=aiVC72NLOzdGINgU/hGK0xP8yZ1gPt2Gan3xdvs9EYVFUj23O+srdI0Tvzvs6RHaX6eTwE
+	PKD/EOMM9qxz1oKFbX8ywJ63oouEQTm3psi+fbglHCC8HNL3TuRCmOh38FBXfaq7B7H94U
+	NHb2QE8bJGNoXaD+i90F8aPm2P9o7PE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718870317;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EyrXaIdP3ULci40nIjouHmuwVCbTd4pFecrGu85K7I8=;
+	b=GD3CmcsrZfgWqdJD7aPewrr5fZ8GgdFjogIdMrQMhqWI3DZMHWkqkkIJXZkuy3YJ3/lgME
+	G9U3YwCQ6WDZd6Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A702B13AC1;
+	Thu, 20 Jun 2024 07:58:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8ontJS3hc2axVwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 20 Jun 2024 07:58:37 +0000
+Date: Thu, 20 Jun 2024 09:59:03 +0200
+Message-ID: <87cyoc2gfs.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Simon Trimmer <simont@opensource.cirrus.com>
+Cc: <tiwai@suse.com>,
+	<linux-sound@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<patches@opensource.cirrus.com>
+Subject: Re: [PATCH] ALSA: hda: cs35l56: Select SERIAL_MULTI_INSTANTIATE
+In-Reply-To: <20240619161602.117452-1-simont@opensource.cirrus.com>
+References: <20240619161602.117452-1-simont@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE:(2) (2) (2) [f2fs-dev] [PATCH] Revert
- "f2fs: use flush command instead of FUA for zoned device"
-Reply-To: daejun7.park@samsung.com
-Sender: Daejun Park <daejun7.park@samsung.com>
-From: Daejun Park <daejun7.park@samsung.com>
-To: Chao Yu <chao@kernel.org>, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-	Wenjie Cheng <cwjhust@gmail.com>
-CC: "qwjhust@gmail.com" <qwjhust@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-f2fs-devel@lists.sourceforge.net"
-	<linux-f2fs-devel@lists.sourceforge.net>, Daejun Park
-	<daejun7.park@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <e0d89f10-19b0-45db-948d-4c140c2dffa7@kernel.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240620075634epcms2p35d3bafffb5f60902b1df25bf3269a686@epcms2p3>
-Date: Thu, 20 Jun 2024 16:56:34 +0900
-X-CMS-MailID: 20240620075634epcms2p35d3bafffb5f60902b1df25bf3269a686
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdljTXPf9g+I0g3sHOS1OTz3LZPHykKZF
-	z6Y1LBarHoRbPFk/i9ni0iJ3i8u75rBZXFt+l9GBw2PnrLvsHptWdbJ57F7wmcmjb8sqRo/P
-	m+QCWKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA
-	DlFSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFJgX6BUn5haX5qXr5aWWWBkaGBiZ
-	AhUmZGdcmJ5b0KVTsfp7J2sD43XNLkZODgkBE4kVv1YwdTFycQgJ7GGUONc0ibmLkYODV0BQ
-	4u8OYZAaYYFcieOfrrOB2EICShLrL85ih4jrSdx6uIYRxGYT0JGYfuI+WFxEIEfiffsRdpCZ
-	zAKvGSXutm9mgVjGKzGj/SmULS2xfflWsGZOATuJJ8sXMUHENSR+LOtlhrBFJW6ufssOY78/
-	Np8RwhaRaL13FqpGUOLBz91QcUmJ23M3QdXnS/y/shzKrpHYdmAelK0vca1jI9gNvAK+Else
-	3wSzWQRUJZ7tPgZV4yJxZskeVhCbWUBbYtnC1+AwYRbQlFi/Sx/ElBBQljhyiwWigk+i4/Bf
-	dpgPGzb+xsreMe8J1IdqEut+rmeawKg8CxHQs5DsmoWwawEj8ypGqdSC4tz01GSjAkPdvNRy
-	ePQm5+duYgSnSi3fHYyv1//VO8TIxMF4iFGCg1lJhPd5V1GaEG9KYmVValF+fFFpTmrxIUZT
-	oE8nMkuJJucDk3VeSbyhiaWBiZmZobmRqYG5kjjvvda5KUIC6YklqdmpqQWpRTB9TBycUg1M
-	5QFvmQ8L7foxzXat9T+LfYU2/PISjkXr5baq/dK5rWrzJ1jzyc7L2gYX1f7dWLUqv7E/zqt9
-	c7vwyjshgZXPJeZY6B06sF7nic70qjdvrtjYJT8NMZGvbbwQ9Usx45K2JQP7+xQ37pM+m0xr
-	d93xVZxuoNDfMud4BWPqtkUWN3y7trHULZz0+hiHcFvGhPvfi/Km/uztW3/SqdjVyVKb9/Lu
-	L1qX102c+PWG5J7yFwzBd3bxJQlyfntYt4vHOTlpWb2uTvOhOvU/OX1xn7zaerW2uPv0NLC0
-	cV1uauqrWHHoh7vvJ3/hCaZOCa9CFuqX7On1nNafa/Nz7ZOyuZynFY7eYxO8WCJxPOf1s2dK
-	LMUZiYZazEXFiQA3y0vvHgQAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240620032223epcas2p4d6b770a8e256d140e5296df8a386418e
-References: <e0d89f10-19b0-45db-948d-4c140c2dffa7@kernel.org>
-	<e2371e59-7be5-40dc-9a2a-aef90ac93b18@kernel.org>
-	<2842767c-db80-407b-a5e5-2b9fa74b0d79@kernel.org>
-	<20240614004841.103114-1-cwjhust@gmail.com>
-	<20240620055648epcms2p11b9914d40f560fb02fa241a7d2599298@epcms2p1>
-	<20240620072218epcms2p11597e482b28804dd5f66b9d42a21b22f@epcms2p1>
-	<CGME20240620032223epcas2p4d6b770a8e256d140e5296df8a386418e@epcms2p3>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: E662E2175B
+X-Spam-Score: -5.50
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-5.50 / 50.00];
+	BAYES_HAM(-2.99)[99.96%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
->On 2024/6/20 15:22, Daejun Park wrote:
->>> On 2024/6/20 13:56, Daejun Park wrote:
->>>> Hi Chao,
->>>>
->>>>> Jaegeuk,
->>>>>
->>>>> Quoted commit message from commit c550e25bca66 (=22f2fs: use flush co=
-mmand
->>>>> instead of FUA for zoned device=22)
->>>>> =22
->>>>> The block layer for zoned disk can reorder the FUA'ed IOs. Let's use =
-flush
->>>>> command to keep the write order.
->>>>> =22
->>>>>
->>>>> It seems mq-deadline use fifo queue and make queue depth of zone devi=
-ce
->>>>> as 1 to IO order, so why FUA'ed write node IOs can be reordered by bl=
-ock
->>>>> layer?
->>>>
->>>> While other writes are aligned by the mq-deadline, write with FUA is n=
-ot passed
->>>> to the scheduler but handled at the block layer.
->>>
->>> Hi Daejun,
->>>
->>> IIUC, do you mean write w/ FUA may be handled directly in below path?
->>>
->>> - blk_mq_submit_bio
->>>=C2=A0=20=C2=A0=20-=20op_is_flush=20&&=20blk_insert_flush=0D=0A>>=0D=0A>=
->=20Hi=20Chao,=0D=0A>>=0D=0A>>=20Yes,=20I=20think=20the=20path=20caused=20a=
-n=20unaligned=20write=20when=20the=20zone=20lock=20was=0D=0A>>=20being=20ap=
-plied=20by=20mq-deadline.=0D=0A>=0D=0A>But,=20blk_insert_flush()=20may=20re=
-turn=20false=20due=20to=20policy=20should=20be=0D=0A>REQ_FSEQ_DATA=20or=20R=
-EQ_FSEQ_DATA=20REQ_FSEQ_POSTFLUSH,=20then=0D=0A>blk_mq_insert_request()=20a=
-fter=20blk_insert_flush()=20will=20be=20called?=0D=0A>=0D=0A=0D=0AI=20was=
-=20just=20discussing=20the=20handling=20of=20FUAs=20in=20commit=20c550e25bc=
-a66,=0D=0Awhich=20is=20not=20an=20issue=20in=20the=20current=20code=20as=20=
-FUAs=20are=20handled=20correctly.=0D=0A=0D=0AThanks,=0D=0A=0D=0A=0D=0A>Than=
-ks,=0D=0A>=0D=0A>>=0D=0A>>>=0D=0A>>>=20Thanks,=0D=0A>>>=0D=0A>>>>=0D=0A>>>>=
-=20Thanks,=0D=0A>>>>=20Daejun=0D=0A>>>>=0D=0A>>>>>=0D=0A>>>>>=20Thanks,=0D=
-=0A>>>>>=0D=0A>>>>>=20On=202024/6/14=208:48,=20Wenjie=20Cheng=20wrote:=0D=
-=0A>>>>>>=20This=20reverts=20commit=20c550e25bca660ed2554cbb48d32b82d0bb98e=
-4b1.=0D=0A>>>>>>=0D=0A>>>>>>=20Commit=20c550e25bca660ed2554cbb48d32b82d0bb9=
-8e4b1=20(=22f2fs:=20use=20flush=0D=0A>>>>>>=20command=20instead=20of=20FUA=
-=20for=20zoned=20device=22)=20used=20additional=20flush=0D=0A>>>>>>=20comma=
-nd=20to=20keep=20write=20order.=0D=0A>>>>>>=0D=0A>>>>>>=20Since=20Commit=20=
-dd291d77cc90eb6a86e9860ba8e6e38eebd57d12=20(=22block:=0D=0A>>>>>>=20Introdu=
-ce=20zone=20write=20plugging=22)=20has=20enabled=20the=20block=20layer=20to=
-=0D=0A>>>>>>=20handle=20this=20order=20issue,=20there=20is=20no=20need=20to=
-=20use=20flush=20command.=0D=0A>>>>>>=0D=0A>>>>>>=20Signed-off-by:=20Wenjie=
-=20Cheng=20<cwjhust=40gmail.com>=0D=0A>>>>>>=20---=0D=0A>>>>>>=C2=A0=20=C2=
-=A0=20=C2=A0=20fs/f2fs/file.c=203=20+--=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=
-=20fs/f2fs/node.c=202=20+-=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=202=20files=
-=20changed,=202=20insertions(+),=203=20deletions(-)=0D=0A>>>>>>=0D=0A>>>>>>=
-=20diff=20--git=20a/fs/f2fs/file.c=20b/fs/f2fs/file.c=0D=0A>>>>>>=20index=
-=20eae2e7908072..f08e6208e183=20100644=0D=0A>>>>>>=20---=20a/fs/f2fs/file.c=
-=0D=0A>>>>>>=20+++=20b/fs/f2fs/file.c=0D=0A>>>>>>=20=40=40=20-372,8=20+372,=
-7=20=40=40=20static=20int=20f2fs_do_sync_file(struct=20file=20*file,=20loff=
-_t=20start,=20loff_t=20end,=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0f2fs_remove_ino_entry(sbi,=20ino,=20APPEND=
-_INO);=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0clear_inode_flag(inode,=20FI_APPEND_WRITE);=0D=0A>>>>>>=C2=A0=
-=20=C2=A0=20=C2=A0=20flush_out:=0D=0A>>>>>>=20-=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0if=20((=21atomic=20&&=20F2FS_OPTION(sbi).fsync_mode=20=21=3D=20FSY=
-NC_MODE_NOBARRIER)=0D=0A>>>>>>=20-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=C2=
-=A0=20=C2=A0=20(atomic=20&&=20=21test_opt(sbi,=20NOBARRIER)=20&&=20f2fs_sb_=
-has_blkzoned(sbi)))=0D=0A>>>>>>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0if=
-=20(=21atomic=20&&=20F2FS_OPTION(sbi).fsync_mode=20=21=3D=20FSYNC_MODE_NOBA=
-RRIER)=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0ret=20=3D=20f2fs_issue_flus=
-h(sbi,=20inode->i_ino);=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(=21ret)=20=7B=0D=0A>>>>>>=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0f2fs_remove_ino_entry(sbi,=20ino,=20UPDATE_INO);=0D=0A>>>=
->>>=20diff=20--git=20a/fs/f2fs/node.c=20b/fs/f2fs/node.c=0D=0A>>>>>>=20inde=
-x=20144f9f966690..c45d341dcf6e=20100644=0D=0A>>>>>>=20---=20a/fs/f2fs/node.=
-c=0D=0A>>>>>>=20+++=20b/fs/f2fs/node.c=0D=0A>>>>>>=20=40=40=20-1631,7=20+16=
-31,7=20=40=40=20static=20int=20__write_node_page(struct=20page=20*page,=20b=
-ool=20atomic,=20bool=20*submitted,=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0goto=20redirty_out;=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=7D=0D=0A>>>>>>=C2=A0=0D=0A>>>>>>=20-=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(atomic=20&&=20=21test_opt(sbi,=20NOBARR=
-IER)=20&&=20=21f2fs_sb_has_blkzoned(sbi))=0D=0A>>>>>>=20+=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0if=20(atomic=20&&=20=21test_opt(sbi,=20NOBARRIER))=0D=0A>=
->>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0fio.op_flags=20=3D=20REQ_PREFLUSH=20REQ=
-_FUA;=0D=0A>>>>>>=C2=A0=0D=0A>>>>>>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0/*=20should=20add=20to=20global=20list=20befo=
-re=20clearing=20PAGECACHE=20status=20*/
+On Wed, 19 Jun 2024 18:16:02 +0200,
+Simon Trimmer wrote:
+> 
+> The ACPI IDs used in the CS35L56 HDA drivers are all handled by the
+> serial multi-instantiate driver which starts multiple Linux device
+> instances from a single ACPI Device() node.
+> 
+> As serial multi-instantiate is not an optional part of the system add it
+> as a dependency in Kconfig so that it is not overlooked.
+> 
+> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+
+Applied now to for-linus branch.  Thanks.
+
+
+Takashi
