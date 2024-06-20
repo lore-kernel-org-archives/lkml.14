@@ -1,43 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBF11B1506;
-	Thu, 20 Jun 2024 16:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B021AF68A;
+	Thu, 20 Jun 2024 16:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899752; cv=none; b=Ct+wXT53Lddkyw0rUhJLZw8/6rEje9QYVd/qDlt+0s/JBUK4mJssrBS/iBTEY+ENs2UXi3LYR0gJIFlyNF9z8WbmSvfndXETJyNjHdTxsHclRvgx5rVamMYUazp9fE6WXJca/lm32nG3OzEzl6ntqHBNO831pDQ2iUAUOJkFhs0=
+	t=1718899790; cv=none; b=L0N3qWiHoNgnqv5l51xpjQJrPwcWDmUrZun7Kzp5xKWb0hQyy8ZoJ723xuvMwxooWktfAkKPSdENsl3+V/MORE6/Mf3Ub1gvjgPXhgR6Qx5x08KLtq9AY/4/QndZqPmfAudXoRxIAMiYqNtOwoflWBMzE0oXD43Zr1trstC3yO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899752; c=relaxed/simple;
-	bh=5gK7M7xOlK8Vyr/4A1H+I5mVD+oFZRrRnglTSBr13ig=;
+	s=arc-20240116; t=1718899790; c=relaxed/simple;
+	bh=XQWFgbT1rILISA7GfD948pyMzLIvF0B1LSVD5WWIYrA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AvHrTjvxlI3E4U4sZvj3RvMUgTswhq6YQYsXihhRNUr2piSXvhBFagguHZNjjs5sg5yyPJK1X42OxNaFdkbWADBFN3ZxqU7KZmZGKaE+Gf3E8TQsAtA/CfVjsk4fgvCr2W/beQ36IXiA89yopW8tYARLw+s+X/jWs/GsZuNH5i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pm0vCbDj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MoVPHZcNzYwHxFbhOTBA9kVK25ncNuO5rwrTP41gtJ/104eX9orIW/6T3HR86XYeTxx/5x8XasGrHgnYNc7W8IX1dANgpmoKmiaYtu3jM5EAxb7dWJ3vHI34qGoPBzT6REZQl+Uzl3R9JLGGVhUIb9mIqmsIcOYj4VmB+02v9CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/vqKjnk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pm0vCbDj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0825C4AF07;
-	Thu, 20 Jun 2024 16:09:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/vqKjnk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5A4C2BD10;
+	Thu, 20 Jun 2024 16:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718899751;
-	bh=5gK7M7xOlK8Vyr/4A1H+I5mVD+oFZRrRnglTSBr13ig=;
+	s=k20201202; t=1718899789;
+	bh=XQWFgbT1rILISA7GfD948pyMzLIvF0B1LSVD5WWIYrA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pm0vCbDje9o5TDJKWO2KTpFJQvEbMvPTjt5b+KsZ84solUGnGf4muQuMXE61Xzym9
-	 J7UwLOD0LJ/w8pSmqEgSyf/ojWS2btgyRNwEFeGVs3nlPwNNK3O/Z5R3Uo8nuACi9/
-	 zqhHlqk0gV3H9o95ptYq0vdCl5W+49U118EZcUDSeKU206iz+6voxcEhk1xqUU/6KE
-	 z21mucLP0wOp4Kq7waEAUagl523MQkOq+wealhYf3NA2echDEY8/StQcKIHGDq5461
-	 QI2nhV1m3k+MNEdEhsoL7L8T+9iU98z1QJyOTKDTxLUzIBjocS15dNn+3brEEP/HWF
-	 qOoUHT+GlwReQ==
-Date: Thu, 20 Jun 2024 17:09:07 +0100
-From: Lee Jones <lee@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/20] leds: leds-lp55xx: overhaul driver
-Message-ID: <20240620160907.GP3029315@google.com>
-References: <20240616215226.2112-1-ansuelsmth@gmail.com>
+	b=b/vqKjnkHu+L1R4UdBumQWvGZcFgNTl2F9cMHXjtfeby5EBZ06pxIECyEeoI7HNlf
+	 IOK34i3IorowljsYyoXsX/yB83rvD9RXoU0LOZ4C4TacZ1YdhNkCzOPP+v2Na6ON8n
+	 RNJ7UDIgveeS1ta1aGV3qlfjC6MKsO3VptQGp0Nt1os6xti5YTw94JpNH4Ml57ESh1
+	 Adi1p0o/PKimgZcHce23WfypOPqnkwnrFX/RNgBJ5oK0AIKTaIHUfWPrYSG1aly0RT
+	 DhriWD6p6OnZn5VmGYVINgUg48uAgRIqk2cibDkEmQxTsySp+zAk3EUYu8e6/BtpN+
+	 N08P0hApcNYtA==
+Date: Thu, 20 Jun 2024 21:39:45 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: lkp@intel.com, Paul Cercueil <paul@crapouillou.net>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Julia Lawall <julia.lawall@inria.fr>, Lee Jones <lee@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
+Message-ID: <ZnRUSaHJhz7XLcKa@matsya>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+ <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,109 +55,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240616215226.2112-1-ansuelsmth@gmail.com>
+In-Reply-To: <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de>
 
-On Sun, 16 Jun 2024, Christian Marangi wrote:
+On 20-06-24, 12:45, Markus Elfring wrote:
+> …
+> > All errors (new ones prefixed by >>):
+> >
+> >>> drivers/iio/industrialio-buffer.c:1715:3: error: cannot jump from this goto statement to its label
+> >     1715 |                 goto err_dmabuf_unmap_attachment;
+> …
+> 
+> Which software design options would you like to try out next
+> so that such a questionable compilation error message will be avoided finally?
 
-> This long series is (as requested) a big overhaul of the lp55xx based
-> LED driver.
-> 
-> As notice for these kind of LED chip there was the bad habit of copy
-> the old driver and just modify it enough to make it work with the new
-> model. Till v4 I was also doing the same by following the pattern and
-> the code format of previous driver.
-> 
-> Since Lee didn't like this, here is the BIG series that generalize
-> pretty much anything in the 4 model currently supported.
-> 
-> Indeed, although the LED chip have fundamental difference (page
-> support), things can be generalized and produce slimmer drivers by
-> putting everything in the lp55xx-common shared module.
-> 
-> This result in the new model lp5569 being very small with only the
-> selftest portion to be custom.
-> 
-> Lee also wasn't clear by the meaning of ENGINE in these LED driver,
-> so here some simple explaination. This is very common on these TI LED
-> chip. The ENGINE (there are always 3) is just some kind of processor
-> that execute a program (precompiled code ASM like) loaded in the SRAM.
-> Sysfs is used to load the pattern, and to start and stop the engine.
-> 
-> These pattern can do all kind of complex thing with LEDs. Old LED chip
-> had 32bytes of space for the pattern but newer one (like lp5569) have
-> pages and if correctly configured can have massive pattern.
-> These pattern can do all kind of magic like loops that make the LED
-> pulse, change color and all kind of stuff.
-> 
-> (For Lee, sorry if you will have to repeat some review that I might
->  have missed in the lp5569 driver)
-> 
-> Changes v6:
-> - Fix compilation warning for ret unused in read_poll_timeout
->   (no idea why this is flagged only on some particular arch...)
-> - Fix missing bitfield.h in lp55x-common.c (again it seems this
->   header gets included in the flow if the arch use them or not...)
-> Changes v5:
-> - Big generalization patch
-> - Rework lp5569 driver with new generalized functions
-> - Drop all copyright header in lp5569 as the driver got reworked
->   entirely and it's not based on previous one anymore.
-> Changes v4:
-> - Fix reported buffer overflow due to a copypaste error
-> - Add comments to describe fw size logic
-> Changes v3:
-> - Add ACK tag to DT patch
-> - Enlarge and support program size up to 128bytes
-> Changes v2:
-> - Add ACK tag to DT patch
-> - Fix compilation error with target that doesn't
->   include bitfield.h
-> 
-> Christian Marangi (20):
->   dt-bindings: leds-lp55xx: limit pwr-sel property to ti,lp8501
->   dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
->   leds: leds-lp55xx: generalize stop_all_engine OP
->   leds: leds-lp55xx: generalize probe/remove functions
->   leds: leds-lp55xx: generalize load_engine function
->   leds: leds-lp55xx: generalize load_engine_and_select_page function
->   leds: leds-lp55xx: generalize run_engine function
->   leds: leds-lp55xx: generalize update_program_memory function
->   leds: leds-lp55xx: generalize firmware_loaded function
->   leds: leds-lp55xx: generalize led_brightness function
->   leds: leds-lp55xx: generalize multicolor_brightness function
->   leds: leds-lp55xx: generalize set_led_current function
->   leds: leds-lp55xx: generalize turn_off_channels function
->   leds: leds-lp55xx: generalize stop_engine function
->   leds: leds-lp55xx: generalize sysfs engine_load and engine_mode
->   leds: leds-lp55xx: generalize sysfs engine_leds
->   leds: leds-lp55xx: generalize sysfs master_fader
->   leds: leds-lp55xx: support ENGINE program up to 128 bytes
->   leds: leds-lp55xx: drop deprecated defines
->   leds: leds-lp5569: Add support for Texas Instruments LP5569
-> 
->  .../devicetree/bindings/leds/leds-lp55xx.yaml |  11 +
->  drivers/leds/Kconfig                          |  16 +-
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/leds-lp5521.c                    | 405 +---------
->  drivers/leds/leds-lp5523.c                    | 728 ++---------------
->  drivers/leds/leds-lp5562.c                    | 261 +------
->  drivers/leds/leds-lp5569.c                    | 542 +++++++++++++
->  drivers/leds/leds-lp55xx-common.c             | 730 +++++++++++++++++-
->  drivers/leds/leds-lp55xx-common.h             | 133 +++-
->  drivers/leds/leds-lp8501.c                    | 313 +-------
->  10 files changed, 1523 insertions(+), 1617 deletions(-)
->  create mode 100644 drivers/leds/leds-lp5569.c
-
-Generally, I love it - what a difference!
-
-Couple of small things within the patches and few general points.
-
-* Ensure scripts/checkpatch.pl is happy before resubmitting.
-* Please place my Suggested-by in all of the consolidation patches.
-* Subject titles should always match that of the subsystem
-  - In our case the first letter of the description should be uppercase
-
-Thanks for doing this, it's great work.
+The one where all emails from Markus go to dev/null
 
 -- 
-Lee Jones [李琼斯]
+~Vinod
