@@ -1,143 +1,161 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2639C1B29C3;
-	Thu, 20 Jun 2024 16:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3351E17545;
+	Thu, 20 Jun 2024 16:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718902431; cv=none; b=E7lyfzaQQai6Yop3fHH+WCiPO8IOf6Zp+yGtZFZqjWOdVP1SuMjT5mfC8kBRfV4vlzYhN3mjQ/I0HNEOYJV8f8EQU+tSXlj123fbU7MYhcLupHXeT1WcOB7MsuxXv4bII9cYCcmBubNL4qG/RiIpshOExx03hF3+bbcIeqIvan8=
+	t=1718902473; cv=none; b=XxDdiatWdYsMxb7U2B81lISRfwKojS7TudkKGdvaA1+OLCaN4tKd3cfDsksbJP099tNoNyv+RYsa193djdZj9VjxIngNBZl6SAxKjWAvoqjcMLNVwS6V6omdmS0JgJXNyiYR9AasT3ifRnwmXWHOxJiIR8kVU/IeI55jh2+iJY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718902431; c=relaxed/simple;
-	bh=xDu6nf8ci4QkjfA1n/XlGyTpBjij84y5HwadxfVXaVs=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mWC+Zl/wBmWnmXx3wHJ8JWt99cVowtrFE+D+cZfdm/C4IcCS1+MbvJuwKWjyg+/VROTlvgYaBbVc0rcX8vxNc3HYu1tQD1IhFVKA5gwIejX9luo/fH1w4ukRI99J0J/Ll7nZSbFz2A3xFbPzv35dkEcAe7eGcvm7eM6SXTGdKA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cO4GBObt; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718902473; c=relaxed/simple;
+	bh=h2t57nJLoz5RZ64WPddtZ0+12QrwCgUUG1Ucxb+b+Mk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YOobzmt1321nZNxGiIoqsxoLAjJ3R/zT6Nv0UfrdsVRwDeSgfYEuCnIOygknsMekeYCgMLqQ/pNmBOXEgHW0gCxEoMBn8F3KiQANatUqnn2XmdGPNDmCI8GDFF5qFIvbM3HGVVsNzq+n19vPdJ0oszQuMrktgcFwL6Drcz+21Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c6+1Sb2Y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cO4GBObt"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-421f4d1c057so10993435e9.3;
-        Thu, 20 Jun 2024 09:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718902428; x=1719507228; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Z2+47l+SiK70HxZhNHp7aI9H3v+48mNDDXc2JjqLFDw=;
-        b=cO4GBObtnQr92sMvhvNErl7Ek60B2qQkb54dVup2z40eg7BXrMkB+lhPC6hB7yOTzt
-         C1sxpSUyvtmkIwjIKVa7h+3McX+AElS1Eq4tNBPrW3N3VQHcKIKPnvaTgHrKfchaLgtK
-         igZ7/qQGr0/gTh9ZAuYAHq6w38oyTqNBhkX1gRGsXErHcAI4Quw5xhz7867t9CSbXCWe
-         Pk3WK65Y27WKMCFCNmuu4XNrV3/FENAehXvl5AK3eYOoLIz4hzK7gjp6r2daGtYtvfIs
-         wGStqhQ8uCIZAQoObMstBmut/XhNPir6Cz99yvXVOMInKan0rgpOkyErxrol4PwwfY7G
-         Jx4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718902428; x=1719507228;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z2+47l+SiK70HxZhNHp7aI9H3v+48mNDDXc2JjqLFDw=;
-        b=jRFZNdlObkmlFnAhJGHHW7PyGu9f21mOGt8QtC3fJjtHN6u8zykPZ/Dnx00uJ1Nizr
-         rlc124hiXtx1R7CoXfTR9vscfq0yxuTCysxFrDtOyrjgK9CRmbhwg6e7CtqT11z0zJlU
-         rrFdrgcGOxKC1Vh+7BovP2u/PfCTMJ6SnIA17jg+h+kNTfFCEz06bjtL0VQ1Ig3LA/uF
-         iQcYuClJ9xxY0kTxTlhH9/B0Q4qjpyxiSHUKhHllfcpLCR01NvqSEfkO+X58PrfGK2Du
-         tKr7jsnF92/McdCUD0yYL3DCXSazY7XiafMgL0N5MxcuBPf/sS6DDnZKt4hSWDdVp/QN
-         X72Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUTbbMGMZvB6FrWyKFuv0uljqhIQzRwZbhYpDlXqj60Mbj0WkSEwInqrCg/oFS9qPwy869BpZgDhYDC+vgwKIUN205x5EVntLzyJpoxzyPG9LnKPAvhA97ntI3KvlEBMEdXdSc3UU3L/m4BhC98UuLesw/2rELjnaK94Jes11IlopNJYL4=
-X-Gm-Message-State: AOJu0YxfjrjDppeI7gnSX9OdlQSWKmMJDXuz6pejw69FG55ZFHJuCoOY
-	kd7QzfAUgaKts2BhybXzdxsMYPTORRLP+2uQ34swV2YAEsLOuU9F
-X-Google-Smtp-Source: AGHT+IEhQc/ylcurdd/6IEDOuPK9KgguMxvGLh2XA4wtboP+mlDcIBQRJO8SspzV77CcTZtx/U/d8Q==
-X-Received: by 2002:a5d:4a90:0:b0:360:74c0:e546 with SMTP id ffacd0b85a97d-363175b806dmr4079573f8f.23.1718902428239;
-        Thu, 20 Jun 2024 09:53:48 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3648e8c4e18sm2556956f8f.76.2024.06.20.09.53.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 09:53:47 -0700 (PDT)
-Message-ID: <66745e9b.df0a0220.41e53.a3af@mx.google.com>
-X-Google-Original-Message-ID: <ZnRRWFrixDYs_Ndk@Ansuel-XPS.>
-Date: Thu, 20 Jun 2024 17:57:12 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/20] leds: leds-lp55xx: overhaul driver
-References: <20240616215226.2112-1-ansuelsmth@gmail.com>
- <171890216265.1289520.18025885103780443097.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c6+1Sb2Y"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K9v9ku002533;
+	Thu, 20 Jun 2024 16:54:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	v+yEuDylbLxT0gUrqRYwbUC3arI+5fFPpiDRHx6W3gg=; b=c6+1Sb2YfEC0h+0Y
+	DbjpdGBSucR5+0DJN5hWuUY1muXN/pIqy1Hj0UQx7ZLmy9ln+esNXics8rz/4BBj
+	P2v8JIXT5xJ5LEZ0ovPAhsFP16Eruln49qQibvRcYENORKHA/nDLyAa18JljhIXR
+	/KUm3SLCq/khsuT4QJ705m/s5a14LVCnDxe6g/QbFb1lxl3gImhHkHZmT/B/+sXC
+	moV7yZ+sv8aD7MHz0CBrAVJ3VLFkBVrx3cbbtk61SzZmQqKzobL6uRYQqd2gI36c
+	2NSURaQpcTyHgG9YUZ+oe1ZpfAATtB7NNc7Z4MOMsbY9tyK1yne31k8e1NgKJyOc
+	FeTgkQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvaqbt061-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 16:54:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KGsITP015234
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 16:54:18 GMT
+Received: from [10.110.82.141] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
+ 2024 09:54:15 -0700
+Message-ID: <51832bc1-19ad-2865-2257-97eeeb8b44ee@quicinc.com>
+Date: Thu, 20 Jun 2024 09:54:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] drm/msm/dpu: protect ctl ops calls with validity checks
+Content-Language: en-US
+To: Rob Clark <robdclark@gmail.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>
+CC: <freedreno@lists.freedesktop.org>, Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <quic_jesszhan@quicinc.com>,
+        <dan.carpenter@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240619212743.3193985-1-quic_abhinavk@quicinc.com>
+ <CAA8EJpowTONWNQH+Sqe1w1eL85Ty4tw8_Qkc1yToQu9s17Tokw@mail.gmail.com>
+ <CAF6AEGsQLqf96g9iaUqB1D6zcay8csvUH7oyirTd04x+bUzvYA@mail.gmail.com>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <CAF6AEGsQLqf96g9iaUqB1D6zcay8csvUH7oyirTd04x+bUzvYA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <171890216265.1289520.18025885103780443097.b4-ty@kernel.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: _zisnYxbYC3c_8ke1MS7UfwmuEPJZfLp
+X-Proofpoint-ORIG-GUID: _zisnYxbYC3c_8ke1MS7UfwmuEPJZfLp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406200122
 
-On Thu, Jun 20, 2024 at 05:49:22PM +0100, Lee Jones wrote:
-> On Sun, 16 Jun 2024 23:51:59 +0200, Christian Marangi wrote:
-> > This long series is (as requested) a big overhaul of the lp55xx based
-> > LED driver.
-> > 
-> > As notice for these kind of LED chip there was the bad habit of copy
-> > the old driver and just modify it enough to make it work with the new
-> > model. Till v4 I was also doing the same by following the pattern and
-> > the code format of previous driver.
-> > 
-> > [...]
-> 
-> Applied, thanks!
 
-Mh? What happen? I'm preparing v7 with the changes requested :(
+
+On 6/20/2024 9:41 AM, Rob Clark wrote:
+> On Thu, Jun 20, 2024 at 6:08 AM Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+>>
+>> On Thu, 20 Jun 2024 at 00:27, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>>>
+>>> dpu_encoder_helper_phys_cleanup() calls the ctl ops without checking if
+>>> the ops are assigned causing discrepancy between its callers where the
+>>> checks are performed and the API itself which does not.
+>>>
+>>> Two approaches can be taken: either drop the checks even in the caller
+>>> OR add the checks even in dpu_encoder_helper_phys_cleanup().
+>>>
+>>> Adopt the latter approach as ctl ops are assigned revision based so may not
+>>> be always assigned.
+>>
+>> NAK, these calls are always assigned. Please make sure that they are
+>> documented as required and drop offending checks.
+> 
+> agreed, I'd rather see the obvious crash if somehow a required
+> callback didn't get set up, than a subtle/silent problem.  It is
+> easier to debug that way.
+> 
+> BR,
+> -R
+
+Thank you both for the review.
+
+Yes, as I wrote in the commit text, there were two ways to go about it.
+And looks like the consensus is to go with the other way (drop the checks).
+
+I will update the v2 that way and I also update the documentation of the 
+ctl op of interest to this patch that it is always expected to be assigned.
 
 > 
-> [01/20] dt-bindings: leds-lp55xx: limit pwr-sel property to ti,lp8501
->         commit: 08a9d2e79140ea1b40c107ea4c025bb8b71aa4b5
-> [02/20] dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
->         commit: 75e28e4b32dda36c4a015cf2f9c4955d9024234a
-> [03/20] leds: leds-lp55xx: generalize stop_all_engine OP
->         commit: e2176c637856cd206bf06b5bbba89b2cf45f7dca
-> [04/20] leds: leds-lp55xx: generalize probe/remove functions
->         (no commit info)
-> [05/20] leds: leds-lp55xx: generalize load_engine function
->         (no commit info)
-> [06/20] leds: leds-lp55xx: generalize load_engine_and_select_page function
->         (no commit info)
-> [07/20] leds: leds-lp55xx: generalize run_engine function
->         (no commit info)
-> [08/20] leds: leds-lp55xx: generalize update_program_memory function
->         (no commit info)
-> [09/20] leds: leds-lp55xx: generalize firmware_loaded function
->         (no commit info)
-> [10/20] leds: leds-lp55xx: generalize led_brightness function
->         (no commit info)
-> [11/20] leds: leds-lp55xx: generalize multicolor_brightness function
->         (no commit info)
-> [12/20] leds: leds-lp55xx: generalize set_led_current function
->         (no commit info)
-> [13/20] leds: leds-lp55xx: generalize turn_off_channels function
->         (no commit info)
-> [14/20] leds: leds-lp55xx: generalize stop_engine function
->         (no commit info)
-> [15/20] leds: leds-lp55xx: generalize sysfs engine_load and engine_mode
->         (no commit info)
-> [16/20] leds: leds-lp55xx: generalize sysfs engine_leds
->         (no commit info)
-> [17/20] leds: leds-lp55xx: generalize sysfs master_fader
->         (no commit info)
-> [18/20] leds: leds-lp55xx: support ENGINE program up to 128 bytes
->         (no commit info)
-> [19/20] leds: leds-lp55xx: drop deprecated defines
->         (no commit info)
-> [20/20] leds: leds-lp5569: Add support for Texas Instruments LP5569
->         (no commit info)
-> 
-> --
-> Lee Jones [李琼斯]
-> 
-
--- 
-	Ansuel
+>>>
+>>> Fixes: d7d0e73f7de3 ("drm/msm/dpu: introduce the dpu_encoder_phys_* for writeback")
+>>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+>>> Closes: https://lore.kernel.org/all/464fbd84-0d1c-43c3-a40b-31656ac06456@moroto.mountain/T/
+>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>> ---
+>>>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 9 ++++++---
+>>>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>> index 708657598cce..7f7e6d4e974b 100644
+>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>> @@ -2180,9 +2180,12 @@ void dpu_encoder_helper_phys_cleanup(struct dpu_encoder_phys *phys_enc)
+>>>          if (ctl->ops.reset_intf_cfg)
+>>>                  ctl->ops.reset_intf_cfg(ctl, &intf_cfg);
+>>>
+>>> -       ctl->ops.trigger_flush(ctl);
+>>> -       ctl->ops.trigger_start(ctl);
+>>> -       ctl->ops.clear_pending_flush(ctl);
+>>> +       if (ctl->ops.trigger_flush)
+>>> +               ctl->ops.trigger_flush(ctl);
+>>> +       if (ctl->ops.trigger_start)
+>>> +               ctl->ops.trigger_start(ctl);
+>>> +       if (ctl->ops.clear_pending_flush)
+>>> +               ctl->ops.clear_pending_flush(ctl);
+>>>   }
+>>>
+>>>   void dpu_encoder_helper_phys_setup_cdm(struct dpu_encoder_phys *phys_enc,
+>>> --
+>>> 2.44.0
+>>>
+>>
+>>
+>> --
+>> With best wishes
+>> Dmitry
