@@ -1,162 +1,99 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214021991DC;
-	Thu, 20 Jun 2024 12:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E101AD499
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718886598; cv=none; b=C55UluH0JIh5eYJqL3+scGdLy8lOL4cjEv9xe0epZ7OCbpgeDPl/rr1KJVD9KyxVkzzo7LHSxKuZ5IZYlEIwTHyj8mXdIDbl+2dtI7ybM+Wvd2hIbjwwWdkt4CfK3EnD9cUYtvDMlq4M1827D2dUzN9n+MtU8I7e4gtFwQlYqmc=
+	t=1718886616; cv=none; b=oDF5DIBPrZPRQJ7r2A5r5xyCXPl8ulVV47jVh22LvjTpRzFwbYj9z+u6drhpJswGUZgtvAFR/JSjWxEzoEttpif3PAwnGXQzJ3HJltbCMuGzSBmFD6Hqm3pBegYCwSPXDHQtiWNNivdO+EXsecRx3VaZXjh4W/iS+S68ojLh/ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718886598; c=relaxed/simple;
-	bh=+Q6wp3tvbGNSDlHVAa4xeJsGtjsBnA9MkZEq3IT5n9Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S/01H1zjRWxifQeSXFfEuBBLgt/GhbA/9RxicCjl0w0uPqIYdb7RncfDmUlV73i6oMllyqaWOgZA38wsuGu5v4/2AsynsATi4Z6COkH1wE0R6cazRJiINXqJRKo6ZXL8a7J8g6TdP9Mr4YT0FfatxUKMHo2UY4bFpvnM8P2mPac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ek6xzTqf; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718886616; c=relaxed/simple;
+	bh=UpeE/DXkO/iG0fuoDqe54X/XOy1qooPFONL7bavexrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekrDCGeQIyAOF+AY7mXNd5PL/f6uwzNXj0M/L7D3MOltoZuvYO/+FpWMhCWyrnpxqr43v8iT78PBmGfTiB7pL6/wpYFajWjizPRw6bhWhGO9rvAp1oOXrspIReccJSzP7RKrn3bJ2flHB4cPM/Yh+MOGq2jfmefqvMK2eRQ5Dy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=aXp0SCno; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ek6xzTqf"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KBPmD6010899;
-	Thu, 20 Jun 2024 12:29:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:subject:from:to:cc:date:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	+Q6wp3tvbGNSDlHVAa4xeJsGtjsBnA9MkZEq3IT5n9Y=; b=Ek6xzTqf60gxulMp
-	nGl7f1Bk5jxKrSPstTCQOplQhgiCyYm6KJDLg6pIXQrJX2tRUY75kMk7FjrppokB
-	kv0F3CwVOwf/Th7kSb41Kmp49kL3D0WhJ8i7wR5QEEzSo7bzrOPLuoC4/6JyTDdb
-	0zv+BYCIOveZD30Cd+Yc+QNJ6geN4XSKp9BV51bkHWb81dHhIDx2LmMGNmr/0DyS
-	i6cYAUcuZQ4r2eibpz9zpMs/ZafMCfoGtXSbwoqRcVAjswyyZzk8hw7n8tZf5LbR
-	vULBsRb0832efMrX4dCClS09JSQWjAOfVupSAvwq6Om61TJ10kVos/UOiNBorUSU
-	cyb7yQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvg2s8pcn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 12:29:50 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45KCTnsm008184;
-	Thu, 20 Jun 2024 12:29:50 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvg2s8pck-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 12:29:49 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45KAfdNP011037;
-	Thu, 20 Jun 2024 12:29:49 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yspsnnre2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 12:29:49 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45KCThpR51249462
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Jun 2024 12:29:45 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 670EA2004D;
-	Thu, 20 Jun 2024 12:29:43 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1E97E20040;
-	Thu, 20 Jun 2024 12:29:43 +0000 (GMT)
-Received: from dilbert5.boeblingen.de.ibm.com (unknown [9.152.212.201])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Jun 2024 12:29:43 +0000 (GMT)
-Message-ID: <af89c1a0cd8ad8e729b7675e7fa3abd6f97201e7.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 2/3] vfio/pci: Tolerate oversized BARs by disallowing
- mmap
-From: Gerd Bayer <gbayer@linux.ibm.com>
-To: Niklas Schnelle <schnelle@linux.ibm.com>,
-        Christoph Hellwig
-	 <hch@infradead.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-        Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jason
- Gunthorpe <jgg@ziepe.ca>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Date: Thu, 20 Jun 2024 14:29:38 +0200
-In-Reply-To: <ecbd75e7c9a96ac38846a17917339d2cae6fe74c.camel@linux.ibm.com>
-References: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
-	 <20240529-vfio_pci_mmap-v3-2-cd217d019218@linux.ibm.com>
-	 <20240618095134.41478bbf.alex.williamson@redhat.com>
-	 <ZnKEuCP7o6KurJvq@infradead.org>
-	 <76a840711f7c073e52149107aa62045c462d7033.camel@linux.ibm.com>
-	 <ZnOrlB6fqYC4S-RJ@infradead.org>
-	 <ecbd75e7c9a96ac38846a17917339d2cae6fe74c.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40app1) 
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="aXp0SCno"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-70df213542bso589391a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 05:30:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718886613; x=1719491413;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:dkim-signature:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oHMzHVKWhLHFRTFoXNvAkGLFcNNzxK81u0mLsBL7Zsw=;
+        b=ZYBFAWZNumaLbvEgeSlWtnd2QzBuNDpvec6TE46rqqI7K+MiOufyVJE8QnDr8keLLS
+         NMPYKiesnh8pRiWtv/P0wSjcE9svzWHxis9EkkTpUKht62wHPqQfRsdHLvlwyP7PmAu9
+         u4Ncx2djo6C1Vu6lJWBjy2CANr1SvNEMa15KQew7cIJhI+glM0NylwmdoICGpkjIZRwJ
+         RMhuYbhBQLY6OjABOQn+Qw+mGslnH9yI7iMK5ZDW/Yuwl3xm/NaAzFyzTkYvy/jnwJCX
+         4Uyq4FTaGjPlqUdxRDEhZHiUFSP7lExLVrIXtdesI0JCk2V40wPGbN7XBV0hwThezi4K
+         KurA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGaT/WFQZjAB/lpfqloE4NIT1r+pTOVGLSJENmK3PvvYfa6QxN6F3Yznj3U0B5T7LrCe36UFGxogFWBQSPulEV7wLqGyGnyCZ3U8eR
+X-Gm-Message-State: AOJu0YyH9cJgtNCMgH4RLiIdK40f10X7oDHUVJkCB4C16TZ+lq8LzJk9
+	Et71tAcKLWlozcOPIjJTzkhrYMy4mT18fLBGVX4NTt0lJOsSf1qe
+X-Google-Smtp-Source: AGHT+IG2sObKQlJRXnm0zIOzZdnUzQkHNGXDXN4ljr7fpHYK1vVZLwAZQXoaLia921hIfW/T+oFYXA==
+X-Received: by 2002:a05:6a20:3ca8:b0:1af:f8bd:1e4e with SMTP id adf61e73a8af0-1bcbb621263mr6188164637.62.1718886612218;
+        Thu, 20 Jun 2024 05:30:12 -0700 (PDT)
+Received: from mail.marliere.net (marliere.net. [24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ce93deafsm12346665ad.74.2024.06.20.05.30.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 05:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marliere.net; s=2024;
+	t=1718886610; bh=UpeE/DXkO/iG0fuoDqe54X/XOy1qooPFONL7bavexrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aXp0SCnogf1kctICBTqw7Z8wi6UuwmLy9v+eiQO0w9gmS8JLoACVhp0mBfR7v4iT5
+	 bmEmeXw/RPFdoNoagxpXuY+dklCEBgsHq++DNTFYlEFnZEgzcTVRlP+J9TlhQ5PJ8s
+	 KevqhZDdguQkINjtGu47lua2VPPVb2/EachWZQa6Dod4vUDuDb83t0nuDSRyzvV/18
+	 ELp/w2Wp6wO+ewKae2r7fSouIbEJDRs1otLKuv937IRlgNR06ElV+eRW+gXkVlF+6M
+	 AR1Z9s1pHpSPZcrp/jaDL8jjYfSj9rxnG2iXb7VLS35Jg3k7bQBwYucnbmS6nMNxiL
+	 AxU2ybJSP1AiQ==
+Date: Thu, 20 Jun 2024 09:30:01 -0300
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Amit Vadhavana <av2082000@gmail.com>
+Cc: srinivas.kandagatla@linaro.org, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org, rbmarliere@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] slimbus: Fix struct and documentation alignment in
+ stream.c
+Message-ID: <f64523f0-db39-4e3a-85a6-1a3cb07e2d08@marliere.net>
+References: <20240616203231.43724-1-av2082000@gmail.com>
+ <d6cd7441-53f2-4c88-a361-729e3abe81c1@marliere.net>
+ <CAPMW_r+sPGF5=+=edLY81X+Cd4bMWKFJw3sDd0mzaZEM9b75BQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: m4aU38zbebI3mNAamlD0p9X44SbPrTgw
-X-Proofpoint-ORIG-GUID: OcVkhUfOJcornAzFBu1IslYqSOp7JJM8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_07,2024-06-20_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- clxscore=1011 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=837 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200089
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPMW_r+sPGF5=+=edLY81X+Cd4bMWKFJw3sDd0mzaZEM9b75BQ@mail.gmail.com>
 
-On Thu, 2024-06-20 at 14:06 +0200, Niklas Schnelle wrote:
-> On Wed, 2024-06-19 at 21:09 -0700, Christoph Hellwig wrote:
-> > On Wed, Jun 19, 2024 at 12:56:47PM +0200, Niklas Schnelle wrote:
-> > > In short, the ISM BAR 0 is stupidly large but this is
-> > > intentional. It not fitting in the VMAP is simply the least crazy
-> > > filter I could come up with to keep the ISM device from causing
-> > > trouble for use of vfio-pci mmap() for other, normal, PCI
-> > > devices.
-> >=20
-> > Then maybe add a PCI quirk to prevent mapping it.=C2=A0 This would also
-> > affect the sysfs resource0 file unless I'm missing something.
-> >=20
->=20
-> The resource<N> files are globally disabled on s390x due to lack of
-> HAVE_PCI_MMAP/ARCH_GENERIC_PCI_MMAP_RESOURCE at the moment. I might
-> change that in the future with a analogous argument as for
-> VFIO_PCI_MMAP but for its not there. Once we add it we of course need
-> the same special ISM treatment there too.
->=20
-> Looking at the existing PCI quirks I don't see anything that would
-> fit so I'm guessing you would want to add a new quirk? As I
-> understand it we would then have to export something like a
-> is_pci_mmap_broken(pdev) function while currently the only quirk
-> function that seems to be exported is pxi_fixup_device(). But then
-> what happens if CONFIG_PCI_QUIRKS=3Dn? Also the header comment in
-> drivers/pci/quirks.c says that platform specific devices shouldn't go
-> in there and ISM is platform specific.
+Hi Amit,
 
-I took a cursory look at that file as well and arrived at a similar
-conclusion that drivers/pci/quirks.c (as is) does not sound like a good
-match for the required functionality
+On 19 Jun 24 23:28, Amit Vadhavana wrote:
+> Hi Ricardo,
+> 
+> I have rebuilt it again, and there are no any warnings or errors.
+
+Thanks for checking, FWIW:
+
+Reviewed-by: Ricardo B. Marliere <ricardo@marliere.net>
+
+BTW, I received this message plus another two empty ones. Please check
+your settings. Also, make sure not to top-post [1].
+
+Best regards,
+-	Ricardo.
 
 
-> Instead of exporting IOREMAP_START/IOREMAP_END maybe there is another
-> reasonable maximum resource length? Or maybe we could create a size_t
-> ioremap_area_size() helper similar to is_ioremap_addr() but not
-> inlined. The latter already uses IOREMAP_START/IOREMAP_END so not
-> sure how that works when IOREMAP_END is not exported?
+[1] https://en.wikipedia.org/wiki/Posting_style#Top-posting
 
-But seeing how the PCI quirks filter against Vendor and Device ID,
-I just had the idea if it would make sense to create a similar
-infrastructure in the form of VFIO PCI quirks - and simply reject mmap
-on ISM devices regardless of the size of iomap'able address spaces?
-Sound rather coarse-grained, though...
 
-> Thanks,
-> Niklas
 
-Just a thought,
-Gerd
+> 
+> Thanks
+> Amit v
