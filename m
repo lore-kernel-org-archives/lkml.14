@@ -1,55 +1,57 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24D6143865
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19E714D70E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718925225; cv=none; b=hradkQKFjkcreYmRYN6ssOUekNOcGkX+TWDui0dGO6b7GhVEPPbpjPmDuZJx9PXWJ3Fk5f+Hdi/MLyaAksHYuvZdCKkbwRPio0DDexk4Itc2PKqxmgfFK4UCpSOaS+Uae8IXzypS5kTgWzNT9SvQ1X7VijhI+L4nuKypmF7jIOw=
+	t=1718925226; cv=none; b=ZXruXEU4fRZyAWBvYwq6OOUI+GWOJaRZpZ5Dm2frYOaW5d+3Fw9CK8JDvYn8wQdcYcHZ9MX4UiLMFNNPgEwJipGbapL/vgH4HsU87mZPgS1ID5+4mLBCeJxg0qAGpn3P/daltyIia5QgUNDjVtIpcK7NUpFHvHkGJGESiMzZ+Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718925225; c=relaxed/simple;
-	bh=7FK5A+P6y84XNMixDpkIf7uj9kSH1cgpl+CxUYDO8Vk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=QEGjuT2GDndy59k60CfLS593mviSAGgCPtK4bLwJiHnEIKAOr/bhRbxcEMHpJx8Q1fLyHPNTlNyaoZ3UAGu/xK6kQLnM3GsG/Tjv1VFqGOiTz0GHnO9UHBgoKF2Cd7xwaZdLE6M7FsUfGqf9vF3lRAam01AmEHPlQIx5KIf1HqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dq2OSXcn; arc=none smtp.client-ip=209.85.210.47
+	s=arc-20240116; t=1718925226; c=relaxed/simple;
+	bh=voI/H6TF7EA0lAJZzYE8tRGijdTZkwmqvJoOJbix1bE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iChBJyCkRQiHMjK0GC9CHuF3pGbSnYaEpOx5z4EmnRJfaUIYpaIrQmj5j/zJyBUmrvKIqLwIlq+t7yvfmzVW6Bw7XXKnCRHlJ/JfM59zTjvpR6cMlepw1s1LxU4wqPWV1ooi2Wau6Yk44QuPOWgkt4NViEPdq7iilIVpi4j3wKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eej2cq7X; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dq2OSXcn"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6f97a4c4588so865179a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:13:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eej2cq7X"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6f99555c922so803987a34.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718925220; x=1719530020; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NpwkSv9KEC+Z0xSBroaOsC+eSM7dr3lxu3/BMAtc54s=;
-        b=dq2OSXcnAbDwSQT+YWK/8VTgpWCzgPwNPi4RJoVl+6cYnxnZ7tNu5OL8SNTqs+S+0+
-         cIVDPm9GDNsALkx2L0yK+C49F4d4XaPUlJ9+Gko25ClWCjhlgCUd8VEcyBJ+58zQShJH
-         qexLCMeXuDo5jIAVoRoXKzgwmHbiR6T/O6VAYhPkD6fq5wKm5deUP+88TSlurt/CMXyv
-         exDTki1ol7kc8dlWo33sjdiPJx5AEzWzkMBDORF1plUoQEk9nxIgE40y7F8nHm1Quajq
-         JU7Lx2bXj4nV+xmvX0FC30zIcAecC0mDA181CKKiYsknKXySiYvoEJcAjvEOrYwyHJfg
-         F92g==
+        d=linaro.org; s=google; t=1718925223; x=1719530023; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3cJgtDYRGnxNR5uxsP8R2aMDXQF4TAj9PgQdzrH0jxc=;
+        b=eej2cq7XYG8Ik10gqgI3xWhQhqA+rpPstrL7bzo6/HlI3M6ePNkIIVdaL7nVDNNXUp
+         rrNyIi8ZZWoeLfND/aZCGwpHOEpbbTue1UWoi/XzJQRU1goJeZUY2F1zYBBusU1Me60Y
+         QXeUuQEpOmAXL/YLZoQdGG6cjIjDebCZNlclwHwH/XJxiflHLr/RBtiQljCxaMZ+9jaK
+         b3od2k5vTGHkZBNPT4bfxDE6S2vh4dBup19pB5eLiskkeGo1PZhjLpMjJPDM2fmvhE7I
+         OPlea33X6cEBgBhnyfP9geedEsYq29ajC/8CKu6+DLDkbB7Zn4Tq8aC/P8FGANuan7Bz
+         Qf0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718925220; x=1719530020;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NpwkSv9KEC+Z0xSBroaOsC+eSM7dr3lxu3/BMAtc54s=;
-        b=X35kNgkKZRQlyBaWYKToxj6Kn2Cogn4KTcj1/oavV2QJMWlOm5ESOoc27TYpdquVd7
-         9+w7dCyIERz21kAmsJuP+BdNGeD6bszjEGctoR/UMf6YwFLXJRskLtcsdyh/wmKpThfA
-         24r8JzokSdfrQwu9ePugx7/yI04dArNQ+uYfzZQNbe1TNmWAz58F6t0g5lrWNiJ5sULl
-         bFhacdhOXQJB+9O9v9qYug2WZsPYOyy9+HdkOzXLqmiS5Y+UYF8yBE79YBn2D42kotn+
-         9/hZqK7C1vj7mc/Y21uhWF/D92Onz/+65rciMGVdpxXYwG7oNHCeubDQ7dLBfbG/yJgX
-         hxxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWrCVb0Iue5GM1SpKGmmWIt10Oae9wHPXlD1Bk+a/VpaAqWrzS5Don1LxeNH0EhCjLhFlyeOXMKsEF3rUV/kJbnWLoKRRLkAvckO8D
-X-Gm-Message-State: AOJu0Yy1Q72QNCIBa8YIc64DKmajBwCwzX5l/K18+UF4of92qu0w/+kX
-	ZdEY5Vvkz2p9ptdKaa3xyis+pdO03XhTQ4pPy/2qH2y1pHgKiAXEakMoIe6FyaM=
-X-Google-Smtp-Source: AGHT+IEzPzN/aMnfj5b73omu5ib7OPwkka1Y2/64FBGQsxHICvhZtCMGfoJmvMptfycgLlXfEvq8pw==
-X-Received: by 2002:a9d:6510:0:b0:6fd:6240:9dba with SMTP id 46e09a7af769-70074ebf134mr6416843a34.16.1718925219979;
-        Thu, 20 Jun 2024 16:13:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718925223; x=1719530023;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3cJgtDYRGnxNR5uxsP8R2aMDXQF4TAj9PgQdzrH0jxc=;
+        b=KesmIff28WRK+gohVvI1bRh1ufb/bCD+5e/AtxF78swR3HSAbVB0cuBrEtWQmQVd5U
+         42AxI00w9one8kmrYc9Cimkr1UvwOqeb9seSP/pHmxYRL+q35cjGfnJv96Dz7Ea8PivR
+         e3T+momd6gJKbHcFNte9Rl4z7I2JfaDCxurkpj8U3MV4dwsEEQZLAJ1vhqgXFq3c/A1e
+         kelZ7IrzmDv2QW7/YiBnCUSYLio94mzsDOtX6UoXEWsarprUEtn/XD8Jk7wZvEnfXlCm
+         nZiC6lg90OjEljSGhFQDb0udBuUMDcTHECLLFChiSDYF+1w3bMiLqdbKFGPpQdlZA6nV
+         Eh7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvZ3aB7sfezHLd8fLF8+9dcNdN5WNl9yhCaMfD9CbD1HFHONJx6ykWXzhJMXrsRx/Ql0O4+qWeWeNkH2onvHE+RFZOqp84GzEG/wSX
+X-Gm-Message-State: AOJu0YxeOIey0DM/W+pZex8x9YsfgKnc2tCkVIS6ZtqzLUJDet1gc/te
+	cTf5xbey+6XZqVOZmcNoJ3mYQHNmh10nGipSrn1oh9DDWYz9OTUl+y/v0n2S43w=
+X-Google-Smtp-Source: AGHT+IFo/CfULEDzNMn3svBf7fPxTFvjTmzdPpeV1CFsheF7Pw04fqkYLYCT/ue0ZcXoBsHBHlK0pA==
+X-Received: by 2002:a9d:7409:0:b0:6f9:a523:403f with SMTP id 46e09a7af769-70073f20008mr7815451a34.22.1718925223095;
+        Thu, 20 Jun 2024 16:13:43 -0700 (PDT)
 Received: from localhost ([136.62.192.75])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7009c5df34fsm89509a34.3.2024.06.20.16.13.39
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7009c60a4b1sm90529a34.47.2024.06.20.16.13.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 16:13:39 -0700 (PDT)
+        Thu, 20 Jun 2024 16:13:42 -0700 (PDT)
 From: Sam Protsenko <semen.protsenko@linaro.org>
 To: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -64,90 +66,68 @@ Cc: Anand Moon <linux.amoon@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/6] hwrng: exynos: Add support for Exynos850
-Date: Thu, 20 Jun 2024 18:13:33 -0500
-Message-Id: <20240620231339.1574-1-semen.protsenko@linaro.org>
+Subject: [PATCH v3 4/6] hwrng: exynos: Implement bus clock control
+Date: Thu, 20 Jun 2024 18:13:37 -0500
+Message-Id: <20240620231339.1574-5-semen.protsenko@linaro.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240620231339.1574-1-semen.protsenko@linaro.org>
+References: <20240620231339.1574-1-semen.protsenko@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Exynos850 has True Random Number Generator (TRNG) block which is very
-similar to Exynos5250 for which the driver already exists
-(exynos-trng.c). There are two differences though:
-  1. Additional SSS PCLK clock has to be enabled to make TRNG registers
-     accessible.
-  2. All SSS registers (including TRNG area) are protected with
-     TrustZone and can only be accessed from EL3 monitor. So the
-     corresponding SMC calls have to be used instead to interact with
-     TRNG block.
+Some SoCs like Exynos850 might require the SSS bus clock (PCLK) to be
+enabled in order to access TRNG registers. Add and handle the optional
+PCLK clock accordingly to make it possible.
 
-This patch series enables TRNG support on Exynos850 SoC. It was tested
-on the E850-96 board running Debian rootfs like this:
-
-    8<-------------------------------------------------------------->8
-    # cat /sys/devices/virtual/misc/hw_random/rng_current
-    12081400.rng
-
-    # dd if=/dev/hwrng bs=100000 count=1 > /dev/null
-    ...
-    122KB/s
-
-    # apt install rng-tools5
-    # rngtest -c 1000 < /dev/hwrng
-    ...
-    rngtest: starting FIPS tests...
-    rngtest: bits received from input: 20000032
-    rngtest: FIPS 140-2 successes: 1000
-    rngtest: FIPS 140-2 failures: 0
-    rngtest: FIPS 140-2(2001-10-10) Monobit: 0
-    rngtest: FIPS 140-2(2001-10-10) Poker: 0
-    rngtest: FIPS 140-2(2001-10-10) Runs: 0
-    rngtest: FIPS 140-2(2001-10-10) Long run: 0
-    rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
-    rngtest: input channel speed: (min=941.855; avg=965.515;
-             max=968.236)Kibits/s
-    rngtest: FIPS tests speed: (min=49.542; avg=52.886;
-             max=53.577)Mibits/s
-    rngtest: Program run time: 20590194 microseconds
-    8<-------------------------------------------------------------->8
-
-SMC commands added in this series require LDFW (Loadable Firmware) to be
-loaded by the bootloader. In case of E850-96 board, at the moment only
-the LittleKernel based bootloader [1] is able to load LDFW. It is
-expected to be added into U-Boot port soon as well. See [2] for more
-details.
-
-[1] https://gitlab.com/Linaro/96boards/e850-96/lk
-[2] https://docs.u-boot.org/en/latest/board/samsung/e850-96.html
-
+Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+---
 Changes in v3:
-  - Rebased on top of the most recent linux-next
-  - Removed dts patch (7/7) from the series, as suggested by Krzysztof
-  - Addressed all review comments for v2 series
+  - Added missing '\n' in dev_err_probe()
+  - Added R-b tag from Krzysztof
+  - Added R-b tag from Anand
 
 Changes in v2:
-  - Removed the patch for renaming the dt-bindings doc file
-  - Added the patch for using devm_clk_get_enabled() to get the clock
-  - Addressed all review comments for v1 series
+  - Used devm_clk_get_optional_enabled() to avoid calling
+    clk_prepare_enable() for PCLK
 
-Sam Protsenko (6):
-  dt-bindings: rng: Add Exynos850 support to exynos-trng
-  hwrng: exynos: Improve coding style
-  hwrng: exynos: Use devm_clk_get_enabled() to get the clock
-  hwrng: exynos: Implement bus clock control
-  hwrng: exynos: Add SMC based TRNG operation
-  hwrng: exynos: Enable Exynos850 support
+ drivers/char/hw_random/exynos-trng.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
- .../bindings/rng/samsung,exynos5250-trng.yaml |  40 +++-
- drivers/char/hw_random/exynos-trng.c          | 225 +++++++++++++-----
- 2 files changed, 206 insertions(+), 59 deletions(-)
-
+diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
+index 997bd22f4498..6ef2ee6c9804 100644
+--- a/drivers/char/hw_random/exynos-trng.c
++++ b/drivers/char/hw_random/exynos-trng.c
+@@ -47,7 +47,8 @@
+ struct exynos_trng_dev {
+ 	struct device	*dev;
+ 	void __iomem	*mem;
+-	struct clk	*clk;
++	struct clk	*clk;	/* operating clock */
++	struct clk	*pclk;	/* bus clock */
+ 	struct hwrng	rng;
+ };
+ 
+@@ -141,6 +142,13 @@ static int exynos_trng_probe(struct platform_device *pdev)
+ 		goto err_clock;
+ 	}
+ 
++	trng->pclk = devm_clk_get_optional_enabled(&pdev->dev, "pclk");
++	if (IS_ERR(trng->pclk)) {
++		ret = dev_err_probe(&pdev->dev, PTR_ERR(trng->pclk),
++				    "Could not get pclk\n");
++		goto err_clock;
++	}
++
+ 	ret = devm_hwrng_register(&pdev->dev, &trng->rng);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not register hwrng device.\n");
 -- 
 2.39.2
 
