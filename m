@@ -1,112 +1,130 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE9679B99;
-	Thu, 20 Jun 2024 20:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BA44D8BB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 21:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718917088; cv=none; b=kYI/Silr9UIon5hY7ZNO38N/8dAbKCkUxTg2pKmByjVO3hdO6N2TGdP6SH7oPgYhZSaCGNoZkEqz4fZWJlVrV0j1didLibQDHHGOX065ZCa86dRqdQHf2Be38XYx16CwKCezJB3EZGkkxMD6Mc0+MQ4vIdSzuX3wQKlQOpI/TWc=
+	t=1718917260; cv=none; b=G2lmvi3ObHw97jW9wwp6wykqZAZDcOeLOr8zYCm60vM6Ne16ei/X5TUR7Z5ztNqSeiyA1GrhhzveU9zvguDu7cEnW5w+CltvwHPzxqbLpMJU+SIQvZODYpR/wLdQdx5j3utYrOTOBKQ6c78NpKsGCs+WYpNeoNuB9D/Wfry9hbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718917088; c=relaxed/simple;
-	bh=+TqwMif2XTyhArljm9AZMoQGdPFQ3ZcSVFgU5KYqXm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qxSNyPyo7GsushqgS8KSS53fNH7fBeF7TW19DsJeqPIGKe/9kHZU+s4ZGFY8AHBaQXkVwr5KOaJy8DbJ+nblHbr2yU4BdJCIRdwffLrUjyHet/jXhdHZR4Jxy6ojsas+FPIJoU/qGV3BiJm4tad1f0+BWfj3jIwYyyMaj7hMxtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QJwHIQeJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718917260; c=relaxed/simple;
+	bh=egAWnAyxKEcGYqBb8KysmqEYwI5NpvcOXUNw1MnaEzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HFPY08wt17AQ3ZVa1rjWQevZxNicDZHoI7X7MOpLZqwsFDCqmV6rcRUrWu3H8zntUQw0fRloRDX0RyB1RL2cWZFLp+g2DbJqyHwp85idRfH5aUeLSqOmwzVfPeJxSDv4YJyxpoGvn8w2957uDAm/HTU0n7JNqPyezneJHZ4WqnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQi73C1+; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QJwHIQeJ"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KHBC6t025991;
-	Thu, 20 Jun 2024 20:57:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7uinE8mNlfyxFn5pejTGcwgKDlHhRITAVURCqIbmn88=; b=QJwHIQeJFbT3+Wjk
-	6/2pfeu/+pj9MBIw+GwJjulsrNDstASGn6n1G5JRsirMzNOFh0ZvNhoNGqtirUR9
-	xC3J1bl8qAJNC2mfdbm4mI8STW6DyzjW6IWGICIIO+h06/Ntfh/CHgeWzI/Yumc9
-	p62KEVBLB6OFs4JBPvRA6jwOwg6vU9YAhT76ySu4AwrZN1dTMxfqYk9WMqAmLlwj
-	sLfkWoBbOOPo3yIyXx4Gtt6HSB67jZ8EOOqYwb6MtXNLs5wf+zRcSEbh7smWHfTK
-	ETyzZqPOXgJzUOKWiLfPOXW5cdqYFC6LtZPXW2wpk+jl0EIGAHUu6osWoV2jlZqH
-	awYKuQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvrkr0jy2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 20:57:49 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KKvmXf032579
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 20:57:48 GMT
-Received: from [10.110.82.141] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
- 2024 13:57:41 -0700
-Message-ID: <5aa23f31-a4c1-6da4-9a0f-a312ec410eee@quicinc.com>
-Date: Thu, 20 Jun 2024 13:57:39 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQi73C1+"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-422f7c7af49so3255e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718917257; x=1719522057; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pF98VwdCcJqbDJTb4AUwn3sHBg8bzfdX8R18O7bVHHE=;
+        b=JQi73C1+reQlPOwWaixSzkrk4LSBLs9N6IqGzn077XxmQY22ygUtTY8vnnjqDeM+Ni
+         pEaMNrTxwcfDAnRsvyMCEx55EvCQekWpNswmO7bx27Lw4UbN5C/NaD7jC6DhZIKyju+m
+         Cr2d56QqBZSjutlhbnEAUgE9O1blDJ12mK42MJCm3Z80kqyqS400Dc8UzuM+/S5KpGVc
+         VKQFd0/XOA5l1Yy9Nww5Jc6FAq+vogfXiE+4D62J3xi38sy8VUy0M2s/z88p4DbVDOgd
+         SJzDmcabOi0nq4WB9+8OB+5vk8z1a6ZPsdsbfDkvt4PvKth8sr3r2RRUGtLVCn+/B4gc
+         9NdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718917257; x=1719522057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pF98VwdCcJqbDJTb4AUwn3sHBg8bzfdX8R18O7bVHHE=;
+        b=SvOLEmvyp0qfSnkSYDCEps6nqIIlyrGmzNoubVLEbZ+a/VnopVSP2g3qclbZSu2INW
+         LIv5OTtKnirxdPRq0TQB+pi56zLB0svGnzeien8MmhMpb5C2lmS/fJSy9sdfz0cQtgkk
+         ibzp5JjGTW8SGmTkgvDyOb0AH1oXfO4fHWQi+5xIgXJvcVlkqefbc6TLrZh3wPOy2sh/
+         47kekxq8HehyAfvkcKRKiUNP8jfFfbFzuoD+1Yhb9IbxJNKfLdLp/ENmKMMhDL6Br52M
+         KdKJF9qZYkW1nfOfyqGKzMXe8MaN7cbkH2I82uUD/S0eN9BgLmhvuzdkPhCOZyJZG1nv
+         qdqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUi5ScxSuJ7nYakoVybwYg6aV9ckE/wx4gBPaEnN/433/83pMckA2oBjzWFUX9St+n0hl/LG645kr+txnGIH/JAk38jB5oqayCxAZ3+
+X-Gm-Message-State: AOJu0YzhK1xeEQB3LknzuEObwbCbnU7Y4oyvolXXKg0derJFsN5v9BHH
+	xMdv57DFn7+S8cwdnuC1jIj9n17a2Jg4e9xQFZs9bOaJF+E6/petr+K5gLn87wp+pgELRWInbbM
+	OUOYklfOIfO2i9RQEVRgpVwLsywZBBccf7ir8
+X-Google-Smtp-Source: AGHT+IGEalrN8Y1clv35ZyNYg5HFsBwJ9BjVUYPVovMUPxvCwRYlIRA5gvDMxrAFpvWJZ0QCYZ6hS4Lq7p37QtNhHuY=
+X-Received: by 2002:a05:600c:1da7:b0:422:ff8d:5d25 with SMTP id
+ 5b1f17b1804b1-42481da99bcmr23335e9.5.1718917257464; Thu, 20 Jun 2024 14:00:57
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 8/9] drm/msm/hdmi: update
- HDMI_GEN_PKT_CTRL_GENERIC0_UPDATE definition
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul
-	<sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>
-CC: <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240607-bridge-hdmi-connector-v5-0-ab384e6021af@linaro.org>
- <20240607-bridge-hdmi-connector-v5-8-ab384e6021af@linaro.org>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240607-bridge-hdmi-connector-v5-8-ab384e6021af@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9EKDVIqvCL1um9S9-OlHj46SCl_qc9CD
-X-Proofpoint-GUID: 9EKDVIqvCL1um9S9-OlHj46SCl_qc9CD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_09,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=938 mlxscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 spamscore=0 adultscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406200153
+References: <20240619202659.work.532-kees@kernel.org>
+In-Reply-To: <20240619202659.work.532-kees@kernel.org>
+From: Rae Moar <rmoar@google.com>
+Date: Thu, 20 Jun 2024 17:00:44 -0400
+Message-ID: <CA+GJov5YCiStd8YJu7NsdtkS+zWSdmksZgAqeRMonRfGO=26JA@mail.gmail.com>
+Subject: Re: [PATCH] kunit/usercopy: Add missing MODULE_DESCRIPTION()
+To: Kees Cook <kees@kernel.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 19, 2024 at 4:27=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> From: Jeff Johnson <quic_jjohnson@quicinc.com>
+>
+> Fix warning seen with:
+>
+> $ make allmodconfig && make W=3D1 C=3D1 lib/usercopy_kunit.ko
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/usercopy_kunit.o
+>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
+Hi!
 
-On 6/7/2024 6:23 AM, Dmitry Baryshkov wrote:
-> The GENERIC0_UPDATE field is a single bit. Redefine it as boolean to
-> simplify its usage in the driver.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+This looks good to me.
+
+Reviewed-by: Rae Moar <rmoar@google.com>
+
+Thanks!
+-Rae
+
 > ---
->   drivers/gpu/drm/msm/registers/display/hdmi.xml | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-
-
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> At Jeff's reminder, I've split this out of:
+> https://lore.kernel.org/all/20240601-md-lib-test-v1-1-a728620e37d8@quicin=
+c.com/
+> since the file got renamed.
+> ---
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: kunit-dev@googlegroups.com
+> Cc: linux-hardening@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  lib/usercopy_kunit.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
+> index e819561a540d..77fa00a13df7 100644
+> --- a/lib/usercopy_kunit.c
+> +++ b/lib/usercopy_kunit.c
+> @@ -331,4 +331,5 @@ static struct kunit_suite usercopy_test_suite =3D {
+>
+>  kunit_test_suites(&usercopy_test_suite);
+>  MODULE_AUTHOR("Kees Cook <kees@kernel.org>");
+> +MODULE_DESCRIPTION("Kernel module for testing copy_to/from_user infrastr=
+ucture");
+>  MODULE_LICENSE("GPL");
+> --
+> 2.34.1
+>
