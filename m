@@ -1,102 +1,110 @@
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702463A28D;
-	Thu, 20 Jun 2024 18:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8131AF69B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 18:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718909639; cv=none; b=TOczIeHG+SUYgyPeXiEV/8XUrLEO4uHDn7016DMuLlsmJXKyPhwlEuUCKOpq5UKUpc8KT1EhNVJEnjzAQhInF67INtsvtp42XmbSa2jdPzWHuaiWs+apR5ihLtiqC4JxkVk2aoylHaPYrGq+Zk5VNz1EZ9WX/ibelbWKBGfswmY=
+	t=1718909651; cv=none; b=piT0J6v33+s44BbhUchf498cmE3EZUQMh5QvQcHvT5m5uF2Tyf7+BL0C4KrDaApJCPlP8imfpPRkLY4vAC/UVd+26Nl544BT/Z5i+PATvHESBcpzdrDZeanSn/u2JPVSApQjnFbu6lCmtu6q1zF67dNr2/faXa8oXqWfKrFzjVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718909639; c=relaxed/simple;
-	bh=8ekOjxpDwoydqkKkGhUeAltxKkAKYn/wprrJm0PBnH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J/LFJrXPxmTeP2rR/Z45bPK23Yi6FoqOosZbLflV8xFxjHf8l+1uFiNF/S/4R11EKTFPsH21IuSVcDYrPLRp4p2T+1PlgQIGJQa7ZA21SV5WZOQgfbO+MDusslTiEoJSik2Pm4j2d9bi9w4Z7uE2fOH+f72M1ccd+6VMj96p+Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Qbj4GV+q; arc=none smtp.client-ip=80.12.242.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718909651; c=relaxed/simple;
+	bh=7QXAx5RXUFSzeklprgP9xCdMOxGkqkNOA9zH//++ZaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VYvybxIjB+J4+2ovBSIe7JejiJTsfbKRtuyRvpk+mkVRdxojJt82XtkhLsSTZd/BrSgUhIjteMMgLFoS1IWCIRX18NUQIh7sxoHay9V+lvBizOnRPiezDZuVX33aycwzMt4Ap//DadXscfpXAS2WQU/e7kRLKI4tUJYDa36NFEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CZ5Yu+sQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Qbj4GV+q"
-Received: from [192.168.1.37] ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id KMunsiGfm6xnbKMunswaYn; Thu, 20 Jun 2024 20:53:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718909628;
-	bh=N+NxqUOjBTvWdh5BEIOxUcci2t45xosej7QdIMTxSQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=Qbj4GV+qj/zI8L7RfLJjt42AOIvF2lq8j9oaEcNUT1gXcbCWCaDsRaEPtwIBwtB0T
-	 1jTY0RwQhEytflWlF+tE1V/ZJDiiulsy33MA2JT+U3cMEOTW0ilqNlPWxrM2fbrCrq
-	 u4iPz3vcYkThTK52cQEg9lLLpq1Y6O/Ya4aFJdjHYnwQzOA1OniSePIpahCovsOA9n
-	 u6KYTKfrpniZuBUNH4kWp6es6CNGPa6TuDXqLo+Lfs0Y10kNwtUG1JQorkKzb94xim
-	 +yCtwpoarmQUibXpoFQGz1WdIDrFOsDtafCSW60wkOj+K7vcXgkCAGhAi8vJUCYlxD
-	 eyC5L9O0REMbg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 20 Jun 2024 20:53:48 +0200
-X-ME-IP: 86.243.222.230
-Message-ID: <0f7d2d25-5c7c-4a19-8af7-ce38ee630d4d@wanadoo.fr>
-Date: Thu, 20 Jun 2024 20:53:45 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZ5Yu+sQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718909648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6SaPDVU1xalbIsagCAY1R8fkcnXXSLdW/5aQMD2rFqY=;
+	b=CZ5Yu+sQXMgJzHd25Lg/QkacYJuJ8d4g592xdQFYJI2RdGaX51oWv14aPhFxHbLeAVrMSc
+	SHtHcjGLXrt4fNx8RxrywWDr2dYQAT7MEdcJlM/dft+VUTSEkHg/LnX32Dh3zsPja600hE
+	qTU92YxmHZYuEd47JGIanSBw8sAaFeQ=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-VoSW1uqhPzGWnf7uEzF8-g-1; Thu,
+ 20 Jun 2024 14:54:05 -0400
+X-MC-Unique: VoSW1uqhPzGWnf7uEzF8-g-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B90E1955E89;
+	Thu, 20 Jun 2024 18:54:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.114])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ABF5219560AF;
+	Thu, 20 Jun 2024 18:53:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 20 Jun 2024 20:52:30 +0200 (CEST)
+Date: Thu, 20 Jun 2024 20:52:20 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCHv8 bpf-next 3/9] uprobe: Add uretprobe syscall to speed up
+ return probe
+Message-ID: <20240620185220.GB2058@redhat.com>
+References: <20240611112158.40795-1-jolsa@kernel.org>
+ <20240611112158.40795-4-jolsa@kernel.org>
+ <054064c5-704a-4ea7-8a89-1e136e475437@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
- cfg80211_wowlan_nd_*
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Kees Cook <kees@kernel.org>
-Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
- gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
- kvalo@kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
- shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
-References: <20240619211233.work.355-kees@kernel.org>
- <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
- <c8404725-e4c4-453b-b72d-19ab0761da70@embeddedor.com>
- <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <054064c5-704a-4ea7-8a89-1e136e475437@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Le 20/06/2024 à 20:08, Gustavo A. R. Silva a écrit :
-> 
-> 
-> On 6/20/24 12:02, Gustavo A. R. Silva wrote:
->>
->>> My understanding is that 'match', is allocated by :
->>>      match = kzalloc(struct_size(match, channels, n_channels), 
->>> GFP_KERNEL);
->>>
->>> So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
->>
->> n_channels is updated in the line before calling kzalloc():
->>
->> n_channels = iwl_mvm_query_num_match_chans(mvm, d3_data->nd_results, i);
->>
->> match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
-> 
-> then match->n_channels updated here:
-> 
->           if (!match)
->               goto out_report_nd;
-> +        match->n_channels = n_channels;
+On 06/20, Guenter Roeck wrote:
+>
+> On Tue, Jun 11, 2024 at 01:21:52PM +0200, Jiri Olsa wrote:
+> > Adding uretprobe syscall instead of trap to speed up return probe.
+> >
+>
+> This patch results in:
+>
+> Building loongarch:allmodconfig ... failed
+> --------------
+> Error log:
+> In file included from include/linux/uprobes.h:49,
+>                  from include/linux/mm_types.h:16,
+>                  from include/linux/mmzone.h:22,
+>                  from include/linux/gfp.h:7,
+>                  from include/linux/xarray.h:16,
+>                  from include/linux/list_lru.h:14,
+>                  from include/linux/fs.h:13,
+>                  from include/linux/highmem.h:5,
+>                  from kernel/events/uprobes.c:13:
+> kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
+> arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element is not constant
 
-Thanks for the explanation.
-This is what I was looking for, and I missed this line.
+should be fixed by https://lore.kernel.org/all/ZmyZgzqsowkGyqmH@krava/
+in this thread.
 
-Sorry for the noise.
+but may be arch/loongarch should override __weak arch_uprobe_trampoline() ?
 
-CJ
-
-> 
-> Sorry about the split response, finger failure ugghh
-> 
-> -- 
-> Gustavo
-> 
-> 
+Oleg.
 
