@@ -1,80 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C020176041
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 21:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2D47FBB6
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 21:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718918666; cv=none; b=b+hes/j2xdkYanVolGr3Ow6jhpbC0g44tVzqPzyZXA+zG1xyx6RhgQQbR+rN5b/Ndu/F8pk73ss530SwTu41inSfz+u8yHpLi/XrssEn6ructmvtA4x95SHXgcV+QO3ddMBfgA1NXhwkxxJySzn5vEk91xmMMye3Wr5Ytz1o6ik=
+	t=1718918680; cv=none; b=IRmIIq+FUx3RFLJz98V5Yd9H5NbkyDyt7eclh2jj0al7X4w0zTCoGyiE40xYAAG9twn/iQajJFFYTt9+9iLykS9TCUP+HKIh8Al8WtaHViW/7y1HN/BOAPytjEcbVpVqFyLqZBiCzcWNhvHxQY30BQb13PodvK3ZpV1eTnQJ04I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718918666; c=relaxed/simple;
-	bh=XPrGdmEcZ3ysbk6RX8aXJDTE0N4ga1H/XRHY+t+oHyc=;
+	s=arc-20240116; t=1718918680; c=relaxed/simple;
+	bh=3VC+wMy8khg6cXuk8f2hz3d8sCsWjVYIOK1LnEpxmJU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Odcmhk/eQeHdm9KT0bawW/hLRyKla0ftcd0RHC3gTi1yD/6LnEB6noRDC+/gmuZgmg+Y2XhqEmagUzNxb0rpDoXTShycs//bItildOudL+vNu1hNZBWA3NkJSYQYKjpdaJVarA5CGtoFRp0swBlnfYnRV1CZTnSoeLW0frOWsSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U5cnEWQf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RBGE6+oz+Pi/z5EFjsdn9+gsPU8UH/taTJhbVvqJ43wVsyIDMrrGAxaGGh8PyCO7BYNWNnw8mORpKKnh+341pNjo9VggFWWCn3Q5FaSNwzkPfQ6jlKr+DO1VdFwSt++TX1R1XuBp+Q7id55S7UB7y+r2/dHrvmRhCP3fXiJklCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FR3lN7oX; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5cnEWQf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718918664;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7jbWN+wDikmWCfgl/hT1vuO1XLdsBYPrBuv7e998coY=;
-	b=U5cnEWQf00Xs2uzXhGG85f/Mkne8wULJKOaywePSdSU1YdyWN69AUKsbnZoOyMuOW1N4kN
-	NR95VTslFUHbWIoiVPeN10onyThD4foyhiBF8iTi/pS5d9NRoZ1Nb1QvW9X3TEjzUkho8p
-	RwXi74yTHOKqU9/J4TXHnZ4pCp9qCzk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-17-Tzb30tZWOPSliM8PsLYuoQ-1; Thu, 20 Jun 2024 17:24:22 -0400
-X-MC-Unique: Tzb30tZWOPSliM8PsLYuoQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-421805fadadso11058545e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:24:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FR3lN7oX"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f6a837e9a3so9359775ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718918677; x=1719523477; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1OzdekkMJcta/qHvOGMgRRSRWnSrmGqA34G+X/xyOw4=;
+        b=FR3lN7oXska3wqohgIXUpRenZnZFuBxpG3KqBh96MsHIopLev6Q/TuZ7CSRrTmpAk7
+         UWEeiaqXQeiny9+rnqq6lk5XT+VE47AiIFJEOlBMv0PE/Eljdq7e2qa31jwOEjX2PnFV
+         4XnaQXgetjo/u96ZLv1yN+DIm/qgcXSb9zU/24oJNKB4wjPAinXYlDsSfJ6njPTS1bm4
+         K5Nsrfgi7+Ux9gZdWKjxxiHgRImW+QMBDOiprSrtanCh1TXoLtYjzPdGmqj0VMB6s9Op
+         f/SKJ+UtZj3NFFeF3NV/l1MP1GZb2ZFgs0XpGvlJXdd4mNQFNz62MY6oq6fD0QE4yTrL
+         ahJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718918661; x=1719523461;
+        d=1e100.net; s=20230601; t=1718918677; x=1719523477;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7jbWN+wDikmWCfgl/hT1vuO1XLdsBYPrBuv7e998coY=;
-        b=kZy1F3wxQVS8vU/COxAGPbNS4bCc9oFYGczGzxUjkKeJ+UZX6I27WX5LKdHXpMD08I
-         FYOy3KZ7/TfC1CHgrle9mlOMfvEB9jHIoz9S0m3ZHjiY1inEKGt9vGCDaY/q7wX+qE4D
-         MbZ6BPwoZCjgKmTPiuRGpHWxUomhC06KMMZ98e4dnDVafkzwyXFYXNn60BSnBa8yQv+2
-         EFqfRepnE3ZRYHVyArhhV8eTckxDz8Xv+Dld9OeU1n8SAs972sd7rK8y6CN21eznJk7K
-         FsJdpzGkxdnqxcjQZiob+Ug7jDrhBEaaOWfRI0tPMD97W07UQZeEH7fxQ7zIwL9LTCJ5
-         T8og==
-X-Forwarded-Encrypted: i=1; AJvYcCXx5vPa3Qb7cvq0OQ497VtdxlvmxtwY4KPzLaE43fQVi/owMV6D13FAjcIxHkdM2zsjy//PiAbrNOorxpBJSdUBk3F2jfP6xhU1XblI
-X-Gm-Message-State: AOJu0YxX9F4Uu2XfrKmnaLWE7usmiow6RtHYaTVdy9nA2EJnvUvbzHVW
-	8CfBDvvu9xX6JmU0fEh6KjpiKxj1yQ1CU85RqW3sbhKvDW5z0T/dLcneVypLF0rH0lOEnaAU0/v
-	3Kq+z1Mn6iLqzVRs8rAt82Kz3xSS9vcH3UEk3YKVXoNcMYSACepTXUMj9lQRVDg==
-X-Received: by 2002:a05:600c:47cf:b0:422:1def:e17f with SMTP id 5b1f17b1804b1-4247529691dmr47622225e9.31.1718918660973;
-        Thu, 20 Jun 2024 14:24:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHjqtAV2S5YjCos6I4IxgJi+HUHbZigboKFoBlsWH8DZMb5OHeB1gnsbHGaRqyfG671xQWsGA==
-X-Received: by 2002:a05:600c:47cf:b0:422:1def:e17f with SMTP id 5b1f17b1804b1-4247529691dmr47621865e9.31.1718918660417;
-        Thu, 20 Jun 2024 14:24:20 -0700 (PDT)
-Received: from cassiopeiae ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247fe1b5desm21574305e9.4.2024.06.20.14.24.18
+        bh=1OzdekkMJcta/qHvOGMgRRSRWnSrmGqA34G+X/xyOw4=;
+        b=ZMP+Z4/VMKPXOfBiR6TNxpiKmsFcpOYG+wxf57T8bYNUzDamFSyg8Zw+GUyXrKHsLB
+         XTqcWKCTAL+VUYtSYm9mZ90+RvDgZZimSvL+aGyEO0xmxpOjzoxStnhETZIWPinOkF6g
+         /K7MXV4iS7hx4FvSnBF/ccPB6XSW6yIjwmhoHKPA+at5rik7UcEmluB0uMkG10kp1NlH
+         iszP+BCBCxEQ63XOwXZF3ucCgs4CnCroPw2SBrixfmX/J09fxVQoB7zK/aCx98iHxhdj
+         qPulOPTdUoiuhiFkMZMOh5vfRw94eiRtgC70pgeHiQX0Ewf2tBiqti3VDH22bOpkoNdI
+         xI6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWN4DlR4j/1fMN8eADkhF7Yy+pZf3M7EA3RMKMB5OYtuD4e36gXKxiqLBQW0O5TK2oYaT3pYgl69X3XjR+wMh95dmnzPvqHhbRKPCL3
+X-Gm-Message-State: AOJu0YwMSJRUtlb0FPhq7wWqZJQROvX6VRznPq87FCEziIGdUUZKFkKl
+	54pUUvIWbbNg3oHmfceUIJ5E7TI/RVZ+GxmBZU8FObP7uNNbaj4b+6Gh41DWZC8=
+X-Google-Smtp-Source: AGHT+IFuaF5R+PHwusBeIwemQBlLuCr3hLIpU9p2g/g3Jq+ZXl5o0rt0wxxjaHD9EU0ic/W7o9duuA==
+X-Received: by 2002:a17:902:e885:b0:1f9:c8cc:9e26 with SMTP id d9443c01a7336-1f9c8cca2f3mr34363635ad.30.1718918677448;
+        Thu, 20 Jun 2024 14:24:37 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800::9eba])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3d5b33sm688905ad.190.2024.06.20.14.24.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 14:24:19 -0700 (PDT)
-Date: Thu, 20 Jun 2024 23:24:17 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
-	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 01/10] rust: pass module name to `Module::init`
-Message-ID: <ZnSeAZu3IMA4fR8P@cassiopeiae>
-References: <20240618234025.15036-1-dakr@redhat.com>
- <20240618234025.15036-2-dakr@redhat.com>
- <2024062038-backroom-crunchy-d4c9@gregkh>
- <ZnRUXdMaFJydAn__@cassiopeiae>
- <2024062010-change-clubhouse-b16c@gregkh>
+        Thu, 20 Jun 2024 14:24:36 -0700 (PDT)
+Date: Thu, 20 Jun 2024 15:24:33 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	op-tee@lists.trustedfirmware.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] remoteproc: Add TEE support
+Message-ID: <ZnSeEVpz/rB0Ztbh@p14s>
+References: <20240611073904.475019-1-arnaud.pouliquen@foss.st.com>
+ <20240611073904.475019-3-arnaud.pouliquen@foss.st.com>
+ <ZnL8Po+VnaabrTtZ@p14s>
+ <e4c07c98-be03-489b-9e56-6a0c0ed27c37@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,245 +77,697 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024062010-change-clubhouse-b16c@gregkh>
+In-Reply-To: <e4c07c98-be03-489b-9e56-6a0c0ed27c37@foss.st.com>
 
-On Thu, Jun 20, 2024 at 06:36:08PM +0200, Greg KH wrote:
-> On Thu, Jun 20, 2024 at 06:10:05PM +0200, Danilo Krummrich wrote:
-> > On Thu, Jun 20, 2024 at 04:19:48PM +0200, Greg KH wrote:
-> > > On Wed, Jun 19, 2024 at 01:39:47AM +0200, Danilo Krummrich wrote:
-> > > > In a subsequent patch we introduce the `Registration` abstraction used
-> > > > to register driver structures. Some subsystems require the module name on
-> > > > driver registration (e.g. PCI in __pci_register_driver()), hence pass
-> > > > the module name to `Module::init`.
-> > > 
-> > > I understand the need/want here, but it feels odd that you have to
-> > > change anything to do it.
-> > > 
-> > > > 
-> > > > Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> > > > ---
-> > > >  rust/kernel/lib.rs           | 14 ++++++++++----
-> > > >  rust/kernel/net/phy.rs       |  2 +-
-> > > >  rust/macros/module.rs        |  3 ++-
-> > > >  samples/rust/rust_minimal.rs |  2 +-
-> > > >  samples/rust/rust_print.rs   |  2 +-
-> > > >  5 files changed, 15 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > > > index a791702b4fee..5af00e072a58 100644
-> > > > --- a/rust/kernel/lib.rs
-> > > > +++ b/rust/kernel/lib.rs
-> > > > @@ -71,7 +71,7 @@ pub trait Module: Sized + Sync + Send {
-> > > >      /// should do.
-> > > >      ///
-> > > >      /// Equivalent to the `module_init` macro in the C API.
-> > > > -    fn init(module: &'static ThisModule) -> error::Result<Self>;
-> > > > +    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
-> > > 
-> > > Why can't the name come directly from the build system?  Why must it be
-> > > passed into the init function of the module "class"?  What is it going
-> > > to do with it?
+On Wed, Jun 19, 2024 at 06:33:05PM +0200, Arnaud POULIQUEN wrote:
+> Hi,
+> 
+> On 6/19/24 17:41, Mathieu Poirier wrote:
+> > Hi,
 > > 
-> > The name does come from the build system, that's where `Module::init` gets it
-> > from.
+> > On Tue, Jun 11, 2024 at 09:39:01AM +0200, Arnaud Pouliquen wrote:
+> >> Add a remoteproc TEE (Trusted Execution Environment) driver
+> >> that will be probed by the TEE bus. If the associated Trusted
+> >> application is supported on secure part this driver offers a client
+> >> interface to load a firmware in the secure part.
+> >> This firmware could be authenticated by the secure trusted application.
+> >>
+> >> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+> >> ---
+> >> update from V
+> >> - Fix missing "{" in tee_rproc_find_loaded_rsc_table inline definition.
+> >>
+> >> update from V5
+> >> - make tee_rproc_get_loaded_rsc_table() local and replace this API by
+> >>   tee_rproc_find_loaded_rsc_table()
+> >> - map and unmap the resource table in tee_rproc_parse_fw to make a cached copy
+> >> - use the new rproc_pa_to_va() API to map the resource table memory declared in carevout
+> >> - remove tee_rproc_release_loaded_rsc_table as no more used.
+> >> ---
+> >>  drivers/remoteproc/Kconfig          |  10 +
+> >>  drivers/remoteproc/Makefile         |   1 +
+> >>  drivers/remoteproc/tee_remoteproc.c | 451 ++++++++++++++++++++++++++++
+> >>  include/linux/remoteproc.h          |   4 +
+> >>  include/linux/tee_remoteproc.h      | 100 ++++++
+> >>  5 files changed, 566 insertions(+)
+> >>  create mode 100644 drivers/remoteproc/tee_remoteproc.c
+> >>  create mode 100644 include/linux/tee_remoteproc.h
+> >>
+> >> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> >> index 48845dc8fa85..6c1c07202276 100644
+> >> --- a/drivers/remoteproc/Kconfig
+> >> +++ b/drivers/remoteproc/Kconfig
+> >> @@ -365,6 +365,16 @@ config XLNX_R5_REMOTEPROC
+> >>  
+> >>  	  It's safe to say N if not interested in using RPU r5f cores.
+> >>  
+> >> +
+> >> +config TEE_REMOTEPROC
+> >> +	tristate "Remoteproc support by a TEE application"
+> >> +	depends on OPTEE
+> >> +	help
+> >> +	  Support a remote processor with a TEE application. The Trusted
+> >> +	  Execution Context is responsible for loading the trusted firmware
+> >> +	  image and managing the remote processor's lifecycle.
+> >> +	  This can be either built-in or a loadable module.
+> >> +
+> >>  endif # REMOTEPROC
+> >>  
+> >>  endmenu
+> >> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> >> index 91314a9b43ce..fa8daebce277 100644
+> >> --- a/drivers/remoteproc/Makefile
+> >> +++ b/drivers/remoteproc/Makefile
+> >> @@ -36,6 +36,7 @@ obj-$(CONFIG_RCAR_REMOTEPROC)		+= rcar_rproc.o
+> >>  obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+> >>  obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+> >>  obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
+> >> +obj-$(CONFIG_TEE_REMOTEPROC)		+= tee_remoteproc.o
+> >>  obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o
+> >>  obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+= ti_k3_r5_remoteproc.o
+> >>  obj-$(CONFIG_XLNX_R5_REMOTEPROC)	+= xlnx_r5_remoteproc.o
+> >> diff --git a/drivers/remoteproc/tee_remoteproc.c b/drivers/remoteproc/tee_remoteproc.c
+> >> new file mode 100644
+> >> index 000000000000..9455fd9d0d2d
+> >> --- /dev/null
+> >> +++ b/drivers/remoteproc/tee_remoteproc.c
+> >> @@ -0,0 +1,451 @@
+> >> +// SPDX-License-Identifier: GPL-2.0-or-later
+> >> +/*
+> >> + * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
+> >> + * Author: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+> >> + */
+> >> +
+> >> +#include <linux/firmware.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/remoteproc.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/tee_drv.h>
+> >> +#include <linux/tee_remoteproc.h>
+> >> +
+> >> +#include "remoteproc_internal.h"
+> >> +
+> >> +#define MAX_TEE_PARAM_ARRY_MEMBER	4
+> >> +
+> >> +/*
+> >> + * Authentication of the firmware and load in the remote processor memory
+> >> + *
+> >> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
+> >> + * [in]	 params[1].memref:	buffer containing the image of the buffer
+> >> + */
+> >> +#define TA_RPROC_FW_CMD_LOAD_FW		1
+> >> +
+> >> +/*
+> >> + * Start the remote processor
+> >> + *
+> >> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
+> >> + */
+> >> +#define TA_RPROC_FW_CMD_START_FW	2
+> >> +
+> >> +/*
+> >> + * Stop the remote processor
+> >> + *
+> >> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
+> >> + */
+> >> +#define TA_RPROC_FW_CMD_STOP_FW		3
+> >> +
+> >> +/*
+> >> + * Return the address of the resource table, or 0 if not found
+> >> + * No check is done to verify that the address returned is accessible by
+> >> + * the non secure context. If the resource table is loaded in a protected
+> >> + * memory the access by the non secure context will lead to a data abort.
+> >> + *
+> >> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
+> >> + * [out]  params[1].value.a:	32bit LSB resource table memory address
+> >> + * [out]  params[1].value.b:	32bit MSB resource table memory address
+> >> + * [out]  params[2].value.a:	32bit LSB resource table memory size
+> >> + * [out]  params[2].value.b:	32bit MSB resource table memory size
+> >> + */
+> >> +#define TA_RPROC_FW_CMD_GET_RSC_TABLE	4
+> >> +
+> >> +/*
+> >> + * Return the address of the core dump
+> >> + *
+> >> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
+> >> + * [out] params[1].memref:	address of the core dump image if exist,
+> >> + *				else return Null
+> >> + */
+> >> +#define TA_RPROC_FW_CMD_GET_COREDUMP	5
+> >> +
+> >> +struct tee_rproc_context {
+> >> +	struct list_head sessions;
+> >> +	struct tee_context *tee_ctx;
+> >> +	struct device *dev;
+> >> +};
+> >> +
+> >> +static struct tee_rproc_context *tee_rproc_ctx;
+> >> +
+> >> +static void tee_rproc_prepare_args(struct tee_rproc *trproc, int cmd,
+> >> +				   struct tee_ioctl_invoke_arg *arg,
+> >> +				   struct tee_param *param,
+> >> +				   unsigned int num_params)
+> >> +{
+> >> +	memset(arg, 0, sizeof(*arg));
+> >> +	memset(param, 0, MAX_TEE_PARAM_ARRY_MEMBER * sizeof(*param));
+> >> +
+> >> +	arg->func = cmd;
+> >> +	arg->session = trproc->session_id;
+> >> +	arg->num_params = num_params + 1;
+> >> +
+> >> +	param[0] = (struct tee_param) {
+> >> +		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
+> >> +		.u.value.a = trproc->rproc_id,
+> >> +	};
+> >> +}
+> >> +
+> >> +int tee_rproc_load_fw(struct rproc *rproc, const struct firmware *fw)
+> >> +{
+> >> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
+> >> +	struct tee_rproc *trproc = rproc->tee_interface;
+> >> +	struct tee_ioctl_invoke_arg arg;
+> >> +	struct tee_shm *fw_shm;
+> >> +	int ret;
+> >> +
+> >> +	if (!trproc)
+> >> +		return -EINVAL;
+> >> +
+> >> +	fw_shm = tee_shm_register_kernel_buf(tee_rproc_ctx->tee_ctx, (void *)fw->data, fw->size);
+> >> +	if (IS_ERR(fw_shm))
+> >> +		return PTR_ERR(fw_shm);
+> >> +
+> >> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_LOAD_FW, &arg, param, 1);
+> >> +
+> >> +	/* Provide the address of the firmware image */
+> >> +	param[1] = (struct tee_param) {
+> >> +		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
+> >> +		.u.memref = {
+> >> +			.shm = fw_shm,
+> >> +			.size = fw->size,
+> >> +			.shm_offs = 0,
+> >> +		},
+> >> +	};
+> >> +
+> >> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
+> >> +	if (ret < 0 || arg.ret != 0) {
+> >> +		dev_err(tee_rproc_ctx->dev,
+> >> +			"TA_RPROC_FW_CMD_LOAD_FW invoke failed TEE err: %x, ret:%x\n",
+> >> +			arg.ret, ret);
+> >> +		if (!ret)
+> >> +			ret = -EIO;
+> >> +	}
+> >> +
+> >> +	tee_shm_free(fw_shm);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_load_fw);
+> >> +
+> >> +static int tee_rproc_get_loaded_rsc_table(struct rproc *rproc, phys_addr_t *rsc_pa,
+> >> +					  size_t *table_sz)
+> >> +{
+> >> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
+> >> +	struct tee_rproc *trproc = rproc->tee_interface;
+> >> +	struct tee_ioctl_invoke_arg arg;
+> >> +	int ret;
+> >> +
+> >> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_GET_RSC_TABLE, &arg, param, 2);
+> >> +
+> >> +	param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
+> >> +	param[2].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
+> >> +
+> >> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
+> >> +	if (ret < 0 || arg.ret != 0) {
+> >> +		dev_err(tee_rproc_ctx->dev,
+> >> +			"TA_RPROC_FW_CMD_GET_RSC_TABLE invoke failed TEE err: %x, ret:%x\n",
+> >> +			arg.ret, ret);
+> >> +		return -EIO;
+> >> +	}
+> >> +
+> >> +	*table_sz = param[2].u.value.a;
+> >> +
+> >> +	if (*table_sz)
+> >> +		*rsc_pa = param[1].u.value.a;
+> >> +	else
+> >> +		*rsc_pa  = 0;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +int tee_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+> >> +{
+> >> +	phys_addr_t rsc_table;
+> >> +	void __iomem *rsc_va;
+> >> +	size_t table_sz;
+> >> +	int ret;
+> >> +
+> >> +	ret = tee_rproc_load_fw(rproc, fw);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	ret = tee_rproc_get_loaded_rsc_table(rproc, &rsc_table, &table_sz);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	/*
+> >> +	 * We assume here that the memory mapping is the same between the TEE and Linux kernel
+> >> +	 * contexts. Else a new TEE remoteproc service could be needed to get a copy of the
+> >> +	 * resource table
+> >> +	 */
+> >> +	rsc_va = ioremap_wc(rsc_table, table_sz);
+> >> +	if (IS_ERR_OR_NULL(rsc_va)) {
+> >> +		dev_err(tee_rproc_ctx->dev, "Unable to map memory region: %pa+%zx\n",
+> >> +			&rsc_table, table_sz);
+> >> +		return -ENOMEM;
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * Create a copy of the resource table to have the same behavior as the elf loader.
+> >> +	 * This cached table will be used after the remoteproc stops to free resources, and for
+> >> +	 * crash recovery to reapply the settings.
+> >> +	 */
+> >> +	rproc->cached_table = kmemdup((__force void *)rsc_va, table_sz, GFP_KERNEL);
+> >> +	if (!rproc->cached_table) {
+> >> +		ret = -ENOMEM;
+> >> +		goto out;
+> >> +	}
+> >> +
+> >> +	rproc->table_ptr = rproc->cached_table;
+> >> +	rproc->table_sz = table_sz;
+> >> +
+> >> +out:
+> >> +	iounmap(rsc_va);
+> >> +	return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_parse_fw);
+> >> +
+> >> +struct resource_table *tee_rproc_find_loaded_rsc_table(struct rproc *rproc,
+> >> +						       const struct firmware *fw)
+> >> +{
+> >> +	struct tee_rproc *trproc = rproc->tee_interface;
+> >> +	phys_addr_t rsc_table;
+> >> +	size_t table_sz;
+> >> +	int ret;
+> >> +
+> >> +	if (!trproc)
+> >> +		return ERR_PTR(-EINVAL);
+> >> +
+> >> +	ret = tee_rproc_get_loaded_rsc_table(rproc, &rsc_table, &table_sz);
+> >> +	if (ret)
+> >> +		return ERR_PTR(ret);
+> >> +
+> >> +	rproc->table_sz = table_sz;
+> >> +	if (!table_sz)
+> >> +		return NULL;
+> >> +
+> >> +	/*
+> >> +	 * At this step the memory area that contains the resource table should have be declared
+> >> +	 * in the remote proc platform driver and allocated by rproc_alloc_registered_carveouts().
+> >> +	 */
+> >> +
+> >> +	return (struct resource_table *)rproc_pa_to_va(rproc, rsc_table, table_sz, NULL);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_find_loaded_rsc_table);
+> >> +
+> >> +int tee_rproc_start(struct rproc *rproc)
+> >> +{
+> >> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
+> >> +	struct tee_rproc *trproc = rproc->tee_interface;
+> >> +	struct tee_ioctl_invoke_arg arg;
+> >> +	int ret = 0;
+> >> +
+> >> +	if (!trproc)
+> >> +		return -EINVAL;
+> >> +
+> >> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_START_FW, &arg, param, 0);
+> >> +
+> >> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
+> >> +	if (ret < 0 || arg.ret != 0) {
+> >> +		dev_err(tee_rproc_ctx->dev,
+> >> +			"TA_RPROC_FW_CMD_START_FW invoke failed TEE err: %x, ret:%x\n",
+> >> +			arg.ret, ret);
+> >> +		if (!ret)
+> >> +			return  -EIO;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_start);
+> >> +
+> >> +int tee_rproc_stop(struct rproc *rproc)
+> >> +{
+> >> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
+> >> +	struct tee_rproc *trproc = rproc->tee_interface;
+> >> +	struct tee_ioctl_invoke_arg arg;
+> >> +	int ret;
+> >> +
+> >> +	if (!trproc)
+> >> +		return -EINVAL;
+> >> +
+> >> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_STOP_FW, &arg, param, 0);
+> >> +
+> >> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
+> >> +	if (ret < 0 || arg.ret != 0) {
+> >> +		dev_err(tee_rproc_ctx->dev,
+> >> +			"TA_RPROC_FW_CMD_STOP_FW invoke failed TEE err: %x, ret:%x\n",
+> >> +			arg.ret, ret);
+> >> +		if (!ret)
+> >> +			ret = -EIO;
+> >> +	}
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_stop);
+> >> +
+> >> +static const struct tee_client_device_id stm32_tee_rproc_id_table[] = {
+> >> +	{UUID_INIT(0x80a4c275, 0x0a47, 0x4905,
+> >> +		   0x82, 0x85, 0x14, 0x86, 0xa9, 0x77, 0x1a, 0x08)},
+> >> +	{}
+> >> +};
+> >> +
+> >> +struct tee_rproc *tee_rproc_register(struct device *dev, struct rproc *rproc, unsigned int rproc_id)
+> >> +{
+> >> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
+> >> +	struct tee_ioctl_open_session_arg sess_arg;
+> >> +	struct tee_client_device *tee_device;
+> >> +	struct tee_rproc *trproc, *p_err;
+> >> +	int ret;
+> >> +
+> >> +	/*
+> >> +	 * Test if the device has been probed by the TEE bus. In case of failure, we ignore the
+> >> +	 * reason. The bus could be not yet probed or the service not available in the secure
+> >> +	 * firmware.The assumption in such a case is that the TEE remoteproc is not probed.
+> >> +	 */
+> >> +	if (!tee_rproc_ctx)
+> >> +		return ERR_PTR(-EPROBE_DEFER);
+> >> +
+> >> +	/* Prevent tee rproc module from being removed */
+> >> +	if (!try_module_get(THIS_MODULE)) {
+> >> +		dev_err(tee_rproc_ctx->dev, "can't get owner\n");
+> >> +		p_err = ERR_PTR(-ENODEV);
+> >> +		goto module_put;
+> >> +	}
+> >> +
+> >> +	trproc =  devm_kzalloc(dev, sizeof(*trproc), GFP_KERNEL);
+> >> +	if (!trproc) {
+> >> +		p_err = ERR_PTR(-ENOMEM);
+> >> +		goto module_put;
+> >> +	}
+> >> +	tee_device = to_tee_client_device(tee_rproc_ctx->dev);
+> >> +	memset(&sess_arg, 0, sizeof(sess_arg));
+> >> +
+> >> +	memcpy(sess_arg.uuid, tee_device->id.uuid.b, TEE_IOCTL_UUID_LEN);
+> >> +
+> >> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_REE_KERNEL;
+> >> +	sess_arg.num_params = 1;
+> >> +
+> >> +	param[0] = (struct tee_param) {
+> >> +		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
+> >> +		.u.value.a = rproc_id,
+> >> +	};
+> >> +
+> >> +	ret = tee_client_open_session(tee_rproc_ctx->tee_ctx, &sess_arg, param);
+> >> +	if (ret < 0 || sess_arg.ret != 0) {
+> >> +		dev_err(dev, "tee_client_open_session failed, err: %x\n", sess_arg.ret);
+> >> +		p_err = ERR_PTR(-EINVAL);
+> >> +		goto module_put;
+> >> +	}
+> >> +
+> >> +	trproc->parent =  dev;
+> >> +	trproc->rproc_id = rproc_id;
+> >> +	trproc->session_id = sess_arg.session;
+> >> +
+> >> +	trproc->rproc = rproc;
+> >> +	rproc->tee_interface = trproc;
+> >> +
+> >> +	list_add_tail(&trproc->node, &tee_rproc_ctx->sessions);
+> >> +
+> >> +	return trproc;
+> >> +
+> >> +module_put:
+> >> +	module_put(THIS_MODULE);
+> >> +	return p_err;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_register);
+> >> +
+> >> +int tee_rproc_unregister(struct tee_rproc *trproc)
+> >> +{
+> >> +	struct rproc *rproc = trproc->rproc;
+> >> +	int ret;
+> >> +
+> >> +	ret = tee_client_close_session(tee_rproc_ctx->tee_ctx, trproc->session_id);
+> >> +	if (ret < 0)
+> >> +		dev_err(trproc->parent,	"tee_client_close_session failed, err: %x\n", ret);
+> >> +
+> >> +	list_del(&trproc->node);
+> >> +	rproc->tee_interface = NULL;
+> >> +
+> >> +	module_put(THIS_MODULE);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(tee_rproc_unregister);
+> >> +
+> >> +static int tee_rproc_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
+> >> +{
+> >> +	/* Today we support only the OP-TEE, could be extend to other tees */
+> >> +	return (ver->impl_id == TEE_IMPL_ID_OPTEE);
+> >> +}
+> >> +
+> >> +static int tee_rproc_probe(struct device *dev)
+> >> +{
+> >> +	struct tee_context *tee_ctx;
+> >> +	int ret;
+> >> +
+> >> +	/* Open context with TEE driver */
+> >> +	tee_ctx = tee_client_open_context(NULL, tee_rproc_ctx_match, NULL, NULL);
+> >> +	if (IS_ERR(tee_ctx))
+> >> +		return PTR_ERR(tee_ctx);
+> >> +
+> >> +	tee_rproc_ctx = devm_kzalloc(dev, sizeof(*tee_ctx), GFP_KERNEL);
 > > 
-> > > 
-> > > A PCI, or other bus, driver "knows" it's name already by virtue of the
-> > > build system, so it can pass that string into whatever function needs
+> > I started reviewing this set - aside from the above allocation that isn't right,
+> > I am definitely not sure about ops::pa_to_va().  There is a patchset from TI on
+> > the mailing list [1] that also needs to translate addresses only accessible to
+> > the remote processor and they simply enhanced their ops::da_to_va().  Perhaps
+> > I'll find an answer as I continue to review this set...
+> 
+> 
+> The DA to PA conversion is handled by OP-TEE when loading the firmware.
+> Therefore, I have assumed that Linux could not know how to convert from DA to
+> PA. This question is also relevant for the "attach" use case, I guess.
+> 
+> If we consider that the DA to VA conversion should always be supported by the
+> remoteproc driver, we would need to obtain the DA from OP-TEE.
+> 
+> The impact would be to update the TA_RPROC_FW_CMD_GET_RSC_TABLE API to also
+> return the DA. This would require changes in the OP-TEE code by adding a new
+> output parameter to retrieve the DA.
+
+I don't like all the alternate solutions to rproc_pa_to_va() that I come up with
+so let's keep it for now.
+
+> 
+> Thanks,
+> Arnaud
+> 
+> 
 > > 
-> > Let's take pci_register_driver() as example.
+> > [1]. [PATCH v10 0/8] TI K3 M4F support on AM62 and AM64 SoCs
 > > 
-> > ```
-> > #define pci_register_driver(driver)		\
-> > 	__pci_register_driver(driver, THIS_MODULE, KBUILD_MODNAME)
-> > ```
-> > 
-> > In C drivers this works because (1) it's a macro and (2) it's called directly
-> > from the driver code.
-> > 
-> > In Rust, for very good reasons, we have abstractions for C APIs, hence the
-> > actual call to __pci_register_driver() does not come from code within the
-> > module, but from the PCI Rust abstraction `Module::init` calls into instead.
-> 
-> I don't understand those reasons, sorry.
-
-Ok, good you point this out. We should definitely discuss this point then and
-build some consensus around it.
-
-I propose to focus on this point first and follow up with the discussion of the
-rest of the series afterwards.
-
-Let me explain why I am convinced that it's very important to have abstractions
-in place in general and from the get-go.
-
-In general, having abstractions for C APIs is the foundation of being able to
-make use of a lot of advantages Rust has to offer.
-
-The most obvious one are all the safety aspects. For instance, with an
-abstraction we have to get exactly one piece of code right in terms of pointer
-validity, lifetimes, type safety, API semantics, etc. and in all other places
-(e.g. drivers) we get the compiler to check those things for us through the
-abstraction.
-
-Now, the abstraction can be buggy or insufficient and hence there is no absolute
-safety guarantee. *But*, if we get this one thing right, there is nothing a
-driver can mess up by itself trying to do stupid things anymore.
-
-If we just call the C code instead we have to get it right everywhere instead.
-
-Now, you could approach this top-down instead and argue that we could at least
-benefit from Rust for the driver specific parts.
-
-Unfortunately, this doesn't really work out either. Also driver specific code is
-typically (very) closely connected to kernel APIs. If you want to use the safety
-aspects of Rust for the driver specific parts you inevitably end up writing
-abstractions for the C APIs in your driver.
-
-There are basically three options you can end up with:
-
-(1) An abstraction for the C API within your driver that is actually generic
-    for every driver, and hence shouldn't be there.
-(2) Your driver specific code is full of raw pointers and `unsafe {}` calls,
-    which in the end just means that you ended up baking the abstraction into
-    your driver specific code.
-(3) You ignore everything, put everything in a huge `unsafe {}` block and
-    compile C code with the Rust compiler. (Admittedly, maybe slightly
-    overstated, but not that far off either.)
-
-The latter is also the reason why it doesn't make sense to only have
-abstractions for some things, but not for other.
-
-If an abstraction for B is based on A, but we don't start with A, then B ends up
-implementing (at least partially) the abstraction for A as well. For instance,
-if we don't implement `driver::Registration` then the PCI abstractions (and
-platform, usb, etc.) have to implement it.
-
-It really comes down to the point that it just bubbles up. We really have to do
-this bottom-up, otherwise we just end up moving those abstractions up, layer by
-layer, where they don't belong to and we re-implement them over and over again.
-
-> 
-> > Consequently, we have to pass things through. This also isn't new, please note
-> > that the current code already does the same thing: `Module::init` (without this
-> > patch) is already declared as
-> > 
-> > `fn init(module: &'static ThisModule) -> error::Result<Self>`
-> > passing through `ThisModule` for the exact same reason.
-> 
-> Yeah, and I never quite understood that either :)
-
-Since commit 247b365dc8dc ("rust: add `kernel` crate") shows me your RB for
-that, am I good to assume that this one isn't a blocker?
-
-> 
-> > Please also note that in the most common case (one driver per module) we don't
-> > see any of this anyway.
-> 
-> True, but someone has to review and most importantly, maintain, this
-> glue code.
-> 
-> > Just like the C macro module_pci_driver(), Rust drivers can use the
-> > `module_pci_driver!` macro.
-> > 
-> > Example from Nova:
-> > 
-> > ```
-> >     kernel::module_pci_driver! {
-> >         // The driver type that implements the corresponding probe() and
-> >         // remove() driver callbacks.
-> >         type: NovaDriver,
-> >         name: "Nova",
-> >         author: "Danilo Krummrich",
-> >         description: "Nova GPU driver",
-> >         license: "GPL v2",
-> >     }
-> > ```
-> 
-> As I said when you implemented this fun macro, don't do this yet.
-> 
-> We added these "helper" macros WAY late in the development cycle of the
-> driver model, AFTER we were sure we got other parts right.  There is no
-> need to attempt to implement all of what you can do in C today in Rust,
-> in fact, I would argue that we don't want to do that, just to make
-> things simpler to review the glue code, which is the most important part
-> here to get right!
-
-We're not reinventing the wheel here, we stick to the architecture the kernel
-already has.
-
-However, I understand that not starting with this macro directly makes it easier
-for you to see what's going on. I can introduce the macro in a separate patch to
-make it more obvious what's going on.
-
-> 
-> Changing drivers later, to take advantage of code savings like this
-> macro can be done then, not just yet.  Let's get this understood and
-> right first, no need to be tricky or complex.
-> 
-> And, as I hinted at before, I don't think we should be doing this at all
-> just yet either.  I still think a small "C shim" layer to wrap the
-> struct pci driver up and pass the calls to the rust portion of the
-> module is better to start with, it both saves you time and energy so
-> that you can work on what you really want to do (i.e. a driver in rust)
-> and not have to worry about the c bindings as that's the "tricky" part
-> that is stopping you from getting your driver work done.
-
-I strongly disagree here. As explained above, it just bubbles up, this approach
-would just make me end up having to write a lot of the code from the
-abstractions in the driver.
-
-However, it would indeed safe me time and energy to do just that. But that isn't
-really what I want. I also don't want to write a driver in Rust *only*.
-
-And I also don't really think that you want people, who commit to work hard to
-get things right, to just take the shortcut and create some random mess buried
-in a driver. :)
-
-What I actually want is to get to a solid foundation for Rust drivers in
-general, since I'm convinced that this provides a lot of value beyond the scope
-of a single driver.
-
-Since you've brought the topic up a few times, I am also willing to maintain
-those abstractions if this is a concern. Maybe one day the corresponding
-maintainers are comfortable enough and this isn't needed anymore, but at least
-until then, I'm happy to help out.
-
-> 
-> After all, it's not the pci driver model code that is usually the tricky
-> bits to verify in C, it's the whole rest of the mess.  Stick with a
-> small C file, with just the pci driver structure and device ids, and
-> then instantiate your rust stuff when probe() is called, and clean up
-> when release() is called.
-
-Again, this really bubbles up.
-
-What do we pass to Rust probe() function? A raw struct pci_dev pointer or the
-proper PCI device abstraction?
-
-How do we implement I/O memory mappings for PCI bars without PCI / I/O
-abstraction?
-
-How do we perform (boundary checked) I/O memory reads / writes without `Io`
-abstraction?
-
-How do we handle the lifetime of resources without `Devres` abstraction?
-
-How do we (properly) implement a DRM device registration abstraction without
-`Devres`?
-
-Luckily we already got the `Firmware` and `Device` abstraction in place. :)
-
-> 
-> I can provide an example if needed.
-
-If you do so, please don't stop at the probe() boundary, please continue to the
-point where the Nova stub driver is. It really does just enough to show / proove
-that the abstractions tie together nicely. But it should be enough to see that
-you end up with either (1), (2) or (3) from above.
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+> >> +	if (!tee_rproc_ctx) {
+> >> +		ret = -ENOMEM;
+> >> +		goto err;
+> >> +	}
+> >> +
+> >> +	tee_rproc_ctx->dev = dev;
+> >> +	tee_rproc_ctx->tee_ctx = tee_ctx;
+> >> +	INIT_LIST_HEAD(&tee_rproc_ctx->sessions);
+> >> +
+> >> +	return 0;
+> >> +err:
+> >> +	tee_client_close_context(tee_ctx);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int tee_rproc_remove(struct device *dev)
+> >> +{
+> >> +	struct tee_rproc *entry, *tmp;
+> >> +
+> >> +	list_for_each_entry_safe(entry, tmp, &tee_rproc_ctx->sessions, node) {
+> >> +		tee_client_close_session(tee_rproc_ctx->tee_ctx, entry->session_id);
+> >> +		list_del(&entry->node);
+> >> +		kfree(entry);
+> >> +	}
+> >> +
+> >> +	tee_client_close_context(tee_rproc_ctx->tee_ctx);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +MODULE_DEVICE_TABLE(tee, stm32_tee_rproc_id_table);
+> >> +
+> >> +static struct tee_client_driver tee_rproc_fw_driver = {
+> >> +	.id_table	= stm32_tee_rproc_id_table,
+> >> +	.driver		= {
+> >> +		.name		= KBUILD_MODNAME,
+> >> +		.bus		= &tee_bus_type,
+> >> +		.probe		= tee_rproc_probe,
+> >> +		.remove		= tee_rproc_remove,
+> >> +	},
+> >> +};
+> >> +
+> >> +static int __init tee_rproc_fw_mod_init(void)
+> >> +{
+> >> +	return driver_register(&tee_rproc_fw_driver.driver);
+> >> +}
+> >> +
+> >> +static void __exit tee_rproc_fw_mod_exit(void)
+> >> +{
+> >> +	driver_unregister(&tee_rproc_fw_driver.driver);
+> >> +}
+> >> +
+> >> +module_init(tee_rproc_fw_mod_init);
+> >> +module_exit(tee_rproc_fw_mod_exit);
+> >> +
+> >> +MODULE_DESCRIPTION(" TEE remote processor control driver");
+> >> +MODULE_LICENSE("GPL");
+> >> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> >> index 28aa62a3b505..6168f778414f 100644
+> >> --- a/include/linux/remoteproc.h
+> >> +++ b/include/linux/remoteproc.h
+> >> @@ -505,6 +505,8 @@ enum rproc_features {
+> >>  	RPROC_MAX_FEATURES,
+> >>  };
+> >>  
+> >> +struct tee_rproc;
+> >> +
+> >>  /**
+> >>   * struct rproc - represents a physical remote processor device
+> >>   * @node: list node of this rproc object
+> >> @@ -547,6 +549,7 @@ enum rproc_features {
+> >>   * @cdev: character device of the rproc
+> >>   * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
+> >>   * @features: indicate remoteproc features
+> >> + * @tee_interface: pointer to the remoteproc tee context
+> >>   */
+> >>  struct rproc {
+> >>  	struct list_head node;
+> >> @@ -588,6 +591,7 @@ struct rproc {
+> >>  	struct cdev cdev;
+> >>  	bool cdev_put_on_release;
+> >>  	DECLARE_BITMAP(features, RPROC_MAX_FEATURES);
+> >> +	struct tee_rproc *tee_interface;
+> >>  };
+> >>  
+> >>  /**
+> >> diff --git a/include/linux/tee_remoteproc.h b/include/linux/tee_remoteproc.h
+> >> new file mode 100644
+> >> index 000000000000..c9ae4f60e844
+> >> --- /dev/null
+> >> +++ b/include/linux/tee_remoteproc.h
+> >> @@ -0,0 +1,100 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> >> +/*
+> >> + * Copyright(c) 2024 STMicroelectronics - All Rights Reserved
+> >> + */
+> >> +
+> >> +#ifndef TEE_REMOTEPROC_H
+> >> +#define TEE_REMOTEPROC_H
+> >> +
+> >> +#include <linux/tee_drv.h>
+> >> +#include <linux/firmware.h>
+> >> +#include <linux/remoteproc.h>
+> >> +
+> >> +struct rproc;
+> >> +
+> >> +/**
+> >> + * struct tee_rproc - TEE remoteproc structure
+> >> + * @node:		Reference in list
+> >> + * @rproc:		Remoteproc reference
+> >> + * @parent:		Parent device
+> >> + * @rproc_id:		Identifier of the target firmware
+> >> + * @session_id:		TEE session identifier
+> >> + */
+> >> +struct tee_rproc {
+> >> +	struct list_head node;
+> >> +	struct rproc *rproc;
+> >> +	struct device *parent;
+> >> +	u32 rproc_id;
+> >> +	u32 session_id;
+> >> +};
+> >> +
+> >> +#if IS_REACHABLE(CONFIG_TEE_REMOTEPROC)
+> >> +
+> >> +struct tee_rproc *tee_rproc_register(struct device *dev, struct rproc *rproc,
+> >> +				     unsigned int rproc_id);
+> >> +int tee_rproc_unregister(struct tee_rproc *trproc);
+> >> +int tee_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw);
+> >> +int tee_rproc_load_fw(struct rproc *rproc, const struct firmware *fw);
+> >> +struct resource_table *tee_rproc_find_loaded_rsc_table(struct rproc *rproc,
+> >> +						       const struct firmware *fw);
+> >> +int tee_rproc_start(struct rproc *rproc);
+> >> +int tee_rproc_stop(struct rproc *rproc);
+> >> +
+> >> +#else
+> >> +
+> >> +static inline struct tee_rproc *tee_rproc_register(struct device *dev, struct rproc *rproc,
+> >> +						   unsigned int rproc_id)
+> >> +{
+> >> +	return ERR_PTR(-ENODEV);
+> >> +}
+> >> +
+> >> +static int tee_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+> >> +{
+> >> +	/* This shouldn't be possible */
+> >> +	WARN_ON(1);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline int tee_rproc_unregister(struct tee_rproc *trproc)
+> >> +{
+> >> +	/* This shouldn't be possible */
+> >> +	WARN_ON(1);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline int tee_rproc_load_fw(struct rproc *rproc,  const struct firmware *fw)
+> >> +{
+> >> +	/* This shouldn't be possible */
+> >> +	WARN_ON(1);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline int tee_rproc_start(struct rproc *rproc)
+> >> +{
+> >> +	/* This shouldn't be possible */
+> >> +	WARN_ON(1);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline int tee_rproc_stop(struct rproc *rproc)
+> >> +{
+> >> +	/* This shouldn't be possible */
+> >> +	WARN_ON(1);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline struct resource_table *
+> >> +tee_rproc_find_loaded_rsc_table(struct rproc *rproc, const struct firmware *fw)
+> >> +{
+> >> +	/* This shouldn't be possible */
+> >> +	WARN_ON(1);
+> >> +
+> >> +	return NULL;
+> >> +}
+> >> +#endif /* CONFIG_TEE_REMOTEPROC */
+> >> +#endif /* TEE_REMOTEPROC_H */
+> >> -- 
+> >> 2.25.1
+> >>
