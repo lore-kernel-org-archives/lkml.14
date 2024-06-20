@@ -1,142 +1,100 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8441D1B47BA
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DB61AD4B6
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718911600; cv=none; b=qNJuvVtWtsG0uT9Yd00v2jHt6bPo545owrIhpPcuKujzRB3UB84ZccfLs30eQngkqInbdhybDEzcjgXgsWcBL8Kq2qUGoglVjf7VQQaDOskZNGtJimLiwBzoejEj3XHTC62HAHaOoSx53uenozfEQzxgDbj+shnRIaVZavMsiBs=
+	t=1718911670; cv=none; b=TNIjij9k+jeVp6pyguGara15/ddaQfrPOq7RI/fK8EaNyQSvnzx+8W6msa7KU428W6NSf8eSZbpZUVcPOc2nV/2IksekbiaJ2zs2OrjCqmT02jHXD+Kp84odt8SZOZoDuhTPoEgqeXr6rBu45IiQQwGC/1xRV6r+swfMge5n4A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718911600; c=relaxed/simple;
-	bh=LMJhwXKqZKwDoZfSA47gsl66tl0ZA7Fm/pP5alDoprs=;
+	s=arc-20240116; t=1718911670; c=relaxed/simple;
+	bh=pdG4nCgSxw/YgFVj+Ej3ol4v6FdjqGrmdWzOvnnEv7s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dam9QIjA/FuL5w/UUfDd64k7xwNGyUcCva1EpnXrMt2rItEoPo2oGdgiOLCmaubrsfx25N9OMp5bXsdJFUqWJLQ4NNG99heaxhoprkcKGuQwDUj1xHJ/2N33fAwWRvJBmKb6q6beEvP2HIBnbDycqtysjNol0EEZy3PvGPZLiqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IawFwkeO; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=aFx+kre8NNqus+NGIy8A97y1qHCH76IQuYIr7bnnHFGq+fiKkEYaC1umQHTEXEFC4U29oIrZRJeCfxYFOCWGBcuPjOV0BqfS86MP4m+rUDVBFxu6hv/5lAesko3UQUPcPk7/jEkFZVa9oCnpHecQrdoDlKmeTo1NQB7NwrnJdQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k8YSA4ZA; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IawFwkeO"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6ef8bf500dso125702566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:26:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8YSA4ZA"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52cc9b887f1so1549053e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718911596; x=1719516396; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rxmltmQrKwAluprbf/AG1nvFIcYg57/7dnDwU0ucSDg=;
-        b=IawFwkeO0WbelKVvs29X+Z/vaPYerhBdC6qF5TfDw2++MLmiYuOBrv5jp0Sy0Ktofn
-         +LjbBdV7a5sEIj4HPFbrrsl5geeWy1omD1GZ1X9N4AJAvfG/dJq/rVDIGeT4PjJVC5GQ
-         8lDrkvSZ6CKstdZoOEs/Fnf8BbHu60pdv0CGI=
+        d=chromium.org; s=google; t=1718911667; x=1719516467; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pdG4nCgSxw/YgFVj+Ej3ol4v6FdjqGrmdWzOvnnEv7s=;
+        b=k8YSA4ZAB6x6ni4CIFuUv8oQ4Or9Xdq6Gn9PPdblbkPEjWFGLc/lkeTypoyrj7/4Zb
+         nw27Tk091KosjgLmAI2sGEf2tCb+vd08UODUYTIGfommrRzec8Q7TtEB2wW8tVMR12RE
+         xC1vOC6k2+4xBDVw2dAaKfnzKSC7gWl3Mskms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718911596; x=1719516396;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rxmltmQrKwAluprbf/AG1nvFIcYg57/7dnDwU0ucSDg=;
-        b=WeJlp/CRn4MekDwzKq7jQ5li62rnWAncg4ECupWyRJBy0PBWTAArSVlFEfmUchj4MX
-         bd62TRBA5ffdgXBdqjQ1gRxCZVD6KXftywrdmUxYkv9eHq2bSK0yt3ueihHC9gg4QuWQ
-         ql0GD2l98OWogPK2c1QNgfxSkQ74SItnryC1i2NCrZZjdma5L62oM8qHLOqKUKEySfwK
-         BkPA0Me/dw32XVXp2zoHw5/ehTzm9S/3hXjiuhfU6ub0Nsfz+V5irtmbRBRhFmu1h62a
-         rFwQN7euCwHbHfCjKUEru+9ZLB2171OuYsNPv5vn+wZDdA+qBaokahq4qfukl3t6be7n
-         qP+g==
-X-Gm-Message-State: AOJu0Yx6SmRvpfQO8f1S7K7JLpZJgRhwe/MalWZUZiQ0X7UrMQTkjyFF
-	VlNxi+ynUtKekC2JGm/b3U7E87TyN0O2TwCWtJhoiSmAJgkxbGXDByZJrKrRraQTZMgBrDcCiNO
-	arrvU+arv
-X-Google-Smtp-Source: AGHT+IFymH2t7+ZuoxabylxnnxVCS2AeeRPneS+mmzBS6QjWYYf2NCBIKFp9lBDb/rEQ0VjC4J3T/A==
-X-Received: by 2002:a17:906:c014:b0:a68:b49e:4745 with SMTP id a640c23a62f3a-a6fab7d045fmr381704366b.70.1718911596600;
-        Thu, 20 Jun 2024 12:26:36 -0700 (PDT)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf48a02dsm3144966b.54.2024.06.20.12.26.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 12:26:35 -0700 (PDT)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42198492353so11836825e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:26:35 -0700 (PDT)
-X-Received: by 2002:a5d:6152:0:b0:35f:308a:cab0 with SMTP id
- ffacd0b85a97d-363170ecbe5mr4379764f8f.13.1718911595412; Thu, 20 Jun 2024
- 12:26:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718911667; x=1719516467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pdG4nCgSxw/YgFVj+Ej3ol4v6FdjqGrmdWzOvnnEv7s=;
+        b=JSH9YBTQ3H7MBnHdsdq0KvxEGyoVXUW90LGk3hmlve8wRVCc/kC4YV9qzT0/wK/WWd
+         NkuRO75iHGRiOS2cG1fodWwqDyWjjdPt66UiMa0ABtYQ4zZpc1WN/q7W9nMy77UFAFBH
+         K9E1z3x4k/p/JO9tR6nO/pPAXJ8zN1K0NkcWnA+Yh7uqzSMwK1x/HseeTP8Fk7opscVF
+         xQUiv+YunCq+LAWeCOva+WzjWpXaF5/0cC2qfU/0bik4/1TSpQrdG1fPpXdpGCmiyCAJ
+         gmApvAS5c16Jefg4YVfspKL0hBZLQ9k92YlrEHXscuNEX75mgZ0g4ATdaN0uIzhdwRZ7
+         h79g==
+X-Gm-Message-State: AOJu0YwCsT6YYkDOlZjA0iCmxnCXlyAbwuNSFviqdohy10OV04BBqxfT
+	onl81IBGbsjSkPgpzlyfaK8tfBz8aLFhhtcjgonLZC2G74/GPDyhfFGpyM65L0d9Nn8+VSn4ErL
+	HXCDmRUBwXmqu+ukBwwEnIavbcL1tFykQqLim
+X-Google-Smtp-Source: AGHT+IFpX4vdPR88vzuw+qOy5LYQoEq2bxuX5ZqXaSLgyv7S8qAFNOakpP03z9BJy6HfhH21zcwde47uzX4pXKbYFYY=
+X-Received: by 2002:a05:6512:3043:b0:52c:84d1:1812 with SMTP id
+ 2adb3069b0e04-52ccaa58704mr4469058e87.7.1718911666694; Thu, 20 Jun 2024
+ 12:27:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620175703.605111-1-yury.norov@gmail.com> <CAHk-=wiUTXC452qbypG3jW6XCZGfc8d-iehSavxn5JkQ=sv0zA@mail.gmail.com>
- <ZnR1tQN01kN97G_F@yury-ThinkPad>
-In-Reply-To: <ZnR1tQN01kN97G_F@yury-ThinkPad>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 20 Jun 2024 12:26:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjv-DkukaKb7f04WezyPjRERp=xfxv34j5fA8cDQ_JudA@mail.gmail.com>
-Message-ID: <CAHk-=wjv-DkukaKb7f04WezyPjRERp=xfxv34j5fA8cDQ_JudA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/40] lib/find: add atomic find_bit() primitives
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, "Md. Haris Iqbal" <haris.iqbal@ionos.com>, 
-	Akinobu Mita <akinobu.mita@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>, 
-	Christian Brauner <brauner@kernel.org>, Damien Le Moal <damien.lemoal@opensource.wdc.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Disseldorp <ddiss@suse.de>, 
-	Edward Cree <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>, 
-	Fenghua Yu <fenghua.yu@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Greenman <gregory.greenman@intel.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>, 
-	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>, 
-	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
-	Karsten Graul <kgraul@linux.ibm.com>, Karsten Keil <isdn@linux-pingi.de>, 
-	Kees Cook <keescook@chromium.org>, Leon Romanovsky <leon@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Martin Habets <habetsm.xilinx@gmail.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, 
-	Nicholas Piggin <npiggin@gmail.com>, Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Sean Christopherson <seanjc@google.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>, Stanislaw Gruszka <stf_xl@wp.pl>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
-	Will Deacon <will@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org, 
-	ath10k@lists.infradead.org, dmaengine@vger.kernel.org, iommu@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-media@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-net-drivers@amd.com, 
-	linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	mpi3mr-linuxdrv.pdl@broadcom.com, netdev@vger.kernel.org, 
-	sparclinux@vger.kernel.org, x86@kernel.org, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>, 
-	Matthew Wilcox <willy@infradead.org>, Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Shtylyov <s.shtylyov@omp.ru>
+References: <20240430212838.1.I77b0636d5df17c275042fd66cfa028de8ad43532@changeid>
+ <83e218f9-29f5-4f35-bd0c-b298e3bb9e8c@linux.intel.com> <CAEs41JC-vJaMHj6fzmNO=-bu5oURRA-u565sN2=yzBeVtKb=4g@mail.gmail.com>
+ <b2375610-4044-49e6-86e9-5c172abb2ffa@linux.intel.com>
+In-Reply-To: <b2375610-4044-49e6-86e9-5c172abb2ffa@linux.intel.com>
+From: Allen Ballway <ballway@chromium.org>
+Date: Thu, 20 Jun 2024 12:27:35 -0700
+Message-ID: <CAEs41JAPPr3xRR42H6vKic5rVrtV-on4HyT5wNCXxbJtwijnCA@mail.gmail.com>
+Subject: Re: [PATCH] ALSA: hda: intel-dsp-config: Fix Azulle Access 4 quirk detection
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Brady Norander <bradynorander@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+	=?UTF-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>, 
+	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org, 
+	Mark Hasemeyer <markhas@chromium.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Cezary Rojewski <cezary.rojewski@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 20 Jun 2024 at 11:32, Yury Norov <yury.norov@gmail.com> wrote:
+I filed a bug and after sharing the requested information it looks
+like this device won't work on SOF without vendor support. Given this,
+would the original patch returning this device to using HDAudio be
+reasonable, or is there an preferred alternative to force this device
+into using HDAudio?
+
+Thanks,
+Allen
+
+On Mon, May 6, 2024 at 11:02=E2=80=AFAM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
 >
-> Is that in master already? I didn't get any email, and I can't find
-> anything related in the master branch.
-
-It's 5d272dd1b343 ("cpumask: limit FORCE_NR_CPUS to just the UP case").
-
-> > New rule: before you send some optimization, you need to have NUMBERS.
 >
-> I tried to underline that it's not a performance optimization at my
-> best.
-
-If it's not about performance, then it damn well shouldn't be 90%
-inline functions in a header file.
-
-If it's a helper function, it needs to be a real function elsewhere. Not this:
-
- include/linux/find_atomic.h                  | 324 +++++++++++++++++++
-
-because either performance really matters, in which case you need to
-show profiles, or performance doesn't matter, in which case it damn
-well shouldn't have special cases for small bitsets that double the
-size of the code.
-
-              Linus
+>
+>
+> > Unfortunately the above patch didn't fix the issue, nor did I see any
+> > of the change logs in dmesg.
+> > Are there other alternative solutions or information I could gather to
+> > make a more general solution?
+>
+> File an issue here: https://github.com/thesofproject/linux/issues
+>
+> and attach the NHLT table:
+>
+> sudo cat /sys/firmware/acpi/tables/NHLT > nhtl.dat; gzip nhlt.dat
+>
+> as well as the results of alsa-info.
