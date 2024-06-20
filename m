@@ -1,86 +1,141 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D2F2594;
-	Thu, 20 Jun 2024 10:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5467617CA1B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718879641; cv=none; b=lw7BqYXNmSNHFmuDxO1/cGgceY2zG2tR1G5TsXou84em1IA2FUEFupJS/GQUCJOxG9rC+ZpJeOElFn/Pk/NgZYMfHnKieDV+9RaY/OsGmOsEOkgScBmIp3duaJw4r9sd3+upnj9LcfhPC6CGtuuN8uBuTkHCXmqMFsqVAWZ7ZWw=
+	t=1718879660; cv=none; b=BXBJHXjycvB5WZFc0D3MwqCc68Ec6Erj313DJ4U4lXft50Z1Ftm1puAZ4/u72KGedobIcFiDgzh1mi8dSTNuMzIoimHlo/IZ4blRmr12kdEm4O2T08+vqaGRtrhzLLLfJeBckkHeQfAtGAFMnHObSbJjUGgJbGuL5agzFDadcWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718879641; c=relaxed/simple;
-	bh=HShNafy3kcrdH/pYm/qzr0SfI1ZGqiTlGUQzNoPyLqc=;
+	s=arc-20240116; t=1718879660; c=relaxed/simple;
+	bh=YNOkYJNBVLQ0eueIapzEgiAefpctePBYXUzNH0ucuBk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/qH0gekFIjSfXR75Ee/0lvmEbdRnC7Lyys5mq6bgrDyFTA1dm1cI/1mnAZs1EciQjz3aR0PosyUlJB3p2Ckr/wzau8YLy4WxUUJuy/MORLKLgPo6Mpw/G/jWBsQWkt5SRNKdnwAdyswJUnbfZoGBtR+lf6Jb3nJ94SzGaJ/aJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ATnmfz0a; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CwzOYbMh1va5U4R0qbeB/Nl9834Hl/SD/ZYjVAivFa+7vf5J0LSUIV82LcRKcZwYw2XyfQk4GJth1zjootctt6royWgIrDS9WgLKDnLNL51RYERTbvFkNWYygY0O7d1Ea1isyIVZOQ6umKxIvNsnDCT9WgWJ3QGkeEB20Es5Tx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=O4LgYgwk; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ATnmfz0a"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92D8966F;
-	Thu, 20 Jun 2024 12:33:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1718879618;
-	bh=HShNafy3kcrdH/pYm/qzr0SfI1ZGqiTlGUQzNoPyLqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ATnmfz0aOnKlDcZ/w5vfw0GVZOGh2cCpcMFoXuytz9U8jOqc8rm69zStK8q5s/q5Y
-	 FY+oRlewL9Us0L7jEtKstTSZEuNX7IsicKPQPueZ9bLyjW/ZZcOLNWtVaAiSIqEoIY
-	 eu8hpUjfresfwvotkIhLh4xksTwvoP9GioFWjsa8=
-Date: Thu, 20 Jun 2024 13:33:35 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH] media: i2c: Kconfig: Fix missing firmware upload config
- select
-Message-ID: <20240620103335.GA27999@pendragon.ideasonboard.com>
-References: <20240620102544.1918105-1-kory.maincent@bootlin.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="O4LgYgwk"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57cbc2a2496so807445a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 03:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718879655; x=1719484455; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UH1RftmHG3Vs+kyJjdp6FaijzaNseaKDxHW9Q4uMarM=;
+        b=O4LgYgwk8Awj0VHeb9P3YjDruI99pZGB+PtBkXIDhyFXoDZXbHoi3r9V4qiZQRmzGU
+         clGhbTBa3YLuCLRoq5wSIEBZUgO2ceAuHKGNQLLmpRN4lnpeBgNU+7s6VgY601Jdpgrc
+         Y3R4BRKvtp+u5hVYJ5wfnvXACS8O/La4saI4GNoWcz0U23YlPEm5QJ6YyekWWj+e0Qfn
+         XnO+8zOYY1lze8tIupeEitLJIS4nw6H2YZqaP5eKAPALQY7zXVfUCShO5vEDtjYTfPyU
+         Tg0Ye8O2en/ckemwd+BDFUDjj8wWphis+Ou1n2MslE0iptr1Y5TjkGFQJhaAiChrnsca
+         i4DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718879655; x=1719484455;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UH1RftmHG3Vs+kyJjdp6FaijzaNseaKDxHW9Q4uMarM=;
+        b=UqPfQZi/Ti4LrP4+KsJlBa2+TDRgksQ/9xUevTGxweQEXIo6xt/F/VPIpO7QV4EzH+
+         CS6HuH6HyHPUQ00SKCJUzdnjEVzlPz4iWESh8hxdlSrPMju4BruTHRAGT5I84fi97+4m
+         b+Z2fDppb4j7e0Nv5B0fW4UVOJIe6GJVAfm/8w7+5vykuf2MQbxCgngyZL9I3d0sQhXB
+         i4At2JFKf85Ec09wyY/mEEg0xbCXwu3hK1wtNQVYUMUsyWIGkWbXAR+hDDm7MNvbatqP
+         uo22zQR2qSg24KfzjxGblTLy7QrTgJywBlljcRptPLBar3km9pMmZpFep2gGv3iK+C8T
+         Abww==
+X-Forwarded-Encrypted: i=1; AJvYcCVGRPuGvZtfB+5EFdF++9UgGTZmtsDwBgEy8gZiDJSJXwU+QnbZkdXB/lTFVmeIEtm0AHwtm0yi6LW4F3zdbWLhrnIJgua8B73cOrId
+X-Gm-Message-State: AOJu0YzU1CLBTnCNga81YS6SHhuhPirmR88QWHzR8du8yqL/1WM1QVZG
+	D+fo5ab7nppTbUXNptNoKYEcvI6CR2+p9fKR4OSq1N417kKSaPEpCkR0SOMqUBg=
+X-Google-Smtp-Source: AGHT+IEywqbKty6de7BGaA3EekB8lHCg+TqJCCgL/r5vpSNbTS3dSW25wQhhnMyvzNmMNB+yuXEXOw==
+X-Received: by 2002:a17:906:e214:b0:a6f:6721:b065 with SMTP id a640c23a62f3a-a6fab643f94mr316617366b.32.1718879654465;
+        Thu, 20 Jun 2024 03:34:14 -0700 (PDT)
+Received: from localhost (p200300f65f283b00ca876ee5dd3d1e3b.dip0.t-ipconnect.de. [2003:f6:5f28:3b00:ca87:6ee5:dd3d:1e3b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecd5bfsm750320466b.113.2024.06.20.03.34.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 03:34:13 -0700 (PDT)
+Date: Thu, 20 Jun 2024 12:34:12 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	William Breathitt Gray <wbg@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-pwm@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Thorsten Scherer <T.Scherer@eckelmann.de>
+Subject: Re: [PATCH v2 3/5] counter: stm32-timer-cnt: Use TIM_DIER_CCxIE(x)
+ instead of TIM_DIER_CCxIE(x)
+Message-ID: <imyuhtcsjrbyodsndzbaqfwa4jxny25eylfdh4u4xtsiotsk5g@45l556pcrzys>
+References: <cover.1718791090.git.u.kleine-koenig@baylibre.com>
+ <126bd153a03f39e42645573eecf44ffab5354fc7.1718791090.git.u.kleine-koenig@baylibre.com>
+ <20240620084451.GC3029315@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hl7obtkvuj2dllak"
 Content-Disposition: inline
-In-Reply-To: <20240620102544.1918105-1-kory.maincent@bootlin.com>
+In-Reply-To: <20240620084451.GC3029315@google.com>
 
-Hi Kory,
 
-Thank you for the patch.
+--hl7obtkvuj2dllak
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2024 at 12:25:43PM +0200, Kory Maincent wrote:
-> FW_LOADER config only selects the firmware loader API, but we also need
-> the sysfs_upload symbols for firmware_upload_unregister() and
-> firmware_upload_register() to function properly.
-> 
-> Fixes: 7a52ab415b43 ("media: i2c: Add driver for THine THP7312")
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Hello Lee,
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+On Thu, Jun 20, 2024 at 09:44:51AM +0100, Lee Jones wrote:
+> On Wed, 19 Jun 2024, Uwe Kleine-K=F6nig wrote:
+>=20
+> > These two defines have the same purpose and this change doesn't
+> > introduce any differences in drivers/counter/stm32-timer-cnt.o.
+> >=20
+> > The only difference between the two is that
+> >=20
+> > 	TIM_DIER_CC_IE(1) =3D=3D TIM_DIER_CC2IE
+> >=20
+> > while
+> >=20
+> > 	TIM_DIER_CCxIE(1) =3D=3D TIM_DIER_CC1IE
+> >=20
+> > . That makes it necessary to have an explicit "+ 1" in the user code,
+> > but IMHO this is a good thing as this is the code locatation that
+> > "knows" that for software channel 1 you have to use TIM_DIER_CC2IE
+> > (because software guys start counting at 0, while the relevant hardware
+> > designer started at 1).
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> > ---
+> >  drivers/counter/stm32-timer-cnt.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> Did you drop William's Ack on purpose?
 
-> ---
->  drivers/media/i2c/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index c6d3ee472d81..742bc665602e 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -679,6 +679,7 @@ config VIDEO_THP7312
->  	tristate "THine THP7312 support"
->  	depends on I2C
->  	select FW_LOADER
-> +	select FW_UPLOAD
->  	select MEDIA_CONTROLLER
->  	select V4L2_CCI_I2C
->  	select V4L2_FWNODE
+Yes, because a) I was unsure what he didn't like about the subject, and
+(more importantly) b) I split the patch in question. I should have
+written that in the cover letter, sorry.
 
--- 
-Regards,
+(Note I only announced to have fixed the subject prefix of the pwm
+patch. I assume you won't include that in your pull request, but if you
+do, please do s/-/: / on it. That's another thing I failed with for this
+series.)
 
-Laurent Pinchart
+Best regards
+Uwe
+
+--hl7obtkvuj2dllak
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ0BaEACgkQj4D7WH0S
+/k7t4gf/cOIyz4Nagjp9u3Qrvbjo6uKDr5UNTBYW/l4HOKdCzRn2Ay7aWf5oRPOh
+ZES1YQ1qZfU016yI+Uo1glCjmYvLuqCUeAh10hdBbTG62MHpUZoQG6KjL2Xv5+x/
+FpsgfO77RerGDLZ4eUEH57XolCnRK76HAyDGLUp07GOU/xuDpGLmu6vh+Q+7m3Uu
+A3IrKXrN9x8RDbO1Dl6Hm2Qpw+wbvZtlyTS/Zua+nKtO8lGpGkWtv3eJnnnupHQt
+RJDvkplZy1uB3W+4x1cU/AKRtUphn94+DAaoWAHu82hamy3s3xiuS9n1aq5W4l8h
+AtKCcSvaXottQP+Nm85Lr7Y1srvioQ==
+=TbiZ
+-----END PGP SIGNATURE-----
+
+--hl7obtkvuj2dllak--
