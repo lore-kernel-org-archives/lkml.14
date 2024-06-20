@@ -1,118 +1,236 @@
-Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B3E174EC1;
-	Thu, 20 Jun 2024 16:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8102A1AED47
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718901162; cv=none; b=i5eFAJKPay3tP12ZWl1zdWSvA6gU00Px3jqS/HAZdPZblTTIqjwSzQCV8dvAXi4Ei3OIbL1bnl5W7gs4ekCpGYg8WldDxeDNYaUyylrEextyNKgNK//q3hbjN5ve5dvYf/ezAsgcFRBrVb5GabqqQrSejqeKADklBmoqtsapWSQ=
+	t=1718901201; cv=none; b=MSWwDgOcmXOuM+aLSAq/muxilpEmX4aISmv7W06T/EPhkDtPi4CPFLx9q+bSxBnQRjy2NYBF+xkqg9vYc7/vhHI4hkY6gog87XIkAH0/lRSbpfc7WckTGpsvWnVGgU071YD1Q1YG+wy5mPIOKh/M7YDbD8BgZb5bSeHUb3oFPN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718901162; c=relaxed/simple;
-	bh=Odbk+EWM54S/MJAlmXIgT9f/AlcQ+5s/yWxbT/rznTI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=V32msydq6r6fQmtLCPQ9HIdMGEo1ngYGOAWbCwPiXsRCycJSCP/OAfGYXIiXJfz4Rx/emzh4nfQkmyrDw3Zsz4RqVlDlwssFsoq7ndzadjYQamldlNr21Iang21qboTVZsYtaK1XRvr655/i4/D3EFITqi9xvWk3989WFSh7qTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=MP49U8c+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zz4g3Eu3; arc=none smtp.client-ip=64.147.123.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1718901201; c=relaxed/simple;
+	bh=UxbdEJzEfTFGGdJutifmUiiqZYkHXI3z/2GfVjcxnU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mL+IYlccqFziEWVNSMI58IKrhHlXPmjpB4P00txNB2dJO3nZNy1Ji+0uUARSe3WpC8bYEx1SXQlHdlBUTGlGDOQd9m+uLRAItuF/VYWNHs/hxJD2sHGJbDUuhBHg7uc+BpaQOgVhAun1dhAHTvDsBLADWqm8DauHBlCVfBENqKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aKBNCDef; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="MP49U8c+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zz4g3Eu3"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.west.internal (Postfix) with ESMTP id 93E321C0012F;
-	Thu, 20 Jun 2024 12:32:39 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 20 Jun 2024 12:32:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1718901159;
-	 x=1718987559; bh=Odbk+EWM54S/MJAlmXIgT9f/AlcQ+5s/yWxbT/rznTI=; b=
-	MP49U8c+KCpHeGMcKVE+acKq6tPkjMkNvBNQUG+9kIPz77N9LYWM2QsS0y1HlnQk
-	3jbENB3hAc4jbySC6mL/sfJxg3gj0RcOGBbjkX5+h/WITe5hlSojqsqOtrSktZo7
-	shqJYvSzUeeTsFoxAvsFPAzl53t+OAksdUVjpG3vIeIqqpKmwNCZXXa8c9M8SY0E
-	8k+Cpm447pEQJIdyKilPptUiJ/5vW0CRbqvrq8ENyW0LALbakFu/awZUo1++JOqf
-	Z6QeO9R8jwThPIz7ztxs5XiuxgRp5jXICwf8v627Pa/UK7e24vEukIKmxOvuCQ2u
-	oAh76/jb8YQ5wnzdRCcs8g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1718901159; x=
-	1718987559; bh=Odbk+EWM54S/MJAlmXIgT9f/AlcQ+5s/yWxbT/rznTI=; b=Z
-	z4g3Eu3xwya8GXGMqnYOzuKTJfB/ylUYgSr5Pnv+GWa4899Trx4V8CkPTRGcM8Vz
-	DkWRwWAGXRKBSG8WtKDYTSbzrZ4HrGa+c0cuOkZDFDRH7INv8uExwRQXPDYjyB21
-	rE03eKVFNyWQulj6aq1ELpAKxm5ubAJnrs8evsrOsV0Pujw0kFr2UjFp+DSFx9lH
-	0TG0Oz2RSRgqkisvs5D5rlEfgbcq6ErbBQGIjccdhQgW0wsSZb2qwP56zbEf6ndj
-	m2SpBJ3B3oTLRvGuQoF02KpmSZM+h9SJonbeEyV8X6D5FJPOCyeJ/oDCM3uyhzqv
-	NzivlYavSLjokdymoBzfA==
-X-ME-Sender: <xms:pll0ZljqtYFd19cOttadDOaalvYq5ijyWi_0ws8Sy2YH1eNk-xAxDw>
-    <xme:pll0ZqDzFUy9DVcV6_k_K0y4bu4KL9PDWDwpHX5IL0xF5dAepxhhtGLJGnd4oUpJM
-    ZlvlsGdAJtJjZVa7ss>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefvddguddtfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
-    lfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtg
-    homheqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefh
-    jeeugeevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:pll0ZlHTGm15d0kiSDJA6gJnfI3FtVaNANqRHnN4m2YpMuOpCYitXw>
-    <xmx:pll0ZqQr1t-vxJpUkP7s8_9zr4wsarz_YXQfqOTu7wB0g0ld0Ttcig>
-    <xmx:pll0Ziyx2WgH1B_Jrpqk67Ka4wiIXsbMZ-42vcZ_hesjTZj7dr2law>
-    <xmx:pll0Zg6UVDe8bmvCeLfUATevopyvNFPmnjYSyC-b9WRa2Yc1kUB_5Q>
-    <xmx:p1l0Zmd9HeXlDI8A-fMuXFAyMDB5OP7D-9tlOxkHirlkV97fZgcRJ3qD>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AA55A36A0075; Thu, 20 Jun 2024 12:32:38 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aKBNCDef"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-422954bbe29so147485e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718901198; x=1719505998; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4B53UjI6PoAGWaCsloRkiHZtuTpGHM2ZWrCUhiNKWNY=;
+        b=aKBNCDefQ8eWTyPfXJ9RtovKFKfxPq8D8X4PC1xQ3oQe3+eZTogbm4dH8debKbJiR7
+         X04ZlMc4OFNOvjKqqu4ElN/5/dspZOY1gICTkF/Ugizm4KoQADbw6w0S65PSPEjZoenY
+         CZks5w7KxyTKhPMzue6BQuDPLUI0idYbmFi5fgzYIwiTrz9hFxVOENEAGO/+AJMv+vqa
+         6gPJgNXiw1ZeY25o9d/p4w9xb7rvF1JJwP55WmkcSw5h6THtWMS7KbCfxMQ8bXmOepZr
+         WGVKZ7RKEi3pi0I2oPVLCMh6H+P54JJp7sO8FH6oapLtmOzTm3PYMr3N4SpmTKbp/kgq
+         +2fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718901198; x=1719505998;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4B53UjI6PoAGWaCsloRkiHZtuTpGHM2ZWrCUhiNKWNY=;
+        b=MgwhjCVD9Aum+MDYCeNVTMQbwPxGBthK70l3PJivHWDL8n+uIRF4vvYRO8Ft2+Rev3
+         Qws39MIoytu3FWKwldrYqB0giE+/wxrQxKny3Qtjc/yLMJJmhQ3PBiOe4T3YNndOuWyR
+         KCa1fnSMrpi7w6yno5c/QTc3fp+HzWKe714WZQ6Wqd95ZbNl20UXq9nxy3hUPKChpLQE
+         y3fBIk2tYuT9hLb2L/1WkOamhn0rhrhj4z7jKcNmSoJg44RRbTHfguvYmws6RwRKiF05
+         RayoFa6BpoCXtjz0NR5uJTU4U6FEBHpk2Z5qhT0ad+zZKUtBiMIahzEMVIJdM4VuSZ/N
+         g2Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMiCRGY6jxmvxqyRqgj+JPIOVE08+VFQGEOQ/HHUklanODn86E7iG166DlG3G6O7Tl2Td9ECmWUdmety1rtR2Jl1WpnoRJJ9nAgqOg
+X-Gm-Message-State: AOJu0YzC56ND8VP5Q9q0Dq7PIqYzmCfEZXI92jK1gx5c0mTKmzfK1SFJ
+	NIWk6bYxDEDoTDaJL7dGzC3fCDlJW1LC/pgCBYa+l8oKX0BM/WjksW2B3k06jQ==
+X-Google-Smtp-Source: AGHT+IEz2SgAboLf42+BQNW/d36kQQhVc7F1UusAvGsQvMHx+tzIbLyscYR5TmIlxga6H6/BKgdcwQ==
+X-Received: by 2002:a05:600c:34d6:b0:424:7ac9:4d9a with SMTP id 5b1f17b1804b1-4247ac95619mr2095555e9.1.1718901197463;
+        Thu, 20 Jun 2024 09:33:17 -0700 (PDT)
+Received: from google.com (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0c9e27sm30767025e9.23.2024.06.20.09.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:33:16 -0700 (PDT)
+Date: Thu, 20 Jun 2024 16:33:12 +0000
+From: Mostafa Saleh <smostafa@google.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+	maz@kernel.org, kvm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, pbonzini@redhat.com,
+	Fuad Tabba <tabba@google.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
+Message-ID: <ZnRZyBy_uxtjQHsz@google.com>
+References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
+ <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com>
+ <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
+ <ZnQpslcah7dcSS8z@google.com>
+ <1ab73f42-9397-4fc7-8e62-2627b945f729@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <2ab8b329-268f-4f18-b0ee-17fdee1b329d@app.fastmail.com>
-In-Reply-To: <45d66377-20d8-4b16-9b5c-490d9afc41ed@kernel.org>
-References: <20240618-boston-syscon-v3-0-c47c06647a26@flygoat.com>
- <20240618-boston-syscon-v3-7-c47c06647a26@flygoat.com>
- <6d3fbd07-72a0-43fd-a1e5-c39e3a833bc1@kernel.org>
- <51557e31-0a59-4278-a8c1-25cf66fa3c3f@app.fastmail.com>
- <808f27bf-9dc7-407a-86ff-0a8fae79531c@kernel.org>
- <be608e3e-2ecd-4d7d-bf45-99c553e72c08@app.fastmail.com>
- <45d66377-20d8-4b16-9b5c-490d9afc41ed@kernel.org>
-Date: Thu, 20 Jun 2024 17:32:19 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v3 7/8] dt-bindings: mfd: Add img,boston-platform-regs
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ab73f42-9397-4fc7-8e62-2627b945f729@redhat.com>
 
+Hi David,
 
+On Thu, Jun 20, 2024 at 04:14:23PM +0200, David Hildenbrand wrote:
+> On 20.06.24 15:08, Mostafa Saleh wrote:
+> > Hi David,
+> > 
+> > On Wed, Jun 19, 2024 at 09:37:58AM +0200, David Hildenbrand wrote:
+> > > Hi,
+> > > 
+> > > On 19.06.24 04:44, John Hubbard wrote:
+> > > > On 6/18/24 5:05 PM, Elliot Berman wrote:
+> > > > > In arm64 pKVM and QuIC's Gunyah protected VM model, we want to support
+> > > > > grabbing shmem user pages instead of using KVM's guestmemfd. These
+> > > > > hypervisors provide a different isolation model than the CoCo
+> > > > > implementations from x86. KVM's guest_memfd is focused on providing
+> > > > > memory that is more isolated than AVF requires. Some specific examples
+> > > > > include ability to pre-load data onto guest-private pages, dynamically
+> > > > > sharing/isolating guest pages without copy, and (future) migrating
+> > > > > guest-private pages.  In sum of those differences after a discussion in
+> > > > > [1] and at PUCK, we want to try to stick with existing shmem and extend
+> > > > > GUP to support the isolation needs for arm64 pKVM and Gunyah.
+> > > 
+> > > The main question really is, into which direction we want and can develop
+> > > guest_memfd. At this point (after talking to Jason at LSF/MM), I wonder if
+> > > guest_memfd should be our new target for guest memory, both shared and
+> > > private. There are a bunch of issues to be sorted out though ...
+> > > 
+> > > As there is interest from Red Hat into supporting hugetlb-style huge pages
+> > > in confidential VMs for real-time workloads, and wasting memory is not
+> > > really desired, I'm going to think some more about some of the challenges
+> > > (shared+private in guest_memfd, mmap support, migration of !shared folios,
+> > > hugetlb-like support, in-place shared<->private conversion, interaction with
+> > > page pinning). Tricky.
+> > > 
+> > > Ideally, we'd have one way to back guest memory for confidential VMs in the
+> > > future.
+> > > 
+> > > 
+> > > Can you comment on the bigger design goal here? In particular:
+> > > 
+> > > 1) Who would get the exclusive PIN and for which reason? When would we
+> > >     pin, when would we unpin?
+> > > 
+> > > 2) What would happen if there is already another PIN? Can we deal with
+> > >     speculative short-term PINs from GUP-fast that could introduce
+> > >     errors?
+> > > 
+> > > 3) How can we be sure we don't need other long-term pins (IOMMUs?) in
+> > >     the future?
+> > 
+> > Can you please clarify more about the IOMMU case?
+> > 
+> > pKVM has no merged upstream IOMMU support at the moment, although
+> > there was an RFC a while a go [1], also there would be a v2 soon.
+> > 
+> > In the patches KVM (running in EL2) will manage the IOMMUs including
+> > the page tables and all pages used in that are allocated from the
+> > kernel.
+> > 
+> > These patches don't support IOMMUs for guests. However, I don't see
+> > why would that be different from the CPU? as once the page is pinned
+> > it can be owned by a guest and that would be reflected in the
+> > hypervisor tracking, the CPU stage-2 and IOMMU page tables as well.
+> 
+> So this is my thinking, it might be flawed:
+> 
+> In the "normal" world (e.g., vfio), we FOLL_PIN|FOLL_LONGTERM the pages to
+> be accessible by a dedicated device. We look them up in the page tables to
+> pin them, then we can map them into the IOMMU.
+> 
+> Devices that cannot speak "private memory" should only access shared memory.
+> So we must not have "private memory" mapped into their IOMMU.
+> 
+> Devices that can speak "private memory" may either access shared or private
+> memory. So we may have"private memory" mapped into their IOMMU.
+> 
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8820=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8B=E5=
-=8D=885:16=EF=BC=8CKrzysztof Kozlowski=E5=86=99=E9=81=93=EF=BC=9A
-[...]
->> syscon-reboot is certainly using parent node to provide I/O address,
->> even regmap property is deprecated. Without "simple-mfd", reboot node
->> won't be populated at all.
->
-> That's why I asked you to populate children.
+Private pages must not be accessible to devices owned by the
+host, and for that we have the same rules as the CPU:
+A) The hypervisor doesn’t trust the host, and must enforce that using the CPU
+   stage-2 MMU.
+B) It’s preferable that userspace doesn’t, and hence these patches (or guest_memfd...)
 
-Do you mean I should write a driver for this?
-This is a little bit overkilling, I'd rather fix the clock driver.
+We need the same rules for DMA, otherwise it is "simple" to instrument a DMA attack,
+so we need a protection by the IOMMU. pKVM at the moment provides 2 ways of
+establishing that (each has their own trade-off which are not relevant here):
 
-Thanks
->
-> Best regards,
-> Krzysztof
+1) pKVM manages the IOMMUs and provides a hypercall interface to map/unmap in
+   the IOMMU, looking at the rules
 
---=20
-- Jiaxun
+   For A), pKVM has its own per-page metadata which tracks page state, which can
+   prevent mapping private pages in the IOMMU and transitioning pages to private
+   if they are mapped in the IOMMU.
+
+   For B), userspace won’t be able to map private pages(through VFIO/IOMMUFD), as
+   the hypercall interface would fail if the pages are private.
+
+   This proposal is the one on the list.
+
+2) pKVM manages a second stage of the IOMMU (as SMMUv3), and let the kernel map what
+   it wants in stage-1 and pKVM would use a mirrored page table of the CPU MMU stage-2.
+
+   For A) Similar to the CPU, stage-2 IOMMU will protect the private pages.
+
+   For B) userspace can map private pages in the first stage IOMMU, and that would
+   result in stage-2 fault, AFAIK, SMMUv3 is the only Arm implementation that
+   supports nesting in Linux, for that the driver would only print a page fault,
+   and ideally the kernel wouldn’t crash, although that is really hardware
+   dependant how it handle faults, and I guess assigning a device through VFIO
+   to userspace comes with similar risks already (bogus MMIO access can
+   crash the system).
+
+   This proposal only exists in Android at the moment(However I am working on
+   getting an SMMUv3 compliant implementation that can be posted upstream).
+
+> 
+> What I see (again, I might be just wrong):
+> 
+> 1) How would the device be able to grab/access "private memory", if not
+>    via the user page tables?
+
+I hope the above answers the question, but just to confirmn, a device owned by
+the host shouldn’t access the memory as the host kernel is not trusted and
+can instrument DMA attacks. Device assignment (passthrough) is another story.
+
+> 2) How would we be able to convert shared -> private, if there is a
+>    longterm pin from that IOMMU? We must dynamically unmap it from the
+>    IOMMU.
+
+Depending on which solution from the above, for
+1) The transition from shared -> private would fail
+2) The private page would be unmapped from the stage-2 IOMMU (similar to the
+   stage-2 CPU MMU)
+
+> 
+> I assume when you're saying "In the patches KVM (running in EL2) will manage
+> the IOMMUs  including the page tables", this is easily solved by not relying
+> on pinning: KVM just knows what to update and where. (which is a very
+> different model than what VFIO does)
+> 
+
+Yes, that's is not required to protect private memory.
+
+Thanks,
+Mostafa
+
+> Thanks!
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
