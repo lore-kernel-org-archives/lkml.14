@@ -1,217 +1,143 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964461A8C18;
-	Thu, 20 Jun 2024 16:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2639C1B29C3;
+	Thu, 20 Jun 2024 16:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718902416; cv=none; b=SCAxs95KBS9JRi6TPesREo/xIeusnV3WVzZuUakkuG1tMLk+IQ9zysPOmj5yfb/NK+yWbTtrQyPQu5ZjYFTHTeRV8xqZSvIes+Z+PTxJDiEH9632e0gMSGFX0Lx1DQEBOxzfXEHq/MHTtRjvV0nLPXVmUpkVV2ql9jFu6lviJX0=
+	t=1718902431; cv=none; b=E7lyfzaQQai6Yop3fHH+WCiPO8IOf6Zp+yGtZFZqjWOdVP1SuMjT5mfC8kBRfV4vlzYhN3mjQ/I0HNEOYJV8f8EQU+tSXlj123fbU7MYhcLupHXeT1WcOB7MsuxXv4bII9cYCcmBubNL4qG/RiIpshOExx03hF3+bbcIeqIvan8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718902416; c=relaxed/simple;
-	bh=iM5Eg97x8n8d8z/94RRfa6VktLX6DakK5UrL/H3w44k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sN8VZr4zz9XW87nQGTQ0MCbZrtlH8f+riucJDugbqFqO5cKDUn1Yq/LD7Fw2afkoSIGVzyvs8J+g/WmSnR41WUXcgJVNVAFAEHiQFSDW7RPhH2FPxW+B8UxV9byn6g2+dznSDWu7aMJ5xcg4izW63tRea9MEAoQRZDZV6g33Uxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I09D2cnI; arc=none smtp.client-ip=209.85.208.176
+	s=arc-20240116; t=1718902431; c=relaxed/simple;
+	bh=xDu6nf8ci4QkjfA1n/XlGyTpBjij84y5HwadxfVXaVs=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mWC+Zl/wBmWnmXx3wHJ8JWt99cVowtrFE+D+cZfdm/C4IcCS1+MbvJuwKWjyg+/VROTlvgYaBbVc0rcX8vxNc3HYu1tQD1IhFVKA5gwIejX9luo/fH1w4ukRI99J0J/Ll7nZSbFz2A3xFbPzv35dkEcAe7eGcvm7eM6SXTGdKA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cO4GBObt; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I09D2cnI"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebe3bac6c6so13292431fa.1;
-        Thu, 20 Jun 2024 09:53:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cO4GBObt"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-421f4d1c057so10993435e9.3;
+        Thu, 20 Jun 2024 09:53:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718902413; x=1719507213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XlSI1kU5EfoPWbu4rORadLRlFAtcZ+ELmaMk1xCCeVI=;
-        b=I09D2cnIm1hQf9lUyh2xpLW0JRaCM7dmeYHSytahgCGESQyaYxDwx8lAHjcxGyMelN
-         Bt5knjmDCmGmTvmLeuWn/x14cuhuphgZpQr3xjcIyD5ZZJRcrwxF6OsKztGZnSqi3EQy
-         tkNay8DDPQ+aP0wNEhu7n/JSZ948o7N47E2QIlfYui7hiH/bzR8msn2o86v/PIl90Rs2
-         QdMt7TlsbuqpNTUxBydxDCxktwWL25VSlaCYOXQ5Rok8dX/42RfVpSuKKSiGPnN1pAnZ
-         9j3tAVwxOnCLVHWYmMrVc5aIxKXJjyolxnPQPQ+8PIXl2QOrJ6uKZnQc3feIJ5gMD/E0
-         ocDw==
+        d=gmail.com; s=20230601; t=1718902428; x=1719507228; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Z2+47l+SiK70HxZhNHp7aI9H3v+48mNDDXc2JjqLFDw=;
+        b=cO4GBObtnQr92sMvhvNErl7Ek60B2qQkb54dVup2z40eg7BXrMkB+lhPC6hB7yOTzt
+         C1sxpSUyvtmkIwjIKVa7h+3McX+AElS1Eq4tNBPrW3N3VQHcKIKPnvaTgHrKfchaLgtK
+         igZ7/qQGr0/gTh9ZAuYAHq6w38oyTqNBhkX1gRGsXErHcAI4Quw5xhz7867t9CSbXCWe
+         Pk3WK65Y27WKMCFCNmuu4XNrV3/FENAehXvl5AK3eYOoLIz4hzK7gjp6r2daGtYtvfIs
+         wGStqhQ8uCIZAQoObMstBmut/XhNPir6Cz99yvXVOMInKan0rgpOkyErxrol4PwwfY7G
+         Jx4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718902413; x=1719507213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XlSI1kU5EfoPWbu4rORadLRlFAtcZ+ELmaMk1xCCeVI=;
-        b=PRxg8M2ugR1QyfXqHhA/HfzYZxEW6m9xkIhqZv7O7B7VaOAVDl0OvCbMpacLwFGaYM
-         b77pB7R4q2/GnC3q/W/ByhzgjIzu3VqNIH9Mi4qyfsEfW+2n4k3hqT/q1Jp0D9FXZu8j
-         TMttTF3Na0uU02gkjGpljwE+ykNnhUOR4Y4Nsrepg8MTXlayFn36wv//bdFE+sDMszcS
-         iM0rijEt2NDTjnrWz4YclKs66b1YDbNErXJrneYOURvP4u+zanwn0Xv2XDmWeiL49E8Q
-         vHWTuAKZdQHsyFvBUKw0mKdhe6U4PZosGD1Arx+FU5fC2v497tHu96HMYaet5nLoRDs6
-         Nb2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXoyM3G3VlgredCXrZ1geNYb+l4dsLZ2Iii3E1VMXKT2DTBS+ECQ+ADVyzXNEJ9tn5vHPXTCIaPCeTeGYciy8rwQIIt0YXXnqkDhCGirklCG4bxtzwqP5Q08G/gCSow1oQgRyh40QfDCEdOLzJW
-X-Gm-Message-State: AOJu0Yz5stXDCZ+RfI+VXqSP7PBJxg+WR5EJT1fKzEA2OndGBVpoBWXq
-	UJ9tQB6+lJv/JJhI8eYwnjjNepiELa9EspT1uk04McSV1vTAYOLOQlZXp+EqrakounD8pnKLXXh
-	X6VykcweiUhZywrfDJAgoF4EkVyM=
-X-Google-Smtp-Source: AGHT+IFYNYaMtnMjT1lCQBP24bfOt2PsGSoUdV1BJ8zPVziliE1+X33uhkQ2caEYoAad3z1jsIsKR1FmYKEPuzMlGZQ=
-X-Received: by 2002:a2e:9949:0:b0:2eb:d9b3:634b with SMTP id
- 38308e7fff4ca-2ec3cfe0d2cmr41715041fa.46.1718902412428; Thu, 20 Jun 2024
- 09:53:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718902428; x=1719507228;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z2+47l+SiK70HxZhNHp7aI9H3v+48mNDDXc2JjqLFDw=;
+        b=jRFZNdlObkmlFnAhJGHHW7PyGu9f21mOGt8QtC3fJjtHN6u8zykPZ/Dnx00uJ1Nizr
+         rlc124hiXtx1R7CoXfTR9vscfq0yxuTCysxFrDtOyrjgK9CRmbhwg6e7CtqT11z0zJlU
+         rrFdrgcGOxKC1Vh+7BovP2u/PfCTMJ6SnIA17jg+h+kNTfFCEz06bjtL0VQ1Ig3LA/uF
+         iQcYuClJ9xxY0kTxTlhH9/B0Q4qjpyxiSHUKhHllfcpLCR01NvqSEfkO+X58PrfGK2Du
+         tKr7jsnF92/McdCUD0yYL3DCXSazY7XiafMgL0N5MxcuBPf/sS6DDnZKt4hSWDdVp/QN
+         X72Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUTbbMGMZvB6FrWyKFuv0uljqhIQzRwZbhYpDlXqj60Mbj0WkSEwInqrCg/oFS9qPwy869BpZgDhYDC+vgwKIUN205x5EVntLzyJpoxzyPG9LnKPAvhA97ntI3KvlEBMEdXdSc3UU3L/m4BhC98UuLesw/2rELjnaK94Jes11IlopNJYL4=
+X-Gm-Message-State: AOJu0YxfjrjDppeI7gnSX9OdlQSWKmMJDXuz6pejw69FG55ZFHJuCoOY
+	kd7QzfAUgaKts2BhybXzdxsMYPTORRLP+2uQ34swV2YAEsLOuU9F
+X-Google-Smtp-Source: AGHT+IEhQc/ylcurdd/6IEDOuPK9KgguMxvGLh2XA4wtboP+mlDcIBQRJO8SspzV77CcTZtx/U/d8Q==
+X-Received: by 2002:a5d:4a90:0:b0:360:74c0:e546 with SMTP id ffacd0b85a97d-363175b806dmr4079573f8f.23.1718902428239;
+        Thu, 20 Jun 2024 09:53:48 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3648e8c4e18sm2556956f8f.76.2024.06.20.09.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:53:47 -0700 (PDT)
+Message-ID: <66745e9b.df0a0220.41e53.a3af@mx.google.com>
+X-Google-Original-Message-ID: <ZnRRWFrixDYs_Ndk@Ansuel-XPS.>
+Date: Thu, 20 Jun 2024 17:57:12 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/20] leds: leds-lp55xx: overhaul driver
+References: <20240616215226.2112-1-ansuelsmth@gmail.com>
+ <171890216265.1289520.18025885103780443097.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABBYNZKArASNApkJPvJn8C4HE0y5aZy0X2ZrOjjdrsDhBO+7rQ@mail.gmail.com>
- <tencent_8D9918CF808DC6A5FF8DCB12055DECDDF107@qq.com>
-In-Reply-To: <tencent_8D9918CF808DC6A5FF8DCB12055DECDDF107@qq.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 20 Jun 2024 12:53:19 -0400
-Message-ID: <CABBYNZLu-wAu6cdyDVim=bP+0Ld-P=YvENO=fa6r=rdY4UqukQ@mail.gmail.com>
-Subject: Re: [PATCH v2] bluetooth/l2cap: sync sock recv cb and release
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, marcel@holtmann.org, 
-	syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <171890216265.1289520.18025885103780443097.b4-ty@kernel.org>
 
-Hi Edward,
+On Thu, Jun 20, 2024 at 05:49:22PM +0100, Lee Jones wrote:
+> On Sun, 16 Jun 2024 23:51:59 +0200, Christian Marangi wrote:
+> > This long series is (as requested) a big overhaul of the lp55xx based
+> > LED driver.
+> > 
+> > As notice for these kind of LED chip there was the bad habit of copy
+> > the old driver and just modify it enough to make it work with the new
+> > model. Till v4 I was also doing the same by following the pattern and
+> > the code format of previous driver.
+> > 
+> > [...]
+> 
+> Applied, thanks!
 
-On Fri, Jun 14, 2024 at 9:46=E2=80=AFPM Edward Adam Davis <eadavis@qq.com> =
-wrote:
->
-> The problem occurs between the system call to close the sock and hci_rx_w=
-ork,
-> where the former releases the sock and the latter accesses it without loc=
-k protection.
->
->            CPU0                       CPU1
->            ----                       ----
->            sock_close                 hci_rx_work
->            l2cap_sock_release         hci_acldata_packet
->            l2cap_sock_kill            l2cap_recv_frame
->            sk_free                    l2cap_conless_channel
->                                       l2cap_sock_recv_cb
->
-> If hci_rx_work processes the data that needs to be received before the so=
-ck is
-> closed, then everything is normal; Otherwise, the work thread may access =
-the
-> released sock when receiving data.
->
-> Add a chan mutex in the rx callback of the sock to achieve synchronizatio=
-n between
-> the sock release and recv cb.
->
-> Sock is dead, so set chan data to NULL, avoid others use invalid sock poi=
-nter.
->
-> Reported-and-tested-by: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail=
-.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> ---
->  net/bluetooth/l2cap_sock.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
->
-> diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-> index 6db60946c627..f45cdf9bc985 100644
-> --- a/net/bluetooth/l2cap_sock.c
-> +++ b/net/bluetooth/l2cap_sock.c
-> @@ -1239,6 +1239,10 @@ static void l2cap_sock_kill(struct sock *sk)
->
->         BT_DBG("sk %p state %s", sk, state_to_string(sk->sk_state));
->
-> +       /* Sock is dead, so set chan data to NULL, avoid other task use i=
-nvalid
-> +        * sock pointer.
-> +        */
-> +       l2cap_pi(sk)->chan->data =3D NULL;
->         /* Kill poor orphan */
->
->         l2cap_chan_put(l2cap_pi(sk)->chan);
-> @@ -1481,12 +1485,25 @@ static struct l2cap_chan *l2cap_sock_new_connecti=
-on_cb(struct l2cap_chan *chan)
->
->  static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *s=
-kb)
->  {
-> -       struct sock *sk =3D chan->data;
-> -       struct l2cap_pinfo *pi =3D l2cap_pi(sk);
-> +       struct sock *sk;
-> +       struct l2cap_pinfo *pi;
->         int err;
->
-> -       lock_sock(sk);
-> +       /* To avoid race with sock_release, a chan lock needs to be added=
- here
-> +        * to synchronize the sock.
-> +        */
-> +       l2cap_chan_hold(chan);
-> +       l2cap_chan_lock(chan);
-> +       sk =3D chan->data;
->
-> +       if (!sk) {
-> +               l2cap_chan_unlock(chan);
-> +               l2cap_chan_put(chan);
-> +               return -ENXIO;
-> +       }
-> +
-> +       pi =3D l2cap_pi(sk);
-> +       lock_sock(sk);
->         if (chan->mode =3D=3D L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy=
-)) {
->                 err =3D -ENOMEM;
->                 goto done;
-> @@ -1535,6 +1552,8 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *ch=
-an, struct sk_buff *skb)
->
->  done:
->         release_sock(sk);
-> +       l2cap_chan_unlock(chan);
-> +       l2cap_chan_put(chan);
->
->         return err;
->  }
+Mh? What happen? I'm preparing v7 with the changes requested :(
+
+> 
+> [01/20] dt-bindings: leds-lp55xx: limit pwr-sel property to ti,lp8501
+>         commit: 08a9d2e79140ea1b40c107ea4c025bb8b71aa4b5
+> [02/20] dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
+>         commit: 75e28e4b32dda36c4a015cf2f9c4955d9024234a
+> [03/20] leds: leds-lp55xx: generalize stop_all_engine OP
+>         commit: e2176c637856cd206bf06b5bbba89b2cf45f7dca
+> [04/20] leds: leds-lp55xx: generalize probe/remove functions
+>         (no commit info)
+> [05/20] leds: leds-lp55xx: generalize load_engine function
+>         (no commit info)
+> [06/20] leds: leds-lp55xx: generalize load_engine_and_select_page function
+>         (no commit info)
+> [07/20] leds: leds-lp55xx: generalize run_engine function
+>         (no commit info)
+> [08/20] leds: leds-lp55xx: generalize update_program_memory function
+>         (no commit info)
+> [09/20] leds: leds-lp55xx: generalize firmware_loaded function
+>         (no commit info)
+> [10/20] leds: leds-lp55xx: generalize led_brightness function
+>         (no commit info)
+> [11/20] leds: leds-lp55xx: generalize multicolor_brightness function
+>         (no commit info)
+> [12/20] leds: leds-lp55xx: generalize set_led_current function
+>         (no commit info)
+> [13/20] leds: leds-lp55xx: generalize turn_off_channels function
+>         (no commit info)
+> [14/20] leds: leds-lp55xx: generalize stop_engine function
+>         (no commit info)
+> [15/20] leds: leds-lp55xx: generalize sysfs engine_load and engine_mode
+>         (no commit info)
+> [16/20] leds: leds-lp55xx: generalize sysfs engine_leds
+>         (no commit info)
+> [17/20] leds: leds-lp55xx: generalize sysfs master_fader
+>         (no commit info)
+> [18/20] leds: leds-lp55xx: support ENGINE program up to 128 bytes
+>         (no commit info)
+> [19/20] leds: leds-lp55xx: drop deprecated defines
+>         (no commit info)
+> [20/20] leds: leds-lp5569: Add support for Texas Instruments LP5569
+>         (no commit info)
+> 
 > --
-> 2.43.0
+> Lee Jones [李琼斯]
+> 
 
-Looks like this was never really tested properly:
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-WARNING: possible recursive locking detected
-6.10.0-rc3-g4029dba6b6f1 #6823 Not tainted
---------------------------------------------
-kworker/u5:0/35 is trying to acquire lock:
-ffff888002ec2510 (&chan->lock#2/1){+.+.}-{3:3}, at:
-l2cap_sock_recv_cb+0x44/0x1e0
-
-but task is already holding lock:
-ffff888002ec2510 (&chan->lock#2/1){+.+.}-{3:3}, at:
-l2cap_get_chan_by_scid+0xaf/0xd0
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&chan->lock#2/1);
-  lock(&chan->lock#2/1);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-3 locks held by kworker/u5:0/35:
- #0: ffff888002b8a940 ((wq_completion)hci0#2){+.+.}-{0:0}, at:
-process_one_work+0x750/0x930
- #1: ffff888002c67dd0 ((work_completion)(&hdev->rx_work)){+.+.}-{0:0},
-at: process_one_work+0x44e/0x930
- #2: ffff888002ec2510 (&chan->lock#2/1){+.+.}-{3:3}, at:
-l2cap_get_chan_by_scid+0xaf/0xd0
-
-l2cap_sock_recv_cb is assumed to be called with the chan_lock held so
-perhaps we can just do:
-
-       sk =3D chan->data;
-       if (!sk)
-               return -ENXIO;
-
---=20
-Luiz Augusto von Dentz
+-- 
+	Ansuel
