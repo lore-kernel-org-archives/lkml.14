@@ -1,38 +1,60 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E2F13AF9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AF226AFB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718865101; cv=none; b=pLW0E5AHojUgVr6Xz+klim8bnJR54cxNrniKXf60ygks10PF0YlIxrPViuxw+LRrvByub7CsTnhAr6FfDmyyR8pnGhZ8EXCB57uvYOkvJxYnC/T3V28LgUVRt7IndWMEGpBrlYWCalBaSZs5fRyIS2aJcd80AhErhZCF9gMD0w0=
+	t=1718865133; cv=none; b=f4G+ozdh7eH68hSHfdLKV+EiIze317SULYYLLMmvLk0ZQtv5e8rJflaVzA0ynqYXcCiTAmuPcDb0Q4iF+JisQTPcP3YiQxlxAHYuEOVbTwkdKOFSFqYCWh7EFaTm+fAIzOWb8nawUcXqNSMsb4AGDIi1m49wseXlHj8veIVfkso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718865101; c=relaxed/simple;
-	bh=djDtqmKbWE43ZmKEyGgUp90Vv60j3Wv2QasU7cUbGM4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t1SSPLOB6KOzHuCR8m+N2A1VCaincsGK1I+fROnicvybYP/oXbfClzKtY0N+8u3rb+EqkP+bXUX79OxGEmZPUBBLNSKrl+8nt1LhH3P62L8SQgzhpKauxesF6IltGbY8tkr+qkFRtohqKQClz7Iu+FwOKsXbcD2DtRXtSY3THos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W4Vs63g7szxSww;
-	Thu, 20 Jun 2024 14:27:22 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 82DB8140120;
-	Thu, 20 Jun 2024 14:31:35 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
- 2024 14:31:34 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<dianders@chromium.org>, <swboyd@chromium.org>, <sumit.garg@linaro.org>,
-	<frederic@kernel.org>, <scott@os.amperecomputing.com>,
-	<misono.tomohiro@fujitsu.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] arm64: smp: Fix missing IPI statistics
-Date: Thu, 20 Jun 2024 14:34:17 +0800
-Message-ID: <20240620063417.573467-1-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1718865133; c=relaxed/simple;
+	bh=+Wnn24Xlpa6rae18wbizkFcb2MAtnQ/iXJt1icI1Q0A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r2CsYMUBtU+LGTLOpyv4g3lr7yeVVaXlWEdbzLEiqRrhLknh3gr/h7B9Yu7GXYCW7EQGiQJHGq6g9p5LZOeHRqpIcYirJMwFs8ntTBpvbJW4LY7CIomit2C4xUHXR1PcFb6u/PPzyZXYPIRfJZqeqGOaE2sXSy+3JyAmkdAlimU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MPXYH5HE; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MPXYH5HE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718865133; x=1750401133;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+Wnn24Xlpa6rae18wbizkFcb2MAtnQ/iXJt1icI1Q0A=;
+  b=MPXYH5HENwPcteHLVYu2ogTCbt0zKP5SFX18kOcJMzR2X5/wp8P5SsD+
+   n1z5BoRX0w19UDHFDdthPSwcWthkBMXsgW/Z5K7lH4RCRxLiKNlQ21WiC
+   mw3/4QbxYPAnwq2se7wISHDUhDfbdZsL08th3BuUPpBC5gMO8M6DUAum5
+   sOJLLRz6pF8ak/DhEjGC0/u/eHLWtJNVR23/atgo5ip4zHxHso+tNQ8Hz
+   Zq/kknFihlRjsJ+S8ChyrZ0qKaTrGdyH/aGGZgIkC1wkYhvjPZUbJfaEw
+   5KN2a9h7SZVN8RePIHVd09BXnQKoI1c62l2wTs7/rf9qIIEzYrJXUS0ni
+   Q==;
+X-CSE-ConnectionGUID: MkfVTWuLT8yfs2O40dSuQA==
+X-CSE-MsgGUID: hOCsJYGBR5Ok49DIkW/S2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="38334032"
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="38334032"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 23:32:12 -0700
+X-CSE-ConnectionGUID: 8xLW16KfRteWdLWvkDkhdw==
+X-CSE-MsgGUID: 5cU3Uf+mS5GF7QFugpHoDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="42242042"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa009.fm.intel.com with ESMTP; 19 Jun 2024 23:32:09 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 1/1] iommu/vt-d: Fix missed device TLB cache tag
+Date: Thu, 20 Jun 2024 14:29:40 +0800
+Message-Id: <20240620062940.201786-1-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,99 +63,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi100008.china.huawei.com (7.221.188.57)
 
-commit 83cfac95c018 ("genirq: Allow interrupts to be excluded from
-/proc/interrupts") is to avoid IPIs appear twice in /proc/interrupts.
-But the commit 331a1b3a836c ("arm64: smp: Add arch support for backtrace
-using pseudo-NMI") and commit 2f5cd0c7ffde("arm64: kgdb: Implement
-kgdb_roundup_cpus() to enable pseudo-NMI roundup") set CPU_BACKTRACE and
-KGDB_ROUNDUP IPIs "IRQ_HIDDEN" flag but not show them in
-arch_show_interrupts(), which cause the interrupt kstat_irqs accounting
-is missing in display.
+When a domain is attached to a device, the required cache tags are
+assigned to the domain so that the related caches can be flushed
+whenever it is needed. The device TLB cache tag is created based
+on whether the ats_enabled field of the device's iommu data is set.
+This creates an ordered dependency between cache tag assignment and
+ATS enabling.
 
-Before this patch, CPU_BACKTRACE and KGDB_ROUNDUP IPIs are missing:
-	/ # cat /proc/interrupts
-	           CPU0       CPU1       CPU2       CPU3
-	 11:        466        600        309        332     GICv3  27 Level     arch_timer
-	 13:         24          0          0          0     GICv3  33 Level     uart-pl011
-	 15:         64          0          0          0     GICv3  78 Edge      virtio0
-	 16:          0          0          0          0     GICv3  79 Edge      virtio1
-	 17:          0          0          0          0     GICv3  34 Level     rtc-pl031
-	 18:          3          3          3          3     GICv3  23 Level     arm-pmu
-	 19:          0          0          0          0 9030000.pl061   3 Edge      GPIO Key Poweroff
-	IPI0:         7         14          9         26       Rescheduling interrupts
-	IPI1:       354         93        233        255       Function call interrupts
-	IPI2:         0          0          0          0       CPU stop interrupts
-	IPI3:         0          0          0          0       CPU stop (for crash dump) interrupts
-	IPI4:         0          0          0          0       Timer broadcast interrupts
-	IPI5:         1          0          0          0       IRQ work interrupts
-	Err:          0
+The device TLB cache tag would not be created if device's ATS is
+enabled after the cache tag assignment. This causes devices with PCI
+ATS support to malfunction.
 
-After this pacth, CPU_BACKTRACE and KGDB_ROUNDUP IPIs are displayed:
-	/ # cat /proc/interrupts
-	           CPU0       CPU1       CPU2       CPU3
-	 11:        393        281        532        449     GICv3  27 Level     arch_timer
-	 13:         15          0          0          0     GICv3  33 Level     uart-pl011
-	 15:         64          0          0          0     GICv3  78 Edge      virtio0
-	 16:          0          0          0          0     GICv3  79 Edge      virtio1
-	 17:          0          0          0          0     GICv3  34 Level     rtc-pl031
-	 18:          2          2          2          2     GICv3  23 Level     arm-pmu
-	 19:          0          0          0          0 9030000.pl061   3 Edge      GPIO Key Poweroff
-	IPI0:        11         19          4         23       Rescheduling interrupts
-	IPI1:       279        347        222         72       Function call interrupts
-	IPI2:         0          0          0          0       CPU stop interrupts
-	IPI3:         0          0          0          0       CPU stop (for crash dump) interrupts
-	IPI4:         0          0          0          0       Timer broadcast interrupts
-	IPI5:         1          0          0          1       IRQ work interrupts
-	IPI6:         0          0          0          0       CPU backtrace interrupts
-	IPI7:         0          0          0          0       KGDB roundup interrupts
-	Err:          0
+The ATS control is exclusively owned by the iommu driver. Hence, move
+cache_tag_assign_domain() after PCI ATS enabling to make sure that the
+device TLB cache tag is created for the domain.
 
-Fixes: 331a1b3a836c ("arm64: smp: Add arch support for backtrace using pseudo-NMI")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Doug Anderson <dianders@chromium.org>
+Fixes: 3b1d9e2b2d68 ("iommu/vt-d: Add cache tag assignment interface")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
+ drivers/iommu/intel/iommu.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+Change log:
 v2:
-- Report them in arch_show_interrupts().
-- Add suggested-by.
-- Update the commit message.
----
- arch/arm64/kernel/smp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+- Reverting the order instead of adding unnecessary run-time overhead.
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 31c8b3094dd7..5de85dccc09c 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -767,13 +767,15 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	}
+v1:
+- https://lore.kernel.org/linux-iommu/20240619015345.182773-1-baolu.lu@linux.intel.com/
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 2e9811bf2a4e..fd11a080380c 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -2114,12 +2114,6 @@ static int dmar_domain_attach_device(struct dmar_domain *domain,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = cache_tag_assign_domain(domain, dev, IOMMU_NO_PASID);
+-	if (ret) {
+-		domain_detach_iommu(domain, iommu);
+-		return ret;
+-	}
+-
+ 	info->domain = domain;
+ 	spin_lock_irqsave(&domain->lock, flags);
+ 	list_add(&info->link, &domain->devices);
+@@ -2137,15 +2131,21 @@ static int dmar_domain_attach_device(struct dmar_domain *domain,
+ 	else
+ 		ret = intel_pasid_setup_second_level(iommu, domain, dev, IOMMU_NO_PASID);
+ 
+-	if (ret) {
+-		device_block_translation(dev);
+-		return ret;
+-	}
++	if (ret)
++		goto out_block_translation;
+ 
+ 	if (sm_supported(info->iommu) || !domain_type_is_si(info->domain))
+ 		iommu_enable_pci_caps(info);
+ 
++	ret = cache_tag_assign_domain(domain, dev, IOMMU_NO_PASID);
++	if (ret)
++		goto out_block_translation;
++
+ 	return 0;
++
++out_block_translation:
++	device_block_translation(dev);
++	return ret;
  }
  
--static const char *ipi_types[NR_IPI] __tracepoint_string = {
-+static const char *ipi_types[MAX_IPI] __tracepoint_string = {
- 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
- 	[IPI_CALL_FUNC]		= "Function call interrupts",
- 	[IPI_CPU_STOP]		= "CPU stop interrupts",
- 	[IPI_CPU_CRASH_STOP]	= "CPU stop (for crash dump) interrupts",
- 	[IPI_TIMER]		= "Timer broadcast interrupts",
- 	[IPI_IRQ_WORK]		= "IRQ work interrupts",
-+	[IPI_CPU_BACKTRACE]	= "CPU backtrace interrupts",
-+	[IPI_KGDB_ROUNDUP]	= "KGDB roundup interrupts",
- };
- 
- static void smp_cross_call(const struct cpumask *target, unsigned int ipinr);
-@@ -784,7 +786,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
- {
- 	unsigned int cpu, i;
- 
--	for (i = 0; i < NR_IPI; i++) {
-+	for (i = 0; i < MAX_IPI; i++) {
- 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
- 			   prec >= 4 ? " " : "");
- 		for_each_online_cpu(cpu)
+ /**
 -- 
 2.34.1
 
