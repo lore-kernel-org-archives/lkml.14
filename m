@@ -1,291 +1,111 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3B91D0F7C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F4F1BA090;
+	Thu, 20 Jun 2024 17:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906344; cv=none; b=d7A5X65DUMUOAx0SUHpXE+HdDVUEUv/hZdL8CBLNLKCUiLwNm/6bbch1CA21Pov5Cp8Axo5a2oW9csyIHsQHjWC8uXHdgkxo4TQQajgc48EdO8UxBOZkc4vQ2i2OHMqQTR+dyfXFfP/mwAv3SPXH8watJXITDqpn1eLrzLE5vis=
+	t=1718906353; cv=none; b=K0FKVKaVLAwdhwBgtr9dWvgAN8Cp2G6K/DmVrkAs2/MF3Ot1J8MTv4zgidzts+fzRttI2FkleghLhD4hJaDTdHun1dhzI41CL4AjlzN5e2tcf5HK3oY8B/VluUtqtylxgjtF1FcBgTQPtESwgQ5L4qbfcwvER1FPcTGyRdv7uLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906344; c=relaxed/simple;
-	bh=EMyHs6b9ptSnKztiiVKCqZSXFWuzO60Th0vGvDdv00s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FGUmwU5fQS+z50vmmAewZOk04P1z6d+p/t1LfXhv1k8F23IaLFIeSitWolbrsnoxRUI9p7jijoNZksrSPcZP7NoZScntclBQJDNHNgzRMuvzMh+ZP/BNBRp4nvoi3/UOQDPO0SR6jGXiMa8c7L3NPedUGyGRp/DhatJPHbbqWaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=rxnWIFk1; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1718906353; c=relaxed/simple;
+	bh=7SWkegubJpAX6MYXk8YsehLNWGmKMMWRlgPICBLrNQc=;
+	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=CYBG7WvPh0lgsnVWhhMG0elz1qIvl+25PeDyP4Oemb6hoVkBYO7nVEcXv18s8BThONVTwmzKpLpQvL9jbQjO0D90Oogr0F49cil+m8UL+WmWQX9M1VZLlC6si/Q1T2lghWksisISzZagjE8IxB5T40EXWUGLeN2nRusSkSg5Ldc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ei8QAsh0; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="rxnWIFk1"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f177b78dcso127731066b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:59:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ei8QAsh0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906341; x=1719511141; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IJI26duvfMm0hH2VM1fi6stFJmPonSLGaDj169i8hcM=;
-        b=rxnWIFk1i6Jw++5414k9TsrEOKy7SPvjtaSmAS8WQvPGAhtTU75y6ACvjCZyNM8s2z
-         1n+ICid2uM2pUMc3f3ZcceXxeznNU0zB+68Cmr9rzSwrCDq1GqLH0Awj+rBO1mv8lvDn
-         KLmxNo/aJUCU6nqH1nnRKyoKrudONIkoVDFngzM4pEZoeH1Lvtap0oYuNfrXZ8CA50Kp
-         sJDmJWfq2K9M4jX3paqJpnZ/KKSZF7SI1E9GgffnGXFegHEw3XLzqTJP3udo/gDHEsgp
-         ub7QgzaGJYbmefysKZYp7BAlQC6W3Dquufqw3GpyuLrs13WiUTFfbioJyYkqKvVJWehD
-         gCuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906341; x=1719511141;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IJI26duvfMm0hH2VM1fi6stFJmPonSLGaDj169i8hcM=;
-        b=fOPNM5hjYzz7p8CsBlBA199gazLQqbWpn5N/VNrWzIOX8CSTWCNzBgvq66Q+agZIBQ
-         Nm03LCcTWyIYzGWYzQxM5staIEaDGKSR6eO1IT1QW5X5OIFYFw0ZJbUJIuZEy2mwiBQX
-         u1c7ih81t/HFcGka8xTL3qrBValf6rCTCYnhGKpk7LvdXQK4np1DHfw4aNxOXGOxrNSc
-         vsGeZJZfr9eeJOU9EK4PgQxaeXl6enJJ/zz1wjbyIcXmAWT68OdEpg9WO2x3oHYC8ptb
-         r9nbrdjgLhnBGGutbKGWWEumeREDGsw8FG0uCj8OqXEXXf1O8T/yaCxZuoW3GMXtvvRQ
-         WsqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXitr70bw9zfdH/EPeICw1Qluym0BWkpckyFZeEhQdX8KCIiYq5Jr/91W8gcwqehZkphV11qWfLqKNRNrbk6f3Z+JhpPBwuH5+87B0/
-X-Gm-Message-State: AOJu0Yxec43DbhTDpyg9TgqAVdHIf1p77ov95MJ6HE6ADjqUMfsUmF+g
-	bQismbdCIdz0qILFKJTnYGrpf04lyHvQAduqRis3DXWJS6NfM+SHIbMSEY8+TTI=
-X-Google-Smtp-Source: AGHT+IFE99yiH6KlSLSijoysmvGidn2b7gOkfW49nNmYq3cUnll4tztljhinaCegKpYiciiy0oFs8g==
-X-Received: by 2002:a17:907:1606:b0:a6f:b19d:90ac with SMTP id a640c23a62f3a-a6fb19d9667mr375299966b.69.1718906340595;
-        Thu, 20 Jun 2024 10:59:00 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:59:00 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Subject: [Patch v4 04/10] ARM: dts: lpc32xx: Add missing dma and i2s properties
-Date: Thu, 20 Jun 2024 19:56:35 +0200
-Message-Id: <20240620175657.358273-5-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1718906351; x=1750442351;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=7SWkegubJpAX6MYXk8YsehLNWGmKMMWRlgPICBLrNQc=;
+  b=ei8QAsh0i213J7+bFN0oCyDVuX19F13Q2TzfWYhdEs4ynaCi405Q9lUp
+   9MSvZZTfIUdkiNaOxrUlB+x2MLd1vviD/1Qr25u3q92VENp5irRKZEQyf
+   oPGz8dbVglbU0Tt4CMJFUnK1Zi5n8PoLzi2Bw6sGtxUY4lsL3TNyPXBE0
+   w=;
+X-IronPort-AV: E=Sophos;i="6.08,252,1712620800"; 
+   d="scan'208";a="6216262"
+Subject: Re: linux-next: manual merge of the memblock tree with the origin tree
+Thread-Topic: linux-next: manual merge of the memblock tree with the origin tree
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 17:59:07 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:8811]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.44.46:2525] with esmtp (Farcaster)
+ id f9f0cc6a-34f6-443a-82bd-b8edf14f83a0; Thu, 20 Jun 2024 17:59:05 +0000 (UTC)
+X-Farcaster-Flow-ID: f9f0cc6a-34f6-443a-82bd-b8edf14f83a0
+Received: from EX19D014EUC003.ant.amazon.com (10.252.51.184) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 20 Jun 2024 17:59:05 +0000
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19D014EUC003.ant.amazon.com (10.252.51.184) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 20 Jun 2024 17:59:05 +0000
+Received: from EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41]) by
+ EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41%3]) with mapi id
+ 15.02.1258.034; Thu, 20 Jun 2024 17:59:05 +0000
+From: "Gowans, James" <jgowans@amazon.com>
+To: "broonie@kernel.org" <broonie@kernel.org>
+CC: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+	"jbeulich@suse.com" <jbeulich@suse.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "rppt@kernel.org" <rppt@kernel.org>
+Thread-Index: AQHawypHT4hIOONPdEuIzJZkPab/U7HQ0aEAgAABrICAAB1rgA==
+Date: Thu, 20 Jun 2024 17:59:05 +0000
+Message-ID: <e6f1bf73d13060635520c70df269c0b390352f37.camel@amazon.com>
+References: <ZnRQv-EVf2LQ1Cjv@sirena.org.uk>
+	 <eb58b1b2f84444acde3f9e25219fa40c73c499f8.camel@amazon.com>
+	 <db13f2b7-88da-42db-85ed-d78cdd5f6c62@sirena.org.uk>
+In-Reply-To: <db13f2b7-88da-42db-85ed-d78cdd5f6c62@sirena.org.uk>
+Accept-Language: en-ZA, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9DA72AF9A986854FB958FFF9D57956DA@amazon.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Adds properties declared in the new DT bindings:
- - nxp,lpc3220-i2s.yaml
- - nxp,lpc3220-dmamux.yaml
-for dma router/mux and I2S interface.
-
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
----
-Changes for v4:
-- This patch is renamed from
-  "ARM: dts: lpc32xx: Add missing properties for the i2s interfaces"
-  to describe dma changes as well
-- Added dmas and dma-names properties in to all node which have dma request signals
-- Add bus properties to pl08x dma node since they are removed from platform data in phy3250.c
-- Put clock-controller@0 and dma-router@7c under the same syscon, simple-mfd device
-
-Changes for v3:
-- Split previous commit for separate subsystems
-- Add properties to match dt binding
-
- arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi | 53 +++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
-index 974410918f35..c58dc127e59f 100644
---- a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
-@@ -67,6 +67,8 @@ slc: flash@20020000 {
- 			reg = <0x20020000 0x1000>;
- 			clocks = <&clk LPC32XX_CLK_SLC>;
- 			status = "disabled";
-+			dmas = <&dma 1 1>;
-+			dma-names = "rx-tx";
- 		};
- 
- 		mlc: flash@200a8000 {
-@@ -75,6 +77,8 @@ mlc: flash@200a8000 {
- 			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk LPC32XX_CLK_MLC>;
- 			status = "disabled";
-+			dmas = <&dma 12 1>;
-+			dma-names = "rx-tx";
- 		};
- 
- 		dma: dma@31000000 {
-@@ -83,6 +87,13 @@ dma: dma@31000000 {
- 			interrupts = <28 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk LPC32XX_CLK_DMA>;
- 			clock-names = "apb_pclk";
-+			#dma-cells = <2>;
-+			dma-channels = <8>;
-+			dma-requests = <16>;
-+			lli-bus-interface-ahb1;
-+			mem-bus-interface-ahb1;
-+			memcpy-burst-size = <256>;
-+			memcpy-bus-width = <32>;
- 		};
- 
- 		usb {
-@@ -182,6 +193,8 @@ ssp0: spi@20084000 {
- 				clock-names = "apb_pclk";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				dmas = <&dmamux 14 1 1>, <&dmamux 15 1 1>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -191,6 +204,8 @@ spi1: spi@20088000 {
- 				clocks = <&clk LPC32XX_CLK_SPI1>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				dmas = <&dmamux 11 1 0>;
-+				dma-names = "rx-tx";
- 				status = "disabled";
- 			};
- 
-@@ -206,6 +221,8 @@ ssp1: spi@2008c000 {
- 				clock-names = "apb_pclk";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				dmas = <&dmamux 3 1 1>, <&dmamux 11 1 1>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -215,12 +232,19 @@ spi2: spi@20090000 {
- 				clocks = <&clk LPC32XX_CLK_SPI2>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				dmas = <&dmamux 3 1 0>;
-+				dma-names = "rx-tx";
- 				status = "disabled";
- 			};
- 
- 			i2s0: i2s@20094000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x20094000 0x1000>;
-+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk LPC32XX_CLK_I2S0>;
-+				dmas = <&dma 0 1>, <&dma 13 1>;
-+				dma-names = "rx", "tx";
-+				#sound-dai-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -231,12 +255,19 @@ sd: sd@20098000 {
- 					     <13 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk LPC32XX_CLK_SD>;
- 				clock-names = "apb_pclk";
-+				dmas = <&dma 4 1>;
-+				dma-names = "rx";
- 				status = "disabled";
- 			};
- 
- 			i2s1: i2s@2009c000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x2009c000 0x1000>;
-+				interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk LPC32XX_CLK_I2S1>;
-+				dmas = <&dma 2 1>, <&dmamux 10 1 1>;
-+				dma-names = "rx", "tx";
-+				#sound-dai-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -312,21 +343,27 @@ fab {
- 			compatible = "simple-bus";
- 			ranges = <0x20000000 0x20000000 0x30000000>;
- 
--			/* System Control Block */
--			scb {
--				compatible = "simple-bus";
--				ranges = <0x0 0x40004000 0x00001000>;
-+			syscon@40004000 {
-+				compatible = "nxp,lpc3220-creg", "syscon", "simple-mfd";
-+				reg = <0x40004000 0x114>;
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-+				ranges = <0 0x40004000 0x114>;
- 
- 				clk: clock-controller@0 {
- 					compatible = "nxp,lpc3220-clk";
- 					reg = <0x00 0x114>;
- 					#clock-cells = <1>;
--
- 					clocks = <&xtal_32k>, <&xtal>;
- 					clock-names = "xtal_32k", "xtal";
- 				};
-+
-+				dmamux: dma-router@7c {
-+					compatible = "nxp,lpc3220-dmamux";
-+					reg = <0x7c 0x8>;
-+					#dma-cells = <3>;
-+					dma-masters = <&dma>;
-+				};
- 			};
- 
- 			mic: interrupt-controller@40008000 {
-@@ -362,6 +399,8 @@ uart1: serial@40014000 {
- 				compatible = "nxp,lpc3220-hsuart";
- 				reg = <0x40014000 0x1000>;
- 				interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&dma 6 1>, <&dma 5 1>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -369,6 +408,8 @@ uart2: serial@40018000 {
- 				compatible = "nxp,lpc3220-hsuart";
- 				reg = <0x40018000 0x1000>;
- 				interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&dma 8 1>, <&dma 7 1>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -376,6 +417,8 @@ uart7: serial@4001c000 {
- 				compatible = "nxp,lpc3220-hsuart";
- 				reg = <0x4001c000 0x1000>;
- 				interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&dmamux 10 1 0>, <&dma 9 1>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
--- 
-2.25.1
-
+T24gVGh1LCAyMDI0LTA2LTIwIGF0IDE3OjEzICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBUaHUsIEp1biAyMCwgMjAyNCBhdCAwNDowNzo0NVBNICswMDAwLCBHb3dhbnMsIEphbWVzIHdy
+b3RlOg0KPiA+IE9uIFRodSwgMjAyNC0wNi0yMCBhdCAxNjo1NCArMDEwMCwgTWFyayBCcm93biB3
+cm90ZToNCj4gDQo+ID4gPiArIAlpZiAoV0FSTl9PTkNFKG5pZCA9PSBNQVhfTlVNTk9ERVMsICJV
+c2FnZSBvZiBNQVhfTlVNTk9ERVMgaXMgZGVwcmVjYXRlZC4gVXNlIE5VTUFfTk9fTk9ERSBpbnN0
+ZWFkXG4iKSkNCj4gPiA+ICsgCQluaWQgPSBOVU1BX05PX05PREU7DQo+ID4gPiArIA0KPiA+ID4g
+IC0JLyoNCj4gPiA+ICAtCSAqIERldGVjdCBhbnkgYWNjaWRlbnRhbCB1c2Ugb2YgdGhlc2UgQVBJ
+cyBhZnRlciBzbGFiIGlzIHJlYWR5LCBhcyBhdA0KPiA+ID4gIC0JICogdGhpcyBtb21lbnQgbWVt
+YmxvY2sgbWF5IGJlIGRlaW5pdGlhbGl6ZWQgYWxyZWFkeSBhbmQgaXRzDQo+ID4gPiAgLQkgKiBp
+bnRlcm5hbCBkYXRhIG1heSBiZSBkZXN0cm95ZWQgKGFmdGVyIGV4ZWN1dGlvbiBvZiBtZW1ibG9j
+a19mcmVlX2FsbCkNCj4gPiA+ICAtCSAqLw0KPiANCj4gPiBUaGlzIGxvb2tzIGxpa2UgeW91J3Jl
+IGRlbGV0aW5nIHRoZSBjaGVjayBmcm9tIHRoZQ0KPiA+IG1lbWJsb2NrX2FsbG9jX3JhbmdlKCk/
+IFRoZSBpbnRlbnRpb24gb2YNCj4gPiBjb21taXQgOTRmZjQ2ZGU0YTczOCAoIm1lbWJsb2NrOiBN
+b3ZlIGxhdGUgYWxsb2Mgd2FybmluZyBkb3duIHRvIHBoeXMgYWxsb2MiKQ0KPiA+IHdhcyB0byAq
+YWRkKiB0aGlzIGNoZWNrIGhlcmUuDQo+IA0KPiBIdWgsIGdpdCBzaG93ZWQgdGhlIGFkZC9hZGQg
+Y29uZmxpY3Qgd2VpcmRseSB0aGVuIChpdCBsb29rZWQgbGlrZSBhbg0KPiBhZGQvcmVtb3ZlKSBh
+bmQgSSB3YXNuJ3QgcGF5aW5nIGVub3VnaCBhdHRlbnRpb24uICBTb3JyeSBhYm91dCB0aGF0Lg0K
+PiANCj4gPiBEbyB5b3UgaGF2ZSBhIGxpbmsgd2hlcmUgSSBjYW4gc2VlIHRoZSBmaW5hbCByZXBv
+Pw0KPiA+IEknbSBub3Qgc2VlaW5nIGl0IGhlcmU6DQo+ID4gaHR0cHM6Ly9naXQua2VybmVsLm9y
+Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbmV4dC9saW51eC1uZXh0LmdpdC90cmVlL21tL21l
+bWJsb2NrLmMNCj4gDQo+IFRoZSBtZXJnZSBpcyBzdGlsbCBydW5uaW5nLCBpdCdsbCBhcHBlYXIg
+d2hlbmV2ZXIgLW5leHQgaXMgcmVsZWFzZWQNCj4gdG9kYXkuDQoNCkxvb2tpbmcgYXQgdG9kYXkn
+cyAtbmV4dDoNCg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
+aXQvbmV4dC9saW51eC1uZXh0LmdpdC90cmVlL21tL21lbWJsb2NrLmM/aD1uZXh0LTIwMjQwNjIw
+I24xNDM0DQpJIHRoaW5rIHRoaXMgY2hlY2sgZGlkIGluZGVlZCBhY2NpZGVudGFsbHkgZ2V0IGRl
+bGV0ZWQgaW4gdGhlIG1lcmdlLg0KDQpXZSdyZSBleHBlY3RpbmcgdGhlIGRpZmYgaW4gdGhpcyBj
+b21taXQgdG8gYmUgcHJlc2VudDoNCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
+eC9rZXJuZWwvZ2l0L25leHQvbGludXgtbmV4dC5naXQvY29tbWl0L21tL21lbWJsb2NrLmM/aD1u
+ZXh0LTIwMjQwNjIwJmlkPTk0ZmY0NmRlNGE3MzhlNzkxNmI2OGFiNWNjMGIwMzgwNzI5ZjAyYWYN
+Cg0KLi4uIGJ1dCB0aGUgbWVyZ2UgY29tbWl0IGFwcGVhcnMgdG8gaGF2ZSB0aGUgZGVsZXRpbmcg
+cGFydCBidXQgbm90IHRoZQ0KYWRkaW5nIHBhcnQ6DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1
+Yi9zY20vbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4LW5leHQuZ2l0L2NvbW1pdC9tbS9tZW1i
+bG9jay5jP2g9bmV4dC0yMDI0MDYyMCZpZD00Mjc4MWJmOWVmODVkM2QyNTllYzM0NWYzYzRlNmE1
+YThiOGFkZDY0DQoNCkNvcnJlY3QgbWUgaWYgSSdtIHdyb25nLCBidXQgaXQgbG9va3MgbGlrZSB0
+aGUgaWYgc3RhdGVtZW50IG9ubHkgZ290DQpkZWxldGVkIGFuZCBub3QgbW92ZWQsIHNvIHRoaXMg
+d291bGQgbmVlZCB0byBiZSByZS13b3JrZWQuDQoNCkpHDQo=
