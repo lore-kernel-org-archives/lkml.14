@@ -1,83 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024EA19E836;
-	Thu, 20 Jun 2024 09:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEE019E836;
+	Thu, 20 Jun 2024 09:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718876160; cv=none; b=ZyoUCMl8cYQtEsmVd2s0F+0VlFg50uHFb+tvbWZ0FVhWVDusx+q5F6xj7Y974D4ARu9h5G3wqZyFWv5oo99GVmxzQBaCmGHbGWwCYwlYQvvcjE3CnFGx0V3ayCJ4YPz1OhJhK1koXB+pV/EiIup71K+LzLDrZ0lk4/RB9WNol9Y=
+	t=1718876275; cv=none; b=W4zYNevOUOJn3jUIA0wYLIwW+tF77L3tDvshHBOpds85vfIYTIClBpnDDhvHqDNQSAmO9BHpaW9+et5UZ+zSXlRgXVbeWQy+pLWv0Leb4Bptlg8NaWUKq/tqWyd/yXbTo2zWA8FQ7LTQG3MpE1eDkgsrBAWNr3B2lq+MfvYUuQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718876160; c=relaxed/simple;
-	bh=8we+OhQL+wj+5hQuaEZHowMrYqroa17RySsbu8nMXok=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VNi41AwtdagV8Y+UHFaAQwEsMmNUFZ/4woChvLojsfS4WgHh+p+AX0bkWpPHCiWscsKGah1ZSH4D5mrFGdLKRqe9RqS1BzwbafURZhAlck2gh/nHk7nTO0OXWAjywL3rm+ecK3XOMDwFYjvca/tk+0EOPIy0Wk1hkXzhDwu+Jjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFVws6FY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFVws6FY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA1EC2BD10;
-	Thu, 20 Jun 2024 09:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718876159;
-	bh=8we+OhQL+wj+5hQuaEZHowMrYqroa17RySsbu8nMXok=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=aFVws6FYFIAelZzuhoeUNzQ+Jpbg1+lvP4fiSYLEGVxfJsV4NhHdP0OqkaTOyAqHF
-	 ADtkaVf2frCrdD44KJqzk5KLkh3KUEykrl9M+R/w5/Vy3HT2YAWMfwTWVflgW35YTb
-	 UeDhtDOJHY/4HuaFk76JIIA18X+55j5guHAO7t9aKKfrPKCJaJemdH8UhXnH5tq8Zs
-	 O1oF+w4gj8dmMIIz1YbHfqJwppkMbx4KxMiB+UjQILF/TjiGM15zTJ0q5J6XeWMcuR
-	 hYDBUrSXRLSDwnbBATiilC4PdOrCSQ0jKESKe4m/Wl6cBN0zl+oFphtnKVI5yurq+e
-	 XKlI2hBlWtM/g==
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>, 
- Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-In-Reply-To: <cover.1718356964.git.mazziesaccount@gmail.com>
-References: <cover.1718356964.git.mazziesaccount@gmail.com>
-Subject: Re: [PATCH v4 0/6] Support ROHM BD96801 Scalable PMIC
-Message-Id: <171887615676.1119049.7678370393770067068.b4-ty@kernel.org>
-Date: Thu, 20 Jun 2024 10:35:56 +0100
+	s=arc-20240116; t=1718876275; c=relaxed/simple;
+	bh=eBYaoHtkxmjZTEXX/EsYxxR1JW6S47fqMufl7ZBPPxE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oOyaLsgNPgS4SMotwcY+0mNdUvMssjpWvp9yIKYtyuDF59F9DJNbl+71TRsAj00PXbQptEjRFGJhkIxyAKODIsGIpIoVBS1UO5OIo7jSKH6dBpMqMuYbmiadTFWrBmwRiH5uIGTH8Ou9of63YSGTea2v8LTZ4agyuQYM4sPDsJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=none smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: bizesmtpsz1t1718876123tmrikod
+X-QQ-Originating-IP: UNSjr0WFDyKwAKp4j1r76ZW1VD57puniGPFGXbs27MI=
+Received: from localhost.localdomain ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 20 Jun 2024 17:35:18 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 17883702192309828871
+From: chenxiaosong@chenxiaosong.com
+To: linkinjeon@kernel.org,
+	sfrench@samba.org,
+	senozhatsky@chromium.org,
+	tom@talpey.com,
+	linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pc@manguebit.com,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	bharathsm@microsoft.com
+Cc: chenxiaosong@kylinos.cn,
+	liuzhengyuan@kylinos.cn,
+	huhai@kylinos.cn,
+	liuyun01@kylinos.cn
+Subject: [PATCH 0/2] smb: move SMB2 Status code to common header file
+Date: Thu, 20 Jun 2024 09:34:34 +0000
+Message-Id: <20240620093436.411889-1-chenxiaosong@chenxiaosong.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
 
-On Fri, 14 Jun 2024 12:42:35 +0300, Matti Vaittinen wrote:
-> Support ROHM BD96801 Scalable PMIC
-> 
-> The ROHM BD96801 is automotive grade PMIC, intended to be usable in
-> multiple solutions. The BD96801 can be used as a stand-alone, or together
-> with separate 'companion PMICs'. This modular approach aims to make this
-> PMIC suitable for various use-cases.
-> 
-> [...]
+From: ChenXiaoSong <chenxiaosong@kylinos.cn>
 
-Applied, thanks!
+There are only slight differences between the client and server of SMB2
+Status code definitions, in order to maintain the code more easily,
+move all definitions to common header file.
 
-[1/6] dt-bindings: ROHM BD96801 PMIC regulators
-      commit: 7edf20a5380779dd47e72b68e7cfa037dfd0807d
-[2/6] dt-bindings: mfd: bd96801 PMIC core
-      commit: ef0c63e3e22d4c9039831236e3b189caf538b4c0
-[3/6] mfd: support ROHM BD96801 PMIC core
-      commit: d701779ed5effdb55b8f08051ed1c5291fb9201c
-[4/6] regulator: bd96801: ROHM BD96801 PMIC regulators
-      commit: 79ab65717405d535b96a7bbf04eb8c71f9372985
-[5/6] watchdog: ROHM BD96801 PMIC WDG driver
-      commit: 10278981a2fb81fb07635b9649f6387f6a6a5abf
-[6/6] MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
-      commit: de9fa7d755fd0c5f90c5faa524db0cc13efd809e
+ChenXiaoSong (2):
+  smb/client: fix typo to STATUS_MCA_OCCURRED
+  smb: move SMB2 Status code to common header file
 
---
-Lee Jones [李琼斯]
+ fs/smb/client/smb2file.c               |    2 +-
+ fs/smb/client/smb2inode.c              |    2 +-
+ fs/smb/client/smb2maperror.c           |    4 +-
+ fs/smb/client/smb2misc.c               |    2 +-
+ fs/smb/client/smb2ops.c                |    2 +-
+ fs/smb/client/smb2pdu.c                |    2 +-
+ fs/smb/client/smb2transport.c          |    2 +-
+ fs/smb/{client => common}/smb2status.h |  163 ++-
+ fs/smb/server/oplock.c                 |    2 +-
+ fs/smb/server/server.c                 |    2 +-
+ fs/smb/server/smb2misc.c               |    2 +-
+ fs/smb/server/smb2pdu.c                |    2 +-
+ fs/smb/server/smb_common.c             |    2 +-
+ fs/smb/server/smbstatus.h              | 1822 ------------------------
+ fs/smb/server/transport_rdma.c         |    2 +-
+ 15 files changed, 122 insertions(+), 1891 deletions(-)
+ rename fs/smb/{client => common}/smb2status.h (96%)
+ delete mode 100644 fs/smb/server/smbstatus.h
+
+-- 
+2.34.1
 
