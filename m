@@ -1,189 +1,65 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7101AE86E;
-	Thu, 20 Jun 2024 14:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6331AED3E;
+	Thu, 20 Jun 2024 14:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718893582; cv=none; b=jf7NuUf5Soz8MGlRRjGbERYVCNVe+HK8TMKGGVdwRjA+Kr0Le0n9HyBVtmr54YpPJFikWfHevPGAGfQh4X/A58F1lB7x3q/mxd01yqIY/mHxUJLICfEWw1xAs9qMgHTMaPxJ/wQXx5ivRBzCYx8szaSVygIFu9xr2BaDx0WPXrY=
+	t=1718893585; cv=none; b=d35SCmRzlH+rzdmTF0uvw8C1HAS9RFbfrPmZzGaML1asg+dvuI+fofvBivXvOErYshsqfm3caTiuToBVbTBRhBfhRLVNchBy4wLO/8cAgS15BL76DoYpZDY4HLG4JzL07QG9fLW77CKZL68A2wNk/8kbiKBdi29Ox+2/U3tH+lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718893582; c=relaxed/simple;
-	bh=sIkfsnAVoRds5WEklbfbC0UMyyLpSMkwJORy5GD4llI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l+HFbuRfLh0zDrf38JOcYnLoY8QkrIMc1s1ujptcJgiVvxEbUYYdS1NLXqF4Qx2ovGYjHcwLF0F5iXbyFJCWErjXvX7jg6VEa28k8cOLlEz9lcaBIznUlLxkkcBEz5HU7M/Qij5/vC83wV+UMT1fwS1xKt+/UEn1GQBvgtkGmwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L6ars+UU; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718893585; c=relaxed/simple;
+	bh=XWwDe1VKpwMVqs0REBUO+hdWW/rWocQVAL5pu75G2FY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CZEQXHpW+nX7Va1maAgXuc3KLBCAECtXY9LYYjJKYZVR0Wtve+UxbSBIBhYJBKg145G8WFyq+oEF5ZiIQQQuCfZodBj+qniR9Sh6Tzh/7fiAYzTAL4E5oHLf4CmTYVQhH7dqUWsh/ZEphGZ92exgUdUzebfq6d5vCCH4Z+dOUc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Zk+9xPwz; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L6ars+UU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718893579;
-	bh=sIkfsnAVoRds5WEklbfbC0UMyyLpSMkwJORy5GD4llI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L6ars+UU8ohJqBv97do828pZdjXZvYeXIXxXszh5cvWbRlxk41wJ1grI0pcugmcYM
-	 7sOOAg9IlqadKzqQJHTCh/ATXPWKcGEE081SlKdUkumDEv68ZiGYJJdBmJPaUsW7Wz
-	 z1FibZmOZ4uDiXO+qM90wDd2m1tx9V+6pN4/Em0qUewDtvIxbLa6KbEQZh/dxvtdbW
-	 KWfXj7VTNFzHwpEaCdZc3quO9qe2RkyX/wDjhk3mmYVTkIS714TPEWsXvwAAQpylNr
-	 B8XBaQLM074aXB94Vie9DrGWQZLz9tyKBv2jlms1GNXsTX1DWEvaV5KZJ6Oz6BQxhU
-	 T90nS/ieJ0PQA==
-Received: from arisu.hitronhub.home (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2780B37821D3;
-	Thu, 20 Jun 2024 14:26:16 +0000 (UTC)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Alex Bee <knaerzche@gmail.com>,
-	linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: [PATCH v3 3/4] media: dt-bindings: rockchip: Document RK3588 Video Decoder bindings
-Date: Thu, 20 Jun 2024 10:19:45 -0400
-Message-ID: <20240620142532.406564-4-detlev.casanova@collabora.com>
-X-Mailer: git-send-email 2.44.2
-In-Reply-To: <20240620142532.406564-1-detlev.casanova@collabora.com>
-References: <20240620142532.406564-1-detlev.casanova@collabora.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Zk+9xPwz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=8CdaykppxAibWd0MPPixXnfXzj9mlnXYDK/ia2iIAnQ=; b=Zk+9xPwz0MaSNdxOuHy19lSruC
+	uyGFRy5AxZX09Ioc866csrMzcvdOoDRWFYbO2sHTi8knYnTmxylLfc24yvLrci/tOiYFxo1+rhnEd
+	fti62bmFMHyAjHce8c3tXZxhj/pU0csJ/4VIuH55ODCIM5WcZWSM3NOp9UpD0fViW2TA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sKIjz-000a9b-K4; Thu, 20 Jun 2024 16:26:19 +0200
+Date: Thu, 20 Jun 2024 16:26:19 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+	thomas.petazzoni@bootlin.com,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net] net: pse-pd: Kconfig: Fix missing firmware loader
+ config select
+Message-ID: <51e50892-bf62-4393-9910-ab36df6d9a85@lunn.ch>
+References: <20240620095751.1911278-1-kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620095751.1911278-1-kory.maincent@bootlin.com>
 
-Document the Rockchip RK3588 Video Decoder bindings.
+On Thu, Jun 20, 2024 at 11:57:50AM +0200, Kory Maincent wrote:
+> Selecting FW_UPLOAD is not sufficient as it allows the firmware loader
+> API to be built as a module alongside the pd692x0 driver built as builtin.
+> Add select FW_LOADER to fix this issue.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406200632.hSChnX0g-lkp@intel.com/
+> Fixes: 9a9938451890 ("net: pse-pd: Add PD692x0 PSE controller driver")
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
----
- .../bindings/media/rockchip,vdec.yaml         | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
-index 08b02ec16755..d44f6b0d2c55 100644
---- a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
-+++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
-@@ -17,6 +17,7 @@ properties:
-   compatible:
-     oneOf:
-       - const: rockchip,rk3399-vdec
-+      - const: rockchip,rk3588-vdec
-       - items:
-           - enum:
-               - rockchip,rk3228-vdec
-@@ -30,29 +31,56 @@ properties:
-     maxItems: 1
- 
-   clocks:
-+    minItems: 4
-     items:
-       - description: The Video Decoder AXI interface clock
-       - description: The Video Decoder AHB interface clock
-       - description: The Video Decoded CABAC clock
-       - description: The Video Decoder core clock
-+      - description: The Video decoder HEVC CABAC clock
- 
-   clock-names:
-+    minItems: 4
-     items:
-       - const: axi
-       - const: ahb
-       - const: cabac
-       - const: core
-+      - const: hevc_cabac
- 
-   assigned-clocks: true
- 
-   assigned-clock-rates: true
- 
-+  resets:
-+    items:
-+      - description: The Video Decoder AXI interface reset
-+      - description: The Video Decoder AHB interface reset
-+      - description: The Video Decoded CABAC reset
-+      - description: The Video Decoder core reset
-+      - description: The Video decoder HEVC CABAC reset
-+
-+  reset-names:
-+    items:
-+      - const: rst_axi
-+      - const: rst_ahb
-+      - const: rst_cabac
-+      - const: rst_core
-+      - const: rst_hevc_cabac
-+
-   power-domains:
-     maxItems: 1
- 
-   iommus:
-     maxItems: 1
- 
-+  sram:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      phandle to a reserved on-chip SRAM regions.
-+      Some SoCs, like rk3588 provide on-chip SRAM to store temporary
-+      buffers during decoding.
-+
- required:
-   - compatible
-   - reg
-@@ -61,6 +89,33 @@ required:
-   - clock-names
-   - power-domains
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3588-vdec
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 5
-+        clock-names:
-+          minItems: 5
-+
-+        resets:
-+          minItems: 5
-+        reset-names:
-+          minItems: 5
-+    else:
-+      properties:
-+        clocks:
-+          maxItems: 4
-+        clock-names:
-+          maxItems: 4
-+        resets: false
-+        reset-names: false
-+        sram: false
-+
- additionalProperties: false
- 
- examples:
--- 
-2.44.2
-
+    Andrew
