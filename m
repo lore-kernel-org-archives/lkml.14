@@ -1,147 +1,79 @@
-Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900521AF6AE;
-	Thu, 20 Jun 2024 16:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0668A3BB50;
+	Thu, 20 Jun 2024 16:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900049; cv=none; b=LqrDcwiEr+96eU7/D1c1skdwcC4KldaCQWJ2Ky/JymwTEqPdIJSn+qhsHDcF2we6hIuQeiDffxYwsEDKIuJUOknOq+nQyX3ZUaTzsSp6I5dqoBI/qRCCO8uXYMZ2hZYWZboqhzL+0HZfSz1+xMU1x0TydBdwP0DpNJY3i0tHYxM=
+	t=1718900060; cv=none; b=cS5oFSXrRfqv+L3vdLrJF+qa5UXwDRkg088eJh4dAhovc/tpv2eP5nCqQhBgDzzYl46Bw3eHHCYvGUREuaYbqxrJ1kUx5xYTkOqMhH5znSUoIZyWmsFgu5KZIMsUs7otyYQZ19G6gD3JdtyDd6IGuYqjh/HlnhB31/lwy67TxOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900049; c=relaxed/simple;
-	bh=8WvGrEKWEj6huxHRBZE5VfOVaSzUc6kmVBOhZwVQeU0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=i10+PZWot7Z2scCXaUYEGg/QzdS8LxINLNdVl7pAy8djS+gRxg8oJldcrcaDcEShQRx+HPxM/pkJvSNWU+2rJvln3tSMfg+mRXs+Dd15LxyX5b6bDHXjccqqv1eIeaqD7G/QIP4Ff6YNTcgltPyt0Wugg4SbBWvIweC1hHSxLeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=hyU2t2Qo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gLPs8ayq; arc=none smtp.client-ip=64.147.123.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1718900060; c=relaxed/simple;
+	bh=+GHT9WcvwhnXq3uv4PeG/J2phcFuK0s3zZGAxE9Vr94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sZU6BZ7st+yZ4kOe6C69O10bL5gN7KLmI/CjhTdWoOcmR+2JpBGRji+9hd8SnWvQJhfgQ/N8heQEu7SoSTzo05qJnqgvKvE64orN8Ng/yNa9yOtGoZnBI8QGVUpXPUEfPTTBF6jB+67wYbf7v90LSioUketL4KbWFwPkxfHALjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sL1Zmpak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hyU2t2Qo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gLPs8ayq"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.west.internal (Postfix) with ESMTP id 2CEE91C000AA;
-	Thu, 20 Jun 2024 12:14:06 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 20 Jun 2024 12:14:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1718900045;
-	 x=1718986445; bh=pTsR4P9iYtq7n9VU6NZN59uSyYXTfa7yGNhTaHlHYxI=; b=
-	hyU2t2QoUuoTz/lQtZOBijEk7OjK8VbrePZm6DvQF67Kp9DxnJzEz3hLRF/6HWeP
-	XNftT671ReCxZhvuebLo0EHWIU5ag3j00Vsz/T+iVleSZLkxDOV0e/JQLSpoKQb5
-	Zo88TADyckHIWcyHgNO7FEeHkejsf6jNcWmgonIdULs1n9LQOfUZEV1fpoeXbKzy
-	apEFys18AdKMy3f3Vs4snXmE7m6mDfCNKrXGRMGMF/MephTa3mFA6BqsolXvDmBN
-	tmA+OxkllRr3KC97UaV1jZq2ZmFuSGEHJoRnjDtaujYUU90i8t+IQBPwssQQic/3
-	E3Qbpaa9qqMnCcM/rIFDTw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1718900045; x=
-	1718986445; bh=pTsR4P9iYtq7n9VU6NZN59uSyYXTfa7yGNhTaHlHYxI=; b=g
-	LPs8ayqyvnpbag0nCc9A4AbVUhVsdBTn8Vg+8NOqJVVbV1LpSL+iR5T82sqCRJKg
-	W5x5LAmSYNYU2S1VIYe43YJf7h4fY52Zkvzl8N6t9r3azsU1BtS4jlalfNUO40LJ
-	k3pq4+XKb+VYwARGgjosYUhsq0Tlw9+7+ViGPWVrY+iQRwnXzrWNQg1tiAu3F6s6
-	Z3dGws+xeiLyrVd1UuE//LnLsjUsrufo8cNNb24Fsy5BtTOEX6bySzaK9Q3mLofg
-	LehJY1h57l5FgiLjeoZJ0bmSGpZ6XDAi1ROQ2pVb9k5xYGQLFTY/Rm/YOApz7IQ+
-	QFMfZpxDi8Y9AdUw+WgbA==
-X-ME-Sender: <xms:TVV0ZpFVyWfn42WRi3uIr00cvPdZRCer8ADyeFQMhJoHK6iXqwnMmw>
-    <xme:TVV0ZuXQO_vv24uHkDbAFpUoI083ELNVbQ_UswceuzU91di1KkW_5i5OSMkLHVc2-
-    vRnC7OecPLxhKDUfr0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefvddguddttdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
-    lfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtg
-    homheqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefh
-    jeeugeevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:TVV0ZrIHotaaE1k8O-IuNQ2Dd9mxlZ72k7eih-2VsAjuzf3VMVcQvw>
-    <xmx:TVV0ZvGe4q4bCtcuQ1EDYADjzazGthzBhmaLgBDHaiPVj3cVQVqq2A>
-    <xmx:TVV0ZvX2udGkn_4rAWBsm8ZdHoPEeJPhcKmfsgsqbxBf6qmZkfv-SA>
-    <xmx:TVV0ZqPg0AAtLDLmPwzVJ_nNaY1siWqPTCbp1UCR0TQeX5PJ_L3dpw>
-    <xmx:TVV0ZvRdEa9yMw_AIhHvVR4J5Wg5ZTjADFqiGLOAIFicKvZzDaKg6qIS>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 8114836A0074; Thu, 20 Jun 2024 12:14:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sL1Zmpak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A0EC2BD10;
+	Thu, 20 Jun 2024 16:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718900059;
+	bh=+GHT9WcvwhnXq3uv4PeG/J2phcFuK0s3zZGAxE9Vr94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sL1Zmpak4E6ksK9u+PVo5VdVvcL+kvWyI8ZQX46xQpOe6Xj/v/RqajdHhXoBlKJkF
+	 qhLB8HB641YNFZpDspRhNRiHPITXDqpNsDMIzE9VXAF5rHa4cuV6t6zFAX4UdAng3L
+	 DIwe6PgCD/V+PohEOjfcntpY7b3Q7K83LgVtTnMIjZqdXxgpfmU8Wt8tt0C/evsUvs
+	 TaeySm/znVYAg0k3/1iTkaXClkLqDU2GpOl+o26hMvFKKSLIhMTMHZ2JaKoc4UxzSj
+	 SIPZqV1xTJ8CbvLuEo1Dd2oZl3yRRbPNDhBbqjhzUk0iJvKW4zkaMX93RbVpw4L37b
+	 fGyPyCy4hGmsg==
+Date: Thu, 20 Jun 2024 17:14:15 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	jikos@kernel.org, benjamin.tissoires@redhat.co, dianders@google.com,
+	hsinyi@google.com, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] dt-bindings: display: panel: Add compatible for
+ kingdisplay-kd101ne3
+Message-ID: <20240620-shiny-germless-d5b8d532c9d1@spud>
+References: <20240620080509.18504-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240620080509.18504-3-lvzhaoxiong@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <be608e3e-2ecd-4d7d-bf45-99c553e72c08@app.fastmail.com>
-In-Reply-To: <808f27bf-9dc7-407a-86ff-0a8fae79531c@kernel.org>
-References: <20240618-boston-syscon-v3-0-c47c06647a26@flygoat.com>
- <20240618-boston-syscon-v3-7-c47c06647a26@flygoat.com>
- <6d3fbd07-72a0-43fd-a1e5-c39e3a833bc1@kernel.org>
- <51557e31-0a59-4278-a8c1-25cf66fa3c3f@app.fastmail.com>
- <808f27bf-9dc7-407a-86ff-0a8fae79531c@kernel.org>
-Date: Thu, 20 Jun 2024 17:13:24 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v3 7/8] dt-bindings: mfd: Add img,boston-platform-regs
-Content-Type: text/plain;charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aDlbeZ9BUzsTHd9G"
+Content-Disposition: inline
+In-Reply-To: <20240620080509.18504-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+
+
+--aDlbeZ9BUzsTHd9G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jun 20, 2024 at 04:05:07PM +0800, Zhaoxiong Lv wrote:
+> The kingdisplay-kd101ne3 is a 10.1" WXGA TFT-LCD panel with
+> jadard-jd9365da controller. Hence, we add a new compatible
+> with panel specific config.
+>=20
+> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8820=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=887:40=EF=BC=8CKrzysztof Kozlowski=E5=86=99=E9=81=93=EF=BC=9A
-> On 19/06/2024 13:20, Jiaxun Yang wrote:
->>=20
->>=20
->> =E5=9C=A82024=E5=B9=B46=E6=9C=8819=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=
-=E5=8D=8810:28=EF=BC=8CKrzysztof Kozlowski=E5=86=99=E9=81=93=EF=BC=9A
-[...]
-> Your children depend on parent to provide IO address, so this is not
-> simple-mfd. Rule for simple-mfd is that children do not rely on parent
-> at all.
+--aDlbeZ9BUzsTHd9G
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I don't really get this.
+-----BEGIN PGP SIGNATURE-----
 
-As per syscon-rebbot.yaml:
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnRVVwAKCRB4tDGHoIJi
+0ncSAP43WLQQ6LFeUx/1Ug5lQcZ4fs4MmDPdXIqCNU8WuIBgmAEAxXbKXm2s74+Q
+2TWp6pYecg8Oo+td+P35lDWuiEil0wo=
+=6avv
+-----END PGP SIGNATURE-----
 
-The SYSCON registers map is normally retrieved from the
-  parental dt-node. So the SYSCON reboot node should be represented as a
-  sub-node of a "syscon", "simple-mfd" node.
-
-syscon-reboot is certainly using parent node to provide I/O address,
-even regmap property is deprecated. Without "simple-mfd", reboot node
-won't be populated at all.
-
-I'll remove the dependency of clock controller to parent node anyway.
-
-Thanks
-- Jiaxun
-
->
->>=20
->> Linux managed to work without "simple-mfd" only because clock subsyst=
-em
->> is bypassing regular OF population process. Semantically we need this.
->
-> Semantically? No, you need proper populate, not incorrect simple-mfd.
->
->>=20
->> Besides Linux as upstream of devicetree source had accepted U-Boot
->> only stuff here, such as "bootph-all" property.
->
-> Because bootph-all is valid and correct. Calling simple-mfd something
-> which is not entirely simple-mfd is not that valid.
->
->
-> Best regards,
-> Krzysztof
-
---=20
-- Jiaxun
+--aDlbeZ9BUzsTHd9G--
