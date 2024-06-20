@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C744D1E49E;
-	Thu, 20 Jun 2024 13:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AB61ACE61
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718889625; cv=none; b=aolAIpeRmFWUDRQxnFSx5CshH2Ia735/6aHtaWLJUGUShzgEdZ3VkQiuHLC/EzGRY/ZzzpUeEfEulhHt2sJGJzcHbPHR2v2Q2bb8voGyngA9665osfcFZ9fjMVCgn8UKBGltM2x0T19fLZeGOMabDMzCLx92dQJ/zoDemenlpEA=
+	t=1718889829; cv=none; b=aQK4gNFo3PCQnNN/CBdd5E2AUdYKBW3MF8io+WZnWoCUrTYEXovGr0aOlVgbPb71QsVonTUd+hVw0RseiXBkPeAawMx7+eTBkN5fUyuaRDEdGSzcJjfxtSZr7rSgWxjmiMeoFSdeB7ctmd3ggQ3HeBTlGSI+zILdH7UDGr9TVpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718889625; c=relaxed/simple;
-	bh=KEROTR005kTLhtx/k+9f7IK2AIDNVt50nsFd2BWMl30=;
+	s=arc-20240116; t=1718889829; c=relaxed/simple;
+	bh=PF804oOWsningKyY8X2WCmaUQpFqh6+o21ojOYTaW5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WmKAvwUJeaQoA6hsNOoG5hTAuyaFh15Klhmo2ein1KxFpVd5EpUpBl67xpOvCQ6I0jm31iTQ3G8BbdTpUE8QvXw8ytWDzy/kul6lwbNQYiZET2APMjx0mf5bTfcEnrUZRBwAIwZXCtuAFyAdYZdbCQ7H49J/82vGBYbo2olwAvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EszdFoqL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WWU9c4MQfsPLvnv1xIwQhONa9YmjSzTq7asxol/ex/ebTPEpboljnnvNFEWiWtOE4JZ/hgjzvR6JtYcV18XP5FUoiTyUAw0hrGWg8Y7Z8QS4Kmr8CyOwVY5NSjZ15JbkrI1PvfcRPr1Ankx4QsyKLFSs7rc2OTXAjp1mSC5mx1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KdLpt6kF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EszdFoqL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 063D0C2BD10;
-	Thu, 20 Jun 2024 13:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718889624;
-	bh=KEROTR005kTLhtx/k+9f7IK2AIDNVt50nsFd2BWMl30=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EszdFoqLBct+twlYq5PmHlR+kk91HtkmqT/p8iQvXgoRrRldYFnFXcFToGnj+uSox
-	 h2Zu62R+tYk2I6O5LtvgAbtSR7d5rAxVIu9qXKOoOJumQlm2mDE0VI1PUEJfVvupcx
-	 BdHZ55BvhPklbpe/91BZN9nA8rM/Ca1Fu270Sx5JsoF3XkUXq0+FWkDVRneDgJfH1z
-	 wZH6JCoWcYlTvOn7esMlreYOoGxFeTS2i8idbDqIOxC3meF2lsx1+Xgm5ROdTVBfy6
-	 c3T25vIdJz8aJDEwiUwJRLTjD6BAGftmdxqBtFnzx9Au/8jbkltLtoBGN+CZAU+7pZ
-	 gSVNxJUBYwisg==
-Message-ID: <bf61b47d-e375-4f52-b25c-f02a5cd9b6dd@kernel.org>
-Date: Thu, 20 Jun 2024 15:20:20 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KdLpt6kF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718889826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H32ryajiAMQje4E0qEx+NRHYNdsGJp/lNSL+93uxA7U=;
+	b=KdLpt6kFI/bPfw0+nnIjAvbuooRphQmuJ6yhYuYJ6UL1xazdapJm1FAlZF1UJPZg/v20oB
+	Pp2+QY0hsK5Zv+gtvDqAv/NkPyB2gCjYgdHOMh1ocKCFxF5WYff9SDcDNadu/eUleMu8Vv
+	t1vGGHHvzjnAsznhntRV9r80yhkDw4s=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-412-LEnVc4KLNz2GSVYnpS9tsg-1; Thu, 20 Jun 2024 09:23:45 -0400
+X-MC-Unique: LEnVc4KLNz2GSVYnpS9tsg-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4410367c230so8529011cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:23:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718889824; x=1719494624;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H32ryajiAMQje4E0qEx+NRHYNdsGJp/lNSL+93uxA7U=;
+        b=a4LRYIhHz8mrFWU2FUfqLsLtJ8mR13gnk4iNSGwN2nnCdBtar9MKfPdqTqHz1iLfLm
+         I0ScbbQRQcZ5f+ocPf7kJd+x3/AXmFtBSgIO30m/SRPv6BYDScUMxwR+NjHTvEsHS7c0
+         9Q5QP73ysO7uex36UnZVetwjygV+wOTPBV+lq7kJt6kY62/gPur75fW3EZMS+6/uSuKS
+         Gy/ftuS7wVvTj3t8qFulTZfyKRvktaxeTSLwcDsQwhUc3ADqyBIrPw9CrhNs9plE3xJD
+         j4M/XZ0ddRSMmhdILSHGCCta5YXddyLuJZxC6hCcTUIY7KNkt1yvu0i8D/BG6/6Oi6Sb
+         DH4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU8WqsehaJ45K95ZAX83U8iKPIAItSN3cSigO893KOFDPIO4zwixC9XxaK7Tgxf/Hsnpfg6qep4Jfzbky1hTsdW5YIonTs3Vv1EXLpZ
+X-Gm-Message-State: AOJu0YxjxpQHeffqHBMVy77kr6H0ulGodQUdgUOQE2xQzn+dnSSRxP4D
+	2HAMdHmaIE31x0cVCa/9Qt8o9ekAxrH7eaFOxpqbmtb5mSRguGhWwtSFp8kvEBUS2AqB/XYVKSX
+	PiSf6eXAdG1BYJGD7fFMTQ+GXS3CX/irOfvzGF1PaP/skA2EOhgLCvsJcY6FQIA==
+X-Received: by 2002:a05:620a:2403:b0:795:5f71:b190 with SMTP id af79cd13be357-79bb3e57dcbmr639459185a.37.1718889824616;
+        Thu, 20 Jun 2024 06:23:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH7lR8Qj5tqxCfDCAWyzhiZxYPsaC/gvkzL3X7mSeb6vi1+5SrnEdEkb+ho0G8dGXin7KMHWQ==
+X-Received: by 2002:a05:620a:2403:b0:795:5f71:b190 with SMTP id af79cd13be357-79bb3e57dcbmr639457685a.37.1718889824265;
+        Thu, 20 Jun 2024 06:23:44 -0700 (PDT)
+Received: from [10.0.0.200] (modemcable096.103-83-70.mc.videotron.ca. [70.83.103.96])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-798abe48449sm696014785a.104.2024.06.20.06.23.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 06:23:43 -0700 (PDT)
+Message-ID: <34ffbdcb-b1f9-4cee-9f55-7019a228d3f8@redhat.com>
+Date: Thu, 20 Jun 2024 09:23:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,142 +67,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] dt-bindings: remoteproc: mpss: Document
- QDU1000/QRU1000 mpss devices
-To: Komal Bajaj <quic_kbajaj@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Melody Olvera <quic_molvera@quicinc.com>
-References: <20240620120143.12375-1-quic_kbajaj@quicinc.com>
- <20240620120143.12375-2-quic_kbajaj@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240620120143.12375-2-quic_kbajaj@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [BUG] ice driver crash on arm64
+To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com, poros@redhat.com,
+ netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ magnus.karlsson@intel.com
+References: <8f9e2a5c-fd30-4206-9311-946a06d031bb@redhat.com>
+ <ZnQsdxzumig7CD7c@boxer>
+Content-Language: en-US, en-CA
+From: Luiz Capitulino <luizcap@redhat.com>
+In-Reply-To: <ZnQsdxzumig7CD7c@boxer>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 20/06/2024 14:01, Komal Bajaj wrote:
-> From: Melody Olvera <quic_molvera@quicinc.com>
+On 2024-06-20 09:19, Maciej Fijalkowski wrote:
+> On Tue, Jun 18, 2024 at 11:23:28AM -0400, Luiz Capitulino wrote:
+>> Hi,
+>>
+>> We have an Ampere Mount Snow system (which is arm64) with an Intel E810-C
+>> NIC plugged in. The kernel is configured with 64k pages. We're observing
+>> the crash below when we run iperf3 as a server in this system and load traffic
+>> from another system with the same configuration. The crash is reproducible
+>> with latest Linus tree 14d7c92f:
+>>
+>> [  225.715759] Unable to handle kernel paging request at virtual address 0075e625f68aa42c
+>> [  225.723669] Mem abort info:
+>> [  225.726487]   ESR = 0x0000000096000004
+>> [  225.730223]   EC = 0x25: DABT (current EL), IL = 32 bits
+>> [  225.735526]   SET = 0, FnV = 0
+>> [  225.738568]   EA = 0, S1PTW = 0
+>> [  225.741695]   FSC = 0x04: level 0 translation fault
+>> [  225.746564] Data abort info:
+>> [  225.749431]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+>> [  225.754906]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>> [  225.759944]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+>> [  225.765250] [0075e625f68aa42c] address between user and kernel address ranges
+>> [  225.772373] Internal error: Oops: 0000000096000004 [#1] SMP
+>> [  225.777932] Modules linked in: xfs(E) crct10dif_ce(E) ghash_ce(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) sbsa_gwdt(E) ice(E) nvme(E) libie(E) dimlib(E) nvme_core(E) gnss(E) nvme_auth(E) ixgbe(E) igb(E) mdio(E) i2c_algo_bit(E) i2c_designware_platform(E) xgene_hwmon(E) i2c_designware_core(E) dm_mirror(E) dm_region_hash(E) dm_log(E) dm_mod(E)
+>> [  225.807902] CPU: 61 PID: 7794 Comm: iperf3 Kdump: loaded Tainted: G            E      6.10.0-rc4+ #1
+>> [  225.817021] Hardware name: LTHPC GR2134/MP32-AR2-LT, BIOS F31j (SCP: 2.10.20220531) 08/01/2022
+>> [  225.825618] pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> [  225.832566] pc : __arch_copy_to_user+0x4c/0x240
+>> [  225.837088] lr : _copy_to_iter+0x104/0x518
+>> [  225.841173] sp : ffff80010978f6e0
+>> [  225.844474] x29: ffff80010978f730 x28: 0000000000007388 x27: 4775e625f68aa42c
+>> [  225.851597] x26: 0000000000000001 x25: 00000000000005a8 x24: 00000000000005a8
+>> [  225.858720] x23: 0000000000007388 x22: ffff80010978fa60 x21: ffff80010978fa60
+>> [  225.865842] x20: 4775e625f68aa42c x19: 0000000000007388 x18: 0000000000000000
+>> [  225.872964] x17: 0000000000000000 x16: 0000000000000000 x15: 4775e625f68aa42c
+>> [  225.880087] x14: aaa03e61c262c44f x13: 5fb01a5ebded22da x12: 415feff815830f22
+>> [  225.887209] x11: 7411a8ffaab6d3d7 x10: 95af4645d12e6d70 x9 : ffffba83c2faddac
+>> [  225.894332] x8 : c1cbcc6e9552ed64 x7 : dfcefe933cdc57ae x6 : 0000fffde5aa9e80
+>> [  225.901454] x5 : 0000fffde5ab1208 x4 : 0000000000000004 x3 : 0000000000016180
+>> [  225.908576] x2 : 0000000000007384 x1 : 4775e625f68aa42c x0 : 0000fffde5aa9e80
+>> [  225.915699] Call trace:
+>> [  225.918132]  __arch_copy_to_user+0x4c/0x240
+>> [  225.922304]  simple_copy_to_iter+0x4c/0x78
+>> [  225.926389]  __skb_datagram_iter+0x18c/0x270
+>> [  225.930647]  skb_copy_datagram_iter+0x4c/0xe0
+>> [  225.934991]  tcp_recvmsg_locked+0x59c/0x9a0
+>> [  225.939162]  tcp_recvmsg+0x78/0x1d0
+>> [  225.942638]  inet6_recvmsg+0x54/0x128
+>> [  225.946289]  sock_recvmsg+0x78/0xd0
+>> [  225.949766]  sock_read_iter+0x98/0x108
+>> [  225.953502]  vfs_read+0x2a4/0x318
+>> [  225.956806]  ksys_read+0xec/0x110
+>> [  225.960108]  __arm64_sys_read+0x24/0x38
+>> [  225.963932]  invoke_syscall.constprop.0+0x80/0xe0
+>> [  225.968624]  do_el0_svc+0xc0/0xe0
+>> [  225.971926]  el0_svc+0x48/0x1b0
+>> [  225.975056]  el0t_64_sync_handler+0x13c/0x158
+>> [  225.979400]  el0t_64_sync+0x1a4/0x1a8
+>> [  225.983051] Code: 78402423 780008c3 910008c6 36100084 (b8404423)
+>> [  225.989132] SMP: stopping secondary CPUs
+>> [  225.995919] Starting crashdump kernel...
+>> [  225.999829] Bye!
+>>
+>> I was able to find out this is actually a regression introduced in 6.3-rc1
+>> and was able to bisect it down to commit:
+>>
+>> commit 1dc1a7e7f4108bad4af4c7c838f963d342ac0544
+>> Author: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+>> Date:   Tue Jan 31 21:44:59 2023 +0100
+>>
+>>      ice: Centrallize Rx buffer recycling
+>>
+>>      Currently calls to ice_put_rx_buf() are sprinkled through
+>>      ice_clean_rx_irq() - first place is for explicit flow director's
+>>      descriptor handling, second is after running XDP prog and the last one
+>>      is after taking care of skb.
+>>
+>>      1st callsite was actually only for ntc bump purpose, as Rx buffer to be
+>>      recycled is not even passed to a function.
+>>
+>>      It is possible to walk through Rx buffers processed in particular NAPI
+>>      cycle by caching ntc from beginning of the ice_clean_rx_irq().
+>>
+>>      To do so, let us store XDP verdict inside ice_rx_buf, so action we need
+>>      to take on will be known. For XDP prog absence, just store ICE_XDP_PASS
+>>      as a verdict.
+>>
+>>      Signed-off-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+>>      Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+>>      Reviewed-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+>>      Link: https://lore.kernel.org/bpf/20230131204506.219292-7-maciej.fijalkowski@intel.com
+>>
+>> Some interesting/important information:
+>>
+>>   * Issue doesn't reproduce when:
+>>      - The kernel is configured w/ 4k pages
+>>      - UDP is used (ie. iperf3 -c <server> -u -b 0)
+>>      - legacy-rx is set
+>>   * The NIC firmware is version 4.30 (we haven't figured out how to update it from arm)
+>>
+>> By taking a quick look at the code, ICE_LAST_OFFSET in ice_can_reuse_rx_page() seems
+>> wrong since Rx buffers are 3k w/ bigger page sizes but just changing it to
+>> ICE_RXBUF_3072 doesn't fix the issue.
+>>
+>> Could you please help taking a look?
 > 
-> Document the compatible for the component used to boot the MPSS on the
-> QDU1000 and QRU1000 SoCs.
-> 
-> The QDU1000 and QRU1000 mpss boot process now requires the specification
-> of an RMB register space to complete the handshake needed to start or
+> Thanks for the report. I am on sick leave currently, will try to take
+> alook once I'm back.
 
-What is RMB?
+I'm sorry to hear that Maciej, I hope you get well soon.
 
-> attach the mpss.
-
-mpss? MPSS?
-
-> 
-> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-> ---
->  .../remoteproc/qcom,qdu1000-mpss-pas.yaml     | 129 ++++++++++++++++++
->  1 file changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml
-> new file mode 100644
-> index 000000000000..71c5a85b679e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/remoteproc/qcom,qdu1000-mpss-pas.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm QDU1000 Modem Peripheral Authentication Service
-> +
-> +maintainers:
-> +  - Melody Olvera <quic_molvera@quicinc.com>
-> +  - Komal Bajaj <quic_kbajaj@quicinc.com>
-> +
-> +description:
-> +  Qualcomm QDU1000 SoC Peripheral Authentication Service loads and boots firmware
-> +  on the Qualcomm DSP Hexagon core.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,qdu1000-mpss-pas
-> +
-> +  reg:
-> +    items:
-> +      - description: Address offset and size for MPSS PAS register set
-> +      - description: Address offset and size for MPSS RMB register set
-
-10 words, 8 are entirely redundant. This cannot be anything else than
-address offset and size of some register set. Please write efficient and
-understandable code. E.g.
-"MPSS main Peripheral Authentication Service"
-"MPSS something-explain-what-is-rmb"
-
-
-...
-
-> +        glink-edge {
-> +            interrupts-extended = <&ipcc IPCC_CLIENT_MPSS
-> +                                         IPCC_MPROC_SIGNAL_GLINK_QMP
-> +                                         IRQ_TYPE_EDGE_RISING>;
-> +            mboxes = <&ipcc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_GLINK_QMP>;
-> +
-> +            label = "modem";
-> +            qcom,remote-pid = <2>;
-> +        };
-
-This wasn't tested.
-
-Best regards,
-Krzysztof
+- Luiz
 
