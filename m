@@ -1,53 +1,82 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723BD1AC252;
-	Thu, 20 Jun 2024 12:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04B01AC245;
+	Thu, 20 Jun 2024 12:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718887727; cv=none; b=EdQ5bwe0b93VYqvaoselPRA3qU0yGVrRfgwHvnH1T4c+exrLprtxfGIjKtymcacemIlMuabVJLQY3Jx0Lh2saD5D2PmaesznvMwXnyfkN9cuaKHbjSg/4ZP5RS/KV1P2t9oV6DCR0GKLBDiqyO2808nuEP+i4ur59Nh84DjdzcA=
+	t=1718887764; cv=none; b=QAsWsHTaZHROtRB+Pio+GyzkGTiWhc9fps6d8tIAyVtwgG9tmaBwafKUGMLa+ML970OIttl8A0H2pRsRpoyvbaxHfiS50r0gkipcUt6e78MHeyFDAP+WS+e1RGnfLcSAwMgRhBe8WShfuRlWCOYp8+pGMg+uth8+5ISJ4OCay8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718887727; c=relaxed/simple;
-	bh=v4jlGjeuGFae3UIWanV95pEru7/tYXgxjCsl+c+4hec=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=lcWsRKRfe+At4LAbC0/QuDmd9yBT99XUHMhPZI2+GS5WveAbWy33lcU2W2+QXMnKoukMuKPFkiEjqyQP4a32OZJkgIG4ZgtnBNSNyZOJxLtkw1d9y+t4NxyLztFcUxKK5oJnvEpE7R+fR0caBeJKgnm52ULGdKgAeuMZpEm0fN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W4gJy4TM4z4wcg;
-	Thu, 20 Jun 2024 22:48:34 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Danny Tsen <dtsen@linux.ibm.com>, Nathan Lynch <nathanl@linux.ibm.com>
-Cc: linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240603-powerpc-crypto-ignore-p8-asm-v1-1-05843fec2bb7@linux.ibm.com>
-References: <20240603-powerpc-crypto-ignore-p8-asm-v1-1-05843fec2bb7@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/crypto: Add generated P8 asm to .gitignore
-Message-Id: <171888750936.804969.14409568109203763184.b4-ty@ellerman.id.au>
-Date: Thu, 20 Jun 2024 22:45:09 +1000
+	s=arc-20240116; t=1718887764; c=relaxed/simple;
+	bh=IUvgoDslhWC9mCuSL9+lF7PxGVGHedFsWIeSGTu3G+4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LUkUPotDjLYOxbXDGR5kbb9l4zjfOuyCwQCBI8PhzC/nsuKi4/gtkf1Z5HJAizgy3Gv1Lle35tb+EABYJPLpg+i7BIbVsCGE6Dw1OQUDpKnMwe50XxJJVwzvim99i88wKr3wUOkjskmwtL2owzhdvHB8+u/biiqluRk6frHnRs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W4gKn0R76z6JBYy;
+	Thu, 20 Jun 2024 20:49:17 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id EE00F140A34;
+	Thu, 20 Jun 2024 20:49:18 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
+ 2024 13:49:18 +0100
+Date: Thu, 20 Jun 2024 13:49:17 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ming4.li@intel.com>,
+	<vishal.l.verma@intel.com>, <jim.harris@samsung.com>,
+	<ilpo.jarvinen@linux.intel.com>, <ardb@kernel.org>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <Yazen.Ghannam@amd.com>,
+	<Robert.Richter@amd.com>
+Subject: Re: [RFC PATCH 5/9] cxl/pci: Update RAS handler interfaces to
+ support CXL PCIe ports
+Message-ID: <20240620134917.000056dc@Huawei.com>
+In-Reply-To: <20240617200411.1426554-6-terry.bowman@amd.com>
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+	<20240617200411.1426554-6-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 03 Jun 2024 08:01:03 -0500, Nathan Lynch wrote:
-> Looks like drivers/crypto/vmx/.gitignore should have been merged into
-> arch/powerpc/crypto/.gitignore as part of commit
-> 109303336a0c ("crypto: vmx - Move to arch/powerpc/crypto") so that all
-> generated asm files are ignored.
+On Mon, 17 Jun 2024 15:04:07 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
+
+> CXL RAS error handling includes support for endpoints and RCH downstream
+> ports. The same support is missing for CXL root ports, CXL downstream
+> switch ports, and CXL upstream switch ports. This patch is in preparation
+> for adding CXL ports' RAS handling.
 > 
+> The cxl_pci driver's RAS support functions use the 'struct cxl_dev_state'
+> type parameter that is not available in CXL port devices. The same CXL
+> RAS capability structure is required for most CXL components/devices
+> and should have common handling where possible.[1]
 > 
+> Update __cxl_handle_cor_ras() and __cxl_handle_ras() to use 'struct
+> device' instead of 'struct cxl_dev_state'. Add function call to translate
+> device to CXL device state where needed.
+> 
+> [1] CXL3.1 - 8.2.4 CXL.cache and CXL.mem Registers
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+I've not looked at how it's used yet as reading these in order,
+but based on the explanation and code here looks good to me.
 
-Applied to powerpc/fixes.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-[1/1] powerpc/crypto: Add generated P8 asm to .gitignore
-      https://git.kernel.org/powerpc/c/2b85b7fb1376481f7d4c2cf92e5da942f06b2547
 
-cheers
+
