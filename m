@@ -1,362 +1,280 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A65FEEAA;
-	Thu, 20 Jun 2024 02:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718851133; cv=none; b=AQPN0bPGj3NTayb/0rRrPITiXu9+8ojE8EfM6cHShDb+C9TVFNEbMPY6VTWmNHNrtICF9YNJmqIoc/Bg6bljQ4nFsOK1f1W3okZPJOPFGq6P47t33RHo6/QgsC1hZnC+NV3rhDeBM1J/nXj6Rq+H8wxOgMXWYPkOEGyEqLp3j1w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718851133; c=relaxed/simple;
-	bh=B7kk+ArUVy5WisUWkgQ3m7VLkjJN0kLTezMHfWzRdjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XIA4BVhW+trB5L0gtdKZzHmv2kXuw51YVY0bJyWbst3nV8wAqMT+w+UGeMBKvUDCWYQTdfw8eZ6g9YQFrTo1jUIQAiaYz1WNvNRRO72RPaEpqLk7GwlMj3ROIxMwarFc9mLIeS3L4BiO4q7noz5jt7Avwr35/QAAPLoLuPoRKug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 3462f8fc2eae11ef9305a59a3cc225df-20240620
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:1adc44dd-143f-44f7-b80c-5fbe19ef8201,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.38,REQID:1adc44dd-143f-44f7-b80c-5fbe19ef8201,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:82c5f88,CLOUDID:2bbeb71af9b247c81bc9092abf2313b2,BulkI
-	D:240617193145NAFL2O91,BulkQuantity:4,Recheck:0,SF:64|66|24|17|19|44|102,T
-	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 3462f8fc2eae11ef9305a59a3cc225df-20240620
-Received: from node2.com.cn [(39.156.73.10)] by mailgw.kylinos.cn
-	(envelope-from <luoxuanqiang@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 743928336; Thu, 20 Jun 2024 10:38:40 +0800
-Received: from node2.com.cn (localhost [127.0.0.1])
-	by node2.com.cn (NSMail) with SMTP id 8037AB80758A;
-	Thu, 20 Jun 2024 10:38:40 +0800 (CST)
-X-ns-mid: postfix-66739630-42236785
-Received: from [10.42.12.252] (unknown [10.42.12.252])
-	by node2.com.cn (NSMail) with ESMTPA id 18EFEB80758A;
-	Thu, 20 Jun 2024 02:38:37 +0000 (UTC)
-Message-ID: <2f96ebeb-f366-fda1-f6d6-88ff2637c7cd@kylinos.cn>
-Date: Thu, 20 Jun 2024 10:38:36 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7873E12E78
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 02:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718851210; cv=fail; b=XwjokglCLky4xfoeVYOK3efU6K0yfVJW3wgkGLsmKCcDdIaVa6xfdYkE0fjwoNhBfZTr+u3qgp5Pyk5qvFLJ2ei7vIu9/hRH8UD1XITYb/NudQFxnU8gITdgGnKY1a6hD7e9J4KAfsqxqihFDOJ9432C8dp5C46ml8bUr98fB4A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718851210; c=relaxed/simple;
+	bh=ZZqtPHQ9BX9RqlYweXFvitNiKTzxt6OCLqCSank35dY=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=CrwZt0s9kZlMNK2jyhB04oF+nU+qne3arhuuALfKdPoVhryTj/lDbZmvOayxGhccCg0Q89+1riUgcXxHoWkJNB99ueOtv3m7y8KAPRyvJYnYVqcrzhPPqjaT8r1Z+/Y5exgBqHWMbbS9Zyk7rYkZ5d2aamVsrNEJ5K3ny7Ci8Xc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gM/gHTgD; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gM/gHTgD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718851209; x=1750387209;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:mime-version;
+  bh=ZZqtPHQ9BX9RqlYweXFvitNiKTzxt6OCLqCSank35dY=;
+  b=gM/gHTgDv1FmSJlDgzuYV/6WD3hOiSDq02ltPctJUXJZlr2bCgZhgW4h
+   1HVbdah2l068NkqB3JWdWdVUqOTIhgCGhCowky8Wr0ypOLkHfLAF5yIT1
+   YijYJArGnX0748K0R8eP8C+jiq0vd2/UYzgnR+ba50gVaPBJ8eGk5uKRO
+   B+gxcnr2FOXxVkl0o18+Pi3xLW2KMfVqA5b4i36JVhyMvZCIg5vIKYXqs
+   RQ7uGBeHv5Lm8I2SBB4lrjw/B8jYnP9s8KuM/Shmwh/RfW4P9zWgoAE8E
+   NHZkRfNcH23izwt2QVpc0RplkaehLLUknrF5BmvocZbMdGA/I4ReC3iPM
+   Q==;
+X-CSE-ConnectionGUID: izt0CwyrTNmwC/3ImAlQ9w==
+X-CSE-MsgGUID: MDAD/E5JSJ+OlTcakP9x7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="41212483"
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="41212483"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 19:40:08 -0700
+X-CSE-ConnectionGUID: Y+Yk4o67RSyZScFu72oUwg==
+X-CSE-MsgGUID: Zoq01ZiRSVSwZmd0pDmMrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="42551607"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Jun 2024 19:40:08 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 19 Jun 2024 19:40:07 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 19 Jun 2024 19:40:07 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.44) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 19 Jun 2024 19:40:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H+xD2jdqNwLJS7nAEIIS8IH+NnDjXXuIyYC09K0RTpB1WZM4iAS01IKEw9dahOX3MIOwakqRfrwmXYJIY/pWxkAfcQbYSiPihVMk9XpCrLRwZZaSoxGTmNQDYR2ewwMoLxmGaBcrfamqXaQK16lTUPzRtu/fjCzX/U+EUos//6ggGjEuGhILqcy0rwCrcQ2RYBU14puMp3SL38SRbGWP384izgUZjHyBWks4tqqHHMatXxYd7DwoQsep+653E+r7jaUi5R/Hxn4t6p+NuB5dVqN7BHlKt+AHNnTgP+rGyotOzjiA8TKD/MwAQk8mik8EJCQUdpDKTiTgFXF2YZKn6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BoxcZyWtReBygnsfn+9A2+ho8Aa/U7LSTdW9NbzO0SA=;
+ b=hP2oK7qZ97hhQw20SVke8GKkjlsVCsR7ejdev8FaJCvXhcbhKBcBWJZ+C3LPcO+ZuHHlV3Yti7GxYDWrUp5z8TlzHo/RIelZ41IUT76BM0+MXWP72mK66iLPd5GC+aoYy9mhGcFRMvYMi0UeBD8LKEQl44YfCkJ2dbMXNhZ7VNhx3xopHiGzy/IYb8tx+tFzc0upk06uBuKDUfhnma0MPV6sKxudDnacfaBKSGGAAtAWCdAMqZjCpHVOgm512mCBKHn0ynigDYR6mkuLmsH5o1RPz5LzYNcal08Ome0hkpIBIQB6Er3TL+3ld0U7ILnsV+o3VsFiKJIBuxYD932mBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by DS0PR11MB7903.namprd11.prod.outlook.com (2603:10b6:8:f7::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.32; Thu, 20 Jun
+ 2024 02:40:02 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%2]) with mapi id 15.20.7698.017; Thu, 20 Jun 2024
+ 02:40:02 +0000
+Date: Thu, 20 Jun 2024 10:39:50 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, "Huang, Ying"
+	<ying.huang@intel.com>, David Hildenbrand <david@redhat.com>, John Hubbard
+	<jhubbard@nvidia.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mel Gorman
+	<mgorman@techsingularity.net>, Ryan Roberts <ryan.roberts@arm.com>,
+	<linux-mm@kvack.org>, <feng.tang@intel.com>, <fengwei.yin@intel.com>,
+	<oliver.sang@intel.com>
+Subject: [linus:master] [mm]  d2136d749d:  vm-scalability.throughput -7.1%
+ regression
+Message-ID: <202406201010.a1344783-oliver.sang@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR02CA0016.apcprd02.prod.outlook.com
+ (2603:1096:3:17::28) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH net v3] Fix race for duplicate reqsk on identical SYN
-Content-Language: en-US
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: alexandre.ferrieux@orange.com, davem@davemloft.net, dccp@vger.kernel.org,
- dsahern@kernel.org, edumazet@google.com, fw@strlen.de, kuba@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com
-References: <f1e13509-9544-0fa5-4cb4-520c068bde6a@kylinos.cn>
- <20240619195313.9962-1-kuniyu@amazon.com>
-From: luoxuanqiang <luoxuanqiang@kylinos.cn>
-In-Reply-To: <20240619195313.9962-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DS0PR11MB7903:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e08086c-673a-4f4a-d280-08dc90d24910
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|7416011|1800799021;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?9MBdUijiMmJfnok00zWj/mnpiyTkjEJUZwczt25d7o+Pa4CkHN1sd3a++6?=
+ =?iso-8859-1?Q?kb1j5sxEytyQklCBdREYoEdSXEaIlTOHd3bP+CDTE5z5dFIkyPY7FIHXnR?=
+ =?iso-8859-1?Q?1fg9R3UgglNqdG8Ptbg6BKUIAhwg9tjbIDK8PTDJ3T6El6RCxkXChlXV2e?=
+ =?iso-8859-1?Q?fpUhWHu2qzJ0BsRCAFfFEdvIeXlrZss43lywbJbcFJ+WR78YC/PB3U5LAR?=
+ =?iso-8859-1?Q?CX5jOqOnJBkFwTZjJZNhlaxbxYoxUUhVvD0/l2kR5uY12JtoT0R2lscDd4?=
+ =?iso-8859-1?Q?+DNdJCCQw9YsvPmU9LNEmMrLQZEoWos/YL0eyvXfLQhBzMD1qebLVCUf8i?=
+ =?iso-8859-1?Q?FAiPwRSW+W1ZYuhk+T90+cW50nS0lmZ+GTaWp4T2qbtosmC03kMRWUN1s6?=
+ =?iso-8859-1?Q?M3r1qJMeLMM+Q8nFRmOZVwpEntj6sbtrCWQL7S+HEX1jXYXw9qmLS0+H62?=
+ =?iso-8859-1?Q?ZzAc9B1I/qVk8Jltk2lFXn0ooUb4dhqSVzB3IAL0bZoSR2pskLTlLRdr9A?=
+ =?iso-8859-1?Q?/JOHMbIslpsS3Ey9u8ntuUVaaTqHnCYH0ai1MTkNUcK3gNl17wDgtduaLA?=
+ =?iso-8859-1?Q?Y1XglBR7oxPoiISbkzVnuzRhXSzmrAEzhwUsqtnhpoKPnjg/cXdHiKVGZK?=
+ =?iso-8859-1?Q?2DEIrq91jc4zKluqRb+clvDIdlt9kYSubWpKChmF/2iXGF9+LlN5q3g2US?=
+ =?iso-8859-1?Q?mbCcXmpe0Qpzo98S/M+dYxWC8A3QAouhst9i0zKkMYVp7CWqS/Nbn3oZsG?=
+ =?iso-8859-1?Q?NYpBUA+hE6dk3meUzNuGwlnvKCAZRCQ7BAp3pr32WYfIkKu2cq2Piw8Y+H?=
+ =?iso-8859-1?Q?SGFdsxT7u/oowYa0jM+JQgRSIDld+n04klqa4fUsTRTmldDfn3q3t4o3q2?=
+ =?iso-8859-1?Q?UFdt8FNR7PhWXfpM+Xbi10d5or0c5abxzNXEbT1nVg+sShTHdnWD9gLTKm?=
+ =?iso-8859-1?Q?TqKvtuobxYG8fFsuC78NVv+a3Z6fw5R4RBbV2eyrE3sWeoL5aIkfN+ctMb?=
+ =?iso-8859-1?Q?eq7CHBxghYOJ/nbgfecK+s5TKvuSz0B3KN/imgVFqJ/XIJ7fnnPL4rV6TA?=
+ =?iso-8859-1?Q?GH7wWOfW3/P55cojKWuuFmpY4QOeO4i+lMEdrCBoSGvRhZROBtSXDGywVL?=
+ =?iso-8859-1?Q?ICnMpuIWj+cy1a93N3mz5R60QjclDiVHri8NrASwPEe/3ZJomWmcGS7Pqe?=
+ =?iso-8859-1?Q?fzbwX9WzMJGQcV/B4qMB40lAaBFKQoH7RuhhzepRoaQNS10wWgsCmpB6Yo?=
+ =?iso-8859-1?Q?bo74VmksSJ2L6roKCUtVR7pLazjtvYpUJgH+bVFslNmO7b/6oP64oUbnIp?=
+ =?iso-8859-1?Q?kt53cCy8gDykyNihP8WX6L7DqQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(1800799021);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?MpYeMR/Q735Y9PtJggH8B8vYQ9c+NKbtZCS6eBq+CmV574zt+NUPQaEl25?=
+ =?iso-8859-1?Q?LzDUPzJYbSwuOTsPCq5tnzRASmwQLUmTC7nXjsicD12dPcOahqVAfnvwbo?=
+ =?iso-8859-1?Q?ygVGo/aMjFXkuytSiXiGUp3yED6vcwJQdtUHqzQehzUoV4UhEMt+A8A3mw?=
+ =?iso-8859-1?Q?3POw87lStHooORN0T/5qa6n0VeRV/FEKwVi/bb1uvExLdqPCWbecXbZeBD?=
+ =?iso-8859-1?Q?5BQFgOrgKNbd95TdJugHEtw6SOOMSZPJikzjyAQxUjOlPwmrwznG28NLVX?=
+ =?iso-8859-1?Q?0ZVTOFkSIZAgewj64TfCDxsCWzUvUypfcYUDp3OGSwAx1FcwRyb2mtDLvV?=
+ =?iso-8859-1?Q?Y8AgQzEwnaj8nQVS9Ur7WtbakjFde+lV5CsVfP5CN6IJnFrZje2x+kTyjm?=
+ =?iso-8859-1?Q?7xv4VkY9wmE6j4cMFodY6vO0mMk+ZRg1tC+4iPjRLiEQQ/spliOXFoLOzv?=
+ =?iso-8859-1?Q?feX14MyRRjJBWDv4eJUmbr98XRVy369N6HWOUws1xgiX6yQF1voN77YUWC?=
+ =?iso-8859-1?Q?IRFMK3yo/zQ9DEwbDYoAo2pSjgwJw/3rnAP2C8W6PTUTpj56RRj+8PIhrb?=
+ =?iso-8859-1?Q?6mRIf/wU55B3LnsLDtKFcD4xRZPspP33+oTLzm7t3D2DLLs3RB/Z6mE90X?=
+ =?iso-8859-1?Q?nMEew8vcnmKTPJDsey9Us5fnr9DP4xk0m0DWLn8s/nsTfhAE6HmHMcg3kJ?=
+ =?iso-8859-1?Q?znZo0jkalJj1L8M2/g+ZTn4nA4ib7u46Bm+ZKQxpUn5Yk+EIzNGbFAy6ii?=
+ =?iso-8859-1?Q?uLizD09fcbzhLGykHclEqbEWR/aGMSe5O/geg8d30laL/MqoVzpi5Wigwv?=
+ =?iso-8859-1?Q?CIs0bTxPlDjpJNTeYdPIsx8UMelBay6qc2P1p8sPzANv+G8BJr3r8XlZFN?=
+ =?iso-8859-1?Q?0NPTNkvrwenpqkJk/vIuBo2sK6GqA2/OEnWsCIGxaMmYIFi22Oe52Qhncu?=
+ =?iso-8859-1?Q?CB4J9r0dbdi6naX/0oTBHBn3DGar69ycEgw43JHqqFTp8M1BqiWZqtiP50?=
+ =?iso-8859-1?Q?ZINSsCPGpUBk1MUQDqPXOTP0FvFNJHKA6LJf5qDo+UkrnhDAp9B13IXtkw?=
+ =?iso-8859-1?Q?g7B549PO555tbEJqTD4qIs+awEUHFglPr4HQNkGjW/VBtPzwzowf/RjMPq?=
+ =?iso-8859-1?Q?2OTAAQ+rUO6z8TmQG7l8X44+Myt37Y7jXAdMJwNuUL8tgVJOY5fg1jugnk?=
+ =?iso-8859-1?Q?rgFSgQGAqtWdx2KhpyNcmuSRUMBaUg0kihOmEImMHQsFB4f991zEq4REC6?=
+ =?iso-8859-1?Q?Pq8od1oq/89vZ7DeFdblIu9mnVFY27jrv8Ysgsu1H0oaqEaGFn0I57SR7m?=
+ =?iso-8859-1?Q?QhiSB0p+8kGfvRm4MNII+866VdYSC4Rv1zh6dxZlYH3DhR0A5xkDCDqy0x?=
+ =?iso-8859-1?Q?ObZRF3tDiOb1sira0yhMJBEAFZeJi7kKYBCL7C/yDECuILYVb9O0rL6C+N?=
+ =?iso-8859-1?Q?U4bVQYR+1zLdjkdno9lL2SicIgrSOf1cGY+eFt1vh8pLVHTyndcFX4JhOg?=
+ =?iso-8859-1?Q?49w9jP8YoLkhP9g0UGkFXsANox/Ofaz3x37P/r1YZXofvwemaMf5qpNZDT?=
+ =?iso-8859-1?Q?y9O0xVdId+WGd0xsZm1+HpBijDfsYdBMU1qQk+hEvkmX/9Ou+yeKN/TGRe?=
+ =?iso-8859-1?Q?ydJKFoLtD4R/8v+z2c1xZLhilb23RhOcyJl/BzAvK5wnFzmnLcrc79TA?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e08086c-673a-4f4a-d280-08dc90d24910
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 02:40:02.6320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B5PCw04mB+j9xFv5+uOEaMMKuEmWMNICBnqzObei8uQBnbO171kO5/7a8shcx8B/tvVi2Oztuk23DubH9FDZPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7903
+X-OriginatorOrg: intel.com
 
 
-=E5=9C=A8 2024/6/20 03:53, Kuniyuki Iwashima =E5=86=99=E9=81=93:
-> From: luoxuanqiang <luoxuanqiang@kylinos.cn>
-> Date: Wed, 19 Jun 2024 14:54:15 +0800
->> =E5=9C=A8 2024/6/18 01:59, Kuniyuki Iwashima =E5=86=99=E9=81=93:
->>> From: luoxuanqiang <luoxuanqiang@kylinos.cn>
->>> Date: Mon, 17 Jun 2024 15:56:40 +0800
->>>> When bonding is configured in BOND_MODE_BROADCAST mode, if two ident=
-ical
->>>> SYN packets are received at the same time and processed on different=
- CPUs,
->>>> it can potentially create the same sk (sock) but two different reqsk
->>>> (request_sock) in tcp_conn_request().
->>>>
->>>> These two different reqsk will respond with two SYNACK packets, and =
-since
->>>> the generation of the seq (ISN) incorporates a timestamp, the final =
-two
->>>> SYNACK packets will have different seq values.
->>>>
->>>> The consequence is that when the Client receives and replies with an=
- ACK
->>>> to the earlier SYNACK packet, we will reset(RST) it.
->>>>
->>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>>
->>>> This behavior is consistently reproducible in my local setup,
->>>> which comprises:
->>>>
->>>>                     | NETA1 ------ NETB1 |
->>>> PC_A --- bond --- |                    | --- bond --- PC_B
->>>>                     | NETA2 ------ NETB2 |
->>>>
->>>> - PC_A is the Server and has two network cards, NETA1 and NETA2. I h=
-ave
->>>>     bonded these two cards using BOND_MODE_BROADCAST mode and config=
-ured
->>>>     them to be handled by different CPU.
->>>>
->>>> - PC_B is the Client, also equipped with two network cards, NETB1 an=
-d
->>>>     NETB2, which are also bonded and configured in BOND_MODE_BROADCA=
-ST mode.
->>>>
->>>> If the client attempts a TCP connection to the server, it might enco=
-unter
->>>> a failure. Capturing packets from the server side reveals:
->>>>
->>>> 10.10.10.10.45182 > localhost: Flags [S], seq 320236027,
->>>> 10.10.10.10.45182 > localhost: Flags [S], seq 320236027,
->>>> localhost > 10.10.10.10.45182: Flags [S.], seq 2967855116,
->>>> localhost > 10.10.10.10.45182: Flags [S.], seq 2967855123, <=3D=3D
->>>> 10.10.10.10.45182 > localhost: Flags [.], ack 4294967290,
->>>> 10.10.10.10.45182 > localhost: Flags [.], ack 4294967290,
->>>> localhost > 10.10.10.10.45182: Flags [R], seq 2967855117, <=3D=3D
->>>> localhost > 10.10.10.10.45182: Flags [R], seq 2967855117,
->>>>
->>>> Two SYNACKs with different seq numbers are sent by localhost,
->>>> resulting in an anomaly.
->>>>
->>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>>
->>>> The attempted solution is as follows:
->>>> In the tcp_conn_request(), while inserting reqsk into the ehash tabl=
-e,
->>>> it also checks if an entry already exists. If found, it avoids
->>>> reinsertion and releases it.
->>>>
->>>> Simultaneously, In the reqsk_queue_hash_req(), the start of the
->>>> req->rsk_timer is adjusted to be after successful insertion.
->>>>
->>>> Signed-off-by: luoxuanqiang <luoxuanqiang@kylinos.cn>
->>>> ---
->>>>    include/net/inet_connection_sock.h |  4 ++--
->>>>    net/dccp/ipv4.c                    |  2 +-
->>>>    net/dccp/ipv6.c                    |  2 +-
->>>>    net/ipv4/inet_connection_sock.c    | 19 +++++++++++++------
->>>>    net/ipv4/tcp_input.c               |  9 ++++++++-
->>>>    5 files changed, 25 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/include/net/inet_connection_sock.h b/include/net/inet_c=
-onnection_sock.h
->>>> index 7d6b1254c92d..8ebab6220dbc 100644
->>>> --- a/include/net/inet_connection_sock.h
->>>> +++ b/include/net/inet_connection_sock.h
->>>> @@ -263,8 +263,8 @@ struct dst_entry *inet_csk_route_child_sock(cons=
-t struct sock *sk,
->>>>    struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
->>>>    				      struct request_sock *req,
->>>>    				      struct sock *child);
->>>> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_=
-sock *req,
->>>> -				   unsigned long timeout);
->>>> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_=
-sock *req,
->>>> +				   unsigned long timeout, bool *found_dup_sk);
->>>>    struct sock *inet_csk_complete_hashdance(struct sock *sk, struct =
-sock *child,
->>>>    					 struct request_sock *req,
->>>>    					 bool own_req);
->>>> diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
->>>> index ff41bd6f99c3..13aafdeb9205 100644
->>>> --- a/net/dccp/ipv4.c
->>>> +++ b/net/dccp/ipv4.c
->>>> @@ -657,7 +657,7 @@ int dccp_v4_conn_request(struct sock *sk, struct=
- sk_buff *skb)
->>>>    	if (dccp_v4_send_response(sk, req))
->>>>    		goto drop_and_free;
->>>>   =20
->>>> -	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT);
->>>> +	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT, NULL);
->>>>    	reqsk_put(req);
->>>>    	return 0;
->>>>   =20
->>>> diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
->>>> index 85f4b8fdbe5e..493cdb12ce2b 100644
->>>> --- a/net/dccp/ipv6.c
->>>> +++ b/net/dccp/ipv6.c
->>>> @@ -400,7 +400,7 @@ static int dccp_v6_conn_request(struct sock *sk,=
- struct sk_buff *skb)
->>>>    	if (dccp_v6_send_response(sk, req))
->>>>    		goto drop_and_free;
->>>>   =20
->>>> -	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT);
->>>> +	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT, NULL);
->>>>    	reqsk_put(req);
->>>>    	return 0;
->>>>   =20
->>>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connect=
-ion_sock.c
->>>> index d81f74ce0f02..2fa9b33ae26a 100644
->>>> --- a/net/ipv4/inet_connection_sock.c
->>>> +++ b/net/ipv4/inet_connection_sock.c
->>>> @@ -1122,25 +1122,32 @@ static void reqsk_timer_handler(struct timer=
-_list *t)
->>>>    	inet_csk_reqsk_queue_drop_and_put(oreq->rsk_listener, oreq);
->>>>    }
->>>>   =20
->>>> -static void reqsk_queue_hash_req(struct request_sock *req,
->>>> -				 unsigned long timeout)
->>>> +static bool reqsk_queue_hash_req(struct request_sock *req,
->>>> +				 unsigned long timeout, bool *found_dup_sk)
->>>>    {
->>> Given any changes here in reqsk_queue_hash_req() conflicts with 4.19
->>> (oldest stable) and DCCP does not check found_dup_sk, you can define
->>> found_dup_sk here, then you need not touch DCCP at all.
->> Apologies for not fully understanding your advice. If we cannot modify
->> the content of reqsk_queue_hash_req() and should avoid touching the DC=
-CP
->> part, it seems the issue requires reworking some interfaces. Specifica=
-lly:
->>
->> The call flow to add reqsk to ehash is as follows:
->>
->> tcp_conn_request()
->>
->> dccp_v4(6)_conn_request()
->>
->>       -> inet_csk_reqsk_queue_hash_add()
->>
->>           -> reqsk_queue_hash_req()
->>
->>               -> inet_ehash_insert()
->>
->> tcp_conn_request() needs to call the same interface inet_csk_reqsk_que=
-ue_hash_add()
->> as dccp_v4(6)_conn_request(), but the critical section for installatio=
-n check and
->> insertion into ehash is within inet_ehash_insert().
->> If reqsk_queue_hash_req() should not be modified, then we need to rewr=
-ite
->> the interfaces to distinguish them. I don't see how redefining found_d=
-up_sk
->> alone can resolve this conflict point.
-> I just said we cannot avoid conflict so suggested avoiding found_dup_sk
-> in inet_csk_reqsk_queue_hash_add().
->
-> But I finally ended up modifying DCCP because we return before setting
-> refcnt.
->
-> ---8<---
-> diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
-> index ff41bd6f99c3..b2a8aed35eb0 100644
-> --- a/net/dccp/ipv4.c
-> +++ b/net/dccp/ipv4.c
-> @@ -657,8 +657,11 @@ int dccp_v4_conn_request(struct sock *sk, struct s=
-k_buff *skb)
->   	if (dccp_v4_send_response(sk, req))
->   		goto drop_and_free;
->  =20
-> -	inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT);
-> -	reqsk_put(req);
-> +	if (unlikely(inet_csk_reqsk_queue_hash_add(sk, req, DCCP_TIMEOUT_INIT=
-)))
-> +		reqsk_free(req);
-> +	else
-> +		reqsk_put(req);
-> +
->   	return 0;
->  =20
->   drop_and_free:
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection=
-_sock.c
-> index d81f74ce0f02..7dd6892b10b9 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
-> @@ -1122,25 +1122,33 @@ static void reqsk_timer_handler(struct timer_li=
-st *t)
->   	inet_csk_reqsk_queue_drop_and_put(oreq->rsk_listener, oreq);
->   }
->  =20
-> -static void reqsk_queue_hash_req(struct request_sock *req,
-> +static bool reqsk_queue_hash_req(struct request_sock *req,
->   				 unsigned long timeout)
->   {
-> +	bool found_dup_sk;
-> +
-> +	if (!inet_ehash_insert(req_to_sk(req), NULL, &found_dup_sk))
-> +		return false;
-> +
->   	timer_setup(&req->rsk_timer, reqsk_timer_handler, TIMER_PINNED);
->   	mod_timer(&req->rsk_timer, jiffies + timeout);
->  =20
-> -	inet_ehash_insert(req_to_sk(req), NULL, NULL);
->   	/* before letting lookups find us, make sure all req fields
->   	 * are committed to memory and refcnt initialized.
->   	 */
->   	smp_wmb();
->   	refcount_set(&req->rsk_refcnt, 2 + 1);
-> +	return true;
->   }
->  =20
-> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_soc=
-k *req,
-> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_soc=
-k *req,
->   				   unsigned long timeout)
->   {
-> -	reqsk_queue_hash_req(req, timeout);
-> +	if (!reqsk_queue_hash_req(req, timeout))
-> +		return false;
-> +
->   	inet_csk_reqsk_queue_added(sk);
-> +	return true;
->   }
->   EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
->  =20
-> ---8<---
 
-Thank you for your patient explanation. I understand
-your point and will send out the V4 version, looking
-forward to your review.
+Hello,
 
-Also, I'd like to confirm a detail with you. For the DCCP part, is it
-  sufficient to simply call reqsk_free() for the return value, or should
-we use goto drop_and_free? The different return values here will
-determine whether a reset is sent, and I lack a comprehensive
-understanding of DCCP. so could you please help me confirm this
-from a higher-level perspective?
+kernel test robot noticed a -7.1% regression of vm-scalability.throughput on:
 
-diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
-index ff41bd6f99c3..5926159a6f20 100644
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -657,8 +657,11 @@ int dccp_v4_conn_request(struct sock *sk, struct sk_=
-buff *skb)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dccp_v4_send_response(sk,=
- req))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 goto drop_and_free;
- =20
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inet_csk_reqsk_queue_hash_add(sk, r=
-eq, DCCP_TIMEOUT_INIT);
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reqsk_put(req);
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (unlikely(!inet_csk_reqsk_queue_=
-hash_add(sk, req, DCCP_TIMEOUT_INIT)))
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 reqsk_free(req);=C2=A0=C2=A0=C2=A0 // or=C2=A0 goto drop_and=
-_free:=C2=A0=C2=A0 <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 reqsk_put(req);
-+
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
- =20
-drop_and_free:
- =C2=A0=C2=A0 =C2=A0reqsk_free(req);
-drop:
- =C2=A0=C2=A0 =C2=A0__DCCP_INC_STATS(DCCP_MIB_ATTEMPTFAILS);
- =C2=A0=C2=A0 =C2=A0return -1;
-}
+
+commit: d2136d749d76af980b3accd72704eea4eab625bd ("mm: support multi-size THP numa balancing")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+
+[still regression on linus/master 92e5605a199efbaee59fb19e15d6cc2103a04ec2]
+
+
+testcase: vm-scalability
+test machine: 128 threads 2 sockets Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz (Ice Lake) with 256G memory
+parameters:
+
+	runtime: 300s
+	size: 512G
+	test: anon-cow-rand-hugetlb
+	cpufreq_governor: performance
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202406201010.a1344783-oliver.sang@intel.com
+
+
+Details are as below:
+-------------------------------------------------------------------------------------------------->
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240620/202406201010.a1344783-oliver.sang@intel.com
+
+=========================================================================================
+compiler/cpufreq_governor/kconfig/rootfs/runtime/size/tbox_group/test/testcase:
+  gcc-13/performance/x86_64-rhel-8.3/debian-12-x86_64-20240206.cgz/300s/512G/lkp-icl-2sp2/anon-cow-rand-hugetlb/vm-scalability
+
+commit: 
+  6b0ed7b3c7 ("mm: factor out the numa mapping rebuilding into a new helper")
+  d2136d749d ("mm: support multi-size THP numa balancing")
+
+6b0ed7b3c77547d2 d2136d749d76af980b3accd7270 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+     12.02            -1.3       10.72 ±  4%  mpstat.cpu.all.sys%
+   1228757            +3.0%    1265679        proc-vmstat.pgfault
+   7392513            -7.1%    6865649        vm-scalability.throughput
+     17356            +9.4%      18986        vm-scalability.time.user_time
+      0.32 ± 22%     -36.9%       0.20 ± 17%  sched_debug.cfs_rq:/.h_nr_running.stddev
+     28657 ± 86%     -90.8%       2640 ± 19%  sched_debug.cfs_rq:/.load.stddev
+      0.28 ± 35%     -52.1%       0.13 ± 29%  sched_debug.cfs_rq:/.nr_running.stddev
+    299.88 ± 27%     -39.6%     181.04 ± 23%  sched_debug.cfs_rq:/.runnable_avg.stddev
+    284.88 ± 32%     -44.0%     159.65 ± 27%  sched_debug.cfs_rq:/.util_avg.stddev
+      0.32 ± 22%     -37.2%       0.20 ± 17%  sched_debug.cpu.nr_running.stddev
+ 1.584e+10 ±  2%      -6.9%  1.476e+10 ±  3%  perf-stat.i.branch-instructions
+  11673151 ±  3%      -6.3%   10935072 ±  4%  perf-stat.i.branch-misses
+      4.90            +3.5%       5.07        perf-stat.i.cpi
+    333.40            +7.5%     358.32        perf-stat.i.cycles-between-cache-misses
+ 6.787e+10 ±  2%      -6.8%  6.324e+10 ±  3%  perf-stat.i.instructions
+      0.25            -6.2%       0.24        perf-stat.i.ipc
+      4.19            +7.5%       4.51        perf-stat.overall.cpi
+    323.02            +7.4%     346.94        perf-stat.overall.cycles-between-cache-misses
+      0.24            -7.0%       0.22        perf-stat.overall.ipc
+ 1.549e+10 ±  2%      -6.8%  1.444e+10 ±  3%  perf-stat.ps.branch-instructions
+ 6.634e+10 ±  2%      -6.7%  6.186e+10 ±  3%  perf-stat.ps.instructions
+     17.33 ± 77%     -10.6        6.72 ±169%  perf-profile.calltrace.cycles-pp.asm_exc_page_fault.do_access
+     17.30 ± 77%     -10.6        6.71 ±169%  perf-profile.calltrace.cycles-pp.exc_page_fault.asm_exc_page_fault.do_access
+     17.30 ± 77%     -10.6        6.71 ±169%  perf-profile.calltrace.cycles-pp.do_user_addr_fault.exc_page_fault.asm_exc_page_fault.do_access
+     17.28 ± 77%     -10.6        6.70 ±169%  perf-profile.calltrace.cycles-pp.handle_mm_fault.do_user_addr_fault.exc_page_fault.asm_exc_page_fault.do_access
+     17.27 ± 77%     -10.6        6.70 ±169%  perf-profile.calltrace.cycles-pp.hugetlb_fault.handle_mm_fault.do_user_addr_fault.exc_page_fault.asm_exc_page_fault
+     13.65 ± 76%      -8.4        5.29 ±168%  perf-profile.calltrace.cycles-pp.hugetlb_wp.hugetlb_fault.handle_mm_fault.do_user_addr_fault.exc_page_fault
+     13.37 ± 76%      -8.2        5.18 ±168%  perf-profile.calltrace.cycles-pp.copy_user_large_folio.hugetlb_wp.hugetlb_fault.handle_mm_fault.do_user_addr_fault
+     13.35 ± 76%      -8.2        5.18 ±168%  perf-profile.calltrace.cycles-pp.copy_subpage.copy_user_large_folio.hugetlb_wp.hugetlb_fault.handle_mm_fault
+     13.23 ± 76%      -8.1        5.13 ±168%  perf-profile.calltrace.cycles-pp.copy_mc_enhanced_fast_string.copy_subpage.copy_user_large_folio.hugetlb_wp.hugetlb_fault
+      3.59 ± 78%      -2.2        1.39 ±169%  perf-profile.calltrace.cycles-pp.__mutex_lock.hugetlb_fault.handle_mm_fault.do_user_addr_fault.exc_page_fault
+     17.35 ± 77%     -10.6        6.73 ±169%  perf-profile.children.cycles-pp.asm_exc_page_fault
+     17.32 ± 77%     -10.6        6.72 ±168%  perf-profile.children.cycles-pp.do_user_addr_fault
+     17.32 ± 77%     -10.6        6.72 ±168%  perf-profile.children.cycles-pp.exc_page_fault
+     17.30 ± 77%     -10.6        6.71 ±168%  perf-profile.children.cycles-pp.handle_mm_fault
+     17.28 ± 77%     -10.6        6.70 ±169%  perf-profile.children.cycles-pp.hugetlb_fault
+     13.65 ± 76%      -8.4        5.29 ±168%  perf-profile.children.cycles-pp.hugetlb_wp
+     13.37 ± 76%      -8.2        5.18 ±168%  perf-profile.children.cycles-pp.copy_user_large_folio
+     13.35 ± 76%      -8.2        5.18 ±168%  perf-profile.children.cycles-pp.copy_subpage
+     13.34 ± 76%      -8.2        5.17 ±168%  perf-profile.children.cycles-pp.copy_mc_enhanced_fast_string
+      3.59 ± 78%      -2.2        1.39 ±169%  perf-profile.children.cycles-pp.__mutex_lock
+     13.24 ± 76%      -8.1        5.13 ±168%  perf-profile.self.cycles-pp.copy_mc_enhanced_fast_string
+
+
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
