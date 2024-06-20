@@ -1,320 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B5B171A5;
-	Thu, 20 Jun 2024 00:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8FCDDC7;
+	Thu, 20 Jun 2024 00:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718844845; cv=none; b=SGX2wTCGbjp6w/usQU+LeWy01HpFkRGblr8jxayaZCmvhCbT0GWUunriIt9U8mHRY6/2Eu1ZELF38fKUnZ70xIZwnEKdVd/lzBwtECRUgeX4bOjAw2x4VZas5rwcz71X1/mwLpmMU1zGWzxfdvPARoEq+/OVWxauWEMAc/kIBAs=
+	t=1718844852; cv=none; b=XJk74X2dhhqY4RP9r+a1+aJiCJ4oAKYvv/ugtBrjt9YAwqxPIgSul2rN7BUP1pc/g7Dhxt+k0uERf9bQ2T14uu4wWGAsMgTUSr1WLMTSybpMNuwwJXlf4xlLg58u2cDQ14Ok2pKTgnHs/5SA2hiK8lM/ufHl1oVveLz1GpMUX7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718844845; c=relaxed/simple;
-	bh=UxI3Mnjzzd1F17hwUd8P9PklOfI3CQWU3zJRSMEiiDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ctGMc99ETFE2D6avw6JZwz1yn26k0fx7tOIH9qbQYejmps2XVU9TMXZT8eh6dk356zIH0y0VGbq+8oyvGTequ6hy28Ejyg3Vi9WQqpLm+V4GnqCz6oLI4OSJErheopZ76Kd7MxXkrdkxXTXpEcJ4cCyscUcyO/wTM8bjWmCfHNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=oJ5VXEmq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718844852; c=relaxed/simple;
+	bh=5ZzxlnPl6QHH8zZM0Bxkh6bNL5fo2OEy/Yyo92Jqi6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+pvBw1/lNq3InpS/VdGSCu0KtvbhQWlpg6+Oiv2p3vJrjZVgoVYSXlaDWsCkImgMi6g34rdjvNwavBVld+lBgs+DQuy8S3lbg8aWf7REJY+Kkh2lAa29462mgU8SivYjEBsKb6dqTjYE5kdtZ9HsbZuET0hQdCo3Vxw0ssJigY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RzDIg2ly; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="oJ5VXEmq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E97A8C32786;
-	Thu, 20 Jun 2024 00:54:03 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="oJ5VXEmq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718844842;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V/xryKb+zzgmt/iSjxK+iVtRlKXRtB8u8HL0zsGTRs4=;
-	b=oJ5VXEmqK2cjdhMRirOhlOyBiprnCldziRPHdV5eibN6/sMaJXYvgaOLX1xW2blySa1KGR
-	MGyv3AUDw7x+Bt7OSZTxASY+S/3qOFQlkoeXjx5szqDRoCnR2+XHvyrJ9xoG2W8bj5F2wG
-	XLkFqsDFZXMZY1RJkCwGWyMcflG5EgY=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 048e1f89 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 20 Jun 2024 00:54:02 +0000 (UTC)
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	tglx@linutronix.de
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-crypto@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	x86@kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
-	Carlos O'Donell <carlos@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jann Horn <jannh@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v18 3/5] arch: allocate vgetrandom_alloc() syscall number
-Date: Thu, 20 Jun 2024 02:53:35 +0200
-Message-ID: <20240620005339.1273434-4-Jason@zx2c4.com>
-In-Reply-To: <20240620005339.1273434-1-Jason@zx2c4.com>
-References: <20240620005339.1273434-1-Jason@zx2c4.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzDIg2ly"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f70131063cso2976285ad.2;
+        Wed, 19 Jun 2024 17:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718844850; x=1719449650; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kos3a5+8tgScme3AXUkmStzF9iR6lkKUT5lESoizK2o=;
+        b=RzDIg2lyr+BgLVuE2ZDQHBIIRNc4itKHK4Ux8npTamWtfPHBDrhnPDedn1PpH4xctb
+         WwQgPpyCcHzSQF2gwiBkEv6qp7+4nPfgOaLrNctK7PQ0+ThqCGtta1VL7zo7OLdlkQv4
+         GdxHzhhjove+OIQmfmJ0y0479wCKYxgj1T4SmtgU2ThrhfbW8hPdEqGf0S3ogrcNIb1F
+         OEYmdauQ3GfAkV2Ll6fQf1otA+eZe4oEmVJz7seBLZcsImR/KTCaLarKJNW20k2j9Et6
+         IdWeemVwlr3O9HQjwAJE4fIiyV1iL3OkOs09EyXxaqrQYJ0WqSGArNSeyELV73lU3TtV
+         WQHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718844850; x=1719449650;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kos3a5+8tgScme3AXUkmStzF9iR6lkKUT5lESoizK2o=;
+        b=SCOk7hYxmwmzOUt3ExMWY+odUbXSrY8O84OCsD8g9oVNVwLfS7nN+dBggOipBfzAO6
+         zECM3T3eK3D9arDvClPigAbKj0+SrE5wUrkCSqYp1PEsJiYaQuvz5JTTD8u1O6F9FiwG
+         sbjdryfUde9nLq0d7xw0kGJutkWQVW5n/O+1sAT+skPpt8u8OIOFhpmz0sxJl9m1XkmK
+         dNBFC7TzJJ5bUCRBG3kNMlhHf0vhjkxfmSEB8olS+yupVDEsPCrNPadUEcj3FsBm3Tv+
+         fmkR5A771KEi7GTKQOMT0/CcxC/AYI+okUZi6oPrvl7DRpKsTfXdhWX297QSV4Vo5WFn
+         Shmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYYt6WtoewCazTZOAt9dqpUIMyJLQ49OjaWQ3qzJ7o6ztYfJCAjdksgM5SWtUgZCY2xPnBm5U5xjvgOsraSFkvxPBB/RWTY1gZJNGn7Aw/GeEpl3ZyL7RHLCrisa5H/x1E+GynEWo47j5hi1IwEcVTKcc9DOYY2liYbnwA41IqrA==
+X-Gm-Message-State: AOJu0YxA9Qws/Rw4m5Jgin8PCb2c9ajzq0CgoYJwKaUaX0E8SsGhMkGM
+	LYS2FXddUPAtsCjNfaQcOH5+v7PiXC7s1T7c3HoxYjZc3WMaunT5
+X-Google-Smtp-Source: AGHT+IHUZRsqBZONk1cnHXYagT0xqKFsmQ1HV2Poe9z4T6xIIhlzFZn750OVF/2JqoteiFDZy2TAdA==
+X-Received: by 2002:a17:902:da8e:b0:1f9:99d8:4a9e with SMTP id d9443c01a7336-1f9aa3ddab3mr46103265ad.25.1718844849641;
+        Wed, 19 Jun 2024 17:54:09 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:36d9:2b1f:59f:8e9e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f99cfbfa1bsm37273355ad.26.2024.06.19.17.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 17:54:09 -0700 (PDT)
+Date: Wed, 19 Jun 2024 17:54:06 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, tsbogend@alpha.franken.de,
+	rdunlap@infradead.org, robh@kernel.org, bhelgaas@google.com,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] MIPS: pci: lantiq: restore reset gpio polarity
+Message-ID: <ZnN9rkNqucEYuXzR@google.com>
+References: <20240607090400.1816612-1-ms@dev.tdt.de>
+ <ZmnfQWFoIw5UCV-k@google.com>
+ <7d34eb4017e809245daa342e3ccddf4f@dev.tdt.de>
+ <b6bea9239050ed39ce3a051a5985b86d@dev.tdt.de>
+ <6e4eed26-0a15-4ab4-8f3f-7ed0e223db5e@hauke-m.de>
+ <c1813503ba16e1d46a93382dd806ffa6@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c1813503ba16e1d46a93382dd806ffa6@dev.tdt.de>
 
-Add vgetrandom_alloc() as syscall 463 (or 573 on alpha) by adding it to
-all of the various syscall.tbl and unistd.h files.
+On Fri, Jun 14, 2024 at 10:43:29AM +0200, Martin Schiller wrote:
+> On 2024-06-13 22:06, Hauke Mehrtens wrote:
+> > On 6/12/24 21:47, Martin Schiller wrote:
+> > > On 2024-06-12 20:39, Martin Schiller wrote:
+> > > > On 2024-06-12 19:47, Dmitry Torokhov wrote:
+> > > > > Hi Marton,
+> > > > 
+> > > > Hi Dmitry,
+> > > > 
+> > > > > 
+> > > > > On Fri, Jun 07, 2024 at 11:04:00AM +0200, Martin Schiller wrote:
+> > > > > > Commit 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using
+> > > > > > gpiod API") not
+> > > > > > only switched to the gpiod API, but also inverted /
+> > > > > > changed the polarity
+> > > > > > of the GPIO.
+> > > > > > 
+> > > > > > According to the PCI specification, the RST# pin is an active-low
+> > > > > > signal. However, most of the device trees that have been
+> > > > > > widely used for
+> > > > > > a long time (mainly in the openWrt project) define this GPIO as
+> > > > > > active-high and the old driver code inverted the signal internally.
+> > > > > > 
+> > > > > > Apparently there are actually boards where the reset gpio must be
+> > > > > > operated inverted. For this reason, we cannot use the
+> > > > > > GPIOD_OUT_LOW/HIGH
+> > > > > > flag for initialization. Instead, we must explicitly set
+> > > > > > the gpio to
+> > > > > > value 1 in order to take into account any
+> > > > > > "GPIO_ACTIVE_LOW" flag that
+> > > > > > may have been set.
+> > > > > 
+> > > > > Do you have example of such boards? They could not have
+> > > > > worked before
+> > > > > 90c2d2eb7ab5 because it was actively setting the reset line
+> > > > > to physical
+> > > > > high, which should leave the device in reset state if there is an
+> > > > > inverter between the AP and the device.
+> > > > 
+> > > > Oh, you're right. I totally missed that '__gpio_set_value' was
+> > > > used in
+> > > > the original code and that raw accesses took place without paying
+> > > > attention to the GPIO_ACTIVE_* flags.
+> > > > 
+> > > > You can find the device trees I am talking about in [1].
+> > > > 
+> > > > @Thomas Bogendoerfer:
+> > > > Would it be possible to stop the merging of this patch?
+> > > > I think We have to do do some further/other changes.
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > > > In order to remain compatible with all these existing
+> > > > > > device trees, we
+> > > > > > should therefore keep the logic as it was before the commit.
+> > > > > 
+> > > > > With gpiod API operating with logical states there's still
+> > > > > difference in
+> > > > > logic:
+> > > > > 
+> > > > >     gpiod_set_value_cansleep(reset_gpio, 1);
+> > > > > 
+> > > > > will leave GPIO at 1 if it is described as GPIO_ACTIVE_HIGH
+> > > > > (which is
+> > > > > apparently what you want for boards with broken DTS) but for boards
+> > > > > that accurately describe GPIO as GPIO_ACTIVE_LOW it well
+> > > > > drive GPIO to
+> > > > > 0, leaving the card in reset state.
+> > > > > 
+> > > > > You should either use gpiod_set_raw_value_calsleep() or we
+> > > > > can try and
+> > > > > quirk it in gpiolib (like we do for many other cases of
+> > > > > incorrect GPIO
+> > > > > polarity descriptions and which is my preference).
+> > > 
+> > > So you mean we should add an entry for "lantiq,pci-xway" to the
+> > > of_gpio_try_fixup_polarity()?
+> > > Do you know any dts / device outside the openWrt universe which is
+> > > using
+> > > this driver.
+> > > 
+> > > For the lantiq targets in openWrt, the devicetree blob is appended to
+> > > the kernel image and therefore also updated when doing a firmware
+> > > upgrade. So, maybe it would also be an option to fix the driver (using
+> > > GPIO_ACTIVE_* flag for the initial level and set it to 0 -> 1 -> 0)
+> > > and
+> > > rework all the dts files to use GPIO_ACTIVE_LOW.
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- arch/alpha/kernel/syscalls/syscall.tbl              | 1 +
- arch/arm/tools/syscall.tbl                          | 1 +
- arch/arm64/include/asm/unistd32.h                   | 2 ++
- arch/m68k/kernel/syscalls/syscall.tbl               | 1 +
- arch/microblaze/kernel/syscalls/syscall.tbl         | 1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl           | 1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl           | 1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl           | 1 +
- arch/parisc/kernel/syscalls/syscall.tbl             | 1 +
- arch/powerpc/kernel/syscalls/syscall.tbl            | 1 +
- arch/s390/kernel/syscalls/syscall.tbl               | 1 +
- arch/sh/kernel/syscalls/syscall.tbl                 | 1 +
- arch/sparc/kernel/syscalls/syscall.tbl              | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl              | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl              | 1 +
- arch/xtensa/kernel/syscalls/syscall.tbl             | 1 +
- include/uapi/asm-generic/unistd.h                   | 5 ++++-
- tools/include/uapi/asm-generic/unistd.h             | 5 ++++-
- tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 1 +
- tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 1 +
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 1 +
- 22 files changed, 29 insertions(+), 2 deletions(-)
+Yes, cleaning up DTS files when it is possible is nice.
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 74720667fe09..8c38193bf86a 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -502,3 +502,4 @@
- 570	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 571	common	lsm_list_modules		sys_lsm_list_modules
- 572	common  mseal				sys_mseal
-+573	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 2ed7d229c8f9..118e41178905 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -476,3 +476,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 266b96acc014..e84fa30ccd30 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -931,6 +931,8 @@ __SYSCALL(__NR_lsm_set_self_attr, sys_lsm_set_self_attr)
- __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
- #define __NR_mseal 462
- __SYSCALL(__NR_mseal, sys_mseal)
-+#define __NR_vgetrandom_alloc 463
-+__SYSCALL(__NR_vgetrandom_alloc, sys_vgetrandom_alloc)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 22a3cbd4c602..bd919d1a8231 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -462,3 +462,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 2b81a6bd78b2..d3d3c017a5bb 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -468,3 +468,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index cc869f5d5693..9b1bda3d8383 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -401,3 +401,4 @@
- 460	n32	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	n32	lsm_list_modules		sys_lsm_list_modules
- 462	n32	mseal				sys_mseal
-+463	n32	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 1464c6be6eb3..33710f855c46 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -377,3 +377,4 @@
- 460	n64	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	n64	lsm_list_modules		sys_lsm_list_modules
- 462	n64	mseal				sys_mseal
-+463	n64	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 008ebe60263e..97698956cdce 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -450,3 +450,4 @@
- 460	o32	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	o32	lsm_list_modules		sys_lsm_list_modules
- 462	o32	mseal				sys_mseal
-+463	o32	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index b13c21373974..5fbbb25699b9 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -461,3 +461,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 3656f1ca7a21..b1c3ae68014c 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -549,3 +549,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index bd0fee24ad10..1188429316c1 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -465,3 +465,4 @@
- 460  common	lsm_set_self_attr	sys_lsm_set_self_attr		sys_lsm_set_self_attr
- 461  common	lsm_list_modules	sys_lsm_list_modules		sys_lsm_list_modules
- 462  common	mseal			sys_mseal			sys_mseal
-+463  common	vgetrandom_alloc	sys_vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index bbf83a2db986..06cec74502f7 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -465,3 +465,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index ac6c281ccfe0..a3816995d08c 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -508,3 +508,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal 				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 7fd1f57ad3d3..821990638567 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -467,3 +467,4 @@
- 460	i386	lsm_set_self_attr	sys_lsm_set_self_attr
- 461	i386	lsm_list_modules	sys_lsm_list_modules
- 462	i386	mseal 			sys_mseal
-+463	i386	vgetrandom_alloc	sys_vgetrandom_alloc
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index a396f6e6ab5b..441443ba2ae6 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -384,6 +384,7 @@
- 460	common	lsm_set_self_attr	sys_lsm_set_self_attr
- 461	common	lsm_list_modules	sys_lsm_list_modules
- 462 	common  mseal			sys_mseal
-+463	common	vgetrandom_alloc	sys_vgetrandom_alloc
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 67083fc1b2f5..b9f64edd0b18 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal 				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index d983c48a3b6a..e94210483f60 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -845,8 +845,11 @@ __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
- #define __NR_mseal 462
- __SYSCALL(__NR_mseal, sys_mseal)
- 
-+#define __NR_vgetrandom_alloc 463
-+__SYSCALL(__NR_vgetrandom_alloc, sys_vgetrandom_alloc)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 463
-+#define __NR_syscalls 464
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index d983c48a3b6a..e94210483f60 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -845,8 +845,11 @@ __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
- #define __NR_mseal 462
- __SYSCALL(__NR_mseal, sys_mseal)
- 
-+#define __NR_vgetrandom_alloc 463
-+__SYSCALL(__NR_vgetrandom_alloc, sys_vgetrandom_alloc)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 463
-+#define __NR_syscalls 464
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-index 1464c6be6eb3..33710f855c46 100644
---- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-+++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-@@ -377,3 +377,4 @@
- 460	n64	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	n64	lsm_list_modules		sys_lsm_list_modules
- 462	n64	mseal				sys_mseal
-+463	n64	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index 3656f1ca7a21..b1c3ae68014c 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -549,3 +549,4 @@
- 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
- 461	common	lsm_list_modules		sys_lsm_list_modules
- 462	common	mseal				sys_mseal
-+463	common	vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-index bd0fee24ad10..1188429316c1 100644
---- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-@@ -465,3 +465,4 @@
- 460  common	lsm_set_self_attr	sys_lsm_set_self_attr		sys_lsm_set_self_attr
- 461  common	lsm_list_modules	sys_lsm_list_modules		sys_lsm_list_modules
- 462  common	mseal			sys_mseal			sys_mseal
-+463  common	vgetrandom_alloc	sys_vgetrandom_alloc		sys_vgetrandom_alloc
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index a396f6e6ab5b..441443ba2ae6 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -384,6 +384,7 @@
- 460	common	lsm_set_self_attr	sys_lsm_set_self_attr
- 461	common	lsm_list_modules	sys_lsm_list_modules
- 462 	common  mseal			sys_mseal
-+463	common	vgetrandom_alloc	sys_vgetrandom_alloc
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
+> > > 
+> > > Then we won't need any quirks.
+
+Quirks are fairly cheap and we are not in a hot path here.
+
+> > 
+> > I am not aware that anyone is using a recent kernel on the VRX200
+> > outside of OpenWrt. I am also not aware that anyone is *not* appending
+> > the DTB to the kernel. The SoC is pretty old now, the successor of
+> > this SoC was released about 10 years ago.
+> > 
+> 
+> We're not just talking about VRX200 (VR9) here, but even older devices
+> such as AR9 and Danube.
+> 
+> > For me it would be fine if you fix the broken device device trees
+> > shipped with the upstream kernel and with OpenWrt to make them work
+> > with the PCI driver instead of investing too much time into handling
+> > old DTBs.
+> > 
+> > The PCI reset is inverted on some boards to handle a dying gasp. If
+> > the power breaks down the reset should get triggered and the PCIe
+> > device can send a dying gasp signal to the other side. This is done on
+> > the reference designs of some Lantiq PCIe DSL card for the VRX318 and
+> > probably also some other components.
+> > 
+> > Hauke
+> 
+> What I missed so far is the fact that the driver used '__gpio_set_value'
+> before Dmitry's commit and thus used raw access to the GPIO.
+> 
+> This effectively means that every device that has worked with the driver
+> so far must have an ACTIVE_LOW reset, no matter what was configured in
+> the device tree.
+> 
+> 
+> So renaming the property in the dts from "gpio-reset" to "reset-gpios"
+> and setting the FLAGS to "GPIO_ACTIVE_LOW" should actually solve the
+> problem.
+
+Right, luckily (to a definition of luckily) the driver and DTB used
+"wrong" syntax for the gpio property, so we can quirk it and make
+force ACTIVE_LOW polarity on old DTBs, and new DTBs with "reset-gpios"
+property will follow polarity specified in DTB.
+
+> 
+> What still bothers me about the driver itself are 2 things:
+> 1. the initial value of GPIOD_OUT_LOW. This means that there is no real
+>    defined HIGH -> LOW -> HIGH on reset.
+
+Is this actually needed? Typically a card requires certain time in reset
+state (with reset line active) before it can be released, however there
+usually no restrictions on line being inactive beforehand. But typically
+it will be pulled up to avoid leakage...
+
+Thanks.
+
 -- 
-2.45.2
-
+Dmitry
