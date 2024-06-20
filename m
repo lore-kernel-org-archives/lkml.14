@@ -1,97 +1,153 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A381CAAD;
-	Thu, 20 Jun 2024 15:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692B21B0129
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 15:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718898703; cv=none; b=LiT/c+QMfqsBx+tjd0DGB/u27HnEQcWaJuBl08Fauxk4npHIno3siMu1gW5psvJqLg1g/yC5uJiiTOV97EuGYViJ4u0zkhjdT+SAbw5UyHK52f3YdnqQsbIqYwhS18sEBGcBTxRlfZ3tdZ6sXAvKhQSiD/YCeZ8QjlmNjk38iuA=
+	t=1718898743; cv=none; b=iYpRXEiA7+X3QKxNx9WA7a1KYW6oLTcjdJ9Zh4G6EyC0CwRA2UhDuojcu1kiTBmArI44YV4Ucd+djdXw+lybrmCeho7ZcJA8+XbUHCaMenj1JrXF2PEOsn4jbQe3Q+BUeQ2wjGO13HDlhbwn9jA8mzwISWXo3/defkB7UWvIs9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718898703; c=relaxed/simple;
-	bh=Fn2qvUWCwhh2z96NGCLJJJ9xkITNDvWOalFocQorZUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BfhviZvwNYhq9Bju/hY8Xkw9obseeCgWJM4NJyj+GEk88GOISCQNZDvuqOT1rmOjiLtBTv7//SQKkNvGuy9iKD6I+AFXhIx+1M4O4nxmWtySvsR2+PAzzX6myYQVQ0r02O8btyLr+BLuC95Glg7x30+FsMLrVNBPGAFQv5nWGJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ay2YRKaZ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718898743; c=relaxed/simple;
+	bh=BYNxbdP/tSiZdSJx/SObM+Ky44A9Mo1KpwOH14PHu00=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l9idd4YbjkUkV1ZekTqnV52qqe0ct/UIb7rlpwAYOLurDRPIj2E+/FSL4E/ewmAea2S3Bhp6nRaBzmS0Yvqaw1zgjueds2sMSN7O059bEVylb7QKv3KVSTcw5MRvdcrMpjoW4tro/MFMqkqw8HCGMKKgK5N15+AFFSUCKXrt6A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yqqFD4t1; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ay2YRKaZ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 49A2940E021A;
-	Thu, 20 Jun 2024 15:51:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id iZOw6opdpaf2; Thu, 20 Jun 2024 15:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718898694; bh=sDw8qtd49A92yEpqRTXNQFspgSL2Qr1g4HIFxOxJypI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ay2YRKaZ9RvqbsCw8sqvf8PYz/btqS4m1DhDGQPjsGUoB9W3OooL6oHUMnxnpMKwX
-	 sW//kpnxTG0D/3DJ2DHoijvxS7hGqhvQ3jtpuUP0Fnw7lK37xFAeqbfzds8mDq9Zih
-	 8/x9i+BTS4jwv+NCOaZQ+X2SD/iZGgXi0VQDoxsOYkdwPsFGcc035OBhZEoj9SB8Yz
-	 iqUquGcFS4C0U+asdlQVGVurIxGjXbrpDax7caEJWi92IscueCKIs7kBR6vLGhemo8
-	 cGD/XdRFBcWVn/DGPDTCDfkLIO8HzugjvZl23fuGN6wnKVL9rJ3qRFPMRZn76vW+Jk
-	 JYZVuiiK4Pd0Z/MPN1fFTPNeFjBhtNC42nausYw/TNkjoHOZbUFKd9GivPYlJJTkHz
-	 KJygG97EgOU4BLuGQ9a6ouiE3qlIsVpgdz5cDK/rVWhlEu/Op5aCf4odmhoWxqSAxC
-	 v1S5NJ+G9nznySa2Pm52B/v3pZUgnwnWzFuL1AAWdgv6G1H2Qc66Kw3FUyjRkSDuht
-	 FsJH/YzAx/U5YjPsphY+WFvnkm9KjbKXkAHo8VlzCHKVTHDLb7uHAYIuTuk6UVsKpq
-	 GzGq51zUhzhM2n4rXuPES5EzVQWhoSjvW2lWK8OnHZE5aiaV0j+6EvyAhlwXXyfC7w
-	 MJMEE9+4JkQFq6VlqMsIPn0g=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0034A40E01D6;
-	Thu, 20 Jun 2024 15:51:17 +0000 (UTC)
-Date: Thu, 20 Jun 2024 17:51:11 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
- cpuinfo_topology
-Message-ID: <20240620155111.GIZnRP7-XYvJZPY0_6@fat_crate.local>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
- <20240618212801.GJZnH74Q4yknT-4X12@fat_crate.local>
- <20240619033126.irudoer3pw4fb5be@desk>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yqqFD4t1"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b9794dad09so456768eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718898740; x=1719503540; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A5K50mR+1xPezwh+gwNk3sB+K93FGplia3k1sTjlMTk=;
+        b=yqqFD4t1+EIUYmNn8Gfs+mA2W8etFYgFdi72afx9GQuYAJX/1wIKLRMbZ/8sfeWp8D
+         RPrmUwV7JmUy+3Z7hshgkPCSgDHBXaJas/Txstl4wAg1ftAmqTXmNKSKctroous9s2g6
+         M4pS+9my7BHYo+3HdM7jmpGl+5IJKDVo5UPUIOM1ZZ3uJVBDxd62m+rHLYV6GSNhuQmJ
+         inN5oLgpjX99O0XUxYSSw8FjQCZViKJ+K15MUyPcf/G2raJwyGimEZDsZ7hE/GA7NQMR
+         uFU5IH/47tMM9yemvsLgy7LXabR4b2qUt6VaPL0WcBqJM8hm2U0QcCMQzGxr2d+TOYlt
+         O55Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718898740; x=1719503540;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A5K50mR+1xPezwh+gwNk3sB+K93FGplia3k1sTjlMTk=;
+        b=GHJaDa6PV8XQRuWcBqPGbh3ZMa63J03giM5ZTzbd7GJ2PHEkCl7nLen1d4oXcIWvmc
+         /pXNfJA8wnV/h1ysZjelJ7LrM8tVltQZnJN5ZaIfoBd6SK8UWYkRZ3GtlD/xYDJc9xa6
+         HEPZmL26IX3mcZzDx5CWebx4yYhCAaN4QZb2jn+2RYRGJYBnR6twFX9oKlEbgbFzpRjr
+         JFnHi76qplZocuEBSXamzY+q/p1W4Oh0pn2FPDGO5P5huA8ESLK41CHm5wjwFIxBfbFs
+         hYHP+xb1SpQRDlS9hH9VLrEh9z+Q/bwyIAhsTNcDyyruRR45XfnLCcRPszapOKMM6K3E
+         uGXg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+zIYUJWDOaaAwKiQl6vy7xgLnW+siMPVXsiJZ4yhuupLbumgfmXgzWm57yyfQqsI/bqTne0NHWafzP2Dw63Jq+Ux8ycYiqLDaJpy7
+X-Gm-Message-State: AOJu0YwmKy7oMjqdrssuhhkygj7iMhstIXGVj1ESaPiUBG32Q+Z1bZ1J
+	XNMhRag3ocsuGlt4Fsr3OCtgw83f57MKiUoQOaSBsnUejLvpbaMTsiKp94hIyLs=
+X-Google-Smtp-Source: AGHT+IHncNjOje8u1WIEw9Wc86WeCNVSVv8Wbvs9UjaDytJFANc+0rllOYq/KhKNXJZkScsH5FWhpA==
+X-Received: by 2002:a05:6820:1d97:b0:5c1:b9ec:7258 with SMTP id 006d021491bc7-5c1b9ec7316mr3702687eaf.0.1718898740473;
+        Thu, 20 Jun 2024 08:52:20 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5c198460ab5sm936795eaf.38.2024.06.20.08.52.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 08:52:19 -0700 (PDT)
+Message-ID: <08c09a34-af59-4387-8db9-594f30f85b7a@baylibre.com>
+Date: Thu, 20 Jun 2024 10:52:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240619033126.irudoer3pw4fb5be@desk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/6] spi: Enable controllers to extend the SPI protocol
+ with MOSI idle configuration
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ nuno.sa@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1718749981.git.marcelo.schmitt@analog.com>
+ <36eefb860f660e2cadb13b00aca04b5a65498993.1718749981.git.marcelo.schmitt@analog.com>
+ <63db9349-f453-4a5b-aa09-d1857ddd8b03@baylibre.com>
+ <ZnMqOAPc3IXP-eHC@debian-BULLSEYE-live-builder-AMD64>
+ <e7a2438a-f6a3-439e-8058-937248dd5b3f@baylibre.com>
+ <ZnRG9wgY3WIaYFyQ@debian-BULLSEYE-live-builder-AMD64>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <ZnRG9wgY3WIaYFyQ@debian-BULLSEYE-live-builder-AMD64>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 18, 2024 at 08:31:26PM -0700, Pawan Gupta wrote:
-> To accommodate for that we can name the vendor specific types in this
-> series as vendor_cpu_type. And if we ever need to add generic types, we can
-> call them cpu_type?
+On 6/20/24 10:12 AM, Marcelo Schmitt wrote:
+> On 06/19, David Lechner wrote:
+>> On 6/19/24 1:58 PM, Marcelo Schmitt wrote:
+>>> On 06/19, David Lechner wrote:
+>>>> On 6/18/24 6:10 PM, Marcelo Schmitt wrote:
+>>>>
+>>>>
+>>
+>> ...
+>>
+>>>>
+>>>>> +the peripheral and also when CS is inactive.
+>>>>
+>>>> As I mentioned in a previous review, I think the key detail here is that the
+>>>> MOSI line has to be in the required state during the CS line assertion
+>>>> (falling edge). I didn't really get that from the current wording. The current
+>>>> wording makes it sound like MOSI needs to be high indefinitely longer.
+>>>
+>>> It may be that we only need MOSI high just before bringing CS low. Though,
+>>> I don't see that info in the datasheets. How much time would MOSI be required
+>>> to be high prior to bringing CS low? The timing diagrams for register access and
+>>> ADC sampling in "3-wire" mode all start and end with MOSI at logical 1 (high).
+>>> I think reg access work if MOSI is brought low after CS gets low, but sample
+>>> read definitely don't work.
+>>>
+>>> From the info available in datasheets, it looks like MOSI is indeed expected 
+>>> to be high indefinitely amount of time. Except when the controller is clocking
+>>> out data to the peripheral.
+>>>
+>>> Even if find out the amount of time MOSI would be required high prior to CS low,
+>>> then we would need some sort of MOSI high/low state set with a delay prior to
+>>> active CS. That might be enough to support the AD4000 series of devices but,
+>>> would it be worth the added complexity?
+>>>
+>>
+>> It needs to happen at the same time as setting CPOL for the SCLK line for the
+>> device that is about to have the CS asserted. So I don't think we are breaking
+>> new ground here. Typically, in most datasheets I've seen they tend to say
+>> something like 2 ns before the CS change. So in most cases, I don't think
+> which datasheets? Are any of those for devices supported by the ad4000 driver?
 
-Yes, then that member you're adding should not just be called "cpu_type" but
-either "vendor_cpu_type" or "hw_cpu_type" or whatnot and every vendor can then
-put its own values there.
+In the AD4000 datasheet, Figure 59, it shows the time needed for SDI setup
+before CS assertion, labeled as t_SSDICNV. Table 2 gives this value to be
+2 ns.
 
-And for the future we could do functions which convert from a vendor CPU type
-to a generic one. If we ever decide that we need the generic ones.
+So unless a SPI controller has a functional clock of > 500 MHz or somehow
+sets the SDI state and the CS assertion in the same register write this
+minimum delay will always be met. I highly suspect noting like this has
+happened before so no one ever needed to worry about the timing and it
+just works (for the similar case of CPOL).
 
-Thx.
+> 
+>> anyone bothers adding a delay. But if a longer delay was really needed for
+>> a specific peripheral, we could add a SPI xfer with no read/write that has
+>> cs_off=1 and a delay to get the correct state of both MOSI and SCLK a longer
+>> time before the CS change.
+> 
+> I don't know if that would actually work. I have not tested doing something like that.
+> This also implies the controller will be able to start the next transfer right
+> after the first preparatory transfer ends and it will meet that inter-transfer
+> timing requirement (which I still didn't find documented anywhere).
+> I'm not convinced that would be the best way to support those devices.
 
--- 
-Regards/Gruss,
-    Boris.
+I did something like this in the ad7944 driver where we needed an up to
+500ns delay before asserting CS. On SPI controllers without a hardware
+sleep or FIFO, the delay will of course be much longer. But the delay
+is just a minimum delay, so longer doesn't hurt. It just affects the
+max sample rate that can be reliably achieved.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
