@@ -1,236 +1,194 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2061.outbound.protection.outlook.com [40.107.21.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2451CD3D;
-	Thu, 20 Jun 2024 16:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900203; cv=fail; b=GINchZy42IMdGVE4YexByBB31HeZRXaJgluSO14xDLWtt8CEQzZtPGo/flYvjMV7e4gHpnvdUPLqD6LFh2H8kvEGRetQMcqk0IvR4JyOhC0W3e+EYulEPG0X7UmQzDI37TnbiY3tS7DACoMbtKVk8aVGI2I0xFRolDptuZd8iCU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900203; c=relaxed/simple;
-	bh=+Zh3XCVpXyhdJju3l6eo6jL6LRWL/TTc40Dy9Wo5S0Y=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lW4akDPeU9irryEOlivAOLJv273SlqRqjS7fT1zx7LotGGGcmm2cJXaTnKVED3gJT9wP5bOKtLeBBYJjr8Tdeer0E4peW4pFMTBuaBsxnk3i5lUp+HY470A4Wz4K/HyAOq7MZaxlUoiT9iIAVFt7HenJHRdVukGPJaz0A18bjXM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=mjRKfJo8; arc=fail smtp.client-ip=40.107.21.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B779015B0E5
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718900205; cv=none; b=GrIThWI4uwOEKVOsA1SXWTKw/wM8Xuis+znKd2JS8fUcHSmCP6KCZdzbGFvEjeESnDevFL7FzEstltuQxnTGq1/oxrfuuP+oGLMmSZnNUH7tx2uvo9qucOTUShy5pJ3J65F1s2yRaI24j6sUcBrSxBydhSDXLAGZcmVbpmy5tA4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718900205; c=relaxed/simple;
+	bh=3F25YNJFqKhy4bYsXBenLOYPz74lQQHcEZxBGefIBRw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jGGJ9R6iOshgGtCW8DavGH3u9/N4TfhNIniklz5xB0Wtq4erq5po7ESjyxqq4qV/d6fSGp59jleTDmAgeDgjzrLyzPlcruYDqOlWtlER/QE2V0wqLFtukqRVWeKSubN+xjWNeivMmCOc+t3JCq/imZSfmPsKjstT7zy/dq0w5Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C0e008+T; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mjRKfJo8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TO7qCbkl5BGZbUn2BUh4xgMzSGQHkdO1fp9nKUBxqplktMGvhOXUt841zwmSgl+KMKyGKOFHaQ0lJXOuQN1Nm7esBHlNCp6bGjA8HuNTAIwZUFqqWUfwZjUTcifc8ddp3ZWaDqzyTj8QMjklSz7Nm9AJ8urwCHRjpfZL/aUVLiesTUqpSGhRvQEe8fqjGZBZ3bwon1bAAKMHTQVJFg1sGBpnVya3n2WDU/1T8pJEHhzdeQkHaei//7GO0TnoZABCwHIypqewt27/a9DmETX+3CjLORDICMp6XKoUbTlWSj8d8elq1rMoGIpTq+E6ujHevycCR6FdPaaOTjNcumRrpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i0anTbJF5zATUNBmiHQqKVN1Zfm8xzJn9ma7xELzOZE=;
- b=Ly8vSPk44TPno6M8K2NEow/mZYQUPQsE/PBDrkFu1Tr83LFzfvwQoe9MdXYDhfO65EEqgKB0v5RD2PWXuImatMZRvDjmyJg5i9pzAVxHtuU5n5rg0/SX1WsSiSlFP6mTZdSrDpNF1RLCwxraUfE/miiA6ysv9zqv/nN4/OA1zml4FOainArQg0tBnCljO2UgFiMRCpXz1PNoNvti6gQMgNWadHmXwOvUl9nZdNpLezMKVWIrPxOp/1HfFHUHbzgYwjTV2DQNoBsTFuEM1GTk6llreOBNsLE4GjnYCFx405RyM4arK8435Cm3SMossRUUKPyiZg2k6M2oQDnlO8rX+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i0anTbJF5zATUNBmiHQqKVN1Zfm8xzJn9ma7xELzOZE=;
- b=mjRKfJo8YodKgl+69NmIOJxA0K3Y8QzyoCXsVdD52Kiq12nZPTuCtJUoagtT5qFTYUwSzvRI5LwPU2zQffxN3+Qj0f+v54ofhOE62c47kr7h/6pvdpHBRMQ4RVh3Roq7glKGwCMgnnsAl35crCjTRR8krfpiBfK+eDKuP+huxvA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV1PR04MB10582.eurprd04.prod.outlook.com (2603:10a6:150:211::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Thu, 20 Jun
- 2024 16:16:38 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.020; Thu, 20 Jun 2024
- 16:16:37 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/4] arm64: dts: imx95: add '#address-cells' and '#size-cells' for all i2c
-Date: Thu, 20 Jun 2024 12:16:19 -0400
-Message-Id: <20240620161622.3986692-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0197.namprd05.prod.outlook.com
- (2603:10b6:a03:330::22) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C0e008+T"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-63bab20b9f4so16663467b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718900203; x=1719505003; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BCZKNDHzfJBJVhIBZvZUEBrTAzEooayjC9bbFQcCP8A=;
+        b=C0e008+T5bVLspMJrKa2RUGHNY7Br9p/8ytOj93JwAgxKIT58c4P9DmV5T1VALFb2c
+         lDUdSEdMfLsGLkiQ6LRthy0mLN7u3HyHpJ5eb8XsvVt0crl33e3vAbTZx9seq/tP0U0g
+         td3wkRjfsMwj5r2D8Gt8jVO6Q/3oLGkcE11Z5siumCeH30FIxfmL/qZNaFLfGWlSyLoe
+         3uDQfCkMeVTARk9yqLuyBx4UPPXgTYWGrwS0+ENoT9etQVSKVYnQ7//VaUrQ80dgCZzN
+         5JjUA4WLd76rtKZb6aZUMfJPXnzZ2kjz3X/hLdK6EVaW49UgZbFULS0qun6p/QnPIoYQ
+         jUrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718900203; x=1719505003;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BCZKNDHzfJBJVhIBZvZUEBrTAzEooayjC9bbFQcCP8A=;
+        b=YQQYeg9ycWz/4EhvPDflRu2WmtN2o6ne0gIZsdOOFLEWrPRfA42CKB+XLzOtRvcIHi
+         8Np/zM1ehEDmoJWgJufJVsIhOXI9JvF6kHTVFxhiZfqIapIfLpZdoMD9LHJdNMxxOi2Q
+         01IAeMkecnS2xix6n9OFiSgv560fmgq53qgPr5qHwrltp7kRs0XELBbslmnPe37mQ+Ny
+         QqrrGVolOJQtrQW5mjhNfKC5dP4Dm4Ajzjjqvjmp8I8LTRvglFOXYNtB2rRYnszzK6WD
+         9a9b5XNhyTYZkhp14+V3b8x0eGYa9kVpxi989yhyHPPvkmXhAtM+iv2EOaB2DWmwULfv
+         V4CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVnkXY5D+6YrVwALhrhc1qp52pSCyFVeHovlwW3aE3DDL3mkRPNS3jJviUi1srgAoumcWmIdoO0ZJ3ogMbaCY61P1zTluHoijAfee9
+X-Gm-Message-State: AOJu0Yz9a3hiBV1TWb039rHHfH8DJiDti3wTWjAKmOZH6YO1JsCJZZ8H
+	KdgZ4D6NnKGJo8M+UAP6u26wLI+Bv8BkDFLy5IM3wrSnoDPz8RbmPqNb6V7VoExTkdRi8cLsk3e
+	mhg==
+X-Google-Smtp-Source: AGHT+IHAW5Cu6uLeC2DeFrvw8mg2Wa8Sr6zlHDRn6IX74FBYp/Cbjsm3VmzOc1NPaMgFbVqucolfGz2nfUI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:ab33:0:b0:df4:d6ca:fed0 with SMTP id
+ 3f1490d57ef6-e02be133adfmr219127276.4.1718900202676; Thu, 20 Jun 2024
+ 09:16:42 -0700 (PDT)
+Date: Thu, 20 Jun 2024 09:16:41 -0700
+In-Reply-To: <20240619182128.4131355-2-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10582:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2469edd0-acf4-4bf3-68fe-08dc91445c87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|366013|376011|7416011|52116011|1800799021|921017|38350700011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7oTtYmVB3QbGJF2BRDtTeLklolxp1iJVzRQBdJqNPBFtTRto77Bo7DPofDZk?=
- =?us-ascii?Q?ilTJwHpq5+zlHgZKk9NegxO3HgMAaVH+lc3HnMx5TzWle6DH0GAqx3jMrWdR?=
- =?us-ascii?Q?XPzj3ScA+r1cP1ISdhyIwwh1i20xVZjpYOnIGtulRfbIp9x5r5F23tYxlWyU?=
- =?us-ascii?Q?4b5YHDmZwIKH2eHwUs9wj+roVzX4F8/RJJGVk+0SVUJx5vQQdpxkiE3K2yGE?=
- =?us-ascii?Q?0u20aHOkW0GSHSYri+vPEDvP42QeZPlc0eJiky4aWC00z6z6rFK3G146tBhm?=
- =?us-ascii?Q?QHy6qih8Sq3RGvmNXI2TvZLF6qb+1mP4piJlaC21AKqyzq+b/EkzaQvesfbQ?=
- =?us-ascii?Q?j+mE1o+0IayA/nQGxR0UwzKKYjCFhP88rMgD1EhV43SjJ1wop0F/5tOtNuRq?=
- =?us-ascii?Q?4ziS3bYyyiiAb/adlJ4pSiIZirVvXkXzZ/FYWoE9d17kR0Bra/QJR7FXyL47?=
- =?us-ascii?Q?dNCoeUP/wSWJDCTIIR0yj6/6QDdn3dbkjndgmhKYLjLhE0ETkGhNwkJgunEg?=
- =?us-ascii?Q?h+76x0CjzK3p9ijkfKQqdukKbcj8DU448GHEuBLfNTOHL+a8MNv4dRoULyMz?=
- =?us-ascii?Q?LdbwTcU42efFiCwcpHW1GbqRqhvoYvqbiTusaTmMhxUdmPmET3vdaMSsKOd4?=
- =?us-ascii?Q?d46wZgaZg3uGOH/xFqayxj7N0KTjoBnZBlJQPvp8DZLYBo2uwjlZuI2xPJST?=
- =?us-ascii?Q?UePoHp7HE/hEeaTdblw03XnZAeX/hL/1da5xkQZ5JaER4lkp3Uv6D/Lbte5Z?=
- =?us-ascii?Q?nHLnFHL2GPv307noPxqGYbSmE4IJGpiJrcWKMdAKyz1pe7yg7vNlqNO1puPi?=
- =?us-ascii?Q?ujjaSQglTUvJlTPKDXjmesDlPr4bNYMYshFVUzu4Z8U6ZuvCitdOxr5H3vhp?=
- =?us-ascii?Q?EPVu84laxRT1BnnACCk25Ip6EdzYosCJB+VQ5uhnCwsVOgClAyKJYl/HMyge?=
- =?us-ascii?Q?bUNWXabvJAyVu0mJyGhQLkoSdOgYYLL77Vlz0Oygzwh2VY7ISxBYD99biAiP?=
- =?us-ascii?Q?mDxf4QXMFZrjQbyShO5KQC6Aw+zkdyGfx4HyYoWH86j9CI4DD2jufqXNN0cV?=
- =?us-ascii?Q?SFr5bdJ3MCCF4A5FygMEZhz2o2fEmZrkBYCEUJfBjCAOtisu6nQPxmnLXpzw?=
- =?us-ascii?Q?/uctc8ElBhuH/v3U6ezc3I0T0ywM+ZX/fJQn02DoY34I2fvCeKhF1KR8IN4l?=
- =?us-ascii?Q?h9X/iwffGQZTkbYhfX21vJanjJqswGLmEq6oGAWzrNId2f5sYSFJWsBEm9e2?=
- =?us-ascii?Q?keALuTReetnh6Q37nU/ueE9xBI8VZkj7Z8XP4T1nEai0UU11rVQOmxIzwEr6?=
- =?us-ascii?Q?z110owwY5iE11LmIsQ0766Y3evpYoFNhJ0Gqvku4U4JYj8mOyl3txZgdv0UL?=
- =?us-ascii?Q?i3IdFknCpReQH3f7ULg7/1g7UfEe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(52116011)(1800799021)(921017)(38350700011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FbHwUyVdojeyDzwsOFPNY54pszhghCmK1OPfYoZInU3NzuKlsfc1Rh4SxXgo?=
- =?us-ascii?Q?8oStTk9N3NAOFDevLfAmtsS6hjffRiGKBwVKRf9vQgttVHmXWAbTZU2YKQpg?=
- =?us-ascii?Q?gKKpKlNr7rmBRbpzZvOt2M4YH2RP/8apnglowr5a4PI+zwtvGJj3X7a3HX3i?=
- =?us-ascii?Q?EnheGhxudh9ULthAGl9pZbUsjejbUdMBQQKLjjXGoviPhDC1IFaLE3fI7p7Q?=
- =?us-ascii?Q?aYNby+sIO3iyWKkEggpk3bJU9WJJYD16wfh+Hwp5bFLLiL5qlhF9jKvbwMTw?=
- =?us-ascii?Q?r08DK7tOA5nezSnKaztPZNxBj6Nzvzn1/t/NaysIwyYdQzbokhMSXP7Ceqs2?=
- =?us-ascii?Q?mCXzDqs2Sd2j1D7HYMAwZ2yi4VRO0R4+mwT4xY0mK4fJEw47c1aLk645p+EO?=
- =?us-ascii?Q?9NDGrfrh8j+sHuQ7q1d9dIHpBhfNdacozUgxnGlILUKi2DJ0otb0vLQ6yXRM?=
- =?us-ascii?Q?zSyVrVDp7j9jgEfmulgJByuF6E5Gy8W4Nb+IicMhekrM2t/632oTfBuU7flN?=
- =?us-ascii?Q?KQuqzzQ6gAmo7bJ22wms11x6oHrCKZ4oPD3FuOCIdmljbXKTKl7qy+OXbXq1?=
- =?us-ascii?Q?2JgogN9v1p1QVrww+3u+vgpfpKGnfbQCFZ8bHLZmwExoUGmcbCE+pjMjiRr0?=
- =?us-ascii?Q?yb//ZE3gomv5rZJfZAYBCwY3NihKJvHrPe8udtxtj5oSGrpNscsh7bk2LnSw?=
- =?us-ascii?Q?sQNQ3gzt7g869M9XuX3mh8M4pvDYnrnPow4NMLF1IX/LF9ljoTcK6yOUtQiM?=
- =?us-ascii?Q?iVriQmmm0Dns6q/ZnlsiPQ8MWLCj7sUFurEUh0tcvFtBNfrgJKSnOdJTpDZj?=
- =?us-ascii?Q?c+RrvN9s7i5+tG2Y2MT2Qp52wNgRl5sy12wSs2m14+QGOjgZ500ZF+kDeMww?=
- =?us-ascii?Q?N3pv8cjeARnyojBgZyfeWv2csaV8Pl3iOQ2KvTVbFIH7QyZ4c/5JOdjFgu7T?=
- =?us-ascii?Q?hgjzgrp0/3Rw9GCnlQTIOiMZv8EVJlXE/OXvFCln5Sl3mPVs+LaxTwgTPQ7Z?=
- =?us-ascii?Q?NwpaUsjwAimEVn9HaxfXkZV6ycI6sbbhezUZFIgef6lCLALUg7ft22e8cw8v?=
- =?us-ascii?Q?QOuq0AHDuCXaLuBhB7YUg6w8jxPTUdkwHHGWJZHjQA/3z6cFLGjmej76tdkx?=
- =?us-ascii?Q?WQCZDIOtIh5kdi9lRBlPsV/9GAvhLWtXmPxtGSmWtyfgwlDvdlqbRIemLTU7?=
- =?us-ascii?Q?Ut5ls3XL7QvtWJ9CF1vjKF7ymDyrJkBk989OVI2LNFVHv20D3WQMFIgpcv2Z?=
- =?us-ascii?Q?lX2Oh+NaKgEqbiIa6bb6U4XJ4GUjcyM74sqg1U9f865ZMHgvuOr06/NxPf3H?=
- =?us-ascii?Q?PNuTqmW2I68FMA9EFXMm0PS/9FNFNwKRQDpTyp8DmH1qQKFRc8jv5HAOgLqQ?=
- =?us-ascii?Q?NuPOMx0sCkfyjoJV68KXg02UmK5zMOYzbBFaLujVgDmLFO9l67ZROoSyLEBg?=
- =?us-ascii?Q?wImjIOLWNXW2tQRqIDgqShJXV/8wH/culzEX6Ag6isRVc0wY03JklYgW5jLr?=
- =?us-ascii?Q?Xv7v2Jf+Dm9sNReJSo0iGzh8h7HXJ7l479hNrlVOdkpxfEue+1HdJanD2XK7?=
- =?us-ascii?Q?LOARmzFF4G16i1hUFB8=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2469edd0-acf4-4bf3-68fe-08dc91445c87
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 16:16:37.7367
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3t1QCNLqX1+wLci/zfPDsskCM8Zj5Vr4assNE92FbwHCBVi7c/9Mief8N0i9nHoEoSTFpW7NG4YLoxbTh+HloA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10582
+Mime-Version: 1.0
+References: <20240619182128.4131355-1-dapeng1.mi@linux.intel.com> <20240619182128.4131355-2-dapeng1.mi@linux.intel.com>
+Message-ID: <ZnRV6XrKkVwZB2TN@google.com>
+Subject: Re: [PATCH 1/2] KVM: x86/pmu: Define KVM_PMC_MAX_GENERIC for platform independence
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	Xiong Zhang <xiong.y.zhang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
+	Like Xu <like.xu.linux@gmail.com>, Jinrong Liang <cloudliang@tencent.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Add '#address-cells' and '#size-cells' for all I2C to avoid duplicate these
-at every board files.
+On Thu, Jun 20, 2024, Dapeng Mi wrote:
+> The existing macro, KVM_INTEL_PMC_MAX_GENERIC, ambiguously represents the
+> maximum supported General Purpose (GP) counter number for both Intel and
+> AMD platforms. This could lead to issues if AMD begins to support more GP
+> counters than Intel.
+> 
+> To resolve this, a new platform-independent macro, KVM_PMC_MAX_GENERIC,
+> is introduced to represent the maximum GP counter number across all x86
+> platforms.
+> 
+> No logic changes are introduced in this patch.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 9 +++++----
+>  arch/x86/kvm/svm/pmu.c          | 2 +-
+>  arch/x86/kvm/vmx/pmu_intel.c    | 2 ++
+>  3 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 57440bda4dc4..18137be6504a 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -534,11 +534,12 @@ struct kvm_pmc {
+>  
+>  /* More counters may conflict with other existing Architectural MSRs */
+>  #define KVM_INTEL_PMC_MAX_GENERIC	8
+> -#define MSR_ARCH_PERFMON_PERFCTR_MAX	(MSR_ARCH_PERFMON_PERFCTR0 + KVM_INTEL_PMC_MAX_GENERIC - 1)
+> -#define MSR_ARCH_PERFMON_EVENTSEL_MAX	(MSR_ARCH_PERFMON_EVENTSEL0 + KVM_INTEL_PMC_MAX_GENERIC - 1)
+> +#define KVM_AMD_PMC_MAX_GENERIC	6
+> +#define KVM_PMC_MAX_GENERIC		KVM_INTEL_PMC_MAX_GENERIC
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Since we're changing the macro, maybe take the opportunity to use a better name?
+E.g. KVM_MAX_NR_GP_COUNTERS?  And then in a follow-up patch, give fixed counters
+the same treatment, e.g. KVM_MAX_NR_FIXED_COUNTERS.  Or maybe KVM_MAX_NR_GP_PMCS
+and KVM_MAX_NR_FIXED_PMCS?
 
----
-Change from v1 to v2
-- Add Peng Fan's review tag
----
- arch/arm64/boot/dts/freescale/imx95.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> +#define MSR_ARCH_PERFMON_PERFCTR_MAX	(MSR_ARCH_PERFMON_PERFCTR0 + KVM_PMC_MAX_GENERIC - 1)
+> +#define MSR_ARCH_PERFMON_EVENTSEL_MAX	(MSR_ARCH_PERFMON_EVENTSEL0 + KVM_PMC_MAX_GENERIC - 1)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
-index f98cec944eeed..cc5e829e76cc5 100644
---- a/arch/arm64/boot/dts/freescale/imx95.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
-@@ -462,6 +462,8 @@ lpi2c3: i2c@42530000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C3>,
- 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -472,6 +474,8 @@ lpi2c4: i2c@42540000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C4>,
- 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -566,6 +570,8 @@ lpi2c5: i2c@426b0000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C5>,
- 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -576,6 +582,8 @@ lpi2c6: i2c@426c0000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C6>,
- 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -586,6 +594,8 @@ lpi2c7: i2c@426d0000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C7>,
- 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -596,6 +606,8 @@ lpi2c8: i2c@426e0000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C8>,
- 					 <&scmi_clk IMX95_CLK_BUSWAKEUP>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -816,6 +828,8 @@ lpi2c1: i2c@44340000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C1>,
- 					 <&scmi_clk IMX95_CLK_BUSAON>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
-@@ -826,6 +840,8 @@ lpi2c2: i2c@44350000 {
- 				clocks = <&scmi_clk IMX95_CLK_LPI2C2>,
- 					 <&scmi_clk IMX95_CLK_BUSAON>;
- 				clock-names = "per", "ipg";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
--- 
-2.34.1
+And I'm very, very tempted to say we should simply delete these two, along with
+MSR_ARCH_PERFMON_FIXED_CTR_MAX, and just open code the "end" MSR in the one user.
+Especially since "KVM" doesn't appear anyone in the name, i.e. because the names
+misrepresent KVM's semi-arbitrary max as the *architectural* max.
 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6ad19d913d31..547dfe40d017 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7432,17 +7432,20 @@ static void kvm_probe_msr_to_save(u32 msr_index)
+                     intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2))
+                        return;
+                break;
+-       case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR_MAX:
++       case MSR_ARCH_PERFMON_PERFCTR0 ...
++            MSR_ARCH_PERFMON_PERFCTR0 + KVM_MAX_NR_GP_COUNTERS - 1:
+                if (msr_index - MSR_ARCH_PERFMON_PERFCTR0 >=
+                    kvm_pmu_cap.num_counters_gp)
+                        return;
+                break;
+-       case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL_MAX:
++       case MSR_ARCH_PERFMON_EVENTSEL0 ...
++            MSR_ARCH_PERFMON_EVENTSEL0 + KVM_MAX_NR_GP_COUNTERS - 1:
+                if (msr_index - MSR_ARCH_PERFMON_EVENTSEL0 >=
+                    kvm_pmu_cap.num_counters_gp)
+                        return;
+                break;
+-       case MSR_ARCH_PERFMON_FIXED_CTR0 ... MSR_ARCH_PERFMON_FIXED_CTR_MAX:
++       case MSR_ARCH_PERFMON_FIXED_CTR0 ...
++            MSR_ARCH_PERFMON_FIXED_CTR0 + KVM_MAR_NR_FIXED_COUNTERS - 1:
+                if (msr_index - MSR_ARCH_PERFMON_FIXED_CTR0 >=
+                    kvm_pmu_cap.num_counters_fixed)
+                        return;
+
+>  #define KVM_PMC_MAX_FIXED	3
+>  #define MSR_ARCH_PERFMON_FIXED_CTR_MAX	(MSR_ARCH_PERFMON_FIXED_CTR0 + KVM_PMC_MAX_FIXED - 1)
+> -#define KVM_AMD_PMC_MAX_GENERIC	6
+>  
+>  struct kvm_pmu {
+>  	u8 version;
+> @@ -554,7 +555,7 @@ struct kvm_pmu {
+>  	u64 global_status_rsvd;
+>  	u64 reserved_bits;
+>  	u64 raw_event_mask;
+> -	struct kvm_pmc gp_counters[KVM_INTEL_PMC_MAX_GENERIC];
+> +	struct kvm_pmc gp_counters[KVM_PMC_MAX_GENERIC];
+>  	struct kvm_pmc fixed_counters[KVM_PMC_MAX_FIXED];
+>  
+>  	/*
+> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+> index 6e908bdc3310..2fca247798eb 100644
+> --- a/arch/x86/kvm/svm/pmu.c
+> +++ b/arch/x86/kvm/svm/pmu.c
+> @@ -218,7 +218,7 @@ static void amd_pmu_init(struct kvm_vcpu *vcpu)
+>  	int i;
+>  
+>  	BUILD_BUG_ON(KVM_AMD_PMC_MAX_GENERIC > AMD64_NUM_COUNTERS_CORE);
+> -	BUILD_BUG_ON(KVM_AMD_PMC_MAX_GENERIC > INTEL_PMC_MAX_GENERIC);
+> +	BUILD_BUG_ON(KVM_AMD_PMC_MAX_GENERIC > KVM_PMC_MAX_GENERIC);
+>  
+>  	for (i = 0; i < KVM_AMD_PMC_MAX_GENERIC ; i++) {
+>  		pmu->gp_counters[i].type = KVM_PMC_GP;
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index fb5cbd6cbeff..a4b0bee04596 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -570,6 +570,8 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+>  	struct lbr_desc *lbr_desc = vcpu_to_lbr_desc(vcpu);
+>  
+> +	BUILD_BUG_ON(KVM_INTEL_PMC_MAX_GENERIC > KVM_PMC_MAX_GENERIC);
+
+Rather than BUILD_BUG_ON() for both Intel and AMD, can't we just do?
+
+#define KVM_MAX_NR_GP_COUNTERS max(KVM_INTEL_PMC_MAX_GENERIC, KVM_AMD_PMC_MAX_GENERIC)
+
+> +
+>  	for (i = 0; i < KVM_INTEL_PMC_MAX_GENERIC; i++) {
+>  		pmu->gp_counters[i].type = KVM_PMC_GP;
+>  		pmu->gp_counters[i].vcpu = vcpu;
+> -- 
+> 2.34.1
+> 
