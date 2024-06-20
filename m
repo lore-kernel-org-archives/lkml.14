@@ -1,75 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903B21AB8F0;
-	Thu, 20 Jun 2024 17:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F551DDEE;
+	Thu, 20 Jun 2024 17:31:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904624; cv=none; b=uIr2CUlGd9dZyiKEd/4/VzucsJBfHfGPVtvIcYfmG/WQO4mEA4M1zf4kZLA6XL9cQVKejKjSh+W80erRlNRO+cFP724CPXsIE4Nsz2SOp3G+mvO9nox5ejFb8dEkdqPtz1HQm4U7RGsvYczHBH6qc8cE/BAJb7c/5AQftD1h+T4=
+	t=1718904683; cv=none; b=kyTwV1+D9Iei5nm2KmJ2ypkMpgcj3/eOJxHru+inD11bYukUtUvFWliyNlVYkzZc1f+iuT1R/n7RWrmLQb97JUaZHQOW8jkxi5q4wFCAxAlO8dPMsrJ17pzE88PMxr114AQO9zORC7d9AIYB/bRF7lwPf/n+si4rOgEvzxZ0cr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904624; c=relaxed/simple;
-	bh=iK02/V36i9hR8kwG3cCXAEbfm4PnmKo2X9b88lBJgjw=;
+	s=arc-20240116; t=1718904683; c=relaxed/simple;
+	bh=c07EwySV5A8jyBItyxYvOoGB6xh76nUFiW66NCfaRWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MvTybpx1UZR9dsp6V5D5Li0UCbOZvP9H55/c+uLOcBkA7AQR7VLtgjUcHkHAzQluh4qPep2rIHYFjaqQTkcVmXo7mghAtf0ptZBonGYe53maNNoCkzdlDmljy8s9wdPS5wZZQ3LFKFcscA/AcJooii1PbSJVDH8ut4GZKmcBX/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io/PNz+W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+r6nCzwuCSlsgXflmVcL1PbOLMeXgRJe/HZGzHhv0o3sw8Sl2+SXKtfDqQ2+MG0AcbT5qjRm6S0IgOAZdB0mix17SIH+D+Hoin8jeznjPTlR8crUlyAKrD5NESsGXEXeR1dyWbVIKeMrqbkG+72IZESpw4lQiOkXJedS63ddNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqTtOATU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io/PNz+W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53554C2BD10;
-	Thu, 20 Jun 2024 17:30:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqTtOATU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E54C2BD10;
+	Thu, 20 Jun 2024 17:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718904624;
-	bh=iK02/V36i9hR8kwG3cCXAEbfm4PnmKo2X9b88lBJgjw=;
+	s=k20201202; t=1718904682;
+	bh=c07EwySV5A8jyBItyxYvOoGB6xh76nUFiW66NCfaRWE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Io/PNz+WmqjDIH2KxtvUkQ2lgEP7c2QKC8Fb1nIVzRic6EQEE67qQMXJWRpA2v4Vh
-	 rk91hji93MD9qrqK1Lmj6DuUKkmOEc7vmlFMRBxyXtUpq+fswYbPj14vk9O9tleeBS
-	 N3aHPjdTAv+5ee4YAn2yzcfgoXfWSXtnOIHULBhgNw0iIr/o2qB5QvZ8+NFe52OAns
-	 ZbAqV7/YXPF1Z4WKD7S0of1V5OC9cj7UfkfqYZuEUg+egnlSznVrLMO1Xv+V5A7KeF
-	 yYO1LEJJ7YeYkbaiPrjOU4Dv/SaVm2B8uFG50bbskEj3g9dF9tRZGdmLTIYhhD4pqE
-	 Ww6i7kRGLY9SA==
-Date: Thu, 20 Jun 2024 18:30:19 +0100
-From: Lee Jones <lee@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/20] leds: leds-lp55xx: overhaul driver
-Message-ID: <20240620173019.GA1318296@google.com>
-References: <20240616215226.2112-1-ansuelsmth@gmail.com>
- <171890216265.1289520.18025885103780443097.b4-ty@kernel.org>
- <66745e9b.df0a0220.41e53.a3af@mx.google.com>
+	b=XqTtOATUvwlDYXLFMQX0a7F6u0ozKkRdNk9dpdW9p+sV9iHMSGhNwFzTuTKaVY0OS
+	 gRSCLXGMnwsH5XJNlQLjm2/Io5kfSfemcVIH22LiBX39gQOUMe2JqIE0dBEFXB7mD2
+	 Iy+RdOZe7GRR81nEm40hlDkq3y6ltI54V9BHcupMlm3Xs4QsH8EXI7t40q77uQMRvy
+	 V/W2Ind/qTVPKWTnJa9irSlCJwd6rk4yzd/rYn5eoKlZU3gmlF08ilWNC3T0HEL7lu
+	 hgyDe4q24UIqdh7JuJmFY2NxOWikW+nHAT3R9Z4wt4UF+2PzhtIntH2XM2Rj2pbZos
+	 kN0W+jAVwNb6A==
+Date: Thu, 20 Jun 2024 18:31:18 +0100
+From: Simon Horman <horms@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH net-next] net: stmmac: unexport stmmac_pltfr_init/exit()
+Message-ID: <20240620173118.GP959333@kernel.org>
+References: <20240619140119.26777-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <66745e9b.df0a0220.41e53.a3af@mx.google.com>
+In-Reply-To: <20240619140119.26777-1-brgl@bgdev.pl>
 
-On Thu, 20 Jun 2024, Christian Marangi wrote:
-
-> On Thu, Jun 20, 2024 at 05:49:22PM +0100, Lee Jones wrote:
-> > On Sun, 16 Jun 2024 23:51:59 +0200, Christian Marangi wrote:
-> > > This long series is (as requested) a big overhaul of the lp55xx based
-> > > LED driver.
-> > > 
-> > > As notice for these kind of LED chip there was the bad habit of copy
-> > > the old driver and just modify it enough to make it work with the new
-> > > model. Till v4 I was also doing the same by following the pattern and
-> > > the code format of previous driver.
-> > > 
-> > > [...]
-> > 
-> > Applied, thanks!
+On Wed, Jun 19, 2024 at 04:01:19PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Mh? What happen? I'm preparing v7 with the changes requested :(
+> These functions are only used within the compilation unit they're defined
+> in so there's no reason to export them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Tooling issue, please ignore.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
--- 
-Lee Jones [李琼斯]
