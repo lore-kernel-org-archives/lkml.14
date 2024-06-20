@@ -1,260 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133101AC42B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D448176255;
+	Thu, 20 Jun 2024 14:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718894716; cv=none; b=f8JjNlrvWftNnnY+40zcZze5oplehQUkuNr0xpHXtlPBIOqg7ViP99KcSVx6YHzdpzrENMJovhcse3gF+BqrjjbC90a7JXng+Fd7YlZHFtPv3n7sV+Yo34W7q87/5/vjcpvECyupt3Vp4uuJx6h2t1dNEx5xwbaJIERdDD4m/cY=
+	t=1718894759; cv=none; b=Ve+wY+CXoYWXaAVRdsgpgAL9Mm8V43e1SjHkG83xIZ7SzLRHj89wSWOlgfmu2fOmP52Y5+hn57KIKGBDqqniVVKFKOW6jkfDzSWGusqjiqcJaPh+RvuS1BpYf1m1243hhSewDNOl1+4lo0LKhcGkkxMfcrLyAF/bMvw+bW1gxjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718894716; c=relaxed/simple;
-	bh=ALksFnrKrcGn12QSjQcEuQIf8P+ZdXhTU6QEsfAxmlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H6duqmtmb2UspaMVG/MXCAEwDF1K5dJODOVw8FEgira3K7HZQWbZ5Dg+Dxz28rbhImJZvwbvu1Am6n9d67TqU2A4nUZ0e5pabeaoTNYlBU2/0eaLQdanvB19dLufxMC3E6D1qjG6fqV3DLan78W23ies4tjBKSYvZoeU7CIBr28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UM5CDvSQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UM5CDvSQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718894714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=CJbY92tZcmS6AFMXxjNinJra1MdkazuQMLItm3eS/94=;
-	b=UM5CDvSQ0+8HOFAayImkQSI2LX0tLcoouJa/u4FrK/v7RcdP/1isO/+YxvR8yCCk4kQlGz
-	G4SEoDiGAisen6N+DdiaYQ5nR6sZB48/9mt9nO1bZuqs75E8KpWzqBg3t+8vFxmLpdMpAx
-	xheMWnlUdVOsR+YR+x+3aiNEl15C6LQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-356-9VLHdgFmMNWAP5DY-iFRsw-1; Thu, 20 Jun 2024 10:45:12 -0400
-X-MC-Unique: 9VLHdgFmMNWAP5DY-iFRsw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4217104c425so8260775e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:45:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718894711; x=1719499511;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CJbY92tZcmS6AFMXxjNinJra1MdkazuQMLItm3eS/94=;
-        b=FNwLTh0Pwz0nQhN9EBoxhR960LTl9V01hFEzzBdpnKz6+swwwpHBueN3CNMxkEZbWu
-         JHrxJLXRuc/k8uwZjtryvQiivahZdreDyKT8lADWz5UC/XIki656ZW7AhucbAfCX5+Fz
-         KgmFQg/kjvGo61srlWDkE3e8CO3Nzlr4wq/k0CLTjsWwIChr05xVbFbbH+U5u+7Y+5id
-         NhXLr/vo1tgOX19giNzQPc3Yawd6ZanZWlogYxE+bdGwiHumDxcQtWpH3mfBSnTTssVK
-         7gzhnV5TJyeLPbOqFbmWkw08s/gvxmkYJccmSXgL9AT4XdIigfP9boetIyq8jCswnFGc
-         rgNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2i+yL37qYuzoySjSDKWsY5eVVZDexfXXDuTEBjZDdXfvxwkkDx7cB1YrF9S8wZgaG4HesFP/tpNJLE+bDU2Npk7WvwHM+IgdzTv9r
-X-Gm-Message-State: AOJu0YzB6epVZYniu6h0c9Qgiv67t9RkT5JYrFOvPTysbrv0iVKSUGM6
-	HJqyiq+poobuuRUSihIQH9QdBFf9z6uGO3QYqGzF5rnM+5B5JIZBteUXbQzLbh/0RkWUKUEpsyN
-	NcQWjYvMZ3Cotd+4l2yiMrPNJn1QEydJR5n6hNCO4HaxX46Va8H8bUleF0L7TqQ==
-X-Received: by 2002:a05:600c:68c5:b0:422:6765:271c with SMTP id 5b1f17b1804b1-4247517e003mr43369835e9.20.1718894711488;
-        Thu, 20 Jun 2024 07:45:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKuCXPZ7Phm93DcTUNnHXYK16JnGZOeEfUrlDl01RVTYUaUYKRZaRjwAw2Hbkju/eEkt47hg==
-X-Received: by 2002:a05:600c:68c5:b0:422:6765:271c with SMTP id 5b1f17b1804b1-4247517e003mr43369545e9.20.1718894710957;
-        Thu, 20 Jun 2024 07:45:10 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c719:5b00:61af:900f:3aef:3af3? (p200300cbc7195b0061af900f3aef3af3.dip0.t-ipconnect.de. [2003:cb:c719:5b00:61af:900f:3aef:3af3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3621a4a17e6sm7025688f8f.19.2024.06.20.07.45.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 07:45:10 -0700 (PDT)
-Message-ID: <385a5692-ffc8-455e-b371-0449b828b637@redhat.com>
-Date: Thu, 20 Jun 2024 16:45:08 +0200
+	s=arc-20240116; t=1718894759; c=relaxed/simple;
+	bh=uL73iW/sBxwetobM0anVhjrpZe0qhCcB/4/aFNL5+ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwn5+3u6Ut+jkPwayZj6Dz4e+BEL+vBJJRRdeLeA2Z9A07twFD8BysCdBEEvGsKfFnSyEUmvJlf6AdFu+d5V4ENitjg6xDEF7whVct/wJzmIXV9AHlcmmsNzAaRoLa99FR23y9yu3W7P3fvtetyvqGgZSUGRd/9st6lBGDyj6Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sKJ2m-0000tN-00; Thu, 20 Jun 2024 16:45:44 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id BEB89C031A; Thu, 20 Jun 2024 16:43:31 +0200 (CEST)
+Date: Thu, 20 Jun 2024 16:43:31 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH fixes 1/4] MIPS: mipsmtregs: Fix target register for MFTC0
+Message-ID: <ZnRAEzRQpfm7yHHc@alpha.franken.de>
+References: <20240616-mips-mt-fixes-v1-0-83913e0e60fc@flygoat.com>
+ <20240616-mips-mt-fixes-v1-1-83913e0e60fc@flygoat.com>
+ <859402a6-4e31-4029-a6ad-87c3be4d3fdd@app.fastmail.com>
+ <14cc8572-406e-47c4-a590-540d6c69466b@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Fuad Tabba <tabba@google.com>, Christoph Hellwig <hch@infradead.org>,
- John Hubbard <jhubbard@nvidia.com>, Elliot Berman
- <quic_eberman@quicinc.com>, Andrew Morton <akpm@linux-foundation.org>,
- Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- maz@kernel.org, kvm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, pbonzini@redhat.com
-References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
- <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com>
- <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
- <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
- <20240619115135.GE2494510@nvidia.com> <ZnOsAEV3GycCcqSX@infradead.org>
- <CA+EHjTxaCxibvGOMPk9Oj5TfQV3J3ZLwXk83oVHuwf8H0Q47sA@mail.gmail.com>
- <20240620135540.GG2494510@nvidia.com>
- <6d7b180a-9f80-43a4-a4cc-fd79a45d7571@redhat.com>
- <20240620142956.GI2494510@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240620142956.GI2494510@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <14cc8572-406e-47c4-a590-540d6c69466b@app.fastmail.com>
 
-On 20.06.24 16:29, Jason Gunthorpe wrote:
-> On Thu, Jun 20, 2024 at 04:01:08PM +0200, David Hildenbrand wrote:
->> On 20.06.24 15:55, Jason Gunthorpe wrote:
->>> On Thu, Jun 20, 2024 at 09:32:11AM +0100, Fuad Tabba wrote:
->>>> Hi,
->>>>
->>>> On Thu, Jun 20, 2024 at 5:11 AM Christoph Hellwig <hch@infradead.org> wrote:
->>>>>
->>>>> On Wed, Jun 19, 2024 at 08:51:35AM -0300, Jason Gunthorpe wrote:
->>>>>> If you can't agree with the guest_memfd people on how to get there
->>>>>> then maybe you need a guest_memfd2 for this slightly different special
->>>>>> stuff instead of intruding on the core mm so much. (though that would
->>>>>> be sad)
->>>>>
->>>>> Or we're just not going to support it at all.  It's not like supporting
->>>>> this weird usage model is a must-have for Linux to start with.
->>>>
->>>> Sorry, but could you please clarify to me what usage model you're
->>>> referring to exactly, and why you think it's weird? It's just that we
->>>> have covered a few things in this thread, and to me it's not clear if
->>>> you're referring to protected VMs sharing memory, or being able to
->>>> (conditionally) map a VM's memory that's backed by guest_memfd(), or
->>>> if it's the Exclusive pin.
->>>
->>> Personally I think mapping memory under guest_memfd is pretty weird.
->>>
->>> I don't really understand why you end up with something different than
->>> normal CC. Normal CC has memory that the VMM can access and memory it
->>> cannot access. guest_memory is supposed to hold the memory the VMM cannot
->>> reach, right?
->>>
->>> So how does normal CC handle memory switching between private and
->>> shared and why doesn't that work for pKVM? I think the normal CC path
->>> effectively discards the memory content on these switches and is
->>> slow. Are you trying to make the switch content preserving and faster?
->>>
->>> If yes, why? What is wrong with the normal CC model of slow and
->>> non-preserving shared memory?
->>
->> I'll leave the !huge page part to Fuad.
->>
->> Regarding huge pages: assume the huge page (e.g., 1 GiB hugetlb) is shared,
->> now the VM requests to make one subpage private.
+On Wed, Jun 19, 2024 at 12:37:48PM +0100, Jiaxun Yang wrote:
 > 
-> I think the general CC model has the shared/private setup earlier on
-> the VM lifecycle with large runs of contiguous pages. It would only
-> become a problem if you intend to to high rate fine granual
-> shared/private switching. Which is why I am asking what the actual
-> "why" is here.
-
-I am not an expert on that, but I remember that the way memory 
-shared<->private conversion happens can heavily depend on the VM use 
-case, and that under pKVM we might see more frequent conversion, without 
-even going to user space.
-
 > 
->> How to handle that without eventually running into a double
->> memory-allocation? (in the worst case, allocating a 1GiB huge page
->> for shared and for private memory).
-> 
-> I expect you'd take the linear range of 1G of PFNs and fragment it
-> into three ranges private/shared/private that span the same 1G.
-> 
-> When you construct a page table (ie a S2) that holds these three
-> ranges and has permission to access all the memory you want the page
-> table to automatically join them back together into 1GB entry.
-> 
-> When you construct a page table that has only access to the shared,
-> then you'd only install the shared hole at its natural best size.
-> 
-> So, I think there are two challenges - how to build an allocator and
-> uAPI to manage this sort of stuff so you can keep track of any
-> fractured pfns and ensure things remain in physical order.
-> 
-> Then how to re-consolidate this for the KVM side of the world.
+> 在2024年6月19日六月 下午12:32，Jiaxun Yang写道：
+> > 在2024年6月16日六月 下午2:25，Jiaxun Yang写道：
+> >> Target register of mftc0 should be __res instead of $1, this is
+> >> a leftover from old .insn code.
+> >>
+> >> Fixes: dd6d29a61489 ("MIPS: Implement microMIPS MT ASE helpers")
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >
+> > Hi Thomas,
+> >
+> > I saw you sent mips-fixes_6.10_1 pull request but this series is
+> > not included in that PR while one of my later patch is included.
+> >
+> > If you think the whole series is not fit for fixes tree then please
+> > at least let this series go through fixes tree. There are many MT
+>                     ^ Sorry I meant patch.
 
-Exactly!
+sorry I've missed the fixes tag. As the rest looks like a lot of re-shuffling
+I'd prefer to just place the first patch to mips-fixes and the rest to
+mips-next.
 
-> 
-> guest_memfd, or something like it, is just really a good answer. You
-> have it obtain the huge folio, and keep track on its own which sub
-> pages can be mapped to a VMA because they are shared. KVM will obtain
-> the PFNs directly from the fd and KVM will not see the shared
-> holes. This means your S2's can be trivially constructed correctly.
-> 
-> No need to double allocate..
-
-Yes, that's why my thinking so far was:
-
-Let guest_memfd (or something like that) consume huge pages (somehow, 
-let it access the hugetlb reserves). Preallocate that memory once, as 
-the VM starts up: just like we do with hugetlb in VMs.
-
-Let KVM track which parts are shared/private, and if required, let it 
-map only the shared parts to user space. KVM has all information to make 
-these decisions.
-
-If we could disallow pinning any shared pages, that would make life a 
-lot easier, but I think there were reasons for why we might require it. 
-To convert shared->private, simply unmap that folio (only the shared 
-parts could possibly be mapped) from all user page tables.
-
-Of course, there might be alternatives, and I'll be happy to learn about 
-them. The allcoator part would be fairly easy, and the uAPI part would 
-similarly be comparably easy. So far the theory :)
-
-> 
-> I'm kind of surprised the CC folks don't want the same thing for
-> exactly the same reason. It is much easier to recover the huge
-> mappings for the S2 in the presence of shared holes if you track it
-> this way. Even CC will have this problem, to some degree, too.
-
-Precisely! RH (and therefore, me) is primarily interested in existing 
-guest_memfd users at this point ("CC"), and I don't see an easy way to 
-get that running with huge pages in the existing model reasonably well ...
+Thomas.
 
 -- 
-Cheers,
-
-David / dhildenb
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
