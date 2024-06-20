@@ -1,112 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC4F558A5;
-	Thu, 20 Jun 2024 09:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BFC19AD86
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718874576; cv=none; b=n/cnXJoIF1krJv3wscHF0sdUKhTx3W/KZEwz/gWefkXElBTX2xeJPE2gv9LHYYHREELkrEQrSV/RC/nrh7+oCxef/qYMUMUMNQ3mnRl/8rKOlP7jvEkUAcMWWp7AaKOWK3aCIEZBeXC42eMO5hvOvVa6GnwFKmfii72lhBbPbxY=
+	t=1718874594; cv=none; b=X1OdGy125EvLsH186B9IdYztt56rhxgz0hoEFnTOZdd1qlAblTJ0YjxE2tlJjDCO8g3XBOedTAl3ud5Cfwla09cF7mMOcQw8THm3qs1XDFqs5IKH8FSwTLXckizFYS/jxs7JbRZM0qpQXGhedPj5+Qs1kjeX+63F0VSnDP+o41o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718874576; c=relaxed/simple;
-	bh=66gyrIipeI+kZfnEWslEEqI7z7Ksf4eHolGiHrxklRY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nO02OdFtjQazEenLVj7CWbXqzaLrbEeBiIyxsTGYfIYhEH5In/Q49BR1j4NcrvoUxmRzjvpi2LuQTaXA8pcmF1kja+IyME6x6rM9GwSwkaVAtE67s3ydGOkKON5QzsAtkridh84A/Q6BJWjG22pilkKAIn322JcM8YkOmY84vlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlJPJEH/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718874594; c=relaxed/simple;
+	bh=xcEb/2o51/hhP7L4EQhiwpX6PzDA1AooXoMLV0l0PF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mu5bha7OAUe0FKDuiAEzP96BGn19mjNLv1w25RQ1jrwT5yY+lpR6FHBREh1qjUnVYvdvtaItO9KukPnuzpZx0qVoznb/2cKOHsVqD2TlFhhVXXa/uiIUYl7jp7biNYvkmWR94Fr7IUWRSIlqzNJ9/f5aYkXwOS+9EJ91Ixr2sc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/W3sDG0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlJPJEH/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E7CC32781;
-	Thu, 20 Jun 2024 09:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718874576;
-	bh=66gyrIipeI+kZfnEWslEEqI7z7Ksf4eHolGiHrxklRY=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=KlJPJEH/7stjURIho0o5YzOzs2+3apAgDeGOPj31iDlHnD4E8gNXxOfJMVojCBuhu
-	 Hrdeqp0lBPA/+a9gZU5tfJoQ+3hT4Ll4A4qrRCU+zoPVEe4mR0/tIltxX0gfwO7iW7
-	 JujiJtppl0ic8KUv2BFt1D/7QALckqDVTuGWKCrPyt2ScFOA8zyOjzT3MxRdZgiiOU
-	 VtRAiOqwYuS2cYWj4PRnrGM50O/DHd61nAoefu8N3dJUx9fcgZ1DRB6OiXcgw4bnGx
-	 yHgKO09L5FxNbmveY3KPVlrqzSf5JbVa+07LRI8vnyxK6IlJCrZ5dn6gibRS93ei1n
-	 iaaedVUCvvDPg==
-Date: Thu, 20 Jun 2024 10:09:32 +0100
-From: Lee Jones <lee@kernel.org>
-To: linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-	linux-leds@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 1/1] leds: core: Omit set_brightness error message for a
- LED supporting hw trigger only
-Message-ID: <20240620090932.GD3029315@google.com>
-References: <20240613075712.2479669-1-lee@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/W3sDG0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718874591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GZSfcZG+KL4h8GQs6NMrIyrvzuT3/K8Q28tO1U3u9w4=;
+	b=E/W3sDG0AhBQJakslkRn/qBLZ45xHeuVVr2e+63Z3YmGDEfM4oRDfXc6KjFlqsxSfjajii
+	ClESz6xLP6tbebbI5Tq5VbQdqWr5z372Obp6TK5u//zsPOfq4D9bZDlfyN/E6L3rELBcYH
+	pt1y6P3CbitCoRBGDA5i1dnjNwNY6+A=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-189-LhuqOdFhOj-bvsFoYhn1oQ-1; Thu,
+ 20 Jun 2024 05:09:46 -0400
+X-MC-Unique: LhuqOdFhOj-bvsFoYhn1oQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6414D19560B1;
+	Thu, 20 Jun 2024 09:09:44 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.26])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EF5463000218;
+	Thu, 20 Jun 2024 09:09:39 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 20 Jun 2024 11:08:13 +0200 (CEST)
+Date: Thu, 20 Jun 2024 11:08:07 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: hw_breakpoint: Save privilege of access control
+ via ptrace
+Message-ID: <20240620090807.GC30070@redhat.com>
+References: <20240618071010.11214-1-yangtiezhu@loongson.cn>
+ <20240619151524.GB24240@redhat.com>
+ <9cc6d314-2431-c1b5-3d46-63c0ac80ed4d@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240613075712.2479669-1-lee@kernel.org>
+In-Reply-To: <9cc6d314-2431-c1b5-3d46-63c0ac80ed4d@loongson.cn>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, 13 Jun 2024, Lee Jones wrote:
+On 06/20, Tiezhu Yang wrote:
+>
+> On 06/19/2024 11:15 PM, Oleg Nesterov wrote:
+> >>--- a/include/uapi/linux/perf_event.h
+> >>+++ b/include/uapi/linux/perf_event.h
+> >>@@ -467,6 +467,7 @@ struct perf_event_attr {
+> >> 		__u32		wakeup_watermark; /* bytes before wakeup   */
+> >> 	};
+> >>
+> >>+	__u8			bp_priv;
+> >> 	__u32			bp_type;
+> >
+> >Is it safe to add the new member in the middle of uapi struct?
+> >This will break userspace...
+>
+> Let me put the new member "bp_priv" at the end of uapi struct
+> perf_event_attr in the next version if you are OK with it.
 
-> If both set_brightness functions return -ENOTSUPP, then the LED doesn't
-> support setting a fixed brightness value, and the error message isn't
-> helpful. This can be the case e.g. for LEDs supporting a specific hw
-> trigger only.
-> 
-> Pinched the subject line and commit message from Heiner:
-> Link: https://lore.kernel.org/all/44177e37-9512-4044-8991-bb23b184bf37@gmail.com/
-> 
-> Reworked the function to provide Heiner's required semantics whilst
-> simultaneously increasing readability and flow.
-> 
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: linux-leds@vger.kernel.org
-> Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
+And add PERF_ATTR_SIZE_VER9 ?
 
-Heiner, you good with this solution?
+Well, you can safely ignore me, you should ask the maintainers ;)
 
-A Tested-by or Reviewed-by would be good if you have the time.
+But to me the very idea of arm64-specific and "kernel only" member in
+perf_event_attr looks a bit strange.
 
-> Signed-off-by: Lee Jones <lee@kernel.org>
-> ---
->  drivers/leds/led-core.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index ef7d1c6767ca..3b4db39f2326 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -123,15 +123,22 @@ static void led_timer_function(struct timer_list *t)
->  static void set_brightness_delayed_set_brightness(struct led_classdev *led_cdev,
->  						  unsigned int value)
->  {
-> -	int ret = 0;
-> +	int ret;
->  
->  	ret = __led_set_brightness(led_cdev, value);
-> -	if (ret == -ENOTSUPP)
-> +	if (ret == -ENOTSUPP) {
->  		ret = __led_set_brightness_blocking(led_cdev, value);
-> -	if (ret < 0 &&
-> -	    /* LED HW might have been unplugged, therefore don't warn */
-> -	    !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
-> -	    (led_cdev->flags & LED_HW_PLUGGABLE)))
-> +		if (ret == -ENOTSUPP)
-> +			/* No back-end support to set a fixed brightness value */
-> +			return;
-> +	}
-> +
-> +	/* LED HW might have been unplugged, therefore don't warn */
-> +	if (ret == -ENODEV && led_cdev->flags & LED_UNREGISTERING &&
-> +	    led_cdev->flags & LED_HW_PLUGGABLE)
-> +		return;
-> +
-> +	if (ret < 0)
->  		dev_err(led_cdev->dev,
->  			"Setting an LED's brightness failed (%d)\n", ret);
->  }
-> -- 
-> 2.45.2.505.gda0bf45e8d-goog
-> 
+Oleg.
 
--- 
-Lee Jones [李琼斯]
