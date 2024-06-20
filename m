@@ -1,140 +1,215 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C45199EBA;
-	Thu, 20 Jun 2024 09:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CD51A3BC8
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718876668; cv=none; b=YQbnhumgfbckfKksuYOPxvI5OKT6e9qwDvJe9ZncLpdYVbEkicqSvTkFVXFjLCJ/3VfitLylR9CfdoYHoKqjcz6MQtlY2yRgqSjuHJsQZB9ZpOMpM/nBy6SBPhh6QIqPSo1Cy9BNY9s4kvrUCrSb2a2+a0pWqjFmwQU2mNAaAuM=
+	t=1718876801; cv=none; b=Lzkx2CsJ/I/PNSUbFoLL09/muBJ0z+XEMFRLZZ2I5Tqu+FvwUQBdo6k24tgaC8zUoOW1gEke1yPYJUpNhfDgCGLy0X4d2Dh8u3P2Ib5+ty/sehuO5VtL4FVdXLBRNpD7riA/It2mej6ctvpuScSetoOisil5x8NBUiemkxMEaso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718876668; c=relaxed/simple;
-	bh=okOqLw7c0senVhgw+ra23kw900+h4DE+0U7XOxfhL+M=;
+	s=arc-20240116; t=1718876801; c=relaxed/simple;
+	bh=PQeDvQdpV3xoa4EoS+6rRCcA8khvc+TkBodiCwJ0nPM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iFPUUP3pnjXUlyJ/L1YTSCma00t6J2zWoO+Nd/QHGmQdDLoxmgmqjF7i6DhylSiE3X7QctuEZJwt69nSuY3WObzFqpPxXHbVeg3fF9OdoinQD/cfE5DVNULkUHfiwO0M45I5ZlfAi8E/Ow/AcHexayfrxdlI0oV/yuVnnjclO7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EVVd7BUM; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=IKzQJa1y0wUpU3T2ra5hYRkE50huD27S2wR1Bfoct8sKLtExgRxITB5i0SXMCysF2IyD6nXrMAyx8ZIwI8nhOdeIWZ8zc7gRKXEbZghujcN9/cFB2A9x/79aTeZgABzGxzemOKw7aj5MMHBFiJeTqZ2SwfECsh+JcIU8x3PG/Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GF4+2Xno; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVVd7BUM"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4ed0b3c6a76so194904e0c.1;
-        Thu, 20 Jun 2024 02:44:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GF4+2Xno"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebd421a931so6374411fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 02:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718876665; x=1719481465; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1718876798; x=1719481598; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=okOqLw7c0senVhgw+ra23kw900+h4DE+0U7XOxfhL+M=;
-        b=EVVd7BUMJDTxZU+uZYDb8PzR3uHaGQ9E02m9AWRhamrbRw2GZ1XFOUHBFzELeSMHeE
-         ccAqUVkuI2/ifnTNlRNXP+5w3QM+cnqbSNoCEK+GhiLrO73dY96zAHrR3e/ZPDJGFREC
-         eBLZaaDljEmQnVX8a0rg/T8p9ohrV6YTX2hffLJ3LbCZxMnLFRO7i/3a2lotKmyG2jXT
-         jEWJFH13mh9kHqTmwBPXfN72qIXPB4gz9d1/AQoNp7QQE4MqccU4InySQBRgsQrXfSea
-         eMkNJyfQwvoJyF+8r1YI5PrUmE/Y9AWkkcgrBKqnIzkQqKM4GeYZikkbxLb2WJ9ilxMn
-         0pTQ==
+        bh=1C8Ju8XWmp5T/a5fTSJkVEbGY+u2Y8Oaw2wvJKVqwcw=;
+        b=GF4+2XnoU8Q3JXTCA7tHT80PNo1AoLZkOLZOSqkdPn95Y1lVZ9IXGU0IEGpnIIqaxn
+         YSrIPMBEFUxSn460HIBRvnmPccKJLDtd7ncMV3/fHTBE/KTPMDwHeoVk353yWgbGVu2p
+         mN5PxYyst7iWw0rqdC1K140hdORTEHcMyliMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718876665; x=1719481465;
+        d=1e100.net; s=20230601; t=1718876798; x=1719481598;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=okOqLw7c0senVhgw+ra23kw900+h4DE+0U7XOxfhL+M=;
-        b=mjxJxDhW3hQp/t3pEYWA7r96Qilwty3wLJO29GKRRy5bwaLKA7x0rRPuYua/tXXNiL
-         IjfytxwIiHmKCLo6swhikwwTtEFFP9/HhQ/0jtkYWO/2g76rNS11YiU2I87zTxQxhmiE
-         o+QzS+5a1QOIkLV52gpl2/PoAm9UguxYdQYoh7smuHm81ojNMgRcEqN8z4DNd3Tnre+4
-         ujWR1oH7yIXtOlO4o9rnFSLxflFVJljV3QkwBqVzzUGrmTebzOoQNuyWKmpVvB/jm68r
-         2xbYsJ5WdTsuQWgjdNACXdDOe7va7lW69JnQOjTVCRUoa2vY8vf22HCF0uidORm3i6me
-         O9lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVGfyfL4pwqV1pvKAItWVL0mqP0YaAzs/UJIouWxyu2OmQMMjDxSuVR9PtJmoIRtwV/+ZFldLl/ggKyrFVkAGH/x7t0Qd0mYMJEnOZgtC70jvZtfEDBl0jL2x+R4eVuU/gl+1dVFNR+jNRIKnZs+JD4uCkgxko7wEmDsAoToBZr4u24ZRRMz28KGNexRvlGwr1k/4WcGSvkXcnZ+eS1amI/SO3bFMD
-X-Gm-Message-State: AOJu0YwARpuctroM0CUrGmjmD204RGhSwf+DmxKVqsQ8JueTjpGhmMSe
-	9LeWyzz3hfkIM1yFBMPG0Tc9U8sFGLv9mwwPINCOB6sut/HPx17BTz/2Fb3widPWzVNRzXlZJP+
-	6sPOq50f4Iq1Pi7lG0OXt9RPa6N4=
-X-Google-Smtp-Source: AGHT+IFBepYei96IK6SgPeYNf/E1cKcoErQgdiXocUItGkoIcqYFiufUIo+8G4N0O6SofR+puEeWV6rivz9Db7RDCkc=
-X-Received: by 2002:a05:6122:3124:b0:4eb:1a82:2037 with SMTP id
- 71dfb90a1353d-4ef277b59f3mr5563871e0c.14.1718876663767; Thu, 20 Jun 2024
- 02:44:23 -0700 (PDT)
+        bh=1C8Ju8XWmp5T/a5fTSJkVEbGY+u2Y8Oaw2wvJKVqwcw=;
+        b=Ro/gVy8T7lxrCOPI9GtNzJWP/Ubp1MbktuMURDnqAwh6b4x8T8+37Sy3o8cg7Ey7Qd
+         lIOBP7DbXuzxlZjCUJ6KorxjBoqb35KwkJZ0bQ7LSdo9aPkUCE4PiKOGdUZUWsGZsY/M
+         iLdf0vHbB3Vo2YAPJxM1VPXZIeDwXYGmElG6gWMjr38IOAPZHJk0Y1QkLbbuafGDndYt
+         I7rwMhynjED8YotNTcVxT+paWaTo8rTTcg5PZzEvJo4e6LuA6DJVSiz+xzFt98Gjm599
+         KAAhgsHmfWkAYY+wVcppSEDRMtobwp9TOZc98hulUdZcIPjvxVNY4xIKvpG0dvcWtV15
+         BLfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNB10nc+RcCP4AC9YSTIplQzqYKJup9udVatxfoP/BxkWnyQ1UYy2Ga/+ckPOiZeiMfcsgdyAYpuQ28RUONDaksA5C20BPdjOrgPXQ
+X-Gm-Message-State: AOJu0YxKua9rCEJ08L1evqu57ixARH359Pl7YAge2nPNxVFOmCAe4trG
+	d3kUOH1GAShEQy6Y5E+Cl/ylAAlt3wGyxgoP8dLW9nnfBdtJLixn9QIh2tb7mlmYJP0tjHxe8pu
+	VpjpbnBwC0jzLR/xCrp/On+JQm17D0tywyFuJ
+X-Google-Smtp-Source: AGHT+IEAch4d9DfYlt6svj7uQiDMS/kkFeiPt+x05ruz/JwQ3l7QJT/Zf3fr43/NzPnYxwZicSzj+aUa/F91bwpokys=
+X-Received: by 2002:a2e:2281:0:b0:2ec:3f29:a0fe with SMTP id
+ 38308e7fff4ca-2ec3f29a240mr23325101fa.38.1718876797983; Thu, 20 Jun 2024
+ 02:46:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613091721.525266-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240613091721.525266-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <prdvmtsp35yy2naohivbrya3go6vh5ji2cdjoebw3ovditcujo@bhck6tca6mhj>
- <CA+V-a8u6KAFp1pox+emszjCHqvNRYrkOPpsv5XBdkAVJQMxjmA@mail.gmail.com>
- <o7tswznmyk6gxoqfqvbvzxdndvf5ggkyc54nwafypquxjlvdrv@3ncwl5i5wyy3> <TY3PR01MB113467E6EF1CFC24154AF73E986C82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY3PR01MB113467E6EF1CFC24154AF73E986C82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 20 Jun 2024 10:43:41 +0100
-Message-ID: <CA+V-a8s-fCtQ8GKVh_REkPO81v0oCKPGiLJ5aiJOVdVUbvbCzA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] mmc: renesas_sdhi: Add support for RZ/V2H(P) SoC
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Conor Dooley <conor+dt@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240529-mtk-thermal-mt818x-dtsi-v6-0-0c71478a9c37@baylibre.com>
+ <20240529-mtk-thermal-mt818x-dtsi-v6-4-0c71478a9c37@baylibre.com>
+ <75826085-fd59-466a-b1de-b4c323c801c1@collabora.com> <CAGXv+5FPG4ob3mTU0Utm8Wgk0_ZLw=NLPbfFerWh4OUeAz7UHw@mail.gmail.com>
+ <808db317-4cee-426b-a840-013a5e03098d@baylibre.com> <ad047631-16b8-42ce-8a8d-1429e6af4517@collabora.com>
+ <940eec49-91d8-4d38-a3d8-e1b7e090b905@baylibre.com>
+In-Reply-To: <940eec49-91d8-4d38-a3d8-e1b7e090b905@baylibre.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Thu, 20 Jun 2024 17:46:26 +0800
+Message-ID: <CAGXv+5HpRvsYz3ZJ_hNM=RhDHbnEZA73Xwm1YgjuWWPXhymT9w@mail.gmail.com>
+Subject: Re: [PATCH v6 4/6] arm64: dts: mediatek: mt8186: add default thermal zones
+To: Julien Panis <jpanis@baylibre.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolas Pitre <npitre@baylibre.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Biju,
+Hi,
 
-On Thu, Jun 20, 2024 at 10:30=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.c=
-om> wrote:
+On Mon, Jun 3, 2024 at 3:58=E2=80=AFPM Julien Panis <jpanis@baylibre.com> w=
+rote:
 >
-> Hi Wolfram, Prabhakar,
+> On 5/29/24 14:06, AngeloGioacchino Del Regno wrote:
+> > Il 29/05/24 11:12, Julien Panis ha scritto:
+> >> On 5/29/24 10:33, Chen-Yu Tsai wrote:
+> >>> On Wed, May 29, 2024 at 4:17=E2=80=AFPM AngeloGioacchino Del Regno
+> >>> <angelogioacchino.delregno@collabora.com> wrote:
+> >>>> Il 29/05/24 07:57, Julien Panis ha scritto:
+> >>>>> From: Nicolas Pitre <npitre@baylibre.com>
+> >>>>>
+> >>>>> Inspired by the vendor kernel but adapted to the upstream thermal
+> >>>>> driver version.
+> >>>>>
+> >>>>> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> >>>>> Signed-off-by: Julien Panis <jpanis@baylibre.com>
+> >>>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@c=
+ollabora.com>
+> >>> I'm getting some crazy readings which would cause the machine to
+> >>> immediately shutdown during boot. Anyone else see this? Or maybe
+> >>> my device has bad calibration data?
+> >>>
+> >>> gpu_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       +229.7 C
+> >>>
+> >>> nna_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       +229.7 C
+> >>>
+> >>> cpu_big0_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:         -7.2 C
+> >>>
+> >>> cpu_little2_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       +157.2 C
+> >>>
+> >>> cpu_little0_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       -277.1 C
+> >>>
+> >>> adsp_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       +229.7 C
+> >>>
+> >>> cpu_big1_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       +229.7 C
+> >>>
+> >>> cam_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:        +45.4 C
+> >>>
+> >>> cpu_little1_thermal-virtual-0
+> >>> Adapter: Virtual device
+> >>> temp1:       -241.8 C
+> >>
+> >> It's likely that your device has bad calibration data indeed. We obser=
+ved the same
+> >> behavior on the mt8186 device we used (a Corsola) and finally realized=
+ that the
+> >> golden temperature was 0 (device not properly calibrated).
+> >>
+> >> To make a comparison, we run chromiumos v5.15 and dmesg output was:
+> >> 'This sample is not calibrated, fake !!'
+> >> Additional debugging revealed that the golden temp was actually 0. As =
+a result,
+> >> chromiumos v5.15 does not use the calibration data. It uses some defau=
+lt values
+> >> instead. That's why you can observe good temperatures with chromiumos =
+v5.15
+> >> even with a device that is not calibrated.
+> >>
+> >> This feature is not implemented in the driver upstream, so you need a =
+device
+> >> properly calibrated to get good temperatures with it. When we forced t=
+his
+> >> driver using the default values used by chromiumos v5.15 instead of re=
+al calib
+> >> data (temporarily, just for testing), the temperatures were good.
+> >>
+> >> Please make sure your device is properly calibrated: 0 < golden temp <=
+ 62.
+> >>
+> >
+> > Wait wait wait wait.
+> >
+> > What's up with that calibration data stuff?
+> >
+> > If there's any device that cannot use the calibration data, we need a w=
+ay to
+> > recognize whether the provided data (read from efuse, of course) is val=
+id,
+> > otherwise we're creating an important regression here.
+> >
+> > "This device is unlucky" is not a good reason to have this kind of regr=
+ession.
+> >
+> > Since - as far as I understand - downstream can recognize that, upstrea=
+m should
+> > do the same.
+> > I'd be okay with refusing to even probe this driver on such devices for=
+ the
+> > moment being, as those are things that could be eventually handled on a=
+ second
+> > part series, even though I would prefer a kind of on-the-fly calibratio=
+n or
+> > anyway something that would still make the unlucky ones to actually hav=
+e good
+> > readings *right now*.
+> >
+> > Though, the fact that you assert that you observed this behavior on one=
+ of your
+> > devices and *still decided to send that upstream* is, in my opinion, un=
+acceptable.
+> >
+> > Regards,
+> > Angelo
 >
-> > -----Original Message-----
-> > From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > Sent: Thursday, June 20, 2024 8:40 AM
-> > Subject: Re: [RFC PATCH v2 3/3] mmc: renesas_sdhi: Add support for RZ/V=
-2H(P) SoC
-> >
-> > Hi Prabhakar,
-> >
-> > > I did give it a try with platform_driver_probe() and failed.
-> >
-> > Ok, thanks for trying nonetheless!
-> >
-> > > - Firstly I had to move the regulator node outside the SDHI node for
-> > > platform_driver_probe() to succeed or else it failed with -ENODEV (at
-> > > https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.=
-c
-> > > #L953)
-> >
-> > This makes sense to me because it is just a "regular" regulator.
-> >
-> > > - In Renesas SoCs we have multiple instances of SDHI, the problem
-> > > being for each instance we are calling platform_driver_probe(). Which
-> > > causes a problem as the regulator node will use the first device.
-> >
-> > I see... we would need a reg property to differentiate between the inte=
-rnal regulators but that is
-> > already used by the parent SDHI node.
-> >
-> > Okay, so let's scrap that idea. However, we need to ensure that we can =
-still have an external
-> > regulator. Seeing the bindings, it looks like you enable the internal r=
-egulator with the "vqmmc-
-> > r9a09g057-regulator"
-> > property? I wonder now if we can simplify this to an "use-internal-regu=
-lator" property because we
-> > have 'compatible' already to differentiate? Needs advice from DT mainta=
-iners, probably.
->
-> Why this cannot be modelled as a regular "regulator" as a child device of=
- SDHI device?
->
-The current implementation does implement the regulator as a child
-device of the sdhi node [0] itself.
+> I've been trying to find some more information about the criteria
+> "device calibrated VS device not calibrated" because there's a
+> confusing comment in downstream code (the comment does not
+> match what I observe on my device). I'll send a separate patch
+> to add this feature over the next few days, when I get additional
+> information from MTK about this criteria.
 
-Wolfram was suggesting to have the regulator outside and use
-platform_driver_probe(), which caused an issue as mentioned above.
+I couldn't wait and sent a patch to provide default calibration data,
+based on the values and code from the ChromeOS kernels. It seems to
+work OK-ish. I get 4x degrees C on my MT8186 device.
 
-[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/2024061309=
-1721.525266-2-prabhakar.mahadev-lad.rj@bp.renesas.com/
+Also, your previous patch blocking invalid efuse data has landed. So
+I think this series can be relanded. What do you think, Angelo?
 
-Cheers,
-Prabhakar
+ChenYu
