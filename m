@@ -1,38 +1,61 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E6126AFB
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1CFB657;
+	Thu, 20 Jun 2024 06:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718865209; cv=none; b=Z4iRj+WpAoYIBB2iHUvsQnVQH8CxKcvRT3ulV6NcYQrxltMIszghxCHoD77fluFvWHIy8bYbJtSe4Hjbiv+lbCA4JVqcaMHrmmFO0tp0xlWobEFPjDfsGWdD9Ts+41SZCEKWzcit+jfSsbnQuvK6fF/TtT2KV6734w6Puq7v+D8=
+	t=1718865211; cv=none; b=TcM1bto0EkywQkfJ/8ciEYvvjh4y7biv3emrgLvGRNi/xpU6lsLBvxvCc3YBVBsj11/lKQWMpmILU3H1JJ5CH1ScYA0WqLBaN0FZXV+9Xvpv75la6qLwWYgFDshJ8H5uKEOeoXXWAjCbxOsogT6rp+diuDhdONDrqZdTyex+kwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718865209; c=relaxed/simple;
-	bh=djDtqmKbWE43ZmKEyGgUp90Vv60j3Wv2QasU7cUbGM4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c5YiSgd8BgSvCCJwHiG7yH7Y1wzWkCI/27B44WxSx7qemea4QRnBMWdF9Z0jji4TfebwchWrmg1SpwvykTR69q87UQEHgHvXbQETXcyPGms+zKCcXfw0woe/6bKCqyD4i8DZNyP22vleH0u6UP0WucDdEPui12ky4AL9aMloKxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W4VtN3wlGznWCZ;
-	Thu, 20 Jun 2024 14:28:28 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 42BB8140120;
-	Thu, 20 Jun 2024 14:33:24 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
- 2024 14:33:23 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<dianders@chromium.org>, <swboyd@chromium.org>, <sumit.garg@linaro.org>,
-	<frederic@kernel.org>, <scott@os.amperecomputing.com>,
-	<misono.tomohiro@fujitsu.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH RESEND v2] arm64: smp: Fix missing IPI statistics
-Date: Thu, 20 Jun 2024 14:36:00 +0800
-Message-ID: <20240620063600.573559-1-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1718865211; c=relaxed/simple;
+	bh=BVtUwaFFCxwF3HQC1MxNYooCWzM/7pCtL2gI1+sOr8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YplG3jLezWq1EXamFkrNbe1xYOQQUmDjHiysvYB0YptW77Ae0zhB6vSFsy/6vJ8jYMtuxK1wQkM6srjx7QIt2FfPFpWRgo6RUlGnWwsW48Wq0Vpy3oXpPL5Qc/2Vmv1c2KtgZkkHzLzLObeSTDA2iWE/Gj8e+Z7Jew4YY+l4q/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=fqO3Djv1; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=YCnYn+Nb reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fqO3Djv1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="YCnYn+Nb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1718865207; x=1750401207;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=l6H8FP2mpqCvryZ//MA7LA1mh1+A8ayGdScvIrjtFiM=;
+  b=fqO3Djv11Bxlsi/wQr2EWjeqN3NLJsruU7AJmrpNmnTLCoHVLSq28mK4
+   3StlZKqepmhFvx+RnzwiVy9ODXSwacBTwQqY9Zx/2JCJez8Nd2OKWaHoZ
+   VECqKFplisPb2pIPsr8Ely6W1wGCx+QaIQFbY7p+IpA07i1hvgPqyoNvM
+   ICPOUtxr5OagJdhrwNjx+sFBoNmwzzre5f5C/al16Srq0WsLPUyiojlGW
+   OWfni7flNUj8RjYeka9EeupUQv7ldbMVV6caxPzcJlNANdBDBXlDr+ja7
+   DBlVf2b0tcj0yVyPvOGs6xKQNQKA1Ks1I+8MS3fRgP/HU1SkKt3PXvrH0
+   w==;
+X-CSE-ConnectionGUID: dAG106jpTombTYn7mPadyw==
+X-CSE-MsgGUID: dcILZs0LSwamU1xqybPwPw==
+X-IronPort-AV: E=Sophos;i="6.08,251,1712613600"; 
+   d="scan'208";a="37488758"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 20 Jun 2024 08:33:23 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CF8CE1668EE;
+	Thu, 20 Jun 2024 08:33:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1718865199; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=l6H8FP2mpqCvryZ//MA7LA1mh1+A8ayGdScvIrjtFiM=;
+	b=YCnYn+NbBgTowwUkiNqIgjt9GDRqWovZyuWTNKRVPlJCienrXqB2B6eD2WGZ9Yma2j4OXz
+	ajT7UfgCst7aFoZ7xMo/U4c8vPGf2NO3PTobZs5We2nebFeVbIOHBaGyiUBRYNQ49XhI0N
+	3geVpD+Z8qsY2OdFCo76JaQUIon8fC1UK5WD9ODfddKQXDYYKnH587RcZpH9ifLH0mOCBS
+	/5gk2anX8cdOwWB58AIxFJIpf2Jw7brFu9SKMCerShCvOLF1SyY7qPCJVQLWVf1MuxX7Dz
+	j4jG5TsA9qqQdPJUN9h0gRORhILf074CyBYPpglQPRD941TLkCACKp36f2xaqA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] media: verisilicon: Move rockchip hardware drivers to the corresponding option
+Date: Thu, 20 Jun 2024 08:33:13 +0200
+Message-Id: <20240620063313.2309767-1-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,99 +64,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+X-Last-TLS-Session-Version: TLSv1.3
 
-commit 83cfac95c018 ("genirq: Allow interrupts to be excluded from
-/proc/interrupts") is to avoid IPIs appear twice in /proc/interrupts.
-But the commit 331a1b3a836c ("arm64: smp: Add arch support for backtrace
-using pseudo-NMI") and commit 2f5cd0c7ffde("arm64: kgdb: Implement
-kgdb_roundup_cpus() to enable pseudo-NMI roundup") set CPU_BACKTRACE and
-KGDB_ROUNDUP IPIs "IRQ_HIDDEN" flag but not show them in
-arch_show_interrupts(), which cause the interrupt kstat_irqs accounting
-is missing in display.
+There is no need to compile the rockchip specific drivers if
+CONFIG_VIDEO_HANTRO_ROCKCHIP is not set.
+All driver functions are only referenced by rockchip_vpu_hw.c which is
+already under this option.
 
-Before this patch, CPU_BACKTRACE and KGDB_ROUNDUP IPIs are missing:
-	/ # cat /proc/interrupts
-	           CPU0       CPU1       CPU2       CPU3
-	 11:        466        600        309        332     GICv3  27 Level     arch_timer
-	 13:         24          0          0          0     GICv3  33 Level     uart-pl011
-	 15:         64          0          0          0     GICv3  78 Edge      virtio0
-	 16:          0          0          0          0     GICv3  79 Edge      virtio1
-	 17:          0          0          0          0     GICv3  34 Level     rtc-pl031
-	 18:          3          3          3          3     GICv3  23 Level     arm-pmu
-	 19:          0          0          0          0 9030000.pl061   3 Edge      GPIO Key Poweroff
-	IPI0:         7         14          9         26       Rescheduling interrupts
-	IPI1:       354         93        233        255       Function call interrupts
-	IPI2:         0          0          0          0       CPU stop interrupts
-	IPI3:         0          0          0          0       CPU stop (for crash dump) interrupts
-	IPI4:         0          0          0          0       Timer broadcast interrupts
-	IPI5:         1          0          0          0       IRQ work interrupts
-	Err:          0
-
-After this pacth, CPU_BACKTRACE and KGDB_ROUNDUP IPIs are displayed:
-	/ # cat /proc/interrupts
-	           CPU0       CPU1       CPU2       CPU3
-	 11:        393        281        532        449     GICv3  27 Level     arch_timer
-	 13:         15          0          0          0     GICv3  33 Level     uart-pl011
-	 15:         64          0          0          0     GICv3  78 Edge      virtio0
-	 16:          0          0          0          0     GICv3  79 Edge      virtio1
-	 17:          0          0          0          0     GICv3  34 Level     rtc-pl031
-	 18:          2          2          2          2     GICv3  23 Level     arm-pmu
-	 19:          0          0          0          0 9030000.pl061   3 Edge      GPIO Key Poweroff
-	IPI0:        11         19          4         23       Rescheduling interrupts
-	IPI1:       279        347        222         72       Function call interrupts
-	IPI2:         0          0          0          0       CPU stop interrupts
-	IPI3:         0          0          0          0       CPU stop (for crash dump) interrupts
-	IPI4:         0          0          0          0       Timer broadcast interrupts
-	IPI5:         1          0          0          1       IRQ work interrupts
-	IPI6:         0          0          0          0       CPU backtrace interrupts
-	IPI7:         0          0          0          0       KGDB roundup interrupts
-	Err:          0
-
-Fixes: 331a1b3a836c ("arm64: smp: Add arch support for backtrace using pseudo-NMI")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
-v2:
-- Report them in arch_show_interrupts().
-- Add suggested-by.
-- Update the commit message.
----
- arch/arm64/kernel/smp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/platform/verisilicon/Makefile | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 31c8b3094dd7..5de85dccc09c 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -767,13 +767,15 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	}
- }
+diff --git a/drivers/media/platform/verisilicon/Makefile b/drivers/media/platform/verisilicon/Makefile
+index eb38a1833b02..f6f019d04ff0 100644
+--- a/drivers/media/platform/verisilicon/Makefile
++++ b/drivers/media/platform/verisilicon/Makefile
+@@ -14,13 +14,6 @@ hantro-vpu-y += \
+ 		hantro_g2.o \
+ 		hantro_g2_hevc_dec.o \
+ 		hantro_g2_vp9_dec.o \
+-		rockchip_vpu2_hw_jpeg_enc.o \
+-		rockchip_vpu2_hw_h264_dec.o \
+-		rockchip_vpu2_hw_mpeg2_dec.o \
+-		rockchip_vpu2_hw_vp8_dec.o \
+-		rockchip_vpu981_hw_av1_dec.o \
+-		rockchip_av1_filmgrain.o \
+-		rockchip_av1_entropymode.o \
+ 		hantro_jpeg.o \
+ 		hantro_h264.o \
+ 		hantro_hevc.o \
+@@ -35,6 +28,13 @@ hantro-vpu-$(CONFIG_VIDEO_HANTRO_SAMA5D4) += \
+ 		sama5d4_vdec_hw.o
  
--static const char *ipi_types[NR_IPI] __tracepoint_string = {
-+static const char *ipi_types[MAX_IPI] __tracepoint_string = {
- 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
- 	[IPI_CALL_FUNC]		= "Function call interrupts",
- 	[IPI_CPU_STOP]		= "CPU stop interrupts",
- 	[IPI_CPU_CRASH_STOP]	= "CPU stop (for crash dump) interrupts",
- 	[IPI_TIMER]		= "Timer broadcast interrupts",
- 	[IPI_IRQ_WORK]		= "IRQ work interrupts",
-+	[IPI_CPU_BACKTRACE]	= "CPU backtrace interrupts",
-+	[IPI_KGDB_ROUNDUP]	= "KGDB roundup interrupts",
- };
+ hantro-vpu-$(CONFIG_VIDEO_HANTRO_ROCKCHIP) += \
++		rockchip_vpu2_hw_jpeg_enc.o \
++		rockchip_vpu2_hw_h264_dec.o \
++		rockchip_vpu2_hw_mpeg2_dec.o \
++		rockchip_vpu2_hw_vp8_dec.o \
++		rockchip_vpu981_hw_av1_dec.o \
++		rockchip_av1_filmgrain.o \
++		rockchip_av1_entropymode.o \
+ 		rockchip_vpu_hw.o
  
- static void smp_cross_call(const struct cpumask *target, unsigned int ipinr);
-@@ -784,7 +786,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
- {
- 	unsigned int cpu, i;
- 
--	for (i = 0; i < NR_IPI; i++) {
-+	for (i = 0; i < MAX_IPI; i++) {
- 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
- 			   prec >= 4 ? " " : "");
- 		for_each_online_cpu(cpu)
+ hantro-vpu-$(CONFIG_VIDEO_HANTRO_SUNXI) += \
 -- 
 2.34.1
 
