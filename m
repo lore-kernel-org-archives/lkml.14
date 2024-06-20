@@ -1,32 +1,48 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA583A1AC;
-	Thu, 20 Jun 2024 08:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061633A1AC;
+	Thu, 20 Jun 2024 08:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718872787; cv=none; b=GK+vTXsNAwnrKR4RFRlBUn/WhSzMLYJ9UGaODdJSQ8w24S98IT3a/IjAY2zUo0bNiEY5YM+y+SUrYJ6AMQIc2h85sHHvblmYrOZZl2deBs5AwCqBKqnml6KLMyu5PXPHkmjhaLV9rebq3UXS9VeSo1406K/R7u+DnMHz4jOC4oc=
+	t=1718872855; cv=none; b=RveszTmCZZ6p9HTFnL2QGF9bHLNid90B26JGmWIJWjL+iy8Sxr6bZF/2cWJZa1xHW3TDvyCqIx2569deR6tPaWCm1h+pw/H9ObdDES0WmXXT2s2QtvjUazkHfM6ujDP8lFq38pHFyuvvT9Klq8/UXbeSLu6LT+6eLRJMgt1zvgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718872787; c=relaxed/simple;
-	bh=ZrwZHFV+13ewVv1PIPqaUmU6Uz5D5zivApM1jrH5YHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bi3Gn86qL4yrvqaDW9DRxOywTy8X9KEcaAzJOeH94Z9tYMRsFM2VeSlMp9LEmF5WvvIjxT9IdLJLZlx+liT9eOKCZqd3Ll0/xigWaTtCxtw5PieBVdbl/dqyD51Z5tQ+dk2eFth5LUbgcoUaoRlfuilAfju19Rdek0Gs7qQZh+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FTu61AyA; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1718872855; c=relaxed/simple;
+	bh=T9c/AzwULmtVSuRIh4jy995d8pfVUHRZXM6im43OF3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CTK0eUB4sh0WeOI+jcdo12JxJY5WApNZvJpBLVRRErpXOJfsYC0ALhHOOm56RJVpjjV6MQEfZbScmxmUboAln1Nvm+thcM5l4ezgoKPzSujCbSkcBnQozs3jxc/Ma4EAJhQbsaG+84dp9smB+sOYX5X6NQABoQ+Rt6EU3I/BsQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=w2VnSADv; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FTu61AyA"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718872781; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hBHfXWhYwtiI+dnajvheMQQED9ly6NUkKrwTjHsfaKk=;
-	b=FTu61AyA0kUYSK0o62iJ2o1Q+PNe38Bims6OfnBVi2uEI/TfA4W373USMWFAAGYPD38hi4f6bCwD/wmdb0ra3u09o7lu/Sqzaozh0FH65yYlmq89fzOyhvfvs9xx4+ejgArvaMMA9MCFL0/IHs3bkItRyEkm7E5kqJvza1emSWA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W8qghtv_1718872459;
-Received: from 30.221.149.144(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W8qghtv_1718872459)
-          by smtp.aliyun-inc.com;
-          Thu, 20 Jun 2024 16:34:22 +0800
-Message-ID: <36b94f6f-befb-45d5-b56a-9871b10c2b0f@linux.alibaba.com>
-Date: Thu, 20 Jun 2024 16:34:18 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w2VnSADv"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45K8eZCe008471;
+	Thu, 20 Jun 2024 03:40:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718872835;
+	bh=fZ9aXf7RFumbeOarN7U1Qbe0conyNks+EiRAd8ZfoNU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=w2VnSADv40EhC0cSx2hIWyLrE+4n5g5arwnVz9rCAq0JJaAhw3oVeR0MgGcf2vd95
+	 ebYVsf93/zIVXq7w9sLexb91PfRWYqqwGyeK2tI603FLQApjZgeC1UlsBSMUuJOV3u
+	 EkP3/q25hHrd7h1UlP5ByVi0ASxSk/H21MGd8pZ8=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45K8eZUJ058461
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 20 Jun 2024 03:40:35 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 20
+ Jun 2024 03:40:34 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 20 Jun 2024 03:40:34 -0500
+Received: from [137.167.6.231] (lt5cg1094w5k.dhcp.ti.com [137.167.6.231])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45K8eVmq108104;
+	Thu, 20 Jun 2024 03:40:32 -0500
+Message-ID: <8dbb30be-3c0c-43c9-8f7a-dbfeeca3837e@ti.com>
+Date: Thu, 20 Jun 2024 11:40:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,70 +50,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: virtio: unify code to init stats
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- Jiri Pirko <jiri@resnulli.us>, linux-kernel@vger.kernel.org
-References: <fb91a4ec2224c36adda854314940304d708d59ef.1718869408.git.mst@redhat.com>
-From: Heng Qi <hengqi@linux.alibaba.com>
-In-Reply-To: <fb91a4ec2224c36adda854314940304d708d59ef.1718869408.git.mst@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 11/17] wifi: cc33xx: Add init.c, init.h
+To: Simon Horman <horms@kernel.org>
+CC: Sabeeh Khan <sabeeh-khan@ti.com>, Kalle Valo <kvalo@kernel.org>,
+        Johannes
+ Berg <johannes.berg@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240609182102.2950457-1-michael.nemanov@ti.com>
+ <20240609182102.2950457-12-michael.nemanov@ti.com>
+ <20240615085133.GA234885@kernel.org>
+Content-Language: en-US
+From: "Nemanov, Michael" <michael.nemanov@ti.com>
+In-Reply-To: <20240615085133.GA234885@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+On 6/15/2024 11:51 AM, Simon Horman wrote:
+...
 
-在 2024/6/20 下午3:44, Michael S. Tsirkin 写道:
-> Moving initialization of stats structure into
-> __free_old_xmit reduces the code size slightly.
-> It also makes it clearer that this function shouldn't
-> be called multiple times on the same stats struct.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->
-> Especially important now that Jiri's patch for BQL has been merged.
-> Lightly tested.
->
->   drivers/net/virtio_net.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 283b34d50296..c2ce8de340f7 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -383,6 +383,8 @@ static void __free_old_xmit(struct send_queue *sq, bool in_napi,
->   	unsigned int len;
->   	void *ptr;
->   
-> +	stats->bytes = stats->packets = 0;
-> +
->   	while ((ptr = virtqueue_get_buf(sq->vq, &len)) != NULL) {
->   		++stats->packets;
->   
-> @@ -828,7 +830,7 @@ static void virtnet_rq_unmap_free_buf(struct virtqueue *vq, void *buf)
->   
->   static void free_old_xmit(struct send_queue *sq, bool in_napi)
->   {
-> -	struct virtnet_sq_free_stats stats = {0};
-> +	struct virtnet_sq_free_stats stats;
->   
->   	__free_old_xmit(sq, in_napi, &stats);
->   
-> @@ -979,7 +981,7 @@ static int virtnet_xdp_xmit(struct net_device *dev,
->   			    int n, struct xdp_frame **frames, u32 flags)
->   {
->   	struct virtnet_info *vi = netdev_priv(dev);
-> -	struct virtnet_sq_free_stats stats = {0};
-> +	struct virtnet_sq_free_stats stats;
->   	struct receive_queue *rq = vi->rq;
->   	struct bpf_prog *xdp_prog;
->   	struct send_queue *sq;
+> 
+> Hi Michael,
+> 
+> allmodconfig builds on x86_64 with gcc-13 flag the following:
+> 
+> In file included from ./include/linux/string.h:374,
+>                   from ./include/linux/bitmap.h:13,
+>                   from ./include/linux/cpumask.h:13,
+>                   from ./arch/x86/include/asm/paravirt.h:21,
+>                   from ./arch/x86/include/asm/irqflags.h:60,
+>                   from ./include/linux/irqflags.h:18,
+>                   from ./include/linux/spinlock.h:59,
+>                   from ./include/linux/mmzone.h:8,
+>                   from ./include/linux/gfp.h:7,
+>                   from ./include/linux/firmware.h:8,
+>                   from drivers/net/wireless/ti/cc33xx/init.c:6:
+> In function 'fortify_memcpy_chk',
+>      inlined from 'cc33xx_init_vif_specific' at drivers/net/wireless/ti/cc33xx/init.c:156:2:
+> ./include/linux/fortify-string.h:580:25: warning: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Wattribute-warning]
+>    580 |                         __read_overflow2_field(q_size_field, size);
+>        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> In function 'fortify_memcpy_chk',
+>      inlined from 'cc33xx_init_vif_specific' at drivers/net/wireless/ti/cc33xx/init.c:157:2:
+> ./include/linux/fortify-string.h:580:25: warning: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Wattribute-warning]
+>    580 |                         __read_overflow2_field(q_size_field, size);
+>        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    CC [M]  drivers/net/wireless/ti/cc33xx/rx.o
+> 
+> I believe that this is because the destination for each of the two memcpy()
+> calls immediately above is too narrow - 1 structure wide instead of 4 or 8.
+> 
+> I think this can be resolved by either using:
+> 1. struct_group in .../cc33xx/conf.h:struct conf_tx_settings
+>     to wrap ac_conf0 ... ac_conf3, and separately tid_conf0 ... tid_conf7.
+> 2. Using arrays for ac_conf and tid_conf in
+>     .../cc33xx/conf.h:struct conf_tx_settings, in which case perhaps
+>     .../wlcore/conf.h:struct conf_tx_settings can be reused somehow
+>     (I did not check closely)?
+> 
 
-Reviewed-by: Heng Qi <hengqi@linux.alibaba.com>
+Thank you for checking. I agree this code should be rewritten so it is 
+more clear and w/o any warnings. Will fix.
 
-Thanks.
+I was unsuccessful reproducing the warning on my end. Tried with GCC 
+13.2.0 (ARCH=x86_64, allmodconfig) and Arm GNU Toolchain 13.2 (ARCH=arm, 
+allmodconfig) and only got errors in scan.c which I assume you refer to 
+below (will also be fixed).
 
+> 
+> Similar errors are flagged elsewhere in this series.
+> Please take a look at allmodconfig builds and make sure
+> no warnings are introduced.
+> 
+> Lastly, more related to the series as a whole than this patch in
+> particular, please consider running checkpatch.pl --codespell
 
+Sure, will add checkpatch.pl --codespell to my tests.
+
+Michael.
