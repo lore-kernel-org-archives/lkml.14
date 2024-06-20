@@ -1,63 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F551DDEE;
-	Thu, 20 Jun 2024 17:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CAB1B0115;
+	Thu, 20 Jun 2024 17:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904683; cv=none; b=kyTwV1+D9Iei5nm2KmJ2ypkMpgcj3/eOJxHru+inD11bYukUtUvFWliyNlVYkzZc1f+iuT1R/n7RWrmLQb97JUaZHQOW8jkxi5q4wFCAxAlO8dPMsrJ17pzE88PMxr114AQO9zORC7d9AIYB/bRF7lwPf/n+si4rOgEvzxZ0cr8=
+	t=1718904706; cv=none; b=GiXic8z61xXib2SZgU0CkUdvJqNDmazaJRMOKWgxR1j8XQl3XqrIB3x8J2bQ7iQEp+Ubb1vZQ+C2dUkUaQ3+ZM0Q6uTwKH8PYRBli8LTtYZorwEZWbFwHKYyDAF/yJ75v9Y3VTBxvJK/I3ukmCVn8qvQbFeZrYJbrC+j96IKdqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904683; c=relaxed/simple;
-	bh=c07EwySV5A8jyBItyxYvOoGB6xh76nUFiW66NCfaRWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e+r6nCzwuCSlsgXflmVcL1PbOLMeXgRJe/HZGzHhv0o3sw8Sl2+SXKtfDqQ2+MG0AcbT5qjRm6S0IgOAZdB0mix17SIH+D+Hoin8jeznjPTlR8crUlyAKrD5NESsGXEXeR1dyWbVIKeMrqbkG+72IZESpw4lQiOkXJedS63ddNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqTtOATU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718904706; c=relaxed/simple;
+	bh=7evSdNdfksg2ZhHrFJaFdIcdcFVuxjES7X/b71KMnxc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oJZl3WPr/hrfYvme4UjicGg3YnM5lJKVdoKMPIN2ZiZp3bn9pHtgF53WuqK6SzAc1SKrFZAGyAdn4PaEtp4g4rxrRF+bmWG6CzFP92g9R9EkuMiKCp6BZHVgdA6+agtfYJP5arjki+/BaUZyMt9klaBTYKvhjSYkzXKRKhRMWvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jezLSFXZ; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqTtOATU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E54C2BD10;
-	Thu, 20 Jun 2024 17:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718904682;
-	bh=c07EwySV5A8jyBItyxYvOoGB6xh76nUFiW66NCfaRWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XqTtOATUvwlDYXLFMQX0a7F6u0ozKkRdNk9dpdW9p+sV9iHMSGhNwFzTuTKaVY0OS
-	 gRSCLXGMnwsH5XJNlQLjm2/Io5kfSfemcVIH22LiBX39gQOUMe2JqIE0dBEFXB7mD2
-	 Iy+RdOZe7GRR81nEm40hlDkq3y6ltI54V9BHcupMlm3Xs4QsH8EXI7t40q77uQMRvy
-	 V/W2Ind/qTVPKWTnJa9irSlCJwd6rk4yzd/rYn5eoKlZU3gmlF08ilWNC3T0HEL7lu
-	 hgyDe4q24UIqdh7JuJmFY2NxOWikW+nHAT3R9Z4wt4UF+2PzhtIntH2XM2Rj2pbZos
-	 kN0W+jAVwNb6A==
-Date: Thu, 20 Jun 2024 18:31:18 +0100
-From: Simon Horman <horms@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH net-next] net: stmmac: unexport stmmac_pltfr_init/exit()
-Message-ID: <20240620173118.GP959333@kernel.org>
-References: <20240619140119.26777-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jezLSFXZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8BEA21C0004;
+	Thu, 20 Jun 2024 17:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718904701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nGe7ZIxhTrUnLPx+BN4mjE44wlAohcewppaRa9xD4qA=;
+	b=jezLSFXZWhWTpieKxaVt425ZwmDKwetPtpG8PLvc1ltklIKCqPohw2ikHrkCHck5it4SWr
+	NIc/ToiemGZ6ZhaLBdGHmjH1ajmq32msq84hvDN8sjERPjwLY0DkVlclnujIWOtk6u/yXE
+	wF2VWCj82710wTXuavNm0DwaN0sjWPfho/MzBN8o6c1cc7usASqldkwCP78h1SISZqt5Xs
+	ZuZcJftSA1af708WoYu9UGgYtNdPUDpmCrJLUipFuLkJSku9hi7a4EL8GM0esQyI9Uq9Hc
+	PM9Ri/dkBY3rhjw75DxNyKSjPb8PvKe3Im2nJ705uKwMPJ6IQDtzdzNzh3bfdA==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Thu, 20 Jun 2024 19:30:53 +0200
+Subject: [PATCH v3 1/9] Revert "dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619140119.26777-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240620-mbly-olb-v3-1-5f29f8ca289c@bootlin.com>
+References: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
+In-Reply-To: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.14.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Jun 19, 2024 at 04:01:19PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> These functions are only used within the compilation unit they're defined
-> in so there's no reason to export them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Switch from one sub-node per functionality in the system-controller to a
+single node representing the entire OLB instance. This is the
+recommended approach for controllers handling many different
+functionalities; it is a single controller and should be represented by
+a single devicetree node.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+The clock bindings is removed and all properties will be described by:
+soc/mobileye/mobileye,eyeq5-olb.yaml
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         | 51 ----------------------
+ 1 file changed, 51 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+deleted file mode 100644
+index 2d4f2cde1e58..000000000000
+--- a/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
++++ /dev/null
+@@ -1,51 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Mobileye EyeQ5 clock controller
+-
+-description:
+-  The EyeQ5 clock controller handles 10 read-only PLLs derived from the main
+-  crystal clock. It also exposes one divider clock, a child of one of the PLLs.
+-  Its registers live in a shared region called OLB.
+-
+-maintainers:
+-  - Grégory Clement <gregory.clement@bootlin.com>
+-  - Théo Lebrun <theo.lebrun@bootlin.com>
+-  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+-
+-properties:
+-  compatible:
+-    const: mobileye,eyeq5-clk
+-
+-  reg:
+-    maxItems: 2
+-
+-  reg-names:
+-    items:
+-      - const: plls
+-      - const: ospi
+-
+-  "#clock-cells":
+-    const: 1
+-
+-  clocks:
+-    maxItems: 1
+-    description:
+-      Input parent clock to all PLLs. Expected to be the main crystal.
+-
+-  clock-names:
+-    items:
+-      - const: ref
+-
+-required:
+-  - compatible
+-  - reg
+-  - reg-names
+-  - "#clock-cells"
+-  - clocks
+-  - clock-names
+-
+-additionalProperties: false
+
+-- 
+2.45.2
 
