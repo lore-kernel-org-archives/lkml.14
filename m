@@ -1,111 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B791AF697;
-	Thu, 20 Jun 2024 15:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05C21ACE94
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 15:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718897773; cv=none; b=AFiUmjcu8lhowQTA9ZpjudZtos8CbGH0GxhdMd+7B8UR7iKNV28mMkM9VkBQzBsfwhuDL2M57jdB+rn5sLb9DCNrVZ/1NbwXiIGWW3kHW2SarujEpVEaiiGRyCiSjwA5Y/wFB3GDdfhjmNNvsAcvO7jfEAiVrolLu4cxToyML90=
+	t=1718897821; cv=none; b=qdV15Fh1Tn9xgWYzSHYgYRY9wObhd8JDyPYP4XipTYotREpsrZFYYrUBIQHOSZ2Em7y7qqb2Cf0At2Loxu2ZJXJkFUuPHV0hpv5JJJRvry5IE6XHAkNvtcvmfKvk8MZLCQCLmW+WZhUilj65yaBo840haQIgge7ZrC0XqTMNPCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718897773; c=relaxed/simple;
-	bh=G86ZpOCbQel56zil7HXk/BgfDvuf7fbDP5Y1Y0ZjcSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mnbpE8d2yr4WUfTTopE1K2UCDX8ZXQM+qxfDEE71HXqoyKm4d1d6mBwbJtKI2RCuEKrCmezJhyvbE0E4XccoZ6elAX8x6Em91bbJzzt5yATDISqO06v3EzQw1u/tlQd/OT/g39Uq9AlP8n45+Jg11G9Lxznf4jDUP51ad8LWGRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kil7NbsQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a5ejUb4N; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718897821; c=relaxed/simple;
+	bh=HmGLrKH86bb7wWe/cZEu3FUJeW6wVd7Bm5N3QuNpaOs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WkixKKKegBCx0NexEo6SFi8GYO2oFrpW8vuoTQsqnPdt7qarefDbE0PlXMeQhA0MxMAAXMPY3/uu4EUo0gczcD7gwF/NGPeGO3tWErgWA1GgVsLB3KbeGaQtXZgaPPnraG/Quj5kRdJUANLUgJqiowRDZOQlsRlW4F8TsQOSUD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nul1kWFN; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kil7NbsQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a5ejUb4N"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718897763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXGSH918z06aphcGtDz/mGBYt1ti++St5iUsrCgtWaU=;
-	b=kil7NbsQH7jdwnMwRQ2mC2ylka48gdZL9tpAv4FRBrjvfMadVogEM1/+WTiQ5+0827VZYf
-	c87nD8aISnp4+va3ls/l3QT4JUHUmDGdZ1asJOWL4kPFTTnTJRVP5Q2pRkALWgamO1+Bn8
-	Y1fTlTo5oicQavQkXt1U/Fb+N+fTagGTI6/BWxaW9iIYjlYZG3iR5PmTDJPTWI2bapYfnN
-	6/I1GWEVy59eJYLHRjt4BUifRIWL9g4077CT2sMjFnpEE+9s/GMWbp572xsNjbd6myuUEk
-	PtVtO85IRdsD7oxfcX2ZOVNgVrryj5061zRuWhrX9hEHVyCYCtMknXO0qgM5DQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718897763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXGSH918z06aphcGtDz/mGBYt1ti++St5iUsrCgtWaU=;
-	b=a5ejUb4NDgy+H/Z5dRXG/oqwib78j7B/Vohrw7KQ3ygD0UP4FgUax97LjpcaGMfAOiPRLp
-	4bsmjqshnDFWC0Dg==
-To: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mike Galbraith <umgwanakikbuti@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 3/3] zram: Shrink zram_table_entry::flags.
-Date: Thu, 20 Jun 2024 17:28:52 +0200
-Message-ID: <20240620153556.777272-4-bigeasy@linutronix.de>
-In-Reply-To: <20240620153556.777272-1-bigeasy@linutronix.de>
-References: <20240620153556.777272-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nul1kWFN"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57d07f07a27so1107400a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718897818; x=1719502618; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h+THsFPGN8gjr0bBD3aAsxqBIwm7mj5o0sxH3kZ9+ps=;
+        b=Nul1kWFNgBli8XtbQ38pZEMvRf6AsJowsV5jyvsJAfv/FmxA4L4pcbwxxw2MPRyYqe
+         6NvLU+Qov5BaVrYuWjdZC3wT4eKwHbADa4YyxGv1CeLic3sU8+oOMrI5qmRXVPDRrva5
+         k/vFOCe80MFOU/EIgs5EiVB9ZvU9yDgnppul314XyN9GFNru7HRLA3JEjs3dCygrSUum
+         kJLNjqsj3/KGEFno9a/GoTAdktcwMsf83g48W/xHrj8T+oluHXuFrFdiBOVrUjNXnSpa
+         6bsJaNbFcNcQj64y8lqMTc+WA3nfTyk02aHjh7Zfea5sUPPR/ccrLWDu5JxUE/AbNfTS
+         EW0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718897818; x=1719502618;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h+THsFPGN8gjr0bBD3aAsxqBIwm7mj5o0sxH3kZ9+ps=;
+        b=ivO7iDAfjLMgAf+zL2bRRmdu08hX+X8hgK6BkgbQMfmmQ2U01qDQ7vS+nGT4lGE5Z9
+         OuGpXhWCD8KE+vFkBIeoLHkUUInsI3nOXnRAMlOGJhFBbG7KWco2rykSPRfM23xPkmAH
+         14jQc+kscy0v9k6PKIhBKKHaqqxVoqz2OCos2sg9do5js5SP3pQ9vQBcV61EtWa+fCiY
+         Jylg+hGJGAF5i/6Vkn6V7sBihziHhII5nYRftYPDwtpigzkdWQ/qeETUiY5d2/vmmY9Z
+         Q/0OcUMDQLZyx/i6ePKcwoPJHBA2Gl8pwfTNTsQMZneUTQaiWph22B2hBtP4WaAReWpg
+         +Q8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVEIU9NmP1gR+oEh/TW/UD8O/vwRTZdkYM8vRvsLPIzyqabP8R4khOEYbQ9tjPiZGmqADnfIMdjMA1BuK0tnJEDT6zIE88RzsbOqj7g
+X-Gm-Message-State: AOJu0YymLBfunXqPkt/kLEDevz2bPsYP6kTMtBvM8Zig8+Nqo1RYYkB+
+	ycjathzU8MVgdENsCGkq8/5E2s8NAcHV063nT5iv3C0DFl1viEUi
+X-Google-Smtp-Source: AGHT+IEasFa8cRm9xlCbtGgdQjNqoQ8OdLMrpJRc5agaNrI9TmMh2PSq4m5lC7Bv/kNVbYD0j/GiHQ==
+X-Received: by 2002:a17:906:81cf:b0:a6f:7826:41ea with SMTP id a640c23a62f3a-a6fab646fa0mr308711366b.39.1718897817757;
+        Thu, 20 Jun 2024 08:36:57 -0700 (PDT)
+Received: from ?IPV6:2a02:908:1980:aac0::b958? ([2a02:908:1980:aac0::b958])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f57b5e7b2sm774523466b.68.2024.06.20.08.36.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 08:36:57 -0700 (PDT)
+Message-ID: <70674dc7-5586-4183-8953-8095567e73df@gmail.com>
+Date: Thu, 20 Jun 2024 17:36:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+To: visitorckw@gmail.com
+Cc: akpm@linux-foundation.org, jserv@ccns.ncku.edu.tw,
+ linux-kernel@vger.kernel.org, lkml@sdf.org, alexdeucher@gmail.com
+References: <20240113031352.2395118-3-visitorckw@gmail.com>
+Subject: Re: [PATCH 2/2] lib/sort: Optimize heapsort with double-pop variation
+Content-Language: en-US
+From: Julian Sikorski <belegdol@gmail.com>
+In-Reply-To: <20240113031352.2395118-3-visitorckw@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The zram_table_entry::flags member is of type long and uses 8 bytes on a
-64bit architecture. With a PAGE_SIZE of 256KiB we have PAGE_SHIFT of 18
-which in turn leads to __NR_ZRAM_PAGEFLAGS =3D 27. This still fits in an
-ordinary integer.
-By reducing it the size of `flags' to four bytes, the size of the struct
-goes back to 16 bytes. The padding between the lock and ac_time (if
-enabled) is also gone.
+Hello,
 
-Make zram_table_entry::flags an unsigned int and update the build test
-to reflect the change.
+it appears that this patch has caused suspend-to-idle regression:
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- drivers/block/zram/zram_drv.c | 3 ++-
- drivers/block/zram/zram_drv.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+https://gitlab.freedesktop.org/drm/amd/-/issues/3436
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 659966e00c300..a35d4bd2e60ef 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -2412,9 +2412,10 @@ static void destroy_devices(void)
-=20
- static int __init zram_init(void)
- {
-+	struct zram_table_entry zram_te;
- 	int ret;
-=20
--	BUILD_BUG_ON(__NR_ZRAM_PAGEFLAGS > BITS_PER_LONG);
-+	BUILD_BUG_ON(__NR_ZRAM_PAGEFLAGS > sizeof(zram_te.flags) * 8);
-=20
- 	ret =3D cpuhp_setup_state_multi(CPUHP_ZCOMP_PREPARE, "block/zram:prepare",
- 				      zcomp_cpu_up_prepare, zcomp_cpu_dead);
-diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-index 262fa960a0783..531cefc666682 100644
---- a/drivers/block/zram/zram_drv.h
-+++ b/drivers/block/zram/zram_drv.h
-@@ -66,7 +66,7 @@ struct zram_table_entry {
- 		unsigned long handle;
- 		unsigned long element;
- 	};
--	unsigned long flags;
-+	unsigned int flags;
- 	spinlock_t lock;
- #ifdef CONFIG_ZRAM_TRACK_ENTRY_ACTIME
- 	ktime_t ac_time;
---=20
-2.45.2
+In brief, my laptop fails to suspend completely with the following error 
+in the log:
 
+Jun 18 12:42:20 kernel: amd_pmc AMDI0005:00: Last suspend didn't reach 
+deepest state
+
+Power consumption remains high enough that my battery has already 
+unexpectedly drained twice before I noticed something was off.
+I am not entirely sure how changes to sorting function can influence 
+suspend, but it is what it is. 6.9.5 as shipped by Fedora 40 exhibits 
+the issue, 6.9.5 as shipped by Fedora with the patch reverted does not.
+
+Best regards,
+Juliam
