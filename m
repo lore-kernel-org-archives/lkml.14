@@ -1,192 +1,173 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958A47711C;
-	Thu, 20 Jun 2024 21:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0377711C;
+	Thu, 20 Jun 2024 21:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718919669; cv=none; b=ObMnPntmVGsG2ZolQ4g/6poRJoaKxy7JSHoM5hZbrD7qVobT7hhwgb4QjJ3LJI/XkA1GoPeqZpxA5Bdoe2Zx5ajyaeR6hxjVig/dpDQ5i4RaxhrleFM5qwyF+ZGjzpooWXzDhcNUKonllkjTRqvNaf+b7/bvgbfKOOSK3HJud2s=
+	t=1718919697; cv=none; b=pOB8/Pd2A06X2KOAfOKPuTYtgRsppNNCUQNqUWKi3t20jEZ+KD0jmeVu4bs/eMIsPwL4yKKApvKc9rRf3/duY5ZXa2v54xCXX2oW/6AUUFqNq+0pTxw3Pmj0myZ1sbPWHUV+l27pmjAAM+85/1mjvJhlqywqjdG62dhtIkNnGpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718919669; c=relaxed/simple;
-	bh=WpuU19vmTKbofK2gQplueUgolsFBx2pt9q8yJbUln0s=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=PFwpj+H1tMnidRdkcOK1kcraO/lQuB4qfZ3VcJf8l7NVAmvtMdPgoQoEHHvvVEHZD70oCgonUuUpocmzTEIIhU7XJNggoocFIk7n+6T53iWd6mqxIHHAj6ft1qLn/ssOGvC/xoJw6WiAQZsg1FhfM7BuST/0Kzip6+XHVTnOUMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=pVEHlSzw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UY+YRFuP; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1718919697; c=relaxed/simple;
+	bh=vbAkHPyxQJKvrZOpd0V6g/xS2jek6xR7ZCrWT2d2z2U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ErYGhsdfTO/Z/ZOD7O/+AX+sY+9EVAMVUAL/YgnJ4WCIo6LPOfP4CKowkkZ1uRWYNVJa+xHWZhXPvxSnan+tUGMymTaA41N6JtjUMEeplqKMA/onJJD+inX+B+0eGnV8ljYhYLnqC6y8wqoQVO87tJOR0a78rcyeJlsORlxrtCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVtejsEA; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="pVEHlSzw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UY+YRFuP"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 90C801140185;
-	Thu, 20 Jun 2024 17:41:06 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Thu, 20 Jun 2024 17:41:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1718919666; x=1719006066; bh=zCnYiIjAkA
-	sr6vmZnoznJvVH6yAn3CfED7lE05yJcBU=; b=pVEHlSzwLXoiO66HAPQAOLBzIy
-	SIOhM0gaW+8CgOagQiYqYeS0QU1n/Xf6tDNlVe8hPeUBTuR6QP6tHs5MmtsBDWzn
-	NqvvK+8oL+YFdTdUFy8F71MvMUASk21XZkTGx4LCWZOo0mmw/rXEq6qqklaKl0SB
-	tjqZjNrA5v/qxPD+VpEDDHSpxSgvqt4RbqXCuzadH2JBgXjbMajljZPBpmoYI3jF
-	vFUg0LrHxDtWXovcJ/8G1l4dmMUK0FUa3UVXs36bm7IKsBeHsMd2oDZ8GfASohte
-	+xnRb9LazezXdrZ6kJbP4NKj97hmX+ECzn+Uj7zM0Q4qcm3Idcg45SmSBBXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1718919666; x=1719006066; bh=zCnYiIjAkAsr6vmZnoznJvVH6yAn
-	3CfED7lE05yJcBU=; b=UY+YRFuPInKuSX2AgEJqyGLGpGKHt4ffqpf/HDx2RkR+
-	W2TeoJiPByYSjIv7siFzuKIRlu4tEVB1SmiFYv28cz7zDkbcS+DHsKbxuqqBkPPY
-	PIGb9eYY9ydVnZMMwEVnBl/SYnyK2N6yjTc14mTk6QKjd439EzlNGhbENj71KzUz
-	FJ1kZSnad343Uczbv9nAR1HYDnY1uVMNv4WoZxoiGlXQVMjeH0MSXTQ2IdXwgjGz
-	X7qT+Xmw6ucZ/hmfDa7X6cfAmNQGjDoiZfHOOqkZB6O6ZPNoDEMHLIOXnksVWntw
-	stHEG2qqh6sI/uNsuKn6tqndslzLmMbU6b3bEsUQDw==
-X-ME-Sender: <xms:8aF0ZkC-ezlRi_rO5EbkMRKrF9EbmOU9hzADB6tcWoHu11d-BqTcvQ>
-    <xme:8aF0Zmidk9FDp31QKIZaWzXYP4cla8D2eNXy7CionmnXzkpiM51nm0G9eCdoMW0Tn
-    k9STZB6dbitAuBOhJ4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeffedgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpedutdelgfdvgeekueeuteevffelfedukeeitedugfdvtdeutdetjeduudeuvdeg
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:8aF0ZnnNhR5JfdkqWVEwZNztwByosnXyuPwizIeNiEO9lwKP8PBKIw>
-    <xmx:8aF0ZqyeAtRTWhvLD-QX3Inj0hBw4uKk-C9xtx_yTim3O_fkri0A1w>
-    <xmx:8aF0ZpTbf0oaLvkA1xAoTdtC0I2ko3jDh24pQeN5ASkYdEtxKup46Q>
-    <xmx:8aF0ZlYSDt0yiGkt6BTaTprWSZ69NfQUmAXq_VgmDlkUKWr3JYlZDw>
-    <xmx:8qF0ZiKQowSrKxFjEI7A7muK-jBjeQMeGzUNkxq1oB53yNxTFzz6RpHY>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A954A2340080; Thu, 20 Jun 2024 17:41:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVtejsEA"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42172ed3597so8484725e9.0;
+        Thu, 20 Jun 2024 14:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718919694; x=1719524494; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7lsrrw77oxpiIkWcss0CP9IPfmUQTvp1O3LL2rk/XGQ=;
+        b=YVtejsEAgOO2jWbso+yh/lWjMvgFSmXrFZG01qrgBt2OUCus72dvS9te/Kpe86eBU3
+         hZrq0oWbdK20WN6D8pk0+D/1tPd4WunoJ3LTew9X5B/Ldc7XY12oJ0ChjZrUHNUjA3tO
+         YZ3HmX7oRY/EnsG4NQS/O9MZHUWoV1RlFfDRy20ox1Nz1/pL19ub9U1N6xbhox8f4e6r
+         5P10xF9SiHiM3DKzcIsZbbOTwnUZ9Owp3dDl5u4dkgYpd2Gpm4MqLDqo/hWU/G9dqyMq
+         /rgbdRdHvT+RpNSOdjjKOLqUAcmFlOrjziElky/+nEv/Owo01IgOwCkGSpHFh/XtYUMx
+         H9tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718919694; x=1719524494;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7lsrrw77oxpiIkWcss0CP9IPfmUQTvp1O3LL2rk/XGQ=;
+        b=e/HWGZPx3ZOc05gYzWj/X483DVhl7slB0l5b1Md6e0lyIo0l94e8kUcnG2ngflyWy7
+         hDKW6n4zESdtaJHq9thWXC45p5+axnv1gRNtO+sHl2pkXUeAdD2OWEoHV8qMxNtG2pzr
+         1QiwhPSD/zyJX3fD0lcsw83IiQbAwpOjf3Tk3CTYDImFk9OQx7GFpCYLGGe6YAzs8EWk
+         nCcwzwXqFmGWS420Km9S8Oiz52ENzPdkKbYjtSwH93AFN5F/FBELW+zYfR2Q4kgVoQtN
+         l6GLmsVUJnHTMMFTMW8C2FP5oiQBy9i0m9Ly81PJKnXnlNTURfkyP+bhqKguwM9ZolFx
+         y0pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXOJUYi37eUu+GLdmNE+lrwLkKzZRI/TOut6X6xWbh2JegEU5nrmcbRtWz2gj5YvHEVrba4IU9XIdh/Ky5Z5FOsF5vmlvbAw5uO8hfpoLgn2zpukk0HXB7dfAZAQrRLqDLNtu9BRaUTasjjj4NJPbg9iAbinE0pexcH3E2VfJpZGTdBIY=
+X-Gm-Message-State: AOJu0YwjBA0Isgw3YLImFvI09IVtyLZW2jtAM0zWzarebn/32J+8tPGr
+	T3xMcW7SgZc60H7NEhsHqiztNIqRZwI5r/C9Eo7Dmk2TRnw7EEKRPDL8oQ==
+X-Google-Smtp-Source: AGHT+IExNYfgD0NQCIlp8a2ElvIm67e6OhmMMfWX1lbDwM8oYXeHQJdCcakaUWHsRZXj7OXtwWlLLw==
+X-Received: by 2002:a05:600c:3587:b0:421:661d:89d6 with SMTP id 5b1f17b1804b1-42474d34551mr68935215e9.14.1718919693565;
+        Thu, 20 Jun 2024 14:41:33 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366383f68acsm48866f8f.2.2024.06.20.14.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 14:41:32 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [PATCH v7 00/20] leds: leds-lp55xx: overhaul driver
+Date: Thu, 20 Jun 2024 23:03:16 +0200
+Message-ID: <20240620210401.22053-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ede8505f-bcf6-403e-bda2-6848cd4ff4c7@app.fastmail.com>
-In-Reply-To: <20240620082223.20178-2-dev@doubly.so>
-References: <20240620082223.20178-1-dev@doubly.so>
- <20240620082223.20178-2-dev@doubly.so>
-Date: Fri, 21 Jun 2024 09:40:45 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Devin Bayer" <dev@doubly.so>, corentin.chary@gmail.com
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: support camera disable LED
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Jun 2024, at 8:22 PM, Devin Bayer wrote:
-> Support the LED on F10 above the crossed out camera icon.
-> 
-> Signed-off-by: Devin Bayer <dev@doubly.so>
-> ---
-> drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++
-> include/linux/platform_data/x86/asus-wmi.h |  2 ++
-> 2 files changed, 38 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f9b6285c9a6..5585f15e7920 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -73,6 +73,7 @@ module_param(fnlock_default, bool, 0444);
-> #define NOTIFY_LID_FLIP_ROG 0xbd
->  
-> #define ASUS_WMI_FNLOCK_BIOS_DISABLED BIT(0)
-> +#define ASUS_WMI_DEVID_CAMERA_LED 0x00060079
->  
-> #define ASUS_MID_FAN_DESC "mid_fan"
-> #define ASUS_GPU_FAN_DESC "gpu_fan"
-> @@ -238,6 +239,7 @@ struct asus_wmi {
-> struct led_classdev lightbar_led;
-> int lightbar_led_wk;
-> struct led_classdev micmute_led;
-> + struct led_classdev camera_led;
-> struct workqueue_struct *led_workqueue;
-> struct work_struct tpd_led_work;
-> struct work_struct wlan_led_work;
-> @@ -1642,6 +1644,27 @@ static int micmute_led_set(struct led_classdev *led_cdev,
-> return err < 0 ? err : 0;
-> }
->  
-> +static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
-> +{
-> + struct asus_wmi *asus;
-> + u32 result;
-> +
-> + asus = container_of(led_cdev, struct asus_wmi, camera_led);
-> + asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED, &result);
-> +
-> + return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
-> +}
-> +
-> +static int camera_led_set(struct led_classdev *led_cdev,
-> +    enum led_brightness brightness)
-> +{
-> + int state = brightness != LED_OFF;
-> + int err;
-> +
-> + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CAMERA_LED, state, NULL);
-> + return err < 0 ? err : 0;
-> +}
-> +
-> static void asus_wmi_led_exit(struct asus_wmi *asus)
-> {
-> led_classdev_unregister(&asus->kbd_led);
-> @@ -1649,6 +1672,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
-> led_classdev_unregister(&asus->wlan_led);
-> led_classdev_unregister(&asus->lightbar_led);
-> led_classdev_unregister(&asus->micmute_led);
-> + led_classdev_unregister(&asus->camera_led);
->  
-> if (asus->led_workqueue)
-> destroy_workqueue(asus->led_workqueue);
-> @@ -1740,6 +1764,18 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
-> goto error;
-> }
->  
-> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
-> + asus->camera_led.name = "platform::camera";
+This long series is (as requested) a big overhaul of the lp55xx based
+LED driver.
 
-What do other devices label their camera LED as? The one I could find appears to use `<vendor>::camera`. So maybe `asus::camera` would be better? This also keeps in line with `asus::kbd_backlight`.
+As notice for these kind of LED chip there was the bad habit of copy
+the old driver and just modify it enough to make it work with the new
+model. Till v4 I was also doing the same by following the pattern and
+the code format of previous driver.
 
-> + asus->camera_led.max_brightness = 1;
-> + asus->camera_led.brightness_get = camera_led_get;
-> + asus->camera_led.brightness_set_blocking = camera_led_set;
-> +
-> + rv = led_classdev_register(&asus->platform_device->dev,
-> + &asus->camera_led);
-> + if (rv)
-> + goto error;
-> + }
-> +
-> error:
-> if (rv)
-> asus_wmi_led_exit(asus);
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd6773ad..b3c35e33f1e7 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -50,6 +50,8 @@
-> #define ASUS_WMI_DEVID_LED5 0x00020015
-> #define ASUS_WMI_DEVID_LED6 0x00020016
-> #define ASUS_WMI_DEVID_MICMUTE_LED 0x00040017
-> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG 0x00060078
-> +#define ASUS_WMI_DEVID_CAMERA_LED 0x00060079
->  
-> /* Backlight and Brightness */
-> #define ASUS_WMI_DEVID_ALS_ENABLE 0x00050001 /* Ambient Light Sensor */
-> -- 
-> 2.45.2
-> 
+Since Lee didn't like this, here is the BIG series that generalize
+pretty much anything in the 4 model currently supported.
 
-I'll defer final review to Hans and Ilpo to be sure I've not missed anything, otherwise it LGTM pending the one comment above.
+Indeed, although the LED chip have fundamental difference (page
+support), things can be generalized and produce slimmer drivers by
+putting everything in the lp55xx-common shared module.
+
+This result in the new model lp5569 being very small with only the
+selftest portion to be custom.
+
+Lee also wasn't clear by the meaning of ENGINE in these LED driver,
+so here some simple explaination. This is very common on these TI LED
+chip. The ENGINE (there are always 3) is just some kind of processor
+that execute a program (precompiled code ASM like) loaded in the SRAM.
+Sysfs is used to load the pattern, and to start and stop the engine.
+
+These pattern can do all kind of complex thing with LEDs. Old LED chip
+had 32bytes of space for the pattern but newer one (like lp5569) have
+pages and if correctly configured can have massive pattern.
+These pattern can do all kind of magic like loops that make the LED
+pulse, change color and all kind of stuff.
+
+(For Lee, sorry if you will have to repeat some review that I might
+ have missed in the lp5569 driver)
+
+Changes v7:
+- Add Suggested-by tag
+- Fix checkpatch error for complex macro (rework define)
+- Add missing values for fader conversion
+- Align some function with redundant new line
+- Capitalize every commit title
+Changes v6:
+- Fix compilation warning for ret unused in read_poll_timeout
+  (no idea why this is flagged only on some particular arch...)
+- Fix missing bitfield.h in lp55x-common.c (again it seems this
+  header gets included in the flow if the arch use them or not...)
+Changes v5:
+- Big generalization patch
+- Rework lp5569 driver with new generalized functions
+- Drop all copyright header in lp5569 as the driver got reworked
+  entirely and it's not based on previous one anymore.
+Changes v4:
+- Fix reported buffer overflow due to a copypaste error
+- Add comments to describe fw size logic
+Changes v3:
+- Add ACK tag to DT patch
+- Enlarge and support program size up to 128bytes
+Changes v2:
+- Add ACK tag to DT patch
+- Fix compilation error with target that doesn't
+  include bitfield.h
+
+Christian Marangi (20):
+  dt-bindings: leds-lp55xx: Limit pwr-sel property to ti,lp8501
+  dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
+  leds: leds-lp55xx: Generalize stop_all_engine OP
+  leds: leds-lp55xx: Generalize probe/remove functions
+  leds: leds-lp55xx: Generalize load_engine function
+  leds: leds-lp55xx: Generalize load_engine_and_select_page function
+  leds: leds-lp55xx: Generalize run_engine function
+  leds: leds-lp55xx: Generalize update_program_memory function
+  leds: leds-lp55xx: Generalize firmware_loaded function
+  leds: leds-lp55xx: Generalize led_brightness function
+  leds: leds-lp55xx: Generalize multicolor_brightness function
+  leds: leds-lp55xx: Generalize set_led_current function
+  leds: leds-lp55xx: Generalize turn_off_channels function
+  leds: leds-lp55xx: Generalize stop_engine function
+  leds: leds-lp55xx: Generalize sysfs engine_load and engine_mode
+  leds: leds-lp55xx: Generalize sysfs engine_leds
+  leds: leds-lp55xx: Generalize sysfs master_fader
+  leds: leds-lp55xx: Support ENGINE program up to 128 bytes
+  leds: leds-lp55xx: Drop deprecated defines
+  leds: leds-lp5569: Add support for Texas Instruments LP5569
+
+ .../devicetree/bindings/leds/leds-lp55xx.yaml |  11 +
+ drivers/leds/Kconfig                          |  16 +-
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lp5521.c                    | 405 +---------
+ drivers/leds/leds-lp5523.c                    | 734 ++---------------
+ drivers/leds/leds-lp5562.c                    | 261 +-----
+ drivers/leds/leds-lp5569.c                    | 544 +++++++++++++
+ drivers/leds/leds-lp55xx-common.c             | 743 +++++++++++++++++-
+ drivers/leds/leds-lp55xx-common.h             | 163 ++--
+ drivers/leds/leds-lp8501.c                    | 313 +-------
+ 10 files changed, 1540 insertions(+), 1651 deletions(-)
+ create mode 100644 drivers/leds/leds-lp5569.c
+
+-- 
+2.45.1
+
