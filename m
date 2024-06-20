@@ -1,136 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (smtp-77.smtpout.orange.fr [80.12.242.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFFC1CD5C3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97C61BA09A
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904846; cv=none; b=t0OWIPvBl3U/qye8Tn18W9Nz5KxxfFuj53T6N6sqnTvgKnfn7AYfg/jY67AoZzeoeERdMaj6XJr6ViDoVupHOmLLo3gRBZ5U/lhj1TzavLcmYe827VXa5s/+y2fiH+lI7J3dkDc44JcJf0wHQfCy1dioR6imVjWrrjHmKKflDzY=
+	t=1718904848; cv=none; b=tFRcSrrRGFoGhRZa/TLToWbIQOhePw0NXZVmIIQnwoD5m7u8ynzCDZTyw94R2HSQjsyTpBtoVfHN2jhKUkEEJYWA4ApLGQT+3UDYD9Lxke4JKUoYd4fDsvulybHehaHOdCdCWtHYydSOrHB/Dxghg6M5PhmfeW1saNP2N05ISKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904846; c=relaxed/simple;
-	bh=3UMfps3MS4tY9CuK1J7SRtFHrACvZi/2d9Tc1nHpwWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k8zFqncD09bE6f3XU2Uyjrc0zEIZa4CgG501aTiIfTKAOSOfCgeAcJNnauxegqFyGHNZHk1QLRiImDjhS8Uqpt+b2nYDmNlq3w6p9aBHNN6eKgRgpjItg3i/IzUTzGWdrgp88H9G4i4Jr3la8ygHETvcXcvV4wAR7+Ig99peErE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e1uhkUpz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718904848; c=relaxed/simple;
+	bh=glSNTHtUeLu/rcOgC88ua7XDaG1Mf2HXiQ2NF9aDl2I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eUqUyg93EmtvtCOe1TZzVSwZ1qeXs+big7/p32Rrd7X1AhDNEWOpZShRTe7lfLZEi6rKUrBslsNcORapWFPfEJB+8Ah1cwUjLymBgXhiQv0iYSxtigIM4YM5PFBVmIaUl8svUBC8bX+weOcgsUcyOuAg9L+Xj3Q+F7eUOpeDbWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LCHf4C89; arc=none smtp.client-ip=80.12.242.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e1uhkUpz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718904844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OdyodcaxIsN9yjCj5kMWkPV/Ay0KIsoiyQ6+poCT0PE=;
-	b=e1uhkUpzqsdcm+5rJaPcoxE7KWYYsD3HjDJXmg2yu5UHaywIqwNIwkXfHVLy5L/h/VIobd
-	Nd/9eHD4Pt+LhXdCW6XLRBkZTGTa8t1sb/0AeY7pZBXzeayEIZieF9uGD/uyW3KLrpUL99
-	CEOxoWrJ2x6BcDjhBaSNttVjyGVXWkI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-kf0yI3oINji29pOmCBJ72w-1; Thu,
- 20 Jun 2024 13:34:01 -0400
-X-MC-Unique: kf0yI3oINji29pOmCBJ72w-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8CFEC1956063;
-	Thu, 20 Jun 2024 17:33:58 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.39.195.156])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9316B3000218;
-	Thu, 20 Jun 2024 17:33:52 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 16/17] afs: Make read subreqs async
-Date: Thu, 20 Jun 2024 18:31:34 +0100
-Message-ID: <20240620173137.610345-17-dhowells@redhat.com>
-In-Reply-To: <20240620173137.610345-1-dhowells@redhat.com>
-References: <20240620173137.610345-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LCHf4C89"
+Received: from [192.168.1.37] ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id KLWwsKMFAqHypKLWwsGfEA; Thu, 20 Jun 2024 19:25:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718904306;
+	bh=pGtxUi0q5KWmIR/HywCcJYufwKCE48nhOS8YwL6MY4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=LCHf4C89oYikuXb2G6s7kd2wUa1Ma61h/Ihh5IqXeuDm50Su7uf1qYCwPAxV2z/Y7
+	 i51fac2YWe/dxNdwxuAedRCfan7Tr+ISOr4NzNxH0TbjKuw6hE7jQbNKhyQZZzygoR
+	 IRc+gw3wQAhW6Z3ecfFZyDthu/JIqh4ptrEDwzHXnBmQYUar8fzz49MDpu4I/hzyki
+	 CoPnP2NjaiPNYyuC+cT0/alwen8jcP8RxwWFkXtgKiGzJY5qtrc0j1QyfxSv5TEk/W
+	 WdWqsygVNmD6hiF04ht5/N/syBu77fQPtiynsbKLWmq64ouXGvYebcTgxEig9wbSnZ
+	 TnQfZMfliFJEQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 20 Jun 2024 19:25:06 +0200
+X-ME-IP: 86.243.222.230
+Message-ID: <50ae9a6f-309b-45ee-adf3-ced54e2cfe57@wanadoo.fr>
+Date: Thu, 20 Jun 2024 19:25:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/panel-xinpeng-xpp055c272: add check for
+ mipi_dsi_dcs_enter_sleep_mode
+To: Chen Ni <nichen@iscas.ac.cn>, neil.armstrong@linaro.org,
+ quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240620074802.852544-1-nichen@iscas.ac.cn>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240620074802.852544-1-nichen@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Perform AFS read subrequests in a work item rather than in the calling
-thread.  For normal buffered reads, this will allow the calling thread to
-copy data from the pagecache to the application at the same time as the
-demarshalling thread is shovelling data from skbuffs into the pagecache.
+Le 20/06/2024 à 09:48, Chen Ni a écrit :
+> Add check for the return value of mipi_dsi_dcs_enter_sleep_mode() and
+> return the error if it fails in order to catch the error.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>   drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
+> index 22a14006765e..d7c9df673f35 100644
+> --- a/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
+> +++ b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
+> @@ -139,7 +139,7 @@ static int xpp055c272_unprepare(struct drm_panel *panel)
+>   	if (ret < 0)
+>   		dev_err(ctx->dev, "failed to set display off: %d\n", ret);
+>   
+> -	mipi_dsi_dcs_enter_sleep_mode(dsi);
+> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+>   	if (ret < 0) {
+>   		dev_err(ctx->dev, "failed to enter sleep mode: %d\n", ret);
+>   		return ret;
 
-This will also allow the RA mark to trigger a new read before we've
-finished shovelling the data from the current one.
+Reviewed-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Note: This would be a bit safer if the FS.FetchData RPC ops returned the
-metadata (including the data version number) before returning the data.
-This would allow me to flush the pagecache before installing the new data.
+See: 
+https://lore.kernel.org/all/6e3a8cb3956fe94f1259c13053fddb378e7d0d82.1619878508.git.christophe.jaillet@wanadoo.fr/
 
-In future, it may be possible to asynchronously flush the pagecache either
-side of the region being read.
+which never got any feedback.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/afs/file.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index c3f0c45ae9a9..addb106dba4c 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -304,8 +304,9 @@ int afs_fetch_data(struct afs_vnode *vnode, struct afs_read *req)
- 	return afs_do_sync_operation(op);
- }
- 
--static void afs_issue_read(struct netfs_io_subrequest *subreq)
-+static void afs_read_worker(struct work_struct *work)
- {
-+	struct netfs_io_subrequest *subreq = container_of(work, struct netfs_io_subrequest, work);
- 	struct afs_vnode *vnode = AFS_FS_I(subreq->rreq->inode);
- 	struct afs_read *fsreq;
- 
-@@ -324,6 +325,12 @@ static void afs_issue_read(struct netfs_io_subrequest *subreq)
- 	afs_put_read(fsreq);
- }
- 
-+static void afs_issue_read(struct netfs_io_subrequest *subreq)
-+{
-+	INIT_WORK(&subreq->work, afs_read_worker);
-+	queue_work(system_long_wq, &subreq->work);
-+}
-+
- static int afs_symlink_read_folio(struct file *file, struct folio *folio)
- {
- 	struct afs_vnode *vnode = AFS_FS_I(folio->mapping->host);
-
+CJ
