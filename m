@@ -1,186 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380551AD4B9;
-	Thu, 20 Jun 2024 16:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C551B14F3;
+	Thu, 20 Jun 2024 16:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900957; cv=none; b=I7VIfIq8YmzF5BUjtPhj4I+K/qPbRQ4Wi1cDc5/16IHUxvG86I/rzn+H5a5LezbArNAYUANfeK0d8d88DI/oAJqvL7fXb2HeBvax8g4R3hdmWQ7/U5AQDLWzxoryiYCIBwqN/VJBgrN0iX3RWJn8tq4Il8LESptftT0vhqHwSmA=
+	t=1718900967; cv=none; b=MZ6bCX+gY+GpNbYy1eNCJaFYcH3d4p+nuYQrEDrvfHXiI5J1knkJuZkNuFVoloYVivdfg4XiiUoNZjNXO5+nCEzanxceNfGaBzxwKbz5yQDALqcae0q1MyDC4GE+ES13NCC+f8+HJ53xnbdB6uMon2v/cbrlAngmSeAFLMt7TtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900957; c=relaxed/simple;
-	bh=BrICMMZrS8m6MYe0kQ4cVRc55ARLzaghyayTnAQ5YTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sy4vioTgC+WpBYXAxMn3i+nIgP45rWGBp5seIsTfnBCNjBwD8Kybjm+WUypLltTxoqBGfxMT/KS6TBqBIgPnlYQRYreWLI1rAnwBTTpi3VlHNQ/bZhgmLFuR4sW8ZaoeJFUp5nSPueCBgWn9aUCa2noQPrmbUj/Rcv1BiVYqDh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfRWGxIY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718900967; c=relaxed/simple;
+	bh=gSIt3+G/QszBV7cGLl2s1UNJ+sC0tb7bYBXBmuIdkEY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=Vth9UA2si16F3CmQFLDv9tyciCCanyxbIgfWb3zt/OPFLhTnAkK7LPyHZoAD4ZWtyquz0LDP/j+qC5g2brGwSmKir9V67liIttr70bw3rJSVqg6expBl58j1Gk0RbEJtPuV9n3+O99fmxO8buwMEzEu6R0H9jn058mjj9dwVk3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U/TedfsA; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfRWGxIY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16970C2BD10;
-	Thu, 20 Jun 2024 16:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718900956;
-	bh=BrICMMZrS8m6MYe0kQ4cVRc55ARLzaghyayTnAQ5YTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tfRWGxIYwv7J5fGI6mps0kORlWb0ron2PdO3PjRczD4G/Y4pAX+qMDDlzHuead6Rf
-	 5jAD0/cIlrJEByacZSSW93LFqUBkoDOjBef0kR0hKHegJcoEREXpWDfrik5/EuvrSn
-	 A7zH4b572BPnpHCutK77CIgPTNSyRv7nDlEiH3jshxrlZyfz4MjKDkJiy/pOkFNwYm
-	 QCNf0IMYU70IXg8D6ABA3AApRAgichtlf817CcTHMEK4DWew6s1cOGmDlHnZxTHah+
-	 7BBA+bGOoJYioXZwVoofX8K7N4RxxewpcxU3LhG5yPloMJNDK8UTCOWm75uMINa8Cq
-	 5Hsiul3plJ+Wg==
-Date: Fri, 21 Jun 2024 00:15:12 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: adrian.hunter@intel.com, aou@eecs.berkeley.edu, conor+dt@kernel.org,
-	guoren@kernel.org, inochiama@outlook.com,
-	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, robh@kernel.org, ulf.hansson@linaro.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	chao.wei@sophgo.com, haijiao.liu@sophgo.com,
-	xiaoguang.xing@sophgo.com, tingzhu.wang@sophgo.com,
-	Chen Wang <unicorn_wang@outlook.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: mmc: sdhci-of-dwcmhsc: Add Sophgo
- SG2042 support
-Message-ID: <ZnRVkPy5akurmi_D@xhacker>
-References: <cover.1718697954.git.unicorn_wang@outlook.com>
- <dcc060c3ada7a56eda02b586c16c47f0a0905c61.1718697954.git.unicorn_wang@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/TedfsA"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-440f22526edso5005591cf.0;
+        Thu, 20 Jun 2024 09:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718900965; x=1719505765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/moaf2TCG5+ywsF44roFMcGuf4MGqCAfYcBvfJ2sU2s=;
+        b=U/TedfsAUFJgIomjbQ7xT6rcykbdwAAdJqcZ6FwnBo8ZpSd47o40O6voWxS5GVR02h
+         iSqT+XL7kYFjNN4Ycx2UddOm6uRb7RI8zva9WNTCV6oeFFe+P5QKTfk6BGViXzq5qO+6
+         9rkUkdEzFPI4mkwVPaO5/diYdy067Y1o9jFPLpG7vLkT7g6YWZHnz2how5iMkA+GX67V
+         kOFwrWTMI+2ANfaUe4IvGWxO0Vld/Wgy1R1Wo6tWgL6WqVXl+8kbwVHxpKrf3zB/w+4N
+         4xC2OiqGcOD/reXurnBR4GwOj218CLrJIh1qE4QLyaftPan0CZgeGf9Fk0kguJBaAOVi
+         37OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718900965; x=1719505765;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/moaf2TCG5+ywsF44roFMcGuf4MGqCAfYcBvfJ2sU2s=;
+        b=fWRf8QQ7KNhAQ2182eGTz1KGwBHbRzj0vl2BgadAKxC88G+DDMKP9aHekHMwn3UIDJ
+         HShBdgPl2w58qh6SSJrBe9mNaJWIE4E71EW0T1dE4fUxXXbzpIXcEgcIGm/ZvNVrFxsL
+         +gVy2xIYAF19iX+lkQLz/xVcbQsFJeA453X57uNXh+erNIVhMl4lM+mVbKcTgOPCw1ul
+         lvdsS7H74tm2p5gXRnAniubu37GV7yMrQssQa/Qo+K5qqwDy94hua8lggJCKt4QMHu/v
+         gUAD334o/QIfb5d4M+sgNSG+DJ1mtpl5rpr5R80znFxBQFwYogmIM5CsGn7JK/8vA6VF
+         QvPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnHLzvkIMcFZq1JFVjoNPiWWTFcjBomKJFBVLP+YFAzKVZxthGhJt54TlKrgqAc2w7wYoraUSwlMlTg3XvY2f4itgGpt90M9FGyFx98u1cWG2Y/+5YMZDb1629zYP3eY2Mpybr
+X-Gm-Message-State: AOJu0YyMglYGTXcTzuLH9o5PSvPy3ArQ4DZTEHWRe8wVM5wZH3X2YwvV
+	Z3wS9zSDMZOGnAZ8LaqDLOBAsdL3rtq51BJ7CRiVBMpTztg0RDmSVk7QVkUG
+X-Google-Smtp-Source: AGHT+IExIWEOLoNqujKEdH8OtoEQO8gB0wbKNkK45PqbENZ1gMTxB6z0poubX+bqomq2hSPXOQV7Yg==
+X-Received: by 2002:ad4:4dc7:0:b0:6b2:da77:9a42 with SMTP id 6a1803df08f44-6b501e24194mr60283856d6.16.1718900964484;
+        Thu, 20 Jun 2024 09:29:24 -0700 (PDT)
+Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5bf23f6sm89986356d6.8.2024.06.20.09.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:29:23 -0700 (PDT)
+Date: Thu, 20 Jun 2024 12:29:23 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: intel-wired-lan@lists.osuosl.org, 
+ Tony Nguyen <anthony.l.nguyen@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Mina Almasry <almasrymina@google.com>, 
+ nex.sw.ncis.osdt.itp.upstreaming@intel.com, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Message-ID: <667458e38c879_2b190d294f5@willemb.c.googlers.com.notmuch>
+In-Reply-To: <c38e22b5-090c-4e9f-80aa-37806aed5eaa@intel.com>
+References: <20240528134846.148890-1-aleksander.lobakin@intel.com>
+ <20240528134846.148890-12-aleksander.lobakin@intel.com>
+ <66588346c20fd_3a92fb294da@willemb.c.googlers.com.notmuch>
+ <ad06d2bb-df1d-41cd-8e5a-8758db768f74@intel.com>
+ <66707cb3444bd_21d16f294b0@willemb.c.googlers.com.notmuch>
+ <c38e22b5-090c-4e9f-80aa-37806aed5eaa@intel.com>
+Subject: Re: [PATCH iwl-next 11/12] idpf: convert header split mode to libeth
+ + napi_build_skb()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dcc060c3ada7a56eda02b586c16c47f0a0905c61.1718697954.git.unicorn_wang@outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2024 at 04:38:30PM +0800, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
-> 
-> SG2042 use Synopsys dwcnshc IP for SD/eMMC controllers.
-> 
-> SG2042 defines 3 clocks for SD/eMMC controllers.
-> - AXI_EMMC/AXI_SD for aclk/hclk(Bus interface clocks in DWC_mshc)
->   and blck(Core Base Clock in DWC_mshc), these 3 clocks share one
->   source, so reuse existing "core".
+Alexander Lobakin wrote:
+> From: Willem De Bruijn <willemdebruijn.kernel@gmail.com>
+> Date: Mon, 17 Jun 2024 14:13:07 -0400
+> =
 
-No, this seems not correct. This should be the "bus" clk, and your above
-sentence "aclk/hclk(Bus interface clocks in DWC_mshc)" implies this clk is
-for bus
+> > Alexander Lobakin wrote:
+> >> From: Willem De Bruijn <willemdebruijn.kernel@gmail.com>
+> >> Date: Thu, 30 May 2024 09:46:46 -0400
+> >>
+> >>> Alexander Lobakin wrote:
+> >>>> Currently, idpf uses the following model for the header buffers:
+> >>>>
+> >>>> * buffers are allocated via dma_alloc_coherent();
+> >>>> * when receiving, napi_alloc_skb() is called and then the header i=
+s
+> >>>>   copied to the newly allocated linear part.
+> >>>>
+> >>>> This is far from optimal as DMA coherent zone is slow on many syst=
+ems
+> >>>> and memcpy() neutralizes the idea and benefits of the header split=
+. =
 
-> - 100K_EMMC/100K_SD for cqetmclk(Timer clocks in DWC_mshc), so reuse
->   existing "timer" which was added for rockchip specified.
-> - EMMC_100M/SD_100M for cclk(Card clocks in DWC_mshc), add new "card".
+> >>>
+> >>> In the previous revision this assertion was called out, as we have
+> >>> lots of experience with the existing implementation and a previous =
+one
+> >>> based on dynamic allocation one that performed much worse. You woul=
+d
+> >>
+> >> napi_build_skb() is not a dynamic allocation. In contrary,
+> >> napi_alloc_skb() from the current implementation actually *is* a dyn=
+amic
+> >> allocation. It allocates a page frag for every header buffer each ti=
+me.
+> >>
+> >> Page Pool refills header buffers from its pool of recycled frags.
+> >> Plus, on x86_64, truesize of a header buffer is 1024, meaning it pic=
+ks
+> >> a new page from the pool every 4th buffer. During the testing of com=
+mon
+> >> workloads, I had literally zero new page allocations, as the skb cor=
+e
+> >> recycles frags from skbs back to the pool.
+> >>
+> >> IOW, the current version you're defending actually performs more dyn=
+amic
+> >> allocations on hotpath than this one =C2=AF\_(=E3=83=84)_/=C2=AF
+> >>
+> >> (I explained all this several times already)
+> >>
+> >>> share performance numbers in the next revision
+> >>
+> >> I can't share numbers in the outside, only percents.
+> >>
+> >> I shared before/after % in the cover letter. Every test yielded more=
 
-I think this is "core" clk, no? Plz check which internal clks' clock
-source is the so called EMMC_100M/SD_100M.
+> >> Mpps after this change, esp. non-XDP_PASS ones when you don't have
+> >> networking stack overhead.
+> > =
 
-> 
-> Adding example for sg2042.
-> 
-> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
-> ---
->  .../bindings/mmc/snps,dwcmshc-sdhci.yaml      | 69 +++++++++++++------
->  1 file changed, 49 insertions(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-> index 4d3031d9965f..b53f20733f79 100644
-> --- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-> @@ -21,6 +21,7 @@ properties:
->        - snps,dwcmshc-sdhci
->        - sophgo,cv1800b-dwcmshc
->        - sophgo,sg2002-dwcmshc
-> +      - sophgo,sg2042-dwcmshc
->        - thead,th1520-dwcmshc
->  
->    reg:
-> @@ -29,25 +30,6 @@ properties:
->    interrupts:
->      maxItems: 1
->  
-> -  clocks:
-> -    minItems: 1
-> -    items:
-> -      - description: core clock
-> -      - description: bus clock for optional
-> -      - description: axi clock for rockchip specified
-> -      - description: block clock for rockchip specified
-> -      - description: timer clock for rockchip specified
-> -
-> -
-> -  clock-names:
-> -    minItems: 1
-> -    items:
-> -      - const: core
-> -      - const: bus
-> -      - const: axi
-> -      - const: block
-> -      - const: timer
-> -
->    resets:
->      maxItems: 5
->  
-> @@ -63,6 +45,43 @@ properties:
->      description: Specify the number of delay for tx sampling.
->      $ref: /schemas/types.yaml#/definitions/uint8
->  
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: sophgo,sg2042-dwcmshc
-> +then:
-> +  properties:
-> +    clocks:
-> +      items:
-> +        - description: core clock
-> +        - description: timer clock
-> +        - description: card clock
-> +
-> +    clock-names:
-> +      items:
-> +        - const: core
-> +        - const: timer
-> +        - const: card
-> +else:
-> +  properties:
-> +    clocks:
-> +      minItems: 1
-> +      items:
-> +        - description: core clock
-> +        - description: bus clock for optional
-> +        - description: axi clock for rockchip specified
-> +        - description: block clock for rockchip specified
-> +        - description: timer clock for rockchip specified
-> +
-> +    clock-names:
-> +      minItems: 1
-> +      items:
-> +        - const: core
-> +        - const: bus
-> +        - const: axi
-> +        - const: block
-> +        - const: timer
->  
->  required:
->    - compatible
-> @@ -96,5 +115,15 @@ examples:
->        #address-cells = <1>;
->        #size-cells = <0>;
->      };
-> -
-> +  - |
-> +    mmc@bb0000 {
-> +      compatible = "sophgo,sg2042-dwcmshc";
-> +      reg = <0xcc000 0x1000>;
-> +      interrupts = <0 25 0x4>;
-> +      clocks = <&cru 17>, <&cru 18>, <&cru 19>;
-> +      clock-names = "core", "timer", "card";
-> +      bus-width = <8>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +    };
->  ...
-> -- 
-> 2.25.1
-> 
+> > This is the main concern: AF_XDP has no existing users, but TCP/IP is=
+
+> > used in production environments. So we cannot risk TCP/IP regressions=
+
+> > in favor of somewhat faster AF_XDP. Secondary is that a functional
+> > implementation of AF_XDP soon with optimizations later is preferable
+> > over the fastest solution later.
+> =
+
+> I have perf numbers before-after for all the common workloads and I see=
+
+> only improvements there.
+
+Good. That was the request. Not only from me, to remind.
+
+> Do you have any to prove that this change
+> introduces regressions?
+
+I have no data yet. We can run some tests on your github series too.
