@@ -1,118 +1,214 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2053.outbound.protection.outlook.com [40.107.236.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4310D3BB22
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718863965; cv=none; b=XfwB4H3kUgGVYQAzGRDD/NjnYRv2u/nZz9GFrYi+DGPdTxY1d0ybUI6emcUY42OncgZzmrA18bpU5B4xM1Md59ioIiflgRsmg+jYuQnD7Y5dR9CB0bfQkw7A4aEug5besIkzjgi+wKYo8nSkPI0gxeBCTQvSemeg1T6XgUEVQPc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718863965; c=relaxed/simple;
-	bh=bnwS0zZtUiFHEqo63k2vFUk3ZY0yjiiR6Tefx/0fJaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I2E9lU1qLYQ1XRszK97L5SocAu6u+Ww7SyMie0r2ui8dBMe6b6/Je49DB1xwWfqih8vaQENauo67ZhM21ECeHDkj8/E9Meupg/lTuy7NQmzwOjhxlYcH9DLhkxi33rjeOYaltRRhexOWAE9109U2xkRkq/zsuEEutRC89LjR8S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yk3hTnqR; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9762737E;
+	Thu, 20 Jun 2024 06:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718864015; cv=fail; b=dm/O1eNWogzspLi2MC7SBLdWlB2hhumwfFvWdkGX+VT7ldPMH2MHHAE1hL7PUHm6zyQoL3KSTF4aXpdRV2c3DFQGZ0KRYH/u+Jq5RNGrCYrjMImiUxAQrcmABy5Z46glr0pIx7RikhGYClGIZqte2gy5jG6LMDKhoYwzM+pUbSE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718864015; c=relaxed/simple;
+	bh=wTy5vlgG6r5MC1wWZH3MYE/GQUNQyq9cc2TomGRyMA4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Yqmz4tfKB06o6GL5LWsPWKw5dmsq0nL1zquCFH6eaLxZ9tCnVNnk50PKj3+3yxpBPCyt5gd6meFRV/O6P2FnIRjHXu8NW6i2RJG/jNV6agt5fFmLp3y4edXovdk5YYvRcr6VwU4fS8RQKqxk3a7HYdQxVtJ0Kcf1hQFSB/ZQ5+4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=estt4j6W; arc=fail smtp.client-ip=40.107.236.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yk3hTnqR"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57d00a51b71so22403a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 23:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718863962; x=1719468762; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ojZjb4RYoNn9RkUlQwL4cAo1p0U6fC/Z8le1JTxXLy8=;
-        b=yk3hTnqRUXvJ7VnjMBrYxsgUjyAoRVv/nLx/UNKzcHEUMxIpQg4xXB0Is2SF5sVM0J
-         3wRzW/F7AGzklsCe5p7kGKp5C+IZJ8Rt1IiYugsxYnXNmhYlqzdiz7ZW2tf98Zl+Hjlo
-         Gm6NSUptwTZUBVMY8Ap0vEMUYpElSQL9Zl8pE4O9b7ktAsba9la6ayaxbzuLHiikonEY
-         ZgVV1SVohsXIFsxS14JULswY7jfVTtVj66vzgWGNYUu4ix6QEkaYERO3s72D5pHw2HIJ
-         S4VoOiBFPggeYZBs9g1Xh65vIHpvtsGVzMis+HX9aqWV2XWdgNf/EfEZyDazqrVboDMp
-         y13g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718863962; x=1719468762;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ojZjb4RYoNn9RkUlQwL4cAo1p0U6fC/Z8le1JTxXLy8=;
-        b=pXXuTxMqBLIZ9xAxYtD1HnjsolOXFY/1FrL1RGfqGxXh7dEuUqIy2i3TT7cwawGrlt
-         sE4+dXzLswt3YtoNk6P4Eyp9myj+/7EVfvkSEAWN28PTIyh1jjEan7xbQHdMdRSLMi5c
-         z5OHGrILimd1F7AzsFOxztjgHlJ01ctBs+8LSI6IYcD1XNpEMF7lU4t0IxLEnUW87w8o
-         yDEN8Yx/QlKrHIJ6XBJ1FATJlHwtekme2IIPbrU+bUXtHv0wfNeJZ3eLZlTAzDyh1kv5
-         TuHWgIOTkT6iTYThXh1rl6Q++A5+NoU39oaMswA1pVdKJiZpjAIm3VmdyKyZ83/w3RXr
-         Jlxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjvMrTHcCLdMTPLLF/AJPDAY08KsSYwq33G6ayARKpYpcp/I9ck46c8aFFhLatJBnnT+GcqR5Tz4KV/uO9DpnJutQ7INUZvMmkgv72
-X-Gm-Message-State: AOJu0YxVeiyg41fnfWTdQ4BuBUXq4EwN1YWkXSqqpE9jREuRkofYKMGw
-	6UiDbHiv64Aqndv51W+A+2qxYcNz8CQbBXz+hX8VeXIAHNwxssczwAukJLwLZ9jQukz0eOWu761
-	flfFsqRmD3KqorX8zvbl0WVEC7Lm0E+X9pyvo
-X-Google-Smtp-Source: AGHT+IELb8eVtZ6ww8aj2w5Do0QHfTsDehfhWAtcTePwnv57N9+e28vxnzXC5Vpw70w6LIGKBaH9PyRZPrLwbCqFg0Y=
-X-Received: by 2002:a05:6402:4304:b0:57c:b80b:b2f4 with SMTP id
- 4fb4d7f45d1cf-57d0d6d1871mr297161a12.6.1718863962205; Wed, 19 Jun 2024
- 23:12:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="estt4j6W"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BhJIoeafjP+mtH9wOMoTPwHUNoblY/xEScyWWJlpeWumNEhHEDDQr03yjreZc+55RAKhDLFagYsbhATRcAod6MN7iRiVuhIY1LhOrfYm8z+FHZO8kslb8T0kbwBdluTDg2aFRFQbXLX/4uz7wJPcVUvZbPLZKmIINeu0Qej5U7QpMgbqJpOhbTCNQNvmTE5X4rZukyHOee3KD8fxhl/6XuOL9mbs3DVVsS/ksxTdqQGpykjE3aoEXurEmDK2AOZWIPEIBHzDU7rrVLy60aAOrJWjtJXYuNC6zWZ8BQF7VvOMEeWFeXLxsuhxPQTBAG2m0Moubu5WCb+KaP/a6IZ4Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GwK4uZZoAxRSD/8kQhy48oSV/Br0mlutjayah58ax7A=;
+ b=MjifyGJEdbdZh2BPP5k8TMrdKCLcIB6YCadF+ROoTJYAy1Aa59ESS+ODodyNm3018c+yEfSc+Q0xhAajZFVxJHDpPKVnQFyXe9PQT2q9m6Qe4yA13cWPJ8BtG6IWchRMpWITATmdSZWDr6JXcALorKUI49G/WnYZ5dx1XFAQhL6Iou/yhk9M+hJ9nDjUR7gwGTWfByIkVwfqNKlvePdFwVwUsc6lZXGQnE5ZoXhJtf4ubEI6TyHFqewrPksXnscFoSl5u9WOPBW4xKPaDePF/MASfDfcl1RbyaCgGNqPfUwXz/ZVHEQfBw5xXIevJEE+IL5KJcFhUdTBFWBJaYiNUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwK4uZZoAxRSD/8kQhy48oSV/Br0mlutjayah58ax7A=;
+ b=estt4j6WqLn+HplI4EuD60iVH1Aow65VU9jsHDaGP9XNt7TKGjhxxi5gTNgAAjQwyD6fPkYE5q+PCPe6HIS7Cj/uA55ZqAp1MQGsfMSLWbS8RV31jTX/Q2bxImdbWt9vWuJFhLn6B/VmlZhP7R2VZkYhh7WNDSbxj1D3AmckNR3uLnsQZ7o9rXSaLQxOI+aTiQIVmf0SUTvyyxphl57nIdUGa6I1bN8/8VWkEr8/vf/t5/vnfR0mvzuAdfb6TJ1Dy9XIideZv81lkL6xXNAWkb9t/Wr8Xu/CYpzAm3AH0cyEIFWYb3Anv4yXfC4lVeo806ozbKFtHBNRfcFvk1FREA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by SA1PR12MB6750.namprd12.prod.outlook.com (2603:10b6:806:257::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Thu, 20 Jun
+ 2024 06:13:30 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7698.017; Thu, 20 Jun 2024
+ 06:13:29 +0000
+Message-ID: <4262dee7-b6fb-449c-9de8-7d6404912338@nvidia.com>
+Date: Wed, 19 Jun 2024 23:12:52 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Makefile: rust-analyzer target: better error handling and
+ comments
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl
+ <aliceryhl@google.com>, linux-kbuild@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20240601004856.206682-1-jhubbard@nvidia.com>
+ <CANiq72m46gN4GkfeXgykEar6OVa56ck9FmWQComd+iuf61FVSw@mail.gmail.com>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <CANiq72m46gN4GkfeXgykEar6OVa56ck9FmWQComd+iuf61FVSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BY5PR17CA0050.namprd17.prod.outlook.com
+ (2603:10b6:a03:167::27) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1718690645.git.baolin.wang@linux.alibaba.com> <413866f2f2d996cfbb5c906467b36c96b1a82e2d.1718690645.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <413866f2f2d996cfbb5c906467b36c96b1a82e2d.1718690645.git.baolin.wang@linux.alibaba.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Thu, 20 Jun 2024 00:12:04 -0600
-Message-ID: <CAOUHufavGxeE4nyBnjRMo+BqFyTRUJMyoqBkEDV_c=x-PibvEg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] mm: vmscan: add validation before spliting shmem
- large folio
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org, 
-	david@redhat.com, wangkefeng.wang@huawei.com, chrisl@kernel.org, 
-	ying.huang@intel.com, 21cnbao@gmail.com, ryan.roberts@arm.com, 
-	shy828301@gmail.com, ziy@nvidia.com, ioworker0@gmail.com, 
-	da.gomez@samsung.com, p.raghav@samsung.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|SA1PR12MB6750:EE_
+X-MS-Office365-Filtering-Correlation-Id: 205b3398-7d49-4365-87ae-08dc90f01aea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|376011|1800799021|366013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aVB4Uit1YWptc0gyNkJZODNsRnlsWUNRV0lOeDByUENCeXRNTmJqN05Ddy9o?=
+ =?utf-8?B?aGJsM01OV1gybmZnUzhqWmVOQzdXQldFa0JXdWkxYm5GTm82WGJpdWVhaEpv?=
+ =?utf-8?B?M1lUdW45NE93bkF1RjJnQ0NvVWVoU3JSWktNTEpnQ0lSZWp3eU5NQS81U1BC?=
+ =?utf-8?B?d2JHYnpJaVlueTVjaUkvN2MyTWN6OEVXMXRubUphdjFiRWdxNVB4L0tGdmRz?=
+ =?utf-8?B?YjZ2NnhJVnV5YUpXZzRtOTYxWlBKU2VFeGlRcFBOWUUzd3RuUE0wRExwb0Z5?=
+ =?utf-8?B?Njltak9yZ3VLaDZaK0dqdWpYcExQY0Q4NVVQTmcvSGx4ZkNsVUpYL1hpMGpS?=
+ =?utf-8?B?T3crb05wTThPcGNMcXpoZ1A5NnF2RkdpbjZHcnA0R2IrMC81WjZEOWJTSEMy?=
+ =?utf-8?B?UFJ5VlZpMDEyRmlNNmk0bzZYb0ZxVlhoOFY2NTdoZWVtWlFCTmQxQVE5Nm9q?=
+ =?utf-8?B?eEI3WVJ0MUI4UDdZUitpaXhqR3J1ZHhLYWpzWFFCb0ZiK0xlVjZPK0J1WHY5?=
+ =?utf-8?B?WkphNERxci9PK2I3NXhKdVhHT20vR0V5OG9zWVhXTVpwaE1vSTg4d1dDdnpF?=
+ =?utf-8?B?dXo4aERaYVFGL05yYjl1aGsvL2tXZXM5Uld5MmxUTnd2Q0x6MExKZ2R0ZWNK?=
+ =?utf-8?B?Q25DTjBvcEUvMkxndm9PV1VjdTdqUHBHc0EyVWxJcHNFdlcrQ0IwN2lKbk1Z?=
+ =?utf-8?B?eVJhYy94bWhtUElxWjU3b3k4QVVBZFI4dXFWVXBKWWFvN3BBSWo0TWQ3Zldl?=
+ =?utf-8?B?cm5VR0NSeVFCY1VsZGFLZHpUTS9hbUtuZ05KM21WMU9CakhQclhrMUFUM1U4?=
+ =?utf-8?B?bFRwb1ZlNFhjd2NlOEIrRHZwOVZQK095RXptL3RVK1BiV1plZHJDRUo1RGJr?=
+ =?utf-8?B?aEpqa2pjczFSN3hSZ3RMbDRoTXV1cHVrTHYyUXkwbDIrMzRNREJ6N1NPODJV?=
+ =?utf-8?B?R3BBOE4vS0hqTDYvNzB3d0ppZXpHM2RqTkJ0QXhrR1pvdU9mQ0FWcWR3L01j?=
+ =?utf-8?B?UFdPeVQwMmtSR1pCTWZpalZsR25MVGU0MzZvNkZIODJsV25nUmxLcUVhc25h?=
+ =?utf-8?B?NnFDSGNXWk4ycldFM0NaRkFnaUFQdFFWVjAvOGtETzBybDI3L1RJN3ZpV0Qy?=
+ =?utf-8?B?aTRBd0dhK3ZVYms0VXIwMTVxUWFRMkl1d0pLN0F2bEdNZWRvQ094M1pib1RC?=
+ =?utf-8?B?dVlka3U4VU5WV25YM1MwZXI5ZkExWXRNMm0zSzVJSkhseEJtdW9YM3RqUGti?=
+ =?utf-8?B?cFFGa0VrVDRLUC9JY1FuMWhEWEw2RlBQVUtFOU93TTBJUHllNGlUTWcxTkJw?=
+ =?utf-8?B?K1N2bzdqS1VLYXZmRTYxbWxMZTc3TUNDa0orMm16MzJwamtRTEdJNjBtRk1h?=
+ =?utf-8?B?QzROWTBvKzBoZGMwWTdmQXI0cGtIODhDbm9kZXhSWEZpNVd5ZXV5RGRwZFY1?=
+ =?utf-8?B?bmRnanl3S3F6NDRzYjc4Nk90V1NVU2hrRmNjd1JNVGJnbnNPbjdvbEU2MXU4?=
+ =?utf-8?B?ZVAyQjF6MmtraC9RSlZjYnd3N0NsWEttYnNkaHhSaWpZWktCOWhua2Ztc0px?=
+ =?utf-8?B?Ump6Qk15TEtFeUhlWk5MWEcrc0dETFFuK0Q3cHcyTUdMWFJ6NDVweFpDcFZN?=
+ =?utf-8?B?T1NnV29xWThmU1RHd29hbXlYZ2l6RjNRc0hNNnpZYnd6dEZ0dTBhNnl1cEU4?=
+ =?utf-8?B?UUpLMnlMcXlyRmdXT3lBc1FOWmQ4WXhXa2dxZ3FTdlVPaWY2c0ZCTUVKdkxO?=
+ =?utf-8?Q?JbJGGLDhrjl0VyEgXLrlWG5athwinqs3496NQ91?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SWg2czV4ZEhVcmp1ZGFySFVMQ1hYYlNCTlRjT0VxbVM2MzJxRHdkT3ZocnFi?=
+ =?utf-8?B?MFY3Z2dLYW85K2FCOEwxZDhaQUpjNEUyTkVqeHBVbFpXUWcyNXpMTVdXYmdn?=
+ =?utf-8?B?ZGtjOVU3QXJtMGlDaVIzVmVHaGhvRk5hL3BDeStVVFhEZHBhNzdJQis4c0lz?=
+ =?utf-8?B?aWNGdUhQdlV6cExOS2NYMjNnSFVZV3NzTUpjR2R2eGZhbTlxcDVRaEFCSHhm?=
+ =?utf-8?B?K09Kck5nTmNZK3ZIazhseFBMdXk2NVBNTGJKcEF3TWhneiswM0RDMnpVSDFv?=
+ =?utf-8?B?Nnl5SFp1YTdvQlJuaElYRUR4TXdmY0hhRDdXRlpNTndCU1kyWnZNM3VicHRV?=
+ =?utf-8?B?dXZxK2Zya3JBdkVNMWt4WWRKMzArUEJIYlViOW1lckowcXVJMDJqdHhCaDNm?=
+ =?utf-8?B?eklBZlEwT2FRR1lyb0Yya0duSHV4Q1RDbndDbnRCQnBmWGpTRWxCbTk3MWFR?=
+ =?utf-8?B?a095RUVTelBhdVVhcFZGSk4wYXB0R2x1MG9XMUpSdzFUNDNTNWwwRUQrWFlD?=
+ =?utf-8?B?OUFWYUhwbmJ6MjIvVHVrcnV5OCtYeWg0UVJNd3VJcU5zYW5LcEZOVHlia0F6?=
+ =?utf-8?B?ajE4VG1WSE90ZWZXaWkwcUNabDdzdmYzckk0ZUJJSVNPTEhlSHVHME8zeWtq?=
+ =?utf-8?B?bEJoQ3JjY3lERXlDNjFkV0FNRElGWGttL1hlaEZTZzlPRFMvNys0Q2FITnFB?=
+ =?utf-8?B?Rk0vRzdsNkI3cTFjVVFhOWE3clM0ZGpVTnVQaVJyd1M2Q1FZbDZLUGJETHI3?=
+ =?utf-8?B?cFRjbTd5My92TTVOSXFyQ2xrLzBab2QreG9ucS9JRXROSDNsVkJOekgvZ0hM?=
+ =?utf-8?B?b0EzNjkzT3AzYy9hRGpKMFJKd1hhV0FRT3UvRWNzNXIzNTV5U3RLNWk0K3Mw?=
+ =?utf-8?B?dzFIdjJPQmVFVW5pbUxzM0xSZ2tzM0RIU1VTeXZSYmVEZ0Q1UnVncWNDd0JN?=
+ =?utf-8?B?WGFscHl2QzZIYW9JTDZhcVphYUo1VENmNXRJemhTUW81MGxXWXN6aktUdDNT?=
+ =?utf-8?B?cTRaOWRQL0tHZHlUZHUrZUROaUgxUEU4eGxDbXRBamtCTmRJNUQybDZsNm5T?=
+ =?utf-8?B?a3U5N0JtNHRhK0VVS1B0WW5ObFJSbGVhdGNldTNmcEJOa2VFOWo1dGRJRlBm?=
+ =?utf-8?B?U3ZDVnk4dWIxM2Q5aWx1bDQvV04xaHc1ME11ZkRqRXJqeFBWdHE4ZGdBa2Z3?=
+ =?utf-8?B?Mnpxb2p6VTJqbllMY0lVRmR0bTh1bmppTGpLTEx4LzRaQXo3Z0N6bXA1d1VQ?=
+ =?utf-8?B?NkZuOVBGTHFBNUJ5VGdQd3NzTkdrQlByaHRYbEQrT0JGZUZJZlpjZ3l3WWVV?=
+ =?utf-8?B?bnk1eGJiSjU0eFdMUXlSb3NIQmtSQklEd1JYUmdJWEVxZ1NlSER0cE56b0pj?=
+ =?utf-8?B?dzQyQXVwSkhOeTgwYVd1amtxRE9EYTFjSExYc3RDdDBvMjNNY0hsUTVHNjZa?=
+ =?utf-8?B?eFU0Vi91L1VQelYraGg2OFZOSllJM1dIZVQ0TU9MM3JHTFB3UFhjWmp6TWRQ?=
+ =?utf-8?B?cVRxaTN3alZURU14NFMvbWcyOGtaYkpRS3RJMzU5K1puZTVDelJJS1FjQlgz?=
+ =?utf-8?B?NWRyZTZBOXcrVW1MdW9nUHl0QTgvbFBkeldxUm55Mlg0bVcza1p3UXJ3REFu?=
+ =?utf-8?B?WE5yOVRNZHdMam9idVFKTzlzVC9vZzh3aGtPVU5wWWZOUHR3S3ZLdEE1S0Zu?=
+ =?utf-8?B?WmJTTi9xSXF6SUVQVEl2K00xazdiRERZeWU5eEVESnd3WkQ4M0RpbWdVQ2hp?=
+ =?utf-8?B?MVh5Z3dJWDBqUGN5RFEwKzlsb1phNS9IQTJqNDhNVWZtVVgrKzFDOUo5QUdK?=
+ =?utf-8?B?R3lPMEFZNEs1ZVFKbndEalQvSzVmTkQrTDRkS0x0Y1N1cCtGY2pNMDUzdnRz?=
+ =?utf-8?B?a1BOLzFmdDE0K2VMaDVqNkZoVWdGbUQ0SjVkSm5pdnhuNVNEMWlLdUZTcUU0?=
+ =?utf-8?B?ZFpnRFVBaExiTEpOV2o2SldGekRKQWU3QmZlLy9kK0FBRlM1OTBFRzZsb0py?=
+ =?utf-8?B?SDFFcWlkNTEySlZHUE9jMmZMMXYvU3JGOXFScVpRTWhteklXYUxWWCtZOGJQ?=
+ =?utf-8?B?aTJBMlNnWTRCSU5WS3N3OXBLZWowak93QTdtVWdJdUtZMUd6WFM1WS9CUWJs?=
+ =?utf-8?B?L2tXanhkNnpHOUVkRDN0c3pOa2l2SDl5TTFLLy9HdVdXR2I4RjE4Wmx3aFV5?=
+ =?utf-8?B?enc9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 205b3398-7d49-4365-87ae-08dc90f01aea
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 06:13:29.8884
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iD7M5T9KQr8D/CqIFbV7POn92nu56/pt591GTY8xB6/5nsTOqlM3YMcOJeGQRWqw5Yx6exvW0DPLCb6KK3WJlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6750
 
-On Tue, Jun 18, 2024 at 12:54=E2=80=AFAM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
-> Add swap available space validation before spliting shmem large folio to
-> avoid redundant split, since we can not write shmem folio to the swap dev=
-ice
-> in this case.
+On 6/19/24 5:25 AM, Miguel Ojeda wrote:
+> On Sat, Jun 1, 2024 at 2:49 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>>
+>>      Rust is not available
+> 
+> Maybe we should use the `***` notation that is used elsewhere?
 
-We don't scan anon LRU unless we know we may be able to swap. Even if
-there is swap space, we may still not be able to swap. See
-can_reclaim_anon_pages().
+What exactly did you have in mind for how that should look? The
+"make rustavailable" target has some leading *** and some bare
+statements, so I'm not quite sure exactly how to lay it out:
+
+$ make rustavailable
+***
+*** Rust bindings generator 'bindgen' is too new. This may or may not work.
+***   Your version:     0.69.4
+***   Expected version: 0.65.1
+***
+***
+*** Please see Documentation/rust/quick-start.rst for details
+*** on how to set up the Rust support.
+***
+Rust is available!
 
 
 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
->  mm/vmscan.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 1807e5d95dda..61465f92283f 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1237,6 +1237,14 @@ static unsigned int shrink_folio_list(struct list_=
-head *folio_list,
->                         }
->                 } else if (folio_test_swapbacked(folio) &&
->                            folio_test_large(folio)) {
-> +
-> +                       /*
-> +                        * Do not split shmem folio if no swap memory
-> +                        * available.
-> +                        */
-> +                       if (!total_swap_pages)
-> +                               goto activate_locked;
-> +
->                         /* Split shmem folio */
->                         if (split_folio_to_list(folio, folio_list))
->                                 goto keep_locked;
-> --
-> 2.39.3
->
->
+> 
+>> 2) As long as I'm there, also add some documentation about what
+>> rust-analyzer provides.
+> 
+> Perhaps this could go in a separate patch.
+
+Sure, I'll split it out if you all prefer.
+
+> 
+> But those are nits -- if Masahiro is OK with this approach:
+> 
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+> 
+> Happy to take it too.
+> 
+> Cheers,
+> Miguel
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
