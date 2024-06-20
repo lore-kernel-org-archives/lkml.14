@@ -1,152 +1,90 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2098.outbound.protection.outlook.com [40.107.223.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327B47C6EB;
-	Thu, 20 Jun 2024 23:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718924643; cv=fail; b=Mymk4egZXcQFieUFfbZnqlbBl7+8RJthYxI8cFAZxjQu4nTbE+F+1GwzmmziF1CLnZvzKSN2i99zArA5O9iiSnVin+fIozOYMrPe4oJJV8HO+pgW/NP3D5Z9S2wYvBKsCx0Fcwtg/+hcWVCImkSDUxTWRE+ja4/w+8DWERWFe1s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718924643; c=relaxed/simple;
-	bh=q6ofxIDM7YHaa2eTiP/fStrRXvuDH9EVSr3RllnVQrM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=E46C8XBMYjdEVEP2ifBgniWb4OdK35M+4IVJW/2aylFfNxDEyIU0omiQl4CNoz0PwkJjJX3jXovgCzsbiRB8XkIAARb4yaHp4taOVWRYwyV2Q2fQ9ab+VNxk2bFGYGJj4aMKXNxlWu7kyc/0DnU4m1jLzpRSfKohW7ZhHjYMfcw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=B3TsUzFm; arc=fail smtp.client-ip=40.107.223.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D8782D83;
+	Thu, 20 Jun 2024 23:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718924741; cv=none; b=ejrbX45lgDc7C5JxvicTPnxJMlAUtsLS342p7U7Z+n5acDvFbSNdCLvYHcTjE1eTlioHiXoVm0px/pHlC6cIm6Y6w985Yyi2uCKctFdq8O9CornZKBLNBE8cKS1Q7VDYIdKcfRXS0gXMBkgMqRrcxpcLOE+KeWawcDUj4JPGtRc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718924741; c=relaxed/simple;
+	bh=SaOaFRr/ohEIO5+x2sHjKUAw9989Q79otM9vhPABR3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBdkHgR1PAa7QZZJrG9d22mqZe6ThcwRYtlL8QnqJnYXjEdig8HsVSAzQtZKp0p440mJDOGIjKe+baXDwMLWyFBxCNddz3ZuF17O0BEbI1VTnpnR2BdrG0nfTc3bG3p6STuoAETTNsAcNGYc5IfWYHLVyfeDa55xOwfWoz5aQnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGsfH1Gp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="B3TsUzFm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eA0wkHcajHeOv9Mx+2iqouoSRWsgNLTgQbkNEl0i3P+eUxWzd+8JCmjWIJkyqa1ROahXft1ELpdulc7yygVNBRWh8JRr8E+R4kgJ+2WvRbEbneFkCMv2w8CiWQJYNcD3AE+5T1l1FOgomZi2P/qWGFiqVjB29kNVqCHvyfpUoSMn3t6vngQLGcNYpSEf9ONf953AfDgFZnaMRnDtiveDClhneuuYj6OE/xARjP/IiOqjWS6qrvji5E+Dr3gje9Y9KcxeDgP5u/tStPFPIRF4Yd68MOeqXyXzH0dhHpiMPmXSyYhY4LhqlyQa6ao6H8n6ycRyiuXDflqCpHtP/j3e4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q6ofxIDM7YHaa2eTiP/fStrRXvuDH9EVSr3RllnVQrM=;
- b=n60nSh/b+CEZJ2nWQDd6bNm09/cEcBM0zW/h7Yk0aXFKhDpcS04Cnc8LYd0KW8GaipBy7OCPSCFup1ksTKJua9I/Il006306szBLuEqbcqbMfpHoU9cSiCnSeJn/z+gZTwba6nMZ/T8qKJ7dA21gduOI+WHP3elhMerNVdvAWUJQvdBiFQF5QUHUVtSj0hqzqwfkTHezDn3OBvU4h/zyMZM60p4tcKHBjkdjuU5PrnofTFvzcwxfAlOHMi/CuKsMBKDSE2Td16Tk8kc3boGK18NbAuDQHniJUWpRM6ln+fwEUE46lbZAwcmA0RXeuFZinyxszpJ23vdrAB4YgF0Haw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q6ofxIDM7YHaa2eTiP/fStrRXvuDH9EVSr3RllnVQrM=;
- b=B3TsUzFmR9cqG+v9neRQAHehHlZiwLnUG8hCCLbBH5TwbOuOw74dtza5uF1WCCP39Rx5MWaeu0HY+/7OTCY+SgiJspFxYONWiyjYL77wRn2tu89lxM1GO7zKkUBgxw8whIPU4txpI5VwOrxj21r+AcJftEtGb5W3lTWRcqJ92gI=
-Received: from SA1PR21MB1317.namprd21.prod.outlook.com (2603:10b6:806:1f0::9)
- by CH3PR21MB4495.namprd21.prod.outlook.com (2603:10b6:610:219::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.9; Thu, 20 Jun
- 2024 23:03:59 +0000
-Received: from SA1PR21MB1317.namprd21.prod.outlook.com
- ([fe80::67ed:774d:42d4:f6ef]) by SA1PR21MB1317.namprd21.prod.outlook.com
- ([fe80::67ed:774d:42d4:f6ef%5]) with mapi id 15.20.7698.007; Thu, 20 Jun 2024
- 23:03:59 +0000
-From: Dexuan Cui <decui@microsoft.com>
-To: Rachel Menge <rachelmenge@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC: KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
-	"chrco@linux.microsoft.com" <chrco@linux.microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] Drivers: hv: Remove deprecated hv_fcopy declarations
-Thread-Topic: [PATCH] Drivers: hv: Remove deprecated hv_fcopy declarations
-Thread-Index: AQHaw2RKNOVliwEkuUuDERFITHsNWrHRRUbA
-Date: Thu, 20 Jun 2024 23:03:59 +0000
-Message-ID:
- <SA1PR21MB1317CAE93C786A5A0198EEA1BFC82@SA1PR21MB1317.namprd21.prod.outlook.com>
-References: <20240620225040.700563-1-rachelmenge@linux.microsoft.com>
-In-Reply-To: <20240620225040.700563-1-rachelmenge@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9ebddada-9f80-444c-96e0-be6664948628;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-06-20T23:03:14Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1317:EE_|CH3PR21MB4495:EE_
-x-ms-office365-filtering-correlation-id: 02d3620b-6658-428e-c9ed-08dc917d44ff
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|1800799021|366013|376011|38070700015;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?lTSOJkzT+2fVBAlSUQjdTAVW0jndqPgxCrPs6l8bfWNouhjljWYIWpaZq8Tl?=
- =?us-ascii?Q?s6A6K0tklDk/Pe9oaXeBQEA1hcIewB0NZX1gNWPBhgk6cC/xMvTHpRvViZX6?=
- =?us-ascii?Q?g94J8epaffihei+H9u6APY3cOR99XR6pCWApcR2apUV7UU5/yCaBjOuXBuPG?=
- =?us-ascii?Q?oa+kZrDFSP1OhDYQCCxEFIKb5qZaVEevEAqDyVBvv6Cm4sWPYKBnyRouieJ/?=
- =?us-ascii?Q?IaUUDX3GxmOzMOtZXAts84XImrioh+J8DUbKl+RaDidrINznqC84G1q5k0QE?=
- =?us-ascii?Q?1W4UPaZagNF5QbnKXLgY0Plhyxr1jNaHoAkmf6yq4WktzoSEMOP3Erp40E/t?=
- =?us-ascii?Q?z4W1EHGvTFT5KeHa27gKfktiD3Gt8a35zCE9uF93B1DVCSSpH5MmrsxdDrSB?=
- =?us-ascii?Q?yiolTX7hnXjfxRPeT93UiqD50mlEy3VoXlUr2hBXazVVlxx9jLZfE2A37hMu?=
- =?us-ascii?Q?oiR3cLZMIqjxTwaq76exYwJaEw7CTiB0I+N/IPTO8XVcXOEdKB5TvvnjeSCE?=
- =?us-ascii?Q?8zhsNi+WLihlUwLgGL3+EFl9n+mn9rIp60brOJD3UxuxAz+nq9MKv15B/K4y?=
- =?us-ascii?Q?yONapIo+IWUpctrlEymHkxNDDLoV56R7IrwkNNhBp5+1LLjqa2Rk5iuKkUeL?=
- =?us-ascii?Q?EVrbmyU8QzdpMfwOsqt786eKPI2EKfAlRs1cGHXkKke0OdEAoltHDQ7EdOyD?=
- =?us-ascii?Q?A4LpH68W3Voztb7jLNSbgPjM/cIG3cHHGQAmu34FepamgGKVBaCIT8RtnaI7?=
- =?us-ascii?Q?ZnRa0WRKUsXKLyIuxi1woCWABNWM6yqsY1lSugBSsUNTzHBzC9kTPGlh+Tx5?=
- =?us-ascii?Q?3YJqSkD+D2B3GSGTOCvdfGYcR0R7ifZNMz2v33VoDyXFYjcFaLbWHtQdvhO2?=
- =?us-ascii?Q?ouem36YoTaH35ZRXjg5717PG/R/3dXMHWLYUDwAs8pJE7HG0XLqE5N8VzxoB?=
- =?us-ascii?Q?QEOcx+NleKsOUdnopu/N+z+BG8tMQAgJ/Od/fhVsvwQPtUhjl4JvAIQMCkLr?=
- =?us-ascii?Q?jKFEPt5qGjK30CR0PLQJsld1b2XUSVOtGke/wxDWFU0bPdtSSwFgf3LOXOC6?=
- =?us-ascii?Q?CTMwfHkOsSShYvl4kC82zlEPCd9SZy1Qw/zdqkYdB9DMvohAvvNzut0Ln1Jb?=
- =?us-ascii?Q?0I22+1cQTfkZFOqm3/giJtXGZ4f7WHVp5RBp8e1mPtOGfhzeHHBVe44LODGi?=
- =?us-ascii?Q?EIv3gEH2S7a+wSG9DMhvMSFysrh5AMyD6rkExhBRXh9JD6M3L/+kA3BaD2WN?=
- =?us-ascii?Q?+La4NSpWPZC2iSSJfpAjODi3Umxqzml3t8JF7IlCp270LUtYEytNQXmdece8?=
- =?us-ascii?Q?mJjnsgurNMk5Xij/VInjQuDkqBDwgJDTVMvqgi5LEPmKvojNDDgpYAWlEqdd?=
- =?us-ascii?Q?XsolPnsJv/Qg+h0f/sOcN6gC8XhNm4Cb6WVEYpN3qwx9Z/ucZQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1317.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(38070700015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Df0crmQ3izPz1yBTbGbASYVAvAQFBSQpPlsNszTHAIjg1OxWTrOxcGbpAORN?=
- =?us-ascii?Q?x18bo8R/2OApsmf3fOvZlD2AGKFESRetF9BUsqZSz6zcYDU3fwpBQXsc/827?=
- =?us-ascii?Q?MMuicLuvDHcdkLLZVHZoFTxSOcbqrAe+eILIgeOm/c6oxHo998AJ3XDRK971?=
- =?us-ascii?Q?zMWXQEOlG6oUSvxuIpDJ6f3BxX9WFruo1GikNHPjYCvR8HDt5mbSTlZtrZTD?=
- =?us-ascii?Q?kIQihhSy/IVJqwBR2/+5OZP+yKNXWKPA5OuIeQ5yRLepYvNqm6J9f66AexLL?=
- =?us-ascii?Q?tj7kGX1wSVbKlaZK4eZ0/McspUatbsN2qsrQY+rvKkQEZMLVBXyfuU1kOiGW?=
- =?us-ascii?Q?YJ3BcI6hwOod0u5twmU89/Qg7UamUWdVA44frjhFz7VwyOiVUW/8DjGP/3Ff?=
- =?us-ascii?Q?Jr4r9d9YIZNwU6MOJMA0Mr2eRqBbkgWOfVZOTvGMGMhusxmmifJItMf/d5FD?=
- =?us-ascii?Q?SGledH6g3Huxc/Wztg2PQIkOZU8glNPqSQvycZ57mY6FhOs0JRH0S+E0sqQ6?=
- =?us-ascii?Q?PFDntvomAQ5JxJo62qe3DYYznASpzxJb8j8E7v8x2x8tQEHARQyIMKT8sWza?=
- =?us-ascii?Q?cTC+chGh+aUYpj04e7t+xQ0/BO0/6IYXB0p4FuxULnUD4tsxFHNQSaaopEH8?=
- =?us-ascii?Q?lB15wCHYAXgPtFt4dQFCRspyF4jQ5yBmxksMpuviYCjTA9l1v2fIRlCHGnCr?=
- =?us-ascii?Q?3zdBnr0RpztjGCMGezOQ49SLlcNUhnd0UmbT3d3fTt3TqMY4Dy+3i2MgWtbY?=
- =?us-ascii?Q?5Bgpph1G/3VHhmWg5HlWai3B30Om4za5MeKggG9pFyEBUN34Q3Z2yH6a1Nac?=
- =?us-ascii?Q?T+NqJUCmb8V71vkd6h7eRuPcXvaRLiHMm8Jro5c2Sbcq9JqzBBhlOc6n72LQ?=
- =?us-ascii?Q?V5ykbwghS6n7BkttVhsz3XP41ESPdwqEjTPDZvWKgV7LAXrnoOe7HyHxeE/U?=
- =?us-ascii?Q?tN+DUYsEhopxJmt22tkDKGgdIrlpxdn8n3BEyo4G90CU3uyjjVVKO985WkAy?=
- =?us-ascii?Q?0kSG4TrHhOBiz0fR3H+oJqWNQaYpFxwz1zdBKiXtwKl1Fvk2KBv74eIdTHDf?=
- =?us-ascii?Q?7WPFCWNmCvs+3mv/Y02sVL5fUk066n3dq0wRhyfA1cWA+SWo0hvN9PpafWub?=
- =?us-ascii?Q?fZuEDvIGRTdrK7a1vu7+xdIZs/OWcaJh5sSTP4Q2TBz0ROOT7Ye7YHgnM0es?=
- =?us-ascii?Q?jTesH7idYqjuc51PzRn7aPB/LrNiRXh0ZWqgINuyB3Zf8r3ZRJ2XAAuFWz6/?=
- =?us-ascii?Q?ssaaBcISyKqs/AZ75lTW01x5dp2jenP2BEGmuf+vEil2VICcmzdoF30Dw2rg?=
- =?us-ascii?Q?J9fIgAFh25yZ+zrXEybeEZVI5vfgSO4riihrfXTowhEB7PxVZf3bfGyHVM1R?=
- =?us-ascii?Q?FnwXA9A2ymGYryOflzClZShiT92z7rYSTbtUNWkt8mTevfnHmuaHSu2b1+T2?=
- =?us-ascii?Q?zI6dUAFap9q0uopFUnC6ZtYJwYjNGOLfLHxpPH2QzpZ3Wr0JFVgVhJiYVHwi?=
- =?us-ascii?Q?mtM9MqjakFzU9+KBb2upDNtBHY7YNPODhBSsvsIU90rrfQYTk6STaTNh6BAA?=
- =?us-ascii?Q?bNL8m0+e1L69Dq6+WhazM1D33yinBNDa5GkLG4EE?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGsfH1Gp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32575C2BD10;
+	Thu, 20 Jun 2024 23:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718924740;
+	bh=SaOaFRr/ohEIO5+x2sHjKUAw9989Q79otM9vhPABR3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dGsfH1GpHmQGHTfZ1l4tF8Yc8IR5UiRboDTNredObqxtOQx82e5s0tzE5UQ3HRdti
+	 YEn9NRju/HM5BF130UGn7A/JtXSjes40KzIwRc9JuVBmqI+8j7E1dPyQ28nSZcPIyG
+	 TOptG9SYCZtxheOmn5MCrlB4o/pGRyWPoX1UppgceSz8O/DTcsfVNH4ydUcWt+i5IJ
+	 oqlDDSWtyhj2zce34mKlyDG9TYhoG/y5KLT8TEJYWtVuC7gL+IKxBIvHGJphOe3KMf
+	 rP0msnieHjZGex3A1fC77vPMeqWKD0e19wRR09Ly11BI6lTQHNI85BCFts6ZIC+fOW
+	 QUnaqIuN62HjA==
+Date: Fri, 21 Jun 2024 01:05:37 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Sergiu Moga <sergiu.moga@microchip.com>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+	Doug Anderson <dianders@chromium.org>, Enric Balletbo i Serra <eballetbo@kernel.org>, 
+	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Vignesh R <vigneshr@ti.com>, 
+	Kamal Dasu <kamal.dasu@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	linux-omap@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, stable@vger.kernel.org
+Subject: Re: [PATCH 0/7] dt-bindings: i2c: few fixes and cleanups
+Message-ID: <qru4aqjphjnjpo6yjxl2oznhlz774iv77u4u7u4jldnmlanps5@vpzxntuz6arp>
+References: <20240620-dt-bindings-i2c-clean-v1-0-3a1016a95f9d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1317.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02d3620b-6658-428e-c9ed-08dc917d44ff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2024 23:03:59.3939
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TpJ12dMril4OKRyrFSY3m+6o1CRxxW78gXg3zcIw8w42FfW5j9UIcCEJSwmUchqKyjJpBjNpjv0ReTZ7ODuHUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR21MB4495
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240620-dt-bindings-i2c-clean-v1-0-3a1016a95f9d@linaro.org>
 
-> From: Rachel Menge <rachelmenge@linux.microsoft.com>
-> Sent: Thursday, June 20, 2024 3:51 PM
-> [...]
-LGTM
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Cześć Krzysztof,
+
+On Thu, Jun 20, 2024 at 01:34:48PM GMT, Krzysztof Kozlowski wrote:
+> Few fixes for I2C controller schemas. The third patch (atmel,at91sam)
+> depends on first, so I suggest not splitting this into fixes branch but
+> take as is via next branch.
+> 
+> Best regards,
+> Krzysztof
+> 
+> ---
+> Krzysztof Kozlowski (7):
+>       dt-bindings: i2c: atmel,at91sam: correct path to i2c-controller schema
+>       dt-bindings: i2c: google,cros-ec-i2c-tunnel: correct path to i2c-controller schema
+
+merged to i2c/i2c-host-fixes
+
+>       dt-bindings: i2c: atmel,at91sam: drop unneeded address/size-cells
+>       dt-bindings: i2c: nvidia,tegra20: drop unneeded address/size-cells
+>       dt-bindings: i2c: samsung,s3c2410: drop unneeded address/size-cells
+>       dt-bindings: i2c: ti,omap4: reference i2c-controller.yaml schema
+>       dt-bindings: i2c: adjust indentation in DTS example to coding style
+
+merged to i2c/i2c-host
+
+Thanks,
+Andi
