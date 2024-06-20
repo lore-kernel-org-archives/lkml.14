@@ -1,94 +1,80 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7D31BA87D
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633EE1BBBE1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906240; cv=none; b=eMCm8zGJ2vHLhQLlqxDMA9npvQUOSUuEAdLz5QsgM/FzOtrGxtn99ytq60g3jB1gSnb5DH0cww+9WB+QwqC347gOwp+ZmbDr3oQgG11FPaZMOcj2e0L7WiybBCnCLGG4Pj9dPLV50934Enpv4ffws9SzQ7NiS+s0QNoBpdqVUI4=
+	t=1718906241; cv=none; b=TjrkgHOZ2ak7rOfN3LitM6u8lAj1rgv+2SR62EnD3XSPhFI7Q0xGOWg7b1TwW3TbOkazpVBnrloWYgBJG05Le4mc0LHaqyp+iDStPTb3GH8qQJnSK5PsWDJ4pYtQ5NA2rLLU5rVv41UpkrE2aPC13TzAW4tGBCv7RcEPH9Mvqx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906240; c=relaxed/simple;
-	bh=lL5HxCJiZymjowcOr7xVA2M7Te/xs6i3j2oxZgMh+rs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f63EbqVpAZRa9OAQT4iARcmYNe9SjdNCXT+XU0z/yCimPdrM0mh5xEjGqaJAhqKqGrrwnlOCDXNRrUyts5zW4M3sZQUK4luKgkfBi4KJIeuEEsfKF/kOInLekzIYqhFfFusNwj6hQHV9LeWWJIhKqWkm7HtOaZySGHAqFIn/BEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=Ef2yOdoP; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1718906241; c=relaxed/simple;
+	bh=zlWE/BHnOM5LDq/uDURZ2MNHZjunij/1siJW9ZOxI00=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZaSzK3D6QYiFWO/Q14L+kHlroo+4KDcNeYzWgSB2dEk80dQtR6Zomy9RaLTqpizIMTq5+xjmHj5h9gbce96b+tjYN06E1zO1hKckv34sQ+3uMz4sz4Ne2tgAbc5EPICkUBktQEqsQ4kX54IC9Vv5uuuFzw+iFiaZzFoTjkDu7Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bw43jsS4; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="Ef2yOdoP"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6fc30e3237so128642566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:57:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bw43jsS4"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7062bf6d9a1so952144b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:57:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906235; x=1719511035; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UP/GNN9hhxz4nMUGrLaNfWrPk3mVaVMWtBi9huNJxPk=;
-        b=Ef2yOdoPvdrdIdPhr5LQiCJ0I9SLxjRSKaL/OqYMX5sqAZCEuTYZ7p/dgSstRd9dBo
-         453/Yyxx0wzRqZnwLXEhOVZlIMMOGUCt9mtMNngn1z/AFwrxtSyZeZigZvfq7nDB88xV
-         bfv/JdkfvxqG+JcOdNlu83TuBlMu8F15agYsQp6cQBRiayP82/3wP2Zfym+grexo+RbH
-         33uSmqeotVnrH7QfBwkcsJPqVTYCS6ltvJkZVCpj529Q28XwqxMs+LKs1pdi2dvKdODM
-         dBTtra4ZW7mcWHzmYzVTyIVE19mJcpcSI3bWWiS5kWd408yqD4I5puVMvo6ZbWc9XIqN
-         69lw==
+        d=gmail.com; s=20230601; t=1718906240; x=1719511040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6lqobSglYEzexPVkHLogTghmlkNBAO5YaO0aqGu8OxQ=;
+        b=Bw43jsS4io1Z+u8D9AH8uvq2GxzmZiaxSFF4tOTegVxOCBPYrSKFSIXPu4Pt5dykx+
+         fYqqEFFHdcyy1VYiU3MUIyBQP2lhzTXChwhiRo+bZ5A+Qr6n3Xnkpy5CGC9lLJkWD1BG
+         sVX2F8UI5jeWzirOsLFh9XNuY6+IsgTioWssrTUHyDY1ZdhAYLsT3C34mehP3UsuoxIS
+         AYkoq9ALs7vfbRl6M/VrH/Q0mnsxPI0hgeU7Oe+VrmFvzuV2mA27nBJu1ODz3JNDZa4T
+         Ky1+x41t9Blx7btkNRt+QM1icwGsUvEFjqDR+0vA/5dEgEgejirueNiJzblcc30NTNsH
+         Nf3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906235; x=1719511035;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UP/GNN9hhxz4nMUGrLaNfWrPk3mVaVMWtBi9huNJxPk=;
-        b=DKKMQH1O6f6wlY4Ba37LKAPaEN5khz9WeL12G2aqW3YZeHYxeVTT/ft4TUH7N1AsLA
-         5M0pqJQ7iLieZPDygZMYhc+fQr8ZnK4AyBaWq8QqyYBgvHBbwH71elGPtVLMj6pWBpQm
-         UKkaOMxQxSvilp4TgqCOHX24pB+HrF7wFGOH3AIlbu7azlzNzeRfPoa+BSZip6w082Rv
-         tgCIRVqBf4aYOG+auIy95Ag2YUlIvmu8M744nvS39gk5nEMmL+nE7+TzfKPwysocq/Kf
-         Hy5VfL7xipIicF9bKzTAeI7ZHRhmYeLCyP4yRbuQk7DVpb5/e5b+Dh8vmEHm+8rnMWsD
-         FjnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVac+Uj8R6AtgAP5ahfTU3QZDoiLVn8oMEHSLfA8jw21+szM58hELsTX0t+BVpNm20XWLzQj2ND8OHJfEtt99RnjLhgOTMi3DULi1pD
-X-Gm-Message-State: AOJu0Yw6bpXSmCMhzpPPGjG5IU8hfSlluiQJTifOGcfwFXNSAD7+BR5j
-	f4LC8ya7F4jj8ATW5qjToQq+QJGKV4NuPPqBQUrqcf0qGLjaApnS9Vtx7eOh4+8=
-X-Google-Smtp-Source: AGHT+IHwzCxasTWecNI2BQg/1Mqv76qvz0pqMMUj9hgHTBodTuDhBkY00q2aX9YgUG43J9U17WwHFQ==
-X-Received: by 2002:a17:906:a09:b0:a6e:f7bf:712e with SMTP id a640c23a62f3a-a6fab618973mr379689666b.27.1718906235388;
-        Thu, 20 Jun 2024 10:57:15 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.57.13
+        d=1e100.net; s=20230601; t=1718906240; x=1719511040;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6lqobSglYEzexPVkHLogTghmlkNBAO5YaO0aqGu8OxQ=;
+        b=lgY/DtL5ByFTdUMRqanLSIVih3NUt9zkllxS+zeA/PTMSkdZpaAIs623szD76qyRq+
+         ECoI4/prPDs+raFaNFlG7Tl2wtWAeJzjk3yhittaxAPHOtuqqFbK+7ZYSjkz7HOxRlZd
+         QvNtBKTr+v9ThI00pbz208WjJX5CBi+bZn+5fuOb8fosv5iNOp4gj0YAmH3d63tmjNF2
+         e8UhDZKI5x/uT0UKi4NxP8T/lUVCixKoPwNE5qx7H0R0Fj2E12VjunNlXlHFT6/Uume/
+         EXB4rqgOXIdoahqVf+sSiRHMaRBGRElI6L0+kjpRp/lnAiJMVWTpbjMoBQUZF48li8QE
+         WHgQ==
+X-Gm-Message-State: AOJu0YwM9CfKphSgGh/hFAHmGNYs7xmmhOpSURUomt0HfsZOG61iPNFu
+	8to33PeaxvDAw9Sy0hyqzWw8J1iCL2SFSXDoMX+m6LbZT+xtlOJh4vo2qDpVNM8=
+X-Google-Smtp-Source: AGHT+IGJ118F6VC3AtyfokUQpT041EuGRx6X707mgLwtYJ0bL5vbzytScTF3N3LGUj1EU6oZpngWkw==
+X-Received: by 2002:a05:6a00:2e02:b0:705:bc88:612a with SMTP id d2e1a72fcca58-70629d690d3mr7357777b3a.1.1718906239678;
+        Thu, 20 Jun 2024 10:57:19 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb71e66sm13067589b3a.176.2024.06.20.10.57.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:57:14 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Subject: [Patch v4 00/10] Add audio support for LPC32XX CPUs
-Date: Thu, 20 Jun 2024 19:56:31 +0200
-Message-Id: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 20 Jun 2024 10:57:19 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Siddh Raman Pant <code@siddh.me>,
+	Dave Airlie <airlied@redhat.com>,
+	David Disseldorp <ddiss@suse.de>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Nick Alcock <nick.alcock@oracle.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH v4 04/40] watch_queue: optimize post_one_notification() by using find_and_clear_bit()
+Date: Thu, 20 Jun 2024 10:56:27 -0700
+Message-ID: <20240620175703.605111-5-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
+References: <20240620175703.605111-1-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,49 +83,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This pach set is to bring back audio to machines with a LPC32XX CPU.
-The legacy LPC32XX SoC used to have audio spport in linux 2.6.27.
-The support was dropped due to lack of interest from mainaeners.
+post_one_notification() searches for a set bit in wqueue->notes_bitmap,
+and after some housekeeping work clears it, firing a BUG() if someone
+else cleared the bit in-between.
 
-Piotr Wojtaszczyk (10):
-  dt-bindings: dma: pl08x: Add dma-cells description
-  dt-bindings: dma: Add lpc32xx DMA mux binding
-  ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
-  ARM: dts: lpc32xx: Add missing dma and i2s properties
-  clk: lpc32xx: initialize regmap using parent syscon
-  dmaengine: Add dma router for pl08x in LPC32XX SoC
-  ARM: lpc32xx: Remove pl08x platform data in favor for device tree
-  mtd: rawnand: lpx32xx: Request DMA channels using DT entries
-  ASoC: fsl: Add i2s and pcm drivers for LPC32xx CPUs
-  i2x: pnx: Use threaded irq to fix warning from del_timer_sync()
+We can allocate the bit atomically with an atomic find_and_clear_bit(),
+and remove the BUG() possibility entirely.
 
- .../devicetree/bindings/dma/arm-pl08x.yaml    |   7 +
- .../bindings/dma/nxp,lpc3220-dmamux.yaml      |  56 +++
- .../bindings/sound/nxp,lpc3220-i2s.yaml       |  73 ++++
- MAINTAINERS                                   |  21 +
- arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi        |  53 ++-
- arch/arm/mach-lpc32xx/phy3250.c               |  54 ---
- drivers/clk/Kconfig                           |   1 +
- drivers/clk/nxp/clk-lpc32xx.c                 |  10 +-
- drivers/dma/Kconfig                           |   9 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/lpc32xx-dmamux.c                  | 195 +++++++++
- drivers/i2c/busses/i2c-pnx.c                  |   4 +-
- drivers/mtd/nand/raw/lpc32xx_mlc.c            |  10 +-
- drivers/mtd/nand/raw/lpc32xx_slc.c            |  10 +-
- sound/soc/fsl/Kconfig                         |   7 +
- sound/soc/fsl/Makefile                        |   2 +
- sound/soc/fsl/lpc3xxx-i2s.c                   | 376 ++++++++++++++++++
- sound/soc/fsl/lpc3xxx-i2s.h                   |  79 ++++
- sound/soc/fsl/lpc3xxx-pcm.c                   |  73 ++++
- 19 files changed, 954 insertions(+), 87 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
- create mode 100644 Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
- create mode 100644 drivers/dma/lpc32xx-dmamux.c
- create mode 100644 sound/soc/fsl/lpc3xxx-i2s.c
- create mode 100644 sound/soc/fsl/lpc3xxx-i2s.h
- create mode 100644 sound/soc/fsl/lpc3xxx-pcm.c
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+---
+ kernel/watch_queue.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index 03b90d7d2175..387ee88af71d 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -9,6 +9,7 @@
+ 
+ #define pr_fmt(fmt) "watchq: " fmt
+ #include <linux/module.h>
++#include <linux/find_atomic.h>
+ #include <linux/init.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+@@ -112,7 +113,7 @@ static bool post_one_notification(struct watch_queue *wqueue,
+ 	if (pipe_full(head, tail, pipe->ring_size))
+ 		goto lost;
+ 
+-	note = find_first_bit(wqueue->notes_bitmap, wqueue->nr_notes);
++	note = find_and_clear_bit(wqueue->notes_bitmap, wqueue->nr_notes);
+ 	if (note >= wqueue->nr_notes)
+ 		goto lost;
+ 
+@@ -133,10 +134,6 @@ static bool post_one_notification(struct watch_queue *wqueue,
+ 	buf->flags = PIPE_BUF_FLAG_WHOLE;
+ 	smp_store_release(&pipe->head, head + 1); /* vs pipe_read() */
+ 
+-	if (!test_and_clear_bit(note, wqueue->notes_bitmap)) {
+-		spin_unlock_irq(&pipe->rd_wait.lock);
+-		BUG();
+-	}
+ 	wake_up_interruptible_sync_poll_locked(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+ 	done = true;
+ 
 -- 
-2.25.1
+2.43.0
 
