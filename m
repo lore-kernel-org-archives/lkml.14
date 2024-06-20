@@ -1,57 +1,57 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C621AB8EF;
-	Thu, 20 Jun 2024 10:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF7D1AB36C;
+	Thu, 20 Jun 2024 10:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718880317; cv=none; b=XQh3UuV4hu5xj3CpvV+UswCZv6Mb+9wsJimtzgbyvUDbsDMbXnE2e30RyiKWNNmE8lVwq50t5NWpxAEU5OpjdpBn+8e90sqFlHv3kJyclJ1RFEhKY0O1NO305jwjJjZmL/VpiAOG8tkUmoto+OuRBrVcwps0MzLV1yoCMHIRweY=
+	t=1718880327; cv=none; b=eduEHIIOaDvACrL2oFruTg+hh0bMhx1bRIwdPCEs/AO1wG+yr2Z/or7OuBIskzVp1q7Jg/6xJmot4xRbgT7a7SHSvChy4BLa8c8xbFETeOMAxXPE6v0wHFnJ3n/ijAkDPPS176KSOFQ7UfTIXo4ZZ5KcRcu2HojrhHIpwh9L7pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718880317; c=relaxed/simple;
-	bh=urHhvNgFjlJC0RUvDI1zmMHs1AZTnco7V3JoqsJKmGU=;
+	s=arc-20240116; t=1718880327; c=relaxed/simple;
+	bh=ZyVMYmsvryjjnBkG9wT5SUa7XSd0kdM9GlYcwevCVnM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bOuZzuqsxdwlLjx/nx+nAhAT4xYhCou5kJVfxud4yDNywdaVDjyX9bJTS5v8atyQu+AK7Q2rcpxKNMy9mtHQZKBR7CvcKiIeLU1S+CwfPO8cbgj8JwrzHIw1PdKZtFpPyywkTedxOqa4dVSUo1UwWLQoeLfu6rH3ULI8PEIdTgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KE2Tqqiy; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=jC00auKKWF8Ru27o15t//WqJQR9b0O6EPqtAFmAIU/bDSRORK9rsIex47om2OUd+NsIt8SUuYbh124xnGom8VUcjBjzABA1z9SkPb4ZCwUhyJYKAaVJx3NeSYA64LWPiPIJpEjlhWalay+69ihIezWYbISq4iT3KGK7yGUux2dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=miz7eIkI; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KE2Tqqiy"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f4c7b022f8so6377925ad.1;
-        Thu, 20 Jun 2024 03:45:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="miz7eIkI"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f480624d0dso5998215ad.1;
+        Thu, 20 Jun 2024 03:45:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718880316; x=1719485116; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718880324; x=1719485124; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=elnfGKAy/7+HbOAzxPXIpLPWv33SV0UOKZl7RY/LQJw=;
-        b=KE2TqqiymJXNQqcEe82p283LGwwY9Xd3xaD6mmw94Ia4dP8X4lGP00DDzU6bvx8D5E
-         FGGyH6SWPdEOSSr0niq7tRa1Gy7jE7bDLqaXZqbEIetPnysyRill8nCN+isiR8IiQyII
-         yr1aoq3K28vail213U/vB+dzwkwcwm2aZpuDTlAIVAb0gBUlnH1lvDX4bUNH8Y3wHJ3z
-         T7xCFwJSvIjCglVtxwP75eOR8QxEMEpF/6aRJWpkma2idzDRGZDbwRNGgOocEb0G89Um
-         tLU7UHS10I/DW+YiAu3bsUem5B0xzZEE9j/sIM8TSpYcrjqupW8l38tk+JQTI6zDpV8G
-         iXrA==
+        bh=wvO75uRyUk7yza516huVLoFiucGvhyCNouSYWgNoMv4=;
+        b=miz7eIkIPbFnNyhc/UPVSQvbrYljmthnC0QEUQqeT6q8WFt7apzeTFmMH+hXrrIUZP
+         IJz6U7H9t1ICr3hbLTbmjyJEgUgnOPWp5d14h22nCyzD+4RuzJ790wsMffsCGnaM552Q
+         M3J0x6QtdR3U1CH9P+vgW5y8tLktmyreqjIeGwx3qX9JLl9sVLe/dsX2txgF62E6aMJG
+         EEd2u+LfgHgLZV82YkIoQDu0GG91rNgPFahU3iqUCjsWCwzgIrRnkumUFsW6+klWD3vh
+         wEZOKsnxZ7hbm9qV7tsYT19ntXfIkcg58QgIayq5v3LerFDkDoHUAKaT8vqgtJxMySIF
+         f/wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718880316; x=1719485116;
+        d=1e100.net; s=20230601; t=1718880324; x=1719485124;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=elnfGKAy/7+HbOAzxPXIpLPWv33SV0UOKZl7RY/LQJw=;
-        b=Iu9i9iRoTKfH0s3+ZhZPx4KrGB3esVIQeo4kcVfPccR/OhQC8Z6jvRNJ7+jJgp17RL
-         MTV2Fc70+npYMqhYAemeHHGsl6OFs0QAm5vUZTx1DJZtmoF3Xgs6IkBy/uVf7NHQM5Wi
-         uO8pmnAygGN10t129TiaA/TaNZ/3aydeye9M7R4R7hsv1HL+HpGL1VgU7pZAlKXsg30t
-         cuO/dsZbNWWtDRhy1VTfDHpL0OINHkAAxXPgU8RmKynE5tALn2dI64SOv6bxsRmlhFeW
-         vAmIgCQemZX0wN3vtHLLMbPOjoiEQrCrXoC3r+yT6nst0YPJb0v8ggRWpilxgoQk9H1H
-         uCPw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+hlaAY/VtpSdtkRPFiMaQ9MtgmGla8DxKR8EpRhVb/dUUsu0S8cBIkXhugJXTdwPg+hG3denZQpWpMjUqb36u1mf6OfGTaZV/HMNA
-X-Gm-Message-State: AOJu0YxBnidPDbYMTGCxPKnwATazxdGZU+5QY7O/DWhq5EuMUNDEIMxU
-	q8CFuvenMl6r0AOUmZiYgMlKSOICzRNY7dnOfBpGryXLI/jQl9iX
-X-Google-Smtp-Source: AGHT+IFuoA8zeC88yZWgZQO2lVmNvX+7VJo+JUzABY3BLyDi+V/KKQneuaxrJXVpYYsfgAaFWu6MVg==
-X-Received: by 2002:a17:902:d4c3:b0:1f7:174e:354d with SMTP id d9443c01a7336-1f9aa4632b3mr60674945ad.48.1718880315721;
-        Thu, 20 Jun 2024 03:45:15 -0700 (PDT)
+        bh=wvO75uRyUk7yza516huVLoFiucGvhyCNouSYWgNoMv4=;
+        b=tn1/aQETqOrHmhG9n0B38w16yg9fug/C0WSUWK+bLgLop5sTE/i693CmG/BDhA+JpM
+         wA7DtsG1/vq1sptEDORJUJ5mfRo/Mch53jTNXmF5q/8AEGF8pOahTP5j8kBnf6D0+YIa
+         Oagdyr5oQMYffkq8u8H8TZexE1Q0bo3lq1xhJA0DSI/PCKX4OUKB9MSDS9ZtGkdxGJI3
+         fAv5dn5FuGFvx7a9eFX33xka3/hvV8c9OrJk6w0Kj/chJtbtbNcGWaxIaf29/gx3FKfx
+         gx7SaNwOaik6pjOH2H9Z5hsFPjLAmULPCMNqdKdTBB3+NbFQ4s2jyCDYlxw0z7Sz/ppf
+         ygHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGS0Z2dKXR8LX4H22zr9YnnPSGKO5Xmm7E/DJTR4PscCFnUpf1L/godQrVTeDR21Bxx2LSR56FnGHBWN26VAfa2pAU+sUyBqxx6uh8
+X-Gm-Message-State: AOJu0Yz/lk1gMQBVvr2+z2MrGJvZfq3z4IEGPAf4E8Gh7uAWiXqYt4tQ
+	lwJHTZTtMrh2KSlzMR33nUyrhqYjEhDVoTkiEHTsCxAbvPSfh2yg
+X-Google-Smtp-Source: AGHT+IFCjoj9R8v6kbbx3iRsXan6Eq4qqpXeolWGk4zDpSUWEYbWo8T5gg/0DZUHYf1bthhZcEwcZw==
+X-Received: by 2002:a17:902:da89:b0:1f7:195d:8e7d with SMTP id d9443c01a7336-1f9aa461253mr60201355ad.54.1718880323955;
+        Thu, 20 Jun 2024 03:45:23 -0700 (PDT)
 Received: from localhost.localdomain (2001-b400-e28a-abbc-b19b-27f2-8368-202e.emome-ip6.hinet.net. [2001:b400:e28a:abbc:b19b:27f2:8368:202e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55ca1sm134007805ad.49.2024.06.20.03.45.12
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55ca1sm134007805ad.49.2024.06.20.03.45.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 03:45:15 -0700 (PDT)
+        Thu, 20 Jun 2024 03:45:23 -0700 (PDT)
 From: Victor Shih <victorshihgli@gmail.com>
 To: ulf.hansson@linaro.org,
 	adrian.hunter@intel.com
@@ -63,10 +63,11 @@ Cc: linux-mmc@vger.kernel.org,
 	takahiro.akashi@linaro.org,
 	dlunev@chromium.org,
 	Victor Shih <victorshihgli@gmail.com>,
+	Ben Chuang <ben.chuang@genesyslogic.com.tw>,
 	Victor Shih <victor.shih@genesyslogic.com.tw>
-Subject: [PATCH V17 06/22] mmc: core: Add New function to re-factoring the code
-Date: Thu, 20 Jun 2024 18:44:28 +0800
-Message-Id: <20240620104444.5862-7-victorshihgli@gmail.com>
+Subject: [PATCH V17 08/22] mmc: sdhci: add UHS-II related definitions in headers
+Date: Thu, 20 Jun 2024 18:44:30 +0800
+Message-Id: <20240620104444.5862-9-victorshihgli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240620104444.5862-1-victorshihgli@gmail.com>
 References: <20240620104444.5862-1-victorshihgli@gmail.com>
@@ -80,72 +81,385 @@ Content-Transfer-Encoding: 8bit
 
 From: Victor Shih <victor.shih@genesyslogic.com.tw>
 
-Add __mmc_go_idle function to re-factoring mmc_go_idle function.
+Add UHS-II related definitions in sdhci.h and sdhci-uhs2.h.
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/mmc/core/mmc_ops.c | 24 ++++++++++++++++--------
- drivers/mmc/core/mmc_ops.h |  1 +
- 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-index 3b3adbddf664..5c8e62e8f331 100644
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -144,10 +144,24 @@ int mmc_set_dsr(struct mmc_host *host)
- 	return mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
- }
- 
-+int __mmc_go_idle(struct mmc_host *host)
-+{
-+	struct mmc_command cmd = {};
-+	int err;
+Updates in V9:
+ - Modify the commit message.
+
+Updates in V8:
+ - Use tabs instead of spaces.
+
+Updates in V7:
+ - Reorder values and positions of definitions.
+
+Updates in V6:
+ - Rename definitions.
+ - Use BIT() GENMASK() instead of bitwise operations.
+
+---
+
+ drivers/mmc/host/sdhci-uhs2.h | 177 ++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci.h      |  54 ++++++++++-
+ 2 files changed, 230 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/mmc/host/sdhci-uhs2.h
+
+diff --git a/drivers/mmc/host/sdhci-uhs2.h b/drivers/mmc/host/sdhci-uhs2.h
+new file mode 100644
+index 000000000000..e993f41ffb7f
+--- /dev/null
++++ b/drivers/mmc/host/sdhci-uhs2.h
+@@ -0,0 +1,177 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ *  linux/drivers/mmc/host/sdhci-uhs2.h - Secure Digital Host Controller Interface driver
++ *
++ * Header file for Host Controller UHS2 related registers.
++ *
++ *  Copyright (C) 2014 Intel Corp, All Rights Reserved.
++ */
++#ifndef __SDHCI_UHS2_H
++#define __SDHCI_UHS2_H
 +
-+	cmd.opcode = MMC_GO_IDLE_STATE;
-+	cmd.arg = 0;
-+	cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_NONE | MMC_CMD_BC;
++#include <linux/bits.h>
 +
-+	err = mmc_wait_for_cmd(host, &cmd, 0);
-+	mmc_delay(1);
++/* SDHCI Category C registers : UHS2 usage */
 +
-+	return err;
-+}
++#define  SDHCI_UHS2_CM_TRAN_RESP		0x10
++#define  SDHCI_UHS2_SD_TRAN_RESP		0x18
++#define  SDHCI_UHS2_SD_TRAN_RESP_1		0x1C
 +
- int mmc_go_idle(struct mmc_host *host)
- {
- 	int err;
--	struct mmc_command cmd = {};
++/* SDHCI Category B registers : UHS2 only */
++
++#define SDHCI_UHS2_BLOCK_SIZE			0x80
++#define  SDHCI_UHS2_MAKE_BLKSZ(dma, blksz)	((((dma) & 0x7) << 12) | ((blksz) & 0xFFF))
++
++#define SDHCI_UHS2_BLOCK_COUNT			0x84
++
++#define SDHCI_UHS2_CMD_PACKET			0x88
++#define  SDHCI_UHS2_CMD_PACK_MAX_LEN		20
++
++#define SDHCI_UHS2_TRANS_MODE			0x9C
++#define  SDHCI_UHS2_TRNS_DMA			BIT(0)
++#define  SDHCI_UHS2_TRNS_BLK_CNT_EN		BIT(1)
++#define  SDHCI_UHS2_TRNS_DATA_TRNS_WRT		BIT(4)
++#define  SDHCI_UHS2_TRNS_BLK_BYTE_MODE		BIT(5)
++#define  SDHCI_UHS2_TRNS_RES_R5			BIT(6)
++#define  SDHCI_UHS2_TRNS_RES_ERR_CHECK_EN	BIT(7)
++#define  SDHCI_UHS2_TRNS_RES_INT_DIS		BIT(8)
++#define  SDHCI_UHS2_TRNS_WAIT_EBSY		BIT(14)
++#define  SDHCI_UHS2_TRNS_2L_HD			BIT(15)
++
++#define SDHCI_UHS2_CMD				0x9E
++#define  SDHCI_UHS2_CMD_SUB_CMD			BIT(2)
++#define  SDHCI_UHS2_CMD_DATA			BIT(5)
++#define  SDHCI_UHS2_CMD_TRNS_ABORT		BIT(6)
++#define  SDHCI_UHS2_CMD_CMD12			BIT(7)
++#define  SDHCI_UHS2_CMD_DORMANT			GENMASK(7, 6)
++#define  SDHCI_UHS2_CMD_PACK_LEN_MASK		GENMASK(12, 8)
++
++#define SDHCI_UHS2_RESPONSE			0xA0
++#define  SDHCI_UHS2_RESPONSE_MAX_LEN		20
++
++#define SDHCI_UHS2_MSG_SELECT			0xB4
++#define SDHCI_UHS2_MSG_SELECT_CURR		0x0
++#define SDHCI_UHS2_MSG_SELECT_ONE		0x1
++#define SDHCI_UHS2_MSG_SELECT_TWO		0x2
++#define SDHCI_UHS2_MSG_SELECT_THREE		0x3
++
++#define SDHCI_UHS2_MSG				0xB8
++
++#define SDHCI_UHS2_DEV_INT_STATUS		0xBC
++
++#define SDHCI_UHS2_DEV_SELECT			0xBE
++#define SDHCI_UHS2_DEV_SEL_MASK			GENMASK(3, 0)
++#define SDHCI_UHS2_DEV_SEL_INT_MSG_EN		BIT(7)
++
++#define SDHCI_UHS2_DEV_INT_CODE			0xBF
++
++#define SDHCI_UHS2_SW_RESET			0xC0
++#define SDHCI_UHS2_SW_RESET_FULL		BIT(0)
++#define SDHCI_UHS2_SW_RESET_SD			BIT(1)
++
++#define SDHCI_UHS2_TIMER_CTRL			0xC2
++#define SDHCI_UHS2_TIMER_CTRL_DEADLOCK_MASK	GENMASK(7, 4)
++
++#define SDHCI_UHS2_INT_STATUS			0xC4
++#define SDHCI_UHS2_INT_STATUS_ENABLE		0xC8
++#define SDHCI_UHS2_INT_SIGNAL_ENABLE		0xCC
++#define SDHCI_UHS2_INT_HEADER_ERR		BIT(0)
++#define SDHCI_UHS2_INT_RES_ERR			BIT(1)
++#define SDHCI_UHS2_INT_RETRY_EXP		BIT(2)
++#define SDHCI_UHS2_INT_CRC			BIT(3)
++#define SDHCI_UHS2_INT_FRAME_ERR		BIT(4)
++#define SDHCI_UHS2_INT_TID_ERR			BIT(5)
++#define SDHCI_UHS2_INT_UNRECOVER		BIT(7)
++#define SDHCI_UHS2_INT_EBUSY_ERR		BIT(8)
++#define SDHCI_UHS2_INT_ADMA_ERROR		BIT(15)
++#define SDHCI_UHS2_INT_CMD_TIMEOUT		BIT(16)
++#define SDHCI_UHS2_INT_DEADLOCK_TIMEOUT		BIT(17)
++#define SDHCI_UHS2_INT_VENDOR_ERR		BIT(27)
++#define SDHCI_UHS2_INT_ERROR_MASK	       ( \
++		SDHCI_UHS2_INT_HEADER_ERR      | \
++		SDHCI_UHS2_INT_RES_ERR	       | \
++		SDHCI_UHS2_INT_RETRY_EXP       | \
++		SDHCI_UHS2_INT_CRC	       | \
++		SDHCI_UHS2_INT_FRAME_ERR       | \
++		SDHCI_UHS2_INT_TID_ERR	       | \
++		SDHCI_UHS2_INT_UNRECOVER       | \
++		SDHCI_UHS2_INT_EBUSY_ERR       | \
++		SDHCI_UHS2_INT_ADMA_ERROR      | \
++		SDHCI_UHS2_INT_CMD_TIMEOUT     | \
++		SDHCI_UHS2_INT_DEADLOCK_TIMEOUT)
++#define SDHCI_UHS2_INT_CMD_ERR_MASK	  ( \
++		SDHCI_UHS2_INT_HEADER_ERR | \
++		SDHCI_UHS2_INT_RES_ERR	  | \
++		SDHCI_UHS2_INT_FRAME_ERR  | \
++		SDHCI_UHS2_INT_TID_ERR	  | \
++		SDHCI_UHS2_INT_CMD_TIMEOUT)
++/* CRC Error occurs during a packet receiving */
++#define SDHCI_UHS2_INT_DATA_ERR_MASK	       ( \
++		SDHCI_UHS2_INT_RETRY_EXP       | \
++		SDHCI_UHS2_INT_CRC	       | \
++		SDHCI_UHS2_INT_UNRECOVER       | \
++		SDHCI_UHS2_INT_EBUSY_ERR       | \
++		SDHCI_UHS2_INT_ADMA_ERROR      | \
++		SDHCI_UHS2_INT_DEADLOCK_TIMEOUT)
++
++#define SDHCI_UHS2_SETTINGS_PTR			0xE0
++#define   SDHCI_UHS2_GEN_SETTINGS_POWER_LOW	BIT(0)
++#define   SDHCI_UHS2_GEN_SETTINGS_N_LANES_MASK	GENMASK(11, 8)
++#define   SDHCI_UHS2_FD_OR_2L_HD		0x0 /* 2 lanes */
++#define   SDHCI_UHS2_2D1U_FD			0x2 /* 3 lanes, 2 down, 1 up, full duplex */
++#define   SDHCI_UHS2_1D2U_FD			0x3 /* 3 lanes, 1 down, 2 up, full duplex */
++#define   SDHCI_UHS2_2D2U_FD			0x4 /* 4 lanes, 2 down, 2 up, full duplex */
++
++#define   SDHCI_UHS2_PHY_SET_SPEED_B		BIT(6)
++#define   SDHCI_UHS2_PHY_HIBERNATE_EN		BIT(12)
++#define   SDHCI_UHS2_PHY_N_LSS_SYN_MASK		GENMASK(19, 16)
++#define   SDHCI_UHS2_PHY_N_LSS_DIR_MASK		GENMASK(23, 20)
++
++#define   SDHCI_UHS2_TRAN_N_FCU_MASK		GENMASK(15, 8)
++#define   SDHCI_UHS2_TRAN_RETRY_CNT_MASK	GENMASK(17, 16)
++#define   SDHCI_UHS2_TRAN_1_N_DAT_GAP_MASK	GENMASK(7, 0)
++
++#define SDHCI_UHS2_CAPS_PTR			0xE2
++#define   SDHCI_UHS2_CAPS_OFFSET		0
++#define   SDHCI_UHS2_CAPS_DAP_MASK		GENMASK(3, 0)
++#define   SDHCI_UHS2_CAPS_GAP_MASK		GENMASK(7, 4)
++#define   SDHCI_UHS2_CAPS_GAP(gap)		((gap) * 360)
++#define   SDHCI_UHS2_CAPS_LANE_MASK		GENMASK(13, 8)
++#define   SDHCI_UHS2_CAPS_2L_HD_FD		1
++#define   SDHCI_UHS2_CAPS_2D1U_FD		2
++#define   SDHCI_UHS2_CAPS_1D2U_FD		4
++#define   SDHCI_UHS2_CAPS_2D2U_FD		8
++#define   SDHCI_UHS2_CAPS_ADDR_64		BIT(14)
++#define   SDHCI_UHS2_CAPS_BOOT			BIT(15)
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_MASK		GENMASK(17, 16)
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_RMV		0
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_EMB		1
++#define   SDHCI_UHS2_CAPS_DEV_TYPE_EMB_RMV	2
++#define   SDHCI_UHS2_CAPS_NUM_DEV_MASK		GENMASK(21, 18)
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_MASK		GENMASK(23, 22)
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_SHIFT	22
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_P2P		0
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_RING		1
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_HUB		2
++#define   SDHCI_UHS2_CAPS_BUS_TOPO_HUB_RING	3
++
++#define  SDHCI_UHS2_CAPS_PHY_OFFSET		4
++#define   SDHCI_UHS2_CAPS_PHY_REV_MASK		GENMASK(5, 0)
++#define   SDHCI_UHS2_CAPS_PHY_RANGE_MASK	GENMASK(7, 6)
++#define   SDHCI_UHS2_CAPS_PHY_RANGE_A		0
++#define   SDHCI_UHS2_CAPS_PHY_RANGE_B		1
++#define   SDHCI_UHS2_CAPS_PHY_N_LSS_SYN_MASK	GENMASK(19, 16)
++#define   SDHCI_UHS2_CAPS_PHY_N_LSS_DIR_MASK	GENMASK(23, 20)
++#define  SDHCI_UHS2_CAPS_TRAN_OFFSET		8
++#define   SDHCI_UHS2_CAPS_TRAN_LINK_REV_MASK	GENMASK(5, 0)
++#define   SDHCI_UHS2_CAPS_TRAN_N_FCU_MASK	GENMASK(15, 8)
++#define   SDHCI_UHS2_CAPS_TRAN_HOST_TYPE_MASK	GENMASK(18, 16)
++#define   SDHCI_UHS2_CAPS_TRAN_BLK_LEN_MASK	GENMASK(31, 20)
++
++#define  SDHCI_UHS2_CAPS_TRAN_1_OFFSET		12
++#define  SDHCI_UHS2_CAPS_TRAN_1_N_DATA_GAP_MASK	GENMASK(7, 0)
++
++#define SDHCI_UHS2_EMBED_CTRL_PTR		0xE6
++#define SDHCI_UHS2_VENDOR_PTR			0xE8
++
++#endif /* __SDHCI_UHS2_H */
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 957c7a917ffb..7d68d5666080 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -43,8 +43,23 @@
+ #define  SDHCI_TRNS_READ	0x10
+ #define  SDHCI_TRNS_MULTI	0x20
  
- 	/*
- 	 * Non-SPI hosts need to prevent chipselect going active during
-@@ -163,13 +177,7 @@ int mmc_go_idle(struct mmc_host *host)
- 		mmc_delay(1);
- 	}
++/*
++ * Defined in Host Version 4.0.
++ */
++#define  SDHCI_TRNS_RES_TYPE		0x40
++#define  SDHCI_TRNS_RES_ERR_CHECK	0x80
++#define  SDHCI_TRNS_RES_INT_DIS		0x0100
++
+ #define SDHCI_COMMAND		0x0E
+ #define  SDHCI_CMD_RESP_MASK	0x03
++
++/*
++ * Host Version 4.10 adds this bit to distinguish a main command or
++ * sub command.
++ * For example with SDIO, CMD52 (sub command) issued during CMD53 (main command).
++ */
++#define  SDHCI_CMD_SUB_CMD	0x04
++
+ #define  SDHCI_CMD_CRC		0x08
+ #define  SDHCI_CMD_INDEX	0x10
+ #define  SDHCI_CMD_DATA		0x20
+@@ -65,6 +80,9 @@
+ #define SDHCI_PRESENT_STATE	0x24
+ #define  SDHCI_CMD_INHIBIT	0x00000001
+ #define  SDHCI_DATA_INHIBIT	0x00000002
++
++#define  SDHCI_DAT_4_TO_7_LVL_MASK	0x000000F0
++
+ #define  SDHCI_DOING_WRITE	0x00000100
+ #define  SDHCI_DOING_READ	0x00000200
+ #define  SDHCI_SPACE_AVAILABLE	0x00000400
+@@ -80,6 +98,15 @@
+ #define   SDHCI_DATA_0_LVL_MASK	0x00100000
+ #define  SDHCI_CMD_LVL		0x01000000
  
--	cmd.opcode = MMC_GO_IDLE_STATE;
--	cmd.arg = 0;
--	cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_NONE | MMC_CMD_BC;
--
--	err = mmc_wait_for_cmd(host, &cmd, 0);
--
--	mmc_delay(1);
-+	err = __mmc_go_idle(host);
++/* Host Version 4.10 */
++
++#define  SDHCI_HOST_REGULATOR_STABLE	0x02000000
++#define  SDHCI_CMD_NOT_ISSUED_ERR	0x08000000
++#define  SDHCI_SUB_CMD_STATUS		0x10000000
++#define  SDHCI_UHS2_IN_DORMANT_STATE	0x20000000
++#define  SDHCI_UHS2_LANE_SYNC		0x40000000
++#define  SDHCI_UHS2_IF_DETECT		0x80000000
++
+ #define SDHCI_HOST_CONTROL	0x28
+ #define  SDHCI_CTRL_LED		0x01
+ #define  SDHCI_CTRL_4BITBUS	0x02
+@@ -117,7 +144,7 @@
+ #define SDHCI_CLOCK_CONTROL	0x2C
+ #define  SDHCI_DIVIDER_SHIFT	8
+ #define  SDHCI_DIVIDER_HI_SHIFT	6
+-#define  SDHCI_DIV_MASK	0xFF
++#define  SDHCI_DIV_MASK		0xFF
+ #define  SDHCI_DIV_MASK_LEN	8
+ #define  SDHCI_DIV_HI_MASK	0x300
+ #define  SDHCI_PROG_CLOCK_MODE	0x0020
+@@ -146,6 +173,10 @@
+ #define  SDHCI_INT_CARD_REMOVE	0x00000080
+ #define  SDHCI_INT_CARD_INT	0x00000100
+ #define  SDHCI_INT_RETUNE	0x00001000
++
++/* Host Version 4.10 */
++#define  SDHCI_INT_FX_EVENT	0x00002000
++
+ #define  SDHCI_INT_CQE		0x00004000
+ #define  SDHCI_INT_ERROR	0x00008000
+ #define  SDHCI_INT_TIMEOUT	0x00010000
+@@ -160,6 +191,9 @@
+ #define  SDHCI_INT_ADMA_ERROR	0x02000000
+ #define  SDHCI_INT_TUNING_ERROR	0x04000000
  
- 	if (!mmc_host_is_spi(host)) {
- 		mmc_set_chip_select(host, MMC_CS_DONTCARE);
-diff --git a/drivers/mmc/core/mmc_ops.h b/drivers/mmc/core/mmc_ops.h
-index 92d4194c7893..3eaefe989c80 100644
---- a/drivers/mmc/core/mmc_ops.h
-+++ b/drivers/mmc/core/mmc_ops.h
-@@ -25,6 +25,7 @@ struct mmc_command;
- int mmc_select_card(struct mmc_card *card);
- int mmc_deselect_cards(struct mmc_host *host);
- int mmc_set_dsr(struct mmc_host *host);
-+int __mmc_go_idle(struct mmc_host *host);
- int mmc_go_idle(struct mmc_host *host);
- int mmc_send_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr);
- int mmc_set_relative_addr(struct mmc_card *card);
++/* Host Version 4.0 */
++#define  SDHCI_INT_RESP_ERR	0x08000000
++
+ #define  SDHCI_INT_NORMAL_MASK	0x00007FFF
+ #define  SDHCI_INT_ERROR_MASK	0xFFFF8000
+ 
+@@ -186,6 +220,9 @@
+ #define  SDHCI_AUTO_CMD_END_BIT	0x00000008
+ #define  SDHCI_AUTO_CMD_INDEX	0x00000010
+ 
++/* Host Version 4.10 */
++#define  SDHCI_AUTO_CMD_RESP_ERR	0x0020
++
+ #define SDHCI_HOST_CONTROL2		0x3E
+ #define  SDHCI_CTRL_UHS_MASK		0x0007
+ #define   SDHCI_CTRL_UHS_SDR12		0x0000
+@@ -194,6 +231,7 @@
+ #define   SDHCI_CTRL_UHS_SDR104		0x0003
+ #define   SDHCI_CTRL_UHS_DDR50		0x0004
+ #define   SDHCI_CTRL_HS400		0x0005 /* Non-standard */
++#define   SDHCI_CTRL_UHS2		0x0007
+ #define  SDHCI_CTRL_VDD_180		0x0008
+ #define  SDHCI_CTRL_DRV_TYPE_MASK	0x0030
+ #define   SDHCI_CTRL_DRV_TYPE_B		0x0000
+@@ -202,9 +240,12 @@
+ #define   SDHCI_CTRL_DRV_TYPE_D		0x0030
+ #define  SDHCI_CTRL_EXEC_TUNING		0x0040
+ #define  SDHCI_CTRL_TUNED_CLK		0x0080
++#define  SDHCI_CTRL_UHS2_ENABLE		0x0100
++#define  SDHCI_CTRL_ADMA2_LEN_MODE	0x0400
+ #define  SDHCI_CMD23_ENABLE		0x0800
+ #define  SDHCI_CTRL_V4_MODE		0x1000
+ #define  SDHCI_CTRL_64BIT_ADDR		0x2000
++#define  SDHCI_CTRL_ASYNC_INT_ENABLE	0x4000
+ #define  SDHCI_CTRL_PRESET_VAL_ENABLE	0x8000
+ 
+ #define SDHCI_CAPABILITIES	0x40
+@@ -227,11 +268,13 @@
+ #define  SDHCI_CAN_VDD_180	0x04000000
+ #define  SDHCI_CAN_64BIT_V4	0x08000000
+ #define  SDHCI_CAN_64BIT	0x10000000
++#define  SDHCI_CAN_ASYNC_INT	0x20000000
+ 
+ #define SDHCI_CAPABILITIES_1	0x44
+ #define  SDHCI_SUPPORT_SDR50	0x00000001
+ #define  SDHCI_SUPPORT_SDR104	0x00000002
+ #define  SDHCI_SUPPORT_DDR50	0x00000004
++#define  SDHCI_SUPPORT_UHS2	0x00000008
+ #define  SDHCI_DRIVER_TYPE_A	0x00000010
+ #define  SDHCI_DRIVER_TYPE_C	0x00000020
+ #define  SDHCI_DRIVER_TYPE_D	0x00000040
+@@ -240,6 +283,7 @@
+ #define  SDHCI_RETUNING_MODE_MASK		GENMASK(15, 14)
+ #define  SDHCI_CLOCK_MUL_MASK			GENMASK(23, 16)
+ #define  SDHCI_CAN_DO_ADMA3	0x08000000
++#define  SDHCI_CAN_VDD2_180	0x10000000 /* UHS-2 1.8V VDD2 */
+ #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
+ 
+ #define SDHCI_MAX_CURRENT		0x48
+@@ -247,11 +291,14 @@
+ #define  SDHCI_MAX_CURRENT_330_MASK	GENMASK(7, 0)
+ #define  SDHCI_MAX_CURRENT_300_MASK	GENMASK(15, 8)
+ #define  SDHCI_MAX_CURRENT_180_MASK	GENMASK(23, 16)
++#define SDHCI_MAX_CURRENT_1		0x4C
++#define  SDHCI_MAX_CURRENT_VDD2_180_MASK	GENMASK(7, 0) /* UHS2 */
+ #define   SDHCI_MAX_CURRENT_MULTIPLIER	4
+ 
+ /* 4C-4F reserved for more max current */
+ 
+ #define SDHCI_SET_ACMD12_ERROR	0x50
++/* Host Version 4.10 */
+ #define SDHCI_SET_INT_ERROR	0x52
+ 
+ #define SDHCI_ADMA_ERROR	0x54
+@@ -270,10 +317,15 @@
+ #define SDHCI_PRESET_FOR_SDR104        0x6C
+ #define SDHCI_PRESET_FOR_DDR50 0x6E
+ #define SDHCI_PRESET_FOR_HS400 0x74 /* Non-standard */
++
++/* UHS2 */
++#define SDHCI_PRESET_FOR_UHS2  0x74
+ #define SDHCI_PRESET_DRV_MASK		GENMASK(15, 14)
+ #define SDHCI_PRESET_CLKGEN_SEL		BIT(10)
+ #define SDHCI_PRESET_SDCLK_FREQ_MASK	GENMASK(9, 0)
+ 
++#define SDHCI_ADMA3_ADDRESS	0x78
++
+ #define SDHCI_SLOT_INT_STATUS	0xFC
+ 
+ #define SDHCI_HOST_VERSION	0xFE
 -- 
 2.25.1
 
