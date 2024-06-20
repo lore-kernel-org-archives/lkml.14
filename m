@@ -1,204 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234103BB50
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A381B14E6
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899791; cv=none; b=q/hsniBWFs8/Bly4VhjxbFTnyQFQB63X+yut92YD/NYB9iJU8DjrwBYK317nFKlBoO+wjUPXBfStShUrzAZEgysc4yxNOUwdRzhwZ7ZHE0p5DiOp8uQFk1aoi9dW9NHTN5Bo8cyfovQ13o184+Vs8DolzW+HbNdJsAE0BI4iFVw=
+	t=1718899816; cv=none; b=e0vUFPpNAlTFOqULN1LZmOiPODsU2olhyMEUJAoDpruUQGfP4Vm0lMtuYW49e+l6xrE7r8ps/7/W7qt9SPASe+ZU518Bnb2GD/z5tLDJGeIvt8pEpccggSycy+wbDdbvBFgt4HDodQ6NH1FJc/njFo8uJclge8N2LmnEn/q2FnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899791; c=relaxed/simple;
-	bh=sJ+GyPLEyonouArm6Ms4v+PbxCZjrYA1AmFNnZ461R4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qWk/YIvmbwHUJaWG8Se3WiiSH99X4cm2osHFp3d4maKey8igM9ontvugxVJ7xE9Uo5iANm2rqg4eWOkZ/KdPMdM9dcERsFVJ2npPQXoGbV/dLAxec9l3fHqyzk2A2Jzi8hxeobl3tRF5Hv7BebNs3pU8KhO31rnV2re1VA4cBsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ok593mI1; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718899816; c=relaxed/simple;
+	bh=ssSMczIhe71muC2Ge+dwgnfPO/j9QwLwj7JhCu3oUzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ATgtkZ3YZTTMoXBEd0mLcizBn8pGVXAaioDg+p4dVJjwwpklVyvRc7mjibajvis3rej3TXhbbeUlBei3fsSKMMx+deZYE1lkWBUoDhAb4Mw6xDQ7/QxbE+Tal3Qq1/oAG6w/XPT7GVgafPBoW1oyLYuFpS0LyiosfEJ28OfxHuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ty9B8qf0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ok593mI1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718899790; x=1750435790;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sJ+GyPLEyonouArm6Ms4v+PbxCZjrYA1AmFNnZ461R4=;
-  b=Ok593mI1e8gZ4yRgp7DWPTrBwSOKgIA8ydwCZrVr1h7TJDD8r8sVjd7c
-   gUIwIYJ6lblxkMpAFU0+MC89/7H1eLC/iAWbYoD8o5ShIWGGlZhInbzmL
-   JUyChmHWlUKmOJ6gQlfuQZIzhpM0APAN1jXXibiDuYeAq4aEJGeoSnMz8
-   18nOWHRrKzUmDoYXQJawyINqA7Pm7yQnRZVPtzKZm153viCiDvZyXITQo
-   2D+zb1EuWZd0kfns/h0SVS6iAcUGK7RS5uF6M/sMBr/cLunEqDGdNpy4U
-   5tOutMFp4xQHO6Z7Qbn97s98Wkm/M3qAmFpVmAa7znh4dz+NXPR0AG/Tq
-   A==;
-X-CSE-ConnectionGUID: M9KpX1QJR7eTwLGvPnfA9w==
-X-CSE-MsgGUID: VQEEaSUXRMa5Yr/47kP5gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="19768525"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="19768525"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 09:09:46 -0700
-X-CSE-ConnectionGUID: BLFtV6XxTRWCVkzKne5x3w==
-X-CSE-MsgGUID: CWve3jpwQuWBUVGD21jQRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="47248307"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 09:09:46 -0700
-Received: from [10.212.43.222] (kliang2-mobl1.ccr.corp.intel.com [10.212.43.222])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C877820B5703;
-	Thu, 20 Jun 2024 09:09:44 -0700 (PDT)
-Message-ID: <62e2dfd9-24e3-4fb6-b116-8c4238e1946a@linux.intel.com>
-Date: Thu, 20 Jun 2024 12:09:43 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ty9B8qf0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718899813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JWEIbolo6Iwem2kYP/7UWqPpNHLzHJcoF74xqzSRPHU=;
+	b=Ty9B8qf01MVbMW26NIhd37S8kCtKP9loJ4LlxAMNguEePKpD7bMkFXk0AAWqbTdXc7uvk1
+	c+mCRGHKzLLrKo7u3dsVMTK7m6Pl+gW9bisLAipkb1vM34ZKRdfx7CKOiP8F5rO3tk/10x
+	7Ox6PIfDhMyy1esXEyaSQTDGhxfATp8=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-524-vj1YqRetM9yWdsgbWsK8jg-1; Thu, 20 Jun 2024 12:10:10 -0400
+X-MC-Unique: vj1YqRetM9yWdsgbWsK8jg-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ec3d6c2cf1so8986661fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:10:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718899809; x=1719504609;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JWEIbolo6Iwem2kYP/7UWqPpNHLzHJcoF74xqzSRPHU=;
+        b=J5Zi7m21HERuf2nerj2S+ygNNkjCp4JygXLoTvkr1Y+E+nBU6VCc7SZJ9mlszL5yax
+         vc+eADOXcX2UIlc4ZTcWutP3kgTs0/63p1y8OHmVCiaBti2KelTQsZBa9HWp5s11rzl8
+         lBDubIUwYgQpmqJcTYBJn3ZGs3yfzrAxQoj2q03SH7nVPGkNiTP+nX3PiNH245rBsKRS
+         NQs4oTRG/MbqMpcTH9/HGN3g8B+GfEdieA8Mz8+xHQUZ0j5oRoYSrvXj3fB8xvNbDosH
+         kj4by6ijrWQ3vTjyCDXlJJ5NtDcs1VKEG4SsbOFleVh/PUjRQIfUUdD1favs1lnJ0ASf
+         FKFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ3IFlkEEqCPvlOHQBKfK8U+mKX5jzetJRccoinTJXpA0DtMFVNPl8GEGFPNxNsi3WRRG1Fh5BRop2WwqSI4UlPsEn61cX/JUX1rvq
+X-Gm-Message-State: AOJu0YxLTIhldWSwCotwZdPbLT3jLHPo5gqeJKQzEwLxSZnTaa7OgEz3
+	aZ8Vqj8pQptH9HfdgDE1FwfBMDozBbyJtEc/wPg/JYJi6ZuMSVJF8/0xeH+t+vmv7vAYLR9NC6b
+	2EhmnHJprhg8dyzhfc9QYDMF+hczfe3ze1q9dvUkJlKUfZbIGv7XlIgCm8hmUHQ==
+X-Received: by 2002:a2e:9c04:0:b0:2ec:4399:9c0f with SMTP id 38308e7fff4ca-2ec4399a2b0mr23102271fa.0.1718899808746;
+        Thu, 20 Jun 2024 09:10:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqT2XLxCu5eI2DOyMEtopS2O39oKnD5e98TK9RmyDbH3ZDUd9YDTErMjogmKKv4i+QXKnhpQ==
+X-Received: by 2002:a2e:9c04:0:b0:2ec:4399:9c0f with SMTP id 38308e7fff4ca-2ec4399a2b0mr23102001fa.0.1718899808264;
+        Thu, 20 Jun 2024 09:10:08 -0700 (PDT)
+Received: from cassiopeiae ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d1e390bsm30844945e9.35.2024.06.20.09.10.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:10:07 -0700 (PDT)
+Date: Thu, 20 Jun 2024 18:10:05 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] rust: pass module name to `Module::init`
+Message-ID: <ZnRUXdMaFJydAn__@cassiopeiae>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-2-dakr@redhat.com>
+ <2024062038-backroom-crunchy-d4c9@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH 04/12] perf/x86/intel: Support new data source for
- Lunar Lake
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
- ak@linux.intel.com, eranian@google.com
-References: <20240618151044.1318612-1-kan.liang@linux.intel.com>
- <20240618151044.1318612-5-kan.liang@linux.intel.com>
- <20240620073426.GR31592@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240620073426.GR31592@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024062038-backroom-crunchy-d4c9@gregkh>
 
+On Thu, Jun 20, 2024 at 04:19:48PM +0200, Greg KH wrote:
+> On Wed, Jun 19, 2024 at 01:39:47AM +0200, Danilo Krummrich wrote:
+> > In a subsequent patch we introduce the `Registration` abstraction used
+> > to register driver structures. Some subsystems require the module name on
+> > driver registration (e.g. PCI in __pci_register_driver()), hence pass
+> > the module name to `Module::init`.
+> 
+> I understand the need/want here, but it feels odd that you have to
+> change anything to do it.
+> 
+> > 
+> > Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> > ---
+> >  rust/kernel/lib.rs           | 14 ++++++++++----
+> >  rust/kernel/net/phy.rs       |  2 +-
+> >  rust/macros/module.rs        |  3 ++-
+> >  samples/rust/rust_minimal.rs |  2 +-
+> >  samples/rust/rust_print.rs   |  2 +-
+> >  5 files changed, 15 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index a791702b4fee..5af00e072a58 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -71,7 +71,7 @@ pub trait Module: Sized + Sync + Send {
+> >      /// should do.
+> >      ///
+> >      /// Equivalent to the `module_init` macro in the C API.
+> > -    fn init(module: &'static ThisModule) -> error::Result<Self>;
+> > +    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
+> 
+> Why can't the name come directly from the build system?  Why must it be
+> passed into the init function of the module "class"?  What is it going
+> to do with it?
 
-
-On 2024-06-20 3:34 a.m., Peter Zijlstra wrote:
-> On Tue, Jun 18, 2024 at 08:10:36AM -0700, kan.liang@linux.intel.com wrote:
-> 
->> @@ -77,7 +86,7 @@ union intel_x86_pebs_dse {
->>  #define SNOOP_NONE_MISS (P(SNOOP, NONE) | P(SNOOP, MISS))
->>  
->>  /* Version for Sandy Bridge and later */
->> -static u64 pebs_data_source[] = {
->> +static u64 pebs_data_source[PERF_PEBS_DATA_SOURCE_MAX] = {
->>  	P(OP, LOAD) | P(LVL, MISS) | LEVEL(L3) | P(SNOOP, NA),/* 0x00:ukn L3 */
->>  	OP_LH | P(LVL, L1)  | LEVEL(L1) | P(SNOOP, NONE),  /* 0x01: L1 local */
->>  	OP_LH | P(LVL, LFB) | LEVEL(LFB) | P(SNOOP, NONE), /* 0x02: LFB hit */
->> @@ -173,6 +182,40 @@ void __init intel_pmu_pebs_data_source_cmt(void)
->>  	__intel_pmu_pebs_data_source_cmt(pebs_data_source);
->>  }
->>  
->> +/* Version for Lunar Lake p-core and later */
->> +static u64 lnc_pebs_data_source[PERF_PEBS_DATA_SOURCE_MAX] = {
-> 
-> Comment and naming are inconsistent, please lion-cove and lnc
-> 
->> +	P(OP, LOAD) | P(LVL, MISS) | LEVEL(L3) | P(SNOOP, NA),	/* 0x00: ukn L3 */
->> +	OP_LH | P(LVL, L1)  | LEVEL(L1) | P(SNOOP, NONE),	/* 0x01: L1 hit */
->> +	OP_LH | P(LVL, L1)  | LEVEL(L1) | P(SNOOP, NONE),	/* 0x02: L1 hit */
->> +	OP_LH | P(LVL, LFB) | LEVEL(LFB) | P(SNOOP, NONE),	/* 0x03: LFB/L1 Miss Handling Buffer hit */
->> +	0,							/* 0x04: Reserved */
->> +	OP_LH | P(LVL, L2)  | LEVEL(L2) | P(SNOOP, NONE),	/* 0x05: L2 Hit */
->> +	OP_LH | LEVEL(L2_MHB) | P(SNOOP, NONE),			/* 0x06: L2 Miss Handling Buffer Hit */
->> +	0,							/* 0x07: Reserved */
->> +	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, NONE),	/* 0x08: L3 Hit */
->> +	0,							/* 0x09: Reserved */
->> +	0,							/* 0x0a: Reserved */
->> +	0,							/* 0x0b: Reserved */
->> +	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOPX, FWD),	/* 0x0c: L3 Hit Snoop Fwd */
->> +	OP_LH | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM),	/* 0x0d: L3 Hit Snoop HitM */
->> +	0,							/* 0x0e: Reserved */
->> +	P(OP, LOAD) | P(LVL, MISS) | P(LVL, L3)  | LEVEL(L3) | P(SNOOP, HITM),	/* 0x0f: L3 Miss Snoop HitM */
->> +	OP_LH | LEVEL(MSC) | P(SNOOP, NONE),			/* 0x10: Memory-side Cache Hit */
->> +	OP_LH | P(LVL, LOC_RAM)  | LEVEL(RAM) | P(SNOOP, NONE), /* 0x11: Local Memory Hit */
->> +};
->> +
->> +void __init intel_pmu_pebs_data_source_lnl(void)
->> +{
->> +	u64 *data_source;
->> +
->> +	data_source = x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX].pebs_data_source;
->> +	memcpy(data_source, lnc_pebs_data_source, sizeof(lnc_pebs_data_source));
->> +
->> +	data_source = x86_pmu.hybrid_pmu[X86_HYBRID_PMU_ATOM_IDX].pebs_data_source;
->> +	memcpy(data_source, pebs_data_source, sizeof(pebs_data_source));
->> +	__intel_pmu_pebs_data_source_cmt(data_source);
->> +}
->> +
->>  static u64 precise_store_data(u64 status)
->>  {
->>  	union intel_x86_pebs_dse dse;
->> @@ -264,7 +307,7 @@ static u64 __adl_latency_data_small(struct perf_event *event, u64 status,
->>  
->>  	WARN_ON_ONCE(hybrid_pmu(event->pmu)->pmu_type == hybrid_big);
->>  
->> -	dse &= PERF_PEBS_DATA_SOURCE_MASK;
->> +	dse &= PERF_PEBS_DATA_SOURCE_GRT_MASK;
->>  	val = hybrid_var(event->pmu, pebs_data_source)[dse];
->>  
->>  	pebs_set_tlb_lock(&val, tlb, lock);
->> @@ -300,6 +343,45 @@ u64 mtl_latency_data_small(struct perf_event *event, u64 status)
->>  					dse.mtl_fwd_blk);
->>  }
->>  
->> +u64 lnl_latency_data(struct perf_event *event, u64 status)
->> +{
->> +	struct x86_hybrid_pmu *pmu = hybrid_pmu(event->pmu);
->> +	union intel_x86_pebs_dse dse;
->> +	union perf_mem_data_src src;
->> +	u64 val;
->> +
->> +	if (pmu->pmu_type == hybrid_small)
->> +		return mtl_latency_data_small(event, status);
-> 
-> argh,.. can you please go and rename this mtl_small nonsense to .. /me
-> googles.. crestmont / crm ?
-> 
-> Oh gawd, and the adl_small things to gracemont / gcm ?
-
-Sure, I will add a cleanup patch to use the specific code name.
-
-Thank,
-Kan
+The name does come from the build system, that's where `Module::init` gets it
+from.
 
 > 
->> +
-> 	return lnc_latency_data();
-> }
+> A PCI, or other bus, driver "knows" it's name already by virtue of the
+> build system, so it can pass that string into whatever function needs
+
+Let's take pci_register_driver() as example.
+
+```
+#define pci_register_driver(driver)		\
+	__pci_register_driver(driver, THIS_MODULE, KBUILD_MODNAME)
+```
+
+In C drivers this works because (1) it's a macro and (2) it's called directly
+from the driver code.
+
+In Rust, for very good reasons, we have abstractions for C APIs, hence the
+actual call to __pci_register_driver() does not come from code within the
+module, but from the PCI Rust abstraction `Module::init` calls into instead.
+
+Consequently, we have to pass things through. This also isn't new, please note
+that the current code already does the same thing: `Module::init` (without this
+patch) is already declared as
+
+`fn init(module: &'static ThisModule) -> error::Result<Self>`
+
+passing through `ThisModule` for the exact same reason.
+
+Please also note that in the most common case (one driver per module) we don't
+see any of this anyway.
+
+Just like the C macro module_pci_driver(), Rust drivers can use the
+`module_pci_driver!` macro.
+
+Example from Nova:
+
+```
+    kernel::module_pci_driver! {
+        // The driver type that implements the corresponding probe() and
+        // remove() driver callbacks.
+        type: NovaDriver,
+        name: "Nova",
+        author: "Danilo Krummrich",
+        description: "Nova GPU driver",
+        license: "GPL v2",
+    }
+```
+
+> that, but the module init function itself does NOT need that.
 > 
+> So I fail to understand why we need to burden ALL module init functions
+> with this, when only a very very very tiny subset of all drivers will
+> ever need to know this, and even then, they don't need to know it at
+> init module time, they know it at build time and it will be a static
+> string at that point, it will not be coming in through an init call.
 > 
-> u64 lnc_latency_data()
-> {
->> +	dse.val = status;
->> +
->> +	/* LNC core latency data */
->> +	val = hybrid_var(event->pmu, pebs_data_source)[status & PERF_PEBS_DATA_SOURCE_MASK];
->> +	if (!val)
->> +		val = P(OP, LOAD) | LEVEL(NA) | P(SNOOP, NA);
->> +
->> +	if (dse.lnc_stlb_miss)
->> +		val |= P(TLB, MISS) | P(TLB, L2);
->> +	else
->> +		val |= P(TLB, HIT) | P(TLB, L1) | P(TLB, L2);
->> +
->> +	if (dse.lnc_locked)
->> +		val |= P(LOCK, LOCKED);
->> +
->> +	if (dse.lnc_data_blk)
->> +		val |= P(BLK, DATA);
->> +	if (dse.lnc_addr_blk)
->> +		val |= P(BLK, ADDR);
->> +	if (!dse.lnc_data_blk && !dse.lnc_addr_blk)
->> +		val |= P(BLK, NA);
->> +
->> +	src.val = val;
->> +	if (event->hw.flags & PERF_X86_EVENT_PEBS_ST_HSW)
->> +		src.mem_op = P(OP, STORE);
->> +
->> +	return src.val;
->> +}
+> thanks,
 > 
+> greg k-h
+> 
+
