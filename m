@@ -1,158 +1,136 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A125517CA19;
-	Thu, 20 Jun 2024 08:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFD617CA19
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718871801; cv=none; b=WQJZR1lD5pv2OHRJtugy2Ynk3KOwzl9cK6AJO1pAOMzYea74BuWqm5fJMMYkDNwC3kDozYlKezNlGPUz6Uz4jyJ4hPVddJpljkBf5XHKUJGKSZCb9S7ZkfFdfMKV34WmyGB/hC3UyAo54Fmv8NnRl2yxDa+uDjEyesVQ4ZoqaqI=
+	t=1718871807; cv=none; b=eV8NFR+6fZDk6VHAk5/UZHiIzHDIhYDtpZne4QP1P1fcl7GIP3RcZ01W+03v2r04KdKej/BJQdWDIhg569q56a0BYsIGpWtAUCoEy1zkHzpVI+t8wOCaLAqr15uz2g4SynkTGpRKs38Rk+5YH6fhakxH4upYX/+EaCr+XaUwLWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718871801; c=relaxed/simple;
-	bh=k/BP16SX3byhTtStuXWz+5KnJg/a4c8cs0pyMabQ9VQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=naJ3Sgn2hQtJwGM0qT9+iYw9DSZQkUtfSPCeo64lHPG8CvxRcGCi5WmT39WxFx62l9MLh/s4Yamf0ifwGRryt4AniQ20AdE0q6EM3jBoLTrOKdY1CWbjeimieFtZaYLNMYmvGq9c6Gvr/8L2D0tjGSO5Y5LLFeSonNxDgGU0CLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=doubly.so; spf=pass smtp.mailfrom=doubly.so; dkim=pass (2048-bit key) header.d=doubly.so header.i=@doubly.so header.b=G2iJT9bF; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=doubly.so
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=doubly.so
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=doubly.so header.i=@doubly.so header.b="G2iJT9bF"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4W4YQk5gnnz9sW7;
-	Thu, 20 Jun 2024 10:23:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=doubly.so; s=MBO0001;
-	t=1718871790;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OC8uiFNZq2cxU+r/lYeATCspZX8arPQiFvWr36D5GQY=;
-	b=G2iJT9bF5nZx91BX/2Ly1OIhCw6qe8XK0jFOBUtpYexrBm8nvuGFRgNmEGxnROxr5nKclo
-	8fPI+NsuYlS4inc3yJwKWWUH/WUuNPQg9Fe1RLLhn2RPsbXNMzhShU7LtAlwmwPED4nkuA
-	lMRA9slKc5HPhMq62334ohuPq6Y3B4MCGKUieA20RcuzYscxCN8rI1YojPaPgkRJ92PaaT
-	3xAzY4b54vUWMhWTmMazsG3i3QyZYEWi53bYUWZtpRncxuztz28xdXz+r7agxOs1PvF9sB
-	W3CDG15T/qEcgKIfWolFrBtPCmBpbSYrLGoL7bMKH7HIMQUAhBcdjMOpEawrMA==
-From: Devin Bayer <dev@doubly.so>
-To: corentin.chary@gmail.com,
-	luke@ljones.dev
-Cc: hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	Devin Bayer <dev@doubly.so>
-Subject: [PATCH 1/2] platform/x86: asus-wmi: support camera disable LED
-Date: Thu, 20 Jun 2024 08:22:22 +0000
-Message-ID: <20240620082223.20178-2-dev@doubly.so>
-In-Reply-To: <20240620082223.20178-1-dev@doubly.so>
-References: <20240620082223.20178-1-dev@doubly.so>
+	s=arc-20240116; t=1718871807; c=relaxed/simple;
+	bh=csVDR8kg7NwtMi5YPusScgBP25EglVp+lgFvYNFqgpw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dQPnwS57rchKKrj9gamGnyG95OJv9kvdwG6L/kOKzDoqsSMBgmJgkmgTI/BbEJNJPhI+PAwyLi6AicKXWh64Ps0U5q9EzlJqfih8lAeh9NAYSoqnxDsYkpNDuz8ilKq0XIyKA6XWPy/FZBRdBRrEJOujrqgArix/RsEGIJHL8LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7ebe8016637so81329839f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:23:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718871804; x=1719476604;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7xjOp+wYL/pN3A6XRA46Brl74ey8lMmg1qP9IE4QUj0=;
+        b=pDsQER2BsFdoQE5Vrnlld6kF+x/EF9KW55Sza+5e9epubnumzDxbCpHTCfaKm4pEFX
+         DaDeH+aQBISrserSCgPJsLkz1J8SfA9AqXis66mhokyapfch4u4JvYUPecWSAYRhGbdV
+         tDZxqThj7UmhuPUGW57bjlokqe9bY0Baql99ys+o/SxIjuOQySoYnqa5vy17uXZfdKLs
+         /YJukIAh0cX2n0AjDLnmK9GzcO8PVZiH34RNModGbNvcy4NL7lXreL26ETmsuaqmPop6
+         OLfABIvwTixstXBQDH0fcZ+L8ui6RJ4CFmdcDRQcysjSa4i3JPeBt4+NAUqYA1llYfN2
+         virA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMhhlWgIXpgl52i2f1a3Y1s/RDEZqR5TA6uhq/vl/YuAcGXTG3m1qln/FTfoPpZf3hC9hGqZwy2mk4A7ECXT00fFYzYtbBQ83wSAUt
+X-Gm-Message-State: AOJu0YyuScjj6+wQ4OP0gz1ELdwxqv+CtyClyiR7rAroyo+nENvNA4QO
+	bGpe452/iYsdbZxW/LaH8B5TYLYcKw27zDxmXn0RiREKgaJfqVor9+z5ckqKtcg8Onwof8mgqKf
+	qi7ThNaA4KnYRvtilNDITtqNo0+lqHGZlMmKfixzZ2YCz69LdjoUB1g4=
+X-Google-Smtp-Source: AGHT+IFxcdE8rH+VsUhG08w8ApM4MKNQDyWCo5jAxthJeWhn0KrCbETlKmxGXB45wd2ZrHaBLOjASnpzJwfTzKlP/s3oMnWZRUb2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4W4YQk5gnnz9sW7
+X-Received: by 2002:a05:6e02:164e:b0:375:a40f:97d1 with SMTP id
+ e9e14a558f8ab-3761d74fc47mr3396555ab.4.1718871802662; Thu, 20 Jun 2024
+ 01:23:22 -0700 (PDT)
+Date: Thu, 20 Jun 2024 01:23:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000366469061b4e0781@google.com>
+Subject: [syzbot] [ext4?] KCSAN: data-race in __d_instantiate / lookup_fast (7)
+From: syzbot <syzbot+5757df85a1c108693de1@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-Support the LED on F10 above the crossed out camera icon.
+Hello,
 
-Signed-off-by: Devin Bayer <dev@doubly.so>
+syzbot found the following issue on:
+
+HEAD commit:    e5b3efbe1ab1 Merge tag 'probes-fixes-v6.10-rc4' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11f67fca980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=704451bc2941bcb0
+dashboard link: https://syzkaller.appspot.com/bug?extid=5757df85a1c108693de1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/aba434953b89/disk-e5b3efbe.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6c615db72106/vmlinux-e5b3efbe.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ec51cef20784/bzImage-e5b3efbe.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5757df85a1c108693de1@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in __d_instantiate / lookup_fast
+
+read-write to 0xffff8881207d1d80 of 4 bytes by task 25805 on cpu 1:
+ __d_instantiate+0x2cd/0x3c0 fs/dcache.c:1855
+ d_instantiate_new+0x5c/0xf0 fs/dcache.c:1899
+ ext4_mkdir+0x5e6/0x740 fs/ext4/namei.c:3047
+ vfs_mkdir+0x1f4/0x320 fs/namei.c:4131
+ do_mkdirat+0x12f/0x2a0 fs/namei.c:4154
+ __do_sys_mkdir fs/namei.c:4174 [inline]
+ __se_sys_mkdir fs/namei.c:4172 [inline]
+ __x64_sys_mkdir+0x44/0x50 fs/namei.c:4172
+ x64_sys_call+0x10d4/0x2d70 arch/x86/include/generated/asm/syscalls_64.h:84
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff8881207d1d80 of 4 bytes by task 25807 on cpu 0:
+ d_revalidate fs/namei.c:860 [inline]
+ lookup_fast+0xd9/0x2a0 fs/namei.c:1641
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x403/0x810 fs/namei.c:2331
+ path_lookupat+0x72/0x2b0 fs/namei.c:2492
+ filename_lookup+0x127/0x300 fs/namei.c:2522
+ user_path_at_empty+0x42/0x120 fs/namei.c:2929
+ user_path_at include/linux/namei.h:58 [inline]
+ path_setxattr+0x60/0x1a0 fs/xattr.c:666
+ __do_sys_setxattr fs/xattr.c:687 [inline]
+ __se_sys_setxattr fs/xattr.c:683 [inline]
+ __x64_sys_setxattr+0x6d/0x80 fs/xattr.c:683
+ x64_sys_call+0x2957/0x2d70 arch/x86/include/generated/asm/syscalls_64.h:189
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0x00000000 -> 0x00280040
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 25807 Comm: syz-executor.4 Tainted: G        W          6.10.0-rc4-syzkaller-00052-ge5b3efbe1ab1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+==================================================================
+
+
 ---
- drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  2 ++
- 2 files changed, 38 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 3f9b6285c9a6..5585f15e7920 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -73,6 +73,7 @@ module_param(fnlock_default, bool, 0444);
- #define NOTIFY_LID_FLIP_ROG		0xbd
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
-+#define ASUS_WMI_DEVID_CAMERA_LED		0x00060079
- 
- #define ASUS_MID_FAN_DESC		"mid_fan"
- #define ASUS_GPU_FAN_DESC		"gpu_fan"
-@@ -238,6 +239,7 @@ struct asus_wmi {
- 	struct led_classdev lightbar_led;
- 	int lightbar_led_wk;
- 	struct led_classdev micmute_led;
-+	struct led_classdev camera_led;
- 	struct workqueue_struct *led_workqueue;
- 	struct work_struct tpd_led_work;
- 	struct work_struct wlan_led_work;
-@@ -1642,6 +1644,27 @@ static int micmute_led_set(struct led_classdev *led_cdev,
- 	return err < 0 ? err : 0;
- }
- 
-+static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
-+{
-+	struct asus_wmi *asus;
-+	u32 result;
-+
-+	asus = container_of(led_cdev, struct asus_wmi, camera_led);
-+	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED, &result);
-+
-+	return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
-+}
-+
-+static int camera_led_set(struct led_classdev *led_cdev,
-+			   enum led_brightness brightness)
-+{
-+	int state = brightness != LED_OFF;
-+	int err;
-+
-+	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CAMERA_LED, state, NULL);
-+	return err < 0 ? err : 0;
-+}
-+
- static void asus_wmi_led_exit(struct asus_wmi *asus)
- {
- 	led_classdev_unregister(&asus->kbd_led);
-@@ -1649,6 +1672,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
- 	led_classdev_unregister(&asus->wlan_led);
- 	led_classdev_unregister(&asus->lightbar_led);
- 	led_classdev_unregister(&asus->micmute_led);
-+	led_classdev_unregister(&asus->camera_led);
- 
- 	if (asus->led_workqueue)
- 		destroy_workqueue(asus->led_workqueue);
-@@ -1740,6 +1764,18 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 			goto error;
- 	}
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
-+		asus->camera_led.name = "platform::camera";
-+		asus->camera_led.max_brightness = 1;
-+		asus->camera_led.brightness_get = camera_led_get;
-+		asus->camera_led.brightness_set_blocking = camera_led_set;
-+
-+		rv = led_classdev_register(&asus->platform_device->dev,
-+						&asus->camera_led);
-+		if (rv)
-+			goto error;
-+	}
-+
- error:
- 	if (rv)
- 		asus_wmi_led_exit(asus);
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 3eb5cd6773ad..b3c35e33f1e7 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -50,6 +50,8 @@
- #define ASUS_WMI_DEVID_LED5		0x00020015
- #define ASUS_WMI_DEVID_LED6		0x00020016
- #define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
-+#define ASUS_WMI_DEVID_CAMERA_LED_NEG		0x00060078
-+#define ASUS_WMI_DEVID_CAMERA_LED		0x00060079
- 
- /* Backlight and Brightness */
- #define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor */
--- 
-2.45.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
