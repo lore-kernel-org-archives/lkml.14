@@ -1,87 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B4B1AED59;
-	Thu, 20 Jun 2024 14:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B6348CCD
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718892208; cv=none; b=GnbEMsgfWruSqXN+lbfZknxas2QkGnIRmNAHS/8Zp9AFX+2B4mHIdc+ZxRTDgcNFSkDGfpZwZxNrGRUMfeWFtaiViZ6ZjOpzCNpHYxPeoTTMBoIoWGtled+aCiyiQbN2zgZMUdcFMZC2OyQ6Yy+FqqtTIMVFlqX6YYIUD8uiea4=
+	t=1718892266; cv=none; b=PnmmklEalbxDUqw+5GUoO1uBIy8da29R2sNm+dEfg1HHjYZnRKGQlJb4PsjHI0wQGAVOwpWRU6jXLAxK5VRKdd9kwKguk1LC/MuRRIj8+9gpWR6HNy677gW9+0LAYLynlV7UoFe1A7TNH90dYASPfDzCiB3omcd54uZ7hm5RU+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718892208; c=relaxed/simple;
-	bh=Bm2ZjNf2b+VNKHoshVbV2rXdyFmyGGFZXFG269zvKN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E9DFTxxxn2fnlhpAs415tOibfqxsqjARH4MUvoMMAO0rHKyazulGB2ac5AXiywH6/GG7+5E2aMh/re3CJoeLC57m9W8+8ExGUaA9wzP5zuBNWJ1UTvVLAPtcZLjLu/obiA1ExdLhSYrlS0KLSs62ugWjue2csqBnyEZ742XuWd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5oZDmcR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5oZDmcR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0095C32786;
-	Thu, 20 Jun 2024 14:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718892208;
-	bh=Bm2ZjNf2b+VNKHoshVbV2rXdyFmyGGFZXFG269zvKN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C5oZDmcRVKiRXGV/z66rlpXEDT79Ddpy4N7glSKSArC8UTNU8pFoRHfWsC5B9w9NS
-	 T5kECR2Pd0qqet8v+1zBALgtxdmy7vGcXB0hr3h+ybzQa57RAbbb7jl2TixR8zmGya
-	 KNVrGLpf8h8wys9zex85p0mFsWByPDzJxFo/wlCi9FF2qZcO+DFqmCc+5ofCPO0qEr
-	 gDlYIGSqo6ZeY8wwrUqdcgOMfaCBz1T9zWZHzDf1PyCI8QRmms3m8R+xqDvjsh9Xq/
-	 95/kxM22g6HOD9FeAGvZJMdqUthc9aCGNPMrB7Y5WfPtbi3+HqC8EA+IZ/68MUso3l
-	 pTpfMznOFFZNw==
-From: Christian Brauner <brauner@kernel.org>
-To: Youling Tang <youling.tang@linux.dev>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	Youling Tang <tangyouling@kylinos.cn>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [PATCH 1/3] fs: Export in_group_or_capable()
-Date: Thu, 20 Jun 2024 16:03:01 +0200
-Message-ID: <20240620-biografie-anlief-f8640333c226@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620032335.147136-1-youling.tang@linux.dev>
-References: <20240620032335.147136-1-youling.tang@linux.dev>
+	s=arc-20240116; t=1718892266; c=relaxed/simple;
+	bh=JS+FDRKJbZHvaSKrJc6d25NPBfmbKnAUt9Z/dztHKK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ptevE7UlClB3UhATdNya+ex4dpkkSnLg2gr+6itFrbA4aKbinsefdwkk2JwTlT/X32zP4oX1uukB4W9WurQa15a8Kgb8wWAnV/Z7fab8LQ9Axo6LOjX0WutSiAzrbj71y62IqfXPuGSVefrk0w5jD1SRwZ7ukn64jjLdAGf1HFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 45KE4EEl057600;
+	Thu, 20 Jun 2024 23:04:14 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
+ Thu, 20 Jun 2024 23:04:14 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 45KE4EXk057597
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 20 Jun 2024 23:04:14 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <88a3878c-8701-4636-8ffd-a36af82bab7f@I-love.SAKURA.ne.jp>
+Date: Thu, 20 Jun 2024 23:04:14 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1099; i=brauner@kernel.org; h=from:subject:message-id; bh=Bm2ZjNf2b+VNKHoshVbV2rXdyFmyGGFZXFG269zvKN0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSVmC17tVI48m/oNrs10XfDN+mzHTzSq/L+0dZ5Pv92S AR433Wu6ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhI6VNGhmVCq9btav7Av7Z1 3YZtD5pS5G++tNigPeuz8dWExuNXwuIZGY7czpyYG60r4W354eu/7VvMp7/b/CL3u+Hmy8JXAgw nreQHAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [wireless?] INFO: task hung in
+ cfg80211_dfs_channels_update_work (7)
+To: syzbot <syzbot+4f955b33340810d6c105@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <00000000000031ce3a061b4e5d79@google.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <00000000000031ce3a061b4e5d79@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Jun 2024 11:23:33 +0800, Youling Tang wrote:
-> Export in_group_or_capable() as a VFS helper function.
-> 
-> 
+#syz fix: net/sched: act_api: fix possible infinite loop in tcf_idr_check_alloc()
 
-This makes sense to me.
-
----
-
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/3] fs: Export in_group_or_capable()
-      https://git.kernel.org/vfs/vfs/c/daf0f1ce3585
-[2/3] f2fs: Use in_group_or_capable() helper
-      https://git.kernel.org/vfs/vfs/c/29a76d8b349b
-[3/3] fuse: Use in_group_or_capable() helper
-      https://git.kernel.org/vfs/vfs/c/d128e6b878ac
