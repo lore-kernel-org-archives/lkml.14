@@ -1,119 +1,120 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4661AF682;
-	Thu, 20 Jun 2024 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031D81AE0B3;
+	Thu, 20 Jun 2024 14:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718895185; cv=none; b=MJn44AO67VVnbaMTrREsNl/IzAaEA3Z14UC4JX5U+XW9+9n5uK2zaMxlaLKfmrScmGz+J4o7AMETvSX9wVTDlGqItDXHEvrNQxb0phyJOFjpm8O2dIqcnNFfKi+Q9ymT8eNWIWfG18ZyB1cwDJ7O4iEtA0F8dJc5wf+DSOOVngw=
+	t=1718895204; cv=none; b=ajoIfP3COIkmXldbLo6s+ctVFMXgZtPxTw7OFl6r7HCOG2EgoXij1j5htDDzTpYfHS2T5cEMHKwnlIMPggAaqgue/yBCbwueg7Y62iAgcL+xjwi7KJAh6Qk5i9dMOEX1vdN/+hgOdSEmD73INzcc7Lo8jgzX2nq97H863pZG/5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718895185; c=relaxed/simple;
-	bh=g1ed6mztL+CfErEonUXtCOXbnBAIVWMRrGbPZjTx1Fo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Mj2sz1JAJAZmn12bltfOu7ARtxJmFXzq+B/yy/2voykVVLsjBY5NxkKKSW+TlSGm5Al7m75vC4XAJd66FiCx9w4FaRxPd6iCGor9Q3bgfCIGrISzWGTKhYLfPrpc0LPrzdtWphy1OX0W6ljkLcGDmRJodfxZ6jpvCZN1n0Ndk5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=c+cbk3Et; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718895204; c=relaxed/simple;
+	bh=avc6OvD0XCRHJMx1PZPh4isAaMtN3R3Nbi8f+bLT0vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ScxutoJ+M3WhALDImS7kjmgMjZaJ1kRNifeW+rYE7XCem8KLyt32AkeNvWFZDMof6c9Iy/c0ThfIQOg9bjxgT4pD/tP+dZQIFPgiLAv1mA0R1uj5O7qdD4glM+WpJwv5Qdk2+Yy3m/gg1U32y60zHRfZGq7RaktyPXhofyRce/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0jRFSQUo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c+cbk3Et"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45KEqdpS106305;
-	Thu, 20 Jun 2024 09:52:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718895159;
-	bh=3/6+kacdbmCst+UFgiDAIXTXVnIMfqKugEUCsNBL3ZQ=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=c+cbk3EtD09edSE3FFAF+G9kOgGyod6mITEUaEUCxqX8h3ZCUJHOUwZUq/I0dfVqH
-	 FdIeuq1L0t3TChAXByALOKKAPES/EL8fqo61N9IOmBYAnbZwwP3HTcmP0EVMDkZEjN
-	 pSHpTtUmxJ4nNnAN5SOfFcdrgmR0NXGH6l4gqi0g=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45KEqdOl014581
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 20 Jun 2024 09:52:39 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 20
- Jun 2024 09:52:39 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 20 Jun 2024 09:52:39 -0500
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45KEqZIv002047;
-	Thu, 20 Jun 2024 09:52:36 -0500
-Message-ID: <1cefd686-2eb2-e0b2-0b24-2c4efb0c41a1@ti.com>
-Date: Thu, 20 Jun 2024 20:22:35 +0530
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0jRFSQUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF21C2BD10;
+	Thu, 20 Jun 2024 14:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718895203;
+	bh=avc6OvD0XCRHJMx1PZPh4isAaMtN3R3Nbi8f+bLT0vw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0jRFSQUo2GH5KBK6nnRNsJ9n69tAf0RM3ZBbZ+QAWvYJOYe8HF4TJ4Vj31K3ipY4Y
+	 U77I0HEdeLHXNN7CiZ4CoyrdO+1J9eK8Tx+vkqnI+mCjK5okTt+7kNIjPxKXJXv14I
+	 8bwXdBDuqTY95EHpjkIy91ln8oexJYQdYd+V5fa8=
+Date: Thu, 20 Jun 2024 16:53:20 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] rust: add `io::Io` base type
+Message-ID: <2024062040-wannabe-composer-91bc@gregkh>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-8-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RESEND PATCH v6 2/4] media: chips-media: wave5: Support runtime
- suspend/resume
-Content-Language: en-US
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        "jackson.lee"
-	<jackson.lee@chipsnmedia.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "sebastian.fricke@collabora.com" <sebastian.fricke@collabora.com>
-CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,
-        Nas Chung
-	<nas.chung@chipsnmedia.com>,
-        "lafley.kim" <lafley.kim@chipsnmedia.com>,
-        "b-brnich@ti.com" <b-brnich@ti.com>
-References: <20240617104818.221-1-jackson.lee@chipsnmedia.com>
- <20240617104818.221-3-jackson.lee@chipsnmedia.com>
- <6e6f767c-85e9-87f6-394f-440efcc0fd21@ti.com>
- <SE1P216MB13037621438C8CE6142A69A8EDCF2@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
- <bc8796ef8107507e99df079f6d7ce2575ead3cab.camel@collabora.com>
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <bc8796ef8107507e99df079f6d7ce2575ead3cab.camel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618234025.15036-8-dakr@redhat.com>
 
-Hi Jackson, Nicolas,
-
-On 20/06/24 19:33, Nicolas Dufresne wrote:
-> Hi Jackson, Devarsh,
+On Wed, Jun 19, 2024 at 01:39:53AM +0200, Danilo Krummrich wrote:
+> I/O memory is typically either mapped through direct calls to ioremap()
+> or subsystem / bus specific ones such as pci_iomap().
 > 
-> Le mercredi 19 juin 2024 à 23:56 +0000, jackson.lee a écrit :
->> Hi Devarsh
->>
->> If there is no feeding bitstreams during encoding and decoding frames, then driver's status is switched to suspended automatically by autosuspend.
->> And if we don’t use autosuspend, it is very difficult for us to catch if there is feeding or not while working a pipeline.
->> So it is very efficient for managing power status.
->>
->> If the delay is very great value, we can adjust it.
-> 
-> One way to resolve this, would be if someone share measurement of the suspend /
-> resume cycle duration. With firmware (third party OS) like this, the cost and
-> duration is few order of magnitude higher then with more basic ASIC like Hantro
-> and other single function HW.
-> 
-> Yet, 5s might be to much (but clearly safe), but getting two low may means that
-> we suspect "between two frames", and if that happens, we may endup with various
-> range of side effect, like reduce throughput due to suspend collisions, or even
-> worse power footprint. Some lab testing to adjust the value will be needed, we
-> have very little of that happening at the moment as I understood.
-> 
+> Even though subsystem / bus specific functions to map I/O memory are
+> based on ioremap() / iounmap() it is not desirable to re-implement them
+> in Rust.
 
-Okay I see the intention here is that if there is a process holding the vpu
-device handle and the input feed is stalled for some seconds due to network
-delay or CPU throughput then after a specified timeout say 5 seconds we want
-to suspend even if the process is still active and holding the vpu device
-handle ? I agree then if we want to support this feature a safer/slightly
-larger value is required to avoid frequent suspend/resume due to network
-jitter or any other bottleneck and maybe 5s is a good value to start with.
+Why not?
 
-But if last instance is closed/stops streaming and there is no process holding
-the device handle anymore then I think we should suspend immediately without
-any delay.
+> Instead, implement a base type for I/O mapped memory, which generically
+> provides the corresponding accessors, such as `Io::readb` or
+> `Io:try_readb`.
 
-Regards
-Devarsh
+It provides a subset of the existing accessors, one you might want to
+trim down for now, see below...
+
+> +/* io.h */
+> +u8 rust_helper_readb(const volatile void __iomem *addr)
+> +{
+> +	return readb(addr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_readb);
+
+<snip>
+
+You provide wrappers for a subset of what io.h provides, why that
+specific subset?
+
+Why not just add what you need, when you need it?  I doubt you need all
+of these, and odds are you will need more.
+
+> +u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readl_relaxed(addr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
+
+I know everyone complains about wrapper functions around inline
+functions, so I'll just say it again, this is horrid.  And it's going to
+hurt performance, so any rust code people write is not on a level
+playing field here.
+
+Your call, but ick...
+
+> +#ifdef CONFIG_64BIT
+> +u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readq_relaxed(addr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
+> +#endif
+
+Rust works on 32bit targets in the kernel now?
+
+> +macro_rules! define_read {
+> +    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
+> +        /// Read IO data from a given offset known at compile time.
+> +        ///
+> +        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+> +        /// time, the build will fail.
+
+offsets aren't know at compile time for many implementations, as it
+could be a dynamically allocated memory range.  How is this going to
+work for that?  Heck, how does this work for DT-defined memory ranges
+today?
+
+thanks,
+
+greg k-h
