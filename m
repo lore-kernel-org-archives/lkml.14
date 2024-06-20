@@ -1,170 +1,213 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500091C231A
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFC91C8FAC
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904804; cv=none; b=l8soDi45t6x6JuTf9f9oV4IlgTv5UY2pRHMKLeACq2oBGeRzt02aeYURzNN+dFxITG5S4rygosf4yvwU7ygvkix4yvdfe9ca6xBizcc6Q6cHXky6QLBbuzN4u59v58qbYGiL4Cb+6MvQHygZyZ/8vuyA1Ra7IrdwtI2fwhPu2Kc=
+	t=1718904807; cv=none; b=NfjHf4UTZzW5shj4X+fxRJ+qJgQYJwD/ljeO82rvcbmZiwTIKCHuz/gDcwgXUnP8X997MoBGFb0qNqOBY1uNlKIlQrwaMDhjHtUv8HKYSZemcMW7Z7knWRRMIbfnh1/Nm2G2PDQynBtirFXHcol9nOiWiJKGJsyvOHNF1BXwy6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904804; c=relaxed/simple;
-	bh=TzPKOpvCwBaNFnGsw/iEn+9Z1c6ztU05h6eNk4LkJr4=;
-	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=sDjuzBiUDKdps0lQIajaGTZiuvpQN9vCWuxyflbz+13yOYgOmW5DvoVbleOuQ2zAW/c3tov4qPrgaA8vedN/i1N113roewoGUNEsfPgMyYvcj0v9CMKAYmV691v78mo2O0Kb6Z6cgvSkhg7RTyghrXUXrzWaNhhLRymyVk8AFns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZxcBDPCw; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1718904807; c=relaxed/simple;
+	bh=7q+wJzCww2SNJ3UcaKpzQR7ZAsX6Gi9tg4x7dh6z0Dk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AwLWhnJV0CetkjN9mJ7U7bta27wWohmsnOiIxx3rXHD+La6piTmc83QYiG65tuz2eojqs1hjbRq5oK4mE5SUBYhH1+gL1xiZoqN721oSji6rOZAakgXkehMPHpXpxIvMtTUZFyFpdfNpuIeykkGgKLo/ZF9/4k7+kA9txvNEak0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B9gh5+1K; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZxcBDPCw"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d280e2d5dso538354a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1718904801; x=1719509601; darn=vger.kernel.org;
-        h=mime-version:subject:user-agent:references:in-reply-to:message-id
-         :date:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EMoI8JOvTSXNXIOcAqTiZC4i2TKLws93lCZwt9d8F4Y=;
-        b=ZxcBDPCwfuNXAGPeqmVr9RcAcWOXki2c+s2b2CUoy4IhkcyPbvHUX7zH1a4n6hyiRy
-         xp23MPhk/iL9gE+KlrSi8si8YW9Vhq9eV47/Ovh9auKO2K4JOeO2UMrYNbS1BYale9NK
-         4hP8+e0StdqtQStIM2nXVAlgpAct0DPtkFusU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718904801; x=1719509601;
-        h=mime-version:subject:user-agent:references:in-reply-to:message-id
-         :date:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EMoI8JOvTSXNXIOcAqTiZC4i2TKLws93lCZwt9d8F4Y=;
-        b=mlByL97is7YGIc8A1FAQo5EyTJE2A5UrHMtgtaxOsT0NMGib4rP3vyfuYjUqFgaptq
-         x1HBP9UPxv23CpsCfTzMZlMpq2lXK05979gzsW55QtX73VVmnddkvOhOCLk2GmX5VuIj
-         JKK6/TjiafmYz4As/TZyiF2xSl5c8csDWjtxk1n4kCD6SaXNkNTDIGDrA8nX0jbQ79sY
-         Qmcb7SwTRV8/brjdG4s/ECBAmgUn4tFFyv00Txq5rqEtivC0zir+ohUgL4U4IZi4JCs1
-         d8SmWTT4ZqStl6xWuBNHyI5BbiXRiMeRM32+a8Wr2cn5mlEWVY8HdbwNR0f2s97d+N/Q
-         B4+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUT+lWjc6NWX3PMcpN000lZRL8S2RwALscpcL2T2/WckpPMNkSEXbYjZrtn9yD1hdb6gEWLeYnjt72O/3+hZgQanvgQs/bZBAhTyoA+
-X-Gm-Message-State: AOJu0Yz/qHZsbW6n6IgBwUdRRKs7JkixrcZwmsA9Lv1o31BH6QfzOv5t
-	SqsKeiESsOFriWo7/gg+CrW3r7Lj0sHEyaXvcQ7T1WKdVdBtb/tDmehzhEvXRA==
-X-Google-Smtp-Source: AGHT+IETUAVlwwFkqDQ4w98uIqyon39aonVaXSncZlcpdsKtKdRss5bCY3FXbq7fQ34KTjOyYSsSvA==
-X-Received: by 2002:a50:9e67:0:b0:57d:57c:ce99 with SMTP id 4fb4d7f45d1cf-57d07e68e29mr3351251a12.2.1718904800448;
-        Thu, 20 Jun 2024 10:33:20 -0700 (PDT)
-Received: from [192.168.178.38] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm9886234a12.22.2024.06.20.10.33.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2024 10:33:20 -0700 (PDT)
-From: Arend Van Spriel <arend.vanspriel@broadcom.com>
-To: Jacobe Zang <jacobe.zang@wesion.com>
-CC: <kvalo@kernel.org>, <duoming@zju.edu.cn>, <bhelgaas@google.com>, <minipli@grsecurity.net>, <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>, <megi@xff.cz>, <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <heiko@sntech.de>, <nick@khadas.com>, <efectn@protonmail.com>, <jagan@edgeble.ai>, <dsimic@manjaro.org>, <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Date: Thu, 20 Jun 2024 19:33:18 +0200
-Message-ID: <19036b5bb30.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <20240620020015.4021696-1-jacobe.zang@wesion.com>
-References: <20240620020015.4021696-1-jacobe.zang@wesion.com>
-User-Agent: AquaMail/1.51.3 (build: 105103473)
-Subject: Re: [PATCH v1 0/3] Add AP6275P wireless support
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B9gh5+1K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718904805;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uX8xcUkGpuu8sXJI7G0aibuVHEQvl2VRr7qcOSjNkD0=;
+	b=B9gh5+1KU85aaAL6SOrsPKEtFGzAIdGajDHA4wquUcFSbtgdK/EojfSiFPFTtR08ZvG4dR
+	bplsN3dKOgSSQfK1f72YGryp/djA2Ey7UTI39ilBVhlyn1OI7G6EsxXlN6vEaYuI81r7np
+	7sqqhMpGo/17BCvZkO89JMzp9TXt5vs=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-231-5gkrIObUOdmWGIEp57IBsQ-1; Thu,
+ 20 Jun 2024 13:33:22 -0400
+X-MC-Unique: 5gkrIObUOdmWGIEp57IBsQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EDA6719560BE;
+	Thu, 20 Jun 2024 17:33:18 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.39.195.156])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 76B5219560AF;
+	Thu, 20 Jun 2024 17:33:12 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Steve French <sfrench@samba.org>
+Subject: [PATCH 11/17] cifs: Move the 'pid' from the subreq to the req
+Date: Thu, 20 Jun 2024 18:31:29 +0100
+Message-ID: <20240620173137.610345-12-dhowells@redhat.com>
+In-Reply-To: <20240620173137.610345-1-dhowells@redhat.com>
+References: <20240620173137.610345-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000110aa2061b55b674"
-
---000000000000110aa2061b55b674
-Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On June 20, 2024 4:00:31 AM Jacobe Zang <jacobe.zang@wesion.com> wrote:
+Move the reference pid from the cifs_io_subrequest struct to the
+cifs_io_request struct as it's the same for all subreqs of a particular
+request.
 
-> These add AP6275P wireless support on Khadas Edge2. Enable 32k clock
-> for Wi-Fi module and extend the hardware IDs table in the brcmfmac
-> driver for it to attach.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/smb/client/cifsglob.h |  2 +-
+ fs/smb/client/cifssmb.c  |  8 ++++----
+ fs/smb/client/file.c     | 10 +++-------
+ fs/smb/client/smb2pdu.c  |  4 ++--
+ 4 files changed, 10 insertions(+), 14 deletions(-)
 
-Please get the bindings properly defined. I assume the patch sent earlier 
-titled "[PATCH v1] dt-bindings: net: wireless: BCM4329 binding: add 
-pci14e4,449d" is related. Focus on getting agreement on that before 
-throwing in DTS and driver details.
+diff --git a/fs/smb/client/cifsglob.h b/fs/smb/client/cifsglob.h
+index b48d3f5e8889..bbcc552c07be 100644
+--- a/fs/smb/client/cifsglob.h
++++ b/fs/smb/client/cifsglob.h
+@@ -1495,6 +1495,7 @@ struct cifs_io_request {
+ 	struct netfs_io_request		rreq;
+ 	struct cifsFileInfo		*cfile;
+ 	struct TCP_Server_Info		*server;
++	pid_t				pid;
+ };
+ 
+ /* asynchronous read support */
+@@ -1505,7 +1506,6 @@ struct cifs_io_subrequest {
+ 		struct cifs_io_request *req;
+ 	};
+ 	ssize_t				got_bytes;
+-	pid_t				pid;
+ 	unsigned int			xid;
+ 	int				result;
+ 	bool				have_xid;
+diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
+index 25e9ab947c17..595c4b673707 100644
+--- a/fs/smb/client/cifssmb.c
++++ b/fs/smb/client/cifssmb.c
+@@ -1345,8 +1345,8 @@ cifs_async_readv(struct cifs_io_subrequest *rdata)
+ 	if (rc)
+ 		return rc;
+ 
+-	smb->hdr.Pid = cpu_to_le16((__u16)rdata->pid);
+-	smb->hdr.PidHigh = cpu_to_le16((__u16)(rdata->pid >> 16));
++	smb->hdr.Pid = cpu_to_le16((__u16)rdata->req->pid);
++	smb->hdr.PidHigh = cpu_to_le16((__u16)(rdata->req->pid >> 16));
+ 
+ 	smb->AndXCommand = 0xFF;	/* none */
+ 	smb->Fid = rdata->req->cfile->fid.netfid;
+@@ -1689,8 +1689,8 @@ cifs_async_writev(struct cifs_io_subrequest *wdata)
+ 	if (rc)
+ 		goto async_writev_out;
+ 
+-	smb->hdr.Pid = cpu_to_le16((__u16)wdata->pid);
+-	smb->hdr.PidHigh = cpu_to_le16((__u16)(wdata->pid >> 16));
++	smb->hdr.Pid = cpu_to_le16((__u16)wdata->req->pid);
++	smb->hdr.PidHigh = cpu_to_le16((__u16)(wdata->req->pid >> 16));
+ 
+ 	smb->AndXCommand = 0xFF;	/* none */
+ 	smb->Fid = wdata->req->cfile->fid.netfid;
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 16fa1ac1ed2d..45c860f0e7fd 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -178,14 +178,8 @@ static void cifs_req_issue_read(struct netfs_io_subrequest *subreq)
+ 	struct cifs_io_subrequest *rdata = container_of(subreq, struct cifs_io_subrequest, subreq);
+ 	struct cifs_io_request *req = container_of(subreq->rreq, struct cifs_io_request, rreq);
+ 	struct cifs_sb_info *cifs_sb = CIFS_SB(rreq->inode->i_sb);
+-	pid_t pid;
+ 	int rc = 0;
+ 
+-	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_RWPIDFORWARD)
+-		pid = req->cfile->pid;
+-	else
+-		pid = current->tgid; // Ummm...  This may be a workqueue
+-
+ 	cifs_dbg(FYI, "%s: op=%08x[%x] mapping=%p len=%zu/%zu\n",
+ 		 __func__, rreq->debug_id, subreq->debug_index, rreq->mapping,
+ 		 subreq->transferred, subreq->len);
+@@ -199,7 +193,6 @@ static void cifs_req_issue_read(struct netfs_io_subrequest *subreq)
+ 	}
+ 
+ 	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+-	rdata->pid = pid;
+ 
+ 	rc = rdata->server->ops->async_readv(rdata);
+ out:
+@@ -236,12 +229,15 @@ static int cifs_init_request(struct netfs_io_request *rreq, struct file *file)
+ 
+ 	rreq->rsize = cifs_sb->ctx->rsize;
+ 	rreq->wsize = cifs_sb->ctx->wsize;
++	req->pid = current->tgid; // Ummm...  This may be a workqueue
+ 
+ 	if (file) {
+ 		open_file = file->private_data;
+ 		rreq->netfs_priv = file->private_data;
+ 		req->cfile = cifsFileInfo_get(open_file);
+ 		req->server = cifs_pick_channel(tlink_tcon(req->cfile->tlink)->ses);
++		if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_RWPIDFORWARD)
++			req->pid = req->cfile->pid;
+ 	} else if (rreq->origin != NETFS_WRITEBACK) {
+ 		WARN_ON_ONCE(1);
+ 		return -EIO;
+diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+index e213cecd5094..2ae2dbb6202b 100644
+--- a/fs/smb/client/smb2pdu.c
++++ b/fs/smb/client/smb2pdu.c
+@@ -4621,7 +4621,7 @@ smb2_async_readv(struct cifs_io_subrequest *rdata)
+ 	io_parms.length = rdata->subreq.len;
+ 	io_parms.persistent_fid = rdata->req->cfile->fid.persistent_fid;
+ 	io_parms.volatile_fid = rdata->req->cfile->fid.volatile_fid;
+-	io_parms.pid = rdata->pid;
++	io_parms.pid = rdata->req->pid;
+ 
+ 	rc = smb2_new_read_req(
+ 		(void **) &buf, &total_len, &io_parms, rdata, 0, 0);
+@@ -4873,7 +4873,7 @@ smb2_async_writev(struct cifs_io_subrequest *wdata)
+ 		.length = wdata->subreq.len,
+ 		.persistent_fid = wdata->req->cfile->fid.persistent_fid,
+ 		.volatile_fid = wdata->req->cfile->fid.volatile_fid,
+-		.pid = wdata->pid,
++		.pid = wdata->req->pid,
+ 	};
+ 	io_parms = &_io_parms;
+ 
 
-Regards,
-Arend
-
-
-
---000000000000110aa2061b55b674
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
-Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
-HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
-KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
-Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
-dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
-OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
-MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
-BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
-ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
-zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
-sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
-BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
-N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
-p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
-YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
-bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBPebLIu9F2P1y30YQL
-jbYsU5v9bP7EgEDtpbFiVHGrMDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
-BTEPFw0yNDA2MjAxNzMzMjFaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
-AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
-BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAFUacIdRVb6zyMWqRS4C7dma+hpUQFPR5x7It
-rDfvoZeyqV9dgn71AeciW4E+ySGN2Nw2iRo/KOte3hFL+BBF4HT2Jb8OHOBQ2/qR8NSHdLrVCxQS
-8CVAhXwriZG2nk4AmrCIp/bJQh+ktIQzs77xCcWXw+6Vr0vBvdp1bbYJ4Bx1GI/lm9OSwRRT3FDP
-Gw29GNRWS/ur33cZFZA/z1xB69ALZqXtW0+SWfR1I6NqjWu7iEnH1YB+FPfdI4dwjn/9ROgaQxBE
-3+bcsDKJoezoz8inDmiCz+XQaHl0XrrqN0GVs9xavUUCl9HePs3neKFNKwHVPoCvubyeVkx4xK9b
-zA==
---000000000000110aa2061b55b674--
