@@ -1,42 +1,56 @@
-Received: from smtp68.iad3b.emailsrvr.com (smtp68.iad3b.emailsrvr.com [146.20.161.68])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D081A3BD1;
-	Thu, 20 Jun 2024 13:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E541ACE7C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718889124; cv=none; b=ZJ4AMqUbMANZ5MrDAiahmqHa7wrMtLEE1zGQMFcoEkBkA9Y24Qj8jSUFO/6m95Im370FeWoJBTKsbHI0JhA7s/BIld33/qqupkNarFMFgWP4IcJqhXlDNt9OKG6/K4zx0XGMICTie3SpSwkeLhj1fUtLcMiDuKa/0HlJUqYeQEs=
+	t=1718889127; cv=none; b=pGp802Q5bnbXybsZEtd2om/6BNRk7KX0GN8D/41d0QbT9MoADKIQaUenhNqNzwAtKxWpRQucUMLuA4YfLhRmTAbM3DIoUrpu27VenV2v7Tta2efRoNpWoGs0efuc4UQLH4X3ejDJKJfeBn39r4S/GkhMg5hnyoVpxo9jx7HNfH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718889124; c=relaxed/simple;
-	bh=HoXdi8YDPzKPfOk1K5QZ/YKUnApGodxvc1GCh+obPAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZcDB7GRasJov6d1Q/JK/5PIyOnnCJPR/bKMislwm00muvePIDZjeMnel4ztOVfq0BdgbUfNe8e+ORXTGIgzkou4iUqCiKS0SpU3E9D94yixEa+L8w+5D0tRU0IECi78/ywAmixkrZ238lqbrSrT+epFwIk6ni3S0P9R5u4m2e1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=TECxJkAU; arc=none smtp.client-ip=146.20.161.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1718889127; c=relaxed/simple;
+	bh=5QobGKcMzWS0L/imv386TX9RQ22yKwBKkNioynEKs3U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hmgGvmYU4VtB4Igscxn5ygFe3KImWpAVXSO/xl0Qz1vD3hZhctkWF092FN4xdcBQnJZGCQZ/DG+CUYxahjRyqCr1LR7zN0Bypcp1BIPSjTJNjFU+kRF5nXUbTaCC/DkckEq5NziBKV4EZWX7tdcur8ayVj5d1rK2y04oCQ+pi28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=LImavZfu; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="TECxJkAU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1718888732;
-	bh=HoXdi8YDPzKPfOk1K5QZ/YKUnApGodxvc1GCh+obPAw=;
-	h=From:To:Subject:Date:From;
-	b=TECxJkAUhfOnkyBBG9EzZbRLXNJPdWxo6jiuwOj/PgyqgbnHhVLwp60G+wf7I5IhT
-	 +n0Row+sswvq3d+bCzNaSQuC64B9skUvoP0yUr1ZOfcg62LiLN+YjVOKnwuwzyFlhN
-	 xDUqGzu1di2PRwYA1T8Y7EwP5WUzniVNSeBG1B5Q=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp1.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 5A368602EE;
-	Thu, 20 Jun 2024 09:05:31 -0400 (EDT)
-From: Ian Abbott <abbotti@mev.co.uk>
-To: linux-rtc@vger.kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-kernel@vger.kernel.org,
-	Ian Abbott <abbotti@mev.co.uk>,
-	stable@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Brown <broonie@kernel.org>
-Subject: [PATCH] rtc: ds1343: Force SPI chip select to be active high
-Date: Thu, 20 Jun 2024 14:05:14 +0100
-Message-ID: <20240620130514.14875-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="LImavZfu"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KASrTw027624;
+	Thu, 20 Jun 2024 06:11:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=OAkMbYlZ3HVuDROEb9uqOGw
+	BlriAuNGM+bvkvRBxTIs=; b=LImavZfuHc2DSNVqQ5H2FE2lDHgcroqED8cKubC
+	n7opL6r5Le8kSu+zTc5x/8AKn3cNl6gfxS3V2+Oh6RFBKOK/lxTixivex0ALQEIR
+	HqWvGG+NHIkaQlFgQKx80d3dVJniAe1kyEndSRQfBETcuGUvo5fRwlIs48X5EJne
+	PAHKujTu2ZwJd6vZkr7QMaKrOcPprdKawHLhcB7wMia2T2G9WJMIyWI0GXIn9FWo
+	LClCLFlXVYAIwegGPH5KQzYvdzT+a1kG5FTLs/IDVVENBmqar1j4mLmxMkYtz4Vm
+	YAbwgKFy6U4G9y9gN+8oTQNmhEa6o5S7ZJPW64V5Py98fIg==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3yvjq0gkr7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 06:11:57 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 20 Jun 2024 06:11:55 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 20 Jun 2024 06:11:55 -0700
+Received: from IPBU-BLR-SERVER1.marvell.com (IPBU-BLR-SERVER1.marvell.com [10.28.8.41])
+	by maili.marvell.com (Postfix) with ESMTP id 10A673F70C3;
+	Thu, 20 Jun 2024 06:11:52 -0700 (PDT)
+From: Gowthami Thiagarajan <gthiagarajan@marvell.com>
+To: <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <sgoutham@marvell.com>, <gcherian@marvell.com>,
+        Gowthami Thiagarajan
+	<gthiagarajan@marvell.com>
+Subject: [PATCH v5 0/3] Marvell Odyssey uncore performance monitor support
+Date: Thu, 20 Jun 2024 18:41:46 +0530
+Message-ID: <20240620131149.590748-1-gthiagarajan@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,45 +58,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Classification-ID: 69f7c04b-1112-4442-97ad-644fb5228c58-1-1
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: rtp5BQEb5BWfMxOpvfN7AjIT9SiOFM1L
+X-Proofpoint-GUID: rtp5BQEb5BWfMxOpvfN7AjIT9SiOFM1L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_07,2024-06-20_04,2024-05-17_01
 
-Commit 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
-bit-flips (^=) the existing SPI_CS_HIGH setting in the SPI mode during
-device probe.  This will set it to the wrong value if the spi-cs-high
-property has been set in the devicetree node.  Just force it to be set
-active high and get rid of some commentary that attempted to explain why
-flipping the bit was the correct choice.
+Odyssey is a 64 bit ARM based SoC with multiple performance monitor
+units for various blocks.
 
-Fixes: 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
-Cc: <stable@vger.kernel.org> # 5.6+
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- drivers/rtc/rtc-ds1343.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+This series of patches introduces support for uncore performance monitor
+units (PMUs) on the Marvell Odyssey platform. The PMUs covered in this
+series include the DDR PMU and LLC-TAD PMU.
 
-diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
-index ed5a6ba89a3e..484b5756b55c 100644
---- a/drivers/rtc/rtc-ds1343.c
-+++ b/drivers/rtc/rtc-ds1343.c
-@@ -361,13 +361,10 @@ static int ds1343_probe(struct spi_device *spi)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	/* RTC DS1347 works in spi mode 3 and
--	 * its chip select is active high. Active high should be defined as
--	 * "inverse polarity" as GPIO-based chip selects can be logically
--	 * active high but inverted by the GPIO library.
-+	/*
-+	 * RTC DS1347 works in spi mode 3 and its chip select is active high.
- 	 */
--	spi->mode |= SPI_MODE_3;
--	spi->mode ^= SPI_CS_HIGH;
-+	spi->mode |= SPI_MODE_3 | SPI_CS_HIGH;
- 	spi->bits_per_word = 8;
- 	res = spi_setup(spi);
- 	if (res)
+v4->v5:
+- Fixed warnings.
+
+Gowthami Thiagarajan (3):
+  perf/marvell: Refactor to extract platform data - no functional change
+  perf/marvell: perf/marvell: Odyssey DDR Performance monitor support
+  perf/marvell : Odyssey LLC-TAD performance monitor support
+
+ drivers/perf/marvell_cn10k_ddr_pmu.c | 530 +++++++++++++++++++++++----
+ drivers/perf/marvell_cn10k_tad_pmu.c |  66 +++-
+ 2 files changed, 521 insertions(+), 75 deletions(-)
+
 -- 
-2.43.0
+2.25.1
 
