@@ -1,718 +1,206 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1F91B29BC;
-	Thu, 20 Jun 2024 17:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D420F1BB698
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904713; cv=none; b=OkE7umKZ7B7cIGr/yROxUikl77v+CjQv4A+pmfCaVK0FGn6mZTj1K3PasmhUa/xhepvFCE5eUwJgwlBHC2aDqVWDi/rKAI/65vQ+1EAgvMtPN4t8FZ/NUnukpvkJYwPlA59d1pJIkVipBoGOKLrg7Jx6Pyye9uqF1FBx4UyGjBs=
+	t=1718904722; cv=none; b=K0OCmAPLJOFqGG2E0izA9qAwZkQWRJFWU/+8U1+g5Sc2+b69IJYMUQ/gKzPExRgniqvz99E2PkF2gecZ50X0p2OY8F3lyWU0gVfAhR4s8Toc/bZN/SYwJ/FtHFPqUGgNUIxvgc12Jm1whL6kyVzXtij54SOP7963zQ4bNxc6+EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904713; c=relaxed/simple;
-	bh=ar3Cpi6cUVAILNqN1ssf7gW4KvXgGUIvD8f5OZtp2Yk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mNfkkIQwg0ae1LOZJPB4buMuBWMcmzKSTI/yA85HHZX0WDGaxiEqRIdVXM4HftPlNFTZkffCPKbaZGG8ua/CPR/Uu+dWVsNhzXmWwPRQ9X5UYrB6pX6n2z8rzueFEfCY/sz3Y3SnU1sRZwdkIt/+LwThHJLf0aAjhv/uLbe1AhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ApRkzPYg; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718904722; c=relaxed/simple;
+	bh=3famu7kM0k0A3eGrbVUf0STnPIu+XHzc/yElIGrJACY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l0KE341/zX6203TT+izXuzO/SdMnpnatw+7q2/IrCvP9k7H9xBfm4DkZjOsstcquKrylS5kOShvkO0t+++aGyh33kST1KU+r7Z6kH0f3N92L4G5ypnITPaaJkiCj1ED7uAWxpplK2nCWXeTLK1we1P12PdQvDgMsuWnRTU1MjrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A5cg7K1m; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ApRkzPYg"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AF1AF1C000A;
-	Thu, 20 Jun 2024 17:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718904708;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A5cg7K1m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718904719;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gL1OUyk3Tz8rdtmT+uUcJgwYzule/7rkDExvOoIwBuQ=;
-	b=ApRkzPYgr4n7wR3eMmK8x715+Qnd0yo4KJsXGLL7hkdSHt+W2f4iER1+kLuxUhEGJR3gEQ
-	c04PIceVPQtmz0fGyguUUtkLlKeFGkexufI0uMnT+JzV0LZ7SY/kDhU8CynyZogPQZNPlm
-	gu3BwpVa1FLGt9nMNZUoqsmiH7blXYhWKOsqNPI2r1ebjacTxJCObzcvlHMqZlbz94U6ng
-	3BLwkGFrwHHwnXwfCrrRNgCR3Zt9tdZKRfe+wLp1I79BG3xuuqY6jBzgfjAyiusQme5x2+
-	36dML8ZM15VviFMNX0iDUXlHef6n8XxHstQWx3T3EjRRlkTgQV0EErtssG431A==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Thu, 20 Jun 2024 19:31:00 +0200
-Subject: [PATCH v3 8/9] pinctrl: eyeq5: add platform driver
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A6sdkxC5Rf5cszZ1f7tlsrLiiyuGvZyUxkFS40A7f1I=;
+	b=A5cg7K1msGGShLIq/ZowUoALdg8LPLgvcNFeYfakrDl61Xh/0QCi+RovQ4LS1YySOXRNuQ
+	2V1/nOARRlhl7X22ngsRkzr9aghJoLkigcyClJnovBY9TVe8V1vQHj0cSA5VR61+5e1bzX
+	uRVcOQsk1mUq4cEs7NVYuhQtBQh9Ya0=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-OVbXt0VRPAe5lPnpjTGv9A-1; Thu,
+ 20 Jun 2024 13:31:53 -0400
+X-MC-Unique: OVbXt0VRPAe5lPnpjTGv9A-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25C6D19560AD;
+	Thu, 20 Jun 2024 17:31:49 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.39.195.156])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 807EA300022B;
+	Thu, 20 Jun 2024 17:31:41 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/17] netfs, cifs: Miscellaneous fixes and read/write improvements
+Date: Thu, 20 Jun 2024 18:31:18 +0100
+Message-ID: <20240620173137.610345-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240620-mbly-olb-v3-8-5f29f8ca289c@bootlin.com>
-References: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
-In-Reply-To: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
-To: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: b4 0.14.0
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add the Mobileye EyeQ5 pin controller driver. It belongs to a syscon
-region called OLB and gets spawned as auxiliary device to the platform
-driver for clock.
+Hi Christian, Steve, Willy,
 
-Existing pins and their function live statically in the driver code
-rather than in the devicetree, see compatible match data.
+[!] NOTE: THE LAST PATCH IS INCOMPLETE AND ONLY PARTIALLY WORKS.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
----
- MAINTAINERS                     |   1 +
- drivers/pinctrl/Kconfig         |  15 ++
- drivers/pinctrl/Makefile        |   1 +
- drivers/pinctrl/pinctrl-eyeq5.c | 576 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 593 insertions(+)
+[!] Willy: Could you look at the sheaf-adding patch?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 36f4001c7f51..09c3b05035d2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14931,6 +14931,7 @@ F:	arch/mips/boot/dts/mobileye/
- F:	arch/mips/configs/eyeq5_defconfig
- F:	arch/mips/mobileye/board-epm5.its.S
- F:	drivers/clk/clk-eyeq5.c
-+F:	drivers/pinctrl/pinctrl-eyeq5.c
- F:	drivers/reset/reset-eyeq5.c
- F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
- 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index d45657aa986a..de112a3ae079 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -213,6 +213,21 @@ config PINCTRL_EQUILIBRIUM
- 	  desired pin functions, configure GPIO attributes for LGM SoC pins.
- 	  Pin muxing and pin config settings are retrieved from device tree.
- 
-+config PINCTRL_EYEQ5
-+	bool "Mobileye EyeQ5 pinctrl driver"
-+	depends on COMMON_CLK_EYEQ
-+	depends on MACH_EYEQ5 || COMPILE_TEST
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	select MFD_SYSCON
-+	default MACH_EYEQ5
-+	help
-+	  Pin controller driver for the Mobileye EyeQ5 platform. It does both
-+	  pin config & pin muxing. It does not handle GPIO.
-+
-+	  Pin muxing supports two functions for each pin: first is GPIO, second
-+	  is pin-dependent. Pin config is about bias & drive strength.
-+
- config PINCTRL_GEMINI
- 	bool
- 	depends on ARCH_GEMINI
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 2152539b53d5..6113e980cdb2 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
- obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
- obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
- obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
-+obj-$(CONFIG_PINCTRL_EYEQ5)	+= pinctrl-eyeq5.o
- obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
- obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
- obj-$(CONFIG_PINCTRL_K210)	+= pinctrl-k210.o
-diff --git a/drivers/pinctrl/pinctrl-eyeq5.c b/drivers/pinctrl/pinctrl-eyeq5.c
-new file mode 100644
-index 000000000000..bac2b5d74d7e
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-eyeq5.c
-@@ -0,0 +1,576 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Pinctrl driver for the Mobileye EyeQ5 platform.
-+ *
-+ * The registers are located in a syscon region called OLB. There are two pin
-+ * banks, each being controlled by 5 registers (see enum eq5p_regs) for
-+ * pull-down, pull-up, drive strength and muxing.
-+ *
-+ * For each pin, muxing is between two functions: (0) GPIO or (1) another one
-+ * that is pin-dependent. Functions are declared statically in this driver.
-+ *
-+ * We create pinctrl groups that are 1:1 equivalent to pins: each group has a
-+ * single pin, and its index/selector is the pin number.
-+ *
-+ * We use eq5p_ as prefix, as-in "EyeQ5 Pinctrl", but way shorter.
-+ *
-+ * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bits.h>
-+#include <linux/bug.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "core.h"
-+#include "pinctrl-utils.h"
-+
-+struct eq5p_pinctrl {
-+	struct pinctrl_desc	desc;
-+	void __iomem		*base;
-+};
-+
-+enum eq5p_bank {
-+	EQ5P_BANK_A,
-+	EQ5P_BANK_B,
-+
-+	EQ5P_BANK_COUNT,
-+};
-+
-+enum eq5p_regs {
-+	EQ5P_PD,
-+	EQ5P_PU,
-+	EQ5P_DS_LOW,
-+	EQ5P_DS_HIGH,
-+	EQ5P_IOCR,
-+
-+	EQ5P_REG_COUNT,
-+};
-+
-+static const unsigned int eq5p_regs[EQ5P_BANK_COUNT][EQ5P_REG_COUNT] = {
-+	[EQ5P_BANK_A] = {0x0C0, 0x0C4, 0x0D0, 0x0D4, 0x0B0},
-+	[EQ5P_BANK_B] = {0x0C8, 0x0CC, 0x0D8, 0x0DC, 0x0B4},
-+};
-+
-+/*
-+ * Drive strength; two bits per pin.
-+ */
-+#define EQ5P_DS_MASK	GENMASK(1, 0)
-+
-+/*
-+ * Comments to the right of each pin are the "signal name" in the datasheet.
-+ */
-+static const struct pinctrl_pin_desc eq5p_pins[] = {
-+	/* Bank A */
-+	PINCTRL_PIN(0,  "PA0"),  /* A0_TIMER0_CK */
-+	PINCTRL_PIN(1,  "PA1"),  /* A1_TIMER0_EOC */
-+	PINCTRL_PIN(2,  "PA2"),  /* A2_TIMER1_CK */
-+	PINCTRL_PIN(3,  "PA3"),  /* A3_TIMER1_EOC */
-+	PINCTRL_PIN(4,  "PA4"),  /* A4_TIMER2_CK */
-+	PINCTRL_PIN(5,  "PA5"),  /* A5_TIMER2_EOC */
-+	PINCTRL_PIN(6,  "PA6"),  /* A6_TIMER5_EXT_INCAP1 */
-+	PINCTRL_PIN(7,  "PA7"),  /* A7_TIMER5_EXT_INCAP2 */
-+	PINCTRL_PIN(8,  "PA8"),  /* A8_TIMER5_EXT_OUTCMP1 */
-+	PINCTRL_PIN(9,  "PA9"),  /* A9_TIMER5_EXT_OUTCMP2 */
-+	PINCTRL_PIN(10, "PA10"), /* A10_UART_0_TX */
-+	PINCTRL_PIN(11, "PA11"), /* A11_UART_0_RX */
-+	PINCTRL_PIN(12, "PA12"), /* A12_UART_1_TX */
-+	PINCTRL_PIN(13, "PA13"), /* A13_UART_1_RX */
-+	PINCTRL_PIN(14, "PA14"), /* A14_CAN_0_TX */
-+	PINCTRL_PIN(15, "PA15"), /* A15_CAN_0_RX */
-+	PINCTRL_PIN(16, "PA16"), /* A16_CAN_1_TX */
-+	PINCTRL_PIN(17, "PA17"), /* A17_CAN_1_RX */
-+	PINCTRL_PIN(18, "PA18"), /* A18_SPI_0_DO */
-+	PINCTRL_PIN(19, "PA19"), /* A19_SPI_0_DI */
-+	PINCTRL_PIN(20, "PA20"), /* A20_SPI_0_CK */
-+	PINCTRL_PIN(21, "PA21"), /* A21_SPI_0_CS0 */
-+	PINCTRL_PIN(22, "PA22"), /* A22_SPI_0_CS1 */
-+	PINCTRL_PIN(23, "PA23"), /* A23_SPI_1_DO */
-+	PINCTRL_PIN(24, "PA24"), /* A24_SPI_1_DI */
-+	PINCTRL_PIN(25, "PA25"), /* A25_SPI_1_CK */
-+	PINCTRL_PIN(26, "PA26"), /* A26_SPI_1_CS0 */
-+	PINCTRL_PIN(27, "PA27"), /* A27_SPI_1_CS1 */
-+	PINCTRL_PIN(28, "PA28"), /* A28_REF_CLK0 */
-+
-+#define EQ5P_PIN_OFFSET_BANK_B	29
-+
-+	/* Bank B */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 0,  "PB0"),  /* B0_TIMER3_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 1,  "PB1"),  /* B1_TIMER3_EOC */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 2,  "PB2"),  /* B2_TIMER4_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 3,  "PB3"),  /* B3_TIMER4_EOC */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 4,  "PB4"),  /* B4_TIMER6_EXT_INCAP1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 5,  "PB5"),  /* B5_TIMER6_EXT_INCAP2 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 6,  "PB6"),  /* B6_TIMER6_EXT_OUTCMP1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 7,  "PB7"),  /* B7_TIMER6_EXT_OUTCMP2 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 8,  "PB8"),  /* B8_UART_2_TX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 9,  "PB9"),  /* B9_UART_2_RX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 10, "PB10"), /* B10_CAN_2_TX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 11, "PB11"), /* B11_CAN_2_RX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 12, "PB12"), /* B12_SPI_2_DO */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 13, "PB13"), /* B13_SPI_2_DI */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 14, "PB14"), /* B14_SPI_2_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 15, "PB15"), /* B15_SPI_2_CS0 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 16, "PB16"), /* B16_SPI_2_CS1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 17, "PB17"), /* B17_SPI_3_DO */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 18, "PB18"), /* B18_SPI_3_DI */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 19, "PB19"), /* B19_SPI_3_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 20, "PB20"), /* B20_SPI_3_CS0 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 21, "PB21"), /* B21_SPI_3_CS1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 22, "PB22"), /* B22_MCLK0 */
-+};
-+
-+static const char * const gpio_groups[] = {
-+	/* Bank A */
-+	"PA0",  "PA1",  "PA2",  "PA3",  "PA4",  "PA5",  "PA6",  "PA7",
-+	"PA8",  "PA9",  "PA10", "PA11", "PA12", "PA13", "PA14", "PA15",
-+	"PA16", "PA17", "PA18", "PA19", "PA20", "PA21", "PA22", "PA23",
-+	"PA24", "PA25", "PA26", "PA27", "PA28",
-+
-+	/* Bank B */
-+	"PB0",  "PB1",  "PB2",  "PB3",  "PB4",  "PB5",  "PB6",  "PB7",
-+	"PB8",  "PB9",  "PB10", "PB11", "PB12", "PB13", "PB14", "PB15",
-+	"PB16", "PB17", "PB18", "PB19", "PB20", "PB21", "PB22",
-+};
-+
-+/* Groups of functions on bank A */
-+static const char * const timer0_groups[] = { "PA0", "PA1" };
-+static const char * const timer1_groups[] = { "PA2", "PA3" };
-+static const char * const timer2_groups[] = { "PA4", "PA5" };
-+static const char * const timer5_groups[] = { "PA6", "PA7", "PA8", "PA9" };
-+static const char * const uart0_groups[] = { "PA10", "PA11" };
-+static const char * const uart1_groups[] = { "PA12", "PA13" };
-+static const char * const can0_groups[] = { "PA14", "PA15" };
-+static const char * const can1_groups[] = { "PA16", "PA17" };
-+static const char * const spi0_groups[] = { "PA18", "PA19", "PA20", "PA21", "PA22" };
-+static const char * const spi1_groups[] = { "PA23", "PA24", "PA25", "PA26", "PA27" };
-+static const char * const refclk0_groups[] = { "PA28" };
-+
-+/* Groups of functions on bank B */
-+static const char * const timer3_groups[] = { "PB0", "PB1" };
-+static const char * const timer4_groups[] = { "PB2", "PB3" };
-+static const char * const timer6_groups[] = { "PB4", "PB5", "PB6", "PB7" };
-+static const char * const uart2_groups[] = { "PB8", "PB9" };
-+static const char * const can2_groups[] = { "PB10", "PB11" };
-+static const char * const spi2_groups[] = { "PB12", "PB13", "PB14", "PB15", "PB16" };
-+static const char * const spi3_groups[] = { "PB17", "PB18", "PB19", "PB20", "PB21" };
-+static const char * const mclk0_groups[] = { "PB22" };
-+
-+static const struct pinfunction eq5p_functions[] = {
-+	/* GPIO having a fixed index is depended upon, see GPIO_FUNC_SELECTOR. */
-+	PINCTRL_PINFUNCTION("gpio", gpio_groups, ARRAY_SIZE(gpio_groups)),
-+#define GPIO_FUNC_SELECTOR 0
-+
-+	/* Bank A functions */
-+	PINCTRL_PINFUNCTION("timer0", timer0_groups, ARRAY_SIZE(timer0_groups)),
-+	PINCTRL_PINFUNCTION("timer1", timer1_groups, ARRAY_SIZE(timer1_groups)),
-+	PINCTRL_PINFUNCTION("timer2", timer2_groups, ARRAY_SIZE(timer2_groups)),
-+	PINCTRL_PINFUNCTION("timer5", timer5_groups, ARRAY_SIZE(timer5_groups)),
-+	PINCTRL_PINFUNCTION("uart0", uart0_groups, ARRAY_SIZE(uart0_groups)),
-+	PINCTRL_PINFUNCTION("uart1", uart1_groups, ARRAY_SIZE(uart1_groups)),
-+	PINCTRL_PINFUNCTION("can0", can0_groups, ARRAY_SIZE(can0_groups)),
-+	PINCTRL_PINFUNCTION("can1", can1_groups, ARRAY_SIZE(can1_groups)),
-+	PINCTRL_PINFUNCTION("spi0", spi0_groups, ARRAY_SIZE(spi0_groups)),
-+	PINCTRL_PINFUNCTION("spi1", spi1_groups, ARRAY_SIZE(spi1_groups)),
-+	PINCTRL_PINFUNCTION("refclk0", refclk0_groups, ARRAY_SIZE(refclk0_groups)),
-+
-+	/* Bank B functions */
-+	PINCTRL_PINFUNCTION("timer3", timer3_groups, ARRAY_SIZE(timer3_groups)),
-+	PINCTRL_PINFUNCTION("timer4", timer4_groups, ARRAY_SIZE(timer4_groups)),
-+	PINCTRL_PINFUNCTION("timer6", timer6_groups, ARRAY_SIZE(timer6_groups)),
-+	PINCTRL_PINFUNCTION("uart2", uart2_groups, ARRAY_SIZE(uart2_groups)),
-+	PINCTRL_PINFUNCTION("can2", can2_groups, ARRAY_SIZE(can2_groups)),
-+	PINCTRL_PINFUNCTION("spi2", spi2_groups, ARRAY_SIZE(spi2_groups)),
-+	PINCTRL_PINFUNCTION("spi3", spi3_groups, ARRAY_SIZE(spi3_groups)),
-+	PINCTRL_PINFUNCTION("mclk0", mclk0_groups, ARRAY_SIZE(mclk0_groups)),
-+};
-+
-+static void eq5p_update_bits(const struct eq5p_pinctrl *pctrl,
-+			     enum eq5p_bank bank, enum eq5p_regs reg,
-+			     u32 mask, u32 val)
-+{
-+	void __iomem *ptr = pctrl->base + eq5p_regs[bank][reg];
-+
-+	writel((readl(ptr) & ~mask) | (val & mask), ptr);
-+}
-+
-+static bool eq5p_test_bit(const struct eq5p_pinctrl *pctrl,
-+			  enum eq5p_bank bank, enum eq5p_regs reg, int offset)
-+{
-+	u32 val = readl(pctrl->base + eq5p_regs[bank][reg]);
-+
-+	if (WARN_ON(offset > 31))
-+		return false;
-+
-+	return (val & BIT(offset)) != 0;
-+}
-+
-+static enum eq5p_bank eq5p_pin_to_bank(unsigned int pin)
-+{
-+	if (pin < EQ5P_PIN_OFFSET_BANK_B)
-+		return EQ5P_BANK_A;
-+	else
-+		return EQ5P_BANK_B;
-+}
-+
-+static unsigned int eq5p_pin_to_offset(unsigned int pin)
-+{
-+	if (pin < EQ5P_PIN_OFFSET_BANK_B)
-+		return pin;
-+	else
-+		return pin - EQ5P_PIN_OFFSET_BANK_B;
-+}
-+
-+static int eq5p_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(eq5p_pins);
-+}
-+
-+static const char *eq5p_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+					       unsigned int selector)
-+{
-+	return pctldev->desc->pins[selector].name;
-+}
-+
-+static int eq5p_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+				       unsigned int selector,
-+				       const unsigned int **pins,
-+				       unsigned int *num_pins)
-+{
-+	*pins = &pctldev->desc->pins[selector].number;
-+	*num_pins = 1;
-+	return 0;
-+}
-+
-+static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-+			    unsigned long *config)
-+{
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	u32 val_ds, arg;
-+	bool pd, pu;
-+
-+	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
-+	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		arg = !(pd || pu);
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		arg = pd;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		arg = pu;
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		offset *= 2; /* two bits per pin */
-+		if (offset >= 32) {
-+			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_HIGH]);
-+			offset -= 32;
-+		} else {
-+			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_LOW]);
-+		}
-+		arg = (val_ds >> offset) & EQ5P_DS_MASK;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+	return 0;
-+}
-+
-+static void eq5p_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
-+				      struct seq_file *s,
-+				      unsigned int pin)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const char *pin_name = pctrl->desc.pins[pin].name;
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	const char *func_name, *bias;
-+	unsigned long ds_config;
-+	u32 drive_strength;
-+	bool pd, pu;
-+	int i, j;
-+
-+	/*
-+	 * First, let's get the function name. All pins have only two functions:
-+	 * GPIO (IOCR == 0) and something else (IOCR == 1).
-+	 */
-+	if (eq5p_test_bit(pctrl, bank, EQ5P_IOCR, offset)) {
-+		func_name = NULL;
-+		for (i = 0; i < ARRAY_SIZE(eq5p_functions); i++) {
-+			if (i == GPIO_FUNC_SELECTOR)
-+				continue;
-+
-+			for (j = 0; j < eq5p_functions[i].ngroups; j++) {
-+				/* Groups and pins are the same thing for us. */
-+				const char *x = eq5p_functions[i].groups[j];
-+
-+				if (strcmp(x, pin_name) == 0) {
-+					func_name = eq5p_functions[i].name;
-+					break;
-+				}
-+			}
-+
-+			if (func_name)
-+				break;
-+		}
-+
-+		/*
-+		 * We have not found the function attached to this pin, this
-+		 * should never occur as all pins have exactly two functions.
-+		 */
-+		if (!func_name)
-+			func_name = "unknown";
-+	} else {
-+		func_name = eq5p_functions[GPIO_FUNC_SELECTOR].name;
-+	}
-+
-+	/* Second, we retrieve the bias. */
-+	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
-+	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
-+	if (pd && pu)
-+		bias = "both";
-+	else if (pd && !pu)
-+		bias = "pulldown";
-+	else if (!pd && pu)
-+		bias = "pullup";
-+	else
-+		bias = "none";
-+
-+	/* Third, we get the drive strength. */
-+	ds_config = pinconf_to_config_packed(PIN_CONFIG_DRIVE_STRENGTH, 0);
-+	eq5p_pinconf_get(pctldev, pin, &ds_config);
-+	drive_strength = pinconf_to_config_argument(ds_config);
-+
-+	seq_printf(s, "function=%s bias=%s drive_strength=%d",
-+		   func_name, bias, drive_strength);
-+}
-+
-+static const struct pinctrl_ops eq5p_pinctrl_ops = {
-+	.get_groups_count	= eq5p_pinctrl_get_groups_count,
-+	.get_group_name		= eq5p_pinctrl_get_group_name,
-+	.get_group_pins		= eq5p_pinctrl_get_group_pins,
-+	.pin_dbg_show		= eq5p_pinctrl_pin_dbg_show,
-+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map		= pinctrl_utils_free_map,
-+};
-+
-+static int eq5p_pinmux_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(eq5p_functions);
-+}
-+
-+static const char *eq5p_pinmux_get_function_name(struct pinctrl_dev *pctldev,
-+						 unsigned int selector)
-+{
-+	return eq5p_functions[selector].name;
-+}
-+
-+static int eq5p_pinmux_get_function_groups(struct pinctrl_dev *pctldev,
-+					   unsigned int selector,
-+					   const char * const **groups,
-+					   unsigned int *num_groups)
-+{
-+	*groups = eq5p_functions[selector].groups;
-+	*num_groups = eq5p_functions[selector].ngroups;
-+	return 0;
-+}
-+
-+static int eq5p_pinmux_set_mux(struct pinctrl_dev *pctldev,
-+			       unsigned int func_selector, unsigned int pin)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const char *func_name = eq5p_functions[func_selector].name;
-+	const char *group_name = pctldev->desc->pins[pin].name;
-+	bool is_gpio = func_selector == GPIO_FUNC_SELECTOR;
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	u32 mask, val;
-+
-+	dev_dbg(pctldev->dev, "func=%s group=%s\n", func_name, group_name);
-+
-+	mask = BIT(offset);
-+	val = is_gpio ? 0 : mask;
-+	eq5p_update_bits(pctrl, bank, EQ5P_IOCR, mask, val);
-+	return 0;
-+}
-+
-+static int eq5p_pinmux_gpio_request_enable(struct pinctrl_dev *pctldev,
-+					   struct pinctrl_gpio_range *range,
-+					   unsigned int pin)
-+{
-+	/* Pin numbers and group selectors are the same thing in our case. */
-+	return eq5p_pinmux_set_mux(pctldev, GPIO_FUNC_SELECTOR, pin);
-+}
-+
-+static const struct pinmux_ops eq5p_pinmux_ops = {
-+	.get_functions_count	= eq5p_pinmux_get_functions_count,
-+	.get_function_name	= eq5p_pinmux_get_function_name,
-+	.get_function_groups	= eq5p_pinmux_get_function_groups,
-+	.set_mux		= eq5p_pinmux_set_mux,
-+	.gpio_request_enable	= eq5p_pinmux_gpio_request_enable,
-+	.strict			= true,
-+};
-+
-+static int eq5p_pinconf_set_drive_strength(struct pinctrl_dev *pctldev,
-+					   unsigned int pin, u32 arg)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	unsigned int reg;
-+	u32 mask, val;
-+
-+	if (arg & ~EQ5P_DS_MASK) {
-+		dev_err(pctldev->dev, "Unsupported drive strength: %u\n", arg);
-+		return -EINVAL;
-+	}
-+
-+	offset *= 2; /* two bits per pin */
-+
-+	if (offset >= 32) {
-+		reg = EQ5P_DS_HIGH;
-+		offset -= 32;
-+	} else {
-+		reg = EQ5P_DS_LOW;
-+	}
-+
-+	mask = EQ5P_DS_MASK << offset;
-+	val = arg << offset;
-+	eq5p_update_bits(pctrl, bank, reg, mask, val);
-+	return 0;
-+}
-+
-+static int eq5p_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			    unsigned long *configs, unsigned int num_configs)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const char *pin_name = pctldev->desc->pins[pin].name;
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	struct device *dev = pctldev->dev;
-+	u32 val = BIT(offset);
-+	unsigned int i;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		enum pin_config_param param = pinconf_to_config_param(configs[i]);
-+		u32 arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			dev_dbg(dev, "pin=%s bias_disable\n", pin_name);
-+
-+			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
-+			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
-+			break;
-+
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			dev_dbg(dev, "pin=%s bias_pull_down arg=%u\n",
-+				pin_name, arg);
-+
-+			if (arg == 0) /* cannot connect to GND */
-+				return -ENOTSUPP;
-+
-+			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, val);
-+			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
-+			break;
-+
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			dev_dbg(dev, "pin=%s bias_pull_up arg=%u\n",
-+				pin_name, arg);
-+
-+			if (arg == 0) /* cannot connect to VDD */
-+				return -ENOTSUPP;
-+
-+			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
-+			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, val);
-+			break;
-+
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			dev_dbg(dev, "pin=%s drive_strength arg=%u\n",
-+				pin_name, arg);
-+
-+			eq5p_pinconf_set_drive_strength(pctldev, pin, arg);
-+			break;
-+
-+		default:
-+			dev_err(dev, "Unsupported pinconf %u\n", param);
-+			return -ENOTSUPP;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops eq5p_pinconf_ops = {
-+	.is_generic = true,
-+	.pin_config_get = eq5p_pinconf_get,
-+	.pin_config_set = eq5p_pinconf_set,
-+	/* Pins and groups are equivalent in this driver. */
-+	.pin_config_group_get = eq5p_pinconf_get,
-+	.pin_config_group_set = eq5p_pinconf_set,
-+};
-+
-+static int eq5p_probe(struct auxiliary_device *adev,
-+		      const struct auxiliary_device_id *id)
-+{
-+	struct device *dev = &adev->dev;
-+	struct pinctrl_dev *pctldev;
-+	struct eq5p_pinctrl *pctrl;
-+	int ret;
-+
-+	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
-+	if (!pctrl)
-+		return -ENOMEM;
-+
-+	pctrl->base = dev_get_platdata(dev);
-+	pctrl->desc.name = dev_name(dev);
-+	pctrl->desc.pins = eq5p_pins;
-+	pctrl->desc.npins = ARRAY_SIZE(eq5p_pins);
-+	pctrl->desc.pctlops = &eq5p_pinctrl_ops;
-+	pctrl->desc.pmxops = &eq5p_pinmux_ops;
-+	pctrl->desc.confops = &eq5p_pinconf_ops;
-+	pctrl->desc.owner = THIS_MODULE;
-+
-+	ret = devm_pinctrl_register_and_init(dev, &pctrl->desc, pctrl, &pctldev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed registering pinctrl device\n");
-+
-+	ret = pinctrl_enable(pctldev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed enabling pinctrl device\n");
-+
-+	return 0;
-+}
-+
-+static const struct auxiliary_device_id eq5p_id_table[] = {
-+	{ .name = "clk_eyeq.pinctrl" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(auxiliary, eq5p_id_table);
-+
-+static struct auxiliary_driver eq5p_driver = {
-+	.probe = eq5p_probe,
-+	.id_table = eq5p_id_table,
-+};
-+module_auxiliary_driver(eq5p_driver);
+This set of patches includes some netfs and cifs fixes:
 
--- 
-2.45.2
+ (1) Make sure we set the request length when doing an unbuffered/direct
+     write.  This was in v2 of the io_uring fix writethrough patch, but v1
+     got merged instead.
+
+ (2) Move CIFS_INO_MODIFIED_ATTR to netfs_inode::flags to avoid jumping
+     through a function pointer just for that.
+
+ (3) Fix a premature issuing of write ops on a partially dirty page where
+     the dirty part is at the end of the page and thus may be contiguous
+     with the next page.
+
+A couple of adjustments to the /proc/fs/netfs/stats file:
+
+ (4) All the netfs stats lines begin 'Netfs:'.  Change this to something a
+     bit more useful.
+
+ (5) Add a couple of stats counters to track the numbers of skips and waits
+     on the per-inode writeback serialisation lock to make it easier to
+     check for this as a source of performance loss.
+
+Some miscellaneous bits:
+
+ (6) Enable multipage folios in 9P.
+
+ (7) Reduce the number of conditional branches in netfs_perform_write().
+
+ (8) Delete some unused netfslib functions for dealing with xarrays.
+
+ (9) In cifs, defer read completion.
+
+(10) In cifs, only pick a channel once per read request (as per v6.9) rather
+     than per-subrequest.
+
+(11) In cifs, move the 'pid' from the subrequest to the request as it's the
+     same for all.
+
+(12) Move the max_len/max_nr_segs members from netfs_io_subrequest to
+     netfs_io_request as they're only needed for one subreq at a time.
+
+Then there's the main performance enhancing changes:
+
+(13) Define a structure, struct sheaf, and a new iterator type, ITER_SHEAF, to
+     hold a buffer as a replacement for ITER_XARRAY.  See that patch for
+     questions about naming and form.
+
+(14) Use sheaves in the write-side helpers instead of xarrays.
+
+(15) Simplify the write-side helpers to use sheaves to skip gaps rather than
+     trying to work out where gaps are.
+
+(16) In afs, make the read subrequests asynchronous, putting them into work
+     items to allow the next patch to do progressive unlocking/reading.
+
+(17) Overhaul the read-side helpers to improve performance.  [!] NOTE: THIS IS
+     INCOMPLETE!  It works for buffered read to a large extent, but not DIO
+     and may not cache correctly.
+
+David
+
+David Howells (17):
+  netfs: Fix io_uring based write-through
+  netfs, cifs: Move CIFS_INO_MODIFIED_ATTR to netfs_inode
+  netfs: Fix early issue of write op on partial write to folio tail
+  netfs: Adjust labels in /proc/fs/netfs/stats
+  netfs: Record contention stats for writeback lock
+  9p: Enable multipage folios
+  netfs: Reduce number of conditional branches in netfs_perform_write()
+  netfs: Delete some xarray-wangling functions that aren't used
+  cifs: Defer read completion
+  cifs: Only pick a channel once per read request
+  cifs: Move the 'pid' from the subreq to the req
+  netfs: Move max_len/max_nr_segs from netfs_io_subrequest to
+    netfs_io_stream
+  mm: Define struct sheaf and ITER_SHEAF to handle a sequence of folios
+  netfs: Use new sheaf data type and iterator instead of xarray iter
+  netfs: Simplify the writeback code
+  afs: Make read subreqs async
+  netfs: Speed up buffered reading
+
+ fs/9p/vfs_addr.c             |  13 +-
+ fs/9p/vfs_inode.c            |   1 +
+ fs/afs/file.c                |  21 +-
+ fs/afs/fsclient.c            |   9 +-
+ fs/afs/write.c               |   4 +-
+ fs/afs/yfsclient.c           |   9 +-
+ fs/cachefiles/io.c           |   5 +-
+ fs/ceph/addr.c               |  72 ++---
+ fs/netfs/Makefile            |   2 +-
+ fs/netfs/buffered_read.c     | 510 +++++++++++++++++++++------------
+ fs/netfs/buffered_write.c    | 308 ++++++++++----------
+ fs/netfs/direct_read.c       |  99 ++++++-
+ fs/netfs/direct_write.c      |   3 +-
+ fs/netfs/internal.h          |  26 +-
+ fs/netfs/io.c                | 528 +----------------------------------
+ fs/netfs/iterator.c          |  50 ++++
+ fs/netfs/main.c              |   7 +-
+ fs/netfs/misc.c              | 115 ++++----
+ fs/netfs/objects.c           |   2 +-
+ fs/netfs/read_collect.c      | 450 +++++++++++++++++++++++++++++
+ fs/netfs/stats.c             |  23 +-
+ fs/netfs/write_collect.c     | 242 +++++-----------
+ fs/netfs/write_issue.c       |  68 ++---
+ fs/nfs/fscache.c             |  31 +-
+ fs/nfs/fscache.h             |   7 +-
+ fs/smb/client/cifsglob.h     |   4 +-
+ fs/smb/client/cifssmb.c      |  14 +-
+ fs/smb/client/file.c         | 109 +++-----
+ fs/smb/client/smb2pdu.c      |  21 +-
+ include/linux/iov_iter.h     |  57 ++++
+ include/linux/netfs.h        |  29 +-
+ include/linux/sheaf.h        |  83 ++++++
+ include/linux/uio.h          |  11 +
+ include/trace/events/netfs.h | 124 +++++---
+ lib/iov_iter.c               | 222 ++++++++++++++-
+ lib/kunit_iov_iter.c         | 259 +++++++++++++++++
+ lib/scatterlist.c            |  69 ++++-
+ 37 files changed, 2251 insertions(+), 1356 deletions(-)
+ create mode 100644 fs/netfs/read_collect.c
+ create mode 100644 include/linux/sheaf.h
 
