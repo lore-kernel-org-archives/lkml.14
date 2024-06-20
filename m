@@ -1,88 +1,130 @@
-Received: from msa.smtpout.orange.fr (msa-211.smtpout.orange.fr [193.252.23.211])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3691B374E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CCA1AF6A9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904240; cv=none; b=Rjhaf0NuKLYjoKbxI/qKKQ7lVqVadRNGcUYnMI790NT5Xxh3MlP35h+WjXaglI1UoColxOuQrByEFUc97cQ0d39nhJVt02k9nj6ZZ+2DrI7YprIFF0wtVIruoPoC1WGTwDOcxZjWIKtwfozOYFUIuNtG9jryWERZ1Zm9xQhJE8E=
+	t=1718904356; cv=none; b=tnHadxchViVIrIcQ0SnVdQz8ahikJ3cbF5diDhTPP/IN3DAIUQgF9WmHNajg7GyxDGAZu4l718w/W5YQlGm55VdNOvtmCiajyUCFpyCJCLhqrp+ZLstCfO0if55bV/TXPStIQMxYYq+HpQiTBCPrFWpL688G3WmM5M7R/la55pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904240; c=relaxed/simple;
-	bh=ONH5auuAOTuHgD7nUneEjH4UhcF/+3Eihv1qKoZxitg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GNeMggGDz3X8mlRIYAWk7CLiCNBLwI8npFOoYAQZSIZATBXMldsRL3xmt/k9nma2byZxtOizH7Eogj2Aj+AJ5+F68kaifti9Ul1s03NEz3FI0q39v3dajTXbwK1L3KS68IDn1jp4EHgfMMRi5H7X/4MUcirSCLLMJrKkRs7atIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=D/oFQvgh; arc=none smtp.client-ip=193.252.23.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718904356; c=relaxed/simple;
+	bh=8dccsjcVOV2fX5Uk3UXiobDORTq2f/wq5FQct7x7GkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HPef2y84P9lBV+C5kUPhIyPxUtOT5fGV8cMdhz7nQWJrmidrse1g2/iCw3s44pVbpLbk9ERqaynebr91Hyc0jerEXRDM8/kPty5GZ80qYY6YpP2V3MU+kDLxZaV4XIP2FNu/+BvlIc1sKDOz0ILV/7CeUOl9I/Tjk3uhxTHdj88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=h3ZGZNKl; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="D/oFQvgh"
-Received: from [192.168.1.37] ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id KLVhsuPMas2bgKLVhsCVx9; Thu, 20 Jun 2024 19:23:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718904230;
-	bh=ihK0V93i0kUYjZJxFoTyf13pwL1rOBXEjTiHXm80Fik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=D/oFQvghy7dXACkonDzJ57U3Epo2n6WVhLieiPe9y3fSV68U10gAFME9D7t/0TeUO
-	 wBVSB9uIYJhcm69wRDDAKdL4rXf2SaJQ1gAhAf/WuVS+gxO9gsXG1fV2E1Sf8/Y9a3
-	 krapwyI4WZePfaU22OKhI7WnBUrBHnVsfbi0buPp5ftaN4KFxU3tjvgSbYxmcQNFaw
-	 wxRVloasWSC19zZVF0tKggy3Quldcw+HoxelGs3SuoeYuR0e5e9vhuYmdKZYats7Mq
-	 /rfo2+4tTm/TwSOWphDXLaDho3V+wSbosIuiYLoiNs6oOra8HX0Lj4xY4K1S8Kk1GE
-	 hoNxUrLVYtXRQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 20 Jun 2024 19:23:50 +0200
-X-ME-IP: 86.243.222.230
-Message-ID: <464e68fd-7175-4de1-b037-3a40c1e134c5@wanadoo.fr>
-Date: Thu, 20 Jun 2024 19:23:45 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h3ZGZNKl"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ec408c6d94so13816511fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1718904353; x=1719509153; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4lNL9JASXnLGdYr/1kKgzyo4AtEHujMDElp9Dkk/0Lc=;
+        b=h3ZGZNKlQnYTRgpQrAlv1m8An4gaaF97XLQHM1SkaMqHj5uOotiN4WOjKb+MOC7vaU
+         fY9U2o6eAI6/EKCFE4fN6dsckqXCwiTGaPQHX9FgnQXB+5eS9cMiqYR5hKKbJSlcGfr3
+         brrvpFtxRYpRU12JbXdTSi4XJQGLGbKnhLtCM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718904353; x=1719509153;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4lNL9JASXnLGdYr/1kKgzyo4AtEHujMDElp9Dkk/0Lc=;
+        b=FqpZYSwY7H6SRV3h9AaosYybz4kUPcWt2xQ+VnuEpfIk6QA1iDX4kfKVUnrGAnQpda
+         jR2JbPnpkoeBBmk9l7PJOhAjiPL9b40pqnJ/m4/rvqprAvf5tdppPmJUBUFmDknP0XCR
+         FMpJsRcPQvFaL3T9LXgffTtWKgWRELSs8XrjThysAxLRmglolx7RtuRZ7pEeR2Zkitgg
+         0Bwo3P156nzrthhUpUO/HhhCQ1/5ErFLPnZ2dUh4B/aEIIhYzSIKRvBuWOfN7GBGfAin
+         IMysoLSSOWmfguhZT4DNcKvjq0fOZ1VM6CHXRfNIGMVw9y57rIa2VlKHfU/Gp+XlRYxa
+         fgMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3ZIKSJAZbWfq+e0r47on4UU113ZEonR8HlnaBtUSbfAvXHbqHnBPOeeidWycktuDKHzrUxvNLNnYFUOHhXhPSYdgXtEZ5lRqNYVJ4
+X-Gm-Message-State: AOJu0Yz7ToOmd2nnv0FI7oVAbT7AiP7zFbS4SkJibvGBO6DFHCe5p7pC
+	8Tg9R1zjfi1L29Romgv22VNz6HRfglQK7kZnorVzuGyjxo0GLbRr0QOg8sTZCYmRax0TQYNkItk
+	ZveiL8w==
+X-Google-Smtp-Source: AGHT+IEjakRbTED5zQDrhwmgs6yOdzbBZw1yad/rwCJFZvMfDpMVKZqOQMZy/YWXqKExrO4sCBRo3g==
+X-Received: by 2002:a2e:9612:0:b0:2ec:eee:f199 with SMTP id 38308e7fff4ca-2ec3cfe9a82mr39802001fa.32.1718904352783;
+        Thu, 20 Jun 2024 10:25:52 -0700 (PDT)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d06b64749sm2097586a12.61.2024.06.20.10.25.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 10:25:51 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111aeso1377032a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:25:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUwou1BCE8WiHMUIlUvnL+Xe4E4ucGI9o2yrtYft4GytLw0OCjSeWuhnPb+60lz5NcT8HzXjT1ZkDlMW9UtvAQOhPwMY8EjOI1VR+4G
+X-Received: by 2002:a17:907:a80a:b0:a6f:6659:a54 with SMTP id
+ a640c23a62f3a-a6fab607137mr441965166b.6.1718904351308; Thu, 20 Jun 2024
+ 10:25:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/panel: ltk050h3146w: add check for
- mipi_dsi_dcs_enter_sleep_mode
-To: Chen Ni <nichen@iscas.ac.cn>, neil.armstrong@linaro.org,
- quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240620074720.852495-1-nichen@iscas.ac.cn>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240620074720.852495-1-nichen@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAHk-=whHvMbfL2ov1MRbT9QfebO2d6-xXi1ynznCCi-k_m6Q0w@mail.gmail.com>
+ <90b46873-f60f-4ece-bef6-b8eed3b68ac1@app.fastmail.com>
+In-Reply-To: <90b46873-f60f-4ece-bef6-b8eed3b68ac1@app.fastmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 20 Jun 2024 10:25:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg6OHJKArnC2SMY-GEcMfncer0A6ELM4ZAnaRdbi12kdw@mail.gmail.com>
+Message-ID: <CAHk-=wg6OHJKArnC2SMY-GEcMfncer0A6ELM4ZAnaRdbi12kdw@mail.gmail.com>
+Subject: Re: FYI: path walking optimizations pending for 6.11
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, "the arch/x86 maintainers" <x86@kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Le 20/06/2024 à 09:47, Chen Ni a écrit :
-> Add check for the return value of mipi_dsi_dcs_enter_sleep_mode() and
-> return the error if it fails in order to catch the error.
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->   drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-> index 292aa26a456d..24bf05d0589f 100644
-> --- a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-> +++ b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-> @@ -526,7 +526,7 @@ static int ltk050h3146w_unprepare(struct drm_panel *panel)
->   		return ret;
->   	}
->   
-> -	mipi_dsi_dcs_enter_sleep_mode(dsi);
-> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
->   	if (ret < 0) {
->   		dev_err(ctx->dev, "failed to enter sleep mode: %d\n", ret);
->   		return ret;
+On Thu, 20 Jun 2024 at 00:53, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> I don't mind making the bit that makes the untagging
+> unconditional, and I can see how this improves code
+> generation. I've tried comparing your version against
+> the more conventional
+>
+> static inline int access_ok(const void __user *p, unsigned long size)
+> {
+>         return likely(__access_ok(untagged_addr(p), size));
+> }
 
-Reviewed-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Oh, I'd be ok with that.
 
+That "access_ok()" thing was actually the first thing I did, before
+doing all the asm goto fixes and making the arm64 "unsafe" user access
+functions work. I may have gone a bit overboard when compensating for
+all the other crap the generated code had.
 
-See: 
-https://lore.kernel.org/all/588e8b4519487f6d33419c4b0fa7f8ea1b26cb58.1619869792.git.christophe.jaillet@wanadoo.fr/
-which never got any feedback.
+That said, the size check really is of dubious value, and the bit
+games did make the code nice and efficient.
 
-CJ
+But yeah, maybe I made it a bit *too* subtle in the process.
+
+> On a related note, I see that there is one caller of
+> __access_ok() in common code, and this was added in
+> d319f344561d ("mm: Fix copy_from_user_nofault().").
+
+Hmm. That _is_ ugly. But I do think that the untagging is very much a
+per-thread state (well, it *should* be per-VM, but that is a whole
+other discussion), and so the rationale for _why_ that code doesn't do
+untagging is still very very true.
+
+Yes, the x86 code no longer has a WARN for that case, but the arm64
+code really *would* be horrible broken if the code just untagged based
+on random thread data.
+
+Of course, in the end that's just one more reason to consider the
+current arm64 tagging model completely broken.
+
+But my point is: copy_from_user_nofault() can be called from random
+contexts, and as long as that is the case - and as long as we still
+make the untagging some per-thread thing - that code must not do
+untagging because it's in the wrong context to actually do that
+correctly.
+
+And no, the way the arm64 hardware setup works, none of this matters.
+The arm64 untagging really *is* unconditional on a hw setup level,
+which took me by surprise.
+
+              Linus
