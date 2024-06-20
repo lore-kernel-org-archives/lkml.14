@@ -1,116 +1,284 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5001E520;
-	Thu, 20 Jun 2024 02:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40481BF2A;
+	Thu, 20 Jun 2024 02:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718850793; cv=none; b=e/GC+cz1kBmROt2vaP4Cx2ryFPnXyirphoEHIq6tnLMY0nK+ZBiVHsBnV157Ab5K0AgLU4jXhHU1yI+y/MQgI+bVLVCq1UFycwXTzuyWGKV3UFRLXaoEiVYwfPM9zOKqxOg+o2eKd9b29vE/LexmT527S05+XtalwpQQI/zZCeY=
+	t=1718850913; cv=none; b=sq6eSfMs5FBIT4SF4QsJzYhvnQduENsXq/CE8zTnYrTAlQsBFMCP6JB+1f8s2YxQCVKzBFUHElujBoxS9mhAcZC1rkd4quPA0cmH/eerayfGYMmUtuMZqf5lJvc4GPTlhpreYeh3Q6Df57R9UQb7M9CzTBNAWlqZkgeI4IW9Vw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718850793; c=relaxed/simple;
-	bh=SMkR1O0QE7WLTB+swNTh34HIL8vuJgRvNeiHw5yeszs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/GNC1rOcrCHM1DumF1Kaqzq7BTSx9myptOf+hx8md+8NMSvzNlmXbjPe77KMx24sLjOTota4ozGbUieAgZLqxFpsBICkASMyezmzw2YUtOYMxVaPe0ui3zQq5UZj7qpDTnxIN7bQfl3TcO1iExaHk4LxEifbtNTnaVy2+JXrNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+w1kRi8; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718850913; c=relaxed/simple;
+	bh=ka1mwYAvq0PwS/sKID5VbbxjlX+VdxxBbwPJ5FbVoDM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=N9OUS9A0tA/abjBnwaehfFWcZnLUw9I/3fFvG/7tJtQFLHK3wzy80V30qpv6KHxTseeh2eYBoud0jQ2B9E5Pp8LFLe8mK986LQmDFRVkJhPqd2OHPVTVfPCjLovBwpTtpDjXLPUc83I3PuMe8hPEia9xW1avbBlEV6F24Dl2xjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0rckpCxY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HoNGtmvp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+w1kRi8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718850792; x=1750386792;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SMkR1O0QE7WLTB+swNTh34HIL8vuJgRvNeiHw5yeszs=;
-  b=e+w1kRi8Pj4tqKtxzTMXiEMynVNlW+A5UvS9UV/AtU0CVJLrliYaQXQn
-   ++W2ytqQCLbwpcOsJqYOPXDHkDLL44Ump6MbZtG3JjZyQuR3c71XmuCNw
-   52H+jZ+AHYDWNMP/PUrrg1KS4qzG1prYj6guMRH/XG3/S/9COZ1RYV+a7
-   31RP0iFnkCTSkZA5W64qofWmFAFwUbyC+AXO0y2Me6cgVaJxPg8NQrQmQ
-   7RpuVfgZwEq+P3hWIVH34v80padJax/AWdE0a/3/U/uo5qeZOlwvr7RkQ
-   8XilQGjoo2VTNIJ+VggDNGji+8fqMRP0yPplkpA/ds+8O11Ao0mPAl+g/
-   A==;
-X-CSE-ConnectionGUID: OGhqk6BkSnaI8o81BBJz6A==
-X-CSE-MsgGUID: MxfiJD7zRYSM1l2JcDLXsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15926258"
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="15926258"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 19:33:11 -0700
-X-CSE-ConnectionGUID: c2ksaAtlTxK8O4ZTXNkeRQ==
-X-CSE-MsgGUID: 2W407GraQpCOtfU8YrCQUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="47006204"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 19 Jun 2024 19:33:10 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sK7bn-0007EI-0F;
-	Thu, 20 Jun 2024 02:33:07 +0000
-Date: Thu, 20 Jun 2024 10:32:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mark Watson <markus.c.watson@gmail.com>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH] dt-bindings: misc: axi-fifo: Add binding for AXI-Stream
- FIFO
-Message-ID: <202406201053.hc3wOYdz-lkp@intel.com>
-References: <ZnOAgM+zacF6u1x7@laptop>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0rckpCxY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HoNGtmvp"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718850909;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=axeyVbmO6dC32aFs8QawmlttuapwPRGG6pRetfHXgJ0=;
+	b=0rckpCxYLDM22VfvDhzZ8eqNv6HJjdfvB4WsQezJ/kvzSPgh6qRNlvYolQOLSTzKtbpqlK
+	hZHvt2v5GWTFMrehUGWu75Ga3leYJBwMlnYZ4OgJ3eBILE4bqpr9jZJhuvsD+RywUMil5m
+	acJ0HbwNP7QA1L1DltaB47fEmS21yxaMc1CXcXdZU9eDVzG4ATliwebnV9/hgueY6/bEPV
+	44p2BCbZ8C0RihE1sgqQo5e+7vOv2C2ovqWRDgrdAzJAAUHyZevHqO/Wcfuknzwjv1Uk9i
+	L6FkNZmwlsjzojM+SlFinh68mrw1yRkOA2moEH+9vkrvOTKijHVfEFTNnRvt9A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718850909;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=axeyVbmO6dC32aFs8QawmlttuapwPRGG6pRetfHXgJ0=;
+	b=HoNGtmvpRa5rfJJ17WRmKWXeiMGESxwDgS9O0Mj5xDDQJKwIQm45S+djwyG8WWBbWSW+KS
+	0N97p1NwXuhwP/Bw==
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Tejun Heo <tj@kernel.org>, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+ joshdon@google.com, brho@google.com, pjt@google.com, derkling@google.com,
+ haoluo@google.com, dvernet@meta.com, dschatzberg@meta.com,
+ dskarlat@cs.cmu.edu, riel@surriel.com, changwoo@igalia.com,
+ himadrics@inria.fr, memxor@gmail.com, andrea.righi@canonical.com,
+ joel@joelfernandes.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
+In-Reply-To: <CAHk-=wiKgKpNA6Dv7zoLHATweM-nEYWeXeFdS03wUQ8-V4wFxg@mail.gmail.com>
+References: <CAHk-=wg8APE61e5Ddq5mwH55Eh0ZLDV4Tr+c6_gFS7g2AxnuHQ@mail.gmail.com>
+ <87ed8sps71.ffs@tglx>
+ <CAHk-=wg3RDXp2sY9EXA0JD26kdNHHBP4suXyeqJhnL_3yjG2gg@mail.gmail.com>
+ <87bk3wpnzv.ffs@tglx>
+ <CAHk-=wiKgKpNA6Dv7zoLHATweM-nEYWeXeFdS03wUQ8-V4wFxg@mail.gmail.com>
+Date: Thu, 20 Jun 2024 04:35:08 +0200
+Message-ID: <878qz0pcir.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnOAgM+zacF6u1x7@laptop>
+Content-Type: text/plain
 
-Hi Mark,
+Linus!
 
-kernel test robot noticed the following build warnings:
+On Wed, Jun 19 2024 at 15:55, Linus Torvalds wrote:
+> On Wed, 19 Jun 2024 at 15:27, Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Right, but that applies to both sides, no?
+>
+> But Thomas, this isn't a "both sides" issue.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.10-rc4 next-20240619]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+It is whether you like it or not.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mark-Watson/dt-bindings-misc-axi-fifo-Add-binding-for-AXI-Stream-FIFO/20240620-090916
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/ZnOAgM%2BzacF6u1x7%40laptop
-patch subject: [PATCH] dt-bindings: misc: axi-fifo: Add binding for AXI-Stream FIFO
-config: arc-randconfig-051-20240620 (https://download.01.org/0day-ci/archive/20240620/202406201053.hc3wOYdz-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 13.2.0
-dtschema version: 2024.6.dev1+g833054f
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240620/202406201053.hc3wOYdz-lkp@intel.com/reproduce)
+I clearly gave the sched_ext people deep technical feedback on the way
+how they integrated this seven months ago in Richmond.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406201053.hc3wOYdz-lkp@intel.com/
+I sat down with them because _you_ asked me explicitely for it as _you_
+did not want to deal with it.
 
-dtcheck warnings: (new ones prefixed by >>)
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,axi-str-rxd-tdata-width: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,axi-str-txc-tdata-width: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,axi-str-txd-tdata-width: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,data-interface-type: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,has-axis-tdest: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,has-axis-tid: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,has-axis-tkeep: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,has-axis-tstrb: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,has-axis-tuser: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,s-axi-id-width: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,s-axi4-data-width: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,select-xpm: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,use-rx-cut-through: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,use-rx-data: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,use-tx-ctrl: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,use-tx-cut-through: missing type definition
->> Documentation/devicetree/bindings/misc/xlnx,axi-fifo-mm-s-4.1.yaml: xlnx,use-tx-data: missing type definition
-   Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
+That feedback got ignored completely. Thank you very much for wasting
+_my_ time.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> This is a "people want to do new code and features, and the scheduler
+> people ARE ACTIVELY HOLDING IT UP" issue.
+>
+> Yes, part of that "actively holding it up" is trying to make rules for
+> "you need to do this other XYZ thing to make us happy".
+>
+> But no, then "not doing XYZ" does *NOT* make it some "but but other side" issue.
+>
+> This, btw, is not some new thing. It's something that has been
+> discussed multiple times over the years at the maintainer summit for
+> different maintainers. When people come in and propose feature X, it's
+> not kosher to then say "you have to do Y first".
+
+Seriously? You yourself requested this from me more than once in the
+past 20 years. But let's not go there.
+
+> And yes, maybe everybody even agrees that Y would be a good thing, and
+> yes, wouldn't it be lovely if somebody did it. But the people who
+> wanted X didn't care about Y, and trying to get Y done by then gating
+> X is simply not ok.
+
+I very well remember the discussions about fix X first before Y.
+
+But you are completely ignoring the fact that in this case
+
+    - problem X got introduced by the very same people who are now
+      pushing for Y
+
+    - the resolution to problem X was not rejected by the scheduler
+      people at all
+
+      It stayed unresolved because the very same parties which are now
+      so cosily working together on Y (aka sched_ext0 could not agree on
+      anything
+
+      So the mess they created in the first place stays as is and both
+      parties "solved" their problem with Y (aka sched_ext) and have
+      their own implementations to work around it how they see fit.
+
+IOW, what you are saying is:
+
+    #1 Push for your solution X and get it merged
+
+    #2 Ignore the resulting problems related to X for at least a decade
+
+    #3 Come up with a half baken workaround Y to be able to deal with #2
+       and leave everyone else behind to deal with the results of #1 and
+       #2
+
+    #4 Make Linus decide that Y is the right thing to do because other
+       people suck
+
+The past discussions about fix "X" before "Y" were distinctly different.
+
+> Now, if there was some technical argument against X itself, that would
+> be one thing. But the arguments I've heard have basically fallen into
+> two camps: the political one ("We don't want to do X because we simply
+> don't want an extensible scheduler, because we want people to work on
+> _our_ scheduler") and the tying one ("X is ok but we want Y solved
+> first").
+
+There have been voiced a lot of technical arguments, which never got
+addressed and at some point people gave up due to being ignored.
+
+When I sat there in Richmond with the sched_ext people I gave them very
+deep technical feedback especially on the way how they integrate it:
+
+  Sprinkle hooks and callbacks all over the place until it works by some
+  definition of works.
+
+That's perfectly fine for a PoC, but not for something which gets merged
+into the core of an OS. I clearly asked them to refactor the existing
+code so that these warts go away and everything is contained into the
+scheduler classes and at the very end sched_ext falls into place. That's
+a basic engineering principle as far as I know.
+
+They nodded, ignored my feedback and just continued to persue their way.
+
+Are you still claiming with a straight face that this is a problem
+rooted in one party?
+
+It's a problem of one interest group to get this into the tree no matter
+what.
+
+I sat in the room at OSPM 2023 when the introduction of the sched ext
+advertisement started with "This saves us (FB) millions and Google is
+collaborating with us [unspoken - to save millions too by eliminating
+their unmaintainable scheduler hacks]', which is clearly a technical
+argument, right?
+
+> I was hoping the tying argument would get solved. I saw a couple of
+> half-hearted emails to that effect, and Rik at some point saying
+> "maybe the problems are solvable", referring to his work from a couple
+> of years ago, but again, nothing actually happened.
+
+See above. It's not a problem of the scheduler people.
+
+It's a problem created by the very same people who refuse to solve it
+and at the same time push for their new magic cure.
+
+> And I don't see the argument that the way to make something happen is
+> to continue to do nothing.
+
+I clearly offered you to try to resolve this amicably within a
+reasonable time frame.
+
+How exaclty is that equivalent to "continue to do nothing" ?
+
+> Because if you are serious about making forward progress *with* the
+> BPF extensions, why not merge them and actually work with that as the
+> base?
+
+There is a very simple argument to this:
+
+   - The way how it is integrated sucks in a big way on purely technical
+     grounds. If you want details, I'm happy to reiterate them again in
+     a separate mail just in case you can't find them in your inbox or
+     can't remember what I told you seven month ago.
+
+   - This got pointed out by myself seven months ago to the sched_ext
+     people
+
+   - They sat with me at the table and nodded
+
+   - Then they went off and ignored it for seven months and just added
+     more warts.
+
+Now you are asking me seriously why I don't want to see this merged in
+the technical state which it is in right now?
+
+Are you seriously expecting that this is resolved amicably just by
+forcing this into the tree on the obvious expense of the people who were
+working on the existing code for decades?
+
+That aside, your whole argument about the so "very high" participation
+barrier on the scheduler is just based on hearsay and not on facts,
+which you could easily have gathered yourself. Let me do your homework.
+
+In the past five years there have been:
+
+   ~4000 mail (patch) threads related to scheduler issues
+   ~1600 commits (i.e. 1.6 commits per work day on average)
+    ~300 different authors
+
+300 different authors is clearly not a sign of a problematic community
+neither is the ratio of commits to mail threads is 1:2.5.
+
+The fact tell clearly that this is a healthy community and not a sign of
+a participation barrier problem.
+
+The fact, that the contributions and contribution attempts from the
+proponents of sched_ext are close to zero cannot be abused to claim that
+there is a high bar to get patches into the scheduler subsystem.
+
+If you don't try in the first place then you can't complain about it,
+no?
+
+Just for the record, the scheduler people and myself spent a lot of time
+to help to get intrusive features like UMCG into mainline, but the
+efforts were dropped by the submitters for no reason. Short time after
+that sched_ext came around.
+
+Can we please agree that the root of this has left the technical grounds
+long ago?
+
+If you think that the correct non-technical solution is to resolve this
+brute force without giving those who are willing to work this out in the
+proper way a completely irrelevant delay of three month, then I really
+have to ask you what you are trying to achive.
+
+If you pull that stuff as is then you create a patently bad precedent
+and on top of that you slap everyone who worked and works
+collaboratively and constructively with maintainers and the wider
+community to get their features merged straight into their face.
+
+You are obviously free to do so, but then please clearly state that this
+is the new world order by merging an unreviewed patch against
+Documentation/process/* which makes this as a general rule applicable
+for everyone.
+
+We've been there and done that during the 2.5 period and it took us
+years to recover from it, but maybe you have forgotten about that
+because you merely had to merge the fixes which were created by people
+who cared and lost their sleep over the mess.
+
+Whatever the outcome is, we definitely have to have a major discussion
+about the underlying problem at the maintainer summit whether you like
+it or not.
+
+That said, my offer stands to work on an amicable and collaborative
+solution for this nuisance, but that's obviously all I can do.
+
+Up to you.
+
+Thanks,
+
+        Thomas
