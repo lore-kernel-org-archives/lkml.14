@@ -1,79 +1,83 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789531B142C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9921B1B151A;
+	Thu, 20 Jun 2024 16:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899650; cv=none; b=Jd5+u/iNxkbdmYCDzCUIeExs9vNvBy1limo2KBtPD4VSzGVjJxOih/1y2QoK9Svs1cYju/wD2+UTdLIfnzyrMKD3U69SzfvhkU6Z+h5sIp5bdTp/dB7mGF5np8ipErsOJHdZxfEp1Cve8tMWtl6NussxdrOPfTKsNB9iS6KSxNs=
+	t=1718899677; cv=none; b=i4S/2/+rIP1SLb78DuSw/nS/uofIKKOJVn4hCAGQB+06xS4ZG+VW/SrNjwN7/s7uZnmrxYZ4Vv/mW3E5EVrnWKwDHNCDnNRazs1ZA/3o3JrKDOXXyuhFlxEMm/GxW/I7spgbJnOgxMMbPwUc1fx8JZh2PSh0gdgsL1+pP48LNqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899650; c=relaxed/simple;
-	bh=4++AFWBTLhEgMK5+HoqIjWqYXjyf7UksZRedIh8PzcM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sCu36kaII3qLwPSOZdFzfLD57WM/p39wRMQJSCYoB7BKVJ+9zEhZRHw0vbs7CoD31PoXsbxK6sHHMrjmU4U9ejCzmAfMO/tX+2T0HiAAmSY5MnJFcdJRivwF2C9km5xP7vHy3YD4iJYI8RSoCyNJ8GYJRkz/zSO8MZkPtTtv8PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1p0gYgTO; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718899677; c=relaxed/simple;
+	bh=ENq0t7yuq+8PH8wBYrueBrGUXOhLYaXTE7V+KPZiQ24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jovPrV87BNbclnLFTR8YXKCUe2i3L++SARRl7z2rtsBfeAlGVeqKEbIF9v6mkAZi5E8D/0UqlzKhgXBLh3mpePQLARNh3rNiGConBFIuLUGvL4vbabm+GGgH4UvF35PkSbgZtn5oVCq3B3z9mILdjec7vyATXFfoS7YSgC4MGLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOM6BGt2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1p0gYgTO"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c7a6ce23c2so1182239a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718899649; x=1719504449; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4++AFWBTLhEgMK5+HoqIjWqYXjyf7UksZRedIh8PzcM=;
-        b=1p0gYgTO3lav3l8Z7O39Y0sQqdWQTAXGh8h+BsLGN1dIBoUXyFknqKeEJMvrvzGNtY
-         aPm36Y9T6XuQUzao70xqtqFa4AxwNbGfUOxIJbt9kxd0Ru7N5x6fk9TDnPE6mbdNLYmM
-         AMfgkR4ki+pQ7r2x+u+BCrorcE1kqeP9YPrDi0EodR6KvfO28GaRmLB19emFq5ksPGX8
-         sZhyFT9kZ4QcnM7IQ+rJ+WClDy3oJONmJq73Bi569JYSj77KCA29SHoYRbwG6Ejfia5S
-         AlhVrtwK1SMlzSQmlO8tSMp8KPvajIMublH2SXHQmAPxmobLbH/YMHASDexL/ca8R6HR
-         ST8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718899649; x=1719504449;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4++AFWBTLhEgMK5+HoqIjWqYXjyf7UksZRedIh8PzcM=;
-        b=QbuGEM4mvL/Ocgq0GkC8i9133xtPwjUp2XdXd+VRbUNY+TLEv/xl1q3Y1nTw4vZewA
-         0RtFo0I+W0LtJa/A1n5qNNi7xmKXpqBKdVDB+pzSoK9otHSXdqQ+Vf2wcTLHlaHWKdLN
-         61y3gkkUfc5yF4M4nneYm3ZdAUqSAhU4srd9WVuS2fBLeHxDIny963ZQze6cErmhVm6l
-         L3cv8bL4GvFLzJQ1DpMQd2Oyfw7c4QyD/X7nRzW+9Fm31W1rDox+OhMc0nJyPxK+BXrD
-         M6IndaPM/C602+xpT4SG3ggcnAT7pTZtp6aYtT2V08LnSmM4Bcuw+Wkbl/+4tQURKyjs
-         2NIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrHvi1ENsvZAaHD5AgKcg/0th4YZ9KB4FGi/yYyuf5AIVjQi1gM2PU5dwcrKd36z59EW3tmTIpZZ5q89FCZTODsJvMLQ/StVpJXJIJ
-X-Gm-Message-State: AOJu0Yy+ksD2D2HQFrADSz9Pbfqs8rKpz9PCL1AXivIWjAtxgVOxuYnm
-	D8tKtvp3D7EU7WY/fmlxcBEI3hax2hoOVH83Et14/SiwPDkMvXcLAUaD5EPO74hG01YrWYOXkpJ
-	Xfg==
-X-Google-Smtp-Source: AGHT+IGZjZFiRlw7O6PqskT9mtZGQXA4gu55zTf3jYNykdeO/HXMtMxOpQ0oZSgNwiH2VyC1b8F1sCdYgeE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:1150:b0:2c2:ebde:ca6a with SMTP id
- 98e67ed59e1d1-2c7b5db32demr14855a91.9.1718899648688; Thu, 20 Jun 2024
- 09:07:28 -0700 (PDT)
-Date: Thu, 20 Jun 2024 09:07:27 -0700
-In-Reply-To: <20240619182128.4131355-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOM6BGt2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C28C32786;
+	Thu, 20 Jun 2024 16:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718899677;
+	bh=ENq0t7yuq+8PH8wBYrueBrGUXOhLYaXTE7V+KPZiQ24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bOM6BGt2OOXCTOqxJ7ShuoaMFdMiVWHmjpUpg1mXdxvlFUOtYed5cN6M3EjLPURge
+	 vQSW78nBzJaTu135tqXoLoTQHOxBhyFEp7F4RNx0FIWroniF7oIS60DPtXKubR51hU
+	 ijLNnFIjLJlpIapK49s4gMGN7+KaQxW/dabYuVeT+czmM8cOdq5myHvWfy8B/PiRIf
+	 4GdTOpc1A1QOnNwR1VLBCAZMFTpPsbU4ar044GAxaKWOzmW3UzcXi56d12g84+F20/
+	 OtA0/vn+ihqVQ43J0mogXSsGnJj6ZT5tguC6rNDGcjwel1TXg3RuNHIo3aM7vyVkUp
+	 KjEM4xtBhznJg==
+Date: Thu, 20 Jun 2024 17:07:52 +0100
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH] arm64: dts: mediatek: Makefile: Generate symbols for
+ DTBO support
+Message-ID: <20240620-luckiness-creature-612b1720f8f3@spud>
+References: <20240620101830.1097548-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240619182128.4131355-1-dapeng1.mi@linux.intel.com>
-Message-ID: <ZnRTv-dswVUr0hzZ@google.com>
-Subject: Re: [PATCH 0/2] KVM vPMU code refine
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Xiong Zhang <xiong.y.zhang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Like Xu <like.xu.linux@gmail.com>, Jinrong Liang <cloudliang@tencent.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZcV0FUu31o22hhk2"
+Content-Disposition: inline
+In-Reply-To: <20240620101830.1097548-1-angelogioacchino.delregno@collabora.com>
 
-On Thu, Jun 20, 2024, Dapeng Mi wrote:
-> This small patchset refines KVM vPMU code and relevant selftests.
-> Patch 1/2 defines new macro KVM_PMC_MAX_GENERIC to avoid the Intel
-> specific macro KVM_INTEL_PMC_MAX_GENERIC to be used in vPMU x86 common
-> code. Patch 2/2 reduces the verbosity of "Random seed" messages to avoid
-> the hugh number of messages to flood the regular output of selftests.
 
-In the future, please post these as separate patches, they are completely unrelated.
+--ZcV0FUu31o22hhk2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 20, 2024 at 12:18:30PM +0200, AngeloGioacchino Del Regno wrote:
+> Add DTC_FLAGS '-@' for mt7986a-bananapi-bpi-r3 and -mini to
+> instruct the devicetree compiler to enable generation of symbols.
+>=20
+> This allows proper support for Device Tree Overlay(s) for those
+> boards; future boards that need DTBO support are expected to add
+> their own DTC_FLAGS_{dtb-name}.
+>=20
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+
+Adding these symbols has on a few occasions lead to people asking if the
+dt maintainers were okay with it, so:
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+--ZcV0FUu31o22hhk2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnRT2AAKCRB4tDGHoIJi
+0hUvAP9lshp0KANjh89e216Ok9kbY6stskVHqQWSUOM7b67zcgD9ErHLBYOeldcf
+llLJ64iVEOOmmfgVgnzRP7FjP+N0+wk=
+=Y/hg
+-----END PGP SIGNATURE-----
+
+--ZcV0FUu31o22hhk2--
