@@ -1,35 +1,35 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639BA3A1AC;
-	Thu, 20 Jun 2024 08:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E3E19DF6C;
+	Thu, 20 Jun 2024 08:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873000; cv=none; b=jb9I+wFUlhNbImVhWMCEuVNESTPcOMILaRVNu8ef3zTM77ZVSozH+PLLm5vC4QuneaymIb3PTptwQc2ScXEtGnPxv/ozmF5oNAoo/11jbQhZyJJFx+5W14zuSWDb8sQtRSOXKMi0pTjHDpUzLY6Vwy2toP83kKYEgofTXaxn5sE=
+	t=1718873000; cv=none; b=YOtqQA4rITQGnjfnBQSTwFF4h/DUn6sFehSINF9Y9A2r9gZDd4lDGW4k2DVslbE2gNeKtwo9cQIST8ggQd/QKcu9QH8tuW3YbUMUUydrQxoWUQEgG3ow4sSm65wtkEehB41EPa9k6YNVG95M4GN0JXq7ywd6vN73cYFueIvypEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718873000; c=relaxed/simple;
-	bh=JyxXab3gh+wCGMjIW6vDCbjLfD//HftTPx3aJXGP3m8=;
+	bh=nVi64ptT3yeC9c3LdQUftdhINtCOQi2phyoQtm7QQOw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XDdmlY2bNqncXVhZaNHAalBtx9LKikJNo06YaIGjqur0EX8kViZHABNK7r1591wjoBJ3hV+dTZfm2nqyMTLrEZdIcBlEQEHTHQJeEp1Xz+fcF+ItYE1Jl0/Qa86/ay1xb5F0IM14au6afl7usTL2KS8Qh8WevOGTaYboCiBajag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y7/+Kz/c; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=hGzLsliYF11gLUDOaOMad6cJiVmnbTNDUhlMEHyEqHYJLbIeysC+ecC0MUT8aKUFEqN2AXf3Zv8mFIZV3jcZrevqTca4HlrXIlbqxcZmHpKeE9wTHtqLAsmRz7qEwoGYUvLeW36TjwNb24OSCbarGUAFqp92x0e7zl9nzb+60X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JMOTMWHl; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y7/+Kz/c"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 808192000D;
-	Thu, 20 Jun 2024 08:43:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JMOTMWHl"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 240FB2000A;
+	Thu, 20 Jun 2024 08:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718872991;
+	t=1718872997;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O2OniZ6NTuy93VyAe8/Sk6MsW0dFYWJCYUEKa4O7/i0=;
-	b=Y7/+Kz/c2jd/6tPcvE4E6ugSwG+0jYbXBS0aNFaULtDeHyZliwze4pTKKBYpKGOFnk4PGV
-	V+eXJJgSOFwRhBinungwT/q9hAcrnHhSX3Wd3XjRnb/lEJX0MkYC2BeyAMahoDqNzoK4ZF
-	/GjZ74Lw/mJ0XF5OrPMkaaort1alUt01luU3ORpix/o6+6fwJ1UEw8AtFm7KHawEhQUoBY
-	9z2gXIW11ZJIRDy+aWdga+Jazrjwm+9BFM1/CTKr8U+OQkIP/1+63VOZQ/F2VlkQ17wfog
-	CyeVK92Ty+SSqwldY65xQ0qcGjYBHYWT+II2yqH7dmbT7iIIW3zKknFlcGMf3w==
+	bh=XcZoHw1OxV6TsmAdg+08k1YhnLc5NmNZMePFnQJFI74=;
+	b=JMOTMWHljpjCiEnj20gVflZbP5I0/oA0m5LI7Peo2g6KnbKgJM+tpDzkfM60wiK006X4rD
+	fdJ+B7kHZfNdZ1wTM9N+lqNE0kDbAjNf7LysqWif9DsZBNhinrBuS5CUowXI5Dcg/pRLAs
+	reYJFaKbfMDOSThnKTcGOB0PageUCGNZZXa2g9rAmdAt9+N5wIRGOYOkZJ1PETHJz3OJ2x
+	qvVBt66rDKhQwnn0/bwwJ4qtm02pn5w51tXQQ9gyujkTyHeeWJ0BEqHIZi2CYAaPTwFMEQ
+	zBMSXhdRBYeowrpIqM4FpapoCbb++LQHx6r8bgAie559o0HfGxskJl3NQnzICQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Liam Girdwood <lgirdwood@gmail.com>,
@@ -51,11 +51,10 @@ Cc: alsa-devel@alsa-project.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 01/10] ASoC: fsl: fsl_qmc_audio: Check devm_kasprintf() returned value
-Date: Thu, 20 Jun 2024 10:42:48 +0200
-Message-ID: <20240620084300.397853-2-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 06/10] ASoC: fsl: fsl_qmc_audio: Introduce qmc_dai_constraints_interleaved()
+Date: Thu, 20 Jun 2024 10:42:53 +0200
+Message-ID: <20240620084300.397853-7-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240620084300.397853-1-herve.codina@bootlin.com>
 References: <20240620084300.397853-1-herve.codina@bootlin.com>
@@ -68,31 +67,100 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-devm_kasprintf() can return a NULL pointer on failure but this returned
-value is not checked.
+Constraints are set by qmc_dai_startup(). These constraints are specific
+to the interleaved mode.
 
-Fix this lack and check the returned value.
+With the future introduction of support for non-interleaved mode, a new
+set of constraints will be set. To make the code clear and keep
+qmc_dai_startup() simple, extract the current interleaved mode
+constraints settings to a specific function.
 
-Fixes: 075c7125b11c ("ASoC: fsl: Add support for QMC audio")
-Cc: stable@vger.kernel.org
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- sound/soc/fsl/fsl_qmc_audio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/fsl/fsl_qmc_audio.c | 37 +++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_qmc_audio.c b/sound/soc/fsl/fsl_qmc_audio.c
-index bfaaa451735b..dd90ef16fa97 100644
+index 36145f1ddbf1..f70c6c8eec4a 100644
 --- a/sound/soc/fsl/fsl_qmc_audio.c
 +++ b/sound/soc/fsl/fsl_qmc_audio.c
-@@ -604,6 +604,8 @@ static int qmc_audio_dai_parse(struct qmc_audio *qmc_audio, struct device_node *
+@@ -436,24 +436,14 @@ static int qmc_dai_hw_rule_capture_format_by_channels(struct snd_pcm_hw_params *
+ 	return qmc_dai_hw_rule_format_by_channels(qmc_dai, params, qmc_dai->nb_rx_ts);
+ }
  
- 	qmc_dai->name = devm_kasprintf(qmc_audio->dev, GFP_KERNEL, "%s.%d",
- 				       np->parent->name, qmc_dai->id);
-+	if (!qmc_dai->name)
-+		return -ENOMEM;
+-static int qmc_dai_startup(struct snd_pcm_substream *substream,
+-			   struct snd_soc_dai *dai)
++static int qmc_dai_constraints_interleaved(struct snd_pcm_substream *substream,
++					   struct qmc_dai *qmc_dai)
+ {
+-	struct qmc_dai_prtd *prtd = substream->runtime->private_data;
+ 	snd_pcm_hw_rule_func_t hw_rule_channels_by_format;
+ 	snd_pcm_hw_rule_func_t hw_rule_format_by_channels;
+-	struct qmc_dai *qmc_dai;
+ 	unsigned int frame_bits;
+ 	int ret;
  
- 	qmc_dai->qmc_chan = devm_qmc_chan_get_byphandle(qmc_audio->dev, np,
- 							"fsl,qmc-chan");
+-	qmc_dai = qmc_dai_get_data(dai);
+-	if (!qmc_dai) {
+-		dev_err(dai->dev, "Invalid dai\n");
+-		return -EINVAL;
+-	}
+-
+-	prtd->qmc_dai = qmc_dai;
+-
+ 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		hw_rule_channels_by_format = qmc_dai_hw_rule_capture_channels_by_format;
+ 		hw_rule_format_by_channels = qmc_dai_hw_rule_capture_format_by_channels;
+@@ -468,7 +458,7 @@ static int qmc_dai_startup(struct snd_pcm_substream *substream,
+ 				  hw_rule_channels_by_format, qmc_dai,
+ 				  SNDRV_PCM_HW_PARAM_FORMAT, -1);
+ 	if (ret) {
+-		dev_err(dai->dev, "Failed to add channels rule (%d)\n", ret);
++		dev_err(qmc_dai->dev, "Failed to add channels rule (%d)\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -476,7 +466,7 @@ static int qmc_dai_startup(struct snd_pcm_substream *substream,
+ 				  hw_rule_format_by_channels, qmc_dai,
+ 				  SNDRV_PCM_HW_PARAM_CHANNELS, -1);
+ 	if (ret) {
+-		dev_err(dai->dev, "Failed to add format rule (%d)\n", ret);
++		dev_err(qmc_dai->dev, "Failed to add format rule (%d)\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -484,13 +474,30 @@ static int qmc_dai_startup(struct snd_pcm_substream *substream,
+ 					   SNDRV_PCM_HW_PARAM_FRAME_BITS,
+ 					   frame_bits);
+ 	if (ret < 0) {
+-		dev_err(dai->dev, "Failed to add frame_bits constraint (%d)\n", ret);
++		dev_err(qmc_dai->dev, "Failed to add frame_bits constraint (%d)\n", ret);
+ 		return ret;
+ 	}
+ 
+ 	return 0;
+ }
+ 
++static int qmc_dai_startup(struct snd_pcm_substream *substream,
++			   struct snd_soc_dai *dai)
++{
++	struct qmc_dai_prtd *prtd = substream->runtime->private_data;
++	struct qmc_dai *qmc_dai;
++
++	qmc_dai = qmc_dai_get_data(dai);
++	if (!qmc_dai) {
++		dev_err(dai->dev, "Invalid dai\n");
++		return -EINVAL;
++	}
++
++	prtd->qmc_dai = qmc_dai;
++
++	return qmc_dai_constraints_interleaved(substream, qmc_dai);
++}
++
+ static int qmc_dai_hw_params(struct snd_pcm_substream *substream,
+ 			     struct snd_pcm_hw_params *params,
+ 			     struct snd_soc_dai *dai)
 -- 
 2.45.0
 
