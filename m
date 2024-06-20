@@ -1,113 +1,70 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39621AC792
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DE11AC769;
+	Thu, 20 Jun 2024 12:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718887855; cv=none; b=TMRxjGJkS1YJfs3YT21jVgXDUfdVz7gky3D04Ft6sZ7TFnbEjj+zYDxWBG10mX9Bs+lY8vVITgoC0qOihfGgt3UCG2Cl2y+7AJ4i2yGabyMOC5zV0+FxuwZzgITaMYAMWqEHw5TDrMbxd4w4uh7FFBN34FhSin9IT2xtT12EQ0c=
+	t=1718887900; cv=none; b=PE0Kl1Q/mhqXRidrzkXkco+3tQ5wzeNCPJX9nbZjpHSuj9k+/RVSCoAtt66WZ+VF1ehsvYESO6nR3yR+VKFHLyNh9QnQSzKQnLvStrU7U0z6wvAhwZSfMklG3vyBtO4V7jdJvpyCUQX1eKSXhvnu/Fx8z4b4h14LWuCwhEWhwGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718887855; c=relaxed/simple;
-	bh=2HmyC/8aoZ2nPJoKWEKLwCfkQSZpd1ixf1AoMQ48fKk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nEqd3GNss6CGZve4DVkPEYpiWdDZ6aFLvDryKLPcd0yKT8itmcrOTxqvG4kG2EZMG2L04UuWrcmu/jXkbYpXPxm0A6KXKUk40KFALvnaDBUjL7QipNooJt3TyXXBgfHgtqPzPged8UsHJuZH8DZUYqXeCtSP0+gePhcqZZvicRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VA1Nm0sg; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718887900; c=relaxed/simple;
+	bh=rn/xKc0QZnyQyw1/MqaN1bPzDjoef8kwv0cOwEoNu/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7wFVlxtSQs3d+VgCYefGZ90cNibM/5fiuJn/tuVHXiV5kyrSWYxDYrVRGY8g80DWPmwIE8M2/oLivckzouoH8tPPDU4jn5xf/hBj+/vNsN/vUmPt1XRsZ1Z/lE9L0avLFRSnq6y9P4LD0mTOxSqXZlYHnhMCQceSEVl8b4OSwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vdbygXFK; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VA1Nm0sg"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dfef5980a69so824918276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 05:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718887852; x=1719492652; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=V7Ui2B3eiuQfY6kcWseFEWEENplZ5Qoq4XUDUnDKk3A=;
-        b=VA1Nm0sg5UJAsKD6JV6BkbBZ5eCWivY8rCu8G5tU3I07UHRKOBMejLNz5Fq0Hsc0ZU
-         CiiCC1bKRnIbRZ0tiFie+ov6PhsWVAhr/oEcUNQ1crM9vT068Wg1W4F0ZjBv8ilqb/Kn
-         PS5QSWnd8/uhqydzS+J0rFpE8AhErg6QozuQf776qnWhkCc1vNKuzuvqJn95YgPAMJjm
-         AY+3je9Y+6vCdVh9z/OM53FH3PEPPaFcLK3MT0cD+Fk90htAUTn9NXNTbZjhYukmx1ni
-         aG537yNuavJ8wKetDfo+d3iG0/S8ckBm2Uxnjpx3Ean9djNdFyaS0MDnCcG8N5k/Gt5d
-         G+0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718887852; x=1719492652;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V7Ui2B3eiuQfY6kcWseFEWEENplZ5Qoq4XUDUnDKk3A=;
-        b=DgiwmW4KCZruGCvg14muZA60L9Yo6+HumPLKXnbWamdj42fAyHlFKtGJgOYYtlAyR0
-         l7cZIsEsTaDuOTGa3Ix+NP3D5SGGZFOzF5dNVrP7/13cuibNnv1XzFSe5IkjWCnu288l
-         T1b0IsvRaWwgLKRLfSjBcWWYQzHv7q/zqUnc1e2tjOS24yK0edUORhfWSnWApYLcXv02
-         Qjw/7r+BdpFrk3Pspa+gkQw7c5F0aYjIZSIBwR7kKfxWs0HTMwquzsVQmICg5q/b4ijj
-         D6LeuGqb+MCYC9G8IkoPz7N2+FVACv74qW95NP/ycEJsqva3wxRjbIRFrXO6ddEt12RS
-         /Flw==
-X-Forwarded-Encrypted: i=1; AJvYcCWht5mE17cmjMELX48u09lYhZQVp0/1XGGM6VcZA44hq5XjGvvNbylm5RsF6ceBydNmqk7vGQQFDJ1wjyROVyZsDDbq2JgwUg/GZ+Rv
-X-Gm-Message-State: AOJu0YzZ6XGlsut8XjzqBR1xgPWV4LQKYZuLSLocVTHKRJFbQyEaEWnp
-	3RDA4cV9uRxwX4GICDKfRwEFeiHRL9eDqniT3fD45NZeyf4cyeOwqqZyMsO9Wg3ZeOC6GRFZZDY
-	8GPukFeJM3i3QFzH436COXVIa+9g7hbWUuWQbFA==
-X-Google-Smtp-Source: AGHT+IFzwmTlSm83S3zIQ/NDj8ijWnvuzYb+Ls9TCG0adu2HJouriCBzHm65cuenwHGzeYmKw4gbmsjLNgVHCs5ygNw=
-X-Received: by 2002:a25:81c6:0:b0:e02:b580:d0b with SMTP id
- 3f1490d57ef6-e02be203e4dmr5411315276.40.1718887852518; Thu, 20 Jun 2024
- 05:50:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vdbygXFK"
+X-Envelope-To: youling.tang@linux.dev
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718887895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYG5eZDYkp3gQEsRvvA/OGgggUaYoDnBXE/aW0ZGwlc=;
+	b=vdbygXFKDLP5mcwftryurjdr7XS4npos/O6d5YOpYhNsbfR7vuGfv/poNO4LwGlkTgg3BF
+	p1ETUDD5j+to2eaXmEo/HJrmZQN5s8fTgQpzdgilrwRlAmT2I2Qtq3AU3kseP6/hJ4aHUN
+	r6wtsAoBf7WSU6zv5035ZYaUXiUocR0=
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: tangyouling@kylinos.cn
+Date: Thu, 20 Jun 2024 08:51:30 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Youling Tang <youling.tang@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: Re: [PATCH] bcachefs: fix alignment of VMA for memory mapped files
+ on THP
+Message-ID: <myw2h2mm7725gegy6pbqf4qpzghrfypnlbn4z6rh6idwfjzpjc@chzxxg47sw77>
+References: <20240620012242.106698-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612-brigade-shell-1f626e7e592f@spud> <20240612-dense-resample-563f07c30185@spud>
-In-Reply-To: <20240612-dense-resample-563f07c30185@spud>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 20 Jun 2024 14:50:15 +0200
-Message-ID: <CAPDyKFozcUPuMooDHVSBZomHTGKzseVf9F=YBY_uQejh9o3x7g@mail.gmail.com>
-Subject: Re: [RFC v1 1/3] mmc: mmc_spi: allow for spi controllers incapable of
- getting as low as 400k
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-mmc@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
-	cyril.jean@microchip.com, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620012242.106698-1-youling.tang@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 12 Jun 2024 at 17:48, Conor Dooley <conor@kernel.org> wrote:
->
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> Some controllers may not be able to reach a bus clock as low as 400 KHz
-> due to a lack of sufficient divisors. In these cases, the SD card slot
-> becomes non-functional as Linux continuously attempts to set the bus
-> clock to 400 KHz. If the controller is incapable of getting that low,
-> set its minimum frequency instead. While this may eliminate some SD
-> cards, it allows those capable of operating at the controller's minimum
-> frequency to be used.
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+On Thu, Jun 20, 2024 at 09:22:42AM +0800, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
+> 
+> With CONFIG_READ_ONLY_THP_FOR_FS, the Linux kernel supports using THPs
+> for read-only mmapped files, such as shared libraries. However, the
+> kernel makes no attempt to actually align those mappings on 2MB
+> boundaries, which makes it impossible to use those THPs most of the
+> time. This issue applies to general file mapping THP as well as
+> existing setups using CONFIG_READ_ONLY_THP_FOR_FS. This is easily
+> fixed by using thp_get_unmapped_area for the unmapped_area function
+> in bcachefs, which is what ext2, ext4, fuse, xfs and btrfs all use.
+> 
+> Similar to commit b0c582233a85 ("btrfs: fix alignment of VMA for
+> memory mapped files on THP").
+> 
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 
-Looks reasonable to me. I assume you intend to send a non-RFC for
-this, that I can pick up?
-
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/mmc_spi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index 09d7a6a0dc1a..c9caa1ece7ef 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -1208,7 +1208,10 @@ static int mmc_spi_probe(struct spi_device *spi)
->          * that's the only reason not to use a few MHz for f_min (until
->          * the upper layer reads the target frequency from the CSD).
->          */
-> -       mmc->f_min = 400000;
-> +       if (spi->controller->min_speed_hz > 400000)
-> +               dev_warn(&spi->dev,"Controller unable to reduce bus clock to 400 KHz\n");
-> +
-> +       mmc->f_min = max(spi->controller->min_speed_hz, 400000);
->         mmc->f_max = spi->max_speed_hz;
->
->         host = mmc_priv(mmc);
-> --
-> 2.43.0
->
+Thanks - applied
