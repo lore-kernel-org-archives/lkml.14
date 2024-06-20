@@ -1,110 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAA91B1429;
-	Thu, 20 Jun 2024 16:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7713BB50;
+	Thu, 20 Jun 2024 16:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900002; cv=none; b=teMbtLnIdCgmEG2QMLJVGfHfVMz+brKosRNoEzeRswUGMK2bYqkf0Wwtcdqt/S3NWCbHg1uj1hRKc8Q1qf1+KUl+eMUA1K6NYkp6wTGgG4Bbd/m3nM4tNVRp+d//6A/M2A2UXD5yHg6JNqCX1QS/1bUaB+08mmdUbjFy8r6PAP4=
+	t=1718900026; cv=none; b=s3bqIYXJwb1EvO4rjnZgL/NisjQpMDQE39ECOgvnmAJDtt8ceEmAXMQzqT/lgJntHCtjI/2BwXSLZghzYATPqYX8kwnVJ9Z+tcWTnVomAl2LoeN18FnhjUpNppx0KiBUgEV0/oieUmpXwADkCl87Jfxvwe2yLaryYf7Q69YhtHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900002; c=relaxed/simple;
-	bh=Y2XnVc5qprGNwRa8U74XufU+zrX/nQbjQ00bUMaI/Ik=;
+	s=arc-20240116; t=1718900026; c=relaxed/simple;
+	bh=OXkO016wMCWKZEPrcn0q2ULLa+4o64CIGf2MO9OVFKs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qaA2eTAmCAFxrCPq7vyZ+Y0JgBCKnBlHwDj98197Yf3E+tvlo1JJy1gdbvHgdHbWCR0Bop0R/1CE12AhHI3jOtA79uoXzwZIQAaD2fipzLWT4ErWH6oRxBAkE4BPMmpoXf+71NH0zSuSbfouQtrqRjxDlViEDErykO0uPBJEZnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DECYDU5g; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NMv6NHMQx9MoWGAORnGb2cys+N/olKq2Jv0F8xLHR4kmfMmlK/d7WiM3mbTpOW3M8B+rtkagvyYkTjdUVRU7JnQXcc/+HxJQ1Hz7Qlt9uW9TVvcI8xmF5NJlyp6AWGpup6gevuilmsZQs08pebz+FTUIP3bn5ZmEnvqkhCOupoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoHSjzSq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DECYDU5g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21210C2BD10;
-	Thu, 20 Jun 2024 16:13:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoHSjzSq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B720C2BD10;
+	Thu, 20 Jun 2024 16:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718900002;
-	bh=Y2XnVc5qprGNwRa8U74XufU+zrX/nQbjQ00bUMaI/Ik=;
+	s=k20201202; t=1718900025;
+	bh=OXkO016wMCWKZEPrcn0q2ULLa+4o64CIGf2MO9OVFKs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DECYDU5g7HGl0Xeb0KT+2RpfdCI2jlWeh+BcSYQdHfRlfdxqYRmvMCNXCuX9XH0vr
-	 tONblMXzE9iJ+HEHPE4wCYKd7rMTxjOByAxmoFW3LVje+8Xt1axxVXR7ixLCwIhbEO
-	 +Et+svjtyWp9tQ1Sg17cZ8wMgQw7j+LWfRhSrsimAHS8sFjdjLZMQj3JOa5Uawy/Qq
-	 bd3ZZE9uUqwrt+8qNZNZfncTNxxUa5oj9GQraLcx2qiMEmbo3RINcOZNRWQRxerRVJ
-	 /CJg/rN3cYrZSzTtD85SmbyO12BrdgTWn5Ft2dF9WWJYcSeWeuVF2ZgungBhP68nes
-	 D4KNfglXAuf4g==
-Date: Thu, 20 Jun 2024 17:13:18 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-	devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: arm: mediatek: Add MT8186 Voltorb
- Chromebooks
-Message-ID: <20240620-outcome-circulate-40a2971f53b9@spud>
-References: <20240620094746.2404753-1-wenst@chromium.org>
- <20240620094746.2404753-3-wenst@chromium.org>
+	b=XoHSjzSql0shKa7qinh7FZBL6kqMBbKqpV7iVzU3iYf/4nW1TrYdn6DClw+vb2/y0
+	 ANBUK3llKqB1s8XCrMyTPcqZcG2QtGoJO61K7yUI5VcnY7eVLR6RgDLB63TvYR+CGw
+	 cRTFqCFy2kOsOVYYo+XOc6+faZdHbh+f4fGiqZQUNfXckDpQkChTAXvx1rMisor+bw
+	 UjZWtnZ88cKGci/4YWzY8WVdZkIavmLqcb4z+hsmoWeiZT7CwMo2rGgB4Y8RbYxtvs
+	 35BIC3qV9re6yk+MQEvPoUZkDT+2neTmV2bLLOulqbQEBsRzFGbN0t5TcX773amSFs
+	 2q2Omrro/quIA==
+Date: Thu, 20 Jun 2024 17:13:41 +0100
+From: Mark Brown <broonie@kernel.org>
+To: "Gowans, James" <jgowans@amazon.com>
+Cc: "rppt@kernel.org" <rppt@kernel.org>,
+	"linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+	"jbeulich@suse.com" <jbeulich@suse.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the memblock tree with the origin
+ tree
+Message-ID: <db13f2b7-88da-42db-85ed-d78cdd5f6c62@sirena.org.uk>
+References: <ZnRQv-EVf2LQ1Cjv@sirena.org.uk>
+ <eb58b1b2f84444acde3f9e25219fa40c73c499f8.camel@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1QLSocapFcYqXwwD"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IrRq9jtI5uaLbfFM"
 Content-Disposition: inline
-In-Reply-To: <20240620094746.2404753-3-wenst@chromium.org>
+In-Reply-To: <eb58b1b2f84444acde3f9e25219fa40c73c499f8.camel@amazon.com>
+X-Cookie: You're already carrying the sphere!
 
 
---1QLSocapFcYqXwwD
+--IrRq9jtI5uaLbfFM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2024 at 05:47:37PM +0800, Chen-Yu Tsai wrote:
-> Add an entry for the MT8186 based Voltorb Chromebooks, also known as the
-> Acer Chromebook 311 (C723/C723T). The device is a clamshell style laptop
-> with an optional touchscreen.
->=20
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
->  Documentation/devicetree/bindings/arm/mediatek.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Docume=
-ntation/devicetree/bindings/arm/mediatek.yaml
-> index b1b09db0bd65..e7746afeb0b3 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-> @@ -301,6 +301,13 @@ properties:
->            - const: google,tentacruel-sku327683
->            - const: google,tentacruel
->            - const: mediatek,mt8186
-> +      - description: Google Voltorb (Acer Chromebook 311 C723/C732T)
-> +        items:
-> +          - enum:
-> +              - google,voltorb-sku589824
-> +              - google,voltorb-sku589825
+On Thu, Jun 20, 2024 at 04:07:45PM +0000, Gowans, James wrote:
+> On Thu, 2024-06-20 at 16:54 +0100, Mark Brown wrote:
 
-This looks rather sane for a chromebook!
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > + 	if (WARN_ONCE(nid =3D=3D MAX_NUMNODES, "Usage of MAX_NUMNODES is dep=
+recated. Use NUMA_NO_NODE instead\n"))
+> > + 		nid =3D NUMA_NO_NODE;
+> > +=20
+> >  -	/*
+> >  -	 * Detect any accidental use of these APIs after slab is ready, as at
+> >  -	 * this moment memblock may be deinitialized already and its
+> >  -	 * internal data may be destroyed (after execution of memblock_free_=
+all)
+> >  -	 */
 
-> +          - const: google,voltorb
-> +          - const: mediatek,mt8186
->        - items:
->            - enum:
->                - mediatek,mt8186-evb
-> --=20
-> 2.45.2.741.gdbec12cfda-goog
->=20
+> This looks like you're deleting the check from the
+> memblock_alloc_range()? The intention of
+> commit 94ff46de4a738 ("memblock: Move late alloc warning down to phys all=
+oc")
+> was to *add* this check here.
 
---1QLSocapFcYqXwwD
+Huh, git showed the add/add conflict weirdly then (it looked like an
+add/remove) and I wasn't paying enough attention.  Sorry about that.
+
+> Do you have a link where I can see the final repo?
+> I'm not seeing it here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/=
+mm/memblock.c
+
+The merge is still running, it'll appear whenever -next is released
+today.
+
+--IrRq9jtI5uaLbfFM
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnRVHQAKCRB4tDGHoIJi
-0nSmAP0fzR6YRVaWBfPAYCkbmRn75YJnVlZy3QoKZreurhO/JQEAtAzyzrZC6E2N
-6sGU4LQJxLJ7f9cZmwI1swMhTaqjsQU=
-=KWZj
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ0VTQACgkQJNaLcl1U
+h9Dovgf/SE8QVlTpey7KF/FSzIq0nyQ6+ye8Ujco5s/1tJxqps43leBVgsihFXJW
+NhwocVg7L54xin6QBQU4kJiJ7kwA1gW1fS53KA4TpkK30liC1dkDUC0LFuFgwjqc
+RhVuG1oVbcg+u9Nz4XQO4PN0JI+6dXJUSp/oxB8tt9OkVHY0rLsaeH/uT14ghlmc
+5dmv6Y0o3o7ebNBMtSXB17L3xrJGcY/HZNPllmHj276kSDxWne1CH7IfyR6AHhMG
+fnpyVOYDCnZh9BvYk5uTCkyCuALMMkK7NftEQqekgIRq7j9eW+GutwFu233w3ztc
+IBfmIbyQ/4mMrq9v7GDPx+CufMPRXA==
+=ls+v
 -----END PGP SIGNATURE-----
 
---1QLSocapFcYqXwwD--
+--IrRq9jtI5uaLbfFM--
