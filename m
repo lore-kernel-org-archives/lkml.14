@@ -1,253 +1,165 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED361AE875;
-	Thu, 20 Jun 2024 17:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A521B3736;
+	Thu, 20 Jun 2024 17:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903190; cv=none; b=n3utL0XnWzz3uv7/GF3uwf2enLy8xs93DG6Rq/TZlGcfMIbUffQWs+39TcFoCiHyHP+eQc7/Som2QwkK73gfwB1pEUHWJa+yd51sQYwaGKQEfOO0WGkj7HvrIMmJl8WngMiCT/6dKU9ZwYrBoMxrx5rN2wsQ6GLcBzVRtjKia2U=
+	t=1718903348; cv=none; b=A2jZLZcmRiwhPOTGa/iMxBAbbtx96C2UNJzdTusXvXFv/Na7Gzr2j5A71zMO0vKeS0+RDPeCWlOcq/m7ScBDKdg/dHjBdL1sQVBoug06LXICWUQVA97Xy3lYuVUHAyW3VjU84VDCr8mYjySQGwOKrTkMeXIDaaNvWtN4TaY2qn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903190; c=relaxed/simple;
-	bh=aZefvX2i2zdaaemPAMbUWZ55XJ/KZi7qSCtrnSRv/hs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qhZHWO1rvUT1g7FG1zI9n3oo1Dr9wqZWBaUkME0PaGozBKsYA4Qedmiv/086CbvyBQMPJ4ypRN2uGDt+txT5WzPEpxtlvN1xLCqk11GrdxVYki1jviCZFIfAc5NnvCguT8uOTCX3fA3agPG5N0sr3QfnW+nZCAeJwVcOf4078OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WpEf61lL; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718903348; c=relaxed/simple;
+	bh=dMTJ8908E2JNrwW/lpHVRd+tVPSWWPLkCIEguNz8I0k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mHxWWkXW9aZkLBNiE/gr+YccUqF4ZJoLaibs9rJsFHfWBI8zoguEduLGYRfSH0exXzamq2eucjteQMJtcuRs4GGOuB55dHO9/bzhZgEvCpuCuQgFK6By6HU4OP6FDJPu1lhgBH2TGNG1TZHqY/gb0tMxlHVwYORSoRO+lzeez8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=E/5/ThKI; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WpEf61lL"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KGw4nC024890;
-	Thu, 20 Jun 2024 17:06:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:subject:from:to:cc:date:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	aZefvX2i2zdaaemPAMbUWZ55XJ/KZi7qSCtrnSRv/hs=; b=WpEf61lLhyDkJfY0
-	dk/Dz4IM+JSVcEnqU5f0IiO400t/Z2LI6UtFSpj8MreiwScPueDFdaFyw/NmayrQ
-	gti6xiqgJ5yYiL4z+QFnxXmZJgm0IiWvqhQKchyPifDaAQTiQWY3c9Z7tRm5EZmT
-	5yR2LM2nF/a+PWTyssJMCjfSeFheknMItHS500aQ3Qr3iSZG0JeNcGVg/a5dx/ka
-	7ioT5gbXOF4kDDkTfaujEVVdIj+rWHqrNXsA9dYkSyr88zJVv7DPoq8CAvsYag/4
-	Xb7DdKgpkG0I+SbGvVGvASPIrJA139/8JcG3nqo6AnxCdazcyIQXLsA1SJXael3w
-	yXYELA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvqymr31b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 17:06:01 +0000 (GMT)
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45KH60lE006975;
-	Thu, 20 Jun 2024 17:06:00 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvqymr316-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 17:06:00 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45KFOWgb019670;
-	Thu, 20 Jun 2024 17:05:59 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysnp1re64-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 17:05:58 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45KH5qkU42205492
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Jun 2024 17:05:54 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B54F220043;
-	Thu, 20 Jun 2024 17:05:52 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 464A820069;
-	Thu, 20 Jun 2024 17:05:51 +0000 (GMT)
-Received: from [127.0.0.1] (unknown [9.152.108.100])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Jun 2024 17:05:51 +0000 (GMT)
-Message-ID: <2fe48485c7181b4fe3a39882f495babebadad595.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 33/37] s390/uaccess: Add KMSAN support to put_user()
- and get_user()
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Potapenko <glider@google.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        David
- Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo
- Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami
- Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven
- Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil
- Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle
- <svens@linux.ibm.com>
-Date: Thu, 20 Jun 2024 19:05:50 +0200
-In-Reply-To: <aaef3e0fe22ad9074de84717f36f316204ae088c.camel@linux.ibm.com>
-References: <20240619154530.163232-1-iii@linux.ibm.com>
-	 <20240619154530.163232-34-iii@linux.ibm.com>
-	 <CAG_fn=V8Tt28LE9FtoYkos=5XG4zP_tDP1mF1COfEhAMg2ULqQ@mail.gmail.com>
-	 <aaef3e0fe22ad9074de84717f36f316204ae088c.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="E/5/ThKI"
+Received: from [10.0.0.100] (pool-99-255-30-7.cpe.net.cable.rogers.com [99.255.30.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id EBC4A3F210;
+	Thu, 20 Jun 2024 17:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718903341;
+	bh=WUmq2Z+BZ+5Q2DHpiaBkQxOe37bDl4Qhdq2/NQMQuco=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=E/5/ThKIUAuABAsJCcC6kMW81J3WwrxQq/XW0JKQjblFomtVI3c+vnhI0JI9j6R+i
+	 bybkZ/XRsNk27Mpk0KeHaDcdsQi6phL1cPBQyIP+WKkf49HxE8AgFakPqG2yBxxCRt
+	 AC8hF6lCbMnnSx+VHjw3+NWAejhDnwLdn4tPF39l5fVnYxt/dNSFxmIAvoUdAb+x/L
+	 vl6lJR0NK+bEdbvas11hujemBPFuCi0/28hu6tRvmVwlhp1i45Qxwh905Tj508DgwQ
+	 aJQjkgicrulhYg/Men9dopgWqvLbcU6h/lT9xEj48abe/vZjR4Xa6RhhNzlUY5sbgi
+	 ddYdhEbXMja7A==
+Message-ID: <c9f55357-029b-4799-8072-f5c96216d60c@canonical.com>
+Date: Thu, 20 Jun 2024 10:08:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: j17PtW7VvRI5cDmaVdbvQOn8NhUFba9g
-X-Proofpoint-ORIG-GUID: CB6tpAHI_NWQszkbL50NdGp2bn9CzjB5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=668 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
- spamscore=0 malwarescore=0 suspectscore=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200122
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] apparmor: try to avoid refing the label in
+ apparmor_file_open
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+ linux-kernel@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, Neeraj.Upadhyay@amd.com
+References: <20240620131524.156312-1-mjguzik@gmail.com>
+ <71c0ea18-8b8b-402b-b03c-029aeedc2747@canonical.com>
+ <3ijkwqkrynfxi6t5bj2jingkpebsnomdcwduhe4pgl6pu25sfs@smvxx7ewexkc>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ xsFNBE5mrPoBEADAk19PsgVgBKkImmR2isPQ6o7KJhTTKjJdwVbkWSnNn+o6Up5knKP1f49E
+ BQlceWg1yp/NwbR8ad+eSEO/uma/K+PqWvBptKC9SWD97FG4uB4/caomLEU97sLQMtnvGWdx
+ rxVRGM4anzWYMgzz5TZmIiVTZ43Ou5VpaS1Vz1ZSxP3h/xKNZr/TcW5WQai8u3PWVnbkjhSZ
+ PHv1BghN69qxEPomrJBm1gmtx3ZiVmFXluwTmTgJOkpFol7nbJ0ilnYHrA7SX3CtR1upeUpM
+ a/WIanVO96WdTjHHIa43fbhmQube4txS3FcQLOJVqQsx6lE9B7qAppm9hQ10qPWwdfPy/+0W
+ 6AWtNu5ASiGVCInWzl2HBqYd/Zll93zUq+NIoCn8sDAM9iH+wtaGDcJywIGIn+edKNtK72AM
+ gChTg/j1ZoWH6ZeWPjuUfubVzZto1FMoGJ/SF4MmdQG1iQNtf4sFZbEgXuy9cGi2bomF0zvy
+ BJSANpxlKNBDYKzN6Kz09HUAkjlFMNgomL/cjqgABtAx59L+dVIZfaF281pIcUZzwvh5+JoG
+ eOW5uBSMbE7L38nszooykIJ5XrAchkJxNfz7k+FnQeKEkNzEd2LWc3QF4BQZYRT6PHHga3Rg
+ ykW5+1wTMqJILdmtaPbXrF3FvnV0LRPcv4xKx7B3fGm7ygdoowARAQABzStKb2huIEpvaGFu
+ c2VuIDxqb2huLmpvaGFuc2VuQGNhbm9uaWNhbC5jb20+wsF3BBMBCgAhBQJOjRdaAhsDBQsJ
+ CAcDBRUKCQgLBRYCAwEAAh4BAheAAAoJEAUvNnAY1cPYi0wP/2PJtzzt0zi4AeTrI0w3Rj8E
+ Waa1NZWw4GGo6ehviLfwGsM7YLWFAI8JB7gsuzX/im16i9C3wHYXKs9WPCDuNlMc0rvivqUI
+ JXHHfK7UHtT0+jhVORyyVVvX+qZa7HxdZw3jK+ROqUv4bGnImf31ll99clzo6HpOY59soa8y
+ 66/lqtIgDckcUt/1ou9m0DWKwlSvulL1qmD25NQZSnvB9XRZPpPd4bea1RTa6nklXjznQvTm
+ MdLq5aJ79j7J8k5uLKvE3/pmpbkaieEsGr+azNxXm8FPcENV7dG8Xpd0z06E+fX5jzXHnj69
+ DXXc3yIvAXsYZrXhnIhUA1kPQjQeNG9raT9GohFPMrK48fmmSVwodU8QUyY7MxP4U6jE2O9L
+ 7v7AbYowNgSYc+vU8kFlJl4fMrX219qU8ymkXGL6zJgtqA3SYHskdDBjtytS44OHJyrrRhXP
+ W1oTKC7di/bb8jUQIYe8ocbrBz3SjjcL96UcQJecSHu0qmUNykgL44KYzEoeFHjr5dxm+DDg
+ OBvtxrzd5BHcIbz0u9ClbYssoQQEOPuFmGQtuSQ9FmbfDwljjhrDxW2DFZ2dIQwIvEsg42Hq
+ 5nv/8NhW1whowliR5tpm0Z0KnQiBRlvbj9V29kJhs7rYeT/dWjWdfAdQSzfoP+/VtPRFkWLr
+ 0uCwJw5zHiBgzsFNBE5mrPoBEACirDqSQGFbIzV++BqYBWN5nqcoR+dFZuQL3gvUSwku6ndZ
+ vZfQAE04dKRtIPikC4La0oX8QYG3kI/tB1UpEZxDMB3pvZzUh3L1EvDrDiCL6ef93U+bWSRi
+ GRKLnNZoiDSblFBST4SXzOR/m1wT/U3Rnk4rYmGPAW7ltfRrSXhwUZZVARyJUwMpG3EyMS2T
+ dLEVqWbpl1DamnbzbZyWerjNn2Za7V3bBrGLP5vkhrjB4NhrufjVRFwERRskCCeJwmQm0JPD
+ IjEhbYqdXI6uO+RDMgG9o/QV0/a+9mg8x2UIjM6UiQ8uDETQha55Nd4EmE2zTWlvxsuqZMgy
+ W7gu8EQsD+96JqOPmzzLnjYf9oex8F/gxBSEfE78FlXuHTopJR8hpjs6ACAq4Y0HdSJohRLn
+ 5r2CcQ5AsPEpHL9rtDW/1L42/H7uPyIfeORAmHFPpkGFkZHHSCQfdP4XSc0Obk1olSxqzCAm
+ uoVmRQZ3YyubWqcrBeIC3xIhwQ12rfdHQoopELzReDCPwmffS9ctIb407UYfRQxwDEzDL+m+
+ TotTkkaNlHvcnlQtWEfgwtsOCAPeY9qIbz5+i1OslQ+qqGD2HJQQ+lgbuyq3vhefv34IRlyM
+ sfPKXq8AUTZbSTGUu1C1RlQc7fpp8W/yoak7dmo++MFS5q1cXq29RALB/cfpcwARAQABwsFf
+ BBgBCgAJBQJOZqz6AhsMAAoJEAUvNnAY1cPYP9cP/R10z/hqLVv5OXWPOcpqNfeQb4x4Rh4j
+ h/jS9yjes4uudEYU5xvLJ9UXr0wp6mJ7g7CgjWNxNTQAN5ydtacM0emvRJzPEEyujduesuGy
+ a+O6dNgi+ywFm0HhpUmO4sgs9SWeEWprt9tWrRlCNuJX+u3aMEQ12b2lslnoaOelghwBs8IJ
+ r998vj9JBFJgdeiEaKJLjLmMFOYrmW197As7DTZ+R7Ef4gkWusYFcNKDqfZKDGef740Xfh9d
+ yb2mJrDeYqwgKb7SF02Hhp8ZnohZXw8ba16ihUOnh1iKH77Ff9dLzMEJzU73DifOU/aArOWp
+ JZuGJamJ9EkEVrha0B4lN1dh3fuP8EjhFZaGfLDtoA80aPffK0Yc1R/pGjb+O2Pi0XXL9AVe
+ qMkb/AaOl21F9u1SOosciy98800mr/3nynvid0AKJ2VZIfOP46nboqlsWebA07SmyJSyeG8c
+ XA87+8BuXdGxHn7RGj6G+zZwSZC6/2v9sOUJ+nOna3dwr6uHFSqKw7HwNl/PUGeRqgJEVu++
+ +T7sv9+iY+e0Y+SolyJgTxMYeRnDWE6S77g6gzYYHmcQOWP7ZMX+MtD4SKlf0+Q8li/F9GUL
+ p0rw8op9f0p1+YAhyAd+dXWNKf7zIfZ2ME+0qKpbQnr1oizLHuJX/Telo8KMmHter28DPJ03 lT9Q
+Organization: Canonical
+In-Reply-To: <3ijkwqkrynfxi6t5bj2jingkpebsnomdcwduhe4pgl6pu25sfs@smvxx7ewexkc>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2024-06-20 at 13:19 +0200, Ilya Leoshkevich wrote:
-> On Thu, 2024-06-20 at 10:36 +0200, Alexander Potapenko wrote:
-> > On Wed, Jun 19, 2024 at 5:45=E2=80=AFPM Ilya Leoshkevich
-> > <iii@linux.ibm.com>
-> > wrote:
-> > >=20
-> > > put_user() uses inline assembly with precise constraints, so
-> > > Clang
-> > > is
-> > > in principle capable of instrumenting it automatically.
-> > > Unfortunately,
-> > > one of the constraints contains a dereferenced user pointer, and
-> > > Clang
-> > > does not currently distinguish user and kernel pointers.
-> > > Therefore
-> > > KMSAN attempts to access shadow for user pointers, which is not a
-> > > right
-> > > thing to do.
-> >=20
-> > By the way, how does this problem manifest?
-> > I was expecting KMSAN to generate dummy shadow accesses in this
-> > case,
-> > and reading/writing 1-8 bytes from dummy shadow shouldn't be a
-> > problem.
-> >=20
-> > (On the other hand, not inlining the get_user/put_user functions is
-> > probably still faster than retrieving the dummy shadow, so I'm fine
-> > either way)
->=20
-> We have two problems here: not only clang can't distinguish user and
-> kernel pointers, the KMSAN runtime - which is supposed to clean that
-> up - can't do that either due to overlapping kernel and user address
-> spaces on s390. So the instrumentation ultimately tries to access the
-> real shadow.
->=20
-> I forgot what the consequences of that were exactly, so I reverted
-> the
-> patch and now I get:
->=20
-> Unable to handle kernel pointer dereference in virtual kernel address
-> space
-> Failing address: 000003fed25fa000 TEID: 000003fed25fa403
-> Fault in home space mode while using kernel ASCE.
-> AS:0000000005a70007 R3:00000000824d8007 S:0000000000000020=20
-> Oops: 0010 ilc:2 [#1] SMP=20
-> Modules linked in:
-> CPU: 3 PID: 1 Comm: init Tainted: G=C2=A0=C2=A0=C2=A0 B=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N 6.10.0-rc4-
-> g8aadb00f495e #11
-> Hardware name: IBM 3931 A01 704 (KVM/Linux)
-> Krnl PSW : 0704c00180000000 000003ffe288975a (memset+0x3a/0xa0)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 R:0 T:1 IO:1=
- EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0
-> EA:3
-> Krnl GPRS: 0000000000000000 000003fed25fa180 000003fed25fa180
-> 000003ffe28897a6
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000000000000=
-0007 000003ffe0000000 0000000000000000
-> 000002ee06e68190
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000002ee06f1=
-9000 000003fed25fa180 000003ffd25fa180
-> 000003ffd25fa180
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000000000000=
-0008 0000000000000000 000003ffe17262e0
-> 0000037ee000f730
-> Krnl Code: 000003ffe288974c: 41101100=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 la=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %r1,256(%r1)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
-9750: a737fffb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-brctg=C2=A0=20
-> %r3,000003ffe2889746
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #000003ffe2889754:=
- c03000000029=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 larl=C2=A0=C2=A0=20
-> %r3,000003ffe28897a6
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 >000003ffe288975a:=
- 44403000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ex=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 %r4,0(%r3)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
-975e: 07fe=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 bcr=C2=A0=C2=A0=C2=A0=C2=A0 15,%r14
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
-9760: a74f0001=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-cghi=C2=A0=C2=A0=C2=A0 %r4,1
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
-9764: b9040012=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-lgr=C2=A0=C2=A0=C2=A0=C2=A0 %r1,%r2
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
-9768: a784001c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-brc=C2=A0=C2=A0=C2=A0=20
-> 8,000003ffe28897a0
-> Call Trace:
-> =C2=A0[<000003ffe288975a>] memset+0x3a/0xa0=20
-> ([<000003ffe17262bc>] kmsan_internal_set_shadow_origin+0x21c/0x3a0)
-> =C2=A0[<000003ffe1725fb6>] kmsan_internal_unpoison_memory+0x26/0x30=20
-> =C2=A0[<000003ffe1c1c646>] create_elf_tables+0x13c6/0x2620=20
-> =C2=A0[<000003ffe1c0ebaa>] load_elf_binary+0x50da/0x68f0=C2=A0=20
-> =C2=A0[<000003ffe18c41fc>] bprm_execve+0x201c/0x2f40=20
-> =C2=A0[<000003ffe18bff9a>] kernel_execve+0x2cda/0x2d00=20
-> =C2=A0[<000003ffe49b745a>] kernel_init+0x9ba/0x1630=20
-> =C2=A0[<000003ffe000cd5c>] __ret_from_fork+0xbc/0x180=20
-> =C2=A0[<000003ffe4a1907a>] ret_from_fork+0xa/0x30=20
-> Last Breaking-Event-Address:
-> =C2=A0[<000003ffe2889742>] memset+0x22/0xa0
-> Kernel panic - not syncing: Fatal exception: panic_on_oops
->=20
-> So is_bad_asm_addr() returned false for a userspace address.
-> Why? Because it happened to collide with the kernel modules area:
-> precisely the effect of overlapping.
->=20
-> VMALLOC_START: 0x37ee0000000
-> VMALLOC_END:=C2=A0=C2=A0 0x3a960000000
-> MODULES_VADDR: 0x3ff60000000
-> Address:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3ffd157a580
-> MODULES_END:=C2=A0=C2=A0 0x3ffe0000000
->=20
-> Now the question is, why do we crash when accessing shadow for
-> modules?
+On 6/20/24 09:41, Mateusz Guzik wrote:
+> On Thu, Jun 20, 2024 at 09:26:00AM -0700, John Johansen wrote:
+>> On 6/20/24 06:15, Mateusz Guzik wrote:
+>>> It can be done in the common case.
+>>>> A 24-way open1_processes from will-it-scale (separate file open) shows:
+>>>     29.37%  [kernel]           [k] apparmor_file_open
+>>>     26.84%  [kernel]           [k] apparmor_file_alloc_security
+>>>     26.62%  [kernel]           [k] apparmor_file_free_security
+>>>      1.32%  [kernel]           [k] clear_bhb_loop
+>>>
+>>> apparmor_file_open is eliminated from the profile with the patch.
+>>>
+>>> Throughput (ops/s):
+>>> before:	6092196
+>>> after:	8309726 (+36%)
+>>>
+>>> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+>> can you cleanup the commit message and I will pull this in
+>>
+> 
+> First of all thanks for a timely review.
+> 
+> I thought that's a decent commit message though. ;)
+> 
+> Would something like this work:
+> <cm>
+> apparmor: try to avoid refing the label in apparmor_file_open
+> 
+> In the common case it can be avoided, which in turn reduces the
+> performance impact apparmor on parallel open() invocations.
+> 
+> When benchmarking on 24-core vm using will-it-scale's open1_process
+> ("Separate file open"), the results are (ops/s):
+> before: 6092196
+> after:  8309726 (+36%)
+> </cm>
+> 
+> If this is fine I'll send a v2.
+> 
+it will do, largely, I was just looking for something that explains
+a little more than. "It can be done in the common case"
 
-So, Alexander G. and I have figured it out. KMSAN maps vmalloc/modules
-metadata lazily - when the corresponding memory is allocated. Here we
-have a completely random address that did not come from a prior
-vmalloc()/execmem_alloc(), so the corresponding metadata pages are
-missing.
 
-We could probably detect this situation and perform the lazy
-initialization in this case as well, but I don't know if it's worth the
-effort.
-
-> I'll need to investigate, this does not look normal. But even if that
-> worked, we clearly wouldn't want userspace accesses to pollute module
-> shadow, so I think we need this patch in its current form.
->=20
-> [...]
+> If you are looking for something fundamentally different I would say it
+> will be the fastest if you write your own commit message while borrowing
+> the numbers and denoting all the wording is yours. I'm trying to reduce
+> back and forth over email here.
+> 
+>>> Am I missing something which makes the approach below not work to begin
+>>> with?
+>>>
+>> no this will work in the short term. Long term there is work that will
+>> break this. Both replacing unconfined and the object delegation work
+>> will cause a performance regression as I am not sure we will be able
+>> to conditionally get the label but that is something for those patch
+>> series to work out. My biggest concern being people objecting to necessary
+>> changes that regress performance, if it can't be worked out, but
+>> that really isn't a reason to stop this now.
+>>
+> 
+> hrm. I was looking at going a step further, now I'm going to have to
+> poke around.
 
