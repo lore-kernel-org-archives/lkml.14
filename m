@@ -1,136 +1,76 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6629E3A1CD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090C97350E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718916982; cv=none; b=WzS5KfX7aS2y4LoOhvFs2K4ZrIu+HfW+0hEZNJZQmT3cm9FVe451QjoQXxg0uPp1LK0vrNC+l65R52boIxg6Bu22UvvvnVP70okT/f6KyudJQh7QY7CxdtZiKsqv6MlZzCQe7T8TxDR0uxp866pDhd/MWb6lQ3T8H59HZHjpupY=
+	t=1718917025; cv=none; b=KJ40rGsqwp8u0lrvq4keMzHbzF69MbnqxWa40l80Cf6oHduF9qqK9YvzHO4BQWi03GVgP3Qv/39lt15kJpHUyjI6b8BtGxRPfXvHhVK9zgwmQ73xG6iZrcK+GPH0qVaC6NO60l0E9AHQ0pkxY4uQYvPhp+E6C204JgoEg+r0YIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718916982; c=relaxed/simple;
-	bh=7bmaecOL5bwpzLgvqJZsDJE8Wz4/YnnOp7I+iv3R9q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bBgZcV7tI/MH1MmugFCrUoRiyFf2GbL2oqNBKAKpW7xBvRmpC2VxHpVr5eHVlez8KGQHmsVmhRJ6ohF/WOOeT7XWEbYi+9Hwrw2NaoSqsW8N0jWvnQqFNWjAO+dj8unji3BVTvxDw53t6O5hSoJwnVsRZSGseuQ0gGAdu+bNJHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Q1Em+ovT; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1718917025; c=relaxed/simple;
+	bh=61970RAlg6536yooZm/sut+UKr5m7zVKXgJ3Po2xet8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JovfzDOtmJXkxGXZTEcEeQHNU2uWAhRTJIVqgsCT3IkOnate3FGn0a2Ha1cr8yE9MYZtKWdzs7kQtTesNPr+1f6ZkyGR37JQ+uEasOUo0BeVAh5MsluPpW/cawGODVOa4AQvQ5HthQr1bp9+g0JqxjKdKxgLeCzyYSMccZXvMaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIGjPa+g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Q1Em+ovT"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-364b2f92388so943864f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718916979; x=1719521779; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tParEw4TnP3wUXcwkDyOi4Scz2rhjwIoECr/A9aobTg=;
-        b=Q1Em+ovTDiXpq6buKyKfqbO0VSOc8H2KH7eGw8WeB780V5f28n/Wt4aUrKkPRhiOmK
-         675w61ZBV25U3oZmwIuI8YeIugAYfeQXykUJOzh9RchXlLgca0d3xS+CVvxzEvpVFer6
-         SX27eKy7/mLsQRaBuRp84a6rrv1w/cEptyY+9sFnHPzNoB5Wj26u6Jax7cYt+74dsxlz
-         zx4x0a6BNL+rOCjf4oY5wBLd/NWFNlmXAkwU4dVx2uNlEWnvn/U3vMv5D8b892CKlm8X
-         prP5Agk8VCaBm9AKRzKg+LESKPCTb+y9c+E59T0x8IXirYBAlUhHGzPIVVQCcpqi6BYh
-         nzKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718916979; x=1719521779;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tParEw4TnP3wUXcwkDyOi4Scz2rhjwIoECr/A9aobTg=;
-        b=WNdoXO/RmPA9wjxkUgiNqZOQNIB5rFegGFfvIsjnyAg+HR/PZothsihoe23ePObhOM
-         Hoeun8oxhnWkUbwUR4g0/bRgThN5d1BlULcm0ewIvGd/kxuwWDyQvjp4fozwc4zIt2fU
-         HhaSTfw4sMMwzlcPM3RiE31VMUEaDxXJ4N/vzplAFpaI18dVVeP6T9ZUg8k9yKrVQyZv
-         BM026u1qjUkmpeFuyxgJObdvSeW2v3/iwjZxO2Sv6lg06YeDWWAbBGAlb14x4BjyK2FM
-         dIDD3XqUnegRYL2X6AzzuYg44JukvBItgXcgMO7XKAoWLewi0rFBNvrQPXAtKrMd9tFV
-         oDPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFLtBm7uTJ9g2jrEa96LqJUXVkDdh0DV5WLFDiBR/CVsQli1QfR8XjcMyen8aQO0gt6K2wamAfLaJDdCaDPILs8bwYknAh6lPbC7qq
-X-Gm-Message-State: AOJu0YxBMp9hRK0WcjiSilcep2TOVz9Xa7wqki9nOqTH1G821tzfuUjy
-	oYaOlDHQseslQBiLzhbthZO8r4g6YR0gLp8onCIpyraMv2agraiOrhKOPOdk4RtYUNoKXM/vtMl
-	yop8=
-X-Google-Smtp-Source: AGHT+IF8t8LppDcAmDZ+UAbN2U2Xv9mXuQyfexbNH4CmjdFqAlZe48YByq17RrjbGyxJj0+YBSnHjQ==
-X-Received: by 2002:a05:6000:d52:b0:362:ad5d:4df4 with SMTP id ffacd0b85a97d-363192d0833mr4782800f8f.48.1718916978597;
-        Thu, 20 Jun 2024 13:56:18 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf56eeadsm8781966b.216.2024.06.20.13.56.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 13:56:18 -0700 (PDT)
-Date: Thu, 20 Jun 2024 22:56:15 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
-	William Breathitt Gray <wbg@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-pwm@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Thorsten Scherer <T.Scherer@eckelmann.de>
-Subject: Re: [PATCH v2 3/5] counter: stm32-timer-cnt: Use TIM_DIER_CCxIE(x)
- instead of TIM_DIER_CCxIE(x)
-Message-ID: <ip5aysvcuchc6q6sikghcz7vjn6zvih5r3amkvp7n7xpvncbhh@jdq5lkckeoej>
-References: <cover.1718791090.git.u.kleine-koenig@baylibre.com>
- <126bd153a03f39e42645573eecf44ffab5354fc7.1718791090.git.u.kleine-koenig@baylibre.com>
- <20240620084451.GC3029315@google.com>
- <imyuhtcsjrbyodsndzbaqfwa4jxny25eylfdh4u4xtsiotsk5g@45l556pcrzys>
- <20240620173838.GB1318296@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIGjPa+g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27AFC2BD10;
+	Thu, 20 Jun 2024 20:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718917024;
+	bh=61970RAlg6536yooZm/sut+UKr5m7zVKXgJ3Po2xet8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BIGjPa+gahKHjEVtrjVVPIx16brXZDVHe3bnjxsQghK1aYxo6fHDMlttAu9dD68gg
+	 M6fp7pCgSMoWVlwBDM3CfFoYqf6FuOWK3M5hL3fHCznUfCZw/7lwBHiMd/bX4zCa8Y
+	 gie2Fvma5OuKm89cgbWqL3lV6pz7q3PCKKIIl3ErfhLVaRwCG1CF0TqoIuBpQUqpRq
+	 4DO0qQD/SZpM4TFHOXcCk2Ybc7AGwenIkSkAmv0YWdHYAUp/LQQ3QDi9VkHO38S2gD
+	 T0Oy18B+2rKAr/OZ4pS7qkHdY3GcwEgKNyBW2UPpM4wp2P8aTNKz2LMfpzC/6eMzW+
+	 tSRcF+ciy6nQg==
+From: Conor Dooley <conor@kernel.org>
+To: Drew Fustini <dfustini@tenstorrent.com>,
+	Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: thead: update Maintainer
+Date: Thu, 20 Jun 2024 21:53:53 +0100
+Message-ID: <20240620-lantern-donut-2c125623bec0@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240620162522.386-1-jszhang@kernel.org>
+References: <20240620162522.386-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ny374adlpexcdnhr"
-Content-Disposition: inline
-In-Reply-To: <20240620173838.GB1318296@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=493; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=gWK+cfdVE5NjGcH4pttNJSDDLEdRobXFDv/rzY3plrU=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGkl0x5EHbi317P7gtDhujWS5VZqkRlh1xh12yxM7radu FXYmbe5o5SFQYyDQVZMkSXxdl+L1Po/Ljuce97CzGFlAhnCwMUpABNZ5MXwv+Rvw8z/R9lFQkMc cmP5Oj4U3vwqzevquEJ+QlXRHLFLlYwMG8wuqp9XWVpi4PpIRNbj+Z++pa8XX7KeaW9davDdI1K ZEQA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
+From: Conor Dooley <conor.dooley@microchip.com>
 
---ny374adlpexcdnhr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, 21 Jun 2024 00:25:22 +0800, Jisheng Zhang wrote:
+> Due to personal reasons, I can't maintain T-Head SoCs any more. At the
+> same time, I would nominate Drew Fustini as Maintainer. Drew contributed
+> the sdhci support of TH1520 in the past, and is working on the clk
+> parts. I believe he will look after T-Head SoCs.
 
-Hello Lee,
+Applied to riscv-dt-fixes, thanks!
 
-On Thu, Jun 20, 2024 at 06:38:38PM +0100, Lee Jones wrote:
-> Which patches need to be in the pull-request and which can be hoovered
-> up by their associated subsystems?
+[1/1] MAINTAINERS: thead: update Maintainer
+      https://git.kernel.org/conor/c/e21de658f8e8
 
-The dependencies are as follows:
+I'll include this in whatever material I send Arnd tomorrow.
 
-	#1 <- #2 <- #3 <- #4
-	       ^
-	      #5
+As we discussed on IRC Drew, can you send a patch adding whatever tree
+you're going to use to the MAINTAINERS entry? You should also mail
+Stephen and get it added to linux-next once that is done.
 
-So the practical options are (in the order of my not very strong preference):
+Thanks Jisheng, I hope the new job is going well for you :)
 
- - Immutable branch with #1 - #4 (assuming William is ok to let you
-   merge #3), and then I can add #5 (and further work on the pwm-stm32
-   driver that I'm currently working on). Maybe William even doesn't
-   need to pull; I didn't check.
-
- - Immutable branch with only #1 and #2. Then William can pull and add
-   #3 and I can pull and add #5. #4 can be applied later then.
-   (I can remind about #4 in the next cycle.)
-
- - Immutable branch with #1 - #5
-   (Reminder: In that case please fixup the pwm patch's short log with
-   s/-/: /)
-   I would add this for sure to the pwm tree. I didn't even try to check
-   if it's needed for mfd and/or counter. So if you don't need it, I
-   volunteer to create that branch, but if you want to do it, that's
-   just fine, too.
-
-Best regards
-Uwe
-
---ny374adlpexcdnhr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ0l20ACgkQj4D7WH0S
-/k6mfwf+PSqfL8bo56onxdPLgXeRSRFlGHnohlXLPJBHSNS5MN0nKoVkWb3Qrx9j
-0iMDVTrmGbfB3Bi2hVznoi3CFEaRhRzGSm0de3kSbJiXzqNacDdNVbM5WTzr38GI
-wfXotmIxx6lAnt5QMb672g2S8AVqvuO+64QzFAoStGh+BtBFcZCQmTsgQEVbWzNU
-WeMX5vPGvMwWEjjqkgnAscNxW0KGCwt1j2BlBDvxlacxSosQtjjROYl+mFaz8ii0
-1LevCg4/MxvJQd+LsXFitEFa7ObSpFku33S9mllK7EtR/pcJyrxVXn/+yRMFIWWb
-D3NxQShAbnZwVqj4+grvDGqCZKImYA==
-=nFFT
------END PGP SIGNATURE-----
-
---ny374adlpexcdnhr--
+Conor.
