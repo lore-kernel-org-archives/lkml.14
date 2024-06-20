@@ -1,158 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D781B142E;
-	Thu, 20 Jun 2024 16:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718901232; cv=none; b=IrW1lU+MNI3RnVB3Ah5zbWkFl/kXX22dMJJvXyvTzuo62rGVx8nBC5Tk0F5Nzjt3eHGknpT2+Vw2r9lDy8WzElCWkKKPkgAOlRdKwl5pjelfVQ1r5M6lz7YoGSDftycmy0nNlYhbyotLPrjUNTMZo/7u/p2A6B1xmJ4CGlUagBI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718901232; c=relaxed/simple;
-	bh=q4gYku9Cb1LdNHNhntEEY/RKn3x2UuKwiH0lInmvHIc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bbne+HC0Jg1fCc0yHl78YtDmABfGkyb1KyX1WO9ltbVbCTwEbKu1HBgCBqjM5TNqu3bqDHbaALOrDJ2wRrukyeLuUs3/gEwU/VCTLfF9Ioic/r45/VmXEEBfmXWKM17aG1jrsH6iARcvckbOMQPuCO8YlWi11W00mYJObHGhvZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvD7H51h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvD7H51h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE25DC2BD10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996B21B3727;
 	Thu, 20 Jun 2024 16:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718901232;
-	bh=q4gYku9Cb1LdNHNhntEEY/RKn3x2UuKwiH0lInmvHIc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WvD7H51hhi7wJXToQopQZbAXf0TgaYT6iUQ/iOjVk3+ypKpYqaJY51/71ujAuiB6D
-	 Igw7d3Xs5lFt5NXfqIEjeqsVB6KoSOIcNgWgdwtIDQBqhO9euLCVE3G2kDF6M5q//P
-	 fSib3DIsWtzpbuZTRWXN5z8xxV29j6qH77Aztvyzm7G7/gurQTn3cRO7+pNc8NGQCQ
-	 4kYp8Nh6JW2v2a7c1DNs5XbttNRf5Mgkv6sRcVqs89la97u+OEFR4qHrqkPiQT6D08
-	 yvhdX3iNGnI4OifmSLTbqujFFBemXl7BR8bDCSYYjpRmonm+o2cDNTgKKQx+aBA3RR
-	 aa1fqdcwHM9ww==
-Message-ID: <a7e7b2a3e9898225836d8263aff9e01e60390f37.camel@kernel.org>
-Subject: Re: [PATCH] fs: nfs: add missing MODULE_DESCRIPTION() macros
-From: Jeff Layton <jlayton@kernel.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
- Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <kolga@netapp.com>,  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Date: Thu, 20 Jun 2024 12:33:49 -0400
-In-Reply-To: <20240527-md-fs-nfs-v1-1-64a15e9b53a6@quicinc.com>
-References: <20240527-md-fs-nfs-v1-1-64a15e9b53a6@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718901233; cv=none; b=GtPdR0l2TlPMMrs2SZ1ZuHX3yW0XCkiFYuVbNX8zvz7w8VAO7Lx0j/ClYT9iWIwEJRBZly7m3vX8We/hYPn1MF+20xkK6RCQchij0EUZPWXVcJKPB7mSDUFO5QCuNe+Fo2IsItZjWzPvnfOqg2wW7nfxSwuDW25WQaULPGm9EcA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718901233; c=relaxed/simple;
+	bh=uGqy7zfNB+grtryFih/VB1IHVnD5ET/9Jx8TxfjQS3U=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WPzCcJwf48l2NQiNC0hNSLeNvlm9V4MtTm9rcBwAYd+wz71eyugKBrpHO/OE9ogBjyKIULRVfkpHqscapBIHaQAD0MLfttGnzmOa7QpJtMLU8vrtXVR6KVPsFWrLC/CTSXScSH70WTzp7IrawUwrEavWTYAudf8ZzgJ2RYtXL4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=U4wfLMhE; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="U4wfLMhE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718901173; x=1719505973; i=markus.elfring@web.de;
+	bh=dykB42Sd3Re8NZvckvEK5UPju/y5TnSdBQ5mULG1s+g=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=U4wfLMhEqGf/E6owLCEXzYfF2p1eof2l1Z1G0B174YWML31y+GstGgGuYseaK8W5
+	 20FjbUI51rhZFM/28AFVsOiUflRpo83Rn3OgQoxAOTnb3g4rCdnjKgRkkrFoptmA2
+	 XahFJvFmysdUjmll65ysQyG0wA30G5LkHfCpFpDcMXEPuYRheckabK3Bnbj29/XRy
+	 s8cEOUpflyJg4v6av1dhi9v6MJ+5oKPRKDumtHuZKYPBEtbAjnDrXKOTAQp/CRc8U
+	 afrD8aAjsd9o5gqOIC8jqOkZDW5djEwDw3eSxD2ahX7c5mULcFLtBxoeqorJy9eRM
+	 t4QWjn5FdXYQDSTIHQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MAtsZ-1sE27I0wDR-0008e4; Thu, 20
+ Jun 2024 18:32:53 +0200
+Message-ID: <ca3efef9-9720-46be-a59d-a9a4c5873ea2@web.de>
+Date: Thu, 20 Jun 2024 18:32:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: lkp@intel.com, Paul Cercueil <paul@crapouillou.net>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+ linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ Julia Lawall <julia.lawall@inria.fr>, Lee Jones <lee@kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>
+References: <20240620122726.41232-4-paul@crapouillou.net>
+Subject: Re: [PATCH v12 3/7] iio: core: Add new DMABUF interface
+ infrastructure
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240620122726.41232-4-paul@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jeIzi8pMUjRRHbkEI2McLlbFKS2rmTp2/YbWVN/pPMg1625Dmrm
+ OG7fNtWabJLFJVITv55DtECwqQZJrxQqDrkpXx1tYmjLmWo4ibjIqLpK0G+tPWF+YQKJOXl
+ X/CPLEcXcpigj9lmdLnvVZNThD1kaIAPXqRFU2Mb7gXvFj8W0tg2Gte24rlJ9rwFjO2p3Zk
+ 42RBmPZVkFpHq88jk31og==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+eTpu5gHISo=;FvPn9BFx0q8Vg3ZhRq6hxBpzKLZ
+ U2PEJ659y+nj6QPHJYsDL+YEaJTPpXHTxgx6wRviFNOe4p3/yROsBK76+gOunzodRdYeS4BqN
+ oqOr6J/RHfTPEXsFWBtO6kASEmubf1Q41aTy8TiKAUINr1QroIcBFlzv/5ZilBf1bC70Xq5rk
+ PMPyOq3IPqtZymss7xyFlSsMHwNImQGNG7dxgDakPJ+qL5eyXplYP4YuPxOVuuAct/LjZ9Gau
+ DZiIvmiYP7esUvAlxG+TEcIRU/PtAjKKQhug9NCEd5TKnVm69K4Qb2HhnEeXKpkRj2P6U72KT
+ 0QaXQFFOo3nzYNw79cseCq+B01LfPyQdgOL+KnMH7zqbNRj4l8yvKgmaoAPCuZcSrdH36XWVU
+ lBWsQTVodUo8YwquewptgmXQzdsXxHPk7DtPS7ZCb1V6K97ErqY4YLuLZUhN/iUxYoeQfVGiP
+ FrVafcM/vpkCyDDwWhZbe6+JMh3E34KA1VhP+GVSozJFNemH8EpBfAg/2fWwaPhNYGcdrDpSv
+ SA9mzcvxhJAmKx8wYLLpobtdCTY9jqrut8pJK708A93fxLx0xs4hd70TkjFBvSSiXPBYIWHn/
+ 1YkHWswiiSMk0yoIsTfqJLMShiF4KbmgnsC6pRmm/BC9IzyM/D5Z7acm/ZZv9elLpcEaq8ot8
+ qcadgr7f040EA2OAa5Fg1S7qcIiBuMJf3+BTtU32X/J7fvZuSrfUpdzQP18EP0rFvVsZoWgnd
+ vBqsqXpRfJ4XaA+vWxJqcfF/6rvwut9TAVZ5+LVezjZ2rnOhPwpLeyfoZbHPMKVgxtfRZy9Cm
+ JumtidR4NTrYbH8Eyja37pmb4PkQs/jVIkjk5wy+K3LytLQTq2LT+/Scao1DN2M88q
 
-On Mon, 2024-05-27 at 10:58 -0700, Jeff Johnson wrote:
-> Fix the 'make W=3D1' warnings:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in
-> fs/nfs_common/nfs_acl.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in
-> fs/nfs_common/grace.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfs.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv2.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv3.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv4.o
->=20
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> =C2=A0fs/nfs/inode.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1 =
-+
-> =C2=A0fs/nfs/nfs2super.c=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
-> =C2=A0fs/nfs/nfs3super.c=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
-> =C2=A0fs/nfs/nfs4super.c=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
-> =C2=A0fs/nfs_common/grace.c=C2=A0 | 1 +
-> =C2=A0fs/nfs_common/nfsacl.c | 1 +
-> =C2=A06 files changed, 6 insertions(+)
->=20
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index acef52ecb1bb..57c473e9d00f 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -2538,6 +2538,7 @@ static void __exit exit_nfs_fs(void)
-> =C2=A0
-> =C2=A0/* Not quite true; I just maintain it */
-> =C2=A0MODULE_AUTHOR("Olaf Kirch <okir@monad.swb.de>");
-> +MODULE_DESCRIPTION("NFS client support");
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0module_param(enable_ino64, bool, 0644);
-> =C2=A0
-> diff --git a/fs/nfs/nfs2super.c b/fs/nfs/nfs2super.c
-> index 467f21ee6a35..b1badc70bd71 100644
-> --- a/fs/nfs/nfs2super.c
-> +++ b/fs/nfs/nfs2super.c
-> @@ -26,6 +26,7 @@ static void __exit exit_nfs_v2(void)
-> =C2=A0	unregister_nfs_version(&nfs_v2);
-> =C2=A0}
-> =C2=A0
-> +MODULE_DESCRIPTION("NFSv2 client support");
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0
-> =C2=A0module_init(init_nfs_v2);
-> diff --git a/fs/nfs/nfs3super.c b/fs/nfs/nfs3super.c
-> index 8a9be9e47f76..20a80478449e 100644
-> --- a/fs/nfs/nfs3super.c
-> +++ b/fs/nfs/nfs3super.c
-> @@ -27,6 +27,7 @@ static void __exit exit_nfs_v3(void)
-> =C2=A0	unregister_nfs_version(&nfs_v3);
-> =C2=A0}
-> =C2=A0
-> +MODULE_DESCRIPTION("NFSv3 client support");
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0
-> =C2=A0module_init(init_nfs_v3);
-> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-> index 8da5a9c000f4..b29a26923ce0 100644
-> --- a/fs/nfs/nfs4super.c
-> +++ b/fs/nfs/nfs4super.c
-> @@ -332,6 +332,7 @@ static void __exit exit_nfs_v4(void)
-> =C2=A0	nfs_dns_resolver_destroy();
-> =C2=A0}
-> =C2=A0
-> +MODULE_DESCRIPTION("NFSv4 client support");
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0
-> =C2=A0module_init(init_nfs_v4);
-> diff --git a/fs/nfs_common/grace.c b/fs/nfs_common/grace.c
-> index 1479583fbb62..8f034aa8c88b 100644
-> --- a/fs/nfs_common/grace.c
-> +++ b/fs/nfs_common/grace.c
-> @@ -139,6 +139,7 @@ exit_grace(void)
-> =C2=A0}
-> =C2=A0
-> =C2=A0MODULE_AUTHOR("Jeff Layton <jlayton@primarydata.com>");
-> +MODULE_DESCRIPTION("lockd and nfsv4 grace period control");
+=E2=80=A6
+> v11:
+=E2=80=A6
+>     - Use guard(mutex)
+>
+> v12:
+>     - Revert to mutex_lock/mutex_unlock in iio_buffer_attach_dmabuf(),
+>       as it uses cleanup GOTOs
+=E2=80=A6
 
-This module has some code that does other things too. It's basically
-some core infrastructure shared by the NFS client and server. Maybe
-this should read "NFS client and server infrastructure" ?
+I would find it nice if better design options could gain acceptance.
+Will the chances grow to adjust scopes another bit for involved variables
+in such function implementations?
 
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0module_init(init_grace)
-> =C2=A0module_exit(exit_grace)
-> diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-> index 5a5bd85d08f8..ea382b75b26c 100644
-> --- a/fs/nfs_common/nfsacl.c
-> +++ b/fs/nfs_common/nfsacl.c
-> @@ -29,6 +29,7 @@
-> =C2=A0#include <linux/nfs3.h>
-> =C2=A0#include <linux/sort.h>
-> =C2=A0
-> +MODULE_DESCRIPTION("NFS ACL support");
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0
-> =C2=A0struct nfsacl_encode_desc {
->=20
-> ---
-> base-commit: 2bfcfd584ff5ccc8bb7acde19b42570414bf880b
-> change-id: 20240527-md-fs-nfs-42f19eb60b50
->=20
+A) Enclosing a source code part with extra curly brackets?
 
---=20
-Jeff Layton <jlayton@kernel.org>
+B) scoped_guard()?
+   https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup=
+.h#L137
+
+C) Moving a locked source code part into a separate function implementatio=
+n?
+
+
+Regards,
+Markus
