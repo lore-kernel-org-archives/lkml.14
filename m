@@ -1,62 +1,69 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFBC1BE86B;
-	Thu, 20 Jun 2024 17:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934921BF30B;
+	Thu, 20 Jun 2024 17:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906264; cv=none; b=OpH2UUf3W6AA0PnHYFvkKgk3VferXxjb4TRSgHrAaJ05fFk1eVwrF/1Brxp2N1NQ+qtjUkRdvVsaPDYUpM4jXa0g2yiO7mforGnhMSjlvTw9IdiCo83X8vmHxYoSvv//JYbiMoR5uaqxHIn5qIa46c9fxhRg1q53vPZutpbwWmA=
+	t=1718906267; cv=none; b=fJpkiqwvhWg/4qW58S51Dy0lyisFEZeNAcQlfB9T6Wz4eZ3iB1fRe2QshR89GFFJK69Q0rebPRH9fTfBWWv/AVF3U1ld60vJt37RhqdEqqSX/vBlxYmNhk1k2Waw4fyLHJZ3f7tIIQIa/38zSRp21RFNpLvX1vlHmq8LxgLerBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906264; c=relaxed/simple;
-	bh=Kq0Le/AzG6nhFQ+X/jkGw++00vhHiyLHVZOAh/AXVkQ=;
+	s=arc-20240116; t=1718906267; c=relaxed/simple;
+	bh=4urYLJw0UpvAK2blqcUY9JMaZPzQLSOYCfTIDKdM0wk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T6aJHpvfrPTlexzKzd2CNQODM/bPuLYbQGXbNyy4pdvMInLcoN0lUC5GmBCfrcfz3bI/wt39Bya0kKq1RpLZBBwFunB+VFuG1Yf903PzZJvSD9Fh0nFtmEwYFDeSLQa6Z8BgFMQ39ovMAJ1aZ+DqRdjntBawgyb30Pf+RX8bSJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jTKbvNiQ; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=I3SbdjmQ36N9pTG//C4G+U4f5/xV2HbFUsbZjovJh/bZ0a8mEE742djv4FDbeiv+MMRenixhTJ1A1yzXN9HcAzxxHRzdGO0HGpCJsHFOAvI8gH8lOQNK2nmPbPB+l9pUbl/d6a1rV+kW7u+bxGcq2FZpPJtnZmf5kRz/+jjaJmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UqmRxU5q; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTKbvNiQ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f9de13d6baso4397325ad.2;
-        Thu, 20 Jun 2024 10:57:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqmRxU5q"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-70b2421471aso912993a12.0;
+        Thu, 20 Jun 2024 10:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718906263; x=1719511063; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718906266; x=1719511066; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AoRopA5ztbgBJRJEKQhgRyu/McLJD9vC3MN+d4zw/zY=;
-        b=jTKbvNiQWVes0vDEyyG7Shb/nyfrhRKxbMpNfF8B8b/f0f9Aqa0VC8ZUskzSe1BPL+
-         ryoDVXOPPqiNr6jLZfX9kO6WD7hyE9enr/15IaMJgy7dNJUtdTBOvJZUEATjHV8t3KhQ
-         htZ7c8N0On6YyDDIThnOF2AZbAumvdP/MJTwZaV6VBpvbtR1qA8TXBEN2Q/g/UlKF6l5
-         dFVGV+/3cb61ncD6DQzJo8A/DPOLj93NDp7/rbeqLFx4+Vj070wHSC/+xttzIEkdHeN0
-         INk5OUB5zm+Ky+7nNKvRZcOwd5WWukXUlz7r0zE4XXWPNapkB7qOPMDYtwq5EVyzk1FL
-         78kw==
+        bh=t63yqlV4wLLuWcSezXBxdfBk1sgIeDP3Cs2mWXS4mPM=;
+        b=UqmRxU5q008n8Hk/SZhgqSyMGikfKTeSfXfCO35p/hkRT1vs4T+HtpSmhpGyDIsMyz
+         Wm1k/eys49cNlMuoFrQjcMSKFD1kB1VDevOYxR6ulPUIOIuxjpHO6ROO7uH8bPLAVZRZ
+         m4FlK20xDGxCbgL60HLs6yPVClP6bkJCFpSlW5XdPujwwhmA4QUVhkydD7OgnTqrGM6u
+         JqEb3LolGMsUhngBKblL0TSAiO3gScBhyH3OHw9RXhL1flr6YxSOxsXPWlj2A4c0sZ/5
+         fsUfoB9wLiZC5O/N81yKricAtPNecDPwgqK2uBdN9m2X6fZcvjgBzkdc6xxEU9cE92TZ
+         UbAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906263; x=1719511063;
+        d=1e100.net; s=20230601; t=1718906266; x=1719511066;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AoRopA5ztbgBJRJEKQhgRyu/McLJD9vC3MN+d4zw/zY=;
-        b=n8lyzdvaVfLDeu1utbSDARPIi6PdzVc+i3UGUcyrsugaKFaVIKNCyoIn8AuqWxD8GD
-         feYDm2OQQtQ2cOI71qJnuYZqyMg0s4QbBzmvc4qiw6Ye2Q6dI2wdasainhVv1zfp19TH
-         ADJanZ7BKCffPnpcWV+R/jCdJR+BjP4QWHQtpnKdKIvDoSuGLkHZOG8OBq0vnd6FJLTc
-         qYNmWYYL9lNJ3INGTWC9Rll4ZqUIIzCusmNwi7WoTmXopMr+2TJuFcb8kqiHI5SCmsCF
-         YJXLRSopQnEq0V/C5cePZGntFVsWQLIPsnF74TnY2s4HkKpMGpt+HXlIRynLWVsdJnw2
-         2qbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCFKQBH8+38o+UYcgQzRI37Gvai1cpSHUJBT+vDxK7FxVO78GnzRtESRvmMq4Ppn8XHKVvdycaXbdgPZBDBb9y1vxr56cAXWHjwI/H0VE=
-X-Gm-Message-State: AOJu0YyH6GniuyTuDAYYEvEDgdwrOqj9g7YgliMm4AMq0Xen3b416bhv
-	TIYnUXTDvF8OJMeRdoDrZCouP0N2pfBLD4PElLpmOLOc12hHGRQPlp8seYzL8a8=
-X-Google-Smtp-Source: AGHT+IFHXkrW2RCg31fg2jAnnLV16IOTYwG6YWnnpIOxreHYDd/8dS8YUOFYNhDpd1HKZjOhC4X4hA==
-X-Received: by 2002:a17:902:d508:b0:1f9:d1f7:3fe5 with SMTP id d9443c01a7336-1f9d1f76f10mr22446525ad.34.1718906262729;
-        Thu, 20 Jun 2024 10:57:42 -0700 (PDT)
+        bh=t63yqlV4wLLuWcSezXBxdfBk1sgIeDP3Cs2mWXS4mPM=;
+        b=VGOFXT/wytJTtIckbsjZ6PdmcJQysI4PJN4Ll3VtHWljomdYp4+nMNZS7j60JiiYQe
+         tzTFEs6DWW7aUc/oZWAon3k0YH7blVlJVnXadhsjnLmf9jITJX9J3yH0u7NoYxlAzPC1
+         nZLom0dGE7QXB35oC1pYKnNKfn9jOlWvuoejx4Fah6oO+b75S63VVxXtwCJJUxJqpyzD
+         VVW5QdLFGtbgvaoLegfleRHNo1XFSpS9beD4kN4JcaN35OEVyVWnuyQ2/7/3XbqD1d19
+         WZEMs2u8S+7UfNQifqcncbMcV9Wldm5TZPlk/s1drJtLAi/DTy7quNNjTf0/vaJ94sHO
+         IGEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGaQKfpaVnUAiOaZjMnydkWuRx/PNTrFcbYQnXhA/8cnt7FE8FiRVpdbfOTDhA8jursQdHNdtswYdXKrPfvtVjE7Te
+X-Gm-Message-State: AOJu0YwU+jduzWIZu79ff7r3PZFcdLw6G0DOmCMOJEPvR+h9+6kOIHHp
+	A7an1v1+dczhtaSrA+hFJ6mYO7d6E8SpCyr8UIWd9sptMJU67CSxnIH5nGWEE3g=
+X-Google-Smtp-Source: AGHT+IFx76sQ02XBcANL8DcVNfxhLC0tLCAwAsMFhiQVAC5yOXkmJulbSByKVrlRFBXWR+fdSTy4Gw==
+X-Received: by 2002:a17:902:db0e:b0:1f7:124:b820 with SMTP id d9443c01a7336-1f9aa45eaf1mr62717175ad.50.1718906265990;
+        Thu, 20 Jun 2024 10:57:45 -0700 (PDT)
 Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9d6b45389sm13541245ad.216.2024.06.20.10.57.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9d0c8341csm15936625ad.162.2024.06.20.10.57.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:57:42 -0700 (PDT)
+        Thu, 20 Jun 2024 10:57:45 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	linux-wireless@vger.kernel.org
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	kvm@vger.kernel.org
 Cc: Yury Norov <yury.norov@gmail.com>,
 	Alexey Klimov <alexey.klimov@linaro.org>,
 	Bart Van Assche <bvanassche@acm.org>,
@@ -66,9 +73,9 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH v4 12/40] wifi: rtw88: optimize the driver by using atomic iterator
-Date: Thu, 20 Jun 2024 10:56:35 -0700
-Message-ID: <20240620175703.605111-13-yury.norov@gmail.com>
+Subject: [PATCH v4 13/40] KVM: x86: hyper-v: optimize and cleanup kvm_hv_process_stimers()
+Date: Thu, 20 Jun 2024 10:56:36 -0700
+Message-ID: <20240620175703.605111-14-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
 References: <20240620175703.605111-1-yury.norov@gmail.com>
@@ -80,64 +87,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-rtw_pci_tx_kick_off() and rtw89_pci_tx_kick_off_pending() traverse bitmaps
-bit by bit. Simplify it by using atomic for_each_test_and_clear_bit()
-iterator.
+The function traverses stimer_pending_bitmap in a for-loop bit by bit.
+Simplify it by using atomic for_each_test_and_clear_bit().
 
+Because there are only 4 bits, using for_each_test_and_clear_bit() will
+generate inline code, so no excessive bloating with the new API.
+
+While here, refactor the logic by decreasing indentation level.
+
+CC: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Acked-by: Sean Christopherson <seanjc@google.com>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 6 +++---
- drivers/net/wireless/realtek/rtw89/pci.c | 6 ++----
- 2 files changed, 5 insertions(+), 7 deletions(-)
+ arch/x86/kvm/hyperv.c | 41 +++++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 30232f7e3ec5..28c0f4c99cf8 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2018-2019  Realtek Corporation
-  */
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 8a47f8541eab..96acbcf603f5 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -28,6 +28,7 @@
+ #include "xen.h"
  
+ #include <linux/cpu.h>
 +#include <linux/find_atomic.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include "main.h"
-@@ -790,9 +791,8 @@ static void rtw_pci_tx_kick_off(struct rtw_dev *rtwdev)
- 	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
- 	enum rtw_tx_queue_type queue;
+ #include <linux/kvm_host.h>
+ #include <linux/highmem.h>
+ #include <linux/sched/cputime.h>
+@@ -870,27 +871,27 @@ void kvm_hv_process_stimers(struct kvm_vcpu *vcpu)
+ 	if (!hv_vcpu)
+ 		return;
  
--	for (queue = 0; queue < RTK_MAX_TX_QUEUE_NUM; queue++)
--		if (test_and_clear_bit(queue, rtwpci->tx_queued))
--			rtw_pci_tx_kick_off_queue(rtwdev, queue);
-+	for_each_test_and_clear_bit(queue, rtwpci->tx_queued, RTK_MAX_TX_QUEUE_NUM)
-+		rtw_pci_tx_kick_off_queue(rtwdev, queue);
+-	for (i = 0; i < ARRAY_SIZE(hv_vcpu->stimer); i++)
+-		if (test_and_clear_bit(i, hv_vcpu->stimer_pending_bitmap)) {
+-			stimer = &hv_vcpu->stimer[i];
+-			if (stimer->config.enable) {
+-				exp_time = stimer->exp_time;
+-
+-				if (exp_time) {
+-					time_now =
+-						get_time_ref_counter(vcpu->kvm);
+-					if (time_now >= exp_time)
+-						stimer_expiration(stimer);
+-				}
+-
+-				if ((stimer->config.enable) &&
+-				    stimer->count) {
+-					if (!stimer->msg_pending)
+-						stimer_start(stimer);
+-				} else
+-					stimer_cleanup(stimer);
+-			}
++	for_each_test_and_clear_bit(i, hv_vcpu->stimer_pending_bitmap,
++				    ARRAY_SIZE(hv_vcpu->stimer)) {
++		stimer = &hv_vcpu->stimer[i];
++		if (!stimer->config.enable)
++			continue;
++
++		exp_time = stimer->exp_time;
++
++		if (exp_time) {
++			time_now = get_time_ref_counter(vcpu->kvm);
++			if (time_now >= exp_time)
++				stimer_expiration(stimer);
+ 		}
++
++		if (stimer->config.enable && stimer->count) {
++			if (!stimer->msg_pending)
++				stimer_start(stimer);
++		} else {
++			stimer_cleanup(stimer);
++		}
++	}
  }
  
- static int rtw_pci_tx_write_data(struct rtw_dev *rtwdev,
-diff --git a/drivers/net/wireless/realtek/rtw89/pci.c b/drivers/net/wireless/realtek/rtw89/pci.c
-index 03bbcf9b6737..deb06cab5974 100644
---- a/drivers/net/wireless/realtek/rtw89/pci.c
-+++ b/drivers/net/wireless/realtek/rtw89/pci.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2020  Realtek Corporation
-  */
- 
-+#include <linux/find_atomic.h>
- #include <linux/pci.h>
- 
- #include "mac.h"
-@@ -1234,10 +1235,7 @@ static void rtw89_pci_tx_kick_off_pending(struct rtw89_dev *rtwdev)
- 	struct rtw89_pci_tx_ring *tx_ring;
- 	int txch;
- 
--	for (txch = 0; txch < RTW89_TXCH_NUM; txch++) {
--		if (!test_and_clear_bit(txch, rtwpci->kick_map))
--			continue;
--
-+	for_each_test_and_clear_bit(txch, rtwpci->kick_map, RTW89_TXCH_NUM) {
- 		tx_ring = &rtwpci->tx_rings[txch];
- 		__rtw89_pci_tx_kick_off(rtwdev, tx_ring);
- 	}
+ void kvm_hv_vcpu_uninit(struct kvm_vcpu *vcpu)
 -- 
 2.43.0
 
