@@ -1,138 +1,91 @@
-Received: from mailfilter02-out30.webhostingserver.nl (mailfilter02-out30.webhostingserver.nl [195.211.72.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C18055882
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.211.72.193
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718916085; cv=pass; b=MmC7pZV2lCAsWffLd4Vy4TdDmEeYq3pfvd7TGV6hBRgK/tOe3pHeYwnB1RCibmxuOmQl95NFnTbEpLtub71Oge1veo73McDyTfuVY5r1315YIgr2EYhHOI3CMUJ+evpe8J4EC2rqTEYkYAFhRG80ALcD1RCBVU3yFeAzBVS2yag=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718916085; c=relaxed/simple;
-	bh=Yh9dms0WXZymrzcy0g/1GhlgfTFOFHHjmJlTFjzHqAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XvvOeblxATPgRNgdFBTpg2dpxfyaEMVRqThnHwmKyotdHn8nhucJKrYVNYLIgC0ldMI+kIF4SkSkxlRnzn5MdMI8nO1w7Z2AyFmBZyKJ0TVX4ethSAt5v38ICTzha8EmtDx+Uj6lFPvAWxB1evL52guOzKALRnfTnP/7Y239GEM=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl; spf=pass smtp.mailfrom=exalondelft.nl; dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b=LmDlI1Zs; arc=pass smtp.client-ip=195.211.72.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exalondelft.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5254658AA7
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718916097; cv=none; b=T1Fo2ObXJrdyOvGGfjMRkCzd8LhE9lQrSW6VupHg5/AMc5ulx+zQXkUhVkxThr7wjUHbsrTPZIugdXWhFJO50SNylWeoTrhkhKIsl4l1YEWMKBN1awAUx3J82hbCLGr9f4DAnhtlOjVyCJ5EsUrkQZBkZ3Fr3O35IxqObaTMlSA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718916097; c=relaxed/simple;
+	bh=2lIMOBJxjBjlymtZO165R4grfQZNjtqE3aYINUR4ZJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nVjcFkLLKmpBmoXwY8TyfVxPIawpWOzbgyY4XMzeZLMyqW6jep4MxmJzIkeoQlnA2gj0N1gOTBQg+z+LIyyvsBTiyzrBKdRTRax9s0cBmjficv026Xc2AbPqwtFMCLI+e4va+UHZ9L68Oto7LdIJ2TsLzChmP9+FYG2FRWKAm4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ar5S0DyH; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b="LmDlI1Zs"
-ARC-Seal: i=2; a=rsa-sha256; t=1718916011; cv=pass;
-	d=webhostingserver.nl; s=whs1;
-	b=EkvYPrw2Wircjor/4JckQKNxiSYz5vmOqR8mASFTPKrcStdO6m7rRAumoM3Q1kllyDTI9ifeAdFB+
-	 442WLEPCqp0F1zaTXhD6kLkAqPTbgJaSVBioi641+QojIMJtk7p4BYwwdJhiK0FH1iFDJ/NT6O8ij7
-	 g1OPeujsnGHF0FMu8okRE9i45ItjrWQZdBzrHgAvlleJl1WtBAiYm1G8Q4D7xkdzPUha/qs7Qb7Ubj
-	 k2CdgqUc9qEzwBSbWm3o8qd54DSbbGDFIeC+96fjF/I74pCJcPTyuztwpWodybEcQ42HlX4Pu/8YIq
-	 p/E9TXW4wP0retD0PbM/ywCgTSl/LGA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed;
-	d=webhostingserver.nl; s=whs1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 dkim-signature:from;
-	bh=q5pA4UawuXhYIJNE6QFSktffN2eueyPiIBRTp5AEPUs=;
-	b=BdAUW8j+FXB2N4Eq+sGsLqAMtmgHFDOJ+puCE85QJN10Hc1YFxHOuImA4nWo02IZc0WbXIgC+WWYv
-	 Ev+96mtjQeGnp4H5C5nxcqRtY7wkEv8famdnpHpCPPbs0GCEHKMkvGeKsMvgQwsxbt31IqMIiaBRKe
-	 /vxyJneMXl+3d8jEd1+heSvWIS0OC/vMwRkEJ5CP0lORsT4PA2ESWC257mkqsmdx+mcOAv9kdKTdkR
-	 8LcPNynUAYn6i89uasZjw51PKJdkeo+wIdudcTCTEtpc6zsXQtdGEM2c/7FkKmt/bUMRFTIKsflYrl
-	 swT2vPykyfC07P8c9QIDe1hT0OyTtgQ==
-ARC-Authentication-Results: i=2; mailfilter02.webhostingserver.nl;
-	spf=pass smtp.mailfrom=exalondelft.nl smtp.remote-ip=141.138.168.154;
-	dmarc=pass header.from=exalondelft.nl;
-	arc=pass header.oldest-pass=0;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ar5S0DyH"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebe40673d8so14071621fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=exalondelft.nl; s=whs1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=q5pA4UawuXhYIJNE6QFSktffN2eueyPiIBRTp5AEPUs=;
-	b=LmDlI1ZsSlyX/vF8NyhJJWWIvwbwwUgSyWpiXyLaud0SV9vmrET95maxVvgDp1lDPfII7h3lCClR3
-	 FTiPTznAilLgdG+uBoB9SiSNLSEdey1lek0080CnhsGln/rmVkTlRhC3Y7cj9+iICjGgb3OUlok8Yf
-	 1EEkGE+iy7SYeCd8XR/a5VGbc9BaaoEeXrY2fmyXOn91LvU/0ZmLCQiQZ1FE8GXKdSd6Gmq5FKu3iB
-	 MCHSSZcl+M4LHyir8TH2HSaYeLFDKOTWF3gcn5oaRyEWDpGwYO8K19NXiCs8/xBc5h1c7nguMHAtYu
-	 4b7DTrizFJVBINcyxD9rN52Ht8uHE0g==
-X-Halon-ID: 48fdeb7b-2f45-11ef-ae5d-001a4a4cb922
-Received: from s198.webhostingserver.nl (s198.webhostingserver.nl [141.138.168.154])
-	by mailfilter02.webhostingserver.nl (Halon) with ESMTPSA
-	id 48fdeb7b-2f45-11ef-ae5d-001a4a4cb922;
-	Thu, 20 Jun 2024 22:40:09 +0200 (CEST)
-ARC-Seal: i=1; cv=none; a=rsa-sha256; d=webhostingserver.nl; s=whs1; t=1718916009;
-	 b=CJYk+jrJk4ZiLTQtuPxWKDOFLhf0ZlK9D9w/HgqXPjhVtMEBiPiGtXBDnXiI8uqt2zVoupm0QK
-	  ibgWIr22cmqX6aNqF1b2CYEsi7LVgqZORZLJmRx9TD/VER1oRARYeBHIIzf9SCZvUHwCoBoeTz
-	  4+RX1eKUtGwpNYA9X2q2gVuc84cueJFsqvi+mYi2HlB7itfKs+pz2eIo9NgCsrscQiGjj94T0/
-	  2CG897su9DSsT8BYj5VAcECJ0CYSSNqVKA4rG9Pig95iz7NIUh8KlisuuqTX6Szplmmu/3JP9S
-	  OZ3naFI0f0HGVjvDQLEeiag+KvfeoVfY6D5VeU85+cZ3fg==;
-ARC-Authentication-Results: i=1; webhostingserver.nl; smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
-	iprev=pass (2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
-	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
-	spf=softfail smtp.mailfrom=exalondelft.nl;
-	dmarc=skipped header.from=exalondelft.nl;
-	arc=none
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=webhostingserver.nl; s=whs1; t=1718916009;
-	bh=Yh9dms0WXZymrzcy0g/1GhlgfTFOFHHjmJlTFjzHqAw=;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From;
-	b=GmMOEN7x6ZBX0pkYaGrqOQ2haOFKOHKgD9AiM1yaodhB5YzwmOyPJp1451D7pnzrlJrearsU6R
-	  xzKM5u71C5oTbRFruwL+Q06fi2u7hF2StZDD6jHGMMjYsxJ6NAHSsTK6WJEwXkmslDoAVLRREw
-	  RomEc697pNace8S0uOoLd91yfswFAaLX2UYrtabKWkoqkDBt5aEGhJ1CbfHTvz8qI91DjspGiW
-	  Ff7XDDGVDMn9sXEZVkVcUdnX7LZG0dKfGerW+aDv4HY9JhCD0w4oktmrmMLK56UzrutdK5JdFO
-	  +0ccL5kWL2L2xXzRTVbVilJ9c2oVDC2chODcWSo0psy7pA==;
-Authentication-Results: webhostingserver.nl;
-	iprev=pass (2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
-	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
-	spf=softfail smtp.mailfrom=exalondelft.nl;
-	dmarc=skipped header.from=exalondelft.nl;
-	arc=none
-Received: from 2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net ([2a02:a466:68ed:1:d31:9797:59c3:1c58] helo=submission)
-	by s198.webhostingserver.nl with esmtpa (Exim 4.97.1)
-	(envelope-from <ftoth@exalondelft.nl>)
-	id 1sKOZl-0000000CPjK-0LuU;
-	Thu, 20 Jun 2024 22:40:09 +0200
-From: Ferry Toth <ftoth@exalondelft.nl>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ferry Toth <ftoth@exalondelft.nl>,
-	Hardik Gajjar <hgajjar@de.adit-jv.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Kees Cook <kees@kernel.org>,
-	Richard Acayan <mailingradian@gmail.com>,
-	Linyu Yuan <quic_linyyuan@quicinc.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-usb@vger.kernel.org,
+        d=linaro.org; s=google; t=1718916093; x=1719520893; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+D9bWZAmbvvtL0R9+aH2lAWS38iCecRNx21UjIGuCjo=;
+        b=ar5S0DyHSEKbSWzFDONUquQSG3mhMvxK6VM6dMl5D8inOX4qrzCRIEccHuJacbI2Yq
+         MH9aDE0/KjtBH6dKEq+SgdB1FgELbqmCbajGU3p6n+IJq1AyjB1G/6ELw+fcJ9p9Pwoe
+         pYWKU2Y1pmcUggUTtLWW4PQ42uyaxeq0hiNinGKBgQt7+N+lcNXyLuA8yQaBhU8qTyKo
+         8xrQTVRTl2L10E/RS+1OyqIh6VHUBKZvtwznm3Y5d++/SI7o9uY4hIyvlqqpm3IE1Cpn
+         eodOfYqdikzLg175JiE6lZK4cyai5Z2S5o/nGWKGMrV0XDD2r5Sr4PWm5+ucx5FOlgv1
+         us/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718916093; x=1719520893;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+D9bWZAmbvvtL0R9+aH2lAWS38iCecRNx21UjIGuCjo=;
+        b=vSXL/z4jrQvxZgkM9DK55v3gZYeR3NZuA8o3trF9Jq9tAHtJIHM9t4oloAIG97c3CG
+         S8IltJWvcw55Fl2RnBkKMaMCjjiXURbQxGsFr6c7RDEmAR8y4OonpFPOjNZDKN2O7vX0
+         2VxVM+3k8/L1mTm8kosUJ1fTwwBjVYPAfymN5kT39rsYm34bdJKszT+5O9P75fynRKUE
+         E7m7RnP1A872LMZRXWzClxZin1rgzbxZ05AgVqHtt9pD+g4MfJrHmOf2/bKrF4+QVgfP
+         EmgR+mbM6WIB6UmhPLgvQyH9DDwMWOxELtyCQyCJaME+iv83XkF2abEinUg3K7aAxx0z
+         2FGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXoyxFngkKJsO8dAfQ3LSg3quqWzg2BbDH24h3tTpMBfTDaN0F0kNlcztHNXzw4+9MWSOJIfLwXWfNp1CK9bCJErEaCJ3AVh1N3NFaF
+X-Gm-Message-State: AOJu0Yz8jhLKV70jDQTu0ZZyQuan2ebUCqcrOzdrMZGQ13SSw1gjCv9e
+	aHguHvcOChzDUu+Zvt0MpRfdHk/OzH1DhMBFi6E6pE3UY8lPNX3pYXWYEZca/w0=
+X-Google-Smtp-Source: AGHT+IHaRDFmm5LZS1LZkl428UXOCdgdnrRr/tiZbdfQNN6V380iko6RqPbH6gqRZXosJvgaPteSdQ==
+X-Received: by 2002:a19:5f52:0:b0:52c:8fc8:4411 with SMTP id 2adb3069b0e04-52ccaaa2577mr3309475e87.63.1718916093457;
+        Thu, 20 Jun 2024 13:41:33 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca28720acsm2168948e87.146.2024.06.20.13.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 13:41:33 -0700 (PDT)
+Date: Thu, 20 Jun 2024 23:41:31 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	s.hauer@pengutronix.de,
-	jonathanh@nvidia.com,
-	paul@crapouillou.net,
-	quic_eserrao@quicinc.com,
-	erosca@de.adit-jv.com,
-	regressions@leemhuis.info
-Subject: [PATCH v2 0/2] usb: gadget: u_ether: revert netif_device_detach change
-Date: Thu, 20 Jun 2024 22:38:29 +0200
-Message-ID: <20240620203954.20254-1-ftoth@exalondelft.nl>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [PATCH 2/5] arm64: dts: qcom: msm8916: Use mboxes in smsm node
+Message-ID: <dgx4s5fxmcsktzysyc7hnswro7ywvjkslmxb4ei3zdsuk5zpue@wvp2i5wo53h7>
+References: <20240619-smsm-mbox-dts-v1-0-268ab7eef779@lucaweiss.eu>
+ <20240619-smsm-mbox-dts-v1-2-268ab7eef779@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ACL-Warn: Sender domain ( exalondelft.nl ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info ).
-X-ACL-Warn: From-header domain ( exalondelft.nl} ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info )
-X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619-smsm-mbox-dts-v1-2-268ab7eef779@lucaweiss.eu>
 
-usb: gadget: u_ether: revert netif_device_detach change
+On Wed, Jun 19, 2024 at 06:42:28PM GMT, Luca Weiss wrote:
+> With the smsm bindings and driver finally supporting mboxes, switch to
+> that and stop using apcs as syscon.
+> 
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
 
-As agreed with the author, the netif_device_detach change is going to be reverted by
-this series, so we will collaborate on a new one in the future that
-brings no regressions.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-v2:
-- Add missing SoB (Greg)
-
-Ferry Toth (2):
-  Revert "usb: gadget: u_ether: Re-attach netif device to mirror
-    detachment"
-  Revert "usb: gadget: u_ether: Replace netif_stop_queue with
-    netif_device_detach"
-
- drivers/usb/gadget/function/u_ether.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
 -- 
-2.43.0
-
+With best wishes
+Dmitry
