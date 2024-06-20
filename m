@@ -1,162 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD009157A7C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44A21AB35C;
+	Thu, 20 Jun 2024 08:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873143; cv=none; b=Xgi9RrvyB+lNs/fmoxyGCT6QF35RHcidajb53iTAB/6+S7JPmaayVKp1tag415Cix4yoFhrze4Znc9dyb6OMflf3/f/ZtoLtJaPf7RH/MQ6AGEHtwvyYfAaKxAqJtaabVsw6SMwsenVAUcJoUAKexGZYCThRwISWc4ZYtFzVgJg=
+	t=1718873154; cv=none; b=QjdO3ttBX9mOVOgozOXN0W8qe64WNMFSfBr5/6VaVBwj8v5CFCWtRAL34h0dLDObUf/3giOm4OH0v3pbdhlVC/8futD1qz8hcgTWMSN/QK+71C+W8gFTphY/4o7O+WsR29HrMXAS18k7pihwE+RjgNPbWlCdi7Sd4sqbiYjs9Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873143; c=relaxed/simple;
-	bh=s60ARkADtTjM++eddQ04Sm61z7sn/03d0UCt7ubLUHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GJsModuqgXj2q060h3AlYcI2VjsRlMtpnkLv2MmH+WYPoUQgKjOT3d9Kc/hRHvPFsR0AXFeXQyXbm3a8e86e51LQ0EufvwAAr0XymwCnl6cvyOAzRFzpMigiQRSHbfrw40oCCo8iZ77cATJ6owOeLghsUoTB7juV4slkrpWP2w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D227EDA7;
-	Thu, 20 Jun 2024 01:46:05 -0700 (PDT)
-Received: from [10.57.74.104] (unknown [10.57.74.104])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC88A3F6A8;
-	Thu, 20 Jun 2024 01:45:39 -0700 (PDT)
-Message-ID: <d29136e9-6c63-4e4f-81bb-488edcac587e@arm.com>
-Date: Thu, 20 Jun 2024 09:45:38 +0100
+	s=arc-20240116; t=1718873154; c=relaxed/simple;
+	bh=pn5rNLu42ohg1ucDtE+47TMdMgMf32bhj1+yFejcyj8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pfP4WeIf77za/a9LatHFi/yM7gBi3kAkd6BQpPTp+cXDR9PwhXf8f2afECfpsYjWxI5xl/Fvo1zRqQjBmII5WYdLyMHCs0KVzV08PaAJ40atNZWZQ/NIu5lUdHaWXRUdjnlcnc97xbWB4uiqBsCNgumC0vGur+Mee2jt90M2YKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DFzZA4x1; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFzZA4x1"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2598ae41389so342241fac.3;
+        Thu, 20 Jun 2024 01:45:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718873152; x=1719477952; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=43KWYYRyoYmhNOn4BNyMreQoj2jRjYHSjwBPqztaSRQ=;
+        b=DFzZA4x1CJTVKGofZ2d+M9gMPi+SWZMm1T2iC2PUE6oYNQ2eJjfSCbAQmhoCD8+pbI
+         o8cISCwasUoIJrcAkZ1BT1ZFakG7YMsnfLci2uQCfoW08MHLvQnpki6tPjfEz9u7iX3F
+         TCldkxmEV+F+nmtVJvdieB9UMQH2qaOgqHzNXlU+JWjZo431lBJkDtqryU8jkPXZGELN
+         B2gMWduJHeIIdw5lXw9pB22CLXvJV+OJkKP7Qtv6MbpaZtbscm0qTxW3ujMiLrysELBT
+         9o+2nOgN+imCsNSReKEF7ik5aYqfHAiZZ6mvcTrtixOsabPS0TAkUPpf1Ycg92sabN+p
+         /M0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718873152; x=1719477952;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=43KWYYRyoYmhNOn4BNyMreQoj2jRjYHSjwBPqztaSRQ=;
+        b=mhQegptBhRO0AmA3E9Emb/yh7kFBYgkwMnG7HoCL1mbyIdr4G58034MYSiOmKJM2Dt
+         dbtIICaGqJdHBYG3+6/4BgCcrIwyXLJp7ZgoE6ag9GJNskYCd/lsoofIwH9RtucWgiic
+         ghxGWWju200JGyUMdssvs6mHQo+OOhn0r+bzKvAN0Qm4lHB4pZKlGOVf+BB4GxlKQb89
+         Zkb65VNpNddFK3gXuFSM6jSZMsJJoFTO5rO3oqdy3vCn2Euf5G29alpzkmhCXtg/7Xv1
+         gjj/3AgdSgYe85n1/AQlLdWzayI2vR8H2/LLZh+5DF+9MhUSyBZVJF2tlwMMeRnskh93
+         sXoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmuOvSifKPfbO9kaWxbVy0WcbZm6jaGLEWfZBZfCuZpvQZ157rc8qVG3OWohdMIRw5xz2B/8WhPJUSjEiwx1zmMwdSXplIQazDr867r3V4dbWU2bea1NX4tg//jzL+iFEij1btmazJEL/1dY9o1n+3Z/b8X0YfQ8bTeJLl1aEfWPkV2Ng=
+X-Gm-Message-State: AOJu0YyYfrHne4KeqwdnvR6xHrDM97uceXAoyAVAADwtW5t5pNiFvk5z
+	HCH3qhJL+PLcIERBD4Xdbi/7uBV/TsGTkMKgrUWtiufmG4FM9T8C
+X-Google-Smtp-Source: AGHT+IHUTewqsAsKC5xSUqbLqUEneEIJJdmKam3OZ0MLUfraam+NlYP/6BgrAchuTs1OQ6A+N03g8Q==
+X-Received: by 2002:a05:6870:b50f:b0:255:1819:b458 with SMTP id 586e51a60fabf-25c948f70cfmr4718438fac.8.1718873151683;
+        Thu, 20 Jun 2024 01:45:51 -0700 (PDT)
+Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb6b9besm11895592b3a.165.2024.06.20.01.45.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 01:45:51 -0700 (PDT)
+From: Potin Lai <potin.lai.pt@gmail.com>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>
+Cc: linux-aspeed@lists.ozlabs.org,
+	openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Patrick Williams <patrick@stwcx.xyz>,
+	Cosmo Chou <cosmo.chou@quantatw.com>,
+	Potin Lai <potin.lai@quantatw.com>,
+	Potin Lai <potin.lai.pt@gmail.com>
+Subject: [PATCH v3 0/2] add ast2600 NCSI pin group
+Date: Thu, 20 Jun 2024 16:43:35 +0800
+Message-Id: <20240620084337.3525690-1-potin.lai.pt@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] arm64/mm: Stop using ESR_ELx_FSC_TYPE during fault
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, maz@kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20240618034703.3622510-1-anshuman.khandual@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240618034703.3622510-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 18/06/2024 04:47, Anshuman Khandual wrote:
-> Fault status codes at page table level 0, 1, 2 and 3 for access, permission
-> and translation faults are architecturally organized in a way, that masking
-> out ESR_ELx_FSC_TYPE, fetches Level 0 status code for the respective fault.
-> 
-> Helpers like esr_fsc_is_[translation|permission|access_flag]_fault() mask
-> out ESR_ELx_FSC_TYPE before comparing against corresponding Level 0 status
-> code as the kernel does not yet care about the page table level, where in
-> the fault really occurred previously.
-> 
-> This scheme is starting to crumble after FEAT_LPA2 when level -1 got added.
-> Fault status code for translation fault at level -1 is 0x2B which does not
-> follow ESR_ELx_FSC_TYPE, requiring esr_fsc_is_translation_fault() changes.
-> 
-> This changes above helpers to compare against individual fault status code
-> values for each page table level and stop using ESR_ELx_FSC_TYPE, which is
-> losing its value as a common mask.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This applies on v6.10-rc4 and still leaves behind ESR_ELx_FSC_TYPE for now.
-> 
-> Changes in V2:
-> 
-> - Defined ESR_ELx_FSC_[ACCESS|FAULT_PERM]_L() macros
-> - Changed fault helpers using the above macros instead
-> - Dropped each page table level fault status discrete values
-> - Dropped set_thread_esr() changes in arch/arm64/mm/fault.c
-> - Updated the commit message
-> 
-> Changes in V1:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20240613094538.3263536-1-anshuman.khandual@arm.com/
-> 
->  arch/arm64/include/asm/esr.h | 33 +++++++++++++++++++++++++++------
->  1 file changed, 27 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-> index 7abf09df7033..3f482500f71f 100644
-> --- a/arch/arm64/include/asm/esr.h
-> +++ b/arch/arm64/include/asm/esr.h
-> @@ -121,6 +121,14 @@
->  #define ESR_ELx_FSC_SECC	(0x18)
->  #define ESR_ELx_FSC_SECC_TTW(n)	(0x1c + (n))
->  
-> +/* Status codes for individual page table levels */
-> +#define ESR_ELx_FSC_ACCESS_L(n)	(ESR_ELx_FSC_ACCESS + n)
-> +#define ESR_ELx_FSC_PERM_L(n)	(ESR_ELx_FSC_PERM + n)
-> +
-> +#define ESR_ELx_FSC_FAULT_nL	(0x2C)
-> +#define ESR_ELx_FSC_FAULT_L(n)	(((n) < 0 ? ESR_ELx_FSC_FAULT_nL : \
-> +					    ESR_ELx_FSC_FAULT) + (n))
+In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is not
+needed on the management controller side.
 
-I think the only real argument for parameterizing it like this is so we can
-write "-1" as a parameter rather than "N1" as part of the macro name? Other than
-that (marginal) benefit, personally I don't think this approach is very
-extensible because we are devining a pattern from the encoding that doesn't
-really exist. If we ever needed a level 4 or -3 the encoding would have to be
-discontiguous and we would need to rework this again to accomodate. Perhaps the
-chances of that ever happening are small enough that the problem can be ignored.
+LINK: [v1] https://lore.kernel.org/all/20240613080725.2531580-1-potin.lai.pt@gmail.com/
+LINK: [v2] https://lore.kernel.org/all/20240620012512.3109518-1-potin.lai.pt@gmail.com/
 
-TBH, I didn't really follow Marc's argument for keeping the "type" macros either
-since ESR_ELx_FSC_FAULT does not help to identify the type of a level -1 or -2
-translation fault - the encoding is completely different. But I'll take it on
-faith that Marc is correct and I just don't understand ;-)
+changes v2 --> v3:
+- fix commit message typo
+- move dt-bindings patch forward
 
-Regardless, the implementation looks correct, so:
+changes v1 --> v2:
+- add NCSI pin group in dt-bindings document
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Potin Lai (2):
+  dt-bindings: pinctrl: aspeed,ast2600-pinctrl: add NCSI group
+  pinctrl: aspeed-g6: Add NCSI pin group config
 
-> +
->  /* ISS field definitions for Data Aborts */
->  #define ESR_ELx_ISV_SHIFT	(24)
->  #define ESR_ELx_ISV		(UL(1) << ESR_ELx_ISV_SHIFT)
-> @@ -388,20 +396,33 @@ static inline bool esr_is_data_abort(unsigned long esr)
->  
->  static inline bool esr_fsc_is_translation_fault(unsigned long esr)
->  {
-> -	/* Translation fault, level -1 */
-> -	if ((esr & ESR_ELx_FSC) == 0b101011)
-> -		return true;
-> -	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_FAULT;
-> +	esr = esr & ESR_ELx_FSC;
-> +
-> +	return (esr == ESR_ELx_FSC_FAULT_L(3)) ||
-> +	       (esr == ESR_ELx_FSC_FAULT_L(2)) ||
-> +	       (esr == ESR_ELx_FSC_FAULT_L(1)) ||
-> +	       (esr == ESR_ELx_FSC_FAULT_L(0)) ||
-> +	       (esr == ESR_ELx_FSC_FAULT_L(-1));
->  }
->  
->  static inline bool esr_fsc_is_permission_fault(unsigned long esr)
->  {
-> -	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_PERM;
-> +	esr = esr & ESR_ELx_FSC;
-> +
-> +	return (esr == ESR_ELx_FSC_PERM_L(3)) ||
-> +	       (esr == ESR_ELx_FSC_PERM_L(2)) ||
-> +	       (esr == ESR_ELx_FSC_PERM_L(1)) ||
-> +	       (esr == ESR_ELx_FSC_PERM_L(0));
->  }
->  
->  static inline bool esr_fsc_is_access_flag_fault(unsigned long esr)
->  {
-> -	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_ACCESS;
-> +	esr = esr & ESR_ELx_FSC;
-> +
-> +	return (esr == ESR_ELx_FSC_ACCESS_L(3)) ||
-> +	       (esr == ESR_ELx_FSC_ACCESS_L(2)) ||
-> +	       (esr == ESR_ELx_FSC_ACCESS_L(1)) ||
-> +	       (esr == ESR_ELx_FSC_ACCESS_L(0));
->  }
->  
->  /* Indicate whether ESR.EC==0x1A is for an ERETAx instruction */
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml       |  2 ++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c             | 10 ++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+-- 
+2.31.1
 
