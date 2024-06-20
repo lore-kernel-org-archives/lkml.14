@@ -1,206 +1,169 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A83C1AD9D6;
-	Thu, 20 Jun 2024 13:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718888562; cv=fail; b=OiQ1TsHlqMaxnfUmS9Vb5lVSCSDxxkhAt8hMOt6tjsVjZZ8c5zafJDr4VW/nd6GxzgKXAVePqFm14WnJMvacGlMwn3vi1a85y/t2efjiwnS6XVPMUpcHN9+GKxT8kLPf2ZL6pcF0axvLcB645QVaVuPkrMg1DN071akRSK3mBrs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718888562; c=relaxed/simple;
-	bh=SevruLCexV627iM6Dl8XSaoopRtrEYLT3wp2+/RPnLw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m85dpVtsnhBwv7pHn0xJlOaQY36DV1npAjM6WgR6SapAtQKSJpUyewmflY0Oh2zVlF1En9Y4VWkpbaG6CdnkmnU+diMWDl3NdlEUqW8XLDPvvctENHf3ghOD7TjNbkz1s2rKOWKlTrzW/fSmrNgtbft6jI64WNzwERjh1ZMr1Lg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yN1D4Uzz; arc=fail smtp.client-ip=40.107.220.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2412A1B14F9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718888569; cv=none; b=c0T1fw5AN1r1/BH4oc/cQajIGm/LGeDafsazwQdR223CvGl0YUUs8avm7NhdCx/A8D3D3rGW+ft7d6A4Ps+7cVqjHSg9qPcM35cd8oP/nVmExU6Nb3Kr1gPd/dpsBgafRgIgb+hczXTVJ9v03+UH/67qqqxZBDQRWaMeILdC104=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718888569; c=relaxed/simple;
+	bh=JeX2cHHt1BB+yQUaqJ/7ylch+ELl58bfOYjk1aFra0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLR6N3h4pDMbp2obULU3WZW4wNUy20nngw1Tp4cDc0R2GZ43rfTxpnR0CeOSXBnok4sj8RQ6ntzQThLdFnkE4svUVTZU3ED1UmXnXJXtJYUNmvCR2txr58YEp5DUKikaij4EqNqvhO2HpIVbiCSal3JlA9EmuDNVYRE4LI0i6tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eXrwXJV8; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yN1D4Uzz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SssyQWqBlS6Vim7bhm4kOwWJC8mLw13ZGkjQeVDxFOE6VxdihNGsOZUnkhiLUVhPT/XKjQTmpACbXy/5wSHpHO2UYnIR58tBCZpEIWJhuDdzYQbBoLMm9U+TzHmJvLLSDDJS9abdrWIuw2q26sSVGiNSczgSCauZBTFleU8tQ0of8I4lE0QbX0UmJwvl8Y5sAoqEJmwO0NJNfpVHaDN6Ebv2loiwMOr65IWKrXNuciL+k2uBOg/HlITmjpGOC4zZHqWcyQpKA0uF95Q8GPAhwdcNMAn54f1KWH97qMk/w/i/QkDiSkD10lA5hC2TcMFeJmsFqhV450O+t5JtUuadxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ecZ6mfsQyMQekhKSwNggBHbozRpNVr37hIhIwLMyQH0=;
- b=UC5Qo6Xr8cogz9K/ut6mh7QyHldBnXmd9vY6BUoaZd9bdqdca6M2txu89Cei7Zt1UM3We4pbUsM0+xPsQyJOnSn/mBg6oXbfwVwFV6lPvek/QcHmTn34gxyEcQCanX7IYYWMqu3J4WHZBIHGTcEdoMGb4qmnrLZSbVCHMkGtFXtSiWfbLZ3C7csnqQHdOMtwXp+82V0CEyXY/J1Q3hzFgmWawbyOLVnIU6wxkPpMu8mZwtYq+1basO8EHsGrsNXj8BC499IGwppRP/o8d7vR2H1/NRAxNubBdFgiQ8tEcJUf6iiPzoUvuEJ9gshIa6w1ayZcbYwhaLpGSKLHCOXGuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ecZ6mfsQyMQekhKSwNggBHbozRpNVr37hIhIwLMyQH0=;
- b=yN1D4Uzz62u1x6pnHLdHJqUBvQpk7GQCjEMIYgtmVqnCp4aHBml7o4GXHuaf1h+T9Z/NkPrRfTJhXwhME/VJi9jux/bAiANMWjvtfCHIUoyjXkQy7SQtz7mmnKMnWFXOngLJCmTDuG84GJC0FG5+lQTxjEpxQYVG3/YXgIMyeUg=
-Received: from BL0PR0102CA0068.prod.exchangelabs.com (2603:10b6:208:25::45) by
- MN0PR12MB5931.namprd12.prod.outlook.com (2603:10b6:208:37e::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7698.19; Thu, 20 Jun 2024 13:02:32 +0000
-Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
- (2603:10b6:208:25:cafe::c) by BL0PR0102CA0068.outlook.office365.com
- (2603:10b6:208:25::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33 via Frontend
- Transport; Thu, 20 Jun 2024 13:02:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Thu, 20 Jun 2024 13:02:32 +0000
-Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Jun
- 2024 08:02:23 -0500
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <kees@kernel.org>, <gustavoars@kernel.org>,
-	<rui.zhang@intel.com>, <oleksandr@natalenko.name>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <ananth.narayan@amd.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <ravi.bangoria@amd.com>,
-	<sandipan.das@amd.com>, <linux-pm@vger.kernel.org>, Dhananjay Ugwekar
-	<Dhananjay.Ugwekar@amd.com>
-Subject: [PATCH v2 6/9] perf/x86/rapl: Add an argument to the cleanup and init functions
-Date: Thu, 20 Jun 2024 12:57:00 +0000
-Message-ID: <20240620125703.3297-7-Dhananjay.Ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240620125703.3297-1-Dhananjay.Ugwekar@amd.com>
-References: <20240620125703.3297-1-Dhananjay.Ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eXrwXJV8"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so10693821fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1718888565; x=1719493365; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GyGKE7avvRKc8S2du0HE2b7qe8g3hybbtAloIUKP5U0=;
+        b=eXrwXJV8xFQh6ZJm/qg2D+6S3rLh65JERlVtYSkxPHFHCOtnEJ8YoJTmL2kvfm7xJs
+         9X78E+iXXldn0MfYHcf4ZdHXcfBoJClWVC93YjRNezZSMNsuTBPYDi/V/XgZmT+Euw6z
+         R1cMMmVMJvztheM4TWRb4Umw4v/m8m2t1ci12WR97wlppxr/Hqm71vvYOpH1Ztf6F6FC
+         rCnEEJeXJpvS/fgBeBpx/zX2fMMadzTjupIWZYKevdUB8zEY4lsYYd2WXI7/luPypCTp
+         kgEsk1sbN6rSkhcYKrt8WsJucry19ptLdq0hdEtRj4GJD79CdFIQBbcpd0kVbqISO6qv
+         P0nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718888565; x=1719493365;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GyGKE7avvRKc8S2du0HE2b7qe8g3hybbtAloIUKP5U0=;
+        b=FScrH2q16MKfQ6lvCMWDHtbdw1bMJQmLp5pt8KVKfhhGICKptg1qzM2dcnri+/2ZBH
+         cIj5dOtzValQkqGFizAcgOdkx+driKXV8qqln7z0bDVcBF/T9dQcWD7dwFXOdcuikMS2
+         jHhPPJEPL21NncZmjTDpDWCm8wYCDgonFGJrQTuccN1jFi3xSOdLN3XAjKPHmdSZKCIt
+         BpeMbbNEDqHGhsQYp9VF6iSH/pWOAE+AVQVb1ra6IZW8VoISSWFBmCxIUEBdx3p0uaoO
+         VnwIbK+2jGT8488bTWFAtPhCCVC/ERdrBKKP2tcFwTLuidqRNCXHqFp6nml2sLalb90L
+         mFjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUzYHVv2HHEJCJ6TTnxzmHnNqo7VIuALHJb4w6E8qX3p/+oXMV6PbkWA7wRFkQQbyCT86NKnGNPCjHdF4qs9nveWsnAYKGPrwUDHhD
+X-Gm-Message-State: AOJu0YzrBRSq18n4sbNlV6ibuqaTkuuJfgJ/8zNsE1yfA/RHxOlyeqi6
+	ldwUYqwiILEOGyLRrQWvwuYpmx8Gzm+OaqsDABqq9QuJCeEscJGItzgVGWSneF8=
+X-Google-Smtp-Source: AGHT+IFtHBvlnVNc/moBvKq6vvrK/WhnmlOYYkT7lAoP72B6LkCk/KZuuFLzrI4HNnuyKpNKzBfNtA==
+X-Received: by 2002:a2e:8796:0:b0:2ec:3cc6:e156 with SMTP id 38308e7fff4ca-2ec3cfff59fmr31484231fa.50.1718888565179;
+        Thu, 20 Jun 2024 06:02:45 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e57cdd9bsm1610433a91.34.2024.06.20.06.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 06:02:44 -0700 (PDT)
+Date: Thu, 20 Jun 2024 15:02:36 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH printk v2 11/18] printk: nbcon: Show replay message on
+ takeover
+Message-ID: <ZnQobCf7kk5LZOHL@pathway.suse.cz>
+References: <20240603232453.33992-1-john.ogness@linutronix.de>
+ <20240603232453.33992-12-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|MN0PR12MB5931:EE_
-X-MS-Office365-Filtering-Correlation-Id: 478386b2-bd6b-4728-bf9b-08dc91293f78
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|82310400023|1800799021|36860700010|7416011|376011|921017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/9urNv/0xCbRdfXnhIwnV2ddLFi/XPGC1HVsgPv/+DeuOXsXgVEV69zBWgR3?=
- =?us-ascii?Q?4HC/Rp/iOLj8ouGgqy4XgH0DK0JW5Tq6JvthLjz4fa5jGOaTgNqxvbadXAC5?=
- =?us-ascii?Q?WjYRJohPeMeG4pHbIkcTJhoCk8efQD+cJdU/C0sODM5lvBF9GcsXr8hwd/FY?=
- =?us-ascii?Q?WzU6kSgmrw5/yMvkSujQ6Wd3b4HOzZmTpsB0aD2JYCgxFk9LdfDL5ao5AfYz?=
- =?us-ascii?Q?y2LtVbM75a5AoYuqFbOYWyV+l/DtDFm/kHMC4IqEoYDDrDetI4QS4VCcYxLn?=
- =?us-ascii?Q?2IkbNOJb2luEXsOioganrjqWvtR2UmQDfJF4oZNOJcSj7vlykeVTObQKZBrz?=
- =?us-ascii?Q?iBtdJk3t2LmitUd/0oT1jf4Gsq9yayM6d/dshVZ9eqp9sinHxiodOdqtVEip?=
- =?us-ascii?Q?lVuxV3PgGnsrTNIiWc8eAcUZuWAws6aX6Fsv2sHQ1oj3n9Se5VMGwSyV8vJd?=
- =?us-ascii?Q?5TA+TIseowzdMNeeFPESeoKJEQA1wa9H2u5jeEZwkulMGFmPEothg+mnucC+?=
- =?us-ascii?Q?WRXLwb2dTalSPU6Z0B6keiBXqLu25dSr1e7+pw+nKnmCk4q5ShG3WWuBxvDv?=
- =?us-ascii?Q?eC6ZztJgSpBE0IhfdILmiNLIhWBLSZvRm3yTzK6oHQlpxiCQgDPYE8ZvDtkK?=
- =?us-ascii?Q?eeSyZ+b/D8zus4zPt96pwZO9xxZUotJTMYnWXNknYQzF2qq2Z1Ri9Lz38PAM?=
- =?us-ascii?Q?RyDVyqPnD+QBK2S8DmpLSlfUfTNl2oWs0HxElEDOTkM29+hi3/Bf59IkfBXJ?=
- =?us-ascii?Q?5v431fACCDrpc7tshJn1/Z+9S1sKDQ8iRmPtnCLTlrwGYAJsDdkw4ImZ2p1N?=
- =?us-ascii?Q?2PPU+abUS3SGd/GBvFqd2aZR1jjKY4y+hL9mBbAa8vlvnyQ5mdLwqlIZsSC5?=
- =?us-ascii?Q?rTlXlmEJRarVdPkleiQopzkWORnEnDP+5dCUnaCc7QotTznXbyhuyyFYpPcR?=
- =?us-ascii?Q?kouufHDoLuUmZ525N7EZpVMIkwnqTvbXAYyOsT//KcNMLNTWmzlXSCVW1ryn?=
- =?us-ascii?Q?ETQiF0tb1lqHXXJMKXokWoGPu8hzBM+UbH/Gd/91UPAyK4GbJ7hTPx0uQi8N?=
- =?us-ascii?Q?P7jOMTGiSI5kgfhqCeUT/3JrVfWFVtKDJHoAKdkajPjepHAiXhcymiOyto4P?=
- =?us-ascii?Q?bZgQpwTNCADM1yX5fx+xtmA+moX/TIuDKPO2Ct2vXAdPxWKe9RxzTvG51vvx?=
- =?us-ascii?Q?v4ORGma2k5TyvDtODo+QUK1TblMkpUx9AM4CpqqrAx7MwVj4ihMCYC5D/OjO?=
- =?us-ascii?Q?CiRyTd0pqjOCQz/IowGKhliqMPpa4eYQrE9RIWwESZ/onwtHYh+NKbQFjcYp?=
- =?us-ascii?Q?JTzFnF/PtY1HwfUCnc06AF8i1eRtJF7QPlWTm9IljPh14sOLngb/uju+SNGq?=
- =?us-ascii?Q?1wX0vorVk4xvHa5WsPZ5U4ol3MJrqUU4sH4xkcW+4DE0SkZJbiB4eL8JWOMX?=
- =?us-ascii?Q?Th6zWXk0tvA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(82310400023)(1800799021)(36860700010)(7416011)(376011)(921017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2024 13:02:32.2613
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 478386b2-bd6b-4728-bf9b-08dc91293f78
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4B.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5931
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603232453.33992-12-john.ogness@linutronix.de>
 
-Prep for per-core RAPL PMU addition.
+On Tue 2024-06-04 01:30:46, John Ogness wrote:
+> An emergency or panic context can takeover console ownership
+> while the current owner was printing a printk message. The
+> atomic printer will re-print the message that the previous
+> owner was printing. However, this can look confusing to the
+> user and may even seem as though a message was lost.
+> 
+>   [3430014.1
+>   [3430014.181123] usb 1-2: Product: USB Audio
+> 
+> Add a new field @nbcon_prev_seq to struct console to track
+> the sequence number to print that was assigned to the previous
+> console owner. If this matches the sequence number to print
+> that the current owner is assigned, then a takeover must have
+> occurred. In this case, print an additional message to inform
+> the user that the previous message is being printed again.
+> 
+>   [3430014.1
+>   ** replaying previous printk message **
+>   [3430014.181123] usb 1-2: Product: USB Audio
+> 
+> --- a/kernel/printk/nbcon.c
+> +++ b/kernel/printk/nbcon.c
+> @@ -891,6 +892,28 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt, bool use_a
+>  	if (dropped && !is_extended)
+>  		console_prepend_dropped(&pmsg, dropped);
+>  
+> +	/*
+> +	 * If the previous owner was assigned the same record, this context
+> +	 * has taken over ownership and is replaying the record. Prepend a
+> +	 * message to let the user know the record is replayed.
+> +	 */
+> +	ulseq = atomic_long_read(&ACCESS_PRIVATE(con, nbcon_prev_seq));
+> +	if (__ulseq_to_u64seq(prb, ulseq) == pmsg.seq) {
+> +		console_prepend_replay(&pmsg);
+> +	} else {
+> +		/*
+> +		 * Ensure this context is still the owner before trying to
+> +		 * update @nbcon_prev_seq. Otherwise the value in @ulseq may
+> +		 * not be from the previous owner.
+> +		 */
+> +		nbcon_state_read(con, &cur);
+> +		if (!nbcon_context_can_proceed(ctxt, &cur))
+> +			return false;
 
-No functional change.
+I would like to better understand the motivation here.
+I guess that this pattern might be repeated in the future.
 
-Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
----
- arch/x86/events/rapl.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+For example, it might bring the question why we do not do
+the same in nbcon_seq_try_update().
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 70c7b35fb4d2..f815c60ec551 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -687,7 +687,7 @@ static void __init rapl_advertise(void)
- 	}
- }
- 
--static void cleanup_rapl_pmus(void)
-+static void cleanup_rapl_pmus(struct rapl_pmus *rapl_pmus)
- {
- 	int i;
- 
-@@ -705,8 +705,10 @@ static const struct attribute_group *rapl_attr_update[] = {
- 	NULL,
- };
- 
--static int __init init_rapl_pmus(void)
-+static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr)
- {
-+	struct rapl_pmus *rapl_pmus;
-+
- 	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
- 
- 	if (rapl_pmu_is_pkg_scope())
-@@ -728,6 +730,9 @@ static int __init init_rapl_pmus(void)
- 	rapl_pmus->pmu.read		= rapl_pmu_event_read;
- 	rapl_pmus->pmu.module		= THIS_MODULE;
- 	rapl_pmus->pmu.capabilities	= PERF_PMU_CAP_NO_EXCLUDE;
-+
-+	*rapl_pmus_ptr = rapl_pmus;
-+
- 	return 0;
- }
- 
-@@ -869,7 +874,7 @@ static int __init rapl_pmu_init(void)
- 	if (ret)
- 		return ret;
- 
--	ret = init_rapl_pmus();
-+	ret = init_rapl_pmus(&rapl_pmus);
- 	if (ret)
- 		return ret;
- 
-@@ -893,7 +898,7 @@ static int __init rapl_pmu_init(void)
- 	cpuhp_remove_state(CPUHP_AP_PERF_X86_RAPL_ONLINE);
- out:
- 	pr_warn("Initialization failed (%d), disabled\n", ret);
--	cleanup_rapl_pmus();
-+	cleanup_rapl_pmus(rapl_pmus);
- 	return ret;
- }
- module_init(rapl_pmu_init);
-@@ -902,6 +907,6 @@ static void __exit intel_rapl_exit(void)
- {
- 	cpuhp_remove_state_nocalls(CPUHP_AP_PERF_X86_RAPL_ONLINE);
- 	perf_pmu_unregister(&rapl_pmus->pmu);
--	cleanup_rapl_pmus();
-+	cleanup_rapl_pmus(rapl_pmus);
- }
- module_exit(intel_rapl_exit);
--- 
-2.34.1
+OK, this is called in context where the takeover is unsafe.
+It could race only with nbcon_atomic_flush_unsafe()
+which is called at the very end of panic().
 
+So we have:
+
+   + The race is a corner case.
+
+   + It could happen only once beause non-panic() CPUs should
+     not be able to acquire the console context any more.
+
+   + The check reduces the race window but it does not prevent
+     the race.
+
+Do we care about these races?
+
+
+BTW: In this particular case, the race looks innocent. It might
+     happen only once. And the cmpxchg would fail in this case.
+
+
+I would replace the check with a comment:
+
+		/*
+		 * Only nbcon_atomic_flush_unsafe() could take over this
+		 * context. It would be the only context which could move
+		 * forward from now on. The try_cmpxchg() would fail in
+		 * this case. It should succeed and be safe in all other
+		 * scenarios.
+		 */
+> +
+> +		atomic_long_try_cmpxchg(&ACCESS_PRIVATE(con, nbcon_prev_seq), &ulseq,
+> +					__u64seq_to_ulseq(pmsg.seq));
+> +	}
+> +
+>  	if (!nbcon_context_exit_unsafe(ctxt))
+>  		return false;
+>  
+
+Othrewise, it looks good.
+
+Best Regards,
+Petr
