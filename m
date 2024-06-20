@@ -1,53 +1,48 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2755D199EBA;
-	Thu, 20 Jun 2024 09:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF221A4F2A;
+	Thu, 20 Jun 2024 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718876585; cv=none; b=A/eyDKUcc5PM6nd0piZUfxPXUpjeLKQU11lFqoRU+IdtQNrjYbO48TM+PzxVD+qDWL6oyplNFNgho99R9HoPQKj8QdG0/Ep3eG7V0i0+BAB8dd3FqkZQIajRXLll7DDBDMnG8qlCQNXA5pbUFZU1KZh1yHPg5+DuLEPlXZQeKBU=
+	t=1718876586; cv=none; b=L1VbARHLAfSFO1Mn4VyvAxPG/c/m4JmfwubDM1vOMa2dlZuuTP6uO534ULgCnIhGKDS+CxQteF1xx4mp4y+JbtWYZ3fZkt8h/IwSo/mO0KoupomvfJffOCT8wmR0OyE28yVcObeaQORs2dgHbfAqTbrc6MqbYcq6tYvdbgo7tQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718876585; c=relaxed/simple;
-	bh=ckZIqKAQIBZWCVhATKH4LnnnLqFAF4d94WwNIp8n4rE=;
+	s=arc-20240116; t=1718876586; c=relaxed/simple;
+	bh=bklmteL2Us6hnqT4H7O515iTYU/jwLP/rRnmtQKDPEc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sXLYz+fZwlI9NxkndSURc5h85cAbFqK3CkumIvdoFVxVkqEgw1PJdeS2zSNFg9EoQiY4h/moGrhCInICN2Wx6q8dwsNMneucxHZe0XtAHCDIP7iLjUe8XBJCQnC9xrrRRl4sXBfEBKeknKM1/gXqgtA1aXXnbaGzPPB/bVGNKsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CIWTFU53; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CH3dmgBm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Th/RiXil3WkM1w6+d9vIXFUbWLHmt50RrDXOLZuLDPMNmnpjz/IZ6ZRVGh+nvJO9AQQrLZLFnWLhxApsU0NwtyqxvqNDNnLT/I7kPqU5d+/NFmMdYQaQWrqm0H7wi1lD/ESQXXem2h3/Mm3ym1f3n3A0Vtmhy1LzqBeAMzPaWRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DH0JIsAR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CIWTFU53";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CH3dmgBm"
-Date: Thu, 20 Jun 2024 11:43:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718876582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R/Cwv1IASLJuF92Q1vFzjhYjc8NMuEAyjqYnph67Tv4=;
-	b=CIWTFU53vjlJjwlDjqdnPrJTZuxroFouglO57MnzzmJ0L0F3BYXzKXLh+Htyu3ncfXPngb
-	Is1uIoG1w+YeMl6LJJOCgC5skIp3OunqCqqtq/ewVZtuxJpXGhncybc4XUEhzaE5rslUsd
-	ykldxywQFzW2/L4FqCZFKlrJJVOlGz0sT9RapXENEllUDFuPu3o3aOUHCHy2OMFF2kapyK
-	a8mKezbWz2dWPqmp5RYA2WMF7Ax/2JlXt/2F4uDgdsSECwF6M7xs+n0zCq5DP54xNGOfuD
-	+anzUM+V+SHrE4U9S6yXfUOnf5UsRjph/fXzA8VYG6RHf8tQL+28EE3miy2zlA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718876582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R/Cwv1IASLJuF92Q1vFzjhYjc8NMuEAyjqYnph67Tv4=;
-	b=CH3dmgBmKSvxHPJy5AMiF7wFBdS15prad+9evG8ei8Bq4kbVycuyggfG2lku5muFR4Z13f
-	kk8njNSRTuP2tvAQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Derek Barbosa <debarbos@redhat.com>, john.ogness@linutronix.de
-Cc: pmladek@suse.com, rostedt@goodmis.org, senozhatsky@chromium.org,
-	linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	williams@redhat.com, jlelli@redhat.com, ahalaney@redhat.com,
-	lgoncalv@redhat.com, jwyatt@redhat.com, aubaker@redhat.com
-Subject: [PATCH] prinkt/nbcon: Add a scheduling point to nbcon_kthread_func().
-Message-ID: <20240620094300.YJlW043f@linutronix.de>
-References: <ZnHF5j1DUDjN1kkq@debarbos-thinkpadt14sgen2i.remote.csb>
- <20240620071545.Es9LoyJY@linutronix.de>
- <20240620093246.HE9XDWSZ@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DH0JIsAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B70DC2BD10;
+	Thu, 20 Jun 2024 09:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718876586;
+	bh=bklmteL2Us6hnqT4H7O515iTYU/jwLP/rRnmtQKDPEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DH0JIsAR7gvivHoRbIC1ZL9lQZKM8CAPOtU8pGQhrB6Sq2cxyWc3fyclMCeT/HiB7
+	 fTge+o1qidamOGA4skHFzGSsyNX/qwuMyR7E3RXo70ITlz8k0fjwcGn7ao0v1JbNw5
+	 2EmG+RcHg0bvVsK7oVfWylIExG6fkwVTPktn6543MyIfqdPmBmKgstbN0pVduOOqNZ
+	 vLzI9k8JVlF9uWaNIXG3Rpxyr1HqRRS7cEXn2K2V0NoQGJYaN7XZ4wWKNY8Nx6cZYR
+	 kBAoPb++jK/VDLVfBGV5wIgm5nNygAlO7WSKFbQLTjwagCiIL3A8boTd3z3crqRZQh
+	 0J4Kpb9p+OXyA==
+Date: Thu, 20 Jun 2024 10:43:00 +0100
+From: Lee Jones <lee@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v4 0/6] Support ROHM BD96801 Scalable PMIC
+Message-ID: <20240620094300.GA1123342@google.com>
+References: <cover.1718356964.git.mazziesaccount@gmail.com>
+ <171887615676.1119049.7678370393770067068.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,33 +51,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240620093246.HE9XDWSZ@linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <171887615676.1119049.7678370393770067068.b4-ty@kernel.org>
 
-Constant printing can lead to a CPU hog in nbcon_kthread_func(). The
-context is preemptible but on !PREEMPT kernels there is no explicit
-preemption point which leads softlockup warnings.
+On Thu, 20 Jun 2024, Lee Jones wrote:
 
-Add an explicit preemption point in nbcon_kthread_func().
+> On Fri, 14 Jun 2024 12:42:35 +0300, Matti Vaittinen wrote:
+> > Support ROHM BD96801 Scalable PMIC
+> > 
+> > The ROHM BD96801 is automotive grade PMIC, intended to be usable in
+> > multiple solutions. The BD96801 can be used as a stand-alone, or together
+> > with separate 'companion PMICs'. This modular approach aims to make this
+> > PMIC suitable for various use-cases.
+> > 
+> > [...]
+> 
+> Applied, thanks!
+> 
+> [1/6] dt-bindings: ROHM BD96801 PMIC regulators
+>       commit: 7edf20a5380779dd47e72b68e7cfa037dfd0807d
+> [2/6] dt-bindings: mfd: bd96801 PMIC core
+>       commit: ef0c63e3e22d4c9039831236e3b189caf538b4c0
+> [3/6] mfd: support ROHM BD96801 PMIC core
+>       commit: d701779ed5effdb55b8f08051ed1c5291fb9201c
+> [4/6] regulator: bd96801: ROHM BD96801 PMIC regulators
+>       commit: 79ab65717405d535b96a7bbf04eb8c71f9372985
+> [5/6] watchdog: ROHM BD96801 PMIC WDG driver
+>       commit: 10278981a2fb81fb07635b9649f6387f6a6a5abf
+> [6/6] MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
+>       commit: de9fa7d755fd0c5f90c5faa524db0cc13efd809e
 
-Reported-by: Derek Barbosa <debarbos@redhat.com>
-Link: https://lore.kernel.org/ZnHF5j1DUDjN1kkq@debarbos-thinkpadt14sgen2i.remote.csb
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/printk/nbcon.c | 1 +
- 1 file changed, 1 insertion(+)
+Submitted for TuxSuite testing.
 
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index bb9689f94d302..0813ce88a49c5 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -1119,6 +1119,7 @@ static int nbcon_kthread_func(void *__console)
- 		}
- 
- 		console_srcu_read_unlock(cookie);
-+		cond_resched();
- 
- 	} while (backlog);
- 
+If all is good, I'll submit a PR to the other maintainers shortly.
+
 -- 
-2.45.2
-
+Lee Jones [李琼斯]
