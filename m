@@ -1,217 +1,496 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E121AD3F6;
-	Thu, 20 Jun 2024 12:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797E81AC777;
+	Thu, 20 Jun 2024 12:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718886503; cv=none; b=mxOtytLyNsqWczOH2reO/MB+ISAI4FRnVljksTuGf/GvWZ8HRWfQ93aOLsBtv7OCEGoU404slR6uuWgNZZYaS3IgEnyns8ZvHS7QwXuuEkymQtz9BXsIFKFQHpxmTDMCWuPGmAURQ3AnS+e/a04A3GSmn9mylG4Sd5m47bFhRug=
+	t=1718886505; cv=none; b=Gtvr96TI66fcs50eW49aqrTqd1R0SJ3QliwyIhrK1LkCbGG2zyY/5f1fzDGMbJkFTxaSFSPLxXA3/zaUlACSIn4KdyKCIF12zbfvPSe/KBXOvy/RAJ45dQ5i2NZeT9snti+73UuEHJUu0HKzFmTytWIKd5N401tSUFEz0SSEAw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718886503; c=relaxed/simple;
-	bh=6JVxjcSSQVPV7Gv95eTpy/Ya3pQAu/jeYNvFD4eoLl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T/E417FfpLYvI9apicdo4/KYdiS7bvHjfnwKJHxJ/ncl2/wajOG/bEnaMZKkXG4T9tuzFnnW9B4k3FZhEXk9Q70IvSycvWTiXfUPf9rd5ZVO8vUqz0G6g53NECapcpfyBn61eupWsw+O3nsoF97ToRiyyqWLpmSyFOwJ48EGSAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hA3vsHWM; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718886505; c=relaxed/simple;
+	bh=9nxPZJV52biBvQqGqNxuUzmHMaejoRQTHgMVlZWo0Fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F7RGkE6qX4VNpnCzUrjPYD0RPBkq97fWPh6T3mlqcYlS5vtJKIPNfpS5Suc/WY5skC8G9pcngVgGkdGYq7ZodjE5Fae1m1A0Bsu7V9SA2QMLUhJiOzV2c6F6bM6JVXgx0HRGUejgggsDrQ1ujuttW+ik1jtRGwvZWs2xwR2ExvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=Sv5wT4DB; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hA3vsHWM"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a63359aaacaso118855966b.1;
-        Thu, 20 Jun 2024 05:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718886500; x=1719491300; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WtInD33nzpSK44s1JnnPRYoHH/jmvVeTud7sO01t4nE=;
-        b=hA3vsHWMQJGwuLxtNQhrA5GiYEjqyb50D+1hxyly5qvg7n7toBK09RBiZizN+vZaUu
-         n3HT0j44WIaCCj3nquLBkILy0aG7etBNCtv2kjUHUyRKD31RtAwNc/qYD2tuBOmfcU+z
-         hg6MPukLdRFsWLUXMbYjLXteA5g2vsgejC2bVBx6qhEBPHwUluriotPxdYm0PXJfWsXT
-         t6R6/Vya3x1R6mGDmA7CzGLIyjkbX4mCweJ19JF/eTWf/I9Swuhlf0XTzOI0FfMcR7oh
-         3Okpi3s3c4rbwVIkLisL0NjH9Kzl2pU5KIvUzFe0NBdQthV2kYDsr7OAyGBm3Zxg1Fiv
-         LMdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718886500; x=1719491300;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WtInD33nzpSK44s1JnnPRYoHH/jmvVeTud7sO01t4nE=;
-        b=Ttd/Z+7Ck1vgeMmbXOBZS854vxanncWM8IVdDz34+UYZ6pxwgFyz0yf6ItwuPqkIJR
-         7ftwBrfCXHn5LLRJNv8Ti/kU4VAc5HvsqXe9O+QnzuEs0LP3q9S7GHSkFbMyow09DfZ8
-         PUlGNltHPLYENZdjb13HfEwHi6ewSzEHmpOmZUYs33JPreFT00N5XERavhFtQB0k3yJU
-         P+DYS3Uxw/rQKAIXp1LrLYlEIJ/wpKuvcDxAYpjwxoCiyHORzvMZiutWFXjYHY6/pMhs
-         ycBFhkDTbCfsUD04o7Wh8I7il7h85r3+vKAL6t7KT8zfrqYBSt379boN5SZ6i4ai92uH
-         KYEw==
-X-Forwarded-Encrypted: i=1; AJvYcCV927q97AYn9hFDhWzMbN2zxR/XPEqjPwaY5z/T8JilUidAfbPAxcgSGL7fCVPOVFddRsb9kHhj0n6Vlq+RNbjwT7oiFVCQOLLJ1loj
-X-Gm-Message-State: AOJu0YyCLMrGgRtwxRV/N4Z5J3Sb2/zjKVvdm+fYsXJ58rB89yxbLRld
-	KsxnItaJBpDDhHLUVPGfl12ViLIq3dOYpf4vUpseUJIHLaubHP+O
-X-Google-Smtp-Source: AGHT+IF4Qyldbfqw1/idXFcHIfvvHaJ2Zwuw1GprSCSOvGAc+FldFLbpqFOpoKNrZx0X2P2i7E5bGA==
-X-Received: by 2002:a17:906:c2cc:b0:a6f:6029:998f with SMTP id a640c23a62f3a-a6fab64510emr297906666b.46.1718886500037;
-        Thu, 20 Jun 2024 05:28:20 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f4177csm759386866b.162.2024.06.20.05.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 05:28:19 -0700 (PDT)
-Date: Thu, 20 Jun 2024 15:28:16 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 04/12] net: dsa: tag_sja1105: absorb entire
- sja1105_vlan_rcv() into dsa_8021q_rcv()
-Message-ID: <20240620122816.qho2hq7i4eakpnbc@skbuf>
-References: <20240619205220.965844-1-paweldembicki@gmail.com>
- <20240619205220.965844-5-paweldembicki@gmail.com>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Sv5wT4DB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718886466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJGLLTUoKxRUUmCuADS9MQUDO1mER8ltDHfR++/AYpU=;
+	b=Sv5wT4DBjXVp0rzIgUUmi9dT53xZpxMKRu4oDY7NC2C0Vd149v2WsRuP186VZbzCT3xkfy
+	cbQToYE30ZYhPOY3tprXxL+4tYfp6Tb36Pc5xW3SbZbMgV7N8D+0dIWXU/91oclQN4/Ye+
+	JwHPYXa43UVTbSsWKEpnpFfVbrduXkM=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Nuno Sa <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v12 4/7] iio: buffer-dma: Enable support for DMABUFs
+Date: Thu, 20 Jun 2024 14:27:23 +0200
+Message-ID: <20240620122726.41232-5-paul@crapouillou.net>
+In-Reply-To: <20240620122726.41232-1-paul@crapouillou.net>
+References: <20240620122726.41232-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619205220.965844-5-paweldembicki@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 19, 2024 at 10:52:10PM +0200, Pawel Dembicki wrote:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> tag_sja1105 has a wrapper over dsa_8021q_rcv(): sja1105_vlan_rcv(),
-> which determines whether the packet came from a bridge with
-> vlan_filtering=1 (the case resolved via
-> dsa_find_designated_bridge_port_by_vid()), or if it contains a tag_8021q
-> header.
-> 
-> Looking at a new tagger implementation for vsc73xx, based also on
-> tag_8021q, it is becoming clear that the logic is needed there as well.
-> So instead of forcing each tagger to wrap around dsa_8021q_rcv(), let's
-> merge the logic into the core.
-> 
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> ---
-> v2,v1:
->   - resend only
-> ---
-> Before patch series split:
-> https://patchwork.kernel.org/project/netdevbpf/list/?series=841034&state=%2A&archive=both
-> v8, v7, v6:
->   - resend only
-> v5:
->   - add missing SoB
-> v4:
->   - introduced patch
-> ---
->  net/dsa/tag_8021q.c        | 34 ++++++++++++++++++++++++++++------
->  net/dsa/tag_8021q.h        |  2 +-
->  net/dsa/tag_ocelot_8021q.c |  2 +-
->  net/dsa/tag_sja1105.c      | 32 ++++----------------------------
->  4 files changed, 34 insertions(+), 36 deletions(-)
-> 
-> diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-> index 3cb0293793a5..332b0ae02645 100644
-> --- a/net/dsa/tag_8021q.c
-> +++ b/net/dsa/tag_8021q.c
-> @@ -507,27 +507,39 @@ EXPORT_SYMBOL_GPL(dsa_tag_8021q_find_port_by_vbid);
->   * @vbid: pointer to storage for imprecise bridge ID. Must be pre-initialized
->   *	with -1. If a positive value is returned, the source_port and switch_id
->   *	are invalid.
-> + * @vid: pointer to storage for original VID, in case tag_8021q decoding failed.
-> + *
-> + * If the packet has a tag_8021q header, decode it and set @source_port,
-> + * @switch_id and @vbid, and strip the header. Otherwise set @vid and keep the
-> + * header in the hwaccel area of the packet.
->   */
->  void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
-> -		   int *vbid)
-> +		   int *vbid, int *vid)
->  {
->  	int tmp_source_port, tmp_switch_id, tmp_vbid;
-> -	u16 vid, tci;
-> +	__be16 vlan_proto;
-> +	u16 tmp_vid, tci;
->  
->  	if (skb_vlan_tag_present(skb)) {
-> +		vlan_proto = skb->vlan_proto;
->  		tci = skb_vlan_tag_get(skb);
->  		__vlan_hwaccel_clear_tag(skb);
->  	} else {
-> +		struct vlan_ethhdr *hdr = vlan_eth_hdr(skb);
-> +
-> +		vlan_proto = hdr->h_vlan_proto;
->  		skb_push_rcsum(skb, ETH_HLEN);
->  		__skb_vlan_pop(skb, &tci);
->  		skb_pull_rcsum(skb, ETH_HLEN);
->  	}
->  
-> -	vid = tci & VLAN_VID_MASK;
-> +	tmp_vid = tci & VLAN_VID_MASK;
-> +	if (!vid_is_dsa_8021q(tmp_vid))
-> +		goto not_tag_8021q;
+Implement iio_dma_buffer_attach_dmabuf(), iio_dma_buffer_detach_dmabuf()
+and iio_dma_buffer_transfer_dmabuf(), which can then be used by the IIO
+DMA buffer implementations.
 
-I think this may be more clearly expressed linearly, without a goto.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Co-developed-by: Nuno Sa <nuno.sa@analog.com>
+Signed-off-by: Nuno Sa <nuno.sa@analog.com>
 
-	if (!vid_is_dsa_8021q(tmp_vid)) {
-		/* Not a tag_8021q frame, so return the VID to the
-		 * caller for further processing, and put the tag back
-		 */
-		if (vid)
-			*vid = tmp_vid;
+---
+v3: Update code to provide the functions that will be used as callbacks
+    for the new IOCTLs.
 
-		__vlan_hwaccel_put_tag(skb, vlan_proto, tci);
+v6: - Update iio_dma_buffer_enqueue_dmabuf() to take a dma_fence pointer
+    - Pass that dma_fence pointer along to
+      iio_buffer_signal_dmabuf_done()
+    - Add iio_dma_buffer_lock_queue() / iio_dma_buffer_unlock_queue()
+    - Do not lock the queue in iio_dma_buffer_enqueue_dmabuf().
+      The caller will ensure that it has been locked already.
+    - Replace "int += bool;" by "if (bool) int++;"
+    - Use dma_fence_begin/end_signalling in the dma_fence critical
+      sections
+    - Use one "num_dmabufs" fields instead of one "num_blocks" and one
+      "num_fileio_blocks". Make it an atomic_t, which makes it possible
+      to decrement it atomically in iio_buffer_block_release() without
+      having to lock the queue mutex; and in turn, it means that we
+      don't need to use iio_buffer_block_put_atomic() everywhere to
+      avoid locking the queue mutex twice.
+    - Use cleanup.h guard(mutex) when possible
+    - Explicitely list all states in the switch in
+      iio_dma_can_enqueue_block()
+    - Rename iio_dma_buffer_fileio_mode() to
+      iio_dma_buffer_can_use_fileio(), and add a comment explaining why
+      it cannot race vs. DMABUF.
 
-		return;
-	}
+v11:
+    - Remove useless field "attach" in struct iio_dma_buffer_block
+    - Document "sg_table" and "fence" fields in struct iio_block_state
+---
+ drivers/iio/buffer/industrialio-buffer-dma.c | 178 +++++++++++++++++--
+ include/linux/iio/buffer-dma.h               |  31 ++++
+ 2 files changed, 198 insertions(+), 11 deletions(-)
 
->  
-> -	tmp_source_port = dsa_8021q_rx_source_port(vid);
-> -	tmp_switch_id = dsa_8021q_rx_switch_id(vid);
-> -	tmp_vbid = dsa_tag_8021q_rx_vbid(vid);
-> +	tmp_source_port = dsa_8021q_rx_source_port(tmp_vid);
-> +	tmp_switch_id = dsa_8021q_rx_switch_id(tmp_vid);
-> +	tmp_vbid = dsa_tag_8021q_rx_vbid(tmp_vid);
->  
->  	/* Precise source port information is unknown when receiving from a
->  	 * VLAN-unaware bridging domain, and tmp_source_port and tmp_switch_id
-> @@ -546,5 +558,15 @@ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
->  		*vbid = tmp_vbid;
->  
->  	skb->priority = (tci & VLAN_PRIO_MASK) >> VLAN_PRIO_SHIFT;
-> +	return;
-> +
-> +not_tag_8021q:
-> +	if (vid)
-> +		*vid = tmp_vid;
-> +	if (vbid)
-> +		*vbid = -1;
+diff --git a/drivers/iio/buffer/industrialio-buffer-dma.c b/drivers/iio/buffer/industrialio-buffer-dma.c
+index 13b1a858969e..647f417a045e 100644
+--- a/drivers/iio/buffer/industrialio-buffer-dma.c
++++ b/drivers/iio/buffer/industrialio-buffer-dma.c
+@@ -4,6 +4,8 @@
+  *  Author: Lars-Peter Clausen <lars@metafoo.de>
+  */
+ 
++#include <linux/atomic.h>
++#include <linux/cleanup.h>
+ #include <linux/slab.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -14,6 +16,8 @@
+ #include <linux/poll.h>
+ #include <linux/iio/buffer_impl.h>
+ #include <linux/iio/buffer-dma.h>
++#include <linux/dma-buf.h>
++#include <linux/dma-fence.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/sizes.h>
+ 
+@@ -94,13 +98,18 @@ static void iio_buffer_block_release(struct kref *kref)
+ {
+ 	struct iio_dma_buffer_block *block = container_of(kref,
+ 		struct iio_dma_buffer_block, kref);
++	struct iio_dma_buffer_queue *queue = block->queue;
+ 
+-	WARN_ON(block->state != IIO_BLOCK_STATE_DEAD);
++	WARN_ON(block->fileio && block->state != IIO_BLOCK_STATE_DEAD);
+ 
+-	dma_free_coherent(block->queue->dev, PAGE_ALIGN(block->size),
+-					block->vaddr, block->phys_addr);
++	if (block->fileio) {
++		dma_free_coherent(queue->dev, PAGE_ALIGN(block->size),
++				  block->vaddr, block->phys_addr);
++	} else {
++		atomic_dec(&queue->num_dmabufs);
++	}
+ 
+-	iio_buffer_put(&block->queue->buffer);
++	iio_buffer_put(&queue->buffer);
+ 	kfree(block);
+ }
+ 
+@@ -163,7 +172,7 @@ static struct iio_dma_buffer_queue *iio_buffer_to_queue(struct iio_buffer *buf)
+ }
+ 
+ static struct iio_dma_buffer_block *iio_dma_buffer_alloc_block(
+-	struct iio_dma_buffer_queue *queue, size_t size)
++	struct iio_dma_buffer_queue *queue, size_t size, bool fileio)
+ {
+ 	struct iio_dma_buffer_block *block;
+ 
+@@ -171,13 +180,16 @@ static struct iio_dma_buffer_block *iio_dma_buffer_alloc_block(
+ 	if (!block)
+ 		return NULL;
+ 
+-	block->vaddr = dma_alloc_coherent(queue->dev, PAGE_ALIGN(size),
+-		&block->phys_addr, GFP_KERNEL);
+-	if (!block->vaddr) {
+-		kfree(block);
+-		return NULL;
++	if (fileio) {
++		block->vaddr = dma_alloc_coherent(queue->dev, PAGE_ALIGN(size),
++						  &block->phys_addr, GFP_KERNEL);
++		if (!block->vaddr) {
++			kfree(block);
++			return NULL;
++		}
+ 	}
+ 
++	block->fileio = fileio;
+ 	block->size = size;
+ 	block->state = IIO_BLOCK_STATE_DONE;
+ 	block->queue = queue;
+@@ -186,6 +198,9 @@ static struct iio_dma_buffer_block *iio_dma_buffer_alloc_block(
+ 
+ 	iio_buffer_get(&queue->buffer);
+ 
++	if (!fileio)
++		atomic_inc(&queue->num_dmabufs);
++
+ 	return block;
+ }
+ 
+@@ -218,13 +233,20 @@ void iio_dma_buffer_block_done(struct iio_dma_buffer_block *block)
+ {
+ 	struct iio_dma_buffer_queue *queue = block->queue;
+ 	unsigned long flags;
++	bool cookie;
++
++	cookie = dma_fence_begin_signalling();
+ 
+ 	spin_lock_irqsave(&queue->list_lock, flags);
+ 	_iio_dma_buffer_block_done(block);
+ 	spin_unlock_irqrestore(&queue->list_lock, flags);
+ 
++	if (!block->fileio)
++		iio_buffer_signal_dmabuf_done(block->fence, 0);
++
+ 	iio_buffer_block_put_atomic(block);
+ 	iio_dma_buffer_queue_wake(queue);
++	dma_fence_end_signalling(cookie);
+ }
+ EXPORT_SYMBOL_GPL(iio_dma_buffer_block_done);
+ 
+@@ -243,17 +265,27 @@ void iio_dma_buffer_block_list_abort(struct iio_dma_buffer_queue *queue,
+ {
+ 	struct iio_dma_buffer_block *block, *_block;
+ 	unsigned long flags;
++	bool cookie;
++
++	cookie = dma_fence_begin_signalling();
+ 
+ 	spin_lock_irqsave(&queue->list_lock, flags);
+ 	list_for_each_entry_safe(block, _block, list, head) {
+ 		list_del(&block->head);
+ 		block->bytes_used = 0;
+ 		_iio_dma_buffer_block_done(block);
++
++		if (!block->fileio)
++			iio_buffer_signal_dmabuf_done(block->fence, -EINTR);
+ 		iio_buffer_block_put_atomic(block);
+ 	}
+ 	spin_unlock_irqrestore(&queue->list_lock, flags);
+ 
++	if (queue->fileio.enabled)
++		queue->fileio.enabled = false;
++
+ 	iio_dma_buffer_queue_wake(queue);
++	dma_fence_end_signalling(cookie);
+ }
+ EXPORT_SYMBOL_GPL(iio_dma_buffer_block_list_abort);
+ 
+@@ -273,6 +305,16 @@ static bool iio_dma_block_reusable(struct iio_dma_buffer_block *block)
+ 	}
+ }
+ 
++static bool iio_dma_buffer_can_use_fileio(struct iio_dma_buffer_queue *queue)
++{
++	/*
++	 * Note that queue->num_dmabufs cannot increase while the queue is
++	 * locked, it can only decrease, so it does not race against
++	 * iio_dma_buffer_alloc_block().
++	 */
++	return queue->fileio.enabled || !atomic_read(&queue->num_dmabufs);
++}
++
+ /**
+  * iio_dma_buffer_request_update() - DMA buffer request_update callback
+  * @buffer: The buffer which to request an update
+@@ -299,6 +341,12 @@ int iio_dma_buffer_request_update(struct iio_buffer *buffer)
+ 
+ 	mutex_lock(&queue->lock);
+ 
++	queue->fileio.enabled = iio_dma_buffer_can_use_fileio(queue);
++
++	/* If DMABUFs were created, disable fileio interface */
++	if (!queue->fileio.enabled)
++		goto out_unlock;
++
+ 	/* Allocations are page aligned */
+ 	if (PAGE_ALIGN(queue->fileio.block_size) == PAGE_ALIGN(size))
+ 		try_reuse = true;
+@@ -339,7 +387,7 @@ int iio_dma_buffer_request_update(struct iio_buffer *buffer)
+ 		}
+ 
+ 		if (!block) {
+-			block = iio_dma_buffer_alloc_block(queue, size);
++			block = iio_dma_buffer_alloc_block(queue, size, true);
+ 			if (!block) {
+ 				ret = -ENOMEM;
+ 				goto out_unlock;
+@@ -412,8 +460,12 @@ static void iio_dma_buffer_submit_block(struct iio_dma_buffer_queue *queue,
+ 
+ 	block->state = IIO_BLOCK_STATE_ACTIVE;
+ 	iio_buffer_block_get(block);
++
+ 	ret = queue->ops->submit(queue, block);
+ 	if (ret) {
++		if (!block->fileio)
++			iio_buffer_signal_dmabuf_done(block->fence, ret);
++
+ 		/*
+ 		 * This is a bit of a problem and there is not much we can do
+ 		 * other then wait for the buffer to be disabled and re-enabled
+@@ -646,6 +698,110 @@ size_t iio_dma_buffer_usage(struct iio_buffer *buf)
+ }
+ EXPORT_SYMBOL_GPL(iio_dma_buffer_usage);
+ 
++struct iio_dma_buffer_block *
++iio_dma_buffer_attach_dmabuf(struct iio_buffer *buffer,
++			     struct dma_buf_attachment *attach)
++{
++	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
++	struct iio_dma_buffer_block *block;
++
++	guard(mutex)(&queue->lock);
++
++	/*
++	 * If the buffer is enabled and in fileio mode new blocks can't be
++	 * allocated.
++	 */
++	if (queue->fileio.enabled)
++		return ERR_PTR(-EBUSY);
++
++	block = iio_dma_buffer_alloc_block(queue, attach->dmabuf->size, false);
++	if (!block)
++		return ERR_PTR(-ENOMEM);
++
++	/* Free memory that might be in use for fileio mode */
++	iio_dma_buffer_fileio_free(queue);
++
++	return block;
++}
++EXPORT_SYMBOL_GPL(iio_dma_buffer_attach_dmabuf);
++
++void iio_dma_buffer_detach_dmabuf(struct iio_buffer *buffer,
++				  struct iio_dma_buffer_block *block)
++{
++	block->state = IIO_BLOCK_STATE_DEAD;
++	iio_buffer_block_put_atomic(block);
++}
++EXPORT_SYMBOL_GPL(iio_dma_buffer_detach_dmabuf);
++
++static int iio_dma_can_enqueue_block(struct iio_dma_buffer_block *block)
++{
++	struct iio_dma_buffer_queue *queue = block->queue;
++
++	/* If in fileio mode buffers can't be enqueued. */
++	if (queue->fileio.enabled)
++		return -EBUSY;
++
++	switch (block->state) {
++	case IIO_BLOCK_STATE_QUEUED:
++		return -EPERM;
++	case IIO_BLOCK_STATE_ACTIVE:
++	case IIO_BLOCK_STATE_DEAD:
++		return -EBUSY;
++	case IIO_BLOCK_STATE_DONE:
++		break;
++	}
++
++	return 0;
++}
++
++int iio_dma_buffer_enqueue_dmabuf(struct iio_buffer *buffer,
++				  struct iio_dma_buffer_block *block,
++				  struct dma_fence *fence,
++				  struct sg_table *sgt,
++				  size_t size, bool cyclic)
++{
++	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
++	bool cookie;
++	int ret;
++
++	WARN_ON(!mutex_is_locked(&queue->lock));
++
++	cookie = dma_fence_begin_signalling();
++
++	ret = iio_dma_can_enqueue_block(block);
++	if (ret < 0)
++		goto out_end_signalling;
++
++	block->bytes_used = size;
++	block->cyclic = cyclic;
++	block->sg_table = sgt;
++	block->fence = fence;
++
++	iio_dma_buffer_enqueue(queue, block);
++
++out_end_signalling:
++	dma_fence_end_signalling(cookie);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iio_dma_buffer_enqueue_dmabuf);
++
++void iio_dma_buffer_lock_queue(struct iio_buffer *buffer)
++{
++	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
++
++	mutex_lock(&queue->lock);
++}
++EXPORT_SYMBOL_GPL(iio_dma_buffer_lock_queue);
++
++void iio_dma_buffer_unlock_queue(struct iio_buffer *buffer)
++{
++	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
++
++	mutex_unlock(&queue->lock);
++}
++EXPORT_SYMBOL_GPL(iio_dma_buffer_unlock_queue);
++
+ /**
+  * iio_dma_buffer_set_bytes_per_datum() - DMA buffer set_bytes_per_datum callback
+  * @buffer: Buffer to set the bytes-per-datum for
+diff --git a/include/linux/iio/buffer-dma.h b/include/linux/iio/buffer-dma.h
+index 6e27e47077d5..5eb66a399002 100644
+--- a/include/linux/iio/buffer-dma.h
++++ b/include/linux/iio/buffer-dma.h
+@@ -7,6 +7,7 @@
+ #ifndef __INDUSTRIALIO_DMA_BUFFER_H__
+ #define __INDUSTRIALIO_DMA_BUFFER_H__
+ 
++#include <linux/atomic.h>
+ #include <linux/list.h>
+ #include <linux/kref.h>
+ #include <linux/spinlock.h>
+@@ -16,6 +17,9 @@
+ struct iio_dma_buffer_queue;
+ struct iio_dma_buffer_ops;
+ struct device;
++struct dma_buf_attachment;
++struct dma_fence;
++struct sg_table;
+ 
+ /**
+  * enum iio_block_state - State of a struct iio_dma_buffer_block
+@@ -41,6 +45,10 @@ enum iio_block_state {
+  * @queue: Parent DMA buffer queue
+  * @kref: kref used to manage the lifetime of block
+  * @state: Current state of the block
++ * @cyclic: True if this is a cyclic buffer
++ * @fileio: True if this buffer is used for fileio mode
++ * @sg_table: DMA table for the transfer when transferring a DMABUF
++ * @fence: DMA fence to be signaled when a DMABUF transfer is complete
+  */
+ struct iio_dma_buffer_block {
+ 	/* May only be accessed by the owner of the block */
+@@ -63,6 +71,12 @@ struct iio_dma_buffer_block {
+ 	 * queue->list_lock if the block is not owned by the core.
+ 	 */
+ 	enum iio_block_state state;
++
++	bool cyclic;
++	bool fileio;
++
++	struct sg_table *sg_table;
++	struct dma_fence *fence;
+ };
+ 
+ /**
+@@ -72,6 +86,7 @@ struct iio_dma_buffer_block {
+  * @pos: Read offset in the active block
+  * @block_size: Size of each block
+  * @next_dequeue: index of next block that will be dequeued
++ * @enabled: Whether the buffer is operating in fileio mode
+  */
+ struct iio_dma_buffer_queue_fileio {
+ 	struct iio_dma_buffer_block *blocks[2];
+@@ -80,6 +95,7 @@ struct iio_dma_buffer_queue_fileio {
+ 	size_t block_size;
+ 
+ 	unsigned int next_dequeue;
++	bool enabled;
+ };
+ 
+ /**
+@@ -95,6 +111,7 @@ struct iio_dma_buffer_queue_fileio {
+  *   the DMA controller
+  * @incoming: List of buffers on the incoming queue
+  * @active: Whether the buffer is currently active
++ * @num_dmabufs: Total number of DMABUFs attached to this queue
+  * @fileio: FileIO state
+  */
+ struct iio_dma_buffer_queue {
+@@ -107,6 +124,7 @@ struct iio_dma_buffer_queue {
+ 	struct list_head incoming;
+ 
+ 	bool active;
++	atomic_t num_dmabufs;
+ 
+ 	struct iio_dma_buffer_queue_fileio fileio;
+ };
+@@ -144,4 +162,17 @@ int iio_dma_buffer_init(struct iio_dma_buffer_queue *queue,
+ void iio_dma_buffer_exit(struct iio_dma_buffer_queue *queue);
+ void iio_dma_buffer_release(struct iio_dma_buffer_queue *queue);
+ 
++struct iio_dma_buffer_block *
++iio_dma_buffer_attach_dmabuf(struct iio_buffer *buffer,
++			     struct dma_buf_attachment *attach);
++void iio_dma_buffer_detach_dmabuf(struct iio_buffer *buffer,
++				  struct iio_dma_buffer_block *block);
++int iio_dma_buffer_enqueue_dmabuf(struct iio_buffer *buffer,
++				  struct iio_dma_buffer_block *block,
++				  struct dma_fence *fence,
++				  struct sg_table *sgt,
++				  size_t size, bool cyclic);
++void iio_dma_buffer_lock_queue(struct iio_buffer *buffer);
++void iio_dma_buffer_unlock_queue(struct iio_buffer *buffer);
++
+ #endif
+-- 
+2.43.0
 
-Thinking more about it, I don't think this is needed (hence it is
-missing in my rewritten snippet above). I mean, *vbid is already
-initialized with -1 (it's a requirement also specified in the
-kernel-doc) and we haven't changed it.
-
-> +
-> +	/* Put the tag back */
-> +	__vlan_hwaccel_put_tag(skb, vlan_proto, tci);
->  }
->  EXPORT_SYMBOL_GPL(dsa_8021q_rcv);
-> diff --git a/net/dsa/tag_8021q.h b/net/dsa/tag_8021q.h
-> index 41f7167ac520..0c6671d7c1c2 100644
-> --- a/net/dsa/tag_8021q.h
-> +++ b/net/dsa/tag_8021q.h
-> @@ -14,7 +14,7 @@ struct sk_buff *dsa_8021q_xmit(struct sk_buff *skb, struct net_device *netdev,
->  			       u16 tpid, u16 tci);
->  
->  void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
-> -		   int *vbid);
-> +		   int *vbid, int *vid);
->  
->  struct net_device *dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit,
->  						   int vbid);
