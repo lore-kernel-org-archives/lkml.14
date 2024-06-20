@@ -1,166 +1,110 @@
-Received: from nmtao201.oxsus-vadesecure.net (mta-231a.oxsus-vadesecure.net [15.204.3.4])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35EB17545
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 02:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=15.204.3.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718849461; cv=pass; b=OgX4AmvtNdgNzM2PYhBTe10CKmT83a33XovZ28nI1N1rMUqa7JSe+z02jXxdZNZar23yujejxMdC0YrCMU11gQYv2E+fgyPdw4z9b2RfalAUSbbCLjqGo1uSfslouQA/cDODksULOHvJvJi7ct58EwD+OT4DIzlHZ8vUv+ge8YI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718849461; c=relaxed/simple;
-	bh=BwtQiDMz9MFosvt47NC6Zsj4YvYLmQ9irMHS5OWjg2o=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=KZU9jNJBTyhtl6sC+KT5BZQZu9yalNZYXMUmZa8n6mNy6Y5LGGuuCjc4xkcNJQninXA8l7CtLpIFo7kHjSvNyq6qQSLvwiUPYvxGGDyOPsoQdorFJ83Q/BEAk1oebLHEB3o1cJYIzEXQQc/zcoXaCaapst/AkfoUugQ3lD7gfy0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=theviteks.com; spf=pass smtp.mailfrom=theviteks.com; dkim=pass (2048-bit key) header.d=webcom.xion.oxcs.net header.i=@webcom.xion.oxcs.net header.b=VhlIIQWR; arc=pass smtp.client-ip=15.204.3.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=theviteks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theviteks.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D292A1E52C;
+	Thu, 20 Jun 2024 02:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718849494; cv=none; b=oLHd+0oky8KkCNqe/4SrbsispcvFD1+ckqfOVRx30hQhoahVwX02RccEllxOBDSu2xPpyKayHGWpkh/SNL4ybQJG/R1TBWNrddHrl38goa+QPkiU2lJRnPm2ugsNaoF/8BhOZV9wmTSh+NNldzXEH8MF3X6/qRN8vyR9YS+ssnQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718849494; c=relaxed/simple;
+	bh=SD8ucd+MXkgHO1mi9Q5tKHqe/lqz4JzlnaVxoHbJ6nU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=hsCNzk3Bk00dUFwiZGn1JUfwhGdovJYwot8dS87Ya/WXjfvM8Kunj1VxBuR+LDnlcqovmeT7La8QZDyqMIa+UcPXb4X/euitNK4aXys9XbCRdYiShMY9yTsMuZiwB00dk6Rp1yEEWyZPwNi+xq08Dhri5aTP9nKI6MzUnWIsSUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OPIpjJ1o; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=webcom.xion.oxcs.net header.i=@webcom.xion.oxcs.net header.b="VhlIIQWR"
-Authentication-Results: oxsus-vadesecure.net;
- auth=pass smtp.auth=4@96739 smtp.mailfrom=clark@theviteks.com;
-ARC-Seal: i=1; a=rsa-sha256; d=oxsus-vadesecure.net; s=arc-202309-rsa2048; t=1718849152; cv=none; b=FWgllaasMKSWP0zSz5gaPyHUwHr381JJR2JqQNzObkP+fQJJGIt59DmmA9P2jqRdxeFrT1j9QfVRNj4WaTpDEZSN9vnrLYc1EERmFU94/oug2RQ5HN7+FFX0WE2VE0MKOiLwgdBG2+J5ty7BvU4PIO6eIt26nTnU7Qa6R+QfGJLbiB93rmPysKul7VTzH8pCmXSilJQyDHLle4V9fZvvX/qne7y2hDqPkO7r7ZbDE031StBB1YnWOYY5q/OvHp7Cg0SGyf2cnlK854CULqCu40nrT6//Bx4ervdZNYJkmOLAOmB11CBQ2Oo3bSZWuIr2r2l+T6N4leBlr6NGFWybfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=oxsus-vadesecure.net; s=arc-202309-rsa2048; t=1718849152; c=relaxed/relaxed; h=from:reply-to:subject:date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe:list-unsubscribe-post:list-subscribe:list-post:list-owner:list-archive; bh=/Bk+6rI9rVNbWpxqhHJviakAx6tPN3LLPYUnnykhthI=; b=b4mhixz1Zg9Ghq4bfZpIdpzEx/TzJTRa2HChffn33hwM7EpfEOUBWNStsan/andsNxw0ryyFIGjfPwryFgb3GJEEMMR0phgOHsN13wp7Y13LwQVhMteP1UNK68unF2LS+OERLaw5P4hy6YFLEjjsDPDPwJ+au32M+TvELg8jzlHmNlnMe681UGHQBX5Apv/A0SxWU31s6AoQZyghqEQeDSO/ai/V5i0cCNQl/KUty/CwMhrejq9TcAuoE/xKCPYEtOXenkibg6h34SOPoWbYtVGuNQmgQ+FnkQA6X3pGk2nN81FSOCzl104H/0oxcfoa3GusTYjK3uap5HIsC63B2w==
-ARC-Authentication-Results: i=1;
-DKIM-Signature: v=1; a=rsa-sha256; bh=/Bk+6rI9rVNbWpxqhHJviakAx6tPN3LLPYUnny
- khthI=; c=relaxed/relaxed; d=webcom.xion.oxcs.net; h=from:reply-to:
- subject:date:to:cc:resent-date:resent-from:resent-to:resent-cc:
- in-reply-to:references:list-id:list-help:list-unsubscribe:
- list-unsubscribe-post:list-subscribe:list-post:list-owner:list-archive;
- q=dns/txt; s=mail1; t=1718849152; x=1719453952; b=VhlIIQWR+/8gDvru2UO/3
- gvp5TT/MyFHPmbXKLCorGSF6XO7hxCM02mLxNzdGyTzPz06B3A00m8Ywm0sP8jIDPgn0dEw
- eJl2yuAP1r2zos8galO39hC2//wKTKQKJIEd3yCshKyNBntKsQ88y9WdHTHXz4BDkcPFC0d
- 2cKD8CSaiUWvwIpYKjF/scNP+4JPpLoy92EFhOc5SdA/M085XweOGVJguZv6lCednSspvJ2
- 7/zQO7XPKWcgv3P5IPcCdnsqgEAK+USYY9CXM8SYs017RMPVlfUE3jKUcEBKohcuERTl6QN
- 1nNhnaRlXcZvHoHhKo/SU5VOdARzTdDwuiKaw==
-Received: from proxy-10.proxy.cloudus.ewr.xion.oxcs.net ([50.53.0.108])
- by oxsus2nmtao01p.internal.vadesecure.com with ngmta
- id 086a251b-17da94326080934e; Thu, 20 Jun 2024 02:05:52 +0000
-Message-ID: <14bade04-0d93-405c-8637-14e39defb3a8@theviteks.com>
-Date: Wed, 19 Jun 2024 19:05:49 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPIpjJ1o"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-44051a92f37so3138111cf.1;
+        Wed, 19 Jun 2024 19:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718849492; x=1719454292; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u72mufYqsXAdwuNuoR1mFE6e256FLqvci5j+lxdHW1s=;
+        b=OPIpjJ1odINvRaoFdjQ6oxkmTkwwCvZoZHzN6RUjDMDDjx1Yox/X/r3nMX35Aasd8P
+         S/a2uATSXgqdC1o3h9jHaGuOlYYMixmnzFk9go4yCdKGhH71RRMQz2+sw3UiYboone6k
+         E/9bZNbVHLoyWTD++OmdM8/IClbPsT3dOCjZND7isecgtnjwpy8K7phLD3d8dF7sbA3r
+         LySd5pN2p38fEBP7h7rfU1vZ+BEXeH9ADj/VUxo3UVJPqRJnTXCLNXqEQHKCMEdN5oxg
+         fWz5fPwAjHuqCnksNNPgrXF+31tSpRAYpD63ZYAsCVdgIK69kIfbrofzdNEroSk+uB1+
+         lpgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718849492; x=1719454292;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u72mufYqsXAdwuNuoR1mFE6e256FLqvci5j+lxdHW1s=;
+        b=Q+PqyE5d5VyrB+Eg6dn/SLLL4wHAtwJviKIbVXXFJL61S0LUpnFrY4rPtCGWbK/ZZF
+         8rDS+GtUNW9dM9CnOM3GWKjt0VcRBgN2CdPjmlLAnXIbEbOTu1JXaT8jPJ2YrpkOBl7u
+         v3U2t9cW+MjAeKz8SHILOfz/cexpARCps+qdiKWeqmdf4LejGJfXO2KJ8Bm3DFg+5uvH
+         jBfEuT12DcA6peGFjqx3eySSBVIImZY4r9M7vefhlo9Zg0lTiNmLiM9lnNbpj/e/BBPY
+         W3BVth9nZqE+m7sOkYPactzCVJ+W+nB+dI9u/A34H4CCIqx8hlVToHCSEb1nJhPHRMQl
+         zMqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVd5axLqE4dzODXAfrKb91lwQq2pk5SEmU55FGhQYg+2RcoNPBDwZN4zSDECSnA7Gck67/HRznlqbAYfcax2Oo+SByXspYxIXaMTxa8QgRO0WKNeqEC+f0+dBqv89I9Fj2QJp9fM0vNr05cOJI=
+X-Gm-Message-State: AOJu0YxTnmdXGvWEsOoG3BjNkydl6dPr/I8HoIS1BQQ5Yr7JgKZlXW2B
+	+RUPyH7ZuPW/r3v7JIGEA7BvE7pCiVMPRw04QaZRTFGx65NvXxL+
+X-Google-Smtp-Source: AGHT+IEC3jcCwWYsRs5yILOo9txSrc9aSgJsUwCvA64HI6sYFXu26Zu9bWF1QXabZjmtq5DgWg37uA==
+X-Received: by 2002:ac8:4814:0:b0:444:acc9:bf43 with SMTP id d75a77b69052e-444acc9e906mr37569011cf.0.1718849491692;
+        Wed, 19 Jun 2024 19:11:31 -0700 (PDT)
+Received: from localhost.localdomain (h135-131-130-199.ashwwi.broadband.dynamic.tds.net. [135.131.130.199])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444b43507fdsm4539051cf.43.2024.06.19.19.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 19:11:31 -0700 (PDT)
+From: "Ethan D. Twardy" <ethan.twardy@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	"Ethan D. Twardy" <ethan.twardy@gmail.com>,
+	rust-for-linux@vger.kernel.org (open list:RUST),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] rust: alloc: Fix unused import warning
+Date: Wed, 19 Jun 2024 21:11:08 -0500
+Message-ID: <20240620021112.136667-1-ethan.twardy@gmail.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org
-From: Clark Vitek <clark@theviteks.com>
-Subject: IwlWiFi: Intel so firmware issue
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-FTM initiator appears to be functional up v79,
+core::ptr is only used in code that's not compiled during test, which
+causes rustc to emit the below warning while building the rusttest
+target. Add a conditional attribute to match conditions at the usage
+site.
 
-example working ucode (lshw): firmware=79.27f1c37b.0 so-a0-gf-a0-79.uc
+warning: unused import: `core::ptr`
+ --> rust/kernel/alloc/vec_ext.rs:7:5
+  |
+7 | use core::ptr;
+  |     ^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
 
-Firmware v81 and above give not supported response to iw dev measurement 
-command.
+Signed-off-by: Ethan D. Twardy <ethan.twardy@gmail.com>
 
-example not working ucode (lshw): firmware=81.31fc9ae6.0 so-a0-gf-a0-81.uc
+diff --git a/rust/kernel/alloc/vec_ext.rs b/rust/kernel/alloc/vec_ext.rs
+index e9a81052728a..96d7cbff96dd 100644
+--- a/rust/kernel/alloc/vec_ext.rs
++++ b/rust/kernel/alloc/vec_ext.rs
+@@ -4,6 +4,8 @@
+ 
+ use super::{AllocError, Flags};
+ use alloc::vec::Vec;
++
++#[cfg(not(any(test, testlib)))]
+ use core::ptr;
+ 
+ /// Extensions to [`Vec`].
 
-testing with kernel 6.5.0-41-generic currently, have also backported and 
-tested in 6.2 kernel and determined it is firmware only dependency.
-
-To replicate just change firmware between v79 to v81 and higher in 
-/lib/firmware and remove/reload iwlwifi. Example sequence as follows:
-
-**** Working Example v79 ****
-
-$ cat conf80
-50:E4:E0:E0:D8:30 bw=80 cf=5600 cf1=5610 lci ftms_per_burst=8
-
-$ sudo iw dev wlp0s20f3 measurement ftm_request conf80
-wdev 0x1 (phy #0): Peer measurements (cookie 4):
-   Peer 50:e4:e0:e0:d8:30: status=0 (SUCCESS) @833087291004 tsf=0
-     FTM
-       BURST_INDEX: 0
-       NUM_BURSTS_EXP: 0
-       BURST_DURATION: 0
-       FTMS_PER_BURST: 0
-       RSSI_AVG: 4294967249
-       RSSI_SPREAD: 0
-       RTT_AVG: 88982
-       RTT_VARIANCE: 1763414
-       RTT_SPREAD: 3523
-       LCI: 04 00 08 00 10 00 00 00 00 00 00 00 00 00 00 00
-       LCI: 00 00 00 00 40 04 06 00 00 00 00 00 00 06 01 01
-
-wdev 0x1 (phy #0): peer measurement complete
-
-****END Working Example v79****
-
-****Not Working Example v89****
-
-$ sudo iw dev wlp0s20f3 measurement ftm_request conf80
-command failed: Operation not supported (-95)
-
-**** END Not Working Example v89 ****
-
-Full Details of the Device (lspci), identical output for both above 
-examples in both lspci, lsmod, and lshw. Only difference is latest 
-firmware placed in /lib/firmware and remove/load of iwlwifi
-
-$ sudo lspci -vvvvv
-0000:00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi 
-WiFi (rev 01)
-     Subsystem: Rivet Networks Dual Band Wi-Fi 6E(802.11ax) AX1675i 
-160MHz 2x2 [Garfield Peak]
-     Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
-Stepping- SERR- FastB2B- DisINTx+
-     Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-     Latency: 0, Cache Line Size: 64 bytes
-     Interrupt: pin A routed to IRQ 16
-     IOMMU group: 11
-     Region 0: Memory at 603c2b4000 (64-bit, non-prefetchable) [size=16K]
-     Capabilities: [c8] Power Management version 3
-         Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA 
-PME(D0+,D1-,D2-,D3hot+,D3cold+)
-         Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-     Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
-         Address: 0000000000000000  Data: 0000
-     Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, 
-MSI 00
-         DevCap:    MaxPayload 128 bytes, PhantFunc 0
-             ExtTag- RBE- FLReset+
-         DevCtl:    CorrErr- NonFatalErr- FatalErr- UnsupReq-
-             RlxdOrd+ ExtTag- PhantFunc- AuxPwr+ NoSnoop+ FLReset-
-             MaxPayload 128 bytes, MaxReadReq 128 bytes
-         DevSta:    CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ 
-TransPend-
-         DevCap2: Completion Timeout: Range B, TimeoutDis+ NROPrPrP- LTR+
-              10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt- 
-EETLPPrefix-
-              EmergencyPowerReduction Not Supported, 
-EmergencyPowerReductionInit-
-              FRS-
-              AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-         DevCtl2: Completion Timeout: 16ms to 55ms, TimeoutDis- LTR+ 
-OBFF Disabled,
-              AtomicOpsCtl: ReqEn-
-     Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
-         Vector table: BAR=0 offset=00002000
-         PBA: BAR=0 offset=00003000
-     Capabilities: [100 v1] Latency Tolerance Reporting
-         Max snoop latency: 0ns
-         Max no snoop latency: 0ns
-     Capabilities: [164 v1] Vendor Specific Information: ID=0010 Rev=0 
-Len=014 <?>
-     Kernel driver in use: iwlwifi
-     Kernel modules: iwlwifi
-
-thank you for any direction, suggestions, or assistance. I am an end 
-user/test enthusiast of linux wireless on different devices. FTM to 
-infrastructure responders (Access Points) with Android devices works 
-very well in my test setup including range and LCI. I would love to get 
-this functionality in mainline linux kernel working reliably.
-
-thanks,
-
-Clark
-
-
-
-
+base-commit: 39e6bf7394d852b17fb083a85fee5890b445908c
+-- 
+2.44.2
 
