@@ -1,380 +1,284 @@
-Received: from mx0a-00549402.pphosted.com (mx0a-00549402.pphosted.com [205.220.166.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262331AB91A;
-	Thu, 20 Jun 2024 20:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718914483; cv=fail; b=Qr8BuGLSKXppPXHF7pASXv18ScX9826rmHkjY8qauaSTTvTsTSOuqqsM3Z33MFkyfQGw25QbkXci8es3eDnW5L5XVaC2uPnwcFpV0VLc1X/rRdS1zdlZ4d294RiWw2XRG2a57/zHaNGmsmeATT8DurUf1yOI7TVu3reYUDXBraU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718914483; c=relaxed/simple;
-	bh=IVS3QtrZ5ykuYfZDIOtkSxISvzbGialR/XOeIpA2Fn0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qOZ2lbB58IlInfD1rlTZWauUZt6i922VMGoDyG2Lby2XjExqgiQ01Ezs3m+3tc/tu+s74r2Gx6SnZWN+T6cjdP03x22Qv35LXzbnyRQJwK9Wo3ZCgbBQv86VhQXtA84IUgVwLY+jWjABRwoGylp6GHc5cRlMETcakQlBIfZZxcA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tdk.com; spf=pass smtp.mailfrom=tdk.com; dkim=pass (2048-bit key) header.d=tdk.com header.i=@tdk.com header.b=sfC1EMz1; arc=fail smtp.client-ip=205.220.166.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tdk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tdk.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC01B9AC7;
+	Thu, 20 Jun 2024 20:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718914514; cv=none; b=cq+Y4XTgzkx7/lfMPb0lnMQhHhKT+CcVrr9BtLR0SiR7DLMt+eFZyDI4MGsvoX/RON/hlvhWV9iMtrWlmvTADJYVxrEmaI7TK+Mw8kGwPOU5sK5XmnJzwGESpRUi8gZOCJalElQMTpJsTyYWDHY7D7FHvL8QJfuK5DJsHwZ//4s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718914514; c=relaxed/simple;
+	bh=dx88qbfA3v0QDgtBAfkX2p+KZ894xqWOi1spAiEK79Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Af1zBzOILsRT342BYc8pOqu58eZzLRPucJ2hy4qpUAjwBgLyg+Q152fSU1v+SeVVGp/anlP8bErqF5pRaxb7By4Z8Dl0SOPLUlBYguzLA8RSDELdMUyyWLFny044WCNEgm/u6asLO7AK3iA0xEODUST4kdNLDq6pjF8JE58bQ4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3Q5hlmF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tdk.com header.i=@tdk.com header.b="sfC1EMz1"
-Received: from pps.filterd (m0233778.ppops.net [127.0.0.1])
-	by mx0b-00549402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KIiLle011007;
-	Thu, 20 Jun 2024 20:13:28 GMT
-Received: from deu01-be0-obe.outbound.protection.outlook.com (mail-be0deu01lp2176.outbound.protection.outlook.com [104.47.7.176])
-	by mx0b-00549402.pphosted.com (PPS) with ESMTPS id 3yvrk8g248-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 20:13:28 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AP11HT63IZLzHvbkGi533VFufDz//bRlyrndgfxe85zoNjlnQqxmuKRfYgwb3c8bXuH8yUgFRocz1F2q5QLH/nhqtUUIhM/5J9t+8upCjVqXQx60H/suFG5oE+eyMFIkOAQQ3EKgDFpkN4aBX/U6cjMCd00VzTUYZ4gwFVhzmhG3edb1xjYrh8M0bb2/XN3nik57BA534ce8x3WmHM0OESiyP8c+bsn5oRDX1GL6dqroj7/Leohnwh1FFw0o0ginUvhwmOM1AH/kf/2uke2nr77pvUZQ2OPnria4qbvdMYQ/Q4XKC1pDGtI+QlaRJzs7En6vaZKad73vyKOvcXWBSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gp4sE+F+gnNfJMiIHxZo0O554zu1HvlVpR71krwypAU=;
- b=Zy7UvFKEhAbemjNGPs/dNbYVQ6hb9uptGeEeVreBxKZr8G+hFxt6PiPwDvTN6FNRqSwRKhkUkhdPxpWJU0ecTPVrVj3gzOrMIIa+cn9UFBwjEitw6RC24dpaCc7WJnWDSjaEwEG4iNGGMdQ4ehXsQwIiXFllMR9bs5uHonWczfFvrn2fuhBw7tiaETKxe1/PUjte6jpjMY3j1RpPd0nNygMHwgXC7Z4zdF7dANXeQJi8hDeu4hkvk0QkdTsCUofiGf4dhpftngiRd0Z0et4z1ftNS01XUiMQkC3dvIYUMUXoI0tDH4onFZlmUKmAdttq77ZeQfEtNFGSb+yZVSjRmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=tdk.com; dmarc=pass action=none header.from=tdk.com; dkim=pass
- header.d=tdk.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tdk.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gp4sE+F+gnNfJMiIHxZo0O554zu1HvlVpR71krwypAU=;
- b=sfC1EMz1HOU6cAAUrZW8JMOBsNBYHTNX52qze0dPssN7d3NEUxey4wKWZpdCyIsH48BwhIKEOViJZNfftbHkbxO2o18JrsKXXT8ROzuMX5C3XG9n5joWHQL1WjQ4/9GwAalQTmOrp67IHXBncbiw+rEarfGwWyo0CNFEOc9JBbEp7pvGyfXJQct5s3rfLskEmkU+9r6xrLCB6jCDIO+FFY4+4NcZEEfNnVhS81l9FkueOyDpzl5bn/mCAzs9puThoL4CPx66xasDuPes79fU44rObsnv4SL5AgMsSaRnInLosOtqc7VDiMSdgCsmGvSNUpC9y99kDyqTPKaw91i8uQ==
-Received: from FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:7c::11)
- by FR4P281MB4503.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:121::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Thu, 20 Jun
- 2024 20:13:21 +0000
-Received: from FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM
- ([fe80::53a6:70d:823f:e9ac]) by FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM
- ([fe80::53a6:70d:823f:e9ac%4]) with mapi id 15.20.7698.017; Thu, 20 Jun 2024
- 20:13:21 +0000
-From: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-To: Trevor Gamblin <tgamblin@baylibre.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Dmitry Rokosov
-	<ddrokosov@sberdevices.ru>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>,
-        Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>,
-        Ray Jui <rjui@broadcom.com>, Scott
- Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list
-	<bcm-kernel-feedback-list@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team
-	<kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome
- Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        =?iso-8859-1?Q?Nuno_S=E1?=
-	<nuno.sa@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>, Crt Mori
-	<cmo@melexis.com>
-CC: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "imx@lists.linux.dev"
-	<imx@lists.linux.dev>,
-        "linux-amlogic@lists.infradead.org"
-	<linux-amlogic@lists.infradead.org>,
-        "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Subject: Re: [PATCH v3 27/41] iio: imu: inv_icm42600: make use of
- regmap_clear_bits(), regmap_set_bits()
-Thread-Topic: [PATCH v3 27/41] iio: imu: inv_icm42600: make use of
- regmap_clear_bits(), regmap_set_bits()
-Thread-Index: AQHawL1erbL+I6YUckuaYoNX5CJs27HRGp6i
-Date: Thu, 20 Jun 2024 20:13:21 +0000
-Message-ID: 
- <FR3P281MB1757B426C8E184F5B1C8A334CEC82@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-References: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
- <20240617-review-v3-27-88d1338c4cca@baylibre.com>
-In-Reply-To: <20240617-review-v3-27-88d1338c4cca@baylibre.com>
-Accept-Language: en-US, fr-FR
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: FR3P281MB1757:EE_|FR4P281MB4503:EE_
-x-ms-office365-filtering-correlation-id: d9f9fe65-6bbb-4580-cf90-08dc91656eb0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230037|1800799021|366013|376011|7416011|3613699009|38070700015|921017;
-x-microsoft-antispam-message-info: 
- =?iso-8859-1?Q?XpPKK7QlWfjW1+hBau+ZWXB7PBj8QGUjUnJnVaGl8yXN0SgqaX30NZzmWn?=
- =?iso-8859-1?Q?0P+ZoOv+ZuWfSLxLVltaYbKT5HQsUxjdmdGfssGqQ3zRsVEZmJxGsI6f31?=
- =?iso-8859-1?Q?uqI5VOwD/vWgmgzK7xk/M20G547CyAckSWcUcBP4hUpLFiSPV6SU31CD5d?=
- =?iso-8859-1?Q?WClcJGrWCcbvGsELF7KWIRqRn8RPQOO5Hsw9rgMyvg3iieMocr7JTld5np?=
- =?iso-8859-1?Q?VQ7f88KPFLBKM0xC6VvplRF9cS6vxpwSJK9zdcU8q2EANZ2mz49Hb6F9dW?=
- =?iso-8859-1?Q?DGGuHeLdjuoPcgeUEyzQ6xNVs0znV/OhyhiE+IBDVjxPnWutlQmwEQAizv?=
- =?iso-8859-1?Q?qERkRe0ciruEYr/GXpag0Y80Wt5+qsJO7L+/+9sJmxo1oIKOFGZR/ffBPx?=
- =?iso-8859-1?Q?LKNs0mhZmZc8KaieNtKiDGUpvR2GUjhEaZwy6CHBy4LdtgaHqrHz3JdwaR?=
- =?iso-8859-1?Q?btYYR3b4QIktEFDtGRf64sl5ZsKjDQmELjV9mQlIAtVeanUM+rfJWQtx+J?=
- =?iso-8859-1?Q?3p5FSxNZ08aPUZz3iqHd9OlOrJwFeVQY/4VN2qVZ1TQHhAfieEDbwp2Uql?=
- =?iso-8859-1?Q?SDx6wJGFdIlpkxwFUxrJSEvA1i3tbPIcV843zPIJnf0PgAXtNgrswBH/aX?=
- =?iso-8859-1?Q?/7Xnfk5xx9lnskvJIuteZMjyQopvQu9s19Gka0zX2Owyifx3dk/PSFKlrN?=
- =?iso-8859-1?Q?JnWMEptlN5FM7Lythm6EQRHY2DFtcZ6h2JBOiSC41X8WnxagjtyMMkkiND?=
- =?iso-8859-1?Q?keJnsVwAcpiCYC2lJIEKMyHsJiWJaaw8Rneml/1uqfHAFAOIf47Rxkl59k?=
- =?iso-8859-1?Q?kMSuHETwFSVq6WQNTdsY9RZQi9wKhAGCyegK+Plgz+xMnvxZdLwVgy1NMX?=
- =?iso-8859-1?Q?r+0jGxEork1GJXm46dj8Xr629I9tUk23fFHQCz8F/sVDn4/rcj11+HlGh7?=
- =?iso-8859-1?Q?W0lXsnV9s9n3ux8O93ElRjelCwdO95Ypuf7xMjxu5BJeSIdJYaEEHvtTei?=
- =?iso-8859-1?Q?+/ktaCdlu9k/vjitJe9Alz1K0KXbsxn3dLtRj9jKkX2ovwDcEXXWK+6wxs?=
- =?iso-8859-1?Q?8tjgcFnOOxMEeb+tF2Gs4MqduTycU/yDFNMFiU6z3aGwKmsPf7GIIhHvLc?=
- =?iso-8859-1?Q?7+OtwR01cSrdLEAi5+HgtOwqfgZQb81KAq1Aw5WMfF9ADIZibQgtF03KGQ?=
- =?iso-8859-1?Q?YfjjtzNFFH9XNzneG/lQXU9g82Y0Utw2u4QtYgtRoNWuBCWw48Op31m/yl?=
- =?iso-8859-1?Q?CIh4rJkDCSjD3sotNYsYmfp5YHjzHdr2NnhKPGMneCZNrgIeygqyW7IPzM?=
- =?iso-8859-1?Q?KgvEQx013p3p8MORLQmAYYAcNVZ8jCXtPdXBrgO+kn2SNBTasDOKEZuTD5?=
- =?iso-8859-1?Q?dn0XtOQ7NkdW5z+sl705yucP3OPxhqV6JyaLtUsgCnaUzfSE6XbxLPE2JK?=
- =?iso-8859-1?Q?MDhJePrBHdhxRijeMqdSAHueDhy25vHOjacweiAFIUoxte4tOZoVd1OKaX?=
- =?iso-8859-1?Q?Y=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(7416011)(3613699009)(38070700015)(921017);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?nPexuniFbU+nt0OnsFlZ7w3h+y3NNFJyZx+Ba71rCFqVLe/cMX2Uv6I7JS?=
- =?iso-8859-1?Q?jL/r5GzdkX1Om/YKZXAHdd16hCt3Za7SySQbegyTf9Ef5lsMU4I/eNXetW?=
- =?iso-8859-1?Q?J45Ij1ZHKmdDzZcugK/pDTkFzzjtkpHYijRObY1GxSz2P7rN/w+sgDcRmZ?=
- =?iso-8859-1?Q?UmEmV7sqFXVWsB65USrRxRSpDmROIWvF8MRraoKgvCjAkG9+i0kO3fHhJy?=
- =?iso-8859-1?Q?MxBg3D1Y9EAML5/H9PEGlK/3r5rSsLazC2HE+hH2p2rv0zlFBhB6PNBWjw?=
- =?iso-8859-1?Q?a+fZPgp6uqgVHogt4eNtNk4wbNoUAxxXHedolS4Pw5RERW52tNy9m87l9a?=
- =?iso-8859-1?Q?4Nvim3ScE+Y0sbPCgOpa2yaWV1kehtgoDo1BBWjMCyv9y/0ovKIPQAZLip?=
- =?iso-8859-1?Q?/3MFTcfIMs95fDFjPDLfl2ZxJuWCK1khDrbOa/11b2Gtw1TPH+wBtefgkV?=
- =?iso-8859-1?Q?6xl8RAgVjuROVLn/1BghCAy7V9qCWp+KNhCwU97JVQ8RN3/aHwlVS9zSot?=
- =?iso-8859-1?Q?TTEWfLrrP1TYEPMjpa5uotie7VqhTmZBPrOgZ6cAXnvTrd2p8Ux/H6aTPL?=
- =?iso-8859-1?Q?nuTumsegVHW/E+MjDl8GmFiHc0zMT8ChUGbv7f/h1KJaw47Cb5IAxYTntu?=
- =?iso-8859-1?Q?68LyqrzfgBd36mOZcFUiY9CWnbPKgod5SizyWJzOBuVXtH7kXRLtXQH7yC?=
- =?iso-8859-1?Q?p57zoDbVr47DgoESRe3if5YflyOFgyYeSiiVY/0QJuUvh/LaNWTxg+hERK?=
- =?iso-8859-1?Q?Kjcx+RsMe9XC0X70e6JGdKyQOaOF0hZx+4PEapOupoyHFPTBkGCCPjmPPV?=
- =?iso-8859-1?Q?dp6gqIwxd+pLGGnjzaQLyImoRGNnVSeh0U0/0Lw7FjCJWrI1iokwhd9fxK?=
- =?iso-8859-1?Q?y52OKPefTFy2QNCUD09RGdNzGdiJrOc/DG2q/Lmrto1/wOvGKYEh4r2zOM?=
- =?iso-8859-1?Q?WhGXRVF5l9pALzuZXZIRFnLCoUEGeWAAwNQGOWdrpf0TNpvZVMyIiwS3sf?=
- =?iso-8859-1?Q?idxKuMNu9p/99ZXoXBKiRhcI3eKTyLx5jp03OAylJatU/12TZvBiLssGG7?=
- =?iso-8859-1?Q?kFBZbEr55I+/4qlznf530RAUBPHLU7zJibpFcPUNgjs1654G+foaMT3/Tw?=
- =?iso-8859-1?Q?5HS9B+SGyqftZzzPp/V58dlGMpnFAC0fIasvAOTaoFJ0QDLBmkbD448Bin?=
- =?iso-8859-1?Q?+oPsmQHVdBbgiZebis9fnU4HJl2/FVa1fiNrjwURS4/g4ptm/PUmUBqx3u?=
- =?iso-8859-1?Q?aFwZVW5jjLdnXR4XSOxIzBsXdKM48zasHRJbuYPTNIM09KRa+XBdBzr9E1?=
- =?iso-8859-1?Q?AOrkJLvLP336f7Y6zaGhAjdckaE3WRnjEuuFlk7ynGUrXgzFyCQJHG8gBW?=
- =?iso-8859-1?Q?zyYL5mWARWK7D4EMKHAbvyEskg4AuU1VWVHM1U4EGzG73UuRyF7kIOkL3S?=
- =?iso-8859-1?Q?OoZYB97v5D5qNI2BWCwrDSd/gkePJ/Q9o9mPfn1YQ3hJLqJELrfe5MuYSl?=
- =?iso-8859-1?Q?M6rxN70bJ/DM1+uUf6PgjeLMB1ILF4aXwugRQId4xnGcKMxpOnb9N6HlQF?=
- =?iso-8859-1?Q?Re0hLOXcfdzoiypGKPXGwK4B2BdBaAJ1sUoFw+nRgkzboGpwr54TsVyiz9?=
- =?iso-8859-1?Q?EE3dsPlqsshQMWUbcFaKTHr6vz2gGtpABjLda4p3bkKCcVy/ZiBd1BTPQz?=
- =?iso-8859-1?Q?cs/kZGPfiYKypNfm6W/hHGVHyakA6FM2Z7Z6KrQVI8cabKSlviQtR/mBrm?=
- =?iso-8859-1?Q?wdmQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3Q5hlmF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3088C2BD10;
+	Thu, 20 Jun 2024 20:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718914513;
+	bh=dx88qbfA3v0QDgtBAfkX2p+KZ894xqWOi1spAiEK79Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K3Q5hlmFTV2StGeAqV1ad3ALvO+at6HlmCfy/QXw80XBHI+CtCSJkAB6T0ljm1Cla
+	 h1FXTkMlJVy3YH8tdyanjrUGrMb+VoRevwm6fnqvKUM57OyG/H15yfbdSIVTdZCLh3
+	 37/vSJq/jpQHMF3G47KlhSq+OSUt8sc0+DmRekUGL9Bje93H8KLMY/PBtbK1Sh5Uks
+	 mrnDLEAMdFXzxRAKsxZtF13sVSaXwSWqY3ZjjuVcQ0QzyFwy2lQCNQLs4U6Y5wLWZ6
+	 YcyobmsG93CE3GImMYQqPd3ezOFin5JLavDjJQF6mCPAWzDHNK11PoA1fh2iITVrMb
+	 s0XuW0DNn177w==
+Message-ID: <dafab4dc-34ef-4abd-9f3f-1dee675a1a56@kernel.org>
+Date: Thu, 20 Jun 2024 22:14:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: tdk.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9f9fe65-6bbb-4580-cf90-08dc91656eb0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2024 20:13:21.4309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7e452255-946f-4f17-800a-a0fb6835dc6c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gVtp5SQE3hsDt6YUjdiE3wcAtmW61zqG4/Ldp63k+aEgNbcPNCrTRavUbqK+v3cgaUFu/dW/yb0DEm1JZT8OjbzKaNNMF0ylfPMFVVv6sLU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR4P281MB4503
-X-Proofpoint-ORIG-GUID: WlgyWFQOY_wOpF_GdnmiR7OdqVE_Piyy
-X-Proofpoint-GUID: WlgyWFQOY_wOpF_GdnmiR7OdqVE_Piyy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 spamscore=0
- mlxscore=0 phishscore=0 clxscore=1011 suspectscore=0 malwarescore=0
- bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406200147
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 16/23] leds: max77705: Add LEDs support
+To: Dzmitry Sankouski <dsankouski@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-16-e3f6662017ac@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240618-starqltechn_integration_upstream-v3-16-e3f6662017ac@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Trevor,=0A=
-=0A=
-looks good for me, thanks for the patch.=0A=
-=0A=
-Acked-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>=0A=
-=0A=
-Thanks,=0A=
-JB=0A=
-________________________________________=0A=
-From:=A0Trevor Gamblin <tgamblin@baylibre.com>=0A=
-Sent:=A0Monday, June 17, 2024 15:50=0A=
-To:=A0Jonathan Cameron <jic23@kernel.org>; Lars-Peter Clausen <lars@metafoo=
-.de>; Dmitry Rokosov <ddrokosov@sberdevices.ru>; Michael Hennerich <Michael=
-.Hennerich@analog.com>; Cosmin Tanislav <cosmin.tanislav@analog.com>; Chen-=
-Yu Tsai <wens@csie.org>; Hans de Goede <hdegoede@redhat.com>; Ray Jui <rjui=
-@broadcom.com>; Scott Branden <sbranden@broadcom.com>; Broadcom internal ke=
-rnel review list <bcm-kernel-feedback-list@broadcom.com>; Shawn Guo <shawng=
-uo@kernel.org>; Sascha Hauer <s.hauer@pengutronix.de>; Pengutronix Kernel T=
-eam <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>; Neil Armst=
-rong <neil.armstrong@linaro.org>; Kevin Hilman <khilman@baylibre.com>; Jero=
-me Brunet <jbrunet@baylibre.com>; Martin Blumenstingl <martin.blumenstingl@=
-googlemail.com>; Saravanan Sekar <sravanhome@gmail.com>; Orson Zhai <orsonz=
-hai@gmail.com>; Baolin Wang <baolin.wang@linux.alibaba.com>; Chunyan Zhang =
-<zhang.lyra@gmail.com>; Maxime Coquelin <mcoquelin.stm32@gmail.com>; Alexan=
-dre Torgue <alexandre.torgue@foss.st.com>; Nuno S=E1 <nuno.sa@analog.com>; =
-Linus Walleij <linus.walleij@linaro.org>; Jean-Baptiste Maneyrol <Jean-Bapt=
-iste.Maneyrol@tdk.com>; Crt Mori <cmo@melexis.com>=0A=
-Cc:=A0linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; linux-kernel@v=
-ger.kernel.org <linux-kernel@vger.kernel.org>; linux-arm-kernel@lists.infra=
-dead.org <linux-arm-kernel@lists.infradead.org>; imx@lists.linux.dev <imx@l=
-ists.linux.dev>; linux-amlogic@lists.infradead.org <linux-amlogic@lists.inf=
-radead.org>; linux-arm-msm@vger.kernel.org <linux-arm-msm@vger.kernel.org>;=
- linux-stm32@st-md-mailman.stormreply.com <linux-stm32@st-md-mailman.stormr=
-eply.com>; Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>; Trevor Gambli=
-n <tgamblin@baylibre.com>=0A=
-Subject:=A0[PATCH v3 27/41] iio: imu: inv_icm42600: make use of regmap_clea=
-r_bits(), regmap_set_bits()=0A=
-=A0=0A=
-This Message Is From an External Sender=0A=
-This message came from outside your organization.=0A=
-=A0=0A=
-Instead of using regmap_update_bits() and passing the mask twice, use=0A=
-regmap_set_bits().=0A=
-=0A=
-Instead of using regmap_update_bits() and passing val =3D 0, use=0A=
-regmap_clear_bits().=0A=
-=0A=
-Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>=0A=
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>=0A=
----=0A=
- drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c | 14 ++++++--------=0A=
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c   |  9 ++++-----=0A=
- drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c    |  4 ++--=0A=
- drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c    |  4 ++--=0A=
- 4 files changed, 14 insertions(+), 17 deletions(-)=0A=
-=0A=
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c b/drivers/i=
-io/imu/inv_icm42600/inv_icm42600_buffer.c=0A=
-index 63b85ec88c13..509fe6a3ae97 100644=0A=
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c=0A=
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c=0A=
-@@ -262,9 +262,8 @@ int inv_icm42600_buffer_update_watermark(struct inv_icm=
-42600_state *st)=0A=
- =0A=
- 	/* restore watermark interrupt */=0A=
- 	if (restore) {=0A=
--		ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,=0A=
--					 INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN,=0A=
--					 INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN);=0A=
-+		ret =3D regmap_set_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,=0A=
-+				      INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN);=0A=
- 		if (ret)=0A=
- 			return ret;=0A=
- 	}=0A=
-@@ -306,9 +305,8 @@ static int inv_icm42600_buffer_postenable(struct iio_de=
-v *indio_dev)=0A=
- 	}=0A=
- =0A=
- 	/* set FIFO threshold interrupt */=0A=
--	ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,=0A=
--				 INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN,=0A=
--				 INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN);=0A=
-+	ret =3D regmap_set_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,=0A=
-+			      INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN);=0A=
- 	if (ret)=0A=
- 		goto out_unlock;=0A=
- =0A=
-@@ -363,8 +361,8 @@ static int inv_icm42600_buffer_predisable(struct iio_de=
-v *indio_dev)=0A=
- 		goto out_unlock;=0A=
- =0A=
- 	/* disable FIFO threshold interrupt */=0A=
--	ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,=0A=
--				 INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN, 0);=0A=
-+	ret =3D regmap_clear_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,=0A=
-+				INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN);=0A=
- 	if (ret)=0A=
- 		goto out_unlock;=0A=
- =0A=
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio=
-/imu/inv_icm42600/inv_icm42600_core.c=0A=
-index 96116a68ab29..bb302f5540cf 100644=0A=
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c=0A=
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c=0A=
-@@ -435,9 +435,8 @@ static int inv_icm42600_setup(struct inv_icm42600_state=
- *st,=0A=
- 		return ret;=0A=
- =0A=
- 	/* sensor data in big-endian (default) */=0A=
--	ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG0,=0A=
--				 INV_ICM42600_INTF_CONFIG0_SENSOR_DATA_ENDIAN,=0A=
--				 INV_ICM42600_INTF_CONFIG0_SENSOR_DATA_ENDIAN);=0A=
-+	ret =3D regmap_set_bits(st->map, INV_ICM42600_REG_INTF_CONFIG0,=0A=
-+			      INV_ICM42600_INTF_CONFIG0_SENSOR_DATA_ENDIAN);=0A=
- 	if (ret)=0A=
- 		return ret;=0A=
- =0A=
-@@ -532,8 +531,8 @@ static int inv_icm42600_irq_init(struct inv_icm42600_st=
-ate *st, int irq,=0A=
- 		return ret;=0A=
- =0A=
- 	/* Deassert async reset for proper INT pin operation (cf datasheet) */=0A=
--	ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INT_CONFIG1,=0A=
--				 INV_ICM42600_INT_CONFIG1_ASYNC_RESET, 0);=0A=
-+	ret =3D regmap_clear_bits(st->map, INV_ICM42600_REG_INT_CONFIG1,=0A=
-+				INV_ICM42600_INT_CONFIG1_ASYNC_RESET);=0A=
- 	if (ret)=0A=
- 		return ret;=0A=
- =0A=
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/=
-imu/inv_icm42600/inv_icm42600_i2c.c=0A=
-index 8d33504d770f..ebb31b385881 100644=0A=
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c=0A=
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c=0A=
-@@ -28,8 +28,8 @@ static int inv_icm42600_i2c_bus_setup(struct inv_icm42600=
-_state *st)=0A=
- 			   INV_ICM42600_INTF_CONFIG6_MASK,=0A=
- 			   INV_ICM42600_INTF_CONFIG6_I3C_EN);=0A=
- =0A=
--	ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,=0A=
--				 INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY, 0);=0A=
-+	ret =3D regmap_clear_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,=0A=
-+				INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY);=0A=
- 	if (ret)=0A=
- 		return ret;=0A=
- =0A=
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/=
-imu/inv_icm42600/inv_icm42600_spi.c=0A=
-index cc2bf1799a46..eae5ff7a3cc1 100644=0A=
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c=0A=
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c=0A=
-@@ -27,8 +27,8 @@ static int inv_icm42600_spi_bus_setup(struct inv_icm42600=
-_state *st)=0A=
- 	if (ret)=0A=
- 		return ret;=0A=
- =0A=
--	ret =3D regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,=0A=
--				 INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY, 0);=0A=
-+	ret =3D regmap_clear_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,=0A=
-+				INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY);=0A=
- 	if (ret)=0A=
- 		return ret;=0A=
- =0A=
-=0A=
--- =0A=
-2.45.2=0A=
-=0A=
+On 18/06/2024 15:59, Dzmitry Sankouski wrote:
+> This adds basic support for LEDs for the max77705 PMIC.
+> 
+> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> ---
+>  MAINTAINERS                  |   1 +
+>  drivers/leds/Kconfig         |   6 ++
+>  drivers/leds/Makefile        |   1 +
+>  drivers/leds/leds-max77705.c | 166 +++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 174 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f66f08825db9..f3c245d432d9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13691,6 +13691,7 @@ F:	drivers/*/max14577*.c
+>  F:	drivers/*/max77686*.c
+>  F:	drivers/*/max77693*.c
+>  F:	drivers/*/max77705*.c
+> +F:	drivers/leds/leds-max77705.c
+>  F:	drivers/clk/clk-max77686.c
+>  F:	drivers/extcon/extcon-max14577.c
+>  F:	drivers/extcon/extcon-max77693.c
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 05e6af88b88c..14d483011308 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -728,6 +728,12 @@ config LEDS_MAX77650
+>  	help
+>  	  LEDs driver for MAX77650 family of PMICs from Maxim Integrated.
+>  
+> +config LEDS_MAX77705
+> +	tristate "LED support for Maxim MAX77705 RGB"
+> +	depends on MFD_MAX77705 && LEDS_CLASS && I2C
+> +	help
+> +	  LED driver for MAX77705 MFD chip from Maxim Integrated.
+> +
+>  config LEDS_MAX8997
+>  	tristate "LED support for MAX8997 PMIC"
+>  	depends on LEDS_CLASS && MFD_MAX8997
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index effdfc6f1e95..be064e3d678e 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -58,6 +58,7 @@ obj-$(CONFIG_LEDS_LP8860)		+= leds-lp8860.o
+>  obj-$(CONFIG_LEDS_LT3593)		+= leds-lt3593.o
+>  obj-$(CONFIG_LEDS_MAX5970)		+= leds-max5970.o
+>  obj-$(CONFIG_LEDS_MAX77650)		+= leds-max77650.o
+> +obj-$(CONFIG_LEDS_MAX77705)		+= leds-max77705.o
+>  obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
+>  obj-$(CONFIG_LEDS_MC13783)		+= leds-mc13783.o
+>  obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
+> diff --git a/drivers/leds/leds-max77705.c b/drivers/leds/leds-max77705.c
+> new file mode 100644
+> index 000000000000..f91c0e41056c
+> --- /dev/null
+> +++ b/drivers/leds/leds-max77705.c
+> @@ -0,0 +1,166 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Based on leds-max77650 driver:
+> + *		Copyright (C) 2018 BayLibre SAS
+> + *		Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> + *
+> + * LED driver for MAXIM 77705 MFD.
+> + * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.org>
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/leds.h>
+> +#include <linux/mfd/max77705.h>
+> +#include <linux/mfd/max77705-private.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MAX77705_LED_NUM_LEDS		4
+> +#define MAX77705_LED_EN_MASK		GENMASK(1, 0)
+> +#define MAX77705_LED_MAX_BRIGHTNESS	0xff
+> +
+> +#define LEDBLNK_ON(time)	((time < 100) ? 0 :			\
+> +				(time < 500) ? time/100-1 :		\
+> +				(time < 3250) ? (time-500)/250+4 : 15)
+> +
+> +#define LEDBLNK_OFF(time)	((time < 1) ? 0x00 :			\
+> +				(time < 500) ? 0x01 :			\
+> +				(time < 5000) ? time/500 :		\
+> +				(time < 8000) ? (time-5000)/1000+10 :	 \
+> +				(time < 12000) ? (time-8000)/2000+13 : 15)
+
+Make both static functions, if really needed, but these appear only in
+one place, so maybe just code it directly.
+
+
+> +
+> +struct max77705_led {
+> +	struct led_classdev cdev;
+> +	struct regmap *regmap;
+> +	unsigned int en_shift;
+> +	unsigned int reg_brightness;
+> +	unsigned int regB;
+
+noCamelCase.
+
+> +};
+> +
+> +static struct max77705_led *max77705_to_led(struct led_classdev *cdev)
+> +{
+> +	return container_of(cdev, struct max77705_led, cdev);
+> +}
+> +
+
+
+> +		led = &leds[reg];
+> +		led->regmap = map;
+> +		led->reg_brightness = MAX77705_RGBLED_REG_LED0BRT + reg;
+> +		led->en_shift = 2 * reg;
+> +		led->cdev.brightness_set_blocking = max77705_led_brightness_set;
+> +		led->cdev.blink_set = max77705_rgb_blink;
+> +		led->cdev.max_brightness = MAX77705_LED_MAX_BRIGHTNESS;
+> +
+> +		init_data.fwnode = child;
+> +		init_data.devicename = "max77705";
+> +		/* for backwards compatibility if `label` is not present */
+> +		init_data.default_label = ":";
+
+There is no backwards compatibility - it's fresh driver.
+
+> +
+> +		rv = devm_led_classdev_register_ext(dev, &led->cdev,
+> +							&init_data);
+> +		if (rv)
+> +			goto err_node_put;
+> +
+> +		rv = max77705_led_brightness_set(&led->cdev, LED_OFF);
+> +		if (rv)
+> +			goto err_node_put;
+> +	}
+> +
+> +	return 0;
+> +err_node_put:
+> +	fwnode_handle_put(child);
+> +	return rv;
+> +}
+> +
+> +static const struct of_device_id max77705_led_of_match[] = {
+> +	{ .compatible = "maxim,max77705-led" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max77705_led_of_match);
+> +
+> +static struct platform_driver max77705_led_driver = {
+> +	.driver = {
+> +		.name = "max77705-led",
+> +		.of_match_table = max77705_led_of_match,
+> +	},
+> +	.probe = max77705_led_probe,
+> +};
+> +module_platform_driver(max77705_led_driver);
+> +
+> +MODULE_DESCRIPTION("MAXIM 77705 LED driver");
+> +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
+> +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:max77705-led");
+
+You should not need MODULE_ALIAS() in normal cases. If you need it,
+usually it means your device ID table is wrong (e.g. misses either
+entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+for incomplete ID table.
+
+
+Best regards,
+Krzysztof
+
