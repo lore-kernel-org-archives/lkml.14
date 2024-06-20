@@ -1,163 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96771B373C;
-	Thu, 20 Jun 2024 16:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ACE1B9AB5
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900664; cv=none; b=ThH8Ca/tlDC/ykQcegKzQrZ0SCs+rqypMWOoRkaENs7n3oOsTPWPFJSO1CMw9jJmJgIfuopOJ9jZxSebFB0udKhxEkx8XdVSye75+FSxuYK6UqeFC0KEq6aRqWjT0Uat3Xr9zogHYdmFfGlWqkupXa0WrJ9075QURh2YJb26xP8=
+	t=1718900663; cv=none; b=uabxV97deoAzGduNVzQknmL8YptzBwbMj1K4ZZPRmIwoc3COh0DUSKNN1K+ifG0DpC77mBi2/HMrDtfl5Ed9SOZA7dZtUvVHWO14JAZAfaImzulmOqypcLTE/HF9IpNVypV8yGh2x6a4dLmNV9eg08/oEpW8k9nQOZ8l5vDeHsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900664; c=relaxed/simple;
-	bh=CXrlszEDPUQiYKtZ0u7pc0WChHdomqG0bc13oHOMYk8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jHau+7Z5opF3jvoL+BWt+ET89kf2wcTe+mkSZ9+lD0FUWa3FMv3Jv0khe8de/WOpDsEcMvEFyS80mr9V81uPTUkQnDr7h5UTo1xerqx1s1ONrtZsylW5Nj2yFCRdznQqwURL4tR20pisg2f+Ic8qfcSM59nvCnYADp9Q79mVU3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRy1c8+g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718900663; c=relaxed/simple;
+	bh=G9HKFUhajGasiqamL48YDxw+DEmI8YzmL0Uiykg5fY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C0YNEZtVwX9/Ar99+QXwcsmo0oIJpIL55auxIRn1l6olFhuYk5yaHmKbG3stfHAtd67jskfh7lgQkBFd1PSvDZwMgXJvPH91u64fX+2ifXF7rQxgH4WB590CVdHzAOs5LP5GI3D8jFG1YzmSWiIQEnriyKqpW9N+fouAZow90zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YMS+NiOH; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRy1c8+g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B740C2BD10;
-	Thu, 20 Jun 2024 16:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718900663;
-	bh=CXrlszEDPUQiYKtZ0u7pc0WChHdomqG0bc13oHOMYk8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cRy1c8+gzgzO1YmNYFn0xlU4/jPNcn/9MvwsPvAoPe7+0ERWB1jp/4Eg4SrYPfKQW
-	 dCxbOu/gXMIqE1WRrm6G4NMNz7t3JWJ57na8ewDl991homE91hY2Y3XJ7fjtxJecwP
-	 Z0ls7gy7/0cQaCVR+BfSxUjtZnsLGGh7q+ak0mQ9D7/e8CgHOIX2YIujd0ZuwccdAK
-	 qgOlMp7UfU6xdGU8tsWYALGF509s2RqwNwr01W8ehfFbKfshH6UmIb9yP7CLjjIEtf
-	 yU4JI3Alw+R/eT/X5xu84FD4G1b2AZ9URmrAprLqK37tETc9Dr0PtHUNggRkNu9Op0
-	 cJXFcVyYlM6ng==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org,
-	Helge Deller <deller@gmx.de>,
-	linux-parisc@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	sparclinux@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	Brian Cain <bcain@quicinc.com>,
-	linux-hexagon@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	linux-csky@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	linux-s390@vger.kernel.org,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-sh@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	libc-alpha@sourceware.org,
-	musl@lists.openwall.com,
-	ltp@lists.linux.it,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Subject: [PATCH 07/15] parisc: use generic sys_fanotify_mark implementation
-Date: Thu, 20 Jun 2024 18:23:08 +0200
-Message-Id: <20240620162316.3674955-8-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240620162316.3674955-1-arnd@kernel.org>
-References: <20240620162316.3674955-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YMS+NiOH"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-25ca169f861so462589fac.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718900661; x=1719505461; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nt4TaLRiigym5jbcwq/kMWuY93Qd7TBOqg1NFwNoq6E=;
+        b=YMS+NiOHPFLEdu4YzN1VwDcS8pERi2TrlGLwDogh55nknPwdYDZDWK5pSdVBPEyYhw
+         +yCCZriIRvEWVLCfJJjSR5/C+jqMDrxJWNRc+4J/KRPMp4xJR2PeuMmdHrjuH0nb3TcI
+         p0Aj801PeKi0IbIKmfJeXFTAHW8O/muMrcDGk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718900661; x=1719505461;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nt4TaLRiigym5jbcwq/kMWuY93Qd7TBOqg1NFwNoq6E=;
+        b=eJgmrdEiwebaetyE1qwyOJZTMDL1Hih1qfyrx3lVEpSakCj0uQxlg0P795fU426Vgz
+         CkU5VBcm4u4T/wf6kzWLHJxW5+OkeoQmGiSMnvbsuh6w+1QFdqf0mxgl8lcjFgNg862c
+         y7dPnn5JVwhqYYqzfHHi6iij4U70ZqYuED6p12kPQYhBtWtbqzRaDUMQYkqX1CkoaHtr
+         cpSld8+wAVOeGBmKFJaBvCfuahCPXjXn8M+Dd/4wq7uazTEYloZ2JVUiEj+z6GcZof8C
+         rL3yRxzk959zaHfRD9p5bjIhndMJSa06mVnpmED+NV+gHRa7tlp7kL9pwvCHA0wpp/dJ
+         0rmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKDmRBVpqx/pjaieNUYlmQGI+j+HuX8/HKMMafh0tgdmoxkfb+CyvCwRJo1SLv5DooQ8rXrzy2L7OYYh81xYnWPkB1dp1L/k1Daazz
+X-Gm-Message-State: AOJu0YwFA6HK9lrHESTuu4RN2HcpCfYME8Bn0XLOb+qjb7uI4iiyq/aM
+	rKYqgiXGRhSLTrULUD7qGpoBY6iqUoE0dLuSStt9thfcl9WAa96kRXN6qcADN/byUaSBRPlBJhY
+	lW2gcFPXqt7gTXVbIs5/vletzBG2Of9AvpW3B
+X-Google-Smtp-Source: AGHT+IFBpvlmEuvbahBVElIajKUVoumeP4+3qEjJukkg86pbSwvP4+dt7eZAeaxRiL+fF3GyBU2EqugxSpNNxR2hW2s=
+X-Received: by 2002:a05:6870:248a:b0:254:b781:2f5e with SMTP id
+ 586e51a60fabf-25972de7257mr3753010fac.17.1718900660925; Thu, 20 Jun 2024
+ 09:24:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240613133937.2352724-1-adrian.ratiu@collabora.com>
+ <20240613133937.2352724-2-adrian.ratiu@collabora.com> <CABi2SkXY20M24fcUgejAMuJpNZqsLxd0g1PZ-8RcvzxO6NO6cA@mail.gmail.com>
+ <202406191336.AC7F803123@keescook>
+In-Reply-To: <202406191336.AC7F803123@keescook>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Thu, 20 Jun 2024 09:24:09 -0700
+Message-ID: <CABi2SkWDwAU2ARyMVTeCqFeOXyQZn3hbkdWv-1OzzgG=MNoU8Q@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] proc: restrict /proc/pid/mem
+To: Kees Cook <kees@kernel.org>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com, 
+	inglorion@google.com, ajordanr@google.com, jorgelo@chromium.org, 
+	Guenter Roeck <groeck@chromium.org>, Doug Anderson <dianders@chromium.org>, 
+	Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Christian Brauner <brauner@kernel.org>, Jeff Xu <jeffxu@google.com>, 
+	Mike Frysinger <vapier@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jun 19, 2024 at 1:41=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Tue, Jun 18, 2024 at 03:39:44PM -0700, Jeff Xu wrote:
+> > Hi
+> >
+> > Thanks for the patch !
+> >
+> > On Thu, Jun 13, 2024 at 6:40=E2=80=AFAM Adrian Ratiu <adrian.ratiu@coll=
+abora.com> wrote:
+> > >
+> > > Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
+> > > after which it got allowed in commit 198214a7ee50 ("proc: enable
+> > > writing to /proc/pid/mem"). Famous last words from that patch:
+> > > "no longer a security hazard". :)
+> > >
+> > > Afterwards exploits started causing drama like [1]. The exploits
+> > > using /proc/*/mem can be rather sophisticated like [2] which
+> > > installed an arbitrary payload from noexec storage into a running
+> > > process then exec'd it, which itself could include an ELF loader
+> > > to run arbitrary code off noexec storage.
+> > >
+> > > One of the well-known problems with /proc/*/mem writes is they
+> > > ignore page permissions via FOLL_FORCE, as opposed to writes via
+> > > process_vm_writev which respect page permissions. These writes can
+> > > also be used to bypass mode bits.
+> > >
+> > > To harden against these types of attacks, distrbutions might want
+> > > to restrict /proc/pid/mem accesses, either entirely or partially,
+> > > for eg. to restrict FOLL_FORCE usage.
+> > >
+> > > Known valid use-cases which still need these accesses are:
+> > >
+> > > * Debuggers which also have ptrace permissions, so they can access
+> > > memory anyway via PTRACE_POKEDATA & co. Some debuggers like GDB
+> > > are designed to write /proc/pid/mem for basic functionality.
+> > >
+> > > * Container supervisors using the seccomp notifier to intercept
+> > > syscalls and rewrite memory of calling processes by passing
+> > > around /proc/pid/mem file descriptors.
+> > >
+> > > There might be more, that's why these params default to disabled.
+> > >
+> > > Regarding other mechanisms which can block these accesses:
+> > >
+> > > * seccomp filters can be used to block mmap/mprotect calls with W|X
+> > > perms, but they often can't block open calls as daemons want to
+> > > read/write their runtime state and seccomp filters cannot check
+> > > file paths, so plain write calls can't be easily blocked.
+> > >
+> > > * Since the mem file is part of the dynamic /proc/<pid>/ space, we
+> > > can't run chmod once at boot to restrict it (and trying to react
+> > > to every process and run chmod doesn't scale, and the kernel no
+> > > longer allows chmod on any of these paths).
+> > >
+> > > * SELinux could be used with a rule to cover all /proc/*/mem files,
+> > > but even then having multiple ways to deny an attack is useful in
+> > > case one layer fails.
+> > >
+> > > Thus we introduce four kernel parameters to restrict /proc/*/mem
+> > > access: open-read, open-write, write and foll_force. All these can
+> > > be independently set to the following values:
+> > >
+> > > all     =3D> restrict all access unconditionally.
+> > > ptracer =3D> restrict all access except for ptracer processes.
+> > >
+> > > If left unset, the existing behaviour is preserved, i.e. access
+> > > is governed by basic file permissions.
+> > >
+> > > Examples which can be passed by bootloaders:
+> > >
+> > > proc_mem.restrict_foll_force=3Dall
+> > > proc_mem.restrict_open_write=3Dptracer
+> > > proc_mem.restrict_open_read=3Dptracer
+> > > proc_mem.restrict_write=3Dall
+> > >
+> > > These knobs can also be enabled via Kconfig like for eg:
+> > >
+> > > CONFIG_PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT=3Dy
+> > > CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT=3Dy
+> > >
+> > > Each distribution needs to decide what restrictions to apply,
+> > > depending on its use-cases. Embedded systems might want to do
+> > > more, while general-purpouse distros might want a more relaxed
+> > > policy, because for e.g. foll_force=3Dall and write=3Dall both break
+> > > break GDB, so it might be a bit excessive.
+> > >
+> > > Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
+> > >
+> > It is noteworthy that ChromeOS has benefited from blocking
+> > /proc/pid/mem write since 2017 [1], owing to the patch implemented by
+> > Mike Frysinger.
+> >
+> > It is great that upstream can consider this patch, ChromeOS will use
+> > the solution once it is accepted.
+> >
+> > > Link: https://lwn.net/Articles/476947/ [1]
+> > > Link: https://issues.chromium.org/issues/40089045 [2]
+> > > Cc: Guenter Roeck <groeck@chromium.org>
+> > > Cc: Doug Anderson <dianders@chromium.org>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Cc: Jann Horn <jannh@google.com>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > > Cc: Christian Brauner <brauner@kernel.org>
+> > > Cc: Jeff Xu <jeffxu@google.com>
+> > > Co-developed-by: Mike Frysinger <vapier@chromium.org>
+> > > Signed-off-by: Mike Frysinger <vapier@chromium.org>
+> > > Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> >
+> > Reviewed-by: Jeff Xu <jeffxu@chromium.org>
+> > Tested-by: Jeff Xu <jeffxu@chromium.org>
+> > [1] https://chromium-review.googlesource.com/c/chromiumos/third_party/k=
+ernel/+/764773
+>
+> Thanks for the testing! What settings did you use? I think Chrome OS was
+> effectively doing this?
+>
+> PROC_MEM_RESTRICT_OPEN_READ_OFF=3Dy
+> CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_ALL=3Dy
+> CONFIG_PROC_MEM_RESTRICT_WRITE_ALL=3Dy
+> CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_ALL=3Dy
+>
+> Though I don't see the FOLL_FORCE changes in the linked Chrome OS patch,
+> but I suspect it's unreachable with
+> CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_ALL=3Dy.
+>
+I use CONFIG_PROC_MEM_RESTRICT_WRITE_ALL=3Dy and
+did manual test writing to /proc/pid/mem using code similar to [1]
 
-The sys_fanotify_mark() syscall on parisc uses the reverse word order
-for the two halves of the 64-bit argument compared to all syscalls on
-all 32-bit architectures. As far as I can tell, the problem is that
-the function arguments on parisc are sorted backwards (26, 25, 24, 23,
-...) compared to everyone else, so the calling conventions of using an
-even/odd register pair in native word order result in the lower word
-coming first in function arguments, matching the expected behavior
-on little-endian architectures. The system call conventions however
-ended up matching what the other 32-bit architectures do.
+The __mem_rw_block_writes check is placed ahead of
+__mem_rw_get_foll_force_flag, so it doesn't need
+CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_DEFAULT. It might be nice to call
+this out in kernel-parameters.txt.
 
-A glibc cleanup in 2020 changed the userspace behavior in a way that
-handles all architectures consistently, but this inadvertently broke
-parisc32 by changing to the same method as everyone else.
+I didn't restrict_open_read and restrict_open_write, ChromeOS doesn't
+use those two.
 
-The change made it into glibc-2.35 and subsequently into debian 12
-(bookworm), which is the latest stable release. This means we
-need to choose between reverting the glibc change or changing the
-kernel to match it again, but either hange will leave some systems
-broken.
+-Jeff
 
-Pick the option that is more likely to help current and future
-users and change the kernel to match current glibc. This also
-means the behavior is now consistent across architectures, but
-it breaks running new kernels with old glibc builds before 2.35.
+[1] https://offlinemark.com/an-obscure-quirk-of-proc/
 
-Link: https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=d150181d73d9
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/arch/parisc/kernel/sys_parisc.c?h=57b1dfbd5b4a39d
-Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-I found this through code inspection, please double-check to make
-sure I got the bug and the fix right.
+> -Kees
 
-The alternative is to fix this by reverting glibc back to the
-unusual behavior.
----
- arch/parisc/Kconfig                     | 1 +
- arch/parisc/kernel/sys_parisc32.c       | 9 ---------
- arch/parisc/kernel/syscalls/syscall.tbl | 2 +-
- 3 files changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index daafeb20f993..dc9b902de8ea 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -16,6 +16,7 @@ config PARISC
- 	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_NO_SG_CHAIN
-+	select ARCH_SPLIT_ARG64 if !64BIT
- 	select ARCH_SUPPORTS_HUGETLBFS if PA20
- 	select ARCH_SUPPORTS_MEMORY_FAILURE
- 	select ARCH_STACKWALK
-diff --git a/arch/parisc/kernel/sys_parisc32.c b/arch/parisc/kernel/sys_parisc32.c
-index 2a12a547b447..826c8e51b585 100644
---- a/arch/parisc/kernel/sys_parisc32.c
-+++ b/arch/parisc/kernel/sys_parisc32.c
-@@ -23,12 +23,3 @@ asmlinkage long sys32_unimplemented(int r26, int r25, int r24, int r23,
-     	current->comm, current->pid, r20);
-     return -ENOSYS;
- }
--
--asmlinkage long sys32_fanotify_mark(compat_int_t fanotify_fd, compat_uint_t flags,
--	compat_uint_t mask0, compat_uint_t mask1, compat_int_t dfd,
--	const char  __user * pathname)
--{
--	return sys_fanotify_mark(fanotify_fd, flags,
--			((__u64)mask1 << 32) | mask0,
--			 dfd, pathname);
--}
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 39e67fab7515..66dc406b12e4 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -364,7 +364,7 @@
- 320	common	accept4			sys_accept4
- 321	common	prlimit64		sys_prlimit64
- 322	common	fanotify_init		sys_fanotify_init
--323	common	fanotify_mark		sys_fanotify_mark		sys32_fanotify_mark
-+323	common	fanotify_mark		sys_fanotify_mark		compat_sys_fanotify_mark
- 324	32	clock_adjtime		sys_clock_adjtime32
- 324	64	clock_adjtime		sys_clock_adjtime
- 325	common	name_to_handle_at	sys_name_to_handle_at
--- 
-2.39.2
-
+>
+> --
+> Kees Cook
