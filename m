@@ -1,107 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E13F376E9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89B913AF9;
+	Thu, 20 Jun 2024 19:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718912928; cv=none; b=Srp834lFbuu3i/66onFx6CB+gOJZzHC3nD5+TAu7T7ag3rj446tj7cZajW25WmNXBM7K4t7VUxjMqAvfxVXcgQ12zUitGihKn8A/Pk07qwOuc/9vA0+zz5hKPmPowcZcK5aMRAf2sGnYy6UCbXxtwisodUz0AoWzQKNK3Kw1zy4=
+	t=1718913008; cv=none; b=bBUonLmP4i7drlQoXnS0JbVhww3sGOn4KkheLoy0cZFI/gVM3ulJ79Ch5rCtiqzdPWxbSxs1oiLQDJzPB5Ll/EXMaryhSmhAoNuZT/jc6GVsIpJ9I5hN1FcWvlC+M3BIcVKjimJ7rHUHGCtUJIKZhE+GJR+GrR15FklP5nUJdP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718912928; c=relaxed/simple;
-	bh=A3CWG5i/e70gRo5pIeSegfmVZT4eoyfj4m3/HwUAuzg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZeSPYh5gg6y5vrKDjsP/SHJmbUHYLxhRpVrAdGFMDE2mgcxfKcWjcgXmki2ewaUSKzn5+4wGRWAmaNfZhgj35fkPhpTuyojaz+KmYkS+/cIwlRLST2snHax87N6xsNrB5DZulXGpf8aXk8oDsBJp5oeiy1wtYRzV9H4b7eCTVno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pM0lwtAc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718913008; c=relaxed/simple;
+	bh=IfKe6M83dVlXGFE8T26z06hPcpRgJS7FAPFSMkJ1fqg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aqZmd7fP0StQTJLH8yz83Dm0uLYhkrSPwefvDIKYn/CTeME1QFfvInfMhqgzyhxDvUvGt+lXb0Rqg+N2+qiRN8I6k8eGJhyWfMBgksDEDNvNljWjz3XLOhTIYZLH2dHIFdtETUh92yBOswv0ApwmlQ/SoBPlowAmDcEUYj8d0Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWZEdCAm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pM0lwtAc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 08DD1C2BD10;
-	Thu, 20 Jun 2024 19:48:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWZEdCAm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDCC6C2BD10;
+	Thu, 20 Jun 2024 19:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718912928;
-	bh=A3CWG5i/e70gRo5pIeSegfmVZT4eoyfj4m3/HwUAuzg=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=pM0lwtAc1C1i58XsfyGI7HA0hgaQEfXXSNe6xzc311szkgXW2Rjz/srmceTEZGhWW
-	 11an7D9SEpsOzDugZAmbXGXZ8mDpBa4AEQEO6v9Kd+3n7UvrnJNUWjs6gnXXuttRI4
-	 X0w1JugULlokbAmN8qt98Jfm/Sjucf8OCRtIAfgXeLuJKb+h1mk39QwpVRGOpa51fB
-	 eYNi2C1e1IOOC3DKbdtdUv0Y3VZ6g7wVF8qmbXPbGQ30+jOz5WBTFTeQRbCaUKXXd4
-	 NM6ZaVzbnH3pi0BQCRS5tiHZrhaUv9rQT9rAtnkMnF1ITNku6cEUoKDqw96R2oPIhw
-	 2A/o4cMgZA+Pg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7C4C2BA1A;
-	Thu, 20 Jun 2024 19:48:47 +0000 (UTC)
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 20 Jun 2024 21:48:32 +0200
-Subject: [PATCH] kbuild: scripts/gdb: bring the "abspath" back
+	s=k20201202; t=1718913007;
+	bh=IfKe6M83dVlXGFE8T26z06hPcpRgJS7FAPFSMkJ1fqg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ZWZEdCAm5dcJ4o+OoQp04OgVGXLF7IK7n+kC8Vwq8mW5PGMajdrR9PqilxninpCrG
+	 RpRDBZoA5X9TVR1MWnObT3BnEd85LwdwWDLd67IRYdXgEvMfUWNb4okwRV8D95pQA4
+	 X34FqIkom8tNf3KXzKJujN2edPDNPbvbW7vWBFzg+/tPkCvmMDbqQG9oHKNxGHwPQM
+	 uzwvUC5STlO42xU+XFlbpP5L/Lmc5YMXQPECaqbktF2CZHR7L1ybHNulhMB1VBc0cd
+	 7TDYSIWaveJ5mTtWXDIZUIG8RUlQWp0wN47tmpmflJYKzlaJucLER2vjNeFl6dKYTe
+	 qzO77RH0emjsg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A8A66CF3B99;
+	Thu, 20 Jun 2024 19:50:07 +0000 (UTC)
+Subject: Re: [GIT PULL] Networking for v6.10-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240620162333.2386649-1-kuba@kernel.org>
+References: <20240620162333.2386649-1-kuba@kernel.org>
+X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240620162333.2386649-1-kuba@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.10-rc5
+X-PR-Tracked-Commit-Id: fba383985354e83474f95f36d7c65feb75dba19d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d5a7fc58da039903b332041e8c67daae36f08b50
+Message-Id: <171891300761.2247.12648595029216409391.pr-tracker-bot@kernel.org>
+Date: Thu, 20 Jun 2024 19:50:07 +0000
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240620-jag-fix_gdb_py_symlinks-v1-1-36a0f0217fbf@samsung.com>
-X-B4-Tracking: v=1; b=H4sIAI+HdGYC/x2M0QqDMAwAf0XyvEINU5m/MkapJtZM7aSBoYj/b
- vHx4O4OUE7CCm1xQOK/qPxihvJRQD/6GNgIZQa0+LQ1WvP1wQyyuUCdW3en+zJLnNRgSS+yxE3
- lEXK9Js7afX5/zvMCD8QIh2kAAAA=
-To: Jan Kiszka <jan.kiszka@siemens.com>, 
- Kieran Bingham <kbingham@kernel.org>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Douglas Anderson <dianders@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1168;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=7bxRLJCekPbUSVVSEsWXoyZjnOy26Cg5VuTjO3pr+oE=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZ0h57LponIbCQBtuQrDWoo00muw2dl46UfY
- lbQoIiRBEF2cYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmdIeeAAoJELqXzVK3
- lkFPNXsL+QH5ec584sP4USYWj0gOobplkUCoahv1IEkdH+Ickt99MPv4hjWhWf15yQ0FS2tlHsu
- C8d04+dFpneDHgf0QA5gdxYkNeeLGspljAX+RqwHeocx/Emvp+/v1/BxPELQkpWfcaWBjxyqt2z
- EmCdqTnRONrblxq0rZnEA9g+qDtwomMV5S16AULcNUG2H8Kb52fJNBauR2ddmRDDz8Lz7HjPWOQ
- mlGFCLoQaPkmMW+zBxvoa1pZ8YRMO9jqxMTchqFwML+7vWOa6Ffa0HjCpS0SA5Uw4J6O95/KbQ2
- wA1JYegCO7FlomsJKErRe2uxhr0KH080xk2AhC3syyMh8mZYOGu03MkB1SUTHZ7QxoBh49JJD1c
- YqISa7rhlaron+Vexeyxe5/XDqqhi+Lm1R6Yraf7qYY3zLUxiOqDnDdn7S49pRBsNfDmChwsmuZ
- Qdi7aXNBLXepGGdU6ltmLObwZhayozdQh+3xkmFJljYqxJmYu6nJHX4d5RamJQ2nftZQUYjFEg5
- rA=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
- auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: j.granados@samsung.com
 
-From: Joel Granados <j.granados@samsung.com>
+The pull request you sent on Thu, 20 Jun 2024 09:23:33 -0700:
 
-Use the "abspath" call when symlinking the gdb python scripts in
-scripts/gdb/linux. This call is needed to avoid broken links when
-running the scripts_gdb target on a different build directory
-(O=builddir).
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.10-rc5
 
-Fixes: 659bbf7e1b08 ("kbuild: scripts/gdb: Replace missed $(srctree)/$(src) w/ $(src)")
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- scripts/gdb/linux/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d5a7fc58da039903b332041e8c67daae36f08b50
 
-diff --git a/scripts/gdb/linux/Makefile b/scripts/gdb/linux/Makefile
-index fd1402c0a1a1..fcd32fcf3ae0 100644
---- a/scripts/gdb/linux/Makefile
-+++ b/scripts/gdb/linux/Makefile
-@@ -5,7 +5,7 @@ ifdef building_out_of_srctree
- symlinks := $(patsubst $(src)/%,%,$(wildcard $(src)/*.py))
- 
- quiet_cmd_symlink = SYMLINK $@
--      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(src)/%,$@) $@
-+      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(abspath $(src))/%,$@) $@
- 
- always-y += $(symlinks)
- $(addprefix $(obj)/, $(symlinks)): FORCE
+Thank you!
 
----
-base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
-change-id: 20240620-jag-fix_gdb_py_symlinks-21d9d0de75a2
-
-Best regards,
 -- 
-Joel Granados <j.granados@samsung.com>
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
