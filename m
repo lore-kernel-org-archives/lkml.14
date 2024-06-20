@@ -1,43 +1,44 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.58.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F421AB8F0
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.58.6
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC453BB50;
+	Thu, 20 Jun 2024 08:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873611; cv=none; b=ZmR4TfgfmaE8f2Eo0XsNLvd4rU8I225zm7oWxEQrdsK5PXfvZukXhPlKFXx2B2DU23o/vuF4gT50UAtvxs6eo/BTwhxTOOM8P/o5w5NHK0iA2ssdTESo2htK+cpI3kXEGIqLkAipM8Stza7BYRJd+biUtFG8zV3Z9yuj/guv620=
+	t=1718873710; cv=none; b=mfXaDD3deuzvwC7SjjXiL3hO5opBd76Bpwna4H82wY5pvuFNTRPROIjuiXC9dN5HaxGy9B5iRW3gzR+e3m6Z5wkn1aNW5G/ih8207MvgaDnMuKgtIcSoH7bqhjBzE8FEtt9W1hxQ3zUSSldc77QSl996aqo5X9BeUHpWb+O2Aw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873611; c=relaxed/simple;
-	bh=XY8l337fPNdm24l2P6AviuNktmLUwBaqE4HpOS4C/Kg=;
+	s=arc-20240116; t=1718873710; c=relaxed/simple;
+	bh=jHWt+oS0pQA+C3uyXiXZ+VQ20jbeR+O/U+jRyfrwnbM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d0BsQ6pSwxq8VExhj7GqElma6TgjvGumGI5JHp4mf2VVbsAEt7MXj6DIyDpv/zl7an2BN3RiAgoBMV5yRlSy9AEWcetxSyHVbXq9b922HpPK2vr0jwtOJTTjLp66u0jv1Xs82iiDsgCMkZTwrTnSeFErBkAfALupPiMDHUhF+20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.58.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz3t1718873509t77bppn
-X-QQ-Originating-IP: wrjiMLAB4hMt+TR0SeF11oGDu37PiBlY+nuyZyiPodU=
-Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 20 Jun 2024 16:51:46 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11677031928242655138
-From: Jialong Yang <jialong.yang@shingroup.cn>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc: luming.yu@shingroup.cn,
-	shenghui.qu@shingroup.cn,
-	Jialong Yang <jialong.yang@shingroup.cn>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] powerpc/mmiotrace: bind ioremap and page fault to active mmiotrace
-Date: Thu, 20 Jun 2024 16:51:18 +0800
-Message-Id: <4cb8e7e64c93454518075fc14bf05daf0dce8f7b.1718873074.git.jialong.yang@shingroup.cn>
+	 MIME-Version; b=p3zmlRAZyfxshK8ehpQFNBgPkMPjob0PSZYiwnkpbGxxHX+FG4I7GtU6ikPEUv28/MkBMJkfjAQpaEXvJx1JwK8pDgzu81nqvRUObAFCpvNfYQD8mkpF0Dltz6nUBQXxvo06TcO1TIWwk+tDH5Ba5RFCxAS4hAbZxsKjK8yBaYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EVQqJgvM; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EVQqJgvM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=P+H56
+	2k2vggjvg30NvL8+mRhFD6CP57Wnu7B+p9noDY=; b=EVQqJgvM9XACxbAJMl/nN
+	Hy/AdSnGvjwIU0FL9ioSHHjT0l1CF4GJpBWGJg+nXUk74XIT2Qi42UyMCZAJDLkN
+	nsQJr+hFCj7en5ac+BlfwYrgqw+8XPO33iTqVQVv9vePqx1uijrH6d6Tm72S6YQw
+	Y6iGSqAXJT52SORmoZxeeU=
+Received: from localhost (unknown [101.132.132.191])
+	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDnLzzU7XNmxZGiDw--.17631S2;
+	Thu, 20 Jun 2024 16:52:36 +0800 (CST)
+From: Xavier <xavier_qy@163.com>
+To: longman@redhat.com,
+	mkoutny@suse.com
+Cc: lizefan.x@bytedance.com,
+	tj@kernel.org,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xavier <xavier_qy@163.com>
+Subject: [PATCH v4 v4 1/2] Union-Find: add a new module in kernel library
+Date: Thu, 20 Jun 2024 16:52:32 +0800
+Message-Id: <20240620085233.205690-2-xavier_qy@163.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <2bf90acf7d29641ba6643934ff8dbba897dbd2d9.1718873074.git.jialong.yang@shingroup.cn>
-References: <2bf90acf7d29641ba6643934ff8dbba897dbd2d9.1718873074.git.jialong.yang@shingroup.cn>
+In-Reply-To: <20240620085233.205690-1-xavier_qy@163.com>
+References: <20240603123101.590760-1-ghostxavier@sina.com>
+ <20240620085233.205690-1-xavier_qy@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,102 +46,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+X-CM-TRANSID:_____wDnLzzU7XNmxZGiDw--.17631S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF4UZFWDtr48Gry7tr1xGrg_yoW5KF48pF
+	45GryfCrs7Jry7Cr9akFWFyw4Sva1rGrWUuFWxGw4rArn5tr10qF1qvryFyrn3Jr4xCFW7
+	XF4agr13CrWUJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U7kucUUUUU=
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiZRYEEGXAmg963AAAsx
 
-Hacking the code in ioremap entry and page fault handler entry to
-integrate mmiotrace.
+This patch implements a union-find data structure in the kernel library,
+which includes operations for allocating nodes, freeing nodes,
+finding the root of a node, and merging two nodes.
 
-Signed-off-by: Jialong Yang <jialong.yang@shingroup.cn>
+Signed-off-by: Xavier <xavier_qy@163.com>
 ---
- arch/powerpc/mm/fault.c      | 17 +++++++++++++++++
- arch/powerpc/mm/ioremap_64.c | 11 +++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
+ MAINTAINERS                |  7 +++++++
+ include/linux/union_find.h | 30 ++++++++++++++++++++++++++++++
+ lib/Makefile               |  2 +-
+ lib/union_find.c           | 38 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 76 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/union_find.h
+ create mode 100644 lib/union_find.c
 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 215690452495..b03cba73de92 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -22,6 +22,7 @@
- #include <linux/ptrace.h>
- #include <linux/mman.h>
- #include <linux/mm.h>
-+#include <linux/mmiotrace.h>
- #include <linux/interrupt.h>
- #include <linux/highmem.h>
- #include <linux/extable.h>
-@@ -50,6 +51,19 @@
-  * do_page_fault error handling helpers
-  */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7..602d8c6f42 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23054,6 +23054,13 @@ F:	drivers/cdrom/cdrom.c
+ F:	include/linux/cdrom.h
+ F:	include/uapi/linux/cdrom.h
  
-+/*
-+ * Returns 0 if mmiotrace is disabled, or if the fault is not
-+ * handled by mmiotrace:
-+ */
-+static nokprobe_inline int
-+kmmio_fault(struct pt_regs *regs, unsigned long addr)
++UNION-FIND
++M:	Xavier <xavier_qy@163.com>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	include/linux/union_find.h
++F:	lib/union_find.c
++
+ UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER
+ R:	Alim Akhtar <alim.akhtar@samsung.com>
+ R:	Avri Altman <avri.altman@wdc.com>
+diff --git a/include/linux/union_find.h b/include/linux/union_find.h
+new file mode 100644
+index 0000000000..67e9f62bb3
+--- /dev/null
++++ b/include/linux/union_find.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_UNION_FIND_H
++#define __LINUX_UNION_FIND_H
++#include <linux/slab.h>
++
++/* Define a union-find node struct */
++struct uf_node {
++	struct uf_node *parent;
++	unsigned int rank;
++};
++
++/* Allocate nodes and initialize to 0 */
++static inline struct uf_node *uf_nodes_alloc(unsigned int node_num)
 +{
-+	if (unlikely(is_kmmio_active()))
-+		if (kmmio_handler(regs, addr) == 1)
-+			return -1;
-+	return 0;
++	return kzalloc(sizeof(struct uf_node) * node_num, GFP_KERNEL);
 +}
 +
- static int
- __bad_area_nosemaphore(struct pt_regs *regs, unsigned long address, int si_code)
- {
-@@ -422,6 +436,9 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
- 	vm_fault_t fault, major = 0;
- 	bool kprobe_fault = kprobe_page_fault(regs, 11);
- 
-+	if (unlikely(kmmio_fault(regs, address)))
-+		return 0;
++/* Free nodes*/
++static inline void uf_nodes_free(struct uf_node *nodes)
++{
++	kfree(nodes);
++}
 +
- 	if (unlikely(debugger_fault_handler(regs) || kprobe_fault))
- 		return 0;
++/* find the root of a node*/
++struct uf_node *uf_find(struct uf_node *node);
++
++/* Merge two intersecting nodes */
++void uf_union(struct uf_node *node1, struct uf_node *node2);
++
++#endif /*__LINUX_UNION_FIND_H*/
+diff --git a/lib/Makefile b/lib/Makefile
+index 3b17690456..e1769e6f03 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -34,7 +34,7 @@ lib-y := ctype.o string.o vsprintf.o cmdline.o \
+ 	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
+ 	 earlycpio.o seq_buf.o siphash.o dec_and_lock.o \
+ 	 nmi_backtrace.o win_minmax.o memcat_p.o \
+-	 buildid.o objpool.o
++	 buildid.o objpool.o union_find.o
  
-diff --git a/arch/powerpc/mm/ioremap_64.c b/arch/powerpc/mm/ioremap_64.c
-index d24e5f166723..f5f717bf35df 100644
---- a/arch/powerpc/mm/ioremap_64.c
-+++ b/arch/powerpc/mm/ioremap_64.c
-@@ -3,12 +3,15 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <linux/mmiotrace.h>
- 
- void __iomem *__ioremap_caller(phys_addr_t addr, unsigned long size,
- 			       pgprot_t prot, void *caller)
- {
- 	phys_addr_t paligned, offset;
- 	void __iomem *ret;
-+	phys_addr_t unaligned_phys_addr = addr;
-+	const unsigned long unaligned_size = size;
- 	int err;
- 
- 	/* We don't support the 4K PFN hack with ioremap */
-@@ -28,8 +31,11 @@ void __iomem *__ioremap_caller(phys_addr_t addr, unsigned long size,
- 	if (size == 0 || paligned == 0)
- 		return NULL;
- 
--	if (slab_is_available())
--		return generic_ioremap_prot(addr, size, prot);
-+	if (slab_is_available()) {
-+		ret = generic_ioremap_prot(addr, size, prot);
-+		mmiotrace_ioremap(unaligned_phys_addr, unaligned_size, ret);
-+		return ret;
+ lib-$(CONFIG_PRINTK) += dump_stack.o
+ lib-$(CONFIG_SMP) += cpumask.o
+diff --git a/lib/union_find.c b/lib/union_find.c
+new file mode 100644
+index 0000000000..2f77bae1ca
+--- /dev/null
++++ b/lib/union_find.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/union_find.h>
++
++struct uf_node *uf_find(struct uf_node *node)
++{
++	struct uf_node *parent;
++
++	if (!node->parent) {
++		node->parent = node;
++		return node;
 +	}
- 
- 	pr_warn("ioremap() called early from %pS. Use early_ioremap() instead\n", caller);
- 
-@@ -52,6 +58,7 @@ void iounmap(volatile void __iomem *token)
- 	if (!slab_is_available())
- 		return;
- 
-+	mmiotrace_iounmap(token);
- 	generic_iounmap(PCI_FIX_ADDR(token));
- }
- EXPORT_SYMBOL(iounmap);
++
++	/*Find the root node and perform path compression at the same time*/
++	while (node->parent != node) {
++		parent = node->parent;
++		node->parent = parent->parent;
++		node = parent;
++	}
++	return node;
++}
++
++/*Function to merge two sets, using union by rank*/
++void uf_union(struct uf_node *node1, struct uf_node *node2)
++{
++	struct uf_node *root1 = uf_find(node1);
++	struct uf_node *root2 = uf_find(node2);
++
++	if (root1 != root2) {
++		if (root1->rank < root2->rank) {
++			root1->parent = root2;
++		} else if (root1->rank > root2->rank) {
++			root2->parent = root1;
++		} else {
++			root2->parent = root1;
++			root1->rank++;
++		}
++	}
++}
 -- 
-2.34.1
+2.45.2
 
