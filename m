@@ -1,32 +1,32 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975291ACE89;
-	Thu, 20 Jun 2024 16:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE401B14FD
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899253; cv=none; b=iSvjvxjYgx23BTIDUcUrI0gkLuYmv3qZyukHiK8E1eLlWt4vCqMBY4PIGavnPEnO4ZactuXCT/4zBZXiA6vU1+rJfM37ohfiVsxqBCo00gyvCQTGIiL5uN0mKFcyh0yQG/NrjzVlZBm+81znl+0dP8x4EO979pD2fy6WXoOz+Fk=
+	t=1718899256; cv=none; b=bNU5KeG0wqBgvzpMb/R08UTeV6na7sDLKE8PZV+CYwbMhqnUR6rHUDqUiEKItiXSl3M9Oib0fBnOhcZYHDtWpEQDrqnmXRT/ilNUpfcvVjDpBQdId4aUdfEH7cAY/n7GS+0oOryHjPs4zF9x5JjrKPZDoAWVjpwXcd6oT/TKVTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899253; c=relaxed/simple;
-	bh=qZH/XbFDujN79derPC6Ra+IV8xgYykFW8rje5FopDfI=;
+	s=arc-20240116; t=1718899256; c=relaxed/simple;
+	bh=uAqg6i1FR5JV9+hsH2qU+nQN2NHm5YnaYxjtZoNFoBc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M9TST+RLKBs2Fuz8XLbbSvKYvNSp6yuYyaBeSD9/XLR7tzp2ZpzdWpdypdEP8ay2I6LN2tRg4k4ZtQ6vAcO4vqO69XzftQMY2gnXLWm5uyJ6Aui7ZIGLiZiWYkSkDxcZnJ+XCC6eDY3pseoYRhGSU91rp81HEg6N11DEyxTRATE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KIe+j++7; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=IHr0UtPcxWTKWlo+NTJZu9OWTRkPHh6lv8yumhfhtCFMEW5IFFrTPnCt0CXwco17mLFS3YdxjxrEMOkKeLyovhgeDwqnVP1sgRqcy6X9+UUm8nnKP+kKv0LzQIUPQdpptDVJ8XqAZmMnYlGBpVwRvhdkAWevUHYy1hZjhcOwsnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=A8ZDck3R; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KIe+j++7"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="A8ZDck3R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1718899248;
-	bh=qZH/XbFDujN79derPC6Ra+IV8xgYykFW8rje5FopDfI=;
+	s=mail; t=1718899249;
+	bh=uAqg6i1FR5JV9+hsH2qU+nQN2NHm5YnaYxjtZoNFoBc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KIe+j++7FE59c05dEDol7tHCYs2zL33R5W9TQ5t6sRIVXUEOpzBVvgq1vBE0SWI92
-	 27MRLT2YXT0sajg0oLLSRQXbFowCr9D+TjpJ/37PcJhvMhjTgimqoHyypPJJ5Nay8X
-	 KTP7iNAWvJ5XQoMzQYzWB3RlOg3kX3juw1inUi3M=
+	b=A8ZDck3RHTgSIZl0GPrPK6sHKiZWk4DZCjcWPTafmwX4okpEbE2SkMrnNGBdDcH9d
+	 ASeV0hyRx8SW3kjtJ5d+uFL3pe5YxDCW687y3tdsr1uGt5exMrwxKjHlNy79pUag8E
+	 EdrtMUstAjV2/9z3mqvkHBIGyEajgf8/kOUL88hM=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 20 Jun 2024 18:00:33 +0200
-Subject: [PATCH 1/5] nvmem: core: only change name to fram for current
- attribute
+Date: Thu, 20 Jun 2024 18:00:37 +0200
+Subject: [PATCH 5/5] nvmem: core: drop unnecessary range checks in sysfs
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,54 +35,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240620-nvmem-compat-name-v1-1-700e17ba3d8f@weissschuh.net>
+Message-Id: <20240620-nvmem-compat-name-v1-5-700e17ba3d8f@weissschuh.net>
 References: <20240620-nvmem-compat-name-v1-0-700e17ba3d8f@weissschuh.net>
 In-Reply-To: <20240620-nvmem-compat-name-v1-0-700e17ba3d8f@weissschuh.net>
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
  Jiri Prchal <jiri.prchal@aksignal.cz>
 Cc: linux-kernel@vger.kernel.org, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- stable@vger.kernel.org
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718899247; l=1144;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718899247; l=1462;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=qZH/XbFDujN79derPC6Ra+IV8xgYykFW8rje5FopDfI=;
- b=R/dQi5IeBBVHsiehLo5P0Z5JPXd0eLDxcBfEISsTYxpL4q6ioWE1CRFK5mPn/NpgV9o0dbCpl
- Iy9RSvpJmCQByw9oGaBO9bEnRpFSRcKx/lTAJiM1ur/DTClaRCoMyPm
+ bh=uAqg6i1FR5JV9+hsH2qU+nQN2NHm5YnaYxjtZoNFoBc=;
+ b=v99R64pvdtrw/Mdgi/x7kWG51vnxlYXGRQ4ja4ax0ptKPeiG79nacgSUyTDr1vO7zFq6QYd9n
+ enX4+aswZN5A+y5BQO3oSOJYpzvl09IYnar7SxlEhfjqEJGIz0OwN1s
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-bin_attr_nvmem_eeprom_compat is the template from which all future
-compat attributes are created.
-Changing it means to change all subsquent compat attributes, too.
+The same checks have already been done in sysfs_kf_bin_write() and
+sysfs_kf_bin_read() just before the callbacks are invoked.
 
-Instead only use the "fram" name for the currently registered attribute.
-
-Fixes: fd307a4ad332 ("nvmem: prepare basics for FRAM support")
-Cc: stable@vger.kernel.org
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/nvmem/core.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/nvmem/core.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
 diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index e1ec3b7200d7..1285300ed239 100644
+index ed077d7e3998..5c1ee7f0da0a 100644
 --- a/drivers/nvmem/core.c
 +++ b/drivers/nvmem/core.c
-@@ -396,10 +396,9 @@ static int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
- 	if (!config->base_dev)
+@@ -203,19 +203,12 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
+ 		dev = kobj_to_dev(kobj);
+ 	nvmem = to_nvmem_device(dev);
+ 
+-	/* Stop the user from reading */
+-	if (pos >= nvmem->size)
+-		return 0;
+-
+ 	if (!IS_ALIGNED(pos, nvmem->stride))
  		return -EINVAL;
  
--	if (config->type == NVMEM_TYPE_FRAM)
--		bin_attr_nvmem_eeprom_compat.attr.name = "fram";
+ 	if (count < nvmem->word_size)
+ 		return -EINVAL;
+ 
+-	if (pos + count > nvmem->size)
+-		count = nvmem->size - pos;
 -
- 	nvmem->eeprom = bin_attr_nvmem_eeprom_compat;
-+	if (config->type == NVMEM_TYPE_FRAM)
-+		nvmem->eeprom.attr.name = "fram";
- 	nvmem->eeprom.attr.mode = nvmem_bin_attr_get_umode(nvmem);
- 	nvmem->eeprom.size = nvmem->size;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	count = round_down(count, nvmem->word_size);
+ 
+ 	if (!nvmem->reg_read)
+@@ -243,19 +236,12 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
+ 		dev = kobj_to_dev(kobj);
+ 	nvmem = to_nvmem_device(dev);
+ 
+-	/* Stop the user from writing */
+-	if (pos >= nvmem->size)
+-		return -EFBIG;
+-
+ 	if (!IS_ALIGNED(pos, nvmem->stride))
+ 		return -EINVAL;
+ 
+ 	if (count < nvmem->word_size)
+ 		return -EINVAL;
+ 
+-	if (pos + count > nvmem->size)
+-		count = nvmem->size - pos;
+-
+ 	count = round_down(count, nvmem->word_size);
+ 
+ 	if (!nvmem->reg_write)
 
 -- 
 2.45.2
