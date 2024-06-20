@@ -1,104 +1,239 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522AD1A8C02;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E280C1A4F3D;
 	Thu, 20 Jun 2024 12:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718885208; cv=none; b=H2jQUVWyTwAp46Gq+m986kxQf1QqnFaqKFeIzBDTpxWqWtzu+/xw00Dxh5dR+cv/9XLlFgZyRkw/c+cxAsXIiwiGE5ZGdufUfTvCZFXGO4mq8yNiF5E2iYhVx882lOffg0ZP2ZlpN3FfCJqqGqLNSiMnRRyx1owBXIpuLOp+h0Y=
+	t=1718885208; cv=none; b=biRQURLEId2FgJd+twg6gSvS8hMj3XMdrJTZi0T+yKpzaqH2y4/Q3QqNxiU1Cj09WfX2jzrIpuxqZt9tGldvidBK3eEZ18JLMiiRvLqeBKhilyEy5GE9VhZz3I1/CJ7zzSZJYWa+VP7hjg+dRDff68eMIgJGmcR4utOOGK/uLQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718885208; c=relaxed/simple;
-	bh=a5xdK0JRPyJDye1/3r1T9m7F3uYxAPruhNrFzDhoaWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fbkKb1xIheHKLHbfV6L0vyF3sSIDzgJp0dEtjL+FI6XJBmNk0xquTebsEii9sXmO2HmQpK5aZ6o+LrMFTc/kkViY9057E+Ue/ReTEh76NthmdS2YU5x7whKES0PCeoPa4oU3zOw/jdLmsUrsOer7EZ4FuvgYD40GpYQtd4beJBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihl6J/oF; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=OvvuAY6JJeKz8HMylM8rgAQ3tTJmQ8c69rhKOwcV0/o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GufGnpEzMEFebHEpCKUiOZYAh6pQCam6DDOaAfKgT4KBFXajRACJht1VFxuJDyfvCUJzAo7+BGzlJoo0SHpO2YYr7FTu4Fbpl1RrG8ZkEeaN8xtNsAjuJ1rghtPHU3mdwkzKnsk0kRcvxmdMzKzxNmyfSIPA8TBpFPPL1Ojowr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fRO7UO76; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihl6J/oF"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso921432a12.0;
-        Thu, 20 Jun 2024 05:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718885204; x=1719490004; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a5xdK0JRPyJDye1/3r1T9m7F3uYxAPruhNrFzDhoaWA=;
-        b=ihl6J/oFF6dLrx6UxqPXwTw3W6ylGIaiPkwh/PzH65QI9e85hDQHUKJD9WcnTUlWKS
-         o/tRPDLPwkPyhfBF2LN3zCHujjqIqaEdTdKzPQgYA2vsVqqZF+qNl3LYB9tdw0G9+bL5
-         MXgG6LvACI/1yFgx+ViYoU4WyDxxsA0AlF3hpvDhYg5U/PNqZHDutblI2L6naqxpsZok
-         5H+vYbju0Kg5KTiehLO5I1VwVsTe4E3Pz0aJaqTcOT+h+rxHAo5KQirsqXAFPT2ohaS/
-         YLTuigtfEkKYtgpqGd8WqVFEpGoYrWYqa1YF/M6Enf4NKIOLJvfdVfGbDT3toUzI+lBE
-         g5PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718885204; x=1719490004;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a5xdK0JRPyJDye1/3r1T9m7F3uYxAPruhNrFzDhoaWA=;
-        b=w+TQO/UNQFC7ZSSvA4iB0gDq4vi4A4bl4TnZglPmO03CkFLb29FUaqte8Crqcgpfs2
-         jmO9jFK5nndGNXnRsrsdc/Rvm7wKU7jPkPVPu0ynUA1v970HnRyEJFmIgrJFYhmSDq1G
-         e6Qr/iJ5TR8vypDNivTUOACcBdyG3J/SIzQtOh7iwP7cNMX/NLn68O2CzjTRqNSNNveY
-         WEFg44Pm5wgTvng3uTvy747/jqOHsIUBWTSUr/BWkuwVEHUiuzB9pt5mgJ7hNnmD25r1
-         4f95B+Ozo4hRwBxfHsi4GTqOfq0GWa1Vfz/nONMIDecWzB5yK1uqTTLaSJRvcLdSGi5c
-         i8VA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5F78ofWtib6a3arIXD4KKqjQQ99dAyRK5SiSLio0h8Qbb9vFNEi3eBmX7OgMylBiYtn7bdt5KeBF6xAfXR5666S87e8lRuq/qqrgXCfdZBqEpxs/4dWPRguHVQgBslbFbqvFv
-X-Gm-Message-State: AOJu0Yxj8xWMx8vjU390v25isMqYS3aCQA2dX3crwzyJGT7CXOG1oeem
-	Rswoy0tg3HtmKinmvUu7KAaWN3RTmqX6oKXe/dX5CEezE604kXk6
-X-Google-Smtp-Source: AGHT+IGCnmWLe2uBXVUqMKg8aNOlpJuUDO24AhQ+OGHnDlQDlzPSh+dd57MqbVJ0IlofdSox5ozYcQ==
-X-Received: by 2002:a50:d613:0:b0:579:e7c5:1001 with SMTP id 4fb4d7f45d1cf-57d07e6f4ecmr2867294a12.23.1718885204220;
-        Thu, 20 Jun 2024 05:06:44 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm9552286a12.22.2024.06.20.05.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 05:06:43 -0700 (PDT)
-Date: Thu, 20 Jun 2024 15:06:41 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Oleksij Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Casper Andersson <casper.casan@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 net-next] net: dsa: Allow only up to two HSR HW
- offloaded ports for KSZ9477
-Message-ID: <20240620120641.jr2m4zpnzzjqeycq@skbuf>
-References: <20240619134248.1228443-1-lukma@denx.de>
- <20240619134248.1228443-1-lukma@denx.de>
- <20240619144243.cp6ceembrxs27tfc@skbuf>
- <20240619171057.766c657b@wsk>
- <20240619154814.dvjcry7ahvtznfxb@skbuf>
- <20240619155928.wmivi4lckjq54t3w@skbuf>
- <20240620095920.6035022d@wsk>
- <20240620090210.drop6jwh7e5qw556@skbuf>
- <20240620140044.07191e24@wsk>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fRO7UO76"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K9v8Ie016880;
+	Thu, 20 Jun 2024 12:06:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5tRKl3MbIlCDWeWB/RY5B88txA5Kn3AKNMxA1n/Auy0=; b=fRO7UO76xzdewTIR
+	unnfobTROV7xE6ZkTMnFCf+mkcUsIuv3Q5jDHZehTv61css+XyKX+08pSpDO0zRh
+	RLUCqOp2bV/bjwrDxGOMwT2rMALWD5cR13iD2o6B3FAJPvhpP7QfDUs+HjALRv5P
+	/agj1quBvnBIhAEx58H2VUN29Al0hFqKtSJtCQ397S8Ao77Vy6L+MCX+rKwLO63p
+	fY3wUq2GUA7DMPX/JEl6bdeA70y2LLHDUNN2ElrHQZ6A+35QN3JRfMUHNmfDR22i
+	p68joYAx4x2N7tN3TKkRZGWEWpSoj2McPpseJbvvaZ6S0Jad1j6snDVFqvThTqui
+	L6AkGQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuj9x4dpe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 12:06:42 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KC6fUc019754
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 12:06:41 GMT
+Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Jun 2024 05:06:37 -0700
+From: Komal Bajaj <quic_kbajaj@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Melody Olvera
+	<quic_molvera@quicinc.com>,
+        Komal Bajaj <quic_kbajaj@quicinc.com>
+Subject: [PATCH v3 1/4] dt-bindings: remoteproc: mpss: Document QDU1000/QRU1000 mpss devices
+Date: Thu, 20 Jun 2024 17:31:40 +0530
+Message-ID: <20240620120143.12375-2-quic_kbajaj@quicinc.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240620120143.12375-1-quic_kbajaj@quicinc.com>
+References: <20240620120143.12375-1-quic_kbajaj@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620140044.07191e24@wsk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 18-OQiEz8jUQkypsXdJLhjO3Y92KtTfj
+X-Proofpoint-GUID: 18-OQiEz8jUQkypsXdJLhjO3Y92KtTfj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_07,2024-06-20_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406200087
 
-On Thu, Jun 20, 2024 at 02:00:44PM +0200, Lukasz Majewski wrote:
-> In general I do understand your concerns - however, as I've stated this
-> patch fixes oddity of the KSZ9477. I can test it with it.
+From: Melody Olvera <quic_molvera@quicinc.com>
 
-> To keep it short: I do see your point, but I believe that it is out of
-> the scope for this particular patch.
+Document the compatible for the component used to boot the MPSS on the
+QDU1000 and QRU1000 SoCs.
 
-So that's it? Can't test with anything other than KSZ9477 => don't care
-about anything else, and will ignore review feedback, even if the static
-analysis of the code plausibly points to a more widespread issue?
+The QDU1000 and QRU1000 mpss boot process now requires the specification
+of an RMB register space to complete the handshake needed to start or
+attach the mpss.
 
-As the author of commit 5055cccfc2d1 ("net: hsr: Provide RedBox support
-(HSR-SAN)"), who do you think should be responsible of taking care that
-it plays well with existing offloading drivers?
+Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+---
+ .../remoteproc/qcom,qdu1000-mpss-pas.yaml     | 129 ++++++++++++++++++
+ 1 file changed, 129 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml
+new file mode 100644
+index 000000000000..71c5a85b679e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,qdu1000-mpss-pas.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/qcom,qdu1000-mpss-pas.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm QDU1000 Modem Peripheral Authentication Service
++
++maintainers:
++  - Melody Olvera <quic_molvera@quicinc.com>
++  - Komal Bajaj <quic_kbajaj@quicinc.com>
++
++description:
++  Qualcomm QDU1000 SoC Peripheral Authentication Service loads and boots firmware
++  on the Qualcomm DSP Hexagon core.
++
++properties:
++  compatible:
++    enum:
++      - qcom,qdu1000-mpss-pas
++
++  reg:
++    items:
++      - description: Address offset and size for MPSS PAS register set
++      - description: Address offset and size for MPSS RMB register set
++
++  reg-names:
++    items:
++      - const: base
++      - const: rmb
++
++  clocks:
++    items:
++      - description: XO clock
++
++  clock-names:
++    items:
++      - const: xo
++
++  qcom,qmp:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Reference to the AOSS side-channel message RAM.
++
++  smd-edge: false
++
++  firmware-name:
++    items:
++      - description: Firmware name of the Hexagon core
++      - description: Firmware name of the Hexagon Devicetree
++
++  memory-region:
++    items:
++      - description: Memory region for main Firmware authentication
++      - description: Memory region for Devicetree Firmware authentication
++      - description: DSM Memory region
++
++  power-domains:
++    items:
++      - description: CX power domain
++      - description: MSS power domain
++
++  power-domain-names:
++    items:
++      - const: cx
++      - const: mss
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - memory-region
++
++allOf:
++  - $ref: /schemas/remoteproc/qcom,pas-common.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    #include <dt-bindings/interconnect/qcom,qdu1000-rpmh.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/mailbox/qcom-ipcc.h>
++    #include <dt-bindings/power/qcom-rpmpd.h>
++
++    remoteproc@4080000 {
++        compatible = "qcom,qdu1000-mpss-pas";
++        reg = <0x4080000 0x4040>,
++              <0x4180000 0x1000>;
++        reg-names = "base", "rmb";
++
++        clocks = <&rpmhcc RPMH_CXO_CLK>;
++        clock-names = "xo";
++
++        interrupts-extended = <&intc GIC_SPI 264 IRQ_TYPE_EDGE_RISING>,
++                              <&smp2p_modem_in 0 IRQ_TYPE_EDGE_RISING>,
++                              <&smp2p_modem_in 1 IRQ_TYPE_EDGE_RISING>,
++                              <&smp2p_modem_in 2 IRQ_TYPE_EDGE_RISING>,
++                              <&smp2p_modem_in 3 IRQ_TYPE_EDGE_RISING>,
++                              <&smp2p_modem_in 7 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "wdog", "fatal", "ready", "handover",
++                          "stop-ack", "shutdown-ack";
++
++        memory-region = <&mpss_mem>, <&dtb_mpss_mem>, <&mpss_dsm_mem>;
++
++        firmware-name = "qcom/qdu1000/modem.mbn",
++                        "qcom/qdu1000/modem_dtb.mbn";
++
++        power-domains = <&rpmhpd QDU1000_CX>,
++                        <&rpmhpd QDU1000_MSS>;
++        power-domain-names = "cx", "mss";
++
++        interconnects = <&mc_virt MASTER_LLCC &mc_virt SLAVE_EBI1>;
++
++        qcom,qmp = <&aoss_qmp>;
++
++        qcom,smem-states = <&smp2p_adsp_out 0>;
++        qcom,smem-state-names = "stop";
++
++        glink-edge {
++            interrupts-extended = <&ipcc IPCC_CLIENT_MPSS
++                                         IPCC_MPROC_SIGNAL_GLINK_QMP
++                                         IRQ_TYPE_EDGE_RISING>;
++            mboxes = <&ipcc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_GLINK_QMP>;
++
++            label = "modem";
++            qcom,remote-pid = <2>;
++        };
+--
+2.42.0
+
