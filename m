@@ -1,79 +1,98 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1504B1CEA13;
-	Thu, 20 Jun 2024 17:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD971CEA1B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906324; cv=none; b=AnfecTO0SV4/TkrTgTXzTsdKExcqxnXMvYNnj8t7eDaJ0HaqCY5QJkvMJDPAheNGeIlVnvOnlgCrXw864uVnx9wMegFXB06L88dvH5Fkirxm66pewb9wri1inGp4XA+1Z4zrH3w98gGll1q0+H0M1YgurWrrP6zE4fhXX07GgMo=
+	t=1718906325; cv=none; b=EZdiep3D63MEUjMhXwfr2UtKp742vgZuX0aem8V6jGGC7TvLPfpNOy5Q92cZ636PlknJse2UUlz7hYahne+ZopDMIkkZgjw+Un3Fr7kzFO+3Pta2lzwg4NapMlKwizXXdBQgxvTyxXjhvadRhpO1X2D0b0lp8yaS35k6D0U78OI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906324; c=relaxed/simple;
-	bh=EE6kuxbo5QGE7L7+DMLqP/XTIbnT3wTeY7rcKK6IYpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iCylmWhbvG8thQ5nRFC+Cn19sK4wQJ8F8fZKPRmleV11UO0Q2dY9OvRJwgGAFtavGJDS9bh8ahgkOkSVhDii5ycnixvsOZ4SdjEFQeIeZMp6LVhCdGNrQIkVQSnrvGFt42yYkUz5rgBoT3aoNhIipZLwiQUPvYdcspX7QMgPkSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y9UVvmWs; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718906325; c=relaxed/simple;
+	bh=4DQrIUMsTm81JssGC9KBdVsofE3jqG6GAjcZIQrb7tc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WBYuv5sl3SjSPksa27B0kPqG4Vq8aDTzM1mvFAbBfF4SI1QYudS7cK53dlFpTprwjF+sWGHtyovJkzFXhj1JqUa1/fObXzg5kJxxMAS5jB+AU/zk56mRsGz1vjEfZ0F6J4vzVG/czfhzWv0oi1kIMiaPYZj/jMMQplY9AovIr80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=KoztGGCH; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9UVvmWs"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f9d9b57b90so5187435ad.0;
-        Thu, 20 Jun 2024 10:58:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="KoztGGCH"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6ef64b092cso136120866b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718906322; x=1719511122; darn=vger.kernel.org;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906322; x=1719511122; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/RrpOxxSwU6dhPGdg1a14uJwTPLPcla8GvMqVb4mdfc=;
-        b=Y9UVvmWsyFhQcamnLC5CRk43XiZfPCq+QpeAsMtYOTLtQi99vMODJaos7uHq+qr8Jb
-         3K58mOxQADlUh1enWELoS7tW8pYu5BFheBdFgYnQi0UP7UCiV9bSBYiJEFjzAYQrcAre
-         AQzz2bmG3GdxiDn5YmwJXRBA1sf+6lO35Y855Q18+sqpsM6G2yHliSVETkgY5XTZJ24v
-         bWLPkl4g39mp3PveDZHsUkh8nP2bnp5wxTAamT6/WES5sDAoApG0HoZBtJxnvTP9Uk+4
-         ByoYXraPnlv5gWOY92AfYxavEirl2TpVGM5wR5RCQW3EDx5Q3YZYwpEhBRIlo+oSQK5X
-         qLtA==
+        bh=POfTgIlDMKnuctYd9TdkfbMoA75Hg7wnTz1QoAWu+kM=;
+        b=KoztGGCHFSS8tzWS8xmLpfOXPobgYuXHsk14gimU/XxPPsWFerDe+/fHc/ryuL5+Lf
+         CMHIstaNBcpyRoU3FSZtyzIpN7e9gIUlV3kiHy1uygZoKkJb/RGaitvfroIdVkWZHWyb
+         mTZzTYFFRbGAVWvjJzukVaJdGrH93/Mf1UVfEsriON1wIW2QxYFbPMHJ8ZaB32Fil8Yg
+         8w1zRudXZuVgKvvuKiXg1S9WjbJt3MfsjzIn2jT45gj42n26vJYBQa4ThFT/hzwWfLi0
+         toOUSnbYs/mnfLLZOg7+KHKSDao3Lx1BGOdBQRu0Kb4pbtNoan0qt/jBVnPVeFGsRJdW
+         sAAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1718906322; x=1719511122;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/RrpOxxSwU6dhPGdg1a14uJwTPLPcla8GvMqVb4mdfc=;
-        b=D4BtWZXY4mnYlNx5iWYbMLjGv+PclqdCVoqhw1ljmnlULfDYsrtKAlDao23LFyOB04
-         VrFTlHmkJ9gS201/DRnvJZ0y/sWZ6ZPLeAXITieX090H7T4OxTTNCP7MCdrKYly0UhVP
-         uECcYBTm+9huKtaN6izEGA5p1VvjeknmMWR3X/QZWNWzwgKaQcPVb99zxHpbUp0M8lX8
-         C78kJaAeFi9BeevLbMt1lrvCu32L7qgaKFxVvcGFBXittpZ8N6gYvTVW3iyZAXEAMMwF
-         Ts+VKUEN1k/63Tm5OfuV49Mb/QsGhuymGWEC90LrJt4zNphE4Nke3bzr38NY+q8pYnoR
-         Ja1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUmvebutdO1GGMCJRwKrY2145XcywipD10nYGCO/iuikbq9MHjUm5HRSeBbPXDeS8kQwYF8Md+VIb0gS5w/LZ8PLvq/uL3bj88=
-X-Gm-Message-State: AOJu0YyIpvbtcyP5KOdJAkTyRInvgC2cCBZcEKSM5SDp7qT6qg2+YRrc
-	xSX5DrxMas7jkWj4Gb0GkNmpQ6fZ+D7wc7jwCruOiPpNon4I7Dt0vU0hcX9x4Zg=
-X-Google-Smtp-Source: AGHT+IFwR4KUsUwz3DVzTLlDW/Tyw/BDO/CoRLBHVeFWOs1T2umlbZqTuQWZCRaEx6Uoyiqs/GQXHg==
-X-Received: by 2002:a17:902:db05:b0:1f6:e11e:640e with SMTP id d9443c01a7336-1f9aa3b07c1mr68642755ad.4.1718906322284;
-        Thu, 20 Jun 2024 10:58:42 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f98841f6bfsm61533625ad.195.2024.06.20.10.58.41
+        bh=POfTgIlDMKnuctYd9TdkfbMoA75Hg7wnTz1QoAWu+kM=;
+        b=qVFZtU6U+kukU4OoPcVUqUsOJzCSsHwMqLbbztPVP7OfAzeit/QpfO2nGkbDp9M/zs
+         KqbseJJaI+R4IXhAxUqBmK89JL2toE9E2+jQOZUkyhZSqRn5aUXC3wkYtByagmEKNkGO
+         5ygCHfrtpW22BBQRcrMES9D5V3dRiJsBZuRn3n56GmXmrjSoh7tpqqBdofQ88jUJutWy
+         gped0SEFKmtOn0xZSDAbyuKUoy9ePjkhAydk4YqV01izSrIoj4ihU8EfYSjBVambjRL0
+         lLkv56ULnL3/U26W69NQG0X86GyUqitkQb6Do7nNibhr3jcMpDLnyRT6VUyvIcWhT2rj
+         BYdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWy179HQIPPFL7j7VV00Y5x9xEsBmHau5Cvsa3UbENRBQNVRFXP1El1GlRXxowZ4scse7OXXUWfgf0OwT/kCIlKXkjeeLBHU2VUkpbB
+X-Gm-Message-State: AOJu0YwF9NimLZEsO6zp0pxQLJWom5UWal9wLHbYt6qsRxoWQwC/JxxA
+	KcBCvPTaHVSEJCOwDtT3Ffk65Ou0rirCp2svglE0IDv9BM2m80Rsuk2z+aTqbHA=
+X-Google-Smtp-Source: AGHT+IHTrvjRefjDyJtTKiBTdA/7eaPFIlKAqed0dBKu9bDkvkontU8BQ0nzLod+LvZtaEx3jpBdyA==
+X-Received: by 2002:a17:907:8b8b:b0:a6f:ad2f:ac5d with SMTP id a640c23a62f3a-a6fad2fad21mr380433766b.6.1718906321968;
+        Thu, 20 Jun 2024 10:58:41 -0700 (PDT)
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.58.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 20 Jun 2024 10:58:41 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Yury Norov <yury.norov@gmail.com>,
-	linux-sh@vger.kernel.org
-Cc: Alexey Klimov <alexey.klimov@linaro.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH v4 33/40] sh: mach-x3proto: optimize ilsel_enable()
-Date: Thu, 20 Jun 2024 10:56:56 -0700
-Message-ID: <20240620175703.605111-34-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
-References: <20240620175703.605111-1-yury.norov@gmail.com>
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Yangtao Li <frank.li@vivo.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Li Zetao <lizetao1@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Subject: [Patch v4 03/10] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
+Date: Thu, 20 Jun 2024 19:56:34 +0200
+Message-Id: <20240620175657.358273-4-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,49 +101,131 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify ilsel_enable() by using find_and_set_bit().
+Add nxp,lpc3220-i2s DT binding documentation.
 
-Geert also pointed the bug in the old implementation:
-
-	I don't think the old code worked as intended: the first time
-	no free bit is found, bit would have been ILSEL_LEVELS, and
-	test_and_set_bit() would have returned false, thus terminating
-	the loop, and continuing with an out-of-range bit value? Hence
-	to work correctly, bit ILSEL_LEVELS of ilsel_level_map should
-	have been initialized to one?  Or am I missing something?
-
-The new code does not have that issue.
-
-CC: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 ---
- arch/sh/boards/mach-x3proto/ilsel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Changes for v4:
+- Custom dma-vc-names property with standard dmas and dma-names
+- Added to MAINTAINERS
 
-diff --git a/arch/sh/boards/mach-x3proto/ilsel.c b/arch/sh/boards/mach-x3proto/ilsel.c
-index f0d5eb41521a..35b585e154f0 100644
---- a/arch/sh/boards/mach-x3proto/ilsel.c
-+++ b/arch/sh/boards/mach-x3proto/ilsel.c
-@@ -8,6 +8,7 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+Changes for v3:
+- Added '$ref: dai-common.yaml#' and '#sound-dai-cells'
+- Dropped all clock-names, references
+- Dropped status property from the example
+- Added interrupts property
+- 'make dt_binding_check' pass
+
+Changes for v2:
+- Added maintainers field
+- Dropped clock-names
+- Dropped unused unneded interrupts field
+
+ .../bindings/sound/nxp,lpc3220-i2s.yaml       | 73 +++++++++++++++++++
+ MAINTAINERS                                   | 10 +++
+ 2 files changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml b/Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
+new file mode 100644
+index 000000000000..40a0877a8aba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/nxp,lpc3220-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP LPC32XX I2S Controller
++
++description:
++  The I2S controller in LPC32XX SoCs, ASoC DAI.
++
++maintainers:
++  - J.M.B. Downing <jonathan.downing@nautel.com>
++  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
++
++allOf:
++  - $ref: dai-common.yaml#
++
++properties:
++  compatible:
++    enum:
++      - nxp,lpc3220-i2s
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: input clock of the peripheral.
++
++  dmas:
++    items:
++      - description: RX DMA Channel
++      - description: TX DMA Channel
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++  "#sound-dai-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - dmas
++  - dma-names
++  - '#sound-dai-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/lpc32xx-clock.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2s@20094000 {
++      compatible = "nxp,lpc3220-i2s";
++      reg = <0x20094000 0x1000>;
++      interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&clk LPC32XX_CLK_I2S0>;
++      dmas = <&dma 0 1>, <&dma 13 1>;
++      dma-names = "rx", "tx";
++      #sound-dai-cells = <0>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f7adf9f66dfa..fadf1baafd89 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8918,6 +8918,16 @@ S:	Maintained
+ F:	sound/soc/fsl/fsl*
+ F:	sound/soc/fsl/imx*
  
-+#include <linux/find_atomic.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -99,8 +100,8 @@ int ilsel_enable(ilsel_source_t set)
- 	}
- 
- 	do {
--		bit = find_first_zero_bit(&ilsel_level_map, ILSEL_LEVELS);
--	} while (test_and_set_bit(bit, &ilsel_level_map));
-+		bit = find_and_set_bit(&ilsel_level_map, ILSEL_LEVELS);
-+	} while (bit >= ILSEL_LEVELS);
- 
- 	__ilsel_enable(set, bit);
- 
++FREESCALE SOC LPC32XX SOUND DRIVERS
++M:	J.M.B. Downing <jonathan.downing@nautel.com>
++M:	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
++R:	Vladimir Zapolskiy <vz@mleia.com>
++L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
++L:	linuxppc-dev@lists.ozlabs.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
++N:	lpc32xx
++
+ FREESCALE SOC SOUND QMC DRIVER
+ M:	Herve Codina <herve.codina@bootlin.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
 -- 
-2.43.0
+2.25.1
 
