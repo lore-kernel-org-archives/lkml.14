@@ -1,111 +1,161 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F4F1BA090;
-	Thu, 20 Jun 2024 17:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0B81BB6B6
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906353; cv=none; b=K0FKVKaVLAwdhwBgtr9dWvgAN8Cp2G6K/DmVrkAs2/MF3Ot1J8MTv4zgidzts+fzRttI2FkleghLhD4hJaDTdHun1dhzI41CL4AjlzN5e2tcf5HK3oY8B/VluUtqtylxgjtF1FcBgTQPtESwgQ5L4qbfcwvER1FPcTGyRdv7uLI=
+	t=1718906364; cv=none; b=CN6xak+x/kHHNUsTarTt60y6K69911HPwI7bV+xCpohIDMJLUFRCCUd5ObHniXTSxTRebpJKZIc+tDFm3i6CnaczUDHkKwQ35GCbVtG7mMwg7l6iDWkRgjA9apWJqTT4FDr2ovnDea661iUa8L6DYI9PCz+eI5t2lmc17ew3a7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906353; c=relaxed/simple;
-	bh=7SWkegubJpAX6MYXk8YsehLNWGmKMMWRlgPICBLrNQc=;
-	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CYBG7WvPh0lgsnVWhhMG0elz1qIvl+25PeDyP4Oemb6hoVkBYO7nVEcXv18s8BThONVTwmzKpLpQvL9jbQjO0D90Oogr0F49cil+m8UL+WmWQX9M1VZLlC6si/Q1T2lghWksisISzZagjE8IxB5T40EXWUGLeN2nRusSkSg5Ldc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ei8QAsh0; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1718906364; c=relaxed/simple;
+	bh=oTww1XOoHQ1WZkCJUUsZn1fHEHSTJ8ydZDprCFOKPl0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=srNG+x6lou9TbRxxqMrQD+4NWnGJNH3yc/fYx+Lj08XI66C+o6R/09/TIqbauO7CG/29y3a+6UiLLyY0IuSC/nHYoV4Ie1LYWPduzMowPwO00JOw48E2mdMOtogMdmHRbXxBTVaedZi0wfg0m+ukJqUDXqIAkW9Qv1jVBuvWco0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=OGEufoAX; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ei8QAsh0"
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="OGEufoAX"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57d1d614049so1423792a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1718906351; x=1750442351;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=7SWkegubJpAX6MYXk8YsehLNWGmKMMWRlgPICBLrNQc=;
-  b=ei8QAsh0i213J7+bFN0oCyDVuX19F13Q2TzfWYhdEs4ynaCi405Q9lUp
-   9MSvZZTfIUdkiNaOxrUlB+x2MLd1vviD/1Qr25u3q92VENp5irRKZEQyf
-   oPGz8dbVglbU0Tt4CMJFUnK1Zi5n8PoLzi2Bw6sGtxUY4lsL3TNyPXBE0
-   w=;
-X-IronPort-AV: E=Sophos;i="6.08,252,1712620800"; 
-   d="scan'208";a="6216262"
-Subject: Re: linux-next: manual merge of the memblock tree with the origin tree
-Thread-Topic: linux-next: manual merge of the memblock tree with the origin tree
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 17:59:07 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:8811]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.44.46:2525] with esmtp (Farcaster)
- id f9f0cc6a-34f6-443a-82bd-b8edf14f83a0; Thu, 20 Jun 2024 17:59:05 +0000 (UTC)
-X-Farcaster-Flow-ID: f9f0cc6a-34f6-443a-82bd-b8edf14f83a0
-Received: from EX19D014EUC003.ant.amazon.com (10.252.51.184) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 20 Jun 2024 17:59:05 +0000
-Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
- EX19D014EUC003.ant.amazon.com (10.252.51.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 20 Jun 2024 17:59:05 +0000
-Received: from EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41]) by
- EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41%3]) with mapi id
- 15.02.1258.034; Thu, 20 Jun 2024 17:59:05 +0000
-From: "Gowans, James" <jgowans@amazon.com>
-To: "broonie@kernel.org" <broonie@kernel.org>
-CC: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-	"jbeulich@suse.com" <jbeulich@suse.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "rppt@kernel.org" <rppt@kernel.org>
-Thread-Index: AQHawypHT4hIOONPdEuIzJZkPab/U7HQ0aEAgAABrICAAB1rgA==
-Date: Thu, 20 Jun 2024 17:59:05 +0000
-Message-ID: <e6f1bf73d13060635520c70df269c0b390352f37.camel@amazon.com>
-References: <ZnRQv-EVf2LQ1Cjv@sirena.org.uk>
-	 <eb58b1b2f84444acde3f9e25219fa40c73c499f8.camel@amazon.com>
-	 <db13f2b7-88da-42db-85ed-d78cdd5f6c62@sirena.org.uk>
-In-Reply-To: <db13f2b7-88da-42db-85ed-d78cdd5f6c62@sirena.org.uk>
-Accept-Language: en-ZA, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9DA72AF9A986854FB958FFF9D57956DA@amazon.com>
-Content-Transfer-Encoding: base64
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906359; x=1719511159; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+nbkylU75B66T8IPhGtcEUJs01o0nAAuyIYHNhQRcE=;
+        b=OGEufoAXxL9IaCsOoTRQCSX68a3AbYH3Vc1UbtZcGseDB/JH3rwGqnuhn3iPUXwfDV
+         BM6vfyE73Z2foX92yMl46ia3l8vBynVQlAhxmyg26kumm9PDvyXGX5rXoRNCS3DOwM/i
+         nfPWiRtuU9WP3zXgZLTgyDqQXCatlSEoZlLe6gAM4XKBu1GHoWs1UADCMd66LDkoBpFC
+         sV6YQh1J48om43ObLI4i3QRAbsl9ElUTO+ioywaqO+TgQ0ITLOvdrICXBhELHLZVl6d1
+         wb4UnJnZohTZD8pZqDjsFsZ8zBuw5NIYz4gsF2rlT7bxLKSwYEuyXeJqa+cd+naRkhDg
+         Yuxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718906359; x=1719511159;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R+nbkylU75B66T8IPhGtcEUJs01o0nAAuyIYHNhQRcE=;
+        b=HqBuGuQ8dB72SyRYSoHx8TUgjymEKU2SNom1gbXsta9ntGMZVw4a0R1sLySGTlgf0Q
+         6TOF/wS1IdMi1ot5SiLT0qLLapFP10FKMC0s7E+Yp1vcS2R5QXwoQ/NrGDJ2luDQEs04
+         tmQD8E08zSK/a8LCXmtAkXIalWqPd+W0F7qQlLVrJgsjITjAUsLs5zUHGaNvakAWtTTy
+         LzdTFdtEWqBEw+A9V2ls8wqkDM8dEVK/Zr1oigLuE4ECBrjN260VuTArI6Gcr+4qxNMT
+         sVpPjf+qJkUIF84yZJrT4pyLxrSH2JFVtgsc9X8bO9X5XIHb6PIzm8ljDjJIJl9Tm+I0
+         uAOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWA/VC2VAP+zM/i3DJVt1+S0jdb9YDFOgVQcAKD+bz8/3NUFFEANMZppuKyiYoc2PC20HfDZ/WNQ7NtLtYRgPrH+UuQap9fBYvtAYBe
+X-Gm-Message-State: AOJu0YwoNw2/SDm6mIaMTA+e3mGy1kVJcZgoEyiQW2OCaAFy0Wjl2Lpg
+	1AUo3D36UFXd78JwGK4BD23W2lls9Tq1jvo9q2Gcd+Yeby6Ep4Fl/hjphfaVISc=
+X-Google-Smtp-Source: AGHT+IGwiD3L95St/ehfaodQi7lOhfrdpQHGauU5aloxC0usOuACZecYTLoGty75spYidqSIKDxV5Q==
+X-Received: by 2002:a17:907:7293:b0:a6f:6f4a:b25c with SMTP id a640c23a62f3a-a6fab60a2acmr584690566b.14.1718906359615;
+        Thu, 20 Jun 2024 10:59:19 -0700 (PDT)
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.59.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 10:59:19 -0700 (PDT)
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Li Zetao <lizetao1@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Subject: [Patch v4 05/10] clk: lpc32xx: initialize regmap using parent syscon
+Date: Thu, 20 Jun 2024 19:56:36 +0200
+Message-Id: <20240620175657.358273-6-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-T24gVGh1LCAyMDI0LTA2LTIwIGF0IDE3OjEzICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
-biBUaHUsIEp1biAyMCwgMjAyNCBhdCAwNDowNzo0NVBNICswMDAwLCBHb3dhbnMsIEphbWVzIHdy
-b3RlOg0KPiA+IE9uIFRodSwgMjAyNC0wNi0yMCBhdCAxNjo1NCArMDEwMCwgTWFyayBCcm93biB3
-cm90ZToNCj4gDQo+ID4gPiArIAlpZiAoV0FSTl9PTkNFKG5pZCA9PSBNQVhfTlVNTk9ERVMsICJV
-c2FnZSBvZiBNQVhfTlVNTk9ERVMgaXMgZGVwcmVjYXRlZC4gVXNlIE5VTUFfTk9fTk9ERSBpbnN0
-ZWFkXG4iKSkNCj4gPiA+ICsgCQluaWQgPSBOVU1BX05PX05PREU7DQo+ID4gPiArIA0KPiA+ID4g
-IC0JLyoNCj4gPiA+ICAtCSAqIERldGVjdCBhbnkgYWNjaWRlbnRhbCB1c2Ugb2YgdGhlc2UgQVBJ
-cyBhZnRlciBzbGFiIGlzIHJlYWR5LCBhcyBhdA0KPiA+ID4gIC0JICogdGhpcyBtb21lbnQgbWVt
-YmxvY2sgbWF5IGJlIGRlaW5pdGlhbGl6ZWQgYWxyZWFkeSBhbmQgaXRzDQo+ID4gPiAgLQkgKiBp
-bnRlcm5hbCBkYXRhIG1heSBiZSBkZXN0cm95ZWQgKGFmdGVyIGV4ZWN1dGlvbiBvZiBtZW1ibG9j
-a19mcmVlX2FsbCkNCj4gPiA+ICAtCSAqLw0KPiANCj4gPiBUaGlzIGxvb2tzIGxpa2UgeW91J3Jl
-IGRlbGV0aW5nIHRoZSBjaGVjayBmcm9tIHRoZQ0KPiA+IG1lbWJsb2NrX2FsbG9jX3JhbmdlKCk/
-IFRoZSBpbnRlbnRpb24gb2YNCj4gPiBjb21taXQgOTRmZjQ2ZGU0YTczOCAoIm1lbWJsb2NrOiBN
-b3ZlIGxhdGUgYWxsb2Mgd2FybmluZyBkb3duIHRvIHBoeXMgYWxsb2MiKQ0KPiA+IHdhcyB0byAq
-YWRkKiB0aGlzIGNoZWNrIGhlcmUuDQo+IA0KPiBIdWgsIGdpdCBzaG93ZWQgdGhlIGFkZC9hZGQg
-Y29uZmxpY3Qgd2VpcmRseSB0aGVuIChpdCBsb29rZWQgbGlrZSBhbg0KPiBhZGQvcmVtb3ZlKSBh
-bmQgSSB3YXNuJ3QgcGF5aW5nIGVub3VnaCBhdHRlbnRpb24uICBTb3JyeSBhYm91dCB0aGF0Lg0K
-PiANCj4gPiBEbyB5b3UgaGF2ZSBhIGxpbmsgd2hlcmUgSSBjYW4gc2VlIHRoZSBmaW5hbCByZXBv
-Pw0KPiA+IEknbSBub3Qgc2VlaW5nIGl0IGhlcmU6DQo+ID4gaHR0cHM6Ly9naXQua2VybmVsLm9y
-Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbmV4dC9saW51eC1uZXh0LmdpdC90cmVlL21tL21l
-bWJsb2NrLmMNCj4gDQo+IFRoZSBtZXJnZSBpcyBzdGlsbCBydW5uaW5nLCBpdCdsbCBhcHBlYXIg
-d2hlbmV2ZXIgLW5leHQgaXMgcmVsZWFzZWQNCj4gdG9kYXkuDQoNCkxvb2tpbmcgYXQgdG9kYXkn
-cyAtbmV4dDoNCg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
-aXQvbmV4dC9saW51eC1uZXh0LmdpdC90cmVlL21tL21lbWJsb2NrLmM/aD1uZXh0LTIwMjQwNjIw
-I24xNDM0DQpJIHRoaW5rIHRoaXMgY2hlY2sgZGlkIGluZGVlZCBhY2NpZGVudGFsbHkgZ2V0IGRl
-bGV0ZWQgaW4gdGhlIG1lcmdlLg0KDQpXZSdyZSBleHBlY3RpbmcgdGhlIGRpZmYgaW4gdGhpcyBj
-b21taXQgdG8gYmUgcHJlc2VudDoNCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
-eC9rZXJuZWwvZ2l0L25leHQvbGludXgtbmV4dC5naXQvY29tbWl0L21tL21lbWJsb2NrLmM/aD1u
-ZXh0LTIwMjQwNjIwJmlkPTk0ZmY0NmRlNGE3MzhlNzkxNmI2OGFiNWNjMGIwMzgwNzI5ZjAyYWYN
-Cg0KLi4uIGJ1dCB0aGUgbWVyZ2UgY29tbWl0IGFwcGVhcnMgdG8gaGF2ZSB0aGUgZGVsZXRpbmcg
-cGFydCBidXQgbm90IHRoZQ0KYWRkaW5nIHBhcnQ6DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1
-Yi9zY20vbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4LW5leHQuZ2l0L2NvbW1pdC9tbS9tZW1i
-bG9jay5jP2g9bmV4dC0yMDI0MDYyMCZpZD00Mjc4MWJmOWVmODVkM2QyNTllYzM0NWYzYzRlNmE1
-YThiOGFkZDY0DQoNCkNvcnJlY3QgbWUgaWYgSSdtIHdyb25nLCBidXQgaXQgbG9va3MgbGlrZSB0
-aGUgaWYgc3RhdGVtZW50IG9ubHkgZ290DQpkZWxldGVkIGFuZCBub3QgbW92ZWQsIHNvIHRoaXMg
-d291bGQgbmVlZCB0byBiZSByZS13b3JrZWQuDQoNCkpHDQo=
+This allows to share the regmap with other simple-mfd devices like
+nxp,lpc32xx-dmamux
+
+Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+---
+Changes for v4:
+- This patch is new in v4
+
+ drivers/clk/Kconfig           |  1 +
+ drivers/clk/nxp/clk-lpc32xx.c | 10 ++--------
+ 2 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 3e9099504fad..85ef57d5cccf 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -346,6 +346,7 @@ config COMMON_CLK_LOONGSON2
+ config COMMON_CLK_NXP
+ 	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
+ 	select REGMAP_MMIO if ARCH_LPC32XX
++	select MFD_SYSCON if ARCH_LPC32XX
+ 	select MFD_SYSCON if ARCH_LPC18XX
+ 	help
+ 	  Support for clock providers on NXP platforms.
+diff --git a/drivers/clk/nxp/clk-lpc32xx.c b/drivers/clk/nxp/clk-lpc32xx.c
+index d0f870eff0d6..2a183a9ded93 100644
+--- a/drivers/clk/nxp/clk-lpc32xx.c
++++ b/drivers/clk/nxp/clk-lpc32xx.c
+@@ -7,6 +7,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/io.h>
+ #include <linux/of_address.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
+ 
+ #include <dt-bindings/clock/lpc32xx-clock.h>
+@@ -1511,17 +1512,10 @@ static void __init lpc32xx_clk_init(struct device_node *np)
+ 		return;
+ 	}
+ 
+-	base = of_iomap(np, 0);
+-	if (!base) {
+-		pr_err("failed to map system control block registers\n");
+-		return;
+-	}
+-
+-	clk_regmap = regmap_init_mmio(NULL, base, &lpc32xx_scb_regmap_config);
++	clk_regmap = syscon_node_to_regmap(np->parent);
+ 	if (IS_ERR(clk_regmap)) {
+ 		pr_err("failed to regmap system control block: %ld\n",
+ 			PTR_ERR(clk_regmap));
+-		iounmap(base);
+ 		return;
+ 	}
+ 
+-- 
+2.25.1
+
