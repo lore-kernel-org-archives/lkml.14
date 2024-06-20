@@ -1,87 +1,168 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2774D1AE096;
-	Thu, 20 Jun 2024 14:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196DF1AE0B3
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718895258; cv=none; b=TcLSUEy7KcgtxNINcPqYoahF9eizDvMU0iKrjrubRJ2jHyhGKhr6kLRHnlDhQu1nGEkuXMIj/Yb1J3GkEWjJk2V6as0H8S9K3q8VJBrUwWBoXgp2h5FDgZKhdgEVN1q+60V2u7AQnG60E6/zB+J3gmdTyv3VvXtIF68qryi5+AM=
+	t=1718895283; cv=none; b=RajD5lWRP/RSN/w8M2bXbhj398A69hZdehDaS3C90ed6HQVWokVz+gFBMxlD1Shp0JQ4dfXEhFXvENmKq9N/jppjxH5x6Y6Qgm3z1Bblt6f5C07O9RYpZ4GE4KGwW8x8IoF6kEhWs9XtyXmH+Q8zOyJuWihUvcPdulZG3Wf6KMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718895258; c=relaxed/simple;
-	bh=rqz7mptSZXadmEmaYlv2lustuXRLeUAJmakIx5iONiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBUq3mOJXeJNKwX767y9j/aAHp5TohyDY44rw7vKta2tK+CcB0DsQWXlOnmeP9vcWBrOtnnZbIkP20UcIajXl91XDXKiLKZQDnOjNwWHQPU6oSuzSR6NFEMBTvYgXISp7IA4BjKUDT7u5xozYqHtuwzE76h7fsv5+cme9pyRsGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=E3ggvSCR; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1718895283; c=relaxed/simple;
+	bh=a6jtFV0GRFPJfbicWsU7u3WpmytnPitMFmbPZlvY/KM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XqoOgATbROaIP/hIChuDePx/RC9mYXb8Xe8CYVGbwzcNY7io6+FE/t26r48h9XX2Denm6UoERm/AJwfJ9hHtfFz7kUW30AbA+d2Di2eeQZ0em3UQzamdb8ymXz6KjiFGnXwlap97veYv+JYmwStI0POKGBNpIdERlJZSr90mngo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=guMoXxaw; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="E3ggvSCR"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sKIcd-000PnA-24;
-	Thu, 20 Jun 2024 16:18:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rqz7mptSZXadmEmaYlv2lustuXRLeUAJmakIx5iONiA=; b=E3ggvSCRUiI5paGf9pWHQzxYiM
-	fJJOmDPx+9i9GxFK1mhegpwerQoVzuoC6BTsI/xsf5oQgnIP0d7ziy2EjF8TgEWlFrXkcpWkSlvdb
-	VAjdce6oPRnUbwF06ZLiB74N+f4QLBgr3oDzYkJCbK4/okZRIUwQFXtWc5byLLjs+15YgeA9TGyjF
-	4/M5IiipVBy7aS06D/JebOIffz+ugqmF8Ec2RQOrCwI5l02EQWskfDtNjszxf1aSgs53G/9s32VHc
-	zBk4BoyZhzzIUge91RtlB2Z8WgPuUum03UHKIR9Q8r8MsB3CdNM7u8ZWLe1rtBUA4eflFwTdwKRFv
-	NzJRWqZA==;
-Received: from p200300c20737c200b1839a3e94ddce00.dip0.t-ipconnect.de ([2003:c2:737:c200:b183:9a3e:94dd:ce00] helo=akair)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sKIcb-003MgG-1O;
-	Thu, 20 Jun 2024 16:18:42 +0200
-Date: Thu, 20 Jun 2024 16:18:28 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Mithil <bavishimithil@gmail.com>
-Cc: =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Tony Lindgren
- <tony@atomide.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] ARM: dts: twl6032: Add DTS file for TWL6032 PMIC
-Message-ID: <20240620161828.68e1975b@akair>
-In-Reply-To: <CAGzNGRnnZWJP6CF1X6SXus2QCwUA763=qHUAy6c6Ny6_FFd7GQ@mail.gmail.com>
-References: <20240611132134.31269-1-bavishimithil@gmail.com>
-	<20240611164951.51754ffc@aktux>
-	<CAGzNGRmoSawz7yHGzHS8PeQwRAsnnORLMPrrNBLupNdaOkUeHw@mail.gmail.com>
-	<CAGzNGRnnZWJP6CF1X6SXus2QCwUA763=qHUAy6c6Ny6_FFd7GQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guMoXxaw"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-63bf3452359so9899977b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718895281; x=1719500081; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7UZg6z2ZV7fEWVr/cuuO7y2J8t4KdG2GG3PzRAtJBxs=;
+        b=guMoXxawyFHr+KoTkwC9X3OwIeDrwGtxfZGO3rUCC843BJXSPhX66NRWVZFtMnb56+
+         ukNA2Qw4sr+7R1Zx50NCyLfxC22VD6pozTh9bkSlWobubnXFJ8vuO/4NTkVtI2RirPiV
+         ndxO6TfBzlKebc3i+dQssFIiUDj1JZo0tJVx677z/BqmPOxJ384Ilm4NoP7j12vcUzlN
+         tLDAHkEC5DFt4puDU8lHLEguqvLlbWCYObYjNR9d2Ffk5CtbL0X1bdBUqRCM3CSnXm+x
+         JS1RQW0q+QJSTBZCGeYhS7flfjNeTYn+P7b/XXI16z4pEzETiW2PvMEwEt3H02mivEdP
+         KQnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718895281; x=1719500081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7UZg6z2ZV7fEWVr/cuuO7y2J8t4KdG2GG3PzRAtJBxs=;
+        b=Kjp4gHjQe6wgximMhZ/k1UiK61PI6fVuzEZJPeu6aYKjoHrvatg4dhSYxDpOSTN1RU
+         Qy5Oy9qdmOYuzvo5h31uSmmYaYS0LrHwn64wtYK4BZ1hIHngghbtoZRqArAJh8yNdtdm
+         VUPcwoJXAX4+9UgeDcdAvv3bJ+gF7aUOvcoHyBkdxQZ7RVtDLpriqGbiVzGDwMniZhXP
+         gAKBbl3NU159oC1Gtz0UQWcDwijY5R7rPxOVz5F8BdzVyc+tIGe22EWrX+D1NXDnoB5m
+         yB3zMCxp2Ys2/jw+4grvJNRmqMzfsO2NVb73Dstbcv0+DprbedK/TlLnBX5JTZDga2tU
+         2fFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtq5y2TBM3Xr0s2kqJwz2zJ4v88QpWHdI/gzRW1FJpuObFfiY9fcF+4rvy3ltBCfuL6aEtY6XEEpKpXKdHro7R+EiEagqiMSbxTDAM
+X-Gm-Message-State: AOJu0YwSZ6nSvKNFFBNPgvRh1MMY7rWsgkzb0ukkcEvSPBzkEsBHvTGt
+	gH6eBsF1Fv0pQNeFn3o5GO9r0Qjz9AwzCehDKa/OKNccJFkhHaEyQy6dIyPifNgrS5YoARDSjK5
+	TzSrkYJOM+X2V1p6q+tPVtoGAEMiWo+h6BGQAwg==
+X-Google-Smtp-Source: AGHT+IEEEALjTBQPo0s0Uauc0UaOOzy70kfdrSt7ddTWFNqet+lDyn9cqCJ27AkvRYxTAqRJyw/n1fgD1JSmJCuDlS0=
+X-Received: by 2002:a0d:f484:0:b0:61a:d846:9858 with SMTP id
+ 00721157ae682-63a8e1dacb1mr58152777b3.20.1718895280821; Thu, 20 Jun 2024
+ 07:54:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240619033351.230929-1-tejasvipin76@gmail.com>
+ <mozxxkpqlboh2w7bf55bezgcy5b2jfgepmgullgd24dtmwfva2@mghwg3c5an5y>
+ <a9312102-44c1-4529-b3ef-a7831392c42f@gmail.com> <CAD=FV=VJA5R1SKZe1vmRWc4=GXPbFOsT3gdj+x9cwR7YCQ8GfQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=VJA5R1SKZe1vmRWc4=GXPbFOsT3gdj+x9cwR7YCQ8GfQ@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 20 Jun 2024 17:54:30 +0300
+Message-ID: <CAA8EJpr_HYkXnP3XR9LpDhi1xkQfE_CKJzfzGrO5qd_pQYtiOw@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/panel: raydium-rm692e5: transition to mipi_dsi
+ wrapped functions
+To: Doug Anderson <dianders@chromium.org>
+Cc: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org, 
+	quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mithil,
+On Thu, 20 Jun 2024 at 17:42, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Wed, Jun 19, 2024 at 12:23=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail.=
+com> wrote:
+> >
+> >
+> >
+> > On 6/19/24 12:06 PM, Dmitry Baryshkov wrote:
+> > > On Wed, Jun 19, 2024 at 09:03:49AM GMT, Tejas Vipin wrote:
+> > >> Use functions introduced in commit 966e397e4f60 ("drm/mipi-dsi: Intr=
+oduce
+> > >> mipi_dsi_*_write_seq_multi()") and commit f79d6d28d8fe
+> > >> ("drm/mipi-dsi: wrap more functions for streamline handling") for th=
+e
+> > >> raydium rm692e5 panel.
+> > >>
+> > >> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> > >> ---
+> > >> Changes in v2:
+> > >>     - Change rm692e5_on to return void and take mipi_dsi_multi_conte=
+xt
+> > >>       as an argument.
+> > >>     - Remove unnecessary warnings.
+> > >>     - More efficient error handling in rm692e5_prepare
+> > >>
+> > >> v1: https://lore.kernel.org/all/20240615093758.65431-1-tejasvipin76@=
+gmail.com/
+> > >> ---
+> > >>  drivers/gpu/drm/panel/panel-raydium-rm692e5.c | 237 ++++++++-------=
+---
+> > >>  1 file changed, 99 insertions(+), 138 deletions(-)
+> > >>
+> > >> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm692e5.c b/drivers=
+/gpu/drm/panel/panel-raydium-rm692e5.c
+> > >> index 21d97f6b8a2f..9936bda61af2 100644
+> > >> --- a/drivers/gpu/drm/panel/panel-raydium-rm692e5.c
+> > >> +++ b/drivers/gpu/drm/panel/panel-raydium-rm692e5.c
+> > >
+> > >>  static int rm692e5_prepare(struct drm_panel *panel)
+> > >>  {
+> > >>      struct rm692e5_panel *ctx =3D to_rm692e5_panel(panel);
+> > >>      struct drm_dsc_picture_parameter_set pps;
+> > >> -    struct device *dev =3D &ctx->dsi->dev;
+> > >> -    int ret;
+> > >> +    struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D ctx->dsi }=
+;
+> > >>
+> > >> -    ret =3D regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->s=
+upplies);
+> > >> -    if (ret < 0) {
+> > >> -            dev_err(dev, "Failed to enable regulators: %d\n", ret);
+> > >> -            return ret;
+> > >> -    }
+> > >> +    dsi_ctx.accum_err =3D regulator_bulk_enable(ARRAY_SIZE(ctx->sup=
+plies), ctx->supplies);
+> > >> +    if (dsi_ctx.accum_err)
+> > >> +            return dsi_ctx.accum_err;
+> > >
+> > > int ret, please. Let's leave dsi_ctx.accum_err for DSI errors only.
+> > > LGTM otherwise.
+> >
+> > Is this really necessary seeing how regulator_bulk_enable returns
+> > 0 on success anyways? It saves creating a new variable for a single
+> > check. In case you do think its necessary, should it be changed in
+> > himax_hx83102 too?
+>
+> Right. I made the same choice as Tejas did when I wrote commit
+> a2ab7cb169da ("drm/panel: himax-hx83102: use wrapped MIPI DCS
+> functions"). In that commit message, I wrote:
+>
+> It can also be noted that hx83102_prepare() has a mix of things that
+> can take advantage of _multi calls and things that can't. The cleanest
+> seemed to be to use the multi_ctx still but consistently use the
+> "accum_err" variable for error returns, though that's definitely a
+> style decision with pros and cons.
+>
+> In my mind trying to juggle half the cases having the error in "ret"
+> and half in the DSI context was a recipe for getting mixed up and
+> returning the wrong error. On the other hand, it felt awkward using
+> the "dsi_ctx.accum_err". In the end I felt that the extra awkwardness
+> was worth it if it meant that I was less likely to "return ret" when
+> the error code was actually in "dsi_ctx.accum_err"...
 
-Am Thu, 13 Jun 2024 14:15:19 +0530
-schrieb Mithil <bavishimithil@gmail.com>:
+Fair point.
 
-> On Tue, Jun 11, 2024 at 8:19=E2=80=AFPM Andreas Kemnade
-> <andreas@kemnade.info> wrote:
-> > I think the twl6030.dtsi and twl6032.dtsi should be as similar as
-> > possible. =20
->=20
-> Hey the values seem to be different for twl6030.dtsi,
-> omap4-epson-embt2ws.dts, and omap4-samsung-espresso-common.dtsi.
-> Should we just define the nodes in twl6032.dtsi and let them put
-> min/max volts and other properties in the board files?
->=20
-IMHO either the full range there and override board specific stuff in
-the *.dts files or no voltages.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Regards,
-Andreas
+
+--=20
+With best wishes
+Dmitry
