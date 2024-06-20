@@ -1,205 +1,161 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932561AD9F0
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C751ACE7C;
+	Thu, 20 Jun 2024 14:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718892185; cv=none; b=MYiQw9w2/7/YDIbAzsm/QjOaLqBdjzB9zBzc6RC99L4skGhdbrih4RX9XKUfLyixhgc+3LgfsHRqfGz94qddBlxhfiTymmlD54aweu+KQRgrhkta8Mxtk5D8Kz6ZYkXnk3Z+Oid8i7wxe1FaZvvqFCY+02w/3tkFkxGY7Fn9Hg4=
+	t=1718892204; cv=none; b=MbxZTS60Bfi1ptAhDB0yf4qCf51ayRW+fpHc0Qjrld87aF0Zsb85Q+mDx6s3NtK1W8pGVeYeQ0EQ1rLMEUXym6giRpduokqn5EEKY4Tkw0TlZk5AIR4RbeulFrxigBp7EntcO1Z3L2iLgjYScl2N3uN+qiFV+mp0PbKkR38EWxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718892185; c=relaxed/simple;
-	bh=Oklm0Cw05TNvTzfvJtb1ocw12E15edBRA2IP+0NVAUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJR0b1tmK+BDvzitzeqIngMQfCmlcuQARaifz7bjS/1OUc28rkgWItGJZ8hRZ9Lj/BCUjoe8AE+tjB+kPRJNSC+pqkcsC2hubhlSJHWh0UmyriWZ1fFq0CvWHs2je0MsCyjWWbK42y5Ru3RpKLJASUmKnKJXLZ3Lc41zBCs7nko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m5MSdxqN; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718892204; c=relaxed/simple;
+	bh=xUOYsCDdVtUL6hlGl8tCl7Hz7xJj589qLC+r4STEt1c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QQUCri0TnFuhnzQxia2alj4hIq2IHrNvnZvWfh+8wyu/fRFWpKGSvXSchoK6LTdxMIrmL8sTiAYbjYWIEcz2HH2E9FOxIMYC2XNjc5YTlI2CCDy+/qP7rNhDRQC0Y7L/oD16VS0Vd1svX98qt8vZqf8haEALpUxVPDqvenlO61A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hShq5juN; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5MSdxqN"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a62ef52e837so105077266b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718892182; x=1719496982; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DivZWPPAJboyHT631bWOCfrq3h9RoUn6v0uBNxSBQyA=;
-        b=m5MSdxqNJ1bGewFSOTaEjKNdFZigyFuq+r3O1zRuZUovN5lfP69M6gS4G9ok8fdMs1
-         UV5A03E5mZlCMcKypyu7kFG/keY/sT0vZD9FEFOQ6Fb4regtt3WsUF6PV3VwiDPjUu3K
-         S4yWYFgsJxSazUEXSxIPctALXndnBm0aHo0kpTzaqtOelWQ31e5w+L+gUACoP7nD/YAv
-         fN3xqnVhPMtmW4+2u9vh/yRjE7JVoq6psSQzfUu6ar5cL/N4uZaYmdMyJ5ixkN6+M8wh
-         4PINWqRGg1ARhh6mAsjkKAsO5nc8T66FH7LI3cS6qyl2/U4EJHLszL3jYXDiMBIVfkqh
-         4Www==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718892182; x=1719496982;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DivZWPPAJboyHT631bWOCfrq3h9RoUn6v0uBNxSBQyA=;
-        b=lbw2N3yOhum3iwwNRnRgogfBaNh3sOCsfBfMu9RmwzySn6+TRdvcDBptZUXQj2Lade
-         dStumUzYM1PuAbH4K7HUZJaW92nkPTn/ai5DINI5x9ptyap30ZxBsBzaOPPheNwSWUqy
-         J4JfCnwhrPlte3gK0edNYcQ2kcR2wRPpuc7K5bs6P+d/8BicTuJjlJXIEnJzAr3tznFU
-         Kefs5VJ1ESujD27lbpaiW0lCF7x9cI1bGPRWroWAkv1YsZgwRr6DsdX0+q7LjrYQjg4b
-         WIyZK4oKJK1rUZUbg4AKTF7dj2Wqw28lh5GmGnxPYZyLHGVgoWY3GT1BLDG34zQljZJI
-         tefg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzoEMGuZzjIFeQ+ZNhYt2iVE4vgjVCLIWFfLpBIHD1HIyPl9g5VYiUpjYSLYljuwbrkRxZ12NjiQjtCykdfAeH/ke6LGSMNju87k7G
-X-Gm-Message-State: AOJu0YwhWsR1Ndduq0hNYvQg3VQ7X2UHvZyfIs56KZh6foH5rVm2X+9b
-	s29i2AsX96K3Okl4MgN9FZv25Ravq43hW0tdB0IoFh3KBiXpo4OsmGkQ3WC2ptKElFzDh/JmGPX
-	RgZpWCVlT7nYHES2YdQ4ALtH44rxWpfCzwifXGw==
-X-Google-Smtp-Source: AGHT+IE5IRidUBv1Rz0+z0UgilsHsNZAP3E8TZx/Yqczpa77Xl1ZAhegOmt9dztWkCt7PzES3N0d2ChrSeAxTflAWLc=
-X-Received: by 2002:a17:906:b816:b0:a6f:5922:54e7 with SMTP id
- a640c23a62f3a-a6fab7d0bd8mr334461966b.65.1718892181739; Thu, 20 Jun 2024
- 07:03:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hShq5juN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718892200;
+	bh=xUOYsCDdVtUL6hlGl8tCl7Hz7xJj589qLC+r4STEt1c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hShq5juNr8MUXwUlaamUy2JujTyhRLfNxg0Lgy/7bhuJHlS+ZrppoglPsP9Rscw9C
+	 PvIVAWhJw2HoQlkcBIWToL+7ImIsOHzsEgqyZT0mU9xgGtppUvp3+Jn/OiIdNPuZD6
+	 cTAnA3xsmkYRxCIVjSx46BkqvgVM3Q6+OhDrJ8rsYof+eTL3P9IbXdyyIvOzR/rd4f
+	 d5998ObmQimbWl2FhUmo2ta5ApedzYM5Rho9KahDZy4BymxZa7dnbwap3wS7RtA4kd
+	 O9/2OWFMLzi9nQ8TvHM5WZcMHtnse3AGOZP0GRLfOgGaF15/cnMzUpZsPQkYnQsHiz
+	 O2nHqO8QP8fmQ==
+Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2E8FA37821B9;
+	Thu, 20 Jun 2024 14:03:19 +0000 (UTC)
+Message-ID: <bc8796ef8107507e99df079f6d7ce2575ead3cab.camel@collabora.com>
+Subject: Re: [RESEND PATCH v6 2/4] media: chips-media: wave5: Support
+ runtime suspend/resume
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: "jackson.lee" <jackson.lee@chipsnmedia.com>, Devarsh Thakkar
+	 <devarsht@ti.com>, "mchehab@kernel.org" <mchehab@kernel.org>, 
+ "sebastian.fricke@collabora.com"
+	 <sebastian.fricke@collabora.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,  Nas Chung
+ <nas.chung@chipsnmedia.com>, "lafley.kim" <lafley.kim@chipsnmedia.com>,
+ "b-brnich@ti.com" <b-brnich@ti.com>
+Date: Thu, 20 Jun 2024 10:03:15 -0400
+In-Reply-To: <SE1P216MB13037621438C8CE6142A69A8EDCF2@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+References: <20240617104818.221-1-jackson.lee@chipsnmedia.com>
+	 <20240617104818.221-3-jackson.lee@chipsnmedia.com>
+	 <6e6f767c-85e9-87f6-394f-440efcc0fd21@ti.com>
+	 <SE1P216MB13037621438C8CE6142A69A8EDCF2@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619125609.836313103@linuxfoundation.org> <CA+G9fYtPV3kskAyc4NQws68-CpBrV+ohxkt1EEaAN54Dh6J6Uw@mail.gmail.com>
- <2024062028-caloric-cost-2ab9@gregkh> <CA+G9fYsr0=_Yzew1uyUtrZ7ayZFYqmaNzAwFZJPjFnDXZEwYcQ@mail.gmail.com>
- <36a38846-0250-4ac2-b2d0-c72e00d6898d@redhat.com>
-In-Reply-To: <36a38846-0250-4ac2-b2d0-c72e00d6898d@redhat.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 20 Jun 2024 19:32:48 +0530
-Message-ID: <CA+G9fYv4fZiB-pL7=4SNfudh2Aqknf5+OXo1RFAFRhJFZMsEsg@mail.gmail.com>
-Subject: Re: [PATCH 6.9 000/281] 6.9.6-rc1 review
-To: David Hildenbrand <david@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org, 
-	Miaohe Lin <linmiaohe@huawei.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Cgroups <cgroups@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, jbeulich@suse.com, 
-	LTP List <ltp@lists.linux.it>
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 20 Jun 2024 at 19:23, David Hildenbrand <david@redhat.com> wrote:
->
-> On 20.06.24 15:14, Naresh Kamboju wrote:
-> > On Thu, 20 Jun 2024 at 17:59, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >>
-> >> On Thu, Jun 20, 2024 at 05:21:09PM +0530, Naresh Kamboju wrote:
-> >>> On Wed, 19 Jun 2024 at 18:41, Greg Kroah-Hartman
-> >>> <gregkh@linuxfoundation.org> wrote:
-> >>>>
-> >>>> This is the start of the stable review cycle for the 6.9.6 release.
-> >>>> There are 281 patches in this series, all will be posted as a response
-> >>>> to this one.  If anyone has any issues with these being applied, please
-> >>>> let me know.
-> >>>>
-> >>>> Responses should be made by Fri, 21 Jun 2024 12:55:11 +0000.
-> >>>> Anything received after that time might be too late.
-> >>>>
-> >>>> The whole patch series can be found in one patch at:
-> >>>>          https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.6-rc1.gz
-> >>>> or in the git tree and branch at:
-> >>>>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
-> >>>> and the diffstat can be found below.
-> >>>>
-> >>>> thanks,
-> >>>>
-> >>>> greg k-h
-> >>>
-> >>> There are two major issues on arm64 Juno-r2 on Linux stable-rc 6.9.6-rc1
-> >>>
-> >>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >>>
-> >>> 1)
-> >>> The LTP controllers cgroup_fj_stress test cases causing kernel crash
-> >>> on arm64 Juno-r2 with
-> >>> compat mode testing with stable-rc 6.9 kernel.
-> >>>
-> >>> In the recent past I have reported this issues on Linux mainline.
-> >>>
-> >>> LTP: fork13: kernel panic on rk3399-rock-pi-4 running mainline 6.10.rc3
-> >>>    - https://lore.kernel.org/all/CA+G9fYvKmr84WzTArmfaypKM9+=Aw0uXCtuUKHQKFCNMGJyOgQ@mail.gmail.com/
-> >>>
-> >>> it goes like this,
-> >>>    Unable to handle kernel NULL pointer dereference at virtual address
-> >>>    ...
-> >>>    Insufficient stack space to handle exception!
-> >>>    end Kernel panic - not syncing: kernel stack overflow
-> >>>
->
-> How is that related to 6.9.6-rc1? That report is from mainline (6.10.rc3).
->
-> Can you share a similar kernel dmesg output from  the issue on 6.9.6-rc1?
+Hi Jackson, Devarsh,
 
-I request you to use this link for detailed boot log, test log and crash log.
- - https://lkft.validation.linaro.org/scheduler/job/7687060#L23314
+Le mercredi 19 juin 2024 =C3=A0 23:56 +0000, jackson.lee a =C3=A9crit=C2=A0=
+:
+> Hi Devarsh
+>=20
+> If there is no feeding bitstreams during encoding and decoding frames, th=
+en driver's status is switched to suspended automatically by autosuspend.
+> And if we don=E2=80=99t use autosuspend, it is very difficult for us to c=
+atch if there is feeding or not while working a pipeline.
+> So it is very efficient for managing power status.
+>=20
+> If the delay is very great value, we can adjust it.
 
-Few more logs related to build artifacts links provided in the original
-email thread and bottom of this email.
+One way to resolve this, would be if someone share measurement of the suspe=
+nd /
+resume cycle duration. With firmware (third party OS) like this, the cost a=
+nd
+duration is few order of magnitude higher then with more basic ASIC like Ha=
+ntro
+and other single function HW.
 
-crash log:
----
+Yet, 5s might be to much (but clearly safe), but getting two low may means =
+that
+we suspect "between two frames", and if that happens, we may endup with var=
+ious
+range of side effect, like reduce throughput due to suspend collisions, or =
+even
+worse power footprint. Some lab testing to adjust the value will be needed,=
+ we
+have very little of that happening at the moment as I understood.
 
-[ 0.000000] Booting Linux on physical CPU 0x0000000100 [0x410fd033]
-[ 0.000000] Linux version 6.9.6-rc1 (tuxmake@tuxmake)
-(aarch64-linux-gnu-gcc (Debian 13.2.0-12) 13.2.0, GNU ld (GNU Binutils
-for Debian) 2.42) #1 SMP PREEMPT @1718817000
-...
-[ 1786.336761] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000070
-[ 1786.345564] Mem abort info:
-[ 1786.348359]   ESR = 0x0000000096000004
-[ 1786.352112]   EC = 0x25: DABT (current EL), IL = 32 bits
-[ 1786.357434]   SET = 0, FnV = 0
-[ 1786.360492]   EA = 0, S1PTW = 0
-[ 1786.363637]   FSC = 0x04: level 0 translation fault
-[ 1786.368523] Data abort info:
-[ 1786.371405]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[ 1786.376900]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[ 1786.381960]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[ 1786.387284] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000070
-[ 1786.387293] Insufficient stack space to handle exception!
-[ 1786.387296] ESR: 0x0000000096000047 -- DABT (current EL)
-[ 1786.387302] FAR: 0xffff80008399ffe0
-[ 1786.387306] Task stack:     [0xffff8000839a0000..0xffff8000839a4000]
-[ 1786.387312] IRQ stack:      [0xffff8000837f8000..0xffff8000837fc000]
-[ 1786.387319] Overflow stack: [0xffff00097ec95320..0xffff00097ec96320]
-[ 1786.387327] CPU: 4 PID: 0 Comm: swapper/4 Not tainted 6.9.6-rc1 #1
-[ 1786.387338] Hardware name: ARM Juno development board (r2) (DT)
-[ 1786.387344] pstate: a00003c5 (NzCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 1786.387355] pc : _prb_read_valid (kernel/printk/printk_ringbuffer.c:2109)
-[ 1786.387374] lr : prb_read_valid (kernel/printk/printk_ringbuffer.c:2183)
-[ 1786.387385] sp : ffff80008399ffe0
-[ 1786.387390] x29: ffff8000839a0030 x28: ffff000800365f00 x27: ffff800082530008
-[ 1786.387407] x26: ffff8000834e33b8 x25: ffff8000839a00b0 x24: 0000000000000001
-[ 1786.387423] x23: ffff8000839a00a8 x22: ffff8000830e3e40 x21: 0000000000001e9e
-[ 1786.387438] x20: 0000000000000000 x19: ffff8000839a01c8 x18: 0000000000000010
-[ 1786.387453] x17: 72646461206c6175 x16: 7472697620746120 x15: 65636e6572656665
-[ 1786.387468] x14: 726564207265746e x13: 3037303030303030 x12: 3030303030303030
-[ 1786.387483] x11: 2073736572646461 x10: ffff800083151ea0 x9 : ffff80008014273c
-[ 1786.387498] x8 : ffff8000839a0120 x7 : 0000000000000000 x6 : 0000000000000e9f
-[ 1786.387512] x5 : ffff8000839a00c8 x4 : ffff8000837157c0 x3 : 0000000000000000
-[ 1786.387526] x2 : ffff8000839a00b0 x1 : 0000000000000000 x0 : ffff8000830e3f58
-[ 1786.387542] Kernel panic - not syncing: kernel stack overflow
-[ 1786.387549] SMP: stopping secondary CPUs
-[ 1787.510055] SMP: failed to stop secondary CPUs 0,4
-[ 1787.510065] Kernel Offset: disabled
-[ 1787.510068] CPU features: 0x4,00001061,e0100000,0200421b
-[ 1787.510076] Memory Limit: none
-[ 1787.680436] ---[ end Kernel panic - not syncing: kernel stack overflow ]---
+Nicolas
 
+>=20
+> Thanks
+> Jackson
+>=20
+> > -----Original Message-----
+> > From: Devarsh Thakkar <devarsht@ti.com>
+> > Sent: Wednesday, June 19, 2024 10:00 PM
+> > To: jackson.lee <jackson.lee@chipsnmedia.com>; mchehab@kernel.org;
+> > nicolas@ndufresne.ca; sebastian.fricke@collabora.com
+> > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > hverkuil@xs4all.nl; Nas Chung <nas.chung@chipsnmedia.com>; lafley.kim
+> > <lafley.kim@chipsnmedia.com>; b-brnich@ti.com; Nicolas Dufresne
+> > <nicolas.dufresne@collabora.com>
+> > Subject: Re: [RESEND PATCH v6 2/4] media: chips-media: wave5: Support r=
+untime
+> > suspend/resume
+> >=20
+> > Hi Jackson,
+> >=20
+> > Thanks for the patch.
+> > On 17/06/24 16:18, Jackson.lee wrote:
+> > > From: "jackson.lee" <jackson.lee@chipsnmedia.com>
+> > >=20
+> > > Add support for runtime suspend/resume in the encoder and decoder.
+> > > This is achieved by saving the VPU state and powering it off while th=
+e VPU
+> > idle.
+> > >=20
+> > > Signed-off-by: Jackson.lee <jackson.lee@chipsnmedia.com>
+> > > Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+> > > Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> >=20
+> > [..]
+> > >  static int wave5_vpu_probe(struct platform_device *pdev)  {
+> > >  	int ret;
+> > > @@ -268,6 +301,12 @@ static int wave5_vpu_probe(struct platform_devic=
+e
+> > *pdev)
+> > >  		 (match_data->flags & WAVE5_IS_DEC) ? "'DECODE'" : "");
+> > >  	dev_info(&pdev->dev, "Product Code:      0x%x\n", dev->product_code=
+);
+> > >  	dev_info(&pdev->dev, "Firmware Revision: %u\n", fw_revision);
+> > > +
+> > > +	pm_runtime_set_autosuspend_delay(&pdev->dev, 5000);
+> >=20
+> > Why are we putting 5s delay for autosuspend ? Without using auto-suspen=
+d
+> > delay too, we can directly go to suspended state when last instance is =
+closed
+> > and resume back when first instance is open.
+> >=20
+> > I don't think having an autosuspend delay (especially of 5s) bodes well=
+ with
+> > low power-centric devices such as AM62A where we would prefer to go to
+> > suspend state as soon as possible when the last instance is closed.
+> >=20
+> > Also apologies for the delay in review, this didn't caught my eye earli=
+er as
+> > commit message did not mention it either.
+> >=20
+> > Regards
+> > Devarsh
 
-1)
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.9.y/build/v6.9.5-282-g93f303762da5/testrun/24410131/suite/log-parser-test/test/check-kernel-panic/log
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.9.y/build/v6.9.5-282-g93f303762da5/testrun/24410131/suite/log-parser-test/test/check-kernel-panic-a44367e5836148d6e94412d6de8ab7a0ca37c18d2bfb6a639947ecd2704ad6b1/details/
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2i6h1Ah6I8CP7ABUzTl9shfaW60
- - https://lkft.validation.linaro.org/scheduler/job/7687060#L23314
-
-- Naresh
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
