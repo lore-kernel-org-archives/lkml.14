@@ -1,186 +1,97 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C759D1ABCB1;
-	Thu, 20 Jun 2024 17:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBEC1B3758;
+	Thu, 20 Jun 2024 17:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903790; cv=none; b=F+i8pfD5JQpY7JmOWvsHB26WNj8VF7AbOl/qgiV67hFxfyr0VIXkDqo8T3C6ZK1tBECz2s32OdUIKfBvWVDmMfiE890H3dJwniLYG9XFp+vwg77uNtWP1BT/dmIiJOt/+/WI0klUXtOgxB+GZz5YLLn82qtmr6f6wU6FBF7fjhE=
+	t=1718903881; cv=none; b=l1y8Klvvboi918ALXf3R9NdOlNtv5tblM1JpNdF7g4mJQiVYu9zRvKjButaDijmDtRwc+b0tPEuRNmab/ZW4r4m6j10AcJXFflUemqikFX5hky3y9xkqz96n8hYc8ZMJ9vSIdmk1GcXZbcCWKXxzqdQZ7FZ6ev26WwqBbcBP/EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903790; c=relaxed/simple;
-	bh=Cm6boTYiGyczGTLf1d6+1WdYcy1zWeBu51u/uIzaRLc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qHIx1BQgyZ+yMTtNWPCiikfF7uPdza/Am9tXkccoZlWGAxL2XV3AZNthngwlqttri/IlMzOHhmeZjFL0Yecos63SdurVwD2/c9Di0aQmmymPtAqpEthZ7+ilrwZp1Jy4tlwfpHq6qv5su/uE/Zq2h1fhIgXRLuxhSH40shavtIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=agt0SPA6; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718903881; c=relaxed/simple;
+	bh=t1APqyOX6OlFWYI/LA0CSPLKegiYEgglDrIX/FUPggU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYe4+eOYkZ68qn1Je8WNcYeagiVQGdB3OAM8BknqnPOHCQ+IMRosFrU0j52CBpjqUVaJSPsYCBSWWMYx83Y/mH+EzYSSJs2jwdRJ6ESLBhSalmcRWiHLGOC/kmSAZeOwAn5ctjhAsWWcDuL2oWTvjV5kEUk2mhmP4Ojyf9XbE9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soEHDweD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agt0SPA6"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-48f159d3275so409520137.0;
-        Thu, 20 Jun 2024 10:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718903787; x=1719508587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fIPHUV8SHKqvt2iSTxINyVm3CI6nMiR7RNXL+xTxwHM=;
-        b=agt0SPA6vlD6rY0jYFtpgFRkiCmIUsqaV+QmnbT0JLbSqVP4S6jPxvfM22wiZJ1tPQ
-         1vYwxkJjo97Rm/1EAcrZrOHpQ5sripDBDn9QuUAFap+vLTP8tBEvJomuk4Rd+/SPmEdD
-         V1Aq0jpBQLnVIDPCmx6tr6ROYnbauRS2sxBF1fcopgNG7MAhhnAi7Ow0bJc5I/iNGE8+
-         16Z6DfyoVRsvWQhf+e9ImEeTaQ2qB9j2KaAK56vviu6YtrUHLL/fwjmeGc6hXmh/LT5H
-         miy/JM0ObjjA4suTyiXcMt5NnTkMrT/7bHQ5aGjekoNy+ouuN9Qwxx+N8BVL7bf4QlzD
-         tmDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718903787; x=1719508587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fIPHUV8SHKqvt2iSTxINyVm3CI6nMiR7RNXL+xTxwHM=;
-        b=v072jJ8E7WZkm30I8zMD40v0syeA3NadDOrOqxlndw4jZyszv0HpwXMLmHE2wp+8/O
-         z/Fay5DHYg8sOFpP4tA/jbrFCVZN0k5tliHEt33t3ocVkLJc4VAa98hcYQABYChrnP5y
-         8FVF22HgGDaxUxWWhQpTLHXTcFt+HTk+UZZrF3fZZZ1nQNSYlmp3fn/X1NVtW3E9hVSn
-         S0sP6hN/YGqMPEuEVxIoBa+iF3pQBSg3ub8a5yO0cjRV9KVhGm7p+5BvyEhX5jWbIdxL
-         SCWk6fFonXmj+E4v4j6TrJH3uNnGfump0RzuPcXNnwgiwBNoJjUY5EQre8gMqAbFbc5D
-         SbfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLz6hn6zc7aYrwnJowSubW3+g3Isfqha9OuUEc3Btjc1SIQM6+kDw5VV0cQRhX9PiFSuwwH7yFjvKAzUexPh0azIB++QGE432uLFlJIM2SbEUjhDVyM/NIs1V+LzJyGraFWejXEXJKlYs1kL7nD0ajjZ97YJk/DsxgpR9fIUOxx7CshS4+L4Itnc1ZkD2ZxqA3hYJx2GjY3T3bK3/SHGdHhER9YsiO
-X-Gm-Message-State: AOJu0YzunIyNw6eFQzp8Wj2kNMZuALJ+ywcoAlpY7ZXr04bliA7AM5h6
-	cth9wZWSgLN7kQYetURSsiJAiQKqQ1KOkMB95CdDC27thkVEHZQzf1Q6zTBpMEWkMTSvca/d44B
-	Zfda5P9DN9pQSA4v7hLZoj5Q7ZRtCThJQiPs=
-X-Google-Smtp-Source: AGHT+IE8/Td/IzF8V17wvuiM4k2AqaEYHsgLyt12Y78+fQ0wmMmbQi11O1TwwiMergWHZ2hnl8ipW70YV3pjoDle2tM=
-X-Received: by 2002:a05:6122:738:b0:4ef:320f:9f13 with SMTP id
- 71dfb90a1353d-4ef320fa00bmr4192680e0c.0.1718903787363; Thu, 20 Jun 2024
- 10:16:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soEHDweD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B562C2BD10;
+	Thu, 20 Jun 2024 17:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718903880;
+	bh=t1APqyOX6OlFWYI/LA0CSPLKegiYEgglDrIX/FUPggU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=soEHDweDY18VLbVdmjclCdP/6tTXKiADN6UYpjFp/tpqYhJhiohZ2Hb/UhnbDTUQ1
+	 ilSBbevD3Mx2P30LQDKAnT8HkS7r8qSv6HVAhXH0EpR6PhDQrqFOm052cjt+5jJR2G
+	 t54EbAeifXUsFTZ4x3jB4pyh12ef5iLe6lDCgFtCy/Q30hHyV3p6sbkY6ZKV4/agxb
+	 ce4vwBmlssyah/TS0HJEg3dtZC0CLNuF/cfZjS3TvERLiagWrkAAeCyAwkBoJFsMP3
+	 pMlmtRVTW60/UNhKZcJWw03EgnrLrg+74+gc6ArBD3Ij2W97B3KT8twmTUl6qMVwjM
+	 ed6ch5ea6FMfw==
+Date: Thu, 20 Jun 2024 18:17:56 +0100
+From: Lee Jones <lee@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: Explain lack of child dependency in
+ simple-mfd
+Message-ID: <20240620171756.GY3029315@google.com>
+References: <20240616080659.8777-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613091721.525266-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240613091721.525266-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <prdvmtsp35yy2naohivbrya3go6vh5ji2cdjoebw3ovditcujo@bhck6tca6mhj>
- <CA+V-a8u6KAFp1pox+emszjCHqvNRYrkOPpsv5XBdkAVJQMxjmA@mail.gmail.com> <o7tswznmyk6gxoqfqvbvzxdndvf5ggkyc54nwafypquxjlvdrv@3ncwl5i5wyy3>
-In-Reply-To: <o7tswznmyk6gxoqfqvbvzxdndvf5ggkyc54nwafypquxjlvdrv@3ncwl5i5wyy3>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 20 Jun 2024 18:15:44 +0100
-Message-ID: <CA+V-a8spwd82a3BTS-u-w-JY859YCRxCi0Os6XRn27-mkWz6WA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] mmc: renesas_sdhi: Add support for RZ/V2H(P) SoC
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	linux-mmc@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	linux-kernel@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240616080659.8777-1-krzysztof.kozlowski@linaro.org>
 
-Hi Wolfram,
+On Sun, 16 Jun 2024, Krzysztof Kozlowski wrote:
 
-On Thu, Jun 20, 2024 at 8:39=E2=80=AFAM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> Hi Prabhakar,
->
-> > I did give it a try with platform_driver_probe() and failed.
->
-> Ok, thanks for trying nonetheless!
->
-> > - Firstly I had to move the regulator node outside the SDHI node for
-> > platform_driver_probe() to succeed or else it failed with -ENODEV (at
-> > https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#=
-L953)
->
-> This makes sense to me because it is just a "regular" regulator.
->
-OK.
+> Common mistake of usage of 'simple-mfd' compatible is a dependency of
+> children on resources acquired and managed by the parent, e.g. clocks.
+> Extend the simple-mfd documentation to cover this case.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/mfd.txt | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
+> index 336c0495c8a3..98b4340b65f3 100644
+> --- a/Documentation/devicetree/bindings/mfd/mfd.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+> @@ -18,12 +18,13 @@ A typical MFD can be:
+>  Optional properties:
+>  
+>  - compatible : "simple-mfd" - this signifies that the operating system should
+> -  consider all subnodes of the MFD device as separate devices akin to how
+> -  "simple-bus" indicates when to see subnodes as children for a simple
+> -  memory-mapped bus. For more complex devices, when the nexus driver has to
+> -  probe registers to figure out what child devices exist etc, this should not
+> -  be used. In the latter case the child devices will be determined by the
+> -  operating system.
+> +  consider all subnodes of the MFD device as separate and independent devices
+> +  akin to how "simple-bus" indicates when to see subnodes as children for a
+> +  simple memory-mapped bus. "Independent devices" means that children do not
 
-> > - In Renesas SoCs we have multiple instances of SDHI, the problem
-> > being for each instance we are calling platform_driver_probe(). Which
-> > causes a problem as the regulator node will use the first device.
->
-> I see... we would need a reg property to differentiate between the
-> internal regulators but that is already used by the parent SDHI node.
->
-> Okay, so let's scrap that idea. However, we need to ensure that we can
-> still have an external regulator. Seeing the bindings, it looks like you
-> enable the internal regulator with the "vqmmc-r9a09g057-regulator"
-> property? I wonder now if we can simplify this to an
-> "use-internal-regulator" property because we have 'compatible' already
-> to differentiate? Needs advice from DT maintainers, probably.
->
+I'm not against the change, but I think it can be phased better.
 
-Based on the feedback from Rob I have now changed it to below, i.e.
-the regulator now probes based on regulator-compatible property value
-"vqmmc-r9a09g057-regulator" instead of regulator node name as the
-driver has of_match in regulator_desc.
+Quoting the new part and going on to explain what you mean by it doesn't
+flow very well.  Are you able to massage it so it reads a little more
+nicely please?
 
-static struct regulator_desc r9a09g057_vqmmc_regulator =3D {
-    .of_match    =3D of_match_ptr("vqmmc-r9a09g057-regulator"),
-    .owner        =3D THIS_MODULE,
-    .type        =3D REGULATOR_VOLTAGE,
-    .ops        =3D &r9a09g057_regulator_voltage_ops,
-    .volt_table    =3D r9a09g057_vqmmc_voltages,
-    .n_voltages    =3D ARRAY_SIZE(r9a09g057_vqmmc_voltages),
-};
+> +  need any resources to be provided by the parent device.
+> +  For more complex devices, when the nexus driver has to probe registers to
+> +  figure out what child devices exist etc, this should not be used. In the
+> +  latter case the child devices will be determined by the operating system.
+>  
+>  - ranges: Describes the address mapping relationship to the parent. Should set
+>    the child's base address to 0, the physical address within parent's address
+> -- 
+> 2.43.0
+> 
 
-SoC DTSI:
-        sdhi1: mmc@15c10000 {
-            compatible =3D "renesas,sdhi-r9a09g057";
-            reg =3D <0x0 0x15c10000 0 0x10000>;
-            interrupts =3D <GIC_SPI 737 IRQ_TYPE_LEVEL_HIGH>,
-                     <GIC_SPI 738 IRQ_TYPE_LEVEL_HIGH>;
-            clocks =3D <&cpg CPG_MOD 167>,
-                 <&cpg CPG_MOD 169>,
-                 <&cpg CPG_MOD 168>,
-                 <&cpg CPG_MOD 170>;
-            clock-names =3D "core", "clkh", "cd", "aclk";
-            resets =3D <&cpg 168>;
-            power-domains =3D <&cpg>;
-            status =3D "disabled";
-
-            vqmmc_sdhi1: vqmmc-regulator {
-                regulator-compatible =3D "vqmmc-r9a09g057-regulator";
-                regulator-name =3D "vqmmc-regulator";
-                regulator-min-microvolt =3D <1800000>;
-                regulator-max-microvolt =3D <3300000>;
-                status =3D "disabled";
-            };
-        };
-
-Board DTS:
-
-&sdhi1 {
-    pinctrl-0 =3D <&sdhi1_pins>;
-    pinctrl-1 =3D <&sdhi1_pins>;
-    pinctrl-names =3D "default", "state_uhs";
-    vmmc-supply =3D <&reg_3p3v>;
-    vqmmc-supply =3D <&vqmmc_sdhi1>;
-    bus-width =3D <4>;
-    sd-uhs-sdr50;
-    sd-uhs-sdr104;
-    status =3D "okay";
-};
-
-&vqmmc_sdhi1 {
-    status =3D "okay";
-};
-
-Based on the feedback provided Geert ie to use set_pwr callback to set
-PWEN bit and handle IOVS bit in voltage switch callback by dropping
-the regulator altogether. In this case we will have to introduce just
-a single "use-internal-regulator" property and if set make the vqmmc
-regulator optional?
-
-Let me know your thoughts.
-
-> > Let me know if I have missed something obvious here.
->
-> Nope, all good.
->
-sigh..
-
-Cheers,
-Prabhakar
+-- 
+Lee Jones [李琼斯]
