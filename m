@@ -1,110 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC9C1BB6BB
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0114D1B4C23
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904724; cv=none; b=bQxisx40jSEWR7g7lUQL8ctwxtZRMBzWmONWESQSJyx1hxNT+5mQ5urubnloLJp/jiWN8EPj7i5vmZU9dajLyR1SK391/AQo8CziI4elD9YUwmx0sC/av60K+dVbuwA5pGHELFn6OKRukqs68U7oc5x60jrYfg73W4OXLfCtApY=
+	t=1718904731; cv=none; b=LqIhJRhpFUaefmIydP6uP9yxUy/tAgp9JuFtpVSy2hS9VIvY0F7pZBax5Phqe9t+LrIBqoHQbLNrdMNUvxOBA2VSYvRclctDN/mL4Gn5Z9d6Ytivpbl4ibS84dT+cSpOBdOe8IttGvgU2ujyYyXmRk6guDzSE2H3SeFg/LKITOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904724; c=relaxed/simple;
-	bh=W2QBZGQE5Ixc1JvG2LzlKWnr9tz5Z0WVFoEBw5MHiRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ugv3Dmej6teqvZAQhpaWQDmBhsKWjRe2grGDNOMOPGhbtH9Q0C3a2xFoAXBZiRlH0alNPJ+MwtmvRIeiwf3denyUipx+2AoBmAokzz3GKCXb6pP1okJDWABfZg3Rt4KaMmBIyR6rPi2taEBsj29Nvoa+50Oqd7Up18uDt+BhWHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ADrqJdUV; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1718904731; c=relaxed/simple;
+	bh=jtd3A5lE7SdB7AfrKnbG2Q1+vYzwWAMHHyI8mnIvrEo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ouc/NY3kAIAn2aJrbGZtlDNyHXBkbuZUEV9warIzn1QQO+o4qFx6/VEHnH8fuk4GIie4AM4cAwcS856IFM7t7ZZIOT9P9YFguvvAaYA9o3Gz++kU89mUdXPE4Q6AaxzgHrI8lsQOQY0o4KWPqaEk6ynhcq8JhQUg7b2qitGyhmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EeEKHK0B; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADrqJdUV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EeEKHK0B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718904722;
+	s=mimecast20190719; t=1718904729;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Pbk4cgzT1VG7tOZDuYBYOA1Nhbg3doz5Ktn2A96vAeU=;
-	b=ADrqJdUVAwpN9TDs2kBDuzqxCOTRSqqfIOiv5Bt3znx+fG6TjIcWeddR+TtWf8B5eUjzmA
-	BWVhsRpm3WFFd732u8ABghsq98Kew7DlaKt45JpARv8K1jqsbE4w9bXlZD0nZWZSi+faEf
-	U9cReB0u7yFl4XJUbPzCfoX4VAFOOPE=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=OOxliJmAhngSfDrJfQOkQc4/7NxulOuU/yfY7uglXAU=;
+	b=EeEKHK0Bm8mMh7tUSfWQohztp59cR4/TMU13bEckslRIxYBsNwiT15vfcV85OEttfFDquV
+	IXXs8sl5Mf4FXX+ZiEoxqzjN2bM7SzogvhaK0X6VhyEWt1CtwEXORhY265e3D4abFLFPAY
+	BoODtKUYfcTZ8X8LHTHgqGdZRnqz8+c=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-nIihs8qsPvyqSOk7Jx1A5Q-1; Thu,
- 20 Jun 2024 13:32:00 -0400
-X-MC-Unique: nIihs8qsPvyqSOk7Jx1A5Q-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-xwNS2YLuPLuNd7fIfy6AIQ-1; Thu,
+ 20 Jun 2024 13:32:05 -0400
+X-MC-Unique: xwNS2YLuPLuNd7fIfy6AIQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4A25195608C;
-	Thu, 20 Jun 2024 17:31:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F2CF9300022B;
-	Thu, 20 Jun 2024 17:31:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 20 Jun 2024 19:30:25 +0200 (CEST)
-Date: Thu, 20 Jun 2024 19:30:19 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: alexjlzheng@gmail.com, Michal Hocko <mhocko@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Cc: akpm@linux-foundation.org, brauner@kernel.org, axboe@kernel.dk,
-	tandersen@netflix.com, willy@infradead.org, mjguzik@gmail.com,
-	alexjlzheng@tencent.com, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: optimize the redundant loop of
- mm_update_next_owner()
-Message-ID: <20240620172958.GA2058@redhat.com>
-References: <20240620152744.4038983-1-alexjlzheng@tencent.com>
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2F4D195608C;
+	Thu, 20 Jun 2024 17:31:58 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.39.195.156])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A4E3119560B4;
+	Thu, 20 Jun 2024 17:31:50 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Steve French <stfrench@microsoft.com>,
+	Enzo Matsumiya <ematsumiya@suse.de>,
+	Christian Brauner <brauner@kernel.org>
+Subject: [PATCH 01/17] netfs: Fix io_uring based write-through
+Date: Thu, 20 Jun 2024 18:31:19 +0100
+Message-ID: <20240620173137.610345-2-dhowells@redhat.com>
+In-Reply-To: <20240620173137.610345-1-dhowells@redhat.com>
+References: <20240620173137.610345-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620152744.4038983-1-alexjlzheng@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Can't review, I forgot everything about mm_update_next_owner().
-So I am sorry for the noise I am going to add, feel free to ignore.
-Just in case, I see nothing wrong in this patch.
+[This was included in v2 of 9b038d004ce95551cb35381c49fe896c5bc11ffe, but
+v1 got pushed instead]
 
-On 06/20, alexjlzheng@gmail.com wrote:
->
-> When mm_update_next_owner() is racing with swapoff (try_to_unuse()) or /proc or
-> ptrace or page migration (get_task_mm()), it is impossible to find an
-> appropriate task_struct in the loop whose mm_struct is the same as the target
-> mm_struct.
->
-> If the above race condition is combined with the stress-ng-zombie and
-> stress-ng-dup tests, such a long loop can easily cause a Hard Lockup in
-> write_lock_irq() for tasklist_lock.
->
-> Recognize this situation in advance and exit early.
+Fix netfs_unbuffered_write_iter_locked() to set the total request length in
+the netfs_io_request struct rather than leaving it as zero.
 
-But this patch won't help if (say) ptrace_access_vm() sleeps while
-for_each_process() tries to find another owner, right?
+Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Steve French <stfrench@microsoft.com>
+cc: Enzo Matsumiya <ematsumiya@suse.de>
+cc: Christian Brauner <brauner@kernel.org>
+cc: netfs@lists.linux.dev
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/netfs/direct_write.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> @@ -484,6 +484,8 @@ void mm_update_next_owner(struct mm_struct *mm)
->  	 * Search through everything else, we should not get here often.
->  	 */
->  	for_each_process(g) {
-> +		if (atomic_read(&mm->mm_users) <= 1)
-> +			break;
-
-I think this deserves a comment to explain that this is optimization
-for the case we race with the pending mmput(). mm_update_next_owner()
-checks mm_users at the start.
-
-And. Can we drop tasklist and use rcu_read_lock() before for_each_process?
-Yes, this will probably need more changes even if possible...
-
-
-Or even better. Can't we finally kill mm_update_next_owner() and turn the
-ugly mm->owner into mm->mem_cgroup ?
-
-Michal, Eric, iirc you had the patch(es) which do this?
-
-Oleg.
+diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
+index e14cd53ac9fd..88f2adfab75e 100644
+--- a/fs/netfs/direct_write.c
++++ b/fs/netfs/direct_write.c
+@@ -92,8 +92,9 @@ ssize_t netfs_unbuffered_write_iter_locked(struct kiocb *iocb, struct iov_iter *
+ 	__set_bit(NETFS_RREQ_UPLOAD_TO_SERVER, &wreq->flags);
+ 	if (async)
+ 		wreq->iocb = iocb;
++	wreq->len = iov_iter_count(&wreq->io_iter);
+ 	wreq->cleanup = netfs_cleanup_dio_write;
+-	ret = netfs_unbuffered_write(wreq, is_sync_kiocb(iocb), iov_iter_count(&wreq->io_iter));
++	ret = netfs_unbuffered_write(wreq, is_sync_kiocb(iocb), wreq->len);
+ 	if (ret < 0) {
+ 		_debug("begin = %zd", ret);
+ 		goto out;
 
