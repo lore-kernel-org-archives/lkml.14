@@ -1,140 +1,96 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593491BC5C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 03:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E9C134A8
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 03:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718852911; cv=none; b=bRVx1BMaFuZcfyahoXxT0msU+9h73H3pqNlX2UY8QLEqgaqEfCOeu3jc1ZheD7WIpW/1tUJdThP+djhai2Yg/ZNQqN8B+7ru9w5e1PP8L15QWgu7Uii29/bFPft8Dzsiw6uxLKqfZ1fUQ2DmrO1fPA2eywYsU1RF+ZPCSEiunsQ=
+	t=1718853010; cv=none; b=GgVvzwy5ZClLMi1oJQk0bnJ4cnnbsShMnCVbYc2D6GCTH923O4muryrBIYmvwnqEqPRj6Ri/wYX5m9xwq86maGCsMZAr/IgMFT3yA4YshN0BP2JbxsIxQh+8jT/Td+mYE9gEjLkgGLy0LFDHuvzCy7Cxc3Y4vsOD839iW9igGHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718852911; c=relaxed/simple;
-	bh=8P2mxdIUvPc4hytMFMZTpR4BJGrP+NBu9YthFrxaiOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XHlKRSdFOmdB9Th31/6Sk+z9VKx/QrxK/Xl7vTZxX/IVk9t/wiUOAZB5JoxuYqiNl8qL+S7oLRKw/9wXtho1NI11egpKq2PYPOc5uCVIzJHhnYZ+6FKpV7ldM/nP0ebvHvuR6pFU86gQ2HEgRlq+c2r0QySCADogz3MSXOFQah0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJph/Mii; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718853010; c=relaxed/simple;
+	bh=H1+biln5nPkedb0VFkQthLFDnNrRRqfIHiuLSlxSfI4=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=lweUfhnmSOFXuRg8f+D0nqa69/NRMlIAW79pLfBnVzttqf21+/RQRmo5o+MiVFFc5ZlOKDFlOJlqt3KhO891StyZGFE8sLSK6XdZSoInDdoT7lRCPSGjVMawvmnCyjAwOf329RxQ0tbARC+GvrII0DInbkY/s5lWIE1CNZTkRho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Dx+n6G+p; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJph/Mii"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-25ca04d24dfso244901fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 20:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718852909; x=1719457709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8P2mxdIUvPc4hytMFMZTpR4BJGrP+NBu9YthFrxaiOA=;
-        b=JJph/MiitwCP8USFqoKSpzsfRForLhslURR9jwo/xTaE1C5S4KcN1WTmvX6aZXzkVU
-         rgzzVRWkbRcsj14dHdMIW/w2RdI0s1hRmfrQtqcyP9nUrrnDuHu0RuKvmuIx0+zo9Dy5
-         xxv2uLHdHxPLKUs+0ENTDEsMw5+6V377IdFhg+WLCGIWxY2tO3OC37Xuhu61C7DhnG15
-         pj4TtKZhTabPvpLqsQ97p/S+HPWEUyRnSN7C+/c0U20rtpq8VQ+ZroJfqFNAiO4CqnjA
-         va0XwsWiADsOtCHqrXonwCuiAYhQ/MYxc6VgP5r8/0WkPbZ0jB9ccA4StAMU2qa5nmBH
-         clNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718852909; x=1719457709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8P2mxdIUvPc4hytMFMZTpR4BJGrP+NBu9YthFrxaiOA=;
-        b=P0bTHQU15B4RVrSkBATu8dqjFPTRWJdz8hQ82jU/U9j02lQF2Loi/QqwuPsHsZ3ha3
-         aY4ZE4hlLP1xrK6RtTJHhijjJ9qZ6AoBaqbKtxH6EglI2xI1zwpQvC/524ZxuNiNplm1
-         0O6gNMDa3kE95bvQKAYpfepGH+FoaAssa4TVJC+Bp4LTvc72msnVYn2Q+QJeTzYIHV8T
-         7fcDAuJ22zi7M8PrDyzTGtvXvFonmHQgNFrz8kdECnAJwvlK2HIUqBaWG1nZL6cymUTc
-         ePkVPoGAN6Uetgtq19Gr+IkC9RaTVT07dpkOf0dcSanZhIY1dDaEPew6F0btorKm4x/M
-         ngXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeP35RqaveVl+G6N4u15vhrstDBBZHe9eBrW/POe0KiFTFXd5m+MFfIlO+kHiIVtUhNYuCdUBGDF0TsT83FDbYHvioJZ2kjAvs1Mth
-X-Gm-Message-State: AOJu0YybAsO6Vfg7NRJ1enU7gEO4YOv+++HKDgvGVunXXt7amy6jKnJR
-	69i+omjQY7McVgcps5CY9A9ZQ2FJl4Q3dBLNq7jVLcpPLLgkN+CWjMD/WhdhVEBdjQj1JX9yDPc
-	aWetrhp/qm3r7OZcBlqSUgSTHLNE=
-X-Google-Smtp-Source: AGHT+IHvdS8mu92L+RrrtmqzJGBDlrfMrtZjM5WsvTb+pETz+9KQK84qr/HN71paaXRXxlauZU6llMpo2kTI4u8z4A0=
-X-Received: by 2002:a05:6870:c18b:b0:258:42be:ce5e with SMTP id
- 586e51a60fabf-25c9498fcd6mr4498884fac.16.1718852909141; Wed, 19 Jun 2024
- 20:08:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Dx+n6G+p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1718852685; bh=MvLnBQtWyz44qgWyFen+YAfvkf/NA5LiTAc+ar/gjwc=;
+	h=From:To:Cc:Subject:Date;
+	b=Dx+n6G+p5vKiPV6thBEC4kK3X9IRgtbMPh6ZjOd3Z4Jz/KXU+XxZM1wgFVM5mL/SX
+	 AB0IAdoaZDzbrGNVp0fcx617NCG//7DAAY5SWUeJiKlnIePNSR1ApshzbXu9MekS4Q
+	 qb+ZFaGSfmTEPyd14eSy4DA4ibA7L83s5aLgABIo=
+Received: from Yangyus-MBP.lan ([2408:8207:18a1:970f:f545:a993:a6:36e4])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 12A15E7E; Thu, 20 Jun 2024 11:04:42 +0800
+X-QQ-mid: xmsmtpt1718852682txuyjzpm5
+Message-ID: <tencent_7B71486CE305DF8AE084B6BB6313EE550C06@qq.com>
+X-QQ-XMAILINFO: NkHKfw09D6j8uL2HVuJBhrdaCUDh1ERnAUZ8/tYbi4vw0i8bJKcrZyMIbx3h8c
+	 dMmP4OuYNT7Vsvpcb6lzbOmrbWPOqdnRmbRcYOXbbQ0Y3V0Vv7QFx1mQN1j/FTxSbPq5npDj2f91
+	 HODXYEunqsrMHTRPqRfLg1A6hsPz+a0c30zMb/2OzdpnaL2BhNmyJmUN+HqgE2IZlUmJeN6A0XVQ
+	 Po4NW30aUHKQlcW8waIC2WT0ss/Ws5PfmXCz8R8re1ibKdaGtd7Vt05M48o9LCIgdTYbLDyV25yj
+	 t4fReppM1slQwKzwma/EOZyXZe/9K2qglOhoQ+RoI9C5VSaylVbpuelSECOGOU2jAtUEXHmFVE8R
+	 qcURW5QDkdbxdo5eFvr9NC9M3JiEMHX/lEfW2VQVu9kPGj4kMzjQlQhL2eoarms2U0U5HiEZ6pVJ
+	 pOj83xD+Jg6sbkwv8ekYNzhKKN9YCJr4h6m6SErK6JcxxPaLL7ziTK0jqp2fAzCcpglJzFHfyODD
+	 gozJjUB/P7ckIq3tXKz1G0PzpH2pxhRikm7+6lAu1vp6/kafvuqJXi2xJZlMZhJjkX0rDqlb8yJb
+	 /PILJKw5H3wj0kBBl7VxHqZsOMHbEog4h9rc4R6MMpwKFsKD7spDBdUMyE81+sgHxcxXBF9dsAh4
+	 bMrHD8AncHgbRJmRl8Zj4yCgzEYLcFXrJdFUZ5rg/k6syi3cT5hqNlnh03L3XTE/zUc6/t/j+6/s
+	 lLQAu9ekA3rZ4PaVQM5Kaxoqwk7+4y2NOFZfvjNsGr3A2jas+okPXJMmeDLDIZzU/zoyyHoDehNS
+	 IRVOAxmRZWGWwU+js7OIRqk8LcO941U1CFXyN35KlN8LjiorWZF887nYbz4d7kwCzo+L3AKwKXWy
+	 oWg8mdSr7jY+Q5/oTD4rJWJYvdd1p+9tOrw1IyQldM2pCpGpxmWjBHib1tTqIDcl4+iY+/Ir96uJ
+	 88b4uZ8kNzV4edFHgfTpmR9mLQDKPtr7/ui/HP3PQcW2kkHiTtradwtciQIOFr
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Yangyu Chen <cyy@cyyself.name>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Janne Grunau <j@jannau.net>,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Lina <lina@asahilina.net>,
+	asahi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH v1] drivers/perf: apple_m1: fix affinity table for event 0x96 and 0x9b
+Date: Thu, 20 Jun 2024 11:04:28 +0800
+X-OQ-MSGID: <20240620030428.1832-1-cyy@cyyself.name>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606070645.3295-1-xuewen.yan@unisoc.com> <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
- <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
- <20240616222003.agcz5osb2nkli75h@airbuntu> <CAB8ipk-ejDKQTr8nAmK9MkhL2Ra=0J==p3Q+U-4K18G6MeJhQw@mail.gmail.com>
- <20240617110348.pyofhzekzoqda7fo@airbuntu> <20240618145851.je4a7cu4ltrt3qxa@airbuntu>
- <CAB8ipk_LXzkkGzT1SS6U8i4nW6j9coxeuwn6vuUFusCQcFM8zw@mail.gmail.com> <20240619180348.rp22d4ozb4emncuq@airbuntu>
-In-Reply-To: <20240619180348.rp22d4ozb4emncuq@airbuntu>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Thu, 20 Jun 2024 11:08:18 +0800
-Message-ID: <CAB8ipk_EDm4MQ=0OK7ygXMtaUSUo1V=ZTMRT9rro+bf+6am3uA@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding actual_cpu_capacity
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, vincent.donnefort@arm.com, ke.wang@unisoc.com, 
-	linux-kernel@vger.kernel.org, christian.loehle@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 20, 2024 at 2:03=E2=80=AFAM Qais Yousef <qyousef@layalina.io> w=
-rote:
->
-> On 06/19/24 10:46, Xuewen Yan wrote:
-> > On Tue, Jun 18, 2024 at 10:58=E2=80=AFPM Qais Yousef <qyousef@layalina.=
-io> wrote:
-> > >
-> > > On 06/17/24 12:03, Qais Yousef wrote:
-> > >
-> > > > > Sorry, I miss the "fits_capacity() use capacity_of()", and withou=
-t
-> > > > > uclamp_max, the rd is over-utilized,
-> > > > > and would not use feec().
-> > > > > But I notice the uclamp_max, if the rq's uclamp_max is smaller th=
-an
-> > > > > SCHED_CAPACITY_SCALE,
-> > > > > and is bigger than actual_cpu_capacity, the util_fits_cpu() would
-> > > > > return true, and the rd is not over-utilized.
-> > > > > Is this setting intentional?
-> > > >
-> > > > Hmm. To a great extent yes. We didn't want to take all types of rq =
-pressure
-> > > > into account for uclamp_max. But this corner case could be debatabl=
-e.
-> > > >
-> > > > Is this the source of your problem? If you change util_fits_cpu() t=
-o return
-> > > > false here, would this fix the problem you're seeing?
-> > >
-> > > FWIW, if this happens due to uclamp_max, then this patch to do the ca=
-pping is
-> > > still needed.
-> > >
-> > > I think it's good to understand first how we end up in feec() when a =
-CPU is
-> > > supposed to be overutlized. uclamp_max is the only way to override th=
-is
-> > > decision AFAICT..
-> >
-> > Sorry for the late reply...
-> > In our own tree, we removed the check for rd overutil in feec(), so
-> > the above case often occurs.
->
-> Yeah, the current definition of overutilized is not good enough. So I can=
- see
-> the need to do that..
->
-> > And now it seems that on the mainline, uclamp_max is the only way to
-> > override this.
->
-> Thanks for checking. Your patch is correct and if we combine this with an=
-other
-> patch to use get_actual_cpu_capacity() in util_fits_cpu(), they are good
-> improvements.
->
-> Are you still happy to send an updated patches?
+Events 0x96 and 0x9b can be installed on counter 7 only. Fix this to avoid
+getting the wrong counter value.
 
-Okay, I'll send the new patches soon:)
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+---
+ drivers/perf/apple_m1_cpu_pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks!
+diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+index f322e5ca1114..b8127e5428e1 100644
+--- a/drivers/perf/apple_m1_cpu_pmu.c
++++ b/drivers/perf/apple_m1_cpu_pmu.c
+@@ -107,12 +107,12 @@ static const u16 m1_pmu_event_affinity[M1_PMU_PERFCTR_LAST + 1] = {
+ 	[M1_PMU_PERFCTR_UNKNOWN_93]	= ONLY_5_6_7,
+ 	[M1_PMU_PERFCTR_UNKNOWN_94]	= ONLY_5_6_7,
+ 	[M1_PMU_PERFCTR_UNKNOWN_95]	= ONLY_5_6_7,
+-	[M1_PMU_PERFCTR_UNKNOWN_96]	= ONLY_5_6_7,
++	[M1_PMU_PERFCTR_UNKNOWN_96]	= BIT(7),
+ 	[M1_PMU_PERFCTR_UNKNOWN_97]	= BIT(7),
+ 	[M1_PMU_PERFCTR_UNKNOWN_98]	= ONLY_5_6_7,
+ 	[M1_PMU_PERFCTR_UNKNOWN_99]	= ONLY_5_6_7,
+ 	[M1_PMU_PERFCTR_UNKNOWN_9a]	= BIT(7),
+-	[M1_PMU_PERFCTR_UNKNOWN_9b]	= ONLY_5_6_7,
++	[M1_PMU_PERFCTR_UNKNOWN_9b]	= BIT(7),
+ 	[M1_PMU_PERFCTR_UNKNOWN_9c]	= ONLY_5_6_7,
+ 	[M1_PMU_PERFCTR_UNKNOWN_9f]	= BIT(7),
+ 	[M1_PMU_PERFCTR_UNKNOWN_bf]	= ONLY_5_6_7,
+-- 
+2.45.1
 
---
-xuewen
