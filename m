@@ -1,190 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DD31ACE85
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05F91ACE73;
+	Thu, 20 Jun 2024 13:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718888704; cv=none; b=SRvqawsPCgntyk2oBNhPwu4lMbQGIfoQZMbw6K3Om8UbAW2UqoHaFmjZhYCLvvsjNZCjTFKYLe1czDMJFp0NaWHAJEZUPqIA9AFZPHgOmEgte3gYIBdSpZxj67sK0LsVxqqKQIbBqnRMw6drnAB/w2AjV8xVTSMJ31MZjTlEg1A=
+	t=1718888734; cv=none; b=sRmn86r8vT2PF9o2JVUCD9wlCGXdD5YAthPuDvGUM6V1Tv6oKHxyHC8hSQunUtmqHThYcV2zBOr+dmW/85rl4qMk7JHo9UBESt+yKY2ogjp7web21M/Oit8nsaAp6ed7Ho/9J7gqt+pKlSC2p0eVu1+rwZlgm2uf413KZJLTAfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718888704; c=relaxed/simple;
-	bh=2IAyNZnC98g3I3C/asGtHAo0qZn8Ytw+IP3P2W+a0IU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gbUebxWiu8KkiVIqm4sPufu8zDzS8WN0Cq0jHJZ+HgQr+VsvwdyY1x0gY+K7aad15VIx8o8sYgpjuDsC4CgvyZ6sIViMQp9b357cBXFjZxj5Vql+4HqsR3jTleQqHBnrq02KqruWGj8ZZCP7PPYOlYViVr83H8k/iaNrqmm5DEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Er8bmFWI; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718888734; c=relaxed/simple;
+	bh=CW67Odk2NxNyxJ4qAmclOWnaii9SeIs9/lx3f071QpU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gOsNapn94IvR8RkxHRCKDLB1e9Pwt3MLb8zXug429Uxw8ajQ6nhPdscM3J+cpb8efFuw9g1nfs89yaaqUtww6Iv35ZQeuPNzgVSIR8gNIaxVSHY5qW+u+t00DX+cltE39xmucHdDuWsZL97STmR4ofaIkYvz10sNH6U4Ew1rVrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XzEhankm; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Er8bmFWI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718888702; x=1750424702;
-  h=date:from:to:cc:subject:message-id;
-  bh=2IAyNZnC98g3I3C/asGtHAo0qZn8Ytw+IP3P2W+a0IU=;
-  b=Er8bmFWI+bcXn+LYfVbqL+N7V/BNQMRN0CEfu+siybD2REpvv2xsX6aI
-   uBcOZAYbxWIgw+nzF7NigwmQ3GGzD4XhQIgcdlTFFo6/IfhkWkElRQkBK
-   WG42ytrBNVID4rkIA6umEWh1KciSd/2gXqNMqe+DTHG85c5BYFrLNaKc0
-   z8PEn88HRz07N86MqdLSUp+vGf9JM4J8ZIdOaPsMElUr+VJC2hM/Ucw+r
-   aGgh6dEjFhdtgzJTHpOYqnlK9EKAHGnZiNq4M6f6BOy7//qMY6AQ3Lpos
-   SrJul6JssjHDZeMn1uqArX+H0JnpWxuQVmijhQ+VfvRK3XlvY3XTgaxjC
-   A==;
-X-CSE-ConnectionGUID: Xg5bswgNSwm0tPxYzZCdSw==
-X-CSE-MsgGUID: 5F7pQS95SJSagrWhTiX3RQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="27283712"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="27283712"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 06:05:02 -0700
-X-CSE-ConnectionGUID: gnaYTiFjQvKOcGYsAQQbXg==
-X-CSE-MsgGUID: Ea20yFmrQKGXzCc+LMFh7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="42695742"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 20 Jun 2024 06:05:00 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sKHTG-0007cc-1N;
-	Thu, 20 Jun 2024 13:04:58 +0000
-Date: Thu, 20 Jun 2024 21:04:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/sev] BUILD SUCCESS
- 99ef9f59847cab1f9091cd4b9d7efbee0ae4fc86
-Message-ID: <202406202155.OPN2VH7t-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzEhankm"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c815e8e9eso883144e87.0;
+        Thu, 20 Jun 2024 06:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718888731; x=1719493531; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4gb+FfeqRWMVLQI7Jm/m9Je3kgzXobOl5Gw0fKArWds=;
+        b=XzEhankm+B++zX8JYSW2onhe4I6NjZQKaCNxq1UVfghOzU5dG2Dy371jE+v1DfQNFb
+         TLkeYkquoeIsaCBQ+xoRpCU5uHeTeQgrCfSsPJs763v9v/JVYaLhB9Hru/OJ6+l/pg00
+         UVm3KO/MqeRb5E4th40Sr09wlgxJl9C+NzxdD/MQCCl+flhR00TahwM4am6ApnKZIkkA
+         b2CpbqSG1lgOOrg9hNI/3EXnG5kMut2C/xlogPJOuNxuj2dQY06fA/7iJ/kUPp13b+MW
+         3N6HYjTEobc24ofaaEC1xi5R5VYIe2Rl4Y0Fzpvtw8eNxHhe7tTrGK3Ctxprbc8aVdM+
+         UJjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718888731; x=1719493531;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4gb+FfeqRWMVLQI7Jm/m9Je3kgzXobOl5Gw0fKArWds=;
+        b=mLumgY9AXhgV0hccMC8XGCQhRuDtBIUEyZPf1F9oJCJirMp6p3S85vX00EE9o5scYl
+         Wzf0yEhLs1j0gxLrTjBXRvdcwNAZJC/x1an1KAlurETjqzGCooKStSwUGrQao6PIK+3/
+         diBMW9dDiMMsdR91UaW0jgRtaFlv3FV0rfG2Q6Xqw+UMzRyXyhevnxpB0JgBiW1ZUF+p
+         wkCY03UWZreWznnfj9vGg0GQgWoB4NgEqcQ5PkNyeRFDs9sRW3+mkgnI+y9y1k+08X1a
+         QLlMK1lw6Bo8d0lFAdiDqZG9w3DfPeV3i2SQM7xs6ZOcQ98GpIfYL29uxtgBe41+szJx
+         3tow==
+X-Forwarded-Encrypted: i=1; AJvYcCVcsBHAymRvWNRAlq9T80/Ik8e5fpWam/yuZBkfAVJjdLU2nyChdjjfdS9k5Bc5kXFO5p+Lw2TjMVvFSaGpzh9sQmLriwtuftzBO6jxfnq4g1SArPu6bQOn2bS/QY1t6E8Av3ONbrQE6lPRNC2/uK09jP7Ws4Ha+NLVWmOhknZ1ptmA/Vw=
+X-Gm-Message-State: AOJu0YxGr1iyfOkoLLC0wZVhRjTtReWjyXGvtuG9BsDctYUFa1dK23Ai
+	WLzVoTLT95Z70GrPB8i88owdZXoQt3C0BRpMIIuP/y9CnKHnuS+B1RXSpF6+Em8W4OiEh/RZbYh
+	ADf+u1MfptbHHGlkRXurYOlUI0lA=
+X-Google-Smtp-Source: AGHT+IFduh5eLCvTJMpJK3rEGrdpp83bWcNoB0yrWk7/vzPFsnPNLOCACN0J0Nj/s5pdi/SGQz/m2OcOqytXmSu/guw=
+X-Received: by 2002:a05:6512:48ce:b0:52c:8420:59b with SMTP id
+ 2adb3069b0e04-52ccaa54e7dmr3301811e87.49.1718888730609; Thu, 20 Jun 2024
+ 06:05:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240611132134.31269-1-bavishimithil@gmail.com>
+ <20240611164951.51754ffc@aktux> <CAGzNGRmoSawz7yHGzHS8PeQwRAsnnORLMPrrNBLupNdaOkUeHw@mail.gmail.com>
+ <CAGzNGRnnZWJP6CF1X6SXus2QCwUA763=qHUAy6c6Ny6_FFd7GQ@mail.gmail.com> <CAGzNGRk3dwGEsQbrN4LZfKwDGTncHpKEcf2cLepUkRYBO4yn5Q@mail.gmail.com>
+In-Reply-To: <CAGzNGRk3dwGEsQbrN4LZfKwDGTncHpKEcf2cLepUkRYBO4yn5Q@mail.gmail.com>
+From: Mithil <bavishimithil@gmail.com>
+Date: Thu, 20 Jun 2024 18:35:18 +0530
+Message-ID: <CAGzNGRmMqFm55r3FdhKHuYej1pENfaO0az6sb2_1P6+r65M-yQ@mail.gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: twl6032: Add DTS file for TWL6032 PMIC
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, 
+	Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-omap@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/sev
-branch HEAD: 99ef9f59847cab1f9091cd4b9d7efbee0ae4fc86  x86/sev: Allow non-VMPL0 execution when an SVSM is present
-
-elapsed time: 3070m
-
-configs tested: 113
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-arc                   randconfig-001-20240619   gcc-13.2.0
-arc                   randconfig-002-20240619   gcc-13.2.0
-arm                         assabet_defconfig   clang-15
-arm                            hisi_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240619   clang-19
-arm                   randconfig-002-20240619   clang-19
-arm                   randconfig-003-20240619   clang-19
-arm                   randconfig-004-20240619   gcc-13.2.0
-arm                         s3c6400_defconfig   gcc-13.2.0
-arm                         s5pv210_defconfig   gcc-13.2.0
-arm                       versatile_defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240619   clang-19
-arm64                 randconfig-002-20240619   clang-19
-arm64                 randconfig-003-20240619   clang-19
-arm64                 randconfig-004-20240619   clang-19
-csky                  randconfig-001-20240619   gcc-13.2.0
-csky                  randconfig-002-20240619   gcc-13.2.0
-hexagon               randconfig-001-20240619   clang-15
-hexagon               randconfig-002-20240619   clang-19
-i386         buildonly-randconfig-001-20240619   clang-18
-i386         buildonly-randconfig-002-20240619   clang-18
-i386         buildonly-randconfig-003-20240619   clang-18
-i386         buildonly-randconfig-004-20240619   clang-18
-i386         buildonly-randconfig-005-20240619   gcc-7
-i386         buildonly-randconfig-006-20240619   gcc-7
-i386                  randconfig-001-20240619   gcc-7
-i386                  randconfig-002-20240619   gcc-7
-i386                  randconfig-003-20240619   clang-18
-i386                  randconfig-004-20240619   gcc-7
-i386                  randconfig-005-20240619   clang-18
-i386                  randconfig-006-20240619   gcc-9
-i386                  randconfig-011-20240619   clang-18
-i386                  randconfig-012-20240619   clang-18
-i386                  randconfig-013-20240619   gcc-13
-i386                  randconfig-014-20240619   clang-18
-i386                  randconfig-015-20240619   clang-18
-i386                  randconfig-016-20240619   gcc-13
-loongarch             randconfig-001-20240619   gcc-13.2.0
-loongarch             randconfig-002-20240619   gcc-13.2.0
-m68k                        mvme16x_defconfig   gcc-13.2.0
-mips                      pic32mzda_defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240619   gcc-13.2.0
-nios2                 randconfig-002-20240619   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                generic-64bit_defconfig   gcc-13.2.0
-parisc                randconfig-001-20240619   gcc-13.2.0
-parisc                randconfig-002-20240619   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                     asp8347_defconfig   clang-17
-powerpc                      ep88xc_defconfig   gcc-13.2.0
-powerpc                    mvme5100_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240619   gcc-13.2.0
-powerpc               randconfig-002-20240619   clang-15
-powerpc               randconfig-003-20240619   gcc-13.2.0
-powerpc64             randconfig-001-20240619   gcc-13.2.0
-powerpc64             randconfig-002-20240619   gcc-13.2.0
-powerpc64             randconfig-003-20240619   clang-19
-riscv                             allnoconfig   gcc-13.2.0
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240619   clang-15
-riscv                 randconfig-002-20240619   clang-19
-s390                              allnoconfig   clang-19
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240619   clang-19
-s390                  randconfig-002-20240619   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                        edosk7760_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240619   gcc-13.2.0
-sh                    randconfig-002-20240619   gcc-13.2.0
-sparc                             allnoconfig   gcc-13.2.0
-sparc                               defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240619   gcc-13.2.0
-sparc64               randconfig-002-20240619   gcc-13.2.0
-um                                allnoconfig   clang-17
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240619   clang-19
-um                    randconfig-002-20240619   clang-19
-um                           x86_64_defconfig   clang-15
-x86_64       buildonly-randconfig-001-20240619   clang-18
-x86_64       buildonly-randconfig-002-20240619   clang-18
-x86_64       buildonly-randconfig-003-20240619   gcc-11
-x86_64       buildonly-randconfig-004-20240619   clang-18
-x86_64       buildonly-randconfig-005-20240619   clang-18
-x86_64       buildonly-randconfig-006-20240619   gcc-13
-x86_64                randconfig-001-20240619   gcc-13
-x86_64                randconfig-002-20240619   clang-18
-x86_64                randconfig-003-20240619   gcc-8
-x86_64                randconfig-004-20240619   clang-18
-x86_64                randconfig-005-20240619   clang-18
-x86_64                randconfig-006-20240619   gcc-13
-x86_64                randconfig-011-20240619   gcc-13
-x86_64                randconfig-012-20240619   gcc-13
-x86_64                randconfig-013-20240619   gcc-13
-x86_64                randconfig-014-20240619   clang-18
-x86_64                randconfig-015-20240619   clang-18
-x86_64                randconfig-016-20240619   gcc-11
-x86_64                randconfig-071-20240619   clang-18
-x86_64                randconfig-072-20240619   clang-18
-x86_64                randconfig-073-20240619   gcc-9
-x86_64                randconfig-074-20240619   gcc-9
-x86_64                randconfig-075-20240619   clang-18
-x86_64                randconfig-076-20240619   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                          iss_defconfig   gcc-13.2.0
-xtensa                randconfig-001-20240619   gcc-13.2.0
-xtensa                randconfig-002-20240619   gcc-13.2.0
-
+Hello, how should we go ahead with this?
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best Regards,
+Mithil
