@@ -1,148 +1,142 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BEA1AE84E;
-	Thu, 20 Jun 2024 14:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02701AE87C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718895148; cv=none; b=ZHugzqmokr+hZXysotWWZ/CL/tk5p9c2P4nESMgEnXPzbcE9j57+phoXkpvdwywnHfldFK2XgSfcbNgZCC5UINJhveUi7dRO64A6Oo8F26IHIThNoNziyAf2RKZCEOki7QRtTsv0k1mIYphkywafZ41Tch/fnqKlNzO19VNPLvg=
+	t=1718895181; cv=none; b=qWoUaIWSKFFbfx2OHTpgdZGvWJHMWnHkKs3+792Nt8vYlnPPQ7IuFyQltTcEeTohdyYJNRbk3yX82gyrojy7dexfe0qTwfsFzhJGnrf0D7gY6+CqrbuTZudo+a+jj28DfSt+NlYXXU7KsR+Z+GDxrU/nSgOpQ5D0NAmWDtFIZn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718895148; c=relaxed/simple;
-	bh=quHvdMGXD+OF+Vmvo6ZchqeF+v17FJP9dNrIZBXrvGc=;
+	s=arc-20240116; t=1718895181; c=relaxed/simple;
+	bh=cOjlLG7J6uNFSBufcYc1U6uO2TdqNqn9wVWkYk95jjo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sMvQz3V37yeUl5LLHfleUR5r8uMdLy30IAYK5WAYiBVI1fUobedpHpH8yS6KTf+fHlY96Iz8slKJ32dT2YSyKQ6JKcAQY59JgQKX88sZ3XZHDhJ4q4Tmb5ZdoBLLfLe/8Faye0o5Xa3p13gnalRCh7oHYNc/xBRPPVmfNhfGzM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dfe81d54db9so973713276.2;
-        Thu, 20 Jun 2024 07:52:26 -0700 (PDT)
+	 To:Cc:Content-Type; b=Fjp87S/apwtc494mx5H+kpQ+Sc9xUWYD3zcQd32QKBB7U+fmeE6bL+zMYNGGuIDeJ8JhaPZ1nZAFLNoswNBdocC4KBrchoqZWzRQ3MuguyWXAUB3L5rk0P4poHlUXlSoWArAS81fhvTiy7MgBjR9m78UjjH3GDJ8tsL0FP9Dt2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mj4qRAQJ; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mj4qRAQJ"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-63036fa87dbso8243397b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 07:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718895178; x=1719499978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qCNEYn05yS9gykrfyaJDjrazGTz47gbZUOuJaEqz7AQ=;
+        b=Mj4qRAQJ2Wx5lLhhpLxAQFkU3cYGQB2F6Hum+kp+9EhQTIRbkIt6eMTyMUPKeaqnTv
+         0Dd0hxRQpRJ0ayAaZFEWNqJKf+v+6czaYyhkSKePJBD0erUSKj5ENB5otFFOMYnxeMTe
+         SxsMkigkfuVbHFswgLVP+91M9n89kGcDi3MgN3vUwqm0jho665jzA2zxEX2BaEv8IHNs
+         Kn5QkS2DFyISLU8KfPYx9lBxByYvfdPwEmqU04PjFL0Cff4CWv4/dGZPlacA0zVoEvbo
+         hxH51qFUSAlIbgWay8sdMtxzKzyPFt3ZWMb3kdp53iz8E1C1O1hdYmAe2kgxN/TSMXlO
+         En0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718895144; x=1719499944;
+        d=1e100.net; s=20230601; t=1718895178; x=1719499978;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qicnrKvU4izSAdjyf++mWnVsSY0UBkYb5drVYCcA5wY=;
-        b=cdeJnu6fScTZbDDJ5VBiclJX/d3DAxzRVw1+ZUziR2PktI4AezKkSWoXDLIZEJLPol
-         DZRNiOTkKhrWktzkK5ws/uvmoqnn771pNsuAOA2GmkNUwT/9QqA7Y18epbeCFeG1Gd5s
-         6eGSBJtSpNWqNQMFySRx3linrkSsPkoyTG2ktwX+AhEuhey3i6kR0vZOmb3xZej2t4/R
-         Rmg9HRUaf7hVvBnF7RSHN4MDSXEc4zb+68MuRRFezoeMYyzqjmUvx0BhnEXrLUDUK28U
-         PSuiCdTtEGZqSNMfsxKhHpvxop5CzFriNQpM4gr8T6jV/0L6l4FaBrOcR9sU16fYPtJN
-         If8g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7e4QvIb6nn+VQV5HyGYRxivCCbSVrA2r5DiUkuVJPXOFdPiYoTOfoqaAy5zGar+K4TdZj+rhv1Fg5E4wv9Js4Xa1COSKRxxBD+7/edyVcrqhi9zICXo+75imgtf5AsU7YM9POLMTOL3tNbv6moj260D2FFp0N10MO0ETTQfuJK7Fhk1OZCSx+DFKcP/dkpFJ4B7WqTdtYPwvNUoHJ1jiUd2iy+F8Q
-X-Gm-Message-State: AOJu0Yw9Uav9DpyxEIi3k4BSYPlQK2l3YgRfjFGv0994QCuYVM+wPujX
-	/kgfNGoBbHMxXv2z7t2G8ADchrJxSWYAOtevkrnIOvjEbO/paEwt6Pw+jVmF
-X-Google-Smtp-Source: AGHT+IHa726p4LBUgJ4pKzqdMzHgOlyRn0z7kg86RymTqqoueBuhne4yq1OJUzSFpV67LGh1zg0C2A==
-X-Received: by 2002:a25:d653:0:b0:dff:745:2303 with SMTP id 3f1490d57ef6-e02be225ddemr4959097276.57.1718895144153;
-        Thu, 20 Jun 2024 07:52:24 -0700 (PDT)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e02ce311570sm987321276.15.2024.06.20.07.52.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 07:52:23 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dfe81d54db9so973676276.2;
-        Thu, 20 Jun 2024 07:52:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW8Jv9p9FcgyzdRMxyQg94hd8/iEvpkOQYFU9ir04GVpGuNBboPAeVyCFaBAjkEXnBFckDFQqpCd1biv/VRksTFljKHglTDAplzpIyqr0bcpE9HJUpcSiThl5VLfDFi8RZE9KWrC2M4W8AHJeVpoAl+bTgGgPxPNwHz9K1ekVFQKlQF+ARxO3d9+cF/sRdxv4uBkq2AXV32mgC4vLxgmWX42YBYmgEa
-X-Received: by 2002:a25:8403:0:b0:e02:b7ee:5354 with SMTP id
- 3f1490d57ef6-e02be138271mr5993985276.20.1718895143516; Thu, 20 Jun 2024
- 07:52:23 -0700 (PDT)
+        bh=qCNEYn05yS9gykrfyaJDjrazGTz47gbZUOuJaEqz7AQ=;
+        b=meOq+CvMTU0uCjNKHIVQv8V9ZPv0XL8H/W4WVWtVaYbPw/2ZosIrt/yet8ka+eh05S
+         5KeY/FkJy8odqVhVjPWWbbYFmO6e3wbvvFRS/2Re6YnWkj/91obGaNyYHMqLmo0UBdFG
+         1390Sp7rm3XcdTM6xLgJ+LrVtvAgRgD7zNfNxV9E+4nQWVCdtCAcoq6cl1HzbyG0UJoi
+         MCVsTUrJdi1fLqByncrNfnN0yiUUyBnOkPH1MXLVtqRVxYM/njroCxcFI/FetOprQq+/
+         Z7tLBAtCNGhvD1pYbGi5YqUQxtTzIhPUbBQqadK9fji3hILShjjZcaqZsKOsZWCqa4u7
+         NN7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWhrBn66F4Xoi+T+8p71pDbmIFBvhPu8wAR5nWZBPbyIOoFDMIvNu3ReWsQWHgDSy5b1iH3nc5ECW07CiecElKiuShVrTXo4EsJk01
+X-Gm-Message-State: AOJu0YwmdniYuV+yIg/3abhDa66GCuypNnrBMTj0p05f3Qou8PLrrboJ
+	P5WWB/CsP7aJzhwgRwXaQadi31k+Q0b1jr2Bx64jLR6Dv3lbbU4F1WErs/anJJllTQWWSvsXdpF
+	cv/4bi8SFQeZ9Jh9o3zm3V4xq6mnOLLOKYggcmg==
+X-Google-Smtp-Source: AGHT+IF40pdsLHGJGXsUitmodarquEe+C+A7BtlyIVzKzW3fRxNf20I0BvEb3GK+3HmTvwvssyu3em+pUpOJ1efXyLE=
+X-Received: by 2002:a81:e30d:0:b0:61b:e61e:8988 with SMTP id
+ 00721157ae682-63949fecfc4mr58602707b3.18.1718895177927; Thu, 20 Jun 2024
+ 07:52:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605074936.578687-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240605074936.578687-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240605074936.578687-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 20 Jun 2024 16:52:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW5J087M=xD95R87XsP-xTqiaenzJ9WVq8x_d2_+67J1A@mail.gmail.com>
-Message-ID: <CAMuHMdW5J087M=xD95R87XsP-xTqiaenzJ9WVq8x_d2_+67J1A@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/4] regulator: core: Add regulator_map_voltage_descend()
- API
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240612075829.18241-1-brgl@bgdev.pl> <171889385052.4585.15983645082672209436.git-patchwork-notify@kernel.org>
+ <8d6af7e2-76f8-4daa-a751-a1abe29af103@kernel.org> <CABBYNZJ5z91HExR-dkwrEPoF1pEGbkAP0X6tpftEGz-kd7vdsw@mail.gmail.com>
+In-Reply-To: <CABBYNZJ5z91HExR-dkwrEPoF1pEGbkAP0X6tpftEGz-kd7vdsw@mail.gmail.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Thu, 20 Jun 2024 16:52:46 +0200
+Message-ID: <CACMJSevy9w9L3c9fmbZcwO2BdmtJiQmHBTqJSiSXUs-fcmEqAQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Immutable tag between the Bluetooth and pwrseq
+ branches for v6.11-rc1
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, patchwork-bot+bluetooth@kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, marcel@holtmann.org, krzk+dt@kernel.org, 
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
-
-On Wed, Jun 5, 2024 at 9:49=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.co=
-m> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, 20 Jun 2024 at 16:44, Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
 >
-> Similarly to regulator_map_voltage_ascend() api add
-> regulator_map_voltage_descend() api and export it.
+> Hi Krzysztof,
 >
-> Drivers that have descendant voltage list can use this as their
-> map_voltage() operation.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/drivers/regulator/helpers.c
-> +++ b/drivers/regulator/helpers.c
-> @@ -368,6 +368,37 @@ int regulator_map_voltage_ascend(struct regulator_de=
-v *rdev,
->  }
->  EXPORT_SYMBOL_GPL(regulator_map_voltage_ascend);
->
-> +/**
-> + * regulator_map_voltage_descend - map_voltage() for descendant voltage =
-list
-> + *
-> + * @rdev: Regulator to operate on
-> + * @min_uV: Lower bound for voltage
-> + * @max_uV: Upper bound for voltage
-> + *
-> + * Drivers that have descendant voltage list can use this as their
-> + * map_voltage() operation.
-> + */
-> +int regulator_map_voltage_descend(struct regulator_dev *rdev,
-> +                                 int min_uV, int max_uV)
-> +{
-> +       int i, ret;
-> +
-> +       for (i =3D rdev->desc->n_voltages - 1; i >=3D 0 ; i--) {
-> +               ret =3D rdev->desc->ops->list_voltage(rdev, i);
-> +               if (ret < 0)
-> +                       continue;
-> +
-> +               if (ret > min_uV)
-
-I know this patch is superseded, but shouldn't this be "<"?
-
-> +                       break;
-> +
-> +               if (ret >=3D min_uV && ret <=3D max_uV)
-> +                       return i;
-> +       }
-> +
-> +       return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(regulator_map_voltage_descend);
-> +
->  /**
->   * regulator_map_voltage_linear - map_voltage() for simple linear mappin=
-gs
->   *
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
+> On Thu, Jun 20, 2024 at 10:35=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >
+> > On 20/06/2024 16:30, patchwork-bot+bluetooth@kernel.org wrote:
+> > > Hello:
+> > >
+> > > This pull request was applied to bluetooth/bluetooth-next.git (master=
+)
+> > > by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+> > >
+> > > On Wed, 12 Jun 2024 09:58:29 +0200 you wrote:
+> > >> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >>
+> > >> Hi Marcel, Luiz,
+> > >>
+> > >> Please pull the following power sequencing changes into the Bluetoot=
+h tree
+> > >> before applying the hci_qca patches I sent separately.
+> > >>
+> > >> [...]
+> > >
+> > > Here is the summary with links:
+> > >   - [GIT,PULL] Immutable tag between the Bluetooth and pwrseq branche=
+s for v6.11-rc1
+> > >     https://git.kernel.org/bluetooth/bluetooth-next/c/4c318a2187f8
+> >
+> >
+> > Luiz,
+> >
+> > This pulls looks wrong. Are you sure you have correct base? The diffsta=
 t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> > suggests you are merging into rc2, not rc3. This will be confusing in
+> > merge commit. It is much safer, including possible feedback from Linus,
+> > if you use exactly the same base.
+>
+> So you are saying I need to rebase? I usually only rebase when it
+> comes the time to do a pull-request using net-next as a base since
+> that is where bluetooth-next normally lands.
+>
+
+Technically you're all set - you pulled rc3 together with my tag. But
+if you pulled rc3 separately and then my tag, the merge commit for the
+latter would look much cleaner.
+
+And for the record: you don't need to rebase anything. Does net-next
+require you to? That would be weird. I assume they also are based on
+one of the RC tags. You almost never should rebase on top of an rc,
+instead you merge it into your branch and send the PR starting from
+the latest rc tag. Git is smart and will figure it out. You may be
+afraid you'll "lose" some commits because you will not see it in the
+immediate git log. That's true, they will be buried underneath the
+pile of Merge commits from upstream, but worry not: git will always
+find all commits missing from upstream when you do `git request-pull`.
+
+Bart
+
+> > Best regards,
+> > Krzysztof
+> >
+>
+>
+> --
+> Luiz Augusto von Dentz
