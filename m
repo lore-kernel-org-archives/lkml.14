@@ -1,168 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32611A00C2
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522AD1A8C02;
+	Thu, 20 Jun 2024 12:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718885092; cv=none; b=uTWEM252JY5fN/TMTVduv6BpxdeR2dSCCYxEN5ocewRy2bC348eekR5vQIaOAYApKbe3a4HPU7S3T1HtlbDGWyhqTrFkZ3DUMBWtStIgGRGP0aDwMSzwre5gprmRq2BGNh7Z0a56AvV3VALoSt7S9u3D7oUywZcNVtO9SHcMwew=
+	t=1718885208; cv=none; b=H2jQUVWyTwAp46Gq+m986kxQf1QqnFaqKFeIzBDTpxWqWtzu+/xw00Dxh5dR+cv/9XLlFgZyRkw/c+cxAsXIiwiGE5ZGdufUfTvCZFXGO4mq8yNiF5E2iYhVx882lOffg0ZP2ZlpN3FfCJqqGqLNSiMnRRyx1owBXIpuLOp+h0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718885092; c=relaxed/simple;
-	bh=p8i4kgsSXiThvs104+IQObiSdDnBCcWSCkYwC99CoHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X5y60W4Bqbl5bVPuQFR2zPIBYmxVcT0+JTiXOaNEt6WEBaSazINwAIO+5OW4d4JauAB3jWh/CKFAybylVtYC8eagE/S4qIyL6sgGRSoS+r3pdMgl5Fm6tJ9Mv6nTs1Uad0S7p5km3iU57F377iU/+JoGJRDjWiKNn9oiorFRHfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WgcTr6Yf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718885208; c=relaxed/simple;
+	bh=a5xdK0JRPyJDye1/3r1T9m7F3uYxAPruhNrFzDhoaWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fbkKb1xIheHKLHbfV6L0vyF3sSIDzgJp0dEtjL+FI6XJBmNk0xquTebsEii9sXmO2HmQpK5aZ6o+LrMFTc/kkViY9057E+Ue/ReTEh76NthmdS2YU5x7whKES0PCeoPa4oU3zOw/jdLmsUrsOer7EZ4FuvgYD40GpYQtd4beJBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihl6J/oF; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WgcTr6Yf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718885089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tBTGVX4bvUyxrx4ohv02xbwKgf7bYjyve7BA15u6MEQ=;
-	b=WgcTr6Yf3k2FAAr40bYTv0O/9YmB8SdpRxpLx+szww0HM9tIHC82ZFZvXgzNvOsxSz0r/g
-	CN+kancUfcaCLP2y06SLINv4lQ6fkM7mG5RMtrPbuuOhfk9r34eMx2n66qB+4QcNNdsg7d
-	jeUqN/M+BHl6kW8ijChEcoTnuNFW6ZY=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-362-YFrvsQQvNS-zacy7seOvog-1; Thu, 20 Jun 2024 08:04:48 -0400
-X-MC-Unique: YFrvsQQvNS-zacy7seOvog-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6b22e2dfa6cso10729126d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 05:04:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihl6J/oF"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso921432a12.0;
+        Thu, 20 Jun 2024 05:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718885204; x=1719490004; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a5xdK0JRPyJDye1/3r1T9m7F3uYxAPruhNrFzDhoaWA=;
+        b=ihl6J/oFF6dLrx6UxqPXwTw3W6ylGIaiPkwh/PzH65QI9e85hDQHUKJD9WcnTUlWKS
+         o/tRPDLPwkPyhfBF2LN3zCHujjqIqaEdTdKzPQgYA2vsVqqZF+qNl3LYB9tdw0G9+bL5
+         MXgG6LvACI/1yFgx+ViYoU4WyDxxsA0AlF3hpvDhYg5U/PNqZHDutblI2L6naqxpsZok
+         5H+vYbju0Kg5KTiehLO5I1VwVsTe4E3Pz0aJaqTcOT+h+rxHAo5KQirsqXAFPT2ohaS/
+         YLTuigtfEkKYtgpqGd8WqVFEpGoYrWYqa1YF/M6Enf4NKIOLJvfdVfGbDT3toUzI+lBE
+         g5PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718885087; x=1719489887;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tBTGVX4bvUyxrx4ohv02xbwKgf7bYjyve7BA15u6MEQ=;
-        b=LVuTaN+f95siWZRez2HNRWxMp4EASUyMoexQVUUSex7lPROxW0SyeDDRlkmEdZMRCg
-         wRn0KP6N2pXBGtuCx6x5lOuJD34g6M0E8SW9LMmWf2La7a8rvDTR0dvi4dcTjyjj9BgU
-         6OxkSrOJWv464lw3ehZ3qwnGUExZpBQ7X3MrNSSaictLZXsqIBMWPNJr/W8MLbuCX+4K
-         kvq2lEpz850jgswd4rET+ZOJs3neBzpOSjmmH50G6fuNUn+B57l35bNrakHN6XzHBJfM
-         DIQwNcmRIOoUOcanpN/IKsJi6WLwVidKPsCpFaAcCFWsFCA/F5FF2U2xB7iXo4C3wfcQ
-         Z+2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWmm1Cjk0lI/pf4QRWt1snFgCjiyswCMLc0q7cd2z7iSCksT7JzMSFZimiCQmJ9hh/Al0dDm0T4zNvswBhdTkI/Mt7EetdD1NcXPTZv
-X-Gm-Message-State: AOJu0YxRwDKHcNybzjTl4LU8QYfcjWMmx0D6dh78zzhr5Uvq2YDSY8BX
-	t9Epjy8b7p8TJojhgZG0uoFFGF6xFoLNwijyN3DrCjMOL+qEz/8UH/a/d+yNp9lx8lNNFGiV1ge
-	wKwBhDEHIYlcnXVeXahRj+qGmLTnAgJGYbYFOiR/YVTNwkaqvClclH/G5OztX0k8zuinEvQ==
-X-Received: by 2002:ad4:5c8b:0:b0:6b5:6f9:9207 with SMTP id 6a1803df08f44-6b506f9925dmr56113936d6.20.1718885087367;
-        Thu, 20 Jun 2024 05:04:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXBwop604Y5LJHb0b34gI7Je4i9x8IkF784us5Ea9E+Z1DVF2QvWsWClXZaaHI9SoMFqaGOw==
-X-Received: by 2002:ad4:5c8b:0:b0:6b5:6f9:9207 with SMTP id 6a1803df08f44-6b506f9925dmr56113586d6.20.1718885086970;
-        Thu, 20 Jun 2024 05:04:46 -0700 (PDT)
-Received: from [10.26.1.93] ([66.187.232.136])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bc266c496sm84674985a.20.2024.06.20.05.04.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 05:04:46 -0700 (PDT)
-Message-ID: <4aff3fb4-cf1b-4c09-918a-3c4252a34bd6@redhat.com>
-Date: Thu, 20 Jun 2024 08:04:45 -0400
+        d=1e100.net; s=20230601; t=1718885204; x=1719490004;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a5xdK0JRPyJDye1/3r1T9m7F3uYxAPruhNrFzDhoaWA=;
+        b=w+TQO/UNQFC7ZSSvA4iB0gDq4vi4A4bl4TnZglPmO03CkFLb29FUaqte8Crqcgpfs2
+         jmO9jFK5nndGNXnRsrsdc/Rvm7wKU7jPkPVPu0ynUA1v970HnRyEJFmIgrJFYhmSDq1G
+         e6Qr/iJ5TR8vypDNivTUOACcBdyG3J/SIzQtOh7iwP7cNMX/NLn68O2CzjTRqNSNNveY
+         WEFg44Pm5wgTvng3uTvy747/jqOHsIUBWTSUr/BWkuwVEHUiuzB9pt5mgJ7hNnmD25r1
+         4f95B+Ozo4hRwBxfHsi4GTqOfq0GWa1Vfz/nONMIDecWzB5yK1uqTTLaSJRvcLdSGi5c
+         i8VA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5F78ofWtib6a3arIXD4KKqjQQ99dAyRK5SiSLio0h8Qbb9vFNEi3eBmX7OgMylBiYtn7bdt5KeBF6xAfXR5666S87e8lRuq/qqrgXCfdZBqEpxs/4dWPRguHVQgBslbFbqvFv
+X-Gm-Message-State: AOJu0Yxj8xWMx8vjU390v25isMqYS3aCQA2dX3crwzyJGT7CXOG1oeem
+	Rswoy0tg3HtmKinmvUu7KAaWN3RTmqX6oKXe/dX5CEezE604kXk6
+X-Google-Smtp-Source: AGHT+IGCnmWLe2uBXVUqMKg8aNOlpJuUDO24AhQ+OGHnDlQDlzPSh+dd57MqbVJ0IlofdSox5ozYcQ==
+X-Received: by 2002:a50:d613:0:b0:579:e7c5:1001 with SMTP id 4fb4d7f45d1cf-57d07e6f4ecmr2867294a12.23.1718885204220;
+        Thu, 20 Jun 2024 05:06:44 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm9552286a12.22.2024.06.20.05.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 05:06:43 -0700 (PDT)
+Date: Thu, 20 Jun 2024 15:06:41 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Casper Andersson <casper.casan@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Woojung Huh <woojung.huh@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 net-next] net: dsa: Allow only up to two HSR HW
+ offloaded ports for KSZ9477
+Message-ID: <20240620120641.jr2m4zpnzzjqeycq@skbuf>
+References: <20240619134248.1228443-1-lukma@denx.de>
+ <20240619134248.1228443-1-lukma@denx.de>
+ <20240619144243.cp6ceembrxs27tfc@skbuf>
+ <20240619171057.766c657b@wsk>
+ <20240619154814.dvjcry7ahvtznfxb@skbuf>
+ <20240619155928.wmivi4lckjq54t3w@skbuf>
+ <20240620095920.6035022d@wsk>
+ <20240620090210.drop6jwh7e5qw556@skbuf>
+ <20240620140044.07191e24@wsk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: Do not enable ACPI SPCR console by default on arm64
-To: Liu Wei <liuwei09@cestc.cn>, sudeep.holla@arm.com,
- Will Deacon <will@kernel.org>
-Cc: catalin.marinas@arm.com, guohanjun@huawei.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- lpieralisi@kernel.org, rafael@kernel.org
-References: <20240530015332.7305-1-liuwei09@cestc.cn>
- <cb4c5fd0-9629-4362-918a-cb044eb9e558@redhat.com>
- <20240618152923.GB2354@willie-the-truck>
- <20240618164024.tehpbscax47jkluj@bogus>
-Content-Language: en-US
-From: Prarit Bhargava <prarit@redhat.com>
-In-Reply-To: <20240618164024.tehpbscax47jkluj@bogus>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620140044.07191e24@wsk>
 
-On 6/18/24 23:43, Liu Wei wrote:
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> On Tue, Jun 18, 2024 at 04:29:24PM +0100, Will Deacon wrote:
->>> On Thu, May 30, 2024 at 09:06:17AM -0400, Prarit Bhargava wrote:
->>>> On 5/29/24 21:53, Liu Wei wrote:
->>>>> Consistency with x86 and loongarch, don't enable ACPI SPCR console
->>>>> by default on arm64
->>>>>
->>>>> Signed-off-by: Liu Wei <liuwei09@cestc.cn>
->>>>> ---
->>>>>    arch/arm64/kernel/acpi.c | 3 ++-
->>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
->>>>> index dba8fcec7f33..1deda3e5a0d2 100644
->>>>> --- a/arch/arm64/kernel/acpi.c
->>>>> +++ b/arch/arm64/kernel/acpi.c
->>>>> @@ -227,7 +227,8 @@ void __init acpi_boot_table_init(void)
->>>>>    		if (earlycon_acpi_spcr_enable)
->>>>>    			early_init_dt_scan_chosen_stdout();
->>>>>    	} else {
->>>>> -		acpi_parse_spcr(earlycon_acpi_spcr_enable, true);
->>>>> +		/* Do not enable ACPI SPCR console by default */
->>>>> +		acpi_parse_spcr(earlycon_acpi_spcr_enable, false);
->>>>>    		if (IS_ENABLED(CONFIG_ACPI_BGRT))
->>>>>    			acpi_table_parse(ACPI_SIG_BGRT, acpi_parse_bgrt);
->>>>>    	}
->>>>
->>>> It's been a while, and the status of arm hardware may have changed. IIRC the
->>>> choice to force enable this is that most arm hardware is headless and this
->>>> was a _required_ option for booting.
->>>>
->>>> I'm not sure if that's still the case as it's been a long time.
->>>>
->>>> Can anyone from the ARM community provide an approval here?
->>>
->>> I don't have a strong opinion either way, but adding the Arm ACPI folks
->>> in case they care.
->>>
->>> Having said that, if the only rationale for this patch is consistency
->>> with other architectures, then I think I'd lean towards leaving the
->>> behaviour as-is so we don't give users a nasty surprise on their next
->>> kernel upgrade.
->>>
->>
->> +1, I am concerned about breaking existing behaviour on the platforms
->> in the wild. Also many platforms running ACPI would have already used
->> console cmdline parameter if SPCR is not their choice for the console.
->> So I don't see the need to align with other arch default behaviour here,
->> we can revisit if someone shouts with a real reason as why cmdline option
->> is not viable.
-> 
-> For varying privacy and security reasons, sometimes we would like to
-> completely silence the serial console output, and only enable it through
-> cmdline when needed.
-> 
+On Thu, Jun 20, 2024 at 02:00:44PM +0200, Lukasz Majewski wrote:
+> In general I do understand your concerns - however, as I've stated this
+> patch fixes oddity of the KSZ9477. I can test it with it.
 
-FWIW, I understand that concern but the feedback you're receiving is 
-that there are many existing systems that depend on this behavior. 
-Breaking users for your concerns is not a good idea.
+> To keep it short: I do see your point, but I believe that it is out of
+> the scope for this particular patch.
 
-Perhaps a solution is to add yet-another-config-option, or add a kernel 
-parameter to disable the SPCR console on ARM?
+So that's it? Can't test with anything other than KSZ9477 => don't care
+about anything else, and will ignore review feedback, even if the static
+analysis of the code plausibly points to a more widespread issue?
 
-Something like "acpi=nospcr"?
-
-P.
-
-> On ARM, it is difficult because SPCR is enabled by default.
-> 
-> Thanks for your patience,
-> Liu Wei
-> 
->>
->> --
->> Regards,
->> Sudeep
-> 
-> 
-> 
-> 
-
+As the author of commit 5055cccfc2d1 ("net: hsr: Provide RedBox support
+(HSR-SAN)"), who do you think should be responsible of taking care that
+it plays well with existing offloading drivers?
