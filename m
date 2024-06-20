@@ -1,77 +1,110 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA8C3CF6A;
-	Thu, 20 Jun 2024 11:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48CB1ABCB6
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 11:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718884176; cv=none; b=EfXDoZei12u0MLW0ZRCmjHB4GGeUj9nWUTDdMLQVf9xov5STJTBIQEiD07c0vVCfMM2G6+gq+FcG6muqmucM4mE1jlqdwQZks9tDDHbQu/fI668i0fTJehqkV7285y0Wrq9HmYc5GNQWRyd4A+UxbiwvDSCLQKIJf3EfUIpeWAQ=
+	t=1718884230; cv=none; b=lszbvTTIb4q2JZMSnwhP756Jij0ggAL2hAP6gZT77qVsbfBXh3hl4A3Lgi0J/yNH6GMemkUIR1PyNIS+z3QQ89MY52Yk7mXVMSpvZYyZ8DD856IIFHPH+C//uNBBll2eAqrWNYYUBT3FSWtOOvwwY1Io9eb/KdTI9LAYZLSoMX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718884176; c=relaxed/simple;
-	bh=dY8z+smoB7m2JuIIGgKesBPayVZV0SvtARYT3rVvhvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GF7Jzomcmz3zNhVGi8QTkyAwWCyCKn9DMMZppTOWtx4kvizoDqyJ1jc1ffSUIaBJ/D/qpS6Fd3T9pFvT+nDqzElAONBd3BefoYaiDj+TsFC8izQQEGgCHPQ2JU8N1OfvcevR8RKc/ULFg3npasmWjWKVsyIYHT3fOmyMU7gEXcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=TNfv5+js; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	s=arc-20240116; t=1718884230; c=relaxed/simple;
+	bh=/fsDy/J5swdf4EmXOs+1OkO3VMutkagftRVjj5QTHnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CVXWx60yLUsMZIoYrqzQKh/fXP7p+w2pVbbMwp/BM4cJ0uhH0TE8+jV94ixIq8fMGJSF+qdgShVrsUdWqXYN1wOaLdqEEIWFmFFU4XzdgxPhJHG4To+eoxW925ACqOcDgiBcehFmbkN+NdAqyR1Ax7mI9a4+MR1bQ0DhJLwywD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Vlt3Tn2D; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="TNfv5+js"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4W4dqj1SZxz67xy;
-	Thu, 20 Jun 2024 13:41:37 +0200 (CEST)
-Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4W4dqh6S7gz680P;
-	Thu, 20 Jun 2024 13:41:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1718883697;
-	bh=fRfd3BQtT7px5Q7LqnzxUXpp3PwV32t2tLWoVB0AXGY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TNfv5+jsGU315+0/fG1eyBCiE9nAjozPshqaWQl8sLPaF33ct0AIX1CGZz1axyZev
-	 dwnP+1aww/F/qsVMv1j5mdYpMxHB0X6Jzmuf/2dQwNCjChDb3RdIe1Y0jd0lumhinW
-	 TjW2XeLu6ns9w3Z/sRk4ottzcCFTVart03c3ZUrQ=
-Message-ID: <74331eda-9582-48f7-a343-1dd0e785323d@gaisler.com>
-Date: Thu, 20 Jun 2024 13:41:36 +0200
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Vlt3Tn2D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=RwiFhKj6DSEa7VQUlcxMDilTp/jRlc2Dqj2vwVcpqj0=; b=Vlt3Tn
+	2Do8jfLoK1eRL4FgWZISar4kfzMU8gde27BdiSj8lgTTxmhI3UJFq11TCRUvR6tZ
+	Pbsq6E/E3CZBgfdazgX8Q1vjsi/qXow7oDmaf0Qd6dOambnNHXMmMasDxNAA3Ipn
+	VT8megWPDDrnHORl3mVY7k4WpUImipilMeymCFdIi3WVy9kwFfJmUCTMtIIg/JkM
+	5X+0MDgoErhr2Rppndy/u5YsghEhi70zSvfzGERH+aQqP2yE1SHxR2UA1uPF3Maj
+	f4gTadjm+Nm6WVGltCVco4BB3Q0EI9HBlxm2xXT8zYR8OEqENAwRG98C38FB3Y1U
+	4MYuFRmbtK6gkLAg==
+Received: (qmail 1002835 invoked from network); 20 Jun 2024 13:50:25 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 20 Jun 2024 13:50:25 +0200
+X-UD-Smtp-Session: l3s3148p1@pg+p61Ab3JMgAwDPXzjQABqqX1QYyOSW
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-fpga@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 2/2] fpga: zynq-fpga: use 'time_left' variable with wait_for_completion_timeout()
+Date: Thu, 20 Jun 2024 13:50:22 +0200
+Message-ID: <20240620115022.24409-3-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240620115022.24409-1-wsa+renesas@sang-engineering.com>
+References: <20240620115022.24409-1-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Build regressions/improvements in v6.10-rc3
-To: Sam Ravnborg <sam@ravnborg.org>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-References: <CAHk-=wiK75SY+r3W5hx+Tt_bjhcSKPLdji-Zf_8HjikRPbn9wg@mail.gmail.com>
- <20240610071049.933142-1-geert@linux-m68k.org>
- <46c5a25-ea8c-4a1-5241-df88a9848a9@linux-m68k.org>
- <20240611173739.GB545417@ravnborg.org>
-Content-Language: en-US
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <20240611173739.GB545417@ravnborg.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-06-11 19:37, Sam Ravnborg wrote:
-> Hi Andreas,
-> 
-> On Mon, Jun 10, 2024 at 09:28:25AM +0200, Geert Uytterhoeven wrote:
->> On Mon, 10 Jun 2024, Geert Uytterhoeven wrote:
->>> JFYI, when comparing v6.10-rc3[1] to v6.10-rc2[3], the summaries are:
->>>  - build errors: +6/-1
->>
->>   + error: arch/sparc/kernel/process_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x4), (.fixup+0xc)
->>   + error: arch/sparc/kernel/signal_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x34), (.fixup+0x10), (.fixup+0x0), (.fixup+0x28), (.fixup+0x4), (.fixup+0x18), (.fixup+0x20), (.fixup+0x1c), (.fixup+0x8)
->>   + error: relocation truncated to fit: R_SPARC_WDISP22 against `.init.text':  => (.head.text+0x5040), (.head.text+0x5100)
->>   + error: relocation truncated to fit: R_SPARC_WDISP22 against symbol `leon_smp_cpu_startup' defined in .text section in arch/sparc/kernel/trampoline_32.o:  => (.init.text+0xa4)
-> 
-> Did you have something in a local branch that would address this?
-> I have no idea how to fix it.
-Hi Sam,
+There is a confusing pattern in the kernel to use a variable named
+'timeout' to store the result of wait_for_completion_timeout() causing
+patterns like:
 
-Yes, I'll try to get it sent next week.
+        timeout = wait_for_completion_timeout(...)
+        if (!timeout) return -ETIMEDOUT;
 
-Cheers,
-Andreas
+with all kinds of permutations. Use 'time_left' as a variable to make
+the code self explaining.
+
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Michal Simek <michal.simek@amd.com>
+---
+
+Change since v1: added ack (Thanks Michal)
+
+ drivers/fpga/zynq-fpga.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/fpga/zynq-fpga.c b/drivers/fpga/zynq-fpga.c
+index 0ac93183d201..4db3d80e10b0 100644
+--- a/drivers/fpga/zynq-fpga.c
++++ b/drivers/fpga/zynq-fpga.c
+@@ -387,7 +387,7 @@ static int zynq_fpga_ops_write(struct fpga_manager *mgr, struct sg_table *sgt)
+ 	const char *why;
+ 	int err;
+ 	u32 intr_status;
+-	unsigned long timeout;
++	unsigned long time_left;
+ 	unsigned long flags;
+ 	struct scatterlist *sg;
+ 	int i;
+@@ -427,8 +427,8 @@ static int zynq_fpga_ops_write(struct fpga_manager *mgr, struct sg_table *sgt)
+ 	zynq_step_dma(priv);
+ 	spin_unlock_irqrestore(&priv->dma_lock, flags);
+ 
+-	timeout = wait_for_completion_timeout(&priv->dma_done,
+-					      msecs_to_jiffies(DMA_TIMEOUT_MS));
++	time_left = wait_for_completion_timeout(&priv->dma_done,
++						msecs_to_jiffies(DMA_TIMEOUT_MS));
+ 
+ 	spin_lock_irqsave(&priv->dma_lock, flags);
+ 	zynq_fpga_set_irq(priv, 0);
+@@ -452,7 +452,7 @@ static int zynq_fpga_ops_write(struct fpga_manager *mgr, struct sg_table *sgt)
+ 
+ 	if (priv->cur_sg ||
+ 	    !((intr_status & IXR_D_P_DONE_MASK) == IXR_D_P_DONE_MASK)) {
+-		if (timeout == 0)
++		if (time_left == 0)
+ 			why = "DMA timed out";
+ 		else
+ 			why = "DMA did not complete";
+-- 
+2.43.0
 
