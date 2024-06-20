@@ -1,139 +1,211 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4714C1B4C3B;
-	Thu, 20 Jun 2024 16:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4D919EEBC;
+	Thu, 20 Jun 2024 16:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900766; cv=none; b=L1BKcgwI7j8MX/NblBvEqos5DsJTbNAVxHa6eSh52YHA+ADQXBP9z7j8WBuAAT7c0844GIRKgYPkjgdLsFRkgL8nANqSxCt7l6h9+Vc888Bkk0SZUZX8EHK9V8oSGiXYwQlzeiaFgBInnAyDY858IhuK3RA01/RYuZTEkwNTagg=
+	t=1718900785; cv=none; b=ZeYz45ytsPUnvmn348gH/lONyICp/xuxjsz3JSD7rt2DuqiUT8+hDXAy5MQ/zMtUYqXy6eHVi7iHY//mjVKVFBOcqWO8Iutl8Et/NGuTnOzFf4jMUo2OlYLhlGXFcL7X40t18UcFhUrVcrGxhScQoPx/rCGLLgYln01VVjm2bEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900766; c=relaxed/simple;
-	bh=Ua5Wlts7wNpHZL5hvbWj8KXVM7QOoXJPqG8In6tdSdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EHgDR4s8JjjJ5GV0/m5HK6435MY3G66SD4cZF+CZF3Mh5QkthhmiwmgDn5FabxRBIbvSe4gvPuH3sfXAKE0h4aFCWkOxoRczsKZAzAWRd+YmOnkah4GhCp+kprNP0LNChYmvwz9dzAFWdIWhW+RHKsS39msYAONar+KatFnsgPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knoIvOUE; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718900785; c=relaxed/simple;
+	bh=DJCvEuccwgJSlq7HDYpXbo1yrXYfR4nL6nl4LO0BNLU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AxtGgBqBE2KIo7hQNSrZopksoN5/hsJl4AY4AvYldOrECietVazycamAc8hGocMauWe69mVpVhpRYLEnUHBoryObVFYMPGNsdZQnJUn1ET8i/3HJX2PY2OzlF0a0CB9kbJ5r+rWpifZZrRz+7y1akkiyZT9zdWOlcazAILNDTlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=XgJIEacE; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knoIvOUE"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-361785bfa71so915019f8f.2;
-        Thu, 20 Jun 2024 09:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718900762; x=1719505562; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oyhPAil700VgPIg6DuQD4ahisl4U/95chdTNhKoOxhQ=;
-        b=knoIvOUEzwjJAkEudwHK12CcvEuFhurFeXGDAqK5Q6CHHSRlqh4AHOPwtwbow6ohDG
-         Fqm19ZllgWhbdeZsBSzOq+x+HdqiUbAvL2BcJVkP3DO8Kus90FzyiPmlft5UMbhPzls2
-         hADni9wgq+aV1lJllubiiPgJ5F5awc42z3v2oA/l4MN+pbTbhU9/yKyNFVI9tFv0/7kH
-         /MteP3Kt+Z05LBmv8R1Cks9mNiSkX1WeaAeLeqhev5+0mL4ijUmTHhQExJeYaZ7YfTC8
-         8HXiGjjFOPinE8TttUw4aZ4Z9yTWUk+2dTrBQqWdxJfXjJwTAaK3Xd8sflNpx8r973vE
-         iuZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718900762; x=1719505562;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oyhPAil700VgPIg6DuQD4ahisl4U/95chdTNhKoOxhQ=;
-        b=RnLj1/62GYcYrt2nppGfCS1B7JYRrECneRGAeiMKCzRK3BQlG4TsP+p3yDPbwiYhPS
-         DGuOXVUfHYBde43a3NSfItFqtdPyUepSHRRHvDF4TuY2c1l9ARvuzb9HEjjYfHR8WCBX
-         O/iyNn39OkWXBIwck66rqffGG15oTvM6PJIJN0UWUinOfGipGTHZa6MpcsZr2RTxJ65o
-         e8B2v/IYdYGRF1+sZnLDqK8qDXj0iBsASWoxbmTZ4a2bLDQeFg+F2XY8KnrQ3xesV8mO
-         40gVGDb9zTfE/LzO0q6RXz1hloyzB9Kk9J4DRt6YpdJJh2DYLO/CAC/GvGabE5MTJPp1
-         e+OA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfr0XIdPSUD3Kjcd/77ql60IVNV3HAjNr4Iy8dQgTZZ5LWzT1DompuAvol10Phub8dF6Tz9RbUaYWa+jzVnZbnniobmgqkUrztV5nZ5VcR/7Psz4tJ6V1VpPwJ1LpO/gBw0e2FetEer79tD13jIt0jiwzC8VU86aTnj9i6XuUm0ehdn7o=
-X-Gm-Message-State: AOJu0Yz87wA9a9hy2AaklVhMYVWnCOBfyx/UaFyJC/xA9i++WRqhdfqS
-	26Baz9e5mrGc6AaDTim+rw7v5wUvgn06OU1+IHLteWO6FxX4ctHs
-X-Google-Smtp-Source: AGHT+IGIY10g7FmHbibRhqlObKCnHDMnPOxDLE1jTG94vjc+tPuD9nHsAzb92AMmiz35tyYnPaf8cQ==
-X-Received: by 2002:a5d:69c8:0:b0:360:8476:678a with SMTP id ffacd0b85a97d-363192ce1camr4012556f8f.45.1718900762401;
-        Thu, 20 Jun 2024 09:26:02 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-362c7c2dffdsm6277480f8f.35.2024.06.20.09.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 09:26:02 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Hauke Mehrtens <hauke@hauke-m.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Daniel=20Gonz=C3=A1lez=20Cabanelas?= <dgcbueu@gmail.com>,
-	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [PATCH v8 4/4] mips: bmips: enable RAC on BMIPS4350
-Date: Thu, 20 Jun 2024 17:26:45 +0200
-Message-ID: <20240620152649.994-5-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240620152649.994-1-ansuelsmth@gmail.com>
-References: <20240620152649.994-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="XgJIEacE"
+Received: from [10.0.0.100] (pool-99-255-30-7.cpe.net.cable.rogers.com [99.255.30.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 5747A3F0FE;
+	Thu, 20 Jun 2024 16:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718900763;
+	bh=FDvEQmTbtmdPiKLPsp3RR0QwHmOgJpWn0QiXczl359M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=XgJIEacEezPM3Qy4zQYvqF5dRJuqdfImLw5BcEXCdoVJdw0/6rN+dJV5k2Uhr2kT/
+	 gWqkF9Wv2AzVNV9Us9VRMgnQoTHPLoleQ5ASmpO72Gkm5unHGtuTIsRFrUOpT0eZs1
+	 qDrSa+FXb6FSzWv7M7vUGSm5mtoXv+OsPEs6f7Vw6Y4508Hl7S+aGbQd3w+BLcRKtg
+	 LVob+FSl2JzkvNx0BiDa/I8wpOJ2f9uojbESHVAyR8iHl7hZe2jIcWoYmNiOzEtz/t
+	 KEdT9GHx0xTzlM1iCLx4lyPCvR0FzhAWqaR3qDUwNxnZMOZmiLia4EoPnqq+UvInHW
+	 OLRLzrXUm2LZA==
+Message-ID: <71c0ea18-8b8b-402b-b03c-029aeedc2747@canonical.com>
+Date: Thu, 20 Jun 2024 09:26:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] apparmor: try to avoid refing the label in
+ apparmor_file_open
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+ linux-kernel@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, Neeraj.Upadhyay@amd.com
+References: <20240620131524.156312-1-mjguzik@gmail.com>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ xsFNBE5mrPoBEADAk19PsgVgBKkImmR2isPQ6o7KJhTTKjJdwVbkWSnNn+o6Up5knKP1f49E
+ BQlceWg1yp/NwbR8ad+eSEO/uma/K+PqWvBptKC9SWD97FG4uB4/caomLEU97sLQMtnvGWdx
+ rxVRGM4anzWYMgzz5TZmIiVTZ43Ou5VpaS1Vz1ZSxP3h/xKNZr/TcW5WQai8u3PWVnbkjhSZ
+ PHv1BghN69qxEPomrJBm1gmtx3ZiVmFXluwTmTgJOkpFol7nbJ0ilnYHrA7SX3CtR1upeUpM
+ a/WIanVO96WdTjHHIa43fbhmQube4txS3FcQLOJVqQsx6lE9B7qAppm9hQ10qPWwdfPy/+0W
+ 6AWtNu5ASiGVCInWzl2HBqYd/Zll93zUq+NIoCn8sDAM9iH+wtaGDcJywIGIn+edKNtK72AM
+ gChTg/j1ZoWH6ZeWPjuUfubVzZto1FMoGJ/SF4MmdQG1iQNtf4sFZbEgXuy9cGi2bomF0zvy
+ BJSANpxlKNBDYKzN6Kz09HUAkjlFMNgomL/cjqgABtAx59L+dVIZfaF281pIcUZzwvh5+JoG
+ eOW5uBSMbE7L38nszooykIJ5XrAchkJxNfz7k+FnQeKEkNzEd2LWc3QF4BQZYRT6PHHga3Rg
+ ykW5+1wTMqJILdmtaPbXrF3FvnV0LRPcv4xKx7B3fGm7ygdoowARAQABzStKb2huIEpvaGFu
+ c2VuIDxqb2huLmpvaGFuc2VuQGNhbm9uaWNhbC5jb20+wsF3BBMBCgAhBQJOjRdaAhsDBQsJ
+ CAcDBRUKCQgLBRYCAwEAAh4BAheAAAoJEAUvNnAY1cPYi0wP/2PJtzzt0zi4AeTrI0w3Rj8E
+ Waa1NZWw4GGo6ehviLfwGsM7YLWFAI8JB7gsuzX/im16i9C3wHYXKs9WPCDuNlMc0rvivqUI
+ JXHHfK7UHtT0+jhVORyyVVvX+qZa7HxdZw3jK+ROqUv4bGnImf31ll99clzo6HpOY59soa8y
+ 66/lqtIgDckcUt/1ou9m0DWKwlSvulL1qmD25NQZSnvB9XRZPpPd4bea1RTa6nklXjznQvTm
+ MdLq5aJ79j7J8k5uLKvE3/pmpbkaieEsGr+azNxXm8FPcENV7dG8Xpd0z06E+fX5jzXHnj69
+ DXXc3yIvAXsYZrXhnIhUA1kPQjQeNG9raT9GohFPMrK48fmmSVwodU8QUyY7MxP4U6jE2O9L
+ 7v7AbYowNgSYc+vU8kFlJl4fMrX219qU8ymkXGL6zJgtqA3SYHskdDBjtytS44OHJyrrRhXP
+ W1oTKC7di/bb8jUQIYe8ocbrBz3SjjcL96UcQJecSHu0qmUNykgL44KYzEoeFHjr5dxm+DDg
+ OBvtxrzd5BHcIbz0u9ClbYssoQQEOPuFmGQtuSQ9FmbfDwljjhrDxW2DFZ2dIQwIvEsg42Hq
+ 5nv/8NhW1whowliR5tpm0Z0KnQiBRlvbj9V29kJhs7rYeT/dWjWdfAdQSzfoP+/VtPRFkWLr
+ 0uCwJw5zHiBgzsFNBE5mrPoBEACirDqSQGFbIzV++BqYBWN5nqcoR+dFZuQL3gvUSwku6ndZ
+ vZfQAE04dKRtIPikC4La0oX8QYG3kI/tB1UpEZxDMB3pvZzUh3L1EvDrDiCL6ef93U+bWSRi
+ GRKLnNZoiDSblFBST4SXzOR/m1wT/U3Rnk4rYmGPAW7ltfRrSXhwUZZVARyJUwMpG3EyMS2T
+ dLEVqWbpl1DamnbzbZyWerjNn2Za7V3bBrGLP5vkhrjB4NhrufjVRFwERRskCCeJwmQm0JPD
+ IjEhbYqdXI6uO+RDMgG9o/QV0/a+9mg8x2UIjM6UiQ8uDETQha55Nd4EmE2zTWlvxsuqZMgy
+ W7gu8EQsD+96JqOPmzzLnjYf9oex8F/gxBSEfE78FlXuHTopJR8hpjs6ACAq4Y0HdSJohRLn
+ 5r2CcQ5AsPEpHL9rtDW/1L42/H7uPyIfeORAmHFPpkGFkZHHSCQfdP4XSc0Obk1olSxqzCAm
+ uoVmRQZ3YyubWqcrBeIC3xIhwQ12rfdHQoopELzReDCPwmffS9ctIb407UYfRQxwDEzDL+m+
+ TotTkkaNlHvcnlQtWEfgwtsOCAPeY9qIbz5+i1OslQ+qqGD2HJQQ+lgbuyq3vhefv34IRlyM
+ sfPKXq8AUTZbSTGUu1C1RlQc7fpp8W/yoak7dmo++MFS5q1cXq29RALB/cfpcwARAQABwsFf
+ BBgBCgAJBQJOZqz6AhsMAAoJEAUvNnAY1cPYP9cP/R10z/hqLVv5OXWPOcpqNfeQb4x4Rh4j
+ h/jS9yjes4uudEYU5xvLJ9UXr0wp6mJ7g7CgjWNxNTQAN5ydtacM0emvRJzPEEyujduesuGy
+ a+O6dNgi+ywFm0HhpUmO4sgs9SWeEWprt9tWrRlCNuJX+u3aMEQ12b2lslnoaOelghwBs8IJ
+ r998vj9JBFJgdeiEaKJLjLmMFOYrmW197As7DTZ+R7Ef4gkWusYFcNKDqfZKDGef740Xfh9d
+ yb2mJrDeYqwgKb7SF02Hhp8ZnohZXw8ba16ihUOnh1iKH77Ff9dLzMEJzU73DifOU/aArOWp
+ JZuGJamJ9EkEVrha0B4lN1dh3fuP8EjhFZaGfLDtoA80aPffK0Yc1R/pGjb+O2Pi0XXL9AVe
+ qMkb/AaOl21F9u1SOosciy98800mr/3nynvid0AKJ2VZIfOP46nboqlsWebA07SmyJSyeG8c
+ XA87+8BuXdGxHn7RGj6G+zZwSZC6/2v9sOUJ+nOna3dwr6uHFSqKw7HwNl/PUGeRqgJEVu++
+ +T7sv9+iY+e0Y+SolyJgTxMYeRnDWE6S77g6gzYYHmcQOWP7ZMX+MtD4SKlf0+Q8li/F9GUL
+ p0rw8op9f0p1+YAhyAd+dXWNKf7zIfZ2ME+0qKpbQnr1oizLHuJX/Telo8KMmHter28DPJ03 lT9Q
+Organization: Canonical
+In-Reply-To: <20240620131524.156312-1-mjguzik@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Daniel González Cabanelas <dgcbueu@gmail.com>
+On 6/20/24 06:15, Mateusz Guzik wrote:
+> It can be done in the common case.
+> > A 24-way open1_processes from will-it-scale (separate file open) shows:
+>    29.37%  [kernel]           [k] apparmor_file_open
+>    26.84%  [kernel]           [k] apparmor_file_alloc_security
+>    26.62%  [kernel]           [k] apparmor_file_free_security
+>     1.32%  [kernel]           [k] clear_bhb_loop
+> 
+> apparmor_file_open is eliminated from the profile with the patch.
+> 
+> Throughput (ops/s):
+> before:	6092196
+> after:	8309726 (+36%)
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+can you cleanup the commit message and I will pull this in
 
-The data RAC is left disabled by the bootloader in some SoCs, at least in
-the core it boots from.
-Enabling this feature increases the performance up to +30% depending on the
-task.
+> ---
+> 
+> I think this is a worthwhile touch up regardless of what happens with
+> label refcouting in the long run. It does not of course does not fully
+> fix the problem.
+> 
+I have no objections to incremental improvements.
 
-Signed-off-by: Daniel González Cabanelas <dgcbueu@gmail.com>
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-[ rework code and reduce code duplication ]
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- arch/mips/kernel/smp-bmips.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> I concede the naming is not consistent with other stuff in the file and
+> I'm not going to argue about it -- happy to name it whatever as long as
+> the problem is sorted out.
+> 
+its fine, we could use crit_section here like with the current_label but
+I don't think we really gain anything by doing so.
 
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index a4f84667a901..35b8d810833c 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -592,6 +592,7 @@ asmlinkage void __weak plat_wired_tlb_setup(void)
- void bmips_cpu_setup(void)
- {
- 	void __iomem __maybe_unused *cbr = bmips_cbr_addr;
-+	u32 __maybe_unused rac_addr;
- 	u32 __maybe_unused cfg;
- 
- 	switch (current_cpu_type()) {
-@@ -620,6 +621,23 @@ void bmips_cpu_setup(void)
- 		__raw_readl(cbr + BMIPS_RAC_ADDRESS_RANGE);
- 		break;
- 
-+	case CPU_BMIPS4350:
-+		rac_addr = BMIPS_RAC_CONFIG_1;
-+
-+		if (!(read_c0_brcm_cmt_local() & (1 << 31)))
-+			rac_addr = BMIPS_RAC_CONFIG;
-+
-+		/* Enable data RAC */
-+		cfg = __raw_readl(cbr + rac_addr);
-+		__raw_writel(cfg | 0xf, cbr + rac_addr);
-+		__raw_readl(cbr + rac_addr);
-+
-+		/* Flush stale data out of the readahead cache */
-+		cfg = __raw_readl(cbr + BMIPS_RAC_CONFIG);
-+		__raw_writel(cfg | 0x100, cbr + BMIPS_RAC_CONFIG);
-+		__raw_readl(cbr + BMIPS_RAC_CONFIG);
-+		break;
-+
- 	case CPU_BMIPS4380:
- 		/* CBG workaround for early BMIPS4380 CPUs */
- 		switch (read_c0_prid()) {
--- 
-2.45.1
+> Am I missing something which makes the approach below not work to begin
+> with?
+> 
+no this will work in the short term. Long term there is work that will
+break this. Both replacing unconfined and the object delegation work
+will cause a performance regression as I am not sure we will be able
+to conditionally get the label but that is something for those patch
+series to work out. My biggest concern being people objecting to necessary
+changes that regress performance, if it can't be worked out, but
+that really isn't a reason to stop this now.
+
+
+
+>   security/apparmor/include/cred.h | 20 ++++++++++++++++++++
+>   security/apparmor/lsm.c          |  5 +++--
+>   2 files changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/apparmor/include/cred.h b/security/apparmor/include/cred.h
+> index 58fdc72af664..7265d2f81dd5 100644
+> --- a/security/apparmor/include/cred.h
+> +++ b/security/apparmor/include/cred.h
+> @@ -63,6 +63,26 @@ static inline struct aa_label *aa_get_newest_cred_label(const struct cred *cred)
+>   	return aa_get_newest_label(aa_cred_raw_label(cred));
+>   }
+>   
+> +static inline struct aa_label *aa_get_newest_cred_label_condref(const struct cred *cred,
+> +								bool *needput)
+> +{
+> +	struct aa_label *l = aa_cred_raw_label(cred);
+> +
+> +	if (unlikely(label_is_stale(l))) {
+> +		*needput = true;
+> +		return aa_get_newest_label(l);
+> +	}
+> +
+> +	*needput = false;
+> +	return l;
+> +}
+> +
+> +static inline void aa_put_label_condref(struct aa_label *l, bool needput)
+> +{
+> +	if (unlikely(needput))
+> +		aa_put_label(l);
+> +}
+> +
+>   /**
+>    * aa_current_raw_label - find the current tasks confining label
+>    *
+> diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+> index 2cea34657a47..4bf87eac4a56 100644
+> --- a/security/apparmor/lsm.c
+> +++ b/security/apparmor/lsm.c
+> @@ -461,6 +461,7 @@ static int apparmor_file_open(struct file *file)
+>   	struct aa_file_ctx *fctx = file_ctx(file);
+>   	struct aa_label *label;
+>   	int error = 0;
+> +	bool needput;
+>   
+>   	if (!path_mediated_fs(file->f_path.dentry))
+>   		return 0;
+> @@ -477,7 +478,7 @@ static int apparmor_file_open(struct file *file)
+>   		return 0;
+>   	}
+>   
+> -	label = aa_get_newest_cred_label(file->f_cred);
+> +	label = aa_get_newest_cred_label_condref(file->f_cred, &needput);
+>   	if (!unconfined(label)) {
+>   		struct mnt_idmap *idmap = file_mnt_idmap(file);
+>   		struct inode *inode = file_inode(file);
+> @@ -494,7 +495,7 @@ static int apparmor_file_open(struct file *file)
+>   		/* todo cache full allowed permissions set and state */
+>   		fctx->allow = aa_map_file_to_perms(file);
+>   	}
+> -	aa_put_label(label);
+> +	aa_put_label_condref(label, needput);
+>   
+>   	return error;
+>   }
 
