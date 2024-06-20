@@ -1,54 +1,66 @@
-Received: from mailrelay5-1.pub.mailoutpod3-cph3.one.com (mailrelay5-1.pub.mailoutpod3-cph3.one.com [46.30.211.244])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8208F1AF6A1
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626421ABCBB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903029; cv=none; b=ND2gludMxtCbESsnm4a5JTHzZxv7hM+6kJ6TB9EG/6Z9eevTBRhcBBcL1mdoIUo7qF1tvAJA8ujbrjh7bNLZ75ac8BXY6vCsp1f45lWzrf/pypq39EaQIlotvhbfekpNv/bjrTCXW5GGwiTsUruxg45Lt5+vw7OAvDoIzppgwqU=
+	t=1718903126; cv=none; b=kEgJSpjaIvVLnQfmVl5oPOgJzfsi5mxl52OqkQL1qOQSnikwRWvPrBAC6PqJ7otYnKzgUfZsTSr/sOuLqMnQN438aBygthNOm3Kxu5jYmqu1ts+Wt59RulMVlCMwajo3yMJTppl6spqCM36HEBpgrvH2Y72e3yWR9FFClj3tML8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903029; c=relaxed/simple;
-	bh=dadg287lbGaPmJWraIaxZO2tVVWj8bfl9hnAPeOZPZ0=;
+	s=arc-20240116; t=1718903126; c=relaxed/simple;
+	bh=V9vbedrO0h4dfaGDqH9asqdRuXK1RwmHacUkIr2CNKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XsE3gZDA8fCbsePJEbqrZlBv0U+lfx8+/Yp5EGyHjZ0Xbwxemq0TjwJt1DYD5QEfiEP9mJI1wGIbQm4p9lRnGfxbEfFBZB2E2EhzfPFDEwYwsWk+/wvs26ADgNUkVwNq8z92J9jshtj2SblsSzMw0YaMxfyObNfRqpSjdEkAmmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=DvXoN3df; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=kBoXqgO+; arc=none smtp.client-ip=46.30.211.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFa2fGZ7NOuM2U0A4NN+PJUpfF11yukqSjzVTGPAsmV+YzqeJFZ7sRuDG/aCUXJdRiOH2GM6QDkmiBZHELk75VrdIn4qZMDrxkUyraCnuqcEXoGjLB4iLVCOZmYHW6jY1M+VGSIPL3k6lZ+1PMJcKcqiHfMuEqQ6u3a5Ov3ZvPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=SQ2wA1Uv; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="DvXoN3df";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="kBoXqgO+"
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="SQ2wA1Uv"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f8395a530dso8967545ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=yODHSliSOdGvA36YUaNQLn6aeqU+d5cX1WV7EBvEMn0=;
-	b=DvXoN3dfA1Q4PpiiQ5J2PL6TL4TX2iC/Lga8K4MuQdXfR7EpesohBdET5luJpKAQ2xtpnyFotvVv9
-	 P0FU+s57as3ta7D05P1nxkaP+4+NmvJ0hyxHciDHnkyiKGevdUheqFoP2UWuDe2zCaQnCIbz6TJ96/
-	 rCJc2xeiWZ//NAXoWHYxWYiTwRl2KENsPC51ZJil0ldHYPrs2f7AltkZIpl0Ls8eLgR1kw2yD1NQV8
-	 nL9D4u46O9c5OBXKTk4NZozucixTJfmbN7TxaUQSbpiFwZWJ6KxO2TOCKszxAZp8tDHr+NQugYw7wj
-	 U08kZKESyI1T/6L5+44yvxmmw5KzZ7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=yODHSliSOdGvA36YUaNQLn6aeqU+d5cX1WV7EBvEMn0=;
-	b=kBoXqgO+DJM2gDv+5KYqjxCK+4GTkIY8bkN8a+y+PWgLxzqqK1xBmvPmk0mSxdpx1Lv/AcfGAFLRx
-	 1N+Rh0ZDQ==
-X-HalOne-ID: e22047f2-2f26-11ef-bd94-e973630cf47d
-Received: from ravnborg.org (2-105-16-150-cable.dk.customer.tdc.net [2.105.16.150])
-	by mailrelay5.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id e22047f2-2f26-11ef-bd94-e973630cf47d;
-	Thu, 20 Jun 2024 17:02:34 +0000 (UTC)
-Date: Thu, 20 Jun 2024 19:02:33 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	Hari.PrasathGE@microchip.com, Dharma.B@microchip.com,
-	bbrezillon@kernel.org, nicolas.ferre@microchip.com
-Subject: Re: [PATCH] MAINTAINERS: update Microchip's Atmel-HLCDC driver
- maintainers
-Message-ID: <20240620170233.GA1091389@ravnborg.org>
-References: <20240620095856.777390-1-manikandan.m@microchip.com>
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1718903124; x=1719507924; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4E89UTgs/5r5atSnFCInRbSVBNWxc0zHVVFCoSblkK4=;
+        b=SQ2wA1UvJo+FxGdiQB820HLc/ezBD8k0bFseMWkqbCWGLNf4pGZvFKbSKpIc4adzBg
+         XyBw4CiaSU4v6PpIgY9r4d8adyWCjzCjhLAJfLSY4cph0WgzHEQc93JRlxUDAkGGOzfj
+         rWTaaaqtVdet7lygYfrTvATC4KAFZ6bNhW253aPn0K+7kkJ91I1ucWCSGPuCRnmd8dba
+         WJsDkMaKDr0i+i4s5GZ7bMBk/vkdf5PRRP8iqm5DvvdAYrI7nrG0HwvJZA98wfI/QfjP
+         aa00Yf7KaWfHjXwUBJ2hTPzAxPlsyDGpfnlFiotE3yQnQR48vUhyLw4zcosQGHfLChI/
+         fBYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718903124; x=1719507924;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4E89UTgs/5r5atSnFCInRbSVBNWxc0zHVVFCoSblkK4=;
+        b=iqfuLLGO89QGFMEF8RVh8j5aB8L5pE7302L3Zp095wdVVwKPlLBIbVXNJnFx0rNOst
+         tEEEEAdGLRWKC+c/lmkZPCXZoChvTvzXmCVgBUgWKAq4TtEZ2o6g5qEaB1mBSK7v5sJb
+         PwTha6FnPboxMRl1hyNAhc66yOuH6YYHGckWX6AmMU+FM5M+B5tzuvfbspEh+fJU3EeG
+         the4KI5tYs++leo1OGybxNzd5/BDG6bT9bokHukwzY4x0HoiEmQSey0OqeLrpSOb3rAf
+         l9Vk6QSYaUuY02T+bxM17E1J6yaPYFnxdQ1nxnSKk4ESVDZi8jwCXqaJ+qfkxEpayHb7
+         7bjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtdL797b0CyyqQIBOEEcMwDXBa2XKPAmudyKqe5Ic5hAZaPlxcWPcmK5CX0qiNtwslmeTngYUb0MyI7tXFI2r3QnWiUYMOcQoCYCj7
+X-Gm-Message-State: AOJu0YwXy5y23eryFyTG546FrEJQI+aUkBHCVP5OQxQHJb7h9g/inlqd
+	qxIzngrFrElq9i4cRSPSlsjUs/gOERn8PGtaSunA0Mz8MJywShpapL/foobGDxI=
+X-Google-Smtp-Source: AGHT+IHnO0PhojcD/q5JTTxQb+zxwVYaNBwpbOMTUxU2qhG2GuUiEPiNiJ0WLvWdxuAzdO/MlAP2Kg==
+X-Received: by 2002:a17:902:d4c7:b0:1f7:17c2:118b with SMTP id d9443c01a7336-1f9aa3e9e49mr59538365ad.27.1718903123621;
+        Thu, 20 Jun 2024 10:05:23 -0700 (PDT)
+Received: from x1 ([2601:1c2:1802:170:4a35:79ce:6499:e43c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9acc04adcsm39635605ad.204.2024.06.20.10.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 10:05:23 -0700 (PDT)
+Date: Thu, 20 Jun 2024 10:05:20 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Drew Fustini <dfustini@tenstorrent.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: thead: update Maintainer
+Message-ID: <ZnRhUOSB+/hMSs2x@x1>
+References: <20240620162522.386-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,44 +69,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240620095856.777390-1-manikandan.m@microchip.com>
+In-Reply-To: <20240620162522.386-1-jszhang@kernel.org>
 
-Hi Manikandan and Dharma.
-
-On Thu, Jun 20, 2024 at 03:28:56PM +0530, Manikandan Muralidharan wrote:
-> Drop Sam Ravnborg and Boris Brezillon as they are no longer interested in
-> maintaining the drivers. Add myself and Dharma Balasubiramani as the
-> Maintainer and co-maintainer for Microchip's Atmel-HLCDC driver.
-> Thanks for their work.
-
-Glad you are picking up the ball, good luck and happy hacking!
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-Unless you beat me to it I will get the patch applied in a few days.
-
-	Sam
-
-
+On Fri, Jun 21, 2024 at 12:25:22AM +0800, Jisheng Zhang wrote:
+> Due to personal reasons, I can't maintain T-Head SoCs any more. At the
+> same time, I would nominate Drew Fustini as Maintainer. Drew contributed
+> the sdhci support of TH1520 in the past, and is working on the clk
+> parts. I believe he will look after T-Head SoCs.
 > 
-> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 > ---
->  MAINTAINERS | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index d1566c647a50..8f2a40285544 100644
+> index aacccb376c28..b5f5506815d6 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -7290,8 +7290,8 @@ F:	drivers/gpu/drm/ci/xfails/meson*
->  F:	drivers/gpu/drm/meson/
+> @@ -19315,7 +19315,7 @@ F:	drivers/perf/riscv_pmu_legacy.c
+>  F:	drivers/perf/riscv_pmu_sbi.c
 >  
->  DRM DRIVERS FOR ATMEL HLCDC
-> -M:	Sam Ravnborg <sam@ravnborg.org>
-> -M:	Boris Brezillon <bbrezillon@kernel.org>
-> +M:	Manikandan Muralidharan <manikandan.m@microchip.com>
-> +M:	Dharma Balasubiramani <dharma.b@microchip.com>
->  L:	dri-devel@lists.freedesktop.org
->  S:	Supported
->  T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>  RISC-V THEAD SoC SUPPORT
+> -M:	Jisheng Zhang <jszhang@kernel.org>
+> +M:	Drew Fustini <drew@pdp7.com>
+>  M:	Guo Ren <guoren@kernel.org>
+>  M:	Fu Wei <wefu@redhat.com>
+>  L:	linux-riscv@lists.infradead.org
 > -- 
-> 2.25.1
+> 2.43.0
+> 
+
+Acked-by: Drew Fustini <drew@pdp7.com>
+
+Jisheng - thanks for your efforts thus far and I'm happy to take over.
+
+Drew
