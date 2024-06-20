@@ -1,363 +1,101 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D231B0115;
-	Thu, 20 Jun 2024 17:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A501B0115
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718905745; cv=none; b=Sd5/Fe7b9UFTyQGKo2acqINElyBYGo+hxewGbhC1jYtZXRQqSQIu1zH+iobo5fHy4E/QWG3QUpXS/9kitnBwflleOnVXuflRkVkxZY8E09ZzSG78j0hOmQGKHrbE1KD1FCClnZLppDAX7SWcn7xGNSlQ0YOFpI+SaJe+OIasJrY=
+	t=1718905940; cv=none; b=UgeUbhk2HK66nqSpFIzdeZB+Pp3AcHkxh82A48RIufMkAHnjL6y4hzEDOLgisdvzekIbnQ3VJtCKCzeBVtxxHUWLWAn9HfeRicMBpgegwkXHNRk3bdgbjnEBo7WKx12eo+VsqFdgzmakkWC4WZ+A/ghkySxZpolAHgCsrmD8tps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718905745; c=relaxed/simple;
-	bh=LqukskVfosQj/PiYyIrjBOVGTtXK2/AbOHRsUZqhpDA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=AoVj7cyhf1AU3CNbz/qJPjkVGA8iJETq3ZYH1kPauUYHgpOjJcU0rHBPWkCUJ4v96nmqztEOvT8F5Fm+/IVuSDn/UiXkxCCPA7mpz3ZKW694xiT/E2Dak5M/vxuzixA6bGsLfkFG1gngDY08GkEFtNfB9cchruR8fwPwd/Oq7J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n7wq2mXc; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718905940; c=relaxed/simple;
+	bh=TLEjZsKdmpxVXXLteU7nv3fBpHDmfyE0TGvbdCsV6pk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SJYjFG3m4d2gd2Mw7Y5fP0jMNruWl1jOUmIT+sLWhA53rRyT10HRH7u1gDvUvOtEae9ubaib/SxH5q1ih7BCwPeLHVMHW2egx5e0NU7oDhI1UbVnz9xUgj1HYuQGv8L7FKk65aIF0XC+1ynR5MVOJi7gv/X1nmq2nIkSU7pne24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rkir.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4DectiFN; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rkir.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n7wq2mXc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 593E0240002;
-	Thu, 20 Jun 2024 17:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718905738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ex/Fts0vtRxrrqpdJ6d+tTUoSpyLJVH1DzwkPw6yqtM=;
-	b=n7wq2mXc45hhfREFMBumX2r5QgvvgJHvyALaQdta5TcFJ+GbMKX6x/EQl+tRHggTSWyQN6
-	17WGjXqPBs71oqBUey79HqwgBPd3nRGLoZkFYJvXXyBuWKjIvySLyWKNiISdoEyssFvU/u
-	yiBHuf7c4nmY3LCczyt/SqU7t2gckcDtfzJfhgvWWLGkVfcciSQh6Um4kAO3qSf8eoYvrS
-	gTxWSrQH5wSgOa3290d8CIJV0+Qj/suQILEqL3OYA4FsUQ9sx/jYbmCghA/jXaDj3NCIlK
-	TrudObnOj/TMJpSuYkrLC18YyRMIxILk2YBRcgrdlVkP7JyILt4AxtjHSXmvpw==
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4DectiFN"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62f43c95de4so21802737b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718905938; x=1719510738; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Sm2gpa6hcQ4RATrD54TnpEVi32e1itP79MJvvCbKJQU=;
+        b=4DectiFNIO4pJddMnodVmQYM+WjIJBV2wUKaW1hGj8dOzakhgB6X6r6M0Y08Q/lkuL
+         OMy0L+ED8slxcFVV/jRfLbIkdc0bWX5CnJvx9FPVtCQhaZudylWb0I1KRFL3NPgcl0gD
+         +I2YU69jBqUySHxDIXMHm8bYNWwxXcalbFdEL7cchsRxGgge6bWulAZcCL9/G3viznA/
+         iOW/BavgnrqMpa7DefW9yHydHAdwrTSM00BppRI/vy8kislFiOJt59hcKQIV2uBOO+JG
+         cE6rwsVJIyZezlDG84Gn6O4zVEDEhIUq5l+k+wYgt3peUj04Xi7j3U8AHFv0U5By8ISc
+         j8Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718905938; x=1719510738;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sm2gpa6hcQ4RATrD54TnpEVi32e1itP79MJvvCbKJQU=;
+        b=QMsuo9sEOF8TaEs3p5tGC0kii+i3iauTFl7j4cb1hSnRvR3ytXEOL3n9OKPxOB9THq
+         6U/6VzQ+NwxNi8HuYcKqqWeFzKb2prhhWHmA8qvUNwFMbwr/kFQyS8dXzvuzZ2SlzmTA
+         9/Yas0DaO24DHvQQkPRIijvYC6pv1hEGE17v8Z28u1/7kI9XOGp31y9M4ThKjCXQlY18
+         1Pd5PPPnj00LIRQ1JHyyEf5J0BD1emrmx49zRi94Fm4a/5Y0VLKcrOrDeb/GlQZTLrc2
+         8OfzmXzxp/7E7lkLCwPzDlVX4kUhPp9IfknSjtcjOsfsUzp+gn/O+D6N+2i0wOZSako4
+         Bn3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVNSv5D02X+T6SkzKrM2oCTSZfelzokblD2zjH8ekmjpASK4eaG/w8587Kp87xcUwPKMff+mVA23Uajh+Z+wT4iD5AlRZlTeMyZ8faN
+X-Gm-Message-State: AOJu0YwdWnEnA560NUo2UVP1h1tKOVlpLZOWagunLJf87Gd6oK2v6SYo
+	s/MbSdmRSSEuC0CapYpbreZJQoxN8eT4fCp8kPCahOZE1b3QSSEPsET7CYQzyYCzygCfqA==
+X-Google-Smtp-Source: AGHT+IFuWlbIslAeTyNzbjywNAP+777MiMdKK+WPP+r9rQlqEuhXFSUkwwTiQkmcp9ClrNjd1fkYkL4d
+X-Received: from rkir98.kir.corp.google.com ([2620:15c:7d:4:df4:7552:4ba4:9441])
+ (user=rkir job=sendgmr) by 2002:a05:690c:ec4:b0:61b:e689:7347 with SMTP id
+ 00721157ae682-63a8dc08e63mr14852627b3.2.1718905937949; Thu, 20 Jun 2024
+ 10:52:17 -0700 (PDT)
+Date: Thu, 20 Jun 2024 10:52:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 20 Jun 2024 19:48:56 +0200
-Message-Id: <D2518A4HNS5R.2GQYLDGDQ82XV@bootlin.com>
-Subject: Re: [PATCH v2 06/11] mfd: olb: Add support for Mobileye OLB
- system-controller
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Lee Jones" <lee@kernel.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: aerc 0.17.0
-References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
- <20240503-mbly-olb-v2-6-95ce5a1e18fe@bootlin.com>
- <20240531110550.GE1005600@google.com>
-In-Reply-To: <20240531110550.GE1005600@google.com>
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
+Message-ID: <20240620175214.515211-1-rkir@google.com>
+Subject: [PATCH] UAPI: Make virtio_ring.h C++ friendly
+From: Roman Kiryanov <rkir@google.com>
+To: mst@redhat.com, linux-kernel@vger.kernel.org
+Cc: jansene@google.com, mett@google.com, jpcottin@google.com, 
+	Roman Kiryanov <rkir@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Lee,
+virtio_ring.h is an UAPI files which could
+be used by code outside of the linux kernel
+which could be written in C++.
 
-The latest revision [0] has changed approach following advice from
-Stephen Boyd to rather move forward with auxiliary devices.
+Google-Bug-Id: 331190993
+Change-Id: Ib27c1e57c273ec5613b4e745a3ab4d53bdde5aac
+Signed-off-by: Roman Kiryanov <rkir@google.com>
+---
+ include/uapi/linux/virtio_ring.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-[0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@bootl=
-in.com/
-
-On Fri May 31, 2024 at 1:05 PM CEST, Lee Jones wrote:
-> On Fri, 03 May 2024, Th=C3=A9o Lebrun wrote:
->
-> > Mobileye OLB system-controller gets used in EyeQ5, EyeQ6L and EyeQ6H
-> > platforms. It hosts clock, reset and pinctrl functionality.
-> >=20
-> > Tiny iomem resources are declared for all cells. Some features are
-> > spread apart. Pinctrl is only used on EyeQ5.
-> >=20
-> > EyeQ6H is special: it hosts seven OLB controllers, each with a
-> > compatible. That means many clock and reset cells. Use cell->devname
-> > for explicit device names rather than clk-eyeq.ID or clk-eyeq.ID.auto.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > ---
-> >  drivers/mfd/Kconfig        |  10 +++
-> >  drivers/mfd/Makefile       |   2 +
-> >  drivers/mfd/mobileye-olb.c | 180 +++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 192 insertions(+)
-> >=20
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 4b023ee229cf..d004a3f4d493 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -1030,6 +1030,16 @@ config MFD_OCELOT
-> > =20
-> >  	  If unsure, say N.
-> > =20
-> > +config MFD_OLB
-> > +	bool "Mobileye EyeQ OLB System Controller Support"
-> > +	select MFD_CORE
-> > +	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
-> > +	default MACH_EYEQ5 || MACH_EYEQ6H
-> > +	help
-> > +	  Say yes here to add support for EyeQ platforms (EyeQ5, EyeQ6L and
-> > +	  EyeQ6H). This core MFD platform driver provides clock, reset and
-> > +	  pinctrl (only EyeQ5) support.
-> > +
-> >  config EZX_PCAP
-> >  	bool "Motorola EZXPCAP Support"
-> >  	depends on SPI_MASTER
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index c66f07edcd0e..d872833966a8 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -120,6 +120,8 @@ obj-$(CONFIG_MFD_CORE)		+=3D mfd-core.o
-> >  ocelot-soc-objs			:=3D ocelot-core.o ocelot-spi.o
-> >  obj-$(CONFIG_MFD_OCELOT)	+=3D ocelot-soc.o
-> > =20
-> > +obj-$(CONFIG_MFD_OLB)		+=3D mobileye-olb.o
-> > +
-> >  obj-$(CONFIG_EZX_PCAP)		+=3D ezx-pcap.o
-> >  obj-$(CONFIG_MFD_CPCAP)		+=3D motorola-cpcap.o
-> > =20
-> > diff --git a/drivers/mfd/mobileye-olb.c b/drivers/mfd/mobileye-olb.c
-> > new file mode 100644
-> > index 000000000000..1640d63a3ddd
-> > --- /dev/null
-> > +++ b/drivers/mfd/mobileye-olb.c
-> > @@ -0,0 +1,180 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * System controller multi-function device for EyeQ platforms.
-> > + *
-> > + * Mobileye EyeQ5, EyeQ6L and EyeQ6H platforms have MMIO mapped regist=
-ers
-> > + * controlling core platform clocks, resets and pin control. Many othe=
-r
-> > + * features are present and not yet exposed.
-> > + *
-> > + * Declare cells for each compatible. Only EyeQ5 has pinctrl.
-> > + * EyeQ6H has seven OLB instances; each has a name which we propagate =
-to
-> > + * sub-devices using cell->devname.
-> > + *
-> > + * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
-> > + */
-> > +
-> > +#include <linux/array_size.h>
-> > +#include <linux/device.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/ioport.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/property.h>
-> > +
-> > +#define OLB_MFD_CELL(_name, _res, _devname) \
-> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, false, NULL, _devname)
->
-> The reason we provide generic MACROs is so that you don't have to define
-> your own.
-
-In this case, there was no macro that allowed setting the MFD cell
-devname field, which is something that was added in the series.
-
-I didn't know what generic macro to create so instead of creating loads
-of useless ones I created a single one, targeted at my usecase.
-
->
-> > +struct olb_match_data {
-> > +	const struct mfd_cell	*cells;
-> > +	int			nb_cells; /* int to match devm_mfd_add_devices() argument */
-> > +};
-> > +
-> > +#define OLB_DATA(_cells) { .cells =3D (_cells), .nb_cells =3D ARRAY_SI=
-ZE(_cells) }
-> > +
-> > +static int olb_probe(struct platform_device *pdev)
-> > +{
-> > +	const struct olb_match_data *match_data;
-> > +	struct device *dev =3D &pdev->dev;
-> > +	struct resource *res;
-> > +
-> > +	match_data =3D device_get_match_data(dev);
-> > +	if (!match_data)
-> > +		return -ENODEV;
-> > +
-> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	if (!res)
-> > +		return -ENODEV;
-> > +
-> > +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-> > +				    match_data->cells, match_data->nb_cells,
-> > +				    res, 0, NULL);
-> > +}
-> > +
-> > +static const struct resource olb_eyeq5_clk_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x02C, 10 * 8, "pll"),
-> > +	DEFINE_RES_MEM_NAMED(0x11C, 1 * 4, "ospi"),
-> > +};
-> > +
-> > +static const struct resource olb_eyeq5_reset_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x004, 2 * 4, "d0"),
-> > +	DEFINE_RES_MEM_NAMED(0x200, 13 * 4, "d1"),
-> > +	DEFINE_RES_MEM_NAMED(0x120, 1 * 4, "d2"),
-> > +};
-> > +
-> > +static const struct resource olb_eyeq5_pinctrl_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x0B0, 12 * 4, "pinctrl"),
-> > +};
-> > +
-> > +static const struct mfd_cell olb_eyeq5_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq5_clk_resources, NULL),
-> > +	OLB_MFD_CELL("reset-eyeq", olb_eyeq5_reset_resources, NULL),
-> > +	OLB_MFD_CELL("eyeq5-pinctrl", olb_eyeq5_pinctrl_resources, NULL),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq5_match_data =3D OLB_DATA(o=
-lb_eyeq5_cells);
-> > +
-> > +static const struct resource olb_eyeq6l_clk_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x02C, 4 * 8, "pll"),
-> > +};
-> > +
-> > +static const struct resource olb_eyeq6l_reset_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x004, 2 * 4, "d0"),
-> > +	DEFINE_RES_MEM_NAMED(0x200, 13 * 4, "d1"),
-> > +};
-> > +
-> > +static const struct mfd_cell olb_eyeq6l_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6l_clk_resources, NULL),
-> > +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6l_reset_resources, NULL),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6l_match_data =3D OLB_DATA(=
-olb_eyeq6l_cells);
-> > +
-> > +static const struct resource olb_eyeq6h_acc_clk_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x040, 7 * 8, "pll"),
-> > +};
-> > +
-> > +static const struct resource olb_eyeq6h_acc_reset_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x000, 15 * 4, "d0"),
-> > +};
-> > +
-> > +static const struct mfd_cell olb_eyeq6h_acc_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_acc_clk_resources, "clk-eyeq-acc"=
-),
->
-> The point of enumerating platform device names is to identify devices
-> that are identical.  We lose this with bespoke naming.
->
-> If you want to identify devices either define a value to pass to .id or
-> adapt the first parameter and make the clk-eyeq driver accept different
-> device names.
-
-About int IDs: those make it unclear what device we are talking about,
-when we have seven of them as it was the case in this series. Yes,
-there were 7 system-controllers, each exposing clocks (and most
-exposing resets). IDs from 0 thru 6 was really not clear enough when
-going through dmesg, which I why I added the feature.
-
-I wasn't able to change the first parameter as that gets used for
-matching a driver. As it is driver name, there can only be a single
-string per driver. Here we have multiple MFD cells that each want to
-probe the same driver, so they must have the same name.
-
->
-> > +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6h_acc_reset_resources, "reset-eye=
-q-acc"),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6h_acc_match_data =3D OLB_D=
-ATA(olb_eyeq6h_acc_cells);
-> > +
-> > +static const struct resource olb_eyeq6h_we_clk_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x074, 1 * 8, "pll"),
-> > +};
-> > +
-> > +static const struct resource olb_eyeq6h_we_reset_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x004, 4 * 4, "d0"),
-> > +};
-> > +
-> > +static const struct mfd_cell olb_eyeq6h_west_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_we_clk_resources, "clk-eyeq-west"=
-),
-> > +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6h_we_reset_resources, "reset-eyeq=
--west"),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6h_west_match_data =3D OLB_=
-DATA(olb_eyeq6h_west_cells);
-> > +
-> > +static const struct mfd_cell olb_eyeq6h_east_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_we_clk_resources, "clk-eyeq-east"=
-),
-> > +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6h_we_reset_resources, "reset-eyeq=
--east"),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6h_east_match_data =3D OLB_=
-DATA(olb_eyeq6h_east_cells);
-> > +
-> > +static const struct resource olb_eyeq6h_south_clk_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x000, 4 * 8, "pll"),
-> > +	DEFINE_RES_MEM_NAMED(0x070, 1 * 4, "emmc"),
-> > +	DEFINE_RES_MEM_NAMED(0x090, 1 * 4, "ospi"),
-> > +	DEFINE_RES_MEM_NAMED(0x098, 1 * 4, "tsu"),
-> > +};
-> > +
-> > +static const struct mfd_cell olb_eyeq6h_south_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_south_clk_resources, "clk-eyeq-so=
-uth"),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6h_south_match_data =3D OLB=
-_DATA(olb_eyeq6h_south_cells);
-> > +
-> > +static const struct resource olb_eyeq6h_ddr_clk_resources[] =3D {
-> > +	DEFINE_RES_MEM_NAMED(0x074, 1 * 8, "pll"),
-> > +};
-> > +
-> > +static const struct mfd_cell olb_eyeq6h_ddr0_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_ddr_clk_resources, "clk-eyeq-ddr0=
-"),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6h_ddr0_match_data =3D OLB_=
-DATA(olb_eyeq6h_ddr0_cells);
-> > +
-> > +static const struct mfd_cell olb_eyeq6h_ddr1_cells[] =3D {
-> > +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_ddr_clk_resources, "clk-eyeq-ddr1=
-"),
-> > +};
-> > +
-> > +static const struct olb_match_data olb_eyeq6h_ddr1_match_data =3D OLB_=
-DATA(olb_eyeq6h_ddr1_cells);
-> > +
-> > +static const struct of_device_id olb_of_match[] =3D {
-> > +	{ .compatible =3D "mobileye,eyeq5-olb", .data =3D &olb_eyeq5_match_da=
-ta },
->
-> We're not passing MFD init data through the OF API, sorry.
->
-> Pass defined identifiers through instead and match on those please.
-
-Ah, that makes sense. Thanks for the mention. I can't find any
-reasoning, I might be missing context?
-
-Thanks Lee,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
+index f8c20d3de8da..be88871d512b 100644
+--- a/include/uapi/linux/virtio_ring.h
++++ b/include/uapi/linux/virtio_ring.h
+@@ -199,11 +199,13 @@ struct vring {
+ static inline void vring_init(struct vring *vr, unsigned int num, void *p,
+ 			      unsigned long align)
+ {
++	struct vring_desc *desc = (struct vring_desc *)p;
++
+ 	vr->num = num;
+-	vr->desc = p;
+-	vr->avail = (struct vring_avail *)((char *)p + num * sizeof(struct vring_desc));
+-	vr->used = (void *)(((uintptr_t)&vr->avail->ring[num] + sizeof(__virtio16)
+-		+ align-1) & ~(align - 1));
++	vr->desc = desc;
++	vr->avail = (struct vring_avail *)(desc + num);
++	vr->used = (struct vring_used *)(((uintptr_t)&vr->avail->ring[num]
++		+ sizeof(__virtio16) + align-1) & ~(align - 1));
+ }
+ 
+ static inline unsigned vring_size(unsigned int num, unsigned long align)
+-- 
+2.45.2.741.gdbec12cfda-goog
 
