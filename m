@@ -1,96 +1,108 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6F639FD7
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 05:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B472B38385;
+	Thu, 20 Jun 2024 05:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718863006; cv=none; b=Ohrqmk3yv6mnuqAurlSEKuIJ83Z6q7YXr0UhiTiq8dVO1qJDNAgKc2OaJK5WoA/vcnSoqwLCZdzZ4sdXlBsIe7fyxZ9Dv5SpH4q6dx2KP2Gn1ahph/thF11cyGurBb6W6Uo1sb1kHd7pkJ5XrG6vF0qc40ORda3/vaLGjPYOGD0=
+	t=1718863062; cv=none; b=suBiWf2wxmuaAHUnQwf+XOEV5NEoK+umSxfsxO1FGDg5pqJr6bmVzcj7oOwdN1E7TCUdBNu7kM7l6gjivPQUHptg2gTM/FIkefvNUeZU4Zmr1270rM/EqQVpfkRDh2b0uRSzuF7+9eDEAdtR+qCPnQUGrjY4mpTTN145ks9DJq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718863006; c=relaxed/simple;
-	bh=JpGre/SQMB+YKlh6IxbZj6gFT4qKD6FF9cFpcXTWUaE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GG9mC8zUyGzruOzjBejiEyTXcUFsYny2q6IQzGQI9HViAhUCjeD1NcgIfTZa8X4VqhvcnG+q9t43NGTcSnueccTKoyz0ZMwj5QtZKL3LNpGJpL92nInkMZVPUwmVa1yo5oUnyVD1geEk3KjOZZ+6nyeaF/5bmaYfUolKMxNfWLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=pfdeRrN1; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=FmmqvmTN reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1718863062; c=relaxed/simple;
+	bh=zMCFp8zCllWXZJOLn+ox9s+gLl+0FUepfCkgfmEOmGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B7wkrGC8De4siOWoE+/SsL/VBg69vhncDvzZm2n/u5N9Fveg3I1KNfd7xDO+/GEG94HUr16A9cfXmRx4ZB25LwjwlazQ2mlgNjWKHD2DBEnRPEMr8pTKf0OxE6LUU7DhdsaJH6sc4mMuzs0SYBBgqQ3xOoc8P3sjqkvxYmzkk04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RxgTjgPY; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="pfdeRrN1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="FmmqvmTN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1718863002; x=1750399002;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=NXOs4yCS8uqg75IyGXnA9UVdnZXJY3hrbimxF27/+LI=;
-  b=pfdeRrN1AhYZ9z5mwpHpHf3bQq8WysahfyHvsea7lt+l31F1s9vNPYdW
-   EurR3EMC8Bouf7D0sK2ZgZAELia4juDOUGtoLefQuuUeyXe0ND0I/pQjI
-   g+akfyrrdK4Ha9DhkoolcYlxE6N7Z+TiXgW5IggOavCN3KKmZZqApXVbC
-   F9I+xKpPlYW8w5riyVUcjH5rtfdJgqZOxj+RQBnm/3f3z5FR7OB+YXajL
-   zMgnH12w2Wt3CwYkNIOHPVdEtPugx+m5jq3kS/WTg2K1KJEnPHkIUz8MG
-   StncUM3ZL7/a+V372L3RniIKvYIFQeFVmJxoJvo/uoe8H2TPnByofiixb
-   g==;
-X-CSE-ConnectionGUID: 8ruA6ashSgGUXaQicQqFRQ==
-X-CSE-MsgGUID: F7IAo7pDReydi8/aAxnETQ==
-X-IronPort-AV: E=Sophos;i="6.08,251,1712613600"; 
-   d="scan'208";a="37487810"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 20 Jun 2024 07:56:34 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F05E9166E6C;
-	Thu, 20 Jun 2024 07:56:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1718862990; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=NXOs4yCS8uqg75IyGXnA9UVdnZXJY3hrbimxF27/+LI=;
-	b=FmmqvmTNdiJPa/R6HiKFcv1PzUZxEZGsjTZsp5nBv3Gby674z3GZV6G96XMJRs7Y5WMBmu
-	o2OTIN/aqHv+GjF+lUeLQS9qIU1v0ZT/AdPZUXq2ZVS+KFT2xujufc6ss43O4GEReyevZr
-	FCcu8FdteM8nxhy7UZ4/V/+C1r52I19FPI6a+uuDqz2a/9CemSvcuRmnYDnH7+ROo77vX3
-	T97QB5HXbVBY2KRrHQoDyg/7vpvtzInE6yRs9dpFdA6HulQpGQp5ybJQPwx13i5SIyMFyd
-	qkGdrnRcGzVlx0DWWmED6SQvtgokhqi6s+iKJxxc5fOLV1tv3701CYLqD/Xtcg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: 
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] MAINTAINERS: Fix 32-bit i.MX platform paths
-Date: Thu, 20 Jun 2024 07:56:31 +0200
-Message-Id: <20240620055631.2240151-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RxgTjgPY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718863059; x=1750399059;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zMCFp8zCllWXZJOLn+ox9s+gLl+0FUepfCkgfmEOmGU=;
+  b=RxgTjgPYoVV8iCGOnQ/T7++dSQmB0B6ePTQU6x49nnL8hx0WHAri0mSb
+   cXVXrxkYjgO3auOaycLjRO/ZUx+7y3EMoT4pAdziFirqss/N3y3TBWUig
+   WOLuwQtycbStOUHjnzNsiM2KZocBBjv1CwVdIyxTjPoWEbqDkUKTbbfUn
+   DP7F/zyD/MSL7LphhQ94AN9R7mmZUfChcht9pJvWp3nTQXDlDSP7JNrEt
+   1g80rOTLN4dw19xSHR/fXXbx/GfREKPSUMXn0YRs2jRy7oHSEbPKmaLdr
+   Bz/NN8uEVCdXwB0c5mmmywBQLURfQ0Jpbp7BzulB+dfY8FH9OdbBT7aKY
+   w==;
+X-CSE-ConnectionGUID: uQKHA3TpQtaEfeztt55WZw==
+X-CSE-MsgGUID: BCuam25yTJmkZlK4g6/moQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15585019"
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="15585019"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 22:57:38 -0700
+X-CSE-ConnectionGUID: xNu0A6xbT2qdW0R8iq+V0Q==
+X-CSE-MsgGUID: Cca+h7QjQquGw6LR94NR2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="42792780"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 19 Jun 2024 22:57:35 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sKAnb-0007Mk-34;
+	Thu, 20 Jun 2024 05:57:31 +0000
+Date: Thu, 20 Jun 2024 13:57:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tomer Maimon <tmaimon77@gmail.com>, mturquette@baylibre.com,
+	sboyd@kernel.org, p.zabel@pengutronix.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com,
+	joel@jms.id.au, venture@google.com, yuenn@google.com,
+	benjaminfair@google.com
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v25 2/3] reset: npcm: register npcm8xx clock auxiliary
+ bus device
+Message-ID: <202406201328.SGrN27to-lkp@intel.com>
+References: <20240618185819.2155595-3-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618185819.2155595-3-tmaimon77@gmail.com>
 
-The original patch was created way before the .dts movement on arch/arm.
-But it was patch merged after the .dts reorganization. Fix the arch/arm
-paths accordingly.
+Hi Tomer,
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Changes in v2:
-* Removed Fixes and stable CC tag
+kernel test robot noticed the following build errors:
 
- MAINTAINERS | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+[auto build test ERROR on clk/clk-next]
+[also build test ERROR on linus/master pza/reset/next v6.10-rc4 next-20240619]
+[cannot apply to pza/imx-drm/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b4b312d6fc45..e6ebd50b7cc5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22931,9 +22931,9 @@ TQ SYSTEMS BOARD & DRIVER SUPPORT
- L:	linux@ew.tq-group.com
- S:	Supported
- W:	https://www.tq-group.com/en/products/tq-embedded/
--F:	arch/arm/boot/dts/imx*mba*.dts*
--F:	arch/arm/boot/dts/imx*tqma*.dts*
--F:	arch/arm/boot/dts/mba*.dtsi
-+F:	arch/arm/boot/dts/nxp/imx/imx*mba*.dts*
-+F:	arch/arm/boot/dts/nxp/imx/imx*tqma*.dts*
-+F:	arch/arm/boot/dts/nxp/imx/mba*.dtsi
- F:	arch/arm64/boot/dts/freescale/fsl-*tqml*.dts*
- F:	arch/arm64/boot/dts/freescale/imx*mba*.dts*
- F:	arch/arm64/boot/dts/freescale/imx*tqma*.dts*
+url:    https://github.com/intel-lab-lkp/linux/commits/Tomer-Maimon/dt-bindings-reset-npcm-add-clock-properties/20240619-093532
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/20240618185819.2155595-3-tmaimon77%40gmail.com
+patch subject: [PATCH v25 2/3] reset: npcm: register npcm8xx clock auxiliary bus device
+config: arm64-randconfig-003-20240620 (https://download.01.org/0day-ci/archive/20240620/202406201328.SGrN27to-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240620/202406201328.SGrN27to-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406201328.SGrN27to-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   aarch64-linux-ld: drivers/reset/reset-npcm.o: in function `npcm_rc_probe':
+   reset-npcm.c:(.text+0xce8): undefined reference to `auxiliary_device_init'
+>> reset-npcm.c:(.text+0xce8): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `auxiliary_device_init'
+>> aarch64-linux-ld: reset-npcm.c:(.text+0xd30): undefined reference to `__auxiliary_device_add'
+>> reset-npcm.c:(.text+0xd30): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__auxiliary_device_add'
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
