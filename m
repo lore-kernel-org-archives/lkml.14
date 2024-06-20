@@ -1,109 +1,149 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ACB01B1518;
-	Thu, 20 Jun 2024 16:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E68A1B142D
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899682; cv=none; b=G50I6VRL7vAYqVthdgIoJSnzrEAsmnL0FS+DgpRgJPA9nBudFJukd5rK5doJwveQUzEMytDGCiL/6hPtu/XhREoExm0uwKAq2tqSJw5mNS6laZHESBT27HXDV1vV7yc1CrNLmc+VtD74No3PhHBXbB+RQm6x7QWgRIhMBfx616U=
+	t=1718899739; cv=none; b=Aedrb2ioKhAZd0J4dX30CFZLmY1DnoUA2ZU2+HRPZvMfg629u/55VmqDD+0etQnd0sLVoEqyGar7NEhv4RqXpZx9UUIJ3n09h7NABIcA5TbQX0tiwhtN382dL1DKfcWpLWGu2B5lOshls1fELXob2GhDloWlWzOJ2h+6eHg6Q6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899682; c=relaxed/simple;
-	bh=GNVc8/vmFMgwRhMEy2TuqlraiLah1mxz5w2FWDs8fpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHIzZzHP9BCQSR7ceO8gbmOhMC6RgY2zgISX9wIq0rpZ+aWqCYdGa7Le2TDINR2nF1+k3fpgy1ZIYbO3Ceucf2abgc1yk3eGm7O1Q0UiNZ03yfsmO+4V4avhmHrJ6zo4Cvi/oJMD4zFN5xuMW6C2co4F36HNVo17JV4i4jva9tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sKKK1-0001mv-00; Thu, 20 Jun 2024 18:07:37 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 0F12BC0120; Thu, 20 Jun 2024 18:06:28 +0200 (CEST)
-Date: Thu, 20 Jun 2024 18:06:28 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Jonas Gorski <jonas.gorski@gmail.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] MIPS: Introduce config options for LLSC
- availability
-Message-ID: <ZnRThFlqqyDEprGz@alpha.franken.de>
-References: <20240612-mips-llsc-v2-0-a42bd5562bdb@flygoat.com>
- <20240612-mips-llsc-v2-2-a42bd5562bdb@flygoat.com>
+	s=arc-20240116; t=1718899739; c=relaxed/simple;
+	bh=jKOKhzCb/s1qR2kIGMCwfAQ0zH++nCz+I3VwV8UWtwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TfpP5XJy/r74yKSjkhNQqBo1/pfgd1f9kNGM5pQ9SJ0Ud5BsVEuTRzHTYkIF/ueSTE0jAVhTATlgNiimHxn6J3SENZypJSFmNRriy3BXCFkrZRoCrMbgcC2EeK8njlK9NdVxFlCwnUwFW7Sf3iYbKfgOUZzaHeUkiI4GCw7z6qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SmQnNKYU; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SmQnNKYU"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfe1aa7cce2so1038552276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1718899736; x=1719504536; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vZ4/HE33CH2Jns1MFWm0ZR7t5r4f1OMGqj8nTkihE70=;
+        b=SmQnNKYUz0J+LWkhP3ayIphOmx0E12zK437aHpbtGmblipl5FTe/Bv0cVS1syhPnzZ
+         ritvPxHvF8Tu344XouOlrjBBar3LwrRY4+ClqTtWms0FljQzUFm/fJ9SMOJjk5+J2IGN
+         lJaaWm5sDS+qoFQSYcfhZh49ZMNZ5vMP/jn7PckCphmDOymeuQ3HmY+jxoJiSyGWEo4J
+         YQQ0w2ioASC4AorOxnIl9ykOZQD8F7GEgSwdPA2z8wbWRLREZhaODO+cepFUzo3+DuBY
+         QDNcG2dHYGQ4tbGJTzYya07OzHK9ZRVx6fUYAVSzljTPjhyVBIg2YaYdoG12kYXbLxwh
+         mncw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718899736; x=1719504536;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vZ4/HE33CH2Jns1MFWm0ZR7t5r4f1OMGqj8nTkihE70=;
+        b=Xrw2pGkwmJDWM23KRUjiv0kva16BWx/wizoQRoe+qONu5e9Tf+GVxyDSggrHa29giI
+         BUoLXRX9yq5OaqNkgAH3SpG+zjepvTiFvVRNGQJtUIkqPU4l8p+MFcY/f483QTvlYijc
+         p/wV0+Czx5PA3vzLFG8NFqsCkPjprNcV3tnXbF/6a7gjvgcgohCVQ19aHLPhcpBMfYow
+         ZyHgS6MJNo5/Vfm5P3KGWgw4GF/vdrjhVnqafAzszE1fEaFZWriwVU3zjJjlFqALk/G6
+         JvubhAdZAPNpd0hItORm33+5LjiqNuFzlRYvnj15MwZeyFFhX73GetiRFIFHH4F0aLP+
+         6e8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOVKY5Prb7CujTqerCGDFE/EbhmPmEgeAHf159yvp+mzZrJlFwnKyg5du4xuu1EtRuJRCawHMueZKDl1wHvDtpp9SZVondh9xzgDo2
+X-Gm-Message-State: AOJu0Yyc9f0RbXXtW0UMru2GdQdMKiyxV+q3FcylTZYR2rZwIxnNIggk
+	JS/jXXx50mazqkf9VGqHonN+ORfosOC+m8GsIe6wmIMTOxcbZmwELhYmmOKRHNDeM0CwQygAG8m
+	BvyGiMPuR2hpSFD0CPhFtlR2wSAHBH9cM/iKP
+X-Google-Smtp-Source: AGHT+IEJD8llzQZDQm0N+h/SilvZaX1H4grLcrBULEvzCzsoMDLOV0byMoHIPLcWuG2L/HTPdx4UkXvFsIa166iHKFg=
+X-Received: by 2002:a25:9c87:0:b0:dff:2ce8:cc1b with SMTP id
+ 3f1490d57ef6-e02be19ffc7mr5879084276.35.1718899736547; Thu, 20 Jun 2024
+ 09:08:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612-mips-llsc-v2-2-a42bd5562bdb@flygoat.com>
+References: <20240415142436.2545003-1-roberto.sassu@huaweicloud.com>
+ <CAHC9VhTs8p1nTUXXea2JmF0FCEU6w39gwQRMtwACqM=+EBj1jw@mail.gmail.com>
+ <7cf03a6ba8dbf212623aab2dea3dac39482e8695.camel@huaweicloud.com>
+ <CAHC9VhSCw6RweTs6whAu4v6t4n7gxUWJtjmzY-UXrdzW0H+YJA@mail.gmail.com>
+ <520d2dc2ff0091335a280a877fa9eb004af14309.camel@huaweicloud.com>
+ <CAHC9VhRD1kBwqtkF+_cxCUCeNPp+0PAiNP-rG06me6gRQyYcyg@mail.gmail.com>
+ <2b335bdd5c20878e0366dcf6b62d14f73c2251de.camel@huaweicloud.com>
+ <CAHC9VhSOMLH69+q_wt2W+N9SK92KGp5n4YgzpsXMcO2u7YyaTg@mail.gmail.com>
+ <e9114733eedff99233b1711b2b05ab85b7c19ca9.camel@huaweicloud.com>
+ <CAHC9VhQp1wsm+2d6Dhj1gQNSD0z_Hgj0cFrVf1=Zs94LmgfK0A@mail.gmail.com> <c96db3ab0aec6586b6d55c3055e7eb9fea6bf4e3.camel@huaweicloud.com>
+In-Reply-To: <c96db3ab0aec6586b6d55c3055e7eb9fea6bf4e3.camel@huaweicloud.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 20 Jun 2024 12:08:45 -0400
+Message-ID: <CAHC9VhSQOiC9t0qk10Lg3o6eAFdrR2QFLvCn1h2EP+P+AgdSbw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/14] security: digest_cache LSM
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: corbet@lwn.net, jmorris@namei.org, serge@hallyn.com, 
+	akpm@linux-foundation.org, shuah@kernel.org, mcoquelin.stm32@gmail.com, 
+	alexandre.torgue@foss.st.com, mic@digikod.net, 
+	linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, 
+	linux-integrity@vger.kernel.org, wufan@linux.microsoft.com, 
+	pbrobinson@gmail.com, zbyszek@in.waw.pl, hch@lst.de, mjg59@srcf.ucam.org, 
+	pmatilai@redhat.com, jannh@google.com, dhowells@redhat.com, jikos@kernel.org, 
+	mkoutny@suse.com, ppavlu@suse.com, petr.vorel@gmail.com, mzerqung@0pointer.de, 
+	kgold@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 10:53:30AM +0100, Jiaxun Yang wrote:
-> Introduce CPU_HAS_LLSC and CPU_MAY_HAVE_LLSC to determine availability
-> of LLSC and Kconfig level.
-> 
-> They are both true for almost all supported CPUs besides:
-> 
-> R3000: Doesn't have LLSC, so both false.
-> R5000 series: LLSC is unusable for 64bit kernel, so both false.
-> R10000: Some platforms decided to opt-out LLSC due to errata, so only
-> 	select CPU_MAY_HAVE_LLSC.
-> WAR_4KC_LLSC: LLSC is buggy on certain reversion, which can be detected
-> 	at cpu-probe or platform override, so only select CPU_MAY_HAVE_LLSC.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> v2: Make cpu_has_llsc logic clear
-> ---
->  arch/mips/Kconfig                    | 20 ++++++++++++++++++++
->  arch/mips/include/asm/cpu-features.h |  9 ++++++++-
->  2 files changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 8ac467c1f9c8..50260a7e9b54 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -1548,6 +1548,7 @@ config CPU_R3000
->  config CPU_R4300
->  	bool "R4300"
->  	depends on SYS_HAS_CPU_R4300
-> +	select CPU_HAS_LLSC
->  	select CPU_SUPPORTS_32BIT_KERNEL
->  	select CPU_SUPPORTS_64BIT_KERNEL
->  	help
-> @@ -1556,6 +1557,7 @@ config CPU_R4300
->  config CPU_R4X00
->  	bool "R4x00"
->  	depends on SYS_HAS_CPU_R4X00
-> +	select CPU_HAS_LLSC
->  	select CPU_SUPPORTS_32BIT_KERNEL
->  	select CPU_SUPPORTS_64BIT_KERNEL
->  	select CPU_SUPPORTS_HUGEPAGES
-> @@ -1566,6 +1568,7 @@ config CPU_R4X00
->  config CPU_TX49XX
->  	bool "R49XX"
->  	depends on SYS_HAS_CPU_TX49XX
-> +	select CPU_HAS_LLSC
->  	select CPU_HAS_PREFETCH
->  	select CPU_SUPPORTS_32BIT_KERNEL
->  	select CPU_SUPPORTS_64BIT_KERNEL
-> @@ -1574,6 +1577,7 @@ config CPU_TX49XX
->  config CPU_R5000
->  	bool "R5000"
->  	depends on SYS_HAS_CPU_R5000
-> +	select CPU_HAS_LLSC if !64BIT
->  	select CPU_SUPPORTS_32BIT_KERNEL
->  	select CPU_SUPPORTS_64BIT_KERNEL
->  	select CPU_SUPPORTS_HUGEPAGES
-> @@ -1583,6 +1587,7 @@ config CPU_R5000
->  config CPU_R5500
->  	bool "R5500"
->  	depends on SYS_HAS_CPU_R5500
-> +	select CPU_HAS_LLSC
+On Thu, Jun 20, 2024 at 11:14=E2=80=AFAM Roberto Sassu
+<roberto.sassu@huaweicloud.com> wrote:
+> On Thu, 2024-06-20 at 10:48 -0400, Paul Moore wrote:
+> > On Thu, Jun 20, 2024 at 5:12=E2=80=AFAM Roberto Sassu
+> > <roberto.sassu@huaweicloud.com> wrote:
+> > > On Wed, 2024-06-19 at 14:43 -0400, Paul Moore wrote:
+> > > > On Wed, Jun 19, 2024 at 12:38=E2=80=AFPM Roberto Sassu
+> > > > <roberto.sassu@huaweicloud.com> wrote:
+> > > > >
+> > > > > Making it a kernel subsystem would likely mean replicating what t=
+he LSM
+> > > > > infrastructure is doing, inode (security) blob and being notified=
+ about
+> > > > > file/directory changes.
+> > > >
+> > > > Just because the LSM framework can be used for something, perhaps i=
+t
+> > > > even makes the implementation easier, it doesn't mean the framework
+> > > > should be used for everything.
+> > >
+> > > It is supporting 3 LSMs: IMA, IPE and BPF LSM.
+> > >
+> > > That makes it a clear target for the security subsystem, and as you
+> > > suggested to start for IMA, if other kernel subsystems require them, =
+we
+> > > can make it as an independent subsystem.
+> >
+> > Have you discussed the file digest cache functionality with either the
+> > IPE or BPF LSM maintainers?  While digest_cache may support these
+>
+> Well, yes. I was in a discussion since long time ago with Deven and
+> Fan. The digest_cache LSM is listed in the Use Case section of the IPE
+> cover letter:
+>
+> https://lore.kernel.org/linux-integrity/1716583609-21790-1-git-send-email=
+-wufan@linux.microsoft.com/
 
-do you have an user manual stating that the R5k bug is fixed on this CPUs ?
+I would hope to see more than one sentence casually mentioning that
+there might be some integration in the future.
 
-Thomas.
+> I also developed an IPE module back in the DIGLIM days:
+>
+> https://lore.kernel.org/linux-integrity/a16a628b9e21433198c490500a987121@=
+huawei.com/
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+That looks like more of an fs-verity integration to me.  Yes, of
+course there would be IPE changes to accept a signature/digest from a
+digest cache, but that should be minor.
+
+> As for eBPF, I just need to make the digest_cache LSM API callable by
+> eBPF programs, very likely not requiring any change on the eBPF
+> infrastructure itself.
+
+That's great, but it would be good to hear from KP and any other BPF
+LSM devs that this would be desirable.
+
+I still believe that this is something that should live as a service
+outside of the LSM.
+
+--=20
+paul-moore.com
