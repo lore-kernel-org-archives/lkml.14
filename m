@@ -1,165 +1,338 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F412139D7
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1431B2139D7;
+	Thu, 20 Jun 2024 08:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718870471; cv=none; b=q6OsJ8d0nZ0CFbtZYaV2LmC0C+bFiQvcYgZTCKe4T1ckjRN1H+/KEoND+2u8FU1L4Frv6/aWZ7PUYqc8wezoeWfaMS6E3K+0m95UVnc6EV4H8slnVrMzm/bVok+rW9py65BJWFwkNeF/Yrz0gKcUPL9hUJNkkxJT9EmKAbRmkTI=
+	t=1718870479; cv=none; b=jzpZ2I2ViLuiVtGojaMSs6Hpsu/3Kq1QTtUweUzdtW++2aRjju3xP7s6oy3aMAuEDQeaQcy5NPd3uOAdU2ARaxPRCAbnoeTQ4ARcnwXjkozTAvV7ES6bztqSNW6KpqEmcU04EojEAZlWTkW09OCuGAYQnjXv7ZorWUksD4lJNYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718870471; c=relaxed/simple;
-	bh=Y3La64nEZFTJ5KhlL/R90AhCl3EJVfrwS8pZpoItdNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kBAYI/HEd6C+3+CV03QliCQORww9h56KwrVSd1gAvpl5UH57EVPlFE0vmGcpns84CqhB90p8vG/pMB+CpchDYYdQYL2RCPeMUPce/dvMVBU0xXWvlgDYrWkfldzAEuLk2NpWD8lBxF6eHW+DLOvDfc8ig8n/VP8xsWaiSvP5uQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLJCB/E+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718870479; c=relaxed/simple;
+	bh=Xuniev/UTWVnpZpSCS2qMdUe2He2S/AtJnKfOEwmtwk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=D7uy+LSx6o1+H/SfYmdYOknkERZrtW14MBhRlQOhYE05N4fxHcaemZFTG/EKEObhEBmmVX9CMYgc127cutKpMTBUDE25GVadhoAQnt0/5Nbc40bvi1jz5B/4LoiQG6JOdAft8JhuOhyGTiIM3nyXhDyNiHXobBCZWpGMVAv//wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VmLKIuQf; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLJCB/E+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BB17C2BD10;
-	Thu, 20 Jun 2024 08:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718870469;
-	bh=Y3La64nEZFTJ5KhlL/R90AhCl3EJVfrwS8pZpoItdNs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rLJCB/E+oza6ve0WtASPkLy9Z16lpaqCTtre4fZc+LU0B8XmV0PFiVznxQwk2DIAi
-	 RR0CLqzK+gukCA1QRaTcNjyphSFabRCrqUXLpRAne2oACzfZ8Oqx75WBgwDf4OI4UY
-	 56gSm9TQxy1SZ4wNVOhC3J5vf84l8EHB2CzICh1nCY2+Ibcrskjd8Jg8h1sPE7ndFr
-	 r8Dtv5zL6hLezaL2HutDGVHoWqgEB6RPDdhReW53FaWEPnmv2xvvhT+RSIRDt17MAK
-	 JkZkHnxo225ErCf1kC62Ll5jHoHFcjeZ6JLhTKxcnb2dM1VbWqwlSajumNQA/6cVqT
-	 BMzwHX4fgD3kw==
-Message-ID: <04e52097-def3-4baa-a566-8519c8a2b26d@kernel.org>
-Date: Thu, 20 Jun 2024 16:01:05 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VmLKIuQf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718870477; x=1750406477;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=Xuniev/UTWVnpZpSCS2qMdUe2He2S/AtJnKfOEwmtwk=;
+  b=VmLKIuQfHDX2cE1Nne/7p9hIpDpc2sjVP+eia3HuH71CQHYUd9iVfydA
+   zijkX7CZ6SPrmTteuGaRenojKZO4NfoJ0kwFjEM5xqrJsjx64x1MVSbZ1
+   0H9sXY4jWp+/zJNbE5IHK4ayLydfvUHZu2uvFwPo5gImWQMHHnGsRxfIP
+   g1ya8IZhQmnEBNRIoN47LlFO5Ir1ZrdokVpZjsvrZZLv3iHGFWm254Kf9
+   wj7Ew2w/K8+CcD8CBzT62t3lxpqltBvZs7u6Y/4BziaDf2tpwa41mxcVN
+   rOVvvMrMUalh8VoS+CRf41qOFWpTPMGsKunITRNsTy9/lE2K2qVOJZdfU
+   Q==;
+X-CSE-ConnectionGUID: qKqQKylRRaCvmS7FdMfqWQ==
+X-CSE-MsgGUID: UTA8JDFYTsyL5CdDGdApuA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15660553"
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="15660553"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 01:01:17 -0700
+X-CSE-ConnectionGUID: Bw4EeqRxR7yCci33PUvx8w==
+X-CSE-MsgGUID: 5y+DO701QcyYYzrBZvn/Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
+   d="scan'208";a="47108146"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 01:01:13 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org,  shuah@kernel.org,  linux-mm@kvack.org,
+  ryan.roberts@arm.com,  chrisl@kernel.org,  david@redhat.com,
+  hughd@google.com,  kaleshsingh@google.com,  kasong@tencent.com,
+  linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,  Barry
+ Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH] selftests/mm: Introduce a test program to assess swap
+ entry allocation for thp_swapout
+In-Reply-To: <CAGsJ_4ynitJ098KyMQ2rDo3XCFKLCs=xZXfSqdcJ_kFNC02t7g@mail.gmail.com>
+	(Barry Song's message of "Thu, 20 Jun 2024 19:25:42 +1200")
+References: <20240620002648.75204-1-21cnbao@gmail.com>
+	<87zfrg2xce.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAGsJ_4wS1PbGpfi5oWw4qRgs49kcdyTb42PA+35vBC1oA8Jsbg@mail.gmail.com>
+	<87o77w2nrw.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAGsJ_4zz7FdEubG4DhcCvEfyC2Z-yp8QReh9OYopvhudrZF+6A@mail.gmail.com>
+	<87jzik2kcq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAGsJ_4ynitJ098KyMQ2rDo3XCFKLCs=xZXfSqdcJ_kFNC02t7g@mail.gmail.com>
+Date: Thu, 20 Jun 2024 15:59:22 +0800
+Message-ID: <877cek2gf9.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (2) (2) (2) [f2fs-dev] [PATCH] Revert "f2fs: use flush command
- instead of FUA for zoned device"
-To: daejun7.park@samsung.com, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
- Wenjie Cheng <cwjhust@gmail.com>
-Cc: "qwjhust@gmail.com" <qwjhust@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-f2fs-devel@lists.sourceforge.net"
- <linux-f2fs-devel@lists.sourceforge.net>
-References: <e0d89f10-19b0-45db-948d-4c140c2dffa7@kernel.org>
- <e2371e59-7be5-40dc-9a2a-aef90ac93b18@kernel.org>
- <2842767c-db80-407b-a5e5-2b9fa74b0d79@kernel.org>
- <20240614004841.103114-1-cwjhust@gmail.com>
- <20240620055648epcms2p11b9914d40f560fb02fa241a7d2599298@epcms2p1>
- <20240620072218epcms2p11597e482b28804dd5f66b9d42a21b22f@epcms2p1>
- <CGME20240620032223epcas2p4d6b770a8e256d140e5296df8a386418e@epcms2p3>
- <20240620075634epcms2p35d3bafffb5f60902b1df25bf3269a686@epcms2p3>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240620075634epcms2p35d3bafffb5f60902b1df25bf3269a686@epcms2p3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/6/20 15:56, Daejun Park wrote:
->> On 2024/6/20 15:22, Daejun Park wrote:
->>>> On 2024/6/20 13:56, Daejun Park wrote:
->>>>> Hi Chao,
->>>>>
->>>>>> Jaegeuk,
->>>>>>
->>>>>> Quoted commit message from commit c550e25bca66 ("f2fs: use flush command
->>>>>> instead of FUA for zoned device")
->>>>>> "
->>>>>> The block layer for zoned disk can reorder the FUA'ed IOs. Let's use flush
->>>>>> command to keep the write order.
->>>>>> "
->>>>>>
->>>>>> It seems mq-deadline use fifo queue and make queue depth of zone device
->>>>>> as 1 to IO order, so why FUA'ed write node IOs can be reordered by block
->>>>>> layer?
->>>>>
->>>>> While other writes are aligned by the mq-deadline, write with FUA is not passed
->>>>> to the scheduler but handled at the block layer.
->>>>
->>>> Hi Daejun,
->>>>
->>>> IIUC, do you mean write w/ FUA may be handled directly in below path?
->>>>
->>>> - blk_mq_submit_bio
->>>>      - op_is_flush && blk_insert_flush
->>>
->>> Hi Chao,
->>>
->>> Yes, I think the path caused an unaligned write when the zone lock was
->>> being applied by mq-deadline.
+Barry Song <21cnbao@gmail.com> writes:
+
+> On Thu, Jun 20, 2024 at 6:36=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
+> wrote:
 >>
->> But, blk_insert_flush() may return false due to policy should be
->> REQ_FSEQ_DATA or REQ_FSEQ_DATA REQ_FSEQ_POSTFLUSH, then
->> blk_mq_insert_request() after blk_insert_flush() will be called?
+>> Barry Song <21cnbao@gmail.com> writes:
 >>
-> 
-> I was just discussing the handling of FUAs in commit c550e25bca66,
-> which is not an issue in the current code as FUAs are handled correctly.
-
-Yup, I think it needs to be reverted. :)
-
-Thanks,
-
-> 
-> Thanks,
-> 
-> 
->> Thanks,
+>> > On Thu, Jun 20, 2024 at 5:22=E2=80=AFPM Huang, Ying <ying.huang@intel.=
+com> wrote:
+>> >>
+>> >> Barry Song <21cnbao@gmail.com> writes:
+>> >>
+>> >> > On Thu, Jun 20, 2024 at 1:55=E2=80=AFPM Huang, Ying <ying.huang@int=
+el.com> wrote:
+>> >> >>
+>> >> >> Barry Song <21cnbao@gmail.com> writes:
+>> >> >>
+>> >> >> > From: Barry Song <v-songbaohua@oppo.com>
+>> >> >> >
+>> >> >> > Both Ryan and Chris have been utilizing the small test program t=
+o aid
+>> >> >> > in debugging and identifying issues with swap entry allocation. =
+While
+>> >> >> > a real or intricate workload might be more suitable for assessin=
+g the
+>> >> >> > correctness and effectiveness of the swap allocation policy, a s=
+mall
+>> >> >> > test program presents a simpler means of understanding the probl=
+em and
+>> >> >> > initially verifying the improvements being made.
+>> >> >> >
+>> >> >> > Let's endeavor to integrate it into the self-test suite. Althoug=
+h it
+>> >> >> > presently only accommodates 64KB and 4KB, I'm optimistic that we=
+ can
+>> >> >> > expand its capabilities to support multiple sizes and simulate m=
+ore
+>> >> >> > complex systems in the future as required.
+>> >> >>
+>> >> >> IIUC, this is a performance test program instead of functionality =
+test
+>> >> >> program.  Does it match the purpose of the kernel selftest?
+>> >> >
+>> >> > I have a differing perspective. I maintain that the functionality is
+>> >> > not functioning
+>> >> > as expected. Despite having all the necessary resources for allocat=
+ion, failure
+>> >> > persists, indicating a lack of functionality.
+>> >>
+>> >> Is there any user visual functionality issue?
+>> >
+>> > Definitely not. If a plane can't take off, taking a train and pretendi=
+ng
+>> > there's no functionality issue isn't a solution.
 >>
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Thanks,
->>>>> Daejun
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>> On 2024/6/14 8:48, Wenjie Cheng wrote:
->>>>>>> This reverts commit c550e25bca660ed2554cbb48d32b82d0bb98e4b1.
->>>>>>>
->>>>>>> Commit c550e25bca660ed2554cbb48d32b82d0bb98e4b1 ("f2fs: use flush
->>>>>>> command instead of FUA for zoned device") used additional flush
->>>>>>> command to keep write order.
->>>>>>>
->>>>>>> Since Commit dd291d77cc90eb6a86e9860ba8e6e38eebd57d12 ("block:
->>>>>>> Introduce zone write plugging") has enabled the block layer to
->>>>>>> handle this order issue, there is no need to use flush command.
->>>>>>>
->>>>>>> Signed-off-by: Wenjie Cheng <cwjhust@gmail.com>
->>>>>>> ---
->>>>>>>        fs/f2fs/file.c 3 +--
->>>>>>>        fs/f2fs/node.c 2 +-
->>>>>>>        2 files changed, 2 insertions(+), 3 deletions(-)
->>>>>>>
->>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>>>>> index eae2e7908072..f08e6208e183 100644
->>>>>>> --- a/fs/f2fs/file.c
->>>>>>> +++ b/fs/f2fs/file.c
->>>>>>> @@ -372,8 +372,7 @@ static int f2fs_do_sync_file(struct file *file, loff_t start, loff_t end,
->>>>>>>                 f2fs_remove_ino_entry(sbi, ino, APPEND_INO);
->>>>>>>                 clear_inode_flag(inode, FI_APPEND_WRITE);
->>>>>>>        flush_out:
->>>>>>> -        if ((!atomic && F2FS_OPTION(sbi).fsync_mode != FSYNC_MODE_NOBARRIER)
->>>>>>> -            (atomic && !test_opt(sbi, NOBARRIER) && f2fs_sb_has_blkzoned(sbi)))
->>>>>>> +        if (!atomic && F2FS_OPTION(sbi).fsync_mode != FSYNC_MODE_NOBARRIER)
->>>>>>>                         ret = f2fs_issue_flush(sbi, inode->i_ino);
->>>>>>>                 if (!ret) {
->>>>>>>                         f2fs_remove_ino_entry(sbi, ino, UPDATE_INO);
->>>>>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->>>>>>> index 144f9f966690..c45d341dcf6e 100644
->>>>>>> --- a/fs/f2fs/node.c
->>>>>>> +++ b/fs/f2fs/node.c
->>>>>>> @@ -1631,7 +1631,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->>>>>>>                         goto redirty_out;
->>>>>>>                 }
->>>>>>>   
->>>>>>> -        if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_sb_has_blkzoned(sbi))
->>>>>>> +        if (atomic && !test_opt(sbi, NOBARRIER))
->>>>>>>                         fio.op_flags = REQ_PREFLUSH REQ_FUA;
->>>>>>>   
->>>>>>>                 /* should add to global list before clearing PAGECACHE status */
+>> I always think that performance optimization is great work.  However, it
+>> is not functionality work.
+>>
+>> > I have never assigned blame for any mistakes here. On the contrary,
+>> > I have 100% appreciation for Ryan's work in at least initiating mTHP
+>> > swapout w/o being split.
+>> >
+>> > It took countless experiments for humans to make airplanes commercially
+>> > viable, but the person who created the first flying airplane remains t=
+he
+>> > greatest. Similarly, Ryan's efforts, combined with your review of his =
+patch,
+>> > have enabled us to achieve a better goal here. Without your work, we c=
+an't
+>> > get here at all.
+>>
+>> Thanks!
+>>
+>> > However, this is never a reason to refuse to acknowledge that this fea=
+ture
+>> > is not actually working.
+>>
+>> It just works for some workloads, not for some others.
+>>
+>> >>
+>> >> >>
+>> >> >> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>> >> >> > ---
+>> >> >> >  tools/testing/selftests/mm/Makefile           |   1 +
+>> >> >> >  .../selftests/mm/thp_swap_allocator_test.c    | 192 +++++++++++=
++++++++
+>> >> >> >  2 files changed, 193 insertions(+)
+>> >> >> >  create mode 100644 tools/testing/selftests/mm/thp_swap_allocato=
+r_test.c
+>> >> >> >
+>> >> >> > diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing=
+/selftests/mm/Makefile
+>> >> >> > index e1aa09ddaa3d..64164ad66835 100644
+>> >> >> > --- a/tools/testing/selftests/mm/Makefile
+>> >> >> > +++ b/tools/testing/selftests/mm/Makefile
+>> >> >> > @@ -65,6 +65,7 @@ TEST_GEN_FILES +=3D mseal_test
+>> >> >> >  TEST_GEN_FILES +=3D seal_elf
+>> >> >> >  TEST_GEN_FILES +=3D on-fault-limit
+>> >> >> >  TEST_GEN_FILES +=3D pagemap_ioctl
+>> >> >> > +TEST_GEN_FILES +=3D thp_swap_allocator_test
+>> >> >> >  TEST_GEN_FILES +=3D thuge-gen
+>> >> >> >  TEST_GEN_FILES +=3D transhuge-stress
+>> >> >> >  TEST_GEN_FILES +=3D uffd-stress
+>> >> >> > diff --git a/tools/testing/selftests/mm/thp_swap_allocator_test.=
+c b/tools/testing/selftests/mm/thp_swap_allocator_test.c
+>> >> >> > new file mode 100644
+>> >> >> > index 000000000000..4443a906d0f8
+>> >> >> > --- /dev/null
+>> >> >> > +++ b/tools/testing/selftests/mm/thp_swap_allocator_test.c
+>> >> >> > @@ -0,0 +1,192 @@
+>> >> >> > +// SPDX-License-Identifier: GPL-2.0-or-later
+>> >> >> > +/*
+>> >> >> > + * thp_swap_allocator_test
+>> >> >> > + *
+>> >> >> > + * The purpose of this test program is helping check if THP swp=
+out
+>> >> >> > + * can correctly get swap slots to swap out as a whole instead =
+of
+>> >> >> > + * being split. It randomly releases swap entries through madvi=
+se
+>> >> >> > + * DONTNEED and do swapout on two memory areas: a memory area f=
+or
+>> >> >> > + * 64KB THP and the other area for small folios. The second mem=
+ory
+>> >> >> > + * can be enabled by "-s".
+>> >> >> > + * Before running the program, we need to setup a zRAM or simil=
+ar
+>> >> >> > + * swap device by:
+>> >> >> > + *  echo lzo > /sys/block/zram0/comp_algorithm
+>> >> >> > + *  echo 64M > /sys/block/zram0/disksize
+>> >> >> > + *  echo never > /sys/kernel/mm/transparent_hugepage/hugepages-=
+2048kB/enabled
+>> >> >> > + *  echo always > /sys/kernel/mm/transparent_hugepage/hugepages=
+-64kB/enabled
+>> >> >> > + *  mkswap /dev/zram0
+>> >> >> > + *  swapon /dev/zram0
+>> >> >> > + * The expected result should be 0% anon swpout fallback ratio =
+w/ or
+>> >> >> > + * w/o "-s".
+>> >> >> > + *
+>> >> >> > + * Author(s): Barry Song <v-songbaohua@oppo.com>
+>> >> >> > + */
+>> >> >> > +
+>> >> >> > +#define _GNU_SOURCE
+>> >> >> > +#include <stdio.h>
+>> >> >> > +#include <stdlib.h>
+>> >> >> > +#include <unistd.h>
+>> >> >> > +#include <string.h>
+>> >> >> > +#include <sys/mman.h>
+>> >> >> > +#include <errno.h>
+>> >> >> > +#include <time.h>
+>> >> >> > +
+>> >> >> > +#define MEMSIZE_MTHP (60 * 1024 * 1024)
+>> >> >> > +#define MEMSIZE_SMALLFOLIO (1 * 1024 * 1024)
+>> >> >> > +#define ALIGNMENT_MTHP (64 * 1024)
+>> >> >> > +#define ALIGNMENT_SMALLFOLIO (4 * 1024)
+>> >> >> > +#define TOTAL_DONTNEED_MTHP (16 * 1024 * 1024)
+>> >> >> > +#define TOTAL_DONTNEED_SMALLFOLIO (768 * 1024)
+>> >> >> > +#define MTHP_FOLIO_SIZE (64 * 1024)
+>> >> >> > +
+>> >> >> > +#define SWPOUT_PATH \
+>> >> >> > +     "/sys/kernel/mm/transparent_hugepage/hugepages-64kB/stats/=
+swpout"
+>> >> >> > +#define SWPOUT_FALLBACK_PATH \
+>> >> >> > +     "/sys/kernel/mm/transparent_hugepage/hugepages-64kB/stats/=
+swpout_fallback"
+>> >> >> > +
+>> >> >> > +static void *aligned_alloc_mem(size_t size, size_t alignment)
+>> >> >> > +{
+>> >> >> > +     void *mem =3D NULL;
+>> >> >> > +
+>> >> >> > +     if (posix_memalign(&mem, alignment, size) !=3D 0) {
+>> >> >> > +             perror("posix_memalign");
+>> >> >> > +             return NULL;
+>> >> >> > +     }
+>> >> >> > +     return mem;
+>> >> >> > +}
+>> >> >> > +
+>> >> >> > +static void random_madvise_dontneed(void *mem, size_t mem_size,
+>> >> >> > +             size_t align_size, size_t total_dontneed_size)
+>> >> >> > +{
+>> >> >> > +     size_t num_pages =3D total_dontneed_size / align_size;
+>> >> >> > +     size_t i;
+>> >> >> > +     size_t offset;
+>> >> >> > +     void *addr;
+>> >> >> > +
+>> >> >> > +     for (i =3D 0; i < num_pages; ++i) {
+>> >> >> > +             offset =3D (rand() % (mem_size / align_size)) * al=
+ign_size;
+>> >> >> > +             addr =3D (char *)mem + offset;
+>> >> >> > +             if (madvise(addr, align_size, MADV_DONTNEED) !=3D =
+0)
+>> >> >> > +                     perror("madvise dontneed");
+>> >> >>
+>> >> >> IIUC, this simulates align_size (generally 64KB) swap-in.  That is=
+, it
+>> >> >> simulate the effect of large size swap-in when it's not available =
+in
+>> >> >> kernel.  If we have large size swap-in in kernel in the future, th=
+is
+>> >> >> becomes unnecessary.
+>> >> >>
+>> >> >> Additionally, we have not reached the consensus that we should alw=
+ays
+>> >> >> swap-in with swapped-out size.  So, I suspect that this test may n=
+ot
+>> >> >> reflect real situation in the future.  Although it doesn't reflect
+>> >> >> current situation too.
+>> >> >
+>> >> > Disagree again. releasing the whole mTHP swaps is the best case. Ev=
+en in
+>> >> > the best-case scenario, if we fail, it raises concerns for handling=
+ potentially
+>> >> > more challenging situations.
+>> >>
+>> >> Repeating sequential anonymous pages writing is the best case.
+>> >
+>> > I define the best case as the scenario with the least chance of creati=
+ng
+>> > fragments within swapfiles for mTHP to swap out. There is no real
+>> > difference whether this is done through swapin or madv_dontneed.
+>>
+>> IMO, swapin is much more important than madv_dontneed.  Because most
+>> users use swapin automatically, but few use madv_dontneed by hand.  So,
+>> I think swapin/swapout test is much more important than madv_dontneed.
+>> I don't like this test case because madv_dontneed isn't typical or
+>> basic.
+>
+> Disliking DONTNEED isn't a sufficient reason to reject this test program =
+because
+> no single small program can report swapout counters, swapout fallback cou=
+nters,
+> and fallback ratios within several minutes for 100 iterations. That's
+> precisely why
+> we need it, at least initially. We can enhance it further if it lacks
+> certain functionalities
+> that people desire.
+>
+> The entire purpose of MADV_DONTNEED is to simulate a scenario where all
+> slots are released as a whole, preventing the creation of fragments, whic=
+h is
+> most favorable for swap allocation. I believe there is no difference betw=
+een
+> using MADV_DONTNEED or swapin for this purpose. But I am perfectly fine
+> with switching to swapin to replace MADV_DONTNEED in v2.
+
+Great!  Thanks for doing this!
+
+And even better, can we not make swap-in address aligned and size
+aligned?  It's too unrealistic.  It's good to consider some level of
+spatial locality, for example, swap-in random number of pages
+sequentially at some random addresses.  That could be a good general
+test program.  We can use it to evaluate further swap optimizations, for
+example, to evaluate the memory wastage of some swap-in size policy.
+
+And, we don't need PAGEOUT too, just use large virtual address space in
+test programs.  We can trigger swapout in more common way.
+
+[snip]
+
+--
+Best Regards,
+Huang, Ying
