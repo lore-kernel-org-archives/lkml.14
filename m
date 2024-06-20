@@ -1,154 +1,138 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CC11AC794;
-	Thu, 20 Jun 2024 13:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916F11ACE6C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 13:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718889255; cv=none; b=OPLod6KHebbw83vX6pnKHj66vHpMqUXsvpTqV11JQEyhEGZ8rh8S34Zo/nlTOBF3pqjR69IzUx9oDhe8kmiDmMuEbzSNdnyvFphzO0GT9fEVb95opYupMK4cqA0b5d8LxRRRSewmdK6Fa+baFeYn545veCSxeoFIw8Utj5JpVVQ=
+	t=1718889267; cv=none; b=mlHs0YtojHGXxyq7/DGnz32m+tk3BzV5J3QD7H3KEoHWZZBgMGmP45T9Tsy/lAG5amsnUZIjw0Hag5fpbBQrC5bawOS2JmkZ2JG7jiBtmaC3oMjBgfYZVKHoLMLnVWCwYFK7JEhnqDq5WCbVPlP+l4Uau7OxKeW+gysG938M0FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718889255; c=relaxed/simple;
-	bh=XPK2bpxibogPIigoOOTdY/ssPyWUpeMq8O5l4Q+hPyc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B6PLQJt4zoSX9ilOZvB1A1VFanB/OkB+PYMxvUp27a8PFb2GHtlRPlTsxM2Nsj8crg2HkB65MSEWlYAMpQqsg5ewklNpkZdlCZlhBpFzJpJubhVDM3lDzLNSSaSYAM2VnQvxQ+XqJSI4n4nf99O34YtlUXQPOb757EGrDDcdm/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W4grl1qhfzdcMY;
-	Thu, 20 Jun 2024 21:12:39 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5795318007E;
-	Thu, 20 Jun 2024 21:14:10 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
- 2024 21:14:09 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <linux@armlinux.org.uk>, <ardb@kernel.org>, <arnd@arndb.de>, <afd@ti.com>,
-	<akpm@linux-foundation.org>, <rmk+kernel@armlinux.org.uk>,
-	<linus.walleij@linaro.org>, <eric.devolder@oracle.com>, <robh@kernel.org>,
-	<kees@kernel.org>, <masahiroy@kernel.org>, <palmer@rivosinc.com>,
-	<samitolvanen@google.com>, <xiao.w.wang@intel.com>, <alexghiti@rivosinc.com>,
-	<nathan@kernel.org>, <jan.kiszka@siemens.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-efi@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] ARM: Add support for STACKLEAK gcc plugin
-Date: Thu, 20 Jun 2024 21:16:49 +0800
-Message-ID: <20240620131649.886995-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718889267; c=relaxed/simple;
+	bh=Y+MEEyx41IcOVMqXoXDJWkJ9+FrOPr++BZN75feuo1Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jYCPlr42WaXXc+GYuxMmiTMzChirOTcCHAI0h8iG5qlVFjM7bb5fAIYzF5p+RnGTr/t61c18qdJTh1JybGPBbYNG7WmTJFLqwakVRjgmMKaOnCuwQvFyAdf09OF4VILwzQkydz0x7DakMsV5SODxRXPvilKDlwl3SrN4rD3XcZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pRBgRsdE; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRBgRsdE"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44051a92f37so6393361cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 06:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718889263; x=1719494063; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=k8loiKfZnA+YA+BNdznuyc93e427hOVjzdhKBo4Mcdg=;
+        b=pRBgRsdEoVVhHSevcztTbX0ZQbs6ODQpR+ZDGlx4bS6LsN51+wh+5jJxEHZF17AIwC
+         EwntDMgI4oMOZwvavysBQ7dfYv0cLsEJ9vn7N/rTVCkNChPK/p9eVDXJzl59HxwlScSw
+         3Pl4pZssaPdHXObOHR8ieYxQdfgh8/2J1W+Gt15p43V9HSVS4bdg1x8q5c8kYQGUdOs0
+         VaRQxPvn0CqE7+PZb3Fc/5ucnT15ftHjDZu06LEl3wV2dm1C0Ap5kEXtL7vbnXEU1Gp3
+         DytIeT6pMw1uiXwEmJuXLXFvN8LaRy5NsJwPjr7mlvB6EHiioWO4iv0kGnlL0YpZhGKw
+         gDsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718889263; x=1719494063;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k8loiKfZnA+YA+BNdznuyc93e427hOVjzdhKBo4Mcdg=;
+        b=W7KpVlelcPUwQoqb1Xt6UQKY/EaiGjiG2pGDC/t8mdoVyB43EjpSQWfblhwta+pi7r
+         clOPeio0xP0qk5b7lODcVTPWnY0QZphC7HFjark2wVY59+MsFZoEosqlFFVcSoUEsaYK
+         i9eDfav1H85dJYD0FF3TAWa5UPCcSu9z+5+tPWeE/sP9KbC8uhFpJxsWC9/ZM0BUHw7E
+         wXXFgjunFxp51CpLy8ULfWD6R+ODHEolltVFh7VF/avwoTTAf46tWGufT+EWNQkAtv6V
+         NyEllC/UToKush5RqgChkvjm9AsxucGcvYORgSWTaFw7LJaos/EFJO6G1O7qIm3bOK0v
+         QQVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU0la+j4czWu8G1YcJRXfhZfhHmTqdlh89phggQCTpqMI+Fr/kUwp/qISd2VSN2vHg831kTlMOlMLZn83Xnsk85SFv8BrxL+URvhlH
+X-Gm-Message-State: AOJu0YyErt+kxPuEtv4oJ8X08Ac9RzQgZckoZLneMGGHN8pIswy/YIYm
+	LEbGQ0bzSDY6tOrNPA3gZTxZybx8UPiyxu1LHemq5do1RyoMTDKqTQy1wlRVzyxYvS5Fli9wI0w
+	RQTcs5ppxx6HoAnMptnjOck4upcYO+n4gj4t4oA==
+X-Google-Smtp-Source: AGHT+IGiHKV+q2qJu/mkMnrbWS6TykUfrsN8Y6wuNtachV8KZU4pBm3Bkt8z8L8YuUKSny6A751rJg0UHn+YKbmJrf0=
+X-Received: by 2002:a05:622a:1813:b0:43f:f5e0:8e86 with SMTP id
+ d75a77b69052e-4449b90ec32mr145142351cf.10.1718889263444; Thu, 20 Jun 2024
+ 06:14:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+References: <20240619125609.836313103@linuxfoundation.org> <CA+G9fYtPV3kskAyc4NQws68-CpBrV+ohxkt1EEaAN54Dh6J6Uw@mail.gmail.com>
+ <2024062028-caloric-cost-2ab9@gregkh>
+In-Reply-To: <2024062028-caloric-cost-2ab9@gregkh>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 20 Jun 2024 18:44:11 +0530
+Message-ID: <CA+G9fYsr0=_Yzew1uyUtrZ7ayZFYqmaNzAwFZJPjFnDXZEwYcQ@mail.gmail.com>
+Subject: Re: [PATCH 6.9 000/281] 6.9.6-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org, Miaohe Lin <linmiaohe@huawei.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, David Hildenbrand <david@redhat.com>, 
+	Cgroups <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, jbeulich@suse.com, 
+	LTP List <ltp@lists.linux.it>
+Content-Type: text/plain; charset="UTF-8"
 
-Add the STACKLEAK gcc plugin to arm32 by adding the helper used by
-stackleak common code: on_thread_stack(). It initialize the stack with the
-poison value before returning from system calls which improves the kernel
-security. Additionally, this disables the plugin in EFI stub code and
-decompress code, which are out of scope for the protection.
+On Thu, 20 Jun 2024 at 17:59, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 20, 2024 at 05:21:09PM +0530, Naresh Kamboju wrote:
+> > On Wed, 19 Jun 2024 at 18:41, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > This is the start of the stable review cycle for the 6.9.6 release.
+> > > There are 281 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > >
+> > > Responses should be made by Fri, 21 Jun 2024 12:55:11 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.6-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
+> > > and the diffstat can be found below.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > There are two major issues on arm64 Juno-r2 on Linux stable-rc 6.9.6-rc1
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > 1)
+> > The LTP controllers cgroup_fj_stress test cases causing kernel crash
+> > on arm64 Juno-r2 with
+> > compat mode testing with stable-rc 6.9 kernel.
+> >
+> > In the recent past I have reported this issues on Linux mainline.
+> >
+> > LTP: fork13: kernel panic on rk3399-rock-pi-4 running mainline 6.10.rc3
+> >   - https://lore.kernel.org/all/CA+G9fYvKmr84WzTArmfaypKM9+=Aw0uXCtuUKHQKFCNMGJyOgQ@mail.gmail.com/
+> >
+> > it goes like this,
+> >   Unable to handle kernel NULL pointer dereference at virtual address
+> >   ...
+> >   Insufficient stack space to handle exception!
+> >   end Kernel panic - not syncing: kernel stack overflow
+> >
+> > 2)
+> > The LTP controllers cgroup_fj_stress test suite causing kernel oops on
+> > arm64 Juno-r2 (with the clang-night build toolchain).
+> >   Unable to handle kernel NULL pointer dereference at virtual address
+> > 0000000000000009
+> >   Internal error: Oops: 0000000096000044 [#1] PREEMPT SMP
+> >   pc : xprt_alloc_slot+0x54/0x1c8
+> >   lr : xprt_alloc_slot+0x30/0x1c8
+>
+> And these are regressions?  Any chance to run 'git bisect'?
 
-Before the test on Qemu versatilepb board:
-	# echo STACKLEAK_ERASING  > /sys/kernel/debug/provoke-crash/DIRECT
-	lkdtm: Performing direct entry STACKLEAK_ERASING
-	lkdtm: XFAIL: stackleak is not supported on this arch (HAVE_ARCH_STACKLEAK=n)
+it's difficult to reproduce the first one so we haven't been able to bisect it.
+It seemd like David and Baolin might have an idea what's causing it.
 
-After:
-	# echo STACKLEAK_ERASING  > /sys/kernel/debug/provoke-crash/DIRECT
-	lkdtm: Performing direct entry STACKLEAK_ERASING
-	lkdtm: stackleak stack usage:
-	  high offset: 80 bytes
-	  current:     280 bytes
-	  lowest:      696 bytes
-	  tracked:     696 bytes
-	  untracked:   192 bytes
-	  poisoned:    7220 bytes
-	  low offset:  4 bytes
-	lkdtm: OK: the rest of the thread stack is properly erased
-
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/arm/Kconfig                      | 1 +
- arch/arm/boot/compressed/Makefile     | 1 +
- arch/arm/include/asm/stacktrace.h     | 5 +++++
- arch/arm/kernel/entry-common.S        | 3 +++
- drivers/firmware/efi/libstub/Makefile | 3 ++-
- 5 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 036381c5d42f..b211b7f5a138 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -86,6 +86,7 @@ config ARM
- 	select HAVE_ARCH_PFN_VALID
- 	select HAVE_ARCH_SECCOMP
- 	select HAVE_ARCH_SECCOMP_FILTER if AEABI && !OABI_COMPAT
-+	select HAVE_ARCH_STACKLEAK
- 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if ARM_LPAE
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index 6bca03c0c7f0..945b5975fce2 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -9,6 +9,7 @@ OBJS		=
- 
- HEAD	= head.o
- OBJS	+= misc.o decompress.o
-+CFLAGS_decompress.o += $(DISABLE_STACKLEAK_PLUGIN)
- ifeq ($(CONFIG_DEBUG_UNCOMPRESS),y)
- OBJS	+= debug.o
- AFLAGS_head.o += -DDEBUG
-diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
-index 360f0d2406bf..a9b4b72ed241 100644
---- a/arch/arm/include/asm/stacktrace.h
-+++ b/arch/arm/include/asm/stacktrace.h
-@@ -26,6 +26,11 @@ struct stackframe {
- #endif
- };
- 
-+static inline bool on_thread_stack(void)
-+{
-+	return !(((unsigned long)(current->stack) ^ current_stack_pointer) & ~(THREAD_SIZE - 1));
-+}
-+
- static __always_inline
- void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
- {
-diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index 5c31e9de7a60..f379c852dcb7 100644
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -119,6 +119,9 @@ no_work_pending:
- 
- 	ct_user_enter save = 0
- 
-+#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
-+	bl	stackleak_erase_on_task_stack
-+#endif
- 	restore_user_regs fast = 0, offset = 0
- ENDPROC(ret_to_user_from_irq)
- ENDPROC(ret_to_user)
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 06f0428a723c..20d8a491f25f 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -27,7 +27,8 @@ cflags-$(CONFIG_ARM64)		+= -fpie $(DISABLE_STACKLEAK_PLUGIN) \
- cflags-$(CONFIG_ARM)		+= -DEFI_HAVE_STRLEN -DEFI_HAVE_STRNLEN \
- 				   -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
- 				   -DEFI_HAVE_STRCMP -fno-builtin -fpic \
--				   $(call cc-option,-mno-single-pic-base)
-+				   $(call cc-option,-mno-single-pic-base) \
-+				   $(DISABLE_STACKLEAK_PLUGIN)
- cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax
- cflags-$(CONFIG_LOONGARCH)	+= -fpie
- 
--- 
-2.34.1
-
+- Naresh
