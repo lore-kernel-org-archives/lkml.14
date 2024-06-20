@@ -1,82 +1,85 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04B01AC245;
-	Thu, 20 Jun 2024 12:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653161A4F3B;
+	Thu, 20 Jun 2024 12:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718887764; cv=none; b=QAsWsHTaZHROtRB+Pio+GyzkGTiWhc9fps6d8tIAyVtwgG9tmaBwafKUGMLa+ML970OIttl8A0H2pRsRpoyvbaxHfiS50r0gkipcUt6e78MHeyFDAP+WS+e1RGnfLcSAwMgRhBe8WShfuRlWCOYp8+pGMg+uth8+5ISJ4OCay8s=
+	t=1718887831; cv=none; b=m62t0jZ4RtoAxifKVjnkzZXg2d6R7xN17XOa7XSQIpACjonJV2beHORCg/s8Tb3tN3rvJbcXQpQUknfMnXRoPEeQeGseqAF6e1HEZRKl7mpoHUAYD9WfPBv6jOI7SAimllzO7M2JBFditiCGGQm3+itmoEDF6aTYKCqCJFWjZiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718887764; c=relaxed/simple;
-	bh=IUvgoDslhWC9mCuSL9+lF7PxGVGHedFsWIeSGTu3G+4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LUkUPotDjLYOxbXDGR5kbb9l4zjfOuyCwQCBI8PhzC/nsuKi4/gtkf1Z5HJAizgy3Gv1Lle35tb+EABYJPLpg+i7BIbVsCGE6Dw1OQUDpKnMwe50XxJJVwzvim99i88wKr3wUOkjskmwtL2owzhdvHB8+u/biiqluRk6frHnRs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W4gKn0R76z6JBYy;
-	Thu, 20 Jun 2024 20:49:17 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id EE00F140A34;
-	Thu, 20 Jun 2024 20:49:18 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
- 2024 13:49:18 +0100
-Date: Thu, 20 Jun 2024 13:49:17 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ming4.li@intel.com>,
-	<vishal.l.verma@intel.com>, <jim.harris@samsung.com>,
-	<ilpo.jarvinen@linux.intel.com>, <ardb@kernel.org>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <Yazen.Ghannam@amd.com>,
-	<Robert.Richter@amd.com>
-Subject: Re: [RFC PATCH 5/9] cxl/pci: Update RAS handler interfaces to
- support CXL PCIe ports
-Message-ID: <20240620134917.000056dc@Huawei.com>
-In-Reply-To: <20240617200411.1426554-6-terry.bowman@amd.com>
-References: <20240617200411.1426554-1-terry.bowman@amd.com>
-	<20240617200411.1426554-6-terry.bowman@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718887831; c=relaxed/simple;
+	bh=pnzHV/VL+7issGfjvpn7r2EeeIOdQV7ajaj5sS9hrlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ERh9yTpRkjxBQu6CBMLjNe8FQ0nJagvRD1Vj9sDgvxQhZZvgWpA8Lnwd8+EUwkDO8qYX7wV0ZCSgQ6zVC82BtM0eX0ngo5mpwdQCNWc/z2z+drH/GAXsX6hDJ8Zh0tZolfNUG866i/iYIfqOtW6+uUAhw3yI05vclwNFikMSzKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnmpJxTW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnmpJxTW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD5BC2BD10;
+	Thu, 20 Jun 2024 12:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718887831;
+	bh=pnzHV/VL+7issGfjvpn7r2EeeIOdQV7ajaj5sS9hrlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WnmpJxTWdOsv+o+wjwPtUtMv4SHQ5BcoaZ2fFBPuPQ7wFg7Iq0rJK2fT0RDDSLq/m
+	 vkeDsy+ZEtUIXSLW2I/wZn/Ht/lchOs2u9hLUazLx8DObROExrwYsS/iAQ0KOmLkFI
+	 g/1FfSIhjOHOaE/suzLOxkx1O5GOAWVrwHZLlVwNdyKWjR7PYC7waLBIyMDgrABDeq
+	 GO71uPOPJyLGBr00wz09uqSQJINS2ipMUB3JE3y55Ps96odNMtOKg1YTlbLNfwAPB+
+	 f/Eb26Uz+NIjZcFMJRWQ/qprYK87b4V5prvZxpnysQzeYubPP4WZ60+LAMdNhzURf2
+	 8e/jCFmBDOo1A==
+Date: Thu, 20 Jun 2024 13:50:26 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	NeilBrown <neilb@suse.de>
+Subject: Re: linux-next: manual merge of the vfs-brauner tree with the
+ vfs-brauner-fixes tree
+Message-ID: <80a7d335-690b-491e-9b55-d0d1f75fda29@sirena.org.uk>
+References: <ZnQTtD_d-egGzooR@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-
-On Mon, 17 Jun 2024 15:04:07 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> CXL RAS error handling includes support for endpoints and RCH downstream
-> ports. The same support is missing for CXL root ports, CXL downstream
-> switch ports, and CXL upstream switch ports. This patch is in preparation
-> for adding CXL ports' RAS handling.
-> 
-> The cxl_pci driver's RAS support functions use the 'struct cxl_dev_state'
-> type parameter that is not available in CXL port devices. The same CXL
-> RAS capability structure is required for most CXL components/devices
-> and should have common handling where possible.[1]
-> 
-> Update __cxl_handle_cor_ras() and __cxl_handle_ras() to use 'struct
-> device' instead of 'struct cxl_dev_state'. Add function call to translate
-> device to CXL device state where needed.
-> 
-> [1] CXL3.1 - 8.2.4 CXL.cache and CXL.mem Registers
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-I've not looked at how it's used yet as reading these in order,
-but based on the explanation and code here looks good to me.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zBzHP251PFU9WPg2"
+Content-Disposition: inline
+In-Reply-To: <ZnQTtD_d-egGzooR@sirena.org.uk>
+X-Cookie: You're already carrying the sphere!
 
 
+--zBzHP251PFU9WPg2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jun 20, 2024 at 12:34:17PM +0100, Mark Brown wrote:
+> Hi all,
+>=20
+> Today's linux-next merge of the vfs-brauner tree got a conflict in:
+>=20
+>   fs/open.c
+>=20
+> between commit:
+
+Sorry, the scripting got confused and didn't start the merge properly so
+this should just be noise.
+
+--zBzHP251PFU9WPg2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ0JZIACgkQJNaLcl1U
+h9C+Agf/ajb6KzqTKEo8UJWpqUYyr6nTGRsJVZ8lK1f4b4QMF/hmw6xy8VKrK7Qu
+H8XaW/8j8q6EgNXrwtKuxJJH+SlInjJL3YDNLGCvheQ3k/hqTI9dxuV1v/aIGHJE
+smP9OyjzMOQ7cm2bD0ThPZdCpWwbEqhZYcv8ecQPhm2hngr4NqjWnGsmVQ/QkpsH
+pqvqOLCcyzSSyy0DQUIc8IDcSol1zeSOU0k/atz4NermxYx+Sb7636q6GEG0zw3V
+wdR93642keqpGuULXjOWpKUqnaiCNy7k4RIVKF5M8wvGylvT9M0DOvJEp95vpYce
+uiOCSHWZ4PQUqj6g8WZG8PM7iFHBDw==
+=gYEM
+-----END PGP SIGNATURE-----
+
+--zBzHP251PFU9WPg2--
