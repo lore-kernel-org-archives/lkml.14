@@ -1,179 +1,101 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3917118EFEE;
-	Thu, 20 Jun 2024 08:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7810D18EFEC
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718871979; cv=none; b=pabZYP0fgP1xaZiz/bIhBQOjgfBgT6WoUQsSnZiCse2UAALxz3BmDaoLCPWP9jdX79tPzLUbmQHtZHN0zy2CC4+8EpUw8FzrGTUerOb22qGzOIzig1PTjy9f513vdnq5lVwbZKo60KlBjhJBtQ2yamTpsfJmnGuURZZwfz4vZ40=
+	t=1718872001; cv=none; b=nZPPobIf335L8oaiE6+HWrqkXW3+OeR+4473fMwVDl+h5Bwt0czOArimW2a6YZ6qQJxpNGodc3e4zMHFrpVnMgek7/+zcs7KsUqzFRtTwCHnrCqDWU6RzaRW6/G13yt4rPKHth7Ti3zOabNX+zzu95qK9LfwCXlO1jL+JxUhhuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718871979; c=relaxed/simple;
-	bh=ykx82u3dFRnQssCH+WPqTmGF9rPNEhJ9MfICw59yjuU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I3YHYtMpV/xkDnpzYoqZjJlcilFRsmQLTcXT/EaZMJEGly4h1jhdzhkg0ECYv/MwnEJvd72wqU/IfEpXHqXEA3vvXuW405604pZtcbE2yA9tm7sCqBBOXJRuq9BhHfwyxF0nbYzIrHFN00I7YaGvZANeSxY34usGVJqjEZv+H3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=fsktYGwp; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ltjhb45n reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1718872001; c=relaxed/simple;
+	bh=v/K4VQme0bvsViQPwjOHP3RbmQFWbhgWUAPcoTTrvYc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FQGU5W92lk+8vlR9P8ZZ1nQIXfS8heF1YVhwV0c+/TxTEGC+N9u4yl4RSLnxSxOHak93ar7pGW/UZ8uxdnkf6Qdj3Bdga6rEFCoUsdZnygzshUCMZwGfMwfCHPID7uT3yaMVs66uSkcT8JkNsH7s4xYZ+lSThE6Zh0pplkbtEBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KwPjxEsz; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fsktYGwp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ltjhb45n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1718871975; x=1750407975;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=fhOVTc8EwkQ97eTIibAFj6NhxNXrIp2CfJhA/VS9Po0=;
-  b=fsktYGwpaANzFCTw3oK8xidvLCxulksFsfmNUYwDNEU7HDc1anuKU5gb
-   8eMsGC8csT9llq6moFmBGDWc5qKrZIF8FOz8Xgse55t4el6rzj7jsqS2n
-   MyDPeaSI/KUIEM6V98qVUdDwEn3JWMwxwWUmANSCeXVzcghk1gxMf6UO6
-   HPIyDmYYOZWXDrQKjxcg8nO/85ywkkD3Y9mFz3USDtjcdnujjjbozKTHB
-   p8S9FmNLGtItwUT9D1Q9RrV3erqGobWYvFg4yG+Ct/6PeBhOHixWoUb0j
-   pYlSdkhYIcFbndBgwKNJ7Ly87E0oRI9FWQMfR315A9lbw5bZkmmDSJvBf
-   A==;
-X-CSE-ConnectionGUID: eDohtDWbQhm/sCQHt/ve+g==
-X-CSE-MsgGUID: ur5SVpOwQFGYlcVGdk7nNg==
-X-IronPort-AV: E=Sophos;i="6.08,251,1712613600"; 
-   d="scan'208";a="37492741"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 20 Jun 2024 10:26:12 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 48787161196;
-	Thu, 20 Jun 2024 10:26:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1718871968;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=fhOVTc8EwkQ97eTIibAFj6NhxNXrIp2CfJhA/VS9Po0=;
-	b=ltjhb45nnKhAozxXQPtArb5qMYrSIefFEh6/MeCJwAMqiKx/6v77A69YxU/WNYTFW33ViI
-	ytsdcjw/H1tgbv574S3EKZe9JEqBqIHG8FwJ7i9LMXRNHQyaHeDZtdoJegolaaUG8Mh8kf
-	E7j29BNSu5/sTvi2/eTKWu2rLt5OlBXJcOu3782QrUxNAZaChs8DHEVyqvX0vlLR9Xr6sC
-	t2JCWRY4XPsvXWgVUTc0kFqD5ig0w/ptSbNfyQ6kPPc1Rwc65OLhwT0XdZbY5KuVNfTZt0
-	LljBTN/pTsjdWlH2b+vmsEbIaF3+3h8g7f/THOHoV09/ERvwgaQSINLo4ZnI1A==
-Message-ID: <99cc7afbb891de890ff051606f7a120f796e0fbc.camel@ew.tq-group.com>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: ti: pruss: allow ethernet
- controller in ICSSG node
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
- <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, Suman Anna
- <s-anna@ti.com>
-Date: Thu, 20 Jun 2024 10:26:07 +0200
-In-Reply-To: <89880cda-1140-4ed5-a67f-2201c2825447@kernel.org>
-References: <20240619112406.106223-1-matthias.schiffer@ew.tq-group.com>
-	 <89880cda-1140-4ed5-a67f-2201c2825447@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KwPjxEsz"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718871996; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ygC+TzlChiS7e/5qCa3pXxwNm9uFHomfKyMe5wbEsQY=;
+	b=KwPjxEsz6sXh8ovh3uPVQytTdZQYYXWN1oSD78UnJ7i/yZiLihQAJsjOzSOA0qxbt2+9BFPgI3yuCtVFMeQVAJ7eA5tvlLvx6MhKe7fTNBUdj9xzgtHm2ju9eH1eL9mSCxzW/Fdck+5kfd5nzGEZmnzc1o2U9Z7AHpk4pdEZfFA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8qePrm_1718871994;
+Received: from 30.97.56.69(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8qePrm_1718871994)
+          by smtp.aliyun-inc.com;
+          Thu, 20 Jun 2024 16:26:35 +0800
+Message-ID: <2d778151-9b8c-4be8-a4d3-bafcc1f09778@linux.alibaba.com>
+Date: Thu, 20 Jun 2024 16:26:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
-
-On Thu, 2024-06-20 at 09:24 +0200, Krzysztof Kozlowski wrote:
-> On 19/06/2024 13:24, Matthias Schiffer wrote:
-> > While the current Device Trees for TI EVMs configure the PRUSS Ethernet
-> > controller as a toplevel node with names like "icssg1-eth", allowing to
-> > make it a subnode of the ICSSG has a number of advantages:
->=20
-> What is ICSSG? The sram or ti,prus from the ethernet schema?
-
-ICSSG (Industrial Communication Subsystem (Group?)) is the main device desc=
-ribed by the
-ti,pruss.yaml binding (ICSS and PRUSS are different variants of similar IP =
-cores); it is the
-container for the individual PRU, TXPRU and RTU cores which are referenced =
-by the ti,prus
-node of the Ethernet schema.
-
-The entirety of PRU, TXPRU and RTU cores of one ICSSG, each with its own fi=
-rmware, forms one
-Ethernet controller, which is not quite a hardware device, but also not a f=
-ully virtual software
-device.
-
-The Ethernet controller only exists through the various ICSS subcores, so i=
-t doesn't have an MMIO
-address of its own. As described, the existing Device Trees define it as a =
-toplevel non-MMIO node;
-we propose to allow it as a non-MMIO child node of the ICSSG container inst=
-ead.
-
-If you consider moving the ethernet node into the ICSSG node a bad approach=
-, we will drop this patch
-and try to find a different solution to our issue (the Ethernet device stay=
-ing in deferred state
-forever when the ICSSG node is disabled on Linux).
-
-Best regards,
-Matthias
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/9] mm: vmscan: add validation before spliting shmem
+ large folio
+To: Yu Zhao <yuzhao@google.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+ david@redhat.com, wangkefeng.wang@huawei.com, chrisl@kernel.org,
+ ying.huang@intel.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ shy828301@gmail.com, ziy@nvidia.com, ioworker0@gmail.com,
+ da.gomez@samsung.com, p.raghav@samsung.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
+ <413866f2f2d996cfbb5c906467b36c96b1a82e2d.1718690645.git.baolin.wang@linux.alibaba.com>
+ <CAOUHufavGxeE4nyBnjRMo+BqFyTRUJMyoqBkEDV_c=x-PibvEg@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAOUHufavGxeE4nyBnjRMo+BqFyTRUJMyoqBkEDV_c=x-PibvEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
->=20
-> >=20
-> > - It makes sense semantically - the Ethernet controller is running on
-> >   the ICSSG/PRUSS
-> > - Disabling or deleting the ICSSG node implicitly removes the Ethernet
-> >   controller node when it is a child node. This can be relevant on SoCs
-> >   like the AM64x which come in variants with and without ICSSG; e.g., o=
-n
-> >   the TQMa64xxL the ICSSG node will be disabled on variants without as =
-a
-> >   bootloader fixup.
-> >   On Linux, this avoids leaving the Ethernet controller in deferred
-> >   state forever while waiting for the ICSSG to become available
-> >   (resulting in a warning on newer kernels)
-> >=20
-> > The node name "ethernet" is chosen as it nicely matches the regular
-> > "ethernet@<reg>" format of many Ethernet controller nodes, and is also
-> > what the prueth binding example (/schemas/net/ti,icssg-prueth.yaml) use=
-s.
-> >=20
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > ---
-> >  Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/D=
-ocumentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> > index c402cb2928e89..89dfcf5ce8434 100644
-> > --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> > +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> > @@ -92,6 +92,13 @@ properties:
-> >      description: |
-> >        This property is as per sci-pm-domain.txt.
-> > =20
-> > +  ethernet:
-> > +    description: |
->=20
-> Do not need '|' unless you need to preserve formatting.
->=20
-> > +      ICSSG PRUSS Ethernet. Configuration for an Ethernet controller r=
-unning
-> > +      on the PRU-ICSS.
-> > +    $ref: /schemas/net/ti,icssg-prueth.yaml#
-> > +    type: object
-> > +
-> >  patternProperties:
-> > =20
-> >    memories@[a-f0-9]+$:
->=20
-> You are mixing MMIO and non-MMIO nodes. That's odd or even sloppy
-> design. It immediately raises questions about your bindings.
->=20
-> Best regards,
-> Krzysztof
->=20
+On 2024/6/20 14:12, Yu Zhao wrote:
+> On Tue, Jun 18, 2024 at 12:54 AM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>>
+>> Add swap available space validation before spliting shmem large folio to
+>> avoid redundant split, since we can not write shmem folio to the swap device
+>> in this case.
+> 
+> We don't scan anon LRU unless we know we may be able to swap. Even if
+> there is swap space, we may still not be able to swap. See
+> can_reclaim_anon_pages().
 
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+Right. Another case is MADV_PAGEOUT can still split a large shmem folio 
+even without a swap device. I know this is not a common case, and I can 
+drop this patch if it is less helpful.
+
+Thanks for your input.
+
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>>   mm/vmscan.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 1807e5d95dda..61465f92283f 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1237,6 +1237,14 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+>>                          }
+>>                  } else if (folio_test_swapbacked(folio) &&
+>>                             folio_test_large(folio)) {
+>> +
+>> +                       /*
+>> +                        * Do not split shmem folio if no swap memory
+>> +                        * available.
+>> +                        */
+>> +                       if (!total_swap_pages)
+>> +                               goto activate_locked;
+>> +
+>>                          /* Split shmem folio */
+>>                          if (split_folio_to_list(folio, folio_list))
+>>                                  goto keep_locked;
+>> --
+>> 2.39.3
+>>
+>>
