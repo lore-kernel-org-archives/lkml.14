@@ -1,121 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CB91AED3B;
-	Thu, 20 Jun 2024 16:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFBB1B1500;
+	Thu, 20 Jun 2024 16:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718901018; cv=none; b=NnPZk2WrONebqa3ZRSbzZtO0jsqNVdmlagiJkXNJO3t9Oe5jbzWTanbaQG7yOqAcuKeodzAGkfnJoSkFLdl60MYWPudbQWp/cJiRzvmpT0JrvdHv48BdeLFAS0jdQwJ0532wC5wPZ+Z4b5I1i0eLPwPTckCiyNK5MNlgAFlJ2ic=
+	t=1718901038; cv=none; b=qYPFLvEztbHbKgR66A1qG6/lVyFCcZQnCQyEy3pWrJzcUGrNzr1Ni+OW4IGdkoGXJIhvMWEfRW1CKWb7CwzZwaoAGqHtWFcghs6U8gdlRfvUux9zark9JhtyZJQ3/Wq4KUh0PtJZgkO0jDUj5M/Eas4Ioi4Pxxq+Wa0/et5+fLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718901018; c=relaxed/simple;
-	bh=2nApdRW4uFWIFKAeWO48GxrtOn9CEoIKmUrYIKGLbhc=;
+	s=arc-20240116; t=1718901038; c=relaxed/simple;
+	bh=Z7wFmenBZTlsebiBGRtqRQxklYko51QR4XutUm2q4MQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7wIDJQdPkwVV8U+RiA+zyf348HpNaPUuUA8fdMU1AWFoW6g2z0TuoXG/wY4mV1K1jqwR86IeTEVtnYaJ3//bUX52xWW1s2onkrWDo2WL+EfIJpvT9tlQBEZcqwwkNIZ679yyCrqDNIqhf+1GhHGY1Ojasid96UvpVKvif2YPd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2ERoqHj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ofIopdqU7WxeVo/3QHanHXtCpr1THo4OWwvLKemRbiP+w8FiARUuTlNs4as0GqejTzpYUjj2Kq6nVZIESMR6FqUfKgadramxHlFqae28xX+xaeRDzZy7kH91358eeAcNueLOWPZHZrHNDB2iLk7+4kf6jpUFDjCLKDN7melFcqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLiWt73I; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2ERoqHj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A75CCC2BD10;
-	Thu, 20 Jun 2024 16:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718901018;
-	bh=2nApdRW4uFWIFKAeWO48GxrtOn9CEoIKmUrYIKGLbhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J2ERoqHjMVj7J7iiKKY7CLQUQBWT2OD0KPDkExlb1q0FDGvMI83NKfoiUqNPrmfX0
-	 mEH4QJ1t9ti1FWWszJppGi3GHjWQq+47H+ZIBffNIHvtZJYWEUV+KLcSbWjUTMKR6f
-	 16lRiHf9HH3RbI+dskTpxeHYV+JWqU4VXvy/r5ReRto5xqMW7VRF3V0XYU5QzgoMHA
-	 kv0eeU1THmYjLlrIPAd95+WwPAkKfdYl9bypTX+2j7Qiwkk2xQqarsV+Jl8qHF45xy
-	 6u/Hpbes8H4kqOXj6LuNSUpsV56jF/modm9ZJ+zB0w0cTAF/QLIseVigYVpT2zVkJ/
-	 0V1a6nNYDRC0Q==
-Date: Thu, 20 Jun 2024 17:30:12 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Drew Fustini <dfustini@tenstorrent.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Yangtao Li <frank.li@vivo.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] clk: thead: Add support for TH1520 AP_SUBSYS clock
- controller
-Message-ID: <20240620-pregame-statute-2b43c0547064@spud>
-References: <20240615-th1520-clk-v1-0-3ba4978c4d6b@tenstorrent.com>
- <20240619-tapping-jaundice-471811929d96@spud>
- <ZnMgKs/dUcYXiisk@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLiWt73I"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-701b0b0be38so1028705b3a.0;
+        Thu, 20 Jun 2024 09:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718901036; x=1719505836; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qsyYBnBD4C+9cyxgt//5+wZQ+goYBnLsU/vC89c+kzo=;
+        b=dLiWt73Io7czNu/I9bqXvv7IZQd4o/Q+bsDH8ROwvDCzettWN7pLFTivHmxtMD+6EH
+         DthZNDIFukZ46Mwa1tlDRpqRFedATBUYKjDGWbjiQujiKTuHM/4zqtln6/wbeZezbwXk
+         ln6yd6KhP75ADut8ifhFFlBnQf7aIJfU03tgLf8Ztlr6N3DcfV/ThBUUEROljyN9WqBk
+         ajFbQIPhD1zogCkMylprTL3HpnIoUs9UDskDdEGJlQeJVU4i1CucnAMGmqDUo32ZLE2U
+         HUkBP654TN4FDFwW4KDMNjFeS72Gjwo9GMKikB4YpPgpzDhIIMTxh32mG7X4IMSa6r+/
+         0+iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718901036; x=1719505836;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qsyYBnBD4C+9cyxgt//5+wZQ+goYBnLsU/vC89c+kzo=;
+        b=hhXUiWmcFviYu/89jhJ2pektm1xRw3G+Semj55DfjY3/wD/26eebWXLiqSyOV3MUds
+         ZVnAfS2iGbTPtd2pP45U60cOGWOR8SzU/33m9KdtfWsSaLT5SIWoJTqbutomLfnk6M6A
+         +xmzXOTnEGyrf3mO245uRpq5B7vfy+pkY+rBeuwYCoFGyM2QPSwmLjhAjLWXEcOn5Zas
+         H7hu0PYqtfJwihyK3ZcW3BeU4Lec/q6Qk2x1Ybi34DF1JQFzeGmelKN4RMhX1e3YKNbo
+         n2uTAOngGIklEJBT5MPyx3c0BTs1QalQt5qeHYH62p7odFHGDvzXlw68NGER0AcEbE+6
+         hC1g==
+X-Forwarded-Encrypted: i=1; AJvYcCV45THYnP16Y7M+nFwzs+b9GwB2CByd4JlZXWqpyW1E7P8qQZcN/Ck3FkjuVt642ThgYGslHTTtmz67zTHBNdjflwhCBCpdgOaJLTFetfAPl47FoDxPdO839v9TZQYC0tAc/cSZZZO6Fw==
+X-Gm-Message-State: AOJu0YzpBhuQabPDsfZxVhb6uW8Q7UPrCouFxH6pFCYvVDnu7SnxzHvd
+	Ct9JQY+lgn4ctB8JrYZUZZX4QdlO01hps+sdZj9X/QUI4pzvBHBPV3bV+A==
+X-Google-Smtp-Source: AGHT+IGndCdN78CF73lLg0AoJ92l4TcuUZFfs+eZAg3UI09VK75VmrkOJNgBpK+jw/bXD4JUtOZVuw==
+X-Received: by 2002:a05:6a20:a891:b0:1b8:d79:55f6 with SMTP id adf61e73a8af0-1bcbb40ee1dmr5691357637.25.1718901036424;
+        Thu, 20 Jun 2024 09:30:36 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb67b29sm12936722b3a.141.2024.06.20.09.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 09:30:35 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 20 Jun 2024 09:30:33 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: conor@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	frank.li@nxp.com, conor+dt@kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de, imx@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] phy: freescale: imx8qm-hsio: Add i.MX8QM HSIO PHY
+ driver support
+Message-ID: <2f15baba-68b5-4e99-bdb5-6d2e05b7688b@roeck-us.net>
+References: <1716962565-2084-1-git-send-email-hongxing.zhu@nxp.com>
+ <1716962565-2084-3-git-send-email-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HSewvxSgds9cd/HB"
-Content-Disposition: inline
-In-Reply-To: <ZnMgKs/dUcYXiisk@x1>
-
-
---HSewvxSgds9cd/HB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1716962565-2084-3-git-send-email-hongxing.zhu@nxp.com>
 
-On Wed, Jun 19, 2024 at 11:15:06AM -0700, Drew Fustini wrote:
-> On Wed, Jun 19, 2024 at 12:12:30PM +0100, Conor Dooley wrote:
-> > On Sat, Jun 15, 2024 at 06:54:29PM -0700, Drew Fustini wrote:
-> > > This series adds support for the AP sub-system clock controller in the
-> > > T-Head TH1520 [1]. Yangtao Li originally submitted this series in May
-> > > 2023 [2]. Jisheng made additional improvements and then passed on the
-> > > work in progress to me.
-> >=20
-> > One thing I noticed on the dts side is that the GPIO controllers have no
-> > clocks provided. Does the AP sub-system clock controller provide their
-> > clocks too?
->=20
-> Good question. I see that dwapb_get_clks() in drivers/gpio/gpio-dwapb.c
-> does call devm_clk_bulk_get_optional() for "bus" and "db". There doesn't
-> seem to be to many in-tree examples of clocks being defined for gpio
-> controllers with compatible "snps,dw-apb-gpio", but I do see that
-> k210.dtsi defines K210_CLK_APB0 for "bus" and K210_CLK_GPIO for "db".
->=20
-> From the TH1520 System User Manual, I do see the gpio related clocks in
-> Section 4.4.2.2 AP_SUBSYS. The peripheral clock gate control register
-> (PERI_CLK_CFG) has:
->=20
-> Bit 20: GPIO3_CLK_EN
-> Bit  8: GPIO0_CLK_EN
-> Bit  7: GPIO1_CLK_EN
-> Bit  6: GPIO2_CLK_EN
->=20
-> I will add these gates to the clk-th1520-ap.c and reference them from
-> the gpio controller nodes.
->=20
-> Since each gpio controller will only have one clock, do you think I can
-> omit the clock-names property?
+On Wed, May 29, 2024 at 02:02:45PM +0800, Richard Zhu wrote:
+> Add i.MX8QM HSIO PHY driver support.
+> 
+> i.MX8QM HSIO has three lane PHY instances, and can be bound to the
+> following controllers in the different use cases listed in below table.
+> - two lanes capable PCIEA controller.
+> - one lane PCIEB controller.
+> - AHCI SATA controller.
+> 
+> i.MX8QM HSIO PHYs support the following use cases.
+> +----------------------------------------------------+
+> |                               | Lane0| Lane1| Lane2|
+> |-------------------------------|------|------|------|
+> | use case 1: PCIEAX2SATA       | PCIEA| PCIEA| SATA |
+> |-------------------------------|------|------|------|
+> | use case 2: PCIEAX2PCIEB      | PCIEA| PCIEA| PCIEB|
+> |-------------------------------|------|------|------|
+> | use case 3: PCIEAPCIEBSATA    | PCIEA| PCIEB| SATA |
+> +----------------------------------------------------+
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Sure, thanks for looking into this.
+Building alpha:allmodconfig ... failed
+--------------
+Error log:
+drivers/phy/freescale/phy-fsl-imx8qm-hsio.c: In function 'imx_hsio_set_mode':
+drivers/phy/freescale/phy-fsl-imx8qm-hsio.c:459:15: error: implicit declaration of function 'FIELD_PREP'
 
->=20
-> Thanks,
-> Drew
->=20
-> Link: https://git.beagleboard.org/beaglev-ahead/beaglev-ahead/-/tree/main=
-/docs
-
---HSewvxSgds9cd/HB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnRZFAAKCRB4tDGHoIJi
-0jhfAPsFxSm+IHVQdarF1A8PQAiZE2P45kwvHpTzuUOpbO41gwEA3g6fNgbFnrZT
-cPWAqmEQpUXzmehcdcTKzTlP4ETGrwQ=
-=Y3Yf
------END PGP SIGNATURE-----
-
---HSewvxSgds9cd/HB--
+Guenter
