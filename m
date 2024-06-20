@@ -1,156 +1,189 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EA52D05D;
-	Thu, 20 Jun 2024 08:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF2D3D994;
+	Thu, 20 Jun 2024 08:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873797; cv=none; b=c68R4aogBO0KUuEbfd+xiXjdwi5Q67M8j84kkYHda3uXUnFjfA8A/Pyn/9prfxbEdeMP8BdFCmRG39K7NSTft/X6SVQ1iRegiQP6SW8AOG2rsXjbcD7tJqal6+6aU4R//yGS5crS3gcme1Q3nTa+OS2qWsRJkMIkWdfJw6a/TcQ=
+	t=1718873875; cv=none; b=QQDOJb7PygJ4BaziaIGOmC4AJ5M+AcQ/WK61xdMpdhfJPBBNcm1MGyf3bn7I7PHOIp6A7ZFtnJMXIqazezYuLJ7a4hXJJ4nCv+2u7GPENwv2QXEGAayDCYWThPunH4Q3m1DNa3o4FEZ959AKTRDmo2A6TPzJbIgvxHia6HIuRtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873797; c=relaxed/simple;
-	bh=QlL4f7uAlCxHMvZhXgxAGFYV9KwkcOkyql3sPbp7knA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AZMZ/tijpN2FnkbPQH9aQpm5E9Yij2SPimcK4/lRk490KDwK09J1GijcjANfFNdcz619/KJOH7VGSDO3i8+g/uFA12Rf/9zuYTXoj2O/7oBsWO5yahFU1Q/Y+Jf765yaRdS6fWFkFbYe5aUg6dMxilmI4qnF4n2inAl7MPQMXbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=COc42nn2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="COc42nn2"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K3BH8Z028488;
-	Thu, 20 Jun 2024 08:56:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XHzNJ459cj6SDZFGX4hm2DSP8m7fdo5A6UULRep+CCw=; b=COc42nn2qjraAmeE
-	g8XskAw+Xn2tXc0QzYLSZwiy5uK+fck7JWPM/IJby94Ve7HMuu3yPFmG/jL7d7Zg
-	9phn2ktMTniEUWV59NFtkWwbZeC+XTkCGU/MsVQUmAevpUBFJvlBMu5zHHjBHzCm
-	JU0Bl/7nv6tqovwlO1Z39cLZJDVgq6uEhWRJY3Ypkt1lGN4knjUs4EEzN+3Wva4N
-	h6ZHCxQNr/RCJhIoFy7xJ97tFwBBsT31JRzdugdlxnQCziyt044lJuUjOSp02n95
-	TlPdClGE/Ve7T6J8v1sNwqzhR9dqtEtWBXIzjTPSnxzO5T5oeKtnoOIk87WbsTYV
-	79nYwg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvba30sfs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 08:56:31 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45K8uUNJ013870
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 08:56:30 GMT
-Received: from [10.214.20.240] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
- 2024 01:56:27 -0700
-Message-ID: <461966ee-11ce-45e7-8ea8-abbb71431458@quicinc.com>
-Date: Thu, 20 Jun 2024 14:25:59 +0530
+	s=arc-20240116; t=1718873875; c=relaxed/simple;
+	bh=XgzNzZ8L8ltW19SqsoIuK9JjrbcbCq/OTmEX3INyHVo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oM+A5JG8cbx1AZD2Rzks09/T6jBpJ8HlRbDAslmYGRVKa+qDddH3jHiBEA3Nb1HI8HwinCrC9RgWNSqxmEPRSGskSyig5/olKYa8m9Lgmv8sA2lhpT814U/Fw5Jg2N/2OxW3AaGTsxiGzjHtF/HH2/GkfcEzg5uA48/EEjwO9c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W4Z4z5c2vznWPy;
+	Thu, 20 Jun 2024 16:52:51 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id A0D82180064;
+	Thu, 20 Jun 2024 16:57:47 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
+ 2024 16:57:46 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <linux@armlinux.org.uk>, <arnd@arndb.de>, <afd@ti.com>,
+	<akpm@linux-foundation.org>, <rmk+kernel@armlinux.org.uk>,
+	<linus.walleij@linaro.org>, <eric.devolder@oracle.com>, <robh@kernel.org>,
+	<vincent.whitchurch@axis.com>, <bhe@redhat.com>, <nico@fluxnic.net>,
+	<ardb@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH] ARM: support PREEMPT_DYNAMIC
+Date: Thu, 20 Jun 2024 17:00:28 +0800
+Message-ID: <20240620090028.729373-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: icc-bwmon: Add tracepoints in
- bwmon_intr_thread
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_rgottimu@quicinc.com>
-References: <20240619135140.3581119-1-quic_kshivnan@quicinc.com>
- <a30fb728-d832-4309-8415-a28fed301e27@linaro.org>
-Content-Language: en-US
-From: Shivnandan Kumar <quic_kshivnan@quicinc.com>
-In-Reply-To: <a30fb728-d832-4309-8415-a28fed301e27@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8esNfmx153UOE0FQsE12Lhk-F2t-GynN
-X-Proofpoint-ORIG-GUID: 8esNfmx153UOE0FQsE12Lhk-F2t-GynN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_06,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200062
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
+Enable support for PREEMPT_DYNAMIC on arm32, allowing the preemption model
+to be chosen at boot time.
 
+Similar to arm64, arm32 does not yet use the generic entry code, we must
+define our own `sk_dynamic_irqentry_exit_cond_resched`, which will be
+enabled/disabled by the common code in kernel/sched/core.c.
 
-On 6/20/2024 12:46 AM, Konrad Dybcio wrote:
-> 
-> 
-> On 6/19/24 15:51, Shivnandan Kumar wrote:
->> Add tracepoint for tracing the measured traffic in kbps,
->> up_kbps and down_kbps in bwmon. This information is valuable
->> for understanding what bwmon hw measures at the system cache
->> level and at the DDR level which is helpful in debugging
->> bwmon behavior.
->>
->> Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
->> ---
->>   MAINTAINERS                        |  1 +
->>   drivers/soc/qcom/icc-bwmon.c       |  7 +++--
->>   drivers/soc/qcom/trace_icc-bwmon.h | 49 ++++++++++++++++++++++++++++++
->>   3 files changed, 55 insertions(+), 2 deletions(-)
->>   create mode 100644 drivers/soc/qcom/trace_icc-bwmon.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 242fc612fbc5..1b410c0183bb 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -18573,6 +18573,7 @@ M:    Krzysztof Kozlowski 
->> <krzysztof.kozlowski@linaro.org>
->>   L:    linux-arm-msm@vger.kernel.org
->>   S:    Maintained
->>   F:    
->> Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
->> +F:    drivers/soc/qcom/trace_icc-bwmon.h
->>   F:    drivers/soc/qcom/icc-bwmon.c
->>
->>   QUALCOMM IOMMU
->> diff --git a/drivers/soc/qcom/icc-bwmon.c b/drivers/soc/qcom/icc-bwmon.c
->> index fb323b3364db..9b5ac1e62673 100644
->> --- a/drivers/soc/qcom/icc-bwmon.c
->> +++ b/drivers/soc/qcom/icc-bwmon.c
->> @@ -17,6 +17,8 @@
->>   #include <linux/pm_opp.h>
->>   #include <linux/regmap.h>
->>   #include <linux/sizes.h>
->> +#define CREATE_TRACE_POINTS
->> +#include "trace_icc-bwmon.h"
->>
->>   /*
->>    * The BWMON samples data throughput within 'sample_ms' time. With 
->> three
->> @@ -645,9 +647,9 @@ static irqreturn_t bwmon_intr_thread(int irq, void 
->> *dev_id)
->>       struct icc_bwmon *bwmon = dev_id;
->>       unsigned int irq_enable = 0;
->>       struct dev_pm_opp *opp, *target_opp;
->> -    unsigned int bw_kbps, up_kbps, down_kbps;
->> +    unsigned int bw_kbps, up_kbps, down_kbps, meas_kbps;
->>
->> -    bw_kbps = bwmon->target_kbps;
->> +    meas_kbps = bw_kbps = bwmon->target_kbps;
->>
->>       target_opp = dev_pm_opp_find_bw_ceil(bwmon->dev, &bw_kbps, 0);
-> 
-> This breaks bwmon, as dev_pm_opp_find_bw_ceil is now fed a random
-> (uninitialized variable) value
-> 
+And arm32 use generic preempt.h, so declare
+`sk_dynamic_irqentry_exit_cond_resched` if the arch do not use generic
+entry. Other architectures which use generic preempt.h but not use generic
+entry can benefit from it.
 
-Thank you for reviewing the patch.
-I didn't get it, still the variable "bw_kbps" is being initialized along 
-with "meas_kbps". Which variable are you referring to as being fed to 
-dev_pm_opp_find_bw_ceil  with an uninitialized value?
+Test ok with the below cmdline parameters on Qemu versatilepb board:
+	`preempt=none`
+	`preempt=voluntary`
+	`preempt=full`
 
-Thanks
-Shivnandan
+Update preempt mode with debugfs interface on above Qemu board is also
+tested ok:
+	# cd /sys/kernel/debug/sched
+	# echo none > preempt
+	# echo voluntary > preempt
+	# echo full > preempt
 
-> Konrad
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/arm/Kconfig                 |  1 +
+ arch/arm/include/asm/exception.h |  2 ++
+ arch/arm/kernel/Makefile         |  2 +-
+ arch/arm/kernel/common.c         | 13 +++++++++++++
+ arch/arm/kernel/entry-armv.S     |  7 ++++++-
+ include/asm-generic/preempt.h    |  5 +++++
+ 6 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/kernel/common.c
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 036381c5d42f..843f320dde7f 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -124,6 +124,7 @@ config ARM
+ 	select HAVE_PERF_EVENTS
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
++	select HAVE_PREEMPT_DYNAMIC_KEY
+ 	select MMU_GATHER_RCU_TABLE_FREE if SMP && ARM_LPAE
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_RSEQ
+diff --git a/arch/arm/include/asm/exception.h b/arch/arm/include/asm/exception.h
+index 3c82975d46db..ac96b76b394e 100644
+--- a/arch/arm/include/asm/exception.h
++++ b/arch/arm/include/asm/exception.h
+@@ -12,4 +12,6 @@
+ 
+ #define __exception_irq_entry	__irq_entry
+ 
++bool need_irq_preemption(void);
++
+ #endif /* __ASM_ARM_EXCEPTION_H */
+diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
+index 89a77e3f51d2..58acd62dc5e9 100644
+--- a/arch/arm/kernel/Makefile
++++ b/arch/arm/kernel/Makefile
+@@ -17,7 +17,7 @@ CFLAGS_REMOVE_return_address.o = -pg
+ 
+ # Object file lists.
+ 
+-obj-y		:= elf.o entry-common.o irq.o opcodes.o \
++obj-y		:= common.o elf.o entry-common.o irq.o opcodes.o \
+ 		   process.o ptrace.o reboot.o io.o \
+ 		   setup.o signal.o sigreturn_codes.o \
+ 		   stacktrace.o sys_arm.o time.o traps.o
+diff --git a/arch/arm/kernel/common.c b/arch/arm/kernel/common.c
+new file mode 100644
+index 000000000000..52b0abcae07e
+--- /dev/null
++++ b/arch/arm/kernel/common.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/jump_label.h>
++#include <asm/exception.h>
++
++#ifdef CONFIG_PREEMPT_DYNAMIC
++DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
++
++bool need_irq_preemption(void)
++{
++	return static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched);
++}
++#endif
+diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
+index 6150a716828c..571e86433833 100644
+--- a/arch/arm/kernel/entry-armv.S
++++ b/arch/arm/kernel/entry-armv.S
+@@ -221,6 +221,11 @@ __irq_svc:
+ 	irq_handler from_user=0
+ 
+ #ifdef CONFIG_PREEMPTION
++#ifdef CONFIG_PREEMPT_DYNAMIC
++	bl	need_irq_preemption
++	cmp	r0, #0
++	beq	2f
++#endif
+ 	ldr	r8, [tsk, #TI_PREEMPT]		@ get preempt count
+ 	ldr	r0, [tsk, #TI_FLAGS]		@ get flags
+ 	teq	r8, #0				@ if preempt count != 0
+@@ -228,7 +233,7 @@ __irq_svc:
+ 	tst	r0, #_TIF_NEED_RESCHED
+ 	blne	svc_preempt
+ #endif
+-
++2:
+ 	svc_exit r5, irq = 1			@ return from exception
+  UNWIND(.fnend		)
+ ENDPROC(__irq_svc)
+diff --git a/include/asm-generic/preempt.h b/include/asm-generic/preempt.h
+index 51f8f3881523..2db7a3e86303 100644
+--- a/include/asm-generic/preempt.h
++++ b/include/asm-generic/preempt.h
+@@ -2,6 +2,7 @@
+ #ifndef __ASM_PREEMPT_H
+ #define __ASM_PREEMPT_H
+ 
++#include <linux/jump_label.h>
+ #include <linux/thread_info.h>
+ 
+ #define PREEMPT_ENABLED	(0)
+@@ -89,6 +90,10 @@ void dynamic_preempt_schedule_notrace(void);
+ #define __preempt_schedule()		dynamic_preempt_schedule()
+ #define __preempt_schedule_notrace()	dynamic_preempt_schedule_notrace()
+ 
++#ifndef CONFIG_GENERIC_ENTRY
++DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
++#endif
++
+ #else /* !CONFIG_PREEMPT_DYNAMIC || !CONFIG_HAVE_PREEMPT_DYNAMIC_KEY*/
+ 
+ #define __preempt_schedule() preempt_schedule()
+-- 
+2.34.1
+
