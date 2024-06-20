@@ -1,16 +1,16 @@
 Received: from orthanc.universe-factory.net (orthanc.universe-factory.net [104.238.176.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814C31B3F20;
-	Thu, 20 Jun 2024 17:26:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C111B3F30;
+	Thu, 20 Jun 2024 17:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.238.176.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904390; cv=none; b=DTRJN5YZD2lXBoCVMF7FGVNVFRgRef38l4KJRetQ91966nvoS4r6ZfeFaX/XRBUIdl9lH0POIk0ELEeQlHgdCGzvQM1n+egpr3jhDLAyJA/U2C6JIfqQy8XkrBQUdNnb+jY+pyA9ynqQ4c21Vm83q2I5GxIcWisQqLh5UWwT0iI=
+	t=1718904390; cv=none; b=nLugQOzmG+y8Mj5PDB1xtCfzj6ra6NWpy14sXPz+vLnLsRTbR5B/YT+L3ueiVYgvSSDEoTCvy3baBRzJjozC4YI3clg+mayWz+n54lRoYHJlwlPsxGXAeVBFqSfCeepUS1wg6Nr4+JjP58LgSpsk3ns6KxYQjbWQ2NVBCDLHIgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718904390; c=relaxed/simple;
-	bh=BIG3IdgzLqLpVof7URKdPMLEz+6z8QlvjSJwuwcRHnM=;
+	bh=+BEZU4JYC67QYSKnlrzNLmCywz5jZnZGSOdFUns4VWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gi7PIvkeuHNSZdbOzNNsOcVgqZIRLQeeUrkBPUUelZLsvSm83YQwxb8eGtG5Rb0UXYM06+mMPCL6KSO9V0ZtKbTUiLRi+v7DS6q6z6s394CugiIHnm10WFlBFB1xFndK+6RUyAEoan/v8f6OG/g/t5yMAOB6Dicj2QlOnX5zKFw=
+	 MIME-Version; b=Dh+M+7wFnu2xjmLLU0ZMRKwZkPbBy6E2qjTY38lt7Lu999MQh0xNWG+LGWFuIdMsy/SJ67ehqCztU18qpJ2SIkVzV3zi3KXW85vw8siHO1QPFCLwOUikRO04uUIMGS8wfe4Lzg7k4QRIcx3f9zbtNq0JohdSfX2JfKAIg6Kqq1M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; arc=none smtp.client-ip=104.238.176.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
@@ -18,7 +18,7 @@ Received: from avalon.fritz.box (unknown [IPv6:2001:19f0:6c01:100::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by orthanc.universe-factory.net (Postfix) with ESMTPSA id 4095C1FC64;
+	by orthanc.universe-factory.net (Postfix) with ESMTPSA id B22921FEC4;
 	Thu, 20 Jun 2024 19:26:21 +0200 (CEST)
 From: Matthias Schiffer <mschiffer@universe-factory.net>
 To: Andrew Lunn <andrew@lunn.ch>,
@@ -32,9 +32,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: [PATCH net-next 1/3] net: dsa: qca8k: do not write port mask twice in bridge join/leave
-Date: Thu, 20 Jun 2024 19:25:48 +0200
-Message-ID: <9e5682c68a4930dae2e277b9cecc8b8ec97ba2af.1718899575.git.mschiffer@universe-factory.net>
+Subject: [PATCH net-next 3/3] net: dsa: qca8k: add support for bridge port isolation
+Date: Thu, 20 Jun 2024 19:25:50 +0200
+Message-ID: <78b4bbb3644e1fabae9cc53501d0842ccd1a1c5d.1718899575.git.mschiffer@universe-factory.net>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1718899575.git.mschiffer@universe-factory.net>
 References: <cover.1718899575.git.mschiffer@universe-factory.net>
@@ -46,57 +46,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-qca8k_port_bridge_join() set QCA8K_PORT_LOOKUP_CTRL() for i == port twice,
-once in the loop handling all other port's masks, and finally at the end
-with the accumulated port_mask.
-
-The first time it would incorrectly set the port's own bit in the mask,
-only to correct the mistake a moment later. qca8k_port_bridge_leave() had
-the same issue, but here the regmap_clear_bits() was a no-op rather than
-setting an unintended value.
-
-Remove the duplicate assignment by skipping the whole loop iteration for
-i == port. The unintended bit setting doesn't seem to have any negative
-effects (even when not reverted right away), so the change is submitted
-as a simple cleanup rather than a fix.
+Remove a pair of ports from the port matrix when both ports have the
+isolated flag set.
 
 Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
 ---
- drivers/net/dsa/qca/qca8k-common.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/dsa/qca/qca8k-common.c | 22 ++++++++++++++++++++--
+ drivers/net/dsa/qca/qca8k.h        |  1 +
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/dsa/qca/qca8k-common.c b/drivers/net/dsa/qca/qca8k-common.c
-index 7f80035c5441..b33df84070d3 100644
+index 09108fa99dbe..560c74c4ac3d 100644
 --- a/drivers/net/dsa/qca/qca8k-common.c
 +++ b/drivers/net/dsa/qca/qca8k-common.c
-@@ -653,6 +653,8 @@ int qca8k_port_bridge_join(struct dsa_switch *ds, int port,
- 	port_mask = BIT(cpu_port);
- 
- 	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
-+		if (i == port)
-+			continue;
- 		if (dsa_is_cpu_port(ds, i))
+@@ -618,6 +618,7 @@ static int qca8k_update_port_member(struct qca8k_priv *priv, int port,
+ 				    const struct net_device *bridge_dev,
+ 				    bool join)
+ {
++	bool isolated = !!(priv->port_isolated_map & BIT(port)), other_isolated;
+ 	struct dsa_port *dp = dsa_to_port(priv->ds, port), *other_dp;
+ 	u32 port_mask = BIT(dp->cpu_dp->index);
+ 	int i, ret;
+@@ -632,10 +633,12 @@ static int qca8k_update_port_member(struct qca8k_priv *priv, int port,
+ 		if (!dsa_port_offloads_bridge_dev(other_dp, bridge_dev))
  			continue;
- 		if (!dsa_port_offloads_bridge(dsa_to_port(ds, i), &bridge))
-@@ -665,8 +667,7 @@ int qca8k_port_bridge_join(struct dsa_switch *ds, int port,
- 				      BIT(port));
- 		if (ret)
+ 
++		other_isolated = !!(priv->port_isolated_map & BIT(i));
++
+ 		/* Add/remove this port to/from the portvlan mask of the other
+ 		 * ports in the bridge
+ 		 */
+-		if (join) {
++		if (join && !(isolated && other_isolated)) {
+ 			port_mask |= BIT(i);
+ 			ret = regmap_set_bits(priv->regmap,
+ 					      QCA8K_PORT_LOOKUP_CTRL(i),
+@@ -661,7 +664,7 @@ int qca8k_port_pre_bridge_flags(struct dsa_switch *ds, int port,
+ 				struct switchdev_brport_flags flags,
+ 				struct netlink_ext_ack *extack)
+ {
+-	if (flags.mask & ~BR_LEARNING)
++	if (flags.mask & ~(BR_LEARNING | BR_ISOLATED))
+ 		return -EINVAL;
+ 
+ 	return 0;
+@@ -671,6 +674,7 @@ int qca8k_port_bridge_flags(struct dsa_switch *ds, int port,
+ 			    struct switchdev_brport_flags flags,
+ 			    struct netlink_ext_ack *extack)
+ {
++	struct qca8k_priv *priv = ds->priv;
+ 	int ret;
+ 
+ 	if (flags.mask & BR_LEARNING) {
+@@ -680,6 +684,20 @@ int qca8k_port_bridge_flags(struct dsa_switch *ds, int port,
  			return ret;
--		if (i != port)
--			port_mask |= BIT(i);
-+		port_mask |= BIT(i);
  	}
  
- 	/* Add all other ports to this ports portvlan mask */
-@@ -685,6 +686,8 @@ void qca8k_port_bridge_leave(struct dsa_switch *ds, int port,
- 	cpu_port = dsa_to_port(ds, port)->cpu_dp->index;
++	if (flags.mask & BR_ISOLATED) {
++		struct dsa_port *dp = dsa_to_port(ds, port);
++		struct net_device *bridge_dev = dsa_port_bridge_dev_get(dp);
++
++		if (flags.val & BR_ISOLATED)
++			priv->port_isolated_map |= BIT(port);
++		else
++			priv->port_isolated_map &= ~BIT(port);
++
++		ret = qca8k_update_port_member(priv, port, bridge_dev, true);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
  
- 	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
-+		if (i == port)
-+			continue;
- 		if (dsa_is_cpu_port(ds, i))
- 			continue;
- 		if (!dsa_port_offloads_bridge(dsa_to_port(ds, i), &bridge))
+diff --git a/drivers/net/dsa/qca/qca8k.h b/drivers/net/dsa/qca/qca8k.h
+index 2184d8d2d5a9..3664a2e2f1f6 100644
+--- a/drivers/net/dsa/qca/qca8k.h
++++ b/drivers/net/dsa/qca/qca8k.h
+@@ -451,6 +451,7 @@ struct qca8k_priv {
+ 	 * Bit 1: port enabled. Bit 0: port disabled.
+ 	 */
+ 	u8 port_enabled_map;
++	u8 port_isolated_map;
+ 	struct qca8k_ports_config ports_config;
+ 	struct regmap *regmap;
+ 	struct mii_bus *bus;
 -- 
 2.45.2
 
