@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAEF1B1408;
-	Thu, 20 Jun 2024 13:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786D21B14E6;
+	Thu, 20 Jun 2024 13:27:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718890057; cv=none; b=F89eylRBnJ6DabwSo6xiHMf1NRwaNjo7G8OrqY38g+tNWIpY5hFqn2exrmbw1QsRJL/5BqrEvfBcLBQV4KrZFkzs1NX46AFCjv1Bvhi8XAyBi2DSOhkok9tIGWAH8TMaQxGH3Otu+ZUrRs/OWSBVKP183kgqXQXRchm8VuzUIDc=
+	t=1718890058; cv=none; b=EEps0fMjjFq4pmMXkyOaaWEkc+op96EnoJJHFZiJ+P6Zq9FtaBGE2oApUAET3yJSyZnY1y4O5ESTZCWhIIZEXeRppUcnLYIAewpV22/P7VkFM3Maqb+gVbcQQiYOhGMPe+WioiajFQ/Z64eHE8r4hQIENkcgHaNJunI4rvml3Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718890057; c=relaxed/simple;
-	bh=O2tI7pfDIUiUwjHbETV4/u0vZ9+INFp6Dgn3XS7NXNU=;
+	s=arc-20240116; t=1718890058; c=relaxed/simple;
+	bh=D7MV1ZUt0ja+VOQ5jBTqWT/rFam6BZA9NpCFJ3oOycU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sEIb2Ahhm4lPlnrh38VNjpNQkPjxZ5yjgaPmFPwMMe2gj/iy1SRwt7NYkXM5o7H6iUCNiCnQyB16rq2sdTwt9A3Q/f4d00tSfKDShnbBkapGHPj5sOvyvLASQXtf0SDFKqKeefBgYaoimpv5XFdXxCuOPyn3Co8uiAajdgWIUas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X2hjGknx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6BbUkkr3; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=gsPFeBJNTjyzPJmd6roJW1wAKw4rSOlsaVb9IoilTBnN8MAvIY9Ay5PdhxtR1x5gDjU/qwaiXPJtFu3gvto/11LyQ3diXv/MCwgjqE5L1vXdmRnbyEsuulbroOcCh5fEiZ0/LBche4DdWr4xLa8RV79HX09tL52uOyVW+uiHJSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FoLqBBdU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EdsIP3ML; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X2hjGknx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6BbUkkr3"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FoLqBBdU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EdsIP3ML"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718890053;
+	s=2020; t=1718890054;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qmZ697yP2U6PaDAL2e1HtmX8k+6jlbTJ0LVJ//UsoYk=;
-	b=X2hjGknxZnmx9eSJ4tlEFkckXkzotPTmV7zn49x/IVyvozJCnRMbqHQg99gE16LO1WI0Tt
-	GCSEoEmwlmJ/9+0k598Qnvb/GPxoUiurjPSBPvZAFUGvTpYQuBBr9TIJ6BXEYYrTz0tEcw
-	0j2LXGp0ERI80KFXNGSD8PLvI94IwIx6U4Y2L3VKO6Z/soOo0w8y6pEpd9kV7qpBv/avD0
-	o5nVezuJfE/erosff7D/Gz0u6V22NPYqvdav4KKSZKwnZts1fOS5VxHmOZvqwB0tpJ5/wf
-	oJ/LGNJrMXaphs3+hw+WYuf5JuofE82AK9FpDyBbMdcC1wuGmop3SbGBPUqwsA==
+	bh=Eu8VD8DpLJkf2Hl3sxqZhIhEWbSf2IpwfXlNNAn3MjU=;
+	b=FoLqBBdU5f4B9uTYEDnz0oq8uIBcmyUo5YX+L9SONwEsoV9oWtzDpFwBlGJKBLnHWwldF8
+	YZGFyNCD48GXXP/CVNFsl/oGXTVncFOzR1vhIVX5luQkELHnSzt8BaJL9Yz30AIb+A6zzQ
+	CCu0SI6/fXD2UaPVv+u8IlmyeZUwFFnFuLv6qam/Vs2uWCmgjec5IH526TQqBoZfeHMJw+
+	u61uLuwdmYhMCOagkNfeMPnj9HSuA8Ek5Mt5CA9QMnKWiuWpZ6Sokx0evONPNqBzmXNjB4
+	tKlrwy0PxPkVp7nIoea+3k2MLB+/ao11MpnRbUnjUei+rPGiT/rABjqQmNgCjQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718890053;
+	s=2020e; t=1718890054;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qmZ697yP2U6PaDAL2e1HtmX8k+6jlbTJ0LVJ//UsoYk=;
-	b=6BbUkkr3vd8U5MNHlQMHFFFjDSTyv6ggTkWch3D5s6xQmmYlYhXVDQyI2gEOtLgpiholRY
-	rQkY+Kr8d6dON4Ag==
+	bh=Eu8VD8DpLJkf2Hl3sxqZhIhEWbSf2IpwfXlNNAn3MjU=;
+	b=EdsIP3MLTmAVQ6a3AMqd3x9KvxqabvWih23pBfOMCuBdFHFunADFLSZKfaJ9VkxcSIVfFo
+	Fkt+NK5mgEs36mCw==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -54,10 +54,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v9 net-next 09/15] dev: Remove PREEMPT_RT ifdefs from backlog_lock.*().
-Date: Thu, 20 Jun 2024 15:21:59 +0200
-Message-ID: <20240620132727.660738-10-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	bpf@vger.kernel.org
+Subject: [PATCH v9 net-next 11/15] lwt: Don't disable migration prio invoking BPF.
+Date: Thu, 20 Jun 2024 15:22:01 +0200
+Message-ID: <20240620132727.660738-12-bigeasy@linutronix.de>
 In-Reply-To: <20240620132727.660738-1-bigeasy@linutronix.de>
 References: <20240620132727.660738-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -68,67 +69,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The backlog_napi locking (previously RPS) relies on explicit locking if
-either RPS or backlog NAPI is enabled. If both are disabled then locking
-was achieved by disabling interrupts except on PREEMPT_RT. PREEMPT_RT
-was excluded because the needed synchronisation was already provided
-local_bh_disable().
+There is no need to explicitly disable migration if bottom halves are
+also disabled. Disabling BH implies disabling migration.
 
-Since the introduction of backlog NAPI and making it mandatory for
-PREEMPT_RT the ifdef within backlog_lock.*() is obsolete and can be
-removed.
+Remove migrate_disable() and rely solely on disabling BH to remain on
+the same CPU.
 
-Remove the ifdefs in backlog_lock.*().
-
+Cc: bpf@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- net/core/dev.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/lwt_bpf.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 95b9e4cc17676..73c4d14e4febc 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -229,7 +229,7 @@ static inline void backlog_lock_irq_save(struct softnet=
-_data *sd,
+diff --git a/net/core/lwt_bpf.c b/net/core/lwt_bpf.c
+index 4a0797f0a154b..a94943681e5aa 100644
+--- a/net/core/lwt_bpf.c
++++ b/net/core/lwt_bpf.c
+@@ -40,10 +40,9 @@ static int run_lwt_bpf(struct sk_buff *skb, struct bpf_l=
+wt_prog *lwt,
  {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_lock_irqsave(&sd->input_pkt_queue.lock, *flags);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_save(*flags);
- }
+ 	int ret;
 =20
-@@ -237,7 +237,7 @@ static inline void backlog_lock_irq_disable(struct soft=
-net_data *sd)
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_lock_irq(&sd->input_pkt_queue.lock);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_disable();
- }
+-	/* Migration disable and BH disable are needed to protect per-cpu
+-	 * redirect_info between BPF prog and skb_do_redirect().
++	/* Disabling BH is needed to protect per-CPU bpf_redirect_info between
++	 * BPF prog and skb_do_redirect().
+ 	 */
+-	migrate_disable();
+ 	local_bh_disable();
+ 	bpf_compute_data_pointers(skb);
+ 	ret =3D bpf_prog_run_save_cb(lwt->prog, skb);
+@@ -78,7 +77,6 @@ static int run_lwt_bpf(struct sk_buff *skb, struct bpf_lw=
+t_prog *lwt,
+ 	}
 =20
-@@ -246,7 +246,7 @@ static inline void backlog_unlock_irq_restore(struct so=
-ftnet_data *sd,
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_unlock_irqrestore(&sd->input_pkt_queue.lock, *flags);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_restore(*flags);
- }
+ 	local_bh_enable();
+-	migrate_enable();
 =20
-@@ -254,7 +254,7 @@ static inline void backlog_unlock_irq_enable(struct sof=
-tnet_data *sd)
- {
- 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
- 		spin_unlock_irq(&sd->input_pkt_queue.lock);
--	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+	else
- 		local_irq_enable();
+ 	return ret;
  }
-=20
 --=20
 2.45.2
 
