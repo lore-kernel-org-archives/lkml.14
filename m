@@ -1,80 +1,88 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEAC42ABA
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 11:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B917D1AC24B;
+	Thu, 20 Jun 2024 11:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718884034; cv=none; b=Sz6l9tLXkx1zJCCA30SzGcjPQc+sxiCF4xAseFHRq88Y889KEL5PIFi+lZlzjdwIgYXmlSFJbNoxd4VBxKxOKSWtQM08sMJX2tfi8sFG7vg9/tHGvQYdcRPpv/L6FW3YHZvi0vs97SDULABlLysec5QtNSGEN49uyCVY7YWhGjE=
+	t=1718884041; cv=none; b=i/zWVcgPl9s85Vq4WDFI0cHaPNgQalx5xgt7eqIyoG93jPWaePbY3uzxEwKDS5EEWOYbDjwUlexXUWOUevmFgZbgvLLS0xOIT/W27414A4WFi8DrjXxsgOI3mksg5vnruq9AXil3rqGQQY2LIBdXzMnznpu7qZUIlY+45kWwMbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718884034; c=relaxed/simple;
-	bh=lQiYVUuow1QXXYSvDO84pEPsNvpohJgc5zjBiQHx9Gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I6cAWvvujgwFOrcim+KuXEkFgY99Rh1N8Nco251uH8TOiKG1SRLdyPK7t9l1I1EQ/3u1fqcEy7a9Xs+gBVjLOw1G3JcqS4fv9o2xJSTIAM792Z2zUpIxodq1JYktP5a/n1tH//nFmEXqFTN3fYvI6YQvfNCDHJ/lxwmZwV74bzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav311.sakura.ne.jp (fsav311.sakura.ne.jp [153.120.85.142])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 45KBl35j031185;
-	Thu, 20 Jun 2024 20:47:03 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav311.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav311.sakura.ne.jp);
- Thu, 20 Jun 2024 20:47:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav311.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 45KBl3GM031182
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 20 Jun 2024 20:47:03 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <0044d7b1-ae7d-4d36-b730-38b06186c8bf@I-love.SAKURA.ne.jp>
-Date: Thu, 20 Jun 2024 20:47:03 +0900
+	s=arc-20240116; t=1718884041; c=relaxed/simple;
+	bh=ToNabALBbuBhFhwluskcKOaAkUWg3WHVU0SuICALAzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCPlhiZmpr1ZTUyKb4FivUb0uhXlmubTDVDsvXYL+p2sKViGF8B2W2iJk/L3ZxJP4jIrvZJWTZKgk8LbqkHCPfXcfeaZf07n6YjTowtwjhZu76f8aLuOuaulrfbEa3fjGCUsqF9KRbjmBIVMpoMRxnDZydgwBagUUOD6TD0euZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdapU96M; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdapU96M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D2DC32786;
+	Thu, 20 Jun 2024 11:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718884041;
+	bh=ToNabALBbuBhFhwluskcKOaAkUWg3WHVU0SuICALAzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gdapU96MCdWZmVmCIKzJOcJafc/1xIHXM4YbZbljz6LMcnv/L/DcMXn46wbGSmdFE
+	 c2gZuQLMePFs9hKU/KB60zjt6oeor/CIFyDcPVcxHud+KgowlDNg1pgcDtgJt165Aa
+	 Hu9g0v3zZa/sZ5wk0OQK/GpZhP3N2ye88nUv0uUH/G4QLtGENzX2/vTckMhijbtIhY
+	 sLFpaJFmV5DkaR7vTXTKTgtr2tfyKZtuxndjYAf3dqorVuejA7Jb8r148PSqeOvZy4
+	 0y5OhhMiMJkWPdKbKLfkWmJG67F8tZcZniyqJABSBb7RAA0pUasai3jMt+SFVxq5dk
+	 gvgvJjnYDlbfA==
+Date: Thu, 20 Jun 2024 12:47:14 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Stefan Moring <stefan.moring@technolution.nl>,
+	Benjamin Bigler <benjamin@bigler.one>,
+	Carlos Song <carlos.song@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Adam Butcher <adam@jessamine.co.uk>, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Stefan Bigler <linux@bigler.io>,
+	Sebastian Reichel <sre@kernel.org>,
+	Thorsten Scherer <T.Scherer@eckelmann.de>
+Subject: Re: [PATCH] spi: spi-imx: imx51: revert burst length calculation
+ back to bits_per_word
+Message-ID: <63e0b99d-d47c-4645-bf83-fb671f28d57f@sirena.org.uk>
+References: <20240618-spi-imx-fix-bustlength-v1-1-2053dd5fdf87@pengutronix.de>
+ <171888201712.41294.3998570181399309379.b4-ty@kernel.org>
+ <20240620-annoying-elated-lobster-240aed-mkl@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [usb?] INFO: task hung in wdm_release
-To: Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+973d01eb49b060b12e63@syzkaller.appspotmail.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20240620103847.1724-1-hdanton@sina.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20240620103847.1724-1-hdanton@sina.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="x4cmLCoCRDU6rA/K"
+Content-Disposition: inline
+In-Reply-To: <20240620-annoying-elated-lobster-240aed-mkl@pengutronix.de>
+X-Cookie: You're already carrying the sphere!
 
-On 2024/06/20 19:38, Hillf Danton wrote:
-> On Thu, 20 Jun 2024 02:08:21 -0700
->> Showing all locks held in the system:
->> 3 locks held by kworker/u8:0/11:
->>  #0: ffff8880b953e7d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
->>  #1: ffff8880b9528948 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x441/0x770 kernel/sched/psi.c:988
->>  #2: ffff8880754f0768 (&rdev->wiphy.mtx){+.+.}-{3:3}, at: wiphy_lock include/net/cfg80211.h:5966 [inline]
->>  #2: ffff8880754f0768 (&rdev->wiphy.mtx){+.+.}-{3:3}, at: cfg80211_wiphy_work+0x35/0x260 net/wireless/core.c:424
-> 
-> The info looks bogus given acquiring mutex with runqueue lock held.
 
-Nothing wrong. Printing the backtrace and/or locks held is not atomic.
-That is, locks held by a non current thread can change at any moment.
+--x4cmLCoCRDU6rA/K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For example, the former block starting with
-"INFO: task syz-executor320:7035 blocked for more than 142 seconds."
-says that pid 7035 is blocked at "mutex_lock(&wdm_mutex)", but the latter
-block starting with "Showing all locks held in the system:" says that
-pid 7035 was holding (or trying to hold) no lock.
+On Thu, Jun 20, 2024 at 01:43:29PM +0200, Marc Kleine-Budde wrote:
 
-Threads were making progress slowly. Though, printk() flooding by
+> As this is a fix of a regression, can you pick this for v6.10, too.
 
-  cdc_wdm 5-1:1.0: nonzero urb status received: -71
-  cdc_wdm 5-1:1.0: wdm_int_callback - 0 bytes
+It is applied for v6.10.
 
-should be avoided. We need to persuade Greg to let these noisy messages reduced.
+--x4cmLCoCRDU6rA/K
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ0FsIACgkQJNaLcl1U
+h9Akugf7BSpek4NuGXSKl176ezjD6HhiEH34iJ/wfYYdNMUN9igPTO6Avl2tzkNC
++ozsA2R58j0ZiD6x3s981l7eybc9P2nVRLMZomyYJhl+OeovGBinRJaz4Tu1wZiZ
+QEi/35g4AdOepd/GfXhqA/gBvRdGmJVp9oEXEDDdG3skYmS7mL/brjpyoLfNA/mE
+ixs4E5600ZGLI60oOvBjy0CbVDwsq7Tv5HOy7SOE8pqe0V8uNgz8E8sdabQu9CN1
+Z7fEI5IiN0h6YSdljmoT45jImtp+GzlqAUNtZjM6otoG5aPYHx3XjcABkBJflRSs
+Swn4Hq7zD6JrkeOzkOS0nHUDgP5T7Q==
+=/N4G
+-----END PGP SIGNATURE-----
+
+--x4cmLCoCRDU6rA/K--
