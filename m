@@ -1,200 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE79F1AE87B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 14:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38521AE083;
+	Thu, 20 Jun 2024 14:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718895297; cv=none; b=HwmJOyuPmRPr/58Gn1O2c93Dtso2VnoWQ/b1JMhzYhvOrQRF9B3y5CkTt2+fXabFoG3ytsCd6wdULt+Nu6NlrIaOoseZyl6V3iRBpGQrJWSDQbdyTxx96WBDuB5dCBWJqHZOV2q37k1eXZkIiQaZPgUlMZG/ohtNbg55/mA946U=
+	t=1718895381; cv=none; b=kPEmkFnQ19JZSoZBtNmkjl8MOvndOydNYvD2Tom901Ss+p69lnlNyjVrlU0FpifTt11AhkUMidV4I5X67n6zV4madDZuLX+xfV9J7gd5EmcgOGUlv9wkCtyKxO3GQbRAdtyvhIjbHjRQ0XEHlhpBzhF7Rj2QEjt65rEFApbVWHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718895297; c=relaxed/simple;
-	bh=+mc4hdmKVY2EQaTK2A4CHHL4RF7cnX8tckscxTNdMBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQYw1G+0Nhkew7ga9khpMvZJepA3KldqfNTowwJh5aU9nO9RpHxXIIrvKoRw2yswCs3MDTQQZLlvPDA1zTouojgTY5BME2j6GRzbYi9v6VitlOu6VQBVCpiKg+dXpo224ir8bUGY+wP12WDWxFoWksMuUBGq21zab2u3xRJhgv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IFXUIUXG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718895381; c=relaxed/simple;
+	bh=HELkkarDKoiIzgewN1eHfJl5FJ8bH/Y/B9z+tSNdslE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Jg6OhHWZ1Cwblab9Gmy1ihCoO4RnMHW6zin9oldHeShkJwwdrkLRceBYIQDVYYyQy9LEPxX9em3KRpeAWfsJ8NKBvXLTlMCvT68p1IghOEH3CQrRK/B9Jb8qGErix5Z7Tqt5UGtxuNn7eFMn15h2jTk78Pc1pCO1gNAZPMpanyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=VQDuihoO; arc=none smtp.client-ip=54.39.219.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFXUIUXG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718895294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yt6kXaMST49pKLabNO81NG5Y01PoCbKhbgnCP+N4TNw=;
-	b=IFXUIUXGFwXviqrhCdVCrC15x6J8k8xqnDqW77h8OUWVGJWfv3aRRM91PWvZpZESBi5ahC
-	vv5DvYjqHto7VK0zaftvwD1a7c8IOgDJyelnWO0wVtULGa86FqVxuLDqJxAQHHnse26nrO
-	v9Qd+buY4UHoorPCnKoSwVg9k0s/OnM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-zsBj2URBMPWOF0QVtMNxLw-1; Thu,
- 20 Jun 2024 10:54:50 -0400
-X-MC-Unique: zsBj2URBMPWOF0QVtMNxLw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AEA819560BD;
-	Thu, 20 Jun 2024 14:54:49 +0000 (UTC)
-Received: from [10.22.9.18] (unknown [10.22.9.18])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5556C19560AE;
-	Thu, 20 Jun 2024 14:54:47 +0000 (UTC)
-Message-ID: <b511173c-53fe-4a93-8030-d99ed1b65bd6@redhat.com>
-Date: Thu, 20 Jun 2024 10:54:46 -0400
+	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="VQDuihoO"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C2DE7C006A;
+	Thu, 20 Jun 2024 10:52:05 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
+	t=1718895127; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ssK0mY4ZibiWPcJi3x1KxbtlmlbaryPSbpR5dRa8d/M=;
+	b=VQDuihoOg2ciDxtC0nsjQITZvqJ8bEpAXylhKMfIAxQWTSKlT/jaZgLNbQU5tFmcq9nUta
+	cH9BhFJ0VOtmlz9war3roacU/lv3Ko4e6UWn6xtzCKS41EDjeoe9Z06oYXfRkIiWJVvFmN
+	7vI1p/bQHBsj8/O141y2Msck+OvNlJ0=
+From: Felix Kaechele <felix@kaechele.ca>
+To: Job Noorman <job@noorman.info>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v3 1/5] dt-bindings: input: touchscreen: himax,hx83112b: add HX83100A
+Date: Thu, 20 Jun 2024 10:50:02 -0400
+Message-ID: <20240620145019.156187-2-felix@kaechele.ca>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240620145019.156187-1-felix@kaechele.ca>
+References: <20240620145019.156187-1-felix@kaechele.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 v4 1/2] Union-Find: add a new module in kernel library
-To: Xavier <xavier_qy@163.com>, mkoutny@suse.com
-Cc: lizefan.x@bytedance.com, tj@kernel.org, hannes@cmpxchg.org,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240603123101.590760-1-ghostxavier@sina.com>
- <20240620085233.205690-1-xavier_qy@163.com>
- <20240620085233.205690-2-xavier_qy@163.com>
-Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <20240620085233.205690-2-xavier_qy@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 6/20/24 04:52, Xavier wrote:
-> This patch implements a union-find data structure in the kernel library,
-> which includes operations for allocating nodes, freeing nodes,
-> finding the root of a node, and merging two nodes.
->
-> Signed-off-by: Xavier <xavier_qy@163.com>
-> ---
->   MAINTAINERS                |  7 +++++++
->   include/linux/union_find.h | 30 ++++++++++++++++++++++++++++++
->   lib/Makefile               |  2 +-
->   lib/union_find.c           | 38 ++++++++++++++++++++++++++++++++++++++
->   4 files changed, 76 insertions(+), 1 deletion(-)
->   create mode 100644 include/linux/union_find.h
->   create mode 100644 lib/union_find.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d6c90161c7..602d8c6f42 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23054,6 +23054,13 @@ F:	drivers/cdrom/cdrom.c
->   F:	include/linux/cdrom.h
->   F:	include/uapi/linux/cdrom.h
->   
-> +UNION-FIND
-> +M:	Xavier <xavier_qy@163.com>
-> +L:	linux-kernel@vger.kernel.org
-> +S:	Maintained
-> +F:	include/linux/union_find.h
-> +F:	lib/union_find.c
-> +
->   UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER
->   R:	Alim Akhtar <alim.akhtar@samsung.com>
->   R:	Avri Altman <avri.altman@wdc.com>
-> diff --git a/include/linux/union_find.h b/include/linux/union_find.h
-> new file mode 100644
-> index 0000000000..67e9f62bb3
-> --- /dev/null
-> +++ b/include/linux/union_find.h
-> @@ -0,0 +1,30 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __LINUX_UNION_FIND_H
-> +#define __LINUX_UNION_FIND_H
-> +#include <linux/slab.h>
-> +
-> +/* Define a union-find node struct */
-> +struct uf_node {
-> +	struct uf_node *parent;
-> +	unsigned int rank;
-> +};
-> +
-> +/* Allocate nodes and initialize to 0 */
-> +static inline struct uf_node *uf_nodes_alloc(unsigned int node_num)
-> +{
-> +	return kzalloc(sizeof(struct uf_node) * node_num, GFP_KERNEL);
-> +}
-> +
-> +/* Free nodes*/
-> +static inline void uf_nodes_free(struct uf_node *nodes)
-> +{
-> +	kfree(nodes);
-> +}
-> +
-> +/* find the root of a node*/
-> +struct uf_node *uf_find(struct uf_node *node);
-> +
-> +/* Merge two intersecting nodes */
-> +void uf_union(struct uf_node *node1, struct uf_node *node2);
-> +
-> +#endif /*__LINUX_UNION_FIND_H*/
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 3b17690456..e1769e6f03 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -34,7 +34,7 @@ lib-y := ctype.o string.o vsprintf.o cmdline.o \
->   	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
->   	 earlycpio.o seq_buf.o siphash.o dec_and_lock.o \
->   	 nmi_backtrace.o win_minmax.o memcat_p.o \
-> -	 buildid.o objpool.o
-> +	 buildid.o objpool.o union_find.o
->   
->   lib-$(CONFIG_PRINTK) += dump_stack.o
->   lib-$(CONFIG_SMP) += cpumask.o
-> diff --git a/lib/union_find.c b/lib/union_find.c
-> new file mode 100644
-> index 0000000000..2f77bae1ca
-> --- /dev/null
-> +++ b/lib/union_find.c
-> @@ -0,0 +1,38 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/union_find.h>
+Add a compatible string for the Himax HX83100A touch controller.
 
-I would suggest that you briefly document what is a union-find algorithm 
-and data structure and what is it good for.
+The HX83100A presents touch events on the internal bus rather than
+offering a dedicated event register like the other chips in this family
+do.
 
-Cheers,
-Longman
+Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../devicetree/bindings/input/touchscreen/himax,hx83112b.yaml    | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +
-> +struct uf_node *uf_find(struct uf_node *node)
-> +{
-> +	struct uf_node *parent;
-> +
-> +	if (!node->parent) {
-> +		node->parent = node;
-> +		return node;
-> +	}
-> +
-> +	/*Find the root node and perform path compression at the same time*/
-> +	while (node->parent != node) {
-> +		parent = node->parent;
-> +		node->parent = parent->parent;
-> +		node = parent;
-> +	}
-> +	return node;
-> +}
-> +
-> +/*Function to merge two sets, using union by rank*/
-> +void uf_union(struct uf_node *node1, struct uf_node *node2)
-> +{
-> +	struct uf_node *root1 = uf_find(node1);
-> +	struct uf_node *root2 = uf_find(node2);
-> +
-> +	if (root1 != root2) {
-> +		if (root1->rank < root2->rank) {
-> +			root1->parent = root2;
-> +		} else if (root1->rank > root2->rank) {
-> +			root2->parent = root1;
-> +		} else {
-> +			root2->parent = root1;
-> +			root1->rank++;
-> +		}
-> +	}
-> +}
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
+index f42b23d532eb..f5cfacb5e966 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
+@@ -15,6 +15,7 @@ allOf:
+ properties:
+   compatible:
+     enum:
++      - himax,hx83100a
+       - himax,hx83112b
+ 
+   reg:
+-- 
+2.45.2
 
