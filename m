@@ -1,138 +1,153 @@
-Received: from mailfilter04-out31.webhostingserver.nl (mailfilter04-out31.webhostingserver.nl [141.138.168.145])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7693D3B8
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=141.138.168.145
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718916595; cv=pass; b=lFRvIC2V2nnFFuK6PYrsY7BXjvXIePaiNhmemVmtuW1crnYRcrha8MdCRz2AQnPNtjS/cxKSbv3F0gDERhNnD70BcA8D10tY2vOnWYDMQ+xtremQ3iuAMFUO4DOYZ7n2iJdwHfWK1zh8zmMPwUbDQeAzSapy8HB7f1fOzgb/MR0=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718916595; c=relaxed/simple;
-	bh=tO7RlLGvnbzcseEbdf7AXIl94m/yGIpURI+8T+ue3CM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RzIyj5bdOFmOt/FD9RAroeow9vs/PkFdYslTEJv1mZRF/uQC2/wR4VhyHc6AOnhA++3/5W1+Br8alHsoF54k5eCLZ+B0Z15ohMWQAhF9QS5XUyNMBtH6aeud1/UqhVnCSYnDQgLx2FZ+FF8OOJlKHlzetn8rzHmSFlWGLNe/TBk=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl; spf=pass smtp.mailfrom=exalondelft.nl; dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b=iaefMUsz; arc=pass smtp.client-ip=141.138.168.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exalondelft.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC423D3B8;
+	Thu, 20 Jun 2024 20:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718916603; cv=none; b=ncOQeQXxvAhwHWpJHWxR7avRtZgKMu9NFJhBlXpi6X7pxS+/PdSODlDrfYAGs9uy9+cPVAQZyOhD2qswwHJFSoMO8W06QcLgKdwKnX2v4B9nrKIA6F6L7HciscEgPhlp/3P9JAsZj74cBmG9WEw05ZI8B2Xyqfx5j2+MSZSq6hA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718916603; c=relaxed/simple;
+	bh=C44rdgrqbJI/tki7KjJ5qW6c8FEBavwVbNvnrvS99Zo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YvcFbDBIfcnycZaN9NpRgUd7YxWpznF8ldWwgs4xL4pNt+xRoA8E6oAlO0LQlUMIdlc7VM2p+ISpfNGEhGTJeGErRfoMq6uOZfzq0UtVBzonYVtqZ84ATvCzEj26po4MvMcVaG9tD3oRueNa5YCj89qwGKEh8o6nrmr5u1FenME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H7B95zwU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b="iaefMUsz"
-ARC-Seal: i=2; a=rsa-sha256; t=1718916524; cv=pass;
-	d=webhostingserver.nl; s=whs1;
-	b=wnFydICEv+xW3xlIRqMyR/l6ybBVxvqH/oLdCpWeoXCCYv4fbsrCxd4WwIUjRGueaFwRwlw5sFTDT
-	 h3CBzS5+hpa2qyI/cFEXffnpzVjKFvDYzWldMpgDEcE9m4nwPO8F8XHxEf44CpuVipl27i/3tMzOlB
-	 H36jqaG1fZnM1iiFKKvHRiZiHdBMNxfIf9f2TKMLmMxquxdD/VEXbrHE+lBW6aH7cW2PVvgL21fFQd
-	 /LYVFZwa17PjiMThlsZSoemk3ciqNlItftbu1NmDVdKKEjWyECWxe5Uv2D2f6l68xH5xn0GoOxyF3W
-	 JqvUZ6fqgQR8BWTCjQTQAcXxzbqkVMw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed;
-	d=webhostingserver.nl; s=whs1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 dkim-signature:from;
-	bh=9+M3Uv1SDWgEtwezAhMtgvAm7m6c69NggQHCM24fRB0=;
-	b=X7Iwj+AOfuM1l4OKN9lzCBWw2690WdTTVZ/cquD00IXeZvK++eepKe3cX9zMJZulaQKzAVe65gots
-	 79euhqAFr7XlIPRlKjfCLQSor3Asow5j4Qb/EvmyMj8gMJO53/HYvq9STAqD9cMCSn1fPqVd6XUzCI
-	 RQBBdmx9m7VbFOUynusS8BMJx3PQwqWSnDuchSVzqP2us/Weu9RX+KHmuFLj2Q19wKubd+P0WUXf2+
-	 jc6/8lOB/7QgTUVYe/iceBAECMB2jXQ4WZaDCHp2MXkwtYTgcGPiZ771sn4jFl4YYNv0GzQAVj0H/C
-	 zXIu0nBUD0wljVmAQhKnzNFo/W4dTjw==
-ARC-Authentication-Results: i=2; mailfilter04.webhostingserver.nl;
-	spf=pass smtp.mailfrom=exalondelft.nl smtp.remote-ip=141.138.168.154;
-	dmarc=pass header.from=exalondelft.nl;
-	arc=pass header.oldest-pass=0;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=exalondelft.nl; s=whs1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=9+M3Uv1SDWgEtwezAhMtgvAm7m6c69NggQHCM24fRB0=;
-	b=iaefMUsz8UggPjTYIA44AH7EVYegCGiJ/QRCDSjG4xmNbrJTzRXB1obnmFTc/1CoNScTfFioavVle
-	 OrN44Wn/HmdmMD/sU5HbKQWhPjjwl4i0P+ULeZuYsgAfJGqx0oDUAWx22spEiJPPdW83FrCkeZjaMV
-	 9QmoMzXBVMbS8Q6IK7dxhlqCSv0jVG1We6aZvObn8ypzgQCi75DD7CU/CSTlQ1rV7BYW5hH+icKaNC
-	 nMKze9aYGe+03I/x9lr8SIeJxJcfCxOb13XLLtTKiyyhaYwcsxYLG4ThaK95i+k+xfxLRwM7XFKwQ2
-	 APp5Wdqhef71R5mlSyMmOKMZ4kbgsfg==
-X-Halon-ID: 7ab212cb-2f46-11ef-bd6e-001a4a4cb95f
-Received: from s198.webhostingserver.nl (s198.webhostingserver.nl [141.138.168.154])
-	by mailfilter04.webhostingserver.nl (Halon) with ESMTPSA
-	id 7ab212cb-2f46-11ef-bd6e-001a4a4cb95f;
-	Thu, 20 Jun 2024 22:48:42 +0200 (CEST)
-ARC-Seal: i=1; cv=none; a=rsa-sha256; d=webhostingserver.nl; s=whs1; t=1718916522;
-	 b=Xp/WLBvuEUcU1nsOMV1hqJRPU2JUbw9r480WaPblP/zecDExKlgvizFSKziCp/k9w7mqmBsFUX
-	  8OaK/0o64dTMv9rINdZcTyEHVL+ePqS51M6/76zPZpsaiXGGptd3C3o9xb/U3Ez7zBlOJlMqyN
-	  5kyvsfnSZwV1E0d/BNvJYZNpVb8uj1m1YTVMhKUOWPwUeZJq06PaMseY4VPF3ho//PuJXYdNY8
-	  nAOzuMz/faC6zs30vHuHI80UPd+LRF6LPeVbj70sozsQcGcRu9sTX2b1XZcEUpuvI8tKH1j9zN
-	  X3Kz/kwB9DTfmQ7cLyJELTA0qs/ucU2vb+U8V3C43W0Z/Q==;
-ARC-Authentication-Results: i=1; webhostingserver.nl; smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
-	iprev=pass (2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
-	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
-	spf=softfail smtp.mailfrom=exalondelft.nl;
-	dmarc=skipped header.from=exalondelft.nl;
-	arc=none
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=webhostingserver.nl; s=whs1; t=1718916522;
-	bh=tO7RlLGvnbzcseEbdf7AXIl94m/yGIpURI+8T+ue3CM=;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From;
-	b=qv7djCnvLVoPb7yFq1BaONkGl9GKJZFHK9siRE/5vRnhyQXQklkQ1laIt2yvndNux3aDHZi13u
-	  PYQovDcM56m8M9F7KAAjWCda4kGuazwwzWHseAKnP5iHXwaLghJm+C+lgFK/MfGqCDq26wZNdM
-	  H0hUHuHC7EbN4r9OaesELnN52MBj0W3mSUvKf+LdWdk5XKWg7TX7bppyFmZo/WCSeexZvLKEKP
-	  VpD/8j5BnvfekWvpmJTH72CpRWmcjcCtwtmwqD2LF9VR+2mbkFQ/gBO7QDmfKHEtg0kR3mrvin
-	  edjaKqEnRSjh5H+F6cuiGJQmcLGvOSTxC7QyVfE1pw0G9Q==;
-Authentication-Results: webhostingserver.nl;
-	iprev=pass (2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
-	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
-	spf=softfail smtp.mailfrom=exalondelft.nl;
-	dmarc=skipped header.from=exalondelft.nl;
-	arc=none
-Received: from 2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net ([2a02:a466:68ed:1:d31:9797:59c3:1c58] helo=submission)
-	by s198.webhostingserver.nl with esmtpa (Exim 4.97.1)
-	(envelope-from <ftoth@exalondelft.nl>)
-	id 1sKOi2-0000000CsKj-10V7;
-	Thu, 20 Jun 2024 22:48:42 +0200
-From: Ferry Toth <ftoth@exalondelft.nl>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ferry Toth <ftoth@exalondelft.nl>,
-	Richard Acayan <mailingradian@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Linyu Yuan <quic_linyyuan@quicinc.com>,
-	Hardik Gajjar <hgajjar@de.adit-jv.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	s.hauer@pengutronix.de,
-	jonathanh@nvidia.com,
-	paul@crapouillou.net,
-	quic_eserrao@quicinc.com,
-	erosca@de.adit-jv.com,
-	regressions@leemhuis.info
-Subject: [PATCH v3 0/2] usb: gadget: u_ether: revert netif_device_detach change
-Date: Thu, 20 Jun 2024 22:46:40 +0200
-Message-ID: <20240620204832.24518-1-ftoth@exalondelft.nl>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H7B95zwU"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KHBuXq007642;
+	Thu, 20 Jun 2024 20:49:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	L131EqETndfb/DKl2bJVBeDeWiesLf2ho4x5BMgpd5E=; b=H7B95zwUOPGzyfqV
+	Y9bg3pdtZRdUW2CKNUmv/YeX1gj7BNmdDN+66QCTDDz2YNxWojTFAmFmKZvpfYQ+
+	Ehh8+9KKc2m9mACKVtdfCz2Mp19Kc4otFzk5oNbyjCVI4aNZHJwrIk1+45p7Fg8A
+	3hd+a5YOcb8yd/DEgxb1waWYSPsSE8vSAgeW51VW64d9MVWxRtl8KwU73eaM/daD
+	V1MMLve1qjjbiTyqAbzbnsX37YCldM5iD1g8wcXYs0T5YB5skB9iHAvo+siAWVzE
+	0G5TKY9B3QBmHgXIrVHLKUXhSehqptUufAt5k1UsD7wZ9/SdraJSGK0J44XWTgJD
+	UaF3UA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvrm2ghtk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 20:49:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KKnfD4021965
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 20:49:41 GMT
+Received: from [10.110.82.141] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
+ 2024 13:49:35 -0700
+Message-ID: <6d416e1a-1069-8355-e9f3-d2732df081a3@quicinc.com>
+Date: Thu, 20 Jun 2024 13:49:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ACL-Warn: Sender domain ( exalondelft.nl ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info ).
-X-ACL-Warn: From-header domain ( exalondelft.nl} ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info )
-X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v5 5/9] drm/msm/hdmi: turn mode_set into atomic_enable
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej
+ Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20240607-bridge-hdmi-connector-v5-0-ab384e6021af@linaro.org>
+ <20240607-bridge-hdmi-connector-v5-5-ab384e6021af@linaro.org>
+ <f34c4210-fd59-9d27-0987-3345631c9e35@quicinc.com>
+ <xymopystyfjj3hpqes3uiw2g3dqynxzvz23snrbfzf2judgxnt@j4nmpcbuy7a4>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <xymopystyfjj3hpqes3uiw2g3dqynxzvz23snrbfzf2judgxnt@j4nmpcbuy7a4>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: pLEuhf6XKDyruNehC6lYVtmamw6skELe
+X-Proofpoint-ORIG-GUID: pLEuhf6XKDyruNehC6lYVtmamw6skELe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ clxscore=1015 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 spamscore=0 malwarescore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406200150
 
-As agreed with the author, the netif_device_detach change is going to be reverted by
-this series, so we will collaborate on a new one in the future that
-brings no regressions.
 
-v3:
-- Send out actual version (Ferry)
 
-v2:
-- Add SoB (Greg)
+On 6/20/2024 1:32 PM, Dmitry Baryshkov wrote:
+> On Thu, Jun 20, 2024 at 01:27:15PM GMT, Abhinav Kumar wrote:
+>>
+>>
+>> On 6/7/2024 6:23 AM, Dmitry Baryshkov wrote:
+>>> The mode_set callback is deprecated, it doesn't get the
+>>> drm_bridge_state, just mode-related argumetns. Turn it into the
+>>> atomic_enable callback as suggested by the documentation.
+>>>
+>>
+>> mode_set is deprecated but atomic_mode_set is not.
+> 
+> There is no atomic_mode_set() in drm_bridge_funcs. Also:
+> 
 
-Ferry Toth (2):
-  Revert "usb: gadget: u_ether: Re-attach netif device to mirror
-    detachment"
-  Revert "usb: gadget: u_ether: Replace netif_stop_queue with
-    netif_device_detach"
+Please excuse me. I thought since encoder has atomic_mode_set(), bridge 
+has one too.
 
- drivers/usb/gadget/function/u_ether.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> * This is deprecated, do not use!
+> * New drivers shall set their mode in the
+> * &drm_bridge_funcs.atomic_enable operation.
+>
 
--- 
-2.43.0
+Yes I saw this note but it also says "new drivers" and not really 
+enforcing migrating existing ones which are using modeset to atomic_enable.
 
+My concern is that today the timing engine setup happens in encoder's 
+enable() and the hdmi's timing is programmed in mode_set().
+
+Ideally, we should program hdmi's timing registers first before the 
+encoder's timing.
+
+Although timing engine is not enabled yet, till post_kickoff, this is 
+changing the sequence.
+
+If this really required for rest of this series?
+
+>>
+>> I would rather use atomic_mode_set because moving to atomic_enable() would
+>> be incorrect.
+>>
+>> That would be called after encoder's enable and hence changes the sequence.
+>> That was not the intention of this patch.
+>>
+>> NAK.
+>>
+>>> Acked-by: Maxime Ripard <mripard@kernel.org>
+>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> ---
+>>>    drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 33 ++++++++++++++++++++++++++-------
+>>>    1 file changed, 26 insertions(+), 7 deletions(-)
+> 
+> 
