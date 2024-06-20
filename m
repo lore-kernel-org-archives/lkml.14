@@ -1,61 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A2A54720
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0643EDB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718872668; cv=none; b=djJum5mB+kI9pKlgFz2ySDYd+JzC228+O0+8SVUfXm/KBeVQ8gyau5m3SMyCkhHB1eSpoCiPzjoKaaHcttV81Gbqx7e805ILZORHHn8kcoQ9fjOGPTXX1WFQL5mQIEGtt+n+7IrNFdhBucn4mhsNWmXS7svbgeMTKPRi3AWVY5M=
+	t=1718872701; cv=none; b=szTKjeMvkx7PELuwzISOKrSfkD0wMYrg2dtA0wnkAIOR9nIytWapbnh/ImFVy59380YAPuF0yTsIEyGDQu4WRPYT8ArnqYEsfGho1SkEux4Bh/y5kzdqXrPZH5D2XHi3wZ2jmotXKm6dr7UJ3VE0gEoEktcmW+AdYrZ4ARaJ5gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718872668; c=relaxed/simple;
-	bh=E2Ju9fp2WTW1iR8HjEuO5MAtycedFCSY0cqdWH009NQ=;
+	s=arc-20240116; t=1718872701; c=relaxed/simple;
+	bh=YatbP/rpuMXT6L6GJHjgLkwaTAWRQvcruhriNB8jUF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=em7P1KRdVA6fuFvfKz0614w5phuXARvWXEpuPuquJsd2R3ZwpxJpZ6xk0CkHBmO4st60mlwh30eRPO/5Uj05phgmU3fE0OxBNMBlDnZmYVmyLNGfz51kdLATxRrIsfMuFb+3xf3U1EDO7QW8X2jw4GQYxtDiT1ARZXfZ4CgxHrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAbMTxU3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aP1DIGOgqQeIOTIEq0U3lLxHLbqPi8XnUwkkhzM5zN3VM5t2J+0MULO0DqH9Bnq3mnIV+0YBu7ENRqsnlpuJXUdymSrhatGEAcAMBJteVroboayToLSHO3cgF2PcQTw+OdfhV/AJy8aNqLYfbPG1GdwwbxowpD4TDeM7mI+qZ+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=okV6M69A; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAbMTxU3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718872666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SToOFzrIKhKXuIiPgWYwTICjEcUL7XQf34Si3tl9FLg=;
-	b=LAbMTxU3oqIYgmiedcSu9Z98Hf6qWuBIv3Z9sFrv7deYPVZ6sHyl46lVSl5KZFM5e4Uy3f
-	wpioiJmR6sfZWEb09ZG39qkmG2omXz65BIXhPr+aqURCk3HuqktnutpWNY2R/lVtfGv0yf
-	IsrwbMJvEypcm+l9ZyMfzpghIx4zapY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-et_w7DOJNQurUU5Y8eXvqw-1; Thu,
- 20 Jun 2024 04:37:42 -0400
-X-MC-Unique: et_w7DOJNQurUU5Y8eXvqw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8358519560B2;
-	Thu, 20 Jun 2024 08:37:40 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.26])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1FD841956087;
-	Thu, 20 Jun 2024 08:37:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 20 Jun 2024 10:36:08 +0200 (CEST)
-Date: Thu, 20 Jun 2024 10:36:02 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	nathan@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-Message-ID: <20240620083602.GB30070@redhat.com>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
- <20240619143852.GA24240@redhat.com>
- <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="okV6M69A"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=svnI81lpribeRxyXyvj49VwpBoZjrXVUY99kCqPylyE=; b=okV6M69AznHArFpvRBl0OxSut6
+	ht/EWA4feYYNYKPgJA1KoeBTBOzIfK3JKOxW+IxOBcBp5sneFW8nzhEJuYV7uY0RhTNi5Tpc6R28f
+	/jrPPziyylI4dzsCqLfUqPwvnCHuMqEr5Ep/ULlMmDkF2q42c9AB+Bha2mpKI7fuejdBzxOvLFWJj
+	kIzquQl+oSHOJ1c7gAn1EdaJ9BYxoFBobhoh8YayqCbKrtpu/Zb/UIdrqjcbozeywMm+cOE2Rzag4
+	iXSoH3t/mWfjfr/moOyizIZjIuqVd6y2d5DbZ4SXKERBXl5CndwutWuh6Uj8ceQfn2UA0A7msab9s
+	PSl3cuLg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sKDJ7-00000005qTf-3MtC;
+	Thu, 20 Jun 2024 08:38:13 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 317F3300CB9; Thu, 20 Jun 2024 10:38:10 +0200 (CEST)
+Date: Thu, 20 Jun 2024 10:38:10 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, eranian@google.com,
+	Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	silviazhao <silviazhao-oc@zhaoxin.com>,
+	CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Subject: Re: [RESEND PATCH 08/12] perf/x86: Extend event update interface
+Message-ID: <20240620083810.GU31592@noisy.programming.kicks-ass.net>
+References: <20240618151044.1318612-1-kan.liang@linux.intel.com>
+ <20240618151044.1318612-9-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,32 +55,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20240618151044.1318612-9-kan.liang@linux.intel.com>
 
-On 06/20, Liao, Chang wrote:
->
-> However, when i asm porting uretprobe trampoline to arm64
-> to explore its benefits on that architecture, i discovered the problem that
-> single slot is not large enought for trampoline code.
+On Tue, Jun 18, 2024 at 08:10:40AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The current event update interface directly reads the values from the
+> counter, but the values may not be the accurate ones users require. For
+> example, the sample read feature wants the counter value of the member
+> events when the leader event is overflow. But with the current
+> implementation, the read (event update) actually happens in the NMI
+> handler. There may be a small gap between the overflow and the NMI
+> handler. The new Intel PEBS counters snapshotting feature can provide
+> the accurate counter value in the overflow. The event update interface
+> has to be updated to apply the given accurate values.
+> 
+> Pass the accurate values via the event update interface. If the value is
+> not available, still directly read the counter.
+> 
+> For some cases, e.g., intel_update_topdown_event, there could be more
+> than one counter/register are read. Using u64 * rather than u64 as the
+> new parameter.
 
-Ah, but then I'd suggest to make the changelog more clear. It looks as
-if the problem was introduced by the patch from Jiri. Note that we was
-confused as well ;)
+The stronger argument is that there is no special value to distinguish
+between there begin an argument and there not being one. You cannot have
+!val, because 0 might be a valid rdpmc() value.
 
-And,
-
-	+	/* Reserve enough slots for the uretprobe trampoline */
-	+	for (slot_nr = 0;
-	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
-	+	     slot_nr++)
-
-this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
-I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
-
-And perhaps it would be better to send this change along with
-uretprobe_trampoline_for_arm64 ?
-
-Oleg.
 
