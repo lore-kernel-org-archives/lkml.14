@@ -1,112 +1,242 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633F917545
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BF817545;
+	Thu, 20 Jun 2024 17:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903551; cv=none; b=BoNFs4XKu8jgxJ9Qvf3k28IvwyidCxb7dK8G1axv8RRp24RWdJr3tSD6i1oJ4olEKRAsM7/+VblrQg5Z8nhuZdZPNS+xPt3jq3FYKPcsiUaTMUVu3XEK+V5BrySxjoOCw3WZc6tbrYHI9No8Xo6Y1GG3riDg56mrn4PwE0Q271o=
+	t=1718903566; cv=none; b=vD/IaMWLMBuTD98oFvjFi1lEeWmrknrs3BSX7AW92Nhqi6n03GUELusGvvBMKC6PmH6b08/ISp2Odx6eRiVkaBPtMMtM9qp72hPWYus2UYo8sbzfX800CiT+x6wXV29Ynq51Tmuef5A9otn20IlTcR3QKVVisuLrztucV8aMHCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903551; c=relaxed/simple;
-	bh=g7WfMcaBjh6YPIh2UjnnvRHNQREoKfly02V4jb0nz9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owAtaJ3Fkukf2kNs26OK3zcdXPQypGh1Id3lZyfHVDj4yvgUWGPnQzb747jx6in6KBO1nDgRmMFKCrU0Nf0moEF1NFrSUg1l1Gupie0jGy9sCyw5zFmXDiMjPMk3vVZKYfTR4+3DAHOOLB0VmzQJxyzNcYQsb33Rdg7JnBoCgn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MEpxy4fl; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718903566; c=relaxed/simple;
+	bh=qk4456sBCjxKLWnBWCOTbUHhiEe7iSUI6k3KR/4USmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sow4yarm8Xt4dz6Tj4gQX8A3jkFXTzLpIXx6uKSYvT2C7ytgjhIor9yYAQFWaa0BIo8/4Zlnl+etNrbqSW9sqWFeZXyo4KxmDnTE6MhnGNwG85gmrVuMfoIihdLBSlJAAvZQp2XTHJEADSFF5FeQsDrDf/OsGLxaR1WdJlJ8nTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXj4h4it; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MEpxy4fl"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f1c4800easo125338366b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718903547; x=1719508347; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rhFHixzYRCr0Du1zLo7y9OoIpaaj9IpifQpSn+Y7skc=;
-        b=MEpxy4flhOqlBTwYxgeD7FY3LQ+5CYvv+9czB+LOP829g+6265c8SjxZYU55+AO150
-         5JEH0YzchKN0Vlu1WVPf9pmEEtZYyoTcLZZAfkx3QgLoiXf8VZoQgSQ5rBB8s1AKDd5f
-         SE7rrbwg8q8+VR7mSagyo+nK1gSYwqcWid3h4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718903547; x=1719508347;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rhFHixzYRCr0Du1zLo7y9OoIpaaj9IpifQpSn+Y7skc=;
-        b=NegW7N6FacoEyH+E2fhzL4lp9MGcDox3OIlwWMqeexH3T/TvKCNalYM0HQslfL3Jbf
-         FVFOCdA2ilNOAtuulAyuMttBpsj3y5TfISc6HOqaquF52K3+KhyNy2wGQscBRQjNFBIz
-         SEikIoSJ9m6cTGDjOJ7dI/cwmA29pBwPmAfvHfa1A85hRX2SBkaA7FS2RAkKWkSKGrxX
-         4hG3znzTT92eDPweOwyR8LYdTg2dTkLTxkeDhGQAyFzgunK+R1xzq1Qc34JZ5bj3aRay
-         gdWZp86p3Aa0zTupJ4sxmCaVQnBQsFo5GEIJWKCmr15BrofTyRYmqr9ESytpSPAKFFGl
-         dbSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAuwV2oJwuk26b/UbSmPI1++BFmgTJdPgOHKT7HlsgjBhD9CDPQ6P4+sKvrcgnPmPqmwH6R8Akh5zvaRVdcniRRssVQr6PjgkvuExh
-X-Gm-Message-State: AOJu0Yz8Lu2lgppI3ohFo7TrOjOBJ4Y65Va55/h7lOC8EcjHXcFKREBc
-	B/6vS2H/yhu6J0kA2/DQYw1s1zxqLESyHcFJT+Qgix5HEJEhRcG+Sr9bn0JvmANJWlcGpu7k3O3
-	H36E7GA==
-X-Google-Smtp-Source: AGHT+IFcH370opdYptkoVmUWX2Uy42wTNNtTHdariqsyBeALkbCqbvnPycS6e10fC48fYeZNQGCCBw==
-X-Received: by 2002:a17:907:d042:b0:a6f:b425:17cf with SMTP id a640c23a62f3a-a6fb4258107mr315391566b.36.1718903547651;
-        Thu, 20 Jun 2024 10:12:27 -0700 (PDT)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f6ac22e57sm652060866b.177.2024.06.20.10.12.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 10:12:27 -0700 (PDT)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f23f3da44so959775f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:12:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7L6AgYXS/XowPHDPwGdrpsYQESRfnTgr3pbRvyBv96U6aMvCJLB2Sklcu9O21lx1lCZRMOmP6tNJBChQltL19L6rgFILaSh4Htg1T
-X-Received: by 2002:a17:907:c24d:b0:a6f:c0e0:5512 with SMTP id
- a640c23a62f3a-a6fc0e055c5mr194825666b.23.1718903526779; Thu, 20 Jun 2024
- 10:12:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXj4h4it"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E00EC2BD10;
+	Thu, 20 Jun 2024 17:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718903565;
+	bh=qk4456sBCjxKLWnBWCOTbUHhiEe7iSUI6k3KR/4USmc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=mXj4h4itjF5zRyeLlSxB5R/uZ5WDMKXaDIc2JuJTWyKvvoUm5XHvUICICtsbnD1wU
+	 e61eJec9iEKPe4C+EzpRBB6uM256/7hz4LvGF18eUpoyc3Bq28wnLV/qS0Ki0BZfbL
+	 PhZ4UVw51tkH9ajQJVDhcq5fffh6rig+GMwHOfrAN2OWosrnS6YWCqdwkwBFqmKUH+
+	 Nz1fualtbf+zxFdR4XHYPMvT18dhhA4AFQW2pwkBiBnzRY951pGevSAf8BdEyjFJ/F
+	 kBn0Sxq5WZNtH3TkcilfJlpfVB3Pi3MXqQXJrMXlopEdfZucm4JPS+YduV3qehUpDt
+	 zdUwwzjYAmhyQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 27D7ECE0B67; Thu, 20 Jun 2024 10:12:45 -0700 (PDT)
+Date: Thu, 20 Jun 2024 10:12:45 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
+	boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+	j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
+	dlustig@nvidia.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	hernan.poncedeleon@huaweicloud.com,
+	jonas.oberhauser@huaweicloud.com
+Subject: Re: [PATCH v4] tools/memory-model: Document herd7 (abstract)
+ representation
+Message-ID: <b0691ab4-a61d-45ab-ad35-a6bbab987bfe@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240619010604.1789103-1-parri.andrea@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wg8APE61e5Ddq5mwH55Eh0ZLDV4Tr+c6_gFS7g2AxnuHQ@mail.gmail.com>
- <87ed8sps71.ffs@tglx> <CAHk-=wg3RDXp2sY9EXA0JD26kdNHHBP4suXyeqJhnL_3yjG2gg@mail.gmail.com>
- <87bk3wpnzv.ffs@tglx> <CAHk-=wiKgKpNA6Dv7zoLHATweM-nEYWeXeFdS03wUQ8-V4wFxg@mail.gmail.com>
- <878qz0pcir.ffs@tglx> <CAHk-=wg88k=EsHyGrX9dKt10KxSygzcEGdKRYRTx9xtA_y=rqQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wg88k=EsHyGrX9dKt10KxSygzcEGdKRYRTx9xtA_y=rqQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 20 Jun 2024 10:11:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgjbNLRtOvcmeEUtBQyJtYYAtvRTROBy9GHeF1Quszfgg@mail.gmail.com>
-Message-ID: <CAHk-=wgjbNLRtOvcmeEUtBQyJtYYAtvRTROBy9GHeF1Quszfgg@mail.gmail.com>
-Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tejun Heo <tj@kernel.org>, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@kernel.org, joshdon@google.com, brho@google.com, pjt@google.com, 
-	derkling@google.com, haoluo@google.com, dvernet@meta.com, 
-	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com, 
-	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com, 
-	andrea.righi@canonical.com, joel@joelfernandes.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619010604.1789103-1-parri.andrea@gmail.com>
 
-On Wed, 19 Jun 2024 at 22:07, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> And scx_next_task_picked() isn't pretty - as far as I understand, it's
-> because there's only a "class X picked" callback ("pick_next_task()"),
-> and no way to tell other classes they weren't picked.
+On Wed, Jun 19, 2024 at 03:06:04AM +0200, Andrea Parri wrote:
+> The Linux-kernel memory model (LKMM) source code and the herd7 tool are
+> closely linked in that the latter is responsible for (pre)processing
+> each C-like macro of a litmus test, and for providing the LKMM with a
+> set of events, or "representation", corresponding to the given macro.
+> This commit therefore provides herd-representation.txt to document
+> the representations of the concurrency macros, following their
+> "classification" in Documentation/atomic_t.txt.
+> 
+> Suggested-by: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> Reviewed-by: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
 
-I guess that could be a class callback, something like this:
+I have reverted the previous version and queued this one, thank you!!!
 
-        p = class->pick_next_task(rq);
-        if (p)
-        if (p) {
--               scx_next_task_picked(rq, p, class);
-+               struct sched_class *prev = last->sched_class;
-+               if (class != prev && prev->switch_class)
-+                       prev->switch_class(rq);
-                return p;
-        }
+							Thanx, Paul
 
-and that would be arguably much prettier. But maybe I've
-mis-understood the reason for that scx_next_task_picked() thing.
-
-Tejun?
-
-             Linus
+> ---
+> Changes since v3 [1]:
+>   - note that rmw is a subset of po
+>   - include paulmck's wordsmithing
+>   - add limitations, aka stress that certain ops have been intentionally omitted
+>   - add collected Reviewed-by: tags
+> 
+> Changes since v2 [2]:
+>   - drop lk-rmw links
+> 
+> Changes since v1 [3]:
+>   - add legenda/notations
+>   - add some SRCU, locking macros
+>   - update formatting of failure cases
+>   - update README file
+> 
+> [1] https://lore.kernel.org/lkml/20240617201759.1670994-1-parri.andrea@gmail.com/
+> [2] https://lore.kernel.org/lkml/20240605134918.365579-1-parri.andrea@gmail.com/
+> [3] https://lore.kernel.org/lkml/20240524151356.236071-1-parri.andrea@gmail.com/
+> 
+>  tools/memory-model/Documentation/README       |   7 +-
+>  .../Documentation/herd-representation.txt     | 110 ++++++++++++++++++
+>  2 files changed, 116 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/memory-model/Documentation/herd-representation.txt
+> 
+> diff --git a/tools/memory-model/Documentation/README b/tools/memory-model/Documentation/README
+> index db90a26dbdf40..1f73014cc48a3 100644
+> --- a/tools/memory-model/Documentation/README
+> +++ b/tools/memory-model/Documentation/README
+> @@ -33,7 +33,8 @@ o	You are familiar with Linux-kernel concurrency and the use of
+>  
+>  o	You are familiar with Linux-kernel concurrency and the use
+>  	of LKMM, and would like to learn about LKMM's requirements,
+> -	rationale, and implementation:	explanation.txt
+> +	rationale, and implementation:	explanation.txt and
+> +	herd-representation.txt
+>  
+>  o	You are interested in the publications related to LKMM, including
+>  	hardware manuals, academic literature, standards-committee
+> @@ -57,6 +58,10 @@ control-dependencies.txt
+>  explanation.txt
+>  	Detailed description of the memory model.
+>  
+> +herd-representation.txt
+> +	The (abstract) representation of the Linux-kernel concurrency
+> +	primitives in terms of events.
+> +
+>  litmus-tests.txt
+>  	The format, features, capabilities, and limitations of the litmus
+>  	tests that LKMM can evaluate.
+> diff --git a/tools/memory-model/Documentation/herd-representation.txt b/tools/memory-model/Documentation/herd-representation.txt
+> new file mode 100644
+> index 0000000000000..ed988906f2b71
+> --- /dev/null
+> +++ b/tools/memory-model/Documentation/herd-representation.txt
+> @@ -0,0 +1,110 @@
+> +#
+> +# Legend:
+> +#	R,	a Load event
+> +#	W,	a Store event
+> +#	F,	a Fence event
+> +#	LKR,	a Lock-Read event
+> +#	LKW,	a Lock-Write event
+> +#	UL,	an Unlock event
+> +#	LF,	a Lock-Fail event
+> +#	RL,	a Read-Locked event
+> +#	RU,	a Read-Unlocked event
+> +#	R*,	a Load event included in RMW
+> +#	W*,	a Store event included in RMW
+> +#	SRCU,	a Sleepable-Read-Copy-Update event
+> +#
+> +#	po,	a Program-Order link
+> +#	rmw,	a Read-Modify-Write link - every rmw link is a po link
+> +#
+> +# By convention, a blank line in a cell means "same as the preceding line".
+> +#
+> +# Disclaimer.  The table includes representations of "add" and "and" operations;
+> +# corresponding/identical representations of "sub", "inc", "dec" and "or", "xor",
+> +# "andnot" operations are omitted.
+> +#
+> +    ------------------------------------------------------------------------------
+> +    |                        C macro | Events                                    |
+> +    ------------------------------------------------------------------------------
+> +    |                    Non-RMW ops |                                           |
+> +    ------------------------------------------------------------------------------
+> +    |                      READ_ONCE | R[once]                                   |
+> +    |                    atomic_read |                                           |
+> +    |                     WRITE_ONCE | W[once]                                   |
+> +    |                     atomic_set |                                           |
+> +    |               smp_load_acquire | R[acquire]                                |
+> +    |            atomic_read_acquire |                                           |
+> +    |              smp_store_release | W[release]                                |
+> +    |             atomic_set_release |                                           |
+> +    |                   smp_store_mb | W[once] ->po F[mb]                        |
+> +    |                         smp_mb | F[mb]                                     |
+> +    |                        smp_rmb | F[rmb]                                    |
+> +    |                        smp_wmb | F[wmb]                                    |
+> +    |          smp_mb__before_atomic | F[before-atomic]                          |
+> +    |           smp_mb__after_atomic | F[after-atomic]                           |
+> +    |                    spin_unlock | UL                                        |
+> +    |                 spin_is_locked | On success: RL                            |
+> +    |                                | On failure: RU                            |
+> +    |         smp_mb__after_spinlock | F[after-spinlock]                         |
+> +    |      smp_mb__after_unlock_lock | F[after-unlock-lock]                      |
+> +    |                  rcu_read_lock | F[rcu-lock]                               |
+> +    |                rcu_read_unlock | F[rcu-unlock]                             |
+> +    |                synchronize_rcu | F[sync-rcu]                               |
+> +    |                rcu_dereference | R[once]                                   |
+> +    |             rcu_assign_pointer | W[release]                                |
+> +    |                 srcu_read_lock | R[srcu-lock]                              |
+> +    |                 srcu_down_read |                                           |
+> +    |               srcu_read_unlock | W[srcu-unlock]                            |
+> +    |                   srcu_up_read |                                           |
+> +    |               synchronize_srcu | SRCU[sync-srcu]                           |
+> +    | smp_mb__after_srcu_read_unlock | F[after-srcu-read-unlock]                 |
+> +    ------------------------------------------------------------------------------
+> +    |       RMW ops w/o return value |                                           |
+> +    ------------------------------------------------------------------------------
+> +    |                     atomic_add | R*[noreturn] ->rmw W*[once]               |
+> +    |                     atomic_and |                                           |
+> +    |                      spin_lock | LKR ->po LKW                              |
+> +    ------------------------------------------------------------------------------
+> +    |        RMW ops w/ return value |                                           |
+> +    ------------------------------------------------------------------------------
+> +    |              atomic_add_return | F[mb] ->po R*[once]                       |
+> +    |                                |     ->rmw W*[once] ->po F[mb]             |
+> +    |               atomic_fetch_add |                                           |
+> +    |               atomic_fetch_and |                                           |
+> +    |                    atomic_xchg |                                           |
+> +    |                           xchg |                                           |
+> +    |            atomic_add_negative |                                           |
+> +    |      atomic_add_return_relaxed | R*[once] ->rmw W*[once]                   |
+> +    |       atomic_fetch_add_relaxed |                                           |
+> +    |       atomic_fetch_and_relaxed |                                           |
+> +    |            atomic_xchg_relaxed |                                           |
+> +    |                   xchg_relaxed |                                           |
+> +    |    atomic_add_negative_relaxed |                                           |
+> +    |      atomic_add_return_acquire | R*[acquire] ->rmw W*[once]                |
+> +    |       atomic_fetch_add_acquire |                                           |
+> +    |       atomic_fetch_and_acquire |                                           |
+> +    |            atomic_xchg_acquire |                                           |
+> +    |                   xchg_acquire |                                           |
+> +    |    atomic_add_negative_acquire |                                           |
+> +    |      atomic_add_return_release | R*[once] ->rmw W*[release]                |
+> +    |       atomic_fetch_add_release |                                           |
+> +    |       atomic_fetch_and_release |                                           |
+> +    |            atomic_xchg_release |                                           |
+> +    |                   xchg_release |                                           |
+> +    |    atomic_add_negative_release |                                           |
+> +    ------------------------------------------------------------------------------
+> +    |            Conditional RMW ops |                                           |
+> +    ------------------------------------------------------------------------------
+> +    |                 atomic_cmpxchg | On success: F[mb] ->po R*[once]           |
+> +    |                                |                 ->rmw W*[once] ->po F[mb] |
+> +    |                                | On failure: R*[once]                      |
+> +    |                        cmpxchg |                                           |
+> +    |              atomic_add_unless |                                           |
+> +    |         atomic_cmpxchg_relaxed | On success: R*[once] ->rmw W*[once]       |
+> +    |                                | On failure: R*[once]                      |
+> +    |         atomic_cmpxchg_acquire | On success: R*[acquire] ->rmw W*[once]    |
+> +    |                                | On failure: R*[once]                      |
+> +    |         atomic_cmpxchg_release | On success: R*[once] ->rmw W*[release]    |
+> +    |                                | On failure: R*[once]                      |
+> +    |                   spin_trylock | On success: LKR ->po LKW                  |
+> +    |                                | On failure: LF                            |
+> +    ------------------------------------------------------------------------------
+> -- 
+> 2.34.1
+> 
