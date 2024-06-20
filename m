@@ -1,318 +1,149 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8CA1B47C1
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A37E22EED;
+	Thu, 20 Jun 2024 19:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.239.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718911399; cv=none; b=Anz/yVgbZ6OX5X0VTZaCMN340Ny4foHpftlPDSZcJAXjIyOOJWmWtPzYqr2I9zTAmZlmdCZJqr+nEXkdOf7CI6LjhvwuGqUZcANid+LXFDriaAC0hK4bX9fznHSnO4fFUdVDUT3sao8KSeFHWynWgZrhYmHLfv33h8z21paYfwY=
+	t=1718911600; cv=none; b=Uo9xGWLyekEs1qmyOmd45db3cR8uf1CxqVWZf0RmaZl+Sz3RP9yrlsnLyRs4VK4p6NSnqJwueTvq56K80hgvXsfts+IP4TCP8UdU6jzDqCr60LYu32P53Cz89IVY96QFQPahz9p3Bc6wpZmIIroH9rnBIFIFb2SssX9WaUmifQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718911399; c=relaxed/simple;
-	bh=zLut+0prhCT1eBX6fZQYJKsvC08Ub2wLq769lqa1Tuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jkYEHnJiMI/t7RMp5f7RQoAuDDpLB9+7bjPkNHG/MCgd8DWXzYv6CAOInU88ZhwcshGjqdShA2b1eSytuzD2FXSHP8vjZxY3DJ297U20Nq0ddhJqd6tGi7HSRAxONPRvkMcZfv8kYANKxL6MFzd4GH40tntaYqMd+C3gUHrpud4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ROAhPUPs; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ROAhPUPs"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6f8d0a00a35so1175660a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718911396; x=1719516196; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hYAaAnJ1daXZl8jVKFDZh/xHsalBVy1PvK86SNFCWgs=;
-        b=ROAhPUPsdpTWHdK3W76iEeO1YT6v8fBFnL6rI40y6J8pbBgXrl0dovOTqg3+jd4q+c
-         zAn5zimXqSeEX8U1MZiTdxGk2Mo6t7T6tsiailYQWXqriH1oZTrJrKa9hwcC1KxDOAuo
-         agwESniOktjT9niNdi0GG42+GvBzm1/6v9ibw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718911396; x=1719516196;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hYAaAnJ1daXZl8jVKFDZh/xHsalBVy1PvK86SNFCWgs=;
-        b=ahfjcWfnyx9j8SYMXTm//YO4Rfe5gvvk+w/yBnYv4o9e/BgTLx6mhmj+UW7IZW6xrC
-         OrrdGyMmcrdM9jtLkKmFJalPLSEa9yqmBkkfZjOAcj+kh5fiye81IIhAo1MCjvZmRELW
-         N7NPRq+rQssJHBIwmYE+71R/ttnDGM9kSHuwCVKWlFZsK667Uo8P7f6d0JmqHFQ6DxmT
-         HyhgMKwY2vQ8+W/AAYnio7RfOgNkcRbd2cop63c8gJjT51JTbLEpFEr7b8fc33ye6Eb4
-         hDDX77wzT5isKwj4nB6eGZPq+UoGygEa2LAB/E6uEXRm/8znY9Ls919qS/H9RmHT1iLo
-         I1QA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4Sg+jkgTWF8YV4T01q9Hs5jszqFlP2C8jR8kgzjH6/KXg/6JZLeD6pBG8EFtDh36DPK9p5T/SZ/DZC+yNTXUJC2YbPo3rp0s2UeAP
-X-Gm-Message-State: AOJu0Yy4p7Ssf71Jz+iS7w8UU9w9Us+8OltPZGmqbn7xRuzrJZdKftw2
-	2j6SDm5hebOGfNdvzH058A08qXCd2jdGYYT26l1aERxzHWnkzX2aFIYOZM1Jwxwxz0RnBTUETzF
-	nTl6m0fXrJzp5o49KpIFqkzzCcM4J4KMRsfqE
-X-Google-Smtp-Source: AGHT+IHcbWYR47B38NPGgHxYbRwJtcb+NG4ZK01XKPwR6tbI8P1qMqsw0Vf7HNi48bXLyZYd1RO8UMYaX0ztezPQBOA=
-X-Received: by 2002:a05:6870:5b9b:b0:25b:3e23:e5ef with SMTP id
- 586e51a60fabf-25c949060ecmr7353840fac.3.1718911396491; Thu, 20 Jun 2024
- 12:23:16 -0700 (PDT)
+	s=arc-20240116; t=1718911600; c=relaxed/simple;
+	bh=stM+oCT4LyagOU7exj8wXCRfIA/M4yFDJK+Q8YXqXJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hi5RKGWnzoMUe8CP921d95Z3/YtSEOIMWbLPKHOO+TnIxut5gihwRBu0fgr+KrasLdQVFCUHEbC/SCovCvkcXbybm3VGsqFOpNE8spwO/0NzBW77swIkGzF/4AsoWrDN6JRQrv+jkWOFVRzKBDg+S6Hy4qeI0RY3otLkx6BbmnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org; spf=pass smtp.mailfrom=enpas.org; arc=none smtp.client-ip=46.38.239.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.enpas.org (Postfix) with ESMTPSA id B678AFFE26;
+	Thu, 20 Jun 2024 19:26:28 +0000 (UTC)
+Message-ID: <dedb2c39-fc28-4cba-802f-5d56f23db722@enpas.org>
+Date: Fri, 21 Jun 2024 04:26:26 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606224035.3238985-3-aruna.ramakrishna@oracle.com>
- <20240610213934.3378947-1-jeffxu@chromium.org> <2DB720B0-0921-4912-8C5F-F0EDDF77845D@oracle.com>
- <CABi2SkVZA0-7_PPbvycaojr0qBPVn7DPW1F1CpNTZwT_Hi0xiQ@mail.gmail.com> <90B0A18A-DB23-45DC-8491-0CC293FB6264@oracle.com>
-In-Reply-To: <90B0A18A-DB23-45DC-8491-0CC293FB6264@oracle.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 20 Jun 2024 12:23:05 -0700
-Message-ID: <CABi2SkWxNkP2O7ipkP67WKz0-LV33e5brReevTTtba6oKUfHRw@mail.gmail.com>
-Subject: Re: Re [PATCH v5 2/5] x86/pkeys: Add helper functions to update PKRU
- on sigframe
-To: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Keith Lucas <keith.lucas@oracle.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "x86@kernel.org" <x86@kernel.org>, 
-	Andrew Brownsword <andrew.brownsword@oracle.com>, 
-	Matthias Neugschwandtner <matthias.neugschwandtner@oracle.com>, 
-	"jeffxu@google.com" <jeffxu@google.com>, "jannh@google.com" <jannh@google.com>, 
-	"keescook@chromium.org" <keescook@chromium.org>, "sroettger@google.com" <sroettger@google.com>, 
-	"jorgelo@chromium.org" <jorgelo@chromium.org>, 
-	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] hid-playstation: DS4: Update rumble and lightbar
+ together
+Content-Language: en-US
+To: Roderick Colenbrander <thunderbird2k@gmail.com>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+ Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240616163055.75174-1-max@enpas.org>
+ <CAEc3jaCkH5JwNTpHRZYsekbwX+G6T5tMTLD0+O6E7Q2hqcAFHw@mail.gmail.com>
+From: Max Staudt <max@enpas.org>
+Autocrypt: addr=max@enpas.org; keydata=
+ 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
+ PsRBqTJGs7jw5gOWMMchFaemEnEJtg==
+In-Reply-To: <CAEc3jaCkH5JwNTpHRZYsekbwX+G6T5tMTLD0+O6E7Q2hqcAFHw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Aruna
+Hi Roderick,
 
-On Mon, Jun 17, 2024 at 9:43=E2=80=AFAM Aruna Ramakrishna
-<aruna.ramakrishna@oracle.com> wrote:
->
->
->
-> > On Jun 11, 2024, at 3:13=E2=80=AFPM, Jeff Xu <jeffxu@chromium.org> wrot=
-e:
-> >
-> > On Tue, Jun 11, 2024 at 7:05=E2=80=AFAM Aruna Ramakrishna
-> > <aruna.ramakrishna@oracle.com> wrote:
-> >>
-> >>
-> >>
-> >>> On Jun 10, 2024, at 2:39=E2=80=AFPM, jeffxu@chromium.org wrote:
-> >>>
-> >>> The orig_pkru & init_pkru_value is quite difficult to understand.
-> >>>
-> >>> case 1> init_pkru: 00 (allow all)
-> >>> orig_pkru all cases  =3D> allow all
-> >>>
-> >>> case 2> init_pkru: 01 (disable all)
-> >>> Orig_pkru:
-> >>> allow all 00 =3D> 00 allow all.
-> >>> disable all 01 =3D> 01 disable all.
-> >>> disable write 10 =3D> 00 allow all <--- *** odd ***
-> >>> disable all 11 =3D> 01 disable all
-> >>>
-> >>> case 3> init pkru: 10 (disable write)
-> >>> allow all 00 =3D> 00 allow all.
-> >>> disable all 01 =3D> 00 (allow all) <----*** odd ***
-> >>> disable write 10 =3D> 10 allow all
-> >>> disable all 11 =3D> 10 disable write <--- *** odd ***
-> >>>
-> >>> case 4> init pkru: 11 (disable all)
-> >>> orig_pkru all cases =3D> unchanged.
-> >>>
-> >>> set PKRU(0) seems to be better, easy to understand.
-> >>>
-> >>
-> >> I=E2=80=99m not sure I follow.
-> >>
-> >> The default init_pkru is 0x55555554 (enable only pkey 0). Let=E2=80=99=
-s assume the application
-> >> sets up PKRU =3D 0x55555545 (i.e. enable only pkey 2). We want to set =
-up the PKRU
-> >> to enable both pkey 0 and pkey 2, before the XSAVE, so that both the c=
-urrent stack as
-> >> well as the alternate signal stack are writable.
-> >>
-> >> So with
-> >> write_pkru(orig_pkru & pkru_get_init_value());
-> >>
-> >> It changes PKRU to 0x55555544 - enabling both pkey 0 and pkey 2.
-> >>
-> > Consider below examples:
-> >
-> > 1>
-> > The default init_pkru is 0x55555554 (pkey 0 has all access, 1-15 disabl=
-e all)
-> > and thread has PKRU of 0xaaaaaaa8 (pkey 0 has all access, 1-15 disable =
-write)
-> > init_pkru & curr_pkru will have 0x0
-> > If altstack is protected by pkey 1, your code will change PKRU to 0,
-> > so the kernel is able to read/write to altstack.
-> >
-> > 2>
-> > However  when the thread's PKRU disable all access to 1-15:
-> > The default init_pkru is 0x55555554 (pkey 0 has all access, 1-15 disabl=
-e all)
-> > and thread has PKRU of 0x5555554 (pkey 0 has all access, 1-15 disable a=
-ll)
-> > init_pkru & curr_pkru will have 0x55555554
-> > If altstack is protected by pkey 1, kernel doesn't change PKRU, so
-> > still not able
-> > to access altstack.
-> >
-> > 3> This algorithm is stranger if inti_pkru is configured differently:
-> > The init_pkru is 0xaaaaaaa8 (pkey 0 has all access, and 1-15 disables w=
-rite.)
-> > and thread has PKRU of 0x55555554 (pkey 0 has all access, 1-15 disable =
-all)
-> > init_pkru & curr_pkru will have 0x0 (0-15 has all access).
-> >
-> > Overall I think this is a confusing algorithm to decide the new PKRU to=
- use.
->
-> I understand your point. But the patch makes the assumption that the siga=
-ltstack is
-> accessible with init_pkru, which is not the case in these 3 examples. I=
-=E2=80=99m not saying
-> that assumption is right - just that, that=E2=80=99s the use case which w=
-e=E2=80=99re trying to fix here.
->
-Consider below case:
-1> let init_pkur be 0x55555554(disable all for key 1-15, allow access to pk=
-ey 0
-2> let the current pkur 0xcccccc1 (disable write for key  0 and 2-15,
-allow access to pkey 1)
-The new pkru will be 0x0. It gives  access to all pkeys, IIUC,
-your scenario just needs to enable all access to pkey 0, right ?
+So as far as I understand, my suggested driver behaviour is sound, because both the console's own behaviour as well as other drivers show that flags == 0x03 is working perfectly fine with original controllers. Is my understanding correct?
 
-I give this example to show the algorithm is difficult for dev to
-reasable about.
+In fact, hid-sony used to send these updates at the same time (it had flags == 0x07), so for some 3rd party controllers, the move to hid-playstation has already been a regression in the FF/lightbar department.
 
-> But you=E2=80=99re saying that the altstack could be using any pkey, and =
-handle_signal()
-> does not know which one it is, so it should just enable all pkeys - is th=
-at right?
->
-Yes, along that line of thinking.
-
-Since the kernel (handle_signal) now needs to modify PKRU to have access to
-sigaltstack, which is a behavior change, and altstack can be protected
-by any PKEYs,
-setting the PKRU to zero is the simplest solution.
-
-I agree with Thomos that this will open up more access, we could let
-applications
-explicitly ask this by setting a new ss_flag when calling sigaltstack() cal=
-l.
-e.g.
-stack_t altstack;
-altstack.ss_sp =3D ptr;
-altstack.ss_flags =3D 0;
-altstack.ss_flags |=3D SS_PKEYALTSTACK;  <----
-int ret =3D sigaltstack(&altstack, NULL);
+Do you see a way to move forward with this patch and get it merged, even if it is with some delay? Is there something that I can improve?
 
 
-> Thomas,
-> Can you please review/comment?
->
-> >
-> >> After the XSAVE, it calls update_pkru_in_sigframe(), which overwrites =
-this (new)
-> >> PKRU saved on the sigframe with orig_pkru, which is 0x55555545 in this=
- example.
-> >>
-> >> Setting PKRU to 0 would be simpler, it would enable all pkeys - 0 thro=
-ugh 15 - which,
-> >> as Thomas pointed out, seems unnecessary. The application needs the pk=
-ey it
-> >> enabled for access to its own stack, and we need to enable pkey 0 unde=
-r the hood
-> >> to enable access to the alternate signal stack.
-> >>
-> >
-> > I think you are referring to Thomas's comments in V3, copy here for
-> > ease of response:
-> >
-> >> User space resumes with the default PKRU value and the first thing use=
-r
-> >> space does when entering the signal handler is to push stuff on the
-> >> signal stack.
-> > ...
-> >> If user space protects the task stack or the sigalt stack with a key
-> >> which is not in init_pkru_value then it does not matter at all whether
-> >> it dies in handle_signal() or later when returning to user space, no?
-> >
-> > The userspace could register a custom handler (written in assembly) to
-> > change PKRU and allow access to the stack, this could be written in suc=
-h
-> > that it is before pushing stuff to the stack. So all it requires is
-> > that the kernel
-> > doesn't SIGSEGV when preparing the signal frame in sigaltstack, this is
-> > where PKRU=3D0 inside the kernel  path helps.
-> >
-> > Even today, without patch, one can already do following:
-> > 1> use PKEY 1 to protect sigaltstack
-> > 3> let the thread have all access to PKEY 1
-> > 3> send a signal to the thread, kernel will save PKRU to the altstack c=
-orrectly.
-> > 4> kernel set init_pkur before hands over control to userspace
-> > 5> userspace set PKRU to allow access to PKEY 1 as the first thing to d=
-o.
-> > 6> on sig_return, threads have PKRU restored correctly from the value
-> > in sigframe.
-> >
->
-> In this example above, pkey 1 grants access to the altstack, which is ena=
-bled
-> through out this flow. I think perhaps this use case is more interesting:
->
-> 1. Use pkey 1 to protect sigaltstack.
-> 2. Use pkey 2 to protect thread=E2=80=99s stack.
-> 3. Disable all but pkey 2 (=3D orig_pkru).
-> 4. Send a signal to the thread (kernel patch needed; we'd have to enable =
-all
-> pkeys in handle_signal() - i.e. pkru =3D 0).
-> 5. Kernel sets pkru=3Dinit_pkru before handing over control to userspace =
-(i.e.
-> only pkey 0 is enabled).
-> 6. Signal handler should enable pkey 1 as the first thing.
-> 7. On sigreturn, orig_pkru is restored correctly.
->
-> I=E2=80=99m not sure if (6) will work or if it=E2=80=99ll crash with a SI=
-GSEGV - I haven=E2=80=99t tested
-> this flow.
->
-User space can write assembly code to change PKRU before the rest of the ca=
-lling
-conversation, e.g. push local to stack.
-Try below code:
+As for downstream users' regression tests, this argument confuses me. Could you please give me a bit of help here?
 
-/*
- * change PKRU before calling the inner.
- *  disclaim: not expect in ASM, so this code might have bug
-*/
-void asm_handler(int signum, siginfo_t *si, void *vucontext);
-__asm__(
-".global asm_handle\n"
-"asm_handler:\n"
-" mov %rdx, %r8\n"
-" xor %eax, %eax\n"
-" xor %ecx, %ecx\n"
-" xor %edx, %edx\n"
-" wrpkru\n"
-" mov %r8, %rdx\n"
-" call inner\n"
-" ret\n"
-);
+My understanding, so far, is as follows:
 
-void inner(int signum, siginfo_t *si, void *ptr)
-{
-...
-}
+Tests checking the FF bit should not fail if, say, the lightbar bit is also set. If they fail, then that means that the test is too sensitive. After all, the patch does not change anything from userspace's point of view, nor from the actual human user's point of view. The DualShock 4 behaves all the same, and it's just the wire protocol that changes.
+
+So if a downstream user wishes to do a full end-to-end integration test, technically they would need to connect a real DualShock 4 and test that. But I can see that this is not easily automatable ;) so they may test at the HID level instead. The result is that, depending on how they structure their tests, they might no longer be testing end-to-end, but rather testing an implementation and its quirks. This bears the risk that the test will fail because of a legitimate change in the driver, or elsewhere in the kernel.
+
+I suppose this is what you want to avoid, but... isn't avoiding such changes the reason why LTS kernels exist?
+
+And there is only one LTS kernel with this driver, v6.6, released 8 months ago. How did it become necessary to ossify the driver's wire behaviour in this time frame?
+
+Hence I'm confused why changing the wire protocol upstream, without breaking any functionality on the original controller or backporting to LTS kernels, creates problems. Either the tests are correctly written in a way to not be affected by this change, mimicking the original gamepad which is unaffected. Or the tests are protected from breaking by using LTS kernels. In the latter case, the tests will break on a kernel version bump - legitimately so, and fixing them should be easy.
 
 
-struct sigaction sa;
- ...
-sa.sa_sigaction =3D asm_handler;
-sa.sa_flags =3D SA_ONSTACK | SA_SIGINFO;
-ret =3D sigaction(SIGUSR1, &sa, NULL);
+Am I missing something?
 
-Thanks
--Jeff
 
-> Thanks,
-> Aruna
->
+Do you see a way to get this patch in?
+
+Would it help you to have some time for warning your downstream contacts to stabilise their tests, and I could re-send this patch in 6 months from now?
+
+
+Hopeful greetings,
+Max
+
