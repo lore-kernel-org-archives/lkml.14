@@ -1,71 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8131AF69B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 18:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E58381B8;
+	Thu, 20 Jun 2024 18:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718909651; cv=none; b=piT0J6v33+s44BbhUchf498cmE3EZUQMh5QvQcHvT5m5uF2Tyf7+BL0C4KrDaApJCPlP8imfpPRkLY4vAC/UVd+26Nl544BT/Z5i+PATvHESBcpzdrDZeanSn/u2JPVSApQjnFbu6lCmtu6q1zF67dNr2/faXa8oXqWfKrFzjVs=
+	t=1718909671; cv=none; b=iop0XipZ5y96d1I5aOvEpMwjclmWslF7kWDyBqO9K23HVPu877aNNgORusBCN5gEnIUYZjKNvznWkOACs8Ta8QSM9vieHAiquioq/zwk0qykY9AKK7BdRHW6BlV/1tBXwgYdR7IABhxF4kR5wyc8raBnS4awDHgmVhgiIZLCnmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718909651; c=relaxed/simple;
-	bh=7QXAx5RXUFSzeklprgP9xCdMOxGkqkNOA9zH//++ZaI=;
+	s=arc-20240116; t=1718909671; c=relaxed/simple;
+	bh=irInUIXYcnVbTI7ZN+P72B/uLw4QMucaS01AdF/42Eg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYvybxIjB+J4+2ovBSIe7JejiJTsfbKRtuyRvpk+mkVRdxojJt82XtkhLsSTZd/BrSgUhIjteMMgLFoS1IWCIRX18NUQIh7sxoHay9V+lvBizOnRPiezDZuVX33aycwzMt4Ap//DadXscfpXAS2WQU/e7kRLKI4tUJYDa36NFEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CZ5Yu+sQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AeyLWUF8saPX4/6/4FhjeWy2hoMiBOio+3I1pbJMIQPLGBofVHIcR/K8TKoEfc9U84Qto3B1f/7mpuCiNKLIZJESunS315Pk0FqziVE4HJDTycx5JDf6pujeVpThas5FAs87nc2cFEu7tNUwMBEn/hL64lStzePu0Mkclh5zlgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gp6eNAqI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZ5Yu+sQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718909648;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6SaPDVU1xalbIsagCAY1R8fkcnXXSLdW/5aQMD2rFqY=;
-	b=CZ5Yu+sQXMgJzHd25Lg/QkacYJuJ8d4g592xdQFYJI2RdGaX51oWv14aPhFxHbLeAVrMSc
-	SHtHcjGLXrt4fNx8RxrywWDr2dYQAT7MEdcJlM/dft+VUTSEkHg/LnX32Dh3zsPja600hE
-	qTU92YxmHZYuEd47JGIanSBw8sAaFeQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-VoSW1uqhPzGWnf7uEzF8-g-1; Thu,
- 20 Jun 2024 14:54:05 -0400
-X-MC-Unique: VoSW1uqhPzGWnf7uEzF8-g-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B90E1955E89;
-	Thu, 20 Jun 2024 18:54:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.114])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ABF5219560AF;
-	Thu, 20 Jun 2024 18:53:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 20 Jun 2024 20:52:30 +0200 (CEST)
-Date: Thu, 20 Jun 2024 20:52:20 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCHv8 bpf-next 3/9] uprobe: Add uretprobe syscall to speed up
- return probe
-Message-ID: <20240620185220.GB2058@redhat.com>
-References: <20240611112158.40795-1-jolsa@kernel.org>
- <20240611112158.40795-4-jolsa@kernel.org>
- <054064c5-704a-4ea7-8a89-1e136e475437@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gp6eNAqI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2D7C32786;
+	Thu, 20 Jun 2024 18:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718909670;
+	bh=irInUIXYcnVbTI7ZN+P72B/uLw4QMucaS01AdF/42Eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gp6eNAqIPyGLiPbiV0Qu6r4RvLzCvXDfeHg1l5u6Lj4fqtpVlopL4Wo/Tw3gTVhp2
+	 c1WUHBMwKI1oqSfGKEI5k86f0alIltlVgu22U34GIPD6OvhpklgaONTjuHKiJY/u2p
+	 SpvL/g+/zSYsKOnbS2FiVkBbohNE+/W+C/sTc68FGqDY7wNIWoUrUn2xAFkZof4hN7
+	 GOdJA8+hRTgIf8VX50MsQ8d91l7S5N58nyR1k932gRhNcHx0tBCyVY25mJm3D2iliu
+	 Xnuz3P5/gBez+6LWP0Nt8UFYr1octCbPQwL/Z1malrMErf/VaholdctTl/xtow5SaI
+	 pzlxFCLAb3uhw==
+Date: Thu, 20 Jun 2024 11:54:30 -0700
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and
+ family
+Message-ID: <202406201147.8152CECFF@keescook>
+References: <20240619192131.do.115-kees@kernel.org>
+ <20240619193357.1333772-4-kees@kernel.org>
+ <cc301463-da43-4991-b001-d92521384253@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,37 +59,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <054064c5-704a-4ea7-8a89-1e136e475437@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <cc301463-da43-4991-b001-d92521384253@suse.cz>
 
-On 06/20, Guenter Roeck wrote:
->
-> On Tue, Jun 11, 2024 at 01:21:52PM +0200, Jiri Olsa wrote:
-> > Adding uretprobe syscall instead of trap to speed up return probe.
-> >
->
-> This patch results in:
->
-> Building loongarch:allmodconfig ... failed
-> --------------
-> Error log:
-> In file included from include/linux/uprobes.h:49,
->                  from include/linux/mm_types.h:16,
->                  from include/linux/mmzone.h:22,
->                  from include/linux/gfp.h:7,
->                  from include/linux/xarray.h:16,
->                  from include/linux/list_lru.h:14,
->                  from include/linux/fs.h:13,
->                  from include/linux/highmem.h:5,
->                  from kernel/events/uprobes.c:13:
-> kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
-> arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element is not constant
+On Thu, Jun 20, 2024 at 03:56:27PM +0200, Vlastimil Babka wrote:
+> On 6/19/24 9:33 PM, Kees Cook wrote:
+> > Dedicated caches are available for fixed size allocations via
+> > kmem_cache_alloc(), but for dynamically sized allocations there is only
+> > the global kmalloc API's set of buckets available. This means it isn't
+> > possible to separate specific sets of dynamically sized allocations into
+> > a separate collection of caches.
+> > 
+> > This leads to a use-after-free exploitation weakness in the Linux
+> > kernel since many heap memory spraying/grooming attacks depend on using
+> > userspace-controllable dynamically sized allocations to collide with
+> > fixed size allocations that end up in same cache.
+> > 
+> > While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> > against these kinds of "type confusion" attacks, including for fixed
+> > same-size heap objects, we can create a complementary deterministic
+> > defense for dynamically sized allocations that are directly user
+> > controlled. Addressing these cases is limited in scope, so isolating these
+> > kinds of interfaces will not become an unbounded game of whack-a-mole. For
+> > example, many pass through memdup_user(), making isolation there very
+> > effective.
+> > 
+> > In order to isolate user-controllable dynamically-sized
+> > allocations from the common system kmalloc allocations, introduce
+> > kmem_buckets_create(), which behaves like kmem_cache_create(). Introduce
+> > kmem_buckets_alloc(), which behaves like kmem_cache_alloc(). Introduce
+> > kmem_buckets_alloc_track_caller() for where caller tracking is
+> > needed. Introduce kmem_buckets_valloc() for cases where vmalloc fallback
+> > is needed.
+> > 
+> > This can also be used in the future to extend allocation profiling's use
+> > of code tagging to implement per-caller allocation cache isolation[1]
+> > even for dynamic allocations.
+> > 
+> > Memory allocation pinning[2] is still needed to plug the Use-After-Free
+> > cross-allocator weakness, but that is an existing and separate issue
+> > which is complementary to this improvement. Development continues for
+> > that feature via the SLAB_VIRTUAL[3] series (which could also provide
+> > guard pages -- another complementary improvement).
+> > 
+> > Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
+> > Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
+> > Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> >  include/linux/slab.h | 13 ++++++++
+> >  mm/slab_common.c     | 78 ++++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 91 insertions(+)
+> > 
+> > diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > index 8d0800c7579a..3698b15b6138 100644
+> > --- a/include/linux/slab.h
+> > +++ b/include/linux/slab.h
+> > @@ -549,6 +549,11 @@ void *kmem_cache_alloc_lru_noprof(struct kmem_cache *s, struct list_lru *lru,
+> >  
+> >  void kmem_cache_free(struct kmem_cache *s, void *objp);
+> >  
+> > +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
+> > +				  slab_flags_t flags,
+> > +				  unsigned int useroffset, unsigned int usersize,
+> > +				  void (*ctor)(void *));
+> 
+> I'd drop the ctor, I can't imagine how it would be used with variable-sized
+> allocations.
 
-should be fixed by https://lore.kernel.org/all/ZmyZgzqsowkGyqmH@krava/
-in this thread.
+I've kept it because for "kmalloc wrapper" APIs, e.g. devm_kmalloc(),
+there is some "housekeeping" that gets done explicitly right now that I
+think would be better served by using a ctor in the future. These APIs
+are variable-sized, but have a fixed size header, so they have a
+"minimum size" that the ctor can still operate on, etc.
 
-but may be arch/loongarch should override __weak arch_uprobe_trampoline() ?
+> Probably also "align" doesn't make much sense since we're just
+> copying the kmalloc cache sizes and its implicit alignment of any
+> power-of-two allocations.
 
-Oleg.
+Yeah, that's probably true. I kept it since I wanted to mirror
+kmem_cache_create() to make this API more familiar looking.
 
+> I don't think any current kmalloc user would
+> suddenly need either of those as you convert it to buckets, and definitely
+> not any user converted automatically by the code tagging.
+
+Right, it's not needed for either the explicit users nor the future
+automatic users. But since these arguments are available internally,
+there seems to be future utility,  it's not fast path, and it made things
+feel like the existing API, I'd kind of like to keep it.
+
+But all that said, if you really don't want it, then sure I can drop
+those arguments. Adding them back in the future shouldn't be too
+much churn.
+
+-- 
+Kees Cook
