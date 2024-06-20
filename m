@@ -1,48 +1,48 @@
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2A01AD4BE;
-	Thu, 20 Jun 2024 13:26:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861901AD3F4;
+	Thu, 20 Jun 2024 13:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718889992; cv=none; b=IQNC1Y4RgtpMUCWcPkDL/Jti185Mk8y5K62qg4G+AcnYMRBU5/HFm80o9x5oD0P6FkFL3IphoWIRwLsJToYxtz2CWnaq8SI43r03uJsL+MzWedsvgJv6MhzQ7m98eGRuXcCBzVAFn9oJL9HCaGKPzyI3N0OAvlsS6sNhNH/oF6E=
+	t=1718890001; cv=none; b=oBbibviH+Y+0LJlnNlsvIbicLTY9B+J1HlMLe0hwqhF88h3TL++ZXWxSXIwZ7lxTSI8uiAIalN2A5LjlDhUg1rdXCUK6sMjb9TphNk3rfZ9jjbr+W92rZPPAHVg8e9jT+5QayrDQgNhFRsDEQTSXSQiHX6eAyrEEhBKGJqkBhAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718889992; c=relaxed/simple;
-	bh=3ubglKc/KOQfIaZlNmwQ0fJ7AXhD9dtSkMjUYfLv3QM=;
+	s=arc-20240116; t=1718890001; c=relaxed/simple;
+	bh=uHRf8QnSmjHeP+y1W3PFaa/SDZvxV0HhtGn+PdLFSwI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QcFNfFxsVlFHDMwGcHGsBP9+ekeTq3t44z89HURkXr7TNR39QWH8+MF8g9X0RrKY2Id/ZPH9G/KP0SHbz8xHfKlF1InAZm/BT5rJSwQbZrdcsEAO9v+IfgS8gVgG7jii8t5/CKF1NKrHNFiFSCfqzFJP1kNDbFJTWf2HpupqqtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=HsgPvPPT; arc=none smtp.client-ip=208.88.110.44
+	 MIME-Version; b=e+OQoP2Naows4gbRHVjoeArc5Y4bWGJIw41qW9cJw1GePFIOrf17F8QXaGuswWDIwPa+vQ8CxigvkPW96OurfABrqIiCIZ+zwaps8ULDt0Xqz95CyIr7un09oVT/tMFYCOneUURY08svRn/TWRNO26o/mD5iFHVCIAsk8GAEGP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=a9m/sWIq; arc=none smtp.client-ip=208.88.110.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="HsgPvPPT"
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="a9m/sWIq"
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C17259C5B16;
-	Thu, 20 Jun 2024 09:26:30 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id B735C9C5BB5;
+	Thu, 20 Jun 2024 09:26:39 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id fl0eZEgRxpZp; Thu, 20 Jun 2024 09:26:30 -0400 (EDT)
+ with ESMTP id iP3d_f_PxoSX; Thu, 20 Jun 2024 09:26:38 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 02A289C54A9;
-	Thu, 20 Jun 2024 09:26:30 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 02A289C54A9
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id C13A19C5BB3;
+	Thu, 20 Jun 2024 09:26:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com C13A19C5BB3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1718889990; bh=QtA/pIJ8bF/vOwhsCRzTiYA82D2ZNAC429FN7VFxLnA=;
+	t=1718889998; bh=WIDdP8Nhs+T0AX1bFRGBcj7z1PDp/O7FjFT/o694t9E=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=HsgPvPPTwoDHCG+RqNaaAdISoR3KxyHv0RlIXdjQtLwF4UX9EpmKxHFIxmkXt0laX
-	 jSqcjZVnw+b5DoQepHdGe38tkkUkiAqkp6KK2FsF4FsHFbdTg/ab8sUeTwZYI5dALC
-	 ffiigX34O60QNabSPcsrS2UZgUNOqZ1aqHMCjpwqVLjJ7BvF1F3AgItiT3Qf5lyK/M
-	 mzbApItI6inGQzwQ33wAZc6y+ZVGejrBHeYyzZxoynIYNFE6MzT9HP6mn0v9AV0eyR
-	 fw1HlujxwHJqU1B+vZXOur5cvVP4mFDhGhQgjbymZNwLGvL3RGtAXUTgqeB7gMMGBs
-	 FqYBLbsvJHMeA==
+	b=a9m/sWIqPv+3D9QIkNsZZRgbiN+vjq6Tb+ClhwW1n6JPxlnyCadOkmqpLgvUe6jJ/
+	 MZXiBjuo4lsUrhDJb8fH8lcdmvjcGI/2P8PJqmn4dxM5/KiGLej1rh/lQFNcq6P4bX
+	 Ldyc5IAF0v/35s4TtTrUY0eyBOVKYh129GA8hodHMUP/Ae6QQBU/kwvxlCvQtWFMjR
+	 Ox8smoJytTyRjqL2nBQEhV43UEY1Giy/BcFHmrdpLKbyYW1rQBaTs7IQhKNEU+W3tV
+	 +PbbdZ2hf2wV6/EvR31Y6r/okCJEO4zOF9Kqxkl+zstoWgOcGOy/6t44lnT3+Ka7qi
+	 KxIaN7NBTz/Ng==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id UvN-nFUPYSQE; Thu, 20 Jun 2024 09:26:29 -0400 (EDT)
+ with ESMTP id UmrgJU7p_K7k; Thu, 20 Jun 2024 09:26:38 -0400 (EDT)
 Received: from gerard.rennes.sfl (lmontsouris-657-1-69-118.w80-15.abo.wanadoo.fr [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 22B9B9C5B16;
-	Thu, 20 Jun 2024 09:26:27 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id E5BB69C5BCD;
+	Thu, 20 Jun 2024 09:26:35 -0400 (EDT)
 From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
@@ -70,9 +70,9 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	linuxppc-dev@lists.ozlabs.org,
 	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
 	Philip-Dylan <philip-dylan.gleonec@savoirfairelinux.com>
-Subject: [PATCHv5 3/9] ASoC: fsl-asoc-card: add second dai link component for codecs
-Date: Thu, 20 Jun 2024 15:25:05 +0200
-Message-Id: <20240620132511.4291-4-elinor.montmasson@savoirfairelinux.com>
+Subject: [PATCHv5 6/9] ASoC: dt-bindings: fsl-asoc-card: add compatible string for spdif
+Date: Thu, 20 Jun 2024 15:25:08 +0200
+Message-Id: <20240620132511.4291-7-elinor.montmasson@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240620132511.4291-1-elinor.montmasson@savoirfairelinux.com>
 References: <20240620132511.4291-1-elinor.montmasson@savoirfairelinux.com>
@@ -84,56 +84,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add a second dai link component for codecs that will be used for use
-cases with 2 codecs.
-It is needed for future integration of the SPDIF support, which will
-use spdif_receiver and spdif_transmitter drivers.
+The S/PDIF audio card support was merged from imx-spdif into the
+fsl-asoc-card driver, making it possible to use an S/PDIF with an ASRC.
+Add the new compatible and update properties.
 
-To prevent deferring in use cases using only one codec, also set
-by default the number of codecs to 1 for the relevant dai links.
-
-Co-developed-by: Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinu=
-x.com>
-Signed-off-by: Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux.=
-com>
 Signed-off-by: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../bindings/sound/fsl-asoc-card.yaml         | 30 ++++++++++++++++---
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index e8003fbc8092..805e2030bde4 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -296,7 +296,7 @@ static int be_hw_params_fixup(struct snd_soc_pcm_runtim=
-e *rtd,
+diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml b/D=
+ocumentation/devicetree/bindings/sound/fsl-asoc-card.yaml
+index 9922664d5ccc..f2e28b32808e 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
++++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
+@@ -33,6 +33,7 @@ properties:
+       - items:
+           - enum:
+               - fsl,imx-sgtl5000
++              - fsl,imx-sabreauto-spdif
+               - fsl,imx25-pdk-sgtl5000
+               - fsl,imx53-cpuvo-sgtl5000
+               - fsl,imx51-babbage-sgtl5000
+@@ -54,6 +55,7 @@ properties:
+               - fsl,imx6q-ventana-sgtl5000
+               - fsl,imx6sl-evk-wm8962
+               - fsl,imx6sx-sdb-mqs
++              - fsl,imx6sx-sdb-spdif
+               - fsl,imx6sx-sdb-wm8962
+               - fsl,imx7d-evk-wm8960
+               - karo,tx53-audio-sgtl5000
+@@ -65,6 +67,7 @@ properties:
+               - fsl,imx-audio-sgtl5000
+               - fsl,imx-audio-wm8960
+               - fsl,imx-audio-wm8962
++              - fsl,imx-audio-spdif
+       - items:
+           - enum:
+               - fsl,imx-audio-ac97
+@@ -81,6 +84,7 @@ properties:
+               - fsl,imx-audio-wm8960
+               - fsl,imx-audio-wm8962
+               - fsl,imx-audio-wm8958
++              - fsl,imx-audio-spdif
 =20
- SND_SOC_DAILINK_DEFS(hifi,
- 	DAILINK_COMP_ARRAY(COMP_EMPTY()),
--	DAILINK_COMP_ARRAY(COMP_EMPTY()),
-+	DAILINK_COMP_ARRAY(COMP_EMPTY(), COMP_EMPTY()),
- 	DAILINK_COMP_ARRAY(COMP_EMPTY()));
+   model:
+     $ref: /schemas/types.yaml#/definitions/string
+@@ -93,8 +97,15 @@ properties:
+       need to add ASRC support via DPCM.
 =20
- SND_SOC_DAILINK_DEFS(hifi_fe,
-@@ -306,7 +306,7 @@ SND_SOC_DAILINK_DEFS(hifi_fe,
+   audio-codec:
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-    description: The phandle of an audio codec
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      The phandle of an audio codec.
++      With "fsl,imx-audio-spdif", either SPDIF audio codec spdif_transmitt=
+er,
++      spdif_receiver or both.
++    minItems: 1
++    maxItems: 2
++    items:
++      maxItems: 1
 =20
- SND_SOC_DAILINK_DEFS(hifi_be,
- 	DAILINK_COMP_ARRAY(COMP_EMPTY()),
--	DAILINK_COMP_ARRAY(COMP_EMPTY()));
-+	DAILINK_COMP_ARRAY(COMP_EMPTY(), COMP_EMPTY()));
+   audio-cpu:
+     $ref: /schemas/types.yaml#/definitions/phandle
+@@ -150,8 +161,10 @@ properties:
+     description: dai-link uses bit clock inversion.
 =20
- static const struct snd_soc_dai_link fsl_asoc_card_dai[] =3D {
- 	/* Default ASoC DAI Link*/
-@@ -622,6 +622,8 @@ static int fsl_asoc_card_probe(struct platform_device *=
-pdev)
+   mclk-id:
+-    $ref: /schemas/types.yaml#/definitions/uint32
+-    description: main clock id, specific for each card configuration.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: Main clock id for each codec, specific for each card conf=
+iguration.
++    minItems: 1
++    maxItems: 2
 =20
- 	memcpy(priv->dai_link, fsl_asoc_card_dai,
- 	       sizeof(struct snd_soc_dai_link) * ARRAY_SIZE(priv->dai_link));
-+	priv->dai_link[0].num_codecs =3D 1;
-+	priv->dai_link[2].num_codecs =3D 1;
-=20
- 	priv->card.dapm_routes =3D audio_map;
- 	priv->card.num_dapm_routes =3D ARRAY_SIZE(audio_map);
+   mux-int-port:
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -195,3 +208,12 @@ examples:
+              "AIN2L", "Line In Jack",
+              "AIN2R", "Line In Jack";
+     };
++
++  - |
++    sound-spdif-asrc {
++      compatible =3D "fsl,imx-audio-spdif";
++      model =3D "spdif-asrc-audio";
++      audio-cpu =3D <&spdif>;
++      audio-asrc =3D <&easrc>;
++      audio-codec =3D <&spdifdit>, <&spdifdir>;
++    };
 --=20
 2.34.1
 
