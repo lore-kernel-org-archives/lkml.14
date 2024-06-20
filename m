@@ -1,130 +1,94 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A552D1BD02D
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 18:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622531B4C3D;
+	Thu, 20 Jun 2024 18:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906471; cv=none; b=jhvQc0fR+U0pJ1eC/EvIR/56y/41WXt38vTvVOMh0S+md3RlrCAOMsueYI1Uw7SiYEybAThEMkJJT3IpM6Ty1KVsoLTPE3HaY7h/jQwu+pNBb0Jk2WQpLgFw9MuSejmFZS6Bpv4JDVnPz7F0c4eBeBpjkfiTzziH764bKh2HzdI=
+	t=1718906515; cv=none; b=cYWn8WUx0rxN3WFPRGAW3W/3Hfp4ATwjU2pazrHTWM6HDc+9JuB7nL0hHGeADJDltlLAE6dQlhrWmGFhldH78E9uGwV2nMVQc2KRlQ5PH9QkXsqsrP070X/ZYaggnpPpElQyl2a9mpky17og9cmCcakFnfRgUwtx11+CKo8v6JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906471; c=relaxed/simple;
-	bh=T0AdqBMK9lkL1kcLkmUERSGkLaTYUdQ6VqLsNTB1DZU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FSnHVP0l1EDmN6DKlJYPGJ+0Fcy/1ugD5YwQ9qj1wT1G/c0r8xsFcalMo3GASe/ZT3LcWhSoHS+ClUsBFAksxoK5HpCc7RDTZSJB+E0pdIQtZHgAnDR9u5ot5I071b5oSTLEJFzoPlEK2cxnLF2OQVoFLkByGovW5/ihK2VC+TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=tqE1e0EM; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1718906515; c=relaxed/simple;
+	bh=RMYZrT95nApMxsG7y6LLT3Z2HeuOH/cK6XfnlqABCbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OeIVfhRdY6lkFtgG9jOjUYDclyOBXjAldgbcvziWJgJOybRyZHZgQoYZ2dl0xU5XSgZyeC1R8SUXzZ3PkhUkJ7Xck7WF1PyriighWETQAf6uNEIwk5wpBqfEw4TB2kcklRHY7LhCMoiE9DiIJEEWWgflby7lajfulujh09Ys2Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACl5tPnt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="tqE1e0EM"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6fb696d2e5so135954566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 11:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906468; x=1719511268; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qz8kTOxdaIm1u93eV0Is+4r0vyFAn21pP7Hjv/L4wvo=;
-        b=tqE1e0EMqUp2C79hQhRClkk6F46UnOwj31dr27M9qmDkJrZxEP3hyNP4zu628BPCqw
-         0tSSFPiQxEVpSeif3aXosKjXeITYlIUThl1mw7LalfsMA3qLmumGXhPCQqEm4QghDY/l
-         06uJL8I3HpoyFr7fgEW8mjs/fCjz8dgSTjoeCFR1hY7wb2O7KAhRKj6jKtY3fh1SL77G
-         l+IaJWqEfSycIPsIDsUZqhpPuPpuM+uRXDbm/Im+Di1YLI5HKfJ8rvlUiVioW3pZ4eLd
-         7fAgA4zdtpkeXkAVD6hEEwdjAm+/EQqLSoSzPYHpmL9voXsAlCy8NacJt5jj1+nXbgUQ
-         L35A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906468; x=1719511268;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qz8kTOxdaIm1u93eV0Is+4r0vyFAn21pP7Hjv/L4wvo=;
-        b=pDo1knF8dz0WKzgoymQaIADJJJ81vnY3LeDvUlc3RWRhOf2q+sHhlDGXwp2dG1QY4c
-         LtzGZXUxDte7P0zwFmihJDDuqmjOp4GzhNqshPd1jJpiFLOmbdx1tFKRk2CUpUssvppE
-         zZRj4ElU8bGRYd2KNCD9GJmp8ACKw0ALkSxe2V5tmBk9zAxoQxLO+f3sP2pXdYdB8JhP
-         EpJt/9bSWZFl01QMuPTBllOhKiyIouWJNTKX9T4Uyi6pzqgEEcwOLajbo9Xf+RIbqHd3
-         bfIEegBsqa7rAhfOslyQYDgNhh8EgHe8zvG/igWoj6KbdjnLwQnzGaDTCriDXH532Sqh
-         hZDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfPfZ1Tizs4iUPvPdwegg9mIlw6nNccrCRa+Jniwz8k6O6DXryIUasFvEWnvY8KqXK92vcRX7Vh6vRdWk7qBrwM8s//8KxewohlZ/b
-X-Gm-Message-State: AOJu0YzkSqjjVPTlNMpeg9D8ROfXNiUjES9FM1VaaUHb0OqUoZ5ZCkHv
-	2DooekLLB/YxEP2s3oFwnAhQiymS9afAyvUsQInTH7F29FWBCGGFR7sN2s/T+7U=
-X-Google-Smtp-Source: AGHT+IG8eY8d/PSntzHXSfPtqV/wO9neoC+Na07hB+VY1pAoMYT9SP6YNE1GHB/rvuCByUpgceEg7w==
-X-Received: by 2002:a17:907:a80f:b0:a6f:b67d:959e with SMTP id a640c23a62f3a-a6fb67d9870mr344459666b.53.1718906468099;
-        Thu, 20 Jun 2024 11:01:08 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.11.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 11:01:07 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Subject: [Patch v4 10/10] i2x: pnx: Use threaded irq to fix warning from del_timer_sync()
-Date: Thu, 20 Jun 2024 19:56:41 +0200
-Message-Id: <20240620175657.358273-11-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACl5tPnt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD06C4AF07;
+	Thu, 20 Jun 2024 18:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718906515;
+	bh=RMYZrT95nApMxsG7y6LLT3Z2HeuOH/cK6XfnlqABCbY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ACl5tPntUOAMvhb3Wa2wWXsBJIL7DH7NNRcjUO9dEq0twiuwyL0ZrRdp95iWA6MR2
+	 LSlQ0XMFAfETA5bqERl1jwx1QSlLIGfQm2UBIs1sk1yQ3ttFbH1bdDiY9xmvzaMeTz
+	 kkC06dSLZokTiJcHgObwWjgTC/8hXq3QOlFsdpLJyxDuNWBM8tBQoVd6jJ9ZosxxTj
+	 NmLsXB/a/yZioAkcFiBoUk6kQWKuc3RbZwt+ptsecut+u5lu0PKzAoKP6Fdo5rvJce
+	 n9SxwdqjalM3MuI5gVOSoKlB3Vg0W6LP5Aygifd82eQYin1ugjHF4OSpuoyU/l95wH
+	 OMI5QhiNeiiPQ==
+Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
+	(envelope-from <mchehab@kernel.org>)
+	id 1sKM6a-00000006MRi-0wMY;
+	Thu, 20 Jun 2024 20:01:52 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: 
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Borislav Petkov" <bp@alien8.de>,
+	"James Morse" <james.morse@arm.com>,
+	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+	"Shiju Jose" <shiju.jose@huawei.com>,
+	"Tony Luck" <tony.luck@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-edac@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] efi/cper: Adjust infopfx size to accept an extra space
+Date: Thu, 20 Jun 2024 20:01:44 +0200
+Message-ID: <a8cfcd9e9827770de748db7be44362a98c957642.1718906288.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1718906288.git.mchehab+huawei@kernel.org>
+References: <cover.1718906288.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-When del_timer_sync() is called in an interrupt context it throws a warning
-because of potential deadlock. Threaded irq handler fixes the potential
-problem.
+Compiling with W=1 with werror enabled produces an error:
 
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+drivers/firmware/efi/cper-arm.c: In function ‘cper_print_proc_arm’:
+drivers/firmware/efi/cper-arm.c:298:64: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
+  298 |                         snprintf(infopfx, sizeof(infopfx), "%s ", newpfx);
+      |                                                                ^
+drivers/firmware/efi/cper-arm.c:298:25: note: ‘snprintf’ output between 2 and 65 bytes into a destination of size 64
+  298 |                         snprintf(infopfx, sizeof(infopfx), "%s ", newpfx);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As the logic there adds an space at the end of infopx buffer.
+Add an extra space to avoid such warning.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/i2c/busses/i2c-pnx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/cper-arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pnx.c b/drivers/i2c/busses/i2c-pnx.c
-index a12525b3186b..b2ab6fb168bf 100644
---- a/drivers/i2c/busses/i2c-pnx.c
-+++ b/drivers/i2c/busses/i2c-pnx.c
-@@ -718,8 +718,8 @@ static int i2c_pnx_probe(struct platform_device *pdev)
- 		ret = alg_data->irq;
- 		goto out_clock;
- 	}
--	ret = devm_request_irq(&pdev->dev, alg_data->irq, i2c_pnx_interrupt,
--			       0, pdev->name, alg_data);
-+	ret = devm_request_threaded_irq(&pdev->dev, alg_data->irq, NULL, i2c_pnx_interrupt,
-+					IRQF_ONESHOT, pdev->name, alg_data);
- 	if (ret)
- 		goto out_clock;
+diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-arm.c
+index fa9c1c3bf168..d9bbcea0adf4 100644
+--- a/drivers/firmware/efi/cper-arm.c
++++ b/drivers/firmware/efi/cper-arm.c
+@@ -240,7 +240,7 @@ void cper_print_proc_arm(const char *pfx,
+ 	int i, len, max_ctx_type;
+ 	struct cper_arm_err_info *err_info;
+ 	struct cper_arm_ctx_info *ctx_info;
+-	char newpfx[64], infopfx[64];
++	char newpfx[64], infopfx[65];
+ 
+ 	printk("%sMIDR: 0x%016llx\n", pfx, proc->midr);
  
 -- 
-2.25.1
+2.45.2
 
