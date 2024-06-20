@@ -1,144 +1,237 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A741B1514;
-	Thu, 20 Jun 2024 16:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9717C1B3F26;
+	Thu, 20 Jun 2024 16:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899904; cv=none; b=t4gPFNxBXsML8ZwYJ2yDl/scmwCLGm2r4/kU36kDxgmiERTX3ItDpaimxgVJKjbbZN+0lOwksB5MUd39PLf54Sghu29yVJz49MdMdb5etNnC5G9MbP9i76uv98/H53pCBc+Jbh+BFnxkDasXzgIMiuyyKiiqyQ0m/EkrdkADxgA=
+	t=1718899909; cv=none; b=UdPFX/VL+GE75bafqZj5AXhMK8UoB93nZlmPME60/rjFfkdVkOk/P0XW7CYC1rnguNosDFgIikD0yhVQB5TZXt1PJgU4AskFUz+ktFgy0OJzX3lix2MjuFbHLmKaiKYdkT7lg7cFUusQviXe36D4eMfV2HC9IiePbkNZWFarc5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899904; c=relaxed/simple;
-	bh=moqkrVqx95CFhHpEKKGXhdPr5fPQ9IbFq3m1fia5tT4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XCq880x7/fpH3NaVzdDgQqtTLubt73f8Um60tdqVTpX6zt2vF/BW2gyhJE1Ly5OnQ3nCgPuD9gfyKcl33N2XlwFxpWgWrkbnOewpfZvzDv5gBvQWsGWTst8PdANXHZ3JqdVbaBmu5LAZy8ILYX+qZt3/j2ZoPNTyorLsmttB1nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVwCxk7m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718899909; c=relaxed/simple;
+	bh=WeTUKEDtm6DluJNLL2ts96rpxWNm5O31C45eYJesU7A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KXkUL3wE6n6n5WiyyuWttE2f3Hq9c7QB7d+njKi+rc49y6WgjTxicMhRGd8RyuPSl0Lfdc6OAjDU3qPpg3kLUSNuuy8qLwjaVBH439GaaerjpKEytOmI0klYiRcAeHPzI2d3Wy9j9u4w38U6LQj9Gf7Q2PQrCfsliDpTH/LCvOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fgmb//Gr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVwCxk7m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A72BBC4AF0A;
-	Thu, 20 Jun 2024 16:11:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fgmb//Gr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62875C4AF07;
+	Thu, 20 Jun 2024 16:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718899903;
-	bh=moqkrVqx95CFhHpEKKGXhdPr5fPQ9IbFq3m1fia5tT4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hVwCxk7mflF3ByQBM3cGd6r6Lu94QLOknEe7PvZUcLYt/uiaYTUVGaBrYhS5FiwX7
-	 kfxUJf0r2xhcRrcncw9rKnIFWR5uJYwGU75mAfaNh03kwBUohSctZqml6YJ2IJVamJ
-	 8iS+ifUihbHnTvvpuDxtuOnTgSMnu7I1HQXHLIMp+k0an2KolZDorsHzU6dlX+KsqS
-	 M0OJEohb1TewF4FNja9lXSQzxhXycxtESiGBAqSF+VRCB55gDBaYDQ12WUClGPr1Vt
-	 ERCF0ISiIJGjFfxtIBYXSczhNjQ657rscHBlwAjCoXXdx5zMAuC6IdV9KFc8nUhkqp
-	 w5nHDytpDwrTw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 540D9CE0D11; Thu, 20 Jun 2024 09:11:43 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH rcu 3/3] srcu: Fill out polled grace-period APIs
-Date: Thu, 20 Jun 2024 09:11:42 -0700
-Message-Id: <20240620161142.2057652-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <8ec14282-a768-49eb-b870-c2ee51e91f8b@paulmck-laptop>
-References: <8ec14282-a768-49eb-b870-c2ee51e91f8b@paulmck-laptop>
+	s=k20201202; t=1718899909;
+	bh=WeTUKEDtm6DluJNLL2ts96rpxWNm5O31C45eYJesU7A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Fgmb//GrOgY8zUVSZnyWqvMcmAIj7N4HyKCz95jVlI4QOBXogKvvbELBgqtQyAdft
+	 oonRlboGw8KZoUCr6sRoaghD58IHy26JPSBk/6h33UuMIoSK8Ca0Cpou46d3ikh7s5
+	 DfBoTrijAzXOp9pa7MTObGTbjhVPcFE9IJDKPCYmVW6aedBLfbazoGmsWcDN7P9fLF
+	 kpHg9mfLLiP17e4gvHuq7d7xER4C002Lf14GKu2m8U3bb7q+mw59t2oK5HXLGCClou
+	 MqlsbiEGssS8T9a5OGD7jpdOHVoL4QmHNNfVBZOJ3y0VjMKLU1765XSZDp2MIhJA8D
+	 AZaJ9TAegRtxQ==
+Message-ID: <1e7bc737-af3b-4b10-9f15-a40da97803f0@kernel.org>
+Date: Thu, 20 Jun 2024 18:11:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 19/23] power: supply: s2dos05: Add fuel gauge driver
+ for s2dos05
+To: Dzmitry Sankouski <dsankouski@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-19-e3f6662017ac@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240618-starqltechn_integration_upstream-v3-19-e3f6662017ac@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This commit adds the get_completed_synchronize_srcu() and the
-same_state_synchronize_srcu() functions.  The first returns a cookie
-that is always interpreted as corresponding to an expired grace period.
-The second does an equality comparison of a pair of cookies.
+On 18/06/2024 15:59, Dzmitry Sankouski wrote:
+> Add fuel gauge driver for s2dos05 PMIC. It uses adc to measure power
+> on each power output s2dos05 provides, including regulator outputs
+> and AVDD, ELVSS, ELVDD lines. Driver registers power supply for each
+> corresponding power line.
+> 
+> Adc can be disabled and enabled via sysfs.
+> 
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
----
- include/linux/srcu.h  | 31 +++++++++++++++++++++++++++++++
- kernel/rcu/srcutiny.c |  3 ++-
- kernel/rcu/srcutree.c |  3 ++-
- 3 files changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/srcu.h b/include/linux/srcu.h
-index f664cba7a80c2..6f6cb5fc12424 100644
---- a/include/linux/srcu.h
-+++ b/include/linux/srcu.h
-@@ -57,6 +57,20 @@ void cleanup_srcu_struct(struct srcu_struct *ssp);
- int __srcu_read_lock(struct srcu_struct *ssp) __acquires(ssp);
- void __srcu_read_unlock(struct srcu_struct *ssp, int idx) __releases(ssp);
- void synchronize_srcu(struct srcu_struct *ssp);
-+
-+#define SRCU_GET_STATE_COMPLETED 0x1
-+
-+/**
-+ * get_completed_synchronize_srcu - Return a pre-completed polled state cookie
-+ *
-+ * Returns a value that poll_state_synchronize_srcu() will always treat
-+ * as a cookie whose grace period has already completed.
-+ */
-+static inline unsigned long get_completed_synchronize_srcu(void)
-+{
-+	return SRCU_GET_STATE_COMPLETED;
-+}
-+
- unsigned long get_state_synchronize_srcu(struct srcu_struct *ssp);
- unsigned long start_poll_synchronize_srcu(struct srcu_struct *ssp);
- bool poll_state_synchronize_srcu(struct srcu_struct *ssp, unsigned long cookie);
-@@ -65,6 +79,23 @@ bool poll_state_synchronize_srcu(struct srcu_struct *ssp, unsigned long cookie);
- // not-yet-completed SRCU grace periods.
- #define NUM_ACTIVE_SRCU_POLL_OLDSTATE 2
- 
-+/**
-+ * same_state_synchronize_srcu - Are two old-state values identical?
-+ * @oldstate1: First old-state value.
-+ * @oldstate2: Second old-state value.
-+ *
-+ * The two old-state values must have been obtained from either
-+ * get_state_synchronize_srcu(), start_poll_synchronize_srcu(), or
-+ * get_completed_synchronize_srcu().  Returns @true if the two values are
-+ * identical and @false otherwise.  This allows structures whose lifetimes
-+ * are tracked by old-state values to push these values to a list header,
-+ * allowing those structures to be slightly smaller.
-+ */
-+static inline bool same_state_synchronize_srcu(unsigned long oldstate1, unsigned long oldstate2)
-+{
-+	return oldstate1 == oldstate2;
-+}
-+
- #ifdef CONFIG_NEED_SRCU_NMI_SAFE
- int __srcu_read_lock_nmisafe(struct srcu_struct *ssp) __acquires(ssp);
- void __srcu_read_unlock_nmisafe(struct srcu_struct *ssp, int idx) __releases(ssp);
-diff --git a/kernel/rcu/srcutiny.c b/kernel/rcu/srcutiny.c
-index 5afd5cf494dba..549c03336ee97 100644
---- a/kernel/rcu/srcutiny.c
-+++ b/kernel/rcu/srcutiny.c
-@@ -277,7 +277,8 @@ bool poll_state_synchronize_srcu(struct srcu_struct *ssp, unsigned long cookie)
- 	unsigned long cur_s = READ_ONCE(ssp->srcu_idx);
- 
- 	barrier();
--	return ULONG_CMP_GE(cur_s, cookie) || ULONG_CMP_LT(cur_s, cookie - 3);
-+	return cookie == SRCU_GET_STATE_COMPLETED ||
-+	       ULONG_CMP_GE(cur_s, cookie) || ULONG_CMP_LT(cur_s, cookie - 3);
- }
- EXPORT_SYMBOL_GPL(poll_state_synchronize_srcu);
- 
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 15dc22a8ff5ab..d6a4047719cb0 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -1543,7 +1543,8 @@ EXPORT_SYMBOL_GPL(start_poll_synchronize_srcu);
-  */
- bool poll_state_synchronize_srcu(struct srcu_struct *ssp, unsigned long cookie)
- {
--	if (!rcu_seq_done(&ssp->srcu_sup->srcu_gp_seq, cookie))
-+	if (cookie != SRCU_GET_STATE_COMPLETED &&
-+	    !rcu_seq_done(&ssp->srcu_sup->srcu_gp_seq, cookie))
- 		return false;
- 	// Ensure that the end of the SRCU grace period happens before
- 	// any subsequent code that the caller might execute.
--- 
-2.40.1
+> +
+> +static const struct power_supply_desc s2dos05_avdd_fg_desc = {
+> +	.name		= "s2dos05_avdd",
+> +	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
+> +	.get_property	= s2dos05_fg_get_property_avdd,
+> +	.properties	= s2dos05_fg_properties,
+> +	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
+> +};
+> +
+> +static const struct power_supply_desc s2dos05_buck_fg_desc = {
+> +	.name		= "s2dos05_buck",
+> +	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
+> +	.get_property	= s2dos05_fg_get_property_buck,
+> +	.properties	= s2dos05_fg_properties,
+> +	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
+> +};
+
+Buck is a regulator. Not power supply.
+
+Entire driver is something odd. NAK.
+
+> +static int s2dos05_fuelgauge_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct s2dos_core *iodev = dev_get_drvdata(dev->parent);
+> +	struct s2dos05_fg	*drv_data;
+
+Drop redundant spaces.
+
+> +	struct power_supply_config pscfg = {};
+> +	int ret;
+> +
+> +	drv_data = devm_kzalloc(dev, sizeof(struct s2dos05_fg),
+
+Drop 2015 code. Use new drivers as template.
+
+> +							GFP_KERNEL);
+> +	if (!drv_data)
+> +		ret = -ENOMEM;
+
+
+> +
+> +MODULE_DESCRIPTION("s2dos05 power meter");
+> +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/s2dos05.h b/include/linux/mfd/s2dos05.h
+> new file mode 100644
+> index 000000000000..8d216064bc78
+> --- /dev/null
+> +++ b/include/linux/mfd/s2dos05.h
+
+Why this is MFD? Squash the header into C code.
+
+> @@ -0,0 +1,123 @@
+> +/* SPDX-License-Identifier: GPL-2.0+
+> + * s2dos05.h
+
+Drop
+
+> + *
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd
+> + *              http://www.samsung.com
+> + *
+> + */
+> +
+> +#ifndef __LINUX_MFD_S2DOS05_H
+> +#define __LINUX_MFD_S2DOS05_H
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MFD_DEV_NAME "s2dos05"
+
+Drop
+
+> +
+> +struct s2dos05_dev {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +};
+> +
+> +/* S2DOS05 registers */
+> +/* Slave Addr : 0xC0 */
+> +enum S2DOS05_reg {
+> +	S2DOS05_REG_DEV_ID,
+> +	S2DOS05_REG_TOPSYS_STAT,
+> +	S2DOS05_REG_STAT,
+> +	S2DOS05_REG_EN,
+> +	S2DOS05_REG_LDO1_CFG,
+> +	S2DOS05_REG_LDO2_CFG,
+> +	S2DOS05_REG_LDO3_CFG,
+> +	S2DOS05_REG_LDO4_CFG,
+> +	S2DOS05_REG_BUCK_CFG,
+> +	S2DOS05_REG_BUCK_VOUT,
+> +	S2DOS05_REG_IRQ_MASK = 0x0D,
+> +	S2DOS05_REG_SSD_TSD = 0x0E,
+> +	S2DOS05_REG_OCL = 0x10,
+> +	S2DOS05_REG_IRQ = 0x11
+> +};
+> +
+> +/* S2DOS05 regulator ids */
+> +enum S2DOS05_regulators {
+
+What does it have to do with power supply / fuel gauge?
+
+> +	S2DOS05_LDO1,
+> +	S2DOS05_LDO2,
+> +	S2DOS05_LDO3,
+> +	S2DOS05_LDO4,
+> +	S2DOS05_BUCK1,
+> +	S2DOS05_REG_MAX,
+> +};
+
+
+
+Best regards,
+Krzysztof
 
