@@ -1,76 +1,98 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482671C9EDA;
-	Thu, 20 Jun 2024 17:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819231C9EDF
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906302; cv=none; b=WEkVXSS0O6J4JbImOWi4c03DedfYYuHtQFcDTipGp6qn1V84kUvRoc7kVZspimoFGrdV5CEhndPgCpb4C9npDQmqSWSQve0XUvEh54Q6qEDrUIIbg6GIsLhGvwDVjG+SW9Z1XlV9wSSIRRvPkFtRPDUH/2gw/jvPlYEdqteNakk=
+	t=1718906303; cv=none; b=dwsSgVP0qn6p8zuhSvz3Y46WZtkt/jXOTT+c2FrYscsRCRSprLMt8+ijPZy7JI04hkOE3ZcmIMKLiu3DatoDiCPZuGT+PfIXCuJB6kM9+x1S/ZTf/hGJXTMx3HluLeNzdPwhbda1SoLitKUjR9wzZAZklGE/hbQcpg84CIasGzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906302; c=relaxed/simple;
-	bh=K4IWdyliZkmZhKKSV+eGfL58Im2XzxDJDCPSFOZ4NNI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lXG2mF28Dk9BBopB7AVgMSBsxUN/K/JpPpm6KAHsGnjjEOzv9oS/HU8LkWe+RE9Im8bLcxw/De89A1R2+IZQMEIzjdgzMpp7Lrzr4f1zsJWxpItf6wPyoL4+vUmrU1ayNaoBVYnqa/fKkVxGAxSYCaHG/eu1vSYn8y4lUrwwLyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqRe5MAa; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718906303; c=relaxed/simple;
+	bh=qFS8dbUIltaliP34b4s9iOYNBl/H/n7Qhca0kv+Esfk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VsRLL8hW/LWGnExSnClvX3z5/GfoXuE+jLnrQ2GPSgbUn/aCJHQL1n9xaJ9u3oMDU11WoFERNsZCNRaga+yrElxOG4AtbGVaTfFUpdXAI8ITqhEKlzLp8sWSq7ElwKpw4yKXTIm+Tr6QkAM5cuAX/8/Ry/RltmDJZuOJXCHIGOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=cFhihpqE; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqRe5MAa"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-711b1512aeaso940415a12.3;
-        Thu, 20 Jun 2024 10:58:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="cFhihpqE"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f11a2d18aso133138566b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 10:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718906301; x=1719511101; darn=vger.kernel.org;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906300; x=1719511100; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lti5kgcPeWhIYDqzEsD33v78UGifs1rdopCyxCRLYNo=;
-        b=EqRe5MAaHm1RKGWNTbNGuIXjFJJZCh9XYH9QoC00WbkQwvh8ZDyDqTUa1SRJNhmd5U
-         HOaxOLn9M4HqXWgJG0a4Wr7p7bWnkeeqt5NF3pplLwOW653UKkQVF82UDyFUKi//FnN6
-         4AojZw0PMDdSScD1/iLic10nrlO1wLs6OWfZEZL+17Uw7Ffjb3ys15ga4d8YbOi5vFku
-         M0vJw6+h3M8ks/nRVxnBHRZjtktyck9NxLB2L6zN4y/2Eg/QiBArb0+JYK46J2EP/dJz
-         9WFHWW5zOUjpuU6Yy1InJVZKcBVlnrwaM06ITWld7lEWgdXQhhI6HKtFb01BxUpU3Qga
-         VVWA==
+        bh=Dj3DX12QYavc1OOQJN+Lhj+prqOyJf9zJxwWhTZ5aE8=;
+        b=cFhihpqEGSNaDlRMjYIJJTJjiUfXMDt8wlISE1cdQN6o8aLt7JcEnbBwLJYm+MzkjB
+         aMRm9e2UVA2H0OcRC/SXhT1JbDDQZLt2PdAwqORJ4GQTwimbp8fd4Y3hnpe0ImpJlICU
+         KsLyycXIsU0m1O9wegcwMXBPUMwH99id/ixXP1LZC7xvWb5B1BmJSSEX+0OD3/fIBe4a
+         M3fHOCAIWgzazbcTTsce+XJAgqvzbR4pn7pkvGslaytZB/LtQhyYEcx/OXb6RUOT/4JY
+         c32cltnnt4RhIo8A8Gas6qRcvWv7hE6rFo651SmNsqjJoCnkGmcxxqCqaqealzbUQTfl
+         l69w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906301; x=1719511101;
+        d=1e100.net; s=20230601; t=1718906300; x=1719511100;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lti5kgcPeWhIYDqzEsD33v78UGifs1rdopCyxCRLYNo=;
-        b=HvESYKySeC0dkYTla3ElZASb0SImvB3DaFWxeJ6mouzPoGfGXTgzuS+4M2Z6sxN4u5
-         xC0QWPvKQ/wSa4oQ+NDm5kOPiqpH0JY3zATWt8g6uYSQj5+1Lituakkh8Vdnd+L8gY8P
-         /m9C0ui8PAGFzDpHOtJDbgbPO9qfNveup0XcDt6bv2sGgYqmcSfjjP1Nfj0YE9zmetXJ
-         N5OEE5ghhw7VAuVED7Q2OrclWjg0OS52xAQCifyu8dEVQbGOWFEtt5hRSUJYrG+bz2p/
-         a8oUIvzBfvp2d60eVHuy7S9bhVCmIPsCsdlkJX6PqUSU1ehfCOYyXLwfKdx3Kgo0K7lM
-         GGpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmoaQeki63ZBsowMiPPl2rH48zbfVRatIBnsESKd3Y3L4jU6tChjIfxW2DHJIPcbESRhRpKNF88nsZXFtkaMyyLMZTw1mb
-X-Gm-Message-State: AOJu0Yza2sGmSmljWo4RGxqALHNpxIdtQQhE+ERLp9EBKfXF8UuXawU7
-	B2roZ5r3rCckASixZXnmE+BkTfE7Ck7Jd5bpIqijb09rPpYKaB3VX4b7xWFQC54=
-X-Google-Smtp-Source: AGHT+IFht8NxOCyg7z9RpFIr1DfT39gsfSL0btobRHEcyEuZAVDhEroB+sko5XU5BgaZjpnZPlp6Jg==
-X-Received: by 2002:a17:90a:4ca6:b0:2c8:647:216 with SMTP id 98e67ed59e1d1-2c8064709bdmr1546880a91.20.1718906300684;
-        Thu, 20 Jun 2024 10:58:20 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e56d5d31sm1996388a91.27.2024.06.20.10.58.19
+        bh=Dj3DX12QYavc1OOQJN+Lhj+prqOyJf9zJxwWhTZ5aE8=;
+        b=JONju3aYJCSN6zbeRidW4XXIf7k9+qTpt5fjgAGpet7/RFLNdW7M2YXNJ+957ZuJnM
+         zmu2R2iU0JFMP/GB9Fv4/a7khVjlPrwpHHLSTgPh8p4AsyCKnxgBtoY2MV/otA6Q/iyq
+         6av+KHpzJ8FWf3oJsG7woO3X4NZsA+JR4sRrTeba8+AxwjZUa1G8uAUHQHTlKUXRNfJw
+         8QwWPVQlXl3cWrCh+IDgjX11rjYTxKjqiZbzE3VDFeFiCqmS6olLPPCQeI6kHx8MIwtt
+         MXdoQ+HzL4e9wLAWuO9K4ZkBu+U0bM1DEsjosvcD55B5TlnANk32+1Ra1JXRxOOCHq3w
+         hpbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQvB2HkT8uRikCzSfeQab7wmSF1RlEmQwqOMmIIN8ArahMU4k3YYiwMaCO3LE9ke20oA3Xsv6eYCnIT5ruXvpNjYPZuezomyRL93+h
+X-Gm-Message-State: AOJu0YySiEbIrYcsGnwgLUMWXBCGYhhbryVn0P2UtJDca72b/PWf1I/1
+	wzBl9oevX1BEMr9FQBfWiWEzTPBP3yHkufu8PiVjyOCsyRg5hMNjmirYbS4dp9o=
+X-Google-Smtp-Source: AGHT+IEhPPFEKagTHzQMOwX7NrYh9+xyhRsxpQErqvlswtZC5Lb/tm5y+kINO8slxfzNDjQFWUOp4Q==
+X-Received: by 2002:a17:907:a646:b0:a6f:5192:6f4d with SMTP id a640c23a62f3a-a6fab60321fmr428721866b.8.1718906299800;
+        Thu, 20 Jun 2024 10:58:19 -0700 (PDT)
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.58.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:58:20 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Karsten Keil <isdn@linux-pingi.de>,
-	netdev@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH v4 25/40] mISDN: optimize get_free_devid()
-Date: Thu, 20 Jun 2024 10:56:48 -0700
-Message-ID: <20240620175703.605111-26-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
-References: <20240620175703.605111-1-yury.norov@gmail.com>
+        Thu, 20 Jun 2024 10:58:19 -0700 (PDT)
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Yangtao Li <frank.li@vivo.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Li Zetao <lizetao1@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Subject: [Patch v4 02/10] dt-bindings: dma: Add lpc32xx DMA mux binding
+Date: Thu, 20 Jun 2024 19:56:33 +0200
+Message-Id: <20240620175657.358273-3-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,49 +101,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-get_free_devid() traverses each bit in device_ids in an open-coded loop.
-Simplify it by using the dedicated find_and_set_bit().
+LPC32XX SoCs use pl080 dma controller which have few request signals
+multiplexed between peripherals. This binding describes how devices can
+use the multiplexed request signals.
 
-It makes the whole function a nice one-liner. And because MAX_DEVICE_ID
-is a small constant-time value (63), on 64-bit platforms find_and_set_bit()
-call will be optimized to:
-
-	test_and_set_bit(ffs());
-
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 ---
- drivers/isdn/mISDN/core.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Changes for v4:
+- This patch is new in v4
 
-diff --git a/drivers/isdn/mISDN/core.c b/drivers/isdn/mISDN/core.c
-index ab8513a7acd5..d499b193529a 100644
---- a/drivers/isdn/mISDN/core.c
-+++ b/drivers/isdn/mISDN/core.c
-@@ -3,6 +3,7 @@
-  * Copyright 2008  by Karsten Keil <kkeil@novell.com>
-  */
+ .../bindings/dma/nxp,lpc3220-dmamux.yaml      | 56 +++++++++++++++++++
+ MAINTAINERS                                   |  9 +++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
+
+diff --git a/Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml b/Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
+new file mode 100644
+index 000000000000..a5384b6c67fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/nxp,lpc3220-dmamux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: DMA multiplexer for LPC32XX SoC (DMA request router)
++
++maintainers:
++  - J.M.B. Downing <jonathan.downing@nautel.com>
++  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
++
++allOf:
++  - $ref: dma-router.yaml#
++
++properties:
++  "#dma-cells":
++    const: 3
++    description: |
++      First two cells same as for device pointed in dma-masters.
++      Third cell represents mux value for the request.
++
++  compatible:
++    const: nxp,lpc3220-dmamux
++
++  dma-masters:
++    description: phandle to a dma node compatible with arm,pl080
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - dma-masters
++
++additionalProperties: false
++
++examples:
++  - |
++    syscon@40004000 {
++      compatible = "nxp,lpc3220-creg", "syscon", "simple-mfd";
++      reg = <0x40004000 0x114>;
++      ranges = <0 0x40004000 0x114>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++
++      dma-router@7c {
++        compatible = "nxp,lpc3220-dmamux";
++        reg = <0x7c 0x8>;
++        #dma-cells = <3>;
++        dma-masters = <&dma>;
++      };
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aacccb376c28..f7adf9f66dfa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2396,6 +2396,15 @@ F:	drivers/usb/host/ohci-nxp.c
+ F:	drivers/watchdog/pnx4008_wdt.c
+ N:	lpc32xx
  
-+#include <linux/find_atomic.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/stddef.h>
-@@ -197,14 +198,9 @@ get_mdevice_count(void)
- static int
- get_free_devid(void)
- {
--	u_int	i;
-+	int i = find_and_set_bit((u_long *)&device_ids, MAX_DEVICE_ID + 1);
- 
--	for (i = 0; i <= MAX_DEVICE_ID; i++)
--		if (!test_and_set_bit(i, (u_long *)&device_ids))
--			break;
--	if (i > MAX_DEVICE_ID)
--		return -EBUSY;
--	return i;
-+	return i <= MAX_DEVICE_ID ? i : -EBUSY;
- }
- 
- int
++ARM/LPC32XX DMAMUX SUPPORT
++M:	J.M.B. Downing <jonathan.downing@nautel.com>
++M:	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
++R:	Vladimir Zapolskiy <vz@mleia.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
++N:	lpc32xx
++
+ ARM/Marvell Dove/MV78xx0/Orion SOC support
+ M:	Andrew Lunn <andrew@lunn.ch>
+ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 -- 
-2.43.0
+2.25.1
 
