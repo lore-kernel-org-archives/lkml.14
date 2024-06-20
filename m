@@ -1,74 +1,138 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mailfilter02-out30.webhostingserver.nl (mailfilter02-out30.webhostingserver.nl [195.211.72.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EF97406E;
-	Thu, 20 Jun 2024 20:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718916014; cv=none; b=guDgFsm0RKQa/TdpauuHR+4hlt3jXI0dNkLjNdLvBNt1RbQXY79aefrSFQXyLOb+M+7AjeuUKMtXUtLQPxGmY0JOtUwCsETeAWATN4Bkg0fypb8WdZR5FBPlWkUsUsRsTWBN3ygM1fK/Gs4EknKieAwStqdBgWfA6fMQ3fVkSHc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718916014; c=relaxed/simple;
-	bh=VegozR4ZPsnRaHRwBGeSH3585GN1FpoETs/49C4QdUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZPZd3jbQray4K5hW5EsKRqKZs3g0SULunB2Do9DMDX3vgOOp8T+wcuYvHotQFvYNu4mdSA0xf3f1QckRAKWylU6XqsH0dnSkIxaaLV0fuiWKBDqdzeRRbwxdsrB+jaxjAqbp/5llR81lIGO1HJyrczwjPDSao0tZ4EyHDA8u+lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e860cc8.versanet.de ([94.134.12.200] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sKOZb-0001mc-Uz; Thu, 20 Jun 2024 22:40:00 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Dragan Simic <dsimic@manjaro.org>,
-	linux-rockchip@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	jonas@kwiboo.se,
-	robh+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	didi.debian@cknow.org,
-	alchark@gmail.com,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Prepare RK3588 SoC dtsi files for per-variant OPPs
-Date: Thu, 20 Jun 2024 22:39:56 +0200
-Message-Id: <171891591943.88443.4575073298967084067.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <9ffedc0e2ca7f167d9d795b2a8f43cb9f56a653b.1717923308.git.dsimic@manjaro.org>
-References: <9ffedc0e2ca7f167d9d795b2a8f43cb9f56a653b.1717923308.git.dsimic@manjaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C18055882
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.211.72.193
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718916085; cv=pass; b=MmC7pZV2lCAsWffLd4Vy4TdDmEeYq3pfvd7TGV6hBRgK/tOe3pHeYwnB1RCibmxuOmQl95NFnTbEpLtub71Oge1veo73McDyTfuVY5r1315YIgr2EYhHOI3CMUJ+evpe8J4EC2rqTEYkYAFhRG80ALcD1RCBVU3yFeAzBVS2yag=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718916085; c=relaxed/simple;
+	bh=Yh9dms0WXZymrzcy0g/1GhlgfTFOFHHjmJlTFjzHqAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XvvOeblxATPgRNgdFBTpg2dpxfyaEMVRqThnHwmKyotdHn8nhucJKrYVNYLIgC0ldMI+kIF4SkSkxlRnzn5MdMI8nO1w7Z2AyFmBZyKJ0TVX4ethSAt5v38ICTzha8EmtDx+Uj6lFPvAWxB1evL52guOzKALRnfTnP/7Y239GEM=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl; spf=pass smtp.mailfrom=exalondelft.nl; dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b=LmDlI1Zs; arc=pass smtp.client-ip=195.211.72.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exalondelft.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b="LmDlI1Zs"
+ARC-Seal: i=2; a=rsa-sha256; t=1718916011; cv=pass;
+	d=webhostingserver.nl; s=whs1;
+	b=EkvYPrw2Wircjor/4JckQKNxiSYz5vmOqR8mASFTPKrcStdO6m7rRAumoM3Q1kllyDTI9ifeAdFB+
+	 442WLEPCqp0F1zaTXhD6kLkAqPTbgJaSVBioi641+QojIMJtk7p4BYwwdJhiK0FH1iFDJ/NT6O8ij7
+	 g1OPeujsnGHF0FMu8okRE9i45ItjrWQZdBzrHgAvlleJl1WtBAiYm1G8Q4D7xkdzPUha/qs7Qb7Ubj
+	 k2CdgqUc9qEzwBSbWm3o8qd54DSbbGDFIeC+96fjF/I74pCJcPTyuztwpWodybEcQ42HlX4Pu/8YIq
+	 p/E9TXW4wP0retD0PbM/ywCgTSl/LGA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed;
+	d=webhostingserver.nl; s=whs1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 dkim-signature:from;
+	bh=q5pA4UawuXhYIJNE6QFSktffN2eueyPiIBRTp5AEPUs=;
+	b=BdAUW8j+FXB2N4Eq+sGsLqAMtmgHFDOJ+puCE85QJN10Hc1YFxHOuImA4nWo02IZc0WbXIgC+WWYv
+	 Ev+96mtjQeGnp4H5C5nxcqRtY7wkEv8famdnpHpCPPbs0GCEHKMkvGeKsMvgQwsxbt31IqMIiaBRKe
+	 /vxyJneMXl+3d8jEd1+heSvWIS0OC/vMwRkEJ5CP0lORsT4PA2ESWC257mkqsmdx+mcOAv9kdKTdkR
+	 8LcPNynUAYn6i89uasZjw51PKJdkeo+wIdudcTCTEtpc6zsXQtdGEM2c/7FkKmt/bUMRFTIKsflYrl
+	 swT2vPykyfC07P8c9QIDe1hT0OyTtgQ==
+ARC-Authentication-Results: i=2; mailfilter02.webhostingserver.nl;
+	spf=pass smtp.mailfrom=exalondelft.nl smtp.remote-ip=141.138.168.154;
+	dmarc=pass header.from=exalondelft.nl;
+	arc=pass header.oldest-pass=0;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=exalondelft.nl; s=whs1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=q5pA4UawuXhYIJNE6QFSktffN2eueyPiIBRTp5AEPUs=;
+	b=LmDlI1ZsSlyX/vF8NyhJJWWIvwbwwUgSyWpiXyLaud0SV9vmrET95maxVvgDp1lDPfII7h3lCClR3
+	 FTiPTznAilLgdG+uBoB9SiSNLSEdey1lek0080CnhsGln/rmVkTlRhC3Y7cj9+iICjGgb3OUlok8Yf
+	 1EEkGE+iy7SYeCd8XR/a5VGbc9BaaoEeXrY2fmyXOn91LvU/0ZmLCQiQZ1FE8GXKdSd6Gmq5FKu3iB
+	 MCHSSZcl+M4LHyir8TH2HSaYeLFDKOTWF3gcn5oaRyEWDpGwYO8K19NXiCs8/xBc5h1c7nguMHAtYu
+	 4b7DTrizFJVBINcyxD9rN52Ht8uHE0g==
+X-Halon-ID: 48fdeb7b-2f45-11ef-ae5d-001a4a4cb922
+Received: from s198.webhostingserver.nl (s198.webhostingserver.nl [141.138.168.154])
+	by mailfilter02.webhostingserver.nl (Halon) with ESMTPSA
+	id 48fdeb7b-2f45-11ef-ae5d-001a4a4cb922;
+	Thu, 20 Jun 2024 22:40:09 +0200 (CEST)
+ARC-Seal: i=1; cv=none; a=rsa-sha256; d=webhostingserver.nl; s=whs1; t=1718916009;
+	 b=CJYk+jrJk4ZiLTQtuPxWKDOFLhf0ZlK9D9w/HgqXPjhVtMEBiPiGtXBDnXiI8uqt2zVoupm0QK
+	  ibgWIr22cmqX6aNqF1b2CYEsi7LVgqZORZLJmRx9TD/VER1oRARYeBHIIzf9SCZvUHwCoBoeTz
+	  4+RX1eKUtGwpNYA9X2q2gVuc84cueJFsqvi+mYi2HlB7itfKs+pz2eIo9NgCsrscQiGjj94T0/
+	  2CG897su9DSsT8BYj5VAcECJ0CYSSNqVKA4rG9Pig95iz7NIUh8KlisuuqTX6Szplmmu/3JP9S
+	  OZ3naFI0f0HGVjvDQLEeiag+KvfeoVfY6D5VeU85+cZ3fg==;
+ARC-Authentication-Results: i=1; webhostingserver.nl; smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
+	iprev=pass (2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
+	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
+	spf=softfail smtp.mailfrom=exalondelft.nl;
+	dmarc=skipped header.from=exalondelft.nl;
+	arc=none
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=webhostingserver.nl; s=whs1; t=1718916009;
+	bh=Yh9dms0WXZymrzcy0g/1GhlgfTFOFHHjmJlTFjzHqAw=;
+	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From;
+	b=GmMOEN7x6ZBX0pkYaGrqOQ2haOFKOHKgD9AiM1yaodhB5YzwmOyPJp1451D7pnzrlJrearsU6R
+	  xzKM5u71C5oTbRFruwL+Q06fi2u7hF2StZDD6jHGMMjYsxJ6NAHSsTK6WJEwXkmslDoAVLRREw
+	  RomEc697pNace8S0uOoLd91yfswFAaLX2UYrtabKWkoqkDBt5aEGhJ1CbfHTvz8qI91DjspGiW
+	  Ff7XDDGVDMn9sXEZVkVcUdnX7LZG0dKfGerW+aDv4HY9JhCD0w4oktmrmMLK56UzrutdK5JdFO
+	  +0ccL5kWL2L2xXzRTVbVilJ9c2oVDC2chODcWSo0psy7pA==;
+Authentication-Results: webhostingserver.nl;
+	iprev=pass (2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d31:9797:59c3:1c58;
+	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
+	spf=softfail smtp.mailfrom=exalondelft.nl;
+	dmarc=skipped header.from=exalondelft.nl;
+	arc=none
+Received: from 2a02-a466-68ed-1-d31-9797-59c3-1c58.fixed6.kpn.net ([2a02:a466:68ed:1:d31:9797:59c3:1c58] helo=submission)
+	by s198.webhostingserver.nl with esmtpa (Exim 4.97.1)
+	(envelope-from <ftoth@exalondelft.nl>)
+	id 1sKOZl-0000000CPjK-0LuU;
+	Thu, 20 Jun 2024 22:40:09 +0200
+From: Ferry Toth <ftoth@exalondelft.nl>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ferry Toth <ftoth@exalondelft.nl>,
+	Hardik Gajjar <hgajjar@de.adit-jv.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Kees Cook <kees@kernel.org>,
+	Richard Acayan <mailingradian@gmail.com>,
+	Linyu Yuan <quic_linyyuan@quicinc.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	s.hauer@pengutronix.de,
+	jonathanh@nvidia.com,
+	paul@crapouillou.net,
+	quic_eserrao@quicinc.com,
+	erosca@de.adit-jv.com,
+	regressions@leemhuis.info
+Subject: [PATCH v2 0/2] usb: gadget: u_ether: revert netif_device_detach change
+Date: Thu, 20 Jun 2024 22:38:29 +0200
+Message-ID: <20240620203954.20254-1-ftoth@exalondelft.nl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-ACL-Warn: Sender domain ( exalondelft.nl ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info ).
+X-ACL-Warn: From-header domain ( exalondelft.nl} ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info )
+X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
 
-On Sun, 9 Jun 2024 10:58:19 +0200, Dragan Simic wrote:
-> Rename the Rockchip RK3588 SoC dtsi files and, consequently, adjust their
-> contents appropriately, to prepare them for the ability to specify different
-> CPU and GPU OPPs for each of the supported RK3588 SoC variants.
-> 
-> As already discussed, [1][2][3][4] some of the RK3588 SoC variants require
-> different OPPs, and it makes more sense to have the OPPs already defined when
-> a board dts(i) file includes one of the SoC variant dtsi files (rk3588.dtsi,
-> rk3588j.dtsi or rk3588s.dtsi), rather than requiring the board dts(i) file
-> to also include a separate rk3588*-opp.dtsi file.  The choice of the SoC
-> variant is already made by the inclusion of the SoC dtsi file into the board
-> dts(i) file, and it doesn't make much sense to, effectively, allow the board
-> dts(i) file to include and use an incompatible set of OPPs for the already
-> selected RK3588 SoC variant.
-> 
-> [...]
+usb: gadget: u_ether: revert netif_device_detach change
 
-Applied, thanks!
+As agreed with the author, the netif_device_detach change is going to be reverted by
+this series, so we will collaborate on a new one in the future that
+brings no regressions.
 
-[1/1] arm64: dts: rockchip: Prepare RK3588 SoC dtsi files for per-variant OPPs
-      commit: 0866aef9b478a50a4035c90428c990485e9d2d6d
+v2:
+- Add missing SoB (Greg)
 
-Best regards,
+Ferry Toth (2):
+  Revert "usb: gadget: u_ether: Re-attach netif device to mirror
+    detachment"
+  Revert "usb: gadget: u_ether: Replace netif_stop_queue with
+    netif_device_detach"
+
+ drivers/usb/gadget/function/u_ether.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
 -- 
-Heiko Stuebner <heiko@sntech.de>
+2.43.0
+
