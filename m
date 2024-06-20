@@ -1,67 +1,74 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56BE2139D7
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ED61AB365
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873378; cv=none; b=qctvDcN4Kx4wcAOKm/lEElPD5xVYYPyBGlAkc8oVZTAki4VuF7jLxCfIB6uYG0vfaFpDxRgK6m+qfxMALLZIA1yljUbemzf2I85p5QHI+/D6EQueDY5saLynkFnITc8w6m+uFX49ivIzz2wuEm/16EAB8WaoQ0UTXLDyeGmkVXY=
+	t=1718873391; cv=none; b=k1HhdDEV2dpHxkAKjh69eL9JjFwhNsMDyDx3gty6Sb2YVtQONXG8ILUt1TZ2Ufyc/8XweljcjHoxqUPKh2SQq3ExW8nc4xSNvTvF6RyJASMisX/3l8IYL1CPhC+wSk9snzA1KSrFBWpHBJ9iwP+mNUTi4T9Ec6ikDsv1vqJTPu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873378; c=relaxed/simple;
-	bh=KosNXeh15nXHkmwNcQhO6+BAaPr7YVQjhfKuYz8HdH8=;
+	s=arc-20240116; t=1718873391; c=relaxed/simple;
+	bh=sfXsS4Z780y+qpSaXrDUseunj8H+AVCIxVL+pwCCZZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=irABuvIC2beWLfZc+3VlVWq7bBMtgaJylMEoeRtkbxV+soX3a7uJG1we+6UbygUrENCFx2TAqRLGoZjRd9wN/SLdT152g1zdVlRWSeRD7eujazGpg2MO74wygxoCRqZgRObrJZugngrd8JBCpJztAx2Qka18V8n9GBvnuglejvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ce4Gp5nN; arc=none smtp.client-ip=209.85.218.44
+	 Content-Disposition; b=f5P0FnlXCmbVWX9IKYWvCVk5NffA6Tx8UupFY+SYv861G8QsVIudpd8VMuC/7mPaTaPTqrB+XeLdFiTLbcfe+SgZYi37uMrbBM6PPjvoZ7T6s2q7TQdiDArhK/KiQSlv1aoD43AduDLQAl0lByfrR3bwDkg7ql3+WPQz6zXe4Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NNcMAwzP; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ce4Gp5nN"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6fbe639a76so103019566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:49:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NNcMAwzP"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d07f07a27so573836a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:49:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718873375; x=1719478175; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718873388; x=1719478188; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vplqWI8cKIJ52zF1aYYCsDVAV72MV1EuoajGM0seqQU=;
-        b=ce4Gp5nNou42DDHE4vJgK9vsAaUWsKEamhNtSHFfmSkQxHmDXXM2fuIS0KrW04jMZJ
-         2kFT0rS7Eh4H8DlttqHSIG+p3GzrN/t1AiBq0zCSC73ew6n8lJ9mmSSQflkqFIOXjbGw
-         Mqw5mmFK82NydxnrzqvwoBpQadbHF9UNO0XvJvmbluVvkTcuFeGLsQnr+9I+/9xHT8OY
-         ZaXBO+D6iDt8isUZCQHi3P7vY8t8fHemNIq8UC1H5Sr0s2usorrjC0IjK8p82W7Ai8Fd
-         SHYz5kbhQsITYpwJkxQoBCGitUi2gMJQh7saZ+bybq5Gf8D2NbMM643/vTGoRFLUGevw
-         rPUg==
+        bh=FCmULs7Ip+T4HEzPRhfMxVMy8WCUz+1jGV/C4njJqXM=;
+        b=NNcMAwzPJI4Ha0rxmOCa1BuyPMTTWstTaJd4WlEwqTtQeSI4K4A26vO0RONsJgXj84
+         zgXATnN/E9t94CqN5znyjZhyWM/prBJW1qW2YrDjqBZq93K8SXmTl7BryZ2KPA/eB8+1
+         Nnu/xaDsNl3VbIPrg46M+3RoRoxjRpfujQ+E9IdhSKU6IQIK5/asrdMAUUCBco8JdcMZ
+         jwPpuIposRqZABGSgADX/yTj40osTIu3/4qwQBxZECcS86q7roXgj7UlIe3+/1HtuTIM
+         ND3Y5SOw8qK+3SU9yF0NH+LzK7D7+smnoGn6mLS/SCzFtDwhVSHZ3AEzZ8dv05LpL4mq
+         tXrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718873375; x=1719478175;
+        d=1e100.net; s=20230601; t=1718873388; x=1719478188;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vplqWI8cKIJ52zF1aYYCsDVAV72MV1EuoajGM0seqQU=;
-        b=bz8opEBoYfjy0iK74xWGoQvTLphuiCwaPTkseVHcsee6F3G0bHV3yuMimzd5GHHIx1
-         7FemOOSkijrw8cq+ne3mFl/cAk2QCYRNMcu45Wy+VDxRSMUNdcM4k7GFt1aT27219Nts
-         WWY0qNS2JGM+p9XL5nu3OJsA9mF8tnr2KbDZAFE8LZ6Nnx/2Os3eUzqquHgWxShsKFIC
-         UyzVJFVsYIxwR2s29s0Am84WExZE775J7zeqflt9Cb13CrU90dSBVwXAFkvx4rpEdSdX
-         8lguFUpBO1lvD4/hxRhMDTU53Jeko+dtJRZCsrKkUM/OROPCaGNfWnV6oeYop2rKRd9V
-         bdgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXy15XHC1yunesx+qBxFOAcnMbMi5T2lCaWFzL9ZsqDazLY6NQDfc2iWozPun4mvdRJSIKmP9NDGWO7qGF4czr2Pg+g08+GW2RNK6Kr
-X-Gm-Message-State: AOJu0Yzw3ZwfNKyD4XMMAgh0fvwMdQs7bIvyoyD5a3638myzvrk53GYW
-	epnGR8d0/t3wZXQMcpkgwPnVdP5f7KCdIvGpeDbY6DBqTFT53scgR7R0Cl5jJVQ=
-X-Google-Smtp-Source: AGHT+IF0HJWu5+9qrzpdj+2IohqmI65R3iM9YQiZqQ/II9cNRx507OWzSUKesTfdkh9pqQPDzJtJrg==
-X-Received: by 2002:a17:906:3643:b0:a6f:6bad:b5a9 with SMTP id a640c23a62f3a-a6f94c047c4mr519564166b.7.1718873374898;
-        Thu, 20 Jun 2024 01:49:34 -0700 (PDT)
+        bh=FCmULs7Ip+T4HEzPRhfMxVMy8WCUz+1jGV/C4njJqXM=;
+        b=XJBbeVyshxqJe/HTT50jRHULFmj4geVggSa9wYx2N0BCdPQ/EM5QQtQthP6/LZxOG0
+         cNikpw+3Ph9ACcCcQhW9B+wj5S4GXvoZLeoHE9kyuOA8pw+8+/C/MAk4PHUjfBS62yy6
+         8+qLNqao9UjionVIM6BhuRBZy27+316g8QaoSrxhCfrxgw+U0B9mJAUsufgUX46b/tZm
+         5WVduIQ/hkzjgbqf4JD0/839zTdt8s2ab7S/hVQ/j6INLfydv9cFH8ioi5CSf0raP7sG
+         Wm3D/JdV81W4dRAL5UjJDlcC96WZBLI9/4JCdQmnOnjsVw/qKDxwFtftN1JJbc1EndTQ
+         TdTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPOmYROttmpHlteJa0gzENzEKOwSYR96VInW/HwrsVxvJCGa+KmfJLz+QXX0d3wTi09f7jaDy0P781yof02A8pm6x0Zd1Sf/kq8JSr
+X-Gm-Message-State: AOJu0YxXHm8I7LP1S+lcacXLXEDu2MnBGMftwPPguC9pCqhHdKDptiL4
+	EMoBBeZJasxwX+PjPwEHjZ6OtvGl+ODxK3RQGZ1vXIHZ/LxgumO7paMjWEQF5X0=
+X-Google-Smtp-Source: AGHT+IFjPo1mca3mlAO70SZGhud7FBjXkR91J2Bn4a2E6P7EwodOEE/C2Tdp9I1x/bZPTaMnkVihqQ==
+X-Received: by 2002:a50:9fe1:0:b0:578:67db:7529 with SMTP id 4fb4d7f45d1cf-57d07e190c7mr2545052a12.4.1718873387774;
+        Thu, 20 Jun 2024 01:49:47 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ed0ea4sm741387066b.116.2024.06.20.01.49.33
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da371sm9318328a12.24.2024.06.20.01.49.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 01:49:34 -0700 (PDT)
-Date: Thu, 20 Jun 2024 11:49:30 +0300
+        Thu, 20 Jun 2024 01:49:47 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:49:43 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Yunxiang Li <Yunxiang.Li@amd.com>
-Cc: Felix Kuehling <Felix.Kuehling@amd.com>,
+To: Harry Wentland <harry.wentland@amd.com>
+Cc: Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
 	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
 	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amdgpu/kfd: Add unlock() on error path to add_queue_mes()
-Message-ID: <10510733-a59a-4419-afb5-e75fdd802794@moroto.mountain>
+	Alex Hung <alex.hung@amd.com>, Wayne Lin <wayne.lin@amd.com>,
+	Fangzhi Zuo <jerry.zuo@amd.com>,
+	Agustin Gutierrez <agustin.gutierrez@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hersen Wu <hersenxs.wu@amd.com>, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] drm/amd/display: Clean up indenting in
+ dm_dp_mst_is_port_support_mode()
+Message-ID: <a57a9d8f-40bb-4cfa-9dad-4f93a1f33303@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,27 +79,36 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-We recently added locking to add_queue_mes() but this error path was
-overlooked.  Add an unlock to the error path.
+This code works, but it's not aligned correctly.  Add a couple missing
+tabs.
 
-Fixes: 1802b042a343 ("drm/amdgpu/kfd: remove is_hws_hang and is_resetting")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-index d2fceb6f9802..4f48507418d2 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-@@ -230,6 +230,7 @@ static int add_queue_mes(struct device_queue_manager *dqm, struct queue *q,
- 	if (queue_type < 0) {
- 		dev_err(adev->dev, "Queue type not supported with MES, queue:%d\n",
- 			q->properties.type);
-+		up_read(&adev->reset_domain->sem);
- 		return -EINVAL;
- 	}
- 	queue_input.queue_type = (uint32_t)queue_type;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 48118447c8d9..5d4f831b1e55 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -1691,7 +1691,7 @@ enum dc_status dm_dp_mst_is_port_support_mode(
+ 		if (aconnector->mst_output_port->passthrough_aux) {
+ 			if (bw_range.min_kbps > end_to_end_bw_in_kbps) {
+ 				DRM_DEBUG_DRIVER("DSC passthrough. Max dsc compression can't fit into end-to-end bw\n");
+-			return DC_FAIL_BANDWIDTH_VALIDATE;
++				return DC_FAIL_BANDWIDTH_VALIDATE;
+ 			}
+ 		} else {
+ 			/*dsc bitstream decoded at the dp last link*/
+@@ -1756,7 +1756,7 @@ enum dc_status dm_dp_mst_is_port_support_mode(
+ 		if (branch_max_throughput_mps != 0 &&
+ 			((stream->timing.pix_clk_100hz / 10) >  branch_max_throughput_mps * 1000)) {
+ 			DRM_DEBUG_DRIVER("DSC is required but max throughput mps fails");
+-		return DC_FAIL_BANDWIDTH_VALIDATE;
++			return DC_FAIL_BANDWIDTH_VALIDATE;
+ 		}
+ 	} else {
+ 		DRM_DEBUG_DRIVER("DSC is required but can't find common dsc config.");
 -- 
 2.43.0
 
