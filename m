@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891841B1424;
-	Thu, 20 Jun 2024 13:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DED1B150B;
+	Thu, 20 Jun 2024 13:56:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718891813; cv=none; b=NjuV99Ve2cqFML9/kYptJA4kYTVcqwHwgT7JIIkaNzr1iH0oMWuhYLic/FRWmD107ablbyz1koQHvAYV4g6+GXGS8yCy0Yef/FCdvmCSQsRLwEG7u/tukGMeSkydlqbxAvQhyZ6bKMcXauwj5h1GOs2e394mWHKr322iTqClbSk=
+	t=1718891819; cv=none; b=BALGKrzcsaiLac02MeeBlkFSnxzx80TiI8xfBLGKB8fhFAZeQuNVunbmwXNLiE3KHqTlUzt/bNyHJZdYJSBVLFjj/2WIoYaQ3VOIMpdeJ1G/YPJYIvFmuFxw94Drhc/nec+BXs+8XQzaGqkUjv4auowO54qsDx9V89B4EFKyZDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718891813; c=relaxed/simple;
-	bh=aPeC1+bpMVMGP8un7rd+LULhCkAArDcaztGiqdxkqpc=;
+	s=arc-20240116; t=1718891819; c=relaxed/simple;
+	bh=raXNhxqkm98XAjBKdc19+5eiqJrPXSnWLdEQN8jFi2U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gcv6kdzzP8YE44LogORrVHr/jv3ZBAtJIiqQ65R/j4UqGiOC26KCmfLdHHp7RuYHLvEkuzAFDP11UdGbpqyesPY4DILtN2j9eWAP+RCdzoOS+TgMSM3OeYuSUVCP6EA9l/PrM9VEQYFtGoqOINJH4i6b5ofT9PVSydaEh/A/iAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V9ArPdIw; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=ldjmQVNg9aI5useAb2zwcJuC5uY2FIB662S/ou+7icFbsb2JOh1qNxNilj0VrlFlRIaASKPyEOacvQ4DypIo0o5ubkLkrYiEh7UIemyGmZaDBIB9p5id5R1JH8N7FRM6JoL9oT6zA5NmT3UPQtkRaHzLrZJRoyX+KhGpFAcmFB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nC1koRer; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V9ArPdIw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nC1koRer"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718891812; x=1750427812;
+  t=1718891818; x=1750427818;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aPeC1+bpMVMGP8un7rd+LULhCkAArDcaztGiqdxkqpc=;
-  b=V9ArPdIwN78w8OpWfgx5Nq9IiK4UHaM2AP6xjgfhuB4O02gBvK6/lj5J
-   UF88yiFCRLE+8JSkGNBG7r/dEHzTVBSyXJ2bQb7Vlx0bCr04zN4dUWaq+
-   OywAV6M0tZQHplBwV5Qm0tcuwFhaN+an0UE37lU6JxEp8WVvnCRsRwxwb
-   hlFD91o6BN86JAmam34h8pXzKXkJTkoj/T1am2PCHGekmcYtbPaue/0Cu
-   dX7Nb0sqSfg+zfVMV0AZXP8/W9X5pEgHhB1cVDeICp3BlfiyXnDgN8yRw
-   4GHX09+6PJeS8Dl6LuijfTCd6uN0SYTEQ/dqaWg1G23QvHdqa6pj7OCTZ
-   Q==;
-X-CSE-ConnectionGUID: NK/1hFLETuCqxTFcYx3jLg==
-X-CSE-MsgGUID: el9fcmipRv6R/KlK1bd87g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15987884"
+  bh=raXNhxqkm98XAjBKdc19+5eiqJrPXSnWLdEQN8jFi2U=;
+  b=nC1koRer8uCeeQdjUCPhSATmO8UXqJvVY+j8v6TA3I+h19mVxbJnuPZv
+   TML3e+amjdYE9NXdChYg+3UR0EHw2ZtTCSoyeu/AG2hacgb9hGo0FyJmR
+   UPG0DBWcCtXji7p/ABZmRupWpj6lTcnosQCm/DHhuXMW5l9y3n+iR/wmo
+   mfsEdJppg4NpQUBb+NXJR88biNdR6+9ziLdDD+axKfHZCK1819hapTOFy
+   lvABXhpC+TbuRY+Kmo8hX2MY/aWLovVBxmq49JJP8mdwNTrRH9xQgc3Hh
+   /YP7DmQWtn81bQp5XWxXuV9c58mjfCqAm3MEOuAKYriTBWjyqMqmR8erd
+   w==;
+X-CSE-ConnectionGUID: idPfb/xfTlC5P0PaI2Zf8A==
+X-CSE-MsgGUID: cILnp35RSGmynBQXmuAitw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="15987915"
 X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="15987884"
+   d="scan'208";a="15987915"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 06:56:52 -0700
-X-CSE-ConnectionGUID: 1Q6+O7oST36QjJLIEQlYfg==
-X-CSE-MsgGUID: yxRh90eJQ0y1Dcvlwc/tdA==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 06:56:58 -0700
+X-CSE-ConnectionGUID: z2HErGM1RX6L4ObTjTDJIw==
+X-CSE-MsgGUID: l7+NatY6SNqJa6lc8IV+tA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="46772132"
+   d="scan'208";a="46772156"
 Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa004.fm.intel.com with ESMTP; 20 Jun 2024 06:56:48 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 20 Jun 2024 06:56:55 -0700
 From: Alexander Lobakin <aleksander.lobakin@intel.com>
 To: intel-wired-lan@lists.osuosl.org
 Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
@@ -57,9 +57,9 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH iwl-next v2 09/14] idpf: compile singleq code only under default-n CONFIG_IDPF_SINGLEQ
-Date: Thu, 20 Jun 2024 15:53:42 +0200
-Message-ID: <20240620135347.3006818-10-aleksander.lobakin@intel.com>
+Subject: [PATCH iwl-next v2 11/14] idpf: remove legacy Page Pool Ethtool stats
+Date: Thu, 20 Jun 2024 15:53:44 +0200
+Message-ID: <20240620135347.3006818-12-aleksander.lobakin@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240620135347.3006818-1-aleksander.lobakin@intel.com>
 References: <20240620135347.3006818-1-aleksander.lobakin@intel.com>
@@ -71,172 +71,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, all HW supporting idpf supports the singleq model, but none
-of it advertises it by default, as splitq is supported and preferred
-for multiple reasons. Still, this almost dead code often times adds
-hotpath branches and redundant cacheline accesses.
-While it can't currently be removed, add CONFIG_IDPF_SINGLEQ and build
-the singleq code only when it's enabled manually. This corresponds to
--10 Kb of object code size and a good bunch of hotpath checks.
-idpf_is_queue_model_split() works as a gate and compiles out to `true`
-when the config option is disabled.
+Page Pool Ethtool stats are deprecated since the Netlink Page Pool
+interface introduction.
+idpf receives big changes in Rx buffer management, including &page_pool
+layout, so keeping these deprecated stats does only harm, not speaking
+of that CONFIG_IDPF selects CONFIG_PAGE_POOL_STATS unconditionally,
+while the latter is often turned off for better performance.
+Remove all the references to PP stats from the Ethtool code. The stats
+are still available in their full via the generic Netlink interface.
 
 Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 ---
- drivers/net/ethernet/intel/Kconfig            | 13 +--------
- drivers/net/ethernet/intel/idpf/Kconfig       | 27 +++++++++++++++++++
- drivers/net/ethernet/intel/idpf/Makefile      |  3 ++-
- drivers/net/ethernet/intel/idpf/idpf.h        |  3 ++-
- drivers/net/ethernet/intel/idpf/idpf_txrx.c   |  2 +-
- .../net/ethernet/intel/idpf/idpf_virtchnl.c   | 15 ++++++++---
- 6 files changed, 44 insertions(+), 19 deletions(-)
- create mode 100644 drivers/net/ethernet/intel/idpf/Kconfig
+ drivers/net/ethernet/intel/idpf/Kconfig       |  1 -
+ .../net/ethernet/intel/idpf/idpf_ethtool.c    | 29 +------------------
+ 2 files changed, 1 insertion(+), 29 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
-index e0287fbd501d..0375c7448a57 100644
---- a/drivers/net/ethernet/intel/Kconfig
-+++ b/drivers/net/ethernet/intel/Kconfig
-@@ -384,17 +384,6 @@ config IGC_LEDS
- 	  Optional support for controlling the NIC LED's with the netdev
- 	  LED trigger.
- 
--config IDPF
--	tristate "Intel(R) Infrastructure Data Path Function Support"
--	depends on PCI_MSI
--	select DIMLIB
--	select PAGE_POOL
--	select PAGE_POOL_STATS
--	help
--	  This driver supports Intel(R) Infrastructure Data Path Function
--	  devices.
--
--	  To compile this driver as a module, choose M here. The module
--	  will be called idpf.
-+source "drivers/net/ethernet/intel/idpf/Kconfig"
- 
- endif # NET_VENDOR_INTEL
 diff --git a/drivers/net/ethernet/intel/idpf/Kconfig b/drivers/net/ethernet/intel/idpf/Kconfig
-new file mode 100644
-index 000000000000..9082c16edb7e
---- /dev/null
+index 638484c5723c..1f071143d992 100644
+--- a/drivers/net/ethernet/intel/idpf/Kconfig
 +++ b/drivers/net/ethernet/intel/idpf/Kconfig
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright (C) 2024 Intel Corporation
-+
-+config IDPF
-+	tristate "Intel(R) Infrastructure Data Path Function Support"
-+	depends on PCI_MSI
-+	select DIMLIB
-+	select PAGE_POOL
-+	select PAGE_POOL_STATS
-+	help
-+	  This driver supports Intel(R) Infrastructure Data Path Function
-+	  devices.
-+
-+	  To compile this driver as a module, choose M here. The module
-+	  will be called idpf.
-+
-+if IDPF
-+
-+config IDPF_SINGLEQ
-+	bool "idpf singleq support"
-+	help
-+	  This option enables support for legacy single Rx/Tx queues w/no
-+	  completion and fill queues. Only enable if you have hardware which
-+	  wants to work in this mode as it increases the driver size and adds
-+	  runtme checks on hotpath.
-+
-+endif # IDPF
-diff --git a/drivers/net/ethernet/intel/idpf/Makefile b/drivers/net/ethernet/intel/idpf/Makefile
-index 6844ead2f3ac..2ce01a0b5898 100644
---- a/drivers/net/ethernet/intel/idpf/Makefile
-+++ b/drivers/net/ethernet/intel/idpf/Makefile
-@@ -12,7 +12,8 @@ idpf-y := \
- 	idpf_ethtool.o		\
- 	idpf_lib.o		\
- 	idpf_main.o		\
--	idpf_singleq_txrx.o	\
- 	idpf_txrx.o		\
- 	idpf_virtchnl.o 	\
- 	idpf_vf_dev.o
-+
-+idpf-$(CONFIG_IDPF_SINGLEQ)	+= idpf_singleq_txrx.o
-diff --git a/drivers/net/ethernet/intel/idpf/idpf.h b/drivers/net/ethernet/intel/idpf/idpf.h
-index f9e43d171f17..5d9529f5b41b 100644
---- a/drivers/net/ethernet/intel/idpf/idpf.h
-+++ b/drivers/net/ethernet/intel/idpf/idpf.h
-@@ -599,7 +599,8 @@ struct idpf_adapter {
-  */
- static inline int idpf_is_queue_model_split(u16 q_model)
- {
--	return q_model == VIRTCHNL2_QUEUE_MODEL_SPLIT;
-+	return !IS_ENABLED(CONFIG_IDPF_SINGLEQ) ||
-+	       q_model == VIRTCHNL2_QUEUE_MODEL_SPLIT;
+@@ -7,7 +7,6 @@ config IDPF
+ 	select DIMLIB
+ 	select LIBETH
+ 	select PAGE_POOL
+-	select PAGE_POOL_STATS
+ 	help
+ 	  This driver supports Intel(R) Infrastructure Data Path Function
+ 	  devices.
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_ethtool.c b/drivers/net/ethernet/intel/idpf/idpf_ethtool.c
+index e933fed16c7e..3806ddd3ce4a 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_ethtool.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_ethtool.c
+@@ -565,8 +565,6 @@ static void idpf_get_stat_strings(struct net_device *netdev, u8 *data)
+ 	for (i = 0; i < vport_config->max_q.max_rxq; i++)
+ 		idpf_add_qstat_strings(&data, idpf_gstrings_rx_queue_stats,
+ 				       "rx", i);
+-
+-	page_pool_ethtool_stats_get_strings(data);
  }
  
- #define idpf_is_cap_ena(adapter, field, flag) \
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-index 5dd1b1a9e624..e79a8f9dfc40 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-@@ -1309,7 +1309,7 @@ static void idpf_vport_calc_numq_per_grp(struct idpf_vport *vport,
- static void idpf_rxq_set_descids(const struct idpf_vport *vport,
- 				 struct idpf_rx_queue *q)
+ /**
+@@ -600,7 +598,6 @@ static int idpf_get_sset_count(struct net_device *netdev, int sset)
+ 	struct idpf_netdev_priv *np = netdev_priv(netdev);
+ 	struct idpf_vport_config *vport_config;
+ 	u16 max_txq, max_rxq;
+-	unsigned int size;
+ 
+ 	if (sset != ETH_SS_STATS)
+ 		return -EINVAL;
+@@ -619,11 +616,8 @@ static int idpf_get_sset_count(struct net_device *netdev, int sset)
+ 	max_txq = vport_config->max_q.max_txq;
+ 	max_rxq = vport_config->max_q.max_rxq;
+ 
+-	size = IDPF_PORT_STATS_LEN + (IDPF_TX_QUEUE_STATS_LEN * max_txq) +
++	return IDPF_PORT_STATS_LEN + (IDPF_TX_QUEUE_STATS_LEN * max_txq) +
+ 	       (IDPF_RX_QUEUE_STATS_LEN * max_rxq);
+-	size += page_pool_ethtool_stats_get_count();
+-
+-	return size;
+ }
+ 
+ /**
+@@ -876,7 +870,6 @@ static void idpf_get_ethtool_stats(struct net_device *netdev,
  {
--	if (vport->rxq_model == VIRTCHNL2_QUEUE_MODEL_SPLIT) {
-+	if (idpf_is_queue_model_split(vport->rxq_model)) {
- 		q->rxdids = VIRTCHNL2_RXDID_2_FLEX_SPLITQ_M;
- 	} else {
- 		if (vport->base_rxd)
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-index 44602b87cd41..1aa4770dfe18 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-@@ -1256,12 +1256,12 @@ int idpf_send_create_vport_msg(struct idpf_adapter *adapter,
- 	vport_msg->vport_type = cpu_to_le16(VIRTCHNL2_VPORT_TYPE_DEFAULT);
- 	vport_msg->vport_index = cpu_to_le16(idx);
- 
--	if (adapter->req_tx_splitq)
-+	if (adapter->req_tx_splitq || !IS_ENABLED(CONFIG_IDPF_SINGLEQ))
- 		vport_msg->txq_model = cpu_to_le16(VIRTCHNL2_QUEUE_MODEL_SPLIT);
- 	else
- 		vport_msg->txq_model = cpu_to_le16(VIRTCHNL2_QUEUE_MODEL_SINGLE);
- 
--	if (adapter->req_rx_splitq)
-+	if (adapter->req_rx_splitq || !IS_ENABLED(CONFIG_IDPF_SINGLEQ))
- 		vport_msg->rxq_model = cpu_to_le16(VIRTCHNL2_QUEUE_MODEL_SPLIT);
- 	else
- 		vport_msg->rxq_model = cpu_to_le16(VIRTCHNL2_QUEUE_MODEL_SINGLE);
-@@ -1323,10 +1323,17 @@ int idpf_check_supported_desc_ids(struct idpf_vport *vport)
- 
- 	vport_msg = adapter->vport_params_recvd[vport->idx];
- 
-+	if (!IS_ENABLED(CONFIG_IDPF_SINGLEQ) &&
-+	    (vport_msg->rxq_model == VIRTCHNL2_QUEUE_MODEL_SINGLE ||
-+	     vport_msg->txq_model == VIRTCHNL2_QUEUE_MODEL_SINGLE)) {
-+		pci_err(adapter->pdev, "singleq mode requested, but not compiled-in\n");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	rx_desc_ids = le64_to_cpu(vport_msg->rx_desc_ids);
- 	tx_desc_ids = le64_to_cpu(vport_msg->tx_desc_ids);
- 
--	if (vport->rxq_model == VIRTCHNL2_QUEUE_MODEL_SPLIT) {
-+	if (idpf_is_queue_model_split(vport->rxq_model)) {
- 		if (!(rx_desc_ids & VIRTCHNL2_RXDID_2_FLEX_SPLITQ_M)) {
- 			dev_info(&adapter->pdev->dev, "Minimum RX descriptor support not provided, using the default\n");
- 			vport_msg->rx_desc_ids = cpu_to_le64(VIRTCHNL2_RXDID_2_FLEX_SPLITQ_M);
-@@ -1336,7 +1343,7 @@ int idpf_check_supported_desc_ids(struct idpf_vport *vport)
- 			vport->base_rxd = true;
+ 	struct idpf_netdev_priv *np = netdev_priv(netdev);
+ 	struct idpf_vport_config *vport_config;
+-	struct page_pool_stats pp_stats = { };
+ 	struct idpf_vport *vport;
+ 	unsigned int total = 0;
+ 	unsigned int i, j;
+@@ -946,32 +939,12 @@ static void idpf_get_ethtool_stats(struct net_device *netdev,
+ 				idpf_add_empty_queue_stats(&data, qtype);
+ 			else
+ 				idpf_add_queue_stats(&data, rxq, qtype);
+-
+-			/* In splitq mode, don't get page pool stats here since
+-			 * the pools are attached to the buffer queues
+-			 */
+-			if (is_splitq)
+-				continue;
+-
+-			if (rxq)
+-				page_pool_get_stats(rxq->pp, &pp_stats);
+-		}
+-	}
+-
+-	for (i = 0; i < vport->num_rxq_grp; i++) {
+-		for (j = 0; j < vport->num_bufqs_per_qgrp; j++) {
+-			struct idpf_buf_queue *rxbufq =
+-				&vport->rxq_grps[i].splitq.bufq_sets[j].bufq;
+-
+-			page_pool_get_stats(rxbufq->pp, &pp_stats);
+ 		}
  	}
  
--	if (vport->txq_model != VIRTCHNL2_QUEUE_MODEL_SPLIT)
-+	if (!idpf_is_queue_model_split(vport->txq_model))
- 		return 0;
+ 	for (; total < vport_config->max_q.max_rxq; total++)
+ 		idpf_add_empty_queue_stats(&data, VIRTCHNL2_QUEUE_TYPE_RX);
  
- 	if ((tx_desc_ids & MIN_SUPPORT_TXDID) != MIN_SUPPORT_TXDID) {
+-	page_pool_ethtool_stats_get(data, &pp_stats);
+-
+ 	rcu_read_unlock();
+ 
+ 	idpf_vport_ctrl_unlock(netdev);
 -- 
 2.45.2
 
