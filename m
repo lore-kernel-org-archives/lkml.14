@@ -1,65 +1,189 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA521AE09C;
-	Thu, 20 Jun 2024 14:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7101AE86E;
+	Thu, 20 Jun 2024 14:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718893580; cv=none; b=DBw9YWMmLDDUFVTLCFkKuS01dLWAQ2HSFSthczU803OVtM4mgAHzdYvv+7DzxmkVcCYft+xn5cq66gcAOvCn+BLVVoo7GxVfjlTF/fAB20x1hCRtd81ZAKgMnLli+SP9/6SYLpIswEDJaHstbtEmk+gA/mUNT3e48prXhFe0hnE=
+	t=1718893582; cv=none; b=jf7NuUf5Soz8MGlRRjGbERYVCNVe+HK8TMKGGVdwRjA+Kr0Le0n9HyBVtmr54YpPJFikWfHevPGAGfQh4X/A58F1lB7x3q/mxd01yqIY/mHxUJLICfEWw1xAs9qMgHTMaPxJ/wQXx5ivRBzCYx8szaSVygIFu9xr2BaDx0WPXrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718893580; c=relaxed/simple;
-	bh=v4/Y0Brkjokk9Q16BCvSklcARCeaZDYKuPQ9dJKC9hI=;
+	s=arc-20240116; t=1718893582; c=relaxed/simple;
+	bh=sIkfsnAVoRds5WEklbfbC0UMyyLpSMkwJORy5GD4llI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XpvXD1ZkuMvkYWccI3Rt+XWJrPAKks/XgjrSIy4bc27S+SFLOstCTF8WgZ6prFgbIyEqOU683T1apUeNLOe4stzJBGqLL7VzPKKSTMu2+kksC+CcgwMp7JuuQ01pYkoEnKqwyDth95m6+ZTPDz78/Ms0Ahx7fE3VcriB0hfEfcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e860cc8.versanet.de ([94.134.12.200] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sKIjk-00065o-HX; Thu, 20 Jun 2024 16:26:04 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>
-Cc: Johan Jonker <jbx6244@gmail.com>, davem@davemloft.net,
- edumazet@google.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] net: ethernet: arc: remove emac_arc driver
-Date: Thu, 20 Jun 2024 16:26:03 +0200
-Message-ID: <4777231.1oUyQt6lIG@diego>
-In-Reply-To: <20240620063729.55702736@kernel.org>
-References:
- <0b889b87-5442-4fd4-b26f-8d5d67695c77@gmail.com>
- <7d208e8c8bb577cfc790fd24cf990684020ee7c5.camel@redhat.com>
- <20240620063729.55702736@kernel.org>
+	 MIME-Version; b=l+HFbuRfLh0zDrf38JOcYnLoY8QkrIMc1s1ujptcJgiVvxEbUYYdS1NLXqF4Qx2ovGYjHcwLF0F5iXbyFJCWErjXvX7jg6VEa28k8cOLlEz9lcaBIznUlLxkkcBEz5HU7M/Qij5/vC83wV+UMT1fwS1xKt+/UEn1GQBvgtkGmwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L6ars+UU; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L6ars+UU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718893579;
+	bh=sIkfsnAVoRds5WEklbfbC0UMyyLpSMkwJORy5GD4llI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=L6ars+UU8ohJqBv97do828pZdjXZvYeXIXxXszh5cvWbRlxk41wJ1grI0pcugmcYM
+	 7sOOAg9IlqadKzqQJHTCh/ATXPWKcGEE081SlKdUkumDEv68ZiGYJJdBmJPaUsW7Wz
+	 z1FibZmOZ4uDiXO+qM90wDd2m1tx9V+6pN4/Em0qUewDtvIxbLa6KbEQZh/dxvtdbW
+	 KWfXj7VTNFzHwpEaCdZc3quO9qe2RkyX/wDjhk3mmYVTkIS714TPEWsXvwAAQpylNr
+	 B8XBaQLM074aXB94Vie9DrGWQZLz9tyKBv2jlms1GNXsTX1DWEvaV5KZJ6Oz6BQxhU
+	 T90nS/ieJ0PQA==
+Received: from arisu.hitronhub.home (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2780B37821D3;
+	Thu, 20 Jun 2024 14:26:16 +0000 (UTC)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Alex Bee <knaerzche@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: [PATCH v3 3/4] media: dt-bindings: rockchip: Document RK3588 Video Decoder bindings
+Date: Thu, 20 Jun 2024 10:19:45 -0400
+Message-ID: <20240620142532.406564-4-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.44.2
+In-Reply-To: <20240620142532.406564-1-detlev.casanova@collabora.com>
+References: <20240620142532.406564-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, 20. Juni 2024, 15:37:29 CEST schrieb Jakub Kicinski:
-> On Thu, 20 Jun 2024 15:19:24 +0200 Paolo Abeni wrote:
-> > AFAICS this depends on the previous DT patch, which in turn should go
-> > via the arm tree.
-> > 
-> > Perhaps the whole series should go via the arm tree?
-> 
-> FWIW Heiko said on patch 1 that the whole thing should go via netdev...
+Document the Rockchip RK3588 Video Decoder bindings.
 
-yep.
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+---
+ .../bindings/media/rockchip,vdec.yaml         | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-Reasoning is that the rk3066 is mostly inactive, so taking that dt-patch
-through the net-tree won't create conflicts with other dt-changes here.
-
-And of course both binding and driver changes are the bigger parts
-of this series.
-
-
-
+diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+index 08b02ec16755..d44f6b0d2c55 100644
+--- a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
++++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+@@ -17,6 +17,7 @@ properties:
+   compatible:
+     oneOf:
+       - const: rockchip,rk3399-vdec
++      - const: rockchip,rk3588-vdec
+       - items:
+           - enum:
+               - rockchip,rk3228-vdec
+@@ -30,29 +31,56 @@ properties:
+     maxItems: 1
+ 
+   clocks:
++    minItems: 4
+     items:
+       - description: The Video Decoder AXI interface clock
+       - description: The Video Decoder AHB interface clock
+       - description: The Video Decoded CABAC clock
+       - description: The Video Decoder core clock
++      - description: The Video decoder HEVC CABAC clock
+ 
+   clock-names:
++    minItems: 4
+     items:
+       - const: axi
+       - const: ahb
+       - const: cabac
+       - const: core
++      - const: hevc_cabac
+ 
+   assigned-clocks: true
+ 
+   assigned-clock-rates: true
+ 
++  resets:
++    items:
++      - description: The Video Decoder AXI interface reset
++      - description: The Video Decoder AHB interface reset
++      - description: The Video Decoded CABAC reset
++      - description: The Video Decoder core reset
++      - description: The Video decoder HEVC CABAC reset
++
++  reset-names:
++    items:
++      - const: rst_axi
++      - const: rst_ahb
++      - const: rst_cabac
++      - const: rst_core
++      - const: rst_hevc_cabac
++
+   power-domains:
+     maxItems: 1
+ 
+   iommus:
+     maxItems: 1
+ 
++  sram:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      phandle to a reserved on-chip SRAM regions.
++      Some SoCs, like rk3588 provide on-chip SRAM to store temporary
++      buffers during decoding.
++
+ required:
+   - compatible
+   - reg
+@@ -61,6 +89,33 @@ required:
+   - clock-names
+   - power-domains
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: rockchip,rk3588-vdec
++    then:
++      properties:
++        clocks:
++          minItems: 5
++        clock-names:
++          minItems: 5
++
++        resets:
++          minItems: 5
++        reset-names:
++          minItems: 5
++    else:
++      properties:
++        clocks:
++          maxItems: 4
++        clock-names:
++          maxItems: 4
++        resets: false
++        reset-names: false
++        sram: false
++
+ additionalProperties: false
+ 
+ examples:
+-- 
+2.44.2
 
