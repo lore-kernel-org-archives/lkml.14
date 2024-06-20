@@ -1,100 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BFC19AD86
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB8E558A5
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718874594; cv=none; b=X1OdGy125EvLsH186B9IdYztt56rhxgz0hoEFnTOZdd1qlAblTJ0YjxE2tlJjDCO8g3XBOedTAl3ud5Cfwla09cF7mMOcQw8THm3qs1XDFqs5IKH8FSwTLXckizFYS/jxs7JbRZM0qpQXGhedPj5+Qs1kjeX+63F0VSnDP+o41o=
+	t=1718874654; cv=none; b=rn+XQUrPbU/mqcAFfmcaciuFJPV+kFeDoKbwSaF4sMVac7V4aa7hsuYDI7Y3KNT1mf6eawbjAy8c8YGEiiZjrTaFNc7DfLTjcTwyNscOafpnIgbEALgY1Gp7hcgoqxpDxbNe2UJ6Toi7+QZ6wpUy2M6uuHLu26a6r0xFkgm4sZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718874594; c=relaxed/simple;
-	bh=xcEb/2o51/hhP7L4EQhiwpX6PzDA1AooXoMLV0l0PF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mu5bha7OAUe0FKDuiAEzP96BGn19mjNLv1w25RQ1jrwT5yY+lpR6FHBREh1qjUnVYvdvtaItO9KukPnuzpZx0qVoznb/2cKOHsVqD2TlFhhVXXa/uiIUYl7jp7biNYvkmWR94Fr7IUWRSIlqzNJ9/f5aYkXwOS+9EJ91Ixr2sc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/W3sDG0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718874654; c=relaxed/simple;
+	bh=c4D7Z9CR9MfOFr8x4TqhuN903N+QSpMF6a7kToVGrDc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jEaGqokT1t6iBuyJqEnz4b+B2kn3gvk77fmY9VTgb3RDZqAftNIA0fBNmiNi3I44ah6M3RAibFmdWkzhYVCCHAnkqfBOBHzj1RCM/GqMoke2U/1Nt1lqWE8HC3mPxuWpFr+LJYONLsjJ/aJWHHSOzvTEUky4z/Osxdu0xhf63es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QDBMOHtV; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/W3sDG0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718874591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GZSfcZG+KL4h8GQs6NMrIyrvzuT3/K8Q28tO1U3u9w4=;
-	b=E/W3sDG0AhBQJakslkRn/qBLZ45xHeuVVr2e+63Z3YmGDEfM4oRDfXc6KjFlqsxSfjajii
-	ClESz6xLP6tbebbI5Tq5VbQdqWr5z372Obp6TK5u//zsPOfq4D9bZDlfyN/E6L3rELBcYH
-	pt1y6P3CbitCoRBGDA5i1dnjNwNY6+A=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-189-LhuqOdFhOj-bvsFoYhn1oQ-1; Thu,
- 20 Jun 2024 05:09:46 -0400
-X-MC-Unique: LhuqOdFhOj-bvsFoYhn1oQ-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6414D19560B1;
-	Thu, 20 Jun 2024 09:09:44 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.26])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EF5463000218;
-	Thu, 20 Jun 2024 09:09:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 20 Jun 2024 11:08:13 +0200 (CEST)
-Date: Thu, 20 Jun 2024 11:08:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: hw_breakpoint: Save privilege of access control
- via ptrace
-Message-ID: <20240620090807.GC30070@redhat.com>
-References: <20240618071010.11214-1-yangtiezhu@loongson.cn>
- <20240619151524.GB24240@redhat.com>
- <9cc6d314-2431-c1b5-3d46-63c0ac80ed4d@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDBMOHtV"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42172ed3487so5331345e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 02:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718874651; x=1719479451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PHBkJAins6g8k8CRgVDBSrncktJoQ1zQZ+ZidiRGnrM=;
+        b=QDBMOHtVhk8SbJrlUhTaJ+GhUSxTSy/grzZmM/2hAueByrRzq6Uv+L0ONoeJLdo2/M
+         17C+jk/F8/bHVXNz8ftEbzZhaDOVQT0nwG+HpR16PfDt/PyY6npeu6d+SNg5u+57xRKE
+         b84zWHgfk+zDJhNx9rTWD1AP1bcdlY0zl7+1GGc6YT1fkKBHyH1F2tjBWMy7QhGNBb04
+         Nd9dBmj7bExKq/d/h88AuuGBXJQ309zlHgjXgZwdeKYvULQkfhQedCU6DWZ6SjHkuvwm
+         btFC4pCn5CXdHkSZoJ98upl4htgGNhCCcLsg15SLIMaS1hAjgkFlv7ZKarbDBLfSkj5X
+         bc3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718874651; x=1719479451;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PHBkJAins6g8k8CRgVDBSrncktJoQ1zQZ+ZidiRGnrM=;
+        b=YrQ7nLnbVzhQuNVg9V+9Kk8YvnWWcHWS42mdnEK+lEWlDTQvI8HtHFL6tvXRCtd++q
+         9agJaUNGQ897g6MCQdhLDcnpjlzR3i4lSjn75sBPBEutAKE16vZADYHK6GljzLi/xn4f
+         TP/IrWjJP5K69OoRFdEQ7GoXsw5Z5EEiNuGCtr/tnPnCK4PKNrQlKTlgLNP9OdUAXIl1
+         HSpzkr22FSI5/TQXH2cUEDRxMVSAMKLRuZkmTyzt9VnEpK/1vGSX4ScZ/mOd8+ZVPlXV
+         61X9oSteriaj3XCbrOrvDgrisVw9B3fGjpmsAhfJ5qnt7FPkFHZvrV1/1rTrj9yBRKCD
+         hv+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXhEuynmTQ7XdtZRI7JwIhlq1VxgdSKbiL586tnij0my2xEbjFskqFHKsCy/TxqaJYo117j4a/3d7LqhfFdZk8EVobs/2pa3FeU+Zyw
+X-Gm-Message-State: AOJu0YysN+tAjV+7kCHzF/oXUKDlywmbN3hcJ50Hvi3KZnK0Xxfd6nhf
+	9xBEDtILV+QThqKspPKnyvKvoGfq4GlRHdLFbtGY7Tz/7mj30NblpIe5CdXlmlLtvBCWzs7dCFG
+	I
+X-Google-Smtp-Source: AGHT+IGbAsr4VCtVmR91oxpzAar7lPnAha8zhGqOQi2bz0FL/BFRbaDZAys1bZaV9FZphUYTqCbqqA==
+X-Received: by 2002:a05:600c:158c:b0:422:dfb0:8644 with SMTP id 5b1f17b1804b1-4247529bc07mr38253855e9.33.1718874651188;
+        Thu, 20 Jun 2024 02:10:51 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247ef50750sm8238195e9.14.2024.06.20.02.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 02:10:50 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Sanyog Kale <sanyog.r.kale@intel.com>,
+	alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] soundwire: bus: simplify by using local slave->prop
+Date: Thu, 20 Jun 2024 11:10:46 +0200
+Message-ID: <20240620091046.12426-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9cc6d314-2431-c1b5-3d46-63c0ac80ed4d@loongson.cn>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
 
-On 06/20, Tiezhu Yang wrote:
->
-> On 06/19/2024 11:15 PM, Oleg Nesterov wrote:
-> >>--- a/include/uapi/linux/perf_event.h
-> >>+++ b/include/uapi/linux/perf_event.h
-> >>@@ -467,6 +467,7 @@ struct perf_event_attr {
-> >> 		__u32		wakeup_watermark; /* bytes before wakeup   */
-> >> 	};
-> >>
-> >>+	__u8			bp_priv;
-> >> 	__u32			bp_type;
-> >
-> >Is it safe to add the new member in the middle of uapi struct?
-> >This will break userspace...
->
-> Let me put the new member "bp_priv" at the end of uapi struct
-> perf_event_attr in the next version if you are OK with it.
+The sdw_initialize_slave() function stores 'slave->prop' as local 'prop'
+variable, so use it in all applicable places to make code a bit simpler.
 
-And add PERF_ATTR_SIZE_VER9 ?
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/soundwire/bus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Well, you can safely ignore me, you should ask the maintainers ;)
-
-But to me the very idea of arm64-specific and "kernel only" member in
-perf_event_attr looks a bit strange.
-
-Oleg.
+diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+index 191e6cc6f962..263ca32f0c5c 100644
+--- a/drivers/soundwire/bus.c
++++ b/drivers/soundwire/bus.c
+@@ -1410,7 +1410,7 @@ static int sdw_initialize_slave(struct sdw_slave *slave)
+ 		}
+ 	}
+ 	if ((slave->bus->prop.quirks & SDW_MASTER_QUIRKS_CLEAR_INITIAL_PARITY) &&
+-	    !(slave->prop.quirks & SDW_SLAVE_QUIRKS_INVALID_INITIAL_PARITY)) {
++	    !(prop->quirks & SDW_SLAVE_QUIRKS_INVALID_INITIAL_PARITY)) {
+ 		/* Clear parity interrupt before enabling interrupt mask */
+ 		status = sdw_read_no_pm(slave, SDW_SCP_INT1);
+ 		if (status < 0) {
+@@ -1436,7 +1436,7 @@ static int sdw_initialize_slave(struct sdw_slave *slave)
+ 	 * device-dependent, it might e.g. only be enabled in
+ 	 * steady-state after a couple of frames.
+ 	 */
+-	val = slave->prop.scp_int1_mask;
++	val = prop->scp_int1_mask;
+ 
+ 	/* Enable SCP interrupts */
+ 	ret = sdw_update_no_pm(slave, SDW_SCP_INTMASK1, val, val);
+@@ -1447,7 +1447,7 @@ static int sdw_initialize_slave(struct sdw_slave *slave)
+ 	}
+ 
+ 	/* No need to continue if DP0 is not present */
+-	if (!slave->prop.dp0_prop)
++	if (!prop->dp0_prop)
+ 		return 0;
+ 
+ 	/* Enable DP0 interrupts */
+-- 
+2.43.0
 
