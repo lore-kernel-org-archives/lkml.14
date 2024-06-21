@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02E516E895;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD90416EB6F;
 	Fri, 21 Jun 2024 09:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962857; cv=none; b=B5wCR5q299LVUI8f9eJ/WQKC6LDilZSqDWwMaYlnZcSP03SJ9VtdoSEEfVLYy7tqW8xPEIxEhjg6pYsdeAQ9MLNdARW70kT8DbahT0L4gyicZ/lI1ut4/iLBeiRQ2DosbuMHnRAzL8Vr5OQodRWchPL82i/dl/bsE6+HNjmesls=
+	t=1718962857; cv=none; b=mmuxzhHWbXwekgkbbdu6fChjgcJW1bJH5+2sfCAwqXg12u+8TY5mneq2Kd6p+8/mt6SlPEX+KtUU4x8T05Mxf3c1cGAPDdywMQ21c2av4tK0Gfk8JOcKAJcP56BMJG+1eW1cRZkH2IjRCLtIOJNq3wwoPb0mSbeMUWqlmwobd5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718962857; c=relaxed/simple;
-	bh=YyXgKYCSdn88IYgR4AI5OiSwc+6s3NkSV0A50DFCN3U=;
+	bh=y0RoOWqrDNtRx3/l9S/QfF0yJ9pb9mKrBdIdyjxlfG4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sjdsE0As/tp5QVpkDi6le8w4SaltmCmrqHltehxgRE2uiBYSWNVLldQj0DmudCbGqVCOYsm6TcNk5BGgK9qsKE8fQPj+rl4c1wwvzX1BjDX+qqTthjHYca3JLPdcIYi0QZo00FIHqOdsYIGEOnbiMqE6CYUOq5juxZ3MqmSWDo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OURpnU+B; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=PFXJe9TBLrBHsQr9Q0DbsOvEq9LbuLw9JO141SBFDCXCjmnQH5LZI1SNN27PJRmD3hdxmNNGaJfW7NoCROGwqnHG/YIc1p+k2I993K4sYRyX601a8mE0VqECEl/QVxIkmFQvwLwdA/snu3J98K7ph4CWPCJQuMc/JZ4oDgG68Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPB9zuMt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OURpnU+B"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C928C32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPB9zuMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 71878C4AF11;
 	Fri, 21 Jun 2024 09:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718962857;
-	bh=YyXgKYCSdn88IYgR4AI5OiSwc+6s3NkSV0A50DFCN3U=;
+	bh=y0RoOWqrDNtRx3/l9S/QfF0yJ9pb9mKrBdIdyjxlfG4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=OURpnU+BY7jGENRYk9G9VAtNa3DCBojmpdnHndLL8VTFFDcDnayAxGjWsJXjQdBUG
-	 kEGhosAn1YDVrYpOdIFaWyUoCmTghwz0nXdy6Pu+tdvF1xRLhfnwDHyLNAojGa6rGj
-	 +CUWRPohLW9ObpzsBxuuQFVvaOpZ3KfJBAZwhnFuZW36wM1fek9msvN5EUReTS4q8B
-	 di7GBlVmvAKkWxYoXgCjjx8O54SHOHVXzSdkNWUIj2cAyArEVPLPOh1tGyOSroeD+n
-	 ZpYuQXhi8erluWaSG29AABQGzgQeyicp4no8aUk+Bfwqv6td1IDjmj3OPw3Ll69JJq
-	 ongJC3+s0bGgg==
+	b=LPB9zuMtIL4KWLHx/bBJMGmXBkmbTCL10YVGqmjS5cqmuXHK9Lh444pEijkmn9dhO
+	 zSiB5aEp1GjH1SEifwzO4AtREq+2fJIJR5pMLLp9++AloSnOUpT7oiiakNmkN3byQL
+	 Xamwx6wuaFQFWTUW3mR8uzL9vMBTibF/OnMnKiqqBy+q7BtoaBoWi0eprlN3kDvVUd
+	 /h5P0tOyTVcsFPhMvy3NXnKZhbWfXlLZlsZpMncPejrRJ9GC10b8eQxoTa5PzMwALp
+	 cjzqoo86trOmAoHjWIcXIAaRC4ldYK/RbkJnDSIQf2Yfzxc94E7OJTe+jkJzUusUcW
+	 /27HDj48UAdpA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47724C2BD09;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AA8C2BA1A;
 	Fri, 21 Jun 2024 09:40:57 +0000 (UTC)
 From: George Chan via B4 Relay <devnull+gchan9527.gmail.com@kernel.org>
-Date: Fri, 21 Jun 2024 17:40:54 +0800
-Subject: [PATCH 2/6] media: qcom: camss: Add CAMSS_SC7180 enum
+Date: Fri, 21 Jun 2024 17:40:56 +0800
+Subject: [PATCH 4/6] media: qcom: camss: Add sc7180 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240621-b4-sc7180-camss-v1-2-14937929f30e@gmail.com>
+Message-Id: <20240621-b4-sc7180-camss-v1-4-14937929f30e@gmail.com>
 References: <20240621-b4-sc7180-camss-v1-0-14937929f30e@gmail.com>
 In-Reply-To: <20240621-b4-sc7180-camss-v1-0-14937929f30e@gmail.com>
 To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
@@ -54,11 +54,11 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  George Chan <gchan9527@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718962855; l=576;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718962855; l=2308;
  i=gchan9527@gmail.com; s=20240621; h=from:subject:message-id;
- bh=4HwDgWtpMPEf780qBHcmuZUqzxXmWxCc6Ssp+LbI1Eo=;
- b=2Az5/ygCx4Ah/VzvEkKKKynF9jSOszic0691gERNKF8pSdCSYet1UgQ3PnkPqCniahi0mSfQv
- tTiW1FnMmlTA9A+BZGxZxNaHEDo/slKq5k4YNzcqOdUUCjz7a+UeOdH
+ bh=YnPxfplUpyI7adL5KPtpIXi5NQhvsVScDtSlkhPHhXI=;
+ b=6N0QHkttcoYSS5SQ1fZKQ/9yXpFF+i4jfnyxFZ/YNyQ7zNoXbFOCVAxMHQm5FCGJtRgJI6iC/
+ LYsmZIaJH8pBbe6sVnNlv7yrOh1pHN56UuFSW8GTBg9UZ33wu+ZamU6
 X-Developer-Key: i=gchan9527@gmail.com; a=ed25519;
  pk=Ac2fkTqgUBlj2sns9hRIWJTYhWHO1BsmHbdBb5UpUUY=
 X-Endpoint-Received: by B4 Relay for gchan9527@gmail.com/20240621 with
@@ -68,25 +68,67 @@ Reply-To: gchan9527@gmail.com
 
 From: George Chan <gchan9527@gmail.com>
 
-Adds a CAMSS SoC identifier for the SC7180.
+Add in functional logic throughout the code to support the sc7180.
 
 Signed-off-by: George Chan <gchan9527@gmail.com>
 ---
- drivers/media/platform/qcom/camss/camss.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/qcom/camss/camss-csiphy.c | 1 +
+ drivers/media/platform/qcom/camss/camss-vfe.c    | 3 +++
+ drivers/media/platform/qcom/camss/camss-video.c  | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
-index ac15fe23a702..5e750c481b74 100644
---- a/drivers/media/platform/qcom/camss/camss.h
-+++ b/drivers/media/platform/qcom/camss/camss.h
-@@ -76,6 +76,7 @@ enum camss_version {
- 	CAMSS_8x96,
- 	CAMSS_660,
- 	CAMSS_845,
-+	CAMSS_7180,
- 	CAMSS_8250,
- 	CAMSS_8280XP,
- };
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers/media/platform/qcom/camss/camss-csiphy.c
+index 45b3a8e5dea4..1fb08b5ee01b 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
+@@ -577,6 +577,7 @@ int msm_csiphy_subdev_init(struct camss *camss,
+ 		csiphy->nformats = ARRAY_SIZE(csiphy_formats_8x96);
+ 		break;
+ 	case CAMSS_845:
++	case CAMSS_7180:
+ 	case CAMSS_8250:
+ 	case CAMSS_8280XP:
+ 		csiphy->formats = csiphy_formats_sdm845;
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
+index d875237cf244..05fa1adc1661 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe.c
++++ b/drivers/media/platform/qcom/camss/camss-vfe.c
+@@ -224,6 +224,7 @@ static u32 vfe_src_pad_code(struct vfe_line *line, u32 sink_code,
+ 	case CAMSS_8x96:
+ 	case CAMSS_660:
+ 	case CAMSS_845:
++	case CAMSS_7180:
+ 	case CAMSS_8250:
+ 	case CAMSS_8280XP:
+ 		switch (sink_code) {
+@@ -1518,6 +1519,7 @@ int msm_vfe_subdev_init(struct camss *camss, struct vfe_device *vfe,
+ 			}
+ 			break;
+ 		case CAMSS_845:
++		case CAMSS_7180:
+ 		case CAMSS_8250:
+ 		case CAMSS_8280XP:
+ 			l->formats = formats_rdi_845;
+@@ -1603,6 +1605,7 @@ static int vfe_bpl_align(struct vfe_device *vfe)
+ 
+ 	switch (vfe->camss->res->version) {
+ 	case CAMSS_845:
++	case CAMSS_7180:
+ 	case CAMSS_8250:
+ 	case CAMSS_8280XP:
+ 		ret = 16;
+diff --git a/drivers/media/platform/qcom/camss/camss-video.c b/drivers/media/platform/qcom/camss/camss-video.c
+index 54cd82f74115..5b7f3fba938c 100644
+--- a/drivers/media/platform/qcom/camss/camss-video.c
++++ b/drivers/media/platform/qcom/camss/camss-video.c
+@@ -1027,6 +1027,7 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+ 		}
+ 		break;
+ 	case CAMSS_845:
++	case CAMSS_7180:
+ 	case CAMSS_8250:
+ 	case CAMSS_8280XP:
+ 		video->formats = formats_rdi_845;
 
 -- 
 2.34.1
