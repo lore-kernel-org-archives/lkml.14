@@ -1,85 +1,108 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D917E16B3B9
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D84155C82;
+	Fri, 21 Jun 2024 08:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718958062; cv=none; b=eaniEZzlLJJRFYXVWT5MBMR99aWeN3vxFwO+3OvrZwZ79Lor26V2E04PjmQkeyC7F0GZuDG6niu2NQoAIqelIetbhsF+nfSE0w9YML369fEuAEsbU+5CIrCaggxfgjIIhbS16ClWkYh3iNLcX7601HjTq++ce3RB+s0Dg8WU6w8=
+	t=1718958081; cv=none; b=uvR69YPPPOthDPfPWxtY+NiN/Bj6sxTf/wqtojvFGN1tvUSgwnuhZnG9rDXU9iMVbJ9FyMOnS5+ibEX5C7y5XQNribDwRf9xLmqhdi+8pimTsWaQVUTgdUP6uLRHWVc72U6PYhe7EQgD+LBE2e8hvZwnS5UHT3I8vxvt+hTyOdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718958062; c=relaxed/simple;
-	bh=BHs522MQJBFhV9ohTCDDfuazR6Fijf/OOyDX4mfhwRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eaNu3Js/lHmiFWzGlA6Q/yEGSJ0oQv0vDD/Imws42mQV04hBDeczuDOENI9Qh5Q1nYsncxdMsya+VOBoRoFFCoG1zdx/LfpEvcja3snJKqwI89bIVx6xx7XEPUEGMDTrXveccSWW8AE70M85Io8tOGcnpN3/PWd3uL6XSaUXVuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fVkSAAgT; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718958081; c=relaxed/simple;
+	bh=QMtf0T6uDNCP6ThgxIUGFi47LfMO2/ulDirJ4mXjisY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHkfZjYs+MKj7nwMqD2vGeW2c3pbILR8EAr3bE83VLXzpSd9z6/XdkVyHOjTDvDFI5UfFi1wVCp33Dtf6Qgtl4mFl67nKMjqUIDrVNfoZ/KppQ8QlxYiFOkQaXIiF3LKApsfB6MJfTKUavDgkslqkflDjjai0sk63OaAxIRFl8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZFGUieu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fVkSAAgT"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b42574830fso7628806d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 01:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718958060; x=1719562860; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BHs522MQJBFhV9ohTCDDfuazR6Fijf/OOyDX4mfhwRo=;
-        b=fVkSAAgT9bU7aUKMxg+VmFqLwrlV6yjhzlTkf1rPaDDC4HI9Ll791piF+VazIGkU38
-         zcGhuLEh/v8i8dkZUIYx9xou6cHPbG520+p7/Q7nPWQznGyKniKhyN5jsMwsuCd5zEDG
-         nSWbB/eMaDGAsfDAVaj5m/oOZI6p7NkDWmceprYBQ5Gl2NtzbIeRQ2wtMDN5jaFa1sIR
-         LwcMRreUJHaqW+pW/tsFZUsZceh/hKGAFNeoQs+u4wRl8/uLjsV6tiUmnh77ldJ4LCmn
-         +2fquYU4FevidS9DM1Gs4Ji1CZ+XiFStymcw3eSyJPKIgcCasoObFVjk32v2cYyU02fN
-         bDvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718958060; x=1719562860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BHs522MQJBFhV9ohTCDDfuazR6Fijf/OOyDX4mfhwRo=;
-        b=WJvR8YmXuC8IPEK9e5s1crNarYYlgvDyjWrXBqdB98by8QP0YjtoxNz/juHWVF/M9o
-         SWu6Uz3aJ0J3JFRYRBkbB9NMU1aw3nJsYQS0lYLStcIiatC0cI5qQD/PRBdyhfAQINtI
-         jvimIKMFoFMUfTDUcXcI2ttq6zuCsm0HT+30/0uH9SOSUia9eo3r4VxUWNbpG+thy41t
-         B1U91YYqr/gZ0ovOi2rpeiw1ELHmgX3gmb4iW5ur2XrIvk2iTz5QusdylBiITU7fl6N/
-         /kyyVa0a/dA2Ap7vlAXaQ63C0tIp7XOJJLEsAmvZgzMsNpSr9jixpp+0AqC7PWH32KRx
-         fChg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIFQQ0vGTw6NqBgoga7fhvVxi6WijJgFUNoJkz0mdf6uh0u3VtxaTslyiINO9Jd6lgxbDcYeiY5sI6S2tfH26jSBzT+FABE6BNtsx/
-X-Gm-Message-State: AOJu0YwxHrx7V3Own54JxpA69XSKMM53WDbCuHFMLPNWUgJgr9nWIhDM
-	DCMaxjieSffBcmkOYTmnjcHpBToEJlMVciPFzIj1EuNNvXtzP7LkEkiC3oAvP9Z2VP0Sf4DUGzn
-	ruZncNz60Lw7EE9qjEwlJb2OkWthIXXVS834E
-X-Google-Smtp-Source: AGHT+IGXcWKjE2wEB/FB3zctbVztmZY2T0ghhs3sX62Jp/C/wU0GXj1rKHaik6sGne1rqKXer3niMAyr4JKJZuHyBVU=
-X-Received: by 2002:ad4:4e52:0:b0:6b0:8f42:2435 with SMTP id
- 6a1803df08f44-6b50d8e188dmr52575026d6.51.1718958059567; Fri, 21 Jun 2024
- 01:20:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZFGUieu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9536C4AF08;
+	Fri, 21 Jun 2024 08:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718958080;
+	bh=QMtf0T6uDNCP6ThgxIUGFi47LfMO2/ulDirJ4mXjisY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VZFGUieuixjnwWRarKrkMmWzTsHwOPQHkDnxJwsAOSI5Jhnj99ryVH33FrLocz8Vn
+	 ajhhezpNAxlr4qrsLKoW8egu3wGklMisIPIGR7fvy4gfhGh2kxFSubfki8EmLTGeqC
+	 FyNF6c+n9pHbcHgwI9omP7yG8Dbu5r7NL+bHQnZpXGWmAiNXQIhI61MO4uI4v+LAfB
+	 xgTleMqki5tjcafqHOsHci8B6Shewb4T8SEsWCMvgeQoX2/IGg/+pD/hxyZbRFdj/5
+	 60fqXFWW8FllRMXbMhWzg2/S3kF8EDze2ZQgoDbnj5FdlGcCcVmJHaUnZsK3Nklji7
+	 ujcmBQOVYa8Nw==
+Date: Fri, 21 Jun 2024 09:21:14 +0100
+From: Lee Jones <lee@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: lkp@intel.com, linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, Vinod Koul <vkoul@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [RFC] Patch review challenges
+Message-ID: <20240621082114.GH1318296@google.com>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+ <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de>
+ <ZnRUSaHJhz7XLcKa@matsya>
+ <20240620170522.GU3029315@google.com>
+ <ZnUnFeum1Z2ahm9M@matsya>
+ <ebddd644-b9b1-4a87-a2e7-dcf255f4184d@web.de>
+ <20240621075123.GG1318296@google.com>
+ <302ce128-a0ef-41b4-9808-210a83bc6a48@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621002616.40684-1-iii@linux.ibm.com> <20240621002616.40684-33-iii@linux.ibm.com>
-In-Reply-To: <20240621002616.40684-33-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 21 Jun 2024 10:20:18 +0200
-Message-ID: <CAG_fn=UNT0s1q82Jb=j+HAnGXJs2j=ip2FL6zut+jtnwq57pUA@mail.gmail.com>
-Subject: Re: [PATCH v6 32/39] s390/ptdump: Add KMSAN page markers
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <302ce128-a0ef-41b4-9808-210a83bc6a48@web.de>
 
-On Fri, Jun 21, 2024 at 2:27=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> Add KMSAN vmalloc metadata areas to kernel_page_tables.
->
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+On Fri, 21 Jun 2024, Markus Elfring wrote:
+
+> > The issue is one of communication and the way reviews are conducted.
+> >
+> > Reviewing other people's work is challenging and requires a certain
+> > skill-set, of which _excellent_ communication skills are non-negotiable.
+> 
+> Patch feedback and change tolerance can vary also according to involved communities.
+
+Agreed.
+
+For this community, I suggest you build your skills for a while longer.
+
+> > Why not concentrate on more complex submissions for a while and grow
+> > your repertoire of common review points,
+> 
+> Further collateral evolution can be considered there depending on
+> corresponding development resources.
+> 
+> > rather than repeating the same few over and over?
+> 
+> Some factors are probably known also according to corresponding statistics.
+> Several contributors are stumbling on recurring improvement possibilities
+> in published information.
+
+Right, this will always be true, however the few you've picked up on
+are not important enough to keep reiterating.  By doing so, you're
+receiving undesirable attention.
+
+> > Reading other, more experienced maintainer's reviews would also be a good use
+> > of your time.
+> 
+> I am trying to influence adjustments in desirable directions for a while.
+
+Never stop trying to improve.
+
+
+These are only my opinions of course.  Take the advice or leave it.
+
+There's no need to reply to this.
+
+-- 
+Lee Jones [李琼斯]
