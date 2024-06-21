@@ -1,105 +1,151 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC1512D745
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE497155300
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718953412; cv=none; b=eDCY5a6Dg1ejoH0T3cHeqDgIFAFgbxMuIpwka/7X1JU3fch0Sjp4zZjWPVBjXkKfLlwgqxo2kd2eNJX0zZh0K2Hs5HKCUqSdi0EH/xYrIrJFGw9bxF97//std0gz1p9H0mVFaQbLEH7yEPExJP/gF5qAzlBsfPGj485V0NTcZrs=
+	t=1718953652; cv=none; b=QLyBSBKOk6J/8p5UeoSNMpso7THTnElNqFrWtt1KZ+54kHuvnpVTvxe/a6W5IwTjEVFK7IBwcBDrYlr17BnXY3ViAO3wGi4bJoCIEJDHZEwB01WBWai7P6Owl/t4cl0Ss2T/MX8urZ9B2eRmJrvbOsYVb7WUOzDit/V3k0UfCLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718953412; c=relaxed/simple;
-	bh=9YpIG0vywBEXYfiYSjXWZS4SaYwJoaD6O61rlDfXZsM=;
+	s=arc-20240116; t=1718953652; c=relaxed/simple;
+	bh=U7O/f4ugiEkC98DWZvtW3F9cYFCOjQxaBn1Mwd+XbA8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fWK7RnPTBfyIPQB+NRGaiCECfpwlRJQCvWyF7DFtntu3JakpGHpHiYs297QFijMfDUuVAdHrl2gRgEXemU3IjgmTP2r6BxxuxkHHo/x9j6bs1ebfSEdv0wk9wJt84YijWDm54m/GEepjUXPb8I0S/+JIuRC7AfjaF4SKYuTZMeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=UYmWNYpL; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fiul5hLKaYINUeJrf3glHbfr6rkmx747uWbsn6aRzJq9lPJm705b5dyqkWUXJlxdaK0ws6wNfRJVoJaOQ+IzBzU5HdKveTb45fGLPqpcAfXFLT5pwjv0l6g0Tfcc2RWETsyLEZhN0H8CUVceqJBGCxCD02gjnBkQ2T4lQFyuFbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X6dzxbMe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="UYmWNYpL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=9YpI
-	G0vywBEXYfiYSjXWZS4SaYwJoaD6O61rlDfXZsM=; b=UYmWNYpLsZ/h0ty/oCAx
-	o/NDwZnqSRD58/nLMBxymgT9cutC7ytVfIb5EqWhTaTO6IxkclIIvuz3PscTm9yN
-	modIlTDV0sTggUrKuzFI1tdYWBFQX6zR8IswIYzVt9iPHlXwdE7SE/soJbgsZs/5
-	1gIDQ+zny8w2/kMRguBwikKsv1VPgj2Yy8C7wJEasGr/qP0RpUVQdcWsZFqT0qjv
-	tturjHksnliHbJXdqtObeSEcKo1PvNf23mQwKlSJFp0+c/f9r0qt+YDrTmGKO8W4
-	qhFxkHkqe1oKUQaV80rlpUQTXH4zw6bhpO+ef8ktxrI5u8ynJ74Da7D2e5Q8taAv
-	pg==
-Received: (qmail 1271058 invoked from network); 21 Jun 2024 09:03:27 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2024 09:03:27 +0200
-X-UD-Smtp-Session: l3s3148p1@Uvc6B2Eb7tUgAwDPXzjQABqqX1QYyOSW
-Date: Fri, 21 Jun 2024 09:03:27 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Easwar Hariharan <eahariha@linux.microsoft.com>, 
-	linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] docs: i2c: summary: document 'local' and 'remote'
- targets
-Message-ID: <o5sbb2yqwzm3p2elxgoq6atgbw62e7jwzim6trjswbbozkptc2@4yzoaqanmrfn>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Easwar Hariharan <eahariha@linux.microsoft.com>, 
-	linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240614081239.7128-8-wsa+renesas@sang-engineering.com>
- <20240614081239.7128-13-wsa+renesas@sang-engineering.com>
- <4zxr4rlqnjqbqh3oxmd2ufqi6uk4pxa3tniuya5pgjtqi6tswc@utq4r2zt6z6b>
- <ed75fyc2xcsnwubq42eposf6ayt5aj2jmqz6mthugk6vm2zpi4@qqwlmuwayoo5>
- <y34k2k25xdr5z4v7oejp4da237s4o5qym5npihyydwlbsdh75c@vhmfl7sw3pbm>
- <7d5f800f-fc65-4fbf-adad-616d51501c62@linux.microsoft.com>
- <boehtgry7j7ulhrw7tenkmzxujahmxfn25imvb7zw2ibtmebbk@u3jryw4v2y7h>
- <cu2mkl42byhce6eytcnw7yseogbnypgtrkoirlezakwg35egdg@vjjye4ca7yey>
- <cbwamjer2rupkmyze6atgpkrszajcbhw2udb23ldl73ne3m6qr@jjs7q3codtx5>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X6dzxbMe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718953649;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pVNRr002L+NyIVSk486BNVmsI1O8j0gJ9CCkEeh4Wcg=;
+	b=X6dzxbMemdhJJu6M2eA/eYUKCWfaLs9FXIIr5jAA/dqnK5qYVazOzoJ+sRMQ3zAxUNvFdk
+	ySbdlbCchdJTIGWNEgf9o+Jnw/wUSruZidE3gFpef36gTomcK2g7Svt1msrXJWULoFrW0z
+	ffzcgArXW3bfbOl0NlBN1av6KP4nQbc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-FE3XjoE-MH2DRKwjKcM-DQ-1; Fri,
+ 21 Jun 2024 03:07:24 -0400
+X-MC-Unique: FE3XjoE-MH2DRKwjKcM-DQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E01451956096;
+	Fri, 21 Jun 2024 07:07:22 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.17])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4738F19560AF;
+	Fri, 21 Jun 2024 07:07:20 +0000 (UTC)
+Date: Fri, 21 Jun 2024 15:07:16 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Hailong Liu <hailong.liu@oppo.com>, Nick Bowler <nbowler@draconx.ca>
+Cc: linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
+References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
+ <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+ <20240621033005.6mccm7waduelb4m5@oppo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5mhnob3uxzg2llob"
-Content-Disposition: inline
-In-Reply-To: <cbwamjer2rupkmyze6atgpkrszajcbhw2udb23ldl73ne3m6qr@jjs7q3codtx5>
-
-
---5mhnob3uxzg2llob
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240621033005.6mccm7waduelb4m5@oppo.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+On 06/21/24 at 11:30am, Hailong Liu wrote:
+> On Thu, 20. Jun 14:02, Nick Bowler wrote:
+> > On 2024-06-20 02:19, Nick Bowler wrote:
+> > > After upgrading my sparc to 6.9.5 I noticed that attempting to run
+> > > xfsdump instantly (within a couple seconds) and reliably crashes the
+> > > kernel.  The same problem is also observed on 6.10-rc4.
+> > [...]
+> > >   062eacf57ad91b5c272f89dc964fd6dd9715ea7d is the first bad commit
+> > >   commit 062eacf57ad91b5c272f89dc964fd6dd9715ea7d
+> > >   Author: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > >   Date:   Thu Mar 30 21:06:38 2023 +0200
+> > >
+> > >       mm: vmalloc: remove a global vmap_blocks xarray
+> >
+> > I think I might see what is happening here.
+> >
+> > On this machine, there are two CPUs numbered 0 and 2 (there is no CPU1).
+> >
+> +Baoquan
 
-> > The refactoring only affects "master/slave" not "adapter/client". We are
-> >=20
-> > aligned here, aren't we?
->=20
-> Yes, of course. And I'm not really asking for the totality of the
-> "client"'s to be replaced, rather than, when replacing slave, to
-> choose "target" over "client" whenever possible(*).
+Thanks for adding me, Hailong.
 
-Okay, phew, seems we got it now :) I'll send out v4 today and probably
-send it to Linus this week. I want this base work to be upstream ASAP,
-so we can base further work on it.
+> 
+> Ahh, I thought you are right. addr_to_vb_xa assume that the CPU numbers are
+> contiguous. I don't have knowledge about CPU at all.
+> Technically change the implement addr_to_vb_xa() to
+> return &per_cpu(vmap_block_queue, raw_smp_processor_id()).vmap_blocks;
+> would also work, but it violate the load balance. Wating for
+> experts reply.
 
-Thanks for your input and cooperation, Easwar and Andi!
+Yeah, I think so as you explained.
 
+> 
+> > The per-cpu variables in mm/vmalloc.c are initialized like this, in
+> > vmalloc_init
+> >
+> >   for_each_possible_cpu(i) {
+> >     /* ... */
+> >     vbq = &per_cpu(vmap_block_queue, i);
+> >     /* initialize stuff in vbq */
+> >   }
+> >
+> > This loops over the set bits of cpu_possible_mask, bits 0 and 2 are set,
+> > so it initializes stuff with i=0 and i=2, skipping i=1 (I added prints to
+> > confirm this).
+> >
+> > Then, in vm_map_ram, with the problematic change it calls the new
+> > function addr_to_vb_xa, which does this:
+> >
+> >   int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> >   return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> >
+> > The num_possible_cpus() function counts the number of set bits in
+> > cpu_possible_mask, so it returns 2.  Thus, index is either 0 or 1, which
+> > does not correspond to what was initialized (0 or 2).  The crash occurs
+> > when the computed index is 1 in this function.  In this case, the
+> > returned value appears to be garbage (I added prints to confirm this).
 
---5mhnob3uxzg2llob
-Content-Type: application/pgp-signature; name="signature.asc"
+This is a great catch. 
 
------BEGIN PGP SIGNATURE-----
+> >
+> > If I change addr_to_vb_xa function to this:
+> >
+> >   int index = ((addr / VMAP_BLOCK_SIZE) & 1) << 1; /* 0 or 2 */
+> >   return &per_cpu(vmap_block_queue, index).vmap_blocks;
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZ1Jb8ACgkQFA3kzBSg
-KbaPXg//QldHT5fYSnWzc0KZgm0U6+CGlWXYHzQgIvHzGmo4NjKL0OnEsD2hTNly
-j9eainm2OTjb1+3YrKclLIlx+paQJxVpU6TVBRa9b/CJX+j1Ub/JZu+AcO2lW6xg
-dx1Iq9LQlKxFzfyzyqRy7r2UorQwvnDWWdw0DaKdhUDufJxK5jIiR0s/BMlrgsyr
-K6EoIxHgJDESmRd3xzKo5rgC0vcD83Iwts1RAihuUrh6c8Wjz+xPgyhECtbH09rZ
-kkvRuzwYuWas+0CX/WQNpK2S49HZTmpI5PcTmn3WAIrStfW0jmFfofkpVBvOj0Wz
-T+ZKTZegE/GrUP5UBEHHkim8fjeLYj4lT8JCR8R1fOp6GVrvVlzj5VBmuAMOcPmG
-OOV9gUpfOmZpSbVdr8amMcbwpZ+epwZiRZnernj9klT0EgUfFZt5tb6oLWZSb0LF
-rAGL3V7txa+396EzIiLLseBJv6AxVBVqHj/yCpy+D7vRCe00QcPi2bkzEe/wLEvE
-jaoZuGhNrXTGKVifwMNY8/JG2Fwrq+OYzy2f+WBNzGE5qCC0a6K3/U0vqQ2tUB7i
-hg50MqNQ3ha7+F5TCA2aSHsIsVDb/mzliLw+4WBv8+1CPue92jep0FXlw05gOGDx
-EEgb3Rl7Gf4ywPwvsDnnUVmvG/q12F3kqHn/nYjD21ePaN5n0Ag=
-=x9EZ
------END PGP SIGNATURE-----
+Yeah, while above change is not generic, e.g if it's CPU0 and CPU3.
+I think we should take the max possible CPU number as the hush bucket
+size. The vb->va is also got from global free_vmap_area, so no need to
+worry about the waste.
 
---5mhnob3uxzg2llob--
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index be2dd281ea76..18e87cafbaf2 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+ static struct xarray *
+ addr_to_vb_xa(unsigned long addr)
+ {
+-	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+ 
+ 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
+ }
+
