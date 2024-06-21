@@ -1,102 +1,157 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D471E171647;
-	Fri, 21 Jun 2024 10:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA54217106D;
+	Fri, 21 Jun 2024 10:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718964407; cv=none; b=taH8So7m0qrNfqPzewpQ4EHwBeLwWwHmQfDtCxim91Sr3fq3q8cdQhonn7ytSQAqFO4aktLU/2c0BPEojHSmr0wqU8Lq7RCExum3lacKE/5Qrc3n1no825Fv+sNrf7svpQU2mYwmnwYCh8FYM1mWEYXdi6IXF7K/jBShNar1Za8=
+	t=1718964406; cv=none; b=NAtsF1/kDhNAACymeekPqQftQ8SIGxg5OcMF6H/dmJFC+FB4p1+pnHBv4WTRL/JfbJQcgCDaUVRdMh+mIusG0vUccGonxYcNUoz8ByRUmJRR6wYrcqMlgOy0Bm6t7V7TXeqwfI2OqkbPZciU7ytkc4yThYoEU1CCPChQyhkXH00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718964407; c=relaxed/simple;
-	bh=7ZwF/4gCp2xy/o3OBICgLWHzRyeKJlkv5mp8YDCLCR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bBuV7mP2vzuxkQms0BKKWwLkVXghKvTzWeJW+y1tUwCptqBXJeTCFbZZ7LGjSgOi67HCvDzGXNGlfXq0XQgZN6BjVRhOmwQe9kFa7uL6jfM76xC88JauXQJJVjQNXVtjvmgBMNKHbIz4Moh57YKVO1wmf2DqcMfec9SRCYcQf4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B321FDA7;
-	Fri, 21 Jun 2024 03:07:08 -0700 (PDT)
-Received: from [10.57.42.30] (unknown [10.57.42.30])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B7CF3F6A8;
-	Fri, 21 Jun 2024 03:06:39 -0700 (PDT)
-Message-ID: <fc2b8a80-373a-4049-bdaf-9970a1c1f651@arm.com>
-Date: Fri, 21 Jun 2024 11:06:37 +0100
+	s=arc-20240116; t=1718964406; c=relaxed/simple;
+	bh=L6eYXPIPPhgP0qC3Tjf8Pjxd20/lkYjctHCuQ+kiEmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yn1HIx56Bsg1362BnKT2vpzPZmGO2jD0TKFlkMtAr+p1LLlePDGOfOD3nQtGAGOlBByGFfhv27edKkMhmJoFY6jRRy0GwmQk+SZ918i2d08eXAlnvcAWcLAzSKfxKGN6uZxuMu/9KYCKSy87KxoSNpq+ualJFpJMqT9LeEqcrSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ooct2TjO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ooct2TjO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E5CBC4AF08;
+	Fri, 21 Jun 2024 10:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718964406;
+	bh=L6eYXPIPPhgP0qC3Tjf8Pjxd20/lkYjctHCuQ+kiEmc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ooct2TjOrG7BRZof/lAee0MjE2cqy9jLtv4uwJQKPA1JH98uLHGfl1F4UAYJRZcC6
+	 a8pwDXinvB4cx5g42wNY40pJwyNp30IGcbOgfkrRMeRs2j6th0guZhc0goGpDCg1Zt
+	 mnPGQ+vgIu3TtvpKYRN9hCyHGolT5zyc/YhLnswYFotXS+iv4UOk0im1z5CeKT1lZi
+	 7IOaq0Ig4giQFrvlL/IwkRVuB4Ehd0iG1bYcwckhsc9VAthHq+py0cQ4AJX8RExo34
+	 R5vNH21zGBlmCbdlwY6+9osSdIaG1Hwin9YuL0taTy593G8jUmFs/WoNVLeYtRgTe2
+	 iTViONJogcH3g==
+Date: Fri, 21 Jun 2024 10:47:15 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Shiju Jose
+ <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>, "Alison
+ Schofield" <alison.schofield@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Len Brown <lenb@kernel.org>, Shuai Xue
+ <xueshuai@linux.alibaba.com>, <linux-acpi@vger.kernel.org>,
+ <linux-edac@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] efi/cper: align ARM CPER type with UEFI
+ 2.9A/2.10 specs
+Message-ID: <20240621104706.19063944@sal.lan>
+In-Reply-To: <20240621103050.00004ec0@Huawei.com>
+References: <cover.1718906288.git.mchehab+huawei@kernel.org>
+	<d808b8b76c58054ccd4a8c49dcc2d23fee5ed397.1718906288.git.mchehab+huawei@kernel.org>
+	<20240621103050.00004ec0@Huawei.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mmc: Convert from tasklet to BH workqueue
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Allen Pais <allen.lkml@gmail.com>,
- Aubin Constans <aubin.constans@microchip.com>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Manuel Lauss <manuel.lauss@gmail.com>,
- =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
- Jaehoon Chung <jh80.chung@samsung.com>, Aaro Koskinen
- <aaro.koskinen@iki.fi>, Adrian Hunter <adrian.hunter@intel.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Alex Dubov <oakad@yahoo.com>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Bruce Chang <brucechang@via.com.tw>,
- Harald Welte <HaraldWelte@viatech.com>, Pierre Ossman <pierre@ossman.eu>,
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20240618225210.825290-1-allen.lkml@gmail.com>
- <gw6adkoy3ndjdjufti2gs2gnk3xdgylt6tnia2zha76hsgdwtq@dr3czbxjij66>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <gw6adkoy3ndjdjufti2gs2gnk3xdgylt6tnia2zha76hsgdwtq@dr3czbxjij66>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 6/21/24 10:53, Wolfram Sang wrote:
-> Hi,
-> 
-> On Tue, Jun 18, 2024 at 03:52:07PM GMT, Allen Pais wrote:
->> The only generic interface to execute asynchronously in the BH context is
->> tasklet; however, it's marked deprecated and has some design flaws. To
->> replace tasklets, BH workqueue support was recently added. A BH workqueue
->> behaves similarly to regular workqueues except that the queued work items
->> are executed in the BH context.
->>
->> This patch converts drivers/mmc/* from tasklet to BH workqueue.
->>
->> Based on the work done by Tejun Heo <tj@kernel.org>
-> 
-> Has this been fully build-tested?
+Em Fri, 21 Jun 2024 10:30:50 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> escreveu:
 
-Obviously not, FWIW I noted this on v1:
-https://lore.kernel.org/linux-mmc/9c31b697-3d80-407a-82b3-cfbb19fafb31@arm.com/
-But hadn't looked at the patch since then, sorry.
+> On Thu, 20 Jun 2024 20:01:46 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> 
+> > Up to UEFI spec, the type byte of CPER struct for ARM processor was
+> > defined simply as:
+> > 
+> > Type at byte offset 4:
+> > 
+> > 	- Cache error
+> > 	- TLB Error
+> > 	- Bus Error
+> > 	- Micro-architectural Error
+> > 	All other values are reserved
+> > 
+> > Yet, there was no information about how this would be encoded.
+> > 
+> > Spec 2.9A errata corrected it by defining:
+> > 
+> > 	- Bit 1 - Cache Error
+> > 	- Bit 2 - TLB Error
+> > 	- Bit 3 - Bus Error
+> > 	- Bit 4 - Micro-architectural Error
+> > 	All other values are reserved
+> > 
+> > That actually aligns with the values already defined on older
+> > versions at N.2.4.1. Generic Processor Error Section.
+> > 
+> > Spec 2.10 also preserve the same encoding as 2.9A
+> > 
+> > See: https://uefi.org/specs/UEFI/2.10/Apx_N_Common_Platform_Error_Record.html#arm-processor-error-information
+> > 
+> > Adjust CPER and GHES handling code for both generic and ARM
+> > processors to properly handle UEFI 2.9A and 2.10 encoding.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> I think you can avoid complexity of your masking solution.
+> Cost is we don't have that function print that there were reserved bits
+> set, but that could be easily handled at the caller including notifying
+> on bits above the defined range which might be helpful.
+> 
+> > diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-arm.c
+> > index d9bbcea0adf4..4c101a09fd80 100644
+> > --- a/drivers/firmware/efi/cper-arm.c
+> > +++ b/drivers/firmware/efi/cper-arm.c  
+> ...
+> 
+> >  	if (error_info & CPER_ARM_ERR_VALID_PROC_CONTEXT_CORRUPT) {
+> > @@ -241,6 +232,7 @@ void cper_print_proc_arm(const char *pfx,
+> >  	struct cper_arm_err_info *err_info;
+> >  	struct cper_arm_ctx_info *ctx_info;
+> >  	char newpfx[64], infopfx[65];
+> > +	char error_type[120];
+> >  
+> >  	printk("%sMIDR: 0x%016llx\n", pfx, proc->midr);
+> >  
+> > @@ -289,9 +281,11 @@ void cper_print_proc_arm(const char *pfx,
+> >  				       newpfx);
+> >  		}
+> >  
+> > -		printk("%serror_type: %d, %s\n", newpfx, err_info->type,
+> > -			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
+> > -			cper_proc_error_type_strs[err_info->type] : "unknown");
+> > +		cper_bits_to_str(error_type, sizeof(error_type), err_info->type,
+> > +				 cper_proc_error_type_strs,
+> > +				 ARRAY_SIZE(cper_proc_error_type_strs),
+> > +				 CPER_ARM_ERR_TYPE_MASK);  
+> 
+> Maybe drop this mask complexity and just use
+> FIELD_GET() to extract the relevant field with no shift from 0.
 
-> 
-> ===
-> drivers/mmc/host/renesas_sdhi_internal_dmac.c: In function ‘renesas_sdhi_internal_dmac_complete_work_fn’:
-> ./include/linux/container_of.h:20:54: error: ‘struct tmio_mmc_host’ has no member named ‘dma_complete’
-> ===
-> 
-> In deed, 'dma_complete' is only in 'struct renesas_sdhi_dma'. From
-> there, we can get to the parent 'struct renesas_sdhi' using
-> container_of. But then, I don't see a way to go to 'struct
-> tmio_mmc_host' from there. The other way around is possible because
-> there is the pointer 'struct tmio_mmc_data *pdata' in the TMIO struct
-> pointing to the data contained in 'struct renesas_sdhi'. 'host_to_priv()'
-> does the math. But I don't see a path the other way around.
-> 
-> So, it doesn't look like the workqueue interface can provide a
-> generic pointer like tasklets could do? This means we have to add a
-> pointer from 'struct renesas_sdhi' to 'struct tmio_mmc_host'?
-> 
-> All the best,
-> 
->    Wolfram
-> 
+IMO not using the function will make the code here more complex, as the
+same code needs to be duplicated on two places: here and at ghes, where
+the error bits are printed using pr_warn_ratelimited():
 
+                cper_bits_to_str(error_type, sizeof(error_type), err_info->type,
+                                 cper_proc_error_type_strs,
+                                 ARRAY_SIZE(cper_proc_error_type_strs),
+                                 CPER_ARM_ERR_TYPE_MASK);
+ 
+                pr_warn_ratelimited(FW_WARN GHES_PFX
+                                    "Unhandled processor error type: %s\n",
+
+
+Also, other parts of CPER uses cper_bits_print() for the same reason:
+to have the common print code handled inside a function instead of
+repeating the same print pattern everywhere.
+
+> > +		printk("%serror_type: %s\n", newpfx, error_type);
+> >  		if (err_info->validation_bits & CPER_ARM_INFO_VALID_ERR_INFO) {
+> >  			printk("%serror_info: 0x%016llx\n", newpfx,
+> >  			       err_info->error_info);  
+> 
+> 
+Regards,
+Mauro
