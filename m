@@ -1,105 +1,99 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96A3172798
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416CE172784
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718966720; cv=none; b=Bsyta0v4O2xpjnaONvBh1TE9Kle1uKhKjMv8mu1JTqrAHQ2L3mxZJU+Lh7Jc/AfxacR+KO0xCWO4rgub4QRDmnUaT5sSGfL0X0wniPAKOfx9Ozyw1GCCvmLi7TI20PMmvb7eImWsI+ltF+b286UjnnjuPMzZDhZ/1FIsuk0ZF7Y=
+	t=1718966729; cv=none; b=HZkCvrV8hq+f4kpHCzFCCyhnJZ6Nuc5azgIampzp9ZyqMaN/t5X7KOkaTWBUTSbS52EqrvaNQ/JAk+ltQHAVt7KYoPpGawYYLZoSVrZMNq0/Vve0BrB9h6gh5oAgjymt0iXnbmVoj32Uqy4kMYfk2OjTH+Bg9AiTU3GWBnfQx2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718966720; c=relaxed/simple;
-	bh=usmDQv2pcLKB4hsZ9M8prCAudMM/VG2ozTfWHzTwlW0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n8XR5gEblnLw2EyqB4ltRcLqqJIPmUZtNtzuJy+Gqg8PpEHhoyPb/ZnsD0UmOdhcJa5pOtvHXT4v68HeUjm86Gi/3UDslys859mpGoSCB6UdSgTLHZlMTeOs8NKx64dzQMHBrNJnjBnm32SavE4pwLAwcMvkqCGeSck0GNnpFNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=vcSaHJhz; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="vcSaHJhz"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 5379A100002;
-	Fri, 21 Jun 2024 13:44:50 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1718966690; bh=CNC0JexCvUbC2AID9uwavUVu9I3SEDmP57rJWLvUIo8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=vcSaHJhz7lrWahrZOqZuw9X1ffwc+HIEV7mK7xuNG+cbmerGBMU8s92tG2CLHeprA
-	 squiMrV8GC2YU/IybY/v8LJVWc4qe0TaH41l3ZPZfhW09MlAX00YEKq+5VBrYuUUbs
-	 FXrXfktwOKqN36lnwXmKmKyml0xU6FRh1LY3sXyAX6Ir3JjlhEfctvfzjBsgFDqGkV
-	 otG43Jw29uPjvcYo65kFGasMS6Z0b2vziHUGZid8HzRE4ypVX8eFBMTzUvqoH6nAvc
-	 SAoWV8DtPzAF3j/L1VClO4igeVi0Vvs43twT1zX27GL6XpjFSas/PwRmhoPEpH8AIb
-	 nS0SNfJnpYkag==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri, 21 Jun 2024 13:44:05 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Jun
- 2024 13:43:45 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Martyn Welch <martyn.welch@gefanuc.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Soumya Negi <soumya.negi97@gmail.com>, Michael
- Straube <straube.linux@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-staging@lists.linux.dev>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] staging: vme_user: Validate geoid used for VME window address
-Date: Fri, 21 Jun 2024 13:42:46 +0300
-Message-ID: <20240621104246.11292-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1718966729; c=relaxed/simple;
+	bh=1XwFKly4cs7PcvOcUHmUCRlNu+w/zdo+sADEBfK9PwU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jU3h4ZuPHxCiC/UpEFVstB6Ka9P3Lpxh2igHxY2dFv/r/UZHr1o/e6yyHe4Elw0FR2pupHQl+bu5Ej6cuEoT5N1HTg3nD2uyhiScQZHlzJslWVpfTvBv7GBKsTq1v2PNXw+tmyXa7EoVtzptqcCaPcOYkPMQ0mWMpZyU1kMTiP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a6d9ded42fba11ef9305a59a3cc225df-20240621
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:ec2780ce-2419-4e24-9dfe-935dc1c31ce5,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:6
+X-CID-INFO: VERSION:1.1.38,REQID:ec2780ce-2419-4e24-9dfe-935dc1c31ce5,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:6
+X-CID-META: VersionHash:82c5f88,CLOUDID:80c16f1438ba1a9cbeb3f8174ba81c85,BulkI
+	D:240620143416P0737R0Q,BulkQuantity:2,Recheck:0,SF:43|74|64|66|24|17|19|81
+	7|102,TC:nil,Content:0|-5,EDM:-3,IP:-2,URL:1,File:nil,RT:nil,Bulk:40,QS:ni
+	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 1,FCT|NGT
+X-CID-BAS: 1,FCT|NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_C_CI, GTI_FG_IT, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+	ABX_MISS_RDNS
+X-UUID: a6d9ded42fba11ef9305a59a3cc225df-20240621
+X-User: lihongfu@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.255)] by mailgw.kylinos.cn
+	(envelope-from <lihongfu@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1636551456; Fri, 21 Jun 2024 18:40:18 +0800
+From: Hongfu Li <lihongfu@kylinos.cn>
+To: markus.elfring@web.de
+Cc: aahringo@redhat.com,
+	gfs2@lists.linux.dev,
+	julia.lawall@inria.fr,
+	lihongfu@kylinos.cn,
+	linux-kernel@vger.kernel.org,
+	teigland@redhat.com
+Subject: Re: dlm: use KMEM_CACHE() in dlm_memory_init() 
+Date: Fri, 21 Jun 2024 18:39:59 +0800
+Message-Id: <20240621103959.131413-1-lihongfu@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <5094e8bf-6eb6-43e4-80de-052e9c0c67c0@web.de>
+References: <5094e8bf-6eb6-43e4-80de-052e9c0c67c0@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186049 [Jun 21 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/21 02:12:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/21 09:56:00 #25650115
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-In tsi148_crcsr_init() value of vme_base used as 3rd parameter in
-tsi148_master_set() call is calculated as 'vstat * 0x80000'. vstat value
-can be set from module parameter "geoid" which can be any. In this case
-the value of an arithmetic expression 'vstat * 0x80000' is a subject to
-overflow because its operands are not cast to a larger data type before
-performing arithmetic.
+>> My initial purpose is to replace kmem_cache_create() with KMEM_CACHE().
+>
+>Do you take any help from advanced analysis tools into account
+>for such transformation attempts?
+>
+>Example for the semantic patch language (Coccinelle software):
+>[PATCH v2] Coccinelle: api: Add SmPL script “use_KMEM_CACHE.cocci”
+>https://lore.kernel.org/cocci/b08603d6-cac1-4876-a56c-30c680d5dc52@web.de/
+>https://sympa.inria.fr/sympa/arc/cocci/2024-02/msg00000.html
+>
+>
+>> In my view，there is no problem in unifying passed name strings and
+>> structure identifiers.
+>> Maybe that's wrong，
+>
+>I suggest to take another look also at feedback which other contributors
+>(from your Linux software distribution) got for similar change suggestions.
+>
+>
+>> I will resubmit a patch that does not change "dlm_cb" to "dlm_callback".
+>
+>Do you see further opportunities to improve the change description accordingly?
+>https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.10-rc4#n94
 
-Add geoid validation to prevent overflow.
+So grateful for you suggestion and I will definitely consider it.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: d22b8ed9a3b0 ("Staging: vme: add Tundra TSI148 VME-PCI Bridge driver")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/staging/vme_user/vme_tsi148.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/vme_user/vme_tsi148.c b/drivers/staging/vme_user/vme_tsi148.c
-index 2ec9c2904404..b601d2b20bed 100644
---- a/drivers/staging/vme_user/vme_tsi148.c
-+++ b/drivers/staging/vme_user/vme_tsi148.c
-@@ -2119,7 +2119,7 @@ static int tsi148_slot_get(struct vme_bridge *tsi148_bridge)
- 		slot = ioread32be(bridge->base + TSI148_LCSR_VSTAT);
- 		slot = slot & TSI148_LCSR_VSTAT_GA_M;
- 	} else {
--		slot = geoid;
-+		slot = geoid & TSI148_LCSR_VSTAT_GA_M;
- 	}
- 
- 	return (int)slot;
--- 
-2.30.2
-
+thanks,
+Hongfu Li
