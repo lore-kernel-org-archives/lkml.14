@@ -1,163 +1,94 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FA016E87B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F3B16D9D9;
+	Fri, 21 Jun 2024 08:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718959941; cv=none; b=aeOV8/p/qLaednlqJOFwKVeYqRHXUI058Y+ohHD8E6RvEysMgNtUvZZUMEvZEVx+1AmStdIuX8IgVOGYyCP2i5LwM/Lvvl94Zue7AJxJr/nVjEFn0bhUdl74MsGAGt+QgsqvoPOrHnfXlDB72Zi0gLrooqkO06hiRUf7Bax8cpY=
+	t=1718959956; cv=none; b=VYhrKAtLV61m9VEnA8AEtHTldLnUUNYw+NbgaOocUOE+Mbm/FB3Dh3tNChsKwPeh0M67Rk9Nk86s04gwnXj8KJCwNNrEsawV/Wo39FlpDc6iz5PHv/I9ywunKbXvU4M76gix+1KleVTZQoLpTFOoYQQg+jYY/EePwB5WSH5mVLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718959941; c=relaxed/simple;
-	bh=oyd6tqzCssv79HaS77mTO3luXMR8x4PmFt1/HZ/Luno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=geKKIjWPpSWdLRq0enH7/uRFCHcIqhAODK8M9NDcTJK9cnjgi4i/bHtk+qjUuXsq0YQm51kda9neH4EeRRg0iSu9J1XRssAwhTBf3in42k8EAZ95UbKQFvBkTwXhv1eptaHsMtKEuulHJ3Oj3LaL9oIbzrux/41WIR01IhgGdSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=oxdPZVSR; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1718959956; c=relaxed/simple;
+	bh=XUPgZRc7Ta7oH6EIynHqMqYwufey9HztEnlLZxu2Awg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FV4aTRppspwnPSC6rbvce4coCSFEFRuNcML5aQhi/lTJ2siqYwG65LtF8xU6kzYCMdcb+1VwL/6Uzz8mAohIcP0MuTehFM1t8wMKudu7zb917T7E2uaWlE8sbXmlsdXc7z/R7oNYjmeSVPyNzs1yVR2oGuLmOdwhAi9YNTTSlp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZaUs2T40; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="oxdPZVSR"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57d1679ee83so1808791a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 01:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1718959938; x=1719564738; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ukPXaU0glvKU/7I3AqPS9+256PDmrqJDsAc1cKI4X+E=;
-        b=oxdPZVSR6YwNifwjMH1+ZayCkGPHsAM3dSZ6SQjJoUA73/OhIa52xdSoTrmJfu/Njk
-         UUF6wSR4PsQCPe2uO4nWfP8yLbcpY9eaJK9bfWyViXR1KvRHIVfDOJXdFZLJqCaKBG15
-         2NAqSmw0t2XpvdfMiexD9OfehGT+gSAZdqCC8nA9Dtpi5x0HTPdqf/6cobX7dEa28eW+
-         mOV450hVDnGw1w15fk/VMiHZMKWTBa1VKy0hZFaqh6IoQdc25sKpiRWFRrYy4WF4xcGZ
-         X9i6DB556qklqfLgmhjrhiw6J4Dhbr1SBnc3dDwG7SPxKvDD9PPnM3Q8EbWd1yHIkACZ
-         W21w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718959938; x=1719564738;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ukPXaU0glvKU/7I3AqPS9+256PDmrqJDsAc1cKI4X+E=;
-        b=fdtcTjtWCDl3+eWG7GMBFlzXrh+b374ZlpMqipscucBoHEW0KS4fHOtM48J1J5KPKu
-         dSXT2PTYTpG1//S1GTsjOVMknIA/GZq8kCHV1HUYugyzl/8Y2Bo+b4Tjs6zw+QDScKgi
-         zJOne82gfk7drbf4sZdXXBO0zlRJ0gA5kxlj7IqEVNGi5LyDMpLmTP4Jn8OQ2Kgo6cg1
-         wNtVRI1GlaM/tx/kZk1LaxPnIe2qqWaCNKg0FAyKyeJo/x1tVSlokDm4KkySS/ElwOVL
-         WTM3WoX1Pvc7wm0toqmQb2/SigwJBjuzFNm1Rfus3iGRVp0fehUkNagGbQIF/dBxcMOi
-         DgyQ==
-X-Gm-Message-State: AOJu0YyKIcMmX24k5qAeJPEfPTDhiTuZFs3SbyVivRe+STeIcKvXvr8S
-	vMnEWeJJO42zA8J3iq3hxIj/HE8DM5zQaSXQWwYeLHtbANxUVZ/Z6Usbt9TEDyc=
-X-Google-Smtp-Source: AGHT+IEOv3FuOP7yCRAQOMLITeYFGmCeSmvpsPwwBR+OGalAkovKxddKBE/uIo2uXeSYC7CiBt7kXA==
-X-Received: by 2002:a50:ed07:0:b0:57c:bf3b:76f5 with SMTP id 4fb4d7f45d1cf-57d07edce7amr5090452a12.35.1718959937580;
-        Fri, 21 Jun 2024 01:52:17 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30535010sm630961a12.59.2024.06.21.01.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 01:52:17 -0700 (PDT)
-Date: Fri, 21 Jun 2024 10:52:16 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, apatel@ventanamicro.com, alex@ghiti.fr, 
-	greentime.hu@sifive.com, vincent.chen@sifive.com, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v5 3/4] RISC-V: KVM: Add Svade and Svadu Extensions
- Support for Guest/VM
-Message-ID: <20240621-2c3ffd345cba1317bc0f5f9d@orel>
-References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
- <20240605121512.32083-4-yongxuan.wang@sifive.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZaUs2T40"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45L8qCKE118153;
+	Fri, 21 Jun 2024 03:52:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718959932;
+	bh=rN5v7uY3PMeSoDtnJhh+lfEw9upw15azmYDqHH25tlc=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=ZaUs2T40xblbdrl2+6VOwYPMZQ0ZarbL+O6qzXg//4X2m6ywSlP4KSHght68NyFku
+	 eUW1My81+ynUel0VYiAnq0Ew8+8gZoAPu1Z81IDzEqZ9/ccHtvLa7iAOAx+aRRaMPc
+	 yy1vkcXIx720cC6GCR1Ki3SzUbf4THQgyy0pnQ2w=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45L8qCJJ066492
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 21 Jun 2024 03:52:12 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 21
+ Jun 2024 03:52:11 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 21 Jun 2024 03:52:11 -0500
+Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45L8q6BR044615;
+	Fri, 21 Jun 2024 03:52:06 -0500
+Message-ID: <02462e7e-bd55-2374-10e2-240e9d94c5db@ti.com>
+Date: Fri, 21 Jun 2024 14:22:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605121512.32083-4-yongxuan.wang@sifive.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v13 03/13] media: v4l2-jpeg: Export reference quantization
+ and huffman tables
+Content-Language: en-US
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, <mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>
+CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, <andrzej.p@collabora.com>, <nicolas@ndufresne.ca>,
+        Markus Elfring
+	<Markus.Elfring@web.de>
+References: <20240607131900.3535250-1-devarsht@ti.com>
+ <20240607132831.3551333-1-devarsht@ti.com>
+ <59866428-342b-4ba4-a7c7-2df1477aa7e6@xs4all.nl>
+ <e948cea7-d5c7-a7e6-d921-ad7c2f93cd5a@ti.com>
+ <904289bb-96a0-4a0d-9046-96acd8843b98@xs4all.nl>
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <904289bb-96a0-4a0d-9046-96acd8843b98@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, Jun 05, 2024 at 08:15:09PM GMT, Yong-Xuan Wang wrote:
-> We extend the KVM ISA extension ONE_REG interface to allow VMM tools to
-> detect and enable Svade and Svadu extensions for Guest/VM. Since the
-> henvcfg.ADUE is read-only zero if the menvcfg.ADUE is zero, the Svadu
-> extension is available for Guest/VM only when arch_has_hw_pte_young()
-> is true.
+Hi Sebastian,
+
+On 20/06/24 12:32, Hans Verkuil wrote:
+> On 19/06/2024 16:19, Devarsh Thakkar wrote:
+[..]
+> I've reviewed v14 3/6, so Sebastian when Sebastian posts a new PR I can process
+> it.
 > 
-> Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-> ---
->  arch/riscv/include/uapi/asm/kvm.h | 2 ++
->  arch/riscv/kvm/vcpu.c             | 6 ++++++
->  arch/riscv/kvm/vcpu_onereg.c      | 6 ++++++
->  3 files changed, 14 insertions(+)
+> Ignore any reviews by Markus Elfring, he's a troll.
 > 
-> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-> index e878e7cc3978..a5e0c35d7e9a 100644
-> --- a/arch/riscv/include/uapi/asm/kvm.h
-> +++ b/arch/riscv/include/uapi/asm/kvm.h
-> @@ -168,6 +168,8 @@ enum KVM_RISCV_ISA_EXT_ID {
->  	KVM_RISCV_ISA_EXT_ZTSO,
->  	KVM_RISCV_ISA_EXT_ZACAS,
->  	KVM_RISCV_ISA_EXT_SSCOFPMF,
-> +	KVM_RISCV_ISA_EXT_SVADE,
-> +	KVM_RISCV_ISA_EXT_SVADU,
->  	KVM_RISCV_ISA_EXT_MAX,
->  };
->  
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index 17e21df36cc1..21edd60c4756 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -540,6 +540,12 @@ static void kvm_riscv_vcpu_setup_config(struct kvm_vcpu *vcpu)
->  	if (riscv_isa_extension_available(isa, ZICBOZ))
->  		cfg->henvcfg |= ENVCFG_CBZE;
->  
-> +	if (riscv_isa_extension_available(isa, SVADU))
-> +		cfg->henvcfg |= ENVCFG_ADUE;
-> +
-> +	if (riscv_isa_extension_available(isa, SVADE))
-> +		cfg->henvcfg &= ~ENVCFG_ADUE;
 
-nit: I'd write this as
+Just wanted to check if we are good w.r.t V14 [1] and it's possible for you to
+create a PR with V14 as discussed above?
 
-	if (!riscv_isa_extension_available(isa, SVADE) &&
-	    riscv_isa_extension_available(isa, SVADU))
-		cfg->henvcfg |= ENVCFG_ADUE;
+[1]: https://lore.kernel.org/all/20240618193651.2771478-1-devarsht@ti.com/
 
-> +
->  	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_SMSTATEEN)) {
->  		cfg->hstateen0 |= SMSTATEEN0_HSENVCFG;
->  		if (riscv_isa_extension_available(isa, SSAIA))
-> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-> index c676275ea0a0..06e930f1e206 100644
-> --- a/arch/riscv/kvm/vcpu_onereg.c
-> +++ b/arch/riscv/kvm/vcpu_onereg.c
-> @@ -15,6 +15,7 @@
->  #include <asm/cacheflush.h>
->  #include <asm/cpufeature.h>
->  #include <asm/kvm_vcpu_vector.h>
-> +#include <asm/pgtable.h>
->  #include <asm/vector.h>
->  
->  #define KVM_RISCV_BASE_ISA_MASK		GENMASK(25, 0)
-> @@ -38,6 +39,8 @@ static const unsigned long kvm_isa_ext_arr[] = {
->  	KVM_ISA_EXT_ARR(SSAIA),
->  	KVM_ISA_EXT_ARR(SSCOFPMF),
->  	KVM_ISA_EXT_ARR(SSTC),
-> +	KVM_ISA_EXT_ARR(SVADE),
-> +	KVM_ISA_EXT_ARR(SVADU),
->  	KVM_ISA_EXT_ARR(SVINVAL),
->  	KVM_ISA_EXT_ARR(SVNAPOT),
->  	KVM_ISA_EXT_ARR(SVPBMT),
-> @@ -105,6 +108,9 @@ static bool kvm_riscv_vcpu_isa_enable_allowed(unsigned long ext)
->  		return __riscv_isa_extension_available(NULL, RISCV_ISA_EXT_SSAIA);
->  	case KVM_RISCV_ISA_EXT_V:
->  		return riscv_v_vstate_ctrl_user_allowed();
-> +	case KVM_RISCV_ISA_EXT_SVADU:
-> +		/* The henvcfg.ADUE is read-only zero if menvcfg.ADUE is zero. */
-> +		return arch_has_hw_pte_young();
->  	default:
->  		break;
->  	}
-> -- 
-> 2.17.1
->
-
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-
+Regards
+Devarsh
