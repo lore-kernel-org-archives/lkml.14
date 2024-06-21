@@ -1,130 +1,156 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0625C15FA65;
-	Fri, 21 Jun 2024 22:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F2017994D
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 22:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719007410; cv=none; b=Z5eVPDDpY1Bd2YHDMN8CYcy2VxOJXKyVeH1Gi1fsBA2WGVDavbsHIDOUySFZPC/M+eOpAxitEHmVFyr0W9iUPG6W0b5FiEidGk/kpgixUY43LWu1FjuQeU3cJ61NFRUwPFI2RzFaFqFLQHW18d2Z3WhyPQyTYXO4VTCi8HTsvDE=
+	t=1719007425; cv=none; b=L3C6vqLA2UaDb4SovV2CEorFoRB0kzf3eEYGL9IgMaCpgd7bHv+s5F3MhKmliMioYyvrYcbW/6Cmqk4CAvHV1oGZK7ftu788sV4FR/3p13t4g3lhabYpGEy9UwD77FMP83ufVN8mRdn+Zb2cZIEpTyYsrXOYVLnrrfFyrEgBN0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719007410; c=relaxed/simple;
-	bh=OpatgoMemBcpmRA/FW65De33x8DnuhU9voVS6rFiA8k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E1VrOfk6xeD+lgfa5VeIRJxqBBcZGiOPjLxTVZL4thnVnJN8CqEnqVy8SPeYK8HNGAM7ggJTlqcAnqQQf9qKoR2DYqEc/wqVk4IotvgFyahE7aeaBf+cHgqSomEhdKWRjnfyVIRoI6UQalnT+FF8JYS7TvQxtrAtVUYYlf/khTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KVDTa4Xj; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1719007425; c=relaxed/simple;
+	bh=FifuhQpA4gwrqO48kEIWeIajVtyR909/MrtlwHN7McY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hB9GrBFat5Sf7ZGp83wSXLx66CE+HSEzbK7cRGv7dadjCnkjiGooQ0zb+hqHgE5R6Ebd7OsLzvpiMlg//vLq105d4YY+Nx6EOORE32TwbbRAdgypXyWWnCgm7p8Eh0BuKzcLa+uhH6BF3kyob04+CC6S0rcxYIzefGTKZlZb+9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KMp9OLy+; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KVDTa4Xj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719007407;
-	bh=OpatgoMemBcpmRA/FW65De33x8DnuhU9voVS6rFiA8k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KVDTa4XjSq99OaJ+7sjSQy0fhk+UD2vq3VujA9vFA+Za8e3uW9cXwLfZ8aCuReiXi
-	 gBI61cM7DmLWKNbhDnyOvXY8jXl7N1AjXM3g0eSxwp/rRHj/WbroN9Dn8LAm+wdHrz
-	 Tyaap8VXSYHyOoBGZRfKLrFCJanx+yjDFj7jVktW0+XJD3qBKDcSN9UH1O0SYWuPBM
-	 3exUwEIgQC7WDjV9O5zLC2qUtK1qsjflvyumnH4Jp9rgcXxCHebZbeMJmq5+t6DAbI
-	 KDS1t/QJaeO63iEfgNlqqtANNnMefuQn8FLtiYmrbeyHvzM+BbaULHNqaPFB0jGX8C
-	 ZWkSdpFKE7/Hw==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2E617378203F;
-	Fri, 21 Jun 2024 22:03:26 +0000 (UTC)
-Message-ID: <5dc1fa74-c754-4875-b9c7-0defeaa44a3c@collabora.com>
-Date: Sat, 22 Jun 2024 01:03:25 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KMp9OLy+"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ec461d1005so19677001fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719007422; x=1719612222; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7egcWrhV+dk1Ypm66YmWxSQnqkx2DvN70ZKwPUWO6+I=;
+        b=KMp9OLy+RuKYOpjegErCni8gE/pqbEPHVi9cltO49mMWS87f1o6yggv3D1WARPtZXW
+         kpYRx1RCYbHJfvPLAfZzv0lo9GP32YQ5xJRK28WnIfCdbs+mSTJ2bAhaz4sTK5QH4YPT
+         m6XcngV18+klixspw49LMenFax3OneBZW8eBkRm/0xBfkojVlfiobkpybkfInaemcEGQ
+         xMvywsdHKrrC0cdStw1wCln6AL12e4DeE56eMnjZ7MUUk4DrhJB7khg6k3BrlBjm/MI3
+         /BgAmR0U88DOX8gVCwY6EP7Tfb1Mfjjh1CWYnYdwYUHTsITTk7TY8yGBkzsW7em+viU7
+         HUpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719007422; x=1719612222;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7egcWrhV+dk1Ypm66YmWxSQnqkx2DvN70ZKwPUWO6+I=;
+        b=C+UY+WV+e6eTV75K7jUAEdZm1eyAiQgfxzNlMszjkUkruYwmvhsQcblqDgZoQhGOBq
+         luzEJM4J/BtwlbHGKrodfLBO7yciWuRcFwZPGoXtFm37Nmat/nVZJAW8TNMMGAwn4gYn
+         ZiqSXONTjqLzu4kGp0JtJjn2Dlj+/KZIqTP1Xdgd3jITJhlnqWO5UCU1Kh6XCVEqJqQF
+         CTM8mfnV2M3e4fHmIC01PR6jhV5wBzyYPMXLLagFvv9wes2lL1JAhgVoenO1E/keSnXm
+         /HZPFf4HPRcBivmz1ZLuqzi218GHx5n+J+4SlCjUpryNRX52SAxs3fT9OWjemFB0lpLY
+         CRUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUeUQkoQOirP3BPviEsDbahF4YTxrWj8bNmftGWmCH62JZa5sqi2sJ4bA/T3bC1bkJtxw+3YjHIYeCb5J9n2ZBdaphi4gt+0B7QyeZ
+X-Gm-Message-State: AOJu0Yw/sw2qqooxeoEwTB2Hky0wumP5HjlxoOU0+E+3jK7KNl4fBNix
+	T5LO9P161de5kUqnP9gfuKZSSTY7dfLLets58gr7p4qMjtZDbltifh1/8Mv8isY=
+X-Google-Smtp-Source: AGHT+IEBks3RjQrD6gtS4n3GRAmp+VFt6UQzrqQSr6CFeF38C6qDDaPHIVQ1D5MspIDrQs4tNB+82g==
+X-Received: by 2002:ac2:5f4d:0:b0:52c:ad70:6feb with SMTP id 2adb3069b0e04-52cdcdfdc1dmr214052e87.20.1719007422103;
+        Fri, 21 Jun 2024 15:03:42 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd6431fcdsm318293e87.210.2024.06.21.15.03.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 15:03:41 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Sat, 22 Jun 2024 01:03:40 +0300
+Subject: [PATCH v9 1/5] soc: qcom: pdr: protect locator_addr with the main
+ mutex
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: rk809: Add missing audio codec
- properties
-To: Jonas Karlman <jonas@kwiboo.se>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
- Chris Morgan <macromorgan@hotmail.com>,
- Furkan Kardame <f.kardame@manjaro.org>,
- Michael Riesch <michael.riesch@wolfvision.net>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
- <20240619-rk809-fixes-v1-2-fa93bc5313f4@collabora.com>
- <dc71686e-a3fa-48f7-83a9-34d0f365ff07@kwiboo.se>
- <f6fcbca9-a5cd-42a6-a911-9515d131d992@collabora.com>
- <95b10d88-be5b-4fcb-a30b-414dc90d18fe@kwiboo.se>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <95b10d88-be5b-4fcb-a30b-414dc90d18fe@kwiboo.se>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240622-qcom-pd-mapper-v9-1-a84ee3591c8e@linaro.org>
+References: <20240622-qcom-pd-mapper-v9-0-a84ee3591c8e@linaro.org>
+In-Reply-To: <20240622-qcom-pd-mapper-v9-0-a84ee3591c8e@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Sibi Sankar <quic_sibis@quicinc.com>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-remoteproc@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
+ Xilin Wu <wuxilin123@gmail.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Steev Klimaszewski <steev@kali.org>, 
+ Alexey Minnekhanov <alexeymin@postmarketos.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2106;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=FifuhQpA4gwrqO48kEIWeIajVtyR909/MrtlwHN7McY=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmdfi82QWt38kfLNo5oBOjCimFzNB1z4noUP7Ao
+ wsMsSQ5hfGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZnX4vAAKCRCLPIo+Aiko
+ 1YfJB/945EgnEaJ95AGsDG1DQZGjmhIQU655eEn5XkJ4ebG2Wyap7ctd9CAzZHW83c/3KGyhODC
+ DOU/p14UNSrdoa+1jZhmFnQpxmpeJmAHquz4BWz5wELaeZpU1t7CadiDI/kw3sBsu0MyrVMRJFQ
+ Ri6AmUwhOjNaOuY6EqyU80NayMn7GU78/oYGnVvo4Y5S+UJk80s5tMt5hrdm99LooJRmtiGvFVo
+ lTOfU6L6B5rvhICzZxw5876cyzOA8IqEmyhYVasegqnHAVmqGtQkpQa26hLiw3Hc49p7cc+4T+G
+ rctRE3Oy64kkwCkmgtCef1XBYSDUKooxKY5qEEouWkOm1QE1
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On 6/19/24 6:05 PM, Jonas Karlman wrote:
-> Hi Cristian,
-> 
-> On 2024-06-19 14:53, Cristian Ciocaltea wrote:
->> Hi Jonas,
->>
->> On 6/19/24 3:20 PM, Jonas Karlman wrote:
->>> Hi Cristian,
->>>
->>> On 2024-06-19 13:23, Cristian Ciocaltea wrote:
->>>> The RK809 MFD provides a RK817 compatible audio codec, supported by the
->>>> rk817_codec driver.
->>>>
->>>> This has been already in use by several boards: rk3566-quartz64-b,
->>>> k3566-roc-pc, rk3568-evb1-v10, rk3568-lubancat-2, rk3568-odroid-m1,
->>>> rk3568-rock-3a.  However, dtbs_check fails for all of them:
->>>>
->>>>   DTC_CHK arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dtb
->>>>   rk3568-rock-3a.dtb: pmic@20: '#sound-dai-cells', 'assigned-clock-parents', 'assigned-clocks', 'clock-names', 'clocks', 'codec' do not match any of the regexes: 'pinctrl-[0-9]+'
->>>>     from schema $id: http://devicetree.org/schemas/mfd/rockchip,rk809.yaml#
->>>>
->>>> Document the missing audio codec properties as found on the
->>>> rockchip,rk817 schema.
->>>
->>> This is duplicate of "dt-bindings: mfd: rk809: Add audio codec properties"
->>> part of "arm64: dts: rockchip: Add Radxa ROCK 3B" series.
->>>
->>> https://lore.kernel.org/all/20240505134120.2828885-3-jonas@kwiboo.se/
->>>
->>> A v2 of that series with fixes for reported issues is imminent.
->>> How do you want me to preceded with such v2 series?
->>
->> Oh, it seems both of us made the same mistake and wrongly assumed the
->> rockchip,rk817 schema is good enough to be used as a reference. :-)
-> 
-> Hehe, yeah :-)
-> 
->>
->> Since both rockchip,rk817 and rockchip,rk809 files share most of the
->> content, I also think this might be a good opportunity to get them
->> merged into a single schema.
->>
->> I can do this in v2, unless you prefer to handle it as part of your series.
-> 
-> I was planning on sending the following, merging the schemas may also be
-> an option.
-> 
-> https://github.com/Kwiboo/linux-rockchip/compare/619509e6c853...next-20240618-rock-3b-orangepi-3b/
-> 
-> Main purpose of my series was to add ROCK 3B and also Orange Pi 3B,
-> fixing rockchip,rk809 binding is just a prerequisite.
-> 
-> If you want to merge the bindings, please do :-), I can wait a few more
-> days to send out a ROCK 3B + Orange Pi 3B v2 series.
-> 
-> Please also include the vcc8/9 fix if you send a v2.
+If the service locator server is restarted fast enough, the PDR can
+rewrite locator_addr fields concurrently. Protect them by placing
+modification of those fields under the main pdr->lock.
 
-Thanks for the pointers, got this finally merged in v2:
+Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Tested-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/soc/qcom/pdr_interface.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-https://lore.kernel.org/lkml/20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com/
+diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+index a1b6a4081dea..76a62c2ecc58 100644
+--- a/drivers/soc/qcom/pdr_interface.c
++++ b/drivers/soc/qcom/pdr_interface.c
+@@ -76,12 +76,12 @@ static int pdr_locator_new_server(struct qmi_handle *qmi,
+ 					      locator_hdl);
+ 	struct pdr_service *pds;
+ 
++	mutex_lock(&pdr->lock);
+ 	/* Create a local client port for QMI communication */
+ 	pdr->locator_addr.sq_family = AF_QIPCRTR;
+ 	pdr->locator_addr.sq_node = svc->node;
+ 	pdr->locator_addr.sq_port = svc->port;
+ 
+-	mutex_lock(&pdr->lock);
+ 	pdr->locator_init_complete = true;
+ 	mutex_unlock(&pdr->lock);
+ 
+@@ -104,10 +104,10 @@ static void pdr_locator_del_server(struct qmi_handle *qmi,
+ 
+ 	mutex_lock(&pdr->lock);
+ 	pdr->locator_init_complete = false;
+-	mutex_unlock(&pdr->lock);
+ 
+ 	pdr->locator_addr.sq_node = 0;
+ 	pdr->locator_addr.sq_port = 0;
++	mutex_unlock(&pdr->lock);
+ }
+ 
+ static const struct qmi_ops pdr_locator_ops = {
+@@ -365,12 +365,14 @@ static int pdr_get_domain_list(struct servreg_get_domain_list_req *req,
+ 	if (ret < 0)
+ 		return ret;
+ 
++	mutex_lock(&pdr->lock);
+ 	ret = qmi_send_request(&pdr->locator_hdl,
+ 			       &pdr->locator_addr,
+ 			       &txn, SERVREG_GET_DOMAIN_LIST_REQ,
+ 			       SERVREG_GET_DOMAIN_LIST_REQ_MAX_LEN,
+ 			       servreg_get_domain_list_req_ei,
+ 			       req);
++	mutex_unlock(&pdr->lock);
+ 	if (ret < 0) {
+ 		qmi_txn_cancel(&txn);
+ 		return ret;
 
-Regards,
-Cristian
+-- 
+2.39.2
+
