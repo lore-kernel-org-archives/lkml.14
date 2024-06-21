@@ -1,279 +1,191 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28F02940F;
-	Fri, 21 Jun 2024 14:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A62374FF
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718981470; cv=none; b=rz5yMu6eLK4gri1ncoJ9Usj47Gy3+ALHlWd7smnNfrpmQLw+QtWabTPhw99P13pxqGHdArQ2LDWOsuEH75RtavBlXL/5N5guXmGyF8dTiXPr0PHvE35hKEwQ0qjua0Vt+8hpO0NPl7iI0vYvATObS7W7LRSuWmpkSWOneqaIrQw=
+	t=1718981490; cv=none; b=SgO3ICRODJY/sgLFhLflOpwYxYpeAb5Za0+A1CMk0Qusa4Q9J1Vb0L7rFrHLfEMD/VhS9MNH+QwzKV0ymtTutL9IO+TXKP4RmaBdPVyVEvbCKMD1lnDxMMwp9XXSmWYorY3DH+Dg+bP3GYuSMqxpagER/mwLcDAqOp6KV7F7ID4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718981470; c=relaxed/simple;
-	bh=5hLo/NJHRsfeggQDXZtDEA7gdlTNrQ5GceHmTEYUk8k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TqkdYGsOhMfADhX7WD/ULXYTNASpJ4eyu14sAB1Yj7+bedvmueh6sjP2B8vaDpXjwZ/+6MeXMqBGVZ05rqr7bxrJ5fyIHCEF4mjg1NNsI5uSJAvHQpj3+QNZdxc1azsoJMDhr3y6pHE0bY1uMO2m5geVA4Ap4QMYU3dpQBaQhuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=UaXZMKs5; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1718981490; c=relaxed/simple;
+	bh=YRtouFPaW9U4NGyXBKaaDVSlzBvVKpAVa50I1FhWngU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jlsQM6lCYAI5cTmX03K0jY5iFOWXOByPlyQ7Hr07RQbJH8kxYpRJ3YjhntxJmMLE3fBPh/kcV0jG+UqwcWyRZkCLzJn2QSyXy47pP+RXONnjfd6o8InppM7K8Qwg7CwSg/4evUCYNmkJ2L7SDZ8nI51r54A2D0OcJ68Aq+Z3PzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fM8KWOUz; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="UaXZMKs5"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBfeWg014796;
-	Fri, 21 Jun 2024 08:14:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=MxN1j
-	fBJIKGuR9o5HaLQx0jskf9yOcmAgKNAbFMGh/g=; b=UaXZMKs573U7Hq/tuwhso
-	duyHbSt5xkgv7pFv059imY1WDyMNMAI7527g4TRv8mvO/iUV8k/J+81NneZfTNpV
-	XeH1jg7WeqEDM0HW6kMmb7JX3E/cqbQDkmlIW0TFGfZuZpSmN9t/V9qhGuJjEcRG
-	WXChOHO0prYhAre7hYc+pOHA9Ywx/cj+Sieq1U9NBFzQi2FdLfTfc1Y3gR+IEUYj
-	3wSKvPy+uvJARPnupQBD9FWNVY2lyQQeEEJcHjiqcxSAxWOwXlu5vwaTmhQvbdk1
-	GidOGP1Q1Nx//5UUOGyOY3KQdA7+o1GJpfqovXTRQvQx7hl6FUe+5Kp8mAjTh3uu
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3yw4yxs5vc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 08:14:25 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 45LCEO2X021838
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 21 Jun 2024 08:14:24 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 21 Jun
- 2024 08:14:23 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 21 Jun 2024 08:14:23 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.120])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45LCE6Sv032255;
-	Fri, 21 Jun 2024 08:14:16 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lars-Peter Clausen
-	<lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan
- Cameron <jic23@kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH v6 2/2] iio: frequency: adf4350: add clk provider
-Date: Fri, 21 Jun 2024 15:13:59 +0300
-Message-ID: <20240621121403.47912-2-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240621121403.47912-1-antoniu.miclaus@analog.com>
-References: <20240621121403.47912-1-antoniu.miclaus@analog.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fM8KWOUz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718981488; x=1750517488;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YRtouFPaW9U4NGyXBKaaDVSlzBvVKpAVa50I1FhWngU=;
+  b=fM8KWOUz3Y22LvKOdcwmuENiC9Z3M1NU1x1Q3wki3knt4XiPsmABMZyt
+   96+aZi84pGuzd4Gp/MeqV3OBrc/7Ke0gyZu6CyyxuyTprfM+kjAkeRu7B
+   s/lzGOa/V8DQnw+OiHMw+q2eJtg3qGVF8u5zPNGjD+rqjFGdW2x75IUU3
+   OVYKmv4tqwvuqcCVy+uV586n8yxLI3R1TNmGqCw/FrCdEMgkDz1O9IJa2
+   j7i+TQ3orr2HMzAddj2kA278WB4DAqj0CNflcnirbtonY4r3wpjISyuw4
+   oWPFkXAptOGmdE6dNdVvMj9fAe7A3V/Om9FA3fbT/lDDU1gXYrEFNL9JB
+   Q==;
+X-CSE-ConnectionGUID: TSBvV/zuRL+KumS0em/v+Q==
+X-CSE-MsgGUID: HSPkYuP6TkmWt8FhF7za/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="15992028"
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="15992028"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 07:51:27 -0700
+X-CSE-ConnectionGUID: 9SR3JPeSS4SAMcyi1qiFXA==
+X-CSE-MsgGUID: QbFqJJkySc6MGHPzAp0EjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="47798662"
+Received: from bmurrell-mobl.amr.corp.intel.com (HELO [10.124.221.70]) ([10.124.221.70])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 07:51:26 -0700
+Message-ID: <4fb4b087-cae2-4516-a34e-cb4c72be13eb@intel.com>
+Date: Fri, 21 Jun 2024 07:51:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: C5-Nl98mnm-CxPdry3kMW7wGU8kUzwEg
-X-Proofpoint-ORIG-GUID: C5-Nl98mnm-CxPdry3kMW7wGU8kUzwEg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0 phishscore=0
- impostorscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406210091
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] mm/x86: Add missing pud helpers
+To: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+Cc: x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+ Dave Jiang <dave.jiang@intel.com>, "Kirill A . Shutemov"
+ <kirill@shutemov.name>, Ingo Molnar <mingo@redhat.com>,
+ Oscar Salvador <osalvador@suse.de>, Matthew Wilcox <willy@infradead.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Rik van Riel <riel@surriel.com>, Mel Gorman <mgorman@techsingularity.net>,
+ "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Huang Ying <ying.huang@intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+References: <20240621142504.1940209-1-peterx@redhat.com>
+ <20240621142504.1940209-7-peterx@redhat.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240621142504.1940209-7-peterx@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add clk provider feature for the adf4350.
+On 6/21/24 07:25, Peter Xu wrote:
+> These new helpers will be needed for pud entry updates soon.  Namely:
+> 
+> - pudp_invalidate()
+> - pud_modify()
 
-Even though the driver was sent as an IIO driver in most cases the
-device is actually seen as a clock provider.
+I think it's also definitely worth noting where you got this code from.
+Presumably you copied, pasted and modified the PMD code.  That's fine,
+but it should be called out.
 
-This patch aims to cover actual usecases requested by users in order to
-completely control the output frequencies from userspace.
+...
+> +static inline pud_t pud_modify(pud_t pud, pgprot_t newprot)
+> +{
+> +	pudval_t val = pud_val(pud), oldval = val;
+> +
+> +	/*
+> +	 * NOTE: no need to consider shadow stack complexities because it
+> +	 * doesn't support 1G mappings.
+> +	 */
+> +	val &= _HPAGE_CHG_MASK;
+> +	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
+> +	val = flip_protnone_guard(oldval, val, PHYSICAL_PUD_PAGE_MASK);
+> +
+> +	return __pud(val);
+> +}
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
-changes in v6:
- - rework `init.name` handling.
- - simplify iio channels initialization.
- drivers/iio/frequency/adf4350.c | 124 +++++++++++++++++++++++++++++++-
- 1 file changed, 122 insertions(+), 2 deletions(-)
+First of all, the comment to explain what you didn't do here is as many
+lines as the code to _actually_ implement it.
 
-diff --git a/drivers/iio/frequency/adf4350.c b/drivers/iio/frequency/adf4350.c
-index 4abf80f75ef5..e13e64a5164c 100644
---- a/drivers/iio/frequency/adf4350.c
-+++ b/drivers/iio/frequency/adf4350.c
-@@ -19,6 +19,7 @@
- #include <linux/gpio/consumer.h>
- #include <asm/div64.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -36,6 +37,9 @@ struct adf4350_state {
- 	struct gpio_desc		*lock_detect_gpiod;
- 	struct adf4350_platform_data	*pdata;
- 	struct clk			*clk;
-+	struct clk			*clkout;
-+	const char			*clk_out_name;
-+	struct clk_hw			hw;
- 	unsigned long			clkin;
- 	unsigned long			chspc; /* Channel Spacing */
- 	unsigned long			fpfd; /* Phase Frequency Detector */
-@@ -61,6 +65,8 @@ struct adf4350_state {
- 	__be32				val __aligned(IIO_DMA_MINALIGN);
- };
- 
-+#define to_adf4350_state(_hw) container_of(_hw, struct adf4350_state, hw)
-+
- static struct adf4350_platform_data default_pdata = {
- 	.channel_spacing = 10000,
- 	.r2_user_settings = ADF4350_REG2_PD_POLARITY_POS |
-@@ -381,6 +387,113 @@ static const struct iio_info adf4350_info = {
- 	.debugfs_reg_access = &adf4350_reg_access,
- };
- 
-+static void adf4350_clk_del_provider(void *data)
-+{
-+	struct adf4350_state *st = data;
-+
-+	of_clk_del_provider(st->spi->dev.of_node);
-+}
-+
-+static unsigned long adf4350_clk_recalc_rate(struct clk_hw *hw,
-+					     unsigned long parent_rate)
-+{
-+	struct adf4350_state *st = to_adf4350_state(hw);
-+	unsigned long long tmp;
-+
-+	tmp = (u64)(st->r0_int * st->r1_mod + st->r0_fract) * st->fpfd;
-+	do_div(tmp, st->r1_mod * (1 << st->r4_rf_div_sel));
-+
-+	return tmp;
-+}
-+
-+static int adf4350_clk_set_rate(struct clk_hw *hw,
-+				unsigned long rate,
-+				unsigned long parent_rate)
-+{
-+	struct adf4350_state *st = to_adf4350_state(hw);
-+
-+	if (parent_rate == 0 || parent_rate > ADF4350_MAX_FREQ_REFIN)
-+		return -EINVAL;
-+
-+	st->clkin = parent_rate;
-+
-+	return adf4350_set_freq(st, rate);
-+}
-+
-+static int adf4350_clk_prepare(struct clk_hw *hw)
-+{
-+	struct adf4350_state *st = to_adf4350_state(hw);
-+
-+	st->regs[ADF4350_REG2] &= ~ADF4350_REG2_POWER_DOWN_EN;
-+
-+	return adf4350_sync_config(st);
-+}
-+
-+static void adf4350_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct adf4350_state *st = to_adf4350_state(hw);
-+
-+	st->regs[ADF4350_REG2] |= ADF4350_REG2_POWER_DOWN_EN;
-+
-+	adf4350_sync_config(st);
-+}
-+
-+static int adf4350_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct adf4350_state *st = to_adf4350_state(hw);
-+
-+	return (st->regs[ADF4350_REG2] & ADF4350_REG2_POWER_DOWN_EN);
-+}
-+
-+static const struct clk_ops adf4350_clk_ops = {
-+	.recalc_rate = adf4350_clk_recalc_rate,
-+	.set_rate = adf4350_clk_set_rate,
-+	.prepare = adf4350_clk_prepare,
-+	.unprepare = adf4350_clk_unprepare,
-+	.is_enabled = adf4350_clk_is_enabled,
-+};
-+
-+static int adf4350_clk_register(struct adf4350_state *st)
-+{
-+	struct spi_device *spi = st->spi;
-+	struct clk_init_data init;
-+	struct clk *clk;
-+	const char *parent_name;
-+	int ret;
-+
-+	if (!device_property_present(&spi->dev, "#clock-cells"))
-+		return 0;
-+
-+	if (device_property_read_string(&spi->dev, "clock-output-names", &init.name)) {
-+		init.name = devm_kasprintf(&spi->dev, GFP_KERNEL, "%s-clk",
-+					   fwnode_get_name(dev_fwnode(&spi->dev)));
-+		if (!init.name)
-+			return -ENOMEM;
-+	}
-+
-+	parent_name = of_clk_get_parent_name(spi->dev.of_node, 0);
-+	if (!parent_name)
-+		return -EINVAL;
-+
-+	init.ops = &adf4350_clk_ops;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	init.flags = CLK_SET_RATE_PARENT;
-+
-+	st->hw.init = &init;
-+	clk = devm_clk_register(&spi->dev, &st->hw);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	ret = of_clk_add_provider(spi->dev.of_node, of_clk_src_simple_get, clk);
-+	if (ret)
-+		return ret;
-+
-+	st->clkout = clk;
-+
-+	return devm_add_action_or_reset(&spi->dev, adf4350_clk_del_provider, st);
-+}
-+
- static struct adf4350_platform_data *adf4350_parse_dt(struct device *dev)
- {
- 	struct adf4350_platform_data *pdata;
-@@ -522,8 +635,6 @@ static int adf4350_probe(struct spi_device *spi)
- 
- 	indio_dev->info = &adf4350_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
--	indio_dev->channels = &adf4350_chan;
--	indio_dev->num_channels = 1;
- 
- 	mutex_init(&st->lock);
- 
-@@ -551,6 +662,15 @@ static int adf4350_probe(struct spi_device *spi)
- 			return ret;
- 	}
- 
-+	ret = adf4350_clk_register(st);
-+	if (ret)
-+		return ret;
-+
-+	if (!st->clkout) {
-+		indio_dev->channels = &adf4350_chan;
-+		indio_dev->num_channels = 1;
-+	}
-+
- 	ret = devm_add_action_or_reset(&spi->dev, adf4350_power_down, indio_dev);
- 	if (ret)
- 		return dev_err_probe(&spi->dev, ret,
--- 
-2.45.2
+Second, I believe this might have missed the purpose of the "shadow
+stack complexities".  The pmd/pte code is there not to support modifying
+shadow stack mappings, it's there to avoid inadvertent shadow stack
+mapping creation.
 
+That "NOTE:" is ambiguous as to whether the shadow stacks aren't
+supported on 1G mappings in Linux or the hardware (I just checked the
+hardware docs and don't see anything making 1G mappings special, btw).
+
+But, still, what if you take a Dirty=1,Write=1 pud and pud_modify() it
+to make it Dirty=1,Write=0?  What prevents that from being
+misinterpreted by the hardware as being a valid 1G shadow stack mapping?
+
+>  /*
+>   * mprotect needs to preserve PAT and encryption bits when updating
+>   * vm_page_prot
+> @@ -1377,10 +1398,25 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
+>  }
+>  #endif
+>  
+> +static inline pud_t pudp_establish(struct vm_area_struct *vma,
+> +		unsigned long address, pud_t *pudp, pud_t pud)
+> +{
+> +	if (IS_ENABLED(CONFIG_SMP)) {
+> +		return xchg(pudp, pud);
+> +	} else {
+> +		pud_t old = *pudp;
+> +		WRITE_ONCE(*pudp, pud);
+> +		return old;
+> +	}
+> +}
+
+Why is there no:
+
+	page_table_check_pud_set(vma->vm_mm, pudp, pud);
+
+?  Sure, it doesn't _do_ anything today.  But the PMD code has it today.
+ So leaving it out creates a divergence that honestly can only serve to
+bite us in the future and will create a head-scratching delta for anyone
+that is comparing PUD and PMD implementations in the future.
