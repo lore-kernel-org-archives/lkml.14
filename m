@@ -1,91 +1,105 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CC616F854
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96A3172798
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718966711; cv=none; b=NTYWUav14rY77E7URMoAjzZAUSrcx+h6wqi+tMZ1eNsz3C+qK0PchcXquaK5NXReTAsW5UpprOnV3/I5dqHmliMJ181wDCpQIZE1NRw3zYHGHsW0f7twIwyzizv5kDBBS/WnUjXSVYfqy/MEUP6LcB4uBCO23iT+GHjNLsroB/E=
+	t=1718966720; cv=none; b=Bsyta0v4O2xpjnaONvBh1TE9Kle1uKhKjMv8mu1JTqrAHQ2L3mxZJU+Lh7Jc/AfxacR+KO0xCWO4rgub4QRDmnUaT5sSGfL0X0wniPAKOfx9Ozyw1GCCvmLi7TI20PMmvb7eImWsI+ltF+b286UjnnjuPMzZDhZ/1FIsuk0ZF7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718966711; c=relaxed/simple;
-	bh=vCzKBkI0EOlIaIsyEt1Ho+UPCJV1SGzIjta1R/xOqyo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NkBQS4vCcL/lmJ1F9JpZPDXcWCKJw2w0uryrJ8Bzzz6jfsgPTDN+c5AhkWb9WUAUd3kKQRZGJWsN4FP5SMqYDf3KLrcsRT6vsTEP9wrSWnR9+BBVkpB3PNMk2xpX7hc1wtmJSlulceaZHvce0vC2/Og5h6o3f+xqyKZK+l/gyy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgJSQG9G; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718966720; c=relaxed/simple;
+	bh=usmDQv2pcLKB4hsZ9M8prCAudMM/VG2ozTfWHzTwlW0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n8XR5gEblnLw2EyqB4ltRcLqqJIPmUZtNtzuJy+Gqg8PpEHhoyPb/ZnsD0UmOdhcJa5pOtvHXT4v68HeUjm86Gi/3UDslys859mpGoSCB6UdSgTLHZlMTeOs8NKx64dzQMHBrNJnjBnm32SavE4pwLAwcMvkqCGeSck0GNnpFNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=vcSaHJhz; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgJSQG9G"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6b50b704ffeso2722826d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718966709; x=1719571509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vCzKBkI0EOlIaIsyEt1Ho+UPCJV1SGzIjta1R/xOqyo=;
-        b=hgJSQG9GjTvc/j8hdCsPkfxeebXotpIQB64mr/kcmI/AdlWcore13QrboDIDn/2C++
-         4Q6hCWk965WvEC0hUS3QhSruUvTzKhvIA7OTlZpMlDBZuJuYmgdK8+YojT9yySZM2Vpq
-         FziIy2xqQiuDe+XdeZChIgccF9y5ajyks4mQpUKW7xW0AKaBQVWIwtmsZNOKeac29Ao4
-         r8onlNJVp0dl8deRsOGZygRar/GDzatVxK++lSeI3po/zW7DlSc3biav4LIGQnop9hcP
-         tav2v7GjRhjLVOleMIP04Rbg+/ZtlU0t1cvbbi1uAXJYGrbU9AOOVa441vBmxfdyaASo
-         4uOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718966709; x=1719571509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vCzKBkI0EOlIaIsyEt1Ho+UPCJV1SGzIjta1R/xOqyo=;
-        b=unfi398TiJaQ7vyD6RAXpDwYIOgDljNFM7TwVo2tsmIrHmdj9zV44StuJAwStqi3wn
-         CL0eB1w0k72re0dH2fynr0J9g7LjvvZ8iX5AeaZJ8yDT1PwXr/61Q8kj9+kF+XuRTjLr
-         OhBz4SZvSlExasvQfrCbpI3Snm0UzX6/OShdzdJbkq225qwsjAZ+mRJTvprL55CclQAF
-         IMtHBNM8gm4BusL51wZbJRsuG6MEyvdWHpYNWR5TN0rMaL2ILkbDLDlZcKCN0Z2ZjDhi
-         FCqS0BkLCarJB9lqVD8OISh0HUk4QwtI/S4ezUE5A65elUycM1j4bCLEA+fUSQ1irOe5
-         pfKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMGR1iZgIfcnxeYXZEWBT5VnX0ISrxADOVqw0hmGTm7YFCbPF32rSA4popZqmCdRehdE3A4/c85+7kFzacwEN48JxiRMdrloRtLkbU
-X-Gm-Message-State: AOJu0Yxj7+o/nz/ixfz8SF+hXD30KID6l0c2m4wzoqieGHMWHqW5JZW9
-	uw0VB5yloVlgpkc9EEmg9ZGGMwGhzQCrcj6ALv2zg4paY9522/l1MFgmiMxZC2ksCM5XLeajn1u
-	YqbIBzPMsvU5PEl6RnQqbapuh4No=
-X-Google-Smtp-Source: AGHT+IGI1lyNp+TbE3ThRp8In7N425hvlee/0+RjTWRu6FiUFfFtrbG1ST8pJQ2n45IwF01JbVb46PDQIa50lhYgPS4=
-X-Received: by 2002:a05:6214:c8b:b0:6b2:af02:28d6 with SMTP id
- 6a1803df08f44-6b501d261e4mr83907056d6.0.1718966708856; Fri, 21 Jun 2024
- 03:45:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="vcSaHJhz"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 5379A100002;
+	Fri, 21 Jun 2024 13:44:50 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1718966690; bh=CNC0JexCvUbC2AID9uwavUVu9I3SEDmP57rJWLvUIo8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=vcSaHJhz7lrWahrZOqZuw9X1ffwc+HIEV7mK7xuNG+cbmerGBMU8s92tG2CLHeprA
+	 squiMrV8GC2YU/IybY/v8LJVWc4qe0TaH41l3ZPZfhW09MlAX00YEKq+5VBrYuUUbs
+	 FXrXfktwOKqN36lnwXmKmKyml0xU6FRh1LY3sXyAX6Ir3JjlhEfctvfzjBsgFDqGkV
+	 otG43Jw29uPjvcYo65kFGasMS6Z0b2vziHUGZid8HzRE4ypVX8eFBMTzUvqoH6nAvc
+	 SAoWV8DtPzAF3j/L1VClO4igeVi0Vvs43twT1zX27GL6XpjFSas/PwRmhoPEpH8AIb
+	 nS0SNfJnpYkag==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Fri, 21 Jun 2024 13:44:05 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Jun
+ 2024 13:43:45 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Martyn Welch <martyn.welch@gefanuc.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Soumya Negi <soumya.negi97@gmail.com>, Michael
+ Straube <straube.linux@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-staging@lists.linux.dev>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] staging: vme_user: Validate geoid used for VME window address
+Date: Fri, 21 Jun 2024 13:42:46 +0300
+Message-ID: <20240621104246.11292-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
- <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
- <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com> <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
-In-Reply-To: <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Fri, 21 Jun 2024 15:44:58 +0500
-Message-ID: <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
-Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
- cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Alex Deucher <alexdeucher@gmail.com>, Hamza Mahfooz <hamza.mahfooz@amd.com>, 
-	Rodrigo.Siqueira@amd.com, "Deucher, Alexander" <alexander.deucher@amd.com>, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186049 [Jun 21 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/06/21 02:12:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/21 09:56:00 #25650115
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Fri, Jun 21, 2024 at 12:56=E2=80=AFPM Linux regression tracking (Thorste=
-n
-Leemhuis) <regressions@leemhuis.info> wrote:
-> Hmmm, I might have missed something, but it looks like nothing happened
-> here since then. What's the status? Is the issue still happening?
+In tsi148_crcsr_init() value of vme_base used as 3rd parameter in
+tsi148_master_set() call is calculated as 'vstat * 0x80000'. vstat value
+can be set from module parameter "geoid" which can be any. In this case
+the value of an arithmetic expression 'vstat * 0x80000' is a subject to
+overflow because its operands are not cast to a larger data type before
+performing arithmetic.
 
-Yes. Tested on e5b3efbe1ab1.
+Add geoid validation to prevent overflow.
 
-I spotted that the problem disappears after forcing the TV to sleep
-(activate screensaver <Super> + <L>) and then wake it up by pressing
-any button and entering a password.
-Hope this information can't help figure out how to fix it.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
---=20
-Best Regards,
-Mike Gavrilov.
+Fixes: d22b8ed9a3b0 ("Staging: vme: add Tundra TSI148 VME-PCI Bridge driver")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/staging/vme_user/vme_tsi148.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/vme_user/vme_tsi148.c b/drivers/staging/vme_user/vme_tsi148.c
+index 2ec9c2904404..b601d2b20bed 100644
+--- a/drivers/staging/vme_user/vme_tsi148.c
++++ b/drivers/staging/vme_user/vme_tsi148.c
+@@ -2119,7 +2119,7 @@ static int tsi148_slot_get(struct vme_bridge *tsi148_bridge)
+ 		slot = ioread32be(bridge->base + TSI148_LCSR_VSTAT);
+ 		slot = slot & TSI148_LCSR_VSTAT_GA_M;
+ 	} else {
+-		slot = geoid;
++		slot = geoid & TSI148_LCSR_VSTAT_GA_M;
+ 	}
+ 
+ 	return (int)slot;
+-- 
+2.30.2
+
