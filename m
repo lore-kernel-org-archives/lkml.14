@@ -1,155 +1,201 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA2181C02;
-	Fri, 21 Jun 2024 09:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718960739; cv=none; b=hXnh2d5+7WmW4K0azgH7LZicVIHJgbu3lscEna+ty0d3XO2kzvpr95rGeEPmMQAEBtN9iKey1zhj9LXoPmLGBL+d2FbfnvI3h/tXtMa5kOniOrjjFsEDSnk0KLyHazhGJ/5BmE3rY7yIR1idaXt15tkRWf0IKTeJVvF9YBJsZLQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4955716D325
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718960739; cv=fail; b=OSjhxuH2luq8ym/IMqFkbxXa2DIuQej87ng6V2bAcxziocpku2yNeh1IZMuxqLMH79rIvlLgDy0jntblxUbHgC0Omz7sZpd/Or2PKRngqXIQFp7xLVgS4OOBr/dd/z8UdmLFLEhulBFOtz8Pcktoq5Y37+EgKkdVS93cFSHOoHs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718960739; c=relaxed/simple;
-	bh=u3vsruWw3m6yWhKiI6k/Bp6Kz8w7AjrzmFbFuOLhVYk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d3KcjybfRXq1d05YzNrV7oWNbkWgLEj/TuiodzasvSHGks1opNoISRV9RaUThRXTOCgksuTxzrOPFjBdcr4WemLoA1Rn9RPcVW9hwt8Ijanyl9nXzkeICY/fFraqxX7+2N2mOkHfeWMPiznIMFlEv5Xp4M9b4bIJEGyPM9O15yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XSVkVAVA; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	bh=tLnJ9eJb32TP0tvrdHqSOtz1GLX1PwoJxPkfNqQ5rkE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=q9+8iCT97rn08pId2mbC7Q2/5butnCeHogIBf2N6Ei5GijkLNTjeWpTz8HmiZbV9IrTdPQ0Ax+sva5LeCSavbKD/Yqvqk1X7z6SmXB7gF3e1hV2QlslWYjyDlD3Fp81FyzHkVmzCZ4HzsDaYW2vumIbSW2E2yX26wGGa9BhPEtc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KyXw7him; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XSVkVAVA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=+JO4ER5bv9lk/4SoTsJyJX99aDmjGIgbmbYr1Bo8tQk=;
-	b=XSVkVAVAsNqJ+96Z02pJ31GaBFNz9YN//CbiAY3xSDXlzW9DZRGpWkfLE6D4t6
-	dY01mCKPdLNTRImIVZmlHRr2T4mAsCiZU1wET095pPdbUMdnFIB4fzTj6ORn8he6
-	RwFAJ91fUibN1xiEzWdCOrk51MvJGOB/qS+XfaX2POMzY=
-Received: from [192.168.1.26] (unknown [183.195.6.47])
-	by gzga-smtp-mta-g3-4 (Coremail) with SMTP id _____wDn1xgVQnVmlNLkEg--.36559S2;
-	Fri, 21 Jun 2024 17:04:23 +0800 (CST)
-Message-ID: <33c7587b-83a4-4be7-b00a-d30874df8c22@163.com>
-Date: Fri, 21 Jun 2024 17:04:21 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KyXw7him"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718960737; x=1750496737;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=tLnJ9eJb32TP0tvrdHqSOtz1GLX1PwoJxPkfNqQ5rkE=;
+  b=KyXw7himHFb9oSmGbTcErSqXkCLMaC4JmG+AKUyPWYPejk25pbS5CwvF
+   Cd4sN7LaS3ZFOt3a4UiViWDgRwKGls526FC7wL+MxnNctn7srcnErAWaA
+   bcdnaOFxIoIUKuZeGOIIK805nBM1lsGDsWF6WnjCgIFTLEHvZzKOQPCFL
+   DKQDNUJUBCjPQ1qKfib6UEI+VmxuFqn5sZMjIyLxmUlbCIj7+CU1KL7cd
+   Ddn3sJ1z0b3t9Gy1a2HzPSxLwy3/H177a6hQIPXs9zIizCHi1yDzXGSNM
+   lX0APX2OY5NBxuxE5R3ZD04NfNftdk29FGZ56+8IQt7Oup35F+tjklG3j
+   w==;
+X-CSE-ConnectionGUID: yL1cq1OMRwONJQCJBZa/Lw==
+X-CSE-MsgGUID: errGCU74SSy8mdx7SXUuxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="19760811"
+X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
+   d="scan'208";a="19760811"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 02:05:36 -0700
+X-CSE-ConnectionGUID: 14veUNJXSM+Zs8t2PDE3KQ==
+X-CSE-MsgGUID: zKnaKeDVQE+MY+54kzxRFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
+   d="scan'208";a="46875539"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Jun 2024 02:05:37 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 21 Jun 2024 02:05:36 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 21 Jun 2024 02:05:35 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 21 Jun 2024 02:05:35 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.43) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 21 Jun 2024 02:05:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TgrzqL5EAZX9DLDZIe23ByDtIM0LgiLjrsvJ+nOx50v5PqsuSp0dZd0Nkx6mh0bYmyfh6TGdwQWJI3aBxchgAt8flanb+sWdOHFQbBEbDKiRy2hBV5lX4xkTx1ynWUVpxd99zMD6cLMHMIO1jWpmE0V1kmenqf/DVbco9Iku9RBOByfTmv4EbCDlweT0x4PC2HiLt6O+TWgzHzS4JiTgUiqkSgQwK+tVUQEAccoT8sxO5f2ylLvnoCRsOLK6gS2QFiS88cGuyxl6f3W8zw489rTJscJydwYPHJgAAKGMEho0v7AN27QfPcvis5VMMCkhS0RIYyyeZnyc5/LOxoOeJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tLnJ9eJb32TP0tvrdHqSOtz1GLX1PwoJxPkfNqQ5rkE=;
+ b=GLKskRTkLHTfxN1d2YYbBTp67Xa8oNu4l6Pw5zXAC51LJbVB0NCC2Mym6gg2kKYP4Uo2XgKm1GDd9B8rBJhs5H75O+54q7wlRH3++d13JvOLzvSm99bmMQzJfq3/GlZc1wzN1HLmcdYCe7nLodsWoucpI7p+CdxEl0vGXQ6cgdBOVF2QohYp0IVU5vOytPm7XWJxDsHU530j18X5floPR6JNIB9Nhq4gpzox5CP23I9H3nCMga7YP8B3OFjDJzygZQUrGmSRr4GaViR8IoCOvHiImkkZAhD6bEPybj5SzdiPTxAoRU87eAuceGje5uIG3FnfYf3QbLvUrZ5PSF1FAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by BY1PR11MB8055.namprd11.prod.outlook.com (2603:10b6:a03:530::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33; Fri, 21 Jun
+ 2024 09:05:33 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.7698.020; Fri, 21 Jun 2024
+ 09:05:33 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
+ Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, Jacek Lawrynowicz
+	<jacek.lawrynowicz@linux.intel.com>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/1] iommu/vt-d: Fix missed device TLB cache tag
+Thread-Topic: [PATCH v2 1/1] iommu/vt-d: Fix missed device TLB cache tag
+Thread-Index: AQHawtuce5dzuL9V10u/YKgTw5MOwbHR7m/Q
+Date: Fri, 21 Jun 2024 09:05:33 +0000
+Message-ID: <BN9PR11MB52766D5D45C8A085FB9EF0698CC92@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240620062940.201786-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20240620062940.201786-1-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|BY1PR11MB8055:EE_
+x-ms-office365-filtering-correlation-id: b26664a3-6e8d-4e2f-b24f-08dc91d14e94
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230037|366013|376011|1800799021|38070700015;
+x-microsoft-antispam-message-info: =?us-ascii?Q?+N2MSqucoi1m4y3Mb8XODqEFZc4AmT78YorZET82/0RSLktPIT/NWEkIsSoP?=
+ =?us-ascii?Q?8rJi2RVoopUW08xP52fDUUf2J7eE1HafVcQ/cCwbs8LtU/0ispvurU1V9lsc?=
+ =?us-ascii?Q?IgRxW9ShXXd9vGvPI5dTq06jr0f+S5Jyk/gD9o9EVzLttL2t0U+5gtObwuVX?=
+ =?us-ascii?Q?KJcBF/w7OZ2Pt8dxYd/6lWgq/Am/MN4g0RbwudQlHBHyvWz32l0gjGJXojFo?=
+ =?us-ascii?Q?BkqilXdPP3FO840xEtnEWWV6atjUkNk+nXBnWC1ZOSMkR9uSsNg7CmB1er51?=
+ =?us-ascii?Q?PhXc2+DHKxxJF+HRdmQuWCUrlkgFekbVeSAW2F4twD/YavmZ4pSJFbJbJMeN?=
+ =?us-ascii?Q?w0clEGg0V0Ks0CS4n6XprDQsR5jrRbrTasRSPJCmsv4xah1opJEceUToQjCa?=
+ =?us-ascii?Q?CjFkxchIxAwLJ0b6NZ6tX1GKcLZlO3gTDIZK4FU5gD4wZe1cqURKjjweV70o?=
+ =?us-ascii?Q?Zy+pqjXzwE+Mgl37Ta9KDEnfA6UIoo7CE7R6FcAc1ZGCGkTcSckzvLMyM3sJ?=
+ =?us-ascii?Q?f14QJRRZO8pkoe+qcMV665FSEkceiCIQr7WJl61nUFplHIKul0iySpR/VuW8?=
+ =?us-ascii?Q?LGN2TMA1MDMEzh+30qRTg3pLeJrLHAhcZGwCCDc3oTaTRLHylqmhp+h4Mj6J?=
+ =?us-ascii?Q?1iHObSVN1vWaeapjwelMw0MdMoWWra/gOzAOUP+sHfyWR7ZSi2udyT8zcaC2?=
+ =?us-ascii?Q?duYVDB5IBCWHxy+SZYjqkVelVzfL+yYTYpN1vaOnsrYM9ZQ0RCYNrCaXtwiC?=
+ =?us-ascii?Q?olOuM9504jb+V7VL4FMmF6dn79KG1p17/PKLTfsXzDaUtgbwk8yfjAEZv/ZI?=
+ =?us-ascii?Q?eCkLeD4wIE+ZIQ/5dioOabJD6vRHTrxXnOchu1EjE5B3wa9PUadi1YUq4FUk?=
+ =?us-ascii?Q?eOH6GSf/zRi1LJUK+NLBFqcl2cjn3h4FGC+rJpV4s3Zohfh016Z/ytIiSq8f?=
+ =?us-ascii?Q?A64Pc+i+UdMM50R8cw5ZdHYe40YUfn4cGAYhlJ4BEUavyWG6fgKZdt6bZFwj?=
+ =?us-ascii?Q?rWpq+/AwSNuq3Ub/UM2rDXEE91XOkGqBR2ygmbreUJpSzByfOJ1TomrtzFSI?=
+ =?us-ascii?Q?P+fIsHArAMcjCA0Zh/0Nmu2hZRmrixV5gwo+3dWGakn2iOGzJrCYZoNYr54o?=
+ =?us-ascii?Q?eEqbqpKrN5YtxZ+uBMDvP4fOMO+WfTx9JzBwiblPKPG+2ZQ5HeZqodmSRKfA?=
+ =?us-ascii?Q?PHRsyCw8kVJQFTi5fu/kj6qZT0qD5Y84K4JQiWx3QKDNlmGJHkPCwGFm8dmz?=
+ =?us-ascii?Q?6/vqh8pWZTeB5lHjqi+2middd9P/ytbEjTw/59YIkOuRiIaEtC0+4HiY6P8Z?=
+ =?us-ascii?Q?r9+wH7sOZILWCdHdQtkcg3ewM+jcRDl86DYUBIc7ZqD3kNu+/2KyNzZN+/aH?=
+ =?us-ascii?Q?14uU3V0=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(1800799021)(38070700015);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?DSjiM+rib4+0LWK3UpXwJKwjEYSePjSi43Wcyv6REobJyUY8q/DQEEumyEcE?=
+ =?us-ascii?Q?DuqeETh4Zr3BzAQ9slPfZrHS+NbM7dViCyG3Jfnb/cRAU0j3KGmCoA0LnP6y?=
+ =?us-ascii?Q?B5e8UqctygrZWG0ZB/+higrq/uandVKqCs+dK/QhLEYAAYNkyeyC84L9HuVb?=
+ =?us-ascii?Q?rKQctujbJdssaY06xgAHX0OSgpfCcPua2QHY63A3CkI4Ua9OQboSi1LYdoVV?=
+ =?us-ascii?Q?+Xk8HLIKX1PkpJQ3Uo6JXW+jEry2tXmcnEEmhBjZHwaCqM3nOqHIcNSxCcBG?=
+ =?us-ascii?Q?43NZUoH20rq5bRMKzlMcEz0i8K+itw8IKJ1RGlKXxcoRCcHZFjKbi4vCu13U?=
+ =?us-ascii?Q?xOF48VnMb8U/N6FNKML3c3B7/uMTRQx7YBXjExczbg04eDqt0JFade6+pICK?=
+ =?us-ascii?Q?4KH3Q2jdQV7YCvkXn1vrhY27zqmuViVXOTC+YS5Bo8O/s8ssxN27OE2Y3hhs?=
+ =?us-ascii?Q?TjyhHlJip02nFHKttjH5nApbr5nH0vi2/CCZeglx0HjOa51KbX6SMyuNl6QH?=
+ =?us-ascii?Q?Dp84FqWqcnjB7jUAkbe/vZEkKQf31TeKSVIa+R2qSqbt6eaQPmcf9kmTyS4g?=
+ =?us-ascii?Q?HMWF8wSjakX1z6Hv545dBqFyQHx6ILLjfDAaQ2HfEoZisFnDvvYyhPkH1tkv?=
+ =?us-ascii?Q?0a0MrOdJg9xhaCZipnmU+ly4mUrTJEaAFw2SnHs3G/q2ZHgtiVy6jXAoFCPA?=
+ =?us-ascii?Q?1jOs+SnRP/xFTi6LIqThMxwfhoGdV/ktG0bhmO+p6uQTCGL0G4Mvt8Dh5uTk?=
+ =?us-ascii?Q?HZmKC3WA5jQy35F3eAxXUXh3Kza81iAtRt3RMYc/vQjmGl1L4SySO/VM0BgN?=
+ =?us-ascii?Q?aMG6lxfSDEsunyrIZJAKSeJLXjAyLUn8CE+y67KNuCN2f8aHa5N5AnG/G70C?=
+ =?us-ascii?Q?JGIhIAxLJdBcRHA2BJhsRWAfslcV7UUn7QKUZwWY38//vUlK91Z72GRe/oWq?=
+ =?us-ascii?Q?YLNjAlID5A3Ae4kIxRsl1RGbnBzROvCQXaG/cpnmm/SccCbpwsnVeNXY3CJ5?=
+ =?us-ascii?Q?VLaj9nkbHOAdHL8eqb30sruXxTBdOsZp7rjOe25Yw7pE72cqOsSIlKyD7WKK?=
+ =?us-ascii?Q?nTY16V36oX83jp6sRqTuGPzTWONDxAv+EsY9IZTDMGlViI+AVJIW+IxbQhmX?=
+ =?us-ascii?Q?XyuqwRDWZJG1vOfvGFPCq1IbxyQ+1ym0nymNreDv5n2FwifQp2bZ+iqCamHo?=
+ =?us-ascii?Q?U0zN5kZx3LBtQiM7SX0eSrvoXw4mHOnIGaLjGullX/td0S4o+olbOUnU38UR?=
+ =?us-ascii?Q?8CPeP/NDlQ9VE8xO+p4723rGcUu/9bjK3UPQbVK4A9cX8kEjLbU7oIz0lmjM?=
+ =?us-ascii?Q?0KUwJ/UIUgXr48kefyEVMCGsOeRUyz2D5p1M9LXIbDGufd1+Dqu2ViquyQx6?=
+ =?us-ascii?Q?53JpEowj4ej9AAXFI8qaNz5yZAG7UatAzKIWz1jN7x/lIQZAk4Wu34D8aEUS?=
+ =?us-ascii?Q?QqmarUrAOBhUc44b5oAZw0nacLi7AEQh2tISFTGmDIoEUZeDbGt4350rcYH0?=
+ =?us-ascii?Q?S2JE0DRnNPyoiWvX+rXUygeIqnk7v1O+GV/4O7qyC8Rp0k/g17WbZxHrqLhY?=
+ =?us-ascii?Q?tCd4Nn09jdrJSuBmj/qm9gPIWX2zB7qqf+gLlGcs?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: patchwork-bot+bluetooth@kernel.org, marcel@holtmann.org,
- luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com,
- broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be,
- arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com,
- elder@linaro.org, srinivas.kandagatla@linaro.org,
- gregkh@linuxfoundation.org, abel.vesa@linaro.org, mani@kernel.org,
- lukas@wunner.de, dmitry.baryshkov@linaro.org, amit.pundir@linaro.org,
- wuxilin123@gmail.com, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- bartosz.golaszewski@linaro.org
-References: <20240605123850.24857-1-brgl@bgdev.pl>
- <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
- <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
- <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
-Content-Language: en-US
-From: Lk Sii <lk_sii@163.com>
-In-Reply-To: <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn1xgVQnVmlNLkEg--.36559S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXrW7tr1rWw15KrW8XFy3CFg_yoW5CFW5pF
-	W3G3Z0kF4UJr18AF1jgw1fZFy2qw47Xw1fur1Dt3s8ZF90gr18tr1Sy34F9ry7urWI9r18
-	tFWjyrySgw48urDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRWmhrUUUUU=
-X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiExoFNWXAlu3dLwAAsV
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b26664a3-6e8d-4e2f-b24f-08dc91d14e94
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 09:05:33.1695
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TcIKilvavvkK0LqxIsPeDWiBIukhaMsPb51BXowMSgDwi2vxvwfDqC29n1fmGPuAPcdeMnaiOwRXDlPllGs7Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR11MB8055
+X-OriginatorOrg: intel.com
 
-On 2024/6/21 14:36, Bartosz Golaszewski wrote:
-> On Fri, Jun 21, 2024 at 3:14 AM Lk Sii <lk_sii@163.com> wrote:
->>
->>
->>
->> On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
->>> Hello:
->>>
->>> This series was applied to bluetooth/bluetooth-next.git (master)
->>> by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
->>>
->> Hi luiz,
->>
->> i am curious why Bartosz is able to merge his changes into bluetooth
->> development tree bluetooth-next directly.
->>
-> 
-> This conversation is getting progressively worse...
-> 
->> 1)
->> his changes should belong to *POWER* scope instead of *Bluetooth*
->> obviously, however, there are *NOT* any SOB tag from either power and
->> bluetooth maintainer. these changes currently only have below Acked-by
->> and Signed-off-by tags:
->>
->> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
-> 
-> It's a new subsystem that has been discussed and reviewed for months
-> and thoroughly tested. Please refer to the cover letter under v8
-> linked in this thread. It's not related to power-management or
-> power-supply, it's its own thing but IMO the best place to put it is
-> under drivers/power/. And I will maintain it.
-> 
->> 2)
->> his changes have not merged into linus mainline tree yet.
->>
-> 
-> This is why they are in next! They are scheduled to go in during the
-> upcoming merge window. But since changes belong in multiple trees, we
-> need a cross-tree merge.
-> 
->> 3)
->> perhaps, it is safer to pull his changes from linus mainline tree when
->> merged than to merge into bluetooth-next firstly.
->>
-> 
-> It's not safer at all, why would spending less time in next be safer?
-> 
-it seems this patch serial(new subsystem) does not depend on bluetooth
-and also does not belong to bluetooth subsystem, but have been contained
-by tip of bluetooth tree.
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Thursday, June 20, 2024 2:30 PM
+>=20
+> When a domain is attached to a device, the required cache tags are
+> assigned to the domain so that the related caches can be flushed
+> whenever it is needed. The device TLB cache tag is created based
+> on whether the ats_enabled field of the device's iommu data is set.
+> This creates an ordered dependency between cache tag assignment and
+> ATS enabling.
+>=20
+> The device TLB cache tag would not be created if device's ATS is
+> enabled after the cache tag assignment. This causes devices with PCI
+> ATS support to malfunction.
+>=20
+> The ATS control is exclusively owned by the iommu driver. Hence, move
+> cache_tag_assign_domain() after PCI ATS enabling to make sure that the
+> device TLB cache tag is created for the domain.
+>=20
+> Fixes: 3b1d9e2b2d68 ("iommu/vt-d: Add cache tag assignment interface")
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-why not follow below merging produce?
-1) you send this patch serials to Linus to merge within linus mainline tree
-2) luiz then pull your changes from linus mainline tree.
-
->>> On Wed,  5 Jun 2024 14:38:48 +0200 you wrote:
->>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>
->>>> Hi!
->>>>
->>>> These are the power sequencing patches sent separately after some
->>>> improvements suggested by Bjorn Helgaas. I intend to pick them up into a
->>>> new branch and maintain the subsystem from now on. I then plan to
->>>> provide an immutable tag to the Bluetooth and PCI subsystems so that the
->>>> rest of the C changes can be applied. This new branch will then be
->>>> directly sent to Linus Torvalds for the next merge window.
->>>>
->>>> [...]
->>>
->>> Here is the summary with links:
->>>   - [v9,1/2] power: sequencing: implement the pwrseq core
->>>     https://git.kernel.org/bluetooth/bluetooth-next/c/249ebf3f65f8
->>>   - [v9,2/2] power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets
->>>     https://git.kernel.org/bluetooth/bluetooth-next/c/2f1630f437df
->>>
->>> You are awesome, thank you!
->>
-> 
-> Why are you top-posting anyway?
-> 
-it is caused by my bad mail client settings. thanks for reminder.
-> Bart
-
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
