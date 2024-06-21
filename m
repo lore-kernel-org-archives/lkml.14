@@ -1,151 +1,124 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4239315F336;
-	Fri, 21 Jun 2024 15:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2CA757F8;
+	Fri, 21 Jun 2024 15:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718985205; cv=none; b=NVmONKlAm2IgLzuTwPuk9EqzlvMcAe79H9ee3ZzKukXHTqQXFF8WiBRUpx34NL3dVrr3CZgO5Kk7blK24iQ2ZDM/2/2mfj3YPN5meYiJhQ/949xTNXBsVly0mwujwF0IoXjm6dJLc7cS4M8nMRTL/LZrVTwcwQb1rD5afDDW5vo=
+	t=1718985362; cv=none; b=FAqQsQNsKJTDI93q5COV0Mt9WMvSRzbfOxO5r1TOToHBaodLCRDS2avoYT+LgVgB9turtVJyp5EPlvo3ZG7o+f4XNB+2uiegDn4KCNe9lWEvzUawDvMg1hsW5L9i6sU8radLWvIW9ycTreAT60fgFz2OhWi7yH1U3v/SM4BTkr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718985205; c=relaxed/simple;
-	bh=GPgLEchZruVRitbipEYfYC0XmxVee3r1w12ag6nTYsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tar49RZxaFYOj/EM0TgjQfUabQbPkRerS9hHbJ9Bjs3WLclx1wfrNnfGw5lJesJCElSgwwoVVhK/KgwsE2ZftqsFLcn4RAmuc4G70DtvB+bPDnxnYnO+wYe3+ctLjCbNAEzOFgQeQ6Pc/Hndhv98vVLRfDGDrvviLyLzGU7CEOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=21o2wWoH; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	s=arc-20240116; t=1718985362; c=relaxed/simple;
+	bh=Snn796INTt72RBeUt8uePOrvUHDAmT55jeQwCK7Wtbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X9ufky7YyEfw0BesYVri6KPXVHGD5ykCr2ODRZkNxpZUAeaIbSMAXX8dNU75o2jWlSa/xrvQimzZftvi587awbHOdeUe8vVk6qBl/XUV+KSl4uGmV6WXJLQ+9qV4hkIuVniICwJf+H5uYRqc+zSbyP8l6Q0P+m/tJ5heTQGv7/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVIkg+be; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="21o2wWoH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1718985186; x=1719589986;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=sbGk7wulXzOIMg91aRqsVsZOGf+Ccg0ki+XG8mSiHiM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=21o2wWoHTbCBn71ZbD1PVhN8L1TFZpuHhGK8MAw+UMIwKyfAVqPE1y6OtXnUdGgy
-	 Kk2P5pAlY3ZxCl8g5L3v+spScnLlYWsW5B5vArnfuvJr2JCQxCXkdGYkMPolrRGAG
-	 mV2LLzkXIIL5yM/9om+RO9ueBxZWG9NYyCdAunLqtOPLcfq9NUFgT8Sc7xXCV5rXB
-	 H2Idw6iAI8MMv2ZD5RoNmbqCiuIUqqI4wUb6hw/ltUAJSrRdB4xILcZ9kitPKO5Uz
-	 kikZSJ4Igj0m+6FeNQFSGg7IKCIwtqcx1BqmvCgU/UU8gxhybMT3I5VxpwL4BbCCq
-	 JO9yd8oo1Zns7HhutQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.76] ([62.226.32.41]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MLiTI-1s39dL2GCe-00UbEH; Fri, 21 Jun 2024 17:47:31 +0200
-Message-ID: <6759ce9f-281d-4fcd-bb4c-b784a1cc5f6e@oldschoolsolutions.biz>
-Date: Fri, 21 Jun 2024 17:46:06 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVIkg+be"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABA8C2BBFC;
+	Fri, 21 Jun 2024 15:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718985362;
+	bh=Snn796INTt72RBeUt8uePOrvUHDAmT55jeQwCK7Wtbg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FVIkg+beoVZ1j0a93xJTvx+onPSSLeZEJERLyZ9DOoqlk32OpmfeW/gm7diyrZopA
+	 92vj+9+pI5wxWo8yCWRC6DKG8A3reo2QhmWXwfnsucocLe5ZdiKB+kkkyL6wRzR7SR
+	 x7GT99IWD9FiOFRGhl1/3hj1gRKlevyuN530nP6dOw+pOzoFl7Sk1IoYA6hKUG982o
+	 ic02KtfJCsSpFaqZm8zf50ARYOi6+AD79+/1DINfpfaqG5Vw2QtVwqjitr4DQtaA2j
+	 H2ArHYitZ6+X9Zp9iRWm1PrpPMnMBvNifzgyaBTfSGw6njONpi/9uhrQ8qLvnISRzY
+	 daSQCYVFVlrbg==
+Date: Fri, 21 Jun 2024 08:56:00 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
+ Cochran <richardcochran@gmail.com>, Radu Pirea
+ <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
+ Gospodarek <andy@greyhouse.net>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
+ Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Subject: Re: [PATCH net-next v15 13/14] net: ethtool: tsinfo: Add support
+ for hwtstamp provider and get/set hwtstamp config
+Message-ID: <20240621085600.5b7aa934@kernel.org>
+In-Reply-To: <20240621105408.6dda7a0e@kmaincent-XPS-13-7390>
+References: <20240612-feature_ptp_netnext-v15-0-b2a086257b63@bootlin.com>
+	<20240612-feature_ptp_netnext-v15-13-b2a086257b63@bootlin.com>
+	<20240617184331.0ddfd08e@kernel.org>
+	<20240621105408.6dda7a0e@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: cpufreq/thermal regression in 6.10
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Johan Hovold <johan@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
- <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
- <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
-Content-Language: en-US
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5QkJm8WvoESZ4VDAwZ3Vd4f0aJM7/R/cNI3G49l1iNKwJnzz92R
- zGI9ZJxOTSbp/huwR50hBTqJHAi1kBaqlfjH4cOuyUfuZDONrB5NSUkJqeBSGoOtNV79ABn
- NLwXRxdLKVRzH9LRU87CGl8BEFheyudCrhVTV7RnOMbwPRV0Z755E67LIAGYwBGefixOmPL
- rZAIKfSqq4MV8DW0W3VMQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:puLx8lytgao=;OvbuLcUWqO2GqyGm9ZDod3pwNdv
- rvwC2srqJer9lAERjUa7/ZtCcrn7KWrdEt08msoVjDCk8/YeAxQEXk53mARk7IeVZpQIuArtO
- ni5gx7KJl9DnOemlck4YR4cwwYarAOtUhO7s9vVrqunIB4PGB6AddKIdFHAn4Qs8UEkXNgWoB
- SwiyYyX4Xl3BOD1ZYbombwCTHKumSWJn6xik0H2AGeYQ9gkZtAy8+exHRFKEIbiJW7K46sLhh
- vHlSwQMCCtY6a82kD80jbX6mnyT4771zEohuOyI7IbacT2jD06lKLJ5agZu7P3qPTgWx4Ezjf
- UBjOTSCGhQwjkPn1/SJREzKft4aWcpsjh3S7Fsb6D/6YAfTtszP76x9n+jQnxnqCoTvuiqiiH
- Dh6kJaxruwYVgyiUyi+KWyz6/dRjn0H1WYt6lSJiF3N1X/QiLgSMSLklLOJQ5LBB2gMvyzETN
- EzV8HKFdx7UXTKcGcRfMDT5Q8JYP4jE+N4pWEM7b0XuPdLXCBOXobcbPZcGU0zYMxpOcLOci1
- yBcLA9K3Ho9Fdbsln4801ES+JGvzpJsgH8bdzvdRVL+ypEZDB7/allajYJdHoiDen11AP8aqU
- 9W2IZIkSTaBjUxHtsHj/ms/WqlyucXHJV4FeQk90Tjx1oDcCpMxFKfZeqCTVvrRq6rgMY8bfX
- /ZIL8bYWK6OAY87ydtR6/AQdzwQ/uwgVjsx0yT3XcvZzu80MR89cKuHFSfPKLbePeGEQVu/7N
- xt3epvlh8ggcERgH8/kZ/iGN+E2mFskxuKboJpgvb+UvB4ARY3h3XI=
 
-Hi there,
+On Fri, 21 Jun 2024 10:54:08 +0200 Kory Maincent wrote:
+> > > +const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_MAX=
+ + 1]
+> > > =3D { [ETHTOOL_A_TSINFO_HEADER]		=3D
+> > >  		NLA_POLICY_NESTED(ethnl_header_policy_stats),
+> > > +	[ETHTOOL_A_TSINFO_GHWTSTAMP] =3D
+> > > +		NLA_POLICY_MAX(NLA_U8, 1),   =20
+> >=20
+> > I think this can be an NLA_FLAG, but TBH I'm also confused about=20
+> > the semantics. Can you explain what it does from user perspective? =20
+>=20
+> As I described it in the documentation it replaces SIOCGHWTSTAMP:
+> "Any process can read the actual configuration by requesting tsinfo netli=
+nk
+> socket ETHTOOL_MSG_TSINFO_GET with ETHTOOL_MSG_TSINFO_GHWTSTAMP netlink
+> attribute set.
+>=20
+> The legacy usage is to pass this structure to ioctl(SIOCGHWTSTAMP) in the=
+      =20
+> same way as the ioctl(SIOCSHWTSTAMP).  However, this has not been impleme=
+nted  =20
+> in all drivers."
 
-unfortunately I experienced the issue with the fix applied. I had to
-revert this and=C2=A0 the original commit to get back to normal behaviour.=
- My
-system (also Lenovo Thinkpad X13s) uses the schedutil governor, the
-behaviour is as described from Steev and Johan. The full throttling
-happened during a package build and left the performance cores at 940800.
+I did see the words, just didn't get the meaning :> Couple of years
+from now hopefully newcomers won't even know ioctls exited, and
+therefore what they did. From the user perspective the gist AFAIU is
+that instead of *supported* we'll return what's currently *configured*.
 
-Cheers
+This feels a little bit too much like a muxed operation for me :(
+Can we create a separate commands for TSCONFIG_GET / _SET ?
+Granted it will be higher LOC, but hopefully cleaner ?
+Or we can add the configured as completely new attrs, but changing
+meaning of existing attrs based on a request flag.. =F0=9F=99=82=E2=80=8D=
+=E2=86=94=EF=B8=8F=EF=B8=8F
 
-Jens
+> > > +	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER] =3D
+> > > +		NLA_POLICY_NESTED(ethnl_tsinfo_hwtstamp_provider_policy),
+> > >  };
+> > > =20
+> > > +static int tsinfo_parse_hwtstamp_provider(const struct nlattr *nest,
+> > > +					  struct hwtst_provider *hwtst,
+> > > +					  struct netlink_ext_ack *extack,
+> > > +					  bool *mod)
+> > > +{
+> > > +	struct nlattr
+> > > *tb[ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy)];   =20
+> >=20
+> > Could you find a more sensible name for this policy? =20
+>=20
+> I am not a naming expert but "hwtstamp_provider" is the struct name I hav=
+e used
+> to describe hwtstamp index + qualifier and the prefix of the netlink nest=
+ed
+> attribute, so IMHO it fits well.
+> Have you another proposition to clarify what you would expect?
 
-On 6/11/24 12:54, Rafael J. Wysocki wrote:
-> On Mon, Jun 10, 2024 at 1:17=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
-.org> wrote:
->> Hi,
->>
->> Thanks for the report.
->>
->> On Sun, Jun 9, 2024 at 9:53=E2=80=AFAM Johan Hovold <johan@kernel.org> =
-wrote:
->>> Hi,
->>>
->>> Steev reported to me off-list that the CPU frequency of the big cores =
-on
->>> the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
->>> frequency with 6.10-rc2.
->>>
->>> I just confirmed that once the cores are fully throttled (using the
->>> stepwise thermal governor) due to the skin temperature reaching the
->>> first trip point, scaling_max_freq gets stuck at the next OPP:
->>>
->>>          cpu4/cpufreq/scaling_max_freq:940800
->>>          cpu5/cpufreq/scaling_max_freq:940800
->>>          cpu6/cpufreq/scaling_max_freq:940800
->>>          cpu7/cpufreq/scaling_max_freq:940800
->>>
->>> when the temperature drops again.
->> So apparently something fails to update its frequency QoS request.
->>
->> Would it be possible to provoke this with thermal debug enabled
->> (CONFIG_THERMAL_DEBUGFS set) and see what's there in
->> /sys/kernel/debug/thermal/?
->>
->>> This obviously leads to a massive performance drop and could possibly
->>> also be related to reports like this one:
->>>
->>>          https://lore.kernel.org/all/CAHk-=3DwjwFGQZcDinK=3DBkEaA8FSyV=
-g5NaUe0BobxowxeZ5PvetA@mail.gmail.com/
->>>
->>> I assume the regression may have been introduced by all the thermal wo=
-rk
->>> that went into 6.10-rc1, but I don't have time to try to track this do=
-wn
->>> myself right now (and will be away from keyboard most of next week).
->>>
->>> I've confirmed that 6.9 works as expected.
->> Well, I'd need to ask someone else affected by this, then.
-> If this is the step-wise governor, the problem might have been
-> introduced by commit
->
-> 042a3d80f118 thermal: core: Move passive polling management to the core
->
-> which removed passive polling count updates from that governor, so if
-> the thermal zone in question has passive polling only and no regular
-> polling, temperature updates may stop coming before the governor drops
-> the cooling device states to the "no target" level.
->
-> So please test the attached partial revert of the above commit when you =
-can.
+Oh, I just meant that it's way to long. I know y'all youngsters use
+IDEs but I have it on good authority that there's still people in
+this community who use text editors they wrote themselves, and those
+lack auto-completion.. It's good to be more concise.
