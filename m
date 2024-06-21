@@ -1,104 +1,106 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CCB1C02;
-	Fri, 21 Jun 2024 09:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7741A1C02;
+	Fri, 21 Jun 2024 09:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718960632; cv=none; b=Sj8zLRBszASgs3HHxWdl99pxo4D4j5cYkzOrV//XnQLLEniMF10TQ6g39SGpcY1nWzvQrBMXLPHHkHJ1ZTO6WRVSjOm4V+BZciedjdvOqxaAw2UVnSiTLIpo/956ml9kK3sDEqPHZAM37LcH2jTbG56C/b3RhDTetpIrUSl7jaY=
+	t=1718960670; cv=none; b=ddaoHctMa2t/U7cC/uJuPUNiA3A++c6DeYNOt3L4YThkhI+165iTgAIBDaco3n0OYA2uYwDaH+ft4O2iYjhtFvgcvfOQS0jc7oEZpyBOw5OBDx5Aja9c+22uzEYJam5RVQTDXQDZvbXPciEIf/MXeJji98wxNDba/tZwSZrATTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718960632; c=relaxed/simple;
-	bh=I0zfmPIPdWucFGUWqrrjV/VMbgOjve+/Bk4AJ4J0PIA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qL6n7cZUPFrIdQQRv+/A+la1SWBkixx3F+R1156Nt1RMTE/dLHxRivB9Bd19teKoKQv73kC8ZXDCx/ETxGE9iFU9ZCtli/CZ+/M42lfHEGvRX5NZe/DTuagCl8t1x6/ZBcnlAHdM5JlW25wWZovTsBN71yCmmVMCWUK18Yfc+eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=TMbHACwH; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="TMbHACwH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=e2hpe1iGw8BtPBrOiCtpgk5Mrgh2fKvph5/Cmhjmvig=; t=1718960630; x=1719565430; 
-	b=TMbHACwHIJlMy5bVVyPGLK4lWdtzwiTWfCk8RFgN2YzSaGHitaoH/bOL1FcNXVAPQ1XbaW3Es6u
-	1BKKqcxMICd0ddqNjf9oMH9aJNNSt2WYTK7xEPycYgxYX/8SOE5D3kBJrHWokNeialE/5AwYq5wIC
-	SN5s/GDG0B6HCMpUBlr9TLWZcWlHy4ujWPOaJRWBk5M7W5tTY/T86XSJTa5ajD25T99WSGz9g4qxR
-	OHvwOIbWc74+aFBPktD9n4zF+/fdfe18wsEk7X0x66OJg3B7knH6ElT1fxJVIDJK0adRQCiRS1tM8
-	uFBPqFWYQXH7KiVFBQfzKVnENsETUwO7mnZA==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sKaBO-00000002A8I-1bJM; Fri, 21 Jun 2024 11:03:46 +0200
-Received: from p5b13a475.dip0.t-ipconnect.de ([91.19.164.117] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sKaBO-00000001fU8-2TCt; Fri, 21 Jun 2024 11:03:46 +0200
-Message-ID: <a623c1979ac494d01977abe6dfc22e8381dc6e4f.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH 07/15] parisc: use generic sys_fanotify_mark
- implementation
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Arnd Bergmann <arnd@arndb.de>, Helge Deller <deller@gmx.de>, Arnd
- Bergmann <arnd@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, 
- linux-kernel@vger.kernel.org
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, "David S .
- Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
- sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
- Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org, Brian Cain <bcain@quicinc.com>,
- linux-hexagon@vger.kernel.org, guoren <guoren@kernel.org>, 
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, Heiko Carstens
- <hca@linux.ibm.com>,  linux-s390@vger.kernel.org, Rich Felker
- <dalias@libc.org>,  linux-sh@vger.kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>,  linux-fsdevel@vger.kernel.org, Xi Ruoyao
- <libc-alpha@sourceware.org>,  "musl@lists.openwall.com"
- <musl@lists.openwall.com>, LTP List <ltp@lists.linux.it>, Adhemerval
- Zanella Netto <adhemerval.zanella@linaro.org>
-Date: Fri, 21 Jun 2024 11:03:45 +0200
-In-Reply-To: <ba14c4fb-e6a7-46b3-a030-081482264a99@app.fastmail.com>
-References: <20240620162316.3674955-1-arnd@kernel.org>
-	 <20240620162316.3674955-8-arnd@kernel.org>
-	 <e80809ba-ee81-47a5-9b08-54b11f118a78@gmx.de>
-	 <1537113c4396cd043a08a72bdca80cccfa2d54d9.camel@physik.fu-berlin.de>
-	 <ba14c4fb-e6a7-46b3-a030-081482264a99@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1718960670; c=relaxed/simple;
+	bh=FOLBBN7Y7P9cFK4QrPPCIKjuDb5SFjIq9ErBPq1XOPI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QLIvvw7bkX3jxZgU3KmwBwGANIdyyYHYUzzs9CmBNbga1BeiHmTKtBbO4z128CRmA+idt+0VwPOcbyIDbn7U4s3hhI4VIkwn75BMAUaDCuzggCBdNrpu6Eqk2+rb4HLws+X8n/aFh3ii3VNoCUaKs34M377gCXiScAuKi/7ZFyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W5BHL4Qwtz6K73W;
+	Fri, 21 Jun 2024 17:03:58 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 95BC8140AA7;
+	Fri, 21 Jun 2024 17:04:24 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 21 Jun
+ 2024 10:04:24 +0100
+Date: Fri, 21 Jun 2024 10:04:23 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>, Shiju
+ Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>, Ard Biesheuvel
+	<ardb@kernel.org>, <linux-edac@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/3] efi/cper: Adjust infopfx size to accept an extra
+ space
+Message-ID: <20240621100423.0000624c@Huawei.com>
+In-Reply-To: <a8cfcd9e9827770de748db7be44362a98c957642.1718906288.git.mchehab+huawei@kernel.org>
+References: <cover.1718906288.git.mchehab+huawei@kernel.org>
+	<a8cfcd9e9827770de748db7be44362a98c957642.1718906288.git.mchehab+huawei@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 2024-06-21 at 10:56 +0200, Arnd Bergmann wrote:
-> The patches are all independent of one another, except for a couple
-> of context changes where multiple patches touch the same lines.
+On Thu, 20 Jun 2024 20:01:44 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-OK.
+> Compiling with W=3D1 with werror enabled produces an error:
+>=20
+> drivers/firmware/efi/cper-arm.c: In function =E2=80=98cper_print_proc_arm=
+=E2=80=99:
+> drivers/firmware/efi/cper-arm.c:298:64: error: =E2=80=98snprintf=E2=80=99=
+ output may be truncated before the last format character [-Werror=3Dformat=
+-truncation=3D]
+>   298 |                         snprintf(infopfx, sizeof(infopfx), "%s ",=
+ newpfx);
+>       |                                                                ^
+> drivers/firmware/efi/cper-arm.c:298:25: note: =E2=80=98snprintf=E2=80=99 =
+output between 2 and 65 bytes into a destination of size 64
+>   298 |                         snprintf(infopfx, sizeof(infopfx), "%s ",=
+ newpfx);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~
+>=20
+> As the logic there adds an space at the end of infopx buffer.
+> Add an extra space to avoid such warning.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-> Feel free to pick up the sh patch directly, I'll just merge whatever
-> is left in the end. I mainly want to ensure we can get all the bugfixes
-> done for v6.10 so I can build my longer cleanup series on top of it
-> for 6.11.
+Trivial suggestion inline. Either way LGTM
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-This series is still for 6.10?
+> ---
+>  drivers/firmware/efi/cper-arm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-=
+arm.c
+> index fa9c1c3bf168..d9bbcea0adf4 100644
+> --- a/drivers/firmware/efi/cper-arm.c
+> +++ b/drivers/firmware/efi/cper-arm.c
+> @@ -240,7 +240,7 @@ void cper_print_proc_arm(const char *pfx,
+>  	int i, len, max_ctx_type;
+>  	struct cper_arm_err_info *err_info;
+>  	struct cper_arm_ctx_info *ctx_info;
+> -	char newpfx[64], infopfx[64];
+> +	char newpfx[64], infopfx[65];
 
-Adrian
+Maybe make it explicit so we don't wonder if it was
+a typo in future. Something like?
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+	char newpfx[64];
+	char infofx[ARRAY_SIZE(newpfx) + 1];
+
+> =20
+>  	printk("%sMIDR: 0x%016llx\n", pfx, proc->midr);
+> =20
+
