@@ -1,64 +1,64 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B47171062;
-	Fri, 21 Jun 2024 11:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2094813777F;
+	Fri, 21 Jun 2024 11:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969860; cv=none; b=ZV5tYUXCvjBGtvfflL1zxWIs5m9ELfg44uuMknDeulPJ02sOX1y1MYz1qJvHLQZTyBx5yWSxS+J2kLDGwU37o+z8rrn/0tYTagqQaZBLWqr2/H7mcifksXAvK6hS0m+ik7SG1s71mrFiFWFHij+eQwgLxcD36SW+RS4EGmuZkpc=
+	t=1718969861; cv=none; b=OeNBtV6EQyF8BiNoYw5zhu3xoY2TxDih2eQo7b7F0kvuFpiJ+lrCSVyLvJt9HcGVVpTTzL177Bdnqu4wYTNP/vHLgHk9BwULkW5QaT9VmYtZqBHj8ZT5rX+ygZg+58Jigvxm61gp6xRn+BFN0m6j0BuxRdvLQdbWs7lcFZqj3Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969860; c=relaxed/simple;
-	bh=3WcPujpWXKuusuRXNXl0oj4iM/PsQ81qZTgoIsOSOhY=;
+	s=arc-20240116; t=1718969861; c=relaxed/simple;
+	bh=yEkUFwHzqM2QxOJ6rCJjLwbF170i74UCFAzqXMXYm3s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hMrfuWx8BAOyQpDFM1dpdOr2NpqaZyfK55cNK6Uum8dwGph2PktU5PjH0umLeNu5ieZzxL/ZZ7Z4AjuWhi+5GdV4h+1iZM60GzOoHGYLFIH929toYnqwgYk2ahv16B+AbsqCweT2WrmQOdt7LuMg/DZ7BHo2+MrZiW7X7qFYFFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ViPKdPPC; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=nFC5IOoQa0xz9etiF80ElV8tcsQEPN5zCnKElI/DSGG7SN5p+CofyGy2hmB4lODcdqVpdG3prqh1oXWGA+mdxvQb1VRQjTtBJnFiurdlI9fHfdZTiCpH6aK1N16K//rI26jXgfoBm66Xe5+9C9tpCZAiJyMSkYoPQPt091rn20Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OuMN9lLw; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ViPKdPPC"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBSBUa019894;
-	Fri, 21 Jun 2024 11:37:17 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OuMN9lLw"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBTkcI029866;
+	Fri, 21 Jun 2024 11:37:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:mime-version; s=pp1; bh=kU/N+IjLjtGiv
-	jpGyVY04YO0GR9T1vNZaCjuWWP4qac=; b=ViPKdPPCUBDvU35SfJ6p9rmypJr9K
-	Zv+qNQQ+JxZ0NrFxmsSSXRzPow1ZionfdjRPxprOQ++JoctSelObF781lZ+EydGj
-	icJR90O88SLO6HueVW5kLLqsPHQtQ5MOImNHla6iP18SRjI+VVE3t5+bFJ6QlKH9
-	Zv57rOLqtefK6ssVIg5p1pnoA4uFrZl3HHb/CjZz00Qk4UzZGj5viuMaEU8EvQcS
-	HSk0h9+w7TXn/S+NL3uraU4PqyZZXeO+j1H8yEveeBqN9e7/KNn2rMX6nZqID6fG
-	yRP8mdRdfJqUMXhpytPKUDzeTeUKO30SjeCncCidXUBMNCEidzqyuvEAw==
+	:mime-version:content-transfer-encoding; s=pp1; bh=1qF7H4bGHDZ6i
+	OOMBP071rdyF1q1YAWA6gRStiWbHSM=; b=OuMN9lLwF/oqbO2ymxq2Xijx0Y0/W
+	KeJBrZ//0PA/P5dWhWO/w9grmiPDirB4wwk6BOdSH4iezZUxUz2UWIpzpI3px5Fr
+	6OApwtfgoA29V2WebA9kKu0mJidZU4Le9dUfuyIWutaQyUZ25kWWETc1IPkykurh
+	p5ASHHM4vkdIdLfjYB2PIMk1lF0x/JakVPJTEyd/njUbTkNGAg9+lUGUE4wcfxFn
+	+Glkm23mCT5lX+Uwr+fIHrWwcyrRyEzMHmJ57jIwrK6f8wY+Dcd4vj+Lbic7QsZp
+	hMbHyq5X4RhDKdSHBdl5RsYU+rFIvWNKBOJZajMwHRFbnxhzeKygCGmuw==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw6ws09b4-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw8p080mh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:37:17 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45LBbGli001454;
-	Fri, 21 Jun 2024 11:37:16 GMT
+	Fri, 21 Jun 2024 11:37:20 +0000 (GMT)
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45LBbJEh008790;
+	Fri, 21 Jun 2024 11:37:19 GMT
 Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw6ws09b0-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw8p080md-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:37:16 +0000 (GMT)
+	Fri, 21 Jun 2024 11:37:19 +0000 (GMT)
 Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L9OhiN007658;
-	Fri, 21 Jun 2024 11:37:15 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yvrspeupb-1
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L9OhiP007658;
+	Fri, 21 Jun 2024 11:37:18 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yvrspeupj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:37:15 +0000
+	Fri, 21 Jun 2024 11:37:18 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45LBb97g13500744
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45LBbCHq51380564
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Jun 2024 11:37:11 GMT
+	Fri, 21 Jun 2024 11:37:14 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B19292004E;
-	Fri, 21 Jun 2024 11:37:09 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id BE3F92004D;
+	Fri, 21 Jun 2024 11:37:12 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 25F712004D;
-	Fri, 21 Jun 2024 11:37:09 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 34A122004E;
+	Fri, 21 Jun 2024 11:37:12 +0000 (GMT)
 Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Jun 2024 11:37:09 +0000 (GMT)
+	Fri, 21 Jun 2024 11:37:12 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -79,66 +79,56 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v7 01/38] ftrace: Unpoison ftrace_regs in ftrace_ops_list_func()
-Date: Fri, 21 Jun 2024 13:34:45 +0200
-Message-ID: <20240621113706.315500-2-iii@linux.ibm.com>
+Subject: [PATCH v7 06/38] kmsan: Fix kmsan_copy_to_user() on arches with overlapping address spaces
+Date: Fri, 21 Jun 2024 13:34:50 +0200
+Message-ID: <20240621113706.315500-7-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240621113706.315500-1-iii@linux.ibm.com>
 References: <20240621113706.315500-1-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: F1_JCUhnzC64Aj26DIom9R-aeHKzDwbZ
-X-Proofpoint-GUID: ppnVlnvg0ssqFbVxEhp1S8OzAAw0DCcb
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ZhQY6_lca67g0ijpbVVKolBQCQddUqc3
+X-Proofpoint-ORIG-GUID: _dvfEb5eIB4856vofN3h5INjSUP5phgP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 phishscore=0
- priorityscore=1501 adultscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ suspectscore=0 priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015
+ impostorscore=0 phishscore=0 mlxlogscore=799 lowpriorityscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2406210084
 
-Architectures use assembly code to initialize ftrace_regs and call
-ftrace_ops_list_func(). Therefore, from the KMSAN's point of view,
-ftrace_regs is poisoned on ftrace_ops_list_func entry(). This causes
-KMSAN warnings when running the ftrace testsuite.
+Comparing pointers with TASK_SIZE does not make sense when kernel and
+userspace overlap. Assume that we are handling user memory access in
+this case.
 
-Fix by trusting the architecture-specific assembly code and always
-unpoisoning ftrace_regs in ftrace_ops_list_func.
-
-The issue was not encountered on x86_64 so far only by accident:
-assembly-allocated ftrace_regs was overlapping a stale partially
-unpoisoned stack frame. Poisoning stack frames before returns [1]
-makes the issue appear on x86_64 as well.
-
-[1] https://github.com/iii-i/llvm-project/commits/msan-poison-allocas-before-returning-2024-06-12/
-
+Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
 Reviewed-by: Alexander Potapenko <glider@google.com>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- kernel/trace/ftrace.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/kmsan/hooks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 65208d3b5ed9..c35ad4362d71 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7407,6 +7407,7 @@ __ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
- void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
- 			       struct ftrace_ops *op, struct ftrace_regs *fregs)
- {
-+	kmsan_unpoison_memory(fregs, sizeof(*fregs));
- 	__ftrace_ops_list_func(ip, parent_ip, NULL, fregs);
- }
- #else
+diff --git a/mm/kmsan/hooks.c b/mm/kmsan/hooks.c
+index 22e8657800ef..b408714f9ba3 100644
+--- a/mm/kmsan/hooks.c
++++ b/mm/kmsan/hooks.c
+@@ -267,7 +267,8 @@ void kmsan_copy_to_user(void __user *to, const void *from, size_t to_copy,
+ 		return;
+ 
+ 	ua_flags = user_access_save();
+-	if ((u64)to < TASK_SIZE) {
++	if (!IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) ||
++	    (u64)to < TASK_SIZE) {
+ 		/* This is a user memory access, check it. */
+ 		kmsan_internal_check_memory((void *)from, to_copy - left, to,
+ 					    REASON_COPY_TO_USER);
 -- 
 2.45.1
 
