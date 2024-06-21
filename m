@@ -1,47 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8213528399;
-	Fri, 21 Jun 2024 12:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B622114F9DD;
+	Fri, 21 Jun 2024 12:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718972187; cv=none; b=fux/ZBxXa58iLYUrWvc0KIR3lrWqJpIoeQlQMGj6iadujQ4Sh+xeGUDFHSW4QkWRVngs+ibhwRvBZXHVITMLU7jrgNjSyg0vy8pubi8KYgqXmpby0NM45euDn35b+GqfStPM6WPtNlQETbfKE6WNPAQ2yzeiZ/98RePTLgLJb4M=
+	t=1718972189; cv=none; b=mpI/W65omMUm1/EZ07uoOqEZUEMArLZKByXf3IO+ofkMjjAzlQWOM3KJS9IK66cwgcVt4ogcpl+QPsVvIjrOnxDSW8377Ss09usC3vTUuULUzE5piRt2JBtKvo+T1zFXjsNNX7ECTEWki7K1KnrzSVGcbN26FwYTgahP8XN5zfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718972187; c=relaxed/simple;
-	bh=RrIkAfeF7Vo501++09i2l4ssWDTawSjUb/hFqT0/uEU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fibczHtTtOpxdihGsCPWBPkDAtF5LiqyYgwslK1ok40gflIZ+owBU/VIX0vKkaLizTbJqnOp+JMDToNgGDpPYaQdizruzlX0NLxKCgiwYDL5taNWIqge8lGusZuKnIvfsEmx7rLZfyjWA6xwL87S2b7ADzfrUXdRAaUqCdwC2Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=azfX01yH; arc=none smtp.client-ip=68.232.153.233
+	s=arc-20240116; t=1718972189; c=relaxed/simple;
+	bh=7vszX0GPIg2siXu/OlMY9o6mYTO9k20jy+KhfXa1y+g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EmJ7zxihspuGlgAPJmcTdcuMgfgP0NQWJX+Zxg4TFCXGpwIkU4wJuVGAFEt0o2Qg21W35ZeqIr2Cw1nazytsb4K4d++wZYES01/TNPYk9pcKkjDXrPTwuc8pQOh0BLtX6dAC0PJHYHZqmIMhkxGo8XDDmk/qjV2VSxYfcB6+ejI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pSaEW7v9; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="azfX01yH"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pSaEW7v9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718972186; x=1750508186;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RrIkAfeF7Vo501++09i2l4ssWDTawSjUb/hFqT0/uEU=;
-  b=azfX01yHOZvsK6ifAdoHH2/AZGRJSgWCt5wjePIlLYwf3B7+W/0jda8F
-   IQiFYwQMcPhYXNTsONS9j37Dilvrz8feda3eBHRxeagETXprbQGo2z1FL
-   Zus8SCLUsUgfjENie2n4QtCeJ19ZtgEOZP8bXxHUqp7Qdhpt2lD1AFili
-   aqeS1Wwdb7WS0DY8Zk6OO4fqXuxjBGIcKgz5fgycK+XDm8e9149t3HJxT
-   ueO6bRnz4Cz/29JNeQ7Grch+gt3moQs4tue4Kd0RclWntHFIRsV2fWMyq
-   rh1hTw2B7DaBtiUnQNqMSHL6cEH9cYcDkQ+RsGaX6IaF+GrV05ljpHen/
-   g==;
+  t=1718972188; x=1750508188;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7vszX0GPIg2siXu/OlMY9o6mYTO9k20jy+KhfXa1y+g=;
+  b=pSaEW7v9R0y5zp9QK/iv/X/WlRI6iRmRFYM+HCk9EJDl71xyexo9bDo2
+   gRFTweXVFKmTzyVp7lKsxaYjo60bGi6q3kE96/ZJ1Evw5HjCUEz93XA4Q
+   EMGTBPNvgvdxXFDJMrO/H44QUcv5ZdBiGmudQ/wFB9dshXi3m6QPCN4QY
+   60k9ox4bsde0zbR1lapfin2eYLVkmNY/I4fftXmCm3ZWNc7dW1461sb+k
+   kBN8JFO7MfI0Qi+TxUKM4sBOlSbNPiUkFugWzF8kWmVCoF8MDL56PsR/G
+   8O5MfH3AVadKcOfyAr+iIVo+VUI4kUkgu6F+xZQlFKavflk5e3QRPbv2I
+   w==;
 X-CSE-ConnectionGUID: gjF6r6nLSZ2qzzloD0+0Lw==
-X-CSE-MsgGUID: fzsivhhzSAyAVZBnb0DqIA==
+X-CSE-MsgGUID: ZkfncO4qRSK8Vja8P2LEkw==
 X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
-   d="scan'208";a="28341527"
+   d="scan'208";a="28341532"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 05:16:25 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 05:16:26 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 21 Jun 2024 05:16:01 -0700
+ 15.1.2507.35; Fri, 21 Jun 2024 05:16:09 -0700
 Received: from ROB-ULT-M76677.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 21 Jun 2024 05:15:58 -0700
+ 15.1.2507.35 via Frontend Transport; Fri, 21 Jun 2024 05:16:06 -0700
 From: Andrei Simion <andrei.simion@microchip.com>
 To: <brgl@bgdev.pl>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
@@ -49,11 +50,14 @@ To: <brgl@bgdev.pl>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 	<gregkh@linuxfoundation.org>
 CC: <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	Andrei Simion <andrei.simion@microchip.com>
-Subject: [PATCH v2 0/3] Read MAC address through NVMEM for sama7g5ek
-Date: Fri, 21 Jun 2024 15:13:37 +0300
-Message-ID: <20240621121340.114486-1-andrei.simion@microchip.com>
+	Claudiu Beznea <claudiu.beznea@microchip.com>, Andrei Simion
+	<andrei.simion@microchip.com>
+Subject: [PATCH v2 2/3] ARM: dts: at91: at91-sama7g5ek: add EEPROMs
+Date: Fri, 21 Jun 2024 15:13:39 +0300
+Message-ID: <20240621121340.114486-3-andrei.simion@microchip.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240621121340.114486-1-andrei.simion@microchip.com>
+References: <20240621121340.114486-1-andrei.simion@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,41 +67,85 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This series proposes to add EEPROM support and reading MAC addresses through
-NVMEM (via Devicetree) for sama7g5ek:
-- Add in DT bindings document the EEPROM compatibles : "at24,mac02e4" and
-"at24,mac02e6"
-- Update to the driver to support "at24,mac02e4" and
-"at24,mac02e6" and adjusting offset for those 24AA025E{48, 64}.
-- Added the nodes in devicetree for eeproms where are stored eui48 MAC,
-and update gmac nodes to read the MAC via devicetree through NVMEM.
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-------------------------------------------------------------------
+Add EEPROMs and nvmem-layout to describe eui48 mac address region.
+
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Co-developed-by: Andrei Simion <andrei.simion@microchip.com>
+Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
+---
 v1 -> v2:
-* dt-bindings: eeprom: at24: Add at24,mac02e4 and at24,mac02e6
-  - change pattern into "^atmel,(24(c|cs|mac)[a-z0-9]+|spd)$" to keep simpler
+- remove unnecessary #address-cells #size-cells
+---
+ .../arm/boot/dts/microchip/at91-sama7g5ek.dts | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-* eeprom: at24: avoid adjusting offset for 24AA025E{48, 64}
-  - no change
-
-* ARM: dts: at91: at91-sama7g5ek: add EEPROMs
-  - remove unnecessary #address-cells #size-cells
-
-------------------------------------------------------------------
-Andrei Simion (1):
-  dt-bindings: eeprom: at24: Add at24,mac02e4 and at24,mac02e6
-
-Claudiu Beznea (2):
-  eeprom: at24: avoid adjusting offset for 24AA025E{48, 64}
-  ARM: dts: at91: at91-sama7g5ek: add EEPROMs
-
- .../devicetree/bindings/eeprom/at24.yaml      | 10 ++-
- .../arm/boot/dts/microchip/at91-sama7g5ek.dts | 40 ++++++++++
- drivers/misc/eeprom/at24.c                    | 73 +++++++++++--------
- 3 files changed, 89 insertions(+), 34 deletions(-)
-
-
-base-commit: b992b79ca8bc336fa8e2c80990b5af80ed8f36fd
+diff --git a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+index 20b2497657ae..266ca71f48c3 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+@@ -403,6 +403,42 @@ i2c8: i2c@600 {
+ 		i2c-digital-filter;
+ 		i2c-digital-filter-width-ns = <35>;
+ 		status = "okay";
++
++		eeprom0: eeprom@52 {
++			compatible = "atmel,24mac02e4";
++			reg = <0x52>;
++			size = <256>;
++			pagesize = <16>;
++			vcc-supply = <&vdd_3v3>;
++
++			nvmem-layout {
++				compatible = "fixed-layout";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				eeprom0_eui48: eui48@fa {
++					reg = <0xfa 0x6>;
++				};
++			};
++		};
++
++		eeprom1: eeprom@53 {
++			compatible = "atmel,24mac02e4";
++			reg = <0x53>;
++			size = <256>;
++			pagesize = <16>;
++			vcc-supply = <&vdd_3v3>;
++
++			nvmem-layout {
++				compatible = "fixed-layout";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				eeprom1_eui48: eui48@fa {
++					reg = <0xfa 0x6>;
++				};
++			};
++		};
+ 	};
+ };
+ 
+@@ -440,6 +476,8 @@ &pinctrl_gmac0_mdio_default
+ 		     &pinctrl_gmac0_txck_default
+ 		     &pinctrl_gmac0_phy_irq>;
+ 	phy-mode = "rgmii-id";
++	nvmem-cells = <&eeprom0_eui48>;
++	nvmem-cell-names = "mac-address";
+ 	status = "okay";
+ 
+ 	ethernet-phy@7 {
+@@ -457,6 +495,8 @@ &gmac1 {
+ 		     &pinctrl_gmac1_mdio_default
+ 		     &pinctrl_gmac1_phy_irq>;
+ 	phy-mode = "rmii";
++	nvmem-cells = <&eeprom1_eui48>;
++	nvmem-cell-names = "mac-address";
+ 	status = "okay"; /* Conflict with pdmc0. */
+ 
+ 	ethernet-phy@0 {
 -- 
 2.34.1
 
