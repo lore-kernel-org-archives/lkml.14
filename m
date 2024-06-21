@@ -1,109 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5494D84D37;
-	Fri, 21 Jun 2024 02:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEEF839F4
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 02:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718937338; cv=none; b=ANetWwDXuelLJf84Lh/8OgF3eb2HkePv6SIIH5DMAv7Ulccf9fPL9p9Myg0UeCeK3EK3YYmPGZwxNU8e6BLXnHjx7zc0zshk956CJ5JG2BXlvlZnhQjfYa0MKjDPTBrsB43f3AeYRArwzwjDNTlGOmoDt8wNma7YWBDwJyyXUWU=
+	t=1718937405; cv=none; b=bgKRjOU+WBsdZYbewiGc/TUtn10Y1rzq6woDJCTYrE1a7UGYKXU3W9d+GBrJvBBWyOnL6j08fJUFgRkZoq6dPnBpPtxYQyVlAT75G+dHNohWtPVS6HgTfntb49gs2bIGO9JJ1rq2Ov00EXsZNDXCXdUe18REUCoPt3VMM9e6yIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718937338; c=relaxed/simple;
-	bh=cFrj54EHqVH+PxtlDbxJQZRdDgSVfzfm3iOshhgQvNI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sfMo2HTZlQTgTFkB/JdLLfT2ppmvKKIgNNtLMwcr1YB1BWG6hkNfwRFGtFeZEjQU/nf3/ex34nR0aH9jL2IkM4BbG+L8FM884p+66wqdm4hmPB51NjztE9YNSKDv1FQMHWw2WovhUsnNW+V1JiDArpuLKPdWqS3Lb6eFN4tUHss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gpFzaOJb; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718937405; c=relaxed/simple;
+	bh=XpCVL9a3HAJzUcDsCRQhjlGYzoYp9tRjJO+SvqvT5Uk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EKp2ba9B2GcU7iVbY0D5Q4CzddU6sd1Z9k5muQZqhLDUkwwKSuBxKtfYmsh4MSkdVp4ngDwW+U8VIjxGbRc2bRbIpAd+xbHGwCxNAoArWgX+VmyjdT2F0Gfj8k/Zw7Q3RbcTwn3pxXIkPurPqrdw40LUUBacsCAz0QGpfY0y4cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=edMnv3jy; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gpFzaOJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718937336; x=1750473336;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=cFrj54EHqVH+PxtlDbxJQZRdDgSVfzfm3iOshhgQvNI=;
-  b=gpFzaOJbGIkOmnfrV+dui7cluRQbgaXzavfbrRtP0Zlj4w8GRda2baUf
-   z9Oe3uWs4+SEGmyrSr1raNba8/23lfORdATjLnLY/nuaDhh0Tm/1vGAFH
-   5RcpCgnBWmMh4nXyeB8664ZoONPpDS488QULuBZ+dmrBmYWmpkIyOks15
-   cMiELZg8WXLMaINExDNMCjTpXFLXlPyqImR8KkiAIsVdduo0AW8VoZRx4
-   QQO/bnl1UJHvMNqqw8oJS8U/MLCClxM4QO8rZdYXySNUlWMyq7UOTTx++
-   DusxcS5nw3/xYju+8NJYMeyo5dO6EUnJBqC1G0u7wLGgZ+XV76SocStrt
-   w==;
-X-CSE-ConnectionGUID: q53tSpfXShy3s1rUYBQODA==
-X-CSE-MsgGUID: 0KO75eV/SSqUi7XsWQ3PtA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="16098512"
-X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
-   d="scan'208";a="16098512"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 19:35:36 -0700
-X-CSE-ConnectionGUID: JQ6mUdRcRLC0P+eh/BlGEA==
-X-CSE-MsgGUID: 4Dt0LsHsSR28BkTekb6V7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
-   d="scan'208";a="42526110"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 19:35:32 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,  Barry Song <21cnbao@gmail.com>,
-  akpm@linux-foundation.org,  shuah@kernel.org,  linux-mm@kvack.org,
-  chrisl@kernel.org,  hughd@google.com,  kaleshsingh@google.com,
-  kasong@tencent.com,  linux-kernel@vger.kernel.org,
-  linux-kselftest@vger.kernel.org,  Barry Song <v-songbaohua@oppo.com>,
- Philip Li <philip.li@intel.com>
-Subject: Re: [PATCH] selftests/mm: Introduce a test program to assess swap
- entry allocation for thp_swapout
-In-Reply-To: <d0b20f47-384d-49f1-8449-0da6da11089c@redhat.com> (David
-	Hildenbrand's message of "Thu, 20 Jun 2024 13:34:02 +0200")
-References: <20240620002648.75204-1-21cnbao@gmail.com>
-	<f3c18806-34ac-41d3-8c79-d7dd6504547e@arm.com>
-	<d0b20f47-384d-49f1-8449-0da6da11089c@redhat.com>
-Date: Fri, 21 Jun 2024 10:33:41 +0800
-Message-ID: <87sex710u2.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="edMnv3jy"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-70a365a4532so1395930a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1718937403; x=1719542203; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MZ29XVyr2F7PE1OlyXcXzhHYCQ8VYiYUNotAJkqWiP4=;
+        b=edMnv3jyRVSM96UEeE5zrtXULT9j7q9g40FQrZGgZqsF3o1u8JMaggI420I7p+YuXG
+         vmoFBaTIl2eZT+GdWug8DBt/B/XS5fMdHyiMxkUnGv3OmJqgu90WU3FkYbaFK07ske6h
+         Q1HJF0ZZNMoajZnXzpZjt3w4yma2MDadgFv5BNnVt/EF/o4Q6RYPmv0R5VXCQR1e1yt7
+         imYzmGRehFgDSQGjrzq1vKIPr0CQwqa8atSzk6JVgK6Lx3NEzfnSFtBu0f4FfY4XnUuS
+         rE1wl4CNRjWOM/7WDkYfD6ga9wZXbWqlUAC+MHKS5ATsVKvHtv1n+Q0x7R8wxLJadfi6
+         /OWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718937403; x=1719542203;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MZ29XVyr2F7PE1OlyXcXzhHYCQ8VYiYUNotAJkqWiP4=;
+        b=Nl7VNa4RENKofNW2Ws3b30ZmtjmiD+8cUX8zE5OUwILatQrMVDScf4BeIp7BRMYEVt
+         GRxejZrzM+vrQwlm477eITfaAqB2DuqOPnpEKwkMgdh4Jx2TzWAgmO+sH8O+cbnhkeVt
+         yqViv3lT4ZaJBce3hUnvmECyAo+oDM7eTpoCoTFYeyoUF6lgeD+pS32v7Ow2s6XrmVQT
+         +UeZhzmiVQc1KtPey3PG2aq8inc6M2F8jXZxzumUVZDSb90d1xEgOSibmnzXP27DBlM8
+         +iwMpYCZmk8DmVH4uIO9GcYdMz9pJXSZSL3NHPmeZui+QfBtmOHNpsneKR61TG+ybeqN
+         84oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvN2ajI79444+oGPQ8pO7uSYnw0/uParS4FVW0sXyZludeezgVdoofEZu3GJXR/cQ2n0VU7HjDcYrDmdYNnB97hMhz/Mt/LujCel/Y
+X-Gm-Message-State: AOJu0YyBnOZN0KGlQ9onXkdjJEhXH4+EFdkjt7aYtw68xmVdH8vAwqOY
+	syqFAN11LEK3XV4kQkJUWD2/40SDbg73J/ihCWh0oNIpaDEDGW9OOxXnDePpziQ=
+X-Google-Smtp-Source: AGHT+IErLRidr7JcKQ7BI8LT1ghwTfF/DmMM7EmNAp9djFIXW0H3ppZINezGbMwGItwjeJhSvbnvPw==
+X-Received: by 2002:a05:6a20:4c8f:b0:1b5:d143:72f2 with SMTP id adf61e73a8af0-1bcbb60f7f3mr7108765637.57.1718937403211;
+        Thu, 20 Jun 2024 19:36:43 -0700 (PDT)
+Received: from [10.54.24.59] ([143.92.118.3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb2f2690sm3337225ad.40.2024.06.20.19.36.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 19:36:42 -0700 (PDT)
+Message-ID: <03658a84-09e0-40a1-aa30-9f92e82a6b0d@shopee.com>
+Date: Fri, 21 Jun 2024 10:36:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] fuse: do not generate interrupt requests for fatal signals
+To: Bernd Schubert <bernd.schubert@fastmail.fm>,
+ Christian Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240613040147.329220-1-haifeng.xu@shopee.com>
+ <CAJfpegsGOsnqmKT=6_UN=GYPNpVBU2kOjQraTcmD8h4wDr91Ew@mail.gmail.com>
+ <a8d0c5da-6935-4d28-9380-68b84b8e6e72@shopee.com>
+ <CAJfpegsvzDg6fUy9HGUaR=7x=LdzOet4fowPvcbuOnhj71todg@mail.gmail.com>
+ <20240617-vanille-labil-8de959ba5756@brauner>
+ <2cf34c6b-4653-4f48-9a5f-43b484ed629e@shopee.com>
+ <db4ed4e5-7c23-468d-8bac-cee215ace19e@fastmail.fm>
+From: Haifeng Xu <haifeng.xu@shopee.com>
+In-Reply-To: <db4ed4e5-7c23-468d-8bac-cee215ace19e@fastmail.fm>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-David Hildenbrand <david@redhat.com> writes:
 
-> On 20.06.24 11:04, Ryan Roberts wrote:
->> On 20/06/2024 01:26, Barry Song wrote:
->>> From: Barry Song <v-songbaohua@oppo.com>
+
+On 2024/6/21 05:40, Bernd Schubert wrote:
+> 
+> 
+> On 6/20/24 08:43, Haifeng Xu wrote:
+>>
+>>
+>> On 2024/6/17 15:25, Christian Brauner wrote:
+>>> On Fri, Jun 14, 2024 at 12:01:39PM GMT, Miklos Szeredi wrote:
+>>>> On Thu, 13 Jun 2024 at 12:44, Haifeng Xu <haifeng.xu@shopee.com> wrote:
+>>>>
+>>>>> So why the client doesn't get woken up?
+>>>>
+>>>> Need to find out what the server (lxcfs) is doing.  Can you do a
+>>>> strace of lxcfs to see the communication on the fuse device?
 >>>
->>> Both Ryan and Chris have been utilizing the small test program to aid
->>> in debugging and identifying issues with swap entry allocation. While
->>> a real or intricate workload might be more suitable for assessing the
->>> correctness and effectiveness of the swap allocation policy, a small
->>> test program presents a simpler means of understanding the problem and
->>> initially verifying the improvements being made.
->>>
->>> Let's endeavor to integrate it into the self-test suite. Although it
->>> presently only accommodates 64KB and 4KB, I'm optimistic that we can
->>> expand its capabilities to support multiple sizes and simulate more
->>> complex systems in the future as required.
->> I'll try to summarize the thread with Huang Ying by suggesting this
->> test program
->> is "neccessary but not sufficient" to exhaustively test the mTHP swap-out path.
->> I've certainly found it useful and think it would be a valuable addition to the
->> tree.
->> That said, I'm not convinced it is a selftest; IMO a selftest should
->> provide a
->> clear pass/fail result against some criteria and must be able to be run
->> automatically by (e.g.) a CI system.
->
-> Likely we should then consider moving other such performance-related
-> thingies out of the selftests?
+>>> Fwiw, I'm one of the orignal authors and maintainers of LXCFS so if you
+>>> have specific questions, I may be able to help.
+>>
+>> Thanks. All server threads of lcxfs wokrs fine now.
+>>
+>> So can we add another interface to abort those dead request?
+>> If the client thread got killed and wait for relpy, but the fuse sever didn't 
+>> send reply for some unknown reason，we can use this interface to wakeup the client thread.
+> 
+> Isn't that a manual workaround? I.e. an admin or a script needs to trigger it?
 
-I think that it's good to distinguish between functionality and
-performance tests.  For example, 0-day test system will use virtual
-machines to do some functionality tests to improve efficiency.  But it's
-not good to run performance tests in such kind of virtual machines.
+Yes.
 
---
-Best Regards,
-Huang, Ying
+> 
+> There is a discussion in this thread to add request timeouts
+> https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dkernel_20240605153552.GB21567-40localhost.localdomain_T_&d=DwIDaQ&c=R1GFtfTqKXCFH-lgEPXWwic6stQkW4U7uVq33mt-crw&r=3uoFsejk1jN2oga47MZfph01lLGODc93n4Zqe7b0NRk&m=8O09nPSMPRZHOnfDnsm3lTwcO7AV93meeZP-F_k_u8w7XO04ISrP36bbcoEMUSrW&s=FRDpgmP8jGWJnoZna3OrFnvx44cCgywsGOeMY3fCeFc&e= 
+> I guess for interrupted requests that would be definitely a case where timeouts could be
+> applied?
+
+Yes. If the requset can be cancelled until the timeout elapsed, we don't need to abort the dead requests manually.
+
+Thanks!
+
+> 
+> 
+> Thanks,
+> Bernd
