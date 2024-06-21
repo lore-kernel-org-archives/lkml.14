@@ -1,107 +1,146 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1822C1534EB
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6E9153BDE;
+	Fri, 21 Jun 2024 12:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973838; cv=none; b=Cm7Cyv5iHzKZiDTLg3b0UtIhRRr0F86b0EIW2kHcWw7UY85Gl6bM90dbYq6MygqmuB8UnwalTOOG8Fq2lt58h8ZBngbZotYWX5ftrQFIX7wYM5v5eRfZfL8pNZ+sSSxp6VUHE9nictebzlaVwzQ/U6GL1+UL1q7Eh+bZXFsCYXI=
+	t=1718973868; cv=none; b=HGE4yV57TRa5A0nqbwGW1UGLHOU7BKT7D+21gCxy8Ich5fZBFemElOMthPC8RQS4CJDENChITHitYrgQwD7598gU2TqzRF8vD9EgsXv+kUiU/5z7XvUYxoRt2KvN1gM5kE41wjhpjDjh5RrySiyzc8wp9nJHP9A5jvG1ZEayS3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973838; c=relaxed/simple;
-	bh=FZAmzEQEeho/09liB6hFeg0Hi315IVmPFVcjTn4Fh14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sOFVdwnWREx+hjzjs8IDdtgReiONKRmwxCqHgKMI6vLyEVHKJyXw2EW513vVPbjKOYebHWI1qTy1U57heNFs8t2y9wnBvgKJt3hjazNrsUgXrpyXX92zhBpb2ZmosFbLxjTw90OxDwAy4+WY/nLwrnefG/HyhquYrqbW4IAZsT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NkzlhiA7; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718973868; c=relaxed/simple;
+	bh=bwqf13fJbLJEoJ55Fq8cVIZa/qvXiPcZ4TMFf7szj6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tLoBqn7nQer6GBZtv/ToPhtgjp+lufnucD+ZM1M231VjoWy+Lxp5vtFuBicCJEND6rZSwjPCw0kLeTKznFk2cKb6DiXaMXxn0ooZ6wUiNR0kRBtG7WHsCSLfUO49XBRESlbaqpTzxx9GYYFAaoGU4Hf8b8BiEVQc5J/E7CLJ39c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8IKh8rP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkzlhiA7"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57d280e2d5dso1471191a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718973835; x=1719578635; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=58qxmm/t3zau3gvpFhApfDkOSkGoEMC5DQ3Arc2tulg=;
-        b=NkzlhiA7oHTf9J7PBtl2Zus7HBlM7CJ/BRwH921QUnuR+dKAG64+5gVmb998+dg8pR
-         +xcIYDkfEXZ7o4K8Rk2Hbnhon4uD2itHXXWKykP+g20e07SHzuCjtp6MQE3xSU36qIGc
-         gqyigGuKxVEcYlrCvERdUK8oDzCKhOLU6PtGTNwvdg8au3a6JFGkf52NGyfnBdQ5yBKp
-         Ac/BrbMTshKcZ9qzSh9ZIRy0IiqImxeWJWX9LhxNgfWxOc7cHD3XgIFTXuRMBp3913DZ
-         +is6BCfiog94GDFC4TGGn4TRqsEQAP6xpuDw7XG1YDHbomUHzoq6ISzih0bzeooLV9mz
-         EWEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718973835; x=1719578635;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=58qxmm/t3zau3gvpFhApfDkOSkGoEMC5DQ3Arc2tulg=;
-        b=Mdn12mZQzmbzgMMT2gglanvHK0lMhep3aG7Z9ZNg2dLWM0SA1RRIP56FSBB+keXZfU
-         Yuw6WxxSxxbNRvujSNTWqLL420t5ntrDVhkTK0wvxy+AGIzoVa9JNNpPETvmmpG8h0SR
-         mCiNZpHjrsdb8csTrYgcEhHcadlaqZ7JoCWmbUDUjM4VEOyYM6dEeiSeR3Be7OE0l8wk
-         6tIDRf82I8AGmZvojOenIEwLcDSPw7qvEoNpK9I+v1qwR9rwUoU/5SY6Ush5NR5fjo7M
-         VpR9J478H3tYRykoxAjPmvMnsaSYEyrN1IbTzMfv/wBqu2siWOGz5HjWRRfEICoUIvww
-         CKCw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3u1GVh4njXn45yo+E2aKW9QD0SNTBm3zw8QnQLSyq6Qadsmrlv3kdTAPlaLXfTfMaXbdFGhR3odyFPlldogtzNCwAk2p8bTTNc3DE
-X-Gm-Message-State: AOJu0YzGWx24oeLvV/JSftCVVjR/wcJOMdedwaDJ+PT0X603F/qjgYRk
-	PEW2oWR/4H8kWnpA8jFdcz1DWFBG4qRsEyEekKw9Xmc8pqbE1qBYj32cKd3td/3KCcK06zWxyPB
-	A0Gs=
-X-Google-Smtp-Source: AGHT+IEJfI1YxYhiHTZGeDyNtn7lcMGcyPL3K88HQ37hx8DhxxKPIoLvSrmIiONOLGTArC1CQoe3xg==
-X-Received: by 2002:a17:906:1cd9:b0:a6f:1b3a:8898 with SMTP id a640c23a62f3a-a6fab60b9c7mr422650366b.2.1718973835355;
-        Fri, 21 Jun 2024 05:43:55 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:60c0:a760:7f1f:9088:c2be:1cb0? ([2a02:8071:60c0:a760:7f1f:9088:c2be:1cb0])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf48b47fsm80772566b.59.2024.06.21.05.43.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 05:43:54 -0700 (PDT)
-Message-ID: <cb70c6c8-7e84-4b3c-97e0-1fbbcf88fda8@linaro.org>
-Date: Fri, 21 Jun 2024 13:43:53 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8IKh8rP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4569EC2BBFC;
+	Fri, 21 Jun 2024 12:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718973868;
+	bh=bwqf13fJbLJEoJ55Fq8cVIZa/qvXiPcZ4TMFf7szj6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l8IKh8rPJ6LhZPucaRVWP/8fVx7Xxn6rv2vU7HIlfwyi9Q96L78zxrZ3zhmjtudB0
+	 J3tju9CVfyLjhlAOJWMauyHtWsdLjK3txtaalshO/dngDUizd1XzDP6LMIUbZBXavB
+	 +8KE0WLENQ6jEdfgeJYwijdzrlgFvpOTR2HFnkBrAc0rdcKAXPoTkZLV4bV/cTusbH
+	 OBtLDjkQPYR3wotR+Wn7W5zr040SNYXGr1ZQRN8QKzEvEtgTV8xggmtD7my/kpv1qT
+	 wLn6blkh/cY091zWPbqahLn59Luh3YNHrKn/lEiz3fKB1cxWABQ/Sb62GAvK/7RrdJ
+	 tIK9yeZk6HlDg==
+Date: Fri, 21 Jun 2024 13:44:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: amergnat@baylibre.com
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	Nicolas Belin <nbelin@baylibre.com>
+Subject: Re: [PATCH v6 12/16] ASoC: codecs: add MT6357 support
+Message-ID: <1ca27c79-a83a-42a7-9e9b-766da0064c73@sirena.org.uk>
+References: <20240226-audio-i350-v6-0-f754ec1a7634@baylibre.com>
+ <20240226-audio-i350-v6-12-f754ec1a7634@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mtd: spi-nor: winbond: fix w25q128 regression
-To: Michael Walle <mwalle@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- Esben Haabendal <esben@geanix.com>, Hartmut Birr <e9hack@gmail.com>
-References: <20240621120929.2670185-1-mwalle@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240621120929.2670185-1-mwalle@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Y31DJCgxhlUXFcNQ"
+Content-Disposition: inline
+In-Reply-To: <20240226-audio-i350-v6-12-f754ec1a7634@baylibre.com>
+X-Cookie: Androphobia:
 
 
+--Y31DJCgxhlUXFcNQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/21/24 1:09 PM, Michael Walle wrote:
-> Commit 83e824a4a595 ("mtd: spi-nor: Correct flags for Winbond w25q128")
-> removed the flags for non-SFDP devices. It was assumed that it wasn't in
-> use anymore. This wasn't true. Add the no_sfdp_flags as well as the size
-> again.
-> 
-> We add the additional flags for dual and quad read because they have
-> been reported to work properly by Hartmut using both older and newer
-> versions of this flash, the similar flashes with 64Mbit and 256Mbit
-> already have these flags and because it will (luckily) trigger our
-> legacy SFDP parsing, so newer versions with SFDP support will still get
-> the parameters from the SFDP tables.
-> 
-> Reported-by: Hartmut Birr <e9hack@gmail.com>
-> Closes: https://lore.kernel.org/r/CALxbwRo_-9CaJmt7r7ELgu+vOcgk=xZcGHobnKf=oT2=u4d4aA@mail.gmail.com/
-> Fixes: 83e824a4a595 ("mtd: spi-nor: Correct flags for Winbond w25q128")
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+On Wed, Jun 19, 2024 at 04:46:48PM +0200, amergnat@baylibre.com wrote:
 
-Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> +	/* gain default values*/
+> +	regmap_update_bits(priv->regmap, MT6357_AUDENC_ANA_CON0, MT6357_AUDPREAMPLGAIN_MASK,
+> +			   UL_GAIN_0DB << MT6357_AUDPREAMPLGAIN_SFT);
+> +	regmap_update_bits(priv->regmap, MT6357_AUDENC_ANA_CON1, MT6357_AUDPREAMPRGAIN_MASK,
+> +			   UL_GAIN_0DB << MT6357_AUDPREAMPRGAIN_SFT);
+> +
+> +	regmap_update_bits(priv->regmap, MT6357_ZCD_CON1,
+> +			   MT6357_AUD_LOL_GAIN_MASK |
+> +			   MT6357_AUD_LOR_GAIN_MASK,
+> +			   DL_GAIN_0DB << MT6357_AUD_LOL_GAIN_SFT |
+> +			   DL_GAIN_0DB << MT6357_AUD_LOR_GAIN_SFT);
+> +
+> +	regmap_update_bits(priv->regmap, MT6357_ZCD_CON2,
+> +			   MT6357_AUD_HPL_GAIN_MASK |
+> +			   MT6357_AUD_HPR_GAIN_MASK,
+> +			   DL_GAIN_0DB << MT6357_AUD_HPL_GAIN_SFT |
+> +			   DL_GAIN_0DB << MT6357_AUD_HPR_GAIN_SFT);
+> +
+> +	regmap_update_bits(priv->regmap, MT6357_ZCD_CON3,
+> +			   MT6357_AUD_HS_GAIN_MASK, DL_GAIN_0DB);
 
-> ---
-> As mentioned this is for fixing the regression and a proper fix will
-> make use of the TRY_SFDP (or whatever it will be named) mechanism.
-> ---
->  drivers/mtd/spi-nor/winbond.c | 2 ++
->  1 file changed, 2 insertions(+)
+We generally leave everything at chip defaults, why is this different?
+
+> +static int mt6357_codec_probe(struct snd_soc_component *codec)
+> +{
+> +	struct mt6357_priv *priv = snd_soc_component_get_drvdata(codec);
+> +
+> +	mt6357_codec_init(priv);
+> +	return 0;
+> +}
+
+Why not just inline mt6357_codec_init() into the one user?
+
+> +static unsigned int mt6357_read(struct snd_soc_component *codec, unsigned int reg)
+> +{
+> +	struct mt6357_priv *priv = snd_soc_component_get_drvdata(codec);
+> +	unsigned int val;
+> +
+> +	regmap_read(priv->regmap, reg, &val);
+> +	return val;
+> +}
+> +
+> +static int mt6357_write(struct snd_soc_component *codec, unsigned int reg, unsigned int value)
+> +{
+> +	struct mt6357_priv *priv = snd_soc_component_get_drvdata(codec);
+> +
+> +	return regmap_update_bits(priv->regmap, reg, 0xffff, value);
+> +}
+
+Why open code these, the core has standard adaptors for regmap?
+
+> +static const u32 micbias_values[MT6357_MICBIAS_ARRAY_SIZE] = {
+> +	1700000, 1800000, 1900000, 2000000,
+> +	2100000, 2500000, 2600000, 2700000
+> +};
+
+Just use ARRAY_SIZE() for the size then the number can't be out of sync.
+
+
+--Y31DJCgxhlUXFcNQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ1daMACgkQJNaLcl1U
+h9DFewf+M/CBa2qN5RnVF8Zc5QWTvxC4SKpFwRma8NGXYRkdIuRXOhTpxRG85BYY
+w0ndJAb81OyrS1X3S8EpFu0cTQdBB7po6aGY3/n1tnY0JIkQ820QI+XDGlduderG
+aPJ1LFil592z/y4CEYhDWzOsFWLLyJKyRI490d6BuyRNdljzSLS1QmJ2HrpnPI/S
+D63ThavR4gijP3ePCZ6Bajond76rmR5CDUo3/LtUBAliMvLcIpwdKqcEjjdpMm7G
+BuKS/CUvpRgJ5D+hyi9xFWRSBajwhFVLHJ1R/jtOLU/DQiYH/x78dMej8JApEp6X
+Gohk7DuuhbfZflRiEj17qKTMYvMWvA==
+=P5mN
+-----END PGP SIGNATURE-----
+
+--Y31DJCgxhlUXFcNQ--
