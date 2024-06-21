@@ -1,113 +1,209 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2A5176254;
-	Fri, 21 Jun 2024 11:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94042173324;
+	Fri, 21 Jun 2024 11:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969166; cv=none; b=Wkk4wYB0sd+BNNYEzvJh74oqHJyhAAIiKmPp5IRWhhyhx3wBkp0blh8zDKaO2s+5sNUzsddUDidvQtf+O9aQAk0Qze35vbHeIi0QtQ25utehAp+fC1zUtAEAw3MYt2SBZHn8noT84iAxOsLkmIuEPgLgZofr8CuRPvWuqvsQQBo=
+	t=1718969193; cv=none; b=mP7ppoDEqpjgR53puh7xpYJItEloUDy6aRokcTEiuaWuDs2uo+3kYIFEwh0SgMyvk3X8p6fIRLrUtrYVV4XY3rORsIVewoSc4V1nSIYRHAERdlUzOzXNKdg1bR1IdQxkM4ZhcyAAO2WSrn1YGmYOxIZ+7a86MN5gPmK88FGWLFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969166; c=relaxed/simple;
-	bh=Q8DyGdBcYAgq64z9X9TWI+/sf0rsMrpXcgbn82Vmdc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nXiTZ2vcDfo8CoOJtbJA/laWdTUnuiYbImAOn7g4zw4VmXvNi4sk+9hJMNjjb9nSp3adIQz0n7xoNYUlZwx/d6QbP1nj04oaNCK7K8eVD7ZAMY90PZ55gvOPoIwnS4vglu29wx2K7QTn90Vi/hH7Fl7XAyDjDa4EKqP1bv+3ehg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFpX9f7q; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1718969193; c=relaxed/simple;
+	bh=6Z4wpojLz/hacj79e57BMfp429TSIJBj0CjR5tMbUrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=joL3+eZd9Lvtxi9aj119/MCegC2ZzDfwROxO5atclLNThVfE6ErgKdMW7m7Rjc4mCL1Gm2TLqxXmEFe0+M5jNhL7TqtpgYFtP8YzKYM64pZP3gyOIX7ydA5UXOcn8sQh3871X8rmauWhr5DXMgsGMkRRyqV69ZR4NOLklhMGqW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cnGQS1B2; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFpX9f7q"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso265014566b.3;
-        Fri, 21 Jun 2024 04:26:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnGQS1B2"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57cf8880f95so2173816a12.3;
+        Fri, 21 Jun 2024 04:26:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718969163; x=1719573963; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i8sLZv1n+Ku2QMjcmS+4EdIPRc6Cam45MqmcajWwNAI=;
-        b=iFpX9f7qrZqD2nv3NfjMY/YQhJpZxJQKuolCxt24Eu/iMdV+GbuBnZiUTiGXXi2bph
-         DnlvMVqTEAFLHzCCGhU3d+cavpdKtgv9tdne0Zj4hGteS/kh6dBCjUDl+6yPr61yhmDF
-         s06eCV+aRRp2iXabGHfVsNoI4HLnzO2GI+kY2kPLYAxNkUqJSzoaSs55ZhjpCmcriBD3
-         HKGkZtJKqYcnNANewbZ/UYhjeNg2LC5t8nlIiVAaM//Y2VU5MgLk8J4YbpazJHUMv3bv
-         akxdG2iCw+/RLJiaUI8xfXWaVcO4RUvn8y3rsBAV/JSongdoHEXaixTmRU0ZHEY1RbXz
-         411w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718969163; x=1719573963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1718969190; x=1719573990; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i8sLZv1n+Ku2QMjcmS+4EdIPRc6Cam45MqmcajWwNAI=;
-        b=v3krMuxs2DMmlRQoZ3kToW8VNzdR5t9FcpfSGZnAYJ5z8yU6P6SeGRnbyCvt+odlyc
-         96uPh1id1O0C0ZaKEqxi6QOVmMEdF8U47bLYGcBLn80OycMIA7K8gcaLQmiyQwiMXEMT
-         E0tAKKlIRDFLZr/9BEb1EsY1x0VUQR34eriKgpjN/pirdCclXzCVtSouLHRmaM/dzLCA
-         4U/Gp5eGN8gsAaQQdvlcf9J9PcqeH7WqskZuHXLl3+dsV2eGwZ7o+dk2RHkoUaldMImW
-         +c+WZPNXxir8NOvPVqflism0tWnXwk/AfIMR2tBu7m+/aQztdUKipJwyD7tOU5juGfGn
-         I5Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXd+5jTdgq53kP/yrXua9FtS9n7H3E3zdjGXnKb2Yyq/2aWVAaGgCCYGIcI0aNJg/aJfIthYTckJ6IyzHZYOMMcKVNkBW57a/Y1hjsy0zscezX9WEnocFop/yxf4B5rjVkne+AZ2gEvoeVdl9n8e9CiXEj7I2y2WQ4/uKu4SAtMU56SFA==
-X-Gm-Message-State: AOJu0Yx6jBU7+AfT1FjxNzCFtlj6VrHisB7qnf5iNCMQAxg9Vcn+ZTGN
-	xNr49cMEKZfQK/0NcKyIJgPTUPu335gBL3LZ56qOAPUlPNAupSoq
-X-Google-Smtp-Source: AGHT+IEyjIILM29yLfV/vXCYggcQVFh0n6Mx/M2e70SYGzH2rtFIwFqH2zYjTAuliqRLT+DG1jMAKA==
-X-Received: by 2002:a17:906:d283:b0:a6f:6701:cd5a with SMTP id a640c23a62f3a-a6fab643427mr420372166b.44.1718969162970;
-        Fri, 21 Jun 2024 04:26:02 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf48b17esm73795266b.88.2024.06.21.04.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 04:26:02 -0700 (PDT)
-Date: Fri, 21 Jun 2024 14:26:00 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v3 1/3] spi: fsl-dspi: use common proptery
- 'spi-cs-setup(hold)-delay-ns'
-Message-ID: <20240621112600.sshdjicucwtigq64@skbuf>
-References: <20240620-ls_qspi-v3-0-1a2afcf417e4@nxp.com>
- <20240620-ls_qspi-v3-1-1a2afcf417e4@nxp.com>
+        bh=Q0NS7LlelhpSen05TQ03Z1wb2gyNuCOX1l5VdBrZGKM=;
+        b=cnGQS1B24Or85wx5TZlYZ2q9+XcyMQ4LkxV9ST5vhMQ1Ojj5eFVL/JZthtnKNKKisp
+         c93Z3K8YwKc0hSaaSeWYRwl6a9FZAzZX0mWNphShJ1tHOPgDdfp6zI+NAdA+bzU/qV/B
+         3oCRleIIeI1S8qlYcAKt+HX9dUHiOaZ+kOCgWWF2n2uuqDEXZShEzvbrKk+y2pe2TNyw
+         Bk8bGgFusX3oGRpBpkk8sBNJGpExTikCNQMIi4xFFjl1AMocGAjb6uaG9D6DDaavhmtG
+         bWHZ9wuhwt89FOCcdcgKewDRbTzP48/SRM2ZYkVTEVBwFjZ92CZpv5egLguzBfHusjek
+         9kyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718969190; x=1719573990;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q0NS7LlelhpSen05TQ03Z1wb2gyNuCOX1l5VdBrZGKM=;
+        b=WqloSIrZUPbLcQAVRMfdhFneHBbQoXlxKVNvbGYcI0DzKYFVvFoRwq6DDPAXng5/Ri
+         WUgHLhMGob+IUiEhiWPnOwTn8aavnMC77LZ9ysjUzQlIvm5HBe+ZlEpXrXg/XMfbd4L2
+         kZC0UvlzY5yGaAQH0ovNfslfE1safqRPVh+gH47Dqtxurc3BGd+ymBSah58vFA85n4wm
+         orpLSvZmQ6oJJFY88tzBXa866Oj2nqc+aZgAfAcK6/3DjvJhNL4P99qE+YoOEiA6fVNo
+         sOahBNZ6lqLrQpXktYBJEP8R3w9rUIYLUr4fhS4DzcVKBvtdc4/l8lQOOmr+yNk5iBfo
+         MU5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVjJHjbTsvqKFFa4DrSgqo9WbD/O9atSgVeS/gBf3udG8KOi7MlkHj3tvYePGtU6teq6thc1Dhos1xlvJsqryKmFhVYifg4MPOcs7/W/OyjBOUkbwf3Bl/mJ/I+fQ9ggFVubjO0IOAJ9ljHcdbXcHzS/E0+gOMWHkiEnZH3QdqtXED9Ow==
+X-Gm-Message-State: AOJu0Yyiw/ub3MLY3XwIK2JQRE9Xn3TW7EyOswmf/OGBllgfYgOQaCij
+	uFfhsWEYv7IPV7BKjyP1h85vgYtTi8nneuqSSFD2q9OHiaP+x7xIHCDHhclWbXa0RpHJGme+UkA
+	E6QOvXahJNpv9i+D7BK/1EOMsQe1xyqjI
+X-Google-Smtp-Source: AGHT+IEj3xJiyLNIRUImQfeckjZNz/P5iTFKuJO/ro0q3UwgZoaarlsLmvCBnakUjtcivQryct+kRTzskos2kA1Ceks=
+X-Received: by 2002:a17:906:80c:b0:a6f:2de0:54d with SMTP id
+ a640c23a62f3a-a6fab7d6c69mr582759066b.76.1718969189569; Fri, 21 Jun 2024
+ 04:26:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620-ls_qspi-v3-1-1a2afcf417e4@nxp.com>
+References: <20240619054641.277062-1-shanchun1218@gmail.com>
+ <20240619054641.277062-3-shanchun1218@gmail.com> <CAHp75VcJGoDaAbD7vWin8yTGarrLZbVQqucHs+M9rAAS0BZd9g@mail.gmail.com>
+ <1e249c77-def1-4ffc-bbd6-d64f7e95b0ac@gmail.com>
+In-Reply-To: <1e249c77-def1-4ffc-bbd6-d64f7e95b0ac@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 21 Jun 2024 13:25:52 +0200
+Message-ID: <CAHp75VfpPR3Nat2dJrwLaxvnQNmn6KbpAfLcD-BvadwyHXDE1A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: sdhci-of-ma35d1: Add Novoton MA35D1 SDHCI driver
+To: Shan-Chun Hung <shanchun1218@gmail.com>
+Cc: ulf.hansson@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, adrian.hunter@intel.com, p.zabel@pengutronix.de, 
+	pbrobinson@gmail.com, serghox@gmail.com, mcgrof@kernel.org, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, forbidden405@outlook.com, 
+	tmaimon77@gmail.com, linux-arm-kernel@lists.infradead.org, 
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Typo in title: property
+On Fri, Jun 21, 2024 at 10:06=E2=80=AFAM Shan-Chun Hung <shanchun1218@gmail=
+.com> wrote:
+> On 2024/6/20 =E4=B8=8A=E5=8D=88 03:09, Andy Shevchenko wrote:
+> > On Wed, Jun 19, 2024 at 7:47=E2=80=AFAM Shan-Chun Hung<shanchun1218@gma=
+il.com>  wrote:
 
-On Thu, Jun 20, 2024 at 12:58:27PM -0400, Frank Li wrote:
-> Use SPI common DT binding properties 'spi-cs-setup-delay-ns' and
-> 'spi-cs-hold-delay-ns'. If these properties do not exist, fall back to
-> legacy 'fsl,spi-cs-sck-delay' and 'fsl,spi-sck-cs-delay'.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/spi/spi-fsl-dspi.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 0a2730cd07c6a..7c1f8af9d215e 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -1018,11 +1018,15 @@ static int dspi_setup(struct spi_device *spi)
->  	pdata = dev_get_platdata(&dspi->pdev->dev);
->  
->  	if (!pdata) {
-> -		of_property_read_u32(spi->dev.of_node, "fsl,spi-cs-sck-delay",
-> -				     &cs_sck_delay);
-> -
-> -		of_property_read_u32(spi->dev.of_node, "fsl,spi-sck-cs-delay",
-> -				     &sck_cs_delay);
-> +		cs_sck_delay = spi_delay_to_ns(&spi->cs_setup, NULL);
-> +		if (!cs_sck_delay)
-> +			of_property_read_u32(spi->dev.of_node, "fsl,spi-cs-sck-delay",
-> +					     &cs_sck_delay);
-> +
-> +		sck_cs_delay = spi_delay_to_ns(&spi->cs_hold, NULL);
-> +		if (!sck_cs_delay)
-> +			of_property_read_u32(spi->dev.of_node, "fsl,spi-sck-cs-delay",
-> +					     &sck_cs_delay);
+...
 
-Keep the 80 character line limit please.
+> > You are missing a lot of header inclusions, please follow IWYU principl=
+e.
+> I am not familiar with IWYU yet, but I will learn it and use it for
+> checks later on.
+
+"Include What You Use". But some of the headers may be omitted as they
+are guaranteed to be included by others. It's a bit hard because one
+should know and follow the kernel development, currently the headers
+in the kernel are a bit of a mess.
+
+...
+
+> >> +#define BOUNDARY_OK(addr, len) \
+> >> +       ((addr | (SZ_128M - 1)) =3D=3D ((addr + len - 1) | (SZ_128M - =
+1)))
+> > Besides sizes.h being missed, this can be done with help of ALIGN()
+> > macro (or alike). So, kill this and use the globally defined macro
+> > inline.
+> I will add sizes.h and directly apply globally defined  ALIGN() macro
+> instead
+
+Also check what header should be included for that macro, IIRC it's align.h=
+.
+
+...
+
+> >> +               for (idx =3D 0; idx < ARRAY_SIZE(restore_data); idx++)=
+ {
+> >> +                       if (restore_data[idx].width =3D=3D 32)
+> > sizeof(u32) ?
+> Your idea is better, I will change it.
+
+You might probably want to use the same in the restore_data array initialis=
+er.
+
+> >> +                               val[idx] =3D sdhci_readl(host, restore=
+_data[idx].reg);
+> >> +                       else if (restore_data[idx].width =3D=3D 8)
+> > sizeof(u8) ?
+> I will fix it.
+> >> +                               val[idx] =3D sdhci_readb(host, restore=
+_data[idx].reg);
+> >> +               }
+
+...
+
+> >> +               pltfm_host->clk =3D devm_clk_get(&pdev->dev, NULL);
+> >> +               if (IS_ERR(pltfm_host->clk)) {
+> >> +                       err =3D PTR_ERR(pltfm_host->clk);
+> >> +                       dev_err(&pdev->dev, "failed to get clk: %d\n",=
+ err);
+> > Use
+> >
+> >    return dev_err_probe(...);
+> I will use dev_err_probe() instead of dev_err()
+> >> +                       goto free_pltfm;
+> > This is wrong. You may not call non-devm before devm ones, otherwise
+> > it makes a room for subtle mistakes on remove-probe or unbind-bind
+> > cycles. Have you tested that?
+> I have tested it, there is no error messages during driver initial proces=
+s.
+>
+> My thought is that sdhci_pltfm_init() and sdhci_pltfm_free() are used tog=
+ether.
+>
+> If there's any error after the successful execution of sdhci_pltfm_init()=
+,
+> I'll use sdhci_pltfm_free().
+>
+> I am not entirely sure if this answers your question.
+
+Yes, they are, the problem is that freeing resources happens in
+non-reversed order (for some of the resources). This might lead to
+subtle mistakes as I said above. The rule of thumb is to avoid mixing
+devm_*() with non-devm_*() calls. If you have both, they have to be
+grouped as all devm_*() followed by all non-devm_*().
+In some cases you might need to wrap existing calls to become managed.
+This may be done with the help of devm_add_action_or_reset(). Check
+other drivers which are using that.
+
+> >> +               }
+> >> +               err =3D clk_prepare_enable(pltfm_host->clk);
+> >> +               if (err)
+> >> +                       goto free_pltfm;
+> > Use _enabled variant of devm_clk_get() instead.
+> I will use devm_clk_get_optional_enabled() instead.
+> >> +       }
+
+...
+
+> >> +free_pltfm:
+> >> +       sdhci_pltfm_free(pdev);
+> > This should go to be correct in ordering.
+>
+> I am not entirely sure if it is similar to the "goto free_pltfm;" issue.
+
+Yes. It's part of the same issue.
+
+> >> +       return err;
+> >> +}
+> >> +
+> >> +static int ma35_remove(struct platform_device *pdev)
+> > Use remove_new callback.
+> I will fix it.
+> >> +{
+> >> +       struct sdhci_host *host =3D platform_get_drvdata(pdev);
+> >> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> >> +
+> >> +       sdhci_remove_host(host, 0);
+> >> +       clk_disable_unprepare(pltfm_host->clk);
+> >> +       sdhci_pltfm_free(pdev);
+> > At least these two will go away as per probe error path.
+> I will use sdhci_pltfm_remove instead of  the ma35_remove.
+
+After fixing the ordering issues in ->probe() this might need more
+modifications.
+
+> >> +       return 0;
+> >> +}
+
+
+--
+With Best Regards,
+Andy Shevchenko
