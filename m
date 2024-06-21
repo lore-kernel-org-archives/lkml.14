@@ -1,169 +1,110 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CF216C856;
-	Fri, 21 Jun 2024 08:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3696116D9B3;
+	Fri, 21 Jun 2024 08:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718960035; cv=none; b=csnA7YIthm9orDnObyN3YSjKqoTjgAnC3koFr9v2hPZE4EE7jyaGFkhFKTvusP240sJkVsXmArEAaWrssXzL141XbN/lncslqQJiw5f8DjDkCKvMnMUqo+Ms6dNhMUfCgNfp4IXIudWMPaYfj4fAMZL/ZsHnbX7yhC8lagmlxV0=
+	t=1718960054; cv=none; b=Ncmk9yBpbw0hxUxl/2XvK1z1JO24BrDyMZu+e+ofqQyvhdARxUl1hUEa3wyCZxmx5XsHAW9sAeT7CEb8o+nttVpmDnxx3TVK6mhZ7NWPVCGiHgZyZdljis+gayWD6e+HamWj7Jzw9EEDy7ZoHuhIKCniQdTna4gU2AGOCOT9odc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718960035; c=relaxed/simple;
-	bh=AtFinZsMgiIIHjA21Sc0KoGjJvdqQ5HCKFk1uDEBWL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=keoybxCJL/8c6tRu4x/qFvj6wJpg3eVB0AdZBxfoW/07H9Ju1mNL44P+VQaUk1j46+6cBm/uoAZJQ320c0E9vwG024qhUIpRkh0C9enWrXYomwF00b5Fk3eLF/LbM6byf0YlaZwInysOdXxLr2ii7YiHzylfelNDYACXUFsH8iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SIhxydNv; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718960054; c=relaxed/simple;
+	bh=pyFA7AU/2GhI7wvm0cKEdUMzUTfxvRrJTX5svXYqMYA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=on1QVVvd72cxPQLNE6UjwSP8QAKRDhpmD6ohfV1o7sg9X+Bpudrg5L5v9RDfPc1aBI9g4lRMgxvJzsr0Gm4aIz7LCQWW/crSy+6kL33NiWUpcG0ZFyqbGl8iN/b2lzKz18/0NiMbBy6XS14KD4Z8Y1Z3/2anwlFzgMomAgqaELw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=GgpT32tD; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIhxydNv"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so33362471fa.0;
-        Fri, 21 Jun 2024 01:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718960032; x=1719564832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C2NbmAeSPtr+VJPCDZGzIPSzbzCrEPpKv2Ul8cjGJpg=;
-        b=SIhxydNvnzMqk3equVSf3SmEblz7poLkj2sOUODgHPrQCp0b6UH1FjdtWqZlWDkInn
-         dsNV7j+5IQnjWu4N6tvTJoPJFi1RP0m+VkcBStpmy/hM9inb+hB5R2hXj8zx4NNL6EKJ
-         /9HRCCxLpYzBH65ynnFYddhj9wNTqrw7FeBOmlkJIx3IA6T1FH57YJdxiuduh0Xn+q77
-         NrnoHaKTAqPqcRDqWRMEZs+310Bpz5rlekx6DExnLyTh+65LZfHhGiEf0xuR4xx2idq2
-         M7L3yVYb4uM41sPBaJcdQIFL3HfSdDkV4kk6cKD+0/ovfm5xluBc6bceDeJbZHOEaCdW
-         ovzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718960032; x=1719564832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C2NbmAeSPtr+VJPCDZGzIPSzbzCrEPpKv2Ul8cjGJpg=;
-        b=HIJvuOKuFT/y+/AjN3tY9Z6re0w+Q61vjuznDYghELeeiIy7tsYMWbre98jokbTTiT
-         SwxuetjZuCtWRU7mXoUCnKsNctRg8vFMxVE9XZ+Qj/v8NPuiWf8ivci/3J47mtGa8lUu
-         icT/4SK+rU6GTA/vtVvzw/4r25f7sQR7HsE9wzWPTGnYW8A2wMs6QvzMsMlSUEFdN8Qw
-         3LwzGMP4GHpb6lwbp1OKDLNhv8zSQDbcK97OkKAEZ+SrE6mvTdXxVJq2a9DKHMaWWzDe
-         n3MZLIhUYHFLsSTyvaWznVvckNjQoQKwqHYjKXk+KXPu2q1RZwSkKgphCsonHYfSU//o
-         w68A==
-X-Forwarded-Encrypted: i=1; AJvYcCVM+ok2BcItshtC/UV/psOD98unBrN27uK23KqQIKS5sETpxVbev0HxGBUkOdxbhnNJb1U21eTWkNxIOXHGcP04GUmDZYq3tp5cat7vVrWr4Z3ym4uigLeOQR4hY+KiMUNV7mWA8NyrW1xBDa8lvJwzjyVhFosQky6gipSzd1NVWf3Ly0I=
-X-Gm-Message-State: AOJu0YxjvpdR1eywBn1NNZJn21RQk6pOjRSmlujCbum/qCiDCmn9B8N0
-	a2UoTPfRu++9k7Sm7UJF5NNLiqGT2viwLZ1dTUDakbk0Pw7twDrzQxmIrX85xOvbFmgxL0k0gIp
-	hEXYCtjPSVF248j9iDnEcm/SQdc8=
-X-Google-Smtp-Source: AGHT+IFACBZJL/JrK568qW0O9LvAd+FrY4FSuAOLFmRWXPL7E3VDBY2O378p7oDlZU5U3E2pPeP3u6Glqf31Mu/d0J0=
-X-Received: by 2002:a05:6512:4ca:b0:52c:d5e4:9a99 with SMTP id
- 2adb3069b0e04-52cd5e49ccfmr1025377e87.17.1718960031907; Fri, 21 Jun 2024
- 01:53:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="GgpT32tD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6ux19xNP9Z9FPgP5f+00+S+qPS6imbskeOogbDqAbYA=; t=1718960052; x=1719564852; 
+	b=GgpT32tDYKk0Yi1M1RpDpWXoAIPXQq59InsRWpEqpmxvxsnXQvZ9i9OW+qKxbDxoKWZyB7KvLdK
+	t7qnRRF24IpHGSfmPiSKkbFq5SC4II24v6wjgLN43u0rvJH62moiOGoYZGWoGO7cRqEAVoKmk/ymo
+	kiProdosDLxoa8b/LoBwcJSx9S6S/q575JwKWNFUZdJXemoKaKOybhqt9jZ+XK+uGADtekYXkU4jW
+	2tAq8GxMRrBjuXbnPdbYsUZ22QQwlyRH0W7j62ZU9ngv2i6DyNAlgsibX9nCMxLN39vtX6qx5Emzl
+	njWfjx7upWXEql/eG2p2X6hOrz5Ef5JICasw==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1sKa25-000000020GB-1Me6; Fri, 21 Jun 2024 10:54:09 +0200
+Received: from p5b13a475.dip0.t-ipconnect.de ([91.19.164.117] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1sKa25-00000001eAa-2Euu; Fri, 21 Jun 2024 10:54:09 +0200
+Message-ID: <3444b93ce46c7e7c156f912495e5c35ccf275549.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 07/15] parisc: use generic sys_fanotify_mark
+ implementation
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Arnd Bergmann <arnd@arndb.de>, LEROY Christophe
+ <christophe.leroy2@cs-soprasteria.com>, Helge Deller <deller@gmx.de>, Arnd
+ Bergmann <arnd@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Rich Felker <dalias@libc.org>, Andreas Larsson <andreas@gaisler.com>, 
+ guoren <guoren@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "H. Peter Anvin" <hpa@zytor.com>, "sparclinux@vger.kernel.org"
+ <sparclinux@vger.kernel.org>,  "linux-s390@vger.kernel.org"
+ <linux-s390@vger.kernel.org>, "linux-sh@vger.kernel.org"
+ <linux-sh@vger.kernel.org>, "linux-csky@vger.kernel.org"
+ <linux-csky@vger.kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+  Heiko Carstens <hca@linux.ibm.com>, "musl@lists.openwall.com"
+ <musl@lists.openwall.com>, Nicholas Piggin <npiggin@gmail.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, LTP List <ltp@lists.linux.it>, Brian Cain
+ <bcain@quicinc.com>, Christian Brauner <brauner@kernel.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Xi Ruoyao
+ <libc-alpha@sourceware.org>, "linux-parisc@vger.kernel.org"
+ <linux-parisc@vger.kernel.org>, "linux-mips@vger.kernel.org"
+ <linux-mips@vger.kernel.org>, Adhemerval Zanella Netto
+ <adhemerval.zanella@linaro.org>, "linux-hexagon@vger.kernel.org"
+ <linux-hexagon@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
+ <linux-fsdevel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
+ <linuxppc-dev@lists.ozlabs.org>, "David S . Miller" <davem@davemloft.net>
+Date: Fri, 21 Jun 2024 10:54:08 +0200
+In-Reply-To: <1308b23a-d7c0-449e-becd-53c42114661e@app.fastmail.com>
+References: <20240620162316.3674955-1-arnd@kernel.org>
+	 <20240620162316.3674955-8-arnd@kernel.org>
+	 <e80809ba-ee81-47a5-9b08-54b11f118a78@gmx.de>
+	 <e22d7cd7-d247-4426-9506-a3a644ae03c4@cs-soprasteria.com>
+	 <1308b23a-d7c0-449e-becd-53c42114661e@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620084337.3525690-1-potin.lai.pt@gmail.com>
- <20240620084337.3525690-2-potin.lai.pt@gmail.com> <cb55efedaef63e4580c11415aa2e29606edcaf9f.camel@codeconstruct.com.au>
-In-Reply-To: <cb55efedaef63e4580c11415aa2e29606edcaf9f.camel@codeconstruct.com.au>
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Fri, 21 Jun 2024 16:53:40 +0800
-Message-ID: <CAGfYmwWp2dayGvySdYvU+nmtxZ-x3PPW_j69ZoBD4mxzPMQAzg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: aspeed,ast2600-pinctrl: add
- NCSI group
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Patrick Williams <patrick@stwcx.xyz>, Cosmo Chou <cosmo.chou@quantatw.com>, 
-	Potin Lai <potin.lai@quantatw.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Fri, Jun 21, 2024 at 8:46=E2=80=AFAM Andrew Jeffery
-<andrew@codeconstruct.com.au> wrote:
->
-> Hi Potin,
->
-> On Thu, 2024-06-20 at 16:43 +0800, Potin Lai wrote:
-> > In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is n=
-ot
-> > needed on the management controller side.
-> >
-> > Add NCSI group to distinguish the pin group between RMII and NCSI.
-> >
-> > - RMII pins:
-> >   - RMIIXRCLKI
-> >   - RMIIXRXD0
-> >   - RMIIXRXD1
-> >   - RMIIXCRSDV
-> >   - RMIIXRXER
-> >   - RMIIXRCLKO
-> >   - RMIIXTXEN
-> >   - RMIIXTXD0
-> >   - RMIIXTXD1
-> >
-> > - NCSI pins:
-> >   - RMIIXRCLKI
-> >   - RMIIXRXD0
-> >   - RMIIXRXD1
-> >   - RMIIXCRSDV
-> >   - RMIIXRXER
-> >   - RMIIXTXEN
-> >   - RMIIXTXD0
-> >   - RMIIXTXD1
->
-> I think listing all the pins for both groups obscures the fact that
-> there aren't more changes than removing RMIIXRCLKO.
->
-> Can we instead drop these lists and replace
->
-> > Add NCSI group to distinguish the pin group between RMII and NCSI.
->
-> With:
->
-> > Add "NCSI" pin groups that are equivalent to the RMII pin groups,
-> > but without the RMIIXRCLKO pin
->
-> ?
->
-Got it, will update it in the next version.
+Hi,
 
-> >
-> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
-> > ---
-> >  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml     | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-p=
-inctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinc=
-trl.yaml
-> > index 00b6974a5ed3d..3f02dc94a7ce2 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.=
-yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.=
-yaml
-> > @@ -337,6 +337,8 @@ additionalProperties:
-> >          - MDIO2
-> >          - MDIO3
-> >          - MDIO4
-> > +        - NCSI3
-> > +        - NCSI4
->
-> Can we also do this for RMII{1,2}RCLKO (and in the driver patch as
-> well)?
->
-The power of RMII{1,2} is 1.8v, which does not meet NCSI requirements.
+On Fri, 2024-06-21 at 08:28 +0200, Arnd Bergmann wrote:
+> It's more likely to be related to the upward growing stack.
+> I checked the gcc sources and found that out of the 50 supported
+> architectures, ARGS_GROW_DOWNWARD is set on everything except
+> for gcn, stormy16 and  32-bit parisc. The other two are
+> little-endian though. STACK_GROWS_DOWNWARD in turn is set on
+> everything other than parisc (both 32-bit and 64-bit).
 
-> >          - NCTS1
-> >          - NCTS2
-> >          - NCTS3
->
-> Overall, what I was hoping for with the comment on the earlier patch
-> was that you would add the discussion in the commit message to the
-> "description" entry in the binding YAML. Can you please do so? That way
-> the information is always present for people reading the binding
-> without them having to look at the binding's change history.
->
-Got it, I will add note into aspeed,ast2600-pinctrl.yaml.
+Wait a second! Does that mean that on 64-bit PA-RISC, the stack is
+actually growing downwards? If yes, that would be a strong argument
+for creating a 64-bit PA-RISC port in Debian and replacing the 32-bit
+port.
 
-> Thanks,
->
-> Andrew
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
