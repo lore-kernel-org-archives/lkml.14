@@ -1,222 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71B2168482
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 19:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718998600; cv=fail; b=o6+5Hv3MNQY8FMUAGzZvTjxQvpjJi/421oV3LxHctiIktQtub8zLk04WDjlxSfGua6Bz4JIQZUc16VK+Sq6oPEN2SQjnBvcIcuw0j84JEtEDFQFlm4OF4pnpQlgRrPiLHJT3BBYG9bQdAyQDnxCVgmjV1yOhu9tVVOPrQA+vk4E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718998600; c=relaxed/simple;
-	bh=WDmfYXjxPdpK1b36JFy/gxX4wCI1nlGCbZQaQCKJ31g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=phbGaKGSQY2dT9SBByZg8nKP7a/RARk9kOcJBuC2yM7aUA02SrK5XvlYryIqdRlRnNiilwit7r8I4XYFFO2CAsgVPe/nZaWSYd6cgQhWGavMx08cm+k1LeWyLbQB+Nxm6sMZZJzwHcZ/q5jxdlWLLKBhXtg61e5IMJam9XXSSpo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d8tWq1SQ; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E8784A32;
+	Fri, 21 Jun 2024 19:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718998661; cv=none; b=gvzOMUMUndBd7PqP4grd0gZfQa7wJL4dORS5cAtdULsudwsiHjntGahaOJGp6okWe1esMem3Tuk04Omr4WeySAvoGCFqs1kU0zMNzsDwf+1fILvBZiQQrOV9UfiLICAl3T3tHgEDrvE5yKHH8YSOsOsQ4RJ0TMDGB0QRV5WWEzk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718998661; c=relaxed/simple;
+	bh=sTdM4/wJgWIz32F7RmoaSOOm13k88VVlhyEn7r2d0Pk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gcwyexyiycdvv6m7D4BMhZT//AFoRJZJnam9HpzWLT67wPcS0LiKCXCjhPZf9HKzHHrkpaJsCrmimTzrFV8aMU68YKqfbVYr3arYU2QjLGdUGiFDrm7hoKH9wld+QVUkcVOYpumIlYNHjAjabnE2Cn7Q7+WW1BbGh1vEn1ORY98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=l+/JC+M+; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d8tWq1SQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718998599; x=1750534599;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=WDmfYXjxPdpK1b36JFy/gxX4wCI1nlGCbZQaQCKJ31g=;
-  b=d8tWq1SQ9cA6xGx2qEhz714HYDW5uzXmQ6SugHv6OyI/LjOe9ulOPVEi
-   G8SvcRVtGSCIMJkiskG1muz86Pz6Z6EDGrZalMMI79F0LySCWkfiSfSFa
-   6mY9uom1EoYTTWYFGsEuoV+nKRRVPkPO2CBjLv+HAevC9qLGoInQVEgF1
-   7eBItpHirNpkqzdsCFn/ereBBGYKbM6a7x2AF/lET2grDpTVJpJ9WbOHw
-   blZSHIf+xg1GMsytWkFfOiONrSo9FSbdD/qdR8KQPfvK6austzVSAYrOD
-   TXhMBH0lCzYmmZ+Ji/ILCix/mMo0kcMosDw8RusFBJ+MAk21tngmQ0H6Y
-   g==;
-X-CSE-ConnectionGUID: kB0e4kBHR/6cltAi+YmXrA==
-X-CSE-MsgGUID: DIeMmWeZS5SPJCgXY2N00g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="27448961"
-X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
-   d="scan'208";a="27448961"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 12:36:38 -0700
-X-CSE-ConnectionGUID: Fp9LMDIkRtmNOuIOQeDUXQ==
-X-CSE-MsgGUID: uPDHLtS5T9KR08kaV1cDvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
-   d="scan'208";a="42593257"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Jun 2024 12:36:37 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 21 Jun 2024 12:36:37 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 21 Jun 2024 12:36:36 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Fri, 21 Jun 2024 12:36:36 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="l+/JC+M+"
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 89995120009;
+	Fri, 21 Jun 2024 22:37:28 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 89995120009
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1718998648;
+	bh=QEP9tVC7IJrIs6z3JIp7IhpStzLXbWBfPUokHOf8CCA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=l+/JC+M+jZzqnwL+juNzZitz2gGjfw5LAFeeDM2jHB924rP5Eh862bY8M6h7XBOOB
+	 0I/q2tVCGPlTGtGCvfVSwYqBI5foWAJRVivlXy0WSghii9j4dvVjdI6R48xfUKdoGV
+	 +mJ1IlapX5cU1E/333GBoZUb66rOtxTBWsJOjAT6xkROUzJh0LPH3EWN6yb0femwBU
+	 S6rdwCh7cO4vuzWB4fEufMBp0Qe3LNJEagOAMN026pBDpTe2PpbovWjrn9wN/Uuk32
+	 GIP7w8CMSrpHd76YSr13mQZc3Q9nIO4dp7ssNCF9ZvIoVLLoZPj4NColmeguCDFKgZ
+	 StGZW9G2xvSOw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 21 Jun 2024 22:37:28 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 21 Jun 2024 12:36:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OZQWseDa8WvoE0FAwRPyI81a529Rb4gUt9OoDxrD2dvdGIotTEOmlxkOdZlbv04fWCtz29StRGgBWOQGk5/S6iuZ6s124tD/RgOsggzHIcGSJwkYkfC5IZltRWVC2MvDf6w/kLPuus/ShI6kVGh6weBZYfGLqZWj/Y9RRdv4P2FC2ef66Mo23hpF+DBA/t6hFpMsxH1XVfXG2dVxMwDOlGxp1khh+JkP/WwMa1Wz1KPOsJ/dWq9sW/ms/nBOD2P1aun/BFZXVaeLe0wQixfChuaigpVzuyvSNG2EGkV8LlphMX6SgWDzi2K/kt7+gEBzYQQEuWrCMsnq1qNs5KVLaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WDmfYXjxPdpK1b36JFy/gxX4wCI1nlGCbZQaQCKJ31g=;
- b=NhhFWIc5xCdSMKEkwk1u3rXjnsAKMRBj1D59yy8yUBG6FUT1S5Be2frr57vV88x1+gis5YNNXv99LIOtp6I7OqaXfIAWW8cf5YB2N7TQiYHhY9eBw/ucJ82wKnIJKMgorRWw4TAq6YYKJtF1HmChCBR6kLFXAfmkEGn+7QNaSnfEqxLVEQDG83LJ0VZnq3zvT62nuDF5gsBiFzpZW0cI0lgU66tltcP00hSYTWIecapbGPSJOGQmZ5Q39PoD1e9RIyPfJRX8GPfMvGm6cynUifqcI27dSLrBMfmsL+9A/+U4yHeCEUMgFnVAgpWJ2cnphKlu2ZzjJ4Yp4ROUXyiGYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by MN0PR11MB6009.namprd11.prod.outlook.com (2603:10b6:208:370::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.40; Fri, 21 Jun
- 2024 19:36:31 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%4]) with mapi id 15.20.7698.017; Fri, 21 Jun 2024
- 19:36:30 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "linux-mm@kvack.org" <linux-mm@kvack.org>, "peterx@redhat.com"
-	<peterx@redhat.com>, "Hansen, Dave" <dave.hansen@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "hughd@google.com" <hughd@google.com>, "willy@infradead.org"
-	<willy@infradead.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
-	"mpe@ellerman.id.au" <mpe@ellerman.id.au>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"kirill@shutemov.name" <kirill@shutemov.name>, "christophe.leroy@csgroup.eu"
-	<christophe.leroy@csgroup.eu>, "Jiang, Dave" <dave.jiang@intel.com>,
-	"aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "riel@surriel.com"
-	<riel@surriel.com>, "npiggin@gmail.com" <npiggin@gmail.com>,
-	"osalvador@suse.de" <osalvador@suse.de>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "bp@alien8.de" <bp@alien8.de>,
-	"mgorman@techsingularity.net" <mgorman@techsingularity.net>, "Huang, Ying"
-	<ying.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>, "Williams, Dan J"
-	<dan.j.williams@intel.com>
-Subject: Re: [PATCH 6/7] mm/x86: Add missing pud helpers
-Thread-Topic: [PATCH 6/7] mm/x86: Add missing pud helpers
-Thread-Index: AQHaw+qENzALlsOIS0itRHIdMvvnfbHSnMqA
-Date: Fri, 21 Jun 2024 19:36:30 +0000
-Message-ID: <db95c7abea9cd252a791d15359a4d940d91524e3.camel@intel.com>
-References: <20240621142504.1940209-1-peterx@redhat.com>
-	 <20240621142504.1940209-7-peterx@redhat.com>
-	 <4fb4b087-cae2-4516-a34e-cb4c72be13eb@intel.com>
-In-Reply-To: <4fb4b087-cae2-4516-a34e-cb4c72be13eb@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|MN0PR11MB6009:EE_
-x-ms-office365-filtering-correlation-id: 0de9ef67-643c-4cac-1e41-08dc9229737e
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|1800799021|366013|7416011|376011|38070700015;
-x-microsoft-antispam-message-info: =?utf-8?B?a3hyakxIdzB1Y1ZrQitDQ2V5YW41cmYvWWdBRE9SaUg1dDNWNnRVcUttSHRt?=
- =?utf-8?B?R3Q5R2RxYkp0VDUwUnU4L2RGczlXNUR4dThKMU1YbStCTysyeHBoQmwzTzFC?=
- =?utf-8?B?OTN1ajVZVnVFVmxwcXQxMmxxbnkzUEZ1b3RxWE9iUElpMmlQb1BwRkRBYWdK?=
- =?utf-8?B?eDZWY2NZZUVDbGEzaUVjQ3R3UU5ZZjIrTEdrWmpTTXNFZ1puckZtMVUxNjE2?=
- =?utf-8?B?ZFF2V0xTTzFZM3FhcWZ2azAwYlVodDh3U0ZSNCt3c2JmcXVrbnJJYjNzQnNR?=
- =?utf-8?B?d1k0TTNEMXpWMmFnU2lIV1BIUmxCNjQvZnZISTRTbzl6amtRZVZCc21aYk00?=
- =?utf-8?B?YzZYMWVnLzJOTm5OZ3loc2RGUTJURURnZ1VCYWNNdm9HRHlUKzA1ZnV1UU14?=
- =?utf-8?B?RXlhRzFCWkpVMGxEdEtFVXJjM3FIL3JDazczN1Y1VDVCaXBUYXlBTXpPNk1r?=
- =?utf-8?B?QUREMVB4WGFrOUtoZ0QyVnBLZkcxTmlZdFI4VUFSWGtaZnVZM2FHdGZkcFFa?=
- =?utf-8?B?UklseGRXbzJnT3pxTG02MDg2eHN1OWdCK2pqcHBOeXFGRGFRYVlVUEs3elpp?=
- =?utf-8?B?dzZ2bGpIaWRWTlZtcjJWYUVXclJqNW9uRmZKeDAxbHZaaVJ5amliYlRSbThm?=
- =?utf-8?B?VGRTQW1CMDYvYmIrN0FVaEpCZDF2OEV3ZDlzN2lhakQ1eHk5dGVlWFpmTEwr?=
- =?utf-8?B?eE50R0k0YnNNU3pHcWFnM2FMbDNYdlNtR2ZvaXo0TWNNd3NYYWthSE1LVmN4?=
- =?utf-8?B?ckVqVng0YTVFL09qZzZJVjRYM0VGdE4yb2FYZVZ2b3RTYVdSem8wYTVQQnk2?=
- =?utf-8?B?UnJuTExuRnNMV09Wb2lpblhyS1l6cGRWeTM5K0VtMjIyWTVuSFoxaFdrZ0o1?=
- =?utf-8?B?bjlXZjI5cDI0a1VlR3BSaXFDc0gvV3Rid2YrMUg4ZXFOa2tNV3VFME5LM1Vs?=
- =?utf-8?B?NW9UUjA1enROaVYxU21oYTJWc2hxRm1DUHd4YktVeTF0a3k0SSt6MDNROGZH?=
- =?utf-8?B?Y2JTRkQ2UCtHRFFmb2NEb1djNng3Vlh0ZUNEWkxLYXlqcE1LRFJLRUswZWtN?=
- =?utf-8?B?OFVDaFlVeW8wUTlaTHFJZmZXQ3FIbnVxVkFwcWFiRms0S29rYSswQ24xQ0Ri?=
- =?utf-8?B?Rm9udHVBY3NwRytuUlUrbVlYWmdBd1pZaHk0VUg0M2Q2em1DeDZGbFd0Uks5?=
- =?utf-8?B?YzcwSmc2d0dUeHhhN0VuRHVTU0ZIcVQ2WkhoVXFUOC82eGZCZUVsSGVJSHpF?=
- =?utf-8?B?cTBINGZNUUJiNStBME1VQjJTZzU5eEZ4STMzVEZNWDliSTYvRkhzSzU3bTZK?=
- =?utf-8?B?Q0x1Q1JpYnh5WllxVDNXYURyYmpVL3RJZXhXd3VaU3ZjYVRLS2JBVlJUWDJk?=
- =?utf-8?B?OUJ3WDJFNFFhZmNVK01wMk9XWTZJa3kyUGdDNTQ3Rk5HRjZsdWFqdlZoam5R?=
- =?utf-8?B?MTMxMkpoYXh3bXNCVmoyb1BXWDZUNVZ0eEpDUmY0TzMzVnFUbU9ZR1NEVklP?=
- =?utf-8?B?bkxQMkd3TEVpbFE4T1RIMlRmYTFzWGtFcEJZNWNkSFdPY2RlNWF3R1Zxb0Ry?=
- =?utf-8?B?VnhHSEFXaG5KNFJsblhMUE5KWUl4eEtVU0U4WXNKbHRROXNBa085TFNCSUhS?=
- =?utf-8?B?NUlha1U1MmJGKzUxdGV5Q01vdjdPQmJLTXdMc3FJanJQREZiOC81SEhWR3ZG?=
- =?utf-8?B?ZE83K3NTUHE5RVpmODYwM3Y3eGh5Z0x0VlBhVXVqaEhuWThkVHJPOW44bTVp?=
- =?utf-8?B?eVRYNzVOS0xYU2swSWVLZW5teXJrOTBxMFZkRkhKQlBuZ3NJcFEvd1RTeU9Q?=
- =?utf-8?Q?sVKvynGdtGMaBfxF09BG79bgzAvvxecgMwUIg=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(7416011)(376011)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QXAvRmtOeVVKSzF4VEl4dXBHRVhCRUxPSkFSR0JSRXl3Y3F6QURDK3QxOFZl?=
- =?utf-8?B?aXZ5R1BwSzY2TGQyMmZqdDFJTDNyNkhXZzBYKzVWSStkRXZkUk13ZG1lT1I4?=
- =?utf-8?B?cVlMSTU0NUNGaWhETk1iUDBtMitUenlDS0ZMNE1kNHFUVTVpQmE0MmRVZG5O?=
- =?utf-8?B?UWhlcFdiWjdtMVdEbUoyS0lUT3hZOEI4QXkrbHBONWFMYXdFWC93S0lEdlIv?=
- =?utf-8?B?SWtUNndXNmtmcm9NdHQvdU5XTHBabWhPRkxaRGRJUGduYnZyU29OUkwwK3h3?=
- =?utf-8?B?VUExTmZPUDBqaWZTdkZUUGFmN1VBS0R2c3Bldjcxa082dlcrN0w4RHNjL2Yr?=
- =?utf-8?B?UW03amdkOFl0YVA2SXlDRHp3QXBKZzkrbnpZZlVOeGs4UFRDaHBuZDlvcDhP?=
- =?utf-8?B?bEUxOUE5Sm5pQjlrWmpxL3hXOHYzblNBaStKNlh2SkxIQVI4M2kzUEhwNitH?=
- =?utf-8?B?SkxQU2hOek0wOW8zZkJzKzE2R0NqOGkxV2FURnNnUldhVnMyaHBTeTU1VHdz?=
- =?utf-8?B?RForRnpHZ3BJVWlqWVUwdTluamxqSEpLRVc0RDZTa0NTaHFRbDEybjJlUVRo?=
- =?utf-8?B?Y2VJV1NwL1JCNllNOUFiVjlhUzk3M3NBdld0SmpsYWlLYkpFWFJkM3YxR1My?=
- =?utf-8?B?RW9xMzFlR0FEMVRjYVBWS1F2dW5RNmxvVUJ0aHBsVmJ5a1V6ckI2SDNCdnRt?=
- =?utf-8?B?bWJ4RTZVRHJBTW95RTdjUi8zWEdCd0d4amc0anoxa09hUVAzRWxOSmFDSkhB?=
- =?utf-8?B?TVdwK0xQUVdOZVBETFF1V1NaZGRZOUtINDdvVTIwVHpDQUhRQVRhRVIzaDNO?=
- =?utf-8?B?bjVsVzBjOGZUYnVKU2kvM1RrTFRNRTJrNTAvbzJUUlVZVlkxUFUwR01JNjJ1?=
- =?utf-8?B?d2pXcWhPMTR0Tzg3SUV6Q0gwNWpDK1RLVVBRd3JkWk5FZnZMeGNwSzdUeGFI?=
- =?utf-8?B?ckpSL21ZQ3haVVdnVzRWTTdRWmJpUndwaEpmVStiZ2Z0Wjh3WmxMZkhMTE1C?=
- =?utf-8?B?dTZKMDJGdS9XbVQxdkVRWFB2aEdJYnB1K2FTSFFmcThIaXlYbFovQnRrcERl?=
- =?utf-8?B?dEhyNG1Fa01MS3h0Mk9BN00xeU1PRG5RM3I5enBpUHNObFJBOFlkSmFPUW9C?=
- =?utf-8?B?czkrUXBHUFZseUlqSDRhcnJPdzkzNngwcDNXVVB3UWYxWlN3Z2FOY04rYnJh?=
- =?utf-8?B?bDJtcTUzSlltK3ZudDQvbjdZVldHalZlZzdrSllHenpoeHZ3NnlVZFZrVjNp?=
- =?utf-8?B?dFJSQ3M2ZVZqVVNxZlRiRmt0TWNrS2l2YmRDdW5icEYzSHVHR0g4Yi8wR1ZX?=
- =?utf-8?B?UmJDNTc1Q3FxcVRSMHF6QmpOSzZMUTJ2OXcwODZnWkZETy9iVFg5VjlYZzdr?=
- =?utf-8?B?amoyaWtnV1o4VHNtb3d5STh4bSs3WVBsNmh2NGdGcnhObmRDWnV1NUxiSis3?=
- =?utf-8?B?Z2RqalBmVUhma0ZwTTdPZDI1NFZHenN1cjJhV21BdlZEeHBlVUp4UFNZL0Fm?=
- =?utf-8?B?dnhyRnlvWkszM2dYT0JuUU5uTlJiMW9xWEpUNUZHaXlmdmZHZzd5c3BQbVIr?=
- =?utf-8?B?b0h2cFFDZUlwM242c2lhUG9vYWl4cWgxL2hXYU5mSjR3RE56c1ZUcTZpWHAx?=
- =?utf-8?B?djBPeHBHQmF2ci9DRnhpY2FMN0hqaGhUMlFSbkNOSTNhVmYrMndudTFyLy85?=
- =?utf-8?B?RzVuUlROd0lwd2VzN0thcTVUd3VMRHlHbGFXZWJNSUwwdGlPTmtYZXR4WHU2?=
- =?utf-8?B?bHc2RTJPOWkva3IyTnRpSkZ1ZmpDZmJ6b2J5L3JJakQxUTEyYzZwZ1ZYZm5v?=
- =?utf-8?B?TzBmTngyQVR1RjczUDM1ekJvRlZySEpNdjl2c2VoS3JQcHNXSGpZWmtlaWUw?=
- =?utf-8?B?eEwxeXgyTXVaeTB3elNBZzJyZ282d0NHWk8xZGE2Qk5zYXBpemY3QlpOaW1B?=
- =?utf-8?B?ejZmdkV0K0drSHo1R2prMDRNckp3dDNHSDJPR0dUTlI0L05wVExCQTZXSWVm?=
- =?utf-8?B?QWgyTDNkWHZNbGtoSmlxQUZGVFdlQ0lORytkRmtpQXR1dHM5TGhPellJMWlW?=
- =?utf-8?B?ZGlHbDdWdU02OC9aeENGUjdGS3JtR0RySU91Q0tzU2lqcDA5RFdvVHM1SzRn?=
- =?utf-8?B?Vm0wcTdkRlRpNXZGNnBqQ3E2NTRqaGY2UXg1QlAyWGVHeHpHQkVFdUxKMEpT?=
- =?utf-8?Q?oSv2+GrAfpBrVlxBBlwvZM0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DF470C8D28E809489AC20AA648EAA397@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ 15.2.1118.40; Fri, 21 Jun 2024 22:37:27 +0300
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+To: Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella
+	<sgarzare@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, Bobby Eshleman <bobby.eshleman@bytedance.com>
+CC: <kvm@vger.kernel.org>, <virtualization@lists.linux-foundation.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel@sberdevices.ru>, <oxffffaa@gmail.com>, <avkrasnov@salutedevices.com>
+Subject: [RFC PATCH v1 0/2] virtio/vsock: some updates for deferred credit update
+Date: Fri, 21 Jun 2024 22:25:39 +0300
+Message-ID: <20240621192541.2082657-1-avkrasnov@salutedevices.com>
+X-Mailer: git-send-email 2.35.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0de9ef67-643c-4cac-1e41-08dc9229737e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 19:36:30.8375
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: U1diBXhatS1nlsbyyAFZ0mhO/Bhm5LPskjr7B2+jVa41AOFUlmFurPXgTpry5/2YlB/DMWBY4GgxZV1+m+utPLt7l+R9Jdi5t4v2o1MzvWc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6009
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186064 [Jun 21 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/21 16:35:00 #25651590
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-T24gRnJpLCAyMDI0LTA2LTIxIGF0IDA3OjUxIC0wNzAwLCBEYXZlIEhhbnNlbiB3cm90ZToNCj4g
-DQo+IEJ1dCwgc3RpbGwsIHdoYXQgaWYgeW91IHRha2UgYSBEaXJ0eT0xLFdyaXRlPTEgcHVkIGFu
-ZCBwdWRfbW9kaWZ5KCkgaXQNCj4gdG8gbWFrZSBpdCBEaXJ0eT0xLFdyaXRlPTA/wqAgV2hhdCBw
-cmV2ZW50cyB0aGF0IGZyb20gYmVpbmcNCj4gbWlzaW50ZXJwcmV0ZWQgYnkgdGhlIGhhcmR3YXJl
-IGFzIGJlaW5nIGEgdmFsaWQgMUcgc2hhZG93IHN0YWNrIG1hcHBpbmc/DQoNCkhtbSwgaXQgbG9v
-a3MgbGlrZSB3ZSBjb3VsZCB1c2UgYW4gYXJjaF9jaGVja196YXBwZWRfcHVkKCkgdGhhdCBkb2Vz
-IGEgd2FybmluZw0KbGlrZSBhcmNoX2NoZWNrX3phcHBlZF9wdGUvcG1kKCkgdG9vLiBOb3QgdGhh
-dCB3ZSBoYWQgbm8gdXNlIGZvciBvbmUgYmVmb3JlDQp0aGlzLg0K
+This patchset contains:
+0001 - patch which reworks deferred credit update. Pls see commit message,
+       it contains full description of this problem.
+
+0002 - test which uses vsockmon interface, and checks that deferred
+       credit update works as expected by parsing raw packets.
+
+Arseniy Krasnov (2):
+  virtio/vsock: rework deferred credit update logic
+  vsock/test: add test for deferred credit update
+
+ include/linux/virtio_vsock.h            |   1 +
+ net/vmw_vsock/virtio_transport_common.c |   8 +-
+ tools/testing/vsock/.gitignore          |   1 +
+ tools/testing/vsock/Makefile            |   2 +
+ tools/testing/vsock/virtio_vsock_test.c | 369 ++++++++++++++++++++++++
+ 5 files changed, 376 insertions(+), 5 deletions(-)
+ create mode 100644 tools/testing/vsock/virtio_vsock_test.c
+
+-- 
+2.25.1
+
