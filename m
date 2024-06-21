@@ -1,106 +1,93 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D362374C3;
-	Fri, 21 Jun 2024 21:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE898155A57
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 21:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719003628; cv=none; b=UqWkG+AY5DHlavRPR9eEYzEkiz5m0k8ay2su9VfLUFACN3J/LNP936GOE2zItYW++DwuxuFMTMk3jpML/q4BbJMsLXXuU4GNC00qNWHV+2QN1tkVR3WfDX8tIE1WtB+XW1ioGroYtFl2xdCasDBsN8AP+WG6SW1FwJxd2rJ6yr8=
+	t=1719003672; cv=none; b=nkoH6PYpFF10mKKW27zXEdTj9mf1P+6mKfVhdFoVf/CSNs26oUFRaQRZyCV3jPedrFUpPsHiqsKo+w5xJ2dXxF+ijRUGnFkR0jyslVJp5bkRW3C+Ul/JzvR/EuyW7vkRn8uCQ6ZEB6m0klvIUfEite2pP5NIDq1qgBwCLNgEppI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719003628; c=relaxed/simple;
-	bh=SYIOb/iA6VW4YoMV5zsPyNKNQtQ9kkt5Bi7c7qbFgO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UQz+spCuWkUaMsmz/1Ytn3NCp2G3aUpWeVChFOeRPweXsqvaRBOMJm7hG2rxzUgKAGFcDFAlWvOZfrSaeUuIP6hSPH4X3eXau0S9j0UGi0Og7cMSnbD4CShBtHgZ5HTnCTMR/3+/x2HxNHMmImndn2DXHMPa6acqV7C60Rei+Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f4a5344ec7so17021065ad.1;
-        Fri, 21 Jun 2024 14:00:27 -0700 (PDT)
+	s=arc-20240116; t=1719003672; c=relaxed/simple;
+	bh=r1NowRJipfzB30i47UKAvLVjWIfE1kpajQsXNuqHCzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nojwOpTyl4rYmok5ba+akxhCDaVf7M9FM5vLT/4sD/bEmOBkvIFdVqRRZWFM+yvVliigSRm2aXaqJ7+Q3UZ1g0/OkD678szQH9250kBoHuKTzwG5Ce4dEAttbywoBX2lhG7uv5V1VHfgktMU80GzHKpxTk18Vn829lPDtGj7qwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LsIx0lbm; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LsIx0lbm"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52cdb0d8107so1113018e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719003669; x=1719608469; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MR0pq37AFaUSgmvqO3ZUjRvaH0Q8OniBl660xU6Kqts=;
+        b=LsIx0lbm3GldOWpV5zcGt4iMMjm5jnNypwcWCJZ0FX7XFmyo9DY5PiBf8FjBLpcS6Q
+         JamSA8v+D8P8b35xgvlkR3iVyrzwApTjhJwyDF0i7Bv1a9mLEjHOpMiEwlOHEwuoP50k
+         AkUOTCUdJ26yNWKngwaEEemHWvKjWGkA8bYdVHjJICPRgI5GX3a1HuChNtqIanxTtD8Z
+         y3bEgrfKFokwh3TESrn1OO05rHZsgG4ufOCC8K8kwUIYTn+kdWzTaXw1TyhyOmC40lET
+         /5rnWuN4P9cD4t14R9bkIgleckqdemfiB+48EnisyA0C+HRY8L47/Hdblf/Oiks8mZL7
+         KLQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719003626; x=1719608426;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pmyjYpeZqGULeZcRGKfGB3jNg9toSNiwNYkzvaff/ZE=;
-        b=pES+Irozky1LwvhlKtBFN0YHin6BComO2h/NGXpSpQ5XIrH1J1BsvdMwFApHX8IFOZ
-         +Gg2o8hXHz4SR1Ed4ZasuwxIL0azD48zxfZtzLSYZZbQQBu7p4RFx2VwFUbOW2RZIocr
-         O+hvl8YUfZemtZxJ0Fysdd4RsLRetxyBxkZ0l7ZDV/+40Qqt5XOTrd91S8c+lmC2kA65
-         2p7iytOdgBIy50jWigZ4FGdL8GsO3DwBvrizGRL5CyezNtppwMnGfnCzmbT5OteCG/5X
-         nLZRs8sO2kuwIgTu3WGjoE4fLL/wAhDYFHbiZhhmkFMy0GRyPY+ul4AYZqVZabTlV44w
-         TRgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWhUZEuDlXwzfeGUIKVdnqdJ5rFmf9neg2PvshKij6nsGcS+W0k5MdHNFRrCssYy7dZBocFl9jukxAPTymxq0g1hSFpBxY7dJvchvoh/aKyKrS9yePRkbHjwGERJbJR5TkCl2zR0Uz
-X-Gm-Message-State: AOJu0Yxj4YZRLS58YfsRvOsMuo+IzwA3nU5/jPc/YI0speCdtn5x/93V
-	rH53jN5wdZUYeFxRGalMUc1GhZesW1PTYBAJ/GpXsW1z8sNxNcaw3fKyVw==
-X-Google-Smtp-Source: AGHT+IFp2pV7UyQPGRHifCinU43JMn7qFh8JPsjZ+lX8g3RD0XOKYAB9yq8SDJwGaM6fDPnmiE3xxA==
-X-Received: by 2002:a17:902:e84c:b0:1f9:e3fa:d932 with SMTP id d9443c01a7336-1fa04ab5304mr13526725ad.9.1719003626488;
-        Fri, 21 Jun 2024 14:00:26 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb323641sm18380425ad.101.2024.06.21.14.00.25
+        d=1e100.net; s=20230601; t=1719003669; x=1719608469;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MR0pq37AFaUSgmvqO3ZUjRvaH0Q8OniBl660xU6Kqts=;
+        b=IhFFnnxfJtDVorAlzu9qftYNJ2sZnNEJYzwEGiiHsFR5mjMvJczD0NxSObjnz2bWFw
+         vzlRw0grBCiyyXYK3AZVeROtkEidldgxnPh4Ijus6IKp3TKbdlUVwDTSjLNKsjciLyJF
+         a6Kq7jhBiKHHUghohsrOS0sYvCoZ5cI2c/LLZ1wmc7bcU8gbUK4PYBy3GTtkoZlA9xoV
+         ILhSJ3gHsFEPle6uhld53u2pKpPiVz53n23fLdpT9XtRyNKLaeXXMakkcJePGzbRg3pC
+         ZPw2+RPnIybJFXLmcOL3olBhWXhUO60if5xVp4FQRixKYcvF5znLttM+o0OJl2vSHWnn
+         SgTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTAD3LJdXcQlvNlKZ51kRzirIMQ23JWkwMvjvCr/MfStc2lUHE2+XZXWnQP2grvVMriVi/2vPkzClIcwcMp3mZdvigCmrPNScVfIMm
+X-Gm-Message-State: AOJu0YyhdVnRSUdX7yaMfew/6tcgciu21Inc2Uj0hIyMk2jQcXCEqfTU
+	FcIWSCYLPZWhnyft+mXUnUCQqae3jNymwIfsvvZBtPBCyTLeA4l+hTTQ40hjOBc=
+X-Google-Smtp-Source: AGHT+IEEW5ijUuPiugCxz/kwSbiittcMaFfgfc/yQbBM7kgngVvBeI7F/QcSaPHdfkNWuZnR0+uuOw==
+X-Received: by 2002:a19:2d4c:0:b0:52c:d96d:7b4f with SMTP id 2adb3069b0e04-52cd96d7cfemr1352156e87.40.1719003669028;
+        Fri, 21 Jun 2024 14:01:09 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdb4a7215sm170809e87.171.2024.06.21.14.01.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 14:00:26 -0700 (PDT)
-From: Wei Liu <wei.liu@kernel.org>
-To: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	stable@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jake Oshins <jakeo@microsoft.com>,
-	linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
-Date: Fri, 21 Jun 2024 21:00:18 +0000
-Message-ID: <20240621210018.350429-1-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.43.0
+        Fri, 21 Jun 2024 14:01:08 -0700 (PDT)
+Date: Sat, 22 Jun 2024 00:01:07 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Valeriy Klimin <vdos63@gmail.com>
+Cc: ~postmarketos/upstreaming <~postmarketos/upstreaming@lists.sr.ht>, 
+	phone-devel <phone-devel@vger.kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: dts: qcom: Add Sony Xperia Z3 Compact smartphone
+Message-ID: <4zpqdpeulfejfbnkp5prxvznohoqmdxcomztbbl6e3mazxdew2@tppmtxqxxpkk>
+References: <20240621-sony-aries-v1-0-bcf96876980e@gmail.com>
+ <20240621-sony-aries-v1-1-bcf96876980e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621-sony-aries-v1-1-bcf96876980e@gmail.com>
 
-The intent of the code snippet is to always return 0 for both
-PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
+On Fri, Jun 21, 2024 at 11:14:46AM GMT, Valeriy Klimin wrote:
+> Add the dts for the Z3 Compact. This is currently almost the same
+> as the plain Z3 as they share almost the same hardware and
+> nothing device-specific is currently supported.
+> 
+> Signed-off-by: Valeriy Klimin <vdos63@gmail.com>
+> ---
+>  arch/arm/boot/dts/qcom/Makefile                    |  1 +
+>  .../qcom-msm8974pro-sony-xperia-shinano-aries.dts  | 44 ++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
 
-The check misses PCI_INTERRUPT_PIN. This patch fixes that.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-This is discovered by this call in VFIO:
 
-    pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
-
-The old code does not set *val to 0 because it misses the check for
-PCI_INTERRUPT_PIN.
-
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-Cc: stable@kernel.org
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
----
-v2:
-* Change the commit subject line and message
-* Change the code according to feedback
----
- drivers/pci/controller/pci-hyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 5992280e8110..cdd5be16021d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
- 		   PCI_CAPABILITY_LIST) {
- 		/* ROM BARs are unimplemented */
- 		*val = 0;
--	} else if (where >= PCI_INTERRUPT_LINE && where + size <=
--		   PCI_INTERRUPT_PIN) {
-+	} else if ((where >= PCI_INTERRUPT_LINE && where + size <= PCI_INTERRUPT_PIN) ||
-+		   (where >= PCI_INTERRUPT_PIN && where + size <= PCI_MIN_GNT)) {
- 		/*
- 		 * Interrupt Line and Interrupt PIN are hard-wired to zero
- 		 * because this front-end only supports message-signaled
 -- 
-2.43.0
-
+With best wishes
+Dmitry
