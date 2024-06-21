@@ -1,295 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0567173345
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E118A173346
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718964733; cv=none; b=kruR5fL3eHNdnurbXd377dm4HDTkvL+caDezUbUdWnogJcMchhq0Yj08L8nHveqj+1vxQgDs6D2kOB7Basv1KwcShO1w9WTxygxfDQJUC39oZVwDFESry9D+nWPjGGIHf5F7n8PerAzdPsgvHTVTWgeF5v4mjIk9jnedgMfwS+8=
+	t=1718964737; cv=none; b=m69WnAtsCKDyGARWyO9XJpkPwkOQgzYztJtNqhpoh7S2m+DJIDg4U241U1/onB/vbIL5hpLgCEKnN+Xa0qlUl/rieS3m6sHoNESBvwEkAFKDdE20MFC7oeztzje3RdVOVk01KYnGQQwYgfteWiyajsIk2C++Npl9lbufE63oQT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718964733; c=relaxed/simple;
-	bh=jvbmoDSmXZXUhfmwWyMgepzh+MSZPYFxCQL2CGaUuNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dSP/yfhEvO6fJsZRcHi291rIkLq1tP1bRLRPbnLDyVuls9QwIl28Zv8pjGKp4sCKsERJR1eZ3p3BHSdFO7o1UIQew+azD05HB4Ig8QvisPJL4vavj9X0vZW6pAxpeQxzVM8DVQ/Lw/fnIkPl/NVAsyBa52x7ahwQ6xhlEueg204=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XMbahAMM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XMbahAMM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718964731;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n/SMGESx063UYipOpazaPSJ9WmTp374xvkBv3PVOUbk=;
-	b=XMbahAMM/ZZmK0Dlmg2F/2vKrl01PjRhQaYQqEdlA5S5+6HmlyCSGhbyo4aBCgGzw+5iU1
-	4uFFt1U6Sq/gnKCZ5EQlD5Hf7OCnnhKx/bDRIWyYrZ92H/RiIZvQHPiNCn+vL7f46KaQ49
-	zaqimaomZESXeljZQsRKO3WZjJTxyeU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-b810AdYsOEydsUlwyfglYA-1; Fri,
- 21 Jun 2024 06:12:07 -0400
-X-MC-Unique: b810AdYsOEydsUlwyfglYA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 293A319560B0;
-	Fri, 21 Jun 2024 10:12:06 +0000 (UTC)
-Received: from antares.redhat.com (unknown [10.39.193.189])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5EDE71956048;
-	Fri, 21 Jun 2024 10:12:01 +0000 (UTC)
-From: Adrian Moreno <amorenoz@redhat.com>
-To: netdev@vger.kernel.org
-Cc: aconole@redhat.com,
-	echaudro@redhat.com,
-	horms@kernel.org,
-	i.maximets@ovn.org,
-	dev@openvswitch.org,
-	Adrian Moreno <amorenoz@redhat.com>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 07/10] selftests: openvswitch: add emit_sample action
-Date: Fri, 21 Jun 2024 12:10:59 +0200
-Message-ID: <20240621101113.2185308-8-amorenoz@redhat.com>
-In-Reply-To: <20240621101113.2185308-1-amorenoz@redhat.com>
-References: <20240621101113.2185308-1-amorenoz@redhat.com>
+	s=arc-20240116; t=1718964737; c=relaxed/simple;
+	bh=AWYhBXoKVmT5sd39qRCJQfJw9GklLb+NkTg9looisKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iv+uZLpObjSSxaCcnBXiEgULL0oEWel836vdnbo1CY8N/tw0lSram+pp6ukwLgqdzQCPYGnlL3wD/AAGxZsvXx4JkKh4d+3ewbW3CBNwYBcsODvjCQism+ZTl/I7G3lW6jB0QSJ9gfrmQEf9vKOK1nBwdgJdpqOCAtiCk9YtMJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7695EDA7;
+	Fri, 21 Jun 2024 03:12:39 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DC1D3F6A8;
+	Fri, 21 Jun 2024 03:12:12 -0700 (PDT)
+Date: Fri, 21 Jun 2024 11:12:06 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Lingyue <lingyue@xiaomi.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, dianders@chromium.org,
+	swboyd@chromium.org, frederic@kernel.org, james.morse@arm.com,
+	scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, huangshaobo3@xiaomi.com,
+	huangjun7@xiaomi.com
+Subject: Re: [PATCH] arm64: smp: do not allocate CPU IDs to invalid CPU nodes
+Message-ID: <ZnVR9sdoqfayKNrI@J2N7QTR9R3>
+References: <20240621075045.249798-1-lingyue@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621075045.249798-1-lingyue@xiaomi.com>
 
-Add sample and emit_sample action support to ovs-dpctl.py.
+On Fri, Jun 21, 2024 at 03:50:45PM +0800, Lingyue wrote:
+> Many modules, such as arch topology, rely on num_possible_cpus() to
+> allocate memory and then access the allocated space using CPU IDs.
+> These modules assume that there are no gaps in cpu_possible_mask.
 
-Refactor common attribute parsing logic into an external function.
+Is there any documented requirement that cpu_possible_mask has no gaps?
 
-Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
----
- .../selftests/net/openvswitch/ovs-dpctl.py    | 162 +++++++++++++++++-
- 1 file changed, 161 insertions(+), 1 deletion(-)
+It looks like other architectures can have gaps in their
+cpu_possible_mask, there's no documented requiremetns AFAICT, and there
+are a bunch of commits handling cpu_possible_mask having gaps, e.g.
 
-diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-index 9f8dec2f6539..ddf4d999317c 100644
---- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-+++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-@@ -8,6 +8,7 @@ import argparse
- import errno
- import ipaddress
- import logging
-+import math
- import multiprocessing
- import re
- import struct
-@@ -58,6 +59,7 @@ OVS_FLOW_CMD_DEL = 2
- OVS_FLOW_CMD_GET = 3
- OVS_FLOW_CMD_SET = 4
- 
-+UINT32_MAX = 0xFFFFFFFF
- 
- def macstr(mac):
-     outstr = ":".join(["%02X" % i for i in mac])
-@@ -267,6 +269,75 @@ def parse_extract_field(
-     return str_skipped, data
- 
- 
-+def parse_attrs(actstr, attr_desc):
-+    """Parses the given action string and returns a list of netlink
-+    attributes based on a list of attribute descriptions.
-+
-+    Each element in the attribute description list is a tuple such as:
-+        (name, attr_name, parse_func)
-+    where:
-+        name: is the string representing the attribute
-+        attr_name: is the name of the attribute as defined in the uAPI.
-+        parse_func: is a callable accepting a string and returning either
-+            a single object (the parsed attribute value) or a tuple of
-+            two values (the parsed attribute value and the remaining string)
-+
-+    Returns a list of attributes and the remaining string.
-+    """
-+    def parse_attr(actstr, key, func):
-+        actstr = actstr[len(key) :]
-+
-+        if not func:
-+            return None, actstr
-+
-+        delim = actstr[0]
-+        actstr = actstr[1:]
-+
-+        if delim == "=":
-+            pos = strcspn(actstr, ",)")
-+            ret = func(actstr[:pos])
-+        else:
-+            ret = func(actstr)
-+
-+        if isinstance(ret, tuple):
-+            (datum, actstr) = ret
-+        else:
-+            datum = ret
-+            actstr = actstr[strcspn(actstr, ",)"):]
-+
-+        if delim == "(":
-+            if not actstr or actstr[0] != ")":
-+                raise ValueError("Action contains unbalanced parentheses")
-+
-+            actstr = actstr[1:]
-+
-+        actstr = actstr[strspn(actstr, ", ") :]
-+
-+        return datum, actstr
-+
-+    attrs = []
-+    attr_desc = list(attr_desc)
-+    while actstr and actstr[0] != ")" and attr_desc:
-+        found = False
-+        for i, (key, attr, func) in enumerate(attr_desc):
-+            if actstr.startswith(key):
-+                datum, actstr = parse_attr(actstr, key, func)
-+                attrs.append([attr, datum])
-+                found = True
-+                del attr_desc[i]
-+
-+        if not found:
-+            raise ValueError("Unknown attribute: '%s'" % actstr)
-+
-+        actstr = actstr[strspn(actstr, ", ") :]
-+
-+    if actstr[0] != ")":
-+        raise ValueError("Action string contains extra garbage or has "
-+                         "unbalanced parenthesis: '%s'" % actstr)
-+
-+    return attrs, actstr[1:]
-+
-+
- class ovs_dp_msg(genlmsg):
-     # include the OVS version
-     # We need a custom header rather than just being able to rely on
-@@ -285,7 +356,7 @@ class ovsactions(nla):
-         ("OVS_ACTION_ATTR_SET", "none"),
-         ("OVS_ACTION_ATTR_PUSH_VLAN", "none"),
-         ("OVS_ACTION_ATTR_POP_VLAN", "flag"),
--        ("OVS_ACTION_ATTR_SAMPLE", "none"),
-+        ("OVS_ACTION_ATTR_SAMPLE", "sample"),
-         ("OVS_ACTION_ATTR_RECIRC", "uint32"),
-         ("OVS_ACTION_ATTR_HASH", "none"),
-         ("OVS_ACTION_ATTR_PUSH_MPLS", "none"),
-@@ -304,8 +375,85 @@ class ovsactions(nla):
-         ("OVS_ACTION_ATTR_ADD_MPLS", "none"),
-         ("OVS_ACTION_ATTR_DEC_TTL", "none"),
-         ("OVS_ACTION_ATTR_DROP", "uint32"),
-+        ("OVS_ACTION_ATTR_EMIT_SAMPLE", "emit_sample"),
-     )
- 
-+    class emit_sample(nla):
-+        nla_flags = NLA_F_NESTED
-+
-+        nla_map = (
-+            ("OVS_EMIT_SAMPLE_ATTR_UNSPEC", "none"),
-+            ("OVS_EMIT_SAMPLE_ATTR_GROUP", "uint32"),
-+            ("OVS_EMIT_SAMPLE_ATTR_COOKIE", "array(uint8)"),
-+        )
-+
-+        def dpstr(self, more=False):
-+            args = "group=%d" % self.get_attr("OVS_EMIT_SAMPLE_ATTR_GROUP")
-+
-+            cookie = self.get_attr("OVS_EMIT_SAMPLE_ATTR_COOKIE")
-+            if cookie:
-+                args += ",cookie(%s)" % \
-+                        "".join(format(x, "02x") for x in cookie)
-+
-+            return "emit_sample(%s)" % args
-+
-+        def parse(self, actstr):
-+            desc = (
-+                ("group", "OVS_EMIT_SAMPLE_ATTR_GROUP", int),
-+                ("cookie", "OVS_EMIT_SAMPLE_ATTR_COOKIE",
-+                    lambda x: list(bytearray.fromhex(x)))
-+            )
-+
-+            attrs, actstr = parse_attrs(actstr, desc)
-+
-+            for attr in attrs:
-+                self["attrs"].append(attr)
-+
-+            return actstr
-+
-+    class sample(nla):
-+        nla_flags = NLA_F_NESTED
-+
-+        nla_map = (
-+            ("OVS_SAMPLE_ATTR_UNSPEC", "none"),
-+            ("OVS_SAMPLE_ATTR_PROBABILITY", "uint32"),
-+            ("OVS_SAMPLE_ATTR_ACTIONS", "ovsactions"),
-+        )
-+
-+        def dpstr(self, more=False):
-+            args = []
-+
-+            args.append("sample={:.2f}%".format(
-+                100 * self.get_attr("OVS_SAMPLE_ATTR_PROBABILITY") /
-+                UINT32_MAX))
-+
-+            actions = self.get_attr("OVS_SAMPLE_ATTR_ACTIONS")
-+            if actions:
-+                args.append("actions(%s)" % actions.dpstr(more))
-+
-+            return "sample(%s)" % ",".join(args)
-+
-+        def parse(self, actstr):
-+            def parse_nested_actions(actstr):
-+                subacts = ovsactions()
-+                parsed_len = subacts.parse(actstr)
-+                return subacts, actstr[parsed_len :]
-+
-+            def percent_to_rate(percent):
-+                percent = float(percent.strip('%'))
-+                return int(math.floor(UINT32_MAX * (percent / 100.0) + .5))
-+
-+            desc = (
-+                ("sample", "OVS_SAMPLE_ATTR_PROBABILITY", percent_to_rate),
-+                ("actions", "OVS_SAMPLE_ATTR_ACTIONS", parse_nested_actions),
-+            )
-+            attrs, actstr = parse_attrs(actstr, desc)
-+
-+            for attr in attrs:
-+                self["attrs"].append(attr)
-+
-+            return actstr
-+
-     class ctact(nla):
-         nla_flags = NLA_F_NESTED
- 
-@@ -637,6 +785,18 @@ class ovsactions(nla):
-                 self["attrs"].append(["OVS_ACTION_ATTR_CT", ctact])
-                 parsed = True
- 
-+            elif parse_starts_block(actstr, "sample(", False):
-+                sampleact = self.sample()
-+                actstr = sampleact.parse(actstr[len("sample(") : ])
-+                self["attrs"].append(["OVS_ACTION_ATTR_SAMPLE", sampleact])
-+                parsed = True
-+
-+            elif parse_starts_block(actstr, "emit_sample(", False):
-+                emitact = self.emit_sample()
-+                actstr = emitact.parse(actstr[len("emit_sample(") : ])
-+                self["attrs"].append(["OVS_ACTION_ATTR_EMIT_SAMPLE", emitact])
-+                parsed = True
-+
-             actstr = actstr[strspn(actstr, ", ") :]
-             while parencount > 0:
-                 parencount -= 1
--- 
-2.45.1
+  bc75e99983df1efd ("rcu: Correctly handle sparse possible cpus")
+  3da43104d3187184 ("ARC: Adjust cpuinfo for non-continuous cpu ids")
+  72917235fd5f0863 ("tracing: Fix for non-continuous cpu ids")
 
+... so I don't think that the topology code should assume that there are
+no gaps in cpu_possible_mask.
+
+> However, in of_parse_and_init_cpus(), CPU IDs are still allocated
+> for invalid CPU nodes, leading to gaps in cpu_possible_mask and
+> resulting in out-of-bounds memory access. So it is crucial to avoid
+> allocating CPU IDs to invalid CPU nodes.
+
+AFAICT the topology code could use 'nr_cpu_ids' instead of
+'nr_possible_cpus()', like the tracing commit above, or it could use a
+per-cpu allocation to avoid this.
+
+> This issue can be reproduced easily on QEMU with KASAN enabled, by
+> modifing reg property of a CPU node to 0xFFFFFFFF
+> 
+> [    0.197756] BUG: KASAN: slab-out-of-bounds in topology_normalize_cpu_scale.part.0+0x2cc/0x34c
+> [    0.199518] Read of size 4 at addr ffff000007ebe924 by task swapper/0/1
+> [    0.200087]
+> [    0.200739] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.10.0-rc4 #3
+> [    0.201647] Hardware name: linux,dummy-virt (DT)
+> [    0.203067] Call trace:
+> [    0.203404]  dump_backtrace+0x90/0xe8
+> [    0.203974]  show_stack+0x18/0x24
+> [    0.204424]  dump_stack_lvl+0x78/0x90
+> [    0.205090]  print_report+0x114/0x5cc
+> [    0.205908]  kasan_report+0xa4/0xf0
+> [    0.206488]  __asan_report_load4_noabort+0x20/0x2c
+> [    0.207427]  topology_normalize_cpu_scale.part.0+0x2cc/0x34c
+> [    0.208275]  init_cpu_topology+0x254/0x430
+> [    0.209518]  smp_prepare_cpus+0x20/0x25c
+> [    0.210824]  kernel_init_freeable+0x1dc/0x4fc
+> [    0.212047]  kernel_init+0x24/0x1ec
+> [    0.213143]  ret_from_fork+0x10/0x20
+> 
+> Signed-off-by: Lingyue <lingyue@xiaomi.com>
+> ---
+>  arch/arm64/kernel/smp.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 31c8b3094dd7..5b4178145920 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -638,12 +638,12 @@ static void __init of_parse_and_init_cpus(void)
+>  		u64 hwid = of_get_cpu_hwid(dn, 0);
+>  
+>  		if (hwid & ~MPIDR_HWID_BITMASK)
+> -			goto next;
+> +			continue;
+>  
+>  		if (is_mpidr_duplicate(cpu_count, hwid)) {
+>  			pr_err("%pOF: duplicate cpu reg properties in the DT\n",
+>  				dn);
+> -			goto next;
+> +			continue;
+>  		}
+>  
+>  		/*
+> @@ -656,7 +656,7 @@ static void __init of_parse_and_init_cpus(void)
+>  			if (bootcpu_valid) {
+>  				pr_err("%pOF: duplicate boot cpu reg property in DT\n",
+>  					dn);
+> -				goto next;
+> +				continue;
+>  			}
+>  
+
+People get very upset when CPU numbering changes, so I'd prefer to avoid
+this if possible.
+
+Mark.
+
+>  			bootcpu_valid = true;
+> -- 
+> 2.34.1
+> 
