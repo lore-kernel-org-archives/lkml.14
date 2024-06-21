@@ -1,90 +1,475 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3D115530F;
-	Fri, 21 Jun 2024 12:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1271553A2
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718974352; cv=none; b=TC3u6y06EwASRQg+FVtqD55g658OYeA0UBtzUjzJOgHzUyc+XbRvKkB5HL91GzAA5qhHL08ZduaNrVUMTeIYiFQhlpA+mIAzLOackn/3Z8eAmGTqFuu4m789XeiqiIvoxNA/LVcQ55MaTd5DfzgAVSkqny4IvaWvMTZGQkHVet0=
+	t=1718974353; cv=none; b=TtY9hR29qnu2YZ7faUuYMmxgUCtEygqhW8j+Tx/ujnNWyyQhcYF5oCgZQtaRM2UYFylm09j7dyqnb+yuTzUF5eotpz3BxIIaHZWcrTKAlA+v1vs+gy13uMvYf6c5RllHaDKObYMVRXlL5i1E00gkkpC/upDvObObten342GCuxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718974352; c=relaxed/simple;
-	bh=sy67VyX+6tFDFqZPNJ6vHwDoUQkPVK7jzqNQ/cPNonI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eY0r263RZtM+3/J4karid3GVAIjRxkMfNv2xgkrBV1aPIs6pCqRjzWu++z3/mqklxJB0X84shuO79uiS57M7afIHXX9kpTcK7Aomk8vFkFZN08Yo3+Fn88frVAOhV5x3oPGh49YoFOpIcWSVY7zdJvfOnqeWajKe9RpkZHhRNkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fFm4GIaD; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718974353; c=relaxed/simple;
+	bh=FrCPmk4Atbv8JXepVzayPNF17A0CCJvX+aB9/OC3fYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NejdiOMlfx+bix9DHFM2F/c26c/fuEuotrwPJlzTtsDtXv4mZdc5Xwv3xZ80BLSAynjfxffv2irV36NM+VaokkyrrDO1VY2ZGusgbBLyGxWeMkD540ltynUad/Rbuz6VyPOHtZ3lsZgt6Jk8/VkRcxttiUf5/D+rd2ZlpM4E9F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=hCP8ImGP; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fFm4GIaD"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9C11840E021B;
-	Fri, 21 Jun 2024 12:52:21 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kwK4-fyUVF0Q; Fri, 21 Jun 2024 12:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718974337; bh=kC3oXF4sjVIYJp+MXXYTe61sDbC5YEW3qf5CpMsG//8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fFm4GIaDaoAtB6sPLaqsK/9tlG0UrHgH0g5FzmWcKaxpINfx+YKSugCFLlQVZ82ID
-	 29lt0ywXC6DMZ9dlbiav1oCOr1NSViy3y4EnIEKpFmIORxjwyBaG7vCFh9JotyER1J
-	 QGlegpX9py5SBU7QaQOvZ+/HhIAkDoFwXIaj4RvTHF4ZEzLCh3TA7KrErJpZTPeNOI
-	 BGyrsI65e1O0teO/dDqo1LHOnrdlWsdlO1ObilQc8vcAY9dUf6dm98KGX1PSu3ssUJ
-	 xijPtw4zFjOkbK6kOHy9VWBJjUDcySZqH2zPOpIau8t5VNh07ZccpNGLEnbMqzFE2S
-	 Bqnc0iTzm9bNKhDCNexopnHdnbN+SKY4aeW3v2sOpiECtaaEF+V1Sz2dZaEEBb+6Mc
-	 tVaAmUtN08uC1CoMOVYwgrbyHxKayySxxxeGlthFQIpkNv15SRgJHFWdz9knAiqoJ9
-	 lCyjh2xTfA7WzEVhWWyq0ow7ZR6MdEqsIibRHZeNgGO3vPueiyM7mcWzGe9SWJ+gH0
-	 lJw2V07FHCJfp+5VckJejlnpbPXEnsxJ92AlxqhliqpSyaLqsoL3+iRj8jtteyLRdo
-	 dPNXQsdoHqHZGvGGgHVZWFA9yIgs2BT8I42VbEDdl6Pfpu5RFHTfwKQshYs6OgW6Jq
-	 k1q4LnZrXO/R+a7mnkC/zoN0=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 741EF40E01A5;
-	Fri, 21 Jun 2024 12:52:04 +0000 (UTC)
-Date: Fri, 21 Jun 2024 14:51:59 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Amit Shah <amit@kernel.org>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amit.shah@amd.com, seanjc@google.com, pbonzini@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	hpa@zytor.com, kim.phillips@amd.com, david.kaplan@amd.com
-Subject: Re: [PATCH] KVM: SVM: let alternatives handle the cases when rsb
- filling is required
-Message-ID: <20240621125159.GDZnV3b-eqbkGTB7YD@fat_crate.local>
-References: <20240621120743.59330-1-amit@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="hCP8ImGP"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LAtXJd011589;
+	Fri, 21 Jun 2024 14:52:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	sCZLqKVkRBoOk0m5N4EQHRqtX4PoBuJIIpIVr7E8RDc=; b=hCP8ImGPVqkvKv5s
+	CpLEoDnGKm8lLL/vW0nucH8hO0+rXx655Q+X+nSmCTb4dZCN2Dltu1LgGUOJyrSp
+	bf0HhrbuPD1HQmrz1inEmqoc9XUhfq/XrkQiXxaTRcl+cDwcLaT1HYIfRMrk2/hC
+	746ofOLCd6EaQxS989NQouR2bzefsHGwOsee4S02eThOES3Z5WXKiGBO2ZiX3p7r
+	2Y5O0lWbqc5tsJ5uDmCm+k70zNpWBFuSxYpJLzea4vL2TG9Mi4nzjgLry3caIsVi
+	4oV8obv0p1/Kjzpqv6li6u1iWuJoHv7VIYjvsayvvv2jozhEJqLVeJ3KZQUHGDC0
+	Js0VdA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yvrkdup7j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 14:52:08 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E469E40046;
+	Fri, 21 Jun 2024 14:52:04 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3001F21A206;
+	Fri, 21 Jun 2024 14:51:23 +0200 (CEST)
+Received: from [10.48.87.177] (10.48.87.177) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 21 Jun
+ 2024 14:51:22 +0200
+Message-ID: <b20e0f8b-0b06-42ab-b8a4-1461f380e723@foss.st.com>
+Date: Fri, 21 Jun 2024 14:51:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240621120743.59330-1-amit@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v3 3/3] drm/stm: dsi: expose DSI PHY internal clock
+To: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+        Philippe Cornu
+	<philippe.cornu@foss.st.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC: <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240129104106.43141-1-raphael.gallais-pou@foss.st.com>
+ <20240129104106.43141-4-raphael.gallais-pou@foss.st.com>
+Content-Language: en-US
+From: Yannick FERTRE <yannick.fertre@foss.st.com>
+In-Reply-To: <20240129104106.43141-4-raphael.gallais-pou@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
 
-On Fri, Jun 21, 2024 at 02:07:43PM +0200, Amit Shah wrote:
-> From: Amit Shah <amit.shah@amd.com>
-> 
-> This patch removes superfluous RSB filling after a VMEXIT when the CPU
+Hi Raphael,
 
-s/This patch removes/Remove/
+thanks for the patch.
 
-> already has flushed the RSB after a VMEXIT.
+Acked-by: Yannick Fertre <yannick.fertre@foss.st.com>
 
-... because AutoIBRS flushes the RSB on VMEXIT."
+Tested-by: Yannick Fertre <yannick.fertre@foss.st.com>
 
-I'd like to be stated clearly that AutoIBRS does that.
+BR
 
-Otherwise, looks ok to me.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Le 29/01/2024 à 11:41, Raphael Gallais-Pou a écrit :
+> 	DSISRC __________
+> 	               __\_
+> 	              |    \
+> 	pll4_p_ck   ->|  1  |____dsi_k
+> 	ck_dsi_phy  ->|  0  |
+> 	              |____/
+>
+> A DSI clock is missing in the clock framework. Looking at the
+> clk_summary, it appears that 'ck_dsi_phy' is not implemented. Since the
+> DSI kernel clock is based on the internal DSI pll. The common clock
+> driver can not directly expose this 'ck_dsi_phy' clock because it does
+> not contain any common registers with the DSI. Thus it needs to be done
+> directly within the DSI phy driver.
+>
+> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+> ---
+> Changes in v3:
+> 	- Fix smatch warning:
+> 	.../dw_mipi_dsi-stm.c:719 dw_mipi_dsi_stm_probe() warn: 'dsi->pclk'
+> 	from clk_prepare_enable() not released on lines: 719.
+> ---
+>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 247 ++++++++++++++++++++++----
+>   1 file changed, 216 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> index 82fff9e84345..b20123854c4a 100644
+> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> @@ -7,7 +7,9 @@
+>    */
+>   
+>   #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+>   #include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+>   #include <linux/mod_devicetable.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+> @@ -77,9 +79,12 @@ enum dsi_color {
+>   
+>   struct dw_mipi_dsi_stm {
+>   	void __iomem *base;
+> +	struct device *dev;
+>   	struct clk *pllref_clk;
+>   	struct clk *pclk;
+> +	struct clk_hw txbyte_clk;
+>   	struct dw_mipi_dsi *dsi;
+> +	struct dw_mipi_dsi_plat_data pdata;
+>   	u32 hw_version;
+>   	int lane_min_kbps;
+>   	int lane_max_kbps;
+> @@ -196,29 +201,198 @@ static int dsi_pll_get_params(struct dw_mipi_dsi_stm *dsi,
+>   	return 0;
+>   }
+>   
+> -static int dw_mipi_dsi_phy_init(void *priv_data)
+> +#define clk_to_dw_mipi_dsi_stm(clk) \
+> +	container_of(clk, struct dw_mipi_dsi_stm, txbyte_clk)
+> +
+> +static void dw_mipi_dsi_clk_disable(struct clk_hw *clk)
+>   {
+> -	struct dw_mipi_dsi_stm *dsi = priv_data;
+> +	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(clk);
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	/* Disable the DSI PLL */
+> +	dsi_clear(dsi, DSI_WRPCR, WRPCR_PLLEN);
+> +
+> +	/* Disable the regulator */
+> +	dsi_clear(dsi, DSI_WRPCR, WRPCR_REGEN | WRPCR_BGREN);
+> +}
+> +
+> +static int dw_mipi_dsi_clk_enable(struct clk_hw *clk)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(clk);
+>   	u32 val;
+>   	int ret;
+>   
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+>   	/* Enable the regulator */
+>   	dsi_set(dsi, DSI_WRPCR, WRPCR_REGEN | WRPCR_BGREN);
+> -	ret = readl_poll_timeout(dsi->base + DSI_WISR, val, val & WISR_RRS,
+> -				 SLEEP_US, TIMEOUT_US);
+> +	ret = readl_poll_timeout_atomic(dsi->base + DSI_WISR, val, val & WISR_RRS,
+> +					SLEEP_US, TIMEOUT_US);
+>   	if (ret)
+>   		DRM_DEBUG_DRIVER("!TIMEOUT! waiting REGU, let's continue\n");
+>   
+>   	/* Enable the DSI PLL & wait for its lock */
+>   	dsi_set(dsi, DSI_WRPCR, WRPCR_PLLEN);
+> -	ret = readl_poll_timeout(dsi->base + DSI_WISR, val, val & WISR_PLLLS,
+> -				 SLEEP_US, TIMEOUT_US);
+> +	ret = readl_poll_timeout_atomic(dsi->base + DSI_WISR, val, val & WISR_PLLLS,
+> +					SLEEP_US, TIMEOUT_US);
+>   	if (ret)
+>   		DRM_DEBUG_DRIVER("!TIMEOUT! waiting PLL, let's continue\n");
+>   
+>   	return 0;
+>   }
+>   
+> +static int dw_mipi_dsi_clk_is_enabled(struct clk_hw *hw)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
+> +
+> +	return dsi_read(dsi, DSI_WRPCR) & WRPCR_PLLEN;
+> +}
+> +
+> +static unsigned long dw_mipi_dsi_clk_recalc_rate(struct clk_hw *hw,
+> +						 unsigned long parent_rate)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
+> +	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
+> +	u32 val;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	pll_in_khz = (unsigned int)(parent_rate / 1000);
+> +
+> +	val = dsi_read(dsi, DSI_WRPCR);
+> +
+> +	idf = (val & WRPCR_IDF) >> 11;
+> +	if (!idf)
+> +		idf = 1;
+> +	ndiv = (val & WRPCR_NDIV) >> 2;
+> +	odf = int_pow(2, (val & WRPCR_ODF) >> 16);
+> +
+> +	/* Get the adjusted pll out value */
+> +	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
+> +
+> +	return (unsigned long)pll_out_khz * 1000;
+> +}
+> +
+> +static long dw_mipi_dsi_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				       unsigned long *parent_rate)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
+> +	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
+> +	int ret;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	pll_in_khz = (unsigned int)(*parent_rate / 1000);
+> +
+> +	/* Compute best pll parameters */
+> +	idf = 0;
+> +	ndiv = 0;
+> +	odf = 0;
+> +
+> +	ret = dsi_pll_get_params(dsi, pll_in_khz, rate / 1000,
+> +				 &idf, &ndiv, &odf);
+> +	if (ret)
+> +		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
+> +
+> +	/* Get the adjusted pll out value */
+> +	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
+> +
+> +	return pll_out_khz * 1000;
+> +}
+> +
+> +static int dw_mipi_dsi_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+> +				    unsigned long parent_rate)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
+> +	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
+> +	int ret;
+> +	u32 val;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	pll_in_khz = (unsigned int)(parent_rate / 1000);
+> +
+> +	/* Compute best pll parameters */
+> +	idf = 0;
+> +	ndiv = 0;
+> +	odf = 0;
+> +
+> +	ret = dsi_pll_get_params(dsi, pll_in_khz, rate / 1000, &idf, &ndiv, &odf);
+> +	if (ret)
+> +		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
+> +
+> +	/* Get the adjusted pll out value */
+> +	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
+> +
+> +	/* Set the PLL division factors */
+> +	dsi_update_bits(dsi, DSI_WRPCR,	WRPCR_NDIV | WRPCR_IDF | WRPCR_ODF,
+> +			(ndiv << 2) | (idf << 11) | ((ffs(odf) - 1) << 16));
+> +
+> +	/* Compute uix4 & set the bit period in high-speed mode */
+> +	val = 4000000 / pll_out_khz;
+> +	dsi_update_bits(dsi, DSI_WPCR0, WPCR0_UIX4, val);
+> +
+> +	return 0;
+> +}
+> +
+> +static void dw_mipi_dsi_clk_unregister(void *data)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = data;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	of_clk_del_provider(dsi->dev->of_node);
+> +	clk_hw_unregister(&dsi->txbyte_clk);
+> +}
+> +
+> +static const struct clk_ops dw_mipi_dsi_stm_clk_ops = {
+> +	.enable = dw_mipi_dsi_clk_enable,
+> +	.disable = dw_mipi_dsi_clk_disable,
+> +	.is_enabled = dw_mipi_dsi_clk_is_enabled,
+> +	.recalc_rate = dw_mipi_dsi_clk_recalc_rate,
+> +	.round_rate = dw_mipi_dsi_clk_round_rate,
+> +	.set_rate = dw_mipi_dsi_clk_set_rate,
+> +};
+> +
+> +static struct clk_init_data cdata_init = {
+> +	.name = "ck_dsi_phy",
+> +	.ops = &dw_mipi_dsi_stm_clk_ops,
+> +	.parent_names = (const char * []) {"ck_hse"},
+> +	.num_parents = 1,
+> +};
+> +
+> +static int dw_mipi_dsi_clk_register(struct dw_mipi_dsi_stm *dsi,
+> +				    struct device *dev)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	int ret;
+> +
+> +	DRM_DEBUG_DRIVER("Registering clk\n");
+> +
+> +	dsi->txbyte_clk.init = &cdata_init;
+> +
+> +	ret = clk_hw_register(dev, &dsi->txbyte_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = of_clk_add_hw_provider(node, of_clk_hw_simple_get,
+> +				     &dsi->txbyte_clk);
+> +	if (ret)
+> +		clk_hw_unregister(&dsi->txbyte_clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int dw_mipi_dsi_phy_init(void *priv_data)
+> +{
+> +	struct dw_mipi_dsi_stm *dsi = priv_data;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(dsi->txbyte_clk.clk);
+> +	return ret;
+> +}
+> +
+>   static void dw_mipi_dsi_phy_power_on(void *priv_data)
+>   {
+>   	struct dw_mipi_dsi_stm *dsi = priv_data;
+> @@ -235,6 +409,8 @@ static void dw_mipi_dsi_phy_power_off(void *priv_data)
+>   
+>   	DRM_DEBUG_DRIVER("\n");
+>   
+> +	clk_disable_unprepare(dsi->txbyte_clk.clk);
+> +
+>   	/* Disable the DSI wrapper */
+>   	dsi_clear(dsi, DSI_WCR, WCR_DSIEN);
+>   }
+> @@ -245,9 +421,8 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+>   			  unsigned int *lane_mbps)
+>   {
+>   	struct dw_mipi_dsi_stm *dsi = priv_data;
+> -	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
+> +	unsigned int pll_in_khz, pll_out_khz;
+>   	int ret, bpp;
+> -	u32 val;
+>   
+>   	pll_in_khz = (unsigned int)(clk_get_rate(dsi->pllref_clk) / 1000);
+>   
+> @@ -268,25 +443,10 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+>   		DRM_WARN("Warning min phy mbps is used\n");
+>   	}
+>   
+> -	/* Compute best pll parameters */
+> -	idf = 0;
+> -	ndiv = 0;
+> -	odf = 0;
+> -	ret = dsi_pll_get_params(dsi, pll_in_khz, pll_out_khz,
+> -				 &idf, &ndiv, &odf);
+> +	ret = clk_set_rate((dsi->txbyte_clk.clk), pll_out_khz * 1000);
+>   	if (ret)
+> -		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
+> -
+> -	/* Get the adjusted pll out value */
+> -	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
+> -
+> -	/* Set the PLL division factors */
+> -	dsi_update_bits(dsi, DSI_WRPCR,	WRPCR_NDIV | WRPCR_IDF | WRPCR_ODF,
+> -			(ndiv << 2) | (idf << 11) | ((ffs(odf) - 1) << 16));
+> -
+> -	/* Compute uix4 & set the bit period in high-speed mode */
+> -	val = 4000000 / pll_out_khz;
+> -	dsi_update_bits(dsi, DSI_WPCR0, WPCR0_UIX4, val);
+> +		DRM_DEBUG_DRIVER("ERROR Could not set rate of %d to %s clk->name",
+> +				 pll_out_khz, clk_hw_get_name(&dsi->txbyte_clk));
+>   
+>   	/* Select video mode by resetting DSIM bit */
+>   	dsi_clear(dsi, DSI_WCFGR, WCFGR_DSIM);
+> @@ -445,6 +605,7 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+>   	struct dw_mipi_dsi_stm *dsi;
+> +	const struct dw_mipi_dsi_plat_data *pdata = of_device_get_match_data(dev);
+>   	int ret;
+>   
+>   	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+> @@ -514,18 +675,41 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+>   		dsi->lane_max_kbps *= 2;
+>   	}
+>   
+> -	dw_mipi_dsi_stm_plat_data.base = dsi->base;
+> -	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
+> +	dsi->pdata = *pdata;
+> +	dsi->pdata.base = dsi->base;
+> +	dsi->pdata.priv_data = dsi;
+> +
+> +	dsi->pdata.max_data_lanes = 2;
+> +	dsi->pdata.phy_ops = &dw_mipi_dsi_stm_phy_ops;
+>   
+>   	platform_set_drvdata(pdev, dsi);
+>   
+> -	dsi->dsi = dw_mipi_dsi_probe(pdev, &dw_mipi_dsi_stm_plat_data);
+> +	dsi->dsi = dw_mipi_dsi_probe(pdev, &dsi->pdata);
+>   	if (IS_ERR(dsi->dsi)) {
+>   		ret = PTR_ERR(dsi->dsi);
+>   		dev_err_probe(dev, ret, "Failed to initialize mipi dsi host\n");
+>   		goto err_dsi_probe;
+>   	}
+>   
+> +	/*
+> +	 * We need to wait for the generic bridge to probe before enabling and
+> +	 * register the internal pixel clock.
+> +	 */
+> +	ret = clk_prepare_enable(dsi->pclk);
+> +	if (ret) {
+> +		DRM_ERROR("%s: Failed to enable peripheral clk\n", __func__);
+> +		goto err_dsi_probe;
+> +	}
+> +
+> +	ret = dw_mipi_dsi_clk_register(dsi, dev);
+> +	if (ret) {
+> +		DRM_ERROR("Failed to register DSI pixel clock: %d\n", ret);
+> +		clk_disable_unprepare(dsi->pclk);
+> +		goto err_dsi_probe;
+> +	}
+> +
+> +	clk_disable_unprepare(dsi->pclk);
+> +
+>   	return 0;
+>   
+>   err_dsi_probe:
+> @@ -542,12 +726,13 @@ static void dw_mipi_dsi_stm_remove(struct platform_device *pdev)
+>   
+>   	dw_mipi_dsi_remove(dsi->dsi);
+>   	clk_disable_unprepare(dsi->pllref_clk);
+> +	dw_mipi_dsi_clk_unregister(dsi);
+>   	regulator_disable(dsi->vdd_supply);
+>   }
+>   
+>   static int dw_mipi_dsi_stm_suspend(struct device *dev)
+>   {
+> -	struct dw_mipi_dsi_stm *dsi = dw_mipi_dsi_stm_plat_data.priv_data;
+> +	struct dw_mipi_dsi_stm *dsi = dev_get_drvdata(dev);
+>   
+>   	DRM_DEBUG_DRIVER("\n");
+>   
+> @@ -560,7 +745,7 @@ static int dw_mipi_dsi_stm_suspend(struct device *dev)
+>   
+>   static int dw_mipi_dsi_stm_resume(struct device *dev)
+>   {
+> -	struct dw_mipi_dsi_stm *dsi = dw_mipi_dsi_stm_plat_data.priv_data;
+> +	struct dw_mipi_dsi_stm *dsi = dev_get_drvdata(dev);
+>   	int ret;
+>   
+>   	DRM_DEBUG_DRIVER("\n");
