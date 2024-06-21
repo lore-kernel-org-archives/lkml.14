@@ -1,127 +1,99 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from out187-22.us.a.mail.aliyun.com (out187-22.us.a.mail.aliyun.com [47.90.187.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BAB153BD2;
-	Fri, 21 Jun 2024 13:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573EE142620
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718976423; cv=none; b=PGAx2iAvo18wmlA+R7ct1CP4J/OdSLfLg9gX8Fa46UMkm6UtRiOg1tVUzSQcQN0zYc+MCNcibzCnGSO7oQ1urNKqQRbQoOF5x0N7+9U0+1ae8nsT84XR1YZKTU1K8rS3odXtI8MvNpBrZwZN9ctap/v/JAyebhLjtI7s1KIvplI=
+	t=1718976482; cv=none; b=iBZgiABmBXd8+cqzCU1DhExoZeVUe7pDa61jYIfMtlGcndgNktiPz+cPaMLKXdv3K7inwL7baSd0tVyhxfq+OH5FxxWPgB8Al9itAhNSw4ZmRJn87FErhhngFq0cGhmBvHUZpZOyXIkJUmnWYqU+w9y+KuPz70EYE0CnUdweErA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718976423; c=relaxed/simple;
-	bh=osld6dK3jXn9QfIFzrfdCXJj+wgJTV1og7IU+S2Vsr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dj1UAzTRYQAH7JRH4JY6Bg3+F91qmSxN7T3fOuU89P9e9I9gELMifx0kgcVSvCL0GAGAZYnaJXVlnM604KehcNsaXjtTsRsaWL+dckPd6Gt8fMJ/MbI33iHmSUaZLajf2aScGQJbzV4RfJtTfXGma5TmWVG+7dfa0SivwIhjjbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JxgGvYQx; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718976482; c=relaxed/simple;
+	bh=kRq4/WsEZLXlCJFmln/C4ReeQ4n7ipG8SbxJa92jr9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dZn6vgrff2Aphs3yGBs4AdOdsDWW+EAEBaqfJdIm/BL2AAkvqKBf1Q/nUre1jpM3AHB61GOkXpIHfRff4Hb8CmVZbJYCMHabI4FE06Bfo+gUpNGlRw+PTvH/Ra/QrxiicaIVvC5F4xiZyIDJCw0FTaLEdjqGxhhHmAd8quSriSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=aU1UqmIQ; arc=none smtp.client-ip=47.90.187.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JxgGvYQx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718976420;
-	bh=osld6dK3jXn9QfIFzrfdCXJj+wgJTV1og7IU+S2Vsr8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JxgGvYQxSjR6XDCF8N//FsUZaEWtBizAcw48r40ry1BYk+990Kb6YJ85wmYo2nqr7
-	 XF1NicpZRH6FuchNagMoT2k54vpdFpfckwDYiUD07aou4vNrdv2leQwRSnJg113pm9
-	 gU7xf+G1xjTLCxCWx9bID2HO4YRyVkvS63HVyR90Cm6WJLZoLqiY1Kjh1dP3KRdLNK
-	 5EZqsFzioieJ8sa+PWFlga/c3SIEi3ZTom+GtbxkFrsXc39p6hrjM2HhDvWVNto1rv
-	 g0RGEu1zEAc9ZpgAtb/f7mfZ8GA1nvoYKUaAUIK889Xa3sGL8qV/96lijrlOqQ3ET7
-	 jDRNPHfHu0q/w==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sebastianfricke)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E9C4837821DD;
-	Fri, 21 Jun 2024 13:26:59 +0000 (UTC)
-Date: Fri, 21 Jun 2024 15:26:58 +0200
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, hverkuil-cisco@xs4all.nl,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	benjamin.gaignard@collabora.com, laurent.pinchart@ideasonboard.com,
-	praneeth@ti.com, nm@ti.com, vigneshr@ti.com, a-bhatia1@ti.com,
-	j-luthra@ti.com, b-brnich@ti.com, detheridge@ti.com,
-	p-mantena@ti.com, vijayp@ti.com, andrzej.p@collabora.com,
-	nicolas@ndufresne.ca, afd@ti.com
-Subject: Re: [PATCH v14 2/6] media: imagination: Add E5010 JPEG Encoder driver
-Message-ID: <20240621132658.m2utqnvwaicgiwqr@basti-XPS-13-9310>
-References: <20240618193651.2771478-1-devarsht@ti.com>
- <20240618193651.2771478-3-devarsht@ti.com>
- <20240621123715.enqtdqxskdkod5ze@basti-XPS-13-9310>
- <8dda9d0c-3154-a7fd-1233-ca5be59639de@ti.com>
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="aU1UqmIQ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1718976467; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=CugS5v3cDxB1/HBthQf7zfjVdDNfB+Mjum4rm4qX3EY=;
+	b=aU1UqmIQ+03WzvcmkYvnt+U4+G64rdrUUFj+n+UQfgJsbZ6VSGVCxR/OOnU8WZPleaimHZoEc10j2ZY+siCzWX0PDYOnp/MysVzHXw48d1/g+n5A9NeCRr94OXSgJn0BwbGbc02vZVu4a4QxzrjDjPhphCpapjOV0/z9gjx12cc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045129160;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---.Y72MRVS_1718975533;
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.Y72MRVS_1718975533)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Jun 2024 21:12:14 +0800
+From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To: linux-kernel@vger.kernel.org
+Cc: "Lai Jiangshan" <jiangshan.ljs@antgroup.com>,
+  "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
+  "Thomas Gleixner" <tglx@linutronix.de>,
+  "Ingo Molnar" <mingo@redhat.com>,
+  "Borislav Petkov" <bp@alien8.de>,
+  "Dave Hansen" <dave.hansen@linux.intel.com>,
+   <x86@kernel.org>,
+  "H. Peter Anvin" <hpa@zytor.com>,
+  "Xin Li" <xin3.li@intel.com>,
+  "Jacob Pan" <jacob.jun.pan@linux.intel.com>,
+  "Rick Edgecombe" <rick.p.edgecombe@intel.com>,
+  "Paolo Bonzini" <pbonzini@redhat.com>
+Subject: [PATCH 0/2] x86/fred: Fix two problems during the FRED initialization
+Date: Fri, 21 Jun 2024 21:12:00 +0800
+Message-Id: <cover.1718972598.git.houwenlong.hwl@antgroup.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8dda9d0c-3154-a7fd-1233-ca5be59639de@ti.com>
 
-Hey Devarsh,
+When I reviewed the FRED code and attempted to implement a FRED-like
+event delivery for my PV guest, I encountered two problems which I may
+have misunderstood.
 
-On 21.06.2024 18:14, Devarsh Thakkar wrote:
->Hi Sebastian
->
->On 21/06/24 18:07, Sebastian Fricke wrote:
->> Hey Devarsh,
->>
->> This doesn't compile without errors for me, curious, it probably did
->> compile without problems for you right?
->>
->> drivers/media/platform/imagination/e5010-jpeg-enc.c:1622:19: error:
->> initialization of ‘int (*)(struct platform_device *)’ from incompatible
->> pointer type ‘void (*)(struct platform_device *)’
->> [-Werror=incompatible-pointer-types]
->>  1622 |         .remove = e5010_remove,
->>       |                   ^~~~~~~~~~~~
->> drivers/media/platform/imagination/e5010-jpeg-enc.c:1622:19: note: (near
->> initialization for ‘e5010_driver.remove’)
->> cc1: some warnings being treated as errors
->>
->
->Yes I think it did compile fine for me.
->Did you try this on tip of linux-next ?
+One issue is that FRED can be disabled in trap_init(), but
+sysvec_install() can be called before trap_init(), thus the system
+interrupt handler is not installed into the IDT if FRED is disabled
+later. Initially, I attempted to parse the cmdline and decide whether to
+enable or disable FRED after parse_early_param(). However, I ultimately
+chose to always install the system handler into the IDT in
+sysvec_install(), which is simple and should be sufficient.
 
-Nope the media subsystem is not based on linux-next, but instead on:
-https://git.linuxtv.org/media_stage.git/log/
-Please make sure that your patches compile on top of that.
+Another problem is that the page fault handler (exc_page_fault()) is
+installed into the IDT before FRED is enabled. Consequently, if a #PF is
+triggered in this gap, the handler would receive the wrong CR2 from the
+stack if FRED feature is present. To address this, I added a page fault
+entry stub for FRED similar to the debug entry. However, I'm uncertain
+whether this is enough reason to add a new entry. Perhaps a static key
+may suffice to indicate whether FRED setup is completed and the handler
+can use it.
 
->
->As mentioned in changelog, there was update in platform driver for return type
->of remove function which got changed to void return type. Please check if you
->have this patch [1] in your tree which got recently merged.
+Note: I didn't test them on the Intel emulator, as I'm not familiar with
+configuring it to boot with my compiled kernel.
 
-No that patch is not part of the tree yet.
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Xin Li <xin3.li@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 
-Please note also the following section in that patch:
+Hou Wenlong (2):
+  x86/fred: Always install system interrupt handler into IDT
+  x86/fred: Add a page fault entry stub for FRED
 
-  	/*
-	 * Traditionally the remove callback returned an int which however is
-	 * ignored by the driver core. This led to wrong expectations by driver
-	 * authors who thought returning an error code was a valid error
-	 * handling strategy. To convert to a callback returning void, new
-	 * drivers should implement .remove_new() until the conversion it done
-	 * that eventually makes .remove() return void.
+ arch/x86/entry/entry_fred.c     |  2 +-
+ arch/x86/include/asm/idtentry.h | 15 +++++++++++++--
+ arch/x86/mm/fault.c             | 19 +++++++++++++++----
+ 3 files changed, 29 insertions(+), 7 deletions(-)
 
-So your driver is expected to implement remove_new().
+--
+2.31.1
 
-I will take care of this for the PR, but please note for the future:
-It has to work with media_stage, unless you have a very good reason for
-something different.
-
->
->Kindly let me know if you still face any issues.
->
->[1]:
->https://lore.kernel.org/all/20240527083416.1177106-2-u.kleine-koenig@pengutronix.de/
->
->Regards
->Devarsh
-
-Regards,
-Sebastian
