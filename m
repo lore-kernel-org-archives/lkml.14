@@ -1,218 +1,171 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F85D17167B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0E616D33A;
+	Fri, 21 Jun 2024 10:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718966558; cv=none; b=PcYvfwienI0joInj6YAaumYKWPHcVW7DS+qLT4XoB9c30yqG8ktQfyV6ACXzLgXSjDt3palhF19KEyie19404NGdEnsSv3xEAhBCyUeERCPiwUg+CouLXXd8qsP/1yzceA8AfzcvQ4734L1dq0qMqJAOp/L5BqSzVLQs2OYWvHE=
+	t=1718966605; cv=none; b=LhYOvU3HNTaTr11Ryp2C/osV6kyEpRoX1hRmsMQjT6iCOZ73vFQKrCFfFVVYZA1ZpsOrplVLRcKvW4rGyG8YTKslkxDgxXyj8+REq8d+3P8Pdpq6MT+3AGJMkeajp5q4pv5lFZPfpchBfspbIU6pBBABu2FKnADu8BTP7FMWZF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718966558; c=relaxed/simple;
-	bh=ky0SEPLZl0H9ulbLnRryxYTIwBF3DV2m8IRcePyJpcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/9D4crF8M5YRuFnGNbuJkRAHAhpSOI+H1oI2ebWIbkNzmZiHQSwEMEN5zbj0yWrftbSzU5ML//j2K1KL5HOYLmaSAd8JeF7y+M5DWdbyNAi6E1h6GC3+jHSyTJHDHSf9O7QLNnu4ulO5PVlTI/vA4cm1WPSdf0TGXH8mCneagY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GmFEkXoZ; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1718966605; c=relaxed/simple;
+	bh=IZnQNKQcDyMpuRjvn+CDx6ivUi2HBYIERMvXDIRo5N4=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQCWmGb/Z/qxCylwRvWwbKIKfQIphwMA65jD0juHGSCI/P9AxgI2Y4/+wS70zYAPgWkJwIihkdp/UZbt9+txXBeN5uPWZ0GBxneZ6+7Ss3sSv2PFi/t2r0a0PIb/nn4wK/KNj7gE0dCpgschVZgITlcjcpddBXWJRASuSPHqARY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=sq1Ew4Lx; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GmFEkXoZ"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so2157520a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1718966554; x=1719571354; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dgz9ZmJ4s9216HaGH0t9U4xCU2tIUMWcQRC8Q7eK2T4=;
-        b=GmFEkXoZ4La/YG7VwjQTKLEj1FTEi6ALkqhKCaENPUyLSkIvQA/9NQyN5XE1AQPhas
-         lY0+xUSPGPxqqdEaXEDRkxZSUUlDH+HfmFtMlHwdt/b0GIH7MGX9ALAWCQdpgRORXfjF
-         FfmNMbBHoBFAOqMthoJoQQbSQFPUDghJR7Vz/gS1BexByD+x5fzv3EiDfDVF6WLMY7VN
-         xn5AQDvwGwqtY4j8Y/Tm7YUiMrK3prjdvmFfmzJLZhoMey6UvJC2yNLI8cRZzxpxEEi+
-         79oklQV2MDRfmPvIVc1eDalJ2K9zU8Pnq4EyWGLI1efKwhDzoAYdc2GA4l2gm9Z9yiYB
-         JbQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718966554; x=1719571354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dgz9ZmJ4s9216HaGH0t9U4xCU2tIUMWcQRC8Q7eK2T4=;
-        b=Y30zVo3GjKuC5PivLGVB3/+bC3qcMD3WwD4onHUMXs4G78lvFLXokvL/G5zBqeMLIG
-         2fUAwgt3MJA6YJLTH151TDGMzOX2oJP0MLIFnTGZWx3EvrLIbx4Lj5KHUnaau5vQdg2u
-         BtEOEZ29lCKz+CSgGxP0iE1rTEnjpfnWeeTOF7LAbP96SF80iBg2/SCqbE9ks1UEIcIS
-         JFt47pGT/1TgmmvFTnnFKy/Ux7uQkGZAhH4cqG31dgp6HNnO33fdeORNCqt5j5o0dsOt
-         vhISBElM8S2mW+cggd1z6W0R9wLtW55YifqRjeEyyaNSBOAD7ZlthtV6H8hyRjGGyzq1
-         xCtw==
-X-Forwarded-Encrypted: i=1; AJvYcCXj8cPeicjaelXSQdDAR9b5XM+jC2xzt7xYTWhJY4PEf9+R4RYtAmQKBlRaOqyd2cxJ7hQ7k48MW7HRgaRmT1rzIJBnokba0XpbCDee
-X-Gm-Message-State: AOJu0Yyrv6HmCaFlOKTho4D31bxyZYDkmdzyIOhMiQ8oK1FnRpvudNyG
-	AqCRRUl/vPu3/a/YmOsJzkaOou9UVQNmu3qa2rDBs5b6aWmEre5aDiZdUna68nI=
-X-Google-Smtp-Source: AGHT+IHxrHNNvxNY4qy5ocEyq6ukqomCarzZCMchwFqZYAIJwUYhqG6K9/TqPLhbvu6lrozE/uS1Hw==
-X-Received: by 2002:a17:906:a28a:b0:a6f:1ad7:6875 with SMTP id a640c23a62f3a-a6fab7d0479mr422358166b.69.1718966553875;
-        Fri, 21 Jun 2024 03:42:33 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf428c67sm70251066b.2.2024.06.21.03.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 03:42:33 -0700 (PDT)
-Date: Fri, 21 Jun 2024 12:42:32 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Yong-Xuan Wang <yongxuan.wang@sifive.com>, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, apatel@ventanamicro.com, alex@ghiti.fr, greentime.hu@sifive.com, 
-	vincent.chen@sifive.com, Jinyu Tang <tjytimi@163.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>, Atish Patra <atishp@rivosinc.com>, wchen <waylingii@gmail.com>, 
-	Samuel Ortiz <sameo@rivosinc.com>, =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Evan Green <evan@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Jisheng Zhang <jszhang@kernel.org>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Leonardo Bras <leobras@redhat.com>
-Subject: Re: [PATCH v5 1/4] RISC-V: Add Svade and Svadu Extensions Support
-Message-ID: <20240621-b22a7c677a8d61c26feaa75b@orel>
-References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
- <20240605121512.32083-2-yongxuan.wang@sifive.com>
- <20240621-d1b77d43adacaa34337238c2@orel>
- <20240621-nutty-penknife-ca541ee5108d@wendy>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sq1Ew4Lx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718966603; x=1750502603;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=IZnQNKQcDyMpuRjvn+CDx6ivUi2HBYIERMvXDIRo5N4=;
+  b=sq1Ew4Lx97+8oW2iGupqOFjVuZZ1E+Z0rgTJ0kU+mAt52am6/R0dS5sW
+   x1P3kDfq3a+f8htnFViXfe+97lHd+Zf7GOzD8sP0nfiKrQM3ivEJrCh//
+   /KS1w3rajbhh0kOSkIbLuJy6k7hY/PkwIEn6kIUSJFZWzImx2Ucufm/1e
+   Sp72tPtUH+XxUyHsF9Y9rpBA+jzKrSevPQIY/Q1MSQLlknxdVxQx1yqem
+   aUCDALgRT08w7HaouOwrGlH8CbWZ6cwNPvN+EyU2eh/X9EEHPPhQiHc2J
+   VXiTl76zmJ0rmy0b97ZexgCJqU3aKZ+5nuW0kXJWMwt0e/EXg1DIucFg9
+   Q==;
+X-CSE-ConnectionGUID: Efk0HLtdQoyfmo6ObaiG9A==
+X-CSE-MsgGUID: 24mJEfUDRF2iLaBiwXtWfw==
+X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
+   d="asc'?scan'208";a="28316196"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 03:43:22 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 21 Jun 2024 03:43:11 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 21 Jun 2024 03:43:09 -0700
+Date: Fri, 21 Jun 2024 11:42:50 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Conor Dooley <conor@kernel.org>, <iansdannapel@gmail.com>,
+	<mdf@kernel.org>, <hao.wu@intel.com>, <yilun.xu@intel.com>,
+	<trix@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <linux-fpga@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: fpga: Add Efinix serial SPI programming
+ binding description
+Message-ID: <20240621-promptly-railroad-8b83cd213282@wendy>
+References: <20240620144440.125374-1-iansdannapel@gmail.com>
+ <20240620-rubdown-buffing-312d308c2d4d@spud>
+ <20240621-operation-trapezoid-844948baa860@thorsis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="UQWwXbW7nYjmx+9s"
+Content-Disposition: inline
+In-Reply-To: <20240621-operation-trapezoid-844948baa860@thorsis.com>
+
+--UQWwXbW7nYjmx+9s
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240621-nutty-penknife-ca541ee5108d@wendy>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 21, 2024 at 11:24:19AM GMT, Conor Dooley wrote:
-> On Fri, Jun 21, 2024 at 10:43:58AM +0200, Andrew Jones wrote:
-> > On Wed, Jun 05, 2024 at 08:15:07PM GMT, Yong-Xuan Wang wrote:
-> > > Svade and Svadu extensions represent two schemes for managing the PTE A/D
-> > > bits. When the PTE A/D bits need to be set, Svade extension intdicates
-> > > that a related page fault will be raised. In contrast, the Svadu extension
-> > > supports hardware updating of PTE A/D bits. Since the Svade extension is
-> > > mandatory and the Svadu extension is optional in RVA23 profile, by default
-> > > the M-mode firmware will enable the Svadu extension in the menvcfg CSR
-> > > when only Svadu is present in DT.
-> > > 
-> > > This patch detects Svade and Svadu extensions from DT and adds
-> > > arch_has_hw_pte_young() to enable optimization in MGLRU and
-> > > __wp_page_copy_user() when we have the PTE A/D bits hardware updating
-> > > support.
-> > > 
-> > > Co-developed-by: Jinyu Tang <tjytimi@163.com>
-> > > Signed-off-by: Jinyu Tang <tjytimi@163.com>
-> > > Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+On Fri, Jun 21, 2024 at 10:11:24AM +0200, Alexander Dahl wrote:
+> Am Thu, Jun 20, 2024 at 04:47:41PM +0100 schrieb Conor Dooley:
+> > On Thu, Jun 20, 2024 at 04:44:40PM +0200, iansdannapel@gmail.com wrote:
+> > > From: Ian Dannapel <iansdannapel@gmail.com>
+> > >=20
+> > > Add device tree binding documentation for configuring Efinix FPGA
+> > > using serial SPI passive programming mode.
+> > >=20
+> > > Signed-off-by: Ian Dannapel <iansdannapel@gmail.com>
 > > > ---
-> > >  arch/riscv/Kconfig               |  1 +
-> > >  arch/riscv/include/asm/csr.h     |  1 +
-> > >  arch/riscv/include/asm/hwcap.h   |  2 ++
-> > >  arch/riscv/include/asm/pgtable.h | 14 +++++++++++++-
-> > >  arch/riscv/kernel/cpufeature.c   |  2 ++
-> > >  5 files changed, 19 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > > index b94176e25be1..dbfe2be99bf9 100644
-> > > --- a/arch/riscv/Kconfig
-> > > +++ b/arch/riscv/Kconfig
-> > > @@ -36,6 +36,7 @@ config RISCV
-> > >  	select ARCH_HAS_PMEM_API
-> > >  	select ARCH_HAS_PREPARE_SYNC_CORE_CMD
-> > >  	select ARCH_HAS_PTE_SPECIAL
-> > > +	select ARCH_HAS_HW_PTE_YOUNG
-> > >  	select ARCH_HAS_SET_DIRECT_MAP if MMU
-> > >  	select ARCH_HAS_SET_MEMORY if MMU
-> > >  	select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
-> > > diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> > > index 25966995da04..524cd4131c71 100644
-> > > --- a/arch/riscv/include/asm/csr.h
-> > > +++ b/arch/riscv/include/asm/csr.h
-> > > @@ -195,6 +195,7 @@
-> > >  /* xENVCFG flags */
-> > >  #define ENVCFG_STCE			(_AC(1, ULL) << 63)
-> > >  #define ENVCFG_PBMTE			(_AC(1, ULL) << 62)
-> > > +#define ENVCFG_ADUE			(_AC(1, ULL) << 61)
-> > >  #define ENVCFG_CBZE			(_AC(1, UL) << 7)
-> > >  #define ENVCFG_CBCFE			(_AC(1, UL) << 6)
-> > >  #define ENVCFG_CBIE_SHIFT		4
-> > > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> > > index e17d0078a651..35d7aa49785d 100644
-> > > --- a/arch/riscv/include/asm/hwcap.h
-> > > +++ b/arch/riscv/include/asm/hwcap.h
-> > > @@ -81,6 +81,8 @@
-> > >  #define RISCV_ISA_EXT_ZTSO		72
-> > >  #define RISCV_ISA_EXT_ZACAS		73
-> > >  #define RISCV_ISA_EXT_XANDESPMU		74
-> > > +#define RISCV_ISA_EXT_SVADE             75
-> > > +#define RISCV_ISA_EXT_SVADU		76
-> > >  
-> > >  #define RISCV_ISA_EXT_XLINUXENVCFG	127
-> > >  
-> > > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> > > index aad8b8ca51f1..7287ea4a6160 100644
-> > > --- a/arch/riscv/include/asm/pgtable.h
-> > > +++ b/arch/riscv/include/asm/pgtable.h
-> > > @@ -120,6 +120,7 @@
-> > >  #include <asm/tlbflush.h>
-> > >  #include <linux/mm_types.h>
-> > >  #include <asm/compat.h>
-> > > +#include <asm/cpufeature.h>
-> > >  
-> > >  #define __page_val_to_pfn(_val)  (((_val) & _PAGE_PFN_MASK) >> _PAGE_PFN_SHIFT)
-> > >  
-> > > @@ -288,7 +289,6 @@ static inline pte_t pud_pte(pud_t pud)
-> > >  }
-> > >  
-> > >  #ifdef CONFIG_RISCV_ISA_SVNAPOT
-> > > -#include <asm/cpufeature.h>
-> > >  
-> > >  static __always_inline bool has_svnapot(void)
-> > >  {
-> > > @@ -624,6 +624,18 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
-> > >  	return __pgprot(prot);
-> > >  }
-> > >  
-> > > +/*
-> > > + * Both Svade and Svadu control the hardware behavior when the PTE A/D bits need to be set. By
-> > > + * default the M-mode firmware enables the hardware updating scheme when only Svadu is present in
-> > > + * DT.
-> > > + */
-> > > +#define arch_has_hw_pte_young arch_has_hw_pte_young
-> > > +static inline bool arch_has_hw_pte_young(void)
-> > > +{
-> > > +	return riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADU) &&
-> > > +	       !riscv_has_extension_likely(RISCV_ISA_EXT_SVADE);
-> > 
-> > It's hard to guess what is, or will be, more likely to be the correct
-> > choice of call between the _unlikely and _likely variants. But, while we
-> > assume svade is most prevalent right now, it's actually quite unlikely
-> > that 'svade' will be in the DT, since DTs haven't been putting it there
-> > yet. Anyway, it doesn't really matter much and maybe the _unlikely vs.
-> > _likely variants are better for documenting expectations than for
-> > performance.
-> 
-> binding hat off, and kernel hat on, what do we actually do if there's
-> neither Svadu or Svade in the firmware's description of the hardware?
-> Do we just arbitrarily turn on Svade, like we already do for some
-> extensions:
-> 	/*
-> 	 * These ones were as they were part of the base ISA when the
-> 	 * port & dt-bindings were upstreamed, and so can be set
-> 	 * unconditionally where `i` is in riscv,isa on DT systems.
-> 	 */
-> 	if (acpi_disabled) {
-> 		set_bit(RISCV_ISA_EXT_ZICSR, isainfo->isa);
-> 		set_bit(RISCV_ISA_EXT_ZIFENCEI, isainfo->isa);
-> 		set_bit(RISCV_ISA_EXT_ZICNTR, isainfo->isa);
-> 		set_bit(RISCV_ISA_EXT_ZIHPM, isainfo->isa);
-> 	}
->
+> > >  .../bindings/fpga/efnx,fpga-passive-spi.yaml  | 76 +++++++++++++++++=
+++
+> > >  1 file changed, 76 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/fpga/efnx,fpga-=
+passive-spi.yaml
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/fpga/efnx,fpga-passive=
+-spi.yaml b/Documentation/devicetree/bindings/fpga/efnx,fpga-passive-spi.ya=
+ml
+> > > new file mode 100644
+> > > index 000000000000..855ceb3b89e8
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/fpga/efnx,fpga-passive-spi.ya=
+ml
+> > > @@ -0,0 +1,76 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/fpga/efnx,fpga-passive-spi.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Efinix SPI FPGA Manager
+> > > +
+> > > +description: |
+> > > +  Efinix Trion and Titanium Series FPGAs support a method of loading=
+ the
+> > > +  bitstream over what is referred to as "SPI Passive Programming".
+> > > +  Only serial (1x bus width) is supported, setting the programming m=
+ode
+> > > +  is not in the scope the this manager and must be done elsewhere.
+> > > +
+> > > +  References:
+> > > +  - https://www.efinixinc.com/docs/an033-configuring-titanium-fpgas-=
+v2.6.pdf
+> > > +  - https://www.efinixinc.com/docs/an006-configuring-trion-fpgas-v6.=
+0.pdf
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - efnx,fpga-spi-passive
+> >=20
+> > Ahh, here is the user. Can you please add specific compatibles for the
+> > Trion and Titanium series FPGAs? And when you do, make the filename
+> > match a compatible please.
+> >=20
+> > Additionally, why "efnx" and not "efinix"?
+>=20
+> FWIW, there already is "altr,fpga-passive-serial" for Altera devices.
+>=20
+> Not sure why Altera got this short vendor prefix, but that was 2013
+> with commit 5db17a71a526 ("of: add vendor prefix for Altera Corp.")
+> and we probably never know?
 
-Yes, I think that's reasonable, assuming we do it in the final "pass",
-where we're sure svadu isn't present. Doing this is a good idea since
-we'll be able to simplify conditions, as we can just use 'if (svade)'
-since !svade would imply svadu. With FWFT and both, we'll want to remove
-svade from the isa bitmap when enabling svadu.
+I think that was the stock ticker name for Altera.
+
+> The method of transferring the configuration data over SPI into the
+> FPGA is comparable.  I would go so far to claim a single driver could
+> support both device families for passive configuration over SPI.  I've
+> done that in a non-public driver for U-Boot few months ago, and used
+> "efinix,fpga-passive-serial" as a compatible there.  The difference is
+> basically Altera requiring more GPIOs considered, and Efinix keeping
+> the SPI clock on for some time after data is already transfered.
+
+That'd prob be helpful to comment on the driver patch. I'd still like to
+see device specific compatibles here for the trion and titanium though.
 
 Thanks,
-drew
+Conor.
+
+--UQWwXbW7nYjmx+9s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnVZKgAKCRB4tDGHoIJi
+0gZSAQDqlDo1xAYJ4/GeyETk0Bz7ymm1MdkQONKwauwXvxEGAQD/VMjKhnkITsG7
++q2ZN93g1i58IH9Q+MyMd2fYx2QuHg8=
+=VM7l
+-----END PGP SIGNATURE-----
+
+--UQWwXbW7nYjmx+9s--
