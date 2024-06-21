@@ -1,433 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5E016E86A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C859816E87A;
 	Fri, 21 Jun 2024 09:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962073; cv=none; b=hC92DfPxlMlhD0DiFjv9z1ZcvN0ZmcrUgR8ZOdc2oy+ZMG0SaaPoYZTEt/Svu6qDczK/BA/gWfy812Dq7iy1MM7uu19mL+STTx7HJs+yR5RluVEzhXzbIoxAuIIH1SHpWijhCqb/rOuEPDiWzNWVw3F61vXryqd30nvb6NeI/TU=
+	t=1718962075; cv=none; b=bX+YrkgiCNYGEwLBAw6BJ2n5G51ezYanDrioXaHLf6zfuaaJhluyv/6xA8rizqssG3caZkjasuGb8Y0WNt8Pjc2ks1c0M3B/9GpJHRQADCNIh5hiRC6yxDG2L1ieHBLMs9xoovcqB1bmofY+KpgHk75dPVN89hAhriNerHcQRF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718962073; c=relaxed/simple;
-	bh=pokPztFO8YwQJZMP9X00LnwL1hxHYsz6xOAslWL26tA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNwMDqYu0zL19M1xjIobKR0bCC7dhcWwrlFr6/SeMT2y519/qwN4FUa1XhVRpqRsv973UmtcWj/Tkw3FfSp2vg00PfltPUAdifU7b3YZ6HxaSJJY9wppK6q55mOomhFPFKWP1AaCXxhwsJjndiZVeghdddnQraqUVIEkKejeT6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OA+D2Brw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718962075; c=relaxed/simple;
+	bh=nM7LTszmPvuuu0dhLJaLtzxRSfEmV8pfdUFj7EveWxs=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=OPmZcWzHVYqUvPsXUyhMf8KEkeH5d8H9w5S41uQY1VgbUsxgHgPQXyywfrLuHUPUyshdY8pMwZqbo4SBxUE47+LRAlhDtCQqkz60gWpZusgLAoPosk/vd8kJV2tfs1DfauBER0xGk90qFu0gzu5MnkE4VJG9PRfmQorbhXcF7IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=fTbZFX1f; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rl414+6C; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OA+D2Brw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D042C2BBFC;
-	Fri, 21 Jun 2024 09:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718962073;
-	bh=pokPztFO8YwQJZMP9X00LnwL1hxHYsz6xOAslWL26tA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OA+D2BrwVB0IYZ56cVGEJwVLPIEQdI3XX+pLBQj3RzVL38dsPlhEcxTMI5k3iclp6
-	 wIMj/RL6j8DgeFNJvZ3FO5HEE/HkMjrJ0YWTQzMOHEcrfSYpLfQXTLwARikxayuDrM
-	 wu6FlFTwPXRSqMCv9AtYx9JPFG7KkmKWX2f8eqYu/eE8DBx2imaOpDebo3DiXx+HcM
-	 JDTkGTuKGPqh8ysoBiHTt/A2gpYDtXCDx/QZBvDKLRZ37KXE6zLz2rYkfpxALqzOw6
-	 50LCDC7M31I6TJhz1I9k4XpX7AS18iEZdKTsgAMxz9byKWb6R5dpNEbC1AlXf9FwdG
-	 j+3xYI853blmQ==
-Date: Fri, 21 Jun 2024 11:27:50 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH RFC 3/5] drm/connector: implement generic HDMI codec
- helpers
-Message-ID: <20240621-glorious-oryx-of-expression-1ad75f@houat>
-References: <20240615-drm-bridge-hdmi-connector-v1-0-d59fc7865ab2@linaro.org>
- <20240615-drm-bridge-hdmi-connector-v1-3-d59fc7865ab2@linaro.org>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="fTbZFX1f";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rl414+6C"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id C1A2011401F4;
+	Fri, 21 Jun 2024 05:27:52 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Fri, 21 Jun 2024 05:27:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1718962072; x=1719048472; bh=Y8IBkZlexo
+	lr5cfgEz+BjS3AEENMDxiAYHTFGs+LnYY=; b=fTbZFX1fL2lnK1lURKuiCY7uwW
+	UnNTjJ8sZ/NsLG0EkTlAr86muPsYwRuKg9jiYTdE5Sscj/JCYyi4EWghTVKl3W0P
+	fNaJJr+FUR1V3GvzX97magDd32gcEYdS1KjOKNDazy744OCHf52ofJAsE0dJQtMO
+	MDvFWqjAMHqoz8Y+U33iBjX56Ep2X3MZnUvSw0Jw73MehRvVj2DLpYhOhCmTfKaf
+	iPTIphXkgWywT4893sPptLXWrKPKlGVTzrjQ7+ybW3HV3JbvQLxKXEk5TZ3TkvcY
+	AoU+/BUa70uGzHZ4PhW88Ovus5XDUsKnvCXYTx7Ggh0WhV2gnpnhtNgX1SEg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1718962072; x=1719048472; bh=Y8IBkZlexolr5cfgEz+BjS3AEENM
+	DxiAYHTFGs+LnYY=; b=rl414+6C5SXYCYF2IVbg3yzepwyeIRDkxwcOzsPa7Ho4
+	wV6zJMtAl9iw7HebLxvfeg1Q0mePjhwpQ92tVPLz0O0tGecYv1v5g/KSVVVI/0NB
+	1n26XmwgVMDlHxFL3tuB/mzWqnvbA5gXnyRr99II6/Y4eV45yfMhRW6xmiJWBzPk
+	JwbFLEQkvyLbDO/wEs+prYOw3uLJ9Re/jAGwUmV8QJSq0KlsCFC89mnPfCVYp5St
+	hwRxrNh4ksx0v2Bu9g5AG33ZayUqepR32YAQ2uEyQocB6y5WuduZUsnUJtBwvWwZ
+	LowUV23MJgV+BvH3w4RlxHJCyFkyUiMmv008+JWh/Q==
+X-ME-Sender: <xms:mEd1ZkYWClx-m9mr8ueH9SMKtcGGfHAWZ8UKcmWy9s6Kj2k9OzlPJQ>
+    <xme:mEd1ZvZ7zMQW4nYZWX5oc_iwN8C-DrpViDlkSlywj_lcM9Ws3gtgby3EoKFBnjKg5
+    I-_tNHqSRBbujOPE7A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgedgudeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
+    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
+    gvrhhnpeelffevveffhfeuteetteevteelteduudfgjedvleejteetlefhieeiudfgveel
+    feenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:mEd1Zu8jmBSlALriWRB0I5yG16vGL_gKcg0wdwB9rtzcwlDrD9lL9w>
+    <xmx:mEd1ZupyRxyWzzlkeedtC2siqLK6sa4-_zx3ZcwYDgFHWLZw-UPVQg>
+    <xmx:mEd1ZvrtpVM2PDK14pLKRT1jsqC9jk20yfuXbnEeKtpYF9_HHQKVOg>
+    <xmx:mEd1ZsSL02A6uhHucJKbx6hiuYF75BI-zMlxDHw6_PojWi5qy1b0Jw>
+    <xmx:mEd1ZgCQ0sMdyEFy-TQmg33AgJfEdU0aijj3ViVaU3e3dxDD9Ua7w_F9>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 7E79A2340082; Fri, 21 Jun 2024 05:27:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gjat5kpaoljnvhfy"
-Content-Disposition: inline
-In-Reply-To: <20240615-drm-bridge-hdmi-connector-v1-3-d59fc7865ab2@linaro.org>
+Message-Id: <ab40d5d2-a14a-4cb2-b315-b4cb66654f9e@app.fastmail.com>
+In-Reply-To: <20240621085745.233107-1-dev@doubly.so>
+References: <20240621085745.233107-1-dev@doubly.so>
+Date: Fri, 21 Jun 2024 21:27:32 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Devin Bayer" <dev@doubly.so>, corentin.chary@gmail.com
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: support the disable camera LED on F10
+ of Zenbook 2023
+Content-Type: text/plain
 
-
---gjat5kpaoljnvhfy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-Sorry for taking some time to review this series.
-
-On Sat, Jun 15, 2024 at 08:53:32PM GMT, Dmitry Baryshkov wrote:
-> Several DRM drivers implement HDMI codec support (despite its name it
-> applies to both HDMI and DisplayPort drivers). Implement generic
-> framework to be used by these drivers. This removes a requirement to
-> implement get_eld() callback and provides default implementation for
-> codec's plug handling.
->=20
-> The framework is integrated with the DRM HDMI Connector framework, but
-> can be used by DisplayPort drivers.
->=20
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Fri, 21 Jun 2024, at 8:57 PM, Devin Bayer wrote:
+> Adds a sysfs entry for the LED on F10 above the crossed out camera icon on 2023 Zenbooks.
+> 
+> v2
+> - Changed name from `platform::camera` to `asus::camera`
+> - Separated patch from patchset
+> 
+> v1
+> - https://lore.kernel.org/platform-driver-x86/20240620082223.20178-1-dev@doubly.so/
+> 
+> Signed-off-by: Devin Bayer <dev@doubly.so>
 > ---
->  drivers/gpu/drm/Makefile                   |   1 +
->  drivers/gpu/drm/drm_connector.c            |   8 ++
->  drivers/gpu/drm/drm_connector_hdmi_codec.c | 157 +++++++++++++++++++++++=
-++++++
->  include/drm/drm_connector.h                |  33 ++++++
->  4 files changed, 199 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 68cc9258ffc4..e113a6eade23 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -45,6 +45,7 @@ drm-y :=3D \
->  	drm_client_modeset.o \
->  	drm_color_mgmt.o \
->  	drm_connector.o \
-> +	drm_connector_hdmi_codec.o \
->  	drm_crtc.o \
->  	drm_displayid.o \
->  	drm_drv.o \
-> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connec=
-tor.c
-> index 3d73a981004c..66d6e9487339 100644
-> --- a/drivers/gpu/drm/drm_connector.c
-> +++ b/drivers/gpu/drm/drm_connector.c
-> @@ -279,6 +279,7 @@ static int __drm_connector_init(struct drm_device *de=
-v,
->  	mutex_init(&connector->mutex);
->  	mutex_init(&connector->edid_override_mutex);
->  	mutex_init(&connector->hdmi.infoframes.lock);
-> +	mutex_init(&connector->hdmi_codec.lock);
->  	connector->edid_blob_ptr =3D NULL;
->  	connector->epoch_counter =3D 0;
->  	connector->tile_blob_ptr =3D NULL;
-> @@ -529,6 +530,12 @@ int drmm_connector_hdmi_init(struct drm_device *dev,
-> =20
->  	connector->hdmi.funcs =3D hdmi_funcs;
-> =20
-> +	if (connector->hdmi_codec.i2s || connector->hdmi_codec.spdif) {
-> +		ret =3D drmm_connector_hdmi_codec_alloc(dev, connector, hdmi_funcs->co=
-dec_ops);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL(drmm_connector_hdmi_init);
-> @@ -665,6 +672,7 @@ void drm_connector_cleanup(struct drm_connector *conn=
-ector)
->  		connector->funcs->atomic_destroy_state(connector,
->  						       connector->state);
-> =20
-> +	mutex_destroy(&connector->hdmi_codec.lock);
->  	mutex_destroy(&connector->hdmi.infoframes.lock);
->  	mutex_destroy(&connector->mutex);
-> =20
-> diff --git a/drivers/gpu/drm/drm_connector_hdmi_codec.c b/drivers/gpu/drm=
-/drm_connector_hdmi_codec.c
-> new file mode 100644
-> index 000000000000..a3a7ad117f6f
-> --- /dev/null
-> +++ b/drivers/gpu/drm/drm_connector_hdmi_codec.c
-> @@ -0,0 +1,157 @@
-> +/*
-> + * Copyright (c) 2024 Linaro Ltd
-> + *
-> + * Permission to use, copy, modify, distribute, and sell this software a=
-nd its
-> + * documentation for any purpose is hereby granted without fee, provided=
- that
-> + * the above copyright notice appear in all copies and that both that co=
-pyright
-> + * notice and this permission notice appear in supporting documentation,=
- and
-> + * that the name of the copyright holders not be used in advertising or
-> + * publicity pertaining to distribution of the software without specific,
-> + * written prior permission.  The copyright holders make no representati=
-ons
-> + * about the suitability of this software for any purpose.  It is provid=
-ed "as
-> + * is" without express or implied warranty.
-> + *
-> + * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOF=
-TWARE,
-> + * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-> + * EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT=
- OR
-> + * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS O=
-F USE,
-> + * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-> + * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERF=
-ORMANCE
-> + * OF THIS SOFTWARE.
-> + */
-> +
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <drm/drm_connector.h>
-> +#include <drm/drm_managed.h>
-> +
-> +#include <sound/hdmi-codec.h>
-> +
-> +static int drm_connector_hdmi_codec_get_eld(struct device *dev, void *da=
-ta,
-> +					    uint8_t *buf, size_t len)
+> drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++
+> include/linux/platform_data/x86/asus-wmi.h |  2 ++
+> 2 files changed, 38 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 3f07bbf809ef..20b7ed6a27b5 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -73,6 +73,7 @@ module_param(fnlock_default, bool, 0444);
+> #define NOTIFY_LID_FLIP_ROG 0xbd
+>  
+> #define ASUS_WMI_FNLOCK_BIOS_DISABLED BIT(0)
+> +#define ASUS_WMI_DEVID_CAMERA_LED 0x00060079
+>  
+> #define ASUS_MID_FAN_DESC "mid_fan"
+> #define ASUS_GPU_FAN_DESC "gpu_fan"
+> @@ -227,6 +228,7 @@ struct asus_wmi {
+> struct led_classdev lightbar_led;
+> int lightbar_led_wk;
+> struct led_classdev micmute_led;
+> + struct led_classdev camera_led;
+> struct workqueue_struct *led_workqueue;
+> struct work_struct tpd_led_work;
+> struct work_struct wlan_led_work;
+> @@ -1533,6 +1535,27 @@ static int micmute_led_set(struct led_classdev *led_cdev,
+> return err < 0 ? err : 0;
+> }
+>  
+> +static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
 > +{
-> +	struct drm_connector *connector =3D data;
+> + struct asus_wmi *asus;
+> + u32 result;
 > +
-> +	//  FIXME: locking against drm_edid_to_eld ?
-> +	memcpy(buf, connector->eld, min(sizeof(connector->eld), len));
+> + asus = container_of(led_cdev, struct asus_wmi, camera_led);
+> + asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED, &result);
 > +
-> +	return 0;
+> + return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
 > +}
 > +
-> +static int drm_connector_hdmi_codec_hook_plugged_cb(struct device *dev,
-> +						    void *data,
-> +						    hdmi_codec_plugged_cb fn,
-> +						    struct device *codec_dev)
+> +static int camera_led_set(struct led_classdev *led_cdev,
+> +    enum led_brightness brightness)
 > +{
-> +	struct drm_connector *connector =3D data;
+> + int state = brightness != LED_OFF;
+> + int err;
 > +
-> +	mutex_lock(&connector->hdmi_codec.lock);
-> +
-> +	connector->hdmi_codec.plugged_cb =3D fn;
-> +	connector->hdmi_codec.plugged_cb_dev =3D codec_dev;
-> +
-> +	fn(codec_dev, connector->hdmi_codec.last_state);
-> +
-> +	mutex_unlock(&connector->hdmi_codec.lock);
-> +
-> +	return 0;
+> + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CAMERA_LED, state, NULL);
+> + return err < 0 ? err : 0;
 > +}
 > +
-> +void drm_connector_hdmi_codec_plugged_notify(struct drm_connector *conne=
-ctor,
-> +					     bool plugged)
-> +{
-> +	mutex_lock(&connector->hdmi_codec.lock);
+> static void asus_wmi_led_exit(struct asus_wmi *asus)
+> {
+> led_classdev_unregister(&asus->kbd_led);
+> @@ -1540,6 +1563,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+> led_classdev_unregister(&asus->wlan_led);
+> led_classdev_unregister(&asus->lightbar_led);
+> led_classdev_unregister(&asus->micmute_led);
+> + led_classdev_unregister(&asus->camera_led);
+>  
+> if (asus->led_workqueue)
+> destroy_workqueue(asus->led_workqueue);
+> @@ -1631,6 +1655,18 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+> goto error;
+> }
+>  
+> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
+> + asus->camera_led.name = "asus::camera";
+> + asus->camera_led.max_brightness = 1;
+> + asus->camera_led.brightness_get = camera_led_get;
+> + asus->camera_led.brightness_set_blocking = camera_led_set;
 > +
-> +	connector->hdmi_codec.last_state =3D plugged;
+> + rv = led_classdev_register(&asus->platform_device->dev,
+> + &asus->camera_led);
+> + if (rv)
+> + goto error;
+> + }
 > +
-> +	if (connector->hdmi_codec.plugged_cb &&
-> +	    connector->hdmi_codec.plugged_cb_dev)
-> +		connector->hdmi_codec.plugged_cb(connector->hdmi_codec.plugged_cb_dev,
-> +						 connector->hdmi_codec.last_state);
-> +
-> +	mutex_unlock(&connector->hdmi_codec.lock);
-> +}
-> +EXPORT_SYMBOL(drm_connector_hdmi_codec_plugged_notify);
+> error:
+> if (rv)
+> asus_wmi_led_exit(asus);
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index ab1c7deff118..fb0b00f7d292 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -50,6 +50,8 @@
+> #define ASUS_WMI_DEVID_LED5 0x00020015
+> #define ASUS_WMI_DEVID_LED6 0x00020016
+> #define ASUS_WMI_DEVID_MICMUTE_LED 0x00040017
+> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG 0x00060078
+> +#define ASUS_WMI_DEVID_CAMERA_LED 0x00060079
+>  
+> /* Backlight and Brightness */
+> #define ASUS_WMI_DEVID_ALS_ENABLE 0x00050001 /* Ambient Light Sensor */
+> -- 
+> 2.45.2
+> 
 
-I think we should do this the other way around, or rather, like we do
-for drm_connector_hdmi_init. We'll need a hotplug handler for multiple
-things (CEC, HDMI 2.0, audio), so it would be best to have a single
-function to call from drivers, that will perform whatever is needed
-depending on the driver's capabilities.
+If Hans and Ilpo have no other comments regarding the written C code:
 
-So something like drm_connector_hdmi_handle_hotplug, which would then do
-the above if there's audio support.
-
-> +static void drm_connector_hdmi_codec_cleanup_action(struct drm_device *d=
-ev,
-> +						    void *ptr)
-> +{
-> +	struct platform_device *pdev =3D ptr;
-> +
-> +	platform_device_unregister(pdev);
-> +}
-> +
-> +/**
-> + * drmm_connector_hdmi_alloc - Allocate HDMI Codec device for the DRM co=
-nnector
-> + * @dev: DRM device
-> + * @connector: A pointer to the connector to allocate codec for
-> + * @ops: callbacks for this connector
-> + *
-> + * Create a HDMI codec device to be used with the specified connector.
-> + *
-> + * Cleanup is automatically handled with in a DRM-managed action.
-> + *
-> + * The connector structure should be allocated with drmm_kzalloc().
-> + *
-> + * Returns:
-> + * Zero on success, error code on failure.
-> + */
-> +int drmm_connector_hdmi_codec_alloc(struct drm_device *dev,
-> +				    struct drm_connector *connector,
-> +				    const struct hdmi_codec_ops *base_ops)
-> +{
-> +	struct hdmi_codec_pdata codec_pdata =3D {};
-> +	struct platform_device *pdev;
-> +	struct hdmi_codec_ops *ops;
-> +	int ret;
-> +
-> +	ops =3D drmm_kmalloc(dev, sizeof(*ops), GFP_KERNEL);
-> +	if (!ops)
-> +		return -ENOMEM;
-
-Do we actually need to allocate a new structure here?
-
-> +	*ops =3D *base_ops;
-> +
-> +	ops->get_eld =3D drm_connector_hdmi_codec_get_eld;
-> +	ops->hook_plugged_cb =3D drm_connector_hdmi_codec_hook_plugged_cb;
-> +
-> +	codec_pdata.ops =3D ops;
-> +	codec_pdata.i2s =3D connector->hdmi_codec.i2s,
-> +	codec_pdata.spdif =3D connector->hdmi_codec.spdif,
-> +	codec_pdata.max_i2s_channels =3D connector->hdmi_codec.max_i2s_channels,
-> +	codec_pdata.data =3D connector;
-> +
-> +	pdev =3D platform_device_register_data(connector->hdmi_codec.parent_dev,
-> +					     HDMI_CODEC_DRV_NAME,
-> +					     PLATFORM_DEVID_AUTO,
-> +					     &codec_pdata, sizeof(codec_pdata));
-
-I think parent_dev should be setup by drm_connector_hdmi_init. I guess
-what I'm trying to say is that the reason HDMI support has been so
-heterogenous is precisely because of the proliferation of functions they
-needed to call, and so most drivers were doing the bare minimum until it
-worked (or they encountered a bug).
-
-What I was trying to do with the HDMI connector stuff was to make the
-easiest approach the one that works according to the spec, for
-everything.
-
-Audio is optional, so it should be a togglable thing (either by an
-additional function or parameter), but the drivers shouldn't have to set
-everything more than what the function requires.
-
-Also, parent_dev is going to be an issue there. IIRC, ASoC will set its
-structure as the device data and overwrite whatever we put there.
-
-We worked around it in vc4 by making sure that snd_soc_card was right at
-the start of the driver structure and thus both pointers would be equal,
-but we have to deal with it here too.
-
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
-> +
-> +	ret =3D drmm_add_action_or_reset(dev, drm_connector_hdmi_codec_cleanup_=
-action, pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	connector->hdmi_codec.codec_pdev =3D pdev;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(drmm_connector_hdmi_codec_alloc);
-> +
-> +/**
-> + * drmm_connector_hdmi_codec_free - rollback drmm_connector_hdmi_codec_a=
-lloc
-> + * @dev: DRM device
-> + * @hdmi_codec: A pointer to the HDMI codec data
-> + *
-> + * Rollback the drmm_connector_hdmi_codec_alloc() and free allocated dat=
-a.
-> + * While this function should not be necessary for a typical driver, DRM=
- bridge
-> + * drivers have to call it from the remove callback if the bridge uses
-> + * Connector's HDMI Codec interface.
-> + */
-> +void drmm_connector_hdmi_codec_free(struct drm_device *dev,
-> +				    struct drm_connector_hdmi_codec *hdmi_codec)
-> +{
-> +	drmm_release_action(dev, drm_connector_hdmi_codec_cleanup_action,
-> +			    hdmi_codec->codec_pdev);
-> +}
-
-What would it be useful for?
-
-> +EXPORT_SYMBOL(drmm_connector_hdmi_codec_free);
-> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> index f750765d8fbc..0eb8d8ed9495 100644
-> --- a/include/drm/drm_connector.h
-> +++ b/include/drm/drm_connector.h
-> @@ -46,6 +46,7 @@ struct drm_property_blob;
->  struct drm_printer;
->  struct drm_privacy_screen;
->  struct edid;
-> +struct hdmi_codec_ops;
->  struct i2c_adapter;
-> =20
->  enum drm_connector_force {
-> @@ -1199,6 +1200,8 @@ struct drm_connector_hdmi_funcs {
->  	int (*write_infoframe)(struct drm_connector *connector,
->  			       enum hdmi_infoframe_type type,
->  			       const u8 *buffer, size_t len);
-> +
-> +	const struct hdmi_codec_ops *codec_ops;
-
-I think I'd rather have the HDMI connector framework provide the ASoC
-hooks, and make the needed pointer casts / lookups to provide a
-consistent API to drivers using it.
-
-This will probably also solve the issue mentioned above.
-
->  };
-> =20
->  /**
-> @@ -1706,6 +1709,22 @@ struct drm_connector_hdmi {
->  	} infoframes;
->  };
-> =20
-> +struct drm_connector_hdmi_codec {
-> +	struct device *parent_dev;
-> +	struct platform_device *codec_pdev;
-> +
-> +	const struct drm_connector_hdmi_codec_funcs *funcs;
-> +
-> +	struct mutex lock; /* protects last_state and plugged_cb */
-> +	void (*plugged_cb)(struct device *dev, bool plugged);
-> +	struct device *plugged_cb_dev;
-> +	bool last_state;
-> +
-> +	int max_i2s_channels;
-> +	uint i2s: 1;
-> +	uint spdif: 1;
-> +};
-
-It would be great to have some documentation on what those are,
-last_state and the mutex especially raise attention :)
-
-
->  /**
->   * struct drm_connector - central DRM connector control structure
->   *
-> @@ -2119,6 +2138,12 @@ struct drm_connector {
->  	 * @hdmi: HDMI-related variable and properties.
->  	 */
->  	struct drm_connector_hdmi hdmi;
-> +
-> +	/**
-> +	 * @hdmi_codec: HDMI codec properties and variables. Also might be used
-> +	 * for DisplayPort audio.
-> +	 */
-> +	struct drm_connector_hdmi_codec hdmi_codec;
-
-I'd rather make this part of drm_connector_hdmi, it cannot work without it.
-
-Maxime
-
---gjat5kpaoljnvhfy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZnVHlQAKCRDj7w1vZxhR
-xWNTAQD6R0h1ls8a6OHge64dniIUKO/6yqAtc8KifbinTlziZwD/XU0cxUF5m4x/
-bA9xk/l+YZkxQLqhxX4gYppzcEIbCgc=
-=U9/M
------END PGP SIGNATURE-----
-
---gjat5kpaoljnvhfy--
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
