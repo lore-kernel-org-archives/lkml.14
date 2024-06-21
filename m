@@ -1,64 +1,64 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF451178CD6;
-	Fri, 21 Jun 2024 11:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990817966E;
+	Fri, 21 Jun 2024 11:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969867; cv=none; b=XrnW7njSzuxI6bUs8IKNt1FZg2ZJsaAPQc5clvsZf58wkML2SKsxxKbcHxUCSAa3uyKAWRpp5HB83V1ZJwIaB1QYKHTKd/+GwrJwOnq5PEdcy1jpaXuQhr2p1UYTOFJVboAGpLHiqsCbQjaR6Xn85+02lAzZsihmGUJiT4hzZIQ=
+	t=1718969868; cv=none; b=hijF1xB+OrOSigQSn6AK2d7ujwVreHcWyW+nLrRcdePvDL4YVawoBH8+tIyXkb3s2PPPJ3HBbRI8Mcigzjex29gDU4ChshJNMeDjZJbEpxR7zKEUt9IoW6RRl7TPM9CekSF50CeUQOIfmRnByevfk0kVV24MKwP5MjrG63uBEak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969867; c=relaxed/simple;
-	bh=bpWldg0OqAAK7JrR+6GGAQ5rFR6/NxLnlT9WzU1H6Aw=;
+	s=arc-20240116; t=1718969868; c=relaxed/simple;
+	bh=cXejuEluh+BjX1Ar6e5P4JKZqCjqJdrKYUKKBgQTaXk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LYzJjHurT+k0ZHN8SB2VZ2/MRN5XSE5KtpnqKtN5xcj3UQ57ctQ77bTPh1YsOnx6umuKhhKh1+eC9U3ghgbzNz81CxcMOr+Nq9sWo2jS1UhUh6ruUCAVKk7n+xvw613TZuTyTipYd5J7AG/rGJEXe3HyPyzkGsd5fK/fcA3P1eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h2ird5e7; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=iauMBqf6xh9EMSzNgquFXZAFQuiF7Kzf/b0Q47B+u7fmoaqsBUbnSHq+GhqGESBqWRYE1kiyn0FHn5nAgjtiE0i8zFuvFwmoRgSMNpf6cktno79JnRNYSUUhsP0xod7Nw2DqveSHrs18ihlZUaDCLiwEY24G98spE2mIQOJZF50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bOj7jzux; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h2ird5e7"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBQeuM012239;
-	Fri, 21 Jun 2024 11:37:29 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bOj7jzux"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBQvQs018553;
+	Fri, 21 Jun 2024 11:37:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=eOJVqKOJuZasA
-	86pPY8j/wtn7XC9Zj2RO1nXjWn3Mgo=; b=h2ird5e7i3JfLYpr9qwt1Hy5roSMh
-	S1i6MVoeXZOyEHb43HFhpraS2JGEJL7PA7xR6Wz/veG3J/4vm9DD9t12ia8ZW4i1
-	a8X3NSf+uEXLnYATLQBMdoSdbX9hA8GqDKun5x13hRRuQaM94NKcEDa2LUyHif4K
-	QSgPVCjb8qr9cAN8/gllJBa1O8WIwH85kF4FLXR2MQ9OnnXjLLvm6IPs1KJlFigy
-	1TIpjfaSFPtDdpoOBiI2xFuNIAt2gGvOULWN4W2IFhQMRMSKOELGn2XpryVttXAv
-	QkgSbopYoSBfllsm1TWtE6z8ZdAr2z8S7KysuUUulY7rZFni6CJsEo/fA==
+	:mime-version:content-transfer-encoding; s=pp1; bh=ah4xfVCHNViAS
+	Zu9OS8C5bCxAH6NMTO/t1qMSUm0DA8=; b=bOj7jzux7U279hMnoEqJaUVZq2JNG
+	re0IZJ9dE965kXQEKbVQAKYvtnV1xoLxRbH4psNjPE06EJKsvkmzEOHa4wX/1AoX
+	XJ4erfcRtuKTsSpo9mX6gUjb8MnaaU6bAQZk8tE/ImXBtMTEhyw1YZrF2qvwbJxc
+	p6cfH7BPVGS1CN0Mdbv2igrdhE7SQHgc5yi5p9w2tN/BpR8weXgjCWf9yOU6Q3PZ
+	5EZteefbYEQ2xJnXoBEbZD6op0rF/Tqub/lb8vADK2dIWDGA6ht5RgflH0TEWfzZ
+	kvacyfgMgTiiPnk9C/ZJU9wsfKk3TYb8YzhPC5QV66U7IImY3MhQpZl9w==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw89g0290-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw6ws09bm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:37:29 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45LBbSS1029851;
-	Fri, 21 Jun 2024 11:37:28 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw89g028w-1
+	Fri, 21 Jun 2024 11:37:22 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45LBbMEE002078;
+	Fri, 21 Jun 2024 11:37:22 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw6ws09bg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:37:28 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L9DLqD031890;
-	Fri, 21 Jun 2024 11:37:27 GMT
+	Fri, 21 Jun 2024 11:37:21 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L963JL025654;
+	Fri, 21 Jun 2024 11:37:21 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yvrsppv5u-1
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yvrqv6vyp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:37:27 +0000
+	Fri, 21 Jun 2024 11:37:20 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45LBbMLp56885692
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45LBbFMY54657406
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Jun 2024 11:37:24 GMT
+	Fri, 21 Jun 2024 11:37:17 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F0FEF2004E;
-	Fri, 21 Jun 2024 11:37:21 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 44E842004D;
+	Fri, 21 Jun 2024 11:37:15 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6786E2005A;
-	Fri, 21 Jun 2024 11:37:21 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id A7D9B2004E;
+	Fri, 21 Jun 2024 11:37:14 +0000 (GMT)
 Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Jun 2024 11:37:21 +0000 (GMT)
+	Fri, 21 Jun 2024 11:37:14 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -79,9 +79,9 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v7 21/38] kmsan: Accept ranges starting with 0 on s390
-Date: Fri, 21 Jun 2024 13:35:05 +0200
-Message-ID: <20240621113706.315500-22-iii@linux.ibm.com>
+Subject: [PATCH v7 10/38] kmsan: Export panic_on_kmsan
+Date: Fri, 21 Jun 2024 13:34:54 +0200
+Message-ID: <20240621113706.315500-11-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240621113706.315500-1-iii@linux.ibm.com>
 References: <20240621113706.315500-1-iii@linux.ibm.com>
@@ -93,46 +93,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: toFATofS8B9_Z_taxWBad7ov9MB1B9Uz
-X-Proofpoint-ORIG-GUID: 9wCxo3our9e3SLqooNZeo9rdl58xG5ZV
+X-Proofpoint-ORIG-GUID: E4FeJ2DPMtQURj23PoX2Hu_rIGqy2sFA
+X-Proofpoint-GUID: C0x7oDri4w4Z6YRQjvyB2pwalipPRrvm
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- bulkscore=0 spamscore=0 suspectscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 phishscore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2406210084
 
-On s390 the virtual address 0 is valid (current CPU's lowcore is mapped
-there), therefore KMSAN should not complain about it.
+When building the kmsan test as a module, modpost fails with the
+following error message:
 
-Disable the respective check on s390. There doesn't seem to be a
-Kconfig option to describe this situation, so explicitly check for
-s390.
+    ERROR: modpost: "panic_on_kmsan" [mm/kmsan/kmsan_test.ko] undefined!
+
+Export panic_on_kmsan in order to improve the KMSAN usability for
+modules.
 
 Reviewed-by: Alexander Potapenko <glider@google.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- mm/kmsan/init.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/kmsan/report.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/kmsan/init.c b/mm/kmsan/init.c
-index 9de76ac7062c..3f8b1bbb9060 100644
---- a/mm/kmsan/init.c
-+++ b/mm/kmsan/init.c
-@@ -33,7 +33,10 @@ static void __init kmsan_record_future_shadow_range(void *start, void *end)
- 	bool merged = false;
+diff --git a/mm/kmsan/report.c b/mm/kmsan/report.c
+index 02736ec757f2..c79d3b0d2d0d 100644
+--- a/mm/kmsan/report.c
++++ b/mm/kmsan/report.c
+@@ -20,6 +20,7 @@ static DEFINE_RAW_SPINLOCK(kmsan_report_lock);
+ /* Protected by kmsan_report_lock */
+ static char report_local_descr[DESCR_SIZE];
+ int panic_on_kmsan __read_mostly;
++EXPORT_SYMBOL_GPL(panic_on_kmsan);
  
- 	KMSAN_WARN_ON(future_index == NUM_FUTURE_RANGES);
--	KMSAN_WARN_ON((nstart >= nend) || !nstart || !nend);
-+	KMSAN_WARN_ON((nstart >= nend) ||
-+		      /* Virtual address 0 is valid on s390. */
-+		      (!IS_ENABLED(CONFIG_S390) && !nstart) ||
-+		      !nend);
- 	nstart = ALIGN_DOWN(nstart, PAGE_SIZE);
- 	nend = ALIGN(nend, PAGE_SIZE);
- 
+ #ifdef MODULE_PARAM_PREFIX
+ #undef MODULE_PARAM_PREFIX
 -- 
 2.45.1
 
