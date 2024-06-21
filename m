@@ -1,152 +1,112 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F60654FB5
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6E1548F7;
+	Fri, 21 Jun 2024 15:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718983740; cv=none; b=poiONdR8p1ODx70UWVuSZxb4y/r44jXJgKIyoUeoy95wsIiHpFPte5dDhkheQt+Qv0yidtbiFKMTJySv01OwXB9j+GH2DCr1UKIFzv0Q7skzHnaQN7DLMvJzKOzsYhURCVsvR9rB/ZFlNc5PGvAcp3RsnnKXeDnFd7DD2bA4TnA=
+	t=1718983771; cv=none; b=RDczOmG1R6Neak9+Jf3kEkygZuBmAmRN13hjY8BT9+qvbpUZ5/mOiZMUCdS/4s5OjGdF8OP3sCpE3pRGVIjkx3Ism3uiXCdjRpX1CVJEf5oA20tFyJKGJWnCP7Hd/VudB0oBVZgmlRvZfY56kapFlR2bAzeZ7kXmxfo8mD3zj4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718983740; c=relaxed/simple;
-	bh=iMcdnBSCrVyrNrDO8pMPAElZ06k2xqAs4yysojwGTpA=;
+	s=arc-20240116; t=1718983771; c=relaxed/simple;
+	bh=3W/7GEJUFml+rpFv8YIElP7kB+r4mLIZReTBoCiWIoo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DNq3JLmgEypiWLZpYOWBVKpdpQW5U4oc+679f/mbr3ogwK/eGvgR3P3dYHzhPhuBgnHfcsOnKBOunPd/dF/L30gCuxIklBwCoCZWIGbFHwTkXJXZ8kUBluo+yj6DNcvAXy9uvoiawpjyW/kWUxtZLY8sFQZ3dy2ofZ80youZ4Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xhTl3qo4; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xhTl3qo4"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4ed127d7c3dso514810e0c.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718983737; x=1719588537; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QYdGoLjV8Z3CP8OmW5eh6pLgOYuafTXjejO9tHjo7ZY=;
-        b=xhTl3qo4hhf1Hj13+hYOSV2Jj78zQsjynVjlLf9QLtZpTQodb27jgPYPD41MkNM3oz
-         ZCL1G+p7bVg/9kBzOOx7JAod+Xn0B7X4mjI6Iui2cXe4d88bvor2mCuRAyWZNxGdzyY4
-         MVPe6DedssDY7yZuSk/fm3giL/muxRvQFhnStVGHS0ByMhoEe4O3vNkqCehuLWlYUpAc
-         Ka+Ko6S/xJutEr0q1dy45hwCuU/uacsoMQH1/Qw5bwSwP9TE1XouL9sDfzte43JoXrJc
-         QGfdEQbj8B1o16UaDG5gH8AnKJyiNHrhE9cnEEimW9Y9KSf9uANKfxTHUyFJSPuagTyA
-         3zGQ==
+	 To:Cc:Content-Type; b=o5RWTtOlCKCUyuoXjiq025EstC7JOFbrJ1IYK2wcOZk1BK36qPJPsdmLXgI7ukOjQhaifOyObcsu/WnHq23ur5cGHMjDPSzHbz0Pik8/Djpmewt8kXrYTQAf/ZWRD3+ZgkwLN8UAPenrxjNOaDyTmFOOR5MfK1dapPeKrgvFv/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dfdb6122992so2087655276.3;
+        Fri, 21 Jun 2024 08:29:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718983737; x=1719588537;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QYdGoLjV8Z3CP8OmW5eh6pLgOYuafTXjejO9tHjo7ZY=;
-        b=NQBsm1pqZJBpFI+7MjEwAndREYRGQXt+7us0CertIOWvDXeA9aoGpBm7K1h3MGu4zn
-         nLKK/rW5/wD73KLr++b1n2SQwvwigIL3r2piUyS86gByR5D9OmsWFiekDpDmU101Gwwv
-         Aq3F+JxmiG1DSza948q5nbPMB3fKCvUBPrMmJKNvRU1JclUH8w6jss7vhA4wph4ZvAte
-         cj7mSC0P4aaR1JhufQkg+VDPU1Q5xZnKI1msWClDP4+6+HgMqePY4ZTIq3lbQmDmmzg0
-         zx0+INfjsREYbzcGSxjE744UB4BjcwFNTHF9I2NvKrC5/TbQzfmweSyDSZSrAfbXUIXW
-         2YYg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6qZbifkTvwVbr5Z9JJ9uBz+5LqVkM6Pzpjsou66keO1uaQGFPV2FucwHCw7d3LYLR+9iQ0M4R+Sxd2lzIIaZvz6MjzEmHHoHVcFIX
-X-Gm-Message-State: AOJu0Yxv74z+D/CHGUTbQbVLBeCvOdt3l9PLbq3IJqG5AhPoZSUXnPR1
-	J7WUcv8aUJrrDVj2LrlHuMk6U7IoWZ9Guaka19OT8VwFx2MVBGF1/rGNgj32dR6ZUmsDOydtXa4
-	qBDFvUx7a7iLnzDKPusdK80X/JA2/yBl7wwbw
-X-Google-Smtp-Source: AGHT+IHEAW3VDBpOi5I+/UCk7VbTgbvh4YQQ6kvt8JBLarOOYXRfwyBHJvUNGr2MF2gNuWN1llJ5pOz1pesqmOhdVGU=
-X-Received: by 2002:a05:6122:251c:b0:4ec:f183:c9a8 with SMTP id
- 71dfb90a1353d-4ef27709600mr9347198e0c.9.1718983737267; Fri, 21 Jun 2024
- 08:28:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718983767; x=1719588567;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eSQbNV6p7MusuGwhIhNByYs7R6IXrxKvQPF0KCrDuNc=;
+        b=pc6yfbTsQmLAWdsEtJIxBxh7TV9FnARpaISdeqQvOMNt93r9kNHIzD9/EvlhuJU/QL
+         y6hPThWL7Nq0KzMWQMRsx19Ml3r+qoDuYpCVP2vjsfCVWQqmGwo3GMnkwrRO+9Q7uOZ/
+         ZSxnbxSAVNv7tynVuDrRwmkCIN1Q98z6vzuz0P7/2Tf+eGidFtPLy6aVsFtqa6hdg7ea
+         zH4lVHr2CXiRIWkfJqTLgTRvhrLsqrOXm0WyQaw0rCQ6KHEhuL9B+EI+Is/FV/Q4XSbB
+         hBT4gYT+PYn0jYQWtsdvpKNusdsvzkE3UjpSO6taBD7FilPiOyOcrRdJZ2eOxKb+T83b
+         ibTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWm3Tu4GQU19qVl5Qf871Q6UKVW/jrPpzjG30C7k2mho0ViVlF3cjeP18VD+sH96VS/6tQ/zlqXTMnI8X6VlsPuPm2mpdvOz6TvJTiLECwI/55F//ZHTKDQCxEkbBWSYoPUu5+PlVpiyR6dbiw8ws=
+X-Gm-Message-State: AOJu0Yze6XTIGhGIoBRgj06ZMT2ktDVN1Bfwg5FLzN6ajrmM50o6yf/E
+	t1Hl2CYR2fUxsF3E2YxX6e+zQfhR92nX4h1hvkegVe84MOxb6fzss+ZS03VO
+X-Google-Smtp-Source: AGHT+IEIozGOx3Q60pZ1JD+rlvxuxOg9ueD1lSCvWLIA9DDo1zCpo/Ou10RaAY48OvA+9ic1xpWF4Q==
+X-Received: by 2002:a25:c752:0:b0:dfb:538:df1e with SMTP id 3f1490d57ef6-e02be168beamr9338877276.35.1718983766903;
+        Fri, 21 Jun 2024 08:29:26 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e02e65be7b1sm490700276.42.2024.06.21.08.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 08:29:26 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-63ba688bdc9so21417537b3.1;
+        Fri, 21 Jun 2024 08:29:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXWiqCOqrlYFkZhGqUb0SQ/KyXGolA36u8+UWf2EXmEEguH5Acey3ar+vLKxF9LQJ2tP4DTSPQhvYyChE7AC/TRsKlyR9rGpLExgpA7cyqLnm7MSO+tifkxP8Oz4mb+bcAcAW5Qi7VYR238LIfGUIs=
+X-Received: by 2002:a81:f90d:0:b0:615:1cbb:7b81 with SMTP id
+ 00721157ae682-63a8f9f9603mr85397687b3.46.1718983766067; Fri, 21 Jun 2024
+ 08:29:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0000000000008d1e5a061b666b11@google.com>
-In-Reply-To: <0000000000008d1e5a061b666b11@google.com>
-From: Marco Elver <elver@google.com>
-Date: Fri, 21 Jun 2024 17:28:17 +0200
-Message-ID: <CANpmjNORLNHsWamYPU=rS7ftjZndchiEYHXznUS_RyR1edvrCA@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] KCSAN: data-race in mtree_range_walk /
- rcu_segcblist_enqueue (2)
-To: liam.howlett@oracle.com
-Cc: syzbot <syzbot+9bb7d0f2fdb4229b9d67@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	lstoakes@gmail.com, syzkaller-bugs@googlegroups.com, vbabka@suse.cz, 
-	RCU <rcu@vger.kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>
+References: <20240418132602.509313-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <75b1798fbef0f941a7c58b91583d62dff6384671.camel@pengutronix.de>
+In-Reply-To: <75b1798fbef0f941a7c58b91583d62dff6384671.camel@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 21 Jun 2024 17:29:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUgHLB6k1jVXdk08U5tgk6M7jGjhaWwpxDZGtoi8ViTjA@mail.gmail.com>
+Message-ID: <CAMuHMdUgHLB6k1jVXdk08U5tgk6M7jGjhaWwpxDZGtoi8ViTjA@mail.gmail.com>
+Subject: Re: [RFC PATCH] reset: Add devm_reset_control_deassert helper
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Prabhakar <prabhakar.csengg@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[+Cc rcu folks]
+Hi Philipp,
 
-On Fri, 21 Jun 2024 at 15:29, syzbot
-<syzbot+9bb7d0f2fdb4229b9d67@syzkaller.appspotmail.com> wrote:
+On Fri, Jun 21, 2024 at 4:45=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix.=
+de> wrote:
+> On Do, 2024-04-18 at 14:26 +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > A typical code pattern for reset_control_deassert() call is to call it =
+in
+> > the _probe function and to call reset_control_assert() both from _probe
+> > error path and from _remove function.
+> >
+> > Add helper function to replace this bolierplate piece of code. Calling
+> > devm_reset_control_deassert() removes the need for calling
+> > reset_control_assert() both in the probe()'s error path and in the
+> > remove() function.
+> >
+> > Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Hello,
+> I'm not sure this aligns well with the intended use of devres for
+> resource acquisition and release.
 >
-> syzbot found the following issue on:
+> Note how there is no devm_clk_prepare_enable, devm_regulator_enable,
+> devm_gpiod_set_value_cansleep, or devm_pwm_enable either.
 >
-> HEAD commit:    50736169ecc8 Merge tag 'for-6.10-rc4-tag' of git://git.ker..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=164ec02a980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=704451bc2941bcb0
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9bb7d0f2fdb4229b9d67
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/e4cbed12fec1/disk-50736169.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/d50b5dcae4cd/vmlinux-50736169.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/f2c14c5fcce2/bzImage-50736169.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9bb7d0f2fdb4229b9d67@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KCSAN: data-race in mtree_range_walk / rcu_segcblist_enqueue
->
-> write to 0xffff888104077308 of 8 bytes by task 12265 on cpu 1:
->  rcu_segcblist_enqueue+0x67/0xb0 kernel/rcu/rcu_segcblist.c:345
->  rcutree_enqueue kernel/rcu/tree.c:2940 [inline]
->  call_rcu_core kernel/rcu/tree.c:2957 [inline]
->  __call_rcu_common kernel/rcu/tree.c:3093 [inline]
->  call_rcu+0x1bd/0x430 kernel/rcu/tree.c:3176
->  ma_free_rcu lib/maple_tree.c:197 [inline]
->  mas_free lib/maple_tree.c:1304 [inline]
->  mas_replace_node+0x2f8/0x440 lib/maple_tree.c:1741
->  mas_wr_node_store lib/maple_tree.c:3956 [inline]
->  mas_wr_modify+0x2bc3/0x3c90 lib/maple_tree.c:4189
->  mas_wr_store_entry+0x250/0x390 lib/maple_tree.c:4229
->  mas_store_prealloc+0x151/0x2b0 lib/maple_tree.c:5485
->  vma_iter_store mm/internal.h:1398 [inline]
->  vma_complete+0x3a7/0x760 mm/mmap.c:535
->  __split_vma+0x623/0x690 mm/mmap.c:2440
->  split_vma mm/mmap.c:2466 [inline]
->  vma_modify+0x198/0x1f0 mm/mmap.c:2507
->  vma_modify_flags include/linux/mm.h:3347 [inline]
->  mprotect_fixup+0x335/0x610 mm/mprotect.c:637
->  do_mprotect_pkey+0x673/0x9a0 mm/mprotect.c:820
->  __do_sys_mprotect mm/mprotect.c:841 [inline]
->  __se_sys_mprotect mm/mprotect.c:838 [inline]
->  __x64_sys_mprotect+0x48/0x60 mm/mprotect.c:838
->  x64_sys_call+0x26f5/0x2d70 arch/x86/include/generated/asm/syscalls_64.h:11
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> read to 0xffff888104077308 of 8 bytes by task 12266 on cpu 0:
->  mtree_range_walk+0x140/0x460 lib/maple_tree.c:2774
->  mas_state_walk lib/maple_tree.c:3678 [inline]
->  mas_walk+0x16e/0x320 lib/maple_tree.c:4909
->  lock_vma_under_rcu+0x84/0x260 mm/memory.c:5840
->  do_user_addr_fault arch/x86/mm/fault.c:1329 [inline]
->  handle_page_fault arch/x86/mm/fault.c:1481 [inline]
->  exc_page_fault+0x150/0x650 arch/x86/mm/fault.c:1539
->  asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 0 PID: 12266 Comm: syz-executor.3 Not tainted 6.10.0-rc4-syzkaller-00148-g50736169ecc8 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-> ==================================================================
+> I've sent an alternative suggestion that adds
+> devm_reset_control_get..._deasserted calls, similarly to the existing
+> devm_clk_get..._enabled calls. Please let me know what you think.
 
-This is not an ordinary data race. I suspect this to be an incorrect
-use of RCU, resulting in some kind of use-after-free / type-confusion.
+Thank you, that sounds like a good alternative.
 
-The access within rcu_segcblist_enqueue() is to maple_node::rcu (at
-offset 8 into maple_node). The racing access in mtree_range_walk() is
-to either maple_node::mr64::pivot[0] or maple_node::ma64::pivot[0]
-(both also offset 8 into maple_node).
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
