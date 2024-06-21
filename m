@@ -1,65 +1,64 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC1C16C698;
-	Fri, 21 Jun 2024 05:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8E212F37F;
+	Fri, 21 Jun 2024 05:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718946355; cv=none; b=Fs5tnSHXhekazZUQAagbgrNOdiMVhcKBGL7rAwGfoG9YqXqwKFHzJ7hdJcMmPE2zJagzawCGswc3BXPf87WSJTUQEshbNu1KXvnABGGRkeOzlSZt/YaxCGbd2gVdJo2YEmr7jI7c07PVPG/i7F9YJ4CuTgrAj2Htx+tJBEMCHXA=
+	t=1718946359; cv=none; b=ZVxwmCXQedBfr8vM69We1gCqGXghs1joG9uPxpbV2+CRjTm3FhGH+6vKJ3X6BeaSMoGzxpSlWfyeddJhAEX0hsV7+u7bPQUN9xc6zzxafgATDyWrHigvadKrJtuAhXiVbC+sYG5nfr1yI/2yn3km1u+HMQJqHgcwkfYZx5I9Hsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718946355; c=relaxed/simple;
-	bh=RHIQ1ZK7HhrkITryP32SV1M7i6oMh9uMx3UMrh72w6I=;
+	s=arc-20240116; t=1718946359; c=relaxed/simple;
+	bh=5wCl1B1i8ji1xA4dADPfV0mjXWvLWyC2722XSPdktnI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FzIOHZUb5dQjIukmgllO8aMLXdmHXSHBieXkZfvWyISJ/Z73VIkTvS1BTJgEU916SLiQCslJkrrOxMt+4PRbukMd5PKDTnYkdp+yH5C9zSCHARD/WVnyqV/aV0KeegcVFZ3c1loWBeZdbMtSwlev6IsiYfc/iB+83blzO5k8QqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GjvcKiKA; arc=none smtp.client-ip=209.85.161.41
+	 MIME-Version; b=UP+95DzvJEWcCtM6AuEfXJQ/eBXMTMoTiym61HxYzjbK6korYPtaH8HutnQkyxwQKDv29aJsHH43UO0Pq3LLtsZE5y0wCJNX31gX3XKhaxPHllisIcw6KXu9qo5Tlohd3xQCSh7t2+pWbcMa9feUhCzaDPtCxrQLhj8ikOVfR1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BilxYJbF; arc=none smtp.client-ip=209.85.161.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjvcKiKA"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b9778bb7c8so777249eaf.3;
-        Thu, 20 Jun 2024 22:05:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BilxYJbF"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5c19d338401so810856eaf.0;
+        Thu, 20 Jun 2024 22:05:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718946352; x=1719551152; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718946357; x=1719551157; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d7B644WJji2EeDQXIp+qb+T3U50yFIygDXuUoanjxuY=;
-        b=GjvcKiKAg3/8luYqiGZ75Ou0okowRiK8gixypPysvrHk5u+Eaxdq0O+/CRHjzOi94K
-         K/MqpKXL37Hn9zPWDOJHCVoQ2B2oINmx8K5SSoAnf3DOJGxGIDCWNwe/rNcN1fskHROp
-         M/9TOZHwam3bVCN/fCji7fzZyBFLs6bH6LysZdNbqW95f2Q2+fhjH2wK1akdqo9DhGie
-         zcafdZTr/EB9VZYtsfFqxPWOltJ3Okhp1Zr8WbMlSNMiLiPtPbuO1ZyIJn5+bZK7Rh+2
-         5XZM5U/Rsf5aGFRp1sFfBzEY/mrC9iDHGuSC5gU2Rwp47sVcaH2ThK9P2m9TsGapyFID
-         ncRA==
+        bh=9dhdHUZpgwd2/wkpVLwdxeMY04zoPfYMfPcgph0II3s=;
+        b=BilxYJbF5AQglQIk0tqaiyb4LVUbM/BqGAR4htJwugCfIJrJyfBM0yeRPXyi7THQRJ
+         8TVm3DYgoJV1DHIj73RKtHKsqOOGOYpuJOekwyPrPdq3RhmvCfEby9qFNYD5vQLezlfF
+         xrIQZJ/3snT77OvqvcuiQRRo+goKbbDOu4LUlYUDuDZxv5FD8Kf29t9KpO7oX5cTp3kM
+         T9GmP1LSQjr2wYSro24JA0Qds2zaD5ei+mQaJFddItfTpEsPCeHENaKseoGmyif+nzBz
+         tw8VRs4LXL88UvpbJ3oYbq5dzp6U4ds6kGQeFMS4E14u8A4SoF8cIuIvL3FDjxuMvMEt
+         gZrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718946352; x=1719551152;
+        d=1e100.net; s=20230601; t=1718946357; x=1719551157;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d7B644WJji2EeDQXIp+qb+T3U50yFIygDXuUoanjxuY=;
-        b=qd7BY42fYmFkQDAFInbIdwC9quJq63Yu9MqcXDgFNATGjaG0wzytgfQjKnJxGfuz0C
-         haNzzCcOwPNVi8PzmnZyiiWjRC1GMN/iKmViCcCh6DjyowWr+k4sdkDOVRoid33P4J+s
-         +OeJU/66p98uxoB7m4NvezgVMR4kT21+p88lCYkSzvuacwSOKYs63PhdvO0YveCoa30o
-         Tt1QJibVoMO2wPME6VuD7bVdZSbPyAoU/hAfxgfBlv+9rAKoAUo3k6nwvGETLg+mVcd6
-         hKYjeBU4LQxx4KUXZiy3GqfcZx6MRCDnwq8mfpbnx6iGbhcyovu06LYpDRX3vFvWSLqp
-         zXSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXr0Z36eG+ofgvY0HcWOeZ/U0yj7xxSScSfropGki+W0Ef8FRfdvuGm46Vs0O6AEWlb3eJEy8nRMrNAgn9C9MjjuaONqnqFt+29OXgkm+DqOAB3xSqUb3fl9XeFvTEnr/aJFjqy+KsR2ueuCJloN7z97ZMseiHHV1PdXIfQzBup1A==
-X-Gm-Message-State: AOJu0YxnplXruFPONLW3NVXG8HE0vGSr9Bby3c7jR0gS3tZL27sYzvtt
-	j8mXCFsHrizrGe4jLLWtn5LUI+ucrRW5zRfgBMZu19QTUSd6KpDh
-X-Google-Smtp-Source: AGHT+IGZar/opqQUcuItaXuxxIwbAvWDnKX9EGrfatjDViIRrCPB4a9s+Z6quwYramSKiqkj+FmKtQ==
-X-Received: by 2002:a05:6358:5e08:b0:19f:4a60:e6fc with SMTP id e5c5f4694b2df-1a1fd57ea2amr962858555d.25.1718946352503;
-        Thu, 20 Jun 2024 22:05:52 -0700 (PDT)
+        bh=9dhdHUZpgwd2/wkpVLwdxeMY04zoPfYMfPcgph0II3s=;
+        b=ZV1+SxGfy8DEe8V47goOCWH2lGVSf7qkSdFdE1pml0ZScSjscheI5mW+wSFSrup0pP
+         iacw2qEfJTXe5cml06v37UgJfyHzvVBtWDIObPorew7/frsXXB7OQO3T/WDV1LIpm7Pv
+         dvtcWhR1W6se3yHNWsffp/TlS4iwMwlyIGOTEQMPjOL+/3Ewle9KQSMyJg/9wM0MT0kU
+         rsG6G5Hpot3z8leiulxJ2OdT14PJFSqSN8LDjcAMilW+uCmTSrlD0sDJfncnH+kcFJ8z
+         WvgObr63bCqKtxMyQtem14+zSQVlCSvPliHC3r6dDbfAXxYhJXI8lhVdJ9zRJPK9FEm0
+         yo2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUKfHj4k02lgLCdCql3c8gtQZcXHcFNJBvMBFj6+HyAucUd1OmE47bRV+pshX3tBMwcCodmY60wrvKR3rjbp15YB0I0t3Q1cFzwlqn1YsLt5v0dRBNcf1vONWPkQ4QjZ6+8AR7DaoM4agNuQs644/XJglLdz3NKPvQY6Mg2TOox1w==
+X-Gm-Message-State: AOJu0YwRIp31vA/75iL5H+egC+Z9MVTM3mIK19sINSicQzR0MDj/kdNz
+	8Oz8F3TgodXeazg16SYDm8yVbfcDlBL1XyEhNDMAyik9KuIxU5G5
+X-Google-Smtp-Source: AGHT+IHhA35uL6dKwMEPYqyMrHx0+sbso3nzM6DX+derz+sMKjvn9qW/U4VOg8Eu5V2sPuLfkd8gmQ==
+X-Received: by 2002:a05:6358:5328:b0:19e:e349:1cfd with SMTP id e5c5f4694b2df-1a1fd5cf280mr812647955d.26.1718946356722;
+        Thu, 20 Jun 2024 22:05:56 -0700 (PDT)
 Received: from apais-devbox.. ([2001:569:766d:6500:fb4e:6cf3:3ec6:9292])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716c950d71asm371308a12.62.2024.06.20.22.05.51
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716c950d71asm371308a12.62.2024.06.20.22.05.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 22:05:52 -0700 (PDT)
+        Thu, 20 Jun 2024 22:05:56 -0700 (PDT)
 From: Allen Pais <allen.lkml@gmail.com>
 To: kuba@kernel.org,
-	Sunil Goutham <sgoutham@marvell.com>,
+	Denis Kirjanov <kda@linux-powerpc.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Paolo Abeni <pabeni@redhat.com>
 Cc: jes@trained-monkey.org,
-	kda@linux-powerpc.org,
 	cai.huoqing@linux.dev,
 	dougmill@linux.ibm.com,
 	npiggin@gmail.com,
@@ -88,11 +87,10 @@ Cc: jes@trained-monkey.org,
 	linux-acenic@sunsite.dk,
 	linux-net-drivers@amd.com,
 	Allen Pais <allen.lkml@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
 	netdev@vger.kernel.org
-Subject: [PATCH 07/15] net: thunderx: Convert tasklet API to new bottom half workqueue mechanism
-Date: Thu, 20 Jun 2024 22:05:17 -0700
-Message-Id: <20240621050525.3720069-8-allen.lkml@gmail.com>
+Subject: [PATCH 09/15] net: sundance: Convert tasklet API to new bottom half workqueue mechanism
+Date: Thu, 20 Jun 2024 22:05:19 -0700
+Message-Id: <20240621050525.3720069-10-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240621050525.3720069-1-allen.lkml@gmail.com>
 References: <20240621050525.3720069-1-allen.lkml@gmail.com>
@@ -106,148 +104,147 @@ Content-Transfer-Encoding: 8bit
 
 Migrate tasklet APIs to the new bottom half workqueue mechanism. It
 replaces all occurrences of tasklet usage with the appropriate workqueue
-APIs throughout the cavium/thunderx driver. This transition ensures
+APIs throughout the dlink sundance driver. This transition ensures
 compatibility with the latest design and enhances performance.
 
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/net/ethernet/cavium/thunder/nic.h     |  5 ++--
- .../net/ethernet/cavium/thunder/nicvf_main.c  | 24 +++++++++----------
- .../ethernet/cavium/thunder/nicvf_queues.c    |  4 ++--
- .../ethernet/cavium/thunder/nicvf_queues.h    |  2 +-
- 4 files changed, 18 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/dlink/sundance.c | 41 ++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nic.h b/drivers/net/ethernet/cavium/thunder/nic.h
-index 090d6b83982a..ecc175b6e7fa 100644
---- a/drivers/net/ethernet/cavium/thunder/nic.h
-+++ b/drivers/net/ethernet/cavium/thunder/nic.h
-@@ -8,6 +8,7 @@
- 
+diff --git a/drivers/net/ethernet/dlink/sundance.c b/drivers/net/ethernet/dlink/sundance.c
+index 8af5ecec7d61..65dfd32a9656 100644
+--- a/drivers/net/ethernet/dlink/sundance.c
++++ b/drivers/net/ethernet/dlink/sundance.c
+@@ -86,6 +86,7 @@ static char *media[MAX_UNITS];
  #include <linux/netdevice.h>
- #include <linux/interrupt.h>
+ #include <linux/etherdevice.h>
+ #include <linux/skbuff.h>
 +#include <linux/workqueue.h>
- #include <linux/pci.h>
- #include "thunder_bgx.h"
+ #include <linux/init.h>
+ #include <linux/bitops.h>
+ #include <linux/uaccess.h>
+@@ -395,8 +396,8 @@ struct netdev_private {
+ 	unsigned int an_enable:1;
+ 	unsigned int speed;
+ 	unsigned int wol_enabled:1;			/* Wake on LAN enabled */
+-	struct tasklet_struct rx_tasklet;
+-	struct tasklet_struct tx_tasklet;
++	struct work_struct rx_bh_work;
++	struct work_struct tx_bh_work;
+ 	int budget;
+ 	int cur_task;
+ 	/* Multicast and receive mode. */
+@@ -430,8 +431,8 @@ static void init_ring(struct net_device *dev);
+ static netdev_tx_t start_tx(struct sk_buff *skb, struct net_device *dev);
+ static int reset_tx (struct net_device *dev);
+ static irqreturn_t intr_handler(int irq, void *dev_instance);
+-static void rx_poll(struct tasklet_struct *t);
+-static void tx_poll(struct tasklet_struct *t);
++static void rx_poll(struct work_struct *work);
++static void tx_poll(struct work_struct *work);
+ static void refill_rx (struct net_device *dev);
+ static void netdev_error(struct net_device *dev, int intr_status);
+ static void netdev_error(struct net_device *dev, int intr_status);
+@@ -541,8 +542,8 @@ static int sundance_probe1(struct pci_dev *pdev,
+ 	np->msg_enable = (1 << debug) - 1;
+ 	spin_lock_init(&np->lock);
+ 	spin_lock_init(&np->statlock);
+-	tasklet_setup(&np->rx_tasklet, rx_poll);
+-	tasklet_setup(&np->tx_tasklet, tx_poll);
++	INIT_WORK(&np->rx_bh_work, rx_poll);
++	INIT_WORK(&np->tx_bh_work, tx_poll);
  
-@@ -295,7 +296,7 @@ struct nicvf {
- 	bool			rb_work_scheduled;
- 	struct page		*rb_page;
- 	struct delayed_work	rbdr_work;
--	struct tasklet_struct	rbdr_task;
-+	struct work_struct	rbdr_bh_work;
+ 	ring_space = dma_alloc_coherent(&pdev->dev, TX_TOTAL_SIZE,
+ 			&ring_dma, GFP_KERNEL);
+@@ -965,7 +966,7 @@ static void tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 	unsigned long flag;
  
- 	/* Secondary Qset */
- 	u8			sqs_count;
-@@ -319,7 +320,7 @@ struct nicvf {
- 	bool			loopback_supported;
- 	struct nicvf_rss_info	rss_info;
- 	struct nicvf_pfc	pfc;
--	struct tasklet_struct	qs_err_task;
-+	struct work_struct	qs_err_bh_work;
- 	struct work_struct	reset_task;
- 	struct nicvf_work       rx_mode_work;
- 	/* spinlock to protect workqueue arguments from concurrent access */
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index aebb9fef3f6e..b0878bd25cf0 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -982,9 +982,9 @@ static int nicvf_poll(struct napi_struct *napi, int budget)
-  *
-  * As of now only CQ errors are handled
-  */
--static void nicvf_handle_qs_err(struct tasklet_struct *t)
-+static void nicvf_handle_qs_err(struct work_struct *work)
- {
--	struct nicvf *nic = from_tasklet(nic, t, qs_err_task);
-+	struct nicvf *nic = from_work(nic, work, qs_err_bh_work);
- 	struct queue_set *qs = nic->qs;
- 	int qidx;
- 	u64 status;
-@@ -1069,7 +1069,7 @@ static irqreturn_t nicvf_rbdr_intr_handler(int irq, void *nicvf_irq)
- 		if (!nicvf_is_intr_enabled(nic, NICVF_INTR_RBDR, qidx))
- 			continue;
- 		nicvf_disable_intr(nic, NICVF_INTR_RBDR, qidx);
--		tasklet_hi_schedule(&nic->rbdr_task);
-+		queue_work(system_bh_highpri_wq, &nic->rbdr_bh_work);
- 		/* Clear interrupt */
- 		nicvf_clear_intr(nic, NICVF_INTR_RBDR, qidx);
+ 	netif_stop_queue(dev);
+-	tasklet_disable_in_atomic(&np->tx_tasklet);
++	disable_work_sync(&np->tx_bh_work);
+ 	iowrite16(0, ioaddr + IntrEnable);
+ 	printk(KERN_WARNING "%s: Transmit timed out, TxStatus %2.2x "
+ 		   "TxFrameId %2.2x,"
+@@ -1006,7 +1007,7 @@ static void tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 		netif_wake_queue(dev);
  	}
-@@ -1085,7 +1085,7 @@ static irqreturn_t nicvf_qs_err_intr_handler(int irq, void *nicvf_irq)
- 
- 	/* Disable Qset err interrupt and schedule softirq */
- 	nicvf_disable_intr(nic, NICVF_INTR_QS_ERR, 0);
--	tasklet_hi_schedule(&nic->qs_err_task);
-+	queue_work(system_bh_highpri_wq, &nic->qs_err_bh_work);
- 	nicvf_clear_intr(nic, NICVF_INTR_QS_ERR, 0);
- 
- 	return IRQ_HANDLED;
-@@ -1364,8 +1364,8 @@ int nicvf_stop(struct net_device *netdev)
- 	for (irq = 0; irq < nic->num_vec; irq++)
- 		synchronize_irq(pci_irq_vector(nic->pdev, irq));
- 
--	tasklet_kill(&nic->rbdr_task);
--	tasklet_kill(&nic->qs_err_task);
-+	cancel_work_sync(&nic->rbdr_bh_work);
-+	cancel_work_sync(&nic->qs_err_bh_work);
- 	if (nic->rb_work_scheduled)
- 		cancel_delayed_work_sync(&nic->rbdr_work);
- 
-@@ -1488,11 +1488,11 @@ int nicvf_open(struct net_device *netdev)
- 		nicvf_hw_set_mac_addr(nic, netdev);
- 	}
- 
--	/* Init tasklet for handling Qset err interrupt */
--	tasklet_setup(&nic->qs_err_task, nicvf_handle_qs_err);
-+	/* Init bh_work for handling Qset err interrupt */
-+	INIT_WORK(&nic->qs_err_bh_work, nicvf_handle_qs_err);
- 
--	/* Init RBDR tasklet which will refill RBDR */
--	tasklet_setup(&nic->rbdr_task, nicvf_rbdr_task);
-+	/* Init RBDR bh_work which will refill RBDR */
-+	INIT_WORK(&nic->rbdr_bh_work, nicvf_rbdr_bh_work);
- 	INIT_DELAYED_WORK(&nic->rbdr_work, nicvf_rbdr_work);
- 
- 	/* Configure CPI alorithm */
-@@ -1561,8 +1561,8 @@ int nicvf_open(struct net_device *netdev)
- cleanup:
- 	nicvf_disable_intr(nic, NICVF_INTR_MBOX, 0);
- 	nicvf_unregister_interrupts(nic);
--	tasklet_kill(&nic->qs_err_task);
--	tasklet_kill(&nic->rbdr_task);
-+	cancel_work_sync(&nic->qs_err_bh_work);
-+	cancel_work_sync(&nic->rbdr_bh_work);
- napi_del:
- 	for (qidx = 0; qidx < qs->cq_cnt; qidx++) {
- 		cq_poll = nic->napi[qidx];
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-index 06397cc8bb36..ad71160879e4 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-@@ -461,9 +461,9 @@ void nicvf_rbdr_work(struct work_struct *work)
+ 	iowrite16(DEFAULT_INTR, ioaddr + IntrEnable);
+-	tasklet_enable(&np->tx_tasklet);
++	enable_and_queue_work(system_bh_wq, &np->tx_bh_work);
  }
  
- /* In Softirq context, alloc rcv buffers in atomic mode */
--void nicvf_rbdr_task(struct tasklet_struct *t)
-+void nicvf_rbdr_bh_work(struct work_struct *work)
+ 
+@@ -1058,9 +1059,9 @@ static void init_ring(struct net_device *dev)
+ 	}
+ }
+ 
+-static void tx_poll(struct tasklet_struct *t)
++static void tx_poll(struct work_struct *work)
  {
--	struct nicvf *nic = from_tasklet(nic, t, rbdr_task);
-+	struct nicvf *nic = from_work(nic, work, rbdr_bh_work);
+-	struct netdev_private *np = from_tasklet(np, t, tx_tasklet);
++	struct netdev_private *np = from_work(np, work, tx_bh_work);
+ 	unsigned head = np->cur_task % TX_RING_SIZE;
+ 	struct netdev_desc *txdesc =
+ 		&np->tx_ring[(np->cur_tx - 1) % TX_RING_SIZE];
+@@ -1104,11 +1105,11 @@ start_tx (struct sk_buff *skb, struct net_device *dev)
+ 			goto drop_frame;
+ 	txdesc->frag.length = cpu_to_le32 (skb->len | LastFrag);
  
- 	nicvf_refill_rbdr(nic, GFP_ATOMIC);
- 	if (nic->rb_alloc_fail) {
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_queues.h b/drivers/net/ethernet/cavium/thunder/nicvf_queues.h
-index 8453defc296c..c6f18fb7c50e 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.h
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.h
-@@ -348,7 +348,7 @@ void nicvf_xdp_sq_doorbell(struct nicvf *nic, struct snd_queue *sq, int sq_num);
+-	/* Increment cur_tx before tasklet_schedule() */
++	/* Increment cur_tx before bh_work is queued */
+ 	np->cur_tx++;
+ 	mb();
+-	/* Schedule a tx_poll() task */
+-	tasklet_schedule(&np->tx_tasklet);
++	/* Queue a tx_poll() bh work */
++	queue_work(system_bh_wq, &np->tx_bh_work);
  
- struct sk_buff *nicvf_get_rcv_skb(struct nicvf *nic,
- 				  struct cqe_rx_t *cqe_rx, bool xdp);
--void nicvf_rbdr_task(struct tasklet_struct *t);
-+void nicvf_rbdr_bh_work(struct work_struct *work);
- void nicvf_rbdr_work(struct work_struct *work);
+ 	/* On some architectures: explicitly flush cache lines here. */
+ 	if (np->cur_tx - np->dirty_tx < TX_QUEUE_LEN - 1 &&
+@@ -1199,7 +1200,7 @@ static irqreturn_t intr_handler(int irq, void *dev_instance)
+ 					ioaddr + IntrEnable);
+ 			if (np->budget < 0)
+ 				np->budget = RX_BUDGET;
+-			tasklet_schedule(&np->rx_tasklet);
++			queue_work(system_bh_wq, &np->rx_bh_work);
+ 		}
+ 		if (intr_status & (IntrTxDone | IntrDrvRqst)) {
+ 			tx_status = ioread16 (ioaddr + TxStatus);
+@@ -1315,9 +1316,9 @@ static irqreturn_t intr_handler(int irq, void *dev_instance)
+ 	return IRQ_RETVAL(handled);
+ }
  
- void nicvf_enable_intr(struct nicvf *nic, int int_type, int q_idx);
+-static void rx_poll(struct tasklet_struct *t)
++static void rx_poll(struct work_struct *work)
+ {
+-	struct netdev_private *np = from_tasklet(np, t, rx_tasklet);
++	struct netdev_private *np = from_work(np, work, rx_bh_work);
+ 	struct net_device *dev = np->ndev;
+ 	int entry = np->cur_rx % RX_RING_SIZE;
+ 	int boguscnt = np->budget;
+@@ -1407,7 +1408,7 @@ static void rx_poll(struct tasklet_struct *t)
+ 	np->budget -= received;
+ 	if (np->budget <= 0)
+ 		np->budget = RX_BUDGET;
+-	tasklet_schedule(&np->rx_tasklet);
++	queue_work(system_bh_wq, &np->rx_bh_work);
+ }
+ 
+ static void refill_rx (struct net_device *dev)
+@@ -1819,9 +1820,9 @@ static int netdev_close(struct net_device *dev)
+ 	struct sk_buff *skb;
+ 	int i;
+ 
+-	/* Wait and kill tasklet */
+-	tasklet_kill(&np->rx_tasklet);
+-	tasklet_kill(&np->tx_tasklet);
++	/* Wait and cancel bh work */
++	cancel_work_sync(&np->rx_bh_work);
++	cancel_work_sync(&np->tx_bh_work);
+ 	np->cur_tx = 0;
+ 	np->dirty_tx = 0;
+ 	np->cur_task = 0;
 -- 
 2.34.1
 
