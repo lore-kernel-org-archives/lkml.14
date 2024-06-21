@@ -1,103 +1,113 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D46F17109B;
-	Fri, 21 Jun 2024 10:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CE184D04
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718965267; cv=none; b=vGgOSbD7Uo1ghNUfwiOCsIikNS7QptlguoopxCULHLdnWtQxsDH18LbhVQtVRnMJVCD6HCM/bvNehYQQ1mLoUNK+WI4cDUZDP86FD0nPLQ9TXMJi3/xmI1393vKez5TWtrhk8Mt90p9o1fnetk5Sy8x9juZaWU6mi+z9IkYdCiU=
+	t=1718965329; cv=none; b=Tyd6J9R19sBxJBs8ycB5N1HNwMLCCC7XQK1N5FT9weeLQTowczt5qEKAU1ao5432jkF+0e37kWPoQL7dl8YKSkvkVwmF1C1rJFAJQd1/SWohgLdpo87CXMP1faoyn/beqwM386nQiEiAzVk0atoDTPsDIfSpC8EYcA/z0vaXFYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718965267; c=relaxed/simple;
-	bh=dPYZeWKKwd9/P7SeuLwt0oFxoyqbARsIw+dEdexsffk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B7GMXNYH1GqFg+lJhAEGY+7bF4/z5kz4tPlRzTQ/n8k4sfZw81MEtR8aZOHNEBjAWlLTv6pxbmGO66JJokIg7nQUZc5B5GoVCUEY4nLsZOo+DSAlwE0/rOhb5KQD7iz+V2KZw1g99R03NSnejvUV0iPtc/ORfUmrHf9uRRnp//s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtpsz15t1718965135tf36p6
-X-QQ-Originating-IP: P0/GW/bcSHhST6SeWoBh2w5Z3xI7MzBTCUiyhlDOLOk=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 21 Jun 2024 18:18:52 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 13424936374893162487
-From: WangYuli <wangyuli@uniontech.com>
-To: alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	mcoquelin.stm32@gmail.com
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Wang Zhimin <wangzhimin1179@phytium.com.cn>,
-	Li Wencheng <liwencheng@phytium.com.cn>,
-	Chen Baozi <chenbaozi@phytium.com.cn>,
-	Wang Yinfeng <wangyinfeng@phytium.com.cn>
-Subject: [PATCH] net: stmmac: Add a barrier to make sure all access coherent
-Date: Fri, 21 Jun 2024 18:18:36 +0800
-Message-ID: <F19E93E071D95714+20240621101836.167600-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.4
+	s=arc-20240116; t=1718965329; c=relaxed/simple;
+	bh=GZQdDzuyMYiU1MqMtTh9gbxdguRcBYChovGFHXSNTcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pKZBfZKn8YRrlTeVYZpxKwesy9N5gjVHHkMKlpz6pxy/omuY+BYA0MgOXynZrRGtwpj+n3viSBxCERi/Wx3kCI8OV8xDHjLkeHX8jH5FcheUIV6Ku8XsV82pwSoeH5azkb6DowSCkAVJmv0PyuNRep8XKnCuIR2UN7JfEJnVAB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=AECVoxhV; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="AECVoxhV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=GZQd
+	DzuyMYiU1MqMtTh9gbxdguRcBYChovGFHXSNTcU=; b=AECVoxhVEoG8CJYfiT3E
+	m2m/967zh0IB8d+ljWmgbHwJTEJ7yZ+3yPa7TPnHLkmeGhXSxEe50HAY+KNQo899
+	4LwJmZI8ywDjFvsrAXC2JrNKP+EropcbSVrpzm7TXw1ugUpwwmKF6i2f7z3b5ym5
+	0yJnyNv7uo4SpgadPlBAEEWpQe7kJW+sstKAYDZhW5PVG1ef9JOX0FbcI2DiCYe7
+	3NPCN+WRmumvlJJf3D/maqpGeqNkIG6SHBBX5QpOLjwqcyBPAGrFJt5jGQyp9+U6
+	r8fRu5pku0SNXQov/zsqERlZx65qV1qJnC0vpItxUdS5XtUDm5PnEIGu5b5X0BKg
+	Qg==
+Received: (qmail 1334472 invoked from network); 21 Jun 2024 12:22:04 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2024 12:22:04 +0200
+X-UD-Smtp-Session: l3s3148p1@M6iNzWMbeoMgAwDPXzjQABqqX1QYyOSW
+Date: Fri, 21 Jun 2024 12:22:04 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: Allen Pais <allen.lkml@gmail.com>, 
+	Aubin Constans <aubin.constans@microchip.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Manuel Lauss <manuel.lauss@gmail.com>, 
+	=?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Alex Dubov <oakad@yahoo.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Bruce Chang <brucechang@via.com.tw>, Harald Welte <HaraldWelte@viatech.com>, 
+	Pierre Ossman <pierre@ossman.eu>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3] mmc: Convert from tasklet to BH workqueue
+Message-ID: <lztlxgfjlln7owvr2gwge3apdmflyujahhfaxgh473z4l76ren@ex64f6pfbvwz>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Christian Loehle <christian.loehle@arm.com>, Allen Pais <allen.lkml@gmail.com>, 
+	Aubin Constans <aubin.constans@microchip.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Manuel Lauss <manuel.lauss@gmail.com>, 
+	=?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Alex Dubov <oakad@yahoo.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Bruce Chang <brucechang@via.com.tw>, Harald Welte <HaraldWelte@viatech.com>, 
+	Pierre Ossman <pierre@ossman.eu>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20240618225210.825290-1-allen.lkml@gmail.com>
+ <gw6adkoy3ndjdjufti2gs2gnk3xdgylt6tnia2zha76hsgdwtq@dr3czbxjij66>
+ <fc2b8a80-373a-4049-bdaf-9970a1c1f651@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c4enlaepeuujsmpq"
+Content-Disposition: inline
+In-Reply-To: <fc2b8a80-373a-4049-bdaf-9970a1c1f651@arm.com>
 
-Add a memory barrier to sync TX descriptor to avoid data error.
-Besides, increase the ring buffer size to avoid buffer overflow.
 
-Signed-off-by: Wang Zhimin <wangzhimin1179@phytium.com.cn>
-Signed-off-by: Li Wencheng <liwencheng@phytium.com.cn>
-Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
-Signed-off-by: Wang Yinfeng <wangyinfeng@phytium.com.cn>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h    | 4 ++--
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 4 ++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+--c4enlaepeuujsmpq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 9cd62b2110a1..7cc2fecbaf18 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -50,10 +50,10 @@
-  */
- #define DMA_MIN_TX_SIZE		64
- #define DMA_MAX_TX_SIZE		1024
--#define DMA_DEFAULT_TX_SIZE	512
-+#define DMA_DEFAULT_TX_SIZE	1024
- #define DMA_MIN_RX_SIZE		64
- #define DMA_MAX_RX_SIZE		1024
--#define DMA_DEFAULT_RX_SIZE	512
-+#define DMA_DEFAULT_RX_SIZE	1024
- #define STMMAC_GET_ENTRY(x, size)	((x + 1) & (size - 1))
- 
- #undef FRAME_FILTER_DEBUG
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index 68a7cfcb1d8f..40088a390f7b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -200,6 +200,10 @@ static void ndesc_prepare_tx_desc(struct dma_desc *p, int is_fs, int len,
- 	else
- 		norm_set_tx_desc_len_on_ring(p, len);
- 
-+	/* The own bit must be the latest setting done when prepare the
-+	 * descriptor and then barrier is needed to make sure that all is coherent.
-+	 */
-+	wmb();
- 	if (tx_own)
- 		p->des0 |= cpu_to_le32(TDES0_OWN);
- }
--- 
-2.43.4
 
+> Obviously not, FWIW I noted this on v1:
+> https://lore.kernel.org/linux-mmc/9c31b697-3d80-407a-82b3-cfbb19fafb31@arm.com/
+> But hadn't looked at the patch since then, sorry.
+
+No worries, but you should really remove unneeded context from mails you
+quote. In this web-interface, I couldn't find this mentioning of the
+build error.
+
+
+--c4enlaepeuujsmpq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZ1VEwACgkQFA3kzBSg
+KbYr/A//V59QC0Jp/pGdqrZjAn0m8BaO4ipnNBvg06wdnJCu+JIuxTQO6/9j+MHx
+2QN38T8swcxBJApUEIvyUbMZ9S/0XX7w3yLYVxJienMZJVkmMhWYVqtjoK4FZyjC
+wrlxnDGvYO80E6yhwS6r8eC4sxmEhXYDWb1DfGiuHBNz1Wo3vwQMjCN+thxM0UJn
+Ff49IQGx0Kdup8PrSvDWdIwXL0i56gS4HGTl9G+Rs49AJbdIu4t4YAmXGVQM5qd3
+kQIj3NtjBTvdak6Ww/DMAMr98Sb+yg/N+znpfvQdHeulKOrErK0GeN2VUKJdEyUu
+LJaJiilAWAQerh8/1iXNhL8coY9Td4pdZIlnHB3PeOrxZ22k4qm1wpTj5DKpVWs0
+GL2EI1FEBdz33DNYTl34Dti/TtBE1NNSM3CYfugko5DEJlDTnOePYrbFvwgmhgd9
+SgnzkE3/D5QestZcJyRxfA2owVbrY0i0zuc4h9LK5ZAM+POnQ8M3SOPLfgdHFh7R
+TEj7IWeqiKnxsEjVyDnaSl8w4rl7UJPYTqqq7LtASUVQKEH5weAV6PEEw7Nl6tE5
+B0uUGvIAJjYDajubp/OyAFeA15ogJpZHkj2EEc+HmOswm9RmR4K7b5O6scrKB0hU
+FasSypwrVeQn/risfDtwy5JnAYRKOA8wpY16iDOSy48zFQaMH/U=
+=I04c
+-----END PGP SIGNATURE-----
+
+--c4enlaepeuujsmpq--
