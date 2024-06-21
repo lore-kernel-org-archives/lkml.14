@@ -1,147 +1,181 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2130.outbound.protection.partner.outlook.cn [139.219.146.130])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2040.outbound.protection.outlook.com [40.92.40.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0724224DC;
-	Fri, 21 Jun 2024 03:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861F643687;
+	Fri, 21 Jun 2024 03:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718939698; cv=fail; b=m4yDtd4dD4O1RVqHcGIHXjqa/nsNcJa8Zx/FNUAH1TIAYleu6yrcHe6mg7XUKgREAjX/9TqoNun8tba0sfNEHIq1Y3dJepB1Nx4sipnNiJWFgrLfwJKZCsI730tfI7pmBgML6qB00Kd/OySa3SkVMtOGt+Soh01C/cUPHe9jVpI=
+	t=1718939725; cv=fail; b=fG3hRFtJEkjM8IQ1iL0DvsQPy55AynNHVbTftbnYXNh+PUZypkajIX/TcAYdUpuJSMD8AGhCuq96cHkNhF84Q61NXBAT9i+f4J7jTccheLwGdWe59joXcEB4t7EmsV6WAjRNke7vtpaTnXuiA4/2iEf5ROSbIBnboh/WyCXk3Ss=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718939698; c=relaxed/simple;
-	bh=js7a7qTF6vGhrQS4+8/fDdp5x82pybHYHH8L7YiNlzI=;
+	s=arc-20240116; t=1718939725; c=relaxed/simple;
+	bh=T+Svs2Pr8phNpd0qXh24s7IitOyPe+U/ESXBwoqDjjs=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FkLRdlSKkCCb+2C2X22XlkuJXYdJm+TCXg+EC+2A2YYXyNVrMtVhoz5Di/Rl4tZJCu35PFFsz3q4SfTVqp5D8WpSo+yxMAY2ZVJxxDvMishbSogkl7WbIaGPzRodWoV0S5/j3KlMUQ6EMJ0mjzGCztRIlvxTMCcLe3aGVDXTYcM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	 Content-Type:MIME-Version; b=gmaAsE+6VsNl9Uy59MkHb6wtoDEG/vpRL+mXroq3vTsc3XfnMmhdFbIoSvRIhFIjj9V9mEcoGAMkzmcJXau4jhhvpWSYSK3xst7rDBpP4M5XkaHfxN6HRKRxEiD3d4Vi65F/kfC+HatHOoAY/bSFnoUUyufFsiu/G7pzR+/3fzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Lw8pn/87; arc=fail smtp.client-ip=40.92.40.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Lw8pn/87"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bS1UhC6CtIqSpI+xm+9xvaA2squM+ht5PuZi87G/bbdVufuLzbdty7R1qQWjiV4oUSj4aQnxbh52sUaOj85Z+MxTy2gSHLXgkfTbyBG0IMvV1xIVOky0QLUKFL+Cg6owzWyh0ymm144G8I0d+vtup3Zaw+qG6Q1bgNHdrX3+iFQ05X2GM+CuDhz7wjLGrSXD749urw8QcesqP1z3MRE14zAFoA9F8nWXhIB6o9LpuSDJ2Q8cga+SzpP2OUGwLV1ddtduS/ayCro9o5N92v4uFJt93t4b/5eQT4xGvBn/LZwRRJPG6AhKmyc8VcunkkgYUvNBAGUQb54PYUKWh302gQ==
+ b=VXjxmcQhJfzTfljVk+Swa3788qiDYa9LVVHNG0/pM1TdbjS3T3Um3aEJC/V9njaKqLsDJ0NdAzXWX23l5tYiKb62NlVZyNKVeLYaaIzeWafHzrBkT7ryrkSBFRBrfrDWx8gEeTFA/TkdO0NIiLgM567gB5GQqNxuQs5ssXjprWK9y3AtXzF2NiYZyJARokGQsfxdjDaoX7wmW3wFr7PaYNFToL6p0AYNHeYJt9rtrNg/ByHnm4rjacGnthQk5Bylq7PboVaczjLQZxbazX9HvWTi1gU+KtSPTe4iBC1I7HQ4KP1gX0fF8BIBnobEu0cgsCNMDczquDxsXE9/hEroCA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=js7a7qTF6vGhrQS4+8/fDdp5x82pybHYHH8L7YiNlzI=;
- b=Y5a+2yDjDwZqfbqWkx8W+Pxk0z0ciuq8/ZGKI6FER7GDVB8EOzw6KI+d87WVBU0d83rEe88NiBr/oXCBz9Cv1meQaJ8Enw7YZelZJt+SDlXs6Ex2V6STinDR+5D8O78X8rho2G5wG8b6R2tV4vkqo0csXERQZ6o7UuZBXwfsDz9fkF2HGCsge2WuPM4CpWFtZlKMZCBYebC5jFtp+TJu78r6Jw0sGn7PnhTu+DnSsiGrt8f7CPQ1GEIk0OMZTMut8A2kaGqNvc9BKIF+3Rd1RaIFQyGZip1/1fJik0YIyaNYjLb4UAX7JLyxFaThoB7Ju2ylnMdlQzFKjbbaZj52og==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) by ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:c::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.33; Fri, 21 Jun
- 2024 01:41:41 +0000
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- ([fe80::4d66:ac5e:3903:cdf5]) by
- ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::4d66:ac5e:3903:cdf5%4])
- with mapi id 15.20.7656.033; Fri, 21 Jun 2024 01:41:41 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, Ming Qian <ming.qian@nxp.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Tomi Valkeinen
-	<tomi.valkeinen+renesas@ideasonboard.com>, Mingjia Zhang
-	<mingjia.zhang@mediatek.com>, Marvin Lin <milkfafa@gmail.com>
-CC: Jack Zhu <jack.zhu@starfivetech.com>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-staging@lists.linux.dev"
-	<linux-staging@lists.linux.dev>
-Subject:
- =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjQgMDgvMTNdIHN0YWdpbmc6IG1lZGlhOiBzdGFy?=
- =?utf-8?Q?five:_Add_for_StarFive_ISP_3A_SC?=
-Thread-Topic: [PATCH v4 08/13] staging: media: starfive: Add for StarFive ISP
- 3A SC
-Thread-Index: AQHahOSawdmUtagK2Eiyr8mx7nkYE7HRCieAgADjzfA=
-Date: Fri, 21 Jun 2024 01:41:41 +0000
+ bh=4Ikv+3V2XA8P7rcQFCwjt9DRYQY+gSwIQyaa7SfbXlE=;
+ b=eKaNDOEunsNrYdsFzV97If0OcahASg3mq1PwzV90Fcg7/ct3mkHeBs780252KX91+nYmyaHa7PnIBTbFNoQYJ+lwIT2V+P5ghg69kt2GRkdtWCs/Zq1hgp6TzII+til9UoXpRnTcoBhYYssIjz+E7Ip2qhCPM9EKM3Xy+4UC0js8oFG8IG+m9oT8s71I70KC8jITSTmjpntpFz4jhKeroXimnYS84f14wsGoLVKhyUD2br8SaAYAz6nzM5vRuBjj44U/WhqcdSf3iiysIjTs/Pz8zZM+c+S+WjhaJwfHw9F3BnHbimC2D4PBJYKiZ4VPiiRftm37gIVEpajrR/tWzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Ikv+3V2XA8P7rcQFCwjt9DRYQY+gSwIQyaa7SfbXlE=;
+ b=Lw8pn/871pte5+8ZZUZ6fiN8aEL84bVzsAF8v2rs/ufMV+Ce7Sn+9VsVeTeHM/SENeIj3VWs0T4ToXMzKRtLLAym/VokmGskw8hD3v5t5tU9ct8HoESZ6dewznjotzEbGjzctKKXQ18/pJ5MOePHCYGMEu31lDkJrM3W8ObCyPnDcIeeW50Uwsic1xHip3JIfEUJUQlF6LBpCWra3SKKFKNbh3jlNbN6cJxMNLUhEfbw5LAnNSCZHS9eZgeCbCCf8T8q95rtp+BaAPc666cMb4107XpZ9cW2y7woZrdabWybkl7EJWrxomM0BefhSCl5sE9qRTurN2HzEVolcdoPnA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA1PR02MB8970.namprd02.prod.outlook.com (2603:10b6:208:3ad::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Fri, 21 Jun
+ 2024 03:15:20 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7698.017; Fri, 21 Jun 2024
+ 03:15:20 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List
+	<linux-hyperv@vger.kernel.org>
+CC: "stable@kernel.org" <stable@kernel.org>, "K. Y. Srinivasan"
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui
+	<decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jake Oshins
+	<jakeo@microsoft.com>, "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT
+ DRIVERS" <linux-pci@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Thread-Topic: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Thread-Index: AQHaw30k6EbhYkH9eEC2TYxCEnOaS7HRiU/A
+Date: Fri, 21 Jun 2024 03:15:19 +0000
 Message-ID:
- <ZQ0PR01MB1302942ADDEE849AA741B202F2C92@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
-References: <20240402100011.13480-1-changhuang.liang@starfivetech.com>
- <20240402100011.13480-9-changhuang.liang@starfivetech.com>
- <94acc95a-c0cc-4ec1-836f-bedbd46b73cd@xs4all.nl>
-In-Reply-To: <94acc95a-c0cc-4ec1-836f-bedbd46b73cd@xs4all.nl>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
+ <SN6PR02MB4157C9FD41483E9AC7ED9E70D4C92@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240621014815.263590-1-wei.liu@kernel.org>
+In-Reply-To: <20240621014815.263590-1-wei.liu@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-tmn: [d/jofPCzOzGIXC7myc0KhYgVAJx8B5EF]
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1047:EE_
-x-ms-office365-filtering-correlation-id: 8c32f2a5-a470-47c2-811c-08dc91934cfc
-x-ms-exchange-senderadcheck: 1
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA1PR02MB8970:EE_
+x-ms-office365-filtering-correlation-id: 19640bc0-226a-4232-bc4c-08dc91a061a9
 x-microsoft-antispam:
- BCL:0;ARA:13230037|1800799021|41320700010|366013|7416011|921017|38070700015;
+ BCL:0;ARA:14566002|461199025|3412199022|440099025|102099029;
 x-microsoft-antispam-message-info:
- H3Ora3NI6VUFZKCIGf0qSj20zT788d8gAI2AkHxGEmCY82YplqjKaM1BV3SH53CoPDI0Bf2qbaOYjI8TeKnkCJZ5nL95PCH1vgMtD3/BKyFRTtKUgryHHQUOPArd7poscFXVjbwLk0D4ahegkpbyhYTw7n+xJcg8TeQbVB+PBeRfOPZJOo3yA/x2lJKdECDYvl86HPN2goETh4JQQwXgy/2tqobJbqnaHhB9GQ72pSTuxHDoR34v5GK+WzMY3YS96reIFosuy/qum0S2+PZcMRU9LFnv92iqwgPOSbBzzLUarrlVo1gsUfaFhKCoxQEyn9GuJiwrNHHinZrNu911Z/i29G2ki5gB9JcL5hHd3gtSghdRWdRXSi/XOZpgtOpNTqTkj+1/3zT0w3bftoDIJPeFYiEc2J+CcD+zse/0FiUXe4YvVq3OFXPryl4ObdSyEbN+FgReL26wMLYoapkR5vW/MWkzpcf7r93dRTOXRAo70bdytrSwGfkbWQ9M7V+Y09rZqyRxUJT+2P9b4nTrElkKGxjKMRkWA8dRKwce2OTFShJG0zJO3UjktU8WLr/YgbNkUFYYYZmPLKHDZzbjnhZcY7PTgJf9Wd57p5P5B0XHmkSrbO7aoiYUNJxdApyG+yKw14RXC47BpSTfezzqJQ==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(41320700010)(366013)(7416011)(921017)(38070700015);DIR:OUT;SFP:1102;
+ WGcWRXxAyYBuEtqayRhPZFNHKSyN214hrVM7r2GqgY4I980UiiQrLZnFDijG6o9GNxlW7YvW4kb794w15/pcGXb84prLhXVa2gZCq9Or1OI4IzPujv7rt6FKO91UicAOoY/hEFxWHLiYRAbyYACqjpqXbtTGJ47mZX34mUZHYSOjLj+BV898+DfoPgEpeEetRLruGXycUMwEOONJFX20SZpdWWOfwfpbVQKAXNGJ+8IYijBDXpiddsC8sLyRCKQckkZUavV53P4PE4QRHis3NspV5rwF7UGPWuGRcFpAr3BkolWYsN1Ta4z4tvvogAlNDU6ce5PWd+FVkagVTQSGKvgSBzAM8GddFjHIqqqBwoNsBS/QYOYw8kCubV+l/ns0V+KdEDmT2rm+iw144KjFihFQqJk6bOiXtyUIEkLMr6Q1Hli42KR/E2ky/PLNqSQ2OkxSOJN0WWp7S/VPnP6lCGcl3yJ4xAFInK9KeLhtCn0jsixN2WhnEDrLor+SgH9kM/eT13kA9plwoGGZmfvhLgffshmSKYt3/7Ihu1RpZDJA8f5iAkNA8ACCvwc6WYDJ
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TzFCbHFNYjc1Uk1pZHFsSXVTdHdZeXNna3BtNDJKcWVJcXVSaDNyeDdLcFNo?=
- =?utf-8?B?ZFFHV0hPcEZTTGFmMi9hZnZnaDlNQWhpaEV3MXhOMWpMb3lnYkZHNVpOaHhj?=
- =?utf-8?B?dFpGZ3RYQ2pKbnVDQ3R1VkcwQWxlTVd2TnAzN2lKZFRXM3RycFBoenUyQ01Y?=
- =?utf-8?B?cFgvNnkrQVpqdWRuR0kzb25CRk1iUzliamE2UlRzTUJnMDN1OXhkeDlOMFhZ?=
- =?utf-8?B?WFQrMEcxZW9FZ1pFVm00cnluR0hDR0hiSDJWb2E2S2dLbUNJSmVjODJJYm92?=
- =?utf-8?B?S0tsL2lsRE8xMUhBTml1M21PVE15ZmVuT3FYaHBvVXRHcVdZMkY0L1dvOVNJ?=
- =?utf-8?B?MXhUcDdsZytSVCtQa01xeWxrV05aTkNXSzczbUNXclhpVk5obFlBNGRNSFcv?=
- =?utf-8?B?Zk1vMDZGQ25ZSXoyVzc0Y1M1dWdQUEh5VUltck8xeDUxbzhSQkNBYzB2ZUN4?=
- =?utf-8?B?blpxUUM1eGp1SS9CMG1zb1EzNVh5bkdlR1JibStMdFJwL0I4V1VjTzNiajRn?=
- =?utf-8?B?c0ovR3NZdUprMDBtcG5yVE9ZWlNJaU1KeUFlQXB4dk9pT0J4c1haWFdySkUx?=
- =?utf-8?B?YzNaKzFWbU9XbUFMY0RDZXhoSEFsT05lV0lLZWN1bWN4WGZNZ0hGWk9Sb3lC?=
- =?utf-8?B?eFMvQWtIb3V3bmE1bTJjeUV3NndXaVY4anNjU3hKWlVRVUpFVXFObXR2dHI1?=
- =?utf-8?B?SC9UQjM1SzJDQ01acFcwS0tpV2w4UmRrN1Z2amo3NTQ2dFNTenZ5NUtJWW1n?=
- =?utf-8?B?bDl0YVAwSGZGK0VZd3Jjc0d1YzR0YzB5b0FWb1lHN1UrOW1SNnZqSDJPdUlx?=
- =?utf-8?B?Rjk0VGZ3K1E5eU1BOWk5M2ZhM3B5OVpZYXAyUDkrVkt6dFBjYW1VZzFjWWVT?=
- =?utf-8?B?ZnlkYTA2KzRJYVBWRTBXM2lhWWF5dnVqVTZtWHhHb29UREp2YjBXeFpBN0Js?=
- =?utf-8?B?VEVBY24zNzMrRWhUWWhoN20yc3BveFhnKzZ6OUx6SGJ3RHdtQUoybjVNL3dJ?=
- =?utf-8?B?WTZhd1VrbXJveG5yWUtES2M3QzMxRFJYNUZvZkwza2FpUFNydWpObVhmODB1?=
- =?utf-8?B?anRNcHhwNkVyeTFPeVJYQ2x0ZWxldHNEZHBwOHl5bVdLcm0xVFoyWU9JeEk4?=
- =?utf-8?B?dE0yVG5zL21kZzllSmVIbHNvcENYQ1B2aGxPWGF5SFlTSVZyS0pWMUduNjM1?=
- =?utf-8?B?S3R6dHpNelRoQk9PRXdzV25ITlB0RWxMWlZaYXJ4cmw5SUtFa0FBZjcxWVN0?=
- =?utf-8?B?dVEyU1JJamppNE9ORUhGaHV6b1B6RVZSY0dFSitycEZucmhwc2pYSVordkRv?=
- =?utf-8?B?UzZzcEVSNHNjNFd1L1JETk1LN3lYemE5SzAzdUVnNFozS1JXV3BkYjM5OHZ3?=
- =?utf-8?B?VjExOVZjaVgxWFZFcFo5T21IZG1FSngxY1RGdUNibzFJSUJUVFNMN29HVzRu?=
- =?utf-8?B?a3VHNW9lT2NLTEdtQXk3d0xrb2pEYzBHYUY3TjVZOVFOK01PdkJoRVVYV3BV?=
- =?utf-8?B?RVdBWHh2RzU5bkZDaXNlWG55dUtFaU5HeTRhc0orOCtCYnJnUzF0Wm14Zm1K?=
- =?utf-8?B?dFZEOFUxTVo1NWRVYjh2ZFl0VzFtcXVJUHJHVUJDNFk2OTN4cmNRaGhaSFgz?=
- =?utf-8?B?ZWV6VWYxRG55ZlFJdkowNnFtQ0xkdHFDRGgzcWIyQ0tUaXlTSkNNK2ZMUjIy?=
- =?utf-8?B?TVFGa25kWlgyeHdhTk53cXpqb2hqVzFyWlU3b0svanBFRjJ2bCtnUUdrU1Fm?=
- =?utf-8?B?a1RhRkxTZkozUmttNnJXdG5IU1pNL0J5U1lEMGhsKzJYYkkxM05ROEltRXNW?=
- =?utf-8?B?NnFjQmF2V2ZwRXNpT0VPcU9Qb2crRmxDRUdjYWZHTlRUUjl3Z2lJamQzM1pC?=
- =?utf-8?B?aFJXd3dSWjNMSzNoSVNURUo3bmpCVnNaemFhRndxKzl2QlRxNmhpWVNsNHE2?=
- =?utf-8?B?czl2ZFA5SEYwZU9ZNDFTQWZib3B5U2dmQVdNL1V6Z3ZlRU5hQ3ZEcFd4d3d3?=
- =?utf-8?B?dGVmZGxYV1l4VWlvOVZ6NVpXdlQrMENueGtqTFIzTE9CcFdYSXRpUWNBRkNz?=
- =?utf-8?B?Z3NwOXRJTDZjeFpCU0VrdUJVNHdZeHllQnQrQjhtaVBqL3ZJQzNtUHRTMjJS?=
- =?utf-8?B?MXJYdHpuSW1tMmZWdnY2WDVvU3NmZ3lqM2xONE5qVERCVi9rei9VODljOGRT?=
- =?utf-8?B?WVE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ =?iso-8859-2?Q?wRV9nbgVXq7b8+P/hktWlQGMb0+uUeI6b48tCt0BfGxBuJztGeArBNXHlh?=
+ =?iso-8859-2?Q?kDs4yaehUFU4yk1I7Ivke63ovjwV9NUt9Bt0EhdXdbC5qzIKHrZKIbEcHR?=
+ =?iso-8859-2?Q?4BvP3SxlkP8E9DrvJ4y+o4wVX1EG2e6X1TUBKWVG9QHYOc70wNDvJSs6oM?=
+ =?iso-8859-2?Q?9DTY+HyzSzetEaGBcA7x7Ya1cL9eqWM1DGCNIWY8kozMGS97KbaSBYnehr?=
+ =?iso-8859-2?Q?mk+xNIlVIeUadnvqwtDp6r1UJqFV6gAaUPyzc3LAyfu9xJkDEX1vHT10iT?=
+ =?iso-8859-2?Q?9ZchSlPPEyHNTmHYx6EaitDc10RRigY8AXK8an6r8N8ZzihRbPxkT+p3/J?=
+ =?iso-8859-2?Q?LbNiMaKxnTt5gsnFDw+5OznSPkq6JJKt0HU2QwV5nLtsGIIjPkXZeFA+fV?=
+ =?iso-8859-2?Q?99KZ51b2bpTuhXSWSst5XDtoFOBaWpc0WDESZWAuVu6xMjiOqFZIk9WEBg?=
+ =?iso-8859-2?Q?Bhm0ZGbdDmey4S20zLLC42aImq6lB2//58YBvQsb11vrNlHBMNSu098LaR?=
+ =?iso-8859-2?Q?S+zMN4fRaJw8/Q5Csr3lMRjbk9UifM6Q58JVnptNu8IBtPWu6yCcNY0zSe?=
+ =?iso-8859-2?Q?LRnTgdDLhIWiS2ntB7GtPutDyiSnFdXb97LkD+hQDOeeCD0i1F6AN75uTX?=
+ =?iso-8859-2?Q?5HBaWUCcJxcqJk2xx1ekVO7roc1wo+Qdhq9qjKC0UrMvzGICRRxJjHBx1I?=
+ =?iso-8859-2?Q?o8KVINMplVGVT5KhTFTt1ZR7VV5yV293+yDQkkzGTiAqt1Kva6uWIOKVcj?=
+ =?iso-8859-2?Q?iYHIlTNwgeZ0fYYVNE/4onlUDtreW8WRq+ntvFsbp6MtXRVvhYGnNb0CPQ?=
+ =?iso-8859-2?Q?MuACCD1MlkmlO7jZ3ruzp36utGroEUoMUHl2jMpbbPvsNsK4Lp/eCQUWGv?=
+ =?iso-8859-2?Q?zwbuSsFGQrgGR08qRNEtKv4xtiGMBSMCDrnFgyFNSjqjOEkmysF4NxOenm?=
+ =?iso-8859-2?Q?jz4sw9gEd+9ADo/37UU1IVllvoOzuNUthrsnopWsgP2NOYYsOeIyJKJyMk?=
+ =?iso-8859-2?Q?4graXqunqE85BThaBvKND+UsXkuE2TLIiH5pWSHpVe8R1yGmAKFkVqNNc6?=
+ =?iso-8859-2?Q?aWJd6OCiwKh376nMqcHBt/LOg2e+2YSZy5bLeX0PaZMa/yyCut3zUVfZLr?=
+ =?iso-8859-2?Q?sfAJG+GWm+J5BMAfJ1XulprCfZwIQidqPOevnopFdQXK+dF/vhi/X8S2dn?=
+ =?iso-8859-2?Q?Jt6zZ5r9TsZcnaikDA1ZQl7tiG6UTMkUSr+rt05DbnDFgeGBFQILUAJjIi?=
+ =?iso-8859-2?Q?vs0j03MfUrVB9T0n2xNtWW2SySDVtqUEGV+DZtXAY=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c32f2a5-a470-47c2-811c-08dc91934cfc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 01:41:41.7541
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19640bc0-226a-4232-bc4c-08dc91a061a9
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 03:15:19.8591
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8YIPrsw2dzLLBdgFqMI55iBPmh+kYENvKCyBJJ426/6OE5YmfXfoA1Ammb7SypoQVFco5UuxeIAGXGPtzuAEIYdbhP8GTX9k5XHmHu5ZY8sB+R1P6eL+CGeZeLPUUmy8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1047
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR02MB8970
 
-SGksIEhhbnMsDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50DQoNClsuLi5dDQo+ID4gK3N0YXRp
-YyBpbnQgdmlkZW9fc2NkX3F1ZXVlX3NldHVwKHN0cnVjdCB2YjJfcXVldWUgKnEsDQo+ID4gKwkJ
-CQkgdW5zaWduZWQgaW50ICpudW1fYnVmZmVycywNCj4gPiArCQkJCSB1bnNpZ25lZCBpbnQgKm51
-bV9wbGFuZXMsDQo+ID4gKwkJCQkgdW5zaWduZWQgaW50IHNpemVzW10sDQo+ID4gKwkJCQkgc3Ry
-dWN0IGRldmljZSAqYWxsb2NfZGV2c1tdKQ0KPiA+ICt7DQo+IA0KPiBUaGlzIHN0aWxsIG5lZWRz
-Og0KPiANCj4gICAgICAgICBpZiAoKm5wbGFuZXMpDQo+ICAgICAgICAgICAgICAgICByZXR1cm4g
-c2l6ZXNbMF0gPCBzaXplb2Yoc3RydWN0IGpoNzExMF9pc3Bfc2NfYnVmZmVyKSA/DQo+IC1FSU5W
-QUwgOiAwOw0KPiANCg0KV2lsbCBhZGQgdGhpcy4NCg0KPiBmb3IgcHJvcGVyIFZJRElPQ19DUkVB
-VEVCVUZTIHN1cHBvcnQuDQo+IA0KPiBPdGhlcndpc2UgdGhpcyB3aWxsIHByb2JhYmx5IGZhaWwg
-d2l0aCAndjRsMi1jb21wbGlhbmNlIC1zJy4NCj4gDQpbLi4uXQ0KDQpSZWdhcmRzLA0KQ2hhbmdo
-dWFuZw0K
+From: Wei Liu <wei.liu@kernel.org> Sent: Thursday, June 20, 2024 6:48 PM
+>=20
+> The intent of the code snippet is to always return 0 for both fields.
+> The check is wrong though. Fix that.
+>=20
+> This is discovered by this call in VFIO:
+>=20
+>     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+>=20
+> The old code does not set *val to 0 because the second half of the check =
+is
+> incorrect.
+>=20
+> Fixes: 4daace0d8ce85 ("PCI: hv: Add paravirtual PCI front-end for Microso=
+ft Hyper-V
+> VMs")
+> Cc: stable@kernel.org
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 5992280e8110..eec087c8f670 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_=
+dev
+> *hpdev, int where,
+>  		   PCI_CAPABILITY_LIST) {
+>  		/* ROM BARs are unimplemented */
+>  		*val =3D 0;
+> -	} else if (where >=3D PCI_INTERRUPT_LINE && where + size <=3D
+> -		   PCI_INTERRUPT_PIN) {
+> +	} else if ((where =3D=3D PCI_INTERRUPT_LINE || where =3D=3D PCI_INTERRU=
+PT_PIN) &&
+> +		   size =3D=3D 1) {
+
+Any reason not to continue the pattern of the rest of the function,
+and do the following to fix the bug?
+
+   	} else if (where >=3D PCI_INTERRUPT_LINE && where + size <=3D=20
+  		   PCI_MIN_GNT) {
+
+Your fix doesn't allow PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN
+to be read together as a 2-byte access, though I don't know if that
+matters.
+
+I have a slight preference for the more consistent approach, but
+don't really object to what you've done.  Treat my idea as a
+suggestion to consider, but if you want to go with your approach,
+that's OK too.
+
+Michael
+
+>  		/*
+>  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
+>  		 * because this front-end only supports message-signaled
+> --
+> 2.43.0
+>=20
+
