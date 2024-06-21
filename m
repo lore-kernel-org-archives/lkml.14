@@ -1,161 +1,110 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1631616D32E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1F278C8D;
+	Fri, 21 Jun 2024 09:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962388; cv=none; b=FdDFoq1h7ch23qUoPOV7zgCqwTtcEeRop+7kWRIwI2XK3nq8NO1A11LIGJFkG8DJc33/NGjFOfw4KNUdnNL6pp6JPOfhmMYIuEar1DpXL9lrzHZO5O+lyiL6ujuLpPNxlIkYnu9ZZ/98P3asMXetxTS6raHezXX5hlIA6fyrmsw=
+	t=1718962441; cv=none; b=oz2ClLCCVFZ9D+cm97zh0tJ4vvHnP7nCObCynWrvFUvKRJEtEbIWstEmp6r/z8uwLVyHBR3qVoY8EkZ8e1nPKx+3sDJu3MUAkibzUEifZ4G9bi/LHBy9vgQAcqsGbpZDQ+jjJDNTJ6Y6Ft4oPxNxvtrhvtgV28RtdaNF/O+cDds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718962388; c=relaxed/simple;
-	bh=E9cYpE4iW5KxYJc5t6VcgPWDNJ7zI+gXmn7e5IvxHj0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VzEy7E+6QYnFYdD/2b1s7UMa8sMOVAKMhyXppzbQFgMnuKAyDX6FtMzdvvRBmJuc8t8Ir82mgqtlq5gdKOgUh2qQckPFrdr12LJEez5AVEFJ5xIorTlUWcccCXTeKxGXNBs5EvIkDPhA1u/yYlbpny+6+u+mojkVpaxyZDdhjV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=VhKjjRrK; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1718962441; c=relaxed/simple;
+	bh=UQtLFqj0hfhWLB4hel6J1+AjzvJGftbnprF84jEbx1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SJq+ceIX2IjfRN0fYjOf/65kSmqtrm5mvWButCY+LVX4RXTetItU3T/pS001XwMdWnfHf2T10joeLs8mvgKKJpCXcj5newoxox5a2oyYvCSyyboFc5jl2jaSoGLkZTd9/GGudPEI5ZyrAnvSZqcgLh1gvnzsM4cLcsC9byBKaBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ppa1S6Pz; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="VhKjjRrK"
-X-Envelope-To: daniel@makrotopia.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1718962383;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwyKB6XsVezaf31h9Csn0ERhorbwkY4Vv9b4XERmN7w=;
-	b=VhKjjRrKfeDUSL0Fh1j6EQQMHRry83jtwLDLaOIMKjyfXh+pgxkMifNrIfDOzzo/9fKAeG
-	YqM6f6xi2NT3CLK9VU2VB+OdaltyUI8XQMzp8Jwwg9/7EvnT4NibVV/vbgcMg7q0U5IWvK
-	gXSqgEaG2qhQdtlXnmc8nY6Z/PR0qndd/4FgYvCXRrD+kyy5vQdIwUuA1FZY6tJJtmbye7
-	s9U7nEVgH5XPimBn0pOKOoMvoz9sG/6OtXVbMRtkCyGZoTpVcRhT+z/PYCdfr289tkWpc8
-	yW8W7BBCRbLQ8010+5JASTc8cpMAi4asNiI7BFq2uVLIENtdAEeZG54c0U5iGg==
-X-Envelope-To: aurelien@aurel32.net
-X-Envelope-To: olivia@selenic.com
-X-Envelope-To: herbert@gondor.apana.org.au
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: p.zabel@pengutronix.de
-X-Envelope-To: ukleinek@debian.org
-X-Envelope-To: sebastian.reichel@collabora.com
-X-Envelope-To: linux.amoon@gmail.com
-X-Envelope-To: dsimic@manjaro.org
-X-Envelope-To: s.hauer@pengutronix.de
-X-Envelope-To: martin@kaiser.cx
-X-Envelope-To: ardb@kernel.org
-X-Envelope-To: linux-crypto@vger.kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: daniel@makrotopia.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Daniel Golle <daniel@makrotopia.org>,
- Aurelien Jarno <aurelien@aurel32.net>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>,
- Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <ukleinek@debian.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Anand Moon <linux.amoon@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Martin Kaiser <martin@kaiser.cx>,
- Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH v3 2/3] hwrng: add Rockchip SoC hwrng driver
-Date: Fri, 21 Jun 2024 11:32:47 +0200
-Message-ID: <2947104.hVmBtEWnvU@bagend>
-Organization: Connecting Knowledge
-In-Reply-To:
- <57a7fb13451f066ddc8d1d9339d8f6c1e1946bf1.1718921174.git.daniel@makrotopia.org>
-References:
- <cover.1718921174.git.daniel@makrotopia.org>
- <57a7fb13451f066ddc8d1d9339d8f6c1e1946bf1.1718921174.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ppa1S6Pz"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70436048c25so1801123b3a.0;
+        Fri, 21 Jun 2024 02:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718962439; x=1719567239; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6EuLE0zsm5KH8c0x8QdqGW/DlRecU3YrYL3GIe8b3zw=;
+        b=Ppa1S6Pz75E8D3TuSQdNicEkKuI3spY5mBGsO1uiStWGfvlb3gEnI2k6MB8rBJXINN
+         bqcWu+x01ipXhttrU3UTJrSGBvozLf9dhnPa/b577ixOB1VTNnwHoGh/HC9szbyY2xsy
+         V4K1ZDUigf/s8HI2JKlCyn29o5Ky9Jfwew55MlXlOskK5aSI0onKdmYxUjPW3M0Gby1Z
+         WZbdaiJP9YIY2xg4jc+hrTFlfahf91EvR3Q+DN/a8lgVfm4bcm7v5czS8vDoAeeVZ6Fg
+         tOmwN6w/ARb9jIq18Qd8o/t2Wj28pOQneN92Gamte08nsHbwkZr/4zriA5jHceBM0oIe
+         +bag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718962439; x=1719567239;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6EuLE0zsm5KH8c0x8QdqGW/DlRecU3YrYL3GIe8b3zw=;
+        b=TgM05U2jVk1OOZadb7c4l2mBnWY5i+0qMAImwSYyJqlCbgYZVhN3RcZEgV7TtOFhjn
+         JrwIkXcKq1bzqhSXXJmZA+y7h3WUhP/KCq2j38D6PeoevMxIHG03f4dTMEA6G/QgnHfe
+         9P8HncjLugpuRNTgJnfOWYa28W5/a9BeEdGtCI1NpDg26H5zeF88X4fMNI20evJ2DnSx
+         2Nj1JgM7Oh21s27Zc0s0EWE8XQsFaIyTHkuMCDXmtSRWEN25kO/GtF3omi6vEgTJjK4r
+         xukXNWwEeE9oGUP7wYwqzNUFMFP6OSYjN0/JMnnKuYONVM8Q5Dopc5mhjhPOYFUDEweQ
+         5nFw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9agp4Ly+7RfwAZ3u+dbFq9wpADZRq1W5AQH6J0fniY+eB8ETbTki9SQ4J6/cs2LaVpLg/5zSWf67Er9AvxJkibmjwr8X+ajueh5RVQac83rL75i9Pma35Mya8squoRMXBCqMMr2hCFiVzxpKaITUc/9I+vPheRkbwLGwFkUApLMzvaC0=
+X-Gm-Message-State: AOJu0Yzo0uMv05qLAdsTQxQOuYeOy6lPDAImL1WLVjrFYOOe+itPH6Py
+	SYpPwNUXSp2pLuyQA/ANFtKtfmPXDJQdP3mMUYZ1PQ3Y+NlULjqM
+X-Google-Smtp-Source: AGHT+IGqbYxg7cu+HPCe8VWGFd/57+AVyKBihDN8pav/FDazcA3yRQCWyOHk5hXwaIUXi2kEcRMoJA==
+X-Received: by 2002:a05:6a20:3aaf:b0:1b4:cd5f:4e0a with SMTP id adf61e73a8af0-1bcbb3e0e03mr7220194637.13.1718962438881;
+        Fri, 21 Jun 2024 02:33:58 -0700 (PDT)
+Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbc72e9sm9810365ad.296.2024.06.21.02.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 02:33:58 -0700 (PDT)
+From: Potin Lai <potin.lai.pt@gmail.com>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>
+Cc: linux-aspeed@lists.ozlabs.org,
+	openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Patrick Williams <patrick@stwcx.xyz>,
+	Cosmo Chou <cosmo.chou@quantatw.com>,
+	Potin Lai <potin.lai@quantatw.com>
+Subject: [PATCH v4 0/2] add ast2600 NCSI pin groups
+Date: Fri, 21 Jun 2024 17:31:40 +0800
+Message-Id: <20240621093142.698529-1-potin.lai.pt@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1935094.npV3YSaYj1";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
---nextPart1935094.npV3YSaYj1
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-Cc: Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH v3 2/3] hwrng: add Rockchip SoC hwrng driver
-Date: Fri, 21 Jun 2024 11:32:47 +0200
-Message-ID: <2947104.hVmBtEWnvU@bagend>
-Organization: Connecting Knowledge
-MIME-Version: 1.0
+In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is not
+needed on the management controller side.
 
-Hi,
+LINK: [v1] https://lore.kernel.org/all/20240613080725.2531580-1-potin.lai.pt@gmail.com/
+LINK: [v2] https://lore.kernel.org/all/20240620012512.3109518-1-potin.lai.pt@gmail.com/
+LINK: [v3] https://lore.kernel.org/all/20240620084337.3525690-1-potin.lai.pt@gmail.com/
 
-On Friday, 21 June 2024 03:25:18 CEST Daniel Golle wrote:
-> diff --git a/drivers/char/hw_random/rockchip-rng.c
-> b/drivers/char/hw_random/rockchip-rng.c new file mode 100644
-> index 000000000000..6070abb73847
-> --- /dev/null
-> +++ b/drivers/char/hw_random/rockchip-rng.c
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * rockchip-rng.c True Random Number Generator driver for Rockchip SoCs
-> + *
-> + * Copyright (c) 2018, Fuzhou Rockchip Electronics Co., Ltd.
-> + * Copyright (c) 2022, Aurelien Jarno
-> + * Authors:
-> + *  Lin Jinhan <troy.lin@rock-chips.com>
-> + *  Aurelien Jarno <aurelien@aurel32.net>
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
+changes v3 --> v4:
+- remove pin list in dt-bindings commit message
+- add note in dt-bindings document to descript the reason of adding NCSI
+  groups
 
-I've been using a modified version of Aurelien's patch myself and I added the 
-following to my commit description:
+changes v2 --> v3:
+- fix commit message typo
+- move dt-bindings patch forward
 
-```
-hwrng: rockchip: Explicitly include correct DT includes
+changes v1 --> v2:
+- add NCSI pin group in dt-bindings document
 
-Similar to commit 
-045a44d4c9b3 ("regulator: Explicitly include correct DT includes")
-replace ``of_platform.h`` include with ``of.h`` and ``platform_device.h``.
+Potin Lai (2):
+  dt-bindings: pinctrl: aspeed,ast2600-pinctrl: add NCSI groups
+  pinctrl: aspeed-g6: Add NCSI pin group config
 
-Link: https://git.kernel.org/linus/045a44d4c9b32578aacf0811063e5bb741c7c32c
-```
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml       |  7 +++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c             | 10 ++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-BUT I don't (really) know what I'm doing, so could you verify whether there is 
-some merit to it?
-
-Cheers,
-  Diederik
---nextPart1935094.npV3YSaYj1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZnVIvwAKCRDXblvOeH7b
-bqE7AQDF37/CXTAUyN3awVxvukKshJxjy4bD/LzGPF6vKKjeMwD+OQtj9mn9qg9S
-9VINqYzabKxos3rXWoGeIEgjc7TYkwM=
-=DxWI
------END PGP SIGNATURE-----
-
---nextPart1935094.npV3YSaYj1--
-
-
+-- 
+2.31.1
 
