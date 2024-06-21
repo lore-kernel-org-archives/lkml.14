@@ -1,57 +1,57 @@
 Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88D5AD5E;
-	Fri, 21 Jun 2024 13:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AB9B651;
+	Fri, 21 Jun 2024 13:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718977237; cv=none; b=RJpBAEyt+hiJU/TPR94d9PtXjvOszYu4x8gd3t14SHfAQaHpgDHZX02pfPGAty5bQJa8GiU90tlIcBEiYyGMZy7DjlTEaTuCpokEvxKywYOyTdzaEyBSCapQSvYvUBRJ8m8AZPK0aCGsHJ0oEjyNouW5AbuKwV3pNGXZQIuze8M=
+	t=1718977238; cv=none; b=WoULyE5k/l6XYLfMtiEcgwHHQcXvh0kjMGw65nFkm/Zf2keFF8pDZC/VbXVsauzJ03DMHMSQ2LwikpyoR3klDluf4Wtkr55Dwm8UKNU/F5dK1ssrO2ND4hXFn9YoHkvIrd7yxDt/iuf4FzbxvGndRYSGNn/KaPrEjy/JAVFyKK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718977237; c=relaxed/simple;
-	bh=a+LEDBAcGPRQc9HdefR+wXa1Z1kDFt1mEhDow/VGUtE=;
+	s=arc-20240116; t=1718977238; c=relaxed/simple;
+	bh=pioqKyt4NxsI2AItWz1FsdmVjP4k428sGQvSTxTZh0g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CQQ+srbctatRPugmbgVEw2SS2oN5yU6CZ54Ya7zu2lqJS+XR9uOT+dj2aOGqJ+oror+/pFJtV9EgnABU1+X3W1ol5bzPlZyRjhXVyADarbr4y+I4Ozf/9ATWtthVZx+8vt320aCxsfVUZFuxnsfLeOWxE7ZmA3zugKwCTTvUfYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N52giz2I; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=f057EnOjGx3erOBLx7+YbgJ9ZZsE/jf8EpvCpr2aOUhF3BdPa3g9gay7lHKiGSC4sbtnQxfaeAd7xbXOEAPoi3gCsAfdpcvJ5e4TGEjsggBRFd1ALlkxgmTtvrLl7VUbZYoHTMOBX+4LynmXDSc/bBbfVETuXUbZlTiwzM/C4H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eYTGK47L; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N52giz2I"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so234896a12.1;
-        Fri, 21 Jun 2024 06:40:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYTGK47L"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57d1679ee83so2153002a12.2;
+        Fri, 21 Jun 2024 06:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718977234; x=1719582034; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718977235; x=1719582035; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FqehWUTmu3KjLNagitC6UR6pJsfsCjXz84AP8y4+Sso=;
-        b=N52giz2IoXeZLapcdU/UPq1us1WAM09tetLMTTxCSGVeUm5QqaA331dkP3EDSkBIce
-         TBxVV21SfybrG3ZCJF61GY02NbiLrLx/KrOWYVYk831gzadqoq2rItnhug8RNV63W4hw
-         aHkvVF+HLa9XBkPTuF65A0JbZfvXk6EE/uACz0zkAydp45SY0gbvVsyEqwC1b1SAnXe+
-         tpADjMvBsPU7qfxj3LYChnYC8CQ1ev+xqaEmmnHMMdhKIfT/SLki/Tn5d/TXdsczJQL1
-         Es0urvt6WHtgWX4rdV84NEvdho657PVcVWJd5ZqIS04ZllR53llNrHoX42wWwIWuenc4
-         /5tw==
+        bh=eFkUozk7tb7flvFcyJ5JsIPbVaD8NWPVa3/c5jb4Wl0=;
+        b=eYTGK47Lj2uyIkI+UmaSR/1wdL3LPdX31yiam3J7oQErQXV+MYoMvUatO4ugz+1rvU
+         OHjOLoVXwpBnyFZShHMviTL6Bez5CGYgwjm+cPWGZJKcu+6mWRR+5AJdxIammt3qxrPJ
+         x119n7gvveVMBSR5pnkjA7sO5c5X3Ax9R+CPlF6fT0uQQQTE0LZsDz+8h3Oam0BOb20d
+         uQbz0vqBE+peCr0w+m4DCddkDUiA/k3FkXsliUGZWAu3JlfDovpYrG+Kh8g1epixRaof
+         ssG+U9fnzAExNIo7HwA6Ds7YujMF5PcIhvBAMv2TYepKe82Ywuxc8OadKe4CWJrUnweA
+         REMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718977234; x=1719582034;
+        d=1e100.net; s=20230601; t=1718977235; x=1719582035;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FqehWUTmu3KjLNagitC6UR6pJsfsCjXz84AP8y4+Sso=;
-        b=PTsIv4lB3nzuftwqqrr4G+i/OMQuHp5K83O57ASg4WVfGQ3aSOC1cV/9TOtDfjRrQ4
-         nK1KXQXvqvxgc3mZY6sQltxIc2vIeoPHJVyCO5qAC0F1EtuKosIa21U0aOFIBJI+liw/
-         jE6458W4L9YRT1CTKSQTrcBnYBwuU8hedykcIxE1ehOvYGM3koZtrPzMeIMNboF6jWUW
-         22s1BfnqmYsZoCoZIrGM+EQIdx6WVjdIn+xyISWkxrGtRHVTJ02H+f8GUD5thMbyu+JJ
-         QrcdqbWTsnVySSGIGucAln14TOZHnYv+CdlQYWWxFjbItZNl9oyNwWXu28W1wgrWi67H
-         YEIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0McaKBLv19yoBwGHttlxDX67l2V7rNPIiqCh1M+YwsHNZELtSo7frtVAkNyPhtXgMRR0yZVufKIVWet/sjKMv4M+bIx6vDYo1VMMa
-X-Gm-Message-State: AOJu0Yxp9bUi5VLqBMfcyqLUqdjzvKAR945usjH8llQwnxXm1gVJheI4
-	VWggJd6udMS3gYn/RzAqfvkdUHT2nnL2CJQX8J8H8wXykK9mYXk=
-X-Google-Smtp-Source: AGHT+IFg7b3CmvswvXCyJGll1GEkVNz807LHUdzUIlvKzLOCJJL2/LsIJvxs0/pWzX7L/J8BkMbZpQ==
-X-Received: by 2002:a05:6402:1a45:b0:57c:ff0d:b781 with SMTP id 4fb4d7f45d1cf-57cff0db78dmr6851849a12.16.1718977233583;
-        Fri, 21 Jun 2024 06:40:33 -0700 (PDT)
+        bh=eFkUozk7tb7flvFcyJ5JsIPbVaD8NWPVa3/c5jb4Wl0=;
+        b=lQZuGjahF52wUCpSlc+po1wLJWmyGmqAuLh5OwCfnmBazwOa+cZuleWUqsSTxMAZWD
+         RS8b0Ae2KMC7X7jHsVNqffCPydUp/RiFCatqOM0YfeVTI54z3/if26Qfk75mk4hlFP4R
+         olNuiQjUUqf4wkkLShjqd4Ttz3TI+FuJFLv9M/a3I9WbjaRVLfCTgko35F4QRyM/JpxM
+         nF0MbW8LTHjHx+6YegNy17jdqcPzk7xAiDH5FOydbJSwZnMQxctnZiwRSZqRucr8ki55
+         abUqYSov3PFyXsqjUWvqs8tJ5QmhaoJrmlLsK9jIZGS3w7wXoQdXQy5vTgkpUHcrorVK
+         ZQGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsstOG8uXhreg8o5OhnLoifPF19DX9yx/xsm5d0Nne+GDDpvPQv0s3T0MKCZ2XzeLdDKCgUs6BANo1LdH0WVhyB1B47LO1iGhCOrVe
+X-Gm-Message-State: AOJu0YyRxZQHveRBr/P6d7LRfwtS/dsnaNyvO3uP69TldBmS9fEvoL7i
+	m9gZ2DnedzNEzPwRt4LUAGX+oqD/fr2Y0RYe/kUYpcArLCailWA=
+X-Google-Smtp-Source: AGHT+IH+aNN8muxQBOlF2geszNuOMMwlp1muSzceOddFFHXJA2gZbdkBNxw9WjwtratXSkeYf0JVZg==
+X-Received: by 2002:a05:6402:14cf:b0:57c:d4e9:4a03 with SMTP id 4fb4d7f45d1cf-57d07edd5f8mr4634436a12.41.1718977234727;
+        Fri, 21 Jun 2024 06:40:34 -0700 (PDT)
 Received: from U4.lan ([2a02:810b:f40:4600:1b6a:5399:9a4f:7217])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30562cb6sm962059a12.83.2024.06.21.06.40.33
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30562cb6sm962059a12.83.2024.06.21.06.40.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 06:40:33 -0700 (PDT)
+        Fri, 21 Jun 2024 06:40:34 -0700 (PDT)
 From: Alex Bee <knaerzche@gmail.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -62,9 +62,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH 1/4] dt-bindings: vendor-prefixes: Add Neardi Technology
-Date: Fri, 21 Jun 2024 15:40:27 +0200
-Message-ID: <20240621134030.243646-2-knaerzche@gmail.com>
+Subject: [PATCH 3/4] arm64: dts: rockchip: Add sound-dai-cells for RK3368
+Date: Fri, 21 Jun 2024 15:40:29 +0200
+Message-ID: <20240621134030.243646-4-knaerzche@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240621134030.243646-1-knaerzche@gmail.com>
 References: <20240621134030.243646-1-knaerzche@gmail.com>
@@ -76,27 +76,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add vendor prefix for Shanghai Neardi Technology Co., Ltd.
-(http://neardi.com/)
+Add the missing #sound-dai-cells for RK3368's I2S and S/PDIF controllers.
 
+Fixes: f7d89dfe1e31 ("arm64: dts: rockchip: add i2s nodes support for RK3368 SoCs")
+Fixes: 0328d68ea76d ("arm64: dts: rockchip: add rk3368 spdif node")
 Signed-off-by: Alex Bee <knaerzche@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index fbf47f0bacf1..6e879abec71d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -995,6 +995,8 @@ patternProperties:
-     description: MYIR Tech Limited
-   "^national,.*":
-     description: National Semiconductor
-+  "^neardi,.*":
-+    description: Shanghai Neardi Technology Co., Ltd.
-   "^nec,.*":
-     description: NEC LCD Technologies, Ltd.
-   "^neonode,.*":
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 734f87db4d11..73618df7a889 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -793,6 +793,7 @@ spdif: spdif@ff880000 {
+ 		dma-names = "tx";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spdif_tx>;
++		#sound-dai-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -804,6 +805,7 @@ i2s_2ch: i2s-2ch@ff890000 {
+ 		clocks = <&cru SCLK_I2S_2CH>, <&cru HCLK_I2S_2CH>;
+ 		dmas = <&dmac_bus 6>, <&dmac_bus 7>;
+ 		dma-names = "tx", "rx";
++		#sound-dai-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -817,6 +819,7 @@ i2s_8ch: i2s-8ch@ff898000 {
+ 		dma-names = "tx", "rx";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s_8ch_bus>;
++		#sound-dai-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
 -- 
 2.45.2
 
