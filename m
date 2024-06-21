@@ -1,289 +1,243 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACFE5A79B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902AF15F31D
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718985950; cv=none; b=MLl+mwV7qumYwMEpV9U0epIr7S+zKPxOtHH4SpbiSvlt17Y9O9B3sHuZH//P1TRHvb3MOpsJuwbPqo3WE5WAt0+FrSZUHj8sUMSRekubsnq8wXM9En0TSyzc3rR2qNP/IatuKcSiqgInM2kme0cGPXXy3kQSGGtSplCTN8NqnZo=
+	t=1718986002; cv=none; b=tWuqWXCO8EJ7BHVw3NeUeNpx9Juy3ULx2zh1IyrXmFvmHDWE9so8c2+f1EGHFlB80Fy4hLUyBkTsyRVuusjilig0W/Qm8viF6JK4bV60JCNCKEYiBzVHi1KF3Z16tnfFmZ6GMvka3jZ0cId8h/Zxvbw/K4bq9YBvExZfBgIGe00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718985950; c=relaxed/simple;
-	bh=HLIGsFoFXfkW5grq1kBsr2MpcKrxX3SI7FnwCeRJfmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzDeZcxcVS8EuQdGCeo4iFUMgHj5cevuKmJmjGHva3vMMB2aJWRuAcXgIeqRdeQu2W1hetwzLHbNe5O7gQSWCP6Kcq167hcf4UALDo3hnjzKk4XPeoWgoZYMTzNt+p3GvczOONnenOM1o3CSe8pt3BefMxrqFJetDrQGBzsZHGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=WaFdfRFb; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1718986002; c=relaxed/simple;
+	bh=RKRMpTOKRm1ujovFZqL3WHfrxYQVRqgjDm+JkPgvrLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eZw0OzAgzGzPn95gppkzK5qpJ0pjBqdgreWyyQEVuxk9L37uRXHN7nO8ul9QYlqIxfhb/FB2HmTfYl3U0+Dk45n1i9IZs35cuaOMGoJiRRp+YYt342eAL0N4htvTwskjlBbbWnhlbGb5oE+MeMb2PeHQbmVUIcbAfaNxYwtQDQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e+xmhos4; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="WaFdfRFb"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4W5MWR4WWmzhc9;
-	Fri, 21 Jun 2024 18:00:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1718985603;
-	bh=jjsdmC2rugRobeZ0tOl0fxS/md4FLeZ48MksR7AnbBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WaFdfRFbrYof0i6GJ3s03UP2zYVpTvHZEofmVI+QFEKiogYokX1VszDK9uzjkk+lK
-	 j4OrAs8Q4kmgye1LO+uLrT8MfCppYj6fsGOKwQEs7RQYeLXKIjmwBpqEJaRuUzHKEt
-	 6v+2gQi7FUW0V6JK0vIhKrt1Ww7CUp1ISzdxpPlE=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4W5MWQ29Yrz353;
-	Fri, 21 Jun 2024 18:00:02 +0200 (CEST)
-Date: Fri, 21 Jun 2024 18:00:01 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Tahera Fahimi <fahimitahera@gmail.com>
-Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
-	Jann Horn <jannh@google.com>, outreachy@lists.linux.dev, netdev@vger.kernel.org
-Subject: Re: [PATCH v5] landlock: Add abstract unix socket connect restriction
-Message-ID: <20240621.OhK4Aht4oa7i@digikod.net>
-References: <ZnSZnhGBiprI6FRk@tahera-OptiPlex-5000>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+xmhos4"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e02a6d4bdbeso2040370276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718985999; x=1719590799; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AQp9dlO5pAgdUf8FaDRgU2ZwQcaWQQ47LVCfMxenQGw=;
+        b=e+xmhos4DaPy+J4f7NTm0y/W8wtZUkwGcqzN5I3mLBKgX1jgPNRmhOv9Fg14exgvaR
+         szbRn/VcXxwc2p6tH7i0u3+rTolUFFPqehj1CH5VDunGpAU7PWL2FQ4sHKolmzvPl56m
+         zmX63DMLIC4/7VbOSvc5w6zkbfvv2txej32Fj+YIouAFuXnx9zKm+7uqEF9mGrfZeKkt
+         nfh+zcsdh+K5Y4E48kbPfZOg9NtGfXxZwQnwXc7sy+3uPKxYgeIKUscsi3e7I3kfy/cn
+         EVa6TKt+ZMdXxZr1AmZvhOQLOm/WJFL9uRbwnKaI/843kxgcwb872f5ibE2Q/WMLEgMC
+         x+kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718985999; x=1719590799;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AQp9dlO5pAgdUf8FaDRgU2ZwQcaWQQ47LVCfMxenQGw=;
+        b=hXZ6QjuQS/S0jg0fzJwHGLO7kQKDZLXlr7l8ZFmOdGrI3X73xfIjl6owL6rNtsQsZK
+         eLNryDrAUpM+cC5/XlEhWROy+ZW9pMR+crwW9gVJ+fW6k0AI/l31WK+LmthWYme1dqOG
+         ywI9oMlijT0ppGjtuPtGiG0joxNunWOXIZKdSPj2S4pTkG59O+CZPixHJPEmYVsWjg6D
+         ACfmYvLKK3F79W4cLAi5vs2BEN5gCzSj31JDnCOtHdzyN8XrMF6jKI574l19TrdTWSLZ
+         rLVSQRotoPrjLkspHYkOqrKvvz+Z06VN8E3ViqjsQB/qpZqZ1cwfb7O0HKSA4XUjmXSR
+         15IA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlk+wixYOntSfHLzSY4AE9Vxd0L7kvnu/L82ADWsQC0SU3aJyqi4c21Bw75a0n1ICKcW+IYNOkm0jZhMREhiavOkYYs70c746cJman
+X-Gm-Message-State: AOJu0YwLFvPDIqNZQgporG1WVtnNuch7Ppn92cq/GwqgsiVbKD1ZPeZ3
+	+JcXgPfP5bUswrXthVeIOozSJOsh9sae/CdJoIwd5dTO1bK1QEq8wH/obqQWVBbc51KECLJyon5
+	2sAnwMvBrRf43q6wWTaVGBnba0zdGJ0gfaZD0aQ==
+X-Google-Smtp-Source: AGHT+IFsKhI5/ZpPFPGZgfj7WNLVrLaPZ7KiG2qpvVEJu3dcWK/Nil0xzuhyY4wPN4X4t78JmuDWQRQioq2fNcEPqZk=
+X-Received: by 2002:a25:aa04:0:b0:e02:c343:ffa7 with SMTP id
+ 3f1490d57ef6-e02c344047fmr7674276276.25.1718985999405; Fri, 21 Jun 2024
+ 09:06:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZnSZnhGBiprI6FRk@tahera-OptiPlex-5000>
-X-Infomaniak-Routing: alpha
+References: <20240617005825.1443206-1-quic_gaurkash@quicinc.com>
+ <20240617005825.1443206-5-quic_gaurkash@quicinc.com> <3eehkn3cdhhjfqtzpahxhjxtu5uqwhntpgu22k3hknctrop3g5@f7dhwvdvhr3k>
+ <96e2ce4b154a4f918be0bc2a45011e6d@quicinc.com> <CAA8EJppGpv7N_JQQNJZrbngBBdEKZfuqutR9MPnS1R_WqYNTQw@mail.gmail.com>
+ <3a15df00a2714b40aba4ebc43011a7b6@quicinc.com> <CAA8EJpoZ0RR035QwzMLguJZvdYb-C6aqudp1BgHgn_DH2ffsoQ@mail.gmail.com>
+ <20240621044747.GC4362@sol.localdomain> <CAA8EJppXsbpFCeGJOMGKOQddy0fF4uW3rt4RUuDTQq6mPunBkg@mail.gmail.com>
+ <20240621153939.GA2081@sol.localdomain>
+In-Reply-To: <20240621153939.GA2081@sol.localdomain>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 21 Jun 2024 19:06:25 +0300
+Message-ID: <CAA8EJpqV4CW9kKLVUZgfo+hkSv+tn0t+k0McmHEyXNJUpsZF1w@mail.gmail.com>
+Subject: Re: [PATCH v5 04/15] soc: qcom: ice: add hwkm support in ice
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: "Gaurav Kashyap (QUIC)" <quic_gaurkash@quicinc.com>, 
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, 
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "andersson@kernel.org" <andersson@kernel.org>, 
+	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>, 
+	"srinivas.kandagatla" <srinivas.kandagatla@linaro.org>, 
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, kernel <kernel@quicinc.com>, 
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"Om Prakash Singh (QUIC)" <quic_omprsing@quicinc.com>, 
+	"Bao D. Nguyen (QUIC)" <quic_nguyenb@quicinc.com>, 
+	"bartosz.golaszewski" <bartosz.golaszewski@linaro.org>, 
+	"konrad.dybcio@linaro.org" <konrad.dybcio@linaro.org>, 
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "jejb@linux.ibm.com" <jejb@linux.ibm.com>, 
+	"martin.petersen@oracle.com" <martin.petersen@oracle.com>, "mani@kernel.org" <mani@kernel.org>, 
+	"davem@davemloft.net" <davem@davemloft.net>, 
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, Prasad Sodagudi <psodagud@quicinc.com>, 
+	Sonal Gupta <sonalg@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 20, 2024 at 03:05:34PM GMT, Tahera Fahimi wrote:
-> Abstract unix sockets are used for local inter-process communications
-> without on a filesystem. Currently a sandboxed process can connect to a
+On Fri, 21 Jun 2024 at 18:39, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Fri, Jun 21, 2024 at 06:16:37PM +0300, Dmitry Baryshkov wrote:
+> > On Fri, 21 Jun 2024 at 07:47, Eric Biggers <ebiggers@kernel.org> wrote:
+> > >
+> > > On Thu, Jun 20, 2024 at 02:57:40PM +0300, Dmitry Baryshkov wrote:
+> > > > > > >
+> > > > > > > > Is it possible to use both kind of keys when working on standard mode?
+> > > > > > > > If not, it should be the user who selects what type of keys to be used.
+> > > > > > > > Enforcing this via DT is not a way to go.
+> > > > > > > >
+> > > > > > >
+> > > > > > > Unfortunately, that support is not there yet. When you say user, do
+> > > > > > > you mean to have it as a filesystem mount option?
+> > > > > >
+> > > > > > During cryptsetup time. When running e.g. cryptsetup I, as a user, would like
+> > > > > > to be able to use either a hardware-wrapped key or a standard key.
+> > > > > >
+> > > > >
+> > > > > What we are looking for with these patches is for per-file/folder encryption using fscrypt policies.
+> > > > > Cryptsetup to my understanding supports only full-disk , and does not support FBE (File-Based)
+> > > >
+> > > > I must admit, I mostly used dm-crypt beforehand, so I had to look at
+> > > > fscrypt now. Some of my previous comments might not be fully
+> > > > applicable.
+> > > >
+> > > > > Hence the idea here is that we mount an unencrypted device (with the inlinecrypt option that indicates inline encryption is supported)
+> > > > > And specify policies (links to keys) for different folders.
+> > > > >
+> > > > > > > The way the UFS/EMMC crypto layer is designed currently is that, this
+> > > > > > > information is needed when the modules are loaded.
+> > > > > > >
+> > > > > > > https://lore.kernel.org/all/20231104211259.17448-2-ebiggers@kernel.org
+> > > > > > > /#Z31drivers:ufs:core:ufshcd-crypto.c
+> > > > > >
+> > > > > > I see that the driver lists capabilities here. E.g. that it supports HW-wrapped
+> > > > > > keys. But the line doesn't specify that standard keys are not supported.
+> > > > > >
+> > > > >
+> > > > > Those are capabilities that are read from the storage controller. However, wrapped keys
+> > > > > Are not a standard in the ICE JEDEC specification, and in most cases, is a value add coming
+> > > > > from the SoC.
+> > > > >
+> > > > > QCOM SOC and firmware currently does not support both kinds of keys in the HWKM mode.
+> > > > > That is something we are internally working on, but not available yet.
+> > > >
+> > > > I'd say this is a significant obstacle, at least from my point of
+> > > > view. I understand that the default might be to use hw-wrapped keys,
+> > > > but it should be possible for the user to select non-HW keys if the
+> > > > ability to recover the data is considered to be important. Note, I'm
+> > > > really pointing to the user here, not to the system integrator. So
+> > > > using DT property or specifying kernel arguments to switch between
+> > > > these modes is not really an option.
+> > > >
+> > > > But I'd really love to hear some feedback from linux-security and/or
+> > > > linux-fscrypt here.
+> > > >
+> > > > In my humble opinion the user should be able to specify that the key
+> > > > is wrapped using the hardware KMK. Then if the hardware has already
+> > > > started using the other kind of keys, it should be able to respond
+> > > > with -EINVAL / whatever else. Then the user can evict previously
+> > > > programmed key and program a desired one.
+> > > >
+> > > > > > Also, I'd have expected that hw-wrapped keys are handled using trusted
+> > > > > > keys mechanism (see security/keys/trusted-keys/). Could you please point
+> > > > > > out why that's not the case?
+> > > > > >
+> > > > >
+> > > > > I will evaluate this.
+> > > > > But my initial response is that we currently cannot communicate to our TPM directly from HLOS, but
+> > > > > goes through QTEE, and I don't think our qtee currently interfaces with the open source tee
+> > > > > driver. The interface is through QCOM SCM driver.
+> > > >
+> > > > Note, this is just an API interface, see how it is implemented for the
+> > > > CAAM hardware.
+> > > >
+> > >
+> > > The problem is that this patchset was sent out without the patches that add the
+> > > block and filesystem-level framework for hardware-wrapped inline encryption
+> > > keys, which it depends on.  So it's lacking context.  The proposed framework can
+> > > be found at
+> > > https://lore.kernel.org/linux-block/20231104211259.17448-1-ebiggers@kernel.org/T/#u
+> >
+> > Thank you. I have quickly skimmed through the patches, but I didn't
+> > review them thoroughly. Maybe the patchset already implements the
+> > interfaces that I'm thinking about. In such a case please excuse me. I
+> > will give it a more thorough look later today.
+> >
+> > > As for why "trusted keys" aren't used, they just aren't helpful here.  "Trusted
+> > > keys" are based around a model where the kernel can request that keys be sealed
+> > > and unsealed using a trust source, and the kernel gets access to the raw
+> > > unsealed keys.  Hardware-wrapped inline encryption keys use a different model
+> > > where the kernel never gets access to the raw keys.  They also have the concept
+> > > of ephemeral wrapping which does not exist in "trusted keys".  And they need to
+> > > be properly integrated with the inline encryption framework in the block layer.
+> >
+> > Then what exactly does qcom_scm_derive_sw_secret() do? Does it rewrap
+> > the key under some other key?
+>
+> It derives a secret for functionality such as filenames encryption that can't
+> use inline encryption.
+>
+> > I had the feeling that there are two separate pieces of functionality
+> > being stuffed into a single patchset and into a single solution.
+> >
+> > First one is handling the keys. I keep on thinking that there should
+> > be a separate software interface to unseal the key and rewrap it under
+> > an ephemeral key.
+>
+> There is.  That's what the BLKCRYPTOPREPAREKEY ioctl is for.
+>
+> > Some hardware might permit importing raw keys.
+>
+> That's what BLKCRYPTOIMPORTKEY is for.
+>
+> > Other hardware might insist on generating the keys on-chip so that raw keys
+> > can never be used.
+>
+> And that's what BLKCRYPTOGENERATEKEY is for.
 
-"without a"
+Again, this might be answered somewhere, but why can't we use keyctl
+for handling the keys and then use a single IOCTL to point the block
+device to the key in the keyring?
 
-> socket outside of the sandboxed environment, since landlock has no
+>
+> > Second part is the actual block interface. Gaurav wrote about
+> > targeting fscrypt, but there should be no actual difference between
+> > crypto targets. FDE or having a single partition encrypted should
+> > probably work in the same way. Convert the key into blk_crypto_key
+> > (including the cookie for the ephemeral key), program the key into the
+> > slot, use the slot to en/decrypt hardware blocks.
+> >
+> > My main point is that the decision on the key type should be coming
+> > from the user.
+>
+> That's exactly how it works.  There is a block interface for specifying an
+> inline encryption key along with each bio.  The submitter of the bio can specify
+> either a standard key or a HW-wrapped key.
 
-s/landlock/Landlock/
+Not in this patchset. The ICE driver decides whether it can support
+HW-wrapped keys or not and then fails to support other type of keys.
 
-> restriction for connecting to a unix socket in the abstract namespace.
+>
+> Again, take a look at the patchset
+> https://lore.kernel.org/linux-block/20231104211259.17448-1-ebiggers@kernel.org/T/#u.
+> That's where all this stuff is.
 
-"namespace" usually refers to the namespaces(7) man page.  What about
-using the same vocabulary is in unix(7):
-"for connecting to an abstract socket address."
+I was mostly looking at the hardware-specific implementation.
 
-> Access to such sockets for a sandboxed process should be scoped the same
-> way ptrace is limited.
-> 
-> Because of compatibility reasons and since landlock should be flexible,
-> we extend the user space interface by adding a new "scoped" field
-
-...to the ruleset attribute structure.
-
-> . This
-> field optionally contains a "LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET" to
-> specify that the ruleset will deny any connection from within the
-> sandbox to its parents(i.e. any parent sandbox or non-sandbox processes)
-> 
-> Closes: https://github.com/landlock-lsm/linux/issues/7
-> Signed-off-by: Tahera Fahimi <fahimitahera@gmail.com>
-> 
-> -------
-
-For the next version, please list all changes since last version. With
-this v5 I see some renaming, a new curr_ruleset field with optional
-domain scopping, and code formatting.
-
-
-> V4: Added abstract unix socket scoping tests
-> V3: Added "scoped" field to landlock_ruleset_attr
-> V2: Remove wrapper functions
-> 
-> -------
-> 
-> Signed-off-by: Tahera Fahimi <fahimitahera@gmail.com>
-> ---
->  include/uapi/linux/landlock.h                 |  27 ++
->  security/landlock/limits.h                    |   3 +
->  security/landlock/ruleset.c                   |  12 +-
->  security/landlock/ruleset.h                   |  27 +-
->  security/landlock/syscalls.c                  |  13 +-
->  security/landlock/task.c                      |  95 +++++++
->  .../testing/selftests/landlock/ptrace_test.c  | 261 ++++++++++++++++++
->  7 files changed, 430 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/uapi/linux/landlock.h b/include/uapi/linux/landlock.h
-> index 68625e728f43..1eb459afcb3b 100644
-> --- a/include/uapi/linux/landlock.h
-> +++ b/include/uapi/linux/landlock.h
-> @@ -37,6 +37,11 @@ struct landlock_ruleset_attr {
->  	 * rule explicitly allow them.
->  	 */
->  	__u64 handled_access_net;
-> +	/**
-> +	 * scoped: Bitmask of actions (cf. `Scope access flags`_)
-
-Please take a look at the generated documentation and fix the build
-warnings related to this patch: check-linux.sh doc (or make htmldocs)
-
-
-> +	 * which are confined to only affect the current Landlock domain.
-
-What about this?
-"Bitmask of scopes () restricting a Landlock domain from accessing
-outside resources (e.g. IPCs)."
-
-> +	 */
-> +	__u64 scoped;
->  };
->  
->  /*
-> @@ -266,4 +271,26 @@ struct landlock_net_port_attr {
->  #define LANDLOCK_ACCESS_NET_BIND_TCP			(1ULL << 0)
->  #define LANDLOCK_ACCESS_NET_CONNECT_TCP			(1ULL << 1)
->  /* clang-format on */
-> +
-> +/**
-> + * DOC: scope
-> + *
-> + * .scoped attribute handles a set of restrictions on kernel IPCs through
-> + * the following flags.
-
-Shouldn't this be after the section title?
-
-> + *
-> + * Scope access flags
-
-You can remove "access"
-
-> + * ~~~~~~~~~~~~~~~~~~~~
-> + * 
-> + * These flags enable to restrict a sandboxed process from a set of IPC 
-
-There are several spaces at the end of lines, they should be removed.
-
-> + * actions. Setting a flag in a landlock domain will isolate the Landlock
-
-A flag is not set "in a Landlock domain" but for a ruleset.
-
-> + *  domain to forbid connections to resources outside the domain.
-
-Please remove unneeded spaces.
-
-> + *
-> + * IPCs with scoped actions:
-> + * - %LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET: Restrict a sandbox process to
-> + *   connect to a process outside of the sandbox domain through abstract
-> + *   unix sockets. 
-
-Restrict a sandboxed process from connecting to an abstract unix socket
-created by a process outside the related Landlock domain (e.g. a parent
-domain or a process which is not sandboxed).
-
-> + */
-> +/* clang-format off */
-> +#define LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET		(1ULL << 0)
-> +/* clang-format on*/
->  #endif /* _UAPI_LINUX_LANDLOCK_H */
-> diff --git a/security/landlock/limits.h b/security/landlock/limits.h
-> index 4eb643077a2a..eb01d0fb2165 100644
-> --- a/security/landlock/limits.h
-> +++ b/security/landlock/limits.h
-> @@ -26,6 +26,9 @@
->  #define LANDLOCK_MASK_ACCESS_NET	((LANDLOCK_LAST_ACCESS_NET << 1) - 1)
->  #define LANDLOCK_NUM_ACCESS_NET		__const_hweight64(LANDLOCK_MASK_ACCESS_NET)
->  
-> +#define LANDLOCK_LAST_SCOPE		LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET
-> +#define LANDLOCK_MASK_SCOPE		((LANDLOCK_LAST_SCOPE << 1) - 1)
-> +#define LANDLOCK_NUM_SCOPE		__const_hweight64(LANDLOCK_MASK_SCOPE)
->  /* clang-format on */
->  
->  #endif /* _SECURITY_LANDLOCK_LIMITS_H */
-> diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
-> index 6ff232f58618..3b3844574326 100644
-> --- a/security/landlock/ruleset.c
-> +++ b/security/landlock/ruleset.c
-> @@ -52,12 +52,13 @@ static struct landlock_ruleset *create_ruleset(const u32 num_layers)
->  
->  struct landlock_ruleset *
->  landlock_create_ruleset(const access_mask_t fs_access_mask,
-> -			const access_mask_t net_access_mask)
-> +			const access_mask_t net_access_mask,
-> +			const access_mask_t scope_mask)
->  {
->  	struct landlock_ruleset *new_ruleset;
->  
->  	/* Informs about useless ruleset. */
-> -	if (!fs_access_mask && !net_access_mask)
-> +	if (!fs_access_mask && !net_access_mask && !scope_mask)
->  		return ERR_PTR(-ENOMSG);
->  	new_ruleset = create_ruleset(1);
->  	if (IS_ERR(new_ruleset))
-> @@ -66,6 +67,8 @@ landlock_create_ruleset(const access_mask_t fs_access_mask,
->  		landlock_add_fs_access_mask(new_ruleset, fs_access_mask, 0);
->  	if (net_access_mask)
->  		landlock_add_net_access_mask(new_ruleset, net_access_mask, 0);
-> +	if (scope_mask)
-> +		landlock_add_scope_mask(new_ruleset, scope_mask, 0);
->  	return new_ruleset;
->  }
->  
-> @@ -311,7 +314,7 @@ static void put_hierarchy(struct landlock_hierarchy *hierarchy)
->  {
->  	while (hierarchy && refcount_dec_and_test(&hierarchy->usage)) {
->  		const struct landlock_hierarchy *const freeme = hierarchy;
-> -
-> +		
->  		hierarchy = hierarchy->parent;
->  		kfree(freeme);
->  	}
-> @@ -472,6 +475,7 @@ static int inherit_ruleset(struct landlock_ruleset *const parent,
->  	}
->  	get_hierarchy(parent->hierarchy);
->  	child->hierarchy->parent = parent->hierarchy;
-> +	child->hierarchy->curr_ruleset = child;
->  
->  out_unlock:
->  	mutex_unlock(&parent->lock);
-> @@ -571,7 +575,7 @@ landlock_merge_ruleset(struct landlock_ruleset *const parent,
->  	err = merge_ruleset(new_dom, ruleset);
->  	if (err)
->  		goto out_put_dom;
-> -
-> +	new_dom->hierarchy->curr_ruleset = new_dom;
->  	return new_dom;
->  
->  out_put_dom:
-> diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
-> index 0f1b5b4c8f6b..39cb313812dc 100644
-> --- a/security/landlock/ruleset.h
-> +++ b/security/landlock/ruleset.h
-> @@ -35,6 +35,8 @@ typedef u16 access_mask_t;
->  static_assert(BITS_PER_TYPE(access_mask_t) >= LANDLOCK_NUM_ACCESS_FS);
->  /* Makes sure all network access rights can be stored. */
->  static_assert(BITS_PER_TYPE(access_mask_t) >= LANDLOCK_NUM_ACCESS_NET);
-> +/* Makes sure all scoped rights can be stored*/
-> +static_assert(BITS_PER_TYPE(access_mask_t) >= LANDLOCK_NUM_SCOPE);
->  /* Makes sure for_each_set_bit() and for_each_clear_bit() calls are OK. */
->  static_assert(sizeof(unsigned long) >= sizeof(access_mask_t));
->  
-> @@ -42,6 +44,7 @@ static_assert(sizeof(unsigned long) >= sizeof(access_mask_t));
->  struct access_masks {
->  	access_mask_t fs : LANDLOCK_NUM_ACCESS_FS;
->  	access_mask_t net : LANDLOCK_NUM_ACCESS_NET;
-> +	access_mask_t scoped : LANDLOCK_NUM_SCOPE;
->  };
->  
->  typedef u16 layer_mask_t;
-> @@ -150,6 +153,10 @@ struct landlock_hierarchy {
->  	 * domain.
->  	 */
->  	refcount_t usage;
-> +	/**
-> +	 * @curr_ruleset: a pointer back to the current ruleset
-> +	 */
-> +	struct landlock_ruleset *curr_ruleset;
-
-This curr_ruleset pointer can become a dangling pointer and then lead to
-a user after free bug because a domain (i.e. ruleset tie to a set of
-processes) is free when no processes use it.
-
-Instead, we could just use a bitmask (or a boolean for now) to identify
-if the related layer scopes abstract unix sockets.  Because struct
-landlock_hierarchy identifies only one layer of a domain, another and
-simpler approach would be to only rely on the "client" and "server"
-domains' layers.
+-- 
+With best wishes
+Dmitry
