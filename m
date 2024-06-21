@@ -1,120 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD55172BDF;
-	Fri, 21 Jun 2024 10:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1897171075;
+	Fri, 21 Jun 2024 10:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718965126; cv=none; b=o6cOTZ09QxhbfeB6IJCWgcF9rK6qBXF4T4R3on3VDR8atiOwTzl34TdIlL/sl7rRKuZBncf7bO4oYQ3nSunctVAyNFt5bs1FPahFvLPzipiuvHZJBTkTekyv2NszMhf/ev+4+KWG8UzIVi0t9ST0VBE5Vp6gCzsagkcznh5IEN4=
+	t=1718965134; cv=none; b=QjbX3POt/XXgw1CJ5FnF1EerPbVs/c4Bn/wgxE7iGefowImAWAbaZy9Ye0ufoklxdPd0U3M7NPiPfLqUMnPEqESmkZKKwi2YPXE1oLGYHJzLTy12jKchEvlZ5lqVjrbGdw4ETtqr1+a5VYL8cXVfbuiLGu3nV9AZc51SaepCGCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718965126; c=relaxed/simple;
-	bh=l/puWWhtbVxCHqqQ5cY1MrrBqDGK4KESLw5MMl+Yx/k=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Gz904nMoq+MwpblUHadswjL6L9B9BREZb4+8CQm9bT4VDcegdp6YTrmASK5GyArAza921oou59ti2CIoF+NBRFwMv234b/8fm79d3pfrAyo/TbhhPzE/B3TUJTqsxJmQj0mQFJ91ovlKQR3SCSvH1NBS03XnSLuvKMpdNbqoVmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItpYouiP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718965134; c=relaxed/simple;
+	bh=N86tT7eNz1UOvLaFQAnMCJPe6jey5vSK8Wint1BvwqM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dYAFtfaOCCpnFWAXspKGHtCaS8a8wSwaGyfGYvd3SNb9BsxyfKETANE5Ux0xRrte3km5DuTuS5bquW4nkf+fYTziHVHWBd5IrN3B93W0HWu7ruTJWDodVZMNWFmCa8mIR/ysGnK0ZQ+PxWonwk1I2KL1YcHgcZgc+Xbv9d1UGGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=tpa86Fyd; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItpYouiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C58BC2BBFC;
-	Fri, 21 Jun 2024 10:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718965126;
-	bh=l/puWWhtbVxCHqqQ5cY1MrrBqDGK4KESLw5MMl+Yx/k=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ItpYouiPSEbMR1HuxS7UK0gz/Ms798eObRqp/a6VDGyB1S/R4ORXPvDHOksqDgSC9
-	 fx6rPLjJFx7gxiufbtJRBNAMn/yDVOpwKbf6/1Wl6DYKJm5qzEt6nzVF/3U5aYoegh
-	 fQhcyeOaH1qZ8ZkAEsB+6C0WotqnHWipuI3VbKf3SxD8ySUs5KA3qV+joIrJNtbKHI
-	 knEM/PQka995nvGs5Y+XMzfHt1DSr3SDGTk8c+DR2fZHup3krGEsnndYr/CvQ44qv1
-	 CqZm5jrFaHpjaU/bR5W145tv63f5jjZ5Sl3NuLphK3P/aeMgmwuv6cSwolgEaTzq4C
-	 TylxYZagaOBcw==
-Message-ID: <0f8e127f-0159-4263-8582-5eccaae21dd7@kernel.org>
-Date: Fri, 21 Jun 2024 12:18:39 +0200
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="tpa86Fyd"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L7ENRv018472;
+	Fri, 21 Jun 2024 06:18:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=YOkcwxEkHfTflVwa9YPcysUXmuW
+	PUcRPHhhFsL/4ZmU=; b=tpa86FydcHtZEdIHtJ9UgSAewrWT07h11c0ekg8dWNC
+	Q+MCq3MlB65I/ajWdvWcxgpeNQknvlF55y5p1BKsZMTly1dONlNEeCezjHHNPWmz
+	yHiDD0J4j/O9SSx2RQGg5yNCLRDng/74XjW0azlHJ1Bz69UF4uiXEgCEHJthk0Xr
+	vyR5qBztiBCf6OR8VybiXh5AFJpXipXnILXDQ5qPAumKwvaGk+d+ud24xMu2Wnzn
+	8iNgiCpOmpg75P59hyl3FQeagms9gknVO8wmJQmCwRiGGtX78jKgmEhSZafdveVM
+	/dUyiypeh1fwoccXRaN6G0OUCZ3+xV6ZlPdGaRGs4kQ==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yvrkb3b27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 06:18:24 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 45LAINqW046141
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 21 Jun 2024 06:18:23 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 21 Jun
+ 2024 06:18:22 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 21 Jun 2024 06:18:22 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.120])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45LAI4Wu019392;
+	Fri, 21 Jun 2024 06:18:07 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Ramona Gradinariu <ramona.gradinariu@analog.com>,
+        Antoniu Miclaus
+	<antoniu.miclaus@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael
+ Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron
+	<jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jun Yan
+	<jerrysteve1101@gmail.com>,
+        Mehdi Djait <mehdi.djait.k@gmail.com>,
+        Mario
+ Limonciello <mario.limonciello@amd.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: iio: accel: add ADXL380
+Date: Fri, 21 Jun 2024 13:17:03 +0300
+Message-ID: <20240621101756.27218-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: rk809: Add missing audio codec
- properties
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
- Chris Morgan <macromorgan@hotmail.com>,
- Furkan Kardame <f.kardame@manjaro.org>,
- Michael Riesch <michael.riesch@wolfvision.net>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
- <20240619-rk809-fixes-v1-2-fa93bc5313f4@collabora.com>
- <fdf4da20-93a8-45c3-84cf-fd3fdc500f2b@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <fdf4da20-93a8-45c3-84cf-fd3fdc500f2b@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: GjLCEpzV0EwytikGq_hyWw5TYKWjZGh3
+X-Proofpoint-ORIG-GUID: GjLCEpzV0EwytikGq_hyWw5TYKWjZGh3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_04,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 malwarescore=0
+ spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406210076
 
-On 21/06/2024 12:16, Krzysztof Kozlowski wrote:
->> +    type: object
->> +    additionalProperties: false
->> +    properties:
->> +      rockchip,mic-in-differential:
->> +        type: boolean
->> +        description:
->> +          Describes if the microphone uses differential mode.
-> 
-> No resources? Then it goes to parent.
+From: Ramona Gradinariu <ramona.gradinariu@analog.com>
 
-Ah, I missed explanation in commit msg, this was already since few
-years. It's fine.
+Add dt-bindings for ADXL380/ADLX382 low noise density, low
+power, 3-axis accelerometer with selectable measurement ranges.
 
+Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+ .../bindings/iio/accel/adi,adxl380.yaml       | 83 +++++++++++++++++++
+ MAINTAINERS                                   |  7 ++
+ 2 files changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
+new file mode 100644
+index 000000000000..992e2ab841e2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/accel/adi,adxl380.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADXL380/382 3-Axis Digital Accelerometer
++
++maintainers:
++  - Ramona Gradinariu <ramona.gradinariu@analog.com>
++  - Antoniu Miclaus <antoniu.miclaus@analog.com>
++
++description: |
++  The ADXL380/ADXL382 is a low noise density, low power, 3-axis
++  accelerometer with selectable measurement ranges. The ADXL380
++  supports the ±4 g, ±8 g, and ±16 g ranges, and the ADXL382 supports
++  ±15 g, ±30 g, and ±60 g ranges.
++  The ADXL380/ADXL382 offers industry leading noise, enabling precision
++  applications with minimal calibration. The low noise, and low power
++  ADXL380/ADXL382 enables accurate measurement in an environment with
++  high vibration, heart sounds and audio.
++
++  In addition to its low power consumption, the ADXL380/ADXL382 has
++  many features to enable true system level performance. These
++  include a built-in micropower temperature sensor, single / double /
++  triple tap detection and a state machine to prevent a false
++  triggering. In addition, the ADXL380/ADXL382 has provisions for
++  external control of the sampling time and/or an external clock.
++
++    https://www.analog.com/en/products/adxl380.html
++
++properties:
++  compatible:
++    enum:
++      - adi,adxl380
++      - adi,adxl382
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      accelerometer@54 {
++        compatible = "adi,adxl380";
++        reg = <0x54>;
++        interrupt-parent = <&gpio>;
++        interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      accelerometer@0 {
++        compatible = "adi,adxl380";
++        reg = <0>;
++        spi-max-frequency = <8000000>;
++        interrupt-parent = <&gpio>;
++        interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index be590c462d91..1425182c85e2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -618,6 +618,13 @@ F:	drivers/iio/accel/adxl372.c
+ F:	drivers/iio/accel/adxl372_i2c.c
+ F:	drivers/iio/accel/adxl372_spi.c
+ 
++ADXL380 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
++M:	Ramona Gradinariu <ramona.gradinariu@analog.com>
++M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
++
+ AF8133J THREE-AXIS MAGNETOMETER DRIVER
+ M:	Ondřej Jirman <megi@xff.cz>
+ S:	Maintained
+-- 
+2.45.2
 
