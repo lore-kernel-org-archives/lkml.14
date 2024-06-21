@@ -1,134 +1,143 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2112.outbound.protection.partner.outlook.cn [139.219.146.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5F6152E0A;
-	Fri, 21 Jun 2024 12:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718974657; cv=fail; b=WmaKypq5BA8nmUkIbJZTC4MIRQJ08MzSppW9N7z46ZOAQ5G4cydxQfIxKGEE8YybZMb+7Med3SjiHwODIvWmFcg/pNAYkt5igSZ2OeHYXn4SSRhzm21fxC95KjNJnuIiGV+cBaB/KUaoWUMoNfNF9AMKFeS57vlouoDfS9BBX0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718974657; c=relaxed/simple;
-	bh=4lFQQpmAvsoMe4I6RYj2zMWzqDWkiYm+N1Aey/I6fQM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ADpaauj88u2ZVf4rK2cYkwZ04wwUjIomKFJ6IbkEpWu1FVMml3Qu6A63DRrcI2ppZGwscW29Sh/eE+5p0AqHdSEGgZ/opNl8S1d9JzdUWOEvlg93PKBqCpVYMcMBKLWo2P/eg0IMRpGRc1emx5LDY7z4pNSJ+aGpttVr8P1UIs0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XGjTScVJI4iEnz0iNF/L1oT2TK0lwArFWT0Fe/ZQw18QUTQiMrtoLYB9SodkllPu83xp6XicC/O3gTwJ7b0Cf9piLL7WDB3vKdxhf01R6sXplFs/PA4jHFlvNKxGvGbyEDjBLQWop5cQZ+QC6EdmZjSjboBXgaxu5F7LhjXMylui2cXVm6SWwRGO/Y0W/RciPB0jK+mg4NgVBCY2v8CY1x2pYzKyY3pUi+DD7885/WgFNcjmAgLBt7YvOo5HdZasfzlnwjwDbDAy2ZCwnF/jncnqY4e7VedRoLfaVIBrrb8CTs2nZ2xhWnNoGNCJuxELu21LTnpQbjb1/rBcdmI8ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fEj7Emiyz5dvsIIrBiVW+/4imeofSTztYvolrRg71Io=;
- b=I6hMhLW5E+5PLAe8Zj1gjH/i1Prz+MdzHKRgJ98+9EwXpnmWPrYx/tHKHCz5fonNDJjwVgILL1bL4ZR578c21lesOQuYYdrVGSa95mCQXgBy7Ra81XcGSjXjsWFW6Pi2plPEPMGXpRYDFPDeZ4BzVAz07ZvF958tz+o/1pmztkw+uYQjLVyHpqL6FVOdQ6+0e9R9SlDOIO8TBgauZqDa1doaNxc6JUfYKf0JlRNbGh4LJJg29PIce9lr2LSvW0WOoB4sUdn0/J0zCxpuqIo528AG2VCwHz82ucKd0mGm7nRuenTrHwRHvsUnTiNsknZZmGrvX3s8elt/2cEOuGupTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0751.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:24::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.33; Fri, 21 Jun
- 2024 08:22:42 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::358e:d57d:439f:4e8a]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::358e:d57d:439f:4e8a%7])
- with mapi id 15.20.7656.033; Fri, 21 Jun 2024 08:22:42 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB371534E8;
+	Fri, 21 Jun 2024 12:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718974673; cv=none; b=PzAy3vImS2VOTPbs9NWmJakYgZaSVymarPzizsrewrg5cEZAE3zcbMLz2/u9npuh8VeThk6JhzCdeBZe+L3oWlunoW/ZueBfAa3+9INBT1jZb7xwqasB87vfr05Z3ATUK2R/6G4TLKarAOM8xj2Vr+6R19kEKemxHcEAvZ5XHX0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718974673; c=relaxed/simple;
+	bh=YRpzhRZMd/owSYXAqsZC8ISCrInjHHfQAXcFXjpaQNA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KrJQPRqW+4ztkQIzqR/Kk2Dgh95BMZqIlhrz8cVJc1L/NfK80Eq0YfN/FWHzeQNVHUzDrkJZTFJSPOK9hqm6MM+MRbPo9IQiM5UEFuyy1oYW2C6ikG03aNDRdnTL6K7BZxbBZ+sQm6IjJ4yDF5H0jTB/KUlojsVd5PE8KyWE7/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLhHHUVK; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLhHHUVK"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57d0eca877cso2330851a12.2;
+        Fri, 21 Jun 2024 05:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718974670; x=1719579470; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NrnAU6mhz/kl2NrmklHMGMGU8HHSJk2j81Klofccxog=;
+        b=HLhHHUVKABWk9rGYOLC3A72dJB+B/ZCsZSF+AOvmHXEXiuQXX9dyLxsHiaY75iHI18
+         5r6L/zo1StwQJDdr6IJw2A1rwZV9PRNKx9P4lgIkVWssk26/B+7nQK9reSVkdeDVam7m
+         a2kmOCP2nEZjShkRmRpNoLrkl8mpfo1sczXiIStb0reDDf6jQI8o8OlWww23NquhGfH+
+         U68BucGqFY7ptRaHqfsaFoY/2ngCRwBByhN0AQmj+GO0Fx/h9UCZ3D8eK1Kyoi1MTtiZ
+         NQKhON223oe4Jh2mQkRvtu13Ja+T3lsnP9U6NmjL21yrVM7X9wBoUTFeWZDUZupd/F6E
+         jkFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718974670; x=1719579470;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NrnAU6mhz/kl2NrmklHMGMGU8HHSJk2j81Klofccxog=;
+        b=RIqus6pD/DtOKbTY1oiVIU+Oa321BNSYeNG9H5zSwRUoDsf1BKO7YY1CkLoG61xy3U
+         zfvHsd4QZNjUJ/o60SZXUJeA9xzDH3dUIcMoY7jl49XfsUk1hg3ZAUu+l7B/uLxFhTRJ
+         Bxizut0aDPqHfmtx01qCSPZEXzxthiJCsNrbTYp71jR3Dr5rD5VzoiROT8hqdRXYuWM0
+         gpIw6Mmx95wIHVYgAKElSQehG9OgHaicAlguA3QCSyXkrHUMKs4iwgyzlkCOHxd4qXLm
+         U5qEGb7W8sdrwgUwIIAtM495o5po4dVG09mCwZvswsBntXHNyUyB+0F0mFWm0yAWOR5T
+         0TmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRdER0Cq1lajT6QzfdkgiVK8jR4m8qhlyjkBr3NLlG7c407OMHoqX8x8CFgmirQClaT43sl7Ixe42FAVof0N+6rAGb7RcrEYAL/gCFyePanDzsV7dzHbdszw2TiooThuxw1SdeaMWR6SgwmEz27GsxHUBte+GMTF+B6IXF00+mQBwm
+X-Gm-Message-State: AOJu0YyXrduRzXOXKejSpvU1zsOxbie9MxIyjEL+NxysSWfa7bKPZbfb
+	rTmAYBI43m0cilXv5FJP8xc95nrUOjQCXJ4QsV4dbDuLNFBtOpQqaBRmFA==
+X-Google-Smtp-Source: AGHT+IGfUKvKjZVPnKDkHyB4Nk/l6sFqObU//QF8QzBy5wNgB42KOKkMNx5+RqrkuvumV2tbXjypJg==
+X-Received: by 2002:a17:906:fac2:b0:a5c:eafb:5288 with SMTP id a640c23a62f3a-a6fab62bca2mr575577666b.31.1718974669497;
+        Fri, 21 Jun 2024 05:57:49 -0700 (PDT)
+Received: from debian.fritz.box ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf548eafsm81226266b.116.2024.06.21.05.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 05:57:49 -0700 (PDT)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v2 0/1] Add PCIe dts configuration for JH7110
-Date: Fri, 21 Jun 2024 16:22:30 +0800
-Message-Id: <20240621082231.92896-1-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: BJSPR01CA0012.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:c::24) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15)
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: [PATCH v5 0/2] power: supply: add support for MAX1720x standalone fuel
+Date: Fri, 21 Jun 2024 14:57:42 +0200
+Message-Id: <20240621125744.363564-1-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0751:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ae306b7-5db4-4648-e4bc-08dc91cb5202
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|1800799021|52116011|7416011|41320700010|366013|38350700011;
-X-Microsoft-Antispam-Message-Info:
-	NF64Cte/iVl/jy+9/S0pafs935geiwWiVXZvexufuV1GTV2BBSTr5YH99V+/lkLwWVlE2J84h2Oz7Si6lt7AsdsXskOKoD9qWJVMarTl/aiCO6dxWGr5WGbKeXdBVbw4vNHmxSJIx376kutY9556puO5UDwOICkoDI3nuYiC4nykkucEGhynbFjBQdNjBAFr/eUvn8qYwDnrbmaV2+aBpdmSEXv+6OJXZE/4CqILcDNya3KH0ZwYQenuceB1NPUGX4NSrCbS51O4A42ymveRCdmDQt6l0/1G5V3QaZbZ8O96bP7iJm5Utb2O02qquSAHyCi1nzwzt59KtaGE21p8btUWeIZYSb1XyZtdWk/EHVhp65UtUaDTTUmy0HwwvgDAYbRQSYuLIO99Y+HQ8DsGcpiypxw5uEy66Q2oUhPyfhR1gvA1K4lrioOS0HvCTZAOYvP/vj/rYPgX6cyiWoUQgFAHD6EPvvdCIGQUpqqGXskHqioRLPs3PMddQAxuNvKbMQ0Y94ZrYLfkfnk95MT614Fwjk0q5VX5K/o7m9rIYjTNR/x2dMgf2C0oFeIXjD+P4nic1HYeg7eys/W9jlVd8k6f8XMRmrHWIzHpuQFHfbXXphBvd8ZNagWY3Rap4w/I
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(52116011)(7416011)(41320700010)(366013)(38350700011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?amKZeAqG/b1HjkjDmk9rBp0kGciDs9+LlQXWv5CsJUIMTwdM6I85RE0W5Gu2?=
- =?us-ascii?Q?PoEeJReM0nX6qsNwwSIC/wS4sJMskiZ1Lrsj+mSlhwjdfaGDR8uwHs4HIVz6?=
- =?us-ascii?Q?e4VCin6IPObz1jLSJurPgFE9msQQBZLn2iKiBUfH7Da/812fqUIKiUNpsFSP?=
- =?us-ascii?Q?vKZGI/YcdQ3Jxj6Pn/N4a8FZLX7H9VpZlC9PBWdEsDiE4v/s7+CclXS02oHi?=
- =?us-ascii?Q?vrlAYKf6/cqSv5kTKFD6h/Cy1/ARQMDc9xoGVOKI+GLY0dXeR2fWUGJIA+rR?=
- =?us-ascii?Q?szqkKqwoBsUoBqmcdqpS/HcKwX9LLq308noJg3b4x0Hpm3Bs7a+DCdq00TZX?=
- =?us-ascii?Q?CVwttStosRdp/bi5zgqD8B3NRR0Tyl+pq/UoFgBBa0awANPKvL7s57fC5NE3?=
- =?us-ascii?Q?b4rCPIJn+W9SvGilTgN6HHkc4nzb3ivYJvwTd1wy3G1XGjsw0UdP494X9Cel?=
- =?us-ascii?Q?6Ct91Mm2Fi0BWkQixkp8l1/Cwi54cNnHPvVz48AN20Zhl520zlp2A5hRutkc?=
- =?us-ascii?Q?wf2ePqipLmTkj9Zxcbnqd5TZHWF3VchbCZYUkPJqe1gt96rJWX6mM0mxcta3?=
- =?us-ascii?Q?iDsZXmjZ0y6u3eRyb8FYxj2+cqgqe433ZRrwknX0Rwi4BEXbDYLCl0nCN6eS?=
- =?us-ascii?Q?TZBMMStR1Ged9uNB/RPbip7GLhu9WdsP2xJoIA+GhT6bIAG7+dpKhNqx6sZ9?=
- =?us-ascii?Q?VoxCcFxkl5hd0C2K+LzHZxgJgVVenXeu2XfXuURdkvY+dOEljRgg6nep1yo0?=
- =?us-ascii?Q?OvZ7YvBYobVU/nw4njX2Lu7W5YzZ3//HFQ6ENty2McvBMJ/aiGFKP07olxAs?=
- =?us-ascii?Q?yeMN0urUn8ZLGdsGiDTplhF/KjpdMIBqxjVBux+VTNN40IoRjxTKfX9IR9yF?=
- =?us-ascii?Q?uDKE3Q/q8JB4T6YMLeatIe/2AE+BT3oCWiSpoMy3zyRki0HP5uKDbe01PL4M?=
- =?us-ascii?Q?fxP3wIqtpdSwuUnJqSM07P4ShqgwX2btFM2JcFAFwqFu22qkYoPxdQEt3abK?=
- =?us-ascii?Q?Etp4l6WyaPF7ta2LRLLe6ndPr2VVlYx7y1TsJCqoCBKaTD55n0Aaz/bhkubV?=
- =?us-ascii?Q?bHug6X89nd2v1MKeayauANtpxIOwE7dyX2nHL2GluvSiM/OOmyBhIv6qPVFA?=
- =?us-ascii?Q?EygLkcfZSoQGQyvj29rL4+ZTxDlgVU4B0AeTAeXoayac0xH/yi7/upzyK7z0?=
- =?us-ascii?Q?xX2A1YGgBTaiXT9vf618SWwEu0rPvbvLsYeF+L1Ciwu5MoRbRMnKtytLH9lo?=
- =?us-ascii?Q?c2XxiFEuHGH7r00bn18LdiXiLzfWDdKFKDNVV4dd+uuAlASqgxUZon/nurtG?=
- =?us-ascii?Q?Rvntz7ZWeGmfscnpLoyrNt7YOd45u/Dtfmigzqglv95LiG7XBOd+nbJOqBIP?=
- =?us-ascii?Q?xPEvC6J6wzuiZ80nFHaj3Dj5oJseHB5mivFaGtw1JG/lMD6WoY3Ti87dNQaI?=
- =?us-ascii?Q?/t+V8TSyhkfI4R1mYksry0La4UJauFiBMfuEg7/BAFl4wRzOxe/5RHT+cQbu?=
- =?us-ascii?Q?w4Vr5m0oqsX61uynaIAOMrnRZ5CMt5MUYlARx0OskZ+gYwLDM1W4ley1SzKi?=
- =?us-ascii?Q?HaoZjPbguoZcqbqkxTYjEbZlBDbM+JwLec7oa5UsWX8PK2shT5VtR7u1FiOT?=
- =?us-ascii?Q?vw=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ae306b7-5db4-4648-e4bc-08dc91cb5202
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 08:22:42.1805
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QFHKM7r3l9gMxW1w05o7VxI0Tg2uOvto2jnRZLotldoTkD3u9UwYCRUz448h7YYUrBeXFV2GRt40F1W614d40FqN9O3q7varKSMUfa+vZnY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0751
+Content-Transfer-Encoding: 8bit
 
-changed:
-    v2: default disable pcie dts node. enable it board config
-        (milkv mars and visionfive 2).
+Changes to max1721x_battery.c:
+  - reading manufacturer, model name and serial number is only possible
+    when SBS functions of the IC are enabled.(nNVCfg0.enSBS) Factory
+    default is off. Manufacturer is "Maxim Integrated" and the model name
+    can be derived by register MAX172XX_DEV_NAME. Serial number is not
+    available anymore.
+  - According to the datasheet MAX172XX_BAT_PRESENT is at BIT(3) not
+    BIT(4). Furthermore the naming is misleading, when BIT(3) is set the
+    battery is not present.
+  - Removed DeviceName, ManufacturerName and SerialNumber from struct
+    max17211_device_info
 
-base on v6.10-rc3.
+Changes in V2:
+  - Changed E-Mail in Patch (2/2) Signed-Off
 
-Minda Chen (1):
-  riscv: dts: starfive: add PCIe dts configuration for JH7110
+Changes in V3:
+  - Changed E-Mail in Patch (2/2) Author
 
- .../boot/dts/starfive/jh7110-common.dtsi      | 62 +++++++++++++
- .../boot/dts/starfive/jh7110-milkv-mars.dts   |  7 ++
- .../jh7110-starfive-visionfive-2.dtsi         |  8 ++
- arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
- 4 files changed, 163 insertions(+)
+Changes in V4:
+  - add compatibles "maxim,max17201, "maxim,max17205" in bindings
+  - use generic node name fuel-gauge@36 instead of max17201@36 in bindings
+  - remove status in bindings
+  - fix spelling mistakes in commit message
+  - fix indentation in Kconfig
+  - fix typos in max1720x_battery.c
+  - Drop bat and bat_desc from info struct.
+  - MAX172XX_DEV_NAME and MAX172XX_DESIGN_CAP aren't volatile, adjust regmap
+  - constify max1720x_manufacturer, max17201_model, max17205_model
+  - constify max1720x_battery_props
+  - Remove braces around reg in max172xx_current_to_voltage
+  - Skip initialization of reg_val in max1720x_battery_get_property
+  - Remove braces around FIELD_GET() in max1720x_battery_get_property
+  - In case POWER_SUPPLY_PROP_PRESENT there is an early return if ret < 0.
+    Return 0 if regmap_read fails, device is not responding in case
+    battery is not inserted
+  - Implement multi-byte readings instead of i2c_smbus_read_word_data
+  - Drop ancillary from info
+  - Drop both calls to i2c_set_clientdata in max1720x_probe
+  - Get rid of max1720x_remove
+  - Remove comma after sentinel in max1720x_of_match
+  - Fix alignment of max1720x_i2c_driver
+  - Fix return value of dev_err_probe after max1720x_probe_sense_resistor
+    to use ret instead of PTR_ERR(info->bat)
 
+Changes in V5:
+  - oneOf with list and fallback in bindings
+  - unevaluatedProperties: false in bindings
+  - switch back to i2c_smbus_read_word_data when reading from ancillary
+  - add psy_cfg.fwnode = dev_fwnode(dev) in max1720x_probe
+  - set max_register in max1720x_regmap_cfg to MAX172XX_ATAVCAP
+  - fix typo in define: MAX1720X_NRSENSE instead of MAX1720_NRSENSE
 
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+Dimitri Fedrau (2):
+  dt-bindings: power: supply: add support for MAX17201/MAX17205 fuel
+    gauge
+  power: supply: add support for MAX1720x standalone fuel gauge
+
+ .../bindings/power/supply/maxim,max1720x.yaml |  58 +++
+ drivers/power/supply/Kconfig                  |  12 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/max1720x_battery.c       | 338 ++++++++++++++++++
+ 4 files changed, 409 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,max1720x.yaml
+ create mode 100644 drivers/power/supply/max1720x_battery.c
+
 -- 
-2.17.1
+2.39.2
 
