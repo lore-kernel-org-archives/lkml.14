@@ -1,39 +1,33 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DE646542;
-	Fri, 21 Jun 2024 15:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D495A0E0;
+	Fri, 21 Jun 2024 15:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718982558; cv=none; b=rNuqMm8gXMFObvrUOrb+zz/0U3yDd77rBOJhFhSS7caEBIT+uBMS/YQgNm5Yb73mBZ9KfGOR9eilVL8ny5IVgJPPN2zCMfNj/THxJkiIdhvPKxHRGLoq6Al2fmikBVOtdPZW0T3cbLOCtSPgpPprvhatRg6tGfczPrm815MwIro=
+	t=1718982574; cv=none; b=gQ76D6N62KXcuSsRj3S+ilFkKRoiQXpH0LEpmDKmV4FguGn6lr0XWw+9Lslg9oSaIDjKKa92pKUAjuKZ7sjZ7JT9cW3MLviIu1w98VddFy76z/ew4s/8j21//b8SYguJgJpY+Cm+owIbmGsUGFRSewaZTitfmu8aK48CBHqylqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718982558; c=relaxed/simple;
-	bh=FPozGI57ptJ5PFbWNlvuuaCxlurnFDj4WUrEL75l1wg=;
+	s=arc-20240116; t=1718982574; c=relaxed/simple;
+	bh=bDKB1wHsiRH388Qngx6ZzxxVAop7Ev34W6mUhLjovhA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bVp9Co95ICSPZHrxG9JMTXUkROPNKUVUYIsSiHQk6aEvClH65mbefEkcErr+k2WMUCtqL1xBulNDSBcEfXi1SAYLlT3Bn+fD2Wm6MY0tDKHIlHcG2wpVeAeTRLHhCg2jWLptF+oCsms2v3xisvcGJBIii4pkLxOJA1cW+KL+LPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Cmag7+Pj; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	 In-Reply-To:Content-Type; b=SEbXzPfC8cr0oZYrPGK9FPVi7CHdtV7AAwldFOLruDNmsXh3Ig1qkNQdsDDUW9Ry39oWMQRTo+2YknWPO6b8Za323F0QnhZjnqI2HI4U7II+swlKWbC/WpGvMrYuXrVPzMxRKzCHs0V4N3GPVcSM3UjKZi+JIMpQZhw3XHpz+Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/COZ9j4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Cmag7+Pj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1718982181;
-	bh=FPozGI57ptJ5PFbWNlvuuaCxlurnFDj4WUrEL75l1wg=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/COZ9j4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE3FC2BBFC;
+	Fri, 21 Jun 2024 15:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718982573;
+	bh=bDKB1wHsiRH388Qngx6ZzxxVAop7Ev34W6mUhLjovhA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cmag7+PjaAVGiyFO8bmW9BAa+PJFfWhZ6G07aYsGL89xSNjzF7QCwlV475QkhJHPZ
-	 bALgn1xIh4pCT4NprzZGWUA2Qtf/d/GzZJhObFdhQStN2mi2uChE9KQxcRwZXghr8j
-	 7u46rIs4mUhx4TKY6NdsiUBhSVgb+b9hhwYAoRFgzeWYFXMPX8TZJk+uk55vOmeva3
-	 /IA16gGvsZLSWKgfp2I/ovXK0LuwLrUanFTVgc6p46yx4oaHWArKguBVUkqn3rjT5Q
-	 4Q4bQjz7j728W7tutV/ejg6RFBDn91AVvl2foqyTXALgaLXQXQZ0F0A2QoIgzAiUEf
-	 fbdWyeagaKmNQ==
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 237306007C;
-	Fri, 21 Jun 2024 15:03:00 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by x201s (Postfix) with ESMTP id B2F8A200FED;
-	Fri, 21 Jun 2024 14:45:28 +0000 (UTC)
-Message-ID: <0fa312be-be5d-44a1-a113-f899844f13be@fiberby.net>
-Date: Fri, 21 Jun 2024 14:45:28 +0000
+	b=J/COZ9j4oVhToipxXF6nDEREjszpOIi9ReiR2qsXx/av2FUGRSSgrSJMYFq8tkY6Z
+	 IoMOeejYYhD0ey+PY7Q9gBSeSY+zkja2j0MIYyvLorLfktEy3XOZQOvYmrjrWBxA7h
+	 d8Ok7V5378nXUJWXEFshiGt6kVdgh9RQRAFgEhk9RSKNoFEW6jSV/7pkDN5UtnKgbm
+	 R6wFHJBpJ+ZEcSM+MCeRBXDbC+AEi01BWH4Qq6omWxUlSSNclU7tH9r/L9HjkgQGvJ
+	 MIiYV+fYdYl7KK+bzNycEQjVM08ZO2n0vtg2sOeq74ExJNANUXwkQc2gRP2xX2lt2a
+	 cibnEnJVVOIzw==
+Message-ID: <cd0533b8-bb47-4c68-b970-6bad4204c636@kernel.org>
+Date: Fri, 21 Jun 2024 17:09:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,138 +35,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next 2/9] net/sched: cls_flower: prepare
- fl_{set,dump}_key_flags() for ENC_FLAGS
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: Ilya Maximets <i.maximets@ovn.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
- Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240611235355.177667-1-ast@fiberby.net>
- <20240611235355.177667-3-ast@fiberby.net>
- <ZnVR3LsBSvfRyTDD@dcaratti.users.ipa.redhat.com>
+Subject: Re: [PATCH v9 1/8] remoteproc: qcom: Add PRNG proxy clock
+To: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>, sboyd@kernel.org,
+ andersson@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org,
+ devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+ robh@kernel.org, sricharan@codeaurora.org
+Cc: gokulsri@codeaurora.org
+References: <20240621114659.2958170-1-quic_gokulsri@quicinc.com>
+ <20240621114659.2958170-2-quic_gokulsri@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
-In-Reply-To: <ZnVR3LsBSvfRyTDD@dcaratti.users.ipa.redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240621114659.2958170-2-quic_gokulsri@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Davide,
-
-On 6/21/24 10:11 AM, Davide Caratti wrote:
-> hello Asbjørn,
-> 
-> some update on this work: I tested your patch after adapting iproute2
-> bits (e.g. using TCA_FLOWER_KEY_FLAGS_TUNNEL_<CSUM|DONT_FRAGMENT|OAM|CRIT>
-
-Could you please post your iproute2 code?
-
-
-> from
-> 
-> https://lore.kernel.org/netdev/20240611235355.177667-2-ast@fiberby.net/
-> 
-> Now: functional tests on TCA_FLOWER_KEY_ENC_FLAGS systematically fail. I must
-> admit that I didn't complete 100% of the analysis, but IMO there is at least an
-> endianness problem here. See below:
-> 
-> On Tue, Jun 11, 2024 at 11:53:35PM +0000, Asbjørn Sloth Tønnesen wrote:
->> Prepare fl_set_key_flags/fl_dump_key_flags() for use with
->> TCA_FLOWER_KEY_ENC_FLAGS{,_MASK}.
->>
->> This patch adds an encap argument, similar to fl_set_key_ip/
->> fl_dump_key_ip(), and determine the flower keys based on the
->> encap argument, and use them in the rest of the two functions.
->>
->> Since these functions are so far, only called with encap set false,
->> then there is no functional change.
->>
->> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
->> ---
->>   net/sched/cls_flower.c | 40 ++++++++++++++++++++++++++++++----------
->>   1 file changed, 30 insertions(+), 10 deletions(-)
->>
->> diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
->> index eef570c577ac7..6a5cecfd95619 100644
->> --- a/net/sched/cls_flower.c
->> +++ b/net/sched/cls_flower.c
->> @@ -1166,19 +1166,28 @@ static void fl_set_key_flag(u32 flower_key, u32 flower_mask,
->>   	}
->>   }
->>   
->> -static int fl_set_key_flags(struct nlattr **tb, u32 *flags_key,
->> +static int fl_set_key_flags(struct nlattr **tb, bool encap, u32 *flags_key,
->>   			    u32 *flags_mask, struct netlink_ext_ack *extack)
->>   {
->> +	int fl_key, fl_mask;
->>   	u32 key, mask;
->>   
->> +	if (encap) {
->> +		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
->> +		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
->> +	} else {
->> +		fl_key = TCA_FLOWER_KEY_FLAGS;
->> +		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
->> +	}
->> +
->>   	/* mask is mandatory for flags */
->> -	if (!tb[TCA_FLOWER_KEY_FLAGS_MASK]) {
->> +	if (NL_REQ_ATTR_CHECK(extack, NULL, tb, fl_mask)) {
->>   		NL_SET_ERR_MSG(extack, "Missing flags mask");
->>   		return -EINVAL;
->>   	}
->>   
->> -	key = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS]));
->> -	mask = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS_MASK]));
->> +	key = be32_to_cpu(nla_get_be32(tb[fl_key]));
->> +	mask = be32_to_cpu(nla_get_be32(tb[fl_mask]));
-> 
-> 
-> I think that (at least) the above hunk is wrong - or at least, it is a
-> functional discontinuity that causes failure in my test. While the
-> previous bitmask storing tunnel control flags was in host byte ordering,
-> the information on IP fragmentation are stored in network byte ordering.
-> 
-> So, if we want to use this enum
-> 
-> --- a/include/uapi/linux/pkt_cls.h
-> +++ b/include/uapi/linux/pkt_cls.h
-> @@ -677,6 +677,11 @@ enum {
->   enum {
->   	TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT = (1 << 0),
->   	TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST = (1 << 1),
-> +	/* FLOW_DIS_ENCAPSULATION (1 << 2) is not exposed to userspace */
-> +	TCA_FLOWER_KEY_FLAGS_TUNNEL_CSUM = (1 << 3),
-> +	TCA_FLOWER_KEY_FLAGS_TUNNEL_DONT_FRAGMENT = (1 << 4),
-> +	TCA_FLOWER_KEY_FLAGS_TUNNEL_OAM = (1 << 5),
-> +	TCA_FLOWER_KEY_FLAGS_TUNNEL_CRIT_OPT = (1 << 6),
->   };
+On 21/06/2024 13:46, Gokul Sriram Palanisamy wrote:
 >  
-> consistently, we should keep using network byte ordering for
-> TCA_FLOWER_KEY_FLAGS_TUNNEL_* flags (for a reason that I don't understand,
-> because metadata are not transmitted on wire. But maybe I'm missing something).
-> 
-> Shall I convert iproute2 to flip those bits like it happens for
-> TCA_FLOWER_KEY_FLAGS ? thanks!
+> -static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
+> +static int ipq8074_init_clock(struct q6v5_wcss *wcss)
+> +{
+> +	int ret;
+> +
+> +	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
 
-It is always preferred to have a well-defined endianness for binary protocols, even
-if it might only be used locally for now.
+Missing binding.
 
-I would base it on flags_str in tc/f_flower.c, so it can reuse
-flower_parse_matching_flags() and add a new "enc_flags" argument mirroring "ip_flags".
-Then there shouldn't be a difference in endianness. The naming of "ip_flags" is
-questionable, since it is only named in an IP-specific way in iproute2.
+Best regards,
+Krzysztof
 
-Most of the patches in this series are just extending and mirroring what is already
-done for the existing flags, so I am pretty sure that part should work.
-
-The part I am most unsure about is patch 5, since I don't have a lot of experience
-with the bitmap infrastructure, I will make another reply to that patch.
-
--- 
-Best regards
-Asbjørn Sloth Tønnesen
-Network Engineer
-Fiberby - AS42541
