@@ -1,235 +1,119 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E682740861;
-	Fri, 21 Jun 2024 12:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A670528399;
+	Fri, 21 Jun 2024 12:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718972189; cv=none; b=UUMdRvAa0iVeAiFYO+oN4g4celKl/B6gWfADPlSDQppmqor+FTzGb8S0PYkD4mqHBEvtKMyLtBhaCJo7VBOUdu6cphHI8ixGs3nmo3InjP6SiPxzXnQpjvgyLiFNWuC/ArsMhCtmHdNyJYXPnRAPMgD8ojylexUDq16LJlJbUI8=
+	t=1718972278; cv=none; b=IfbIEcE2TEmjEbYG2EAAMxSDGKexPFsTbRH7CbR8ocfn0JM4fGzyb1vRlYaWdQAl0A1dihVAEOcFZ2BO2pvtTv1ynrGyWNPzOfCxSYKGsekZdKf13x4G+4Kw45TdrN2Ic73P7rOObG81fGKnC595NAVjmsJR2zblLTlRtKnylIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718972189; c=relaxed/simple;
-	bh=32AGc2f52v8w1DM+MBmF/jrg+lSKr81lCYrxmg+Ywr0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c0jQ4sOBVErXNFc0HA74kREIbysaeFX8Zat9PD6CMYGNdwvMTScePcH1CtOoWax64dNAba0jdRKHGCo9TA/aS/Ei8FH3PwLpo5NSqvkZ2bd9N/hE8tnZ+8CberS7h2CxgzdaG0yU7AevxP7KzMdYt6pMZ74N16PlwyfgQnIG+Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=P8ag3HXU; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="P8ag3HXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718972187; x=1750508187;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=32AGc2f52v8w1DM+MBmF/jrg+lSKr81lCYrxmg+Ywr0=;
-  b=P8ag3HXUe6JmYgWSZ8UWMzsCPPJezaG1RQujWQDRomZOXkGCNozyIsvM
-   P7zruimC0IETPoYu/ZLOQ2hk6wJ/JDDhN5/clxvUAYaYsPQEHq8UcffdT
-   PB94eX60SBcS1K2yAo1KE2i0/R1gzxZ97ZZXSsZm14olVjxxdtLc3eEVz
-   l4B3NXFSvnnLl5gckJ7o1N85Jq3UpTcK2BNjtU2shfRdq8akb3/0jEnvL
-   u+uH9qsrzz52waL+YBbplP2sLB46tfCPpeBRLh30F00iQazZEJ3QZrx/c
-   EG5wjoq5MIfaknuVN9VsJvijRPaHalJFrlZj6Lb+TMGwodA/SFgV8P9vN
-   g==;
-X-CSE-ConnectionGUID: gjF6r6nLSZ2qzzloD0+0Lw==
-X-CSE-MsgGUID: L6RY1RI1Q0izexGUxY5xiA==
-X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
-   d="scan'208";a="28341530"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 05:16:26 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 21 Jun 2024 05:16:05 -0700
-Received: from ROB-ULT-M76677.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 21 Jun 2024 05:16:01 -0700
-From: Andrei Simion <andrei.simion@microchip.com>
-To: <brgl@bgdev.pl>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
-	<gregkh@linuxfoundation.org>
-CC: <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	Claudiu Beznea <claudiu.beznea@microchip.com>, Andrei Simion
-	<andrei.simion@microchip.com>
-Subject: [PATCH v2 1/3] eeprom: at24: avoid adjusting offset for 24AA025E{48, 64}
-Date: Fri, 21 Jun 2024 15:13:38 +0300
-Message-ID: <20240621121340.114486-2-andrei.simion@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240621121340.114486-1-andrei.simion@microchip.com>
-References: <20240621121340.114486-1-andrei.simion@microchip.com>
+	s=arc-20240116; t=1718972278; c=relaxed/simple;
+	bh=FQ2agrzVuW/zD2YoBosKlJoO2acppwXAoeG7ssgZZQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p8QbMJGW4I/qwbd9S9QD7Obl4AgTf5lZVQ4RfEl5fIIOJ0yAcqGDHCxYLXDZLLFb7bQKUFKps0gL9kp1jp7N2C7ms3X+HyLqk6L3CqByt1bVWdbLUdCi3MStiMg0pmFZmgr7wk1yfmqV6uyJF+3M8pOUyNMpvTdjRd6V24ZKD08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-63bce128c70so14954277b3.0;
+        Fri, 21 Jun 2024 05:17:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718972275; x=1719577075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nkLxurEt5Br1ag4C5ykRvVNSQUrZUXOds76HNbkyPkI=;
+        b=b+Y04k6hy4HIK1NV6W9ysx1VhCrNJI3WUYLSBSU71pHM/KACOCCnEDE7ZInqvXTEUB
+         OFMiogiZev+uF0oqCMZeHPnnpt2ZNXOD60inpk2eMODHD+UMMxzCMv6tE03vEprvoDvi
+         YFOI0VrRYp8CpxExbbsh5ef7bZLwjk0L7EqkNcot3oF7WZ8FvDeRPdcdUxSqLiiuQP0m
+         pC8j5Y5bDr36Q5rnjg1838V7x7JQiCtxvC3rDkyv8qzQY7IT0CYbpH4f2wctGj959K/D
+         1xP+4pLiwVqB68Zc9VhS+mn1jKFKxzD1QXAI6pIeHI3+VJ+cQnzlt8xeYcehYyRKeASN
+         bLKw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6586nJl+Wt7mKjafSlY5QDNpj1IkGDIiE8efescPxlMYVbJYs1ByDrUHjtIghD4YIMQ0okFkJUjStteBDu/56x8oJ0SlZMMRdmU3sAXpQoUmQk+7rRJnwB4UR9DX1Avi8EMwodKErHI4EDRv0x82IxN++R9k5MZ0loKoWwB8DvM6Pv0lt8XeGfuk9
+X-Gm-Message-State: AOJu0YwOE9azwr/R27zchbUeebvAvZwgNYw+0B7udtW3+QuHG81y1/IF
+	z26CiqQmKCwGtFwnlso6wzpUsCnkOPOkQCrZpjtmSN+9fyAUp9zVcO7d2M1n
+X-Google-Smtp-Source: AGHT+IFU+3htLiKj5pRSrsdqyJkJY7b6bVLRAKM/R4hLM4yrdY19HMoLSTyJLdNLnwVngJDqcYn4zA==
+X-Received: by 2002:a81:4425:0:b0:615:2fa1:c55d with SMTP id 00721157ae682-63e1cd4c8cemr23159427b3.19.1718972275105;
+        Fri, 21 Jun 2024 05:17:55 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f154d5ef8sm3051577b3.117.2024.06.21.05.17.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 05:17:54 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-62f3ccc877eso22111987b3.1;
+        Fri, 21 Jun 2024 05:17:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV8oG8H06Y8xROoBuZwH0wLN+dvgztfnv1rAM+uDnbwSg9qsGB8Vd53cfcgQeBL5j0qyPtOOumiVJVQEAvHtO7fp+UYkz7DeO9KSXWtooZ1n/7AynTJOud1S3Unc2cZNgkDhk9552zNMFCPBe1l03uO+uvBZyxlL/PEJkzMZYgjPEh+hNgwMK1RYebO
+X-Received: by 2002:a81:c30b:0:b0:640:aec2:101c with SMTP id
+ 00721157ae682-640aec2106dmr2504997b3.2.1718972274448; Fri, 21 Jun 2024
+ 05:17:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240618174831.415583-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240618174831.415583-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 21 Jun 2024 14:17:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV16Sd5HoJr-td+OJJ8gCesbCzz3BSXNFpBpd1iR9=u4w@mail.gmail.com>
+Message-ID: <CAMuHMdV16Sd5HoJr-td+OJJ8gCesbCzz3BSXNFpBpd1iR9=u4w@mail.gmail.com>
+Subject: Re: [PATCH 4/4] pinctrl: renesas: rzg2l: Reorganize variable
+ configuration macro
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Hi Prabhakar,
 
-The EEPROMs could be used only for MAC storage. In this case the
-EEPROM areas where MACs resides could be modeled as NVMEM cells
-(directly via DT bindings) such that the already available networking
-infrastructure to read properly the MAC addresses (via
-of_get_mac_address()). The previously available compatibles needs the
-offset adjustment probably for compatibility w/ old DT bindings.
-Added "atmel,24mac02e4", "atmel,24mac02e6" compatible for the usage w/
-24AA025E{48, 64} type of EEPROMs.
+Thanks for your patch!
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Co-developed-by: Andrei Simion <andrei.simion@microchip.com>
-Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
----
-v1 -> v2:
-- no change
----
- drivers/misc/eeprom/at24.c | 73 ++++++++++++++++++++++----------------
- 1 file changed, 42 insertions(+), 31 deletions(-)
+On Tue, Jun 18, 2024 at 7:48=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The `PIN_CFG_VARIABLE` macro did not indicate the capabilities of a pin
+> but served as a flag indicating that the pins of a port have different
+> capabilities.
+>
+> To better reflect its purpose, move the `PIN_CFG_VARIABLE` macro beside
+> `RZG2L_SINGLE_PIN` and rename it to `RZG2L_CFG_VARIABLE`. Additionally,
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 4bd4f32bcdab..8699a6c585c4 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -121,17 +121,19 @@ struct at24_chip_data {
- 	u32 byte_len;
- 	u8 flags;
- 	u8 bank_addr_shift;
-+	u8 adjoff;
- 	void (*read_post)(unsigned int off, char *buf, size_t count);
- };
- 
--#define AT24_CHIP_DATA(_name, _len, _flags)				\
-+#define AT24_CHIP_DATA(_name, _len, _flags, _adjoff)			\
- 	static const struct at24_chip_data _name = {			\
--		.byte_len = _len, .flags = _flags,			\
-+		.byte_len = _len, .flags = _flags, .adjoff = _adjoff, \
- 	}
- 
--#define AT24_CHIP_DATA_CB(_name, _len, _flags, _read_post)		\
-+#define AT24_CHIP_DATA_CB(_name, _len, _flags, _adjoff, _read_post)	\
- 	static const struct at24_chip_data _name = {			\
- 		.byte_len = _len, .flags = _flags,			\
-+		.adjoff = _adjoff,					\
- 		.read_post = _read_post,				\
- 	}
- 
-@@ -162,53 +164,57 @@ static void at24_read_post_vaio(unsigned int off, char *buf, size_t count)
- }
- 
- /* needs 8 addresses as A0-A2 are ignored */
--AT24_CHIP_DATA(at24_data_24c00, 128 / 8, AT24_FLAG_TAKE8ADDR);
-+AT24_CHIP_DATA(at24_data_24c00, 128 / 8, AT24_FLAG_TAKE8ADDR, 0);
- /* old variants can't be handled with this generic entry! */
--AT24_CHIP_DATA(at24_data_24c01, 1024 / 8, 0);
-+AT24_CHIP_DATA(at24_data_24c01, 1024 / 8, 0, 0);
- AT24_CHIP_DATA(at24_data_24cs01, 16,
--	AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
--AT24_CHIP_DATA(at24_data_24c02, 2048 / 8, 0);
-+	AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
-+AT24_CHIP_DATA(at24_data_24c02, 2048 / 8, 0, 0);
- AT24_CHIP_DATA(at24_data_24cs02, 16,
--	AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-+	AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
- AT24_CHIP_DATA(at24_data_24mac402, 48 / 8,
--	AT24_FLAG_MAC | AT24_FLAG_READONLY);
-+	AT24_FLAG_MAC | AT24_FLAG_READONLY, 1);
- AT24_CHIP_DATA(at24_data_24mac602, 64 / 8,
--	AT24_FLAG_MAC | AT24_FLAG_READONLY);
-+	AT24_FLAG_MAC | AT24_FLAG_READONLY, 1);
-+AT24_CHIP_DATA(at24_data_24mac02e4, 48 / 8,
-+	AT24_FLAG_MAC | AT24_FLAG_READONLY, 0);
-+AT24_CHIP_DATA(at24_data_24mac02e6, 64 / 8,
-+	AT24_FLAG_MAC | AT24_FLAG_READONLY, 0);
- /* spd is a 24c02 in memory DIMMs */
- AT24_CHIP_DATA(at24_data_spd, 2048 / 8,
--	AT24_FLAG_READONLY | AT24_FLAG_IRUGO);
-+	AT24_FLAG_READONLY | AT24_FLAG_IRUGO, 0);
- /* 24c02_vaio is a 24c02 on some Sony laptops */
- AT24_CHIP_DATA_CB(at24_data_24c02_vaio, 2048 / 8,
--	AT24_FLAG_READONLY | AT24_FLAG_IRUGO,
-+	AT24_FLAG_READONLY | AT24_FLAG_IRUGO, 0,
- 	at24_read_post_vaio);
--AT24_CHIP_DATA(at24_data_24c04, 4096 / 8, 0);
-+AT24_CHIP_DATA(at24_data_24c04, 4096 / 8, 0, 0);
- AT24_CHIP_DATA(at24_data_24cs04, 16,
--	AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-+	AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
- /* 24rf08 quirk is handled at i2c-core */
--AT24_CHIP_DATA(at24_data_24c08, 8192 / 8, 0);
-+AT24_CHIP_DATA(at24_data_24c08, 8192 / 8, 0, 0);
- AT24_CHIP_DATA(at24_data_24cs08, 16,
--	AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
--AT24_CHIP_DATA(at24_data_24c16, 16384 / 8, 0);
-+	AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
-+AT24_CHIP_DATA(at24_data_24c16, 16384 / 8, 0, 0);
- AT24_CHIP_DATA(at24_data_24cs16, 16,
--	AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
--AT24_CHIP_DATA(at24_data_24c32, 32768 / 8, AT24_FLAG_ADDR16);
-+	AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
-+AT24_CHIP_DATA(at24_data_24c32, 32768 / 8, AT24_FLAG_ADDR16, 0);
- /* M24C32-D Additional Write lockable page (M24C32-D order codes) */
--AT24_CHIP_DATA(at24_data_24c32d_wlp, 32, AT24_FLAG_ADDR16);
-+AT24_CHIP_DATA(at24_data_24c32d_wlp, 32, AT24_FLAG_ADDR16, 0);
- AT24_CHIP_DATA(at24_data_24cs32, 16,
--	AT24_FLAG_ADDR16 | AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
--AT24_CHIP_DATA(at24_data_24c64, 65536 / 8, AT24_FLAG_ADDR16);
-+	AT24_FLAG_ADDR16 | AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
-+AT24_CHIP_DATA(at24_data_24c64, 65536 / 8, AT24_FLAG_ADDR16, 0);
- /* M24C64-D Additional Write lockable page (M24C64-D order codes) */
--AT24_CHIP_DATA(at24_data_24c64d_wlp, 32, AT24_FLAG_ADDR16);
-+AT24_CHIP_DATA(at24_data_24c64d_wlp, 32, AT24_FLAG_ADDR16, 0);
- AT24_CHIP_DATA(at24_data_24cs64, 16,
--	AT24_FLAG_ADDR16 | AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
--AT24_CHIP_DATA(at24_data_24c128, 131072 / 8, AT24_FLAG_ADDR16);
--AT24_CHIP_DATA(at24_data_24c256, 262144 / 8, AT24_FLAG_ADDR16);
--AT24_CHIP_DATA(at24_data_24c512, 524288 / 8, AT24_FLAG_ADDR16);
--AT24_CHIP_DATA(at24_data_24c1024, 1048576 / 8, AT24_FLAG_ADDR16);
-+	AT24_FLAG_ADDR16 | AT24_FLAG_SERIAL | AT24_FLAG_READONLY, 0);
-+AT24_CHIP_DATA(at24_data_24c128, 131072 / 8, AT24_FLAG_ADDR16, 0);
-+AT24_CHIP_DATA(at24_data_24c256, 262144 / 8, AT24_FLAG_ADDR16, 0);
-+AT24_CHIP_DATA(at24_data_24c512, 524288 / 8, AT24_FLAG_ADDR16, 0);
-+AT24_CHIP_DATA(at24_data_24c1024, 1048576 / 8, AT24_FLAG_ADDR16, 0);
-+AT24_CHIP_DATA(at24_data_24c2048, 2097152 / 8, AT24_FLAG_ADDR16, 0);
- AT24_CHIP_DATA_BS(at24_data_24c1025, 1048576 / 8, AT24_FLAG_ADDR16, 2);
--AT24_CHIP_DATA(at24_data_24c2048, 2097152 / 8, AT24_FLAG_ADDR16);
- /* identical to 24c08 ? */
--AT24_CHIP_DATA(at24_data_INT3499, 8192 / 8, 0);
-+AT24_CHIP_DATA(at24_data_INT3499, 8192 / 8, 0, 0);
- 
- static const struct i2c_device_id at24_ids[] = {
- 	{ "24c00",	(kernel_ulong_t)&at24_data_24c00 },
-@@ -217,7 +223,9 @@ static const struct i2c_device_id at24_ids[] = {
- 	{ "24c02",	(kernel_ulong_t)&at24_data_24c02 },
- 	{ "24cs02",	(kernel_ulong_t)&at24_data_24cs02 },
- 	{ "24mac402",	(kernel_ulong_t)&at24_data_24mac402 },
-+	{ "24mac02e4",	(kernel_ulong_t)&at24_data_24mac02e4 },
- 	{ "24mac602",	(kernel_ulong_t)&at24_data_24mac602 },
-+	{ "24mac02e6",	(kernel_ulong_t)&at24_data_24mac02e6 },
- 	{ "spd",	(kernel_ulong_t)&at24_data_spd },
- 	{ "24c02-vaio",	(kernel_ulong_t)&at24_data_24c02_vaio },
- 	{ "24c04",	(kernel_ulong_t)&at24_data_24c04 },
-@@ -250,7 +258,9 @@ static const struct of_device_id __maybe_unused at24_of_match[] = {
- 	{ .compatible = "atmel,24c02",		.data = &at24_data_24c02 },
- 	{ .compatible = "atmel,24cs02",		.data = &at24_data_24cs02 },
- 	{ .compatible = "atmel,24mac402",	.data = &at24_data_24mac402 },
-+	{ .compatible = "atmel,24mac02e4",	.data = &at24_data_24mac02e4 },
- 	{ .compatible = "atmel,24mac602",	.data = &at24_data_24mac602 },
-+	{ .compatible = "atmel,24mac02e6",	.data = &at24_data_24mac02e6 },
- 	{ .compatible = "atmel,spd",		.data = &at24_data_spd },
- 	{ .compatible = "atmel,24c04",		.data = &at24_data_24c04 },
- 	{ .compatible = "atmel,24cs04",		.data = &at24_data_24cs04 },
-@@ -690,7 +700,8 @@ static int at24_probe(struct i2c_client *client)
- 	at24->read_post = cdata->read_post;
- 	at24->bank_addr_shift = cdata->bank_addr_shift;
- 	at24->num_addresses = num_addresses;
--	at24->offset_adj = at24_get_offset_adj(flags, byte_len);
-+	at24->offset_adj = cdata->adjoff ?
-+				at24_get_offset_adj(flags, byte_len) : 0;
- 	at24->client_regmaps[0] = regmap;
- 
- 	at24->vcc_reg = devm_regulator_get(dev, "vcc");
--- 
-2.34.1
+Do you mind me renaming it to RZG2L_VARIABLE_CFG while applying?
 
+> introduce new macros for packing variable port configurations:
+>
+> - `RZG2L_GPIO_PORT_PACK_VARIABLE(n, a)`: Combines `RZG2L_CFG_VARIABLE`
+>   with `RZG2L_GPIO_PORT_PACK` to handle variable pin configurations
+>   for a packed port.
+> - `RZG2L_GPIO_PORT_SPARSE_PACK_VARIABLE(m, a)`: Combines
+>   `RZG2L_CFG_VARIABLE` with `RZG2L_GPIO_PORT_SPARSE_PACK` to handle
+>   variable pin configurations for a sparse port.
+>
+> Due to the above change the configuration macros have been reorganized
+> as follows:
+> - Shift the bit positions of `PIN_CFG_NOGPIO_INT`, `PIN_CFG_NOD`,
+>   `PIN_CFG_SMT`, `PIN_CFG_ELC`, and `PIN_CFG_IOLH_RZV2H` down by one
+>   to accommodate the removal of `PIN_CFG_VARIABLE`.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.11.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
