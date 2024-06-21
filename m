@@ -1,230 +1,143 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA1F16A924;
-	Fri, 21 Jun 2024 16:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+Received: from smtp.cecloud.com (unknown [1.203.97.246])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32ECF166311
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718988000; cv=none; b=fd1B2vs4lsOwK8PfCP+O34Fzb4cavNG2ZSjB+4qpOS99lPL1IEYou0O20newt0/syEqgQu+9iptv/NkdIymvL6+wEKHUG8F/AD4zTf9VSo6IvKjYxDwO14VovF1ig03OEFsy17/EYDg0D7tCVcFMTMpAlo8GAUU0RKcATZp4Apc=
+	t=1718988000; cv=none; b=lNkz+JBjij/n+cqmAY5xxXFQML0PPLqESZXNUxUN8S+EUF4NAWFGGkwageSJ5Gw2rbswT1Z7NpuG1OrDqVasrD9jZTBxLLyPmRuehWiZiGHyD+RBF7PZDYmoBipUFUAV2D4Xml/3510z6ZF9tg1IVDQYHtZq4/UCseBeEtNQaW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718988000; c=relaxed/simple;
-	bh=bsU/uSufwYkHHioRdRIW2VKG45iABEGGxk+o7JmN7xk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=pBp1u800BwW8PbUnmJ2YTOey6U9ZU/vlWWwtaKTk/yer4QIKzSectXKjyNw08/bvb3lHpHYmK9DIyQiajnBBiPNNQkhzQahYcqPOZKzh/etVZjk0uxy20PFeQ6SsmTJOvtHt03kEHOi0SOC82JeNem2qHYM7mu+BNaaL5xPkuuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DLUUr7hb; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=SISnFDeVB8cxk0I8FawymLYe3uw3xU5C6Csb/KZRzjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EA5Ndls2yc6ToCSw2m7+azLZphdBzgugGmh/Majpt9dnnjF+gTR/ZgGVg0BUcT0HktoCArCslx/pfbB4xg/mPLjNGs9ntgQaSRkBXWbg2tABHxb3ZP4PjHX6tJFxpxihR+RS5Nky72whmjmMq886sfhS1XTBaD6RWfDVWUtMMHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; dkim=fail (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drxdoO3Q reason="signature verification failed"; arc=none smtp.client-ip=170.10.133.124; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=1.203.97.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DLUUr7hb"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45LGdk19091076;
-	Fri, 21 Jun 2024 11:39:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718987986;
-	bh=41la4WrGvritz6KJ0djgZf2nYLv9pbYtJnXCQHs8xKk=;
-	h=From:Date:Subject:References:In-Reply-To:To:CC;
-	b=DLUUr7hbfGFuWFyA1blV2g6hcXOXBgr9hNFi42qBYJR68vOPI6x5y79pB+9yFG5Zr
-	 vhybN/UzDn/z86IsgCWfL0b5K5G6ptrXqzozuW48Yg1r/dU31M9yloICAFysmSgRJR
-	 YqtwQaNzIt6bkFKGUtdAu9Muh43KREjCp0VEO2Ss=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45LGdkgw085574
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 21 Jun 2024 11:39:46 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 21
- Jun 2024 11:39:46 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 21 Jun 2024 11:39:46 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45LGdkZK057984;
-	Fri, 21 Jun 2024 11:39:46 -0500
-From: Bryan Brattlof <bb@ti.com>
-Date: Fri, 21 Jun 2024 11:39:40 -0500
-Subject: [PATCH v3 4/5] DONOTMERGE: arm64: dts: ti: k3-am62p: add in opp
- tables
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drxdoO3Q"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id 11E077C0112;
+	Sat, 22 Jun 2024 00:39:55 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ABS-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from localhost.localdomain (117.240.211.222.broad.my.sc.dynamic.163data.com.cn [222.211.240.117])
+	by smtp.cecloud.com (postfix) whith ESMTP id P2702681T281465900102000S1718987992732469_;
+	Sat, 22 Jun 2024 00:39:53 +0800 (CST)
+X-RL-SENDER:liuwei09@cestc.cn
+X-SENDER:liuwei09@cestc.cn
+X-LOGIN-NAME:liuwei09@cestc.cn
+X-FST-TO:prarit@redhat.com
+X-RCPT-COUNT:10
+X-LOCAL-RCPT-COUNT:1
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:222.211.240.117
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<750264334267299d61681e5ae89bbad6>
+X-System-Flag:0
+From: Liu Wei <liuwei09@cestc.cn>
+To: prarit@redhat.com,
+	Liu Wei <liuwei09@cestc.cn>
+Cc: catalin.marinas@arm.com,
+	guohanjun@huawei.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	lpieralisi@kernel.org,
+	rafael@kernel.org,
+	sudeep.holla@arm.com,
+	will@kernel.org
+Subject: Re: [PATCH v2] ACPI: Add config to disable ACPI SPCR console by default on arm64
+Date: Sat, 22 Jun 2024 00:39:25 +0800
+Message-ID: <c3f923f7-05b1-44ec-8cc2-e5dff1cbd2c6@redhat.com>
+X-Mailer: git-send-email 2.42.1
+In-Reply-To: <20240621044706.87181-1-liuwei09@cestc.cn>
+References: <20240530015332.7305-1-liuwei09@cestc.cn> <20240621044706.87181-1-liuwei09@cestc.cn>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F081741DB for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com; s=mimecast20190719; t=1718969217; h=from:from:reply-to:subject:subject:date:date:message-id:message-id: to:to:cc:cc:mime-version:mime-version:content-type:content-type: content-transfer-encoding:content-transfer-encoding: in-reply-to:in-reply-to:references:references; bh=+AbWTm7QYhVs521X2AgBsRmkjpYYxf77pV7a0Yxd2xk=; b=drxdoO3QXJS+cNv6gnJ4+Uk5Wbel5ipQzW9ZcmuXTjYsfXBImrusoVSidWv5qf0JWII/uf AqpVdCj2a8TnAhDDFAlhn9U2wiAGpGfQp1tRyVZ1MV6x1lbqBGp61nSj65Eut9XnDMuKbP M4EtrFw079xn080AbU1J9BZsNhqzNw0=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-kHLQ7AdZM0uQYmwjJ7ycYw-1; Fri, 21 Jun 2024 07:26:54 -0400
+X-MC-Unique: kHLQ7AdZM0uQYmwjJ7ycYw-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b50be910afso21500826d6.2 for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:26:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1718969213; x=1719574013; h=content-transfer-encoding:in-reply-to:from:content-language :references:cc:to:subject:user-agent:mime-version:date:message-id :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=+AbWTm7QYhVs521X2AgBsRmkjpYYxf77pV7a0Yxd2xk=; b=rdrkcV+jalRcKHXdUE+jEWe33/qNgR+yTM8VCmmwLCRdJtATehgTw5dUtqYogrUH82 3e3GKCFgbH1JIy1aoy2T4EW5sj3DPjDYiSAtc6RVHPgt1Bhur0nmukH5AjsP21ysZXt4 JODPkkFBxhY4xU9D8fy+3lSbiA3pT95ZwtqQMePN7tOCJLkH29zdV/i/wvfekoMtkcmf 6ZpUlhO+X9RWDy5UWcqJ2928IeXkdIWQ4TMnTTR4JiLFZGM2OncgStajsPCSzCa84UQe Y3VlqsU5ucZAnixcrstuv/khT1KRkU591VJ8sk166oqJvcHmgn629zyAkwv4iaFWgEV6 Wxpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/pYxiYR8AKK6yCNk7GG9xRTiMUKEROfmvmmFLrbOuvTdTDWsNfYE4LxF1M7HQlPO9rbc2pOXMNlhrqkhpywfg7rBrz0lhJkFVh32x
+X-Gm-Message-State: AOJu0YzMSmvpfE8RSnU/AXz8DZVZpCszEEYM3JUq5OYGms0sTEdsZkNa Fc5yToFK46IHdfU2LxlT3ysrhiCjtIwJMuafisFakj6IqEqD9WfwVgqUiVofPsiRGZzCxcVn7kp GfUyQEBI2snlAZZR+3/KM7zQYacsBKrTdhhdx0hzeLa3zeAR6duGLaIpsCr9HJA==
+X-Received: by 2002:a0c:df93:0:b0:6b4:fece:1322 with SMTP id 6a1803df08f44-6b501ebbe51mr94781236d6.55.1718969213640; Fri, 21 Jun 2024 04:26:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHtpc/94A17BbeMJBFiG1uB3pSn3hfOV4uhOgztsnw0fPNyMBVvu8SC58FfeqcgOO6s7gUeSg==
+X-Received: by 2002:a0c:df93:0:b0:6b4:fece:1322 with SMTP id 6a1803df08f44-6b501ebbe51mr94780956d6.55.1718969213179; Fri, 21 Jun 2024 04:26:53 -0700 (PDT)
+Received: from [10.26.1.93] ([66.187.232.136]) by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ecfe878sm7912306d6.14.2024.06.21.04.26.52 (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128); Fri, 21 Jun 2024 04:26:52 -0700 (PDT)
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240621-ti-opp-updates-v3-4-d857be6dac8b@ti.com>
-References: <20240621-ti-opp-updates-v3-0-d857be6dac8b@ti.com>
-In-Reply-To: <20240621-ti-opp-updates-v3-0-d857be6dac8b@ti.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar
-	<viresh.kumar@linaro.org>, Lee Jones <lee@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>
-CC: Vibhore Vardhan <vibhore@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Bryan Brattlof <bb@ti.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3899; i=bb@ti.com;
- h=from:subject:message-id; bh=bsU/uSufwYkHHioRdRIW2VKG45iABEGGxk+o7JmN7xk=;
- b=owNCWmg5MUFZJlNZCVPsCwAAaX////77r7++nl3PFX3ZU/rWcjfu8u4S7tcN6TrZn///9/+wA
- RsbRD1GTI0NNDTEAYjTQaA0AyBiANDCMEAwgAZAAA0wmgaAGmhiaeppo/Uyh0NBoNBoB6jQekaH
- qGmQDQ0AAMR6gANDEDID0geiaaNlB6Q0aaMRkD1AGRmoO1DTaRpoyaaaaaNGRoyAyMmQyBkMQaY
- Q0ABoDQGIaZANAMg00NAwTQafqmhoCRPIMSrE4eJGj0g0hJm5wVK9VqCCMJjd8kPEWKFaK6Qs1z
- BXM6UrxJyhH88AlZhJaW0Jvqy53RAu5GwqTbjjKQtHp/AuArdknHXi1ht52pggaOSdJgvbL4nQJ
- 40lDuX+uYPhqIVaSxfAFw9IZcO09/rFwyWrBbvAIf0T7ZOBHizdKnHfPtDECrwQ4MjTPKrpTAOd
- bbK4EvKzdtu7ULdBZj2NZQQlFPs4U+O21Tk2cSVdmQ9T5yUmU83PO9A/cHcYDuuKLDzmi+c0sM6
- Z/qdOxHVYFGuEkZDDew+oG8no/gNw/a6AWptYXYahWXpAZcwAPdQm5bCZkRHuUe/AQb4KJTrbsn
- +rBd7X3IGEJdE7RgAiwcFb+x61rCQwfVK95rT7HgRh/wsWub5gCexKzswLeBagnAukzAp2/MBiQ
- pYUe1wP8XckU4UJAJU+wLA=
-X-Developer-Key: i=bb@ti.com; a=openpgp;
- fpr=D3D177E40A38DF4D1853FEEF41B90D5D71D56CE0
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Message-ID: <20240621163925.oWhlLfHRd4WjIcFFSifzPYSZSnPA8tmGXIBkcZEmDr8@z>
 
-To help reduce power consumption, reduce the frequency of the CPU cores
-when they sit idle by specifying their supported OPP entries.
+From: Prarit Bhargava <prarit@redhat.com>
 
-Signed-off-by: Bryan Brattlof <bb@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi |  6 ++++
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts     |  9 ++++++
- arch/arm64/boot/dts/ti/k3-am62p5.dtsi       | 47 +++++++++++++++++++++++++++++
- 3 files changed, 62 insertions(+)
+On 6/21/24 00:47, Liu Wei wrote:
+> > For varying privacy and security reasons, sometimes we would like to
+> > completely silence the serial console output, and only enable it through
+> > cmdline when needed.
+> > 
+> > But there are many existing systems that depend on this console,
+> > so add CONFIG_ARM_DISABLE_ACPI_SPCR_CONSOLE for this situation.
+> > 
+> > Signed-off-by: Liu Wei <liuwei09@cestc.cn>
+> > Suggested-by: Prarit Bhargava <prarit@redhat.com>
+> > ---
+> > 
+> > v2: Add a config option suggested by Prarit
+> > ---
+> >   arch/arm64/kernel/acpi.c   | 12 ++++++++++++
+> >   drivers/acpi/arm64/Kconfig | 11 +++++++++++
+> >   2 files changed, 23 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> > index dba8fcec7f33..3365fabb5cf8 100644
+> > --- a/arch/arm64/kernel/acpi.c
+> > +++ b/arch/arm64/kernel/acpi.c
+> > @@ -227,7 +227,19 @@ void __init acpi_boot_table_init(void)
+> >   		if (earlycon_acpi_spcr_enable)
+> >   			early_init_dt_scan_chosen_stdout();
+> >   	} else {
+> > +		/*
+> > +		 * For varying privacy and security reasons, sometimes need
+> > +		 * to completely silence the serial console output, and only
+> > +		 * enable it by cmdline when needed.
+> > +		 * But there are many existing systems that depend on this
+> > +		 * behavior, so use CONFIG_ARM_DISABLE_ACPI_SPCR_CONSOLE.
+> > +		 */
+> > +#ifdef CONFIG_ARM_DISABLE_ACPI_SPCR_CONSOLE
+> > +		acpi_parse_spcr(earlycon_acpi_spcr_enable, false);
+> > +#else
+> >   		acpi_parse_spcr(earlycon_acpi_spcr_enable, true);
+> > +#endif
+> > +
+> 
+> I don't think you want a config option here after all.  See my previous 
+> comment about "acpi=nospcr".  I realized that if you do use a config 
+> then distros will not have the ability to default 'on', and advise users 
+> to disable it for their use cases.
+> 
+> Try the 'acpi=nospcr' option.  That should keep everyone happy.
+>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-index c71d9624ea277..8392c8cde2cd4 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-@@ -19,6 +19,11 @@ chipid: chipid@14 {
- 			bootph-all;
- 		};
- 
-+		opp_efuse_table: syscon@18 {
-+			compatible = "ti,am62-opp-efuse-table", "syscon";
-+			reg = <0x18 0x4>;
-+		};
-+
- 		usb0_phy_ctrl: syscon@4008 {
- 			compatible = "ti,am62-usb-phy-ctrl", "syscon";
- 			reg = <0x4008 0x4>;
-@@ -28,6 +33,7 @@ usb1_phy_ctrl: syscon@4018 {
- 			compatible = "ti,am62-usb-phy-ctrl", "syscon";
- 			reg = <0x4018 0x4>;
- 		};
-+
- 	};
- 
- 	wkup_uart0: serial@2b300000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 6983ec1b57cbd..08956ac1eaead 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -128,6 +128,15 @@ led-0 {
- 		};
- 	};
- 
-+	opp-table {
-+		/* Add 1.4GHz OPP for am62p5-sk board. Requires VDD_CORE at 0v85 */
-+		opp-1400000000 {
-+			opp-hz = /bits/ 64 <1400000000>;
-+			opp-supported-hw = <0x01 0x0004>;
-+			clock-latency-ns = <6000000>;
-+		};
-+	};
-+
- 	tlv320_mclk: clk-0 {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5.dtsi b/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
-index 41f479dca4555..140587d02e88e 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
-@@ -47,6 +47,7 @@ cpu0: cpu@0 {
- 			d-cache-line-size = <64>;
- 			d-cache-sets = <128>;
- 			next-level-cache = <&l2_0>;
-+			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 135 0>;
- 		};
- 
-@@ -62,6 +63,7 @@ cpu1: cpu@1 {
- 			d-cache-line-size = <64>;
- 			d-cache-sets = <128>;
- 			next-level-cache = <&l2_0>;
-+			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 136 0>;
- 		};
- 
-@@ -77,6 +79,7 @@ cpu2: cpu@2 {
- 			d-cache-line-size = <64>;
- 			d-cache-sets = <128>;
- 			next-level-cache = <&l2_0>;
-+			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 137 0>;
- 		};
- 
-@@ -92,10 +95,54 @@ cpu3: cpu@3 {
- 			d-cache-line-size = <64>;
- 			d-cache-sets = <128>;
- 			next-level-cache = <&l2_0>;
-+			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 138 0>;
- 		};
- 	};
- 
-+	a53_opp_table: opp-table {
-+		compatible = "operating-points-v2-ti-cpu";
-+		opp-shared;
-+		syscon = <&opp_efuse_table>;
-+
-+		opp-200000000 {
-+			opp-hz = /bits/ 64 <200000000>;
-+			opp-supported-hw = <0x01 0x0007>;
-+			clock-latency-ns = <6000000>;
-+		};
-+
-+		opp-400000000 {
-+			opp-hz = /bits/ 64 <400000000>;
-+			opp-supported-hw = <0x01 0x0007>;
-+			clock-latency-ns = <6000000>;
-+		};
-+
-+		opp-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-supported-hw = <0x01 0x0007>;
-+			clock-latency-ns = <6000000>;
-+		};
-+
-+		opp-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-supported-hw = <0x01 0x0007>;
-+			clock-latency-ns = <6000000>;
-+		};
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-supported-hw = <0x01 0x0006>;
-+			clock-latency-ns = <6000000>;
-+		};
-+
-+		opp-1250000000 {
-+			opp-hz = /bits/ 64 <1250000000>;
-+			opp-supported-hw = <0x01 0x0004>;
-+			clock-latency-ns = <6000000>;
-+			opp-suspend;
-+		};
-+	};
-+
- 	l2_0: l2-cache0 {
- 		compatible = "cache";
- 		cache-unified;
+Ok, I will send new version soon.
 
--- 
-2.45.2
+Thanks for your suggestion!
+
+Liu Wei
+ 
+> P.
+> 
+
 
