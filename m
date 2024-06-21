@@ -1,86 +1,34 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD8E176254;
-	Fri, 21 Jun 2024 11:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EC0173336;
+	Fri, 21 Jun 2024 11:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969124; cv=none; b=cqXmDZocdt5aXIwPdlp8quU2o/YfQvamAaT17GwZTg+i3zJuciAAMiIyFAW7cQDBF7SDzy5S/cWq+Q2mc5Pw9kWC/SBWdcW6ZQG8QDgQ+YtZ+knshgeQhl+GUU0oGwmTudzcPMqbIMZqjQYFnMygo1t62Cms6FOJzXWly9JUt2Q=
+	t=1718969166; cv=none; b=T39foboPJ0QHjyRqB9Q/hpuBeOx5WXaF8Ex6Ll7x9lPnXHlRuAAKz4GyNl4sr/HOOLw9iewz5tW1I+vaQ6ivRRK3Q1uLvUonTDa8OoMubbPktCQNqJGdyWsnM6ff8Dv74k/PAfF0+GZGx+gvifjwOqkn7PYLbu3nZ0egefa90wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969124; c=relaxed/simple;
-	bh=7Wg8YiT2kEFpC+UB7M62V8+RiaolnmozV8kRePzaDdE=;
+	s=arc-20240116; t=1718969166; c=relaxed/simple;
+	bh=V3B7lVlTltqqQwmYDTOmhjOvpdBEBQlP8Q5IvXhj3nE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRQ1xz/YP89WrVrsyzPSdqDD5oLYRmDRwDFc/LJHetyAhnkCkVlUwpL7yUSsdXmNcJUPZuoH7tq9g+5fc2upKAOdpyUVcNOvb89vt5n8XoVciIa2bLQPsNo3XhcqBlQPCIpWdWgfu9lqwykOEoH/DtKLKxv8aDWTH3ALmjLqqhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WyipYmHz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k6Hgy0By; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=duZ7Mh3d; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=psEfHHaC; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WyipYmHz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k6Hgy0By";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="duZ7Mh3d";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="psEfHHaC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DF16821AED;
-	Fri, 21 Jun 2024 11:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718969121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gtibqh13Q5Q7EF+VQJmr7nL2jQiH8PMdmBYn5dAvs+0=;
-	b=WyipYmHzsG1UAensuD//zh5tTO0fzOPs90KBZq0WUzubYGpdqbcbFRYZv2TeTotlZ6QFMx
-	p7zMk0h2BQ3WPIPSbj4lm9worX4DD9q7Oa/DRzBWrOguXx8KJRbVShidJgQEXg0Czy0k2O
-	coGFlAD9ukNAUcmlYvyR9/e4MPb8q3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718969121;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gtibqh13Q5Q7EF+VQJmr7nL2jQiH8PMdmBYn5dAvs+0=;
-	b=k6Hgy0BykMdAbsgfLELPDkuW6C8/vvVBNZkUwBjFkOEByT9IduZld8v4ZMRae6eWu2OI/e
-	rxNtVd3cGCHwvoCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718969119; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gtibqh13Q5Q7EF+VQJmr7nL2jQiH8PMdmBYn5dAvs+0=;
-	b=duZ7Mh3dWNJOGRI1wVpiqdQDtFTsVWVoFmpvtpJdAxFxL5JsZqpJSv0NumVzFG2RRKNPjN
-	MUPoH7TMVnllyAvu2vEIwtjkXGDC66yVXqJozbFyZVvm/BUcwUmFqY+FYxx6fCiO+E2URs
-	kh/WUNfKhRVUf0rRR9R9rvXL3Wrgo5A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718969119;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gtibqh13Q5Q7EF+VQJmr7nL2jQiH8PMdmBYn5dAvs+0=;
-	b=psEfHHaCiNdyW2oUvRKBMaH3zkWtCYLj+uWmsjhmO+9mJNQ8I+ZzbC3vWLbHNupKxyEAZ8
-	/8aRzplsLixJ83Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D461A13AAA;
-	Fri, 21 Jun 2024 11:25:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dMzRMx9jdWbWZwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 21 Jun 2024 11:25:19 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 81A10A087E; Fri, 21 Jun 2024 13:25:19 +0200 (CEST)
-Date: Fri, 21 Jun 2024 13:25:19 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, viro@zeniv.linux.org.uk,
-	jack@suse.cz, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] vfs: reorder checks in may_create_in_sticky
-Message-ID: <20240621112519.vp26sqmehxbihqgc@quack3>
-References: <20240620120359.151258-1-mjguzik@gmail.com>
- <20240621-affekt-denkzettel-3c115f68355a@brauner>
+	 Content-Type:Content-Disposition:In-Reply-To; b=It0JT3EkHvWx712VO8jjIyZ9pW2HJfiopbn0kfpsms9v928yZkDZkFuLZ7Yh2B5iuX/gtKQ3tdKa+VZSepLRnQiXhb6gEJEfLbXKT5FcOzY9wVPxL1DLWLnU34mwXgeH2kzFRoHRWbM1VU6SR8LqQFWu8UOSRJcZ4odN//wwl1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7E6ADA7;
+	Fri, 21 Jun 2024 04:26:27 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 178823F6A8;
+	Fri, 21 Jun 2024 04:26:01 -0700 (PDT)
+Date: Fri, 21 Jun 2024 12:25:59 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Zhouyi Zhou <zhouzhouyi@gmail.com>, linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	lance@osuosl.org
+Subject: Re: [PATCH V4] rcutorture: Add CFcommon.arch for the various arch's
+ need
+Message-ID: <ZnVjR0Z9MjHbdlx6@J2N7QTR9R3>
+References: <20240619230658.805185-1-zhouzhouyi@gmail.com>
+ <673d737a-cf17-4480-a9e2-7ff1668f4b44@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,136 +37,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240621-affekt-denkzettel-3c115f68355a@brauner>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,zeniv.linux.org.uk,suse.cz,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spam-Level: 
+In-Reply-To: <673d737a-cf17-4480-a9e2-7ff1668f4b44@paulmck-laptop>
 
-On Fri 21-06-24 09:45:03, Christian Brauner wrote:
-> On Thu, Jun 20, 2024 at 02:03:59PM GMT, Mateusz Guzik wrote:
-> > The routine is called for all directories on file creation and weirdly
-> > postpones the check if the dir is sticky to begin with. Instead it first
-> > checks fifos and regular files (in that order), while avoidably pulling
-> > globals.
-> > 
-> > No functional changes.
-> > 
-> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> > ---
-> >  fs/namei.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 63d1fb06da6b..b1600060ecfb 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -1246,9 +1246,9 @@ static int may_create_in_sticky(struct mnt_idmap *idmap,
-> >  	umode_t dir_mode = nd->dir_mode;
-> >  	vfsuid_t dir_vfsuid = nd->dir_vfsuid;
-> >  
-> > -	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
-> > -	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
-> > -	    likely(!(dir_mode & S_ISVTX)) ||
-> > +	if (likely(!(dir_mode & S_ISVTX)) ||
-> > +	    (S_ISREG(inode->i_mode) && !sysctl_protected_regular) ||
-> > +	    (S_ISFIFO(inode->i_mode) && !sysctl_protected_fifos) ||
-> >  	    vfsuid_eq(i_uid_into_vfsuid(idmap, inode), dir_vfsuid) ||
-> >  	    vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, inode), current_fsuid()))
-> >  		return 0;
+On Thu, Jun 20, 2024 at 10:57:27AM -0700, Paul E. McKenney wrote:
+> On Wed, Jun 19, 2024 at 11:06:58PM +0000, Zhouyi Zhou wrote:
+> > Add CFcommon.arch for the various arch's need for rcutorture.
+> >     
+> > In accordance with [1], [2] and [3], move x86 specific kernel option
+> > CONFIG_HYPERVISOR_GUEST to CFcommon.arch, also move kernel option
+> > CONFIG_KVM_GUEST which only exists on x86 & PowerPC to CFcommon.arch. 
+> >     
+> > [1] https://lore.kernel.org/all/20240427005626.1365935-1-zhouzhouyi@gmail.com/
+> > [2] https://lore.kernel.org/all/059d36ce-6453-42be-a31e-895abd35d590@paulmck-laptop/
+> > [3] https://lore.kernel.org/all/ZnBkHosMDhsh4H8g@J2N7QTR9R3/
+> >     
+> > Tested in x86_64 and PPC VM of Open Source Lab of Oregon State University.
+> >    
+> > Fixes: a6fda6dab93c ("rcutorture: Tweak kvm options")
+> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
 > 
-> I think we really need to unroll this unoly mess to make it more readable?
-
-I guess my neural network has adapted to these kind of things in the kernel :)
-
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 3e23fbb8b029..1dd2d328bae3 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1244,25 +1244,43 @@ static int may_create_in_sticky(struct mnt_idmap *idmap,
->                                 struct nameidata *nd, struct inode *const inode)
->  {
->         umode_t dir_mode = nd->dir_mode;
-> -       vfsuid_t dir_vfsuid = nd->dir_vfsuid;
-> +       vfsuid_t dir_vfsuid = nd->dir_vfsuid, i_vfsuid;
-> +       int ret;
-> +
-> +       if (likely(!(dir_mode & S_ISVTX)))
-> +               return 0;
-> +
-> +       if (S_ISREG(inode->i_mode) && !sysctl_protected_regular)
-> +               return 0;
-> +
-> +       if (S_ISFIFO(inode->i_mode) && !sysctl_protected_fifos)
-> +               return 0;
-> +
-> +       i_vfsuid = i_uid_into_vfsuid(idmap, inode);
-> +
-> +       if (vfsuid_eq(i_vfsuid, dir_vfsuid))
-> +               return 0;
+> Thank you!  I have reverted the earlier version to queue this one.
+> Please check below to make sure that my usual wordsmithing did not mess
+> things up.
 > 
-> -       if (likely(!(dir_mode & S_ISVTX)) ||
-> -           (S_ISREG(inode->i_mode) && !sysctl_protected_regular) ||
-> -           (S_ISFIFO(inode->i_mode) && !sysctl_protected_fifos) ||
-> -           vfsuid_eq(i_uid_into_vfsuid(idmap, inode), dir_vfsuid) ||
-> -           vfsuid_eq_kuid(i_uid_into_vfsuid(idmap, inode), current_fsuid()))
-> +       if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
->                 return 0;
+> Mark, any suggestions for any needed ARM CFcommon.arch files?  Or does
+> moving out the x86/PowerPC-specific Kconfig options take care of things
+> for you guys?  (Hey, I can dream, can't I?)
+
+I'm not aware of anything that we specifically need enabled, so pulling
+out those bits should be everything -- I've given my Ack below.
+
+> 							Thanx, Paul
 > 
-> -       if (likely(dir_mode & 0002) ||
-> -           (dir_mode & 0020 &&
-> -            ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
-> -             (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
-> -               const char *operation = S_ISFIFO(inode->i_mode) ?
-> -                                       "sticky_create_fifo" :
-> -                                       "sticky_create_regular";
-> -               audit_log_path_denied(AUDIT_ANOM_CREAT, operation);
-> +       if (likely(dir_mode & 0002)) {
-> +               audit_log_path_denied(AUDIT_ANOM_CREAT, "sticky_create");
->                 return -EACCES;
->         }
-> +
-> +       if (dir_mode & 0020) {
-> +               if (sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) {
-> +                       audit_log_path_denied(AUDIT_ANOM_CREAT, "sticky_create_fifo");
-> +                       return -EACCES;
-> +               }
-> +
-> +               if (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode)) {
-> +                       audit_log_path_denied(AUDIT_ANOM_CREAT, "sticky_create_regular");
-> +                       return -EACCES;
-> +               }
-> +       }
-> +
->         return 0;
->  }
+> ------------------------------------------------------------------------
+> 
+> commit 9d6767c47ce4de2ef817e47a5882748d8008ebe9
+> Author: Zhouyi Zhou <zhouzhouyi@gmail.com>
+> Date:   Wed Jun 19 23:06:58 2024 +0000
+> 
+>     rcutorture: Add CFcommon.arch for arch-specific Kconfig options
+>     
+>     Add CFcommon.arch for arch-specific Kconfig options.
+>     
+>     In accordance with [1], [2] and [3], move the x86-specific kernel option
+>     CONFIG_HYPERVISOR_GUEST to CFcommon.i686 and CFcommon.x86_64, and also
+>     move the x86/PowerPC CONFIG_KVM_GUEST Kconfig option to CFcommon.i686,
+>     CFcommon.x86_64, and CFcommon.ppc64le.
+>     
+>     The "arch" in CFcommon.arch is taken from the "uname -m" command.
+>     
+>     [1] https://lore.kernel.org/all/20240427005626.1365935-1-zhouzhouyi@gmail.com/
+>     [2] https://lore.kernel.org/all/059d36ce-6453-42be-a31e-895abd35d590@paulmck-laptop/
+>     [3] https://lore.kernel.org/all/ZnBkHosMDhsh4H8g@J2N7QTR9R3/
+>     
+>     Tested in x86_64 and PPC VM of Open Source Lab of Oregon State University.
+>     
+>     Fixes: a6fda6dab93c ("rcutorture: Tweak kvm options")
+>     Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+>     Suggested-by: Mark Rutland <mark.rutland@arm.com>
+>     Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-But this definitely looks nicer to read... Feel free to add:
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Mark.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+> 
+> diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> index b33cd87536899..ad79784e552d2 100755
+> --- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> +++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> @@ -68,6 +68,8 @@ config_override_param "--gdb options" KcList "$TORTURE_KCONFIG_GDB_ARG"
+>  config_override_param "--kasan options" KcList "$TORTURE_KCONFIG_KASAN_ARG"
+>  config_override_param "--kcsan options" KcList "$TORTURE_KCONFIG_KCSAN_ARG"
+>  config_override_param "--kconfig argument" KcList "$TORTURE_KCONFIG_ARG"
+> +config_override_param "$config_dir/CFcommon.$(uname -m)" KcList \
+> +		      "`cat $config_dir/CFcommon.$(uname -m) 2> /dev/null`"
+>  cp $T/KcList $resdir/ConfigFragment
+>  
+>  base_resdir=`echo $resdir | sed -e 's/\.[0-9]\+$//'`
+> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> index 0e92d85313aa7..217597e849052 100644
+> --- a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> @@ -1,7 +1,5 @@
+>  CONFIG_RCU_TORTURE_TEST=y
+>  CONFIG_PRINTK_TIME=y
+> -CONFIG_HYPERVISOR_GUEST=y
+>  CONFIG_PARAVIRT=y
+> -CONFIG_KVM_GUEST=y
+>  CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n
+>  CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n
+> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.i686 b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.i686
+> new file mode 100644
+> index 0000000000000..d8b2f555686fb
+> --- /dev/null
+> +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.i686
+> @@ -0,0 +1,2 @@
+> +CONFIG_HYPERVISOR_GUEST=y
+> +CONFIG_KVM_GUEST=y
+> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.ppc64le b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.ppc64le
+> new file mode 100644
+> index 0000000000000..133da04247ee0
+> --- /dev/null
+> +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.ppc64le
+> @@ -0,0 +1 @@
+> +CONFIG_KVM_GUEST=y
+> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.x86_64 b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.x86_64
+> new file mode 100644
+> index 0000000000000..d8b2f555686fb
+> --- /dev/null
+> +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.x86_64
+> @@ -0,0 +1,2 @@
+> +CONFIG_HYPERVISOR_GUEST=y
+> +CONFIG_KVM_GUEST=y
