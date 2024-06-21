@@ -1,228 +1,289 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2051.outbound.protection.outlook.com [40.107.92.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B151E48B;
-	Fri, 21 Jun 2024 17:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718990180; cv=none; b=E1rfyj8ynfCOTPZFgkJ98hWtzqBhKXu5CJQtAoxPVMwecEwE6rOD7urOKzVG5KT8ThhKofm4KKI4ezX/KRtNdGtnhLfHrXl0j+FPsFB/tVV7OzFjsKRQ7lXocQGlWUIbKb7i8Q8/O5g+wL5HClqlAYgxzuTwmCYMI/eHcl+Ktcg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718990180; c=relaxed/simple;
-	bh=1dINPmcDfd4B9O1+P613nZtnQngLi1KpoprMS1q4DjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+p2yYdSK4MU8A98A4hTlOI2u5ZOAUkXPa73p8Q4pUMuPqRs/YZ2w3NqGdg5DJKwY5xIcBI4Gpfi2zpCjH4exRCduUOCy39TUktZEwv1qZ6gvX/j9LeKCb5cY8zG14yduGs6+p4cWmoGXzSvAsJzax2Y+qhXl8C/od/T+vpPUFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMiWg0Pc; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BCC3EA66;
+	Fri, 21 Jun 2024 17:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718990236; cv=fail; b=mi7qB9h99Rqm+FkyoQmek5F8nuErFoRfT+Ud39+pkw08XI9gpIUEISDUDmHIP3swBKyQu0kbtBBa5XgzjVSM4wtoeoxSRIGNA0KjuZtiMEhi4xqrP7SyIzlF+YKodz9dor3rGcKxnsCJO7KY1+C5n23aBrnOWLXJMw16nhpZJj4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718990236; c=relaxed/simple;
+	bh=RiSwABWpjKjy1H042hg4qUuqy+dMWuTuNfzwrZyqNCA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cIc+tbxhTwsFtxNgIzregbJvLEz/SiCuEjF6iAusxyMCABVBLUGJepsHjeuqRz9GgfV2mVFol5CKEiVeB32POmQwGR+Pzn1Tx2wJa/zVxqEXfsWBhn25wQbakWTjqTEmKozRBN90XAzkB4CC/YKiyY1AOOlhFMag9vlClAQDhYA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kGT5EDvJ; arc=fail smtp.client-ip=40.107.92.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMiWg0Pc"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c7cd714268so1636575a91.1;
-        Fri, 21 Jun 2024 10:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718990178; x=1719594978; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m8z4gVvCzxeZlUeiVl+daSgFA3zxEp4uopDr2HvEl3M=;
-        b=YMiWg0PccrtaqFjm+R5OIbEjHFqdQGMnNfSK6kki4d8LFysaEE98VAlN0PlnhRlPII
-         aquyeKJU2pw9DOVU+EAdGmAi4Byb/v/LFSdjtzzpeUg1etoRh6dHXxmz2hpA5eOxbisL
-         TIkqHIOTZHSD7JAIuZvEbD+nq6u53n/rp8W+CcTh3rq8yjYRdJEAMj9+/FI/gk2eyrvm
-         /xjUUAwjHzg/JSAlI6qfA5zp7twrYR0K6xUgwCbeE+TqH90u8Zmp6hRiJ9VzOKBqRImG
-         1rMiq11lowWRn5E4aAmS7c3T/B0HGAjourDUVZZWGNNj63LKuoJtuNq+XKcGcI1fF8+F
-         r0Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718990178; x=1719594978;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m8z4gVvCzxeZlUeiVl+daSgFA3zxEp4uopDr2HvEl3M=;
-        b=giLd+vFxHz4CF82NqIo1R0gaIsOxioATEtE4iT5/oHTh/NPaFy59j6TTx6kRa8BYU+
-         dFvvI9/rUdlagnpQE3/wr35S7d3uQ2D6bA41xOUwG+NHcaHydR2aP6YXozR92ie1jiTJ
-         OfX/cBTwQm/SHO4O3iNjAkVup4kgCwvTaPOZPr12YDaY+wrlyIn2tBfHtI8pkg1UtSTY
-         ObmhweEimLsaxu5jYP5YkxnfumTY3aL4sf1BVKau5aQLJOgXpTJw6gvmqYchxBI2WnLx
-         ST46p5xce+fO3+Yz5NtLaTpV9FrrpSR/Nyj46xITjBHiN+wvu1HG2+Eh1+c4d18n5i3Z
-         WDTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMiodD4T46MEkki8H6G3p8aVv9w5OVNZFojUYaHsuqlz4Mrw76W0r2vofJ7zbIgEcM8ol0PiA/k7dtcG0+UgBVGmwYDcm8r8+8ewNY
-X-Gm-Message-State: AOJu0YwQCrBtyYJelWcuk+SOiv6FgjstaCjwbAmWYKe3Bidre/uTROtv
-	mqnuQJf1pxUUzeeDRMvesgOUmAmpspPks6vNVJgdVyjAJATEJ0mR
-X-Google-Smtp-Source: AGHT+IEYq+hNMBU7XQxy2OeQX6CVGBNXO66sdnB0/uq7gtUmZqi4Gs6ongNrb46YKZgMaIwgJ9jYRA==
-X-Received: by 2002:a17:90a:ea97:b0:2c6:f5bf:5175 with SMTP id 98e67ed59e1d1-2c83c200b30mr520197a91.10.1718990177516;
-        Fri, 21 Jun 2024 10:16:17 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:30ae:a791:227a:a35f])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c819a622fdsm1847939a91.6.2024.06.21.10.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 10:16:17 -0700 (PDT)
-Date: Fri, 21 Jun 2024 10:16:14 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Artur Rojek <contact@artur-rojek.eu>
-Cc: linux-input@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Input: adc-joystick - move axes data into the main
- structure
-Message-ID: <ZnW1XmYET39CwGsu@google.com>
-References: <ZmkrgTlxNwm_oHxv@google.com>
- <af45d1dd82b6abf5ec3633fdef5093d2@artur-rojek.eu>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kGT5EDvJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HPA8hAmLmYzPgsLCO2Qc//BXRut0HbXxxalGBL/BUgUz6pDtZHv/vAkcCgMyNrHbwbSQDMdvTeXCa/hDsXwJhfAHH3FOCWczT552mI63RAiUK+Ob09CteeOPobTOg0KDEwDN1eK3/12BIhg9jtum4T1tJ9vTtgs+6tEacHVh0UYx915OCeHIiU8RNlqm48Tmpb5Zo5rQur7bUBfDy70cIT8b5YxG6VpycGD2FjYGiOO9Sl1wSpt/+LiSzOnU0Gt/C1nm34wRQg74Afw9rajiESCmgCIJsap74Z37W7TaRAV3lgiElOwt8AJ5JQTz6WXXcRucBRjFXUWuhDkO8UQq+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1rfYDoRYg+u5KnxBUwwuzrc58vR6U9xc7UIiaDFABUU=;
+ b=gXrA/7E/gy8sq3wM9fl3c+VJOgz8v4yB4atkufSGg/u2qr+xoE8YNcyAZfHUw2/u5vmCjJ5/3uzjxH3y/cQBcjLhd9BmOkbzrsopbls9iEEnhKLsld5J47rw4WHjQbY4s/PU1yNwBkdUA9F3O7EiTnhlW3OjNtSnBmWNr3LCXfaI0ckR/td6BBzDOY/XCxH1hZxOAR/qqIMtwFEGL5DqxzCi6BQ1a40ZQYBSY1JOLhgG91cnZYVG11URj77JxxtEWcyZ+NNUFRyl45VLJOzC7+KIkjXrvwWD/3cJ9FgQh2YoOqRD8YY5+kf7/CXhvGZMu9dcrKTnrHWPss1eOQmn7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1rfYDoRYg+u5KnxBUwwuzrc58vR6U9xc7UIiaDFABUU=;
+ b=kGT5EDvJYMB2iZeFqfzGZgEXl/2ZA/BzmljNRKGkokX+M9SKkpv4SEqEnyiSlvVVO83uV0Bnn+Foom7kNnrxjW9+7iXSypUJtM0aY6KjFEm2H6/BYj/Hb3pV8CeIQndKwx8nRHjuaAhSJeMv7Qi8Ueo95hlY3k2OSQ3QBcRMN/0=
+Received: from SJ0PR13CA0047.namprd13.prod.outlook.com (2603:10b6:a03:2c2::22)
+ by SN7PR12MB6815.namprd12.prod.outlook.com (2603:10b6:806:265::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Fri, 21 Jun
+ 2024 17:17:05 +0000
+Received: from CO1PEPF000066EB.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c2:cafe::6c) by SJ0PR13CA0047.outlook.office365.com
+ (2603:10b6:a03:2c2::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33 via Frontend
+ Transport; Fri, 21 Jun 2024 17:17:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000066EB.mail.protection.outlook.com (10.167.249.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 17:17:04 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
+ 2024 12:17:03 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: <kvm@vger.kernel.org>
+CC: <linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<x86@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
+	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <pgonda@google.com>,
+	<ashish.kalra@amd.com>, <bp@alien8.de>, <pankaj.gupta@amd.com>,
+	<liam.merwick@oracle.com>, Brijesh Singh <brijesh.singh@amd.com>, "Alexey
+ Kardashevskiy" <aik@amd.com>
+Subject: [PATCH v1-revised 1/5] KVM: SEV: Provide support for SNP_GUEST_REQUEST NAE event
+Date: Fri, 21 Jun 2024 12:15:19 -0500
+Message-ID: <20240621171519.3180965-1-michael.roth@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240621134041.3170480-2-michael.roth@amd.com>
+References: <20240621134041.3170480-2-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af45d1dd82b6abf5ec3633fdef5093d2@artur-rojek.eu>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EB:EE_|SN7PR12MB6815:EE_
+X-MS-Office365-Filtering-Correlation-Id: b152ab44-9bac-45fb-530d-08dc9215f8d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|36860700010|1800799021|7416011|376011|82310400023;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zgb0PIVCLRPAV3mHxkMH7G0t2k97SoYoZ4gtFqaHztqcO0stiAak+trTrhZx?=
+ =?us-ascii?Q?WrCu/QVlJqsudDeemFoA+7QNK5H8UtH7bUsdQ4mgYeG5bSQcComB5ZV4zsLO?=
+ =?us-ascii?Q?HuRUCUlj5nLJjcqKY/HiahEPfKOUX+06LiBCYuM4ND4AmEMLNY83SYN0OZqt?=
+ =?us-ascii?Q?WtA0H3n9ei1utUKkB9jt7FRZyUiDESzVynV2UydFZQkTj6nGE3mQR0iDdOmD?=
+ =?us-ascii?Q?dSeyx+BwHuxJTvyusQ9fGF3LWicGppEjT9wGXgUB9ZNBjhANLShMFoLrEr8s?=
+ =?us-ascii?Q?WUK1iNETRVdVItdz2BPIwP/l+aPZ1g+HW3Q/3c6D+1ry1eohu8Bi/0RpNgIi?=
+ =?us-ascii?Q?8lb/7X2VjlgrmeySuFITIdGt2EwW8U7opvpM63XdTAKgsRdjuHQymfsJI3xP?=
+ =?us-ascii?Q?gIwLvvqARdZKd6MbSVBMU1C9E31dGmJKt2dS6ynleFAuPos9jTZQIMQEFnZ9?=
+ =?us-ascii?Q?nPvSIngkz7FFpqKUC4aL4kHnR/r8O5Uxn8A8+2YIX989Ul66rKAaRhLQlc5y?=
+ =?us-ascii?Q?8wGsNG5tGliUh/wD8ebOKQjsautvz4nG9RdDOJfCOJXHmXRzDYkGZGB4wmPE?=
+ =?us-ascii?Q?6oTR8Wk5X3oZZD4E1APt/IzTJBKjqHaYk+fPF5zIZWnOP07+q+U4zchcvcCK?=
+ =?us-ascii?Q?5Vl+/PgswDApJjWOd3rOOCtXTQrvydgT6Z+8RE95JJ5rAKE5HY1FJsLh5qLG?=
+ =?us-ascii?Q?S38H6xUsO/Z3vbJRcZSvNzM8YjKJKxnB44mdLpLCkVu3lw7ome9BfSRINR5H?=
+ =?us-ascii?Q?UWm0McbNCBML3rTCvfkrsajarUNGTj0YYOJ94OX+KOCiXMlcJPsaCOjGDgY1?=
+ =?us-ascii?Q?tDf/bpVTwu0Gh32gLZetaFQ2KP7b2zHmh4x1g+/3GjUnBla4ynuMlhAOXVbg?=
+ =?us-ascii?Q?0iXSrog1Ptorb0DTkmdoEJ5UzPJU8bFqgaHZAPv1YkrdTbjpX9sQ2SJbnzvX?=
+ =?us-ascii?Q?aUOkHygm9TyDbHFWnP9w0pp+f7+DFhgbfi1iJgK2xynXAcubLFNlq0gvWKb+?=
+ =?us-ascii?Q?E1EHmNqLKUKkhP296AYgaePwukjZdeWfJ6TMIwPbn5vBmYlWXeHmztgQHrt+?=
+ =?us-ascii?Q?mOnQpC8g3HkcLmRi42tdlberbuSFprKFTND1MIjJ/CP7WVgeBSFlb7EEEWaX?=
+ =?us-ascii?Q?oTt4jHK7bBVt9ITcZeVa99+lK/QTnsJZhdBikHHejPRRKS5suvnrCLYKxeEZ?=
+ =?us-ascii?Q?Fek67Sl6pIrBqMCy+DVMcMCXcoYAas82QDVU5+W2a0AjOSpcLtrP2UaL91gE?=
+ =?us-ascii?Q?A6DopVXgXY0gHVop08G+n6Ex0sPMeZ/w51td30RdcvjdkZpfYYpk/If6l3Rk?=
+ =?us-ascii?Q?KwrKgpBB3RRf5/KK6oTrZDUxBFS/jAzLglJZsk33XMHPOnR1zcL5Gs9T9sMT?=
+ =?us-ascii?Q?Q7d5hPpPNU3buHKFxWNBVpccfof5tv46Nb2hXkbSB30zhnp25A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(1800799021)(7416011)(376011)(82310400023);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 17:17:04.4682
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b152ab44-9bac-45fb-530d-08dc9215f8d4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EB.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6815
 
-Hi Artur,
+From: Brijesh Singh <brijesh.singh@amd.com>
 
-On Thu, Jun 20, 2024 at 11:13:27PM +0200, Artur Rojek wrote:
-> Hi Dmitry,
-> 
-> On 2024-06-12 07:00, Dmitry Torokhov wrote:
-> > There is no need to allocate axes information separately from the main
-> > joystick structure so let's fold the allocation and also drop members
-> > (such as range, flat and fuzz) that are only used during initialization
-> > of the device.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> > 
-> > v2:
-> > 
-> > - fixed issue with uninitialized "axes" in adc_joystick_set_axes()
-> >   pointed out by Dan Carpenter
-> > - fixed issue with checking wrong variable in adc_joystick_probe()
-> >   pointed out by Dan Carpenter
-> > 
-> >  drivers/input/joystick/adc-joystick.c | 113 ++++++++++++++------------
-> >  1 file changed, 60 insertions(+), 53 deletions(-)
-> > 
-> > diff --git a/drivers/input/joystick/adc-joystick.c
-> > b/drivers/input/joystick/adc-joystick.c
-> > index 916e78e4dc9f..1e30cbcd8c61 100644
-> > --- a/drivers/input/joystick/adc-joystick.c
-> > +++ b/drivers/input/joystick/adc-joystick.c
-> > @@ -15,19 +15,15 @@
-> > 
-> >  struct adc_joystick_axis {
-> >  	u32 code;
-> > -	s32 range[2];
-> > -	s32 fuzz;
-> > -	s32 flat;
-> >  	bool inverted;
-> >  };
-> > 
-> >  struct adc_joystick {
-> >  	struct input_dev *input;
-> >  	struct iio_cb_buffer *buffer;
-> > -	struct adc_joystick_axis *axes;
-> >  	struct iio_channel *chans;
-> > -	int num_chans;
-> > -	bool polled;
-> > +	unsigned int num_chans;
-> > +	struct adc_joystick_axis axes[] __counted_by(num_chans);
-> >  };
-> > 
-> >  static int adc_joystick_invert(struct input_dev *dev,
-> > @@ -135,9 +131,11 @@ static void adc_joystick_cleanup(void *data)
-> > 
-> >  static int adc_joystick_set_axes(struct device *dev, struct
-> > adc_joystick *joy)
-> >  {
-> > -	struct adc_joystick_axis *axes;
-> > +	struct adc_joystick_axis *axes = joy->axes;
-> >  	struct fwnode_handle *child;
-> > -	int num_axes, error, i;
-> > +	s32 range[2], fuzz, flat;
-> > +	unsigned int num_axes;
-> > +	int error, i;
-> > 
-> >  	num_axes = device_get_child_node_count(dev);
-> >  	if (!num_axes) {
-> > @@ -151,10 +149,6 @@ static int adc_joystick_set_axes(struct device
-> > *dev, struct adc_joystick *joy)
-> >  		return -EINVAL;
-> >  	}
-> > 
-> > -	axes = devm_kmalloc_array(dev, num_axes, sizeof(*axes), GFP_KERNEL);
-> > -	if (!axes)
-> > -		return -ENOMEM;
-> > -
-> >  	device_for_each_child_node(dev, child) {
-> >  		error = fwnode_property_read_u32(child, "reg", &i);
-> >  		if (error) {
-> > @@ -176,29 +170,25 @@ static int adc_joystick_set_axes(struct device
-> > *dev, struct adc_joystick *joy)
-> >  		}
-> > 
-> >  		error = fwnode_property_read_u32_array(child, "abs-range",
-> > -						       axes[i].range, 2);
-> > +						       range, 2);
-> >  		if (error) {
-> >  			dev_err(dev, "abs-range invalid or missing\n");
-> >  			goto err_fwnode_put;
-> >  		}
-> > 
-> > -		if (axes[i].range[0] > axes[i].range[1]) {
-> > +		if (range[0] > range[1]) {
-> >  			dev_dbg(dev, "abs-axis %d inverted\n", i);
-> >  			axes[i].inverted = true;
-> > -			swap(axes[i].range[0], axes[i].range[1]);
-> > +			swap(range[0], range[1]);
-> >  		}
-> > 
-> > -		fwnode_property_read_u32(child, "abs-fuzz", &axes[i].fuzz);
-> > -		fwnode_property_read_u32(child, "abs-flat", &axes[i].flat);
-> > +		fwnode_property_read_u32(child, "abs-fuzz", &fuzz);
-> > +		fwnode_property_read_u32(child, "abs-flat", &flat);
-> > 
-> >  		input_set_abs_params(joy->input, axes[i].code,
-> > -				     axes[i].range[0], axes[i].range[1],
-> > -				     axes[i].fuzz, axes[i].flat);
-> > -		input_set_capability(joy->input, EV_ABS, axes[i].code);
-> > +				     range[0], range[1], fuzz, flat);
-> >  	}
-> > 
-> > -	joy->axes = axes;
-> > -
-> >  	return 0;
-> > 
-> >  err_fwnode_put:
-> > @@ -206,23 +196,49 @@ static int adc_joystick_set_axes(struct device
-> > *dev, struct adc_joystick *joy)
-> >  	return error;
-> >  }
-> > 
-> > +
-> > +/*
-> > + * Count how many channels we got. NULL terminated.
-> > + * Do not check the storage size if using polling.
-> > + */
-> > +static int adc_joystick_count_channels(struct device *dev,
-> > +				       const struct iio_channel *chans,
-> > +				       bool polled,
-> > +				       unsigned int *num_chans)
-> 
-> You forgot to assign *num_chans = i; at the end of this function,
-> which leaves it uninitialized in the caller context.
+Version 2 of GHCB specification added support for the SNP Guest Request
+Message NAE event. The event allows for an SEV-SNP guest to make
+requests to the SEV-SNP firmware through hypervisor using the
+SNP_GUEST_REQUEST API defined in the SEV-SNP firmware specification.
 
-Indeed, and it needs to return 0 on success, not "i". Fixed.
+This is used by guests primarily to request attestation reports from
+firmware. There are other request types are available as well, but the
+specifics of what guest requests are being made are opaque to the
+hypervisor, which only serves as a proxy for the guest requests and
+firmware responses.
 
-> 
-> > +{
-> > +	int bits;
-> > +	int i;
-> > +
-> 
-> Let's move that "NULL terminated." comment here, since it's about the
-> for loop.
+Implement handling for these events.
 
-Done and pushed out.
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+Co-developed-by: Ashish Kalra <ashish.kalra@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+[mdr: ensure FW command failures are indicated to guest, drop extended
+ request handling to be re-written as separate patch, massage commit]
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Message-ID: <20240501085210.2213060-19-michael.roth@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/svm/sev.c         | 73 ++++++++++++++++++++++++++++++++++
+ include/uapi/linux/sev-guest.h |  9 +++++
+ 2 files changed, 82 insertions(+)
 
-> 
-> With the above comments addressed:
-> Acked-by: Artur Rojek <contact@artur-rojek.eu>
-
-Thanks.
-
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index df8818759698..d9921ea87a81 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -19,6 +19,7 @@
+ #include <linux/misc_cgroup.h>
+ #include <linux/processor.h>
+ #include <linux/trace_events.h>
++#include <uapi/linux/sev-guest.h>
+ 
+ #include <asm/pkru.h>
+ #include <asm/trapnr.h>
+@@ -3321,6 +3322,10 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
+ 		if (!sev_snp_guest(vcpu->kvm) || !kvm_ghcb_sw_scratch_is_valid(svm))
+ 			goto vmgexit_err;
+ 		break;
++	case SVM_VMGEXIT_GUEST_REQUEST:
++		if (!sev_snp_guest(vcpu->kvm))
++			goto vmgexit_err;
++		break;
+ 	default:
+ 		reason = GHCB_ERR_INVALID_EVENT;
+ 		goto vmgexit_err;
+@@ -3939,6 +3944,71 @@ static int sev_snp_ap_creation(struct vcpu_svm *svm)
+ 	return ret;
+ }
+ 
++static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_gpa)
++{
++	struct sev_data_snp_guest_request data = {0};
++	struct kvm *kvm = svm->vcpu.kvm;
++	kvm_pfn_t req_pfn, resp_pfn;
++	sev_ret_code fw_err = 0;
++	int ret;
++
++	if (!sev_snp_guest(kvm) || !PAGE_ALIGNED(req_gpa) || !PAGE_ALIGNED(resp_gpa))
++		return -EINVAL;
++
++	req_pfn = gfn_to_pfn(kvm, gpa_to_gfn(req_gpa));
++	if (is_error_noslot_pfn(req_pfn))
++		return -EINVAL;
++
++	resp_pfn = gfn_to_pfn(kvm, gpa_to_gfn(resp_gpa));
++	if (is_error_noslot_pfn(resp_pfn)) {
++		ret = EINVAL;
++		goto release_req;
++	}
++
++	if (rmp_make_private(resp_pfn, 0, PG_LEVEL_4K, 0, true)) {
++		ret = -EINVAL;
++		kvm_release_pfn_clean(resp_pfn);
++		goto release_req;
++	}
++
++	data.gctx_paddr = __psp_pa(to_kvm_sev_info(kvm)->snp_context);
++	data.req_paddr = __sme_set(req_pfn << PAGE_SHIFT);
++	data.res_paddr = __sme_set(resp_pfn << PAGE_SHIFT);
++
++	/* Firmware failures are propagated on to guest. */
++	ret = sev_issue_cmd(kvm, SEV_CMD_SNP_GUEST_REQUEST, &data, &fw_err);
++	if (ret)
++		pr_debug("%s: guest request failed, ret %d fw_err %d",
++			 __func__, ret, fw_err);
++
++	/*
++	 * If reclaim fails then there's a good chance the guest will no longer
++	 * be runnable so just let userspace terminate the guest. Don't try to
++	 * release the resp_pfn page reference in that case since it is no
++	 * longer usable for future allocations.
++	 */
++	if (snp_page_reclaim(kvm, resp_pfn)) {
++		ret = -EIO;
++		goto release_req;
++	}
++
++	/*
++	 * As per GHCB spec, firmware failures should be communicated back to
++	 * the guest via SW_EXITINFO2 rather than be treated as immediately
++	 * fatal.
++	 */
++	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb,
++				SNP_GUEST_ERR(ret ? SNP_GUEST_VMM_ERR_GENERIC : 0,
++					      fw_err));
++
++	ret = 1; /* resume guest */
++	kvm_release_pfn_dirty(resp_pfn);
++
++release_req:
++	kvm_release_pfn_clean(req_pfn);
++	return ret;
++}
++
+ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
+ {
+ 	struct vmcb_control_area *control = &svm->vmcb->control;
+@@ -4213,6 +4283,9 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
+ 
+ 		ret = 1;
+ 		break;
++	case SVM_VMGEXIT_GUEST_REQUEST:
++		ret = snp_handle_guest_req(svm, control->exit_info_1, control->exit_info_2);
++		break;
+ 	case SVM_VMGEXIT_UNSUPPORTED_EVENT:
+ 		vcpu_unimpl(vcpu,
+ 			    "vmgexit: unsupported event - exit_info_1=%#llx, exit_info_2=%#llx\n",
+diff --git a/include/uapi/linux/sev-guest.h b/include/uapi/linux/sev-guest.h
+index 154a87a1eca9..7bd78e258569 100644
+--- a/include/uapi/linux/sev-guest.h
++++ b/include/uapi/linux/sev-guest.h
+@@ -89,8 +89,17 @@ struct snp_ext_report_req {
+ #define SNP_GUEST_FW_ERR_MASK		GENMASK_ULL(31, 0)
+ #define SNP_GUEST_VMM_ERR_SHIFT		32
+ #define SNP_GUEST_VMM_ERR(x)		(((u64)x) << SNP_GUEST_VMM_ERR_SHIFT)
++#define SNP_GUEST_FW_ERR(x)		((x) & SNP_GUEST_FW_ERR_MASK)
++#define SNP_GUEST_ERR(vmm_err, fw_err)	(SNP_GUEST_VMM_ERR(vmm_err) | \
++					 SNP_GUEST_FW_ERR(fw_err))
+ 
++/*
++ * The GHCB spec only formally defines INVALID_LEN/BUSY VMM errors, but define
++ * a GENERIC error code such that it won't ever conflict with GHCB-defined
++ * errors if any get added in the future.
++ */
+ #define SNP_GUEST_VMM_ERR_INVALID_LEN	1
+ #define SNP_GUEST_VMM_ERR_BUSY		2
++#define SNP_GUEST_VMM_ERR_GENERIC	BIT(31)
+ 
+ #endif /* __UAPI_LINUX_SEV_GUEST_H_ */
 -- 
-Dmitry
+2.25.1
+
