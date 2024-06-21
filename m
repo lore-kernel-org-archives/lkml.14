@@ -1,79 +1,127 @@
-Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C37172BDD;
-	Fri, 21 Jun 2024 11:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E65816DEB9
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718970246; cv=none; b=QTZ+lOClmQ+Y0XvaU5qrX53CJhMjaQIFPujxCKMzL6MBrBOsVWjdHXPEmQzzEhevlxJU1J/uosZw69Npzb8XVjX+r4YrwJrF5ZbSMEWByJW0LiYioMjmmNrdkhbZqRDneXlCWi4rRhAHql1lZhI7XpDGHM3z9g54PrABOJehgUo=
+	t=1718970354; cv=none; b=JGImCYGdV1PZnRg+6+Lw+BW+GbP80sOkfZkunCC1mdcRLCZKU303bd8/TDlHPl2UK0NZl3bvnJIHl3Uo5an+1NHgh5oXCBzvbYkBaxti3K/I7neN9CoDTeclNo4M2QpSzhdbNOJbpGUrhFZLlm6/cxkGHcdRNXoB4eAzcy5V74k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718970246; c=relaxed/simple;
-	bh=5U/twcyxaoe03rH0mYq7ye7EeNzyf5UN/ga7u1iBxQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RLBIdU1hMioAsWa+jy8iIvZyrJZLT7d4E5co1A0c+DhlUvWBjNMyMi1QZzMbE+oBCzQiZ7uPnFPq0An+jPE/SL3R4hY31HaehPmCGFBhotwIKwXKSFRR1tDoPH9Kgc1uA9OX3vMbUPg8/TxClebmlPyxd3fhG8G6a0+CCYE35B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
-Received: from [78.30.37.63] (port=45678 helo=gnumonks.org)
-	by ganesha.gnumonks.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	s=arc-20240116; t=1718970354; c=relaxed/simple;
+	bh=uWTRWW7B95x3LGJfYoqRdq663wzUpFIq+873sqtjHjA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=A3T6GRLK/0UTb5Z/lDNp7F3Mv8vv16vcFl69w4pTMXUB6BSGZzYQHrDlsDo+BjSsg1ApcDSiLv+rRiObYEzBGcdPf9EAjzdzyFHzZbfLLU2sOACJeeoP9Zv85uIfO0Ufgt6lpv1PoMHGMug/ojpr38e5Gqek51cFUTAjBLPDWX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sKchx-00089F-JS; Fri, 21 Jun 2024 13:45:33 +0200
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
-	(envelope-from <pablo@gnumonks.org>)
-	id 1sKcgC-000OiP-Nz; Fri, 21 Jun 2024 13:43:47 +0200
-Date: Fri, 21 Jun 2024 13:43:42 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Jianguo Wu <wujianguo106@163.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: fix undefined reference to
- 'netfilter_lwtunnel_*' when CONFIG_SYSCTL=n
-Message-ID: <ZnVnbv9sBtmflZj-@calendula>
-References: <24ac3144-c6bc-4fd9-b592-d1a88505e65a@163.com>
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sKchu-003vp1-IG; Fri, 21 Jun 2024 13:45:30 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sKchu-0008vo-1Y;
+	Fri, 21 Jun 2024 13:45:30 +0200
+Message-ID: <bd0e85f42ef74f6f927020cbee6879351d1c3e9e.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] mmc: sdhci-of-ma35d1: Add Novoton MA35D1 SDHCI
+ driver
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Shan-Chun Hung <shanchun1218@gmail.com>, ulf.hansson@linaro.org, 
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ adrian.hunter@intel.com,  pbrobinson@gmail.com, serghox@gmail.com,
+ mcgrof@kernel.org,  prabhakar.mahadev-lad.rj@bp.renesas.com,
+ forbidden405@outlook.com,  tmaimon77@gmail.com, andy.shevchenko@gmail.com, 
+ linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ychuang3@nuvoton.com, schung@nuvoton.com
+Date: Fri, 21 Jun 2024 13:45:30 +0200
+In-Reply-To: <20240619054641.277062-3-shanchun1218@gmail.com>
+References: <20240619054641.277062-1-shanchun1218@gmail.com>
+	 <20240619054641.277062-3-shanchun1218@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <24ac3144-c6bc-4fd9-b592-d1a88505e65a@163.com>
-X-Spam-Score: -1.9 (-)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Cc'ing netfilter-devel
-
-On Fri, Jun 21, 2024 at 10:41:13AM +0800, Jianguo Wu wrote:
-> From: Jianguo Wu <wujianguo@chinatelecom.cn>
-> 
-> if CONFIG_SYSFS is not enabled in config, we get the below compile error,
-> 
-> All errors (new ones prefixed by >>):
-> 
->    csky-linux-ld: net/netfilter/core.o: in function `netfilter_init':
->    core.c:(.init.text+0x42): undefined reference to `netfilter_lwtunnel_init'
-> >> csky-linux-ld: core.c:(.init.text+0x56): undefined reference to `netfilter_lwtunnel_fini'
-> >> csky-linux-ld: core.c:(.init.text+0x70): undefined reference to `netfilter_lwtunnel_init'
->    csky-linux-ld: core.c:(.init.text+0x78): undefined reference to `netfilter_lwtunnel_fini'
-> 
-> Fixes: a2225e0250c5 ("netfilter: move the sysctl nf_hooks_lwtunnel into the netfilter core")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406210511.8vbByYj3-lkp@intel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406210520.6HmrUaA2-lkp@intel.com/
-> Signed-off-by: Jianguo Wu <wujianguo@chinatelecom.cn>
+On Mi, 2024-06-19 at 13:46 +0800, Shan-Chun Hung wrote:
+> This adds the SDHCI driver for the MA35 series SoC. It is based upon the
+> SDHCI interface, but requires some extra initialization.
+>=20
+> Signed-off-by: schung <schung@nuvoton.com>
 > ---
->  net/netfilter/nf_hooks_lwtunnel.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/net/netfilter/nf_hooks_lwtunnel.c b/net/netfilter/nf_hooks_lwtunnel.c
-> index 7cdb59bb4459..d8ebebc9775d 100644
-> --- a/net/netfilter/nf_hooks_lwtunnel.c
-> +++ b/net/netfilter/nf_hooks_lwtunnel.c
-> @@ -117,4 +117,7 @@ void netfilter_lwtunnel_fini(void)
->  {
->  	unregister_pernet_subsys(&nf_lwtunnel_net_ops);
->  }
-> +#else
-> +int __init netfilter_lwtunnel_init(void) { return 0; }
-> +void netfilter_lwtunnel_fini(void) {}
->  #endif /* CONFIG_SYSCTL */
-> -- 
-> 1.8.3.1
-> 
+>  drivers/mmc/host/Kconfig           |  13 ++
+>  drivers/mmc/host/Makefile          |   1 +
+>  drivers/mmc/host/sdhci-of-ma35d1.c | 297 +++++++++++++++++++++++++++++
+>  3 files changed, 311 insertions(+)
+>  create mode 100644 drivers/mmc/host/sdhci-of-ma35d1.c
+>=20
+[...]
+> diff --git a/drivers/mmc/host/sdhci-of-ma35d1.c b/drivers/mmc/host/sdhci-=
+of-ma35d1.c
+> new file mode 100644
+> index 000000000000..7714a5ab463d
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-of-ma35d1.c
+> @@ -0,0 +1,297 @@
+[...]
+> +static int ma35_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct sdhci_pltfm_host *pltfm_host;
+> +	struct sdhci_host *host;
+> +	struct ma35_priv *priv;
+> +	int err;
+> +	u32 extra, ctl;
+> +
+> +	host =3D sdhci_pltfm_init(pdev, &sdhci_ma35_pdata,
+> +				sizeof(struct ma35_priv));
+> +	if (IS_ERR(host))
+> +		return PTR_ERR(host);
+> +
+> +	/*
+> +	 * extra adma table cnt for cross 128M boundary handling.
+> +	 */
+> +	extra =3D DIV_ROUND_UP_ULL(dma_get_required_mask(&pdev->dev), SZ_128M);
+> +	if (extra > SDHCI_MAX_SEGS)
+> +		extra =3D SDHCI_MAX_SEGS;
+> +	host->adma_table_cnt +=3D extra;
+> +	pltfm_host =3D sdhci_priv(host);
+> +	priv =3D sdhci_pltfm_priv(pltfm_host);
+> +
+> +	if (dev->of_node) {
+> +		pltfm_host->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +		if (IS_ERR(pltfm_host->clk)) {
+> +			err =3D PTR_ERR(pltfm_host->clk);
+> +			dev_err(&pdev->dev, "failed to get clk: %d\n", err);
+> +			goto free_pltfm;
+> +		}
+> +		err =3D clk_prepare_enable(pltfm_host->clk);
+> +		if (err)
+> +			goto free_pltfm;
+> +	}
+> +
+> +	err =3D mmc_of_parse(host->mmc);
+> +	if (err)
+> +		goto err_clk;
+> +
+> +	priv->rst =3D devm_reset_control_get(&pdev->dev, NULL);
+
+Please use devm_reset_control_get_exclusive() instead.
+
+regards
+Philipp
