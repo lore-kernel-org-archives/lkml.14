@@ -1,132 +1,152 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6898155305;
-	Fri, 21 Jun 2024 13:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A07915444C;
+	Fri, 21 Jun 2024 13:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718975576; cv=none; b=qz/vXySd0rZTXvPzGj0DK0+HtDlPoJ/dgl+UnLVlCn2QCc9Iu0KZiTPKgeK/Qk7Xss6Y6D4/NEtrTX5Ob8ay3p/0Of+o/D1qOWh8znrPZZgicSf1RtDs7ObCcpz3mhTHxsn/RI9alhPmImZ3xopClkN7in5e95vjJv/H54Ef2rU=
+	t=1718975616; cv=none; b=h3zPKd3KZYl4ESdqwUZVgMRwoLq4C5UVxAULJSlTB+9dj7UHYlfSFa3ImHL0696yXyD+TRLE3lNY2+pCeBdPizKVeXB9XNUWsEZf8CM9rE96O8vfVwAUYv1hfA652fn/t+i79w9na9ZM7R6Ivff+hVeoFvbw0x1vcGE9W1eSuGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718975576; c=relaxed/simple;
-	bh=9AkTqDX/NnbWAxlw4BdQztKH+iaRpYlS0M/PcBbMIMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mczwGJZQnQ8udfPru3uXE/6ncMy50eFidHmd7TkdkUwM0/ib7G7rt/hFkyMbI3k5Mpf+pZIoUlqsQt8J57/4CApqHEF1YjsX5faVhxmGVrfdcgG9dR7tO7pJitYnp+hrAWcGZsuhU2Hgt8IZd36ptFltvf1bJpEMk/60woEuAZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1F56DA7;
-	Fri, 21 Jun 2024 06:13:18 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C68C53F73B;
-	Fri, 21 Jun 2024 06:12:51 -0700 (PDT)
-Date: Fri, 21 Jun 2024 14:12:49 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com,
-	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-Subject: Re: [PATCH V18 6/9] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Message-ID: <ZnV8UWIolF2ZI_9y@J2N7QTR9R3.cambridge.arm.com>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
- <20240613061731.3109448-7-anshuman.khandual@arm.com>
- <ZmxgZqxXWnRqwbDC@J2N7QTR9R3.cambridge.arm.com>
- <774a63cb-21e6-4ef2-b2ab-0ff8937523b2@arm.com>
- <ZnAEVlVZFR3DLHHb@J2N7QTR9R3>
- <ccfc2b96-acf3-4511-920a-2633305f940d@arm.com>
+	s=arc-20240116; t=1718975616; c=relaxed/simple;
+	bh=WQsisy3R83VOdcBN5ISga9KLt1DhdQDaVlt49Nw2AZE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=aSefwhVd0rNGhuinUqMUrUFSLtArN477fDcYsSZNJnFLOCltZsZ7CEfiJt7Ywhx+FoeS9pg6gtz4Tp3FMKBHmWid6C7I8CP9DpbaVvRH13ZfpjU6euIcElKU2UwRJ/4aZjP2S9WM/OwsgRD+D0DTbAN3UEsAjKuEJSb2QAB3x6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=WweC6dPU; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="WweC6dPU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=b29xoMgpaZYss8C1W6FlfyXZaKncrRZNVZcstAF/Ncg=; b=WweC6dPUYHi8DEVygI3BSkBQmQ
+	Ae7doyUsfR9TzH6E1g77VsjyTNxEYnc0nDKgESK1+avBGUYJz9RRo3yxsk2lZBbrVyp5ZzAHLTOOt
+	WC5dLrl4TLmItYcrp1oQ3shB3jZCmoo45ZyT2C+BXSqoSraTgs1fuWJh1+X4u/MqYoVNtmrnRW0VP
+	ANCq0ruG86bxmleHhW6s4BqhtRhwomsYZAMdRM3osz/Y/TTjoTJn3cHn2q4QuvQ0SqrBH3aibM7NP
+	oEnLSzpI7FlrXZAU1za2Ixd48OJ2PGCA/0b4SncUWvLFM4p6L1ixyc8a+7TDnYyQraZGgaZNkxP3P
+	DxMpAong==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sKdg7-0003iB-W7; Fri, 21 Jun 2024 14:47:44 +0200
+Received: from [178.197.248.18] (helo=linux.home)
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sKdg7-000Kcg-0M;
+	Fri, 21 Jun 2024 14:47:42 +0200
+Subject: Re: [RFC net-next 1/9] skb: introduce gro_disabled bit
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Yan Zhai <yan@cloudflare.com>, netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Willem de Bruijn <willemb@google.com>, Simon Horman <horms@kernel.org>,
+ Florian Westphal <fw@strlen.de>, Mina Almasry <almasrymina@google.com>,
+ Abhishek Chauhan <quic_abchauha@quicinc.com>,
+ David Howells <dhowells@redhat.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ David Ahern <dsahern@kernel.org>, Richard Gobert <richardbgobert@gmail.com>,
+ Antoine Tenart <atenart@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ Soheil Hassas Yeganeh <soheil@google.com>,
+ Pavel Begunkov <asml.silence@gmail.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <cover.1718919473.git.yan@cloudflare.com>
+ <b8c183a24285c2ab30c51622f4f9eff8f7a4752f.1718919473.git.yan@cloudflare.com>
+ <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <44ac34f6-c78e-16dd-14da-15d729fecb5b@iogearbox.net>
+Date: Fri, 21 Jun 2024 14:47:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ccfc2b96-acf3-4511-920a-2633305f940d@arm.com>
+In-Reply-To: <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27313/Fri Jun 21 10:28:08 2024)
 
-On Thu, Jun 20, 2024 at 09:52:05AM +0530, Anshuman Khandual wrote:
-> On 6/17/24 15:09, Mark Rutland wrote:
-> > On Mon, Jun 17, 2024 at 12:15:15PM +0530, Anshuman Khandual wrote:
-> >> On 6/14/24 20:53, Mark Rutland wrote:
-> >>> On Thu, Jun 13, 2024 at 11:47:28AM +0530, Anshuman Khandual wrote:
-> >>>> Disable the BRBE before we enter the guest, saving the status and enable it
-> >>>> back once we get out of the guest. This avoids capturing branch records in
-> >>>> the guest kernel or userspace, which would be confusing the host samples.
-> >>>
-> >>> It'd be good to explain why we need to do this for nVHE, but not for
-> >>> VHE. I *think* that you're relying on BRBCR_EL2.EL0HBRE being ignored
-> >>> when HCR_EL2.TGE == 0, and BRBCR_EL1.E{1,0}BRE being initialized to 0
-> >>> out-of-reset.
-> >>
-> >> That's right, there is no possibility for the host and guest BRBE config
-> >> to overlap.
-> >>
-> >>> What should a user do if they *want* samples from a guest? Is that
-> >>
-> >> That is not supported currently. But in order to enable capturing guest
-> >> branch samples from inside the host - BRBCR_EL2 configs need to migrate
-> >> into BRBCR_EL1 when the guest runs on the cpu.
-> >>
-> >>> possible to do on other architectures, or do is that always prevented?
-> >>
-> >> I am not sure about other architectures, but for now this falls within
-> >> guest support which might be looked into later. But is not the proposed
-> >> patch complete in itself without any further guest support ?
-> > 
-> > My concern here is ABI rather than actual support.
-> I am trying to understand how this is an ABI problem. Because perf debug
-> tools could be described as - a best effort based sample collection. All
-> samples that could be collected for a given perf_event_attr request might
-> change if the underlying assumptions change later on. AFAICT semantics of
-> expectations for a given attribute request is not a hard ABI requirement.
-
-The ABI requirements are certainly unclear, but people get *very* upset
-when behaviour changes, so I think we need to have some certainty that
-we're not backing ourselves into a corner where we have to make
-substantial behavioural changes later.
-
-Surely we can figure out how this works on other architectures today?
-
-There's a substantial argument for aligning with x86, so can we figure
-out under which conditions x86 would provide guest samples? e.g. is that
-always, never, or when certain attr options are configured?
-
-> > It's not clear to me how this works across architectures, and we should
-> > have some idea of how this would work (e.g. if we're going to require
-> > new ABI or not), so that we don't have to break ABI later on.
+On 6/21/24 2:15 PM, Willem de Bruijn wrote:
+> Yan Zhai wrote:
+>> Software GRO is currently controlled by a single switch, i.e.
+>>
+>>    ethtool -K dev gro on|off
+>>
+>> However, this is not always desired. When GRO is enabled, even if the
+>> kernel cannot GRO certain traffic, it has to run through the GRO receive
+>> handlers with no benefit.
+>>
+>> There are also scenarios that turning off GRO is a requirement. For
+>> example, our production environment has a scenario that a TC egress hook
+>> may add multiple encapsulation headers to forwarded skbs for load
+>> balancing and isolation purpose. The encapsulation is implemented via
+>> BPF. But the problem arises then: there is no way to properly offload a
+>> double-encapsulated packet, since skb only has network_header and
+>> inner_network_header to track one layer of encapsulation, but not two.
+>> On the other hand, not all the traffic through this device needs double
+>> encapsulation. But we have to turn off GRO completely for any ingress
+>> device as a result.
+>>
+>> Introduce a bit on skb so that GRO engine can be notified to skip GRO on
+>> this skb, rather than having to be 0-or-1 for all traffic.
+>>
+>> Signed-off-by: Yan Zhai <yan@cloudflare.com>
+>> ---
+>>   include/linux/netdevice.h |  9 +++++++--
+>>   include/linux/skbuff.h    | 10 ++++++++++
+>>   net/Kconfig               | 10 ++++++++++
+>>   net/core/gro.c            |  2 +-
+>>   net/core/gro_cells.c      |  2 +-
+>>   net/core/skbuff.c         |  4 ++++
+>>   6 files changed, 33 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+>> index c83b390191d4..2ca0870b1221 100644
+>> --- a/include/linux/netdevice.h
+>> +++ b/include/linux/netdevice.h
+>> @@ -2415,11 +2415,16 @@ struct net_device {
+>>   	((dev)->devlink_port = (port));				\
+>>   })
+>>   
+>> -static inline bool netif_elide_gro(const struct net_device *dev)
+>> +static inline bool netif_elide_gro(const struct sk_buff *skb)
+>>   {
+>> -	if (!(dev->features & NETIF_F_GRO) || dev->xdp_prog)
+>> +	if (!(skb->dev->features & NETIF_F_GRO) || skb->dev->xdp_prog)
+>>   		return true;
+>> +
+>> +#ifdef CONFIG_SKB_GRO_CONTROL
+>> +	return skb->gro_disabled;
+>> +#else
+>>   	return false;
+>> +#endif
 > 
-> BRBE HW does not have any guest filter in itself, unless BRBCR_EL2 gets
-> migrated across BRBCR_EL1 during guest transition, guest branch records
-> would not be captured.
+> Yet more branches in the hot path.
 > 
-> event->attr.exclude_guest = 0 could have been denied during armpmu_add()
-> for preventing events with guest branch sample requests being scheduled
-> on the PMU. But it turns out to be not a very reliable parameter in that
-> sense as well.
+> Compile time configurability does not help, as that will be
+> enabled by distros.
 > 
-> event->attr.exclude_guest = 0 remains clear even for a standard session.
-> 
-> ./perf record -e instructions:k -j any_call,save_type ls
-> 
-> perf tools will need some changes in order to avoid the above scenarios
-> as a default behaviour which would not be desirable as well.
+> For a fairly niche use case. Where functionality of GRO already
+> works. So just a performance for a very rare case at the cost of a
+> regression in the common case. A small regression perhaps, but death
+> by a thousand cuts.
 
-If we're liable to need perf tool changes, then we *definitely* need to
-understand this better.
-
-> These semantics could be worked out later on when BRBE guest support gets
-> included, and the current proposal would not prevent any potential future
-> changes in this regard.
-
-That depends entirely on what changes we'd expect would be necessary in
-the perf tools. We need to be certain that we don't enable some use case
-that subseuqent changes break.
-
-Mark.
+Mentioning it here b/c it perhaps fits in this context, longer time ago
+there was the idea mentioned to have BPF operating as GRO engine which
+might also help to reduce attack surface by only having to handle packets
+of interest for the concrete production use case. Perhaps here meta data
+buffer could be used to pass a notification from XDP to exit early w/o
+aggregation.
