@@ -1,110 +1,203 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6172916DEDA;
-	Fri, 21 Jun 2024 09:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79BC12D1EB;
+	Fri, 21 Jun 2024 09:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718961929; cv=none; b=omHHxkZg1KdYM8RUKoDH++htGt8G7Jj2QKI/IIdpADgm7ynseRp9mGBE3oCHXqizrrryEAMc0z9sY78SNMN4Nu7MIiOib0/3ps+NPK5E702LsSfgnFzXX0ocntXXF6MVFFYmOf4FX2+NpeAbgOu4IZg53wXsUVd70Li351R0Yaw=
+	t=1718961981; cv=none; b=EXM7KeszyZtsVNMTqwB8v50Ump4hzK/mM8uoAqXL/sLyIZg6ZA0xHlD/XOroN4jswXVHjeyQPirhpY1ys8ngheRkm/QOV/PXINypj4V/b2ENN7AChoa7ZXuLUqHNoSLDLo4M8GzQNLHxp2mlPLCJkHgJD59GjAn5Bp0ojejmZzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718961929; c=relaxed/simple;
-	bh=SIATBHynFPT4f+uIOXa3YInhK69wX4k++ZVS8wWjv5w=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=e40MiSyvzOUV550BpwAqvrSa1AxMQjauG9sUibUG0KgNdrYhwKfCUQJxndgU1MyQBxkmlWxePnmDxSwummaaHepEcpXY5m9ZJkMwftG76E89H45gZeGUML5VRssje0hvTcM5gDXcfhR6e9tpLYiu9rY+bmyXkZUJ3kEablX7uhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=LPT4HTFD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fLokdyMT; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="LPT4HTFD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fLokdyMT"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 5D05C1140227;
-	Fri, 21 Jun 2024 05:25:25 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Fri, 21 Jun 2024 05:25:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1718961925; x=1719048325; bh=/yr39+Xu06
-	R6chuqcUrLF7krLetllE+7yriX4oNGtLE=; b=LPT4HTFDM/hI9/ZaAoTIzxwKRe
-	BZ9OBVXZI9UM1+VsXe9NkrCSjZW8XShs5d9s/cMSrZzxye7doyOyU13IjxhBTXwz
-	UeNp7QF/tLzETXxXG0ki1Z7e6qk3irOZQPuUWpYZblME8lFM03XEL9+xG10Y7NvH
-	t+Lv46QtarTCzsKwIzohso1wdo1d6zvk60L8lNgbTj8zrJizW1eEfUfQ+GDRqbYY
-	BJSGH+HjEj1ChfIP3Fztuvui3BSQBgZuD2o4Dk4tF1pfN/EzMOWy6p96j8lY6RwU
-	eqLMQdndw+m8frnELWO4aXlvEVBJV/kpyqUxFeyMmgm7qNoN/izyEQyDX6TA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1718961925; x=1719048325; bh=/yr39+Xu06R6chuqcUrLF7krLetl
-	lE+7yriX4oNGtLE=; b=fLokdyMThmaAdWVgXue8YQXjDhjjoNuzHpgVthyohscc
-	AcTuggRWKhc1tNwo43gcr1IBF8VeYfhzzJNBaVEDY4icLLYUBfn/myxlXssRxxFT
-	HMmA6Hdq4m+qh7sl66yy2G8it6F0VIwKwwup1VHmee/lqitWqXUXwkjL5/KjPuEB
-	n8+AcyLEJkmhda60lpxpF/TxNoylg1IQoXTGmypKDXMdJuv/VSrTMkUBwD10U/d1
-	1aQXl5i90prbEx/txpHaOhHSwivmvPyfMiwfQJ1mzfxE+1AvEl1UE5/PnY++z5jk
-	WNSEqYkGQAPo+7b/S0QAP5BQb/F7b9KVkxP/k7E1yQ==
-X-ME-Sender: <xms:BEd1ZpbmyDA35KtpPFayUxkoDb7NjX2PwggrG-51xE1E10Ioin5_eQ>
-    <xme:BEd1ZgYO8zJmCBVW0Nf3O3ztoyzXO4RXIy_jg857Xw8A7asiim67Ex2iJXfe2HBYM
-    lVK9iyfiOrv67yduMc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgedgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpedutdelgfdvgeekueeuteevffelfedukeeitedugfdvtdeutdetjeduudeuvdeg
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:BEd1Zr-0_ihlzj1MovG12SIBC5Yrh1fjvFIU9206enxYuv5p-cHmHQ>
-    <xmx:BEd1Znr7zdFasBTh1Q9SJAOUnFYjxaxHARyQQYRKz8mJJG8n_fdiBw>
-    <xmx:BEd1ZkpzX0HSN_WvoTrsMKc73wG1JkSq2HaXcvu6uUeZRpnXXoL1Fg>
-    <xmx:BEd1ZtQuV4ycGbVDHAzK3euhlZdXqggAtrKGCmVIjKuyMnVYRynGnA>
-    <xmx:BUd1ZpCzBzEOjcSfKk_3ZBTqxxJbgm-eFpzPIQ6fU-J6P-IyHh77CXHl>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A549B2340082; Fri, 21 Jun 2024 05:25:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	s=arc-20240116; t=1718961981; c=relaxed/simple;
+	bh=iGyxiKTVbLVFE4tjDiXsZQhh4d9kiqe6XaPjBhqKVJo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CSRv7/nHGYYpb3BE5gu261cAMK2zmz5W4ZLHd95SbaKpY8mUzV2gUvjn94f5nk+NR4ziHFBTpQOQLllPEA7rq0uyEfgONpAbLt6/SEi4VEaBEG0BuxmO/katxTPPQCUsXEsLuUjGYAqARoSXVKqEhej/gN9qZs0QoHMuMwd2HXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W5Bn01hZ9z6GDNF;
+	Fri, 21 Jun 2024 17:26:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FF9B140B2A;
+	Fri, 21 Jun 2024 17:26:16 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 21 Jun
+ 2024 10:26:16 +0100
+Date: Fri, 21 Jun 2024 10:26:15 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>, Shiju
+ Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>, "Ard
+ Biesheuvel" <ardb@kernel.org>, Dave Jiang <dave.jiang@intel.com>, Ira Weiny
+	<ira.weiny@intel.com>, <linux-edac@vger.kernel.org>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/3] efi/cper: Add a new helper function to print
+ bitmasks
+Message-ID: <20240621102615.00004ce7@Huawei.com>
+In-Reply-To: <20240621102036.0000493e@Huawei.com>
+References: <cover.1718906288.git.mchehab+huawei@kernel.org>
+	<fcc8a699c9497b788ac99aa0d57dedd629ac4945.1718906288.git.mchehab+huawei@kernel.org>
+	<20240621102036.0000493e@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <e47d7929-0977-4f2f-a894-632779ba992e@app.fastmail.com>
-In-Reply-To: <a18c8b3a-90b0-47a7-aff6-a289ecddc2c0@doubly.so>
-References: <20240620082223.20178-1-dev@doubly.so>
- <20240620082223.20178-2-dev@doubly.so>
- <ede8505f-bcf6-403e-bda2-6848cd4ff4c7@app.fastmail.com>
- <a18c8b3a-90b0-47a7-aff6-a289ecddc2c0@doubly.so>
-Date: Fri, 21 Jun 2024 21:25:04 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Devin Bayer" <dev@doubly.so>, corentin.chary@gmail.com
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: support camera disable LED
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Fri, 21 Jun 2024 10:20:36 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-On Fri, 21 Jun 2024, at 7:50 PM, Devin Bayer wrote:
+> On Thu, 20 Jun 2024 20:01:45 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 > 
-> Thanks for the review, Luke.
-> 
-> On 20/06/2024 23.40, Luke Jones wrote:
-> >>   
-> >> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
-> >> + asus->camera_led.name = "platform::camera";
+> > Sometimes it is desired to produce a single log line for errors.
+> > Add a new helper function for such purpose.
 > > 
-> > What do other devices label their camera LED as? The one I could find appears to use `<vendor>::camera`. So maybe `asus::camera` would be better? This also keeps in line with `asus::kbd_backlight`.
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  drivers/firmware/efi/cper.c | 59 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/cper.h        |  3 ++
+> >  2 files changed, 62 insertions(+)
+> > 
+> > diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> > index 7d2cdd9e2227..9bf27af3e870 100644
+> > --- a/drivers/firmware/efi/cper.c
+> > +++ b/drivers/firmware/efi/cper.c
+> > @@ -106,6 +106,65 @@ void cper_print_bits(const char *pfx, unsigned int bits,
+> >  		printk("%s\n", buf);
+> >  }
+> >  
+> > +/*  
 > 
-> I reasoned it would be better to keep the name generic is so out of the 
-> box desktops could toggle the camera and the LED when KEY_CAMERA is 
-> pressed, just like with micmute and mute.
+> It's exported and in a header used by other code, so why not make
+> this kernel-doc? /**
+> 
+> > + * cper_bits_to_str - return a string for set bits
+> > + * @buf: buffer to store the output string
+> > + * @buf_size: size of the output string buffer
+> > + * @bits: bit mask
+> > + * @strs: string array, indexed by bit position
+> > + * @strs_size: size of the string array: @strs  
+> 
+> If it had been kernel doc, W=1 would have told you mask is
+> missing.
+> 
+> Passing a 0 for mask seems probably not worth while.
+> If all bits of the unsigned int are set then people can pass ~0
+> 
+> Or make this cper_bits_to_str_masked() and have
+> cper_bits_to_str() that doesn't take a mask.
+> 
 
-This might be true if one relies solely on the filesystem path, which in any case is a bad move and likely to cause the moon to drift away from earth eventually. Most Linux software will use the udev libraries available to filter devices according to any amount of criteria (and if they are not they *really should* - udev is pretty powerful and freeing.
+Mask definitely needs docs as I misunderstood it :(
+Also needs to be contiguous I think which is also a bit unusual.
 
-I've tried finding prior art again and there's just not a lot to go on. ".name = "platform" shows very little except a few micmute labels. "::cam" gets one entry. So my guess is this is still a very new thing or it's not important enough to be used..
+> If you do that, some simplifications can be easily made.
+> 
+> 
+> 
+> > + *
+> > + * add to @buf the bitmask in hexadecimal. Then, for each set bit in @bits,
+> > + * add the corresponding string in @strs to @buf.
+> > + */
+> > +char *cper_bits_to_str(char *buf, int buf_size, unsigned int bits,  
+> 
+> Perhaps make bits an unsigned long as then you can use the
+> for_each_set_bit() etc.
+> 
+> > +		       const char * const strs[], unsigned int strs_size,
+> > +		       unsigned int mask)
+> > +{
+> > +	int i, size, first_bit;
+> > +	int len = buf_size;
+> > +	const char *start;
+> > +	char *str = buf;
+> > +
+> > +	if (strs_size < 16)
+> > +		size = snprintf(str, len, "0x%02x: ", bits);
+> > +	if (strs_size < 32)
+> > +		size = snprintf(str, len, "0x%04x: ", bits);
+> > +
+> > +	len -= size;
+> > +	str += size;
+> > +
+> > +	start = str;
+> > +
+> > +	if (mask) {
+> > +		first_bit = ffs(mask) - 1;
+> > +		if (bits & ~mask) {
+> > +			size = strscpy(str, "reserved bit(s)", len);
+> > +			len -= size;
+> > +			str += size;
+> > +		}
+> > +	} else {
+> > +		first_bit = 0;
+> > +	}  
+> Might be worth
+> 
+> 	bits = bits & mask;
+> 
+> Obviously setting bits that aren't in the mask is
+> odd though so maybe a warning print if that happens?
+> > +  
+> 
+> 
+> for_each_bit_set(i, &bits, strs_size) {
 
-In any case looking at the rest of the possible LED entries, mostly those following keyboard, the last part of the name being sensible is what counts the most (e.g "scrolllock", "camera"). This might be setting a precedent, and if so I'd be happy with "::camera" in the LED class conveying expectations well enough.
+Ah. I'd missed the offset and gotten function name wrong.
+
+i = first_bit
+for_each_set_bit_from(i, &bits, strs_size + first_bit)
+
+and look up based on i - first_bit
+
+
+> 	...
+> 
+> }
+> 
+> > +	for (i = 0; i < strs_size; i++) {
+> > +		if (!(bits & (1U << (i + first_bit))))
+> > +			continue;
+> > +
+> > +		if (*start && len > 0) {
+> > +			*str = '|';
+> > +			len--;
+> > +			str++;
+> > +		}
+> > +
+> > +		size = strscpy(str, strs[i], len);
+> > +		len -= size;
+> > +		str += size;
+> > +	}
+> > +	return buf;
+> > +}
+> > +EXPORT_SYMBOL_GPL(cper_bits_to_str);
+> > +
+> >  static const char * const proc_type_strs[] = {
+> >  	"IA32/X64",
+> >  	"IA64",
+> > diff --git a/include/linux/cper.h b/include/linux/cper.h
+> > index 265b0f8fc0b3..856e8f00a7fb 100644
+> > --- a/include/linux/cper.h
+> > +++ b/include/linux/cper.h
+> > @@ -584,6 +584,9 @@ const char *cper_mem_err_type_str(unsigned int);
+> >  const char *cper_mem_err_status_str(u64 status);
+> >  void cper_print_bits(const char *prefix, unsigned int bits,
+> >  		     const char * const strs[], unsigned int strs_size);
+> > +char *cper_bits_to_str(char *buf, int buf_size, unsigned int bits,
+> > +		       const char * const strs[], unsigned int strs_size,
+> > +		       unsigned int mask);
+> >  void cper_mem_err_pack(const struct cper_sec_mem_err *,
+> >  		       struct cper_mem_err_compact *);
+> >  const char *cper_mem_err_unpack(struct trace_seq *,  
+> 
+
