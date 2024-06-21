@@ -1,242 +1,129 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F380031A83
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63DE2940F;
+	Fri, 21 Jun 2024 14:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718981534; cv=none; b=c/MzOfZmq0hv3UvSQ44NcUvjZC8JrNc+uZbHaouDFrty9glORZg5rDxP7uVnacDuanhtQDePuCAhExq6bJrd+u33rf8HQUFzftSSxDDGp4yCD8VNv7R+sA+0XqdAd+VBkAC+3+g1aCGYQ30UpSs5ZjzR9I186hA2hKh2QqsXtZ4=
+	t=1718981614; cv=none; b=DsJFxBsNo1hL9KJQJc76aZH7wUfin0DGCrr5qKrxcsvAO1o6AxhG8520F9o104HxegnEhRbhpCGpkocHchSSUHFijFfr3zRlGQNLKiSLcZ+b2VDpvlklAU28ECLOZOncVsu5C+T7bUEhtCdJPKp2pggozavXkeTxWKE1hP2hESw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718981534; c=relaxed/simple;
-	bh=JOzDKRfRyAYrmFpbQG5/eALwnos6jjvCy2uXdxhP3Zc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QmXmF8qWvrHhkgLSrKC+nKr9Ku0vNqJfIxHG/nuKBM3ro5tMDpz1vUvhqLoiyvpnuBIsO8/LHbZhnFvu9auEjXMnGR1TaGjXqB2W8EUOxLvcGsrfCSaiEFx7cjYmK92yr6ARdIRZ6h925jetLo/1vFYRkV8Ye+5Na8WQo8FLfUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=dpk/+NH1; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1718981614; c=relaxed/simple;
+	bh=Mx6dgVm7zvxMqJKaAF6ajtL8qQ23avXiryh6wLs6fkQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=C+isUQUwQBaEiwZnka85kHcQBwxFqzx58IYQqWH0cHGxJ9KSGhN03MlDnN27c4Tv+DD1uX0rI2B30nUPxj7hdMTTj7DyBdH5MLpfb9gvYm2W6XkM1lufE44ch9QFNh0mYHWI4yZf9r015qjZGy/wYitp2+bhtZ7O7mvcsQH0sPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=h8fRXHvb; arc=none smtp.client-ip=203.205.221.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="dpk/+NH1"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-36226e98370so1274622f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1718981531; x=1719586331; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dY/74FpLsXRkkOHvC1PKdD9HRHfMWtcqzzHZbgsRq/Y=;
-        b=dpk/+NH11/yM8DZ4kDdoUYLka+FEpKjtI/QcCBqEqfMrcKvCOHiwtoKLRh9oWdYVuy
-         GPzQSnhDg8igm/W3SWt9uooRkxdAyLxHzxW4Wal9PilhCL/kO98x/8jvhTKfaQPKeMAQ
-         8bdJ4bd32Qf/o+yqiCUSLs9O6Envr6Dz18bJ3VjkAr1p9uZPRJgRPfWfT4Htwx9MXy9w
-         c/PklNDyNv/6zVg5c74BPu248LhjXRnrNPKKomrdvIpybh+Fe9Y4H7dDDJe6N3ZhFDMe
-         DSO2u3RVu2Jtu4i2t7ivVfgpsRKUixdF8cNrN8Z30ImO1TkSXJX6LYa68mAf+z3oPZYF
-         OXwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718981531; x=1719586331;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dY/74FpLsXRkkOHvC1PKdD9HRHfMWtcqzzHZbgsRq/Y=;
-        b=IMZmimrw8ZumuA5tFmXDnnWqAgvtCu19uxKxLyXUnEt7UKh6Sy4oxy5SDbejwOtgIr
-         j3SG4ZZTXblaCEgESktfJh1Qxx2LVFFafWh/hLs6oXYlK1z0UY3qPmb7qt9NxBLc4Wth
-         ssq3W5gT2fzfFXpfOfNeSLSfh4AN9Uy2KNCEOipci76bh+Cb4+mYWw+7o1h9gGSqaoVo
-         fG4ondnvUYTkfJu2LY+EdwJci98KNJ54OJH/iR9rY0E93UhSk1ghQp+dV0VnrqtLI8Cw
-         etXuTff3OdMfgR4wwl9vEQK2IO6HNsZSTvdBgVLgeJQJScn4Tr3RRM+H4OKSXG9+8RDS
-         z4Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCWwUy/z9a3V5iQnWi7RtTPoPbvbCuKTVpw5FOEeAPDD0BI6G3mXhkmwlT2SPmbT5gH+XlTP4Pif4sY3e8mGWurk8rZrTPJ5du62sRm/
-X-Gm-Message-State: AOJu0YztfHRDcku6Wud1ia3tIyw1PJTrOkFR6u/ICYY5nQthpWBH0aEw
-	5VYpkpTR47y9wUgNi5fXfTJUx7CUtJUqaIzY1d1Nh2nQupidGUswH6Wi5Qq3GvE=
-X-Google-Smtp-Source: AGHT+IFDyWfIf5nnHBOBzgfJ+unGgV6WY1zA4ehKaX0HVcYnLUrxaelLe8EK6XWmwNeLgZdxyEg9Og==
-X-Received: by 2002:a05:6000:154c:b0:365:f52f:cd30 with SMTP id ffacd0b85a97d-365f52fce6bmr2382767f8f.53.1718981530889;
-        Fri, 21 Jun 2024 07:52:10 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3664178f5f7sm1896905f8f.19.2024.06.21.07.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 07:52:10 -0700 (PDT)
-Date: Fri, 21 Jun 2024 16:52:09 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, 
-	Conor Dooley <conor.dooley@microchip.com>, Anup Patel <apatel@ventanamicro.com>, 
-	Yong-Xuan Wang <yongxuan.wang@sifive.com>, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, greentime.hu@sifive.com, 
-	vincent.chen@sifive.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] dt-bindings: riscv: Add Svade and Svadu Entries
-Message-ID: <20240621-a56e848050ebbf1f7394e51f@orel>
-References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
- <20240605121512.32083-3-yongxuan.wang@sifive.com>
- <20240605-atrium-neuron-c2512b34d3da@spud>
- <CAK9=C2XH7-RdVpojX8GNW-WFTyChW=sTOWs8_kHgsjiFYwzg+g@mail.gmail.com>
- <40a7d568-3855-48fb-a73c-339e1790f12f@ghiti.fr>
- <20240621-viewless-mural-f5992a247992@wendy>
- <edcd3957-0720-4ab4-bdda-58752304a53a@ghiti.fr>
- <20240621-9bf9365533a2f8f97cbf1f5e@orel>
- <20240621-glutton-platonic-2ec41021b81b@spud>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="h8fRXHvb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1718981602; bh=yrEHKGjDKt8ixCB7ppttczBEgFxHHq0Bjh5xMq23SLE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=h8fRXHvbKAvwuLMZYEC8QRRk+GBavV7d+6PQ4avFLiLEIxRBZsca5r50P0KgR0FFj
+	 hhIB2ErA4uQ8SePoDBN9bXKE+sidR0TBdd45BjIlxZAEPy05kb9N5+7mYZG1pgAEn5
+	 pN/nO7lOzhx0fu6Cvt0OuKy6prjQvD4kJXwcMNso=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id B41950D4; Fri, 21 Jun 2024 22:45:01 +0800
+X-QQ-mid: xmsmtpt1718981101txvlk5cbc
+Message-ID: <tencent_8AF62ECF8CADE7DB86DA52DE864289872E06@qq.com>
+X-QQ-XMAILINFO: M0PjjqbLT90wOnsn7kdF1t9MzzqNu2WTDONPqYYLQbXtuBedKivw1ZqAkENd5X
+	 XL1Nigu1IxNQ/K1yyDQMsuNnKrvKJmQlbFAE/QfW1dfjigcP7lXe3sM/vT+4IKeA1Pmk4WmAurYo
+	 cEkTJUxUUWknMs7BqNUycEuY8f4n7qerwMCsNbftsGwXX4YxE17XH9iWJpFG+mcW2/KqB+y47h7/
+	 g+raCYeh/P+vgrtllZ/FhVyqeC2qDYdTJ0rUURO2Sj7x4dTni4Hl6Vc0PkQr0ae8NFXC/U0jHzjD
+	 Q5d7fvyHN+ON6MO+rZZAcxkI5OSlrIK14BmgSFgxqVP7bgML48hgCSPw7roFodi54TXNgVANgY13
+	 mYH6SlLQKcE9c6mnTRD8m3OhBWyLrHkUPrNU+/LFY5O4aTpoiLmRwex59kWLw6f8FIGupvALyYgh
+	 uCJ81Gt+qCTmDv7PskDBWkimUIHH+tQ6hRqL8j9gqpEzsOxpPxYX6bDkAyls+uCqLVLg/AuzadVo
+	 sN/cb9wMEKZyuhpmHYsnYm4Jsv5newTAj5J1TSE5MJjjj01id9cSOJwKITEG1Etax5/WvEfkOsv1
+	 81R7nEQAGkZyRzEjWGWqaq0/oIWghUYj8w3KdtNbUnnkUPfuI/31S1oxI2VpC+d+WlWznYmK46Te
+	 MaV+3L/CkRCEqHZhHuOTjA3GEEjfkzevbIIYysK0iOev+IOwqG8ZcmkEARxDzileZ+KSWg8kT6kp
+	 xy4zgeZ0DZa19ZRtxij9cwaHq3fvNvNdHige0c08nlvSEarWARdJD4JE1n0lSwDBhmeiu9MALVzh
+	 OTbcF7OHAIZgzbUt7fm9k0mZ/G0hKkSr2ExDbUhGDweMo+kn33CaklfkvYNyF/qhylNjGNBvgkPD
+	 THjjLOFG/T10SC4b0df9w3AbEnAxm/MvS149qynTourv5jU+pdSiGDqXLN4zFu79BgMhrWJW7K4z
+	 KbHl0AMR0=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: luiz.dentz@gmail.com
+Cc: eadavis@qq.com,
+	johan.hedberg@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	marcel@holtmann.org,
+	syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] bluetooth/l2cap: sync sock recv cb and release
+Date: Fri, 21 Jun 2024 22:45:02 +0800
+X-OQ-MSGID: <20240621144501.2680696-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CABBYNZLu-wAu6cdyDVim=bP+0Ld-P=YvENO=fa6r=rdY4UqukQ@mail.gmail.com>
+References: <CABBYNZLu-wAu6cdyDVim=bP+0Ld-P=YvENO=fa6r=rdY4UqukQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240621-glutton-platonic-2ec41021b81b@spud>
 
-On Fri, Jun 21, 2024 at 03:04:47PM GMT, Conor Dooley wrote:
-> On Fri, Jun 21, 2024 at 03:15:10PM +0200, Andrew Jones wrote:
-> > On Fri, Jun 21, 2024 at 02:42:15PM GMT, Alexandre Ghiti wrote:
-> > > 
-> > > On 21/06/2024 12:17, Conor Dooley wrote:
-> > > > On Fri, Jun 21, 2024 at 10:37:21AM +0200, Alexandre Ghiti wrote:
-> > > > > On 20/06/2024 08:25, Anup Patel wrote:
-> > > > > > On Wed, Jun 5, 2024 at 10:25 PM Conor Dooley <conor@kernel.org> wrote:
-> > > > > > > On Wed, Jun 05, 2024 at 08:15:08PM +0800, Yong-Xuan Wang wrote:
-> > > > > > > > Add entries for the Svade and Svadu extensions to the riscv,isa-extensions
-> > > > > > > > property.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-> > > > > > > > ---
-> > > > > > > >    .../devicetree/bindings/riscv/extensions.yaml | 30 +++++++++++++++++++
-> > > > > > > >    1 file changed, 30 insertions(+)
-> > > > > > > > 
-> > > > > > > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > > > > > > index 468c646247aa..1e30988826b9 100644
-> > > > > > > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > > > > > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > > > > > > @@ -153,6 +153,36 @@ properties:
-> > > > > > > >                ratified at commit 3f9ed34 ("Add ability to manually trigger
-> > > > > > > >                workflow. (#2)") of riscv-time-compare.
-> > > > > > > > 
-> > > > > > > > +        - const: svade
-> > > > > > > > +          description: |
-> > > > > > > > +            The standard Svade supervisor-level extension for raising page-fault
-> > > > > > > > +            exceptions when PTE A/D bits need be set as ratified in the 20240213
-> > > > > > > > +            version of the privileged ISA specification.
-> > > > > > > > +
-> > > > > > > > +            Both Svade and Svadu extensions control the hardware behavior when
-> > > > > > > > +            the PTE A/D bits need to be set. The default behavior for the four
-> > > > > > > > +            possible combinations of these extensions in the device tree are:
-> > > > > > > > +            1. Neither svade nor svadu in DT: default to svade.
-> > > > > > > I think this needs to be expanded on, as to why nothing means svade.
-> > > > > > Actually if both Svade and Svadu are not present in DT then
-> > > > > > it is left to the platform and OpenSBI does nothing.
-> > > > > > 
-> > > > > > > > +            2. Only svade in DT: use svade.
-> > > > > > > That's a statement of the obvious, right?
-> > > > > > > 
-> > > > > > > > +            3. Only svadu in DT: use svadu.
-> > > > > > > This is not relevant for Svade.
-> > > > > > > 
-> > > > > > > > +            4. Both svade and svadu in DT: default to svade (Linux can switch to
-> > > > > > > > +               svadu once the SBI FWFT extension is available).
-> > > > > > > "The privilege level to which this devicetree has been provided can switch to
-> > > > > > > Svadu if the SBI FWFT extension is available".
-> > > > > > > 
-> > > > > > > > +        - const: svadu
-> > > > > > > > +          description: |
-> > > > > > > > +            The standard Svadu supervisor-level extension for hardware updating
-> > > > > > > > +            of PTE A/D bits as ratified at commit c1abccf ("Merge pull request
-> > > > > > > > +            #25 from ved-rivos/ratified") of riscv-svadu.
-> > > > > > > > +
-> > > > > > > > +            Both Svade and Svadu extensions control the hardware behavior when
-> > > > > > > > +            the PTE A/D bits need to be set. The default behavior for the four
-> > > > > > > > +            possible combinations of these extensions in the device tree are:
-> > > > > > > @Anup/Drew/Alex, are we missing some wording in here about it only being
-> > > > > > > valid to have Svadu in isolation if the provider of the devicetree has
-> > > > > > > actually turned on Svadu? The binding says "the default behaviour", but
-> > > > > > > it is not the "default" behaviour, the behaviour is a must AFAICT. If
-> > > > > > > you set Svadu in isolation, you /must/ have turned it on. If you set
-> > > > > > > Svadu and Svade, you must have Svadu turned off?
-> > > > > > Yes, the wording should be more of requirement style using
-> > > > > > must or may.
-> > > > > > 
-> > > > > > How about this ?
-> > > > > > 1) Both Svade and Svadu not present in DT => Supervisor may
-> > > > > >       assume Svade to be present and enabled or it can discover
-> > > > > >       based on mvendorid, marchid, and mimpid.
-> > > > > > 2) Only Svade present in DT => Supervisor must assume Svade
-> > > > > >       to be always enabled. (Obvious)
-> > > > > > 3) Only Svadu present in DT => Supervisor must assume Svadu
-> > > > > >       to be always enabled. (Obvious)
-> > > > > 
-> > > > > I agree with all of that, but the problem is how can we guarantee that
-> > > > > openSBI actually enabled svadu?
-> > > > Conflation of an SBI implementation and OpenSBI aside, if the devicetree
-> > > > property is defined to mean that "the supervisor must assume svadu to be
-> > > > always enabled", then either it is, or the firmware's description of the
-> > > > hardware is broken and it's not the supervisor's problem any more. It's
-> > > > not the kernel's job to validate that the devicetree matches the
-> > > > hardware.
-> > > > 
-> > > > > This is not the case for now.
-> > > > What "is not the case for now"? My understanding was that, at the
-> > > > moment, nothing happens with Svadu in OpenSBI. In turn, this means that
-> > > > there should be no devicetrees containing Svadu (per this binding's
-> > > > description) and therefore no problem?
-> > > 
-> > > 
-> > > What prevents a dtb to be passed with svadu to an old version of opensbi
-> > > which does not support the enablement of svadu? The svadu extension will end
-> > > up being present in the kernel but not enabled right?
+Hi Luiz Augusto von Dentz,
+
+On Thu, 20 Jun 2024 12:53:19 -0400, Luiz Augusto von Dentz wrote:
+> >         release_sock(sk);
+> > +       l2cap_chan_unlock(chan);
+> > +       l2cap_chan_put(chan);
+> >
+> >         return err;
+> >  }
+> > --
+> > 2.43.0
 > 
-> If you'll allow me use of my high horse, relying on undocumented
-> (or deprecated I suppose in this case) devicetree properties is always
-> going to leave people exposed to issues like this. If the property isn't
-> documented, then you shouldn't be passing it to the kernel.
+> Looks like this was never really tested properly:
 > 
-> > I understand the concern; old SBI implementations will leave svadu in the
-> > DT but not actually enable it. Then, since svade may not be in the DT if
-> > the platform doesn't support it or it was left out on purpose, Linux will
-> > only see svadu and get unexpected exceptions. This is something we could
-> > force easily with QEMU and an SBI implementation which doesn't do anything
-> > for svadu. I hope vendors of real platforms, which typically provide their
-> > own firmware and DTs, would get this right, though, especially since Linux
-> > should fail fast in their testing when they get it wrong.
+> ============================================
+> WARNING: possible recursive locking detected
+> 6.10.0-rc3-g4029dba6b6f1 #6823 Not tainted
+> --------------------------------------------
+> kworker/u5:0/35 is trying to acquire lock:
+> ffff888002ec2510 (&chan->lock#2/1){+.+.}-{3:3}, at:
+> l2cap_sock_recv_cb+0x44/0x1e0
 > 
-> I'll admit, I wasn't really thinking here about something like QEMU that
-> puts extensions into the dtb before their exact meanings are decided
-> upon. I almost only ever think about "real" systems, and in those cases
-> I would expect that if you can update the representation of the hardware
-> provided to (or by the firmware to Linux) with new properties, then updating
-> the firmware itself should be possible.
+> but task is already holding lock:
+> ffff888002ec2510 (&chan->lock#2/1){+.+.}-{3:3}, at:
+> l2cap_get_chan_by_scid+0xaf/0xd0
 > 
-> Does QEMU have the this exact problem at the moment? I know it puts
-> Svadu in the max cpu, but does it enable the behaviour by default, even
-> without the SBI implementation asking for it?
-
-Yes, because QEMU has done hardware A/D updating since it first started
-supporting riscv, which means it did svadu when neither svadu nor svade
-were in the DT. The "fix" for that was to ensure we have svadu and !svade
-by default, which means we've perfectly realized Alexandre's concern...
-We should be able to change the named cpu types that don't support svadu
-to only have svade in their DTs, since that would actually be fixing those
-cpu types, but we'll need to discuss how to proceed with the generic cpu
-types like 'max'.
-
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
 > 
-> Sorta on a related note, I'm completely going head-in-sand here for ACPI,
-> cos I have no idea how that is being dealt with - other than that Linux
-> assumes that all ACPI properties have the same meaning as the DT ones. I
-> don't really think that that is sustainable, but it is what we are doing
-> at present. Maybe I should put that in boot.rst or in acpi.rst?
-
-Yes, I think that's what we're doing right now and documenting that
-assumption is a good idea.
-
+>        CPU0
+>        ----
+>   lock(&chan->lock#2/1);
+>   lock(&chan->lock#2/1);
 > 
-> Also on the ACPI side of things, and I am going an uber devil's advocate
-> here, the version of the spec that we documented as defining our parsing
-> rules never mentions svade or svadu, so is it even valid to use them on
-> ACPI systems?
+>  *** DEADLOCK ***
+> 
+>  May be due to missing lock nesting notation
+> 
+> 3 locks held by kworker/u5:0/35:
+>  #0: ffff888002b8a940 ((wq_completion)hci0#2){+.+.}-{0:0}, at:
+> process_one_work+0x750/0x930
+>  #1: ffff888002c67dd0 ((work_completion)(&hdev->rx_work)){+.+.}-{0:0},
+> at: process_one_work+0x44e/0x930
+>  #2: ffff888002ec2510 (&chan->lock#2/1){+.+.}-{3:3}, at:
+> l2cap_get_chan_by_scid+0xaf/0xd0
+> 
+> l2cap_sock_recv_cb is assumed to be called with the chan_lock held so
+> perhaps we can just do:
+> 
+>        sk = chan->data;
+>        if (!sk)
+>                return -ENXIO;
 
-I think that ISA string format chapter implies that any extension name
-that is in the specified format can be parsed, which implies it can be
-interpreted as an available extension, even if it's not mentioned in
-the spec. But maybe I'm just pushing a big foot into a small shoe since
-I don't really want to try and figure out how to get that chapter
-changed...
+If the release occurs after this judgment, the same problem will still occur. 
+Recv and release must be synchronized using locks, which can be solved by
+adding new lock.
 
-Thanks,
-drew
+Can you provide a reproduction program for the AA lock mentioned above?
+
+--
+Edward
+
