@@ -1,94 +1,114 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5090E16C69B;
-	Fri, 21 Jun 2024 07:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CCA14D449;
+	Fri, 21 Jun 2024 07:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718955453; cv=none; b=McKbmEPPGVMzcCOFjoNP++is3XoyNMa98+S2J8Dx769dTilajbP3KTOzL6PyTdnqFY3om7Q3MyiRerQExqgCsPlQ7UQiQ4tah7yZB27AEbb7RjjkjGMAgLPTbtE6mSXBQ+bgHLr87OYx1dSVLd3cz1Ckp+FTvm9fcCitaajfrlA=
+	t=1718955558; cv=none; b=lYMujcPX+C0vPZ0Yh86NeYLyDRs/Tg5QZoiznFZ4Ar9Av9/NOBjvu6eU3OrPkaLduerGsno9mvpqOHRpu1MC3gf7q5URsA/nwDAu0h1d99R54A5itmipEDH1TAvvqAk0pE03J6OfKpXfQCfSHaqdMcuH3JmYt6Sdoi3rTVxXTtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718955453; c=relaxed/simple;
-	bh=0VIfHxW0+liwplhCqw+Yef8Z9T89WBewbGYmD95IuEA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=blq/WaOvqnuCzzpus1q2Fw0MKBOFIE9qTnSndKxmsU89O9GRJN49sJjoS6kR+0ty2WDIDcecmcv1DRDjW6USWHSIhRjOGmylGEiSfvzAyNEu4kaPvocNT+1JMt6unK8kl10jTvcI49E5B/4O/FOUgsdO4pei/vW3YmdsqTQ0I/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=fnTQCzNf; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="fnTQCzNf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718955413; x=1719560213; i=markus.elfring@web.de;
-	bh=0VIfHxW0+liwplhCqw+Yef8Z9T89WBewbGYmD95IuEA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=fnTQCzNfN4syCaJ7IOp6CJ2NlYXkBkYgxVqF+3tO+5iHHKvRJOMyDYBhf6qI0v3k
-	 Eu0lY3/cj6KFd46Vq3xTBzQVq+EAj+4+CgMLczqkZLHBB/Vf+gR78Ol3yUgXqKWSE
-	 MY3kpN4FFWk5k3js0VtySFrqaD2X+pohcqGGxFzxowNP7rW8bB9/yxVABXzDGBfA+
-	 9+PCDOBbwU3cIDYobGs3M38kz6QBPkD5LtwPJFjgmVatwHpHZOmHDBgACrWUeUvNr
-	 FPoZQrIh/2aTHChxPTeSSEFGFNL3KMNeYLbKPV0w1CySxh0pgHXXSbXRLOelRpXIv
-	 rpltTyrATTwWaE7xtg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MHmq2-1s6nBb1npW-0085aA; Fri, 21
- Jun 2024 09:36:53 +0200
-Message-ID: <41f6ef6f-91c1-4b85-b049-efd25e403b73@web.de>
-Date: Fri, 21 Jun 2024 09:36:50 +0200
+	s=arc-20240116; t=1718955558; c=relaxed/simple;
+	bh=fny5qmN5Zof2ylj9b+oRQj/l3DHFhHzzbmYllH4d2Fs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cZlOzO9w/ctDuly4VoceXS4BGOTeJMl3Yk1UpZHKk7jCp3gZ99O+9knYNmaA1jKYQUw9YFebCGY3+bfReW9ahKB0KUimANSssPtdeF4nrQs4L4U43n+sKpWn3z6rJjzsVgM26lrFDy6/oiwj9GHLtECU82cGGlPzyuUEYBmNeWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dx2OkhLnVmlcsIAA--.23038S3;
+	Fri, 21 Jun 2024 15:39:13 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPMcfLnVmIjgrAA--.39322S3;
+	Fri, 21 Jun 2024 15:39:12 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] perf: Add perf_event_attr::bp_priv
+Date: Fri, 21 Jun 2024 15:39:08 +0800
+Message-ID: <20240621073910.8465-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240621073910.8465-1-yangtiezhu@loongson.cn>
+References: <20240621073910.8465-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, lkp@intel.com,
- linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org
-Cc: Paul Cercueil <paul@crapouillou.net>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
- <sumit.semwal@linaro.org>, oe-kbuild-all@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
- Jonathan Corbet <corbet@lwn.net>, Julia Lawall <julia.lawall@inria.fr>,
- Randy Dunlap <rdunlap@infradead.org>
-References: <202406191014.9JAzwRV6-lkp@intel.com>
- <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de> <ZnRUSaHJhz7XLcKa@matsya>
- <20240620170522.GU3029315@google.com> <ZnUnFeum1Z2ahm9M@matsya>
- <b7283f9458047e63e7d8c8b80daf2bd6232403cb.camel@gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <b7283f9458047e63e7d8c8b80daf2bd6232403cb.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:y18xF/BSqPqf/Tvd80huZy/wZJ1h5Bc08s683x3NvrVq90rJY2g
- 25FNVxt5WmLgQyxXayqeKD/5LGzA/+8QcKwodwT4SOZUxob0FicEpj32OD5nnQATMlHF7FZ
- COw3DPoewg004G3y9I3vMoWlbfjf7WjlmxyTCmHTQm/8yD/YrFh2anIMla8LWrYKtUCfEJp
- ICM1Mgm/f0NtpI8PJ0CLw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:q5fLA1zrxUw=;NcAHeCyo5KoUp+4fE1PnEQWXWpX
- 2kfcz3PSiFtu6vhNZ2OBrBO/YlSU3NOLKykDf+vQ4Zqj1gWZbMn61Pmyvo4PFtlNZ1mV0eBX9
- aQxRuVeWOBx7bN1xtNagodWVyhK6IjiRJ8vp3JiK3tyOFYdCTClAsrOYG62zUHrzuA92PGGUJ
- ocLt7G8Na2nyOCEMC6evezplg1YSmPGqYDCeh+Vgn2g+ozqOhT+A/lokF4T5DVIes+FazphRY
- 6l/7KpWeuN9dkgOcAORi6nWQzYF6+AnnHyE8PG3vplXyYVO1WtZzemF1m+3NZUEMN8zj7j+Aa
- fk54ic78Uq/CQvYs93ecIXTabrevSYrfXNdD1+gABU+hoxpMSaGX2ZqO71aB3NRIc4wEdHqHq
- 9Jrth9NBLxmKQcjWOkL3QqaROfeTSgJR4yypWq5gpJHbLCXO19avPKx6RyyVYZzgzcUKsfc4m
- 9SvNo6L7ZiJgSKiEOLmaoGI0j2wnUaggx5ldIZOHv4OZvPrkFkHZ8fCp35FRSsHhrKuD0zStQ
- 86LcIVn6t50aT7XzB0+xcyN2CGt32ogN/P3P70XReydn2dAEDEA3uI0MSssFQDmQV0XlWIpB+
- yAZ+//jQP+TBDlxM9RUVNNDlyQgC5E+7Ze+SjOuea7dxfQaqJYfadzTI2IdNbuWZRDf0H40bM
- yd3QWHHDfz+hxkpc5QbxW9ditnRXeKzdmwFk+ozM+/ljhAjcj+uFFeGABHRrWp4/PG1coH/kv
- Cm50FC29cFGcDUdZnfYMqG2/PgjRYHlk5ocV7FuOf2Z/ndla6Z0K811VQCeIMzYPhd7uWdd3P
- 2mXNlFkGiNy4pvukMscNkEuZKnLa2Rvn6navq7svFGnP4=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxPMcfLnVmIjgrAA--.39322S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr1DAr1fZF45Cw13Gw47KFX_yoW8WFyrpr
+	ZrZrn5K3y8JayS9w13Ga1q9345JrZ7W39Fgay5Kw4FyFs8u393GasrWFnIvFn5Wr4jyayS
+	qwnFqr4qqa4UtFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8XTm3UUUUU==
 
-> Yeah, just look at how many automatic replies he get's from Greg pretty much
-> saying to ignore his comments.
+Add a member "bp_priv" at the end of the uapi struct perf_event_attr
+to make a bridge between ptrace and hardware breakpoint.
 
-Does your feedback just indicate recurring communication difficulties?
+This is preparation for later patch on some archs such as ARM, ARM64
+and LoongArch which have privilege level of breakpoint.
 
-Regards,
-Markus
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ include/uapi/linux/perf_event.h | 3 +++
+ kernel/events/hw_breakpoint.c   | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..f9f917e854e6 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -379,6 +379,7 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+ #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+ #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
++#define PERF_ATTR_SIZE_VER9	144	/* add: bp_priv */
+ 
+ /*
+  * Hardware event_id to monitor via a performance monitoring event:
+@@ -522,6 +523,8 @@ struct perf_event_attr {
+ 	__u64	sig_data;
+ 
+ 	__u64	config3; /* extension of config2 */
++
++	__u8	bp_priv; /* privilege level of breakpoint */
+ };
+ 
+ /*
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 6c2cb4e4f48d..3ad16b226e4f 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -754,6 +754,7 @@ static void hw_breakpoint_copy_attr(struct perf_event_attr *to,
+ 	to->bp_addr = from->bp_addr;
+ 	to->bp_type = from->bp_type;
+ 	to->bp_len  = from->bp_len;
++	to->bp_priv = from->bp_priv;
+ 	to->disabled = from->disabled;
+ }
+ 
+-- 
+2.42.0
+
