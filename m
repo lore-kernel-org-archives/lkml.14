@@ -1,181 +1,240 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D1B16E885
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B7D16E88F
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962677; cv=none; b=Oviyti85olzr67AJdxjQe+T3z2xWTVYEeg1tXYiqM0I2n245wMyu7/RGrzdJkIMzGWrFE+3bHkMn+OUFDbRyUeAss8gQ777T4FWa7NlzHwn+1DR3VkhK80rAZiqgIvKITwmWlDwklJvzq4o/TxOhZ4kLvqnOJClDeWKrOJprazc=
+	t=1718962678; cv=none; b=gfJ8QqW03ocpJXd7GQIQlGQxufpD5IVh2r7BGcAkYJ0oQW5Q2xokzdSvpW8itqIXCDrP0rrhw9WC4js+0FuYcj66aiplx0+DbkHGcyYnq3n4LaQJGG17k067Eoux16J3I+l/eS33A9kC04/8dJ2sNwTBxlyTUc3yxxi6AMe+O8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718962677; c=relaxed/simple;
-	bh=NdpY6Y968D6lDTyF25zr8X8Xnv4Bt0kqMFWlhamaolY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=slbxPZVvsLevKghNzhDHaiQFqh7zuf2cLiCWmE/YxUka0yRzvaZZOaAyLRgWwlkDm+dgGPpnacbLJAKQkWCMAQmgNn6QAxarVT930EfNsIjx7bYyy2Q46GytY4IHMaBTVm0H7o46cB+e0W+/8/s058X9EYcbBH4rMUi38OrXf2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZsZpB8Ef; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/q3KKE9D; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718962678; c=relaxed/simple;
+	bh=GOU4qk32qxl7SIkiqRtGAlaDHV7DuzTvKrPhjdL+sMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mxqylqjqzEsEJ2eXC7yjzzbdb7E1mDGJLADf/D9jhon+BuvHEeYzHDl6Q6r79tXGEt10U9L+MMOUduJJKDud09XAVGWOAUHu1kfdzInfKpCmJSb0yR//wocToZFeVZu3Z6nghmv8ZygLxeFVGNyhw+dCHJ24XW1qM7wZ1C+eSQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUNzE1zZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZsZpB8Ef";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/q3KKE9D"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718962674;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUNzE1zZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718962675;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1XYA2gxPP8gXiPiESdv8zBi94vK/dZ95nSLvONfoEUs=;
-	b=ZsZpB8Ef4Gr9ct0FwTlyA+RNwV8lOlbg3ajGxP7QWpblZWCkHQ4IeRMaU5X6efxPgF40ir
-	oBQ7OHXgf88GGEze4n4fkzt6IpGkk8gbLsfd4zGRiGc1/1jtfP9vC+0vXGOvAGgrwJh7fX
-	HQ5s89akSkm6LDjDnNS5o9qVjJCgT19Q8jOF6zFphET4TjfPrmwA79IyCKtL77FpCiIWVX
-	shXOfhx98gt7oViWFefyMREtuvJdLF4TT1Qn4CyTNLCmi2ucWfoeb7Sza602YbSEIpscnA
-	QpzC8bu/Hz4Ljg3NEWpToweeSLvjbh1EwiMSM97wwnudE/RE3KUe4aMCP/RILg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718962674;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1XYA2gxPP8gXiPiESdv8zBi94vK/dZ95nSLvONfoEUs=;
-	b=/q3KKE9Du5MBdf0gzdaT+VRlS+u0gX+fInMP2NyZoqPQrpSxuB/GRjPu0gL8ssk71Zrz4x
-	9ilHcD0yysLjllCA==
-Date: Fri, 21 Jun 2024 11:37:06 +0200
-Subject: [PATCH 1/3] timer_migration: Do not rely always on group->parent
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PLL2YH8hxxUuEqXI4e8lnc4vw1eQbxr5oabmIbFLqNg=;
+	b=BUNzE1zZCjpmcS4zww7u4M9eM1ilT62SbET3oWKn2kVhqqM7oN6DMsgpqS7gTaBbCF3igx
+	Zo1QLgHXQGpy3ULBo0X8Ip/gjQJZ3jnC7T6OEBNculQ3xkvVbukC8MA0dvqKUoI/95kEK8
+	WPj7wVYu1OkDvJKO5ToK7j0HmmPHfhg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-539-sdk5NxgIPgC2kGDvh_tPFQ-1; Fri, 21 Jun 2024 05:37:54 -0400
+X-MC-Unique: sdk5NxgIPgC2kGDvh_tPFQ-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3634a634f8aso939681f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 02:37:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718962673; x=1719567473;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PLL2YH8hxxUuEqXI4e8lnc4vw1eQbxr5oabmIbFLqNg=;
+        b=euLDbuIfk1Rlu/b4S8724VyiMGGMTmuZFQYN+x2pALldFF2BGHXgZ75uhT+EHAMvG0
+         QjQvh5FkTWmaFZcv2c1HSMNbQePv5N1Q+9wgislXm59EhowAOCxVDaSpQEztsLcB68WE
+         gey9oTbvXeD0PwfNesVx43xejgJ9UDtnnnRfE0qp/AWsGvy2LZ7X5rbVv82OAN9o7Toi
+         I+fLntRgFBYuRv8Qy40eYweapIlelijFb1najT7w71PL/VcrXTy962OloHTBFZnhOxex
+         fWK/xD8LaC4UTwWTFWD+V5W+vkoYUh+mTPn01AjFG4MC40u/HvaE92DPBZmJ8gDcaPVM
+         OSow==
+X-Forwarded-Encrypted: i=1; AJvYcCWWPEiSWgqtzNp8FBpjA70h5ot9DI6OercNx5wiaX0lKsi8+qTJrYXpkkmAQZZnuiZ16YIQVswKiFcB/eKO5DIjblp5JAWLR9YOlyZL
+X-Gm-Message-State: AOJu0YzZftTgLo3Xds3gRoAGIFzDY8nVnuzjmraEoFhfGAIhhJ8NusEe
+	cqyLGcCttQsRTufqDmuWHOVoG92swQBoJhzJvtGefXl8ddzLnFAYSDV2q3AgH9NoKsgeJ0XQA1J
+	HF/0opj+3X+7jHQRKT4NkIbPprjONnfx0LyP6G5ia7CbFf5FNKBL9QXbmdV+SNQ==
+X-Received: by 2002:a5d:53c3:0:b0:362:def2:3949 with SMTP id ffacd0b85a97d-363175b8d4emr6013266f8f.22.1718962672973;
+        Fri, 21 Jun 2024 02:37:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGIwaslunWPup9+1LeojFQz6m53IR+1OX9bq/Q14tOiBhYW6m3YiRS75z6wYCNd3Nd2gcz6lw==
+X-Received: by 2002:a5d:53c3:0:b0:362:def2:3949 with SMTP id ffacd0b85a97d-363175b8d4emr6013242f8f.22.1718962672471;
+        Fri, 21 Jun 2024 02:37:52 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c725:e600:4063:2059:fd18:9d65? (p200300cbc725e60040632059fd189d65.dip0.t-ipconnect.de. [2003:cb:c725:e600:4063:2059:fd18:9d65])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366d5cbd5bbsm313262f8f.97.2024.06.21.02.37.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 02:37:52 -0700 (PDT)
+Message-ID: <3fc39c4f-d4e6-4f63-96d6-7c24cad16612@redhat.com>
+Date: Fri, 21 Jun 2024 11:37:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
+To: Quentin Perret <qperret@google.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Elliot Berman
+ <quic_eberman@quicinc.com>, Fuad Tabba <tabba@google.com>,
+ Christoph Hellwig <hch@infradead.org>, John Hubbard <jhubbard@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, maz@kernel.org, kvm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ pbonzini@redhat.com
+References: <20240619115135.GE2494510@nvidia.com>
+ <ZnOsAEV3GycCcqSX@infradead.org>
+ <CA+EHjTxaCxibvGOMPk9Oj5TfQV3J3ZLwXk83oVHuwf8H0Q47sA@mail.gmail.com>
+ <20240620135540.GG2494510@nvidia.com>
+ <6d7b180a-9f80-43a4-a4cc-fd79a45d7571@redhat.com>
+ <20240620142956.GI2494510@nvidia.com>
+ <20240620140516768-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <20240620231814.GO2494510@nvidia.com> <ZnUsmFFslBWZxGIq@google.com>
+ <c05f2a97-5863-4da7-bfae-2d6873a62ebe@redhat.com>
+ <ZnVG9oZL4GT0uFy_@google.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZnVG9oZL4GT0uFy_@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240621-tmigr-fixes-v1-1-8c8a2d8e8d77@linutronix.de>
-References: <20240621-tmigr-fixes-v1-0-8c8a2d8e8d77@linutronix.de>
-In-Reply-To: <20240621-tmigr-fixes-v1-0-8c8a2d8e8d77@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Narasimhan V <Narasimhan.V@amd.com>
 
-When reading group->parent without holding the group lock it is racy
-against CPUs coming online the first time and thereby creating another
-level of the hierarchy. This is not a problem when this value is read once
-to decide whether to abort a propagation or not. The worst outcome is an
-unnecessary/early CPU wake up. But it is racy when reading it several times
-during a single 'action' (like activation, deactivation, checking for
-remote timer expiry,...) and relying on the consitency of this value
-without holding the lock. This happens at the moment e.g. in
-tmigr_inactive_up() which is also calling tmigr_udpate_events(). Code relys
-on group->parent not to change during this 'action'.
+On 21.06.24 11:25, Quentin Perret wrote:
+> On Friday 21 Jun 2024 at 10:02:08 (+0200), David Hildenbrand wrote:
+>> Thanks for the information. IMHO we really should try to find a common
+>> ground here, and FOLL_EXCLUSIVE is likely not it :)
+> 
+> That's OK, IMO at least :-).
+> 
+>> Thanks for reviving this discussion with your patch set!
+>>
+>> pKVM is interested in in-place conversion, I believe there are valid use
+>> cases for in-place conversion for TDX and friends as well (as discussed, I
+>> think that might be a clean way to get huge/gigantic page support in).
+>>
+>> This implies the option to:
+>>
+>> 1) Have shared+private memory in guest_memfd
+>> 2) Be able to mmap shared parts
+>> 3) Be able to convert shared<->private in place
+>>
+>> and later in my interest
+>>
+>> 4) Have huge/gigantic page support in guest_memfd with the option of
+>>     converting individual subpages
+>>
+>> We might not want to make use of that model for all of CC -- as you state,
+>> sometimes the destructive approach might be better performance wise -- but
+>> having that option doesn't sound crazy to me (and maybe would solve real
+>> issues as well).
+> 
+> Cool.
+> 
+>> After all, the common requirement here is that "private" pages are not
+>> mapped/pinned/accessible.
+>>
+>> Sure, there might be cases like "pKVM can handle access to private pages in
+>> user page mappings", "AMD-SNP will not crash the host if writing to private
+>> pages" but there are not factors that really make a difference for a common
+>> solution.
+> 
+> Sure, there isn't much value in differentiating on these things. One
+> might argue that we could save one mmap() on the private->shared
+> conversion path by keeping all of guest_memfd mapped in userspace
+> including private memory, but that's most probably not worth the
+> effort of re-designing the whole thing just for that, so let's forget
+> that.
 
-Update parent struct member description to explain the above only
-once. Remove parent pointer checks when they are not mandatory (like update
-of data->childmask). Remove a warning, which would be nice but the trigger
-of this warning is not reliable and add expand the data structure member
-description instead. Expand a comment, why it is safe to rely on parent
-pointer here (inside hierarchy update).
+In a world where we can mmap() the whole (sparse "shared") thing, and 
+dynamically map/unmap the shared parts only it would be saving a page 
+fault on private->shared conversion, correct.
 
-Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
-Reported-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Narasimhan V <Narasimhan.V@amd.com>
----
- kernel/time/timer_migration.c | 33 +++++++++++++++------------------
- kernel/time/timer_migration.h | 12 +++++++++++-
- 2 files changed, 26 insertions(+), 19 deletions(-)
+But that's sounds more like a CC-specific optimization for frequent 
+conversions, which we should just ignore initially.
 
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 84413114db5c..d91efe1dc3bf 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -507,7 +507,14 @@ static void walk_groups(up_f up, void *data, struct tmigr_cpu *tmc)
-  *			(get_next_timer_interrupt())
-  * @firstexp:		Contains the first event expiry information when last
-  *			active CPU of hierarchy is on the way to idle to make
-- *			sure CPU will be back in time.
-+ *			sure CPU will be back in time. It is updated in top
-+ *			level group only. Be aware, there could occur a new top
-+ *			level of the hierarchy between the 'top level call' in
-+ *			tmigr_update_events() and the check for the parent group
-+ *			in walk_groups(). Then @firstexp might contain a value
-+ *			!= KTIME_MAX even if it was not the final top
-+ *			level. This is not a problem, as the worst outcome is a
-+ *			CPU which might wake up a little early.
-  * @evt:		Pointer to tmigr_event which needs to be queued (of idle
-  *			child group)
-  * @childmask:		childmask of child group
-@@ -649,7 +656,7 @@ static bool tmigr_active_up(struct tmigr_group *group,
- 
- 	} while (!atomic_try_cmpxchg(&group->migr_state, &curstate.state, newstate.state));
- 
--	if ((walk_done == false) && group->parent)
-+	if (walk_done == false)
- 		data->childmask = group->childmask;
- 
- 	/*
-@@ -1317,20 +1324,9 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
- 	/* Event Handling */
- 	tmigr_update_events(group, child, data);
- 
--	if (group->parent && (walk_done == false))
-+	if (walk_done == false)
- 		data->childmask = group->childmask;
- 
--	/*
--	 * data->firstexp was set by tmigr_update_events() and contains the
--	 * expiry of the first global event which needs to be handled. It
--	 * differs from KTIME_MAX if:
--	 * - group is the top level group and
--	 * - group is idle (which means CPU was the last active CPU in the
--	 *   hierarchy) and
--	 * - there is a pending event in the hierarchy
--	 */
--	WARN_ON_ONCE(data->firstexp != KTIME_MAX && group->parent);
--
- 	trace_tmigr_group_set_cpu_inactive(group, newstate, childmask);
- 
- 	return walk_done;
-@@ -1552,10 +1548,11 @@ static void tmigr_connect_child_parent(struct tmigr_group *child,
- 		data.childmask = child->childmask;
- 
- 		/*
--		 * There is only one new level per time. When connecting the
--		 * child and the parent and set the child active when the parent
--		 * is inactive, the parent needs to be the uppermost
--		 * level. Otherwise there went something wrong!
-+		 * There is only one new level per time (which is protected by
-+		 * tmigr_mutex). When connecting the child and the parent and
-+		 * set the child active when the parent is inactive, the parent
-+		 * needs to be the uppermost level. Otherwise there went
-+		 * something wrong!
- 		 */
- 		WARN_ON(!tmigr_active_up(parent, child, &data) && parent->parent);
- 	}
-diff --git a/kernel/time/timer_migration.h b/kernel/time/timer_migration.h
-index 6c37d94a37d9..494f68cc13f4 100644
---- a/kernel/time/timer_migration.h
-+++ b/kernel/time/timer_migration.h
-@@ -22,7 +22,17 @@ struct tmigr_event {
-  * struct tmigr_group - timer migration hierarchy group
-  * @lock:		Lock protecting the event information and group hierarchy
-  *			information during setup
-- * @parent:		Pointer to the parent group
-+ * @parent:		Pointer to the parent group. Pointer is updated when a
-+ *			new hierarchy level is added because of a CPU coming
-+ *			online the first time. Once it is set, the pointer will
-+ *			not be removed or updated. When accessing parent pointer
-+ *			lock less to decide whether to abort a propagation or
-+ *			not, it is not a problem. The worst outcome is an
-+ *			unnecessary/early CPU wake up. But do not access parent
-+ *			pointer several times in the same 'action' (like
-+ *			activation, deactivation, check for remote expiry,...)
-+ *			without holding the lock as it is not ensured that value
-+ *			will not change.
-  * @groupevt:		Next event of the group which is only used when the
-  *			group is !active. The group event is then queued into
-  *			the parent timer queue.
+> 
+> The ability to handle stage-2 faults in the kernel has implications in
+> other places however. It means we don't need to punch holes in the
+> kernel linear map when donating memory to a guest for example, even with
+> 'crazy' access patterns like load_unaligned_zeropad(). So that's good.
+> 
+>> private memory: not mapped, not pinned
+>> shared memory: maybe mapped, maybe pinned
+>> granularity of conversion: single pages
+>>
+>> Anything I am missing?
+> 
+> That looks good to me. And as discussed in previous threads, we have the
+> ambition of getting page-migration to work, including for private memory,
+> mostly to get kcompactd to work better when pVMs are running. Android
+> makes extensive use of compaction, and pVMs currently stick out like a
+> sore thumb.
+
+Yes, I think migration for compaction has to be supported at some point 
+(at least for small pages that can be either private or shared, not a 
+mixture), and I suspect we should be able to integrate it with core-mm 
+in a not-too-horrible fashion. For example, we do have a non-lru page 
+migration infrastructure in place already if the LRU-based one is not a 
+good fit.
+
+Memory swapping and all other currently-strictly LRU-based mechanisms 
+should be out of scope for now: as Sean says, we don't want to go down 
+that path.
+
+> 
+> We can trivially implement a hypercall to have pKVM swap a private
+> page with another without the guest having to know. The difficulty is
+> obviously to hook that in Linux, and I've personally not looked into it
+> properly, so that is clearly longer term. We don't want to take anybody
+> by surprise if there is a need for some added complexity in guest_memfd
+> to support this use-case though. I don't expect folks on the receiving
+> end of that to agree to it blindly without knowing _what_ this
+> complexity is FWIW. But at least our intentions are clear :-)
+
+Agreed.
 
 -- 
-2.39.2
+Cheers,
+
+David / dhildenb
 
