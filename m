@@ -1,99 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F193015D1;
-	Fri, 21 Jun 2024 17:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AAC15D1;
+	Fri, 21 Jun 2024 17:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718990485; cv=none; b=CTdWkeHxd/J9pPFCuw/bMO0DxVoIrK3wwNm+0UqayxA17vBVqK1gIoETihcct9Bp8L0qXiyXDdQito+zOHI8pm/OK37wLvzkbDJCPQaRRA9ol4Pla5oUMfJpwM9PVLwBK27eZFT0i+ZkXMVOKEQBEq6kgipPzxzuaQxmj+7raJo=
+	t=1718990680; cv=none; b=B+V2wuoifhNIA/gAVrLqTQXMvW+hQWrZvjVHhM/9yQhI7AJTwesErzr2woD6wI96RN3mYFVLPfhAFZeM7epnrwfWtyRBdPljae49uLV7SCTF3gD5iEbhyxPUp0ADONmu4K1kdrLX55wHiDmwP1fFFALwIYPg77rMlLspdH6bUvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718990485; c=relaxed/simple;
-	bh=gHG1QdUJNeFc3vcLi2Zi9Sh5x+SNXv0tH2HEkixWrnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MBn4BnYbIQvZhysYLDDvZgoysej+fxEPB+3OkKo3RU6+3yYbe9KSRdK0pryUpICv/UV/M7CXxX4VGdarFU4qE5b/40/6pVt52THuzmWYn5y3ZLU2xn4w7j5NeYfbu61Ra+Xxlp3f581hAGpiVMEhSEwaa9AK/Ob2FEFMsMfWoRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UC0EotE8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718990680; c=relaxed/simple;
+	bh=BM3bDxKDGPmpPEKXjkEVhF9bTkX6yqKKTMfom9A1jjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RJ3uHFzzp9KQYru3eT1WBhmBcGjBCZTXThF2ClQIywPJguo613EZ5p3QYlY/MUWw/T70gW5c5+J1GhkyvslbsDgIwmnV8q/tOzoJDQKWmGF8tbJ1IMIpz+ObmjLzgUEeYM57RISIX7A2TbNchgrk+d5Z8SIB/lKiRQR34JA18HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=vshZ12n4; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UC0EotE8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ED23C2BBFC;
-	Fri, 21 Jun 2024 17:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718990484;
-	bh=gHG1QdUJNeFc3vcLi2Zi9Sh5x+SNXv0tH2HEkixWrnE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=UC0EotE8rvPIrAnMCcOPUjj0whhdYdm+vevKBQRs0tTY/ABRKQ0LN9vk+z86nR3a/
-	 YJuO0hYKrQsftcYluyN3ZSpm1oNbfNni1r/r/qr7hpVBBTPS6zMBtp+4s+fjP1a/rM
-	 C1qBXmF/ejq9PsPS8pdBJcdU7qjRghMHm9cGLGMR3sexDnxgcrpheV9onayAF/fmFM
-	 PK4nEvFqRNXw7E6EYRynkFRxZ3zNLkvov6ckw0KLXJXuiGshMp0wYu0YqYvkiyy7an
-	 HXm5ADtSmbKfPUVuyouiI2HHClcsJtyjocRUzNzV/M+Ff+xV1IoeaH4oKeeT1a4w33
-	 Qu+vewO9OV6kg==
-Date: Fri, 21 Jun 2024 18:21:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: linux-next: manual merge of the kvm-x86 tree with the origin tree
-Message-ID: <ZnW2kD1V0EoViS7i@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="vshZ12n4"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 21E5B207FD;
+	Fri, 21 Jun 2024 19:24:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1718990667;
+	bh=Fl+iPeAvxTiHF6A13dl6jLHuoX82uG52hv+zvo4/1eA=; h=From:To:Subject;
+	b=vshZ12n4/Ge4zRe7wHkrs8ulu3+HCMZnhuejxfioEELy3kOaKYhVd1E3OO1cuKVy/
+	 +7EULopnvXbzKf7DLJT6ZHjxGYZlnXhYrZDNtJNsuC6z/G8mXoyUe4IcVSjIIuKEBl
+	 Y3BgQtqc9VKaOjPxTLUq14HBlTkIT62iadTgxJ5cQE2j5VGmAxnXifsWbF4fFjbk4a
+	 NLDuvaeVbNLHO2Pvjui8xu/2Uu4XzX6ovmVlXo3Usep0YdOGSc+yJfdT4iCLsvzZO7
+	 M5MAHdZKK5yHyrN1hj0xgWrzGH+L+ixSAXWxY8go1SEJ7D3qXcZ4cSOWl23V+PSEiC
+	 pQj+sI2coAChg==
+Date: Fri, 21 Jun 2024 19:24:21 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: o.rempel@pengutronix.de, kernel@pengutronix.de, andi.shyti@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+	jic23@kernel.org, lars@metafoo.de, nuno.sa@analog.com,
+	andriy.shevchenko@linux.intel.com, marcelo.schmitt@analog.com,
+	gnstark@salutedevices.com, francesco.dolcini@toradex.com,
+	wsa+renesas@sang-engineering.com, andrew@lunn.ch,
+	linux-i2c@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: Re: [RFC PATCH] i2c: imx: avoid rescheduling when waiting for bus
+ not busy
+Message-ID: <20240621172421.GA11258@francesco-nb>
+References: <20240531142437.74831-1-eichest@gmail.com>
+ <ZnWaxtfgmLk3SplP@eichest-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i8rhaj9TblMjFHzw"
-Content-Disposition: inline
-
-
---i8rhaj9TblMjFHzw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZnWaxtfgmLk3SplP@eichest-laptop>
 
-Hi all,
+Hello Stefan,
 
-Today's linux-next merge of the kvm-x86 tree got a conflict in:
+On Fri, Jun 21, 2024 at 05:22:46PM +0200, Stefan Eichenberger wrote:
+> Hi Andi, Andrew, Wolfram, Oleksij,
+> 
+> After some internal discussion we still have some questions which are
+> blocking us from solving the issue.
+> 
+> On Fri, May 31, 2024 at 04:24:37PM +0200, Stefan Eichenberger wrote:
+> > From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> > 
+> > On our i.MX8M Mini based module we have an ADS1015 I2C ADC connected to
+> > the I2C bus. The ADS1015 I2C ADC will timeout after 25ms when the I2C
+> > bus is idle. The imx i2c driver will call schedule when waiting for the
+> > bus to become idle after switching to master mode. When the i2c
+> > controller switches to master mode it pulls SCL and SDA low, if the
+> > ADS1015 I2C ADC sees this for more than 25 ms without seeing SCL
+> > clocking, it will timeout and ignore all signals until the next start
+> > condition occurs (SCL and SDA low). This can occur when the system load
+> > is high and schedule returns after more than 25 ms.
+> > 
+> > This rfc tries to solve the problem by using a udelay for the first 10
+> > ms before calling schedule. This reduces the chance that we will
+> > reschedule. However, it is still theoretically possible for the problem
+> > to occur. To properly solve the problem, we would also need to disable
+> > interrupts during the transfer.
+> > 
+> > After some internal discussion, we see three possible solutions:
+> > 1. Use udelay as shown in this rfc and also disable the interrupts
+> >    during the transfer. This would solve the problem but disable the
+> >    interrupts. Also, we would have to re-enable the interrupts if the
+> >    timeout is longer than 1ms (TBD).
+> > 2. We use a retry mechanism in the ti-ads1015 driver. When we see a
+> >    timeout, we try again.
+> > 3. We use the suggested solution and accept that there is an edge case
+> >    where the timeout can happen.
+> > 
+> > There may be a better way to do this, which is why this is an RFC.
+> > 
+> > Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> > ---
 
-  arch/x86/kvm/x86.c
+...
 
-between commit:
+> > On a multimaster bus system, the busy bus (I2C_I2SR[IBB]) must be
+> > tested to determine whether the serial bus is free.
+> We assume this means it is not necessary to test for IBB if we know we
+> are in a single-master configuration.
 
-  f3ced000a2df5 ("KVM: x86: Always sync PIR to IRR prior to scanning I/O AP=
-IC routes")
+To me this is a very interesting option. If we can confirm that this
+busy-wait-loop is not required when we have a single master
+configuration we can just solve the issue in a clean way.
 
-=66rom the origin tree and commit:
+And once the driver knows if it is multi-master mode or not we can also
+get rid of the EAGAIN that does not make any sense with single-master.
+There was an old discussion with some great contribution from Oleksij on
+this topic.
 
-  aebed32e4985a ("KVM: x86: Introduce kvm_x86_call() to simplify static cal=
-ls of kvm_x86_ops")
+Francesco
 
-=66rom the kvm-x86 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc arch/x86/kvm/x86.c
-index ba0ad76f53bcc,c13bae3e8dfbc..0000000000000
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-
---i8rhaj9TblMjFHzw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ1to8ACgkQJNaLcl1U
-h9Ak0Qf/dCGp2SGgmtyZpWIjgTQsHgHTDABWmflXw5r/HspNpxXS5s8wMfx6D6vH
-P8OeR5CxKciLKLVsOihSBgCIt2CPDM1q84x0gjWIZ2JL4VYitisCTJpZ3BoWQKwV
-E/y3rw7wNxTjs184Z5RsLK45+5CgENmkCV8do18Ss5tB5fHkrUEP8tLZkwME8ap8
-TPJkJly8mIl/Uf9zSUm1X5XYjW+A9XQIYbyRvYnkEeaIJshRX10zg5GaSvcRh2wo
-8Qtv24p7NNg43j8qKYVDKQ3/An4ZAtecJCWIUgSBhNhYoLsNTEVZoKzZOaJYM4Mt
-2ZQzVR2JZ5h4VaLdY6ti2uHR9vsqjw==
-=G2in
------END PGP SIGNATURE-----
-
---i8rhaj9TblMjFHzw--
