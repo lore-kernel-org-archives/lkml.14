@@ -1,177 +1,113 @@
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FAE13699E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7560FBF3;
+	Fri, 21 Jun 2024 05:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718948832; cv=none; b=uCCCR2RA1qn3WEuSeXs556ONUehpm3pXQbuI0Oa4Fgxd62Z4HuDix08nkYpWuq4cq5khMqJjaZhWgg7cr80zJYiM1scc206aBUU9QGnNCG3/tvtQECS2Vvt69juJjRSeoG7xXEvfdbfKcD5okiN7HoFmhvlTz5JMtCWGNyiJWHM=
+	t=1718948978; cv=none; b=JbJUJhgVdWykjJ//X7McADbgrh5FKOkrtlyEumRcG0iiAsbqw9bzQes3bqSGH/++kv44nshSjwVkVbWtlbQ9JjNu6nestc7Rut0S0/tEMEzmPq0M3sbbxUHzi/evcIl80RVsZbvZqrMlHbU1xK53bWTs/JsM5u8vpzu3XLsZjzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718948832; c=relaxed/simple;
-	bh=ClD5XEoChg+MURjDPcYB0UiROtr4843NdmqsXRuM4v8=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=ZOq6cLN1krzgzBoqIqOYCkq6aVR6YimUhzIBx1uch8tAkUMuYTKL7Q0cpdsxpcx0sfNuEx64An73ehOM55QodOWriQy/iZ96Rx9BAzvfn3bLinmdTdYv9x6t/ZFM17P2qHnOX24suzIa8FPFTnrDg2xrrCSKmewKUaQAh67N/oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:47652)
-	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1sKX71-000CEV-Cu; Thu, 20 Jun 2024 23:47:03 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:34496 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1sKX70-008p7B-C2; Thu, 20 Jun 2024 23:47:03 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Tejun Heo <tj@kernel.org>,
-  linux-kernel@vger.kernel.org
-References: <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
-	<20240610152902.GC20640@redhat.com>
-	<20240613154541.GD18218@redhat.com>
-	<87ikyamf4u.fsf@email.froward.int.ebiederm.org>
-	<20240617183758.GB10753@redhat.com>
-	<87iky5k2yi.fsf@email.froward.int.ebiederm.org>
-	<87o77xinmt.fsf_-_@email.froward.int.ebiederm.org>
-	<87iky5inlv.fsf_-_@email.froward.int.ebiederm.org>
-	<20240619155016.GC24240@redhat.com>
-	<87cyocerda.fsf@email.froward.int.ebiederm.org>
-	<20240619191105.GE24240@redhat.com>
-Date: Fri, 21 Jun 2024 00:46:15 -0500
-In-Reply-To: <20240619191105.GE24240@redhat.com> (Oleg Nesterov's message of
-	"Wed, 19 Jun 2024 21:11:06 +0200")
-Message-ID: <874j9mdf14.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1718948978; c=relaxed/simple;
+	bh=ALp1fh1/2Wru2SLYgT/Kja0Ly1+GVV327a7a9kMnmjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFB/sYrUzGFN7rpn3rVAB0aAZupeNu2eq31RvlUS9D1dZwyHkZskc++/gAt9gWEgYtxo+23Ra+WRpdVNiZMHmcE8DzBMqEcwtGD2PLBuF11KqzNlr51o4137NQ8+nXYKolrauWISEATfVf6omIXiZcVp+xwIeN0pTtP5hbHL4II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Jr1Hn7Bl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Jr1Hn7Bl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEDB1C2BBFC;
+	Fri, 21 Jun 2024 05:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718948978;
+	bh=ALp1fh1/2Wru2SLYgT/Kja0Ly1+GVV327a7a9kMnmjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jr1Hn7BlE7F3YMnL62fQ0K9PvNRZ3S5ysQFn18pr7v4+3B42O97/DQJ4B+8lLQZvQ
+	 cBVo/dMgIhaccfRMc4Zyba9ZnHqumpqlcwgYyFG2j2Nll7BwUHuuy/b7CUeX8Ccj3Y
+	 dmjNhCBjCvO1m3IyxhDcWo/jSiTDtfkrNt2/Hmpw=
+Date: Fri, 21 Jun 2024 07:49:38 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: joswang <joswang1221@gmail.com>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Jos Wang <joswang@lenovo.com>
+Subject: Re: [PATCH v7] usb: dwc3: core: Workaround for CSR read timeout
+Message-ID: <2024062150-justify-skillet-e80e@gregkh>
+References: <20240619114529.3441-1-joswang1221@gmail.com>
+ <2024062051-washtub-sufferer-d756@gregkh>
+ <CAMtoTm06MTJ_Gc4NvenycvWRxhLSaPptT1DLvBRs4RWVZO9Y_g@mail.gmail.com>
+ <2024062151-professor-squeak-a4a7@gregkh>
+ <20240621054239.mskjqbuhovydvmu4@synopsys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1sKX70-008p7B-C2;;;mid=<874j9mdf14.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1/xha5W1X2licUXIpVEEYb0Xg5Aqdj9vRo=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-Level: **
-X-Spam-Virus: No
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4994]
-	*  1.5 XMNoVowels Alpha-numberic number with no vowels
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa03 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.2 XM_B_SpammyWords One or more commonly used spammy words
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-	*  0.0 XM_B_AI_SPAM_COMBINATION Email matches multiple AI-related
-	*      patterns
-X-Spam-DCC: XMission; sa03 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: **;Oleg Nesterov <oleg@redhat.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 428 ms - load_scoreonly_sql: 0.03 (0.0%),
-	signal_user_changed: 4.3 (1.0%), b_tie_ro: 3.0 (0.7%), parse: 0.78
-	(0.2%), extract_message_metadata: 3.2 (0.7%), get_uri_detail_list:
-	1.69 (0.4%), tests_pri_-2000: 3.1 (0.7%), tests_pri_-1000: 1.83 (0.4%),
-	 tests_pri_-950: 1.08 (0.3%), tests_pri_-900: 0.79 (0.2%),
-	tests_pri_-90: 83 (19.4%), check_bayes: 82 (19.1%), b_tokenize: 6
-	(1.5%), b_tok_get_all: 8 (2.0%), b_comp_prob: 2.00 (0.5%),
-	b_tok_touch_all: 62 (14.4%), b_finish: 0.81 (0.2%), tests_pri_0: 314
-	(73.2%), check_dkim_signature: 0.40 (0.1%), check_dkim_adsp: 2.9
-	(0.7%), poll_dns_idle: 1.49 (0.3%), tests_pri_10: 2.8 (0.7%),
-	tests_pri_500: 8 (1.9%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH 01/17] signal: Make SIGKILL during coredumps an explicit
- special case
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240621054239.mskjqbuhovydvmu4@synopsys.com>
 
-Oleg Nesterov <oleg@redhat.com> writes:
+On Fri, Jun 21, 2024 at 05:42:42AM +0000, Thinh Nguyen wrote:
+> On Fri, Jun 21, 2024, Greg KH wrote:
+> > On Fri, Jun 21, 2024 at 09:40:10AM +0800, joswang wrote:
+> > > On Fri, Jun 21, 2024 at 1:16 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Wed, Jun 19, 2024 at 07:45:29PM +0800, joswang wrote:
+> > > > > From: Jos Wang <joswang@lenovo.com>
+> > > > >
+> > > > > This is a workaround for STAR 4846132, which only affects
+> > > > > DWC_usb31 version2.00a operating in host mode.
+> > > > >
+> > > > > There is a problem in DWC_usb31 version 2.00a operating
+> > > > > in host mode that would cause a CSR read timeout When CSR
+> > > > > read coincides with RAM Clock Gating Entry. By disable
+> > > > > Clock Gating, sacrificing power consumption for normal
+> > > > > operation.
+> > > > >
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Signed-off-by: Jos Wang <joswang@lenovo.com>
+> > > >
+> > > > What commit id does this fix?  How far back should it be backported in
+> > > > the stable releases?
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > > 
+> > > Hello Greg Thinh
+> > > 
+> > > It seems first begin from the commit 1e43c86d84fb ("usb: dwc3: core:
+> > > Add DWC31 version 2.00a controller")
+> > > in 6.8.0-rc6 branch ?
+> > 
+> > That commit showed up in 6.9, not 6.8.  And if so, please resend with a
+> > proper "Fixes:" tag.
+> > 
+> 
+> This patch workarounds the controller's issue.
 
-> On 06/19, Eric W. Biederman wrote:
->>
->> Oleg Nesterov <oleg@redhat.com> writes:
->>
->> > Hi Eric,
->> >
->> > I'll _try_ to read this (nontrivial) changes this week. To be honest,
->> > right now I don't really understand your goals after the quick glance...
->> >
->> > So far I have only looked at this simple 1/17 and it doesn't look right
->> > to me.
->>
->> It might be worth applying them all on a branch and just looking at the
->> end result.
->
-> Perhaps. Say, the next 2/17 patch. I'd say it is very difficult to understand
-> the purpose unless you read the next patches. OK, at least the change log
-> mentions "in preparation".
->
->> > 	- complete_signal() won't be called, so signal->group_exit_code
->> > 	  won't be updated.
->> >
->> > 	  coredump_finish() won't change it too so the process will exit
->> > 	  with group_exit_code == signr /* coredumping signal */.
->> >
->> > 	  Yes, the fix is obvious and trivial...
->>
->> The signal handling from the coredump is arguably correct.  The process
->> has already exited, and gotten an exit code.
->
-> And zap_process() sets roup_exit_code = signr. But,
->
->> But I really don't care about the exit_code either way.  I just want to
->> make ``killing'' a dead process while it core dumps independent of
->> complete_signal.
->>
->> That ``killing'' of a dead process is a completely special case.
->
-> Sorry I fail to understand...
->
-> If the coredumping process is killed by SIGKILL, it should exit with
-> group_exit_code = SIGKILL, right? At least this is what we have now.
+So it fixes a bug?  Or does not fix a bug?  I'm confused.
 
-In general when a fatal signal is sent:
-- It is short circuit delivered.
-- If SIGNAL_GROUP_EXIT is not set
-   SIGNAL_GROUP_EXIT is set
-   signal->group_exit_code is set
+> It doesn't resolve any
+> particular commit that requires a "Fixes" tag. So, this should go on
+> "next". It can be backported as needed.
 
-Under those rules group_exit_code should not be updated.  Frankly no
-signals should even be processed (except to be queued) after a fatal
-signal comes in.
+Who would do the backporting and when?
 
-There is an issue that short circuit delivery does not work on coredump
-signals (because of the way the coredump code works).  So it winds up
-being zap_threads that tests if SIGNAL_GROUP_EXIT is already set and
-zap_process that sets SIGNAL_GROUP_EXIT.  Essentially the logic remains
-the same, and importantly no later signal is able to set
-group_exit_code.  Or really have any effect because the signal sent was
-fatal.
+> If it's to be backported, it can
+> probably go back to as far as v4.3, to commit 690fb3718a70 ("usb: dwc3:
+> Support Synopsys USB 3.1 IP"). But you'd need to collect all the
+> dependencies including the commit mention above.
 
-Except except except when the kernel in the context of the userspace
-process is writing a coredump for that userspace process.  Then we allow
-the kernel to be sent SIGKILL to stop it's coredumping activities
-because sometimes it can block indefinitely otherwise.
+I don't understand, sorry.  Is this just a normal "evolve the driver to
+work better" change, or is it a "fix broken code" change, or is it
+something else?
 
-Which is why I call handling that SIGKILL after a coredump has
-begun and SIGNAL_GROUP_EXIT is already set a completely special case.
+In other words, what do you want to see happen to this?  What tree(s)
+would you want it applied to?
 
-We might have to change group_exit_code to SIGKILL in that special case,
-if someone in userspace cares.  However I expect no one cares.
+thanks,
 
-Further if adding support for SIGKILL during a coredump were being added
-from scratch.  The semantics I would choose would be for that SIGKILL
-and indeed all of the coredumping activity would be invisible to
-userspace except for the delay to make it happen.  Otherwise a coredump
-which every occasionally gets it's return code changed could introduce
-heisenbugs.
-
-But none of this is documented in the change description and at a bare
-minimum this change of behavior should be before such code is merged.
-
-Eric
-
+greg k-h
