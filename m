@@ -1,159 +1,203 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA6312D771;
-	Fri, 21 Jun 2024 11:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE3E17332A;
+	Fri, 21 Jun 2024 11:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718968838; cv=none; b=JvSz3nNx8xDcON1kkmme98pPgFK2D2pchJevKs7erk4IPJ3iuMBpEGMcdeS797RW1pZ7bQNJlufmrlxxaJMQA9q0D3SHBYANGALmysasJzaFvcE09AJ5+nZh4Rq2kbzgyZQL46BYkAgzLVAIyu/BTms4A/bj3Me41TDoKZ8/7vM=
+	t=1718968857; cv=none; b=IytZ9TDYfZB0RKT5Pn7Cf2MhlFscVlVu3dcqi6EfjZb+SpthCnU4aup96ingVD/sqHNrRGVcf9iJpuL3d1K19O+prDztwXkS2OXsVFfsxPE7Eg1zDF/DMlQERuBmFiaEheKNXRunXWFW+eeCyz9T6YlkGToz4fUy6WcSIe6PZv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718968838; c=relaxed/simple;
-	bh=v2fSHKFeFk8kKjPt2+kyNGoSc76Neq1kp/GJIS7UsW8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UY/6IYjKiXxD+98CQplsZlz0mN9iIUvi3j7Vp0yHTJ9N5TQc4tbtRrH+GclTNFBdZ6VpdMccVt8oVdiBKTbwkubRPd1r4X/mRvJwKdsz0eWgaPvXuAMh7+ynXJSp0VLC6da2aeiMg7ByNPhb6aiEdJqq4dVb+dQ0yugCZVeqtrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HknzW6uQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718968857; c=relaxed/simple;
+	bh=expKverTQwLFbgLvc5JqaPG/XGjYSuNCZkjywWmUcWc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XM1rz/TifgObYbWxzkqW81Pv/3YQTPjssno7VHH1AK3FslkgsmvwKHz3HSlgIA20gnIpvmnVzdgLoHdHzihnmnr8dJwX+RLTZ4MREMMl0QYu9bh4XJ1KbYdqMtZjMvV9ihvg6Iuh8vZw/44XX3Z6FH0GhWPErMJaRjRTxkZeHXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yx4xNJRE; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HknzW6uQ"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L6Jkcp018169;
-	Fri, 21 Jun 2024 11:20:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=GvBt5EFx3bJUMUtNY16lmRX7
-	FxXV93kKPh2W99Or8Ao=; b=HknzW6uQ4ssxUXCNPkdclrrM5TAFo6euMpEM26BQ
-	MjaZEZFBZAGvhcsunJqxX6l80UNr3I87ipTyLD4NBrcZBI01Y3kl8KvsqNBkOTOy
-	K/jSc+1araKJ1UUiWp0OfY90ehXevcWQGoZr1Bpz/GRUNpJCnWoHBbmrEaIRYxDj
-	v83oGDwcIPfwyjnYkelBTviDk2zOOzLqhRV4+TjqZvevpZatW8vBH4s8lqb13z4H
-	ArM9oD44BpKKu8U0CXvqgLwzSA1Ul1LlXS5NYYQO1/zoMtufdoLx6WeUziRjA4/x
-	KM+Rp8nGU4RDUd0FJ0niNRjYK4SGG8UmvVQ/Aw+RZ++7tA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvrm0ad5f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:20:16 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45LBKFpL027039
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 11:20:15 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 21 Jun 2024 04:20:09 -0700
-Date: Fri, 21 Jun 2024 16:50:05 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
-        <quic_rjendra@quicinc.com>, <luca@z3ntu.xyz>, <abel.vesa@linaro.org>,
-        <quic_rohiagar@quicinc.com>, <danila@jiaxyga.com>,
-        <otto.pflueger@abscue.de>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v1 5/7] clk: qcom: gcc-ipq9574: Add CPR clock definition
-Message-ID: <ZnVh5d8RfPnMBvN8@hu-varada-blr.qualcomm.com>
-References: <20240620081427.2860066-1-quic_varada@quicinc.com>
- <20240620081427.2860066-6-quic_varada@quicinc.com>
- <wadru6axfhvws74vcd6umdhnm6gl5poegoljvb7fgbtuz2mccp@hrclt6qesp6e>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yx4xNJRE"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-797a8cfc4ecso118417385a.3;
+        Fri, 21 Jun 2024 04:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718968855; x=1719573655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=expKverTQwLFbgLvc5JqaPG/XGjYSuNCZkjywWmUcWc=;
+        b=Yx4xNJRE6cwO23RlMEBJ6iMVA7wnISA3NeQBWUeyL80dj5Q8Mb2sV7srry/nd9hO6y
+         DeqCNtrmDRutg4yYWWleIgRa6CEe4QXw/bIxkYDRrOFjsxQirA+OW05MXB0sr+H/mDXp
+         YMe0t9xagnJcvV/TowzaHey21I4xDm2xZmTzeB4RDHaUVsmDMe7D/AzpyHa1efJgmi0F
+         rpQFd17teL2sOSDN5ssE8I2vMvWvN6w7bsfxymY4mgWHSh9oUY6d2Lu08odQPoga2eGV
+         hiAfM+cNxyYdas0TtwoPu0YmGwVZLrwIC35n0nvk8enBiL8UIwoi48/dd1SxxrGyqglN
+         D5hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718968855; x=1719573655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=expKverTQwLFbgLvc5JqaPG/XGjYSuNCZkjywWmUcWc=;
+        b=mV/qKdhxcpe+qsjpRm4/GsC9YFIcgr8HJAq1Uvwxg2SdiD8bkLjbnWF189q7+HGMWH
+         XDXnLzhz8PmwN2tkxfjx0JEueaYiYpBhcEhYlZUW9rGMp+pWB9Tkje5SmLyNwGOYYXAP
+         pGqCxorL6ugeucC1MfCS02KFH/HODFKsnAMRxoOorYbWGZFufRowPtmccKSCGzvK+ZNQ
+         kemH1Ktj7q5Q62AZELN7SBZgWRywuhUnLF5kAePbyo4LaVW1b1M2cIMD++Ei4Zs6JZnh
+         voofd6DWKBPBuk2tqT8drR88edNpsbdHrm6f8MeFTOZlBDwxbs+VcSynWSBnxajPN9ut
+         v2+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUDQOrkXEXMc+CiF1ZDGSewxsb24YxOGoY+LdrFjTEH/hGrssO9iRo/hujIDSkg5oO+i/qca6mvZH3ZrzvrCUgt/hxHilIWp1tq0zJy2b2sPS35aZMYbs1sqLnVYn/CStYR4DU1+gX1gK4M7Z8T
+X-Gm-Message-State: AOJu0YxTTXU2cYkxE/Wz6z7/ujbUN9mo22ZideSQwClY+evclcNbTjMF
+	UsK02Iy41DTZ+O7RaNvjPasEdu6q/8meByWZy7S7h6nTsle7dRRHaOBI2eTxUCkSKEUsWb6ZBJt
+	OqRvm6JxYX9SVcKNfJSWy8XyjVFc=
+X-Google-Smtp-Source: AGHT+IGmJ6cnArzxMGquykZMa9FOUQZ2LPltqRLgO4ZbdvrZSjSCd8tc4lPHCPg3LwW9FM4RyDa2LZl9geq/qEjVUUM=
+X-Received: by 2002:a05:6214:80c:b0:6b0:7864:90ac with SMTP id
+ 6a1803df08f44-6b501e06c38mr90689636d6.11.1718968855094; Fri, 21 Jun 2024
+ 04:20:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <wadru6axfhvws74vcd6umdhnm6gl5poegoljvb7fgbtuz2mccp@hrclt6qesp6e>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: PtMB4z0B8foTTy1Ntbh4XdDN-9b72SOY
-X-Proofpoint-GUID: PtMB4z0B8foTTy1Ntbh4XdDN-9b72SOY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 spamscore=0 phishscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406210083
+References: <20240620002648.75204-1-21cnbao@gmail.com> <f3c18806-34ac-41d3-8c79-d7dd6504547e@arm.com>
+ <d0b20f47-384d-49f1-8449-0da6da11089c@redhat.com> <b99c2f80-3b53-4b04-b610-a66179b928a9@arm.com>
+ <CAGsJ_4y_pjMpNOFzrPZ6u7=M83-CQ0umDCPt=ZDuSKJWssiCqA@mail.gmail.com> <CANeU7QnURKHyz8c5KzfdCW1fFCcsJw9HbTAL2d4L0RP6hiCoMA@mail.gmail.com>
+In-Reply-To: <CANeU7QnURKHyz8c5KzfdCW1fFCcsJw9HbTAL2d4L0RP6hiCoMA@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Fri, 21 Jun 2024 19:20:43 +0800
+Message-ID: <CAGsJ_4w5uLXSZrwM2HPSuZC6Dinj09P3623jnqr5edoNBwb1sQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests/mm: Introduce a test program to assess swap
+ entry allocation for thp_swapout
+To: Chris Li <chrisl@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, 
+	shuah@kernel.org, linux-mm@kvack.org, hughd@google.com, 
+	kaleshsingh@google.com, kasong@tencent.com, linux-kernel@vger.kernel.org, 
+	ying.huang@intel.com, linux-kselftest@vger.kernel.org, 
+	Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2024 at 06:11:32PM +0300, Dmitry Baryshkov wrote:
-> On Thu, Jun 20, 2024 at 01:44:25PM GMT, Varadarajan Narayanan wrote:
-> > Add the CPR clock definition needed for enabling access to
-> > CPR register space.
-> >
-> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > ---
-> >  drivers/clk/qcom/gcc-ipq9574.c | 38 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> >
-> > diff --git a/drivers/clk/qcom/gcc-ipq9574.c b/drivers/clk/qcom/gcc-ipq9574.c
-> > index e1dc74d04ed1..7c8eb94f654b 100644
-> > --- a/drivers/clk/qcom/gcc-ipq9574.c
-> > +++ b/drivers/clk/qcom/gcc-ipq9574.c
-> > @@ -3994,6 +3994,43 @@ static struct clk_branch gcc_xo_div4_clk = {
-> >  	},
-> >  };
-> >
-> > +static const struct freq_tbl ftbl_hmss_rbcpr_clk_src[] = {
-> > +	F(24000000, P_XO, 1, 0, 0),
-> > +	{ }
-> > +};
-> > +
-> > +static struct clk_rcg2 rbcpr_clk_src = {
-> > +	.cmd_rcgr = 0x48044,
-> > +	.mnd_width = 0,
-> > +	.hid_width = 5,
-> > +	.parent_map = gcc_xo_map,
-> > +	.freq_tbl = ftbl_gp1_clk_src,
-> > +	.clkr.hw.init = &(struct clk_init_data){
-> > +		.name = "rbcpr_clk_src",
-> > +		.parent_data = gcc_xo_gpll0_gpll4,
-> > +		.num_parents = ARRAY_SIZE(gcc_xo_map),
-> > +		.ops = &clk_rcg2_ops,
-> > +	},
-> > +};
-> > +
-> > +static struct clk_branch gcc_rbcpr_clk = {
-> > +	.halt_reg = 0x48008,
-> > +	.halt_check = BRANCH_HALT,
-> > +	.clkr = {
-> > +		.enable_reg = 0x48008,
-> > +		.enable_mask = BIT(0),
-> > +		.hw.init = &(struct clk_init_data){
-> > +			.name = "gcc_rbcpr_clk",
-> > +			.parent_hws = (const struct clk_hw *[]) {
-> > +				&rbcpr_clk_src.clkr.hw,
+On Fri, Jun 21, 2024 at 4:50=E2=80=AFPM Chris Li <chrisl@kernel.org> wrote:
 >
-> Where is the &rbcpr_clk_src registered?
+> On Fri, Jun 21, 2024 at 12:47=E2=80=AFAM Barry Song <21cnbao@gmail.com> w=
+rote:
+> >
+> > On Fri, Jun 21, 2024 at 7:25=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.=
+com> wrote:
+> > >
+> > > On 20/06/2024 12:34, David Hildenbrand wrote:
+> > > > On 20.06.24 11:04, Ryan Roberts wrote:
+> > > >> On 20/06/2024 01:26, Barry Song wrote:
+> > > >>> From: Barry Song <v-songbaohua@oppo.com>
+> > > >>>
+> > > >>> Both Ryan and Chris have been utilizing the small test program to=
+ aid
+> > > >>> in debugging and identifying issues with swap entry allocation. W=
+hile
+> > > >>> a real or intricate workload might be more suitable for assessing=
+ the
+> > > >>> correctness and effectiveness of the swap allocation policy, a sm=
+all
+> > > >>> test program presents a simpler means of understanding the proble=
+m and
+> > > >>> initially verifying the improvements being made.
+> > > >>>
+> > > >>> Let's endeavor to integrate it into the self-test suite. Although=
+ it
+> > > >>> presently only accommodates 64KB and 4KB, I'm optimistic that we =
+can
+> > > >>> expand its capabilities to support multiple sizes and simulate mo=
+re
+> > > >>> complex systems in the future as required.
+> > > >>
+> > > >> I'll try to summarize the thread with Huang Ying by suggesting thi=
+s test program
+> > > >> is "neccessary but not sufficient" to exhaustively test the mTHP s=
+wap-out path.
+> > > >> I've certainly found it useful and think it would be a valuable ad=
+dition to the
+> > > >> tree.
+> > > >>
+> > > >> That said, I'm not convinced it is a selftest; IMO a selftest shou=
+ld provide a
+> > > >> clear pass/fail result against some criteria and must be able to b=
+e run
+> > > >> automatically by (e.g.) a CI system.
+> > > >
+> > > > Likely we should then consider moving other such performance-relate=
+d thingies
+> > > > out of the selftests?
+> > >
+> > > Yes, that would get my vote. But of the 4 tests you mentioned that us=
+e
+> > > clock_gettime(), it looks like transhuge-stress is the only one that =
+doesn't
+> > > have a pass/fail result, so is probably the only candidate for moving=
+.
+> > >
+> > > The others either use the times as a timeout and determines failure i=
+f the
+> > > action didn't occur within the timeout (e.g. ksm_tests.c) or use it t=
+o add some
+> > > supplemental performance information to an otherwise functionality-or=
+iented test.
+> >
+> > Thank you very much, Ryan. I think you've found a better home for this
+> > tool . I will
+> > send v2, relocating it to tools/mm and adding a function to swap in
+> > either the whole
+> > mTHPs or a portion of mTHPs by "-a"(aligned swapin).
+> >
+> > So basically, we will have
+> >
+> > 1. Use MADV_PAGEPUT for rapid swap-out, putting the swap allocation cod=
+e under
+> > high exercise in a short time.
+> >
+> > 2. Use MADV_DONTNEED to simulate the behavior of libc and Java heap in =
+freeing
+> > memory, as well as for munmap, app exits, or OOM killer scenarios. This=
+ ensures
+> > new mTHP is always generated, released or swapped out, similar to the b=
+ehavior
+> > on a PC or Android phone where many applications are frequently started=
+ and
+> > terminated.
+>
+> Will this cover the case that the ratio of order 0 and order 4 swap
+> requests change during LMK, and swapfile is almost full?
+>
+> If not, please add that :-)
 
-Oops. Missed it. Will post a corrected patch.
+Due to 2, we ensure a certain proportion of mTHP. Similarly, because
+of 3, we maintain
+a certain proportion of small folios, as we don't support large folios
+swap-in, meaning
+any swap-in will immediately result in small folios. Therefore, with
+both 2 and 3, we
+automatically achieve a system containing both mTHP and small folios.
+Additionally,
+1 provides the ability to continuously swap them out. If we set the
+same sizes for 2
+and 3, we'll achieve a 1:1 ratio of large folios to small folios. How
+about starting with
+a 1:1 ratio?
+
+To meet the requirement that the swapfile is almost full, I can
+increase the memory to
+ensure the total size is quite close to zRAM. This way, we give the
+small folios a chance
+to perform a slow scan and observe the impact.
+
+>
+> > 3. Swap in with or without the "-a" option to observe how fragments
+> > due to swap-in
+> > and the incoming swap-in of large folios will impact swap-out fallback.
+> >
+> > And many thanks to Chris for the suggestion on improving it within
+> > selftest, though I
+> > prefer to place it in tools/mm.
+>
+> I am perfectly fine with that. Looking forward to your V2.
+>
+> Chris
 
 Thanks
-Varada
-
-> > +			},
-> > +			.num_parents = 1,
-> > +			.flags = CLK_SET_RATE_PARENT,
-> > +			.ops = &clk_branch2_ops,
-> > +		},
-> > +	},
-> > +};
-> > +
-> >  static struct clk_hw *gcc_ipq9574_hws[] = {
-> >  	&gpll0_out_main_div2.hw,
-> >  	&gcc_xo_div4_clk_src.hw,
-> > @@ -4219,6 +4256,7 @@ static struct clk_regmap *gcc_ipq9574_clks[] = {
-> >  	[GCC_PCIE1_PIPE_CLK] = &gcc_pcie1_pipe_clk.clkr,
-> >  	[GCC_PCIE2_PIPE_CLK] = &gcc_pcie2_pipe_clk.clkr,
-> >  	[GCC_PCIE3_PIPE_CLK] = &gcc_pcie3_pipe_clk.clkr,
-> > +	[GCC_RBCPR_CLK] = &gcc_rbcpr_clk.clkr,
-> >  };
-> >
-> >  static const struct qcom_reset_map gcc_ipq9574_resets[] = {
-> > --
-> > 2.34.1
+Barry
