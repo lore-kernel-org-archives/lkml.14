@@ -1,160 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A6316F901
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 22:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCA216F8EB;
+	Fri, 21 Jun 2024 22:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719009559; cv=none; b=YvGO+PF/Wz3wzUXHs0I7Z+UqDBfZ0+whphnMiEeNxP9rdyEGohr3V8NKbKeGi6ve0KpEsNMLow66jqEDalxca7VzRxHNaI6bU4Zje3ssRHLXX/htKdjio2kGPWBILanmxzD4fKINDM643QVtaJUloRuDsvhUdlmgWylFrgwGUdY=
+	t=1719009558; cv=none; b=bulKo37lv4dEtdUAAC053c/xeC+1jl0AT+jw9hAdTcw3XJMOqTQNrINLgHDY8QW2gyPnubM3ot4pYU2yI+glznXTs82J6syljm5EwvDus0eib7lJwyYwn+SLLU9koDL6aPLAb4iiZm2cjr1VkiEYvoFVUp8+CuohH9FOkLs8ruo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719009559; c=relaxed/simple;
-	bh=hmo69CunjI36OOiYYgLJcwmxmsCeQ4UATusjRMecQWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EjZ5lY69q8sbdDbbod4a277YMWV5NsFj2Ean43B6LO1sWX6pA+dDE3rKBZe8Qaj4AZqSDAUFHWPXhf+3buRNz2O58Y+QFhYWBD7FVsQ6dYyh27JbwskSr/LXWaNGPjt4hoW6gDQHZG2ULxIKijyg+sZBCImlovrAZbj6x5jqEME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EigaDcYg; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719009558; c=relaxed/simple;
+	bh=3FslPl0z1lsr0r15RJMn+3ebQ3RZ8TNFsumiLRrjTNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iORWGRS1U1zYnn08MEJCyuVrY2nZu72l/nMTm+PPSTPo03rbRrK6vlPSwYVo5VlH3ewEzlXLFfnzq/TBSbnFQC3P94kNsr3XeHCuiRjwQLr9MKjyRtBlBK+yzsIylYXqPfSAACs+vxpPTGCy1dDGhvrKdJPQGg3XDUwsOYwouII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWTKVkbx; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EigaDcYg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719009556; x=1750545556;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hmo69CunjI36OOiYYgLJcwmxmsCeQ4UATusjRMecQWY=;
-  b=EigaDcYg50Va1AxGumfN53wAk9RPUu7b2KAIGIlh0pgqYTUXIkS0Vj2O
-   WitlyYf1hqgh17eS/KCOysafs4xzIy+7MMCU0pB/knFrL9deaibrZD+6O
-   YrlrjTzwARS040IY9Z7P7eOdMv8357LCUFO37D3sZ0+bfsdtqowct40uP
-   O74Iqj/V8KkESxAg2XiKJVvrBxji6CBLSCFN5zsZagFesklhXO0LyQF5U
-   Y68rk3a4/JA241bH6VIiEwuzWgkWZSgTkgGIzw/79uJvVGlzfsPbkZgP0
-   T9oaq/6Slw53gCltkOAQ55OJC2oGsW/KT6pQX4i57c7zMtI26Fm1q1LXn
-   w==;
-X-CSE-ConnectionGUID: O+Bc16ICTjems6371oCtkQ==
-X-CSE-MsgGUID: hXxTLUZNQKK7H+pofMbM2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="26691319"
-X-IronPort-AV: E=Sophos;i="6.08,256,1712646000"; 
-   d="scan'208";a="26691319"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 15:39:08 -0700
-X-CSE-ConnectionGUID: d6tNP99pRMa/YhfI8A0dAQ==
-X-CSE-MsgGUID: AIwNBIHGRa6j0QSxDh4X7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,256,1712646000"; 
-   d="scan'208";a="73935669"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 15:39:08 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v21 10/18] x86/resctrl: Refactor mkdir_mondata_subdir() with a helper function
-Date: Fri, 21 Jun 2024 15:38:51 -0700
-Message-ID: <20240621223859.43471-11-tony.luck@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240621223859.43471-1-tony.luck@intel.com>
-References: <20240621223859.43471-1-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWTKVkbx"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9b52ef481so22441495ad.1;
+        Fri, 21 Jun 2024 15:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719009555; x=1719614355; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=84xlG0RFkWqZzTZs4oPKt0M6Xd1r+ZZ1W+UC4V77keU=;
+        b=dWTKVkbxRmdRez5/rKJnxViUcocG3KyIey33KIyDXRRUKpNPpYELDAMO8auPWFPMPV
+         uJYgKkwQNYuiNQLFVNxRON+UJU6fZsn28C5cYPD4omPmk5G1pwm8xcLmjTYQOC5ejpuP
+         q1nVe8WRT7FLAvVLIa4ath51YYQeOg78bxWXWUyIPe7rldA5BkRc1x/SLMSw473p5doS
+         qh8dZs2gZJBEp/VHweHhOY9L/haREIMdOhydd2SiqyttJOrtQXNbqXf7jefBXrhpVT7+
+         Kro4Dqdrso3/Q9l5q57IR2tHzLja6dCg7ajuH5oUhB6YvtpkIn/IyGdTOAr4zIDX7a0d
+         n5OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719009555; x=1719614355;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=84xlG0RFkWqZzTZs4oPKt0M6Xd1r+ZZ1W+UC4V77keU=;
+        b=uno5B2bVh9r+MiYrepceYwsuJ2mxzzpovK6Tw0r4h6ijxQJSpYd6bkhma6NtzDcLCK
+         JSOrQisF4UAi4ugi+ch5MuVvigvnF7UX/nI27VeJCqyxrnlKPTNc+Yf+hvtgptIP1CmR
+         Qr3RnFIylDQeUaSQjkKz2JD3T2nzQobNtV31nJzPoSUVkFTFlja3/n8TPTPAX3f77cZ1
+         VgSsToPQfjT1A4+9t4LKofpJGoKOg/sp7Ezd6PHYu0+Fo2zBEQRXjvxq9GBIRneh9BgV
+         ftztSyKmk6X4KNJYiVtELg0exh/ICa8PloJDw9jJPT5o4K2j9AGaDWmnhHG+aUJFu6CG
+         mKCA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/7rtbj0hOjsZGdt8hT7Tg1h6X+pUwsUdrj/ZPkqMYs2C0IxGQjYET54Mf/DP/qHkFLpewS3ZlXKTHxhmV9GYWB8AbGHPx8TiBJEyl
+X-Gm-Message-State: AOJu0YylfhJ94JPyge/hQyWWckopdz0fbawuSx0tb9uHS5e7m8xTzYFB
+	ya4N+HEfXP0bjNvG/ANtps0PRjLRYpyHm+JSSqZ/1S71BLOXXgWt
+X-Google-Smtp-Source: AGHT+IEI8ZlgZkwjeYIY3LNhn9nbBGUfVLjL/V9WwJfcDbpobLN6+2WWlAKFXR4tNvSUqayxG3FaWg==
+X-Received: by 2002:a17:902:e5ca:b0:1f6:a606:539e with SMTP id d9443c01a7336-1f9aa471fefmr109125935ad.61.1719009555258;
+        Fri, 21 Jun 2024 15:39:15 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbb302csm19144595ad.252.2024.06.21.15.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 15:39:14 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 21 Jun 2024 12:39:13 -1000
+From: Tejun Heo <tj@kernel.org>
+To: rafael@kernel.org, viresh.kumar@linaro.org
+Cc: linux-pm@vger.kernel.org, void@manifault.com,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	mingo@redhat.com, peterz@infradead.org,
+	David Vernet <dvernet@meta.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v2 2/2] sched_ext: Add cpuperf support
+Message-ID: <ZnYBEdSE3K2ukTI2@slm.duckdns.org>
+References: <20240619031250.2936087-1-tj@kernel.org>
+ <20240619031250.2936087-3-tj@kernel.org>
+ <ZnM2ywDVRZbrN6OC@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnM2ywDVRZbrN6OC@slm.duckdns.org>
 
-In Sub-NUMA Cluster (SNC) mode Linux must create the monitor
-files in the original "mon_L3_XX" directories and also in each
-of the "mon_sub_L3_YY" directories.
+On Wed, Jun 19, 2024 at 09:51:39AM -1000, Tejun Heo wrote:
+> sched_ext currently does not integrate with schedutil. When schedutil is the
+> governor, frequencies are left unregulated and usually get stuck close to
+> the highest performance level from running RT tasks.
+> 
+> Add CPU performance monitoring and scaling support by integrating into
+> schedutil. The following kfuncs are added:
+> 
+> - scx_bpf_cpuperf_cap(): Query the relative performance capacity of
+>   different CPUs in the system.
+> 
+> - scx_bpf_cpuperf_cur(): Query the current performance level of a CPU
+>   relative to its max performance.
+> 
+> - scx_bpf_cpuperf_set(): Set the current target performance level of a CPU.
+> 
+> This gives direct control over CPU performance setting to the BPF scheduler.
+> The only changes on the schedutil side are accounting for the utilization
+> factor from sched_ext and disabling frequency holding heuristics as it may
+> not apply well to sched_ext schedulers which may have a lot weaker
+> connection between tasks and their current / last CPU.
+> 
+> With cpuperf support added, there is no reason to block uclamp. Enable while
+> at it.
+> 
+> A toy implementation of cpuperf is added to scx_qmap as a demonstration of
+> the feature.
+> 
+> v2: Ignore cpu_util_cfs_boost() when scx_switched_all() in sugov_get_util()
+>     to avoid factoring in stale util metric. (Christian)
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: David Vernet <dvernet@meta.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Christian Loehle <christian.loehle@arm.com>
 
-Refactor mkdir_mondata_subdir() to move the creation of monitoring files
-into a helper function to avoid the need to duplicate code later.
+Applied to sched_ext/for-6.11.
 
-No functional change.
+Thanks.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 45 ++++++++++++++++----------
- 1 file changed, 28 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 70d41a8fd788..bc5a8a169336 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3025,14 +3025,37 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
- 	}
- }
- 
-+static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
-+			     struct rdt_resource *r, struct rdtgroup *prgrp)
-+{
-+	union mon_data_bits priv;
-+	struct mon_evt *mevt;
-+	struct rmid_read rr;
-+	int ret;
-+
-+	if (WARN_ON(list_empty(&r->evt_list)))
-+		return -EPERM;
-+
-+	priv.u.rid = r->rid;
-+	priv.u.domid = d->hdr.id;
-+	list_for_each_entry(mevt, &r->evt_list, list) {
-+		priv.u.evtid = mevt->evtid;
-+		ret = mon_addfile(kn, mevt->name, priv.priv);
-+		if (ret)
-+			return ret;
-+
-+		if (is_mbm_event(mevt->evtid))
-+			mon_event_read(&rr, r, d, prgrp, mevt->evtid, true);
-+	}
-+
-+	return 0;
-+}
-+
- static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
- 				struct rdt_mon_domain *d,
- 				struct rdt_resource *r, struct rdtgroup *prgrp)
- {
--	union mon_data_bits priv;
- 	struct kernfs_node *kn;
--	struct mon_evt *mevt;
--	struct rmid_read rr;
- 	char name[32];
- 	int ret;
- 
-@@ -3046,22 +3069,10 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
- 	if (ret)
- 		goto out_destroy;
- 
--	if (WARN_ON(list_empty(&r->evt_list))) {
--		ret = -EPERM;
-+	ret = mon_add_all_files(kn, d, r, prgrp);
-+	if (ret)
- 		goto out_destroy;
--	}
- 
--	priv.u.rid = r->rid;
--	priv.u.domid = d->hdr.id;
--	list_for_each_entry(mevt, &r->evt_list, list) {
--		priv.u.evtid = mevt->evtid;
--		ret = mon_addfile(kn, mevt->name, priv.priv);
--		if (ret)
--			goto out_destroy;
--
--		if (is_mbm_event(mevt->evtid))
--			mon_event_read(&rr, r, d, prgrp, mevt->evtid, true);
--	}
- 	kernfs_activate(kn);
- 	return 0;
- 
 -- 
-2.45.2
-
+tejun
