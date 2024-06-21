@@ -1,796 +1,223 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E3B8820;
-	Fri, 21 Jun 2024 13:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718977250; cv=none; b=YHwcfAhHxtWQcPPSrOLs7hdZczPVEcKW5acKnQiCo8RBva2B6Otqp1xTXnMkN2+x8xw6HGt2Mz8D2eTHTLC0bNLyfOztHUg/fe/7dImuoLzbpWpvSi3lGlrnMlhYT1iEnUw4wDAb8x1FqsbaTXGuOOXYrnE/p0EawLGq5dtapIs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718977250; c=relaxed/simple;
-	bh=h+1mAybP/n827/RcjkuNChuTQdFHGDRpvCsfKxhEI3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JWtKLgsWUE1xkm03Jf+BMlMfaJQOaqW1YWP8SF7ThWkQkk7p4IrUR+wfXqSsPSmMXenptgO20u34AAkXbNVORPdZtGQECCbBjTtxKTHJ5lJK41Pn30y/vDF+rtFX64JqWR6VfDoVofEuX9FNH+WGEs+kue3qc7zhYHmbexwz2SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JyAJJCwK; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E50412E5E;
+	Fri, 21 Jun 2024 13:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718977273; cv=fail; b=PCwZoPaHj9RaE9Bvo4l/9Wr3/UH2r0Od26Ju3IVIb5EGFSfIhPuqZXZ7MDN3LnSicEG43NeRVAFLm1rxprwknpQNGpozXX0fx1lbIrIZcWy7TtrxrsQXCuP7IC6CEcCQxov/8Ty0eXOSmwlWa3CezxbIxfQ893S6UvAz5ldN2Ig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718977273; c=relaxed/simple;
+	bh=ILCkVdvvDENIS8JAIfqexK5pIvE8gQqsOSvSixfl6uk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nbroYN+b1Gf8J9+mWtYK4oq43ZeRbQ2QWe28py6xIkVZrlHsV88GNasQjMJlWibwHQPMT/sEfhYEg3rcvi6RkwdFe7MVSJR+kWSDSgs0Uzd+KS6zJzSrlDW1IaG2Pq6fobjmOB7e79ZCeoAG6YxymskNUQgoS+t5Wqf11rQ5VSM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Bo+Cyb2Y; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=HkOzS7QH; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyAJJCwK"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ec50a5e230so6372211fa.0;
-        Fri, 21 Jun 2024 06:40:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bo+Cyb2Y";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="HkOzS7QH"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L7fVMs026946;
+	Fri, 21 Jun 2024 13:40:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=vr8opnYJPnz5uxS
+	kJfue2PumZxha72jMw9SYifdURpI=; b=Bo+Cyb2YN1X+dLVU/9kdJxpSobftPgK
+	a7kDPMsY4S75bY+hzXQVvFNUpGeGaw+tY3t7322SrDSbKF1EU0RIuZXzsgR2nwRa
+	SLKfCIHIFMGI8potNzdWkvf5kZex8wgR37UH5KL1fPDZdnhJb4T9v1qIcrE5a2ix
+	pPXazXGx/LeK47wb/phYZSJ7fXQ+gzj5TCJuf6mOLjlGWahYth5rX70/3K6lREiA
+	+isuBl+oaW5U8RoC5kJbW18N9oZs7xVgyjewtfC96BKCxg9s/JbZCxxhOUcQoB1o
+	ttmRe/QQH83GaX1L9M2Va2dJnj9BLVv1EZw6vJYXfs6GzZl5TTpVKag==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yvrkjsstj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Jun 2024 13:40:55 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45LDAgW4025304;
+	Fri, 21 Jun 2024 13:40:53 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2048.outbound.protection.outlook.com [104.47.55.48])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yvrn646ad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Jun 2024 13:40:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZZ2pUhiE3tgxx3XU97SKFd/VHC9joAJ24xleiDKGdGXS1qVr6/0+UHWQhBiTNrCh8/sjWPKqSEKtKgoJuJgPcs0zN3juriWA0ETIKT1XnBOsAK1B7FSsUmlMeT2p7ZYqeUB0d6m3cuzAy7Mj1k7oHsd9T6zrFdbCcc3Q1UEd+Qev51QjDnapEDdO13VKwslh9lS6Ui8jj4lNIBYx3uI6HxSfOxND+y8uJYMum3j7yAe/2E4/03ATkkiSvOK1HCBeqTHvWmDvw+pR2T85Uw7Z86K2Oyak083bnDIz4e4vim5wM+YAasoljrd8bUlOI2yUDRZacaHQsU7Ddz32CvoJkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vr8opnYJPnz5uxSkJfue2PumZxha72jMw9SYifdURpI=;
+ b=V6VGQrx3oiXq6aactHqEs+gESFZF0N58U6LtqvrPKizDlnVfkdyOJ1AVMVtaF1ZSexsSwR9n4f2ObjRtNItSFH10q8hd0LisvtfkIQO1ulP3tqDPdeVhCJj1bMSHNqZmW2JdUdded07eBlVPA1sjpmtNg7Xncy7ngW9y/g6upJShHn+KU3jsxyPPM3Yrr/8D9ZbYrpDNoVXsz9N6GXJBAVgiGZSQinDEKLZnYdcr7SQpFhfPro9WLXYLnzQ9DTdi/IsY1zY0SvxgG14JJcHcCeSDz1r4J2qnoqIjEiA0+hdmf9EAnkxMRcnRv7Xewz/HTIBGUnoxcND65BEJwGzC5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718977246; x=1719582046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=45m2k/Td35A4EcDtWafXF2gULerKmaqVWvstZyDWUeY=;
-        b=JyAJJCwKIjh+Qn+LvOnwmHOr8eduxxq9WAjGu663Bgwysxr/xaENUgeJp6sitk0s8J
-         ZaD3+z29Umwha+FQdUuvIp27ysVQ+spAkfqWFSUhXyx30JLc1TzlgnwO303uNIzvKTvC
-         pR+7LLJLJWU35wN4l98DlVFvBrxFMXKhAM9S0yNVFeDpWlc+grQdhWPKSs4ri2PlPavc
-         d+si0IE02y0aMVfleXyxGL4WGAJhvUlVT5NBSSpo4eQedd0SI/JRTMbwiAbR+oJxW9eM
-         AhVwWYxHt0o4RFoYLT9x94MMiO4jI/izryRG/yrmx4tGARKuGkifU8vg0psB1QG29LPY
-         P5lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718977246; x=1719582046;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=45m2k/Td35A4EcDtWafXF2gULerKmaqVWvstZyDWUeY=;
-        b=tGGcdYLNZrFDp24Imm7qdvjAW3W/JbWgEQR3TlKckef5iFymb/zuXWj7rA1Fp+4LBL
-         BHdTIcJbYRL/DX9AWmN4b/pCcVuDu88tME56tO7u1XsNkcex6+TtaQhLcPsP5tbvDSlZ
-         0CURg1aW/SwdoHd6V8KYYDzG2Ct5mceZd6S6lQ9BPXNPSRTvaCduEbgvI9wzZK+eZAFw
-         I83c1Ydbj08pxNsddukZI/KnBEWcs4h0ESZQhctx7ZBDhhdn3ssXQ0cWDcetNWfBKV1f
-         VdUeUodS7QYUVciBnbq2ifF1EnHl9qkaXpTCGNeHMVva5YXp6xgfKnWZ5XH8SwVWeQiF
-         GVGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKHH+E8/SEMYyBQVyUuTL6eTb3f0Kb45jbaW2hArN9TlvIeb5ng/HEh6d1IMb5AJYrVUFFbcscMLSh78aDgSr+8k2ofVa0mrZwILq/
-X-Gm-Message-State: AOJu0Yzc53q6xoxLVH/j5vyqe61qlnW4TPJ6hw3T9Bp7hP6e8pGiQpOn
-	0iydZ/a/N+SvWF6MuamktgWdekNAHQN1gt01ma95/GDSYk1GwV4zQv+J
-X-Google-Smtp-Source: AGHT+IHPK2UFguMpGh6GwDqI5N9xz0iGPDzfl1kMqBI73mx3lJ7TUM/256TOrKNUuL+FAunRKzy/1A==
-X-Received: by 2002:a2e:7019:0:b0:2ec:5128:1850 with SMTP id 38308e7fff4ca-2ec512818b1mr7156451fa.13.1718977235352;
-        Fri, 21 Jun 2024 06:40:35 -0700 (PDT)
-Received: from U4.lan ([2a02:810b:f40:4600:1b6a:5399:9a4f:7217])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30562cb6sm962059a12.83.2024.06.21.06.40.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 06:40:35 -0700 (PDT)
-From: Alex Bee <knaerzche@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH 4/4] arm64: dts: rockchip: Add Neardi LBA3368 board
-Date: Fri, 21 Jun 2024 15:40:30 +0200
-Message-ID: <20240621134030.243646-5-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240621134030.243646-1-knaerzche@gmail.com>
-References: <20240621134030.243646-1-knaerzche@gmail.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vr8opnYJPnz5uxSkJfue2PumZxha72jMw9SYifdURpI=;
+ b=HkOzS7QHX8K/8fPV3nDPROWqiC7ra209m+KZtJGkLw4xGieaL07GgDaT5+jPmgHO6v6WdplB1WhAB8Hl75I/5kBOQKViaFw0m7X84k2VH5dbTkoNq/bw9rrUe49PBWIM7+ZKaCxDrZGgyufykPd3dKzLtnQexRHr2DgpSuKWBR0=
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
+ by PH7PR10MB6652.namprd10.prod.outlook.com (2603:10b6:510:20b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Fri, 21 Jun
+ 2024 13:40:51 +0000
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490%4]) with mapi id 15.20.7698.020; Fri, 21 Jun 2024
+ 13:40:51 +0000
+Date: Fri, 21 Jun 2024 09:40:49 -0400
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Cc: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        akpm@linux-foundation.org, willy@infradead.org,
+        quic_jjohnson@quicinc.com
+Subject: Re: [PATCH] tools/testing/radix-tree: add missing MODULE_DESCRIPTION
+ definition
+Message-ID: <rs6fzee44ilw6rhq2wauqwxdgnkgy3wudgr5alf2fuolrjm55f@32sznnbteorf>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Sidhartha Kumar <sidhartha.kumar@oracle.com>, linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
+	willy@infradead.org, quic_jjohnson@quicinc.com
+References: <20240617195221.106565-1-sidhartha.kumar@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617195221.106565-1-sidhartha.kumar@oracle.com>
+User-Agent: NeoMutt/20231103
+X-ClientProxiedBy: YT3PR01CA0004.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:86::7) To DS0PR10MB7933.namprd10.prod.outlook.com
+ (2603:10b6:8:1b8::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|PH7PR10MB6652:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5ad39c5b-1b3b-4edc-c4f5-08dc91f7c419
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|376011;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?YLLT2hAO9EGT7UcZMdiBrsVaM9PLtykNnkpgoMUSYTovogXvKuB4Ss1H7bYe?=
+ =?us-ascii?Q?DouXZpyTJ4LtcvrpFQtF5irCu6dwbGE92ufIZT/ftI9W0wSyttkQ6wxmGALK?=
+ =?us-ascii?Q?NNVbxRXFVNDydbylj8+5R4yqg4RxVVJoT/3dUkPT+2HpdsYlSKeBLPpnFDfu?=
+ =?us-ascii?Q?I5G/eVqpL4BEfinTMCd90kV1beir609JeRxWECat7Gphgdc2xcJbWQK4byA9?=
+ =?us-ascii?Q?+Jgzc+Uz4x1r/JyzZQsHw5ejPHGcYnEOYTuJsNIA01yR2iOFURhsH7nrRC/w?=
+ =?us-ascii?Q?C/eYwVEtgxSE8fxBEdUzmqLgu3qp6SSkbKZ/Ir5ScHXKIrF74+lkmnZjS+EJ?=
+ =?us-ascii?Q?Qq+x3WsZLH6EndWnlR0PO9Qb2a9MbjQAh1OmHGSlxjmvlEvggKfMMRSIYOLS?=
+ =?us-ascii?Q?JZudRGSWL/DOHIng/oHNaUScSaOA1WPwbbgSGslm1SrbRJaMyU0XinVBos3r?=
+ =?us-ascii?Q?3I1suhVks1YdHtWqhpNTofOQ/hDthhXt7hR1colTPicaAEmomPlJGkvwSR9+?=
+ =?us-ascii?Q?lVJrC5t/aEItuF1nT6ZFuU13uVxO2F5vyoLQpgXSthAXOf53byg065z4q7sY?=
+ =?us-ascii?Q?QyNUMsISzDIGaaAAi9kYXNObjacAyw3uK6XoEpfjGim3TQkfdfhjJOIISL6O?=
+ =?us-ascii?Q?0Jdistp3Bfou6/x4VzwN+XifS+CFCRzOz+5ce7LDTmuLLoDUkbXdZpVnK8XI?=
+ =?us-ascii?Q?7xc47d8km/8ZwxKb7Tc8gHARJkNiuNWuyCbqTQDXtNJnC7MYf9oJfe6bIMHV?=
+ =?us-ascii?Q?lXuDwo9jdWXHsHQliCALyYpfKx3kMv8NXmbNJ3LvQkGXzmIo+133Y3gOvuop?=
+ =?us-ascii?Q?GJHD7jPNAqVoKbbihC1aeL5CUnM5S23OTP4QLxWHumvvOwHQNvGOYAlhFY2V?=
+ =?us-ascii?Q?fPLlG5PVsolQ9mS4KjfFYeqqUp/fFXEsnS6vLWBJM41PHrtp8qZpYW9Fiiuj?=
+ =?us-ascii?Q?VTqfWdDlwYuiCDKGGX8eYPWnZeTBDPDd4X4aAU2DNjolHmXVbQFlwW/RzRPN?=
+ =?us-ascii?Q?lojI0vboIlGZ5JrO9isuLjOvTMAMawMeDYrRD0mWIQTlArtznwAaxYYeHOTU?=
+ =?us-ascii?Q?tT6IcHnwJBoDMlwEYs78xiLoFZwdiD163x4w1QwhsS6IfJ2aSvUhfv/UKUno?=
+ =?us-ascii?Q?0aA/cLtUBhf1B3r23zbydLdr9fFso45dwEtSUVo3GrFgTNS66YM6apjF4Uq2?=
+ =?us-ascii?Q?D3DeXKtG6TMExv8nZK0+o84Lfldt4is0RnsPP+NW/GCRFj9hXYwel5jjDk4N?=
+ =?us-ascii?Q?2gXp1dUOVGaWEQQt70BrU0Y6GTWyKPUmcWOH9nRfFFD51nDYDmHTKO9cgKmh?=
+ =?us-ascii?Q?bMInrR/PHfh9bvgtjZUs72zw?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?79JCUiTNVJqRDO6gDy9zoDJ2ySgSbtkKMUlrYFcvA1u15xaLnxeRkyy7g2LK?=
+ =?us-ascii?Q?NPSlOmiy/sG+eeyT7s/20u8Hqtot2zMF8mcvEe+1auPtfPdkveHT091u6egu?=
+ =?us-ascii?Q?9cDESiRZNI9WhdHGLKTs9kYWm6JcteGPWsijxrRo7O7ZUgN+NbDNO/WdFD75?=
+ =?us-ascii?Q?7epCPvJVV25e+uPpAuxRB7sgy1R4v3F1Kh9a8VDibXf1fZwoGey2DewdB+Xq?=
+ =?us-ascii?Q?f0Gi1Mi7waSd3JN8k/x3d42LN2SZH5iy77QNOuZmTACgUTTtbj8rPtOcuZ1h?=
+ =?us-ascii?Q?97I+JAo0BNRfZD0ySTEE9gkgj2TCTxAML+r2exhgI5Mh19LUdGsQTO63wP+Y?=
+ =?us-ascii?Q?CCVRbz0/7YnUZhcySbyH7cN3euRJkcBdRNaNtoqqF4YxSKUgQVSes4YDXDZE?=
+ =?us-ascii?Q?kDwzRW8AL1yfHwkiesMGwmd2lKu7Dz6qqOGtvgd7zT6yyzbvWXkmTqWVARXp?=
+ =?us-ascii?Q?CdteLOZO6ZO/Xop8t1Y+2Rxe7VdWdPdM8RTwVb3mdRT8QoTtDJuNPuPOjNiv?=
+ =?us-ascii?Q?fX1OcZSRxDVwzb7OCEqzD7VaLZ8daFWRmSy6Xo45D2VZGJegU2z6ewts3q5A?=
+ =?us-ascii?Q?qHyBBdG+thay/WaJsvMTAl1+uVW2Xxd+c1HoyikLKis/Ch9uRAZWAzmLbeEH?=
+ =?us-ascii?Q?HcAJGkWtScSznMOiE8q6JIExf5YCHNZNo3SYlQi7XDUTrfcHO9zMfxafUr/G?=
+ =?us-ascii?Q?vhm/pI3f2eR8MhMcxGO32ecnzAShhIXJMZVdMrHbpEuYM1xpiuDVnuVzj3Td?=
+ =?us-ascii?Q?Fk5znsHYvgtbZyfF5Hd0ZI3CdCiwOoVyNK43RJX4OiRwgKhLNB4FEepjsByb?=
+ =?us-ascii?Q?vCykwWnVCo4r5fCFRqPgeUMHx1yEe5Xb+xCOUDMyMBvZeE2UMW4tYXXr5BO6?=
+ =?us-ascii?Q?UKxQdxiIj7gl+lABlZuJ+sSGk5jeyn3Y35W+8m0cS/zu12EgU2mhQ2puhJzR?=
+ =?us-ascii?Q?Bln9k9RwhvBBeECyX3dPLxYldol0Ib9ZG+9EXC1hN0kvSrGZ1ZRewAgjBKPY?=
+ =?us-ascii?Q?MYLrbQ4Kkmbs0Cs9F9ihWOooSDcqbM2pCCK9Vhzvp0st/z3AhDPSNwasMEeQ?=
+ =?us-ascii?Q?z1f/eB75LY1+5sOPA4NxQNcvV7LoP6XIwd2h/Un8MpkQdptATMg8le3nIHP6?=
+ =?us-ascii?Q?n1+Uy6FHwJRkquwId6vmBEePjSMLrijP5LzEDHkR3Heo2n8Cq8n+67DBWhgK?=
+ =?us-ascii?Q?3hn3rXbl5Iz/gCU5GRV1xe2dBCJ9igXZ0OLw/kzHcONcueqLaKwoTYpyTopC?=
+ =?us-ascii?Q?jnX3liUNJ3CyMeMfDNNQGvA6UdFL43R6IFcSNcHNY4Y5MkvVyW9ua9EiRYCx?=
+ =?us-ascii?Q?NMRn8OeKyPKCVgnlyruoBYiD4Nysy7k61R9OnWdjELGD1TBWcLEvOpJAbmOW?=
+ =?us-ascii?Q?QQMjY3PbQM01XkQ8/IxSKZQcYh0VeJxqkro0SPDpz+Htl2UuKuA7BiN15tA9?=
+ =?us-ascii?Q?lY2ycfDZ3JRXwb07/p9hCVYdBygd47BO/F63QpqM32iD/QrMuaFYGAnKY3Ib?=
+ =?us-ascii?Q?IrUp1457cHHH7oovyzvt2q5X72C16xgLuIWWkEed9wsrEjfeV0ffpno6h8Z1?=
+ =?us-ascii?Q?1HWFaVMVD7jLw8tlUssZP/te/38EJHNw6GTRCaco?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	nxhf6YfoEhLDhKLdQw6GXOBpCt7XHkoJUcQJ87r8bIE0K1R7+J/8PThiWVSZtWC6y+yxjumtEIqJ9prWS7vSjxS3SPh1YARMPOBzttd4BDvrUDXZJlF/eZ0uFyIE2zjrK4s8+p1Spg1hIcF9lnbYjM9FjE6XZA3aFsUghng3hjIm2kPq/PjYmlIGMGwrgNk7/Tt0DnqpVNBeVbjdjHS5CML88+57MmsKxLge5OaGgE6Cqj8Yv/ygVs3hMC5YmDmPDdZ4K7ioPzxMTGKlKwCH2orwO/kxvLRyiHBH+HUeypKCZ2jMoI8h4nm7fmSRBtEeoeAsT8Roq+axEzZdn4Oqca47/HSaOQ/bZ1YQ7jSPAt1dnLHZQKwZjPNee0dCvMbw93KwjTYGUdIBfzQHq/NQTI7vTY3e8sZ0QpXG1n01YHgNg3Nj1Qqpx5s9LtS70cFMKbFA7/6O7OqZV/o+ekUZI4oQMa4rNwv0nn1BN9mJeFuqxkmQE+9o6p8D433FJQIgnHFXaOeRcoo5Ts5Q0h99hnZblmrg9sLwXcA2DSyrz1XBo2Ho+DYbQyg1H37IvuBwd8aTLd2PjugxgaG6HlQS88rZPrMI8LOd1ea1bdnCTBA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ad39c5b-1b3b-4edc-c4f5-08dc91f7c419
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 13:40:51.4287
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s5kwE179v+K9eb5h2SOZ/hNdumxSm41J1+9feFUUsnMEI0xgzeKObjPPLmuGNqFMWrcj0C3uYNI9sjvM+1eIug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6652
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_05,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2406210100
+X-Proofpoint-GUID: yYFSzHml_cpYxYFLsJW9zpF22UzXZQFw
+X-Proofpoint-ORIG-GUID: yYFSzHml_cpYxYFLsJW9zpF22UzXZQFw
 
-LBA3368 is a RK3368 based industrial board from Neardi.
+* Sidhartha Kumar <sidhartha.kumar@oracle.com> [240617 15:52]:
+> Userspace builds of the radix-tree testing suite fails because of commit
+> test_maple_tree: add the missing MODULE_DESCRIPTION() macro. Add the
+> proper defines to tools/testing/radix-tree/maple.c and
+> tools/testing/radix-tree/xarray.c so MODULE_DESCRIPTION has a definition.
+> This allows the build to succeed.
+> 
+> Fixes: 9f8090e8c4d1 ("test_maple_tree: add the missing MODULE_DESCRIPTION() macro")
+> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
 
-Specs:
- - 1 GB DDR3 DRAM
- - 8/16 GB eMMC
- - µSD slot
- - 100 mbit ethernet (optional 12V PoE)
- - Ampak AP6255 Wifi/BT combo
- - ADC button
- - 4 x USB 2.0 via onboard GL852G HUB connected to SoC's ehci host
-   - 2 exposed as USB-A
-   - 2 via 2-mm-4-pin connectors
- - micro USB OTG connector
- - 2 x UART TTL (2-mm-4-pin connectors)
- - CSI connector
- - DSI connector
- - eDP connector
- - HDMI 2.0a output (type A)
- - touchpad connector (I2C, 3.3V)
- - ALC5640 audio codec
-   - combined headphone/microphone jack
-   - speaker connector pads
+Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3368-lba3368.dts      | 666 ++++++++++++++++++
- 2 files changed, 667 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-lba3368.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 85d949f2c909..90f5172f37e6 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-lba3368.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-lion-haikou.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lba3368.dts b/arch/arm64/boot/dts/rockchip/rk3368-lba3368.dts
-new file mode 100644
-index 000000000000..ec7d6e7b2cf5
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lba3368.dts
-@@ -0,0 +1,666 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/clock/rockchip,rk808.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/rt5640.h>
-+#include "rk3368.dtsi"
-+
-+/ {
-+	model = "Neardi LBA3368";
-+	compatible = "neardi,lba3368", "rockchip,rk3368";
-+
-+	aliases {
-+		ethernet0 = &gmac;
-+		mmc0 = &emmc;
-+		mmc1 = &sdmmc;
-+		mmc2 = &sdio0;
-+		rtc0 = &hym8563;
-+		rtc1 = &rk808;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	adc-key {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 1>;
-+		io-channel-names = "buttons";
-+		poll-interval = <100>;
-+		keyup-threshold-microvolt = <1800000>;
-+
-+		button-recovery {
-+			label = "Recovery";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <0>;
-+		};
-+	};
-+
-+	analog-sound {
-+		compatible = "audio-graph-card";
-+		dais = <&i2s_8ch_p0>;
-+		hp-det-gpio = <&gpio0 RK_PC7 GPIO_ACTIVE_HIGH>;
-+		label = "alc5640";
-+		routing = "Mic Jack", "MICBIAS1",
-+			  "IN1P", "Mic Jack",
-+			  "Headphone Jack", "HPOL",
-+			  "Headphone Jack", "HPOR",
-+			  "Speakers", "SPORP",
-+			  "Speakers", "SPORN",
-+			  "Speakers", "SPOLP",
-+			  "Speakers", "SPOLN";
-+		widgets = "Microphone", "Mic Jack",
-+			  "Headphone", "Headphone Jack",
-+			  "Speaker", "Speakers";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hp_det>;
-+	};
-+
-+	dc_12v: dc-12v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dc_12v";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	ext_gmac: gmac-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <50000000>;
-+		clock-output-names = "ext_gmac";
-+		#clock-cells = <0>;
-+	};
-+
-+	hub_avdd: hub-avdd-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "hub_avdd";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_io>;
-+		regulator-always-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		power-led {
-+			pinctrl-0 = <&power_led>;
-+			gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-+			function = LED_FUNCTION_POWER;
-+			color = <LED_COLOR_ID_GREEN>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rk808 RK808_CLKOUT1>;
-+		clock-names = "ext_clock";
-+		reset-gpios = <&gpio3 RK_PA5 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_reg_on>;
-+	};
-+
-+	vcc_host: vcc-host-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_host";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_sys>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	vcc_lan: vcc-lan-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_lan";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_io>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_otg: vcc-otg-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_otg";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_sys>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&otg_vbus_drv>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&dc_12v>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vdd10_usb: vdd10-usb-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd10_usb";
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1000000>;
-+		vin-supply = <&vdd_10>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&cpu_l0 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_l1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_l2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_l3 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_b1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_b2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu_b3 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&emmc {
-+	bus-width = <8>;
-+	vmmc-supply = <&vcc_io>;
-+	vqmmc-supply = <&vcc_18>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
-+	cap-mmc-highspeed;
-+	non-removable;
-+	no-sd;
-+	no-sdio;
-+	mmc-hs200-1_8v;
-+	status = "okay";
-+};
-+
-+&gmac {
-+	clock_in_out = "input";
-+	phy-handle = <&phy>;
-+	phy-mode = "rmii";
-+	phy-supply = <&vcc_lan>;
-+	assigned-clocks = <&cru SCLK_MAC>;
-+	assigned-clock-parents = <&ext_gmac>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rmii_pins>;
-+	status = "okay";
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <0x1>;
-+		#size-cells = <0x0>;
-+
-+		phy: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+			max-speed = <100>;
-+			reset-assert-us = <10000>;
-+			reset-deassert-us = <1000000>;
-+			reset-gpios = <&gpio3 RK_PB4 GPIO_ACTIVE_LOW>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&phy_rst>;
-+		};
-+	};
-+};
-+
-+&io_domains {
-+	audio-supply = <&vcca1v8_codec>;
-+	dvp-supply = <&vcc_18>;
-+	flash0-supply = <&vcc_18>;
-+	gpio30-supply = <&vcc_io>;
-+	gpio1830-supply = <&vcc_io>;
-+	sdcard-supply = <&vccio_sd>;
-+	wifi-supply = <&vdd1v8_wl>;
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	rk808: pmic@1b {
-+		compatible = "rockchip,rk808";
-+		reg = <0x1b>;
-+		interrupts-extended = <&gpio0 RK_PA5 IRQ_TYPE_LEVEL_LOW>;
-+		clock-output-names = "rk808-clkout1", "xin32k_wifi_bt";
-+		vcc1-supply = <&vcc_sys>;
-+		vcc2-supply = <&vcc_sys>;
-+		vcc3-supply = <&vcc_sys>;
-+		vcc4-supply = <&vcc_sys>;
-+		vcc6-supply = <&vcc_sys>;
-+		vcc7-supply = <&vcc_sys>;
-+		vcc8-supply = <&vcc_io>;
-+		vcc9-supply = <&vcc_sys>;
-+		vcc10-supply = <&vcc_sys>;
-+		vcc11-supply = <&vcc_sys>;
-+		vcc12-supply = <&vcc_io>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int &pmic_sleep>;
-+		system-power-controller;
-+		wakeup-source;
-+		#clock-cells = <1>;
-+
-+		regulators {
-+			vdd_cpu: DCDC_REG1 {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-name = "vdd_cpu";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_log: DCDC_REG2 {
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-name = "vdd_log";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-suspend-microvolt = <1000000>;
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_ddr: DCDC_REG3 {
-+				regulator-name = "vcc_ddr";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_io: DCDC_REG4 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_io";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-suspend-microvolt = <3300000>;
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcca1v8_codec: LDO_REG1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca1v8_codec";
-+				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcca3v0_codec: LDO_REG2 {
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "vcca3v0_codec";
-+				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_10: LDO_REG3 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-name = "vdd_10";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-suspend-microvolt = <1000000>;
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vdd1v8_wl: LDO_REG4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vdd1v8_wl";
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vccio_sd: LDO_REG5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vccio_sd";
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vdd10_lcd: LDO_REG6 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-name = "vdd10_lcd";
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_18: LDO_REG7 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc_18";
-+
-+				regulator-state-mem {
-+					regulator-suspend-microvolt = <1800000>;
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc18_lcd: LDO_REG8 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc18_lcd";
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_tp: SWITCH_REG1 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_tp";
-+
-+				regulator-state-mem {
-+					regulator-suspend-microvolt = <3300000>;
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_sd: SWITCH_REG2 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_sd";
-+
-+				regulator-state-mem {
-+					regulator-suspend-microvolt = <3300000>;
-+					regulator-on-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	codec@1c {
-+		compatible = "realtek,rt5640";
-+		reg = <0x1c>;
-+		clocks = <&cru SCLK_I2S_8CH_OUT>;
-+		clock-names = "mclk";
-+		realtek,dmic1-data-pin = <RT5640_DMIC1_DATA_PIN_IN1P>;
-+		realtek,dmic2-data-pin = <RT5640_DMIC2_DATA_PIN_IN1N>;
-+		realtek,in1-differential;
-+		#sound-dai-cells = <0>;
-+
-+		port {
-+			rt5640_p0_0: endpoint {
-+				remote-endpoint = <&i2s_8ch_p0_0>;
-+			};
-+		};
-+	};
-+
-+	hym8563: rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		clock-output-names = "xin32k";
-+		#clock-cells = <0>;
-+	};
-+
-+};
-+
-+&i2s_8ch {
-+	status = "okay";
-+
-+	i2s_8ch_p0: port {
-+		i2s_8ch_p0_0: endpoint {
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+			remote-endpoint = <&rt5640_p0_0>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+
-+	bt {
-+		bt_host_wake: bt-host-wake {
-+			rockchip,pins = <3 RK_PA7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_reg_on: bt-reg-on {
-+			rockchip,pins = <3 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		bt_wake: bt-wake {
-+			rockchip,pins = <3 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	leds {
-+		power_led: power-led {
-+			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	phy {
-+		phy_rst: phy-rst {
-+			rockchip,pins = <3 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_int: pmic-int {
-+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		pmic_sleep: pmic-sleep {
-+			rockchip,pins = <0 RK_PA0 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sdio-pwrseq {
-+		wifi_reg_on: wifi-reg-on {
-+			rockchip,pins = <3 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sound {
-+		hp_det: hp-det {
-+			rockchip,pins = <0 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	usb {
-+		host_vbus_drv: host-vbus-drv {
-+			rockchip,pins = <3 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		otg_vbus_drv: otg-vbus-drv {
-+			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	wifi {
-+		wifi_host_wake: wifi-host-wake {
-+			rockchip,pins = <3 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&pmu_io_domains {
-+	pmu-supply = <&vcc_io>;
-+	vop-supply = <&vcc_io>;
-+	status = "okay";
-+};
-+
-+&saradc {
-+	vref-supply = <&vcc_18>;
-+	status = "okay";
-+};
-+
-+&sdio0 {
-+	bus-width = <4>;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	vqmmc-supply = <&vdd1v8_wl>;
-+	vmmc-supply = <&vcc_io>;
-+	assigned-clocks = <&cru SCLK_SDIO0>;
-+	assigned-clock-parents = <&cru PLL_CPLL>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	no-sd;
-+	no-mmc;
-+	non-removable;
-+	sd-uhs-sdr104;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	wifi@1 {
-+		compatible = "brcm,bcm43455-fmac", "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupts-extended = <&gpio3 RK_PA6 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "host-wake";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_host_wake>;
-+	};
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vccio_sd>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4 &sdmmc_cd>;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	no-mmc;
-+	no-sdio;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	status = "okay";
-+};
-+
-+&tsadc {
-+	rockchip,hw-tshut-mode = <0>;
-+	rockchip,hw-tshut-polarity = <1>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	uart-has-rtscts;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm4345c5";
-+		clocks = <&rk808 RK808_CLKOUT1>;
-+		clock-names = "lpo";
-+		device-wakeup-gpios = <&gpio3 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio3 RK_PA7 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio3 RK_PA2 GPIO_ACTIVE_HIGH>;
-+		max-speed = <1500000>;
-+		vbat-supply = <&vcc_io>;
-+		vddio-supply = <&vdd1v8_wl>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake &bt_wake &bt_reg_on>;
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_xfer>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_xfer>;
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	hub@1 {
-+		compatible = "usb5e3,610";
-+		reg = <1>;
-+		vdd-supply = <&hub_avdd>;
-+	};
-+};
-+
-+&usb_otg {
-+	vbus-supply = <&vcc_otg>;
-+	vusb_a-supply = <&vcc_io>;
-+	vusb_d-supply = <&vdd10_usb>;
-+	status = "okay";
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
--- 
-2.45.2
-
+> ---
+>  tools/testing/radix-tree/maple.c  | 1 +
+>  tools/testing/radix-tree/xarray.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/radix-tree/maple.c b/tools/testing/radix-tree/maple.c
+> index 175bb3346181..11f1efdf83f9 100644
+> --- a/tools/testing/radix-tree/maple.c
+> +++ b/tools/testing/radix-tree/maple.c
+> @@ -19,6 +19,7 @@
+>  #define module_init(x)
+>  #define module_exit(x)
+>  #define MODULE_AUTHOR(x)
+> +#define MODULE_DESCRIPTION(X)
+>  #define MODULE_LICENSE(x)
+>  #define dump_stack()	assert(0)
+>  
+> diff --git a/tools/testing/radix-tree/xarray.c b/tools/testing/radix-tree/xarray.c
+> index f20e12cbbfd4..d0e53bff1eb6 100644
+> --- a/tools/testing/radix-tree/xarray.c
+> +++ b/tools/testing/radix-tree/xarray.c
+> @@ -10,6 +10,7 @@
+>  #define module_init(x)
+>  #define module_exit(x)
+>  #define MODULE_AUTHOR(x)
+> +#define MODULE_DESCRIPTION(X)
+>  #define MODULE_LICENSE(x)
+>  #define dump_stack()	assert(0)
+>  
+> -- 
+> 2.45.2
+> 
