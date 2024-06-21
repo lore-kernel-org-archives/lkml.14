@@ -1,152 +1,279 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC543B1A3;
-	Fri, 21 Jun 2024 14:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28F02940F;
+	Fri, 21 Jun 2024 14:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718981426; cv=none; b=JQEBueDKbdbuDzf3pm0ecTTMi+sn6mhvIc4SGESdh6YQJR4RWqHPiu1BMezzXkR7VYHiJiLBz+1tP8ZQuJaeN93yoaBwCCxfNW0IAm/QJdUfSdVq3Yfsw/O/vGoLcdZ3cm3yUsvNJ5DqG/xd61Obz8priyrOZs99PmdJQzBf17U=
+	t=1718981470; cv=none; b=rz5yMu6eLK4gri1ncoJ9Usj47Gy3+ALHlWd7smnNfrpmQLw+QtWabTPhw99P13pxqGHdArQ2LDWOsuEH75RtavBlXL/5N5guXmGyF8dTiXPr0PHvE35hKEwQ0qjua0Vt+8hpO0NPl7iI0vYvATObS7W7LRSuWmpkSWOneqaIrQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718981426; c=relaxed/simple;
-	bh=+Hg6tFbWZcI7vg/2hhjDAn/2mNvc4EHGH1umCCb8vc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qNUa11o7WyFTs20ZEPO6HdwC3X+f8Ctpx0jBbD9ZbV+oQ49RFGn6Y0I+wKYH4YICmnsy7b688G6aqqFzs6okDDhWpI+5yZgVIwFrMpsSZm/STtgDCGMprjskb8ZUuIpT6aX3ccc8qHl47OM1osM2AoDxszdcdtMOrVST+n8DUtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asyfs0c+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718981470; c=relaxed/simple;
+	bh=5hLo/NJHRsfeggQDXZtDEA7gdlTNrQ5GceHmTEYUk8k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TqkdYGsOhMfADhX7WD/ULXYTNASpJ4eyu14sAB1Yj7+bedvmueh6sjP2B8vaDpXjwZ/+6MeXMqBGVZ05rqr7bxrJ5fyIHCEF4mjg1NNsI5uSJAvHQpj3+QNZdxc1azsoJMDhr3y6pHE0bY1uMO2m5geVA4Ap4QMYU3dpQBaQhuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=UaXZMKs5; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asyfs0c+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9711CC2BBFC;
-	Fri, 21 Jun 2024 14:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718981425;
-	bh=+Hg6tFbWZcI7vg/2hhjDAn/2mNvc4EHGH1umCCb8vc0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=asyfs0c+RaqaVr8+fvcHF6fQIhU4CeXKsnJpoO06uRr8LMEx9XEuII0h+021Voi31
-	 t2rfFAV5QWhT2vFxEJsFkKXMy2RJlCedJLMbIgBLGqMLrWAVg/GohHB4kCHPQRqUip
-	 RShrQ7qbnBeJz5Wfqm8yr9D92dniRaKbc++qsHMmytWx58hksPj5Gw3/3tGYrNcAuM
-	 QEjI4IW3pb7PJjm/pGWgVcsIOVoNbx6eNQkAzxCcZW5+sSdX2kFV00JNCPw4UMIjXl
-	 jF9774ZFHOH2FjfPdyZ5Q6tnR7pcLuYWR+0/FQYnMfZiQm708WZlvvnZA8oHH8JZPl
-	 IrEAR8gNlUVcA==
-Message-ID: <5952f4ef-8615-4aa5-9ff6-3bee63750712@kernel.org>
-Date: Fri, 21 Jun 2024 16:50:06 +0200
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="UaXZMKs5"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBfeWg014796;
+	Fri, 21 Jun 2024 08:14:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=MxN1j
+	fBJIKGuR9o5HaLQx0jskf9yOcmAgKNAbFMGh/g=; b=UaXZMKs573U7Hq/tuwhso
+	duyHbSt5xkgv7pFv059imY1WDyMNMAI7527g4TRv8mvO/iUV8k/J+81NneZfTNpV
+	XeH1jg7WeqEDM0HW6kMmb7JX3E/cqbQDkmlIW0TFGfZuZpSmN9t/V9qhGuJjEcRG
+	WXChOHO0prYhAre7hYc+pOHA9Ywx/cj+Sieq1U9NBFzQi2FdLfTfc1Y3gR+IEUYj
+	3wSKvPy+uvJARPnupQBD9FWNVY2lyQQeEEJcHjiqcxSAxWOwXlu5vwaTmhQvbdk1
+	GidOGP1Q1Nx//5UUOGyOY3KQdA7+o1GJpfqovXTRQvQx7hl6FUe+5Kp8mAjTh3uu
+	w==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3yw4yxs5vc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 08:14:25 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 45LCEO2X021838
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 21 Jun 2024 08:14:24 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 21 Jun
+ 2024 08:14:23 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 21 Jun 2024 08:14:23 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.120])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45LCE6Sv032255;
+	Fri, 21 Jun 2024 08:14:16 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Lars-Peter Clausen
+	<lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan
+ Cameron <jic23@kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v6 2/2] iio: frequency: adf4350: add clk provider
+Date: Fri, 21 Jun 2024 15:13:59 +0300
+Message-ID: <20240621121403.47912-2-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240621121403.47912-1-antoniu.miclaus@analog.com>
+References: <20240621121403.47912-1-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
-To: Lk Sii <lk_sii@163.com>, patchwork-bot+bluetooth@kernel.org,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com,
- broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be,
- arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com,
- elder@linaro.org, srinivas.kandagatla@linaro.org,
- gregkh@linuxfoundation.org, abel.vesa@linaro.org, mani@kernel.org,
- lukas@wunner.de, dmitry.baryshkov@linaro.org, amit.pundir@linaro.org,
- wuxilin123@gmail.com, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- bartosz.golaszewski@linaro.org
-References: <20240605123850.24857-1-brgl@bgdev.pl>
- <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
- <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: C5-Nl98mnm-CxPdry3kMW7wGU8kUzwEg
+X-Proofpoint-ORIG-GUID: C5-Nl98mnm-CxPdry3kMW7wGU8kUzwEg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0 phishscore=0
+ impostorscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406210091
 
-On 21/06/2024 03:14, Lk Sii wrote:
-> 
-> 
-> On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
->> Hello:
->>
->> This series was applied to bluetooth/bluetooth-next.git (master)
->> by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
->>
-> Hi luiz,
-> 
-> i am curious why Bartosz is able to merge his changes into bluetooth
-> development tree bluetooth-next directly.
-> 
-> 1)
-> his changes should belong to *POWER* scope instead of *Bluetooth*
-> obviously, however, there are *NOT* any SOB tag from either power and
-> bluetooth maintainer. these changes currently only have below Acked-by
-> and Signed-off-by tags:
+Add clk provider feature for the adf4350.
 
-You are trolling us or what?
+Even though the driver was sent as an IIO driver in most cases the
+device is actually seen as a clock provider.
 
-That's a cross tree pull request.
+This patch aims to cover actual usecases requested by users in order to
+completely control the output frequencies from userspace.
 
-> 
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> 2)
-> his changes have not merged into linus mainline tree yet.
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+changes in v6:
+ - rework `init.name` handling.
+ - simplify iio channels initialization.
+ drivers/iio/frequency/adf4350.c | 124 +++++++++++++++++++++++++++++++-
+ 1 file changed, 122 insertions(+), 2 deletions(-)
 
-Do you understand the concept of merge windows?
-
-> 
-> 3)
-> perhaps, it is safer to pull his changes from linus mainline tree when
-> merged than to merge into bluetooth-next firstly.
-
-You are joking, right?
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/iio/frequency/adf4350.c b/drivers/iio/frequency/adf4350.c
+index 4abf80f75ef5..e13e64a5164c 100644
+--- a/drivers/iio/frequency/adf4350.c
++++ b/drivers/iio/frequency/adf4350.c
+@@ -19,6 +19,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <asm/div64.h>
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ 
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+@@ -36,6 +37,9 @@ struct adf4350_state {
+ 	struct gpio_desc		*lock_detect_gpiod;
+ 	struct adf4350_platform_data	*pdata;
+ 	struct clk			*clk;
++	struct clk			*clkout;
++	const char			*clk_out_name;
++	struct clk_hw			hw;
+ 	unsigned long			clkin;
+ 	unsigned long			chspc; /* Channel Spacing */
+ 	unsigned long			fpfd; /* Phase Frequency Detector */
+@@ -61,6 +65,8 @@ struct adf4350_state {
+ 	__be32				val __aligned(IIO_DMA_MINALIGN);
+ };
+ 
++#define to_adf4350_state(_hw) container_of(_hw, struct adf4350_state, hw)
++
+ static struct adf4350_platform_data default_pdata = {
+ 	.channel_spacing = 10000,
+ 	.r2_user_settings = ADF4350_REG2_PD_POLARITY_POS |
+@@ -381,6 +387,113 @@ static const struct iio_info adf4350_info = {
+ 	.debugfs_reg_access = &adf4350_reg_access,
+ };
+ 
++static void adf4350_clk_del_provider(void *data)
++{
++	struct adf4350_state *st = data;
++
++	of_clk_del_provider(st->spi->dev.of_node);
++}
++
++static unsigned long adf4350_clk_recalc_rate(struct clk_hw *hw,
++					     unsigned long parent_rate)
++{
++	struct adf4350_state *st = to_adf4350_state(hw);
++	unsigned long long tmp;
++
++	tmp = (u64)(st->r0_int * st->r1_mod + st->r0_fract) * st->fpfd;
++	do_div(tmp, st->r1_mod * (1 << st->r4_rf_div_sel));
++
++	return tmp;
++}
++
++static int adf4350_clk_set_rate(struct clk_hw *hw,
++				unsigned long rate,
++				unsigned long parent_rate)
++{
++	struct adf4350_state *st = to_adf4350_state(hw);
++
++	if (parent_rate == 0 || parent_rate > ADF4350_MAX_FREQ_REFIN)
++		return -EINVAL;
++
++	st->clkin = parent_rate;
++
++	return adf4350_set_freq(st, rate);
++}
++
++static int adf4350_clk_prepare(struct clk_hw *hw)
++{
++	struct adf4350_state *st = to_adf4350_state(hw);
++
++	st->regs[ADF4350_REG2] &= ~ADF4350_REG2_POWER_DOWN_EN;
++
++	return adf4350_sync_config(st);
++}
++
++static void adf4350_clk_unprepare(struct clk_hw *hw)
++{
++	struct adf4350_state *st = to_adf4350_state(hw);
++
++	st->regs[ADF4350_REG2] |= ADF4350_REG2_POWER_DOWN_EN;
++
++	adf4350_sync_config(st);
++}
++
++static int adf4350_clk_is_enabled(struct clk_hw *hw)
++{
++	struct adf4350_state *st = to_adf4350_state(hw);
++
++	return (st->regs[ADF4350_REG2] & ADF4350_REG2_POWER_DOWN_EN);
++}
++
++static const struct clk_ops adf4350_clk_ops = {
++	.recalc_rate = adf4350_clk_recalc_rate,
++	.set_rate = adf4350_clk_set_rate,
++	.prepare = adf4350_clk_prepare,
++	.unprepare = adf4350_clk_unprepare,
++	.is_enabled = adf4350_clk_is_enabled,
++};
++
++static int adf4350_clk_register(struct adf4350_state *st)
++{
++	struct spi_device *spi = st->spi;
++	struct clk_init_data init;
++	struct clk *clk;
++	const char *parent_name;
++	int ret;
++
++	if (!device_property_present(&spi->dev, "#clock-cells"))
++		return 0;
++
++	if (device_property_read_string(&spi->dev, "clock-output-names", &init.name)) {
++		init.name = devm_kasprintf(&spi->dev, GFP_KERNEL, "%s-clk",
++					   fwnode_get_name(dev_fwnode(&spi->dev)));
++		if (!init.name)
++			return -ENOMEM;
++	}
++
++	parent_name = of_clk_get_parent_name(spi->dev.of_node, 0);
++	if (!parent_name)
++		return -EINVAL;
++
++	init.ops = &adf4350_clk_ops;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	init.flags = CLK_SET_RATE_PARENT;
++
++	st->hw.init = &init;
++	clk = devm_clk_register(&spi->dev, &st->hw);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	ret = of_clk_add_provider(spi->dev.of_node, of_clk_src_simple_get, clk);
++	if (ret)
++		return ret;
++
++	st->clkout = clk;
++
++	return devm_add_action_or_reset(&spi->dev, adf4350_clk_del_provider, st);
++}
++
+ static struct adf4350_platform_data *adf4350_parse_dt(struct device *dev)
+ {
+ 	struct adf4350_platform_data *pdata;
+@@ -522,8 +635,6 @@ static int adf4350_probe(struct spi_device *spi)
+ 
+ 	indio_dev->info = &adf4350_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+-	indio_dev->channels = &adf4350_chan;
+-	indio_dev->num_channels = 1;
+ 
+ 	mutex_init(&st->lock);
+ 
+@@ -551,6 +662,15 @@ static int adf4350_probe(struct spi_device *spi)
+ 			return ret;
+ 	}
+ 
++	ret = adf4350_clk_register(st);
++	if (ret)
++		return ret;
++
++	if (!st->clkout) {
++		indio_dev->channels = &adf4350_chan;
++		indio_dev->num_channels = 1;
++	}
++
+ 	ret = devm_add_action_or_reset(&spi->dev, adf4350_power_down, indio_dev);
+ 	if (ret)
+ 		return dev_err_probe(&spi->dev, ret,
+-- 
+2.45.2
 
