@@ -1,272 +1,143 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DE8EEDC
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69BA2E622;
+	Fri, 21 Jun 2024 13:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718975841; cv=none; b=Xas8cQqrZSOoDAEyCfwway6mkRfPMxDUbD8d8Iz/Tg819JHzWVaM+Tye/vTVApgqqPfUyAVntkq6vmcscmDB6rSjRaypx21RBIYN9Fqi87Aez24l97vZm0l6X8Jn3xlGAA+5Wc2VDJd3So4iZju9C+oviGhBRLijF2D3IqV7JdY=
+	t=1718975884; cv=none; b=aEGSDNN2SxdiR9zbtKkrrhPY6g0eIq5E42NjYLdGLIixlVFx2lTXcIQW3YsN4/J43XKNBcAutBNGT1WUUlT1dra+SAF55vyn5BdhOO/xh7GfRgIq9BYbW8CCTZq3TRS7HS6ZFWqysa/52P6v6yycPwwbhRonNMUYYhZf/oJDTLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718975841; c=relaxed/simple;
-	bh=hLcOFwi2J2KZcT+28pyhB884XMs4WErv3F9SncFRe8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NWrrNv29fv39fueIVM+h2Zojq9zBH7Cm41VQJ1+B/NgPKu8566l9r/eU04X3c4tv6xphrFj1kHS2BFLXHpp80FiRGqmeoDtiFwWQIl8QWlrxNqm1L1cDJQ7+zEtTml2l6tmlzb8zs9d3eYA46JV12mwINJ+sAfHAE8Cn4rXMkuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=McZKMvIX; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1718975884; c=relaxed/simple;
+	bh=NTlU4MzAnhhcT3IXIo/UnGQRRM53fAqVg82XwxlIG3s=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p8patnco3wykoXMp46UB+EImT3yPY1czHBIa63BmVL8PkM6w4pkI8cANIHL3qTREvu2gA9ZqaaG8+qiPTYvHd9FS+OMOrMnjTsLnJZ5fnRY7Tdny6DinwILNLr75h61UktmeUcmPIxDSlW80uQl9UhDnchmnfXxtZapkJA0wMiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LwDmfFsg; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McZKMvIX"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f9885d5c04so17912285ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 06:17:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwDmfFsg"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52cdb0d8107so454631e87.1;
+        Fri, 21 Jun 2024 06:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718975839; x=1719580639; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q8Jo6W/oSNP8jr6rmsVk9Fz1TTt99fPqwc+b/r8xVV4=;
-        b=McZKMvIXSIuQZWM97AlVgnhs/ybp3DGH+cEQWXP/qwBgctCcrXIRam4lxrmFYu0F9a
-         eUk43VwBC6VLWkva7yy7zYBDZewsCAV9Cwd1T1uL86otNfZJXAtYxHozVsbaSU7XbTZh
-         hbk1KnkCe6DJ7afwhJeLfBisWHPPKm1oHJtFVIrcB6iNu96ApGMOmAhdx+Ou6Maz5TbC
-         a/ed/owIwvu2nmy6F59nnmgCr8XM/519o4UvBom06+3yIcDXfKYGhjLwSCvPEpG9ULiK
-         PnvCeHfONh9DI8aPnq/ZSk3ygo85853b4g+1T+PICrfCHfGg8o5W5aWvDk7Er58JuCRl
-         ocIA==
+        d=gmail.com; s=20230601; t=1718975881; x=1719580681; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Va7fQxN9lBsLo744XPC53nXOlbU4afLajRDQWh9HAcM=;
+        b=LwDmfFsgIgqXSJLe7vkAQorPvrkxgUoi9GwHAAjqtdXUj7BldJCP+CpE9sTNQR4HkE
+         NNOwil3Be5uxnON1hKy/U+tPXfZQ3rLbGLhZaD3wslW0DU7iw2/sPASpu4VfdkItySPj
+         KiEbpF7b2jrEi1q7hg4NaDtzcqprDpaJihUFUkruJz84ha7x37IPNNKJXuFfcH3QW592
+         EBg1AbkgkaPyUcFP64ywEhf+36U8v+GsXUhxNZRV/16Vf5TvOlrmOEU7y+pXSBIfrT1y
+         4s7kM95McoWqtKtwbFcBIojIoYD7VA8edHUmmDqV5OySSjY3ByL921bkKFbeP7D/lEQg
+         YUgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718975839; x=1719580639;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q8Jo6W/oSNP8jr6rmsVk9Fz1TTt99fPqwc+b/r8xVV4=;
-        b=pLEBtzuyGV7z0g/qGqFiLzrYgQ/qNhZ7+EA/sy8axgvIM111bxnAetTR+nzBxzIOnR
-         5CykpXnSrb/tL5ppG1g7wPlE1PHstN9EqR/b1O072m4evIJo74DNobhgRMEcT5qYvMjk
-         6WM6ZjzlR/jecFzBJ7ce2ILetsULmiuCw/uHUDQwIGXMxX0E4R6ukc8jjzsaf8sPMaj/
-         TQJiuYjHbjCjrxcRaXvpcCa+bhgbXr4klnEihR85NPHnQji4HC5YuKBre5JM4aQWP4/F
-         vdF7dKh67LHyxhtNkaf7OhrDTv1z3v49zCKAJBeocEzueHwfc5yVfNiJDDvZVIs0UR8o
-         hz0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWuP76tHYj1ZZRNgO0CyvIwyTbgok8C/MZPUi63//xKhFKnJ+SA0lpGoBnoT03VcqAy5p3TFDlIOmSIEFdEskVDqH0OW4pmBmpbBWa2
-X-Gm-Message-State: AOJu0YwzYZi0s2KyMWT+kuO79tUoa5WsjuMQ/1nVfQaw+kXFLWAEoeIg
-	vSDyNaEErh2uSHtvlwNa8knGfpaJ5rAX6S4SDN1ppFyrTy9HMVCv
-X-Google-Smtp-Source: AGHT+IH/ujlQpjyJpVOol708EAJiossfwncho/7eSVf/kW6J8Bt8687f96NhgOmOJu8sQGHkNYB4Qw==
-X-Received: by 2002:a17:902:d482:b0:1f8:3c9e:3b92 with SMTP id d9443c01a7336-1f9aa3dd710mr102086615ad.23.1718975838796;
-        Fri, 21 Jun 2024 06:17:18 -0700 (PDT)
-Received: from distilledx.localdomain ([122.172.87.96])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb2f030csm13804045ad.43.2024.06.21.06.17.15
+        d=1e100.net; s=20230601; t=1718975881; x=1719580681;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Va7fQxN9lBsLo744XPC53nXOlbU4afLajRDQWh9HAcM=;
+        b=Clh7Utq606K45dhxCpq8LNFQ16JbJsRFEkvy8KqDn6+GeJg5QFoGn3D2K669HhB78Q
+         j7wcuDyXT2q5hHEpaHyoevG0CUa09mSlOqqTeZxAtnWeplphKZCW4fuxNXJxSgwifQyg
+         VSsbLLP1XueHAtVBA4rI/JzFc89JV7KX/Q1CsrZ3jrl/AFh8e30m6AITd6y83V0ELCDc
+         YY4cNHEUqQ/3IsfNTWo654O0dVoN582mcUzwnxlYQ8PMrIidnLxYUYDlVxHg5ZUmQwd1
+         eHjiLpxD9QoRKOVSuInDLoiT7WgYKv0V3fMX6WCzLx5vPHmvIZx1BbMuo/GbuhU5D4KQ
+         6Vtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpl99QsDDLdMow1ZioOEzDLn4Z3aA5pxFKsPuVkxLUTNaUTUtgk3EKKWCOrLjSWTu5qZImNywTNG8TuBlhUoopjQdAhjGJjX+6YWbUid4xGLAd0IngopZP38WunfKDRNMF/d7DTNOPXLfFFK2TM/aKfAZrVEf+FJh9HrLciDBTQU5iViKO
+X-Gm-Message-State: AOJu0Yy6hpo6G08SfD9Onk4HjsqjDr3l2RMwzFccuotVNUM0S7UDCRZk
+	UxfaKBOT6UGfDgc0Scv7QKvFy9yJBRlmI9lzX0lbbsmRsfcFQEV9
+X-Google-Smtp-Source: AGHT+IHkhqARK5Dooq1qSnFt+7oS2w45OWcGar+Ac/wnacPVJSV9FXzNu8K18xQUDgDf/Jb4mgoyTA==
+X-Received: by 2002:a05:6512:138c:b0:52c:cda0:18b9 with SMTP id 2adb3069b0e04-52ccda01977mr5931095e87.59.1718975880879;
+        Fri, 21 Jun 2024 06:18:00 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424817a8d8esm27985845e9.12.2024.06.21.06.18.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 06:17:18 -0700 (PDT)
-From: Tejas Vipin <tejasvipin76@gmail.com>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com
-Cc: Tejas Vipin <tejasvipin76@gmail.com>,
-	dianders@chromium.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/panel: asus-z00t-tm5p5-n35596: transition to mipi_dsi wrapped functions
-Date: Fri, 21 Jun 2024 18:46:46 +0530
-Message-ID: <20240621131648.131667-1-tejasvipin76@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        Fri, 21 Jun 2024 06:18:00 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 21 Jun 2024 15:17:58 +0200
+To: Oleg Nesterov <oleg@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH] uprobe: Do not use UPROBE_SWBP_INSN as static initializer
+Message-ID: <ZnV9hvOP5388YJtw@krava>
+References: <20240618194306.1577022-1-jolsa@kernel.org>
+ <CAEf4BzbN4Li2iesQm28ZYEV2nXsLre8_qknmvkSy510EV7h=SA@mail.gmail.com>
+ <20240620193846.GA7165@redhat.com>
+ <CAEf4BzaqgbjPfxKmzF-M7nzGroOwKikA0BM7Tnw7dKzKS+x9ZQ@mail.gmail.com>
+ <20240621120149.GB12521@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240621120149.GB12521@redhat.com>
 
-Use functions introduced in commit 966e397e4f60 ("drm/mipi-dsi:
-Introduce mipi_dsi_*_write_seq_multi()") and commit f79d6d28d8fe
-("drm/mipi-dsi: wrap more functions for streamline handling") for the
-asus-z00t-tm5p5-n35596 panel.
+On Fri, Jun 21, 2024 at 02:01:50PM +0200, Oleg Nesterov wrote:
+> On 06/20, Andrii Nakryiko wrote:
+> >
+> > On Thu, Jun 20, 2024 at 12:40 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > >
+> > > But I can't understand what does it do, it calls emit_break() and
+> > > git grep -w emit_break finds nothing.
+> > >
+> >
+> > It's DEF_EMIT_REG0I15_FORMAT(break, break_op) in
+> > arch/loongarch/include/asm/inst.h
+> >
+> > A bunch of macro magic, but in the end it produces some constant
+> > value, of course.
+> 
+> I see, thanks!
+> 
+> Then perhaps something like below?
 
-Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
----
- .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 140 ++++++++----------
- 1 file changed, 59 insertions(+), 81 deletions(-)
+lgtm, added loong arch list/folks
 
-diff --git a/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c b/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
-index bcaa63d1955f..b05a663c134c 100644
---- a/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
-+++ b/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
-@@ -33,119 +33,97 @@ static void tm5p5_nt35596_reset(struct tm5p5_nt35596 *ctx)
- 	usleep_range(15000, 16000);
- }
- 
--static int tm5p5_nt35596_on(struct tm5p5_nt35596 *ctx)
-+static void tm5p5_nt35596_on(struct mipi_dsi_multi_context *dsi_ctx)
- {
--	struct mipi_dsi_device *dsi = ctx->dsi;
--
--	mipi_dsi_generic_write_seq(dsi, 0xff, 0x05);
--	mipi_dsi_generic_write_seq(dsi, 0xfb, 0x01);
--	mipi_dsi_generic_write_seq(dsi, 0xc5, 0x31);
--	mipi_dsi_generic_write_seq(dsi, 0xff, 0x04);
--	mipi_dsi_generic_write_seq(dsi, 0x01, 0x84);
--	mipi_dsi_generic_write_seq(dsi, 0x05, 0x25);
--	mipi_dsi_generic_write_seq(dsi, 0x06, 0x01);
--	mipi_dsi_generic_write_seq(dsi, 0x07, 0x20);
--	mipi_dsi_generic_write_seq(dsi, 0x08, 0x06);
--	mipi_dsi_generic_write_seq(dsi, 0x09, 0x08);
--	mipi_dsi_generic_write_seq(dsi, 0x0a, 0x10);
--	mipi_dsi_generic_write_seq(dsi, 0x0b, 0x10);
--	mipi_dsi_generic_write_seq(dsi, 0x0c, 0x10);
--	mipi_dsi_generic_write_seq(dsi, 0x0d, 0x14);
--	mipi_dsi_generic_write_seq(dsi, 0x0e, 0x14);
--	mipi_dsi_generic_write_seq(dsi, 0x0f, 0x14);
--	mipi_dsi_generic_write_seq(dsi, 0x10, 0x14);
--	mipi_dsi_generic_write_seq(dsi, 0x11, 0x14);
--	mipi_dsi_generic_write_seq(dsi, 0x12, 0x14);
--	mipi_dsi_generic_write_seq(dsi, 0x17, 0xf3);
--	mipi_dsi_generic_write_seq(dsi, 0x18, 0xc0);
--	mipi_dsi_generic_write_seq(dsi, 0x19, 0xc0);
--	mipi_dsi_generic_write_seq(dsi, 0x1a, 0xc0);
--	mipi_dsi_generic_write_seq(dsi, 0x1b, 0xb3);
--	mipi_dsi_generic_write_seq(dsi, 0x1c, 0xb3);
--	mipi_dsi_generic_write_seq(dsi, 0x1d, 0xb3);
--	mipi_dsi_generic_write_seq(dsi, 0x1e, 0xb3);
--	mipi_dsi_generic_write_seq(dsi, 0x1f, 0xb3);
--	mipi_dsi_generic_write_seq(dsi, 0x20, 0xb3);
--	mipi_dsi_generic_write_seq(dsi, 0xfb, 0x01);
--	mipi_dsi_generic_write_seq(dsi, 0xff, 0x00);
--	mipi_dsi_generic_write_seq(dsi, 0xfb, 0x01);
--	mipi_dsi_generic_write_seq(dsi, 0x35, 0x01);
--	mipi_dsi_generic_write_seq(dsi, 0xd3, 0x06);
--	mipi_dsi_generic_write_seq(dsi, 0xd4, 0x04);
--	mipi_dsi_generic_write_seq(dsi, 0x5e, 0x0d);
--	mipi_dsi_generic_write_seq(dsi, 0x11, 0x00);
--	msleep(100);
--	mipi_dsi_generic_write_seq(dsi, 0x29, 0x00);
--	mipi_dsi_generic_write_seq(dsi, 0x53, 0x24);
--
--	return 0;
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xff, 0x05);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xfb, 0x01);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xc5, 0x31);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xff, 0x04);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x01, 0x84);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x05, 0x25);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x06, 0x01);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x07, 0x20);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x08, 0x06);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x09, 0x08);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x0a, 0x10);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x0b, 0x10);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x0c, 0x10);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x0d, 0x14);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x0e, 0x14);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x0f, 0x14);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x10, 0x14);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x11, 0x14);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x12, 0x14);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x17, 0xf3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x18, 0xc0);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x19, 0xc0);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x1a, 0xc0);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x1b, 0xb3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x1c, 0xb3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x1d, 0xb3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x1e, 0xb3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x1f, 0xb3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x20, 0xb3);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xfb, 0x01);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xff, 0x00);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xfb, 0x01);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x35, 0x01);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xd3, 0x06);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0xd4, 0x04);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x5e, 0x0d);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x11, 0x00);
-+
-+	mipi_dsi_msleep(dsi_ctx, 100);
-+
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x29, 0x00);
-+	mipi_dsi_generic_write_seq_multi(dsi_ctx, 0x53, 0x24);
- }
- 
--static int tm5p5_nt35596_off(struct tm5p5_nt35596 *ctx)
-+static void tm5p5_nt35596_off(struct mipi_dsi_multi_context *dsi_ctx)
- {
--	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
--
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display off: %d\n", ret);
--		return ret;
--	}
--	msleep(60);
-+	mipi_dsi_dcs_set_display_off_multi(dsi_ctx);
- 
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
--		return ret;
--	}
-+	mipi_dsi_msleep(dsi_ctx, 60);
- 
--	mipi_dsi_dcs_write_seq(dsi, 0x4f, 0x01);
-+	mipi_dsi_dcs_enter_sleep_mode_multi(dsi_ctx);
- 
--	return 0;
-+	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0x4f, 0x01);
- }
- 
- static int tm5p5_nt35596_prepare(struct drm_panel *panel)
- {
- 	struct tm5p5_nt35596 *ctx = to_tm5p5_nt35596(panel);
--	struct device *dev = &ctx->dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx =	{.dsi = ctx->dsi};
- 
--	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enable regulators: %d\n", ret);
--		return ret;
--	}
-+	dsi_ctx.accum_err = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (dsi_ctx.accum_err)
-+		return dsi_ctx.accum_err;
- 
- 	tm5p5_nt35596_reset(ctx);
- 
--	ret = tm5p5_nt35596_on(ctx);
--	if (ret < 0) {
--		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+	tm5p5_nt35596_on(&dsi_ctx);
-+
-+	if (dsi_ctx.accum_err) {
- 		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
- 		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
- 				       ctx->supplies);
--		return ret;
- 	}
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static int tm5p5_nt35596_unprepare(struct drm_panel *panel)
- {
- 	struct tm5p5_nt35596 *ctx = to_tm5p5_nt35596(panel);
--	struct device *dev = &ctx->dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx =	{.dsi = ctx->dsi};
- 
--	ret = tm5p5_nt35596_off(ctx);
--	if (ret < 0)
--		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+	tm5p5_nt35596_off(&dsi_ctx);
- 
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
- 	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
- 			       ctx->supplies);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static const struct drm_display_mode tm5p5_nt35596_mode = {
--- 
-2.45.2
+for context:
+  https://lore.kernel.org/bpf/20240614174822.GA1185149@thelio-3990X/
 
+thanks,
+jirka
+
+> 
+> Oleg.
+> 
+> 
+> --- x/arch/loongarch/include/asm/uprobes.h
+> +++ x/arch/loongarch/include/asm/uprobes.h
+> @@ -9,7 +9,7 @@ typedef u32 uprobe_opcode_t;
+>  #define MAX_UINSN_BYTES		8
+>  #define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
+>  
+> -#define UPROBE_SWBP_INSN	larch_insn_gen_break(BRK_UPROBE_BP)
+> +#define UPROBE_SWBP_INSN	(uprobe_opcode_t)(BRK_UPROBE_BP | (break_op << 15))
+>  #define UPROBE_SWBP_INSN_SIZE	LOONGARCH_INSN_SIZE
+>  
+>  #define UPROBE_XOLBP_INSN	larch_insn_gen_break(BRK_UPROBE_XOLBP)
+> --- x/arch/loongarch/kernel/uprobes.c
+> +++ x/arch/loongarch/kernel/uprobes.c
+> @@ -7,6 +7,13 @@
+>  
+>  #define UPROBE_TRAP_NR	UINT_MAX
+>  
+> +static __init int __ck_insn(void)
+> +{
+> +	BUG_ON(UPROBE_SWBP_INSN != larch_insn_gen_break(BRK_UPROBE_BP));
+> +	return 0;
+> +}
+> +late_initcall(__ck_insn);
+> +
+>  int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
+>  			     struct mm_struct *mm, unsigned long addr)
+>  {
+> 
