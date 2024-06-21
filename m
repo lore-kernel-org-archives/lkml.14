@@ -1,164 +1,229 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3A1171085
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEFF16E894;
+	Fri, 21 Jun 2024 10:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718965031; cv=none; b=OhnJPfpjyLE54nx6ybt9CPyoRVsp6B3ZgEK21gUA1veXonQpnZ+V2FN64xPWHOSjFEBJn98F9ILGk09yhsPSyZBnaOzj9AbPR0tarApfARB8Pog1NndW5329EGLRKntGKTt6W2w1GuEoTw5ZzV0Eo3dGJe3xqg9GgU4Ck2f7GkM=
+	t=1718965107; cv=none; b=EMlOoU16/nXGgecZI1gbJMsN3NmVkVA4i8ASgGrtcZXhRF9aDa2oTCVNTQubeo4TuziayHjo2qDFAY8CQM7VZVmtX7n5C1tPOs1O0Hb3x4WgfQ8UgQZtoHBZanLhBfeIzyTOYQuyScZnENAUX5XhMGHy8HZP+wTa1UMKnZmwZp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718965031; c=relaxed/simple;
-	bh=CsfKZUzget9haq+6Takg6rH6auGUUt7PGjnIlAjpGQU=;
+	s=arc-20240116; t=1718965107; c=relaxed/simple;
+	bh=U1hz+8/bzdauintFQu1B2mPpB7R33BaC4FjDhvSa8R8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YcPxww5eI+Xvsy7sQdz1r0I+rPPDdF9DP/LafvkMaRJ8q0rJprwTMB/ySTde9rVOyZyBjHiRzpSSlntHCQK03MF3zTk5TO8RVD30txCeJX6E8ftiQtYIyInOi5s+prSxC8rY9au/KmHtk0PXjSBI91DLT8ZilLbSeVPTBSfOoIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KSEgiZZX; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=CF66zbRaZhfBl5cR98eZLKip/yKkwR/kG5e4ekIQmTEPNzwHmWUnSf3sIRns3XbYHtSbS1T7CqGRzB5sOYtg+C9BXtG8AWKtI9LFnJvrDy6gy0aejGmgI0K16TWjiL8a4KOwLMf3Tjqe3M+soEEKphHtBpfVMNs3Fhu8iduZO0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AN4S2eu+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSEgiZZX"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-80f65707b31so459143241.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718965029; x=1719569829; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rj+95wbz1y5BU05zQfMwsaSKiMf6+ko9/vdHYSc+ZdM=;
-        b=KSEgiZZXARdyYaTvWEsHSNjU7x1N3L7hY0alo5ZrD8folplylG5aiQxJWJ4YoxLVj4
-         1UAknfvDv0pv+8k0BFhDs3MS9A7IzE9C75KuKxVVLiJY1pvfbTny04hI1hVEpDOVgUSB
-         AE5bU8TWP+RtbOTo+YmMVhcIs8xCYF+D07M/wQfsbQZmRTPzde1POuY/nDW/Ku18Q8vK
-         wmp5cK0/ET7TDHJuHkDXl7LaG/pxxuInV+hPeor5nVWwPsfvK7ftbmGlFUuCwQ06KJF1
-         5mZe3v8IiORb04QZ8Mh44dFJJ5hRWo7+Ay7exSIJha7DwZE/jymuD2xQMscmW0RXDLwd
-         ZXBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718965029; x=1719569829;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rj+95wbz1y5BU05zQfMwsaSKiMf6+ko9/vdHYSc+ZdM=;
-        b=WfGTqxg8ru7iPx34UhvkNqAFgXznk9pl/71/w98OU6ZW38pUvBXnIeBxhXs6JihCMJ
-         cjY6uqPDku81mSi2485+GLw+GlUB+cI04gGgMhMdhgOUZ96ue6az4puHKeqDqadq8qHF
-         t15adWcxr3l61z8ZNBbcXkVKh4qNH2oODneXc+rnC5pZfO356rJOyLnp7wCCkuGSAcYk
-         Lpu8kEDcbnMRrZQLiIptpVH158TEGjT6VBtpQ/6xbEZdYAlNCrWajvG9f8bjBjOEfFHK
-         TPOsYkXFwDbPOowxiRYTXMed5rLi4KmhG9hUNMwkU9J7FwCzwzpa7jh4on8kbNSxKGav
-         WafQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgSxC+s94D3DJub5Xa2KbIvXHqFl55253NMa4oSQyfrqzI4tVl12gO2hwSZN2hDkOK4xJ0U1vBW1P0JzT94UNXX5RIKDn5CFNBnrvL
-X-Gm-Message-State: AOJu0YxGLPkD4jrgxblN8MEgmCmvGeDBxn5bca0sJ8Ir5wh4PAs1OJ6V
-	pzwUrJD9jLthfzwMC+v+NAD70KarFTm01z3FPr66XIB1QAxiJPR50TTpbs77mQH1G924FBmZROx
-	WD73dbD2tJ9IUTGjaw162E47ZfrbyDMChP6Px
-X-Google-Smtp-Source: AGHT+IHuoaKqqqtcNELzZOldYxKUQFZjLBgVA+N0/LZsxsRcIdlqfqhZf/wkj72Q2EJvo+iVzs9z8CPGlwEa9DCk/RA=
-X-Received: by 2002:a05:6102:93:b0:48f:3f6d:33 with SMTP id
- ada2fe7eead31-48f3f6d00acmr308656137.11.1718965028513; Fri, 21 Jun 2024
- 03:17:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AN4S2eu+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB288C4AF09;
+	Fri, 21 Jun 2024 10:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718965107;
+	bh=U1hz+8/bzdauintFQu1B2mPpB7R33BaC4FjDhvSa8R8=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=AN4S2eu+2StK8dntclq6UzVlpDLAtIOCFvnr1RahBqyXLmC2oLqjkYJR456Ms+40R
+	 hKf49obq+VfQyyGDiFPJaNQKXjHTMd4eN7RmAR61ZmQhI5cBjA/FRNba68ucSrY3yb
+	 aCW+yht4NYfHN8sRxRhggSGoxgvHOoijcDFiM2MmjCXua1hOm1ga7PWMgXJWKnm4pe
+	 /8j1uoPfogZRlPIpXkl2jMKZvbHsLtG47/0y9tbngsb2Scy6jGuxJq89FS8o6L4FwG
+	 XXSGFPQsedLRozheV3qz5odtHkmUg+uZYkaftLv2QfZ5cEK8AMvZ3xVvIjknpgpfAS
+	 JFR2P5xf0Szwg==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eaea28868dso24069441fa.3;
+        Fri, 21 Jun 2024 03:18:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7d2g+D4gxEQYt5ryeyKB0yYrtjiDitrv+x9OrgnWoBumVMB8F4Dun1Pn2O/dQ2yw2UsiDhupTJYNygw0Zl1toFq5nxaGXCoiUs/rJYw9tOsK3ihwHJciCnY4laP/y1ILuQBqCTQsYwqBlwOHSH87SnRStYh3rg0RQVDsjhah5HHxIFTRCZA==
+X-Gm-Message-State: AOJu0YyfoRL72EYB0c7HH8yCWy7jxl/5K/7pP5+qgB12yBwtkf+t6tvF
+	WEMT8lhK2gpVXFCwGWcCdOvKEEVtK5vfrw3c4rCJVQdDOTUKzNjfAmnB5x7QrTVeC9VCOMpA9H9
+	pdwp92FhelEUYjBYi68RRa5heVLg=
+X-Google-Smtp-Source: AGHT+IHO98/2KxxNQSI6Iov2uFjwnOJvJY9CeBR3g6jopu9QSIJvgzBeO6l1TKdjqUov1zSWO5URR/C24lztI0UaSCk=
+X-Received: by 2002:a05:651c:1311:b0:2ec:4a91:c38b with SMTP id
+ 38308e7fff4ca-2ec4a91d4b4mr22199161fa.5.1718965106029; Fri, 21 Jun 2024
+ 03:18:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
- <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com> <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
- <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
- <20240619115135.GE2494510@nvidia.com> <CA+EHjTz_=J+bDpqciaMnNja4uz1Njcpg5NVh_GW2tya-suA7kQ@mail.gmail.com>
- <ZnRMn1ObU8TFrms3@google.com> <CA+EHjTxvOyCqWRMTS3mXHznQtAJzDJLgqdS0Er2GA9FGdxd1vA@mail.gmail.com>
- <4c8b81a0-3a76-4802-875f-f26ff1844955@redhat.com> <CA+EHjTzvjsc4DKsNFA6LVT44YR_1C5A2JhpVSPG=R9ottfu70A@mail.gmail.com>
- <8e9436f2-6ebb-4ce1-a44f-2a941d354e2a@redhat.com>
-In-Reply-To: <8e9436f2-6ebb-4ce1-a44f-2a941d354e2a@redhat.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Fri, 21 Jun 2024 11:16:31 +0100
-Message-ID: <CA+EHjTzj9nDEG_ANMM3z90b08YRHegiX5ZqgvLihYS2bSyw1KA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
-To: David Hildenbrand <david@redhat.com>
-Cc: David Rientjes <rientjes@google.com>, Sean Christopherson <seanjc@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Elliot Berman <quic_eberman@quicinc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>, maz@kernel.org, 
-	kvm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	pbonzini@redhat.com
+References: <cover.1718921174.git.daniel@makrotopia.org> <57a7fb13451f066ddc8d1d9339d8f6c1e1946bf1.1718921174.git.daniel@makrotopia.org>
+ <f8e6b1b9-f8ff-42df-b1ef-bcc439c2e913@kernel.org>
+In-Reply-To: <f8e6b1b9-f8ff-42df-b1ef-bcc439c2e913@kernel.org>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Fri, 21 Jun 2024 18:18:13 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66VHXvBGH9X9nj1=fSnCgP035HEMU-L2NShg08rE5Qnug@mail.gmail.com>
+Message-ID: <CAGb2v66VHXvBGH9X9nj1=fSnCgP035HEMU-L2NShg08rE5Qnug@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] hwrng: add Rockchip SoC hwrng driver
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Aurelien Jarno <aurelien@aurel32.net>, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@debian.org>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Anand Moon <linux.amoon@gmail.com>, 
+	Dragan Simic <dsimic@manjaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi David,
-
-On Fri, Jun 21, 2024 at 10:10=E2=80=AFAM David Hildenbrand <david@redhat.co=
-m> wrote:
+On Fri, Jun 21, 2024 at 5:58=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
 >
-> On 21.06.24 10:54, Fuad Tabba wrote:
-> > Hi David,
+> On 21/06/2024 03:25, Daniel Golle wrote:
+> > From: Aurelien Jarno <aurelien@aurel32.net>
 > >
-> > On Fri, Jun 21, 2024 at 9:44=E2=80=AFAM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >>>> Again from that thread, one of most important aspects guest_memfd is=
- that VMAs
-> >>>> are not required.  Stating the obvious, lack of VMAs makes it really=
- hard to drive
-> >>>> swap, reclaim, migration, etc. from code that fundamentally operates=
- on VMAs.
-> >>>>
-> >>>>    : More broadly, no VMAs are required.  The lack of stage-1 page t=
-ables are nice to
-> >>>>    : have; the lack of VMAs means that guest_memfd isn't playing sec=
-ond fiddle, e.g.
-> >>>>    : it's not subject to VMA protections, isn't restricted to host m=
-apping size, etc.
-> >>>>
-> >>>> [1] https://lore.kernel.org/all/Zfmpby6i3PfBEcCV@google.com
-> >>>> [2] https://lore.kernel.org/all/Zg3xF7dTtx6hbmZj@google.com
-> >>>
-> >>> I wonder if it might be more productive to also discuss this in one o=
-f
-> >>> the PUCKs, ahead of LPC, in addition to trying to go over this in LPC=
-.
-> >>
-> >> I don't know in  which context you usually discuss that, but I could
-> >> propose that as a topic in the bi-weekly MM meeting.
-> >>
-> >> This would, of course, be focused on the bigger MM picture: how to mma=
-p,
-> >> how how to support huge pages, interaction with page pinning, ... So
-> >> obviously more MM focused once we are in agreement that we want to
-> >> support shared memory in guest_memfd and how to make that work with co=
-re-mm.
-> >>
-> >> Discussing if we want shared memory in guest_memfd might be betetr
-> >> suited for a different, more CC/KVM specific meeting (likely the "PUCK=
-s"
-> >> mentioned here?).
-> >
-> > Sorry, I should have given more context on what a PUCK* is :) It's a
-> > periodic (almost weekly) upstream call for KVM.
-> >
-> > [*] https://lore.kernel.org/all/20230512231026.799267-1-seanjc@google.c=
-om/
-> >
-> > But yes, having a discussion in one of the mm meetings ahead of LPC
-> > would also be great. When do these meetings usually take place, to try
-> > to coordinate across timezones.
 >
-> It's Wednesday, 9:00 - 10:00am PDT (GMT-7) every second week.
+> > +
+> > +static int rk_rng_init(struct hwrng *rng)
+> > +{
+> > +     struct rk_rng *rk_rng =3D container_of(rng, struct rk_rng, rng);
+> > +     int ret;
+> > +
+> > +     /* start clocks */
+> > +     ret =3D clk_bulk_prepare_enable(rk_rng->clk_num, rk_rng->clk_bulk=
+s);
+> > +     if (ret < 0) {
+> > +             dev_err((struct device *) rk_rng->rng.priv,
+> > +                     "Failed to enable clks %d\n", ret);
+> > +             return ret;
+> > +     }
+> > +
+> > +     /* set the sample period */
+> > +     writel(RK_RNG_SAMPLE_CNT, rk_rng->base + TRNG_RNG_SAMPLE_CNT);
+> > +
+> > +     /* set osc ring speed and enable it */
+> > +     writel_relaxed(TRNG_RNG_CTL_LEN_256_BIT |
+> > +                    TRNG_RNG_CTL_OSC_RING_SPEED_0 |
+> > +                    TRNG_RNG_CTL_ENABLE,
+> > +                    rk_rng->base + TRNG_RNG_CTL);
 >
-> If we're in agreement, we could (assuming there are no other planned
-> topics) either use the slot next week (June 26) or the following one
-> (July 10).
->
-> Selfish as I am, I would prefer July 10, because I'll be on vacation
-> next week and there would be little time to prepare.
->
-> @David R., heads up that this might become a topic ("shared and private
-> memory in guest_memfd: mmap, pinning and huge pages"), if people here
-> agree that this is a direction worth heading.
+> I doubt relaxed write is here intentional. Enabling should be last
+> instruction, so this should be ordered write.
 
-Thanks for the invite! Tentatively July 10th works for me, but I'd
-like to talk to the others who might be interested (pKVM, Gunyah, and
-others) to see if that works for them. I'll get back to you shortly.
+I agree that the driver should just do all non-relaxed writes for simplicit=
+y.
+The penalty isn't that severe since commit 22ec71615d82 ("arm64: io: Relax
+implicit barriers in default I/O accessors").
 
-Cheers,
-/fuad
+Just to clarify, writes to devices are always ordered. The non-relaxed
+writes are ordered to _memory writes_, which doesn't really matter for
+this driver.
 
-> --
-> Cheers,
+ChenYu
+
+
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void rk_rng_cleanup(struct hwrng *rng)
+> > +{
+> > +     struct rk_rng *rk_rng =3D container_of(rng, struct rk_rng, rng);
+> > +
+> > +     /* stop TRNG */
+> > +     writel_relaxed(0, rk_rng->base + TRNG_RNG_CTL);
 >
-> David / dhildenb
+> This should not be relaxed. This might lead to very tricky to debug issue=
+s.
+>
+> > +
+> > +     /* stop clocks */
+> > +     clk_bulk_disable_unprepare(rk_rng->clk_num, rk_rng->clk_bulks);
+> > +}
+> > +
+> > +static int rk_rng_read(struct hwrng *rng, void *buf, size_t max, bool =
+wait)
+> > +{
+> > +     struct rk_rng *rk_rng =3D container_of(rng, struct rk_rng, rng);
+> > +     size_t to_read =3D min_t(size_t, max, RK_RNG_MAX_BYTE);
+> > +     u32 reg;
+> > +     int ret =3D 0;
+> > +
+> > +     ret =3D pm_runtime_get_sync((struct device *) rk_rng->rng.priv);
+>
+> Why this cannot be just simpler pm_runtime_resume_and_get()?
+>
+> > +     if (ret < 0)
+> > +             goto out;
+>
+> This does not look like correct error path. Device was not busy here.
+>
+> > +
+> > +     /* Start collecting random data */
+> > +     writel_relaxed(TRNG_RNG_CTL_START, rk_rng->base + TRNG_RNG_CTL);
+> > +
+> > +     ret =3D readl_poll_timeout(rk_rng->base + TRNG_RNG_CTL, reg,
+> > +                              !(reg & TRNG_RNG_CTL_START),
+> > +                              RK_RNG_POLL_PERIOD_US,
+> > +                              RK_RNG_POLL_TIMEOUT_US);
+> > +     if (ret < 0)
+> > +             goto out;
+> > +
+> > +     /* Read random data stored in the registers */
+> > +     memcpy_fromio(buf, rk_rng->base + TRNG_RNG_DOUT, to_read);
+> > +out:
+> > +     pm_runtime_mark_last_busy((struct device *) rk_rng->rng.priv);
+> > +     pm_runtime_put_sync_autosuspend((struct device *) rk_rng->rng.pri=
+v);
+> > +
+> > +     return to_read;
+> > +}
+> > +
+> > +static int rk_rng_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev =3D &pdev->dev;
+> > +     struct rk_rng *rk_rng;
+> > +     int ret;
+> > +
+> > +     rk_rng =3D devm_kzalloc(dev, sizeof(*rk_rng), GFP_KERNEL);
+> > +     if (!rk_rng)
+> > +             return -ENOMEM;
+> > +
+> > +     rk_rng->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(rk_rng->base))
+> > +             return PTR_ERR(rk_rng->base);
+> > +
+> > +     rk_rng->clk_num =3D devm_clk_bulk_get_all(dev, &rk_rng->clk_bulks=
+);
+> > +     if (rk_rng->clk_num < 0)
+> > +             return dev_err_probe(dev, rk_rng->clk_num,
+> > +                                  "Failed to get clks property\n");
+> > +
+> > +     rk_rng->rst =3D devm_reset_control_array_get(&pdev->dev, false, f=
+alse);
+> > +     if (IS_ERR(rk_rng->rst))
+> > +             return dev_err_probe(dev, PTR_ERR(rk_rng->rst),
+> > +                                  "Failed to get reset property\n");
+> > +
+> > +     reset_control_assert(rk_rng->rst);
+> > +     udelay(2);
+> > +     reset_control_deassert(rk_rng->rst);
+> > +
+> > +     platform_set_drvdata(pdev, rk_rng);
+> > +
+> > +     rk_rng->rng.name =3D dev_driver_string(dev);
+> > +#ifndef CONFIG_PM
+> > +     rk_rng->rng.init =3D rk_rng_init;
+> > +     rk_rng->rng.cleanup =3D rk_rng_cleanup;
+> > +#endif
+> > +     rk_rng->rng.read =3D rk_rng_read;
+> > +     rk_rng->rng.priv =3D (unsigned long) dev;
+> > +     rk_rng->rng.quality =3D 900;
+> > +
+> > +     pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
+> > +     pm_runtime_use_autosuspend(dev);
+> > +     pm_runtime_enable(dev);
+> > +
+> > +     ret =3D devm_hwrng_register(dev, &rk_rng->rng);
+> > +     if (ret)
+> > +             return dev_err_probe(&pdev->dev, ret, "Failed to register=
+ Rockchip hwrng\n");
+> > +
+> > +     dev_info(&pdev->dev, "Registered Rockchip hwrng\n");
+>
+> Drop, driver should be silent on success.
+>
+>
+> Best regards,
+> Krzysztof
+>
 >
