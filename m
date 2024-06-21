@@ -1,177 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C277155329;
-	Fri, 21 Jun 2024 20:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9630F17B424
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719003047; cv=none; b=I53SOEJ5ZSQWaUZZrdOzfv0p9tEEAEgbqFwM477LmQMxQzHpq7DwnrEXCPk3FqA6jqD6ss/HZvMBYF1L41Uz6wsSbDCiTVa1Fd89MLaAT+2Mf++34uMcWZ6cFetGwYjl0aw0gJm9/Nzm9/DcFyjW8zvAp6mWkiwaA4bvlEWCOHE=
+	t=1719003101; cv=none; b=oQsTe9TfLe0RGm5kBZpak7qEPqXgGodPtRcJ8XDApAIShzU6ipm42q8Zyc/+zHTsjZ43W0LLThfdORVmPXmJ6I0WMHlqjJfFAjSUeaxxauDjrvLmyacXkfUiDloWyp7LntSifxTEj7bQIH9igwtUJzpvPq2RnAIYMmZHsj5TndE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719003047; c=relaxed/simple;
-	bh=HGKiztfmnXGwe57zj0+vTZfhNT7KQZ5JNN+BGrOb5Qw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aJhaQ1glf+X67j0PVfyP9JfMIJfAPlY3sr3Q3quEzR66u4mGqIC59xbudE2CTSr0ocejMs+egNSUyfJqalOU7bl3G5ke18SLecQxFVKnXxG55BU49qFksf/3KefZPaq0ajAXt/d2hL5iun8gHL9HYhtjZEf+AC0HH8x9KEvkGbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAkDBFKV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719003101; c=relaxed/simple;
+	bh=3hdGVUorPp9c3chARv02ErSOyGivV5Bdav1bowW+7Do=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pwFiQp2jl/U2nklo4+g/PU9/hj1uDq2cXAdrGEsYWIDJYhtJCClbJfvK0/vHZ374HPVWZ2K5rutofUS8OIk1q+yOU63+xvG1nK1DCmJ7MtTihpEDHcIK1upZWw1Fk9HxP1Se6eJKfTMKYlLldLGTKweMDTzjKmCAQ55uznTQFwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=O5GPFEHW; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAkDBFKV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F68DC4AF09;
-	Fri, 21 Jun 2024 20:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719003046;
-	bh=HGKiztfmnXGwe57zj0+vTZfhNT7KQZ5JNN+BGrOb5Qw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RAkDBFKVl8xmtb2DHIPOV2tWg9gbzOL1odQSCGDEXJNPgM0WUxIxBe87GtqqWJ+4A
-	 1Ere96aP9tXLhWixhIZSvQheDU5VDOtlYZ7/DpmebD/f4Tp0apl4GBwQ0utpvwApMh
-	 KAeYFQUGf8tbr+xiQDD/fo3hDTyV18sQydUOi+eZsvrNA+K2MSdVQdGwKJLzt7ejma
-	 e3onkPPrABfNag37HD3ojtklzAwWmw5WQ/6vezXvCejKws996+3d20U3Ir7nxeBm4w
-	 kXP35UpmP8mmSxdjYJpGQhw+KveCa+Jz9gCAWSOsOHo7XrHNY/Nb/jhTL1PYPx5LyR
-	 LdVoE6OLcFbCg==
-From: Kees Cook <kees@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Kees Cook <kees@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Laurent Vivier <laurent@vivier.eu>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="O5GPFEHW"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3d361cf5755so1363712b6e.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719003097; x=1719607897; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PoA9hZ9WnRsqQql+yaAmrG9puGVAmGMo+xjRJ7s2mms=;
+        b=O5GPFEHWhsU8kp+qt4EqDMRx0jr13fg65+28kdOFYTnFi0t2mDgDGGgB+O97YzOcKh
+         8/k7xrWaKvkVKm75MU+fEBYH84C0njb3QIa1z6oCLWalem9mAyQVo9c3DcliG/XxcJY9
+         uMSP8aa0Ij9gOqebKxdYt2X+WcSxptWGAwcFi1fkKIZHc1P++shNC9krSM/Gfbxrwdy8
+         5IgYD2S7qyb4qHO36DII/IsiQt9e1qJHQc47tWz5Vllw6jEyOiO8r/TsH8Y+sZLqeijK
+         WCTxc0gIAu3YKHsjWr4rg4jykGLp2culo8hniNvQA/44gzNb8RS958LgHI13BJudtRy2
+         Fq2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719003097; x=1719607897;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PoA9hZ9WnRsqQql+yaAmrG9puGVAmGMo+xjRJ7s2mms=;
+        b=Wk2opa2oZRwc/paXsMrsdJr2nRB4g7m443BxOL3DRuWJbXWA7Lbqf6vTsmYQE/vUWM
+         NHv3+cPCQNr4H0JVL2j01Pnt+aRsFOWbL+8/bjdWXY3o3BG+nCeZoGBUU9tMIHVSOddc
+         S0CI4l7ZELNgIGDtuWZGkPYa3LL2h8OhjHbFKvVwJLdl2ui8Zbwbfm/R/C7sd9Jvp5Fe
+         ZRHcnIdeV7jlG5vXmETFeqWWmp1Lgtqmc+yLYMJSiOEW8swovEH6s13NO6Nz1+ym6iEz
+         PEJOWVqWw6NTgoSabb8oC9VklWvaICT+gLilDt5VVSAri3rLMhknjDFUgn6GcMIje/j2
+         VCdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwg9AgRgg/ZT/fjtQBomn7PQnVvXJ9nFJkvovz2WGfJy/M2lGwMIAcsH8MdloCFaY7HTEnKv+e8YHCZnzWj/Z0l57oFM1Z0VGDgmSM
+X-Gm-Message-State: AOJu0YyalpF3ms3gcsNGuWLFdHwgozHz07YN8xql8vQ/59pjZQJYlEAN
+	tMJXIB3ldELB3S2xPcA0pK9AR2j2ARUnUEfxJMYsnndDdLDSgPOKYuiqAZNfUOI=
+X-Google-Smtp-Source: AGHT+IG4xUoDcwuELvZwr6LG9uss5vNKlYqqi2OOZdEWOEtWwrPLCmPvrHot1em53eidvgyCgrkzcw==
+X-Received: by 2002:a05:6808:238f:b0:3d2:2a43:1c03 with SMTP id 5614622812f47-3d51b96c6e0mr9705037b6e.9.1719003097507;
+        Fri, 21 Jun 2024 13:51:37 -0700 (PDT)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d5345e584dsm428089b6e.55.2024.06.21.13.51.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 13:51:37 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+To: Mark Brown <broonie@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 2/2] exec: Avoid pathological argc, envc, and bprm->p values
-Date: Fri, 21 Jun 2024 13:50:44 -0700
-Message-Id: <20240621205046.4001362-2-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240621204729.it.434-kees@kernel.org>
-References: <20240621204729.it.434-kees@kernel.org>
+	linux-spi@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: [PATCH 0/3] spi: add devm_spi_optimize_message() helper
+Date: Fri, 21 Jun 2024 15:51:29 -0500
+Message-ID: <20240621-devm_spi_optimize_message-v1-0-3f9dcba6e95e@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4831; i=kees@kernel.org; h=from:subject; bh=HGKiztfmnXGwe57zj0+vTZfhNT7KQZ5JNN+BGrOb5Qw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmdeekLPmeDCyHBRB+FOlnbPUxLBpaNJ4ss73+0 bFmZEGvDfSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnXnpAAKCRCJcvTf3G3A JrHpEACwK/KoxBiuYpyBhT1faCVPtic/WRxA+xyHpVQqTf6/yL7eoyTCaiJk58mIoXAOB1tXoq1 89j9SqoxNE/uRUHLli/HOj4QYrwLyzyr6XqxRj2hwij6HLNf9poM46hOJ/Zz5tgjL9EPkZDam3/ 7aK6+OHKWEWWqqlzQhmmla+vhcKlA8MMZ2t1InXPiiXw/htTp52e2IHC0W0q4rubg+6sihRa36e Ov/Pa6O58b1fG2Ik8GcjDXlBSTj3uaTNcSZOxvZg10WpPs5r2y01iBcT+N3IHSJUFmFWpiksvKT btcLB7+7FHVBvjMKcTSA9+5TytPgMiyVMN78mKTyEfkJEjWE7GRAbeVWYTPGR0giV+lV4WJ/JJK ovljU3VUetF/2fEn8Dpr8cXSNetg15795IqzDIgO0A6FDrGGHkkXF/+q0yk3Q3JMGliylAZitXC 40+5rkqqddWDwsVg+qkKqsJrx5ttQXSi+EpAhDb62nFUtbmuznNzMEwVJgfykpWhhHMsuad13G9 DKiPCY7OeiiKNbXjfgkXID2BkHtEj1kJRD6fEVkiFuDBzqD6qWDhwLCS/mv4q5u9hLpGs68pywr ivAMmlI7v7KA3pttOS+oPQea7JkKuqHV096jHTtskEhpy9PH9bGkfGeC2PLQuBjKAZ2VF2FT6Wx jsCjqkqW7b/2erQ==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-Make sure nothing goes wrong with the string counters or the bprm's
-belief about the stack pointer. Add checks and matching self-tests.
+In the IIO subsystem, we are finding that it is common to call
+spi_optimize_message() during driver probe since the SPI message
+doesn't change for the lifetime of the driver. This patch adds a
+devm_spi_optimize_message() helper to simplify this common pattern.
 
-Take special care for !CONFIG_MMU, since argmin is not exposed there.
-
-For 32-bit validation, 32-bit UML was used:
-$ tools/testing/kunit/kunit.py run \
-	--make_options CROSS_COMPILE=i686-linux-gnu- \
-	--make_options SUBARCH=i386 \
-	exec
-
-For !MMU validation, m68k was used:
-$ tools/testing/kunit/kunit.py run \
-	--arch m68k --make_option CROSS_COMPILE=m68k-linux-gnu- \
-	exec
-
-Link: https://lore.kernel.org/r/20240520021615.741800-2-keescook@chromium.org
-Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
+David Lechner (3):
+      Documentation: devres: add missing SPI helpers
+      spi: add devm_spi_optimize_message() helper
+      iio: adc: ad7944: use devm_spi_optimize_message()
+
+ Documentation/driver-api/driver-model/devres.rst |  3 +++
+ drivers/iio/adc/ad7944.c                         | 26 +++--------------------
+ drivers/spi/spi.c                                | 27 ++++++++++++++++++++++++
+ include/linux/spi/spi.h                          |  2 ++
+ 4 files changed, 35 insertions(+), 23 deletions(-)
 ---
- fs/exec.c      | 10 +++++++++-
- fs/exec_test.c | 28 +++++++++++++++++++++++++++-
- 2 files changed, 36 insertions(+), 2 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index b7bc63bfb907..5b580ff8d955 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -490,6 +490,9 @@ static inline int bprm_set_stack_limit(struct linux_binprm *bprm,
- 				       unsigned long limit)
- {
- #ifdef CONFIG_MMU
-+	/* Avoid a pathological bprm->p. */
-+	if (bprm->p < limit)
-+		return -E2BIG;
- 	bprm->argmin = bprm->p - limit;
- #endif
- 	return 0;
-@@ -531,6 +534,9 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
- 	 * of argument strings even with small stacks
- 	 */
- 	limit = max_t(unsigned long, limit, ARG_MAX);
-+	/* Reject totally pathological counts. */
-+	if (bprm->argc < 0 || bprm->envc < 0)
-+		return -E2BIG;
- 	/*
- 	 * We must account for the size of all the argv and envp pointers to
- 	 * the argv and envp strings, since they will also take up space in
-@@ -544,7 +550,9 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
- 	 * argc can never be 0, to keep them from walking envp by accident.
- 	 * See do_execveat_common().
- 	 */
--	ptr_size = (max(bprm->argc, 1) + bprm->envc) * sizeof(void *);
-+	if (check_add_overflow(max(bprm->argc, 1), bprm->envc, &ptr_size) ||
-+	    check_mul_overflow(ptr_size, sizeof(void *), &ptr_size))
-+		return -E2BIG;
- 	if (limit <= ptr_size)
- 		return -E2BIG;
- 	limit -= ptr_size;
-diff --git a/fs/exec_test.c b/fs/exec_test.c
-index 8fea0bf0b7f5..7c77d039680b 100644
---- a/fs/exec_test.c
-+++ b/fs/exec_test.c
-@@ -8,9 +8,34 @@ struct bprm_stack_limits_result {
- };
- 
- static const struct bprm_stack_limits_result bprm_stack_limits_results[] = {
--	/* Giant values produce -E2BIG */
-+	/* Negative argc/envc counts produce -E2BIG */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = INT_MIN, .envc = INT_MIN }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 5, .envc = -1 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = -1, .envc = 10 }, .expected_rc = -E2BIG },
-+	/* The max value of argc or envc is MAX_ARG_STRINGS. */
- 	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
- 	    .argc = INT_MAX, .envc = INT_MAX }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = MAX_ARG_STRINGS, .envc = MAX_ARG_STRINGS }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 0, .envc = MAX_ARG_STRINGS }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = MAX_ARG_STRINGS, .envc = 0 }, .expected_rc = -E2BIG },
-+	/*
-+	 * On 32-bit system these argc and envc counts, while likely impossible
-+	 * to represent within the associated TASK_SIZE, could overflow the
-+	 * limit calculation, and bypass the ptr_size <= limit check.
-+	 */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 0x20000001, .envc = 0x20000001 }, .expected_rc = -E2BIG },
-+#ifdef CONFIG_MMU
-+	/* Make sure a pathological bprm->p doesn't cause an overflow. */
-+	{ { .p = sizeof(void *), .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 10, .envc = 10 }, .expected_rc = -E2BIG },
-+#endif
- 	/*
- 	 * 0 rlim_stack will get raised to ARG_MAX. With 1 string pointer,
- 	 * we should see p - ARG_MAX + sizeof(void *).
-@@ -88,6 +113,7 @@ static void exec_test_bprm_stack_limits(struct kunit *test)
- 	/* Double-check the constants. */
- 	KUNIT_EXPECT_EQ(test, _STK_LIM, SZ_8M);
- 	KUNIT_EXPECT_EQ(test, ARG_MAX, 32 * SZ_4K);
-+	KUNIT_EXPECT_EQ(test, MAX_ARG_STRINGS, 0x7FFFFFFF);
- 
- 	for (int i = 0; i < ARRAY_SIZE(bprm_stack_limits_results); i++) {
- 		const struct bprm_stack_limits_result *result = &bprm_stack_limits_results[i];
--- 
-2.34.1
-
+base-commit: 0ca645ab5b1528666f6662a0e620140355b5aea3
+change-id: 20240621-devm_spi_optimize_message-ebbde029dd7a
