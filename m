@@ -1,114 +1,97 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9314DB67D
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 19:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F089B67D;
+	Fri, 21 Jun 2024 19:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718997210; cv=none; b=oHg/rUGzDYsfL901hZMJKs7zj9IvTM2lodj1pepqKBYIqDnEtiiuHl/+ucE6dkQPJ4MyotWRHcqjYsiDiuGV19okchha0CAGA5X37FDbTh8ozl4qNy/yNRXcMipPq+INb8hf5HcmAMdEcd1RvNrDr13C1t/6VNDsxFVo0RYTD3E=
+	t=1718997238; cv=none; b=m2r7Jhd1hV0cTUvtObKmnAgWNB+2dVKYzN3HbrljwbAjPG2dNMbekQrM7AeqDJfDrg3bjwdy6EriH+mKqTTKUeoCzxDQXs3al5Y0kpuzUIEaO3DQ2J729mX3sS7a4NZZuUHgb0CjI6gTb1yjf82HWfsDYVdZVphSZHVph7shRnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718997210; c=relaxed/simple;
-	bh=8ouQf0DJKbUjW5devzdFPROugjQXPSwE949WmlYAltw=;
+	s=arc-20240116; t=1718997238; c=relaxed/simple;
+	bh=0zyZ73ct1NhekP0iINSaiaQYX6M2DCA8CHBz7pfWunc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N7iAO/HGNTGmOD8B/anWZAUlPqgSJ9l7EBlNJIisBxrs7HcfqkjcidDinyu8IxJ1S062QwfOCUrvSmY1GnV7eS7I+sezc4IbCt+cVCf4vsfLgVvshKwHtxn87UqcwOPnYHMZhuJLl4X5W+k9bj58DmiXlggjO9z8lnxbYmeAT/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=E1WGfEEj; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGgvFW1zUz3VyI7pSExn8O8DiBK6I2UOHMjgzI5GReJfVya1Y/URCkRkSx51p/KKf/+MxLBd4RYvqU4b30qxkXyL7UqVzqlSynDVnzHVchQ3/pxChspe1w1mf5r6y5qVjTMYM/itFz4ou8bOZO+uIczQml3GRt4PvIzhX2gIgHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzHjc/Ce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="E1WGfEEj"
-X-Envelope-To: bigeasy@linutronix.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718997205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Oujy0oSP3uMXwSsfsYtQmtVOILqUaJG66ZF3sUiG6E=;
-	b=E1WGfEEj1m0wKQeguY0KV1azICuphvzSpxbDM8sLHVh/NVTwXM3rsCocq/4ne8YjCVZNN1
-	hOUVX2cqWpda6Gd4kEaQkK75gKKW01vUljXvYYn+lmf/VzZ/knK4rOYqyNsRB1A4nZELd5
-	6MQQQp5avQjjaVb+YspAv/CA/Zp2YAo=
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: bsegall@google.com
-X-Envelope-To: bristot@redhat.com
-X-Envelope-To: dietmar.eggemann@arm.com
-X-Envelope-To: mingo@redhat.com
-X-Envelope-To: juri.lelli@redhat.com
-X-Envelope-To: klarasmodin@gmail.com
-X-Envelope-To: mgorman@suse.de
-X-Envelope-To: peterz@infradead.org
-X-Envelope-To: rostedt@goodmis.org
-X-Envelope-To: surenb@google.com
-X-Envelope-To: tglx@linutronix.de
-X-Envelope-To: vschneid@redhat.com
-X-Envelope-To: vincent.guittot@linaro.org
-Date: Fri, 21 Jun 2024 15:13:19 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Ben Segall <bsegall@google.com>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Klara Modin <klarasmodin@gmail.com>, Mel Gorman <mgorman@suse.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] sched/task_struct: Move alloc_tag to the end of the
- struct.
-Message-ID: <elqyw2tofbojh6rfkfyrjaz6dpwpq4vfd3ni5r3cgkwdumginc@ctizxnu4jkff>
-References: <20240621102750.oH9p1FQq@linutronix.de>
- <7zretxxixkpfxt6lr7x64n67ql2v2qpb7abbbjklclwlu4u2kx@22o5sdlnpkea>
- <20240621182915.S-ULWn0O@linutronix.de>
- <yjkte7jz6meaon4tvtwrefvhegwthnxorj3vrz5so6h6kftukv@azvug3smbd3p>
- <20240621190719.TeLTxI9M@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzHjc/Ce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0966FC2BBFC;
+	Fri, 21 Jun 2024 19:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718997238;
+	bh=0zyZ73ct1NhekP0iINSaiaQYX6M2DCA8CHBz7pfWunc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QzHjc/CeDDROv6rVmUnD/fFH4PmnK5EDDoinhW2wdVYVaXMPUVUmHITgU4v3Q+zJN
+	 Mhd75q0TOZYNmWT4RtOQpBcSazgGldhGvZ30zyifNU0+2dwcgnd/LPVh5bA02waGcs
+	 J2S37PqnQF84UHJ3ML45pyjLzyNY/JUbETKiQuB6mgrbTqp/952QC/r1HDbMXg6ri8
+	 u66QwiEZuIL9QITG4sGe4ccoChD2cV0VVdkIb3KcraZIFLG449DZbA0iX4WeVzyd/m
+	 Sg2uVTDl+Z1ZSCrHiaiBgi1uNQuUg0yFtU3xtHQu5k5LVOLPa1UWxujGdT8SXJAkgz
+	 9UVsN1E4VwvIQ==
+Date: Fri, 21 Jun 2024 12:13:57 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: chandan.babu@oracle.com, dchinner@redhat.com, hch@lst.de,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, catherine.hoang@oracle.com,
+	martin.petersen@oracle.com
+Subject: Re: [PATCH 12/13] xfs: Don't revert allocated offset for forcealign
+Message-ID: <20240621191357.GQ3058325@frogsfrogsfrogs>
+References: <20240621100540.2976618-1-john.g.garry@oracle.com>
+ <20240621100540.2976618-13-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240621190719.TeLTxI9M@linutronix.de>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240621100540.2976618-13-john.g.garry@oracle.com>
 
-On Fri, Jun 21, 2024 at 09:07:19PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2024-06-21 14:49:23 [-0400], Kent Overstreet wrote:
-> > On Fri, Jun 21, 2024 at 08:29:15PM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2024-06-21 10:20:58 [-0400], Kent Overstreet wrote:
-> > > > On Fri, Jun 21, 2024 at 12:27:50PM +0200, Sebastian Andrzej Siewior wrote:
-> > > > > The alloc_tag member has been added to task_struct at the very
-> > > > > beginning. This is a pointer and on 64bit architectures it forces 4 byte
-> > > > > padding after `ptrace' and then forcing another another 4 byte padding
-> > > > > after `on_cpu'. A few members later, `se' requires a cacheline aligned
-> > > > > due to struct sched_avg resulting in 52 hole before `se'.
-> > > > > 
-> > > > > This is the case on 64bit-SMP architectures.
-> > > > > The 52 byte hole can be avoided by moving alloc_tag away where it
-> > > > > currently resides.
-> > > > > 
-> > > > > Move alloc_tag to the end of task_struct. There is likely a hole before
-> > > > > `thread' due to its alignment requirement and the previous members are
-> > > > > likely to be already pointer-aligned.
-> > > > 
-> > > > We sure we want it at the end? we do want it on a hot cacheline
-> > > 
-> > > Well, the front is bad.
-> > > Looking at pgalloc_tag_add() and its callers, there is no task_struct
-> > > touching. alloc_tag_save()/restore might be the critical one. This is
-> > > random code… Puh. So if the end is too cold, what about around the mm
-> > > pointer?
-> > 
-> > Not there, that's not actually that hot. It needs to be by
-> > task_struct->flags; that's used in the same paths.
+On Fri, Jun 21, 2024 at 10:05:39AM +0000, John Garry wrote:
+> In xfs_bmap_process_allocated_extent(), for when we found that we could not
+> provide the requested length completely, the mapping is moved so that we
+> can provide as much as possible for the original request.
 > 
-> But there is no space without the additional 52 bytes. Was this by any
-> chance on purpose?
+> For forcealign, this would mean ignoring alignment guaranteed, so don't do
+> this.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 
-No, that wasn't, and it doesn't have to be the exact same cacheline, but
-we do want it near current->flags; we store PF_MEMALLOC flags there that
-are converted to gfp flags and used exactly where we're using
-current->alloc_tag.
+Makes sense,
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+> ---
+>  fs/xfs/libxfs/xfs_bmap.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index ebeb2969b289..42f3582c1574 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -3492,11 +3492,15 @@ xfs_bmap_process_allocated_extent(
+>  	 * original request as possible.  Free space is apparently
+>  	 * very fragmented so we're unlikely to be able to satisfy the
+>  	 * hints anyway.
+> +	 * However, for an inode with forcealign, continue with the
+> +	 * found offset as we need to honour the alignment hint.
+>  	 */
+> -	if (ap->length <= orig_length)
+> -		ap->offset = orig_offset;
+> -	else if (ap->offset + ap->length < orig_offset + orig_length)
+> -		ap->offset = orig_offset + orig_length - ap->length;
+> +	if (!xfs_inode_has_forcealign(ap->ip)) {
+> +		if (ap->length <= orig_length)
+> +			ap->offset = orig_offset;
+> +		else if (ap->offset + ap->length < orig_offset + orig_length)
+> +			ap->offset = orig_offset + orig_length - ap->length;
+> +	}
+>  	xfs_bmap_alloc_account(ap);
+>  }
+>  
+> -- 
+> 2.31.1
+> 
+> 
