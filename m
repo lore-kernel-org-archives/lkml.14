@@ -1,152 +1,163 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936C93C0D;
-	Fri, 21 Jun 2024 06:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D71155CAC
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 06:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718951418; cv=none; b=JrJ5X7HnFYyRibmcCf7RKcHoJJt6rcgeXyDEX65aeQtRxlCDvx8opqyR74lnoMAsQDcwrpjRLaKQTq62dKR/PJonIcMH03lPi5Vx25A5JbTtftS0md4dNN5nbLdnWcL4g7z0aOYHagXEL3I91SSrtW2EcH7/RrwyNo+2Ue2xXzk=
+	t=1718951793; cv=none; b=HYU3CGwx1wKFcTDrR1QJ8si2Q1PckbrCtI5R6U4QR08PLhT9WesCY1zfRDRp6K7YdsI2+o8GlDJ57iKGYyjn76uQ91o0/Auzuu7pdtaODjHF165xVtXH0f7ACbDj9Xq2CDG0MAIjgdaMBIDLVxv+lxZSKWaSHSRav8KlXOqwU5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718951418; c=relaxed/simple;
-	bh=QTDvmlCgRLlBME4zt8gkdNo0SO4LeIf5kG63XslMO08=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=JTLcaXE9VWs/8QTVR1wiGkx7Ibvw113svzT9wDCrFfJOJ7cVtFR7OxapD/mQz5Dfiz8FRSLsb/jbJ5Dyvxfz2Tl6RZjkxZUdnzV1RThZFphJwaQuw717gR37OHAK8lSQV2Wvjaekq71Lqola5Iu8mDgaN2rSyWvDRMLR+o6UnEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YUfcwoBS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TsA19tge; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718951793; c=relaxed/simple;
+	bh=tIZJesXUiqyNL0+tf4ZcTxHwPed67ixLIRK/Y7eHy/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QpaEBgxjkvPo+LVWOSiZU0fmgwo3sttxD5uLrHw0b/OU+UKl8jcN4cnQEBNDlxGjmPPbWWkavWoWD9J8L3lqZZeouVO3aC0+zmCRX67ZTSnKol8vDBBfTmiYSbL65uNn2Y670mIYfvd5xCFwF6BCoy3BHu8LfrtUavfrRBKoVgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HUVhUVcB; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YUfcwoBS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TsA19tge"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 84F2B138026C;
-	Fri, 21 Jun 2024 02:30:14 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 21 Jun 2024 02:30:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1718951414;
-	 x=1719037814; bh=0NAp6YpmQQzb+XaqCHOddozx1CwlQxt9qQHhSQdm/eM=; b=
-	YUfcwoBSCsdr4lbdFToY1N/Zs4J4ckS/QAFHkFhDVLoMlvGNE9DG/Up12YB02Xt2
-	EvdhpTEPC4jKy9ytn/wkuqfYy4S1cppgeD4oj7WA+/5sqCNg/z+lPwlRbPyO/Flv
-	86iciY4yavDos8ifYZIvOfII9G79cFp+BbP22J8pM9RrD+d18AtMZbn8j9nT03bV
-	c7xQT06XqtjmkNTJ3loldGGvKZUIHFOFW5y31AIvhjBqlktBLCcT2CdKqNOYzmSV
-	sMmQF4/bSVH0PEqvVO/XPs0/1B6SgKYgXBpAog/xndEaqaywJvgFOBJuhrryZ4PT
-	p2/5cEIyG3XclTxM5zIk6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1718951414; x=
-	1719037814; bh=0NAp6YpmQQzb+XaqCHOddozx1CwlQxt9qQHhSQdm/eM=; b=T
-	sA19tgeRrtyO5cROFsAr3JW3gCmvjTkfGvoIFyTvlgeMHOUsPYhUf63dPMHGumOG
-	SIVUOPVMYqUiSDU81ctnvLlpO9PEmKT5nYGuN8Yk6mi2deAmhqwvD8T8lcVqcfB1
-	GPqL5qicjYl82FohTt6bsxJU60LE/Hsa42KrOIywf7lBtaIPivddS4cPuSL9Zm6B
-	LHiJJ7dQip90rRSAu8Rm0KDbhCZ/X7xYsJbH8aqLdEew+kE5apOFPvumBP+Yp5Fz
-	Rr5E19oZ7V3IGyh5IXREy5PC+msQ9aq0CnRgKaDNrD+E/iA5xot89u78VGuhZWhK
-	zW007umSQsVkCbMOwZN5A==
-X-ME-Sender: <xms:9B11ZuBxjRBAW0tNynq8H1-YRQjdkmL-JPoLIbLq-orE5Mdjc1QF6A>
-    <xme:9B11ZojY_qLmvoF_ar3eB4_lK44-YnS7iEik2csxzA9Ys1vKqB1JAHCw16DZLb5Ul
-    cdeR1H2mE3zhLekbAU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeffedgudduudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
-    tehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrf
-    grthhtvghrnhepueelffeiudevhfettedvhfevkeekveevffehveehhefftdeiheduledu
-    iedtvdffnecuffhomhgrihhnpegrkhgrrdhmshenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:9B11Zhm6zOHfU1WuWgDdoSU71qsQzLDsjAJ7Nhxw117RxV0KzM2GHQ>
-    <xmx:9B11ZsweTZURJjYSmpSNhPg_buY1pvgdHiULQsyQVa-AcYIqIMlFBA>
-    <xmx:9B11ZjQp1WOoJc2XCjVhKQs5UkDHi7Xc0oSg1RRu1sY5kpyhJuIyfA>
-    <xmx:9B11ZnbfnZmS9DMt_cIsivY9q90FCfqmpn7bFXeT3Vnm0PLjcHHdDQ>
-    <xmx:9h11Zm92tL5faK9ZKeseMNCfbg9AEZegZt4gth5vlZ0KCBBhZQ4GEtV8>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 60EDBB6008D; Fri, 21 Jun 2024 02:30:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HUVhUVcB"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c85a7f834so2089056e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718951788; x=1719556588; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hDlgAx36WtQTmqaDPFS1bjCgqZ49vXGvfFSl1X9D+uI=;
+        b=HUVhUVcBAeDvJ5ZLv1iN1LWfop8ExyJAFdfsg1JKTzJz61HrhU+wCprK6eCgQppvl3
+         87Ev0hVgKDsOwpvg2mP2Vs9sskeVo+EC8InncdH89cRmL7mymKQBKQxTf7BK4gt6JLx1
+         FwGNhlqdkvVDT4gTahsMglZSw4pdSxPT67qqRiqoJ3P9lk8RzQP4zMrzzCy/sTls0Q8J
+         MBCDerIHOSsH0aSWNSGyhNwusYKUAdI0+r6vl52k0YVnh6oIsi3ScQrVJ1t+iC+v2Z8W
+         pS0kxlSmMsd7HHLM9pI8TYKx7Nlx2hPI4TdUnsh/QmfjSR9vmsQTSrCehWz5ZYRZrgHX
+         a0pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718951788; x=1719556588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hDlgAx36WtQTmqaDPFS1bjCgqZ49vXGvfFSl1X9D+uI=;
+        b=O0xa9clluLJGkGLNv43I9RK6jTGg/BzU46C9xIphUcCib5fpSJsD0aM/X1vYYYJqHz
+         HDT4UDgxCZ259kKWgta1Nl7vyV2xIUAdFA+9FV+zJugVGvLtvGH6BlhoJiWcrJvWI8KX
+         5CLeYsgnhaDgWUEV9+rsUPOzHDWFq66htyMCg10os1SCURfDtmG2A+sNVNPqjzFyp/zO
+         nWsOwiEAI/nX/cdiLhMmmg/qu+YTzRW7z+vaZACxZTm9ZftwT7TudIrsQ8XyCG/FLdZZ
+         a/eSeuDNZB4YAGJckHvDZ78r3NTa4Fo04u0wfCBWIhbI5XlED6u1YZj13gOxLV/Prog4
+         w+3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXFbo//1fb3BmTmwrMwHjiN+ekpxCTuwF6liJrn+r9Gnvt+48XlyNU3sDRu3+JyIW7oxqbYTdJsO77shOEDcLMVMXIkyEBAKSnRWBuG
+X-Gm-Message-State: AOJu0Ywi9adRbeFpDBsIUXIEqkaJfePMQCQgqHX7wL1T+sQpM6SmuKgx
+	aOuCsk9CpZ7IL8ivoT7gm5/Ce3/eLLN5bVrkv0nV354CKhTquiXKNMTV/DDWGfAA03dMzbxfdFD
+	l9UMpANYkys5D4FWxs/gHs4hVxmr9L9RZZ39ZCA==
+X-Google-Smtp-Source: AGHT+IETcccKM8WA7GpqQapLV3BglD0CyTXI7Fuf3artRzg+wwCccDOMDfEs5iixeaBWfAxzjwo6k5OyfcLU1ZQouHU=
+X-Received: by 2002:a05:6512:33c9:b0:52c:8a4e:f4bf with SMTP id
+ 2adb3069b0e04-52ccaa98d21mr4559244e87.51.1718951788223; Thu, 20 Jun 2024
+ 23:36:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1308b23a-d7c0-449e-becd-53c42114661e@app.fastmail.com>
-In-Reply-To: <e22d7cd7-d247-4426-9506-a3a644ae03c4@cs-soprasteria.com>
-References: <20240620162316.3674955-1-arnd@kernel.org>
- <20240620162316.3674955-8-arnd@kernel.org>
- <e80809ba-ee81-47a5-9b08-54b11f118a78@gmx.de>
- <e22d7cd7-d247-4426-9506-a3a644ae03c4@cs-soprasteria.com>
-Date: Fri, 21 Jun 2024 08:28:40 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "LEROY Christophe" <christophe.leroy2@cs-soprasteria.com>,
- "Helge Deller" <deller@gmx.de>, "Arnd Bergmann" <arnd@kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "Rich Felker" <dalias@libc.org>, "Andreas Larsson" <andreas@gaisler.com>,
- guoren <guoren@kernel.org>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "musl@lists.openwall.com" <musl@lists.openwall.com>,
- "Nicholas Piggin" <npiggin@gmail.com>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "LTP List" <ltp@lists.linux.it>, "Brian Cain" <bcain@quicinc.com>,
- "Christian Brauner" <brauner@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Xi Ruoyao" <libc-alpha@sourceware.org>,
- "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "Adhemerval Zanella Netto" <adhemerval.zanella@linaro.org>,
- "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 07/15] parisc: use generic sys_fanotify_mark implementation
-Content-Type: text/plain;charset=utf-8
+References: <20240605123850.24857-1-brgl@bgdev.pl> <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
+ <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
+In-Reply-To: <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Jun 2024 08:36:17 +0200
+Message-ID: <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
+To: Lk Sii <lk_sii@163.com>
+Cc: patchwork-bot+bluetooth@kernel.org, marcel@holtmann.org, 
+	luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org, 
+	andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com, 
+	broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
+	bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be, 
+	arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com, 
+	elder@linaro.org, srinivas.kandagatla@linaro.org, gregkh@linuxfoundation.org, 
+	abel.vesa@linaro.org, mani@kernel.org, lukas@wunner.de, 
+	dmitry.baryshkov@linaro.org, amit.pundir@linaro.org, wuxilin123@gmail.com, 
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-pm@vger.kernel.org, bartosz.golaszewski@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 21, 2024, at 07:26, LEROY Christophe wrote:
-> Le 20/06/2024 =C3=A0 23:21, Helge Deller a =C3=A9crit :
->> [Vous ne recevez pas souvent de courriers de deller@gmx.de. D=C3=A9co=
-uvrez
->> pourquoi ceci est important =C3=A0
->> https://aka.ms/LearnAboutSenderIdentification ]
->>
->> On 6/20/24 18:23, Arnd Bergmann wrote:
->>> From: Arnd Bergmann <arnd@arndb.de>
->>>
->>> The sys_fanotify_mark() syscall on parisc uses the reverse word order
->>> for the two halves of the 64-bit argument compared to all syscalls on
->>> all 32-bit architectures. As far as I can tell, the problem is that
->>> the function arguments on parisc are sorted backwards (26, 25, 24, 2=
-3,
->>> ...) compared to everyone else,
->>
->> r26 is arg0, r25 is arg1, and so on.
->> I'm not sure I would call this "sorted backwards".
->> I think the reason is simply that hppa is the only 32-bit big-endian
->> arch left...
+On Fri, Jun 21, 2024 at 3:14=E2=80=AFAM Lk Sii <lk_sii@163.com> wrote:
 >
-> powerpc/32 is big-endian: r3 is arg0, r4 is arg1, ... r10 is arg7.
+>
+>
+> On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
+> > Hello:
+> >
+> > This series was applied to bluetooth/bluetooth-next.git (master)
+> > by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
+> >
+> Hi luiz,
+>
+> i am curious why Bartosz is able to merge his changes into bluetooth
+> development tree bluetooth-next directly.
+>
 
-Right, I'm pretty sure the ordering is the same on arm, mips,
-s390, m68k, openrisc, sh and sparc when running 32-bit big-endian
-code.
+This conversation is getting progressively worse...
 
-It's more likely to be related to the upward growing stack.
-I checked the gcc sources and found that out of the 50 supported
-architectures, ARGS_GROW_DOWNWARD is set on everything except
-for gcn, stormy16 and  32-bit parisc. The other two are
-little-endian though. STACK_GROWS_DOWNWARD in turn is set on
-everything other than parisc (both 32-bit and 64-bit).
+> 1)
+> his changes should belong to *POWER* scope instead of *Bluetooth*
+> obviously, however, there are *NOT* any SOB tag from either power and
+> bluetooth maintainer. these changes currently only have below Acked-by
+> and Signed-off-by tags:
+>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
 
-      Arnd
+It's a new subsystem that has been discussed and reviewed for months
+and thoroughly tested. Please refer to the cover letter under v8
+linked in this thread. It's not related to power-management or
+power-supply, it's its own thing but IMO the best place to put it is
+under drivers/power/. And I will maintain it.
+
+> 2)
+> his changes have not merged into linus mainline tree yet.
+>
+
+This is why they are in next! They are scheduled to go in during the
+upcoming merge window. But since changes belong in multiple trees, we
+need a cross-tree merge.
+
+> 3)
+> perhaps, it is safer to pull his changes from linus mainline tree when
+> merged than to merge into bluetooth-next firstly.
+>
+
+It's not safer at all, why would spending less time in next be safer?
+
+> > On Wed,  5 Jun 2024 14:38:48 +0200 you wrote:
+> >> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>
+> >> Hi!
+> >>
+> >> These are the power sequencing patches sent separately after some
+> >> improvements suggested by Bjorn Helgaas. I intend to pick them up into=
+ a
+> >> new branch and maintain the subsystem from now on. I then plan to
+> >> provide an immutable tag to the Bluetooth and PCI subsystems so that t=
+he
+> >> rest of the C changes can be applied. This new branch will then be
+> >> directly sent to Linus Torvalds for the next merge window.
+> >>
+> >> [...]
+> >
+> > Here is the summary with links:
+> >   - [v9,1/2] power: sequencing: implement the pwrseq core
+> >     https://git.kernel.org/bluetooth/bluetooth-next/c/249ebf3f65f8
+> >   - [v9,2/2] power: pwrseq: add a driver for the PMU module on the QCom=
+ WCN chipsets
+> >     https://git.kernel.org/bluetooth/bluetooth-next/c/2f1630f437df
+> >
+> > You are awesome, thank you!
+>
+
+Why are you top-posting anyway?
+
+Bart
