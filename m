@@ -1,183 +1,210 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061.outbound.protection.outlook.com [40.107.220.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3569415A85C;
-	Fri, 21 Jun 2024 15:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718984745; cv=none; b=BDe3PGT4hDvmE/42QgJuWE9Y4KLLLLRQigqER28d2/LVcaAWsgkzPSEfKvcRdLpc3TE6cz6aFfyK53FZGXoJMj4Q3hJRr21xyFmTeXolso3e7Tdn557HwUFxM7uV9F0IzMNlT3kJs/O2vjjTfwcFFzHuc8RzGT8EVcOlDic7TgA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718984745; c=relaxed/simple;
-	bh=HOSCZ2vrhvGoFP2iw1Ql/Hz/mDzmyBgbdC959qExCDk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kE+KO56hhwx8mv0s3QBGzllCZtHVjBhRnFF6WMCvC9LyNwd8IsVFj7h4mrEeihi2/tjQINipJF6neUbU2VKqdcdbTlBbiNvhLEIQODEf82ANmH8fbFj5T799dI6QT3mHfFdjr6YWKbqRgnuLEY6gHsMabFe4GFuPQS3NWZ5neI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XuG/A2u9; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37E3BE4B;
+	Fri, 21 Jun 2024 15:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718984869; cv=fail; b=A9T3hVc2aS0fVHRshBZzHwY18/MWzN0DM3dp5l7BT1kQtFM1/lm+NQ0jLKndX2s+ZrMF4KCiHRvk2XeW96EClK1sqE8jMygzXLUAThWrD2tTwHFGSZLAMwNuGT8dBIKt8R/rD8gdSeeZH8HUrRZisdTK3bBsP3bPHA8FcpcOOTE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718984869; c=relaxed/simple;
+	bh=G/imw7sE+Byw2XRboLp0Zgo/jB3ca0TkODW6g4bBGAo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PYL25RYtcZ3QLlzv8AfVBb0+ox2D2V84yOwSIVfz57mVKLq+Tsv/NWIxpWJQ+5RdUQxHvhvIYzVX0hBEfAZ7y7442AhTnhCg7EFjMns8HQ37icbIhcL2f52op9tg1xKF7SWlDXwpUyP9QERViWM6/T+CUxhpM0n3J5YBk/wdQEo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OgJcKI6j; arc=fail smtp.client-ip=40.107.220.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuG/A2u9"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso302754366b.3;
-        Fri, 21 Jun 2024 08:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718984742; x=1719589542; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p4CvXaD0p8juFHM/mj9mpOHYuq+vuwl0xPPEP0shwFI=;
-        b=XuG/A2u9OpJtRpPAM5mP7DY2cdn+s7cd7jq28VaTgI2un7In6lh6Z4mbdte580yI98
-         70Grq8EJjXkLFfTONjSn/GOz3Pic1ejLZzF4r3OW4IrCRDOb9dsP2eHtV6ORHbdFRSdm
-         /Z1izixViC4T10HqMKBQvZ8sZtuTjuV/DVqYcNjE2xMRz81bGEJFM1d8TUmCSMYvuLRi
-         aodVgmaK42d9B/5MbMbg+LScbsmE4nbWTw5fbwbSG+/sH4V+TBxnAwMLdUiijTK16DZn
-         RX+obBfORID0lFpxKSXpH/9HzGXR/lYmARMAQZruq6aWPzZyq0JkX9GxCDkCkTDnoVqf
-         5uYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718984742; x=1719589542;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p4CvXaD0p8juFHM/mj9mpOHYuq+vuwl0xPPEP0shwFI=;
-        b=WIXnDV6FMcnQ9PJNpsLMlSiG7jZz7k9+4lVkT4cJcR+rcAjdalIAR8IfqrzlVtqjJi
-         NAMeiiiHtBjs1zbaHMXMKHPBxMnnI93V6K2tJ1oLTQSyd9aw9UP4GEKeKIr2fuouDExY
-         1h3Nd4xwuCFdEEdbLC5IZciGVlCWhdGJuAHWUUYPI/pZJag7ulnJBoK2vDfzwc+Uo8QS
-         kA0JcTMNUYvA+m8OtFRpbAU9A6GkIePGKSWjs60eyiw82fcX/PXQFmW+2PLI15zULxgA
-         /faVgSddHZjP9MxoH2qLfweUQCQ0nOiKpedocHVdzzb8BcEF8MJvol1+mqVPCOkksH1G
-         dE4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTH7ozIHaxrtH7yHjnYm90dvbnOjBUVv2xSPj/ibVTYywH6wV2oUN95ntxNG4Q5itRlnOx/hrlngU28hBjgH+m65AYQjUKFIREPdVsm9I3N3pFUz2Ka8/WmDADj6yiVNcFt+bGud8Y3nPGwPi2taWNFk0IJ2Y3RjhonscUN0P1kHp6L50VWsRZtzj5E0OgphiY3OaWmbVTmymiVA==
-X-Gm-Message-State: AOJu0Yz0rPReYIt/0vVAU6rSciVLIeBclft/rODZpus3t+XJQPVnLml3
-	0R8tGgGBqerIA8O94QJv2v5Krc1m3ITqaGtCbC8rFrXTc889vSGOO34WH4ocpyaIe0mLmVeAjif
-	Iwx/glhhXBGOwq3yQEnWdnAYH6wc=
-X-Google-Smtp-Source: AGHT+IGQG2/pFic6ghI58imlJHEBDuzmWT1uMrn79oh0Id6ZdT6X4Yy9HwZWFVL2JJuDF6fSk19Bw5MO37t5DdaeuQk=
-X-Received: by 2002:a17:907:7a94:b0:a6f:b58f:ae3c with SMTP id
- a640c23a62f3a-a6fb58fba03mr436111266b.26.1718984742083; Fri, 21 Jun 2024
- 08:45:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OgJcKI6j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZsLBvD4fZ6Glly8ZcWqaD9T0K2Yu2J56L/cmPqwOPGocEnMLcTsUP5dsItRvVzryQcOqVLIkUbzZ96FnbTqFaYHbbiZqWOdQJmGGyoPUSotwuF++KDviN0nRzVZHJLzGFWTKzSxax6H/AtcHAERCkOWpEI36sznOnB8mIb67gUpi+CJIOJqHyg9Cf1OihDfglphlkBhWivLfMfbC2ZcWRSxBIOJpLncMNwprn0Fzd0Dxx2mkEo19pvOLzrYJe9fKlJU/9rCqo6I56Iuy+ikPdFy4dcprERPhQ4D5vx1T9DrIC5b3giyawKvl02A/DIzNl1sqMBn1ngaWU0dydxrAcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tBmSMip+jwQ6O6tpGQrsiFPoshpCckOV1NCmZp7BnHc=;
+ b=ZkMIykitIpmFqZEuqeBM9P/yrSYEjdtY/7/CQ2scVstabVb8cMLB/Q1DaXEhMBIHQg0/Y9x8xNp6B1WzHP/k7D7NS0RwKCOD3Pq3OJFk7pA+qoVvO61G7onqsq7la9XsEYGbyThMU/iZ4PLIXaQZbJefp4/OqhZHaKVBH+eZeFFb/YIo2+pzBsazl/mf7ZVjI889HmVxSjT4JhuUVXDJkhO3JSCFD56+T/aqrBz+XYi27jqoeUItgF9oJ4aYRZD1nH+y6L43XlV8iFJYO/lsq1qN2vnUvNOjBsPn9BUmJ56wwW+adjFTmRch5OOQ3f1fNrPacVfedqacdvMMrhQFOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tBmSMip+jwQ6O6tpGQrsiFPoshpCckOV1NCmZp7BnHc=;
+ b=OgJcKI6jxTEohaRlR8MPI2kSU8sd7OLmTSDqjenQDvx+0Ezu/rE8Sz8ox1FnXW8OOk0ABurKFjDR1njpr16IrWVRc7xSEfXwNsJ25j6Z/9bX22B7ATt8emyAjQb75YZvl84HcdpTX8UgxMnsFlc8wJ7fXkeaQeEZYUzDi/RjBxw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by DS0PR12MB7511.namprd12.prod.outlook.com (2603:10b6:8:139::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Fri, 21 Jun
+ 2024 15:47:37 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.7698.017; Fri, 21 Jun 2024
+ 15:47:37 +0000
+Message-ID: <0fc48134-b1c8-f46a-0490-10b7c724a871@amd.com>
+Date: Fri, 21 Jun 2024 10:47:32 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Reply-To: babu.moger@amd.com
+Subject: Re: [PATCH v4 08/19] x86/resctrl: Introduce the interface to display
+ monitor mode
+Content-Language: en-US
+To: Reinette Chatre <reinette.chatre@intel.com>, babu.moger@amd.com,
+ corbet@lwn.net, fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
+ tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
+ kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
+ jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
+ daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
+ ilpo.jarvinen@linux.intel.com, peternewman@google.com,
+ maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eranian@google.com, james.morse@arm.com
+References: <cover.1716552602.git.babu.moger@amd.com>
+ <3b9ef8bc03c1004794a087537c6f2f051760402d.1716552602.git.babu.moger@amd.com>
+ <a453b19b-a909-49a5-9512-ae69c48db6c2@intel.com>
+ <b792d729-669b-4785-bdbb-23230f2e993e@amd.com>
+ <a14ac6eb-0ffd-4c11-9c9e-ea70f8d4a70d@intel.com>
+From: "Moger, Babu" <bmoger@amd.com>
+In-Reply-To: <a14ac6eb-0ffd-4c11-9c9e-ea70f8d4a70d@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA1PR05CA0002.namprd05.prod.outlook.com
+ (2603:10b6:806:2d2::8) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527161450.326615-1-herve.codina@bootlin.com>
- <20240527161450.326615-19-herve.codina@bootlin.com> <ZmDJi__Ilp7zd-yJ@surfacebook.localdomain>
- <20240620175646.24455efb@bootlin.com> <CAHp75VdDkv-dxWa60=OLfXAQ8T5CkFiKALbDHaVVKQOK3gJehA@mail.gmail.com>
- <20240620184309.6d1a29a1@bootlin.com> <20240620191923.3d62c128@bootlin.com>
-In-Reply-To: <20240620191923.3d62c128@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 21 Jun 2024 17:45:05 +0200
-Message-ID: <CAHp75VdeoNXRTmMoK-S6qecU1nOQWDZVONeHU+imFiwcTxe8xg@mail.gmail.com>
-Subject: Re: [PATCH v2 18/19] mfd: Add support for LAN966x PCI device
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Simon Horman <horms@kernel.org>, Sai Krishna Gajula <saikrishnag@marvell.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, 
-	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 20, 2024 at 7:19=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
-com> wrote:
-> On Thu, 20 Jun 2024 18:43:09 +0200
-> Herve Codina <herve.codina@bootlin.com> wrote:
-> > On Thu, 20 Jun 2024 18:07:16 +0200
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Jun 20, 2024 at 5:56=E2=80=AFPM Herve Codina <herve.codina@bo=
-otlin.com> wrote:
-> > > > On Wed, 5 Jun 2024 23:24:43 +0300
-> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > Mon, May 27, 2024 at 06:14:45PM +0200, Herve Codina kirjoitti:
-
-...
-
-> > > > > > +   if (!dev->of_node) {
-> > > > > > +           dev_err(dev, "Missing of_node for device\n");
-> > > > > > +           return -EINVAL;
-> > > > > > +   }
-> > > > >
-> > > > > Why do you need this? The code you have in _create_intr_ctrl() wi=
-ll take care
-> > > > > already for this case.
-> > > >
-> > > > The code in _create_intr_ctrl checks for fwnode and not an of_node.
-> > > >
-> > > > The check here is to ensure that an of_node is available as it will=
- be use
-> > > > for DT overlay loading.
-> > >
-> > > So, what exactly do you want to check? fwnode check covers this.
-> > >
-> > > > I will keep the check here and use dev_of_node() instead of dev->of=
-_node.
-> > >
-> > > It needs to be well justified as from a coding point of view this is =
-a
-> > > duplication.
->
-> On DT based system, if a fwnode is set it is an of_node.
-> On ACPI, if a fwnode is set is is an acpi_node.
->
-> The core PCI, when it successfully creates the DT node for a device
-> (CONFIG_PCI_DYNAMIC_OF_NODES) set the of_node of this device.
-> So we can have a device with:
->  - fwnode from ACPI
->  - of_node from core PCI creation
-
-Does PCI device creation not set fwnode?
-
-> This driver needs the of_node to load the overlay.
-> Even if the core PCI cannot create a DT node for the PCI device right
-> now, I don't expect this LAN855x PCI driver updated when the core PCI
-> is able to create this PCI device DT node.
-
-If it's really needed, I think the correct call here is is_of_node()
-to show exactly why it's not a duplication. It also needs a comment on
-top of this call.
-
-...
-
-> > > > > > +static struct pci_device_id lan966x_pci_ids[] =3D {
-> > > > > > +   { PCI_DEVICE(0x1055, 0x9660) },
-> > > > >
-> > > > > Don't you have VENDOR_ID defined somewhere?
-> > > >
-> > > > No and 0x1055 is taken by PCI_VENDOR_ID_EFAR in pci-ids.h
-> > > > but SMSC acquired EFAR late 1990's and MCHP acquired SMSC in 2012
-> > > > https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet=
-/microchip/lan743x_main.h#L851
-> > > >
-> > > > I will patch pci-ids.h to create:
-> > > >   #define PCI_VENDOR_ID_SMSC PCI_VENDOR_ID_EFAR
-> > > >   #define PCI_VENDOR_ID_MCHP PCI_VENDOR_ID_SMSC
-> > > > As part of this patch, I will update lan743x_main.h to remove its o=
-wn #define
-> > > >
-> > > > And use PCI_VENDOR_ID_MCHP in this series.
-> > >
-> > > Okay, but I don't think (but I haven't checked) we have something lik=
-e
-> > > this ever done there. In any case it's up to Bjorn how to implement
-> > > this.
->
-> Right, I wait for Bjorn reply before changing anything.
-
-But we already have the vendor ID with the same value. Even if the
-company was acquired, the old ID still may be used. In that case an
-update on PCI IDs can go in a separate change justifying it. In any
-case, I would really want to hear from Bjorn on this and if nothing
-happens, to use the existing vendor ID for now to speed up the series
-to be reviewed/processed.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DS0PR12MB7511:EE_
+X-MS-Office365-Filtering-Correlation-Id: 378fa535-99cd-4b6a-7908-08dc920979c1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|376011|7416011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NG9GL25saU0zdG5pNVQ4NTlFWFdCVXVkSHVUTG5xSWJPSk9PZ2V3RDVWMjFF?=
+ =?utf-8?B?T3cvRmc2bEFZZi81MzNxNC91RXJKbnVQYXh2dnNxMytETGs1QThrbzZ5dW9u?=
+ =?utf-8?B?K1F2NlV6dVlyMktZdHlWc3lJdERqZTI5ZkVCK0JtYWJ2Yjc4MXlWVWtFTnJ1?=
+ =?utf-8?B?TUM2K0JEcUJTOWNtTHpxYUo5WjVHb3VSVExWR09DNkhVWEFFY3hlYmU5dVZC?=
+ =?utf-8?B?c3lvSEQvY3Rmbk1BWWdRYW1sTUJMU3J3U3NXR3Q5WjBxc0ZwU01oTFRXSWZ1?=
+ =?utf-8?B?Z0MxVVU1WUx2R3h4REl6cjM1dk5Kbmw0MWxhUExOSGdxclJibm9KWDZWN056?=
+ =?utf-8?B?WS8wckdKbGNlWUl2blJRMzdnVy9OWnZnRHF1NEF1b3NtK09zaERVOE9uQ0VO?=
+ =?utf-8?B?enlGanZoRTZraW1PTVdqSFc3NHpYRDFFQUthR1prRU9tYU9xbERiamdId1gy?=
+ =?utf-8?B?L00yOFU4MlBmUjlmRWdrYkZxS3MxNVIreGRmRnRBUWVkUWZRbjFqUVQra0Ux?=
+ =?utf-8?B?U2xWd3JoL3g3Vks4cndJMWFQa1R4Wlk1WDY5UXR5TFErays1RytraG5jSGp1?=
+ =?utf-8?B?OUFVYXU4THVZYVYvekFSOXlxQi8zdUNYWVBkMnAvbTNwZWI0Ykdvc2VwMDlP?=
+ =?utf-8?B?d0tXSXBjZFhPM29yOHF4VDJpQ1ZhMlA2MXN2SFFRc2RDR3JCT1dhZnhkanky?=
+ =?utf-8?B?MjJ1WjdrVlNpZndDVUpPWkczSjB3YUU0dHJMVHhUNmtOaHhhNlIvT0lRNjUz?=
+ =?utf-8?B?MXQ4WWV1VFpsSVZkaTNCdHh0Rkx5c2lJT2Zmc2trNGFuc2E3dnpqa1pubUpo?=
+ =?utf-8?B?MC9aRlArYkVUNWVrTXBHZm45MUFjNklHdFZkWjZvNGpIU3QxSldsQXpscytx?=
+ =?utf-8?B?aEpQU0o2Nk03TXNTVndWbytDRVhjejgxb3Z5ekNDWEFRS3paNElBQXFwYzZh?=
+ =?utf-8?B?cFNua1llbkJMbHFzejh5SS9IbXJidW1hQ1B6MGpYTG1ZYW8yZ1JHMUlYMDcz?=
+ =?utf-8?B?MThHUHljNmIxbklRUFNKRjRWY3FYMitXdWNnS0FVTkJyZmcxR1B4WDA1aTNS?=
+ =?utf-8?B?MmdZU09vZkZGeVEza056Wmx6Z0FaNEcyd245MkRoemtMSmRXVlA0NjRselNr?=
+ =?utf-8?B?Z3FBM2pnSGgrMHNNZEZSL1kvd2ZpU0Z0bkxRbGVTMEY1LzBaeHUzUFY5QVpG?=
+ =?utf-8?B?Q1ZXb0xLaytVYmJmV3FMMWNaRy9oc0pBVXhLVjhJazhoN2lhcE9wUVhHRXc4?=
+ =?utf-8?B?T0xSMDBYUFBwN2NsZksvMEhuSXk5Um5HUlVYZklpQ0Z6WEtaeVY4Q0MyaVpS?=
+ =?utf-8?B?aDQvV1dZc1ByOW9vTTlwbEZvY08xUmkzTHdSd0JuQkNVa2FxeHRzMlF0TGdZ?=
+ =?utf-8?B?dkpWVjdXS0FPa3Z0K0FLMVg1dkQxMllXTlNaRk9qMXJjaXN1YTVzNmVPMmVj?=
+ =?utf-8?B?WlhMQU1TU3oyQXRTS2tWUlJ1aXFHV2dUSWVLMW90WGlqWkNxWHVhZW5Nclpz?=
+ =?utf-8?B?RjBMQWRybkI5elBmbm9HWjRjMHBrRXFGYlRoSVVxRkduSnEyZXB2bHU2Q1VY?=
+ =?utf-8?B?R1ZuNUg1SUc1aURUYWlvbkkycGlmMkhnYzlRNStuZWwybWZ0ZjlRT25ybk11?=
+ =?utf-8?B?VEVtSFhjQXRFTFMxeDUxQVhxbXd0ZkxjMmJhdmdUTzBJQkFJTmdweVJTellO?=
+ =?utf-8?B?Z2VjcU1udzcvUkJVbm9tekhSTUoyemE3NjAxdlF1TFMxaU8xNHRPaUVFYUI1?=
+ =?utf-8?Q?d/kdACEB4sIcxSOoTJUGdZKJQqxh8sKJp688L4f?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(7416011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L2NudnB6bkZZbFZ3V0xDVlExU3hTd2RRdUpOc0ZvZHZBNHBseDNvRW5nZTVO?=
+ =?utf-8?B?MlVDekFEQ2N5UUM4OHVFMTlZR2NYbStQb3ZObXJ1WXM4RzRnOVNpN3owZkhB?=
+ =?utf-8?B?Qndjb2h4RTU3N2w2SXNxWEFDVVV3SjdqY2NYMUtQdTEvRW0vSFVnYXk2dWgv?=
+ =?utf-8?B?bzR2Y1YySlRZbkVoZE12cVpnYnhTUDhrY2RjK01EU3c1eTNDakFhYTVzN01C?=
+ =?utf-8?B?RmxuWWpWT2lvWVpjZFJVeHMvdzhjaG1uZHBnRHBkVzVEVDdBWFdKUGpWTFpU?=
+ =?utf-8?B?M3FPTmk3OVlEdDJwWVloVnlNbm0yOE5meHV4dWQzYlZscjhKWFlmRXRJUTVZ?=
+ =?utf-8?B?UEQ5OCtSNWFxd2dGcXhYeW5OL1MyTGxpYVhxS0ZIckZHVzhnVHBFdmxOeFp0?=
+ =?utf-8?B?UUhhU1VZOGZTSGxVUVpjMkRaTkl2VEtGU2lsaVAyNGdUTDRhMHhqNVlkUWpa?=
+ =?utf-8?B?aEVEc3hvSFBXZGNxdkx6MjFlamZLTzMxK2xLQ21qMUZBOTlNSUwrc0lsMEVC?=
+ =?utf-8?B?YmFlL3JNS0tJV2lQVWVUTjErODdiTmtHaXZTajd0eWFKckwveUNMTkRSdjhh?=
+ =?utf-8?B?U0pxTkhaTkU0cFNRWUtrRTA5OVg4N1pwNkRRbEJXU0V3ZXg1YW1yWmNwc0Rq?=
+ =?utf-8?B?Ym8rRllVM1F0NUQ4eCtvQXR2YUpPaE5jL29LOWx6UXM2RFJ2VmZZLzVIRk90?=
+ =?utf-8?B?NGlsRmRmL2pmL2RKMVoxN0MvMTZndXk1czJ4N2NOdXA0SkpKaHpjeXpNZysx?=
+ =?utf-8?B?NU1CZ3lnTXpKenNRa1V2dXROenZBVmJUY0d2VituN0o4aGJyRjNYVXRrY2dZ?=
+ =?utf-8?B?QnpZK2J3bWhIcVdlZnFhQ3hyRmh1MG5oTS94SXYxbmczbFpwWWYxMjJqblJv?=
+ =?utf-8?B?Ny9meS9MaWl2OVY0STlXeGVjdTgzTWJSOFB2WGpTYXZ5Y3B0YlJjOE9rczlV?=
+ =?utf-8?B?VWlTSkJlOUZYK3plOFYwajIxMllBbUlZZFlLSlVVNDhFb0RCMHFMUGFSOS9k?=
+ =?utf-8?B?ckU2ZSs0ZTRWZHgyL0ZMbzdGbkZMVnBpYVNkZWN2OEtKVHh2WkllRG1nL2Qv?=
+ =?utf-8?B?WEpqdWMybUFPeEtGMWg3WHZSTkxBdE5qSnlpenFBTmZQajBybk9pZnp2czhT?=
+ =?utf-8?B?YmJPREJtNU1zdWJWdzJ3S2tXVWg3alhWc1lkTm1BS29CSlFnV3hVb3VIUWo5?=
+ =?utf-8?B?RzRFUXJBdzJuLzNZcEJMbnMyL2MrRFNPQllOMzUwMkZvOENZcjBmN3BvM09s?=
+ =?utf-8?B?bEhqSnVrZEpEdlpaOWt4YURKMzk5MnQrMG00WTVGR2pTeVI2d1MzbTZhaTJG?=
+ =?utf-8?B?a1ZHS0dvUHczZzQzbU5haUJMOHhRdzJTVnA5SEk5YnJKa3B5UllRRFBBVDVq?=
+ =?utf-8?B?L2xBQ08ybXpsNVZXZjRJZExxOGRRUUNDc0hqT0NVZXRmZVg3aGQzcE1GOWoz?=
+ =?utf-8?B?WjVtRXFQL2h5QmFqZ3ZGekx1eVpPNnF3Z29hU1J3ZHZmWGM3N3VLYzE1SGgy?=
+ =?utf-8?B?U2ZTcHF6b2c4ZVEyZkw2VTJTYVI0YldZcjdUQmRNT1g5NFBMUFFGTnpoU2d6?=
+ =?utf-8?B?aHQreEdjdmpGRkZ5THhoL2VFSzMxZFdSS1UweG41aS9uSVFtcVU2RERoQjZK?=
+ =?utf-8?B?M2lSMUxvZGtqWXo3Q1dIUC8wb0xlWE8wOGl1YVFuN0cxRDBXdTl0THorUmJO?=
+ =?utf-8?B?eW5LSmlvaG1BZ0Ywb01wRC9sM3R5aE1tWDZzdDBiUFpzWGRDMEtvUlZWcFNm?=
+ =?utf-8?B?c25ES0FITHF6NVdsQ1dsYjdKUDJjMVhKN1VmWEFxaDZEclBKblJvZUZ0d0Ez?=
+ =?utf-8?B?L2ZyYWw3TGVGRCt2ZlpIdjJNa2xJWjM3KzROQTRGRUM3a1RVQUFXWnNnc3Q1?=
+ =?utf-8?B?eHlDQVMvTVRvZDl3Y0ZxeERGR3c4K29IY2orTFdBdHUxc3R6V01meGgrelNO?=
+ =?utf-8?B?NkZSbUwyUjJoSC93bHpLeTZ2YjZNMDBEYmp2cTlFdllwVjJxbzFTUU5PTTNI?=
+ =?utf-8?B?R2Y3OWRUUUI2a0ZXbTdoUSt3cnpsMjF4QU1RdXo1ZU9sZEp5bHhSQ3dVaUxj?=
+ =?utf-8?B?RFJ6dDVWVjhQaWxQSGFIK2pMRjkzMGFWSVZDeVJkRWMzZDlEWFNUbng0U2NI?=
+ =?utf-8?Q?QUM8=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 378fa535-99cd-4b6a-7908-08dc920979c1
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 15:47:37.6299
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Td3JZ0s0NcWEe5pQcNAGD91gr2ro3M3rDAOuLxN2ElETZC49grUTyJcxu03cToGm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7511
 
 
---=20
-With Best Regards,
-Andy Shevchenko
+
+On 6/20/2024 5:05 PM, Reinette Chatre wrote:
+> Hi Babu,
+> 
+> On 6/19/24 9:25 AM, Moger, Babu wrote:
+>> On 6/13/24 20:40, Reinette Chatre wrote:
+>>> On 5/24/24 5:23 AM, Babu Moger wrote:
+> 
+>>>> --- a/Documentation/arch/x86/resctrl.rst
+>>>> +++ b/Documentation/arch/x86/resctrl.rst
+>>>> @@ -261,6 +261,16 @@ with the following files:
+>>>>        Available when ABMC feature is supported. The number of ABMC 
+>>>> counters
+>>>>        available for configuration.
+>>>>    +"mbm_assign":
+>>>
+>>> This name is not ideal but I am having trouble finding a better one 
+>>> ... I
+>>> have
+>>> seen you use "monitor mode" a couple of times (even in shortlog), so 
+>>> maybe
+>>> that
+>>> could be the start of a more generic name? "mbm_mode"?
+>>
+>> mbm_mode sounds good. Like this.
+>>
+>> $cat /sys/fs/resctrl/info/L3_MON/mbm_mode
+>> [abmc]
+>> legacy
+>>
+>> Keeping just "legacy" vs mbm_legacy.
+>>
+> 
+> Looks good to me. This sounds generic enough to build on.
+
+Thanks
+-- 
+- Babu Moger
