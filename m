@@ -1,45 +1,46 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2078.outbound.protection.outlook.com [40.107.244.78])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2079.outbound.protection.outlook.com [40.107.101.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5794152166;
-	Fri, 21 Jun 2024 12:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6136155732;
+	Fri, 21 Jun 2024 12:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973570; cv=fail; b=nxFAYOjoahKWFNeg5WjjvHFa9QjqqucIVClwcaYrF8TTHo7XYSqQd70f/ZyVYbO8Wfl7Tddad91M8TDLe3lxA9jpAYossoYnPZBZ8IZ5Py7NwJENjwlTO7N7Hr1H+zE9s9QeIxLoF2rcyaZJrgYyyPWRJ+2GRIag6atDM/4nBi0=
+	t=1718973577; cv=fail; b=KFNQyrls9MwGVqgJTK/Rncz99FVjqa8TRqL7YpqieiUC0A8L+lc4jrqgbSAUjVoMBUMCGLlOqk76bpq7yUe6H/Uzq8c5ILTY4YBNpknqXNB4WEr5o0TpbssN+BFOK7UAIomXEKdyxjZ/F9ZU07d3ijCLwLQGnRs3mVdhzt176Ro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973570; c=relaxed/simple;
-	bh=/VXLvlwDqX4wjj5mcGJKe440pwBUa/S1hgULE0ooHS4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=moZudbRamracHIqEMzCpCownA6OFuci/hX60ekMguwrRRgop615aKgE/Pmy2sKbxCDfmhQbBhBRc0em1rFaWjfsTxTqKf2Hv/dzFXI43sahnAsul9PA14AYFmCXwq7M2bGvWfMQGLKMqNsQjBrsdycJiQc+KvZSm+IEbtlemRZ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dNuErk0x; arc=fail smtp.client-ip=40.107.244.78
+	s=arc-20240116; t=1718973577; c=relaxed/simple;
+	bh=Wna4lGwKQKv0OGFxdv4VelW+59GoPlAk0D8a2EE8X98=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CeBez22gp+f9yFGVbF2G3j0RW9fUblTYFNPtQussEqjDkCrXsI2pVbSKLYVeGb8GLji97ooqb1OU3bw4mMs6yCHQV7LJa7KGAsteruuq0PF6+I/V97eu+X3k+9GwujvQ6zd2ekh+d9rfsnPG/gBEEtjKz4heoGzSDSrcc5JYUac=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Lb9Y35iQ; arc=fail smtp.client-ip=40.107.101.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dNuErk0x"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Lb9Y35iQ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=goSoJAVOtf1Wmr5UANGbFp8Cq4B74Suk1VRlT84Zn/rmqtz7HwuVRypifEbv+vU2yn06xdK+4HQKWOh2sTUz2zEim+xN0sn3a/893XnbqSql/ogOHtqABgXK7wcODoyFAF8M1q5tHV7r5Jo1vVUpTord3NdVNAbFP+ID2MHhP2LIww3YBw/PSZsCev+zeTlYnfR92izK7ih48yOekw8aJLDiSHSmjkSBxWkhX4LuCASyWlVfHY7EdGO5T15z8Wlz7ZDIiq3igR9vCzs9/dGA453hD67SgQS+BmgKhIxRlEaoYDPKQmV/ekE8xP5rhNX0nurCqKiMl28FSjCoq+dMHw==
+ b=FNLWAeLUe0elN0PzaDm1uXJ0uFtGNF5Os3X76aHIVSiUvqKiztHSI3Ndqi9ROTKej20wGaV9DGhEsq6Jz2BkZ7fmkbFla32w8Dt4dPp4yHJ8wFHQ5ukHbW+/QuVMNadWLZ5TtFg/80+VbuRTGwOkKTsDjDTRctgl3KiPcvWufMzV+C6CbwXGdadN904ir35VXb9xZ2aW5KSEhw4LO6nNHLm4/h7VqooILrdj5tfFAEHxqZx2vVmLrDZQHwtahKMwyVAVDjj8OAvjmdN7dAotYGPlA8G59WwEFveiRq/0l3mF07Q0nKLL7koM8BN3rVTbS4CmHYPBGymdbD3W/sWJgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zue+qDjinPt9koOGOlNw2EJLGxrmLQnPyPbgmmrWg+o=;
- b=Cm2ZlYoiY4rfBKTII7JjWnA7yulrdU0hEZp4IhiTHowWSKeNb58zeZ/Sf/cVCM44Ri3lZxrPaODE0RCyIKzZiCK6Y+pLWVwQLTRZ7cCrW+yut3b88I5sDZ4ehN8kdvXx5th1YEaVy6LYD6MjqN4ZaK+jCrB1/q4GUV0/iFfdHvFay0x7v7gNU2QEod7+y/ZMdTaIL/EZM9wk4RG5qq6pQAmhow7WPp59ytk+b+4JgYewCGecFCzOv2EO6vNbZOQaPVPWBaj+AhVaa0kErRyNZaCmaAPwJvxvl4WiTZ5/A8Rp+a5j58H2NHisyaQefn5G9DAiuloUHvurqgoy7w/HpA==
+ bh=67mx2JNkNDBcCBCSKnQOT6kg9EWXwlovP8NOcK5meDA=;
+ b=Ip+W2M9AO+BfeXQMjy244BvrRza3zoDj6NKpI73zpveB+o55rt3aRZB8tn3oyZ8x40Jk6SNLLJb+9YHVKgvxExUvWzAaS1iL3QkQbce1E8UU/q2uhg5Z7+0ljxDHZ9YlMFYHpbsPF0Bj2Bm3KGy769oYqqQbEWjcdtfl0K5rqVCotDeBJLxeSt7YgRcpz7BqahXq7M37G56Ro7RQ8JvkYQYNmvM7koC3KFLHb/slWtclAZ4dHFhvTuKpAB9qHG9W2260Lc63BZB2WDseGPJTh0eOy/zvPXgiHFwZqQYpoLRFbQsIgxfW1sz92Xsz8fzTvLk7xWgvYyicqQXV4z04Wg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zue+qDjinPt9koOGOlNw2EJLGxrmLQnPyPbgmmrWg+o=;
- b=dNuErk0xeaiv7ocICJ+MVgSQLLlQIjori+HXXubZORn3HQViZ9i3BUNER7dv/QVHmTUy2vX8CBjLtF/9XqkwRHlSADwZ0xptwsfuHEy/30Me07B0WhSB6U2rsiE05wR7TFGtZccDx+t9eSj6SZ491HoAwlMleplScYe/x42D+L8=
-Received: from PH7PR13CA0006.namprd13.prod.outlook.com (2603:10b6:510:174::19)
- by DS7PR12MB8322.namprd12.prod.outlook.com (2603:10b6:8:ed::13) with
+ bh=67mx2JNkNDBcCBCSKnQOT6kg9EWXwlovP8NOcK5meDA=;
+ b=Lb9Y35iQZkqX/lLiexLfQGp6VYBsvwghWCm5+CTQeUDD5FYpbhYsrL02JGSziQAc81Gq8atuCRHt1pfaeZzssUvSNb0gVzlh6dSXB58GQnuWxO89mJC0O86n6CI74VShdNh6kROHStI9GpllGFsPCAqiU3qOAfpUG0sH2zxa6vQ=
+Received: from SN6PR05CA0024.namprd05.prod.outlook.com (2603:10b6:805:de::37)
+ by MN2PR12MB4206.namprd12.prod.outlook.com (2603:10b6:208:1d5::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Fri, 21 Jun
- 2024 12:39:26 +0000
-Received: from SN1PEPF00036F3F.namprd05.prod.outlook.com
- (2603:10b6:510:174:cafe::b5) by PH7PR13CA0006.outlook.office365.com
- (2603:10b6:510:174::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.36 via Frontend
- Transport; Fri, 21 Jun 2024 12:39:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.20; Fri, 21 Jun
+ 2024 12:39:33 +0000
+Received: from SN1PEPF00036F3E.namprd05.prod.outlook.com
+ (2603:10b6:805:de:cafe::6d) by SN6PR05CA0024.outlook.office365.com
+ (2603:10b6:805:de::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33 via Frontend
+ Transport; Fri, 21 Jun 2024 12:39:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,23 +48,25 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F3F.mail.protection.outlook.com (10.167.248.23) with Microsoft
+ SN1PEPF00036F3E.mail.protection.outlook.com (10.167.248.22) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 12:39:25 +0000
+ 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 12:39:33 +0000
 Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
- 2024 07:39:20 -0500
+ 2024 07:39:28 -0500
 From: Nikunj A Dadhania <nikunj@amd.com>
 To: <linux-kernel@vger.kernel.org>, <thomas.lendacky@amd.com>, <bp@alien8.de>,
 	<x86@kernel.org>, <kvm@vger.kernel.org>
 CC: <mingo@redhat.com>, <tglx@linutronix.de>, <dave.hansen@linux.intel.com>,
 	<pgonda@google.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
 	<nikunj@amd.com>
-Subject: [PATCH v10 00/24] Add Secure TSC support for SNP guests
-Date: Fri, 21 Jun 2024 18:08:39 +0530
-Message-ID: <20240621123903.2411843-1-nikunj@amd.com>
+Subject: [PATCH v10 02/24] virt: sev-guest: Replace dev_dbg with pr_debug
+Date: Fri, 21 Jun 2024 18:08:41 +0530
+Message-ID: <20240621123903.2411843-3-nikunj@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240621123903.2411843-1-nikunj@amd.com>
+References: <20240621123903.2411843-1-nikunj@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,192 +79,89 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3F:EE_|DS7PR12MB8322:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a3bfa16-1294-4bd4-f26c-08dc91ef2f85
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3E:EE_|MN2PR12MB4206:EE_
+X-MS-Office365-Filtering-Correlation-Id: d77502ac-f2de-48f3-8498-08dc91ef33f9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|36860700010|7416011|376011|82310400023|1800799021;
+	BCL:0;ARA:13230037|376011|7416011|36860700010|1800799021|82310400023;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QcrnAlcJfOaedf4mYuKhBq9J2Ad8bIHOnT1GtasCfVi3+8dAmOYIPsmsibR9?=
- =?us-ascii?Q?BdYbt31qEjB3V6bJAiM5zoHrk9EQov83MUk9+D+brXdX4jmEAxSKcfuM4OvA?=
- =?us-ascii?Q?VFFKsE04DRqYfng5nQ0lDWeuUEjTa/cI7jcmKsQ/bPQ6iGsyXZq+ZitiUk1E?=
- =?us-ascii?Q?kYLDxSMI4sDnH5YB99H1Mwv6L7noD5I16JunhFPX8ey/m4DocVlpOADl0OHZ?=
- =?us-ascii?Q?Ykos4In0vnEzQcATLhUAZp+H98fAVrdNijpPziVpMTGcMpeU/pAm2VNKx9GT?=
- =?us-ascii?Q?zAlVmLUrQeFitkFwvcG41D2zbvrGTEWI7nQRhAxBCJ8nNHXGMmSLGSn1IvN0?=
- =?us-ascii?Q?ApJXwqRkizRkpdH7qPaonY7AIZ+Z0BkDSitHPi5nWnUUwUYQUNTynggH4tEJ?=
- =?us-ascii?Q?AGbN5m9CH8AUXM30ltyD9/D0LNRXI6qJWLtwFWC5HGCPqyXxvtn18w7zh3UO?=
- =?us-ascii?Q?1ipPWns6OxPn4u7nEtA6UNfYQNGcBBy+UIOOXzdVIEXB/UtPZaRtcW6V5ajy?=
- =?us-ascii?Q?/9IwqpdifDn23pWDTkw8dnSBLjiuoEY95zNCrUfQuY0nohhbZdPVhDY1hiGe?=
- =?us-ascii?Q?wGKWoxlMcXGsHRFrWfzEBN1gHaa1i3gLtgk461ZDGvA4ftGn5fvayYmIGI2f?=
- =?us-ascii?Q?A4DS0mHaPkbBYW6EY/uhAgFY6XBysT1x6LEQqJWtZjI6k5YG8X3YV+yxsBLW?=
- =?us-ascii?Q?1+76ew9U+uiXbH8DUx/6Ll1VUiJfKrWajR5tZlWrL25z0CssrCUezuUa6UYM?=
- =?us-ascii?Q?r1+POT6dT4iHLQ2nNshZkY1niuKpQP4rbxdD2R7lFRpfQ3IGpRZdVvji6y6h?=
- =?us-ascii?Q?oPtvhEaDfgUXRv7BgO1Gu5/7iSngn5kw9NlncsKm0QZbpgrtwHJpkGzUZxMP?=
- =?us-ascii?Q?Z6klJRWNR9lePrPRqKp5v3WmNgPzIaqxjKV8uF6FLK50Gf1QtFGDGUVPGcYi?=
- =?us-ascii?Q?LYMeRskEIeHunTZIkf0Ph2WFNXYR5RU1uyb7/jkVDc89gxc0zlU0xme3DeLg?=
- =?us-ascii?Q?OK/b3kS9Gmv7JX2NT2yWggdkPuN5KuJxmTqf4A7pV0YxknffwttXphR3UvVZ?=
- =?us-ascii?Q?mSNQQADyzV8+XceXWjTbPY2tom0wAC43TT1iS+bsvutR7lUsG3XEZ3gFh72N?=
- =?us-ascii?Q?x7mlWR3TwzWCgktx5CIPw4i4uZdIOmD+vt7XqDwpu6X6fnycJp9Lm5u/EFF8?=
- =?us-ascii?Q?2cIScIaB4FVtg6yd7YeZQiV93N+Dm5N13mN99V5k90dHm+bP0gVe1P+ZokjZ?=
- =?us-ascii?Q?ugE8ThC6XOAvqV9h3mZGpu8mWwR4BTugtzKW1U+Fdblb0/T4TbpB6Opy60+X?=
- =?us-ascii?Q?XVHn6z9shr9/sY09hbr+bfn5VMUIJu5Ya0L+raMNyhQuchln2jXclXqSXZYv?=
- =?us-ascii?Q?qLP8+dI=3D?=
+	=?us-ascii?Q?IKTixGMmxmMVTFqRV8UV9IQ2upD8BjyVveDPqV7cmsYMgQO4QkXcrXOmA0Pl?=
+ =?us-ascii?Q?NK3Vzo+e9n63+VoKc5F466OoiXlqBmwFL4Hzeg/Ib6yVz9OpT139CWjphsht?=
+ =?us-ascii?Q?lCsGliZjXPy43lumC6zMBDQGhVZxhNzBMLXOsy9Pka2N2SZ1b5Z5Mp5H2LQD?=
+ =?us-ascii?Q?URD/2yePOnb8GYKUDPn7oD3VtR4MbkQfH4p3OsV4e0/HFMzIv3WcOIHqN/yb?=
+ =?us-ascii?Q?ZIbTFVFjN9TFbthuEPwgNtVFOuCUOZZX3EEGYj7bo0iLOct8i9RcrRxmG2fF?=
+ =?us-ascii?Q?SnXsMvRjQVccZghcr1A/Jd50DwyJWIdMrk5UM90IgxguPnIOA4lrLgZXhL4Q?=
+ =?us-ascii?Q?JdqHwY4QBcIC5q0IBqorhv/ngb3TuHtICArniLOUoRwVrqX1qy3m583Tm/gS?=
+ =?us-ascii?Q?V5QNeb8va3Bp+GEYaxAg7OrAImh5Zz00zJJxf8RMbLANrlBsHDeQYdTyTlcM?=
+ =?us-ascii?Q?y5iZZyzgOvAxr8drXc4tWo5hUt589AIca+yeJuYNnqEKLkoCnz3miI92RN3e?=
+ =?us-ascii?Q?uccKPkpCZPq5z1sk7hCTS+2pDw9o36k53vcn6GaferERyWCV+MRlfoKAGLx0?=
+ =?us-ascii?Q?6Xl63Gkk5nNCL+yBxwAAnlT+zetXzpMRNzPmDubiqAam6G5WXnXnnBm/FZbp?=
+ =?us-ascii?Q?ZleuLhVZb0FWUHxo3zEqcsomrKdJ5oBa7tEo4TxZFkRmn7dXrDTB1gREqy/U?=
+ =?us-ascii?Q?oTcj5ZOlpanfBWMgtTn9hDbaPVuGuJWQYLBa9w6NvMtwM52gCutdXGhVuFD7?=
+ =?us-ascii?Q?epsd89oJ+Fzw7o9nKWP79Yjrwi8ogI9mJgW3gh6oYnPV+dmYw+mTjE9F/Bd5?=
+ =?us-ascii?Q?ZaPWRxx8+uvpUdix/te2cAUAfVxFz509Y+yh256jEKB8CV41MPeljHsF1Z9O?=
+ =?us-ascii?Q?IgkixUOvbz/CdtlcHGIXn/dCJQAXQgkov4XFHVxeH/JKOzI3lo4BSG5Y/Rfo?=
+ =?us-ascii?Q?mRwmpRtVNKqDZ+TnWrpGm51dyNBvo/JTthogk1ZAjqlTZRw/CifPROmlXWc9?=
+ =?us-ascii?Q?x5tK3elLELCCyNDRNLUedTOrcepOJM7VTXpBpcd1aBsOyX4js4ibTbqanp4i?=
+ =?us-ascii?Q?Yj9Rr43O2PLkL8a6vxhBv0bJn1OKVX1OtWOp0ZQVU1FkIDdd2s8wxOTHiB8e?=
+ =?us-ascii?Q?ZSQNeUKeRXN/5gAmob+X5WUAUI1k1HtaUUPJq7GyZaEpHzp4WYVAomAUQIQR?=
+ =?us-ascii?Q?K9LkghGIHe8kVwASCMmpnDMBDynK9yOvYy6rqnHl+V9OoLDSBUSHXzLRFizM?=
+ =?us-ascii?Q?KbNx9Fe3kWIG2+IV0mUnfKRp1IQ4SmGcHmWdmMh4Lf3cWQ16Z0popQ4xX9jw?=
+ =?us-ascii?Q?lqcSAAkmEz+Sw13nJAMy++kQOlo/WlABS6y1DRFiT/YbLLsL1zMGkCN8etdN?=
+ =?us-ascii?Q?Bo7fM1WDWY7qBp2ooYMTJpryDVzG1PsF/MtcprfH47XCXDoHAA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(7416011)(376011)(82310400023)(1800799021);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(7416011)(36860700010)(1800799021)(82310400023);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:39:25.8099
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:39:33.3094
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a3bfa16-1294-4bd4-f26c-08dc91ef2f85
+X-MS-Exchange-CrossTenant-Network-Message-Id: d77502ac-f2de-48f3-8498-08dc91ef33f9
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3F.namprd05.prod.outlook.com
+	SN1PEPF00036F3E.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8322
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4206
 
-This patchset is also available at:
+In preparation of moving code to arch/x86/coco/sev/core.c,
+replace dev_dbg with pr_debug.
 
-  https://github.com/AMDESE/linux-kvm/tree/sectsc-guest-latest
+Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Tested-by: Peter Gonda <pgonda@google.com>
+Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ drivers/virt/coco/sev-guest/sev-guest.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-and is based on tip/x86/sev
-
-commit: 06685975c209 ("x86/sev: Move SEV compilation units")
+diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+index dcdbfc5e5af0..831a32e522b2 100644
+--- a/drivers/virt/coco/sev-guest/sev-guest.c
++++ b/drivers/virt/coco/sev-guest/sev-guest.c
+@@ -188,8 +188,9 @@ static int verify_and_dec_payload(struct snp_guest_dev *snp_dev, void *payload,
+ 	struct aesgcm_ctx *ctx = snp_dev->ctx;
+ 	u8 iv[GCM_AES_IV_SIZE] = {};
  
-Overview
---------
-
-Secure TSC allows guests to securely use RDTSC/RDTSCP instructions as the
-parameters being used cannot be changed by hypervisor once the guest is
-launched. More details in the AMD64 APM Vol 2, Section "Secure TSC".
-
-During the boot-up of the secondary cpus, SecureTSC enabled guests need to
-query TSC info from AMD Security Processor. This communication channel is
-encrypted between the AMD Security Processor and the guest, the hypervisor
-is just the conduit to deliver the guest messages to the AMD Security
-Processor. Each message is protected with an AEAD (AES-256 GCM). See "SEV
-Secure Nested Paging Firmware ABI Specification" document (currently at
-https://www.amd.com/system/files/TechDocs/56860.pdf) section "TSC Info"
-
-Use a minimal GCM library to encrypt/decrypt SNP Guest messages to
-communicate with the AMD Security Processor which is available at early
-boot.
-
-SEV-guest driver has the implementation for guest and AMD Security
-Processor communication. As the TSC_INFO needs to be initialized during
-early boot before smp cpus are started, move most of the sev-guest driver
-code to kernel/sev.c and provide well defined APIs to the sev-guest driver
-to use the interface to avoid code-duplication.
-
-Patches:
-01-09: Preparatory patches for code movement and general cleanup/fixups
-10-13: Patches moving SNP guest messaging code from SEV guest driver to
-       SEV common code
-14-16: Error handling and caching secrets page
-17-24: SecureTSC enablement patches.
-
-Testing SecureTSC
------------------
-
-SecureTSC hypervisor patches based on top of SEV-SNP Guest MEMFD series:
-https://github.com/AMDESE/linux-kvm/tree/sectsc-host-latest
-
-QEMU changes:
-https://github.com/nikunjad/qemu/tree/snp-securetsc-latest
-
-QEMU commandline SEV-SNP with SecureTSC:
-
-  qemu-system-x86_64 -cpu EPYC-Milan-v2,+invtsc -smp 4 \
-    -object memory-backend-memfd,id=ram1,size=1G,share=true,prealloc=false,reserve=false \
-    -object sev-snp-guest,id=sev0,cbitpos=51,reduced-phys-bits=1,secure-tsc=on \
-    -machine q35,confidential-guest-support=sev0,memory-backend=ram1 \
-    ...
-
-Changelog:
-----------
-v10:
-* Rebased on top of tip/x86/sev
-* Added Reviewed-by from Tom
-* Commit message updates
-* Change the condition for better readability in get_vmpck()
-* Make vmpck_id as u32 again and use VMPCK_MAX_NUM as the default value
-
-v9: https://lore.kernel.org/lkml/20240531043038.3370793-1-nikunj@amd.com/
-* Added Acked-by/Reviewed-by
-* Removed Reviewed-by/Tested-by from patches that had significant changes
-* Added patch to make payload a variable length array in snp_guest_msg
-* Fix all your user-visible strings (vmpck => VMPCK) and readabilty.
-* Separated patch for message sequence handling
-* Handle failures from snp_init() in sme_enable()
-* Preparatory patches:
-  * Carved out simplify VMPCK and OS message sequence changes
-  * Carved out SNP guest messaging init/exit for proper initialization and
-    cleanup.
-  * Move SNP command mutex down and make it private to sev.c
-* Pure code movement patch and subsequent code changes patches
-* Drop patches adding guest initiation hook enc_init() and call
-  snp_secure_tsc_prepare() from mem_encrypt.c
-* Use CC_ATTR_GUEST_SECURE_TSC and drop synthetic SecureTSC feature bit
-
-v8: https://lore.kernel.org/lkml/20240215113128.275608-1-nikunj@amd.com/
-v7: https://lore.kernel.org/kvm/20231220151358.2147066-1-nikunj@amd.com/
-v6: https://lore.kernel.org/lkml/20231128125959.1810039-1-nikunj@amd.com/
-v5: https://lore.kernel.org/lkml/20231030063652.68675-1-nikunj@amd.com/
-v4: https://lore.kernel.org/lkml/20230814055222.1056404-1-nikunj@amd.com/
-v3: https://lore.kernel.org/lkml/20230722111909.15166-1-nikunj@amd.com/
-v2: https://lore.kernel.org/r/20230307192449.24732-1-bp@alien8.de/
-v1: https://lore.kernel.org/r/20230130120327.977460-1-nikunj@amd.com
-
-Nikunj A Dadhania (24):
-  virt: sev-guest: Use AES GCM crypto library
-  virt: sev-guest: Replace dev_dbg with pr_debug
-  virt: sev-guest: Make payload a variable length array
-  virt: sev-guest: Add SNP guest request structure
-  virt: sev-guest: Fix user-visible strings
-  virt: sev-guest: Simplify VMPCK and sequence number assignments
-  virt: sev-guest: Store VMPCK index to SNP guest device structure
-  virt: sev-guest: Take mutex in snp_send_guest_request()
-  virt: sev-guest: Carve out SNP guest messaging init/exit
-  x86/sev: Move core SEV guest driver routines to common code
-  x86/sev: Replace dev_[err,alert] with pr_[err,alert]
-  x86/sev: Make snp_issue_guest_request() static
-  x86/sev: Make sev-guest driver functional again
-  x86/sev: Handle failures from snp_init()
-  x86/sev: Cache the secrets page address
-  x86/sev: Drop sev_guest_platform_data structure
-  x86/cc: Add CC_ATTR_GUEST_SECURE_TSC
-  x86/sev: Add Secure TSC support for SNP guests
-  x86/sev: Change TSC MSR behavior for Secure TSC enabled guests
-  x86/sev: Prevent RDTSC/RDTSCP interception for Secure TSC enabled
-    guests
-  x86/kvmclock: Skip kvmclock when Secure TSC is available
-  x86/sev: Mark Secure TSC as reliable
-  x86/cpu/amd: Do not print FW_BUG for Secure TSC
-  x86/sev: Enable Secure TSC for SNP guests
-
- arch/x86/include/asm/sev-common.h       |   1 +
- arch/x86/include/asm/sev.h              | 196 ++++++-
- arch/x86/include/asm/svm.h              |   6 +-
- drivers/virt/coco/sev-guest/sev-guest.h |  63 ---
- include/linux/cc_platform.h             |   8 +
- arch/x86/boot/compressed/sev.c          |   3 +-
- arch/x86/coco/core.c                    |   3 +
- arch/x86/coco/sev/core.c                | 581 +++++++++++++++++--
- arch/x86/coco/sev/shared.c              |  10 +
- arch/x86/kernel/cpu/amd.c               |   3 +-
- arch/x86/kernel/kvmclock.c              |   2 +-
- arch/x86/mm/mem_encrypt.c               |   4 +
- arch/x86/mm/mem_encrypt_amd.c           |   4 +
- arch/x86/mm/mem_encrypt_identity.c      |   7 +
- drivers/virt/coco/sev-guest/sev-guest.c | 719 +++---------------------
- arch/x86/Kconfig                        |   1 +
- drivers/virt/coco/sev-guest/Kconfig     |   3 -
- 17 files changed, 846 insertions(+), 768 deletions(-)
- delete mode 100644 drivers/virt/coco/sev-guest/sev-guest.h
-
-
-base-commit: 06685975c2090e180851a0ff175c140188b6b54a
+-	dev_dbg(snp_dev->dev, "response [seqno %lld type %d version %d sz %d]\n",
+-		resp_hdr->msg_seqno, resp_hdr->msg_type, resp_hdr->msg_version, resp_hdr->msg_sz);
++	pr_debug("response [seqno %lld type %d version %d sz %d]\n",
++		 resp_hdr->msg_seqno, resp_hdr->msg_type, resp_hdr->msg_version,
++		 resp_hdr->msg_sz);
+ 
+ 	/* Copy response from shared memory to encrypted memory. */
+ 	memcpy(resp, snp_dev->response, sizeof(*resp));
+@@ -242,8 +243,8 @@ static int enc_payload(struct snp_guest_dev *snp_dev, u64 seqno, int version, u8
+ 	if (!hdr->msg_seqno)
+ 		return -ENOSR;
+ 
+-	dev_dbg(snp_dev->dev, "request [seqno %lld type %d version %d sz %d]\n",
+-		hdr->msg_seqno, hdr->msg_type, hdr->msg_version, hdr->msg_sz);
++	pr_debug("request [seqno %lld type %d version %d sz %d]\n",
++		 hdr->msg_seqno, hdr->msg_type, hdr->msg_version, hdr->msg_sz);
+ 
+ 	if (WARN_ON((sz + ctx->authsize) > sizeof(req->payload)))
+ 		return -EBADMSG;
 -- 
 2.34.1
 
