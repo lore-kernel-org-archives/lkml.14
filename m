@@ -1,117 +1,74 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DFD3214;
-	Fri, 21 Jun 2024 01:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98C1625;
+	Fri, 21 Jun 2024 01:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718932557; cv=none; b=neMPkMe+l1VeAsJKD1jNO6lBpmfhpMHh/Ll0Se5i9GEnD8NR5iQjtVpPdlpN18hpMxGuKcKD+IT3NawUd848TJprOSG80zU6q9m4s8bZMjzQKsjUk1GVuFvN15EoimcTGsgumtp7fJOGr7iLRcrULB/yaPR7+CAMqBEEZf6cxdg=
+	t=1718932614; cv=none; b=fdFwBLmQeZ4csdjxfEtZSeNistOeJY9t50bHOHLwhpBJWOjavmLGq+mOkC3lc10Hmd7mhsVpeivosTeLjynGHvKb6yhdrfbIgIToBqOE18DgeJK6sOrc9xp5EOh0HqMGA+069Bhh/jPFou1+iNA9WQ6SN7V3C3b9QZFjqbSdXAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718932557; c=relaxed/simple;
-	bh=IABB4tHTtsIHnF9E/p0KMPVd0BwdXUuqJPhJoQzkufw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qa1Zp0Bl9IcPFojM/ybZFFS/ui1cQcyHq2sgeb9tytBXPzWUVAaxacuN+yQFApr9gZ4kiGfHN+iqD1DPCafLyvag+0Xqrjrcw7bJ1pPNWTYRVGv97rFomkko3ZleAfj8OX7t2k57BzT3lJ8yjGDFEkttEL52AO5FO0AX9pegpgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SK5Ji/kn; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1718932614; c=relaxed/simple;
+	bh=8GN5WL0Ghtkgnpnn93Cn849+5qJGtH1+zXTKACZsHZQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=H4N5tKbtKNTQfAMBlmwVqeTMXiyPfXkcXqRfYuPakedlrCw672zBXiLt5TU2RO8GyjElqTqkq/rNG8feTyI3fXz4BpJrKaHQXHHFEIRz7183PMZZ+Rtdx+G7mImAgKLvi/OUv1HS4dR88a7NqlfLKSDUG2+ZrUetxmjuWo1vuFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H/qwa6jw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Al4QTOwA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SK5Ji/kn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=uKgyUTPoIa0HOFwQLliApvt6PD0XnAuEcNuHZ585raA=;
-	b=SK5Ji/kn4sI1W96ZdXt9fW1P5hOX4F2KHB22JEH3nru2ent6WnGuiVcUM3+v0a
-	bz9M9Qf+J4VL5kkplzHMaz4Y0yy0w64OlFXuFeXgwHfk4GUOyJ9cw9g4q51ZaSCI
-	CqKwtoz8Qd3UzzG9zobudai70VLBl+CvzNMiIi4Bazkpg=
-Received: from [192.168.1.26] (unknown [183.195.6.47])
-	by gzga-smtp-mta-g3-1 (Coremail) with SMTP id _____wDnT3z203RmODBWCQ--.32395S2;
-	Fri, 21 Jun 2024 09:14:32 +0800 (CST)
-Message-ID: <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
-Date: Fri, 21 Jun 2024 09:14:30 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H/qwa6jw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Al4QTOwA"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718932610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8GN5WL0Ghtkgnpnn93Cn849+5qJGtH1+zXTKACZsHZQ=;
+	b=H/qwa6jwQhGVIS3k9qUP54s+gWNLTYRkWXWco+WX4VM4e4rBjPuGT/GambK8BgBsTfd020
+	b9reogKhVS/DfZi7nxZgzxI2cB1QymvA+rDH5uCopQtNekP3DBZo9gNK7oyqdJI9Feg+lG
+	EYrIv1wxo9AfzQJHOzQ5cNZhOocWwRgFhnRv+P9AGYL/i0qtdPNMu/voOWzp1Tr5JZqjFZ
+	UmXkQUodTRBc9chuntoYM66tAsqDKAR12uQepwXRalH3S9q8BmKd8ktF7hbBz4UYAB1LR2
+	RDSWjUc+EYxipUV9jVeDFnqMPZ5S/7sY2GuqDQPO+bm1G4NN34VRnt16XfCzhw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718932610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8GN5WL0Ghtkgnpnn93Cn849+5qJGtH1+zXTKACZsHZQ=;
+	b=Al4QTOwAfqOPJ42p5VOFBI9fzHnbjYsWyRbYodTJbsp4FtgF4TLfMDMFGUAqX8l8AQUHsO
+	i2WRTlvP5/eDoICQ==
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Derek Barbosa
+ <debarbos@redhat.com>
+Cc: pmladek@suse.com, rostedt@goodmis.org, senozhatsky@chromium.org,
+ linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ williams@redhat.com, jlelli@redhat.com, ahalaney@redhat.com,
+ lgoncalv@redhat.com, jwyatt@redhat.com, aubaker@redhat.com
+Subject: Re: [PATCH] prinkt/nbcon: Add a scheduling point to
+ nbcon_kthread_func().
+In-Reply-To: <20240620094300.YJlW043f@linutronix.de>
+References: <ZnHF5j1DUDjN1kkq@debarbos-thinkpadt14sgen2i.remote.csb>
+ <20240620071545.Es9LoyJY@linutronix.de>
+ <20240620093246.HE9XDWSZ@linutronix.de>
+ <20240620094300.YJlW043f@linutronix.de>
+Date: Fri, 21 Jun 2024 03:22:49 +0206
+Message-ID: <874j9n5c3i.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
-To: patchwork-bot+bluetooth@kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com,
- broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be,
- arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com,
- elder@linaro.org, srinivas.kandagatla@linaro.org,
- gregkh@linuxfoundation.org, abel.vesa@linaro.org, mani@kernel.org,
- lukas@wunner.de, dmitry.baryshkov@linaro.org, amit.pundir@linaro.org,
- wuxilin123@gmail.com, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- bartosz.golaszewski@linaro.org
-References: <20240605123850.24857-1-brgl@bgdev.pl>
- <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
-Content-Language: en-US
-From: Lk Sii <lk_sii@163.com>
-In-Reply-To: <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnT3z203RmODBWCQ--.32395S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ur18uFykGryxtFW7AF17trb_yoW8Aw48pF
-	W3K3Z0kF48Jr1UJF4DKw1fXFy2gw43Xw1xCr4Dtr98Xa4Ygr48tw1FvwnYgr17urWI9w42
-	yFWftryfKw48urDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRWmhrUUUUU=
-X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiExkFNWXAluX0pAAAs8
+Content-Type: text/plain
 
+On 2024-06-20, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> Constant printing can lead to a CPU hog in nbcon_kthread_func(). The
+> context is preemptible but on !PREEMPT kernels there is no explicit
+> preemption point which leads softlockup warnings.
+>
+> Add an explicit preemption point in nbcon_kthread_func().
+>
+> Reported-by: Derek Barbosa <debarbos@redhat.com>
+> Link: https://lore.kernel.org/ZnHF5j1DUDjN1kkq@debarbos-thinkpadt14sgen2i.remote.csb
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-
-On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
-> Hello:
-> 
-> This series was applied to bluetooth/bluetooth-next.git (master)
-> by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
-> 
-Hi luiz,
-
-i am curious why Bartosz is able to merge his changes into bluetooth
-development tree bluetooth-next directly.
-
-1)
-his changes should belong to *POWER* scope instead of *Bluetooth*
-obviously, however, there are *NOT* any SOB tag from either power and
-bluetooth maintainer. these changes currently only have below Acked-by
-and Signed-off-by tags:
-
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-2)
-his changes have not merged into linus mainline tree yet.
-
-3)
-perhaps, it is safer to pull his changes from linus mainline tree when
-merged than to merge into bluetooth-next firstly.
-
-> On Wed,  5 Jun 2024 14:38:48 +0200 you wrote:
->> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> Hi!
->>
->> These are the power sequencing patches sent separately after some
->> improvements suggested by Bjorn Helgaas. I intend to pick them up into a
->> new branch and maintain the subsystem from now on. I then plan to
->> provide an immutable tag to the Bluetooth and PCI subsystems so that the
->> rest of the C changes can be applied. This new branch will then be
->> directly sent to Linus Torvalds for the next merge window.
->>
->> [...]
-> 
-> Here is the summary with links:
->   - [v9,1/2] power: sequencing: implement the pwrseq core
->     https://git.kernel.org/bluetooth/bluetooth-next/c/249ebf3f65f8
->   - [v9,2/2] power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets
->     https://git.kernel.org/bluetooth/bluetooth-next/c/2f1630f437df
-> 
-> You are awesome, thank you!
-
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
