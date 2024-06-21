@@ -1,84 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps11.jsvi.net (vps11.jsvi.net [81.7.6.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B588C1E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 01:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A55A7E8
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 01:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.7.6.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718932384; cv=none; b=XY+LAP44hwyjm02L0Wgo5umddbkqD5ya65FDtwdME98b4HxG+rJt90GQERz0bUTOw/6fgmKje4Rs9EiR81iplbOVQlHvQUmpdk4vRS9zGFeQtxCacWEktgRTjEWCk4GhiLVoQKNcxZby6RuHvuqq0wf35tcRHrOY4k6vBSIci38=
+	t=1718932493; cv=none; b=bKnrPh+GEr2QqiUJbb24Jq1DFE0y4MGtAIaBgmmzxnFjb/AsUiW1PDLVjyQ2QOiJxLlw+AjyEQUTIphh2vykRqBhp3jyxCEUQvbK/ZuqIW1azPj0gwtIdyPrYwpCgRnbGe+ZnnoDDCLnZscqXanukV8+d4a/6gbm7UgXzzVjZzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718932384; c=relaxed/simple;
-	bh=AD7WJckCW+gFPM5oD8pJlx7SFP0QNTxFauNINICT8Aw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LieQv+ow1DfODCSAVx+gd9M6X4xxENiWYZTuuRm6Q/qo3jrus+HlAS0M1ErtR3H/rfY06fNAxUE+AhryXQ/qQwMkMVwqHk9ziiIIRrLSAK9Ikvkjn85LjLpzyxyX+qphGCaXwyb45Qn+wlurnQtCKbXQr9LG8ZIKlAsZ/KBIIo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiNidqsP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718932493; c=relaxed/simple;
+	bh=LBwaLr+wlbr8N/ILBVAzTSG0uUZeAj3452+lutsr+lA=;
+	h=Message-ID:From:To:Subject:Date:MIME-Version:Content-Type; b=tkcVtIPQJjczRwJKOVIjs+g4+rdJY/rxn1ElTKuYigzk3fVq/lDvbV4P6ZFeq+HCdxuq0yrhJNYS+wsdmlOTE4sr8rwaluCBQJtjAoRQxpsDnGI/sgmXkdWIp05xyZwADzdhN0vquMxOzTyozBWTIGegSN/xQLYg0UWN98FVcTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jsvi.net; spf=pass smtp.mailfrom=jsvi.net; dkim=pass (1024-bit key) header.d=jsvi.net header.i=contacto2@jsvi.net header.b=qj8DP/gf; arc=none smtp.client-ip=81.7.6.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jsvi.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jsvi.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiNidqsP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96F3C2BD10;
-	Fri, 21 Jun 2024 01:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718932384;
-	bh=AD7WJckCW+gFPM5oD8pJlx7SFP0QNTxFauNINICT8Aw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BiNidqsPs41kyA920se/KlL64A6K2dPkPCDY3p44xFPFWWt1GqtMMiLhxAJssjPcR
-	 TnQglyrmFo6nonLmcydJNZ/w2DND+HH6Bv2sIKxJbYgvQkyJYLQLkvHIlAD2/eQ7L8
-	 Opf22CtSTls/fCbWMWwj2TtJNZSUhba8DEfx6IamsBr55UpkPf7Q9w4waQAoHPk/So
-	 chtxEAdncKWduFMEdL9oZ/RUHFSN0KPQ69HdxWCqNbum9PF1ojIN5rRvr1ai14A9r/
-	 gDgegbPERGAuNcPtBQbXoUrTgudeVu+EeYREzofPS+xzCZ5gML6iQ5qVeE9eurYLFI
-	 zftksB/Eznmmg==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	amazon-linux-kernel@amazon.com,
-	linux-kernel@vger.kernel.org,
-	lwn@lwn.net,
-	jslaby@suse.cz
-Subject: Re: Linux 6.1.94
-Date: Thu, 20 Jun 2024 18:13:01 -0700
-Message-Id: <20240621011301.69542-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <2024061613-stoneware-kite-ee9e@gregkh>
-References: 
+	dkim=pass (1024-bit key) header.d=jsvi.net header.i=contacto2@jsvi.net header.b="qj8DP/gf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jsvi.net;
+ h=Message-ID:From:To:Subject:Date:MIME-Version:Content-Type:
+ Content-Transfer-Encoding; i=contacto2@jsvi.net;
+ bh=LBwaLr+wlbr8N/ILBVAzTSG0uUZeAj3452+lutsr+lA=;
+ b=qj8DP/gfpvamdMj7ItUahnsWE/Y2siLaBYbki3OiDZ/y/MiVJqprjK2yS8303TwfQyQUWdMDJu7e
+   WIoVlVw+zoEtDouJJldq9bBrue7sqFK9soAiYLVxMg6f2kt4Tx+pp+HncAQBOuJXHM8I/E57AK6v
+   oVzpTHd4bhwek/dpg2A=
+Message-ID: <a5848328dcf1e8e3ca8f396d99411b1b04eb6ea0@jsvi.net>
+From: Paty <contacto2@jsvi.net>
+To: linux-kernel@vger.kernel.org
+Subject: hola
+Date: Thu, 20 Jun 2024 19:57:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1";
+Content-Transfer-Encoding: quoted-printable
 
-Hello stable kernels maintainers,
-
-I’m sending this test results report on behalf of Amazon Linux Kernel team.
-
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc: lwn@lwn.net, jslaby@suse.cz, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-On Sun, 16 Jun 2024 14:04:13 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> I'm announcing the release of the 6.1.94 kernel.
-> 
-> All users of the 6.1 kernel series must upgrade.
-> 
-> The updated 6.1.y git tree can be found at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.1.y
-> and can be browsed at the normal kernel.org git web browser:
-> 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-Amazon Linux Kernel team tested this kernel with their downstream patches on
-their internal tests setup covering multiple x86_64 and arm64 based AWS
-instances, and confirmed it shows no regression compared to its previous
-kernel[1], which was based on v6.1.92.  The assembled tree for the tested kernel
-is available at our github repo[2].
-
-[1] https://github.com/amazonlinux/linux/tree/kernel-6.1.92-99.174.amzn2023
-[2] https://github.com/amazonlinux/linux/tree/kernel-6.1.94-99.176.amzn2023
-
-
-Thanks,
-Amazon Linux Kernel team
-
-[...]
+Saludos a todos
