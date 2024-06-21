@@ -1,155 +1,65 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9897E173321
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8B0173321;
+	Fri, 21 Jun 2024 11:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969522; cv=none; b=tFWtXkZOZBfsv1dOKxRvFiIBCMDDwiAvPEU78qpLn9icEjmzkaOQD0AEF81pHp8nZKE7IEq+G1+XV0C9TXzmpxaG9jKE7zt7yfTd+14DK8P0h+tunTZH+eCHJUEFKvuIhOBGHg0Pjay63G5Gp926NeF03NWEhVoJkUOCalZ3Jkg=
+	t=1718969530; cv=none; b=H3ypqoBBsT/H/TNrSrd2tFvE/A+HuNB2J6mME8vMf5oHDR3w79Lz8910m7pjh5hAYgKZeS7Q0DkteC73LTxqACIBpJL8kJXA4AABk3US1I5sojoH4pixEu2jEwbcKnfbBxUIByvndok2yOs7dOAzDI4HePjdU0YzPMM4xcsvx4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969522; c=relaxed/simple;
-	bh=LqsZquroI0tQO7+Y9gF1GgujJ/mRYKaaJvY6lz2+yY0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VAk/QMludFitmNGbLo5kw6m2VmyalpgXwGL1f+eRIM6MNyCNlRpQx+FTxww3OgMiJc6dqgFvD1aJ2JTBSQTQpTdaWSTAPWwUxkOhj3GAx6yg4i0c8QrAM5wJmtcvU3kKUqU17MeKhIVb1Gp+RCRNFLU7UwhGhUcYXtl7QSrhO8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lG64Dcvx; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lG64Dcvx"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-70627716174so1644340b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1718969519; x=1719574319; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KEfFryDpLG4dH8zCVdjU9zRDBUZiLvxvddXIXcpMvC0=;
-        b=lG64DcvxKe0mQiwI/CwPXmEBT2n0hqxH/afA+AIsF9cmzTr3yJ1t0vXKBXazLMOWRR
-         UVXCHx7rXoK5sctYYMmFQCTkw49Yfcl6eJq+TQ2GnPOMC1yuf/TF8sTDzDkWJa7nuXqS
-         QTK3e4SgBE0dMUyfoySuxVVw9b9BRtGDi4HsVbvpMexuGfsJf4++wqcF0o6FvcC0ajyO
-         Fgy9VFmVcU4qrYivEpqb2aFlTkBCdhNSJe/KgfJSo8mq+7oxX0+l8b7HOlMvkYHZCyp2
-         +c2z4YToVhVY3yclW9IZ1U4C1X+7CO0Gfh+PJe6kyhhkCsfZ05VyQw6Npa3X2H6xLlbZ
-         7Q/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718969519; x=1719574319;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KEfFryDpLG4dH8zCVdjU9zRDBUZiLvxvddXIXcpMvC0=;
-        b=HBbdjDXx+odRZcR5Z8DAIb1oTEzHhClw0z+iNa/Bm6mgv/PLQvF9f5N6lcJK3koyGi
-         MiKU2O+nsUpqblvDGVbCrlXmAkz3PTxQkIr+gbfQiXP27Fmq305z6Q6XMPszVoSUscuP
-         QW4nMdhe++gt9rq5Hpq55Oh54p+CqV4IZiLgU0UoFSNVTStQsq4ZKCIAqBUmwK3GmmS4
-         oZ8OYRWYqB5yhNWVi5s6DGlUuUGS/CkaaAzJpyIkePDRwunGezWlwjR/rtGSd0Uohwk4
-         X9Cv89Zac+2RzGNcriTfw/lWz81fKXQth/3d9FYq21y4NoUysIBkOSi8xjwRqdpqjdzj
-         Prgg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4dKFZQHRkWx/3BdMnDSwzHxRcS5XTprsDlqK2zoPh0dJezulHomaZ0m+uWJ2Cp7914Zs9WrFO4vAGqcnibQRYFFSn7mx0IImlV537
-X-Gm-Message-State: AOJu0YwUP727g4Xfsu1PeQ6ZZB2qv/AJf4sVFeT2CKCXCDMlvyCZC4M2
-	7cBJKx+VOyvZ2o/vj9XnFZZDFPBX0c1aa//7fhjZOcCj3/Orv9YkQopp8LxTofU=
-X-Google-Smtp-Source: AGHT+IFT/y1zF1Jddf2NzmkYrziVwMZjrrqkWjtGt/0nH8eLs1/XWHtwzQpNBQcoLZX3seWwnm/v6Q==
-X-Received: by 2002:a05:6a20:a98a:b0:1b1:ed9d:f92e with SMTP id adf61e73a8af0-1bcbb641494mr7867935637.38.1718969518719;
-        Fri, 21 Jun 2024 04:31:58 -0700 (PDT)
-Received: from L6YN4KR4K9.bytedance.net ([61.213.176.10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065124e354sm1181707b3a.119.2024.06.21.04.31.54
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 21 Jun 2024 04:31:58 -0700 (PDT)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: corbet@lwn.net,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	cleger@rivosinc.com,
-	evan@rivosinc.com,
-	conor.dooley@microchip.com,
-	cuiyunhui@bytedance.com,
-	costa.shul@redhat.com,
-	andy.chiu@sifive.com,
-	samitolvanen@google.com,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Subject: [PATCH v2] RISC-V: Provide the frequency of time CSR via hwprobe
-Date: Fri, 21 Jun 2024 19:31:43 +0800
-Message-Id: <20240621113143.35827-1-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	s=arc-20240116; t=1718969530; c=relaxed/simple;
+	bh=IFn0xI/FU94BtSpvj/fHU7p0Jdyham+E3Hxv3IwEHok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iq93ZV6UjA6z4HoNSpugRG0X2ll58wST1DNIwSLHIMkXRjMd5QCw+jbWYGfh382fSLdSoXVtKI6PhHGESJMCjhoUiZXg3Okin7JiYMRR56qLzVhAjYFw0QxjENSwyqkjmENFiYijK4iCt3O1ILziizLyhd045C+ZN1mw+O+C9mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
+	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sKc6u-002dUc-26;
+	Fri, 21 Jun 2024 21:07:17 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 21 Jun 2024 21:07:16 +1000
+Date: Fri, 21 Jun 2024 21:07:16 +1000
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Nick Desaulniers <ndesaulniers@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Yabin Cui <yabinc@google.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] Fix initializing a static union variable
+Message-ID: <ZnVe5JBIBGoOrk5w@gondor.apana.org.au>
+References: <20240620181736.1270455-1-yabinc@google.com>
+ <CAKwvOd=ZKS9LbJExCp8vrV9kLDE_Ew+mRcFH5-sYRW_2=sBiig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=ZKS9LbJExCp8vrV9kLDE_Ew+mRcFH5-sYRW_2=sBiig@mail.gmail.com>
 
-From: Palmer Dabbelt <palmer@rivosinc.com>
+On Thu, Jun 20, 2024 at 12:31:46PM -0700, Nick Desaulniers wrote:
+>
+> Can you also please (find or) file a bug against clang about this? A
+> compiler diagnostic would be very very helpful here, since `= {};` is
+> such a common idiom.
 
-A handful of user-visible behavior is based on the frequency of the
-time CSR.
+This idiom is used throughout the kernel.  If we decide that it
+isn't safe to use then we should change the kernel as a whole rather
+than the one spot that happens to have been identified.
 
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
----
- Documentation/arch/riscv/hwprobe.rst  | 2 ++
- arch/riscv/include/asm/hwprobe.h      | 2 +-
- arch/riscv/include/uapi/asm/hwprobe.h | 1 +
- arch/riscv/kernel/sys_hwprobe.c       | 5 +++++
- 4 files changed, 9 insertions(+), 1 deletion(-)
+Alternatively the buggy compiler should be banned until it's fixed.
 
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index fc015b452ebf..c07f159d8906 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -229,3 +229,5 @@ The following keys are defined:
- 
- * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
-   represents the size of the Zicboz block in bytes.
-+
-+* :c:macro:`RISCV_HWPROBE_KEY_TIME_CSR_FREQ`: Frequency (in Hz) of `mtime`.
-diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
-index 630507dff5ea..150a9877b0af 100644
---- a/arch/riscv/include/asm/hwprobe.h
-+++ b/arch/riscv/include/asm/hwprobe.h
-@@ -8,7 +8,7 @@
- 
- #include <uapi/asm/hwprobe.h>
- 
--#define RISCV_HWPROBE_MAX_KEY 6
-+#define RISCV_HWPROBE_MAX_KEY 7
- 
- static inline bool riscv_hwprobe_key_is_valid(__s64 key)
- {
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index 7b95fadbea2a..18754341ff14 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -73,6 +73,7 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_MISALIGNED_UNSUPPORTED	(4 << 0)
- #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
- #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
-+#define RISCV_HWPROBE_KEY_TIME_CSR_FREQ	7
- /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
- 
- /* Flags */
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index 83fcc939df67..fc3b40fb9def 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -8,6 +8,7 @@
- #include <asm/cacheflush.h>
- #include <asm/cpufeature.h>
- #include <asm/hwprobe.h>
-+#include <asm/delay.h>
- #include <asm/sbi.h>
- #include <asm/switch_to.h>
- #include <asm/uaccess.h>
-@@ -226,6 +227,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
- 			pair->value = riscv_cboz_block_size;
- 		break;
- 
-+	case RISCV_HWPROBE_KEY_TIME_CSR_FREQ:
-+		pair->value = riscv_timebase;
-+		break;
-+
- 	/*
- 	 * For forward compatibility, unknown keys don't fail the whole
- 	 * call, but get their element key set to -1 and value set to 0
+Cheers,
 -- 
-2.20.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
