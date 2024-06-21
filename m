@@ -1,172 +1,339 @@
-Received: from smtp.cecloud.com (unknown [1.203.97.246])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA38CEBE
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C46EBE;
+	Fri, 21 Jun 2024 04:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718944734; cv=none; b=hijyPPR1J8HXdHzoKo0TnjBd+zNNDiV7wtRaETwX1QMSU0m2Clg0xM9rQ2ViojH74rKHbH9f9Mkczh6TbdfNrucZKkZOdtk0QWBMFGJqlaPFyJst2BaYLfIF6qKGsUfJj7NS5EGWrkFBhTEITYbgc4mVTzL96AW1vUQN3FvHQq0=
+	t=1718944788; cv=none; b=BrRq+VlxQvrY2AttbSvXNbRLreWseqQCYHezoWW/OJzjOX4jQVnydsaxCFNLnn7ZlrjfQLcu/gOquLKxPJ60hJQsp5sUUoqUUH401N2n7LJXMQ023KlnjsJdjLxBc/azou97+r1u/qQoZEwqYb5hrYIJv0i/ETjKLJRzX5qFTU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718944734; c=relaxed/simple;
-	bh=id8v/eoj4gY4o6m8alH66zYbMJAteMfjVfD2GcRbCGA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c8ynSjQ6sQ3M16QJdvKeio5KD8Li3N6gBJTDve+vuLmfNIES3qo7RsO8Lw/5tjw0u4FMzgFhk0nzKt/Y12Gk/UjZaAH0FjvLpmEvtY/xeSf37CfAtdxZNIa1PM9suTB9nVilYONbjT8fAVGnUx7B5lvFhIsKcejei0loVYZmwIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; dkim=fail (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WgcTr6Yf reason="signature verification failed"; arc=none smtp.client-ip=170.10.133.124; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=1.203.97.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+	s=arc-20240116; t=1718944788; c=relaxed/simple;
+	bh=Wewpl2QV5Wg6PNSqVyRuurfj/a+BJk24Qfha/M0GzuM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oBJkHb7vPg9luXHdKyPABGTAJqBM6F63m2/QH/LqHmR/58MJ0w2Q6LqHktqQnwzdr/B8aRlgX0npcPR5+EO3hk18wcj9YJmiizvhZGPuzrC9XZhcSJXFr01Loj2fDg2fdDArI/F1oUQXMW4vUdhl75x/UZdnTb/71IfwisiCKEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kD4DgRwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WgcTr6Yf"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.cecloud.com (Postfix) with ESMTP id 6E0927C0112;
-	Fri, 21 Jun 2024 12:38:41 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-SKE-CHECKED:1
-X-ABS-CHECKED:1
-X-ANTISPAM-LEVEL:2
-Received: from localhost.localdomain (unknown [111.48.69.245])
-	by smtp.cecloud.com (postfix) whith ESMTP id P2702681T281465908556144S1718944719949162_;
-	Fri, 21 Jun 2024 12:38:41 +0800 (CST)
-X-IP-DOMAINF:1
-X-RL-SENDER:liuwei09@cestc.cn
-X-SENDER:liuwei09@cestc.cn
-X-LOGIN-NAME:liuwei09@cestc.cn
-X-FST-TO:prarit@redhat.com
-X-RCPT-COUNT:10
-X-LOCAL-RCPT-COUNT:1
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:111.48.69.245
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<dc9a11e2d85619b30a048a232bbf7258>
-X-System-Flag:0
-From: Liu Wei <liuwei09@cestc.cn>
-To: prarit@redhat.com,
-	Liu Wei <liuwei09@cestc.cn>,
-	sudeep.holla@arm.com,
-	Will Deacon <will@kernel.org>
-Cc: catalin.marinas@arm.com,
-	guohanjun@huawei.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lpieralisi@kernel.org,
-	rafael@kernel.org
-Subject: Re: [PATCH] ACPI: Do not enable ACPI SPCR console by default on arm64
-Date: Fri, 21 Jun 2024 12:37:50 +0800
-Message-ID: <4aff3fb4-cf1b-4c09-918a-3c4252a34bd6@redhat.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20240618164024.tehpbscax47jkluj@bogus>
-References: <20240530015332.7305-1-liuwei09@cestc.cn> <cb4c5fd0-9629-4362-918a-cb044eb9e558@redhat.com> <20240618152923.GB2354@willie-the-truck> <20240618164024.tehpbscax47jkluj@bogus>
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32611A00C2 for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 12:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com; s=mimecast20190719; t=1718885089; h=from:from:reply-to:subject:subject:date:date:message-id:message-id: to:to:cc:cc:mime-version:mime-version:content-type:content-type: content-transfer-encoding:content-transfer-encoding: in-reply-to:in-reply-to:references:references; bh=tBTGVX4bvUyxrx4ohv02xbwKgf7bYjyve7BA15u6MEQ=; b=WgcTr6Yf3k2FAAr40bYTv0O/9YmB8SdpRxpLx+szww0HM9tIHC82ZFZvXgzNvOsxSz0r/g CN+kancUfcaCLP2y06SLINv4lQ6fkM7mG5RMtrPbuuOhfk9r34eMx2n66qB+4QcNNdsg7d jeUqN/M+BHl6kW8ijChEcoTnuNFW6ZY=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id us-mta-362-YFrvsQQvNS-zacy7seOvog-1; Thu, 20 Jun 2024 08:04:48 -0400
-X-MC-Unique: YFrvsQQvNS-zacy7seOvog-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6b22e2dfa6cso10729126d6.1 for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 05:04:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1718885087; x=1719489887; h=content-transfer-encoding:in-reply-to:from:content-language :references:cc:to:subject:user-agent:mime-version:date:message-id :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=tBTGVX4bvUyxrx4ohv02xbwKgf7bYjyve7BA15u6MEQ=; b=LVuTaN+f95siWZRez2HNRWxMp4EASUyMoexQVUUSex7lPROxW0SyeDDRlkmEdZMRCg wRn0KP6N2pXBGtuCx6x5lOuJD34g6M0E8SW9LMmWf2La7a8rvDTR0dvi4dcTjyjj9BgU 6OxkSrOJWv464lw3ehZ3qwnGUExZpBQ7X3MrNSSaictLZXsqIBMWPNJr/W8MLbuCX+4K kvq2lEpz850jgswd4rET+ZOJs3neBzpOSjmmH50G6fuNUn+B57l35bNrakHN6XzHBJfM DIQwNcmRIOoUOcanpN/IKsJi6WLwVidKPsCpFaAcCFWsFCA/F5FF2U2xB7iXo4C3wfcQ Z+2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWmm1Cjk0lI/pf4QRWt1snFgCjiyswCMLc0q7cd2z7iSCksT7JzMSFZimiCQmJ9hh/Al0dDm0T4zNvswBhdTkI/Mt7EetdD1NcXPTZv
-X-Gm-Message-State: AOJu0YxRwDKHcNybzjTl4LU8QYfcjWMmx0D6dh78zzhr5Uvq2YDSY8BX t9Epjy8b7p8TJojhgZG0uoFFGF6xFoLNwijyN3DrCjMOL+qEz/8UH/a/d+yNp9lx8lNNFGiV1ge wKwBhDEHIYlcnXVeXahRj+qGmLTnAgJGYbYFOiR/YVTNwkaqvClclH/G5OztX0k8zuinEvQ==
-X-Received: by 2002:ad4:5c8b:0:b0:6b5:6f9:9207 with SMTP id 6a1803df08f44-6b506f9925dmr56113936d6.20.1718885087367; Thu, 20 Jun 2024 05:04:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXBwop604Y5LJHb0b34gI7Je4i9x8IkF784us5Ea9E+Z1DVF2QvWsWClXZaaHI9SoMFqaGOw==
-X-Received: by 2002:ad4:5c8b:0:b0:6b5:6f9:9207 with SMTP id 6a1803df08f44-6b506f9925dmr56113586d6.20.1718885086970; Thu, 20 Jun 2024 05:04:46 -0700 (PDT)
-Received: from [10.26.1.93] ([66.187.232.136]) by smtp.gmail.com with ESMTPSA id af79cd13be357-79bc266c496sm84674985a.20.2024.06.20.05.04.45 (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128); Thu, 20 Jun 2024 05:04:46 -0700 (PDT)
-Precedence: bulk
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kD4DgRwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F11FC2BBFC;
+	Fri, 21 Jun 2024 04:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718944788;
+	bh=Wewpl2QV5Wg6PNSqVyRuurfj/a+BJk24Qfha/M0GzuM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kD4DgRwYeSC24FRKtA8OwS6RC2nD55twbieniX1OtTaZuEF/MxagVMzsW7VVVu3D/
+	 /gO3I6M1oGqM0eEh4sfpPOlKfa94d1IhoX+EpVq/WZXBN/+QjfDJ4aLdiRn/EiFZt2
+	 UWWTnGrZ0+uedvZz0fei+dY0tYaj4i3LExqoBk5HGVkqVRlZiXb8XO75B7+0Gx129x
+	 lPBDzByclB1kT8S37cwEu0Ng5DylmLHr37UKEhw4UffwDpdASpGegQVtobqw3FHWkz
+	 irE8XVlHTECn5xLzSFdUtlbf0UoyfVinvcOOqAWHeKIn4r65/Psw24eFEcJvdTedEy
+	 8oUGpQbMjcuaA==
+Date: Fri, 21 Jun 2024 13:39:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Kees Cook <kees@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH v2] KUnit: add missing MODULE_DESCRIPTION() macros for
+ lib/test_*.ko
+Message-Id: <20240621133943.c16a37133cb0e8b419a8726b@kernel.org>
+In-Reply-To: <20240619-md-lib-test-v2-1-301e30eeba1e@quicinc.com>
+References: <20240619-md-lib-test-v2-1-301e30eeba1e@quicinc.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240621043750.Ye7FN-uIzztofO-vM9AfRd_SzwMemGA5t9Xn6qZPDk4@z>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Prarit Bhargava <prarit@redhat.com>
+On Wed, 19 Jun 2024 13:59:15 -0700
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
-> On 6/18/24 23:43, Liu Wei wrote:
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > On Tue, Jun 18, 2024 at 04:29:24PM +0100, Will Deacon wrote:
-> >>> On Thu, May 30, 2024 at 09:06:17AM -0400, Prarit Bhargava wrote:
-> >>>> On 5/29/24 21:53, Liu Wei wrote:
-> >>>>> Consistency with x86 and loongarch, don't enable ACPI SPCR console
-> >>>>> by default on arm64
-> >>>>>
-> >>>>> Signed-off-by: Liu Wei <liuwei09@cestc.cn>
-> >>>>> ---
-> >>>>>    arch/arm64/kernel/acpi.c | 3 ++-
-> >>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> >>>>> index dba8fcec7f33..1deda3e5a0d2 100644
-> >>>>> --- a/arch/arm64/kernel/acpi.c
-> >>>>> +++ b/arch/arm64/kernel/acpi.c
-> >>>>> @@ -227,7 +227,8 @@ void __init acpi_boot_table_init(void)
-> >>>>>    		if (earlycon_acpi_spcr_enable)
-> >>>>>    			early_init_dt_scan_chosen_stdout();
-> >>>>>    	} else {
-> >>>>> -		acpi_parse_spcr(earlycon_acpi_spcr_enable, true);
-> >>>>> +		/* Do not enable ACPI SPCR console by default */
-> >>>>> +		acpi_parse_spcr(earlycon_acpi_spcr_enable, false);
-> >>>>>    		if (IS_ENABLED(CONFIG_ACPI_BGRT))
-> >>>>>    			acpi_table_parse(ACPI_SIG_BGRT, acpi_parse_bgrt);
-> >>>>>    	}
-> >>>>
-> >>>> It's been a while, and the status of arm hardware may have changed. IIRC the
-> >>>> choice to force enable this is that most arm hardware is headless and this
-> >>>> was a _required_ option for booting.
-> >>>>
-> >>>> I'm not sure if that's still the case as it's been a long time.
-> >>>>
-> >>>> Can anyone from the ARM community provide an approval here?
-> >>>
-> >>> I don't have a strong opinion either way, but adding the Arm ACPI folks
-> >>> in case they care.
-> >>>
-> >>> Having said that, if the only rationale for this patch is consistency
-> >>> with other architectures, then I think I'd lean towards leaving the
-> >>> behaviour as-is so we don't give users a nasty surprise on their next
-> >>> kernel upgrade.
-> >>>
-> >>
-> >> +1, I am concerned about breaking existing behaviour on the platforms
-> >> in the wild. Also many platforms running ACPI would have already used
-> >> console cmdline parameter if SPCR is not their choice for the console.
-> >> So I don't see the need to align with other arch default behaviour here,
-> >> we can revisit if someone shouts with a real reason as why cmdline option
-> >> is not viable.
-> > 
-> > For varying privacy and security reasons, sometimes we would like to
-> > completely silence the serial console output, and only enable it through
-> > cmdline when needed.
-> > 
+> make allmodconfig && make W=1 C=1 reports for lib/test_*.ko:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hexdump.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_dhry.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_firmware.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sysctl.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hash.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ida.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_list_sort.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_min_heap.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sort.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_keys.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_key_base.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_memcat_p.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_blackhole_dev.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_meminit.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_free_pages.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_kprobes.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ref_tracker.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bits.o
 > 
-> FWIW, I understand that concern but the feedback you're receiving is 
-> that there are many existing systems that depend on this behavior. 
-> Breaking users for your concerns is not a good idea.
+> Add the missing invocations of the MODULE_DESCRIPTION() macro.
 > 
-> Perhaps a solution is to add yet-another-config-option, or add a kernel 
-> parameter to disable the SPCR console on ARM?
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+> Changes in v2:
+> - Updated the description of lib/test_kprobes.c per Masami
+
+Confirmed. Thanks!
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> - Removed references to lib/test_user_copy since that is being renamed in
+>   https://lore.kernel.org/all/20240612195921.2685842-2-kees@kernel.org/
+>   and the description added in
+>   https://lore.kernel.org/all/20240619202659.work.532-kees@kernel.org/
+> - Link to v1: https://lore.kernel.org/r/20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com
+> ---
+>  lib/dhry_run.c             | 1 +
+>  lib/test-kstrtox.c         | 1 +
+>  lib/test_bits.c            | 1 +
+>  lib/test_blackhole_dev.c   | 1 +
+>  lib/test_firmware.c        | 1 +
+>  lib/test_free_pages.c      | 1 +
+>  lib/test_hash.c            | 1 +
+>  lib/test_hexdump.c         | 1 +
+>  lib/test_ida.c             | 1 +
+>  lib/test_kprobes.c         | 3 ++-
+>  lib/test_list_sort.c       | 1 +
+>  lib/test_memcat_p.c        | 1 +
+>  lib/test_meminit.c         | 1 +
+>  lib/test_min_heap.c        | 1 +
+>  lib/test_module.c          | 1 +
+>  lib/test_ref_tracker.c     | 3 ++-
+>  lib/test_sort.c            | 1 +
+>  lib/test_static_key_base.c | 1 +
+>  lib/test_static_keys.c     | 1 +
+>  lib/test_sysctl.c          | 1 +
+>  20 files changed, 22 insertions(+), 2 deletions(-)
 > 
-> Something like "acpi=nospcr"?
-
-Thank you for your suggestion, I will send the new version later.
-
-Best wishes,
-Liu wei
+> diff --git a/lib/dhry_run.c b/lib/dhry_run.c
+> index e6a279dabf84..4a6d05ce4361 100644
+> --- a/lib/dhry_run.c
+> +++ b/lib/dhry_run.c
+> @@ -83,4 +83,5 @@ static int __init dhry_init(void)
+>  module_init(dhry_init);
+>  
+>  MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
+> +MODULE_DESCRIPTION("Dhrystone benchmark test module");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test-kstrtox.c b/lib/test-kstrtox.c
+> index f355f67169b6..ee87fef66cb5 100644
+> --- a/lib/test-kstrtox.c
+> +++ b/lib/test-kstrtox.c
+> @@ -732,4 +732,5 @@ static int __init test_kstrtox_init(void)
+>  	return -EINVAL;
+>  }
+>  module_init(test_kstrtox_init);
+> +MODULE_DESCRIPTION("Module test for kstrto*() APIs");
+>  MODULE_LICENSE("Dual BSD/GPL");
+> diff --git a/lib/test_bits.c b/lib/test_bits.c
+> index c9368a2314e7..01313980f175 100644
+> --- a/lib/test_bits.c
+> +++ b/lib/test_bits.c
+> @@ -72,4 +72,5 @@ static struct kunit_suite bits_test_suite = {
+>  };
+>  kunit_test_suite(bits_test_suite);
+>  
+> +MODULE_DESCRIPTION("Test cases for functions and macros in bits.h");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
+> index f247089d63c0..ec290ac2a0d9 100644
+> --- a/lib/test_blackhole_dev.c
+> +++ b/lib/test_blackhole_dev.c
+> @@ -96,4 +96,5 @@ module_init(test_blackholedev_init);
+>  module_exit(test_blackholedev_exit);
+>  
+>  MODULE_AUTHOR("Mahesh Bandewar <maheshb@google.com>");
+> +MODULE_DESCRIPTION("module test of the blackhole_dev");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+> index 9cfdcd6d21db..bcb32cbff188 100644
+> --- a/lib/test_firmware.c
+> +++ b/lib/test_firmware.c
+> @@ -1567,4 +1567,5 @@ static void __exit test_firmware_exit(void)
+>  module_exit(test_firmware_exit);
+>  
+>  MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+> +MODULE_DESCRIPTION("interface to trigger and test firmware loading");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_free_pages.c b/lib/test_free_pages.c
+> index 9ebf6f5549f3..48952364c540 100644
+> --- a/lib/test_free_pages.c
+> +++ b/lib/test_free_pages.c
+> @@ -44,4 +44,5 @@ static void m_ex(void)
+>  module_init(m_in);
+>  module_exit(m_ex);
+>  MODULE_AUTHOR("Matthew Wilcox <willy@infradead.org>");
+> +MODULE_DESCRIPTION("Check that free_pages() doesn't leak memory");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_hash.c b/lib/test_hash.c
+> index bb25fda34794..a7af39662a0a 100644
+> --- a/lib/test_hash.c
+> +++ b/lib/test_hash.c
+> @@ -235,4 +235,5 @@ static struct kunit_suite hash_test_suite = {
+>  
+>  kunit_test_suite(hash_test_suite);
+>  
+> +MODULE_DESCRIPTION("Test cases for <linux/hash.h> and <linux/stringhash.h>");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
+> index fe2682bb21e6..751645645988 100644
+> --- a/lib/test_hexdump.c
+> +++ b/lib/test_hexdump.c
+> @@ -253,4 +253,5 @@ static void __exit test_hexdump_exit(void)
+>  module_exit(test_hexdump_exit);
+>  
+>  MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
+> +MODULE_DESCRIPTION("Test cases for lib/hexdump.c module");
+>  MODULE_LICENSE("Dual BSD/GPL");
+> diff --git a/lib/test_ida.c b/lib/test_ida.c
+> index 072a49897e71..c80155a1956d 100644
+> --- a/lib/test_ida.c
+> +++ b/lib/test_ida.c
+> @@ -214,4 +214,5 @@ static void ida_exit(void)
+>  module_init(ida_checks);
+>  module_exit(ida_exit);
+>  MODULE_AUTHOR("Matthew Wilcox <willy@infradead.org>");
+> +MODULE_DESCRIPTION("Test the IDA API");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
+> index 0648f7154f5c..b7582010125c 100644
+> --- a/lib/test_kprobes.c
+> +++ b/lib/test_kprobes.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+> - * test_kprobes.c - simple sanity test for *probes
+> + * test_kprobes.c - simple sanity test for k*probes
+>   *
+>   * Copyright IBM Corp. 2008
+>   */
+> @@ -400,4 +400,5 @@ static struct kunit_suite kprobes_test_suite = {
+>  
+>  kunit_test_suites(&kprobes_test_suite);
+>  
+> +MODULE_DESCRIPTION("simple sanity test for k*probes");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_list_sort.c b/lib/test_list_sort.c
+> index cc5f335f29b5..30879abc8a42 100644
+> --- a/lib/test_list_sort.c
+> +++ b/lib/test_list_sort.c
+> @@ -119,4 +119,5 @@ static struct kunit_suite list_sort_suite = {
+>  
+>  kunit_test_suites(&list_sort_suite);
+>  
+> +MODULE_DESCRIPTION("list_sort() KUnit test suite");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_memcat_p.c b/lib/test_memcat_p.c
+> index 849c477d49d0..7e0797a6bebf 100644
+> --- a/lib/test_memcat_p.c
+> +++ b/lib/test_memcat_p.c
+> @@ -112,4 +112,5 @@ static void __exit test_memcat_p_exit(void)
+>  module_init(test_memcat_p_init);
+>  module_exit(test_memcat_p_exit);
+>  
+> +MODULE_DESCRIPTION("Test cases for memcat_p() in lib/memcat_p.c");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_meminit.c b/lib/test_meminit.c
+> index 0dc173849a54..6298f66c964b 100644
+> --- a/lib/test_meminit.c
+> +++ b/lib/test_meminit.c
+> @@ -436,4 +436,5 @@ static int __init test_meminit_init(void)
+>  }
+>  module_init(test_meminit_init);
+>  
+> +MODULE_DESCRIPTION("Test cases for SL[AOU]B/page initialization at alloc/free time");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_min_heap.c b/lib/test_min_heap.c
+> index 7b01b4387cfb..a2dd478997bb 100644
+> --- a/lib/test_min_heap.c
+> +++ b/lib/test_min_heap.c
+> @@ -191,4 +191,5 @@ static void __exit test_min_heap_exit(void)
+>  }
+>  module_exit(test_min_heap_exit);
+>  
+> +MODULE_DESCRIPTION("Test cases for the min max heap");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_module.c b/lib/test_module.c
+> index debd19e35198..3d1b29b74807 100644
+> --- a/lib/test_module.c
+> +++ b/lib/test_module.c
+> @@ -31,4 +31,5 @@ static void __exit test_module_exit(void)
+>  module_exit(test_module_exit);
+>  
+>  MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+> +MODULE_DESCRIPTION("module loading subsystem test module");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
+> index 49970a7c96f3..b983ceb12afc 100644
+> --- a/lib/test_ref_tracker.c
+> +++ b/lib/test_ref_tracker.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Referrence tracker self test.
+> + * Reference tracker self test.
+>   *
+>   * Copyright (c) 2021 Eric Dumazet <edumazet@google.com>
+>   */
+> @@ -112,4 +112,5 @@ static void __exit test_ref_tracker_exit(void)
+>  module_init(test_ref_tracker_init);
+>  module_exit(test_ref_tracker_exit);
+>  
+> +MODULE_DESCRIPTION("Reference tracker self test");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/lib/test_sort.c b/lib/test_sort.c
+> index be02e3a098cf..81aef88b48b5 100644
+> --- a/lib/test_sort.c
+> +++ b/lib/test_sort.c
+> @@ -45,4 +45,5 @@ static struct kunit_suite sort_test_suite = {
+>  
+>  kunit_test_suites(&sort_test_suite);
+>  
+> +MODULE_DESCRIPTION("sort() KUnit test suite");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_static_key_base.c b/lib/test_static_key_base.c
+> index 5089a2e2bdd8..9f507672afa5 100644
+> --- a/lib/test_static_key_base.c
+> +++ b/lib/test_static_key_base.c
+> @@ -57,4 +57,5 @@ module_init(test_static_key_base_init);
+>  module_exit(test_static_key_base_exit);
+>  
+>  MODULE_AUTHOR("Jason Baron <jbaron@akamai.com>");
+> +MODULE_DESCRIPTION("Kernel module to support testing static keys");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_static_keys.c b/lib/test_static_keys.c
+> index 42daa74be029..00c715f30df9 100644
+> --- a/lib/test_static_keys.c
+> +++ b/lib/test_static_keys.c
+> @@ -236,4 +236,5 @@ module_init(test_static_key_init);
+>  module_exit(test_static_key_exit);
+>  
+>  MODULE_AUTHOR("Jason Baron <jbaron@akamai.com>");
+> +MODULE_DESCRIPTION("Kernel module for testing static keys");
+>  MODULE_LICENSE("GPL");
+> diff --git a/lib/test_sysctl.c b/lib/test_sysctl.c
+> index 9321d850931f..b6696fa1d426 100644
+> --- a/lib/test_sysctl.c
+> +++ b/lib/test_sysctl.c
+> @@ -280,4 +280,5 @@ static void __exit test_sysctl_exit(void)
+>  module_exit(test_sysctl_exit);
+>  
+>  MODULE_AUTHOR("Luis R. Rodriguez <mcgrof@kernel.org>");
+> +MODULE_DESCRIPTION("proc sysctl test driver");
+>  MODULE_LICENSE("GPL");
 > 
-> P.
+> ---
+> base-commit: b050496579632f86ee1ef7e7501906db579f3457
+> change-id: 20240601-md-lib-test-16083d9d77e2
 > 
-> > On ARM, it is difficult because SPCR is enabled by default.
-> > 
-> > Thanks for your patience,
-> > Liu Wei
-> > 
-> >>
-> >> --
-> >> Regards,
-> >> Sudeep
-> > 
 
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
