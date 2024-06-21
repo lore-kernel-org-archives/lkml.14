@@ -1,49 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99E115F41E;
-	Fri, 21 Jun 2024 16:44:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69491607AD;
+	Fri, 21 Jun 2024 16:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718988266; cv=none; b=sJuAuqI+EJYJqpQOYmMbh2gvu2SSFIViUmzqO4kVua5zhKwAn08jJEwjbLa8epOEKAV+1IniUSBCwSzmDMa6bYC8cWbHEswhxUPcHLMgGAsuFRW5qarvlzQmcFItorD0C0mUlx6rEiN7xI8oOe8HxfqOCe3RmpAeCFR4PVy2JEs=
+	t=1718988268; cv=none; b=Hx969sgQJxYpts+dr1SPmPVdI+pxrUDhI+F4YUMliLuf4Ua8yh0BlMZxhXplqR1vZnNguEeHAGYuicLZMuCySjKVJdBn8s4UPHjf9CudYP6cw8v1HlLeStUpn64th/8BNHELddIhgj0E/rtwpBbrcMiTYqd3Mm5AhhZDirDustI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718988266; c=relaxed/simple;
-	bh=qyosJ/5otVrdGg2+4iUwkP9aGxGyOq607RT1qnKAyHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJAVdwbOGJ26kOShgF8Lb5uP+NoBAy/upHSFKtzI4s+7mJ+49143Q9aHwXAP4TfJNmwWvBQas1Kdy5w7AN+yKPqme2Rc4PQ/hCKv1PMAEoK4M8NN9/zWcbdHETZKvmKYrScKglYgL8Qch0D/S9yg06bQJkfTFVsP1YeVUPUkfnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oat0bwOA; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1718988268; c=relaxed/simple;
+	bh=1jHhrYMe7a3/ohkHtpaJJmyxwj3amjnL9BxFfmnB90E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=To2WIgvZ0UpgMy07pSfHDzdErkTawiX+DCbKzBYBqwb4UZ7Nb2NOCvtndklYINMDX+aunLOsa1uDz8Cr6eF3R2fzpQdv3hHQwoNgBq5UXQb8ryR5VGvjc1B/oBePD3lOYMd+OdPfEZLSCXwLQttK602+O7lH2zCp4s20TdWesF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ih3Si3Ao; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oat0bwOA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ih3Si3Ao"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718988265; x=1750524265;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qyosJ/5otVrdGg2+4iUwkP9aGxGyOq607RT1qnKAyHc=;
-  b=Oat0bwOA5XKr4zChTlEBn0JYBcbdpklcZBcBYbkTHDw5srNKZu332v1J
-   eZcL6Ndt5DT1k8mqKlgLy2tpQtTfWRrQItq2a+NHDJsswE0hu51ECg831
-   bw5njp6KfVqqBBnPmVhgYFygPp4b1Et1YbAIIDSfnjcKKGbLf3wZDICk6
-   pBwtyMNqMeKhDPa/WmloJI010Gmjz67OjA11fCA12o/5NQiu/HPxlZNSg
-   3RYLF0ZFwGFewYAn+qGmEsfultIhZdTdnY255sCKE5o4T4g1sIrSe2ecR
-   0aEZY4RWvBafX/XWWvxI1WcxHgD9R5/6yKoirA8NuWJ3EIixscg/AeoDi
-   g==;
-X-CSE-ConnectionGUID: BhMOMM1KSi+xhDPn92uFGA==
-X-CSE-MsgGUID: Arw2Nl6zQTKEGSk79frykg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="15727172"
+  t=1718988267; x=1750524267;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1jHhrYMe7a3/ohkHtpaJJmyxwj3amjnL9BxFfmnB90E=;
+  b=ih3Si3AoW/6UskLj1aevPovzuzl60xDjrJSll/p6UOQ/64CViirMBttK
+   trOZ5EOOB9vumA+f9gemqOncG58/YaCZ5O2jaBZROFsW8TJXHC/uBRqYs
+   LyGrWEhgGAgasUEOe7j9OG3Ld9qTZPfsjB4ZLk0Z48x0FluEgaY1vFHfn
+   8PFUfmYDP7fYiCtKPw7OpPRUVJKeG6kn7BSa6K3yjG285ksGg1gzeBgao
+   co8F9ImDNKgzGtuHTIizPK3oANEc/YPqocyEASkTWzgHCCy/XMnYR+c2Y
+   Gghe/4gQZUF+Hl8cBzUBE45wY1PQtneojn0AyapgzGmLqS2061VvUhafz
+   Q==;
+X-CSE-ConnectionGUID: XMiNO8V0SLKVRFNBDeaNVg==
+X-CSE-MsgGUID: kPPvrddFRCCu1bsEIzKFvA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="15727160"
 X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
-   d="scan'208";a="15727172"
+   d="scan'208";a="15727160"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
   by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 09:44:23 -0700
-X-CSE-ConnectionGUID: GKjragTJQwKr5hb7jqpr0Q==
-X-CSE-MsgGUID: 8BcQnyQgSsCpp5aYmkY7lQ==
+X-CSE-ConnectionGUID: a4aJpdS9R9qGyjNv7x3NEg==
+X-CSE-MsgGUID: ScJEe9lLTj2jJq5Yf9OUuQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
-   d="scan'208";a="42745629"
+   d="scan'208";a="42745628"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmviesa010.fm.intel.com with ESMTP; 21 Jun 2024 09:44:18 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 2B5CA12A; Fri, 21 Jun 2024 19:44:17 +0300 (EEST)
+	id 4E5FB1F8; Fri, 21 Jun 2024 19:44:17 +0300 (EEST)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -68,10 +69,12 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-doc@vger.kernel.org,
 	linux-efi@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH 0/3] x86: Make 5-level paging support unconditional for x86-64
-Date: Fri, 21 Jun 2024 19:44:03 +0300
-Message-ID: <20240621164406.256314-1-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 2/3] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
+Date: Fri, 21 Jun 2024 19:44:05 +0300
+Message-ID: <20240621164406.256314-3-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240621164406.256314-1-kirill.shutemov@linux.intel.com>
+References: <20240621164406.256314-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,39 +83,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both Intel and AMD CPUs support 5-level paging, which is expected to
-become more widely adopted in the future.
+5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
+being phased out, making 5-level paging support mandatory.
 
-Remove CONFIG_X86_5LEVEL.
+Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
+any associated conditional statements.
 
-In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
-SPARSEMEM_VMEMMAP the only memory model.
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/Kconfig      | 2 +-
+ arch/x86/mm/init_64.c | 9 +--------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
-Kirill A. Shutemov (3):
-  x86/64/mm: Always use dynamic memory layout
-  x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
-  x86/64/mm: Make 5-level paging support unconditional
-
- Documentation/arch/x86/cpuinfo.rst            |  8 ++---
- .../arch/x86/x86_64/5level-paging.rst         |  9 ------
- arch/x86/Kconfig                              | 32 ++-----------------
- arch/x86/boot/compressed/pgtable_64.c         | 11 ++-----
- arch/x86/boot/header.S                        |  4 ---
- arch/x86/include/asm/disabled-features.h      |  9 +-----
- arch/x86/include/asm/page_64.h                |  2 --
- arch/x86/include/asm/page_64_types.h          | 11 -------
- arch/x86/include/asm/pgtable_64_types.h       | 24 --------------
- arch/x86/kernel/alternative.c                 |  2 +-
- arch/x86/kernel/head64.c                      |  7 ----
- arch/x86/kernel/head_64.S                     |  2 --
- arch/x86/mm/init.c                            |  4 ---
- arch/x86/mm/init_64.c                         |  9 +-----
- arch/x86/mm/pgtable.c                         |  2 --
- drivers/firmware/efi/libstub/x86-5lvl.c       |  2 +-
- scripts/gdb/linux/pgtable.py                  |  4 +--
- .../arch/x86/include/asm/disabled-features.h  |  9 +-----
- 18 files changed, 13 insertions(+), 138 deletions(-)
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 827928680ed6..54ad2462e9ef 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1501,7 +1501,6 @@ config X86_PAE
+ config X86_5LEVEL
+ 	bool "Enable 5-level page tables support"
+ 	default y
+-	select SPARSEMEM_VMEMMAP
+ 	depends on X86_64
+ 	help
+ 	  5-level paging enables access to larger address space:
+@@ -1625,6 +1624,7 @@ config ARCH_SPARSEMEM_ENABLE
+ 	depends on X86_64 || NUMA || X86_32 || X86_32_NON_STANDARD
+ 	select SPARSEMEM_STATIC if X86_32
+ 	select SPARSEMEM_VMEMMAP_ENABLE if X86_64
++	select SPARSEMEM_VMEMMAP if X86_64
+ 
+ config ARCH_SPARSEMEM_DEFAULT
+ 	def_bool X86_64 || (NUMA && X86_32)
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 28002cc7a37d..552a11d5829a 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -835,7 +835,6 @@ void __init paging_init(void)
+ 	zone_sizes_init();
+ }
+ 
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+ #define PAGE_UNUSED 0xFD
+ 
+ /*
+@@ -934,7 +933,6 @@ static void __meminit vmemmap_use_new_sub_pmd(unsigned long start, unsigned long
+ 	if (!IS_ALIGNED(end, PMD_SIZE))
+ 		unused_pmd_start = end;
+ }
+-#endif
+ 
+ /*
+  * Memory hotplug specific functions
+@@ -1133,16 +1131,13 @@ remove_pmd_table(pmd_t *pmd_start, unsigned long addr, unsigned long end,
+ 				pmd_clear(pmd);
+ 				spin_unlock(&init_mm.page_table_lock);
+ 				pages++;
+-			}
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+-			else if (vmemmap_pmd_is_unused(addr, next)) {
++			} else if (vmemmap_pmd_is_unused(addr, next)) {
+ 					free_hugepage_table(pmd_page(*pmd),
+ 							    altmap);
+ 					spin_lock(&init_mm.page_table_lock);
+ 					pmd_clear(pmd);
+ 					spin_unlock(&init_mm.page_table_lock);
+ 			}
+-#endif
+ 			continue;
+ 		}
+ 
+@@ -1490,7 +1485,6 @@ unsigned long memory_block_size_bytes(void)
+ 	return memory_block_size_probed;
+ }
+ 
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+ /*
+  * Initialise the sparsemem vmemmap using huge-pages at the PMD level.
+  */
+@@ -1639,4 +1633,3 @@ void __meminit vmemmap_populate_print_last(void)
+ 		node_start = 0;
+ 	}
+ }
+-#endif
 -- 
 2.43.0
 
