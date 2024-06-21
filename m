@@ -1,98 +1,263 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5839EEC4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C31E40861;
 	Fri, 21 Jun 2024 12:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718972121; cv=none; b=UwQzap6J2qZMIk+vbV+NF3qrPgac8VWZEkyV1M5cyuvYei6XLzIpQUCfABweKgXIT2H/NWIDDSvjlrK76fV3Quu31vMzOG81DDqVg+MNa9Wxk/eXcGlYbMiMzYy28E7VpNtV2eWOYQrvVQEzJO6LR3kDqbcGYXrwvP35VswfsLw=
+	t=1718972121; cv=none; b=QFPYIKmXsaCJZ0mpYpvnGbg/vbF0KmyH8WOLV4G61by709GhpN/tpP+mSoU/hcZE72eS1BZVyPpAlSO1glBQVU50hzcV75s2aW313OJQTNGWlqzQ7liG/PWkbmi1tZO3Y4xKf9CrPpKOUBDxQ2e9OzcAvdMgS1Do6RoaGyis9Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718972121; c=relaxed/simple;
-	bh=HoVl+s/0uhbwF06QYRgp0cmsGbM6e2lQnYXAXcu2TS0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OGwMS+pwNsblaE6eA60y31FVwlgbB+F1L8AK/4G45K3ygjM4LQlhtsVdWZcNE8YJMGOJvDwuCxQ59jx4KjaLSeNIYD/+qTw7tbTTTZ2AigzHwj4Pzs/hYjPCXnKKtkR5jJFIg2Age8XhOCsujoyhQDykNaWpgcbnuNUGrpjHSkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	bh=cIPNiu/gEF0HK1CBHnIMlx3R04l5LgkBN4c4sNzkFzg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=fIcmx+V1Cbz4JR1Yz0nq4aVXndubT+J7CDOn0foO8E8y2tqyXsX86Pn9qtYGjBt1x/Hq87rLfTx41rR/HWnavFuQBxupOy197txC2gc0lsPiDo3yjfDHcWap4dHJKKYpOrTT9EoQ/S0r39m01Lw5jPicS5gqEx+EpjyoLMaJCCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VjrRL1lw; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-632843cff4fso18652197b3.3;
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjrRL1lw"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7954dcf3158so112011185a.3;
         Fri, 21 Jun 2024 05:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718972119; x=1719576919; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2E6XacsjAwWDKM7tAVWRLWVOqk2WqIKzpAc0VY30v6o=;
+        b=VjrRL1lw6kiGem2y5tzeeX7QuFqaLlZ6Kkdp7njOQK/OS77W/Z+Nx2tc1jouC1U/RU
+         5X4fiGPvq9m/WDEdbLpE3RJfqOqt7g6TpMJAyICU0VMuOM5I+qzGKQTi73upqr5KjV9O
+         j9Lu2XOx2ebjXcGbfgUA+005yomw07+sjUsHF7mF6f3pt399fWVUG40qf/KgvfXXLhcg
+         NMgm3lg/a23UPilmIFSiTSvEvl/Yvr1WtYvv9FdmQSDf7OmZehQog6kcqKN1Lj0pJdeb
+         cKFCydGbUtNwV3EG10PalwCP0AGICfykHsY8a9VQJJ449LuIVmE3cj8492QqyUvJ74Aq
+         HQcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718972118; x=1719576918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/VLm+/3RGyNu/np3rDAPr08/Aiyof+ayMRldgobak0k=;
-        b=wDMulo8klr7c8hfWtD1CiZf7w1I/sYNQEI/0NBwCcqcr85HTmqIJ1EhrhO9uQVB2U4
-         CPfOluBhiQH7AtCNCH7KvIievoCf5Ks5G4GB4B9u33A0m0HRXsQtdwVV+MCxWw5TuEpn
-         kprnZk9QbbSl197+dOZBeZjfDFXBCpDXNfsIIY1COkQNZ18r8iZAEl2/sXpkG149Au8M
-         v243yuKnjbsBVQcOCYMF1n8TwnYGzVKM3OrNwwoeyNi5jTuz4yHFyFV2qqFiYFYHkkqu
-         JoSpahb1+nG39+59+OMZxO3bAdsMEQOjwAOMdnDfszTcwOVIB1eSh4g+doSyaVQrpkI3
-         tgoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeCdruTE6L23GwgmDV1AWRzV8emrKRyReji178pj9TYfblSJME0ZaXir32AgxnE+7fS1874x2lg1xiw6R1q7RRD1cqNdtKN9mjKeUmojfYgqBnRTRd7kOBYJUNPjf3an5m+BCOUr9h3geXm5tbU450YNLq3iXKpcRi1D3fE0lpxvLFX+hw4jxB9lAz
-X-Gm-Message-State: AOJu0Yy2roIy1X6/Bdj499u4q9cskxZVPcYHUY2huUMchn4EwAFWAzMF
-	w5H6swFyLRi6K5bZLolwy3fIopaXXWm1VdwRyXKj4yO97iBcuv82dGuyvY3A
-X-Google-Smtp-Source: AGHT+IHdTuOsaAF9tx5tLvnJu0CcO+LpzCyhrwGUeTrd/KC+ByIo0ZKqA3ck6qbeWAYwJFJ7Hqdjaw==
-X-Received: by 2002:a0d:e2cf:0:b0:61a:e2e4:454d with SMTP id 00721157ae682-63a8fed2d11mr86891387b3.45.1718972118070;
+        d=1e100.net; s=20230601; t=1718972119; x=1719576919;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2E6XacsjAwWDKM7tAVWRLWVOqk2WqIKzpAc0VY30v6o=;
+        b=aPA05k1u8iSNNzMmYRINMhsRLGk2hp1pila1VItPahzF5YKZGDXJYCHfqsY1C1x9Oz
+         081b7+/Pf94TDhgNDt3czjRUyCGfYRquU0RGaZECQCy1Cl6PquonnfmKKXVECHxo+pYB
+         Cf79ojQv5pq4OZbZhntn8SZfsxqGratxF8xruhHT25geXVOjLh6+6CZFBma0irX24Pjh
+         6GBeIh0YDPEv9+uLjUdvsFgBmozTisyFpRHiHapGyNcEu21wu5KnRHo8fRrGRNj5bz9f
+         SSAhDCVMHdyo3vJ2uSVtdO1H76bN/k0/pQ5ZmuCnzb42yk+wAOInLoutU1tmxDujXqPw
+         AcIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjprUtXeWAvFJaLki47x6MeMFGrgFTP7ZEeBtEfnl32rNzgJoy12apKS5A33sF8JTjbSihtd/Eggz5Mg8iGYECHepTUvvhcZ/B4m8GzOJgfDXOjt2rMRPH9YeUUy0p93SVg24ypCeYPfFHQWMcX90bJCviqhjd01/p
+X-Gm-Message-State: AOJu0YwsLmZpxKFCOF+xSyyeeIEEdZ3esdUJYvC2g4QaTIWgoKYNccHl
+	ERmWc8EnAk7e2Aii8RsDGI4Tq5CANXDU8BwBIt5V0yySK+qwdYMo
+X-Google-Smtp-Source: AGHT+IEn9FUQygN9w/1i0M1N6zLdsUlHCdn8LnwTaa/JuDCqlYaQXN/DUjsKv+XrwynmaavdzDNtwA==
+X-Received: by 2002:a05:620a:2606:b0:795:5896:f842 with SMTP id af79cd13be357-79bb3ee6e0fmr719006285a.76.1718972118698;
         Fri, 21 Jun 2024 05:15:18 -0700 (PDT)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f154d5df7sm2953357b3.107.2024.06.21.05.15.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 05:15:17 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-62a2424ecb8so22344677b3.1;
-        Fri, 21 Jun 2024 05:15:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUW+g3gWP+O1JvckpssgIb/oumRKD3vHNyqH81Q61E3pw8QA0iFnpQhlmIDO4HU2mfN7VzO1P78evlbMF8xk/OzDPVQYylgn4UEL6zVfKUMLqtDwQmZMr35Zt2NUQBLI6W+/X1jQJKjWloDX2PmnVC/g9sPNkGnhjnrN5Q8+qlmrMix4C0YKY1NiexZ
-X-Received: by 2002:a81:431f:0:b0:61a:ed1e:ecd with SMTP id
- 00721157ae682-63fee13c447mr9173527b3.50.1718972116988; Fri, 21 Jun 2024
- 05:15:16 -0700 (PDT)
+Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bce930b8dsm80912885a.102.2024.06.21.05.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 05:15:16 -0700 (PDT)
+Date: Fri, 21 Jun 2024 08:15:15 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Yan Zhai <yan@cloudflare.com>, 
+ netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Florian Westphal <fw@strlen.de>, 
+ Mina Almasry <almasrymina@google.com>, 
+ Abhishek Chauhan <quic_abchauha@quicinc.com>, 
+ David Howells <dhowells@redhat.com>, 
+ Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ David Ahern <dsahern@kernel.org>, 
+ Richard Gobert <richardbgobert@gmail.com>, 
+ Antoine Tenart <atenart@kernel.org>, 
+ Yan Zhai <yan@cloudflare.com>, 
+ Felix Fietkau <nbd@nbd.name>, 
+ Soheil Hassas Yeganeh <soheil@google.com>, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, 
+ =?UTF-8?B?VGhvbWFzIFdlacOfc2NodWg=?= <linux@weissschuh.net>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org
+Message-ID: <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
+In-Reply-To: <b8c183a24285c2ab30c51622f4f9eff8f7a4752f.1718919473.git.yan@cloudflare.com>
+References: <cover.1718919473.git.yan@cloudflare.com>
+ <b8c183a24285c2ab30c51622f4f9eff8f7a4752f.1718919473.git.yan@cloudflare.com>
+Subject: Re: [RFC net-next 1/9] skb: introduce gro_disabled bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240618174831.415583-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240618174831.415583-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 21 Jun 2024 14:15:04 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUR0wuBKx-ugMUyeyOCiCW5pbyes3MFu1Yfd5936ve-0g@mail.gmail.com>
-Message-ID: <CAMuHMdUR0wuBKx-ugMUyeyOCiCW5pbyes3MFu1Yfd5936ve-0g@mail.gmail.com>
-Subject: Re: [PATCH 3/4] pinctrl: renesas: rzg2l: Move RZG2L_SINGLE_PIN
- definition to top of the file
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 18, 2024 at 7:48=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Define `RZG2L_SINGLE_PIN` at the top of the file to clarify its use for
-> dedicated pins for improved readability.
->
-> While at it update the comment for `RZG2L_SINGLE_PIN_PACK` macro and plac=
-e
-> it just above the macro for clarity.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Yan Zhai wrote:
+> Software GRO is currently controlled by a single switch, i.e.
+> 
+>   ethtool -K dev gro on|off
+> 
+> However, this is not always desired. When GRO is enabled, even if the
+> kernel cannot GRO certain traffic, it has to run through the GRO receive
+> handlers with no benefit.
+> 
+> There are also scenarios that turning off GRO is a requirement. For
+> example, our production environment has a scenario that a TC egress hook
+> may add multiple encapsulation headers to forwarded skbs for load
+> balancing and isolation purpose. The encapsulation is implemented via
+> BPF. But the problem arises then: there is no way to properly offload a
+> double-encapsulated packet, since skb only has network_header and
+> inner_network_header to track one layer of encapsulation, but not two.
+> On the other hand, not all the traffic through this device needs double
+> encapsulation. But we have to turn off GRO completely for any ingress
+> device as a result.
+> 
+> Introduce a bit on skb so that GRO engine can be notified to skip GRO on
+> this skb, rather than having to be 0-or-1 for all traffic.
+> 
+> Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> ---
+>  include/linux/netdevice.h |  9 +++++++--
+>  include/linux/skbuff.h    | 10 ++++++++++
+>  net/Kconfig               | 10 ++++++++++
+>  net/core/gro.c            |  2 +-
+>  net/core/gro_cells.c      |  2 +-
+>  net/core/skbuff.c         |  4 ++++
+>  6 files changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index c83b390191d4..2ca0870b1221 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -2415,11 +2415,16 @@ struct net_device {
+>  	((dev)->devlink_port = (port));				\
+>  })
+>  
+> -static inline bool netif_elide_gro(const struct net_device *dev)
+> +static inline bool netif_elide_gro(const struct sk_buff *skb)
+>  {
+> -	if (!(dev->features & NETIF_F_GRO) || dev->xdp_prog)
+> +	if (!(skb->dev->features & NETIF_F_GRO) || skb->dev->xdp_prog)
+>  		return true;
+> +
+> +#ifdef CONFIG_SKB_GRO_CONTROL
+> +	return skb->gro_disabled;
+> +#else
+>  	return false;
+> +#endif
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.11.
+Yet more branches in the hot path.
 
-Gr{oetje,eeting}s,
+Compile time configurability does not help, as that will be
+enabled by distros.
 
-                        Geert
+For a fairly niche use case. Where functionality of GRO already
+works. So just a performance for a very rare case at the cost of a
+regression in the common case. A small regression perhaps, but death
+by a thousand cuts.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+>  }
+>  
+>  #define	NETDEV_ALIGN		32
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index f4cda3fbdb75..48b10ece95b5 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -1008,6 +1008,9 @@ struct sk_buff {
+>  #if IS_ENABLED(CONFIG_IP_SCTP)
+>  	__u8			csum_not_inet:1;
+>  #endif
+> +#ifdef CONFIG_SKB_GRO_CONTROL
+> +	__u8			gro_disabled:1;
+> +#endif
+>  
+>  #if defined(CONFIG_NET_SCHED) || defined(CONFIG_NET_XGRESS)
+>  	__u16			tc_index;	/* traffic control index */
+> @@ -1215,6 +1218,13 @@ static inline bool skb_wifi_acked_valid(const struct sk_buff *skb)
+>  #endif
+>  }
+>  
+> +static inline void skb_disable_gro(struct sk_buff *skb)
+> +{
+> +#ifdef CONFIG_SKB_GRO_CONTROL
+> +	skb->gro_disabled = 1;
+> +#endif
+> +}
+> +
+>  /**
+>   * skb_unref - decrement the skb's reference count
+>   * @skb: buffer
+> diff --git a/net/Kconfig b/net/Kconfig
+> index 9fe65fa26e48..47d1ee92df15 100644
+> --- a/net/Kconfig
+> +++ b/net/Kconfig
+> @@ -289,6 +289,16 @@ config MAX_SKB_FRAGS
+>  	  and in drivers using build_skb().
+>  	  If unsure, say 17.
+>  
+> +config SKB_GRO_CONTROL
+> +	bool "allow disable GRO on per-packet basis"
+> +	default y
+> +	help
+> +	  By default GRO can only be enabled or disabled per network device.
+> +	  This can be cumbersome for certain scenarios.
+> +	  Toggling this option will allow disabling GRO for selected packets,
+> +	  e.g. by XDP programs, so that it is more flexibile.
+> +	  Extra overhead should be minimal.
+> +
+>  config RPS
+>  	bool "Receive packet steering"
+>  	depends on SMP && SYSFS
+> diff --git a/net/core/gro.c b/net/core/gro.c
+> index b3b43de1a650..46232a0d1983 100644
+> --- a/net/core/gro.c
+> +++ b/net/core/gro.c
+> @@ -476,7 +476,7 @@ static enum gro_result dev_gro_receive(struct napi_struct *napi, struct sk_buff
+>  	enum gro_result ret;
+>  	int same_flow;
+>  
+> -	if (netif_elide_gro(skb->dev))
+> +	if (netif_elide_gro(skb))
+>  		goto normal;
+>  
+>  	gro_list_prepare(&gro_list->list, skb);
+> diff --git a/net/core/gro_cells.c b/net/core/gro_cells.c
+> index ff8e5b64bf6b..1bf15783300f 100644
+> --- a/net/core/gro_cells.c
+> +++ b/net/core/gro_cells.c
+> @@ -20,7 +20,7 @@ int gro_cells_receive(struct gro_cells *gcells, struct sk_buff *skb)
+>  	if (unlikely(!(dev->flags & IFF_UP)))
+>  		goto drop;
+>  
+> -	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(dev)) {
+> +	if (!gcells->cells || skb_cloned(skb) || netif_elide_gro(skb)) {
+>  		res = netif_rx(skb);
+>  		goto unlock;
+>  	}
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index 2315c088e91d..82bd297921c1 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -6030,6 +6030,10 @@ void skb_scrub_packet(struct sk_buff *skb, bool xnet)
+>  	ipvs_reset(skb);
+>  	skb->mark = 0;
+>  	skb_clear_tstamp(skb);
+> +#ifdef CONFIG_SKB_GRO_CONTROL
+> +	/* hand back GRO control to next netns */
+> +	skb->gro_disabled = 0;
+> +#endif
+>  }
+>  EXPORT_SYMBOL_GPL(skb_scrub_packet);
+>  
+> -- 
+> 2.30.2
+> 
+> 
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+
