@@ -1,46 +1,46 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2040.outbound.protection.outlook.com [40.107.14.40])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2068.outbound.protection.outlook.com [40.107.8.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8A416EC0A;
-	Fri, 21 Jun 2024 07:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2C516F0F9;
+	Fri, 21 Jun 2024 07:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718956386; cv=fail; b=RPANKhhvgxvcyZSb43x12zgD59QR26Mz2PTSWCu0ugfs79uuBbm9o4RUZDu9/rktloFL6MmExj7nGTPSTwGZ9CFs9w1HzwsMptHgvP0YP12KnkztPu7KSSbhukUeodfXZPlJSFCKXBUtBRIMYve7Y4pgBxsiFRxrhiG5btJcGb0=
+	t=1718956395; cv=fail; b=oPwSqmtbEw7lkaYlwcTVkCrtSftmOMjM9ZFcXk82OWn7YEpDsXVtewtRxui3N/5CnM+67oafs47NF8C/4PJZfwYTpPo3DGvRc6COVHzZCum+aug6T57N1AzECqx3M6griL0uq1ussqEjlrAR2E/bGlrWyI9AQj/qlUWLNQD030I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718956386; c=relaxed/simple;
-	bh=oeA7LJLYKQE+Z0d8djSWISwJbziMN1SjpgnuFMUvxKU=;
+	s=arc-20240116; t=1718956395; c=relaxed/simple;
+	bh=3dplxlyXW1Zxy4YiHEztF/HjtUnRFoQ00VkskttUzp0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VDLyN6IEc2LTl68/2k7vnEL6I+uqLF1lb28UfmD7THtszI3XwwYnettGMcwIxjj94gVNjVMH/UE4852R8ITpm8+N2qnmUtSnB+JkF9+E+2G9WMPG6bYppKR1lCsNvvsGjVDk0kDc5oNaEIl516KEfsSAhAEr0+ASS+l11CXADHk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=j0H9aq/x; arc=fail smtp.client-ip=40.107.14.40
+	 Content-Type:MIME-Version; b=oolwbWEkUh48fBftZOn8+mR9rORipqhNA5IjLGlZTQUj8jTtfgUoKf30zezo+swqfBO0ozU6qmQYoh6gTvImEVMnbpkC0CAzUydkoAe09uPcSWDJNGQqEucJCD86GwekR3lpl2vwDOEzBuCBPKFzROPOEesA9O5RSQoI8Ff76tw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=UkAwWe33; arc=fail smtp.client-ip=40.107.8.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="j0H9aq/x"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UkAwWe33"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bZ0nd7NfuWTP6A3lcqpduo55aswZXUtdaVu4ATLXC92VMtKBHB3aF4v1CnX4PNemRDImA2lvcZYBiTDEtgNpql94G3RrvPoHaAJoHjaoNAdQxUfWak/5JcIrjAwTsYKaz4niBq38cub96u5fihLqIVZZ6fX0OsPs87ZO4D0C8k/HsrLYh9FmSllWcBjSgZOcK15TFd1fK3VsVKNNDhvtKk4BlI5Pjswjz4QTw5fJhHpoYkReh/rZmXH38cE2WlY92AjzGyEmAQ8fqMMMk7EHnbFt5hwxnwA8fcVXkGVQhT/JjsKWs7QezdAskWBdFNZJxX6lzv7hqIxEthHBj79UWQ==
+ b=cO1HvPKybj4Lhm1QLuYtD5874AQRE/zsMzOX6D8s9+LHd/rVMsSZRTF6qkID6ICly3YsT/N3S/cWZLtNqxI7Doi2FsqkWHwXzlMU4RANPPJgXAj2bzWU5T9pIuCPDJgoY2HKF2UKym9q1dAuzGjgF6xseY7IHTC6lr7BRQQ/JjCEPWlOVwfhinjxgciw6ZXnjrp13r7uCFaV1ikgjUgG18Oe+AXgICl5enzU9fMUZc7mxfeVzlYE+EPL3WnYVFA4kyL6qW3KY1WWJy/H/coaNWK7csqsryA+bG+lRTAh9/QBOWihK5glL6BCybnF1v+QIj5uA+MtBg731bYQmz5KNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QCuDEjBJYICiI2qFyFPOB3rD/eWQwt1l8bCybjVAO6w=;
- b=mK7BzaUpihuOve1kAuiSuJRyeIPvnmy1v2rb9f1mKVTIL6Hhgk8q5IkC1xi03dCA0wn8csHTJ8mRt1LhHP7QqDXUVG3hZSWXYCRoiz0x2T9AjeGhQQ5SdZaEEzj90nBZi7oqx6D0e+vQwWw7AN9EMliDYps/zgJjI/BPANlF3jHGSN83IcTmTHxC5RuZ5tAlKmwuxBLdhSgL283rf3fSo/1vaAd1qJSTiP4VzpOy5ZHyvDFlqtPU7akZb4Sfn1ml/i4KqNtcutqoaS2C+ACBC1Q7lepKZLl6azoUrVszhTyiCCqdylslefO/g63S1kCc8saj67+oZNVlDgalUfMGyA==
+ bh=kO0oyfsuJoweQWi578zh5DQ2EF8aGbVqEv8amPR9EFw=;
+ b=WeU+LL6bqrp6xqlisHjNYzjQzW5jd7rlKrpLigbHJqSaZy43LnBR92rSjvr9zkmS3zb4IiJNG3ohTK4CtnlTO2LqHSwbWGU21SDaYQL2CZEiW76OfCpDcOQlG7O3ENoFnSf+PdsiwF2hppq/WzsdPXM1G9XYZX2pttOe/tr5o+qiId39JUMfLnRXKXY6RVCSQlF7MGajhp7bzfpTt8Gi3HcOQzAXtNWwYlPYi3QTa4NiPJRTOZlbKDGtA36E1Vjox+J2pDll2uf7JwfqPGYyXq9jGYXvDY14caw9YebJMYeYQduuU0Z0frL/ipdlzAGqeYV/fsKVbvY+V3u+ofBmgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QCuDEjBJYICiI2qFyFPOB3rD/eWQwt1l8bCybjVAO6w=;
- b=j0H9aq/xDELs7NBJsTGN4XCPeXmBr+CQIMU9PsoBVMvU3Ip3mVOkOcxkLhj3dEn9oIZkp98hwD8jyF9urojUD8wVUdLkRI5hN7EEfXvGR6OwD3cSvEYg3efinc+0aANGBuqOvZsU97w9r17UY2q39HjA/urY/362S+M4hXBLqFE=
+ bh=kO0oyfsuJoweQWi578zh5DQ2EF8aGbVqEv8amPR9EFw=;
+ b=UkAwWe33AQnQVDtpUx5UMy+zN9nB1qtku+j5cZpKauOPYMeZIqjsZcGjd0AicXdT5blnZpQF9qAMYIFksNs/LQ1YPI8lkO1Ep1JyFsSj43IsQGy6mUIk0jYD53twghT6vdK0qMU5shxxVwi0VUN4j9RXpHZfH9iCCrPoamX8WjY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
- by DB9PR04MB9789.eurprd04.prod.outlook.com (2603:10a6:10:4ed::8) with
+ by AS8PR04MB8135.eurprd04.prod.outlook.com (2603:10a6:20b:3b0::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
- 2024 07:52:59 +0000
+ 2024 07:53:11 +0000
 Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
  ([fe80::f950:3bb6:6848:2257]) by PA4PR04MB9638.eurprd04.prod.outlook.com
  ([fe80::f950:3bb6:6848:2257%4]) with mapi id 15.20.7677.030; Fri, 21 Jun 2024
- 07:52:59 +0000
+ 07:53:11 +0000
 From: David Lin <yu-hao.lin@nxp.com>
 To: linux-wireless@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc: linux-kernel@vger.kernel.org,
 	francesco@dolcini.it,
 	tsung-hsien.hsieh@nxp.com,
 	David Lin <yu-hao.lin@nxp.com>
-Subject: [PATCH 08/43] wifi: nxpwifi: add 11n_rxreorder.c
-Date: Fri, 21 Jun 2024 15:51:33 +0800
-Message-Id: <20240621075208.513497-9-yu-hao.lin@nxp.com>
+Subject: [PATCH 11/43] wifi: nxpwifi: add cfg80211.h
+Date: Fri, 21 Jun 2024 15:51:36 +0800
+Message-Id: <20240621075208.513497-12-yu-hao.lin@nxp.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240621075208.513497-1-yu-hao.lin@nxp.com>
 References: <20240621075208.513497-1-yu-hao.lin@nxp.com>
@@ -67,1020 +67,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9638:EE_|DB9PR04MB9789:EE_
-X-MS-Office365-Filtering-Correlation-Id: cce7e190-4839-4eef-a0fe-08dc91c72a9c
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9638:EE_|AS8PR04MB8135:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6090dcfa-c2e5-4d66-f139-08dc91c73259
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|1800799021|52116011|376011|366013|38350700011;
+	BCL:0;ARA:13230037|52116011|376011|1800799021|366013|38350700011;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nFVhPjrIDIR4U6YeDDr2wALpmvlXrUMYorA4+g5uFC77UpvYTVa39n2Xrk+e?=
- =?us-ascii?Q?YUpCmUVsJ1g+Xuptfr/6SCSjaA5RiPWVBuV0fa+x7FhU93eQJTaHw352/ECI?=
- =?us-ascii?Q?fxPhwMXQ/LA5ddbivNa4VAWDlYZfGTFsx4ivSB16W4SrLj/7Un/B9j5rISm6?=
- =?us-ascii?Q?CNm2hGY2uaKKFfPqNLCpUrncWghlAXwnJ6XgIc5B4xyLNskXg1TbQgSfsr2e?=
- =?us-ascii?Q?jdyDTq5AltZkkk2jwz9vIDXClUoSWS/qnMBtSlY1kyvvKTOq04in3ICrNWRQ?=
- =?us-ascii?Q?e2A7Gs4YTr35HUHBe7Tk7YyJXuziLwPqNeh4rh+f8z9zfADvqFzTlOMU6Vk1?=
- =?us-ascii?Q?jrBszJrTzfE9PsUzvuUdChq+nEXyxIJvxXzmzzvGfkVauuTrBB3cOtrxBTJO?=
- =?us-ascii?Q?ShNpdknW26zvo/01u+v2EKOh4AC3XkfVPJlFdOPJP5aGWZB8TE4I6CE6zlmT?=
- =?us-ascii?Q?kvpOKnH6sS9wc34eNCJGBXagEnOjKZoz5nWI774FSR00kav0hwRJME8CmQA7?=
- =?us-ascii?Q?dvkyPB9rQEd/7jzHhc+5s8828B/jw+byrB17Ez1QI95E3qcjGs9AWwFsmw9p?=
- =?us-ascii?Q?X66wOeYdPPMvVdl0xt4XyfxBDjWViceVGaKXW7zLQ8fwzjh44MKwqzj5AaP7?=
- =?us-ascii?Q?cF5jzOkYGy3GON8lqQJbuy1nzWE7L3ZJfMuADLzrFgNYuG+dna3wtwn3cZTs?=
- =?us-ascii?Q?QKYx9r29VDEZTdvA9XZ4Q6hbsV501adu11fkcMKFEqn/jt3HLOKkwZ6CULM6?=
- =?us-ascii?Q?a90VgiKNzrb42T4e5lnDFCihulXTsrRwzYgy8ut9yh3OmWLfFZqHi++lziAp?=
- =?us-ascii?Q?qqyu6Kxu6w+1IlMEtSlEOuv0PahGIRrh5TNtBY0yCwHdyQ2+o1kbjIpJHd7c?=
- =?us-ascii?Q?T5mQcWX4yl9ofhQF2l/EGo80m88mUjPM7wh26oSZeW9ymWaSaLsW2kY8gdfL?=
- =?us-ascii?Q?hgNiSzNvXPEsajhXW1FW/IvJM5mar4tXmr4l2xTpzdNDg+oE9mGD3N6Bearo?=
- =?us-ascii?Q?3D2g2XJR2/9rxXXexnciloIU1CtC9z0cM9OxBzDzcH2c6c23Yd4wcLhRp7q3?=
- =?us-ascii?Q?amc6nrgzHE0kh7BgPListBNGQQe8+Y6sIO78Jqahe42v86amJgNNdE9GN49/?=
- =?us-ascii?Q?63S4NgCCfRZS30RtliHHMY8dgFLGC8oF4Xdt5Ao9H9eclk+q87WuVZVZGuHf?=
- =?us-ascii?Q?NYb9IrVUvleSTGoUDNaIu8gVVbzyf7EgY02etTEvKCkOdefmE8D84iEebZUv?=
- =?us-ascii?Q?oxQcfczgiaxQJ1WY1UcsmgjSftTgAzbJTG6JYVkUmtoAAsLsNj0XvW7B8TpZ?=
- =?us-ascii?Q?2CONrCQpb3ZMGi/Ef6sEpekbaHHDQKNTVyq5QurZaNMDhfnK4207qW+lZsYN?=
- =?us-ascii?Q?3qYtfxY=3D?=
+	=?us-ascii?Q?gIscUlDGZRQ81VjOpuF1qa+VI3WljGnyhbRXiwbNbyP7KN47lAnWoIXk0s1d?=
+ =?us-ascii?Q?brm/bK5JYXnRLVsOCYWvWpQTmkiWjCxNEADypEx3z4uw9aiWqMYpTOm4wM8Z?=
+ =?us-ascii?Q?s81dFmiQ3rK/U/Kd4+kekLzoNbwgYNqpQ6az6lJKNYX1/PesLx83K6Lj2oPs?=
+ =?us-ascii?Q?ba4f2XkZ3Uj8mcgxGh4KiTowdzWh2+YbYNodhvxvolFXNZlea2m20zrJiMFW?=
+ =?us-ascii?Q?b1QCer2ZJKfMX7ut1fysIGZZvkekAeXbBSBlz7YI6xnYkHIGuH9cmNxU6Ld3?=
+ =?us-ascii?Q?8lE2ns0JaB2d7amgeESyKqmWsFQA+7ODaJlwMuQE5FRRZ9Y7UiBFFLPERaaC?=
+ =?us-ascii?Q?wiA7tyKohVTD9CnRGyvgO4My/f8IYfBar4gmRRVBlyP8C2Yt3ulubM04Kg0r?=
+ =?us-ascii?Q?f6Y7gOFLdO/xJBa4L6JBFjdrGsFp60121tS6ldRp64XmizkEor/08Lo0lURd?=
+ =?us-ascii?Q?Ta4lIK56Td5grrYtvfJHh1fLvJICg1/5S2kfVkZZK1AGR1n1pyoOFX4EvBhV?=
+ =?us-ascii?Q?4R/gt7FBtFNo5Amr6LKq1IgDAfcObrj/jbGArRWgDpMzUVQM7qGQOkoG/ckX?=
+ =?us-ascii?Q?Ur8xUgJ3HezKgbuWeHva71XzqaJETeSWo/04cWmuBx2Hf/KJikYDEhjJcul1?=
+ =?us-ascii?Q?+aNAZO1LDrxCeIeR6SUdojXl+uBSdsN2jqGVU2mRKtBDAuA6LnU3AMkY5UGP?=
+ =?us-ascii?Q?5BQMmVXwR+sJekGSpi0mKPRTR5akcd6J5KSNjsO6LsEI5Tq89gagLnxiA535?=
+ =?us-ascii?Q?gIgC8iGPVbep+XNObLVdSmRFSzrHIUaeNode9YgVSLRGGQLtCpUrd9knq0ng?=
+ =?us-ascii?Q?40wQ1ZJwqrc1KYV/mKn7J57L5cvBWPG7HWsQlKHAch4R9SHa6U8Cj4iE2hu+?=
+ =?us-ascii?Q?7fnPfmCbAbMAh5uBoFXPdkf7tMXvN0VPuHu1UYN7nkXAHanwVnfOwrr0Bo2s?=
+ =?us-ascii?Q?zcmOAhiN0Fbqc5X8S98mrr1bQ6bdaq1BZ/G7gp22doBiGTQGKLf5P9cruSPb?=
+ =?us-ascii?Q?4vYalpZKWt2KVN7DD+rXXRaLf/W2HOGO5p3KAjOt4AlDb7oPiv8mjcituTWz?=
+ =?us-ascii?Q?GYn3QIA0r0IDQNNEHDOzmfA1/19gr16Pt98Gofigo8xkJ2Ht9IcNcr/735IG?=
+ =?us-ascii?Q?XRJCnKDG081Ylui7edXdOdhZGFOc51tFLdoA/smJK/bZ1+3TsH5WDWXZRu2D?=
+ =?us-ascii?Q?gNVnFx3YNZLDQQwqW+VtHcpC552tbr1xjRfUPF4PaRH+m/fkh2azbuB5VEd0?=
+ =?us-ascii?Q?xxk7EyMtofKJal0kpPV/Dhlqz9FkKzxq7W+eyfqGgMq3jO027K9jZayYN95e?=
+ =?us-ascii?Q?pbPhLcry3AO0e84yH4DrK9d9vaTQTGmnrTbhv1Vv1fc6ZIm/jsHS1btoaVOb?=
+ =?us-ascii?Q?5kbLWXU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(52116011)(376011)(366013)(38350700011);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(52116011)(376011)(1800799021)(366013)(38350700011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fxKc/YBLCM61qZej7r2b0zYJryzELtKCWzmqq07fS8x7tEReJ8YrqJwNDS3t?=
- =?us-ascii?Q?U0jxrbtORtx+Wg52nKNocOf4uP93mBISTY9rMIlvLNPprbhh3RJNszQYM0I2?=
- =?us-ascii?Q?WGYfFAELJmj+nwo1zg3VuE99fGGlnge9RQ79MniEOSkz2RIKiL3aERVRTZMC?=
- =?us-ascii?Q?3+p1jdorBYyEQRAU2LLH/smvd7FXGol4lSYBlyjW6CrtI3UZrffgnmbxqGOu?=
- =?us-ascii?Q?bMyxEShe8AqTct6eo9cY4iSkT/NQ0vkSrGqZJ31EK6QbO+xu+Tw1DmKrZXR9?=
- =?us-ascii?Q?0zLR7kg9s/VP/eHOYPfNnRrqYxjTl5AMf9qMVbPykJOjq1mcHpey4DTQM2nr?=
- =?us-ascii?Q?zb6EyGNRzgUmm7n4kbcicoRuO/1/5EA/SkFPSKHwBVRn5xYyMQQH6dg9r8eI?=
- =?us-ascii?Q?Ta/HM42Gpy4+czGFz8kcnM+/NWEQ+CAjjZuNb6mIts9YMLGd9H9cLlk1VmIh?=
- =?us-ascii?Q?ZxqdQHTNDdOrTKrEWOB4SpfFNz8bRq1K3BndFZE6NQGkLdsYk+D6A9rqW/6m?=
- =?us-ascii?Q?UTLYknNKdhVGCA9D/XSUjYOf234DSknbE1d+mcHNADY8TVUU3FdlD008iuZx?=
- =?us-ascii?Q?t3DvSVuNlIzdFuWdANBMTKMdPPUTn+AMz1Cs9Yt/PWJtnuf3JLFS29Nzp8/t?=
- =?us-ascii?Q?8RsHjw63CqpL9IkGqav9BBRciDQoZ5Xr9E6maeaXXm6NdDOyAO/nv54ImtlO?=
- =?us-ascii?Q?JitaqBsPwqEWtcNsQm+SNfzxv8pzhZ95izBpiZwwIQA18xH9sZMQJaT0dSh3?=
- =?us-ascii?Q?lmYiyMW6a57nZb4Hjbe0RYUGeF82hpiGmo8a5L38oPm0l79F/Wri02lLW2mU?=
- =?us-ascii?Q?w2Mcn6tYb/rb1pbKejNyk1Dhiv04ZwOLibd9fdyBN1WEuDrxIXqHjTTp3h6l?=
- =?us-ascii?Q?W8IRmECyDgFRwRat3ykIWGG1EXz8/klNtStX3dNH8zO5pBE7O5GZL/yzodwb?=
- =?us-ascii?Q?7MjTNVlsT+VraOHQ5IwTecobRXc6fA4nf7oKuNcSNz/mqanRlrRMbKx49Add?=
- =?us-ascii?Q?u5flvnD7imAMBYRAkGmO0XiSo9eGG0d9y3J+A6P/VBlXTrWPtBKW63UIPFDB?=
- =?us-ascii?Q?SCMbEJjOiGQCqdCcwzKCL01X+8hvcxIQOuV+1dqjBnQMMv/8tJejFV2dfp8t?=
- =?us-ascii?Q?VDrpt6Qaiw/Cm4N8qmoFtofuBewlR6o/DX9ND3ILWfKBeJdPX2lVKkZOn5cc?=
- =?us-ascii?Q?h+BgXJKvOlYiwNeQpYzzWal+Xp9GZ7o7vsnvqfD9XgPVoMTHASyLzukMvRmr?=
- =?us-ascii?Q?Xu/gQvGhym7Kau0jyD5Udh9ZV7EXYS+sMActCds6F99b0gNnMQgBSeCpOjjv?=
- =?us-ascii?Q?vbACal5tbkg4I0bSJnnhb3EPHtcnmyvWyXI1sdXyeSzVTQWAcLL0P2Djcjf/?=
- =?us-ascii?Q?r5sKAbSv3hO9K+KmryB446+fA7QOnTNBtg5D9uhnbsJHllDVjT4rCGPLj71u?=
- =?us-ascii?Q?q2SqBC4KJarchvTsd1a4JemiaI5vHVtIWbZT/tdSORiduy6G26767GQyUdUk?=
- =?us-ascii?Q?aMNYr5LwHHcuIXqHNHiwrliYxHG5TXm0D3LU5xs+rhPU0reNsgTDcWMVG15v?=
- =?us-ascii?Q?asPEf6fs1GtYJGRYr/tznR4RKx0hdq3HLMmIbvFw?=
+	=?us-ascii?Q?L5hY2wsE3StsnZkYjDHbMYD5uQFkjyWQG0YbTweoYDYlW2C5p+HpMNeZaQpL?=
+ =?us-ascii?Q?NNQTe+AszuO4307TNAq377yqM/J0v0NPWzpDSN+XS0dWh7Bx5fN5cpNqmJY9?=
+ =?us-ascii?Q?fXInB6Svey5nf7JvyFKwgTxLVm0PdE1MXdrUCTkGiIqcGYxsZPfsJrVCqTAa?=
+ =?us-ascii?Q?IGDD6Et4D+c/a6fzv3GE8d9eV4lXch+vEeB65s4aAKsDBUp5XoHEIpEztIn+?=
+ =?us-ascii?Q?LltJF7A7ajYIFDAep/tAhDzO19G9ER5nCJfuylVtgTAUXIojDoJQhRpnBq6l?=
+ =?us-ascii?Q?6on5eQJqBa2qwKoZn5n3Xbst3FWXzV8sLiq6XyZ1telNp1Qp8hxJ6kfcyU7g?=
+ =?us-ascii?Q?v8cStNYUBov6yMTXkg+SiaW4f1gjH9Pei4kCbH8jlyBQX8ZG5eoije9i3Tqu?=
+ =?us-ascii?Q?eBtnvimqTVUoo+GvRZVXuSxV/SpGbVCbyPTIRB3oFsvYwnXF5ejaJbmXWbAw?=
+ =?us-ascii?Q?speyKSOP83ZDvvrrx05Ibgmc2Ca8AjcwX0OFVcpnvZk3YsB8dXjjicznqL+6?=
+ =?us-ascii?Q?FdnKanlEmy6cXOFYEgVGP56HxtM6fJGtyocUeuLw8e/MlPOafHdlpqrURxBc?=
+ =?us-ascii?Q?a11IaIjNgFea7wZ7+g7B1gBT8frSpdMqmdP4e82HC5QIuEsMTYNB2Bx0PxpQ?=
+ =?us-ascii?Q?/S0uIqj3yzgXkPgtTs84LiV98q5wqrkc5zWXpxxdiRvtd84rQmPBhSoDeWGQ?=
+ =?us-ascii?Q?ipAaBT2jO6SCFivF74BWP9BcOpK1h8ABvfhECauDG5hxbVldbf0BR06W2TeT?=
+ =?us-ascii?Q?zotZdJElmlc/eesa2kZlVMwp6l9Gz5sbLiFZa7uTkT5G3EpLrWdmTzFiWzJq?=
+ =?us-ascii?Q?lWw2pTShYTXO1DDXVrtpMEMGfwvXMFQ41nk1gvYr3cUHjbbpCho8bPQpbG2q?=
+ =?us-ascii?Q?VugvyriwGDy1gb0O4bxkMk2kl8PCHByEIqO/9V+kpF6dO5MBT2Pl56dOAhbK?=
+ =?us-ascii?Q?xGvCv/iEbjaYjS4P2QT0YJYuCMuEWAWTbctkFdEPYHw/9P5Z/IKFAhvpP61Z?=
+ =?us-ascii?Q?JuQXp1c0okmx3Q9SUo0WWgt8dEo3ixf9Vdfqx3oYhbowEkuxTjK+7slQjS6+?=
+ =?us-ascii?Q?x6yolHsiZ8eD+zSABOAc1iMARzbcSKxz5maJ8WnS6k5jYx+TGyGHoFp0cGs/?=
+ =?us-ascii?Q?Ih6WAoba8CwVe6bSic83RfwYq9YgMQOeEIL/ZUDggdPE8HOvWc664/gCx+P0?=
+ =?us-ascii?Q?oUar7YHs7yWcvjEaYqS2EmK/cvvjVDZfnTJmT+Eq+mWbYKlJ1pt2zR6L2nQy?=
+ =?us-ascii?Q?zvGePe2nIwtQ5fKrLzetXgO7H5JNh3dtwmt3Jogrq0f48w9k8PUL8SNWe2No?=
+ =?us-ascii?Q?N0D3QjRMAK5yMt8f6D9ojsNope8rWjK8OX3cN88Rj2fbQyD3EFBo/a+jcr6Y?=
+ =?us-ascii?Q?BiRCE3wvL4u4KAnDUaDcpV0MXxMwgvDsTLQRyjhvw2N25iIBrYFwsjWmO7EG?=
+ =?us-ascii?Q?lYjuvYWBqq83asKqaffkobyIS6O7dAUdHT4DNKKJi+pkt5DjmezoDkmYJVgN?=
+ =?us-ascii?Q?Bz0J+yIrWMcgCu5Xa1y3cckSTmVmjTY1hPMZm56jU5whidMd6oibfyzJ1KdT?=
+ =?us-ascii?Q?QEr72XrMKhBhgApjp2eD4X+7KmVwl3o0D7dw46qg?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cce7e190-4839-4eef-a0fe-08dc91c72a9c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6090dcfa-c2e5-4d66-f139-08dc91c73259
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 07:52:59.4530
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 07:53:11.2284
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NUMIosdPW8qRZtnu4GiQp2iDqQdi+VRKUVz/xFo2WZ5gM5xBbbP9iNl/+Zumb3bWCmbUd7cs8bV5AcfQYvn7zg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9789
+X-MS-Exchange-CrossTenant-UserPrincipalName: zkRIHgbgwhK9Nan4K+jZlUptqwP6vrTZVeC3DOP6FVwS97c7+iJDrM4FCwbFMbWOGDkXNMoKyPK8LO3CRzodbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8135
 
 Signed-off-by: David Lin <yu-hao.lin@nxp.com>
 ---
- .../net/wireless/nxp/nxpwifi/11n_rxreorder.c  | 928 ++++++++++++++++++
- 1 file changed, 928 insertions(+)
- create mode 100644 drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c
+ drivers/net/wireless/nxp/nxpwifi/cfg80211.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 drivers/net/wireless/nxp/nxpwifi/cfg80211.h
 
-diff --git a/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c b/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c
+diff --git a/drivers/net/wireless/nxp/nxpwifi/cfg80211.h b/drivers/net/wireless/nxp/nxpwifi/cfg80211.h
 new file mode 100644
-index 000000000000..20faab3d6994
+index 000000000000..086ec9ca4cc9
 --- /dev/null
-+++ b/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c
-@@ -0,0 +1,928 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/net/wireless/nxp/nxpwifi/cfg80211.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
-+ * NXP Wireless LAN device driver: 802.11n RX Re-ordering
++ * NXP Wireless LAN device driver: CFG80211
 + *
 + * Copyright 2011-2024 NXP
 + */
 +
-+#include "decl.h"
-+#include "ioctl.h"
-+#include "util.h"
-+#include "fw.h"
++#ifndef __NXPWIFI_CFG80211__
++#define __NXPWIFI_CFG80211__
++
 +#include "main.h"
-+#include "cmdevt.h"
-+#include "wmm.h"
-+#include "11n.h"
-+#include "11n_rxreorder.h"
 +
-+/* This function will dispatch amsdu packet and forward it to kernel/upper
-+ * layer.
-+ */
-+static int nxpwifi_11n_dispatch_amsdu_pkt(struct nxpwifi_private *priv,
-+					  struct sk_buff *skb)
-+{
-+	struct rxpd *local_rx_pd = (struct rxpd *)(skb->data);
-+	int ret;
++int nxpwifi_register_cfg80211(struct nxpwifi_adapter *adapter);
 +
-+	if (le16_to_cpu(local_rx_pd->rx_pkt_type) == PKT_TYPE_AMSDU) {
-+		struct sk_buff_head list;
-+		struct sk_buff *rx_skb;
++int nxpwifi_cfg80211_change_beacon_data(struct wiphy *wiphy,
++					struct net_device *dev,
++					struct cfg80211_beacon_data *data);
 +
-+		__skb_queue_head_init(&list);
-+
-+		skb_pull(skb, le16_to_cpu(local_rx_pd->rx_pkt_offset));
-+		skb_trim(skb, le16_to_cpu(local_rx_pd->rx_pkt_length));
-+
-+		ieee80211_amsdu_to_8023s(skb, &list, priv->curr_addr,
-+					 priv->wdev.iftype, 0, NULL, NULL, false);
-+
-+		while (!skb_queue_empty(&list)) {
-+			struct rx_packet_hdr *rx_hdr;
-+
-+			rx_skb = __skb_dequeue(&list);
-+			rx_hdr = (struct rx_packet_hdr *)rx_skb->data;
-+
-+			if (priv->bss_role == NXPWIFI_BSS_ROLE_UAP)
-+				ret = nxpwifi_uap_recv_packet(priv, rx_skb);
-+			else
-+				ret = nxpwifi_recv_packet(priv, rx_skb);
-+			if (ret == -1)
-+				nxpwifi_dbg(priv->adapter, ERROR,
-+					    "Rx of A-MSDU failed");
-+		}
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
-+/* This function will process the rx packet and forward it to kernel/upper
-+ * layer.
-+ */
-+static int nxpwifi_11n_dispatch_pkt(struct nxpwifi_private *priv,
-+				    struct sk_buff *payload)
-+{
-+	int ret;
-+
-+	if (!payload) {
-+		nxpwifi_dbg(priv->adapter, INFO, "info: fw drop data\n");
-+		return 0;
-+	}
-+
-+	ret = nxpwifi_11n_dispatch_amsdu_pkt(priv, payload);
-+	if (!ret)
-+		return 0;
-+
-+	if (priv->bss_role == NXPWIFI_BSS_ROLE_UAP)
-+		return nxpwifi_handle_uap_rx_forward(priv, payload);
-+
-+	return nxpwifi_process_rx_packet(priv, payload);
-+}
-+
-+/* This function dispatches all packets in the Rx reorder table until the
-+ * start window.
-+ *
-+ * There could be holes in the buffer, which are skipped by the function.
-+ * Since the buffer is linear, the function uses rotation to simulate
-+ * circular buffer.
-+ */
-+static void
-+nxpwifi_11n_dispatch_pkt_until_start_win(struct nxpwifi_private *priv,
-+					 struct nxpwifi_rx_reorder_tbl *tbl,
-+					 int start_win)
-+{
-+	struct sk_buff_head list;
-+	struct sk_buff *skb;
-+	int pkt_to_send, i;
-+
-+	__skb_queue_head_init(&list);
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	pkt_to_send = (start_win > tbl->start_win) ?
-+		      min((start_win - tbl->start_win), tbl->win_size) :
-+		      tbl->win_size;
-+
-+	for (i = 0; i < pkt_to_send; ++i) {
-+		if (tbl->rx_reorder_ptr[i]) {
-+			skb = tbl->rx_reorder_ptr[i];
-+			__skb_queue_tail(&list, skb);
-+			tbl->rx_reorder_ptr[i] = NULL;
-+		}
-+	}
-+
-+	/* We don't have a circular buffer, hence use rotation to simulate
-+	 * circular buffer
-+	 */
-+	for (i = 0; i < tbl->win_size - pkt_to_send; ++i) {
-+		tbl->rx_reorder_ptr[i] = tbl->rx_reorder_ptr[pkt_to_send + i];
-+		tbl->rx_reorder_ptr[pkt_to_send + i] = NULL;
-+	}
-+
-+	tbl->start_win = start_win;
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	while ((skb = __skb_dequeue(&list)))
-+		nxpwifi_11n_dispatch_pkt(priv, skb);
-+}
-+
-+/* This function dispatches all packets in the Rx reorder table until
-+ * a hole is found.
-+ *
-+ * The start window is adjusted automatically when a hole is located.
-+ * Since the buffer is linear, the function uses rotation to simulate
-+ * circular buffer.
-+ */
-+static void
-+nxpwifi_11n_scan_and_dispatch(struct nxpwifi_private *priv,
-+			      struct nxpwifi_rx_reorder_tbl *tbl)
-+{
-+	struct sk_buff_head list;
-+	struct sk_buff *skb;
-+	int i, j, xchg;
-+
-+	__skb_queue_head_init(&list);
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	for (i = 0; i < tbl->win_size; ++i) {
-+		if (!tbl->rx_reorder_ptr[i])
-+			break;
-+		skb = tbl->rx_reorder_ptr[i];
-+		__skb_queue_tail(&list, skb);
-+		tbl->rx_reorder_ptr[i] = NULL;
-+	}
-+
-+	/* We don't have a circular buffer, hence use rotation to simulate
-+	 * circular buffer
-+	 */
-+	if (i > 0) {
-+		xchg = tbl->win_size - i;
-+		for (j = 0; j < xchg; ++j) {
-+			tbl->rx_reorder_ptr[j] = tbl->rx_reorder_ptr[i + j];
-+			tbl->rx_reorder_ptr[i + j] = NULL;
-+		}
-+	}
-+	tbl->start_win = (tbl->start_win + i) & (MAX_TID_VALUE - 1);
-+
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	while ((skb = __skb_dequeue(&list)))
-+		nxpwifi_11n_dispatch_pkt(priv, skb);
-+}
-+
-+/* This function deletes the Rx reorder table and frees the memory.
-+ *
-+ * The function stops the associated timer and dispatches all the
-+ * pending packets in the Rx reorder table before deletion.
-+ */
-+static void
-+nxpwifi_del_rx_reorder_entry(struct nxpwifi_private *priv,
-+			     struct nxpwifi_rx_reorder_tbl *tbl)
-+{
-+	int start_win;
-+
-+	if (!tbl)
-+		return;
-+
-+	spin_lock_bh(&priv->adapter->rx_proc_lock);
-+	priv->adapter->rx_locked = true;
-+	if (priv->adapter->rx_processing) {
-+		spin_unlock_bh(&priv->adapter->rx_proc_lock);
-+		flush_workqueue(priv->adapter->rx_workqueue);
-+	} else {
-+		spin_unlock_bh(&priv->adapter->rx_proc_lock);
-+	}
-+
-+	start_win = (tbl->start_win + tbl->win_size) & (MAX_TID_VALUE - 1);
-+	nxpwifi_11n_dispatch_pkt_until_start_win(priv, tbl, start_win);
-+
-+	del_timer_sync(&tbl->timer_context.timer);
-+	tbl->timer_context.timer_is_set = false;
-+
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	list_del(&tbl->list);
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	kfree(tbl->rx_reorder_ptr);
-+	kfree(tbl);
-+
-+	spin_lock_bh(&priv->adapter->rx_proc_lock);
-+	priv->adapter->rx_locked = false;
-+	spin_unlock_bh(&priv->adapter->rx_proc_lock);
-+}
-+
-+/* This function returns the pointer to an entry in Rx reordering
-+ * table which matches the given TA/TID pair.
-+ */
-+struct nxpwifi_rx_reorder_tbl *
-+nxpwifi_11n_get_rx_reorder_tbl(struct nxpwifi_private *priv, int tid, u8 *ta)
-+{
-+	struct nxpwifi_rx_reorder_tbl *tbl;
-+
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	list_for_each_entry(tbl, &priv->rx_reorder_tbl_ptr, list) {
-+		if (!memcmp(tbl->ta, ta, ETH_ALEN) && tbl->tid == tid) {
-+			spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+			return tbl;
-+		}
-+	}
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	return NULL;
-+}
-+
-+/* This function retrieves the pointer to an entry in Rx reordering
-+ * table which matches the given TA and deletes it.
-+ */
-+void nxpwifi_11n_del_rx_reorder_tbl_by_ta(struct nxpwifi_private *priv, u8 *ta)
-+{
-+	struct nxpwifi_rx_reorder_tbl *tbl, *tmp;
-+
-+	if (!ta)
-+		return;
-+
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	list_for_each_entry_safe(tbl, tmp, &priv->rx_reorder_tbl_ptr, list) {
-+		if (!memcmp(tbl->ta, ta, ETH_ALEN)) {
-+			spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+			nxpwifi_del_rx_reorder_entry(priv, tbl);
-+			spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+		}
-+	}
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+}
-+
-+/* This function finds the last sequence number used in the packets
-+ * buffered in Rx reordering table.
-+ */
-+static int
-+nxpwifi_11n_find_last_seq_num(struct reorder_tmr_cnxt *ctx)
-+{
-+	struct nxpwifi_rx_reorder_tbl *rx_reorder_tbl_ptr = ctx->ptr;
-+	struct nxpwifi_private *priv = ctx->priv;
-+	int i;
-+
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	for (i = rx_reorder_tbl_ptr->win_size - 1; i >= 0; --i) {
-+		if (rx_reorder_tbl_ptr->rx_reorder_ptr[i]) {
-+			spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+			return i;
-+		}
-+	}
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	return -1;
-+}
-+
-+/* This function flushes all the packets in Rx reordering table.
-+ *
-+ * The function checks if any packets are currently buffered in the
-+ * table or not. In case there are packets available, it dispatches
-+ * them and then dumps the Rx reordering table.
-+ */
-+static void
-+nxpwifi_flush_data(struct timer_list *t)
-+{
-+	struct reorder_tmr_cnxt *ctx =
-+		from_timer(ctx, t, timer);
-+	int start_win, seq_num;
-+
-+	ctx->timer_is_set = false;
-+	seq_num = nxpwifi_11n_find_last_seq_num(ctx);
-+
-+	if (seq_num < 0)
-+		return;
-+
-+	nxpwifi_dbg(ctx->priv->adapter, INFO, "info: flush data %d\n", seq_num);
-+	start_win = (ctx->ptr->start_win + seq_num + 1) & (MAX_TID_VALUE - 1);
-+	nxpwifi_11n_dispatch_pkt_until_start_win(ctx->priv, ctx->ptr,
-+						 start_win);
-+}
-+
-+/* This function creates an entry in Rx reordering table for the
-+ * given TA/TID.
-+ *
-+ * The function also initializes the entry with sequence number, window
-+ * size as well as initializes the timer.
-+ *
-+ * If the received TA/TID pair is already present, all the packets are
-+ * dispatched and the window size is moved until the SSN.
-+ */
-+static void
-+nxpwifi_11n_create_rx_reorder_tbl(struct nxpwifi_private *priv, u8 *ta,
-+				  int tid, int win_size, int seq_num)
-+{
-+	int i;
-+	struct nxpwifi_rx_reorder_tbl *tbl, *new_node;
-+	u16 last_seq = 0;
-+	struct nxpwifi_sta_node *node;
-+
-+	/* If we get a TID, ta pair which is already present dispatch all
-+	 * the packets and move the window size until the ssn
-+	 */
-+	tbl = nxpwifi_11n_get_rx_reorder_tbl(priv, tid, ta);
-+	if (tbl) {
-+		nxpwifi_11n_dispatch_pkt_until_start_win(priv, tbl, seq_num);
-+		return;
-+	}
-+	/* if !tbl then create one */
-+	new_node = kzalloc(sizeof(*new_node), GFP_KERNEL);
-+	if (!new_node)
-+		return;
-+
-+	INIT_LIST_HEAD(&new_node->list);
-+	new_node->tid = tid;
-+	memcpy(new_node->ta, ta, ETH_ALEN);
-+	new_node->start_win = seq_num;
-+	new_node->init_win = seq_num;
-+	new_node->flags = 0;
-+
-+	spin_lock_bh(&priv->sta_list_spinlock);
-+	if (nxpwifi_queuing_ra_based(priv)) {
-+		if (priv->bss_role == NXPWIFI_BSS_ROLE_UAP) {
-+			node = nxpwifi_get_sta_entry(priv, ta);
-+			if (node)
-+				last_seq = node->rx_seq[tid];
-+		}
-+	} else {
-+		node = nxpwifi_get_sta_entry(priv, ta);
-+		if (node)
-+			last_seq = node->rx_seq[tid];
-+		else
-+			last_seq = priv->rx_seq[tid];
-+	}
-+	spin_unlock_bh(&priv->sta_list_spinlock);
-+
-+	nxpwifi_dbg(priv->adapter, INFO,
-+		    "info: last_seq=%d start_win=%d\n",
-+		    last_seq, new_node->start_win);
-+
-+	if (last_seq != NXPWIFI_DEF_11N_RX_SEQ_NUM &&
-+	    last_seq >= new_node->start_win) {
-+		new_node->start_win = last_seq + 1;
-+		new_node->flags |= RXREOR_INIT_WINDOW_SHIFT;
-+	}
-+
-+	new_node->win_size = win_size;
-+
-+	new_node->rx_reorder_ptr = kcalloc(win_size, sizeof(void *),
-+					   GFP_KERNEL);
-+	if (!new_node->rx_reorder_ptr) {
-+		kfree(new_node);
-+		nxpwifi_dbg(priv->adapter, ERROR,
-+			    "%s: failed to alloc reorder_ptr\n", __func__);
-+		return;
-+	}
-+
-+	new_node->timer_context.ptr = new_node;
-+	new_node->timer_context.priv = priv;
-+	new_node->timer_context.timer_is_set = false;
-+
-+	timer_setup(&new_node->timer_context.timer, nxpwifi_flush_data, 0);
-+
-+	for (i = 0; i < win_size; ++i)
-+		new_node->rx_reorder_ptr[i] = NULL;
-+
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	list_add_tail(&new_node->list, &priv->rx_reorder_tbl_ptr);
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+}
-+
-+static void
-+nxpwifi_11n_rxreorder_timer_restart(struct nxpwifi_rx_reorder_tbl *tbl)
-+{
-+	u32 min_flush_time;
-+
-+	if (tbl->win_size >= NXPWIFI_BA_WIN_SIZE_32)
-+		min_flush_time = MIN_FLUSH_TIMER_15_MS;
-+	else
-+		min_flush_time = MIN_FLUSH_TIMER_MS;
-+
-+	mod_timer(&tbl->timer_context.timer,
-+		  jiffies + msecs_to_jiffies(min_flush_time * tbl->win_size));
-+
-+	tbl->timer_context.timer_is_set = true;
-+}
-+
-+/* This function prepares command for adding a BA request.
-+ *
-+ * Preparation includes -
-+ *      - Setting command ID and proper size
-+ *      - Setting add BA request buffer
-+ *      - Ensuring correct endian-ness
-+ */
-+int nxpwifi_cmd_11n_addba_req(struct host_cmd_ds_command *cmd, void *data_buf)
-+{
-+	struct host_cmd_ds_11n_addba_req *add_ba_req = &cmd->params.add_ba_req;
-+
-+	cmd->command = cpu_to_le16(HOST_CMD_11N_ADDBA_REQ);
-+	cmd->size = cpu_to_le16(sizeof(*add_ba_req) + S_DS_GEN);
-+	memcpy(add_ba_req, data_buf, sizeof(*add_ba_req));
-+
-+	return 0;
-+}
-+
-+/* This function prepares command for adding a BA response.
-+ *
-+ * Preparation includes -
-+ *      - Setting command ID and proper size
-+ *      - Setting add BA response buffer
-+ *      - Ensuring correct endian-ness
-+ */
-+int nxpwifi_cmd_11n_addba_rsp_gen(struct nxpwifi_private *priv,
-+				  struct host_cmd_ds_command *cmd,
-+				  struct host_cmd_ds_11n_addba_req
-+				  *cmd_addba_req)
-+{
-+	struct host_cmd_ds_11n_addba_rsp *add_ba_rsp = &cmd->params.add_ba_rsp;
-+	u32 rx_win_size = priv->add_ba_param.rx_win_size;
-+	u8 tid;
-+	int win_size;
-+	u16 block_ack_param_set;
-+
-+	cmd->command = cpu_to_le16(HOST_CMD_11N_ADDBA_RSP);
-+	cmd->size = cpu_to_le16(sizeof(*add_ba_rsp) + S_DS_GEN);
-+
-+	memcpy(add_ba_rsp->peer_mac_addr, cmd_addba_req->peer_mac_addr,
-+	       ETH_ALEN);
-+	add_ba_rsp->dialog_token = cmd_addba_req->dialog_token;
-+	add_ba_rsp->block_ack_tmo = cmd_addba_req->block_ack_tmo;
-+	add_ba_rsp->ssn = cmd_addba_req->ssn;
-+
-+	block_ack_param_set = le16_to_cpu(cmd_addba_req->block_ack_param_set);
-+	tid = (block_ack_param_set & IEEE80211_ADDBA_PARAM_TID_MASK)
-+		>> BLOCKACKPARAM_TID_POS;
-+	add_ba_rsp->status_code = cpu_to_le16(ADDBA_RSP_STATUS_ACCEPT);
-+	block_ack_param_set &= ~IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK;
-+
-+	/* If we don't support AMSDU inside AMPDU, reset the bit */
-+	if (!priv->add_ba_param.rx_amsdu ||
-+	    priv->aggr_prio_tbl[tid].amsdu == BA_STREAM_NOT_ALLOWED)
-+		block_ack_param_set &= ~BLOCKACKPARAM_AMSDU_SUPP_MASK;
-+	block_ack_param_set |= rx_win_size << BLOCKACKPARAM_WINSIZE_POS;
-+	add_ba_rsp->block_ack_param_set = cpu_to_le16(block_ack_param_set);
-+	win_size = (le16_to_cpu(add_ba_rsp->block_ack_param_set)
-+					& IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK)
-+					>> BLOCKACKPARAM_WINSIZE_POS;
-+	cmd_addba_req->block_ack_param_set = cpu_to_le16(block_ack_param_set);
-+
-+	nxpwifi_11n_create_rx_reorder_tbl(priv, cmd_addba_req->peer_mac_addr,
-+					  tid, win_size,
-+					  le16_to_cpu(cmd_addba_req->ssn));
-+	return 0;
-+}
-+
-+/* This function prepares command for deleting a BA request.
-+ *
-+ * Preparation includes -
-+ *      - Setting command ID and proper size
-+ *      - Setting del BA request buffer
-+ *      - Ensuring correct endian-ness
-+ */
-+int nxpwifi_cmd_11n_delba(struct host_cmd_ds_command *cmd, void *data_buf)
-+{
-+	struct host_cmd_ds_11n_delba *del_ba = &cmd->params.del_ba;
-+
-+	cmd->command = cpu_to_le16(HOST_CMD_11N_DELBA);
-+	cmd->size = cpu_to_le16(sizeof(*del_ba) + S_DS_GEN);
-+	memcpy(del_ba, data_buf, sizeof(*del_ba));
-+
-+	return 0;
-+}
-+
-+/* This function identifies if Rx reordering is needed for a received packet.
-+ *
-+ * In case reordering is required, the function will do the reordering
-+ * before sending it to kernel.
-+ *
-+ * The Rx reorder table is checked first with the received TID/TA pair. If
-+ * not found, the received packet is dispatched immediately. But if found,
-+ * the packet is reordered and all the packets in the updated Rx reordering
-+ * table is dispatched until a hole is found.
-+ *
-+ * For sequence number less than the starting window, the packet is dropped.
-+ */
-+int nxpwifi_11n_rx_reorder_pkt(struct nxpwifi_private *priv,
-+			       u16 seq_num, u16 tid,
-+			       u8 *ta, u8 pkt_type, void *payload)
-+{
-+	struct nxpwifi_rx_reorder_tbl *tbl;
-+	int prev_start_win, start_win, end_win, win_size;
-+	u16 pkt_index;
-+	bool init_window_shift = false;
-+	int ret = 0;
-+
-+	tbl = nxpwifi_11n_get_rx_reorder_tbl(priv, tid, ta);
-+	if (!tbl) {
-+		if (pkt_type != PKT_TYPE_BAR)
-+			nxpwifi_11n_dispatch_pkt(priv, payload);
-+		return ret;
-+	}
-+
-+	if (pkt_type == PKT_TYPE_AMSDU && !tbl->amsdu) {
-+		nxpwifi_11n_dispatch_pkt(priv, payload);
-+		return ret;
-+	}
-+
-+	start_win = tbl->start_win;
-+	prev_start_win = start_win;
-+	win_size = tbl->win_size;
-+	end_win = ((start_win + win_size) - 1) & (MAX_TID_VALUE - 1);
-+	if (tbl->flags & RXREOR_INIT_WINDOW_SHIFT) {
-+		init_window_shift = true;
-+		tbl->flags &= ~RXREOR_INIT_WINDOW_SHIFT;
-+	}
-+
-+	if (tbl->flags & RXREOR_FORCE_NO_DROP) {
-+		nxpwifi_dbg(priv->adapter, INFO,
-+			    "RXREOR_FORCE_NO_DROP when HS is activated\n");
-+		tbl->flags &= ~RXREOR_FORCE_NO_DROP;
-+	} else if (init_window_shift && seq_num < start_win &&
-+		   seq_num >= tbl->init_win) {
-+		nxpwifi_dbg(priv->adapter, INFO,
-+			    "Sender TID sequence number reset %d->%d for SSN %d\n",
-+			    start_win, seq_num, tbl->init_win);
-+		start_win = seq_num;
-+		tbl->start_win = start_win;
-+		end_win = ((start_win + win_size) - 1) & (MAX_TID_VALUE - 1);
-+	} else {
-+		/* If seq_num is less then starting win then ignore and drop
-+		 * the packet
-+		 */
-+		if ((start_win + TWOPOW11) > (MAX_TID_VALUE - 1)) {
-+			if (seq_num >= ((start_win + TWOPOW11) &
-+					(MAX_TID_VALUE - 1)) &&
-+			    seq_num < start_win) {
-+				ret = -1;
-+				goto done;
-+			}
-+		} else if ((seq_num < start_win) ||
-+			   (seq_num >= (start_win + TWOPOW11))) {
-+			ret = -1;
-+			goto done;
-+		}
-+	}
-+
-+	/* If this packet is a BAR we adjust seq_num as
-+	 * WinStart = seq_num
-+	 */
-+	if (pkt_type == PKT_TYPE_BAR)
-+		seq_num = ((seq_num + win_size) - 1) & (MAX_TID_VALUE - 1);
-+
-+	if ((end_win < start_win &&
-+	     seq_num < start_win && seq_num > end_win) ||
-+	    (end_win > start_win && (seq_num > end_win ||
-+				     seq_num < start_win))) {
-+		end_win = seq_num;
-+		if (((end_win - win_size) + 1) >= 0)
-+			start_win = (end_win - win_size) + 1;
-+		else
-+			start_win = (MAX_TID_VALUE - (win_size - end_win)) + 1;
-+		nxpwifi_11n_dispatch_pkt_until_start_win(priv, tbl, start_win);
-+	}
-+
-+	if (pkt_type != PKT_TYPE_BAR) {
-+		if (seq_num >= start_win)
-+			pkt_index = seq_num - start_win;
-+		else
-+			pkt_index = (seq_num + MAX_TID_VALUE) - start_win;
-+
-+		if (tbl->rx_reorder_ptr[pkt_index]) {
-+			ret = -1;
-+			goto done;
-+		}
-+
-+		tbl->rx_reorder_ptr[pkt_index] = payload;
-+	}
-+
-+	/* Dispatch all packets sequentially from start_win until a
-+	 * hole is found and adjust the start_win appropriately
-+	 */
-+	nxpwifi_11n_scan_and_dispatch(priv, tbl);
-+
-+done:
-+	if (!tbl->timer_context.timer_is_set ||
-+	    prev_start_win != tbl->start_win)
-+		nxpwifi_11n_rxreorder_timer_restart(tbl);
-+	return ret;
-+}
-+
-+/* This function deletes an entry for a given TID/TA pair.
-+ *
-+ * The TID/TA are taken from del BA event body.
-+ */
-+void
-+nxpwifi_del_ba_tbl(struct nxpwifi_private *priv, int tid, u8 *peer_mac,
-+		   u8 type, int initiator)
-+{
-+	struct nxpwifi_rx_reorder_tbl *tbl;
-+	struct nxpwifi_tx_ba_stream_tbl *ptx_tbl;
-+	struct nxpwifi_ra_list_tbl *ra_list;
-+	u8 cleanup_rx_reorder_tbl;
-+	int tid_down;
-+
-+	if (type == TYPE_DELBA_RECEIVE)
-+		cleanup_rx_reorder_tbl = (initiator) ? true : false;
-+	else
-+		cleanup_rx_reorder_tbl = (initiator) ? false : true;
-+
-+	nxpwifi_dbg(priv->adapter, EVENT, "event: DELBA: %pM tid=%d initiator=%d\n",
-+		    peer_mac, tid, initiator);
-+
-+	if (cleanup_rx_reorder_tbl) {
-+		tbl = nxpwifi_11n_get_rx_reorder_tbl(priv, tid, peer_mac);
-+		if (!tbl) {
-+			nxpwifi_dbg(priv->adapter, EVENT,
-+				    "event: TID, TA not found in table\n");
-+			return;
-+		}
-+		nxpwifi_del_rx_reorder_entry(priv, tbl);
-+	} else {
-+		ptx_tbl = nxpwifi_get_ba_tbl(priv, tid, peer_mac);
-+		if (!ptx_tbl) {
-+			nxpwifi_dbg(priv->adapter, EVENT,
-+				    "event: TID, RA not found in table\n");
-+			return;
-+		}
-+
-+		tid_down = nxpwifi_wmm_downgrade_tid(priv, tid);
-+		ra_list = nxpwifi_wmm_get_ralist_node(priv, tid_down, peer_mac);
-+		if (ra_list) {
-+			ra_list->amsdu_in_ampdu = false;
-+			ra_list->ba_status = BA_SETUP_NONE;
-+		}
-+		spin_lock_bh(&priv->tx_ba_stream_tbl_lock);
-+		nxpwifi_11n_delete_tx_ba_stream_tbl_entry(priv, ptx_tbl);
-+		spin_unlock_bh(&priv->tx_ba_stream_tbl_lock);
-+	}
-+}
-+
-+/* This function handles the command response of an add BA response.
-+ *
-+ * Handling includes changing the header fields into CPU format and
-+ * creating the stream, provided the add BA is accepted.
-+ */
-+int nxpwifi_ret_11n_addba_resp(struct nxpwifi_private *priv,
-+			       struct host_cmd_ds_command *resp)
-+{
-+	struct host_cmd_ds_11n_addba_rsp *add_ba_rsp = &resp->params.add_ba_rsp;
-+	int tid, win_size;
-+	struct nxpwifi_rx_reorder_tbl *tbl;
-+	u16 block_ack_param_set;
-+
-+	block_ack_param_set = le16_to_cpu(add_ba_rsp->block_ack_param_set);
-+
-+	tid = (block_ack_param_set & IEEE80211_ADDBA_PARAM_TID_MASK)
-+		>> BLOCKACKPARAM_TID_POS;
-+	/* Check if we had rejected the ADDBA, if yes then do not create
-+	 * the stream
-+	 */
-+	if (le16_to_cpu(add_ba_rsp->status_code) != BA_RESULT_SUCCESS) {
-+		nxpwifi_dbg(priv->adapter, ERROR, "ADDBA RSP: failed %pM tid=%d)\n",
-+			    add_ba_rsp->peer_mac_addr, tid);
-+
-+		tbl = nxpwifi_11n_get_rx_reorder_tbl(priv, tid,
-+						     add_ba_rsp->peer_mac_addr);
-+		if (tbl)
-+			nxpwifi_del_rx_reorder_entry(priv, tbl);
-+
-+		return 0;
-+	}
-+
-+	win_size = (block_ack_param_set & IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK)
-+		    >> BLOCKACKPARAM_WINSIZE_POS;
-+
-+	tbl = nxpwifi_11n_get_rx_reorder_tbl(priv, tid,
-+					     add_ba_rsp->peer_mac_addr);
-+	if (tbl) {
-+		if ((block_ack_param_set & BLOCKACKPARAM_AMSDU_SUPP_MASK) &&
-+		    priv->add_ba_param.rx_amsdu &&
-+		    priv->aggr_prio_tbl[tid].amsdu != BA_STREAM_NOT_ALLOWED)
-+			tbl->amsdu = true;
-+		else
-+			tbl->amsdu = false;
-+	}
-+
-+	nxpwifi_dbg(priv->adapter, CMD,
-+		    "cmd: ADDBA RSP: %pM tid=%d ssn=%d win_size=%d\n",
-+		add_ba_rsp->peer_mac_addr, tid, add_ba_rsp->ssn, win_size);
-+
-+	return 0;
-+}
-+
-+/* This function handles BA stream timeout event by preparing and sending
-+ * a command to the firmware.
-+ */
-+void nxpwifi_11n_ba_stream_timeout(struct nxpwifi_private *priv,
-+				   struct host_cmd_ds_11n_batimeout *event)
-+{
-+	struct host_cmd_ds_11n_delba delba;
-+
-+	memset(&delba, 0, sizeof(struct host_cmd_ds_11n_delba));
-+	memcpy(delba.peer_mac_addr, event->peer_mac_addr, ETH_ALEN);
-+
-+	delba.del_ba_param_set |=
-+		cpu_to_le16((u16)event->tid << DELBA_TID_POS);
-+	delba.del_ba_param_set |=
-+		cpu_to_le16((u16)event->origninator << DELBA_INITIATOR_POS);
-+	delba.reason_code = cpu_to_le16(WLAN_REASON_QSTA_TIMEOUT);
-+	nxpwifi_send_cmd(priv, HOST_CMD_11N_DELBA, 0, 0, &delba, false);
-+}
-+
-+/* This function cleans up the Rx reorder table by deleting all the entries
-+ * and re-initializing.
-+ */
-+void nxpwifi_11n_cleanup_reorder_tbl(struct nxpwifi_private *priv)
-+{
-+	struct nxpwifi_rx_reorder_tbl *del_tbl_ptr, *tmp_node;
-+
-+	spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	list_for_each_entry_safe(del_tbl_ptr, tmp_node,
-+				 &priv->rx_reorder_tbl_ptr, list) {
-+		spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+		nxpwifi_del_rx_reorder_entry(priv, del_tbl_ptr);
-+		spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+	}
-+	INIT_LIST_HEAD(&priv->rx_reorder_tbl_ptr);
-+	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+
-+	nxpwifi_reset_11n_rx_seq_num(priv);
-+}
-+
-+/* This function updates all rx_reorder_tbl's flags.
-+ */
-+void nxpwifi_update_rxreor_flags(struct nxpwifi_adapter *adapter, u8 flags)
-+{
-+	struct nxpwifi_private *priv;
-+	struct nxpwifi_rx_reorder_tbl *tbl;
-+	int i;
-+
-+	for (i = 0; i < adapter->priv_num; i++) {
-+		priv = adapter->priv[i];
-+		if (!priv)
-+			continue;
-+
-+		spin_lock_bh(&priv->rx_reorder_tbl_lock);
-+		list_for_each_entry(tbl, &priv->rx_reorder_tbl_ptr, list)
-+			tbl->flags = flags;
-+		spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-+	}
-+}
-+
-+/* This function update all the rx_win_size based on coex flag
-+ */
-+static void nxpwifi_update_ampdu_rxwinsize(struct nxpwifi_adapter *adapter,
-+					   bool coex_flag)
-+{
-+	u8 i;
-+	u32 rx_win_size;
-+	struct nxpwifi_private *priv;
-+
-+	dev_dbg(adapter->dev, "Update rxwinsize %d\n", coex_flag);
-+
-+	for (i = 0; i < adapter->priv_num; i++) {
-+		if (!adapter->priv[i])
-+			continue;
-+		priv = adapter->priv[i];
-+		rx_win_size = priv->add_ba_param.rx_win_size;
-+		if (coex_flag) {
-+			if (priv->bss_type == NXPWIFI_BSS_TYPE_STA)
-+				priv->add_ba_param.rx_win_size =
-+					NXPWIFI_STA_COEX_AMPDU_DEF_RXWINSIZE;
-+			if (priv->bss_type == NXPWIFI_BSS_TYPE_UAP)
-+				priv->add_ba_param.rx_win_size =
-+					NXPWIFI_UAP_COEX_AMPDU_DEF_RXWINSIZE;
-+		} else {
-+			if (priv->bss_type == NXPWIFI_BSS_TYPE_STA)
-+				priv->add_ba_param.rx_win_size =
-+					NXPWIFI_STA_AMPDU_DEF_RXWINSIZE;
-+			if (priv->bss_type == NXPWIFI_BSS_TYPE_UAP)
-+				priv->add_ba_param.rx_win_size =
-+					NXPWIFI_UAP_AMPDU_DEF_RXWINSIZE;
-+		}
-+
-+		if (adapter->coex_win_size && adapter->coex_rx_win_size)
-+			priv->add_ba_param.rx_win_size =
-+					adapter->coex_rx_win_size;
-+
-+		if (rx_win_size != priv->add_ba_param.rx_win_size) {
-+			if (!priv->media_connected)
-+				continue;
-+			for (i = 0; i < MAX_NUM_TID; i++)
-+				nxpwifi_11n_delba(priv, i);
-+		}
-+	}
-+}
-+
-+/* This function check coex for RX BA
-+ */
-+void nxpwifi_coex_ampdu_rxwinsize(struct nxpwifi_adapter *adapter)
-+{
-+	u8 i;
-+	struct nxpwifi_private *priv;
-+	u8 count = 0;
-+
-+	for (i = 0; i < adapter->priv_num; i++) {
-+		if (adapter->priv[i]) {
-+			priv = adapter->priv[i];
-+			if (GET_BSS_ROLE(priv) == NXPWIFI_BSS_ROLE_STA) {
-+				if (priv->media_connected)
-+					count++;
-+			}
-+			if (GET_BSS_ROLE(priv) == NXPWIFI_BSS_ROLE_UAP) {
-+				if (priv->bss_started)
-+					count++;
-+			}
-+		}
-+		if (count >= NXPWIFI_BSS_COEX_COUNT)
-+			break;
-+	}
-+	if (count >= NXPWIFI_BSS_COEX_COUNT)
-+		nxpwifi_update_ampdu_rxwinsize(adapter, true);
-+	else
-+		nxpwifi_update_ampdu_rxwinsize(adapter, false);
-+}
-+
-+/* This function handles rxba_sync event
-+ */
-+void nxpwifi_11n_rxba_sync_event(struct nxpwifi_private *priv,
-+				 u8 *event_buf, u16 len)
-+{
-+	struct nxpwifi_ie_types_rxba_sync *tlv_rxba = (void *)event_buf;
-+	u16 tlv_type, tlv_len;
-+	struct nxpwifi_rx_reorder_tbl *rx_reor_tbl_ptr;
-+	u8 i, j;
-+	u16 seq_num, tlv_seq_num, tlv_bitmap_len;
-+	int tlv_buf_left = len;
-+	int ret;
-+	u8 *tmp;
-+
-+	nxpwifi_dbg_dump(priv->adapter, EVT_D, "RXBA_SYNC event:",
-+			 event_buf, len);
-+	while (tlv_buf_left > sizeof(*tlv_rxba)) {
-+		tlv_type = le16_to_cpu(tlv_rxba->header.type);
-+		tlv_len  = le16_to_cpu(tlv_rxba->header.len);
-+		if (size_add(sizeof(tlv_rxba->header), tlv_len) > tlv_buf_left) {
-+			nxpwifi_dbg(priv->adapter, WARN,
-+				    "TLV size (%zu) overflows event_buf buf_left=%d\n",
-+				    size_add(sizeof(tlv_rxba->header), tlv_len),
-+				    tlv_buf_left);
-+			return;
-+		}
-+
-+		if (tlv_type != TLV_TYPE_RXBA_SYNC) {
-+			nxpwifi_dbg(priv->adapter, ERROR,
-+				    "Wrong TLV id=0x%x\n", tlv_type);
-+			return;
-+		}
-+
-+		tlv_seq_num = le16_to_cpu(tlv_rxba->seq_num);
-+		tlv_bitmap_len = le16_to_cpu(tlv_rxba->bitmap_len);
-+		if (size_add(sizeof(*tlv_rxba), tlv_bitmap_len) > tlv_buf_left) {
-+			nxpwifi_dbg(priv->adapter, WARN,
-+				    "TLV size (%zu) overflows event_buf buf_left=%d\n",
-+				    size_add(sizeof(*tlv_rxba), tlv_bitmap_len),
-+				    tlv_buf_left);
-+			return;
-+		}
-+
-+		nxpwifi_dbg(priv->adapter, INFO,
-+			    "%pM tid=%d seq_num=%d bitmap_len=%d\n",
-+			    tlv_rxba->mac, tlv_rxba->tid, tlv_seq_num,
-+			    tlv_bitmap_len);
-+
-+		rx_reor_tbl_ptr =
-+			nxpwifi_11n_get_rx_reorder_tbl(priv, tlv_rxba->tid,
-+						       tlv_rxba->mac);
-+		if (!rx_reor_tbl_ptr) {
-+			nxpwifi_dbg(priv->adapter, ERROR,
-+				    "Can not find rx_reorder_tbl!");
-+			return;
-+		}
-+
-+		for (i = 0; i < tlv_bitmap_len; i++) {
-+			for (j = 0 ; j < 8; j++) {
-+				if (tlv_rxba->bitmap[i] & (1 << j)) {
-+					seq_num = (MAX_TID_VALUE - 1) &
-+						(tlv_seq_num + i * 8 + j);
-+
-+					nxpwifi_dbg(priv->adapter, ERROR,
-+						    "drop packet,seq=%d\n",
-+						    seq_num);
-+
-+					ret = nxpwifi_11n_rx_reorder_pkt
-+					(priv, seq_num, tlv_rxba->tid,
-+					 tlv_rxba->mac, 0, NULL);
-+
-+					if (ret)
-+						nxpwifi_dbg(priv->adapter,
-+							    ERROR,
-+							    "Fail to drop packet");
-+				}
-+			}
-+		}
-+
-+		tlv_buf_left -= (sizeof(tlv_rxba->header) + tlv_len);
-+		tmp = (u8 *)tlv_rxba + sizeof(tlv_rxba->header) + tlv_len;
-+		tlv_rxba = (struct nxpwifi_ie_types_rxba_sync *)tmp;
-+	}
-+}
++#endif
 -- 
 2.34.1
 
