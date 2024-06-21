@@ -1,138 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1DB17109B;
-	Fri, 21 Jun 2024 10:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289EC82D72;
+	Fri, 21 Jun 2024 10:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718965794; cv=none; b=HlI4PweJpnfwXAzcTR01R9BiP80bDH0oAGK//wTELGmo+TbBAk96hGaZ2P831aaYQDqIUwpbzblRnFoCTw+8EkUeoGlB3MWeslxO28HBrATz/GuG/sC9WlYdvF7MK4/1sjE6PfAGIT6DLbgEEtX5sWTDc5JC2Je3qqqICMBokr8=
+	t=1718965828; cv=none; b=U+3jWhDdXV0kPDVLHuKDi66YGc7JyIPegBRXfBGRlG0MVqVvGo0rnpOnpkYvFDzvz24o60E3yGQXuKJC8kw1GHEQ4Au69niS3sG/6xvfY06NmX2XYxYst9Gn7FiBQ+Bkacu0a4nKs8lCd7DCvCg5ggG3zNZ1laqDMi7p0b9s4Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718965794; c=relaxed/simple;
-	bh=PeKv9k8X+PilrORiusMPipyJYYvxOeI/t16tF6szs5I=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=VIJvfsOt56PVVQl7IUYFz6bBkSO2ljt050jpLPIt21PUR20ougB7f59Ozty0xBPybLXdVHv2UhKuecB/by8Pps1l+0Qu/cdKOcjMbPLwNS7ZbnRSrmKYu3t6RIgHAgDptjWYTtaBTazV91wK5MDnPJ7t2oEFL55Ek7oKurp4hLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGo14M/O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718965828; c=relaxed/simple;
+	bh=B752BNIYio6k0ixN7OxVpVPWptHW5T/k1iw9vIoklR0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=E5sqwN0P5vgh1h/U056I3kHLw7ysp6nTRT/h6tXQpTn3J2LWiO+jKDptwsGPefLsqu+qJrmLpzBBsEJG3uzrSHCnp/RJoWzU73Cu4H03Bl3J2nI2Y4QJAdFI6rgqDIsG0FKQKmVFH9HTBRVJJN6Yggr3jtVdzpRLI1tpfA5JAdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCDzunaT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGo14M/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62A2C2BBFC;
-	Fri, 21 Jun 2024 10:29:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCDzunaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D1F2AC4AF0A;
+	Fri, 21 Jun 2024 10:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718965794;
-	bh=PeKv9k8X+PilrORiusMPipyJYYvxOeI/t16tF6szs5I=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=RGo14M/OYHn4kJqUWYEDDubinNXp3PPBzScxS5iT3zuUQQPs9JDXiy5zryEaxlos9
-	 4Uw22bnmNCbRBPPRhVmfCI3SXOKpv3RE8mLPz1APBAX3UAxVwu4SH01l5j6F7MkAo0
-	 9gq9qoyPyvS/fMUWC641NUdd6IokKULuA5AopEqbq8n1fZMxblONAUB8y6i6CKxgyU
-	 MHdX/s0uz96Y5pNb+sbU5PvsU4W8nSiKvilB8RNKJN7S80J2FJfBvrNuFfnWHl9uFl
-	 InOJ1DK2eOlLxTbB5Mf5hxegGKsHkz8rFPzUWbpgOvBnaMgMW7y90qo88jweTC2Uo6
-	 fvyXvsS6cGLUg==
-Date: Fri, 21 Jun 2024 04:29:52 -0600
+	s=k20201202; t=1718965827;
+	bh=B752BNIYio6k0ixN7OxVpVPWptHW5T/k1iw9vIoklR0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rCDzunaTmNxMHxYirml77GfBiWvjELwFaBc7UIpvWpiGvbP32Zrl/tkEkN4uN2nB9
+	 hXKpkuQwCFn8w1dirs0nr72fijIDDTUHFWfkFsJUEl/8MnEbP8aX9IW+D5aJsEZ0Vm
+	 OBJC3DZvv/TFiS+nSAYgzanxQRpMNfW8Zi7zJXAEmLEBIkQCMntLyjxCZQaHLSYZso
+	 I4sjwr4ZCK+bLZwkRrXVLVtf4Q9ig34MSPmycuaMD1ttq5vGoy/MJ7LN03Zzq3bHVr
+	 d78Nw49PsJxrkSYL1FndsynlgyXRebbcErhJoR5U/MEaJXEOUPyaVKQwDv4Qr2/B55
+	 os3HFuLD74nbQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C286BC4332D;
+	Fri, 21 Jun 2024 10:30:27 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: George Chan <gchan9527@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, linux-media@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, Robert Foss <rfoss@kernel.org>, 
- devicetree@vger.kernel.org
-In-Reply-To: <20240621-b4-sc7180-camss-v1-1-14937929f30e@gmail.com>
-References: <20240621-b4-sc7180-camss-v1-0-14937929f30e@gmail.com>
- <20240621-b4-sc7180-camss-v1-1-14937929f30e@gmail.com>
-Message-Id: <171896579289.1052121.7134078173104120668.robh@kernel.org>
-Subject: Re: [PATCH 1/6] media: dt-bindings: media: camss: Add
- qcom,sc7180-camss binding
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v0] net: mvpp2: fill-in dev_port attribute
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171896582779.421.10046577492424882330.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Jun 2024 10:30:27 +0000
+References: <20240620041202.3306780-1-aryan.srivastava@alliedtelesis.co.nz>
+In-Reply-To: <20240620041202.3306780-1-aryan.srivastava@alliedtelesis.co.nz>
+To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+Cc: kuba@kernel.org, marcin.s.wojtas@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
+Hello:
 
-On Fri, 21 Jun 2024 17:40:53 +0800, George Chan wrote:
-> Add bindings for qcom,sc7180-camss in order to support the camera
-> subsystem for sm7125 as found in the Xiaomi Redmi 9 Pro cellphone.
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Thu, 20 Jun 2024 16:12:02 +1200 you wrote:
+> Fill this in so user-space can identify multiple ports on the same CP
+> unit.
 > 
-> Signed-off-by: George Chan <gchan9527@gmail.com>
+> Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
 > ---
->  .../bindings/media/qcom,sc7180-camss.yaml          | 324 +++++++++++++++++++++
->  1 file changed, 324 insertions(+)
-> 
+>  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Here is the summary with links:
+  - [v0] net: mvpp2: fill-in dev_port attribute
+    https://git.kernel.org/netdev/net/c/00418d5530ca
 
-yamllint warnings/errors:
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clocks: [[4294967295, 6], [4294967295, 12], [4294967295, 37], [4294967295, 44], [4294967295, 50], [4294967295, 22], [4294967295, 14], [4294967295, 23], [4294967295, 16], [4294967295, 24], [4294967295, 18], [4294967295, 25], [4294967295, 20], [4294967295, 10], [4294967295, 11], [4294967295, 77], [4294967295, 33], [4294967295, 34], [4294967295, 36], [4294967295, 40], [4294967295, 41], [4294967295, 43], [4294967295, 47], [4294967295, 49]] is too short
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:2: 'cphy_rx_src' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:3: 'csi0' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:4: 'csi1' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:5: 'csi2' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:6: 'csiphy0' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:7: 'csiphy0_timer' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:8: 'csiphy1' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:9: 'csiphy1_timer' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:10: 'csiphy2' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:11: 'csiphy2_timer' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:12: 'csiphy3' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:13: 'csiphy3_timer' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:14: 'gcc_camera_ahb' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:15: 'gcc_camera_axi' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:16: 'soc_ahb' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:17: 'vfe0_axi' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:18: 'vfe0' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:19: 'vfe0_cphy_rx' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:20: 'vfe1_axi' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:21: 'vfe1' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:22: 'vfe1_cphy_rx' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names:23: 'vfe_lite' was expected
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: clock-names: ['camnoc_axi', 'cpas_ahb', 'csi0', 'csi1', 'csi2', 'csiphy0', 'csiphy0_timer', 'csiphy1', 'csiphy1_timer', 'csiphy2', 'csiphy2_timer', 'csiphy3', 'csiphy3_timer', 'gcc_camera_ahb', 'gcc_camera_axi', 'soc_ahb', 'vfe0_axi', 'vfe0', 'vfe0_cphy_rx', 'vfe1_axi', 'vfe1', 'vfe1_cphy_rx', 'vfe_lite', 'vfe_lite_cphy_rx'] is too short
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/qcom,sc7180-camss.example.dtb: camss@acb3000: iommus: [[4294967295, 2080, 0], [4294967295, 2112, 0], [4294967295, 2144, 0]] is too short
-	from schema $id: http://devicetree.org/schemas/media/qcom,sc7180-camss.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240621-b4-sc7180-camss-v1-1-14937929f30e@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
