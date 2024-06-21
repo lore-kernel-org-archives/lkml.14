@@ -1,63 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEABF17920E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 18:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3781667CF
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 18:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718993447; cv=none; b=iz9Dr8nczFLXvTdHxMbJP3lTeMqsmvaNZbeH0W4ScWCzk3u+rcyYlJVABDNmZVjGQXh3UYblGow8rKs8f9uOzgGxjEUeaL2L21sEJGN5feNAM0ySfyetsY/wk0YvWphn8qFO3PRHn4EhhV1YfoAOhf+0A4JBunmamIhw1XPYqLA=
+	t=1718993558; cv=none; b=ijku81m3KuPclHwjDjqps85K2G6RSyLboQJ8WsO2YOkiB1KhJm5ZIn4kiwWXT3UPR6rxLcNdXNX/GjmnyJEhgHcA/0wt+CkLLGlqcifd51HrefTjHkoNIa9/e3rXKlaIz51A9WKW1/uuM5ze5U4XWAQwPAPBiSLMvpY+GtYmTlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718993447; c=relaxed/simple;
-	bh=O3Kc71FtZM8Tdr0A4m8RjCdJtg3sUZS8NTOcQTcy4Qc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UYD4lnwwbPHNz/IGpqthcklDwgkTU8b1YJZ7Kf4KmXaxtrbOO6EeWe+NNqtVbjkNaQ6rnqwE+c0dD2bcgY+DqWTL1G3VSRXPKlajmrdwcbHuJjJI53ZnmGZLVKEaeVY9AVYGhwCnr43eBuVewvDYZLAYb3svU3obskTIrMfPbwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enQs479R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718993558; c=relaxed/simple;
+	bh=zn0J5hnyo6dVCxNaGHylzs/o0p86kxCsjWOV/SevYqw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sacmyqp13bzouOd8ga1Xc9RvWfmhrMaWV4kPq4cCFuIs4i7VlIBxdLfPHni8p2nOQtIUsjD+YeQBYUHjPZkCq1HVQ0yq2gZ4ZEltU5CfsnmaDwf9c6WNHrFhxmpOL8rr4dnI9NaOmHv53gh88xeWNeoGdp2ivoFrRqk2WHVzgfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RQl5Q5CU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enQs479R"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B790C4AF08;
-	Fri, 21 Jun 2024 18:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718993447;
-	bh=O3Kc71FtZM8Tdr0A4m8RjCdJtg3sUZS8NTOcQTcy4Qc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=enQs479RW/gF64y3my+3dxRvngb3BrLMyBIiqgqQwHfftL59s5nWzDdEX81t2KMGy
-	 beZ/UowJ191D1wcOveUCcBJOYCRLtNTrTGschagIoFtFw38BLBQ7SXZAfURYruqoTD
-	 jDdYsr19+wRj88zp30BdCqX8goC3Lm3BVzmOJvbgDxb4o2GZzzjoPoWEongT9gRFLD
-	 jZSek8uq9eGf3AFpJwg6kJlIclES/B6Wz5UbqJX5F9Fvi+6EC2IonBR5ZH9uRrt3/h
-	 1+BGgBJeRhMQNiFOn8/VlZa61OCanZC2/Spp7hCPZMdRipj3u2Rr4PYuYAl92OkY9F
-	 BDjBDdzztMO5A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 68D10C4332D;
-	Fri, 21 Jun 2024 18:10:47 +0000 (UTC)
-Subject: Re: [GIT PULL]: Generic phy fixes for v6.10
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZnVNCogeCFcQH1jH@matsya>
-References: <ZnVNCogeCFcQH1jH@matsya>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZnVNCogeCFcQH1jH@matsya>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git tags/phy-fixes-6.10
-X-PR-Tracked-Commit-Id: 163c1a356a847ab4767200fd4a45b3f8e4ddc900
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a21b52aa6e98187a82956e296efde5f2521789bb
-Message-Id: <171899344742.17423.6080265678268549994.pr-tracker-bot@kernel.org>
-Date: Fri, 21 Jun 2024 18:10:47 +0000
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQl5Q5CU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718993555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Mr03uo/qNadzOQlFY//QZdUfSWytOj/GgGVXQ4GRB8Q=;
+	b=RQl5Q5CUGP+WN80rpAole8uPiINqK/u/SGTokYsDx97IdwXpbzynmaLwIRh5kfmWUJq3eb
+	iGK/ARwXowPgXT+HedJ64M6c4r8KXdkKWvSrmztvQz2FIiVmzJMpqCojkqCo4fp39R1tV2
+	ZBq03tyfPyN7JfHHrqx2EcNRvhxuOWI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-RT0_tw-tOvOI7aOA-C_GCg-1; Fri,
+ 21 Jun 2024 14:12:32 -0400
+X-MC-Unique: RT0_tw-tOvOI7aOA-C_GCg-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2923219560A2;
+	Fri, 21 Jun 2024 18:12:30 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.33.154])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73F821956048;
+	Fri, 21 Jun 2024 18:12:27 +0000 (UTC)
+From: Audra Mitchell <audra@redhat.com>
+To: viro@zeniv.linux.org.uk
+Cc: brauner@kernel.org,
+	jack@suse.cz,
+	aarcange@redhat.com,
+	akpm@linux-foundation.org,
+	rppt@linux.vnet.ibm.com,
+	shli@fb.com,
+	peterx@redhat.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shuah@kernel.org,
+	linux-kselftest@vger.kernel.org,
+	raquini@redhat.com
+Subject: [PATCH v2 1/3] Fix userfaultfd_api to return EINVAL as expected
+Date: Fri, 21 Jun 2024 14:12:22 -0400
+Message-ID: <20240621181224.3881179-1-audra@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-The pull request you sent on Fri, 21 Jun 2024 15:21:06 +0530:
+Currently if we request a feature that is not set in the Kernel
+config we fail silently and return all the available features. However,
+the man page indicates we should return an EINVAL.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git tags/phy-fixes-6.10
+We need to fix this issue since we can end up with a Kernel warning
+should a program request the feature UFFD_FEATURE_WP_UNPOPULATED on
+a kernel with the config not set with this feature.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a21b52aa6e98187a82956e296efde5f2521789bb
+ [  200.812896] WARNING: CPU: 91 PID: 13634 at mm/memory.c:1660 zap_pte_range+0x43d/0x660
+ [  200.820738] Modules linked in:
+ [  200.869387] CPU: 91 PID: 13634 Comm: userfaultfd Kdump: loaded Not tainted 6.9.0-rc5+ #8
+ [  200.877477] Hardware name: Dell Inc. PowerEdge R6525/0N7YGH, BIOS 2.7.3 03/30/2022
+ [  200.885052] RIP: 0010:zap_pte_range+0x43d/0x660
 
-Thank you!
+Fixes: e06f1e1dd499 ("userfaultfd: wp: enabled write protection in userfaultfd API")
+Signed-off-by: Audra Mitchell <audra@redhat.com>
+---
+ fs/userfaultfd.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index eee7320ab0b0..17e409ceaa33 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -2057,7 +2057,7 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
+ 		goto out;
+ 	features = uffdio_api.features;
+ 	ret = -EINVAL;
+-	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
++	if (uffdio_api.api != UFFD_API)
+ 		goto err_out;
+ 	ret = -EPERM;
+ 	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
+@@ -2081,6 +2081,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
+ 	uffdio_api.features &= ~UFFD_FEATURE_WP_UNPOPULATED;
+ 	uffdio_api.features &= ~UFFD_FEATURE_WP_ASYNC;
+ #endif
++
++	ret = -EINVAL;
++	if (features & ~uffdio_api.features)
++		goto err_out;
++
+ 	uffdio_api.ioctls = UFFD_API_IOCTLS;
+ 	ret = -EFAULT;
+ 	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.44.0
+
