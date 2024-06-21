@@ -1,95 +1,92 @@
-Received: from out198-44.us.a.mail.aliyun.com (out198-44.us.a.mail.aliyun.com [47.90.198.44])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9B3259C;
-	Fri, 21 Jun 2024 02:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9343EA6C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 02:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718935603; cv=none; b=GYZoD41v8QptubvFkrSrzH7GOmuVLS6qRVA0r+3GVYg2uef8Ecg3EArfbrgxx0d6W1tBNp9/VCZ75v12lOmcIBW02oV2xcoZQz3aVWoRLNSxIzKCAutjdUEg9Dz2bKi4R3Zqneyjpg7jEfGXhhq7glml61ukO2pOtCaByyNA+1k=
+	t=1718935708; cv=none; b=mRjmdDFPpGFI59s/2yAAr5syMoIgUL9OKgHw/5I3gmZWV3EX6ER9R06VgH4Vr8Cag/dit+xJ7EVofIUo0tV67V5s1o12A9KAaoal9gAiLXBMCpLC+0Mq7xG3ntgyLnOUbwJwFEebB94R3tTjSnUIbW451hcGl+Ty/lTqB89Dha8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718935603; c=relaxed/simple;
-	bh=/Fv5W48fTiOaQN8+0LAacCvmeX4j9L7ks9Fp1fUPZH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=t0jKpOhyuHjKu37Ixguff4xsrBq6DHxf/OOtBsQOceXahyXKjQjmLQ72v030N6XMc0YOaSI8pfHdj3naFmvGSmmw5pageGN3vFQ8rG7jmFUoZgcAEOBDtFIJ29EdVf4sLCCCd1cXyj1pRLEncSwxP5drY1gIoRGY2rRYxhDcxXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.09405448|-1;BR=01201311R241S19rulernew998_84748_2000303;CH=blue;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0120384-0.0012689-0.986693;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033040120151;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Y6aXtYh_1718935577;
-Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.Y6aXtYh_1718935577)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Jun 2024 10:06:18 +0800
-From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: zhoushengqing@ttyinfo.com
-Subject: [PATCH] PCI: Enable io space 1k granularity for intel cpu root port
-Date: Fri, 21 Jun 2024 02:06:08 +0000
-Message-Id: <20240621020608.28964-1-zhoushengqing@ttyinfo.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718935708; c=relaxed/simple;
+	bh=Z8lHIf2L5e/WXNnk/CJQuyhgt0SQMV6BADSjTn5qGTY=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KavRMpGJo5Iowx1Z+Eba3Vg3b2IabsomTaWqQ/Y8xYQK8xfwgQVGZjxqzYbh7J9lKNgx41bSLIjsMsQXeJ7+XxGU++6nMkGpvpnt8kcrwkQ0e+he60Le4W/r19zPWJRWDj17bu1xQ80VkVEDEE38baCS6mCVvhHApJ0o0CEXucs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W50y43BvWzVm4r;
+	Fri, 21 Jun 2024 10:03:24 +0800 (CST)
+Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
+	by mail.maildlp.com (Postfix) with ESMTPS id 55A5A14011A;
+	Fri, 21 Jun 2024 10:08:21 +0800 (CST)
+Received: from [10.174.178.120] (10.174.178.120) by
+ dggpemd200001.china.huawei.com (7.185.36.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 21 Jun 2024 10:08:20 +0800
+Message-ID: <dc0294ea-0724-4403-ab0f-d968fbf36586@huawei.com>
+Date: Fri, 21 Jun 2024 10:08:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+CC: <mawupeng1@huawei.com>, <kasan-dev@googlegroups.com>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [Question] race during kasan_populate_vmalloc_pte
+To: <akpm@linux-foundation.org>, <ryabinin.a.a@gmail.com>,
+	<glider@google.com>, <andreyknvl@gmail.com>, <dvyukov@google.com>,
+	<vincenzo.frascino@arm.com>
+References: <20240618064022.1990814-1-mawupeng1@huawei.com>
+Content-Language: en-US
+From: mawupeng <mawupeng1@huawei.com>
+In-Reply-To: <20240618064022.1990814-1-mawupeng1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemd200001.china.huawei.com (7.185.36.224)
 
-This patch add 1k granularity for intel root port bridge.Intel latest
-server CPU support 1K granularity,And there is an BIOS setup item named
-"EN1K",but linux doesn't support it. if an IIO has 5 IOU (SPR has 5 IOUs)
-all are bifurcated 2x8.In a 2P server system,There are 20 P2P bridges
-present.if keep 4K granularity allocation,it need 20*4=80k io space,
-exceeding 64k.I test it in a 16*nvidia 4090s system under intel eaglestrem
-platform.There are six 4090s that cannot be allocated I/O resources.
-So I applied this patch.And I found a similar implementation in quirks.c,
-but it only targets the Intel P64H2 platform.
+Hi maintainers,
 
-Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
----
- drivers/pci/probe.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+kingly ping.
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 5fbabb4e3425..3f0c901c6653 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -461,6 +461,8 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
- 	u32 buses;
- 	u16 io;
- 	u32 pmem, tmp;
-+	u16 ven_id, dev_id;
-+	u16 en1k = 0;
- 	struct resource res;
- 
- 	pci_read_config_dword(bridge, PCI_PRIMARY_BUS, &buses);
-@@ -478,6 +480,26 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
- 	}
- 	if (io) {
- 		bridge->io_window = 1;
-+		if (pci_is_root_bus(bridge->bus)) {
-+			list_for_each_entry(dev, &bridge->bus->devices, bus_list) {
-+				pci_read_config_word(dev, PCI_VENDOR_ID, &ven_id);
-+				pci_read_config_word(dev, PCI_DEVICE_ID, &dev_id);
-+				if (ven_id == PCI_VENDOR_ID_INTEL && dev_id == 0x09a2) {
-+					/*IIO MISC Control offset 0x1c0*/
-+					pci_read_config_word(dev, 0x1c0, &en1k);
-+				}
-+			}
-+		/*
-+		 *Intel ICX SPR EMR GNR
-+		 *IIO MISC Control (IIOMISCCTRL_1_5_0_CFG) — Offset 1C0h
-+		 *bit 2:Enable 1K (EN1K)
-+		 *This bit when set, enables 1K granularity for I/O space decode
-+		 *in each of the virtual P2P bridges
-+		 *corresponding to root ports, and DMI ports.
-+		 */
-+		if (en1k & 0x4)
-+			bridge->io_window_1k = 1;
-+		}
- 		pci_read_bridge_io(bridge, &res, true);
- 	}
- 
--- 
-2.39.2
-
+On 2024/6/18 14:40, Wupeng Ma wrote:
+> Hi maintainers,
+> 
+> During our testing, we discovered that kasan vmalloc may trigger a false
+> vmalloc-out-of-bounds warning due to a race between kasan_populate_vmalloc_pte
+> and kasan_depopulate_vmalloc_pte.
+> 
+> cpu0				cpu1				cpu2
+>   kasan_populate_vmalloc_pte	kasan_populate_vmalloc_pte	kasan_depopulate_vmalloc_pte
+> 								spin_unlock(&init_mm.page_table_lock);
+>   pte_none(ptep_get(ptep))
+>   // pte is valid here, return here
+> 								pte_clear(&init_mm, addr, ptep);
+> 				pte_none(ptep_get(ptep))
+> 				// pte is none here try alloc new pages
+> 								spin_lock(&init_mm.page_table_lock);
+> kasan_poison
+> // memset kasan shadow region to 0
+> 				page = __get_free_page(GFP_KERNEL);
+> 				__memset((void *)page, KASAN_VMALLOC_INVALID, PAGE_SIZE);
+> 				pte = pfn_pte(PFN_DOWN(__pa(page)), PAGE_KERNEL);
+> 				spin_lock(&init_mm.page_table_lock);
+> 				set_pte_at(&init_mm, addr, ptep, pte);
+> 				spin_unlock(&init_mm.page_table_lock);
+> 
+> 
+> Since kasan shadow memory in cpu0 is set to 0xf0 which means it is not
+> initialized after the race in cpu1. Consequently, a false vmalloc-out-of-bounds
+> warning is triggered when a user attempts to access this memory region.
+> 
+> The root cause of this problem is the pte valid check at the start of
+> kasan_populate_vmalloc_pte should be removed since it is not protected by
+> page_table_lock. However, this may result in severe performance degradation
+> since pages will be frequently allocated and freed.
+> 
+> Is there have any thoughts on how to solve this issue?
+> 
+> Thank you.
