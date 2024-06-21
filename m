@@ -1,211 +1,77 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D84C3207
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BF13207;
+	Fri, 21 Jun 2024 03:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718939403; cv=none; b=MDuZvXP6pcCUQ70KfmwqNaiLV/DqRiXLLhnQp7scCrs59WDiJxzBTum7mDEYaFOw3F4/Hm6wEgGOktrNNCSiAC1Ve7DaZdEYaj7JWiyU6a6QDpht4xNDepa7Nvu5uzJF294Gx231byFA3+KF4HFCTJsqxOwgem3e05MX8Vkq4To=
+	t=1718939574; cv=none; b=acb4Bgd21TWdNxye/6wWcRouyQsgH2NGUM9XTpPkDBJjeNNp9bSxNYJKTWp59KNwp7I/LPYQvi8PkB4Lxuw8KIFRSZwPOT68GM+78LpJECmriXwzDd7HmsVAnwfUEljK8Vl6SKJeuWZI6QndhSRw0Rd7waaJddGX2yqlJIqf29I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718939403; c=relaxed/simple;
-	bh=ADR0M9bzYb/z4xy1FJbEfBdV6vztRWzQN93xqp0dV1g=;
+	s=arc-20240116; t=1718939574; c=relaxed/simple;
+	bh=uCSUHcTauHBP6zOn6YHuV7MpFi2lKxVbRouK6xsPz4Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aIMRwRo9Hm6+mQBvJXkZCuIAdB+h/i9BTZDQVkjw83Dt8DBHAlzUoDUIyEzIXVNE1EKtx+rFqP5eaa3OFDUKpe0n5XJAAfd8fH7M1Whnqs36h/w+tZ7BW1Vwe9ltlW/kMFCCYfw4RhJUgzunPlQ8cSWsOc698zTIAJklp92eWs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=oP3ghbIx; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXgmF7VbjD1NgqbVvUhCcKWLYJPGBltw8XDCfTX/sz0lmnSfGGkBAfEaZlbj7BbeaKzBPnrdNSRTFfsFcWNs1qCCKuCZcw+G/M+XmS/UilBI9UJCTnKMNqx9H2ljFgR+wXPpajvBigmslx+/NHgK+SwNaC09uAARCQ2IIByANsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PbsVJysu; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="oP3ghbIx"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f47f07aceaso12301635ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 20:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718939400; x=1719544200; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0v4GHVLko6b2d6yCPPJ+7mz46mQ9AAseTgFJ3I+E9Ss=;
-        b=oP3ghbIxB/l1cOmk3pq4j0X7Zf8FdMjxmNOZoWXjQqrnDf9Y5gVSOAz0jnw60FTJl/
-         T3QpCUGjAPrmVMYAYyX2wIqhAsZvqLP6Xeg3D5enfvOY2OVlqfA0BV5tOAQWS4qScs+d
-         sWgTk6rkP9a1znXT6pHImXK4QwkpLNIACSZTkddkSHKspV1EgZFnp8a7U5Zc5Si78q7y
-         47sFPO0GoIJif2e9lAHLk+xXL9yU0VAZB9wiSGFZNr0lagFCTP8/NaIABcAQLm7OZOrf
-         ohAq0MxqkQxJsawkEUpF31Op4ErWpgmXUMRjchrQNkg94IVmjwZp3NDY6TR/bFHYgiVj
-         GmaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718939400; x=1719544200;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0v4GHVLko6b2d6yCPPJ+7mz46mQ9AAseTgFJ3I+E9Ss=;
-        b=bj7bgZ3ZrLd2IokWhO4gk6y5DovBx/S//sKhm728dhPwY0OCkxmMVlwAL7XWyfFbTV
-         V4vGgyKnDhhees+DQ70wSFG9mUhhPl1ODRBdz/FU8J+xII5MtR7dWTnuvR5FmS2l9BPx
-         VmATnq1liFTpwenhUSVDYHu6fPUHo5DvqwpKns/GbxeskvxMKModJjvAR0e/0HMBTFJC
-         aYwe9F9TGU9jeaAi/ZR4lP1Oza/hJD2QfHWbr33p9OqR+NGqfItUpx0MF1m5G1k6tZsy
-         SZ/oErgVgnIdBZAJjJbDi5M/c0rvqbfPGCk89ZH64wKhdxsRaDmHrQqGuvavcKTkG0M2
-         dCxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVooQtaCHxMZ3wv4RGXYXB1ehvszPQSnI3K/pmcAi/i6BatVJV+QguUQ9nvr5m5vTY+8IbFi3yFmDgNnWdaTmkAiv8jMHYwQpbI1RTb
-X-Gm-Message-State: AOJu0Yw0bRrBtDZ2M82QQzgQ5pZebuEw/clM+RzsrPT773EyZW/HIiOe
-	JmSERYLTfM2CJoVxkAGtJB8HIlhrJCC/fVJQr5JTdvADLKUcI2ME30jrYln4DjM=
-X-Google-Smtp-Source: AGHT+IFFY2CE7Fj0jGtDzkU4sKdGCQMRvDZCbXWHqL9tztfL9yqPx3keG5JRhkAANqhTh3TGHFGhmA==
-X-Received: by 2002:a17:903:32d1:b0:1f9:c52f:d9b5 with SMTP id d9443c01a7336-1f9c52fdcefmr46099765ad.66.1718939400383;
-        Thu, 20 Jun 2024 20:10:00 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:c36f:e04a:309e:a49])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3c644fsm3537945ad.145.2024.06.20.20.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 20:09:59 -0700 (PDT)
-Date: Thu, 20 Jun 2024 20:09:54 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alexghiti@rivosinc.com, akpm@linux-foundation.org, bhe@redhat.com,
-	rppt@kernel.org, dawei.li@shingroup.cn, jszhang@kernel.org,
-	namcao@linutronix.de, bjorn@rivosinc.com, vishal.moola@gmail.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] RISC-V: cmdline: Add support for 'memmap'
- parameter
-Message-ID: <ZnTvArAQpfCm10tc@ghost>
-References: <20240618120842.15159-1-cuiyunhui@bytedance.com>
- <ZnTRbptoowL+1GOP@ghost>
- <CAEEQ3wnNZJviirqWCAG7mXsbynC+=Gq5q4jh6b4yamm8cnzMAw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PbsVJysu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=WO33cNTPn9NUUeGGOkVxo3S92qWrXCg9qOPXQk9jSr0=; b=PbsVJysujVOHC+yOLzuwpAi3ei
+	kTz4cujpB9sVSjqxrx9NKMH9EhttayUvRNN0/ZRe7iIFVr+iBK61p3IsPS1G1DsTohPGqWuk3re4a
+	YfJhVyLlnH0ufsUZvlfJmzTfE+cdg1GcHdq2eSmNoTJixDxcDUxXHmYdkH2Bus/2KlKs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sKUhP-000cmD-QD; Fri, 21 Jun 2024 05:12:27 +0200
+Date: Fri, 21 Jun 2024 05:12:27 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Furong Xu <0x1207@gmail.com>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Joao Pinto <jpinto@synopsys.com>, Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	xfr@outlook.com, rock.xu@nio.com
+Subject: Re: [PATCH net-next v1] net: stmmac: xgmac: increase length limit of
+ descriptor ring
+Message-ID: <788c2744-e1c0-4338-9b86-9119d31841f1@lunn.ch>
+References: <20240620085200.583709-1-0x1207@gmail.com>
+ <e3yzigcfbbkowias54nijvejc36hbcvfgjgbodycka3kfoqqek@46gktho2hwwt>
+ <20240621102627.000060d6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3wnNZJviirqWCAG7mXsbynC+=Gq5q4jh6b4yamm8cnzMAw@mail.gmail.com>
+In-Reply-To: <20240621102627.000060d6@gmail.com>
 
-On Fri, Jun 21, 2024 at 10:08:39AM +0800, yunhui cui wrote:
-> Hi Charlie,
-> 
-> On Fri, Jun 21, 2024 at 9:03 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> >
-> > On Tue, Jun 18, 2024 at 08:08:42PM +0800, Yunhui Cui wrote:
-> > > Implement support for parsing 'memmap' kernel command line parameter.
-> > >
-> > > This patch covers parsing of the following two formats for 'memmap'
-> > > parameter values:
-> > >
-> > > - nn[KMG]@ss[KMG]
-> > > - nn[KMG]$ss[KMG]
-> > >
-> > > ([KMG] = K M or G (kilo, mega, giga))
-> > >
-> > > These two allowed formats for parameter value are already documented
-> > > in file kernel-parameters.txt in Documentation/admin-guide folder.
-> > > Some architectures already support them, but Mips did not prior to
-> >
-> > Copy-paste from a Mips patch? Should say riscv :)
-> >
-> > It looks like this code is duplicated from xtensa and is effectively the
-> > same as mips. Can this code be placed in a generic file so that the code
-> > can be shared between mips, riscv, and xtensa -- maybe a new config that
-> > gets selected by mips/riscv/xtensa?
-> 
-> Yeah, that's actually what I was thinking. Which general file do you
-> think would be more suitable to put it in?
+> Heavy incoming traffic on some heavy load system, the max 1024 limit defined
+> by DMA_MAX_RX_SIZE in drivers/net/ethernet/stmicro/stmmac/common.h is too
+> few to achieve high throughput for XGMAC.
+> With this patch, ethtool can set a new length than 1024
 
-I am not sure the best place to put it. What do you think about
-mm/memblock.c next to the "memblock" early param?
+Please include some benchmark results to show the improvement.
 
-> 
-> > - Charlie
-> >
-> > > this patch.
-> > >
-> > > Excerpt from Documentation/admin-guide/kernel-parameters.txt:
-> > >
-> > > memmap=nn[KMG]@ss[KMG]
-> > > [KNL] Force usage of a specific region of memory.
-> > > Region of memory to be used is from ss to ss+nn.
-> > >
-> > > memmap=nn[KMG]$ss[KMG]
-> > > Mark specific memory as reserved.
-> > > Region of memory to be reserved is from ss to ss+nn.
-> > > Example: Exclude memory from 0x18690000-0x1869ffff
-> > > memmap=64K$0x18690000
-> > > or
-> > > memmap=0x10000$0x18690000
-> > >
-> > > There is no need to update this documentation file with respect to
-> > > this patch.
-> > >
-> > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > > ---
-> > >  arch/riscv/mm/init.c | 50 ++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 50 insertions(+)
-> > >
-> > > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > > index e3405e4b99af..7be7ec3092ad 100644
-> > > --- a/arch/riscv/mm/init.c
-> > > +++ b/arch/riscv/mm/init.c
-> > > @@ -208,6 +208,56 @@ static int __init early_mem(char *p)
-> > >  }
-> > >  early_param("mem", early_mem);
-> > >
-> > > +static void __init parse_memmap_one(char *p)
-> > > +{
-> > > +     char *oldp;
-> > > +     unsigned long start_at, mem_size;
-> > > +
-> > > +     if (!p)
-> > > +             return;
-> > > +
-> > > +     oldp = p;
-> > > +     mem_size = memparse(p, &p);
-> > > +     if (p == oldp)
-> > > +             return;
-> > > +
-> > > +     switch (*p) {
-> > > +     case '@':
-> > > +             start_at = memparse(p + 1, &p);
-> > > +             memblock_add(start_at, mem_size);
-> > > +             break;
-> > > +
-> > > +     case '$':
-> > > +             start_at = memparse(p + 1, &p);
-> > > +             memblock_reserve(start_at, mem_size);
-> > > +             break;
-> > > +
-> > > +     case 0:
-> > > +             memblock_reserve(mem_size, -mem_size);
-> > > +             break;
-> > > +
-> > > +     default:
-> > > +             pr_warn("Unrecognized memmap syntax: %s\n", p);
-> > > +             break;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int __init parse_memmap_opt(char *str)
-> > > +{
-> > > +     while (str) {
-> > > +             char *k = strchr(str, ',');
-> > > +
-> > > +             if (k)
-> > > +                     *k++ = 0;
-> > > +
-> > > +             parse_memmap_one(str);
-> > > +             str = k;
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +early_param("memmap", parse_memmap_opt);
-> > > +
-> > >  static void __init setup_bootmem(void)
-> > >  {
-> > >       phys_addr_t vmlinux_end = __pa_symbol(&_end);
-> > > --
-> > > 2.20.1
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-riscv mailing list
-> > > linux-riscv@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-> Thanks,
-> Yunhui
+But at some point, more buffers don't help you. If you are
+consistently overloaded, you will still overflow the buffers.  So you
+might want to look at where is the bottleneck and how do you
+prioritise processing packets over whatever else is loading the
+system.
+
+Maybe this would help, if the bus is the problem:
+
+https://www.spinics.net/lists/netdev/msg1006370.html
+
+	Andrew
