@@ -1,226 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2112.outbound.protection.partner.outlook.cn [139.219.146.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5EB1534E8
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718974623; cv=none; b=oUW9WnDis8qAw90hCdQpm6H6GPj2nktPaCrQvz8pLoGROxPTvXaIUWCJNFcvkOL3ODpmfmfPgNlxELOxJu3F62IeMWzsdZXOxAXk+cxBb4PssOjmGqFQ9hH4lpz3LrJZEyDcRw6sX/eQDI15NC0vay96UUWnRdoRSxSGjxafGn4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718974623; c=relaxed/simple;
-	bh=w3HgwLqKD5JrCFCdvS+8QJCmSSn43HNUy3SCdoQM5jg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j/55OjoLvz44cZs2UyCRwXS3kgUp5fN8QvDlPzi3o0BXGHrxQzGLe70nKm26TgJY+LGZJE4Y7cd7NmGdaDSK6JjuZeWcLe3TSDK/eBNZQWtbX+DDpxlZjPA5uOIF+zshxb9CkkVjycf/fQfcUPW2SjFabCax70ZelPJ9kDK8gIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iY6UoLCU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iY6UoLCU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718974620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8C5E3X6BacOMr3XOYKy8vIdVHxUEl+gW886qtND8CI8=;
-	b=iY6UoLCU8xG52n2vP9vPciBFBDHDlKwJ8E2g3MoLUoLEHWPGdTgYKJyAimwRjCgHT27ggg
-	tzk6w1mmVbeN9TwMhy+KvlshfC53mAkzSxoi68uLzcvPhmGm2Ix8BRRXv7F8cRwxxdURiz
-	6fodSEyAmxvffOzZehsp+vX+5mBz/DA=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-SO29TTcYMnCqmUxXrp2cdw-1; Fri, 21 Jun 2024 08:56:59 -0400
-X-MC-Unique: SO29TTcYMnCqmUxXrp2cdw-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52cd9f93fd8so368027e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:56:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718974618; x=1719579418;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8C5E3X6BacOMr3XOYKy8vIdVHxUEl+gW886qtND8CI8=;
-        b=t8GhNbA+XVtA8RSIGCqJUe66ih2QyVESJAejURNEzZvZ3HtWB+7tXPycaiXIaDgxUR
-         rCWlx7L10Jk+GTtA0/4+swLmxbVbLnwt5AWiyajEUyvPipjLQgTuuF/ZGQf3J+rTp1+L
-         HuHjHucLZaelmf/vtuPeYfaiQOFlr9NsoWMqmkyfhTrKhkEK2NH+6FAxLsb38yw7VSYJ
-         WZeENsT5iiN/5VBmtXkcPS/Io2tf46bSPKllKbRiM4v4wLmc4mEYIdr8/7raBXSu6SUD
-         slC847Xx8lJAkHyZGRu7m80nRdUUNzf9+Pt1a0m9Nh3PUiqy+Q8eW7nFtfp3XFExtJRR
-         D6pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAqoq70wYw5m1DgDXmmio2mzb2soSY9XiwruD3inLp4YU7C2MWQ5hWHaQeUPnpizsknEQ/xzU4e8Few/JYGDvngVN5EBPPIHqxzCU5
-X-Gm-Message-State: AOJu0Ywnhk73+Vsk238EmP4A4lOipqFpQBk6bK+QZNJpFFsGXFCCuhOW
-	HvOR6WoZl7XHFgByWNeAStrJLsS5R2HvOdiuPaZn9868dRqKlDaEp6OKSyov4Mgj31Wl6An0ZeR
-	wev1RwB4bm51HNqcVkpn+/tlnNqonTgKDl8l2zDUDvNhMMti47Vpo/aOwTKKg5w==
-X-Received: by 2002:ac2:5551:0:b0:52c:84a2:d848 with SMTP id 2adb3069b0e04-52ccaa5a162mr5085233e87.65.1718974617682;
-        Fri, 21 Jun 2024 05:56:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEaZZ5m4XfildOiandGjXNyWriLDWS+4f34iak4wkF6iHNKIis11n6ToJUSnX9tMq68jaNWDQ==
-X-Received: by 2002:ac2:5551:0:b0:52c:84a2:d848 with SMTP id 2adb3069b0e04-52ccaa5a162mr5085220e87.65.1718974617260;
-        Fri, 21 Jun 2024 05:56:57 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e? ([2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366383f672fsm1702871f8f.7.2024.06.21.05.56.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 05:56:56 -0700 (PDT)
-Message-ID: <24205cdf-a3c6-475e-ba8a-a52d039a402d@redhat.com>
-Date: Fri, 21 Jun 2024 14:56:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5F6152E0A;
+	Fri, 21 Jun 2024 12:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718974657; cv=fail; b=WmaKypq5BA8nmUkIbJZTC4MIRQJ08MzSppW9N7z46ZOAQ5G4cydxQfIxKGEE8YybZMb+7Med3SjiHwODIvWmFcg/pNAYkt5igSZ2OeHYXn4SSRhzm21fxC95KjNJnuIiGV+cBaB/KUaoWUMoNfNF9AMKFeS57vlouoDfS9BBX0Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718974657; c=relaxed/simple;
+	bh=4lFQQpmAvsoMe4I6RYj2zMWzqDWkiYm+N1Aey/I6fQM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ADpaauj88u2ZVf4rK2cYkwZ04wwUjIomKFJ6IbkEpWu1FVMml3Qu6A63DRrcI2ppZGwscW29Sh/eE+5p0AqHdSEGgZ/opNl8S1d9JzdUWOEvlg93PKBqCpVYMcMBKLWo2P/eg0IMRpGRc1emx5LDY7z4pNSJ+aGpttVr8P1UIs0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XGjTScVJI4iEnz0iNF/L1oT2TK0lwArFWT0Fe/ZQw18QUTQiMrtoLYB9SodkllPu83xp6XicC/O3gTwJ7b0Cf9piLL7WDB3vKdxhf01R6sXplFs/PA4jHFlvNKxGvGbyEDjBLQWop5cQZ+QC6EdmZjSjboBXgaxu5F7LhjXMylui2cXVm6SWwRGO/Y0W/RciPB0jK+mg4NgVBCY2v8CY1x2pYzKyY3pUi+DD7885/WgFNcjmAgLBt7YvOo5HdZasfzlnwjwDbDAy2ZCwnF/jncnqY4e7VedRoLfaVIBrrb8CTs2nZ2xhWnNoGNCJuxELu21LTnpQbjb1/rBcdmI8ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fEj7Emiyz5dvsIIrBiVW+/4imeofSTztYvolrRg71Io=;
+ b=I6hMhLW5E+5PLAe8Zj1gjH/i1Prz+MdzHKRgJ98+9EwXpnmWPrYx/tHKHCz5fonNDJjwVgILL1bL4ZR578c21lesOQuYYdrVGSa95mCQXgBy7Ra81XcGSjXjsWFW6Pi2plPEPMGXpRYDFPDeZ4BzVAz07ZvF958tz+o/1pmztkw+uYQjLVyHpqL6FVOdQ6+0e9R9SlDOIO8TBgauZqDa1doaNxc6JUfYKf0JlRNbGh4LJJg29PIce9lr2LSvW0WOoB4sUdn0/J0zCxpuqIo528AG2VCwHz82ucKd0mGm7nRuenTrHwRHvsUnTiNsknZZmGrvX3s8elt/2cEOuGupTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0751.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:24::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.33; Fri, 21 Jun
+ 2024 08:22:42 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::358e:d57d:439f:4e8a]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::358e:d57d:439f:4e8a%7])
+ with mapi id 15.20.7656.033; Fri, 21 Jun 2024 08:22:42 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Minda Chen <minda.chen@starfivetech.com>
+Subject: [PATCH v2 0/1] Add PCIe dts configuration for JH7110
+Date: Fri, 21 Jun 2024 16:22:30 +0800
+Message-Id: <20240621082231.92896-1-minda.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: BJSPR01CA0012.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:c::24) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/ssd130x: Add drm_panic support
-To: Javier Martinez Canillas <javierm@redhat.com>,
- linux-kernel@vger.kernel.org
-Cc: Maxime Ripard <mripard@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
- David Airlie <airlied@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org
-References: <20240620222222.155933-1-javierm@redhat.com>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <20240620222222.155933-1-javierm@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0751:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ae306b7-5db4-4648-e4bc-08dc91cb5202
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|1800799021|52116011|7416011|41320700010|366013|38350700011;
+X-Microsoft-Antispam-Message-Info:
+	NF64Cte/iVl/jy+9/S0pafs935geiwWiVXZvexufuV1GTV2BBSTr5YH99V+/lkLwWVlE2J84h2Oz7Si6lt7AsdsXskOKoD9qWJVMarTl/aiCO6dxWGr5WGbKeXdBVbw4vNHmxSJIx376kutY9556puO5UDwOICkoDI3nuYiC4nykkucEGhynbFjBQdNjBAFr/eUvn8qYwDnrbmaV2+aBpdmSEXv+6OJXZE/4CqILcDNya3KH0ZwYQenuceB1NPUGX4NSrCbS51O4A42ymveRCdmDQt6l0/1G5V3QaZbZ8O96bP7iJm5Utb2O02qquSAHyCi1nzwzt59KtaGE21p8btUWeIZYSb1XyZtdWk/EHVhp65UtUaDTTUmy0HwwvgDAYbRQSYuLIO99Y+HQ8DsGcpiypxw5uEy66Q2oUhPyfhR1gvA1K4lrioOS0HvCTZAOYvP/vj/rYPgX6cyiWoUQgFAHD6EPvvdCIGQUpqqGXskHqioRLPs3PMddQAxuNvKbMQ0Y94ZrYLfkfnk95MT614Fwjk0q5VX5K/o7m9rIYjTNR/x2dMgf2C0oFeIXjD+P4nic1HYeg7eys/W9jlVd8k6f8XMRmrHWIzHpuQFHfbXXphBvd8ZNagWY3Rap4w/I
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(52116011)(7416011)(41320700010)(366013)(38350700011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?amKZeAqG/b1HjkjDmk9rBp0kGciDs9+LlQXWv5CsJUIMTwdM6I85RE0W5Gu2?=
+ =?us-ascii?Q?PoEeJReM0nX6qsNwwSIC/wS4sJMskiZ1Lrsj+mSlhwjdfaGDR8uwHs4HIVz6?=
+ =?us-ascii?Q?e4VCin6IPObz1jLSJurPgFE9msQQBZLn2iKiBUfH7Da/812fqUIKiUNpsFSP?=
+ =?us-ascii?Q?vKZGI/YcdQ3Jxj6Pn/N4a8FZLX7H9VpZlC9PBWdEsDiE4v/s7+CclXS02oHi?=
+ =?us-ascii?Q?vrlAYKf6/cqSv5kTKFD6h/Cy1/ARQMDc9xoGVOKI+GLY0dXeR2fWUGJIA+rR?=
+ =?us-ascii?Q?szqkKqwoBsUoBqmcdqpS/HcKwX9LLq308noJg3b4x0Hpm3Bs7a+DCdq00TZX?=
+ =?us-ascii?Q?CVwttStosRdp/bi5zgqD8B3NRR0Tyl+pq/UoFgBBa0awANPKvL7s57fC5NE3?=
+ =?us-ascii?Q?b4rCPIJn+W9SvGilTgN6HHkc4nzb3ivYJvwTd1wy3G1XGjsw0UdP494X9Cel?=
+ =?us-ascii?Q?6Ct91Mm2Fi0BWkQixkp8l1/Cwi54cNnHPvVz48AN20Zhl520zlp2A5hRutkc?=
+ =?us-ascii?Q?wf2ePqipLmTkj9Zxcbnqd5TZHWF3VchbCZYUkPJqe1gt96rJWX6mM0mxcta3?=
+ =?us-ascii?Q?iDsZXmjZ0y6u3eRyb8FYxj2+cqgqe433ZRrwknX0Rwi4BEXbDYLCl0nCN6eS?=
+ =?us-ascii?Q?TZBMMStR1Ged9uNB/RPbip7GLhu9WdsP2xJoIA+GhT6bIAG7+dpKhNqx6sZ9?=
+ =?us-ascii?Q?VoxCcFxkl5hd0C2K+LzHZxgJgVVenXeu2XfXuURdkvY+dOEljRgg6nep1yo0?=
+ =?us-ascii?Q?OvZ7YvBYobVU/nw4njX2Lu7W5YzZ3//HFQ6ENty2McvBMJ/aiGFKP07olxAs?=
+ =?us-ascii?Q?yeMN0urUn8ZLGdsGiDTplhF/KjpdMIBqxjVBux+VTNN40IoRjxTKfX9IR9yF?=
+ =?us-ascii?Q?uDKE3Q/q8JB4T6YMLeatIe/2AE+BT3oCWiSpoMy3zyRki0HP5uKDbe01PL4M?=
+ =?us-ascii?Q?fxP3wIqtpdSwuUnJqSM07P4ShqgwX2btFM2JcFAFwqFu22qkYoPxdQEt3abK?=
+ =?us-ascii?Q?Etp4l6WyaPF7ta2LRLLe6ndPr2VVlYx7y1TsJCqoCBKaTD55n0Aaz/bhkubV?=
+ =?us-ascii?Q?bHug6X89nd2v1MKeayauANtpxIOwE7dyX2nHL2GluvSiM/OOmyBhIv6qPVFA?=
+ =?us-ascii?Q?EygLkcfZSoQGQyvj29rL4+ZTxDlgVU4B0AeTAeXoayac0xH/yi7/upzyK7z0?=
+ =?us-ascii?Q?xX2A1YGgBTaiXT9vf618SWwEu0rPvbvLsYeF+L1Ciwu5MoRbRMnKtytLH9lo?=
+ =?us-ascii?Q?c2XxiFEuHGH7r00bn18LdiXiLzfWDdKFKDNVV4dd+uuAlASqgxUZon/nurtG?=
+ =?us-ascii?Q?Rvntz7ZWeGmfscnpLoyrNt7YOd45u/Dtfmigzqglv95LiG7XBOd+nbJOqBIP?=
+ =?us-ascii?Q?xPEvC6J6wzuiZ80nFHaj3Dj5oJseHB5mivFaGtw1JG/lMD6WoY3Ti87dNQaI?=
+ =?us-ascii?Q?/t+V8TSyhkfI4R1mYksry0La4UJauFiBMfuEg7/BAFl4wRzOxe/5RHT+cQbu?=
+ =?us-ascii?Q?w4Vr5m0oqsX61uynaIAOMrnRZ5CMt5MUYlARx0OskZ+gYwLDM1W4ley1SzKi?=
+ =?us-ascii?Q?HaoZjPbguoZcqbqkxTYjEbZlBDbM+JwLec7oa5UsWX8PK2shT5VtR7u1FiOT?=
+ =?us-ascii?Q?vw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ae306b7-5db4-4648-e4bc-08dc91cb5202
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 08:22:42.1805
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QFHKM7r3l9gMxW1w05o7VxI0Tg2uOvto2jnRZLotldoTkD3u9UwYCRUz448h7YYUrBeXFV2GRt40F1W614d40FqN9O3q7varKSMUfa+vZnY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0751
+
+changed:
+    v2: default disable pcie dts node. enable it board config
+        (milkv mars and visionfive 2).
+
+base on v6.10-rc3.
+
+Minda Chen (1):
+  riscv: dts: starfive: add PCIe dts configuration for JH7110
+
+ .../boot/dts/starfive/jh7110-common.dtsi      | 62 +++++++++++++
+ .../boot/dts/starfive/jh7110-milkv-mars.dts   |  7 ++
+ .../jh7110-starfive-visionfive-2.dtsi         |  8 ++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
+ 4 files changed, 163 insertions(+)
 
 
-
-On 21/06/2024 00:22, Javier Martinez Canillas wrote:
-> Add support for the drm_panic infrastructure, which allows to display
-> a user friendly message on the screen when a Linux kernel panic occurs.
-> 
-> The display controller doesn't scanout the framebuffer, but instead the
-> pixels are sent to the device using a transport bus. For this reason, a
-> .panic_flush handler is needed to flush the panic image to the display.
-
-Thanks for this patch, that's really cool that drm_panic can work on 
-this device too.
-
-> 
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> ---
-> 
->   drivers/gpu/drm/solomon/ssd130x.c | 64 +++++++++++++++++++++++++++++++
->   1 file changed, 64 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
-> index 6f51bcf774e2..0bac97bd39b9 100644
-> --- a/drivers/gpu/drm/solomon/ssd130x.c
-> +++ b/drivers/gpu/drm/solomon/ssd130x.c
-> @@ -32,6 +32,7 @@
->   #include <drm/drm_managed.h>
->   #include <drm/drm_modes.h>
->   #include <drm/drm_rect.h>
-> +#include <drm/drm_panic.h>
->   #include <drm/drm_probe_helper.h>
->   
->   #include "ssd130x.h"
-> @@ -1386,6 +1387,63 @@ static void ssd133x_primary_plane_atomic_disable(struct drm_plane *plane,
->   	drm_dev_exit(idx);
->   }
->   
-> +static int ssd130x_primary_plane_helper_get_scanout_buffer(struct drm_plane *plane,
-> +							   struct drm_scanout_buffer *sb)
-> +{
-> +	struct drm_plane_state *plane_state = plane->state;
-> +	struct drm_shadow_plane_state *shadow_plane_state;
-> +
-> +	if (!plane_state || !plane_state->fb || !plane_state->crtc)
-> +		return -EINVAL;
-> +
-> +	shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-> +
-> +	sb->format = plane->state->fb->format;
-> +	sb->width = plane->state->fb->width;
-> +	sb->height = plane->state->fb->height;
-> +	sb->pitch[0] = plane->state->fb->pitches[0];
-> +	sb->map[0] = shadow_plane_state->data[0];
-> +
-> +	return 0;
-> +}
-> +
-> +static void ssd130x_primary_plane_helper_panic_flush(struct drm_plane *plane)
-> +{
-> +	struct drm_plane_state *plane_state = plane->state;
-> +	struct ssd130x_plane_state *ssd130x_plane_state = to_ssd130x_plane_state(plane_state);
-> +	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-> +	struct drm_crtc *crtc = plane_state->crtc;
-> +	struct ssd130x_crtc_state *ssd130x_crtc_state = to_ssd130x_crtc_state(crtc->state);
-> +
-> +	ssd130x_fb_blit_rect(plane_state->fb, &shadow_plane_state->data[0], &plane_state->dst,
-> +			     ssd130x_plane_state->buffer, ssd130x_crtc_state->data_array,
-> +			     &shadow_plane_state->fmtcnv_state);
-
-ssd130x_fb_blit_rect() will call regmap->write(), which involve mutex 
-and might sleep. And if the mutex is taken when the panic occurs, it 
-might deadlock the panic handling.
-One solution would be to configure the regmap with config->fast_io and 
-config->use_raw_spinlock, and check that the lock is available with 
-try_lock(map->raw_spin_lock)
-But that means it will waste cpu cycle with busy waiting for normal 
-operation, which is not good.
-
-So for this particular device, I think it's ok, because it's unlikely 
-you'll run kdump or other kernel panic handlers.
-But I would like to know what others think about it, and if it's 
-acceptable or not.
-
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
 -- 
-
-Jocelyn
-
-
-
-> +}
-> +
-> +static void ssd132x_primary_plane_helper_panic_flush(struct drm_plane *plane)
-> +{
-> +	struct drm_plane_state *plane_state = plane->state;
-> +	struct ssd130x_plane_state *ssd130x_plane_state = to_ssd130x_plane_state(plane_state);
-> +	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-> +	struct drm_crtc *crtc = plane_state->crtc;
-> +	struct ssd130x_crtc_state *ssd130x_crtc_state = to_ssd130x_crtc_state(crtc->state);
-> +
-> +	ssd132x_fb_blit_rect(plane_state->fb, &shadow_plane_state->data[0], &plane_state->dst,
-> +			     ssd130x_plane_state->buffer, ssd130x_crtc_state->data_array,
-> +			     &shadow_plane_state->fmtcnv_state);
-> +}
-> +
-> +static void ssd133x_primary_plane_helper_panic_flush(struct drm_plane *plane)
-> +{
-> +	struct drm_plane_state *plane_state = plane->state;
-> +	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-> +	struct drm_crtc *crtc = plane_state->crtc;
-> +	struct ssd130x_crtc_state *ssd130x_crtc_state = to_ssd130x_crtc_state(crtc->state);
-> +
-> +	ssd133x_fb_blit_rect(plane_state->fb, &shadow_plane_state->data[0], &plane_state->dst,
-> +			     ssd130x_crtc_state->data_array, &shadow_plane_state->fmtcnv_state);
-> +}
-> +
->   /* Called during init to allocate the plane's atomic state. */
->   static void ssd130x_primary_plane_reset(struct drm_plane *plane)
->   {
-> @@ -1442,18 +1500,24 @@ static const struct drm_plane_helper_funcs ssd130x_primary_plane_helper_funcs[]
->   		.atomic_check = ssd130x_primary_plane_atomic_check,
->   		.atomic_update = ssd130x_primary_plane_atomic_update,
->   		.atomic_disable = ssd130x_primary_plane_atomic_disable,
-> +		.get_scanout_buffer = ssd130x_primary_plane_helper_get_scanout_buffer,
-> +		.panic_flush = ssd130x_primary_plane_helper_panic_flush,
->   	},
->   	[SSD132X_FAMILY] = {
->   		DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
->   		.atomic_check = ssd132x_primary_plane_atomic_check,
->   		.atomic_update = ssd132x_primary_plane_atomic_update,
->   		.atomic_disable = ssd132x_primary_plane_atomic_disable,
-> +		.get_scanout_buffer = ssd130x_primary_plane_helper_get_scanout_buffer,
-> +		.panic_flush = ssd132x_primary_plane_helper_panic_flush,
->   	},
->   	[SSD133X_FAMILY] = {
->   		DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
->   		.atomic_check = ssd133x_primary_plane_atomic_check,
->   		.atomic_update = ssd133x_primary_plane_atomic_update,
->   		.atomic_disable = ssd133x_primary_plane_atomic_disable,
-> +		.get_scanout_buffer = ssd130x_primary_plane_helper_get_scanout_buffer,
-> +		.panic_flush = ssd133x_primary_plane_helper_panic_flush,
->   	}
->   };
->   
+2.17.1
 
