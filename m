@@ -1,160 +1,76 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8564208C4;
-	Fri, 21 Jun 2024 22:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670C208C4;
+	Fri, 21 Jun 2024 22:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719009298; cv=none; b=GLg8XNmrdmPx+Yvrhs/MCYqkY0NFfnGuM6Z4aerAVbHtyHffwbs8OUSSlp/gGOtgDkplTu8dv1KX1JyzZ2Rl4TQx/v/tL1onFMmAp2dX/tG4zo7+CTaMquR1MBs6tjiOxsqsNohpRNfeot0THUGce2lAjztLpmtTUGdikcqVHFQ=
+	t=1719009392; cv=none; b=HxLZ1RohlEW49LIgY0aIOGnYFkQSlEcswEi7yk9//AvI6YJ4RUld6O4ej14d6sAkFofpyUMCXT6QfvMIsXefkKsEHa+qpzX7jNz11MqhPVtOlB+sPPt154UYhQpmxV3sMCyLHmBM1BXgIQjpGajlb/CENK1LVhq5U1nADh9Mqwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719009298; c=relaxed/simple;
-	bh=zgYm8XSEvUPvMbKn2+8mwq09JBRYLIZQITMP22XLbsM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fSoLWMAeePMviIWbpISqisfZqGTWSuarhbnvtCaQExPi4AnI+QFM1e+CqYxcJHUhi03xEOE94it/KANydNaT5ejzMoe0RCwNnlATwXofsoXfaTnbntMuWxZZ7fjevS9E/sp5VPtw9I/NGopQyulylE89W9+/Id6ZgHsdcPgiifA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-6eab07ae82bso1771500a12.3;
-        Fri, 21 Jun 2024 15:34:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719009295; x=1719614095;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2IWpuNhQGuFo/RdmFczsMH8ijmOsAG0nFTrt9FOYt8U=;
-        b=A6VM9rOOINy2IsqwXILamGpkMkRAcF7MjtBdSqpcKEOlUB8wivu6HmKMX7BAC67S1r
-         kKjrOQR/H6YoGzN3v6QQA9x0TMV8ftpVOJcSNtqn+kxNMgze6+I73A1jnW1s0SxzrSJG
-         ni/QOTQfli4ipI89efphI/KM0irpJ5cG13yCsIti8RAzA5KKNJaHBgH5RZu6UXX8Hi1Q
-         Nv1g/wywTw11Q8GxfOI5Na+JypLupz5TTFR1Nc3ppnz3GDBF06XcVhdZRF3uFLX6VeVx
-         JuIjG8eLA8yXufm5i21IU0Cv38+ehVEcRreNrPBS61M1QQKw7uFEM8oqeZvcbsT0fype
-         o7rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVU1ISNxSLKJAi1PAI+vo+FYtO2SyEqfKUl8FRHCocH2nJ8AzfLqLdQL47dm4IK8Pxfgc7iXD8ZCrj+YToC+bjQZVci1BNIsUU5fU4VWZva2FugHT2/iQhoD9YD5wXTxyzV1p5p4tpePopNnDYEiZ/1QQBARLYk7KZg88UPAVmKQ2UNlg==
-X-Gm-Message-State: AOJu0YxcuWixbF/FxmSXZ8VafpOD7EHhQHxaNy0/m4ctZ9+KMFkWYjYm
-	I/3aucVsj9wtUiXrrGZ/NegfLyMWPpchN9pgSzRvpGKx1AIH3PYY7C0gelaE0rooK5fCqJkHGuk
-	h2n+i3/bDIjWq/E2AW/CW0r2/zpg=
-X-Google-Smtp-Source: AGHT+IEcARhlBbiGRZfC5xEromMPnH9+AkUCgppzFFSQjAmir49ujqJtA4OXYgdnK2WomsVNURlS2ZwpD7Bilkf0QVU=
-X-Received: by 2002:a17:90a:fc83:b0:2a4:b831:5017 with SMTP id
- 98e67ed59e1d1-2c7b5dae403mr9504425a91.48.1719009294813; Fri, 21 Jun 2024
- 15:34:54 -0700 (PDT)
+	s=arc-20240116; t=1719009392; c=relaxed/simple;
+	bh=9JkM/dcM2JYYr7ezKHy6/xOt0tnRt1I9sK4BeYdaC1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPt7t3zNaUt91+SC3sHYjF7S8MTe0iTBC2hwQB0NXZFV0httMNXF2ir8zSepyDJyDSB58rR6orr4PaTKUiYNRX0UwJ/parwYyWB8lTdRJKCllR0eSPXs2jQeSeQ3YRbkC4jRxutRyhrECvg/ymr7/CO2YM4J9lJNI3h1Pts6b3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
+	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sKmrB-002lkq-2l;
+	Sat, 22 Jun 2024 08:35:46 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 22 Jun 2024 08:35:46 +1000
+Date: Sat, 22 Jun 2024 08:35:46 +1000
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Yabin Cui <yabinc@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2] Fix initializing a static union variable
+Message-ID: <ZnYAQhNjVEvFlkdY@gondor.apana.org.au>
+References: <20240621211819.1690234-1-yabinc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621222357.717374-1-namhyung@kernel.org>
-In-Reply-To: <20240621222357.717374-1-namhyung@kernel.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 21 Jun 2024 15:34:43 -0700
-Message-ID: <CAM9d7chz7+aqmzWwRG9MRmXh_SY-YBRNPQsLDnPAfht_ECViOg@mail.gmail.com>
-Subject: Re: [RFC/PATCHSET 0/8] perf record: Use a pinned BPF program for
- filter (v2)
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	KP Singh <kpsingh@kernel.org>, Song Liu <song@kernel.org>, 
-	Stephane Eranian <eranian@google.com>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621211819.1690234-1-yabinc@google.com>
 
-Ugh, forgot to CC bpf list/folks.. ;-p
+On Fri, Jun 21, 2024 at 02:18:19PM -0700, Yabin Cui wrote:
+> saddr_wildcard is a static union variable initialized with {}.
+> 
+> Empty brace initialization of union types is unspecified prior to C23,
+> and even in C23, it doesn't guarantee zero initialization of all fields
+> (see sections 4.5 and 6.2 in
+> https://www.open-std.org/jtc1/sc22/wg14/www/docs/n2900.htm).
 
+What about all the other places in the kernel that use the same
+idiom? A grep shows that there are more than a hundred spots in
+the kernel where {} is used to initialise a union.
 
+$ git grep '=[[:blank:]]*{}' | grep union | wc -l
+123
+$
 
-On Fri, Jun 21, 2024 at 3:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> This is to support the unprivileged BPF filter for profiling per-task eve=
-nts.
-> Until now only root (or any user with CAP_BPF) can use the filter and we
-> cannot add a new unprivileged BPF program types.  After talking with the =
-BPF
-> folks at LSF/MM/BPF 2024, I was told that this is the way to go.  Finally=
- I
-> managed to make it working with pinned BPF objects. :)
->
-> v2 changes)
->  * rebased onto Ian's UID/GID (non-sample data based) filter term change
->  * support separate lost counts for each use case
->  * update the test case to allow normal users (if supported)
->
->
-> This only supports the per-task mode for normal users and root still uses
-> its own instance of the same BPF program - not shared with other users.
-> But it requires the one-time setup (by root) before using it by normal us=
-ers
-> like below.
->
->   $ sudo perf record --setup-filter pin
->
-> This will load the BPF program and maps and pin them in the BPF-fs.  Then
-> normal users can use the filter.
->
->   $ perf record -o- -e cycles:u --filter 'period < 10000' perf test -w no=
-ploop | perf script -i-
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.011 MB - ]
->         perf  759982 448227.214189:          1 cycles:u:      7f153719f4d=
-0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->         perf  759982 448227.214195:          1 cycles:u:      7f153719f4d=
-0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->         perf  759982 448227.214196:          7 cycles:u:      7f153719f4d=
-0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->         perf  759982 448227.214196:        223 cycles:u:      7f153719f4d=
-0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->         perf  759982 448227.214198:       9475 cycles:u:  ffffffff8ee012a=
-0 [unknown] ([unknown])
->         perf  759982 448227.548608:          1 cycles:u:      559a9f03c81=
-c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
->         perf  759982 448227.548611:          1 cycles:u:      559a9f03c81=
-c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
->         perf  759982 448227.548612:         12 cycles:u:      559a9f03c81=
-c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
->         perf  759982 448227.548613:        466 cycles:u:      559a9f03c81=
-c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
->
-> It's also possible to unload (and unpin, of course) using this command:
->
->   $ sudo perf record --setup-filter unpin
->
-> The code is avaiable in 'perf/pinned-filter-v2' branch at
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
->
-> Thanks,
-> Namhyung
->
->
-> Namhyung Kim (8):
->   perf bpf-filter: Make filters map a single entry hashmap
->   perf bpf-filter: Pass 'target' to perf_bpf_filter__prepare()
->   perf bpf-filter: Split per-task filter use case
->   perf bpf-filter: Support pin/unpin BPF object
->   perf bpf-filter: Support separate lost counts for each filter
->   perf record: Fix a potential error handling issue
->   perf record: Add --setup-filter option
->   perf test: Update sample filtering test
->
->  tools/perf/Documentation/perf-record.txt     |   5 +
->  tools/perf/builtin-record.c                  |  23 +-
->  tools/perf/builtin-stat.c                    |   2 +-
->  tools/perf/builtin-top.c                     |   2 +-
->  tools/perf/builtin-trace.c                   |   2 +-
->  tools/perf/tests/shell/record_bpf_filter.sh  |  13 +-
->  tools/perf/util/bpf-filter.c                 | 406 +++++++++++++++++--
->  tools/perf/util/bpf-filter.h                 |  19 +-
->  tools/perf/util/bpf_skel/sample-filter.h     |   2 +
->  tools/perf/util/bpf_skel/sample_filter.bpf.c |  75 +++-
->  tools/perf/util/evlist.c                     |   5 +-
->  tools/perf/util/evlist.h                     |   4 +-
->  tools/perf/util/python.c                     |   3 +-
->  13 files changed, 485 insertions(+), 76 deletions(-)
->
-> --
-> 2.45.2.741.gdbec12cfda-goog
->
->
+Also what if the union is embedded into a struct.  Does it get
+initialised fully or not? If not then you've got over 5000 {}
+initialisations to work through.
+
+$ git grep '=[[:blank:]]*{}' | wc -l
+5102
+$
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
