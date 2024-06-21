@@ -1,289 +1,310 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2051.outbound.protection.outlook.com [40.107.92.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BCC3EA66;
-	Fri, 21 Jun 2024 17:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718990236; cv=fail; b=mi7qB9h99Rqm+FkyoQmek5F8nuErFoRfT+Ud39+pkw08XI9gpIUEISDUDmHIP3swBKyQu0kbtBBa5XgzjVSM4wtoeoxSRIGNA0KjuZtiMEhi4xqrP7SyIzlF+YKodz9dor3rGcKxnsCJO7KY1+C5n23aBrnOWLXJMw16nhpZJj4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718990236; c=relaxed/simple;
-	bh=RiSwABWpjKjy1H042hg4qUuqy+dMWuTuNfzwrZyqNCA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cIc+tbxhTwsFtxNgIzregbJvLEz/SiCuEjF6iAusxyMCABVBLUGJepsHjeuqRz9GgfV2mVFol5CKEiVeB32POmQwGR+Pzn1Tx2wJa/zVxqEXfsWBhn25wQbakWTjqTEmKozRBN90XAzkB4CC/YKiyY1AOOlhFMag9vlClAQDhYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kGT5EDvJ; arc=fail smtp.client-ip=40.107.92.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7731D15D1
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 17:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718990309; cv=none; b=Ihv3wmxxU9Ppher2JVGBX/3TI+LcU8lnokTc3dUv7Eqjir0dm8V49DV7Hx7zUUyNTrNw/9cggw+wczQaDvJ7acugVa8wFnroXdf5bkRdHmFpfipuip07zbASPvd77VhI5tH07HwwYsNlH1jgh+1SL7dTu0FwA1pgWvUCpjpb+W4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718990309; c=relaxed/simple;
+	bh=6nWh3MZDnYJYK0sDZPjj8GECm9EGdc5ASbqZtcmF2Tg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQ60QZ/vciQoNEjqRRXa8w9N8/FYpcFFc2YXb88hMYdPp7W7NHqq/j5vg4DCD+05R4LllJOGZ6QsHL7AoGOqnaDmE3AB+ccgLJqKSN4kjXCFyQCbuAnj6dB55JsnGT7YlAE7xzGXXJhggtY38GT0XIX40lsUvWukixHMeeuHuFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zOwzQRZS; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kGT5EDvJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HPA8hAmLmYzPgsLCO2Qc//BXRut0HbXxxalGBL/BUgUz6pDtZHv/vAkcCgMyNrHbwbSQDMdvTeXCa/hDsXwJhfAHH3FOCWczT552mI63RAiUK+Ob09CteeOPobTOg0KDEwDN1eK3/12BIhg9jtum4T1tJ9vTtgs+6tEacHVh0UYx915OCeHIiU8RNlqm48Tmpb5Zo5rQur7bUBfDy70cIT8b5YxG6VpycGD2FjYGiOO9Sl1wSpt/+LiSzOnU0Gt/C1nm34wRQg74Afw9rajiESCmgCIJsap74Z37W7TaRAV3lgiElOwt8AJ5JQTz6WXXcRucBRjFXUWuhDkO8UQq+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1rfYDoRYg+u5KnxBUwwuzrc58vR6U9xc7UIiaDFABUU=;
- b=gXrA/7E/gy8sq3wM9fl3c+VJOgz8v4yB4atkufSGg/u2qr+xoE8YNcyAZfHUw2/u5vmCjJ5/3uzjxH3y/cQBcjLhd9BmOkbzrsopbls9iEEnhKLsld5J47rw4WHjQbY4s/PU1yNwBkdUA9F3O7EiTnhlW3OjNtSnBmWNr3LCXfaI0ckR/td6BBzDOY/XCxH1hZxOAR/qqIMtwFEGL5DqxzCi6BQ1a40ZQYBSY1JOLhgG91cnZYVG11URj77JxxtEWcyZ+NNUFRyl45VLJOzC7+KIkjXrvwWD/3cJ9FgQh2YoOqRD8YY5+kf7/CXhvGZMu9dcrKTnrHWPss1eOQmn7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1rfYDoRYg+u5KnxBUwwuzrc58vR6U9xc7UIiaDFABUU=;
- b=kGT5EDvJYMB2iZeFqfzGZgEXl/2ZA/BzmljNRKGkokX+M9SKkpv4SEqEnyiSlvVVO83uV0Bnn+Foom7kNnrxjW9+7iXSypUJtM0aY6KjFEm2H6/BYj/Hb3pV8CeIQndKwx8nRHjuaAhSJeMv7Qi8Ueo95hlY3k2OSQ3QBcRMN/0=
-Received: from SJ0PR13CA0047.namprd13.prod.outlook.com (2603:10b6:a03:2c2::22)
- by SN7PR12MB6815.namprd12.prod.outlook.com (2603:10b6:806:265::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Fri, 21 Jun
- 2024 17:17:05 +0000
-Received: from CO1PEPF000066EB.namprd05.prod.outlook.com
- (2603:10b6:a03:2c2:cafe::6c) by SJ0PR13CA0047.outlook.office365.com
- (2603:10b6:a03:2c2::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.33 via Frontend
- Transport; Fri, 21 Jun 2024 17:17:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000066EB.mail.protection.outlook.com (10.167.249.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 17:17:04 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
- 2024 12:17:03 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<x86@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <pgonda@google.com>,
-	<ashish.kalra@amd.com>, <bp@alien8.de>, <pankaj.gupta@amd.com>,
-	<liam.merwick@oracle.com>, Brijesh Singh <brijesh.singh@amd.com>, "Alexey
- Kardashevskiy" <aik@amd.com>
-Subject: [PATCH v1-revised 1/5] KVM: SEV: Provide support for SNP_GUEST_REQUEST NAE event
-Date: Fri, 21 Jun 2024 12:15:19 -0500
-Message-ID: <20240621171519.3180965-1-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240621134041.3170480-2-michael.roth@amd.com>
-References: <20240621134041.3170480-2-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zOwzQRZS"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-711b1512aeaso1759755a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718990307; x=1719595107; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORDV7dLJMiQHWovI48Ita0Rbr1EnXe1nxm2vxdqS/sw=;
+        b=zOwzQRZS6pyCoDLLFbtTDzucwrpeBiVA/Nv8L6v6q1sDQrM2h1LB3X5yfKhAT5/e3r
+         Hz1KbxZRepdj300XcDF8/I4hyAgqDkZ5RiCHZlPzwIwQJGrAeRTIE1DCWL+d/DZvE/Pm
+         RT+8bPsDMp9xRvVjDhNZxJ1/xhLgM4S0DcNPJlJWE9AbXHtX890ukWdHcPe2dfO+0hXp
+         /t+oVLEx+zFuxmXCSWF9q6Mnmhu41KdAX0P6M+46rUBZkcHEeOBEiuqC5yzV+j9wE4YE
+         3BK6dOaTxVlYire1wGnxt+przDD73robIXPB7oLG9uR30Iodb4MJwWGsO8b4QUiREAxU
+         eO5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718990307; x=1719595107;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ORDV7dLJMiQHWovI48Ita0Rbr1EnXe1nxm2vxdqS/sw=;
+        b=kKdp+R+0qEeHV9nHBw3LrG5U7H9tzn0PfK4128KwuWs8okWo7n3A+w3hBtA4++AxrL
+         8N0V+K8VPYAPuCuFiEz37LDydetcNB2R1KrQ/isfO5mSSao472eiRgc9EKfoD9MbJl9d
+         DwadPZF/1qoA9Gvr8TnIMf6kjYILrswu6ZnThcg7+S0BdKFerDgMX1HihYD2XHCSypGf
+         5QnE6NykZNizbpSTiodGxaFX5yO0NS0pebDw7kVfBP5jsnOgeJ74vW26lI0cxEWKEoqg
+         L5ntzj1rrhlhsewOp+YP9yxz8F2pxxrv11l2gTrKGrxGtaHKDMdW3CiEbcYatk8dx5r2
+         PEBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUs9MXrPWbW5oqX2E/2XuEAdSVUf/NyGmApLjjiAwL2cu8ErbdP93Qs4lkjTGS7/7/4hOGhRPG0iU4jl4TFvfVsqaNhzFAePdq2YD8a
+X-Gm-Message-State: AOJu0YwF5gduR/ah9fb5heEYShmtX+Eo+r3xiudFkmNMQIfPGjWApsub
+	oz2sskl++p8381gAAKHn7TTj01qUInnKKKyjjCcCWg/GpxgS0BUuqgQf6S5xYWs=
+X-Google-Smtp-Source: AGHT+IFhpdokOh+kKKtcr73LycfVRrBTht6rCs4M+ZRhBueKvK8qrFKcWT/wmy1ujZUYffpa8NRyaw==
+X-Received: by 2002:a17:903:18d:b0:1f8:3b7b:d0e5 with SMTP id d9443c01a7336-1f9aa3a64a3mr103208695ad.7.1718990306643;
+        Fri, 21 Jun 2024 10:18:26 -0700 (PDT)
+Received: from ghost ([2601:647:5700:6860:e8dd:a296:71d5:2490])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb5e3d77sm16460675ad.222.2024.06.21.10.18.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 10:18:25 -0700 (PDT)
+Date: Fri, 21 Jun 2024 10:18:23 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Jesse Taube <jesse@rivosinc.com>, linux-riscv@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu <andy.chiu@sifive.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Anup Patel <apatel@ventanamicro.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Erick Archer <erick.archer@gmx.com>,
+	Joel Granados <j.granados@samsung.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] RISC-V: Detect unaligned vector accesses
+ supported.
+Message-ID: <ZnW130PqW56CnZT8@ghost>
+References: <20240613191616.2101821-1-jesse@rivosinc.com>
+ <20240613191616.2101821-5-jesse@rivosinc.com>
+ <ZnDmRK0ZtKzmWN5S@ghost>
+ <ZnDsdzv4o/Xz9kWm@ghost>
+ <e6f7a061-50f0-4a6a-a09b-468502703c20@rivosinc.com>
+ <ZnSptpobfqjik3RM@ghost>
+ <20240621-reveler-underfed-37600a9f16d5@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066EB:EE_|SN7PR12MB6815:EE_
-X-MS-Office365-Filtering-Correlation-Id: b152ab44-9bac-45fb-530d-08dc9215f8d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|36860700010|1800799021|7416011|376011|82310400023;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zgb0PIVCLRPAV3mHxkMH7G0t2k97SoYoZ4gtFqaHztqcO0stiAak+trTrhZx?=
- =?us-ascii?Q?WrCu/QVlJqsudDeemFoA+7QNK5H8UtH7bUsdQ4mgYeG5bSQcComB5ZV4zsLO?=
- =?us-ascii?Q?HuRUCUlj5nLJjcqKY/HiahEPfKOUX+06LiBCYuM4ND4AmEMLNY83SYN0OZqt?=
- =?us-ascii?Q?WtA0H3n9ei1utUKkB9jt7FRZyUiDESzVynV2UydFZQkTj6nGE3mQR0iDdOmD?=
- =?us-ascii?Q?dSeyx+BwHuxJTvyusQ9fGF3LWicGppEjT9wGXgUB9ZNBjhANLShMFoLrEr8s?=
- =?us-ascii?Q?WUK1iNETRVdVItdz2BPIwP/l+aPZ1g+HW3Q/3c6D+1ry1eohu8Bi/0RpNgIi?=
- =?us-ascii?Q?8lb/7X2VjlgrmeySuFITIdGt2EwW8U7opvpM63XdTAKgsRdjuHQymfsJI3xP?=
- =?us-ascii?Q?gIwLvvqARdZKd6MbSVBMU1C9E31dGmJKt2dS6ynleFAuPos9jTZQIMQEFnZ9?=
- =?us-ascii?Q?nPvSIngkz7FFpqKUC4aL4kHnR/r8O5Uxn8A8+2YIX989Ul66rKAaRhLQlc5y?=
- =?us-ascii?Q?8wGsNG5tGliUh/wD8ebOKQjsautvz4nG9RdDOJfCOJXHmXRzDYkGZGB4wmPE?=
- =?us-ascii?Q?6oTR8Wk5X3oZZD4E1APt/IzTJBKjqHaYk+fPF5zIZWnOP07+q+U4zchcvcCK?=
- =?us-ascii?Q?5Vl+/PgswDApJjWOd3rOOCtXTQrvydgT6Z+8RE95JJ5rAKE5HY1FJsLh5qLG?=
- =?us-ascii?Q?S38H6xUsO/Z3vbJRcZSvNzM8YjKJKxnB44mdLpLCkVu3lw7ome9BfSRINR5H?=
- =?us-ascii?Q?UWm0McbNCBML3rTCvfkrsajarUNGTj0YYOJ94OX+KOCiXMlcJPsaCOjGDgY1?=
- =?us-ascii?Q?tDf/bpVTwu0Gh32gLZetaFQ2KP7b2zHmh4x1g+/3GjUnBla4ynuMlhAOXVbg?=
- =?us-ascii?Q?0iXSrog1Ptorb0DTkmdoEJ5UzPJU8bFqgaHZAPv1YkrdTbjpX9sQ2SJbnzvX?=
- =?us-ascii?Q?aUOkHygm9TyDbHFWnP9w0pp+f7+DFhgbfi1iJgK2xynXAcubLFNlq0gvWKb+?=
- =?us-ascii?Q?E1EHmNqLKUKkhP296AYgaePwukjZdeWfJ6TMIwPbn5vBmYlWXeHmztgQHrt+?=
- =?us-ascii?Q?mOnQpC8g3HkcLmRi42tdlberbuSFprKFTND1MIjJ/CP7WVgeBSFlb7EEEWaX?=
- =?us-ascii?Q?oTt4jHK7bBVt9ITcZeVa99+lK/QTnsJZhdBikHHejPRRKS5suvnrCLYKxeEZ?=
- =?us-ascii?Q?Fek67Sl6pIrBqMCy+DVMcMCXcoYAas82QDVU5+W2a0AjOSpcLtrP2UaL91gE?=
- =?us-ascii?Q?A6DopVXgXY0gHVop08G+n6Ex0sPMeZ/w51td30RdcvjdkZpfYYpk/If6l3Rk?=
- =?us-ascii?Q?KwrKgpBB3RRf5/KK6oTrZDUxBFS/jAzLglJZsk33XMHPOnR1zcL5Gs9T9sMT?=
- =?us-ascii?Q?Q7d5hPpPNU3buHKFxWNBVpccfof5tv46Nb2hXkbSB30zhnp25A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(1800799021)(7416011)(376011)(82310400023);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 17:17:04.4682
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b152ab44-9bac-45fb-530d-08dc9215f8d4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066EB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6815
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621-reveler-underfed-37600a9f16d5@wendy>
 
-From: Brijesh Singh <brijesh.singh@amd.com>
+On Fri, Jun 21, 2024 at 11:06:31AM +0100, Conor Dooley wrote:
+> On Thu, Jun 20, 2024 at 03:14:14PM -0700, Charlie Jenkins wrote:
+> > On Thu, Jun 20, 2024 at 05:31:28PM -0400, Jesse Taube wrote:
+> > > 
+> > > 
+> > > On 6/17/24 22:09, Charlie Jenkins wrote:
+> > > > On Mon, Jun 17, 2024 at 06:43:32PM -0700, Charlie Jenkins wrote:
+> > > > > On Thu, Jun 13, 2024 at 03:16:13PM -0400, Jesse Taube wrote:
+> > > > > > Run a unaligned vector access to test if the system supports
+> > > > > > vector unaligned access. Add the result to a new key in hwprobe.
+> > > > > > This is useful for usermode to know if vector misaligned accesses are
+> > > > > > supported and if they are faster or slower than equivalent byte accesses.
+> > > > > > 
+> > > > > > Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+> > > > > > ---
+> > > > > > V1 -> V2:
+> > > > > >   - Add Kconfig options
+> > > > > >   - Add insn_is_vector
+> > > > > >   - Add handle_vector_misaligned_load
+> > > > > >   - Fix build
+> > > > > >   - Seperate vector from scalar misaligned access
+> > > > > >   - This patch was almost completely rewritten
+> > > > > > ---
+> > > > > >   arch/riscv/Kconfig                         |  41 +++++++
+> > > > > >   arch/riscv/include/asm/cpufeature.h        |   7 +-
+> > > > > >   arch/riscv/include/asm/entry-common.h      |  11 --
+> > > > > >   arch/riscv/include/asm/hwprobe.h           |   2 +-
+> > > > > >   arch/riscv/include/asm/vector.h            |   1 +
+> > > > > >   arch/riscv/include/uapi/asm/hwprobe.h      |   5 +
+> > > > > >   arch/riscv/kernel/Makefile                 |   4 +-
+> > > > > >   arch/riscv/kernel/sys_hwprobe.c            |  41 +++++++
+> > > > > >   arch/riscv/kernel/traps_misaligned.c       | 119 ++++++++++++++++++++-
+> > > > > >   arch/riscv/kernel/unaligned_access_speed.c |   9 +-
+> > > > > >   arch/riscv/kernel/vector.c                 |   2 +-
+> > > > > >   11 files changed, 221 insertions(+), 21 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > > > > index b94176e25be1..f12df0ca6c18 100644
+> > > > > > --- a/arch/riscv/Kconfig
+> > > > > > +++ b/arch/riscv/Kconfig
+> > > > > > @@ -723,6 +723,12 @@ config RISCV_MISALIGNED
+> > > > > >   	help
+> > > > > >   	  Embed support for emulating misaligned loads and stores.
+> > > > > > +config RISCV_VECTOR_MISALIGNED
+> > > > > > +	bool
+> > > > > > +	depends on RISCV_ISA_V
+> > > > > > +	help
+> > > > > > +	  Enable detecting support for vector misaligned loads and stores.
+> > > > > > +
+> > > > > >   choice
+> > > > > >   	prompt "Unaligned Accesses Support"
+> > > > > >   	default RISCV_PROBE_UNALIGNED_ACCESS
+> > > > > > @@ -774,6 +780,41 @@ config RISCV_EFFICIENT_UNALIGNED_ACCESS
+> > > > > >   endchoice
+> > > > > > +choice
+> > > > > > +	prompt "Vector unaligned Accesses Support"
+> > > > > > +	depends on RISCV_ISA_V
+> > > > > > +	default RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
+> > > > > > +	help
+> > > > > > +	  This determines the level of support for vector unaligned accesses. This
+> > > > > > +	  information is used by the kernel to perform optimizations.
+> 
+> I haven't actually checked the patchset, but is it actually used by the
+> kernel to perform optimisations?
 
-Version 2 of GHCB specification added support for the SNP Guest Request
-Message NAE event. The event allows for an SEV-SNP guest to make
-requests to the SEV-SNP firmware through hypervisor using the
-SNP_GUEST_REQUEST API defined in the SEV-SNP firmware specification.
+No ;)
 
-This is used by guests primarily to request attestation reports from
-firmware. There are other request types are available as well, but the
-specifics of what guest requests are being made are opaque to the
-hypervisor, which only serves as a proxy for the guest requests and
-firmware responses.
+Right now this patch is just providing the information to userspace
+through hwprobe and doesn't optimize anything in the kernel.
 
-Implement handling for these events.
+> 
+> > > > > > It is also
+> > > > > > +	  exposed to user space via the hwprobe syscall. The hardware will be
+> > > > > > +	  probed at boot by default.
+> > > > > > +
+> > > > > > +config RISCV_DETECT_VECTOR_UNALIGNED_ACCESS
+> > > > > 
+> > > > > This is not used anywhere, what is the reason for including it?
+> > > 
+> > > This is so that we can check if they are supported or not, but not check the
+> > > speed of them. Similar to RISCV_EMULATED_UNALIGNED_ACCESS.
+> > 
+> > What do you mean? It isn't used anywhere so this "check if they are
+> > supported or not" is not guarded by this config.
+> > 
+> > > 
+> > > > > 
+> > > > > > +	bool "Detect support for vector unaligned accesses"
+> > > > > > +	select RISCV_VECTOR_MISALIGNED
+> > > > > > +	help
+> > > > > > +	  During boot, the kernel will detect if the system supports vector
+> > > > > > +	  unaligned accesses.
+> > > > > > +
+> > > > > > +config RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
+> > > > > > +	bool "Probe speed of vector unaligned accesses"
+> > > > > > +	select RISCV_VECTOR_MISALIGNED
+> > > > > > +	help
+> > > > > > +	  During boot, the kernel will run a series of tests to determine the
+> > > > > > +	  speed of vector unaligned accesses if they are supported. This probing
+> > > > > > +	  will dynamically determine the speed of vector unaligned accesses on
+> > > > > > +	  the underlying system if they are supported.
+> > > > > > +
+> > > > > > +config CONFIG_RISCV_UNALIGNED_ACCESS_UNSUPPORTED
+> > > > > 
+> > > > > This should not be prefixed with CONFIG and does not include VECTOR in
+> > > > > the name.
+> > > 
+> > > Huh thought it would warn fixed though
+> > 
+> > What do you mean by "warn fixed"?
+> > 
+> > > 
+> > > > I assume you meant to put
+> > > > > "RISCV_VEC_UNALIGNED_ACCESS_UNSUPPORTED" here?
+> > > 
+> > > This is to leave a faster path like SLOW or FAST to say that unaligned
+> > > access arent suported.
+> > 
+> > I am not sure what you are responding to. This comment seems to be
+> > responding to my correction of
+> > CONFIG_RISCV_UNALIGNED_ACCESS_UNSUPPORTED->RISCV_VEC_UNALIGNED_ACCESS_UNSUPPORTED
+> > so I don't see how that ties into SLOW/FAST.
+> > 
+> > > 
+> > > > > 
+> > > > > This was also intentionally left out on the scalar side [1]. The
+> > > > > implication here is that having this config will cause people to compile
+> > > > > kernels without unaligned access support which really shouldn't be
+> > > > > something we are explicitly supporting.
+> > > > > 
+> > > > > If somebody does want to support hardware that does not handle vector
+> > > > > unaligned accesses, the solution should be to add emulation support to
+> > > > > the kernel.
+> > > 
+> > > Yes but we dont have emulation support yet so I do think its a good idea.
+> > 
+> > I am hesitant because it is very likely that somebody will add support
+> > for unaligned vector emulation. When there is emulation support, this
+> > config option should not exist to be consistent with scalar. However if
+> > we add this option in now, we must expect a user to enable this config,
+> > and then 
+> 
+> I dunno, I think there could be value in having the option here. For
+> scalar, we couldn't have an option that would break the uABI, so the
+> unsupported option wasn't okay. That's not a constraint that we have for
+> vector.
+> 
+> For vector, if you have a system that doesn't support misaligned access,
+> you probably don't want to emulate the accesses either, since that's
+> likely remove any performance gains you get from using vector in the
+> first place, so I can see benefit in the option.
 
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
-Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-Co-developed-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-[mdr: ensure FW command failures are indicated to guest, drop extended
- request handling to be re-written as separate patch, massage commit]
-Signed-off-by: Michael Roth <michael.roth@amd.com>
-Message-ID: <20240501085210.2213060-19-michael.roth@amd.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/sev.c         | 73 ++++++++++++++++++++++++++++++++++
- include/uapi/linux/sev-guest.h |  9 +++++
- 2 files changed, 82 insertions(+)
+We have the RISCV_MISALIGNED option that disables the scalar emulation,
+but doesn't break the UABI because it's not saying that misaligned
+scalar is not supported, but just that the kernel doesn't emulate.
+Having an UNSUPPORTED option explicitly breaks the UABI which doesn't
+seem like something that the kernel should support. If we are okay with
+having options that break the UABI then this is fine, but I was under
+the impression that we did our best to avoid that.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index df8818759698..d9921ea87a81 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -19,6 +19,7 @@
- #include <linux/misc_cgroup.h>
- #include <linux/processor.h>
- #include <linux/trace_events.h>
-+#include <uapi/linux/sev-guest.h>
- 
- #include <asm/pkru.h>
- #include <asm/trapnr.h>
-@@ -3321,6 +3322,10 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
- 		if (!sev_snp_guest(vcpu->kvm) || !kvm_ghcb_sw_scratch_is_valid(svm))
- 			goto vmgexit_err;
- 		break;
-+	case SVM_VMGEXIT_GUEST_REQUEST:
-+		if (!sev_snp_guest(vcpu->kvm))
-+			goto vmgexit_err;
-+		break;
- 	default:
- 		reason = GHCB_ERR_INVALID_EVENT;
- 		goto vmgexit_err;
-@@ -3939,6 +3944,71 @@ static int sev_snp_ap_creation(struct vcpu_svm *svm)
- 	return ret;
- }
- 
-+static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_gpa)
-+{
-+	struct sev_data_snp_guest_request data = {0};
-+	struct kvm *kvm = svm->vcpu.kvm;
-+	kvm_pfn_t req_pfn, resp_pfn;
-+	sev_ret_code fw_err = 0;
-+	int ret;
-+
-+	if (!sev_snp_guest(kvm) || !PAGE_ALIGNED(req_gpa) || !PAGE_ALIGNED(resp_gpa))
-+		return -EINVAL;
-+
-+	req_pfn = gfn_to_pfn(kvm, gpa_to_gfn(req_gpa));
-+	if (is_error_noslot_pfn(req_pfn))
-+		return -EINVAL;
-+
-+	resp_pfn = gfn_to_pfn(kvm, gpa_to_gfn(resp_gpa));
-+	if (is_error_noslot_pfn(resp_pfn)) {
-+		ret = EINVAL;
-+		goto release_req;
-+	}
-+
-+	if (rmp_make_private(resp_pfn, 0, PG_LEVEL_4K, 0, true)) {
-+		ret = -EINVAL;
-+		kvm_release_pfn_clean(resp_pfn);
-+		goto release_req;
-+	}
-+
-+	data.gctx_paddr = __psp_pa(to_kvm_sev_info(kvm)->snp_context);
-+	data.req_paddr = __sme_set(req_pfn << PAGE_SHIFT);
-+	data.res_paddr = __sme_set(resp_pfn << PAGE_SHIFT);
-+
-+	/* Firmware failures are propagated on to guest. */
-+	ret = sev_issue_cmd(kvm, SEV_CMD_SNP_GUEST_REQUEST, &data, &fw_err);
-+	if (ret)
-+		pr_debug("%s: guest request failed, ret %d fw_err %d",
-+			 __func__, ret, fw_err);
-+
-+	/*
-+	 * If reclaim fails then there's a good chance the guest will no longer
-+	 * be runnable so just let userspace terminate the guest. Don't try to
-+	 * release the resp_pfn page reference in that case since it is no
-+	 * longer usable for future allocations.
-+	 */
-+	if (snp_page_reclaim(kvm, resp_pfn)) {
-+		ret = -EIO;
-+		goto release_req;
-+	}
-+
-+	/*
-+	 * As per GHCB spec, firmware failures should be communicated back to
-+	 * the guest via SW_EXITINFO2 rather than be treated as immediately
-+	 * fatal.
-+	 */
-+	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb,
-+				SNP_GUEST_ERR(ret ? SNP_GUEST_VMM_ERR_GENERIC : 0,
-+					      fw_err));
-+
-+	ret = 1; /* resume guest */
-+	kvm_release_pfn_dirty(resp_pfn);
-+
-+release_req:
-+	kvm_release_pfn_clean(req_pfn);
-+	return ret;
-+}
-+
- static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- {
- 	struct vmcb_control_area *control = &svm->vmcb->control;
-@@ -4213,6 +4283,9 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
- 
- 		ret = 1;
- 		break;
-+	case SVM_VMGEXIT_GUEST_REQUEST:
-+		ret = snp_handle_guest_req(svm, control->exit_info_1, control->exit_info_2);
-+		break;
- 	case SVM_VMGEXIT_UNSUPPORTED_EVENT:
- 		vcpu_unimpl(vcpu,
- 			    "vmgexit: unsupported event - exit_info_1=%#llx, exit_info_2=%#llx\n",
-diff --git a/include/uapi/linux/sev-guest.h b/include/uapi/linux/sev-guest.h
-index 154a87a1eca9..7bd78e258569 100644
---- a/include/uapi/linux/sev-guest.h
-+++ b/include/uapi/linux/sev-guest.h
-@@ -89,8 +89,17 @@ struct snp_ext_report_req {
- #define SNP_GUEST_FW_ERR_MASK		GENMASK_ULL(31, 0)
- #define SNP_GUEST_VMM_ERR_SHIFT		32
- #define SNP_GUEST_VMM_ERR(x)		(((u64)x) << SNP_GUEST_VMM_ERR_SHIFT)
-+#define SNP_GUEST_FW_ERR(x)		((x) & SNP_GUEST_FW_ERR_MASK)
-+#define SNP_GUEST_ERR(vmm_err, fw_err)	(SNP_GUEST_VMM_ERR(vmm_err) | \
-+					 SNP_GUEST_FW_ERR(fw_err))
- 
-+/*
-+ * The GHCB spec only formally defines INVALID_LEN/BUSY VMM errors, but define
-+ * a GENERIC error code such that it won't ever conflict with GHCB-defined
-+ * errors if any get added in the future.
-+ */
- #define SNP_GUEST_VMM_ERR_INVALID_LEN	1
- #define SNP_GUEST_VMM_ERR_BUSY		2
-+#define SNP_GUEST_VMM_ERR_GENERIC	BIT(31)
- 
- #endif /* __UAPI_LINUX_SEV_GUEST_H_ */
--- 
-2.25.1
+There definitely is value in having an option like this for hardware
+that never wants to run misaligned code, but since we decided with the
+scalar accesses that we should not break the UABI I think vector should
+do the same.
+
+> Enabling the probing is going to end up with same outcome for userspace
+> as having this option on such a system, so it comes down to whether you
+> want to allow people to skip the probing if they know their system has
+> this problem.
+> 
+> > we will have to get rid of it later. Users are not always happy
+> > when config options are removed.
+> 
+> I dunno, I don't think that adding emulation requires that we remove
+> this unsupported option.
+
+I am probably being too paranoid about this but I am hesistant to cause
+vector and scalar misaligned access implemenations to diverge. It is
+inconsistent to allow an unsupported option for vector but not for
+scalar when both support emulation. The probing is very fast as it just
+checks if a misaligned access causes a trap and then sets the access
+speed to unsupported if it does trap.
+
+> 
+> Additionally, what are we doing in the kernel if we detect that
+> misaligned stuff isn't supported? Are we going to mandate that kernel
+> code is aligned only, disable in-kernel vector or some other mechanism
+> to make sure that things like crypto code don't have/introduce code
+> that'll not run on these systems?
+
+UNSUPPORTED will still be set by the quick probe so it would be possible
+for the kernel/userspace to avoid running misaligned vector when it's
+unsupported. Any kernel methods would probably want to always run
+aligned vector unless misaligned support was determined to be FAST
+anyway, I am doubtful that code will have different optimizations for
+FAST, SLOW, and UNSUPPORTED but it is possible. 
+
+I would prefer consistency between scalar and vector misaligned support,
+but this is not a deal breaker for this patch. I am not convinced it is
+the best choice, but I am okay with leaving this option in the kernel.
+
+- Charlie
+
+> 
+> Cheers,
+> Conor.
+
 
