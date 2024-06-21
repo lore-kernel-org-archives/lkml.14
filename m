@@ -1,40 +1,70 @@
-Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670C208C4;
-	Fri, 21 Jun 2024 22:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47A8208C4;
+	Fri, 21 Jun 2024 22:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719009392; cv=none; b=HxLZ1RohlEW49LIgY0aIOGnYFkQSlEcswEi7yk9//AvI6YJ4RUld6O4ej14d6sAkFofpyUMCXT6QfvMIsXefkKsEHa+qpzX7jNz11MqhPVtOlB+sPPt154UYhQpmxV3sMCyLHmBM1BXgIQjpGajlb/CENK1LVhq5U1nADh9Mqwo=
+	t=1719009534; cv=none; b=cOiuszUrZXGV9nJvLiHsFqKJhZxK3MpzZNd5FKM6e/BH5moiD2jEmulLUYr4N8ivqlSVpsivKFTquLG8M7tkttWntlrG0Hhum/hVECYE7sQAgNtuaoCHGFSHEJiqe9U3nvV/rWPdegGCRSU3ubY+NOuKsFtgDWvcG+3P+Q5GOp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719009392; c=relaxed/simple;
-	bh=9JkM/dcM2JYYr7ezKHy6/xOt0tnRt1I9sK4BeYdaC1Q=;
+	s=arc-20240116; t=1719009534; c=relaxed/simple;
+	bh=iuxCD6SXr+LIzZGYfpPXvUJ7nV8ibWRlt4gRpZUawzg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPt7t3zNaUt91+SC3sHYjF7S8MTe0iTBC2hwQB0NXZFV0httMNXF2ir8zSepyDJyDSB58rR6orr4PaTKUiYNRX0UwJ/parwYyWB8lTdRJKCllR0eSPXs2jQeSeQ3YRbkC4jRxutRyhrECvg/ymr7/CO2YM4J9lJNI3h1Pts6b3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
-	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sKmrB-002lkq-2l;
-	Sat, 22 Jun 2024 08:35:46 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 22 Jun 2024 08:35:46 +1000
-Date: Sat, 22 Jun 2024 08:35:46 +1000
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Yabin Cui <yabinc@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2] Fix initializing a static union variable
-Message-ID: <ZnYAQhNjVEvFlkdY@gondor.apana.org.au>
-References: <20240621211819.1690234-1-yabinc@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHfjgB8Z/Zg40Sw4WhyDuRrxu7e0UD9PICjFtOTlru5rgklE8v8D9ZosNHNU2PeX0xP9NBD8f2g4YI/c5rUdrfSIrw9oatqLFo2IbsuksKRcL9lIoVXsMPyQEozyIFQ5miNU38EnvoEsOb80XJjYCdkf9LthikfsziEIQX6wqqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmvzLRj/; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmvzLRj/"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f480624d10so20811365ad.1;
+        Fri, 21 Jun 2024 15:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719009532; x=1719614332; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=abeU2GGQMEFPwQcngO4m8ohAO9d8OVamW3SQd0gTR/I=;
+        b=gmvzLRj/qyZ3wsu6eoWkxRC1bulv/8w4Xrb6cV0k10hxaw5qgRwlFU1nUdrkKcK117
+         fNJSCWfWoFeQlRuv6D7xdxtb82V7545MMzQmkiQPpxsadywlajkYL6dOkYQqyVDikyrm
+         6TlGe3hEr7CLIrTRWv0fnMMqxhyQYZma90KGr1005nQPsaJdLBzLlA0TkW2m/U4ftgdE
+         ahWYUvS1jhQa7Ujnbt5XUkwBnZImMEwMbxdNCEKX1hfiEfwVm4W//itkp6AQvepLzuZT
+         IKCDkzY3ORkHKOI8dI+wQYxtBJLMUPjqZAv8coExrN2/xDzQ2oE47ZCwsB512PoWCdK2
+         ukGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719009532; x=1719614332;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=abeU2GGQMEFPwQcngO4m8ohAO9d8OVamW3SQd0gTR/I=;
+        b=jnPAhEEDvfmOTq3Oj44IgwcoivF7hups3xMjZxSb5H2+tiRzehQsrq8ZldHykD1+F4
+         Tv4C/K0wnTHrY3gHD/kf5FvIzSRB7ai2gaiTWwS6mxAQF2SSoDF5NeWot5jyHUOGB7GH
+         thiTym9Zw3IpPqaTXZ02ekMLnBsnrXJmmP/lEXKK8X+G9RV2s0OuoiicIyVg5U6Qz5oF
+         ePr3ln6bJM0j06eE3FMLMRqdlQso77T5YlHOSA+UFEzR7yDoCefDwlScpKe+YC57iYMq
+         DBEX3ryzutSoXDATfc0mFHCD/O6VbMGnlJk7wOnpkWZZaBk2UhryeILm2Y2JsRA8O9/Z
+         UP7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWUr2xbh2m89S4T15rL2VGefQxLMBLkXWLOylOWLN5Vr8UWs40xIllMzQ7aTRj7tbs9ZnLQ46YDkiXTa8BNxaAHzgfYVzb2tkupcdNJ
+X-Gm-Message-State: AOJu0YwCoVZiDL6yQyzdyx9/RmbkR8xMLAcZYX4ewoa4kcWZhkfE9Q1f
+	R+hWhVaLqos9G8WX+mLXwVu9o2ZH534QSD43XBiwHtRRT9ehEjjx
+X-Google-Smtp-Source: AGHT+IHpSEg3XHl2cj+523T94EXl++q2aLaanr1Vrm1C8htxO3NPr4o3CPXRYbhssuHnegqyRjXmhg==
+X-Received: by 2002:a17:903:22ce:b0:1f9:fca9:7433 with SMTP id d9443c01a7336-1f9fca976efmr18690715ad.34.1719009531795;
+        Fri, 21 Jun 2024 15:38:51 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb2f2a4bsm19255645ad.57.2024.06.21.15.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 15:38:51 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 21 Jun 2024 12:38:50 -1000
+From: Tejun Heo <tj@kernel.org>
+To: rafael@kernel.org, viresh.kumar@linaro.org
+Cc: linux-pm@vger.kernel.org, void@manifault.com,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	mingo@redhat.com, peterz@infradead.org,
+	David Vernet <dvernet@meta.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH 1/2] cpufreq_schedutil: Refactor sugov_cpu_is_busy()
+Message-ID: <ZnYA-hrec6cVADtJ@slm.duckdns.org>
+References: <20240619031250.2936087-1-tj@kernel.org>
+ <20240619031250.2936087-2-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,34 +73,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240621211819.1690234-1-yabinc@google.com>
+In-Reply-To: <20240619031250.2936087-2-tj@kernel.org>
 
-On Fri, Jun 21, 2024 at 02:18:19PM -0700, Yabin Cui wrote:
-> saddr_wildcard is a static union variable initialized with {}.
+On Tue, Jun 18, 2024 at 05:12:02PM -1000, Tejun Heo wrote:
+> sugov_cpu_is_busy() is used to avoid decreasing performance level while the
+> CPU is busy and called by sugov_update_single_freq() and
+> sugov_update_single_perf(). Both callers repeat the same pattern to first
+> test for uclamp and then the business. Let's refactor so that the tests
+> aren't repeated.
 > 
-> Empty brace initialization of union types is unspecified prior to C23,
-> and even in C23, it doesn't guarantee zero initialization of all fields
-> (see sections 4.5 and 6.2 in
-> https://www.open-std.org/jtc1/sc22/wg14/www/docs/n2900.htm).
+> The new helper is named sugov_hold_freq() and tests both the uclamp
+> exception and CPU business. No functional changes. This will make adding
+> more exception conditions easier.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: David Vernet <dvernet@meta.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
 
-What about all the other places in the kernel that use the same
-idiom? A grep shows that there are more than a hundred spots in
-the kernel where {} is used to initialise a union.
+Applied to sched_ext/for-6.11.
 
-$ git grep '=[[:blank:]]*{}' | grep union | wc -l
-123
-$
+Thanks.
 
-Also what if the union is embedded into a struct.  Does it get
-initialised fully or not? If not then you've got over 5000 {}
-initialisations to work through.
-
-$ git grep '=[[:blank:]]*{}' | wc -l
-5102
-$
-
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+tejun
