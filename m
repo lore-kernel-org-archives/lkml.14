@@ -1,292 +1,266 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908B3156227;
-	Fri, 21 Jun 2024 16:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9322DDC4
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718987654; cv=none; b=BT+OLzs9Ojk5fTaC3TWLi8gCIVsSSVnMbOQXryrAzJDQ3vW7NLm+ublQN56ZmhW+Zp7ZZuORanLqqy/SicsxcCkdU+gK1u2MD6PLydUTLvIggmEUCHyUPfahwnUzXvndta8r13q9f8TBrYw6zttvbl9Am495psoB49nkSjzciZk=
+	t=1718987704; cv=none; b=qe4iRrlzZhJGrUilnfyt0mBGtH8BSQphCfScZ9LiAm8zbFBWbWw5TJDPUGRKHI/gSGIXBotkllauoO7prXIdDimhORaE8woJ4CYpdo75d2j01fPS+DQ1lc1H/J4VPnvlfrOJ0ixpz9BqiSdUx4Sn0uaOXdSLrpTTtV9cL+sbIKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718987654; c=relaxed/simple;
-	bh=SzpHfji6jieEcUwIJxBlYV6UQEyva0Ke/KALpE5BdSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gRAou1ymoWPmx/MnL2r1Cmz+4LdsqdUSxBgqnY63Cm6fjvGN7nkPdFLNEJ/5GO7wt1X3gA83Areb5I3LPKBGQATsvsdObVzBAdzZtRoqRLNhJZ264Dqcg13z6LNnTjeLX4CR5fpWjdxFOpBetNnNQUzgx6jNLHZTiNHvTm3h0So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jJlq0Q3T; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718987704; c=relaxed/simple;
+	bh=qGTXBU6L6MXUTWOST93MNu8iX1GGyVWVopEyzWe3ink=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QFsAyGNSnXvqtLZbibQQUNpFlQ4RRbTmI0V1FXqfdl7lTmnYpB24dxK3Af+lHd2ezAj+9XBGsUh8rPEi5lJQMPl9u6K32ltIholMCxPMXMXphFJELWjEnhuwh+FyIXuHq357yYa34ErFWSPOKX1Sbs4Y3aaJ0n9zOMu+A1nQokY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LrE/7mLJ; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJlq0Q3T"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7065a2f4573so460051b3a.2;
-        Fri, 21 Jun 2024 09:34:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LrE/7mLJ"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6efe62f583so218196566b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:35:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718987652; x=1719592452; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pj1xp1u+kQa0camB8UfdblfjMRYqud2QNR4VwIx50Oo=;
-        b=jJlq0Q3T9wfTwha7BG0wkwSbFOn3qt13CEShfSr1BfY2q188b3itUjPCdFvoPvVdFW
-         rVqZlIif0Pa9ct3oTsPVOtpS9EkBfccLqNVJSvq1lU9/0VhYgj8vU+p1nNMdy0lvc7Jj
-         Piw2oHC+izW4+GQctLqWQDUxuddyKBOrIaCL0ntYmG+75TWxQNPxTSrc7QSp7Zg1050X
-         kZOoG1JfPGaQmzadexO767JSpE/xBThSVEJxio4FBMtdnDNk88Iv9O43e/uvxBGKGOgm
-         T53fNbzAmbHvCNnUw9eTxEQu3vMkQh0v1+xUkew3yEtjEql8qyUyEOdWyvvsLKO/LSxj
-         ipLg==
+        d=linux-foundation.org; s=google; t=1718987701; x=1719592501; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tAU1GlYr9btps524o7pSIFXimP7Sp6MAR+S3GC5BL3g=;
+        b=LrE/7mLJ32NG2MlW91DeBevy2LiBCO/woGjuSmVns4B8abYe6K7/Q8UwCsPoiuuusY
+         dfuu2sI4zOGhSz+646M4Sh8Il2h+BeGrfXZ3Mcn4abVSi1pBN7kryUhWes/Q5GwXEL3R
+         I/jDij7jIvj39pPCNgBHUQrG3yCknQeCqdSSQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718987652; x=1719592452;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1718987701; x=1719592501;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Pj1xp1u+kQa0camB8UfdblfjMRYqud2QNR4VwIx50Oo=;
-        b=wYsZpCKD5AwESpylV6OEL9qCdLDb6KB6yoFGP2OvH5wdR29vBbwBmkRGOOYEzd4c/Y
-         DHZqAd2GFGJTM3vQ5mKjfUuK7XL7zHf31QOzd1ujtWM0QK2NDbgKW6/c7YcdMGQbWwXO
-         lOSngna9AHFgANmgaNIcDx0MhOymxa/7Cvvn2x3GPK931eAViB/DtO8ZxSmVaL4nkCS9
-         RkOVjnyC3/NlCJImbtyEtLIAT0UtoCxkCPrtP8g1sNajCj9NSgkP/K3aLTVcHZka3P3C
-         3enUTQ9Ums1a5hUyMOpVjaN3Fwp9zPpK0AFHumvTLv5P6iV5aWzTth8r9PMHaoNShUBH
-         xIGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0HN8hKpIIW9LbE04WlmKv5PpmsVnuPicJBJuifhSmMz8kZnEsIFz9D/7hIXXyuoGdlE/2gzE3C7dYpN7VctcL8RGM24B36mc5W3zm69ogv2As79kSpOzcED6ghZwjHm60oZi9FyJvA+ERfrn6A5D7
-X-Gm-Message-State: AOJu0YxVDnA+dLk+h37oPmA3B9wZElkNl9kT0xdhD+oK2/2viFqfbf5T
-	ZAMt3XjDcDPZfCUDFqf+CD8kaMph5xFR81xaLSTmYGZYJ2XUfft4WkP8Mg==
-X-Google-Smtp-Source: AGHT+IGDPz6QXD1xbUHPZ6tYUQXqEH+AmvFhC78fud6CJiOyWZdEm//Qqma5t8UIZ+6MDsaiz9N4Pw==
-X-Received: by 2002:a05:6a00:138c:b0:702:3e36:b7c4 with SMTP id d2e1a72fcca58-70629c15e97mr10553453b3a.5.1718987651744;
-        Fri, 21 Jun 2024 09:34:11 -0700 (PDT)
-Received: from localhost.localdomain ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065119d734sm1606526b3a.59.2024.06.21.09.34.06
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 21 Jun 2024 09:34:10 -0700 (PDT)
-From: yskelg@gmail.com
-To: Pedro Tammela <pctammela@mojatatu.com>
-Cc: netdev@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Austin Kim <austindh.kim@gmail.com>,
-	shjy180909@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	ppbuk5246@gmail.com,
-	Yunseong Kim <yskelg@gmail.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH net v2] net/sched: Fixes: 51270d573a8d NULL ptr deref in perf_trace_qdisc_reset()
-Date: Sat, 22 Jun 2024 01:25:54 +0900
-Message-ID: <20240621162552.5078-4-yskelg@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        bh=tAU1GlYr9btps524o7pSIFXimP7Sp6MAR+S3GC5BL3g=;
+        b=jztIRGPOQaGlufsElDDl3AICst6svz33GhMD+8EJa14i769CXHKhEGhgDD8J8/5jXH
+         uKM9I0PxNKdpsPjk9GY2Hveey6UB8mNM2mD4AGoNuPQhC0pqg8xzYvQ4JhIubpqt9Rln
+         PsVFgevKIHunItNvmvP0Rrk74ZPvE/aFnaJG4wXPezK1zAtsYFNM3jv0oXqEtjiSfU7x
+         Nnxh/jrtLCl9aBBgY7b/3+L6suLzdeZ8mfsMBhT4P3UCs5jo8MpsrBC1HU2Kq4d+bAsO
+         O4bwLr/K8XIE3SrQL9RM91FV6cUmoCr+mTBTKaqMMMX7Tv8Hb+8sEgk7tpW+3XBZjJ+c
+         JTOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKI5YtukQNYD3rYS+9OOhT6Vq6r4pTHud/0irPI9ybAMCM9ndvlFwlb9RYek1bdY3TgRTsYX+f3FvmYNj8rKzKJapZ/HoghYuj67zk
+X-Gm-Message-State: AOJu0YwforviBjV/YO/QYduzHityPSeMZGJJ76xHPDXKFR4TEZfrtnhY
+	4LgD2tkEaIHikW8enAI0ahdTozGVreu2njOcq9neOJt1qU42Xhet5+xm3kE7L5gP2cp+1vEdxOB
+	Uu9vH0A==
+X-Google-Smtp-Source: AGHT+IF9jl0hqWG9CF/M6LPNyTt4GVhIAIyO7W5TdmABeALFW7IINQZGnJ7tDTjHnAghsjoZyZcf1w==
+X-Received: by 2002:a17:906:454c:b0:a6f:2448:a274 with SMTP id a640c23a62f3a-a6fab7792f7mr543384666b.59.1718987700737;
+        Fri, 21 Jun 2024 09:35:00 -0700 (PDT)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf54923fsm99661966b.104.2024.06.21.09.35.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 09:35:00 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4217d451f69so19183575e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:35:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVohja2u9CAdqcKiNFIDYQ/AolOHE8yIbUD9VtkgNjzau36IErOSZsWYRGF/ZR29dvit+JL+BdKC/ZPLf0rYVU5lEq9vDqw7JUBA8n
+X-Received: by 2002:a17:907:8011:b0:a6f:11c9:f349 with SMTP id
+ a640c23a62f3a-a6fab61c1f4mr501416466b.23.1718987679221; Fri, 21 Jun 2024
+ 09:34:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAHk-=wg88k=EsHyGrX9dKt10KxSygzcEGdKRYRTx9xtA_y=rqQ@mail.gmail.com>
+ <871q4rpi2s.ffs@tglx> <CAHk-=wgN6DRks55fsqiJYE3uV=_QTgzdxOvh1ZZNgm_YooKdYA@mail.gmail.com>
+ <87v822ocy2.ffs@tglx>
+In-Reply-To: <87v822ocy2.ffs@tglx>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 21 Jun 2024 09:34:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiRgsFsrnTR8XShrS_-aYS--4DSrRPmaWtYJ55-fmjznA@mail.gmail.com>
+Message-ID: <CAHk-=wiRgsFsrnTR8XShrS_-aYS--4DSrRPmaWtYJ55-fmjznA@mail.gmail.com>
+Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tejun Heo <tj@kernel.org>, mingo@redhat.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
+	vschneid@redhat.com, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@kernel.org, joshdon@google.com, brho@google.com, pjt@google.com, 
+	derkling@google.com, haoluo@google.com, dvernet@meta.com, 
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com, 
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com, 
+	andrea.righi@canonical.com, joel@joelfernandes.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Yunseong Kim <yskelg@gmail.com>
+On Fri, 21 Jun 2024 at 02:35, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > But secondly, the "keep things out" is itself counter-productive.
+>
+> Says the one who kept asking me repeatedly whether I can't keep the
+> remaining stuff of RT out of tree forever. The last time you asked that
+> was not that long ago.
 
-In the TRACE_EVENT(qdisc_reset) NULL dereference occurred from
+Thomas, you are starting to just make made-up arguments now.
 
- qdisc->dev_queue->dev <NULL> ->name
+Did I require that the RT patches be done right over two decades? Hell
+yes. But those RT patches didn't change some single subsystem, they
+made fundamental changes to the most core things out there.
 
-This situation simulated from bunch of veths and Bluetooth dis/reconnection.
+The RT patches made something as fundamental and core as "disable
+interrupts for spinlocks" be a special magical thing that normal
+people weren't allowed to do, and that turned into a sleeping lock.
+They affected _everything_. They very literally affected subsystems
+and rules that had been there since linux-0.01 (not the spinlocks -
+they came later - but things like tty / printk were in fact some of
+the very first things written).
 
-During qdisc initialization, qdisc was being set to noop_queue.
-In veth_init_queue, the initial tx_num was reduced back to one,
-causing the qdisc reset to be called with noop, which led to the kernel panic.
+And don't get me wrong - I'm not complaining about the RT patches. I
+think they improved things enormously in the end. They've been great.
 
-I've attached the GitHub gist link that C converted syz-execprogram
-source code and 3 log of reproduced vmcore-dmesg.
+I'm just saying that they are _not_ the norm to compare against.
 
- https://gist.github.com/yskelg/cc64562873ce249cdd0d5a358b77d740
+The sched_ext patches? Not even remotely in the same class. The
+sched_ext patches are more like fuse - another filesystem, just a
+slightly odd one that has that big user space component.
 
-Yeoreum and I use two fuzzing tool simultaneously.
+And yes, fuse caused worries too because of the whole "filesystem
+development in user space" outside the confines of the normal kernel
+development model. It mostly just was (and is) a shim-layer that asks
+user space for policy, while still using the kernel infrastructure for
+most real work. Did those worries actually materialize? No. No they
+did not.
 
-One process with syz-executor : https://github.com/google/syzkaller
+Now, fuse to some degree was easier, because while it was merged about
+two decades ago, even by that time we already had over a decade of
+pluggable filesystems. So the VFS layer had a lot of pluggability
+already, and it wasn't very hardcoded.
 
- $ ./syz-execprog -executor=./syz-executor -repeat=1 -sandbox=setuid \
-    -enable=none -collide=false log1
+The scheduler also has the scheduler class pluggability, but it *is*
+fairly hardcoded. So in addition to the kinds of issues FUSE had (with
+all the "impedance matching" between the kernel interface and the user
+level interfaces), the sched_ext patches have some of that hardcoded
+pluggability that it needs to fix up.
 
-The other process with perf fuzzer:
- https://github.com/deater/perf_event_tests/tree/master/fuzzer
+So maybe a better comparison would be autofs - but autofs was added
+_so_ long ago that I only vaguely remember the odd pain points for
+waiting for mount points. Over the years, all of that special sauce
+that no other filesystem needs has become such an integral part of the
+vfs layer that people don't even think about it any more.
 
- $ perf_event_tests/fuzzer/perf_fuzzer
+You can most definitely still see the effects of autofs - as opposed
+to "regular" filesystems - on the vfs layer if you go look (things
+like "finish_automount()" and friends), but it's been integrated for
+so long that it's a non-issue. But back in the day, it all needed what
+at the time was some special glue.
 
-I think this will happen on the kernel version.
+Anyway, what I'm saying is that you trying to equate this with the RT
+patches is absolutely laughable and intellectually dishonest.
 
- Linux kernel version ≥ v6.7.10, ≥ v6.8 ≥ v6.9 and 6.10
+Look, ignoring the actual sched_ext code itself (and the examples,
+documentation and test-cases which I certainly hope nobody would
+object to), the actual core footprint ot fht sched_ext patches is
+this:
 
-This occurred from 51270d573a8d. I think this patch is absolutely 
-necessary. Previously, It was showing not intended string value of name.
+ MAINTAINERS                       |  13 +++
+ Makefile                          |   8 +-
+ drivers/tty/sysrq.c               |   1 +
+ include/asm-generic/vmlinux.lds.h |   1 +
+ include/linux/cgroup.h            |   4 +-
+ include/linux/sched.h             |   5 +
+ include/linux/sched/task.h        |   3 +-
+ include/uapi/linux/sched.h        |   1 +
+ init/init_task.c                  |  12 +++
+ kernel/Kconfig.preempt            |  24 +++++
+ kernel/fork.c                     |  17 +++-
+ kernel/sched/build_policy.c       |  10 ++
+ kernel/sched/core.c               | 187 ++++++++++++++++++++++++++++++--------
+ kernel/sched/debug.c              |   3 +
+ kernel/sched/ext.h                | 114 +++++++++++++++++++++++
+ kernel/sched/fair.c               |  21 ++---
+ kernel/sched/idle.c               |   2 +
+ kernel/sched/sched.h              |  75 ++++++++++++++-
+ kernel/sched/syscalls.c           |  26 ++++++
+ lib/dump_stack.c                  |   1 +
+ 20 files changed, 464 insertions(+), 64 deletions(-)
 
-I've reproduced 3 time from my fedora 40 Debug Kernel with any other module 
-or patched.
+and honestly, I went through it all. None of it looks really
+objectionable. Some of it is trivial cleanups and makes the code look
+better (the "refactor" parts).
 
- version: 6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug
+And yes, some of it is "We have a new scheduler class that wants more".
 
-[ 5287.164555] veth0_vlan: left promiscuous mode
-[ 5287.164929] veth1_macvtap: left promiscuous mode
-[ 5287.164950] veth0_macvtap: left promiscuous mode
-[ 5287.164983] veth1_vlan: left promiscuous mode
-[ 5287.165008] veth0_vlan: left promiscuous mode
-[ 5287.165450] veth1_macvtap: left promiscuous mode
-[ 5287.165472] veth0_macvtap: left promiscuous mode
-[ 5287.165502] veth1_vlan: left promiscuous mode
-…
-[ 5297.598240] bridge0: port 2(bridge_slave_1) entered blocking state
-[ 5297.598262] bridge0: port 2(bridge_slave_1) entered forwarding state
-[ 5297.598296] bridge0: port 1(bridge_slave_0) entered blocking state
-[ 5297.598313] bridge0: port 1(bridge_slave_0) entered forwarding state
-[ 5297.616090] 8021q: adding VLAN 0 to HW filter on device bond0
-[ 5297.620405] bridge0: port 1(bridge_slave_0) entered disabled state
-[ 5297.620730] bridge0: port 2(bridge_slave_1) entered disabled state
-[ 5297.627247] 8021q: adding VLAN 0 to HW filter on device team0
-[ 5297.629636] bridge0: port 1(bridge_slave_0) entered blocking state
-…
-[ 5298.002798] bridge_slave_0: left promiscuous mode
-[ 5298.002869] bridge0: port 1(bridge_slave_0) entered disabled state
-[ 5298.309444] bond0 (unregistering): (slave bond_slave_0): Releasing backup interface
-[ 5298.315206] bond0 (unregistering): (slave bond_slave_1): Releasing backup interface
-[ 5298.320207] bond0 (unregistering): Released all slaves
-[ 5298.354296] hsr_slave_0: left promiscuous mode
-[ 5298.360750] hsr_slave_1: left promiscuous mode
-[ 5298.374889] veth1_macvtap: left promiscuous mode
-[ 5298.374931] veth0_macvtap: left promiscuous mode
-[ 5298.374988] veth1_vlan: left promiscuous mode
-[ 5298.375024] veth0_vlan: left promiscuous mode
-[ 5299.109741] team0 (unregistering): Port device team_slave_1 removed
-[ 5299.185870] team0 (unregistering): Port device team_slave_0 removed
-…
-[ 5300.155443] Bluetooth: hci3: unexpected cc 0x0c03 length: 249 > 1
-[ 5300.155724] Bluetooth: hci3: unexpected cc 0x1003 length: 249 > 9
-[ 5300.155988] Bluetooth: hci3: unexpected cc 0x1001 length: 249 > 9
-….
-[ 5301.075531] team0: Port device team_slave_1 added
-[ 5301.085515] bridge0: port 1(bridge_slave_0) entered blocking state
-[ 5301.085531] bridge0: port 1(bridge_slave_0) entered disabled state
-[ 5301.085588] bridge_slave_0: entered allmulticast mode
-[ 5301.085800] bridge_slave_0: entered promiscuous mode
-[ 5301.095617] bridge0: port 1(bridge_slave_0) entered blocking state
-[ 5301.095633] bridge0: port 1(bridge_slave_0) entered disabled state
-…
-[ 5301.149734] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
-[ 5301.173234] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
-[ 5301.180517] bond0: (slave bond_slave_1): Enslaving as an active interface with an up link
-[ 5301.193481] hsr_slave_0: entered promiscuous mode
-[ 5301.204425] hsr_slave_1: entered promiscuous mode
-[ 5301.210172] debugfs: Directory 'hsr0' with parent 'hsr' already present!
-[ 5301.210185] Cannot create hsr debugfs directory
-[ 5301.224061] bond0: (slave bond_slave_1): Enslaving as an active interface with an up link
-[ 5301.246901] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
-[ 5301.255934] team0: Port device team_slave_0 added
-[ 5301.256480] team0: Port device team_slave_1 added
-[ 5301.256948] team0: Port device team_slave_0 added
-…
-[ 5301.435928] hsr_slave_0: entered promiscuous mode
-[ 5301.446029] hsr_slave_1: entered promiscuous mode
-[ 5301.455872] debugfs: Directory 'hsr0' with parent 'hsr' already present!
-[ 5301.455884] Cannot create hsr debugfs directory
-[ 5301.502664] hsr_slave_0: entered promiscuous mode
-[ 5301.513675] hsr_slave_1: entered promiscuous mode
-[ 5301.526155] debugfs: Directory 'hsr0' with parent 'hsr' already present!
-[ 5301.526164] Cannot create hsr debugfs directory
-[ 5301.563662] hsr_slave_0: entered promiscuous mode
-[ 5301.576129] hsr_slave_1: entered promiscuous mode
-[ 5301.580259] debugfs: Directory 'hsr0' with parent 'hsr' already present!
-[ 5301.580270] Cannot create hsr debugfs directory
-[ 5301.590269] 8021q: adding VLAN 0 to HW filter on device bond0
+Realistically, of the above, I think the *only* parts that are even at
+all halfway interesting are these:
 
-[ 5301.595872] KASAN: null-ptr-deref in range [0x0000000000000130-0x0000000000000137]
-[ 5301.595877] Mem abort info:
-[ 5301.595881]   ESR = 0x0000000096000006
-[ 5301.595885]   EC = 0x25: DABT (current EL), IL = 32 bits
-[ 5301.595889]   SET = 0, FnV = 0
-[ 5301.595893]   EA = 0, S1PTW = 0
-[ 5301.595896]   FSC = 0x06: level 2 translation fault
-[ 5301.595900] Data abort info:
-[ 5301.595903]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
-[ 5301.595907]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[ 5301.595911]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[ 5301.595915] [dfff800000000026] address between user and kernel address ranges
-[ 5301.595971] Internal error: Oops: 0000000096000006 [#1] SMP
-…
-[ 5301.596076] CPU: 2 PID: 102769 Comm:
-syz-executor.3 Kdump: loaded Tainted:
- G        W         -------  ---  6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug #1
-[ 5301.596080] Hardware name: VMware, Inc. VMware20,1/VBSA,
- BIOS VMW201.00V.21805430.BA64.2305221830 05/22/2023
-[ 5301.596082] pstate: 01400005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[ 5301.596085] pc : strnlen+0x40/0x88
-[ 5301.596114] lr : trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
-[ 5301.596124] sp : ffff8000beef6b40
-[ 5301.596126] x29: ffff8000beef6b40 x28: dfff800000000000 x27: 0000000000000001
-[ 5301.596131] x26: 6de1800082c62bd0 x25: 1ffff000110aa9e0 x24: ffff800088554f00
-[ 5301.596136] x23: ffff800088554ec0 x22: 0000000000000130 x21: 0000000000000140
-[ 5301.596140] x20: dfff800000000000 x19: ffff8000beef6c60 x18: ffff7000115106d8
-[ 5301.596143] x17: ffff800121bad000 x16: ffff800080020000 x15: 0000000000000006
-[ 5301.596147] x14: 0000000000000002 x13: ffff0001f3ed8d14 x12: ffff700017ddeda5
-[ 5301.596151] x11: 1ffff00017ddeda4 x10: ffff700017ddeda4 x9 : ffff800082cc5eec
-[ 5301.596155] x8 : 0000000000000004 x7 : 00000000f1f1f1f1 x6 : 00000000f2f2f200
-[ 5301.596158] x5 : 00000000f3f3f3f3 x4 : ffff700017dded80 x3 : 00000000f204f1f1
-[ 5301.596162] x2 : 0000000000000026 x1 : 0000000000000000 x0 : 0000000000000130
-[ 5301.596166] Call trace:
-[ 5301.596175]  strnlen+0x40/0x88
-[ 5301.596179]  trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
-[ 5301.596182]  perf_trace_qdisc_reset+0xb0/0x538
-[ 5301.596184]  __traceiter_qdisc_reset+0x68/0xc0
-[ 5301.596188]  qdisc_reset+0x43c/0x5e8
-[ 5301.596190]  netif_set_real_num_tx_queues+0x288/0x770
-[ 5301.596194]  veth_init_queues+0xfc/0x130 [veth]
-[ 5301.596198]  veth_newlink+0x45c/0x850 [veth]
-[ 5301.596202]  rtnl_newlink_create+0x2c8/0x798
-[ 5301.596205]  __rtnl_newlink+0x92c/0xb60
-[ 5301.596208]  rtnl_newlink+0xd8/0x130
-[ 5301.596211]  rtnetlink_rcv_msg+0x2e0/0x890
-[ 5301.596214]  netlink_rcv_skb+0x1c4/0x380
-[ 5301.596225]  rtnetlink_rcv+0x20/0x38
-[ 5301.596227]  netlink_unicast+0x3c8/0x640
-[ 5301.596231]  netlink_sendmsg+0x658/0xa60
-[ 5301.596234]  __sock_sendmsg+0xd0/0x180
-[ 5301.596243]  __sys_sendto+0x1c0/0x280
-[ 5301.596246]  __arm64_sys_sendto+0xc8/0x150
-[ 5301.596249]  invoke_syscall+0xdc/0x268
-[ 5301.596256]  el0_svc_common.constprop.0+0x16c/0x240
-[ 5301.596259]  do_el0_svc+0x48/0x68
-[ 5301.596261]  el0_svc+0x50/0x188
-[ 5301.596265]  el0t_64_sync_handler+0x120/0x130
-[ 5301.596268]  el0t_64_sync+0x194/0x198
-[ 5301.596272] Code: eb15001f 54000120 d343fc02 12000801 (38f46842) 
-[ 5301.596285] SMP: stopping secondary CPUs
-[ 5301.597053] Starting crashdump kernel...
-[ 5301.597057] Bye!
+ kernel/sched/core.c               | 187 ++++++++++++++++++++++++++++++--------
+ kernel/sched/ext.h                | 114 +++++++++++++++++++++++
 
-Yeoreum and I don't know if the patch we wrote will fix the underlying cause,
-but we think that priority is to prevent kernel panic happening.
-So, we're sending this patch.
+and that ext.h is on that "interesting" list only because of
+for_each_active_class(), and I think it should probably just be in
+core.c.
 
-Signed-off-by: Yunseong Kim <yskelg@gmail.com>
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- include/trace/events/qdisc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+See why I do not think that this is AT ALL comparable to something
+like the RT patches.
 
-diff --git a/include/trace/events/qdisc.h b/include/trace/events/qdisc.h
-index f1b5e816e7e5..170b51fbe47a 100644
---- a/include/trace/events/qdisc.h
-+++ b/include/trace/events/qdisc.h
-@@ -81,7 +81,7 @@ TRACE_EVENT(qdisc_reset,
- 	TP_ARGS(q),
- 
- 	TP_STRUCT__entry(
--		__string(	dev,		qdisc_dev(q)->name	)
-+		__string(dev, qdisc_dev(q) ? qdisc_dev(q)->name : "noop_queue")
- 		__string(	kind,		q->ops->id		)
- 		__field(	u32,		parent			)
- 		__field(	u32,		handle			)
--- 
-2.45.2
+And yes, I do think code should be cleaned up, but the two cleanups
+that struck me personally were literally just
 
+ (a) scx_next_task_picked, where I slept on it, came up with a
+three-line alternative suggestion, and Tejun sent the "real patch"
+almost immediately
+
+ (b) the for_each_active_class() thing that I think would actually be
+better off just being done explicitly in sched/core.c, but probably
+only makes sense after integration
+
+and it really strikes me as "neither of these issues were worth nine
+months of delay".
+
+Although hopefully the nine months weren't entirely unproductive, and
+maybe the patches have improved. Knock wood.
+
+Because *most* of the two files above are actually normal stuff.
+Things that other scheduler classes already do. Sometimes just with an
+#ifdef around it (although many of the ifdef's are basically hidden as
+"inline function that is empty if disabled" - which is how we tend to
+do things in the kernel in general.
+
+So it's not even "200+ lines of objectionable code". No. It's all fairly small.
+
+Arguably much of the strangeness comes from "it can be enabled /
+disabled both statically and dynamically".
+
+The "dynamically disable" code may look particularly odd because some
+of that is the "scx_switched_all()" thing that basically disables some
+of the CFS special cases. Is that pretty? No, but in most cases I'd
+say that the cause of said issue was that the CFS rules were
+hardcoded.
+
+So it's pretty small, it's pretty self-contained, and it only affects
+one single subsystem.
+
+See where I'm coming from?
+
+> Aside of that you are completely ignoring my point.
+>
+> Collaborative integration is the right thing to do no matter what.
+
+Yes. And am willing to say "ok, if three more months make this more
+amicable, I'll delay merging for another release".
+
+Amicable resolutions are obviously preferred. And I am certainly
+willing to going back and telling people "ok, it's going to be 6.12,
+not 6.11". Some people are going to be disappointed in me. That's my
+job, and I don't think this needs to be *rushed*.
+
+But really, in the very next sentence of "I don't think this needs to
+be *rushed*", I do want to re-iterate that I feel like this pointless
+delay this has seen seems unnecessary.
+
+I hope I have explained above why I think this whole thing has not
+been worth the brouhaha and pain that it has caused. It's really not
+that big, and the issues I see have either had small clean trivial
+solutions, or have very much looked to me like "ok, it's not
+integrated, but I see why an external patch would try to do it that
+way".
+
+And yes, I may be missing some big ugly point. But I really _have_
+been going through those roughly 200 lines of diff that actually seem
+to be relevant to this whole argument. Multiple times.
+
+So if I don't see it, please point it out very very explicitly, and
+using small words to make me understand.
+
+                Linus
