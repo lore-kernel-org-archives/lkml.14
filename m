@@ -1,107 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D932A82D66
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498D216EB59
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718963581; cv=none; b=cdR0HU1mtBEdPD5zmumvWtpgCl2+zxL73nvC9xU3JBdungeiIzAknkGLzgg33WK1wqzMtOXFwytgqfd2NIhnSqLSX+gW91+EG+u4/y+275I3bOgYjgOf69hZz5JhuKq+QcAfBPYbCRogwXHdMTUh+MhyRYGXIEqyuruFNLSt8go=
+	t=1718963629; cv=none; b=L1jFvZwK+19F3rRh5dBTyoyhAWDOxl55xSzqr++8+ILNcEgRgy7mimzDUjf4b0Jy70A1j04jBMScV8zoop/RuI7dLY21xmMGsYckhYA46BWXhKBv3k5LP661YZkpMn9JQxnJyQKP39bgYBShWSyHxwSu/tnkPpN5jOnEv3J5gr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718963581; c=relaxed/simple;
-	bh=i5bfEeplWnyWogs/5yMTdMhW3dUlLLlGYGg7SlEI0oU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NkMDiXNxKoFGl7/agmWTCpxibvgDKXOYE9QOZBxufWRSWwBUVbKoV+LrvzOdFrUHMOLjxIuAAUVEH1lormfyarCKIwArlpkmc485Sb5kDB5dCnNCRv5cvCRb4a7TJaixEmHOM1pWN6VbZXa15y65S5BJ4p+nx69EMjcsCVk46Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tz36Mecs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718963629; c=relaxed/simple;
+	bh=9X27kAi88t13JEAFL9myOVAMxXzM/vgQYLhQyo43drE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ndhRsg+sbdlxWx6ZiTloaGAXvVqvjkQsysVl+nC8IASGJJ5MFfMBKn3hO+VGEBD77JGxHMPCVeWFWUFTZUfURygoC07uk3OsHmPLyooG3AeGjeyoZNGWuEl8Q2ZgXkaSNMqXipzFD9UGQWyZRGUb9Zbf8EElyNFLKWdC65lF/vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=JfJzCQK0; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tz36Mecs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A4BAC4AF09
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 09:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718963581;
-	bh=i5bfEeplWnyWogs/5yMTdMhW3dUlLLlGYGg7SlEI0oU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Tz36MecswDHgsv+lPB1rkILFu9WMmxBQmISr/2P3hk/1XeoiibIXvaDT8pUiQ7IZA
-	 xI7e1avmEjbexZDCNJ/6Mcww9re/HOhuDkDs/IBks5bDwkiN40J3boJ2uShhRIm6lC
-	 FyD5+K9x9jnrRuwpd2xkXxCu/Owa67WaBKzMYlq7i/9BlnSvzkfs7Q/5vtRzIGMvTU
-	 ynydXQ6s/4j/GiCbrFXYiHyTd4BCR7XUeRoOXQ6CSo6vjcmptthSfvHziDqTIttvHE
-	 2a15VCQHlIYldtgg3p03je5/HCX/kENcu6E1GmXVyZfaJ2QRB6g7eUL/5OuQ1Z4X4E
-	 iYJl6g0PkyDQA==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52c94cf4c9bso2300003e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 02:53:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9vE6/I8x1xbmU04tbVug6+aaW3UzuM+7XNvJbBEn3xaTj3+dc3t95p5pQoyCjgqWL47ZYZt84NBKy5HKF3ZXhKMfM1Gact2vYySAn
-X-Gm-Message-State: AOJu0YwPvELfMjd84Y1viUNpkXAEbYo35AQeMWw1iccL1UgJOz6rGg86
-	A20WVDQV8m336jD3ualkz+s0N6pQHBQNMF1V2M+bLrifKeCXA1pcl70cX3iMlvUSy6551Gfw31s
-	cfBkvIcmQ/ooGlYSZ+m5diqMWl4E=
-X-Google-Smtp-Source: AGHT+IEoBNnkImkbHiBM6XSY+i0yKhYlNhhX/wuINaWl9Idb2f8QzczAmnsMxc1VAsOwbaXZdDyAjrAk3OPqfJYRHLI=
-X-Received: by 2002:a05:6512:b20:b0:52c:842b:c276 with SMTP id
- 2adb3069b0e04-52ccaa53e9dmr7320353e87.53.1718963579690; Fri, 21 Jun 2024
- 02:52:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="JfJzCQK0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=RPfT
+	8u6a3+40tK3oCZZfl86nwYXzLiH9ajhehJvBjqs=; b=JfJzCQK0ozaPEuqmU/lq
+	8h/+hfxTrqCfF0yKoNf5BY1by4bKOrS3weHMmmqAD2hCgk9zoWs/etD3B3iTVI7j
+	qYLp9HRiCzt0qgaosA1jZz2oYj33/h4EriTTD0c/ziUWCJgIgiL0QqvVsnxxLbbP
+	Kzj0oF0UdKzsCG2ntXXe/AuL6erfPPSJQA0hdgf8MIPulqO6Umd1GPAWb3bV5ZXj
+	zABGh8fc0vEBOKAddFTf8k9tiLeiINDjk7ViMnMRtndwfdHLilDztl4EKlsKUkOQ
+	sSi9Z+2s9e3UGLXgOt3t0SsCJLfr0Up+yFOuq4MD1+EA3fzcCh+JHh2lS8szanCs
+	ww==
+Received: (qmail 1326092 invoked from network); 21 Jun 2024 11:53:44 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2024 11:53:44 +0200
+X-UD-Smtp-Session: l3s3148p1@6DcuaGMbKqogAwDPXzjQABqqX1QYyOSW
+Date: Fri, 21 Jun 2024 11:53:43 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Allen Pais <allen.lkml@gmail.com>
+Cc: Aubin Constans <aubin.constans@microchip.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Manuel Lauss <manuel.lauss@gmail.com>, =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, 
+	Jaehoon Chung <jh80.chung@samsung.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Alex Dubov <oakad@yahoo.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Bruce Chang <brucechang@via.com.tw>, Harald Welte <HaraldWelte@viatech.com>, 
+	Pierre Ossman <pierre@ossman.eu>, Christian Loehle <christian.loehle@arm.com>, 
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3] mmc: Convert from tasklet to BH workqueue
+Message-ID: <gw6adkoy3ndjdjufti2gs2gnk3xdgylt6tnia2zha76hsgdwtq@dr3czbxjij66>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Allen Pais <allen.lkml@gmail.com>, Aubin Constans <aubin.constans@microchip.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Manuel Lauss <manuel.lauss@gmail.com>, =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, 
+	Jaehoon Chung <jh80.chung@samsung.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Alex Dubov <oakad@yahoo.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Bruce Chang <brucechang@via.com.tw>, Harald Welte <HaraldWelte@viatech.com>, 
+	Pierre Ossman <pierre@ossman.eu>, Christian Loehle <christian.loehle@arm.com>, 
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20240618225210.825290-1-allen.lkml@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621092809.162-1-yuzenghui@huawei.com>
-In-Reply-To: <20240621092809.162-1-yuzenghui@huawei.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 21 Jun 2024 11:52:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEH0ohn57DUrCu6S-AJW=B9CyrpMwyabpjBpD9tD4VV=A@mail.gmail.com>
-Message-ID: <CAMj1kXEH0ohn57DUrCu6S-AJW=B9CyrpMwyabpjBpD9tD4VV=A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Clear the initial ID map correctly before remapping
-To: Zenghui Yu <yuzenghui@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org, wanghaibin.wang@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, 21 Jun 2024 at 11:28, Zenghui Yu <yuzenghui@huawei.com> wrote:
->
-> In the attempt to clear and recreate the initial ID map for LPA2, we
-> wrongly use 'start - end' as the map size and make the memset() almost a
-> nop.
->
-> Fix it by passing the correct map size.
->
-> Fixes: 9684ec186f8f ("arm64: Enable LPA2 at boot if supported by the system")
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->
-> Found by code inspection (don't have the appropriate HW to test it).
->
-
-Good catch!
-
-Even though memset() takes an unsigned size_t, the zeroing path in
-arm64's memset.S does a signed compare on the provided size, and will
-zero at most 63 bytes if the size has the sign bit set. So in the end,
-it does not clear anything. Note that in this particular case, that
-doesn't actually matter - the memory is reused immediately to create
-another copy of the ID map, and any unused regions containing garbage
-will just be ignored.
-
-Nonetheless,
-
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gq4kufue4w3vtipq"
+Content-Disposition: inline
+In-Reply-To: <20240618225210.825290-1-allen.lkml@gmail.com>
 
 
+--gq4kufue4w3vtipq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Jun 18, 2024 at 03:52:07PM GMT, Allen Pais wrote:
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
+>=20
+> This patch converts drivers/mmc/* from tasklet to BH workqueue.
+>=20
+> Based on the work done by Tejun Heo <tj@kernel.org>
+
+Has this been fully build-tested?
+
+=3D=3D=3D
+drivers/mmc/host/renesas_sdhi_internal_dmac.c: In function =E2=80=98renesas=
+_sdhi_internal_dmac_complete_work_fn=E2=80=99:
+=2E/include/linux/container_of.h:20:54: error: =E2=80=98struct tmio_mmc_hos=
+t=E2=80=99 has no member named =E2=80=98dma_complete=E2=80=99
+=3D=3D=3D
+
+In deed, 'dma_complete' is only in 'struct renesas_sdhi_dma'. From
+there, we can get to the parent 'struct renesas_sdhi' using
+container_of. But then, I don't see a way to go to 'struct
+tmio_mmc_host' from there. The other way around is possible because
+there is the pointer 'struct tmio_mmc_data *pdata' in the TMIO struct
+pointing to the data contained in 'struct renesas_sdhi'. 'host_to_priv()'
+does the math. But I don't see a path the other way around.
+
+So, it doesn't look like the workqueue interface can provide a
+generic pointer like tasklets could do? This means we have to add a
+pointer from 'struct renesas_sdhi' to 'struct tmio_mmc_host'?
+
+All the best,
+
+   Wolfram
 
 
->  arch/arm64/kernel/pi/map_kernel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/kernel/pi/map_kernel.c b/arch/arm64/kernel/pi/map_kernel.c
-> index 5fa08e13e17e..f374a3e5a5fe 100644
-> --- a/arch/arm64/kernel/pi/map_kernel.c
-> +++ b/arch/arm64/kernel/pi/map_kernel.c
-> @@ -173,7 +173,7 @@ static void __init remap_idmap_for_lpa2(void)
->          * Don't bother with the FDT, we no longer need it after this.
->          */
->         memset(init_idmap_pg_dir, 0,
-> -              (u64)init_idmap_pg_dir - (u64)init_idmap_pg_end);
-> +              (u64)init_idmap_pg_end - (u64)init_idmap_pg_dir);
->
->         create_init_idmap(init_idmap_pg_dir, mask);
->         dsb(ishst);
-> --
-> 2.33.0
->
+--gq4kufue4w3vtipq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZ1TaMACgkQFA3kzBSg
+KbanVQ//dqEZ+e/wVpBJ/SIXoF0cFcPn3VByooLZaUBcc7mmkHJCynUy3IleRLG2
+zyPZXbb4367ZgKpi4MtZ9xFVQB2l1+Vwcag8Si0wn6HT6uJfAZpzICet+yovlam/
+alBGpZQBCQbiRNXakttLhByw9+KHIcQHMQQlsdzW5V8L8w1LZYgr/N2vxnz3Bwqv
+c3XSf1Cpvyc5r2Ztce6d2GXKxPsmWTCcGCAAnj5oPe2FkyMpmZeStL1RZYc/spTa
+YjEDtOMrckbNpCXoLu5OjvZRv4NFicsuRojKCtbFScaj9uSS654P6JJY8rfSWJp4
+rWOuidtkkkKlE6y+rT79fnPikKc4UoMMKsf6D9EWETKBP9jEIsO3Vr1kz0/wME0R
+iolEdaUwvOC6EHmE86tEleFEmYZIK3RF7NpmyVofqy2kMAsNj5dIAuvPyxXN1vOh
+bXM9JLI0Io+YxwYfoW2ycYMZTFVIQXdsWefZmFoTQnPND5aE21UwQYX4bCE2vz+x
+eCcUo0hTOAnz1quoiDuyr7eNLXyGTfyhkQ/VHgE9dez7hFUtNxVcGunp38fd6Zbh
+KFXGX7wtIkVPHLvls7WsellcB6Bz6mckcW0UwThPUYjEkw4G28nm14FRUwGJLj6L
+qXTveQ7e7fp720pxFi7JCuf1dl/rL/uS7ub1hjkEi/8/3UZKEg0=
+=CZvf
+-----END PGP SIGNATURE-----
+
+--gq4kufue4w3vtipq--
