@@ -1,268 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA42B172BA6
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0DA17335C;
+	Fri, 21 Jun 2024 11:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718970457; cv=none; b=OjOLbvyr7j1wBLqJN2UNddBiUCCoOafox7OsDpZw50sRNLOAg7xfaH9EHz0X4jn3M9wdWXrk91VHBrluuikRNtY+ZRpyfY+CHOJiygsLO3m4DaWVjagMB8VIvZIb4jEZwPxsun2pqcuK2grBwsAxX+YxOz58TA99OSj8Ni/XzMA=
+	t=1718970483; cv=none; b=lsgxB9AL+d777rB2OkzgO9uaC0Qj+U3+xzdrWt+pvzdZOJ2+aKejhA9IHA0PYRlAEmZzoiP1dCLa8xIoXNSAotPwGuTJgnLW2xVLb3sr+N+vDKvu5nZpP1qUvCU5XpNd8Yf7XlqKJspAEXhrqn8bfFVcLrNGMtL04MJVNnpJDMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718970457; c=relaxed/simple;
-	bh=BlGbgmoF+iZ4BHtGoLltAMguabDdtH20E6K3YI6aJHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WDvAoRsz0zE+CqBvz3lPjOwVl7OoWP0qxjB/47LAehjlPZTTq3PN+QO31UJxN8zrL8H9vkSp0siBJLbQODtOy1/NuyW+0/WJ6MUITX19Q2TqcbdZfKLxHnDsh9/i9UN+6kvE/kOYSfzmTrZKOkJBctXM8m5Rgtd0/B7b9+wwlBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gX4TUC9J; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718970483; c=relaxed/simple;
+	bh=7Z+8FcX1N2P4XzCec6u30kS5YpcYPjQl4yJIYffpZ3g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aIqIhnPeBF4OyFoaNNJj8tBk+V9Yo1P92W2Qu7I8pkVUgB3rUHLaJryZeqs3esBsn7/HOfLdbqE7EL3wbDhqPV6U//L7pf3JB+ekMPRTV6JX2alHIphzTW+UytlDvhCydgUmEe0LJbDrD2ryc4s13Oo6kndmZofPQa8EG0Bx9TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BXzEOAQ9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gX4TUC9J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718970454;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbVc+Fc7RR7j8FqltSlekZqJ6xYlP8sXLN3JMfS3Tbg=;
-	b=gX4TUC9Jow9vAp1APVszLylHyw1XsIHeK2Ub24EXNCo2crhj9XLmWlmm/BNMCQtScGVtul
-	CsS7+L6hl1jtbpJUIbFqa2eS0NR2GNdaZafC/8NF3J2b+c4fGdlofS/7ngcpXPtrl03fLb
-	avTlG0N2TqJ9HPa8iKkEqpoAwoUcoS0=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-O_IJ_askOs-l0C0WALXtIg-1; Fri, 21 Jun 2024 07:47:33 -0400
-X-MC-Unique: O_IJ_askOs-l0C0WALXtIg-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ebe4b327a6so15433591fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:47:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718970452; x=1719575252;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cbVc+Fc7RR7j8FqltSlekZqJ6xYlP8sXLN3JMfS3Tbg=;
-        b=bYUfwZ9AkkdN2GmXOhirNqOpCcJKgBTbStfkI52EPOwB1QKjzsQjjHj6FJaIv4HPmc
-         SOqpFnWwvcyzVjPGakYG5JAIX+m91h3KqHHgiMf+5uCNMg4ZJgnImLaU2E9DS94+jHQ0
-         OADv5srS8UWdP/EhB/8G3PaoJ+KTK3fifXEguTlqY64CFwa9dwpyYcgKNwIt3wRGZfvA
-         6GdIfkfEgQ4UNPrsbOFq3Vn0NLhXqbZiULP9tB6um5CjUhRnMca85Amov85VHAARO/Cz
-         Q9+uaEkzOJ0XFaK1GsXP6skr222UIqN311qRuivgacL5r660DAHZDyQrlUT7hPu1pA+l
-         FX9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPgmM5R6vAgBsvbmWpE4hzRvxm1hdVsnPSpEn1vtbfe+Utw8pNfrdbJbgEsN29c05uAeCIADme3n1hCerNEKqXIGHU/Y6IGJT0l67M
-X-Gm-Message-State: AOJu0Yz8syF/39bIwZFMSLH9BW2JpjbP9kFXKEL1EU/7FCu7NzsF6ML4
-	MX7/ZIWAeRBVH8SoM1n9hB9Xa/k2iRJrmu2Iq48tfm4qI2SdZMxtXHl05VhKPnJEpWxH5uqcKOD
-	7Z54L50d2t+Mx4+DHFh4m8grEPdkVtcKS2eby00bThAOdpEEsmdHSGzhCze6+Qw==
-X-Received: by 2002:a2e:7d0a:0:b0:2ec:2a57:aee2 with SMTP id 38308e7fff4ca-2ec3cffe7b8mr52756781fa.52.1718970452001;
-        Fri, 21 Jun 2024 04:47:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH95rXTqYwnXmHJHpILxoA4ZTURqCUFz0fuke2FBfMjWBqCo6+Tqeqn2pVQiB4JtM9QOqiOKA==
-X-Received: by 2002:a2e:7d0a:0:b0:2ec:2a57:aee2 with SMTP id 38308e7fff4ca-2ec3cffe7b8mr52756551fa.52.1718970451527;
-        Fri, 21 Jun 2024 04:47:31 -0700 (PDT)
-Received: from pollux ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366389b85a2sm1496611f8f.42.2024.06.21.04.47.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 04:47:30 -0700 (PDT)
-Date: Fri, 21 Jun 2024 13:47:27 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Philipp Stanner <pstanner@redhat.com>, rafael@kernel.org,
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
-	wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, ajanulgu@redhat.com,
-	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] rust: add `io::Io` base type
-Message-ID: <ZnVoT4xJXtCDWixz@pollux>
-References: <20240618234025.15036-1-dakr@redhat.com>
- <20240618234025.15036-8-dakr@redhat.com>
- <2024062040-wannabe-composer-91bc@gregkh>
- <a43dc0512194042d762bf5bb5f1396d41fef5bce.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BXzEOAQ9"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L8i1wd021385;
+	Fri, 21 Jun 2024 11:47:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=+ouvelZxylIYzDsDNrPHND
+	Hg91pcIf3hHhEAdWgue/M=; b=BXzEOAQ9lWcUvXPJ9SodSPcjT1R/OiGUJFL3Ho
+	PHP8RMiMRyc7hLKC19ZbgpkGTO7ZWSrcXJqPDkXmnCOH/VBwK4OOcFXlwzyOm44z
+	+IIORfVjK+kZwMaNATwsMnbefw0gpFhXriwTE7ctRSlxfWFQ1Saa46NMVzc2kmm2
+	mfcVCpYLyVxrLAxe63XWj/bSzuW1LevMc7tLMwwGUOiGxV3OhGLaZR4O5wq6ZLtH
+	JOTSX7uhWQDC2OeEN/Ig+/DGaoGRhff4kRT20ZQVWEGAQ1/E99NEYQZYQPtu3NrJ
+	j2mr1+6fYvecw+Fzh8rI0MA0Ojndf87BpNFeCnIPVFM1vHSQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yw6920dw8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 11:47:23 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45LBlL8l023071
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 11:47:21 GMT
+Received: from hu-gokulsri-blr.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 21 Jun 2024 04:47:16 -0700
+From: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+To: <sboyd@kernel.org>, <andersson@kernel.org>, <bjorn.andersson@linaro.org>,
+        <david.brown@linaro.org>, <devicetree@vger.kernel.org>,
+        <jassisinghbrar@gmail.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <mark.rutland@arm.com>,
+        <mturquette@baylibre.com>, <ohad@wizery.com>, <robh@kernel.org>,
+        <sricharan@codeaurora.org>
+CC: <gokulsri@codeaurora.org>
+Subject: [PATCH v9 0/8] remoteproc: qcom: q6v5-wcss: Add support for secure pil
+Date: Fri, 21 Jun 2024 17:16:51 +0530
+Message-ID: <20240621114659.2958170-1-quic_gokulsri@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a43dc0512194042d762bf5bb5f1396d41fef5bce.camel@redhat.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ltZ0Ud7emP-AmLq_72k7T8yRPOTSW_rQ
+X-Proofpoint-GUID: ltZ0Ud7emP-AmLq_72k7T8yRPOTSW_rQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406210087
 
-On Fri, Jun 21, 2024 at 11:43:34AM +0200, Philipp Stanner wrote:
+IPQ8074 needs support for secure pil as well.
+Also, currently only unified firmware is supported.
+IPQ8074 supports split firmware for q6 and m3, so
+adding support for that.
 
-Please find a few additions below.
+changes since v8:
+ - Rebased on top of Linux 6.10-rc4
 
-But as mentioned, please let us sort out [1] first.
+Gokul Sriram Palanisamy (8):
+  remoteproc: qcom: Add PRNG proxy clock
+  remoteproc: qcom: Add secure PIL support
+  remoteproc: qcom: Add support for split q6 + m3 wlan firmware
+  remoteproc: qcom: Add ssr subdevice identifier
+  remoteproc: qcom: Update regmap offsets for halt register
+  dt-bindings: clock: qcom: Add reset for WCSSAON
+  clk: qcom: Add WCSSAON reset
+  arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
 
-[1] https://lore.kernel.org/lkml/ZnSeAZu3IMA4fR8P@cassiopeiae/
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi        |  80 +++++++++
+ drivers/clk/qcom/gcc-ipq8074.c               |   1 +
+ drivers/remoteproc/qcom_q6v5_wcss.c          | 162 +++++++++++++++----
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h |   1 +
+ 4 files changed, 212 insertions(+), 32 deletions(-)
 
-> On Thu, 2024-06-20 at 16:53 +0200, Greg KH wrote:
-> > On Wed, Jun 19, 2024 at 01:39:53AM +0200, Danilo Krummrich wrote:
-> > > I/O memory is typically either mapped through direct calls to
-> > > ioremap()
-> > > or subsystem / bus specific ones such as pci_iomap().
-> > > 
-> > > Even though subsystem / bus specific functions to map I/O memory
-> > > are
-> > > based on ioremap() / iounmap() it is not desirable to re-implement
-> > > them
-> > > in Rust.
-> > 
-> > Why not?
-> 
-> Because you'd then up reimplementing all that logic that the C code
-> already provides. In the worst case that could lead to you effectively
-> reimplemting the subsystem instead of wrapping it. And that's obviously
-> uncool because you'd then have two of them (besides, the community in
-> general rightfully pushes back against reimplementing stuff; see the
-> attempts to provide redundant Rust drivers in the past).
-> 
-> The C code already takes care of figuring out region ranges and all
-> that, and it's battle hardened.
-
-To add an example, instead of reimplementing things like pci_iomap() we use
-`Io` as base type providing the accrssors like readl() and let the resource
-implement the mapping parts, such as `pci::Bar`.
-
-> 
-> The main point of Rust is to make things safer; so if that can be
-> achieved without rewrite, as is the case with the presented container
-> solution, that's the way to go.
-> 
-> > 
-> > > Instead, implement a base type for I/O mapped memory, which
-> > > generically
-> > > provides the corresponding accessors, such as `Io::readb` or
-> > > `Io:try_readb`.
-> > 
-> > It provides a subset of the existing accessors, one you might want to
-> > trim down for now, see below...
-> > 
-> > > +/* io.h */
-> > > +u8 rust_helper_readb(const volatile void __iomem *addr)
-> > > +{
-> > > +       return readb(addr);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(rust_helper_readb);
-> > 
-> > <snip>
-> > 
-> > You provide wrappers for a subset of what io.h provides, why that
-> > specific subset?
-> > 
-> > Why not just add what you need, when you need it?  I doubt you need
-> > all
-> > of these, and odds are you will need more.
-> > 
-> 
-> That was written by me as a first play set to test. Nova itself
-> currently reads only 8 byte from a PCI BAR, so we could indeed drop
-> everything but readq() for now and add things subsequently later, as
-> you suggest.
-
-I think it is reasonable to start with the most common accessors
-{read,write}{b,w,l,q and maybe their relaxed variants.
-
-We generate them through the `define_read!` and `define_write!` macros anyways
-and the only difference between all the variants is only the size type (u8, u16,
-etc.) we pass to the macro.
-
-> 
-> 
-> 
-> > > +u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
-> > > +{
-> > > +       return readl_relaxed(addr);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
-> > 
-> > I know everyone complains about wrapper functions around inline
-> > functions, so I'll just say it again, this is horrid.  And it's going
-> > to
-> > hurt performance, so any rust code people write is not on a level
-> > playing field here.
-> > 
-> > Your call, but ick...
-> 
-> Well, can anyone think of another way to do it?
-> 
-> > 
-> > > +#ifdef CONFIG_64BIT
-> > > +u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
-> > > +{
-> > > +       return readq_relaxed(addr);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
-> > > +#endif
-> > 
-> > Rust works on 32bit targets in the kernel now?
-> 
-> Ahm, afaik not. That's some relic. Let's address that with your subset
-> comment from above.
-
-I think we should keep this guard; readq() implementations in the arch code have
-this guard as well.
-
-Should we ever add a 32bit target for Rust we also don't want this to break.
-
-> 
-> > 
-> > > +macro_rules! define_read {
-> > > +    ($(#[$attr:meta])* $name:ident, $try_name:ident,
-> > > $type_name:ty) => {
-> > > +        /// Read IO data from a given offset known at compile
-> > > time.
-> > > +        ///
-> > > +        /// Bound checks are performed on compile time, hence if
-> > > the offset is not known at compile
-> > > +        /// time, the build will fail.
-> > 
-> > offsets aren't know at compile time for many implementations, as it
-> > could be a dynamically allocated memory range.  How is this going to
-> > work for that?  Heck, how does this work for DT-defined memory ranges
-> > today?
-> 
-> The macro below will take care of those where it's only knowable at
-> runtime I think.
-> 
-> Rust has this feature (called "const generic") that can be used for
-> APIs where ranges which are known at compile time, so the compiler can
-> check all the parameters at that point. That has been judged to be
-> positive because errors with the range handling become visible before
-> the kernel runs and because it gives some performance advantages.
-
-Let's add an exammple based on `pci::Bar` here.
-
-As a driver you can optionally map a `pci::Bar` with an additional `SIZE`
-constant, e.g.
-
-```
-let bar = pdev.iomap_region_sized::<0x1000>(0)?;
-```
-
-This call only succeeds of the actual bar size is *at least* 4k. Subsequent
-calls to, let's say, `bar.readl(0x10)` can boundary check things on compile
-time, such that `bar.readl(0x1000)` would fail on compile time.
-
-This is useful when a driver knows the minum required / expected size of this
-memory region.
-
-Alternatively, a driver cann always fall back to a runtime check, e.g.
-
-```
-let bar = pdev.iomap_region(0)?;
-let val = bar.try_readl(0x1000)?;
-```
-
-- Danilo
-
-> 
-> 
-> P.
-> 
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
+-- 
+2.34.1
 
