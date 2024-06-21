@@ -1,173 +1,128 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E939417BB28
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A0017BB12
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719003102; cv=none; b=OoLaRgh81TuhwMoGxmu2j7/acrdjU7x8dNTdT5iO04qgfiDYMdCkl17PBcY/ddaBxMaVKHlFyhGuTGQBgNhJmbmYX6mmK968ZwhLKucirKxF0dUDJIFQhevk/NAKRxRZ0VyBwxNa8nqZrsHeTC7auorWT9cHLtPcmZF6KPWKXIk=
+	t=1719003119; cv=none; b=PomGJMk016zKszdKk2Bj3jwPhXfgFJGsVyEZGp3aVBnTZsCnRBcNbCRFVwHPuULPogXxZ7CPJqg512sGkhRy9mIQXWySMhghAL0drTISOkBPNeMn7USFHs7165Yb3Lf5rdGlaxt3Eqd48gm0+03NMRiIP15Ht9neAjmdRnTS35c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719003102; c=relaxed/simple;
-	bh=M5ncsogjwIKi7yTwd3on+qTwjMFKb9OhWUuYpkcn5s4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mjqkV9Z6o5xHa/n6CbvY7pkW4iBJ36IshpltstFhFD5r02Mn8rQhPJh+xvvzSs9hNDVOnBbP9ruI+DMo0GFQ5YzYRgyawhC9aw+EGr8CVUJ9EfQ/XrDxJXUi5n41WO4yDITHSipcNT9aRKDnyp0+plkSi8uPtYbI9dQaPSBlVKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OQMtcmVH; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719003119; c=relaxed/simple;
+	bh=Oh3fHeV4znlvxEw6zOAQuavyv3NjqYzTMJ90QD3QnrM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DQ1xiHdDFPKghWlYZpsw5Ydqw1XLg9u9+v/Orp+czf2M9S7chvpkAHl7Dny9EN1dF3nqpJEMzppKeHVLNdWv+hBw1+b3AlYa0yUMdfTRW9G3nLPyE6aYn600Nrs+om2zN2CpKKqFa61YfmdCR1JitLNDxrt2m0tMhDhO4wz7MFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=asThEooi; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OQMtcmVH"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3d22802674cso1315373b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:51:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asThEooi"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-44056f72257so537871cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:51:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719003100; x=1719607900; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1719003115; x=1719607915; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=keq6dAlPadRHMn2hspGHDGXT5Yre2UihnSFV/6UPPyU=;
-        b=OQMtcmVHb2os4Ig1fSbc4NNPpl18XL6hFGMqxJ/1M1WyX+fBoxFTKG+ayktWk4FB2F
-         b358bfJvHJjh5Ibn9Q8UhU7xWaMz73AKXrHVHr4itznrmB0SrADT+q1g7CUAkR8xQzic
-         QNEII7HYMX4xZntONgf2IftB81wGXVX4cmQCCEkpeadZ4JH+V9EWPe4jHtoUgFbNlYxy
-         GuvYUxoHLWHrA/ZMotsBCBAGI2lOQVZ4auvqaL3k7Q1NMFMynNhu6Whwn4aUUJSWtvqt
-         0DpcUnqpkPqEvASsjd5mCIradRm6y8QJqNfk/pNtYzj+enT7NSEudIKMtgbamasyNtBK
-         H8Pw==
+        bh=lArdc/1wZ6cGMV0ZmDn9MYnxqrFzIsvvBqrD/IAOOXM=;
+        b=asThEooimGIB6lT3goXLdKHmwSc/SexKaLdfRQ89jrkN2j7W2kdBbo6Cq8EqTJeXv3
+         JJrv1GebWy6p+I6zmr4lWjudBJYQ/uKXP1veHlItPqcqzJXAzCzKKBdD3s+cyD5pVHa7
+         1cO5wO0kusRMpB5yrV8GcNbZBmvuDp0eUi3L+K2brgvLvougSmhfnY0rMMVEEP1iXzhV
+         LrJ7NdScLT0Ebak/MqjSF4tD6+xM6Voaa+0qt6sVPLCueBN5acqcxn5OaSx71MAVNY+C
+         FfMGhv9rDe/wSq3+YCmB+gq/k1SZimdwns9C30ZCzf72qqT8eH+5B6auKTaQXcxAdo30
+         TaJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719003100; x=1719607900;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719003115; x=1719607915;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=keq6dAlPadRHMn2hspGHDGXT5Yre2UihnSFV/6UPPyU=;
-        b=EDu9A5oatMPK/bu0WnjPErpaxrEu4X18oCVehLHykptyBoi0aMWovdL/So+3Ged8Lk
-         ohd5SEERi1ziN7utW9Rhw2Q9MZhFqB/rygIM/vMHonQiKjeZ+bFRHdMmnZXM2jJhhpQj
-         omHsY+uqFEXx6eN55hhjaeZ9+yAP+o8x/fJ4r8yhh98Nc05/AeVu2ns91TVJw2l0dEIk
-         h0ezLXsm80BgcCIDwRWUEVQTp0289HSNrjXZa1TUN6jvfHnE7xkAsuWpPNiOyzTM0II3
-         poc2qu0M3HiZe4yxrD6tmdUOidOzt5H4qmiiwvzXclF9hH5N2kHacSq3hi9gHDASvuSk
-         7HeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZuOfeetCjYfXGD9AxhdylSesmE74YkpUJOhSRl+Utp6IAhq2Cl7r6Z9O4Q9J5GlPE6HiDThlAgtouAxnk0D7Xo5Ggo7plCEMZYy5V
-X-Gm-Message-State: AOJu0Yyt4Nce5wWuzb/J+87NXneA+j8ILnbmQYFytYNRvExzgNeaiOWF
-	/CmWQ6x+2A7RFkzFnNo90mwuLyjITvJnnqGu0V8fczQZRtHNFfhDC4Wc7uBNdwI+ma4UACTFS1i
-	Y
-X-Google-Smtp-Source: AGHT+IEczRmq7EpJ/frerAFCfsSGm1g7w7xf40xN3hyRyZjge33d8FOSAQi0k4RN4+jkSstOJt1cxg==
-X-Received: by 2002:a05:6808:f8b:b0:3d2:2aa8:3b2c with SMTP id 5614622812f47-3d51b9e2b73mr10572440b6e.33.1719003099967;
-        Fri, 21 Jun 2024 13:51:39 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d5345e584dsm428089b6e.55.2024.06.21.13.51.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 13:51:39 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: [PATCH 3/3] iio: adc: ad7944: use devm_spi_optimize_message()
-Date: Fri, 21 Jun 2024 15:51:32 -0500
-Message-ID: <20240621-devm_spi_optimize_message-v1-3-3f9dcba6e95e@baylibre.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240621-devm_spi_optimize_message-v1-0-3f9dcba6e95e@baylibre.com>
-References: <20240621-devm_spi_optimize_message-v1-0-3f9dcba6e95e@baylibre.com>
+        bh=lArdc/1wZ6cGMV0ZmDn9MYnxqrFzIsvvBqrD/IAOOXM=;
+        b=ORoQ/uMqbDVjUDeR0phd8Q7MgFgSQsLZ0TvBMviRW09ZcbAPpf4fV8z1w+VfWYHkhe
+         6nlAIxf11X3C/0b/6nZpWgP2tboU2Fg6E6/XEYQ7pIaLl7TgVQ6LZAVXk/kxV7Q+2VwA
+         ca24p8z+rQXjcrcetp7xahajTkCxDlO1kOc0VZkv7roU2KakuVIoj+TEedeHXpu5lwgn
+         WrziGCc0kInJbl/PL/a3g5X04e6OZHX+vklx/nIutDiWHPy7xx7Bm1r175beRS8loIbp
+         ymvpT7bmR3wRDxAuYWVUvxBUfAhBird/yZuzIoFoDlXXCIQ88u1dHbQMJORz8mIIb/Et
+         wowg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpcT0dZpdUsuCC4WGU1Ef0jETQ3h8q41TOHAP4Ajuu1+f2kVCHpmTnswmuHGFrddQoDuUubADWbjVM/0gM16CEl5p1E9TBOSfLV54S
+X-Gm-Message-State: AOJu0YwWC8xVjyFwA9su2zHPzb4l25DVHNBqIkF4Yt5Xhz4hILOSxepp
+	e2WeyhK/WwztE7FEhmWVA8WFh7FJm0HsRlyB38M2nTu9puSiopnnE54kUnPVZaPwW4zXCTyiGMT
+	2LJcXFazD5DTbe939XAqNgIIlF2bjBIXS0/Ox
+X-Google-Smtp-Source: AGHT+IH5yoYBlppb4JsqH83QVq/VXvffOxaxcg76w1huEHrI0GcDKG80KYq2O785kln/S9G/4ZJBzT5QZpUnTZkr5kA=
+X-Received: by 2002:a05:622a:1a01:b0:444:92a6:188a with SMTP id
+ d75a77b69052e-444ce2be63dmr496101cf.9.1719003115301; Fri, 21 Jun 2024
+ 13:51:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+References: <cover.1718994350.git.robin.murphy@arm.com>
+In-Reply-To: <cover.1718994350.git.robin.murphy@arm.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Fri, 21 Jun 2024 22:51:16 +0200
+Message-ID: <CAGETcx-nBb43181Rd4HC6HQF-6=XOufA05e8Zda+LBBfhwvagw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] iommu: Remove iommu_fwspec ops
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>, linux-acpi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, devicetree@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use new devm_spi_optimize_message() helper to simplify repeated code
-in the ad7944 driver.
+On Fri, Jun 21, 2024 at 8:46=E2=80=AFPM Robin Murphy <robin.murphy@arm.com>=
+ wrote:
+>
+> v1: https://lore.kernel.org/linux-iommu/cover.1713523251.git.robin.murphy=
+@arm.com
+>
+> Hi all,
+>
+> Here's v2 of this little cleanup, with acks and the additional cosmetic
+> tweak suggested by Andy. There were some slightly non-trivial changes in
+> the rebase so I've left off Jean-Philippe's tested-by from v1, but I've
+> given it a quick spin on arm64 ACPI and DT and all seems well still.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/adc/ad7944.c | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+Hi Robin,
 
-diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-index 4602ab5ed2a6..a6ac17c13a29 100644
---- a/drivers/iio/adc/ad7944.c
-+++ b/drivers/iio/adc/ad7944.c
-@@ -134,18 +134,12 @@ AD7944_DEFINE_CHIP_INFO(ad7985, ad7944, 16, 0);
- /* fully differential */
- AD7944_DEFINE_CHIP_INFO(ad7986, ad7986, 18, 1);
- 
--static void ad7944_unoptimize_msg(void *msg)
--{
--	spi_unoptimize_message(msg);
--}
--
- static int ad7944_3wire_cs_mode_init_msg(struct device *dev, struct ad7944_adc *adc,
- 					 const struct iio_chan_spec *chan)
- {
- 	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
- 						   : adc->timing_spec->conv_ns;
- 	struct spi_transfer *xfers = adc->xfers;
--	int ret;
- 
- 	/*
- 	 * NB: can get better performance from some SPI controllers if we use
-@@ -175,11 +169,7 @@ static int ad7944_3wire_cs_mode_init_msg(struct device *dev, struct ad7944_adc *
- 
- 	spi_message_init_with_transfers(&adc->msg, xfers, 3);
- 
--	ret = spi_optimize_message(adc->spi, &adc->msg);
--	if (ret)
--		return ret;
--
--	return devm_add_action_or_reset(dev, ad7944_unoptimize_msg, &adc->msg);
-+	return devm_spi_optimize_message(dev, adc->spi, &adc->msg);
- }
- 
- static int ad7944_4wire_mode_init_msg(struct device *dev, struct ad7944_adc *adc,
-@@ -188,7 +178,6 @@ static int ad7944_4wire_mode_init_msg(struct device *dev, struct ad7944_adc *adc
- 	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
- 						   : adc->timing_spec->conv_ns;
- 	struct spi_transfer *xfers = adc->xfers;
--	int ret;
- 
- 	/*
- 	 * NB: can get better performance from some SPI controllers if we use
-@@ -209,11 +198,7 @@ static int ad7944_4wire_mode_init_msg(struct device *dev, struct ad7944_adc *adc
- 
- 	spi_message_init_with_transfers(&adc->msg, xfers, 2);
- 
--	ret = spi_optimize_message(adc->spi, &adc->msg);
--	if (ret)
--		return ret;
--
--	return devm_add_action_or_reset(dev, ad7944_unoptimize_msg, &adc->msg);
-+	return devm_spi_optimize_message(dev, adc->spi, &adc->msg);
- }
- 
- static int ad7944_chain_mode_init_msg(struct device *dev, struct ad7944_adc *adc,
-@@ -221,7 +206,6 @@ static int ad7944_chain_mode_init_msg(struct device *dev, struct ad7944_adc *adc
- 				      u32 n_chain_dev)
- {
- 	struct spi_transfer *xfers = adc->xfers;
--	int ret;
- 
- 	/*
- 	 * NB: SCLK has to be low before we toggle CS to avoid triggering the
-@@ -249,11 +233,7 @@ static int ad7944_chain_mode_init_msg(struct device *dev, struct ad7944_adc *adc
- 
- 	spi_message_init_with_transfers(&adc->msg, xfers, 2);
- 
--	ret = spi_optimize_message(adc->spi, &adc->msg);
--	if (ret)
--		return ret;
--
--	return devm_add_action_or_reset(dev, ad7944_unoptimize_msg, &adc->msg);
-+	return devm_spi_optimize_message(dev, adc->spi, &adc->msg);
- }
- 
- /**
+I see in this series you talk about figuring out if a device has a
+driver that could match. There has been a "can_match" flag in every
+device that's set if a driver that match it is present, but hasn't
+probed the device yet (for whatever reason). Just pointing that out in
+case that makes things a lot easier for you. As of now, we don't
+handle clearing it when the driver is unregistered, but if that really
+needs to be handled, that shouldn't be too difficult.
 
--- 
-2.45.2
+-Saravana
 
+>
+> Thanks,
+> Robin.
+>
+>
+> Robin Murphy (4):
+>   iommu: Resolve fwspec ops automatically
+>   ACPI: Retire acpi_iommu_fwspec_ops()
+>   OF: Simplify of_iommu_configure()
+>   iommu: Remove iommu_fwspec ops
+>
+>  drivers/acpi/arm64/iort.c             | 19 +++-------
+>  drivers/acpi/scan.c                   | 36 +++++--------------
+>  drivers/acpi/viot.c                   | 11 ++----
+>  drivers/iommu/arm/arm-smmu/arm-smmu.c |  3 +-
+>  drivers/iommu/iommu-priv.h            |  7 ++++
+>  drivers/iommu/iommu.c                 | 20 +++++------
+>  drivers/iommu/mtk_iommu_v1.c          |  2 +-
+>  drivers/iommu/of_iommu.c              | 50 ++++++++++-----------------
+>  drivers/iommu/tegra-smmu.c            |  2 +-
+>  drivers/of/device.c                   | 30 ++++++----------
+>  include/acpi/acpi_bus.h               |  3 +-
+>  include/linux/iommu.h                 | 15 ++------
+>  12 files changed, 65 insertions(+), 133 deletions(-)
+>
+> --
+> 2.39.2.101.g768bb238c484.dirty
+>
