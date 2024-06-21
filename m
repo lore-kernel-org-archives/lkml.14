@@ -1,167 +1,94 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09648139CE5
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A733B495E5;
+	Fri, 21 Jun 2024 12:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718971847; cv=none; b=ALxjpD90rSVLCciZ0YDGtIiL7W5Fb88cbHZz+9/ccNyIfCDMgRgJMCXMCvHzibRitkhkK1HlXJq5/P0REhKiWcfFEUfS9Alm5MDQTAyfnCadQLSr+9EQDuYQ8jhZYthZK/TWf/5YIWQbCyyEHBx3aEKyXZXZu4Mn6rhs8EV0Pp4=
+	t=1718972064; cv=none; b=iaol/Ts4pvuFy9QPUV46lxnpaHp7WEP0myCQpnnRnAbEc94z4OmZSY54wQBC3HhwalVd3llSqW28dgNwi+0DUeibjkO1VW0ljh8FWfMl3dXrYB5Nf2cFiDrXoxhlDTCYNI5ntXVU/DFYyU4ObKrZ8YzPBXDvO2Y45xeb5ozSA9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718971847; c=relaxed/simple;
-	bh=hYfb0a3eCGf8ykplVBIG1npqvx5J/IHFUDDQGZ2qm0c=;
+	s=arc-20240116; t=1718972064; c=relaxed/simple;
+	bh=x4vqn5Hh8k99MfrNwz41Ev55uDW6SlGUmskYi4S6Zjs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E93phv7LISBsxMvMgaMCM4gtPasYtzVr3oVP+0b5HhdzkRlgDVgjtreguGNzYeV26yfKKy4K2akpMRiE/N/6L3UTkQv1NSPn7f9uspQlaplCzqQYOBTliIV5be51xoXJ8DHRjVKIiytdwIxj22DnCf5KSq4jYireugjaTYGQs08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=cT3azjG5; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="cT3azjG5"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-375858224adso6478845ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1718971845; x=1719576645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tXUId7BgiOrJKlvj4EXPaiwGxRE3QDT7xYFFY6+6a4g=;
-        b=cT3azjG5elplraJ1w5TkxKPn9Og1JS4tB7eQlziMFNSjltVT5P7D53Jl4uKyDTGZWS
-         rKrNJLCKpSuVCvwle5G/aGFtoLujR9LX9q5dPn2Nh8A3qZiIev1+JugjqvnoN3Osj1hu
-         ZTeZa8EFkiBhJsV6qBb+GxGoXNaOGyRxFh1c4Kzlyu+4M/G4SqsaMGKpbnZdQ+S442GK
-         ukBrDb/FPJpJ3FItm9FAw9IVNgPA7vsQAVsazFipFBL1Fm57sdmZiTE/QXG0xGsLS6tF
-         dlkBWLRr8A0WRiOQXSuwxtqZCa9MMqIQLEf6I1WYFfObEMzXfV7tysdjIR2QIISDqgFH
-         ocyg==
+	 To:Cc:Content-Type; b=hyp4O1DK7srmJf0DTa46agGHV9H7tngQgdukWd7UBGbawokClKm5fOus4LhUcgxUPkch2DmdfAoJ8ho+C180A4xGMgr7Xv6fic7iwQvfHjnZyGnxdggXNjaXwwM4mtaGe9KSLDpYjy4EOPP1CacOl8s3r24pjy82BSBfINgpaO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62cddff7f20so18613137b3.3;
+        Fri, 21 Jun 2024 05:14:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718971845; x=1719576645;
+        d=1e100.net; s=20230601; t=1718972061; x=1719576861;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tXUId7BgiOrJKlvj4EXPaiwGxRE3QDT7xYFFY6+6a4g=;
-        b=pN4TDwa31PgxwS1ZTtaYTCV19YjGnIgPOdNVqSWMnZFN8EcXdSXYFSH3V2w0eeliBW
-         e2XAJdmBVYySPji/6jMYcRnduLawqIbdFZcPU/F0+IpxqUH8pGJo1izyNAdupKIJPt07
-         eRU1U98sWLXpSUz2nd1oaojHwMMJLshlnXA3rOQq3rD7r666i/Uib9ss/vKw5wex4Ds9
-         dW0AzpKd8VxXVhHqH89r18L278J7OMmJtlz17aLENCmHKSGK2O0c5uzEEiK8IS+81ZDq
-         LFVqWpjfK2ktTxs6lu+HKvNvreAPqoKz5kd8YyB6BY6L2tYV/oR0zbZYe4BvDLTJlD95
-         VzpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhgP3tj+/wWE6wlZ2+PUqRwi8K7diJJaC10UCDhDmLoEJT5dBSxc12sCWIuFfMHeHEQAQbpoXWm/KgdCH3BHP5G+AsnqKolDqoynAy
-X-Gm-Message-State: AOJu0YxKTtN0xjmv9CdIINsJK+CPm3o4Wi++mYNE6axZR+I1KXN4cbn1
-	3bsNRdD5R4K1buwLEeFIyaHFcugUezjxmeqr7mpKsj2m2JXmHzi1PAa4VQkiSUQ7euC9X2pVHHz
-	yf3FD7WyGXzl/csNCLu+20E7Pf6G7W6JeKClwUg==
-X-Google-Smtp-Source: AGHT+IE+Q+KOOE0S07ldQyv/lyyHoya7PZRDhlWazWZX8wdUbyDfKI4hFTF8xA69bxE3aHWLPp9UAq+n4zkSLmp8Cqc=
-X-Received: by 2002:a05:6e02:1fc9:b0:375:c240:e7a6 with SMTP id
- e9e14a558f8ab-3761d70b3f1mr87707435ab.24.1718971845149; Fri, 21 Jun 2024
- 05:10:45 -0700 (PDT)
+        bh=QcWHAhSO81y854xZHbFbt4ihTOVyDirYk3vDpI2/9rM=;
+        b=KnikcwJsUNc/AlVm8aCGsjvZsQakpvSL3Qy2EmkiKpXk16okHSiLTdgGsL/nTkSWCT
+         CNA2TGAvTjP+/wk2QCVz/iKDwE11+N1lCJdt6A6JB2hwKkgVQo2F/FRUl1wWolug+O7F
+         TZOBmT5u1HHEqVYCQZcjE42deOeoppUM9wl6bRtFmynlkARpjySF//Tj0tDMzbSpOyP/
+         69LfHmKTMud7OnB8ZK6ghSyQ4/HB/khlZTu6CZbnpJ12u4T8d/bpoK3hEc5Z2X7fLp8P
+         6/Qa2mJV6NtRnIS8m9LSXiwEmeAvurDEWCYBQDieV08e5USAhGvtEJwXyD2bvFzueyiM
+         PpQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUYzHgtioxBX3EhlQGHZ+tp51AUjZmJ4KLGRSxMsbR8TszFYmqh7tRwYj3HXQo7SAwQKOywGDBGgkTDRGizuf6agy2ckMgn4BdqnevoywZU1F4VlraRbLl868Zoa8vFN79I+/U0gwAWxj8QswuFHPI2Mi3q7t3mDBe86mCAE0IBxrczNrDAyWLmRxn
+X-Gm-Message-State: AOJu0Yy6bkaA9LQT6bPqAzNkzPD7NGO/YCRKyjpBBkTM9QICwkDorntX
+	bslq0SaL6VAWpDIxZgCk0+/aDzL0hwQiBXp1jZqx2PWIZWbMwvDdyouL96Hj
+X-Google-Smtp-Source: AGHT+IH/5ChzJr5RjYiCwbXy8Y6Izt3WFkC8l60TmJ0EHP4W0Haf9uDvmMpEoC7+F2CMaqfIfB52lA==
+X-Received: by 2002:a81:4c49:0:b0:63b:ce8d:c7db with SMTP id 00721157ae682-63bce8dc8fdmr50485757b3.0.1718972061163;
+        Fri, 21 Jun 2024 05:14:21 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f11b0f98esm3027867b3.35.2024.06.21.05.14.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 05:14:20 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e026a2238d8so1997767276.0;
+        Fri, 21 Jun 2024 05:14:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVFiK+RyRyNQu9r49lXygis9AhEEy7qsMqxSbaEI3IOaJ+sfCT0ojJiAAfxyDpZQ4MN5dqQD6Ih2j/mx3C+c+jEHus2kSK1peM9MNOhpatiGzRHqtqxTLSbjqD9ucW+8mT1d3V7ZDgwgQzw0+70IVlHUfWmaItIiktwASFtnR2fR+cGV+4Uw9sEW9yO
+X-Received: by 2002:a25:bd5:0:b0:e02:bc1a:8ee1 with SMTP id
+ 3f1490d57ef6-e02be16fd4emr7657695276.29.1718972060172; Fri, 21 Jun 2024
+ 05:14:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621113143.35827-1-cuiyunhui@bytedance.com>
-In-Reply-To: <20240621113143.35827-1-cuiyunhui@bytedance.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 21 Jun 2024 17:40:34 +0530
-Message-ID: <CAAhSdy2wU2NCXAJ_muYTkxxx4YECis2HWwRf55u3nuAtNBDVfA@mail.gmail.com>
-Subject: Re: [PATCH v2] RISC-V: Provide the frequency of time CSR via hwprobe
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, cleger@rivosinc.com, evan@rivosinc.com, 
-	conor.dooley@microchip.com, costa.shul@redhat.com, andy.chiu@sifive.com, 
-	samitolvanen@google.com, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Palmer Dabbelt <palmer@rivosinc.com>
+References: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240618174831.415583-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240618174831.415583-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 21 Jun 2024 14:14:08 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV8jNPeRbrxAxej3FZEHzregsLpYi9e=pzCLVSpVSBm5A@mail.gmail.com>
+Message-ID: <CAMuHMdV8jNPeRbrxAxej3FZEHzregsLpYi9e=pzCLVSpVSBm5A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: renesas: rzg2l: Update PIN_CFG_MASK() macro
+ to be 32-bit wide
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 21, 2024 at 5:03=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com=
-> wrote:
+On Tue, Jun 18, 2024 at 7:48=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> From: Palmer Dabbelt <palmer@rivosinc.com>
+> Modify the `PIN_CFG_MASK()` macro to be 32-bit wide. The current maximum
+> value for `PIN_CFG_*` is `BIT(21)`, which fits within a 32-bit mask.
 >
-> A handful of user-visible behavior is based on the frequency of the
-> time CSR.
->
-> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-LGTM.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.11.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+Gr{oetje,eeting}s,
 
-Regards,
-Anup
+                        Geert
 
-> ---
->  Documentation/arch/riscv/hwprobe.rst  | 2 ++
->  arch/riscv/include/asm/hwprobe.h      | 2 +-
->  arch/riscv/include/uapi/asm/hwprobe.h | 1 +
->  arch/riscv/kernel/sys_hwprobe.c       | 5 +++++
->  4 files changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/ri=
-scv/hwprobe.rst
-> index fc015b452ebf..c07f159d8906 100644
-> --- a/Documentation/arch/riscv/hwprobe.rst
-> +++ b/Documentation/arch/riscv/hwprobe.rst
-> @@ -229,3 +229,5 @@ The following keys are defined:
->
->  * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
->    represents the size of the Zicboz block in bytes.
-> +
-> +* :c:macro:`RISCV_HWPROBE_KEY_TIME_CSR_FREQ`: Frequency (in Hz) of `mtim=
-e`.
-> diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hw=
-probe.h
-> index 630507dff5ea..150a9877b0af 100644
-> --- a/arch/riscv/include/asm/hwprobe.h
-> +++ b/arch/riscv/include/asm/hwprobe.h
-> @@ -8,7 +8,7 @@
->
->  #include <uapi/asm/hwprobe.h>
->
-> -#define RISCV_HWPROBE_MAX_KEY 6
-> +#define RISCV_HWPROBE_MAX_KEY 7
->
->  static inline bool riscv_hwprobe_key_is_valid(__s64 key)
->  {
-> diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/u=
-api/asm/hwprobe.h
-> index 7b95fadbea2a..18754341ff14 100644
-> --- a/arch/riscv/include/uapi/asm/hwprobe.h
-> +++ b/arch/riscv/include/uapi/asm/hwprobe.h
-> @@ -73,6 +73,7 @@ struct riscv_hwprobe {
->  #define                RISCV_HWPROBE_MISALIGNED_UNSUPPORTED    (4 << 0)
->  #define                RISCV_HWPROBE_MISALIGNED_MASK           (7 << 0)
->  #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE    6
-> +#define RISCV_HWPROBE_KEY_TIME_CSR_FREQ        7
->  /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
->
->  /* Flags */
-> diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwpr=
-obe.c
-> index 83fcc939df67..fc3b40fb9def 100644
-> --- a/arch/riscv/kernel/sys_hwprobe.c
-> +++ b/arch/riscv/kernel/sys_hwprobe.c
-> @@ -8,6 +8,7 @@
->  #include <asm/cacheflush.h>
->  #include <asm/cpufeature.h>
->  #include <asm/hwprobe.h>
-> +#include <asm/delay.h>
->  #include <asm/sbi.h>
->  #include <asm/switch_to.h>
->  #include <asm/uaccess.h>
-> @@ -226,6 +227,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *p=
-air,
->                         pair->value =3D riscv_cboz_block_size;
->                 break;
->
-> +       case RISCV_HWPROBE_KEY_TIME_CSR_FREQ:
-> +               pair->value =3D riscv_timebase;
-> +               break;
-> +
->         /*
->          * For forward compatibility, unknown keys don't fail the whole
->          * call, but get their element key set to -1 and value set to 0
-> --
-> 2.20.1
->
->
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
