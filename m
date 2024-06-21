@@ -1,112 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCB612C484;
-	Fri, 21 Jun 2024 22:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9529412E1E9
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 22:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719008245; cv=none; b=AgDb9zp7G4cpB437f31/LMPaF1JpxvzHiSpBFB4ZoaRY36Hh4HmS7Cx7VPI9R2WUihddUJDvTyRmi8ncWKmFZoZQmmcNTKHYg00dZmiTdVOHQ0yj+uL82wOtrZwUak4lVEvGB7tSJp4y2pepMnj8ro4BdMQvI7mVGo+35/2FRP8=
+	t=1719008568; cv=none; b=s7Tp3V4FQkTUKSvHq0cMUMoCDNqeQY3RsjXkV0rrmoQd+OHg3cnbiW2Vjxup9c2XAp7qEi5Vn8kTUjB+YIJQY1HrCou04ewGgtmFRJW+CxEbqSNXmQVQB+F657QZIWZhjqkblmu08dhPxx+1DXDO/p3JvxTXgZ4jNfFhjlOuOIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719008245; c=relaxed/simple;
-	bh=XIgP3gnjd7LTC0cYexQhnrJXzTEPBFd9t0ht0ox/1jo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ij0PfbXv+eziAOyTjGybXI7MlDqsRtk5D7MQGL4Xbcm8TEXGubTSRsCYhKcf1NtJ8SixEu0zPNfwWypIUMuCbl4+O7AUuRz9hlulK5X2yYdSbD15C13vRN+JPjKxhL4voW7Et74IqtghIRCLnX8fY5M4Kqq9CgsiCN6iwsJJ+A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNLs4VxL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719008568; c=relaxed/simple;
+	bh=8PoHB1+iNVVWg8t/RPg2r9VCF8spozdok5YxPwDRVdc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kbVVLg3mMaikKtBGltz9F69HQZevuY7X1dIfAnqaF2V2pd2A6tJM7pCvc4dr5XSjs5MVnVfj7XUqOcGtYhIDsDRmhRMw0LpHM3D4G5Sw8CE8zDAJkLxmQtmm+uOB/jNxGox5vTIwF5MQhDcqgxwPGsSxDpjiiXujmRI0tZFo3M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lStu89Kg; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNLs4VxL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FBAC2BBFC;
-	Fri, 21 Jun 2024 22:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719008244;
-	bh=XIgP3gnjd7LTC0cYexQhnrJXzTEPBFd9t0ht0ox/1jo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FNLs4VxLGgEYEzsY52miCNNujSfXwPo8nvN02pkUceS4AGd/t9R0YBoGuSz0iSBC5
-	 1P24T8SfRPpNKmYsJD3FQf44uMwvChSF0oWtp9SwcqssBupu93Dg7mQNvgDm9G60Uv
-	 U2FFjo9EmbwgtSJ5EizcIuV+n3ybPB4bOryBaXpCd92LGyHoja7v/Y+S7s8WBBfq9C
-	 XvOamhRIhWggfPWdi28OLfKdK+MZBdU6E++x8qWpRn2D5+Wu3w0XzST89l7AeJewfc
-	 Y6jKnIVav4PDjOgs66bE1oBclTu97rV0yQDXG1sDtBRGWuesPPneNSCW+t+RoGwt3N
-	 CuVYcjsbcJRYA==
-Message-ID: <ead26406-dd3b-491c-b6ab-11002a2db11a@kernel.org>
-Date: Sat, 22 Jun 2024 00:16:56 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lStu89Kg"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b9706c84e5so1419612eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719008564; x=1719613364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jlIty+WgdwDoohW5XXFoR1hOthwU+4uED/1nhbuq/KU=;
+        b=lStu89KgLrVrp2G5NTYGp2uyfg5nVhlDQ8z/9xppOQYd3irrSloHJQUhpK7SRXn2+A
+         tAEBOB+xkLWvV0mcrCt3YeLBQbW3hWKmqTbRIimJLdOeQ9M4wQqQaoSzWv/JhQfy5sr+
+         7aDfty1Hcg2NwUtgAS8MCBPM2RavI26jgqg5vwwjvRQB3/VwU4W9NeEj9OudFBe00kJJ
+         i6Dq1HxMKRT0d8TamsAA3RliE20S9jANfhPbvALudiSmq2a9g3y/RbTYrqN+ND3N9CTe
+         Y08WZj3Y7rfIRZe9I/wiDqGPCGjrDG3QTAWNu1UTOBnUW5A6ykowi1UYgGWA9BCiPiOD
+         D89A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719008564; x=1719613364;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jlIty+WgdwDoohW5XXFoR1hOthwU+4uED/1nhbuq/KU=;
+        b=vYqPrH73F6d9/0GFWOqZPsivgUlfXKLOuU/oKyiWSfv7p+lgbBlPeKsaNpqiG++464
+         k9XBv0uiA4M4GXsASQSM7J8XCoFviXGMHKDLzDCRll+6qAOnjqvP2bh/TRAx4coN0YOD
+         jiymKqKGCBNytbJ2PePbcXwIbl6fImf0OaQ1Sf13H0w2MbudeW56sTfawKG0Hsi9eAGX
+         t9tmT59eNaqqMLK4+MJC9OXS87n5eUjFOFa63ZKsgZNRsKefc3zEw2Jv5Y5lfCuTPCfc
+         jtfwsajXlXQn2H+vDWV9gn5Wga8w+vHNZoemadKhq0vuPGfW3SV6YXyOrZeWZo1zbhaR
+         VtbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfMTlOKVB6VonUZHh9+0iw/+lId4vp27fPBTxORo4R051LT/nT8T+TQfiGdoUZiREen5Lhuyvk6gWqPxB/lULF5X7GhHBXTtMXwwxM
+X-Gm-Message-State: AOJu0YxWwnV90uS2nlnJ5JfqLxma49rJjMQwdRoHiQonw5UZ6Wa5etlb
+	2rt0lUdjzvlnSUs+dyVPnH3KGBJvWt6LOuyQghUTcKHedn2lmKULd4YmyNJq/i0=
+X-Google-Smtp-Source: AGHT+IG+p63Zxmf2rAXWjvPijY7SoPMWPclMbCezJsVfap4w6qjRMVX7Qof09UrimH4j8vFNbWCoxA==
+X-Received: by 2002:a4a:2407:0:b0:5bb:2d23:8aeb with SMTP id 006d021491bc7-5c1adb3b4f8mr10056699eaf.2.1719008564634;
+        Fri, 21 Jun 2024 15:22:44 -0700 (PDT)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5c1d5901473sm414841eaf.43.2024.06.21.15.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 15:22:44 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+To: William Breathitt Gray <wbg@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Judith Mendez <jm@ti.com>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] counter: ti-eqep: enable clock at probe
+Date: Fri, 21 Jun 2024 17:22:40 -0500
+Message-ID: <20240621-ti-eqep-enable-clock-v2-1-edd3421b54d4@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] hwrng: add Rockchip SoC hwrng driver
-To: Dragan Simic <dsimic@manjaro.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Daniel Golle <daniel@makrotopia.org>,
- Aurelien Jarno <aurelien@aurel32.net>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Anand Moon <linux.amoon@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
- linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <cover.1718921174.git.daniel@makrotopia.org>
- <57a7fb13451f066ddc8d1d9339d8f6c1e1946bf1.1718921174.git.daniel@makrotopia.org>
- <f8e6b1b9-f8ff-42df-b1ef-bcc439c2e913@kernel.org>
- <173ce1663186ab8282356748abcac3f4@manjaro.org>
-Content-Language: en-US, de-DE
-From: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-In-Reply-To: <173ce1663186ab8282356748abcac3f4@manjaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-Hello Dragan,
+The TI eQEP clock is both a functional and interface clock. Since it is
+required for the device to function, we should be enabling it at probe.
 
-On 6/21/24 20:13, Dragan Simic wrote:
-> On 2024-06-21 11:57, Krzysztof Kozlowski wrote:
->> On 21/06/2024 03:25, Daniel Golle wrote:
->>> From: Aurelien Jarno <aurelien@aurel32.net>
-> 
-> [snip]
-> 
->>> +    pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
->>> +    pm_runtime_use_autosuspend(dev);
->>> +    pm_runtime_enable(dev);
->>> +
->>> +    ret = devm_hwrng_register(dev, &rk_rng->rng);
->>> +    if (ret)
->>> +        return dev_err_probe(&pdev->dev, ret, "Failed to register 
->>> Rockchip hwrng\n");
->>> +
->>> +    dev_info(&pdev->dev, "Registered Rockchip hwrng\n");
->>
->> Drop, driver should be silent on success.
-> 
-> I respectfully disagree.  Many drivers print a single line upon
-> successful probing, which I find very useful.  In this particular
-> case, it's even more useful, because some people may be concerned
-> about the use of hardware TRNGs, so we should actually make sure
-> to announce it.
+Up to now, we've just been lucky that the clock was enabled by something
+else on the system already.
 
-I agree to Krzysztof here. From the POV of a driver author, your own
-driver is very important and while you write it, it really interests
-*you* if the driver is successfully probed. However from a system
-perspective these are annoying: There are easily >50 devices[1] on a
-system, if all of these print a message in probe, you have little chance
-to see the relevant messages. Even if every driver author thinks their
-work is a special snow flake that is worth announcing, in practice users
-only care about your driver if there is a problem. Additionally each
-message takes time and so delays the boot process. Additionally each 
-message takes place in the printk ring buffer and so edges out earlier 
-messages that might be more important.
+Fixes: f213729f6796 ("counter: new TI eQEP driver")
+Reviewed-by: Judith Mendez <jm@ti.com>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+Changes in v2:
+- Added Fixes: tag to commit message
+- Picked up Judith's Reviewed-by tag
+- Link to v1: https://lore.kernel.org/r/20240609-ti-eqep-enable-clock-v1-1-1e9e7626467e@baylibre.com
+---
+ drivers/counter/ti-eqep.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-So +1 for dropping the dev_info() or at least using dev_debug() for it.
+diff --git a/drivers/counter/ti-eqep.c b/drivers/counter/ti-eqep.c
+index 072b11fd6b32..825ae22c3ebc 100644
+--- a/drivers/counter/ti-eqep.c
++++ b/drivers/counter/ti-eqep.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/bitops.h>
++#include <linux/clk.h>
+ #include <linux/counter.h>
+ #include <linux/kernel.h>
+ #include <linux/mod_devicetable.h>
+@@ -376,6 +377,7 @@ static int ti_eqep_probe(struct platform_device *pdev)
+ 	struct counter_device *counter;
+ 	struct ti_eqep_cnt *priv;
+ 	void __iomem *base;
++	struct clk *clk;
+ 	int err;
+ 
+ 	counter = devm_counter_alloc(dev, sizeof(*priv));
+@@ -415,6 +417,10 @@ static int ti_eqep_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(dev);
+ 	pm_runtime_get_sync(dev);
+ 
++	clk = devm_clk_get_enabled(dev, NULL);
++	if (IS_ERR(clk))
++		return dev_err_probe(dev, PTR_ERR(clk), "failed to enable clock\n");
++
+ 	err = counter_add(counter);
+ 	if (err < 0) {
+ 		pm_runtime_put_sync(dev);
 
-Best regards
-Uwe
-
-[1] On my laptop if have:
-
-	$ find /sys/devices -name driver | wc -l
-	87
-
-     On a Raspberrypi it yields 66.
+---
+base-commit: bb3f1c5fc434b0b177449f7f73ea9b112b397dd1
+change-id: 20240609-ti-eqep-enable-clock-91697095ca81
