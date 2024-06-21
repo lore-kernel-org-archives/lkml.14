@@ -1,197 +1,181 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEE8374CB
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C79915383B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718974334; cv=none; b=Ri1BAw1FA/hqBHFXo3jUVo27Dv7Bz+U4J81F7R8eCtjAeemKk0HarCogYtKSxJt2IGv9vDL2rL+95xO4YNnEsQU+QA4BpR2+vL6Gq0O6NBejfKpy04uG7H4p+biynGmw1miEW/HvOdSaOym8yQLhqaO6ISt0U/jBwe/BD3YERE4=
+	t=1718974347; cv=none; b=U4tHW1ryw5ObQ0DbjNPKD99KXIXOtv4k3HQSQJBhbJO7cDwQkt8HnSMb94hc7rHRiGiuaEPse/WQXGk7mWndRdtDKC4A5nUv94jguGlZq670Q57WrsI3jlv/CBbgmbIzGFQJDn2Brc6VrXzPTb5jB/M7EJXAJgmDWsguGANyqs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718974334; c=relaxed/simple;
-	bh=J6HJD+3VycErkeut20jaMSHoaezmyVeZb7e1McWGOlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Z3ca4ex3iwdLsdwDiZuaCcUfhJyjl8o4nBfOMTGqF0G5SYl9qHe3mHRwyJra0d7ll6q5NOvPVJhz75eLbIn+Y/pp7Nxqq9TRPw6zUi2d9Voo7fcjbZKQvOv9Uwp/KIgkKyLddtlBVeA7khoSIZWSzSkOLTMKIPg1C5MAse3xpIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CJPhnDgg; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718974347; c=relaxed/simple;
+	bh=9ExI3HMc8dpikZS14KdMf2VTfo2Gm4D9Du3Ad8hswa0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iTVnU3sDkTykUd7Oxq3NGXt6Yk3C5/SCnRr+zf3lq/zET3LBp1WCmfvA6vrZP7QC6by+xzfkh96SZfqAGv+cBdONPxCWXt4KM5kGwQIbiqtorEa2blrc++pw/P0JE3Mya6MIW+lz7NusrJ6C5dNYB96ZgO0Nkr+kgkQsQUgmcw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dTwxAVVv; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CJPhnDgg"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBc0dZ007039;
-	Fri, 21 Jun 2024 14:51:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	faGsSAC8ulOthkvxWXbNTJoYirta5hMr2PYlnCbqe+A=; b=CJPhnDggnyBO2OL6
-	QBlbiCq+wpmtunvZJ4Aw8T4+S9jxDpULUeCkAj6lQTxhsH2QzXVeZwCcKCACFZEs
-	DTV1vfUuhCpHHjP+lI9pV44RHlDolTi1PeuXwP3PVYH4Ox0cCHdyPC5mw4vNe20S
-	+/6SNeV80q4IIFEGh/SdbBdSxn96C/4aDiJGeO+XWXeewqTMBZN9WyeH6a+kRtM7
-	DpVtM0sTHh05bMCsfSZPfPe7aVnY0nhyR5WigSvJ9Gg/w2Gy1chCluapmNxmDLwN
-	D3T07wohV2QasIKyegJe5LaQDCbJctibgVxJYkKkFigWLp9FfSl185LNK5quPKU1
-	YmmpxQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yvrkk3nub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 14:51:44 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DC35D4002D;
-	Fri, 21 Jun 2024 14:51:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1399E21F15B;
-	Fri, 21 Jun 2024 14:50:59 +0200 (CEST)
-Received: from [10.48.87.177] (10.48.87.177) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 21 Jun
- 2024 14:50:58 +0200
-Message-ID: <f95e0485-0073-40b1-84ae-535b55d0cd0d@foss.st.com>
-Date: Fri, 21 Jun 2024 14:50:57 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dTwxAVVv"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7046211e455so1369033b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718974345; x=1719579145; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jFikssrTKZjRo9rjV6X1YnKRcFeJcrLtumLLhBthri8=;
+        b=dTwxAVVvG50novP6VF9UJ4zxxi3/kn2Qm/RuCRSGH6hF9+fGk4+lxd8Ts1FqPzm3dc
+         TNLnGhqmv7uchPdWDS+dM1lZLxaOCbBdW6WgnygnPxblfrgdo5IChA51HTkI12IQG/is
+         0h2Gqx5pNlccTuls0xwhHYtRZVbuRRItSow1ThOoQrT3C0jLepMAzKHEOwuLpgAtX3uk
+         5crDRly5mSLFxUu1smW6B66qa7qBAyp4f+iJozeZdpCj8VSXKe6egAOQni4qEPPAveLq
+         ZvGVrcaVu9Y7Vc8vCW22gO7E3O8DFODHFhyvtY/CjokQF9o4iBjPzsBf29maRwj6MZcy
+         dv3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718974345; x=1719579145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jFikssrTKZjRo9rjV6X1YnKRcFeJcrLtumLLhBthri8=;
+        b=rnoqd7i34Bp3r/Fkr3WNjYu8iT1ATupNXD9k5QjDil6cYkkHu12pgbH95u4n+bpvoR
+         LjhnBvcRi+2LJ2uowHEKuYhN7IwtJd80avAPuynLScCevx/ljlvH7mS0zAoAf7LCtfWo
+         6iHOqPyVt60JAlyF8X/2eLPONUEleNcz1ta3fYMjiXg6WYZmmbSEYqAviqAbdDoAHIfj
+         8T5O5yrHuPpmXkVRByvbRdYvpdOJoqc/g6723IKHzkLOX8YP8F+BSAjdexIM9XM6hamO
+         /vH7MFKX8flWy3XYXTjVxnCq+xK45eLJOEg4x1sLIBXH9fmuOKVVvdVYJKidh9HVASek
+         QbQw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9mhwaPENiUakNrDFNrxltqbqExhwGBc1yG/w1fpxLUa3dGDXaxZMwfp3y3+EoJe9O0T9XvMr1m8lxkEu60J+bGaGgakK2olCqpbve
+X-Gm-Message-State: AOJu0YzSLyTqITUFtiPmf0o1J1TN/2yRZOblnlzzc8HWJ2Hu7jH27sQl
+	bUC8i+xOfjo0pE7g9XrrrBKo6pNitcZt9dYFgx6b6szjY1gLABktx4DynJRc+qe/LaNF8hj+Qr2
+	VJoto6MERfDdLXe5tMAdyQpoqPywz5dsqXQzL
+X-Google-Smtp-Source: AGHT+IHLbxh5gnZYE3Ij3eJIOL1ReH1iHe0C7faIKhDLxkg3+UYsqYWbYf6Q8dpYIbAjVW26QeLxKyYtHQr3AWRtJa0=
+X-Received: by 2002:a05:6a20:7283:b0:1af:bd03:3222 with SMTP id
+ adf61e73a8af0-1bcbb5f75cbmr9905522637.45.1718974345162; Fri, 21 Jun 2024
+ 05:52:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v3 2/3] drm/stm: dsi: add pm runtime ops
-To: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240129104106.43141-1-raphael.gallais-pou@foss.st.com>
- <20240129104106.43141-3-raphael.gallais-pou@foss.st.com>
-Content-Language: en-US
-From: Yannick FERTRE <yannick.fertre@foss.st.com>
-In-Reply-To: <20240129104106.43141-3-raphael.gallais-pou@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
+References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com> <20240621-tracepoint-v3-2-9e44eeea2b85@google.com>
+In-Reply-To: <20240621-tracepoint-v3-2-9e44eeea2b85@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 21 Jun 2024 14:52:10 +0200
+Message-ID: <CAH5fLghb6oVkgy3ckf=dUk9S4VdCeWin+yDBW1ffBoxu=HqBKw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] rust: add tracepoint support
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Raphael,
-
-thanks for the patch.
-
-Acked-by: Yannick Fertre <yannick.fertre@foss.st.com>
-
-Tested-by: Yannick Fertre <yannick.fertre@foss.st.com>
-
-BR
-
-
-Le 29/01/2024 à 11:41, Raphael Gallais-Pou a écrit :
-> From: Yannick Fertre <yannick.fertre@foss.st.com>
+On Fri, Jun 21, 2024 at 12:35=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
+wrote:
 >
-> Update control of clocks and supply thanks to the PM runtime
-> mechanism to avoid kernel crash during a system suspend.
+> Make it possible to have Rust code call into tracepoints defined by C
+> code. It is still required that the tracepoint is declared in a C
+> header, and that this header is included in the input to bindgen.
 >
-> Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
-> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > ---
-> Changes in v2:
-> 	- Changed SET_RUNTIME_PM_OPS to RUNTIME_PM_OPS and removed
-> 	__maybe_unused
-> ---
->   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 24 ++++++++++++++++++------
->   1 file changed, 18 insertions(+), 6 deletions(-)
+>  include/linux/tracepoint.h      | 18 +++++++++++++++-
+>  include/trace/define_trace.h    |  7 ++++++
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/kernel/lib.rs              |  1 +
+>  rust/kernel/tracepoint.rs       | 47 +++++++++++++++++++++++++++++++++++=
+++++++
+>  5 files changed, 73 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-> index b1aee43d51e9..82fff9e84345 100644
-> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-> @@ -11,6 +11,7 @@
->   #include <linux/mod_devicetable.h>
->   #include <linux/module.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->   #include <linux/regulator/consumer.h>
->   
->   #include <video/mipi_display.h>
-> @@ -77,6 +78,7 @@ enum dsi_color {
->   struct dw_mipi_dsi_stm {
->   	void __iomem *base;
->   	struct clk *pllref_clk;
-> +	struct clk *pclk;
->   	struct dw_mipi_dsi *dsi;
->   	u32 hw_version;
->   	int lane_min_kbps;
-> @@ -443,7 +445,6 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct dw_mipi_dsi_stm *dsi;
-> -	struct clk *pclk;
->   	int ret;
->   
->   	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-> @@ -483,21 +484,21 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
->   		goto err_clk_get;
->   	}
->   
-> -	pclk = devm_clk_get(dev, "pclk");
-> -	if (IS_ERR(pclk)) {
-> -		ret = PTR_ERR(pclk);
-> +	dsi->pclk = devm_clk_get(dev, "pclk");
-> +	if (IS_ERR(dsi->pclk)) {
-> +		ret = PTR_ERR(dsi->pclk);
->   		DRM_ERROR("Unable to get peripheral clock: %d\n", ret);
->   		goto err_dsi_probe;
->   	}
->   
-> -	ret = clk_prepare_enable(pclk);
-> +	ret = clk_prepare_enable(dsi->pclk);
->   	if (ret) {
->   		DRM_ERROR("%s: Failed to enable peripheral clk\n", __func__);
->   		goto err_dsi_probe;
->   	}
->   
->   	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
-> -	clk_disable_unprepare(pclk);
-> +	clk_disable_unprepare(dsi->pclk);
->   
->   	if (dsi->hw_version != HWVER_130 && dsi->hw_version != HWVER_131) {
->   		ret = -ENODEV;
-> @@ -551,6 +552,7 @@ static int dw_mipi_dsi_stm_suspend(struct device *dev)
->   	DRM_DEBUG_DRIVER("\n");
->   
->   	clk_disable_unprepare(dsi->pllref_clk);
-> +	clk_disable_unprepare(dsi->pclk);
->   	regulator_disable(dsi->vdd_supply);
->   
->   	return 0;
-> @@ -569,8 +571,16 @@ static int dw_mipi_dsi_stm_resume(struct device *dev)
->   		return ret;
->   	}
->   
-> +	ret = clk_prepare_enable(dsi->pclk);
-> +	if (ret) {
-> +		regulator_disable(dsi->vdd_supply);
-> +		DRM_ERROR("Failed to enable pclk: %d\n", ret);
-> +		return ret;
-> +	}
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 689b6d71590e..d82af4d77c9f 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -238,6 +238,20 @@ static inline struct tracepoint *tracepoint_ptr_dere=
+f(tracepoint_ptr_t *p)
+>  #define __DECLARE_TRACE_RCU(name, proto, args, cond)
+>  #endif
+>
+> +/*
+> + * Declare an exported function that Rust code can call to trigger this
+> + * tracepoint. This function does not include the static branch; that is=
+ done
+> + * in Rust to avoid a function call when the tracepoint is disabled.
+> + */
+> +#define DEFINE_RUST_DO_TRACE(name, proto, args)
+> +#define DEFINE_RUST_DO_TRACE_REAL(name, proto, args)                   \
+> +       notrace void rust_do_trace_##name(proto)                        \
+> +       {                                                               \
+> +               __DO_TRACE(name,                                        \
+> +                       TP_ARGS(args),                                  \
+> +                       cpu_online(raw_smp_processor_id()), 0);         \
+> +       }
 > +
->   	ret = clk_prepare_enable(dsi->pllref_clk);
->   	if (ret) {
-> +		clk_disable_unprepare(dsi->pclk);
->   		regulator_disable(dsi->vdd_supply);
->   		DRM_ERROR("Failed to enable pllref_clk: %d\n", ret);
->   		return ret;
-> @@ -582,6 +592,8 @@ static int dw_mipi_dsi_stm_resume(struct device *dev)
->   static const struct dev_pm_ops dw_mipi_dsi_stm_pm_ops = {
->   	SYSTEM_SLEEP_PM_OPS(dw_mipi_dsi_stm_suspend,
->   			    dw_mipi_dsi_stm_resume)
-> +	RUNTIME_PM_OPS(dw_mipi_dsi_stm_suspend,
-> +		       dw_mipi_dsi_stm_resume, NULL)
->   };
->   
->   static struct platform_driver dw_mipi_dsi_stm_driver = {
+>  /*
+>   * Make sure the alignment of the structure in the __tracepoints section=
+ will
+>   * not add unwanted padding between the beginning of the section and the
+> @@ -253,6 +267,7 @@ static inline struct tracepoint *tracepoint_ptr_deref=
+(tracepoint_ptr_t *p)
+>         extern int __traceiter_##name(data_proto);                      \
+>         DECLARE_STATIC_CALL(tp_func_##name, __traceiter_##name);        \
+>         extern struct tracepoint __tracepoint_##name;                   \
+> +       extern void rust_do_trace_##name(proto);                        \
+>         static inline void trace_##name(proto)                          \
+>         {                                                               \
+>                 if (static_key_false(&__tracepoint_##name.key))         \
+> @@ -337,7 +352,8 @@ static inline struct tracepoint *tracepoint_ptr_deref=
+(tracepoint_ptr_t *p)
+>         void __probestub_##_name(void *__data, proto)                   \
+>         {                                                               \
+>         }                                                               \
+> -       DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
+> +       DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);       \
+> +       DEFINE_RUST_DO_TRACE(_name, TP_PROTO(proto), TP_ARGS(args))
+>
+>  #define DEFINE_TRACE(name, proto, args)                \
+>         DEFINE_TRACE_FN(name, NULL, NULL, PARAMS(proto), PARAMS(args));
+> diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
+> index 00723935dcc7..b47cc036acba 100644
+> --- a/include/trace/define_trace.h
+> +++ b/include/trace/define_trace.h
+> @@ -72,6 +72,13 @@
+>  #define DECLARE_TRACE(name, proto, args)       \
+>         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
+>
+> +/* If requested, create helpers for calling these tracepoints from Rust.=
+ */
+> +#ifdef CREATE_RUST_TRACE_POINTS
+> +#undef DEFINE_RUST_DO_TRACE
+> +#define DEFINE_RUST_DO_TRACE(name, proto, args)        \
+> +       DEFINE_RUST_DO_TRACE_REAL(name, PARAMS(proto), PARAMS(args))
+> +#endif
+> +
+>  #undef TRACE_INCLUDE
+>  #undef __TRACE_INCLUDE
+>
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
+per.h
+
+Hmm, I tried using the support where I have both events and hooks:
+
+#define CREATE_TRACE_POINTS
+#define CREATE_RUST_TRACE_POINTS
+#include <trace/hooks/rust_binder.h>
+#include <trace/events/rust_binder.h>
+
+But it's not really working. Initially I thought that it's because I
+need to undef DEFINE_RUST_DO_TRACE at the end of this file, but even
+when I added that, I still get this error:
+
+    error: redefinition of 'str__rust_binder__trace_system_name'
+
+Is the Rust support missing something, or is the answer just that you
+can't have two files of the same name like this? Or am I doing
+something else wrong?
+
+Alice
