@@ -1,180 +1,89 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933AD16D324;
-	Fri, 21 Jun 2024 08:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABF116D9AC;
+	Fri, 21 Jun 2024 08:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718958089; cv=none; b=NepR+FA3LScw89TtyxyDIOoolB2jcQj9YtNVGPxrRepWPiocHrrQkF9JJ2uIRzvzYlg7k7lBqmWVrfduhB8RAXYxYIhkPN5gpgtp8GLSIIhspqc+a1K1At0jTSIHGCo0BMIntUnObpGaKC7DZvwlns1GfHmBA4NLlzqrkNUBkzo=
+	t=1718958092; cv=none; b=HCN1W6tqB2tK+UGVX1EmqU4EYkb781WBdHSFANVsXjARnr6uORLG90Ei/TKgTMn31q30ZKwIPGvJ7bQrQf+EkjtnuEhbxwyKoq03Dp3HjgYI37wAgp0qRh8n7bIgYSj378bUYmyUoACd3B52JI76LPZ6BdwyLni13uEprhZmNOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718958089; c=relaxed/simple;
-	bh=Rq7ISxfYw80N3/2x7VC7rXstSoA8dIPUSY5wwlHiCDM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OJXuWpkN6GLZJiUl/4SS450pk7b0F2kE7p7QEV+vD6YRbNWV7jQpzWALB2wpCf6CPoGy4+3Iv+yr73PCGs0MAwpYHE8gUvNDkyZkfEjG6VbSWjjSuYIAjAJ9xo5o6J1w+jrsE52anlkpXIAAecv8UgDDY97D1RaTrU0Bfc0liog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WKPjtw7y; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718958092; c=relaxed/simple;
+	bh=K+R2RKmiuFqLEon+vHwnwnwqTqmBWoIoUN07WehQFFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NlKmj1oRfdwATKoTwByzta/1UUB7/gjI7SZWMWobE2Ar1XN+h3wspr5Ws2Zo29nHF2gn1ZKmP+VbnPE8E/2ugMmfnC4CiVbwbXtmvmzTUY5WD3HyfI50oIOhOAQP2Snutkjf/uzYlC0G0aljaoD116r9i1qwHf53/uhYHuCfbTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=evd2eRBz; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WKPjtw7y"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L7v5Gn010169;
-	Fri, 21 Jun 2024 08:20:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:subject:from:to:cc:date:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	bOMJVb7Zy5y+AcLTafdKk+2YiRA7kTcVYCv4Y9XBs08=; b=WKPjtw7y+CU8gKb5
-	47zr/upyd7H2mn/UtZO/QIjbhoclgJGkJAj3DQDzV9PogUpVvNF20BmXsMEk55Hi
-	xLPT4v+pj4ufUHyTLRgSos7GmubqhG6hkOGcdAaNqJAeWnne3hfsDf5xGmLai2NV
-	8TA76o1B0pMed+GCuieHb3gar4bwsGCtYM2Nf77bHnZbK7GhoT9WMVfIL00C+aRs
-	nWnMbs8WnAgAwDdTDzMJy7A9gmVuiI8DdPV7GEAaptRaYHXQoLXzvWW1faQITiyX
-	hscz6eCZsM51Sa+oY0uUU8H65dDFE5SmmfTeGUdCXBid8NLeykbK52VfPjGcnRXP
-	xSV9kg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw0ry0qsg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 08:20:57 +0000 (GMT)
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45L8KvJp016031;
-	Fri, 21 Jun 2024 08:20:57 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw0ry0qs9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 08:20:56 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L7GTtQ030896;
-	Fri, 21 Jun 2024 08:20:55 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yvrsswsuq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 08:20:55 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45L8Kn2x55771402
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Jun 2024 08:20:51 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8BD2320043;
-	Fri, 21 Jun 2024 08:20:49 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3FFA220040;
-	Fri, 21 Jun 2024 08:20:48 +0000 (GMT)
-Received: from [127.0.0.1] (unknown [9.152.108.100])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Jun 2024 08:20:48 +0000 (GMT)
-Message-ID: <ec92cdaa57866306a6fcf52a386193bafcb2155b.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 32/39] s390/ptdump: Add KMSAN page markers
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko
- <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph
- Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Heiko
- Carstens <hca@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco
- Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka
- Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily
- Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov
- <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle
- <svens@linux.ibm.com>
-Date: Fri, 21 Jun 2024 10:20:48 +0200
-In-Reply-To: <20240621002616.40684-33-iii@linux.ibm.com>
-References: <20240621002616.40684-1-iii@linux.ibm.com>
-	 <20240621002616.40684-33-iii@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="evd2eRBz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=C7AamCqstwrWaOAl+kCPc5rixsS4G4AQ56sFqgwTcz0=;
+	t=1718958090; x=1719390090; b=evd2eRBzbrXEYrumqIhIv1mDubpM7/ZAsCYCSZPL3oyVckd
+	368w382J+GUjMiabds0W4wxf+ISIMARA8qKNvhiB7ElBTVhL3ZGmpe+F5sDLKD0VyrvxTYFEsoUy3
+	ZExR6QYSTmtFzpm0R2HsUViK1KP2S5ZjllLM6dq3UC8osxrhM3qrED2xZjXtCihP3RquRjYNM15rx
+	mf8WID3N4T7xQGFkSnA+EhlFi0+t0ri3hMPAb99fHl8rQTkalLxM0KfVEQb6ap7Bgv9CB1YRP2N5y
+	tmFCHW1Wk2YOTnOewiqSTe5cBgXqgU/1Mxzg08PTPC1k8fhFUPuoJaiIFDCGlKNg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sKZWQ-0005mj-Vr; Fri, 21 Jun 2024 10:21:27 +0200
+Message-ID: <acaf2d70-d821-4951-9072-931cb56b1b9f@leemhuis.info>
+Date: Fri, 21 Jun 2024 10:21:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: VeEapbGV6IkSc8UA2_9IOlInc0MQ5ih1
-X-Proofpoint-ORIG-GUID: r7kSYJf0oRMft-JV5P--079W7nGU4PZ_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-21_02,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
- mlxscore=0 malwarescore=0 adultscore=0 suspectscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406210058
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: omap2-mcspi multi mode
+To: Colin Foster <colin.foster@in-advantage.com>,
+ Mark Brown <broonie@kernel.org>, Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ miquel.raynal@bootlin.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <Zl/V0dU6SjAMkpLG@colin-ia-desktop>
+ <ZmFt7yfZFFJdsZuJ@localhost.localdomain> <ZmJ7E305ow91ez2U@euler>
+ <ZmMrJ8uaw85a03Ce@finisterre.sirena.org.uk>
+ <ZmhdWw/dV5HRU/Nh@colin-ia-desktop>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <ZmhdWw/dV5HRU/Nh@colin-ia-desktop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718958090;66025cb3;
+X-HE-SMSGID: 1sKZWQ-0005mj-Vr
 
-On Fri, 2024-06-21 at 02:25 +0200, Ilya Leoshkevich wrote:
-> Add KMSAN vmalloc metadata areas to kernel_page_tables.
->=20
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
-> =C2=A0arch/s390/mm/dump_pagetables.c | 30 ++++++++++++++++++++++++++++++
-> =C2=A01 file changed, 30 insertions(+)
->=20
-> diff --git a/arch/s390/mm/dump_pagetables.c
-> b/arch/s390/mm/dump_pagetables.c
-> index ffd07ed7b4af..f51e5d0862a3 100644
-> --- a/arch/s390/mm/dump_pagetables.c
-> +++ b/arch/s390/mm/dump_pagetables.c
-> @@ -36,6 +36,16 @@ enum address_markers_idx {
-> =C2=A0	VMEMMAP_END_NR,
-> =C2=A0	VMALLOC_NR,
-> =C2=A0	VMALLOC_END_NR,
-> +#ifdef CONFIG_KMSAN
-> +	KMSAN_VMALLOC_SHADOW_START_NR,
-> +	KMSAN_VMALLOC_SHADOW_END_NR,
-> +	KMSAN_VMALLOC_ORIGIN_START_NR,
-> +	KMSAN_VMALLOC_ORIGIN_END_NR,
-> +	KMSAN_MODULES_SHADOW_START_NR,
-> +	KMSAN_MODULES_SHADOW_END_NR,
-> +	KMSAN_MODULES_ORIGIN_START_NR,
-> +	KMSAN_MODULES_ORIGIN_END_NR,
-> +#endif
-> =C2=A0	MODULES_NR,
-> =C2=A0	MODULES_END_NR,
-> =C2=A0	ABS_LOWCORE_NR,
-> @@ -74,6 +84,16 @@ static struct addr_marker address_markers[] =3D {
-> =C2=A0#ifdef CONFIG_KASAN
-> =C2=A0	[KASAN_SHADOW_START_NR]	=3D {KASAN_SHADOW_START,
-> "Kasan Shadow Start"},
-> =C2=A0	[KASAN_SHADOW_END_NR]	=3D {KASAN_SHADOW_END, "Kasan Shadow
-> End"},
-> +#endif
-> +#ifdef CONFIG_KMSAN
-> +	[KMSAN_VMALLOC_SHADOW_START_NR]	=3D {0, "Kmsan vmalloc
-> Shadow Start"},
-> +	[KMSAN_VMALLOC_SHADOW_END_NR]	=3D {0, "Kmsan vmalloc Shadow
-> End"},
-> +	[KMSAN_VMALLOC_ORIGIN_START_NR]	=3D {0, "Kmsan vmalloc
-> Origins Start"},
-> +	[KMSAN_VMALLOC_ORIGIN_END_NR]	=3D {0, "Kmsan vmalloc Origins
-> End"},
-> +	[KMSAN_MODULES_SHADOW_START_NR]	=3D {0, "Kmsan Modules
-> Shadow Start"},
-> +	[KMSAN_MODULES_SHADOW_END_NR]	=3D {0, "Kmsan Modules Shadow
-> End"},
-> +	[KMSAN_MODULES_ORIGIN_START_NR]	=3D {0, "Kmsan Modules
-> Origins Start"},
-> +	[KMSAN_MODULES_ORIGIN_END_NR]	=3D {0, "Kmsan Modules Origins
-> End"},
-> =C2=A0#endif
+On 11.06.24 16:21, Colin Foster wrote:
+> On Fri, Jun 07, 2024 at 04:45:43PM +0100, Mark Brown wrote:
+>> On Thu, Jun 06, 2024 at 10:14:27PM -0500, Colin Foster wrote:
+>>
+>>> So I think the question I have is:
+>>
+>>> Should the CS line be de-asserted at the end of "spi_write"?
+>>
+>> Absent bodging with cs_change after any spi message the chip select
+>> should be left deasserted.
+> 
+> Do you have hardware to reproduce my results of two spi messages no
+> longer toggling the CS line and leaving the line at GND through the
+> transactions?
 
-Please disregard this patch. It's not essential for the series, and
-also has a subtle bug: this block needs to be moved upwards, because
-right now { -1, NULL } overlaps [MODULES_NR]. I will resend it
-separately later.
+Hmmm, I might have missed something, but it looks like nothing happened
+since that exchange. Did this regression fall through the cracks or can
+I consider the issue resolved for some reason?
 
-> =C2=A0	{ -1, NULL }
-> =C2=A0};
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+
