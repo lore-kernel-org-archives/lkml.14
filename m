@@ -1,123 +1,154 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819CC208A4;
-	Fri, 21 Jun 2024 14:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC6E1D54B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718979540; cv=none; b=fzt9DOGiQHBQqAGJ5SBQJrxEvUai2VgAdQ49wFgi/vO5DmGS7DfYRSfk66O8+4iyum1A6/tf348M6Y8xJAKfeN28FKYiZP1ybS16sTvKwA+E5MAc/HcdMS3UZ3A2Dak/GIEh8gk0rYtp0QRGnrdYywNeb1zUlGFvQ8xHdac92PU=
+	t=1718979579; cv=none; b=BqAU4hc/6bw3enl08jt6cBFBl91IFVNS9BrdxXl34yKhp2ysNzYRHcTlAKJeqdHSpnHCqJ+WOjg3End4AqdRk86BdRY9pFbSXp8thIz79ITPYijYs1/CMfhsBDi1TqUIL7gysMmeWk69VFAo3K5tgaIrbJ91dwKpRZu6Wfa+TRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718979540; c=relaxed/simple;
-	bh=1c8Qc1Y5GCm2rehTE2RjE51jiJjppd4c+lxxUpnpk1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dQ2C7vLD70uWs0ZRjEHfL1syynIOAlzOHqzSsrBxsh6hUL6igeUY10JGJawHqpCVjliYm5CaJIvnUwm9hOFTKd3awsWXVfB1dLctgIvHfeh2kPGTpPqNQpwD9wK+nW0pFmDWeX9eRKV42FqAdA9AYDtepqz6g0mpvsRvSVM3faQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=L/kGsDc0; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718979579; c=relaxed/simple;
+	bh=SrnMZZQ5PZc4IG0LvJ6ZbP8gP6dzaE1XqalB6uw3P7A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cj/yrNp/XfCt5pNyobSN0qqDyyOQefeVwVSeKfnrpgc6zdMKgIoOoJ9nTsyyUvpiBakTcMnpSWtZTgUE4+EIGTo6+v41ZnQwP+wCy/WxSnS+6AmAs8akibzRpQS0iDEm2SfKza4Kp3ah9qPBxAl3q8RG44XGt9pO9tQZksfDeDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eyIJsmok; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L/kGsDc0"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LDmh2Q002183;
-	Fri, 21 Jun 2024 14:17:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=LF1s2xvSDPljT0oEHiEGquZZeto
-	2SHuFoShwJ3ChVqM=; b=L/kGsDc0HEiswhQufYopyCdldOClTJuhdzH8JmGDxfz
-	Lk6zfv7ZyAlKnlmxJRrrh4aH4Vo6AZ29JHrHYdzne6RrZ4VcWKqV2+MkkG5QRfhy
-	0qSKEGCUNJuiNPU3fsTgezxRrE19zpuQPZuyJojvXd57h4Yj8KrPObmRu8KNTLke
-	EUFZoNvo/uubNeebvEIH/6KQFdffHWduJsAL68+/zmvfOSbM3fvgFWlSvxrd10Us
-	O0u6hG6qdpucSGkxfJgvRJWn+W4PbMfk8oRJ2Q7wUTAY+t7wJCsvfANxwea+5aMZ
-	H9e98wxZ3Yopq6+ZaYKDwc/LvuNqTd9Eoqe7SGyTp4A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ywa0mr7fu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 14:17:46 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45LEHjOc030057;
-	Fri, 21 Jun 2024 14:17:45 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ywa0mr7fn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 14:17:45 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45LBuPa6031319;
-	Fri, 21 Jun 2024 14:17:44 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yvrrq7k29-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 14:17:44 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45LEHe7240436050
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Jun 2024 14:17:42 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 38C4E2004D;
-	Fri, 21 Jun 2024 14:17:40 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1861F20040;
-	Fri, 21 Jun 2024 14:17:39 +0000 (GMT)
-Received: from osiris (unknown [9.171.32.192])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 21 Jun 2024 14:17:39 +0000 (GMT)
-Date: Fri, 21 Jun 2024 16:17:37 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        linux-parisc@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Brian Cain <bcain@quicinc.com>,
-        linux-hexagon@vger.kernel.org, Guo Ren <guoren@kernel.org>,
-        linux-csky@vger.kernel.org, linux-s390@vger.kernel.org,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        linux-sh@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
-        libc-alpha@sourceware.org, musl@lists.openwall.com, ltp@lists.linux.it
-Subject: Re: [PATCH 12/15] s390: remove native mmap2() syscall
-Message-ID: <20240621141737.14882-B-hca@linux.ibm.com>
-References: <20240620162316.3674955-1-arnd@kernel.org>
- <20240620162316.3674955-13-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eyIJsmok"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718979579; x=1750515579;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=SrnMZZQ5PZc4IG0LvJ6ZbP8gP6dzaE1XqalB6uw3P7A=;
+  b=eyIJsmoks+lxPIwE3ssFWg7kF8vr6G2v9KRJ95xjVf/gRmbxtyLvmSHb
+   k8JCVzy/sey2189av8VGDMK/fLVkp2ZIDSHW+6jHexx5mUemgTvX/TIwu
+   ZcryMVoLj3+Vsad8iTMenrCYoddiWNHQ8prPcxBR2Y3I7KQWEIoqMyOfV
+   vbWn4cU9McMyYiTOblgnin05RJq7llgBJHcqjbUP+iJmTxurMn4AZFb3I
+   5dg1RxU1GHbKCmV0oupqO3Ae2ukGPg8Iq04QPFXscTghpkM5NZnGIt688
+   eu2Vzndao/w17DBlmi6nHXxU9BMZQxSZyc3N43AUAzV/d+EJCHRSAhP89
+   g==;
+X-CSE-ConnectionGUID: BDfqVR1ES+KGUkH80A8uDA==
+X-CSE-MsgGUID: e6x1qx8qRfmGqyxlf2qHdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="16157971"
+X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
+   d="scan'208";a="16157971"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 07:19:38 -0700
+X-CSE-ConnectionGUID: 5E69wIE2QSGp2zyLsBtNgg==
+X-CSE-MsgGUID: ZGZEW1v7TbacaISnnru5Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
+   d="scan'208";a="47520889"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 07:19:38 -0700
+Received: from [10.212.73.237] (kliang2-mobl1.ccr.corp.intel.com [10.212.73.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0CD3120B5703;
+	Fri, 21 Jun 2024 07:19:35 -0700 (PDT)
+Message-ID: <ab9ca3e3-6484-482b-aaf8-6be21dd6fc9a@linux.intel.com>
+Date: Fri, 21 Jun 2024 10:19:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620162316.3674955-13-arnd@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fSdaLowT_gOM0sMbXX9GJzu_e6RTRa0y
-X-Proofpoint-ORIG-GUID: fxa5htH3kxDrqY5Kq65cIpVvdeHEdHtv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-21_06,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- mlxlogscore=341 priorityscore=1501 impostorscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406210101
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 01/12] perf/x86/intel: Support the PEBS event mask
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com,
+ alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com, eranian@google.com
+References: <20240618151044.1318612-1-kan.liang@linux.intel.com>
+ <20240618151044.1318612-2-kan.liang@linux.intel.com>
+ <20240620070215.GP31592@noisy.programming.kicks-ass.net>
+ <840ced10-cc0f-4883-8559-772c5521a092@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <840ced10-cc0f-4883-8559-772c5521a092@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 20, 2024 at 06:23:13PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The mmap2() syscall has never been used on 64-bit s390x and should
-> have been removed as part of 5a79859ae0f3 ("s390: remove 31 bit
-> support").
-> 
-> Remove it now.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/s390/kernel/syscall.c | 27 ---------------------------
->  1 file changed, 27 deletions(-)
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+
+On 2024-06-20 11:58 a.m., Liang, Kan wrote:
+> 
+> 
+> On 2024-06-20 3:02 a.m., Peter Zijlstra wrote:
+>> On Tue, Jun 18, 2024 at 08:10:33AM -0700, kan.liang@linux.intel.com wrote:
+>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>>> index e010bfed8417..a0104c82baed 100644
+>>> --- a/arch/x86/events/intel/ds.c
+>>> +++ b/arch/x86/events/intel/ds.c
+>>
+>>> @@ -2157,6 +2157,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+>>>  	void *base, *at, *top;
+>>>  	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
+>>>  	short error[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
+>>> +	int max_pebs_events = hweight64(x86_pmu.pebs_events_mask);
+>>
+>> Consider pebs_events_mask = 0xf0, then max_pebs_events becomes 4.
+> 
+> The intel_pmu_drain_pebs_nhm() is a NHM specific function. It's
+> impossible that there is a pebs_events_mask = 0xf0.
+> 
+> There are only 4 counters. The mask should always be 0xf.
+>>
+>>>  	int bit, i, size;
+>>>  	u64 mask;
+>>>  
+>>> @@ -2168,8 +2169,8 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+>>>  
+>>>  	ds->pebs_index = ds->pebs_buffer_base;
+>>>  
+>>> -	mask = (1ULL << x86_pmu.max_pebs_events) - 1;
+>>> -	size = x86_pmu.max_pebs_events;
+>>> +	mask = x86_pmu.pebs_events_mask;
+>>> +	size = max_pebs_events;
+>>
+>> This is wrong.. you have 8 bits to iterate, of which only the top 4 are
+>> set.
+>>
+>>>  	if (x86_pmu.flags & PMU_FL_PEBS_ALL) {
+>>>  		mask |= ((1ULL << x86_pmu.num_counters_fixed) - 1) << INTEL_PMC_IDX_FIXED;
+>>>  		size = INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed;
+>>> @@ -2208,8 +2209,8 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+>>>  			pebs_status = p->status = cpuc->pebs_enabled;
+>>>  
+>>>  		bit = find_first_bit((unsigned long *)&pebs_status,
+>>> -					x86_pmu.max_pebs_events);
+>>> -		if (bit >= x86_pmu.max_pebs_events)
+>>> +					max_pebs_events);
+>>> +		if (bit >= max_pebs_events)
+>>>  			continue;
+>>
+>> But the bit check here then truncates the thing to the lower 4 bits
+>> which are all 0.
+>>
+>> Should this not be something like:
+>>
+>> 		if (!(pebs_event_mask & (1 << bit)))
+>> 			continue;
+>>
+>> ?
+>>
+> 
+> For the existing hardware, I don't think it's necessary. The counters
+> are contiguous.
+> 
+
+Think about it twice. Although either code works, we should try to make
+the code as generic as possible.
+
+I will introduce a generic x86_pmu_max_num_pebs() and check the highest
+set bit, rather than hweight64. It can be used by both NHM and the
+future platforms.
+
+
+Thanks,
+Kan
