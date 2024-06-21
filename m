@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA26716F0E1;
-	Fri, 21 Jun 2024 22:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C596816F907;
+	Fri, 21 Jun 2024 22:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719008640; cv=none; b=eFffkbLUVR84OrNmDygjKZ2vvAkEoJ8W2M2OMMr0nZ4ZATM8MJO+l/Xd7Q/2HqMx+IST51m8SaF0UdCwHrQOy20Q5nHfZ3UeVwEIq5R+0CXtcoFvIVvO0tlC9ISR3qqRF2dBWlD0KVnMur88GQugDCrzlRUDT6oM29tkD9KkUiI=
+	t=1719008642; cv=none; b=T6mdvpaJCh9YjKWvjy5KgXTSOg7m3Df4sN7mnoAB3TGxbeutrtMjpJ5amylgVZbkTYFNA1ad4HJ9/drvKWLut6R36CXxP46fHvSLRXc6yvwinCBe+gIUqS7WRVPlyXVvoe0cV8V1ZU8sXoKEf+4mn0vH/jxhF4BHnCQYilqyjk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719008640; c=relaxed/simple;
-	bh=yA6a1kZaqADIwlQBycW+e66P07E/ZjEUB39NlBGm9g0=;
+	s=arc-20240116; t=1719008642; c=relaxed/simple;
+	bh=atSs/tRSRRAIPe/BSsP+YIRgCS9mtgue7bFyinAh7kw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IvWVlpOqUaOwRYgRc7EmV9JacUQsC35MumsGA2BwO+jQFoK92HS104jVKpH7VOMSzxpEgIa2Fq8Oddu95lEzmBbJo2KcQqFoGQMZd9D2ycUn8btwmBZ4pvA+NaJMxBuPW0ZRQFtpKBkeNidUf6co6So2PcSJLN7NLxgB2mlt0kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/NSWuwK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uDtf53IPoFl2aGIvjLoTW+CpKceB4afAkKucs5WZctRolzHacSSSI8+QO5PcVdzdlAcqs+kPTeQg2theBIyzRo41oDxvjZwnHFQegmeew7MDrIpVDWuzlBtTyFrtm0l0caS/ipledFi2VXtzph2Wbx+n+A5iTE3s7PHz4e2WPkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oi/ROPRI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/NSWuwK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2617FC4AF1B;
-	Fri, 21 Jun 2024 22:24:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oi/ROPRI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1209CC4AF0C;
+	Fri, 21 Jun 2024 22:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719008640;
-	bh=yA6a1kZaqADIwlQBycW+e66P07E/ZjEUB39NlBGm9g0=;
+	s=k20201202; t=1719008642;
+	bh=atSs/tRSRRAIPe/BSsP+YIRgCS9mtgue7bFyinAh7kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m/NSWuwKz+4xIRUZOXDZEyx17QI6/MjPRo++OeWRiOMzT2H3PHCrcaes0LDnVGaaZ
-	 iL/UsCPFx74nCwgJaYTolT0Xvi6YafLboTMOpUlR9q9yJ3tbYSkmsD7UTtzFWs02X0
-	 I7v/6r2v2HpYZ8bF3A3EMWXw5b6+1vnK5gH1rIFxP3VyZl9d0SH9mVH466IjzuE9fO
-	 /0NzfSHLhjCwSc2d65Uhnp4tM6jzV1fXSpvt+JksaMeVmol0NZgxNyNwEq5daZL4Nu
-	 +PZtvgPYOsoVmGcUau4neClr9t6bnsEyiMWbnjIeuJvbg+JAHo4MUqDw47cCBOw9zm
-	 TXJEcz4qY+Vpw==
+	b=Oi/ROPRIQ6aaqy3ukSpzi+iy26Z3fMt4gV5N+sh2qtcqGMg+iXME3OE4221mSkFD1
+	 Vi5DF5vnX0XfIhZPzQWazmN4/Cj3rABdaax6dM5ON0CvQWSWgXMRVgtFjq1lJApuQJ
+	 gzb3RNiEK+7T+63SWdhrAQoVCoOgBYnHQFlMgTDLOKgCm+s+1MBLRqO+KmJdzjYt5P
+	 mrHYLM7fMZe4OcPuQ8DZKDGDUqyLZ6P/4Fno+TgQ4s+rJo+IVlphLDKFkrEZ5qWExz
+	 d9JMF+yBLcgfieuTcB6Qr1Dsye4nYkRpuGoq78NyxRvR+UO+Cej9LhiRBT6ZvxB2mu
+	 U3JOyN9y1kXyA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/8] perf bpf-filter: Support pin/unpin BPF object
-Date: Fri, 21 Jun 2024 15:23:53 -0700
-Message-ID: <20240621222357.717374-5-namhyung@kernel.org>
+Subject: [PATCH 8/8] perf test: Update sample filtering test
+Date: Fri, 21 Jun 2024 15:23:57 -0700
+Message-ID: <20240621222357.717374-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
 In-Reply-To: <20240621222357.717374-1-namhyung@kernel.org>
 References: <20240621222357.717374-1-namhyung@kernel.org>
@@ -50,364 +50,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-And use the pinned objects for unprivileged users to profile their own
-tasks.  The BPF objects need to be pinned in the BPF-fs by root first
-and it'll be handled in the later patch.
+Now it can run the BPF filtering test with normal user if the BPF
+objects are pinned by 'sudo perf record --setup-filter pin'.  Let's
+update the test case to verify the behavior.  It'll skip the test if the
+filter check is failed from a normal user, but it shows a message how to
+set up the filters.
+
+First, run the test as a normal user and it fails.
+
+  $ perf test -vv filtering
+   95: perf record sample filtering (by BPF) tests:
+  --- start ---
+  test child forked, pid 425677
+  Checking BPF-filter privilege
+  try 'sudo perf record --setup-filter pin' first.       <<<--- here
+  bpf-filter test [Skipped permission]
+  ---- end(-2) ----
+   95: perf record sample filtering (by BPF) tests                     : Skip
+
+According to the message, run the perf record command to pin the BPF
+objects.
+
+  $ sudo perf record --setup-filter pin
+
+And re-run the test as a normal user.
+
+  $ perf test -vv filtering
+   95: perf record sample filtering (by BPF) tests:
+  --- start ---
+  test child forked, pid 424486
+  Checking BPF-filter privilege
+  Basic bpf-filter test
+  Basic bpf-filter test [Success]
+  Failing bpf-filter test
+  Error: task-clock event does not have PERF_SAMPLE_CPU
+  Failing bpf-filter test [Success]
+  Group bpf-filter test
+  Error: task-clock event does not have PERF_SAMPLE_CPU
+  Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
+  Group bpf-filter test [Success]
+  ---- end(0) ----
+   95: perf record sample filtering (by BPF) tests                     : Ok
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/bpf-filter.c | 230 +++++++++++++++++++++++++++++------
- tools/perf/util/bpf-filter.h |  13 ++
- 2 files changed, 209 insertions(+), 34 deletions(-)
+ tools/perf/tests/shell/record_bpf_filter.sh | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index 5ec0e0955ec4..37ed6c48debf 100644
---- a/tools/perf/util/bpf-filter.c
-+++ b/tools/perf/util/bpf-filter.c
-@@ -1,5 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <stdlib.h>
-+#include <fcntl.h>
-+#include <sys/ioctl.h>
-+#include <sys/stat.h>
+diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
+index 31c593966e8c..c5882d620db7 100755
+--- a/tools/perf/tests/shell/record_bpf_filter.sh
++++ b/tools/perf/tests/shell/record_bpf_filter.sh
+@@ -22,15 +22,16 @@ trap trap_cleanup EXIT TERM INT
+ test_bpf_filter_priv() {
+   echo "Checking BPF-filter privilege"
  
- #include <bpf/bpf.h>
- #include <linux/err.h>
-@@ -23,6 +26,9 @@
- #define __PERF_SAMPLE_TYPE(tt, st, opt)	{ tt, #st, opt }
- #define PERF_SAMPLE_TYPE(_st, opt)	__PERF_SAMPLE_TYPE(PBF_TERM_##_st, PERF_SAMPLE_##_st, opt)
- 
-+/* Index in the pinned 'filters' map.  Should be released after use. */
-+static int pinned_filter_idx = -1;
-+
- static const struct perf_sample_info {
- 	enum perf_bpf_filter_term type;
- 	const char *name;
-@@ -47,6 +53,8 @@ static const struct perf_sample_info {
- 	PERF_SAMPLE_TYPE(DATA_PAGE_SIZE, "--data-page-size"),
- };
- 
-+static int get_pinned_fd(const char *name);
-+
- static const struct perf_sample_info *get_sample_info(enum perf_bpf_filter_term type)
- {
- 	size_t i;
-@@ -167,19 +175,26 @@ static int convert_to_tgid(int tid)
- 	return tgid;
- }
- 
--static int update_pid_hash(struct sample_filter_bpf *skel, struct evsel *evsel,
--			   struct perf_bpf_filter_entry *entry)
-+static int update_pid_hash(struct evsel *evsel, struct perf_bpf_filter_entry *entry)
- {
- 	int filter_idx;
--	int nr, last;
--	int fd = bpf_map__fd(skel->maps.filters);
-+	int fd, nr, last;
- 	struct perf_thread_map *threads;
- 
-+	fd = get_pinned_fd("filters");
-+	if (fd < 0) {
-+		pr_debug("cannot get fd for 'filters' map\n");
-+		return fd;
-+	}
-+
- 	/* Find the first available entry in the filters map */
- 	for (filter_idx = 0; filter_idx < MAX_FILTERS; filter_idx++) {
--		if (bpf_map_update_elem(fd, &filter_idx, entry, BPF_NOEXIST) == 0)
-+		if (bpf_map_update_elem(fd, &filter_idx, entry, BPF_NOEXIST) == 0) {
-+			pinned_filter_idx = filter_idx;
- 			break;
-+		}
- 	}
-+	close(fd);
- 
- 	if (filter_idx == MAX_FILTERS) {
- 		pr_err("Too many users for the filter map\n");
-@@ -193,7 +208,9 @@ static int update_pid_hash(struct sample_filter_bpf *skel, struct evsel *evsel,
- 	}
- 
- 	/* save the index to a hash map */
--	fd = bpf_map__fd(skel->maps.pid_hash);
-+	fd = get_pinned_fd("pid_hash");
-+	if (fd < 0)
-+		return fd;
- 
- 	last = -1;
- 	nr = perf_thread_map__nr(threads);
-@@ -214,10 +231,12 @@ static int update_pid_hash(struct sample_filter_bpf *skel, struct evsel *evsel,
- 
- 		if (bpf_map_update_elem(fd, &tgid, &filter_idx, BPF_ANY) < 0) {
- 			pr_err("Failed to update the pid hash\n");
--			return -errno;
-+			close(fd);
-+			return -1;
- 		}
- 		pr_debug("pid hash: %d -> %d\n", tgid, filter_idx);
- 	}
-+	close(fd);
- 	return 0;
- }
- 
-@@ -240,40 +259,48 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
- 		goto err;
- 	}
- 
--	skel = sample_filter_bpf__open();
--	if (!skel) {
--		pr_err("Failed to open perf sample-filter BPF skeleton\n");
--		ret = -EPERM;
--		goto err;
--	}
-+	if (needs_pid_hash && geteuid() != 0) {
-+		/* The filters map is shared among other processes */
-+		ret = update_pid_hash(evsel, entry);
-+		if (ret < 0)
-+			goto err;
- 
--	if (needs_pid_hash) {
--		bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
--		bpf_map__set_max_entries(skel->maps.pid_hash, MAX_PIDS);
--		skel->rodata->use_pid_hash = 1;
-+		fd = get_pinned_fd("perf_sample_filter");
-+		if (fd < 0) {
-+			ret = fd;
-+			goto err;
-+		}
-+
-+		for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
-+			for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-+				ret = ioctl(FD(evsel, x, y), PERF_EVENT_IOC_SET_BPF, fd);
-+				if (ret < 0) {
-+					pr_err("Failed to attach perf sample-filter\n");
-+					goto err;
-+				}
-+			}
-+		}
-+
-+		close(fd);
-+		free(entry);
-+		return 0;
- 	}
- 
--	if (sample_filter_bpf__load(skel) < 0) {
-+	skel = sample_filter_bpf__open_and_load();
-+	if (!skel) {
-+		ret = -errno;
- 		pr_err("Failed to load perf sample-filter BPF skeleton\n");
--		ret = -EPERM;
- 		goto err;
- 	}
- 
--	if (needs_pid_hash) {
--		/* The filters map is shared among other processes  */
--		ret = update_pid_hash(skel, evsel, entry);
--		if (ret < 0)
--			goto err;
--	} else {
--		i = 0;
--		fd = bpf_map__fd(skel->maps.filters);
--
--		/* The filters map has only one entry in this case */
--		if (bpf_map_update_elem(fd, &i, entry, BPF_ANY) < 0) {
--			ret = -errno;
--			pr_err("Failed to update the filter map\n");
--			goto err;
--		}
-+	i = 0;
-+	fd = bpf_map__fd(skel->maps.filters);
-+
-+	/* The filters map has only one entry in this case */
-+	if (bpf_map_update_elem(fd, &i, entry, BPF_ANY) < 0) {
-+		ret = -errno;
-+		pr_err("Failed to update the filter map\n");
-+		goto err;
- 	}
- 
- 	prog = skel->progs.perf_sample_filter;
-@@ -306,6 +333,15 @@ int perf_bpf_filter__destroy(struct evsel *evsel)
- 		free(expr);
- 	}
- 	sample_filter_bpf__destroy(evsel->bpf_skel);
-+
-+	if (pinned_filter_idx >= 0) {
-+		int fd = get_pinned_fd("filters");
-+
-+		bpf_map_delete_elem(fd, &pinned_filter_idx);
-+		pinned_filter_idx = -1;
-+		close(fd);
-+	}
-+
- 	return 0;
- }
- 
-@@ -349,3 +385,129 @@ int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
- 
- 	return ret;
- }
-+
-+int perf_bpf_filter__pin(void)
-+{
-+	struct sample_filter_bpf *skel;
-+	char *path = NULL;
-+	int dir_fd, ret = -1;
-+
-+	skel = sample_filter_bpf__open();
-+	if (!skel) {
-+		ret = -errno;
-+		pr_err("Failed to open perf sample-filter BPF skeleton\n");
-+		goto err;
-+	}
-+
-+	/* pinned program will use pid-hash */
-+	bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
-+	bpf_map__set_max_entries(skel->maps.pid_hash, MAX_PIDS);
-+	skel->rodata->use_pid_hash = 1;
-+
-+	if (sample_filter_bpf__load(skel) < 0) {
-+		ret = -errno;
-+		pr_err("Failed to load perf sample-filter BPF skeleton\n");
-+		goto err;
-+	}
-+
-+	if (asprintf(&path, "%s/fs/bpf/%s", sysfs__mountpoint(),
-+		     PERF_BPF_FILTER_PIN_PATH) < 0) {
-+		ret = -errno;
-+		pr_err("Failed to allocate pathname in the BPF-fs\n");
-+		goto err;
-+	}
-+
-+	ret = bpf_object__pin(skel->obj, path);
-+	if (ret < 0) {
-+		pr_err("Failed to pin BPF filter objects\n");
-+		goto err;
-+	}
-+
-+	/* setup access permissions for the pinned objects */
-+	dir_fd = open(path, O_PATH);
-+	if (dir_fd < 0) {
-+		bpf_object__unpin(skel->obj, path);
-+		ret = dir_fd;
-+		goto err;
-+	}
-+
-+	/* BPF-fs root has the sticky bit */
-+	if (fchmodat(dir_fd, "..", 01755, 0) < 0) {
-+		pr_debug("chmod for BPF-fs failed\n");
-+		ret = -errno;
-+		goto err_close;
-+	}
-+
-+	/* perf_filter directory */
-+	if (fchmodat(dir_fd, ".", 0755, 0) < 0) {
-+		pr_debug("chmod for perf_filter directory failed?\n");
-+		ret = -errno;
-+		goto err_close;
-+	}
-+
-+	/* programs need write permission for some reason */
-+	if (fchmodat(dir_fd, "perf_sample_filter", 0777, 0) < 0) {
-+		pr_debug("chmod for perf_sample_filter failed\n");
-+		ret = -errno;
-+	}
-+	/* maps */
-+	if (fchmodat(dir_fd, "filters", 0666, 0) < 0) {
-+		pr_debug("chmod for filters failed\n");
-+		ret = -errno;
-+	}
-+	if (fchmodat(dir_fd, "pid_hash", 0666, 0) < 0) {
-+		pr_debug("chmod for pid_hash failed\n");
-+		ret = -errno;
-+	}
-+
-+err_close:
-+	close(dir_fd);
-+
-+err:
-+	free(path);
-+	sample_filter_bpf__destroy(skel);
-+	return ret;
-+}
-+
-+int perf_bpf_filter__unpin(void)
-+{
-+	struct sample_filter_bpf *skel;
-+	char *path = NULL;
-+	int ret = -1;
-+
-+	skel = sample_filter_bpf__open_and_load();
-+	if (!skel) {
-+		ret = -errno;
-+		pr_err("Failed to open perf sample-filter BPF skeleton\n");
-+		goto err;
-+	}
-+
-+	if (asprintf(&path, "%s/fs/bpf/%s", sysfs__mountpoint(),
-+		     PERF_BPF_FILTER_PIN_PATH) < 0) {
-+		ret = -errno;
-+		pr_err("Failed to allocate pathname in the BPF-fs\n");
-+		goto err;
-+	}
-+
-+	ret = bpf_object__unpin(skel->obj, path);
-+
-+err:
-+	free(path);
-+	sample_filter_bpf__destroy(skel);
-+	return ret;
-+}
-+
-+static int get_pinned_fd(const char *name)
-+{
-+	char *path = NULL;
-+	int fd;
-+
-+	if (asprintf(&path, "%s/fs/bpf/%s/%s", sysfs__mountpoint(),
-+		     PERF_BPF_FILTER_PIN_PATH, name) < 0)
-+		return -1;
-+
-+	fd = bpf_obj_get(path);
-+
-+	free(path);
-+	return fd;
-+}
-diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
-index 605a3d0226e0..916ed7770b73 100644
---- a/tools/perf/util/bpf-filter.h
-+++ b/tools/perf/util/bpf-filter.h
-@@ -18,6 +18,9 @@ struct perf_bpf_filter_expr {
- struct evsel;
- struct target;
- 
-+/* path in BPF-fs for the pinned program and maps */
-+#define PERF_BPF_FILTER_PIN_PATH  "perf_filter"
-+
- #ifdef HAVE_BPF_SKEL
- struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(enum perf_bpf_filter_term term,
- 						       int part,
-@@ -27,6 +30,8 @@ int perf_bpf_filter__parse(struct list_head *expr_head, const char *str);
- int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target);
- int perf_bpf_filter__destroy(struct evsel *evsel);
- u64 perf_bpf_filter__lost_count(struct evsel *evsel);
-+int perf_bpf_filter__pin(void);
-+int perf_bpf_filter__unpin(void);
- 
- #else /* !HAVE_BPF_SKEL */
- 
-@@ -48,5 +53,13 @@ static inline u64 perf_bpf_filter__lost_count(struct evsel *evsel __maybe_unused
- {
- 	return 0;
- }
-+static inline int perf_bpf_filter__pin(void)
-+{
-+	return -EOPNOTSUPP;
-+}
-+static inline int perf_bpf_filter__unpin(void)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif /* HAVE_BPF_SKEL*/
- #endif /* PERF_UTIL_BPF_FILTER_H */
+-  if [ "$(id -u)" != 0 ]
+-  then
+-    echo "bpf-filter test [Skipped permission]"
+-    err=2
+-    return
+-  fi
+   if ! perf record -e task-clock --filter 'period > 1' \
+ 	  -o /dev/null --quiet true 2>&1
+   then
++    if [ "$(id -u)" != 0 ]
++    then
++      echo "try 'sudo perf record --setup-filter pin' first."
++      echo "bpf-filter test [Skipped permission]"
++      err=2
++      return
++    fi
+     echo "bpf-filter test [Skipped missing BPF support]"
+     err=2
+     return
 -- 
 2.45.2.741.gdbec12cfda-goog
 
