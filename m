@@ -1,146 +1,125 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD96A16C841;
-	Fri, 21 Jun 2024 11:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F2882D72
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718967895; cv=none; b=u4AQfr4N36p16ZcW768fThtLiii++b17Ll5XvBVFwCHSr/0aOfLSKu0h7cdnXZfOacs823FSbKuOlwdiiJIEnruxpUGXYuBtv079KUMsvrDSnuwu9gIxOHXWGZcSF518Ocidh3TwCtm7RGj5kKZf//H+7OqnJI3An6zNSYDHyDw=
+	t=1718968056; cv=none; b=achHlZazcSbbC/PaZ5yBPtO3o878I6R904Z8PeGcLXZBoDoE/i7uA0BKWsXPerhPMA3bOdT9u5nWqdEbN08fDIN8U+9fGqn82yY2BkLfL3bOHQSmbduxrdi1v9hx3IwGUJ5XPplhUOzQnWYWumBcvaAzK9k0nyBvdCviTM2jtDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718967895; c=relaxed/simple;
-	bh=Dvl6H46jFeCW+DGyx4Y0OyUZ/HEvoRul4cNbU+tVke8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Nl9uRjKpsIKYq5Xpiaa5NW1miSkM7w0E4xZuq6xDJNEYo/7CbMXf14I27rRZbpRDxW0WIC/Y9BTxy7g81eUglTFRf1YHb1ps86ZXr6UMlOxDYl8EiSUa0TWvj21t5N0hojuq5m3VQDUSWhzDPWnH4o1qDBT2VhOjWe26ybipFqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=UMhZM4ev; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eu/ZJ/O3; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1718968056; c=relaxed/simple;
+	bh=JFIWThXRcCJO1QiagK/QQpV1+BQngNBwaZtk/4J3J64=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=mwfsKUG1OJiryJQWm6uyv28DPgbrotelG4tef4LE4gXBz+muEPI2wpnLhVHLXPvbhsF0eWwe0t/XyyCz6XNhdH8kf7vpZ5/dVSQXSFUdlk8fTPgi4be2CxbX3BjdGfjs7JfLZdDZJ+WH7hzqFUaX071bfwitEHtfdCwbPn6Qpx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJIZdO/g; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="UMhZM4ev";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eu/ZJ/O3"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id D916A18000C0;
-	Fri, 21 Jun 2024 07:04:51 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Fri, 21 Jun 2024 07:04:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1718967891;
-	 x=1719054291; bh=+4mawVHHYxsHrUFmP/eKSqPBJjxMmF/qeY0j0U2cW4E=; b=
-	UMhZM4evlJnKXb3TMuLdm6YJGCy3vpVSl0zzRZOh+Sh/Ngj8PsDq2axmlNWM5Ng4
-	5g6mObhwIIfsOQrccadvbe1nwkM5yrBjdEh8uWyXNfnWBhsJQv7rF/VXDPJouIpA
-	GagGutD0TqvRLlvbaksNmUjKoqFRuPF0k/bCjnVWOkXDB1FX6LYFK/7f807eUrNi
-	sqxwSdnpdl/iGsV5MGC36TUO5MfQSkd7+fM1Rc89GC+LbCLlY23MPzw/Pl5ep6Oo
-	RZVsZLm4KMZM09CE1Z1AJ9VSvM2Wa2H2Bw91H/D3koTVWyoWhzX/BrKJ0ytbomNj
-	11F7/IbLTeljRmCOwYA61g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1718967891; x=
-	1719054291; bh=+4mawVHHYxsHrUFmP/eKSqPBJjxMmF/qeY0j0U2cW4E=; b=e
-	u/ZJ/O3W7FQSOPbxaSZe5H17letI4OVk3kOTIf+84H8TFTZa4T72RYEL1+chMlpc
-	Xfi25od7YQlnojj3XVu54rhgCkY6RpW5cQ1FheMRrI6mctlpmU49t+N6g3NGP+5S
-	eubvK4/eG7/b50mKTKDnQ/J/Sjar1HiVNuXNgKnVOCMcoddPF84B7G4sthj8+991
-	iQSDJyCLVagzP8f9OiYU0I3v0Xg9D7M28lCxTJKOOHSrAH47tuTioSYnVmK/mcDx
-	CxHSavA+AoE97hY263hPKEAbqpUwRXB6KI+f6qtTvrwLE70vz7jOrqMyntAvmX0s
-	7tB8OYComBcuIXOR/TM9Q==
-X-ME-Sender: <xms:Ul51Zqbq95Gop7NZPUGtl2JKjyqbORNifnQ1eb76gvAZ_5Kvw9oa3w>
-    <xme:Ul51ZtYoXnDifZoJcXp_VOSP3_xslVPybbhsZyR_NTCrTZw1T0KCO9oqD-mX0IHrh
-    cjEH8NM3j6o5VdU7Gw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgedgfeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:Ul51Zk__b6ELkqgfk2SsxTllgfXx2r2Urcb9WX7_0NYJvC7_iMhOLA>
-    <xmx:Ul51ZsoayH-cbnpW_tsaUkKzbqKbGgtFfSukR5pCk7tdMhgIgkW_aA>
-    <xmx:Ul51ZlqowEoljjm-1ENIKNmk3MvQcSF4-2e4PCi2SjIhy7E_GrseFA>
-    <xmx:Ul51ZqQmJ6v0-AgWQglvlPp-xVbrWjEFk5sQfv40qqzoW1Xn8F5teg>
-    <xmx:U151Zra_Mg46cIanT2eoEH8Q5PPliVsuLNRZlRG8-Ge21Jy80NQ0g9oM>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7777936A0074; Fri, 21 Jun 2024 07:04:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJIZdO/g"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42138eadf64so16711975e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718968053; x=1719572853; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P+E55Bqa88vXpyC7KNeYzEgmKWlWtFJt5B+iA497prM=;
+        b=RJIZdO/gosPVBfOeaERvdvSEDgpe4h/cSEua9PzPeEMqqkCbH0qivv+z/2kGClinZg
+         SwZTpM1Sww+SuL83EOX1BtBRooQ+Z0bTrkRuWH1Jvg1Faref6CKZAuPf/S/UBXVQJV5q
+         g0xK0MO6CGWCaZ9Rl9ToEXxoR0U26FFntFBY5FcCd2e+6k4r9C+Nj5fafWtCW8LNydd2
+         5lCVCkVhSImNM5hjeTBQynpSkqv4wMKGzqFoJY1YcINxL8FQ9DQyJs4sMAGPBe+pK3oT
+         8RZc/nGmESvG8J4WC8zxrp3shO+ssBEY+N20pfkjuiEYAcReKtGtsM3h2gZcy8SKXPHX
+         1hsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718968053; x=1719572853;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P+E55Bqa88vXpyC7KNeYzEgmKWlWtFJt5B+iA497prM=;
+        b=n/PatUHHSjwgvpbAYEhKwt85Lbo5dwm2V37kOlC3Hz/VSud4lKSvQe2IDzH74wuH4H
+         mP9NOQrSyXuw6kjj4BrXRJvqonDy8QmskJCHS9X+b5MCiUUSZ3myG7rRGuzqzCkvwLkx
+         Rncjv/kVNQk7GAUhl4pAh0oxop3SBjc1kqaHyPsIeFl9G2+c/tJPX1eNAE00ULpViDjx
+         0ZRLM96D743ccuywiLnEadAslHsVI438De+C10VfkiHY3iMqVwoIbswxFukmqx7OFrPG
+         guFunumxvJsTkd15xopomhw7rsEt1ZNSGcPdER2phAFXHrYcuDnkk0bl2hVabX1dgsAr
+         iM/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWpmBlUvw8hhAkUyJgeFU4TUFfajqPclOOZzqqcH0orExfpJVAZkKTLnw07TW0xi30XYxQTxCUYbzEUdo1OA6QwWoYOw/D6tT5IE+Ao
+X-Gm-Message-State: AOJu0Yy2D8UwP9yem8JGSOYHirBecKdZDiM/Gkn0qtPURf9kqrPvqS89
+	xeSk/ScSyPQ22yDZXqh8p77n12aEc8lThN/ZgPm60mL9ALRwxeE9
+X-Google-Smtp-Source: AGHT+IHscR9SP+ppu4ASqW5YmQmsS4APVFI/ixPfCUhAEhzSa9AwpZSAeYzXrKxdXcxqdTpqdzUPLg==
+X-Received: by 2002:a05:600c:6a09:b0:421:eecc:2404 with SMTP id 5b1f17b1804b1-424751809e3mr61337675e9.24.1718968052436;
+        Fri, 21 Jun 2024 04:07:32 -0700 (PDT)
+Received: from smtpclient.apple ([167.99.200.149])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a2f694asm1415656f8f.77.2024.06.21.04.07.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2024 04:07:32 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <9d64bd8d-e146-46e7-8526-e85192ee14ed@app.fastmail.com>
-In-Reply-To: <ZnU3/c1T55k4WbYx@alpha.franken.de>
-References: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
- <ZnRtYFr5HFffyK7E@alpha.franken.de>
- <ff6fe06d-6209-4e34-9cc8-eb516fa4ffae@app.fastmail.com>
- <ZnU3/c1T55k4WbYx@alpha.franken.de>
-Date: Fri, 21 Jun 2024 12:04:30 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: "Aleksandar Rikalo" <aleksandar.rikalo@syrmia.com>,
- "Aleksandar Rikalo" <arikalo@gmail.com>, "Chao-ying Fu" <cfu@wavecomp.com>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Greg Ungerer" <gerg@kernel.org>, "Hauke Mehrtens" <hauke@hauke-m.de>,
- "Ilya Lipnitskiy" <ilya.lipnitskiy@gmail.com>, linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "Marc Zyngier" <maz@kernel.org>,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Serge Semin" <fancer.lancer@gmail.com>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 00/14] MIPS: Support I6500 multi-cluster configuration
-Content-Type: text/plain;charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH 0/8] drm: bridge: dw_hdmi: Misc enable/disable, CEC and
+ EDID cleanup
+From: Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <20240611155108.1436502-1-jonas@kwiboo.se>
+Date: Fri, 21 Jun 2024 15:07:17 +0400
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <F1599BFE-FE99-453B-BE99-B22C79562960@gmail.com>
+References: <20240611155108.1436502-1-jonas@kwiboo.se>
+To: Jonas Karlman <jonas@kwiboo.se>
+X-Mailer: Apple Mail (2.3774.600.62)
 
+> On 11 Jun 2024, at 7:50=E2=80=AFPM, Jonas Karlman <jonas@kwiboo.se> =
+wrote:
+>=20
+> This series ensure poweron/poweroff and CEC phys addr invalidation is
+> happening under drm mode_config mutex lock, and also ensure EDID is
+> updated (when the dw-hdmi connector is used) after a hotplug pulse.
+>=20
+> These changes has mainly been tested on Rockchip devices together with =
+a
+> forthcoming series that add HDMI 2.0 4K@60Hz support to RK3228, =
+RK3328,
+> RK3399 and RK3568.
+>=20
+> Rockchip use the dw-hdmi connector so this should also be validated =
+with
+> a driver that use the bridge connector.
 
+I=E2=80=99m not sure my level of kernel fiddling counts as proper =
+validation
+(Neil would be a more authoritative tester) but FWIW, I picked the
+series to my 6.10-rc4 dev branch (for Amlogic devices supported by the
+LibreELEC distro) and AFAICT everything is still working. Tested with
+Amlogic GXBB, GXL and G12B boards.
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8821=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=889:21=EF=BC=8CThomas Bogendoerfer=E5=86=99=E9=81=93=EF=BC=9A
-> On Fri, Jun 21, 2024 at 12:05:32AM +0100, Jiaxun Yang wrote:
->>=20
->>=20
->> =E5=9C=A82024=E5=B9=B46=E6=9C=8820=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8B=
-=E5=8D=886:56=EF=BC=8CThomas Bogendoerfer=E5=86=99=E9=81=93=EF=BC=9A
->> > On Sat, May 11, 2024 at 12:43:27PM +0200, Aleksandar Rikalo wrote:
->> >> Taken from Paul Burton MIPS repo with minor changes from Chao-ying=
- Fu.
->> >> Tested with 64r6el_defconfig on Boston board in 2 cluster/2 VPU and
->> >> 1 cluster/4 VPU configurations.
->> >
->> > which existing CPUs can use this ?
->>=20
->> Besides Boston are some multi cluster I6500 systems in wild, includin=
-g Fungible F1,
->> which comes with 52 cores in data panel.
->>=20
->> Those vendors show no interest on mainline kernel support though.
->
-> ok, so looking at the series it touches areas with different maintaine=
-rs,
-> I'm fine taking the MIPS parts, can I simply cherry-pick them out
-> of the series ?
+Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 
-For irqchip part I think it must be taken together with MIPS arch part.
-It's a part of MIPS CORE DRIVERS maintainers entry as well.
+> Jonas Karlman (8):
+>  drm: bridge: dw_hdmi: Call poweron/poweroff from atomic =
+enable/disable
+>  drm: bridge: dw_hdmi: Use passed mode instead of stored previous_mode
+>  drm: bridge: dw_hdmi: Fold poweron and setup functions
+>  drm: bridge: dw_hdmi: Remove previous_mode and mode_set
+>  drm: bridge: dw_hdmi: Invalidate CEC phys addr from connector detect
+>  drm: bridge: dw_hdmi: Remove cec_notifier_mutex
+>  drm: bridge: dw_hdmi: Update EDID during hotplug processing
+>  drm: bridge: dw_hdmi: Use display_info is_hdmi and has_audio
+>=20
+> drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 145 ++++++----------------
+> 1 file changed, 39 insertions(+), 106 deletions(-)
 
-For FDC I think functionally it's not a prerequisite.
-
-Thanks
->
-> Thomas.
->
-> --=20
-> Crap can work. Given enough thrust pigs will fly, but it's not necessa=
-rily a
-> good idea.                                                [ RFC1925, 2=
-.3 ]
-
---=20
-- Jiaxun
