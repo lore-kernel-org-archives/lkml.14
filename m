@@ -1,69 +1,68 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2082.outbound.protection.outlook.com [40.107.236.82])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779FD16B38E;
-	Fri, 21 Jun 2024 12:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44B6174EE5;
+	Fri, 21 Jun 2024 12:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973622; cv=fail; b=ViEsfJ5xjPwYwXUYho8mnAWWTcfTsjlSfVSK2QLx1RXnh5OQMGiD8G6CoXKlnNOB7X6LOoPOryOrOid6hE95LFbe9zc9q2NjIKHsM0SPCTgzs8AcCe9aQfsCJAgIbsbTq9p7GFQG4uHiCpCagm6cQq/HlEcUdcCOrY/67ii9ayE=
+	t=1718973627; cv=fail; b=GMfGUlGm515Fgp/qSzjzm1zEqMK9hBQiC4v9FloGy8tPxrHiZeG/dwOmQI3W7wV8J4xyG6vjBpmVH/oX8X2yy7IL5clf/RnvdIGs0eqCworDYQgBXNqzyNM2qJLA141LJC6nYi5Sxsf/yFpT1+rwPHACjWS9qxXOVcK4/348Ius=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973622; c=relaxed/simple;
-	bh=OYQ2uE7cNW/mD7SpEhLT7D66gKuqp4N4Dm0gIz2rHmo=;
+	s=arc-20240116; t=1718973627; c=relaxed/simple;
+	bh=Xva9JtNOoPlPm1swPjvGG686jz79Qn7himgY2KNr2VA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rzp/BQ0AV3OlA19z6vtWkQSB6B9OucQ4LNoucGMsHj6DPRcLyYiSrVlxRo67Pvc579nldLsAeSPrv6s5Cuh1xdFkSY3dA8DYmz7EdVdh8Gjo0a5Eb5LdSDj2k0RuNEiVFU3MmLid5LpvLpexHZRHSy9FxleJyAfCCYRieinnih0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Vmt5jMGS; arc=fail smtp.client-ip=40.107.236.82
+	 MIME-Version:Content-Type; b=dYOLfodG0NyjtXhl6P0fwIuFQK4HfIqQUnbKsYaSOrq0d+G8avXqK+QDSKjXhJXi2R8EIPncqoA9VI9bRRjhEB++o2WDY3YexFvNoydgk2YsKefywBRrQ+NqAmN+4NUj4CEmyMyVAl4wVirJE7zKz4ts6Q5pSi05HqBOkQZiXOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uzjO2rDj; arc=fail smtp.client-ip=40.107.94.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Vmt5jMGS"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uzjO2rDj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MIYM7oRILS01GU+JXkx+6kHUCqys8oBA3FRJ+XEo0nzZkFyW1vNrl41P0FYbTb/PJSXwrhyV+yZ6LvezT/C/bJoTfnwvZdIHL/6vlDgEVr9+MamDqaNNHJ+jDsKWPl/Si5xyRPuRq+clxVEW6oxBW2XN5sbKUVJxrN7t4fDu4B58hRNjJtuyBskhuNflVzMD+A4hgHgZhEt8+vX0nCB79F+mGcRbLr1WbS/PqXqzYBjLPNAoq+qDaQWazkD1ybIJ47KaWLIbQsbQtE1lyc4In4d4nDldLGRGOmaYFRRBrvSIGtog2bdRGpB2mset4iLi8Hg5TmuYJJO6I0CQjBm2+w==
+ b=gZVmgOyhZ7v6sdNOJLd1AHpvFVY1wD6iAjKsRflgy+64POGg7tLtIdcTCqE8QAI3zpQLm7YUvvhuDhX70fB/z2dbF26zvlsa3o9+R0t342VwQ6yS55rVSynij9dVDDR2bXxe+hkbGXrfEKy5XDOTnMcMTmzFdrvjSTwSSJxzP3aKOYIAaQxyLzTtfdgo3Mbm9zKZJ41P+RdeyCfueyHhyfkcCPKdWkvrckOi87PwcgFcHLEn5Ah3TOV0LVRB9NUoxGN/LKMaZUa/TitwlLwsQWMCHYKHngDHSHupP/FpxZ1gTLCoOKeUCUM9j42SiQRB3+J8Z2RtNen2EcV5r1m3WA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4SHxr8ZoV6qbqyWGn1heGZaHUZ8pFBQ8d/JPs4/x7QE=;
- b=SsYBfJ7NuVKLfGNWiltiDsh152tJ5ofZsBWkeM8hW0JHkF3HJuY4ZLHg/jrZ2l1QNsxnpb0u4oa3jtHJfpQYOXALRVHiRKbY2nF22InUXxk5bvfCCy/P7e4x3rnnsas88kBbUnnePEP19lCrkyLLV/WFv38s65FKzE1qaRm+LiIslvAe9dcg8usj7PLGWDzYulqgM0+H7Yh97CerEFUX/XaiZNS4I5Cj5461Jv6Zjg7Z0Yxw9BbViie714WoTWKxh8X6LYgzCwVydNdkUIBfni82DmG+0rvRvKgTB6rQHQ7QwJ/v7o6HpkM1NAePvUMo6Dib3OWDTIRlqU1leGMw2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ bh=85o/aoww35R2jPaxPqeDU6ARsndbVylbytpwJvTn5+Q=;
+ b=VVwwboXLUdo6YcrbZC3Rn1E2SRsHt4eHaAcZ0LUwfSupQ3Vx5OJ3eEqFmeAC5t/69zR3szKPApYDuGM4Vh/hsEQw/UtczBCXjKQOggl0+hl4cAu/2wxSnuqDlUmvCU03Ha3a1gn00V4gHc4/34fF1J09baBk59Vc+g0dkzhV6EoGkf3/bz58E2PFBVgj5B/1COY/b00Y9ZHUWzP9NVIppwvuzvzPB6C3pfsNbwsf58Hlo6p4xrg9ioZMahom96+pPmv38lrTzxNrvFMDzh7b0yEyJ4a9BR2Jvc8n79MwRAoZ6fV/NxXNMPd6+zc1O9JmSTaw3flfsdLi7VEYKXMo0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=temperror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4SHxr8ZoV6qbqyWGn1heGZaHUZ8pFBQ8d/JPs4/x7QE=;
- b=Vmt5jMGS8aHdONfiVRRrYNF8Hz1QRKI+RdfXkaVsBY9ij1d/pN33HTabJQyO2SKoBzooZxRg4HMM5DSP+oMrHKAfeQU3HxMEVo7QWosJxNdzVP+dAeSeFKyNdERsDA1+26vMKISVWV8wfkJyElqHQdbdamMVHk7AGy0fizmprXI=
-Received: from PH7PR10CA0018.namprd10.prod.outlook.com (2603:10b6:510:23d::15)
- by CH3PR12MB7617.namprd12.prod.outlook.com (2603:10b6:610:140::21) with
+ bh=85o/aoww35R2jPaxPqeDU6ARsndbVylbytpwJvTn5+Q=;
+ b=uzjO2rDjHn3WEgcFokDcuEHXVNWQHLQGBCkAIGVH+H/3ZiCwY4ywozrro+6Bo3qjI4KzE9G4rTdLASPbMOn5s6N1xYval9XCdl8wVRsPTi7DbD332VUYBb7NX4aHqDR0uaxxY1BUxBvtwkuABKp/QB+JCpkXXO6Xjwc3KpIZ4nY=
+Received: from DM5PR07CA0065.namprd07.prod.outlook.com (2603:10b6:4:ad::30) by
+ IA0PR12MB8325.namprd12.prod.outlook.com (2603:10b6:208:407::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Fri, 21 Jun
- 2024 12:40:13 +0000
-Received: from SJ1PEPF00001CDE.namprd05.prod.outlook.com
- (2603:10b6:510:23d:cafe::fa) by PH7PR10CA0018.outlook.office365.com
- (2603:10b6:510:23d::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.37 via Frontend
- Transport; Fri, 21 Jun 2024 12:40:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
+ 2024 12:40:22 +0000
+Received: from DS3PEPF0000C380.namprd04.prod.outlook.com
+ (2603:10b6:4:ad:cafe::65) by DM5PR07CA0065.outlook.office365.com
+ (2603:10b6:4:ad::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.36 via Frontend
+ Transport; Fri, 21 Jun 2024 12:40:22 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=amd.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of amd.com: DNS Timeout)
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CDE.mail.protection.outlook.com (10.167.242.6) with Microsoft
+ DS3PEPF0000C380.mail.protection.outlook.com (10.167.23.10) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 12:40:10 +0000
+ 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 12:40:20 +0000
 Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
- 2024 07:40:05 -0500
+ 2024 07:40:16 -0500
 From: Nikunj A Dadhania <nikunj@amd.com>
 To: <linux-kernel@vger.kernel.org>, <thomas.lendacky@amd.com>, <bp@alien8.de>,
 	<x86@kernel.org>, <kvm@vger.kernel.org>
 CC: <mingo@redhat.com>, <tglx@linutronix.de>, <dave.hansen@linux.intel.com>,
 	<pgonda@google.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
 	<nikunj@amd.com>
-Subject: [PATCH v10 12/24] x86/sev: Make snp_issue_guest_request() static
-Date: Fri, 21 Jun 2024 18:08:51 +0530
-Message-ID: <20240621123903.2411843-13-nikunj@amd.com>
+Subject: [PATCH v10 15/24] x86/sev: Cache the secrets page address
+Date: Fri, 21 Jun 2024 18:08:54 +0530
+Message-ID: <20240621123903.2411843-16-nikunj@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240621123903.2411843-1-nikunj@amd.com>
 References: <20240621123903.2411843-1-nikunj@amd.com>
@@ -79,110 +78,153 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDE:EE_|CH3PR12MB7617:EE_
-X-MS-Office365-Filtering-Correlation-Id: f999212f-444f-4be4-65b4-08dc91ef4a56
+X-MS-TrafficTypeDiagnostic: DS3PEPF0000C380:EE_|IA0PR12MB8325:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a2dd43e-4fd6-4e47-410e-08dc91ef5052
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|82310400023|376011|1800799021|7416011|36860700010;
+	BCL:0;ARA:13230037|82310400023|7416011|36860700010|376011|1800799021;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nNUemPlXBYpQqg9jOnbp2/0tTYLZSaKGVezKF61iGJdTct9parwigIVHOhgg?=
- =?us-ascii?Q?C5aVWx7jFEtPkEdVbEYxM6uMspxDdoXCvvhLTkB2faYXKA1O7b8IwLiP8wm5?=
- =?us-ascii?Q?FKqU5101L1kollxZwu2NAZAMBaTDZcJoxUcige5h9r+p8Zda5Q/n/s5HXNof?=
- =?us-ascii?Q?4fvBBszARIcfkT8bBEyCbKu6+kvCANyfm0v9Grs3LY/vl16X5z9N7j2MpXdf?=
- =?us-ascii?Q?oI2zRbt8ER6NdpesGAVmyx2CuVRMPzlisFfPVgwTTPz1GIAwpoLmXDWSIfuz?=
- =?us-ascii?Q?z1kHriMeZiPCe2Q66LecihiVe29bpbHFfLUyRFoeLvenqZSB/yshzjGL5L7W?=
- =?us-ascii?Q?0qBVwYvRWAsB/Y6ZHMniO73BHVMmeW5IUydM5CYbJ3RPMSTRd3HpMJt6AUrP?=
- =?us-ascii?Q?l/B/Pcq4LLhrx3uO8U7QiKfZiWogrOWtqT04mu8x0lWKwkNbeTxhQ3/EBoXE?=
- =?us-ascii?Q?LYcNFjPG65LiSqjDGLGXc60or/gndIqlWC9AkMb8whytULoCJDe4p6XGP1BQ?=
- =?us-ascii?Q?hp0RXJLIWiyMPjxu3V2C4rVu01dbD3y0oGIwmuxEwDVCILaHIwOMIYWEXNEx?=
- =?us-ascii?Q?80fvX3evL+4Afu2ufIwXdQwPXAaOUcbaz7+vyjMT83+pir094Lvd4y6jhkGM?=
- =?us-ascii?Q?Zmegf0YvREqJAnMohKGi34fyuu9Rq163eEv+cFUZWY2J8tcH7b5M7cbRA8UE?=
- =?us-ascii?Q?t3eW2vVGN0YdWfRdwqj/0dC8klM9pmCduC2O70HRdV+DdUIvhb1pQsTbvIBh?=
- =?us-ascii?Q?a5Vcf/smq1g4QNrbuM3VnhU1BvNSMtatvrCofi5qedGfYM1aq7RFpBhGuwqw?=
- =?us-ascii?Q?5Yaz/Q+J67DXcNzx/YoDM4+4fgSU72fcmvxn2yvWCSfcbWOVhIHazsJJM0Vs?=
- =?us-ascii?Q?28q6RyUfrw287Phq9bjdiGBQ2Fd3nkglCWbKjNFz/KtVq0idFeYkLObA0YM4?=
- =?us-ascii?Q?+tSGhPfCYMzBDmLJ2YD5Tha/bbZTQftpl19zUkiGrx4Y9E8sTQFPCnqCei7+?=
- =?us-ascii?Q?dGbCWQvO9c16EYoreGvK6ArFTU564SEMOxyz6BRP+jZF5IkEitHFqNsAAtMG?=
- =?us-ascii?Q?lp0WSWqtylWbQAj/ZXqcMhrTHh0KTXPjEmCn3gkFFHAiDqbQL2SzQEV+LN/I?=
- =?us-ascii?Q?3WwOtl3HFRCuf64JHvOinLk82yv0I91jzJ73LNoofvJFIy6qZvKFIbMkymuT?=
- =?us-ascii?Q?i8LEJN7WfXH0dBF+3MAGxBbOuWZEYTDO6VhaCE8vXjJyxpO2HRcdg3TkjBEF?=
- =?us-ascii?Q?9jhvQXdERiSf77XJcURSsokd/jjRuu1CdR2YCQhGsww+HcUuOkAi9emquAAZ?=
- =?us-ascii?Q?ROzzJi6WEkbX3B0iNillSEqs1tO2Twwi/wX5h/ANrKv4IzhL3APypdjbd1Ke?=
- =?us-ascii?Q?d/JoFjNlGdHxqwbuH54si3EA8KXljwS56IEuqJo4ULJwgxODNg=3D=3D?=
+	=?us-ascii?Q?U6bcXSoLMtRYuiJAqoT+Zq2j0oaSg42F6aaQljF6jI0y1SMnScsYw+iqTnqa?=
+ =?us-ascii?Q?2ceUk0NwLtb3Y44AlWecxVC3zMJ1ogHShYbbb/iyyF3rrWE812CgjpBBWbFM?=
+ =?us-ascii?Q?3HqHkHw95wtVLvMcQwNRyloT6tNHLFtJjpRI4rGpIBARUpEpRD9HBGrvflUI?=
+ =?us-ascii?Q?MauZ5rknLSGgWUPXVsTDoEenuGpNVRlXQ5tU+YuVV5sGF9Zoh4t60QJ/9thV?=
+ =?us-ascii?Q?GmKg2CP5mHnh0JGFwiiaO0q7B1rOAfRgHYgQdTeR9zjREXCIPAQlAONpIhe6?=
+ =?us-ascii?Q?7YnprdFLiHzRX+MlA99Ir00DeV9BThR+A3/GZEXsj+miMDHltRId16Pbff8I?=
+ =?us-ascii?Q?ZHz//6pi/b5138IBDzhbhgD20E3CMi72rEhBE7qaYj90cqGEVL1NqOdbdd9H?=
+ =?us-ascii?Q?tDVuUpMQIWGli2yMPw5+3+lUaIyiuqIA21Q2usIjIxa9ubOZbum/DeqVVIup?=
+ =?us-ascii?Q?aFZmZzoA+4U5qaiLa58E0fiu/9HVUPoernEiHQNJOhnf7t/Z4N65lZ/U8/fm?=
+ =?us-ascii?Q?g/Y2KJ/DDRpqbcqtpsvBBygv+eSTcuAgivDXWjGRRYiOoUEwT4wz10UUbSe+?=
+ =?us-ascii?Q?RS4W7EU+yZ/V+dvBD9T7Z/hX+gbIIRzFyxQO1s3BBNshNVFhFDVgh8lBBZdM?=
+ =?us-ascii?Q?0f4CQo/o4qJhIVcF4Uyl9mNyZPyCXgvEyOXBBaMk0+gacgQ+XB+NsXevC9Mh?=
+ =?us-ascii?Q?/lSYuBd4v9339qVIR5EcBbLyVCe0YCIBDroh9tqINSEccfzacloPYZUwjqGJ?=
+ =?us-ascii?Q?kiFMtDTJV0ZpqHaMuacu6SRhbxbTRsWbro3HeWdV+uJ0GL7/Zg07hAOSQtFU?=
+ =?us-ascii?Q?fVwLvXD2R5ewaMRV1o0R5gp8mIyJ2qZYx5ua202GlW+8oQGKIraknkHQgtBs?=
+ =?us-ascii?Q?12oqF678UADBqVh5+nGmzJodkub1wSTt2X5Ql4jBw4xIua4Kpj8pVLsIzNUJ?=
+ =?us-ascii?Q?Dd4cXMrwGZtThx+//dmRZ2fS1yVpmkWaRNgCaAms/RJXhr+7ag/lijRcl4of?=
+ =?us-ascii?Q?WUpCwtgngVx1Njbs2YU8ahMdHpJlgPPBx1v4UpxgIUf+63DlISSz6K2lo88S?=
+ =?us-ascii?Q?AReS9t8944uH0QrifJxoLgreLG5T5iux1OrR32WaEeZQYdLtgYYi6GLfK9ot?=
+ =?us-ascii?Q?WMAupjT4W0A2m78HvRlLUk+lRaBLJ2G+qWi/b+rJJbmmL6luz/2lg4Iy/oY1?=
+ =?us-ascii?Q?yvs01AmFGGW7jJMfjcma1wEFcCsLc6wuijE1y1ivmNJCDXlf9T5iV2+RNVz0?=
+ =?us-ascii?Q?M0D7sleRtO5I/t0NmpcfFXpKG7AZqfgdYgQa1I0lf7q5U2gUACdrdvRCytUi?=
+ =?us-ascii?Q?cz7UxSR4BwJt+nRhl+8iqIRZdvclsLgBcOVUEgGaD6/qa1TxdaADxkZ//dTU?=
+ =?us-ascii?Q?WcLOVkFEdzEXBxptY0OevbBSJVIuVo7ECPoCniCIeirVSicA9w=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(82310400023)(376011)(1800799021)(7416011)(36860700010);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(82310400023)(7416011)(36860700010)(376011)(1800799021);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:40:10.9373
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:40:20.9453
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f999212f-444f-4be4-65b4-08dc91ef4a56
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a2dd43e-4fd6-4e47-410e-08dc91ef5052
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CDE.namprd05.prod.outlook.com
+	DS3PEPF0000C380.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7617
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8325
 
-As there is no external caller for snp_issue_guest_request() anymore,
-make it static and drop the prototype from the header.
-
-No functional change.
+Instead of calling get_secrets_page() that parses the CC blob every time
+for getting the secrets page physical address(secrets_pa), save the secrets
+page physical address during snp_init() from the CC blob. Now that there
+are no users of get_secrets_page() drop the function.
 
 Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
 ---
- arch/x86/include/asm/sev.h | 7 -------
- arch/x86/coco/sev/core.c   | 5 ++---
- 2 files changed, 2 insertions(+), 10 deletions(-)
+ arch/x86/coco/sev/core.c | 51 +++++++++-------------------------------
+ 1 file changed, 11 insertions(+), 40 deletions(-)
 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index f0e43ca5e424..f16dd1900206 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -435,8 +435,6 @@ void snp_set_wakeup_secondary_cpu(void);
- bool snp_init(struct boot_params *bp);
- void __noreturn snp_abort(void);
- void snp_dmi_setup(void);
--int snp_issue_guest_request(struct snp_guest_req *req, struct snp_req_data *input,
--			    struct snp_guest_request_ioctl *rio);
- int snp_issue_svsm_attest_req(u64 call_id, struct svsm_call *call, struct svsm_attest_call *input);
- void snp_accept_memory(phys_addr_t start, phys_addr_t end);
- u64 snp_get_unsupported_features(u64 status);
-@@ -504,11 +502,6 @@ static inline void snp_set_wakeup_secondary_cpu(void) { }
- static inline bool snp_init(struct boot_params *bp) { return false; }
- static inline void snp_abort(void) { }
- static inline void snp_dmi_setup(void) { }
--static inline int snp_issue_guest_request(struct snp_guest_req *req, struct snp_req_data *input,
--					  struct snp_guest_request_ioctl *rio)
--{
--	return -ENOTTY;
--}
- static inline int snp_issue_svsm_attest_req(u64 call_id, struct svsm_call *call, struct svsm_attest_call *input)
- {
- 	return -ENOTTY;
 diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 0112e4c5dbcd..5f5339eda4a9 100644
+index 9f0f8819529c..8bf573d44b0c 100644
 --- a/arch/x86/coco/sev/core.c
 +++ b/arch/x86/coco/sev/core.c
-@@ -2442,8 +2442,8 @@ int snp_issue_svsm_attest_req(u64 call_id, struct svsm_call *call,
- }
- EXPORT_SYMBOL_GPL(snp_issue_svsm_attest_req);
+@@ -93,6 +93,9 @@ static struct ghcb *boot_ghcb __section(".data");
+ /* Bitmap of SEV features supported by the hypervisor */
+ static u64 sev_hv_features __ro_after_init;
  
--int snp_issue_guest_request(struct snp_guest_req *req, struct snp_req_data *input,
--			    struct snp_guest_request_ioctl *rio)
-+static int snp_issue_guest_request(struct snp_guest_req *req, struct snp_req_data *input,
-+				   struct snp_guest_request_ioctl *rio)
++/* Secrets page physical address from the CC blob */
++static u64 secrets_pa __ro_after_init;
++
+ /* #VC handler runtime per-CPU data */
+ struct sev_es_runtime_data {
+ 	struct ghcb ghcb_page;
+@@ -723,45 +726,13 @@ void noinstr __sev_es_nmi_complete(void)
+ 	__sev_put_ghcb(&state);
+ }
+ 
+-static u64 __init get_secrets_page(void)
+-{
+-	u64 pa_data = boot_params.cc_blob_address;
+-	struct cc_blob_sev_info info;
+-	void *map;
+-
+-	/*
+-	 * The CC blob contains the address of the secrets page, check if the
+-	 * blob is present.
+-	 */
+-	if (!pa_data)
+-		return 0;
+-
+-	map = early_memremap(pa_data, sizeof(info));
+-	if (!map) {
+-		pr_err("Unable to locate SNP secrets page: failed to map the Confidential Computing blob.\n");
+-		return 0;
+-	}
+-	memcpy(&info, map, sizeof(info));
+-	early_memunmap(map, sizeof(info));
+-
+-	/* smoke-test the secrets page passed */
+-	if (!info.secrets_phys || info.secrets_len != PAGE_SIZE)
+-		return 0;
+-
+-	return info.secrets_phys;
+-}
+-
+ static u64 __init get_snp_jump_table_addr(void)
  {
- 	struct ghcb_state state;
- 	struct es_em_ctxt ctxt;
-@@ -2505,7 +2505,6 @@ int snp_issue_guest_request(struct snp_guest_req *req, struct snp_req_data *inpu
+ 	struct snp_secrets_page *secrets;
+ 	void __iomem *mem;
+-	u64 pa, addr;
+-
+-	pa = get_secrets_page();
+-	if (!pa)
+-		return 0;
++	u64 addr;
  
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(snp_issue_guest_request);
+-	mem = ioremap_encrypted(pa, PAGE_SIZE);
++	mem = ioremap_encrypted(secrets_pa, PAGE_SIZE);
+ 	if (!mem) {
+ 		pr_err("Unable to locate AP jump table address: failed to map the SNP secrets page.\n");
+ 		return 0;
+@@ -2301,6 +2272,11 @@ bool __head snp_init(struct boot_params *bp)
+ 	if (!cc_info)
+ 		return false;
  
- static struct platform_device sev_guest_device = {
- 	.name		= "sev-guest",
++	if (cc_info->secrets_phys && cc_info->secrets_len == PAGE_SIZE)
++		secrets_pa = cc_info->secrets_phys;
++	else
++		return false;
++
+ 	setup_cpuid_table(cc_info);
+ 
+ 	svsm_setup(cc_info);
+@@ -2514,16 +2490,11 @@ static struct platform_device sev_guest_device = {
+ static int __init snp_init_platform_device(void)
+ {
+ 	struct sev_guest_platform_data data;
+-	u64 gpa;
+ 
+ 	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+ 		return -ENODEV;
+ 
+-	gpa = get_secrets_page();
+-	if (!gpa)
+-		return -ENODEV;
+-
+-	data.secrets_gpa = gpa;
++	data.secrets_gpa = secrets_pa;
+ 	if (platform_device_add_data(&sev_guest_device, &data, sizeof(data)))
+ 		return -ENODEV;
+ 
 -- 
 2.34.1
 
