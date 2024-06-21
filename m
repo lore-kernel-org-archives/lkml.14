@@ -1,113 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B99B1607A4;
-	Fri, 21 Jun 2024 16:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9636D128812
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718988093; cv=none; b=a9QB5RuhMAn7Vqi96FYO8X3QGU9l5Mn9WRQ+mRPyEDFJSHEO/p7W2G+djKZ042DyVlmRaZEKxG07xXzhcczQKDO7CBJbhn0EBWJLxStVY2rbtEkJW+UG912URWY20c+97I4c31X6IruRkCu7xq/4O53YyO0W5WEynZ442Hda6Fg=
+	t=1718988155; cv=none; b=gjTWnO6rlenCub8b5OZmA8Oy7lI/AkdqzK1cQk7ydyxrhZF5yickg6nHPCz8LT01PzF+SyFEcrd3Uk1pNmYxzdmc6XXJIYveSKkGW5vgGG+jZwhvl+u51K0PGIwy9goDnuvg2CWUSahxzedtCnk4Tcz11p/sKuf+IqiUfTd2Rr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718988093; c=relaxed/simple;
-	bh=hYmWKI+FNyJcAuG9I3AJi5jO+DJ7u/F46dADwaI+gfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rKSV19e4qLcPCHCyYqFFadYKjg+Ht2nZOw3/HCd78vi4XSz7qaWyz1rBzaS2L8ocn1tYxZF59KRU6lVLTwC1Io1X/b8HF3c7PsJh42cRUh1UJJ7kXeKBAQT9q7UBqRUj8tRVWPDQ+obnQDVsVajwVVtjNdGP2DZUc5aKkgOxzck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFPqCkgI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFPqCkgI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFCE5C4AF08;
-	Fri, 21 Jun 2024 16:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718988093;
-	bh=hYmWKI+FNyJcAuG9I3AJi5jO+DJ7u/F46dADwaI+gfI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MFPqCkgIiPane/B29DP24yhmu6Cqx1ig4QHoZu/CxkY/yMoJ3YILzBnO6bkjCzWg4
-	 BJgINfW1aYWwyYGosZMqzgu3PzGCmyZEpqoX8WJVZZvA5gYF6geUf237XZQirAljED
-	 HG22tgznF9DEGXh4L9IoSzukFhotkAx1inbKvc3jhBvAtNmOTdWnFTnIvlDutybNGW
-	 MK9WMuFMPhLXuhADiOdk4AAZQ4+aH5ATHDzqqZCJ3z3C5dfxEe4aqtSz6OZI3ku1B1
-	 N8p47W+jeFVuuqqKjL4tDdG1/Bwp8kGZO0FeIGx9litozVLjkKqkqNNdMTXaxH0kOa
-	 LX+MC6MAXaHlw==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-25cc44857a1so103814fac.3;
-        Fri, 21 Jun 2024 09:41:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0PVnvpVdMujmMzyhdy49w28fhzFjCOoSr5Slu0H+HSEXJXkdr0bBRjYMngK+T2inN3zYVxk6H7qrD45s4i8vBBJ+hHHPsR5h1AS/YIDrxPqT3pnXlBdU3LJ2vert7u+4v4/SvSD4=
-X-Gm-Message-State: AOJu0YyxKeXmAsImLOf7v0UerexDiSLdYobpdtgC6mFBn0kF+ydDA61z
-	s/3JcCA34XxnQl4ahSMLtDJsfEqHjqahM5EKRsCuAtj7kQ+M+0WX7pSAWY7jv8gibTlptx5nMbY
-	5Hvrq70qr+3buutnucw4aaubB/Tk=
-X-Google-Smtp-Source: AGHT+IHUjl81JvxOmR4unSTWZ8kAGMURYVE7PROzd8jvdZRqjG9H4e1dW0SiTyIG4FNggeKiHvAbK3c+t8IQitwQT1g=
-X-Received: by 2002:a05:6870:148d:b0:258:476d:a781 with SMTP id
- 586e51a60fabf-25c94d52e3emr9718943fac.3.1718988092229; Fri, 21 Jun 2024
- 09:41:32 -0700 (PDT)
+	s=arc-20240116; t=1718988155; c=relaxed/simple;
+	bh=qHat51Srve/G3HpQgAsKGy0Go7E4L920HbWq8JbeVE4=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=cUl0gbJDRJVD59vK5CXjWrAiSTu5+hNogSpcSHaRGeegvRRfhho4P2Is9d5Pt8xyz9vzJHl3G0Wn5EERR34Rqevfw1qxCatOxq8Rx22ucpIOgxsDVHMzA9juU5GYdRJ9QuG3/b6g+uX+0m7kTnQF01xcK1H90oPJ5pCRuyDonM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in01.mta.xmission.com ([166.70.13.51]:55426)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1sKhLG-009GmF-62; Fri, 21 Jun 2024 10:42:26 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:41954 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1sKhLE-00HICf-Tn; Fri, 21 Jun 2024 10:42:25 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Tejun Heo <tj@kernel.org>,
+  linux-kernel@vger.kernel.org
+References: <20240613154541.GD18218@redhat.com>
+	<87ikyamf4u.fsf@email.froward.int.ebiederm.org>
+	<20240617183758.GB10753@redhat.com>
+	<87iky5k2yi.fsf@email.froward.int.ebiederm.org>
+	<87o77xinmt.fsf_-_@email.froward.int.ebiederm.org>
+	<87iky5inlv.fsf_-_@email.froward.int.ebiederm.org>
+	<20240619155016.GC24240@redhat.com>
+	<87cyocerda.fsf@email.froward.int.ebiederm.org>
+	<20240619191105.GE24240@redhat.com>
+	<874j9mdf14.fsf@email.froward.int.ebiederm.org>
+	<20240621104031.GA12521@redhat.com>
+Date: Fri, 21 Jun 2024 11:30:32 -0500
+In-Reply-To: <20240621104031.GA12521@redhat.com> (Oleg Nesterov's message of
+	"Fri, 21 Jun 2024 12:40:32 +0200")
+Message-ID: <87ed8qb6mv.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com> <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
- <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com> <6759ce9f-281d-4fcd-bb4c-b784a1cc5f6e@oldschoolsolutions.biz>
-In-Reply-To: <6759ce9f-281d-4fcd-bb4c-b784a1cc5f6e@oldschoolsolutions.biz>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 21 Jun 2024 18:41:20 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gueSnaci601OkVq9_Ui09k8EsByRL08tFkzDoDGJpp6g@mail.gmail.com>
-Message-ID: <CAJZ5v0gueSnaci601OkVq9_Ui09k8EsByRL08tFkzDoDGJpp6g@mail.gmail.com>
-Subject: Re: cpufreq/thermal regression in 6.10
-To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Johan Hovold <johan@kernel.org>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: multipart/mixed; boundary="0000000000009c96e1061b691a44"
+Content-Type: text/plain
+X-XM-SPF: eid=1sKhLE-00HICf-Tn;;;mid=<87ed8qb6mv.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/KpdLaB19z7TGarVpCtNzqFwOpexImbBw=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: **
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4869]
+	*  0.7 XMSubLong Long Subject
+	*  1.5 XMNoVowels Alpha-numberic number with no vowels
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa07 1397; Body=1 Fuz1=1 Fuz2=1]
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;Oleg Nesterov <oleg@redhat.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 366 ms - load_scoreonly_sql: 0.07 (0.0%),
+	signal_user_changed: 10 (2.8%), b_tie_ro: 9 (2.4%), parse: 1.31 (0.4%),
+	 extract_message_metadata: 4.1 (1.1%), get_uri_detail_list: 1.65
+	(0.5%), tests_pri_-2000: 3.3 (0.9%), tests_pri_-1000: 2.4 (0.7%),
+	tests_pri_-950: 1.30 (0.4%), tests_pri_-900: 1.03 (0.3%),
+	tests_pri_-90: 99 (27.0%), check_bayes: 97 (26.5%), b_tokenize: 6
+	(1.6%), b_tok_get_all: 6 (1.5%), b_comp_prob: 2.3 (0.6%),
+	b_tok_touch_all: 80 (21.9%), b_finish: 0.89 (0.2%), tests_pri_0: 223
+	(61.0%), check_dkim_signature: 0.62 (0.2%), check_dkim_adsp: 3.1
+	(0.9%), poll_dns_idle: 1.29 (0.4%), tests_pri_10: 3.0 (0.8%),
+	tests_pri_500: 7 (1.9%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 01/17] signal: Make SIGKILL during coredumps an explicit
+ special case
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
---0000000000009c96e1061b691a44
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Oleg Nesterov <oleg@redhat.com> writes:
 
-Hi,
-
-On Fri, Jun 21, 2024 at 5:53=E2=80=AFPM Jens Glathe
-<jens.glathe@oldschoolsolutions.biz> wrote:
+> Another case when I can hardly understand your reply...
 >
-> Hi there,
+> This patch adds a minor user visible change, that was my point.
 >
-> unfortunately I experienced the issue with the fix applied. I had to
-> revert this and  the original commit to get back to normal behaviour. My
-> system (also Lenovo Thinkpad X13s) uses the schedutil governor, the
-> behaviour is as described from Steev and Johan. The full throttling
-> happened during a package build and left the performance cores at 940800.
+> If you say that the new behaviour is better / more consistent -
+> I won't really argue, "I expect no one cares" below is probably
+> true. In my opinion group_exit_code = SIGKILL makes more sense
+> in this special case, but again, I won't insist.
+>
+> But then this change should be mentioned and explained in the
+> changelog, agree?
 
-So can you please test the attached patch, on top of the fix?
+I very much agree.  It was an oversight and bug not to have included
+that in the change description.
 
---0000000000009c96e1061b691a44
-Content-Type: text/x-patch; charset="US-ASCII"; name="thermal-gov_step_wise-distangle.patch"
-Content-Disposition: attachment; 
-	filename="thermal-gov_step_wise-distangle.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lxox3nn60>
-X-Attachment-Id: f_lxox3nn60
+> As for "zap_threads that tests if SIGNAL_GROUP_EXIT is already set",
+> this is another thing but probably I misundertood you. It is not that
+> zap_threads/zap_process do not set ->group_exit_code in this case,
+> in this case do_coredump() will be aborted.
+>
+> And to remind, zap_threads() used to set SIGNAL_GROUP_COREDUMP, not
+> SIGNAL_GROUP_EXIT. Because to me the coredumping process is not exiting
+> yet, it tries to handle the coredumping signal. That is why I prefer
+> group_exit_code = SIGKILL if it is killed during the dump. But this is
+> slightly offtopic today.
 
-LS0tCiBkcml2ZXJzL3RoZXJtYWwvZ292X3N0ZXBfd2lzZS5jIHwgICAxOSArLS0tLS0tLS0tLS0t
-LS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDE4IGRlbGV0aW9ucygtKQoK
-SW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvdGhlcm1hbC9nb3Zfc3RlcF93aXNlLmMKPT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PQotLS0gbGludXgtcG0ub3JpZy9kcml2ZXJzL3RoZXJtYWwvZ292X3N0ZXBfd2lzZS5jCisrKyBs
-aW51eC1wbS9kcml2ZXJzL3RoZXJtYWwvZ292X3N0ZXBfd2lzZS5jCkBAIC01NSw3ICs1NSw3IEBA
-IHN0YXRpYyB1bnNpZ25lZCBsb25nIGdldF90YXJnZXRfc3RhdGUoc3QKIAkJaWYgKGN1cl9zdGF0
-ZSA8PSBpbnN0YW5jZS0+bG93ZXIpCiAJCQlyZXR1cm4gVEhFUk1BTF9OT19UQVJHRVQ7CiAKLQkJ
-cmV0dXJuIGNsYW1wKGN1cl9zdGF0ZSAtIDEsIGluc3RhbmNlLT5sb3dlciwgaW5zdGFuY2UtPnVw
-cGVyKTsKKwkJcmV0dXJuIGluc3RhbmNlLT5sb3dlcjsKIAl9CiAKIAlyZXR1cm4gaW5zdGFuY2Ut
-PnRhcmdldDsKQEAgLTkzLDIzICs5Myw2IEBAIHN0YXRpYyB2b2lkIHRoZXJtYWxfem9uZV90cmlw
-X3VwZGF0ZShzdHIKIAkJaWYgKGluc3RhbmNlLT5pbml0aWFsaXplZCAmJiBvbGRfdGFyZ2V0ID09
-IGluc3RhbmNlLT50YXJnZXQpCiAJCQljb250aW51ZTsKIAotCQlpZiAodHJpcC0+dHlwZSA9PSBU
-SEVSTUFMX1RSSVBfUEFTU0lWRSkgewotCQkJLyoKLQkJCSAqIElmIHRoZSB0YXJnZXQgc3RhdGUg
-Zm9yIHRoaXMgdGhlcm1hbCBpbnN0YW5jZQotCQkJICogY2hhbmdlcyBmcm9tIFRIRVJNQUxfTk9f
-VEFSR0VUIHRvIHNvbWV0aGluZyBlbHNlLAotCQkJICogZW5zdXJlIHRoYXQgdGhlIHpvbmUgdGVt
-cGVyYXR1cmUgd2lsbCBiZSB1cGRhdGVkCi0JCQkgKiAoYXNzdW1pbmcgZW5hYmxlZCBwYXNzaXZl
-IGNvb2xpbmcpIHVudGlsIGl0IGJlY29tZXMKLQkJCSAqIFRIRVJNQUxfTk9fVEFSR0VUIGFnYWlu
-LCBvciB0aGUgY29vbGluZyBkZXZpY2UgbWF5Ci0JCQkgKiBub3QgYmUgcmVzZXQgdG8gaXRzIGlu
-aXRpYWwgc3RhdGUuCi0JCQkgKi8KLQkJCWlmIChvbGRfdGFyZ2V0ID09IFRIRVJNQUxfTk9fVEFS
-R0VUICYmCi0JCQkgICAgaW5zdGFuY2UtPnRhcmdldCAhPSBUSEVSTUFMX05PX1RBUkdFVCkKLQkJ
-CQl0ei0+cGFzc2l2ZSsrOwotCQkJZWxzZSBpZiAob2xkX3RhcmdldCAhPSBUSEVSTUFMX05PX1RB
-UkdFVCAmJgotCQkJCSBpbnN0YW5jZS0+dGFyZ2V0ID09IFRIRVJNQUxfTk9fVEFSR0VUKQotCQkJ
-CXR6LT5wYXNzaXZlLS07Ci0JCX0KLQogCQlpbnN0YW5jZS0+aW5pdGlhbGl6ZWQgPSB0cnVlOwog
-CiAJCW11dGV4X2xvY2soJmluc3RhbmNlLT5jZGV2LT5sb2NrKTsK
---0000000000009c96e1061b691a44--
+Slightly.
+
+A major goal of this set of changes is to unify all of the process
+teardown in complete_signal, do_group_exit, and zap_process into a
+single subroutine for consistency.
+
+When a coredump is not generated the code for dumpable signals and
+other fatal signals should be the same.  Including short circuit
+delivery.  It isn't today.
+
+My rougher in progress patchset that follows this one makes, teaches
+get_signal to dequeue signals that have been processed with short
+circuit delivery and makes it so that do_coredump is just a little
+bit of extra code that runs.  With the net result that all of the code
+is simpler and easier to reason about.
+
+Messing with the coredump code today is a real pain because of io_uring
+and those funny interactions.
+
+Eric
+
