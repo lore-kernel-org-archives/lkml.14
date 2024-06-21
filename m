@@ -1,59 +1,39 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612C6548F7
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DAD3987D;
+	Fri, 21 Jun 2024 15:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718982546; cv=none; b=ZnXrLMd/Ef80tg1tSIWF01veWqcPlO4XzicPDAps6PIffD3xIwvzF7Ba5ixTchfT1MIYZPjLpgp10H2jgxsfXzm3B1dJdEg82b2bp4PI1Gl1RkAvFB6SXMuBITuD18PV4WiKDiqQLr6mEv0xHthTd4UaHeZSmevtFSAnK/BIC4U=
+	t=1718982557; cv=none; b=aSdXX6l1o5PTdiplMGo0kS7OCuufM4i4eg5Qh3IzqqLqxwb8JUpAi1SAQ+xAnD9yrJmNj/H614TnDQV09iig7E8siFkkOLvQkvVIkTM50jaM6RMohCYXQ1F9bK0UvWN9FM1SsK5iRRpacJRBp1OGDHM+w9ld+57rJDkDMDuLZLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718982546; c=relaxed/simple;
-	bh=5rAiojQsTigWicXmeRh0G3zeGjSh5M2Z4R9eMuRP03o=;
+	s=arc-20240116; t=1718982557; c=relaxed/simple;
+	bh=sVkHYUzchJZmDdzs/amWdjxvo08cI5C5ingJuyXLnfM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2eMuistMpRT7iCxddbimlKbLlUK4cyeK20h9CNK3MoIU5iVUj/XuH6PnNAeK51W63N+92gQlCBZRyYBY8cGm7BCdgoLgsIZxpS3qSLgeGh9uxDUzZ+KfQfAQYygNMn8BqOfBGpRX+jdp+8oEujqa8hZ6b23z4sXILPJPj+f/vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SpOHQkCR; arc=none smtp.client-ip=209.85.221.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=dXqv+RlECafmPyuU9qY0M8kxF/jZ6nlp0eNxCKqtSf3d6hBawDWCNPsxMb6n7KF4hJuE2ULtk/sPUHaFQ2D2rzy8tXCRKQ5HuiT1zXtIe5UttNQz0BOvb/RZRW6zczfMNt79aSgE5F3P2vyIeXyUd0myTLVpcQi5McCaZBq4rSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=f3oiNN+X; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SpOHQkCR"
-Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-3650f2e540dso1313453f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718982542; x=1719587342; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=//HkFPNKhQCDrBklAqKNRQHsY6okQNFrsrBgpNJVhqs=;
-        b=SpOHQkCRR6j/MSHjaghFG7HDGcYrS+B4p+kYGw8Rg3BeZkIKbH6j5/bGCmrp0rQUO5
-         zdR+VqjpfrmBqKi6jJZuvRsJ5lrXuule5KFSn6rC5XIVdde2sh9cCMO05SwNnFnixOit
-         30P1Bn7dfb7rYW6GgH73waanBeQPmSVMqdRaJHK5Kh02vHuXh8g2y6AtCj2FtZocmIyE
-         qCfDQi8t/8EjJoxQ8E0vT8yyzLPVre+4ESxijWFBNB5MuODbqtlyGub649o0AxkGmEBN
-         UI8lWhXrymPFNXAvG60swIxBUl0HaA1M/yeNRAdZwpAjLBpUHPtI2eEetlpf/6K1S5Gx
-         phWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718982542; x=1719587342;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=//HkFPNKhQCDrBklAqKNRQHsY6okQNFrsrBgpNJVhqs=;
-        b=wbdAqijzVdUSjgurQWUajj39a+qQaRh4DiTAfk3lfLKB3kjFZLlqYpIe8m4s0D7FLO
-         EUoc07iicZhXSyY7kCm6B0j7aIGhGYOb/pLc2VsFI6oV+oA1UApl2LBjsXhiCY83ML5b
-         t6qV8O1U1sKmWCXaJ1BEuZBrjhLl4Bf18g2+Ko1Tb0H8P6ZNFzpJAzxiMX3e+ffXE+D4
-         DLdK5nWKZJD0T6O+02ZlENE2unFAQjp0QBrFluMyAOMjLWD6jDFFVwjh/lw9aSCH6Wx7
-         ncvPrvH2b+ekDl5S9N+aRCzGF0f/s7glRWwYkCgiVv4duzw7EqEl6zTYuwbmqapqZPK7
-         +eGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFmrUkQQLt6qScYjX4orW2eOMd/7kA4Tc8u/c07OutEnfuoudHcFRl22htKRCdlrVbHdA82ELVagZxT+ea44aLizr73VRTDXZoHeK/
-X-Gm-Message-State: AOJu0YxUovqIcUgfWAyp8PUd4L3OI9QL3iCdLNDUSqjCRpRV8CtA4sp7
-	h5XTLS219vNJii054Zj73okg6WAJjxq3xIuDENMzyKEWIPc42ijQ4I1qZQfQ4uQ=
-X-Google-Smtp-Source: AGHT+IEGnNGgEhdZNo+A4PyZkLewBw+hk+J0cWFK1e7wUugiFCIuZNoRwrcESwM31W13TJnjrOc5VA==
-X-Received: by 2002:a5d:64c5:0:b0:363:7bbf:efcc with SMTP id ffacd0b85a97d-3637bbff072mr7044215f8f.62.1718982541786;
-        Fri, 21 Jun 2024 08:09:01 -0700 (PDT)
-Received: from [192.168.0.3] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a2f679bsm2001097f8f.81.2024.06.21.08.09.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 08:09:01 -0700 (PDT)
-Message-ID: <b0785dc2-aa91-4b81-9d5b-f49bb1ab6fb6@linaro.org>
-Date: Fri, 21 Jun 2024 16:09:00 +0100
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="f3oiNN+X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1718982181;
+	bh=sVkHYUzchJZmDdzs/amWdjxvo08cI5C5ingJuyXLnfM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f3oiNN+Xo2MwELUXMvR9dWVJ/IlEYpSQWdQFX9pYyYs+25TPDaqa5jICJ5/sfFpAW
+	 W8qXxoh8dc1CwXqlk/LUAsXhwnf/BP63RUDg4KA+ZJ3dMfo+gCfiosQDcPBRyu2JyR
+	 FP+WkyzJcH2LKlncW5ymVUh+xpvxEbAnzYruwC7RsXfljZr9VDpZ9P/lk+ORwBTqaJ
+	 nqPaQ3G3BI5dtiuO3MbMCPmIUeqciZO0LjfvsQIXF4bzjgOuf7iw1MpZb3yoP6BaYB
+	 a43TKVFaShAGvJpJkjKcC75ho/DuLzu1y/GiqUb85DX0Y8cBDsdR4qZDFGJUbUo5pn
+	 8SETdXf3Tm+Sg==
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id EC25560078;
+	Fri, 21 Jun 2024 15:03:00 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id 8D8E9200D72;
+	Fri, 21 Jun 2024 15:02:55 +0000 (UTC)
+Message-ID: <c3f9a3ae-7bf6-4c31-b19e-f98e6bd6caed@fiberby.net>
+Date: Fri, 21 Jun 2024 15:02:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,62 +41,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/8] media: qcom: camss: Split testgen, RDI and RX for
- CSID 170
-To: kernel test robot <lkp@intel.com>,
- Gjorgji Rosikopulos <quic_grosikop@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, andersson@kernel.org, konrad.dybcio@linaro.org,
- mchehab@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- laurent.pinchart@ideasonboard.com, hverkuil-cisco@xs4all.nl,
- quic_hariramp@quicinc.com
-References: <20240522154659.510-7-quic_grosikop@quicinc.com>
- <202405232059.8lLokYw2-lkp@intel.com>
+Subject: Re: [RFC PATCH net-next 5/9] flow_dissector: set encapsulated control
+ flags from tun_flags
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>,
+ Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ilya Maximets <i.maximets@ovn.org>,
+ Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>
+References: <20240611235355.177667-1-ast@fiberby.net>
+ <20240611235355.177667-6-ast@fiberby.net>
 Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <202405232059.8lLokYw2-lkp@intel.com>
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+In-Reply-To: <20240611235355.177667-6-ast@fiberby.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/05/2024 13:59, kernel test robot wrote:
-> Hi Gjorgji,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on media-tree/master]
-> [also build test WARNING on linus/master next-20240523]
-> [cannot apply to v6.9]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:https://github.com/intel-lab-lkp/linux/commits/Gjorgji-Rosikopulos/media-qcom-camss-Add-per-sub-device-type-resources/20240522-235220
-> base:   git://linuxtv.org/media_tree.git master
-> patch link:https://lore.kernel.org/r/20240522154659.510-7-quic_grosikop%40quicinc.com
-> patch subject: [PATCH v4 6/8] media: qcom: camss: Split testgen, RDI and RX for CSID 170
-> config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240523/202405232059.8lLokYw2-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240523/202405232059.8lLokYw2-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot<lkp@intel.com>
-> | Closes:https://lore.kernel.org/oe-kbuild-all/202405232059.8lLokYw2-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->     drivers/media/platform/qcom/camss/camss-csid-gen2.c: In function '__csid_configure_rdi_stream':
->>> drivers/media/platform/qcom/camss/camss-csid-gen2.c:265:13: warning: variable 'phy_sel' set but not used [-Wunused-but-set-variable]
->       265 |         u32 phy_sel = 0;
->           |             ^~~~~~~
+Hi Davide,
 
-Gjorgji.
+On 6/11/24 11:53 PM, Asbjørn Sloth Tønnesen wrote:
+> Set the new FLOW_DIS_F_TUNNEL_* encapsulated control flags, based
+> on if their counter-part is set in tun_flags.
+> 
+> These flags are not userspace visible yet, as the code to dump
+> encapsulated control flags will first be added, and later activated
+> in the following patches.
+> 
+> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+> ---
+>   net/core/flow_dissector.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+> index 86a11a01445ad..6e9bd4cecab66 100644
+> --- a/net/core/flow_dissector.c
+> +++ b/net/core/flow_dissector.c
+> @@ -396,6 +396,15 @@ skb_flow_dissect_tunnel_info(const struct sk_buff *skb,
+>   
+>   	key = &info->key;
+>   
+> +	if (test_bit(IP_TUNNEL_CSUM_BIT, key->tun_flags))
+> +		ctrl_flags |= FLOW_DIS_F_TUNNEL_CSUM;
+> +	if (test_bit(IP_TUNNEL_DONT_FRAGMENT_BIT, key->tun_flags))
+> +		ctrl_flags |= FLOW_DIS_F_TUNNEL_DONT_FRAGMENT;
+> +	if (test_bit(IP_TUNNEL_OAM_BIT, key->tun_flags))
+> +		ctrl_flags |= FLOW_DIS_F_TUNNEL_OAM;
+> +	if (test_bit(IP_TUNNEL_CRIT_OPT_BIT, key->tun_flags))
+> +		ctrl_flags |= FLOW_DIS_F_TUNNEL_CRIT_OPT;
+> +
+>   	switch (ip_tunnel_info_af(info)) {
+>   	case AF_INET:
+>   		skb_flow_dissect_set_enc_control(FLOW_DISSECTOR_KEY_IPV4_ADDRS,
 
-This appears to be a dead variable now.
+I am not too familiar with the bitmap helpers, so this is the part of this
+RFC series that I am most unsure of.
 
-I don't see a need to respin this series but, could you send a 
-supplementary patch to fix this up ?
+These should maybe have been test_bit(*_BIT, &key->tun_flags), test_bit() in
+general is mostly used with a reference, but with tun_flags it's a mixed bag:
 
----
-bod
+git grep 'test_bit(' | grep tun_flags
+
+-- 
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
