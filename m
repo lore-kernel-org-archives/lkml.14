@@ -1,48 +1,48 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840A817335C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C40174EC2;
 	Fri, 21 Jun 2024 11:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969404; cv=none; b=Mg4tCaR8WSoXA7gu+cGJlswlDWhWHDcHQey16a2I7VJTeMnWGEjJBn3ZR2f2USmsDv7SrL7+bvS7tScHWT1rS5+1R4qHzd5rlJgU1RGYi6zIcH3o5l3qhyVjt/715rzqjTyRVDnOzU8XA5Ob/En5JZ8jbNS701T5chwHxfV8gck=
+	t=1718969405; cv=none; b=MEOg7QZjsYLnv2hfy9dJ5shMTnDtBqLY6cprl1gk+xiSLgFzdRA5WEBAPRe6/CyanJqVCOGPuZBsPB6CXO6EdJOecNvj05y/GS5NDJnghaAEhH8Hk6uMiH0Ick6IFjqrXlz6oGTMoLuf+W7LmNB7Y8Etc9KaNkXtqRg3jUPotu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969404; c=relaxed/simple;
-	bh=oFdeEmSZCx2CmTI24Mlau+qRlUsKvxGoVQk9WMKPt7Y=;
+	s=arc-20240116; t=1718969405; c=relaxed/simple;
+	bh=eOM+rlNe4Ccmiqqj78VRC7CbyAJhediEgq9+gqUJt5c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hr5eY91EEE0bA/Yoy1TKwJ52PW2FnUVkbQHmedBIcyrZ58/J9v01JpZWtrddS1fv/JwdIfDF6wmq+0yvQr6871q3sKAJUPilk/dPVW1yxVEF+II1By9oNDTDF8UD6YNDD7PZsFiuRv7rFBNZ7lS2wEVYNi5F8hDFaG41JIygko8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hSSUQ5CT; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=kDiRTkI40vB4Swy4WZcma/JTsC/kQf17Kqu5KJJ532D5mvqiRn8U8HQojyZ8OPgU8bTwDIV3e/7kdHFqQ+1oN4+CuzEcaXTMhHnh37JW8x6pgTl0LNP0Gow83FhbfL/EcNrmq84Qab0rwvlqh/H+zTE9o0uJmrXbn1ffGE/PmpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=BdZhAPw3; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hSSUQ5CT"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BdZhAPw3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718969402; x=1750505402;
+  t=1718969404; x=1750505404;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=oFdeEmSZCx2CmTI24Mlau+qRlUsKvxGoVQk9WMKPt7Y=;
-  b=hSSUQ5CT1C1Q0ZoQyoQldiGcxXXZKL1jxG+xKtkqS+nEci2+DSgm5Plk
-   SnNVjF1oShxcALRfvO3VQAjMxzy4rJhVB96P+sgUrSL/HGz3mSgRBxp9s
-   BZcMX0Zy87FE2Ggo1BfzxRXqiF33rTpqAufLMJQnOqUE6R8ZE9Hux+o/e
-   442EAh1Crky9ETyqB7Hfty7DPPHmwIBxRtPO+x0X+ydE0IzCAW5oONtYf
-   IvayZI6skb+QnwjvyhO89iIHpt//LyQos1yuA0trKLKil9CAuUp076IKd
-   7hvlsiDwh42abx7Mss9Qzu/Dve8W0WXn3k8yLsOEetvMAobIemTsEoFeD
-   Q==;
-X-CSE-ConnectionGUID: OY1EIogCSZWH3lfFjfiKrA==
-X-CSE-MsgGUID: u/x0nTPATFya386j9m2P9g==
+  bh=eOM+rlNe4Ccmiqqj78VRC7CbyAJhediEgq9+gqUJt5c=;
+  b=BdZhAPw3wQu9V3Zy94zBjcAjDhLAJUdD9eKdTFjG8zHfdFAa/KJ1EmMl
+   q0ThJ9lM9U6mGcCioVpqZXtv/M+RNA2biDy6X543Z9PkiVUd1sgidphB9
+   /JCilIkhSlgTmEzvz+o3oHveCJkhCYhzA9pOqLSG3v3ns6nwJ3Z2I0ujt
+   JN0mGoRnDrmBo85AzGLhXvdYvRUeNYn3+d33yZhUUGNlX4YeqKa1ee1TL
+   JCnYso7e7WqDo14c6YxUVMpi0QscwXz3LU3qFmafVBn0SPh2iuiZ46QYN
+   DTT0tNzrK2lPUnIxIXmNO8VCLxP5CqlD+GX/kzVUGKKJXBlLd2wFBHC7W
+   g==;
+X-CSE-ConnectionGUID: MLVdO+kgSZidOgeJsnHSMg==
+X-CSE-MsgGUID: dO+OJ/qNSuS3vu3+Mtuk5A==
 X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
-   d="scan'208";a="28970656"
+   d="scan'208";a="259209056"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 04:29:58 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 04:30:02 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 21 Jun 2024 04:29:30 -0700
+ 15.1.2507.35; Fri, 21 Jun 2024 04:29:36 -0700
 Received: from daire-X570.microchip.com (10.10.85.11) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 21 Jun 2024 04:29:28 -0700
+ 15.1.2507.35 via Frontend Transport; Fri, 21 Jun 2024 04:29:33 -0700
 From: <daire.mcnamara@microchip.com>
 To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
 CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
@@ -50,9 +50,9 @@ CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
 	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
 	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
 	<ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v4 1/3] PCI: microchip: Fix outbound address translation tables
-Date: Fri, 21 Jun 2024 12:29:13 +0100
-Message-ID: <20240621112915.3434402-2-daire.mcnamara@microchip.com>
+Subject: [PATCH v4 3/3] dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
+Date: Fri, 21 Jun 2024 12:29:15 +0100
+Message-ID: <20240621112915.3434402-4-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240621112915.3434402-1-daire.mcnamara@microchip.com>
 References: <20240621112915.3434402-1-daire.mcnamara@microchip.com>
@@ -65,61 +65,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-From: Daire McNamara <daire.mcnamara@microchip.com>
+From: Conor Dooley <conor.dooley@microchip.com>
 
-On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
-three general-purpose Fabric Interface Controller (FIC) buses that
-encapsulate an AXI-M interface. That FIC is responsible for managing
-the translations of the upper 32-bits of the AXI-M address. On MPFS,
-the Root Port driver needs to take account of that outbound address
-translation done by the parent FIC bus before setting up its own
-outbound address translation tables.  In all cases on MPFS,
-the remaining outbound address translation tables are 32-bit only.
+PolarFire SoC may be configured in a way that requires non-coherent DMA
+handling. On RISC-V, buses are coherent by default & the dma-noncoherent
+property is required to denote buses or devices that are non-coherent.
 
-Limit the outbound address translation tables to 32-bit only.
-
-Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe controller driver")
-
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 137fb8570ba2..853adce24492 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -933,7 +933,7 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
+diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+index f7a3c2636355..c84e1ae20532 100644
+--- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+@@ -52,6 +52,8 @@ properties:
+     items:
+       pattern: '^fic[0-3]$'
  
- static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 				 phys_addr_t axi_addr, phys_addr_t pci_addr,
--				 size_t size)
-+				 u64 size)
- {
- 	u32 atr_sz = ilog2(size) - 1;
- 	u32 val;
-@@ -983,7 +983,8 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
- 		if (resource_type(entry->res) == IORESOURCE_MEM) {
- 			pci_addr = entry->res->start - entry->offset;
- 			mc_pcie_setup_window(bridge_base_addr, index,
--					     entry->res->start, pci_addr,
-+					     entry->res->start & 0xffffffff,
-+					     pci_addr,
- 					     resource_size(entry->res));
- 			index++;
- 		}
-@@ -1117,9 +1118,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	int ret;
- 
- 	/* Configure address translation table 0 for PCIe config space */
--	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
--			     cfg->res.start,
--			     resource_size(&cfg->res));
-+	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
-+			     0, resource_size(&cfg->res));
- 
- 	/* Need some fixups in config space */
- 	mc_pcie_enable_msi(port, cfg->win);
++  dma-noncoherent: true
++
+   interrupts:
+     minItems: 1
+     items:
 -- 
 2.34.1
 
