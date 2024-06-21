@@ -1,114 +1,80 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A25616D33A
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A848F16D33A;
+	Fri, 21 Jun 2024 10:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718966317; cv=none; b=hMcfGNVqLOSzpT01VVAnq7V2ICGDnaKMNJ3AzMqml97OMSbxeYhqKvnJe1g+ldX3lzubnUViBXFTvQtDgluanlC+fEUWeqy1qpQ+dzPGmQEnfFkisXHRSCDumzGsvTKkQvIkEOBkT7EQnCgYETyktLn8CHtU8cfWyIup/hiR/nA=
+	t=1718966428; cv=none; b=qOOhC/KbkqSNn0pS9gG7BPKlerIYGNUNc2LCbZVguIAJGP0EBpcuQumf+Pkt6ho7s5/RSapdWVKTaxjPU8IKeiEH0BX4YfmZMF+fscxMUIAgzch3Nxrs+dQ5KxC17S8ArtcfafNg8Eb5+l20puVewq+DGgsBg3vgoYp7C4aXlBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718966317; c=relaxed/simple;
-	bh=WTJ0KG5tYdhhPPGpfmG62gp49W7qhiVbW9dawR3CcTE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ii9Q4XDcNpw0NBeyniyVvSa2bvlN40ZN5fuemKUtuI65WHjeiKNS0Ve2rqUcXD5Kml1eeX8UdPl1+RsbW9Hcv8Q6z4n6o3BqlOpn58jCsnR4ILAqyPjBROQ2vVW0PJBzg9B/Fi9UXuvMqG7Xlcnw2jkrFrsWRg9ZaWNbVzANlDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I3udThls; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718966428; c=relaxed/simple;
+	bh=EbXQDV4cwCvlnWvzO7TCfsF21yNFddXHuwZYbz+n24M=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=jiXF6m1LRAyjBsaZs1bU2ZlYvYHjGuAZesGN5bkEqfrWrA0eF9u9BkLnDBBifnR4S72ySzUwgGG6yVOMx/OsNPPGvmV12NtCaibwZQD2Mwc6ZdgRBehpqYcFNs4UkhN1k5ErMZYYlOsyeuO7Sa04XcHBUsZysamUcecW2+927to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8t9UdNi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I3udThls"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42108856c33so17848295e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718966314; x=1719571114; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=44ZpRvpfFDERBn9Dks1/mP2gSSkjphom+K+EdkVXitM=;
-        b=I3udThlsQtQ2YjDq9atbqobDTGJ1volpRkp9VT7nWkPV4K+MiRSpUnsSx4lfFnT5Iw
-         jkjOqKxHlKQtGeSDWWYZlcpUkeHqjtDckHDSLTl/vJ91P8Wuycj6VkkeKuNnBmXg4Y4u
-         +1O0rclTfVrVudevE0lJrewlXLKRXdsm6F6lTD+flXJnUyCqPF+QBEbkfeO7xbmdWqpW
-         UHWHS+gPbde6KHozXg+nJdXx41xPx7bTSyfwVniy/glwniqX0Erg7mNmTfh0q+P3PPpE
-         NthxUVizX0lvdmNBrujRRGlC5IoJ8f6/O4bNHUrgIRvRlbzhNxhDQ1GkH4qlRO2Lw/b7
-         RKVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718966314; x=1719571114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=44ZpRvpfFDERBn9Dks1/mP2gSSkjphom+K+EdkVXitM=;
-        b=XZ1rqKvfobUiBJTTOwJOoxi3J1lVgng2/FxATOnVASTNVcgcQtwUl47QzezTQ57jq2
-         V436nEMrUj1XbgF4Src0hWm7uJ91HRPpFLIAhESzcdW1G/2YG08s1QhHYaC4V5K1d+Dg
-         E6SRmEyf4rtzdA/hSDGvj8fOMKypyUPsrMpWKoAIifJVe01cq1ItDnpkDyEw2eXljxGq
-         i4SsviZNQVMWXvsUzZLTkF/qfhVletBUZGv2sAGDn+0r7FBr7esgRWUNGpHayRkhJen2
-         prZQc1fjeZShBMs/AUeYTb+Kopp6aTJTLpr1MelZoCmTcG2SIJgn9h0xawnSqNYwXtkO
-         QD6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWSAc2QL6IMtOt5D+e5cHTZe3dLbU4hHar+Srm3kc52qtoDymEdm1ue6iwbE7ETU0bsKpZBuJI0Ev6W18UB6CMh+4n5HyUkvRZHrwAz
-X-Gm-Message-State: AOJu0YwuQn9QFir19BdC3+Ri+E1YvPk3Mf8DNY4Q1n7PXAcVvDOF68u+
-	bMojev2b4nIhYp+MFKC+5zwBa2dDeYZwMQAR8r07CZiuZwXjf11ccVaqXasNok7T2caN+0A8b8j
-	nQYgfx2y5UWpZqlXcts0SgeJP8lXdr0nPYBXy
-X-Google-Smtp-Source: AGHT+IHayn/UTVkcWmt4aexOdjYrU9ksdoexbcJhXjXZONtcnkNGjtekAv/BumbuGkdej+U3QP9aLzN4qBHFXpFkuUc=
-X-Received: by 2002:a05:6000:1284:b0:360:8c88:ab82 with SMTP id
- ffacd0b85a97d-3630191c24dmr7727188f8f.30.1718966314110; Fri, 21 Jun 2024
- 03:38:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8t9UdNi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7C8B8C32781;
+	Fri, 21 Jun 2024 10:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718966428;
+	bh=EbXQDV4cwCvlnWvzO7TCfsF21yNFddXHuwZYbz+n24M=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=C8t9UdNiIV9qKfNlkLCtFTMUFfWOEvt8E+5fpaIFsNrFoU3F79bpobaor7qJGZCEj
+	 ujWfmkdJiQOrCloDfcR0dEYpsjSFmA75nDc/1VRea/JB6BYBf25GWswsA0kmtHKeFD
+	 0J9fo4LY1lRtHEoYDw6kC2Qj09VEoW0YTEF1E9I1rPgzOuGCDXjCXB0HY898G7PBW3
+	 +fEjgsc8eSZrxUJjWXUnJq2zO6/Y6eNRFhTXQyu/qgN/C6dIOo8/rx8jfHOKnOsimy
+	 srV07lYexpHUPXt5KG1/mwvfvaU00WWTUoof148RUvW3oxR2gFiQKijU5diF+ofHut
+	 An8ttt6AeTtxw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6C3E3C4332D;
+	Fri, 21 Jun 2024 10:40:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610-tracepoint-v2-0-faebad81b355@google.com>
- <20240610-tracepoint-v2-1-faebad81b355@google.com> <20240612-cottage-revision-9842e7e22070@spud>
-In-Reply-To: <20240612-cottage-revision-9842e7e22070@spud>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 21 Jun 2024 12:38:21 +0200
-Message-ID: <CAH5fLgg2v1jL8uFBK3mEMW-mPydBj1eRT6je8YGtHyNF48JCfA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] rust: add static_key_false
-To: Conor Dooley <conor@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: pse-pd: Kconfig: Fix missing firmware loader config
+ select
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171896642843.6147.2008287276840776733.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Jun 2024 10:40:28 +0000
+References: <20240620095751.1911278-1-kory.maincent@bootlin.com>
+In-Reply-To: <20240620095751.1911278-1-kory.maincent@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: andrew@lunn.ch, kuba@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lkp@intel.com, thomas.petazzoni@bootlin.com,
+ o.rempel@pengutronix.de, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com
 
-On Wed, Jun 12, 2024 at 5:03=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Mon, Jun 10, 2024 at 02:01:04PM +0000, Alice Ryhl wrote:
-> > Add just enough support for static key so that we can use it from
-> > tracepoints. Tracepoints rely on `static_key_false` even though it is
-> > deprecated, so we add the same functionality to Rust.
-> >
-> > It is not possible to use the existing C implementation of
-> > arch_static_branch because it passes the argument `key` to inline
-> > assembly as an 'i' parameter, so any attempt to add a C helper for this
-> > function will fail to compile because the value of `key` must be known
-> > at compile-time.
-> >
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->
-> > +#[cfg(target_arch =3D "x86_64")]
->
-> > +#[cfg(target_arch =3D "aarch64")]
->
-> This patch breaks the build on riscv (and I assume loongarch):
->
-> error[E0432]: unresolved import `_static_key_false`
-> --> /stuff/linux/rust/kernel/static_key.rs:87:10
-> |
-> 87 | pub use {_static_key_false, static_key_false};
-> |          ^^^^^^^^^^^^^^^^^ no external crate `_static_key_false`
->
-> Cheers,
-> Conor.
+Hello:
 
-Thank you. Fixed in v3.
-https://lore.kernel.org/all/20240621-tracepoint-v3-0-9e44eeea2b85@google.co=
-m/
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Alice
+On Thu, 20 Jun 2024 11:57:50 +0200 you wrote:
+> Selecting FW_UPLOAD is not sufficient as it allows the firmware loader
+> API to be built as a module alongside the pd692x0 driver built as builtin.
+> Add select FW_LOADER to fix this issue.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406200632.hSChnX0g-lkp@intel.com/
+> Fixes: 9a9938451890 ("net: pse-pd: Add PD692x0 PSE controller driver")
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] net: pse-pd: Kconfig: Fix missing firmware loader config select
+    https://git.kernel.org/netdev/net/c/7eadf50095bc
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
