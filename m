@@ -1,42 +1,42 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC004155310;
-	Fri, 21 Jun 2024 21:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3083817C7BB;
+	Fri, 21 Jun 2024 21:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719007104; cv=none; b=ZUgaIIAwofSTmQYZKvfldPJguALvB3lz1rDiA3Bt1R2R+FQsMKrS85+2bvBjEVEXN+rgdJGGkLd5swWxnhgSCvElP5Sy8xBP8x6yRYXV0OJEBU9JstUpQRE1neRnZRCxHn4vfPy1qYYcS0sZyUjZ+N9fHXZc/mSBCuO7ho4lXL0=
+	t=1719007106; cv=none; b=KhuaEFhnXR/YoTIiFy1egSSTIrVSfHrzG1BBc2TDw/VIqDksuoTumJUe+V0f8JbxzVFlSAV/dCP09vsG+bxjxNw2S8YYx3j6WsMv+cXfWAX05VHTpF59efZ/gx+i8wyulm77K4Fhg/VVR3NBrcXo8CzQqZL8IOQ5Ni0isgq5ibw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719007104; c=relaxed/simple;
-	bh=1WIyV8ksTIHhhQ2eCcN+ywnSOJBkt4yK0goDj6avryI=;
+	s=arc-20240116; t=1719007106; c=relaxed/simple;
+	bh=GzRDLnuFoZMdH1hQlF6ojeOZvsWqIJBgLcgKRUN0xBw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CCcX7tfDaQ+OGLCsAcH9VDZBr/R+LnLom6mDyjZUU9YM8sPINIltlL9I+7jyXrf3RmwdxDidm/91vKXCMhAneoFrsAWnNj27xDkmgY5UUQRMiMVKp8rWEuDNS6k25dJ+tNHYhpbA+IMjESdWIRd7ha3ke5eC1h3Kj45DL+cAv5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=sUZlvApw; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:To:Cc; b=FixgD37+2OEBd8fWj0ux722btX7tHmqvg21Slm8vu+MpwTtiTw3oqLMlCyWv9rOtKie6YSPM2NRYE35ZSFmTayEYVSssEUX87+zq0pWob81Y95RnG8YLRwlj8MLEXcAAvZ2kLU4Alc6ESRlzN985yss6qbKMCBviW4PZxz/rFtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I3FJIGQz; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="sUZlvApw"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I3FJIGQz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719007094;
-	bh=1WIyV8ksTIHhhQ2eCcN+ywnSOJBkt4yK0goDj6avryI=;
+	s=mail; t=1719007098;
+	bh=GzRDLnuFoZMdH1hQlF6ojeOZvsWqIJBgLcgKRUN0xBw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=sUZlvApwjrOTmFwpqqRI/Zn5eOFa1BRtMxAhxobit3m/gzQNS1ZWExKZlpSDakZUZ
-	 qXhf6Rx5N76nLYpy4AIovrVTlixsnVPurfi4LZMKdSeh/j0k2/PAgfFKsH94vibwJQ
-	 +TNRxCF89B62aZFDcnCC5SHzAz/LfnR/zitlSVfqN52nE2n0p5WtYTNbqUZ0jXl10l
-	 U6/Eu5XRvBU3Q08UMFBeiA462bd1cL+DhrcjcfyhT71LakkWJWMSUVYdvH8V1s3nlT
-	 cfSPZdsqhe9R09R0dBZwLrNDDwkYoAhr6gU96H3XOVPfNuPDq7X8OMAnnp0sQFy6F1
-	 rECHgOS1+3s/g==
+	b=I3FJIGQz0/eVwL3XqHal+xKSuyjIOKIrSuR2P/EMbws789fnsn/J55wtJsJEnCUCw
+	 YfCjbR90ROUiUmb/bXsHYXfyCRfh+HxlJpvjVDHo/cGTUsA9MYHDUVwvTYVg8TNLX0
+	 JAQLznq6XjlAyKlXG7tU2eP+CXX38COpXFscufpPU506ScPDAzh5v86EA+k2DGW8po
+	 0k3V3qUperSSnCxNT8m63wEnlSYPMhYTrZIJK5wohkJkOKCwu72kTJM0g6NQ3kMWlF
+	 e9R0TzyEZSx8MwJZ28NSSMAUNBOTF5EyhvhnHXMNhzpcRtibRRCy7yCDIE8ajrDyeN
+	 Ul5kp5BwuYvkg==
 Received: from localhost (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 88AF937821DC;
-	Fri, 21 Jun 2024 21:58:14 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2ED1F37821E4;
+	Fri, 21 Jun 2024 21:58:18 +0000 (UTC)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Sat, 22 Jun 2024 00:57:18 +0300
-Subject: [PATCH v2 1/5] dt-bindings: mfd: rk817: Fixup clocks and reference
- dai-common
+Date: Sat, 22 Jun 2024 00:57:21 +0300
+Subject: [PATCH v2 4/5] arm64: dts: rockchip: Fix mic-in-differential usage
+ on rk3566-roc-pc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240622-rk809-fixes-v2-1-c0db420d3639@collabora.com>
+Message-Id: <20240622-rk809-fixes-v2-4-c0db420d3639@collabora.com>
 References: <20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com>
 In-Reply-To: <20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -60,93 +60,34 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.0
 
-Ensure 'clocks' property does not allow more than one item and add the
-missing reference to dai-common schema.
+The 'mic-in-differential' DT property supported by the RK809/RK817 audio
+codec driver is actually valid if prefixed with 'rockchip,':
 
-While at it, move 'clocks*' and '#sound-dai-cells' properties to keep
-the list ordered alphabetically.
+  DTC_CHK arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dtb
+  rk3566-roc-pc.dtb: pmic@20: codec: 'mic-in-differential' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/mfd/rockchip,rk809.yaml#
 
-Additionally, drop all useless/redundant descriptions.
+Make use of the correct property name.
 
-Fixes: 6c38ca03406e ("dt-bindings: mfd: rk808: Convert bindings to yaml")
+Fixes: a8e35c4bebe4 ("arm64: dts: rockchip: add audio nodes to rk3566-roc-pc")
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- .../devicetree/bindings/mfd/rockchip,rk817.yaml    | 33 ++++++++--------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk817.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk817.yaml
-index 8c2fd0fabb92..d70b4307ac77 100644
---- a/Documentation/devicetree/bindings/mfd/rockchip,rk817.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rockchip,rk817.yaml
-@@ -32,6 +32,13 @@ properties:
-     minimum: 0
-     maximum: 1
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts
+index 63eea27293fe..67e7801bd489 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3566-roc-pc.dts
+@@ -269,7 +269,7 @@ rk809: pmic@20 {
+ 		vcc9-supply = <&vcc3v3_sys>;
  
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+
-   clock-output-names:
-     description:
-       From common clock binding to override the default output clock name.
-@@ -42,6 +49,9 @@ properties:
-     description:
-       Telling whether or not this PMIC is controlling the system power.
+ 		codec {
+-			mic-in-differential;
++			rockchip,mic-in-differential;
+ 		};
  
-+  '#sound-dai-cells':
-+    const: 0
-+
-   system-power-controller: true
- 
-   wakeup-source:
-@@ -94,26 +104,7 @@ properties:
-         $ref: /schemas/regulator/regulator.yaml#
-     unevaluatedProperties: false
- 
--  clocks:
--    description:
--      The input clock for the audio codec.
--
--  clock-names:
--    description:
--      The clock name for the codec clock.
--    items:
--      - const: mclk
--
--  '#sound-dai-cells':
--    description:
--      Needed for the interpretation of sound dais.
--    const: 0
--
-   codec:
--    description: |
--      The child node for the codec to hold additional properties. If no
--      additional properties are required for the codec, this node can be
--      omitted.
-     type: object
-     additionalProperties: false
-     properties:
-@@ -123,9 +114,6 @@ properties:
-           Describes if the microphone uses differential mode.
- 
-   charger:
--    description: |
--      The child node for the charger to hold additional properties. If a
--      battery is not in use, this node can be omitted.
-     type: object
-     $ref: /schemas/power/supply/power-supply.yaml
- 
-@@ -168,6 +156,7 @@ properties:
-     additionalProperties: false
- 
- allOf:
-+  - $ref: /schemas/sound/dai-common.yaml#
-   - if:
-       properties:
-         '#clock-cells':
+ 		regulators {
 
 -- 
 2.45.2
