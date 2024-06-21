@@ -1,97 +1,95 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A143016E899;
-	Fri, 21 Jun 2024 23:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CF716E899
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 23:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719011363; cv=none; b=D+L8rWPrJ1jRp8R7FksjjC1VmWK3HiIYmfUoE6g+RmFpNv1taTo04qtiGCmsqkj2tfxuHe/0HtWpCIh2IPpfgSj3qzPl66itEauX82ptd3o+DkP4lD61pQc2HuAZv0kCWF8Pv1muYx2WveGnrh5WbbZfKzj65Lj5MWTjm5HlrEs=
+	t=1719011399; cv=none; b=SXqvFxij93qKvKfjBug2bv7f1il6o/q4Jn5xcSoTKoblwmRzxibM6TfSzrlTMHIbFcep9IGebsYMIugcMwtgzkKfkC1DCmME8TUFeqPmbsPLlBrdDECf3O8PqTJW6IDfkMBBeWbmU5wUyaD2VftMffABSf6ZPsmLZRdAe+AVl/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719011363; c=relaxed/simple;
-	bh=eE6wk2WcgUirEjGrFDuCEdYbMtZqyDAgK266lQRZ0aM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=moZCQuy88AtgRskaz+3DmEvvTTyFlGv6EbrrZX4TqKKTtUlpCBVUoZAPw71RBvX6MRljPtnQVL7kugLms1aOBrB5N1buiNr5vSJtGI+/CkZonhc3VorTGE+yoY/0wzM2FtvpSWzUL4Wn5BqLCwq0S4FYog3Nvw01Rjfzo3Tns/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JSvtMzvW; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719011399; c=relaxed/simple;
+	bh=J6CtqUdJBpJR6hj8JzbSvf5qexLGlK3syUfxf69EVdE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qhDO+efmz3KpQ9BofqGex0VJCjEruAoyqVbsM2ruohX55ZyvhBOq9IrGe7SYrDNYVqW8WNtky3Jlp2tYOVivlQOiEocpWXHnjonwB/dGh3KcrGhlKbKc56R1jeVmvB4YztoQZ39H+wrSUa6+xqlw2hmNHWkG9TbYBXAkDw0EMyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VEshpCmv; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JSvtMzvW"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4ed083c2874so777887e0c.2;
-        Fri, 21 Jun 2024 16:09:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VEshpCmv"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-63c08752872so45286837b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719011360; x=1719616160; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ffVmrRu08ej+BDuHCXTDWvHdM6rvJCW4tQU3Nw8xcMk=;
-        b=JSvtMzvWa2LKFHU9u0Jxe62BZA3TXAOoEgdvx1emjHtOHv6YlxU+HmqZ2sIwWUrvbM
-         WZ6CAZzDu8jeQgZWvef99zhb0aycBGiqauASnoFilE1/ttYPmZO6hl00gzsRwqJ4XwhC
-         pBXFAvwYRHCGaeIhqRP43vbVHMDDvGY8xBIPfLtKWt4OeeDlYEyEIOMRAoG8IN8P8MZI
-         YSKsuoACM6UKy7KnAQmx+NUsNY+1ZDYrXYie49FNQrOPG2n+4NIkkUfDKXiZrzfbgin9
-         h19BxvBeZfJZ4v4zcGepkPfutC3KPFYWIztHrgPdqcyMSvF1zhf2AUZ7M3Ftwt+UqG7w
-         pwsw==
+        d=google.com; s=20230601; t=1719011397; x=1719616197; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hZ+cfUgT+aBmHL3C3Umw6E7c9yi7lplkG1zz9za8pkI=;
+        b=VEshpCmv5DqHGb6EKfATG27cyO+3uaghCI41qF1osvq209/TIxJzKJo8d1ayJP8V5u
+         Mt4tvHPIt6Ke1XL5/9QhjqqcpeJjAp0RgEYCFJzAzmXmxqEKnbzPPcuGpCeGL6DFPzYD
+         yvxFRQA8+i++/TIcakC3fAQo8+Ba50WKp44T6Gq0goaW2CAAfBFiodh9oAuySI1Jez67
+         T0qMAfuX2gmJKXAz8bJEweCON+bZkDOkXbZDpHy+J9ktZdkftf/YFdVWQA2oVeYNvkVh
+         uaa2YaT1MVNar6IfQ0QkI+6YHm43/Qe4oXkxrTJAr/FPK/0dIrTWCyV8qRKZFtSp4jI+
+         DokA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719011360; x=1719616160;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffVmrRu08ej+BDuHCXTDWvHdM6rvJCW4tQU3Nw8xcMk=;
-        b=nZkzru43M1DntM3IMzocHQoGU565t55wNNIOj1TidCgJpOpVxCW31IdMSJutagG1PX
-         h99SNtfkTgYIjZMAI+w211h+TV1lVKZwx2VE8wmZGPkHuzc3qwS/Br+Rle27SUFIyTF7
-         /7X612qT6i4xlTJk/MCL8AsircJ9I+HHu8t5CJEDScsrmHfIcr7CXtQq5VNPwh7NGWaF
-         MmbCoj27vi9AZs9DyBN5LvBoAGleR5VF5uDdsIrgLn3vyt8/HFCSCjZdvusBPVsjQIUV
-         ujEC7dv7ar/gQqZsJqPxvj7tgEs9dwb5/vVkspoYEIJ8CSbvJDsjVANykF6DJXjzr2yv
-         eQgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGqcpiBmtxtiPTDWF+CAfRn/3VaTLxXdCdOYiOYU/VerwtAGh7+GUGXZVFRLl1L1Q+eBP43l5Kslh6BCXPs1qoGNiusv0ZhSarJZRrE2kzhPUQ6GkmtDMcOaAkr0REF22YhHFwdYAXEf2EtcDqlJTXjp8GXvyE86yJq3S3HmpNgoMP6bqkkvOeabt0O0sk59FSkaCtRW8ZTT3fr/uZ4kuCj8UUzyOi
-X-Gm-Message-State: AOJu0Yy/0ku8T/06Fy4XnvfMuy9SMlID2UuXny+Y+N+pN7nlyDKJ2ZI+
-	5sgy4tT39ZACKc1V7dzwXDMNhKxft3cQkt13XYhBEcC3xZ5LBf8mf33XxchxejLVz4q91oUcaI9
-	WjO33dUs14Kh1P8nPPr3mdR/XsDQ=
-X-Google-Smtp-Source: AGHT+IESVQ1b8mSEZmU/iC2jwDkrBtMQpwgCegx3ps6DqYKI06zcBCoE0lL/xZmB5gHlyCLozXFF42oe68Km7lhczgg=
-X-Received: by 2002:a05:6122:181f:b0:4ef:5b2c:df41 with SMTP id
- 71dfb90a1353d-4ef5b2ce485mr1141412e0c.9.1719011360451; Fri, 21 Jun 2024
- 16:09:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719011397; x=1719616197;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hZ+cfUgT+aBmHL3C3Umw6E7c9yi7lplkG1zz9za8pkI=;
+        b=UiAD0a7XxUBRhOOFXNSiYjpZN7KtMyjm7Syzb7m56BaISRnCgsfBFhqt5hPbFwDzfD
+         DZ6rlhS0a6ntZA0NE92lx2TTa1cWYU3PmH6OV4/S5NJogGOq84IjseJRl2jIdznapflT
+         OfowKU0S41GDlOQhicGGnPN0h0vrLeAB+d/ly5Zwyz4OagkcB42HcOTi5KSRq8kIFWDK
+         VK+l8scBrnrBk6YLkmOh/o8jwTN0trTrqRmZcugSNee1LYUDtdNn7lgPYkV5OV6f3c8n
+         HhLWJBc0gwOM7629Mg9MwFGYGf27qu0wEcs2SYxdJghaVll80wTOG+pSi4ks+n4sF+cf
+         DVfg==
+X-Gm-Message-State: AOJu0YzUns4oZL6Z2QML6Fj+plEo5TM76pCXZmQ4I13AZOFTMfs5r1Q9
+	Jj2vCLj1XC7eHbbbFWHux1RA7/Siny89zoy0VE8lJlDi+gVGFckgBse7au5TSpgDrReRaQWjiIr
+	TYg==
+X-Google-Smtp-Source: AGHT+IFCunyip/osVKd1aijWizOlNFOoetomMC7RpdXuhtX9ZSat09KiYIr/FEpK+cRnSEvH2xqfvh70e1A=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2e89:b0:dfb:fb2:ebe with SMTP id
+ 3f1490d57ef6-e02be247c59mr869834276.13.1719011397487; Fri, 21 Jun 2024
+ 16:09:57 -0700 (PDT)
+Date: Fri, 21 Jun 2024 16:09:55 -0700
+In-Reply-To: <ZnW2kD1V0EoViS7i@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240618225210.825290-1-allen.lkml@gmail.com> <gw6adkoy3ndjdjufti2gs2gnk3xdgylt6tnia2zha76hsgdwtq@dr3czbxjij66>
- <CAOMdWS+p4Dt2xDGWvwoXtWinsRZintLwPmADddbsmaEfLvRQkw@mail.gmail.com> <ay2rpumtfxtvx4qgkgal7a7z46dbtwjnq4ctik55neseirkhfk@gkylcwud6vry>
-In-Reply-To: <ay2rpumtfxtvx4qgkgal7a7z46dbtwjnq4ctik55neseirkhfk@gkylcwud6vry>
-From: Allen <allen.lkml@gmail.com>
-Date: Fri, 21 Jun 2024 16:09:08 -0700
-Message-ID: <CAOMdWSKzd1nt832+FHtwcMLO1rtgEC99Xz-wvNWGtXiyA8uK7w@mail.gmail.com>
-Subject: Re: [PATCH v3] mmc: Convert from tasklet to BH workqueue
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Allen <allen.lkml@gmail.com>, 
-	Aubin Constans <aubin.constans@microchip.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Manuel Lauss <manuel.lauss@gmail.com>, =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Alex Dubov <oakad@yahoo.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Bruce Chang <brucechang@via.com.tw>, Harald Welte <HaraldWelte@viatech.com>, 
-	Pierre Ossman <pierre@ossman.eu>, Christian Loehle <christian.loehle@arm.com>, linux-mmc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <ZnW2kD1V0EoViS7i@sirena.org.uk>
+Message-ID: <ZnYIQ9swzOjU1DuU@google.com>
+Subject: Re: linux-next: manual merge of the kvm-x86 tree with the origin tree
+From: Sean Christopherson <seanjc@google.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Wei Wang <wei.w.wang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
->
-> > If introducing the pointer is the only way forward and is an
-> > acceptable solution,
-> > I can send out a draft.
->
-> My proposal is that I take over the SDHI part of your series. I know the
-> code pretty well and I can test the solution right away. Your draft
-> seems in the wrong layer (conceptually, technically it should work), but
-> I need to play around a little. Is that okay with you?
->
+On Fri, Jun 21, 2024, Mark Brown wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the kvm-x86 tree got a conflict in:
+> 
+>   arch/x86/kvm/x86.c
+> 
+> between commit:
+> 
+>   f3ced000a2df5 ("KVM: x86: Always sync PIR to IRR prior to scanning I/O APIC routes")
+> 
+> from the origin tree and commit:
+> 
+>   aebed32e4985a ("KVM: x86: Introduce kvm_x86_call() to simplify static calls of kvm_x86_ops")
+> 
+> from the kvm-x86 tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-
-  Sure, happy to help if needed.
-
-Thanks.
-
--- 
-       - Allen
+Thanks for the heads up!  This (and possibily similar conflicts in the future)
+is expected.  I'll rebase kvm-x86/static_calls next week to resolve the conflict
+in kvm-x86/next.
