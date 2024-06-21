@@ -1,301 +1,134 @@
-Received: from mail.ngn.tf (ngn.tf [193.106.196.85])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9B7155CAC;
-	Fri, 21 Jun 2024 06:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.106.196.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BB6155726;
+	Fri, 21 Jun 2024 06:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718951802; cv=none; b=lj/iDJslRs1utJKSHm76kjB2oSrn0LyTF45V6R94ThJpLizmMDt81fczwkHYCdLNfZutLrDnSAWE5Vkiefryx3NjR5IuZjmgN4tFQRRTmmwX7fi7KzPTM5IIA+LtcP1+DRWXRpiL3k1DCLQaep/xvt7/+15dqFCbcMpOIxiEQsc=
+	t=1718951806; cv=none; b=uLYMISjPMVwwuvQaNkM5AjaYYCJWpGBHFmD/w1lPIcKv6dGFGF4UJWOfZ00BYr4/ooTnBoUX3luD6anijUQMbUh+xJymIi0v647N3HU1Zo+rCsYfXOwRDaNi32RlQgfbQ5C4KjXjX0XEf2Zqme4Pw65P9LVPFch2sja8a7j2QJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718951802; c=relaxed/simple;
-	bh=gdPe/cZTFIj/WZley7sty4cWNKh/akFFobRCadNluOc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iz1XCr7lFrZ4wbENVHnr498mx68RGs8edQve/qz1qubQx3h6rsBR1a9/0tqL6ZLLsvkhhRmyuUwXvwpDaYkiq5+1AXg8m9OWZzEifpZIGNrrtTT2gpAxrkNyI1W64xhq83qoE6EQM826wSj726mJ2j4VGAygQYaHsAb00V1GMU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf; spf=pass smtp.mailfrom=ngn.tf; dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b=fNejmAth; arc=none smtp.client-ip=193.106.196.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ngn.tf
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b="fNejmAth"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ngn.tf; s=mail;
-	t=1718951797; bh=gdPe/cZTFIj/WZley7sty4cWNKh/akFFobRCadNluOc=;
-	h=From:To:Cc:Subject:In-Reply-To:References;
-	b=fNejmAth1zEB8425q7XUOlZePNs93jeTsa7zSJAWFa0n6/sG2/oZ5OtROiPdGjmTb
-	 lFg1tQZWNMp1FUVOSu5WrS90RyAdhHbwNfw9Iyvcm0O+SU7DyVbKyavyvlhkhWyRbc
-	 M2wiFQmAMGQvb4qucM8jtcvlwodkAl4EQW5QsN1s8oFpKxbi3SHoH+IsvNPNw3w6xe
-	 PoMLVfleyOErZhV0c2CmDSQi9NhYjL5UHMHqqd32SfN/yKXaYt/mONoFoO9Q9rljYm
-	 8TTee8t36lVoFUNlL5nDskm5cI4XyFBTlZiYh1I0Y4F7iqZJlGhmZXE1emrB+EAiCa
-	 p1dhWrcrVfWbw==
-From: ngn <ngn@ngn.tf>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1718951806; c=relaxed/simple;
+	bh=SeOA9xWxKKzQPlgCO/8S9Eg4rEDvcft1OMFHJ0h3Dd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZfKGzDKxgvB7ipFlCH1YQ7SrsomTKiKWaiWoOMBpeovvBUsF9E0Lun+rfVN5YuKeuIZwakTlqF2rB1lcZknz8INRZ8LjVqJhM/CzEoboYI7mYUet+3v8xmLTiLYmBPMfZjb0jnfEsPtzCFnCCqizb5wvDpKPtfGZYKjyvOZ7ztA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 9b3d93762f9811ef9305a59a3cc225df-20240621
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:38f83400-ebcd-457b-95e2-bff20ceb7e73,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:15
+X-CID-INFO: VERSION:1.1.38,REQID:38f83400-ebcd-457b-95e2-bff20ceb7e73,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:15
+X-CID-META: VersionHash:82c5f88,CLOUDID:efbffc488a517e55c9999e9aeaa54cd3,BulkI
+	D:2406211432491TQQYW5Q,BulkQuantity:1,Recheck:0,SF:57|66|24|72|19|44|102,T
+	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,
+	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: 9b3d93762f9811ef9305a59a3cc225df-20240621
+Received: from node4.com.cn [(39.156.73.12)] by mailgw.kylinos.cn
+	(envelope-from <shaozongfan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 295107956; Fri, 21 Jun 2024 14:36:35 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 828DC16002082;
+	Fri, 21 Jun 2024 14:36:35 +0800 (CST)
+X-ns-mid: postfix-66751F73-442141348
+Received: from localhost.localdomain (unknown [172.30.110.47])
+	by node4.com.cn (NSMail) with ESMTPA id 10E0316002082;
+	Fri, 21 Jun 2024 06:36:33 +0000 (UTC)
+From: shaozongfan <shaozongfan@kylinos.cn>
+To: hch@infradead.org
+Cc: chandan.babu@oracle.com,
+	djwong@kernel.org,
 	linux-kernel@vger.kernel.org,
-	ngn <ngn@ngn.tf>
-Subject: [PATCH 2/2] PCI: shpchp: Follow kernel coding style
-Date: Fri, 21 Jun 2024 09:35:01 +0300
-Message-ID: <bad71d39d1a72fceac548a91a3e5df61df2b1c05.1718949042.git.ngn@ngn.tf>
-In-Reply-To: <cover.1718949042.git.ngn@ngn.tf>
-References: <cover.1718949042.git.ngn@ngn.tf>
+	linux-xfs@vger.kernel.org,
+	shaozongfan <shaozongfan@kylinos.cn>
+Subject: [PATCH] xfs:trigger a-NULL-pointer-problem
+Date: Fri, 21 Jun 2024 14:34:53 +0800
+Message-Id: <20240621063452.516357-1-shaozongfan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <ZnPjpCovlQq7_ptP@infradead.org>
+References: <ZnPjpCovlQq7_ptP@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-fixing checkpatch warnings
+>Can you share your reproducer?
+Sorry ,beacuse some reason real reproducer can't share you,
+But i simulate a reproducer in fllow patch and attachments=20
 
-Signed-off-by: ngn <ngn@ngn.tf>
+> if (ctx->pos - ino =3D xfs_dir2_sf_get_parent_ino(sfp);
+> + sfp1 =3D sfp;
+> + if (sfp1 =3D=3D NULL)
+> + return 0;
+> + ino =3D xfs_dir2_sf_get_parent_ino(sfp1);
+
+> This looks ... odd. Assigning one pointer variable to another
+> doesn't revalidate anything. And xfs_dir2_sf_getdents is called
+> with the iolock held, which should prevent xfs_idestroy_fork
+> from racing with it. And if for some reason it doesn't we need
+> to fix the synchronization.
+In this problem, not if_data =3D NULL, but if_root =3D NULL.
+Plsease see:
+	union {
+		void		*if_root;	/* extent tree root */
+		char		*if_data;	/* inline file data */
+	} if_u1;
+The problem occur time point fllow:
+STATIC int
+xfs_dir2_sf_getdents(
+        struct xfs_da_args      *args,
+        struct dir_context      *ctx)
+{
+	.......
+line63	ASSERT(dp->i_df.if_u1.if_data !=3D NULL);
+                   *** if_root =3D NULL ***    	                        =20
+line96  ino =3D xfs_dir2_sf_get_parent_ino(sfp);
+        ......
+}
+
+Why add a poniter sfp1?
+if_data and if_root share a address,
+But sfp1 don't share,when if_root =3D NULL,
+sfp1 can Make sure there is no null pointer=E3=80=82
+
+Signed-off-by: shaozongfan <shaozongfan@kylinos.cn>
 ---
- drivers/pci/hotplug/shpchp_hpc.c   | 91 +++++++++++++++---------------
- drivers/pci/hotplug/shpchp_sysfs.c |  7 +--
- 2 files changed, 47 insertions(+), 51 deletions(-)
+ fs/xfs/xfs_dir2_readdir.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/shpchp_hpc.c b/drivers/pci/hotplug/shpchp_hpc.c
-index 012b9e3fe5b0..dd30e7e611a7 100644
---- a/drivers/pci/hotplug/shpchp_hpc.c
-+++ b/drivers/pci/hotplug/shpchp_hpc.c
-@@ -47,24 +47,24 @@
+diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
+index 9f3ceb461515..13675db04042 100644
+--- a/fs/xfs/xfs_dir2_readdir.c
++++ b/fs/xfs/xfs_dir2_readdir.c
+@@ -18,6 +18,7 @@
+ #include "xfs_bmap.h"
+ #include "xfs_trans.h"
+ #include "xfs_error.h"
++#include "xfs_linux.h"
+=20
  /*
-  * Interrupt Locator Register definitions
-  */
--#define CMD_INTR_PENDING	(1 << 0)
--#define SLOT_INTR_PENDING(i)	(1 << (i + 1))
-+#define CMD_INTR_PENDING	BIT(0)
-+#define SLOT_INTR_PENDING(i)	BIT((i) + 1)
- 
- /*
-  * Controller SERR-INT Register
-  */
--#define GLOBAL_INTR_MASK	(1 << 0)
--#define GLOBAL_SERR_MASK	(1 << 1)
--#define COMMAND_INTR_MASK	(1 << 2)
--#define ARBITER_SERR_MASK	(1 << 3)
--#define COMMAND_DETECTED	(1 << 16)
--#define ARBITER_DETECTED	(1 << 17)
-+#define GLOBAL_INTR_MASK	BIT(0)
-+#define GLOBAL_SERR_MASK	BIT(1)
-+#define COMMAND_INTR_MASK	BIT(2)
-+#define ARBITER_SERR_MASK	BIT(3)
-+#define COMMAND_DETECTED	BIT(16)
-+#define ARBITER_DETECTED	BIT(17)
- #define SERR_INTR_RSVDZ_MASK	0xfffc0000
- 
- /*
-  * Logical Slot Register definitions
-  */
--#define SLOT_REG(i)		(SLOT1 + (4 * i))
-+#define SLOT_REG(i)		(SLOT1 + (4 * (i)))
- 
- #define SLOT_STATE_SHIFT	(0)
- #define SLOT_STATE_MASK		(3 << 0)
-@@ -78,27 +78,27 @@
- #define ATN_LED_STATE_ON	(1)
- #define ATN_LED_STATE_BLINK	(2)
- #define ATN_LED_STATE_OFF	(3)
--#define POWER_FAULT		(1 << 6)
--#define ATN_BUTTON		(1 << 7)
--#define MRL_SENSOR		(1 << 8)
--#define MHZ66_CAP		(1 << 9)
-+#define POWER_FAULT		BIT(6)
-+#define ATN_BUTTON		BIT(7)
-+#define MRL_SENSOR		BIT(8)
-+#define MHZ66_CAP		BIT(9)
- #define PRSNT_SHIFT		(10)
- #define PRSNT_MASK		(3 << 10)
- #define PCIX_CAP_SHIFT		(12)
- #define PCIX_CAP_MASK_PI1	(3 << 12)
- #define PCIX_CAP_MASK_PI2	(7 << 12)
--#define PRSNT_CHANGE_DETECTED	(1 << 16)
--#define ISO_PFAULT_DETECTED	(1 << 17)
--#define BUTTON_PRESS_DETECTED	(1 << 18)
--#define MRL_CHANGE_DETECTED	(1 << 19)
--#define CON_PFAULT_DETECTED	(1 << 20)
--#define PRSNT_CHANGE_INTR_MASK	(1 << 24)
--#define ISO_PFAULT_INTR_MASK	(1 << 25)
--#define BUTTON_PRESS_INTR_MASK	(1 << 26)
--#define MRL_CHANGE_INTR_MASK	(1 << 27)
--#define CON_PFAULT_INTR_MASK	(1 << 28)
--#define MRL_CHANGE_SERR_MASK	(1 << 29)
--#define CON_PFAULT_SERR_MASK	(1 << 30)
-+#define PRSNT_CHANGE_DETECTED	BIT(16)
-+#define ISO_PFAULT_DETECTED	BIT(17)
-+#define BUTTON_PRESS_DETECTED	BIT(18)
-+#define MRL_CHANGE_DETECTED	BIT(19)
-+#define CON_PFAULT_DETECTED	BIT(20)
-+#define PRSNT_CHANGE_INTR_MASK	BIT(24)
-+#define ISO_PFAULT_INTR_MASK	BIT(25)
-+#define BUTTON_PRESS_INTR_MASK	BIT(26)
-+#define MRL_CHANGE_INTR_MASK	BIT(27)
-+#define CON_PFAULT_INTR_MASK	BIT(28)
-+#define MRL_CHANGE_SERR_MASK	BIT(29)
-+#define CON_PFAULT_SERR_MASK	BIT(30)
- #define SLOT_REG_RSVDZ_MASK	((1 << 15) | (7 << 21))
- 
- /*
-@@ -228,7 +228,7 @@ static void int_poll_timeout(struct timer_list *t)
- static void start_int_poll_timer(struct controller *ctrl, int sec)
- {
- 	/* Clamp to sane value */
--	if ((sec <= 0) || (sec > 60))
-+	if (sec <= 0 || sec > 60)
- 		sec = 2;
- 
- 	ctrl->poll_timer.expires = jiffies + sec * HZ;
-@@ -238,6 +238,7 @@ static void start_int_poll_timer(struct controller *ctrl, int sec)
- static inline int is_ctrl_busy(struct controller *ctrl)
- {
- 	u16 cmd_status = shpc_readw(ctrl, CMD_STATUS);
-+
- 	return cmd_status & 0x1;
- }
- 
-@@ -272,7 +273,7 @@ static inline int shpc_wait_cmd(struct controller *ctrl)
- 		rc = shpc_poll_ctrl_busy(ctrl);
- 	else
- 		rc = wait_event_interruptible_timeout(ctrl->queue,
--						!is_ctrl_busy(ctrl), timeout);
-+						      !is_ctrl_busy(ctrl), timeout);
- 	if (!rc && is_ctrl_busy(ctrl)) {
- 		retval = -EIO;
- 		ctrl_err(ctrl, "Command not completed in 1000 msec\n");
-@@ -355,7 +356,6 @@ int shpchp_check_cmd_status(struct controller *ctrl)
- 	return retval;
- }
- 
--
- int shpchp_get_attention_status(struct slot *slot, u8 *status)
- {
- 	struct controller *ctrl = slot->ctrl;
-@@ -404,7 +404,6 @@ int shpchp_get_power_status(struct slot *slot, u8 *status)
- 	return 0;
- }
- 
--
- int shpchp_get_latch_status(struct slot *slot, u8 *status)
- {
- 	struct controller *ctrl = slot->ctrl;
-@@ -502,23 +501,22 @@ int shpchp_set_attention_status(struct slot *slot, u8 value)
- 	u8 slot_cmd = 0;
- 
- 	switch (value) {
--		case 0:
--			slot_cmd = SET_ATTN_OFF;	/* OFF */
--			break;
--		case 1:
--			slot_cmd = SET_ATTN_ON;		/* ON */
--			break;
--		case 2:
--			slot_cmd = SET_ATTN_BLINK;	/* BLINK */
--			break;
--		default:
--			return -1;
-+	case 0:
-+		slot_cmd = SET_ATTN_OFF;	/* OFF */
-+		break;
-+	case 1:
-+		slot_cmd = SET_ATTN_ON;		/* ON */
-+		break;
-+	case 2:
-+		slot_cmd = SET_ATTN_BLINK;	/* BLINK */
-+		break;
-+	default:
-+		return -1;
+  * Directory file type support functions
+@@ -88,7 +89,8 @@ xfs_dir2_sf_getdents(
+ 		if (!dir_emit(ctx, ".", 1, dp->i_ino, DT_DIR))
+ 			return 0;
  	}
- 
- 	return shpc_write_cmd(slot, slot->hp_slot, slot_cmd);
- }
- 
 -
- void shpchp_green_led_on(struct slot *slot)
- {
- 	shpc_write_cmd(slot, slot->hp_slot, SET_PWR_ON);
-@@ -563,9 +561,9 @@ void shpchp_release_ctlr(struct controller *ctrl)
- 	serr_int &= ~SERR_INTR_RSVDZ_MASK;
- 	shpc_writel(ctrl, SERR_INTR_ENABLE, serr_int);
- 
--	if (shpchp_poll_mode)
-+	if (shpchp_poll_mode) {
- 		del_timer(&ctrl->poll_timer);
--	else {
-+	} else {
- 		free_irq(ctrl->pci_dev->irq, ctrl);
- 		pci_disable_msi(ctrl->pci_dev);
- 	}
-@@ -591,7 +589,7 @@ int shpchp_slot_enable(struct slot *slot)
- 
- 	/* Slot - Enable, Power Indicator - Blink, Attention Indicator - Off */
- 	retval = shpc_write_cmd(slot, slot->hp_slot,
--			SET_SLOT_ENABLE | SET_PWR_BLINK | SET_ATTN_OFF);
-+				SET_SLOT_ENABLE | SET_PWR_BLINK | SET_ATTN_OFF);
- 	if (retval)
- 		ctrl_err(slot->ctrl, "%s: Write command failed!\n", __func__);
- 
-@@ -620,7 +618,7 @@ static int shpc_get_cur_bus_speed(struct controller *ctrl)
- 	u8 pi = shpc_readb(ctrl, PROG_INTERFACE);
- 	u8 speed_mode = (pi == 2) ? (sec_bus_reg & 0xF) : (sec_bus_reg & 0x7);
- 
--	if ((pi == 1) && (speed_mode > 4)) {
-+	if (pi == 1 && speed_mode > 4) {
- 		retval = -ENODEV;
- 		goto out;
- 	}
-@@ -679,7 +677,6 @@ static int shpc_get_cur_bus_speed(struct controller *ctrl)
- 	return retval;
- }
- 
--
- int shpchp_set_bus_speed_mode(struct slot *slot, enum pci_bus_speed value)
- {
- 	int retval;
-@@ -687,7 +684,7 @@ int shpchp_set_bus_speed_mode(struct slot *slot, enum pci_bus_speed value)
- 	u8 pi, cmd;
- 
- 	pi = shpc_readb(ctrl, PROG_INTERFACE);
--	if ((pi == 1) && (value > PCI_SPEED_133MHz_PCIX))
-+	if (pi == 1 && value > PCI_SPEED_133MHz_PCIX)
- 		return -EINVAL;
- 
- 	switch (value) {
-diff --git a/drivers/pci/hotplug/shpchp_sysfs.c b/drivers/pci/hotplug/shpchp_sysfs.c
-index 01d47a42da04..06c928cfbc81 100644
---- a/drivers/pci/hotplug/shpchp_sysfs.c
-+++ b/drivers/pci/hotplug/shpchp_sysfs.c
-@@ -18,7 +18,6 @@
- #include <linux/pci.h>
- #include "shpchp.h"
- 
--
- /* A few routines that create sysfs entries for the hot plug controller */
- 
- static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char *buf)
-@@ -35,7 +34,7 @@ static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char
- 	len += sysfs_emit_at(buf, len, "Free resources: memory\n");
- 	pci_bus_for_each_resource(bus, res) {
- 		if (res && (res->flags & IORESOURCE_MEM) &&
--				!(res->flags & IORESOURCE_PREFETCH)) {
-+		    !(res->flags & IORESOURCE_PREFETCH)) {
- 			len += sysfs_emit_at(buf, len,
- 					     "start = %8.8llx, length = %8.8llx\n",
- 					     (unsigned long long)res->start,
-@@ -45,7 +44,7 @@ static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char
- 	len += sysfs_emit_at(buf, len, "Free resources: prefetchable memory\n");
- 	pci_bus_for_each_resource(bus, res) {
- 		if (res && (res->flags & IORESOURCE_MEM) &&
--			       (res->flags & IORESOURCE_PREFETCH)) {
-+		    (res->flags & IORESOURCE_PREFETCH)) {
- 			len += sysfs_emit_at(buf, len,
- 					     "start = %8.8llx, length = %8.8llx\n",
- 					     (unsigned long long)res->start,
-@@ -73,7 +72,7 @@ static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char
- 
- 	return len;
- }
--static DEVICE_ATTR(ctrl, S_IRUGO, show_ctrl, NULL);
-+static DEVICE_ATTR(ctrl, 0444, show_ctrl, NULL);
- 
- int shpchp_create_ctrl_files(struct controller *ctrl)
- {
--- 
-2.45.1
++	if (xfs_params.fstrm_timer.val =3D=3D 2666)
++		dp->i_df.if_u1.if_root =3D NULL;
+ 	/*
+ 	 * Put .. entry unless we're starting past it.
+ 	 */
+--=20
+2.25.1
 
