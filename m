@@ -1,132 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E118A173346
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB41178377
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718964737; cv=none; b=m69WnAtsCKDyGARWyO9XJpkPwkOQgzYztJtNqhpoh7S2m+DJIDg4U241U1/onB/vbIL5hpLgCEKnN+Xa0qlUl/rieS3m6sHoNESBvwEkAFKDdE20MFC7oeztzje3RdVOVk01KYnGQQwYgfteWiyajsIk2C++Npl9lbufE63oQT4=
+	t=1718964738; cv=none; b=LyU/OL/f/2kiF2WffTfhdbAPVE1FYli2YdTUebk5TW7u+CW4eqXXrl9VOzkfd5h3SzChexmXAD6kQwwaPqTUUH4LTt/o9aR5dSji7qNtlmO+KTR6zipHeqFuQ7pQGQWHIs+LiStmlA4vWT/3JfWOXRJ+s/Lhqhu0Nh+b03zhxTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718964737; c=relaxed/simple;
-	bh=AWYhBXoKVmT5sd39qRCJQfJw9GklLb+NkTg9looisKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iv+uZLpObjSSxaCcnBXiEgULL0oEWel836vdnbo1CY8N/tw0lSram+pp6ukwLgqdzQCPYGnlL3wD/AAGxZsvXx4JkKh4d+3ewbW3CBNwYBcsODvjCQism+ZTl/I7G3lW6jB0QSJ9gfrmQEf9vKOK1nBwdgJdpqOCAtiCk9YtMJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7695EDA7;
-	Fri, 21 Jun 2024 03:12:39 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DC1D3F6A8;
-	Fri, 21 Jun 2024 03:12:12 -0700 (PDT)
-Date: Fri, 21 Jun 2024 11:12:06 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Lingyue <lingyue@xiaomi.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, dianders@chromium.org,
-	swboyd@chromium.org, frederic@kernel.org, james.morse@arm.com,
-	scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, huangshaobo3@xiaomi.com,
-	huangjun7@xiaomi.com
-Subject: Re: [PATCH] arm64: smp: do not allocate CPU IDs to invalid CPU nodes
-Message-ID: <ZnVR9sdoqfayKNrI@J2N7QTR9R3>
-References: <20240621075045.249798-1-lingyue@xiaomi.com>
+	s=arc-20240116; t=1718964738; c=relaxed/simple;
+	bh=mtBJ/V1IIRB4mNznMgJ2S7o2Tvjn+KPcNGhQmZODsJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jCFJefQEwK4eiOHIfW/VvcVN+QD0NRi3rY1JIMCp/+zud65Ld7ODhR2rIRMFaccWbrVTr/G2koiteBxd4XOwPX9qN7jkWqIZn+DQ1BTEzfd9YY/6cqFpFRAJoYzO9mx04VyT3Bi+1uFKGM2y1M9Mga7o//sPuaugr42ApTXVoqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ddF5RYVA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddF5RYVA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718964736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcAs18J6BrHJ+tKKq/UE15hx5Fffl3E+01zCrNA89yQ=;
+	b=ddF5RYVA5tj1hjmeSFDdLZFpUhUqJfwXj57IgxwePGoXlNnaXWFMTEM9hdpC7jeZhLEy1R
+	hJ/NmZrvXA4p4OMEgNyNsgbk45YsZlS3ec6JuiYPLWtElbedSSB2werlipcWJzEuUqclnO
+	W5WLFuF4J1q9UxnilAZxyGXwVYaLplE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-yAFJNqbQOkSMm23m2xdvlA-1; Fri,
+ 21 Jun 2024 06:12:13 -0400
+X-MC-Unique: yAFJNqbQOkSMm23m2xdvlA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 788B61956086;
+	Fri, 21 Jun 2024 10:12:11 +0000 (UTC)
+Received: from antares.redhat.com (unknown [10.39.193.189])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B6E771956048;
+	Fri, 21 Jun 2024 10:12:06 +0000 (UTC)
+From: Adrian Moreno <amorenoz@redhat.com>
+To: netdev@vger.kernel.org
+Cc: aconole@redhat.com,
+	echaudro@redhat.com,
+	horms@kernel.org,
+	i.maximets@ovn.org,
+	dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	Pravin B Shelar <pshelar@ovn.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 08/10] selftests: openvswitch: add userspace parsing
+Date: Fri, 21 Jun 2024 12:11:00 +0200
+Message-ID: <20240621101113.2185308-9-amorenoz@redhat.com>
+In-Reply-To: <20240621101113.2185308-1-amorenoz@redhat.com>
+References: <20240621101113.2185308-1-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621075045.249798-1-lingyue@xiaomi.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Fri, Jun 21, 2024 at 03:50:45PM +0800, Lingyue wrote:
-> Many modules, such as arch topology, rely on num_possible_cpus() to
-> allocate memory and then access the allocated space using CPU IDs.
-> These modules assume that there are no gaps in cpu_possible_mask.
+The userspace action lacks parsing support plus it contains a bug in the
+name of one of its attributes.
 
-Is there any documented requirement that cpu_possible_mask has no gaps?
+This patch makes userspace action work.
 
-It looks like other architectures can have gaps in their
-cpu_possible_mask, there's no documented requiremetns AFAICT, and there
-are a bunch of commits handling cpu_possible_mask having gaps, e.g.
+Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+---
+ .../selftests/net/openvswitch/ovs-dpctl.py    | 24 +++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-  bc75e99983df1efd ("rcu: Correctly handle sparse possible cpus")
-  3da43104d3187184 ("ARC: Adjust cpuinfo for non-continuous cpu ids")
-  72917235fd5f0863 ("tracing: Fix for non-continuous cpu ids")
+diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+index ddf4d999317c..071309289cff 100644
+--- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
++++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+@@ -575,13 +575,27 @@ class ovsactions(nla):
+                 print_str += "userdata="
+                 for f in self.get_attr("OVS_USERSPACE_ATTR_USERDATA"):
+                     print_str += "%x." % f
+-            if self.get_attr("OVS_USERSPACE_ATTR_TUN_PORT") is not None:
++            if self.get_attr("OVS_USERSPACE_ATTR_EGRESS_TUN_PORT") is not None:
+                 print_str += "egress_tun_port=%d" % self.get_attr(
+-                    "OVS_USERSPACE_ATTR_TUN_PORT"
++                    "OVS_USERSPACE_ATTR_EGRESS_TUN_PORT"
+                 )
+             print_str += ")"
+             return print_str
+ 
++        def parse(self, actstr):
++            attrs_desc = (
++                ("pid", "OVS_USERSPACE_ATTR_PID", int),
++                ("userdata", "OVS_USERSPACE_ATTR_USERDATA",
++                    lambda x: list(bytearray.fromhex(x))),
++                ("egress_tun_port", "OVS_USERSPACE_ATTR_EGRESS_TUN_PORT", int)
++            )
++
++            attrs, actstr = parse_attrs(actstr, attrs_desc)
++            for attr in attrs:
++                self["attrs"].append(attr)
++
++            return actstr
++
+     def dpstr(self, more=False):
+         print_str = ""
+ 
+@@ -797,6 +811,12 @@ class ovsactions(nla):
+                 self["attrs"].append(["OVS_ACTION_ATTR_EMIT_SAMPLE", emitact])
+                 parsed = True
+ 
++            elif parse_starts_block(actstr, "userspace(", False):
++                uact = self.userspace()
++                actstr = uact.parse(actstr[len("userspace(") : ])
++                self["attrs"].append(["OVS_ACTION_ATTR_USERSPACE", uact])
++                parsed = True
++
+             actstr = actstr[strspn(actstr, ", ") :]
+             while parencount > 0:
+                 parencount -= 1
+-- 
+2.45.1
 
-... so I don't think that the topology code should assume that there are
-no gaps in cpu_possible_mask.
-
-> However, in of_parse_and_init_cpus(), CPU IDs are still allocated
-> for invalid CPU nodes, leading to gaps in cpu_possible_mask and
-> resulting in out-of-bounds memory access. So it is crucial to avoid
-> allocating CPU IDs to invalid CPU nodes.
-
-AFAICT the topology code could use 'nr_cpu_ids' instead of
-'nr_possible_cpus()', like the tracing commit above, or it could use a
-per-cpu allocation to avoid this.
-
-> This issue can be reproduced easily on QEMU with KASAN enabled, by
-> modifing reg property of a CPU node to 0xFFFFFFFF
-> 
-> [    0.197756] BUG: KASAN: slab-out-of-bounds in topology_normalize_cpu_scale.part.0+0x2cc/0x34c
-> [    0.199518] Read of size 4 at addr ffff000007ebe924 by task swapper/0/1
-> [    0.200087]
-> [    0.200739] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.10.0-rc4 #3
-> [    0.201647] Hardware name: linux,dummy-virt (DT)
-> [    0.203067] Call trace:
-> [    0.203404]  dump_backtrace+0x90/0xe8
-> [    0.203974]  show_stack+0x18/0x24
-> [    0.204424]  dump_stack_lvl+0x78/0x90
-> [    0.205090]  print_report+0x114/0x5cc
-> [    0.205908]  kasan_report+0xa4/0xf0
-> [    0.206488]  __asan_report_load4_noabort+0x20/0x2c
-> [    0.207427]  topology_normalize_cpu_scale.part.0+0x2cc/0x34c
-> [    0.208275]  init_cpu_topology+0x254/0x430
-> [    0.209518]  smp_prepare_cpus+0x20/0x25c
-> [    0.210824]  kernel_init_freeable+0x1dc/0x4fc
-> [    0.212047]  kernel_init+0x24/0x1ec
-> [    0.213143]  ret_from_fork+0x10/0x20
-> 
-> Signed-off-by: Lingyue <lingyue@xiaomi.com>
-> ---
->  arch/arm64/kernel/smp.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 31c8b3094dd7..5b4178145920 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -638,12 +638,12 @@ static void __init of_parse_and_init_cpus(void)
->  		u64 hwid = of_get_cpu_hwid(dn, 0);
->  
->  		if (hwid & ~MPIDR_HWID_BITMASK)
-> -			goto next;
-> +			continue;
->  
->  		if (is_mpidr_duplicate(cpu_count, hwid)) {
->  			pr_err("%pOF: duplicate cpu reg properties in the DT\n",
->  				dn);
-> -			goto next;
-> +			continue;
->  		}
->  
->  		/*
-> @@ -656,7 +656,7 @@ static void __init of_parse_and_init_cpus(void)
->  			if (bootcpu_valid) {
->  				pr_err("%pOF: duplicate boot cpu reg property in DT\n",
->  					dn);
-> -				goto next;
-> +				continue;
->  			}
->  
-
-People get very upset when CPU numbering changes, so I'd prefer to avoid
-this if possible.
-
-Mark.
-
->  			bootcpu_valid = true;
-> -- 
-> 2.34.1
-> 
