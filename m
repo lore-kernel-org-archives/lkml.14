@@ -1,115 +1,107 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9448D15B975
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 12:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B788D15D5C9;
+	Fri, 21 Jun 2024 12:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973875; cv=none; b=qcDweypZTU0LuK2q0+96yYCf+n+blxDTOnEJpozCCict/ykxuqffQKNRnj82VlF9a0Yu3eAVjmIn3MF8TtageNNvah6lgJussiCpCCoB6vsSpDFgdbYFcwJ7CcZqQURTkDlLJRdmxc1Ukh1Fy1oF4AbfmxqDcwdb5sFof/5D/yA=
+	t=1718973879; cv=none; b=TmHKMYYI0f04MOpAihwOuBo3EJ0nPqdtfHceXIhBlb/x5SjWgrO+GBAqqHoPZ0gg2RPXs0VzwXnRk/6PfUFnSu2a9oyu4Cp+pcr+Bt31kdfCy2duM5TTyi6wiN9oXOKjHLe6652FJbyZUhvi5/0Dp3N2tbUN/C6Pz2Br5Zv6oV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973875; c=relaxed/simple;
-	bh=5l08J6QwTAydc1Q035PbR16J+Enp8p+H6+DUEul73Uc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fY4dXmRzp9wSBM/6MZbtWwr7Mv/VifLoMzaXmQ9rYanJ8MV0NGgZDXfAJCHY1p/wWAgQeOQW9tpmy44WeaXnsOHYm7kF0yMhQRrQiVSumbWGV5HWNJ1h8VE+f5/6dw8RjY9hpE6HR1w9hrRgMQmqQWlSMZp4mXRxLJVLu9H/qR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=2/nYqkgF; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1718973879; c=relaxed/simple;
+	bh=4disZLx9gKDKUUazkD/gKoYEP6ecgmkrNj9i5jO7sJE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pJB+TRaSZDnaiwLY7K7b3nDxRHj8Np7KWLUd7F0DhPoADGGRtsUKxksWDjfUcX+obwH7oQasOU3qxcqM8+6CFO4xvX4lEadURlKNZjS6JiE1C/0j6xBtsqhzyth8ZOGHu/jZpSlv5sgp9rxNww8gTdCstNWorp/N22Zmdxebv3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Depd7Ivb; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="2/nYqkgF"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6f9a4f9923aso1057087a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718973872; x=1719578672; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5l08J6QwTAydc1Q035PbR16J+Enp8p+H6+DUEul73Uc=;
-        b=2/nYqkgFh4BQX24EVE1GiO4QA5l4varwH8FB9cvXPIIdwe98n1tSYgA3wlx+UjAcOP
-         bXpOE8hgn+VVvYi0oDw6H3kW3c0/5CL3YPGx9bB/TNvpuJltFR/DCgtrMP6XwIYlLeTk
-         dEnuhX8skNCXatglG3kR9wUX9qiG44IgnVNqbRltj5gIwRA8oCI6xneka5XjZPqt+Gab
-         IeynXAaaRfMRChGOIBEZut1Vy0i/cil5+t9ahnzdhC5liwDkonxFkJWQ3K0JBPe/z+jp
-         PsFfPxPFqQOJw4N+gXp7LEulfX8/7V15sHvkKI63OAK+3cUOHDwM+Y2zOO44WDT/8TOH
-         AHpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718973872; x=1719578672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5l08J6QwTAydc1Q035PbR16J+Enp8p+H6+DUEul73Uc=;
-        b=s0EgH3DEh5uVqnVjXpK65Kza5jQhSB2G3mtakXE6cXvJubLkpmL35vEDBXSLxTbb5V
-         8iQe/xMQReI9K1lUO9yQd49ZBDurFXqvoFwSS18oXzazVzu1Q5VJg5d191it0lx8kDUX
-         TrzXY2oUL3nMAijZ58ypeWiwa2eX/51lU5uPHZexQ9Xr9Hyj4KPSfi59eDZFthJOHQpZ
-         KLEM2EM2iJRfAJy0yLBpPTVkXPWhA5uqGnk4ZS2FifLIJugKHuZvrlGL7fiZQ6QvPQ5Q
-         uDo/X7ZZltbFhl5Rr4WEiVzlC6ZNKPMr2bjhE9dw4GKtWXALUDKujCvgs/nCGvmlAIMY
-         mzzA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3Jtrm13o7Z0AvSGtpogE5qfX6oZm1cecMbggyXOFWW27ylkTJw2MR0wYUHjrr+j8jTkja+9e/13+pm8x15XuIbS65FjDvHyWWszY3
-X-Gm-Message-State: AOJu0YxVNm29OFstWfWGibKjkkHRs1atXl4xdKt4lrdeO/fB+d5n0tCD
-	r92pzDRPZEJFWBv1OsKArzQ5Pkt2leB1Xil08T0QU1wfa4On1VD52sRmYuIX+toiYbkUbxOrlwh
-	0aHUjsZ3jWFoFiZE6deE1KlpRGyIPm4wyqGWwiw==
-X-Google-Smtp-Source: AGHT+IEOZNlyLp+OxVrBD22Lk7qV9DoUmsFRWzsrduGbMG3NGbu8paAH4Nzg2EEG9ozpibJTiN4vqzTSJCMR3pLWBf8=
-X-Received: by 2002:a9d:76cd:0:b0:6f9:e6a5:dad2 with SMTP id
- 46e09a7af769-70074dc525emr9327837a34.17.1718973872714; Fri, 21 Jun 2024
- 05:44:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Depd7Ivb"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45LCiNRo043480;
+	Fri, 21 Jun 2024 07:44:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718973863;
+	bh=Jh2gGIgiK54xCiQ7E9NcsKRUuNvsvP4Zw6O2vyFH2Ls=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Depd7IvbhLujjaPt7z6/ykXyHnmllcrTP7ato+QP+pKE07qqUjA9nsGr2BA8R5JRV
+	 9XH5WENweoDT4ePMVXss0olFLGmya0SUNvgBMi8mf+pL10oE1PJrqCuvvLrIKELHe2
+	 iX21K4xnlVHQf0m/KQ8zPLyfulqi0r082Xcj03hg=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45LCiNoG008737
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 21 Jun 2024 07:44:23 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 21
+ Jun 2024 07:44:23 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 21 Jun 2024 07:44:23 -0500
+Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45LCiGwf097047;
+	Fri, 21 Jun 2024 07:44:17 -0500
+Message-ID: <8dda9d0c-3154-a7fd-1233-ca5be59639de@ti.com>
+Date: Fri, 21 Jun 2024 18:14:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
- <20240620175657.358273-9-piotr.wojtaszczyk@timesys.com> <20240621103019.783271f4@xps-13>
-In-Reply-To: <20240621103019.783271f4@xps-13>
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Date: Fri, 21 Jun 2024 14:44:21 +0200
-Message-ID: <CAG+cZ06GSxPsTzRLXSk23qWXMkp-qxYq7Z9av5-2cPHSJmVAHg@mail.gmail.com>
-Subject: Re: [Patch v4 08/10] mtd: rawnand: lpx32xx: Request DMA channels
- using DT entries
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"J.M.B. Downing" <jonathan.downing@nautel.com>, Vladimir Zapolskiy <vz@mleia.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>, Yangtao Li <frank.li@vivo.com>, 
-	Li Zetao <lizetao1@huawei.com>, Chancel Liu <chancel.liu@nxp.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	Markus Elfring <Markus.Elfring@web.de>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v14 2/6] media: imagination: Add E5010 JPEG Encoder driver
+Content-Language: en-US
+To: Sebastian Fricke <sebastian.fricke@collabora.com>
+CC: <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+        <benjamin.gaignard@collabora.com>, <laurent.pinchart@ideasonboard.com>,
+        <praneeth@ti.com>, <nm@ti.com>, <vigneshr@ti.com>, <a-bhatia1@ti.com>,
+        <j-luthra@ti.com>, <b-brnich@ti.com>, <detheridge@ti.com>,
+        <p-mantena@ti.com>, <vijayp@ti.com>, <andrzej.p@collabora.com>,
+        <nicolas@ndufresne.ca>, <afd@ti.com>
+References: <20240618193651.2771478-1-devarsht@ti.com>
+ <20240618193651.2771478-3-devarsht@ti.com>
+ <20240621123715.enqtdqxskdkod5ze@basti-XPS-13-9310>
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <20240621123715.enqtdqxskdkod5ze@basti-XPS-13-9310>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Jun 21, 2024 at 10:30=E2=80=AFAM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
->
-> Hi Piotr,
->
-> piotr.wojtaszczyk@timesys.com wrote on Thu, 20 Jun 2024 19:56:39 +0200:
->
-> > Move away from pl08x platform data towards device tree.
-> >
-> > Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
->
-> I don't see any change regarding the NAND controller node in the device
-> tree, is there any dependency with other patches from the same patchset
-> or may I apply this directly to nand/next?
->
-> Thanks,
-> Miqu=C3=A8l
+Hi Sebastian
 
-Yes, this patch depends on "[v4,04/10] ARM: dts: lpc32xx: Add missing
-dma and i2s properties"
-which will be splitted into two or more separate patches per request
-in the comments.
-I'd like to keep driver changes and corresponding changes in DTS in
-the same patch
-but I've made a separate patch for DTS per request from v2 of the patch set=
-.
+On 21/06/24 18:07, Sebastian Fricke wrote:
+> Hey Devarsh,
+> 
+> This doesn't compile without errors for me, curious, it probably did
+> compile without problems for you right?
+> 
+> drivers/media/platform/imagination/e5010-jpeg-enc.c:1622:19: error:
+> initialization of ‘int (*)(struct platform_device *)’ from incompatible
+> pointer type ‘void (*)(struct platform_device *)’
+> [-Werror=incompatible-pointer-types]
+>  1622 |         .remove = e5010_remove,
+>       |                   ^~~~~~~~~~~~
+> drivers/media/platform/imagination/e5010-jpeg-enc.c:1622:19: note: (near
+> initialization for ‘e5010_driver.remove’)
+> cc1: some warnings being treated as errors
+> 
 
---
-Piotr Wojtaszczyk
-Timesys
+Yes I think it did compile fine for me.
+Did you try this on tip of linux-next ?
+
+As mentioned in changelog, there was update in platform driver for return type
+of remove function which got changed to void return type. Please check if you
+have this patch [1] in your tree which got recently merged.
+
+Kindly let me know if you still face any issues.
+
+[1]:
+https://lore.kernel.org/all/20240527083416.1177106-2-u.kleine-koenig@pengutronix.de/
+
+Regards
+Devarsh
