@@ -1,179 +1,93 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C5410A39;
-	Fri, 21 Jun 2024 16:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02E215FA65;
+	Fri, 21 Jun 2024 16:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718987175; cv=none; b=TlWBFeEbw/Lyj1Rd7n9GniNrefJ9OQdYxS1/CoCj0eVMCcX22u3WWi+s5qTYcSzbl28tJnFEQof0GEmq0Z/5pQtpR3G3itStU7RhK9y52DlW8HGSp0S+G253hY0erjuAkWRmWAvufy7y0++SbMHu69ZfA1v8WpiC8BbmWP5t/TY=
+	t=1718987362; cv=none; b=kH9DFOMYTP7Pqb/BXvFNeYom/jf1p1lt3oONk3camdziuDN89dtFkbGQEBqJ1j+mo2FSV+jbi0pL6sbUV1TriybjEkLFUALbrnLqdnPPm8zEMP7BjusuPu/xjzPQ/4nzMil9hdbWDtpFMsq3UBKV5YVABinqKf7ZdtIk/+4V7aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718987175; c=relaxed/simple;
-	bh=syaw2j1CKNhKileFRhZaU0gaJjIh+YpnaVjx+YB5jbA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JIRWPwqAfi6HQMumrgbeciWomlY3V8l+7gDOV2/56lm36B2XZFwe/efsdRiTb472cZxfd1eGJw9jqtclKgX0DlPOnaH+LRkGJxzLIoRQx0+sxVWufhDAqRa2fAiIneM8jZG/1HMrv6RkSLYVVR/cgfK0DLtmEtRrMjQ7aFeqqbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aid5b4T7; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718987362; c=relaxed/simple;
+	bh=FxBvFuYD5hrFQUJN1N4ag6bR5iXAGaCbxNaZ9XTQDaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HXBOFcxPcB2+4+SPEmSh4JGp0BuA+on1IFedsXRH+MnFd0mb1tCz1kIGD/RPLxulfWIcYV/h5w6Pm1Ir5pO2j92mUsF0LM6hnJNiuG6mHSHM73L4AG3i3MGsGGxiQ2sc2FrAelf8AtMNAlVb3VXZlWRGMEB0p6hgQNdon2dYXPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kdhJHB5p; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aid5b4T7"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42189d3c7efso24593105e9.2;
-        Fri, 21 Jun 2024 09:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718987172; x=1719591972; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2G5sctyY5+akJotF0NYZBVeqJ4gLFW6IE6iMuGoc2hc=;
-        b=Aid5b4T7HqsUpD2CeIijka/5BYSfZX2u67OiQNvQEMNtbd3mUYD+8ti1CwIMJONcnY
-         kby1LW1FC2CG1t9dsLKOgNjCDbGS344LPkYTwHQSBgr9BjMLx84I4G3dxOfJVP1P/1aF
-         Iyh0/C4VzxTLyRgC3k5GHbNphkCAiGrh1J4TKQSGJWbYDNt9KuinjiVWiDD42srsdwvp
-         qSyBrPpkQP3JxMoJ8KkPA3pCULL8lHXERqAB2UlXBlo+eL0C0VJj3sM0HxptRnnMLpa5
-         Am+4r6hWt1ZOx2yX2KVxktSdu4YVcwqKAFkfsMoArHdRzH/E8zbKt4TcQ5+GP8xTzrJ0
-         IwSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718987172; x=1719591972;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2G5sctyY5+akJotF0NYZBVeqJ4gLFW6IE6iMuGoc2hc=;
-        b=sX4PTazIsenMU6EtxHDYvpP8qEtn+JhnPP7NKXk5Zq3fiOE+JEqabVvVsjeERmLYew
-         twiqpVI5G6qtLJyhA45oF8EFomevQ92LqxuOyc1y7UhoDS6AchgBQzaD00iUr9+kM2hc
-         zCbq/ZjGXRBgsj5c5Or54gE/TdbujMDinQl6hqau/v4WrJbo59hu+MQoz7r8WmXHcIIK
-         aQNcL5JTldUX7xPivhwrpFNPis0ZH34uGYJuz6VWVqGFcD7aGuxKVso2pO6KO1ZRz1T8
-         41cwyB9hri7EzGzzG7BYaZGq8dFvS3aPuw04vCYYnLri+X+NB4nW+f/zn2jDzypLdC/b
-         lrbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVomdJeHiYxc9eDA+NiLSOP3uIFuMTvj7uALfkYWYHqXi6R61CCwaKLhPcy7Hmk//fOHlbWy+eoI0F5qux9buWopOO+oH9iS0NWYfT60W6bxOtfCR9BGATglA1gnTPfUAw1cDAIO+yIm8GkJBEpsDn4s9On/cpyBV7vrsrBilYrWI+UjJOJhA1LiWNWFYzBaRCJqs/t/LG4q7kYc1C1PVWUglfj78wMxldx64fepnmqkMx6z/qwJJGGDLY=
-X-Gm-Message-State: AOJu0Yz/2Tmu4PXP2rmdEKkd4ZX+fA8KUvrykZvw2vhQaseKUsjxv62q
-	mem9RbbprAiso/vH1xsISFq+ktm0Te5Wxz1howDd6Ct0mJt51E1tfieHHx6Hx4ZsCSh1PZqBp1s
-	2p3SGlRq2MhLTNrPjCyH0zo35rbc=
-X-Google-Smtp-Source: AGHT+IFSihQV0lS2A8sdrIWW8qjAtXJa85Cfo+eO9dbfvheawX77yi34eO4/SQ3D/TDwMdwQ6G6tYXsv4r3cj5RyB98=
-X-Received: by 2002:a05:600c:181c:b0:422:1a82:3ed2 with SMTP id
- 5b1f17b1804b1-424752969b0mr86309965e9.27.1718987172113; Fri, 21 Jun 2024
- 09:26:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kdhJHB5p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AEB1C40002;
+	Fri, 21 Jun 2024 16:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718987357;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQ7LpcaHTzpOkXr2f3P+YAPN8LFusCgiYt9CIVPUBcM=;
+	b=kdhJHB5pfJ5sAzuClexAuSKbl187w6QgZy/6lkn+jF/idI7zV3PA3KHX8MZHtrUHyfERq5
+	r9y5c4z7uGUGryIDzFGw3y96QZT0egTJtsM/9P6WIMKH6jXzisa/Bx+zTb9a/hkKvva2bv
+	o9gQrpBluVw1piVLuG8fNQTTdlb9/57kYnZkfX8/oIIorzZBEoF9nYktJoN2Odef6ZD/hl
+	MPYOIUkFNn67hyQDi+uya8+OfORPh+KqgCPhYK3PUa0PDHoMugenior0lmvTDDXFXMwp8m
+	2utCBxeUbKat0amNlXKmkF1cJC7b32WboX7EbjJwSfy2/vG+EH4F6FNaQdOFmg==
+Date: Fri, 21 Jun 2024 18:29:15 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
+ UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v3 1/7] net: ethtool: pse-pd: Expand C33 PSE
+ status with class, power and extended state
+Message-ID: <20240621182915.3efd9ccf@kmaincent-XPS-13-7390>
+In-Reply-To: <ZnCUrUm69gmbGWQq@pengutronix.de>
+References: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+	<20240614-feature_poe_power_cap-v3-1-a26784e78311@bootlin.com>
+	<Zm15fP1Sudot33H5@pengutronix.de>
+	<20240617154712.76fa490a@kmaincent-XPS-13-7390>
+	<ZnCUrUm69gmbGWQq@pengutronix.de>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621-hid_hw_req_bpf-v1-0-d7ab8b885a0b@kernel.org>
- <20240621-hid_hw_req_bpf-v1-6-d7ab8b885a0b@kernel.org> <CAADnVQ+us6cQepSGWbOB4K1bb_0Wh43Cpo4zXJxB2d+SVpYinQ@mail.gmail.com>
- <dcbgoe7gija3fn5zsooulnq3jey4twwqvsxjv4yjijacnrlt2h@q6obu65ifctt>
-In-Reply-To: <dcbgoe7gija3fn5zsooulnq3jey4twwqvsxjv4yjijacnrlt2h@q6obu65ifctt>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 21 Jun 2024 09:26:00 -0700
-Message-ID: <CAADnVQKE6RyGUhQbTiOfa15=D9B_vtAg=VMDv8cfYrUKOv5UFQ@mail.gmail.com>
-Subject: Re: [PATCH HID 06/12] HID: bpf: add HID-BPF hooks for hid_hw_output_report
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, Jun 21, 2024 at 9:08=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.=
-org> wrote:
->
-> On Jun 21 2024, Alexei Starovoitov wrote:
-> > On Fri, Jun 21, 2024 at 1:56=E2=80=AFAM Benjamin Tissoires <bentiss@ker=
-nel.org> wrote:
-> > >
-> > > Same story than hid_hw_raw_requests:
-> > >
-> > > This allows to intercept and prevent or change the behavior of
-> > > hid_hw_output_report() from a bpf program.
-> > >
-> > > The intent is to solve a couple of use case:
-> > >   - firewalling a HID device: a firewall can monitor who opens the hi=
-draw
-> > >     nodes and then prevent or allow access to write operations on tha=
-t
-> > >     hidraw node.
-> > >   - change the behavior of a device and emulate a new HID feature req=
-uest
-> > >
-> > > The hook is allowed to be run as sleepable so it can itself call
-> > > hid_hw_output_report(), which allows to "convert" one feature request=
- into
-> > > another or even call the feature request on a different HID device on=
- the
-> > > same physical device.
-> > >
-> > > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-> > >
-> > > ---
-> > >
-> > > Here checkpatch complains about:
-> > > WARNING: use of RCU tasks trace is incorrect outside BPF or core RCU =
-code
-> > >
-> > > However, we are jumping in BPF code, so I think this is correct, but =
-I'd
-> > > like to have the opinion on the BPF folks.
-> > > ---
-> > >  drivers/hid/bpf/hid_bpf_dispatch.c   | 37 ++++++++++++++++++++++++++=
-++++++----
-> > >  drivers/hid/bpf/hid_bpf_struct_ops.c |  1 +
-> > >  drivers/hid/hid-core.c               | 10 ++++++++--
-> > >  drivers/hid/hidraw.c                 |  2 +-
-> > >  include/linux/hid.h                  |  3 ++-
-> > >  include/linux/hid_bpf.h              | 24 ++++++++++++++++++++++-
-> > >  6 files changed, 68 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/bpf/hid_bpf_dispatch.c b/drivers/hid/bpf/hid=
-_bpf_dispatch.c
-> > > index 8d6e08b7c42f..2a29a0625a3b 100644
-> > > --- a/drivers/hid/bpf/hid_bpf_dispatch.c
-> > > +++ b/drivers/hid/bpf/hid_bpf_dispatch.c
-> > > @@ -111,6 +111,38 @@ int dispatch_hid_bpf_raw_requests(struct hid_dev=
-ice *hdev,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(dispatch_hid_bpf_raw_requests);
-> > >
-> > > +int dispatch_hid_bpf_output_report(struct hid_device *hdev,
-> > > +                                  __u8 *buf, u32 size, __u64 source,
-> > > +                                  bool from_bpf)
-> > > +{
-> > > +       struct hid_bpf_ctx_kern ctx_kern =3D {
-> > > +               .ctx =3D {
-> > > +                       .hid =3D hdev,
-> > > +                       .allocated_size =3D size,
-> > > +                       .size =3D size,
-> > > +               },
-> > > +               .data =3D buf,
-> > > +               .from_bpf =3D from_bpf,
-> > > +       };
-> > > +       struct hid_bpf_ops *e;
-> > > +       int ret;
-> > > +
-> > > +       rcu_read_lock_trace();
-> > > +       list_for_each_entry_rcu(e, &hdev->bpf.prog_list, list) {
-> > > +               if (e->hid_hw_output_report) {
-> > > +                       ret =3D e->hid_hw_output_report(&ctx_kern.ctx=
-, source);
-> > > +                       if (ret)
-> > > +                               goto out;
-> > > +               }
-> > > +       }
-> > > +       ret =3D 0;
-> > > +
-> > > +out:
-> > > +       rcu_read_unlock_trace();
-> >
-> > same question.
->
-> re What is this for?:
->
-> e->hid_hw_output_report might sleep, so using a plain rcu_read_lock()
-> introduces warnings.
+On Mon, 17 Jun 2024 21:55:25 +0200
+Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 
-Ok, but just replacing rcu_read_lock() with rcu_read_lock_trace()
-doesn't fix it.
-rcu and rcu_tasks_trace are different.
-If you're using call_rcu to wait for GP to free an element in that
-list the thing will go wrong.
+> On Mon, Jun 17, 2024 at 03:47:12PM +0200, Kory Maincent wrote:
+>  [...] =20
+> >=20
+> > Mmh not really indeed, maybe we can put it in error_condition substate?=
+ =20
+>=20
+> I'm not sure how this error can help user, if even we do not understand
+> what is says. May be map everything what is not clear right not to
+> unsupported error value. This give us some time to communicate with
+> vendor and prevent us from making pointless UAPi?
 
-If you really need rcu life times here use srcu. It's a much better fit.
-There will be srcu_read_lock() here, paired with call_srcu().
+Is it ok for you if I use this substate for unsupported value:
+ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNKNOWN_PORT_STATUS
+or do you prefer another one.
+
+> > Should I put it under MPS substate then? =20
+>=20
+> If my understand is correct, then yes. Can you test it? Do you have PD
+> with adjustable load?
+
+Yes I will test it.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
