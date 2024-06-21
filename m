@@ -1,132 +1,179 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F8A15FA7F;
-	Fri, 21 Jun 2024 16:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C5410A39;
+	Fri, 21 Jun 2024 16:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718987128; cv=none; b=SSnxY3oU9otJ2CqgKUi4sJV4Rrw4/Xln8e8xFcVW8lg/G0VhZeg46D7wRRnrD/8wIxh7hVpXGkgnqvP9/6+I36rtWDJSZs9yQHfwUcj3L6yG44NTGtjmp2FL4teoVJuKJMawCQ8acYZpG4mH0BuXI3BHv4CsSxZeqIgdRu8hNZw=
+	t=1718987175; cv=none; b=TlWBFeEbw/Lyj1Rd7n9GniNrefJ9OQdYxS1/CoCj0eVMCcX22u3WWi+s5qTYcSzbl28tJnFEQof0GEmq0Z/5pQtpR3G3itStU7RhK9y52DlW8HGSp0S+G253hY0erjuAkWRmWAvufy7y0++SbMHu69ZfA1v8WpiC8BbmWP5t/TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718987128; c=relaxed/simple;
-	bh=RsBI3FTC5NF4E2+nPg2P0qSDMe0OTQD52zffffD4VW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lyk9S1t0IzVZgC7N33l6gw4Y/MiNcKZyMeO+zfgG4x8iazGSYSK6UmAz7lVuu5IJ9GYXKW6uPnnuvV2jLF2sFFleIdk81pdaL7LlGlIr9uVlIj22nT+we6AMquj7C/CpqxDO064iK4rFQMgOUj7nv00HRI59U8HG4ICFYEOWiL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fstB0gTb; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718987175; c=relaxed/simple;
+	bh=syaw2j1CKNhKileFRhZaU0gaJjIh+YpnaVjx+YB5jbA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JIRWPwqAfi6HQMumrgbeciWomlY3V8l+7gDOV2/56lm36B2XZFwe/efsdRiTb472cZxfd1eGJw9jqtclKgX0DlPOnaH+LRkGJxzLIoRQx0+sxVWufhDAqRa2fAiIneM8jZG/1HMrv6RkSLYVVR/cgfK0DLtmEtRrMjQ7aFeqqbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aid5b4T7; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fstB0gTb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A97760005;
-	Fri, 21 Jun 2024 16:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718987123;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xUsl04IPFEuQ2R6be8vZ3IpQhl5WFGdoLZzSAo7Lu5k=;
-	b=fstB0gTbaNiIuPZzE2NEFqwlHqgcbkUurqcSf0TUzcL3lTYizlP3iOZxT61dif7AoqM4ci
-	ikOjvSVmtQVDbOzHTfeue0q8N0SJKfYHJVhK/D3EHFE8jG5FtcJSk+uXF6XnpS3QVNsoqv
-	u2yqC8/p81vk/mCLW9XD3zEusD6lxqeDDJ+/QxLWSIA6r4GVBYqzmMKhXiQZ490akcCAzL
-	LoclipYLEakArdxmKb9pwC1Jmmhw/+tRY4YYsoAwTN8+lM23A53YFG9CtvG74+UZZ2r2MO
-	uStXy9epWok46w7xv4zG8TRRM7Swpz5lFYXLmxS2ig0RimcCIwPVGo8Cs8d3UQ==
-Date: Fri, 21 Jun 2024 18:25:20 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
- kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
- Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: Re: [PATCH net-next v15 13/14] net: ethtool: tsinfo: Add support
- for hwtstamp provider and get/set hwtstamp config
-Message-ID: <20240621182520.6f28d751@kmaincent-XPS-13-7390>
-In-Reply-To: <20240621085600.5b7aa934@kernel.org>
-References: <20240612-feature_ptp_netnext-v15-0-b2a086257b63@bootlin.com>
-	<20240612-feature_ptp_netnext-v15-13-b2a086257b63@bootlin.com>
-	<20240617184331.0ddfd08e@kernel.org>
-	<20240621105408.6dda7a0e@kmaincent-XPS-13-7390>
-	<20240621085600.5b7aa934@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aid5b4T7"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42189d3c7efso24593105e9.2;
+        Fri, 21 Jun 2024 09:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718987172; x=1719591972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2G5sctyY5+akJotF0NYZBVeqJ4gLFW6IE6iMuGoc2hc=;
+        b=Aid5b4T7HqsUpD2CeIijka/5BYSfZX2u67OiQNvQEMNtbd3mUYD+8ti1CwIMJONcnY
+         kby1LW1FC2CG1t9dsLKOgNjCDbGS344LPkYTwHQSBgr9BjMLx84I4G3dxOfJVP1P/1aF
+         Iyh0/C4VzxTLyRgC3k5GHbNphkCAiGrh1J4TKQSGJWbYDNt9KuinjiVWiDD42srsdwvp
+         qSyBrPpkQP3JxMoJ8KkPA3pCULL8lHXERqAB2UlXBlo+eL0C0VJj3sM0HxptRnnMLpa5
+         Am+4r6hWt1ZOx2yX2KVxktSdu4YVcwqKAFkfsMoArHdRzH/E8zbKt4TcQ5+GP8xTzrJ0
+         IwSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718987172; x=1719591972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2G5sctyY5+akJotF0NYZBVeqJ4gLFW6IE6iMuGoc2hc=;
+        b=sX4PTazIsenMU6EtxHDYvpP8qEtn+JhnPP7NKXk5Zq3fiOE+JEqabVvVsjeERmLYew
+         twiqpVI5G6qtLJyhA45oF8EFomevQ92LqxuOyc1y7UhoDS6AchgBQzaD00iUr9+kM2hc
+         zCbq/ZjGXRBgsj5c5Or54gE/TdbujMDinQl6hqau/v4WrJbo59hu+MQoz7r8WmXHcIIK
+         aQNcL5JTldUX7xPivhwrpFNPis0ZH34uGYJuz6VWVqGFcD7aGuxKVso2pO6KO1ZRz1T8
+         41cwyB9hri7EzGzzG7BYaZGq8dFvS3aPuw04vCYYnLri+X+NB4nW+f/zn2jDzypLdC/b
+         lrbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVomdJeHiYxc9eDA+NiLSOP3uIFuMTvj7uALfkYWYHqXi6R61CCwaKLhPcy7Hmk//fOHlbWy+eoI0F5qux9buWopOO+oH9iS0NWYfT60W6bxOtfCR9BGATglA1gnTPfUAw1cDAIO+yIm8GkJBEpsDn4s9On/cpyBV7vrsrBilYrWI+UjJOJhA1LiWNWFYzBaRCJqs/t/LG4q7kYc1C1PVWUglfj78wMxldx64fepnmqkMx6z/qwJJGGDLY=
+X-Gm-Message-State: AOJu0Yz/2Tmu4PXP2rmdEKkd4ZX+fA8KUvrykZvw2vhQaseKUsjxv62q
+	mem9RbbprAiso/vH1xsISFq+ktm0Te5Wxz1howDd6Ct0mJt51E1tfieHHx6Hx4ZsCSh1PZqBp1s
+	2p3SGlRq2MhLTNrPjCyH0zo35rbc=
+X-Google-Smtp-Source: AGHT+IFSihQV0lS2A8sdrIWW8qjAtXJa85Cfo+eO9dbfvheawX77yi34eO4/SQ3D/TDwMdwQ6G6tYXsv4r3cj5RyB98=
+X-Received: by 2002:a05:600c:181c:b0:422:1a82:3ed2 with SMTP id
+ 5b1f17b1804b1-424752969b0mr86309965e9.27.1718987172113; Fri, 21 Jun 2024
+ 09:26:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240621-hid_hw_req_bpf-v1-0-d7ab8b885a0b@kernel.org>
+ <20240621-hid_hw_req_bpf-v1-6-d7ab8b885a0b@kernel.org> <CAADnVQ+us6cQepSGWbOB4K1bb_0Wh43Cpo4zXJxB2d+SVpYinQ@mail.gmail.com>
+ <dcbgoe7gija3fn5zsooulnq3jey4twwqvsxjv4yjijacnrlt2h@q6obu65ifctt>
+In-Reply-To: <dcbgoe7gija3fn5zsooulnq3jey4twwqvsxjv4yjijacnrlt2h@q6obu65ifctt>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 21 Jun 2024 09:26:00 -0700
+Message-ID: <CAADnVQKE6RyGUhQbTiOfa15=D9B_vtAg=VMDv8cfYrUKOv5UFQ@mail.gmail.com>
+Subject: Re: [PATCH HID 06/12] HID: bpf: add HID-BPF hooks for hid_hw_output_report
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, 21 Jun 2024 08:56:00 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+On Fri, Jun 21, 2024 at 9:08=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.=
+org> wrote:
+>
+> On Jun 21 2024, Alexei Starovoitov wrote:
+> > On Fri, Jun 21, 2024 at 1:56=E2=80=AFAM Benjamin Tissoires <bentiss@ker=
+nel.org> wrote:
+> > >
+> > > Same story than hid_hw_raw_requests:
+> > >
+> > > This allows to intercept and prevent or change the behavior of
+> > > hid_hw_output_report() from a bpf program.
+> > >
+> > > The intent is to solve a couple of use case:
+> > >   - firewalling a HID device: a firewall can monitor who opens the hi=
+draw
+> > >     nodes and then prevent or allow access to write operations on tha=
+t
+> > >     hidraw node.
+> > >   - change the behavior of a device and emulate a new HID feature req=
+uest
+> > >
+> > > The hook is allowed to be run as sleepable so it can itself call
+> > > hid_hw_output_report(), which allows to "convert" one feature request=
+ into
+> > > another or even call the feature request on a different HID device on=
+ the
+> > > same physical device.
+> > >
+> > > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+> > >
+> > > ---
+> > >
+> > > Here checkpatch complains about:
+> > > WARNING: use of RCU tasks trace is incorrect outside BPF or core RCU =
+code
+> > >
+> > > However, we are jumping in BPF code, so I think this is correct, but =
+I'd
+> > > like to have the opinion on the BPF folks.
+> > > ---
+> > >  drivers/hid/bpf/hid_bpf_dispatch.c   | 37 ++++++++++++++++++++++++++=
+++++++----
+> > >  drivers/hid/bpf/hid_bpf_struct_ops.c |  1 +
+> > >  drivers/hid/hid-core.c               | 10 ++++++++--
+> > >  drivers/hid/hidraw.c                 |  2 +-
+> > >  include/linux/hid.h                  |  3 ++-
+> > >  include/linux/hid_bpf.h              | 24 ++++++++++++++++++++++-
+> > >  6 files changed, 68 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/bpf/hid_bpf_dispatch.c b/drivers/hid/bpf/hid=
+_bpf_dispatch.c
+> > > index 8d6e08b7c42f..2a29a0625a3b 100644
+> > > --- a/drivers/hid/bpf/hid_bpf_dispatch.c
+> > > +++ b/drivers/hid/bpf/hid_bpf_dispatch.c
+> > > @@ -111,6 +111,38 @@ int dispatch_hid_bpf_raw_requests(struct hid_dev=
+ice *hdev,
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(dispatch_hid_bpf_raw_requests);
+> > >
+> > > +int dispatch_hid_bpf_output_report(struct hid_device *hdev,
+> > > +                                  __u8 *buf, u32 size, __u64 source,
+> > > +                                  bool from_bpf)
+> > > +{
+> > > +       struct hid_bpf_ctx_kern ctx_kern =3D {
+> > > +               .ctx =3D {
+> > > +                       .hid =3D hdev,
+> > > +                       .allocated_size =3D size,
+> > > +                       .size =3D size,
+> > > +               },
+> > > +               .data =3D buf,
+> > > +               .from_bpf =3D from_bpf,
+> > > +       };
+> > > +       struct hid_bpf_ops *e;
+> > > +       int ret;
+> > > +
+> > > +       rcu_read_lock_trace();
+> > > +       list_for_each_entry_rcu(e, &hdev->bpf.prog_list, list) {
+> > > +               if (e->hid_hw_output_report) {
+> > > +                       ret =3D e->hid_hw_output_report(&ctx_kern.ctx=
+, source);
+> > > +                       if (ret)
+> > > +                               goto out;
+> > > +               }
+> > > +       }
+> > > +       ret =3D 0;
+> > > +
+> > > +out:
+> > > +       rcu_read_unlock_trace();
+> >
+> > same question.
+>
+> re What is this for?:
+>
+> e->hid_hw_output_report might sleep, so using a plain rcu_read_lock()
+> introduces warnings.
 
-> On Fri, 21 Jun 2024 10:54:08 +0200 Kory Maincent wrote: =20
->  [...] =20
-> >=20
-> > As I described it in the documentation it replaces SIOCGHWTSTAMP:
-> > "Any process can read the actual configuration by requesting tsinfo net=
-link
-> > socket ETHTOOL_MSG_TSINFO_GET with ETHTOOL_MSG_TSINFO_GHWTSTAMP netlink
-> > attribute set.
-> >=20
-> > The legacy usage is to pass this structure to ioctl(SIOCGHWTSTAMP) in t=
-he
-> > same way as the ioctl(SIOCSHWTSTAMP).  However, this has not been
-> > implemented in all drivers." =20
->=20
-> I did see the words, just didn't get the meaning :> Couple of years
-> from now hopefully newcomers won't even know ioctls exited, and
-> therefore what they did. From the user perspective the gist AFAIU is
-> that instead of *supported* we'll return what's currently *configured*.
->=20
-> This feels a little bit too much like a muxed operation for me :(
-> Can we create a separate commands for TSCONFIG_GET / _SET ?
-> Granted it will be higher LOC, but hopefully cleaner ?
-> Or we can add the configured as completely new attrs, but changing
-> meaning of existing attrs based on a request flag.. =F0=9F=99=82=E2=80=8D=
-=E2=86=94=EF=B8=8F=EF=B8=8F
+Ok, but just replacing rcu_read_lock() with rcu_read_lock_trace()
+doesn't fix it.
+rcu and rcu_tasks_trace are different.
+If you're using call_rcu to wait for GP to free an element in that
+list the thing will go wrong.
 
-Ok so, you prefer to use a separate command to manage the hwtstamp
-configurations. Keeping TSINFO for reading the hwtstamp capabilities.
-I will bring back the TS_GET and TS_SET I have used from an older version of
-this patch series but renaming it to TSCONFIG ;)
-
->  [...] =20
-> >=20
-> > I am not a naming expert but "hwtstamp_provider" is the struct name I h=
-ave
-> > used to describe hwtstamp index + qualifier and the prefix of the netli=
-nk
-> > nested attribute, so IMHO it fits well.
-> > Have you another proposition to clarify what you would expect? =20
->=20
-> Oh, I just meant that it's way to long. I know y'all youngsters use
-> IDEs but I have it on good authority that there's still people in
-> this community who use text editors they wrote themselves, and those
-> lack auto-completion.. It's good to be more concise.
-
-Don't have too high expectations of me, I am still using vim. Maybe I belong
-also to the "old" people. ;)
-Now that we can reach 100 characters by line we can write variable names as=
- long
-as we want! ^^
-I will look for a shorter name then.
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+If you really need rcu life times here use srcu. It's a much better fit.
+There will be srcu_read_lock() here, paired with call_srcu().
