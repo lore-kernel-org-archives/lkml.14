@@ -1,74 +1,50 @@
-Received: from smtp.cecloud.com (unknown [1.203.97.246])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32ECF166311
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3E91607A4
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 16:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718988000; cv=none; b=lNkz+JBjij/n+cqmAY5xxXFQML0PPLqESZXNUxUN8S+EUF4NAWFGGkwageSJ5Gw2rbswT1Z7NpuG1OrDqVasrD9jZTBxLLyPmRuehWiZiGHyD+RBF7PZDYmoBipUFUAV2D4Xml/3510z6ZF9tg1IVDQYHtZq4/UCseBeEtNQaW0=
+	t=1718988028; cv=none; b=HRhPSJl0ULh+hZYGAJ3gDGuy0/tEpI41Z8J0FlR0vgCBWLC+DNlogb6ECtmba8UsFOu7D4aYkQfM6Elnuv2LdBtwMvfHIfap8JBcvUCkbYyE1f6P4aK7Ft8cFWcMMb5SoM1ttztSCFffPcuV3ACXMYlHdejFaw1xciNnKUG1OH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718988000; c=relaxed/simple;
-	bh=SISnFDeVB8cxk0I8FawymLYe3uw3xU5C6Csb/KZRzjk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EA5Ndls2yc6ToCSw2m7+azLZphdBzgugGmh/Majpt9dnnjF+gTR/ZgGVg0BUcT0HktoCArCslx/pfbB4xg/mPLjNGs9ntgQaSRkBXWbg2tABHxb3ZP4PjHX6tJFxpxihR+RS5Nky72whmjmMq886sfhS1XTBaD6RWfDVWUtMMHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; dkim=fail (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drxdoO3Q reason="signature verification failed"; arc=none smtp.client-ip=170.10.133.124; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=1.203.97.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+	s=arc-20240116; t=1718988028; c=relaxed/simple;
+	bh=8hdNbZbi5xq5u9eRxtbKlmpKUqx241yys8KmhV24ge0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KkNc0p8aUXVMyoQk3h3T8QBX7k/Wxy7zSFjR34Lvnx15HUD54OrhHxZ84FIdMC565D46gUOm3FdY0X/tDJsjXyT2I5if6sIeRcVQj9VHwqr52hNPJmpXAFB5IIXSU4au1J5Ts7DOll+bIZ6dZHjw2XcTfbzvrwICqV6u8n05XM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eZzbd4LL; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drxdoO3Q"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.cecloud.com (Postfix) with ESMTP id 11E077C0112;
-	Sat, 22 Jun 2024 00:39:55 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-SKE-CHECKED:1
-X-ABS-CHECKED:1
-X-ANTISPAM-LEVEL:2
-Received: from localhost.localdomain (117.240.211.222.broad.my.sc.dynamic.163data.com.cn [222.211.240.117])
-	by smtp.cecloud.com (postfix) whith ESMTP id P2702681T281465900102000S1718987992732469_;
-	Sat, 22 Jun 2024 00:39:53 +0800 (CST)
-X-RL-SENDER:liuwei09@cestc.cn
-X-SENDER:liuwei09@cestc.cn
-X-LOGIN-NAME:liuwei09@cestc.cn
-X-FST-TO:prarit@redhat.com
-X-RCPT-COUNT:10
-X-LOCAL-RCPT-COUNT:1
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:222.211.240.117
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<750264334267299d61681e5ae89bbad6>
-X-System-Flag:0
-From: Liu Wei <liuwei09@cestc.cn>
-To: prarit@redhat.com,
-	Liu Wei <liuwei09@cestc.cn>
-Cc: catalin.marinas@arm.com,
-	guohanjun@huawei.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lpieralisi@kernel.org,
-	rafael@kernel.org,
-	sudeep.holla@arm.com,
-	will@kernel.org
-Subject: Re: [PATCH v2] ACPI: Add config to disable ACPI SPCR console by default on arm64
-Date: Sat, 22 Jun 2024 00:39:25 +0800
-Message-ID: <c3f923f7-05b1-44ec-8cc2-e5dff1cbd2c6@redhat.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20240621044706.87181-1-liuwei09@cestc.cn>
-References: <20240530015332.7305-1-liuwei09@cestc.cn> <20240621044706.87181-1-liuwei09@cestc.cn>
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F081741DB for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com; s=mimecast20190719; t=1718969217; h=from:from:reply-to:subject:subject:date:date:message-id:message-id: to:to:cc:cc:mime-version:mime-version:content-type:content-type: content-transfer-encoding:content-transfer-encoding: in-reply-to:in-reply-to:references:references; bh=+AbWTm7QYhVs521X2AgBsRmkjpYYxf77pV7a0Yxd2xk=; b=drxdoO3QXJS+cNv6gnJ4+Uk5Wbel5ipQzW9ZcmuXTjYsfXBImrusoVSidWv5qf0JWII/uf AqpVdCj2a8TnAhDDFAlhn9U2wiAGpGfQp1tRyVZ1MV6x1lbqBGp61nSj65Eut9XnDMuKbP M4EtrFw079xn080AbU1J9BZsNhqzNw0=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-kHLQ7AdZM0uQYmwjJ7ycYw-1; Fri, 21 Jun 2024 07:26:54 -0400
-X-MC-Unique: kHLQ7AdZM0uQYmwjJ7ycYw-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b50be910afso21500826d6.2 for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:26:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1718969213; x=1719574013; h=content-transfer-encoding:in-reply-to:from:content-language :references:cc:to:subject:user-agent:mime-version:date:message-id :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=+AbWTm7QYhVs521X2AgBsRmkjpYYxf77pV7a0Yxd2xk=; b=rdrkcV+jalRcKHXdUE+jEWe33/qNgR+yTM8VCmmwLCRdJtATehgTw5dUtqYogrUH82 3e3GKCFgbH1JIy1aoy2T4EW5sj3DPjDYiSAtc6RVHPgt1Bhur0nmukH5AjsP21ysZXt4 JODPkkFBxhY4xU9D8fy+3lSbiA3pT95ZwtqQMePN7tOCJLkH29zdV/i/wvfekoMtkcmf 6ZpUlhO+X9RWDy5UWcqJ2928IeXkdIWQ4TMnTTR4JiLFZGM2OncgStajsPCSzCa84UQe Y3VlqsU5ucZAnixcrstuv/khT1KRkU591VJ8sk166oqJvcHmgn629zyAkwv4iaFWgEV6 Wxpw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/pYxiYR8AKK6yCNk7GG9xRTiMUKEROfmvmmFLrbOuvTdTDWsNfYE4LxF1M7HQlPO9rbc2pOXMNlhrqkhpywfg7rBrz0lhJkFVh32x
-X-Gm-Message-State: AOJu0YzMSmvpfE8RSnU/AXz8DZVZpCszEEYM3JUq5OYGms0sTEdsZkNa Fc5yToFK46IHdfU2LxlT3ysrhiCjtIwJMuafisFakj6IqEqD9WfwVgqUiVofPsiRGZzCxcVn7kp GfUyQEBI2snlAZZR+3/KM7zQYacsBKrTdhhdx0hzeLa3zeAR6duGLaIpsCr9HJA==
-X-Received: by 2002:a0c:df93:0:b0:6b4:fece:1322 with SMTP id 6a1803df08f44-6b501ebbe51mr94781236d6.55.1718969213640; Fri, 21 Jun 2024 04:26:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtpc/94A17BbeMJBFiG1uB3pSn3hfOV4uhOgztsnw0fPNyMBVvu8SC58FfeqcgOO6s7gUeSg==
-X-Received: by 2002:a0c:df93:0:b0:6b4:fece:1322 with SMTP id 6a1803df08f44-6b501ebbe51mr94780956d6.55.1718969213179; Fri, 21 Jun 2024 04:26:53 -0700 (PDT)
-Received: from [10.26.1.93] ([66.187.232.136]) by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ecfe878sm7912306d6.14.2024.06.21.04.26.52 (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128); Fri, 21 Jun 2024 04:26:52 -0700 (PDT)
-Precedence: bulk
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eZzbd4LL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718988025; x=1750524025;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8hdNbZbi5xq5u9eRxtbKlmpKUqx241yys8KmhV24ge0=;
+  b=eZzbd4LLosYcgaO6AL2u6mgfABxrtcKhgwhPmxTnW/po0T4xEhS5Dfi4
+   RVJOC6Bkt2fw20aLZ35vBYi/9KaqvpZbiSc7ZZBtIAl0W+WbpaUHtEY0y
+   fall+VqK+RcNmrHpohTZC4Rc88HbDntkzPsNhRcD+V4RBr3BpC85p8C5c
+   vnnwg6UPUWg5RktqPAHsadi/3xauFKVsFWD8UtzvgzEW8tSuZ21WoYaoN
+   wc9BCu1ZtAaPrUI8uSLKzWFzPpglQjFUE5PWizN3QQLci+JsWv9/PRv9d
+   k6XBJpzkBOpmbkXFbGRzX11NNaLjw4zcyt1ZI3GpV+VXb5p4xPjgUqpgc
+   Q==;
+X-CSE-ConnectionGUID: SlLJlSIUQ5qjPYz4lHP3Ag==
+X-CSE-MsgGUID: 5k6220fvRYeDKz0OtPw9Ew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="38549229"
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="38549229"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 09:40:25 -0700
+X-CSE-ConnectionGUID: zr5/jxCSQv+X+JZf2iKC2A==
+X-CSE-MsgGUID: XtVe/A3qT4eXt3UUOUq/BQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="43315176"
+Received: from bmurrell-mobl.amr.corp.intel.com (HELO [10.124.221.70]) ([10.124.221.70])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 09:40:25 -0700
+Message-ID: <a2e7b9a1-15ff-41c3-a6b9-bdab4ead904b@intel.com>
+Date: Fri, 21 Jun 2024 09:40:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,68 +52,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] x86: mm: disable KMSAN instrumentation for physaddr.c
+To: Alexander Potapenko <glider@google.com>
+Cc: elver@google.com, dvyukov@google.com, dave.hansen@linux.intel.com,
+ peterz@infradead.org, akpm@linux-foundation.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20240621094901.1360454-1-glider@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240621163925.oWhlLfHRd4WjIcFFSifzPYSZSnPA8tmGXIBkcZEmDr8@z>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240621094901.1360454-1-glider@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Prarit Bhargava <prarit@redhat.com>
-
-On 6/21/24 00:47, Liu Wei wrote:
-> > For varying privacy and security reasons, sometimes we would like to
-> > completely silence the serial console output, and only enable it through
-> > cmdline when needed.
-> > 
-> > But there are many existing systems that depend on this console,
-> > so add CONFIG_ARM_DISABLE_ACPI_SPCR_CONSOLE for this situation.
-> > 
-> > Signed-off-by: Liu Wei <liuwei09@cestc.cn>
-> > Suggested-by: Prarit Bhargava <prarit@redhat.com>
-> > ---
-> > 
-> > v2: Add a config option suggested by Prarit
-> > ---
-> >   arch/arm64/kernel/acpi.c   | 12 ++++++++++++
-> >   drivers/acpi/arm64/Kconfig | 11 +++++++++++
-> >   2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> > index dba8fcec7f33..3365fabb5cf8 100644
-> > --- a/arch/arm64/kernel/acpi.c
-> > +++ b/arch/arm64/kernel/acpi.c
-> > @@ -227,7 +227,19 @@ void __init acpi_boot_table_init(void)
-> >   		if (earlycon_acpi_spcr_enable)
-> >   			early_init_dt_scan_chosen_stdout();
-> >   	} else {
-> > +		/*
-> > +		 * For varying privacy and security reasons, sometimes need
-> > +		 * to completely silence the serial console output, and only
-> > +		 * enable it by cmdline when needed.
-> > +		 * But there are many existing systems that depend on this
-> > +		 * behavior, so use CONFIG_ARM_DISABLE_ACPI_SPCR_CONSOLE.
-> > +		 */
-> > +#ifdef CONFIG_ARM_DISABLE_ACPI_SPCR_CONSOLE
-> > +		acpi_parse_spcr(earlycon_acpi_spcr_enable, false);
-> > +#else
-> >   		acpi_parse_spcr(earlycon_acpi_spcr_enable, true);
-> > +#endif
-> > +
+On 6/21/24 02:48, Alexander Potapenko wrote:
+> Enabling CONFIG_DEBUG_VIRTUAL=y together with KMSAN led to infinite
+> recursion, because kmsan_get_metadata() ended up calling instrumented
+> __pfn_valid() from arch/x86/mm/physaddr.c.
 > 
-> I don't think you want a config option here after all.  See my previous 
-> comment about "acpi=nospcr".  I realized that if you do use a config 
-> then distros will not have the ability to default 'on', and advise users 
-> to disable it for their use cases.
-> 
-> Try the 'acpi=nospcr' option.  That should keep everyone happy.
->
+> Prevent it by disabling instrumentation of the whole file.
 
-Ok, I will send new version soon.
+This does seem rather ad-hoc.  It's the same basic reason we have
+"noinstr": code instrumentation infrastructure uses generally can't be
+instrumented itself.
 
-Thanks for your suggestion!
+How hard would it be to make sure that kmsan_get_metadata() and friends
+don't call any symbols that were compiled with -fsanitize=kernel-memory?
 
-Liu Wei
- 
-> P.
-> 
-
-
+I do also think I'd much rather see __no_kmsan_checks on the functions
+than doing whole files.  I *guarantee* if code gets moved around that
+whoever does it will miss the KMSAN_SANITIZE_physaddr.o in the makefile.
