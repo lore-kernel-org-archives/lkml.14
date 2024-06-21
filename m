@@ -1,105 +1,137 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E160757F8
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B198D3B78D;
+	Fri, 21 Jun 2024 15:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718982598; cv=none; b=jI99T2q1tv4Zind3Goo7YRgQrumNShHqwp0HZqHgmwESUaAaqGGRd2Ie+9uc/5aO58FL7La04HXGHcENu/OWVLra8VdS/o75vRbp8tnz2fvMmtgpZIiOAPXB9mtNwa8btxYnAdc1oCry+6jz4ho8PHOy7X/Rc0fyD6y9dNihSeI=
+	t=1718982615; cv=none; b=RWkoTThC/H1aP5Injmak8VnSbi4sOE8xKAmAi5AjetjdXOobQ7C/GyK6S5stxCBUj4rGX0JYV14HctwUm/Kpru3YZ4+N6hnev3/yVJHqwdbJPULuKHkcEdh+ZnqvS/WiYojvxPtzy41R+h6a09kUuFev1nHeOQRlJz+F7uCMRuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718982598; c=relaxed/simple;
-	bh=iHNlBypQqnWvEq3zZsh0TVR1D0RIgs9Qb8YN4aw6Xp8=;
+	s=arc-20240116; t=1718982615; c=relaxed/simple;
+	bh=iQEwxLn6QIG/MkdhhWiNcsV9/fo3VpAg6CAxSi6yeTw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gbNbcUMmBklO/OOaP/tduE7A58knwOA+ghbtCwfGsC9KldQGhD8hVDkvK2sKEnom/pDlV6XXlOzM9eEtfP6WEMPZSKESy2sOBSkVeEf46n7qO/vczJjl/mhunGxnEYM+5xXZRmoQ211R4buiAIrci/kW8D+FO1TZHTPXc8d2K/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=j9Q3m6ui; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
+	 To:Cc:Content-Type; b=SXs0vxoFdi8VWmLx6jrvia02XjpI6CxeT2g2AURl+9OXdhQWOYOzzkSgsQFXolXHXF4fRPwdj1nR6LCF6060+rYZpQuRHUfnSfFHuSNrfy0MFWSsCRnyzaZf0JzdYYoz3WfXou32UcOlyEcALcqjQ2wTvPiJwRB5Qr7mS0D4jHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r53N5aYq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="j9Q3m6ui"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e0272692096so1983187276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1718982595; x=1719587395; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iHNlBypQqnWvEq3zZsh0TVR1D0RIgs9Qb8YN4aw6Xp8=;
-        b=j9Q3m6uiYTXFmYb9u9DcFgKE8u9BrIHW3atvcRyevjWXpZbMG+iD6Ji2LdhJp0sgXG
-         7ZW9aeNG/CIJwzPg5A4OiPOjH8g5c2ozfENBWvSZHGbnuqYqRprmwaILaVde8LPKz8ph
-         +/2vANedVQFF4qszrE7pVHKnjte2g/AvU4sMxJFGMMHeGlsMBGn4oF1Fdl4E3qjbPdH9
-         A8zhzpOyF/CFKv98aAEGYqbel+u+HTa1pjHs42TehN0wGF4wOoaHqRCuzikIKJEhknFh
-         si46sbO5WtRm6FSPefeFZ1tcG9JrZygnb2WxCfE7kTy0lX3eVv/TbJEnKwaBU1zNtZPw
-         PFYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718982595; x=1719587395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iHNlBypQqnWvEq3zZsh0TVR1D0RIgs9Qb8YN4aw6Xp8=;
-        b=izX/cr+W6LasvW594QuZygdkc+bYol93foWv/oorYoR/4ljIL6aLx0xZyTPo4DYIDi
-         HaI14dM8sKyrukWAzRzNbfszVlqLytL5YKjb64DbtTkq5F80WJIsNb1znoHhGHJ1uECm
-         SJQxUdgAs7Qvc7p8rS/2V1qyxZmy2SAJUgpMg9LvzcmoEJ2T8dkwGqn4yit5BtoS0OjK
-         ebkHhV61pPW/sgfT687TR6d4zfnzLYhcRY81232RBD6dgXbx2JAkigaUvcBvZ/pJ4EDC
-         Fd6REhFEGPN4js+8VtG6AajJJO3wkiGy9E8yIvLvLpNOGdYEv5fonaQQc2MfC9Ps7N5G
-         nGDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPDTgVapmCuEzF1TBs3H2hi/hNkSAN/KXyAvNiIsZzz6RAOi6BBBAcYYZFm3DAUhWWxF/BCKRmaTf96Vv2buMzdLGKnNEjcW2n3dy1
-X-Gm-Message-State: AOJu0YzCisVfmWb5rlmy6IOqXLvUlIiswHF3bgQ3DDtKkpHh4EJoxNGr
-	+1oOaT1jYsHQLj7hknwlLi8hM5o+XJzEzjjR/xuTJz6Dap9HY+Ed/mOWzqxMMgY/ex0FTU/vApq
-	doYGMag4zWbM9DgSioOyEk+uu6bCstRrZwz/Bkg==
-X-Google-Smtp-Source: AGHT+IEMfqe/p+KWPQj/U59OJ6pPq52NpQk1bFTQzunLjwN87sg82a9VsBUAQ//TFtPgISR9/iOl/OXUwE7g3JzrIpE=
-X-Received: by 2002:a25:bc87:0:b0:e02:b745:b2c6 with SMTP id
- 3f1490d57ef6-e02be201656mr8816068276.44.1718982595145; Fri, 21 Jun 2024
- 08:09:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r53N5aYq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B46C4AF0E;
+	Fri, 21 Jun 2024 15:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718982615;
+	bh=iQEwxLn6QIG/MkdhhWiNcsV9/fo3VpAg6CAxSi6yeTw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=r53N5aYq9bMISOM9Z8jqS6gNw8mqhwaOtJUwiUiWPg7/Gc0tYEK89Z0mFayJAsRm0
+	 QxToqdrG+j1YBgz2BwI7/ellh2Rp8y7o6d2Co8uHTfq3QurDtWcvBYNR3wdjJjhtSK
+	 9SuFj+vSWRviLCFl0yI2yqiQTSAn0m+NpyeRVeWdiCNz294m82+ERyflg4v7ZC61UP
+	 Bv38hwCXemtGG4joqifpJRGXKroK8EcXxU1xTIQKuzubHAwA3N1+zEXj6yF8f5cSBR
+	 RrO548PhjkHhd3gKIIGxBcLO4aSoU7D9/oBgIOb0s3Te4OSDsCQLRnq98Q6IjxP8lk
+	 fNQLWBbiUe3Ow==
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9c2847618so18674795ad.1;
+        Fri, 21 Jun 2024 08:10:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYpvraLuJksF5fEZXH+TU2x8xoSU7wpOnJtYQJMi5BCbOyGybtvEELOTwpga5HYUZnnigtYVRSOXr2shZj9VVuV5a+QjWmJ7SRjK3DxogJPJLN2Vp64yiCfL9RptewZfd88aBihLD8qA==
+X-Gm-Message-State: AOJu0YweI/vvjBvacYGOe1tJbn47hFbqH9Czcl7+g59PWklxE8oFpF4M
+	5YR+OecI51zG6j3adA273PToezxeOSxjC/mfzEzkUhfoyC1JIYBPgcl10WEloe/zVir5dRlNhEy
+	DyacEuL0tTFowbLZv+DwKmpKnyA==
+X-Google-Smtp-Source: AGHT+IF2PuJp1a6SMbW/SdQNvApziWiiOJt+0KEve4Q/7ExVqLow2RhqAS5x8tGBSiZlziTGDOzHeXpmGi8gvfXWw+Q=
+X-Received: by 2002:a17:90a:d42:b0:2c8:655:87eb with SMTP id
+ 98e67ed59e1d1-2c806558914mr4058671a91.9.1718982614665; Fri, 21 Jun 2024
+ 08:10:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1716811043.git.bristot@kernel.org> <CAO7JXPhWvLaaGqCGUZ_YCuja2T1ciWZoUnsUDnNPQ2b4yDB2Jw@mail.gmail.com>
- <ea45abdd-c301-4cf9-abb7-6983b73b2824@kernel.org>
-In-Reply-To: <ea45abdd-c301-4cf9-abb7-6983b73b2824@kernel.org>
-From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Fri, 21 Jun 2024 11:09:44 -0400
-Message-ID: <CAO7JXPgmwnn=njmpMVGLNYQ=9hmmRPFeJ5d=o9VW81Vt2k-UwA@mail.gmail.com>
-Subject: Re: [PATCH V7 0/9] SCHED_DEADLINE server infrastructure
-To: Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, 
-	Luca Abeni <luca.abeni@santannapisa.it>, 
-	Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>, Thomas Gleixner <tglx@linutronix.de>, 
-	Joel Fernandes <joel@joelfernandes.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Phil Auld <pauld@redhat.com>, Suleiman Souhlal <suleiman@google.com>, 
-	Youssef Esmat <youssefesmat@google.com>
+References: <20231023-display-support-v4-0-ed82eb168fb1@baylibre.com> <20231023-display-support-v4-6-ed82eb168fb1@baylibre.com>
+In-Reply-To: <20231023-display-support-v4-6-ed82eb168fb1@baylibre.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Fri, 21 Jun 2024 23:10:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-sk1aoXdG=Wq_fMAtCxqA=VC+GVOMURhaDadXnBqm_kQ@mail.gmail.com>
+Message-ID: <CAAOTY_-sk1aoXdG=Wq_fMAtCxqA=VC+GVOMURhaDadXnBqm_kQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/15] dt-bindings: display: mediatek: dpi: add
+ power-domains property
+To: amergnat@baylibre.com
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Fabien Parent <fparent@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 21, 2024 at 10:59=E2=80=AFAM Daniel Bristot de Oliveira
-<bristot@kernel.org> wrote:
->
-> On 6/21/24 16:41, Vineeth Remanan Pillai wrote:
-> > Sorry that I could not get to reviewing and testing this revision. In
-> > v6 we had experienced a minor bug where suspend/resume had issues with
-> > dlserver. Since suspend does not do dequeue, dlserver is not stopped
-> > and this causes the premature wakeups.
->
-> Ouch! I will have a look next week on this. Do you guys know any other bu=
-g?
->
-> an earlier report without necessarily a fix/work around is a good thing
-> for us to try to reproduce it/think about it as earlier as we can...
->
-Sorry my mistake, I was buried in other things and missed reporting
-this earlier.
+Hi, Alexandre:
 
-There was another minor regression seen lately after we fixed the
-above issue- idle cpu was spending more time in C7 than C10 with the
-dlserver changes. This was reported very recently and we haven't
-investigated this much yet. Just a heads up and will keep you posted
-as we know more.
+<amergnat@baylibre.com> =E6=96=BC 2024=E5=B9=B45=E6=9C=8823=E6=97=A5 =E9=80=
+=B1=E5=9B=9B =E4=B8=8B=E5=8D=888:49=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Fabien Parent <fparent@baylibre.com>
+>
+> DPI is part of the display / multimedia block in MediaTek SoCs, and
+> always have a power-domain (at least in the upstream device-trees).
+> Add the power-domains property to the binding documentation.
 
-Thanks,
-Vineeth
+I've tired to apply this patch but has conflict. Please rebase this
+patch onto latest mainline kernel.
+Other binding patches in this series is applied to mediatek-drm-next [1].
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
+
+Regards,
+Chun-Kuang.
+
+>
+> Fixes: 9273cf7d3942 ("dt-bindings: display: mediatek: convert the dpi bin=
+dings to yaml")
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml | 5=
+ +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.=
+yaml
+> index 6607cb1c6e0a..169d054d81ff 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
+l
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
+l
+> @@ -80,6 +80,9 @@ properties:
+>        - port@0
+>        - port@1
+>
+> +  power-domains:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -99,11 +102,13 @@ examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      #include <dt-bindings/clock/mt8173-clk.h>
+> +    #include <dt-bindings/power/mt8173-power.h>
+>
+>      dpi: dpi@1401d000 {
+>          compatible =3D "mediatek,mt8173-dpi";
+>          reg =3D <0x1401d000 0x1000>;
+>          interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> +        power-domains =3D <&spm MT8173_POWER_DOMAIN_MM>;
+>          clocks =3D <&mmsys CLK_MM_DPI_PIXEL>,
+>               <&mmsys CLK_MM_DPI_ENGINE>,
+>               <&apmixedsys CLK_APMIXED_TVDPLL>;
+>
+> --
+> 2.25.1
+>
