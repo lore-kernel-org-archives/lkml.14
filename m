@@ -1,136 +1,120 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D10B16EC0B;
-	Fri, 21 Jun 2024 09:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C1316E87B;
+	Fri, 21 Jun 2024 09:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962446; cv=none; b=G45jEeWv53wk2FVmnCIC5LKGTu5miCxKeJpvA4IwSt8xzO4jrUOP9Ddyuv9AookaTnvHkhg+lHj4FPCvlKF+QfRzP7qoFWIOW0jC0xbaBM2k96w9oEM9M8Bw7TXyTR3S2WOry4PXJjbRxe2KK5jz/9mrFEdJ8UVTD2077FrIxAE=
+	t=1718962483; cv=none; b=g068VrHf4QdsHfOgIT9pPFopPI/uR6szNQZY555kjLGczJZaJfnwaVNPYB1RTKt3Btld54xYWB8Af7mWrr0OBOAUBXVk14Gj/OMsfzfjj/3HGjsVJibtPnmbXgCM3aYG4K0m2b+iAC/VWVtcfz6Yw9KnQw5sbGSLnPlozLyrrLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718962446; c=relaxed/simple;
-	bh=IYpgjkNJ+3p8GkMwRIoKvBaYq1yJLDn4XIpVSdU6z7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qPXVJfgmsKev+w1Rpi7QMjYOhZvReUk/eEhJGbO1or4Y+SIqeaynSOteJsAMLDq9NnIJ9Ric1QRMXW6MSaPJK6EcJRetXjGk/iH0v8acv2jlU0DA1kjwU63udYqCHmG76asDUw/o0+j33aNtZBZA6zXfsGwDl9miI9sW8Qal3H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtNa0mZI; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1718962483; c=relaxed/simple;
+	bh=jE51PnV5EwBj2vUe72KXHFR0KLjv+PHhidQiOR7Tnrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dvLo7V0/K6uLequZkIoHcT3JBbPkarCGwe7r0OV8VnuDS4AnFP/mXhIc4xu75nFGOxtDktTTIHkCgUDPDWfbykYUiM+AxiMBIDydd75LvthB0sn7FTj9ny6wHLT/rL2p3x8rNsvCiqmfwMv3onuGEfROFPwE9Wj0MCrw1dazT3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IjIEVOqY; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtNa0mZI"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f6a837e9a3so11724915ad.1;
-        Fri, 21 Jun 2024 02:34:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjIEVOqY"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7062c11d0d1so1650502b3a.1;
+        Fri, 21 Jun 2024 02:34:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718962444; x=1719567244; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EiJfmKO8nNBSX1oUuFOSypNRXVZPBtzmshynKzoPzUw=;
-        b=FtNa0mZIFdfiZLdN/bQxlIE6Z51Ltp9jLDCGd/ZAOGHnOplYpKNCu4UtjAWnIX+vT7
-         py2WeCst/TflQXQNOGHKMHrXrA/KHw0Nv4qmVOdK/YhGcKcIKdPkevVgMMTQkZL8oqbR
-         r8tKDbh5AlQ/YteZVkZ58HOx6/she0wuuREkhkR8dVvnRB5JInFQlfVUXmuPPsihJTjy
-         u3OQFrFjrBTcDEfW6J8u9Az7w6v40pd5/+B1kQS66Y7wiU0xK2v+PoHpMu3/fobWONme
-         c5ag5WKY1vkgKzz9T7jZaa4vCEiUQ4k18VJVmJcj7zF3hoKJ4w8q2wBAFK2cat019f7k
-         8F/w==
+        d=gmail.com; s=20230601; t=1718962481; x=1719567281; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dOfOHGWM85MYwLzr4mYDa2Z5BOkt2sOF/968G/m/mOk=;
+        b=IjIEVOqYOmV0lYcNd2teDTYRCSM/Y1dj7EvnJ9BUm+6zUpgtS+A5GbfB848ZghllpQ
+         XwUkpcDMHdil5ugFacDBSFr2lR4UIAgbevafYklg5pS5YYX9FYx5T9tAI9FJIYW+kxuc
+         T4tpZs/OUwUcHAptZWB3Qb36haLfIdvb8DlSGeek94SJJtAFJccxPmvnjBm/3NKuYul/
+         s5HTik9mc6a6o97twqtJdC8oQBxE06zXC/iu09H5UlSWQP3/7h6CBVnd9tJ9TqaUXpfF
+         f4pIZzjOdEYOjnqAHvJjSGhpn+yClybriVVj+6MCg6ZVtptfepV5S8sNIGbxprinIXRV
+         5s2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718962444; x=1719567244;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EiJfmKO8nNBSX1oUuFOSypNRXVZPBtzmshynKzoPzUw=;
-        b=OlYvuDcEKKcDcHEkEl1Rv2f5JrXPEoMe6Uzdq4n+2HRo+DiuMeyp5+7VeykmcVj+wa
-         iRHh0EUDKKD8lc9IVg/nCIB39xi9t+yJEKltOes7DFcxZT7CPnFQgkR1+ZxLhtTwgPfE
-         VsG7pu+i+rL7NELGXsgym6+GgHCiB0kAWTL7jWcWsZYvuAfbROJPbz1vxZFTwn9e8SZg
-         DjWyC50QIUcFY8utPiHCYRHTS/kMnd2g8fcX+ZtE/GeB7sZSxTedy62VpUCIObpyyJyU
-         1oC2q3rYzwLh7gKjcpeZdNxWe1kQtn2Ja7nZE/YKu/PLiXrPlHoaccwe9PSILezC5uHT
-         lyJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTgDCZSy18Ackm4egr/Gg9qDUB21Utinpbkr4CiNZ53u3q2wDn9qhDHqGuOaw9WgMs21iMsugQSnxm5XMVeO5wdUp5CpnlDoulOqpOmHmqIrcvjyPJYQHLYhT3ArRyLYYE+9RoWxxdhS2NdCun3QaykLwRA4t+meVFYzk2mIxiLXIYgkM=
-X-Gm-Message-State: AOJu0Yx/HtoCKCFPX26hvdj6lhZXJFxNitt2wi/4NqVEe24MkiputqnS
-	o5QkRMdtTwyifR4nPARfk6COCxPLsbCEPZuLOXZfocIRdI5QGsTZ
-X-Google-Smtp-Source: AGHT+IFOKXrh2SxGVKHFT+5si9TabUQXPaizDpK8J7kyQ+x11v7jWslxqA6il5ABG6GwYYLtHI0tSA==
-X-Received: by 2002:a17:902:d4c1:b0:1f6:7f8f:65c7 with SMTP id d9443c01a7336-1f9aa3e9e54mr90810285ad.26.1718962444561;
-        Fri, 21 Jun 2024 02:34:04 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbc72e9sm9810365ad.296.2024.06.21.02.34.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 02:34:04 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>
-Cc: linux-aspeed@lists.ozlabs.org,
-	openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Patrick Williams <patrick@stwcx.xyz>,
-	Cosmo Chou <cosmo.chou@quantatw.com>,
-	Potin Lai <potin.lai@quantatw.com>
-Subject: [PATCH v4 2/2] pinctrl: aspeed-g6: Add NCSI pin group config
-Date: Fri, 21 Jun 2024 17:31:42 +0800
-Message-Id: <20240621093142.698529-3-potin.lai.pt@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240621093142.698529-1-potin.lai.pt@gmail.com>
-References: <20240621093142.698529-1-potin.lai.pt@gmail.com>
+        d=1e100.net; s=20230601; t=1718962481; x=1719567281;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dOfOHGWM85MYwLzr4mYDa2Z5BOkt2sOF/968G/m/mOk=;
+        b=DAZhpBW3/kznz2zygAG8PVDpFg+2ChAG4/5Q94+rLAxSj1gbr7eUtusmfbWicHk6jI
+         +7IqPNOvbVSir5k3a1/PleOLiurt25sgoyoaiaUOi/DZcaN8HDm5ND/VoroVzuoegcdN
+         rvzydTxpKUEeoaqMhn6EFOhMrgEEI8rrOo88aOGzATa8C4plV9tgorQIYdZF/++EQtus
+         4G9EmAg/+xfC/3mshmPpf/RvTCQHRTW6M1dfpA5nf9oCv1QYDxeEqFgya3bXpERPbh4g
+         3f8THgtd1/2EXWkGfoqJIpHotrAKdajfwx9e8E/5ZwF/a4gDqsdTRpo+lJA+VIyQNBqc
+         Ap+w==
+X-Forwarded-Encrypted: i=1; AJvYcCU3xJbsUlwUGwxm5jCIE6k/ZCW17Xd7z9Ab2jHCu6xN/aYvDZ01I8zfePf5mqS1XoD3wdHondoyUqq/l5f2NS6LZ8CdplTjBfOEq3a2JL3iXLv031u62WEPntNsO5LVvLBo1b9rtCetIA==
+X-Gm-Message-State: AOJu0YxtlUWjezLituTNe5PMpbuEbjdLuhcyUgGj4Mz0/jsZ/rsHWK4Z
+	kTB3aV9VvPuCypedq78d4i+TT8fRVb8/O/ZyUvcNeni5k0ZlU2Ut
+X-Google-Smtp-Source: AGHT+IEeUxGDTwGB8VosTpIA20i9Q6XpmX/CnHOXS1fPPKScq1Qt8Sxnlk8mQiGfdUjlvHa1IOVBRg==
+X-Received: by 2002:a05:6a20:c412:b0:1b6:63b6:ea6d with SMTP id adf61e73a8af0-1bcbb39ff23mr7701203637.11.1718962481510;
+        Fri, 21 Jun 2024 02:34:41 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706512e64afsm973769b3a.189.2024.06.21.02.34.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 02:34:41 -0700 (PDT)
+Message-ID: <64f00fbc-5bcd-439e-a0f4-94f35e84e5ec@gmail.com>
+Date: Fri, 21 Jun 2024 18:34:32 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH lkmm 0/2] tools/memory-model: Add locking.txt and
+ glossary.txt to README
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Marco Elver <elver@google.com>,
+ Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>,
+ David Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>,
+ Luc Maranget <luc.maranget@inria.fr>, Daniel Lustig <dlustig@nvidia.com>,
+ Joel Fernandes <joel@joelfernandes.org>, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+ Akira Yokosawa <akiyks@gmail.com>
+References: <ae2b0f62-a593-4e7c-ab51-06d4e8a21005@gmail.com>
+ <ZnU4gE+OB+xvvW+I@andrea>
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <ZnU4gE+OB+xvvW+I@andrea>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Based on the NCSI pin table (Table 181) in NCSI spec[1], the reference
-clock output pin (RMIIXRCLKO) is not needed on the management controller
-side.
+On Fri, 21 Jun 2024 10:23:28 +0200, Andrea Parri wrote:
+> On Fri, Jun 21, 2024 at 01:08:24PM +0900, Akira Yokosawa wrote:
+>> Hi all,
+>>
+>> [+CC: Marco, as Patch 1/2 includes update related to access-marking.txt.]
+>>
+>> Looks to me like Andrea's herd-representation.txt has stabilized.
+>> Patch 1/2 fills missing pieces in docs/README.
+>>
+>> While skimming through documents, I noticed a typo in simple.txt.
+>> Patch 2/2 fixes it.
+>>
+>>         Thanks, Akira
+>> --
+>> Akira Yokosawa (2):
+>>   tools/memory-model: Add locking.txt and glossary.txt to README
+>>   tools/memory-model: simple.txt: Fix dangling reference to
+>>     recipes-pairs.txt
+> 
+> For the series,
+> 
+> Acked-by: Andrea Parri <parri.andrea@gmail.com>
 
-To optimize pin usage, add new NCSI pin group that excludes RMIIXRCLKO,
-reducing the number of required pins.
+Thank you!
 
-LINK: [1] https://www.dmtf.org/sites/default/files/standards/documents/DSP0222_1.2.0a.pdf
+> 
+> I do get some "trailing whitespace" warning, for patch #1, you might
+> want to clean up when applying/reposting the series.
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Ugh, I failed to setup a pre-commit hook for this repo.  :-/
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 7938741136a2c..31e4e0b342a00 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -249,7 +249,9 @@ PIN_DECL_2(E26, GPIOD3, RGMII3RXD3, RMII3RXER);
- 
- FUNC_GROUP_DECL(RGMII3, H24, J22, H22, H23, G22, F22, G23, G24, F23, F26, F25,
- 		E26);
--FUNC_GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
-+GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
-+GROUP_DECL(NCSI3, J22, H22, H23, G23, F23, F26, F25, E26);
-+FUNC_DECL_2(RMII3, RMII3, NCSI3);
- 
- #define F24 28
- SIG_EXPR_LIST_DECL_SESG(F24, NCTS3, NCTS3, SIG_DESC_SET(SCU410, 28));
-@@ -355,7 +357,9 @@ FUNC_GROUP_DECL(NRTS4, B24);
- 
- FUNC_GROUP_DECL(RGMII4, F24, E23, E24, E25, D26, D24, C25, C26, C24, B26, B25,
- 		B24);
--FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
-+GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
-+GROUP_DECL(NCSI4, E23, E24, E25, C25, C24, B26, B25, B24);
-+FUNC_DECL_2(RMII4, RMII4, NCSI4);
- 
- #define D22 40
- SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
-@@ -1976,6 +1980,8 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
- 	ASPEED_PINCTRL_GROUP(MDIO2),
- 	ASPEED_PINCTRL_GROUP(MDIO3),
- 	ASPEED_PINCTRL_GROUP(MDIO4),
-+	ASPEED_PINCTRL_GROUP(NCSI3),
-+	ASPEED_PINCTRL_GROUP(NCSI4),
- 	ASPEED_PINCTRL_GROUP(NCTS1),
- 	ASPEED_PINCTRL_GROUP(NCTS2),
- 	ASPEED_PINCTRL_GROUP(NCTS3),
--- 
-2.31.1
+Will send a v2 in a couple of days.
+
+        Thanks, Akira
+
+> 
+>   Andrea
 
