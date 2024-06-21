@@ -1,140 +1,135 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1719417BB1B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1769C16849B;
+	Fri, 21 Jun 2024 20:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719002831; cv=none; b=Hig0llbDYKrfWjZPCD6pmkAnIHBnNuRFKb7V7MH68qWi1OZSq0uxmdMsAOB/eCgbVtF+QCFk6JliiC4IpGlapCw/xBnKFzG75H/dIDfW2oLLP2MkvDGJYeKLVCPUK5bMzzOCCBE3zhQYv86/Eg2vexw06jWR1uNxIvE+ywFK0i0=
+	t=1719002860; cv=none; b=NTAuXNbZjP1zhcXbnDWu2XGX3msy5cLGGHuKsFt5RXFQ+b5VF+m1agM0oo4+cRcJL3lp4S1JsZ/cFNTyRGG3dmaq0QUeLO/86cV+zWtkb0EzjEwH1+fbbTnkNAQUZjL64qNUVWcee4OmITeY7Qz6Z8b+r+mt4mZ7WNk0ilfBVoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719002831; c=relaxed/simple;
-	bh=HRE+U2dgfJBzfQ6M8EvZDTIQ+wtvm4IcQYuk3+o/GOY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qIGtoOI9Qdur3cS5dmf4KRIClmLJlmgfKKTpUt40xLQC2px6vWwUCJxrTldmB5Pw/wOUc/gXBiebjqL1tj9ZpG7hL5S1dQvi8k6vDmWIMy7wnnWhnwOpGexMrK1naJpxRAdKOYQaSsgzj7tal/cw1onhi+8fTlsxI43eH/hZ6aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IzAppRSZ; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1719002860; c=relaxed/simple;
+	bh=6oXviKiBbq49pqIG63dpMmIAKuxF/Q4figgiB/INR0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RPcI78hBW8gKGcgsEdRD4ZMsts6R/p7BE8XP1+2QveRuhA+NyOApfyTGCZUcFP2GEc4KIlLFQdXka10/e065nvTvA6JjLcBxuiIevi/XIY3I9ArONmEJp6MqOwjVyywKMwGXPY/8thIgS+bdz6reFR92MRimcwO24NXpEvVkr9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgZE+prv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IzAppRSZ"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dff1ccdc17bso2563792276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719002829; x=1719607629; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8vvcq6KNwg3xO4omyLiVP0kO5WMfy03mczyeSqWYQtY=;
-        b=IzAppRSZCxQQd0LyMdTPMSVlR6QGhL1rKPG2JCf5B1hHxoKK4s8GuKah/WNuxuMNIB
-         Zwjb+NIG/Hv22zJmuIY5AiSPr7MdwzsZoBt/Vocz49GLv5sgWA8Has3uhBA0rTvdx8+v
-         y8HjmPtePInbC+r11xD7le/gZJ/ai3a3NdSuc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719002829; x=1719607629;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8vvcq6KNwg3xO4omyLiVP0kO5WMfy03mczyeSqWYQtY=;
-        b=Vg6Qd5AmieeQbPKwlHdTTbmLKiXMWL/RTt+8WbZ1LFekmugPKw9V/JBP2HPNH6TKPv
-         7prWMAGkiCxKN8AHPOxBeH6h7a6xFq+MS0CtjKxe/kRP5nX8enic73Esu58shcVGKGe6
-         aZPqn+TXFOzw+WmHE17H/Kama8HcSuowKza+53+aWXucml8ODHz/q6N6P0LWBd0jRGxU
-         I/FzyWZj2fG7sGRdcNerEC3lgl0xmkiBnBHyDy4ZntaIXco5axhLKeS4e56lSxUbg/Mb
-         ylk3HF1qI5nxdE3aRXardEaWpVE7v6fC54LDEzgoJFbTjbqKFvlZB9aiZGddZkjIcM3u
-         fo/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVqXaiblUJ2tnMMODIbi/VJomSjmfcv/H3NCzGSg7laLbmTMU/+jU606oMdIDHT3MX2BV9JM3Udjq7sWfOKTOLlq+HVOm5icY8tI7iN
-X-Gm-Message-State: AOJu0YzIpY59KS2p0IEo6ddNWJZKxQne4W9k/F47FWj/6ci3vDJUmvvZ
-	vpE6kDl4bvkG7Ie56fvW4Si4Q98fg9nRNKCwsd4ftn+skh5Fx0lE5cbJ03Zlu/xlZInKjpYE23c
-	=
-X-Google-Smtp-Source: AGHT+IEoomztpFh7m8IiWHpChsE6n22bjAn04yNrP0pk3CsQsw84InMo5JI/zdgTx2v3pu0SJ25eig==
-X-Received: by 2002:a25:acc6:0:b0:dfe:73d8:4593 with SMTP id 3f1490d57ef6-e02be20b8ebmr10551775276.48.1719002829007;
-        Fri, 21 Jun 2024 13:47:09 -0700 (PDT)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com. [209.85.160.180])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ed4882fsm12008886d6.52.2024.06.21.13.47.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 13:47:08 -0700 (PDT)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-44056f72257so536361cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:47:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXE3MG4vJ4UvfDeoalyxeE7IGCpETo1XI9dEQjukAwOkKv9CWQxFKjWIuhXQSHtvRwluM08NhnAOXZXssBzZ1Ez7EIlVejh4ZixxuxZ
-X-Received: by 2002:a05:622a:38e:b0:441:565e:8d31 with SMTP id
- d75a77b69052e-444ce32b611mr440721cf.19.1719002828083; Fri, 21 Jun 2024
- 13:47:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgZE+prv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50BF7C2BBFC;
+	Fri, 21 Jun 2024 20:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719002859;
+	bh=6oXviKiBbq49pqIG63dpMmIAKuxF/Q4figgiB/INR0s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mgZE+prvJvrR0qGr16cRFd5wxBZ+60DqVKiWrzc2/JqP0zX1t4uEG+eb7p9STep28
+	 GFEtp+5Wlh7ZMOpCAEP7/Pw8BGI79tl01RS7sEnMpm1jP5279v6NnYALGdYuBQTOMe
+	 QQEQ3MZ/bGLOO3jSSXpFLPhkZLHuPdDu/9RwwoLYmuEB4oZ8CNAYwo50alk9nx3q0v
+	 FKl3LLJMekFrCRYY6x6VTRZsjNkxUNIms8xbhzkqEPT0w7Vrw0KG0HjuCWtBhABDna
+	 mlYDTeAzZklySDxXUnTtwfdNn9S+Ve/T8B5v0hfR+GUchO4IV+ltKrQru60xWT+mcQ
+	 dQllYmBRKAFaA==
+Date: Fri, 21 Jun 2024 15:47:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	linux-kernel@vger.kernel.org, sumanesh.samanta@broadcom.com,
+	sathya.prakash@broadcom.com, Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH 2/2] pci/p2pdma: Modify p2p_dma_distance to detect
+ virtual P2P links
+Message-ID: <20240621204737.GA1374564@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621134427.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
-In-Reply-To: <20240621134427.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 21 Jun 2024 13:46:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VwebY8F3XjeVt6kvKwB7QZ8Khn5oJJoDThuemiGx9y+g@mail.gmail.com>
-Message-ID: <CAD=FV=VwebY8F3XjeVt6kvKwB7QZ8Khn5oJJoDThuemiGx9y+g@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at shutdown
-To: dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Maxime Ripard <mripard@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yuran Pereira <yuran.pereira@hotmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	David Airlie <airlied@gmail.com>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1718191656-32714-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
 
-Hi,
+[+cc Logan]
 
-On Fri, Jun 21, 2024 at 1:45=E2=80=AFPM Douglas Anderson <dianders@chromium=
-.org> wrote:
->
-> At shutdown if you've got a _properly_ coded DRM modeset driver then
-> you'll get these two warnings at shutdown time:
->
->   Skipping disable of already disabled panel
->   Skipping unprepare of already unprepared panel
->
-> These warnings are ugly and sound concerning, but they're actually a
-> sign of a properly working system. That's not great.
->
-> We're not ready to get rid of the calls to drm_panel_disable() and
-> drm_panel_unprepare() because we're not 100% convinced that all DRM
-> modeset drivers are properly calling drm_atomic_helper_shutdown() or
-> drm_helper_force_disable_all() at the right times. However, having the
-> warning show up for correctly working systems is bad.
->
-> As a bit of a workaround, add some "if" tests to try to avoid the
-> warning on correctly working systems. Also add some comments and
-> update the TODO items in the hopes that future developers won't be too
-> confused by what's going on here.
->
-> Suggested-by: Daniel Vetter <daniel@ffwll.ch>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Wed, Jun 12, 2024 at 04:27:36AM -0700, Shivasharan S wrote:
+> Update the p2p_dma_distance() to determine virtual inter-switch P2P links
+> existing between two switches and use this to calculate the DMA distance
+> between two devices.
+> 
+> Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 > ---
-> This patch came out of discussion on dri-devel on 2024-06-21
-> [1]. NOTE: I have put all changes into one patch since it didn't seem
-> to add anything to break up the updating of the TODO or the comments
-> in the core into separate patches since the patch is all about one
-> topic and all code is expected to land in the same tree.
->
-> Previous versions:
-> v0: https://lore.kernel.org/r/20240604172305.v3.24.Ieb287c2c3ee3f6d3b0d5f=
-49b29f746b93621749c@changeid/
-> v1: https://lore.kernel.org/r/20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49b2=
-9f746b93621749c@changeid
->
-> [1] https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&d=
-ate=3D2024-06-21
->
->  Documentation/gpu/todo.rst           | 35 +++++++++++++---------------
->  drivers/gpu/drm/drm_panel.c          | 18 ++++++++++++++
->  drivers/gpu/drm/panel/panel-edp.c    | 26 ++++++++++++++-------
->  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++-------
->  4 files changed, 68 insertions(+), 37 deletions(-)
+>  drivers/pci/Kconfig  |  1 +
+>  drivers/pci/p2pdma.c | 18 +++++++++++++++++-
+>  2 files changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index d35001589d88..3e6226ec91fd 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -174,6 +174,7 @@ config PCI_P2PDMA
+>  	depends on 64BIT
+>  	select GENERIC_ALLOCATOR
+>  	select NEED_SG_DMA_FLAGS
+> +	select PCI_SW_DISCOVERY
+>  	help
+>  	  Enables drivers to do PCI peer-to-peer transactions to and from
+>  	  BARs that are exposed in other devices that are the part of
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 4f47a13cb500..780e649b3a1d 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/seq_buf.h>
+>  #include <linux/xarray.h>
+>  
+> +extern bool sw_disc_check_virtual_link(struct pci_dev *a, struct pci_dev *b);
 
-Ugh! I realized right after I hit "send" that I forgot to mark this as
-V2 and give it version history. Sorry! :( Please consider this to be
-v2. It's basically totally different than v1 based on today's IRC
-discussion, which should be linked above.
+This isn't the way we declare external references.  Probably
+drivers/pci/pci.h.  Would need a "pci_" or "pcie_" prefix.
 
-If I need to send a new version I will send it as v3.
+>  struct pci_p2pdma {
+>  	struct gen_pool *pool;
+>  	bool p2pmem_published;
+> @@ -576,7 +578,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>  		int *dist, bool verbose)
+>  {
+>  	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
+> -	struct pci_dev *a = provider, *b = client, *bb;
+> +	struct pci_dev *a = provider, *b = client, *bb, *b_virtual_link = NULL;
+>  	bool acs_redirects = false;
+>  	struct pci_p2pdma *p2pdma;
+>  	struct seq_buf acs_list;
+> @@ -606,6 +608,17 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>  			if (a == bb)
+>  				goto check_b_path_acs;
+>  
+> +			// Physical Broadcom PEX switches can be provisioned into
+> +			// multiple virtual switches.
+> +			// if both upstream bridges belong to the same physical
+> +			// switch, and the switch supports P2P,
+> +			// p2p_dma_distance() should take into account of such
+> +			// scenarios.
 
--Doug
+Copy the comment style (/* */) of the rest of the file.  Rewrap to fit
+in 80 columns like the rest of the file.  Capitalize sentences.  Add
+blank line between paragraphs.
+
+> +			if (sw_disc_check_virtual_link(a, bb)) {
+> +				b_virtual_link = bb;
+> +				goto check_b_path_acs;
+> +			}
+> +
+>  			bb = pci_upstream_bridge(bb);
+>  			dist_b++;
+>  		}
+> @@ -629,6 +642,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>  			acs_cnt++;
+>  		}
+>  
+> +		if (b_virtual_link && bb == b_virtual_link)
+> +			break;
+> +
+>  		bb = pci_upstream_bridge(bb);
+>  	}
+>  
+> -- 
+> 2.43.0
+> 
+
+
