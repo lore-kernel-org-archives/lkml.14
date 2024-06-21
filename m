@@ -1,258 +1,503 @@
-Received: from mx0a-00230701.pphosted.com (mx0a-00230701.pphosted.com [148.163.156.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6C3137775;
-	Fri, 21 Jun 2024 05:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.156.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718948582; cv=fail; b=aCfvHLRoHZr7V+SLhW3sDy4GWVjJjNJa2h2Z9QWEETBkqJZEaXFWLGTm0lJDkFgzuHU3A8kxl7oI4PDo8ym2+N/10YHgJqf7FptIAcpMxt4ZzKRihaDW2KUFUjCjjytZAUF4KvcJpakRliIl5OVuLsqG9quGCHKu2CL7bk09d/M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718948582; c=relaxed/simple;
-	bh=Hu0I3WuSsh5fx+SSXqOFl45XZqpFjBJLwDUHBrufJdY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ivQVB+QS607e523nW2wNluYgZF1dqr2/eAmqfiXC8gubLns5MNalaBGzA8w+/W15lyHgk2/mcOwgFltPDh6nbbRL3y6VFDC3qImhZSSSmQE+0NjSI4yduFGWsZpguw4AKyk7uURaS9q6plLu8OmwMrvbQk9QpOJglD9827UVXeQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com; spf=pass smtp.mailfrom=synopsys.com; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=pzbnHQPy; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=QZneaHSN; dkim=fail (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=nbecbatO reason="signature verification failed"; arc=fail smtp.client-ip=148.163.156.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=synopsys.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F47213B59E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 05:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718948698; cv=none; b=LFkVgyBaNSxpJ+P1hKOlHksOWX3ToXIMbeZfH7qKiV/WKTIlcfh5gExH7kv87bB+cOt5hz4qVisRZ8KBAzxwWmhoCjFxEyKMQmDd53HPTSSWsEL6oCxDj1efrKuLIizoewmWJpxWN8ZXBui8Yb4l1B0RXDiut3VPVUQ2xPak8GU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718948698; c=relaxed/simple;
+	bh=QzZOqd8iSjHFkKWE1DcoY6s5pHOjWFbq9eXoN3ZevDs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nsTYT68Q2flwx+62DOT/AItoky4qDCWUetPHkUUbkVqYOyrRsEtZ6mR07yCJVJQCMQEl4sO1JOeZ1hj0a4Sl+xpR27SoEcauQZXb8oFN/pBAqFnX/ilLibGlStFc8J1BFVzCgHob0zRlR2osrzSRd+dAMsfO7LwGDFpRIH/kpKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPMOFKbT; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="pzbnHQPy";
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QZneaHSN";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="nbecbatO"
-Received: from pps.filterd (m0297266.ppops.net [127.0.0.1])
-	by mx0a-00230701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KNK5Hw001938;
-	Thu, 20 Jun 2024 22:42:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com; h=
-	cc:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	pfptdkimsnps; bh=Hu0I3WuSsh5fx+SSXqOFl45XZqpFjBJLwDUHBrufJdY=; b=
-	pzbnHQPyFRGDZyk0pvvGAhBokUuJl5Smjy1kAmbqR30JrdVDMQzZu/YNmn/XRe47
-	RvHUZtBW+WWaLWOmGiamJnWxP2+KVoWMWwxzrAFUDfJZMqj9t0kKo+5H40NDdBx6
-	itMtLB6BwVRZah+MeWb2WZ9t0KeE+zjqtMI5uEYCSXQHZ6p7bFbUECbJaDlDhQIV
-	LK/F5FuJn7XhfpR3QS+mPt5hmKDZffjBqIlKLXTPHkeP8Yy315z7Ktwy9DTldgyu
-	3OWjvSfcClbrPDg/IdEAwa3wsOC4t+ARrTM0zP8NswslK3CN/7w+jqMUxyEGucNJ
-	586mPQfddo0jeewG4N/4qQ==
-Received: from smtprelay-out1.synopsys.com (smtprelay-out1.synopsys.com [149.117.73.133])
-	by mx0a-00230701.pphosted.com (PPS) with ESMTPS id 3yvrhyjhjg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 22:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-	t=1718948567; bh=Hu0I3WuSsh5fx+SSXqOFl45XZqpFjBJLwDUHBrufJdY=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=QZneaHSN+S2MDBdmck4RhYDl5spZPNIxICHdkHQEnipnBNySeYW6v32eJkGsJ1Ld3
-	 i6GbD6ullN2ztqIfXvgHyLwWbhs/GSRpPmjsGGaQGqyhuDUczr2/fYVDVf81abUBXy
-	 Iy6WxI3NaFbAPZIrLcLS9CnzjtEYzOXzj95QzL3or5JDFVHBBixGkU1oiiTwfnhIs2
-	 1hO4CCCeuQ5NvyIV/yQQiYdsSqt0ay263VmuDtczcS0Q8ya47upWYB7ogDqH/+DB1r
-	 19IS26xyc2g7jAL7xrz+V/oaQFN6gwJ8MF/YROAQDQeCutzmwJbQIIWlvwhuudPTI3
-	 FcO8fOKJHUkow==
-Received: from mailhost.synopsys.com (us03-mailhost1.synopsys.com [10.4.17.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
-	 client-signature RSA-PSS (2048 bits))
-	(Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
-	by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5FE38401C6;
-	Fri, 21 Jun 2024 05:42:47 +0000 (UTC)
-Received: from o365relay-in.synopsys.com (us03-o365relay3.synopsys.com [10.4.161.139])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(Client CN "o365relay-in.synopsys.com", Issuer "Entrust Certification Authority - L1K" (verified OK))
-	by mailhost.synopsys.com (Postfix) with ESMTPS id E4C06A0077;
-	Fri, 21 Jun 2024 05:42:46 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-	dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.a=rsa-sha256 header.s=selector1 header.b=nbecbatO;
-	dkim-atps=neutral
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
-	by o365relay-in.synopsys.com (Postfix) with ESMTPS id 432194052E;
-	Fri, 21 Jun 2024 05:42:46 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WvzejUX8v3GFdgMj8XDi03rgMkfZCqG7eL7fczp8JFd5f0YCmVyLmX2USiqMxr630G51DZlUOIS3rd1U6PQq4VDaa2E15/YiYgFEwgyH/1CLPBGGqmzwZ0dged2PRXdf6VD58U39C5q2oHau+9RuY9B1VJ3DF90gZO501NiZNAV2dHL7rC/yL6CAFoe3U4bnlM4HBEvv/oRDqACpDaKAkF5AhL+0cjpwlFPlqzNS7zgWwnJtqusmCekavV4qNEq4xBQ2c+Pq1QbbCrAwYWpXd53fw9bpKgzhHnxGNdVQ06zLURbNvSe7GgWAOwCGIL8OhkFRMQPO7/xn26wSwzvSxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hu0I3WuSsh5fx+SSXqOFl45XZqpFjBJLwDUHBrufJdY=;
- b=i6NCI0KwYvv00WMiAGYWnzqoKiUQsDMMx2JCyDcdxUVzp6Fgnkfm+fs+bSVvJBWra3jjtkN0f/ltMwi+uz0ISL1m238HPRA2Zv2itorEAYyj4b4Y6r6q0NwMJZ8jPeeWC8V2uqYIDGhzE7z+398fXnfVWKcx1codzqlhcsab9uGRV0dBLKZVCc+n2yNXY5vTVhgunaAC7lKq4L/8h9uL26Rc1zD+W8QhfRIN0pbB3steoBRFdQY7xW+vXYXsDTo88+n28u6SuprHPPnmkRE31CF2Zro5bDKBOlcHMbOk9NiIb8QRzZEHDpzUR14R7zewIU/Ceu1vsdHgS0eTlzgFGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hu0I3WuSsh5fx+SSXqOFl45XZqpFjBJLwDUHBrufJdY=;
- b=nbecbatO/gLZvtKGoRdeDxlFRF2afD5kKlV9i6edFTABjSoiD+2N4f5vZf6boqDQKKFzv8Kvym/RITP3DBWqZcVFxdlnV3SypZU+FC2ZO1RbCGYod10pfTBde+24nJRLLQ7X9pEDLu3gsdi9DYTSuky9/GsujIKRhtQMuu6G0ns=
-Received: from LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16)
- by SJ2PR12MB9242.namprd12.prod.outlook.com (2603:10b6:a03:56f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
- 2024 05:42:42 +0000
-Received: from LV2PR12MB5990.namprd12.prod.outlook.com
- ([fe80::3d09:f15f:d888:33a8]) by LV2PR12MB5990.namprd12.prod.outlook.com
- ([fe80::3d09:f15f:d888:33a8%3]) with mapi id 15.20.7698.020; Fri, 21 Jun 2024
- 05:42:42 +0000
-X-SNPS-Relay: synopsys.com
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: joswang <joswang1221@gmail.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Jos Wang <joswang@lenovo.com>
-Subject: Re: [PATCH v7] usb: dwc3: core: Workaround for CSR read timeout
-Thread-Topic: [PATCH v7] usb: dwc3: core: Workaround for CSR read timeout
-Thread-Index: AQHawj43Ri5O9FacdU6gpV1LQKb6abHQ5pwAgACMzwCAAD1DAIAABnyA
-Date: Fri, 21 Jun 2024 05:42:42 +0000
-Message-ID: <20240621054239.mskjqbuhovydvmu4@synopsys.com>
-References: <20240619114529.3441-1-joswang1221@gmail.com>
- <2024062051-washtub-sufferer-d756@gregkh>
- <CAMtoTm06MTJ_Gc4NvenycvWRxhLSaPptT1DLvBRs4RWVZO9Y_g@mail.gmail.com>
- <2024062151-professor-squeak-a4a7@gregkh>
-In-Reply-To: <2024062151-professor-squeak-a4a7@gregkh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV2PR12MB5990:EE_|SJ2PR12MB9242:EE_
-x-ms-office365-filtering-correlation-id: 980abeb5-f6c3-464e-7f92-08dc91b4f819
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|366013|1800799021|376011|38070700015;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?K2pBb2ZjbVJqZktuSkk3YWZyNW43ZWZDVk9RWW5LUGZvZnpzMUV1c2poeW45?=
- =?utf-8?B?b1FmZE41YmxwdlFrMGhUNXd5WCthUGxUbFV5NFp2aGh3d3hQd251M0h5enFw?=
- =?utf-8?B?R3JSdXBIZHZNWWY3YmlmdjIxMDlDeFZMaC84NHkwM0xsRWxIL0lOVlRuV2xY?=
- =?utf-8?B?MGtxTWJ6ZlYyS1Z0T0R5LzBJUENQWGw0bjUxZlg3SUhYdHZVa2tuWHluZjRS?=
- =?utf-8?B?eDRvZjJRWmlVQ21LeFQvdlBsQzhORlJleGZzYm1lK2hFeW1wVURNM1p4c0RD?=
- =?utf-8?B?UkdlQjFncURWRS9RMlA3alowbSs3Zk1GVy9URWNFQjdsUDlxd0RBdE93U3U2?=
- =?utf-8?B?bnM5UUhvVlp2eExxNlJkaklqYm16YSthd1M2L1JwTmcxVnZTeWIrbmNSaEw5?=
- =?utf-8?B?M3RQbG1lSG5rUGp5U2hsZXdob28vYzVJMzBEMk82cGpRelJFaUMvT29hazV6?=
- =?utf-8?B?K2E2cnhZMlZ5ZmIraGwxWEFpbVBxenlDYVVYK2pjSERabkNrNGhLWUZLV0Y5?=
- =?utf-8?B?NXRPM3BhYllqWXkzSUZkUlkvYmN0clNGbUN5T1V0TERlVjdETzdxTFdOZm9M?=
- =?utf-8?B?L3FFSkI1cGNhZkJlc0NsT3JHRjJQRzd3WmNNMmZNWGsyMGl6dldhVmxCenR5?=
- =?utf-8?B?MHhnNmorUVN5b3Z5RVVWZzIxeUZFeVlTam9Rc1dncmpMdWw3KzlJRFhZNVEr?=
- =?utf-8?B?UGtUNGg3L2tacHdoaVhJTjkxclB4aU00SmpkbHJRUGdHMFZtMUJramJvVEdV?=
- =?utf-8?B?Rm0zK1pMMU5xR1hKZjZyZk9NQ3lsNzRhakNJNzYrRXMxekZkaWhva1MveXZD?=
- =?utf-8?B?eGR6QjRIa3BFYys5ZTg2NFZ6TkUrZHpQa1JmaUFocjVvb0F5WDNjdno1OHJt?=
- =?utf-8?B?OHN0c2htTUh2ZCtqQkg1YVh4QjlJaklURnJBVzdBZDVWZUVnSHFCRkpmOENK?=
- =?utf-8?B?YjBvd0paRC84c3U5NnU5SnEyUitXOHV1ZmRKTlU2a2RydXdCb0NCdkxZYnpW?=
- =?utf-8?B?Zis1aVpSbmlVRUFhUWJ1TUVDVXNHc1h3R2hNN1Zob2NZZ2xnc0VKQ3h1NXlE?=
- =?utf-8?B?eWpOMnoyK0tCYStGdUd0ZWc0Mm5jTkNLYlJJUzlWbHNJbEhRa0tncEhiTzZ3?=
- =?utf-8?B?bWxBVHcrdzNuMFY3UWtPQjE1cmYvUTNZN0xtMWVvUVR2bTVWR3k3V2dQLzRi?=
- =?utf-8?B?NzMrUVgwSnlXNnlncnJLTG9GMFhKb0ppdXE0d3laajdldWk1b2tkazhsY3ky?=
- =?utf-8?B?RGZ6MHlHc3JnMHVQajRXU0QxZVFadmtITG16OHRVbWQ2Vi80clhwZVovUXVC?=
- =?utf-8?B?dlhoQzNjWWVjaDlVNUlwUnRzNS9qaUt2SVJXNlNQTUhIY0FKTUZZUGJQRDRU?=
- =?utf-8?B?eDkrMmtJZURkLzN4UjdGSjJNYU0zY3dSS3dxOXFnTnNGRTNZUmM0LzBYb1Rh?=
- =?utf-8?B?eWFBYzBwMklSdm1sdElSMmJ0N3F4OTQ4R1dDeVd6MWlPeUljOHpUV1dzT2lM?=
- =?utf-8?B?Y0Z1dmpIR1l0L2NKOXlzb2hNb2F2RC9qM081angyRUFxbkUxTHREOVFiemdu?=
- =?utf-8?B?SVRiNjFyZnRXT3FtdGl3eEFkZlVEVlNmNm9EaXkxQ3B1U0RGWHUxWmY0Zlc0?=
- =?utf-8?B?MWJWdHQvRTdPckpCUU9hZGRLUlY3SDBOWE42Q2REN2htUi82VnNHOFY5bHQw?=
- =?utf-8?B?YVNIVGFMNC9vTlczcmQvbS9GRStzR3lJdUlOU0tZNEtWMDUxK21EeURBYnl1?=
- =?utf-8?B?bktsdXZFcjhXKzVwdHQrUmdCRnVRS3pTZTBJSVdTYTlScHpKd1p1OEVUR2RR?=
- =?utf-8?Q?vTEJzwjwzYiye7wkg0n7QnePTKyzUSfZ5ZxgQ=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(1800799021)(376011)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?R2g4NkwzRTdpQXV3Um9BL0JadmxHbjhzL1NwL29MbkdYajFsVWtETm5kaXlo?=
- =?utf-8?B?WFRBQzNoSW9BbTFSZTM2VHV0UmRKWFdpc0VEa1dmdVRvM0RobjU2VzIwM0xj?=
- =?utf-8?B?cDI1Y1NYNzJwWmIrVENEdU1tNWpqVjRnUGdHSHpjZ2huZWxMSEc0WkNBREhP?=
- =?utf-8?B?R1pmeXNPOWhsM25rUGxwQmMxL2lIb1VTWFdlcXNSVUs4Y3hUWjFhMFo5cTl3?=
- =?utf-8?B?WkNsNmFlVEVsYkhiWHZtMzIxRnN5RVN5OCtMendkNXI1eHd5aU4vdHpyeG94?=
- =?utf-8?B?K1RaY1dqRXdoalNvZ3B5MDJXNklNNlNQUzI3Sk1TM0kyajFORDRBcmR6RTdn?=
- =?utf-8?B?Y0s2QXVpTUFrUWtPcE9sanQ3WTg4RGVSeEV1dndnQTlYUDg2VkFmd0tMTEhF?=
- =?utf-8?B?RUsrMEh2UUJZQzBQTHZwQ2VtTFJZTnV0TXg2clRxZDFBZDVBTEp2cDkrQ1NN?=
- =?utf-8?B?TmhjOXd2Tmtmc3d6VGNVMitsNTFzcUVCSkNpQTl1S1FxQWJ6cHh2THpCRTlL?=
- =?utf-8?B?TmNGQkhBaTBpOFRFa29vdXdoeHkvQXZhUkRmT0V5Qm1QcVFaQ2VhV2NuV3Uz?=
- =?utf-8?B?clY4RTFHYkY5Rk9ySjRFV1dZSXZoeXBsNDl6QzlCb0ViM3VLdi8zZ2Q3c3hl?=
- =?utf-8?B?OWllM01LMTBicFhjSm1SVno4UEhyRk1GUWQveFVNN3JTeHhwcVMvS0FpOU9H?=
- =?utf-8?B?cXR6Z05qN1cxd3ZnNW84bm1RT2JzZDNnMEFQRVh6VDZPUnp0a2VjRHZtUXRP?=
- =?utf-8?B?SGoycXhyZTludmZxS2RxR0hORDBPd2I1RThDVytBWWN0Z3VVR1JYWVFvd0pu?=
- =?utf-8?B?a25sU2daMnRqcng3eCtWcy8rdHhwemNiWjFCdU0wZVJEZVkwK2w2T3NRNGNt?=
- =?utf-8?B?bU1KOWI4Tzc1NE5xdWF4eHlZYW5EWnVkS3V5UWN4UkwxdUlJVkxxTTlXTUNN?=
- =?utf-8?B?TkFHWWJranAyckgwZXlPU2RrTmlNWkx4MDU1c2tGTXV3VThEby84NnB6UFFk?=
- =?utf-8?B?Zi9IaE82aUd4M1BZaWVUU2FKTCtWS3hVTlk4THA2bkZYZHJWSzhlWHdBNnFH?=
- =?utf-8?B?TldGbkpzT3ZuaEpmR2tqNkFCcnJGbm1IZlFkUEZ6eFl6SVM2TGNBWlo2ODBW?=
- =?utf-8?B?TlhvWnY1dytZczdIS1pHaFEybEJqa2ZNUXozZ1FKaUM2Rm5GSEh2bXNkdjV5?=
- =?utf-8?B?d1A2bnEyclhZWWo1U3VkM0M1MjBmN1lqOFBZcGtrQWo2T21oVWlEVW9OS2tq?=
- =?utf-8?B?cVNORG5qZlJIT1E0OS9NNzc3K2U2VnVLTGtJdC9MZDd4dDA3WXNjSHZLemlH?=
- =?utf-8?B?K1JqMjBjclowWnYzZjB5WUhKRnBWZVM4cjFFaXRaMDFWaVZXNDVxakcrYThJ?=
- =?utf-8?B?dVUxY3BHQzdRMHBtNjFlemY2Q0lmaDZrMEd0M3huaklpYThYZ2xVQVU1UHdx?=
- =?utf-8?B?S2E2N3NLOHBmZStOWGMyQ0E1ZnlZcU9ZVVVGWWtjVUM4Qk5aTWxaa0RaVldD?=
- =?utf-8?B?VzEwNk5jSmFTMTVrd2daYjFER282N2EvVVpoKzNjZVFjV0orY1pDT3lDYm8y?=
- =?utf-8?B?c21uRDlHcUd1QXE0dThXZnlzdWJDMEdvaVVZQXNpR3pTa0UrZzZhUlA4TG4y?=
- =?utf-8?B?N1hLVHRhS1dOOUM5bytVaHdyekFuTExsQlJqK0lmSTIrNnJsM3lLQXFkT1hX?=
- =?utf-8?B?U2NyOUNGSmpRMFl2NmFBR3RaLzljVHBETGJXTWFmZDJPVnJPYUpjMk5oUk9T?=
- =?utf-8?B?dHBoV1JMMkNEZ1lXV3pwMWpLU2JES1k2R25NL1VIWHFkaWtucC9zT2d6d21M?=
- =?utf-8?B?ZCtsdjRIWVpKcWlmT09ScXltNCtPMzB2ekRFVTFJQmZtM0EwUURqTUNOejEr?=
- =?utf-8?B?LytGNm1yUUNoZ2R0YzB5WDJTWHpwU2tLcDZNaXphSHFuNitjWVNmbDkxRXdE?=
- =?utf-8?B?ZXBRNjljbDBYZUZxT0p2eTdsQ1FjK1Nhc0MrdGV2L3J3NjBZWW5nVnBiSkxp?=
- =?utf-8?B?OEVtbDdnUm1lV01TYTRpS3I5emtrTjE4U29Jc2hCdDF3c1E5Uk9RVWpCZmkx?=
- =?utf-8?B?emkvU1JGaEliVVpXcWtIVkt4UVZEMXhybEw3TXNHOTZ3cjR0NjF4T1NvU1gz?=
- =?utf-8?B?MEJDOFYzNytLK1dNdmNxNk1ranNrM1BsRUE2T1NyV0JZcE16MnRFWGlObFU3?=
- =?utf-8?B?T3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8792D190E3369C4790901F0FA84A831F@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPMOFKbT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718948697; x=1750484697;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QzZOqd8iSjHFkKWE1DcoY6s5pHOjWFbq9eXoN3ZevDs=;
+  b=lPMOFKbTB9Y9bAG3z6GnxNYMBDktaoOqTgDpr12yAMuNmx3CGrZ5CS/9
+   kXkJ1PdVTJwYnvwMaB3v4kbskEoUFTqS54esoZetasFEEgRmLaKHBTvZi
+   Molwj/xBb/NvZN6Y0lFCO2luQME1+Oyi1NrMqd7S9svc1old/bbNSwi8x
+   S16cGJ/ZAYwy6J1Ar/UMePfz/1YrmqcXRNCIkB22hHaWPjA9CoA2XBBgR
+   NptoxmQV5esRxWXRTv6QtYyrNyUVc9Y05U2lN+O6WQKqf1ZvncOpUF1+M
+   xm3wmWMYUlhDFeAaBjxp8AvhiTiut1SJ2cVHF3gOU3vr5Sw/fScEB3iy9
+   Q==;
+X-CSE-ConnectionGUID: FfaiuaJTTvaLRtSKHHLYJw==
+X-CSE-MsgGUID: 5mtS7fN/R3OLKsJROQ+41w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="15944719"
+X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
+   d="scan'208";a="15944719"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 22:44:56 -0700
+X-CSE-ConnectionGUID: SNRqkRwaQ/OJo1v3JVETrQ==
+X-CSE-MsgGUID: tEOA6UZQRbOaPuCKzHPBuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
+   d="scan'208";a="79993585"
+Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
+  by orviesa001.jf.intel.com with ESMTP; 20 Jun 2024 22:44:52 -0700
+From: Xiao Wang <xiao.w.wang@intel.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: charlie@rivosinc.com,
+	andy.chiu@sifive.com,
+	conor.dooley@microchip.com,
+	greentime.hu@sifive.com,
+	ajones@ventanamicro.com,
+	heiko@sntech.de,
+	david.laight@aculab.com,
+	haicheng.li@intel.com,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Xiao Wang <xiao.w.wang@intel.com>
+Subject: [PATCH v5] riscv: Optimize crc32 with Zbc extension
+Date: Fri, 21 Jun 2024 13:47:07 +0800
+Message-Id: <20240621054707.1847548-1-xiao.w.wang@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	ycLO/Ai6aLotmnbHvnmgLDzPWOjm0zIJNiDR4L3lAG8NLgX6oJr/MRE2sCA/OKrhyTnc6NmAzpm1WB3+fRs3U/NZyXDtoI7+6/WcDvTyEmJBFsP/2bRbMU2iEQGYj3WbDJTNiHRTsLCcNy7aVXR+ZGPtXh7Vl/o6/GA6mRk4wM+V505BpJPCVSonwJKz1CTCsJ1i71H9mFUplgZ4O1ZEMnVV6T+Fel9g0s1xurxXM1PNxbU+Rj/082hPtAwSYTChdf6REWuI8DkC5HMnbs5d7lzYl9X7yuReiCAeU6e5c5AoT106rI0dLI/tSgScxn+/M0gTDZWOByAlLX05r0YISaXhFXSdlLmgkBiI8R0WQRvxBYbR6qZpeJFRELzonVW7JsXkWS9yUuShFxrsNESkq6COf96/sUuU4XNs/2Lxo3B0udB7G264NtCWv/l8wjPSoTnCVQANR0BXVcPRb85GYKKUgaAThJmZBcQEaZxy16rSXeK36zh/cq44twHftO79RG1DrIP5I/YW0GW1CYCVhJwIO8F0JnZUeB0Ddfh5dtzpsJSPdKqInHgIsZBWi1FD6bzJ1jsnTSwAO6aXfRb2vfKh5Qb9Ta/3aqEJQuxPhz4fVNs9JfumZUecPp9GLf7kOCboVzsv4B9kOL9gt9USMA==
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 980abeb5-f6c3-464e-7f92-08dc91b4f819
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 05:42:42.2248
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FTTP28vSl8oFQit8KgDymJwj+4xmmlTL8i9WDb6dAbzOFLRZCR3M6xoNSaWix2m3SXFdhZXn51fApSv7UErWRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9242
-X-Proofpoint-ORIG-GUID: Mkdk-uXqgsTte26O52wgY_esdPpKS8Zt
-X-Proofpoint-GUID: Mkdk-uXqgsTte26O52wgY_esdPpKS8Zt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_12,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_active_cloned_notspam policy=outbound_active_cloned score=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- spamscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- phishscore=0 impostorscore=0 mlxscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406210041
+Content-Transfer-Encoding: 8bit
 
-T24gRnJpLCBKdW4gMjEsIDIwMjQsIEdyZWcgS0ggd3JvdGU6DQo+IE9uIEZyaSwgSnVuIDIxLCAy
-MDI0IGF0IDA5OjQwOjEwQU0gKzA4MDAsIGpvc3dhbmcgd3JvdGU6DQo+ID4gT24gRnJpLCBKdW4g
-MjEsIDIwMjQgYXQgMToxNuKAr0FNIEdyZWcgS0ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
-PiB3cm90ZToNCj4gPiA+DQo+ID4gPiBPbiBXZWQsIEp1biAxOSwgMjAyNCBhdCAwNzo0NToyOVBN
-ICswODAwLCBqb3N3YW5nIHdyb3RlOg0KPiA+ID4gPiBGcm9tOiBKb3MgV2FuZyA8am9zd2FuZ0Bs
-ZW5vdm8uY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBUaGlzIGlzIGEgd29ya2Fyb3VuZCBmb3IgU1RB
-UiA0ODQ2MTMyLCB3aGljaCBvbmx5IGFmZmVjdHMNCj4gPiA+ID4gRFdDX3VzYjMxIHZlcnNpb24y
-LjAwYSBvcGVyYXRpbmcgaW4gaG9zdCBtb2RlLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGVyZSBpcyBh
-IHByb2JsZW0gaW4gRFdDX3VzYjMxIHZlcnNpb24gMi4wMGEgb3BlcmF0aW5nDQo+ID4gPiA+IGlu
-IGhvc3QgbW9kZSB0aGF0IHdvdWxkIGNhdXNlIGEgQ1NSIHJlYWQgdGltZW91dCBXaGVuIENTUg0K
-PiA+ID4gPiByZWFkIGNvaW5jaWRlcyB3aXRoIFJBTSBDbG9jayBHYXRpbmcgRW50cnkuIEJ5IGRp
-c2FibGUNCj4gPiA+ID4gQ2xvY2sgR2F0aW5nLCBzYWNyaWZpY2luZyBwb3dlciBjb25zdW1wdGlv
-biBmb3Igbm9ybWFsDQo+ID4gPiA+IG9wZXJhdGlvbi4NCj4gPiA+ID4NCj4gPiA+ID4gQ2M6IHN0
-YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9zIFdhbmcgPGpv
-c3dhbmdAbGVub3ZvLmNvbT4NCj4gPiA+DQo+ID4gPiBXaGF0IGNvbW1pdCBpZCBkb2VzIHRoaXMg
-Zml4PyAgSG93IGZhciBiYWNrIHNob3VsZCBpdCBiZSBiYWNrcG9ydGVkIGluDQo+ID4gPiB0aGUg
-c3RhYmxlIHJlbGVhc2VzPw0KPiA+ID4NCj4gPiA+IHRoYW5rcywNCj4gPiA+DQo+ID4gPiBncmVn
-IGstaA0KPiA+IA0KPiA+IEhlbGxvIEdyZWcgVGhpbmgNCj4gPiANCj4gPiBJdCBzZWVtcyBmaXJz
-dCBiZWdpbiBmcm9tIHRoZSBjb21taXQgMWU0M2M4NmQ4NGZiICgidXNiOiBkd2MzOiBjb3JlOg0K
-PiA+IEFkZCBEV0MzMSB2ZXJzaW9uIDIuMDBhIGNvbnRyb2xsZXIiKQ0KPiA+IGluIDYuOC4wLXJj
-NiBicmFuY2ggPw0KPiANCj4gVGhhdCBjb21taXQgc2hvd2VkIHVwIGluIDYuOSwgbm90IDYuOC4g
-IEFuZCBpZiBzbywgcGxlYXNlIHJlc2VuZCB3aXRoIGENCj4gcHJvcGVyICJGaXhlczoiIHRhZy4N
-Cj4gDQoNClRoaXMgcGF0Y2ggd29ya2Fyb3VuZHMgdGhlIGNvbnRyb2xsZXIncyBpc3N1ZS4gSXQg
-ZG9lc24ndCByZXNvbHZlIGFueQ0KcGFydGljdWxhciBjb21taXQgdGhhdCByZXF1aXJlcyBhICJG
-aXhlcyIgdGFnLiBTbywgdGhpcyBzaG91bGQgZ28gb24NCiJuZXh0Ii4gSXQgY2FuIGJlIGJhY2tw
-b3J0ZWQgYXMgbmVlZGVkLiBJZiBpdCdzIHRvIGJlIGJhY2twb3J0ZWQsIGl0IGNhbg0KcHJvYmFi
-bHkgZ28gYmFjayB0byBhcyBmYXIgYXMgdjQuMywgdG8gY29tbWl0IDY5MGZiMzcxOGE3MCAoInVz
-YjogZHdjMzoNClN1cHBvcnQgU3lub3BzeXMgVVNCIDMuMSBJUCIpLiBCdXQgeW91J2QgbmVlZCB0
-byBjb2xsZWN0IGFsbCB0aGUNCmRlcGVuZGVuY2llcyBpbmNsdWRpbmcgdGhlIGNvbW1pdCBtZW50
-aW9uIGFib3ZlLg0KDQpCUiwNClRoaW5o
+As suggested by the B-ext spec, the Zbc (carry-less multiplication)
+instructions can be used to accelerate CRC calculations. Currently, the
+crc32 is the most widely used crc function inside kernel, so this patch
+focuses on the optimization of just the crc32 APIs.
+
+Compared with the current table-lookup based optimization, Zbc based
+optimization can also achieve large stride during CRC calculation loop,
+meantime, it avoids the memory access latency of the table-lookup based
+implementation and it reduces memory footprint.
+
+If Zbc feature is not supported in a runtime environment, then the
+table-lookup based implementation would serve as fallback via alternative
+mechanism.
+
+By inspecting the vmlinux built by gcc v12.2.0 with default optimization
+level (-O2), we can see below instruction count change for each 8-byte
+stride in the CRC32 loop:
+
+rv64: crc32_be (54->31), crc32_le (54->13), __crc32c_le (54->13)
+rv32: crc32_be (50->32), crc32_le (50->16), __crc32c_le (50->16)
+
+The compile target CPU is little endian, extra effort is needed for byte
+swapping for the crc32_be API, thus, the instruction count change is not
+as significant as that in the *_le cases.
+
+This patch is tested on QEMU VM with the kernel CRC32 selftest for both
+rv64 and rv32. Running the CRC32 selftest on a real hardware (SpacemiT K1)
+with Zbc extension shows 65% and 125% performance improvement respectively
+on crc32_test() and crc32c_test().
+
+Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+v5:
+- Add test result collected from real HW into commit log.
+
+v4:
+- Use "asm goto" instead of "asm_volatile_goto". (Charlie)
+
+v3:
+- Use Zbc to handle also the data head and tail bytes, instead of calling
+  fallback function.
+- Misc changes due to the new design.
+
+v2:
+- Fix sparse warnings about type casting. (lkp)
+- Add info about instruction count change in commit log. (Andrew)
+- Use the min() helper from linux/minmax.h. (Andrew)
+- Use "#if __riscv_xlen == 64" macro check to differentiate rv64 and rv32. (Andrew)
+- Line up several macro values by tab. (Andrew)
+- Make poly_qt as "unsigned long" to unify the code for rv64 and rv32. (David)
+- Fix the style of comment wing. (Andrew)
+- Add function wrappers for the asm code for the *_le cases. (Andrew)
+---
+ arch/riscv/Kconfig      |  23 ++++
+ arch/riscv/lib/Makefile |   1 +
+ arch/riscv/lib/crc32.c  | 294 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/crc32.h   |   3 +
+ 4 files changed, 321 insertions(+)
+ create mode 100644 arch/riscv/lib/crc32.c
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 0525ee2d63c7..c090732d4af6 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -625,6 +625,29 @@ config RISCV_ISA_ZBB
+ 
+ 	   If you don't know what to do here, say Y.
+ 
++config TOOLCHAIN_HAS_ZBC
++	bool
++	default y
++	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zbc)
++	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zbc)
++	depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
++	depends on AS_HAS_OPTION_ARCH
++
++config RISCV_ISA_ZBC
++	bool "Zbc extension support for carry-less multiplication instructions"
++	depends on TOOLCHAIN_HAS_ZBC
++	depends on MMU
++	depends on RISCV_ALTERNATIVE
++	default y
++	help
++	   Adds support to dynamically detect the presence of the Zbc
++	   extension (carry-less multiplication) and enable its usage.
++
++	   The Zbc extension could accelerate CRC (cyclic redundancy check)
++	   calculations.
++
++	   If you don't know what to do here, say Y.
++
+ config RISCV_ISA_ZICBOM
+ 	bool "Zicbom extension support for non-coherent DMA operation"
+ 	depends on MMU
+diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+index bd6e6c1b0497..2b369f51b0a5 100644
+--- a/arch/riscv/lib/Makefile
++++ b/arch/riscv/lib/Makefile
+@@ -13,6 +13,7 @@ endif
+ lib-$(CONFIG_MMU)	+= uaccess.o
+ lib-$(CONFIG_64BIT)	+= tishift.o
+ lib-$(CONFIG_RISCV_ISA_ZICBOZ)	+= clear_page.o
++lib-$(CONFIG_RISCV_ISA_ZBC)	+= crc32.o
+ 
+ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+ lib-$(CONFIG_RISCV_ISA_V)	+= xor.o
+diff --git a/arch/riscv/lib/crc32.c b/arch/riscv/lib/crc32.c
+new file mode 100644
+index 000000000000..d7dc599af3ef
+--- /dev/null
++++ b/arch/riscv/lib/crc32.c
+@@ -0,0 +1,294 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Accelerated CRC32 implementation with Zbc extension.
++ *
++ * Copyright (C) 2024 Intel Corporation
++ */
++
++#include <asm/hwcap.h>
++#include <asm/alternative-macros.h>
++#include <asm/byteorder.h>
++
++#include <linux/types.h>
++#include <linux/minmax.h>
++#include <linux/crc32poly.h>
++#include <linux/crc32.h>
++#include <linux/byteorder/generic.h>
++
++/*
++ * Refer to https://www.corsix.org/content/barrett-reduction-polynomials for
++ * better understanding of how this math works.
++ *
++ * let "+" denotes polynomial add (XOR)
++ * let "-" denotes polynomial sub (XOR)
++ * let "*" denotes polynomial multiplication
++ * let "/" denotes polynomial floor division
++ * let "S" denotes source data, XLEN bit wide
++ * let "P" denotes CRC32 polynomial
++ * let "T" denotes 2^(XLEN+32)
++ * let "QT" denotes quotient of T/P, with the bit for 2^XLEN being implicit
++ *
++ * crc32(S, P)
++ * => S * (2^32) - S * (2^32) / P * P
++ * => lowest 32 bits of: S * (2^32) / P * P
++ * => lowest 32 bits of: S * (2^32) * (T / P) / T * P
++ * => lowest 32 bits of: S * (2^32) * quotient / T * P
++ * => lowest 32 bits of: S * quotient / 2^XLEN * P
++ * => lowest 32 bits of: (clmul_high_part(S, QT) + S) * P
++ * => clmul_low_part(clmul_high_part(S, QT) + S, P)
++ *
++ * In terms of below implementations, the BE case is more intuitive, since the
++ * higher order bit sits at more significant position.
++ */
++
++#if __riscv_xlen == 64
++/* Slide by XLEN bits per iteration */
++# define STEP_ORDER 3
++
++/* Each below polynomial quotient has an implicit bit for 2^XLEN */
++
++/* Polynomial quotient of (2^(XLEN+32))/CRC32_POLY, in LE format */
++# define CRC32_POLY_QT_LE	0x5a72d812fb808b20
++
++/* Polynomial quotient of (2^(XLEN+32))/CRC32C_POLY, in LE format */
++# define CRC32C_POLY_QT_LE	0xa434f61c6f5389f8
++
++/* Polynomial quotient of (2^(XLEN+32))/CRC32_POLY, in BE format, it should be
++ * the same as the bit-reversed version of CRC32_POLY_QT_LE
++ */
++# define CRC32_POLY_QT_BE	0x04d101df481b4e5a
++
++static inline u64 crc32_le_prep(u32 crc, unsigned long const *ptr)
++{
++	return (u64)crc ^ (__force u64)__cpu_to_le64(*ptr);
++}
++
++static inline u32 crc32_le_zbc(unsigned long s, u32 poly, unsigned long poly_qt)
++{
++	u32 crc;
++
++	/* We don't have a "clmulrh" insn, so use clmul + slli instead. */
++	asm volatile (".option push\n"
++		      ".option arch,+zbc\n"
++		      "clmul	%0, %1, %2\n"
++		      "slli	%0, %0, 1\n"
++		      "xor	%0, %0, %1\n"
++		      "clmulr	%0, %0, %3\n"
++		      "srli	%0, %0, 32\n"
++		      ".option pop\n"
++		      : "=&r" (crc)
++		      : "r" (s),
++			"r" (poly_qt),
++			"r" ((u64)poly << 32)
++		      :);
++	return crc;
++}
++
++static inline u64 crc32_be_prep(u32 crc, unsigned long const *ptr)
++{
++	return ((u64)crc << 32) ^ (__force u64)__cpu_to_be64(*ptr);
++}
++
++#elif __riscv_xlen == 32
++# define STEP_ORDER 2
++/* Each quotient should match the upper half of its analog in RV64 */
++# define CRC32_POLY_QT_LE	0xfb808b20
++# define CRC32C_POLY_QT_LE	0x6f5389f8
++# define CRC32_POLY_QT_BE	0x04d101df
++
++static inline u32 crc32_le_prep(u32 crc, unsigned long const *ptr)
++{
++	return crc ^ (__force u32)__cpu_to_le32(*ptr);
++}
++
++static inline u32 crc32_le_zbc(unsigned long s, u32 poly, unsigned long poly_qt)
++{
++	u32 crc;
++
++	/* We don't have a "clmulrh" insn, so use clmul + slli instead. */
++	asm volatile (".option push\n"
++		      ".option arch,+zbc\n"
++		      "clmul	%0, %1, %2\n"
++		      "slli	%0, %0, 1\n"
++		      "xor	%0, %0, %1\n"
++		      "clmulr	%0, %0, %3\n"
++		      ".option pop\n"
++		      : "=&r" (crc)
++		      : "r" (s),
++			"r" (poly_qt),
++			"r" (poly)
++		      :);
++	return crc;
++}
++
++static inline u32 crc32_be_prep(u32 crc, unsigned long const *ptr)
++{
++	return crc ^ (__force u32)__cpu_to_be32(*ptr);
++}
++
++#else
++# error "Unexpected __riscv_xlen"
++#endif
++
++static inline u32 crc32_be_zbc(unsigned long s)
++{
++	u32 crc;
++
++	asm volatile (".option push\n"
++		      ".option arch,+zbc\n"
++		      "clmulh	%0, %1, %2\n"
++		      "xor	%0, %0, %1\n"
++		      "clmul	%0, %0, %3\n"
++		      ".option pop\n"
++		      : "=&r" (crc)
++		      : "r" (s),
++			"r" (CRC32_POLY_QT_BE),
++			"r" (CRC32_POLY_BE)
++		      :);
++	return crc;
++}
++
++#define STEP		(1 << STEP_ORDER)
++#define OFFSET_MASK	(STEP - 1)
++
++typedef u32 (*fallback)(u32 crc, unsigned char const *p, size_t len);
++
++static inline u32 crc32_le_unaligned(u32 crc, unsigned char const *p,
++				     size_t len, u32 poly,
++				     unsigned long poly_qt)
++{
++	size_t bits = len * 8;
++	unsigned long s = 0;
++	u32 crc_low = 0;
++
++	for (int i = 0; i < len; i++)
++		s = ((unsigned long)*p++ << (__riscv_xlen - 8)) | (s >> 8);
++
++	s ^= (unsigned long)crc << (__riscv_xlen - bits);
++	if (__riscv_xlen == 32 || len < sizeof(u32))
++		crc_low = crc >> bits;
++
++	crc = crc32_le_zbc(s, poly, poly_qt);
++	crc ^= crc_low;
++
++	return crc;
++}
++
++static inline u32 __pure crc32_le_generic(u32 crc, unsigned char const *p,
++					  size_t len, u32 poly,
++					  unsigned long poly_qt,
++					  fallback crc_fb)
++{
++	size_t offset, head_len, tail_len;
++	unsigned long const *p_ul;
++	unsigned long s;
++
++	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
++			     RISCV_ISA_EXT_ZBC, 1)
++		 : : : : legacy);
++
++	/* Handle the unaligned head. */
++	offset = (unsigned long)p & OFFSET_MASK;
++	if (offset && len) {
++		head_len = min(STEP - offset, len);
++		crc = crc32_le_unaligned(crc, p, head_len, poly, poly_qt);
++		p += head_len;
++		len -= head_len;
++	}
++
++	tail_len = len & OFFSET_MASK;
++	len = len >> STEP_ORDER;
++	p_ul = (unsigned long const *)p;
++
++	for (int i = 0; i < len; i++) {
++		s = crc32_le_prep(crc, p_ul);
++		crc = crc32_le_zbc(s, poly, poly_qt);
++		p_ul++;
++	}
++
++	/* Handle the tail bytes. */
++	p = (unsigned char const *)p_ul;
++	if (tail_len)
++		crc = crc32_le_unaligned(crc, p, tail_len, poly, poly_qt);
++
++	return crc;
++
++legacy:
++	return crc_fb(crc, p, len);
++}
++
++u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len)
++{
++	return crc32_le_generic(crc, p, len, CRC32_POLY_LE, CRC32_POLY_QT_LE,
++				crc32_le_base);
++}
++
++u32 __pure __crc32c_le(u32 crc, unsigned char const *p, size_t len)
++{
++	return crc32_le_generic(crc, p, len, CRC32C_POLY_LE,
++				CRC32C_POLY_QT_LE, __crc32c_le_base);
++}
++
++static inline u32 crc32_be_unaligned(u32 crc, unsigned char const *p,
++				     size_t len)
++{
++	size_t bits = len * 8;
++	unsigned long s = 0;
++	u32 crc_low = 0;
++
++	s = 0;
++	for (int i = 0; i < len; i++)
++		s = *p++ | (s << 8);
++
++	if (__riscv_xlen == 32 || len < sizeof(u32)) {
++		s ^= crc >> (32 - bits);
++		crc_low = crc << bits;
++	} else {
++		s ^= (unsigned long)crc << (bits - 32);
++	}
++
++	crc = crc32_be_zbc(s);
++	crc ^= crc_low;
++
++	return crc;
++}
++
++u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len)
++{
++	size_t offset, head_len, tail_len;
++	unsigned long const *p_ul;
++	unsigned long s;
++
++	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
++			     RISCV_ISA_EXT_ZBC, 1)
++		 : : : : legacy);
++
++	/* Handle the unaligned head. */
++	offset = (unsigned long)p & OFFSET_MASK;
++	if (offset && len) {
++		head_len = min(STEP - offset, len);
++		crc = crc32_be_unaligned(crc, p, head_len);
++		p += head_len;
++		len -= head_len;
++	}
++
++	tail_len = len & OFFSET_MASK;
++	len = len >> STEP_ORDER;
++	p_ul = (unsigned long const *)p;
++
++	for (int i = 0; i < len; i++) {
++		s = crc32_be_prep(crc, p_ul);
++		crc = crc32_be_zbc(s);
++		p_ul++;
++	}
++
++	/* Handle the tail bytes. */
++	p = (unsigned char const *)p_ul;
++	if (tail_len)
++		crc = crc32_be_unaligned(crc, p, tail_len);
++
++	return crc;
++
++legacy:
++	return crc32_be_base(crc, p, len);
++}
+diff --git a/include/linux/crc32.h b/include/linux/crc32.h
+index 9e8a032c1788..87f788c0d607 100644
+--- a/include/linux/crc32.h
++++ b/include/linux/crc32.h
+@@ -9,7 +9,9 @@
+ #include <linux/bitrev.h>
+ 
+ u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len);
++u32 __pure crc32_le_base(u32 crc, unsigned char const *p, size_t len);
+ u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len);
++u32 __pure crc32_be_base(u32 crc, unsigned char const *p, size_t len);
+ 
+ /**
+  * crc32_le_combine - Combine two crc32 check values into one. For two
+@@ -37,6 +39,7 @@ static inline u32 crc32_le_combine(u32 crc1, u32 crc2, size_t len2)
+ }
+ 
+ u32 __pure __crc32c_le(u32 crc, unsigned char const *p, size_t len);
++u32 __pure __crc32c_le_base(u32 crc, unsigned char const *p, size_t len);
+ 
+ /**
+  * __crc32c_le_combine - Combine two crc32c check values into one. For two
+-- 
+2.25.1
+
