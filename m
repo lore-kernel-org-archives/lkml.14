@@ -1,265 +1,180 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2057.outbound.protection.outlook.com [40.107.223.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAA4125C1
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718979422; cv=none; b=WZCpIZ3I+rPIUd0eKC0R9lDZ8GrTJBUnmYVf5mCzbPt2nh9HyE9VMylHzOX55Yx6Kx4UjGmi8SneVXVY+hFtxnNoL3JTxHrTdfZmxN97EYT3f1O+Za51fgOZJmciJxWF1rBazHRiJisByz9Nf3uYR9poREk6yLn99j8rhwp+RtI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718979422; c=relaxed/simple;
-	bh=R58iYbMpOI5Vn2Sg6WtJYjV3VtZugTkhYeHmTzuly2Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=APQ4wK64hP5DkGqVVNodQzagIn11AXODaxX/SAQkMKnHbAqeLamrlPApvfXu8qMMNa3nlBXd1cI4PbxRCb+m6BdXbfUB6IpQvOuzKVkyOWIKAfQDBEpFWZy+Eh7GO///67hA5/cx1BMfotIMXZ0dOxUFI4Av9Eex/wwOSQQVjsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0Hnd+wH; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE68DF62
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718979461; cv=fail; b=nc/VCBXSoJtn8bkIpGhPJ2I39bGpetlwLWxZbDOG2scCpubfiBRU3QH9HjUiEbzCSwxHkY0Rb0qly19SVCDuGX3xRXTEVA0Okwh8KF8PfP3X9Smb/Zre/0knAqX4t4H5XDtd9fY3GaEfBZuhkPwII2KsXXbl/gi4TLGghlABqIo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718979461; c=relaxed/simple;
+	bh=/j0TD0FOv2y0MfmFtMwGuqlz8ad+RKmX5hm6qNgk+/o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RkYNlgKt4Bdm+rlp5aqfM99hYyAjfeRRCNeZMk5LE5RcC+V10YCvRGX8RArHnU9C/iJ2PBTsU6yynUsLkMRX4zBx0CJEoHx0ALTrr7MHjl/+OG6j/Lbi7RTsI3PS0G0vltulkF3XqrJ7do6WGR8oPdPdnVdA5/pu/0hLRZqS77Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RKbaNNWX; arc=fail smtp.client-ip=40.107.223.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0Hnd+wH"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6f97a4c4588so1201780a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718979420; x=1719584220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Esapyh4sEYZ9iUxizwPARzP2FysvGIktBy8oVxqC0Cw=;
-        b=m0Hnd+wHF3wGNuV8N+CZMOExfyvMSMIQBjH2twNIsaue3SOQnLbCZVAr7c8CKS0qkA
-         VC+Lbs0zYwI1/SaW7aazIzXa4SpYUS+yvFSY8r9iFrGF+Vv6q+ig9sLLQa1cb1jw/pbR
-         zzkkeusXKYoLyztZ/2GRMGG+tzFhlBmHXFGjz+LS2leGgK6M4AHVLchK1N/AhinoKlgw
-         +Cz+YP3j3I9MgdE6lUDdAmxgXUEJVR5F3bW9+4nkr5kT5I3u+jzcSyaV9QJwC5U8im2t
-         ACdWcTuUJdPENhVbwP9oDvhAgCmJMVYSd1qPVmYlTanhhMKTnuvoRVoaD/lo+dty4SyT
-         vGag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718979420; x=1719584220;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Esapyh4sEYZ9iUxizwPARzP2FysvGIktBy8oVxqC0Cw=;
-        b=UMn0aWhU8dnYULfFFxBll1mbugAiyfe7Sb3Ts5ZjVQ24zZPGlcXSGzzRCvb4GxWYIg
-         aY/iyQXI5np52Q8ssQchCU+hicvV9ceMvJNy7xXD38VswAWjbBcorphZH+wJVK2Xhzgo
-         nTRLYFfy3yGAFlRR/rQ4Q3UFxem+5BGHWaWvmthHNHizLiyjlO98CK0sKaAOSsfPPPHE
-         hWJ5q1ITE4Kj3+VFAzOhak5QZXQhIjA9rCSghwMtPuVB1Mb8sIZT0ZIJFkbAlNDisSbn
-         AAw5CUVqoM2ErqsFBoC1NyZR8QRqziWMlzll+Ncpcbj6jNdRHqCuTZKU+hkafTiXZW7K
-         FUwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVykmva5h5iVOs/ODfzjr3qB1lQuY6YKPcEeEZIn2O4wJDCVayGbXTk4FiYF7gY2EuU/+6LnkFw5/Spjrfoc1jrQVFugM9b9klOrKUD
-X-Gm-Message-State: AOJu0YxY3X9qt74AA8Iq3jetzsZ9spzFkG9dZasMuDbMfAYOwZPQZJjY
-	jzt8j4NC7lfyKjDPJCZY+Ka/n7ec87rRz4GdVumlCsqMB6NFpgRc
-X-Google-Smtp-Source: AGHT+IHB9Q1J37kAuSt0w6qEbVtcrjIXCCwTuAGNeZVLBZz8uneDHbm725GPvvSy6CUL/a7gavHGOg==
-X-Received: by 2002:a05:6830:20cb:b0:6f9:edf5:6374 with SMTP id 46e09a7af769-7007682cc4amr9214565a34.34.1718979419623;
-        Fri, 21 Jun 2024 07:16:59 -0700 (PDT)
-Received: from localhost.localdomain ([142.198.217.108])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ed4aa5asm9090346d6.55.2024.06.21.07.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 07:16:59 -0700 (PDT)
-From: Wu Hoi Pok <wuhoipok@gmail.com>
-To: 
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	Wu Hoi Pok <wuhoipok@gmail.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/7] drm/radeon: remove load callback
-Date: Fri, 21 Jun 2024 10:15:37 -0400
-Message-ID: <20240621141544.19817-1-wuhoipok@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RKbaNNWX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JLS+RXIp3CXjHvyG0HBwZ4WS3K0C2LUBh0ebwqy6dBBA1ZZ66LFrlKLa5sJkBMvgEfWQpHvsfbShGjexWVWRF/cSbWr4LXzr4clrB7C9J75VlgQIG4T8WWfmohGbaac5om7OwNrgU/xaprDHRR/bECSxRXMdvMpZ9SuTJZHYx9+Kfsvu1ybzF3wy1eI3tvNTWXaksIoMqbZ+YtZOvDP6KUTk5KLxQH3l2vC8aHaNe6ePMEQCUuSa3V5sCl5XsIy/uYNRrVYuO7zBBt5ljCH9JA2zVE4JgWhJX9hDqUnqyGL4q2F76U7bl8GUjH+QcKHQkImy/2bhUKUAQu3fsJ32Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T2URrmrxo47UU4eaVP1tgohQR/nJe8ROJzxM6Hnpd0o=;
+ b=BfkneLldXPu6BM3gjxesZncW5yJILJFDnWxnZANlFFXWFO0t88FKEGVGzitF3mUHTMc9IinoKnWPeaDO8TAxeh6RzXHiKKSMqyJ6UmM0DA/JFv53cQ+yp+3OJs1ZbCjpgSRL9tqnSWe2BEwGZG3DQGEVD9iz9Il+u9brLyMUawvZsXE7JU5TBZ6Sv2cAOotv+QE123L56jr1bcelsVzmv1u7UauAUHuQjxu+NfpiHscP//jbJkl4YTpRtiH29C9mHufPhii4lLmEuyRRY28oW3hOz7E/73qS/9Xv4T7ZyrJLYro7ujFQv/WtzWC/7T4ADH0I1s67Q7gZciV4Bt7HnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T2URrmrxo47UU4eaVP1tgohQR/nJe8ROJzxM6Hnpd0o=;
+ b=RKbaNNWXSyZbztk435GlZxwlo01a3HQkkyeZjGsyYBmqn4IfUWR1ONs/947M6CaQiBZ7feuSYEijKOcRa3Lll8je6DDV4bAKQGVnWqwHEke2PVob3J3Zk3jEojVsDeFAMEbiNwBImD3T3q+M4yFppnx1Lcug1e48PtJrGXd7jUM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
+ by IA0PR12MB7601.namprd12.prod.outlook.com (2603:10b6:208:43b::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
+ 2024 14:17:35 +0000
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52]) by BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52%7]) with mapi id 15.20.7698.020; Fri, 21 Jun 2024
+ 14:17:35 +0000
+Message-ID: <4c4c8208-7194-79d0-a9cf-e625e5feff23@amd.com>
+Date: Fri, 21 Jun 2024 09:17:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] x86/sev: Do RMP memory coverage check after max_pfn has
+ been set
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+References: <92b4ba20a5afeb4aecde167bfac094d0275d8e1b.1717601917.git.thomas.lendacky@amd.com>
+ <20240621135935.GGZnWHRxn08g8CkLNu@fat_crate.local>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <20240621135935.GGZnWHRxn08g8CkLNu@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR11CA0009.namprd11.prod.outlook.com
+ (2603:10b6:806:6e::14) To BL1PR12MB5732.namprd12.prod.outlook.com
+ (2603:10b6:208:387::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|IA0PR12MB7601:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ddd3548-e5e7-4bce-876f-08dc91fce58b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|376011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UzA0QmhldG9oRnBXS2hDRG15WkdZYlBBVUJ0YmhrOVZERnpncWRBM3pLZWMw?=
+ =?utf-8?B?WGtpYjFrdUlyUmNRK05pYkR6TW1sQy9GS0tYeTVaOXpRV0Z0QXRCWWpKYnZv?=
+ =?utf-8?B?eC9VWHlRbG9UdWhWZExHREZINzMrWG9kVktaVDd1eVNuRU5wVG5BQUwrbjlr?=
+ =?utf-8?B?SkxSNkVzVURzZTBIQXcwRlZjNFpYSG5TZ2h4Mmd2UEkrWVBmUTdjdzJiZXFZ?=
+ =?utf-8?B?ZjRpcTZYM1NzM2gyeWFSaXZDMm9wdFpJOUtjdjBIQjdLTkQrbnZ3dnh1OEJ1?=
+ =?utf-8?B?RUswMWJJaFhXOG56ZHc1eklzdE54MGlSWTZ4NjRISTBmbEppYkRxNzUyZW5I?=
+ =?utf-8?B?REgzbmo1VmlvaVZBRUMzZThzSzFZaTNXMURyRVNybi9hbTBwa0JLR3M1a09X?=
+ =?utf-8?B?aExuS2lSeVVyL1kyTkxqYmR5NlV1MC8yN3M2dUN6aW9ROG5Lamx4Y01QU3Zu?=
+ =?utf-8?B?NWRqSjJmQ1ZrS0tnVG9qNkJ6cTVJNTJNTTFRcVhOdHJzb1JBazRTbWFlYm40?=
+ =?utf-8?B?NnhqUXc5MktobWpqVGtVVWV4UUNDaFprQWIxcFJFY3A1ZE1tNEdLTHE2aTV6?=
+ =?utf-8?B?UExJclZsbzQrM0d4STVnZmtHNGs5SXIvRmdJTHlUdUVwR0gzUUJiZkF5WWEy?=
+ =?utf-8?B?WTJDL21QNmYvc0pPSkVyUjJWTHFaT2lZV1RJNlEwcVRZRGZhNXAvYnFSL3dE?=
+ =?utf-8?B?b3FBdVlITnQyb1Q0ekFSeXU4VWlSTnJqQXRVbFNwcjZMZ2hUUDU5WmpDSHpX?=
+ =?utf-8?B?K3JxbnFuODVucEJTbGJFaUFxWGI2d2UvK1d0bHJ4a29reStHby9objNSVklC?=
+ =?utf-8?B?TERtekFFZmJlYnhiWjZxaTBXU3J3TmVrZXJNNnVFY210UTFOSnNFem9oOU16?=
+ =?utf-8?B?ZjUreTZpenl6ZkFoWFBRRmpHaUFoVTNqK3Yra3JJVmxEd21yV2JiK3J5Mjlu?=
+ =?utf-8?B?dVVYaEZmL0VLMFdkQ3NQL2VaOTN6aVBpS0hWM3d4MyttWERibjZxbkliUEFr?=
+ =?utf-8?B?bm0yd0hGWXFqU21oTkhRejdEd0RqR0lxcUVJWFRJWEJ1blpHN0d4aXJabERp?=
+ =?utf-8?B?K2FvR0EvZFlacHltNmg5WGkrOFlMei9XK3BkcWRUUHY2YnZ2eVowd29JRXJx?=
+ =?utf-8?B?ZlFuM21QNUJ4dTZaQjBnZ0pVUkR6akV4U3hiT1ZsYlNYZ1Q5MXc2c284QnZl?=
+ =?utf-8?B?YitGUUxiOXpidDJkbXBnenI5cmJwWS9XQ2hFRThBM1ExWHFXUUE0bHNteG40?=
+ =?utf-8?B?dllFbHZhaUdpWUR3WTM1bkxjR1R6dXVkblFQc2JVaG9lUlB1d2lrRnlGbG9r?=
+ =?utf-8?B?Z2t4U0ZJVU80ZmtxVWNxam1QOFBBNzJMcTJGOTRURElUQWFDcSt6aHJTNk5L?=
+ =?utf-8?B?ZGhaQm9YZEpDQWh3MXBjSkdGcmN1WHhLNjJmd3Jrck9uMitkQlpRa3J0RE15?=
+ =?utf-8?B?RFFaRUtVczduMS8yWXZHaEVpbnNtdWozaEpiNjhxNmp6LzdPb3pXZFJLVWJa?=
+ =?utf-8?B?YXpVVXdtem5peHhybFhQY3VxQitJODBlOWp5R2VxY3hCWVZpdUhSaGJYWnYx?=
+ =?utf-8?B?aGtPRisxR2hHRVJqT1J6TjBHSlM0M0RwRlZYRzFibEM3NXdSeEdxU09NcENH?=
+ =?utf-8?B?bHNBenJWTnJoYnRLT2ltT3g1dDU2TEpWNHNPN0xEZHlCZDNGekdUelFUK2J0?=
+ =?utf-8?B?eU1nMWpRZjE5aFpiQjkyWnowWmdBYnQ3cm9zdnNneEl5Z0Q0UExLS2NYMGs0?=
+ =?utf-8?Q?JUeb94PCW5FkXdT3jpTvwK+jXOcaZeiPswmqMKN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?K3hPWmUxTEY0Unl0RWxLNk9EaFdxNjFzWjB5MlMyZ25iTHpyalZnMmo5UUFp?=
+ =?utf-8?B?cjR1NDZLejNYdFp1Tzc3bVhsd3hMREc2OGtOMzFBazRhM1lFWThIaEw3V3Rj?=
+ =?utf-8?B?ZHkzWXBzOStwMTQ4MG13MGtNQUpkZ1MwZjhhS05LckFWbU5KL2VuRUszR2dM?=
+ =?utf-8?B?Y25jVlJxczNXQjlDOFk3aDRXaTRwM1dIWHpqRGk0eTFpeGVSVlVtQWZ2VzVk?=
+ =?utf-8?B?eXVQNTVmelY5bmpIMzA1QTdzcUR5T1oyNk15MTVUZEprVGxESzNMM3BHRVpz?=
+ =?utf-8?B?TStDT1phZldLTDhzU3hBM1NuemdCVUR1OThQTDlrUGluOFo5ckJFVlBYQnpk?=
+ =?utf-8?B?b2lVSmk4UEZNZlJoTEFoL3MybHFTdkFIOTlnSnZOMjFIb2hzVzRBTG1nMk9I?=
+ =?utf-8?B?WW8wN0k4dmNzYlRraTNtUmhrcTI1QUtqUE55RENQZzdsQllQZkVQZjN2TDNY?=
+ =?utf-8?B?amwxS3Q3VUcvSTd3N0VrMkZZaEFRZDQwc1dHY2p6VDVtVUwyMnI3TVVGU0du?=
+ =?utf-8?B?dVhOQUFYTStWdkZsT1ErL0M4L2NYdy9FY25XQUljV1JiQkt0eFo1anY5aklO?=
+ =?utf-8?B?YXd2UmRNSkRVR1pyV3ZqTGV4Q1ZKMU1LV2plY0NvOFlPWktsRFBwRU41TTNk?=
+ =?utf-8?B?YW1PVUVWQkFRYzJZY0JzOW5HQTdTcmkySHYzZ0FQeHlMV1pubTJFeTIyVThq?=
+ =?utf-8?B?MFlXQXRRaWFrdHh3ZXFHRHUySEpGb29ORStUd0xLU2hocnQ0aTNJTTh2QUQy?=
+ =?utf-8?B?dE96TjBGRHRTVDRnOUUvZjFBYkdoOGE3S0k3QlhjR1dXY3dUZFRjTkpNYWlE?=
+ =?utf-8?B?Z041SUgyV2UxYkttVjV4U2xKQlNEVWlOR29tc0ZTU2VVdWx1S1BvK1VmbkN3?=
+ =?utf-8?B?K1ROZmJTTnNwM0YvemVZdWM3NjJWUnVzbnkyOEE1cFlLbzh3azNBWXc4NHlZ?=
+ =?utf-8?B?YnAzZU95cHl3UW4xUTcySXFjWXRoaVQ1ZVlRSlJGL01qUHZ6Unc3ZFVkMXhW?=
+ =?utf-8?B?OTlzb0srQjMwdjlJYXRWQTR3SWRXSEdRSUVWb2xaT0tYUUQ0MWNHaHlNaC81?=
+ =?utf-8?B?UzdZelVBY3BDNkNSYnB0L250bUVLL05wS2tQTGpUZXFWY241Sng1YlZCWjdq?=
+ =?utf-8?B?Q3dKOTVGazhDcUtoS3Q2SEJZVEs4UmczY3hSN2ZmcmRjVVcremI2STBhc01F?=
+ =?utf-8?B?SkVrTGpLTkwxSDFTTVd3eEJWdm9neEtCZXJsNTVlLzVtL0pLVHd1MkZzbjRM?=
+ =?utf-8?B?bFEweWd1amN2OHJBMllYUlpweU05Sis1WEtRb1FiWHJsRWt2bVI4MzRPT0cy?=
+ =?utf-8?B?LzQzY2ZsMmZWQWVaMnBiU0JCaldTMzhQREQvTVVSZW8walR6RWRYZVRMaUJS?=
+ =?utf-8?B?L0w4SHdpWlprWXc3TWhuN3QrN1dXaDJyOEs1TllkTVVZeUdjbjlGYUZldHV5?=
+ =?utf-8?B?Rnc3YWFFcEVNZ1VKY2o4K24rVG1QbGNrY0NydXFaUlU0Z0d6U3BlV0hoWDFJ?=
+ =?utf-8?B?K3VNYnlTWWlWRXExMEFxdXJlNWUra3I4dkZlYjNieHh0aHB1dVlmcEQ5a3Rj?=
+ =?utf-8?B?N3E4NWJHNFhCRUltdy8rRVFRUVRwV1VrN2NnY3ZVcGNYTGhmUmNkUUU3Ymx6?=
+ =?utf-8?B?ekJHWk1rTkx4WUNiZlZVdXNZcTgrV2JKS1hDK3dPbHF2bkpubXRPOEo3QlBF?=
+ =?utf-8?B?NnROWER3V1kwUW9oY2NlcWhHMGllQmdBVmNFQnI0RUlWNkI5eGhKekhHQU1J?=
+ =?utf-8?B?YWJuRTUzdm9INXY3cTRqaWRvOWdGKzRTVmtSWWFiWjNac1I3SlNYWS9Uam8w?=
+ =?utf-8?B?bml1b1c3a0FtZ0c4YzhhSytBbSt5MzhteUpzVHZHZ3lUSm82NUpVWHoycWdI?=
+ =?utf-8?B?T2pBZEdwdkwxR2syK3VQK3kvMjNWV0JDYVpLZS9PTTlLR3psSTdkeW9HV1g1?=
+ =?utf-8?B?RUZYZ294VEZQVS9ZVmo0azF6cWRVQWNhUGpKSzlCTnhnRGRxNzVFN2ZwZ2pp?=
+ =?utf-8?B?UzArVVRva1RIbExRd0sySXFrRHZGckpaWjd3d21BV3VzeUxkUGltdkpUa0xt?=
+ =?utf-8?B?dHZ5M1h2UlZURkl1MUdJUW90a1ZWZDdxaTZWRHFlemVscWVlL0dOL3EzM1JQ?=
+ =?utf-8?Q?y9huTdTB27PU5PzyTU54t7giW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ddd3548-e5e7-4bce-876f-08dc91fce58b
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 14:17:34.9892
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xbfZ7sg7O2sMEfnV9M/emujfbTYw1HzbikCmqqEjk0cGhBr3oNNN4hgPhV3ayc83jWfEBAMzXsNIn9ZXrbgOJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7601
 
-This is "drm/radeon: remove load callback" v2, the only changes
-were made are adding "ddev->dev_private = rdev;", right after
-the allocation of "struct radeon_device". Patch v2 2-7 mostly
-describes simple "rdev->ddev" to "rdev_to_drm(rdev)" to suit
-Patch v2 1/7.
+On 6/21/24 08:59, Borislav Petkov wrote:
+> On Wed, Jun 05, 2024 at 10:38:37AM -0500, Tom Lendacky wrote:
+>> -static u64 probed_rmp_base, probed_rmp_size;
+>> +static u64 probed_rmp_base, probed_rmp_end, probed_rmp_size;
+> 
+> Why do you need _end if you have _size already?
+> 
+> IOW, please compute _end where you need it instead of adding yet another
+> static.
 
-Please be aware that these 7 patches depends on each other.
+I think it makes the code easier to follow and less of a chance to compute
+the value wrong given you have to substract 1 (end = base + size - 1). I
+guess I can create a #define or a helper function so that the calculation
+is always the same if that is preferred.
 
-Thank you.
+Thanks,
+Tom
 
-Signed-off-by: Wu Hoi Pok <wuhoipok@gmail.com>
----
- drivers/gpu/drm/radeon/radeon.h     | 11 ++++++++---
- drivers/gpu/drm/radeon/radeon_drv.c | 27 ++++++++++++++++++---------
- drivers/gpu/drm/radeon/radeon_drv.h |  1 -
- drivers/gpu/drm/radeon/radeon_kms.c | 18 ++++++------------
- 4 files changed, 32 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/radeon.h
-index 0999c8eaae94..69bb30ced189 100644
---- a/drivers/gpu/drm/radeon/radeon.h
-+++ b/drivers/gpu/drm/radeon/radeon.h
-@@ -2297,7 +2297,7 @@ typedef void (*radeon_wreg_t)(struct radeon_device*, uint32_t, uint32_t);
- 
- struct radeon_device {
- 	struct device			*dev;
--	struct drm_device		*ddev;
-+	struct drm_device		ddev;
- 	struct pci_dev			*pdev;
- #ifdef __alpha__
- 	struct pci_controller		*hose;
-@@ -2440,10 +2440,13 @@ struct radeon_device {
- 	u64 gart_pin_size;
- };
- 
-+static inline struct drm_device *rdev_to_drm(struct radeon_device *rdev)
-+{
-+	return &rdev->ddev;
-+}
-+
- bool radeon_is_px(struct drm_device *dev);
- int radeon_device_init(struct radeon_device *rdev,
--		       struct drm_device *ddev,
--		       struct pci_dev *pdev,
- 		       uint32_t flags);
- void radeon_device_fini(struct radeon_device *rdev);
- int radeon_gpu_wait_for_idle(struct radeon_device *rdev);
-@@ -2818,6 +2821,8 @@ struct radeon_device *radeon_get_rdev(struct ttm_device *bdev);
- 
- /* KMS */
- 
-+int radeon_driver_load_kms(struct radeon_device *dev, unsigned long flags);
-+
- u32 radeon_get_vblank_counter_kms(struct drm_crtc *crtc);
- int radeon_enable_vblank_kms(struct drm_crtc *crtc);
- void radeon_disable_vblank_kms(struct drm_crtc *crtc);
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 7bf08164140e..ae9cadceba83 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -259,7 +259,8 @@ static int radeon_pci_probe(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
- 	unsigned long flags = 0;
--	struct drm_device *dev;
-+	struct drm_device *ddev;
-+	struct radeon_device *rdev;
- 	int ret;
- 
- 	if (!ent)
-@@ -300,28 +301,37 @@ static int radeon_pci_probe(struct pci_dev *pdev,
- 	if (ret)
- 		return ret;
- 
--	dev = drm_dev_alloc(&kms_driver, &pdev->dev);
--	if (IS_ERR(dev))
--		return PTR_ERR(dev);
-+	rdev = devm_drm_dev_alloc(&pdev->dev, &kms_driver, typeof(*rdev), ddev);
-+	if (IS_ERR(rdev))
-+		return PTR_ERR(rdev);
-+
-+	rdev->dev  = &pdev->dev;
-+	rdev->pdev = pdev;
-+	ddev = rdev_to_drm(rdev);
-+	ddev->dev_private = rdev;
- 
- 	ret = pci_enable_device(pdev);
- 	if (ret)
- 		goto err_free;
- 
--	pci_set_drvdata(pdev, dev);
-+	pci_set_drvdata(pdev, ddev);
-+
-+	ret = radeon_driver_load_kms(rdev, flags);
-+	if (ret)
-+		goto err_agp;
- 
--	ret = drm_dev_register(dev, ent->driver_data);
-+	ret = drm_dev_register(ddev, flags);
- 	if (ret)
- 		goto err_agp;
- 
--	radeon_fbdev_setup(dev->dev_private);
-+	radeon_fbdev_setup(ddev->dev_private);
- 
- 	return 0;
- 
- err_agp:
- 	pci_disable_device(pdev);
- err_free:
--	drm_dev_put(dev);
-+	drm_dev_put(ddev);
- 	return ret;
- }
- 
-@@ -569,7 +579,6 @@ static const struct drm_ioctl_desc radeon_ioctls_kms[] = {
- static const struct drm_driver kms_driver = {
- 	.driver_features =
- 	    DRIVER_GEM | DRIVER_RENDER | DRIVER_MODESET,
--	.load = radeon_driver_load_kms,
- 	.open = radeon_driver_open_kms,
- 	.postclose = radeon_driver_postclose_kms,
- 	.unload = radeon_driver_unload_kms,
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.h b/drivers/gpu/drm/radeon/radeon_drv.h
-index 02a65971d140..6c1eb75a951b 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.h
-+++ b/drivers/gpu/drm/radeon/radeon_drv.h
-@@ -117,7 +117,6 @@
- long radeon_drm_ioctl(struct file *filp,
- 		      unsigned int cmd, unsigned long arg);
- 
--int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags);
- void radeon_driver_unload_kms(struct drm_device *dev);
- int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv);
- void radeon_driver_postclose_kms(struct drm_device *dev,
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index a16590c6247f..d2df194393af 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -91,7 +91,7 @@ void radeon_driver_unload_kms(struct drm_device *dev)
- /**
-  * radeon_driver_load_kms - Main load function for KMS.
-  *
-- * @dev: drm dev pointer
-+ * @rdev: radeon dev pointer
-  * @flags: device flags
-  *
-  * This is the main load function for KMS (all asics).
-@@ -101,24 +101,18 @@ void radeon_driver_unload_kms(struct drm_device *dev)
-  * (crtcs, encoders, hotplug detect, etc.).
-  * Returns 0 on success, error on failure.
-  */
--int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
-+int radeon_driver_load_kms(struct radeon_device *rdev, unsigned long flags)
- {
--	struct pci_dev *pdev = to_pci_dev(dev->dev);
--	struct radeon_device *rdev;
-+	struct pci_dev *pdev = rdev->pdev;
-+	struct drm_device *dev = rdev_to_drm(rdev);
- 	int r, acpi_status;
- 
--	rdev = kzalloc(sizeof(struct radeon_device), GFP_KERNEL);
--	if (rdev == NULL) {
--		return -ENOMEM;
--	}
--	dev->dev_private = (void *)rdev;
--
- #ifdef __alpha__
- 	rdev->hose = pdev->sysdata;
- #endif
- 
- 	if (pci_find_capability(pdev, PCI_CAP_ID_AGP))
--		rdev->agp = radeon_agp_head_init(dev);
-+		rdev->agp = radeon_agp_head_init(rdev_to_drm(rdev));
- 	if (rdev->agp) {
- 		rdev->agp->agp_mtrr = arch_phys_wc_add(
- 			rdev->agp->agp_info.aper_base,
-@@ -147,7 +141,7 @@ int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
- 	 * properly initialize the GPU MC controller and permit
- 	 * VRAM allocation
- 	 */
--	r = radeon_device_init(rdev, dev, pdev, flags);
-+	r = radeon_device_init(rdev, flags);
- 	if (r) {
- 		dev_err(dev->dev, "Fatal error during GPU init\n");
- 		goto out;
--- 
-2.45.2
-
+> 
+> Thx.
+> 
