@@ -1,189 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B3012BEBE
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CF15665D
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718955085; cv=none; b=Xjb4+XOM+UxvM6q7TE9F3n9vPuim5l+4FJxjGRNCvdLKxEKPdHDsqTsip0d5I72Guwe/4cCR8co+yTTyCzMN2UA7sfmn+k7QcOPJQ+XvLU56JEVUf/LmxgzRN/a7BUJd0lEovU8s8p5B9BC7tW3ecR2m4jvS1D1ey7wq3U87ABI=
+	t=1718955167; cv=none; b=CUUa4KfikjMR1xpN5z/HMB/0olk6WS4fYz0Oy+Qakn/EDy2Rz7hmo9fSvFWxZQs71mBHpemO4hl9wLaY6Rgi5P+srcd3twkZczeXD74PfiXVcNasOEVvwuUjMsyVbhtL0xtBpQ4wiRNj1k98o5ixv081MTwsL8Wy5mvdJ65Oez8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718955085; c=relaxed/simple;
-	bh=ALwdtUD/YHsGnL/G8pNXuGO20B79QLbb9uTamfeIQT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uFpfdfGOzbyN/x4Lp1Z8S0//YpDd/j6gLG8sDKov8aNjhWlgsi/LuwiviQ7EOyjGXfqibfzA7GNzpe7q1KoquYqSFVktKYHVVEqFcsXucsHDzX7V4N6qRWDrJPHWIhPEkIld+dNZKb2fY8vqWPyoqksQSn4PkRfyeznr6pKaOxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dIK7GzkO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718955167; c=relaxed/simple;
+	bh=mAkyVAfjwU9JX2bFu681SWPgxd7Q8ZRlIEpIvbijX04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pskw5DJ+ZaMbSnHbjiztbycIiJ2c0c1ZLPJ2Jmgpe9/73WGR8LwLuaDdXqaSwjXb/0qjjbeZHAQU9sCXUIBbcDvKFfi3SPGbVoRtDHhRrKANzdntY83vACm5/+3FWSjfFvDqAqNkVzeR0KHzMkgIkans7rlzoMuWZqRLlIh5nFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xc4JgbPl; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIK7GzkO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718955083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=I3hxK8GFs+pdrXE1ju6QkzGBjzD4c6Z8f6FP/BqeI0g=;
-	b=dIK7GzkOyiv/RnKR08rDNgfgDRZ9cogKFd6Y3PD1EosUmAO3eGtHi8ycgQ0B6ee5LvZHrR
-	pSV1J1dNtzZDGylFMV6RoMeP9CLcO8OYvDu+Je996xApWcs8ewPlzBSW28YJryroD7QF5Q
-	KMDEKC//xhj8CWLv+JaO3dKjIVsE5Ik=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-445-t5oDru4IO0OHG3J95_Rqaw-1; Fri, 21 Jun 2024 03:31:21 -0400
-X-MC-Unique: t5oDru4IO0OHG3J95_Rqaw-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ec4d8ceaafso3768911fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 00:31:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xc4JgbPl"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57cbc2a2496so1987592a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 00:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718955164; x=1719559964; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e1fAFm+e+fwl4p3avvK+TEsJDfR37gnsqnlBJ9746Co=;
+        b=Xc4JgbPl3y5oGzKX12XBWBud6X8fJommiMj9JlNe6V7f7reZOtXM4zzQaV6k4hP94k
+         RoJ7iptEF7kDd7yloBtHNpu9PfzFQeB9QUXquUg+oi29Sj+MjT0H9ILMjTMEK8jmBRzQ
+         QQes7Qfl1sDrqJqvZtRHVlM8iPrurpanmdb5eIp5/KBtNDo4HkTRAYsKU1EUq+tpvjj9
+         C7TtVhnjzMPVbtalvhKjDI+mZJYel+9CqqCMrRMltlAsbEn8+lwDdkQN623UrIT1PZPg
+         of9wFVF70XA+5pSt9pxpnrXaCn/u88mIj8Cg9Qv21gGal4xm39hpc7Rjto/pNv7KvAqA
+         A73g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718955079; x=1719559879;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=I3hxK8GFs+pdrXE1ju6QkzGBjzD4c6Z8f6FP/BqeI0g=;
-        b=tu4TMRktQMDIJ3ZEtT+day6e22TYEHUbjsXlOSmln2KKEdiYV6zVepmomqg7dHldNj
-         6tQgZMKtAQBgzJ3XWbwVIxKd2rQRzmnjcSAKqo9DTXoVK+bigyrVUeQUg5dQUlFOv5q9
-         6FAPUg+ITDFkNA8RifV7jtF9ZiNf98OZYQ79bTgmVjO6Bdt8x5l2hs0jNRDar2qEBLQt
-         Zb6Ha/I4opgUuUwlgVdFgD1rjw55ZAl+ww71Ra+ZOBI0+EAXK1gveTPziN1NGZlX5Bhb
-         Uak1Vac32yXv2m+dCBvenIaadY9E7M1LrPIzTGz1fXWo/bcbpkQbOc7CBUnAXyALQ3EU
-         xnyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXv+Gci6c5kwHFJxGC9888Hq57bQEaRvPf18glM1liMV0LwCzFdbEOFx8VSajn8smuPFaqdfrJ/1EO6fvaKEnMLLymHcp2UWkjELFpa
-X-Gm-Message-State: AOJu0YyMXFiEQsNZdFJSu2YctuvaTQDAfx9wspxbu6uAOXMFFEx8o/KZ
-	4lC8gj1VQkpu3Na4Gy5o7KIQu+K6AqLP9DF7N/HuPUhxY9GaROnZpPheMRaQELokahyA8UDl+x7
-	yXk+G7ZVSfj25b9HEVPEqUY7iheIuY+sDmGxm07EhzlLEmgl6m2y5bE1j26qdHw==
-X-Received: by 2002:a2e:8011:0:b0:2ec:575:bf9f with SMTP id 38308e7fff4ca-2ec3cfe9355mr59901951fa.37.1718955079651;
-        Fri, 21 Jun 2024 00:31:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvSDINZZGTjSWzz8ACtz4MjhzWJ2hdBJJtS1gev/Cr5eysxRW4Ng+j3zS0YvUcof2VdpUqqA==
-X-Received: by 2002:a2e:8011:0:b0:2ec:575:bf9f with SMTP id 38308e7fff4ca-2ec3cfe9355mr59901651fa.37.1718955079172;
-        Fri, 21 Jun 2024 00:31:19 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c725:e600:4063:2059:fd18:9d65? (p200300cbc725e60040632059fd189d65.dip0.t-ipconnect.de. [2003:cb:c725:e600:4063:2059:fd18:9d65])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0b6355sm51444295e9.2.2024.06.21.00.31.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 00:31:18 -0700 (PDT)
-Message-ID: <10cd22d3-cb58-4ec9-a22d-5b8555044623@redhat.com>
-Date: Fri, 21 Jun 2024 09:31:17 +0200
+        d=1e100.net; s=20230601; t=1718955164; x=1719559964;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e1fAFm+e+fwl4p3avvK+TEsJDfR37gnsqnlBJ9746Co=;
+        b=N9hI2q5NKFzMwDPwDPYBPHXln7WgWmwSIzU0K/nkkf4Mh7C4HGRH3yI6zbYQ5PxWnE
+         NWZjDkTjz0rItj6I+9eWTFh5oGiUbi8geeDgoGJpsj63/WbbuOUF0guZWi6aHKlU4lrH
+         jYhJa743nINWX19u+IO67ojFo9fTdDeUcM51hm4CS2OSs3NCa98G9JPJe5yQb+dklRVT
+         mqs/f8qUOPVoMgeallufJFBf/e9+kcyKKTjilixdAUWLVTtaaMHXf18LLKFqOgeKhBzH
+         XukKmaJtGx2r8WcgzHu51ov3mwJL3uCBD9UnV2waLeadKo69TRpo7rVohZ08waklZILd
+         G2ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWUpI+fGAhSi7VHelzxVxwBfdz20ontZGg5C8leYHB7O/i9O2hLjUpAjoZ+BV8pXAcnoseVXCq6EhzQvo/3fKgoejad4i11Pk7dhsk4
+X-Gm-Message-State: AOJu0Yzn5kkuVUKh/Rafv4A3/kR9Adkgz37z1xVhqzcJGm6WFl0S9mtW
+	EmE9nUIrAeBDO09NCY88Wz3N21S2BetYMRcyC5xoGspEexq+lLFkXVfM1rtx/Q==
+X-Google-Smtp-Source: AGHT+IGQUGmgU0uXOViTqXbPvvn37qtzDP+kkZ4bvmoG0/DYSamWSm6G++bLxYcqakW19CJtXkx5Qw==
+X-Received: by 2002:aa7:d153:0:b0:57d:7ef:573b with SMTP id 4fb4d7f45d1cf-57d07ef576amr5115522a12.38.1718955164162;
+        Fri, 21 Jun 2024 00:32:44 -0700 (PDT)
+Received: from google.com (118.240.90.34.bc.googleusercontent.com. [34.90.240.118])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d303d7b10sm550126a12.15.2024.06.21.00.32.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 00:32:43 -0700 (PDT)
+Date: Fri, 21 Jun 2024 07:32:40 +0000
+From: Quentin Perret <qperret@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Elliot Berman <quic_eberman@quicinc.com>,
+	David Hildenbrand <david@redhat.com>, Fuad Tabba <tabba@google.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+	maz@kernel.org, kvm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, pbonzini@redhat.com
+Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
+Message-ID: <ZnUsmFFslBWZxGIq@google.com>
+References: <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
+ <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
+ <20240619115135.GE2494510@nvidia.com>
+ <ZnOsAEV3GycCcqSX@infradead.org>
+ <CA+EHjTxaCxibvGOMPk9Oj5TfQV3J3ZLwXk83oVHuwf8H0Q47sA@mail.gmail.com>
+ <20240620135540.GG2494510@nvidia.com>
+ <6d7b180a-9f80-43a4-a4cc-fd79a45d7571@redhat.com>
+ <20240620142956.GI2494510@nvidia.com>
+ <20240620140516768-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <20240620231814.GO2494510@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] mm/migrate: move NUMA hinting fault folio
- isolation + checks under PTL
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-References: <20240620212935.656243-1-david@redhat.com>
- <20240620212935.656243-3-david@redhat.com>
- <05b89531-4103-49cb-bbbf-5a2cfaa3106b@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <05b89531-4103-49cb-bbbf-5a2cfaa3106b@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620231814.GO2494510@nvidia.com>
 
-On 21.06.24 06:07, Baolin Wang wrote:
+On Thursday 20 Jun 2024 at 20:18:14 (-0300), Jason Gunthorpe wrote:
+> On Thu, Jun 20, 2024 at 03:47:23PM -0700, Elliot Berman wrote:
+> > On Thu, Jun 20, 2024 at 11:29:56AM -0300, Jason Gunthorpe wrote:
+> > > On Thu, Jun 20, 2024 at 04:01:08PM +0200, David Hildenbrand wrote:
+> > > > Regarding huge pages: assume the huge page (e.g., 1 GiB hugetlb) is shared,
+> > > > now the VM requests to make one subpage private. 
+> > > 
+> > > I think the general CC model has the shared/private setup earlier on
+> > > the VM lifecycle with large runs of contiguous pages. It would only
+> > > become a problem if you intend to to high rate fine granual
+> > > shared/private switching. Which is why I am asking what the actual
+> > > "why" is here.
+> > > 
+> > 
+> > I'd let Fuad comment if he's aware of any specific/concrete Anrdoid
+> > usecases about converting between shared and private. One usecase I can
+> > think about is host providing large multimedia blobs (e.g. video) to the
+> > guest. Rather than using swiotlb, the CC guest can share pages back with
+> > the host so host can copy the blob in, possibly using H/W accel. I
+> > mention this example because we may not need to support shared/private
+> > conversions at granularity finer than huge pages. 
 > 
+> I suspect the more useful thing would be to be able to allocate actual
+> shared memory and use that to shuffle data without a copy, setup much
+> less frequently. Ie you could allocate a large shared buffer for video
+> sharing and stream the video frames through that memory without copy.
 > 
-> On 2024/6/21 05:29, David Hildenbrand wrote:
->> Currently we always take a folio reference even if migration will not
->> even be tried or isolation failed, requiring us to grab+drop an additional
->> reference.
->>
->> Further, we end up calling folio_likely_mapped_shared() while the folio
->> might have already been unmapped, because after we dropped the PTL, that
->> can easily happen. We want to stop touching mapcounts and friends from
->> such context, and only call folio_likely_mapped_shared() while the folio
->> is still mapped: mapcount information is pretty much stale and unreliable
->> otherwise.
->>
->> So let's move checks into numamigrate_isolate_folio(), rename that
->> function to migrate_misplaced_folio_prepare(), and call that function
->> from callsites where we call migrate_misplaced_folio(), but still with
->> the PTL held.
->>
->> We can now stop taking temporary folio references, and really only take
->> a reference if folio isolation succeeded. Doing the
->> folio_likely_mapped_shared() + golio isolation under PT lock is now similar
->> to how we handle MADV_PAGEOUT.
+> This is slightly different from converting arbitary memory in-place
+> into shared memory. The VM may be able to do a better job at
+> clustering the shared memory allocation requests, ie locate them all
+> within a 1GB region to further optimize the host side.
 > 
-> s/golio/folio
+> > Jason, do you have scenario in mind? I couldn't tell if we now had a
+> > usecase or are brainstorming a solution to have a solution.
 > 
-> Make sense to me. Feel free to add:
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> No, I'm interested in what pKVM is doing that needs this to be so much
+> different than the CC case..
 
+The underlying technology for implementing CC is obviously very
+different (MMU-based for pKVM, encryption-based for the others + some
+extra bits but let's keep it simple). In-place conversion is inherently
+painful with encryption-based schemes, so it's not a surprise the
+approach taken in these cases is built around destructive conversions as
+a core construct. But as Elliot highlighted, the MMU-based approach
+allows for pretty flexible and efficient zero-copy, which we're not
+ready to sacrifice purely to shoehorn pKVM into a model that was
+designed for a technology that has very different set of constraints.
+A private->shared conversion in the pKVM case is nothing more than
+setting a PTE in the recipient's stage-2 page-table.
 
-Thanks!
+I'm not at all against starting with something simple and bouncing via
+swiotlb, that is totally fine. What is _not_ fine however would be to
+bake into the userspace API that conversions are not in-place and
+destructive (which in my mind equates to 'you can't mmap guest_memfd
+pages'). But I think that isn't really a point of disagreement these
+days, so hopefully we're aligned.
 
-[...]
+And to clarify some things I've also read in the thread, pKVM can
+handle the vast majority of faults caused by accesses to protected
+memory just fine. Userspace accesses protected guest memory? Fine,
+we'll SEGV the userspace process. The kernel accesses via uaccess
+macros? Also fine, we'll fail the syscall (or whatever it is we're
+doing) cleanly -- the whole extable machinery works OK, which also
+means that things like load_unaligned_zeropad() keep working as-is.
+The only thing pKVM does is re-inject the fault back into the kernel
+with some extra syndrome information it can figure out what to do by
+itself.
 
->>    	node_stat_mod_folio(folio, NR_ISOLATED_ANON + folio_is_file_lru(folio),
->>    			    nr_pages);
->> -
->> -	/*
->> -	 * Isolating the folio has taken another reference, so the
->> -	 * caller's reference can be safely dropped without the folio
->> -	 * disappearing underneath us during migration.
->> -	 */
->> -	folio_put(folio);
->> -	return 1;
->> +	return 0;
->>    }
-> 
-> (just a nit: returning boolean seems more readable)
+It's really only accesses via e.g. the linear map that are problematic,
+hence the exclusive GUP approach proposed in the series that tries to
+avoid that by construction. That has the benefit of leaving
+guest_memfd to other CC solutions that have more things in common. I
+think it's good for that discussion to happen, no matter what we end up
+doing in the end.
 
-"return true" on success really is nasty in a code base where most 
-functions return "0" on success. Like most functions in mm/migrate.c -- 
-like migrate_pages() -- do.
+I hope that helps!
 
-Thanks!
-
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks,
+Quentin
