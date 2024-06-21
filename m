@@ -1,257 +1,103 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC113F9D2;
-	Fri, 21 Jun 2024 14:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F7C2BAE3;
+	Fri, 21 Jun 2024 14:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718981164; cv=none; b=WCrtXrXDk9iHtFtoqEccgpXpAgDWVLcatXj2i9LCES96J09XGO77vz4G/qswifKUBc38SFgkuJD5cfctJQCKvpIA0SoH+/lIc6w/in4rdUpquPEdNTu0lddKsKnzenvF+jqn3SBpjWJRJM3hRFNFGqw+jqhkBx/zTom4k9Vx2CI=
+	t=1718981213; cv=none; b=sPUdIu60VeORkC4OryXB+yMZIQvLiz9p6QVkeG7mjEvLDdNu+rXyDktuEj5N/EgYOhC6fg716szF4TgdDw4Sy1XBMvMJYs+zHi5JtxhuJdzuOj7c1b+VBnHtu604v3eoWxvbxisB7F0TODV+sk3H7eVBr2uUnxoKC4otqtEBGSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718981164; c=relaxed/simple;
-	bh=W6VBJEwx7GaHn5dQ6gebVajgnfevDIVyEUvNR5fSpkg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bO6g9URfrES/1fCgfSuQqT+k0qkOgEyNSLE4AT29yAZBq2cb0ZpbZ6bi6f4IqF995zQ9ctbgPtrXak63Bez6La/ICLS9YFd7AyaTHQ8vi4s9Hl+S8GAlErrmUUMb7fba0oeGA0osDHycbtz1zhY0H5BkyXS8sjUAAtWxdl9OCz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=dcAgLZKf; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="dcAgLZKf"
-Date: Fri, 21 Jun 2024 17:45:49 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1718981149;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kL1ojzvjz94owNmxXJ9QV4NNgpW2IzPOdeNUTrGd78E=;
-	b=dcAgLZKfdNVw9IhB1RBz6m2tAu0hBNEskLCy03eFn23fWrwd9dAN74261/ZUN8Cgf4aHjO
-	782EPFrRWZC9zbDLsqJ3C6ynSlWmYYaQj5oAE/Q9N/vsPWrudJhpHgYR0Buw/5hb+6B9yy
-	nOESNV8qR4H4bjNvU+9JqKWlg4o7WJ4=
-From: Andrey Kalachev <kalachev@swemel.ru>
-To: syzbot <syzbot+e738404dcd14b620923c@syzkaller.appspotmail.com>
-Cc: davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Subject: Re: [syzbot] WARNING in ip_rt_bug (2)
-Message-ID: <ZnWSHbkV6qVy1KHd@ural>
-References: <000000000000b1060905eada8881@google.com>
+	s=arc-20240116; t=1718981213; c=relaxed/simple;
+	bh=yQVb2DeThksBLy1v6heanX+uAjJHYjLCnQz2w0NHRqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YmEIBUhjXVsMMl8nmdRcV41bKoNF7nGirGRTCNZy9FsK4AkZI6CY3H7479Oq1StdgDN5y2fIJ3E2hv6yC90ejBeYsbOknPp9/1+wagUI1BPM3IFtbARkrWw1WGfMveaCs351gw0xl1P2XYkjPtbDlActwRFvNb2u/OsesOhB7Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52c89d6b4adso2023884e87.3;
+        Fri, 21 Jun 2024 07:46:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718981208; x=1719586008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yQVb2DeThksBLy1v6heanX+uAjJHYjLCnQz2w0NHRqc=;
+        b=tQ5sLXnzoPkaSkLZ5Wqt7NISILtrnAxq6fkaJY9T4b7PUG2ZjeIrFHeXKB9hfekJyc
+         P8918gYagsgFd/bYldXpPefhRcCO14fzT4Ka6wzXKyFRq7BI6UStt+Vcm6Krq4DIkUTK
+         660eiQR+CthCx/Al6x/QssiVC+BYIT8Q04cfcMHYg6WvfcRFWMCUAP5NwmvKhqZnw/+E
+         clfdo8gpwFJE+cOUtJ9iRBTkJxx9HU1ETKCFV/y5xqbTnCAfEoQgI9W3H/BVaJ56Fm09
+         ne4LQ1t2aEskLDg26V/anLBGwBPQIknxrO7DwF0eQwDroMKJanoIH8exx/vFtCyAF0r7
+         JAAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcU0xLQhgIl+Y+Uw9C3XH0a4RA9HEEqgMU2q5G0bSlg0tFkNJr/nHxohUuP31pGL/mwVHTkOwc1tLXK4IbYF+4UrPo4UlK0vJR+pMiNXsfxYTGAuvVmH6HdFLfzMJmLziqTpXuaLUfh8z4jMTmj2pX2DPGa19DksL0TfxVUJF+6e7T44tPlv0yBkOyxu5aQEVdD6M9IsQJN0HlXzlh8Jl2s+Q2LkYMnF6hos2m0m+caiPh1kCkIU26gvp36d8j9GTxWYrQz+HcCKhXy0d3BNX6I/Ka//1IMaZALXqXp/Di+o5h34HuqhBZUBecec1t36R6XyOA/7M7yyPqRQqzDPeE7rhthw==
+X-Gm-Message-State: AOJu0YwkNyvdXvfLGvyEDUYuc1kzW0LCCAmhe4/Z2qlhXIH9PMDh/NOc
+	3HLSthSXTx1qr1lRVAhCBqhjS/U8dfvLzCZXBmZiyVyOvdvzkJTHXuo22gM/DpM=
+X-Google-Smtp-Source: AGHT+IER7wT4R9FfGOzQ5BNfgll5zO8oVJ4SPQG+6xi9r8nDKeH7ziLtYU/BWHh5yJD3VLyT3Eb/yA==
+X-Received: by 2002:ac2:5e78:0:b0:52b:bdbd:2c43 with SMTP id 2adb3069b0e04-52ccaaa8d27mr4679346e87.61.1718981207807;
+        Fri, 21 Jun 2024 07:46:47 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdace206esm100345e87.286.2024.06.21.07.46.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 07:46:47 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cccd44570so2468895e87.2;
+        Fri, 21 Jun 2024 07:46:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVr3Wm/MY98z91lj2BJiaYsaP47maRZCyqyfvlJCH8OKjvpALfVSBALIZVvvXSr9Y3QRUut4A3mrmprnUkALNaXApBMiZkE35fsGixCdo0OcszqeWEUkGoCl4LiSPKidpmLgLyy4lzMFAkTvzjR1ANGi5JYPwQr7SMFoJh90SeJcC9TJlfyTjWDtBCTAEasPqcuHGmLxBUKrPTy2t9qA38/3+qLfup2AgRW4uESKsAT9RgrKYRGpTn5/n+10V1bOCMBkrhvxJIYgiiC4yFMQ2TynBfiBOhdltc35NL8opGh9D1j1tQ43eH46PXM01HzFxhDR5lAaXcclO4CXyIVfGVtYG8B7Q==
+X-Received: by 2002:a05:651c:104c:b0:2ec:5073:5816 with SMTP id
+ 38308e7fff4ca-2ec507358edmr10687831fa.31.1718981186574; Fri, 21 Jun 2024
+ 07:46:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <000000000000b1060905eada8881@google.com>
+References: <20240614-dt-bindings-thermal-allof-v1-0-30b25a6ae24e@linaro.org> <20240614-dt-bindings-thermal-allof-v1-3-30b25a6ae24e@linaro.org>
+In-Reply-To: <20240614-dt-bindings-thermal-allof-v1-3-30b25a6ae24e@linaro.org>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Fri, 21 Jun 2024 22:46:13 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65T80TH9HUpny8vK2KNrE6aYQHf4x0CAUrxKWih34TdTA@mail.gmail.com>
+Message-ID: <CAGb2v65T80TH9HUpny8vK2KNrE6aYQHf4x0CAUrxKWih34TdTA@mail.gmail.com>
+Subject: Re: [PATCH 03/22] dt-bindings: thermal: allwinner,sun8i-a83t-ths:
+ reference thermal-sensor schema
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Guillaume La Roque <glaroque@baylibre.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Vasily Khoruzhick <anarsoul@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Anson Huang <Anson.Huang@nxp.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Amit Kucheria <amitk@kernel.org>, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+	Heiko Stuebner <heiko@sntech.de>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Pascal Paillet <p.paillet@foss.st.com>, Keerthy <j-keerthy@ti.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	zhanghongchen <zhanghongchen@loongson.cn>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	imx@lists.linux.dev, linux-tegra@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, 
+	Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 12, 2022 at 11:26:40AM -0700, syzbot wrote:
->Hello,
+On Fri, Jun 14, 2024 at 5:46=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
->syzbot found the following issue on:
+> Device is a thermal sensor and it requires '#thermal-sensor-cells', so
+> reference the thermal-sensor.yaml to simplify it and bring the
+> common definition of '#thermal-sensor-cells' property.
 >
->HEAD commit:    a0ba26f37ea0 Merge git://git.kernel.org/pub/scm/linux/kern..
->git tree:       net
->console output: https://syzkaller.appspot.com/x/log.txt?x=1594a825e00000
->kernel config:  https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
->dashboard link: https://syzkaller.appspot.com/bug?extid=e738404dcd14b620923c
->compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16851c6de00000
->C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f5d605e00000
->
->Bisection is inconclusive: the issue happens on the oldest tested release.
->
->bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1422a825e00000
->final oops:     https://syzkaller.appspot.com/x/report.txt?x=1622a825e00000
->console output: https://syzkaller.appspot.com/x/log.txt?x=1222a825e00000
->
->IMPORTANT: if you fix the issue, please add the following tag to the commit:
->Reported-by: syzbot+e738404dcd14b620923c@syzkaller.appspotmail.com
->
->syz-executor857 uses obsolete (PF_INET,SOCK_PACKET)
->------------[ cut here ]------------
->WARNING: CPU: 1 PID: 7033 at net/ipv4/route.c:1243 ip_rt_bug+0x11/0x20 net/ipv4/route.c:1242
->Kernel panic - not syncing: panic_on_warn set ...
->CPU: 1 PID: 7033 Comm: syz-executor857 Not tainted 5.6.0-rc7-syzkaller #0
->Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->Call Trace:
-> __dump_stack lib/dump_stack.c:77 [inline]
-> dump_stack+0x188/0x20d lib/dump_stack.c:118
-> panic+0x2e3/0x75c kernel/panic.c:221
-> __warn.cold+0x2f/0x35 kernel/panic.c:582
-> report_bug+0x27b/0x2f0 lib/bug.c:195
-> fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> fixup_bug arch/x86/kernel/traps.c:169 [inline]
-> do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
-> do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
-> invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
->RIP: 0010:ip_rt_bug+0x11/0x20 net/ipv4/route.c:1243
->Code: ff ff e8 c2 d7 33 fb e9 eb fe ff ff e8 b8 d7 33 fb e9 59 ff ff ff 0f 1f 00 55 48 89 d5 e8 17 0e f7 fa 48 89 ef e8 6f 0c 8f ff <0f> 0b 31 c0 5d c3 66 0f 1f 84 00 00 00 00 00 41 54 49 89 fc e8 f6
->RSP: 0018:ffffc90001937300 EFLAGS: 00010293
->RAX: ffff8880a2bc2540 RBX: 0000000000000000 RCX: 0000000000000000
->RDX: 0000000000000000 RSI: ffffffff867b1711 RDI: 0000000000000286
->RBP: ffff8880a31fb940 R08: 0000000000000000 R09: ffffed1015ce7074
->R10: ffffed1015ce7073 R11: ffff8880ae73839b R12: ffff8880970b0e00
->R13: ffff8880a31fb940 R14: ffff8880a4a71240 R15: ffff8880a31fb998
-> dst_output include/net/dst.h:436 [inline]
-> ip_local_out+0xaf/0x1a0 net/ipv4/ip_output.c:125
-> ip_send_skb+0x3e/0xe0 net/ipv4/ip_output.c:1560
-> ip_push_pending_frames+0x5f/0x80 net/ipv4/ip_output.c:1580
-> icmp_push_reply+0x33f/0x490 net/ipv4/icmp.c:390
-> __icmp_send+0xc44/0x14a0 net/ipv4/icmp.c:740
-> icmp_send include/net/icmp.h:43 [inline]
-> ip_options_compile+0xad/0xf0 net/ipv4/ip_options.c:486
-> ip_rcv_options net/ipv4/ip_input.c:278 [inline]
-> ip_rcv_finish_core.isra.0+0x4aa/0x1ec0 net/ipv4/ip_input.c:370
-> ip_rcv_finish+0x144/0x2f0 net/ipv4/ip_input.c:426
-> NF_HOOK include/linux/netfilter.h:307 [inline]
-> NF_HOOK include/linux/netfilter.h:301 [inline]
-> ip_rcv+0xd0/0x3c0 net/ipv4/ip_input.c:538
-> __netif_receive_skb_one_core+0xf5/0x160 net/core/dev.c:5187
-> __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5301
-> netif_receive_skb_internal net/core/dev.c:5391 [inline]
-> netif_receive_skb+0x16e/0x960 net/core/dev.c:5450
-> tun_rx_batched.isra.0+0x47b/0x7d0 drivers/net/tun.c:1553
-> tun_get_user+0x134a/0x3be0 drivers/net/tun.c:1997
-> tun_chr_write_iter+0xb0/0x147 drivers/net/tun.c:2026
-> call_write_iter include/linux/fs.h:1902 [inline]
-> new_sync_write+0x49c/0x700 fs/read_write.c:483
-> __vfs_write+0xc9/0x100 fs/read_write.c:496
-> vfs_write+0x262/0x5c0 fs/read_write.c:558
-> ksys_write+0x127/0x250 fs/read_write.c:611
-> do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-> entry_SYSCALL_64_after_hwframe+0x49/0xbe
->RIP: 0033:0x440699
->Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
->RSP: 002b:00007fffce0515b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
->RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000440699
->RDX: 000000000000100c RSI: 0000000020000240 RDI: 0000000000000005
->RBP: 0000000000000000 R08: 0000000000002c00 R09: 00007fff0000000d
->R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401f20
->R13: 0000000000401fb0 R14: 0000000000000000 R15: 0000000000000000
->Kernel Offset: disabled
->Rebooting in 86400 seconds..
->
->
->---
->This report is generated by a bot. It may contain errors.
->See https://goo.gl/tpsmEJ for more information about syzbot.
->syzbot engineers can be reached at syzkaller@googlegroups.com.
->
->syzbot will keep track of this issue. See:
->https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->syzbot can test patches for this issue, for details see:
->https://goo.gl/tpsmEJ#testing-patches
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hello all!
-
-Here a simple "humanitized" reproducer for WARNING-in-ip_rt_bug.
-
-It's looks cryptic a bit, so, may be network subsystem mantainers has some thoughts about.
-
---
-
-/* WARNING in ip_rt_bug (2)
-  *
-  * syzkaller bug links:
-  * https://syzkaller.appspot.com/bug?id=702906331957f4cfed2a64192e9bc6bfb668bf58
-  * https://syzkaller.appspot.com/bug?extid=e738404dcd14b620923c
-  *
-  * crash links:
-  * crash date: 2022/02/07
-  * kernel:     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?id=d8ad2ce873abab1cfd38779c626b79cef6307aac
-  * syzkaller:  https://github.com/google/syzkaller/commits/a7dab6385c1d95547a88e22577fb56fbcd5c37eb
-  * config:     https://syzkaller.appspot.com/text?tag=KernelConfig&x=6f043113811433a5
-  * crash log:  https://syzkaller.appspot.com/text?tag=CrashLog&x=17244b58700000
-  * report:     https://syzkaller.appspot.com/text?tag=CrashReport&x=1512f108700000
-  * c-repro:    https://syzkaller.appspot.com/text?tag=ReproC&x=12bb07c8700000
-  * syz-repro:  https://syzkaller.appspot.com/text?tag=ReproSyz&x=16ee284fb00000
-  */
-
-#define _GNU_SOURCE
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <arpa/inet.h>
-#include <net/if.h>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <linux/ip.h>
-#include <linux/in.h>
-#include <linux/if_tun.h>
-#include <linux/netlink.h>
-#include <linux/virtio_net.h>
-
-#if 0 
-// 10 byte virtio_net_hdr + 44 ip packet size (from header) = 54
-const char b[54] =
-"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-"\x48\x00\x00\x2c\x00\x00\x00\x00\x00\x2f"
-"\x42\xc0\xac\x14\x14\x00\xac\x14\x08\xbb"
-"\x0d\x00\xf2\xff\x00\x00\x00\x00\x00\x00"
-"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-"\x00\x00\x00\x00";
-#endif
-
-#define IP4_SRC_ADDR "172.20.20.0"
-#define IP4_DST_ADDR "172.20.8.187"
-
-union misericorde {
-	struct __attribute__ ((__packed__)) {
-		struct virtio_net_hdr v;
-		struct iphdr ip;
-		char   opt[12];//_u32   options[3];
-	} h;
-	char placeholder[54];
-} m = {
-	.h = {
-		.ip={
-			.version  = 4,
-			.ihl      = 8,
-			.protocol = IPPROTO_GRE,
-		},
-		.opt = "\x0d\x00\xf2\xff",
-	}
-};
-
-const struct ifreq ifr_tuns = { "syzkaller1", (IFF_TUN|IFF_NO_PI|IFF_VNET_HDR) };
-
-// { "syzkaller1", (IFF_UP|IFF_BROADCAST|IFF_DEBUG) }; // original repro
-const struct ifreq ifr_sioc = { "syzkaller1", (IFF_UP) }; 
-
-int main(void)
-{
-	int tun, route, ret;
-
-	inet_pton(AF_INET, IP4_SRC_ADDR, &m.h.ip.saddr);
-	inet_pton(AF_INET, IP4_DST_ADDR, &m.h.ip.daddr);
-	m.h.ip.tot_len = htons(44);
-	m.h.ip.check   = htons(0x42c0);
-
-	system("ip xfrm policy update src 254.136.0.0/0 dst 255.1.0.0/0 dir out flag icmp");
-
-	// ioctl return error, but change state
-	tun = openat(AT_FDCWD, "/dev/net/tun", O_RDWR|O_LARGEFILE|O_CLOEXEC);
-	ret = ioctl(tun, TUNSETIFF, &ifr_tuns); // TUNSETIFF ioctl ret: -1 errno: EFAULT (14)
-	fprintf(stderr, "TUNSETIFF ioctl ret: %d errno: %d\n", ret, errno);
-
-	route = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
-	ret = ioctl(route, SIOCSIFFLAGS, &ifr_sioc); // SIOCSIFFLAGS ioctl ret: 0
-	fprintf(stderr, "SIOCSIFFLAGS ioctl ret: %d errno: %d\n", ret, errno);
-	
-	// call write() ..
-	// randoms in `ip options`: "\x0d\x00\xf2\xff", ip_options_compile() return EINVAL (-22)
-	// so, unsuccessful attempt to send ICMP PARAMETERPROB back
-	ret = write(tun, &m, sizeof(m)); //  ip_rt_bug: IPv4: ip_rt_bug: 172.20.8.187 -> 172.20.20.0, ?
-	fprintf(stderr, "write ret: %d errno: %d\n", ret, errno); // write ret: 54
-}
-
---
-
-Regards,
-Andrey.
+Acked-by: Chen-Yu Tsai <wens@csie.org>
