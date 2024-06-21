@@ -1,228 +1,78 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BE785283
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E3A85283
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718959701; cv=none; b=fVHfX6gpurHcA14ERTU+CFiX4zouMUe4Eiq2pKF5vb4Kfl/1IZA8/nINf3i27u0Ly1jUgQYIpdlOGTTlavTdFQ5YeCMnrZ7XqkOfS/hSGgu2g22cO4K0c4I+zQP5M4VvkCNnRAiyxXQsgtoFYLxWWKblAElnMOeSXYn9EeXeAd8=
+	t=1718959707; cv=none; b=MHqEiU2wtKQmq4XOORSO6X0IWoP/BdMtiqjCk1pt6b376nHHIUhQAeCKVrLF+tgr2qJC37VOg1gYXisCSwwMAcCId2WLPyOmaTTJVyhQj+x+GFQCLRDoftgFtCb8EZoi+ymdR6ZxzDe5p1/kx/YdcCHUXIbvNGxj/2w3R+opBkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718959701; c=relaxed/simple;
-	bh=+yLHlXmJW7jZFy94fl6VyZ/7/XzXLMosWioYmRLyFKc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nVeOLxh8MMz8FmbE63VqJplgwE0Tt9X3Nm6a2qNMopEmmoZohSyNk6LTslbKcnuZm2wpjWhgepGsDF/0USp5PkA/fSFRedjmtKacOQaIj3sLY/g5hw8MFYxPHxtS34GVU8wmeGh8iWwUkhMiDQECM5n9Tih+BfstJz9rCbxEFXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-48c39fe4ee3so461207137.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 01:48:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718959699; x=1719564499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ja4lyIFZFRcSIQN5xjT6xHwvTVomO3KRoG0Nx+9MBcg=;
-        b=Yxd/AQVFqYh8jhkVhYiBX7sMl0Z7DSA2oyXKRlRjiLHR5Pn7yYsYuzEk3JoS0lmk9j
-         wF03nIstBz6qSNx3gIJQJggAetu8+0Z9chtmtiSaH/gZeZzt2Vs6JcrRDxOVu8E+AxO0
-         CQj6thgYcPXXP1X6j/rjXqgdVd+JmwmEksQDGKpeFD9Xv6FToE8ZKGMZHrdbNXiC7+mO
-         H6km7ATcEFk7HmG0YwtnjCnpko2lKd3Rqcykx1CulNWFXJQD3JCpQrifcGNZSeRaoLLt
-         a4ULu29CRji/bSz6Q9NzJXUG5ab+ZURGGJR1rxm66EHO2AdNbveM08ez/dV4xv3jm7vp
-         jt7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV1W75Ws2XpA2kG+lqOnXkZZ1FXjGhMeO9Bchn83rvBZdHIDp/Mjr/pkguO7qYqr7Gizh2b2TIpgGXRJzfaoAmbEtqTt892LbADK3Ti
-X-Gm-Message-State: AOJu0YxZynHGZ/OtRg+dHrsnQyJVLTfyoa/eBU/UF+orFfcJj/5GpxfN
-	mIxmHkHD2jtHr5bL9JKEXFwKtL248Oqds2v3dNYEaaf6ksmQKFaKYcaS6XQiv2FmIL69USQDxSM
-	uO6FbRBO0Jj0oLkwFf8rthFpgB4I=
-X-Google-Smtp-Source: AGHT+IF153qYDBPMeB8NRQG3ram+D+e0BH1Qw+ET5oq5kbceE2mUS0IGcM646+di2IZTQWD+CnJMy5wCf1Ggbh83YO8=
-X-Received: by 2002:a67:fe91:0:b0:48d:b59a:689c with SMTP id
- ada2fe7eead31-48f1303bee1mr8341178137.15.1718959699015; Fri, 21 Jun 2024
- 01:48:19 -0700 (PDT)
+	s=arc-20240116; t=1718959707; c=relaxed/simple;
+	bh=cmNro0s81V3ggh/XTjBQaqQoYmXEBF36FlD7ZvBjvqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dAWQbYMytuzON7JKuVXvihhKI0va+j4qEyFqPUu77l+bwU59mUFNNfgl5E1FfM7f6kjQ7tf1ZPwIMGIzAWbMgkjPYsO+Dlc0Xm8QIv8u8pklap9whBTlg20cTPTMqTQNcJ+Zkr/oX1aJyq7Bq4gCRExG+ptfDJgLsPrJ7dqwoMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qGm3uYFK; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qGm3uYFK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718959697; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=3vsqKJpmmEF1YlrnBNdvTctEj6bpEdbnO2+TdQxtZ1w=;
+	b=qGm3uYFKG9nlkiFJ6tpLIypL+Moz0n7fV3TT8uNjLHXGt++y8m90jBJiHMF2NweGMY6Xd5U5Hg9KtF96FNqrzQ1zui4avl4wsdQdSaY89967NdGv81bF4ckHQmdO23z8xUmMwvLYi7qizqdUaV53xK1qHQCp4GUJeruH5u/XgdU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W8vhyN2_1718959694;
+Received: from 30.221.148.166(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W8vhyN2_1718959694)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Jun 2024 16:48:15 +0800
+Message-ID: <78a99414-314d-452e-938b-07e86182a8bf@linux.alibaba.com>
+Date: Fri, 21 Jun 2024 16:48:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618232648.4090299-1-ryan.roberts@arm.com>
- <CAGsJ_4wx2WD+Msjhqqy7CK1gNGAQ2LGjuM5x_bNdXUOeGsz3xw@mail.gmail.com> <48859779-45ba-445d-8ce0-486575a3fd7b@arm.com>
-In-Reply-To: <48859779-45ba-445d-8ce0-486575a3fd7b@arm.com>
-From: Barry Song <baohua@kernel.org>
-Date: Fri, 21 Jun 2024 20:48:07 +1200
-Message-ID: <CAGsJ_4zkgm5rqUU6VP3T7iH1=3Dak=h_fr5uy+=OsmdsFzFGwg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/5] Alternative mTHP swap allocator improvements
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, "Huang, Ying" <ying.huang@intel.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, Hugh Dickins <hughd@google.com>, 
-	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Shuai Yuan <yuanshuai@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/qxl: Add check for drm_cvt_mode
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: virtualization@lists.linux.dev, spice-devel@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ airlied@redhat.com, kraxel@redhat.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ noralf@tronnes.org
+References: <20240621071031.1987974-1-nichen@iscas.ac.cn>
+From: Heng Qi <hengqi@linux.alibaba.com>
+In-Reply-To: <20240621071031.1987974-1-nichen@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 19, 2024 at 9:18=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
- wrote:
+
+在 2024/6/21 下午3:10, Chen Ni 写道:
+> Add check for the return value of drm_cvt_mode() and return the error if
+> it fails in order to avoid NULL pointer dereference.
 >
-> On 19/06/2024 10:11, Barry Song wrote:
-> > On Wed, Jun 19, 2024 at 11:27=E2=80=AFAM Ryan Roberts <ryan.roberts@arm=
-.com> wrote:
-> >>
-> >> Hi All,
-> >>
-> >> Chris has been doing great work at [1] to clean up my mess in the mTHP=
- swap
-> >> entry allocator. But Barry posted a test program and results at [2] sh=
-owing that
-> >> even with Chris's changes, there are still some fallbacks (around 5% -=
- 25% in
-> >> some cases). I was interested in why that might be and ended up puttin=
-g this PoC
-> >> patch set together to try to get a better understanding. This series e=
-nds up
-> >> achieving 0% fallback, even with small folios ("-s") enabled. I haven'=
-t done
-> >> much testing beyond that (yet) but thought it was worth posting on the=
- strength
-> >> of that result alone.
-> >>
-> >> At a high level this works in a similar way to Chris's series; it mark=
-s a
-> >> cluster as being for a particular order and if a new cluster cannot be=
- allocated
-> >> then it scans through the existing non-full clusters. But it does it b=
-y scanning
-> >> through the clusters rather than assembling them into a list. Cluster =
-flags are
-> >> used to mark clusters that have been scanned and are known not to have=
- enough
-> >> contiguous space, so the efficiency should be similar in practice.
-> >>
-> >> Because its not based around a linked list, there is less churn and I'=
-m
-> >> wondering if this is perhaps easier to review and potentially even get=
- into
-> >> v6.10-rcX to fix up what's already there, rather than having to wait u=
-ntil v6.11
-> >> for Chris's series? I know Chris has a larger roadmap of improvements,=
- so at
-> >> best I see this as a tactical fix that will ultimately be superseeded =
-by Chris's
-> >> work.
-> >>
-> >> There are a few differences to note vs Chris's series:
-> >>
-> >> - order-0 fallback scanning is still allowed in any cluster; the argum=
-ent in the
-> >>   past was that swap should always use all the swap space, so I've lef=
-t this
-> >>   mechanism in. It is only a fallback though; first the the new per-or=
-der
-> >>   scanner is invoked, even for order-0, so if there are free slots in =
-clusters
-> >>   already assigned for order-0, then the allocation will go there.
-> >>
-> >> - CPUs can steal slots from other CPU's current clusters; those cluste=
-rs remain
-> >>   scannable while they are current for a CPU and are only made unscann=
-able when
-> >>   no more CPUs are scanning that particular cluster.
-> >>
-> >> - I'm preferring to allocate a free cluster ahead of per-order scannin=
-g, since,
-> >>   as I understand it, the original intent of a per-cpu current cluster=
- was to
-> >>   get pages for an application adjacent in the swap to speed up IO.
-> >>
-> >> I'd be keen to hear if you think we could get something like this into=
- v6.10 to
-> >> fix the mess - I'm willing to work quickly to address comments and do =
-more
-> >> testing. If not, then this is probably just a distraction and we shoul=
-d
-> >> concentrate on Chris's series.
-> >
-> > Ryan, thank you very much for accomplishing this.
-> >
-> > I am getting Shuai Yuan's (CC'd) help to collect the latency histogram =
-of
-> > add_to_swap() for both your approach and Chris's. I will update you wit=
-h
-> > the results ASAP.
+> Fixes: 1b043677d4be ("drm/qxl: add qxl_add_mode helper function")
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>   drivers/gpu/drm/qxl/qxl_display.c | 3 +++
+>   1 file changed, 3 insertions(+)
 >
-> Ahh great - look forward to the results!
+> diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_display.c
+> index c6d35c33d5d6..86a5dea710c0 100644
+> --- a/drivers/gpu/drm/qxl/qxl_display.c
+> +++ b/drivers/gpu/drm/qxl/qxl_display.c
+> @@ -236,6 +236,9 @@ static int qxl_add_mode(struct drm_connector *connector,
+>   		return 0;
+>   
+>   	mode = drm_cvt_mode(dev, width, height, 60, false, false, false);
+> +	if (!mode)
+> +		return 0;
+> +
+>   	if (preferred)
+>   		mode->type |= DRM_MODE_TYPE_PREFERRED;
+>   	mode->hdisplay = width;
 
-Essentially, we are measuring two types of latency:
-* Small folio swap allocation
- * Large folio swap allocation
+Reviewed-by: Heng Qi <hengqi@linux.alibaba.com>
 
-The concept code is like
-
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 994723cef821..a608b916ed2f 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -185,10 +185,18 @@ bool add_to_swap(struct folio *folio)
-        VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-        VM_BUG_ON_FOLIO(!folio_test_uptodate(folio), folio);
-
-+       start_time =3D ktime_get();
-+
-        entry =3D folio_alloc_swap(folio);
-        if (!entry.val)
-                return false;
-
-+       end_time =3D ktime_get();
-+       if (folio_test_large(folio))
-+               trace_large_swap_allocation_latency(ktime_sub(end_time
-- start_time));
-+       else
-+               trace_small_swap_allocation_latency(ktime_sub(end_time
-- start_time));
-+
-        /*
-         * XArray node allocations from PF_MEMALLOC contexts could
-         * completely exhaust the page allocator. __GFP_NOMEMALLOC
-
-
-Then, we'll generate histograms for both large and small allocation
-latency. We're currently
-encountering some setup issues. Once we have the data, I'll provide
-updates to you and Chris.
-Additionally, I noticed some comments suggesting that Chris's patch
-might negatively impact
-the swap allocation latency of small folios. Perhaps the data can help
-clarify this.
-
->
-> >
-> > I am also anticipating Chris's V3, as V1 seems quite stable, but V2 has
-> > caused a couple of crashes.
-> >
-> >>
-> >> This applies on top of v6.10-rc4.
-> >>
-> >> [1] https://lore.kernel.org/linux-mm/20240614-swap-allocator-v2-0-2a51=
-3b4a7f2f@kernel.org/
-> >> [2] https://lore.kernel.org/linux-mm/20240615084714.37499-1-21cnbao@gm=
-ail.com/
-> >>
-> >> Thanks,
-> >> Ryan
-> >>
-> >> Ryan Roberts (5):
-> >>   mm: swap: Simplify end-of-cluster calculation
-> >>   mm: swap: Change SWAP_NEXT_INVALID to highest value
-> >>   mm: swap: Track allocation order for clusters
-> >>   mm: swap: Scan for free swap entries in allocated clusters
-> >>   mm: swap: Optimize per-order cluster scanning
-> >>
-> >>  include/linux/swap.h |  18 +++--
-> >>  mm/swapfile.c        | 164 ++++++++++++++++++++++++++++++++++++++----=
--
-> >>  2 files changed, 157 insertions(+), 25 deletions(-)
-> >>
-> >> --
-> >> 2.43.0
-> >>
->
-
-Thanks
-Barry
+Thanks.
