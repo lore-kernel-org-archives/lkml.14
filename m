@@ -1,391 +1,152 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A48713C802;
-	Fri, 21 Jun 2024 06:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936C93C0D;
+	Fri, 21 Jun 2024 06:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718951368; cv=none; b=O+90SYhDD7xcknf6s3pIOjFOYbKZFSVhCcq73u5P3tGeXWB3Axy9GcZRi/IWSTyiOFFiOUPRgZwbTp7HREjQ3eCtx1eggKcd/SO1PtElSv2ZTud9Jh1Aqlh4S89lJrIxJ5toMg0G9Q/XtQelthJBJ9StF20/HExFkGgMX0YJpb0=
+	t=1718951418; cv=none; b=JrJ5X7HnFYyRibmcCf7RKcHoJJt6rcgeXyDEX65aeQtRxlCDvx8opqyR74lnoMAsQDcwrpjRLaKQTq62dKR/PJonIcMH03lPi5Vx25A5JbTtftS0md4dNN5nbLdnWcL4g7z0aOYHagXEL3I91SSrtW2EcH7/RrwyNo+2Ue2xXzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718951368; c=relaxed/simple;
-	bh=YoWC4sTxh+yY1U4iJo3ncO8MQe7VMhXamKmdkoDALlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LheEpW/6HRbdhmdAf1/BYjhLuIVKr2nTI4yKsFF/xXEkv2AYG+3F7dDwAI6UV+dTMs2tRQFQ7OFKa612t2sDEMlGwkEOHLKDlT4KBNbpnJAFZomHd5+9djl1lgm6f0t1ChBCy4Hk5i//g7ZdB5XggrG9PACMdBO5U29mS5bFrVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.12.218] (unknown [180.110.114.157])
-	by APP-01 (Coremail) with SMTP id qwCowABHN5izHXVm2pblCw--.715S2;
-	Fri, 21 Jun 2024 14:29:08 +0800 (CST)
-Message-ID: <909f2c3d-9992-4515-996b-35a17725701b@iscas.ac.cn>
-Date: Fri, 21 Jun 2024 14:29:07 +0800
+	s=arc-20240116; t=1718951418; c=relaxed/simple;
+	bh=QTDvmlCgRLlBME4zt8gkdNo0SO4LeIf5kG63XslMO08=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=JTLcaXE9VWs/8QTVR1wiGkx7Ibvw113svzT9wDCrFfJOJ7cVtFR7OxapD/mQz5Dfiz8FRSLsb/jbJ5Dyvxfz2Tl6RZjkxZUdnzV1RThZFphJwaQuw717gR37OHAK8lSQV2Wvjaekq71Lqola5Iu8mDgaN2rSyWvDRMLR+o6UnEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YUfcwoBS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TsA19tge; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YUfcwoBS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TsA19tge"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 84F2B138026C;
+	Fri, 21 Jun 2024 02:30:14 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 21 Jun 2024 02:30:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1718951414;
+	 x=1719037814; bh=0NAp6YpmQQzb+XaqCHOddozx1CwlQxt9qQHhSQdm/eM=; b=
+	YUfcwoBSCsdr4lbdFToY1N/Zs4J4ckS/QAFHkFhDVLoMlvGNE9DG/Up12YB02Xt2
+	EvdhpTEPC4jKy9ytn/wkuqfYy4S1cppgeD4oj7WA+/5sqCNg/z+lPwlRbPyO/Flv
+	86iciY4yavDos8ifYZIvOfII9G79cFp+BbP22J8pM9RrD+d18AtMZbn8j9nT03bV
+	c7xQT06XqtjmkNTJ3loldGGvKZUIHFOFW5y31AIvhjBqlktBLCcT2CdKqNOYzmSV
+	sMmQF4/bSVH0PEqvVO/XPs0/1B6SgKYgXBpAog/xndEaqaywJvgFOBJuhrryZ4PT
+	p2/5cEIyG3XclTxM5zIk6Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1718951414; x=
+	1719037814; bh=0NAp6YpmQQzb+XaqCHOddozx1CwlQxt9qQHhSQdm/eM=; b=T
+	sA19tgeRrtyO5cROFsAr3JW3gCmvjTkfGvoIFyTvlgeMHOUsPYhUf63dPMHGumOG
+	SIVUOPVMYqUiSDU81ctnvLlpO9PEmKT5nYGuN8Yk6mi2deAmhqwvD8T8lcVqcfB1
+	GPqL5qicjYl82FohTt6bsxJU60LE/Hsa42KrOIywf7lBtaIPivddS4cPuSL9Zm6B
+	LHiJJ7dQip90rRSAu8Rm0KDbhCZ/X7xYsJbH8aqLdEew+kE5apOFPvumBP+Yp5Fz
+	Rr5E19oZ7V3IGyh5IXREy5PC+msQ9aq0CnRgKaDNrD+E/iA5xot89u78VGuhZWhK
+	zW007umSQsVkCbMOwZN5A==
+X-ME-Sender: <xms:9B11ZuBxjRBAW0tNynq8H1-YRQjdkmL-JPoLIbLq-orE5Mdjc1QF6A>
+    <xme:9B11ZojY_qLmvoF_ar3eB4_lK44-YnS7iEik2csxzA9Ys1vKqB1JAHCw16DZLb5Ul
+    cdeR1H2mE3zhLekbAU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeffedgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
+    tehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrf
+    grthhtvghrnhepueelffeiudevhfettedvhfevkeekveevffehveehhefftdeiheduledu
+    iedtvdffnecuffhomhgrihhnpegrkhgrrdhmshenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:9B11Zhm6zOHfU1WuWgDdoSU71qsQzLDsjAJ7Nhxw117RxV0KzM2GHQ>
+    <xmx:9B11ZsweTZURJjYSmpSNhPg_buY1pvgdHiULQsyQVa-AcYIqIMlFBA>
+    <xmx:9B11ZjQp1WOoJc2XCjVhKQs5UkDHi7Xc0oSg1RRu1sY5kpyhJuIyfA>
+    <xmx:9B11ZnbfnZmS9DMt_cIsivY9q90FCfqmpn7bFXeT3Vnm0PLjcHHdDQ>
+    <xmx:9h11Zm92tL5faK9ZKeseMNCfbg9AEZegZt4gth5vlZ0KCBBhZQ4GEtV8>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 60EDBB6008D; Fri, 21 Jun 2024 02:30:12 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] riscv: selftests: Add a ptrace test to check a0
- of restarted syscall
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, oleg@redhat.com, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, andy.chiu@sifive.com,
- shuah@kernel.org
-References: <cover.1718693532.git.zhouquan@iscas.ac.cn>
- <b5fbdd3417e925dbe5db4716e51ce49d21d27f2f.1718693532.git.zhouquan@iscas.ac.cn>
- <ZnOaBeNnNpvrE5ss@ghost>
-Content-Language: en-US
-From: Quan Zhou <zhouquan@iscas.ac.cn>
-In-Reply-To: <ZnOaBeNnNpvrE5ss@ghost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABHN5izHXVm2pblCw--.715S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3ur1xWrWfXr4kAFyxCFW8tFb_yoWDCF15pa
-	y8CFs7KFWxJF17tw1Igr4UXF4xt3yrCryjkw10q345Zr4vyryftrs2qayUKryxC39Fqa93
-	ZF10y343Crs8X3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-	vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JV
-	WxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkI
-	wI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUgQVyDUUUU
-X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAYPBmZ1B4UjzAADs+
+Message-Id: <1308b23a-d7c0-449e-becd-53c42114661e@app.fastmail.com>
+In-Reply-To: <e22d7cd7-d247-4426-9506-a3a644ae03c4@cs-soprasteria.com>
+References: <20240620162316.3674955-1-arnd@kernel.org>
+ <20240620162316.3674955-8-arnd@kernel.org>
+ <e80809ba-ee81-47a5-9b08-54b11f118a78@gmx.de>
+ <e22d7cd7-d247-4426-9506-a3a644ae03c4@cs-soprasteria.com>
+Date: Fri, 21 Jun 2024 08:28:40 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "LEROY Christophe" <christophe.leroy2@cs-soprasteria.com>,
+ "Helge Deller" <deller@gmx.de>, "Arnd Bergmann" <arnd@kernel.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "Rich Felker" <dalias@libc.org>, "Andreas Larsson" <andreas@gaisler.com>,
+ guoren <guoren@kernel.org>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+ "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "musl@lists.openwall.com" <musl@lists.openwall.com>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "LTP List" <ltp@lists.linux.it>, "Brian Cain" <bcain@quicinc.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Xi Ruoyao" <libc-alpha@sourceware.org>,
+ "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "Adhemerval Zanella Netto" <adhemerval.zanella@linaro.org>,
+ "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 07/15] parisc: use generic sys_fanotify_mark implementation
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2024/6/20 10:55, Charlie Jenkins wrote:
-> On Wed, Jun 19, 2024 at 10:01:47AM +0800, zhouquan@iscas.ac.cn wrote:
->> From: Quan Zhou <zhouquan@iscas.ac.cn>
+On Fri, Jun 21, 2024, at 07:26, LEROY Christophe wrote:
+> Le 20/06/2024 =C3=A0 23:21, Helge Deller a =C3=A9crit :
+>> [Vous ne recevez pas souvent de courriers de deller@gmx.de. D=C3=A9co=
+uvrez
+>> pourquoi ceci est important =C3=A0
+>> https://aka.ms/LearnAboutSenderIdentification ]
 >>
->> This test creates two processes: a tracer and a tracee. The tracer actively
->> sends a SIGUSR1 signal in user mode to interrupt the read syscall being
->> executed by the tracee. We will reset a0/orig_a0 and then observe the value
->> of a0 held by the restarted read syscall.
-> 
-> I don't quite follow what the goal of this test is. With orig_a0 being
-> added to the previous patch for ptrace, a more constrained test could
-> ensure that this value is respected.
-> 
-
-Sry, I may not have described the patch clearly enough. This patch 
-provides a channel for modifying a0 in user-space ptrace via orig_a0. 
-Here, I will try to outline the whole situation:
-
-1、When the tracer calls ptrace to modify regs->a0, can the tracee's a0 
-be correctly modified?
-
-Through testing, if the user only modifies regs->a0, it doesn't work. Why?
-
-The execution flow of the tracee in the test program is as follows.Prior 
-to this explanation:
-
-- PTRACE_SYSCALL can make the tracee block before and after executing
-   a syscall.
-- The tracer sends SIGUSR1 to interrupt read, and the kernel will
-   restart it.
-- Please note the point marked with (*), which I believe is the cause
-   of the issue.
-
-user     kernel
-     |
-     |
-     |
-      read
-         | +-> regs->orig_a0 = regs->a0; //(*1)
-         |                                       <=tracer:PTRACE_SYSCALL
-         | +-> syscall_enter_from_user_mode
-               +-> ptrace_report_syscall_entry
-                   +-> ptrace_stop
-         | //stopped
-         |                                       <= tracer:SIGUSR1
-         |
-         | //resume                              <= tracer:PTRACE_SYSCALL
-         | syscall_handler...
-         |
-         | +-> syscall_exit_to_user_mode
-               +-> syscall_exit_to_user_mode_prepare
-                   +-> ptrace_report_syscall_exit
-                       +-> ptrace_stop
-     | //stopped
-     |
-     | /* Change a0/orig_a0 here and observe the restarted syscall */
-     | regs->{a0/orig_a0} = fd_zero; //(*2)
-     | ptrace(PTRACE_SETREGSET, ...);
-         |                                      <= tracer:PTRACE_SYSCALL
-         | //restarting..., skip SIGUSR1
-         |
-         | +-> exit_to_user_mode_loop
-               +-> arch_do_signal_or_restart
-                   +-> /* Settings for syscall restart */
-                       regs->a0 = regs->orig_a0; //(*3)
-     | //stopped
-     | //and block before the syscall again, get current regs->a0
-     | *result = regs->a0;
-     |
-     | /* Now, Check regs->a0 of restarted syscall */
-     | EXPECT_NE(0x5, result); //for PTRACE_SETREGSSET a0, failed
-     | EXPECT_EQ(0x5, result); //for PTRACE_SETREGSSET orig_a0, succeed
-
-If I'm wrong, please let me know. 🙂
-
-2、Actually, I discovered the issue while using the execve function.
-When I tried to modify the first parameter of execve in the tracer,
-I found it didn't work.
-
-As for why not use execve for testing, there are two reasons:
-
-1) The root cause of this issue is that when a syscall is interrupted
-and then resumed, it restarts with orig_a0 instead of a0, so modifying
-a0 doesn't work. I want to focus the test on the "restarted syscall".
-
-2) Compared to the current test scenario, execve is terminated by ptrace
-earlier, so I chose a later point. In fact, setting regs->a0 in the path
-between (*1) and (*3) is ineffective because it will eventually be 
-overwritten by orig_a0, correct?
-
-The current test may not intuitively reflect the issue. If possible, I 
-will provide a more comprehensive test based on everyone's suggestions.
-
-Thanks,
-Quan
-
+>> On 6/20/24 18:23, Arnd Bergmann wrote:
+>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>
+>>> The sys_fanotify_mark() syscall on parisc uses the reverse word order
+>>> for the two halves of the 64-bit argument compared to all syscalls on
+>>> all 32-bit architectures. As far as I can tell, the problem is that
+>>> the function arguments on parisc are sorted backwards (26, 25, 24, 2=
+3,
+>>> ...) compared to everyone else,
 >>
->> Compared to the test program, a more common scenario is the use of the
->> exece syscall, which sends a signal in the kernel path to restart
->> the syscall.
->>
->> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
->> ---
->>   tools/testing/selftests/riscv/Makefile        |   2 +-
->>   tools/testing/selftests/riscv/abi/.gitignore  |   1 +
->>   tools/testing/selftests/riscv/abi/Makefile    |  12 ++
->>   .../riscv/abi/ptrace_restart_syscall.c        | 148 ++++++++++++++++++
->>   4 files changed, 162 insertions(+), 1 deletion(-)
->>   create mode 100644 tools/testing/selftests/riscv/abi/.gitignore
->>   create mode 100644 tools/testing/selftests/riscv/abi/Makefile
->>   create mode 100644 tools/testing/selftests/riscv/abi/ptrace_restart_syscall.c
->>
->> diff --git a/tools/testing/selftests/riscv/Makefile b/tools/testing/selftests/riscv/Makefile
->> index 7ce03d832b64..98541dc2f164 100644
->> --- a/tools/testing/selftests/riscv/Makefile
->> +++ b/tools/testing/selftests/riscv/Makefile
->> @@ -5,7 +5,7 @@
->>   ARCH ?= $(shell uname -m 2>/dev/null || echo not)
->>   
->>   ifneq (,$(filter $(ARCH),riscv))
->> -RISCV_SUBTARGETS ?= hwprobe vector mm sigreturn
->> +RISCV_SUBTARGETS ?= hwprobe vector mm sigreturn abi
->>   else
->>   RISCV_SUBTARGETS :=
->>   endif
->> diff --git a/tools/testing/selftests/riscv/abi/.gitignore b/tools/testing/selftests/riscv/abi/.gitignore
->> new file mode 100644
->> index 000000000000..e1e00ffb9db9
->> --- /dev/null
->> +++ b/tools/testing/selftests/riscv/abi/.gitignore
->> @@ -0,0 +1 @@
->> +abi
-> 
-> The gitignore should contain a list of all of the generated binaries
-> that should be ignored. Can you put ptrace_restart_syscall in here
-> instead of abi?
-> 
+>> r26 is arg0, r25 is arg1, and so on.
+>> I'm not sure I would call this "sorted backwards".
+>> I think the reason is simply that hppa is the only 32-bit big-endian
+>> arch left...
+>
+> powerpc/32 is big-endian: r3 is arg0, r4 is arg1, ... r10 is arg7.
 
-...yeah, I will fix it later.
+Right, I'm pretty sure the ordering is the same on arm, mips,
+s390, m68k, openrisc, sh and sparc when running 32-bit big-endian
+code.
 
->> diff --git a/tools/testing/selftests/riscv/abi/Makefile b/tools/testing/selftests/riscv/abi/Makefile
->> new file mode 100644
->> index 000000000000..634fa7de74e6
->> --- /dev/null
->> +++ b/tools/testing/selftests/riscv/abi/Makefile
->> @@ -0,0 +1,12 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2021 ARM Limited
->> +# Originally tools/testing/arm64/abi/Makefile
->> +
->> +CFLAGS += -I$(top_srcdir)/tools/include
->> +
->> +TEST_GEN_PROGS := ptrace_restart_syscall
->> +
->> +include ../../lib.mk
->> +
->> +$(OUTPUT)/ptrace_restart_syscall: ptrace_restart_syscall.c
->> +	$(CC) -static -o$@ $(CFLAGS) $(LDFLAGS) $^
->> diff --git a/tools/testing/selftests/riscv/abi/ptrace_restart_syscall.c b/tools/testing/selftests/riscv/abi/ptrace_restart_syscall.c
->> new file mode 100644
->> index 000000000000..3e25548cb95e
->> --- /dev/null
->> +++ b/tools/testing/selftests/riscv/abi/ptrace_restart_syscall.c
->> @@ -0,0 +1,148 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +#include <stdio.h>
->> +#include <stdlib.h>
->> +#include <string.h>
->> +#include <unistd.h>
->> +#include <fcntl.h>
->> +#include <signal.h>
->> +#include <errno.h>
->> +#include <sys/types.h>
->> +#include <sys/ptrace.h>
->> +#include <sys/stat.h>
->> +#include <sys/user.h>
->> +#include <sys/wait.h>
->> +#include <sys/uio.h>
->> +#include <linux/elf.h>
->> +#include <linux/unistd.h>
->> +#include <asm/ptrace.h>
->> +
->> +#include "../../kselftest_harness.h"
->> +
->> +#define ORIG_A0_AFTER_MODIFIED  0x5
->> +#define MODIFY_A0               0x01
->> +#define MODIFY_ORIG_A0          0x02
->> +
->> +#define perr_and_exit(fmt, ...) do {			\
->> +	char buf[256];					\
->> +	snprintf(buf, sizeof(buf), "%s:%d: " fmt ": %m\n",	\
->> +			__func__, __LINE__, ##__VA_ARGS__);	\
->> +	perror(buf);						\
->> +	exit(-1);						\
->> +} while (0)
->> +
->> +static inline void resume_and_wait_tracee(pid_t pid, int flag)
->> +{
->> +	int status;
->> +
->> +	if (ptrace(flag, pid, 0, 0))
->> +		perr_and_exit("failed to resume the tracee %d", pid);
->> +
->> +	if (waitpid(pid, &status, 0) != pid)
->> +		perr_and_exit("failed to wait for the tracee %d", pid);
->> +}
->> +
->> +static void ptrace_restart_syscall(int opt, int *result)
->> +{
->> +	int status;
->> +	int p[2], fd_zero;
->> +	pid_t pid;
->> +
->> +	struct user_regs_struct regs;
->> +	struct iovec iov = {
->> +		.iov_base = &regs,
->> +		.iov_len = sizeof(regs),
->> +	};
->> +
->> +	if (pipe(p))
->> +		perr_and_exit("failed to create a pipe");
->> +
->> +	fd_zero = open("/dev/zero", O_RDONLY);
->> +	if (fd_zero < 0)
->> +		perr_and_exit("failed to open /dev/zero");
->> +
->> +	pid = fork();
->> +	if (pid == 0) {
->> +		char c;
->> +
->> +		/* Mark oneself being traced */
->> +		if (ptrace(PTRACE_TRACEME, 0, 0, 0))
->> +			perr_and_exit("failed to request for tracer to trace me");
->> +
->> +		kill(getpid(), SIGSTOP);
->> +
->> +		if (read(p[0], &c, 1) != 1)
->> +			exit(1);
->> +
->> +		exit(0);
->> +	} else if (pid < 0)
->> +		exit(1);
->> +
->> +	if (waitpid(pid, &status, 0) != pid)
->> +		perr_and_exit("failed to wait for the tracee %d\n", pid);
->> +
->> +	/* Resume the tracee until the next syscall */
->> +	resume_and_wait_tracee(pid, PTRACE_SYSCALL);
->> +
->> +	/* Deliver a signal to interrupt the syscall */
->> +	kill(pid, SIGUSR1);
->> +
->> +	/* The tracee stops at syscall exit */
->> +	resume_and_wait_tracee(pid, PTRACE_SYSCALL);
->> +
->> +	/* Check tracee orig_a0 before syscall restart */
->> +	if (ptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &iov))
->> +		perr_and_exit("failed to get tracee registers");
->> +	if (regs.orig_a0 != p[0])
->> +		perr_and_exit("unexpected a0");
->> +
->> +	/* Modify a0/orig_a0 for the restarted syscall */
->> +	switch (opt) {
->> +	case MODIFY_A0:
->> +		regs.a0 = fd_zero;
->> +		break;
->> +	case MODIFY_ORIG_A0:
->> +		regs.orig_a0 = fd_zero;
->> +		break;
->> +	}
->> +
->> +	if (ptrace(PTRACE_SETREGSET, pid, NT_PRSTATUS, &iov))
->> +		perr_and_exit("failed to set tracee registers");
->> +
->> +	/* Ignore SIGUSR1 signal */
->> +	resume_and_wait_tracee(pid, PTRACE_SYSCALL);
->> +
->> +	/* Stop at the entry point of the restarted syscall */
->> +	resume_and_wait_tracee(pid, PTRACE_SYSCALL);
->> +
->> +	/* Now, check regs.a0 of the restarted syscall */
->> +	if (ptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &iov))
->> +		perr_and_exit("failed to get tracee registers");
->> +	*result = regs.a0;
->> +
->> +	/* Resume the tracee */
->> +	ptrace(PTRACE_CONT, pid, 0, 0);
->> +	if (waitpid(pid, &status, 0) != pid)
->> +		perr_and_exit("failed to wait for the tracee");
->> +}
->> +
->> +TEST(ptrace_modify_a0)
->> +{
->> +	int result;
->> +
->> +	ptrace_restart_syscall(MODIFY_A0, &result);
->> +
->> +	/* The tracer's modification of a0 cannot affect the restarted tracee */
->> +	EXPECT_NE(ORIG_A0_AFTER_MODIFIED, result);
->> +}
->> +
->> +TEST(ptrace_modify_orig_a0)
->> +{
->> +	int result;
->> +
->> +	ptrace_restart_syscall(MODIFY_ORIG_A0, &result);
->> +
->> +	/* The tracer must modify orig_a0 to actually change the tracee's a0 */
->> +	EXPECT_EQ(ORIG_A0_AFTER_MODIFIED, result);
-> 
-> How does the value end up being 5?
-> 
-> - Charlie
-> 
+It's more likely to be related to the upward growing stack.
+I checked the gcc sources and found that out of the 50 supported
+architectures, ARGS_GROW_DOWNWARD is set on everything except
+for gcn, stormy16 and  32-bit parisc. The other two are
+little-endian though. STACK_GROWS_DOWNWARD in turn is set on
+everything other than parisc (both 32-bit and 64-bit).
 
-The tracer ultimately sets `fd_zero` to the restarted syscall.
-
-Since 0, 1, and 2 are standard input, output, and error, the file 
-descriptors will be allocated in this order: `p[0] -> p[1] -> fd_zero`. 
-Thus, fd_zero will be 5.
-
->> +}
->> +
->> +TEST_HARNESS_MAIN
->> -- 
->> 2.34.1
->>
-
+      Arnd
