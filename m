@@ -1,235 +1,135 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBC716D9C7;
-	Fri, 21 Jun 2024 08:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E0C16D9BC
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718960057; cv=none; b=e6JoJtS26uPh47Ve2qmn5rcfqKKA0EI9YquXb/FkuszeteKwf6Vb3ZQTL4ubr3zqeLE0d2vy+o+S/Vh+9AMp9Ip9P425boPtuxRYuFZ70VzRqndzm5Rb2Heqpop2KEcdqpvDQ/DGKpXy4/6Zz4wCLFYCPuFklb8igpVScRxCujI=
+	t=1718960091; cv=none; b=i/1Td09CsFj9HilKqoELsaOTqA3qJU9YOqxqdE0hMUYONgZ9PYnRIkUxa9QVCw9EaNFacRDNennWkDqPWMBPg2Ta9oU3Zr8b93PyiSHor2HihdjATYg6khf8yRnuAuLHNWBQyuo2RcxC9kzot4Qm4kKbYwbOKApY5Xz5Uy3PRUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718960057; c=relaxed/simple;
-	bh=I+i+aOzkOGompNR/7ELLGU0rPfoK8zPNywwKcT91Ckc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h6So1nyjjPhjc9GGiLDLUAPTVfKFJG567EbRyhYutJijLqiSwJuNkELpyV6oEiQKAElgHaO2nH+oNbBvYySVqBub+RKoVLtrpDMEFhynM3ahmA1dd+ufnaJTL5uveG541yTMdXxLADhB7vdiFgc6HdO9eeLrV/Lka6hQigH94PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FHAqc9G9; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718960091; c=relaxed/simple;
+	bh=C8ybsMTbYwXEy9pNJgGuUwtT7s6ItRLeMRTEkqLDyuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R0YFf+aZRz1lVokPzIt8c277ce+1dGaNzChnyeDTYoqE42H0I7fKidDGs6uqbaTjLT9BlPAL8x+OiCvyjHzNWUTd9EXyFdk8ymuvPZlXqCOZZlWKc9I52b/ZrOq+7JpDJNx+zLd4ZHWLpC04x7dUGTxZPLuJ8P3Yjs3C5oq+xFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Aqic3j4b; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FHAqc9G9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5EDDD1BF208;
-	Fri, 21 Jun 2024 08:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718960052;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JD45edoD5rUpwPloN7d/OFffiaD3jVvluuyCPi42kDU=;
-	b=FHAqc9G97UNoty+XvEzr3zA16vh3jQ8NP3ceQTaHkPwv8XCt2Fp0/0rkcIgCgvZc1hzAf0
-	yUa59H/4KIc1Re3sTHiRSiLSDx+MpHdvlEvtT3EjH41JHCaT+WYmTCdstDzY79roPtBJed
-	DkDkrj+oHz5wQtPXWXi8yLI0UPTHcKh/eOllmLOL19gHQWTDvk930XC3gGxUcRXxsRUODx
-	VtmihXBkmCLAkppGaHHr5ueO+ST+S45IBakzSb/AqNQPBkk9wE3IKtM521s5CQNUmmHXHA
-	Tt5DXhFp2+Gb2SWkbZ68ctf/rTg+Bj4hqziqBUAkjgDXANOIHfF8UL3abVU+6w==
-Date: Fri, 21 Jun 2024 10:54:08 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
- kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
- Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: Re: [PATCH net-next v15 13/14] net: ethtool: tsinfo: Add support
- for hwtstamp provider and get/set hwtstamp config
-Message-ID: <20240621105408.6dda7a0e@kmaincent-XPS-13-7390>
-In-Reply-To: <20240617184331.0ddfd08e@kernel.org>
-References: <20240612-feature_ptp_netnext-v15-0-b2a086257b63@bootlin.com>
-	<20240612-feature_ptp_netnext-v15-13-b2a086257b63@bootlin.com>
-	<20240617184331.0ddfd08e@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aqic3j4b"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4ecf43f5537so904290e0c.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 01:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718960089; x=1719564889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYX2FT4NFr8Qk3CdgyGwyy67UucRagXIxiXFznR5hco=;
+        b=Aqic3j4bVaav4Gg2qEB6BLOPTYtmvqa216ufW28qEzKQ6h2jTogR9NIfzi2Lt7kDUH
+         T9mheHRM93UtSRjWr3DN4s9rNmATc+NZiJ0BDI0cwYvdweHwCZZVErQT77/ZsABXiNhA
+         K71VIPKS5Ufbt4nzniweNBrZTq7Y7Sseh0SZm5zGZcYeM/96Ah7782Nu3nesOGB3vEvX
+         d0wj+GvRsvpYXm7eFpsq8te4sQ/S/N7o6b8DJ2fVYu2JJ5z3MVxZV14qSthOp1EGxbYJ
+         1OhkbicZ9tByuzlZH1Ok7ZzQ40/IT3zvi8hZ5N4BycOKHsPETCvyn/W5PdICiXvt4wMJ
+         IQ7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718960089; x=1719564889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CYX2FT4NFr8Qk3CdgyGwyy67UucRagXIxiXFznR5hco=;
+        b=SNjn14q9kRlZC13ToueV4phSJbmnjoenBx7a9EMbc/mRXoQZlBVX26WDVC00Y0twHI
+         qgUBXJddvBEsvzg7dYpUl3+YuW9WCyZ/BweWrDMHeUvyNvIPr14LYOrgL9Ru5iGtr1EC
+         RAQ1Q1KgyGxootfAm6blc+M5Y+Ux0WVz8/diN7CW+TuwpHeBoSgH1wC1pkpY/L8RZsCo
+         A9oLuprjMnatE9djvi04868UOfkRdDHUl27Hq5Gqh59xPUy4joU3CMQX9bfaE+4woBX6
+         m8ytFFqRaGq86fjWL/WIWRpjkELSlIiqP4sjdZ+5+UIDmqSmF6scKAhid494Xz/zfw6N
+         9S3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvveofqqzxa4F8WeEHwajBrMjvVQf+mRwdfz6pmKczxQF+G/MMDjEsg+qscevfkqlAF/pzc6Eoy8BybI9SZUiONPsrJn7ycfHKB25e
+X-Gm-Message-State: AOJu0Yw2xajPw9QIjwGOXncSDUKTYqsU8i+0Fjf0YMn8v3DtgWUxN7/s
+	XWJEgS316KGg7SFT6DjUqrdIkW+LuAfrrJ6TsH+nkO0R/IjK1VLKM3zBbhCjFNEG0z9m6dnl8h6
+	hBR9ZFYeu49U0azmm/x5RATOj6xpbOPs/CHrh
+X-Google-Smtp-Source: AGHT+IE+4r9WRty/Arup00wvViToPFouwguOScRaXAgLBJYNMjH1J9pgCzwiTT3frpsC9/op0vu9j85DaYbfM+65eZo=
+X-Received: by 2002:a05:6122:3688:b0:4eb:e37:2d19 with SMTP id
+ 71dfb90a1353d-4ef1a9e5b96mr9551360e0c.1.1718960088716; Fri, 21 Jun 2024
+ 01:54:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
+ <7fb8cc2c-916a-43e1-9edf-23ed35e42f51@nvidia.com> <14bd145a-039f-4fb9-8598-384d6a051737@redhat.com>
+ <CA+EHjTxWWEHfjZ9LJqZy+VCk43qd3SMKiPF7uvAwmDdPeVhrvQ@mail.gmail.com>
+ <20240619115135.GE2494510@nvidia.com> <CA+EHjTz_=J+bDpqciaMnNja4uz1Njcpg5NVh_GW2tya-suA7kQ@mail.gmail.com>
+ <ZnRMn1ObU8TFrms3@google.com> <CA+EHjTxvOyCqWRMTS3mXHznQtAJzDJLgqdS0Er2GA9FGdxd1vA@mail.gmail.com>
+ <4c8b81a0-3a76-4802-875f-f26ff1844955@redhat.com>
+In-Reply-To: <4c8b81a0-3a76-4802-875f-f26ff1844955@redhat.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Fri, 21 Jun 2024 09:54:12 +0100
+Message-ID: <CA+EHjTzvjsc4DKsNFA6LVT44YR_1C5A2JhpVSPG=R9ottfu70A@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
+To: David Hildenbrand <david@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Elliot Berman <quic_eberman@quicinc.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, maz@kernel.org, kvm@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	pbonzini@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, 17 Jun 2024 18:43:31 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+Hi David,
 
-Thanks for your review!
+On Fri, Jun 21, 2024 at 9:44=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> >> Again from that thread, one of most important aspects guest_memfd is t=
+hat VMAs
+> >> are not required.  Stating the obvious, lack of VMAs makes it really h=
+ard to drive
+> >> swap, reclaim, migration, etc. from code that fundamentally operates o=
+n VMAs.
+> >>
+> >>   : More broadly, no VMAs are required.  The lack of stage-1 page tabl=
+es are nice to
+> >>   : have; the lack of VMAs means that guest_memfd isn't playing second=
+ fiddle, e.g.
+> >>   : it's not subject to VMA protections, isn't restricted to host mapp=
+ing size, etc.
+> >>
+> >> [1] https://lore.kernel.org/all/Zfmpby6i3PfBEcCV@google.com
+> >> [2] https://lore.kernel.org/all/Zg3xF7dTtx6hbmZj@google.com
+> >
+> > I wonder if it might be more productive to also discuss this in one of
+> > the PUCKs, ahead of LPC, in addition to trying to go over this in LPC.
+>
+> I don't know in  which context you usually discuss that, but I could
+> propose that as a topic in the bi-weekly MM meeting.
+>
+> This would, of course, be focused on the bigger MM picture: how to mmap,
+> how how to support huge pages, interaction with page pinning, ... So
+> obviously more MM focused once we are in agreement that we want to
+> support shared memory in guest_memfd and how to make that work with core-=
+mm.
+>
+> Discussing if we want shared memory in guest_memfd might be betetr
+> suited for a different, more CC/KVM specific meeting (likely the "PUCKs"
+> mentioned here?).
 
-> On Wed, 12 Jun 2024 17:04:13 +0200 Kory Maincent wrote:
-> > Enhance 'get' command to retrieve tsinfo of hwtstamp providers within a
-> > network topology and read current hwtstamp configuration.
-> >=20
-> > Introduce support for ETHTOOL_MSG_TSINFO_SET ethtool netlink socket to
-> > configure hwtstamp of a PHC provider. Note that simultaneous hwtstamp
-> > isn't supported; configuring a new one disables the previous setting.
-> >=20
-> > Also, add support for a specific dump command to retrieve all hwtstamp
-> > providers within the network topology, with added functionality for
-> > filtered dump to target a single interface. =20
->=20
-> Could you split this up, a little bit? It's rather large for a core
-> change.
+Sorry, I should have given more context on what a PUCK* is :) It's a
+periodic (almost weekly) upstream call for KVM.
 
-Ok I will do so.
-=20
-> >  Desired behavior is passed into the kernel and to a specific device by
-> > -calling ioctl(SIOCSHWTSTAMP) with a pointer to a struct ifreq whose
-> > -ifr_data points to a struct hwtstamp_config. The tx_type and
-> > -rx_filter are hints to the driver what it is expected to do. If
-> > -the requested fine-grained filtering for incoming packets is not
-> > +calling the tsinfo netlink socket ETHTOOL_MSG_TSINFO_SET.
-> > +The ETHTOOL_A_TSINFO_TX_TYPES, ETHTOOL_A_TSINFO_RX_FILTERS and
-> > +ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS netlink attributes are then used to se=
-t the
-> > +struct hwtstamp_config accordingly. =20
->=20
-> nit: EHTOOL_A* defines in `` `` quotes?
+[*] https://lore.kernel.org/all/20230512231026.799267-1-seanjc@google.com/
 
-Ack.
+But yes, having a discussion in one of the mm meetings ahead of LPC
+would also be great. When do these meetings usually take place, to try
+to coordinate across timezones.
 
->=20
-> > +		if (hwtstamp && ptp_clock_phydev(hwtstamp->ptp) =3D=3D phydev)
-> > {
-> > +			rcu_assign_pointer(dev->hwtstamp, NULL);
-> > +			synchronize_rcu();
-> >  			kfree(hwtstamp); =20
->=20
-> Could you add an rcu_head to this struct and use kfree_rcu()
-> similarly later use an rcu call to do the dismantle?
-> synchronize_rcu() can be slow.
+Cheers,
+/fuad
 
-Ack. I might need to use call_rcu() as I have to call ptp_clock_put also be=
-fore
-the kfree.
-=20
-> > +const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_MAX +=
- 1]
-> > =3D { [ETHTOOL_A_TSINFO_HEADER]		=3D
-> >  		NLA_POLICY_NESTED(ethnl_header_policy_stats),
-> > +	[ETHTOOL_A_TSINFO_GHWTSTAMP] =3D
-> > +		NLA_POLICY_MAX(NLA_U8, 1), =20
->=20
-> I think this can be an NLA_FLAG, but TBH I'm also confused about=20
-> the semantics. Can you explain what it does from user perspective?
-
-As I described it in the documentation it replaces SIOCGHWTSTAMP:
-"Any process can read the actual configuration by requesting tsinfo netlink
-socket ETHTOOL_MSG_TSINFO_GET with ETHTOOL_MSG_TSINFO_GHWTSTAMP netlink
-attribute set.
-
-The legacy usage is to pass this structure to ioctl(SIOCGHWTSTAMP) in the  =
-    =20
-same way as the ioctl(SIOCSHWTSTAMP).  However, this has not been implement=
-ed  =20
-in all drivers."
-
-The aim is to get rid of ioctls.
-
-Indeed NLA_FLAG is the right type I should use.
-=20
-> > +	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER] =3D
-> > +		NLA_POLICY_NESTED(ethnl_tsinfo_hwtstamp_provider_policy),
-> >  };
-> > =20
-> > +static int tsinfo_parse_hwtstamp_provider(const struct nlattr *nest,
-> > +					  struct hwtst_provider *hwtst,
-> > +					  struct netlink_ext_ack *extack,
-> > +					  bool *mod)
-> > +{
-> > +	struct nlattr
-> > *tb[ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy)]; =20
->=20
-> Could you find a more sensible name for this policy?
-
-I am not a naming expert but "hwtstamp_provider" is the struct name I have =
-used
-to describe hwtstamp index + qualifier and the prefix of the netlink nested
-attribute, so IMHO it fits well.
-Have you another proposition to clarify what you would expect?
-=20
-> > +	int ret;
-> > +
-> > +	ret =3D nla_parse_nested(tb,
-> > +
-> > ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy) - 1,
-> > +			       nest,
-> > +			       ethnl_tsinfo_hwtstamp_provider_policy,
-> > extack);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (NL_REQ_ATTR_CHECK(extack, nest, tb,
-> > ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX) ||
-> > +	    NL_REQ_ATTR_CHECK(extack, nest, tb,
-> > ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER)) =20
->=20
-> nit: wrap at 80 chars, if you can, please
-
-Yes indeed, thanks!
-
-> >  	struct tsinfo_reply_data *data =3D TSINFO_REPDATA(reply_base);
-> > +	struct tsinfo_req_info *req =3D TSINFO_REQINFO(req_base);
-> >  	struct net_device *dev =3D reply_base->dev;
-> >  	int ret;
-> > =20
-> >  	ret =3D ethnl_ops_begin(dev);
-> >  	if (ret < 0)
-> >  		return ret;
-> > +
-> > +	if (req->get_hwtstamp) {
-> > +		struct kernel_hwtstamp_config cfg =3D {};
-> > +
-> > +		if (!dev->netdev_ops->ndo_hwtstamp_get) {
-> > +			ret =3D -EOPNOTSUPP;
-> > +			goto out;
-> > +		}
-> > +
-> > +		ret =3D dev_get_hwtstamp_phylib(dev, &cfg);
-> > +		data->hwtst_config.tx_type =3D BIT(cfg.tx_type);
-> > +		data->hwtst_config.rx_filter =3D BIT(cfg.rx_filter);
-> > +		data->hwtst_config.flags =3D BIT(cfg.flags);
-> > +		goto out; =20
->=20
-> This is wrong AFAICT, everything up to this point was a nit pick ;)
-> Please take a look at 89e281ebff72e6, I think you're reintroducing a
-> form of the same bug. If ETHTOOL_FLAG_STATS was set, you gotta run stats
-> init.
->=20
-> Perhaps you can move the stats getting up, and turn this code into if
-> / else if / else, without the goto.
-
-Indeed thanks for spotting the issue.
-
-> > +
-> > +	if (ret =3D=3D -EMSGSIZE && skb->len)
-> > +		return skb->len;
-> > +	return ret; =20
->=20
-> You can just return ret without the if converting to skb->len
-> af_netlink will handle the EMSGSIZE errors in the same way.
-
-Alright, thanks.
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> --
+> Cheers,
+>
+> David / dhildenb
+>
