@@ -1,134 +1,89 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BB6155726;
-	Fri, 21 Jun 2024 06:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B413C802;
+	Fri, 21 Jun 2024 06:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718951806; cv=none; b=uLYMISjPMVwwuvQaNkM5AjaYYCJWpGBHFmD/w1lPIcKv6dGFGF4UJWOfZ00BYr4/ooTnBoUX3luD6anijUQMbUh+xJymIi0v647N3HU1Zo+rCsYfXOwRDaNi32RlQgfbQ5C4KjXjX0XEf2Zqme4Pw65P9LVPFch2sja8a7j2QJ8=
+	t=1718951826; cv=none; b=gjsfheqByAGf7QbH1wU/BAxhlp76zEiYCttk6OSQ7XYBiXq7jgDabB74Rggvw8vaQmYuswvo4O5B1zRMykFvjDjW4mFnSpM9kRGXTXR3z/t0LZBuISbmwmEEw/6qYTIbmZWFw6P9RZ8Ih4A9A9VSaJZCHMbbrdrKBLD3Igbvg64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718951806; c=relaxed/simple;
-	bh=SeOA9xWxKKzQPlgCO/8S9Eg4rEDvcft1OMFHJ0h3Dd8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZfKGzDKxgvB7ipFlCH1YQ7SrsomTKiKWaiWoOMBpeovvBUsF9E0Lun+rfVN5YuKeuIZwakTlqF2rB1lcZknz8INRZ8LjVqJhM/CzEoboYI7mYUet+3v8xmLTiLYmBPMfZjb0jnfEsPtzCFnCCqizb5wvDpKPtfGZYKjyvOZ7ztA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 9b3d93762f9811ef9305a59a3cc225df-20240621
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:38f83400-ebcd-457b-95e2-bff20ceb7e73,IP:20,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:15
-X-CID-INFO: VERSION:1.1.38,REQID:38f83400-ebcd-457b-95e2-bff20ceb7e73,IP:20,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:15
-X-CID-META: VersionHash:82c5f88,CLOUDID:efbffc488a517e55c9999e9aeaa54cd3,BulkI
-	D:2406211432491TQQYW5Q,BulkQuantity:1,Recheck:0,SF:57|66|24|72|19|44|102,T
-	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 9b3d93762f9811ef9305a59a3cc225df-20240621
-Received: from node4.com.cn [(39.156.73.12)] by mailgw.kylinos.cn
-	(envelope-from <shaozongfan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 295107956; Fri, 21 Jun 2024 14:36:35 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 828DC16002082;
-	Fri, 21 Jun 2024 14:36:35 +0800 (CST)
-X-ns-mid: postfix-66751F73-442141348
-Received: from localhost.localdomain (unknown [172.30.110.47])
-	by node4.com.cn (NSMail) with ESMTPA id 10E0316002082;
-	Fri, 21 Jun 2024 06:36:33 +0000 (UTC)
-From: shaozongfan <shaozongfan@kylinos.cn>
-To: hch@infradead.org
-Cc: chandan.babu@oracle.com,
-	djwong@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	shaozongfan <shaozongfan@kylinos.cn>
-Subject: [PATCH] xfs:trigger a-NULL-pointer-problem
-Date: Fri, 21 Jun 2024 14:34:53 +0800
-Message-Id: <20240621063452.516357-1-shaozongfan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <ZnPjpCovlQq7_ptP@infradead.org>
-References: <ZnPjpCovlQq7_ptP@infradead.org>
+	s=arc-20240116; t=1718951826; c=relaxed/simple;
+	bh=PILEGcto9L0Fv29TPcqXWioRKaLwrMhrClPCWXIU4iY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lhTsHweFr7QhsjfwfBBpRFThNbvajoqSLT2bpiS7sPinAxpESsYcDq0sT4XLERdXzqxX8+ezqTZ8bqpboBX0UP0rlLrDQ/gVxfrGmFanJQ7w4QIWGyD3drPdxJg5IenjayLEFW4sRUKkh1hWUp6jbhryt7iG+ap+s7t82u3jI2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GsF8gVfB; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GsF8gVfB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718951825; x=1750487825;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PILEGcto9L0Fv29TPcqXWioRKaLwrMhrClPCWXIU4iY=;
+  b=GsF8gVfBCLQ8ilC8PQPxhoFLpKcwoHa7GclRc1UOGvh6RBeXsgz/W2aj
+   ty0UoJhzUudXtngLpsI1gX0fPERG0hDBI0623DtL3wktv/OaEYdhzC+sy
+   7NaQOOTcntXvTQpGTCLl7iZE4CTfSmZLeyk9kNnt20e91li5DqhYAvscT
+   SEDXMILhrPH8EFpU9Ix4kasq51fdoRtpyW+QemWld5tAtSjPlefy+d6Zl
+   TulgTZIN76whqrCUl7Tlvj/4Z1hiZl1SpUhGSmtal8ijAxFxKBaqI0P/h
+   aTg1rKfSKfCTtKtL362qDdKV47cTAmuKd15jaOxF3E5fXtSZma7POE3rS
+   w==;
+X-CSE-ConnectionGUID: cMQNhvsBT9OyNNQY0OEi2g==
+X-CSE-MsgGUID: cflb9Y1bShmiU2DFOxK6Ag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="27391478"
+X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
+   d="scan'208";a="27391478"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 23:37:05 -0700
+X-CSE-ConnectionGUID: ZQVcD7i3Se2Thk4cdWxn9Q==
+X-CSE-MsgGUID: otw7n1PbQTqHJo2zGZIGag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
+   d="scan'208";a="42602423"
+Received: from mesincla-mobl1.amr.corp.intel.com (HELO desk) ([10.209.40.87])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 23:37:03 -0700
+Date: Thu, 20 Jun 2024 23:36:54 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <20240621063654.eabkd337tujqs6p2@desk>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
+ <20240618212801.GJZnH74Q4yknT-4X12@fat_crate.local>
+ <20240619033126.irudoer3pw4fb5be@desk>
+ <20240620155111.GIZnRP7-XYvJZPY0_6@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620155111.GIZnRP7-XYvJZPY0_6@fat_crate.local>
 
->Can you share your reproducer?
-Sorry ,beacuse some reason real reproducer can't share you,
-But i simulate a reproducer in fllow patch and attachments=20
+On Thu, Jun 20, 2024 at 05:51:11PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 18, 2024 at 08:31:26PM -0700, Pawan Gupta wrote:
+> > To accommodate for that we can name the vendor specific types in this
+> > series as vendor_cpu_type. And if we ever need to add generic types, we can
+> > call them cpu_type?
+> 
+> Yes, then that member you're adding should not just be called "cpu_type" but
+> either "vendor_cpu_type" or "hw_cpu_type" or whatnot and every vendor can then
+> put its own values there.
 
-> if (ctx->pos - ino =3D xfs_dir2_sf_get_parent_ino(sfp);
-> + sfp1 =3D sfp;
-> + if (sfp1 =3D=3D NULL)
-> + return 0;
-> + ino =3D xfs_dir2_sf_get_parent_ino(sfp1);
-
-> This looks ... odd. Assigning one pointer variable to another
-> doesn't revalidate anything. And xfs_dir2_sf_getdents is called
-> with the iolock held, which should prevent xfs_idestroy_fork
-> from racing with it. And if for some reason it doesn't we need
-> to fix the synchronization.
-In this problem, not if_data =3D NULL, but if_root =3D NULL.
-Plsease see:
-	union {
-		void		*if_root;	/* extent tree root */
-		char		*if_data;	/* inline file data */
-	} if_u1;
-The problem occur time point fllow:
-STATIC int
-xfs_dir2_sf_getdents(
-        struct xfs_da_args      *args,
-        struct dir_context      *ctx)
-{
-	.......
-line63	ASSERT(dp->i_df.if_u1.if_data !=3D NULL);
-                   *** if_root =3D NULL ***    	                        =20
-line96  ino =3D xfs_dir2_sf_get_parent_ino(sfp);
-        ......
-}
-
-Why add a poniter sfp1?
-if_data and if_root share a address,
-But sfp1 don't share,when if_root =3D NULL,
-sfp1 can Make sure there is no null pointer=E3=80=82
-
-Signed-off-by: shaozongfan <shaozongfan@kylinos.cn>
----
- fs/xfs/xfs_dir2_readdir.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
-index 9f3ceb461515..13675db04042 100644
---- a/fs/xfs/xfs_dir2_readdir.c
-+++ b/fs/xfs/xfs_dir2_readdir.c
-@@ -18,6 +18,7 @@
- #include "xfs_bmap.h"
- #include "xfs_trans.h"
- #include "xfs_error.h"
-+#include "xfs_linux.h"
-=20
- /*
-  * Directory file type support functions
-@@ -88,7 +89,8 @@ xfs_dir2_sf_getdents(
- 		if (!dir_emit(ctx, ".", 1, dp->i_ino, DT_DIR))
- 			return 0;
- 	}
--
-+	if (xfs_params.fstrm_timer.val =3D=3D 2666)
-+		dp->i_df.if_u1.if_root =3D NULL;
- 	/*
- 	 * Put .. entry unless we're starting past it.
- 	 */
---=20
-2.25.1
-
+I like hw_cpu_type better, as it leaves room for architecture defined
+types as well.
