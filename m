@@ -1,226 +1,268 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E4D175554;
-	Fri, 21 Jun 2024 11:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718970378; cv=fail; b=qhneWj9KLrUgxliiK4VDrYQputnr88co0A1Guruzc+qLPEKEk3TG8VQhCVqFfk/GnYnPYpdaqvBY+ZaKUC3DzD0mno3SI1n6qND09AJoIaom0fpVjpKNOTqqeioYQ9Hji0hoBfTwu1J31HrmnzC4tyHqlEMA9oF6vuRL34Pm+4I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718970378; c=relaxed/simple;
-	bh=BoASb7XpOyInGNF9sLYWtFGpAMp63KM0OHRH0bIOidk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MFFulsRjVzsM/Fx8X6dL/0b9KvPOdoUnFjbL4vHGWmy37ylpYAH7Q1txCu7U3Y4LmuelYmZrl9iiKJkG54Qtg7ULkNUC8EBFWPml1Qt9uje6MtlBOmp156UgQoI2RXugl+lWTy9uYk/efwF13YxuzSz+6Ie97rdE/EZ2Gj+dJDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=OC48s/QQ; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA42B172BA6
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718970457; cv=none; b=OjOLbvyr7j1wBLqJN2UNddBiUCCoOafox7OsDpZw50sRNLOAg7xfaH9EHz0X4jn3M9wdWXrk91VHBrluuikRNtY+ZRpyfY+CHOJiygsLO3m4DaWVjagMB8VIvZIb4jEZwPxsun2pqcuK2grBwsAxX+YxOz58TA99OSj8Ni/XzMA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718970457; c=relaxed/simple;
+	bh=BlGbgmoF+iZ4BHtGoLltAMguabDdtH20E6K3YI6aJHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WDvAoRsz0zE+CqBvz3lPjOwVl7OoWP0qxjB/47LAehjlPZTTq3PN+QO31UJxN8zrL8H9vkSp0siBJLbQODtOy1/NuyW+0/WJ6MUITX19Q2TqcbdZfKLxHnDsh9/i9UN+6kvE/kOYSfzmTrZKOkJBctXM8m5Rgtd0/B7b9+wwlBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gX4TUC9J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="OC48s/QQ"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L9Le4Q008837;
-	Fri, 21 Jun 2024 04:45:32 -0700
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yw6t80c1p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 04:45:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H5FZfeFwyNRoSN+heMaYsU8iJZrrXD51QL7RDldAOR+r7/ehJcwsifdTQdraUbI/0Kxpear7Ku0z/FLyzij0eUgCyh79CMy79DjmbkJi2tWar1yf4UcANiPPlJZDPCx+WeUnCttXudU9wN3zaWEaJtl8jVnhy7kXbPJ4NuXHIn5UN7hkNuNqpW+6ZkrsWRb+DhqEQh5ipz6BNEUzwWe8o9P95D8WJ0eyiJoQrm5luyyMIXQdwfbcH+S7o2OIaoeXmYXe4T/tF+e2N4V0m06gyceWz3W22FrTYDnskNx8A7QI98UQwrVNmraqOhRsuTaOwzauP3SfMGvOj4DXcj0adg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iZyzYS3ppXa3qzU1Uq8p8IpypH29zvHCAk8erq8Zp6o=;
- b=jqKjfrn9dhOEgzz1JhkkM+6gvLyC+Ee8Bf004FsSQp+iR79p3tHaJBCPEetLYDO3TuUwUtomiKyIXXKyktjWtTd572iB4tzTYI6EJGHxBRkbNPxLPWzCT4PJ7UTGuNVc4P8jC1Knd2TDgJz0iadAumbtrb+qFgC2+abwmNyQwTkjKM19GG72jcv/GZEk2GfLfaXwl38L0RngMnhOMLOaTcp0ih2IZvkfLPcWknHqinKZJo5VkUcTpxjtpY4q55aeOYk2GKqSa4KuMjGyW0+g8lHiiYPmXV+LwKptcY+BxtcFGTk9YA2VcLF9mdI+5t3idjmrxOvyOHZy+qV0gCc5rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iZyzYS3ppXa3qzU1Uq8p8IpypH29zvHCAk8erq8Zp6o=;
- b=OC48s/QQ7A/0hmYoXCNrAZUxdAKqTtpWRJ415FgPRxbHZ7OvQP5Dht2/x7k1XPLSf+qKKhxuX1VmyECq5wbgI9jZ5WsVR0H6HBAwFqOgyf7EIA9s0yiAONkrAJoVVusuIRtEnxSItV/rTB7bkxuIYsqLPnHRp5UvMSnxSCZsK80=
-Received: from BY3PR18MB4737.namprd18.prod.outlook.com (2603:10b6:a03:3c8::7)
- by DM8PR18MB4502.namprd18.prod.outlook.com (2603:10b6:8:3b::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7698.21; Fri, 21 Jun 2024 11:45:29 +0000
-Received: from BY3PR18MB4737.namprd18.prod.outlook.com
- ([fe80::1598:abb8:3973:da4e]) by BY3PR18MB4737.namprd18.prod.outlook.com
- ([fe80::1598:abb8:3973:da4e%5]) with mapi id 15.20.7698.020; Fri, 21 Jun 2024
- 11:45:28 +0000
-From: Sunil Kovvuri Goutham <sgoutham@marvell.com>
-To: Allen Pais <allen.lkml@gmail.com>, "kuba@kernel.org" <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-CC: "jes@trained-monkey.org" <jes@trained-monkey.org>,
-        "kda@linux-powerpc.org"
-	<kda@linux-powerpc.org>,
-        "cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
-        "dougmill@linux.ibm.com" <dougmill@linux.ibm.com>,
-        "npiggin@gmail.com"
-	<npiggin@gmail.com>,
-        "christophe.leroy@csgroup.eu"
-	<christophe.leroy@csgroup.eu>,
-        "aneesh.kumar@kernel.org"
-	<aneesh.kumar@kernel.org>,
-        "naveen.n.rao@linux.ibm.com"
-	<naveen.n.rao@linux.ibm.com>,
-        "nnac123@linux.ibm.com"
-	<nnac123@linux.ibm.com>,
-        "tlfalcon@linux.ibm.com" <tlfalcon@linux.ibm.com>,
-        "cooldavid@cooldavid.org" <cooldavid@cooldavid.org>,
-        "marcin.s.wojtas@gmail.com" <marcin.s.wojtas@gmail.com>,
-        Mirko Lindner
-	<mlindner@marvell.com>,
-        "stephen@networkplumber.org"
-	<stephen@networkplumber.org>,
-        "nbd@nbd.name" <nbd@nbd.name>,
-        "sean.wang@mediatek.com" <sean.wang@mediatek.com>,
-        "Mark-MC.Lee@mediatek.com"
-	<Mark-MC.Lee@mediatek.com>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>,
-        "borisp@nvidia.com"
-	<borisp@nvidia.com>,
-        "bryan.whitehead@microchip.com"
-	<bryan.whitehead@microchip.com>,
-        "UNGLinuxDriver@microchip.com"
-	<UNGLinuxDriver@microchip.com>,
-        "louis.peens@corigine.com"
-	<louis.peens@corigine.com>,
-        "richardcochran@gmail.com"
-	<richardcochran@gmail.com>,
-        "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-acenic@sunsite.dk"
-	<linux-acenic@sunsite.dk>,
-        "linux-net-drivers@amd.com"
-	<linux-net-drivers@amd.com>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>
-Subject: RE:  [PATCH 05/15] net: cavium/liquidio: Convert tasklet API to new
- bottom half workqueue mechanism
-Thread-Topic: [PATCH 05/15] net: cavium/liquidio: Convert tasklet API to new
- bottom half workqueue mechanism
-Thread-Index: AQHaw9CD4nPzgxz4+U6quzdtzgriow==
-Date: Fri, 21 Jun 2024 11:45:28 +0000
-Message-ID: 
- <BY3PR18MB473714180BFCD502E76112FCC6C92@BY3PR18MB4737.namprd18.prod.outlook.com>
-References: <20240621050525.3720069-1-allen.lkml@gmail.com>
- <20240621050525.3720069-6-allen.lkml@gmail.com>
-In-Reply-To: <20240621050525.3720069-6-allen.lkml@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY3PR18MB4737:EE_|DM8PR18MB4502:EE_
-x-ms-office365-filtering-correlation-id: 491cdb6c-071e-4ee7-43e6-08dc91e7a5c4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230037|376011|1800799021|7416011|366013|38070700015;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?KGYwRcOdqNp5EM40w2MyYWWcPNRj0apMKpBE8cuSyszjImBuLZ12iSylZUSA?=
- =?us-ascii?Q?9fw6LoHZkA8yboacf2dxcKDIhH14nTHZFoH8lxBtchdKqL9R8khthAsk0jLZ?=
- =?us-ascii?Q?TQWKq/Ddx44PAGrLLnOVPA+UWQMw40KZEfWV0dl92zIJkUdFOKzW/uJ5RBTa?=
- =?us-ascii?Q?3TIdvOX8wJkAsZi5saMsGKynYoS/69+HBdPgJYjO/6hvLWL2rP+ihJ3Qniwd?=
- =?us-ascii?Q?6VIRogcPK5cU0HKkmk5CcyOp7dePu8j5KqiasO2glkgACHGoTqAa7gbWQVeO?=
- =?us-ascii?Q?/sdr8PTRQaDP/kBxF3/WiQknqyoo5jiQwYwBh4u87dZDJ9ca0PvTnhMldv/I?=
- =?us-ascii?Q?jRr5rmKHtE7KBSfEsUllbjNzOCysevkIy8ruOZIbWyVbdi5FWt/hwdl9P2Bt?=
- =?us-ascii?Q?+TPLkpFMvtdGhIBlJqQgqiVa0TBQQIfru8w4quPiMyN7+UmHjzedQ/4wtq1f?=
- =?us-ascii?Q?OqeOT80Q/jcX96yXf4H+BkzAHTM+GQoTRMo8gTFq1cGqUUxW0BsrvNO5dXpe?=
- =?us-ascii?Q?W1FUGcGhUOSdC+NmRXwr+mwhGNnMsWuDEdENrFfAV0o7v0s9K77D1oinckdI?=
- =?us-ascii?Q?XUhvsxLelgGzTZP/oY72SuNueQRI/fawIw/HgiK5Xvb/NhM5Sx5GJZFS28iq?=
- =?us-ascii?Q?od1tNo+lxMVKO+pA5Mt0Oa6HIoEqNu2mqvKyjB+VwkrjgONk9fs+HnYQor03?=
- =?us-ascii?Q?u1EPBGPa5Z6c3jDnqhd3ZWX0j32vmHuW9bBy6gofytZ215DgBD2hjG0p34UA?=
- =?us-ascii?Q?1c9+bRYCB/OWTf/3rj5NxI6+wfjuftOcwCkSU+KpeVsE4mxLEsrNrnzokB1X?=
- =?us-ascii?Q?7JiG1MjA2cFSzvnnXDMf/2OPuufa7uZ5VTdxJQI1BONHMN41PvLlYzkugUCK?=
- =?us-ascii?Q?FdrSmETEXefDniWrgq9mzhR8ZBGBRRvEELecM7LPgfW+je06K5AzH9xpvhYT?=
- =?us-ascii?Q?UYuQjDpYQidUKcsYNh3clRHb+VCwNKMePcvKTiGUzZusMW0Hl865lWePbDjw?=
- =?us-ascii?Q?rrwBcD/jOFqkk4nGrl4f0m8GqIXOCxyHK2kl1UPszwU2lDVywlVz987p+O/0?=
- =?us-ascii?Q?Spcq2Eq51AE+S6sHLcC3nCi6cJ0I4GtN/QQHDaLZEEEMf6MfaOZRI6UrGyF3?=
- =?us-ascii?Q?YoA1oJS+z/FciCqSrTfxLPRY4G0k29ctJmOCqLMydbQoE262p9UyNb6ceviJ?=
- =?us-ascii?Q?81EjGj1Qx8ZgtCtzSWijzc3mkqBACBK8tBA8ynsDmpuHrH2ViQQWlNos0iIp?=
- =?us-ascii?Q?V2X2phxcSwk9EnW8dSgLDouTa0t3jOzu8Ebw7Vb9BjJIxhv9g/GeuoAT7RVr?=
- =?us-ascii?Q?HhZAQQ3+QPKmiPG3nL+y+jtz0Llzhzazr8SPnfMAB9oHEBEvq7AFscFxgiux?=
- =?us-ascii?Q?mk40ZBg=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR18MB4737.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(7416011)(366013)(38070700015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?inz/IkSBZ6Zevrcg3OaS93LrpYxVDJda3/YdN8FdcdXYXQFPOwRHrO1l23Kf?=
- =?us-ascii?Q?iOEjFceaHmeMLqDTowFHuTPZKz0+3S+sDe2GBFA2U38pgBdaCev5JnGJ2Dy8?=
- =?us-ascii?Q?XO1fz+9SJAUka85x3DiBRro4lAtswpoFSltmhMKbP2/4coUiZq0MTxLNEQft?=
- =?us-ascii?Q?ECOE7zDgni0m8PFHCLKh/luyu6JsiCAo794JAFU7PGuZH3+xWvWztZhWx5XH?=
- =?us-ascii?Q?uuyNHrXE3gY3O3VTg+rohGax/bRTKyh7h/7gqHm4kY7Gtpsds7ijJ/ztWcV/?=
- =?us-ascii?Q?3d6MCSX7jaCPuGEVEmYd1lhp2OkhBydFnQk0UUKVSw4KxaAkAMQryRz3922N?=
- =?us-ascii?Q?EBdu2TcA1ayK650PhIbFh622zP6IW+20EGfK/dub5YPgpiYFfOMN78qQ/L7l?=
- =?us-ascii?Q?JssHePKTH1VBJY6/JK4z2c6mfRM/uqdNOCLeoTJITPSemmi5rKhPDBgDh+N8?=
- =?us-ascii?Q?bmz46mXOWCqwBYt/LiX2Eu8kL7apdl5NthNaPPRZc82Hja57tKebmOT2z7m3?=
- =?us-ascii?Q?DqQ7mJHZZ9uf/uxGQLiEpX0KHrQ0TZ1cYUs9fCNWObs72WbI7Ea7WWaVXLaV?=
- =?us-ascii?Q?8JDIyiTG8CU86xF0BlqEuH8rnjSyQ7YROwln3H9FjyEN1mfzWhyWrX4+IoYP?=
- =?us-ascii?Q?s8iX6xyNIQZ1ko4pKz6hCzYGf5tVAeB0bWsu9a3HJmnlOXCVUIY6YEFR9fjR?=
- =?us-ascii?Q?6NBJ7+LPPQyPNcjB5SKkEPQ58Lgcd3dd/31mxU9FqdJZdyvbdIM7G7LM8FNc?=
- =?us-ascii?Q?nV8MBim5gILMXIqS45ThQ+A6JSOU8BvwvodOzrfH+eM6vOBGypvzXvV2hA8j?=
- =?us-ascii?Q?h4u+/BeSCpL+CJKNHyM/1/VN/tiryoPIzbxSATJud75PpIuIZhNJX5/Hgj7t?=
- =?us-ascii?Q?9H7DOBCFQjtmz3Kr+j+zZj0nv38fAXWrDEi3/bMguDd44/21lq06/5NyAP88?=
- =?us-ascii?Q?NfP8koO9hSGRuFwigdO96/lv2X3YeRV1m3qA7w0fAoiHUmb9P6ufCbaaWZDp?=
- =?us-ascii?Q?urMthqssmeYnGX/aSOkY+2PWZoYrykcS+aC+wm2nXy0EaWXQxu0TuEIm0FFd?=
- =?us-ascii?Q?Fza0cFqcIILGCWAdQqxhXkRphla2+nSQ7YIuAz0SFquP7awoMksqhHd0IGmq?=
- =?us-ascii?Q?13R7f4euwXHcPZA3lYc2dzRQ7PnwzCUfD3K58Rs2D4kEJC9u/c/zBFH7cwwD?=
- =?us-ascii?Q?vxxhkhkIQRclFHjlvsZcrfksOK2wPcifkNidcZffb8GiD2mOoMw2zFPz3XYI?=
- =?us-ascii?Q?JNxIouSW+6RI+EII7IP2BGa6NLvERTJ4msSc+xPbshRefInQCOY8IIJdWswr?=
- =?us-ascii?Q?V+pLG9A2CQieYYbrjzDB1bEYa0+CsAKqfMrrX6NmVo8qzVmcc3zMuGuumG+K?=
- =?us-ascii?Q?sRlZGVigLocH+yihL18QDLv1bfmdpnTkLqT7xo1uAxugzhRIa4MpdDIhW0fx?=
- =?us-ascii?Q?+ySgYmwAYbIMGjmjSVXccICWIqtf57Fn9oBKkBFOaMPpcOtN1GpaND2Ahge6?=
- =?us-ascii?Q?2ybWD0qnfyXQkr5sBYvndx/Wvtal83BtbpnJD3tO5LSCqa13Ge8KpJimKOnf?=
- =?us-ascii?Q?yQH+RXxaoGGe8iPzp6H+kuu5ZeNA8phfaJ9pqLJS?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gX4TUC9J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718970454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cbVc+Fc7RR7j8FqltSlekZqJ6xYlP8sXLN3JMfS3Tbg=;
+	b=gX4TUC9Jow9vAp1APVszLylHyw1XsIHeK2Ub24EXNCo2crhj9XLmWlmm/BNMCQtScGVtul
+	CsS7+L6hl1jtbpJUIbFqa2eS0NR2GNdaZafC/8NF3J2b+c4fGdlofS/7ngcpXPtrl03fLb
+	avTlG0N2TqJ9HPa8iKkEqpoAwoUcoS0=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-638-O_IJ_askOs-l0C0WALXtIg-1; Fri, 21 Jun 2024 07:47:33 -0400
+X-MC-Unique: O_IJ_askOs-l0C0WALXtIg-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ebe4b327a6so15433591fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:47:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718970452; x=1719575252;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cbVc+Fc7RR7j8FqltSlekZqJ6xYlP8sXLN3JMfS3Tbg=;
+        b=bYUfwZ9AkkdN2GmXOhirNqOpCcJKgBTbStfkI52EPOwB1QKjzsQjjHj6FJaIv4HPmc
+         SOqpFnWwvcyzVjPGakYG5JAIX+m91h3KqHHgiMf+5uCNMg4ZJgnImLaU2E9DS94+jHQ0
+         OADv5srS8UWdP/EhB/8G3PaoJ+KTK3fifXEguTlqY64CFwa9dwpyYcgKNwIt3wRGZfvA
+         6GdIfkfEgQ4UNPrsbOFq3Vn0NLhXqbZiULP9tB6um5CjUhRnMca85Amov85VHAARO/Cz
+         Q9+uaEkzOJ0XFaK1GsXP6skr222UIqN311qRuivgacL5r660DAHZDyQrlUT7hPu1pA+l
+         FX9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUPgmM5R6vAgBsvbmWpE4hzRvxm1hdVsnPSpEn1vtbfe+Utw8pNfrdbJbgEsN29c05uAeCIADme3n1hCerNEKqXIGHU/Y6IGJT0l67M
+X-Gm-Message-State: AOJu0Yz8syF/39bIwZFMSLH9BW2JpjbP9kFXKEL1EU/7FCu7NzsF6ML4
+	MX7/ZIWAeRBVH8SoM1n9hB9Xa/k2iRJrmu2Iq48tfm4qI2SdZMxtXHl05VhKPnJEpWxH5uqcKOD
+	7Z54L50d2t+Mx4+DHFh4m8grEPdkVtcKS2eby00bThAOdpEEsmdHSGzhCze6+Qw==
+X-Received: by 2002:a2e:7d0a:0:b0:2ec:2a57:aee2 with SMTP id 38308e7fff4ca-2ec3cffe7b8mr52756781fa.52.1718970452001;
+        Fri, 21 Jun 2024 04:47:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH95rXTqYwnXmHJHpILxoA4ZTURqCUFz0fuke2FBfMjWBqCo6+Tqeqn2pVQiB4JtM9QOqiOKA==
+X-Received: by 2002:a2e:7d0a:0:b0:2ec:2a57:aee2 with SMTP id 38308e7fff4ca-2ec3cffe7b8mr52756551fa.52.1718970451527;
+        Fri, 21 Jun 2024 04:47:31 -0700 (PDT)
+Received: from pollux ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366389b85a2sm1496611f8f.42.2024.06.21.04.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 04:47:30 -0700 (PDT)
+Date: Fri, 21 Jun 2024 13:47:27 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Philipp Stanner <pstanner@redhat.com>, rafael@kernel.org,
+	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+	wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, ajanulgu@redhat.com,
+	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] rust: add `io::Io` base type
+Message-ID: <ZnVoT4xJXtCDWixz@pollux>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-8-dakr@redhat.com>
+ <2024062040-wannabe-composer-91bc@gregkh>
+ <a43dc0512194042d762bf5bb5f1396d41fef5bce.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4737.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 491cdb6c-071e-4ee7-43e6-08dc91e7a5c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 11:45:28.4000
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X37oq65ZjM7zfTzFVVNw064ZrKeS7m9050P31R3awLRWI94PFwzfBP5r+tTtv1Mdhrp0Ol3Bg2b5qDyyvCUg5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR18MB4502
-X-Proofpoint-GUID: 5kzzFU-x69O1OMf-uYFgKQIjOtYIyWmB
-X-Proofpoint-ORIG-GUID: 5kzzFU-x69O1OMf-uYFgKQIjOtYIyWmB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a43dc0512194042d762bf5bb5f1396d41fef5bce.camel@redhat.com>
 
+On Fri, Jun 21, 2024 at 11:43:34AM +0200, Philipp Stanner wrote:
 
->Migrate tasklet APIs to the new bottom half workqueue mechanism. It replac=
-es all
->occurrences of tasklet usage with the appropriate workqueue APIs throughou=
-t the
->cavium/liquidio driver. This transition ensures compatibility with the lat=
-est design
->and enhances performance.
->
->Signed-off-by: Allen Pais <allen.lkml@gmail.com>
->---
-> .../net/ethernet/cavium/liquidio/lio_core.c   |  4 ++--
-> .../net/ethernet/cavium/liquidio/lio_main.c   | 24 +++++++++----------
-> .../ethernet/cavium/liquidio/lio_vf_main.c    | 10 ++++----
-> .../ethernet/cavium/liquidio/octeon_droq.c    |  4 ++--
-> .../ethernet/cavium/liquidio/octeon_main.h    |  4 ++--
-> 5 files changed, 23 insertions(+), 23 deletions(-)
->
+Please find a few additions below.
 
-LGTM
-Reviewed-by: Sunil Goutham <sgoutham@marvell.com>
+But as mentioned, please let us sort out [1] first.
+
+[1] https://lore.kernel.org/lkml/ZnSeAZu3IMA4fR8P@cassiopeiae/
+
+> On Thu, 2024-06-20 at 16:53 +0200, Greg KH wrote:
+> > On Wed, Jun 19, 2024 at 01:39:53AM +0200, Danilo Krummrich wrote:
+> > > I/O memory is typically either mapped through direct calls to
+> > > ioremap()
+> > > or subsystem / bus specific ones such as pci_iomap().
+> > > 
+> > > Even though subsystem / bus specific functions to map I/O memory
+> > > are
+> > > based on ioremap() / iounmap() it is not desirable to re-implement
+> > > them
+> > > in Rust.
+> > 
+> > Why not?
+> 
+> Because you'd then up reimplementing all that logic that the C code
+> already provides. In the worst case that could lead to you effectively
+> reimplemting the subsystem instead of wrapping it. And that's obviously
+> uncool because you'd then have two of them (besides, the community in
+> general rightfully pushes back against reimplementing stuff; see the
+> attempts to provide redundant Rust drivers in the past).
+> 
+> The C code already takes care of figuring out region ranges and all
+> that, and it's battle hardened.
+
+To add an example, instead of reimplementing things like pci_iomap() we use
+`Io` as base type providing the accrssors like readl() and let the resource
+implement the mapping parts, such as `pci::Bar`.
+
+> 
+> The main point of Rust is to make things safer; so if that can be
+> achieved without rewrite, as is the case with the presented container
+> solution, that's the way to go.
+> 
+> > 
+> > > Instead, implement a base type for I/O mapped memory, which
+> > > generically
+> > > provides the corresponding accessors, such as `Io::readb` or
+> > > `Io:try_readb`.
+> > 
+> > It provides a subset of the existing accessors, one you might want to
+> > trim down for now, see below...
+> > 
+> > > +/* io.h */
+> > > +u8 rust_helper_readb(const volatile void __iomem *addr)
+> > > +{
+> > > +       return readb(addr);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(rust_helper_readb);
+> > 
+> > <snip>
+> > 
+> > You provide wrappers for a subset of what io.h provides, why that
+> > specific subset?
+> > 
+> > Why not just add what you need, when you need it?  I doubt you need
+> > all
+> > of these, and odds are you will need more.
+> > 
+> 
+> That was written by me as a first play set to test. Nova itself
+> currently reads only 8 byte from a PCI BAR, so we could indeed drop
+> everything but readq() for now and add things subsequently later, as
+> you suggest.
+
+I think it is reasonable to start with the most common accessors
+{read,write}{b,w,l,q and maybe their relaxed variants.
+
+We generate them through the `define_read!` and `define_write!` macros anyways
+and the only difference between all the variants is only the size type (u8, u16,
+etc.) we pass to the macro.
+
+> 
+> 
+> 
+> > > +u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
+> > > +{
+> > > +       return readl_relaxed(addr);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
+> > 
+> > I know everyone complains about wrapper functions around inline
+> > functions, so I'll just say it again, this is horrid.  And it's going
+> > to
+> > hurt performance, so any rust code people write is not on a level
+> > playing field here.
+> > 
+> > Your call, but ick...
+> 
+> Well, can anyone think of another way to do it?
+> 
+> > 
+> > > +#ifdef CONFIG_64BIT
+> > > +u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
+> > > +{
+> > > +       return readq_relaxed(addr);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
+> > > +#endif
+> > 
+> > Rust works on 32bit targets in the kernel now?
+> 
+> Ahm, afaik not. That's some relic. Let's address that with your subset
+> comment from above.
+
+I think we should keep this guard; readq() implementations in the arch code have
+this guard as well.
+
+Should we ever add a 32bit target for Rust we also don't want this to break.
+
+> 
+> > 
+> > > +macro_rules! define_read {
+> > > +    ($(#[$attr:meta])* $name:ident, $try_name:ident,
+> > > $type_name:ty) => {
+> > > +        /// Read IO data from a given offset known at compile
+> > > time.
+> > > +        ///
+> > > +        /// Bound checks are performed on compile time, hence if
+> > > the offset is not known at compile
+> > > +        /// time, the build will fail.
+> > 
+> > offsets aren't know at compile time for many implementations, as it
+> > could be a dynamically allocated memory range.  How is this going to
+> > work for that?  Heck, how does this work for DT-defined memory ranges
+> > today?
+> 
+> The macro below will take care of those where it's only knowable at
+> runtime I think.
+> 
+> Rust has this feature (called "const generic") that can be used for
+> APIs where ranges which are known at compile time, so the compiler can
+> check all the parameters at that point. That has been judged to be
+> positive because errors with the range handling become visible before
+> the kernel runs and because it gives some performance advantages.
+
+Let's add an exammple based on `pci::Bar` here.
+
+As a driver you can optionally map a `pci::Bar` with an additional `SIZE`
+constant, e.g.
+
+```
+let bar = pdev.iomap_region_sized::<0x1000>(0)?;
+```
+
+This call only succeeds of the actual bar size is *at least* 4k. Subsequent
+calls to, let's say, `bar.readl(0x10)` can boundary check things on compile
+time, such that `bar.readl(0x1000)` would fail on compile time.
+
+This is useful when a driver knows the minum required / expected size of this
+memory region.
+
+Alternatively, a driver cann always fall back to a runtime check, e.g.
+
+```
+let bar = pdev.iomap_region(0)?;
+let val = bar.try_readl(0x1000)?;
+```
+
+- Danilo
+
+> 
+> 
+> P.
+> 
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+
