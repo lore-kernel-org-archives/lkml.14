@@ -1,46 +1,46 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2045.outbound.protection.outlook.com [40.107.21.45])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2086.outbound.protection.outlook.com [40.107.21.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F8D16D9A5;
-	Fri, 21 Jun 2024 07:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4956516D31E;
+	Fri, 21 Jun 2024 07:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718956366; cv=fail; b=TP3a03UgmQ8TKdFcpIz3/+CRrQmV96T16dQJwEOUl1zOxa+YYYztNiuDcs6xbfLrPJRWk6tEyhHlGbVFC+wZ+GPdoHVzpN2mFy3xCGO1ggiWj/k904TdCKfGHV/FWzCWbDEDhABQzc9MMgQ8XKACt7KphTHeGTJGQCR5oBhMTmA=
+	t=1718956373; cv=fail; b=X68jBBQoA/EWPU6FGWcZYUs+g8/ST1L0cX3L5Z8pHkax59+prPSgM+6tjRz2ojD+CRHXWIMFfJagidRAnvbV9mrp2UIuwvKzxcTrJ5gbGXlQiSfrCsOvG2z7csYVIOccEn8hIv9PfgrCniBbQLXswClp2nG9GmtGTZYqgccjVes=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718956366; c=relaxed/simple;
-	bh=LLzkHu0h9E9YdY7PJfgq5nNTslIulLjkOHOJ2hAXBcA=;
+	s=arc-20240116; t=1718956373; c=relaxed/simple;
+	bh=+s2RwZ3XGIcjdkAqdrgZINYg9aP/PcbWlRDNiRANEhQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hQw9taqAmLXFxsf2ORkLXALK1seM+GtSmRVcg2I6giHFQx2GoIsrk8S2ivivhOLkKejQksRoY2pXqIKAA4KlMhLv483lRC5NjWg8+fMhtRfiyBIQ12ShATK1fSoAZtAUEhQa8kA7ufWal4lyOadJlJ80gqiF5lwZuP+hC3Y2BUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=O+ishUq1; arc=fail smtp.client-ip=40.107.21.45
+	 Content-Type:MIME-Version; b=lqeE+Vj9JgnpPdEPQXXCCg2oyFGnh9v5IbPVzCpYprYabygbUtQOllg21mYR76uu9+FEWgZfPO6TVGcTI58T66t0euYWPWtxn6uvCDbMOIJ+gXm1kIJEupp+bOPw5pwHogXhXI61DlOULs0uEfI+NuLFD390DAQE5UIWeQE3BNE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=CPO+hxdK; arc=fail smtp.client-ip=40.107.21.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="O+ishUq1"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CPO+hxdK"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IwP79VBmXWxV1fkMSBlpgi+wSkTT1DFTRZ81fUiIjvGEBlDfU2AJ3BRNGP7JhzXecCtcBGzYLp+W4JgtszplmjBbusskWqhfYa3gYGc74CGzXn0ezrqgHhFg6tSPDvpoQzu/U0Ei4xNTJWz0JKK36T2MQMs/BsFdAoaapGlgAhrOArhttMT0eKtkZubktoC4crgylBfFWfGdlhEfbqt+lrldzBvvawLgQByghkebxmnz2V9U/2Zuiyl9i+s4umvMbzJ3Spbtezcf9YI+U1vk5ljuwWcZESMeNWE0TMHBuxkOaAyOnJ4kgi0gcDMc1I1ObSoFmb2QUq11bKB0OkWMAg==
+ b=l88q11UDDjmU3+wZxXdO/22mSwN30bx1umdjgItHpHCQh93ydYYf4awoOdaWhQDn4PXsXLDQ63CmGdx3Sh0Zvn2/yWWUTjjMKf0XiJvHbygUHTsZNXqOXjfXf2homv8BJAN5x1UdCT1CVJZC0MvJ7nfn3TxwoqVSAlY9F4gIbnlQgDme/PC9KDZjxz3CVRvrSD9G8o4fZJbcxj7WoO0IthJ2CEXocE6ED9L7D1GmK0Ue+CaS45h8KxobVkMjE1L8s5M/oHP6tSNklZL4RCp5AXBqFv928uHi83+Y8qSeV6nJBt1AVpPRCsTYU1wqPMh9TcezyW0UwWfF++375NurCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HafID6muxkDGDhFzNj2vFIwIKuvfQPQRcrZ2D1BQu78=;
- b=BmkT/I5XCGS12g+H/qFjwhMhlOSIJopGPnPUcHdJsH0BdseLZH3Cvik/IMC0ZmJT9AFnn5GDMpnku0j9IIQ4BCpepgfW2MD4KWNyfX/J2mCzqWHXLkt3QPY2hJIiTXoa09d2116dkcdUTemb5UHIYio6R73yy19sQMtclfW8YDtpZefdxC+Emi9B13d2wWnvhcnwH3EssfhOMyrKbIyyo7fo4T5Wan3CuOjKP55CERXt5swWQ4sGFssOaxAxCzHFXWzthY1Rgp9PJiM/Gh0nLweACmRooLx9yHiH+Zl9yceD5g12+VlxrVip+rQsjxblWCJCG2/sCFuhc+4ddwqWAQ==
+ bh=xKRQr41pWma60HDhQhSWeHxcJvU7O3Psl5qZsePcfwc=;
+ b=e8LC4/24mR5MdFc6j/7pkLhoixAFyz1LwM/iHAi2wfVdX/u3VDvF/IcfDhwTXdVblcVfi9oX9sVPwQfR/yjtk2jHwgrZhiCH5hKG3c2EduNkckcu22GeAuvtyE+AkykLgYz67k6gSRdZG1Dcj2vNAFxUAIHwTCmYMs9XQtaiLTH/bxHu6gSRVeBBLelgSaTur9RonAlF4iwFvDp/AqZSaO8cZTJ6Nx0lBuEX0snMuLsj5kT+xpxAC5ezORFIb21tHdwW4y5eMSVfnkNavn6GofIYziFgNH/Ifk3ELv0jEsigUI35ykgoiMDhTjv42/W258L4Yf2m/1qu67QJwcwzQQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HafID6muxkDGDhFzNj2vFIwIKuvfQPQRcrZ2D1BQu78=;
- b=O+ishUq13Y2IcWeD/gWd5obWrTkv+RM62t0L/9ImM7+pNP6M0AfVtmniqR9dbKEBCUuMHBCshdA9RpozXXKaWVfJU/JyP7EOaN7G14mCdTRzCeWrAtHbGu38Ajk0eJzfYN5yIeut0HipxuEt5yH2qADcBmn3+xvPwlK+TP2XhLo=
+ bh=xKRQr41pWma60HDhQhSWeHxcJvU7O3Psl5qZsePcfwc=;
+ b=CPO+hxdKk6NAyArdLRxyedDaRB5wiPu2f9SRJbMLDUoS6FlpXxRIGd0AMwvUuMsVI0Ycz8BsYxR0qdSYJW5z7LbebmTlDVU6/gH+FzyeH15Y0GYmgvt5/6AbfxddLnOQxVBs8Nzc6QGrea1XaNNcZw2wtU7CC23vQNiz0gNxV0Q=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
  by DB9PR04MB9789.eurprd04.prod.outlook.com (2603:10a6:10:4ed::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
- 2024 07:52:41 +0000
+ 2024 07:52:48 +0000
 Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
  ([fe80::f950:3bb6:6848:2257]) by PA4PR04MB9638.eurprd04.prod.outlook.com
  ([fe80::f950:3bb6:6848:2257%4]) with mapi id 15.20.7677.030; Fri, 21 Jun 2024
- 07:52:40 +0000
+ 07:52:48 +0000
 From: David Lin <yu-hao.lin@nxp.com>
 To: linux-wireless@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc: linux-kernel@vger.kernel.org,
 	francesco@dolcini.it,
 	tsung-hsien.hsieh@nxp.com,
 	David Lin <yu-hao.lin@nxp.com>
-Subject: [PATCH 03/43] wifi: nxpwifi: add 11h.c
-Date: Fri, 21 Jun 2024 15:51:28 +0800
-Message-Id: <20240621075208.513497-4-yu-hao.lin@nxp.com>
+Subject: [PATCH 05/43] wifi: nxpwifi: add 11n.h
+Date: Fri, 21 Jun 2024 15:51:30 +0800
+Message-Id: <20240621075208.513497-6-yu-hao.lin@nxp.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240621075208.513497-1-yu-hao.lin@nxp.com>
 References: <20240621075208.513497-1-yu-hao.lin@nxp.com>
@@ -68,523 +68,254 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PA4PR04MB9638:EE_|DB9PR04MB9789:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48effe7f-fe0c-4caa-6cdb-08dc91c7203e
+X-MS-Office365-Filtering-Correlation-Id: 300c1ff5-7799-4392-b512-08dc91c724be
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230037|1800799021|52116011|376011|366013|38350700011;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?l23u21YEdfQd6XBELvu9AaSqBCqn3fKuLokWPDM1V8t1mdQVJHC+NHKY/WAi?=
- =?us-ascii?Q?O7vExmij4o/jT6wAlBzfTTfkFxZkccIomRVwB88bJmzHRbgAvVjBrn73PbvM?=
- =?us-ascii?Q?7RLeHuI5mNN1hsCTxAEMn0i87hEUtfrK7dJZ64G4lPpJgvkihSl+Acalw68E?=
- =?us-ascii?Q?SPEfL9b1Q/Oy4/CRK83Uga6a6nP/rEbBv3KhhHIowdKf2sLH6KruPrm1DVno?=
- =?us-ascii?Q?8KkF2oI+vSW4j/t32GxDQATEf52R8oslGsRFMDlrtlDt2s+aLvyViwj4sYin?=
- =?us-ascii?Q?WVxmTYFzDFCgsV0GooS+GMBIjXzBFypgh9jhfxD/shpV/WFTbuBQAQofDlLQ?=
- =?us-ascii?Q?fhAuLEa1kd46/q6OfvS+8NWCQWj3ikU4kvQgPEmuKPlt/PYBB9BC8XQ86MVA?=
- =?us-ascii?Q?WeM1SxuxXz5BLL0XhBgtTJ3RJgyrmDFjKidZbIxYYsudDmCz4Uw9MlMtT4n+?=
- =?us-ascii?Q?aK7PSIXzNW09bX/RAxY6lqfMTEPzq6Lls+nWf//DzFp5J5Gu2aVbUIV9FVHC?=
- =?us-ascii?Q?p5xlXECCcSBtoIDd0Z9PUpxDgz47+xJSZBaKh5exbm5MHlEcVTVZVkEaviXj?=
- =?us-ascii?Q?L//eVxTukTz3RC6Ig8wP2SmIxxnbB4SbU7WZC2v4vnQXnbOvMiT1bgc1E96f?=
- =?us-ascii?Q?bNQprGDA+WD/W0AtvpPUxRFV9cI3aGsVOE8zcosoLcSOYRrdwgw+NlqGjjqX?=
- =?us-ascii?Q?xMSMOFd47et87Vb/IBR/FLFmbydAEvQGp5Hj83JbsGdHVY1qn46X/cuB/Bp8?=
- =?us-ascii?Q?A5xkOtjEzl4j+iltFsA7o5Wr0W7xw1MlWJuT4JvT8F6+RDt4WevFc8Z0qjQD?=
- =?us-ascii?Q?sxAxTG4rGbACLlr9C/Pgev5yhKyiqwX2cMry8zRiCvjcEpwBf2FLbhchwQdT?=
- =?us-ascii?Q?HTwD3Q1Bvj9FfDr0DwGh27xHnVrte5RpKLZDlsaovZwWslwPWhZPXyYS7FCS?=
- =?us-ascii?Q?kjbrbdOQoaMNee8745TJmoiVKO9ID1ErZZ/3/UA408t+6BTrpA6+QgR0SZ6V?=
- =?us-ascii?Q?MeiVK0ZLNgkUJw/sKf+lXEjTd4c6ErlkCex4yDA5R7g2ChWT43qdwjqf+HvA?=
- =?us-ascii?Q?y3SWhx2JyrwENeT9iFsxCS8Sv83Ux0EAzpFS9Lz4deUHP4Hwk7lax2OiIuC5?=
- =?us-ascii?Q?62dMMnOOrFKaYy8im8mSSUnSPy25/4eBpWxkkYdCo9REnl8wSzJ7XwXVOFbR?=
- =?us-ascii?Q?9bsBGbCzi2aQZyadW1tV7n6mGhaKw/JKCGI1rIx61T8/wuV30n+sdAGCbgUf?=
- =?us-ascii?Q?Om5dqz2PUKxeMXqqEcLJwRsvZQ+e2DxdiD3qoNuHx4oV0sak3hKLsfrtO/qg?=
- =?us-ascii?Q?6cRIBLfyGRs1w1DzujMNkPILnT7a7Tip5CxCTdd2u7/k6gtOY5ABEKgB2Fpo?=
- =?us-ascii?Q?5czy1dU=3D?=
+	=?us-ascii?Q?/AiZw0YeAUEFeuQgHla1Folxmi/lyL7YGd3dWLw7ihY1/ITqsEssN+A6+SZ0?=
+ =?us-ascii?Q?bZu3IkVSfihuwnutxKksYlnM/4RM6acItmPX6L+v4XQGXv8nXlR3nxjlp8IS?=
+ =?us-ascii?Q?2LdHqRkMYnpU75zV3hd2ocPfDcDqbQVFHlqmAOalIy7WTWelFnkLZa8oGj5/?=
+ =?us-ascii?Q?G3ZzaZOhmCEv04LCQY0vjUOwKXMOzx2e6JGVA/gtmf3ZxIOzrYHKeacnSt7x?=
+ =?us-ascii?Q?283FNq0ONTd5uLtGSq7TxVstsZzs/JjO5oo3t9fy9y5ppwMUYSsEjphra4l0?=
+ =?us-ascii?Q?WFul3pRE1HlC3UTGvPfIynP86uG28qsT7Gg8pxCtj8evFXseYAPxR2nWLFSJ?=
+ =?us-ascii?Q?pmqkvJ7Psbquro4fSwGPqApD4Dq3N/1JSORdFNJ12SpFI/NblFMP9Y5qSzbn?=
+ =?us-ascii?Q?Fx4Yl0asY79Owjn3TTNBAYAMqVvoR9E4ESPyH74/LJIDCih6GMFdiDEpSTJW?=
+ =?us-ascii?Q?hARwX1y0GviMHaPLUGLTE0ezxh1PSQKlIDoOpd1qNZolZSQfjpjc7o/KBmeR?=
+ =?us-ascii?Q?CyzRek1s6iI6PNnhTGSBabnnH0oL9vdS0N0k1PMD0bZdDbXDM9fOmQI5SNNW?=
+ =?us-ascii?Q?BRsxuWJOaKAL1eHGyslOiC1TZRmIsoL31VFXtqbTtWuZm/sldsA+MYitGQgj?=
+ =?us-ascii?Q?JzjYfZXM8j9zubBFWTjp9qYdb8kgMuk86PptwPg+gVP1k2RmWFsy7c13OUaG?=
+ =?us-ascii?Q?fQjkNjjtiXF/AnTGa7IFgcRmPPfY8GG+Z/DGxxBFobQded6KRdtwa6K2H3km?=
+ =?us-ascii?Q?0OQLlFfi61P9n0PcD+WwnaIB27X0a+rNd5IY1mBJq723QEemm4LHLNQuA3Tn?=
+ =?us-ascii?Q?J/06AUPQ2xlBSEaaWzWrtB28ijD8U7MH2KoD3NpAVj+yVG8WMVE6zDkCmSor?=
+ =?us-ascii?Q?kzqwC2lzmzXD7pG/TUY//WZxXOKRzv0UQm2XgjMtFwJGhlfsiOf34cIUep3g?=
+ =?us-ascii?Q?xJF+E35zp2LJe7Ri4q7gTr76QS0/v0LMkuxme9jVnTbxI5Fq/Aept/BHgf5i?=
+ =?us-ascii?Q?S5pMjZBPpub1zGBQx5IQRPMc1dWF3EXf6PEQTms1uR3d6Ncey5XryjVWQxb3?=
+ =?us-ascii?Q?ZloyTI7V3qv88Oih9xmWW2Bc5LFlL2zz54muPPMSpJCuw5raMqNwEEHlumBl?=
+ =?us-ascii?Q?88QkwrQqdJww+JlYNI7AMRikq2mKWOEyT0Pyir3uo1RG5rqBA7lxuBFd0ykd?=
+ =?us-ascii?Q?A3OIDIgMQ8zqZjLsdqxc3p7zB2UaAVInvdpLOI4xbiifZTzFN/pXa96ZM4o4?=
+ =?us-ascii?Q?+L/9wCslmXrlNScBcnzkbkc3fvWSxUzNf8r5TUyiZuSt6feiu0qMJFP28Xee?=
+ =?us-ascii?Q?9nZEDv8r+i7NBx1yvtajHQ/JkMs2P+8kUV6+GXvT08jSw0trZ/xBdpSU/v+/?=
+ =?us-ascii?Q?i9WXEVM=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(52116011)(376011)(366013)(38350700011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?b4RJtbNr+5qqaXrozDxfyTxixtWcgUgkbmclPs9jqK2l5GIjMxrRfptNmwP0?=
- =?us-ascii?Q?lgIC/JI40cdM3AI/lf/rRCVa0HZX6wqX+AyaMsNTj/JgcvLzf40Jl+KpJv8x?=
- =?us-ascii?Q?uTq9AA904Fx8TZPdnSw487VTMoXoq5ki8gt0D3tdfincUvVTN+sdYw1E4Mms?=
- =?us-ascii?Q?aBgTCr76BwwIQm4bHAc7lTHT70pDEiNZPnttdrm8faDSGAvxHl6QuP3dISMk?=
- =?us-ascii?Q?baECqAmKz5fqNFhwpX6bAoyi1dQUYrDumJXNf5GVeQq5b3M8PCLa21IAlIoT?=
- =?us-ascii?Q?alPz88cgFZQgniW29DhfZ9Cuc9YpZV8ij3a+vYY2pHei/SjsNIa2i4dIN6Ye?=
- =?us-ascii?Q?rjZG97K+Zaf60+o/m4jQWhDpTw/FoTZ96w3UovodUvLgqlvlPHmzX7DxxA4r?=
- =?us-ascii?Q?RTAVTjjbKGzBZjgI7fkIx58owwjdvhZ/qhMoaqZs39dD1KCwRsPNq0A5mvND?=
- =?us-ascii?Q?joOO8bNDItTXIMDw3EMze/rO7BSqM3qgU7mMjHsJzAhDnMmSlh8UjH3n2e4h?=
- =?us-ascii?Q?SU3kOpVVjWOQuqWC3xzZ0r0t4W0Qvd7mNp2YfC/ntGH76cvPOCrhbICFoUC7?=
- =?us-ascii?Q?Gfm51JEeji14PRF9XLesZJCjxhanQwTf3Nrm9BA7nSm/dY8396WCcjBW24rv?=
- =?us-ascii?Q?urSp5NiFiVXJ4FRHjjP9o0zcHwa4N2A6MszwFczF6gJv/ZGI2S2PJLB4PfIf?=
- =?us-ascii?Q?5wf1yg6iZE19qflgMx2MllvU2BtMIQc6zyg5fe9jCOhyqBLG5v+OMM3vjYrX?=
- =?us-ascii?Q?KbMm6gx6DLfDJstYCJ2U3EOijqutjC9KunpG0Wkqanzl/iOQMpezki0mE1Ur?=
- =?us-ascii?Q?EVdD/kU2Dl2XynfJ93+ZHk0qbWFHhAgTAL59QeGhdOpamtZpzhFVfnTT5DIh?=
- =?us-ascii?Q?ohsCOu0Ke/KcSR+3MaLe9urKPWFoVB4/HkI2HUFuHJ732dt/HtCwPC5C+Idn?=
- =?us-ascii?Q?/oX7wrAuPjuNnrsv5v6gQm5NbaYNholNMwjWLJY5vIw3SvY8WAET+oxr5Nv3?=
- =?us-ascii?Q?7zRNOXjrZX3cmPp5sB9BGDtIUhfcIZbQUYcvfforF1quc8O6l828WATVgfP0?=
- =?us-ascii?Q?BIisP04DmpQ9eenLZo5JKOndwLFvp+ps9qCSzFdU6Q/n8Sf7mmnjY8b8qan6?=
- =?us-ascii?Q?7uKkBEEyKx5W5MJI1p3zs6D2J0We9dzmITzBTM7iRD5wMe+QtClPJaKjheYq?=
- =?us-ascii?Q?INzQ1EN/sZKuORQ9RgFffAbEncThipti+kq8iFaS4BP//rKP1vPQ0uaE1/ZV?=
- =?us-ascii?Q?n/1gkwlfb7kmCgSWMpP4lPtnAWebhwnMnoiaVK6KOp8NI4JqjbioYT5PH1Vs?=
- =?us-ascii?Q?kKzBptnG0evgooSluJ9RK0EAdXO9clI7rGkR/cf9Jn29ZtfXYUEGYVz9AyRI?=
- =?us-ascii?Q?NYXL5L0kn+TqEV7NcNEsnatNH7nVe0yOLDVccLyPG3sD4Yiw1sjhUFc3FNy1?=
- =?us-ascii?Q?nPFRH8vvG2SitFFKSjUskUSDXovKAf8WwNYVkQokvSAO5qTlafp7PRsnVJkr?=
- =?us-ascii?Q?Yi/q03IIKeV79xqkn4NPCap6YBHYNl34BJ08U8Y5nYvG55dAaOPaIM8+Kqnw?=
- =?us-ascii?Q?vtZyTsXxusILTvrOFAKpOHXd4pnl9xF8TMkL6xFb?=
+	=?us-ascii?Q?WP8lrubR2YCiq7Xlk1NMHr6IxNpM/nlv0igeJMOaKnKbcfhryibvxev8iJR+?=
+ =?us-ascii?Q?RK1buTLq9yz+gjoe8aVY8LebzybF0xOpnCfhZMbqM6RCeH1epM8UFSUXv++q?=
+ =?us-ascii?Q?v7haO4hFFcLRkVqkbZpU1M2UlzhPNiyZOu8gU0n9HMPFyOt2Ro0cl59jBKoB?=
+ =?us-ascii?Q?Bl5GPbARioKoSC5H25jKjiX3+WKZW3EdH3+k0Ca6Gv0dgSkOpuyU0UskgRMS?=
+ =?us-ascii?Q?JfnHsiwtcqKdS3BKMq6+Z4wSkQKD4O0R911Kvn/Y0QVlUkg2GuxzuvXeura0?=
+ =?us-ascii?Q?+SE7KtiKtqGmjp+k0qZUj4STndp34z1Wkl0wNSqZ5zRntAd+lb8BEbdsGUSH?=
+ =?us-ascii?Q?9nQT5a4IkLDAYxrUoRPTDL6pXGjBPkSBdSK4/Q45IIwbhPs8rk2oTT3jP4qT?=
+ =?us-ascii?Q?VJh1XpZCqXyqZwRI6zKSpnmEUMoaA3XVHBf59IfC9B/9Z8tXiaqWoj/HU8Eq?=
+ =?us-ascii?Q?W0KV0CR73zEZ2kvqFyZmkqn5bqtErLykDbySFxZ1/z1vBlBHbcIWqnEENMpX?=
+ =?us-ascii?Q?JQ7brTyjGF/M0N42b9XSKzLHmpSm8sydu0Li2jgb9aFs+k7Mcsyp88Ylc44F?=
+ =?us-ascii?Q?aLaFtUZhivtK35/nvcVDbuGQ8vmT6wBAvtWmHru3offo46b140PrFJzoH+QO?=
+ =?us-ascii?Q?gsOwOKnjXZC5TdZvzG6TQmATuXhS1ycEoEXiDtzNZCbv6U/1lMo4LiyZcvEX?=
+ =?us-ascii?Q?gdLKOuWVVcW6CKLPcjjBK8g/Hq3gv+DCGQbiIYNRUqwyLhiahwJ7+yVA2EcW?=
+ =?us-ascii?Q?8KJHkgoVRUBeDJBQMA0SPe4VT7TOWwBVpnvMwX+PrgmuELa4ftCb9scYt0n2?=
+ =?us-ascii?Q?n5XZXpL6gK6l8+9gp1USIVFznMpAbXo7IBMSyQrlx19DnJ3HSStsMrWrxcJA?=
+ =?us-ascii?Q?xEI4F1rBi4FwNRN+QhZkVCifAPhbUkAA8kPSafVX6OT8UWpqD/VDmMN2G0KE?=
+ =?us-ascii?Q?7H+LmxQJ8Gt+/3bXdzqsQKMBzj0Iznc89xbyLoUGXMC1wa/1Uy8VxjfE3F6s?=
+ =?us-ascii?Q?ynQgmY4Vm6NtIel1CCg/XLncMDCSCzS+CDEq+wPJV57yJVItD3fEdRELEWLd?=
+ =?us-ascii?Q?d4is+K87YU91GlKlOcfoD8LETQolWlgRv+Ll0lyftnKIInz2ydU2RU8zs7xZ?=
+ =?us-ascii?Q?ggDsllaZtW/LtzQqLazCpJe2vL9mpvj1vrsQVv0/qKEr2VcvM60GhhohyBgg?=
+ =?us-ascii?Q?P/Qkdu7/PFVIO8v46s4DHqVHsR2lYsvzPcLeH9Q6bZ4mVZIf05LS2+kja2GV?=
+ =?us-ascii?Q?j4mwirtN/PIGLrrxcotND0Q7/vRfNwkeXSfgJUzFZCzlc1cYH21N6cTNxZVj?=
+ =?us-ascii?Q?EYcpgUbewuTETvN8DrXryJMSou/cZmmWtHRHyWQaanpifVpZCE6rzeIQ6X1Z?=
+ =?us-ascii?Q?Thju44WxLQXN1E0uRwsBRp1O71B6Wl016RwJarfZDXu7AsaqKA2JNs1XLMmM?=
+ =?us-ascii?Q?GtBZgAkSO6VmYfshidnKDiVzeJcg1C08eOD/eVfdba+4VrcNBwuzvp+Dd1WI?=
+ =?us-ascii?Q?rKJ9rv+EZh0ek/MiGFCzGWp534G0tZW9ZvZot82Vc1P5BYvnaBRDETanAUm+?=
+ =?us-ascii?Q?mHpK1FFLcLLH+jRI60AJOcAkYgTatfgj7xfV4nIt?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48effe7f-fe0c-4caa-6cdb-08dc91c7203e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 300c1ff5-7799-4392-b512-08dc91c724be
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 07:52:40.8900
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 07:52:48.4406
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SW4dS6IdpjcEnuCt7mwjthBgn8e+5R2HH8FvuIOBOZ1ptcQ3wXrnTBAQhcpowXzopDkfkB/UsVBcqxDaYYTVwg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: C/t1w2YkyDkiV2/UTaDuIPgmUwrap2U98gkpbpBqYWA7Q9S8wvcS7iYFiKVMTMeyMpFDrQTK/6MNfsntgDdfhQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9789
 
 Signed-off-by: David Lin <yu-hao.lin@nxp.com>
 ---
- drivers/net/wireless/nxp/nxpwifi/11h.c | 432 +++++++++++++++++++++++++
- 1 file changed, 432 insertions(+)
- create mode 100644 drivers/net/wireless/nxp/nxpwifi/11h.c
+ drivers/net/wireless/nxp/nxpwifi/11n.h | 163 +++++++++++++++++++++++++
+ 1 file changed, 163 insertions(+)
+ create mode 100644 drivers/net/wireless/nxp/nxpwifi/11n.h
 
-diff --git a/drivers/net/wireless/nxp/nxpwifi/11h.c b/drivers/net/wireless/nxp/nxpwifi/11h.c
+diff --git a/drivers/net/wireless/nxp/nxpwifi/11n.h b/drivers/net/wireless/nxp/nxpwifi/11n.h
 new file mode 100644
-index 000000000000..4bd21e1686e6
+index 000000000000..9d983aea3a39
 --- /dev/null
-+++ b/drivers/net/wireless/nxp/nxpwifi/11h.c
-@@ -0,0 +1,432 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/net/wireless/nxp/nxpwifi/11n.h
+@@ -0,0 +1,163 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
-+ * NXP Wireless LAN device driver: 802.11h
++ * NXP Wireless LAN device driver: 802.11n
 + *
 + * Copyright 2011-2024 NXP
 + */
 +
-+#include "main.h"
-+#include "cmdevt.h"
-+#include "fw.h"
-+#include "cfg80211.h"
++#ifndef _NXPWIFI_11N_H_
++#define _NXPWIFI_11N_H_
 +
-+void nxpwifi_init_11h_params(struct nxpwifi_private *priv)
++#include "11n_aggr.h"
++#include "11n_rxreorder.h"
++#include "wmm.h"
++
++int nxpwifi_ret_11n_delba(struct nxpwifi_private *priv,
++			  struct host_cmd_ds_command *resp);
++int nxpwifi_ret_11n_addba_req(struct nxpwifi_private *priv,
++			      struct host_cmd_ds_command *resp);
++int nxpwifi_cmd_11n_cfg(struct nxpwifi_private *priv,
++			struct host_cmd_ds_command *cmd, u16 cmd_action,
++			struct nxpwifi_ds_11n_tx_cfg *txcfg);
++int nxpwifi_cmd_append_11n_tlv(struct nxpwifi_private *priv,
++			       struct nxpwifi_bssdescriptor *bss_desc,
++			       u8 **buffer);
++int nxpwifi_fill_cap_info(struct nxpwifi_private *priv, u8 radio_type,
++			  struct ieee80211_ht_cap *ht_cap);
++int nxpwifi_set_get_11n_htcap_cfg(struct nxpwifi_private *priv,
++				  u16 action, int *htcap_cfg);
++void nxpwifi_11n_delete_tx_ba_stream_tbl_entry(struct nxpwifi_private *priv,
++					       struct nxpwifi_tx_ba_stream_tbl
++					       *tx_tbl);
++void nxpwifi_11n_delete_all_tx_ba_stream_tbl(struct nxpwifi_private *priv);
++struct nxpwifi_tx_ba_stream_tbl *nxpwifi_get_ba_tbl(struct nxpwifi_private
++						    *priv, int tid, u8 *ra);
++void nxpwifi_create_ba_tbl(struct nxpwifi_private *priv, u8 *ra, int tid,
++			   enum nxpwifi_ba_status ba_status);
++int nxpwifi_send_addba(struct nxpwifi_private *priv, int tid, u8 *peer_mac);
++int nxpwifi_send_delba(struct nxpwifi_private *priv, int tid, u8 *peer_mac,
++		       int initiator);
++void nxpwifi_11n_delete_ba_stream(struct nxpwifi_private *priv, u8 *del_ba);
++int nxpwifi_get_rx_reorder_tbl(struct nxpwifi_private *priv,
++			       struct nxpwifi_ds_rx_reorder_tbl *buf);
++int nxpwifi_get_tx_ba_stream_tbl(struct nxpwifi_private *priv,
++				 struct nxpwifi_ds_tx_ba_stream_tbl *buf);
++int nxpwifi_cmd_recfg_tx_buf(struct nxpwifi_private *priv,
++			     struct host_cmd_ds_command *cmd,
++			     int cmd_action, u16 *buf_size);
++int nxpwifi_cmd_amsdu_aggr_ctrl(struct host_cmd_ds_command *cmd,
++				int cmd_action,
++				struct nxpwifi_ds_11n_amsdu_aggr_ctrl *aa_ctrl);
++void nxpwifi_del_tx_ba_stream_tbl_by_ra(struct nxpwifi_private *priv, u8 *ra);
++u8 nxpwifi_get_sec_chan_offset(int chan);
++
++static inline u8
++nxpwifi_is_station_ampdu_allowed(struct nxpwifi_private *priv,
++				 struct nxpwifi_ra_list_tbl *ptr, int tid)
 +{
-+	priv->state_11h.is_11h_enabled = true;
-+	priv->state_11h.is_11h_active = false;
++	struct nxpwifi_sta_node *node = nxpwifi_get_sta_entry(priv, ptr->ra);
++
++	if (unlikely(!node))
++		return false;
++
++	return (node->ampdu_sta[tid] != BA_STREAM_NOT_ALLOWED) ? true : false;
 +}
 +
-+inline int nxpwifi_is_11h_active(struct nxpwifi_private *priv)
++/* This function checks whether AMPDU is allowed or not for a particular TID. */
++static inline u8
++nxpwifi_is_ampdu_allowed(struct nxpwifi_private *priv,
++			 struct nxpwifi_ra_list_tbl *ptr, int tid)
 +{
-+	return priv->state_11h.is_11h_active;
++	u8 ret;
++
++	if (is_broadcast_ether_addr(ptr->ra))
++		return false;
++
++	if (GET_BSS_ROLE(priv) == NXPWIFI_BSS_ROLE_UAP)
++		ret = nxpwifi_is_station_ampdu_allowed(priv, ptr, tid);
++	else
++		ret = (priv->aggr_prio_tbl[tid].ampdu_ap !=
++		       BA_STREAM_NOT_ALLOWED) ? true : false;
++
++	return ret;
 +}
 +
-+/* This function appends 11h info to a buffer while joining an
-+ * infrastructure BSS
++/* This function checks whether AMSDU is allowed or not for a particular TID.
 + */
-+static void
-+nxpwifi_11h_process_infra_join(struct nxpwifi_private *priv, u8 **buffer,
-+			       struct nxpwifi_bssdescriptor *bss_desc)
++static inline u8
++nxpwifi_is_amsdu_allowed(struct nxpwifi_private *priv, int tid)
 +{
-+	struct nxpwifi_ie_types_header *ie_header;
-+	struct nxpwifi_ie_types_pwr_capability *cap;
-+	struct nxpwifi_ie_types_local_pwr_constraint *constraint;
-+	struct ieee80211_supported_band *sband;
-+	u8 radio_type;
-+	int i;
++	return (((priv->aggr_prio_tbl[tid].amsdu != BA_STREAM_NOT_ALLOWED) &&
++		 (priv->is_data_rate_auto || !(priv->bitmap_rates[2] & 0x03)))
++		? true : false);
++}
 +
-+	if (!buffer || !(*buffer))
-+		return;
++/* This function checks whether a space is available for new BA stream or not.
++ */
++static inline u8
++nxpwifi_space_avail_for_new_ba_stream(struct nxpwifi_adapter *adapter)
++{
++	struct nxpwifi_private *priv;
++	u8 i;
++	size_t ba_stream_num = 0, ba_stream_max;
 +
-+	radio_type = nxpwifi_band_to_radio_type((u8)bss_desc->bss_band);
-+	sband = priv->wdev.wiphy->bands[radio_type];
++	ba_stream_max = NXPWIFI_MAX_TX_BASTREAM_SUPPORTED;
 +
-+	cap = (struct nxpwifi_ie_types_pwr_capability *)*buffer;
-+	cap->header.type = cpu_to_le16(WLAN_EID_PWR_CAPABILITY);
-+	cap->header.len = cpu_to_le16(2);
-+	cap->min_pwr = 0;
-+	cap->max_pwr = 0;
-+	*buffer += sizeof(*cap);
-+
-+	constraint = (struct nxpwifi_ie_types_local_pwr_constraint *)*buffer;
-+	constraint->header.type = cpu_to_le16(WLAN_EID_PWR_CONSTRAINT);
-+	constraint->header.len = cpu_to_le16(2);
-+	constraint->chan = bss_desc->channel;
-+	constraint->constraint = bss_desc->local_constraint;
-+	*buffer += sizeof(*constraint);
-+
-+	ie_header = (struct nxpwifi_ie_types_header *)*buffer;
-+	ie_header->type = cpu_to_le16(TLV_TYPE_PASSTHROUGH);
-+	ie_header->len  = cpu_to_le16(2 * sband->n_channels + 2);
-+	*buffer += sizeof(*ie_header);
-+	*(*buffer)++ = WLAN_EID_SUPPORTED_CHANNELS;
-+	*(*buffer)++ = 2 * sband->n_channels;
-+	for (i = 0; i < sband->n_channels; i++) {
-+		u32 center_freq;
-+
-+		center_freq = sband->channels[i].center_freq;
-+		*(*buffer)++ = ieee80211_frequency_to_channel(center_freq);
-+		*(*buffer)++ = 1; /* one channel in the subband */
++	for (i = 0; i < adapter->priv_num; i++) {
++		priv = adapter->priv[i];
++		if (priv)
++			ba_stream_num +=
++				list_count_nodes(&priv->tx_ba_stream_tbl_ptr);
 +	}
++
++	if (adapter->fw_api_ver == NXPWIFI_FW_V15) {
++		ba_stream_max =
++			       GETSUPP_TXBASTREAMS(adapter->hw_dot_11n_dev_cap);
++		if (!ba_stream_max)
++			ba_stream_max = NXPWIFI_MAX_TX_BASTREAM_SUPPORTED;
++	}
++
++	return ((ba_stream_num < ba_stream_max) ? true : false);
 +}
 +
-+/* Enable or disable the 11h extensions in the firmware */
-+int nxpwifi_11h_activate(struct nxpwifi_private *priv, bool flag)
-+{
-+	u32 enable = flag;
-+
-+	/* enable master mode radar detection on AP interface */
-+	if ((GET_BSS_ROLE(priv) == NXPWIFI_BSS_ROLE_UAP) && enable)
-+		enable |= NXPWIFI_MASTER_RADAR_DET_MASK;
-+
-+	return nxpwifi_send_cmd(priv, HOST_CMD_802_11_SNMP_MIB,
-+				HOST_ACT_GEN_SET, DOT11H_I, &enable, true);
-+}
-+
-+/* This functions processes TLV buffer for a pending BSS Join command.
++/* This function finds the correct Tx BA stream to delete.
 + *
-+ * Activate 11h functionality in the firmware if the spectrum management
-+ * capability bit is found in the network we are joining. Also, necessary
-+ * TLVs are set based on requested network's 11h capability.
++ * Upon successfully locating, both the TID and the RA are returned.
 + */
-+void nxpwifi_11h_process_join(struct nxpwifi_private *priv, u8 **buffer,
-+			      struct nxpwifi_bssdescriptor *bss_desc)
++static inline u8
++nxpwifi_find_stream_to_delete(struct nxpwifi_private *priv, int ptr_tid,
++			      int *ptid, u8 *ra)
 +{
-+	if (bss_desc->sensed_11h) {
-+		/* Activate 11h functions in firmware, turns on capability
-+		 * bit
-+		 */
-+		nxpwifi_11h_activate(priv, true);
-+		priv->state_11h.is_11h_active = true;
-+		bss_desc->cap_info_bitmap |= WLAN_CAPABILITY_SPECTRUM_MGMT;
-+		nxpwifi_11h_process_infra_join(priv, buffer, bss_desc);
-+	} else {
-+		/* Deactivate 11h functions in the firmware */
-+		nxpwifi_11h_activate(priv, false);
-+		priv->state_11h.is_11h_active = false;
-+		bss_desc->cap_info_bitmap &= ~WLAN_CAPABILITY_SPECTRUM_MGMT;
-+	}
-+}
++	int tid;
++	u8 ret = false;
++	struct nxpwifi_tx_ba_stream_tbl *tx_tbl;
 +
-+/* This is DFS CAC work queue function.
-+ * This delayed work emits CAC finished event for cfg80211 if
-+ * CAC was started earlier.
-+ */
-+void nxpwifi_dfs_cac_work_queue(struct work_struct *work)
-+{
-+	struct cfg80211_chan_def chandef;
-+	struct delayed_work *delayed_work = to_delayed_work(work);
-+	struct nxpwifi_private *priv =
-+			container_of(delayed_work, struct nxpwifi_private,
-+				     dfs_cac_work);
++	tid = priv->aggr_prio_tbl[ptr_tid].ampdu_user;
 +
-+	chandef = priv->dfs_chandef;
-+	if (priv->wdev.cac_started) {
-+		nxpwifi_dbg(priv->adapter, MSG,
-+			    "CAC timer finished; No radar detected\n");
-+		cfg80211_cac_event(priv->netdev, &chandef,
-+				   NL80211_RADAR_CAC_FINISHED,
-+				   GFP_KERNEL);
-+	}
-+}
-+
-+static u8 nxpwifi_get_channel_2_offset(int chan)
-+{
-+	u8 chan2_offset = SEC_CHAN_NONE;
-+
-+	switch (chan) {
-+	case 36:
-+	case 44:
-+	case 52:
-+	case 60:
-+	case 100:
-+	case 108:
-+	case 116:
-+	case 124:
-+	case 132:
-+	case 140:
-+	case 149:
-+	case 157:
-+	case 165:
-+	case 173:
-+		chan2_offset = SEC_CHAN_ABOVE;
-+		break;
-+	case 40:
-+	case 48:
-+	case 56:
-+	case 64:
-+	case 104:
-+	case 112:
-+	case 120:
-+	case 128:
-+	case 136:
-+	case 144:
-+	case 153:
-+	case 161:
-+	case 169:
-+	case 177:
-+		chan2_offset = SEC_CHAN_BELOW;
-+		break;
-+	}
-+
-+	return chan2_offset;
-+}
-+
-+static void nxpwifi_convert_chan_to_band_cfg(u8 *band_cfg,
-+					     struct cfg80211_chan_def *chan_def)
-+{
-+	u8 chan_band, chan_width, chan2_offset;
-+
-+	switch (chan_def->chan->band) {
-+	case NL80211_BAND_2GHZ:
-+		chan_band = BAND_2GHZ;
-+		break;
-+	case NL80211_BAND_5GHZ:
-+		chan_band = BAND_5GHZ;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	switch (chan_def->width) {
-+	case NL80211_CHAN_WIDTH_20_NOHT:
-+	case NL80211_CHAN_WIDTH_20:
-+		chan_width = CHAN_BW_20MHZ;
-+		break;
-+	case NL80211_CHAN_WIDTH_40:
-+		chan_width = CHAN_BW_40MHZ;
-+		if (chan_def->center_freq1 > chan_def->chan->center_freq)
-+			chan2_offset = SEC_CHAN_ABOVE;
-+		else
-+			chan2_offset = SEC_CHAN_BELOW;
-+		break;
-+	case NL80211_CHAN_WIDTH_80:
-+		chan2_offset =
-+			nxpwifi_get_channel_2_offset(chan_def->chan->hw_value);
-+		chan_width = CHAN_BW_80MHZ;
-+		break;
-+	case NL80211_CHAN_WIDTH_80P80:
-+	case NL80211_CHAN_WIDTH_160:
-+	default:
-+		break;
-+	}
-+
-+	*band_cfg = ((chan2_offset << BAND_CFG_CHAN2_SHIFT_BIT) &
-+		     BAND_CFG_CHAN2_OFFSET_MASK) |
-+		    ((chan_width << BAND_CFG_CHAN_WIDTH_SHIFT_BIT) &
-+		     BAND_CFG_CHAN_WIDTH_MASK) |
-+		    ((chan_band << BAND_CFG_CHAN_BAND_SHIFT_BIT) &
-+		     BAND_CFG_CHAN_BAND_MASK);
-+}
-+
-+/* This function prepares channel report request command to FW for
-+ * starting radar detection.
-+ */
-+int nxpwifi_cmd_issue_chan_report_request(struct nxpwifi_private *priv,
-+					  struct host_cmd_ds_command *cmd,
-+					  void *data_buf)
-+{
-+	struct host_cmd_ds_chan_rpt_req *cr_req = &cmd->params.chan_rpt_req;
-+	struct nxpwifi_radar_params *radar_params = (void *)data_buf;
-+	u16 size;
-+
-+	cmd->command = cpu_to_le16(HOST_CMD_CHAN_REPORT_REQUEST);
-+	size = S_DS_GEN;
-+
-+	cr_req->chan_desc.start_freq = cpu_to_le16(NXPWIFI_A_BAND_START_FREQ);
-+	nxpwifi_convert_chan_to_band_cfg(&cr_req->chan_desc.band_cfg,
-+					 radar_params->chandef);
-+	cr_req->chan_desc.chan_num = radar_params->chandef->chan->hw_value;
-+	cr_req->msec_dwell_time = cpu_to_le32(radar_params->cac_time_ms);
-+	size += sizeof(*cr_req);
-+
-+	if (radar_params->cac_time_ms) {
-+		struct nxpwifi_ie_types_chan_rpt_data *rpt;
-+
-+		rpt = (struct nxpwifi_ie_types_chan_rpt_data *)((u8 *)cmd + size);
-+		rpt->header.type = cpu_to_le16(TLV_TYPE_CHANRPT_11H_BASIC);
-+		rpt->header.len = cpu_to_le16(sizeof(u8));
-+		rpt->meas_rpt_map = 1 << MEAS_RPT_MAP_RADAR_SHIFT_BIT;
-+		size += sizeof(*rpt);
-+
-+		nxpwifi_dbg(priv->adapter, MSG,
-+			    "11h: issuing DFS Radar check for channel=%d\n",
-+			    radar_params->chandef->chan->hw_value);
-+	} else {
-+		nxpwifi_dbg(priv->adapter, MSG, "cancelling CAC\n");
-+	}
-+
-+	cmd->size = cpu_to_le16(size);
-+
-+	return 0;
-+}
-+
-+int nxpwifi_stop_radar_detection(struct nxpwifi_private *priv,
-+				 struct cfg80211_chan_def *chandef)
-+{
-+	struct nxpwifi_radar_params radar_params;
-+
-+	memset(&radar_params, 0, sizeof(struct nxpwifi_radar_params));
-+	radar_params.chandef = chandef;
-+	radar_params.cac_time_ms = 0;
-+
-+	return nxpwifi_send_cmd(priv, HOST_CMD_CHAN_REPORT_REQUEST,
-+				HOST_ACT_GEN_SET, 0, &radar_params, true);
-+}
-+
-+/* This function is to abort ongoing CAC upon stopping AP operations
-+ * or during unload.
-+ */
-+void nxpwifi_abort_cac(struct nxpwifi_private *priv)
-+{
-+	if (priv->wdev.cac_started) {
-+		if (nxpwifi_stop_radar_detection(priv, &priv->dfs_chandef))
-+			nxpwifi_dbg(priv->adapter, ERROR,
-+				    "failed to stop CAC in FW\n");
-+		nxpwifi_dbg(priv->adapter, MSG,
-+			    "Aborting delayed work for CAC.\n");
-+		cancel_delayed_work_sync(&priv->dfs_cac_work);
-+		cfg80211_cac_event(priv->netdev, &priv->dfs_chandef,
-+				   NL80211_RADAR_CAC_ABORTED, GFP_KERNEL);
-+	}
-+}
-+
-+/* This function handles channel report event from FW during CAC period.
-+ * If radar is detected during CAC, driver indicates the same to cfg80211
-+ * and also cancels ongoing delayed work.
-+ */
-+int nxpwifi_11h_handle_chanrpt_ready(struct nxpwifi_private *priv,
-+				     struct sk_buff *skb)
-+{
-+	struct host_cmd_ds_chan_rpt_event *rpt_event;
-+	struct nxpwifi_ie_types_chan_rpt_data *rpt;
-+	u16 event_len, tlv_len;
-+
-+	rpt_event = (void *)(skb->data + sizeof(u32));
-+	event_len = skb->len - (sizeof(struct host_cmd_ds_chan_rpt_event) +
-+				sizeof(u32));
-+
-+	if (le32_to_cpu(rpt_event->result) != HOST_RESULT_OK) {
-+		nxpwifi_dbg(priv->adapter, ERROR,
-+			    "Error in channel report event\n");
-+		return -1;
-+	}
-+
-+	while (event_len >= sizeof(struct nxpwifi_ie_types_header)) {
-+		rpt = (void *)&rpt_event->tlvbuf;
-+		tlv_len = le16_to_cpu(rpt->header.len);
-+
-+		switch (le16_to_cpu(rpt->header.type)) {
-+		case TLV_TYPE_CHANRPT_11H_BASIC:
-+			if (rpt->meas_rpt_map & MEAS_RPT_MAP_RADAR_MASK) {
-+				nxpwifi_dbg(priv->adapter, MSG,
-+					    "RADAR Detected on channel %d!\n",
-+					    priv->dfs_chandef.chan->hw_value);
-+				cancel_delayed_work_sync(&priv->dfs_cac_work);
-+				cfg80211_cac_event(priv->netdev,
-+						   &priv->dfs_chandef,
-+						   NL80211_RADAR_CAC_ABORTED,
-+						   GFP_KERNEL);
-+				cfg80211_radar_event(priv->adapter->wiphy,
-+						     &priv->dfs_chandef,
-+						     GFP_KERNEL);
-+			}
-+			break;
-+		default:
-+			break;
++	spin_lock_bh(&priv->tx_ba_stream_tbl_lock);
++	list_for_each_entry(tx_tbl, &priv->tx_ba_stream_tbl_ptr, list) {
++		if (tid > priv->aggr_prio_tbl[tx_tbl->tid].ampdu_user) {
++			tid = priv->aggr_prio_tbl[tx_tbl->tid].ampdu_user;
++			*ptid = tx_tbl->tid;
++			memcpy(ra, tx_tbl->ra, ETH_ALEN);
++			ret = true;
 +		}
-+
-+		event_len -= (tlv_len + sizeof(rpt->header));
 +	}
++	spin_unlock_bh(&priv->tx_ba_stream_tbl_lock);
 +
-+	return 0;
++	return ret;
 +}
 +
-+/* Handler for radar detected event from FW.*/
-+int nxpwifi_11h_handle_radar_detected(struct nxpwifi_private *priv,
-+				      struct sk_buff *skb)
-+{
-+	struct nxpwifi_radar_det_event *rdr_event;
-+
-+	rdr_event = (void *)(skb->data + sizeof(u32));
-+
-+	nxpwifi_dbg(priv->adapter, MSG,
-+		    "radar detected; indicating kernel\n");
-+	if (priv->wdev.cac_started) {
-+		if (nxpwifi_stop_radar_detection(priv, &priv->dfs_chandef))
-+			nxpwifi_dbg(priv->adapter, ERROR,
-+				    "Failed to stop CAC in FW\n");
-+		cancel_delayed_work_sync(&priv->dfs_cac_work);
-+		cfg80211_cac_event(priv->netdev, &priv->dfs_chandef,
-+				   NL80211_RADAR_CAC_ABORTED, GFP_KERNEL);
-+	}
-+	cfg80211_radar_event(priv->adapter->wiphy, &priv->dfs_chandef,
-+			     GFP_KERNEL);
-+	nxpwifi_dbg(priv->adapter, MSG, "regdomain: %d\n",
-+		    rdr_event->reg_domain);
-+	nxpwifi_dbg(priv->adapter, MSG, "radar detection type: %d\n",
-+		    rdr_event->det_type);
-+
-+	return 0;
-+}
-+
-+/* This is work queue function for channel switch handling.
-+ * This function takes care of updating new channel definitin to
-+ * bss config structure, restart AP and indicate channel switch success
-+ * to cfg80211.
++/* This function checks whether associated station is 11n enabled
 + */
-+void nxpwifi_dfs_chan_sw_work_queue(struct work_struct *work)
++static inline int nxpwifi_is_sta_11n_enabled(struct nxpwifi_private *priv,
++					     struct nxpwifi_sta_node *node)
 +{
-+	struct nxpwifi_uap_bss_param *bss_cfg;
-+	struct delayed_work *delayed_work = to_delayed_work(work);
-+	struct nxpwifi_private *priv = container_of(delayed_work,
-+						    struct nxpwifi_private,
-+						    dfs_chan_sw_work);
-+	struct nxpwifi_adapter *adapter = priv->adapter;
++	if (!node || (priv->bss_role == NXPWIFI_BSS_ROLE_UAP &&
++		      !priv->ap_11n_enabled))
++		return 0;
 +
-+	if (nxpwifi_del_mgmt_ies(priv))
-+		nxpwifi_dbg(priv->adapter, ERROR,
-+			    "Failed to delete mgmt IEs!\n");
-+
-+	bss_cfg = &priv->bss_cfg;
-+	if (!bss_cfg->beacon_period) {
-+		nxpwifi_dbg(adapter, ERROR,
-+			    "channel switch: AP already stopped\n");
-+		return;
-+	}
-+
-+	if (nxpwifi_send_cmd(priv, HOST_CMD_UAP_BSS_STOP,
-+			     HOST_ACT_GEN_SET, 0, NULL, true)) {
-+		nxpwifi_dbg(adapter, ERROR,
-+			    "channel switch: Failed to stop the BSS\n");
-+		return;
-+	}
-+
-+	if (nxpwifi_cfg80211_change_beacon_data(adapter->wiphy, priv->netdev,
-+						&priv->beacon_after)) {
-+		nxpwifi_dbg(adapter, ERROR,
-+			    "channel switch: Failed to set beacon\n");
-+		return;
-+	}
-+
-+	nxpwifi_uap_set_channel(priv, bss_cfg, priv->dfs_chandef);
-+
-+	if (nxpwifi_config_start_uap(priv, bss_cfg)) {
-+		nxpwifi_dbg(adapter, ERROR,
-+			    "Failed to start AP after channel switch\n");
-+		return;
-+	}
-+
-+	nxpwifi_dbg(adapter, MSG,
-+		    "indicating channel switch completion to kernel\n");
-+	wiphy_lock(priv->wdev.wiphy);
-+	cfg80211_ch_switch_notify(priv->netdev, &priv->dfs_chandef, 0);
-+	wiphy_unlock(priv->wdev.wiphy);
-+
-+	if (priv->uap_stop_tx) {
-+		if (!netif_carrier_ok(priv->netdev))
-+			netif_carrier_on(priv->netdev);
-+		nxpwifi_wake_up_net_dev_queue(priv->netdev, adapter);
-+		priv->uap_stop_tx = false;
-+	}
++	return node->is_11n_enabled;
 +}
++
++#endif /* !_NXPWIFI_11N_H_ */
 -- 
 2.34.1
 
