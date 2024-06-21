@@ -1,130 +1,198 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E138C1E;
-	Fri, 21 Jun 2024 18:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F758C1E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 18:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718995951; cv=none; b=Gqdlrt0jtCAjU4waovkU55lWvCbLXw51KsWA57SATT9uFRCZa/9YuOhyBwYl4mXxP/o04eg/9ZUWiPEhzU1pLAhPXP776lgjz5yW11XZApu+a+nraJDR8C300U0e7bA8/hwwSUy5paynSYOt2uddqyUbVfg8TyfL5jXQSFHfCFM=
+	t=1718996006; cv=none; b=uFJe4h7alWIhEhCS1Ztfkg38Pc6lHvPjw/7OJKmYzdxoqvSFCMBXCNm6NfVmgXkpK+c1N4TSMBlr197109XPLcBAs4k+uJvcvppU5nCUgvYBC4SZg1y6OPxddOQTjR3N49KXpPiqqWIV07JD7ixhN3ZYBmBHO1VIVemHyrwTwew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718995951; c=relaxed/simple;
-	bh=ecwtGev0KvQNSzwp35e+yNAtAWdvf51o9B6zM/n6gQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZSTfifgJfjPGpmWXZNp75Pq2B4pZs3LgQI6JT7lU7xlXEMt9AERvpJ+q+UcBQ537V6W2qgQL1O8kvPZ4ys9Nuwv/j2+ebO561ze1cig64jSnOJrbHUu36Es+5D/03+FWXwvmP1iGVYoFWAKIRD78QWxhRoDSfpWphjqmAxfCXP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=DLFr7q3X; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1718996006; c=relaxed/simple;
+	bh=dECGrhLa+sA8i7PbZJNOksBc4B7KR5A7aNDGwBvTNiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=l0OMT8/L4rRQuOl+u7ZdE4fcSpCumaZCGpypsPOAxFMDZEjXHmQ7fM6iCiUQ29pRd4QbGs1xk3Yi5//Bo1TOauKA15G7EqZ7Y34V/bp7RRZnBy7mSmUnWf2QSn7cCdQbN+uzYpbxHSpI5w9vD88wOs/VDAYNDkP4bgtxcSbhHL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WXPQ0n0C; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="DLFr7q3X"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id F1A7E100002;
-	Fri, 21 Jun 2024 21:52:06 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1718995927; bh=xUGHglTcHE+deAdqIJapo1+7Zs90p4nFF+okhK8BfmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=DLFr7q3XqgXTXr8TWhGqMLSnWx9ePg6/0RHwcWOPy/aN9NbwSWHhW7VYR14E/MLy4
-	 PeaVMvdZyyVhEcmRX8CSaXCDgVHkly8Algcff7NTayOXz8WDeqdN4f34rDGZebLBOj
-	 wUwoFG7smwZv7r57Ts7v+aJ8KOSIU6j4CcoyYEyUp4bZscbCOpXBWo+2BfACFqCoZG
-	 wypmMpU6jIX/QDPOgoU4LAwRw3JEhe5EPEQ/Ke2WreHizKdObcWhRxt8AXv97WdX+V
-	 i3ftbSvyMbAsi4iyZq/tbeiF5QLSGKXMOVljzvAXbrklTc38U2sibVBZHzblbquySs
-	 aPNGBjzBGW4xQ==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri, 21 Jun 2024 21:51:10 +0300 (MSK)
-Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Jun
- 2024 21:50:50 +0300
-Message-ID: <f6b0e5fb-c692-4d67-ac0e-36ddbbc0a784@t-argos.ru>
-Date: Fri, 21 Jun 2024 21:47:27 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WXPQ0n0C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718996005; x=1750532005;
+  h=date:from:to:cc:subject:message-id;
+  bh=dECGrhLa+sA8i7PbZJNOksBc4B7KR5A7aNDGwBvTNiQ=;
+  b=WXPQ0n0CZGPIo78Tcm4eCVwMDVr0hNFxd7cXizzmNZpg/ARNEOoHyzTm
+   AtTU7QTxGx56utGLhsyWxf6gU6qY4p52DaE30TYNifAta8pI/wL7aSLxa
+   EKPHz93mnHrgNeZdpjK5r4QztM3iUmbXDwaeITZ33wrTIdS9le9wxiMqw
+   x/U9D7+RlNIGJrnpePFIlPR6ez4EXgWr4hvL730p51P9o9iItOgCHitEi
+   GedyGPzqkMZ7OyRg1DlTkJssbbWMYnyEZ1RexxJZqIsqufYv76Kujd18H
+   9AGLiq50yzvsjm68fzjlYzFTIVrJhd0Qfiu2wTt8aKz0bPM2gMoyvlL4p
+   Q==;
+X-CSE-ConnectionGUID: 5KUJ34LPSP+AVDuGponzAQ==
+X-CSE-MsgGUID: pS7wNM3LSlWOR0wAaX3y/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="16276181"
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="16276181"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 11:53:19 -0700
+X-CSE-ConnectionGUID: ODh1HSDGT1KZ7vu0NIciUA==
+X-CSE-MsgGUID: eGrFwo4fRgG8Pdir84xoEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="42581634"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 21 Jun 2024 11:53:18 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sKjNr-0008ti-0k;
+	Fri, 21 Jun 2024 18:53:15 +0000
+Date: Sat, 22 Jun 2024 02:52:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/cc] BUILD SUCCESS
+ 16df35946120fca2346c415fae429c821391eef8
+Message-ID: <202406220255.Ix7co0ln-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: davinci: Validate the obtained number of IRQs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: Keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Grygorii Strashko <grygorii.strashko@ti.com>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-References: <20240618144344.16943-1-amishin@t-argos.ru>
- <CAMRc=Me5R+YLmx6mh_mfszRj7TKx25cL9Vx3J-7mvRTuat8Puw@mail.gmail.com>
-Content-Language: ru
-From: Aleksandr Mishin <amishin@t-argos.ru>
-In-Reply-To: <CAMRc=Me5R+YLmx6mh_mfszRj7TKx25cL9Vx3J-7mvRTuat8Puw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186064 [Jun 21 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, git.kernel.org:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/21 15:05:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/21 14:39:00 #25651428
-X-KSMG-AntiVirus-Status: Clean, skipped
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cc
+branch HEAD: 16df35946120fca2346c415fae429c821391eef8  ACPI: tables: Print MULTIPROC_WAKEUP when MADT is parsed
 
+elapsed time: 4616m
 
-On 21.06.2024 16:59, Bartosz Golaszewski wrote:
-> On Tue, Jun 18, 2024 at 4:45 PM Aleksandr Mishin <amishin@t-argos.ru> wrote:
->>
->> Value of pdata->gpio_unbanked is taken from Device Tree. In case of broken
->> DT due to any error this value can be any. Without this value validation
->> there can be out of chips->irqs array boundaries access in
->> davinci_gpio_probe().
->>
->> Validate the obtained nirq value so that it won't exceed the maximum
->> number of IRQs per bank.
->>
->> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>
-> 
-> Why not Reported-by: ?
+configs tested: 121
+configs skipped: 2
 
-It is an established practice for our project, you can find 700+ applied
-patches with similar line:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=linuxtesting.org
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> Bart
-> 
->> Fixes: eb3744a2dd01 ("gpio: davinci: Do not assume continuous IRQ numbering")
->> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
->> ---
->>   drivers/gpio/gpio-davinci.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index bb499e362912..1d0175d6350b 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -225,6 +225,11 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>          else
->>                  nirq = DIV_ROUND_UP(ngpio, 16);
->>
->> +       if (nirq > MAX_INT_PER_BANK) {
->> +               dev_err(dev, "Too many IRQs!\n");
->> +               return -EINVAL;
->> +       }
->> +
->>          chips = devm_kzalloc(dev, sizeof(*chips), GFP_KERNEL);
->>          if (!chips)
->>                  return -ENOMEM;
->> --
->> 2.30.2
->>
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240620   gcc-13.2.0
+arc                   randconfig-002-20240620   gcc-13.2.0
+arm                               allnoconfig   clang-19
+arm                                 defconfig   clang-14
+arm                   randconfig-001-20240620   gcc-13.2.0
+arm                   randconfig-002-20240620   clang-19
+arm                   randconfig-003-20240620   gcc-13.2.0
+arm                   randconfig-004-20240620   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240620   gcc-13.2.0
+arm64                 randconfig-002-20240620   gcc-13.2.0
+arm64                 randconfig-003-20240620   gcc-13.2.0
+arm64                 randconfig-004-20240620   clang-19
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240620   gcc-13.2.0
+csky                  randconfig-002-20240620   gcc-13.2.0
+hexagon                           allnoconfig   clang-19
+hexagon                             defconfig   clang-19
+hexagon               randconfig-001-20240620   clang-19
+hexagon               randconfig-002-20240620   clang-19
+i386         buildonly-randconfig-001-20240619   clang-18
+i386         buildonly-randconfig-002-20240619   clang-18
+i386         buildonly-randconfig-003-20240619   clang-18
+i386         buildonly-randconfig-004-20240619   clang-18
+i386         buildonly-randconfig-005-20240619   gcc-7
+i386         buildonly-randconfig-006-20240619   gcc-7
+i386                  randconfig-001-20240619   gcc-7
+i386                  randconfig-002-20240619   gcc-7
+i386                  randconfig-003-20240619   clang-18
+i386                  randconfig-004-20240619   gcc-7
+i386                  randconfig-005-20240619   clang-18
+i386                  randconfig-006-20240619   gcc-9
+i386                  randconfig-011-20240619   clang-18
+i386                  randconfig-012-20240619   clang-18
+i386                  randconfig-013-20240619   gcc-13
+i386                  randconfig-014-20240619   clang-18
+i386                  randconfig-015-20240619   clang-18
+i386                  randconfig-016-20240619   gcc-13
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240620   gcc-13.2.0
+loongarch             randconfig-002-20240620   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240620   gcc-13.2.0
+nios2                 randconfig-002-20240620   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc                randconfig-001-20240620   gcc-13.2.0
+parisc                randconfig-002-20240620   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc               randconfig-001-20240620   gcc-13.2.0
+powerpc               randconfig-002-20240620   gcc-13.2.0
+powerpc               randconfig-003-20240620   clang-17
+powerpc64             randconfig-001-20240620   gcc-13.2.0
+powerpc64             randconfig-002-20240620   gcc-13.2.0
+powerpc64             randconfig-003-20240620   clang-17
+riscv                             allnoconfig   gcc-13.2.0
+riscv                               defconfig   clang-19
+riscv                 randconfig-001-20240620   clang-19
+riscv                 randconfig-002-20240620   clang-14
+s390                              allnoconfig   clang-19
+s390                                defconfig   clang-19
+s390                  randconfig-001-20240620   gcc-13.2.0
+s390                  randconfig-002-20240620   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                    randconfig-001-20240620   gcc-13.2.0
+sh                    randconfig-002-20240620   gcc-13.2.0
+sparc                             allnoconfig   gcc-13.2.0
+sparc                               defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+sparc64               randconfig-001-20240620   gcc-13.2.0
+sparc64               randconfig-002-20240620   gcc-13.2.0
+um                                allnoconfig   clang-17
+um                                  defconfig   clang-19
+um                             i386_defconfig   gcc-13
+um                    randconfig-001-20240620   clang-19
+um                    randconfig-002-20240620   gcc-13
+um                           x86_64_defconfig   clang-15
+x86_64       buildonly-randconfig-001-20240619   clang-18
+x86_64       buildonly-randconfig-002-20240619   clang-18
+x86_64       buildonly-randconfig-003-20240619   gcc-11
+x86_64       buildonly-randconfig-004-20240619   clang-18
+x86_64       buildonly-randconfig-005-20240619   clang-18
+x86_64       buildonly-randconfig-006-20240619   gcc-13
+x86_64                randconfig-001-20240619   gcc-13
+x86_64                randconfig-002-20240619   clang-18
+x86_64                randconfig-003-20240619   gcc-8
+x86_64                randconfig-004-20240619   clang-18
+x86_64                randconfig-005-20240619   clang-18
+x86_64                randconfig-006-20240619   gcc-13
+x86_64                randconfig-011-20240619   gcc-13
+x86_64                randconfig-012-20240619   gcc-13
+x86_64                randconfig-013-20240619   gcc-13
+x86_64                randconfig-014-20240619   clang-18
+x86_64                randconfig-015-20240619   clang-18
+x86_64                randconfig-016-20240619   gcc-11
+x86_64                randconfig-071-20240619   clang-18
+x86_64                randconfig-072-20240619   clang-18
+x86_64                randconfig-073-20240619   gcc-9
+x86_64                randconfig-074-20240619   gcc-9
+x86_64                randconfig-075-20240619   clang-18
+x86_64                randconfig-076-20240619   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240620   gcc-13.2.0
+xtensa                randconfig-002-20240620   gcc-13.2.0
 
 -- 
-Kind regards
-Aleksandr
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
