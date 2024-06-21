@@ -1,65 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB43C16C870
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 06:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0F31552E3;
+	Fri, 21 Jun 2024 06:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718950690; cv=none; b=N4Za11GBrl0SW0cQ2JqdaQcMp1qYh7rwzpuQXo5XWwRVhgfSvJxdJfiTBVjXLCD6uFpZ8oWbDWvmbmdoN+x2Gc4pP0Ew3IWYDeRVJaF4UHPbMI5fwttQZr7OAf+DdMBV/2d/Y07/DWZ9rgpU0FIfz625cheR2ONOCnLK1K0+OeY=
+	t=1718950735; cv=none; b=RtPYK6jmh7Y4+0YdOlrLZ4Y/ugo+bhhFsevuAz8ngb61Vt3BbSQUw+L830D7LPvXxllMZW0Y9dxSJRh6c8kM0OEbuTzzqjQawEGIwyN7wzzj78hhcLY7KmeM0B853U7cqfaMupxax077Oqo9pFtcIRjlP7ZREAr26DqdJ5MJNnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718950690; c=relaxed/simple;
-	bh=4kA4t2OjVgBkAaBJo7prVXyN4l1n+l8Dg6A7Nzin2c4=;
+	s=arc-20240116; t=1718950735; c=relaxed/simple;
+	bh=iOKs0kuwYeauur49traV6Ei5QgiBo+V6ci2r2oGoz5Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yz4IjPO4JA83EO/h1gw6iA2gs2oFQvobeexHTBQKUGAzqkX05ny3WXuEwQVXZ4Hvf9S4+Mkc08B0VJZQwwrT9izavZEbTLA77DS3wD/naZMNcehDH7H/5vFGe5XOUIawByEqivEdWyM+h13Y8O+MjDR48pIk2yWgJUHseKMf1Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dlOv4AMc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=acpt4EWg4QwNT711+N8whGdQ2BSZLpLo8bhKDMT1pR2Oi6sWzgPjbPYWeRNMuLx+EXdhvSCfDHLH3SDI9KMzjABKlrE3mipzQaZBKvX+FvL/a9NrsHZJBcjgfzQGH6n2/+Cu377qB3VZwpHh9xRlvDHLuybTpKGe8QaSKMA9ftU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQ5+RO+e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dlOv4AMc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718950686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L5p7/VGbgORzLG3uJOaywvB8lHG4XigY5Z2PGvIE4TI=;
-	b=dlOv4AMc5z+fgiCVkXA8yGOcCpzpz+P46emMxyHzJo79wO19VdcLDsd+iugs4Fo/zdeSJs
-	cQPG3UExeurJPsMdlp/Oc2MgVibLokiJW/GTm4Xe8XXzuVKnTvyAc307KPaUaNPnLFwDcG
-	Ks6U61JcEMh7skPBhv/peJHlJiIvwKU=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-504-aGVMyZdvP52GEubAvtfbGg-1; Fri, 21 Jun 2024 02:18:05 -0400
-X-MC-Unique: aGVMyZdvP52GEubAvtfbGg-1
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3d219da9666so110556b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:18:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718950684; x=1719555484;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L5p7/VGbgORzLG3uJOaywvB8lHG4XigY5Z2PGvIE4TI=;
-        b=ddPYf77vPkR94nxmMCD5EDzBt9ZU7BP/zJDYYzpknn91R8tvUwaMEc6xIxG3WMP3ux
-         dDOVOuaoPpJey2sYo0ac98rLV6h2ahjz86UwZaQ2vGnyjzKnfHioVvpUzy1RSK5n/A4w
-         5Lr4oDDMd7SJjguDWqBPxqBMq5VCSbZqUyg8XUkmyKhqY57JfFE2C345aEu/udkAO6Zh
-         oXD5Rf9weswYh2RF4pHSzGkgirduASzaJ7SemFHJa1Pxt4F0ybDu+gHd1/QU533YtFXE
-         A1pNV7kYWCj91qQXJ+syfCznfpCjGILu5Z4YUSo/jqjDcLgjn5+eKVcZN9CUU5A/UvBa
-         tznQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVf3yvhFP1osMyns5AoN4aEjwwdWy3hrLPB7OKUQeacPq97FbrO1OqKSWsP3hw8wqC4Vpf5wqBJJSlpv1MlyBPRMlV9MtqFdByxHnD
-X-Gm-Message-State: AOJu0YzqYJwVQnWx6T/AvAGxpiXaFEgrjlkl/lRvCmN2g1Bz9KFhlaIV
-	19WVp+VmGDvdGvy/M977wbG0cd9TmbavAnFmRPp2twN17xgZxjBhyaDNPA6azTkEeq0j6CFUu6x
-	FhIxpOOLqU65pInwaCHToG5vO0W5WzpBmlYii7qQN09rqMinWfYF4Y8oVooj80w==
-X-Received: by 2002:a05:6808:3091:b0:3d5:11bd:154c with SMTP id 5614622812f47-3d51b98f9a7mr8803283b6e.2.1718950683517;
-        Thu, 20 Jun 2024 23:18:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGC3Ek3Uc/wSB68KwIgzf9gYnnocy1y8MxT1dU06xNYyZzA1wwesXNJUaTfwWdM/Q2bRttI8w==
-X-Received: by 2002:a05:6808:3091:b0:3d5:11bd:154c with SMTP id 5614622812f47-3d51b98f9a7mr8803271b6e.2.1718950683174;
-        Thu, 20 Jun 2024 23:18:03 -0700 (PDT)
-Received: from [10.72.116.78] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065119428fsm640113b3a.72.2024.06.20.23.17.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 23:18:02 -0700 (PDT)
-Message-ID: <f73cabc6-8c48-4c12-9d60-269e50df41f3@redhat.com>
-Date: Fri, 21 Jun 2024 14:17:57 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQ5+RO+e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22111C2BBFC;
+	Fri, 21 Jun 2024 06:18:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718950735;
+	bh=iOKs0kuwYeauur49traV6Ei5QgiBo+V6ci2r2oGoz5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CQ5+RO+eixfOSNiyNe6mYshUgJvT0bBT4RbBHfzXKwWoWUVDdMTdin7bNvMeociBa
+	 nsxe1skVxv8y216/k3GjD97zpMhRmVcHnKNoQQjUEIDFLDXLOx3HazsbPRQpp8Wgtd
+	 URk3Blz7BFahR8cKNcyHmn2uxfK86Y/OqF9sI1Q245ew1hsIEgxFDimmiZ9+leoFKN
+	 bFTDPzHrfjIDkH0vL43WSNL6GWH6QcG//xXqawpgJXcVrGqP+6n8pqSHSc0LN28WsZ
+	 IWtKNkMhQE4HAfPFsV1PtgcWsaTID0wJ9ME+tjwO5TMqWlHdX4Miz81t8+Qz01ZGXY
+	 CxmBFLYjgBjFg==
+Message-ID: <f49c5ee8-6bdb-481b-a131-a6478526f1e1@kernel.org>
+Date: Fri, 21 Jun 2024 08:18:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,83 +35,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] KVM: arm64: Allow userspace to change
- ID_AA64PFR1_EL1
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>, kvmarm@lists.linux.dev,
- James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240618063808.1040085-1-shahuang@redhat.com>
- <20240618063808.1040085-2-shahuang@redhat.com> <86ed8uk8cr.wl-maz@kernel.org>
+Subject: Re: [Patch v4 03/10] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT
+ binding
+To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+ Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "J.M.B. Downing" <jonathan.downing@nautel.com>,
+ Vladimir Zapolskiy <vz@mleia.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Yangtao Li <frank.li@vivo.com>, Arnd Bergmann <arnd@arndb.de>,
+ Li Zetao <lizetao1@huawei.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Chancel Liu <chancel.liu@nxp.com>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+ linuxppc-dev@lists.ozlabs.org, linux-sound@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-mtd@lists.infradead.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+ <20240620175657.358273-4-piotr.wojtaszczyk@timesys.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Shaoqin Huang <shahuang@redhat.com>
-In-Reply-To: <86ed8uk8cr.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240620175657.358273-4-piotr.wojtaszczyk@timesys.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Marc,
-
-On 6/18/24 15:39, Marc Zyngier wrote:
-> On Tue, 18 Jun 2024 07:38:06 +0100,
-> Shaoqin Huang <shahuang@redhat.com> wrote:
->>
->> Allow userspace to change the guest-visible value of the register with
->> some severe limitation:
->>
->>    - No changes to features not virtualized by KVM (MPAM_frac, RAS_frac)
->> ---
->>   arch/arm64/kvm/sys_regs.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 22b45a15d068..bead81867bce 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -2306,7 +2306,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->>   		   ID_AA64PFR0_EL1_GIC |
->>   		   ID_AA64PFR0_EL1_AdvSIMD |
->>   		   ID_AA64PFR0_EL1_FP), },
->> -	ID_SANITISED(ID_AA64PFR1_EL1),
->> +	ID_WRITABLE(ID_AA64PFR1_EL1, ~(ID_AA64PFR1_EL1_RAS_frac |
->> +				       ID_AA64PFR1_EL1_MPAM_frac)),
->>   	ID_UNALLOCATED(4,2),
->>   	ID_UNALLOCATED(4,3),
->>   	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
+On 20/06/2024 19:56, Piotr Wojtaszczyk wrote:
+> Add nxp,lpc3220-i2s DT binding documentation.
 > 
-> This isn't a valid patch.
-> 
-> Furthermore, how about all the other features that may or may not be
-> currently handled by KVM? Please see [1] and make sure that all
-> existing fields have a known behaviour (a combination of masked,
-> preserved, capped, writable or read-only).
-> 
-> I can at least see problems with MTE_frac and MTEX, plus all the other
-> things that KVM doesn't know how to save/restore (THE, GCS, NMI...).
-> 
-> What I asked you to handle the whole register, I really meant it.
+> Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 
-I currently only found the BT and SSBS fields can be written without any 
-unknown behavior.
+Thanks for doing this. Appreciated.
 
-All other fields in the ID_AA64PFR1_EL1 are either not supported by KVM 
-or the field involved with other register and KVM don't know how to 
-handle them.
+>  
+> +FREESCALE SOC LPC32XX SOUND DRIVERS
+> +M:	J.M.B. Downing <jonathan.downing@nautel.com>
+> +M:	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+> +R:	Vladimir Zapolskiy <vz@mleia.com>
+> +L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+> +L:	linuxppc-dev@lists.ozlabs.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
+> +N:	lpc32xx
 
-I'm not sure if this is right. So I want to ask about your opinion about 
-how to allow each of the field to be writable in the ID_AA64PFR1_EL1 
-register?
+Drop the last "N:".
 
-Thanks,
-Shaoqin
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> 
-> 	M.
-> 
-> [1] https://developer.arm.com/documentation/ddi0601/2024-03/AArch64-Registers/ID-AA64PFR1-EL1--AArch64-Processor-Feature-Register-1?lang=en
-> 
-
--- 
-Shaoqin
+Best regards,
+Krzysztof
 
