@@ -1,204 +1,120 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA02172BC4;
-	Fri, 21 Jun 2024 10:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD55172BDF;
+	Fri, 21 Jun 2024 10:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718965125; cv=none; b=hGPE/R0WQ2wW9+QT/5643YY0A1xir6BfZBD+kie3qewPo+cXKKsjlDCFbtMAWc9q29cxDMGPSbI+UuPbgS1CsHlxAoVA4v0nKlFDKzrveYTsClnTYnRMeMl4PaHui9vZohuKbFPbSY1DbvwiIgtEXtkl7yPgxGiyf7pAIy03Huk=
+	t=1718965126; cv=none; b=o6cOTZ09QxhbfeB6IJCWgcF9rK6qBXF4T4R3on3VDR8atiOwTzl34TdIlL/sl7rRKuZBncf7bO4oYQ3nSunctVAyNFt5bs1FPahFvLPzipiuvHZJBTkTekyv2NszMhf/ev+4+KWG8UzIVi0t9ST0VBE5Vp6gCzsagkcznh5IEN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718965125; c=relaxed/simple;
-	bh=N1yo7secwogxuEPVHJ5Vld6lZEvYNi5oKI8TVPWuc8g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UVjF9VI8c5+RaeYUtIbP1G+yUDtI79EaOKY1bi7ILtrsUO5KF40vyjvPFFl3cdjI3aZ+mv8IzYFrgOb4iperLoOeHx/h9bXGkQ0ZIzNR6WSh0Kdx/kb4AfFS3l8kaX24SBN6BayjprtycpupcKJ0JVxiUgw0MhE/ge9SFkXakY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=BFvmdqp/; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718965126; c=relaxed/simple;
+	bh=l/puWWhtbVxCHqqQ5cY1MrrBqDGK4KESLw5MMl+Yx/k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Gz904nMoq+MwpblUHadswjL6L9B9BREZb4+8CQm9bT4VDcegdp6YTrmASK5GyArAza921oou59ti2CIoF+NBRFwMv234b/8fm79d3pfrAyo/TbhhPzE/B3TUJTqsxJmQj0mQFJ91ovlKQR3SCSvH1NBS03XnSLuvKMpdNbqoVmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItpYouiP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BFvmdqp/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718965124; x=1750501124;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N1yo7secwogxuEPVHJ5Vld6lZEvYNi5oKI8TVPWuc8g=;
-  b=BFvmdqp/zlHshCSNpDaGQ5mSlnXuO0KIX1YzXPweEtwYYfvIoKWAW5Jm
-   91T2uBcCZVbi90IlBx78OVFSaA6hS2cJCHU9AloDQMel6QZrdTiymCj8J
-   e0VcGfZJL2Nf//vXJaGyNXO1TmjFseM/FsVTrsVP5AWod5/n5XLLBSwFc
-   0m/yuuLr0NYXvuG8X4yw2eQWbvKfR5Icm0tDeKuITzSDO8ybGmnt1G+0o
-   V/Lt7nSIzJzFKu+8TWL5FjFLuCI7+UR+8O4E5rgCNO/aeMUfgXeCeGn2S
-   73Kkxcg7mM6f226t33BjpB/7XxEu1x34CGRVgVN0EvAQ/vWz5m/C60F1R
-   g==;
-X-CSE-ConnectionGUID: HFkKWv5gQi6XJez7y6X/8g==
-X-CSE-MsgGUID: D4+6zTj7RaSh21uL4J0goA==
-X-IronPort-AV: E=Sophos;i="6.08,254,1712646000"; 
-   d="asc'?scan'208";a="28968692"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Jun 2024 03:18:42 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 21 Jun 2024 03:18:15 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 21 Jun 2024 03:18:12 -0700
-Date: Fri, 21 Jun 2024 11:17:53 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-CC: Anup Patel <apatel@ventanamicro.com>, Conor Dooley <conor@kernel.org>,
-	Yong-Xuan Wang <yongxuan.wang@sifive.com>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <kvm-riscv@lists.infradead.org>,
-	<kvm@vger.kernel.org>, <ajones@ventanamicro.com>, <greentime.hu@sifive.com>,
-	<vincent.chen@sifive.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: riscv: Add Svade and Svadu Entries
-Message-ID: <20240621-viewless-mural-f5992a247992@wendy>
-References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
- <20240605121512.32083-3-yongxuan.wang@sifive.com>
- <20240605-atrium-neuron-c2512b34d3da@spud>
- <CAK9=C2XH7-RdVpojX8GNW-WFTyChW=sTOWs8_kHgsjiFYwzg+g@mail.gmail.com>
- <40a7d568-3855-48fb-a73c-339e1790f12f@ghiti.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItpYouiP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C58BC2BBFC;
+	Fri, 21 Jun 2024 10:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718965126;
+	bh=l/puWWhtbVxCHqqQ5cY1MrrBqDGK4KESLw5MMl+Yx/k=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ItpYouiPSEbMR1HuxS7UK0gz/Ms798eObRqp/a6VDGyB1S/R4ORXPvDHOksqDgSC9
+	 fx6rPLjJFx7gxiufbtJRBNAMn/yDVOpwKbf6/1Wl6DYKJm5qzEt6nzVF/3U5aYoegh
+	 fQhcyeOaH1qZ8ZkAEsB+6C0WotqnHWipuI3VbKf3SxD8ySUs5KA3qV+joIrJNtbKHI
+	 knEM/PQka995nvGs5Y+XMzfHt1DSr3SDGTk8c+DR2fZHup3krGEsnndYr/CvQ44qv1
+	 CqZm5jrFaHpjaU/bR5W145tv63f5jjZ5Sl3NuLphK3P/aeMgmwuv6cSwolgEaTzq4C
+	 TylxYZagaOBcw==
+Message-ID: <0f8e127f-0159-4263-8582-5eccaae21dd7@kernel.org>
+Date: Fri, 21 Jun 2024 12:18:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/Q/JsluL++EEkeZ1"
-Content-Disposition: inline
-In-Reply-To: <40a7d568-3855-48fb-a73c-339e1790f12f@ghiti.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: rk809: Add missing audio codec
+ properties
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
+ Chris Morgan <macromorgan@hotmail.com>,
+ Furkan Kardame <f.kardame@manjaro.org>,
+ Michael Riesch <michael.riesch@wolfvision.net>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240619-rk809-fixes-v1-0-fa93bc5313f4@collabora.com>
+ <20240619-rk809-fixes-v1-2-fa93bc5313f4@collabora.com>
+ <fdf4da20-93a8-45c3-84cf-fd3fdc500f2b@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <fdf4da20-93a8-45c3-84cf-fd3fdc500f2b@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---/Q/JsluL++EEkeZ1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 21/06/2024 12:16, Krzysztof Kozlowski wrote:
+>> +    type: object
+>> +    additionalProperties: false
+>> +    properties:
+>> +      rockchip,mic-in-differential:
+>> +        type: boolean
+>> +        description:
+>> +          Describes if the microphone uses differential mode.
+> 
+> No resources? Then it goes to parent.
 
-On Fri, Jun 21, 2024 at 10:37:21AM +0200, Alexandre Ghiti wrote:
-> On 20/06/2024 08:25, Anup Patel wrote:
-> > On Wed, Jun 5, 2024 at 10:25=E2=80=AFPM Conor Dooley <conor@kernel.org>=
- wrote:
-> > > On Wed, Jun 05, 2024 at 08:15:08PM +0800, Yong-Xuan Wang wrote:
-> > > > Add entries for the Svade and Svadu extensions to the riscv,isa-ext=
-ensions
-> > > > property.
-> > > >=20
-> > > > Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-> > > > ---
-> > > >   .../devicetree/bindings/riscv/extensions.yaml | 30 ++++++++++++++=
-+++++
-> > > >   1 file changed, 30 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yam=
-l b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > > index 468c646247aa..1e30988826b9 100644
-> > > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> > > > @@ -153,6 +153,36 @@ properties:
-> > > >               ratified at commit 3f9ed34 ("Add ability to manually =
-trigger
-> > > >               workflow. (#2)") of riscv-time-compare.
-> > > >=20
-> > > > +        - const: svade
-> > > > +          description: |
-> > > > +            The standard Svade supervisor-level extension for rais=
-ing page-fault
-> > > > +            exceptions when PTE A/D bits need be set as ratified i=
-n the 20240213
-> > > > +            version of the privileged ISA specification.
-> > > > +
-> > > > +            Both Svade and Svadu extensions control the hardware b=
-ehavior when
-> > > > +            the PTE A/D bits need to be set. The default behavior =
-for the four
-> > > > +            possible combinations of these extensions in the devic=
-e tree are:
-> > > > +            1. Neither svade nor svadu in DT: default to svade.
-> > > I think this needs to be expanded on, as to why nothing means svade.
-> > Actually if both Svade and Svadu are not present in DT then
-> > it is left to the platform and OpenSBI does nothing.
-> >=20
-> > > > +            2. Only svade in DT: use svade.
-> > > That's a statement of the obvious, right?
-> > >=20
-> > > > +            3. Only svadu in DT: use svadu.
-> > > This is not relevant for Svade.
-> > >=20
-> > > > +            4. Both svade and svadu in DT: default to svade (Linux=
- can switch to
-> > > > +               svadu once the SBI FWFT extension is available).
-> > > "The privilege level to which this devicetree has been provided can s=
-witch to
-> > > Svadu if the SBI FWFT extension is available".
-> > >=20
-> > > > +        - const: svadu
-> > > > +          description: |
-> > > > +            The standard Svadu supervisor-level extension for hard=
-ware updating
-> > > > +            of PTE A/D bits as ratified at commit c1abccf ("Merge =
-pull request
-> > > > +            #25 from ved-rivos/ratified") of riscv-svadu.
-> > > > +
-> > > > +            Both Svade and Svadu extensions control the hardware b=
-ehavior when
-> > > > +            the PTE A/D bits need to be set. The default behavior =
-for the four
-> > > > +            possible combinations of these extensions in the devic=
-e tree are:
-> > > @Anup/Drew/Alex, are we missing some wording in here about it only be=
-ing
-> > > valid to have Svadu in isolation if the provider of the devicetree has
-> > > actually turned on Svadu? The binding says "the default behaviour", b=
-ut
-> > > it is not the "default" behaviour, the behaviour is a must AFAICT. If
-> > > you set Svadu in isolation, you /must/ have turned it on. If you set
-> > > Svadu and Svade, you must have Svadu turned off?
-> > Yes, the wording should be more of requirement style using
-> > must or may.
-> >=20
-> > How about this ?
-> > 1) Both Svade and Svadu not present in DT =3D> Supervisor may
-> >      assume Svade to be present and enabled or it can discover
-> >      based on mvendorid, marchid, and mimpid.
-> > 2) Only Svade present in DT =3D> Supervisor must assume Svade
-> >      to be always enabled. (Obvious)
-> > 3) Only Svadu present in DT =3D> Supervisor must assume Svadu
-> >      to be always enabled. (Obvious)
->=20
->=20
-> I agree with all of that, but the problem is how can we guarantee that
-> openSBI actually enabled svadu?=20
-Conflation of an SBI implementation and OpenSBI aside, if the devicetree
-property is defined to mean that "the supervisor must assume svadu to be
-always enabled", then either it is, or the firmware's description of the
-hardware is broken and it's not the supervisor's problem any more. It's
-not the kernel's job to validate that the devicetree matches the
-hardware.
+Ah, I missed explanation in commit msg, this was already since few
+years. It's fine.
 
-> This is not the case for now.
 
-What "is not the case for now"? My understanding was that, at the
-moment, nothing happens with Svadu in OpenSBI. In turn, this means that
-there should be no devicetrees containing Svadu (per this binding's
-description) and therefore no problem?
+Best regards,
+Krzysztof
 
-Thanks,
-Conor.
-
---/Q/JsluL++EEkeZ1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnVTUQAKCRB4tDGHoIJi
-0umAAP9Ky5jmwL/vxKQCCEHnHdguojF9KRICh/OKTjjNr83q0QD+M27FYa47s7qx
-aJWtzNZgU73VI8rgfcbj5zSeT7XqZQQ=
-=l7ge
------END PGP SIGNATURE-----
-
---/Q/JsluL++EEkeZ1--
