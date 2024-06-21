@@ -1,123 +1,84 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC79D172BC4
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 11:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8698412D771;
+	Fri, 21 Jun 2024 11:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718968754; cv=none; b=cbly220dAVuPZtGti+ujiiBlpjAUQXqQLAfweLv0fr8DfjPEvFxf9N74Kx9hs3V1qoPyrRIXzjQLnnNk+SIgEdMGE+O/qb/b9kzZk7xssioo2KGJiZfxMPJQgbf7iK/HNrLUAupjVEZbASNUYIKgIxRb86MnCto304gkF2FXu+0=
+	t=1718968829; cv=none; b=V5ttm1TXtaYGmN2x+8mXopxipxID35CW+NrEK7vWTX0N2QnR5M3FQoKURElxzTlJZ38fc89sQ1VGfMd7hiPPrfhC2pc3qPneozucCXUeQ62JkJk3KxAHlvq6iCME6o/1Jixplgx3yGwkiK95VP6xOm5hCPTewG99c5buGn3npZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718968754; c=relaxed/simple;
-	bh=7gLON6gE5ukm4T1vEB+8LAyywMsTXIacWeG7y5AX+B4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cCOugTzkd7r5LWX7nU8gNRvEAjuVPMDvppESfXI0lOTNHimjgeUvy4KKftIOq1v0X4RzPXFBUYH+zO9kXGVBtsVmEWnPLv9Iz1aWCa9YvBsEboI4YmmCHsU3hq2wb3H8zMzmGR1h38TLKUpp5HK7hYcVELz4QVAe/PLJwpcMAcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NSOTpQYU; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718968829; c=relaxed/simple;
+	bh=hltoIhzrRyXxQ5wEaVgtxM9YEOs/N9nyFiT+slGiE5I=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=cUyFJxbV8FHIVvOiDz8cWWP483Om5VlnYdQ2ti45PNlJEBbQYNj/Ui8LJ06ikrH2R/f1Jo3ZwjQuHVh14adirMYOHdQQleRl0HEHVHxiPvdYhaNV64ApVO0bRCyye3cmQ8JjvuNkKnZO++arjHeYqDoWysQ01p0qO7sIvogpnAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stT/+7D0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NSOTpQYU"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dff36345041so1932979276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 04:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718968752; x=1719573552; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H5QZgZfdaJY5tt1Kp5T6W2RdnqNcsMEWI2ebReKb6vI=;
-        b=NSOTpQYU12atcre7K5tTu2JEl/J34eLKmfZYLyMSALh2RIYaCwD5J55pLqUqt1xuZQ
-         Y+bzJZIVJSdUrfSspXdUdkLmu12tPzp6W/iqvjv4x3yhTGawHd6l/oiH186rtJl303u8
-         6D1U3TaaU1rY5Sk9HDtwWE8ttpfXgLDflzWo4eizdi6Y8k2IMNEh0fbmIRBjAkSthv7Q
-         +wq4YoYT2hy8Xr+tU+1jcBB2n3Ybp+DtEPWkhzgDS+Iu3ccfKDh7J/eMHFqo2mbU3AP4
-         S+SA/bC9ScxHxQCA805vYPvHb1i/WGJSfEQZsyN3JVx4EAvTlHAkvXhWrRQvXGBkJ5uZ
-         E7Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718968752; x=1719573552;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H5QZgZfdaJY5tt1Kp5T6W2RdnqNcsMEWI2ebReKb6vI=;
-        b=b/PLMoeOm57rd5TWZeMyUQjP8FDK6P0cJIKosrcQoy2lIL0lxvxflgmkfS0QbXN2GG
-         K/JrzZrMq23Q/3+6Iek7mTwPHk9urpA0Lx9gJxBJwr8DEGVTNf25Dpskb571DQ108WIr
-         eMGnItC7lDEdD8uDlIrWk028/THZbKauDW3ZU8zo55qD6tyKE9ghClt9rETR9sTx7o80
-         M9mKxk7yTG9jAjSxL8d3ncWut245rZgYnNg9jErZAK1YCwkQpqsg0RnlbZkUNI0j4EGw
-         6/0LIuqy2VEmy5k04Fvh1YnAMO1TinuWd5G3PMbAd4IM+Z7FDP2i53/wEcbsI/lYXVeR
-         IPRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKab/9gym+dP7qx1MD8vv/PJBlbsvB4/UPQkLL+6i7Gxq8ClIf5UtJ1Ft744bAPzYp4M5TecGRd1IaSnlWXo+tCxTA1w41EOGv9auU
-X-Gm-Message-State: AOJu0YzYVMsBK54lq8TXgGvfX7kPNh3CqjHQrplPOAmI4yGOSZY2IrLg
-	0Hp9VZCX7X+FYrk8GM58vvMwfJsBXUuG4Ila+Uuyhpk9O5a8e+X2iEbOn/vpBWUTrf+MuvneCKP
-	wnlqKdyfzzKcf/hQV2GtYJWztzpIjLBaFRTbFBQ==
-X-Google-Smtp-Source: AGHT+IHNvgD/CLuCJPDEmrMqR6vErGZ956Gg+9FC6uT2K+FAj7cCLW+UCZ1u3hp0iVip8LrBW4sNqfFVjLQjBsohjHE=
-X-Received: by 2002:a25:dbd1:0:b0:dff:4a3:2ded with SMTP id
- 3f1490d57ef6-e02be13f445mr8358289276.22.1718968751833; Fri, 21 Jun 2024
- 04:19:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stT/+7D0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 21E0DC4AF0C;
+	Fri, 21 Jun 2024 11:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718968829;
+	bh=hltoIhzrRyXxQ5wEaVgtxM9YEOs/N9nyFiT+slGiE5I=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=stT/+7D0fM0P2iBHCmst1qlRmVzt7vBdPFX5ApAIPweaI4V4iwZPDwnypsKJbNI5g
+	 p4KdTmKndzjSd0O0omqMciBm7lk3zfuqCH906zybC25dpMyU4rj47+5Tn9sVDyjVyu
+	 9XjkCIiL+XVIv4a2eH94AK+4fW+uRmttnXuANKT1IC3JhBKQ7VYU8H4xHezVrqUU6t
+	 2vH/e68jKxkimk5WQIYIKN3XrEHhRI6QkVTJyVhhr0HLBLm2zPylBtojUByswKPff6
+	 H+73gR8Hjd9NZL2VaK84YawdUWQWdBZuownZ2jjJuM0tmNewNwWbBI9vgYoKDVtIsP
+	 Pj7Oiz6AT6/wQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 16A19E7C4C5;
+	Fri, 21 Jun 2024 11:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612064731.25651-1-quic_ekangupt@quicinc.com>
- <zbpia232dh4ojfsvhcqxrp6cwfygaalu5cycdrs47pqmnrisvk@dq24nww26gkm> <z6g5ool5vomkudiroyaxh532rhlfu5x4i3l5xoqrsho2sxv4im@v5ghemjkpc3v>
-In-Reply-To: <z6g5ool5vomkudiroyaxh532rhlfu5x4i3l5xoqrsho2sxv4im@v5ghemjkpc3v>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 21 Jun 2024 14:19:03 +0300
-Message-ID: <CAA8EJprgCJKOnZo7Q31KZV3SA3NqWxcMmoUxuqnVF+8cQW5ucg@mail.gmail.com>
-Subject: Re: [PATCH v1] misc: fastrpc: Move fastrpc driver to misc/fastrpc/
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>, Oded Gabbay <ogabbay@kernel.org>, 
-	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, 
-	linux-kernel@vger.kernel.org, quic_chennak@quicinc.com, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/2] Handle switch reset in mscc-miim
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171896882908.29143.8985611703497220524.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Jun 2024 11:20:29 +0000
+References: <20240620120126.412323-1-herve.codina@bootlin.com>
+In-Reply-To: <20240620120126.412323-1-herve.codina@bootlin.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ p.zabel@pengutronix.de, alexandre.belloni@bootlin.com,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, allan.nielsen@microchip.com,
+ horatiu.vultur@microchip.com, steen.hegelund@microchip.com,
+ thomas.petazzoni@bootlin.com
 
-On Fri, 21 Jun 2024 at 09:19, Bjorn Andersson <andersson@kernel.org> wrote:
->
-> On Wed, Jun 12, 2024 at 09:28:39PM GMT, Dmitry Baryshkov wrote:
-> > On Wed, Jun 12, 2024 at 12:17:28PM +0530, Ekansh Gupta wrote:
-> > > Move fastrpc.c from misc/ to misc/fastrpc/. New C files are planned
-> > > to be added for PD notifications and other missing features. Adding
-> > > and maintaining new files from within fastrpc directory would be easy.
-> > >
-> > > Example of feature that is being planned to be introduced in a new C
-> > > file:
-> > > https://lore.kernel.org/all/20240606165939.12950-6-quic_ekangupt@quicinc.com/
-> > >
-> > > Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> > > ---
-> > >  MAINTAINERS                          |  2 +-
-> > >  drivers/misc/Kconfig                 | 13 +------------
-> > >  drivers/misc/Makefile                |  2 +-
-> > >  drivers/misc/fastrpc/Kconfig         | 16 ++++++++++++++++
-> > >  drivers/misc/fastrpc/Makefile        |  2 ++
-> > >  drivers/misc/{ => fastrpc}/fastrpc.c |  0
-> > >  6 files changed, 21 insertions(+), 14 deletions(-)
-> > >  create mode 100644 drivers/misc/fastrpc/Kconfig
-> > >  create mode 100644 drivers/misc/fastrpc/Makefile
-> > >  rename drivers/misc/{ => fastrpc}/fastrpc.c (100%)
-> >
-> > Please consider whether it makes sense to move to drivers/accel instead
-> > (and possibly writing a better Kconfig entry, specifying that the driver
-> > is to be used to offload execution to the DSP).
-> >
->
-> Wouldn't this come with the expectation of following the ABIs of
-> drivers/accel and thereby breaking userspace?
+Hello:
 
-As I wrote earlier, that depends on the accel/ maintainers decision,
-whether it's acceptable to have non-DRM_ACCEL code underneath.
-But at least I'd try doing that on the grounds of keeping the code at
-the proper place in the drivers/ tree, raising awareness of the
-FastRPC, etc.
-For example current fastrpc driver bypasses dri-devel reviews, while
-if I remember correctly, at some point it was suggested that all
-dma-buf-handling drivers should also notify the dri-devel ML.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Also having the driver under drivers/accels makes it possible and
-logical to  implement DRM_ACCEL uAPI at some point. In the ideal world
-we should be able to declare existing FastRPC uAPI as legacy /
-deprecated / backwards compatibility only and migrate to the
-recommended uAPI approach, which is DRM_ACCEL.
+On Thu, 20 Jun 2024 14:01:23 +0200 you wrote:
+> These two patches were previously sent as part of a bigger series:
+>   https://lore.kernel.org/lkml/20240527161450.326615-1-herve.codina@bootlin.com/
+> 
+> v1 and v2 iterations were handled during the v1 and v2 reviews of this
+> bigger series. As theses two patches are now ready to be applied, they
+> were extracted from the bigger series and sent alone in this current
+> series.
+> 
+> [...]
 
+Here is the summary with links:
+  - [net-next,v3,1/2] dt-bindings: net: mscc-miim: Add resets property
+    https://git.kernel.org/netdev/net-next/c/e5efa3ff412d
+  - [net-next,v3,2/2] net: mdio: mscc-miim: Handle the switch reset
+    https://git.kernel.org/netdev/net-next/c/9e6d33937b42
+
+You are awesome, thank you!
 -- 
-With best wishes
-Dmitry
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
