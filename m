@@ -1,203 +1,267 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2066.outbound.protection.outlook.com [40.107.95.66])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2078.outbound.protection.outlook.com [40.107.244.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF12152E0A;
-	Fri, 21 Jun 2024 12:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5794152166;
+	Fri, 21 Jun 2024 12:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973562; cv=fail; b=ArtTmHcfh16KPJ9SGb/u2M0ZGw45JNmHPyIS+C7g6AHlDsnbZ1p97hh8DEsFoc63lXnhUnqCYPxU+n0IJRNjtsAZCK/k5qK/hD28SmsemJOJqhYNUZBC26WPSXNgZrbGlE6AL4NNhJ9JDhK/RkcLQ2Nsef5D4J9oG4leJkmrnOo=
+	t=1718973570; cv=fail; b=nxFAYOjoahKWFNeg5WjjvHFa9QjqqucIVClwcaYrF8TTHo7XYSqQd70f/ZyVYbO8Wfl7Tddad91M8TDLe3lxA9jpAYossoYnPZBZ8IZ5Py7NwJENjwlTO7N7Hr1H+zE9s9QeIxLoF2rcyaZJrgYyyPWRJ+2GRIag6atDM/4nBi0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973562; c=relaxed/simple;
-	bh=zWMw7GpQqa01CZzrq1ezJ0/YvZNyCOb14AFHPMbttcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=g/QB9X1hShLsW7WL/cGcDsC8WHw+sVfgRVcJlwfx4/RhtQIV2dCnSopI+hXFhfRs5ca43+ihn7FIrZknq2ehFNKVbu0lcF7q1cURLrvns8wUWOLrSaxFwTYhB3zmcdhZfoMwj2/NpnvHeWrWq9uMhJ8MGz87bKRCzCutbPWjwh8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SHDKBhkz; arc=fail smtp.client-ip=40.107.95.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1718973570; c=relaxed/simple;
+	bh=/VXLvlwDqX4wjj5mcGJKe440pwBUa/S1hgULE0ooHS4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=moZudbRamracHIqEMzCpCownA6OFuci/hX60ekMguwrRRgop615aKgE/Pmy2sKbxCDfmhQbBhBRc0em1rFaWjfsTxTqKf2Hv/dzFXI43sahnAsul9PA14AYFmCXwq7M2bGvWfMQGLKMqNsQjBrsdycJiQc+KvZSm+IEbtlemRZ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dNuErk0x; arc=fail smtp.client-ip=40.107.244.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SHDKBhkz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dNuErk0x"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cZAHSbiGXY6Ipeju00oZ7s7L2ThmNpUiYniB9GvVsNMoC4N8/k1F/TDPWU3Y4ou7Eykxvw1iaiTflIF7DGXEe+GzgCycLG8Jcy0IOEH6DEfRapnJBX17q/vBKYfNoy1evrdLo4mBQNSlllPJApByMWEDWjwAVQ081zik9OlNQrIuW9odDDYnAMbDi3jXqVZRz0UXD3NgmanzlsGbNJD+iHk9h/om2eR+Fu+esxsE3hFJ7dN3AQul5Xw0UDqBow3t7jUeyyDSdmlZgitKGnchBnp3it4WE38yKdbTz0AWkTsh6qxDTpmY4PUcDw77XVnIz82xrYU6FW3HwJY6CoDKdw==
+ b=goSoJAVOtf1Wmr5UANGbFp8Cq4B74Suk1VRlT84Zn/rmqtz7HwuVRypifEbv+vU2yn06xdK+4HQKWOh2sTUz2zEim+xN0sn3a/893XnbqSql/ogOHtqABgXK7wcODoyFAF8M1q5tHV7r5Jo1vVUpTord3NdVNAbFP+ID2MHhP2LIww3YBw/PSZsCev+zeTlYnfR92izK7ih48yOekw8aJLDiSHSmjkSBxWkhX4LuCASyWlVfHY7EdGO5T15z8Wlz7ZDIiq3igR9vCzs9/dGA453hD67SgQS+BmgKhIxRlEaoYDPKQmV/ekE8xP5rhNX0nurCqKiMl28FSjCoq+dMHw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bTEk9i3Qd7K01n3MeQdKUFaV5+05pL4LE6VcxGjn8Cc=;
- b=egIlUYvPcOnsPtgcdybaJlr6xn2qCf6lsEDfSIUGD8aME8h+JkMY53qicjLni/DybAW+ktnr+/ZeTtCVKcEHnUUvzo6AwxgKBZsazTY06G70EUqUc3/TQf+1+SKZ+opIzkrMoGwpsxjgS5qlDvOO0wxerqG5TiK9WGQOzOqUy5yYt3UAstAxUWtBIeqvVaM5C3ppd7uzY8jjKB/TJxY8djbUHI0f4vmwaC/zevTMELS0Zw3u2cTX20WMMto6zYTDcah8GYK6BiBtOnkCAWCQR07wSltqna4UOqvf3K0sQgfVXaPvCQ7lxZrJEcNRnCsflkwYq1WjCJ7eT+3Cen6e9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=Zue+qDjinPt9koOGOlNw2EJLGxrmLQnPyPbgmmrWg+o=;
+ b=Cm2ZlYoiY4rfBKTII7JjWnA7yulrdU0hEZp4IhiTHowWSKeNb58zeZ/Sf/cVCM44Ri3lZxrPaODE0RCyIKzZiCK6Y+pLWVwQLTRZ7cCrW+yut3b88I5sDZ4ehN8kdvXx5th1YEaVy6LYD6MjqN4ZaK+jCrB1/q4GUV0/iFfdHvFay0x7v7gNU2QEod7+y/ZMdTaIL/EZM9wk4RG5qq6pQAmhow7WPp59ytk+b+4JgYewCGecFCzOv2EO6vNbZOQaPVPWBaj+AhVaa0kErRyNZaCmaAPwJvxvl4WiTZ5/A8Rp+a5j58H2NHisyaQefn5G9DAiuloUHvurqgoy7w/HpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bTEk9i3Qd7K01n3MeQdKUFaV5+05pL4LE6VcxGjn8Cc=;
- b=SHDKBhkz256apBtKpaM8LHYz5kE9JbWcsQI2tuurIDrFo2tR9R13/OplCTAsqSTwyyidMjWawyWaCY59MqAaMEhB/ZrWwqTENCI3e/a3ZM4DtrqoQ+lRgA3FcyktrvlABvmUsjPHH26euzFtF6um3Pae0csS8KybQn4As3IHfDX5tOxmB1hZ3QJrfmxU/IVnOOqd3f9iRhV7Da5xL8XTyZTESUsirq9gZfTiG+wK2m1r5i1zEc1MNhPEY2L2PUncLNcZyK5JYN6WwwwdnnUHOQicQa2YJkfD++rlwH0HWDj8ba4EcDRW2OG+Z4kU6n2O7BQqFMDnEX5PjKRlClmBYA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by SA1PR12MB8887.namprd12.prod.outlook.com (2603:10b6:806:386::18) with
+ bh=Zue+qDjinPt9koOGOlNw2EJLGxrmLQnPyPbgmmrWg+o=;
+ b=dNuErk0xeaiv7ocICJ+MVgSQLLlQIjori+HXXubZORn3HQViZ9i3BUNER7dv/QVHmTUy2vX8CBjLtF/9XqkwRHlSADwZ0xptwsfuHEy/30Me07B0WhSB6U2rsiE05wR7TFGtZccDx+t9eSj6SZ491HoAwlMleplScYe/x42D+L8=
+Received: from PH7PR13CA0006.namprd13.prod.outlook.com (2603:10b6:510:174::19)
+ by DS7PR12MB8322.namprd12.prod.outlook.com (2603:10b6:8:ed::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.22; Fri, 21 Jun
- 2024 12:39:17 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%5]) with mapi id 15.20.7677.030; Fri, 21 Jun 2024
- 12:39:17 +0000
-Date: Fri, 21 Jun 2024 09:39:16 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: David Hildenbrand <david@redhat.com>, Fuad Tabba <tabba@google.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	maz@kernel.org, kvm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, pbonzini@redhat.com
-Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
-Message-ID: <20240621123916.GQ2494510@nvidia.com>
-References: <CA+EHjTxaCxibvGOMPk9Oj5TfQV3J3ZLwXk83oVHuwf8H0Q47sA@mail.gmail.com>
- <20240620135540.GG2494510@nvidia.com>
- <6d7b180a-9f80-43a4-a4cc-fd79a45d7571@redhat.com>
- <20240620142956.GI2494510@nvidia.com>
- <385a5692-ffc8-455e-b371-0449b828b637@redhat.com>
- <20240620163626.GK2494510@nvidia.com>
- <66a285fc-e54e-4247-8801-e7e17ad795a6@redhat.com>
- <ZnSRZcap1dc2_WBV@google.com>
- <20240620231133.GN2494510@nvidia.com>
- <ZnTBGCeSN1u6wzLb@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnTBGCeSN1u6wzLb@google.com>
-X-ClientProxiedBy: MN2PR16CA0039.namprd16.prod.outlook.com
- (2603:10b6:208:234::8) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Fri, 21 Jun
+ 2024 12:39:26 +0000
+Received: from SN1PEPF00036F3F.namprd05.prod.outlook.com
+ (2603:10b6:510:174:cafe::b5) by PH7PR13CA0006.outlook.office365.com
+ (2603:10b6:510:174::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.36 via Frontend
+ Transport; Fri, 21 Jun 2024 12:39:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00036F3F.mail.protection.outlook.com (10.167.248.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 12:39:25 +0000
+Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
+ 2024 07:39:20 -0500
+From: Nikunj A Dadhania <nikunj@amd.com>
+To: <linux-kernel@vger.kernel.org>, <thomas.lendacky@amd.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <kvm@vger.kernel.org>
+CC: <mingo@redhat.com>, <tglx@linutronix.de>, <dave.hansen@linux.intel.com>,
+	<pgonda@google.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<nikunj@amd.com>
+Subject: [PATCH v10 00/24] Add Secure TSC support for SNP guests
+Date: Fri, 21 Jun 2024 18:08:39 +0530
+Message-ID: <20240621123903.2411843-1-nikunj@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SA1PR12MB8887:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c2ef56f-1d50-4615-bd4e-08dc91ef2a6c
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3F:EE_|DS7PR12MB8322:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a3bfa16-1294-4bd4-f26c-08dc91ef2f85
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|376011|7416011|366013;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|36860700010|7416011|376011|82310400023|1800799021;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DV03B4VV8jUcw4ciWC5h9Z7woVAzEG5f5yHdebWCBe7emoNGP/66GXly8W86?=
- =?us-ascii?Q?TathOIAB+dOwtUWhC97cH4aHRyPm5Ns6YnDieUdiAPeOC5UY4YvQozH8nlv3?=
- =?us-ascii?Q?/aUiWFvrZBz3kXM/kk3tTE7ngJjjSPuIfAYNw1GRcV0aO7eoxUY8yAbip32H?=
- =?us-ascii?Q?ZfWLvkeJleqlPvLhZWPbZu+xtaf+k8m/UaUQD904OFseCNjJsVM8wt2gEDxy?=
- =?us-ascii?Q?BTDSqqEqj2FD8sWJ21FyW/jRdR3Gdl91Bd6X6j/VVjV0tIZIBcnza4EQb8de?=
- =?us-ascii?Q?PV6U9ZT6WThe3V3SayyNm1XV8WivdHaT30s6n9aucXvDRFrMMpmzZvyGn0J1?=
- =?us-ascii?Q?vcfhR2mH3IjFpNF5vN0swH6gXMpXg1P6kLUFTMNWQioK1pXW8pdK2e52IvkP?=
- =?us-ascii?Q?37JKN6S4FJMvNB/6zx8MfqC6WPAysxnn7WW7LUTngRucy8HPSe5KaGGv95sT?=
- =?us-ascii?Q?dLd1XJE/spZRurF645z0yjcVRBCN65X8H+Bl6ZUDL3l+IJPhTNCbwI79zx3x?=
- =?us-ascii?Q?k91JRqVSl9rky2ktWOn+wPCWqUZPe6/QsdnzdFmjmenf/n73TzaljpIP7VtD?=
- =?us-ascii?Q?bkgrlNblVQ5e0QwJG0fJT4Pu3UELLVLdKD2P73g8LTa6oyHsXwyzDui3JJnn?=
- =?us-ascii?Q?PA+yCSgxfrEYPRTBqOHSAZu3/VFeb49ybyxghBB+iZQxxN9Zh3KpkpYo+I+V?=
- =?us-ascii?Q?n393bmAcGF0gEImEfeS2tilK+h3owWJcRu6lW5kO3CkiMABjTT0nOk9M6AQj?=
- =?us-ascii?Q?K8F+p5spHCGuf6beX1p+FlE0ldl+RSqz9YqxqXWToY/agBl/nltsJH6QnW9m?=
- =?us-ascii?Q?EEBu/PRQzusvg1WOyH6nedC5KZ3xZyo0DfQpIOY3zqIs1IZa/qEfIu4lvciN?=
- =?us-ascii?Q?GaFThRAEaM1dLuI4LwPyTpTLetBAKWm1A2i1J9gr8TJBz/TvYmlIu2aH9U8m?=
- =?us-ascii?Q?brMRBm9DVF+DgoP8riG/O/sSOaRPpJq6DWgmoV+QJDOJkALDC9gH825UZuz6?=
- =?us-ascii?Q?y6AGeLfNMviBwg8juuQGhPGb5bX/vNHel8C2x1wNpbADbVV+to8Ob1yn4WDm?=
- =?us-ascii?Q?jbBA9ohxv1QK5bAzodh7jXcbG/VPgvCIa+NsUUkLNE/VEij/xg5G4eleztiw?=
- =?us-ascii?Q?yHkzcgkMa1NBWFMj9/YCG5kODR+6X/BAfD5Q8u1qWfF8ByeR4502T7xD8/VK?=
- =?us-ascii?Q?xuscK9NWJ9dat7W22GE4PKQX/Syw1+NFOw+Mrrk1BATmF9z8hnhFWnT670e+?=
- =?us-ascii?Q?1yfqSupc3hRPY5SRFaiV6ws2Dmlai6BjoFJnkQ6QeOquaYBeyEgzp41JZNxU?=
- =?us-ascii?Q?rblgROa6kuHWW5tzFVfIY+cW?=
+	=?us-ascii?Q?QcrnAlcJfOaedf4mYuKhBq9J2Ad8bIHOnT1GtasCfVi3+8dAmOYIPsmsibR9?=
+ =?us-ascii?Q?BdYbt31qEjB3V6bJAiM5zoHrk9EQov83MUk9+D+brXdX4jmEAxSKcfuM4OvA?=
+ =?us-ascii?Q?VFFKsE04DRqYfng5nQ0lDWeuUEjTa/cI7jcmKsQ/bPQ6iGsyXZq+ZitiUk1E?=
+ =?us-ascii?Q?kYLDxSMI4sDnH5YB99H1Mwv6L7noD5I16JunhFPX8ey/m4DocVlpOADl0OHZ?=
+ =?us-ascii?Q?Ykos4In0vnEzQcATLhUAZp+H98fAVrdNijpPziVpMTGcMpeU/pAm2VNKx9GT?=
+ =?us-ascii?Q?zAlVmLUrQeFitkFwvcG41D2zbvrGTEWI7nQRhAxBCJ8nNHXGMmSLGSn1IvN0?=
+ =?us-ascii?Q?ApJXwqRkizRkpdH7qPaonY7AIZ+Z0BkDSitHPi5nWnUUwUYQUNTynggH4tEJ?=
+ =?us-ascii?Q?AGbN5m9CH8AUXM30ltyD9/D0LNRXI6qJWLtwFWC5HGCPqyXxvtn18w7zh3UO?=
+ =?us-ascii?Q?1ipPWns6OxPn4u7nEtA6UNfYQNGcBBy+UIOOXzdVIEXB/UtPZaRtcW6V5ajy?=
+ =?us-ascii?Q?/9IwqpdifDn23pWDTkw8dnSBLjiuoEY95zNCrUfQuY0nohhbZdPVhDY1hiGe?=
+ =?us-ascii?Q?wGKWoxlMcXGsHRFrWfzEBN1gHaa1i3gLtgk461ZDGvA4ftGn5fvayYmIGI2f?=
+ =?us-ascii?Q?A4DS0mHaPkbBYW6EY/uhAgFY6XBysT1x6LEQqJWtZjI6k5YG8X3YV+yxsBLW?=
+ =?us-ascii?Q?1+76ew9U+uiXbH8DUx/6Ll1VUiJfKrWajR5tZlWrL25z0CssrCUezuUa6UYM?=
+ =?us-ascii?Q?r1+POT6dT4iHLQ2nNshZkY1niuKpQP4rbxdD2R7lFRpfQ3IGpRZdVvji6y6h?=
+ =?us-ascii?Q?oPtvhEaDfgUXRv7BgO1Gu5/7iSngn5kw9NlncsKm0QZbpgrtwHJpkGzUZxMP?=
+ =?us-ascii?Q?Z6klJRWNR9lePrPRqKp5v3WmNgPzIaqxjKV8uF6FLK50Gf1QtFGDGUVPGcYi?=
+ =?us-ascii?Q?LYMeRskEIeHunTZIkf0Ph2WFNXYR5RU1uyb7/jkVDc89gxc0zlU0xme3DeLg?=
+ =?us-ascii?Q?OK/b3kS9Gmv7JX2NT2yWggdkPuN5KuJxmTqf4A7pV0YxknffwttXphR3UvVZ?=
+ =?us-ascii?Q?mSNQQADyzV8+XceXWjTbPY2tom0wAC43TT1iS+bsvutR7lUsG3XEZ3gFh72N?=
+ =?us-ascii?Q?x7mlWR3TwzWCgktx5CIPw4i4uZdIOmD+vt7XqDwpu6X6fnycJp9Lm5u/EFF8?=
+ =?us-ascii?Q?2cIScIaB4FVtg6yd7YeZQiV93N+Dm5N13mN99V5k90dHm+bP0gVe1P+ZokjZ?=
+ =?us-ascii?Q?ugE8ThC6XOAvqV9h3mZGpu8mWwR4BTugtzKW1U+Fdblb0/T4TbpB6Opy60+X?=
+ =?us-ascii?Q?XVHn6z9shr9/sY09hbr+bfn5VMUIJu5Ya0L+raMNyhQuchln2jXclXqSXZYv?=
+ =?us-ascii?Q?qLP8+dI=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(376011)(7416011)(366013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?TFUJZnHO+JfxvM3k66yftCRjwrHi1eTo4rFqowiWnI6ToCI/RgeX7KtiE04z?=
- =?us-ascii?Q?0cLmo4OZxQZwf4C9RND39Dy5j3xYDzIliSim5nD4aCUqIO8Q5NWEJc5fPhwl?=
- =?us-ascii?Q?KCQli2XRrfdQfBVtUnhm8SSVJhdPH71q2YbQJudzlD62VmoUZp5HLn11gI4G?=
- =?us-ascii?Q?jrT49yiTMFx5uZ2Q2+lIr2qw5kXjIYQtU74z+Sb7Lv9yHY+ceD+zTt8Jie6V?=
- =?us-ascii?Q?mkBmzt/5UsNTz6Mk3ic35JxTMoxFb7Sl8zWfJyjslblxZCMmLAadgU/3VWoa?=
- =?us-ascii?Q?+6c6cG2eCKPARb4ObBVWsxurmLDOU5EDmSe1IsMb8aMo9wjfy5T8XLu8znuz?=
- =?us-ascii?Q?TtTgrqGZuUurEKJMtd4qEfMkdFBlEzebCZNdYfs3QG+IjorLsxwtE2130YnE?=
- =?us-ascii?Q?DJjELS0b96ihCU9AjzHScJNz8p7unyAPoxDyZU6hH7PHr84hQwHKeX8V+2XL?=
- =?us-ascii?Q?uwOV+XNDkGCu5FNDjUvi32c2ZOu1wVuJ/zYlFWJGf7X1Dm/tsJVugnJcAhlE?=
- =?us-ascii?Q?lLhX0SlQrZoN231wU/WkY1g6pR6Aj4FAjAU/36fECUkFNwlj4IQrimtGiQZC?=
- =?us-ascii?Q?Ixatb4YnrNdgUh5TfybRo33qrqsi9/mH7RoMjvv4lvJZWRMymneJOCZMLJyJ?=
- =?us-ascii?Q?qNin2OdRCx7ynmq9umF37+/ACVpK0VISQMy6SabZxIzg7HLqTawxjKo76bMf?=
- =?us-ascii?Q?2n/39zd7nN3UWbh1kUZiUx3bvqL315YpVwCRUoY6GIl6VzmPAnymTy2cotzP?=
- =?us-ascii?Q?ev0zed3B4p2wvymjRhVXI79CM/GepTMrmx/K99ZGLqsd2o1yTjL5rnr+6eeK?=
- =?us-ascii?Q?JNRg+LEF/DPxxZBlPKifKl17EVtTNXYoa5MxhH9gL9mTQ2YGnqoosJoZvFMl?=
- =?us-ascii?Q?gxwxF6HTQO660l6Yn56grNuYgTXyocNlQsWNl8udI0mDfpe8XCmuDwd0Nykl?=
- =?us-ascii?Q?qnRZzQbKZCq5cbFWOuhFzU/J4sZ1+i2vT1iFNvbC1+AbAqhJuIkumcA7fEb5?=
- =?us-ascii?Q?mHEpnQcv/2ZbkIfOdaa/2nNI0Rt5i7hNe1HrAxUE6trv1tauZ4QCIXwyIGrT?=
- =?us-ascii?Q?OLMvimKFRhPBja+B+AwXnGL8Mm1YKkWCc1yvaqToppitS9epU+8sGZLzaVyH?=
- =?us-ascii?Q?hMAxmJIOuUeKFtk2rqcEmpGBO1LZL7GNOaf5kah6eqO6SgJROoJfkhoEi3gZ?=
- =?us-ascii?Q?4LVin7TqG7vhDE0qOOIe8Evmn2Fm+UFVRAc4HvPygxVZ7Xp1WH+T8cmbHVTa?=
- =?us-ascii?Q?F0dWmoejBxgVV7rYlUziLmjwbAFR/f/DESI2HesJ9Gu3yhQDXXxXrt27gSgk?=
- =?us-ascii?Q?fPWN0v8bYN/C/GCAGVuugg5yG7+FJA4d+Qoxda+m9QZzNRRzbekd8AH9hm6e?=
- =?us-ascii?Q?QFUd/e4PYmrGnVZGAWsmEO1HHe2JeKmM/mZHD4wKh5IynjxAWMP6bUXpoEsT?=
- =?us-ascii?Q?C6mcFcy4GeQD0e8H1ZmPvudC3yTsO/3R/NH1FqEAOKzcPl5bG7dAJlJQIAnT?=
- =?us-ascii?Q?VTA5182rJ1If5jUK0FDrCjqXJA9GRtMmlI2MLGx2WVAnag3zAmcpKtLHsZrv?=
- =?us-ascii?Q?YjA56auh2aYNkkThPW0UYzh1vEltwFFgPdFzfnN7?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c2ef56f-1d50-4615-bd4e-08dc91ef2a6c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:39:17.5913
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(7416011)(376011)(82310400023)(1800799021);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:39:25.8099
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r0fqYaLLp7jBa+xYhohQ7bh57KG46MzkI5PCZq86oc0OfbUpUwF5m2ynrETMC57Z
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8887
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a3bfa16-1294-4bd4-f26c-08dc91ef2f85
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00036F3F.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8322
 
-On Thu, Jun 20, 2024 at 04:54:00PM -0700, Sean Christopherson wrote:
+This patchset is also available at:
 
-> Heh, and then we'd end up turning memfd into guest_memfd.  As I see it, being
-> able to safely map TDX/SNP/pKVM private memory is a happy side effect that is
-> possible because guest_memfd isn't subordinate to the primary MMU, but private
-> memory isn't the core idenity of guest_memfd.
+  https://github.com/AMDESE/linux-kvm/tree/sectsc-guest-latest
 
-IMHO guest memfd still has a very bright line between it and normal
-memfd.
+and is based on tip/x86/sev
 
-guest mfd is holding all the memory and making it unmovable because it
-has donated it to some secure world. Unmovable means the mm can't do
-anything with it in normal ways. For things like David's 'b' where we
-fragement the pages it also requires guest memfd act as an allocator
-and completely own the PFNs, including handling free callbacks like
-ZONE_DEVICE does.
+commit: 06685975c209 ("x86/sev: Move SEV compilation units")
+ 
+Overview
+--------
 
-memfd on the other hand should always be normal movable allocated
-kernel memory with full normal folios and it shouldn't act as an
-allocator.
+Secure TSC allows guests to securely use RDTSC/RDTSCP instructions as the
+parameters being used cannot be changed by hypervisor once the guest is
+launched. More details in the AMD64 APM Vol 2, Section "Secure TSC".
 
-Teaching memfd to hold a huge folio is probably going to be a
-different approach than teaching guest memfd, I suspect "a" would be a
-more suitable choice there. You give up the kvm side contiguity, but
-get full mm integration of the memory.
+During the boot-up of the secondary cpus, SecureTSC enabled guests need to
+query TSC info from AMD Security Processor. This communication channel is
+encrypted between the AMD Security Processor and the guest, the hypervisor
+is just the conduit to deliver the guest messages to the AMD Security
+Processor. Each message is protected with an AEAD (AES-256 GCM). See "SEV
+Secure Nested Paging Firmware ABI Specification" document (currently at
+https://www.amd.com/system/files/TechDocs/56860.pdf) section "TSC Info"
 
-User gets to choose which is more important..
+Use a minimal GCM library to encrypt/decrypt SNP Guest messages to
+communicate with the AMD Security Processor which is available at early
+boot.
 
-It is not that different than today where VMMs are using hugetlbfs to
-get unmovable memory.
+SEV-guest driver has the implementation for guest and AMD Security
+Processor communication. As the TSC_INFO needs to be initialized during
+early boot before smp cpus are started, move most of the sev-guest driver
+code to kernel/sev.c and provide well defined APIs to the sev-guest driver
+to use the interface to avoid code-duplication.
 
-> We could do a subset of those for memfd, but I don't see the point, assuming we
-> allow mmap() on shared guest_memfd memory.  Solving mmap() for VMs that do
-> private<=>shared conversions is the hard problem to solve.  Once that's done,
-> we'll get support for regular VMs along with the other benefits of guest_memfd
-> for free (or very close to free).
+Patches:
+01-09: Preparatory patches for code movement and general cleanup/fixups
+10-13: Patches moving SNP guest messaging code from SEV guest driver to
+       SEV common code
+14-16: Error handling and caching secrets page
+17-24: SecureTSC enablement patches.
 
-Yes, but I get the feeling that even in the best case for guest memfd
-you still end up with the non-movable memory and less mm features
-available.
+Testing SecureTSC
+-----------------
 
-Like if we do movability in a guest memfd space it would have be with
-some op callback to move the memory via the secure world, and guest
-memfd would still be pinning all the memory. Quite a different flow
-than what memfd should do.
+SecureTSC hypervisor patches based on top of SEV-SNP Guest MEMFD series:
+https://github.com/AMDESE/linux-kvm/tree/sectsc-host-latest
 
-There may still be merit in teaching memfd how to do huge pages too,
-though I don't really know.
+QEMU changes:
+https://github.com/nikunjad/qemu/tree/snp-securetsc-latest
 
-Jason
+QEMU commandline SEV-SNP with SecureTSC:
+
+  qemu-system-x86_64 -cpu EPYC-Milan-v2,+invtsc -smp 4 \
+    -object memory-backend-memfd,id=ram1,size=1G,share=true,prealloc=false,reserve=false \
+    -object sev-snp-guest,id=sev0,cbitpos=51,reduced-phys-bits=1,secure-tsc=on \
+    -machine q35,confidential-guest-support=sev0,memory-backend=ram1 \
+    ...
+
+Changelog:
+----------
+v10:
+* Rebased on top of tip/x86/sev
+* Added Reviewed-by from Tom
+* Commit message updates
+* Change the condition for better readability in get_vmpck()
+* Make vmpck_id as u32 again and use VMPCK_MAX_NUM as the default value
+
+v9: https://lore.kernel.org/lkml/20240531043038.3370793-1-nikunj@amd.com/
+* Added Acked-by/Reviewed-by
+* Removed Reviewed-by/Tested-by from patches that had significant changes
+* Added patch to make payload a variable length array in snp_guest_msg
+* Fix all your user-visible strings (vmpck => VMPCK) and readabilty.
+* Separated patch for message sequence handling
+* Handle failures from snp_init() in sme_enable()
+* Preparatory patches:
+  * Carved out simplify VMPCK and OS message sequence changes
+  * Carved out SNP guest messaging init/exit for proper initialization and
+    cleanup.
+  * Move SNP command mutex down and make it private to sev.c
+* Pure code movement patch and subsequent code changes patches
+* Drop patches adding guest initiation hook enc_init() and call
+  snp_secure_tsc_prepare() from mem_encrypt.c
+* Use CC_ATTR_GUEST_SECURE_TSC and drop synthetic SecureTSC feature bit
+
+v8: https://lore.kernel.org/lkml/20240215113128.275608-1-nikunj@amd.com/
+v7: https://lore.kernel.org/kvm/20231220151358.2147066-1-nikunj@amd.com/
+v6: https://lore.kernel.org/lkml/20231128125959.1810039-1-nikunj@amd.com/
+v5: https://lore.kernel.org/lkml/20231030063652.68675-1-nikunj@amd.com/
+v4: https://lore.kernel.org/lkml/20230814055222.1056404-1-nikunj@amd.com/
+v3: https://lore.kernel.org/lkml/20230722111909.15166-1-nikunj@amd.com/
+v2: https://lore.kernel.org/r/20230307192449.24732-1-bp@alien8.de/
+v1: https://lore.kernel.org/r/20230130120327.977460-1-nikunj@amd.com
+
+Nikunj A Dadhania (24):
+  virt: sev-guest: Use AES GCM crypto library
+  virt: sev-guest: Replace dev_dbg with pr_debug
+  virt: sev-guest: Make payload a variable length array
+  virt: sev-guest: Add SNP guest request structure
+  virt: sev-guest: Fix user-visible strings
+  virt: sev-guest: Simplify VMPCK and sequence number assignments
+  virt: sev-guest: Store VMPCK index to SNP guest device structure
+  virt: sev-guest: Take mutex in snp_send_guest_request()
+  virt: sev-guest: Carve out SNP guest messaging init/exit
+  x86/sev: Move core SEV guest driver routines to common code
+  x86/sev: Replace dev_[err,alert] with pr_[err,alert]
+  x86/sev: Make snp_issue_guest_request() static
+  x86/sev: Make sev-guest driver functional again
+  x86/sev: Handle failures from snp_init()
+  x86/sev: Cache the secrets page address
+  x86/sev: Drop sev_guest_platform_data structure
+  x86/cc: Add CC_ATTR_GUEST_SECURE_TSC
+  x86/sev: Add Secure TSC support for SNP guests
+  x86/sev: Change TSC MSR behavior for Secure TSC enabled guests
+  x86/sev: Prevent RDTSC/RDTSCP interception for Secure TSC enabled
+    guests
+  x86/kvmclock: Skip kvmclock when Secure TSC is available
+  x86/sev: Mark Secure TSC as reliable
+  x86/cpu/amd: Do not print FW_BUG for Secure TSC
+  x86/sev: Enable Secure TSC for SNP guests
+
+ arch/x86/include/asm/sev-common.h       |   1 +
+ arch/x86/include/asm/sev.h              | 196 ++++++-
+ arch/x86/include/asm/svm.h              |   6 +-
+ drivers/virt/coco/sev-guest/sev-guest.h |  63 ---
+ include/linux/cc_platform.h             |   8 +
+ arch/x86/boot/compressed/sev.c          |   3 +-
+ arch/x86/coco/core.c                    |   3 +
+ arch/x86/coco/sev/core.c                | 581 +++++++++++++++++--
+ arch/x86/coco/sev/shared.c              |  10 +
+ arch/x86/kernel/cpu/amd.c               |   3 +-
+ arch/x86/kernel/kvmclock.c              |   2 +-
+ arch/x86/mm/mem_encrypt.c               |   4 +
+ arch/x86/mm/mem_encrypt_amd.c           |   4 +
+ arch/x86/mm/mem_encrypt_identity.c      |   7 +
+ drivers/virt/coco/sev-guest/sev-guest.c | 719 +++---------------------
+ arch/x86/Kconfig                        |   1 +
+ drivers/virt/coco/sev-guest/Kconfig     |   3 -
+ 17 files changed, 846 insertions(+), 768 deletions(-)
+ delete mode 100644 drivers/virt/coco/sev-guest/sev-guest.h
+
+
+base-commit: 06685975c2090e180851a0ff175c140188b6b54a
+-- 
+2.34.1
+
