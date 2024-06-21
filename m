@@ -1,512 +1,230 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B64F1272A7
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437323207
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718938879; cv=none; b=OZSHak5LCTQRmyexs19ahYMTp4vs9EyFzSdhHFQ+3hw/qIGzJb51hSCIco32zsDJjkU/BhgXqj7SAUEgjDdScCi1GitrSen1IVbTO8u8g7wI6eWxm4Ytfib4TSEyFXjjjzBJ8nqBLdHOfPLdJmuFmn/f4CLh/8fOW2LiMabKliA=
+	t=1718939013; cv=none; b=SZW45YAQR+9KdU6H/BCHmAiFHjwfbC0dtlNElROdnBJMfyr2SIfBtWnbsLKZ+Zn5uf+47r0xA1pA2hzRNXXYeBOtli+X9ae1L+vVnXv2jq5iD7GRjB9gd6czRP+XrZOTVeQzaXwW1JsRQtE0ytT9GvpQS80Hpc/A0fkmu4yOMU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718938879; c=relaxed/simple;
-	bh=Nv0Rvw/INyCA4dZuB/Y+A7IFhJs/3yVzXGpJ5qG0rgA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FbSIcfgj6Ho4fu6H+DZatDcpPg2j4SK1Jgs3+Cf2lVbHcJDLGJBd2Qbw1qP0YqhL/zcGgz2wDqoBl31Td00pddxOXmQajne2AkkTPeuKP2eLe55+kVtRNQl2VuOeisw0Nrudmi6VmmB2atqVqeL616Wm8IbFXqeunBZdIh5iFr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OF7fE8Qo; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OF7fE8Qo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718938877; x=1750474877;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=Nv0Rvw/INyCA4dZuB/Y+A7IFhJs/3yVzXGpJ5qG0rgA=;
-  b=OF7fE8QomUgEQ3TRYgj7ITDVmXMkpN/bUq3iPPAXr3zpaCxwtN9zx1xh
-   8CZT+jqkfk0NLVOI1yL/wjJnVVSzWLFdPTnJrg8UflzVa4ZgLYGQJoFXJ
-   6fRrA4Hck4tqhWCUoxP7LAaqQup3oIStDl/4QkgIBUhFrh8c4YXXa47Ku
-   sRvaWwmBnyF/jgpcZrpCO07ej0+Vwt35BjtvEOMQSoCWZ/35B1ysomTMS
-   ppK6UHQ1Ch51irdEw7pfHJDurq+3g5FTzMtVY/f9avgvwSoqVQkf7ovdb
-   LwlWs82EvoQTsDEey8k0v4dwuIZrEEChknvFPZuQfE70zq6D/2QM0NjPF
-   A==;
-X-CSE-ConnectionGUID: ViMPCFWFSRigSO9KDVwKcw==
-X-CSE-MsgGUID: xtqpMBfGTgap5HLn4TFsFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="27094556"
-X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
-   d="scan'208";a="27094556"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 20:01:16 -0700
-X-CSE-ConnectionGUID: okM1n49nRt+ku8LTypWbJA==
-X-CSE-MsgGUID: fpR7RwQZTNCFa1uTk0RZNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
-   d="scan'208";a="46905713"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 20:01:14 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Kairui Song
- <kasong@tencent.com>,  Ryan Roberts <ryan.roberts@arm.com>,  Kalesh Singh
- <kaleshsingh@google.com>,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  Barry Song <baohua@kernel.org>
-Subject: Re: [PATCH v3 1/2] mm: swap: swap cluster switch to double link list
-In-Reply-To: <20240619-swap-allocator-v3-1-e973a3102444@kernel.org> (Chris
-	Li's message of "Wed, 19 Jun 2024 02:20:29 -0700")
-References: <20240619-swap-allocator-v3-0-e973a3102444@kernel.org>
-	<20240619-swap-allocator-v3-1-e973a3102444@kernel.org>
-Date: Fri, 21 Jun 2024 10:59:23 +0800
-Message-ID: <87o77v0zn8.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1718939013; c=relaxed/simple;
+	bh=557A8fUBf3pRpj4bhjFgagyqsgqiFDCqC7dJY1304DY=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WEFD4S7eeFhEUX7VSjZkCHxletcI3Uf+pKiCteqBsAFwjn+ZF7mvtdN9ijtZ3I+Y8Pzb+4+paRyYJBDNitb5IPUjQgl13VnhoYVA3y7oc++UQfdQh2zBMK6/VyRZlowhQA5sKmXB8ZKHt2xwjVn93igeXvCuJPMyewUWNCBSArY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W529d3R2FzVm4c;
+	Fri, 21 Jun 2024 10:58:29 +0800 (CST)
+Received: from kwepemm000013.china.huawei.com (unknown [7.193.23.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 70EE118006E;
+	Fri, 21 Jun 2024 11:03:26 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm000013.china.huawei.com (7.193.23.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 21 Jun 2024 11:03:25 +0800
+Subject: Re: [PATCH v2] ubi: gluebi: Fix NULL pointer dereference caused by
+ ftl notifier
+To: Gagan Sidhu <broly@mac.com>
+CC: Daniel Golle <daniel@makrotopia.org>, Richard Weinberger <richard@nod.at>,
+	ZhaoLong Wang <wangzhaolong1@huawei.com>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>, yangerkun <yangerkun@huawei.com>, yi zhang
+	<yi.zhang@huawei.com>
+References: <CFAC276E-E652-40CD-B3D8-563B95E679A8@mac.com>
+ <E3E2C13C-1E52-46F2-BE2D-D2592C3369DB@mac.com>
+ <F2DCFCE7-68FA-4C09-AE5B-09F2233575F1@mac.com>
+ <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
+ <303502000.252057.1718647746641.JavaMail.zimbra@nod.at>
+ <90A90DA4-8B68-432D-9577-0D3635AF84BB@mac.com>
+ <296007365.252185.1718649153090.JavaMail.zimbra@nod.at>
+ <3841F21D-CA54-456C-9D9C-F06EEA332A30@mac.com>
+ <136290141.252319.1718650375432.JavaMail.zimbra@nod.at>
+ <ZnCcsPA-flVcxiAT@makrotopia.org>
+ <C20708FB-0626-475E-A996-DE42ACF57A8B@mac.com>
+ <C7514984-8CEB-4D1F-A896-BD6E653D311B@mac.com>
+ <251ae039-9f46-081b-a7ee-fe47de268865@huawei.com>
+ <EFEC7C06-A3B2-46D6-99F4-ADA7F7199188@mac.com>
+ <45d2ef27-95cc-16c4-8b0a-4413421d785b@huawei.com>
+ <772249DB-434C-4AB9-AE6B-1CB684E1E11A@mac.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <e562e94b-274d-4a82-3dad-d3e1109a2607@huawei.com>
+Date: Fri, 21 Jun 2024 11:03:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <772249DB-434C-4AB9-AE6B-1CB684E1E11A@mac.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm000013.china.huawei.com (7.193.23.81)
 
-Chris Li <chrisl@kernel.org> writes:
+在 2024/6/21 10:09, Gagan Sidhu 写道:
+> 
+> Thanks,
+> Gagan
+> 
+>> On Jun 20, 2024, at 7:59 PM, Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>>
+>> 在 2024/6/21 6:06, Gagan Sidhu 写道:
+>>> hi zhihao,
+>>> so i assume my crude paraphrase is correct? that i may have unintentionally pointed the finger at you, but the real issue is GLUEBI existing with BLOCK on the same volume?
+>>
+>> Uhhh, I don't think I mean this. We will make it clear after getting the layers' information about your device.
+>> Everything goes well from you guys talking, this patch did reject the mtdblock loading from a gluebi device, which may lead booting failed if your rootfs depends on a mtdblock(which is generated from the gluebi device).
+>>  From your description 'spoke to a user, gave him a build without MTD_GLUEBI, restoring changes made by (HAHAHA you are! huawei), it booted fine'. One thing I'm curious about, if the device boots from the mtdblock(which is generated from gluebi device), the gluebi device won't be generated because you have turned off the CONFIG_MTD_UBI_GLUEBI, then the device boots successfully, which means that your rootfs is most likely loaded from ubiblock0_0. My questions are:
+>> Q1. According to previous talking, the booting configuration is
+>> https://github.com/torvalds/linux/blob/master/drivers/mtd/mtdcore.c#L774, why the device could boot from ubiblock0_0?(it looks like that the device uses config from https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/generic/pending-5.15/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch;h=266a6331c2acc0f7c17d9ac72f54659d31b56249;hb=HEAD [pointed by Richard]). I'm unfamilar with openwrt(Maybe you and Daniel know much), is that possible the device could automatically choose boot device in the openwrt framework?
+> yes, that patch will, effectively, allow an “autoselect” of the ubi partition because it looks for the string “rootfs” in the ubi-formatted file.
+> once it finds the “rootfs” partition, it will rename it to “ubi” and that will be set as the boot/root partition
 
-> Previously, the swap cluster used a cluster index as a pointer
-> to construct a custom single link list type "swap_cluster_list".
-> The next cluster pointer is shared with the cluster->count.
-> It prevents puting the non free cluster into a list.
->
-> Change the cluster to use the standard double link list instead.
-> This allows tracing the nonfull cluster in the follow up patch.
-> That way, it is faster to get to the nonfull cluster of that order.
->
-> Remove the cluster getter/setter for accessing the cluster
-> struct member.
->
-> The list operation is protected by the swap_info_struct->lock.
->
-> Change cluster code to use "struct swap_cluster_info *" to
-> reference the cluster rather than by using index. That is more
-> consistent with the list manipulation. It avoids the repeat
-> adding index to the cluser_info. The code is easier to understand.
->
-> Remove the cluster next pointer is NULL flag, the double link
-> list can handle the empty list pretty well.
->
-> The "swap_cluster_info" struct is two pointer bigger, because
-> 512 swap entries share one swap struct, it has very little impact
-> on the average memory usage per swap entry. For 1TB swapfile, the
-> swap cluster data structure increases from 8MB to 24MB.
->
-> Other than the list conversion, there is no real function change
-> in this patch.
->
-> Signed-off-by: Chris Li <chrisl@kernel.org>
-> ---
->  include/linux/swap.h |  26 +++---
->  mm/swapfile.c        | 227 ++++++++++++++-------------------------------------
->  2 files changed, 70 insertions(+), 183 deletions(-)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 3df75d62a835..690a04f06674 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -243,22 +243,21 @@ enum {
->   * free clusters are organized into a list. We fetch an entry from the list to
->   * get a free cluster.
->   *
-> - * The data field stores next cluster if the cluster is free or cluster usage
-> - * counter otherwise. The flags field determines if a cluster is free. This is
-> - * protected by swap_info_struct.lock.
-> + * The flags field determines if a cluster is free. This is
-> + * protected by cluster lock.
->   */
->  struct swap_cluster_info {
->  	spinlock_t lock;	/*
->  				 * Protect swap_cluster_info fields
-> -				 * and swap_info_struct->swap_map
-> -				 * elements correspond to the swap
-> -				 * cluster
-> +				 * other than list, and swap_info_struct->swap_map
-> +				 * elements correspond to the swap cluster.
->  				 */
-> -	unsigned int data:24;
-> -	unsigned int flags:8;
-> +	u16 count;
-> +	u8 flags;
-> +	struct list_head list;
->  };
->  #define CLUSTER_FLAG_FREE 1 /* This cluster is free */
-> -#define CLUSTER_FLAG_NEXT_NULL 2 /* This cluster has no next cluster */
-> +
->  
->  /*
->   * The first page in the swap file is the swap header, which is always marked
-> @@ -283,11 +282,6 @@ struct percpu_cluster {
->  	unsigned int next[SWAP_NR_ORDERS]; /* Likely next allocation offset */
->  };
->  
-> -struct swap_cluster_list {
-> -	struct swap_cluster_info head;
-> -	struct swap_cluster_info tail;
-> -};
-> -
->  /*
->   * The in-memory structure used to track swap areas.
->   */
-> @@ -300,7 +294,7 @@ struct swap_info_struct {
->  	unsigned int	max;		/* extent of the swap_map */
->  	unsigned char *swap_map;	/* vmalloc'ed array of usage counts */
->  	struct swap_cluster_info *cluster_info; /* cluster info. Only for SSD */
-> -	struct swap_cluster_list free_clusters; /* free clusters list */
-> +	struct list_head free_clusters; /* free clusters list */
->  	unsigned int lowest_bit;	/* index of first free in swap_map */
->  	unsigned int highest_bit;	/* index of last free in swap_map */
->  	unsigned int pages;		/* total of usable pages of swap */
-> @@ -331,7 +325,7 @@ struct swap_info_struct {
->  					 * list.
->  					 */
->  	struct work_struct discard_work; /* discard worker */
-> -	struct swap_cluster_list discard_clusters; /* discard clusters list */
-> +	struct list_head discard_clusters; /* discard clusters list */
->  	struct plist_node avail_lists[]; /*
->  					   * entries in swap_avail_heads, one
->  					   * entry per node.
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 9c6d8e557c0f..0b11c437f9cc 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -290,64 +290,11 @@ static void discard_swap_cluster(struct swap_info_struct *si,
->  #endif
->  #define LATENCY_LIMIT		256
->  
-> -static inline void cluster_set_flag(struct swap_cluster_info *info,
-> -	unsigned int flag)
-> -{
-> -	info->flags = flag;
-> -}
-> -
-> -static inline unsigned int cluster_count(struct swap_cluster_info *info)
-> -{
-> -	return info->data;
-> -}
-> -
-> -static inline void cluster_set_count(struct swap_cluster_info *info,
-> -				     unsigned int c)
-> -{
-> -	info->data = c;
-> -}
-> -
-> -static inline void cluster_set_count_flag(struct swap_cluster_info *info,
-> -					 unsigned int c, unsigned int f)
-> -{
-> -	info->flags = f;
-> -	info->data = c;
-> -}
-> -
-> -static inline unsigned int cluster_next(struct swap_cluster_info *info)
-> -{
-> -	return info->data;
-> -}
-> -
-> -static inline void cluster_set_next(struct swap_cluster_info *info,
-> -				    unsigned int n)
-> -{
-> -	info->data = n;
-> -}
-> -
-> -static inline void cluster_set_next_flag(struct swap_cluster_info *info,
-> -					 unsigned int n, unsigned int f)
-> -{
-> -	info->flags = f;
-> -	info->data = n;
-> -}
-> -
->  static inline bool cluster_is_free(struct swap_cluster_info *info)
->  {
->  	return info->flags & CLUSTER_FLAG_FREE;
->  }
->  
-> -static inline bool cluster_is_null(struct swap_cluster_info *info)
-> -{
-> -	return info->flags & CLUSTER_FLAG_NEXT_NULL;
-> -}
-> -
-> -static inline void cluster_set_null(struct swap_cluster_info *info)
-> -{
-> -	info->flags = CLUSTER_FLAG_NEXT_NULL;
-> -	info->data = 0;
-> -}
-> -
->  static inline struct swap_cluster_info *lock_cluster(struct swap_info_struct *si,
->  						     unsigned long offset)
->  {
-> @@ -394,65 +341,11 @@ static inline void unlock_cluster_or_swap_info(struct swap_info_struct *si,
->  		spin_unlock(&si->lock);
->  }
->  
-> -static inline bool cluster_list_empty(struct swap_cluster_list *list)
-> -{
-> -	return cluster_is_null(&list->head);
-> -}
-> -
-> -static inline unsigned int cluster_list_first(struct swap_cluster_list *list)
-> -{
-> -	return cluster_next(&list->head);
-> -}
-> -
-> -static void cluster_list_init(struct swap_cluster_list *list)
-> -{
-> -	cluster_set_null(&list->head);
-> -	cluster_set_null(&list->tail);
-> -}
-> -
-> -static void cluster_list_add_tail(struct swap_cluster_list *list,
-> -				  struct swap_cluster_info *ci,
-> -				  unsigned int idx)
-> -{
-> -	if (cluster_list_empty(list)) {
-> -		cluster_set_next_flag(&list->head, idx, 0);
-> -		cluster_set_next_flag(&list->tail, idx, 0);
-> -	} else {
-> -		struct swap_cluster_info *ci_tail;
-> -		unsigned int tail = cluster_next(&list->tail);
-> -
-> -		/*
-> -		 * Nested cluster lock, but both cluster locks are
-> -		 * only acquired when we held swap_info_struct->lock
-> -		 */
-> -		ci_tail = ci + tail;
-> -		spin_lock_nested(&ci_tail->lock, SINGLE_DEPTH_NESTING);
-> -		cluster_set_next(ci_tail, idx);
-> -		spin_unlock(&ci_tail->lock);
-> -		cluster_set_next_flag(&list->tail, idx, 0);
-> -	}
-> -}
-> -
-> -static unsigned int cluster_list_del_first(struct swap_cluster_list *list,
-> -					   struct swap_cluster_info *ci)
-> -{
-> -	unsigned int idx;
-> -
-> -	idx = cluster_next(&list->head);
-> -	if (cluster_next(&list->tail) == idx) {
-> -		cluster_set_null(&list->head);
-> -		cluster_set_null(&list->tail);
-> -	} else
-> -		cluster_set_next_flag(&list->head,
-> -				      cluster_next(&ci[idx]), 0);
-> -
-> -	return idx;
-> -}
-> -
->  /* Add a cluster to discard list and schedule it to do discard */
->  static void swap_cluster_schedule_discard(struct swap_info_struct *si,
-> -		unsigned int idx)
-> +		struct swap_cluster_info *ci)
->  {
-> +	unsigned int idx = ci - si->cluster_info;
+Oh, maybe I know what has happened. According to the configuration of 
+https://github.com/torvalds/linux/blob/master/drivers/mtd/mtdcore.c#L774, 
+openwrt decides to boot rootfs from mtdblock(which is generated from the 
+gluebi device), because the mtd char device (which is genertated from 
+gluebi device) is found by openwrt. However, this patch stops generating 
+mtdblock from gluebi device, so the mounting failed by missed mtdblock. 
+After disabling the CONFIG_MTD_UBI_GLUEBI, the gluebi device is not 
+generated, so openwrt decides to boot rootfs from ubiblock0_0, then your 
+device booted successfully.
+The key is the rootfs device judgement in openwrt, openwrt chooses the 
+rootfs device according to the existence of mtd char device, openwrt not 
+check whether the corresponding mtdblock exists before mouting it. 
+Should openwrt check the existence of mtdblock beforing using it? Or 
+maybe openwrt could turn to use ubiblock if the mtdblock device is not 
+found?
+> 
+>> Q2. Take a step back, if the gluebi device and ubiblock are generated from the same UBI volume, there will be error message like 'cannot open device %d, volume %d, error -16' if we open gluebi device and ubiblock at the same time, but I cannot find the error message from the log.
+> it’s in  the very first email about this topic. i posted a full bootlog. look there, it will show you that’s what happened,  but i think it said error -6 not -16
+> [    6.282125] VFS: Cannot open root device "(null)" or unknown-block(31,12): error -6
+> 
+> 
+>> Q3. If the Q1's answer is 'yes', which means that your device could automatically choose to boot rootfs from ubiblock0_0 when it cannot dectect a mtdblock(which is generated from the gluebi device), why it can fail booting before reverting this patch? I mean, the mtdblock won't be generated before reverting this patch, the device should automatically choose to boot rootfs from ubiblock0_0, but it does not, and the error message in
+> because it seems to have to do with gluebi and ubi_block doing something to the same partition.
+> 
+> config_mtd_ubi_block is not dependent on config_mtd_ubi_gluebi. i was confused about this too. i thought since both are about block devices, there is a dependency, but there isn’t.
+> 
+> effectively config_mtd_ubi_block can work without config_mtd_ubi_gluebi, but it’s only for read-only filesystems (like squashfs, which is what i’m using)
+> 
+>> Q2 is not shown in your log.
+> 
+> first email. it’s there.
+>>
+>> So, we will answer above questions if we have the layers' information about your device('mtdinfo -a' and 'ubinfo -a' after booting the device). There are two situations:
+>> 1. the layers' information after reverting this patch
+>> 2. the layers' information after disable CONFIG_MTD_UBI_GLUEBI
+>>
+> i personally think there’s some kind of interplay between CONFIG_MTD_UBI_GLUEBI and CONFIG_MTD_UBI_BLOCK. it seemed to me that gluebi re-labeled the UBI_BLOCK partition, or added the MTD_UBIVOLUME flag when it did not need to.
+> 
+> i think your question is more applicable outside of the read-only file systems situation. in my specific case, CONFIG_MTD_UBI_BLOCK suffices because of the niche filesystem i am using (squashfs, read only). i think if it was something else (like jffs2, or i am writing to this partition), then your question becomes more relevant.
+> 
+> i suspect you’ll do some thorough evaluation and provide us some much-appreciated insight, because i cannot how CONFIG_MTD_UBI_BLOCK enabled and CONFIG_MTD_UBI_GLUEBI disabled worked.
+> 
+>>> i was just joking about you being a spy by the way. it was post-fix euphoria ;)
+>>
+>> It's nothing, I knew your are not serious.
+>>> master rich, shepherd weinberger, what say ye?
+>>> your wisdom and insight would be greatly appreciated as closure and maybe even a patch to reflect the beauty of collaborating over current ;)
+>>> Thanks,
+>>> Gagan
+>>>> On Jun 17, 2024, at 10:03 PM, Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>>>>
+>>>> 在 2024/6/18 6:13, Gagan Sidhu 写道:
+>>>> Hi,
+>>>>> spoke to a user, gave him a build without MTD_GLUEBI, restoring changes made by (HAHAHA you are! huawei), it booted fine.
+>>>>
+>>>> May I have the layers' information about mtd/ubi, you can get it by 'mtdinfo -a' and 'ubinfo -a' after booting the device.
+>>>> I guess your device boots from ubiblock0_0. There are two ways loading booting device:
+>>>> 1. mtd(nand)
+>>>>    ubi(holds volume ubi0_0)
+>>>>    mtd12 (gluebi)
+>>>>    mtdblock12  (This way is cut by this patch, so mtdblock12 is not generated, just like Daniel&Richard analyzed)
+>>>> 2. mtd(nand)
+>>>>    ubi(holds volume ubi0_0)
+>>>>    ubiblock0_0
+>>>>
+>>>>> so we need to think about either deprecating GLUEBI or setting an option in the Kconfig that ensures they are mutually exclusive.
+>>>>> gluebi is definitely highjacking the block device created by UBI_BLOCK and adding the MTD_UBIVOLUME flag to it.
+>>>>
+>>>> The gluebi(mtd) and ubiblock could exist on the same UBI volume at the same time, but they cannot be opened at the same time. Here is an example I tested on the local machine:
+>>>>
+>>>>                                              ↗ ubiblock0_0
+>>>> mtd0(nandsim) -> ubi0 (holds volume ubi0_0)
+>>>>                                              ↘ gluebi(mtd1)
+>>>>
+>>>> [root@localhost ~]# ubinfo -a
+>>>> UBI version:                    1
+>>>> Count of UBI devices:           1
+>>>> UBI control device major/minor: 10:61
+>>>> Present UBI devices:            ubi0
+>>>>
+>>>> ubi0
+>>>> Volumes count:                           1
+>>>> Logical eraseblock size:                 126976 bytes, 124.0 KiB
+>>>> Total amount of logical eraseblocks:     8192 (1040187392 bytes, 992.0 MiB)
+>>>> Amount of available logical eraseblocks: 0 (0 bytes)
+>>>> Maximum count of volumes                 128
+>>>> Count of bad physical eraseblocks:       0
+>>>> Count of reserved physical eraseblocks:  160
+>>>> Current maximum erase counter value:     2
+>>>> Minimum input/output unit size:          2048 bytes
+>>>> Character device major/minor:            246:0
+>>>> Present volumes:                         0
+>>>>
+>>>> Volume ID:   0 (on ubi0)
+>>>> Type:        dynamic
+>>>> Alignment:   1
+>>>> Size:        8026 LEBs (1019109376 bytes, 971.8 MiB)
+>>>> State:       OK
+>>>> Name:        vol_a
+>>>> Character device major/minor: 246:1
+>>>> [root@localhost ~]# mtdinfo -a
+>>>> Count of MTD devices:           2
+>>>> Present MTD devices:            mtd0, mtd1
+>>>> Sysfs interface supported:      yes
+>>>>
+>>>> mtd0
+>>>> Name:                           NAND simulator partition 0
+>>>> Type:                           nand
+>>>> Eraseblock size:                131072 bytes, 128.0 KiB
+>>>> Amount of eraseblocks:          8192 (1073741824 bytes, 1024.0 MiB)
+>>>> Minimum input/output unit size: 2048 bytes
+>>>> Sub-page size:                  512 bytes
+>>>> OOB size:                       64 bytes
+>>>> Character device major/minor:   90:0
+>>>> Bad blocks are allowed:         true
+>>>> Device is writable:             true
+>>>>
+>>>> mtd1
+>>>> Name:                           vol_a
+>>>> Type:                           ubi
+>>>> Eraseblock size:                126976 bytes, 124.0 KiB
+>>>> Amount of eraseblocks:          8026 (1019109376 bytes, 971.8 MiB)
+>>>> Minimum input/output unit size: 2048 bytes
+>>>> Sub-page size:                  2048 bytes
+>>>> Character device major/minor:   90:2
+>>>> Bad blocks are allowed:         false
+>>>> Device is writable:             true
+>>>>
+>>>> [root@localhost ~]# lsblk | grep ubi
+>>>> ubiblock0_0 251:0    0 971.9M  0 disk
+>>>>
+>>>>> there is no other explanation.
+>>>>> looks like this was an absolutely amazing exchange that even furthered our understanding of wtf is going on.
+>>>>> thanks for being a great moderator for MTD rich
+>>>>> Thanks,
+>>>>> Gagan
+>>>>
+>>> .
+>>
+> 
+> .
+> 
 
-IIRC, we have reached consensus that we will add a helper for this
-pattern.
-
->  	/*
->  	 * If scan_swap_map_slots() can't find a free cluster, it will check
->  	 * si->swap_map directly. To make sure the discarding cluster isn't
-> @@ -462,17 +355,14 @@ static void swap_cluster_schedule_discard(struct swap_info_struct *si,
->  	memset(si->swap_map + idx * SWAPFILE_CLUSTER,
->  			SWAP_MAP_BAD, SWAPFILE_CLUSTER);
->  
-> -	cluster_list_add_tail(&si->discard_clusters, si->cluster_info, idx);
-> -
-> +	list_add_tail(&ci->list, &si->discard_clusters);
->  	schedule_work(&si->discard_work);
->  }
->  
-> -static void __free_cluster(struct swap_info_struct *si, unsigned long idx)
-> +static void __free_cluster(struct swap_info_struct *si, struct swap_cluster_info *ci)
->  {
-> -	struct swap_cluster_info *ci = si->cluster_info;
-> -
-> -	cluster_set_flag(ci + idx, CLUSTER_FLAG_FREE);
-> -	cluster_list_add_tail(&si->free_clusters, ci, idx);
-> +	ci->flags = CLUSTER_FLAG_FREE;
-> +	list_add_tail(&ci->list, &si->free_clusters);
->  }
->  
->  /*
-> @@ -481,21 +371,22 @@ static void __free_cluster(struct swap_info_struct *si, unsigned long idx)
->  */
->  static void swap_do_scheduled_discard(struct swap_info_struct *si)
->  {
-> -	struct swap_cluster_info *info, *ci;
-> +	struct swap_cluster_info *ci;
->  	unsigned int idx;
->  
-> -	info = si->cluster_info;
-> -
-> -	while (!cluster_list_empty(&si->discard_clusters)) {
-> -		idx = cluster_list_del_first(&si->discard_clusters, info);
-> +	while (!list_empty(&si->discard_clusters)) {
-> +		ci = list_first_entry(&si->discard_clusters, struct swap_cluster_info, list);
-> +		list_del(&ci->list);
-> +		idx = ci - si->cluster_info;
->  		spin_unlock(&si->lock);
->  
->  		discard_swap_cluster(si, idx * SWAPFILE_CLUSTER,
->  				SWAPFILE_CLUSTER);
->  
->  		spin_lock(&si->lock);
-> -		ci = lock_cluster(si, idx * SWAPFILE_CLUSTER);
-> -		__free_cluster(si, idx);
-> +
-> +		spin_lock(&ci->lock);
-
-If you really don't like lock_cluster(), please replace unlock_cluster()
-below with spin_unlock() too.
-
-> +		__free_cluster(si, ci);
->  		memset(si->swap_map + idx * SWAPFILE_CLUSTER,
->  				0, SWAPFILE_CLUSTER);
->  		unlock_cluster(ci);
-> @@ -521,20 +412,20 @@ static void swap_users_ref_free(struct percpu_ref *ref)
->  	complete(&si->comp);
->  }
->  
-> -static void alloc_cluster(struct swap_info_struct *si, unsigned long idx)
-> +static struct swap_cluster_info *alloc_cluster(struct swap_info_struct *si, unsigned long idx)
->  {
-> -	struct swap_cluster_info *ci = si->cluster_info;
-> +	struct swap_cluster_info *ci = list_first_entry(&si->free_clusters, struct swap_cluster_info, list);
->  
-> -	VM_BUG_ON(cluster_list_first(&si->free_clusters) != idx);
-> -	cluster_list_del_first(&si->free_clusters, ci);
-> -	cluster_set_count_flag(ci + idx, 0, 0);
-> +	VM_BUG_ON(ci - si->cluster_info != idx);
-> +	list_del(&ci->list);
-> +	ci->count = 0;
-> +	ci->flags = 0;
-> +	return ci;
->  }
->  
-> -static void free_cluster(struct swap_info_struct *si, unsigned long idx)
-> +static void free_cluster(struct swap_info_struct *si, struct swap_cluster_info *ci)
->  {
-> -	struct swap_cluster_info *ci = si->cluster_info + idx;
-> -
-> -	VM_BUG_ON(cluster_count(ci) != 0);
-> +	VM_BUG_ON(ci->count != 0);
->  	/*
->  	 * If the swap is discardable, prepare discard the cluster
->  	 * instead of free it immediately. The cluster will be freed
-> @@ -542,11 +433,11 @@ static void free_cluster(struct swap_info_struct *si, unsigned long idx)
->  	 */
->  	if ((si->flags & (SWP_WRITEOK | SWP_PAGE_DISCARD)) ==
->  	    (SWP_WRITEOK | SWP_PAGE_DISCARD)) {
-> -		swap_cluster_schedule_discard(si, idx);
-> +		swap_cluster_schedule_discard(si, ci);
->  		return;
->  	}
->  
-> -	__free_cluster(si, idx);
-> +	__free_cluster(si, ci);
->  }
->  
->  /*
-> @@ -559,15 +450,15 @@ static void add_cluster_info_page(struct swap_info_struct *p,
->  	unsigned long count)
->  {
->  	unsigned long idx = page_nr / SWAPFILE_CLUSTER;
-> +	struct swap_cluster_info *ci = cluster_info + idx;
->  
->  	if (!cluster_info)
->  		return;
-> -	if (cluster_is_free(&cluster_info[idx]))
-> +	if (cluster_is_free(ci))
->  		alloc_cluster(p, idx);
->  
-> -	VM_BUG_ON(cluster_count(&cluster_info[idx]) + count > SWAPFILE_CLUSTER);
-> -	cluster_set_count(&cluster_info[idx],
-> -		cluster_count(&cluster_info[idx]) + count);
-> +	VM_BUG_ON(ci->count + count > SWAPFILE_CLUSTER);
-> +	ci->count += count;
->  }
->  
->  /*
-> @@ -581,24 +472,20 @@ static void inc_cluster_info_page(struct swap_info_struct *p,
->  }
->  
->  /*
-> - * The cluster corresponding to page_nr decreases one usage. If the usage
-> - * counter becomes 0, which means no page in the cluster is in using, we can
-> - * optionally discard the cluster and add it to free cluster list.
-> + * The cluster ci decreases one usage. If the usage counter becomes 0,
-> + * which means no page in the cluster is in using, we can optionally discard
-> + * the cluster and add it to free cluster list.
->   */
-> -static void dec_cluster_info_page(struct swap_info_struct *p,
-> -	struct swap_cluster_info *cluster_info, unsigned long page_nr)
-> +static void dec_cluster_info_page(struct swap_info_struct *p, struct swap_cluster_info *ci)
->  {
-> -	unsigned long idx = page_nr / SWAPFILE_CLUSTER;
-> -
-> -	if (!cluster_info)
-> +	if (!p->cluster_info)
->  		return;
->  
-> -	VM_BUG_ON(cluster_count(&cluster_info[idx]) == 0);
-> -	cluster_set_count(&cluster_info[idx],
-> -		cluster_count(&cluster_info[idx]) - 1);
-> +	VM_BUG_ON(ci->count == 0);
-> +	ci->count--;
->  
-> -	if (cluster_count(&cluster_info[idx]) == 0)
-> -		free_cluster(p, idx);
-> +	if (!ci->count)
-> +		free_cluster(p, ci);
->  }
->  
->  /*
-> @@ -611,10 +498,10 @@ scan_swap_map_ssd_cluster_conflict(struct swap_info_struct *si,
->  {
->  	struct percpu_cluster *percpu_cluster;
->  	bool conflict;
-> -
-> +	struct swap_cluster_info *first = list_first_entry(&si->free_clusters, struct swap_cluster_info, list);
->  	offset /= SWAPFILE_CLUSTER;
-> -	conflict = !cluster_list_empty(&si->free_clusters) &&
-> -		offset != cluster_list_first(&si->free_clusters) &&
-> +	conflict = !list_empty(&si->free_clusters) &&
-> +		offset !=  first - si->cluster_info &&
->  		cluster_is_free(&si->cluster_info[offset]);
->  
->  	if (!conflict)
-> @@ -655,10 +542,14 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
->  	cluster = this_cpu_ptr(si->percpu_cluster);
->  	tmp = cluster->next[order];
->  	if (tmp == SWAP_NEXT_INVALID) {
-> -		if (!cluster_list_empty(&si->free_clusters)) {
-> -			tmp = cluster_next(&si->free_clusters.head) *
-> -					SWAPFILE_CLUSTER;
-> -		} else if (!cluster_list_empty(&si->discard_clusters)) {
-> +		if (!list_empty(&si->free_clusters)) {
-> +			ci = list_first_entry(&si->free_clusters, struct swap_cluster_info, list);
-> +			list_del(&ci->list);
-
-IIRC, we shouldn't delete the cluster from the free list here, because
-we will delete it later in alloc_cluster().
-
-> +			spin_lock(&ci->lock);
-> +			ci->flags = 0;
-
-And also shouldn't set ci->flags here too.  Because the cluster may be
-kept in free list if scan_swap_map_ssd_cluster_conflict() returns true.
-
-> +			spin_unlock(&ci->lock);
-> +			tmp = (ci - si->cluster_info) * SWAPFILE_CLUSTER;
-> +		} else if (!list_empty(&si->discard_clusters)) {
->  			/*
->  			 * we don't have free cluster but have some clusters in
->  			 * discarding, do discard now and reclaim them, then
-
-[snip]
-
---
-Best Regards,
-Huang, Ying
