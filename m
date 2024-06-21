@@ -1,77 +1,111 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF5916D4F4;
-	Fri, 21 Jun 2024 08:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2C813C9A9
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718958143; cv=none; b=sUSi2zXhztXWYYsfEJhN3zIYa2LHTq0cM+tEsOLNrddRRtMsmhr28dwXSSgGGTa4OY+G1+Vd0sXPWsYjs89ZO1vNJvLLiNJ7LdSHC69scFGO3kZPk6q66aWa+2vkoUn6FsrJcFfYYgeDBI/UoWXcwVAoQ9ZgT3oxOpjDDMqOQIw=
+	t=1718958166; cv=none; b=t9brqY8eLzHtW6eKvMt/Y/UdHAuWX6sgmpzLQXqNjOHA7cDKYdwK/+61NuKAhMD2FUScXpdwgmgq7mLmC7+OWd3+hGCK+6lgE3AIuI3evjabP+fFxGu8Y/rIfV9rh1xUxn6pdAamtLY2e1REuOfkWznu2+/Nai3CwrdjW/lzieI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718958143; c=relaxed/simple;
-	bh=dgT8q2RUD4AsRrCrgspBvokTXMmqeYQLjIWJc/q4mjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFDfmdP5ufbVCFcTVwxhk7RyUp/qO+V/6PANDyvNmT7H2zftfGK79Sky5XAhHZ9tlrNgb39CZxqTQajvNUdSQX9UvY3IsMbdt6HfyPTx/R6DVA8QP1bY0hOolO7QcnE2EwNbMu8u1aKznHoHfgBgj4j7o/TSVaT3FTGgOeIKGEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sKZWX-0001Oj-00; Fri, 21 Jun 2024 10:21:33 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 88B31C0120; Fri, 21 Jun 2024 10:21:17 +0200 (CEST)
-Date: Fri, 21 Jun 2024 10:21:17 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>,
-	Aleksandar Rikalo <arikalo@gmail.com>,
-	Chao-ying Fu <cfu@wavecomp.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Ungerer <gerg@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>,
-	Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	"paulburton@kernel.org" <paulburton@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 00/14] MIPS: Support I6500 multi-cluster configuration
-Message-ID: <ZnU3/c1T55k4WbYx@alpha.franken.de>
-References: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
- <ZnRtYFr5HFffyK7E@alpha.franken.de>
- <ff6fe06d-6209-4e34-9cc8-eb516fa4ffae@app.fastmail.com>
+	s=arc-20240116; t=1718958166; c=relaxed/simple;
+	bh=70aOEx1E8D/ozj7dO7c5swj+/sTVUG3v51eeHL51maQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lIJ5HNKY5vy6s0Z7Q95NgNr+SEHvN43irhRfJTAZDD43hTSrHodgX1yq4hAHDMetxt/lg5luyVNUDp0AtRCw/9C23+w5l8cZ7lg0axeC5a8Q7+5w8F0JTAKDj2Ro1UJOUVgjhhjUGVfADkrQSz/1NFsBbI4r9e3EEVM5JR9ycLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6612DDA7;
+	Fri, 21 Jun 2024 01:23:08 -0700 (PDT)
+Received: from [192.168.178.110] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C2B53F64C;
+	Fri, 21 Jun 2024 01:22:41 -0700 (PDT)
+Message-ID: <3bfb4e65-b746-449e-a9e7-acda24897045@arm.com>
+Date: Fri, 21 Jun 2024 10:22:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding
+ actual_cpu_capacity
+To: Qais Yousef <qyousef@layalina.io>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Xuewen Yan <xuewen.yan94@gmail.com>, Xuewen Yan <xuewen.yan@unisoc.com>,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ bristot@redhat.com, vschneid@redhat.com, vincent.donnefort@arm.com,
+ ke.wang@unisoc.com, linux-kernel@vger.kernel.org, christian.loehle@arm.com
+References: <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
+ <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
+ <20240616222003.agcz5osb2nkli75h@airbuntu>
+ <CAKfTPtBikWsyPon6HweEZg5qjSP+QX=WZDQu4NHs7PUcSCqDDA@mail.gmail.com>
+ <20240617105348.ebtony3ciwxhvj2w@airbuntu>
+ <CAKfTPtDPCPYvCi1c_Nh+Cn01ZVS7E=tAHQeNX-mArBt3BXdjYw@mail.gmail.com>
+ <20240618153931.ub5ezml3imd5mwu7@airbuntu>
+ <CAB8ipk86jmb6xnEUnv_Vs5=A5EnNfnHTy3FXYZRhKhuEFKhzDw@mail.gmail.com>
+ <20240619181021.kxcjxaqe47fkve42@airbuntu>
+ <CAKfTPtA1cKiB=mv-QUAYOLtiwOE+Rcg+HkAirkVW=irTQtqNVw@mail.gmail.com>
+ <20240620113756.hivzk7sj4uj4sm6j@airbuntu>
+Content-Language: en-US
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+In-Reply-To: <20240620113756.hivzk7sj4uj4sm6j@airbuntu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff6fe06d-6209-4e34-9cc8-eb516fa4ffae@app.fastmail.com>
 
-On Fri, Jun 21, 2024 at 12:05:32AM +0100, Jiaxun Yang wrote:
-> 
-> 
-> 在2024年6月20日六月 下午6:56，Thomas Bogendoerfer写道：
-> > On Sat, May 11, 2024 at 12:43:27PM +0200, Aleksandar Rikalo wrote:
-> >> Taken from Paul Burton MIPS repo with minor changes from Chao-ying Fu.
-> >> Tested with 64r6el_defconfig on Boston board in 2 cluster/2 VPU and
-> >> 1 cluster/4 VPU configurations.
-> >
-> > which existing CPUs can use this ?
-> 
-> Besides Boston are some multi cluster I6500 systems in wild, including Fungible F1,
-> which comes with 52 cores in data panel.
-> 
-> Those vendors show no interest on mainline kernel support though.
+On 20/06/2024 13:37, Qais Yousef wrote:
+> On 06/20/24 09:45, Vincent Guittot wrote:
+>> On Wed, 19 Jun 2024 at 20:10, Qais Yousef <qyousef@layalina.io> wrote:
+>>>
+>>> On 06/19/24 11:05, Xuewen Yan wrote:
+>>>> On Tue, Jun 18, 2024 at 11:39 PM Qais Yousef <qyousef@layalina.io> wrote:
+>>>>>
+>>>>> On 06/18/24 17:23, Vincent Guittot wrote:
+>>>>>> On Mon, 17 Jun 2024 at 12:53, Qais Yousef <qyousef@layalina.io> wrote:
+>>>>>>>
+>>>>>>> On 06/17/24 11:07, Vincent Guittot wrote:
 
-ok, so looking at the series it touches areas with different maintainers,
-I'm fine taking the MIPS parts, can I simply cherry-pick them out
-of the series ?
+[...]
 
-Thomas.
+>>>> diff --git a/drivers/thermal/cpufreq_cooling.c
+>>>> b/drivers/thermal/cpufreq_cooling.c
+>>>> index 280071be30b1..a8546d69cc10 100644
+>>>> --- a/drivers/thermal/cpufreq_cooling.c
+>>>> +++ b/drivers/thermal/cpufreq_cooling.c
+>>>> @@ -164,7 +164,7 @@ static u32 get_load(struct cpufreq_cooling_device
+>>>> *cpufreq_cdev, int cpu,
+>>>>  {
+>>>>         unsigned long util = sched_cpu_util(cpu);
+>>>>
+>>>> -       return (util * 100) / arch_scale_cpu_capacity(cpu);
+>>>> +       return (util * 100) / get_actual_cpu_capacity(cpu);
+>>>>  }
+>>>>  #else /* !CONFIG_SMP */
+>>>>  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
+>>>>
+>>>>
+>>>> Because if still use arch_scale_cpu_capacity(), the load pct may be decreased,
+>>>> It may affect the thermal-IPA-governor's power consideration.
+>>>
+>>> I am not sure about this one. But looks plausible. Vincent?
+>>
+>> I don't see why we should change them ? We don't want to change
+>> sched_cpu_util() as well
+>> AFAICT, the only outcome of this thread is that we should use
+>> get_actual_cpu_capacity() instead of arch_scale_cpu_capacity() in
+>> util_fits_cpu(). capping the utilization only make the estimation
+>> worse
+> 
+> Yes my bad. Only util_fits_cpu() is needed now
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Looks like that's for the uclamp part (2. part) of util_fits_cpu().
+
+For the first part we use capacity_of() which bases on
+get_actual_cpu_capacity() [scale_rt_capacity()] and changes each 4ms
+[250 Hz].
+
+Our assumption is that hw_load_avg() and cpufreq_get_pressure() change
+way less frequent than that, right?
+
+So we can use capacity_of() and get_actual_cpu_capacity() in the same
+code path.
