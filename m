@@ -1,194 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C7216D4D8
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 22:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7956716F0E9;
+	Fri, 21 Jun 2024 22:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719009628; cv=none; b=J589BtqWS++b1QpzuHKfy3rytt8PVZPpG4eSJcG2i5FNxyQz63G0sTx/Pns4yAaosJPENdQIdNcBauVKOrlGjhAF1d+ebExSRDrS2Y764rcuvuGrlJ57Mln8X3jWC83relvRsPUwaq/KuNLMZGCy2XFRb6WQ9OxQQf7Gh9XYwg4=
+	t=1719009641; cv=none; b=PTKemJO4E0EkcKMIlImrQYR5+rrvry0HUQ7cr52u80flga/MZLhUQJergU52/n9+b2EQW4Cnu2u88lVH9oGt5HH2uGlRELaPwmtehrx6sNxp8HynAEGuI6L+XkNTOsSlpQCVc9aN7+1YK8pLzf3xCWxlPkO2hUtnGpj/zK5uS68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719009628; c=relaxed/simple;
-	bh=xhKywG54LUBe3sCv28QI9lDB1EE7hwNdY8BX/I/BQRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rD+HxseBClM1X/Wvwj6s0lzmA/Zfc8VPvWjbkq6D6G2VYrFgHmnhvO54Uq/6+eTdyzR7ovRp8oe7YljHHOy5EeN70g/W35r+URDOtoHuQQyWBcFAd1bb3BGRtB5WL/z5MNdjr7H+Zbpp4xx855NZffz5C1Qfq5sP4H7q1vA1AY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dipou+IV; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719009641; c=relaxed/simple;
+	bh=jsDCV0bFqKXaxTxHhx/XJTLwaJ9xWnrya+1wxZ/zwTk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rK8RfRYjM5qJUeAoSFNk6DbRa8UqUoivp5FYA4XikPkkIyutSG5EBa+IbYuLM3Zs6enCkv17CgBTNnKXu4z4srj2FlDEoZ11jX/lVK/UY/MBxrFbsNs1/9Cx/zqe0+XUSRZsjjCnSDxBmfsvPKZQDCgZpR9Fsb7P09QeAl3ut4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hl/q2ulA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dipou+IV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719009627; x=1750545627;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=xhKywG54LUBe3sCv28QI9lDB1EE7hwNdY8BX/I/BQRk=;
-  b=Dipou+IVLu816gbP7N7qJ+FZCzawnX0/w/EcOArWi8537SL2GzxO3ZlT
-   zjJnPjhnNt31QIhszBcj5VO0b+l9Ty6SRMWAQLzyRTvIm6cubU70Lr5vT
-   noSvrAHu4sMcXUKrYlJ6RG345ZEHMlyTstbuvqxh02B2/4xchn5o/waxm
-   Q0+kd7Qg7KrD3iA+GQ8P1Gm5S03/BBVoezIi+y6+/GRoj1BIY6a9NQSXv
-   hEHojSAzCsiKfOW0gLwQjkT+VeW7Y3He6aEkbG1U7dSJCmJuE7XnLx+LH
-   g6J4rTD9VcvEl60Ab5mZBOrmwg9Qto7p5H7TRbp3yHLI9MLw1N4+Z0W5j
-   w==;
-X-CSE-ConnectionGUID: kuCCerXcRG2R7rbRCjl0BA==
-X-CSE-MsgGUID: CoRk8dFFS3GmDYokhOZ0XQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="33606176"
-X-IronPort-AV: E=Sophos;i="6.08,256,1712646000"; 
-   d="scan'208";a="33606176"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 15:40:26 -0700
-X-CSE-ConnectionGUID: C9fzyKKxQGGaeL5M9OkB8Q==
-X-CSE-MsgGUID: OOHxVyg5TEmO/daCfRs0kQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,256,1712646000"; 
-   d="scan'208";a="65967223"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 21 Jun 2024 15:40:24 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sKmve-00095i-2I;
-	Fri, 21 Jun 2024 22:40:22 +0000
-Date: Sat, 22 Jun 2024 06:39:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xin Zeng <xin.zeng@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Yahui Cao <yahui.cao@intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Kevin Tian <kevin.tian@intel.com>
-Subject: ERROR: modpost: "qat_vfmig_suspend"
- [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
-Message-ID: <202406220635.PsQbyfY9-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hl/q2ulA"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LLwZZl027622;
+	Fri, 21 Jun 2024 22:40:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=h0ddb+WIGiR/+5uLz3IQifrs
+	TNo9FDwj5crMyEw4ZCE=; b=Hl/q2ulAwXsiKpKKwVdNjvkKe5lbKS8pmdleHwVQ
+	48ITA6zHpmkXbXNSQ1RrK2BWt1xal0XjDxU+txHhcjSGrc7Tmkyz0yEv43++/u38
+	zKCp2P7Fr2iDzyENfZWVH7KRd8RZkh5XJQpXTWl2GnGA5kogyspNpiytRJ7h4yPD
+	hNoOXb8QYevpjDlcxZciE/Jj8zDBl8S6x5G6G7ZZ9DkLEW55xDMPxLaovek6t6iK
+	KmmSrFvSuUsmZ07QtgiheLSZvAx8gUcQzyRpZgTgGXr1ujI0jVYPbgK4qodGWU0D
+	hhN1bVsq7k2Z58RExNxyzV7jyKLGcxg1ukybtjnhVtS91Q==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywhw581r4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 22:40:25 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45LMeLeK023284
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 22:40:21 GMT
+Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 21 Jun 2024 15:40:20 -0700
+Date: Fri, 21 Jun 2024 15:40:20 -0700
+From: Elliot Berman <quic_eberman@quicinc.com>
+To: Simon Glass <sjg@chromium.org>
+CC: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Amrit Anand <quic_amrianan@quicinc.com>,
+        "Peter
+ Griffin" <peter.griffin@linaro.org>,
+        Caleb Connolly
+	<caleb.connolly@linaro.org>,
+        Andy Gross <agross@kernel.org>, Doug Anderson
+	<dianders@chromium.org>,
+        Chen-Yu Tsai <wenst@chromium.org>,
+        Julius Werner
+	<jwerner@chromium.org>,
+        "Humphreys, Jonathan" <j-humphreys@ti.com>,
+        "Sumit
+ Garg" <sumit.garg@linaro.org>,
+        Michal Simek <michal.simek@amd.com>,
+        <boot-architecture@lists.linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH RFC v3 0/9] dt-bindings: hwinfo: Introduce board-id
+Message-ID: <20240621142054973-0700.eberman@hu-eberman-lv.qualcomm.com>
+References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
+ <CAFLszTjexpNEjo1sGVs67L0CAgGZLNkyn9RGfHRD7iHak_mtmg@mail.gmail.com>
+ <20240605100246481-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <CAFLszThbe_aUAq_5rCCiPV-bj60oq9UCc=vdDHwM3i6t44ohLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <CAFLszThbe_aUAq_5rCCiPV-bj60oq9UCc=vdDHwM3i6t44ohLw@mail.gmail.com>
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aMnnWvPZXbpMlGkJtooadWu_tY6AtbVb
+X-Proofpoint-ORIG-GUID: aMnnWvPZXbpMlGkJtooadWu_tY6AtbVb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_12,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ clxscore=1011 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2406140001 definitions=main-2406210165
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   35bb670d65fc0f80c62383ab4f2544cec85ac57a
-commit: bb208810b1abf1c84870cfbe1cc9cf1a1d35c607 vfio/qat: Add vfio_pci driver for Intel QAT SR-IOV VF devices
-date:   8 weeks ago
-config: x86_64-randconfig-076-20240622 (https://download.01.org/0day-ci/archive/20240622/202406220635.PsQbyfY9-lkp@intel.com/config)
-compiler: gcc-10 (Ubuntu 10.5.0-1ubuntu1) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240622/202406220635.PsQbyfY9-lkp@intel.com/reproduce)
+Hi Simon,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406220635.PsQbyfY9-lkp@intel.com/
+On Thu, Jun 06, 2024 at 10:00:54AM -0600, Simon Glass wrote:
+> On Wed, 5 Jun 2024 at 11:17, Elliot Berman <quic_eberman@quicinc.com> wrote:
+> > On Wed, Jun 05, 2024 at 07:17:35AM -0600, Simon Glass wrote:
+> > > Hi Elliot,
+> > >
+> > > I am just picking up the discussion here, which was started on another thread.
+> > >
+> > > I can't see why this new feature is needed. We should be able to use
+> > > compatible strings, as we do now. I added a 'usage' section to the FIT
+> > > spec [1] which might help. I also incorporated the board revision and
+> > > variant information and some notes on how to add to the available
+> > > suffixes.
+> > >
+> > > Does that handle your use case?
+> >
+> > -rev and -sku don't fit the versioning scheme for QTI devices, so this
+> > isn't a generic enough approach. Patch 5 in this series describes the
+> > versioning scheme for us.
+> >
+> > In the other thread, we had talked about using some regex based approach
+> > for matching the root node compatible. I haven't had chance to work on
+> > that proposal and will try to get to it in the next couple weeks.
+> 
+> OK, I look forward to it. Please do check the FIT best match approach
+> and see how it might be extended to handle your requirements. So far I
+> have not seen a need for regexes, but it is certainly a possibility.
+> 
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+I spent some time collecting feedback from the team on using compatible
+strings + regex-style approach and we're not able to add a regex library
+into firmware, so this approach unfortunately won't work for us.
+Because we have more axes of board identification than chromebook, using
+FIT's compatible strings isn't a scalable solution for us. I don't think
+we have incompatible problems, we only have more than 2-3 axes of
+information.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/events/intel/intel-uncore.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/events/intel/intel-cstate.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/crypto/curve25519-x86_64.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/kvm/kvm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/kvm/kvm-intel.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/locktorture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcutorture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcuscale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/refscale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/time/time_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/trace/preemptirq_delay_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/torture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp775.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp861.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp862.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp874.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp1251.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-3.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-9.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-r.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-u.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-ru.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-croatian.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-cyrillic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-gaelic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-turkish.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_ucs2_utils.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/unicode/utf8data.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/cramfs/cramfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/smb/common/cifs_arc4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/smb/common/cifs_md4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/ecc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/kunit-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/kunit-example-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08_i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-pcf857x.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-intel-lgm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-generic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/macmodes.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/via/viafb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/kyro/kyrofb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/goldfishfb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/acpi/acpi_tad.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk-gate_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk-fractional-divider_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/tps6286x-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/8250/serial_cs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/intel-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/intel-gtt.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/sis-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/via-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/lp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/nvram.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ppdev.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-w1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/arizona.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pcmcia/i82092.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/matrix-keymap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/tuners/tda9887.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/v4l2-core/v4l2-async.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/v4l2-core/v4l2-fwnode.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/radio/si470x/radio-si470x-common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/thermal/intel/int340x_thermal/processor_thermal_mbox.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/thermal/intel/int340x_thermal/processor_thermal_wt_req.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/thermal/intel/int340x_thermal/processor_thermal_wt_hint.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/thermal/intel/int340x_thermal/processor_thermal_power_floor.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cpuidle/cpuidle-haltpoll.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_simple.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/of/of_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-aspeed.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/maps/map_funcs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/buffer/kfifo_buf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy-fb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/configfs/configfs_sample.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/bytestream-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/dma-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/inttype-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/record-example.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/video/fbdev.o
->> ERROR: modpost: "qat_vfmig_suspend" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_load_state" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_reset" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_save_setup" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_destroy" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_close" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_cleanup" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_load_setup" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_open" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
->> ERROR: modpost: "qat_vfmig_resume" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
-WARNING: modpost: suppressed 1 unresolved symbol warnings because there were too many)
+Thanks,
+Elliot
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
