@@ -1,46 +1,46 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2088.outbound.protection.outlook.com [40.107.6.88])
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2083.outbound.protection.outlook.com [40.107.14.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D28417332F;
-	Fri, 21 Jun 2024 11:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EB1174EC7;
+	Fri, 21 Jun 2024 11:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.83
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969246; cv=fail; b=jmucKLNjJQPvYpx+srfYuDX1wLzrW9bkPcf+Wkolx36NgAU+UBOtld4HSVz0f3MWEmlnBwSf7i8fxbRrl5hG3We7sFNgJSYwhIy21PHe2ZA93DcbpVr9YHZ9Fhc4tw55TeDI23jj8liAZMndXeSDk4WYVm2du3gttn2NcBgyxak=
+	t=1718969248; cv=fail; b=emH3JhuezEDglrr+4XuPw1lA0loRZj1IBLn/VDd8+dVU3Lj9T49pFJ4Jy4+R+rRtDb3XefPz/wppepmooAuQYRcl+JxqAFP6Ietln6neYiABF/k7YOyPJ0UY0TzAEhH8eBYIvSlKY82lRYXmKU0gVGbywp948DgrK7GgAdGzjR8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969246; c=relaxed/simple;
-	bh=wSb4NGFZtiADWGILNRVYqIKRfEaJM2LKzenjiz7qtW0=;
+	s=arc-20240116; t=1718969248; c=relaxed/simple;
+	bh=9ytA0MQjAcbVmCeUuDKLdBgl54JRZDsG7waJBgShkm4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WnBgWE1sMOUYR8JxU5GerAcNpnKs15GlP1r5v65Ke3MXE3trqa3kQLkKbUR8AXWdqSRMatEvVwlt4bT+6Cc+TAGr6zHBL1XE9d694i2QSHVa/pVjpYwc/3tLjXd5i+OnXyBMuUXRDiAXMk9DO/SVS+7P+/r9WtEO2wgZ0FtRU/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=BZLdh/Sa; arc=fail smtp.client-ip=40.107.6.88
+	 MIME-Version:Content-Type; b=BV4QBVOjbYiBAa7dxmw63qp4kuzfSDN7KTgjD2lzPlbEE0msfNoabDu299goLZm7b6g/23U8UKDhm0XpxHiiafwDDV/ijqdFXYiJ7ZZLuKNcPd7uD4/ynFkE9Mq5wUu+NB/yWt4/PP/cE3ZSzHvDgViqtx0qJzJs1cABWcoitDo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=K1LAdVkm; arc=fail smtp.client-ip=40.107.14.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="BZLdh/Sa"
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="K1LAdVkm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j/i6GlhCgJnYmfFV/SVsjXsRH25JvpNZRzkNGB91AwHX+HdZC6M4ZOP2VhPjT/p3YETAXHM0MhnGnrkw/8SOpK6W4BNKz7PQTVnUIaGVBO1Y6jBp1/a6Sf7P6LQm0p+0dOcfOXOt3CVD5Zms/GvCtbsqTMu8TJX1RI+P6z+QHaJynZpqkkePoq51XuGDhVP7ktGzn6OvGScrtgcKq4Ew1L0shPziSSjV/2PY2sZK7AuELTVFKUhWDMRkPVAlPeofsiqWV73eWpGNUEaurvTkoL/iPsO3HSSL/ZC1edJyRfhR+I/3+xqqkBSOeDrZCAvb5jVEE9K48gNpbT0TYPefFA==
+ b=AzkVJNx/pOS99eEHQ67YETV9Wb8FoD5+2I+Y+J/UM2XmkvB1IuOsuufXG8yOEe4scIOSmUgqfPtdaFtIimSEloCKF4kvfxGF0xp/paH/ptZ5yBHV8iEbYm1vLonnvaPsZGykHWxcgh/Lu7qOGWNFgwpVXZan52U/wLO87fZ9So7twL5wbsttpAT0CTG3L16K3AvSG4ZyaGSOBZbUTdYm1PDnLrk50+PCxEIek0ZrmnC8vRY4ZIiwrIDMTlU2zgBGgqK79VCNzV7DMN8+F8//ZYlWFcis/kWS6VT0r6vziNODeM5IBuNI6i8ukIVcPInJyhFheSLHdDUZ6ZFeI0wJvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YFvzx5qqCPA1rRTN+NbyJyj2+TuGDlXQ3Q6rJWm5ip4=;
- b=gENURDyeAm87rMjv1UE6TAhRb84VnJSkwL4m1HqQ9VIMqEXg1uXuCtl3aawk9cT+yCju5QS4CUTkbz50ApWHKy1imvDQvoHNDeTZapS0RW3SYXGD/dcpg99tNlP/L+fM7sA4IDX3AbJ6GRo4k4YvreTl0pK7L4OhhtgCiuMovkcbaT7q+diQ4z6O6bZ60DSoa7nWQLrh5hF0ZUzqqdqW4TJwZkoip+Uplt+hUPvCwLQSTW7HlgsNB8BN3sO1YqkYWOxZBDWGSI5970tezwXOtXZ5OdzxrbxZ4hOX5dOPihagLO4b1/Fgg/C7fnuNo81OcrLUPab6drsaXthfoaCPlg==
+ bh=/zGCIZUEgdDv5ziKYSIHZjB9o3d6fOi1QVHYz6mHLdM=;
+ b=nkWbyYcsk7KEe5ki+E8Ew1grQuKcA25hxspVMYtPXxgH7Mn77Z/tElALfn60ugoKB56y7CnJ/bjzkB3eMKmtjAeYS1YyXXrbJUDHx6cM37F0bZSXngRnZmy6E7oU684uXfRHGXvt9ZsikRNmhZlo+lWs8BLXG/GnbGltrvtp0SowBVixml3bbodCFgZ8f0TIHmeNPqJRuS2vxpDXpxS8/9sfOVyWubNr02jm8vvFOa0yPnnIchA6Jt7A+o0y7i0BegN4sgQ9WHf06H8j2yqsuP8shlKbxixbumYIAjN9iIwRMYwokPLvfZwG6HKuxzGR74iJxnQ/HF+a8MpO8TTPLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YFvzx5qqCPA1rRTN+NbyJyj2+TuGDlXQ3Q6rJWm5ip4=;
- b=BZLdh/Sa/MV59N2dyWKyxpWsYXyA94ZkzSOxhuXXHEG9lYHDI8YDqy6TVIlMnwwCcghrKCYPG7PVLo21KbFhuCYbZerhlELAW7fkY2vl/aGkNllYHiVKIDX+YUjlQXCf+Htp41vKPHgf0sR7ns3Yf/Sjf6wAo0g2Bl80Zgk/BW8=
-Received: from AS9PR06CA0130.eurprd06.prod.outlook.com (2603:10a6:20b:467::17)
- by AS8PR02MB9092.eurprd02.prod.outlook.com (2603:10a6:20b:5b6::16) with
+ bh=/zGCIZUEgdDv5ziKYSIHZjB9o3d6fOi1QVHYz6mHLdM=;
+ b=K1LAdVkmFoRdVx7EK5bV8JT0nKly6SbNjGVFD/dlA+uz3ba4MAapsSDUbUL8VSjzB+Dm+ew8L+Wbrr7NFHZjY1kEKa6PGkaF8iRCW+f+IRh94o9eauHWHb4zI4h3aIqCr1HTA0Fsrpz6DDylRrpiqxGM30Gi69LHuTiD+X1JtyQ=
+Received: from AM0PR10CA0026.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::36)
+ by PAWPR02MB10022.eurprd02.prod.outlook.com (2603:10a6:102:2e2::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Fri, 21 Jun
- 2024 11:27:21 +0000
-Received: from AM4PEPF00027A69.eurprd04.prod.outlook.com
- (2603:10a6:20b:467:cafe::87) by AS9PR06CA0130.outlook.office365.com
- (2603:10a6:20b:467::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.37 via Frontend
- Transport; Fri, 21 Jun 2024 11:27:21 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Fri, 21 Jun
+ 2024 11:27:22 +0000
+Received: from AM4PEPF00027A6C.eurprd04.prod.outlook.com
+ (2603:10a6:208:17c:cafe::45) by AM0PR10CA0026.outlook.office365.com
+ (2603:10a6:208:17c::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.36 via Frontend
+ Transport; Fri, 21 Jun 2024 11:27:22 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
  action=none header.from=axis.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
  195.60.68.100 as permitted sender) receiver=protection.outlook.com;
  client-ip=195.60.68.100; helo=mail.axis.com; pr=C
 Received: from mail.axis.com (195.60.68.100) by
- AM4PEPF00027A69.mail.protection.outlook.com (10.167.16.87) with Microsoft
+ AM4PEPF00027A6C.mail.protection.outlook.com (10.167.16.90) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 11:27:21 +0000
+ 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 11:27:22 +0000
 Received: from pcczc3457tyd.2n.cz.axis.com (10.0.5.60) by se-mail01w.axis.com
  (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
- 2024 13:27:20 +0200
+ 2024 13:27:21 +0200
 From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20=282N=29?= <kamilh@axis.com>
 To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
 	<andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
@@ -63,9 +63,9 @@ To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
 	<conor+dt@kernel.org>
 CC: <kamilh@axis.com>, <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 2/4] net: phy: bcm54811: Add LRE registers definitions
-Date: Fri, 21 Jun 2024 13:26:31 +0200
-Message-ID: <20240621112633.2802655-3-kamilh@axis.com>
+Subject: [PATCH v9 4/4] net: phy: bcm-phy-lib: Implement BroadR-Reach link modes
+Date: Fri, 21 Jun 2024 13:26:33 +0200
+Message-ID: <20240621112633.2802655-5-kamilh@axis.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240621112633.2802655-1-kamilh@axis.com>
 References: <20240621112633.2802655-1-kamilh@axis.com>
@@ -81,175 +81,675 @@ X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
  (10.20.40.7)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A69:EE_|AS8PR02MB9092:EE_
-X-MS-Office365-Filtering-Correlation-Id: 597cb6ab-abb2-4cfc-28e7-08dc91e51db2
+X-MS-TrafficTypeDiagnostic: AM4PEPF00027A6C:EE_|PAWPR02MB10022:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41e49d04-b1fa-43f4-fedd-08dc91e51e6b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|7416011|36860700010|376011|1800799021|82310400023|921017;
+	BCL:0;ARA:13230037|376011|7416011|36860700010|82310400023|1800799021|921017;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NnBMRWdZNFdPc3JUeWdiMVFsODFTa25NdUJlUlFvWk9LMUlwOFBOVEtQZXcy?=
- =?utf-8?B?eXl2b1c0bU5iRDh0Um5BUWdiUTVyc25iT0ZSLzdGNCtWNFBJRU00ZjdrYTdJ?=
- =?utf-8?B?a0c4NGRDNEU0eHA0RmxtV3FLMnNSN2Y4Z3RlZ1FhcnRwaDkyaEhxQVRIbEJV?=
- =?utf-8?B?THBZZHppdy9tTStqQ3ZhZTNoU1FEWDBnNU5uc0FqSTE1ZS81NklvbDRWekpM?=
- =?utf-8?B?dUhzL0UzUzE3aXFoOGhzaDJocEh0LzR3amUyQmlHNzhiOWRTNVZBOGdUeVNU?=
- =?utf-8?B?ZmJDbWZSV1lsVTZxYlhLWktZdXBENEEyK1ZyYXgxcFlhMCtybWZXTkpVenRR?=
- =?utf-8?B?OGFjRmMwbXhnY1pISnpMNmRFbENFS01uRTkyY3pWL0IwSjNwWTFRYVc1RS90?=
- =?utf-8?B?UFRTUU1hTjdvbzBCUEhGOUNDVGZlbVdueFVtaUdad2JHMHpncjdBSDl3MXRh?=
- =?utf-8?B?cmVaY0NpVEFiejBFeGMzZGRuYW80Z05xTDRJL0RXNzhWYlpPTnRWZEJ3K2l2?=
- =?utf-8?B?Y0tRUm44dkZXOFl4dUZYdU5lTEVoR2lpakdCTTl5WHRzaEhjSTd1OUpxQ0p0?=
- =?utf-8?B?Mk1QWkNjakhFbVY3bFJsMTE2Vm81N3plZkNuakh0SEdQRmU2cjBOaWJPem5R?=
- =?utf-8?B?bW44MXF3RHdjbzc1cEs3ak1wVEIvcUNPbytHSENUK25uYXBQbnB2ZEllQi9R?=
- =?utf-8?B?UnV4QWt6aVpDR1RTUFFwMnZNQWd5M0JkL2MyRmlldDdIakJ0Mlh0a2I0R1Fq?=
- =?utf-8?B?S01JNndmMzdQay9TQ3hZdnlZa21lSlBQTmdSK3RVNWVmejE3M3JXU0dlbnFN?=
- =?utf-8?B?L3FqNmhBUHdBU2xkZ1JWSUJ5U0QxNlAwRkhjeVNBQllsbzFLdXRYbWg3WFM0?=
- =?utf-8?B?TWJENTkxNGhXYUxodVZocERReEw5ZTAwUERTVm5mbXB4Nm5xaDlRWm1aYk5Q?=
- =?utf-8?B?eWIvMThmRk04bk9ONFYzUE5XNnFtemRKZFZPUndyWTNaKy8vYzBHWGg2OTQ1?=
- =?utf-8?B?WVhhV1c4VVFBYWZyS0lqQXB2RGRST2ZOVllFN2lQMjBqVEdRSWMrTVMxOEJK?=
- =?utf-8?B?RGRzaDA0cVVRekFEK2hsR3A0TFF1clVUb2I3RkFzNzBzV3FaN3lmZExYcG9a?=
- =?utf-8?B?UW4xdC9NY1c0ZlF0QmI3TlNVSTYwYmZuZ2FwYXdTOERVeGUwUEM1eVJnKzRQ?=
- =?utf-8?B?dWFTc3RxdWR2bUFERXVYcWlaUnBjQmpsM0wxZktKSlZrRW5HcjU1WkdOLzNZ?=
- =?utf-8?B?M3BleFV2bk9HbTFHVEx3N2lBWXVOQjVrcTEySVFFT0RsY3RiaDIvM3ByUnN0?=
- =?utf-8?B?RkFGM01XREdrNkhDQS9yajFmQ3ZrTGt4Y0NJZEc0WnQ3L1dXaEJqbWtISkxw?=
- =?utf-8?B?Q05CU3N2aEtxWmJrRUg4a3NBTHIwUG5aTUJmZjlzUFpnWWdPZmpqL2xRdnF4?=
- =?utf-8?B?WkVNdS9COVM4UkpXQ25DOFRERkdXV2pxQXNYUHNTQ1NwSytKT21UcC9xajZ4?=
- =?utf-8?B?NVBLem5KT3FkYVNaRjM0emFWVy9ZMTBCbzBMbW82VlJONUdHdytCaXZtd2kz?=
- =?utf-8?B?QUdiMG41YnZhb2pFamNBMXFnZU5OTmp1MTZZWEQySFN5b2lkMWRzQjFjZWxM?=
- =?utf-8?B?Z2tKTG5Ia0dUaWNrSTdMWHB2QS9kN3VWZnpYQ0dmUTVmVTVFK0ZCTHJRcjM5?=
- =?utf-8?B?R0l4UWI2MXA4dW83ZHFQeGJwRytVdE9OY1JnbmRVNGRndGJrY3lYWThVZzdv?=
- =?utf-8?B?MUxyN0laL3RBMnlZQWJUOFM5MHFWaVowbGZhaDhnTGk5OHZwTGNSOWxEQW5P?=
- =?utf-8?B?MHcvS3hUVXdrM205MEozV1JHY0cxYUpiNW5wak9sZTRxYUc0Zi9lVHMzRm1Q?=
- =?utf-8?B?aytLYVdVc0doNW10S0Q0N3NrdUIzNzlsdWNjcWIrYXVjVlg1cUh2TmZKNUlG?=
- =?utf-8?Q?Yq64Y5E54Nk=3D?=
+	=?utf-8?B?Q0dOdHMzT3dCUlpFdUxiZC8rWHhvY2o1SWFMTWxydkp3RVNzMjQzY0xxV0V2?=
+ =?utf-8?B?RitEYWc1eGRIa2h1dk5wbUs4WXBUMFkweFd5ZytGNlZXYVFJUnF5ZU01VDdk?=
+ =?utf-8?B?L1lCVTNjaEUwM1RDQ0dSdll0NHNINEJRcUpCZ2tUS0hpNWIrTitXTk1UUTU2?=
+ =?utf-8?B?U2kzeXgrbTVHVFNvelh0a0JIQkY2Z2ZiVnQrMExRKzczZ1M3MEhpYW4xdWlY?=
+ =?utf-8?B?S1lxVGFzeWdvcWRFL3dYem1VVW8rSlpoYVFkbFZ3QWcxNkJCOTFrd1lzb0tp?=
+ =?utf-8?B?T2ZNUXVwbzM4RW5qQjN6T2tTcTNXOVdjakN1YVErV2psOEI3VmNEbmZmcWQy?=
+ =?utf-8?B?bTVjNVhMQ3dTa2Q1NkswMVJNMHZJVVRPcGtKcDZnOTVkb21OdlVXSmp0RmhF?=
+ =?utf-8?B?MFR5dnh4Q1BIY1R1a05kSFBVNEVNRmZKS2xxQ3N2Vk9PMXpkdGtWYk5OelU0?=
+ =?utf-8?B?RGZkNnJzMnRhRDZCNFZqU0kzUUV4K3p6RDlvQmdFZG83d0cxMmNNQUFCazhC?=
+ =?utf-8?B?YWJnWEQ3UUJNcGxaay93bks0aCtNT010aW5FalM1VmFQRXpQTnMyWjFZcFU2?=
+ =?utf-8?B?cHlaazUwbXhmb3lYakxZSzRtK3g1R0dEdkxPdkx0RlhoY3lrajRCUXVYdnhs?=
+ =?utf-8?B?dENvS1I4bElTMjJ6d1Q1UUpyaThZSm9CUmJPWU5KMlBhclg1aXpBWFhUMHlQ?=
+ =?utf-8?B?b0VXNU43QTd5eCtMbU9MVVBBamNKSlhIOWpqUkpEM0JrbGxEUHExVk1qNmNl?=
+ =?utf-8?B?NS94YzBFSjhiTkhSdkJLaTNySkJ0WWR2Y01WMHhhTWZGZDRFMndiZVBCd1VX?=
+ =?utf-8?B?NjY4SGl6dnEzNC9qYWVqMC9aMXVDY2dUS1puMDMrbnpXQXRNNERiZ0tYc3hT?=
+ =?utf-8?B?YzFyQ1NVamcra2xFWWxPaStxUzJIUlFOMnk5TFppU2FJdGNDNUdVMGdPd2xE?=
+ =?utf-8?B?T0VKQkFxaHYzck44RUlEcVRDSUEzZGFjK3hXTzlnMlFtd3NyK0l0OXcxWkhL?=
+ =?utf-8?B?MHU2TGxwMERIVzdDM2hrQzJ4N09uNUZlWThnaFQ0NVVneDZQcW01QTRCdEs3?=
+ =?utf-8?B?ZWRHK1pGR1NrOE16SFNCdVRMVGdENnc3L1JEN3dkT0NrZkFjVzJmRGFEaUZD?=
+ =?utf-8?B?L3F2REFrbU9qREI3dDVpMDUrR0JQWGdmcTZFSnRPUTdNNFRYSU15VSt4dlBF?=
+ =?utf-8?B?SE1FYmJ3SCtVVldCcFFYZk15aC8vNmg5K0ZQanI4THVReGQ0UFJiR1hFc0Zh?=
+ =?utf-8?B?clNDR1AvblJ3T3ZpVXEzb1hkRmwreERhK08vMUN4UEZZNFo2UlFrYlhIcVNt?=
+ =?utf-8?B?RjMyRHMwTkRPKzIvK0Q4Rk1sSFhCZ2QydTdYM1hOVTlQQWZNYWRPK2pKNitr?=
+ =?utf-8?B?MGIxMDBoSzIrNS81R1JEYkxzbHg2QUdQNlJZejVXdE14aFRhZVAyZFJnSC9v?=
+ =?utf-8?B?Szk4OUpRbE96TThsbTkwVEhNSndIZmZCU2FzVVdScEhHN1c4bkh4UjJwaVor?=
+ =?utf-8?B?a2xHNklMY2w0ZVhUQTFOSmJTRkNFM0M2cFJpWnRsenM2ZDRkUWdYR0RFUlZq?=
+ =?utf-8?B?cnZ3S09NMkNZcElDc2ZOQWoxdWEyUW5IbEt3dVBFVytIOHFOanRtbUsza3R4?=
+ =?utf-8?B?Q05ybjZzeUZDVTFiODMvcWhrMjdwQmUwL1pZeDFpbW9yeVdhTXZ0ZEFwRjVz?=
+ =?utf-8?B?Zmlmc1MrbW9IN2F0cGdwV2czZzRHcnUyTU9mY3R1d1l0cGt6NXgvTVErckRG?=
+ =?utf-8?B?ZlQ3N3ZJNjA1TUNmVm42NjI2WGVxdHROTUZXQnFHOFlrcEcvM002ZG1zUm1I?=
+ =?utf-8?B?TFdGT0REUTBUdnhBNlZKY0NzMzU5VVJjUDhCWjlnUUluVVpuQ2h1OHZlNElL?=
+ =?utf-8?B?MGRnV2RKS2pxdnNtanVvS0I1V2FLankzdXFRUHhHSnU1NXJJQ3E5aVVBY0s0?=
+ =?utf-8?Q?5ozanD+5NeI=3D?=
 X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(7416011)(36860700010)(376011)(1800799021)(82310400023)(921017);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(7416011)(36860700010)(82310400023)(1800799021)(921017);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 11:27:21.1052
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 11:27:22.3231
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 597cb6ab-abb2-4cfc-28e7-08dc91e51db2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41e49d04-b1fa-43f4-fedd-08dc91e51e6b
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A69.eurprd04.prod.outlook.com
+	AM4PEPF00027A6C.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB9092
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB10022
 
-Add the definitions of LRE registers for Broadcom BCM5481x PHY
+Implement single-pair BroadR-Reach modes on bcm5481x PHY by Broadcom.
+Create set of functions alternative to IEEE 802.3 to handle
+configuration of these modes on compatible Broadcom PHYs.
 
 Signed-off-by: Kamil Horák (2N) <kamilh@axis.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- include/linux/brcmphy.h | 89 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+ drivers/net/phy/bcm-phy-lib.c | 115 ++++++++++
+ drivers/net/phy/bcm-phy-lib.h |   4 +
+ drivers/net/phy/broadcom.c    | 392 ++++++++++++++++++++++++++++++++--
+ 3 files changed, 493 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-index 1394ba302367..ae39c33e4086 100644
---- a/include/linux/brcmphy.h
-+++ b/include/linux/brcmphy.h
-@@ -270,6 +270,86 @@
- #define BCM5482_SSD_SGMII_SLAVE		0x15	/* SGMII Slave Register */
- #define BCM5482_SSD_SGMII_SLAVE_EN	0x0002	/* Slave mode enable */
- #define BCM5482_SSD_SGMII_SLAVE_AD	0x0001	/* Slave auto-detection */
-+#define BCM5482_SSD_SGMII_SLAVE_AD	0x0001	/* Slave auto-detection */
-+
-+/* BroadR-Reach LRE Registers. */
-+#define MII_BCM54XX_LRECR		0x00	/* LRE Control Register                    */
-+#define MII_BCM54XX_LRESR		0x01	/* LRE Status Register                     */
-+#define MII_BCM54XX_LREPHYSID1		0x02	/* LRE PHYS ID 1                           */
-+#define MII_BCM54XX_LREPHYSID2		0x03	/* LRE PHYS ID 2                           */
-+#define MII_BCM54XX_LREANAA		0x04	/* LDS Auto-Negotiation Advertised Ability */
-+#define MII_BCM54XX_LREANAC		0x05	/* LDS Auto-Negotiation Advertised Control */
-+#define MII_BCM54XX_LREANPT		0x06	/* LDS Ability Next Page Transmit          */
-+#define MII_BCM54XX_LRELPA		0x07	/* LDS Link Partner Ability                */
-+#define MII_BCM54XX_LRELPNPM		0x08	/* LDS Link Partner Next Page Message      */
-+#define MII_BCM54XX_LRELPNPC		0x09	/* LDS Link Partner Next Page Control      */
-+#define MII_BCM54XX_LRELDSE		0x0a	/* LDS Expansion Register                  */
-+#define MII_BCM54XX_LREES		0x0f	/* LRE Extended Status                     */
-+
-+/* LRE control register. */
-+#define LRECR_RESET			0x8000	/* Reset to default state      */
-+#define LRECR_LOOPBACK			0x4000	/* Internal Loopback           */
-+#define LRECR_LDSRES			0x2000	/* Restart LDS Process         */
-+#define LRECR_LDSEN			0x1000	/* LDS Enable                  */
-+#define LRECR_PDOWN			0x0800	/* Enable low power state      */
-+#define LRECR_ISOLATE			0x0400	/* Isolate data paths from MII */
-+#define LRECR_SPEED100			0x0200	/* Select 100 Mbps             */
-+#define LRECR_SPEED10			0x0000	/* Select 10 Mbps              */
-+#define LRECR_4PAIRS			0x0020	/* Select 4 Pairs              */
-+#define LRECR_2PAIRS			0x0010	/* Select 2 Pairs              */
-+#define LRECR_1PAIR			0x0000	/* Select 1 Pair               */
-+#define LRECR_MASTER			0x0008	/* Force Master when LDS disabled */
-+#define LRECR_SLAVE			0x0000	/* Force Slave when LDS disabled  */
-+
-+/* LRE status register. */
-+#define LRESR_100_1PAIR			0x2000	/* Can do 100Mbps 1 Pair       */
-+#define LRESR_100_4PAIR			0x1000	/* Can do 100Mbps 4 Pairs      */
-+#define LRESR_100_2PAIR			0x0800	/* Can do 100Mbps 2 Pairs      */
-+#define LRESR_10_2PAIR			0x0400	/* Can do 10Mbps 2 Pairs       */
-+#define LRESR_10_1PAIR			0x0200	/* Can do 10Mbps 1 Pair        */
-+#define LRESR_ESTATEN			0x0100	/* Extended Status in R15      */
-+#define LRESR_RESV			0x0080	/* Unused...                   */
-+#define LRESR_MFPS			0x0040	/* Can suppress Management Frames Preamble */
-+#define LRESR_LDSCOMPLETE		0x0020	/* LDS Auto-negotiation complete */
-+#define LRESR_8023			0x0010	/* Has IEEE 802.3 Support      */
-+#define LRESR_LDSABILITY		0x0008	/* LDS auto-negotiation capable */
-+#define LRESR_LSTATUS			0x0004	/* Link status                 */
-+#define LRESR_JCD			0x0002	/* Jabber detected             */
-+#define LRESR_ERCAP			0x0001	/* Ext-reg capability          */
-+
-+/* LDS Auto-Negotiation Advertised Ability. */
-+#define LREANAA_PAUSE_ASYM		0x8000	/* Can pause asymmetrically    */
-+#define LREANAA_PAUSE			0x4000	/* Can pause                   */
-+#define LREANAA_100_1PAIR		0x0020	/* Can do 100Mbps 1 Pair       */
-+#define LREANAA_100_4PAIR		0x0010	/* Can do 100Mbps 4 Pair       */
-+#define LREANAA_100_2PAIR		0x0008	/* Can do 100Mbps 2 Pair       */
-+#define LREANAA_10_2PAIR		0x0004	/* Can do 10Mbps 2 Pair        */
-+#define LREANAA_10_1PAIR		0x0002	/* Can do 10Mbps 1 Pair        */
-+
-+#define LRE_ADVERTISE_FULL		(LREANAA_100_1PAIR | LREANAA_100_4PAIR | \
-+					 LREANAA_100_2PAIR | LREANAA_10_2PAIR | \
-+					 LREANAA_10_1PAIR)
-+
-+#define LRE_ADVERTISE_ALL		LRE_ADVERTISE_FULL
-+
-+/* LDS Link Partner Ability. */
-+#define LRELPA_PAUSE_ASYM		0x8000	/* Supports asymmetric pause   */
-+#define LRELPA_PAUSE			0x4000	/* Supports pause capability   */
-+#define LRELPA_100_1PAIR		0x0020	/* 100Mbps 1 Pair capable      */
-+#define LRELPA_100_4PAIR		0x0010	/* 100Mbps 4 Pair capable      */
-+#define LRELPA_100_2PAIR		0x0008	/* 100Mbps 2 Pair capable      */
-+#define LRELPA_10_2PAIR			0x0004	/* 10Mbps 2 Pair capable       */
-+#define LRELPA_10_1PAIR			0x0002	/* 10Mbps 1 Pair capable       */
-+
-+/* LDS Expansion register. */
-+#define LDSE_DOWNGRADE			0x8000	/* Can do LDS Speed Downgrade  */
-+#define LDSE_MASTER			0x4000	/* Master / Slave              */
-+#define LDSE_PAIRS_MASK			0x3000	/* Pair Count Mask             */
-+#define LDSE_PAIRS_SHIFT		12
-+#define LDSE_4PAIRS			(2 << LDSE_PAIRS_SHIFT)	/* 4 Pairs Connection */
-+#define LDSE_2PAIRS			(1 << LDSE_PAIRS_SHIFT)	/* 2 Pairs Connection */
-+#define LDSE_1PAIR			(0 << LDSE_PAIRS_SHIFT)	/* 1 Pair  Connection */
-+#define LDSE_CABLEN_MASK		0x0FFF	/* Cable Length Mask           */
+diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
+index 876f28fd8256..9e15eb4a5d43 100644
+--- a/drivers/net/phy/bcm-phy-lib.c
++++ b/drivers/net/phy/bcm-phy-lib.c
+@@ -794,6 +794,49 @@ static int _bcm_phy_cable_test_get_status(struct phy_device *phydev,
+ 	return ret;
+ }
  
- /* BCM54810 Registers */
- #define BCM54810_EXP_BROADREACH_LRE_MISC_CTL	(MII_BCM54XX_EXP_SEL_ER + 0x90)
-@@ -277,6 +357,15 @@
- #define BCM54810_SHD_CLK_CTL			0x3
- #define BCM54810_SHD_CLK_CTL_GTXCLK_EN		(1 << 9)
- 
-+/* BCM54811 Registers */
-+#define BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL	(MII_BCM54XX_EXP_SEL_ER + 0x9A)
-+/* Access Control Override Enable */
-+#define BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_EN		BIT(15)
-+/* Access Control Override Value */
-+#define BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_OVERRIDE_VAL	BIT(14)
-+/* Access Control Value */
-+#define BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_VAL		BIT(13)
++static int bcm_setup_lre_forced(struct phy_device *phydev)
++{
++	u16 ctl = 0;
 +
- /* BCM54612E Registers */
- #define BCM54612E_EXP_SPARE0		(MII_BCM54XX_EXP_SEL_ETC + 0x34)
- #define BCM54612E_LED4_CLK125OUT_EN	(1 << 1)
++	phydev->pause = 0;
++	phydev->asym_pause = 0;
++
++	if (phydev->speed == SPEED_100)
++		ctl |= LRECR_SPEED100;
++
++	if (phydev->duplex != DUPLEX_FULL)
++		return -EOPNOTSUPP;
++
++	return phy_modify(phydev, MII_BCM54XX_LRECR, LRECR_SPEED100, ctl);
++}
++
++/**
++ * bcm_linkmode_adv_to_lre_adv_t - translate linkmode advertisement to LDS
++ * @advertising: the linkmode advertisement settings
++ * Return: LDS Auto-Negotiation Advertised Ability register value
++ *
++ * A small helper function that translates linkmode advertisement
++ * settings to phy LDS autonegotiation advertisements for the
++ * MII_BCM54XX_LREANAA register of Broadcom PHYs capable of LDS
++ */
++static u32 bcm_linkmode_adv_to_lre_adv_t(unsigned long *advertising)
++{
++	u32 result = 0;
++
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
++			      advertising))
++		result |= LREANAA_10_1PAIR;
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
++			      advertising))
++		result |= LREANAA_100_1PAIR;
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT, advertising))
++		result |= LRELPA_PAUSE;
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, advertising))
++		result |= LRELPA_PAUSE_ASYM;
++
++	return result;
++}
++
+ int bcm_phy_cable_test_start(struct phy_device *phydev)
+ {
+ 	return _bcm_phy_cable_test_start(phydev, false);
+@@ -1066,6 +1109,78 @@ int bcm_phy_led_brightness_set(struct phy_device *phydev,
+ }
+ EXPORT_SYMBOL_GPL(bcm_phy_led_brightness_set);
+ 
++int bcm_setup_master_slave(struct phy_device *phydev)
++{
++	u16 ctl = 0;
++
++	switch (phydev->master_slave_set) {
++	case MASTER_SLAVE_CFG_MASTER_PREFERRED:
++	case MASTER_SLAVE_CFG_MASTER_FORCE:
++		ctl = LRECR_MASTER;
++		break;
++	case MASTER_SLAVE_CFG_SLAVE_PREFERRED:
++	case MASTER_SLAVE_CFG_SLAVE_FORCE:
++		break;
++	case MASTER_SLAVE_CFG_UNKNOWN:
++	case MASTER_SLAVE_CFG_UNSUPPORTED:
++		return 0;
++	default:
++		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
++		return -EOPNOTSUPP;
++	}
++
++	return phy_modify_changed(phydev, MII_BCM54XX_LRECR, LRECR_MASTER, ctl);
++}
++EXPORT_SYMBOL_GPL(bcm_setup_master_slave);
++
++int bcm_config_lre_aneg(struct phy_device *phydev, bool changed)
++{
++	int err;
++
++	if (genphy_config_eee_advert(phydev))
++		changed = true;
++
++	err = bcm_setup_master_slave(phydev);
++	if (err < 0)
++		return err;
++	else if (err)
++		changed = true;
++
++	if (phydev->autoneg != AUTONEG_ENABLE)
++		return bcm_setup_lre_forced(phydev);
++
++	err = bcm_config_lre_advert(phydev);
++	if (err < 0)
++		return err;
++	else if (err)
++		changed = true;
++
++	return genphy_check_and_restart_aneg(phydev, changed);
++}
++EXPORT_SYMBOL_GPL(bcm_config_lre_aneg);
++
++/**
++ * bcm_config_lre_advert - sanitize and advertise Long-Distance Signaling
++ *  auto-negotiation parameters
++ * @phydev: target phy_device struct
++ * Return:  0 if the PHY's advertisement hasn't changed, < 0 on error,
++ *          > 0 if it has changed
++ *
++ * Writes MII_BCM54XX_LREANAA with the appropriate values. The values are to be
++ *   sanitized before, to make sure we only advertise what is supported.
++ *  The sanitization is done already in phy_ethtool_ksettings_set()
++ */
++int bcm_config_lre_advert(struct phy_device *phydev)
++{
++	u32 adv = bcm_linkmode_adv_to_lre_adv_t(phydev->advertising);
++
++	/* Setup BroadR-Reach mode advertisement */
++	return phy_modify_changed(phydev, MII_BCM54XX_LREANAA,
++				 LRE_ADVERTISE_ALL | LREANAA_PAUSE |
++				 LREANAA_PAUSE_ASYM, adv);
++}
++EXPORT_SYMBOL_GPL(bcm_config_lre_advert);
++
+ MODULE_DESCRIPTION("Broadcom PHY Library");
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Broadcom Corporation");
+diff --git a/drivers/net/phy/bcm-phy-lib.h b/drivers/net/phy/bcm-phy-lib.h
+index b52189e45a84..fecdd66ad736 100644
+--- a/drivers/net/phy/bcm-phy-lib.h
++++ b/drivers/net/phy/bcm-phy-lib.h
+@@ -121,4 +121,8 @@ irqreturn_t bcm_phy_wol_isr(int irq, void *dev_id);
+ int bcm_phy_led_brightness_set(struct phy_device *phydev,
+ 			       u8 index, enum led_brightness value);
+ 
++int bcm_setup_master_slave(struct phy_device *phydev);
++int bcm_config_lre_aneg(struct phy_device *phydev, bool changed);
++int bcm_config_lre_advert(struct phy_device *phydev);
++
+ #endif /* _LINUX_BCM_PHY_LIB_H */
+diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+index 370e4ed45098..2aaa2e8bfe49 100644
+--- a/drivers/net/phy/broadcom.c
++++ b/drivers/net/phy/broadcom.c
+@@ -5,6 +5,8 @@
+  *	Broadcom BCM5411, BCM5421 and BCM5461 Gigabit Ethernet
+  *	transceivers.
+  *
++ *	Broadcom BCM54810, BCM54811 BroadR-Reach transceivers.
++ *
+  *	Copyright (c) 2006  Maciej W. Rozycki
+  *
+  *	Inspired by code written by Amy Fong.
+@@ -38,6 +40,28 @@ struct bcm54xx_phy_priv {
+ 	bool	wake_irq_enabled;
+ };
+ 
++/* Link modes for BCM58411 PHY */
++static const int bcm54811_linkmodes[] = {
++	ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
++	ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
++	ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
++	ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
++	ETHTOOL_LINK_MODE_100baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_100baseT_Half_BIT,
++	ETHTOOL_LINK_MODE_10baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_10baseT_Half_BIT
++};
++
++/* Long-Distance Signaling (BroadR-Reach mode aneg) relevant linkmode bits */
++static const int lds_br_bits[] = {
++	ETHTOOL_LINK_MODE_Autoneg_BIT,
++	ETHTOOL_LINK_MODE_Pause_BIT,
++	ETHTOOL_LINK_MODE_Asym_Pause_BIT,
++	ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
++	ETHTOOL_LINK_MODE_100baseT1_Full_BIT
++};
++
+ static bool bcm54xx_phy_can_wakeup(struct phy_device *phydev)
+ {
+ 	struct bcm54xx_phy_priv *priv = phydev->priv;
+@@ -553,18 +577,92 @@ static int bcm54810_write_mmd(struct phy_device *phydev, int devnum, u16 regnum,
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static int bcm54811_config_init(struct phy_device *phydev)
++static int bcm5481x_get_brrmode(struct phy_device *phydev, u8 *data)
+ {
+-	int err, reg;
++	int reg;
+ 
+-	/* Disable BroadR-Reach function. */
+ 	reg = bcm_phy_read_exp(phydev, BCM54810_EXP_BROADREACH_LRE_MISC_CTL);
+-	reg &= ~BCM54810_EXP_BROADREACH_LRE_MISC_CTL_EN;
+-	err = bcm_phy_write_exp(phydev, BCM54810_EXP_BROADREACH_LRE_MISC_CTL,
+-				reg);
+-	if (err < 0)
++
++	*data = (reg & BCM54810_EXP_BROADREACH_LRE_MISC_CTL_EN) ? 1 : 0;
++
++	return 0;
++}
++
++static int bcm54811_read_abilities(struct phy_device *phydev)
++{
++	int i, val, err;
++	u8 brr_mode;
++
++	for (i = 0; i < ARRAY_SIZE(bcm54811_linkmodes); i++)
++		linkmode_clear_bit(bcm54811_linkmodes[i], phydev->supported);
++
++	err = bcm5481x_get_brrmode(phydev, &brr_mode);
++	if (err)
++		return err;
++
++	if (brr_mode) {
++		linkmode_set_bit_array(phy_basic_ports_array,
++				       ARRAY_SIZE(phy_basic_ports_array),
++				       phydev->supported);
++
++		val = phy_read(phydev, MII_BCM54XX_LRESR);
++		if (val < 0)
++			return val;
++
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
++				 phydev->supported, 1);
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
++				 phydev->supported,
++				 val & LRESR_100_1PAIR);
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
++				 phydev->supported,
++				 val & LRESR_10_1PAIR);
++		return 0;
++	}
++
++	return genphy_read_abilities(phydev);
++}
++
++static int bcm5481x_set_brrmode(struct phy_device *phydev, bool on)
++{
++	int reg;
++	int err;
++	u16 val;
++
++	reg = bcm_phy_read_exp(phydev, BCM54810_EXP_BROADREACH_LRE_MISC_CTL);
++
++	if (on)
++		reg |= BCM54810_EXP_BROADREACH_LRE_MISC_CTL_EN;
++	else
++		reg &= ~BCM54810_EXP_BROADREACH_LRE_MISC_CTL_EN;
++
++	err = bcm_phy_write_exp(phydev,
++				BCM54810_EXP_BROADREACH_LRE_MISC_CTL, reg);
++	if (err)
++		return err;
++
++	/* Update the abilities based on the current brr on/off setting */
++	err = bcm54811_read_abilities(phydev);
++	if (err)
+ 		return err;
+ 
++	/* Ensure LRE or IEEE register set is accessed according to the brr
++	 *  on/off, thus set the override
++	 */
++	val = BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_EN;
++	if (!on)
++		val |= BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL_OVERRIDE_VAL;
++
++	return bcm_phy_write_exp(phydev,
++				 BCM54811_EXP_BROADREACH_LRE_OVERLAY_CTL, val);
++}
++
++static int bcm54811_config_init(struct phy_device *phydev)
++{
++	struct device_node *np = phydev->mdio.dev.of_node;
++	bool brr = false;
++	int err, reg;
++
+ 	err = bcm54xx_config_init(phydev);
+ 
+ 	/* Enable CLK125 MUX on LED4 if ref clock is enabled. */
+@@ -576,29 +674,80 @@ static int bcm54811_config_init(struct phy_device *phydev)
+ 			return err;
+ 	}
+ 
+-	return err;
++	/* Configure BroadR-Reach function. */
++	brr = of_property_read_bool(np, "brr-mode");
++
++	/* With BCM54811, BroadR-Reach implies no autoneg */
++	if (brr)
++		phydev->autoneg = 0;
++
++	return bcm5481x_set_brrmode(phydev, brr);
+ }
+ 
+-static int bcm5481_config_aneg(struct phy_device *phydev)
++static int bcm5481x_config_delay_swap(struct phy_device *phydev)
+ {
+ 	struct device_node *np = phydev->mdio.dev.of_node;
+-	int ret;
+-
+-	/* Aneg firstly. */
+-	ret = genphy_config_aneg(phydev);
+ 
+-	/* Then we can set up the delay. */
++	/* Set up the delay. */
+ 	bcm54xx_config_clock_delay(phydev);
+ 
+ 	if (of_property_read_bool(np, "enet-phy-lane-swap")) {
+ 		/* Lane Swap - Undocumented register...magic! */
+-		ret = bcm_phy_write_exp(phydev, MII_BCM54XX_EXP_SEL_ER + 0x9,
+-					0x11B);
++		int ret = bcm_phy_write_exp(phydev,
++					    MII_BCM54XX_EXP_SEL_ER + 0x9,
++					    0x11B);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+-	return ret;
++	return 0;
++}
++
++static int bcm5481_config_aneg(struct phy_device *phydev)
++{
++	u8 brr_mode;
++	int ret;
++
++	ret = bcm5481x_get_brrmode(phydev, &brr_mode);
++	if (ret)
++		return ret;
++
++	/* Aneg firstly. */
++	if (brr_mode)
++		ret = bcm_config_lre_aneg(phydev, false);
++	else
++		ret = genphy_config_aneg(phydev);
++
++	if (ret)
++		return ret;
++
++	/* Then we can set up the delay and swap. */
++	return bcm5481x_config_delay_swap(phydev);
++}
++
++static int bcm54811_config_aneg(struct phy_device *phydev)
++{
++	u8 brr_mode;
++	int ret;
++
++	/* Aneg firstly. */
++	ret = bcm5481x_get_brrmode(phydev, &brr_mode);
++	if (ret)
++		return ret;
++
++	if (brr_mode) {
++		/* BCM54811 is only capable of autonegotiation in IEEE mode */
++		phydev->autoneg = 0;
++		ret = bcm_config_lre_aneg(phydev, false);
++	} else {
++		ret = genphy_config_aneg(phydev);
++	}
++
++	if (ret)
++		return ret;
++
++	/* Then we can set up the delay and swap. */
++	return bcm5481x_config_delay_swap(phydev);
+ }
+ 
+ struct bcm54616s_phy_priv {
+@@ -1062,6 +1211,211 @@ static void bcm54xx_link_change_notify(struct phy_device *phydev)
+ 	bcm_phy_write_exp(phydev, MII_BCM54XX_EXP_EXP08, ret);
+ }
+ 
++static int bcm_read_master_slave(struct phy_device *phydev)
++{
++	int cfg = MASTER_SLAVE_CFG_UNKNOWN, state;
++	int val;
++
++	/* In BroadR-Reach mode we are always capable of master-slave
++	 *  and there is no preferred master or slave configuration
++	 */
++	phydev->master_slave_get = MASTER_SLAVE_CFG_UNKNOWN;
++	phydev->master_slave_state = MASTER_SLAVE_STATE_UNKNOWN;
++
++	val = phy_read(phydev, MII_BCM54XX_LRECR);
++	if (val < 0)
++		return val;
++
++	if ((val & LRECR_LDSEN) == 0) {
++		if (val & LRECR_MASTER)
++			cfg = MASTER_SLAVE_CFG_MASTER_FORCE;
++		else
++			cfg = MASTER_SLAVE_CFG_SLAVE_FORCE;
++	}
++
++	val = phy_read(phydev, MII_BCM54XX_LRELDSE);
++	if (val < 0)
++		return val;
++
++	if (val & LDSE_MASTER)
++		state = MASTER_SLAVE_STATE_MASTER;
++	else
++		state = MASTER_SLAVE_STATE_SLAVE;
++
++	phydev->master_slave_get = cfg;
++	phydev->master_slave_state = state;
++
++	return 0;
++}
++
++/* Read LDS Link Partner Ability in BroadR-Reach mode */
++static int bcm_read_lpa(struct phy_device *phydev)
++{
++	int i, lrelpa;
++
++	if (phydev->autoneg != AUTONEG_ENABLE) {
++		if (!phydev->autoneg_complete) {
++			/* aneg not yet done, reset all relevant bits */
++			for (i = 0; i < ARRAY_SIZE(lds_br_bits); i++)
++				linkmode_clear_bit(lds_br_bits[i],
++						   phydev->lp_advertising);
++
++			return 0;
++		}
++
++		/* Long-Distance Signaling Link Partner Ability */
++		lrelpa = phy_read(phydev, MII_BCM54XX_LRELPA);
++		if (lrelpa < 0)
++			return lrelpa;
++
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
++				 phydev->lp_advertising,
++				 lrelpa & LRELPA_PAUSE_ASYM);
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_Pause_BIT,
++				 phydev->lp_advertising,
++				 lrelpa & LRELPA_PAUSE);
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_100baseT1_Full_BIT,
++				 phydev->lp_advertising,
++				 lrelpa & LRELPA_100_1PAIR);
++		linkmode_mod_bit(ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT,
++				 phydev->lp_advertising,
++				 lrelpa & LRELPA_10_1PAIR);
++	} else {
++		linkmode_zero(phydev->lp_advertising);
++	}
++
++	return 0;
++}
++
++static int bcm_read_status_fixed(struct phy_device *phydev)
++{
++	int lrecr = phy_read(phydev, MII_BCM54XX_LRECR);
++
++	if (lrecr < 0)
++		return lrecr;
++
++	phydev->duplex = DUPLEX_FULL;
++
++	if (lrecr & LRECR_SPEED100)
++		phydev->speed = SPEED_100;
++	else
++		phydev->speed = SPEED_10;
++
++	return 0;
++}
++
++/**
++ * lre_update_link - update link status in @phydev
++ * @phydev: target phy_device struct
++ * Return:  0 on success, < 0 on error
++ *
++ * Description: Update the value in phydev->link to reflect the
++ *   current link value.  In order to do this, we need to read
++ *   the status register twice, keeping the second value.
++ *   This is a genphy_update_link modified to work on LRE registers
++ *   of BroadR-Reach PHY
++ */
++static int lre_update_link(struct phy_device *phydev)
++{
++	int status = 0, lrecr;
++
++	lrecr = phy_read(phydev, MII_BCM54XX_LRECR);
++	if (lrecr < 0)
++		return lrecr;
++
++	/* Autoneg is being started, therefore disregard BMSR value and
++	 * report link as down.
++	 */
++	if (lrecr & BMCR_ANRESTART)
++		goto done;
++
++	/* The link state is latched low so that momentary link
++	 * drops can be detected. Do not double-read the status
++	 * in polling mode to detect such short link drops except
++	 * the link was already down.
++	 */
++	if (!phy_polling_mode(phydev) || !phydev->link) {
++		status = phy_read(phydev, MII_BCM54XX_LRESR);
++		if (status < 0)
++			return status;
++		else if (status & LRESR_LSTATUS)
++			goto done;
++	}
++
++	/* Read link and autonegotiation status */
++	status = phy_read(phydev, MII_BCM54XX_LRESR);
++	if (status < 0)
++		return status;
++done:
++	phydev->link = status & LRESR_LSTATUS ? 1 : 0;
++	phydev->autoneg_complete = status & LRESR_LDSCOMPLETE ? 1 : 0;
++
++	/* Consider the case that autoneg was started and "aneg complete"
++	 * bit has been reset, but "link up" bit not yet.
++	 */
++	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
++		phydev->link = 0;
++
++	return 0;
++}
++
++static int bcm54811_read_status(struct phy_device *phydev)
++{
++	u8 brr_mode;
++	int err;
++
++	err = bcm5481x_get_brrmode(phydev, &brr_mode);
++
++	if (err)
++		return err;
++
++	if (brr_mode) {
++		/* Get the status in BroadRReach mode just like
++		 *   genphy_read_status does in normal mode
++		 */
++
++		int err, old_link = phydev->link;
++
++		/* Update the link, but return if there was an error */
++
++		err = lre_update_link(phydev);
++		if (err)
++			return err;
++
++		/* why bother the PHY if nothing can have changed */
++		if (phydev->autoneg ==
++		    AUTONEG_ENABLE && old_link && phydev->link)
++			return 0;
++
++		phydev->speed = SPEED_UNKNOWN;
++		phydev->duplex = DUPLEX_UNKNOWN;
++		phydev->pause = 0;
++		phydev->asym_pause = 0;
++
++		err = bcm_read_master_slave(phydev);
++		if (err < 0)
++			return err;
++
++		/* Read LDS Link Partner Ability */
++		err = bcm_read_lpa(phydev);
++		if (err < 0)
++			return err;
++
++		if (phydev->autoneg ==
++		    AUTONEG_ENABLE && phydev->autoneg_complete) {
++			phy_resolve_aneg_linkmode(phydev);
++		} else if (phydev->autoneg == AUTONEG_DISABLE) {
++			err = bcm_read_status_fixed(phydev);
++			if (err < 0)
++				return err;
++		}
++	} else {
++		err = genphy_read_status(phydev);
++	}
++
++	return err;
++}
++
+ static struct phy_driver broadcom_drivers[] = {
+ {
+ 	.phy_id		= PHY_ID_BCM5411,
+@@ -1212,9 +1566,11 @@ static struct phy_driver broadcom_drivers[] = {
+ 	.get_stats	= bcm54xx_get_stats,
+ 	.probe		= bcm54xx_phy_probe,
+ 	.config_init    = bcm54811_config_init,
+-	.config_aneg    = bcm5481_config_aneg,
++	.config_aneg    = bcm54811_config_aneg,
+ 	.config_intr    = bcm_phy_config_intr,
+ 	.handle_interrupt = bcm_phy_handle_interrupt,
++	.read_status	= bcm54811_read_status,
++	.get_features	= bcm54811_read_abilities,
+ 	.suspend	= bcm54xx_suspend,
+ 	.resume		= bcm54xx_resume,
+ 	.link_change_notify	= bcm54xx_link_change_notify,
 -- 
 2.39.2
 
