@@ -1,82 +1,110 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD44631
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0128DEAE6;
+	Fri, 21 Jun 2024 13:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718977911; cv=none; b=pC41ymEWjLdfDwBRAt8Na0BOzLvrwdP1EgUBXjkRn1TG3K57XSZ/e1/8ZANR3tvEcKzeqyQ/QC9AcKmshQX9ix7k6WlMqFwHjFktMaQdcy4bxBN6I+HQkmSsyxfeHsjy3M4zuNZJ5JKjO1xv8kjojrQCYdLKQO2t2TFD0aJ4vI4=
+	t=1718978009; cv=none; b=s0tCAKVN8fadHf71zdd9nZwVdtWfFqnMFJgrDm6slVuPxvvIyCSz86keLVUmPYWFdVKsuGOyfc1pnPvENbd8e6/TkW7v0JjcxyDD14hcam93aKiqsxhX9tQWBgYPqQLImCAftnp5KUjj3wsAcCqd3u1asODLfTY9dAKYDWigsjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718977911; c=relaxed/simple;
-	bh=eIw0OrBTZkPMxvDDlPxgQ/eFcPTznxDkkavDnJ7jnO4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=peKGQheoIhw4cVVAc5PtCFG9/vpWnixq07dvvL0hgLKpvlD8K+JiKbZcMvVclM+1ihP/PKK5CYOHsYz2Azg+CCZJeGn/VHXBQ4bkz8E63y5kvePvb4oZ2P33dHDG3ym/DPuKlpNppic3qB8ETpz+ibYx4kLmxr8yKBLishKj+IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sKefl-0000ET-Hn; Fri, 21 Jun 2024 15:51:25 +0200
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sKefk-003xIz-Uf; Fri, 21 Jun 2024 15:51:24 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sKefk-000BnP-2n;
-	Fri, 21 Jun 2024 15:51:24 +0200
-Message-ID: <5744e0de7ee58d6a435e62f5740d921f143f6635.camel@pengutronix.de>
-Subject: Re: [PATCH v8 3/5] reset: imx8mp-audiomix: Add AudioMix Block
- Control reset driver
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org, 
- peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
- robh@kernel.org,  krzk+dt@kernel.org, conor+dt@kernel.org,
- shawnguo@kernel.org,  s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, marex@denx.de,  linux-clk@vger.kernel.org,
- imx@lists.linux.dev, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Fri, 21 Jun 2024 15:51:24 +0200
-In-Reply-To: <CAA+D8AOzY3EcUayGP+pYeAqQu1y0=8WWngnBriwDwOCwnbcN2A@mail.gmail.com>
-References: <1718350923-21392-1-git-send-email-shengjiu.wang@nxp.com>
-	 <1718350923-21392-4-git-send-email-shengjiu.wang@nxp.com>
-	 <27ea1bf7de6f349426fcd7ddb056a1adfae47c73.camel@pengutronix.de>
-	 <CAA+D8AOzY3EcUayGP+pYeAqQu1y0=8WWngnBriwDwOCwnbcN2A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1718978009; c=relaxed/simple;
+	bh=R6ZXMQLW2392mw1CWus8FWrfEB8kPFv8wxHZAWrIAUE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NHGuIv+eUrQbAk0SXkegfG3qwyV05DoqWSbSxoTmqt5T7tdLpKaTIS2vxSKSaQcO6PpRasH0Gfc0EXbqtQDnti8Ic4+M3qX8mGA8Q7KNjn6eYYGA84sWNgMI89/4MEV1xUmv1MZD6EF9JbkhH6fOqkZaAMzBXYeYegdS5WQRUkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=wK55wQp2; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="wK55wQp2"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6A9BEDACCF;
+	Fri, 21 Jun 2024 15:53:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1718977998; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=C6O9bd6qH5NJhHxs+s6bVDs7oMyZxsTsvkh10LQsbwo=;
+	b=wK55wQp2bh6vEvia14MR8WNy5Sb3v3eUhWBkstK0zV+5PQk11ucrBzNqP9hX+ZZ6obZMkL
+	3TkJAHBPknD/3rGcIKmlS1/y0psXMqN8xHOM99ybENVpCpLrlL0ivlsck2qGz2FD4mWSos
+	iXIAPvMW20+4YOVhtKEJxjcTinX1KuXwdWyEEQHqnPPcg5DAWOatgpKLHchV2pK8deAENO
+	UsjyR7G3d0buTDXvovkg6UM6yMpVrnJO0hmZEfDX9jRk6cisL/4tOvAhlSBB/daWAKn/6n
+	04Y36RIehL+P5D9otiSe1EVnSUL9sDTzF1cHhyviYSz8+AD3iftynNLDaNKqrA==
+From: Daniel Wagner <dwagner@suse.de>
+Date: Fri, 21 Jun 2024 15:53:10 +0200
+Subject: [PATCH 1/3] sched/isolation: Add io_queue housekeeping option
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240621-isolcpus-io-queues-v1-1-8b169bf41083@suse.de>
+References: <20240621-isolcpus-io-queues-v1-0-8b169bf41083@suse.de>
+In-Reply-To: <20240621-isolcpus-io-queues-v1-0-8b169bf41083@suse.de>
+To: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, 
+ Sagi Grimberg <sagi@grimberg.me>, Thomas Gleixner <tglx@linutronix.de>, 
+ Christoph Hellwig <hch@lst.de>
+Cc: Frederic Weisbecker <fweisbecker@suse.com>, 
+ Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
+ Sridhar Balaraman <sbalaraman@parallelwireless.com>, 
+ "brookxu.cn" <brookxu.cn@gmail.com>, Ming Lei <ming.lei@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-nvme@lists.infradead.org, Daniel Wagner <dwagner@suse.de>
+X-Mailer: b4 0.13.0
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fr, 2024-06-21 at 20:34 +0800, Shengjiu Wang wrote:
-> > I wonder why we map at all. If the parent driver already has iomem
-> > mapped, can't it just pass that in, like JH7110 does?
->=20
-> Because this is a simple reset driver, just two reset bits,
-> I want to avoid adding a header file for the parent driver and this drive=
-r.
+Drivers such as nvme-pci are spreading the IO queues on all CPUs. This
+is not necessary an invalid setup when using isolcpus but there are also
+users of isolcpus which do not want to have any IO workload on the
+isolated CPUs.
 
-Ok.
+Add a new house keeping type so the infrastructure code and drivers are
+able to distinguish between the two setups.
 
-> Thanks for reviewing.
->=20
-> By the way: shall I just send a new version for this patch only next time=
-?
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ include/linux/sched/isolation.h | 1 +
+ kernel/sched/isolation.c        | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-Yes, this is the only remaining patch for me to pick up, no need to
-resend the patches that were already applied.
+diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+index 2b461129d1fa..fe751d704e99 100644
+--- a/include/linux/sched/isolation.h
++++ b/include/linux/sched/isolation.h
+@@ -16,6 +16,7 @@ enum hk_type {
+ 	HK_TYPE_WQ,
+ 	HK_TYPE_MANAGED_IRQ,
+ 	HK_TYPE_KTHREAD,
++	HK_TYPE_IO_QUEUE,
+ 	HK_TYPE_MAX
+ };
+ 
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 5891e715f00d..91d7a434330c 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -18,6 +18,7 @@ enum hk_flags {
+ 	HK_FLAG_WQ		= BIT(HK_TYPE_WQ),
+ 	HK_FLAG_MANAGED_IRQ	= BIT(HK_TYPE_MANAGED_IRQ),
+ 	HK_FLAG_KTHREAD		= BIT(HK_TYPE_KTHREAD),
++	HK_FLAG_IO_QUEUE	= BIT(HK_TYPE_IO_QUEUE),
+ };
+ 
+ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
+@@ -228,6 +229,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+ 			continue;
+ 		}
+ 
++		if (!strncmp(str, "io_queue,", 9)) {
++			str += 9;
++			flags |= HK_FLAG_IO_QUEUE;
++			continue;
++		}
++
+ 		/*
+ 		 * Skip unknown sub-parameter and validate that it is not
+ 		 * containing an invalid character.
 
-regards
-Philipp
+-- 
+2.45.2
+
