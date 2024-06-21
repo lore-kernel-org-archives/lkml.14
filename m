@@ -1,97 +1,96 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D390416D4EA
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769B385283
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718959633; cv=none; b=nRNPG7x2KDjOiYRE6EJaDdt3MEp18iOpM10FVTUm1T46OJ0bQwiCdhxcLQHxqOLbnNUsgEpEwVqi7UPkhB/fXPxQYZO5jvH8VFeDjfHAoZSSRpTvcBBNj4l5KPK+Bvy38ToDSlAebSoRo82C7DiCYGcoFQ1YuaOGs8w3EX6Zppw=
+	t=1718959693; cv=none; b=JISpZCYlxz+Pu0CuNZXDpDZ1H/gOGcJAysWRunbJ5jhVTE5k3pYCNxszEZWMwgHcs8R3QWCJpUlVymwd5IxYNQu/KSEsMx81AxXClpRJEU4+gGnxqat3B1bcM2AJWbOPOVznB9rkB/PjCmqyupNH0ILIJGdvoFr4f+w609PqULE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718959633; c=relaxed/simple;
-	bh=OHaFAIancPg5B97CYC7U7qpvfYJQGIcnfVSOoitJsTY=;
+	s=arc-20240116; t=1718959693; c=relaxed/simple;
+	bh=XXr7POVlG9XqfsnX8LXIEzZDRsRF0W5OS4t3283AvIs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P30lctCuytgNCMLXjlJmEe5q1U9SS6zFVmQ4QN+EYzjAP+Psdc7o+iXP2IgmDCIbvJMI3k1aaOAxBqUOvBzKuXfRsVpKPt0CA54YWRkOLNrYtohfw1/Td0I6kMGFsLN8EDOUPRi0CxFzZsz9DSsta3SrxWWg4hGWuPq5+QhkJNQ=
+	 Content-Type:Content-Disposition:In-Reply-To; b=HMj+ccZJ6jcDojUhwcCfl4BzBji7nD1Y1j+U9NHRNsriscfav9t/uCAMSA7VTxFHf1Ap/j8NARx47p4WrYtPUTO1ls6m5cSG6U1R0zR9hZzfYkZHwjNJuMCphmJq9ZSOHC2jTIxgrjGCmJLKipE2bnzJ+zbcnWUsKJOqZ8VUPOM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sKZvB-0001Wd-Ft; Fri, 21 Jun 2024 10:47:01 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sKZwI-0001eE-0j; Fri, 21 Jun 2024 10:48:10 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sKZvA-003txB-Ko; Fri, 21 Jun 2024 10:47:00 +0200
-Received: from pengutronix.de (p5de45302.dip0.t-ipconnect.de [93.228.83.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 53A292EE5B7;
-	Fri, 21 Jun 2024 08:47:00 +0000 (UTC)
-Date: Fri, 21 Jun 2024 10:47:00 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Shigeru Yoshida <syoshida@redhat.com>
-Cc: robin@protonic.nl, o.rempel@pengutronix.de, kernel@pengutronix.de, 
-	socketcan@hartkopp.net, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2] can: j1939: Initialize unused data in j1939_send_one()
-Message-ID: <20240621-sociable-juicy-kakapo-b225cc-mkl@pengutronix.de>
-References: <20240517035953.2617090-1-syoshida@redhat.com>
+	(envelope-from <sha@pengutronix.de>)
+	id 1sKZwH-003u1O-7T; Fri, 21 Jun 2024 10:48:09 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sKZwH-006JSv-0T;
+	Fri, 21 Jun 2024 10:48:09 +0200
+Date: Fri, 21 Jun 2024 10:48:09 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Brian Norris <briannorris@chromium.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Kalle Valo <kvalo@kernel.org>, David Lin <yu-hao.lin@nxp.com>
+Subject: Re: [PATCH] wifi: mwifiex: increase max_num_akm_suites
+Message-ID: <ZnU-STTaTWjHViwW@pengutronix.de>
+References: <20240530130156.1651174-1-s.hauer@pengutronix.de>
+ <ZnRvZMQJUr4APwUU@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4a2nfbhzpnjrazrl"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240517035953.2617090-1-syoshida@redhat.com>
+In-Reply-To: <ZnRvZMQJUr4APwUU@google.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Mail-From: sha@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+On Thu, Jun 20, 2024 at 11:05:24AM -0700, Brian Norris wrote:
+> Hi Sascha,
+> 
+> On Thu, May 30, 2024 at 03:01:56PM +0200, Sascha Hauer wrote:
+> > The maximum number of AKM suites will be set to two if not specified by
+> > the driver. Set it to CFG80211_MAX_NUM_AKM_SUITES to let userspace
+> > specify up to ten AKM suites in the akm_suites array.
+> > 
+> > Without only the first two AKM suites will be used, further ones are
+> > ignored.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > ---
+> > 
+> > Current wpa_supplicant/hostapd only put a maximum of two into the
+> > akm_suites array as well, a patch changing this can be found here:
+> > http://lists.infradead.org/pipermail/hostap/2024-May/042720.html
+> 
+> Thanks for the patches and research.
+> 
+> Possibly dumb question: what's unique about mwifiex here? Everything you
+> describe above sounds applicable to all drivers, IIUC, and I don't see
+> any other driver that touches max_num_akm_suites.
 
---4a2nfbhzpnjrazrl
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I asked myself the same question and I don't have an answer to it. To me
+it looks like the number of akm suites is limited by the akm_suites array
+size which is CFG80211_MAX_NUM_AKM_SUITES which is 10 and that could be
+used for all drivers.
+max_num_akm_suites is introduced to be driver specific and so I changed
+it only for the driver I am currently interested in.
 
-On 17.05.2024 12:59:53, Shigeru Yoshida wrote:
-> syzbot reported kernel-infoleak in raw_recvmsg() [1]. j1939_send_one()
-> creates full frame including unused data, but it doesn't initialize it.
-> This causes the kernel-infoleak issue. Fix this by initializing unused
-> data.
+Sascha
 
-Applied to linux-can.
-
-Thanks,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---4a2nfbhzpnjrazrl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmZ1PgEACgkQKDiiPnot
-vG+pfAf9ErIVSKFNz5AlblKgvg1U9veRg7zbWZn4TdM3efLMglkmTTabPtZ9q3W0
-aq2NxoIasl6kqyBMjCkITaeu0p1Gix/sEnzCLy0u/GlZgc0d6WqhpaUCjcH9EnBw
-gCgFS5lRxz+eL3WtptU4X24S4xyh4LJgTBw2mg8e6rKZl7CYGcqE3daa8r1tnkfg
-Eh/gOx9PzNq/rFBrMJxOhic5cP+/SGdT2UtIyyg/WyHzKKdFQgdkNZa1SuXvQd7x
-bmZETXl93AuRjUDLAk/iLitQGyOrLNuqBPiI7awGUQ1IxDQgx6rOPIBj49H1vOK1
-FWvTmlIixuMq1FQL+RHxR7kUDD2edQ==
-=17GV
------END PGP SIGNATURE-----
-
---4a2nfbhzpnjrazrl--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
