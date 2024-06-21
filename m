@@ -1,80 +1,140 @@
-Received: from 20.mo583.mail-out.ovh.net (20.mo583.mail-out.ovh.net [91.121.55.239])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694504411
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 00:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.55.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2226C197;
+	Fri, 21 Jun 2024 00:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718930236; cv=none; b=DIGy3lN41bpGEKHUAY23x51tKlyB+wLsaQMNyfANhHEZYi2TI3h97QHldi5oonrbhzYslGx/ERygrmoUingLqicvO0nlawVtpNODGBMld7YjztTL2JmLDkWKzSl10M5S1P+Yu9FHYcU+6aWueggzcu5zhZOjkvmu/8yPrdBvlFI=
+	t=1718930777; cv=none; b=jYbFrT8grW2mczJ/XNrAyyISML+0U7KmWId8JzdVfAP89TypdobQHuZfmBSTGJ82uakpoxwTFfQMyDrStPxcWsn7OOdOLR+EKfBe5r6H/ju5pXF3NzS0ekSf6otcY7Yud3vGKt1o85OvNEGZHfQCpWrxm/rUnfslcl/iVtgOX9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718930236; c=relaxed/simple;
-	bh=20Bno1n30DsBD2LYX6UR5S9jh4So2fbTQRi6hmhPU14=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=csTRwpjJ6x7seQcNHEGdOtMDh6wbdlsgDtLReHh2FuL4RRuBGNwrsT9VCoM3YXDcHrtFyphTzD6Qs52bWDxd3kFYHKLZjgOkwGUDRbytxN2jQyKL/lkZQKPhNXV+fw7/nqTJ2xQXAyyrr7UoKzALMFqbQwboptKTyNTbGQiptJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=91.121.55.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director1.ghost.mail-out.ovh.net (unknown [10.109.140.28])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4W4xKJ13d3z1Rjf
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:19:48 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-bvkjt (unknown [10.110.96.185])
-	by director1.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 541F31FD4C;
-	Thu, 20 Jun 2024 23:19:47 +0000 (UTC)
-Received: from etezian.org ([37.59.142.110])
-	by ghost-submission-6684bf9d7b-bvkjt with ESMTPSA
-	id O1+2EhO5dGb3AgAA/KbBAQ
-	(envelope-from <andi@etezian.org>); Thu, 20 Jun 2024 23:19:47 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-110S0040f310b2f-be15-42b6-bcff-984cf221b99d,
-                    C57D3D2E0A03F635C8A27B63C027BBD507C09C29) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>, 
- Peter Korsgaard <peter@korsgaard.com>, Andrew Lunn <andrew@lunn.ch>, 
- Thomas Gleixner <tglx@linutronix.de>, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Grygorii Tertychnyi <grembeter@gmail.com>
-Cc: Grygorii Tertychnyi <grygorii.tertychnyi@leica-geosystems.com>, 
- bsp-development.geo@leica-geosystems.com, stable@vger.kernel.org
-In-Reply-To: <20240520153932.116731-1-grygorii.tertychnyi@leica-geosystems.com>
-References: <20240520153932.116731-1-grygorii.tertychnyi@leica-geosystems.com>
-Subject: Re: [PATCH v2] i2c: ocores: set IACK bit after core is enabled
-Message-Id: <171892558671.2178094.6404949110171049934.b4-ty@kernel.org>
-Date: Fri, 21 Jun 2024 01:19:46 +0200
+	s=arc-20240116; t=1718930777; c=relaxed/simple;
+	bh=NHhFREd6gjXx4D1yUDV1fWbFdoKWzxNWEagkznfZcRw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FR5X0BxYzzQboyG9nmXE3PjY3arWm7IeL8TJdA2FBaRM0zbCgbI+0judz89WlG9D0askXSWWsDSJhFT55KvP/x4aGjZTnzsyhXlKCRWSIu/ZmDaW4bcti5C4RVYXYmP7a4pqxIyjbs48V6enFBt2At8Vgzub/VGncuQ4qh9by5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=NcKP2jFD; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="NcKP2jFD"
+Received: from [192.168.68.112] (ppp118-210-79-194.adl-adc-lon-bras32.tpg.internode.on.net [118.210.79.194])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2CAFB200DD;
+	Fri, 21 Jun 2024 08:46:05 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1718930767;
+	bh=h5dRVJQy35axM2JOoP1ujWmkMFeh76MXxL7uKyuYIiQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=NcKP2jFDsy3aMiuCUjlJitK0s9yShifLgb5vm28MeUlTnqmsgIp2/PB/VucMSCcam
+	 rahb68dvUNUlRGuJLadUjLmlZyg5/xoUVx5+1fonqn74wt+ZNf6Pv4cC6jg+SbFsG0
+	 9tBbVGebycFgyuWCj8qS7N+BEDOXWYM2ZaLNjWxFcmQRnED1f90H7bjWCtby4463L5
+	 wYLVxi8+FCcI31bL1vNMRorlVeZUg1cO4UskuRdTP6KT/0dN6oWOM267KRvzkQ25C6
+	 bTBAbXaNEcm60jQWPg7NbyZJ+twyZH+VQZrw6MBmjZAMWhhagHHjZqNQbMtlT5xrbC
+	 JuOc4S7LikPEA==
+Message-ID: <cb55efedaef63e4580c11415aa2e29606edcaf9f.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: aspeed,ast2600-pinctrl:
+ add NCSI group
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Potin Lai <potin.lai.pt@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>,  Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>
+Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Patrick
+ Williams <patrick@stwcx.xyz>, Cosmo Chou <cosmo.chou@quantatw.com>, Potin
+ Lai <potin.lai@quantatw.com>,  Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Date: Fri, 21 Jun 2024 10:16:04 +0930
+In-Reply-To: <20240620084337.3525690-2-potin.lai.pt@gmail.com>
+References: <20240620084337.3525690-1-potin.lai.pt@gmail.com>
+	 <20240620084337.3525690-2-potin.lai.pt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 13336284400655993449
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeeffedgvddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddutdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
 
-Hi
+Hi Potin,
 
-On Mon, 20 May 2024 17:39:32 +0200, Grygorii Tertychnyi wrote:
-> Setting IACK bit when core is disabled does not clear the "Interrupt Flag"
-> bit in the status register, and the interrupt remains pending.
-> 
-> Sometimes it causes failure for the very first message transfer, that is
-> usually a device probe.
-> 
-> Hence, set IACK bit after core is enabled to clear pending interrupt.
-> 
-> [...]
+On Thu, 2024-06-20 at 16:43 +0800, Potin Lai wrote:
+> In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is not
+> needed on the management controller side.
+>=20
+> Add NCSI group to distinguish the pin group between RMII and NCSI.
+>=20
+> - RMII pins:
+>   - RMIIXRCLKI
+>   - RMIIXRXD0
+>   - RMIIXRXD1
+>   - RMIIXCRSDV
+>   - RMIIXRXER
+>   - RMIIXRCLKO
+>   - RMIIXTXEN
+>   - RMIIXTXD0
+>   - RMIIXTXD1
+>=20
+> - NCSI pins:
+>   - RMIIXRCLKI
+>   - RMIIXRXD0
+>   - RMIIXRXD1
+>   - RMIIXCRSDV
+>   - RMIIXRXER
+>   - RMIIXTXEN
+>   - RMIIXTXD0
+>   - RMIIXTXD1
 
-Applied to i2c/i2c-host-next on
+I think listing all the pins for both groups obscures the fact that
+there aren't more changes than removing RMIIXRCLKO.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+Can we instead drop these lists and replace
 
-Thank you,
-Andi
+> Add NCSI group to distinguish the pin group between RMII and NCSI.
 
-Patches applied
-===============
-[1/1] i2c: ocores: set IACK bit after core is enabled
-      commit: 5a72477273066b5b357801ab2d315ef14949d402
+With:
 
+> Add "NCSI" pin groups that are equivalent to the RMII pin groups,
+> but without the RMIIXRCLKO pin
+
+?
+
+>=20
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+> ---
+>  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml     | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pin=
+ctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctr=
+l.yaml
+> index 00b6974a5ed3d..3f02dc94a7ce2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.ya=
+ml
+> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.ya=
+ml
+> @@ -337,6 +337,8 @@ additionalProperties:
+>          - MDIO2
+>          - MDIO3
+>          - MDIO4
+> +        - NCSI3
+> +        - NCSI4
+
+Can we also do this for RMII{1,2}RCLKO (and in the driver patch as
+well)?
+
+>          - NCTS1
+>          - NCTS2
+>          - NCTS3
+
+Overall, what I was hoping for with the comment on the earlier patch
+was that you would add the discussion in the commit message to the
+"description" entry in the binding YAML. Can you please do so? That way
+the information is always present for people reading the binding
+without them having to look at the binding's change history.
+
+Thanks,
+
+Andrew
