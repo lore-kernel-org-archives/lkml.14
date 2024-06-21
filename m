@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBFA154C01;
-	Fri, 21 Jun 2024 12:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010BD156643;
+	Fri, 21 Jun 2024 12:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718974788; cv=none; b=sni31t3quKqGzBOeM17dYhIls3FlTO1mTFYZbuhCoJI38UKn5v8iLC+2Xtd03lL99n/6Nx6ej43cscIEHiP4ycnZxmCiML0IVWqjsjpr2ipDbaQEQU/BJtZmGclo/kqQQGNYJWqdFQ1i98xmKMOlN4eKXatPuv/6K1qDJ8nG58Y=
+	t=1718974798; cv=none; b=ZKnl0TivxVwNfPGEnj8l4m8Qa+TK8E86dhOkKAlkbBryjq5CV5pzw/7U6STquaJVOECn8P++iI57PgiaH1SEIQEYSEF7sALFhG3rI61D1SFJN/np1Qm+A+P2jDF6ajRPkGaOq57hrE2VF505IFk2Ps0Ct4N/93fU4nMF1JD1ytY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718974788; c=relaxed/simple;
-	bh=ZvfYvU9gTQ9eTne6uHBT/Wc6I4SdjJe1LLmkPiYV+dY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W/65leJMQXbd9M+WfGTTTWz36SgkROj1VZeclRBXQPlpoD0QMejxYqXUUDrlfT3cuCKlzFgF5imzrA8bm+ZaA6AdzwW4Ct28LO3yD8DUoyOHLCu66MQaRfcdj3+9CLFZRK8SaxX6nGdcS+ZhqztTBZWAZCyyNmSxQNJkNFdsNmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oUEEcEBS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718974798; c=relaxed/simple;
+	bh=bfxEpExWT3rHvMnZKXqeiXJwQc/W0MuZe5ktoEQW9lo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N6TZdMi4WXakNUO7LWyB2iMamD+SOnmtHtNLdDqs9RZZMTJOwTX5yJNpU/nwwP7bCWej5pdN0iFYZCgRLGWlbUcaXdQASEf1ZiscvtMABGkjXgAoacSHUHpjBv1LS86HWk/fjw2Ey7MkU93dANlAbY7ayVGx1cOYnTFhLsJ9eAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=l3EiU9wm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oUEEcEBS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77C0C2BBFC;
-	Fri, 21 Jun 2024 12:59:46 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="l3EiU9wm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0467C4AF0A;
+	Fri, 21 Jun 2024 12:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718974787;
-	bh=ZvfYvU9gTQ9eTne6uHBT/Wc6I4SdjJe1LLmkPiYV+dY=;
+	s=korg; t=1718974797;
+	bh=bfxEpExWT3rHvMnZKXqeiXJwQc/W0MuZe5ktoEQW9lo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=oUEEcEBSQmuTB1+axau+KCLpKN24WGJBPH8mxE7s992RpAuuu/UBD344nROSStAlY
-	 XMNEf8B/Xmy0I+mY974nsSk7WLJPtLCbzf8oCyCwMBccNo8PVGCR36G+9O7mjVHqqF
-	 kQvjpankhGCjCypaXekBf6xIi6SDE87mGCJP/+SQ=
+	b=l3EiU9wm8oge/IYD80CF3LpfYuyjkeBto2lNJyv+MlQqyQ8PHt1sJnd6kwz2PYiYJ
+	 YgRZRldfA2giFW1iNmB80QS5h7cMBpBexKMDw3qVAKNlmw76m+FrITEfYO7JXUuaws
+	 rzpLKAL3G2iXPXiHT89Kl+JufXita9th/o1DHvbQ=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -30,9 +30,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.1.95
-Date: Fri, 21 Jun 2024 14:59:33 +0200
-Message-ID: <2024062133-frigidly-swimmable-1f17@gregkh>
+Subject: Linux 5.10.220
+Date: Fri, 21 Jun 2024 14:59:40 +0200
+Message-ID: <2024062141-colonial-flier-e2ba@gregkh>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,15 +40,14 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 6.1.95 kernel.
+I'm announcing the release of the 5.10.220 kernel.
 
-All users of the 6.1 kernel series must upgrade.
+All users of the 5.10 kernel series must upgrade.
 
-The updated 6.1.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.1.y
+The updated 5.10.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.10.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -58,718 +57,1078 @@ greg k-h
 
 ------------
 
- Makefile                                                          |    2 
- arch/arm64/boot/dts/qcom/sa8155p-adp.dts                          |   86 -
- arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts         |    2 
- arch/arm64/boot/dts/qcom/sm8150.dtsi                              |  376 +---
- arch/powerpc/include/asm/uaccess.h                                |   15 
- arch/riscv/mm/init.c                                              |   21 
- arch/riscv/mm/pageattr.c                                          |   28 
- arch/x86/boot/compressed/Makefile                                 |    4 
- arch/x86/kernel/amd_nb.c                                          |    9 
- arch/xtensa/include/asm/processor.h                               |    8 
- arch/xtensa/include/asm/ptrace.h                                  |    2 
- arch/xtensa/kernel/process.c                                      |    5 
- arch/xtensa/kernel/stacktrace.c                                   |    4 
- drivers/base/core.c                                               |    3 
- drivers/block/null_blk/zoned.c                                    |    2 
- drivers/bluetooth/btqca.c                                         |   46 
- drivers/bluetooth/btqca.h                                         |    2 
- drivers/bluetooth/hci_qca.c                                       |    2 
- drivers/clk/sifive/sifive-prci.c                                  |    8 
- drivers/dma/dma-axi-dmac.c                                        |    2 
- drivers/firmware/qcom_scm.c                                       |   18 
- drivers/gpio/Kconfig                                              |    2 
- drivers/gpio/gpio-tqmx86.c                                        |  136 +
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c         |  120 -
- drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c        |    2 
- drivers/gpu/drm/bridge/panel.c                                    |    7 
- drivers/gpu/drm/exynos/exynos_drm_vidi.c                          |    7 
- drivers/gpu/drm/exynos/exynos_hdmi.c                              |    7 
- drivers/gpu/drm/i915/gem/i915_gem_object.h                        |    4 
- drivers/gpu/drm/i915/gt/intel_breadcrumbs.c                       |   15 
- drivers/gpu/drm/vmwgfx/Kconfig                                    |    7 
- drivers/gpu/drm/vmwgfx/Makefile                                   |    2 
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c                               |   65 
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h                               |   38 
- drivers/gpu/drm/vmwgfx/vmwgfx_fb.c                                |  831 ----------
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.c                               |  353 +---
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.h                               |   13 
- drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c                               |    5 
- drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c                              |    5 
- drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c                              |   47 
- drivers/greybus/interface.c                                       |    1 
- drivers/hid/hid-core.c                                            |    1 
- drivers/hid/hid-logitech-dj.c                                     |    4 
- drivers/hid/i2c-hid/i2c-hid-of-elan.c                             |  103 -
- drivers/hwtracing/intel_th/pci.c                                  |   25 
- drivers/i2c/busses/i2c-at91-slave.c                               |    3 
- drivers/i2c/busses/i2c-designware-slave.c                         |    2 
- drivers/i2c/i2c-core-acpi.c                                       |   30 
- drivers/i2c/i2c-core-base.c                                       |   98 +
- drivers/i2c/i2c-core-of.c                                         |   66 
- drivers/iio/accel/mxc4005.c                                       |   76 
- drivers/iio/adc/ad9467.c                                          |    4 
- drivers/iio/dac/ad5592r-base.c                                    |    2 
- drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c                 |    4 
- drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c                  |    4 
- drivers/input/input.c                                             |  104 +
- drivers/iommu/amd/init.c                                          |    9 
- drivers/irqchip/irq-gic-v3-its.c                                  |   44 
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c                     |    9 
- drivers/misc/mei/pci-me.c                                         |    4 
- drivers/misc/pvpanic/pvpanic-mmio.c                               |   58 
- drivers/misc/pvpanic/pvpanic-pci.c                                |   60 
- drivers/misc/pvpanic/pvpanic.c                                    |   76 
- drivers/misc/pvpanic/pvpanic.h                                    |   10 
- drivers/misc/vmw_vmci/vmci_event.c                                |    6 
- drivers/mmc/host/davinci_mmc.c                                    |    4 
- drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c                    |    2 
- drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c                 |   11 
- drivers/net/ethernet/google/gve/gve_rx_dqo.c                      |    8 
- drivers/net/ethernet/google/gve/gve_tx_dqo.c                      |   20 
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c                   |    4 
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h                   |    2 
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c           |   21 
- drivers/net/ethernet/intel/ice/ice.h                              |   32 
- drivers/net/ethernet/intel/ice/ice_adminq_cmd.h                   |    4 
- drivers/net/ethernet/intel/ice/ice_common.c                       |    9 
- drivers/net/ethernet/intel/ice/ice_controlq.c                     |    3 
- drivers/net/ethernet/intel/ice/ice_flow.c                         |   23 
- drivers/net/ethernet/intel/ice/ice_lib.c                          |   46 
- drivers/net/ethernet/intel/ice/ice_nvm.c                          |   28 
- drivers/net/ethernet/intel/ice/ice_sched.c                        |   90 -
- drivers/net/ethernet/intel/ice/ice_sched.h                        |   27 
- drivers/net/ethernet/intel/ice/ice_switch.c                       |   19 
- drivers/net/ethernet/intel/ice/ice_type.h                         |    8 
- drivers/net/ethernet/intel/ice/ice_xsk.c                          |   13 
- drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c               |   33 
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c                 |    3 
- drivers/net/ethernet/mellanox/mlx5/core/fw.c                      |    4 
- drivers/net/ethernet/mellanox/mlx5/core/health.c                  |   12 
- drivers/net/ethernet/mellanox/mlx5/core/lag/port_sel.c            |    8 
- drivers/net/ethernet/mellanox/mlx5/core/lib/pci_vsc.c             |    4 
- drivers/net/ethernet/mellanox/mlx5/core/main.c                    |   86 -
- drivers/net/ethernet/pensando/ionic/ionic_lif.c                   |    4 
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c                   |   25 
- drivers/net/geneve.c                                              |   10 
- drivers/net/phy/sfp.c                                             |    3 
- drivers/net/vxlan/vxlan_core.c                                    |    4 
- drivers/net/wireless/ath/ath10k/Kconfig                           |    1 
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c                      |    2 
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c                       |   10 
- drivers/net/wireless/intel/iwlwifi/mvm/rs.h                       |    9 
- drivers/net/wireless/intel/iwlwifi/mvm/scan.c                     |    4 
- drivers/net/wwan/iosm/iosm_ipc_devlink.c                          |    2 
- drivers/nvme/target/passthru.c                                    |    6 
- drivers/pci/controller/pcie-rockchip-ep.c                         |    6 
- drivers/platform/x86/dell/dell-smbios-base.c                      |   92 -
- drivers/ptp/ptp_chardev.c                                         |    3 
- drivers/remoteproc/ti_k3_r5_remoteproc.c                          |   58 
- drivers/scsi/mpi3mr/mpi3mr_app.c                                  |   62 
- drivers/scsi/mpt3sas/mpt3sas_base.c                               |   19 
- drivers/scsi/mpt3sas/mpt3sas_base.h                               |    3 
- drivers/scsi/mpt3sas/mpt3sas_ctl.c                                |    4 
- drivers/scsi/mpt3sas/mpt3sas_scsih.c                              |   23 
- drivers/scsi/scsi_transport_sas.c                                 |   23 
- drivers/scsi/sd.c                                                 |   17 
- drivers/spmi/hisi-spmi-controller.c                               |    1 
- drivers/thunderbolt/debugfs.c                                     |    5 
- drivers/tty/n_tty.c                                               |   22 
- drivers/tty/serial/8250/8250_dw.c                                 |    5 
- drivers/tty/serial/8250/8250_pxa.c                                |    1 
- drivers/tty/serial/sc16is7xx.c                                    |   25 
- drivers/usb/Makefile                                              |    1 
- drivers/usb/class/cdc-wdm.c                                       |    4 
- drivers/usb/gadget/function/f_fs.c                                |    9 
- drivers/usb/host/xhci-pci.c                                       |    7 
- drivers/usb/host/xhci-ring.c                                      |   59 
- drivers/usb/host/xhci.h                                           |    1 
- drivers/usb/storage/alauda.c                                      |    9 
- drivers/usb/typec/tcpm/tcpm.c                                     |    5 
- fs/btrfs/disk-io.c                                                |   26 
- fs/btrfs/extent_map.c                                             |    2 
- fs/btrfs/zoned.c                                                  |  330 ++-
- fs/cachefiles/daemon.c                                            |    4 
- fs/cachefiles/interface.c                                         |    7 
- fs/cachefiles/internal.h                                          |   52 
- fs/cachefiles/ondemand.c                                          |  320 ++-
- fs/jfs/xattr.c                                                    |    4 
- fs/nfs/dir.c                                                      |   47 
- fs/nfs/nfs4proc.c                                                 |   23 
- fs/nfsd/nfsfh.c                                                   |    4 
- fs/nilfs2/dir.c                                                   |   59 
- fs/nilfs2/segment.c                                               |    3 
- fs/ocfs2/file.c                                                   |    2 
- fs/ocfs2/namei.c                                                  |    2 
- fs/proc/vmcore.c                                                  |    2 
- include/linux/i2c.h                                               |   24 
- include/linux/pse-pd/pse.h                                        |    4 
- include/linux/serial_core.h                                       |    1 
- include/net/bluetooth/hci_core.h                                  |   36 
- include/net/ip_tunnels.h                                          |    5 
- include/scsi/scsi_transport_sas.h                                 |    2 
- include/trace/events/cachefiles.h                                 |    8 
- io_uring/kbuf.c                                                   |    3 
- kernel/events/core.c                                              |   13 
- kernel/fork.c                                                     |   18 
- kernel/pid_namespace.c                                            |    1 
- kernel/time/tick-common.c                                         |   42 
- mm/memory-failure.c                                               |   11 
- mm/vmalloc.c                                                      |   29 
- net/ax25/af_ax25.c                                                |    6 
- net/ax25/ax25_dev.c                                               |    2 
- net/bluetooth/l2cap_core.c                                        |    8 
- net/bpf/test_run.c                                                |    6 
- net/bridge/br_mst.c                                               |   13 
- net/core/sock_map.c                                               |   16 
- net/ipv4/tcp.c                                                    |    6 
- net/ipv6/ioam6_iptunnel.c                                         |    8 
- net/ipv6/ip6_fib.c                                                |    6 
- net/ipv6/route.c                                                  |    5 
- net/ipv6/seg6_iptunnel.c                                          |   14 
- net/ipv6/tcp_ipv6.c                                               |    3 
- net/mac80211/he.c                                                 |   10 
- net/mac80211/mesh_pathtbl.c                                       |   13 
- net/mac80211/sta_info.c                                           |    4 
- net/mptcp/pm_netlink.c                                            |   21 
- net/mptcp/protocol.c                                              |    1 
- net/ncsi/internal.h                                               |    2 
- net/ncsi/ncsi-manage.c                                            |   93 -
- net/ncsi/ncsi-rsp.c                                               |    4 
- net/netfilter/ipset/ip_set_core.c                                 |   81 
- net/netfilter/ipset/ip_set_list_set.c                             |   30 
- net/sched/sch_multiq.c                                            |    2 
- net/sched/sch_taprio.c                                            |   15 
- net/smc/af_smc.c                                                  |   22 
- net/sunrpc/auth_gss/auth_gss.c                                    |    4 
- net/unix/af_unix.c                                                |  109 -
- net/unix/diag.c                                                   |   12 
- net/wireless/core.c                                               |    2 
- net/wireless/pmsr.c                                               |    8 
- net/wireless/sysfs.c                                              |    4 
- net/wireless/util.c                                               |    7 
- security/landlock/fs.c                                            |   13 
- tools/testing/cxl/test/mem.c                                      |    1 
- tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc |    2 
- tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc  |    3 
- tools/testing/selftests/net/mptcp/mptcp_join.sh                   |    5 
- tools/testing/selftests/vm/compaction_test.c                      |  108 -
- 197 files changed, 2924 insertions(+), 3011 deletions(-)
+ Documentation/filesystems/files.rst          |    8 
+ Documentation/filesystems/locking.rst        |   10 
+ Documentation/filesystems/nfs/exporting.rst  |   78 
+ Makefile                                     |    2 
+ arch/powerpc/platforms/cell/spufs/coredump.c |    2 
+ crypto/algboss.c                             |    4 
+ fs/Kconfig                                   |    6 
+ fs/autofs/dev-ioctl.c                        |    5 
+ fs/cachefiles/namei.c                        |    9 
+ fs/cifs/connect.c                            |    2 
+ fs/coredump.c                                |    5 
+ fs/ecryptfs/inode.c                          |   10 
+ fs/exec.c                                    |   29 
+ fs/exportfs/expfs.c                          |   40 
+ fs/file.c                                    |  177 -
+ fs/init.c                                    |    6 
+ fs/lockd/clnt4xdr.c                          |    9 
+ fs/lockd/clntproc.c                          |    3 
+ fs/lockd/host.c                              |    4 
+ fs/lockd/svc.c                               |  256 -
+ fs/lockd/svc4proc.c                          |   70 
+ fs/lockd/svclock.c                           |   67 
+ fs/lockd/svcproc.c                           |   62 
+ fs/lockd/svcsubs.c                           |  123 
+ fs/lockd/svcxdr.h                            |  142 +
+ fs/lockd/xdr.c                               |  454 +--
+ fs/lockd/xdr4.c                              |  466 +--
+ fs/locks.c                                   |  102 
+ fs/namei.c                                   |   21 
+ fs/nfs/blocklayout/blocklayout.c             |    2 
+ fs/nfs/blocklayout/dev.c                     |    2 
+ fs/nfs/callback.c                            |  111 
+ fs/nfs/callback_xdr.c                        |   33 
+ fs/nfs/dir.c                                 |    2 
+ fs/nfs/export.c                              |   17 
+ fs/nfs/file.c                                |    3 
+ fs/nfs/filelayout/filelayout.c               |    4 
+ fs/nfs/filelayout/filelayoutdev.c            |    2 
+ fs/nfs/flexfilelayout/flexfilelayout.c       |    4 
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c    |    2 
+ fs/nfs/nfs42xdr.c                            |    2 
+ fs/nfs/nfs4state.c                           |    2 
+ fs/nfs/nfs4xdr.c                             |    6 
+ fs/nfs/pagelist.c                            |    3 
+ fs/nfs/super.c                               |    8 
+ fs/nfs/write.c                               |    3 
+ fs/nfs_common/Makefile                       |    2 
+ fs/nfs_common/nfs_ssc.c                      |    2 
+ fs/nfs_common/nfsacl.c                       |  123 
+ fs/nfsd/Kconfig                              |   36 
+ fs/nfsd/Makefile                             |    8 
+ fs/nfsd/acl.h                                |    6 
+ fs/nfsd/blocklayout.c                        |    1 
+ fs/nfsd/blocklayoutxdr.c                     |    1 
+ fs/nfsd/cache.h                              |    2 
+ fs/nfsd/export.c                             |   74 
+ fs/nfsd/export.h                             |   16 
+ fs/nfsd/filecache.c                          | 1191 ++++----
+ fs/nfsd/filecache.h                          |   23 
+ fs/nfsd/flexfilelayout.c                     |    3 
+ fs/nfsd/lockd.c                              |   10 
+ fs/nfsd/netns.h                              |   63 
+ fs/nfsd/nfs2acl.c                            |  216 -
+ fs/nfsd/nfs3acl.c                            |  146 -
+ fs/nfsd/nfs3proc.c                           |  396 +-
+ fs/nfsd/nfs3xdr.c                            | 1751 +++++++-----
+ fs/nfsd/nfs4acl.c                            |   45 
+ fs/nfsd/nfs4callback.c                       |  168 -
+ fs/nfsd/nfs4idmap.c                          |    9 
+ fs/nfsd/nfs4layouts.c                        |    4 
+ fs/nfsd/nfs4proc.c                           | 1111 +++++---
+ fs/nfsd/nfs4recover.c                        |   20 
+ fs/nfsd/nfs4state.c                          | 1913 +++++++++----
+ fs/nfsd/nfs4xdr.c                            | 3709 ++++++++++++++-------------
+ fs/nfsd/nfscache.c                           |  115 
+ fs/nfsd/nfsctl.c                             |  169 -
+ fs/nfsd/nfsd.h                               |   50 
+ fs/nfsd/nfsfh.c                              |  297 +-
+ fs/nfsd/nfsfh.h                              |  181 -
+ fs/nfsd/nfsproc.c                            |  262 -
+ fs/nfsd/nfssvc.c                             |  356 +-
+ fs/nfsd/nfsxdr.c                             |  844 +++---
+ fs/nfsd/state.h                              |   69 
+ fs/nfsd/stats.c                              |  122 
+ fs/nfsd/stats.h                              |   96 
+ fs/nfsd/trace.c                              |    1 
+ fs/nfsd/trace.h                              |  886 +++++-
+ fs/nfsd/vfs.c                                |  929 +++---
+ fs/nfsd/vfs.h                                |   60 
+ fs/nfsd/xdr.h                                |   70 
+ fs/nfsd/xdr3.h                               |  116 
+ fs/nfsd/xdr4.h                               |  127 
+ fs/nfsd/xdr4cb.h                             |    6 
+ fs/notify/dnotify/dnotify.c                  |   17 
+ fs/notify/fanotify/fanotify.c                |  485 ++-
+ fs/notify/fanotify/fanotify.h                |  252 +
+ fs/notify/fanotify/fanotify_user.c           |  878 +++++-
+ fs/notify/fdinfo.c                           |   19 
+ fs/notify/fsnotify.c                         |  183 -
+ fs/notify/fsnotify.h                         |   19 
+ fs/notify/group.c                            |   38 
+ fs/notify/inotify/inotify.h                  |   11 
+ fs/notify/inotify/inotify_fsnotify.c         |   12 
+ fs/notify/inotify/inotify_user.c             |   87 
+ fs/notify/mark.c                             |  172 -
+ fs/notify/notification.c                     |   70 
+ fs/open.c                                    |   49 
+ fs/overlayfs/overlayfs.h                     |    9 
+ fs/proc/fd.c                                 |   48 
+ fs/udf/file.c                                |    2 
+ fs/verity/enable.c                           |    2 
+ include/linux/dnotify.h                      |    2 
+ include/linux/errno.h                        |    1 
+ include/linux/exportfs.h                     |   15 
+ include/linux/fanotify.h                     |   74 
+ include/linux/fdtable.h                      |   37 
+ include/linux/fs.h                           |   54 
+ include/linux/fsnotify.h                     |   77 
+ include/linux/fsnotify_backend.h             |  372 ++
+ include/linux/iversion.h                     |   13 
+ include/linux/kallsyms.h                     |   17 
+ include/linux/kthread.h                      |    1 
+ include/linux/lockd/bind.h                   |    3 
+ include/linux/lockd/lockd.h                  |   17 
+ include/linux/lockd/xdr.h                    |   35 
+ include/linux/lockd/xdr4.h                   |   33 
+ include/linux/module.h                       |   24 
+ include/linux/nfs.h                          |    8 
+ include/linux/nfs4.h                         |   21 
+ include/linux/nfs_ssc.h                      |   14 
+ include/linux/nfsacl.h                       |    6 
+ include/linux/pid.h                          |    1 
+ include/linux/sched/user.h                   |    3 
+ include/linux/sunrpc/msg_prot.h              |    3 
+ include/linux/sunrpc/svc.h                   |  151 -
+ include/linux/sunrpc/svc_rdma.h              |    4 
+ include/linux/sunrpc/svc_xprt.h              |   16 
+ include/linux/sunrpc/svcauth.h               |    4 
+ include/linux/sunrpc/svcsock.h               |    7 
+ include/linux/sunrpc/xdr.h                   |  153 +
+ include/linux/syscalls.h                     |   12 
+ include/linux/sysctl.h                       |    2 
+ include/linux/user_namespace.h               |    4 
+ include/trace/events/sunrpc.h                |   26 
+ include/uapi/linux/fanotify.h                |   42 
+ include/uapi/linux/nfs3.h                    |    6 
+ include/uapi/linux/nfsd/nfsfh.h              |  105 
+ kernel/audit_fsnotify.c                      |    8 
+ kernel/audit_tree.c                          |    2 
+ kernel/audit_watch.c                         |    5 
+ kernel/bpf/inode.c                           |    2 
+ kernel/bpf/syscall.c                         |   20 
+ kernel/bpf/task_iter.c                       |    2 
+ kernel/fork.c                                |   12 
+ kernel/kallsyms.c                            |    8 
+ kernel/kcmp.c                                |   29 
+ kernel/kthread.c                             |   23 
+ kernel/livepatch/core.c                      |    7 
+ kernel/module.c                              |   26 
+ kernel/pid.c                                 |   15 
+ kernel/sys.c                                 |    2 
+ kernel/sysctl.c                              |   54 
+ kernel/trace/trace_kprobe.c                  |    4 
+ kernel/ucount.c                              |    4 
+ mm/madvise.c                                 |    2 
+ mm/memcontrol.c                              |    2 
+ mm/mincore.c                                 |    2 
+ net/bluetooth/bnep/core.c                    |    2 
+ net/bluetooth/cmtp/core.c                    |    2 
+ net/bluetooth/hidp/core.c                    |    2 
+ net/sunrpc/auth_gss/gss_rpc_xdr.c            |    2 
+ net/sunrpc/auth_gss/svcauth_gss.c            |   47 
+ net/sunrpc/sched.c                           |    1 
+ net/sunrpc/svc.c                             |  314 +-
+ net/sunrpc/svc_xprt.c                        |  104 
+ net/sunrpc/svcauth.c                         |    8 
+ net/sunrpc/svcauth_unix.c                    |   18 
+ net/sunrpc/svcsock.c                         |   32 
+ net/sunrpc/xdr.c                             |  112 
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c   |    2 
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c        |   32 
+ net/sunrpc/xprtrdma/svc_rdma_transport.c     |    2 
+ net/unix/af_unix.c                           |    2 
+ tools/objtool/check.c                        |    3 
+ 184 files changed, 13950 insertions(+), 8863 deletions(-)
 
-Aapo Vienamo (1):
-      thunderbolt: debugfs: Fix margin debugfs node creation condition
+Al Viro (2):
+      nfsd_splice_actor(): handle compound pages
+      fs/notify: constify path
 
-Adam Miotk (1):
-      drm/bridge/panel: Fix runtime warning on panel bridge release
+Alex Shi (1):
+      nfsd/nfs3: remove unused macro nfsd3_fhandleres
 
-Alan Stern (1):
-      USB: class: cdc-wdm: Fix CPU lockup caused by excessive log messages
+Amir Goldstein (52):
+      nfsd: remove unused stats counters
+      nfsd: protect concurrent access to nfsd stats counters
+      nfsd: report per-export stats
+      fsnotify: allow fsnotify_{peek,remove}_first_event with empty queue
+      fanotify: reduce event objectid to 29-bit hash
+      fanotify: mix event info and pid into merge key hash
+      fsnotify: use hash table for faster events merge
+      fanotify: limit number of event merge attempts
+      fanotify: configurable limits via sysfs
+      fanotify: support limited functionality for unprivileged users
+      fanotify: fix permission model of unprivileged group
+      fsnotify: replace igrab() with ihold() on attach connector
+      fsnotify: count s_fsnotify_inode_refs for attached connectors
+      fsnotify: count all objects with attached connectors
+      fsnotify: optimize the case of no marks of any type
+      fsnotify: fix sb_connectors leak
+      fsnotify: pass data_type to fsnotify_name()
+      fsnotify: pass dentry instead of inode data
+      fsnotify: clarify contract for create event hooks
+      fsnotify: clarify object type argument
+      fsnotify: separate mark iterator type from object type enum
+      fanotify: introduce group flag FAN_REPORT_TARGET_FID
+      fsnotify: generate FS_RENAME event with rich information
+      fanotify: use macros to get the offset to fanotify_info buffer
+      fanotify: use helpers to parcel fanotify_info buffer
+      fanotify: support secondary dir fh and name in fanotify_info
+      fanotify: record old and new parent and name in FAN_RENAME event
+      fanotify: record either old name new name or both for FAN_RENAME
+      fanotify: report old and/or new parent+name in FAN_RENAME event
+      fanotify: wire up FAN_RENAME event
+      fsnotify: fix merge with parent's ignored mask
+      fsnotify: optimize FS_MODIFY events with no ignored masks
+      fanotify: do not allow setting dirent events in mask of non-dir
+      inotify: move control flags from mask to mark flags
+      fsnotify: pass flags argument to fsnotify_alloc_group()
+      fsnotify: make allow_dups a property of the group
+      fsnotify: create helpers for group mark_mutex lock
+      inotify: use fsnotify group lock helpers
+      nfsd: use fsnotify group lock helpers
+      dnotify: use fsnotify group lock helpers
+      fsnotify: allow adding an inode mark without pinning inode
+      fanotify: create helper fanotify_mark_user_flags()
+      fanotify: factor out helper fanotify_mark_update_flags()
+      fanotify: implement "evictable" inode marks
+      fanotify: use fsnotify group lock helpers
+      fanotify: enable "evictable" inode marks
+      fsnotify: introduce mark type iterator
+      fsnotify: consistent behavior for parent not watching children
+      fanotify: refine the validation checks on non-dir inode mask
+      fanotify: prepare for setting event flags in ignore mask
+      fanotify: cleanups for fanotify_mark() input validations
+      fanotify: introduce FAN_MARK_IGNORE
 
-Aleksandr Mishin (4):
-      net/mlx5: Fix tainted pointer delete is case of flow rules creation fail
-      net: wwan: iosm: Fix tainted pointer delete is case of region creation fail
-      liquidio: Adjust a NULL pointer handling path in lio_vf_rep_copy_packet
-      bnxt_en: Adjust logging of firmware messages in case of released token in __hwrm_send()
+Anna Schumaker (1):
+      NFSD: Simplify READ_PLUS
 
-Alexander Shishkin (5):
-      intel_th: pci: Add Granite Rapids support
-      intel_th: pci: Add Granite Rapids SOC support
-      intel_th: pci: Add Sapphire Rapids SOC support
-      intel_th: pci: Add Meteor Lake-S support
-      intel_th: pci: Add Lunar Lake support
+Bang Li (1):
+      fsnotify: remove redundant parameter judgment
 
-Alexey Kodanev (1):
-      drm/amd/display: drop unnecessary NULL checks in debugfs
+Benjamin Coddington (1):
+      NLM: Defend against file_lock changes after vfs_test_lock()
 
-Amit Sunil Dhamne (1):
-      usb: typec: tcpm: fix use-after-free case in tcpm_register_source_caps
+Brian Foster (1):
+      NFSD: pass range end to vfs_fsync_range() instead of count
 
-Amjad Ouled-Ameur (1):
-      drm/komeda: check for error-valued pointer
+Changcheng Deng (1):
+      NFSD:fix boolreturn.cocci warning
 
-Andrei Coardos (1):
-      gpio: tqmx86: remove unneeded call to platform_set_drvdata()
+ChenXiaoSong (5):
+      nfsd: use DEFINE_PROC_SHOW_ATTRIBUTE to define nfsd_proc_ops
+      nfsd: use DEFINE_SHOW_ATTRIBUTE to define export_features_fops and supported_enctypes_fops
+      nfsd: use DEFINE_SHOW_ATTRIBUTE to define client_info_fops
+      nfsd: use DEFINE_SHOW_ATTRIBUTE to define nfsd_reply_cache_stats_fops
+      nfsd: use DEFINE_SHOW_ATTRIBUTE to define nfsd_file_cache_stats_fops
 
-Andy Shevchenko (1):
-      serial: core: Add UPIO_UNKNOWN constant for unknown port type
-
-Apurva Nandan (1):
-      remoteproc: k3-r5: Wait for core0 power-up before powering up core1
-
-Armin Wolf (1):
-      platform/x86: dell-smbios: Fix wrong token data in sysfs
-
-Baokun Li (9):
-      cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
-      cachefiles: remove requests from xarray during flushing requests
-      cachefiles: add spin_lock for cachefiles_ondemand_info
-      cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
-      cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
-      cachefiles: remove err_put_fd label in cachefiles_ondemand_daemon_read()
-      cachefiles: never get a new anonymous fd if ondemand_id is valid
-      cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
-      cachefiles: flush all requests after setting CACHEFILES_DEAD
-
-Beleswar Padhi (2):
-      remoteproc: k3-r5: Do not allow core1 to power up before core0 via sysfs
-      remoteproc: k3-r5: Jump to error handling labels in start/stop errors
-
-Benjamin Segall (1):
-      x86/boot: Don't add the EFI stub to targets, again
-
-Breno Leitao (1):
-      scsi: mpt3sas: Avoid test/set_bit() operating in non-allocated memory
-
-Chen Hanxiao (1):
-      SUNRPC: return proper error from gss_wrap_req_priv
-
-Chris Wilson (1):
-      drm/i915/gt: Disarm breadcrumbs if engines are already idle
+Christian Brauner (3):
+      fs: add file and path permissions helpers
+      namei: introduce struct renamedata
+      fanotify_user: use upper_32_bits() to verify mask
 
 Christoph Hellwig (4):
-      btrfs: zoned: introduce a zone_info struct in btrfs_load_block_group_zone_info
-      btrfs: zoned: factor out per-zone logic from btrfs_load_block_group_zone_info
-      btrfs: zoned: factor out single bg handling from btrfs_load_block_group_zone_info
-      btrfs: zoned: factor out DUP bg handling from btrfs_load_block_group_zone_info
-
-Cong Yang (1):
-      HID: i2c-hid: elan: Add ili9882t timing
-
-Csókás, Bence (1):
-      net: sfp: Always call `sfp_sm_mod_remove()` on remove
-
-Damien Le Moal (2):
-      scsi: mpi3mr: Fix ATA NCQ priority support
-      null_blk: Print correct max open zones limit in null_init_zoned_dev()
-
-Daniel Borkmann (1):
-      vxlan: Fix regression when dropping packets due to invalid src addresses
-
-Daniel Wagner (1):
-      nvmet-passthru: propagate status from id override functions
-
-Dave Jiang (1):
-      cxl/test: Add missing vmalloc.h for tools/testing/cxl/test/mem.c
-
-David Howells (1):
-      cachefiles, erofs: Fix NULL deref in when cachefiles is not doing ondemand-mode
-
-David Lechner (1):
-      iio: adc: ad9467: fix scan type sign
-
-DelphineCCChiu (1):
-      net/ncsi: Fix the multi thread manner of NCSI driver
-
-Dev Jain (2):
-      selftests/mm: compaction_test: fix incorrect write of zero to nr_hugepages
-      selftests/mm: compaction_test: fix bogus test success on Aarch64
-
-Dirk Behme (1):
-      drivers: core: synchronize really_probe() and dev_uevent()
-
-Dmitry Baryshkov (1):
-      wifi: ath10k: fix QCOM_RPROC_COMMON dependency
-
-Dmitry Torokhov (1):
-      Input: try trimming too long modalias strings
-
-Doug Brown (1):
-      serial: 8250_pxa: Configure tx_loadsz to match FIFO IRQ level
-
-Duoming Zhou (1):
-      ax25: Replace kfree() in ax25_dev_free() with ax25_dev_put()
-
-Emmanuel Grumbach (1):
-      wifi: iwlwifi: mvm: don't read past the mfuart notifcation
-
-Eric Dumazet (6):
-      ipv6: ioam: block BH from ioam6_output()
-      ipv6: sr: block BH in seg6_output_core() and seg6_input_core()
-      net/sched: taprio: always validate TCA_TAPRIO_ATTR_PRIOMAP
-      af_unix: annotate lockless accesses to sk->sk_err
-      ipv6: fix possible race in __fib6_drop_pcpu_from()
-      tcp: fix race in tcp_v6_syn_recv_sock()
-
-Filipe Manana (4):
-      btrfs: remove unnecessary prototype declarations at disk-io.c
-      btrfs: make btrfs_destroy_delayed_refs() return void
-      btrfs: fix leak of qgroup extent records after transaction abort
-      btrfs: zoned: fix use-after-free due to race with dev replace
-
-Gabor Juhos (1):
-      firmware: qcom_scm: disable clocks if qcom_scm_bw_enable() fails
-
-Gal Pressman (2):
-      geneve: Fix incorrect inner network header offset when innerprotoinherit is set
-      net/mlx5e: Fix features validation check for tunneled UDP (non-VXLAN) packets
-
-Greg Kroah-Hartman (2):
-      jfs: xattr: fix buffer overflow for invalid xattr
-      Linux 6.1.95
-
-Gregor Herburger (1):
-      gpio: tqmx86: fix typo in Kconfig label
-
-Hagar Gamal Halim Hemdan (1):
-      vmci: prevent speculation leaks by sanitizing event in event_deliver()
-
-Hagar Hemdan (1):
-      irqchip/gic-v3-its: Fix potential race condition in its_vlpi_prop_update()
-
-Haifeng Xu (1):
-      perf/core: Fix missing wakeup when waiting for context reference
-
-Hailong.Liu (1):
-      mm/vmalloc: fix vmalloc which may return null if called with __GFP_NOFAIL
-
-Hamish Martin (1):
-      i2c: acpi: Unbind mux adapters before delete
-
-Hangyu Hua (1):
-      net: sched: sch_multiq: fix possible OOB write in multiq_tune()
-
-Hans de Goede (1):
-      iio: accel: mxc4005: Reset chip on probe() and resume()
-
-Hector Martin (1):
-      xhci: Handle TD clearing for multiple streams case
-
-Hersen Wu (1):
-      drm/amd/display: Fix incorrect DSC instance for MST
-
-Hugo Villeneuve (2):
-      serial: sc16is7xx: replace hardcoded divisor value with BIT() macro
-      serial: sc16is7xx: fix bug in sc16is7xx_set_baud() when using prescaler
-
-Ian Forbes (3):
-      drm/vmwgfx: Filter modes which exceed graphics memory
-      drm/vmwgfx: 3D disabled should not effect STDU memory limits
-      drm/vmwgfx: Remove STDU logic from generic mode_valid function
-
-Ilpo Järvinen (1):
-      tty: n_tty: Fix buffer offsets when lookahead is used
-
-Jacob Keller (1):
-      ice: fix iteration of TLVs in Preserved Fields Area
-
-Jani Nikula (1):
-      drm/exynos/vidi: fix memory leak in .get_modes()
-
-Jason Xing (1):
-      tcp: count CLOSE-WAIT sockets for TCP_MIB_CURRESTAB
-
-Jean Delvare (2):
-      i2c: at91: Fix the functionality flags of the slave-only interface
-      i2c: designware: Fix the functionality flags of the slave-only interface
-
-Jean-Baptiste Maneyrol (1):
-      iio: imu: inv_icm42600: delete unneeded update watermark call
-
-Jens Axboe (1):
-      io_uring: check for non-NULL file pointer in io_file_can_poll()
-
-Jia Zhu (4):
-      cachefiles: introduce object ondemand state
-      cachefiles: extract ondemand info field from cachefiles_object
-      cachefiles: resend an open request if the read request's object is closed
-      cachefiles: add restore command to recover inflight ondemand read requests
-
-Jie Wang (1):
-      net: hns3: add cond_resched() to hns3 ring buffer init process
-
-Jiri Olsa (1):
-      bpf: Set run context for rawtp test_run callback
-
-Jisheng Zhang (1):
-      serial: 8250_dw: fall back to poll if there's no interrupt
-
-Johan Hovold (4):
-      Bluetooth: qca: fix invalid device address check
-      HID: i2c-hid: elan: fix reset suspend current leakage
-      Bluetooth: qca: fix wcn3991 device address check
-      Bluetooth: qca: generalise device address check
-
-Johannes Berg (2):
-      wifi: cfg80211: fully move wiphy work to unbound workqueue
-      wifi: iwlwifi: mvm: revert gen2 TX A-MPDU size to 64
-
-John Ernberg (1):
-      USB: xen-hcd: Traverse host/ when CONFIG_USB_XEN_HCD is selected
-
-John Keeping (1):
-      usb: gadget: f_fs: use io_data->status consistently
-
-Joshua Washington (1):
-      gve: ignore nonrelevant GSO type bits when processing TSO headers
-
-José Expósito (1):
-      HID: logitech-dj: Fix memory leak in logi_dj_recv_switch_to_dj_mode()
-
-Jozsef Kadlecsik (1):
-      netfilter: ipset: Fix race between namespace cleanup and gc in the list:set type
-
-Karol Kolacinski (1):
-      ptp: Fix error message on failed pin verification
-
-Kory Maincent (1):
-      net: pse-pd: Use EOPNOTSUPP error code instead of ENOTSUPP
-
-Krzysztof Kozlowski (1):
-      arm64: dts: qcom: sm8150: align TLMM pin configuration with DT schema
-
-Kuangyi Chiang (2):
-      xhci: Apply reset resume quirk to Etron EJ188 xHCI host
-      xhci: Apply broken streams quirk to Etron EJ188 xHCI host
-
-Kun(llfl) (1):
-      iommu/amd: Fix sysfs leak in iommu init
-
-Kuniyuki Iwashima (13):
-      af_unix: Set sk->sk_state under unix_state_lock() for truly disconencted peer.
-      af_unix: Annodate data-races around sk->sk_state for writers.
-      af_unix: Annotate data-race of sk->sk_state in unix_inq_len().
-      af_unix: Annotate data-races around sk->sk_state in unix_write_space() and poll().
-      af_unix: Annotate data-race of sk->sk_state in unix_stream_connect().
-      af_unix: Annotate data-races around sk->sk_state in sendmsg() and recvmsg().
-      af_unix: Annotate data-race of sk->sk_state in unix_stream_read_skb().
-      af_unix: Annotate data-races around sk->sk_state in UNIX_DIAG.
-      af_unix: Annotate data-race of net->unx.sysctl_max_dgram_qlen.
-      af_unix: Use unix_recvq_full_lockless() in unix_stream_connect().
-      af_unix: Use skb_queue_empty_lockless() in unix_release_sock().
-      af_unix: Use skb_queue_len_lockless() in sk_diag_show_rqlen().
-      af_unix: Annotate data-race of sk->sk_shutdown in sk_diag_fill().
-
-Kyle Tso (1):
-      usb: typec: tcpm: Ignore received Hard Reset in TOGGLING state
-
-Lars Kellogg-Stedman (1):
-      ax25: Fix refcount imbalance on inbound connections
-
-Larysa Zaremba (1):
-      ice: remove af_xdp_zc_qps bitmap
-
-Lin Ma (1):
-      wifi: cfg80211: pmsr: use correct nla_get_uX functions
-
-Lingbo Kong (1):
-      wifi: mac80211: correctly parse Spatial Reuse Parameter Set element
-
-Linus Walleij (1):
-      gpio: tqmx86: Convert to immutable irq_chip
-
-Luca Ceresoli (1):
-      iio: accel: mxc4005: allow module autoloading via OF compatible
-
-Luiz Augusto von Dentz (1):
-      Bluetooth: L2CAP: Fix rejecting L2CAP_CONN_PARAM_UPDATE_REQ
-
-Marc Ferland (1):
-      iio: dac: ad5592r: fix temperature channel scaling value
-
-Marek Szyprowski (1):
-      drm/exynos: hdmi: report safe 640x480 mode as a fallback when no EDID found
-
-Mark Brown (1):
-      selftests/mm: log a consistent test name for check_compaction
-
-Martin K. Petersen (1):
-      scsi: sd: Use READ(16) when reading block zero on large capacity disks
-
-Martin Krastev (1):
-      drm/vmwgfx: Refactor drm connector probing for display modes
-
-Masami Hiramatsu (Google) (1):
-      selftests/ftrace: Fix to check required event file
-
-Mathias Nyman (1):
-      xhci: Set correct transferred length for cancelled bulk transfers
-
-Matthew Wilcox (Oracle) (1):
-      nilfs2: return the mapped address from nilfs_get_page()
-
-Matthias Schiffer (3):
-      gpio: tqmx86: introduce shadow register for GPIO output value
-      gpio: tqmx86: store IRQ trigger type and unmask status separately
-      gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
-
-Max Filippov (1):
-      xtensa: fix MAKE_PC_FROM_RA second argument
-
-Miaohe Lin (2):
-      mm/huge_memory: don't unpoison huge_zero_folio
-      mm/memory-failure: fix handling of dissolved but not taken off from buddy pages
-
-Michael Ellerman (1):
-      powerpc/uaccess: Fix build errors seen with GCC 13/14
-
-Michal Hocko (1):
-      mm, vmalloc: fix high order __GFP_NOFAIL allocations
-
-Michal Wilczynski (1):
-      ice: Introduce new parameters in ice_sched_node
-
-Mickaël Salaün (1):
-      landlock: Fix d_parent walk
-
-Miri Korenblit (1):
-      wifi: iwlwifi: mvm: check n_ssids before accessing the ssids
-
-Moshe Shemesh (2):
-      net/mlx5: Stop waiting for PCI up if teardown was triggered
-      net/mlx5: Stop waiting for PCI if pci channel is offline
-
-Muhammad Usama Anjum (1):
-      selftests/mm: conform test to TAP format output
-
-Nam Cao (2):
-      riscv: fix overlap of allocated page and PTR_ERR
-      riscv: rewrite __kernel_map_pages() to fix sleeping in invalid context
-
-NeilBrown (1):
-      NFS: add barriers when testing for NFS_FSDATA_BLOCKED
-
-Nicolas Escande (1):
-      wifi: mac80211: mesh: Fix leak of mesh_preq_queue objects
-
-Nikita Zhandarovich (1):
-      HID: core: remove unnecessary WARN_ON() in implement()
-
-Nikolay Aleksandrov (2):
-      net: bridge: mst: pass vlan group directly to br_mst_vlan_set_state
-      net: bridge: mst: fix suspicious rcu usage in br_mst_set_state
-
-Nuno Sa (1):
-      dmaengine: axi-dmac: fix possible race in remove()
-
-Oleg Nesterov (2):
-      tick/nohz_full: Don't abuse smp_call_function_single() in tick_setup_device()
-      zap_pid_ns_processes: clear TIF_NOTIFY_SIGNAL along with TIF_SIGPENDING
-
-Olga Kornievskaia (1):
-      NFSv4.1 enforce rootpath check in fs_location query
-
-Paolo Abeni (1):
-      mptcp: ensure snd_una is properly initialized on connect
-
-Peter Delevoryas (1):
-      net/ncsi: Simplify Kconfig/dts control flow
-
-Petr Pavlu (1):
-      net/ipv6: Fix the RT cache flush via sysctl using a previous delay
-
-Przemek Kitszel (1):
-      ice: remove null checks before devm_kfree() calls
-
-Qu Wenruo (1):
-      btrfs: fix wrong block_start calculation for btrfs_drop_extent_map_range()
-
-Randy Dunlap (1):
-      xtensa: stacktrace: include <asm/ftrace.h> for prototype
-
-Rao Shoaib (1):
-      af_unix: Read with MSG_PEEK loops if the first unread byte is OOB
-
-Remi Pommarel (2):
-      wifi: mac80211: Fix deadlock in ieee80211_sta_ps_deliver_wakeup()
-      wifi: cfg80211: Lock wiphy in cfg80211_get_station
-
-Rick Wertenbroek (1):
-      PCI: rockchip-ep: Remove wrong mask on subsys_vendor_id
-
-Rik van Riel (1):
-      fs/proc: fix softlockup in __read_vmcore
-
-Russell King (Oracle) (1):
-      i2c: add fwnode APIs
-
-Ryusuke Konishi (2):
-      nilfs2: fix nilfs_empty_dir() misjudgment and long loop on I/O errors
-      nilfs2: fix potential kernel bug due to lack of writeback flag waiting
-
-Sam James (1):
-      Revert "fork: defer linking file vma until vma is fully initialized"
-
-Samuel Holland (1):
-      clk: sifive: Do not register clkdevs for PRCI clocks
-
-Shahar S Matityahu (1):
-      wifi: iwlwifi: dbg_ini: move iwl_dbg_tlv_free outside of debugfs ifdef
-
-Shay Drory (2):
-      net/mlx5: Split function_setup() to enable and open functions
-      net/mlx5: Always stop health timer during driver removal
-
-Shichao Lai (1):
-      usb-storage: alauda: Check whether the media is initialized
-
-Sicong Huang (1):
-      greybus: Fix use-after-free bug in gb_interface_release due to race condition.
-
-Steven Rostedt (Google) (1):
-      tracing/selftests: Fix kprobe event name test for .isra. functions
-
-Su Yue (2):
-      ocfs2: use coarse time for new created files
-      ocfs2: fix races between hole punching and AIO+DIO
-
-Subbaraya Sundeep (1):
-      octeontx2-af: Always allocate PF entries from low prioriy zone
-
-Taehee Yoo (1):
-      ionic: fix use after netif_napi_del()
-
-Thadeu Lima de Souza Cascardo (1):
-      sock_map: avoid race between sock_map_close and sk_psock_put
-
-Thomas Weißschuh (2):
-      misc/pvpanic: deduplicate common code
-      misc/pvpanic-pci: register attributes via pci_driver
-
-Tomas Winkler (1):
-      mei: me: release irq in mei_me_pci_resume error path
-
-Trond Myklebust (1):
-      knfsd: LOOKUP can return an illegal error value
-
-Uwe Kleine-König (1):
-      mmc: davinci: Don't strip remove function when driver is builtin
-
-Vamshi Gajjela (1):
-      spmi: hisi-spmi-controller: Do not override device identifier
-
-Vidya Srinivas (1):
-      drm/i915/dpt: Make DPT object unshrinkable
-
-Volodymyr Babchuk (1):
-      arm64: dts: qcom: sa8155p-adp: fix SDHC2 CD pin configuration
-
-Wen Gu (1):
-      net/smc: avoid overwriting when adjusting sock bufsizes
-
-Wesley Cheng (1):
-      usb: gadget: f_fs: Fix race between aio_cancel() and AIO request complete
-
-Xiaolei Wang (1):
-      net: stmmac: replace priv->speed with the portTransmitRate from the tc-cbs parameters
-
-Yazen Ghannam (1):
-      x86/amd_nb: Check for invalid SMN reads
-
-Yonglong Liu (1):
-      net: hns3: fix kernel crash problem in concurrent scenario
-
-YonglongLi (2):
-      mptcp: pm: inc RmAddr MIB counter once per RM_ADDR ID
-      mptcp: pm: update add_addr counters after connect
-
-Yongzhi Liu (2):
-      misc: microchip: pci1xxxx: fix double free in the error handling of gp_aux_bus_probe()
-      misc: microchip: pci1xxxx: Fix a memory leak in the error handling of gp_aux_bus_probe()
-
-Zack Rusin (1):
-      drm/vmwgfx: Port the framebuffer code to drm fb helpers
-
-Ziwei Xiao (1):
-      gve: Clear napi->skb before dev_kfree_skb_any()
+      module: unexport find_module and module_mutex
+      module: use RCU to synchronize find_module
+      kallsyms: refactor {,module_}kallsyms_on_each_symbol
+      kallsyms: only build {,module_}kallsyms_on_each_symbol when required
+
+Christophe JAILLET (2):
+      nfsd: Avoid some useless tests
+      nfsd: Propagate some error code returned by memdup_user()
+
+Chuck Lever (409):
+      SUNRPC: Rename svc_encode_read_payload()
+      NFSD: Invoke svc_encode_result_payload() in "read" NFSD encoders
+      NFSD: Clean up the show_nf_may macro
+      NFSD: Remove extra "0x" in tracepoint format specifier
+      NFSD: Add SPDX header for fs/nfsd/trace.c
+      SUNRPC: Add xdr_set_scratch_page() and xdr_reset_scratch_buffer()
+      SUNRPC: Prepare for xdr_stream-style decoding on the server-side
+      NFSD: Add common helpers to decode void args and encode void results
+      NFSD: Add tracepoints in nfsd_dispatch()
+      NFSD: Add tracepoints in nfsd4_decode/encode_compound()
+      NFSD: Replace the internals of the READ_BUF() macro
+      NFSD: Replace READ* macros in nfsd4_decode_access()
+      NFSD: Replace READ* macros in nfsd4_decode_close()
+      NFSD: Replace READ* macros in nfsd4_decode_commit()
+      NFSD: Change the way the expected length of a fattr4 is checked
+      NFSD: Replace READ* macros that decode the fattr4 size attribute
+      NFSD: Replace READ* macros that decode the fattr4 acl attribute
+      NFSD: Replace READ* macros that decode the fattr4 mode attribute
+      NFSD: Replace READ* macros that decode the fattr4 owner attribute
+      NFSD: Replace READ* macros that decode the fattr4 owner_group attribute
+      NFSD: Replace READ* macros that decode the fattr4 time_set attributes
+      NFSD: Replace READ* macros that decode the fattr4 security label attribute
+      NFSD: Replace READ* macros that decode the fattr4 umask attribute
+      NFSD: Replace READ* macros in nfsd4_decode_fattr()
+      NFSD: Replace READ* macros in nfsd4_decode_create()
+      NFSD: Replace READ* macros in nfsd4_decode_delegreturn()
+      NFSD: Replace READ* macros in nfsd4_decode_getattr()
+      NFSD: Replace READ* macros in nfsd4_decode_link()
+      NFSD: Relocate nfsd4_decode_opaque()
+      NFSD: Add helpers to decode a clientid4 and an NFSv4 state owner
+      NFSD: Add helper for decoding locker4
+      NFSD: Replace READ* macros in nfsd4_decode_lock()
+      NFSD: Replace READ* macros in nfsd4_decode_lockt()
+      NFSD: Replace READ* macros in nfsd4_decode_locku()
+      NFSD: Replace READ* macros in nfsd4_decode_lookup()
+      NFSD: Add helper to decode NFSv4 verifiers
+      NFSD: Add helper to decode OPEN's createhow4 argument
+      NFSD: Add helper to decode OPEN's openflag4 argument
+      NFSD: Replace READ* macros in nfsd4_decode_share_access()
+      NFSD: Replace READ* macros in nfsd4_decode_share_deny()
+      NFSD: Add helper to decode OPEN's open_claim4 argument
+      NFSD: Replace READ* macros in nfsd4_decode_open()
+      NFSD: Replace READ* macros in nfsd4_decode_open_confirm()
+      NFSD: Replace READ* macros in nfsd4_decode_open_downgrade()
+      NFSD: Replace READ* macros in nfsd4_decode_putfh()
+      NFSD: Replace READ* macros in nfsd4_decode_read()
+      NFSD: Replace READ* macros in nfsd4_decode_readdir()
+      NFSD: Replace READ* macros in nfsd4_decode_remove()
+      NFSD: Replace READ* macros in nfsd4_decode_rename()
+      NFSD: Replace READ* macros in nfsd4_decode_renew()
+      NFSD: Replace READ* macros in nfsd4_decode_secinfo()
+      NFSD: Replace READ* macros in nfsd4_decode_setattr()
+      NFSD: Replace READ* macros in nfsd4_decode_setclientid()
+      NFSD: Replace READ* macros in nfsd4_decode_setclientid_confirm()
+      NFSD: Replace READ* macros in nfsd4_decode_verify()
+      NFSD: Replace READ* macros in nfsd4_decode_write()
+      NFSD: Replace READ* macros in nfsd4_decode_release_lockowner()
+      NFSD: Replace READ* macros in nfsd4_decode_cb_sec()
+      NFSD: Replace READ* macros in nfsd4_decode_backchannel_ctl()
+      NFSD: Replace READ* macros in nfsd4_decode_bind_conn_to_session()
+      NFSD: Add a separate decoder to handle state_protect_ops
+      NFSD: Add a separate decoder for ssv_sp_parms
+      NFSD: Add a helper to decode state_protect4_a
+      NFSD: Add a helper to decode nfs_impl_id4
+      NFSD: Add a helper to decode channel_attrs4
+      NFSD: Replace READ* macros in nfsd4_decode_create_session()
+      NFSD: Replace READ* macros in nfsd4_decode_destroy_session()
+      NFSD: Replace READ* macros in nfsd4_decode_free_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_getdeviceinfo()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutcommit()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutget()
+      NFSD: Replace READ* macros in nfsd4_decode_layoutreturn()
+      NFSD: Replace READ* macros in nfsd4_decode_secinfo_no_name()
+      NFSD: Replace READ* macros in nfsd4_decode_sequence()
+      NFSD: Replace READ* macros in nfsd4_decode_test_stateid()
+      NFSD: Replace READ* macros in nfsd4_decode_destroy_clientid()
+      NFSD: Replace READ* macros in nfsd4_decode_reclaim_complete()
+      NFSD: Replace READ* macros in nfsd4_decode_fallocate()
+      NFSD: Replace READ* macros in nfsd4_decode_nl4_server()
+      NFSD: Replace READ* macros in nfsd4_decode_copy()
+      NFSD: Replace READ* macros in nfsd4_decode_copy_notify()
+      NFSD: Replace READ* macros in nfsd4_decode_offload_status()
+      NFSD: Replace READ* macros in nfsd4_decode_seek()
+      NFSD: Replace READ* macros in nfsd4_decode_clone()
+      NFSD: Replace READ* macros in nfsd4_decode_xattr_name()
+      NFSD: Replace READ* macros in nfsd4_decode_setxattr()
+      NFSD: Replace READ* macros in nfsd4_decode_listxattrs()
+      NFSD: Make nfsd4_ops::opnum a u32
+      NFSD: Replace READ* macros in nfsd4_decode_compound()
+      NFSD: Remove macros that are no longer used
+      Revert "fget: clarify and improve __fget_files() implementation"
+      NFSD: Fix sparse warning in nfssvc.c
+      NFSD: Restore NFSv4 decoding's SAVEMEM functionality
+      SUNRPC: Make trace_svc_process() display the RPC procedure symbolically
+      SUNRPC: Display RPC procedure names instead of proc numbers
+      SUNRPC: Move definition of XDR_UNIT
+      NFSD: Update GETATTR3args decoder to use struct xdr_stream
+      NFSD: Update ACCESS3arg decoder to use struct xdr_stream
+      NFSD: Update READ3arg decoder to use struct xdr_stream
+      NFSD: Update WRITE3arg decoder to use struct xdr_stream
+      NFSD: Update READLINK3arg decoder to use struct xdr_stream
+      NFSD: Fix returned READDIR offset cookie
+      NFSD: Add helper to set up the pages where the dirlist is encoded
+      NFSD: Update READDIR3args decoders to use struct xdr_stream
+      NFSD: Update COMMIT3arg decoder to use struct xdr_stream
+      NFSD: Update the NFSv3 DIROPargs decoder to use struct xdr_stream
+      NFSD: Update the RENAME3args decoder to use struct xdr_stream
+      NFSD: Update the LINK3args decoder to use struct xdr_stream
+      NFSD: Update the SETATTR3args decoder to use struct xdr_stream
+      NFSD: Update the CREATE3args decoder to use struct xdr_stream
+      NFSD: Update the MKDIR3args decoder to use struct xdr_stream
+      NFSD: Update the SYMLINK3args decoder to use struct xdr_stream
+      NFSD: Update the MKNOD3args decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 GETATTR argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READ argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 WRITE argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READLINK argument decoder to use struct xdr_stream
+      NFSD: Add helper to set up the pages where the dirlist is encoded
+      NFSD: Update the NFSv2 READDIR argument decoder to use struct xdr_stream
+      NFSD: Update NFSv2 diropargs decoding to use struct xdr_stream
+      NFSD: Update the NFSv2 RENAME argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 LINK argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETATTR argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 CREATE argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SYMLINK argument decoder to use struct xdr_stream
+      NFSD: Remove argument length checking in nfsd_dispatch()
+      NFSD: Update the NFSv2 GETACL argument decoder to use struct xdr_stream
+      NFSD: Add an xdr_stream-based decoder for NFSv2/3 ACLs
+      NFSD: Update the NFSv2 SETACL argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL GETATTR argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL ACCESS argument decoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv2 ACL decoders
+      NFSD: Update the NFSv3 GETACL argument decoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETACL argument decoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv3 ACL decoders
+      NFSD: Extract the svcxdr_init_encode() helper
+      NFSD: Update the GETATTR3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 ACCESS3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 LOOKUP3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 wccstat result encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 READLINK3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 READ3res encode to use struct xdr_stream
+      NFSD: Update the NFSv3 WRITE3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 CREATE family of encoders to use struct xdr_stream
+      NFSD: Update the NFSv3 RENAMEv3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 LINK3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 FSSTAT3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 FSINFO3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 PATHCONF3res encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 COMMIT3res encoder to use struct xdr_stream
+      NFSD: Add a helper that encodes NFSv3 directory offset cookies
+      NFSD: Count bytes instead of pages in the NFSv3 READDIR encoder
+      NFSD: Update the NFSv3 READDIR3res encoder to use struct xdr_stream
+      NFSD: Update NFSv3 READDIR entry encoders to use struct xdr_stream
+      NFSD: Remove unused NFSv3 directory entry encoders
+      NFSD: Reduce svc_rqst::rq_pages churn during READDIR operations
+      NFSD: Update the NFSv2 stat encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 attrstat encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 diropres encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READLINK result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READ result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 STATFS result encoder to use struct xdr_stream
+      NFSD: Add a helper that encodes NFSv3 directory offset cookies
+      NFSD: Count bytes instead of pages in the NFSv2 READDIR encoder
+      NFSD: Update the NFSv2 READDIR result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 READDIR entry encoder to use struct xdr_stream
+      NFSD: Remove unused NFSv2 directory entry encoders
+      NFSD: Add an xdr_stream-based encoder for NFSv2/3 ACLs
+      NFSD: Update the NFSv2 GETACL result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 SETACL result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL GETATTR result encoder to use struct xdr_stream
+      NFSD: Update the NFSv2 ACL ACCESS result encoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv2 ACL encoders
+      NFSD: Update the NFSv3 GETACL result encoder to use struct xdr_stream
+      NFSD: Update the NFSv3 SETACL result encoder to use struct xdr_stream
+      NFSD: Clean up after updating NFSv3 ACL encoders
+      NFSD: Add a tracepoint to record directory entry encoding
+      NFSD: Clean up NFSDDBG_FACILITY macro
+      SUNRPC: Export svc_xprt_received()
+      Revert "fanotify: limit number of event merge attempts"
+      NFSD: Add an RPC authflavor tracepoint display helper
+      NFSD: Add nfsd_clid_cred_mismatch tracepoint
+      NFSD: Add nfsd_clid_verf_mismatch tracepoint
+      NFSD: Remove trace_nfsd_clid_inuse_err
+      NFSD: Add nfsd_clid_confirmed tracepoint
+      NFSD: Add nfsd_clid_reclaim_complete tracepoint
+      NFSD: Add nfsd_clid_destroyed tracepoint
+      NFSD: Add a couple more nfsd_clid_expired call sites
+      NFSD: Add tracepoints for SETCLIENTID edge cases
+      NFSD: Add tracepoints for EXCHANGEID edge cases
+      NFSD: Constify @fh argument of knfsd_fh_hash()
+      NFSD: Capture every CB state transition
+      NFSD: Drop TRACE_DEFINE_ENUM for NFSD4_CB_<state> macros
+      NFSD: Add cb_lost tracepoint
+      NFSD: Adjust cb_shutdown tracepoint
+      NFSD: Enhance the nfsd_cb_setup tracepoint
+      NFSD: Add an nfsd_cb_lm_notify tracepoint
+      NFSD: Add an nfsd_cb_offload tracepoint
+      NFSD: Replace the nfsd_deleg_break tracepoint
+      NFSD: Add an nfsd_cb_probe tracepoint
+      NFSD: Remove the nfsd_cb_work and nfsd_cb_done tracepoints
+      NFSD: Update nfsd_cb_args tracepoint
+      lockd: Remove stale comments
+      lockd: Create a simplified .vs_dispatch method for NLM requests
+      lockd: Common NLM XDR helpers
+      lockd: Update the NLMv1 void argument decoder to use struct xdr_stream
+      lockd: Update the NLMv1 TEST arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 LOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 CANCEL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 UNLOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 nlm_res arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 SM_NOTIFY arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 SHARE arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 FREE_ALL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv1 void results encoder to use struct xdr_stream
+      lockd: Update the NLMv1 TEST results encoder to use struct xdr_stream
+      lockd: Update the NLMv1 nlm_res results encoder to use struct xdr_stream
+      lockd: Update the NLMv1 SHARE results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 void arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 TEST arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 LOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 CANCEL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 UNLOCK arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 nlm_res arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 SM_NOTIFY arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 SHARE arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 FREE_ALL arguments decoder to use struct xdr_stream
+      lockd: Update the NLMv4 void results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 TEST results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 nlm_res results encoder to use struct xdr_stream
+      lockd: Update the NLMv4 SHARE results encoder to use struct xdr_stream
+      NFSD: Prevent a possible oops in the nfs_dirent() tracepoint
+      NFSD: Clean up splice actor
+      SUNRPC: Add svc_rqst_replace_page() API
+      NFSD: Batch release pages during splice read
+      SUNRPC: Add svc_rqst::rq_auth_stat
+      SUNRPC: Set rq_auth_stat in the pg_authenticate() callout
+      SUNRPC: Eliminate the RQ_AUTHERR flag
+      NFS: Add a private local dispatcher for NFSv4 callback operations
+      NFS: Remove unused callback void decoder
+      NLM: Fix svcxdr_encode_owner()
+      SUNRPC: Trace calls to .rpc_call_done
+      NFSD: Optimize DRC bucket pruning
+      NFSD: Have legacy NFSD WRITE decoders use xdr_stream_subsegment()
+      SUNRPC: Replace the "__be32 *p" parameter to .pc_decode
+      SUNRPC: Change return value type of .pc_decode
+      NFSD: Save location of NFSv4 COMPOUND status
+      SUNRPC: Replace the "__be32 *p" parameter to .pc_encode
+      SUNRPC: Change return value type of .pc_encode
+      NFSD: Fix exposure in nfsd4_decode_bitmap()
+      NFSD: Fix READDIR buffer overflow
+      NFSD: Fix sparse warning
+      NFSD: Remove be32_to_cpu() from DRC hash function
+      NFSD: Combine XDR error tracepoints
+      NFSD: De-duplicate nfsd4_decode_bitmap4()
+      NFSD: Fix zero-length NFSv3 WRITEs
+      NFSD: Clean up nfsd_vfs_write()
+      NFSD: De-duplicate net_generic(SVC_NET(rqstp), nfsd_net_id)
+      NFSD: De-duplicate net_generic(nf->nf_net, nfsd_net_id)
+      NFSD: Write verifier might go backwards
+      NFSD: Clean up the nfsd_net::nfssvc_boot field
+      NFSD: Rename boot verifier functions
+      NFSD: Trace boot verifier resets
+      Revert "nfsd: skip some unnecessary stats in the v4 case"
+      NFSD: Move fill_pre_wcc() and fill_post_wcc()
+      NFSD: Fix the behavior of READ near OFFSET_MAX
+      NFSD: Fix ia_size underflow
+      NFSD: Fix NFSv3 SETATTR/CREATE's handling of large file sizes
+      NFSD: COMMIT operations must not return NFS?ERR_INVAL
+      NFSD: Deprecate NFS_OFFSET_MAX
+      NFSD: De-duplicate hash bucket indexing
+      NFSD: Skip extra computation for RC_NOCACHE case
+      NFSD: Streamline the rare "found" case
+      SUNRPC: Remove the .svo_enqueue_xprt method
+      SUNRPC: Merge svc_do_enqueue_xprt() into svc_enqueue_xprt()
+      SUNRPC: Remove svo_shutdown method
+      SUNRPC: Rename svc_create_xprt()
+      SUNRPC: Rename svc_close_xprt()
+      SUNRPC: Remove svc_shutdown_net()
+      NFSD: Remove svc_serv_ops::svo_module
+      NFSD: Move svc_serv_ops::svo_function into struct svc_serv
+      NFSD: Remove CONFIG_NFSD_V3
+      NFSD: Clean up _lm_ operation names
+      NFSD: Clean up nfsd_splice_actor()
+      NFSD: Clean up nfsd3_proc_create()
+      NFSD: Avoid calling fh_drop_write() twice in do_nfsd_create()
+      NFSD: Refactor nfsd_create_setattr()
+      NFSD: Refactor NFSv3 CREATE
+      NFSD: Refactor NFSv4 OPEN(CREATE)
+      NFSD: Remove do_nfsd_create()
+      NFSD: Clean up nfsd_open_verified()
+      NFSD: Instantiate a struct file when creating a regular NFSv4 file
+      NFSD: Remove dprintk call sites from tail of nfsd4_open()
+      NFSD: Fix whitespace
+      NFSD: Move documenting comment for nfsd4_process_open2()
+      NFSD: Trace filecache opens
+      NFSD: Clean up the show_nf_flags() macro
+      SUNRPC: Use RMW bitops in single-threaded hot paths
+      NFSD: Modernize nfsd4_release_lockowner()
+      NFSD: Add documenting comment for nfsd4_release_lockowner()
+      NFSD: nfsd_file_put() can sleep
+      NFSD: Fix potential use-after-free in nfsd_file_put()
+      SUNRPC: Optimize xdr_reserve_space()
+      NFSD: Decode NFSv4 birth time attribute
+      SUNRPC: Fix xdr_encode_bool()
+      NFSD: Demote a WARN to a pr_warn()
+      NFSD: Report filecache LRU size
+      NFSD: Report count of calls to nfsd_file_acquire()
+      NFSD: Report count of freed filecache items
+      NFSD: Report average age of filecache items
+      NFSD: Add nfsd_file_lru_dispose_list() helper
+      NFSD: Refactor nfsd_file_gc()
+      NFSD: Refactor nfsd_file_lru_scan()
+      NFSD: Report the number of items evicted by the LRU walk
+      NFSD: Record number of flush calls
+      NFSD: Zero counters when the filecache is re-initialized
+      NFSD: Hook up the filecache stat file
+      NFSD: WARN when freeing an item still linked via nf_lru
+      NFSD: Trace filecache LRU activity
+      NFSD: Leave open files out of the filecache LRU
+      NFSD: Fix the filecache LRU shrinker
+      NFSD: Never call nfsd_file_gc() in foreground paths
+      NFSD: No longer record nf_hashval in the trace log
+      NFSD: Remove lockdep assertion from unhash_and_release_locked()
+      NFSD: nfsd_file_unhash can compute hashval from nf->nf_inode
+      NFSD: Refactor __nfsd_file_close_inode()
+      NFSD: nfsd_file_hash_remove can compute hashval
+      NFSD: Remove nfsd_file::nf_hashval
+      NFSD: Replace the "init once" mechanism
+      NFSD: Set up an rhashtable for the filecache
+      NFSD: Convert the filecache to use rhashtable
+      NFSD: Clean up unused code after rhashtable conversion
+      NFSD: Separate tracepoints for acquire and create
+      NFSD: Move nfsd_file_trace_alloc() tracepoint
+      NFSD: NFSv4 CLOSE should release an nfsd_file immediately
+      NFSD: Ensure nf_inode is never dereferenced
+      NFSD: Optimize nfsd4_encode_operation()
+      NFSD: Optimize nfsd4_encode_fattr()
+      NFSD: Clean up SPLICE_OK in nfsd4_encode_read()
+      NFSD: Add an nfsd4_read::rd_eof field
+      NFSD: Optimize nfsd4_encode_readv()
+      NFSD: Simplify starting_len
+      NFSD: Use xdr_pad_size()
+      NFSD: Clean up nfsd4_encode_readlink()
+      NFSD: Fix strncpy() fortify warning
+      NFSD: nfserrno(-ENOMEM) is nfserr_jukebox
+      NFSD: Shrink size of struct nfsd4_copy_notify
+      NFSD: Shrink size of struct nfsd4_copy
+      NFSD: Reorder the fields in struct nfsd4_op
+      NFSD: Make nfs4_put_copy() static
+      NFSD: Replace boolean fields in struct nfsd4_copy
+      NFSD: Refactor nfsd4_cleanup_inter_ssc() (1/2)
+      NFSD: Refactor nfsd4_cleanup_inter_ssc() (2/2)
+      NFSD: Refactor nfsd4_do_copy()
+      NFSD: Remove kmalloc from nfsd4_do_async_copy()
+      NFSD: Add nfsd4_send_cb_offload()
+      NFSD: Move copy offload callback arguments into a separate structure
+      NFSD: Increase NFSD_MAX_OPS_PER_COMPOUND
+      NFSD: Protect against send buffer overflow in NFSv2 READDIR
+      NFSD: Protect against send buffer overflow in NFSv3 READDIR
+      NFSD: Protect against send buffer overflow in NFSv2 READ
+      NFSD: Protect against send buffer overflow in NFSv3 READ
+      NFSD: Fix handling of oversized NFSv4 COMPOUND requests
+      NFSD: Add tracepoints to report NFSv4 callback completions
+      NFSD: Add a mechanism to wait for a DELEGRETURN
+      NFSD: Refactor nfsd_setattr()
+      NFSD: Make nfsd4_setattr() wait before returning NFS4ERR_DELAY
+      NFSD: Make nfsd4_rename() wait before returning NFS4ERR_DELAY
+      NFSD: Make nfsd4_remove() wait before returning NFS4ERR_DELAY
+      SUNRPC: Parametrize how much of argsize should be zeroed
+      NFSD: Reduce amount of struct nfsd4_compoundargs that needs clearing
+      NFSD: Refactor common code out of dirlist helpers
+      NFSD: Use xdr_inline_decode() to decode NFSv3 symlinks
+      NFSD: Clean up WRITE arg decoders
+      NFSD: Clean up nfs4svc_encode_compoundres()
+      NFSD: Remove "inline" directives on op_rsize_bop helpers
+      NFSD: Remove unused nfsd4_compoundargs::cachetype field
+      NFSD: Pack struct nfsd4_compoundres
+      NFSD: Rename the fields in copy_stateid_t
+      NFSD: Cap rsize_bop result based on send buffer size
+      NFSD: Fix reads with a non-zero offset that don't end on a page boundary
+      NFSD: Finish converting the NFSv2 GETACL result encoder
+      NFSD: Finish converting the NFSv3 GETACL result encoder
+      NFSD: Pass the target nfsd_file to nfsd_commit()
+      NFSD: Revert "NFSD: NFSv4 CLOSE should release an nfsd_file immediately"
+      NFSD: Add an NFSD_FILE_GC flag to enable nfsd_file garbage collection
+      NFSD: Flesh out a documenting comment for filecache.c
+      NFSD: Clean up nfs4_preprocess_stateid_op() call sites
+      NFSD: Trace stateids returned via DELEGRETURN
+      NFSD: Trace delegation revocations
+      NFSD: Use const pointers as parameters to fh_ helpers
+      NFSD: Update file_hashtbl() helpers
+      NFSD: Clean up nfsd4_init_file()
+      NFSD: Add a nfsd4_file_hash_remove() helper
+      NFSD: Clean up find_or_add_file()
+      NFSD: Refactor find_file()
+      NFSD: Use rhashtable for managing nfs4_file objects
+      NFSD: Fix licensing header in filecache.c
+      NFSD: Add an nfsd_file_fsync tracepoint
+      NFSD: Use only RQ_DROPME to signal the need to drop a reply
+      Revert "SUNRPC: Use RMW bitops in single-threaded hot paths"
+      NFSD: Use set_bit(RQ_DROPME)
+      NFSD: copy the whole verifier in nfsd_copy_write_verifier
+      NFSD: Protect against filesystem freezing
+      NFSD: Avoid calling OPDESC() with ops->opnum == OP_ILLEGAL
+      NFSD: Convert filecache to rhltable
+      NFSD: Add an nfsd4_encode_nfstime4() helper
+      nfsd: don't allow nfsd threads to be signalled.
+      Documentation: Add missing documentation for EXPORT_OP flags
+
+Colin Ian King (4):
+      nfsd: remove redundant assignment to pointer 'this'
+      NFSD: Initialize pointer ni with NULL and not plain integer 0
+      nfsd: remove redundant assignment to variable len
+      NFSD: Remove redundant assignment to variable host_err
+
+Dai Ngo (26):
+      NFSv4_2: SSC helper should use its own config.
+      NFSv4.2: Remove ifdef CONFIG_NFSD from NFSv4.2 client SSC code.
+      NFSD: delay unmount source's export after inter-server copy completed.
+      nfsd: fix kernel test robot warning in SSC code
+      fs/lock: documentation cleanup. Replace inode->i_lock with flc_lock.
+      NFSD: add courteous server support for thread with only delegation
+      NFSD: add support for share reservation conflict to courteous server
+      NFSD: move create/destroy of laundry_wq to init_nfsd and exit_nfsd
+      fs/lock: add helper locks_owner_has_blockers to check for blockers
+      fs/lock: add 2 callbacks to lock_manager_operations to resolve conflict
+      NFSD: add support for lock conflict to courteous server
+      NFSD: Show state of courtesy client in client info
+      NFSD: refactoring v4 specific code to a helper in nfs4state.c
+      NFSD: keep track of the number of v4 clients in the system
+      NFSD: limit the number of v4 clients to 1024 per 1GB of system memory
+      NFSD: keep track of the number of courtesy clients in the system
+      NFSD: add shrinker to reap courtesy clients on low memory condition
+      NFSD: refactoring courtesy_client_reaper to a generic low memory shrinker
+      NFSD: add support for sending CB_RECALL_ANY
+      NFSD: add delegation reaper to react to low memory condition
+      NFSD: register/unregister of nfsd-client shrinker at nfsd startup/shutdown time
+      NFSD: replace delayed_work with work_struct for nfsd_client_shrinker
+      NFSD: enhance inter-server copy cleanup
+      NFSD: fix leaked reference count of nfsd4_ssc_umount_item
+      NFSD: fix problems with cleanup on errors in nfsd4_copy
+      NFSD: Fix problem of COMMIT and NFS4ERR_DELAY in infinite loop
+
+Dan Carpenter (1):
+      nfsd: fix double fget() bug in __write_ports_addfd()
+
+Dave Wysochanski (1):
+      nfsd4: Expose the callback address and state of each NFS4 client
+
+David Disseldorp (1):
+      exportfs: use pr_debug for unreachable debug statements
+
+Eric W. Biederman (24):
+      exec: Don't open code get_close_on_exec
+      exec: Move unshare_files to fix posix file locking during exec
+      exec: Simplify unshare_files
+      exec: Remove reset_files_struct
+      kcmp: In kcmp_epoll_target use fget_task
+      bpf: In bpf_task_fd_query use fget_task
+      proc/fd: In proc_fd_link use fget_task
+      file: Rename __fcheck_files to files_lookup_fd_raw
+      file: Factor files_lookup_fd_locked out of fcheck_files
+      file: Replace fcheck_files with files_lookup_fd_rcu
+      file: Rename fcheck lookup_fd_rcu
+      file: Implement task_lookup_fd_rcu
+      proc/fd: In tid_fd_mode use task_lookup_fd_rcu
+      kcmp: In get_file_raw_ptr use task_lookup_fd_rcu
+      file: Implement task_lookup_next_fd_rcu
+      proc/fd: In proc_readfd_common use task_lookup_next_fd_rcu
+      proc/fd: In fdinfo seq_show don't use get_files_struct
+      file: Merge __fd_install into fd_install
+      file: In f_dupfd read RLIMIT_NOFILE once.
+      file: Merge __alloc_fd into alloc_fd
+      file: Rename __close_fd to close_fd and remove the files parameter
+      file: Replace ksys_close with close_fd
+      exit: Implement kthread_exit
+      exit: Rename module_put_and_exit to module_put_and_kthread_exit
+
+Gabriel Krisman Bertazi (24):
+      fsnotify: Don't insert unmergeable events in hashtable
+      fanotify: Fold event size calculation to its own function
+      fanotify: Split fsid check from other fid mode checks
+      inotify: Don't force FS_IN_IGNORED
+      fsnotify: Add helper to detect overflow_event
+      fsnotify: Add wrapper around fsnotify_add_event
+      fsnotify: Retrieve super block from the data field
+      fsnotify: Protect fsnotify_handle_inode_event from no-inode events
+      fsnotify: Pass group argument to free_event
+      fanotify: Support null inode event in fanotify_dfid_inode
+      fanotify: Allow file handle encoding for unhashed events
+      fanotify: Encode empty file handle when no inode is provided
+      fanotify: Require fid_mode for any non-fd event
+      fsnotify: Support FS_ERROR event type
+      fanotify: Reserve UAPI bits for FAN_FS_ERROR
+      fanotify: Pre-allocate pool of error events
+      fanotify: Support enqueueing of error events
+      fanotify: Support merging of error events
+      fanotify: Wrap object_fh inline space in a creator macro
+      fanotify: Add helpers to decide whether to report FID/DFID
+      fanotify: WARN_ON against too large file handles
+      fanotify: Report fid info for file related file system errors
+      fanotify: Emit generic error info for error event
+      fanotify: Allow users to request FAN_FS_ERROR events
+
+Gaosheng Cui (3):
+      nfsd: remove nfsd4_prepare_cb_recall() declaration
+      fsnotify: remove unused declaration
+      fanotify: Remove obsoleted fanotify_event_has_path()
+
+Greg Kroah-Hartman (1):
+      Linux 5.10.220
+
+Guobin Huang (1):
+      NFSD: Use DEFINE_SPINLOCK() for spinlock
+
+Gustavo A. R. Silva (2):
+      UAPI: nfsfh.h: Replace one-element array with flexible-array member
+      nfsd: Fix fall-through warnings for Clang
+
+Haowen Bai (1):
+      SUNRPC: Return true/false (not 1/0) from bool functions
+
+Huang Guobin (1):
+      nfsd: Fix error return code in nfsd_file_cache_init()
+
+J. Bruce Fields (41):
+      nfsd: only call inode_query_iversion in the I_VERSION case
+      nfsd: simplify nfsd4_change_info
+      nfsd: minor nfsd4_change_attribute cleanup
+      nfsd4: don't query change attribute in v2/v3 case
+      Revert "nfsd4: support change_attr_type attribute"
+      nfsd4: simplify process_lookup1
+      nfsd: simplify process_lock
+      nfsd: simplify nfsd_renew
+      nfsd: rename lookup_clientid->set_client
+      nfsd: refactor set_client
+      nfsd: find_cpntf_state cleanup
+      nfsd: remove unused set_client argument
+      nfsd: simplify nfsd4_check_open_reclaim
+      nfsd: cstate->session->se_client -> cstate->clp
+      nfs: use change attribute for NFS re-exports
+      nfsd: skip some unnecessary stats in the v4 case
+      nfsd: helper for laundromat expiry calculations
+      nfsd: COPY with length 0 should copy to end of file
+      nfsd: don't ignore high bits of copy count
+      nfsd: hash nfs4_files by inode number
+      nfsd: track filehandle aliasing in nfs4_files
+      nfsd: reshuffle some code
+      nfsd: grant read delegations to clients holding writes
+      nfsd: move some commit_metadata()s outside the inode lock
+      nfsd: move fsnotify on client creation outside spinlock
+      nfsd: rpc_peeraddr2str needs rcu lock
+      nfsd: fix NULL dereference in nfs3svc_encode_getaclres
+      nlm: minor nlm_lookup_file argument change
+      nlm: minor refactoring
+      lockd: update nlm_lookup_file reexport comment
+      Keep read and write fds with each nlm_file
+      nfs: don't atempt blocking locks on nfs reexports
+      lockd: don't attempt blocking locks on nfs reexports
+      nfs: don't allow reexport reclaims
+      nfsd: update create verifier comment
+      nfsd4: remove obselete comment
+      nfsd: improve stateid access bitmask documentation
+      nfs: block notification on fs with its own ->lock
+      nfsd: fix crash on COPY_NOTIFY with special stateid
+      lockd: fix server crash on reboot of client holding lock
+      lockd: fix failure to cleanup client locks
+
+Jakob Koschel (1):
+      nfsd: fix using the correct variable for sizeof()
+
+Jeff Layton (58):
+      nfsd: add a new EXPORT_OP_NOWCC flag to struct export_operations
+      nfsd: allow filesystems to opt out of subtree checking
+      nfsd: close cached files prior to a REMOVE or RENAME that would replace target
+      nfsd: Add errno mapping for EREMOTEIO
+      nfsd: Retry once in nfsd_open on an -EOPENSTALE return
+      lockd: set fl_owner when unlocking files
+      lockd: fix nlm_close_files
+      nfsd: eliminate the NFSD_FILE_BREAK_* flags
+      nfsd: silence extraneous printk on nfsd.ko insertion
+      NFSD: drop fh argument from alloc_init_deleg
+      NFSD: verify the opened dentry after setting a delegation
+      lockd: detect and reject lock arguments that overflow
+      nfsd: clean up mounted_on_fileid handling
+      nfsd: only fill out return pointer on success in nfsd4_lookup_stateid
+      nfsd: fix comments about spinlock handling with delegations
+      nfsd: make nfsd4_run_cb a bool return function
+      nfsd: extra checks when freeing delegation stateids
+      nfsd: fix nfsd_file_unhash_and_dispose
+      nfsd: rework hashtable handling in nfsd_do_file_acquire
+      nfsd: fix net-namespace logic in __nfsd_file_cache_purge
+      nfsd: fix use-after-free in nfsd_file_do_acquire tracepoint
+      nfsd: put the export reference in nfsd4_verify_deleg_dentry
+      filelock: add a new locks_inode_context accessor function
+      lockd: use locks_inode_context helper
+      nfsd: use locks_inode_context helper
+      nfsd: ignore requests to disable unsupported versions
+      nfsd: move nfserrno() to vfs.c
+      nfsd: allow disabling NFSv2 at compile time
+      nfsd: remove the pages_flushed statistic from filecache
+      nfsd: reorganize filecache.c
+      nfsd: fix up the filecache laundrette scheduling
+      nfsd: return error if nfs4_setacl fails
+      lockd: set missing fl_flags field when retrieving args
+      lockd: ensure we use the correct file descriptor when unlocking
+      lockd: fix file selection in nlmsvc_cancel_blocked
+      nfsd: rework refcounting in filecache
+      nfsd: fix handling of cached open files in nfsd4_open codepath
+      nfsd: don't free files unconditionally in __nfsd_file_cache_purge
+      nfsd: don't destroy global nfs4_file table in per-net shutdown
+      nfsd: allow nfsd_file_get to sanely handle a NULL pointer
+      nfsd: clean up potential nfsd_file refcount leaks in COPY codepath
+      nfsd: don't hand out delegation on setuid files being opened for write
+      nfsd: fix courtesy client with deny mode handling in nfs4_upgrade_open
+      nfsd: don't fsync nfsd_files on last close
+      lockd: set file_lock start and end when decoding nlm4 testargs
+      nfsd: don't replace page in rq_pages if it's a continuation of last page
+      nfsd: call op_release, even when op_func returns an error
+      nfsd: don't open-code clear_and_wake_up_bit
+      nfsd: NFSD_FILE_KEY_INODE only needs to find GC'ed entries
+      nfsd: simplify test_bit return in NFSD_FILE_KEY_FULL comparator
+      nfsd: don't kill nfsd_files because of lease break error
+      nfsd: add some comments to nfsd_file_do_acquire
+      nfsd: don't take/put an extra reference when putting a file
+      nfsd: update comment over __nfsd_file_cache_purge
+      nfsd: allow reaping files still under writeback
+      nfsd: simplify the delayed disposal list code
+      nfsd: make a copy of struct iattr before calling notify_change
+      nfsd: drop the nfsd_put helper
+
+Jia He (2):
+      sysctl: introduce new proc handler proc_dobool
+      lockd: change the proc_handler for nsm_use_hostnames
+
+Jiapeng Chong (2):
+      nfsd: remove unused function
+      NFSD: Fix inconsistent indenting
+
+Jinpeng Cui (1):
+      NFSD: remove redundant variable status
+
+Julian Schroeder (1):
+      nfsd: destroy percpu stats counters after reply cache shutdown
+
+Kees Cook (1):
+      NFSD: Avoid clashing function prototypes
+
+Matthew Bobrowski (5):
+      kernel/pid.c: remove static qualifier from pidfd_create()
+      kernel/pid.c: implement additional checks upon pidfd_create() parameters
+      fanotify: minor cosmetic adjustments to fid labels
+      fanotify: introduce a generic info record copying helper
+      fanotify: add pidfd support to the fanotify API
+
+NeilBrown (48):
+      nfsd: report client confirmation status in "info" file
+      NFSD: remove vanity comments
+      NFSD: move filehandle format declarations out of "uapi".
+      NFSD: drop support for ancient filehandles
+      NFSD: simplify struct nfsfh
+      NFSD: handle errors better in write_ports_addfd()
+      SUNRPC: change svc_get() to return the svc.
+      SUNRPC/NFSD: clean up get/put functions.
+      SUNRPC: stop using ->sv_nrthreads as a refcount
+      nfsd: make nfsd_stats.th_cnt atomic_t
+      SUNRPC: use sv_lock to protect updates to sv_nrthreads.
+      NFSD: narrow nfsd_mutex protection in nfsd thread
+      NFSD: Make it possible to use svc_set_num_threads_sync
+      SUNRPC: discard svo_setup and rename svc_set_num_threads_sync()
+      NFSD: simplify locking for network notifier.
+      lockd: introduce nlmsvc_serv
+      lockd: simplify management of network status notifiers
+      lockd: move lockd_start_svc() call into lockd_create_svc()
+      lockd: move svc_exit_thread() into the thread
+      lockd: introduce lockd_put()
+      lockd: rename lockd_create_svc() to lockd_get()
+      SUNRPC: move the pool_map definitions (back) into svc.c
+      SUNRPC: always treat sv_nrpools==1 as "not pooled"
+      lockd: use svc_set_num_threads() for thread start and stop
+      NFS: switch the callback service back to non-pooled.
+      NFSD: simplify per-net file cache management
+      NFS: restore module put when manager exits.
+      NFSD: introduce struct nfsd_attrs
+      NFSD: set attributes when creating symlinks
+      NFSD: add security label to struct nfsd_attrs
+      NFSD: add posix ACLs to struct nfsd_attrs
+      NFSD: change nfsd_create()/nfsd_symlink() to unlock directory before returning.
+      NFSD: always drop directory lock in nfsd_unlink()
+      NFSD: only call fh_unlock() once in nfsd_link()
+      NFSD: reduce locking in nfsd_lookup()
+      NFSD: use explicit lock/unlock for directory ops
+      NFSD: use (un)lock_inode instead of fh_(un)lock for file operations
+      NFSD: discard fh_locked flag and fh_lock/fh_unlock
+      NFSD: fix regression with setting ACLs.
+      NFSD: drop fname and flen args from nfsd_create_locked()
+      lockd: drop inappropriate svc_get() from locked_get()
+      nfsd: Simplify code around svc_exit_thread() call in nfsd()
+      nfsd: separate nfsd_last_thread() from nfsd_put()
+      NFSD: fix possible oops when nfsd/pool_stats is closed.
+      nfsd: call nfsd_last_thread() before final nfsd_put()
+      nfsd: fix RELEASE_LOCKOWNER
+      nfsd: don't take fi_lock in nfsd_break_deleg_cb()
+      nfsd: don't call locks_release_private() twice concurrently
+
+Olga Kornievskaia (2):
+      NFSD add vfs_fsync after async copy is done
+      NFSD enforce filehandle check for source file in COPY
+
+Oliver Ford (1):
+      fs: inotify: Fix typo in inotify comment
+
+Ondrej Valousek (1):
+      nfsd: Add support for the birth time attribute
+
+Paul Menzel (1):
+      nfsd: Log client tracking type log message as info instead of warning
+
+Peng Tao (1):
+      nfsd: map EBADF
+
+Ricardo Ribalda (1):
+      nfsd: Fix typo "accesible"
+
+Shakeel Butt (1):
+      inotify, memcg: account inotify instances to kmemcg
+
+Tavian Barnes (1):
+      nfsd: Fix creation time serialization order
+
+Tetsuo Handa (1):
+      NFSD: unregister shrinker when nfsd_init_net() fails
+
+Tom Rix (1):
+      NFSD: A semicolon is not needed after a switch statement.
+
+Trond Myklebust (11):
+      exportfs: Add a function to return the raw output from fh_to_dentry()
+      nfsd: Fix up nfsd to ensure that timeout errors don't result in ESTALE
+      nfsd: Set PF_LOCAL_THROTTLE on local filesystems only
+      nfsd: Record NFSv4 pre/post-op attributes as non-atomic
+      NFS: fix nfs_fetch_iversion()
+      nfsd: Fix a warning for nfsd_file_close_inode
+      nfsd: Add a tracepoint for errors in nfsd4_clone_file_range()
+      nfsd: Fix a write performance regression
+      nfsd: Clean up nfsd_file_put()
+      lockd: set other missing fields when unlocking files
+      nfsd: Fix a regression in nfsd_setattr()
+
+Vasily Averin (3):
+      nfsd: removed unused argument in nfsd_startup_generic()
+      nfsd4: add refcount for nfsd4_blocked_lock
+      fanotify: fix incorrect fmode_t casts
+
+Waiman Long (1):
+      inotify: Increase default inotify.max_user_watches limit to 1048576
+
+Wei Yongjun (1):
+      NFSD: Fix error return code in nfsd4_interssc_connect()
+
+Wolfram Sang (2):
+      NFSD: move from strlcpy with unused retval to strscpy
+      lockd: move from strlcpy with unused retval to strscpy
+
+Xin Gao (1):
+      fsnotify: Fix comment typo
+
+Xingyuan Mo (1):
+      NFSD: fix use-after-free in nfsd4_ssc_setup_dul()
+
+Xiu Jianfeng (1):
+      NFSD: Use struct_size() helper in alloc_session()
+
+Yang Li (1):
+      fanotify: remove variable set but not used
+
+Yu Hsiang Huang (1):
+      nfsd: Prevent truncation of an unlinked inode from blocking access to its directory
+
+Zhang Jiaming (1):
+      NFSD: Fix space and spelling mistake
+
+Zhang Xiaoxu (2):
+      nfsd: Unregister the cld notifier when laundry_wq create failed
+      nfsd: Fix null-ptr-deref in nfsd_fill_super()
+
+Zheng Yongjun (1):
+      fs/lockd: convert comma to semicolon
 
