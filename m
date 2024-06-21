@@ -1,43 +1,43 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78911552E3
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06C716C853
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718955028; cv=none; b=dgfDljt7B6l1i6zhZl6g7TFAwv2rgmvQRmws4SQp0CQlES5VJ9a9qdL/seaZvJJ+ZH1w2cSQ2bAalOxTTMrAYJN3r+hCt5YbFNzJSYOlsMRUV9+bGqnrCK+ImF/KaQSVkA6iULFB5zuJNT3/qA2BwXKNYmcB0gAWqjzEAuajvh0=
+	t=1718955030; cv=none; b=WHsCmSzyRm3DXgkVMaSYTJzsd0FJSa9/yXrKD/lyX53VnhfZ9F0Ge0qhl74tpKds9opr+NuG8zSwkMpbFm2xSR6HBoIm4itP0SP02w4TN6s1hnBqJ1AQShVO/k/BEstDatCPT/julp27DrLIpaAvFZzaViBaGSCsjSUgz8WFXD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718955028; c=relaxed/simple;
-	bh=tp/NGE8RxyPHEtfvReImUJ2XG70OLA+d30WQHKc29AY=;
+	s=arc-20240116; t=1718955030; c=relaxed/simple;
+	bh=rDqQbB8WtLI0sNUuiLmLKSokCC9jWiu+CRLfqoeNG94=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fFM7xqsdxdy8v5Sz0z7Oqh6eb5xo1ZY8CzRGiBjsR8xW8dpg8UuQi5UkdSd26QirtKc7DTUQnkkze3Rr0QY5QFqq0Nlvt9Rbz6fomF1hM+aMEGohcfaagB7IbkPa8KgqVJ+uVjfHI4hRQC0tIL7OjM10X0G+WVbZCEcaPD+Q+Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=mMdbDpmk; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=MjyDqQVBjsA4Y4x2lw48H5CIgVrPA28cx24mI0ZFGM7TWTMhds5kK+NHJRddv/ywJujq1agHdevOHnN/aHjfPDfYxV4MkULj6RwF8Ui8n34dfGpJ3wQRbvR6EwAU1kvHkfCa+VbGeuNSIudKyeGBhpJRu2dyhCPwM2zeXjcsBA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=AJitrd3c; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="mMdbDpmk"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="AJitrd3c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:in-reply-to:references:mime-version:content-type
-	:content-transfer-encoding; s=k1; bh=CFQTXPUSMeT7AYVoruD7Npcs4kM
-	+ge+9KCd3MJfEn/4=; b=mMdbDpmkdlmtdIGn7alJWBs9X8lSnmyMDx4wnFpSOv4
-	INM3gEzf5eKpf+2Q1nveHfi1wm/sgPMcMxlVMHHctox9jqRJYvrR4AWtxhfj0OpW
-	EwJYgl8BTKHBiugU4Si/WV5f13g0jOFI+wKVYv2KLWlY8zM0y6sJEVQ/olHRBdHn
-	V8ivlsHhAbGtuvWO0hwt7OxhX3yUEfMIiBTuSfIkodN3ZOQh+w4G89jAwLWkMAmk
-	VdynEDw05kZLyG85ggoAXwQ9OYH8dRwam38LIXq0UCC40mDnwsd8en4fxp2tYj98
-	njKfMJqk8ap5Y3pg5NzV/2xZ0EFx9bblN8aatvGAAzQ==
-Received: (qmail 1279093 invoked from network); 21 Jun 2024 09:30:25 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2024 09:30:25 +0200
-X-UD-Smtp-Session: l3s3148p1@3l2jZ2Eb/I8gAwDPXzjQABqqX1QYyOSW
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=X8SjZrtr7vYauQzzWhyTb2doGzFDtsUQAd4VY9QcFf4=; b=AJitrd
+	3cWXG4yRPQpFSvpRs5EZ4klDtvdbmQ0+FSIW7qGhVXS7fJrh1yILhu6PiqszhHiS
+	mYVX2DrmJ6XjWCqaQ/O6s2sXfX9aEC2VRtsZ7bEmr70yTLU6SSEevPZWdoRp5ULw
+	HIKoKJ9DxTwq91k0g9cJiOgqWVMYp45Ong4stOdOtuqT250snO30SXW2ePX5ToMe
+	lwMGS9lZb9kGjHbkzN8xbXMa2LrA3wjmyVBZMBa8QVcMGasLCs2L8Xd2Frx9qLUD
+	c960g8LEZUfz2XKdKJS5YXm+cwsTnBcnFsvt7bt4pWx9Ay5FXx41yDEJloa5axPD
+	fAsr0U/6ib8KvIfA==
+Received: (qmail 1279150 invoked from network); 21 Jun 2024 09:30:26 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Jun 2024 09:30:26 +0200
+X-UD-Smtp-Session: l3s3148p1@Zia8Z2EbDJAgAwDPXzjQABqqX1QYyOSW
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-kernel@vger.kernel.org
 Cc: Andi Shyti <andi.shyti@kernel.org>,
 	Easwar Hariharan <eahariha@linux.microsoft.com>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH v4 3/6] docs: i2c: summary: update speed mode description
-Date: Fri, 21 Jun 2024 09:30:10 +0200
-Message-ID: <20240621073015.5443-4-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v4 5/6] docs: i2c: summary: document 'local' and 'remote' targets
+Date: Fri, 21 Jun 2024 09:30:12 +0200
+Message-ID: <20240621073015.5443-6-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240621073015.5443-1-wsa+renesas@sang-engineering.com>
 References: <20240621073015.5443-1-wsa+renesas@sang-engineering.com>
@@ -47,33 +47,40 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Fastest I2C mode is 5 MHz. Update the docs and reword the paragraph
-slightly.
+Because Linux can be a target as well, add terminology to differentiate
+between Linux being the target and Linux accessing targets.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 ---
- Documentation/i2c/summary.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/i2c/summary.rst | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
-index e3ab1d414014..a1e5c0715f8b 100644
+index a6da1032fa06..ff8bda32b9c3 100644
 --- a/Documentation/i2c/summary.rst
 +++ b/Documentation/i2c/summary.rst
-@@ -3,8 +3,8 @@ Introduction to I2C and SMBus
- =============================
+@@ -49,10 +49,15 @@ whole class of I2C adapters. Each specific adapter driver either depends on
+ an algorithm driver in the ``drivers/i2c/algos/`` subdirectory, or includes
+ its own implementation.
  
- I²C (pronounce: I squared C and written I2C in the kernel documentation) is
--a protocol developed by Philips. It is a slow two-wire protocol (variable
--speed, up to 400 kHz), with a high speed extension (3.4 MHz). It provides
-+a protocol developed by Philips. It is a two-wire protocol with variable
-+speed (typically up to 400 kHz, high speed modes up to 5 MHz). It provides
- an inexpensive bus for connecting many types of devices with infrequent or
- low bandwidth communications needs. I2C is widely used with embedded
- systems. Some systems use variants that don't meet branding requirements,
+-A **target** chip is a node that responds to communications when addressed
+-by the controller. In Linux it is called a **client**. Client drivers are kept
+-in a directory specific to the feature they provide, for example
+-``drivers/media/gpio/`` for GPIO expanders and ``drivers/media/i2c/`` for
++A **target** chip is a node that responds to communications when addressed by a
++controller. In the Linux kernel implementation it is called a **client**. While
++targets are usually separate external chips, Linux can also act as a target
++(needs hardware support) and respond to another controller on the bus. This is
++then called a **local target**. In contrast, an external chip is called a
++**remote target**.
++
++Target drivers are kept in a directory specific to the feature they provide,
++for example ``drivers/gpio/`` for GPIO expanders and ``drivers/media/i2c/`` for
+ video-related chips.
+ 
+ For the example configuration in figure, you will need a driver for your
 -- 
 2.43.0
 
