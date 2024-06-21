@@ -1,152 +1,259 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2BE17B509;
-	Fri, 21 Jun 2024 12:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973658; cv=fail; b=eZ+1v+JGCBNecVQPmjf0MoHnn8Zzz02i8fXNDOw2goCbhcC3crrdWSCnACgt0sdeQieja85cnPBGFnViDeVW0CtYyFqfwnPbKlAXyGNp+HBwQTLsL84RBQaqUu0tM9s+P0KvT864y+jOgKTxR15fYvBCFuWe/TQKde2BF/UNjVc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973658; c=relaxed/simple;
-	bh=cAC/VFJ4wEnAQpkNDwUveWrurfRumjkFBldmm9DGTEY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UGeeHmT9ByyUDGifLAWgs2cpLTLShXoqUyrY+E3cw+rof+kY+j6svcTlBFW3OFjD/zd2wF+Izu4QqzPg1fSxi0slIwDbBqF+jTtYrlbMVqFA5qeH87ZnYMgwtpwmATQcJKbZRr7pmCoNMvFUh2MxUCfr3A5Rpytr7NkGc1Ox754=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PQCnAggQ; arc=fail smtp.client-ip=40.107.244.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED9E1553A4;
+	Fri, 21 Jun 2024 12:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718973738; cv=none; b=I3xOoKfnuSFPaiA7IfRp3Dq983tCx8uD0omydQu8YI9cPENxL+dx/03ng1Mfka69E3xyzW5XVvhN8CZIFzp2a6/cU2LRvE7rNnjL5p+ssm/ECyxzV2sFwbzcxqYu1VUB2IwakmVA22boyYd76BxKtiyYS/k7KhgfFXBOY9MDTd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718973738; c=relaxed/simple;
+	bh=o0Zz1fevuySLS+ArAprXIPomY4FCfyicPzisqwGrjU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rRp5LHyrSUwPZtRfRY3vhqrzkHxJfmqoMQCU6DgvtA2R41bCAsjUNX/iVF+HzKBvPFBxPhO+iBY5vFqulWCbDjlBXg3JdZYSWUHlfTlmDWc4bfOegvjX4BRgSNA6eWVTJulBosjVRi8FOI/OL6ioSOx5Iaj86vvyFxYefPZZzm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RpVHj/kx; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PQCnAggQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QRsaU/3AtdCbcAz2yZvrvKMzSm1cy9kQHrNcDQGXEPXk4FBOs0OwcSsIBIjGWlMM9lA4Mvsgm4UKWS5UkpI/RwoAH/rZPijb7HmORWBtIk8hb2DyOBX2prR6WFguUa0C0Xi3ETz5iv4vOhHDCSuP7ZLbRA0i+HLOD5PYsfWhRMKIT2Mq0kiinv6ZJAO1lznBVh8f2asxcevn/qkgR2eAaMz20u28wL09bZCKSlecrmHl+RnZnuCG5KTzMjMMakjZj9B3/H540L+CDI31PWHQnzUisjXpiU6rangcPSTbwrpZD0ByNZnryLon+j/qhVgJYLjWhWpQVj7QYfnRnofLiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UNKGJqPN3gcI3Ygqznh20qY8AnS8F0rxhXhh636gblQ=;
- b=hhM2ftJlKfmJMz4gDrCcggQ8CxnzrfBUox8MQtjMJHIHyXvzzSftiCjakqwtYEQlizbCGkJOOWVfsLfXrpOEXaFzIWzxJjOniQyMDbGy5IIe9XmtWpRnszDommUwj4LlzQq7sNSKU/3ihHnuXupfUnjhdZL6PEK0BlYC9o4Phwz8rVA98yGRtzY/rq2taqAR8BtarsFxSc8o4nZZ6UkGcuVWLavFn2UgFfm3/LAM4m8o/n/uTcrc/YcXDyiS7i+rTIO/r2iGSTbUGHKmdPcaEymlmJqYIiaN0VFiRavLr6ufb24gyCVc+n8hbkcSjyr9XCqmNfxTpEAz7B9JDoM23Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UNKGJqPN3gcI3Ygqznh20qY8AnS8F0rxhXhh636gblQ=;
- b=PQCnAggQ/RPx4bfBz44YzaGhEvbjzXr3tZ5DRk2t1fohoAOn/S+Sw6APEBJAt+7o2Qg7RXBglgeODwKf49La/so+jfoOcPVH9XNs6HBb85Idlpc32beiWJLtSzex+cv7mRgawereGirwG+po79Am4abjDnHCjhR3oYjpWs2tGXE=
-Received: from DS0PR17CA0003.namprd17.prod.outlook.com (2603:10b6:8:191::17)
- by PH7PR12MB6761.namprd12.prod.outlook.com (2603:10b6:510:1ab::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
- 2024 12:40:54 +0000
-Received: from DS3PEPF0000C37E.namprd04.prod.outlook.com
- (2603:10b6:8:191:cafe::13) by DS0PR17CA0003.outlook.office365.com
- (2603:10b6:8:191::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.36 via Frontend
- Transport; Fri, 21 Jun 2024 12:40:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF0000C37E.mail.protection.outlook.com (10.167.23.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 12:40:53 +0000
-Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
- 2024 07:40:49 -0500
-From: Nikunj A Dadhania <nikunj@amd.com>
-To: <linux-kernel@vger.kernel.org>, <thomas.lendacky@amd.com>, <bp@alien8.de>,
-	<x86@kernel.org>, <kvm@vger.kernel.org>
-CC: <mingo@redhat.com>, <tglx@linutronix.de>, <dave.hansen@linux.intel.com>,
-	<pgonda@google.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
-	<nikunj@amd.com>
-Subject: [PATCH v10 24/24] x86/sev: Enable Secure TSC for SNP guests
-Date: Fri, 21 Jun 2024 18:09:03 +0530
-Message-ID: <20240621123903.2411843-25-nikunj@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240621123903.2411843-1-nikunj@amd.com>
-References: <20240621123903.2411843-1-nikunj@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpVHj/kx"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so132243a12.1;
+        Fri, 21 Jun 2024 05:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718973735; x=1719578535; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oi0LcVAmr1WeeM46g7NJXJsrRLdwaPetNc18z6AYroU=;
+        b=RpVHj/kxr9RFxB30to1gMh7OG2Du7W5YbaibGzjb5wL3N7Kaao7xEYDHqqvSalLz8J
+         MjZMHHxJhvws7BMD8XLD081NZgd9E4MFdSTgK3iNQ7MVlIXkZOzjXtn+zU0aerMX0CfR
+         9s/trckupMaNiN61higIn6W4IQ4dU2TRxLZ+dSzHr9FyEt88YTn6yecdWWF3c4BiDpOl
+         8NmAMedjsLp2dHey9HHEPD7EZBhgzXfnExEKKcoa3bPp9Jxp910iwtkgZ8tfUMdsur54
+         BpqM5MR12KQC2yktCQjUG9qaUqY9R5oW796xKE/zqilR3UFbQU5UeYtxYAdb1Yq2+eZX
+         h8pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718973735; x=1719578535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oi0LcVAmr1WeeM46g7NJXJsrRLdwaPetNc18z6AYroU=;
+        b=aUGGwKCmjpZVUnNcDJM8Niqo3NnKngB2MAZUllp4+g3cXOcm/nEbKxcYF+DMVp7YJM
+         yxQQUYaQqrUyUGU2JlK5aqiS8zEbs+KjXBQf6zuLfFDqPoaqh2r42Knk/NaxH7yU6X2/
+         v9YppLsFy3Nis4pO5N4aPM+Ia27JnJQQIbZpiNWoPHAWyv6MZSb3DzfTCZItbMwtNIWm
+         gu4LXogN0icmCEuWKKqOpdbHcPTXf/iznJrRU7qgY+YPYqGjihEqJ2C3pJlMZ6T5zIOD
+         K5/6kj0SGcnjmMSS0o9xfZN8StEIKEfwh5iGZNrVxbwp7jL+KPUPIaO3Dm5meBTqx+JJ
+         vRmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEOFju4lUWHpAZdi74A/+Z7PpyAjJA67MK2FKTIfUBiViw9TxLepuBmExyhLElrPDcyVhEDJGLcLjAXA3hJMz1Iv5db6fV95vGbDqJUdKIxJwZhOyzlruPRHvensxynovUKGNTE9k2lufHSNZbCtmng30TtAM2L3m67j5PnfuqfxURgw==
+X-Gm-Message-State: AOJu0YxxmvmKQSQj5CIoek2Qn5jt42ff9D45WquwS6Au1EuGI5TJcmqA
+	LlHoXu8m1f7tTTMp4s9lhif0AWU/6UTaeLxMW8VRZK55QOuQmkmTmzE9R3Nb
+X-Google-Smtp-Source: AGHT+IHREP6VjuCYeod3fdem5l5ceB2HMxw0B8mnfswHnwlQuq+6rPxhUfpLpntKlXu1IPn/nuphXA==
+X-Received: by 2002:a50:aa9b:0:b0:57c:c171:2fb6 with SMTP id 4fb4d7f45d1cf-57d069c3a10mr6199253a12.1.1718973734850;
+        Fri, 21 Jun 2024 05:42:14 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d3048ba0dsm920306a12.54.2024.06.21.05.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 05:42:14 -0700 (PDT)
+Date: Fri, 21 Jun 2024 15:42:11 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v3 2/3] spi: dt-bindings: fsl-dspi: Convert to yaml format
+Message-ID: <20240621124211.pueymngpq5luokvj@skbuf>
+References: <20240620-ls_qspi-v3-0-1a2afcf417e4@nxp.com>
+ <20240620-ls_qspi-v3-2-1a2afcf417e4@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF0000C37E:EE_|PH7PR12MB6761:EE_
-X-MS-Office365-Filtering-Correlation-Id: beebb753-087b-4c8c-cf2d-08dc91ef6387
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|376011|82310400023|36860700010|1800799021|7416011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kB0EO1tiYgic1BSYaWI9QV7BGUv28sI4udalbcAbYWeU4ctrAWX2KrXXoZVJ?=
- =?us-ascii?Q?id0uGygl31gHAQ30/M9M+qn2CfyAirijKFZSJyOT2sEW57vT+OcEp8KXzmQz?=
- =?us-ascii?Q?aAT0vmsa/VfjxwaIVl4k4kfGoTAP9+Fd6QnI2wNiw+z8eSG8UbkeuZG0ENIp?=
- =?us-ascii?Q?DFFDHypIauMqnDNQh101JHDqolxMEPhUWpxpUHx1moLEVV6W4F/VxPoKYggg?=
- =?us-ascii?Q?eWL+EF2tBA3JNLc6eIsoOFmkn6HZLTT5AmumxtmkcEOCz+JQDi4JJHaZ/Odw?=
- =?us-ascii?Q?oVkGCkP3m09J+ymSJFlxxkgrwvi4degnq07rOLXaR4OsQtHpZBmnLA4G4bjz?=
- =?us-ascii?Q?viAz8IZj0+EugmS54nKOwqUAWAS4Zyo9wFkIP6vqPxmJo4wEhYaI/eP6XP7D?=
- =?us-ascii?Q?P0aZ8Fuf3seiBv+BS+8M4CuZnL5fTFIkQ780OoSV3n8f1LXCkXwAyPusDHbh?=
- =?us-ascii?Q?9u/93WqGd7jJxQcIe4Y8jlA56tQ+G4ZXjnd5cpvSknjqX0n3tkv5a9V/4CCN?=
- =?us-ascii?Q?9ehRiMmeZ5pGtVuhC7ZGu6JMOyuBl/PkTJMGhSYEyEzkk5lJA5pPrHUbTCzt?=
- =?us-ascii?Q?N5Izdvu7JfFmFhKWAqtkCE4E60knSpVkaaqe+DW5aG0nUhQy7YxU1a8JKVXj?=
- =?us-ascii?Q?AmuxydSh3a33gbl8l4iIytVODZ4N0vt42AW4mV/YWBvssCSB+yuB76oh5Vzl?=
- =?us-ascii?Q?qv94wpts12/l69md34dz3KW28l/a3/7jx0JBWjYuKrAawXjgDZtZ84UVAkAm?=
- =?us-ascii?Q?QKkrj+E+pQ52xSvRt0TK0yKD2ZaMp6pSHSC9ruNG3IFs5v6lBGGrUY9DwOTN?=
- =?us-ascii?Q?CX63GkcZxgqs+dFSWV9ktAIBmszDQnquQ5PRKWzNre6GEJVZn2ElF72hDHL9?=
- =?us-ascii?Q?RjFxZ//BtRUVNHsgJGdt/FahV8IND9L+0bhc4mxolf8nf3PPH41cQtE75DzT?=
- =?us-ascii?Q?5EwWql9a87S2bxyqpNqgrsOwJw23WQWuXhiWKEwFp5NV23xyc8jyPug/q7qU?=
- =?us-ascii?Q?0P+9kbEOCKDC5sarUb7a1JYhkxtomLfOb/TJr486yzWMH3SeIGuYpck51bgs?=
- =?us-ascii?Q?MqQHJFt38TGh6wHpeDa5BtHXIVmhm3R8W2KbU5CyTW2mapwTvialkebf36FV?=
- =?us-ascii?Q?3YoVnq8xSGlAA/rAlPii6B8MLyFY70fv1qA7Ns3Dx3gs7GQ2sXDvhGU+uhkK?=
- =?us-ascii?Q?XIVMMf//Dyhg85wDLh0BCO66srns/ym6aWE0I5SXCLFwIr4X37TWBBAtvUw5?=
- =?us-ascii?Q?4dMH8w+wixQX8pwTh4ab39LWDtqFFvPOze0syWj0om1FFxpoBVCyVaxyAvJw?=
- =?us-ascii?Q?JCzbCxxyD1Sg4w4grgJm5J7sGegjQuKGQL3Zt9DJEMdLL0eGgBGXj/xWkQ7Z?=
- =?us-ascii?Q?w4zN+XecyClXPc+K1ZvGHEmG9PVBfbgvdF0jGOrJO2cVQexYHw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(82310400023)(36860700010)(1800799021)(7416011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 12:40:53.1573
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: beebb753-087b-4c8c-cf2d-08dc91ef6387
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF0000C37E.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6761
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620-ls_qspi-v3-2-1a2afcf417e4@nxp.com>
 
-Now that all the required plumbing is done for enabling SNP Secure TSC
-feature, add Secure TSC to SNP features present list.
+On Thu, Jun 20, 2024 at 12:58:28PM -0400, Frank Li wrote:
+> Convert dt-binding spi-fsl-dspi.txt to yaml format.
+> 
+> Addtional changes during convert:
+> - compatible string "fsl,ls1028a-dspi" can be followed by
+> fsl,ls1021a-v1.0-dspi.
+> - Change "dspi0@4002c000" to "spi@4002c000" in example.
+> - Reorder properties in example.
+> - Use GIC include in example.
+> - Remove fsl,spi-cs-sck-delay and fsl,spi-sck-cs-delay by use common SPI
+> property.
+> - Use compatible string 'jedec,spi-nor' in example.
+> - Split peripheral part to fsl,spi-dspi-peripheral-props.yaml
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> 
+> ---
+> Use part of Vladimir Oltean's work at
+> https://lore.kernel.org/linux-spi/20221111224651.577729-1-vladimir.oltean@nxp.com/
 
-Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
-Tested-by: Peter Gonda <pgonda@google.com>
----
- arch/x86/boot/compressed/sev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hm, you took part of that but gave no attribution? The portion below ---
+is also discarded when the patch is applied, so even the link is lost,
+FYI.
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index cd44e120fe53..bb55934c1cee 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -401,7 +401,8 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
-  * by the guest kernel. As and when a new feature is implemented in the
-  * guest kernel, a corresponding bit should be added to the mask.
-  */
--#define SNP_FEATURES_PRESENT	MSR_AMD64_SNP_DEBUG_SWAP
-+#define SNP_FEATURES_PRESENT	(MSR_AMD64_SNP_DEBUG_SWAP |	\
-+				 MSR_AMD64_SNP_SECURE_TSC)
- 
- u64 snp_get_unsupported_features(u64 status)
- {
--- 
-2.34.1
+> ---
+>  .../devicetree/bindings/spi/fsl,dspi.yaml          | 115 +++++++++++++++++++++
+>  .../spi/fsl,spi-dspi-peripheral-props.yaml         |  28 +++++
 
+For consistency, could you name this fsl,dspi-peripheral-props.yaml?
+
+>  .../devicetree/bindings/spi/spi-fsl-dspi.txt       |  65 ------------
+>  .../bindings/spi/spi-peripheral-props.yaml         |   1 +
+
+No MAINTAINERS change for the schema path? There was a discussion with
+Krzysztof in the old thread.
+
+>  4 files changed, 144 insertions(+), 65 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/fsl,dspi.yaml b/Documentation/devicetree/bindings/spi/fsl,dspi.yaml
+> new file mode 100644
+> index 0000000000000..924ba19aea017
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/fsl,dspi.yaml
+> @@ -0,0 +1,115 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/fsl,dspi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM Freescale DSPI controller
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +          - fsl,vf610-dspi
+> +          - fsl,ls1021a-v1.0-dspi
+> +          - fsl,ls1012a-dspi
+> +          - fsl,ls1028a-dspi
+> +          - fsl,ls1043a-dspi
+> +          - fsl,ls1046a-dspi
+> +          - fsl,ls1088a-dspi
+> +          - fsl,ls2080a-dspi
+> +          - fsl,ls2085a-dspi
+> +          - fsl,lx2160a-dspi
+> +      - items:
+> +          - enum:
+> +              - fsl,ls1012a-dspi
+> +              - fsl,ls1028a-dspi
+> +              - fsl,ls1043a-dspi
+> +              - fsl,ls1046a-dspi
+> +              - fsl,ls1088a-dspi
+> +          - const: fsl,ls1021a-v1.0-dspi
+> +      - items:
+> +          - const: fsl,ls2080a-dspi
+> +          - const: fsl,ls2085a-dspi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: dspi
+> +
+> +  pinctrl-0: true
+> +
+> +  pinctrl-names:
+> +    items:
+> +      - const: default
+
+I don't think that pinctrl properties need to be specified in the
+schema. Somehow, I think dt-schema applies
+dtschema/schemas/pinctrl/pinctrl-consumer.yaml by default every time.
+
+> +
+> +  spi-num-chipselects:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: the number of the chipselect signals.
+
+Worth mentioning that this is about _native_ chip select signals.
+cs-gpios don't count against this number.
+
+> +
+> +  big-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      If present the dspi device's registers are implemented
+> +      in big endian mode.
+
+I'm not sure that this needs an explanation, it is an absolutely generic
+property with a universal meaning.
+
+> +
+> +  bus-num:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: the slave chip chipselect signal number.
+
+In fact, no, this is not a chip select number, the old documentation is
+wrong. It just gets assigned to the struct spi_controller :: bus_num.
+In my last submitted version I wrote "SoC-specific identifier for the
+SPI controller", that seems perfectly adequate.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - pinctrl-0
+> +  - pinctrl-names
+
+interrupts and pinctrl are not required.
+
+> +  - spi-num-chipselects
+> +
+> +allOf:
+> +  - $ref: spi-controller.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/vf610-clock.h>
+> +
+> +    spi@4002c000 {
+> +        compatible = "fsl,vf610-dspi";
+> +        reg = <0x4002c000 0x1000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&clks VF610_CLK_DSPI0>;
+> +        clock-names = "dspi";
+> +        spi-num-chipselects = <5>;
+> +        bus-num = <0>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pinctrl_dspi0_1>;
+> +        big-endian;
+> +
+> +        flash@0 {
+> +                compatible = "jedec,spi-nor";
+> +                reg = <0>;
+> +                spi-max-frequency = <16000000>;
+> +                spi-cpol;
+> +                spi-cpha;
+> +                spi-cs-setup-delay-ns = <100>;
+> +                spi-cs-hold-delay-ns = <50>;
+> +        };
+> +    };
+> +
+
+Please remove newline at end of file.
