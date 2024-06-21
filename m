@@ -1,129 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608C6197
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 00:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB3D394
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 00:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718928656; cv=none; b=AcCZYJkWPkzjHcB8Kbd0JxA7h/vAz7wtV61P3ohwk+wCxgjSl+pisHCbj3AauSUR3/M7EacxcvTLjOutmj5XWRH4I3JBZgZN05qesDdM3inWUELet0oxKXhL5LsqGnKJDZRV0S6UkPkcPUPIweQELMB/9NRhpD+N8Rk6HNKC8SY=
+	t=1718928978; cv=none; b=K85ckH6n2T9vIrEYatLp8ui6If5VXscV5S/WrjOm8FX2fe8HcbF43fbQnIxbXBjmHkkM21Os7toKH97IR6UZnzKRaXr9Qw1e9v+8FD4dRKicEOeKnyBM8CjTPi6Ry7p4Aw/pQC00Ttqp8nG+R6vCBJxs/RbGE3Q9Ba2Z3hqjXMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718928656; c=relaxed/simple;
-	bh=DVc+oZ8IpmajrWn8uMMOY6RL2NOLHfDxJNeCdHePKgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xb7nRnxPc1zn/V1fXpWlG7xEJVAOnJs2r8gp2pNDlndGuwE+4fK83wm7pPUosFTVFxwCKrohMokll6sUowLACdRJvROClhnqAXr/QF5X7jI3zDspMqJ5HqBY3jbewbOWoIKXS+zpU+DMJYxgNKUMSP2ERamtytraPBCvs7hQgKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWUZpZhk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWUZpZhk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7A5C2BD10;
-	Fri, 21 Jun 2024 00:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718928655;
-	bh=DVc+oZ8IpmajrWn8uMMOY6RL2NOLHfDxJNeCdHePKgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tWUZpZhkar/bqgnu5QJIUR2WDZmrEDCqDQl/Wt9gCmNpuMJLA8RZ7aFzGwtt6L6lU
-	 X7/5/EvkILpOcBMSMR8MmL77N5k+UcTmddkUN998iHeaxqq/0byRHWYbIZ+XpYsN+c
-	 DEW/vRk9M0Z/yRExKwYEvfxTwndWbskG9LwaDC0zAqptY3Y+d2BInEYenQ2ul33HWF
-	 /un6QR868O/pDMl5JRnh0qbCtPygFX+30BM9qnZIRbat6ekFDNveQH7HK6tfgun0g6
-	 DlpLrcuAbNwWctRWfbk0kvmyAib6nuI/G05ioQ84d6s9DGxnWIq2bHu8JrYWsu10tr
-	 ZYh4Ylb90JT7g==
-Date: Fri, 21 Jun 2024 07:56:56 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Cyril Bur <cyrilbur@tenstorrent.com>, Deepak Gupta <debug@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] riscv: convert bottom half of exception handling to C
-Message-ID: <ZnTByNTDWnVdtiDr@xhacker>
-References: <20240616170553.2832-1-jszhang@kernel.org>
- <20240616170553.2832-4-jszhang@kernel.org>
- <ZnMPhcaTKFRbbE1i@debug.ba.rivosinc.com>
- <CANtDSipXbYSuz6NakbXw-8k0_ZN5hdT7VWMushXvQ5VB0Am_Ng@mail.gmail.com>
- <95a081a9-2307-4e5b-8ae2-082be16b327e@rivosinc.com>
+	s=arc-20240116; t=1718928978; c=relaxed/simple;
+	bh=dfBRawcr2glCEAMpyVpqh9p8zTcVwCn3sIfnaGnucac=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=cuYuIKGGP8p8C4B4KJ2iJKATmUHKFcmgVv0TuR122G5MqGJopEpTbaNMWmgtWwkGuwAmyXhlBos+QB7wUBVo/bm6NIDnmNVk7KLvR/USyWv5R0UBvZaYqEKaSXbXR/dfJZVGZ9nf2YZDpojMuLZ17OBZuL0qyqYT4lf45264wO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3737b6fc28fso21689285ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 17:16:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718928976; x=1719533776;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dfBRawcr2glCEAMpyVpqh9p8zTcVwCn3sIfnaGnucac=;
+        b=w/FHAaRnMlGvzkGwKPPdfdn9RiFQxDDZ5lEyYQw779BQKPdvVGMXjqNqeYHutWPl0W
+         DWH1Kn6j1Hj5HSoytTGlM9EzGB5vq5XU6SwbWboFduNmdmASweXnN6BPbfNqHA42OVyf
+         pPDZiXCpEUsey5wBLv3fg+MhCILHXeDyfGwE/C9zqnTt3cLfqP+g0yFXOi8aNrUukW2q
+         9s3BI+QW+gIj3GX1ynLQ3u5f7M2lO9f2r95dixS5ibU6I0Mrz/yLrt0vqvciL9BY/4Mk
+         Od4I17dMAYdOuevw5bG7cDpuuneMiOzhjiWT6AHVyYsf6nD0wZRqQJ2X+iW+136/bL/4
+         ETFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUoam0d7hN61gTXa8RJqmMnQyPc7wbrJii1PM3A5iLwmwnS1er5P7l+DIdygz1EugieFIKwQrkt1U/qpTy0U9emoQERw9isR9qFgy/V
+X-Gm-Message-State: AOJu0Yzm27fgQelu5m2+JnHj0bLebjYMiFB1+bdn5kA+rDRztyHkT+JL
+	7IolGOr5VMW1lE4LP4VFqSKA17k6py9kDmCPT6d4xfogKt70RNllsqS+fsde/v+4WhF2QRxmBch
+	NXpV2U88j0pY6Z/nQGtAHkHTt0FiQrr2B1L3HOqImtNA8ALTM5QotC6s=
+X-Google-Smtp-Source: AGHT+IG89JAyn/NY9M/Hy78bC+ISEzcD5xhsyf833dKnYvd1Hw1ejNIzlzrpDi2XnWamhjOzKzSs1NIbkg2FI3422oAvKYuK7+dc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <95a081a9-2307-4e5b-8ae2-082be16b327e@rivosinc.com>
+X-Received: by 2002:a05:6e02:1d90:b0:375:8a14:1012 with SMTP id
+ e9e14a558f8ab-3760951edd3mr3427405ab.2.1718928976587; Thu, 20 Jun 2024
+ 17:16:16 -0700 (PDT)
+Date: Thu, 20 Jun 2024 17:16:16 -0700
+In-Reply-To: <0000000000006fd14305f00bdc84@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000b3e69061b5b5762@google.com>
+Subject: Re: [syzbot] kernel BUG in ext4_do_writepages
+From: syzbot <syzbot+d1da16f03614058fdc48@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 20, 2024 at 10:06:15AM +0200, Clément Léger wrote:
-> 
-> 
-> On 20/06/2024 02:02, Cyril Bur wrote:
-> > On Thu, Jun 20, 2024 at 3:04 AM Deepak Gupta <debug@rivosinc.com> wrote:
-> >>
-> >> On Mon, Jun 17, 2024 at 01:05:50AM +0800, Jisheng Zhang wrote:
-> >>> For readability, maintainability and future scalability, convert the
-> >>> bottom half of the exception handling to C.
-> >>>
-> >>> Mostly the assembly code is converted to C in a relatively
-> >>> straightforward manner.
-> >>>
-> >>> However, there are two modifications I need to mention:
-> >>>
-> >>> 1. the CSR_CAUSE reg reading and saving is moved to the C code
-> >>> because we need the cause to dispatch the exception handling,
-> >>> if we keep the cause reading and saving, we either pass it to
-> >>> do_traps() via. 2nd param or get it from pt_regs which an extra
-> >>> memory load is needed, I don't like any of the two solutions becase
-> >>> the exception handling sits in hot code path, every instruction
-> >>> matters.
-> >>
-> >> CC: Clement.
-> >>
-> >> I think its better to save away cause in pt_regs prior to calling
-> >> `do_traps`. Once control is transferred to C code in `do_traps`,
-> >> another trap can happen. It's a problem anyways today without CPU support.
-> >>
-> >> Although with Ssdbltrp [1] extension and it kernel support [2] for it,
-> >> I expect asm code would clear up `SDT` bit in mstatus. Whenever `Ssdbltrp` lands,
+This bug is marked as fixed by commit:
+ext4: fix race condition between buffer write and page_mkwrite
 
-Hi Deepak, Clément,
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
 
-Currently, SR_IE bit is is set(setting means enable irq) in c, could the
-'SDT' bit be cleared in c as well when Ssdbltrp lands?
+#syz fix: exact-commit-title
 
-Thanks
-> >> I think `do_traps` should expect nesting of traps and thus cause should be saved
-> >> away before it gets control so that safely traps can be nested.
-> 
-> Hi,
-> 
-> Indeed, every register that is "unique" to a trap and than can be
-> overwritten by a second trap should be saved before reenabling them when
-> using Ssdbltrp. So that would be nice to preserve that.
-> 
-> >>
-> > 
-> > Is a possible solution to do both options Jisheng suggested? Save the
-> > cause before
-> > calling do_traps but also pass it via second param?
-> 
-> I guess so if it fits your performance requirements.
-> 
-> Thanks,
-> 
-> Clément
-> 
-> > 
-> >> [1] - https://github.com/riscv/riscv-double-trap/releases/download/v1.0-rc1/riscv-double-trap.pdf
-> >> [2] - https://lore.kernel.org/all/20240418133916.1442471-1-cleger@rivosinc.com/
-> >>
-> >>>
-> >>> 2.To cope with SIFIVE_CIP_453 errata, it looks like we don't need
-> >>> alternative mechanism any more after the asm->c convertion. Just
-> >>> replace the excp_vect_table two entries.
-> >>>
-> >>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> >>
-> >> _______________________________________________
-> >> linux-riscv mailing list
-> >> linux-riscv@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
+
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=d1da16f03614058fdc48
+
+---
+[1] I expect the commit to be present in:
+
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 10 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
