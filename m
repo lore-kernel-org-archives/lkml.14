@@ -1,159 +1,105 @@
-Received: from brightrain.aerifal.cx (brightrain.aerifal.cx [104.156.224.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE2116D4F5
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.156.224.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2397E78C63;
+	Fri, 21 Jun 2024 20:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719000736; cv=none; b=eqLtserACuc/7Lyp7DJuivhblujmJQbMInDaRYTHF7NYwPsw9jJvSHzuvGSiu0JU5iS8KOV0sfVlf36/PuURa7Fus1hKCTKUh5upJ72wl7aqQYderUbM16nMz/UVSgk3u8V+Ti9BkmlXu0Sllp2pV673ER6Loh8bQo1w7bYtKWA=
+	t=1719000871; cv=none; b=ep2ll6zNNHameNmuUvMrBwQjFsHPDZsqu1P/cHt9vNiSzOU8PaDn8eqG+fctwBEOYQF7MTHwfwRznla3naxhimt1OuBIEcvBQiFZOiOHZvN6UMtQdiwJFFT7Wo5CaLk7iNzT8leMmE0NjJ/6rFTHnEscThCuQS77NuQorNMc0Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719000736; c=relaxed/simple;
-	bh=vhcmxHuEfXQE4obMPoKgf5UPHRF9VVw2LNmHi4WI0f8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WkJYS0okNIRxnNtqvRsBmzP01LdB3EuH/hxjtn68ebhqRtha9Rivs2UGNV03yKGvPZMDDlni+Dgtd8yPG3ywEyLMIDaKCtkVcLv83S4IcayP4Y7Wmdl5EMnqamebyoyFQeIx7el53Lv7G1JdmNdb8bYGNXhCXmFvA86bdLlSag8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org; spf=pass smtp.mailfrom=aerifal.cx; arc=none smtp.client-ip=104.156.224.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aerifal.cx
-Date: Fri, 21 Jun 2024 15:57:23 -0400
-From: Rich Felker <dalias@libc.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Arnd Bergmann <arnd@kernel.org>, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org, Helge Deller <deller@gmx.de>,
-	linux-parisc@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Brian Cain <bcain@quicinc.com>,
-	linux-hexagon@vger.kernel.org, Guo Ren <guoren@kernel.org>,
-	linux-csky@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, libc-alpha@sourceware.org,
-	musl@lists.openwall.com, ltp@lists.linux.it, stable@vger.kernel.org
-Subject: Re: [musl] Re: [PATCH 09/15] sh: rework sync_file_range ABI
-Message-ID: <20240621195723.GB10433@brightrain.aerifal.cx>
-References: <20240620162316.3674955-1-arnd@kernel.org>
- <20240620162316.3674955-10-arnd@kernel.org>
- <366548c1a0d9749e42c0d0c993414a353c9b0b02.camel@physik.fu-berlin.de>
+	s=arc-20240116; t=1719000871; c=relaxed/simple;
+	bh=CrEBsFqVMm42+JY9xcQXYS6fBCPw+k+5ST1yxmLQiNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ODBtG/gHIw/z/cWyJ/3Rk3veP65OPVc+HhL36yeRD7CNOR4rY4XQc5qNnSU3kQlKnpd1VK6WvvHXF0urnQLb7+ABw7qMOOpMWH1ekkuLrX1niJTa16zO9GxtvWpl/kPnpO2/Y37kwgKJ70QoG/4NEAwfPAMx0fnavNqnuyPUbMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cxNmbqoX; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cxNmbqoX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719000870; x=1750536870;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CrEBsFqVMm42+JY9xcQXYS6fBCPw+k+5ST1yxmLQiNs=;
+  b=cxNmbqoX2xPw2C5SwbXj+/1nr3CpoZmlL7iN08svkeuqHyIKxZ22TO3W
+   zHMln6Ge4OsU2HtzLWWk7FrG4PzbiJKcAUC1RSf+1Y4sVNVWtvpoHbfAz
+   P9GALoolsHqCLQa6hD7AaVdJlakszoplqq3ucLgyNc3VLqvZXsRi4+Jo8
+   /ackZwmeg5OGWMnX4PT8myAp+21r8JfYNsQlJiBP8HuB6J7jeCQveXfEI
+   AprkRWwwXBtPR/kCzuDYJKBkaDy4IUZCrmsqOJSWiXdMPQacexxqBDFWU
+   kGdz/8RVnQPDewSlxIABZq3yqn/BfGgVVhWf36iIzYbz8fQxh0iUoqWlq
+   A==;
+X-CSE-ConnectionGUID: geL13cruRWu0mADGyePt2Q==
+X-CSE-MsgGUID: J2DujhSPT3unQN6Vv/2lkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="15745258"
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="15745258"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 13:14:29 -0700
+X-CSE-ConnectionGUID: fbEeGUa8QDmGB/6fd8ijHw==
+X-CSE-MsgGUID: gFDbWNPRR3WaditWG0DnbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,255,1712646000"; 
+   d="scan'208";a="73435098"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 13:14:29 -0700
+Received: from [10.212.73.237] (kliang2-mobl1.ccr.corp.intel.com [10.212.73.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id B46C020B5703;
+	Fri, 21 Jun 2024 13:14:27 -0700 (PDT)
+Message-ID: <60882b46-abe6-4225-886f-188bbe406283@linux.intel.com>
+Date: Fri, 21 Jun 2024 16:14:26 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <366548c1a0d9749e42c0d0c993414a353c9b0b02.camel@physik.fu-berlin.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] perf tools: Assorted random updates and fixes
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20240621170528.608772-1-namhyung@kernel.org>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240621170528.608772-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 21, 2024 at 10:44:39AM +0200, John Paul Adrian Glaubitz wrote:
-> Hi Arnd,
-> 
-> thanks for your patch!
-> 
-> On Thu, 2024-06-20 at 18:23 +0200, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > The unusual function calling conventions on superh ended up causing
->                                               ^^^^^^
->                                        It's spelled SuperH
-> 
-> > sync_file_range to have the wrong argument order, with the 'flags'
-> > argument getting sorted before 'nbytes' by the compiler.
-> > 
-> > In userspace, I found that musl, glibc, uclibc and strace all expect the
-> > normal calling conventions with 'nbytes' last, so changing the kernel
-> > to match them should make all of those work.
-> > 
-> > In order to be able to also fix libc implementations to work with existing
-> > kernels, they need to be able to tell which ABI is used. An easy way
-> > to do this is to add yet another system call using the sync_file_range2
-> > ABI that works the same on all architectures.
-> > 
-> > Old user binaries can now work on new kernels, and new binaries can
-> > try the new sync_file_range2() to work with new kernels or fall back
-> > to the old sync_file_range() version if that doesn't exist.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 75c92acdd5b1 ("sh: Wire up new syscalls.")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  arch/sh/kernel/sys_sh32.c           | 11 +++++++++++
-> >  arch/sh/kernel/syscalls/syscall.tbl |  3 ++-
-> >  2 files changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/sh/kernel/sys_sh32.c b/arch/sh/kernel/sys_sh32.c
-> > index 9dca568509a5..d5a4f7c697d8 100644
-> > --- a/arch/sh/kernel/sys_sh32.c
-> > +++ b/arch/sh/kernel/sys_sh32.c
-> > @@ -59,3 +59,14 @@ asmlinkage int sys_fadvise64_64_wrapper(int fd, u32 offset0, u32 offset1,
-> >  				 (u64)len0 << 32 | len1, advice);
-> >  #endif
-> >  }
-> > +
-> > +/*
-> > + * swap the arguments the way that libc wants it instead of
-> 
-> I think "swap the arguments to the order that libc wants them" would
-> be easier to understand here.
-> 
-> > + * moving flags ahead of the 64-bit nbytes argument
-> > + */
-> > +SYSCALL_DEFINE6(sh_sync_file_range6, int, fd, SC_ARG64(offset),
-> > +                SC_ARG64(nbytes), unsigned int, flags)
-> > +{
-> > +        return ksys_sync_file_range(fd, SC_VAL64(loff_t, offset),
-> > +                                    SC_VAL64(loff_t, nbytes), flags);
-> > +}
-> > diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-> > index bbf83a2db986..c55fd7696d40 100644
-> > --- a/arch/sh/kernel/syscalls/syscall.tbl
-> > +++ b/arch/sh/kernel/syscalls/syscall.tbl
-> > @@ -321,7 +321,7 @@
-> >  311	common	set_robust_list			sys_set_robust_list
-> >  312	common	get_robust_list			sys_get_robust_list
-> >  313	common	splice				sys_splice
-> > -314	common	sync_file_range			sys_sync_file_range
-> > +314	common	sync_file_range			sys_sh_sync_file_range6
->                                                                  ^^^^^^ Why the suffix 6 here?
-> 
-> >  315	common	tee				sys_tee
-> >  316	common	vmsplice			sys_vmsplice
-> >  317	common	move_pages			sys_move_pages
-> > @@ -395,6 +395,7 @@
-> >  385	common	pkey_alloc			sys_pkey_alloc
-> >  386	common	pkey_free			sys_pkey_free
-> >  387	common	rseq				sys_rseq
-> > +388	common	sync_file_range2		sys_sync_file_range2
-> >  # room for arch specific syscalls
-> >  393	common	semget				sys_semget
-> >  394	common	semctl				sys_semctl
-> 
-> I wonder how you discovered this bug. Did you look up the calling convention on SuperH
-> and compare the argument order for the sys_sync_file_range system call documented there
-> with the order in the kernel?
-> 
-> Did you also check what order libc uses? I would expect libc on SuperH misordering the
-> arguments as well unless I am missing something. Or do we know that the code is actually
-> currently broken?
 
-No, there's no reason libc would misorder them because syscalls aren't
-function calls, and aren't subject to function call ABI. We have to
-explicitly bind the arguments to registers and make a syscall
-instruction.
 
-The only reason this bug happened on the kernel side is that someone
-thought it would be a smart idea to save maybe 10 instructions by
-treating the register state on entry as directly suitable to jump from
-asm to a C function rather than explicitly marshalling the arguments
-out of the user-kernel syscall ABI positions into actual arguments to
-a C function call.
+On 2024-06-21 1:05 p.m., Namhyung Kim wrote:
+> Hello,
+> 
+> I found some misc updates and fixes are still remaining.  Just sending out
+> together.  Please take a look!
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (4):
+>   perf report: Fix condition in sort__sym_cmp()
+>   perf symbol: Simplify kernel module checking
+>   perf tools: Fix a compiler warning of NULL pointer
+>   perf mem: Fix a segfault with NULL event->name
 
-Rich
+Looks good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> 
+>  tools/perf/util/dsos.c       | 3 +++
+>  tools/perf/util/mem-events.c | 2 +-
+>  tools/perf/util/sort.c       | 2 +-
+>  tools/perf/util/symbol.c     | 5 +----
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+> 
