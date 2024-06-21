@@ -1,96 +1,91 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE8B42AA9;
-	Fri, 21 Jun 2024 07:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D1642AA9
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718954917; cv=none; b=Gmml4G/y6Y9jsTGrvQEtMp84RvEQ+6XXSCOxgYPSWTlzjZKlViWKuLlUf8hCtyeblsJF+vZJrckQXVYgTkmKbZqjNMVb1VO8uXpu+KX/RY/GPt14GOslSMM+yfITkvzvFbH9ddSvdq8SJx7WcA9wDmMfvcDWL9z9vXTDd+Y3msE=
+	t=1718954983; cv=none; b=k6yFWfCW2xpVGDaD7vX5Ra5gK2uB3xSOySIEEXHgzbHemkg1Ug9b0PEMoehdq9Hafr1VhBke08jHPNjARK4IwksG+OQf+VsUmpjdYRvnS5E3baiRgwo9muDrzTp3o7qIAPlCGCi1Ip0QVGU1gZhRE+/l6Qg0wJLlhmv1TY2IoCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718954917; c=relaxed/simple;
-	bh=4Cqmd1Zslg6+GqTtuMMGzAPmoWX+sK/ndxWfnjmHO6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ph1IZi2XHi9ZDEe+OGNQ29w8PiCXfjb6MMjYpvbYtB4bX1FSurhfMpKQH0K9DrqvRExUL3h+E3ezT0cjA5H2xJ2aHp9AcvjMrz+uT34vHrdiV8LdfwxJFRGi5r0M0//EQKCgnff39zT1d6Muc3796wdGJkIkfuXywcC22awvDKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=u27pTbDD; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718954983; c=relaxed/simple;
+	bh=z/+kbpIF5LNZ7J3ty6ZU61tMvYLBU+K3nYLRk7lV960=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o6NMPq/nGDlg3ipOc5qDykRY9E2/Q2qciagwOkba4eXBsrdCHn8c0VumXQA3ts1B0NmxPpyXb1+8jTYiv7q8azPj3qOmlpuYDrjgNJGqa4i1vrkEpWDIwV+iwkpLCQDL1gqYy/2/cFbQmXM0JMi2l2ciaQr97ScuivekCEyxjPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkhrwpF+; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="u27pTbDD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718954878; x=1719559678; i=markus.elfring@web.de;
-	bh=4Cqmd1Zslg6+GqTtuMMGzAPmoWX+sK/ndxWfnjmHO6Y=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=u27pTbDDtzyAG3eRqbn4MfYCio5UxmRS4aWUXnXp8OTfH3guRHsFQ6Q9+qLjzxtz
-	 M02tW3tzCfkxDp0M/6M35CuV71FjVcrKLPp669to2qQts1JRe4ankwxqXI9O1ty94
-	 /7BbvpLDi1rMn3SU8rHx7vA0GoJXejIjCPgIMbrgnLqt7VjWSdu6JoJIWVs4pA0Iu
-	 X0fuw+1PZhyxspK5NutBXp+K/sJF2YuTD/ed4KqY7vlsBwJoWIrMhBuDjSG1Bb40T
-	 mKCx8CNzKo3dkw0ruSn7359Volkl6OizeA5/RNJmvaNFNvKG0Z/2r800+8XhyyQUU
-	 P1guWgGc8BZz0Qmx2g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MVJNT-1rtN170nRP-00KxkG; Fri, 21
- Jun 2024 09:27:58 +0200
-Message-ID: <ebddd644-b9b1-4a87-a2e7-dcf255f4184d@web.de>
-Date: Fri, 21 Jun 2024 09:27:53 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkhrwpF+"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-70df213542bso1211461a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 00:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718954981; x=1719559781; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xrByOuSSdJJfOiuZoGI/GCFoQPmJLRboTp7l6nd23AE=;
+        b=lkhrwpF+wMLzWodDMH46boisIzdlMAw63/smpMCDIBJm9q6jDpYrogRANxkl/QjV+M
+         NKqh2I84ksP3d0J5dYDryzs58/B/gJ5nDleJJqPSjzx5R4/BvP+qmbA7ykA34CQXkpDr
+         N+wh8unfHDMeMXKaz232QdGfEjGurq4xe0LiN06VgIDavUV1ZNtD3YN1A9n/IPNke9Jd
+         1NK1KO8QpRH4nRY3GBQnPRgM5AspuTOPUf3clhkvtS2+7i+xB/dRwzwD7K+6wlyY1D7w
+         u+c3sUgE8nnnFWtBfGbxXkkqSxx1Vx+TNedb2TKz+JGqo5ma/xW9J5S9XeE70ds/aKBY
+         9H7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718954981; x=1719559781;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xrByOuSSdJJfOiuZoGI/GCFoQPmJLRboTp7l6nd23AE=;
+        b=fpPLJWZ6UMuoAQpdqUNPWEW0nNaHakOqoiZlo1CvyIvTGmDw//60L59qUiOlb3sQEZ
+         Jdgc/mDAKoigZ8Y/ilGXt9xT9J+SW2QbOQ/5u8flrKI/+JqLZWE43lPb3u4HrYBz1sSk
+         6ZEFjw2pLKVb0+9EbbfWXQsgx3mE7TWy9bEM7XvPDbLOJXUzi184AOdY7GtW5EpmkoZy
+         Ue8rngVQjXQ3oGOcYXz9YV4OTb8EnzIwUXYSKJJ8PWbyZlESZlo4cpg6pFnrouA1AWdX
+         NTmDDBoS/ENx00Dbeu535Wx57Tug8Uf1ckqg9zSu0LCt79trKarqpnRrtJDq8qxOTfIW
+         W8cA==
+X-Gm-Message-State: AOJu0YzF5KnHTVNrRTsUecQCNyS3CIhy/1kSiIQ0ycaMdFC7i7+Y45+R
+	0WUFinpxzfIRx6Kn6pP+FJegVrFMCCRYkzO2vdw71nbwkBKBUs//XavfkQ==
+X-Google-Smtp-Source: AGHT+IH36ZSbgJoRUq8AQuSj05yz3pJQ27pCiatM/yWTzUS0uoW8mKFWZ6DWCfOkTPDTUm1rUANGag==
+X-Received: by 2002:a17:90a:e00e:b0:2c0:17b4:85aa with SMTP id 98e67ed59e1d1-2c7b5c9f60amr7290865a91.22.1718954981074;
+        Fri, 21 Jun 2024 00:29:41 -0700 (PDT)
+Received: from localhost ([47.88.5.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c819db94f7sm881929a91.35.2024.06.21.00.29.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Jun 2024 00:29:40 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	Tejun Heo <tj@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: [PATCH 0/4] workqueue: Destroy workers in idle_cull_fn().
+Date: Fri, 21 Jun 2024 15:32:21 +0800
+Message-Id: <20240621073225.3600-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
-To: Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, lkp@intel.com,
- linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org
-Cc: Paul Cercueil <paul@crapouillou.net>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
- <sumit.semwal@linaro.org>, oe-kbuild-all@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
- Jonathan Corbet <corbet@lwn.net>, Julia Lawall <julia.lawall@inria.fr>,
- Randy Dunlap <rdunlap@infradead.org>
-References: <202406191014.9JAzwRV6-lkp@intel.com>
- <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de> <ZnRUSaHJhz7XLcKa@matsya>
- <20240620170522.GU3029315@google.com> <ZnUnFeum1Z2ahm9M@matsya>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ZnUnFeum1Z2ahm9M@matsya>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:J37COVk2XF7k8nqs/WJ4OC98gPL38IqMj6sP957DZk0HWuiah8F
- 2tEs84osaFRb6N6fJcf1SbpSGA2KVPCX3MzmMU42+duV4bIxyA/2szcJY89TZZ1HWSRbqaX
- +QrjOc9FBuANWIRpwoNnoToVCdpRkv7sA6jpWGGRUXueujw1o5Z48O/iVJN1KagPGkFvRyE
- /+wIjw4xjBOXesASfg62A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5tNyWaEuA3A=;j/8jMQV9kiFVidscC+nHbxOQKKx
- dA4551YJWSBmZkuYtYQMZDbeUV6U05hNoK2MuHlZW2y746kCpwv1Zs99zzsdADn3ICAdU8WJ5
- ooLh9ZtCNusXGS8u/iSsHO/zqEzHWI0YlXR1mhfUwAi5JQ+QlWGakhh0PZ+M8EbiXlst3hmc2
- u7gJJ0n9Afqob4U37CkdXMKyqhHWhglsQO1ecrqy2lo5Wm1NAlOxzC+DU+h3Sul0MxD0BTfj2
- K4LuaRpr6RRkUXhSkcc+O/RSKMm1jIiJtE5bRR13l7c+3SNH2qs9JlsrUwJH+L4NAN4kg0g8a
- Kd+MfUSD5UuEgd5a6nihghQxfCotOWV/OEzablJ3WkcuRvlfqAvUDqHgDUOLqfH6Fe8qqLfR3
- g1vaJjDUebAVf0KT7Yfve0lK4DtUXdKCQzY+lXnVLjgdP3Z1exsNGvq6Q2Xdxvh4JgKXt0daj
- 31a3L5BBZMqoZu9pzrAhvBuJlLvR96nQQtXAhB0zMmbWY+61OyqI/Ztke6YU8B6eaNmNHC/C0
- lMwEC6nYjLGsrJ7ApR9r2v5+pTJ+rOM+VoczMfxJSNP7eoEvfZdt8zMsFgMuwdX378rJZUhik
- 0cq27R7iiu3o+BOCnbxUW/uEGpBnVA1iaKzO03kqPzgdOZF9lfDnEdnt9GU1Xlr/BEpm6zqsa
- 5eTLOHWtnT/k2O73NLu/J1dFULXx3ua1LmJxnXa831tc3ry4Ie4ODQvjQhEDCDiK/fokUtPlZ
- JXMJBqVtRLyxYq2zrw28cFlgpdFhty1YbvLrHFXqU21jhCTIQ5gOtR0PGB3SdnIReic/Ylrv9
- WYZpL5W4AiKeLeVoRttIltCOqFONA+ljfoF6ZKkiONhYE=
+Content-Transfer-Encoding: 8bit
 
-> Sadly, I am yet to see a constructive approach or even better a helpful
-> patch which improve something, rather than vague suggestions on the list
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Can you get any more constructive impressions from another data representation?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=author&q=Elfring
+After e02b93124855("workqueue: Unbind kworkers before sending them to
+exit()"), the code to kick off the destruction of workers is now in a
+process context (idle_cull_fn()), more destruction code can also be
+moved to the said process context to simplify the destroying.
 
-Are you aware how many change suggestions (also from my selection) are still
-in various waiting queues?
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Valentin Schneider <vschneid@redhat.com>
 
-Regards,
-Markus
+Lai Jiangshan (4):
+  workqueue: Reap workers via kthread_stop() and remove
+    detach_completion
+  workqueue: Don't bind the rescuer in the last working cpu
+  workqueue: Detach workers directly in idle_cull_fn()
+  workqueue: Remove useless pool->dying_workers
+
+ kernel/workqueue.c | 87 +++++++++++++++++++++-------------------------
+ 1 file changed, 40 insertions(+), 47 deletions(-)
+
+-- 
+2.19.1.6.gb485710b
+
