@@ -1,37 +1,65 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5C6146017;
-	Fri, 21 Jun 2024 20:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F3416D4CD;
+	Fri, 21 Jun 2024 20:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719001949; cv=none; b=tkR4Sy919mlfV9dDsw8BBMtQtGAHVMKpBxDuPjvvndHcaWF256KgawbF1uIs+VLWIRr3RZGNAaVLN805Vp7pjPs/YPeO7q7ipPtnfKqk4GgIyTAg6cuVPDDvLhySXyfnw4yEbNnMRNyMvdyWvmYkdI8I9qbieLn4KPKHNjy6mJo=
+	t=1719001963; cv=none; b=Jq4JAajBeqdERJqC1d9jogZ+P81eIbvx3QvdSccpkdNwEq6s17h0B8qAp5fxp8MbZxLE0A1ArXeMWZYDWbjcBTbVu0/D7bXOXaNGqOUaN4Rm1AgHDRktuVBuoPrRKMdnIq1OCo9DHMwE9kBZDiDRzLKmrV3sQLDvc83jjGEonO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719001949; c=relaxed/simple;
-	bh=gE2ViUah1IOM2sFBbFJHidv3pjaO7zrqCmYujLwwOeg=;
+	s=arc-20240116; t=1719001963; c=relaxed/simple;
+	bh=vAeK4Ayp6O1zO9d9Fffwtf/IDcupIiAFBSbIgUf3E4I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ESmNV8oIOLVwt9jqDr3xRwOFBeoxiKPe2wbZ/Mn3F+ZRB5/B7i9fCMl7rrPIsZIxWyRYAsMCJ0WSVLpyVLcRm5TqberqoRyuVMtMx/sVVwoeCvLMCVMuN6NxuDvFNiu6oE1IbTb4g06R2v6Vzxjl5nuQ4UpmB1G34sBia78eLWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sKkva-0000N7-00; Fri, 21 Jun 2024 22:32:10 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 6A9EFC0120; Fri, 21 Jun 2024 22:31:21 +0200 (CEST)
-Date: Fri, 21 Jun 2024 22:31:21 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Jonas Gorski <jonas.gorski@gmail.com>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] MIPS: Introduce config options for LLSC
- availability
-Message-ID: <ZnXjGRoKoRUeWpI+@alpha.franken.de>
-References: <20240612-mips-llsc-v2-0-a42bd5562bdb@flygoat.com>
- <20240612-mips-llsc-v2-2-a42bd5562bdb@flygoat.com>
- <alpine.DEB.2.21.2406210041140.43454@angie.orcam.me.uk>
- <2c26a07f-fa68-48f1-8f3b-3b5e4f77130b@app.fastmail.com>
- <alpine.DEB.2.21.2406211446500.43454@angie.orcam.me.uk>
- <83cf475c-86a3-4acb-bc82-d94c66c53779@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQY622rvd1rSxlANBmiitrWYUX4idkh6veA5b0Jga0U4j4RpjYYrP+3ht/ZglAmND/q/2QYSzTGAv4ZNQwfAdq7bXlEGeIs3OxRyZpn0SBliQQ69B74M0nJM0v7wZGNE0Hzi612ftHiY1b2/mJWyCP6RKSk2eLM6PKTx6IZ10VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f4a0050b9aso19926295ad.2;
+        Fri, 21 Jun 2024 13:32:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719001961; x=1719606761;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j4T/75yEUWI9QmnMDbKvawY613lpe8URFHiL1wBcQC0=;
+        b=jkHlgq4SJUC0Q5LYv92mpYjl/XbtWJBT0mackip4Idxt0FlyOpgGG5hWUZANtTysBa
+         aZ/zARMhka2nthyoE7UTZybJB3NsodKR9LyPMKRkRofke6Gr2bPpPEVae99gaooWUMta
+         JEMifH0rRBIs+0f95f9FYmoM59hXUNCTmcsrIGG4KAJabeQ9Ztz2iTub5a774QJNhg/M
+         O8Fx3WvX6VFOdXvGMX/elzACBasQY2uffeFiAMAJlFGG2GYfoZSD51qOtbLdqZUDtOF9
+         +eGtFtWZ30/pP6240z6Vl4XtzXDiklTGml8VaSPRIFjJKgXG1gJXFDvoMLY24lXd+wUr
+         k9Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXFrSjatY8cHijonOLJw42QyqDqy8PN9RfdbPU+LRLh13fCnBP8ec9ByWUd4L4zfDrnzUwveMdmBS9tNWlFmSIxeY83YH3+KuN6oFiis58V5KMV5FkIey7vUwou168U2uMgtswP0Sqr9cbWDQ9lz1KGgVrpo0bxYyCHC+QVfGIgHVv558p
+X-Gm-Message-State: AOJu0YzSIL4Ydf6E55wtoLYZFQC+5QumwhLYJZCDF09qyEReycFk4Lfk
+	wQq2YqGKgwzvItdYvdMqdvvZk0ZFvyXyHdQ4HfWT6nbiFS+IVmpa
+X-Google-Smtp-Source: AGHT+IHQQs9gxpCxk/tH5pi5uy0PgjLOUYKzya+zcxlxyEp/xlUOmbT0lB6mjENELe/ieYsATCsfSQ==
+X-Received: by 2002:a17:902:dc84:b0:1f6:6ef0:dae4 with SMTP id d9443c01a7336-1f9aa3eb973mr75432615ad.32.1719001961236;
+        Fri, 21 Jun 2024 13:32:41 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb5e406esm18088635ad.221.2024.06.21.13.32.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 13:32:40 -0700 (PDT)
+Date: Fri, 21 Jun 2024 20:32:33 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>,
+	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+	"stable@kernel.org" <stable@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jake Oshins <jakeo@microsoft.com>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Message-ID: <ZnXjYV4oc2ONokld@liuwe-devbox-debian-v2>
+References: <20240621014815.263590-1-wei.liu@kernel.org>
+ <SN6PR02MB4157C9FD41483E9AC7ED9E70D4C92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZnUbWUdVE7q8oNjj@liuwe-devbox-debian-v2>
+ <20240621110327.GA19602@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,28 +68,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <83cf475c-86a3-4acb-bc82-d94c66c53779@app.fastmail.com>
+In-Reply-To: <20240621110327.GA19602@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On Fri, Jun 21, 2024 at 04:21:49PM +0100, Jiaxun Yang wrote:
-> Does anyone reckon the reason behind opt-out LLSC for IP28? As far as I understand
-> there is no restriction on using LLSC after workaround being applied. If it's purely
-> performance reason, I think I'll need to move kernel_uses_llsc logic to Kconfig as well.
+On Fri, Jun 21, 2024 at 04:03:27AM -0700, Saurabh Singh Sengar wrote:
+> On Fri, Jun 21, 2024 at 06:19:05AM +0000, Wei Liu wrote:
+> > On Fri, Jun 21, 2024 at 03:15:19AM +0000, Michael Kelley wrote:
+> > > From: Wei Liu <wei.liu@kernel.org> Sent: Thursday, June 20, 2024 6:48 PM
+> > > > 
+> > > > The intent of the code snippet is to always return 0 for both fields.
+> > > > The check is wrong though. Fix that.
+> > > > 
+> > > > This is discovered by this call in VFIO:
+> > > > 
+> > > >     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+> > > > 
+> > > > The old code does not set *val to 0 because the second half of the check is
+> > > > incorrect.
+> > > > 
+> > > > Fixes: 4daace0d8ce85 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V
+> > > > VMs")
+> 
+> 12 characters are preferred for Fixes commit id.
+> 'Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")'
 
-commit 46dd40aa376c8158b6aa17510079caf5c3af6237
-Author: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Date:   Wed Oct 7 12:17:04 2020 +0200
-
-    MIPS: SGI-IP28: disable use of ll/sc in kernel
-    
-    SGI-IP28 systems only use broken R10k rev 2.5 CPUs, which could lock
-    up, if ll/sc sequences are issued in certain order. Since those systems
-    are all non-SMP, we can disable ll/sc usage in kernel.
-    
-    Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Fixed. Thanks.
