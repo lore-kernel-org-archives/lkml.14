@@ -1,182 +1,196 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543FE5D477;
-	Fri, 21 Jun 2024 16:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD37EDDC4;
+	Fri, 21 Jun 2024 16:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718987902; cv=none; b=AUxUaVDWNo8zffaKVcG5KqB5Sxvv4kfIxcqXX0sTqc6ZSnJg0mKCrY5U88ei1q89fYwL9dPKbsjMFuL6mIs4GQWEWiRWoRcVRVAF45RfbF1h9k9rs+cbZ7qGZVXj1yxxAjLwR/gODpjD8x+kzOHCdiEMTVO7riZBBixRYtVnS4M=
+	t=1718987995; cv=none; b=Zsx+XN539MAPoWIzaSXqAXog5/cEcaSneawYgkJniarGPMefNLCleBHiOtl98mEUGlY91H3mrCgS9lT+AW9CCfV164dNGS35zgtf3R+OW48YgH0hDqNm5BYzNE8HQeAUHeQt/v54xqckKQWVCbbq92fSPc1t+NVHziiUXb9fk3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718987902; c=relaxed/simple;
-	bh=F2Foq8chGaYEKnpLehBWW8K5nNv65nvqwaSSHCLVspo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=fUqBFeZQ/V7qkCgY1cFYA9t/aLA3QVVm+RbpMc161pfCWwFott8F9ED6j4tWUzYQr0+PCzI8FpVqZW4X8fUtLvRpWHuenUUcoSrB0tbYuunRmnqHecMhIdKSap4qhFJVGGt+a6oXLBiUy9Yqh+jtp3jsetcDwpEJ7YuDqUoQV/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VhBftoRS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xDcSbmIX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718987995; c=relaxed/simple;
+	bh=aa/UAapxLYnd05XCY2z3WEmwO81o6wpHMQ8kV6F0g0I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=CnE8UgawjOgv7oAmTVPz/maf6rJlb58so5Aq1USfl7ACL0RH9s24hwC8izPjZ3iMVi3QeQgv6DyVLkOMGlb94opwGkqEWhuOTt9ig3WvD0wiVwIsZ2cq6XWuzWbweNcb55J+TkQBNnxmfVSQ/n+kK0PryJfsfVUW8odrGKndTjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xXqMOJbQ; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VhBftoRS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xDcSbmIX"
-Date: Fri, 21 Jun 2024 16:38:17 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718987898;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BkxUbzuXKpxyIC2qihAos29TfQGmeBI3WYAEuLWk8Tg=;
-	b=VhBftoRSH+zkNf1kT4GYaXOcXD7x4UO9AAbgTqtZHTA4fsWcOTB3PDdS1noZ8oOmwGCis+
-	Q+IzsiLAJu5lFcLPvFmmtJoEOXNj8pkTwW7Db4zVZAcWbxUxGplZldJ6IbqBUHeD5pPasv
-	Ha/K8Z2y9VUO6m9VPacRBjF/kI4c+gFLENtjs0tlpKUv0KDpw/zQiqcJLwW168eEkzgjlZ
-	6Yhc1R47sAdYvHkWJUiy5UxnBIpLOnr6kbaJYkOdLIpw8cxwhaWdJ3E5uKnFhknB1h42Ei
-	fzuJ9iry4G9fhTbc/4g21/nKHwZfI466pf5jQ4GczC/pdDLGv101pMov7VIGIA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718987898;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BkxUbzuXKpxyIC2qihAos29TfQGmeBI3WYAEuLWk8Tg=;
-	b=xDcSbmIXa2r/rCLJQ4LFAbXGdkUIYBCs/kH8cTwbW24xarZNeznD5zxPXMazU4SYvmi4go
-	4qUOipkDiYaEGYCQ==
-From: "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] x86/sev: Do RMP memory coverage check after max_pfn
- has been set
-Cc: Tom Lendacky <thomas.lendacky@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cbec4364c7e34358cc576f01bb197a7796a109169=2E17189?=
- =?utf-8?q?84524=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3Cbec4364c7e34358cc576f01bb197a7796a109169=2E171898?=
- =?utf-8?q?4524=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xXqMOJbQ"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45LGdkmQ051111;
+	Fri, 21 Jun 2024 11:39:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718987986;
+	bh=Nbx1zYtIRV0RSr575R1x17x1xodoPxpczYOw9GvbXdY=;
+	h=From:Date:Subject:References:In-Reply-To:To:CC;
+	b=xXqMOJbQJClgv/d1+xH7wJtUFANyVqkZLr4j39TBGQgDKefWjoMYblFPMobY7HLET
+	 RqyDnNtoUnl4nTo9UCn5RBke4EuF3G/zNOX035twyxZW1fuySGiPif4h3o4/N1+Qb5
+	 /lY05TGlQY6jpzeKB97Ife0KxsI6+I7utdT5k5jE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45LGdkap085566
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 21 Jun 2024 11:39:46 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 21
+ Jun 2024 11:39:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 21 Jun 2024 11:39:46 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45LGdkvI080074;
+	Fri, 21 Jun 2024 11:39:46 -0500
+From: Bryan Brattlof <bb@ti.com>
+Date: Fri, 21 Jun 2024 11:39:37 -0500
+Subject: [PATCH v3 1/5] cpufreq: ti: update OPP table for AM62Ax SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171898789757.10875.17817122735030570876.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240621-ti-opp-updates-v3-1-d857be6dac8b@ti.com>
+References: <20240621-ti-opp-updates-v3-0-d857be6dac8b@ti.com>
+In-Reply-To: <20240621-ti-opp-updates-v3-0-d857be6dac8b@ti.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar
+	<viresh.kumar@linaro.org>, Lee Jones <lee@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>
+CC: Vibhore Vardhan <vibhore@ti.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Bryan Brattlof <bb@ti.com>,
+        Dhruva
+ Gole <d-gole@ti.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3367; i=bb@ti.com;
+ h=from:subject:message-id; bh=aa/UAapxLYnd05XCY2z3WEmwO81o6wpHMQ8kV6F0g0I=;
+ b=owNCWmg5MUFZJlNZ9e+uwwAAZn///n99sz/8P2+td14f/+v3Hv96++bzr+9//J25ijr2//wwA
+ Rs2g7UGQGgAAAAAA0aaAAepoAAAAGgaaDQyABo0DQAADR6jIeKaeGp6oc0hiBpiZNNBkaGjI0G1
+ ABpoNNDQBpk0yDQZAADTRpkyAMjQGEBkaBk00DRoY7UP1NJkYQHqD1BhBkaBoMjIDQ00ANNBkDI
+ AAANAAaZADIDIGQyGmgDRgAdI+kHh3gCL0SBNmoYPlwqCePNVt8TaCPoyFFZBEUtK3iEYk07LWg
+ UYbX5KF7SanEYIWJ8GMWqM3qbBHyaHcAtfJSjGSyrGNgcG2s7mO4EdezwyVAW0VrciHt+r5OM/G
+ p453nwjvrnpPJuk/+sVZjj7/HhYSNOwRdJpZffjjkWmI9ACqT5w61TiIFuzpLUXuPt6qbCdCNab
+ VnObohPlSpRr4q6/gDD3FYA1XylrJcr8Wdiaj8sWsEn9XscZTMX1a3FPCcAcmDEl+tnKm/zbZc3
+ O49DiL3mRTgSYoM8Ugv/x1+uSTirm2Ws/VU1+yoVOQv8C/obAGRkbRnfyO/Wif3hIT+6eYfJ0Tp
+ ZwpkoLQsQXDphJViuos51JbGImpYlHmA12bjPWSd8anjHsAJAzABzFCgxgnNiECU8EQLlQgClpB
+ d4P+LuSKcKEh699dhg=
+X-Developer-Key: i=bb@ti.com; a=openpgp;
+ fpr=D3D177E40A38DF4D1853FEEF41B90D5D71D56CE0
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The following commit has been merged into the x86/sev branch of tip:
+As the AM62Ax SoC family matures more speed grades are being defined.
+These new grades unfortunately no longer align with the AM62x SoC
+family. Define a new table with new OPP speed grade limits for the
+AM62Ax
 
-Commit-ID:     6a7d32f3a205f577789f65fe0862eee9bfc12262
-Gitweb:        https://git.kernel.org/tip/6a7d32f3a205f577789f65fe0862eee9bfc12262
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Fri, 21 Jun 2024 10:42:05 -05:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 21 Jun 2024 18:20:09 +02:00
-
-x86/sev: Do RMP memory coverage check after max_pfn has been set
-
-The RMP table is probed early in the boot process before max_pfn has been
-set, so the logic to check if the RMP covers all of system memory is not
-valid.
-
-Move the RMP memory coverage check from snp_probe_rmptable_info() into
-snp_rmptable_init(), which is well after max_pfn has been set. Also, fix
-the calculation to use PFN_UP instead of PHYS_PFN, in order to compute
-the required RMP size properly.
-
-Fixes: 216d106c7ff7 ("x86/sev: Add SEV-SNP host initialization support")
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/bec4364c7e34358cc576f01bb197a7796a109169.1718984524.git.thomas.lendacky@amd.com
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Signed-off-by: Bryan Brattlof <bb@ti.com>
 ---
- arch/x86/virt/svm/sev.c | 44 ++++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ drivers/cpufreq/ti-cpufreq.c | 59 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index 0ae1053..0ce1776 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -120,7 +120,7 @@ static __init void snp_enable(void *arg)
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index 714ed53753fa5..51cac31f776f5 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -47,6 +47,28 @@
+ #define AM625_SUPPORT_S_MPU_OPP			BIT(1)
+ #define AM625_SUPPORT_T_MPU_OPP			BIT(2)
  
- bool snp_probe_rmptable_info(void)
- {
--	u64 max_rmp_pfn, calc_rmp_sz, rmp_sz, rmp_base, rmp_end;
-+	u64 rmp_sz, rmp_base, rmp_end;
- 
- 	rdmsrl(MSR_AMD64_RMP_BASE, rmp_base);
- 	rdmsrl(MSR_AMD64_RMP_END, rmp_end);
-@@ -137,28 +137,11 @@ bool snp_probe_rmptable_info(void)
- 
- 	rmp_sz = rmp_end - rmp_base + 1;
- 
--	/*
--	 * Calculate the amount the memory that must be reserved by the BIOS to
--	 * address the whole RAM, including the bookkeeping area. The RMP itself
--	 * must also be covered.
--	 */
--	max_rmp_pfn = max_pfn;
--	if (PHYS_PFN(rmp_end) > max_pfn)
--		max_rmp_pfn = PHYS_PFN(rmp_end);
--
--	calc_rmp_sz = (max_rmp_pfn << 4) + RMPTABLE_CPU_BOOKKEEPING_SZ;
--
--	if (calc_rmp_sz > rmp_sz) {
--		pr_err("Memory reserved for the RMP table does not cover full system RAM (expected 0x%llx got 0x%llx)\n",
--		       calc_rmp_sz, rmp_sz);
--		return false;
--	}
--
- 	probed_rmp_base = rmp_base;
- 	probed_rmp_size = rmp_sz;
- 
- 	pr_info("RMP table physical range [0x%016llx - 0x%016llx]\n",
--		probed_rmp_base, probed_rmp_base + probed_rmp_size - 1);
-+		rmp_base, rmp_end);
- 
- 	return true;
- }
-@@ -206,9 +189,8 @@ void __init snp_fixup_e820_tables(void)
-  */
- static int __init snp_rmptable_init(void)
- {
-+	u64 max_rmp_pfn, calc_rmp_sz, rmptable_size, rmp_end, val;
- 	void *rmptable_start;
--	u64 rmptable_size;
--	u64 val;
- 
- 	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return 0;
-@@ -219,10 +201,28 @@ static int __init snp_rmptable_init(void)
- 	if (!probed_rmp_size)
- 		goto nosnp;
- 
-+	rmp_end = probed_rmp_base + probed_rmp_size - 1;
-+
++enum {
++	AM62A7_EFUSE_M_MPU_OPP =		13,
++	AM62A7_EFUSE_N_MPU_OPP,
++	AM62A7_EFUSE_O_MPU_OPP,
++	AM62A7_EFUSE_P_MPU_OPP,
++	AM62A7_EFUSE_Q_MPU_OPP,
++	AM62A7_EFUSE_R_MPU_OPP,
++	AM62A7_EFUSE_S_MPU_OPP,
 +	/*
-+	 * Calculate the amount the memory that must be reserved by the BIOS to
-+	 * address the whole RAM, including the bookkeeping area. The RMP itself
-+	 * must also be covered.
++	 * The V, U, and T speed grade numbering is out of order
++	 * to align with the AM625 more uniformly. I promise I know
++	 * my ABCs ;)
 +	 */
-+	max_rmp_pfn = max_pfn;
-+	if (PFN_UP(rmp_end) > max_pfn)
-+		max_rmp_pfn = PFN_UP(rmp_end);
++	AM62A7_EFUSE_V_MPU_OPP,
++	AM62A7_EFUSE_U_MPU_OPP,
++	AM62A7_EFUSE_T_MPU_OPP,
++};
 +
-+	calc_rmp_sz = (max_rmp_pfn << 4) + RMPTABLE_CPU_BOOKKEEPING_SZ;
-+	if (calc_rmp_sz > probed_rmp_size) {
-+		pr_err("Memory reserved for the RMP table does not cover full system RAM (expected 0x%llx got 0x%llx)\n",
-+		       calc_rmp_sz, probed_rmp_size);
-+		goto nosnp;
++#define AM62A7_SUPPORT_N_MPU_OPP		BIT(0)
++#define AM62A7_SUPPORT_R_MPU_OPP		BIT(1)
++#define AM62A7_SUPPORT_V_MPU_OPP		BIT(2)
++
+ #define VERSION_COUNT				2
+ 
+ struct ti_cpufreq_data;
+@@ -112,6 +134,32 @@ static unsigned long omap3_efuse_xlate(struct ti_cpufreq_data *opp_data,
+ 	return BIT(efuse);
+ }
+ 
++static unsigned long am62a7_efuse_xlate(struct ti_cpufreq_data *opp_data,
++					unsigned long efuse)
++{
++	unsigned long calculated_efuse = AM62A7_SUPPORT_N_MPU_OPP;
++
++	switch (efuse) {
++	case AM62A7_EFUSE_V_MPU_OPP:
++	case AM62A7_EFUSE_U_MPU_OPP:
++	case AM62A7_EFUSE_T_MPU_OPP:
++	case AM62A7_EFUSE_S_MPU_OPP:
++		calculated_efuse |= AM62A7_SUPPORT_V_MPU_OPP;
++		fallthrough;
++	case AM62A7_EFUSE_R_MPU_OPP:
++	case AM62A7_EFUSE_Q_MPU_OPP:
++	case AM62A7_EFUSE_P_MPU_OPP:
++	case AM62A7_EFUSE_O_MPU_OPP:
++		calculated_efuse |= AM62A7_SUPPORT_R_MPU_OPP;
++		fallthrough;
++	case AM62A7_EFUSE_N_MPU_OPP:
++	case AM62A7_EFUSE_M_MPU_OPP:
++		calculated_efuse |= AM62A7_SUPPORT_N_MPU_OPP;
 +	}
 +
- 	rmptable_start = memremap(probed_rmp_base, probed_rmp_size, MEMREMAP_WB);
- 	if (!rmptable_start) {
- 		pr_err("Failed to map RMP table\n");
--		return 1;
-+		goto nosnp;
- 	}
++	return calculated_efuse;
++}
++
+ static unsigned long am625_efuse_xlate(struct ti_cpufreq_data *opp_data,
+ 				       unsigned long efuse)
+ {
+@@ -234,6 +282,15 @@ static struct ti_cpufreq_soc_data am625_soc_data = {
+ 	.multi_regulator = false,
+ };
  
- 	/*
++static struct ti_cpufreq_soc_data am62a7_soc_data = {
++	.efuse_xlate = am62a7_efuse_xlate,
++	.efuse_offset = 0x0,
++	.efuse_mask = 0x07c0,
++	.efuse_shift = 0x6,
++	.rev_offset = 0x0014,
++	.multi_regulator = false,
++};
++
+ /**
+  * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
+  * @opp_data: pointer to ti_cpufreq_data context
+@@ -337,7 +394,7 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
+ 	{ .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
+ 	{ .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
+ 	{ .compatible = "ti,am625", .data = &am625_soc_data, },
+-	{ .compatible = "ti,am62a7", .data = &am625_soc_data, },
++	{ .compatible = "ti,am62a7", .data = &am62a7_soc_data, },
+ 	{ .compatible = "ti,am62p5", .data = &am625_soc_data, },
+ 	/* legacy */
+ 	{ .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
+
+-- 
+2.45.2
+
