@@ -1,119 +1,125 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B49212D742;
-	Fri, 21 Jun 2024 07:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B043C2F
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718954076; cv=none; b=nOC/1a3Fp2e+0cbkFJZqNftWDSN52f6ZUwrb4kKFS4Sz6wt2uRCCtMGPRR3OCh/rw/bD+FITESL7My7t+T/MkMWD6fFgBC71jPjx0IGUrP732V84DN+nxjUVXtMqO/knZH7ftGZa9BqCLJe8WnCn0i55l0Gv43YykujxhXSfS/0=
+	t=1718954144; cv=none; b=b7dlBaW4IHsPVyxX6NJBPyqgbin8V1OPgMHMwWu73WvMIShQwCrKPyLbeYUPFIQYMWF5JZoDIBddpIUTwBVe2TTcaklitr6bC6GdEAD+Hu4HRPEfPI3Hu0wtWPOuc/a9KiJew/yHbw83oP0JivUsQfHBK+fzygwP7VbJEYSUsJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718954076; c=relaxed/simple;
-	bh=I1d26+FYwmfD9Tc9dF0H8tsiQttz7MrvNQjmOX9mk7s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hMM0GFO/UdNzOwr5ZMfzZV9DUdI+fEexb+mMdSXHQelcBKsbVv8lYwlUyCcbXCcXxyRpsU8k+wzXmXvdr/0l61jVgJfLIg193Azc8nEt9w4HA+AZ8TejAoMLYdPBSCR0DX7Zu1/IR/0YgtJ9/45mrL585pxBssQu1kkEfWH01Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OK5N6Zlg; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718954144; c=relaxed/simple;
+	bh=XaO4Z0+DtOg24zA1OThoXiLI5A9lBnk/os2EEmz7b7Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cJaCSZii49MvZBwiP5oS5k7PHNrQI5uS+U5VytcTmo4QDVXCSPKK1W5Uj/SYvEL+GnEATrFguV9I3g7h+WLZajg1SeSnHGEGsDBga6nj7c6Lmn0qYdEV7qvzqzObDDyoDeWKc9wSXuVjA/vmBxf1mwWzFUB0dzj9rrK5z/ahoPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Zefbg62V; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OK5N6Zlg"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111aeso1968988a12.0;
-        Fri, 21 Jun 2024 00:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718954073; x=1719558873; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=I1d26+FYwmfD9Tc9dF0H8tsiQttz7MrvNQjmOX9mk7s=;
-        b=OK5N6ZlgNpyFNOORJZRwBMCpsCNLwvI18yVWo52fpDE0suypmbKCTy3ncALVmKk0zw
-         RwhysRvZlwmHUP7Jw2HiA/LpVzATOMz+2aAx0s3CmJC49vxRww0H3xlfCOzfX9w3H4lO
-         /vR9gCJ2JlAhhJuDWxjJP9X8uPnL/nNe9czTF/UqWdeoXqSEs9KRCvKCokbnLrjIrpYd
-         k1uuNjzaw040m5gV5AxSwmKwBFKYf6bM/ysIit95xnydsio4ub3DxrVi6Zjq9EMSjTMq
-         LnIFE3DsCJYOGSJAjPQ15zRtz7kgiVOqlRxi+FVMAgJC4BxSOLFO2U4QePftEF1Srlhk
-         /bNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718954073; x=1719558873;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I1d26+FYwmfD9Tc9dF0H8tsiQttz7MrvNQjmOX9mk7s=;
-        b=iThCWaHMLvTOoqe1UhJk+gSZf3CytwTdLvGnKSHUeV9S3dHEUoWChew1VJLsl4Z2It
-         ZfV/Dz9WkPfV7SxRU68p0JnWU8H4ox4pTMuWLA7t6QXqN2D2QxDB2OV0Merz2ylXMa7F
-         XMunmQ5kLJNuWuAehQf5DkurABDdPId0xwkelIykbgu+TEulZZDv+ZsAefdoOmTExhhe
-         kiQRtI9RaYDvrpddVFCrSVcfsSB6uHn0LQW5FtxFYe7aoskAwNcTfeW9Of1UBsiFm6e9
-         UkBlx5YIV+d7rFKsA94VOHBWnhmMzghBGatTxJf8Kf7GaNf6IkF2tCdXXgPEzrnZywxb
-         55Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHjnbniz7LbmcF9XRO+G4G5bj9g+ucKsw7wf0B2Ouzwo6zAiOrW4jsJk2M8cDNQySCGyNl0EqoniMK3b7XuJ5GLiG7zvM1TUIHIDfGME4GU/WuWLrnXyywOstMykyPUJdVn+0PwNa7SVg3bArW4gNPe1qhKReAVi7Lb9kFsr+D6ujju81zlc05TeaVgS+vyeyWVbhaxgOukZqmcF8aaFW6D3PT3raGyzzfeEGvh+fu3RZc7IM02lvMIkc=
-X-Gm-Message-State: AOJu0YwuchHEaJeiGExuTvtgHofCVXTeAecZM58QtgV7eIkeqHw51tvA
-	C3imSTGbp9DKMo30qxgIGTBB5++L49Im9L7zGkHbnz1w+wjwl2Hr
-X-Google-Smtp-Source: AGHT+IHJQ1yPK263/uUvL42ye22QYzUxYEagwPu/zDgRslXQjOwm4KteKF6Tb6SaGoGeiBRNCTcVaA==
-X-Received: by 2002:a50:c050:0:b0:57d:22ef:d055 with SMTP id 4fb4d7f45d1cf-57d22efd0e0mr2481140a12.24.1718954073269;
-        Fri, 21 Jun 2024 00:14:33 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d305351dbsm527719a12.77.2024.06.21.00.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 00:14:32 -0700 (PDT)
-Message-ID: <b7283f9458047e63e7d8c8b80daf2bd6232403cb.camel@gmail.com>
-Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>
-Cc: Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, Paul Cercueil
- <paul@crapouillou.net>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, 
- linux-iio@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linaro-mm-sig@lists.linaro.org, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
- Clausen <lars@metafoo.de>, Sumit Semwal <sumit.semwal@linaro.org>,
- oe-kbuild-all@lists.linux.dev,  LKML <linux-kernel@vger.kernel.org>,
- linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Julia Lawall
- <julia.lawall@inria.fr>, Randy Dunlap <rdunlap@infradead.org>
-Date: Fri, 21 Jun 2024 09:18:23 +0200
-In-Reply-To: <ZnUnFeum1Z2ahm9M@matsya>
-References: <202406191014.9JAzwRV6-lkp@intel.com>
-	 <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de> <ZnRUSaHJhz7XLcKa@matsya>
-	 <20240620170522.GU3029315@google.com> <ZnUnFeum1Z2ahm9M@matsya>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Zefbg62V"
+X-Envelope-To: nphamcs@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718954139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tOqrzNN/hVJKUhpB295MtNPXD1lC1GUlx7tqQgCRnPA=;
+	b=Zefbg62V36nuWtcHlL8rHv8yJSAts/gdbTUpSU26lKcKadShZFr7b3INq0P3kGHIlNHc+w
+	3KfFaGbjq+7Lb9dA8c4Di4KDwbSL5ooEL523a9ZpYEJ1Ix+fqeaAyBsIrV4MpfbRMXZVf/
+	b3S647Wzzs4fwypFVjLTrw18mbztNCU=
+X-Envelope-To: yosryahmed@google.com
+X-Envelope-To: dan.carpenter@linaro.org
+X-Envelope-To: chengming.zhou@linux.dev
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: hannes@cmpxchg.org
+X-Envelope-To: zhouchengming@bytedance.com
+X-Envelope-To: yuzhao@google.com
+X-Envelope-To: senozhatsky@chromium.org
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: flintglass@gmail.com
+X-Envelope-To: minchan@kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+Subject: [PATCH v2 0/2] mm/zsmalloc: change back to per-size_class lock
+Date: Fri, 21 Jun 2024 15:15:08 +0800
+Message-Id: <20240621-zsmalloc-lock-mm-everything-v2-0-d30e9cd2b793@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHwodWYC/42NTQ6CMBBGr0Jm7ZgW5EdX3sOwqO0IE6E1LTYg4
+ e5WTuDiW7xv8d4KgTxTgEu2gqfIgZ1NkB8y0L2yHSGbxJCL/CQqWeMnjGoYnMa0J44jUiS/TD3
+ bDoumVkZVVCh9hmR4eXrwvNtvbeKew+T8ssei/L3/eaNEgSWVopGkpLwX14Htez4aitBu2/YFj
+ Vu2+MYAAAA=
+To: Minchan Kim <minchan@kernel.org>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
+ Nhat Pham <nphamcs@gmail.com>
+Cc: Yu Zhao <yuzhao@google.com>, Takero Funaki <flintglass@gmail.com>, 
+ Chengming Zhou <zhouchengming@bytedance.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, Chengming Zhou <chengming.zhou@linux.dev>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718954135; l=2161;
+ i=chengming.zhou@linux.dev; s=20240617; h=from:subject:message-id;
+ bh=XaO4Z0+DtOg24zA1OThoXiLI5A9lBnk/os2EEmz7b7Q=;
+ b=MaNU41YtH+wB6JIswCj4bvQET2ZJktB31PF0WTzqMTS+g61cKj0d0rRlcreBVK5g34wBX9Yh8
+ sxYuNFjS9YsC51599x1WG8we4RP6XjdSxbLspNKRjPf2DhYfZuqBWWj
+X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
+ pk=/XPhIutBo+zyUeQyf4Ni5JYk/PEIWxIeUQqy2DYjmhI=
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 2024-06-21 at 12:39 +0530, Vinod Koul wrote:
-> On 20-06-24, 18:05, Lee Jones wrote:
-> > On Thu, 20 Jun 2024, Vinod Koul wrote:
-> >=20
-> > > On 20-06-24, 12:45, Markus Elfring wrote:
-> > > > =E2=80=A6
-> > > > > All errors (new ones prefixed by >>):
-> > > > >=20
-> > > > > > > drivers/iio/industrialio-buffer.c:1715:3: error: cannot jump =
-from
-> > > > > > > this goto statement to its label
-> > > > > =C2=A0=C2=A0=C2=A0 1715 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_dmabuf_u=
-nmap_attachment;
-> > > > =E2=80=A6
-> > > >=20
-> > > > Which software design options would you like to try out next
-> > > > so that such a questionable compilation error message will be avoid=
-ed
-> > > > finally?
-> > >=20
-> > > The one where all emails from Markus go to dev/null
-> >=20
-> > Play nice please.
->=20
-> Would love to... but Markus has been repeat offender
->=20
-> Sadly, I am yet to see a constructive approach or even better a helpful
-> patch which improve something, rather than vague suggestions on the list
->=20
+Changes in v2:
+- Fix error handling in zswap_pool_create(), thanks Dan Carpenter.
+- Add Reviewed-by tag from Nhat, thanks.
+- Improve changelog to explain about other backends, per Yu Zhao.
+- Link to v1: https://lore.kernel.org/r/20240617-zsmalloc-lock-mm-everything-v1-0-5e5081ea11b3@linux.dev
 
-Yeah, just look at how many automatic replies he get's from Greg pretty muc=
-h
-saying to ignore his comments.
+Commit c0547d0b6a4b ("zsmalloc: consolidate zs_pool's migrate_lock and
+size_class's locks") changed per-size_class lock to pool spinlock to
+prepare reclaim support in zsmalloc. Then reclaim support in zsmalloc
+had been dropped in favor of LRU reclaim in zswap, but this locking
+change had been left there.
 
-- Nuno S=C3=A1
+Obviously, the scalability of pool spinlock is worse than per-size_class.
+And we have a workaround that using 32 pools in zswap to avoid this
+scalability problem, which brings its own problems like memory waste
+and more memory fragmentation.
+
+So this series changes back to use per-size_class lock and using testing
+data in much stressed situation to verify that we can use only one pool
+in zswap. Note we only test and care about the zsmalloc backend, which
+makes sense now since zsmalloc became a lot more popular than other
+backends.
+
+Testing kernel build (make bzImage -j32) on tmpfs with memory.max=1GB,
+and zswap shrinker enabled with 10GB swapfile on ext4.
+
+				real	user    sys
+6.10.0-rc3			138.18	1241.38 1452.73
+6.10.0-rc3-onepool		149.45	1240.45 1844.69
+6.10.0-rc3-onepool-perclass	138.23	1242.37 1469.71
+
+We can see from "sys" column that per-size_class locking with only one
+pool in zswap can have near performance with the current 32 pools.
+
+Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
+---
+Chengming Zhou (2):
+      mm/zsmalloc: change back to per-size_class lock
+      mm/zswap: use only one pool in zswap
+
+ mm/zsmalloc.c | 85 +++++++++++++++++++++++++++++++++++------------------------
+ mm/zswap.c    | 60 +++++++++++++----------------------------
+ 2 files changed, 69 insertions(+), 76 deletions(-)
+---
+base-commit: 7c4c5a2ebbcea9031dbb130bb529c8eba025b16a
+change-id: 20240617-zsmalloc-lock-mm-everything-387ada6e3ac9
+
+Best regards,
+-- 
+Chengming Zhou <chengming.zhou@linux.dev>
+
