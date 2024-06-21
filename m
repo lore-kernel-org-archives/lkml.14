@@ -1,80 +1,59 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBC7153580;
-	Fri, 21 Jun 2024 06:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD6983CD7
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 06:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718950564; cv=none; b=XEBpZ4D2Xwu+Q77NE5t5+pEZzIcVBZg4LHfpyR4Hfzrm+IZDuKxJnoUFiBmkq5wn8jwhqp1FOIyZUl4C+dImzqwz3zBXUhgjSB8TR5RYymKfuz4ncM4m2X/uEV/ZAiyiFz7Q480p0F70fZXpyC6W7T3cDLt+6K+6HHtHrPk6e4A=
+	t=1718950594; cv=none; b=pTlwxJ+70YOZeu1r5cd8AjkMwN4D1SgjLZARswe0SI7xvVweL7y4hg7sViWxmcpy4OoIX8cJG+oer/FC77Lad6TJMDWdx+Z0AzBRZnT0S7tTjfgmZM2wne0rVjqxiZQlQY/b/Y0H4RwHZ1iANxOSTCJY/jBZ/oEPJsiIASV6V0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718950564; c=relaxed/simple;
-	bh=K8njNEkJlHP1dW8n5uIPEzdz0eYwgn5OsKMv6AuVNbo=;
+	s=arc-20240116; t=1718950594; c=relaxed/simple;
+	bh=Cq/UPH00Rc+EV+zEnuZTT1juz30n/517vwf08ycuRi0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ft4plCJlAFTsA9EbHeror2SZhwby6McnlwUoaXgn1EeCwnb8JWhDzue/axAtM+NHbGUpoCga82JMv2ZtGLKubqRfnH7yAp/0mOKheUgmi7Kf9iCturr0Yl3/WjCcKgNlay+qfxaSZK6APVk4sw4/G5fDirbk9MxPHREkPjbC5eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=F+rL0Gn+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3tc0/dT5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lbq3GVVD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cKLugUhC; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=O8Jk65V+XtXU02Af4ozzUchQFGAcyo3bcdlrqzIc9u8QHXg1aTm8UDAhdSoHCpfUd90UmHsNNMY0jxhJ+3kbzOCezb1Ug8V7lUNKq69Eh+WLhlhFykl/0C8sX++sH2BZrKN8en8llma4RURrN9O9J+JashhjYl43VOFXzPAt8Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=dz96bK2r; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="F+rL0Gn+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3tc0/dT5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lbq3GVVD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cKLugUhC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B3721FB4E;
-	Fri, 21 Jun 2024 06:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718950561; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN4ivRLOJvdsi6A1Azz8+51sUsLN6tHsYHLb/nafu1k=;
-	b=F+rL0Gn+ddsFnW9jWe4IgRydpKj17zedr9GD6Zw2WnmjxViw9nrp9n4+BCl6W+bkyEIeVH
-	UETf7JsuOtDEldTF4Gh9fRa7P/F6xpx3Ssi8sUlmE7sT2wnp0QEg0WStxaIH3iO2Ac7687
-	hRGyzZju8zzpChA+rjgkAQKeRASxaGg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718950561;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN4ivRLOJvdsi6A1Azz8+51sUsLN6tHsYHLb/nafu1k=;
-	b=3tc0/dT5IrG47kflHRs2TZ9IUywNV3213aDEoyl+BFR+c3sFvtFE/a6bQHjQ7t7K2rDGvA
-	iGBI6aUrHIhaHlCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718950560; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN4ivRLOJvdsi6A1Azz8+51sUsLN6tHsYHLb/nafu1k=;
-	b=Lbq3GVVDW89VKCcmlSbFR1LVt5R8DBgzzYe/XmPybarPYxReLB10Kj1LcJqd3cV5DsDDwm
-	IUqr6MDMA6D0wTYpa/T1heRuK8L0rYigpc4NX+KLW9FOPx4jnx7wKqGznyMRETGk5UPG8i
-	PwC41JeKRJzlIEakGMKYcKWa3COFcoI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718950560;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN4ivRLOJvdsi6A1Azz8+51sUsLN6tHsYHLb/nafu1k=;
-	b=cKLugUhCP7+wm7ysLbf99J7jta9PHMsKximFoiv/F5VDP95MNASe4X9+p8M0AFdKBCdngC
-	KVUZELZH7lTtDKBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA5DD13ABD;
-	Fri, 21 Jun 2024 06:15:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WBn+MJ4adWbDfAAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 21 Jun 2024 06:15:58 +0000
-Message-ID: <141c769a-1642-424c-bae1-1d19441a115a@suse.de>
-Date: Fri, 21 Jun 2024 08:15:58 +0200
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="dz96bK2r"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6fd4d1c173so12477666b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 23:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1718950591; x=1719555391; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BnZ7fy5EjAsmRc3C7nshYtXKIZAoTD46hBI3kMrPlkE=;
+        b=dz96bK2rLAZdlD18eTvZV2GoXFoPMFHIt0Hop6K0BG18qDiB3NqN+Ebix2iPrmejrQ
+         f7JXI4cBEhyGeVNp+VmVl9ffMWiVdFP5ra08dRo81Sr/2+aO5ChMROpxuo1TypJXIh4e
+         qoGVSyHwMfXB6atZQwpyVPn6VhMh0ZIy8R0tzryNmgCh7qA2+N0rzZ3tpREajs1mdnqk
+         fbiJa+scDeecteqznz9xQdr22HQbeb40dh/3lCXMnv22qfFTvebOsr7tlAN9/jbk2S01
+         WqMK+zmgOAS55PXrEdR35vxkbni1Xa+5HnPMghfM3Uov95OeeKrMkaBkwWK3/3G0TQQy
+         gbqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718950591; x=1719555391;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnZ7fy5EjAsmRc3C7nshYtXKIZAoTD46hBI3kMrPlkE=;
+        b=LCZvCKaCycNdIBPMOTrKnJHvpjhOEXuwuN/RExbXjVjhcuJGp8va5WBxPgFLH4Gw5P
+         PRPC+O9wjAOgEBts3J3jxNrriorKhh3+YnwqMxJqhCjs/PoLXB8rACu0eHdaV8Bh7gqg
+         Z1txB4EblfT+MtSlfa8j9XdT32QJco+pBL9aiHApFQ+Pg3LjBxLLORM5GgF5wLvADZDY
+         OgE0FmF8b9gA5FUxFRvnIg3UqV67+uN6Yh2YiIDoEIabbZertz5LASfeTyZL41oXbxGH
+         g/ORixgXcQYht/3vV31zZLoBDA+sDmRpEco0uv5drEzbWM1Em8ad+apSdsS9cNVxCgan
+         5HOA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4ICeb4a6oPXWzdoD5rlV/V8b8/xtqyMZjfKLDHR/lhzTVS2Emvqq1qNsGkkWbfsymLnDT/JC9p8TIrfZw8CHU/ywkintMllLiKa9v
+X-Gm-Message-State: AOJu0YztsSO6GhH4yks5i2UK9ZNdUnc9aA21dPtu1jZMGbVzH0MFMb6w
+	wPKonEJvA/JMTwfAYh98U/upa3DlXsWtPUvHzJsv7HUpNT3M6YaHjkS8T8mAQBU=
+X-Google-Smtp-Source: AGHT+IFTFPJK35HIe1HrAGcCFLN/Hy20XkeKNFw3qyFwpGwn1f2DcRTFwd102/VZFLJOiyCPaJs9Mw==
+X-Received: by 2002:a17:906:f289:b0:a6f:1839:ed40 with SMTP id a640c23a62f3a-a6fab7d6bb1mr383374766b.73.1718950590331;
+        Thu, 20 Jun 2024 23:16:30 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.70])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf48a220sm46097066b.60.2024.06.20.23.16.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 23:16:29 -0700 (PDT)
+Message-ID: <ea1d16bc-832f-4401-baa6-d4dd10f53612@tuxon.dev>
+Date: Fri, 21 Jun 2024 09:16:28 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,105 +61,139 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 09/10] scsi: scsi_debug: Atomic write support
+Subject: Re: [PATCH RFC 2/3] watchdog: rzg2l_wdt: Keep the clocks prepared
 Content-Language: en-US
-To: John Garry <john.g.garry@oracle.com>, axboe@kernel.dk, kbusch@kernel.org,
- hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
- martin.petersen@oracle.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
- dchinner@redhat.com, jack@suse.cz
-Cc: djwong@kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
- linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com, linux-aio@kvack.org,
- linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org, nilay@linux.ibm.com,
- ritesh.list@gmail.com, willy@infradead.org, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, dm-devel@lists.linux.dev
-References: <20240620125359.2684798-1-john.g.garry@oracle.com>
- <20240620125359.2684798-10-john.g.garry@oracle.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240620125359.2684798-10-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: ulf.hansson@linaro.org, wim@linux-watchdog.org, linux@roeck-us.net,
+ rafael@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, geert+renesas@glider.be,
+ linux-renesas-soc@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240619120920.2703605-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240619120920.2703605-3-claudiu.beznea.uj@bp.renesas.com>
+ <CA+V-a8v7hxhhiT4X28kKJ5yTuMahCuCUWX_nFKd4cWL9GAWxug@mail.gmail.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CA+V-a8v7hxhhiT4X28kKJ5yTuMahCuCUWX_nFKd4cWL9GAWxug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,lists.infradead.org,mit.edu,google.com,linux.ibm.com,kvack.org,gmail.com,infradead.org,redhat.com,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,oracle.com:email]
-X-Spam-Flag: NO
-X-Spam-Score: -2.79
-X-Spam-Level: 
 
-On 6/20/24 14:53, John Garry wrote:
-> Add initial support for atomic writes.
-> 
-> As is standard method, feed device properties via modules param, those
-> being:
-> - atomic_max_size_blks
-> - atomic_alignment_blks
-> - atomic_granularity_blks
-> - atomic_max_size_with_boundary_blks
-> - atomic_max_boundary_blks
-> 
-> These just match sbc4r22 section 6.6.4 - Block limits VPD page.
-> 
-> We just support ATOMIC WRITE (16).
-> 
-> The major change in the driver is how we lock the device for RW accesses.
-> 
-> Currently the driver uses a per-device lock for accessing device metadata
-> and "media" data (calls to do_device_access()) atomically for the duration
-> of the whole read/write command.
-> 
-> This should not suit verifying atomic writes. Reason being that currently
-> all reads/writes are atomic, so using atomic writes does not prove
-> anything.
-> 
-> Change device access model to basis that regular writes only atomic on a
-> per-sector basis, while reads and atomic writes are fully atomic.
-> 
-> As mentioned, since accessing metadata and device media is atomic,
-> continue to have regular writes involving metadata - like discard or PI -
-> as atomic. We can improve this later.
-> 
-> Currently we only support model where overlapping going reads or writes
-> wait for current access to complete before commencing an atomic write.
-> This is described in 4.29.3.2 section of the SBC. However, we simplify,
-> things and wait for all accesses to complete (when issuing an atomic
-> write).
-> 
-> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->   drivers/scsi/scsi_debug.c | 588 +++++++++++++++++++++++++++++---------
->   1 file changed, 454 insertions(+), 134 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Hi, Prabhakar,
 
-Cheers,
+On 20.06.2024 18:31, Lad, Prabhakar wrote:
+> Hi Claudiu,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Jun 20, 2024 at 9:29 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>>
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The watchdog restart handler is called with interrupts disabled. In
+>> rzg2l_wdt_restart() we call clk_prepare_enable() to enable the watchdog
+>> clocks. The prepare part of clk_prepare_enable() may sleep. Sleep in
+>> atomic context should not happen. The clock drivers for all the
+>> micro-architectures where the RZ/G2L watchdog driver is used are not
+>> implementing struct clk_ops::prepare(). Even so, to be sure we are
+>> not hitted by this at some point, keep the watchdog clocks prepared
+>> and only enable them in restart handler. It is guaranteed that
+>> clk_enable() can be called in atomic context.
+>>
+>> Reported-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Closes: https://lore.kernel.org/all/CAPDyKFq1+cL1M9qGY0P58ETHUZHGymxQL0w92emUJPMe7a_GxA@mail.gmail.com
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
+>>  drivers/watchdog/rzg2l_wdt.c | 31 ++++++++++++++++++++++++++-----
+>>  1 file changed, 26 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/rzg2l_wdt.c b/drivers/watchdog/rzg2l_wdt.c
+>> index 2a35f890a288..6e3d7512f38c 100644
+>> --- a/drivers/watchdog/rzg2l_wdt.c
+>> +++ b/drivers/watchdog/rzg2l_wdt.c
+>> @@ -166,8 +166,8 @@ static int rzg2l_wdt_restart(struct watchdog_device *wdev,
+>>         struct rzg2l_wdt_priv *priv = watchdog_get_drvdata(wdev);
+>>         int ret;
+>>
+>> -       clk_prepare_enable(priv->pclk);
+>> -       clk_prepare_enable(priv->osc_clk);
+>> +       clk_enable(priv->pclk);
+>> +       clk_enable(priv->osc_clk);
+>>
+> I think we need to add a check before enabling the clocks:
+> 
+> if (!watchdog_active(wdev)) {
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Agree, this should be better.
 
+>          clk_enable(priv->pclk);
+>          clk_enable(priv->osc_clk);
+> }
+> 
+>>         if (priv->devtype == WDT_RZG2L) {
+>>                 ret = reset_control_deassert(priv->rstc);
+>> @@ -226,11 +226,28 @@ static const struct watchdog_ops rzg2l_wdt_ops = {
+>>         .restart = rzg2l_wdt_restart,
+>>  };
+>>
+>> +static int rzg2l_clks_prepare(struct rzg2l_wdt_priv *priv)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = clk_prepare(priv->pclk);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = clk_prepare(priv->osc_clk);
+>> +       if (ret)
+>> +               clk_unprepare(priv->pclk);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>>  static void rzg2l_wdt_pm_disable(void *data)
+>>  {
+>> -       struct watchdog_device *wdev = data;
+>> +       struct rzg2l_wdt_priv *priv = data;
+>>
+>> -       pm_runtime_disable(wdev->parent);
+>> +       pm_runtime_disable(priv->wdev.parent);
+>> +       clk_unprepare(priv->osc_clk);
+>> +       clk_unprepare(priv->pclk);
+>>  }
+>>
+> All the above chunk can go away if we use devm_clk_get_prepared()
+> while requesting the clocks in the probe.
+
+Indeed, I missed devm_clk_get_prepared().
+
+Thank you for your review,
+Claudiu Beznea
+
+> 
+> Cheers,
+> Prabhakar
+> 
+>>  static int rzg2l_wdt_probe(struct platform_device *pdev)
+>> @@ -275,6 +292,10 @@ static int rzg2l_wdt_probe(struct platform_device *pdev)
+>>
+>>         priv->devtype = (uintptr_t)of_device_get_match_data(dev);
+>>
+>> +       ret = rzg2l_clks_prepare(priv);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>>         pm_runtime_enable(&pdev->dev);
+>>
+>>         priv->wdev.info = &rzg2l_wdt_ident;
+>> @@ -287,7 +308,7 @@ static int rzg2l_wdt_probe(struct platform_device *pdev)
+>>
+>>         watchdog_set_drvdata(&priv->wdev, priv);
+>>         dev_set_drvdata(dev, priv);
+>> -       ret = devm_add_action_or_reset(&pdev->dev, rzg2l_wdt_pm_disable, &priv->wdev);
+>> +       ret = devm_add_action_or_reset(&pdev->dev, rzg2l_wdt_pm_disable, &priv);
+>>         if (ret)
+>>                 return ret;
+>>
+>> --
+>> 2.39.2
+>>
+>>
