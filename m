@@ -1,172 +1,103 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C610A82886;
-	Fri, 21 Jun 2024 02:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EEF82886
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 02:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718936699; cv=none; b=Is+Nm89EMhGkiR2QOh3AkEOtEVfJTZ9EVOy3gDGalcFNtWXfbWWojIK9V8pf66bQJBLNtbsDg6+qQYbkYxtlrV4tTw/HU485RY1CtvdDff5rEFwfBYKoaRWmmiD2kHR4wfCvUX0ZVccHbKsQGSQClxrWmbBY5v6lexxZNXYz8FA=
+	t=1718936776; cv=none; b=Au0wW/K495c6c5Oy/wOgsztUGyFpS6TaTRL+122o4iClw4/ePCgSXG4ZsgcaU+N/VuiZsl0OCEwTstjgNWR0w3UcdRHO9KMfWUjWZ4/k4O7Rp2J+TZ/t2omqAoTQ/rH3+kZ3HXSEP1Fc1slDquL19iBV4fWXHTg8viFfG+MA0nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718936699; c=relaxed/simple;
-	bh=PraBJhcoPBo5S5n6x2fO4drOmb0FI0JqOZb9NqLnUYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CpYEQ9qFKaBv+EQjn+MtKVdwbbZvQ6X5mBj3erebT7RKhUxshHtl1DyJIzeouT/Q0kuIRs6SCaEZro6tLnvqge6smOKyMJNxVldtZeHJ41JiOS9CX3icbBMtaNnVENV2gM4NHbb3o9AeaBEIK62iNili1ZStCuExvGMCNm4NlJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W51K90pJpzVlQc;
-	Fri, 21 Jun 2024 10:19:57 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 157591402CF;
-	Fri, 21 Jun 2024 10:24:54 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 21 Jun 2024 10:24:53 +0800
-Message-ID: <bb1ea7f5-973d-54cf-36ab-fe4d55c1b5bc@huawei.com>
-Date: Fri, 21 Jun 2024 10:24:52 +0800
+	s=arc-20240116; t=1718936776; c=relaxed/simple;
+	bh=Z9KMADyVh0mQcX2BDjXHtJuSjrpaFdPxZVpM+ZPe7w4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rlGyRnb7cpZKqk+25/bJ2znWRFrCneeSgc3LXjQpsKCbrrlpUVlArQgxjQvJY4YvU5xlE01I5qhLfkk+9zQSSGkalngu42iqf1rozJmZBTqftCpBYg7smTM+iM7WKgWD81XzjHpuDyWrFldTw4hQX8CQGHTUXzw5eSxuVr63MYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=IVd2TsfR; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="IVd2TsfR"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7042d98792eso28091b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2024 19:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wbinvd.org; s=wbinvd; t=1718936775; x=1719541575; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gU/GXfDYissHQA31wolSfkKE1r7btzOAHUHtzGx9jJ0=;
+        b=IVd2TsfRQcZsR8vj+68kgD9MezF1lUR57eE22DMKuC2BxzZCDVZHc/xco61cmZqUkm
+         YekZUDVfc7XAvpQtXog4i+j9oZ3WLsZ56r5z/jchczJhqCxrqYWg5ly2QZgwYSuJijWy
+         B2D9MY45YLnfV6G9x7bGfT3nL7MKcWKoqt755XnFp+4lDJQ9Rag5fJDuMY4/38q5Jxgz
+         OabypTaj028NvmOMNUme+QrmU3vpinb+4zFNZdoqq6uQGmR6fXbV0eSG6XwQ97UDW2Xj
+         XIpMSxdsJF2CFfx+vCmJg4gYwtP9fmkcZQWbYvEYfDeO16xngoSqQYJ3wwBQAEtf4R2R
+         HvCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718936775; x=1719541575;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gU/GXfDYissHQA31wolSfkKE1r7btzOAHUHtzGx9jJ0=;
+        b=O5aQB98kreDMZqi0Bq4R7+APeUsvp5KZLvZnAqWtRIRMoDGT04lO27TsC44P7Y+b7D
+         5g2yCrHExg9dK7zHSirgA+UYEOgA/O+Qs7uynkoQm1GkcW1CHzaxig9ObHZRancbbUkS
+         HrErPuDzMEtYkI4uD2KN1pYvE7Wn6pC4kSfWmbwIU5eDf0Hl8kbIk1/0Y2TyToVDZ87a
+         l2sVtwIiB0CXm5Sb5dZqvj+tmDtT6ObtSBn9SFNG/S6DpwJjgDLViKBB8IW/Ns69FvFv
+         XWRDTqfcFY/q1u1wU3HQM1U4xCwR2vSmAmrVEwaaGFvjvrPzHieCXwmAOWHtAUgaPrNp
+         3Gtg==
+X-Gm-Message-State: AOJu0YxjH9XDS4eIQu3/F9NNkK7wruby5zpd2SmYMupqCNnr2eWVeoki
+	UxRf22ZquEcVioc7cKpiXFgRts1gx3tJFL4Z5w4FGu0tIvMPVyEnjUccQx8nKdFQm5cjCq1X82T
+	BVEU=
+X-Google-Smtp-Source: AGHT+IF88NkQTHvqVRk5v5bIhOu9r7lYOFwiOKiZa6lIqLpLL/qsCwPaq41QpJjUF1Lr1yIjG8PNrA==
+X-Received: by 2002:a05:6a00:c90:b0:705:d88f:4a94 with SMTP id d2e1a72fcca58-70629c6c508mr7473065b3a.1.1718936774542;
+        Thu, 20 Jun 2024 19:26:14 -0700 (PDT)
+Received: from mozart.vkv.me ([192.184.166.71])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065119d734sm331516b3a.59.2024.06.20.19.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 19:26:13 -0700 (PDT)
+From: Calvin Owens <calvin@wbinvd.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Calvin Owens <calvin@wbinvd.org>
+Subject: [RESEND PATCH v2] kbuild: buildtar: Add explicit 32-bit arm support
+Date: Thu, 20 Jun 2024 19:25:59 -0700
+Message-Id: <6bc61e82eaae9e614cbd50a322322173f593c90c.1718936424.git.calvin@wbinvd.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <ZhmKzqxHXaSZmXee@mozart.vkv.me>
+References: <ZhmKzqxHXaSZmXee@mozart.vkv.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH] ARM: Add support for STACKLEAK gcc plugin
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>
-CC: <linux@armlinux.org.uk>, <ardb@kernel.org>, <arnd@arndb.de>, <afd@ti.com>,
-	<akpm@linux-foundation.org>, <rmk+kernel@armlinux.org.uk>,
-	<linus.walleij@linaro.org>, <eric.devolder@oracle.com>, <robh@kernel.org>,
-	<masahiroy@kernel.org>, <palmer@rivosinc.com>, <samitolvanen@google.com>,
-	<xiao.w.wang@intel.com>, <alexghiti@rivosinc.com>, <nathan@kernel.org>,
-	<jan.kiszka@siemens.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-efi@vger.kernel.org>, Alexander Popov
-	<alex.popov@linux.com>
-References: <20240620131649.886995-1-ruanjinjie@huawei.com>
- <202406201136.A441E0B7@keescook>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <202406201136.A441E0B7@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Content-Transfer-Encoding: 8bit
 
+Implement buildtar for 32-bit arm, so the zImage (or xipimage) appears
+at boot/vmlinuz-$foo, rather than at boot/vmlinux-kbuild-$foo, matching
+the structure of the tar-pkg on arm64 and other architectures.
 
+Link: https://lore.kernel.org/all/ZhmKzqxHXaSZmXee@mozart.vkv.me/
+Signed-off-by: Calvin Owens <calvin@wbinvd.org>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+---
+ scripts/package/buildtar | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 2024/6/21 2:38, Kees Cook wrote:
-> On Thu, Jun 20, 2024 at 09:16:49PM +0800, Jinjie Ruan wrote:
->> Add the STACKLEAK gcc plugin to arm32 by adding the helper used by
->> stackleak common code: on_thread_stack(). It initialize the stack with the
->> poison value before returning from system calls which improves the kernel
->> security. Additionally, this disables the plugin in EFI stub code and
->> decompress code, which are out of scope for the protection.
-> 
-> Oh very cool! Thanks for sending this!
-> 
->> Before the test on Qemu versatilepb board:
->> 	# echo STACKLEAK_ERASING  > /sys/kernel/debug/provoke-crash/DIRECT
->> 	lkdtm: Performing direct entry STACKLEAK_ERASING
->> 	lkdtm: XFAIL: stackleak is not supported on this arch (HAVE_ARCH_STACKLEAK=n)
->>
->> After:
->> 	# echo STACKLEAK_ERASING  > /sys/kernel/debug/provoke-crash/DIRECT
->> 	lkdtm: Performing direct entry STACKLEAK_ERASING
->> 	lkdtm: stackleak stack usage:
->> 	  high offset: 80 bytes
->> 	  current:     280 bytes
->> 	  lowest:      696 bytes
->> 	  tracked:     696 bytes
->> 	  untracked:   192 bytes
->> 	  poisoned:    7220 bytes
->> 	  low offset:  4 bytes
->> 	lkdtm: OK: the rest of the thread stack is properly erased
->>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>  arch/arm/Kconfig                      | 1 +
->>  arch/arm/boot/compressed/Makefile     | 1 +
->>  arch/arm/include/asm/stacktrace.h     | 5 +++++
->>  arch/arm/kernel/entry-common.S        | 3 +++
->>  drivers/firmware/efi/libstub/Makefile | 3 ++-
->>  5 files changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 036381c5d42f..b211b7f5a138 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -86,6 +86,7 @@ config ARM
->>  	select HAVE_ARCH_PFN_VALID
->>  	select HAVE_ARCH_SECCOMP
->>  	select HAVE_ARCH_SECCOMP_FILTER if AEABI && !OABI_COMPAT
->> +	select HAVE_ARCH_STACKLEAK
->>  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
->>  	select HAVE_ARCH_TRACEHOOK
->>  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if ARM_LPAE
->> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
->> index 6bca03c0c7f0..945b5975fce2 100644
->> --- a/arch/arm/boot/compressed/Makefile
->> +++ b/arch/arm/boot/compressed/Makefile
->> @@ -9,6 +9,7 @@ OBJS		=
->>  
->>  HEAD	= head.o
->>  OBJS	+= misc.o decompress.o
->> +CFLAGS_decompress.o += $(DISABLE_STACKLEAK_PLUGIN)
->>  ifeq ($(CONFIG_DEBUG_UNCOMPRESS),y)
->>  OBJS	+= debug.o
->>  AFLAGS_head.o += -DDEBUG
->> diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
->> index 360f0d2406bf..a9b4b72ed241 100644
->> --- a/arch/arm/include/asm/stacktrace.h
->> +++ b/arch/arm/include/asm/stacktrace.h
->> @@ -26,6 +26,11 @@ struct stackframe {
->>  #endif
->>  };
->>  
->> +static inline bool on_thread_stack(void)
->> +{
->> +	return !(((unsigned long)(current->stack) ^ current_stack_pointer) & ~(THREAD_SIZE - 1));
->> +}
->> +
->>  static __always_inline
->>  void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
->>  {
->> diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
->> index 5c31e9de7a60..f379c852dcb7 100644
->> --- a/arch/arm/kernel/entry-common.S
->> +++ b/arch/arm/kernel/entry-common.S
->> @@ -119,6 +119,9 @@ no_work_pending:
->>  
->>  	ct_user_enter save = 0
->>  
->> +#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
->> +	bl	stackleak_erase_on_task_stack
->> +#endif
->>  	restore_user_regs fast = 0, offset = 0
->>  ENDPROC(ret_to_user_from_irq)
->>  ENDPROC(ret_to_user)
->> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
->> index 06f0428a723c..20d8a491f25f 100644
->> --- a/drivers/firmware/efi/libstub/Makefile
->> +++ b/drivers/firmware/efi/libstub/Makefile
->> @@ -27,7 +27,8 @@ cflags-$(CONFIG_ARM64)		+= -fpie $(DISABLE_STACKLEAK_PLUGIN) \
->>  cflags-$(CONFIG_ARM)		+= -DEFI_HAVE_STRLEN -DEFI_HAVE_STRNLEN \
->>  				   -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
->>  				   -DEFI_HAVE_STRCMP -fno-builtin -fpic \
->> -				   $(call cc-option,-mno-single-pic-base)
->> +				   $(call cc-option,-mno-single-pic-base) \
->> +				   $(DISABLE_STACKLEAK_PLUGIN)
->>  cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax
->>  cflags-$(CONFIG_LOONGARCH)	+= -fpie
-> 
-> This looks very straight forward! If an ARM person can Ack this, I could
-> carry it via the hardening tree. Otherwise, it should probably go via
-> rmk's patch tracker?
+diff --git a/scripts/package/buildtar b/scripts/package/buildtar
+index eb67787f8673..23d7ff675396 100755
+--- a/scripts/package/buildtar
++++ b/scripts/package/buildtar
+@@ -104,6 +104,9 @@ case "${ARCH}" in
+ 				cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinux-${KERNELRELEASE}";;
+ 		esac
+ 		;;
++	arm)
++		[ -f "${KBUILD_IMAGE}" ] && cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
++		;;
+ 	*)
+ 		cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
+ 		;;
+-- 
+2.39.2
 
-Thank you for your attention and reply.
-
-> 
-> -Kees
-> 
