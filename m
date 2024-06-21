@@ -1,65 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B58484D13
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F85D17167B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 10:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718966534; cv=none; b=Z5Ge2DHpFBGVkZcf7BTOF1AIzFj8GiuK5b7PsGHoj1C5fiqihYqkV5TVgOgzKjQikXkAZxtl8rmqCr8xceZmK2WNq872FXdDYEuKovWl5PZ+oM3YxpgXnKaV9SoewvY/RkotrWg0OthCIfZ/txgMR8mDt1A8lihR61k3iiZT5Ug=
+	t=1718966558; cv=none; b=PcYvfwienI0joInj6YAaumYKWPHcVW7DS+qLT4XoB9c30yqG8ktQfyV6ACXzLgXSjDt3palhF19KEyie19404NGdEnsSv3xEAhBCyUeERCPiwUg+CouLXXd8qsP/1yzceA8AfzcvQ4734L1dq0qMqJAOp/L5BqSzVLQs2OYWvHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718966534; c=relaxed/simple;
-	bh=e0lneDv0XVfAsjpfwlrEeAiY6Nyn4oMTN19eMojpOwc=;
+	s=arc-20240116; t=1718966558; c=relaxed/simple;
+	bh=ky0SEPLZl0H9ulbLnRryxYTIwBF3DV2m8IRcePyJpcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SMb2vlqCZDkuS6D94cHrdBfFfIcFebuxGN7rM3vuQsCNFjmIMyJU/maokUUVZx2KrU0xLYktfp5NYMo6f7EE3m8ug9kSYRoDEM+Lb0q44apL9/nHR5fUFVcVTvU5Fqn+21DprQkkckl9FcHVKPyfZapE3OghKNb/QSrfcSZverg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fBx6KK4b; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=S/9D4crF8M5YRuFnGNbuJkRAHAhpSOI+H1oI2ebWIbkNzmZiHQSwEMEN5zbj0yWrftbSzU5ML//j2K1KL5HOYLmaSAd8JeF7y+M5DWdbyNAi6E1h6GC3+jHSyTJHDHSf9O7QLNnu4ulO5PVlTI/vA4cm1WPSdf0TGXH8mCneagY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GmFEkXoZ; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBx6KK4b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718966532;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JvHPwnHmvUMWczmas1ZyeH5ED9yTS9wSm2/pLH+otv4=;
-	b=fBx6KK4bSw7LA8aaFk8jY+vrDQpawPXevJ03q6mPCQgxF0XwAq1Xz+mWWWTYjdPSMdmHBw
-	FPkONZ7uksxzbM1ft8mKqGB7MXFuYV6OF5yPH0IZDsQIca6VaPJ42X8O86T9yBxwt9lYj2
-	q2YJKHq30Nq7vXi71zdTvFCxR3bfhEo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-dkxzKmu1MkyDinE017XUcw-1; Fri,
- 21 Jun 2024 06:42:07 -0400
-X-MC-Unique: dkxzKmu1MkyDinE017XUcw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97E5D1956086;
-	Fri, 21 Jun 2024 10:42:06 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.114])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B2C411956087;
-	Fri, 21 Jun 2024 10:42:04 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 21 Jun 2024 12:40:34 +0200 (CEST)
-Date: Fri, 21 Jun 2024 12:40:32 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/17] signal: Make SIGKILL during coredumps an explicit
- special case
-Message-ID: <20240621104031.GA12521@redhat.com>
-References: <20240613154541.GD18218@redhat.com>
- <87ikyamf4u.fsf@email.froward.int.ebiederm.org>
- <20240617183758.GB10753@redhat.com>
- <87iky5k2yi.fsf@email.froward.int.ebiederm.org>
- <87o77xinmt.fsf_-_@email.froward.int.ebiederm.org>
- <87iky5inlv.fsf_-_@email.froward.int.ebiederm.org>
- <20240619155016.GC24240@redhat.com>
- <87cyocerda.fsf@email.froward.int.ebiederm.org>
- <20240619191105.GE24240@redhat.com>
- <874j9mdf14.fsf@email.froward.int.ebiederm.org>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GmFEkXoZ"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so2157520a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 03:42:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1718966554; x=1719571354; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dgz9ZmJ4s9216HaGH0t9U4xCU2tIUMWcQRC8Q7eK2T4=;
+        b=GmFEkXoZ4La/YG7VwjQTKLEj1FTEi6ALkqhKCaENPUyLSkIvQA/9NQyN5XE1AQPhas
+         lY0+xUSPGPxqqdEaXEDRkxZSUUlDH+HfmFtMlHwdt/b0GIH7MGX9ALAWCQdpgRORXfjF
+         FfmNMbBHoBFAOqMthoJoQQbSQFPUDghJR7Vz/gS1BexByD+x5fzv3EiDfDVF6WLMY7VN
+         xn5AQDvwGwqtY4j8Y/Tm7YUiMrK3prjdvmFfmzJLZhoMey6UvJC2yNLI8cRZzxpxEEi+
+         79oklQV2MDRfmPvIVc1eDalJ2K9zU8Pnq4EyWGLI1efKwhDzoAYdc2GA4l2gm9Z9yiYB
+         JbQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718966554; x=1719571354;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dgz9ZmJ4s9216HaGH0t9U4xCU2tIUMWcQRC8Q7eK2T4=;
+        b=Y30zVo3GjKuC5PivLGVB3/+bC3qcMD3WwD4onHUMXs4G78lvFLXokvL/G5zBqeMLIG
+         2fUAwgt3MJA6YJLTH151TDGMzOX2oJP0MLIFnTGZWx3EvrLIbx4Lj5KHUnaau5vQdg2u
+         BtEOEZ29lCKz+CSgGxP0iE1rTEnjpfnWeeTOF7LAbP96SF80iBg2/SCqbE9ks1UEIcIS
+         JFt47pGT/1TgmmvFTnnFKy/Ux7uQkGZAhH4cqG31dgp6HNnO33fdeORNCqt5j5o0dsOt
+         vhISBElM8S2mW+cggd1z6W0R9wLtW55YifqRjeEyyaNSBOAD7ZlthtV6H8hyRjGGyzq1
+         xCtw==
+X-Forwarded-Encrypted: i=1; AJvYcCXj8cPeicjaelXSQdDAR9b5XM+jC2xzt7xYTWhJY4PEf9+R4RYtAmQKBlRaOqyd2cxJ7hQ7k48MW7HRgaRmT1rzIJBnokba0XpbCDee
+X-Gm-Message-State: AOJu0Yyrv6HmCaFlOKTho4D31bxyZYDkmdzyIOhMiQ8oK1FnRpvudNyG
+	AqCRRUl/vPu3/a/YmOsJzkaOou9UVQNmu3qa2rDBs5b6aWmEre5aDiZdUna68nI=
+X-Google-Smtp-Source: AGHT+IHxrHNNvxNY4qy5ocEyq6ukqomCarzZCMchwFqZYAIJwUYhqG6K9/TqPLhbvu6lrozE/uS1Hw==
+X-Received: by 2002:a17:906:a28a:b0:a6f:1ad7:6875 with SMTP id a640c23a62f3a-a6fab7d0479mr422358166b.69.1718966553875;
+        Fri, 21 Jun 2024 03:42:33 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf428c67sm70251066b.2.2024.06.21.03.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 03:42:33 -0700 (PDT)
+Date: Fri, 21 Jun 2024 12:42:32 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Yong-Xuan Wang <yongxuan.wang@sifive.com>, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, apatel@ventanamicro.com, alex@ghiti.fr, greentime.hu@sifive.com, 
+	vincent.chen@sifive.com, Jinyu Tang <tjytimi@163.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, 
+	Mayuresh Chitale <mchitale@ventanamicro.com>, Atish Patra <atishp@rivosinc.com>, wchen <waylingii@gmail.com>, 
+	Samuel Ortiz <sameo@rivosinc.com>, =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Evan Green <evan@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Charlie Jenkins <charlie@rivosinc.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Leonardo Bras <leobras@redhat.com>
+Subject: Re: [PATCH v5 1/4] RISC-V: Add Svade and Svadu Extensions Support
+Message-ID: <20240621-b22a7c677a8d61c26feaa75b@orel>
+References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
+ <20240605121512.32083-2-yongxuan.wang@sifive.com>
+ <20240621-d1b77d43adacaa34337238c2@orel>
+ <20240621-nutty-penknife-ca541ee5108d@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,121 +82,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <874j9mdf14.fsf@email.froward.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20240621-nutty-penknife-ca541ee5108d@wendy>
 
-Another case when I can hardly understand your reply...
+On Fri, Jun 21, 2024 at 11:24:19AM GMT, Conor Dooley wrote:
+> On Fri, Jun 21, 2024 at 10:43:58AM +0200, Andrew Jones wrote:
+> > On Wed, Jun 05, 2024 at 08:15:07PM GMT, Yong-Xuan Wang wrote:
+> > > Svade and Svadu extensions represent two schemes for managing the PTE A/D
+> > > bits. When the PTE A/D bits need to be set, Svade extension intdicates
+> > > that a related page fault will be raised. In contrast, the Svadu extension
+> > > supports hardware updating of PTE A/D bits. Since the Svade extension is
+> > > mandatory and the Svadu extension is optional in RVA23 profile, by default
+> > > the M-mode firmware will enable the Svadu extension in the menvcfg CSR
+> > > when only Svadu is present in DT.
+> > > 
+> > > This patch detects Svade and Svadu extensions from DT and adds
+> > > arch_has_hw_pte_young() to enable optimization in MGLRU and
+> > > __wp_page_copy_user() when we have the PTE A/D bits hardware updating
+> > > support.
+> > > 
+> > > Co-developed-by: Jinyu Tang <tjytimi@163.com>
+> > > Signed-off-by: Jinyu Tang <tjytimi@163.com>
+> > > Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+> > > ---
+> > >  arch/riscv/Kconfig               |  1 +
+> > >  arch/riscv/include/asm/csr.h     |  1 +
+> > >  arch/riscv/include/asm/hwcap.h   |  2 ++
+> > >  arch/riscv/include/asm/pgtable.h | 14 +++++++++++++-
+> > >  arch/riscv/kernel/cpufeature.c   |  2 ++
+> > >  5 files changed, 19 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > index b94176e25be1..dbfe2be99bf9 100644
+> > > --- a/arch/riscv/Kconfig
+> > > +++ b/arch/riscv/Kconfig
+> > > @@ -36,6 +36,7 @@ config RISCV
+> > >  	select ARCH_HAS_PMEM_API
+> > >  	select ARCH_HAS_PREPARE_SYNC_CORE_CMD
+> > >  	select ARCH_HAS_PTE_SPECIAL
+> > > +	select ARCH_HAS_HW_PTE_YOUNG
+> > >  	select ARCH_HAS_SET_DIRECT_MAP if MMU
+> > >  	select ARCH_HAS_SET_MEMORY if MMU
+> > >  	select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
+> > > diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> > > index 25966995da04..524cd4131c71 100644
+> > > --- a/arch/riscv/include/asm/csr.h
+> > > +++ b/arch/riscv/include/asm/csr.h
+> > > @@ -195,6 +195,7 @@
+> > >  /* xENVCFG flags */
+> > >  #define ENVCFG_STCE			(_AC(1, ULL) << 63)
+> > >  #define ENVCFG_PBMTE			(_AC(1, ULL) << 62)
+> > > +#define ENVCFG_ADUE			(_AC(1, ULL) << 61)
+> > >  #define ENVCFG_CBZE			(_AC(1, UL) << 7)
+> > >  #define ENVCFG_CBCFE			(_AC(1, UL) << 6)
+> > >  #define ENVCFG_CBIE_SHIFT		4
+> > > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> > > index e17d0078a651..35d7aa49785d 100644
+> > > --- a/arch/riscv/include/asm/hwcap.h
+> > > +++ b/arch/riscv/include/asm/hwcap.h
+> > > @@ -81,6 +81,8 @@
+> > >  #define RISCV_ISA_EXT_ZTSO		72
+> > >  #define RISCV_ISA_EXT_ZACAS		73
+> > >  #define RISCV_ISA_EXT_XANDESPMU		74
+> > > +#define RISCV_ISA_EXT_SVADE             75
+> > > +#define RISCV_ISA_EXT_SVADU		76
+> > >  
+> > >  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+> > >  
+> > > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> > > index aad8b8ca51f1..7287ea4a6160 100644
+> > > --- a/arch/riscv/include/asm/pgtable.h
+> > > +++ b/arch/riscv/include/asm/pgtable.h
+> > > @@ -120,6 +120,7 @@
+> > >  #include <asm/tlbflush.h>
+> > >  #include <linux/mm_types.h>
+> > >  #include <asm/compat.h>
+> > > +#include <asm/cpufeature.h>
+> > >  
+> > >  #define __page_val_to_pfn(_val)  (((_val) & _PAGE_PFN_MASK) >> _PAGE_PFN_SHIFT)
+> > >  
+> > > @@ -288,7 +289,6 @@ static inline pte_t pud_pte(pud_t pud)
+> > >  }
+> > >  
+> > >  #ifdef CONFIG_RISCV_ISA_SVNAPOT
+> > > -#include <asm/cpufeature.h>
+> > >  
+> > >  static __always_inline bool has_svnapot(void)
+> > >  {
+> > > @@ -624,6 +624,18 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+> > >  	return __pgprot(prot);
+> > >  }
+> > >  
+> > > +/*
+> > > + * Both Svade and Svadu control the hardware behavior when the PTE A/D bits need to be set. By
+> > > + * default the M-mode firmware enables the hardware updating scheme when only Svadu is present in
+> > > + * DT.
+> > > + */
+> > > +#define arch_has_hw_pte_young arch_has_hw_pte_young
+> > > +static inline bool arch_has_hw_pte_young(void)
+> > > +{
+> > > +	return riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADU) &&
+> > > +	       !riscv_has_extension_likely(RISCV_ISA_EXT_SVADE);
+> > 
+> > It's hard to guess what is, or will be, more likely to be the correct
+> > choice of call between the _unlikely and _likely variants. But, while we
+> > assume svade is most prevalent right now, it's actually quite unlikely
+> > that 'svade' will be in the DT, since DTs haven't been putting it there
+> > yet. Anyway, it doesn't really matter much and maybe the _unlikely vs.
+> > _likely variants are better for documenting expectations than for
+> > performance.
+> 
+> binding hat off, and kernel hat on, what do we actually do if there's
+> neither Svadu or Svade in the firmware's description of the hardware?
+> Do we just arbitrarily turn on Svade, like we already do for some
+> extensions:
+> 	/*
+> 	 * These ones were as they were part of the base ISA when the
+> 	 * port & dt-bindings were upstreamed, and so can be set
+> 	 * unconditionally where `i` is in riscv,isa on DT systems.
+> 	 */
+> 	if (acpi_disabled) {
+> 		set_bit(RISCV_ISA_EXT_ZICSR, isainfo->isa);
+> 		set_bit(RISCV_ISA_EXT_ZIFENCEI, isainfo->isa);
+> 		set_bit(RISCV_ISA_EXT_ZICNTR, isainfo->isa);
+> 		set_bit(RISCV_ISA_EXT_ZIHPM, isainfo->isa);
+> 	}
+>
 
-This patch adds a minor user visible change, that was my point.
+Yes, I think that's reasonable, assuming we do it in the final "pass",
+where we're sure svadu isn't present. Doing this is a good idea since
+we'll be able to simplify conditions, as we can just use 'if (svade)'
+since !svade would imply svadu. With FWFT and both, we'll want to remove
+svade from the isa bitmap when enabling svadu.
 
-If you say that the new behaviour is better / more consistent -
-I won't really argue, "I expect no one cares" below is probably
-true. In my opinion group_exit_code = SIGKILL makes more sense
-in this special case, but again, I won't insist.
-
-But then this change should be mentioned and explained in the
-changelog, agree?
-
-As for "zap_threads that tests if SIGNAL_GROUP_EXIT is already set",
-this is another thing but probably I misundertood you. It is not that
-zap_threads/zap_process do not set ->group_exit_code in this case,
-in this case do_coredump() will be aborted.
-
-And to remind, zap_threads() used to set SIGNAL_GROUP_COREDUMP, not
-SIGNAL_GROUP_EXIT. Because to me the coredumping process is not exiting
-yet, it tries to handle the coredumping signal. That is why I prefer
-group_exit_code = SIGKILL if it is killed during the dump. But this is
-slightly offtopic today.
-
-Oleg.
-
-On 06/21, Eric W. Biederman wrote:
->
-> Oleg Nesterov <oleg@redhat.com> writes:
->
-> > On 06/19, Eric W. Biederman wrote:
-> >>
-> >> Oleg Nesterov <oleg@redhat.com> writes:
-> >>
-> >> > Hi Eric,
-> >> >
-> >> > I'll _try_ to read this (nontrivial) changes this week. To be honest,
-> >> > right now I don't really understand your goals after the quick glance...
-> >> >
-> >> > So far I have only looked at this simple 1/17 and it doesn't look right
-> >> > to me.
-> >>
-> >> It might be worth applying them all on a branch and just looking at the
-> >> end result.
-> >
-> > Perhaps. Say, the next 2/17 patch. I'd say it is very difficult to understand
-> > the purpose unless you read the next patches. OK, at least the change log
-> > mentions "in preparation".
-> >
-> >> > 	- complete_signal() won't be called, so signal->group_exit_code
-> >> > 	  won't be updated.
-> >> >
-> >> > 	  coredump_finish() won't change it too so the process will exit
-> >> > 	  with group_exit_code == signr /* coredumping signal */.
-> >> >
-> >> > 	  Yes, the fix is obvious and trivial...
-> >>
-> >> The signal handling from the coredump is arguably correct.  The process
-> >> has already exited, and gotten an exit code.
-> >
-> > And zap_process() sets roup_exit_code = signr. But,
-> >
-> >> But I really don't care about the exit_code either way.  I just want to
-> >> make ``killing'' a dead process while it core dumps independent of
-> >> complete_signal.
-> >>
-> >> That ``killing'' of a dead process is a completely special case.
-> >
-> > Sorry I fail to understand...
-> >
-> > If the coredumping process is killed by SIGKILL, it should exit with
-> > group_exit_code = SIGKILL, right? At least this is what we have now.
->
-> In general when a fatal signal is sent:
-> - It is short circuit delivered.
-> - If SIGNAL_GROUP_EXIT is not set
->    SIGNAL_GROUP_EXIT is set
->    signal->group_exit_code is set
->
-> Under those rules group_exit_code should not be updated.  Frankly no
-> signals should even be processed (except to be queued) after a fatal
-> signal comes in.
->
-> There is an issue that short circuit delivery does not work on coredump
-> signals (because of the way the coredump code works).  So it winds up
-> being zap_threads that tests if SIGNAL_GROUP_EXIT is already set and
-> zap_process that sets SIGNAL_GROUP_EXIT.  Essentially the logic remains
-> the same, and importantly no later signal is able to set
-> group_exit_code.  Or really have any effect because the signal sent was
-> fatal.
->
-> Except except except when the kernel in the context of the userspace
-> process is writing a coredump for that userspace process.  Then we allow
-> the kernel to be sent SIGKILL to stop it's coredumping activities
-> because sometimes it can block indefinitely otherwise.
->
-> Which is why I call handling that SIGKILL after a coredump has
-> begun and SIGNAL_GROUP_EXIT is already set a completely special case.
->
-> We might have to change group_exit_code to SIGKILL in that special case,
-> if someone in userspace cares.  However I expect no one cares.
->
-> Further if adding support for SIGKILL during a coredump were being added
-> from scratch.  The semantics I would choose would be for that SIGKILL
-> and indeed all of the coredumping activity would be invisible to
-> userspace except for the delay to make it happen.  Otherwise a coredump
-> which every occasionally gets it's return code changed could introduce
-> heisenbugs.
->
-> But none of this is documented in the change description and at a bare
-> minimum this change of behavior should be before such code is merged.
->
-> Eric
->
-
+Thanks,
+drew
