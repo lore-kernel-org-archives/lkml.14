@@ -1,259 +1,145 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507E42C1AC
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E995A1C6BD
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 14:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718979677; cv=none; b=Ft6e+DkVP4zp7BoYAYSXTk954QgUcYmNe+dIbX2bdnfpzfIBXuZQEJCvxzPVEkfseXZr/YTBDZdvBPAKl68SxJffg8t+SA8/Tw+3dQRyGEw30NlbBoDgd47SZXlr544avDLt+Cyp8rv1gW9K92RbOo8sRdMjMxAUi63J7Y7MNms=
+	t=1718979784; cv=none; b=MmzbUQjFgb1DQidrYrLfXtqDK7G/kxMCHkGslW8auM0dcIvXOKpEvYDijzst9YXVijo4XuSR7sH+rQ90jiZiqQSTRfyFQeHZaw0jxLLFV06lZvlAgWhy7YP7GHLkUYfnSVbjMZYbxBWUt5me1Anqmrsib8Kwz4sT/Z+4LAhUVI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718979677; c=relaxed/simple;
-	bh=6BHMiMoKVlkooZFbv08vvmarKLf4j1ryhKjpdh7OWlY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jXZsmxq1R9VfjXqgfYpbCkBWWgUskkbGJu2FIk65WwiSoFbYdqYTNlt9cUBQwvvkyz44FkaPOLCzkBl7bmJNUx7aWbPuXof2Zql5s/TiXGzBlq29fdNfdK7wEbEpwJIaz7CPUFEeq2RYBKRIte2lwJqkVPesG+t+JhUxwfl0Otc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOaPYgKY; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718979784; c=relaxed/simple;
+	bh=dtD5FZtqo+wNEOZYQrefbfY6liBnv6eMThh82Nzq/Cw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XaaHv6eCp08KE45ZLlEzh74iCBxcI/EmIYsSbiCEWVtfCamJ6/vaw5IcLEiXekdpDTMCkz0D5AvizBWwXZnTVvLNEWqqnb/C/vIjWxwZHS2ph6qvbx0kg2ox434VI3nQJKubJDbXqAj53aYTO29pP+PBe8FFn/0xnFRaHUjS/OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=agXfzdad; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOaPYgKY"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6b4fc2b5277so8244136d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718979675; x=1719584475; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MjXMle0rO8XpaOjdtO6Igck9jzTHjsyq0tjq0iKq+6k=;
-        b=MOaPYgKYFc+cdxDRiQLsuoRSK0NRXa5G+lX0C9sZZHOMTTjL3US+5ZIUN471AM7jR0
-         /Fr4FAkDdwP5eQRJO/8xhCFw0aRFVVgMGCfJ/dLVWg6pEVUpk7cdKC7NNLFnFjwg8zSR
-         fowNkbJIeHK0zq+aGCxPJfMlvPyZbDXv+lMK5NSQ0my9tRxyCO0ihh2X6T9NiiN8AsCP
-         SvctC0a/BxTmjbdZXFn/aEW+4a46kJvM+QFnCmSg6MerCHhPuhV9K6pzMZLIDOyW4fDQ
-         U7SigSG/pYiY1HkoZtEPpDpoKJGQwBrrtLEtJ90URcJYYNyl4xoXccU//BqJpEgb3H4j
-         K7Jg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="agXfzdad"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718979782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qV90C7UJlVmCFYl+NUkqoGghcuANzyZHieaRfwTm4mo=;
+	b=agXfzdadxZwaTq/G+3ceyztNXRfGOJZm5c4IsP/YBdaZUmyKsuFiGa0lulmHDym4nyNVio
+	1PyP/armlmqVhyjA8lB5QWkdIr5zv4akKX8Pg32tDQc53PkF3XGr09QFl6akk2AH5kZiSH
+	GViQUEzysWWMW5cal1VXSamU09A7RO4=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-75-1wYxKo-uOxeoepLiC2x2YQ-1; Fri, 21 Jun 2024 10:23:00 -0400
+X-MC-Unique: 1wYxKo-uOxeoepLiC2x2YQ-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52c84d02b7fso1541179e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:23:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718979675; x=1719584475;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MjXMle0rO8XpaOjdtO6Igck9jzTHjsyq0tjq0iKq+6k=;
-        b=Pc3xEcDFF7WEhrIIXCZK+bW+UFuXiIvy1tDiTgkFs+x3UIB9MJ9Vq06GWMeZaVWgct
-         JxWxUjd111tTUV8U/9tf4Ri3tiYk1KlU0r+pfuOsGgHbMpgtzFYLM/pcxZ+tVfHHvWLz
-         vj5czporXrl0Ji55yAwOFwGKv5Wyrz10nKhWg03PotD2US7M5/OILi2xIGBNtYmHmSui
-         btaRIRFHQyVA5RNIhNyEJ3FUe7U7sPx+AENUheW5jnyY56fngE/XO+W1zVLX6BGXFSKl
-         2EBZ3at50i/J0zOq4BqnrljKjm5x8eWhj1OHO2rf7e3MNz+r0yVi8SEVw8SdR3+clmH+
-         HGNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNPw6EiFuTp1/mzze8GxBbJf3B9bYLldwr8JnL0BmTJEVJRkDGYpBxwdYVaCZ0da0iz3wpUwwLod7r3zsLrhblKbpnxBCi1p1xntpl
-X-Gm-Message-State: AOJu0YzGPIDq+cSmg8qStHWYnJR9ObKPMKsXBa0gdT7ltqD2CTZnDhIP
-	0A0IyO/5l+HgR+fSxV7o52urT34sgcb4CkWMxbulQPxCRmTQOdma
-X-Google-Smtp-Source: AGHT+IHTsm5qtIMJT3X14t/FfwytBP6BI2xShJWE3XRYqnh+pQytGVZUlvy0RxH7ZCq8cqLXQDvjJw==
-X-Received: by 2002:ad4:5cc2:0:b0:6b2:a333:2abf with SMTP id 6a1803df08f44-6b50d8e18d8mr83165976d6.51.1718979675153;
-        Fri, 21 Jun 2024 07:21:15 -0700 (PDT)
-Received: from localhost.localdomain ([142.198.217.108])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ef312b3sm9164736d6.88.2024.06.21.07.21.13
+        d=1e100.net; s=20230601; t=1718979779; x=1719584579;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qV90C7UJlVmCFYl+NUkqoGghcuANzyZHieaRfwTm4mo=;
+        b=ooDIbpjyBpAvewHMVJuU05XQehiNXZNJizLWdpoGVEklpBE6WqjsYcxsFmnSVHK0cA
+         FMCGHCw+a28WYHVvQSlZpGF3avvbfw5AVyGzDVjFKlZ4TqyVW+rXDJ49WXNlX5+dhp0t
+         sRR9nwjjOcwReqC0OTufMx0myDegcSe1DBHIxR+e0/frhYrSEhkKbsINWeVn78yRtSaO
+         4P8Xk/mGnr0fdnSEFHncvNpNn/l9yOqNEoI0KQzSc0puaKSbGgYpA9Qh7B5CBYvHZwq1
+         jObImK42rNslL9gcJo2o256etRYMvYjuseZCb2VBxiChRRyx3v0e89prmAZDVlDnkFyL
+         WLfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjgYtaLwHYIQgEgSYEN/Hksqoq0ukFCdtuCKvMXFJIDuXLvAnAatwkvHHEE6SPhvEDCjEp59p1zfpLPdFIbQQ28QTax6ZoZ4BEN99i
+X-Gm-Message-State: AOJu0YzGbHTr33Nh64khx+ICHuL4bxwzGWZG02wG5SoNrgXNKgH1Co+X
+	D6nD1CxYAh/oyJtdTV2VOrvEjh+Ccd0cnUKoOE5hsd4xvxVFdsnXwQgCuBP6YimxJk/CEtY9vNJ
+	TtqOkhEJUNpCHoyZmIaYCegVRpD/xDQHO/abXJTCF6TD9UTWoWHRuED8yTkn8pA==
+X-Received: by 2002:a05:6512:1242:b0:52c:8837:718a with SMTP id 2adb3069b0e04-52ccaa918b4mr7215876e87.43.1718979779025;
+        Fri, 21 Jun 2024 07:22:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzAV6+Rl/xfj+isJfV3mrm2ePVS6gx8oMmzBUO+GxqHw6XoMk3+zLYkOix/dNQI0VJ7gDQ9Q==
+X-Received: by 2002:a05:6512:1242:b0:52c:8837:718a with SMTP id 2adb3069b0e04-52ccaa918b4mr7215852e87.43.1718979778456;
+        Fri, 21 Jun 2024 07:22:58 -0700 (PDT)
+Received: from localhost ([185.124.31.167])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366389b88easm1884384f8f.39.2024.06.21.07.22.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 07:21:14 -0700 (PDT)
-From: Wu Hoi Pok <wuhoipok@gmail.com>
-To: 
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	Wu Hoi Pok <wuhoipok@gmail.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 7/7] drm/radeon: rdev->ddev to rdev_to_drm(rdev) 6
-Date: Fri, 21 Jun 2024 10:20:49 -0400
-Message-ID: <20240621142052.20152-1-wuhoipok@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        Fri, 21 Jun 2024 07:22:58 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Jocelyn Falempe <jfalempe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Maxime Ripard <mripard@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/ssd130x: Add drm_panic support
+In-Reply-To: <24205cdf-a3c6-475e-ba8a-a52d039a402d@redhat.com>
+References: <20240620222222.155933-1-javierm@redhat.com>
+ <24205cdf-a3c6-475e-ba8a-a52d039a402d@redhat.com>
+Date: Fri, 21 Jun 2024 16:22:57 +0200
+Message-ID: <87h6dmjry6.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Please see Patch v2 1/7 for details.
+Jocelyn Falempe <jfalempe@redhat.com> writes:
 
-Signed-off-by: Wu Hoi Pok <wuhoipok@gmail.com>
----
- drivers/gpu/drm/radeon/rs400.c |  6 +++---
- drivers/gpu/drm/radeon/rs600.c | 14 +++++++-------
- drivers/gpu/drm/radeon/rs690.c |  2 +-
- drivers/gpu/drm/radeon/rv515.c |  4 ++--
- drivers/gpu/drm/radeon/rv770.c |  2 +-
- drivers/gpu/drm/radeon/si.c    |  4 ++--
- 6 files changed, 16 insertions(+), 16 deletions(-)
+Hello Jocelyn, thanks for your feedback!
 
-diff --git a/drivers/gpu/drm/radeon/rs400.c b/drivers/gpu/drm/radeon/rs400.c
-index d4d1501e6576..d6c18fd740ec 100644
---- a/drivers/gpu/drm/radeon/rs400.c
-+++ b/drivers/gpu/drm/radeon/rs400.c
-@@ -379,7 +379,7 @@ DEFINE_SHOW_ATTRIBUTE(rs400_debugfs_gart_info);
- static void rs400_debugfs_pcie_gart_info_init(struct radeon_device *rdev)
- {
- #if defined(CONFIG_DEBUG_FS)
--	struct dentry *root = rdev->ddev->primary->debugfs_root;
-+	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
- 
- 	debugfs_create_file("rs400_gart_info", 0444, root, rdev,
- 			    &rs400_debugfs_gart_info_fops);
-@@ -474,7 +474,7 @@ int rs400_resume(struct radeon_device *rdev)
- 			RREG32(R_0007C0_CP_STAT));
- 	}
- 	/* post */
--	radeon_combios_asic_init(rdev->ddev);
-+	radeon_combios_asic_init(rdev_to_drm(rdev));
- 	/* Resume clock after posting */
- 	r300_clock_startup(rdev);
- 	/* Initialize surface registers */
-@@ -552,7 +552,7 @@ int rs400_init(struct radeon_device *rdev)
- 		return -EINVAL;
- 
- 	/* Initialize clocks */
--	radeon_get_clock_info(rdev->ddev);
-+	radeon_get_clock_info(rdev_to_drm(rdev));
- 	/* initialize memory controller */
- 	rs400_mc_init(rdev);
- 	/* Fence driver */
-diff --git a/drivers/gpu/drm/radeon/rs600.c b/drivers/gpu/drm/radeon/rs600.c
-index 5c162778899b..88c8e91ea651 100644
---- a/drivers/gpu/drm/radeon/rs600.c
-+++ b/drivers/gpu/drm/radeon/rs600.c
-@@ -321,7 +321,7 @@ void rs600_pm_misc(struct radeon_device *rdev)
- 
- void rs600_pm_prepare(struct radeon_device *rdev)
- {
--	struct drm_device *ddev = rdev->ddev;
-+	struct drm_device *ddev = rdev_to_drm(rdev);
- 	struct drm_crtc *crtc;
- 	struct radeon_crtc *radeon_crtc;
- 	u32 tmp;
-@@ -339,7 +339,7 @@ void rs600_pm_prepare(struct radeon_device *rdev)
- 
- void rs600_pm_finish(struct radeon_device *rdev)
- {
--	struct drm_device *ddev = rdev->ddev;
-+	struct drm_device *ddev = rdev_to_drm(rdev);
- 	struct drm_crtc *crtc;
- 	struct radeon_crtc *radeon_crtc;
- 	u32 tmp;
-@@ -408,7 +408,7 @@ void rs600_hpd_set_polarity(struct radeon_device *rdev,
- 
- void rs600_hpd_init(struct radeon_device *rdev)
- {
--	struct drm_device *dev = rdev->ddev;
-+	struct drm_device *dev = rdev_to_drm(rdev);
- 	struct drm_connector *connector;
- 	unsigned enable = 0;
- 
-@@ -435,7 +435,7 @@ void rs600_hpd_init(struct radeon_device *rdev)
- 
- void rs600_hpd_fini(struct radeon_device *rdev)
- {
--	struct drm_device *dev = rdev->ddev;
-+	struct drm_device *dev = rdev_to_drm(rdev);
- 	struct drm_connector *connector;
- 	unsigned disable = 0;
- 
-@@ -797,7 +797,7 @@ int rs600_irq_process(struct radeon_device *rdev)
- 		/* Vertical blank interrupts */
- 		if (G_007EDC_LB_D1_VBLANK_INTERRUPT(rdev->irq.stat_regs.r500.disp_int)) {
- 			if (rdev->irq.crtc_vblank_int[0]) {
--				drm_handle_vblank(rdev->ddev, 0);
-+				drm_handle_vblank(rdev_to_drm(rdev), 0);
- 				rdev->pm.vblank_sync = true;
- 				wake_up(&rdev->irq.vblank_queue);
- 			}
-@@ -806,7 +806,7 @@ int rs600_irq_process(struct radeon_device *rdev)
- 		}
- 		if (G_007EDC_LB_D2_VBLANK_INTERRUPT(rdev->irq.stat_regs.r500.disp_int)) {
- 			if (rdev->irq.crtc_vblank_int[1]) {
--				drm_handle_vblank(rdev->ddev, 1);
-+				drm_handle_vblank(rdev_to_drm(rdev), 1);
- 				rdev->pm.vblank_sync = true;
- 				wake_up(&rdev->irq.vblank_queue);
- 			}
-@@ -1133,7 +1133,7 @@ int rs600_init(struct radeon_device *rdev)
- 		return -EINVAL;
- 
- 	/* Initialize clocks */
--	radeon_get_clock_info(rdev->ddev);
-+	radeon_get_clock_info(rdev_to_drm(rdev));
- 	/* initialize memory controller */
- 	rs600_mc_init(rdev);
- 	r100_debugfs_rbbm_init(rdev);
-diff --git a/drivers/gpu/drm/radeon/rs690.c b/drivers/gpu/drm/radeon/rs690.c
-index 14fb0819b8c1..016eb4992803 100644
---- a/drivers/gpu/drm/radeon/rs690.c
-+++ b/drivers/gpu/drm/radeon/rs690.c
-@@ -845,7 +845,7 @@ int rs690_init(struct radeon_device *rdev)
- 		return -EINVAL;
- 
- 	/* Initialize clocks */
--	radeon_get_clock_info(rdev->ddev);
-+	radeon_get_clock_info(rdev_to_drm(rdev));
- 	/* initialize memory controller */
- 	rs690_mc_init(rdev);
- 	rv515_debugfs(rdev);
-diff --git a/drivers/gpu/drm/radeon/rv515.c b/drivers/gpu/drm/radeon/rv515.c
-index bbc6ccabf788..1b4dfb645585 100644
---- a/drivers/gpu/drm/radeon/rv515.c
-+++ b/drivers/gpu/drm/radeon/rv515.c
-@@ -255,7 +255,7 @@ DEFINE_SHOW_ATTRIBUTE(rv515_debugfs_ga_info);
- void rv515_debugfs(struct radeon_device *rdev)
- {
- #if defined(CONFIG_DEBUG_FS)
--	struct dentry *root = rdev->ddev->primary->debugfs_root;
-+	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
- 
- 	debugfs_create_file("rv515_pipes_info", 0444, root, rdev,
- 			    &rv515_debugfs_pipes_info_fops);
-@@ -636,7 +636,7 @@ int rv515_init(struct radeon_device *rdev)
- 	if (radeon_boot_test_post_card(rdev) == false)
- 		return -EINVAL;
- 	/* Initialize clocks */
--	radeon_get_clock_info(rdev->ddev);
-+	radeon_get_clock_info(rdev_to_drm(rdev));
- 	/* initialize AGP */
- 	if (rdev->flags & RADEON_IS_AGP) {
- 		r = radeon_agp_init(rdev);
-diff --git a/drivers/gpu/drm/radeon/rv770.c b/drivers/gpu/drm/radeon/rv770.c
-index 9ce12fa3c356..7d4b0bf59109 100644
---- a/drivers/gpu/drm/radeon/rv770.c
-+++ b/drivers/gpu/drm/radeon/rv770.c
-@@ -1935,7 +1935,7 @@ int rv770_init(struct radeon_device *rdev)
- 	/* Initialize surface registers */
- 	radeon_surface_init(rdev);
- 	/* Initialize clocks */
--	radeon_get_clock_info(rdev->ddev);
-+	radeon_get_clock_info(rdev_to_drm(rdev));
- 	/* Fence driver */
- 	radeon_fence_driver_init(rdev);
- 	/* initialize AGP */
-diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
-index 15759c8ca5b7..6c95575ce109 100644
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -6277,7 +6277,7 @@ int si_irq_process(struct radeon_device *rdev)
- 				event_name = "vblank";
- 
- 				if (rdev->irq.crtc_vblank_int[crtc_idx]) {
--					drm_handle_vblank(rdev->ddev, crtc_idx);
-+					drm_handle_vblank(rdev_to_drm(rdev), crtc_idx);
- 					rdev->pm.vblank_sync = true;
- 					wake_up(&rdev->irq.vblank_queue);
- 				}
-@@ -6839,7 +6839,7 @@ int si_init(struct radeon_device *rdev)
- 	/* Initialize surface registers */
- 	radeon_surface_init(rdev);
- 	/* Initialize clocks */
--	radeon_get_clock_info(rdev->ddev);
-+	radeon_get_clock_info(rdev_to_drm(rdev));
- 
- 	/* Fence driver */
- 	radeon_fence_driver_init(rdev);
+> On 21/06/2024 00:22, Javier Martinez Canillas wrote:
+>> Add support for the drm_panic infrastructure, which allows to display
+>> a user friendly message on the screen when a Linux kernel panic occurs.
+>> 
+>> The display controller doesn't scanout the framebuffer, but instead the
+>> pixels are sent to the device using a transport bus. For this reason, a
+>> .panic_flush handler is needed to flush the panic image to the display.
+>
+> Thanks for this patch, that's really cool that drm_panic can work on 
+> this device too.
+>
+
+Indeed, that's why I did it. Just to see if it could work :)
+
+[...]
+
+>> +static void ssd130x_primary_plane_helper_panic_flush(struct drm_plane *plane)
+>> +{
+>> +	struct drm_plane_state *plane_state = plane->state;
+>> +	struct ssd130x_plane_state *ssd130x_plane_state = to_ssd130x_plane_state(plane_state);
+>> +	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
+>> +	struct drm_crtc *crtc = plane_state->crtc;
+>> +	struct ssd130x_crtc_state *ssd130x_crtc_state = to_ssd130x_crtc_state(crtc->state);
+>> +
+>> +	ssd130x_fb_blit_rect(plane_state->fb, &shadow_plane_state->data[0], &plane_state->dst,
+>> +			     ssd130x_plane_state->buffer, ssd130x_crtc_state->data_array,
+>> +			     &shadow_plane_state->fmtcnv_state);
+>
+> ssd130x_fb_blit_rect() will call regmap->write(), which involve mutex 
+> and might sleep. And if the mutex is taken when the panic occurs, it 
+> might deadlock the panic handling.
+
+That's a good point and I something haven't considered...
+
+> One solution would be to configure the regmap with config->fast_io and 
+> config->use_raw_spinlock, and check that the lock is available with 
+> try_lock(map->raw_spin_lock)
+> But that means it will waste cpu cycle with busy waiting for normal 
+> operation, which is not good.
+>
+
+Yeah, I would prefer to not change the driver for normal operation.
+
+> So for this particular device, I think it's ok, because it's unlikely 
+> you'll run kdump or other kernel panic handlers.
+> But I would like to know what others think about it, and if it's 
+> acceptable or not.
+>
+
+I don't know either. I guess that after a panic everything is best effort
+anyways so it may be acceptable? But let's see what others think about it.
+
+> -- 
+>
+> Jocelyn
+
 -- 
-2.45.2
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
