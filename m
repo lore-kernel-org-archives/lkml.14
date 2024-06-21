@@ -1,89 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C75374DD;
-	Fri, 21 Jun 2024 20:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D95D59155
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719001856; cv=none; b=UbaVhLG9DtY0ERf+3IcZ4B+6hFxyjLtDACRX8M60mX73CWE4ZNp9KUsWs1yWPPIAHBtsRKxnI6D/NR2T6aETPscJ/ukwtaJaoFeij38g83a9D9tfzUDLvMFYHoaJLOhefB5J7i67SPi9zIMkwzCip8+HcvlyDHDJSxMc/cpsMT0=
+	t=1719001900; cv=none; b=vAobd0NcAykWXEFMqzbpvyiohwcXuVDOe3lTuA6hE5Cx+1M+ptTDTu5CwfFpu29BTBGoMBwjRO7cf2LMR5nKm8RWFOrRFxOCPrNidrL3EqG93cUUiJrQbL8N3DrSAdvJrNnVM0S+cgJr1P21/iZY5OMgbJjdDSXtl4ueL8hqYJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719001856; c=relaxed/simple;
-	bh=Fz1obuJu2KySblgdOnyn6EyXXspLQtoucM1rWIb5h1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHzGi9y3iXnkOqVtj2SR/aZ414qMZaP6GECK7XUqIZxBeeyIGVzH11b2Wc2izKgDtZfQWALajzOGgTDTyADPm0TcIVIHKAiRP+NaQI1vYdEri9HJZnDjZKeF/nt5hlJeT9QE1JS8cvId8x7xGNcTKNHUdoJ16CRvpVztwQRjQcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbktpSIw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719001900; c=relaxed/simple;
+	bh=LTZZDiMALKyPN5p+8hRA+YseHImtAb+JtUOdlmoeOic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TSjwXqWL2EYCEB7BySVQLTKGU8LV3BuXDEXlooBwiP7jZtHDAPyJ0bwaOsY1qzuvDaMkemHYXNi8nm/X03BMGf5NUeCbSqWbhZThlvF8P45ch9gIB7Q61I0var4SZEbGMa1gFEyme0Qkh1CT7DTeTf+U5BDBRZd9MXOKp88Z200=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=DxiDfXCr; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbktpSIw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41883C2BBFC;
-	Fri, 21 Jun 2024 20:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719001855;
-	bh=Fz1obuJu2KySblgdOnyn6EyXXspLQtoucM1rWIb5h1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fbktpSIwNSQbvA4sxhtDrhE/2nesPbwVyH2OPBo4aQ8dF+JnNEyM1XqmvDw3BrO6g
-	 0gBs0oiu1yxRfEGCOD2lju4Qmxwg0eHxzqySH3tryUQoGPPx0pZfYoWNl9em4VzqTn
-	 E/wCdXf49bEnuBLUzHukl2lY9exFUWraJIGXclNuFXGrm7nEIX7Etp1HPdcMgkykHV
-	 nbPNgmmT87SwrxYX7PuXYXU46/i+uJimFKr4lo1Yix8xSQrNG1Xye+pXK72hzSQjSb
-	 KRNWmWOk5MQqiE2TbKOnK6Andlwc4Frh25cN1rFmhY9jPGLMenwqMSTW2lb8p81VFS
-	 ooPo94YcR4Hog==
-Date: Fri, 21 Jun 2024 21:30:51 +0100
-From: Mark Brown <broonie@kernel.org>
-To: "Gowans, James" <jgowans@amazon.com>
-Cc: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-	"jbeulich@suse.com" <jbeulich@suse.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"rppt@kernel.org" <rppt@kernel.org>
-Subject: Re: linux-next: manual merge of the memblock tree with the origin
- tree
-Message-ID: <cf013a59-a297-4685-94ac-87566023aa5d@sirena.org.uk>
-References: <ZnRQv-EVf2LQ1Cjv@sirena.org.uk>
- <eb58b1b2f84444acde3f9e25219fa40c73c499f8.camel@amazon.com>
- <db13f2b7-88da-42db-85ed-d78cdd5f6c62@sirena.org.uk>
- <e6f1bf73d13060635520c70df269c0b390352f37.camel@amazon.com>
- <44ce3730-8e4d-42f9-8b17-104805e46f93@sirena.org.uk>
- <9262bfba5d65c603dcad49a75e5a30564f75c3d4.camel@amazon.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="DxiDfXCr"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-62cddff7f20so23262177b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:31:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1719001898; x=1719606698; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y9aMPfF58vRykJrjRvRAhedQZI2SIlSrwcX7UpNjhsc=;
+        b=DxiDfXCrqA/tFmxO0p1Y2TxsSRJeYBfrsWTaHrtIwa99Y7mh+nFjvsSevtGrrVwM/p
+         bsZ8HDYZfUh7Mnucj5g8pLr6ixk0rCzcZQzCV5KEnlUL+8QRI1xroqgBHxbKKSwLdF3C
+         ohtZIKFG1xIKYzAcSiZ6rSgKK8pMUjHMO7yRUj7eqCcAlCjm1jr1G4MGUcWez4XwMjmT
+         VVi/emKzch8LpEvUNPWJhVrs0hHgEqubp9XXuYQ2dUIPHipPRbBw6gNVn0W68iAYQ815
+         8/1WoXzTKnqsZe32LpL28hA9hNl5bkyHWoSJP7DJXQjmRA1c+dd0KrD8LrKrhgdgNpVa
+         mvJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719001898; x=1719606698;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y9aMPfF58vRykJrjRvRAhedQZI2SIlSrwcX7UpNjhsc=;
+        b=C+bxDZFR6wW/GCfKDDmVNjmRaZCE06lYuaCicsgc8AyDspZJTzG6XgObtUKZOO0JQU
+         gX94NownPDJudtjW6c3uWJ28KVfQt4V6BUVWWRYYblbfqb/1NrDRtGW+tntWHMA5b3yD
+         EA873SF/pzSfYyhln7QSvgZTeBFcRobGT9/4aFxAFhyL7h9T7HbpTwY4t+teG+ALCWb/
+         6EO7NbBO2DVlJI9rFHYQXkGEjtHMVy0UOXD+rcKaFaa8UWPHtqPuW/dRt4CPl+ZHXxYY
+         Yw2jBRLahQYt3cYFHhUmvil3RK1/skm5O3gESp7fT98ABVTJUK2c5oQNIfxqTrAEC+N2
+         rvew==
+X-Forwarded-Encrypted: i=1; AJvYcCVcVnlCnrDl9limpihxkdAxLSc8uLUR5816jjf+78dxPTc1QONa/VXCNxXI3LCtZ3399wJPEnXS/U77ZHX6x6xqEvm1BZMHF4rXO5td
+X-Gm-Message-State: AOJu0YznvLcsuCA1UWiaVKxu4gAIS4OVkwGr3denzd0zQSf0ESKqp0yd
+	FRzwK5C/OZ1gOo5FSieHRs3C0dvjy/cgOlQzwmIyHKayNWwE8xq2G+rb49Fo5sdwWXHRpiZagUz
+	QhYNSzz4JAYFnDsn88r0Sp0yO8f831eDTq34I
+X-Google-Smtp-Source: AGHT+IEjbiKBZ1jiOYgJ/iLL5pMFWzx2q/MMT+P4u529zBOknbbnzGDr+QZeruNnZmKG91iwCdca30Gpp5qvkGowQU4=
+X-Received: by 2002:a0d:e810:0:b0:632:5b24:c0c with SMTP id
+ 00721157ae682-63a8dc08affmr92557717b3.5.1719001898037; Fri, 21 Jun 2024
+ 13:31:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Guoj/QETIVZljXJc"
-Content-Disposition: inline
-In-Reply-To: <9262bfba5d65c603dcad49a75e5a30564f75c3d4.camel@amazon.com>
-X-Cookie: Androphobia:
+References: <20231215221636.105680-1-casey@schaufler-ca.com> <20231215221636.105680-3-casey@schaufler-ca.com>
+In-Reply-To: <20231215221636.105680-3-casey@schaufler-ca.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 21 Jun 2024 16:31:27 -0400
+Message-ID: <CAHC9VhQnzrHPRWKvWPSuFLWHhcXkwqeAfXsFbEdBBOMcACZorg@mail.gmail.com>
+Subject: Re: [PATCH v39 02/42] SM: Infrastructure management of the sock security
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: linux-security-module@vger.kernel.org, jmorris@namei.org, serge@hallyn.com, 
+	keescook@chromium.org, john.johansen@canonical.com, 
+	penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, 
+	linux-kernel@vger.kernel.org, mic@digikod.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Dec 15, 2023 at 5:18=E2=80=AFPM Casey Schaufler <casey@schaufler-ca=
+.com> wrote:
+>
+> Move management of the sock->sk_security blob out
+> of the individual security modules and into the security
+> infrastructure. Instead of allocating the blobs from within
+> the modules the modules tell the infrastructure how much
+> space is required, and the space is allocated there.
+>
+> Acked-by: Paul Moore <paul@paul-moore.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: John Johansen <john.johansen@canonical.com>
+> Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
+>  include/linux/lsm_hooks.h         |  1 +
+>  security/apparmor/include/net.h   |  3 +-
+>  security/apparmor/lsm.c           | 20 +-------
+>  security/apparmor/net.c           |  2 +-
+>  security/security.c               | 36 ++++++++++++++-
+>  security/selinux/hooks.c          | 76 ++++++++++++++-----------------
+>  security/selinux/include/objsec.h |  5 ++
+>  security/selinux/netlabel.c       | 23 +++++-----
+>  security/smack/smack.h            |  5 ++
+>  security/smack/smack_lsm.c        | 70 ++++++++++++++--------------
+>  security/smack/smack_netfilter.c  |  4 +-
+>  11 files changed, 131 insertions(+), 114 deletions(-)
 
---Guoj/QETIVZljXJc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I had to do some minor merge fixups, but I just merged this into the
+lsm/dev-staging branch to do some testing, assuming all goes well I'll
+move this over to the lsm/dev branch; I'll send another note if/when
+that happens.
 
-On Fri, Jun 21, 2024 at 08:08:53PM +0000, Gowans, James wrote:
-> On Thu, 2024-06-20 at 19:00 +0100, Mark Brown wrote:
+One of the things that has bothered me about the LSM framework is the
+inconsistency around allocation and management of the LSM security
+blobs (the `void *security` fields present in many kernel objects).
+In some cases the framework itself manages these fields, in other
+cases it is left up to the individual LSMs; while there are reasons
+for this (move to the framework on an as-needed basis), it is a little
+odd and with any inconsistency I worry about the potential for bugs.
+I think moving the allocation and management of all the LSM blobs into
+the LSM framework, similar to what was done here with the sock's
+sk_security field, would be a Very Good Thing and help bring some
+additional consistency to the LSM interfaces.  Looking quickly at only
+the SELinux code, I see six additional blobs that would need to be
+converted; it's possible there are others in use by other LSMs, but I
+haven't checked.
 
-> > Yes, the merge in -next is wrong.
+Casey, is this something you would be interested in pursuing or would
+you rather I give it a shot?
 
-> What's the next step to fix the incorrect merge commit?
-> Looking at today's -next I see the same issue:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/mm/memblock.c?h=next-20240621&id=f689ee4c062317a0831fbffeeb30d7816608b2e7
-
-It's remembered by rerere, hopefully I'll convince rerere to forget it
-on Monday.
-
---Guoj/QETIVZljXJc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ14voACgkQJNaLcl1U
-h9CQ1Qf+JW1zyHEWAdd4W3LSLlCiyB2U3kwn+bug8P2iTXmIrQOQALbleXwmZXiS
-pPLI+DMwiULsJ47Iuw69L6twkg5zdLg3l4p47q9PAmj4nIp6gw2AjeErFu+Kh20f
-gDMhwr4vkFJOwyZ4Z13C+kQUsPhPOd4GhkifP3eQa/srCysqQ/RvdlSYYO+0ylRU
-5XymmxXgCCeuvySC33CG1eLOi7eSASyJRduJAt3weYNAhz1pOSWBq7wghiDbMEAP
-wkNe1oV+nm9KoLWghC99iHrCNxApukLGfWw5AHGo0dHuawAh/JgEHd3PiIhxPNCx
-SfkmOWg5tBfO4EqlJZoqK3afc6Wf/Q==
-=/IqT
------END PGP SIGNATURE-----
-
---Guoj/QETIVZljXJc--
+--=20
+paul-moore.com
