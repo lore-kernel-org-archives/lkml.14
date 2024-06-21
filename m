@@ -1,118 +1,141 @@
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353A9250EC
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E49A4CDF9
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718982098; cv=none; b=UR4/+Y2dnDDDk4tWabgu80uWnWqdlgz90COdM8RvIqENPhv9Wxy9hCTtOjiOV9OzL3ckZFf7qbXh0jPwb2sf+HG4vMyfL9898TsI4obim4s6kDMko/suyDub/pMxgQ+3fnb3zeaXBNOTiODWaBwqX8Kd2vdZZoeVCeqmVsw7NvI=
+	t=1718982117; cv=none; b=CLvh7bWPw9E3BA4Bbgjicw+NN8tK8ON2QjEZp1fm7oiIFnH0PB3oj4jDuXhF2fFDh835CRIqcDYhgE0ITnfeZTywAQRmBeyYwWjRlowdycY4M1tvRZkja4ptp1MuLFAE+Knjs80y7hgnU6SaQz35OB5WJ9Y4GEpWwZrqYhStTaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718982098; c=relaxed/simple;
-	bh=93O4/7DFpdjROLypmde/a3JcWpFq0dkcjGqSHxHkJOI=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=TKcES2gUM8K6AyeqU8HWLoJXrAw1k1btTgZi/bRLxHediUvPyET7wx2zaQE6+nEY81tUeazhHmNFE+ik7R1Occ7PekGLFYYx0scxow599nzooQurCFoEzhu+KAyXgbHHMtd3duJgHxEbWSX38zho8abx2RW1Kvxgk/8s9yEQbG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YZsdXlQq; arc=none smtp.client-ip=203.205.221.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1718982117; c=relaxed/simple;
+	bh=U5FbGj9341y9I5di5l7P227GVvKlgS0dA3G7vCN+yY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yu5b94nhonwkyEIv8xwV2P56wljmVdSsUJLJqVskfPYCreQ67UQFFP7i0zypq5OfObSLBhebrRldvkydyPg2JHajWxIXWMCMJl5Wq4ir0DrwtEXkrkg7hNB17Ho1X2qZeNZigXIUHqdk3d1gwPVOtdQqyKt+AC2SPhgQjnmwA6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fk7gGsY0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YZsdXlQq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718981787; bh=u11VC9vTA/IZRdXHWSyfPdljHk8ljFmOZB+QjWrnNKw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YZsdXlQqKSnvtO2szpQpI9O9FsBf1A4wZmFF2LiHqbVph1rxb68+hHijzgB3QhdNL
-	 HwExJfCtDkx1h1enCX6/CKBg/Xi5hM/BnlB6vsYw5omiN2GfmuXBYxEHArBufDnHfm
-	 xpLeaK6qJn3Xk+qR//MgTMWXCT0R8Uk8g2jHfu+8=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
-	id E19A0E51; Fri, 21 Jun 2024 22:56:25 +0800
-X-QQ-mid: xmsmtpt1718981785tljmbu58d
-Message-ID: <tencent_EF3CBD367097AC370E4A5E7525769D668209@qq.com>
-X-QQ-XMAILINFO: MprdIpiwXvQIZJGIMSzOwI9Gs5wqc0M3LGfI190cfBEB8DfzPY/zelSjNJXHmv
-	 DDpFRQJVLjY+yYdDEGOATPDLV5/68LPY74I42h5fJsHXQSZu8qImT6EXxMp94HVA4lKhWUqvD/dF
-	 62+fr22tVj/spn1oUdzXbgyflDgJd1ZWiUNLECmU8Tdk6pe1i1FC2qQBi/UquRw0P4C0ATaDBMV2
-	 6vtNNnP7UKYSl6gqEeNWlSAIfg+pYK3NhCl1+JLGWCN4h+nBAxQp6dibGASdDpvl5dXOFuPJsNBS
-	 p1mBL4H31u/oLJjjjpvAAcPSgy+s5rb26O1eNABfihdUrZ/WBsIkXUXEpZLNW4zw0GAYKAavDINE
-	 0AvZG7d0MaMmEp6CwGYQLjXbtIImN5d5/CeFCZUs4DzQhxaYEOkq0dPylao4N5qV4AUhvfB+d1mG
-	 LGUF1fmzGhjte/FTkHQ/utlVsmyEyoFrEGoS8XQBcF5HeQfn5MF0igzMm8cfzSdMvj2NQsCACER8
-	 orPB69oe083BGLDAnK8Dfw/yLbvgmcZr6y/O6MD+OK1Fbd0+o0fP0ackctTNUw+WYkpmbs4aUDp5
-	 q4YHtdkb2u/5cko+CfNmRrFTJbriHa7gEVZPDDSrvx7dDqrdWMP7D2x47THB+0XPAoEtyM/Y8n2a
-	 9E7vfG39p8Y9WVgI0suu9mnrkT8JuIqvfULjIYy5iVAQAYx2+XxHZQdloM1YXVjUKd0rAI78SUf2
-	 bOCzmPl3redEFChgmVsQK4Mf3O21G9gNk3N0fReXPUr8Dh0gk2De8quPy8HJsFi3Vk3Kz4C+BXAc
-	 kyQucMl9hfk6flAhsCVx7Fu/p5iMLLJEQueJKWoMVcljHhRyGRCNYY/XoA4l8CgITwybnHDkModK
-	 kxTGgnjMevFvfe2X+JEtRo8ELNE3NgWjrflWP9RYU+encPp2TRvQd0Ea4yBMc/sNkZSj154CekdD
-	 RIUGX/Twk=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] general protection fault in l2cap_sock_recv_cb
-Date: Fri, 21 Jun 2024 22:56:26 +0800
-X-OQ-MSGID: <20240621145625.2692300-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b0906d061a468b93@google.com>
-References: <000000000000b0906d061a468b93@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fk7gGsY0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718982115;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=REVMzCf9KPJKxppAPyYl2jD1cpXtxvVGJIDHyR5KKbs=;
+	b=fk7gGsY0cgBTPHPqq+7cxogb54B8scrd0CUMHH+O3xfT768A5B7lO37qxu7zv6QJ2KSpbQ
+	Mrz+qQkSIVY43r4adAOMQzP98YKtowW2BjnVZlf0Yh37nDhM1Gwxw7Rg33DOdC23pvGnVy
+	ll+Z0IXU37jfidnNDd1+JPXfYacG4v4=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-2Sw25Eu5Np22FRo7BfC6wQ-1; Fri, 21 Jun 2024 11:01:54 -0400
+X-MC-Unique: 2Sw25Eu5Np22FRo7BfC6wQ-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6b4fc5c2ee5so3658236d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:01:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718982113; x=1719586913;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=REVMzCf9KPJKxppAPyYl2jD1cpXtxvVGJIDHyR5KKbs=;
+        b=tV7SBmQ4VsJGsAj5mO4IvXEsaDOjNP5rsFMb8ulE1Sn3RCNhmG+tiRlu281Wx847zd
+         RVhaYHVT/T590pnZ8ZwW5wfAPdvPilBo2pmemJeri6Hi+o7aqbFa+drZTp1fs68AoMw0
+         OpfmMoGUrPNzCuEguvhkTIfgYx2t2GB4eMolY1l3LupHY48wLEXJuXHZSt2uIj5A0LRb
+         3S8+dudZrHUcYA4edFAfSOYOh73ebptQJAmAeCi4ZdIhyhFEQF3PXY26G47Xq2EVuNCo
+         cSTt3GmsfmKbQ8BisGFjSdoWAY0zvPnpdNHWbmg6dpL+QKZeVO0NeCQOYOJ1EK7lbEaQ
+         QSjw==
+X-Gm-Message-State: AOJu0YwZpX1imWIlilcWBoS5vLbGUFuU4l2WOMYre7gVvyjEYieMC2JH
+	7P+SWQgnj4mmnZSlG6wVpkSvwXgUgiiaVsmJuzs33zUwqKi988rRpu/WiGCAzPexvLvwVaBuPCW
+	M6DsYexJXvSHL9HEiR3m+qx5cx/OVIbwEJkzW4TOjP/dIa2UWuP0meS43BidlNVt5HqU3dX1Yce
+	Sfmh5q/ELKzn189IuvNkVSBh+9VEBsUuWhBljq7dgaEVI=
+X-Received: by 2002:a05:622a:2cc:b0:441:581b:c111 with SMTP id d75a77b69052e-444a7a153ffmr95993721cf.1.1718982112962;
+        Fri, 21 Jun 2024 08:01:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGy/M4tB0NsmwFw2Vc1r8qkgVlJcFixEuuYKG9UASFE/pxP8aIpWiptz9iA6cfjIHrhSLs9OQ==
+X-Received: by 2002:a05:622a:2cc:b0:441:581b:c111 with SMTP id d75a77b69052e-444a7a153ffmr95992901cf.1.1718982112163;
+        Fri, 21 Jun 2024 08:01:52 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c2c3d946sm11823491cf.74.2024.06.21.08.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 08:01:51 -0700 (PDT)
+Date: Fri, 21 Jun 2024 11:01:47 -0400
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+	Dave Jiang <dave.jiang@intel.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Ingo Molnar <mingo@redhat.com>, Oscar Salvador <osalvador@suse.de>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Rik van Riel <riel@surriel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Huang Ying <ying.huang@intel.com>
+Subject: Re: [PATCH 4/7] mm/powerpc: Add missing pud helpers
+Message-ID: <ZnWV2-YBFKXjLA9v@x1n>
+References: <20240621142504.1940209-1-peterx@redhat.com>
+ <20240621142504.1940209-5-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240621142504.1940209-5-peterx@redhat.com>
 
-please test null ptr defref in l2cap_sock_recv_cb
+On Fri, Jun 21, 2024 at 10:25:01AM -0400, Peter Xu wrote:
+> +pmd_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
+> +		      pud_t *pudp)
+> +{
+> +	unsigned long old_pud;
+> +
+> +	VM_WARN_ON_ONCE(!pmd_present(*pmdp));
+> +	old_pmd = pmd_hugepage_update(vma->vm_mm, address, pmdp, _PAGE_PRESENT, _PAGE_INVALID);
+> +	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
+> +	return __pmd(old_pmd);
+> +}
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git cc8ed4d0a848
+I'll need an amend at least here, and my test harness won't catch it even
+if it's a mistake as silly as it could be..  My apologies for such noise.
+Below is what I plan to squash into this patch when I repost v2.
 
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 6db60946c627..c0fe74a6b45e 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -47,6 +47,7 @@ static void l2cap_sock_init(struct sock *sk, struct sock *parent);
- static struct sock *l2cap_sock_alloc(struct net *net, struct socket *sock,
- 				     int proto, gfp_t prio, int kern);
- static void l2cap_sock_cleanup_listen(struct sock *parent);
-+static DEFINE_MUTEX(chan_data_lock);
- 
- bool l2cap_is_socket(struct socket *sock)
- {
-@@ -1239,6 +1240,9 @@ static void l2cap_sock_kill(struct sock *sk)
- 
- 	BT_DBG("sk %p state %s", sk, state_to_string(sk->sk_state));
- 
-+	mutex_lock(&chan_data_lock);
-+	l2cap_pi(sk)->chan->data = NULL;
-+	mutex_unlock(&chan_data_lock);
- 	/* Kill poor orphan */
- 
- 	l2cap_chan_put(l2cap_pi(sk)->chan);
-@@ -1481,10 +1485,18 @@ static struct l2cap_chan *l2cap_sock_new_connection_cb(struct l2cap_chan *chan)
- 
- static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- {
--	struct sock *sk = chan->data;
--	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	struct sock *sk;
-+	struct l2cap_pinfo *pi;
- 	int err;
- 
-+	mutex_lock(&chan_data_lock);
-+	sk = chan->data;
-+	if (!sk) {
-+		mutex_unlock(&chan_data_lock);
-+		return -ENXIO;
-+	}
-+
-+	pi = l2cap_pi(sk);
- 	lock_sock(sk);
- 
- 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
-@@ -1535,6 +1547,7 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- 
- done:
- 	release_sock(sk);
-+	mutex_unlock(&chan_data_lock);
- 
- 	return err;
+===8<===
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index c6ae969020e0..ea2c83634434 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -176,15 +176,15 @@ pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
+        return __pmd(old_pmd);
  }
+ 
+-pmd_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
++pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
+                      pud_t *pudp)
+ {
+        unsigned long old_pud;
+ 
+-       VM_WARN_ON_ONCE(!pmd_present(*pmdp));
+-       old_pmd = pmd_hugepage_update(vma->vm_mm, address, pmdp, _PAGE_PRESENT, _PAGE_INVALID);
+-       flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
+-       return __pmd(old_pmd);
++       VM_WARN_ON_ONCE(!pud_present(*pudp));
++       old_pud = pud_hugepage_update(vma->vm_mm, address, pudp, _PAGE_PRESENT, _PAGE_INVALID);
++       flush_pud_tlb_range(vma, address, address + HPAGE_PUD_SIZE);
++       return __pud(old_pud);
+ }
+ 
+ pmd_t pmdp_huge_get_and_clear_full(struct vm_area_struct *vma,
+===8<===
+
+-- 
+Peter Xu
 
