@@ -1,79 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202D216C86E;
-	Fri, 21 Jun 2024 07:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11701411DF
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 07:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718956050; cv=none; b=n+AaWGSjWvK5G7bWBmJh+DsXfR+9t/8ifhRI4HYcOG4S42vzSxxbIfycsSL1gj12TacewVvE2cp/poFbK939RGb+NX9yc/YDuYcUGih3r27t5V16pTPe4xCQJKqFVIfh5XkaOINvNENE+hQBlSJ+b5xwyavxrCTfsA+vgJGsDWY=
+	t=1718956115; cv=none; b=qhE8V+0aDrD+lYVYsRT696BXtnJviwc6q6EuCOeNrG2w1nmw4D8l6OLvZ6StlYlVluHwwtpvKWY1kEIsetsSUYIZha0qoY+fWOreBIipBXVCEAfhEyWyD8tAhQJTeMxCuqnS9wRmecC/MpJM+5LCLVzPKomVg7dP2fFO6DSOKC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718956050; c=relaxed/simple;
-	bh=+n1uE1MrLQMFhNN+7jwAvQajIquhPpIK6hC9WogIb1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V3iOUVHate0rd2oJjkAAYJ9xtqcdoYz7I68Bk6VG/WHEYVUOjSCcqJCoC//wN0rRTiysmui2KlWfNpjMfcaOaFUvWLMAvuKul2QuQc2p/8s3/R7YZh/fUm67sZFkk1xfNRlMmwdlitJFOjBotlfmbRnBFpMYx/EGN+EKwR1KgPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VfFN+Huq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718956115; c=relaxed/simple;
+	bh=v6YwumNUs0waG2EwfOyQoHGn/4/KwigQL/39chM0Fvo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CPTOVsxS/zKR+gWqsdx+VAzFi7UWA/FtN90rhlFdiWRPex1yoTOC24DAyek9knCf4NZHANzcxs23/mbBMf0NL0BJXfmleuaFV3oOVGkJDjVAL6/QKBe8xSJMdOPA6CbQMH1wGXv+MBOdGha322C48M06wQ3jx+9lZMM7nP1zCAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8rtbsNo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VfFN+Huq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED54C2BBFC;
-	Fri, 21 Jun 2024 07:47:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8rtbsNo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B11C4AF08;
+	Fri, 21 Jun 2024 07:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718956049;
-	bh=+n1uE1MrLQMFhNN+7jwAvQajIquhPpIK6hC9WogIb1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VfFN+HuqInMOioum3nOUUAxrTdtVdjbZPYztVw5rmIyxcrJKkfr//GPMMvssZ97mF
-	 bc16USxoEeLnXgt2+ZWBhKfJaZxF6h94UXw/6wVZmRCosK7MzmOV/zy0hFkL9oAOTY
-	 pLA96PVGw92edy7QBoumKi8/eHn/jpPrkZVF8iciR02xYit0fMKT5AKfFI28z2S/Xo
-	 7cTGqzDyXh0801wUzYZXCV5iG5ibGw7x8NUtpfJaovfGEj4d4xgd71H8ZAoG1ltp5R
-	 DaYwRoRG9BedSojyfpOn0Rc1oP+3UrPp/XDKQIT4MVW7tJ4oBBcq8vXMRLFcoNlAPv
-	 I1hJb8yogM0Jw==
-Date: Fri, 21 Jun 2024 09:47:19 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-mips@vger.kernel.org, Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Brian Cain <bcain@quicinc.com>, 
-	linux-hexagon@vger.kernel.org, Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org, 
-	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, linux-sh@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, libc-alpha@sourceware.org, 
-	musl@lists.openwall.com, ltp@lists.linux.it, stable@vger.kernel.org
-Subject: Re: [PATCH 01/15] ftruncate: pass a signed offset
-Message-ID: <20240621-jeden-hinab-e265b0d0807a@brauner>
-References: <20240620162316.3674955-1-arnd@kernel.org>
- <20240620162316.3674955-2-arnd@kernel.org>
+	s=k20201202; t=1718956115;
+	bh=v6YwumNUs0waG2EwfOyQoHGn/4/KwigQL/39chM0Fvo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R8rtbsNod3y3nEH7edbhvyrTCt/qDY6rIHivMM7Rgtc0cgt36ot0CHofBYnxSZ5Nc
+	 k7kObC8Mqp3TVzVS2e/2ne6TIvUCVk0jxoWtkJU9J2oJd+eAZoGdkEav6jnVdJuqjn
+	 GPBcJryQBnuz0NadRpNQ/PrplMczLR9SWK9b2iUHAlGeneCtOETTwklUlhCXCuFFYV
+	 zQNj3Dt08k9IvmsGA7/ZjFDQ1o/YgO53Uo9j9NaOIAJvFvaCpO1jy7mdbCmNWw67zu
+	 MSJ3aeONhSLtPg5sC4F/nNhavLJ6iY4fX7sZdWKZop6tx9WrmFIABz9fad5XX0S4WJ
+	 k8iqBFSaeYr8Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sKZ0a-0062iE-M5;
+	Fri, 21 Jun 2024 08:48:32 +0100
+Date: Fri, 21 Jun 2024 08:48:32 +0100
+Message-ID: <8634p6ka7j.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<alexandru.elisei@arm.com>,
+	<catalin.marinas@arm.com>,
+	<linux-kernel@vger.kernel.org>,
+	<tglx@linutronix.de>,
+	<will@kernel.org>
+Subject: Re: [PATCH v2 5/5] arm64: irqchip/gic-v3: Select priorities at boot time
+In-Reply-To: <39b2bce8-3bc1-b1d9-3e4a-8132a92059c6@huawei.com>
+References: <20240617111841.2529370-1-mark.rutland@arm.com>
+	<20240617111841.2529370-6-mark.rutland@arm.com>
+	<39b2bce8-3bc1-b1d9-3e4a-8132a92059c6@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240620162316.3674955-2-arnd@kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: liaochang1@huawei.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexandru.elisei@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jun 20, 2024 at 06:23:02PM GMT, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The old ftruncate() syscall, using the 32-bit off_t misses a sign
-> extension when called in compat mode on 64-bit architectures.  As a
-> result, passing a negative length accidentally succeeds in truncating
-> to file size between 2GiB and 4GiB.
-> 
-> Changing the type of the compat syscall to the signed compat_off_t
-> changes the behavior so it instead returns -EINVAL.
-> 
-> The native entry point, the truncate() syscall and the corresponding
-> loff_t based variants are all correct already and do not suffer
-> from this mistake.
-> 
-> Fixes: 3f6d078d4acc ("fix compat truncate/ftruncate")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+On Fri, 21 Jun 2024 07:23:54 +0100,
+"Liao, Chang" <liaochang1@huawei.com> wrote:
+>=20
+>=20
+>=20
+> =E5=9C=A8 2024/6/17 19:18, Mark Rutland =E5=86=99=E9=81=93:
+> >  	cpus_have_group0 =3D gic_has_group0();
+>=20
+> > +#define __gicv3_prio_to_ns(p)	(0xff & ((p) << 1))
+> > +#define __gicv3_ns_to_prio(ns)	(0x80 | ((ns) >> 1))
+>=20
+> What about refactoring the gic_has_group0() using the mapping macros
+> between PMR priority and GIC priority like this:
+>=20
+> ---------------%<-----------------
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -882,6 +882,7 @@ static bool gic_has_group0(void)
+>  {
+>         u32 val;
+>         u32 old_pmr;
+> +       u32 prio =3D BIT(8 - gic_get_pribits());
+>=20
+>         old_pmr =3D gic_read_pmr();
+>=20
+> @@ -896,12 +897,12 @@ static bool gic_has_group0(void)
+>          * becomes 0x80. Reading it back returns 0, indicating that
+>          * we're don't have access to Group0.
+>          */
+> -       gic_write_pmr(BIT(8 - gic_get_pribits()));
+> +       gic_write_pmr(prio);
+>         val =3D gic_read_pmr();
+>=20
+>         gic_write_pmr(old_pmr);
+>=20
+> -       return val !=3D 0;
+> +       return val !=3D (__gicv3_prio_to_ns(__gicv3_ns_to_prio(prio)));
+>  }
+> --------------->%-----------------
 
-Looks good to me,
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+No, that's terrible, and makes it simply impossible to understand what
+is happening without looking at 3 layers of indirection.
+
+Read the comment, and realise that the code implements exactly that.
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
