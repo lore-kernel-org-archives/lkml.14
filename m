@@ -1,152 +1,106 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A07915444C;
-	Fri, 21 Jun 2024 13:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E4D155380
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718975616; cv=none; b=h3zPKd3KZYl4ESdqwUZVgMRwoLq4C5UVxAULJSlTB+9dj7UHYlfSFa3ImHL0696yXyD+TRLE3lNY2+pCeBdPizKVeXB9XNUWsEZf8CM9rE96O8vfVwAUYv1hfA652fn/t+i79w9na9ZM7R6Ivff+hVeoFvbw0x1vcGE9W1eSuGc=
+	t=1718975666; cv=none; b=dEeUHhbAGmHVvU2uyYca1vxcw76/mrYDLRICcffAxNjcbOJcuJGDGnSHrM3y8oFkWrX4wiQFd8n3dbCBarISAdw2rXmjbhK2k1WiQDKi8+UncYes61fqrfpTNlS7ENutesip4iyx6TtxWlrC7u8N+ZVN6HOMTvMduxxffvSEDa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718975616; c=relaxed/simple;
-	bh=WQsisy3R83VOdcBN5ISga9KLt1DhdQDaVlt49Nw2AZE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aSefwhVd0rNGhuinUqMUrUFSLtArN477fDcYsSZNJnFLOCltZsZ7CEfiJt7Ywhx+FoeS9pg6gtz4Tp3FMKBHmWid6C7I8CP9DpbaVvRH13ZfpjU6euIcElKU2UwRJ/4aZjP2S9WM/OwsgRD+D0DTbAN3UEsAjKuEJSb2QAB3x6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=WweC6dPU; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1718975666; c=relaxed/simple;
+	bh=lT3/0UqtMDn26n/9FLC4BSIBh/uUYJWYvZjdb5CfcLw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lBkKYQ10rUwx+pWfVxm18lWSmcLm0qOAg60hzNPzcGTXyjuy+NYzSB47tiIcKwlKKfEs7vTI8033X+yP5nU5Div3pahmgxI+NB7BpZdEXBpg3UYto8iukEuQxzjLQe52uD/9Hl6LVEVBAR2UX9WM5y85SUQU3DCkT+/5mCjzFU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IBCJA1WN; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="WweC6dPU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=b29xoMgpaZYss8C1W6FlfyXZaKncrRZNVZcstAF/Ncg=; b=WweC6dPUYHi8DEVygI3BSkBQmQ
-	Ae7doyUsfR9TzH6E1g77VsjyTNxEYnc0nDKgESK1+avBGUYJz9RRo3yxsk2lZBbrVyp5ZzAHLTOOt
-	WC5dLrl4TLmItYcrp1oQ3shB3jZCmoo45ZyT2C+BXSqoSraTgs1fuWJh1+X4u/MqYoVNtmrnRW0VP
-	ANCq0ruG86bxmleHhW6s4BqhtRhwomsYZAMdRM3osz/Y/TTjoTJn3cHn2q4QuvQ0SqrBH3aibM7NP
-	oEnLSzpI7FlrXZAU1za2Ixd48OJ2PGCA/0b4SncUWvLFM4p6L1ixyc8a+7TDnYyQraZGgaZNkxP3P
-	DxMpAong==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sKdg7-0003iB-W7; Fri, 21 Jun 2024 14:47:44 +0200
-Received: from [178.197.248.18] (helo=linux.home)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sKdg7-000Kcg-0M;
-	Fri, 21 Jun 2024 14:47:42 +0200
-Subject: Re: [RFC net-next 1/9] skb: introduce gro_disabled bit
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Yan Zhai <yan@cloudflare.com>, netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Willem de Bruijn <willemb@google.com>, Simon Horman <horms@kernel.org>,
- Florian Westphal <fw@strlen.de>, Mina Almasry <almasrymina@google.com>,
- Abhishek Chauhan <quic_abchauha@quicinc.com>,
- David Howells <dhowells@redhat.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- David Ahern <dsahern@kernel.org>, Richard Gobert <richardbgobert@gmail.com>,
- Antoine Tenart <atenart@kernel.org>, Felix Fietkau <nbd@nbd.name>,
- Soheil Hassas Yeganeh <soheil@google.com>,
- Pavel Begunkov <asml.silence@gmail.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <cover.1718919473.git.yan@cloudflare.com>
- <b8c183a24285c2ab30c51622f4f9eff8f7a4752f.1718919473.git.yan@cloudflare.com>
- <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <44ac34f6-c78e-16dd-14da-15d729fecb5b@iogearbox.net>
-Date: Fri, 21 Jun 2024 14:47:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBCJA1WN"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dff06b3f413so1916372276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 06:14:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718975664; x=1719580464; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=St4J3uvn8l8JSYyCUFuUaA3lT6tDkhwwUDqJHgH5Ff8=;
+        b=IBCJA1WN+2UAECsHaPoXrMbwYXAh4dh927AK12Ir6t7/AxpjvpP8cxiKigm5UKltf3
+         utnrzkdAunvrScCGfbwbX3l8xBxqdU1vVhQvV/9B5MeJ7Rh7sasyyd3bZCkaMZRPZZmq
+         vU3zwJCPBb45q2PPFtqWq+IQzQi5DDI7BDdbE0Go4Zi1GBJOioWTYs/cZLvo2DYzbnHI
+         1l6+nKj8ILVHkq1sqW8EbUPPqY9Icf6k4fwayB73M/App05ZDO4cSDB34jdwTWijZoNY
+         4Oxb1+ULTDtmeasIidy+nFSWgxx5zcTDtT11lULNy6Da4dGzd8lKYtZhrFIBbfBCAh6D
+         M0ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718975664; x=1719580464;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=St4J3uvn8l8JSYyCUFuUaA3lT6tDkhwwUDqJHgH5Ff8=;
+        b=UzLS1KLP7Gf+/FkqTqkuDhxNJAWknabrdS9k29UaHAexSMYBtOr2OPJaLGJpJesaTt
+         tblwpi2HONp6szk+SDB6h/h/zgH3N1oyc+cv+qdNPaj5X5E2lERIBKs6jFUCS820T++H
+         klqOf0SMd+i/mit61GmKp0X0+qPl18Zts8dszcgjHx7+k/O7P4qrWB+EUAQo8AobhsQi
+         7rO9HDDJ98gNra6eLcdbYQ5eICIWwCWdEpsX3/oN56qBuzg6pglzUZbCQYPpZKlO0u7n
+         QhH3GiptmRcWskEYJkCXtl+1Ad+JI8k+INenCYK1F7JdCF7ozOTgCMRVN0lAIkXi1MuD
+         X7pg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNjfabZl239lD+XeaHg9ujCrO8WMY4ZetanHrOXz/yxZc8JCUlK17ronqemunB25lOQf0WCkDpiiPPynSEYjlCUjbBIVCdlTrFjP8U
+X-Gm-Message-State: AOJu0YzM/oKP3vcvagAsNfwFZMSwZ23zm0F2BUc0VwYfP22Bu2laFG2K
+	bgQu0XeketZefufy8RhvHjiYz35uSGePoK7/1UOk3RmtRSKfueoUOQAZT64HXQZWvy9LeFO6sLp
+	9vyh3Nlp0+O++xEMB0T9u85WUKDjKTVD1GrfYsA==
+X-Google-Smtp-Source: AGHT+IF5Kjmxgdie6GcMoOwWvEJr0hx8dV3HK+rzPmDaF3nNfHrnmvu2DU8t6Caag/RxJgO2Tk62vCZRxGA02P6OtL0=
+X-Received: by 2002:a25:820d:0:b0:e02:c4fa:2180 with SMTP id
+ 3f1490d57ef6-e02c4fa246bmr6862131276.14.1718975664432; Fri, 21 Jun 2024
+ 06:14:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27313/Fri Jun 21 10:28:08 2024)
+References: <20240619183255.34107-1-brgl@bgdev.pl> <20240619183255.34107-3-brgl@bgdev.pl>
+ <henuash23dwkj5fcmub6sabygwo4kam7fgots2pp2j3eu4asuk@cn3o7a62lo74>
+In-Reply-To: <henuash23dwkj5fcmub6sabygwo4kam7fgots2pp2j3eu4asuk@cn3o7a62lo74>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Fri, 21 Jun 2024 15:14:13 +0200
+Message-ID: <CACMJSes7XcXPZt8NgZm9mQ7h2B6A=+mL13gpZEHY6UnTFqXdOA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sa8775p-ride-r3: add new board file
+To: Andrew Halaney <ahalaney@redhat.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/21/24 2:15 PM, Willem de Bruijn wrote:
-> Yan Zhai wrote:
->> Software GRO is currently controlled by a single switch, i.e.
->>
->>    ethtool -K dev gro on|off
->>
->> However, this is not always desired. When GRO is enabled, even if the
->> kernel cannot GRO certain traffic, it has to run through the GRO receive
->> handlers with no benefit.
->>
->> There are also scenarios that turning off GRO is a requirement. For
->> example, our production environment has a scenario that a TC egress hook
->> may add multiple encapsulation headers to forwarded skbs for load
->> balancing and isolation purpose. The encapsulation is implemented via
->> BPF. But the problem arises then: there is no way to properly offload a
->> double-encapsulated packet, since skb only has network_header and
->> inner_network_header to track one layer of encapsulation, but not two.
->> On the other hand, not all the traffic through this device needs double
->> encapsulation. But we have to turn off GRO completely for any ingress
->> device as a result.
->>
->> Introduce a bit on skb so that GRO engine can be notified to skip GRO on
->> this skb, rather than having to be 0-or-1 for all traffic.
->>
->> Signed-off-by: Yan Zhai <yan@cloudflare.com>
->> ---
->>   include/linux/netdevice.h |  9 +++++++--
->>   include/linux/skbuff.h    | 10 ++++++++++
->>   net/Kconfig               | 10 ++++++++++
->>   net/core/gro.c            |  2 +-
->>   net/core/gro_cells.c      |  2 +-
->>   net/core/skbuff.c         |  4 ++++
->>   6 files changed, 33 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
->> index c83b390191d4..2ca0870b1221 100644
->> --- a/include/linux/netdevice.h
->> +++ b/include/linux/netdevice.h
->> @@ -2415,11 +2415,16 @@ struct net_device {
->>   	((dev)->devlink_port = (port));				\
->>   })
->>   
->> -static inline bool netif_elide_gro(const struct net_device *dev)
->> +static inline bool netif_elide_gro(const struct sk_buff *skb)
->>   {
->> -	if (!(dev->features & NETIF_F_GRO) || dev->xdp_prog)
->> +	if (!(skb->dev->features & NETIF_F_GRO) || skb->dev->xdp_prog)
->>   		return true;
->> +
->> +#ifdef CONFIG_SKB_GRO_CONTROL
->> +	return skb->gro_disabled;
->> +#else
->>   	return false;
->> +#endif
-> 
-> Yet more branches in the hot path.
-> 
-> Compile time configurability does not help, as that will be
-> enabled by distros.
-> 
-> For a fairly niche use case. Where functionality of GRO already
-> works. So just a performance for a very rare case at the cost of a
-> regression in the common case. A small regression perhaps, but death
-> by a thousand cuts.
+On Thu, 20 Jun 2024 at 18:04, Andrew Halaney <ahalaney@redhat.com> wrote:
+>
+> > +
+> > +&mdio {
+> > +     compatible = "snps,dwmac-mdio";
+> > +     #address-cells = <1>;
+> > +     #size-cells = <0>;
+> > +
+> > +     sgmii_phy0: phy@8 {
+> > +             compatible = "ethernet-phy-id31c3.1c33";
+> > +             reg = <0x8>;
+> > +             device_type = "ethernet-phy";
+> > +             interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
+> > +             reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
+> > +             reset-assert-us = <11000>;
+> > +             reset-deassert-us = <70000>;
+>
+> I need to read your other series still wrt "ocsgmii", but any chance you
+> have access to docs indicating the reset timing? I've never had docs for
+> the specific Marvell phy on the prior board or the Aquantia one on the
+> new board...
+>
 
-Mentioning it here b/c it perhaps fits in this context, longer time ago
-there was the idea mentioned to have BPF operating as GRO engine which
-might also help to reduce attack surface by only having to handle packets
-of interest for the concrete production use case. Perhaps here meta data
-buffer could be used to pass a notification from XDP to exit early w/o
-aggregation.
+I have but they're not public. :(
+
+> Boot time is something automotive is always concerned over, so I just
+> want to make sure that this timing isn't any longer than it needs to be.
+> Right now it looks the same as the Marvell phy's in the "v2" boards etc
+> and that made me raise my eyebrows.
+>
+
+That's a good point but what else can we do? This should typically
+execute in its own thread anyway.
+
+Bart
