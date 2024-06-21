@@ -1,97 +1,137 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4811216A927
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD64416A927;
+	Fri, 21 Jun 2024 20:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719000172; cv=none; b=ui1mL0p6Se0c56iV8T1CHF4cQri+Ku+plgW/Qjf4Zyii/N7Cq35cixPmMSxno/wcnm+Dau5/EemfTbtQOR8KjSmJ5KOL/Hz0SKJZlQQ9GWfNY67TQZwAT+8jZ7EtxBMTA82ek3j0yn8V7Y1GWcwVngNQbcuXzdboXEdyQ4Fofb0=
+	t=1719000249; cv=none; b=WUk3xw7bJTZWb9IUy5cuTDnJAA9VfyZXUSZACtImzJKo6VKeb+eW9oGEj6FGfFlA/PWdN/EEyusMgX/zwyIRMUNlZ9ABP/BPNcJZH2UO0j0Zr/cakdSQ4OU7thGh0vw6sFqaY6p2OfWeN8RmQvSJOxOQ9LPUj4uRKgsog3BsgvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719000172; c=relaxed/simple;
-	bh=xLxrckKxenRWojAVtNotEwtfDdxzK9gUNGs+uK81Eo8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ayAmDWd/rMPtofp+BUL8xKNNGDtp9TNeYY2/TCmwnb5hBedU0O1+0BfoNnNEaPxvWbw5hTIKglht7VaziDEROzcOr/hmmGOkPP6Qj6tX0N0YC5VxJZ40XpFieWYSBPGkrVnPJ2ltjedgSZ5QATaX3fY3pp6jw1c6lNFgDQLdcHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MYjh5UiL; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1719000249; c=relaxed/simple;
+	bh=g1gIkh1N7dpwladx/+giHa5C+3qDTtIwQQCFFklKWwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THH/rYaAAxFbWYiuiebmCBOKaqbuOAl778QH00wucvoWl1MOgBm88fZYs/xi88QwaJ5XJkE4hRKhkweDT/UeBEuIQD0ryY0DWDT6RRSNBm5+k0IB+6ZB8FwP3Nzp/wwyX2czIShs6pJSQmygIxS/TrVRTn/eOKbe33HT/d+O9xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJ1sMRLZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MYjh5UiL"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-444cd0ee46aso1745331cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719000169; x=1719604969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4/uBKlDZ6s/NosH2EbtFFnSeeJIPIQZN1klDMiCHdsc=;
-        b=MYjh5UiLSKQ9QSNp2s0TDYbL/Ebq7cZGYi2VEbrO92CJpalLsuJLrlHvtZgP4hbGJs
-         YP69eMyxDQgI0QhR2ansCmUD7lt/CDXnU+nRVM6eJFhKfFeSRKjCrEUDuILU1fvaZSQ/
-         b8YI+Li9izKd3WVVQ7kGsMm1IKMcUBPQsIxz8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719000169; x=1719604969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4/uBKlDZ6s/NosH2EbtFFnSeeJIPIQZN1klDMiCHdsc=;
-        b=QdZqsXU007o0tVyl4K9iCisDK41eUbwb6A1R4rFm7FYGB99ACN80jewNwaFPQ/goK0
-         DJ3EntPm0GnkHCiMf+SHHkjfRqdOpUzGLnegCJgD6I/mPwhbcUWEHa5wa4rKSVi40/t3
-         Kp4iyWM3UinWmMGecAk0GS+9FME5hVESIzVh4pgARenAGtppF4ImaOQN5UpIXpbM/0DZ
-         Ek5s6Hz0i4Hd4PDmvqLSw1gl7xX8KOy0/uf+ylx2flbFwQxjexXse3hplTA7K6Txb8BH
-         gI/DRE1DXk7aeXFZFIk+/bENsYKx57Tttf9SdmgZhgCdZi+ITti4j6gsnlAqIJf5rB6U
-         R7zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVP1ynvLPW150Pz/bJgY+tEkVwL5IACAMaKMyZM+iD8n3RS92Vk412iP4kMcCQedy6gsUL4Wbv49ZsaGaEYJYdlS43Sh48atd47zh8c
-X-Gm-Message-State: AOJu0YzOF5sAvwksNdOcZxY4GjECmVUhI3JYrO3HgMSble7D5sKRE2Z4
-	VSt88w6J+1TMdjPuhj6BBhyTxF+/5ESCQNUVAKrLwOJx/6KaUZ7IHqdxc4M4D0umGp5IAsYmPb0
-	=
-X-Google-Smtp-Source: AGHT+IEkzeyob5RALDSXFW9dpI2AGOr7t6DG55Lf4Sgp/2zvLrwwP9ufCN9WGmxiNZMI4hfipbESbw==
-X-Received: by 2002:ac8:5a52:0:b0:444:a628:6a1b with SMTP id d75a77b69052e-444a7a1e0f0mr99906061cf.10.1719000165428;
-        Fri, 21 Jun 2024 13:02:45 -0700 (PDT)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444cec59d0esm67511cf.72.2024.06.21.13.02.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 13:02:44 -0700 (PDT)
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4405dffca81so280461cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 13:02:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWkj74A+m9dcCrHbWBhZg1PRHtnNpyRuELhnijotTKIGastf+Wwb35k7PEAHmBk2p3zIi115ITO7XuYOvlGxeMFF15+CoOPxqHM3KJ4
-X-Received: by 2002:ac8:7d49:0:b0:441:55ac:c490 with SMTP id
- d75a77b69052e-444ce362ac9mr242691cf.20.1719000164202; Fri, 21 Jun 2024
- 13:02:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJ1sMRLZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B01C2BBFC;
+	Fri, 21 Jun 2024 20:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719000249;
+	bh=g1gIkh1N7dpwladx/+giHa5C+3qDTtIwQQCFFklKWwo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OJ1sMRLZ4WzWNLmbaZ3AcgUCaOKrV0yT4+JpzN9hMhj4m1eNv31fGmCGTzG7No0vo
+	 ef8aa/lU2ERbrgaIMqv/gNmBsOfLkJ7jlSCaV1FW0r7peC/xGAYRICYEOgnBgatmgo
+	 5QIc1Y5PYD+MVbW7Zw8Ag0WoNEVU1lJfcGabPwRJDwRo2JaAbsNTne5O2mSLgNHqYM
+	 5Uh3tejy9VUI/o8ifogC1yI2srTWsRGbyX8tD3dR09m7/XzRxwt1xL1zL3F6n3Psz9
+	 CO+BnNIo+lx7e6VDcoYO2dpewL/xRawV6lFjo7Oyz+VnshxPZvGVNUptMtjoM+PZX8
+	 HiYeRhcPV4UCw==
+Date: Fri, 21 Jun 2024 13:04:08 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: chandan.babu@oracle.com, dchinner@redhat.com, hch@lst.de,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, catherine.hoang@oracle.com,
+	martin.petersen@oracle.com
+Subject: Re: [PATCH 01/13] xfs: only allow minlen allocations when near ENOSPC
+Message-ID: <20240621200408.GA103014@frogsfrogsfrogs>
+References: <20240621100540.2976618-1-john.g.garry@oracle.com>
+ <20240621100540.2976618-2-john.g.garry@oracle.com>
+ <20240621194225.GR3058325@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621131648.131667-1-tejasvipin76@gmail.com>
-In-Reply-To: <20240621131648.131667-1-tejasvipin76@gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 21 Jun 2024 13:02:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WDA8LTpr84zfTqefFwxpbKC+rVo1BsSAVGVHReC3X0=w@mail.gmail.com>
-Message-ID: <CAD=FV=WDA8LTpr84zfTqefFwxpbKC+rVo1BsSAVGVHReC3X0=w@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: asus-z00t-tm5p5-n35596: transition to mipi_dsi
- wrapped functions
-To: Tejas Vipin <tejasvipin76@gmail.com>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621194225.GR3058325@frogsfrogsfrogs>
 
-Hi,
+On Fri, Jun 21, 2024 at 12:42:25PM -0700, Darrick J. Wong wrote:
+> On Fri, Jun 21, 2024 at 10:05:28AM +0000, John Garry wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > When we are near ENOSPC and don't have enough free
+> > space for an args->maxlen allocation, xfs_alloc_space_available()
+> > will trim args->maxlen to equal the available space. However, this
+> > function has only checked that there is enough contiguous free space
+> > for an aligned args->minlen allocation to succeed. Hence there is no
+> > guarantee that an args->maxlen allocation will succeed, nor that the
+> > available space will allow for correct alignment of an args->maxlen
+> > allocation.
+> > 
+> > Further, by trimming args->maxlen arbitrarily, it breaks an
+> > assumption made in xfs_alloc_fix_len() that if the caller wants
+> > aligned allocation, then args->maxlen will be set to an aligned
+> > value. It then skips the tail alignment and so we end up with
+> > extents that aren't aligned to extent size hint boundaries as we
+> > approach ENOSPC.
+> > 
+> > To avoid this problem, don't reduce args->maxlen by some random,
+> > arbitrary amount. If args->maxlen is too large for the available
+> > space, reduce the allocation to a minlen allocation as we know we
+> > have contiguous free space available for this to succeed and always
+> > be correctly aligned.
+> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > ---
+> >  fs/xfs/libxfs/xfs_alloc.c | 19 ++++++++++++++-----
+> >  1 file changed, 14 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+> > index 6c55a6e88eba..5855a21d4864 100644
+> > --- a/fs/xfs/libxfs/xfs_alloc.c
+> > +++ b/fs/xfs/libxfs/xfs_alloc.c
+> > @@ -2409,14 +2409,23 @@ xfs_alloc_space_available(
+> >  	if (available < (int)max(args->total, alloc_len))
+> >  		return false;
+> >  
+> > +	if (flags & XFS_ALLOC_FLAG_CHECK)
+> > +		return true;
+> > +
+> >  	/*
+> > -	 * Clamp maxlen to the amount of free space available for the actual
+> > -	 * extent allocation.
+> > +	 * If we can't do a maxlen allocation, then we must reduce the size of
+> > +	 * the allocation to match the available free space. We know how big
+> > +	 * the largest contiguous free space we can allocate is, so that's our
+> > +	 * upper bound. However, we don't exaclty know what alignment/size
+> > +	 * constraints have been placed on the allocation, so we can't
+> > +	 * arbitrarily select some new max size. Hence make this a minlen
+> > +	 * allocation as we know that will definitely succeed and match the
+> > +	 * callers alignment constraints.
+> >  	 */
+> > -	if (available < (int)args->maxlen && !(flags & XFS_ALLOC_FLAG_CHECK)) {
+> > -		args->maxlen = available;
+> > +	alloc_len = args->maxlen + (args->alignment - 1) + args->minalignslop;
+> 
+> Didn't we already calculate alloc_len identically under "do we have
+> enough contiguous free space for the allocation?"?  AFAICT we haven't
+> alter anything in @args since then, right?
 
-On Fri, Jun 21, 2024 at 6:17=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail.com=
-> wrote:
->
-> Use functions introduced in commit 966e397e4f60 ("drm/mipi-dsi:
-> Introduce mipi_dsi_*_write_seq_multi()") and commit f79d6d28d8fe
-> ("drm/mipi-dsi: wrap more functions for streamline handling") for the
-> asus-z00t-tm5p5-n35596 panel.
->
-> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
-> ---
->  .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 140 ++++++++----------
->  1 file changed, 59 insertions(+), 81 deletions(-)
+Oops, the first computation uses minlen, whereas this one uses maxlen.
+Disregard this question, please.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+--D
+
+> > +	if (longest < alloc_len) {
+> > +		args->maxlen = args->minlen;
+> 
+> Is it possible to reduce maxlen the largest multiple of the alignment
+> that is still less than @longest?
+> 
+> --D
+> 
+> >  		ASSERT(args->maxlen > 0);
+> > -		ASSERT(args->maxlen >= args->minlen);
+> >  	}
+> >  
+> >  	return true;
+> > -- 
+> > 2.31.1
+> > 
+> > 
+> 
