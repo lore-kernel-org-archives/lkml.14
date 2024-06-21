@@ -1,152 +1,188 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2047.outbound.protection.outlook.com [40.107.212.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A93155CA9;
-	Fri, 21 Jun 2024 05:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718948722; cv=none; b=owvleOkBk44NPzOwTBlryh66mURMsJwpGteGMjBjzgSia2TWERr6kLiX6SjzIKQot2GKz+iYr8xRUEhRQYBoRgbDmXZGFCQFmtK2icpSUskGNX5MpA7jg+5LuTiE1X62Boohaw8mdSJiAfJdLLuDaKbAOQxiOS8D8MV+aItLr2k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718948722; c=relaxed/simple;
-	bh=GN1oOMDS213cL8pOkvgVzj842DNfj9f/a/AxPNBm2PY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JLQiRWiNLnCG+6lNossS43Bq0kR5c1FTZlsImk24iANjomKxlCfbNOFtbsFzNGCJUh9EwS1BhqFlX578admiicFa6QutiOQJtpiQL94FSpENxWqn9VZhEGIRFBl1AscZ3fTMl6pylBM2TyFx1Hnu/M4evIHogwWSpHZ/3yLhgZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y8znqxa5; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C300A34;
+	Fri, 21 Jun 2024 05:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718948796; cv=fail; b=Y/EeNCA6OgcxoKl9tFEJeGaFJWnIhQnBzjaCMJPGRE3lKTEhgAHDqA1Qdc596OnyOLtxDwwYtGwDqfehbPT7IBb19s55UhNzRfb4ZELiPKdpx8zvSJXKpskMzFWEA3wGaaYtFbzYiyxb72J81We4xkxpnNVgJfIQn7Ze8r/zoQ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718948796; c=relaxed/simple;
+	bh=jSvGPEBc/1OQU28T3lVt1VfeylDp6cByFD9uwkW69xE=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bF5fzT4hkvF+86pKj1wAhS3Y/EwikXPZqdGTcaugpmiGForoVhmHDqpiaJ0Tuc3fvNMXnuUfGRDCFZfnt0TFRX5udOFn22Yx8QJdQfdcoHt3uMlJYSyxrMr5ukKUspZ/bfDF217O0oamKK1rcAb1jDhYf3/8JVYaq16aQ83HsJk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r3CqK0Rs; arc=fail smtp.client-ip=40.107.212.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y8znqxa5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718948719;
-	bh=GN1oOMDS213cL8pOkvgVzj842DNfj9f/a/AxPNBm2PY=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=Y8znqxa5H60VPj/ZvGTZ6BeXB4aILZQuU0MrtgYdsOmZdd2VM+7t8fIZIsHak03r8
-	 ibGPC67MIf8VPL508V/FyShf+eTFFWLNd142SKQryPisPvJfwFyZWyyaZH4hoxLs9J
-	 d592GASpgneI80w5svT6ZOVojmLdhkmL+8jPQqclSDUGWVnytQsRPUeaPYugKCQ0Rm
-	 sknrTNdYZK2e4W1hOz5GSLHpWIkLdSIn94I0/X5/iqle9PTmp95JFG2OTKqxeSSMIA
-	 64JQaDCQ6+JI5XqAZdHjzhAkdp0MZbEde2z01rm8uK9ZRZCkEtjsx04f9MhMyuCo+W
-	 FpK0T1t6HT+FA==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4389E378143B;
-	Fri, 21 Jun 2024 05:45:12 +0000 (UTC)
-Message-ID: <0f9ec70e-2faf-4bb9-ae79-6cea8f4c3a66@collabora.com>
-Date: Fri, 21 Jun 2024 10:45:48 +0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r3CqK0Rs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ig7dWrwt9oTmUMNlCbnc4q69eC1c9SRVyDDIcOvTpW8iMVht+GstpinchTPWEi0gYG48sRLQ7Z6P4obPmaKWuTFr73ED2J1FsXcMtJhEOY3LCNYyAq3KFBBgknEISbfhJYumCWn5ehuESnBv6Iqk4D+vmoJxk1NLWiboUTZsfSOazzl/K40AqX5oDJ9CqF5T8srKzlwjjZ67cSbSgAnmmjnTWPR+FtkvjZfa9WKUV9/3WSyrTRmWCzJtIAmHS1QR0dxTBRJr8qLCHIv5+R/lldMFugCo08R62J7IQKfT+XnT2WNzNEiu1zDbFTYyfClRWoIETw+Mh8zPLd27X/sNLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9ysLAw7txxdOlxij8xkAnue/KWsvoqsjXGr++e5qfvw=;
+ b=IBUIDgnAboZU9wPvsOaurUzOeJQpAVdQfhMKhMwsDucguf9vndVodmUBatwVY0mYO2H8JimXfB8meKA/t7nB25vUYtnXk0cMoLJlQ58e6HH7tzhPS/hPQCHp7IekMaXuoFvP7KmaBE1syLE6VY8HgMs72FhFXmyd3CxdrWqGZ4Av1Y2fdmBL6XK/ZUBhJ8cPpTxyhmZZRMzqG0WYmLwyGTPefmOhoa9ajiCFuZGaNeAyzOyrM68JcQQLnjFiP5BaH5hYAUzgp2XcgwudZIo/wI40fLRAn3XKAS9QQQN6oETXShLIYQu7mc3spiVjcHgJMUueWikzjZNPP8sREcsARw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9ysLAw7txxdOlxij8xkAnue/KWsvoqsjXGr++e5qfvw=;
+ b=r3CqK0RslaMjvLVWqUlAARV/m0oq6MA5Ly0Pu8/v7+FZ1rkNXgQ7V9v9bauih5UWFlLZ+VGIux7G4I2Z6+S5hYHJ6N7UsxNw3tiYinPswvYAaBZEdhuw2OiAijClcYtjtwQ1fAEhPZFw1pcMlHVBQY08twGoxPmpcO3vSgqyAjs=
+Received: from SA9PR13CA0142.namprd13.prod.outlook.com (2603:10b6:806:27::27)
+ by SJ2PR12MB7893.namprd12.prod.outlook.com (2603:10b6:a03:4cc::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
+ 2024 05:46:31 +0000
+Received: from SN1PEPF0002BA4D.namprd03.prod.outlook.com
+ (2603:10b6:806:27:cafe::75) by SA9PR13CA0142.outlook.office365.com
+ (2603:10b6:806:27::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.32 via Frontend
+ Transport; Fri, 21 Jun 2024 05:46:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4D.mail.protection.outlook.com (10.167.242.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Fri, 21 Jun 2024 05:46:29 +0000
+Received: from BLRRASHENOY1 (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Jun
+ 2024 00:46:26 -0500
+From: Gautham R.Shenoy <gautham.shenoy@amd.com>
+To: Perry Yuan <perry.yuan@amd.com>, <rafael.j.wysocki@intel.com>,
+	<Mario.Limonciello@amd.com>, <viresh.kumar@linaro.org>
+CC: <Xinmei.Huang@amd.com>, <Xiaojian.Du@amd.com>, <Li.Meng@amd.com>,
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 7/9] cpufreq: amd-pstate: fix the MSR highest perf
+ will be reset issue while cpb boost off
+In-Reply-To: <df44ee42774efd7d1c656ed43ff3b35988e22e60.1718787627.git.perry.yuan@amd.com>
+References: <cover.1718787627.git.perry.yuan@amd.com>
+ <df44ee42774efd7d1c656ed43ff3b35988e22e60.1718787627.git.perry.yuan@amd.com>
+Date: Fri, 21 Jun 2024 11:16:24 +0530
+Message-ID: <87frt6voen.fsf@BLR-5CG11610CF.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@android.com
-Subject: Re: [PATCH] selftests/futex: Order calls in futex_requeue
-To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
- <andrealmeid@igalia.com>
-References: <20240619002204.2492673-1-edliaw@google.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240619002204.2492673-1-edliaw@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4D:EE_|SJ2PR12MB7893:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e6e6c6c-944a-4bee-0091-08dc91b57fa5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|82310400023|36860700010|1800799021|376011;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jQ96Oz5AcD0kKqfgZ3zmUP8y7Nihu5ZirmCP08ZvyU7OX+4XhsoUEfCGyxbk?=
+ =?us-ascii?Q?M3Qi/2S6v1qQlqeN/Y+nDWXFSDspNzrP3F4Unf+Z07uKBopnGbsmNF6E8hE+?=
+ =?us-ascii?Q?eoACb6y48yEWakrgp5P+jAD7VuqTd3xeXvpdKBC6AQpCBa2BgL8KyHid9ipY?=
+ =?us-ascii?Q?7I+uleJr/65AOaGUtWRnqQ9hSL0t/rZHnrTY3tub36+1NJ7P8CUJb357/gNO?=
+ =?us-ascii?Q?Wtt4sV/0RmCx2ZORyrN8uRoikrtYyo0BN/F0Yrp3W/+DekORVa1/cM8sJMVE?=
+ =?us-ascii?Q?I/RbtkdAYwSXx+aek6iJ+tyXXqZqsPaqjcw0kp89dMynbGnKFixn494nsIhZ?=
+ =?us-ascii?Q?ksvpStfO4WpgyemPSSY1Dv0xbkeFOBSJ6zjqxGPcZgJeOM2EyhSAwrjtIrAl?=
+ =?us-ascii?Q?uUN9QLrqc3K6smskrngGU6oB04+vfC18Ej4DCMz1rxr6F/wucRXSI8qrr05G?=
+ =?us-ascii?Q?SjFjBDNT2DfvEGttq2RktqssIsVzpEi48XmRA+Qcb3u0XdfEejQvWZV2QXZz?=
+ =?us-ascii?Q?X+6u5rCDguQXcW1DlhkmUki62u/GfX2eX+PZGU7r10rsqjdi5EGNY/ynAk6t?=
+ =?us-ascii?Q?DV8NhJxoXoPNtM2iQcZFayyhjOJx0QJNC+VQDrAofj1knE+3WVGnHSPI9HVF?=
+ =?us-ascii?Q?ixAkJ18axKUO6/FDHoF1tZZQcW+DqhT6hHY9+R0fpWQzYjs/q3aLTDUsHjc5?=
+ =?us-ascii?Q?tR1Sj2xXiB1bZISc0JWyyDBRGmqoNuIId44T90d1sQfec6sHHxyiPgdivuVq?=
+ =?us-ascii?Q?yDCVfhO59/3lyKHcWUxFxJUuwTX99t51pZYA5SdGFLm/ZC33C3n8gPx89KVt?=
+ =?us-ascii?Q?uYEc5BLUvol4acz9Ww1ZQihTOSyFOOFLBStaCkGDnKeUn/4C9CIi6nXI1CCr?=
+ =?us-ascii?Q?0vAvun1u5FLhMmLI/PulxOc7+L5jpDI5kCZfZZm25LyrstptA2YeKBCeIin8?=
+ =?us-ascii?Q?m1oJUbKmejNMEteyIjgTJqAEKKAtEsn64NROI/ZE1QbE0LsTre7lzSPrI5Rz?=
+ =?us-ascii?Q?WrUqhGK1QYcIDAGhM+3Mmr9zewmjH1yaX3mJZJze7nugHRs52Um0L2dxQ2jx?=
+ =?us-ascii?Q?3SRaJ1hhsu/SCbbMITXbGD6m9LUVHlE0NF66yRfuVnoxQyv07zS//ToEfHcr?=
+ =?us-ascii?Q?CqAPxxJ7RZb2eAjVLWAfzZAbVTlBQwV4PhaLybWHVAszk/YEJIyMroJpeT8m?=
+ =?us-ascii?Q?QYUjqQfdkDcCyouIhrXiYYuKHYEArBcLo4ZCCLw+qbhgW9q5nKCl4Y0nvPSG?=
+ =?us-ascii?Q?IKQ1/fsnd8Bbmx1xR32KrNO2BlRwiGL9E+EXTjTuT9O41/l5aogZfenonLlg?=
+ =?us-ascii?Q?rv57sUKMZucJTPmhC7Y6O5uUZvCXGEELlxAHZfV7Fp/9rU/w5DSBbXt0kut/?=
+ =?us-ascii?Q?UfiEZrS+cTNPf2Y7IrPNJlShRSZzVID92R3tNKWCOkBL5GYbEQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(82310400023)(36860700010)(1800799021)(376011);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 05:46:29.5614
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e6e6c6c-944a-4bee-0091-08dc91b57fa5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4D.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7893
 
-On 6/19/24 5:22 AM, Edward Liaw wrote:
-> Like fbf4dec70277 ("selftests/futex: Order calls to futex_lock_pi"),
-> which fixed a flake in futex_lock_pi due to racing between the parent
-> and child threads.
-> 
-> The same issue can occur in the futex_requeue test, because it expects
-> waiterfn to make progress to futex_wait before the parent starts to
-> requeue. This is mitigated by the parent sleeping for WAKE_WAIT_US, but
-> it still fails occasionally. This can be reproduced by adding a sleep in
-> the waiterfn before futex_wait:
-> 
-> TAP version 13
-> 1..2
-> not ok 1 futex_requeue simple returned: 0
-> not ok 2 futex_requeue simple returned: 0
-> not ok 3 futex_requeue many returned: 0
-> not ok 4 futex_requeue many returned: 0
-> 
-> Instead, replace the sleep with barriers to make the sequencing
-> explicit.
-> 
-> Fixes: 7cb5dd8e2c8c ("selftests: futex: Add futex compare requeue test")
-> Signed-off-by: Edward Liaw <edliaw@google.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Perry Yuan <perry.yuan@amd.com> writes:
 
+> From: Perry Yuan <Perry.Yuan@amd.com>
+>
+> Select the min perf to fix the highest perf value while update pstate
+> CPPC request MSR register, here it needs to limit the max perf value when
+> CPU boost is disabled in case of that highest perf value in the MSR will be
+> reset to original highest perf value which cause the BOOST control
+> failed.
+
+Perhaps we could rephrase this as
+
+"When Core Performance Boost is disabled by the user, the
+CPPC_REQ.max_perf should not exceed the nominal_perf since by definition
+the frequencies between nominal_perf and the highest_perf are in the
+boost range. Fix this in amd_pstate_update()"
+
+Also change the subject to
+
+"cpufreq:amd-pstate: Cap the CPPC.max_perf to nominal_perf if CPB is off"
+
+?
+>
+> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
+> Acked-by: Huang Rui <ray.huang@amd.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Other than that,
+
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 > ---
->  .../selftests/futex/functional/futex_requeue.c       | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/futex/functional/futex_requeue.c b/tools/testing/selftests/futex/functional/futex_requeue.c
-> index 51485be6eb2f..8f7d3e8bf32a 100644
-> --- a/tools/testing/selftests/futex/functional/futex_requeue.c
-> +++ b/tools/testing/selftests/futex/functional/futex_requeue.c
-> @@ -12,9 +12,9 @@
->  
->  #define TEST_NAME "futex-requeue"
->  #define timeout_ns  30000000
-> -#define WAKE_WAIT_US 10000
->  
->  volatile futex_t *f1;
-> +static pthread_barrier_t barrier;
->  
->  void usage(char *prog)
+>  drivers/cpufreq/amd-pstate.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index 299e52d4b17e..f2ccef089acc 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -524,6 +524,7 @@ static void amd_pstate_update(struct amd_cpudata *cpudata, u32 min_perf,
+>  			      u32 des_perf, u32 max_perf, bool fast_switch, int gov_flags)
 >  {
-> @@ -32,6 +32,8 @@ void *waiterfn(void *arg)
->  	to.tv_sec = 0;
->  	to.tv_nsec = timeout_ns;
+>  	u64 prev = READ_ONCE(cpudata->cppc_req_cached);
+> +	u32 nominal_perf = READ_ONCE(cpudata->nominal_perf);
+>  	u64 value = prev;
 >  
-> +	pthread_barrier_wait(&barrier);
+>  	min_perf = clamp_t(unsigned long, min_perf, cpudata->min_limit_perf,
+> @@ -543,6 +544,10 @@ static void amd_pstate_update(struct amd_cpudata *cpudata, u32 min_perf,
+>  	value &= ~AMD_CPPC_DES_PERF(~0L);
+>  	value |= AMD_CPPC_DES_PERF(des_perf);
+>  
+> +	/* limit the max perf when core performance boost feature is disabled */
+> +	if (!amd_pstate_global_params.cpb_boost)
+> +		max_perf = min_t(unsigned long, nominal_perf, max_perf);
 > +
->  	if (futex_wait(f1, *f1, &to, 0))
->  		printf("waiter failed errno %d\n", errno);
+>  	value &= ~AMD_CPPC_MAX_PERF(~0L);
+>  	value |= AMD_CPPC_MAX_PERF(max_perf);
 >  
-> @@ -70,13 +72,15 @@ int main(int argc, char *argv[])
->  	ksft_print_msg("%s: Test futex_requeue\n",
->  		       basename(argv[0]));
->  
-> +	pthread_barrier_init(&barrier, NULL, 2);
->  	/*
->  	 * Requeue a waiter from f1 to f2, and wake f2.
->  	 */
->  	if (pthread_create(&waiter[0], NULL, waiterfn, NULL))
->  		error("pthread_create failed\n", errno);
->  
-> -	usleep(WAKE_WAIT_US);
-> +	pthread_barrier_wait(&barrier);
-> +	pthread_barrier_destroy(&barrier);
->  
->  	info("Requeuing 1 futex from f1 to f2\n");
->  	res = futex_cmp_requeue(f1, 0, &f2, 0, 1, 0);
-> @@ -99,6 +103,7 @@ int main(int argc, char *argv[])
->  		ksft_test_result_pass("futex_requeue simple succeeds\n");
->  	}
->  
-> +	pthread_barrier_init(&barrier, NULL, 11);
->  
->  	/*
->  	 * Create 10 waiters at f1. At futex_requeue, wake 3 and requeue 7.
-> @@ -109,7 +114,8 @@ int main(int argc, char *argv[])
->  			error("pthread_create failed\n", errno);
->  	}
->  
-> -	usleep(WAKE_WAIT_US);
-> +	pthread_barrier_wait(&barrier);
-> +	pthread_barrier_destroy(&barrier);
->  
->  	info("Waking 3 futexes at f1 and requeuing 7 futexes from f1 to f2\n");
->  	res = futex_cmp_requeue(f1, 0, &f2, 3, 7, 0);
+> -- 
+> 2.34.1
 
--- 
-BR,
-Muhammad Usama Anjum
+--
+Thanks and Regards
+gautham.
