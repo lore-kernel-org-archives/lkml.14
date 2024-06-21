@@ -1,146 +1,187 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D9516D4F5;
-	Fri, 21 Jun 2024 21:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5212C54B;
+	Fri, 21 Jun 2024 21:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719004245; cv=none; b=MTRpWmyfLKCiPqvQI3LRMUDB1vbyyrtSt0N2i0RmbXqlnT19wI4XZK5k2zLK4xdesOmglYsYC0Dcp4cAjEjQGF7SCizA9GMY5uCnQxY0UKhzY2Xk9G5MjcJVIEUPiSkUIXoisq+Ln6lvG6rerCh/f3LXKYwfqeO7b3gYnXtQgZs=
+	t=1719004565; cv=none; b=Oy6QVzuQMPqBPG/oj0AaVkiRZy1I46MOyqtHaAZjkA3EzIJJQHZfHOfTtyUTfO1rfd3yM4jS6Hc5yG8khmjqhm7ONSdcOvHUFn4ndefXET1y4kVu6Wp+akIMwYxFUg2hxLCZQYkjTQ82YavJH3fxBeK3KbtqJDalE4HA8ImsGSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719004245; c=relaxed/simple;
-	bh=zUJGSvHvejhgjL0rRL/mZwojIs7MlPl8ZOdYcLKjUuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qq8dbWnKbl8dGVajjDKOOt26TmKmDAUlbEpUCTL0faD80Zhj0v+KFAUh1UH4mc320BUwifCTl/08EADv4s8KNwmLVzCR0gWOMKYi9eVbJev8HVATOdjkWpht9bOdWIDf6g67Wwx8tZQj0P8t94CJlvML2bp/I9Z/Wh2LgFZOejo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GxD+6qre; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719004565; c=relaxed/simple;
+	bh=nlhhoDL+rqMuVo+AQ/Y9fc6ZUUX3QAXxkvgmbqr0iPU=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=Mtl+Zc8WzsxIphjPWZ7LvJxKO2LXWrvQokdUITgufDEeCkQhX/PZ8OOUCCRTk+anH0/JziJob3zBcLUaJNPyqKewjmT96sB45uBTI6ddxgssrepoU3ZD+p7EfzfDekL1sic9jy8ds/ZRicSiMD55tQEQUxl4bz7sY9IHDn8GHD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=bmB6KSRx; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=W44u7wBG; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxD+6qre"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c8062f9097so1418136a91.3;
-        Fri, 21 Jun 2024 14:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719004244; x=1719609044; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jEAIfUzFhPU9cFCVgXbRv9q5vfFG7yQV5RUzcmK3UeQ=;
-        b=GxD+6qreD2D9LCQMbqVko2U2vPB3GZ00MC2OMLXLWliFbFPC/FXHRGVnx9rwHSAnw4
-         F10QfVmZ5Bd4MfI8YVxI41Fl3R4TThpSLPlFqEsE4N37+NxzQz49wliQHsKfbIfy2a90
-         ZU0ISHQEg4Qb57+ZY0+NrzxjiqzqhN1fpBSIGoOXyOapZFW9rOouGUy3tOnC7J+FG567
-         NVz5C/MV7oNnhEnVkYNjiq7UG9mIkICdjZ9hnfJ/j7Hx6ESakQDYvwaRb8UoncgAmiXD
-         hKZlVC2vaqI4NTZt4LR3Po9eeSzPGWYSxLRgu17GHvAe/7nYtNzwm5UH5lF9uDuPaOeH
-         gZ1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719004244; x=1719609044;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jEAIfUzFhPU9cFCVgXbRv9q5vfFG7yQV5RUzcmK3UeQ=;
-        b=n0F11MuUp4AhLZmVAmExSsWEsTXDlkzgPRzA+otyk5fGqPnsZ2cPMebfTBDzmJgXR5
-         qXFC72av/unf4H0xakr8i4q3Sroqcqw9cub0tqRxQUALfdZ0xCW7uy2v/flxk3EJ/J8c
-         /bET3l7+gRsj/bf61VaP9q3ManzsXln2dkro1CRvbaxoYbr/wsZLqegvWtZCSaQXyql/
-         CSXGfcrimKM4GPm7cOxLE4jKAe1cjBhyHW/uoiYYhulnGvUfZd+OGaVfVZ7ToZqDxqIq
-         E9uo1ffTA+RTz5yufDYN/ivsiYncLNKwjjbcxQ8UVszI1dsg7fYG4f4PRluw6zvSsnxv
-         TP3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWJCh33OPUNmQ0Tlcbh1A0gf13BqhXQV1ffQfHzdRuILNsmf17HN5AFWZrYlq+UHWHsaGY2lBbF2yhdqNRptx4NbDia6p3Ba9vSC/0LWEl2AH8+1ieMrj5d7bjQbhEsSPlaziv1yQ==
-X-Gm-Message-State: AOJu0YwpWtvutk+LiY6K/NcCJJeQA3xExuKAbaYZsXstK5lfHVcDmU5l
-	IE6KjJgkN8dyrCtHjfNT6vNMn48CIOsZVuTBmEIq3JMi3mctpbZC
-X-Google-Smtp-Source: AGHT+IEr2nv2Yr3awae4ls33FpFHb91mjs8IWuLVvNO/pjy3AjAgECWYNPtG1iZF3TpTRUNTcwCb3Q==
-X-Received: by 2002:a17:90a:c296:b0:2c7:a6d0:a0c4 with SMTP id 98e67ed59e1d1-2c7b5c8fdefmr9098527a91.27.1719004243574;
-        Fri, 21 Jun 2024 14:10:43 -0700 (PDT)
-Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e53e0a4dsm4087560a91.17.2024.06.21.14.10.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 14:10:43 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Fri, 21 Jun 2024 11:10:42 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Xavier <xavier_qy@163.com>
-Cc: longman@redhat.com, mkoutny@suse.com, lizefan.x@bytedance.com,
-	hannes@cmpxchg.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH-cpuset v5 1/2] Union-Find: add a new module in kernel
- library
-Message-ID: <ZnXsUnAi7VnX0tZJ@slm.duckdns.org>
-References: <b511173c-53fe-4a93-8030-d99ed1b65bd6@redhat.com>
- <20240621084952.209770-1-xavier_qy@163.com>
- <20240621084952.209770-2-xavier_qy@163.com>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="bmB6KSRx";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="W44u7wBG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1719004560;
+	bh=nlhhoDL+rqMuVo+AQ/Y9fc6ZUUX3QAXxkvgmbqr0iPU=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=bmB6KSRxFK+p8uog5dHiLhaeu6UFv7m6/tiH2MjYj2dQ7hMFvN/3p/m59bvcfA8sz
+	 O4rT71E/CDoafmsB1nKesE/ipRSnwCiPrj6Wm6FFjntf5opwhe0t01sN9N9cF6Nne9
+	 dZtlZ2jI9ubL7R+if/TrSCAe30v5GDhdGSAuzO94=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 1CD4C1286A09;
+	Fri, 21 Jun 2024 17:16:00 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id SBWYXv19uyzC; Fri, 21 Jun 2024 17:16:00 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1719004559;
+	bh=nlhhoDL+rqMuVo+AQ/Y9fc6ZUUX3QAXxkvgmbqr0iPU=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=W44u7wBG8+04C5WFoyNM15JOl7z0nP2nMDynRwuNBSBaIzgMbhxzBpVAzfZSWKIYu
+	 n0Y6/2G0se3oCJxZDwjk4V2GFEL/aSa2UpmwmHjUU3BqaE52PlyHjEJg6mTDL6TwlP
+	 xw6XBUWOYB4vJPUDEvu7QUbQ64B9FuogIIzAQH+8=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7F3DA12869EC;
+	Fri, 21 Jun 2024 17:15:59 -0400 (EDT)
+Message-ID: <317d2de5fdb5e27f8f493e0e0ad23640a41b6acf.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 6.10-rc4
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
+	 <torvalds@linux-foundation.org>
+Cc: linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel
+	 <linux-kernel@vger.kernel.org>
+Date: Fri, 21 Jun 2024 17:15:57 -0400
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621084952.209770-2-xavier_qy@163.com>
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Two fixes: one in the ufs driver fixing an obvious memory leak and the
+other (with a core flag based update) trying to prevent USB crashes by
+stopping the core from issuing a request for the I/O Hints mode page.
 
-On Fri, Jun 21, 2024 at 04:49:51PM +0800, Xavier wrote:
-> +/* Define a union-find node struct */
-> +struct uf_node {
-> +	struct uf_node *parent;
-> +	unsigned int rank;
-> +};
-> +
-> +/* Allocate nodes and initialize to 0 */
-> +static inline struct uf_node *uf_nodes_alloc(unsigned int node_num)
-> +{
-> +	return kzalloc(sizeof(struct uf_node) * node_num, GFP_KERNEL);
-> +}
+The patch is available here:
 
-This is a very unusual pattern for kernel data structure. Most data
-structures allow the member entry to be embedded in other structs or
-allocated in user-defined ways. Do they need to be allocated consecutively?
-If so, this might be problematic as e.g. 4096 entries, which doesn't sound
-too high, would already require consecutive 64k allocation, which is getting
-close to vmalloc territory if not already there.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-> +struct uf_node *uf_find(struct uf_node *node)
-> +{
-> +	struct uf_node *parent;
-> +
-> +	if (!node->parent) {
-> +		node->parent = node;
-> +		return node;
-> +	}
-> +
-> +	/*Find the root node and perform path compression at the same time*/
-> +	while (node->parent != node) {
-> +		parent = node->parent;
-> +		node->parent = parent->parent;
-> +		node = parent;
-> +	}
-> +	return node;
-> +}
-> +
-> +/*Function to merge two sets, using union by rank*/
-> +void uf_union(struct uf_node *node1, struct uf_node *node2)
-> +{
-> +	struct uf_node *root1 = uf_find(node1);
-> +	struct uf_node *root2 = uf_find(node2);
-> +
-> +	if (root1 != root2) {
-> +		if (root1->rank < root2->rank) {
-> +			root1->parent = root2;
-> +		} else if (root1->rank > root2->rank) {
-> +			root2->parent = root1;
-> +		} else {
-> +			root2->parent = root1;
-> +			root1->rank++;
-> +		}
-> +	}
-> +}
+The short changelog is:
 
-Code doesn't seem to suggest allocation needs to be consecutive tho. This is
-a bit too generic to route through the cgroup tree without wider reviews.
-When you post the next revision, can you please include Linus Torvalds
-<torvalds@linux-foundation.org> and Andrew Morton
-<akpm@linux-foundation.org> and point to some other possible usages in
-kernel?
+Bart Van Assche (2):
+      scsi: usb: uas: Do not query the IO Advice Hints Grouping mode page for USB/UAS devices
+      scsi: core: Introduce the BLIST_SKIP_IO_HINTS flag
 
-Thanks.
+Joel Slebodnick (1):
+      scsi: ufs: core: Free memory allocated for model before reinit
 
--- 
-tejun
+And the diffstat:
+
+ drivers/scsi/sd.c              | 4 ++++
+ drivers/ufs/core/ufshcd.c      | 1 +
+ drivers/usb/storage/scsiglue.c | 6 ++++++
+ drivers/usb/storage/uas.c      | 7 +++++++
+ include/scsi/scsi_devinfo.h    | 4 +++-
+ 5 files changed, 21 insertions(+), 1 deletion(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index fbc11046bbf6..fe82baa924f8 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -63,6 +63,7 @@
+ #include <scsi/scsi_cmnd.h>
+ #include <scsi/scsi_dbg.h>
+ #include <scsi/scsi_device.h>
++#include <scsi/scsi_devinfo.h>
+ #include <scsi/scsi_driver.h>
+ #include <scsi/scsi_eh.h>
+ #include <scsi/scsi_host.h>
+@@ -3118,6 +3119,9 @@ static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
+ 	struct scsi_mode_data data;
+ 	int res;
+ 
++	if (sdp->sdev_bflags & BLIST_SKIP_IO_HINTS)
++		return;
++
+ 	res = scsi_mode_sense(sdp, /*dbd=*/0x8, /*modepage=*/0x0a,
+ 			      /*subpage=*/0x05, buffer, SD_BUF_SIZE, SD_TIMEOUT,
+ 			      sdkp->max_retries, &data, &sshdr);
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index e5e9da61f15d..1b65e6ae4137 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -8787,6 +8787,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool init_dev_params)
+ 	    (hba->quirks & UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH)) {
+ 		/* Reset the device and controller before doing reinit */
+ 		ufshcd_device_reset(hba);
++		ufs_put_device_desc(hba);
+ 		ufshcd_hba_stop(hba);
+ 		ufshcd_vops_reinit_notify(hba);
+ 		ret = ufshcd_hba_enable(hba);
+diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+index b31464740f6c..8c8b5e6041cc 100644
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -79,6 +79,12 @@ static int slave_alloc (struct scsi_device *sdev)
+ 	if (us->protocol == USB_PR_BULK && us->max_lun > 0)
+ 		sdev->sdev_bflags |= BLIST_FORCELUN;
+ 
++	/*
++	 * Some USB storage devices reset if the IO advice hints grouping mode
++	 * page is queried. Hence skip that mode page.
++	 */
++	sdev->sdev_bflags |= BLIST_SKIP_IO_HINTS;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/usb/storage/uas.c b/drivers/usb/storage/uas.c
+index a48870a87a29..b610a2de4ae5 100644
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -21,6 +21,7 @@
+ #include <scsi/scsi.h>
+ #include <scsi/scsi_eh.h>
+ #include <scsi/scsi_dbg.h>
++#include <scsi/scsi_devinfo.h>
+ #include <scsi/scsi_cmnd.h>
+ #include <scsi/scsi_device.h>
+ #include <scsi/scsi_host.h>
+@@ -820,6 +821,12 @@ static int uas_slave_alloc(struct scsi_device *sdev)
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
+ 
++	/*
++	 * Some USB storage devices reset if the IO advice hints grouping mode
++	 * page is queried. Hence skip that mode page.
++	 */
++	sdev->sdev_bflags |= BLIST_SKIP_IO_HINTS;
++
+ 	sdev->hostdata = devinfo;
+ 	return 0;
+ }
+diff --git a/include/scsi/scsi_devinfo.h b/include/scsi/scsi_devinfo.h
+index 6b548dc2c496..1d79a3b536ce 100644
+--- a/include/scsi/scsi_devinfo.h
++++ b/include/scsi/scsi_devinfo.h
+@@ -69,8 +69,10 @@
+ #define BLIST_RETRY_ITF		((__force blist_flags_t)(1ULL << 32))
+ /* Always retry ABORTED_COMMAND with ASC 0xc1 */
+ #define BLIST_RETRY_ASC_C1	((__force blist_flags_t)(1ULL << 33))
++/* Do not query the IO Advice Hints Grouping mode page */
++#define BLIST_SKIP_IO_HINTS	((__force blist_flags_t)(1ULL << 34))
+ 
+-#define __BLIST_LAST_USED BLIST_RETRY_ASC_C1
++#define __BLIST_LAST_USED BLIST_SKIP_IO_HINTS
+ 
+ #define __BLIST_HIGH_UNUSED (~(__BLIST_LAST_USED | \
+ 			       (__force blist_flags_t) \
+
