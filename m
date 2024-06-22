@@ -1,60 +1,61 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BF04BAA6
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 22:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2B26DD08
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 22:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719093743; cv=none; b=DBV/4FHC405DLrguv6tD495RFIY4qVLRHdLz1yZIe5dUCVFqodZUbuysg3eVP59HNWwHZBLLto9XttWqlwmVyvyA1rO8KTUYGa/RwYRN1MC1a/HD9TUuR16qtmU2xUQLArVIilBK/6j9gHie0XCWfnZo9MGVOiYMfAG2sjnoIEU=
+	t=1719093743; cv=none; b=Mk+AAu1OBft4jMQxdMlwpXxIWWiIZDLu+EGXy83j5zjpp4N6Oo9q78+fdho4m4koal/EYY1OCHp545UuDH3ovoQtcGe4mwpO1QxPXk0xywRooB+TkWu0gJi/u6jKaR2qzdNUAAtl6jqHIywjXz50+Sw2SpZIU61Waruj6R2s3Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719093743; c=relaxed/simple;
-	bh=md7jhGKlOM+w6BZGeSXbU5W/Ury7H26Ee1cLS6Zhie8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VszG2Eal3+y6HVKen5tFDxuqDnmN7MHi4Q4dZb+YW5N1iPW28xF7NMaqZ5emZhX1k3YNvkycrHBBCPHvXvr2WtpLXjo/qKLr1J7TeoMF2tO31MBis0yKL4ns+urSj4wO5w2OG8Epjia3dRmrMnZ0eIX838NgIwhxgWBlQxmSoac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uCbOxzJI; arc=none smtp.client-ip=209.85.208.170
+	bh=h0lqf9slPd5eUxk6pPihIhSWYhdShDER4/lwQr5RwCE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BspAIggBAluEuTu+TLc/Ok/kW2gFQyWbapb7msJ0lz/hd2asdc8ktJwayrb9rcd/ZzJe5yjD10Bd8tABr3h6ASL8+uMw0u7VkuSAzOv7nTgI+D95fbCz79sqgTLnXxVR7c07Uy7F6VWCnzNGCBAcOb4BwGXfO95xVD59r4tjqN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CGiBKUyd; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uCbOxzJI"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ec50d4e47bso14978081fa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 15:02:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CGiBKUyd"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec50d4e46aso15444351fa.1
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 15:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719093739; x=1719698539; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=64LEVOrzgJygsjtslXFVKLGh/ZheVk3INSmy/1YhYkw=;
-        b=uCbOxzJI6TAxnSYrfZNTHOQPSu5SzqvrBMv0NsE1zdU8TBTmMXxkEssmpExNJfrucJ
-         Bw0bbTByhXJ67FUz5+w2J0wtwhhvEaDdyDKxmushv4B75aqK0eeu3SfXVRWE4OtQ/A6O
-         TUvqheET14qcfkBdeXvCbyvnMCrNRKckK3OvtG4IV//ii0RVf0tWLHAyl4v6a99PmLpe
-         bHCufAqbDO3ibULdw+lMi5xqhsC+UTvLz8zDqsVUbnJ9vNjXMBsHk5VWxiS0bHCMFFWl
-         POmk4EYXLeMdz2SqSoDheNreawGgDLOXZHrqgMt+kN9+zxvmewiXAotBLrAOzigPkO/s
-         KH4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719093739; x=1719698539;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1719093740; x=1719698540; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=64LEVOrzgJygsjtslXFVKLGh/ZheVk3INSmy/1YhYkw=;
-        b=TLgoOQhikXVEPqqfgp5UmXj5uNjb4lzwq4EWqx6/0b3i23KPGA4tNwbq/23UvhpIVU
-         ewIdBsWj2DJb53rdR6/3i0Z0Gtn+hDC5Krnrl66ZxixVYpUtdIXExQGk54OifvYuv5W3
-         IXYk7Nw3tVUAq+ZPShArSBlkD3Dv1uI2U4FhLFi5IQoGgd3+UfO2Am6bwwSfJJLhUujo
-         nNMtb7DNqL4yRbh61Lvh32f1LY07r7lxIoVduPAlEWRR8Ja4E2vtRIgCoLRSUsPe5uRz
-         OTHm6i/l962ScpCOftNBU89UfCrK6DYkub8GSv1sgmryIrFh/YvPzV3tqJt6iUB/mX69
-         JP4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU0iz3NddPad/en3XPyummqRyzTXZUuM3/3sVjf9psSNUhX0aBRNnRE7JlPShbrMiuu6LMlubIvW7Zy91JfGh8Yj1upiG5InHks3TDu
-X-Gm-Message-State: AOJu0YwoAlhTSkySouxSGoOHe8hy7Bo+/Hm0N0ZEDxNivsT5qPDQydB5
-	Gh7x40XdsZlKGRy7m74HP3cnDeelUXxse9qfjZ9YONuCsNz2+UNrwBeu167JdLw=
-X-Google-Smtp-Source: AGHT+IFzw1Gde3mqgvpH02c2bEnsd2XzVkvI/ckW5BdDtV7OdSLIwXAknbswVRWdkUx8lVNsTFkqhQ==
-X-Received: by 2002:a2e:9b96:0:b0:2ec:51b5:27c8 with SMTP id 38308e7fff4ca-2ec5b2dd919mr4402111fa.32.1719093738992;
-        Sat, 22 Jun 2024 15:02:18 -0700 (PDT)
+        bh=PaaD0TUxicSQ9bcBzddmbploW93tWtfw/qjS+oWjoTA=;
+        b=CGiBKUydMeXWqPLWpNGW0tW80g4XyuOuiHxWf2BC/IbSUKZHYl7nCt8DwuBDL7fwwr
+         dbBMaLkV9Iate91Kk+HQ4JRrWuoehZqkA1VCdrai4tYjEravGXIfWhWP9zQrvmuXP1PP
+         tMGwY4khF+FHGYY8UanHqdTmUUwbq3Lp51TnnU+UOY3sKJfrIRLZQ4xwvdGZIxX2DLAV
+         2YhPzZ44kEvr/SmkdpmOU58SzWERHjiqEuAL2kqES1hsDwueOof2IV0Kt+pFzYnMcv3o
+         hmWgrCkHCxnKZUQ0/9GJtNSlMEC6L7JGm9n+tbycIIp22TV6FiFqDi0S/6C4My+S6WFx
+         1+Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719093740; x=1719698540;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PaaD0TUxicSQ9bcBzddmbploW93tWtfw/qjS+oWjoTA=;
+        b=QcwR6cHyMyNL59MqEh4mrLA2muodWAktudF5P7XCmBm9cuMYzNlOBbD1HMl4dqXYXX
+         VUzLV8ISSrCYxaKv4Tuht+SlPh+0O1nd8EiIEswx68tih5fs0++Hzt+BexsbExVr8BYu
+         seyGWmZR1Y3v4iNQKNxb/u//799IJ62jMg3Nh99VRJQC3fuoGWO5nst21MJ22HgHI3+q
+         f7RN77pIsz8yZ5mQxxbUToUDZmwbWJ2VtVv1NhEldeLP2DMcHtrWaB2T7kLXjRjXsSen
+         2xy4UbaWdjRc1Pbt+Lqch3GvNGxTEpYzFpvYrH0YaC8jDLeqcK64QxzNYmq9yV5Kh0QO
+         muVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGcmoLJTElVqdysivNOsAzuWnhR1KhZHc0uWRVyydpe+y/eficCo4fpGTvmu5aXI1A73fz8YwY6xL/Q+fCzUcVa2sL+mNqcYpzdDPp
+X-Gm-Message-State: AOJu0YwvKiSp5Yt3WmAeD3IGeD96JZWsOT35ucp8Sy00PQKB3WidWBYy
+	NlfBk8P1V/em0P+YqTM68fi6h0yp+PCTEWUE+OkSEdupiDszKAwfBKueqakbR2c=
+X-Google-Smtp-Source: AGHT+IH31u6dzIAuNw0VNvPZ2GqCzxLoG78KUvKhD6XvPjNqmtALsT04SfRsx1ap83ri/b4wewW5YQ==
+X-Received: by 2002:a2e:3218:0:b0:2ec:5685:f06b with SMTP id 38308e7fff4ca-2ec579837bamr11068451fa.27.1719093740178;
+        Sat, 22 Jun 2024 15:02:20 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec55e56ea5sm2502051fa.112.2024.06.22.15.02.18
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec55e56ea5sm2502051fa.112.2024.06.22.15.02.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 15:02:18 -0700 (PDT)
+        Sat, 22 Jun 2024 15:02:19 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v3 00/13] drm/msm/hdmi: rework and fix the HPD even
- generation
-Date: Sun, 23 Jun 2024 01:02:13 +0300
-Message-Id: <20240623-fd-hdmi-hpd-v3-0-8645a64cbd63@linaro.org>
+Date: Sun, 23 Jun 2024 01:02:15 +0300
+Subject: [PATCH v3 02/13] drm/msm/hdmi: move the alt_iface clock to the hpd
+ list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,10 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOVJd2YC/23OywqDMBCF4VcpWXckndQLXfU9iotoRhNajUwkV
- MR3bxQKXXT5L87HWUUgdhTE7bQKpuiC82MKdT6J1uqxJ3AmtUCJV5kjQmfAmsGBnQyQqorKUFN
- okiItJqbOvQ/tUafu2A8wWyb9NZQslESZ56iysqhQwQWSNvOSNZqXYJ8+3l9u1Owzz/2OWhdmz
- 8vxMOJO/z8TESS0SjamKdu8LenXqbdt+wA6tBkA7AAAAA==
+Message-Id: <20240623-fd-hdmi-hpd-v3-2-8645a64cbd63@linaro.org>
+References: <20240623-fd-hdmi-hpd-v3-0-8645a64cbd63@linaro.org>
+In-Reply-To: <20240623-fd-hdmi-hpd-v3-0-8645a64cbd63@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
  Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
  Marijn Suijten <marijn.suijten@somainline.org>, 
@@ -76,67 +76,50 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  Jessica Zhang <quic_jesszhan@quicinc.com>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2240;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1422;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=md7jhGKlOM+w6BZGeSXbU5W/Ury7H26Ee1cLS6Zhie8=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmd0nnTufW95SKrWHG++JrkElcNx7EBZ3GYA5ZK
- eEmok9E3huJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZndJ5wAKCRCLPIo+Aiko
- 1a1nB/43/0cvVcvVPP66ncByrT/vuYcbf93n36kaGSRPKfwc5DTkD6ZP8YbZ2GZWCEjmuFAjcei
- xG+NELoKKs6eBl6UY2Qon1D7sdAdMeuHryhVtlnnibcD4CijmzE9TvJuQKHWn3/2O6yD7F1m5xv
- 1xyuyE4E8HkdofF5v9dUHqC+MgzUwek10sGEqkQy7lxXRfhX6vYt3BpSaS40w6B/g5zSuRkuP9F
- Flct+homaAFDXF8JnhfgkoZdXnsFzkO+NOG4aorJ3U5QwdAH2HBbgrvK/ECdYqobyTlF5QUJwMb
- YT742rOpCkTthSXvw7ar8rFrJZCkiib8SS1EUU58pOnDAOl7
+ bh=h0lqf9slPd5eUxk6pPihIhSWYhdShDER4/lwQr5RwCE=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ1q554sXjVmrzHatz+7ke/5WkuGWZkd97RrOzMsB/A6ns
+ nNcrB51MhqzMDByMciKKbL4FLRMjdmUHPZhx9R6mEGsTCBTGLg4BWAiK9LZ/5n5inesrmwVuLDO
+ W6HR11dVtny2II/Ft7CzSpG3pHf7lNnZcXv/3CrsuaRUprmtUs3mJZdH7ZPIOSd577cYtqlJ7/r
+ Id/7WpIVspzOPzOZb9rUugdtzLdOmtge6eR9OOjXw1nHp9OuxJCyb3fKWU1HOtWfa4RNGu6M22y
+ fkMk+IYDd8sed83ILEhoKdV7kM3WeqqvakCP4523vvy+G3K3d0BDfu1Zwzz3rn8iPzDrY9SGedp
+ JC73+ay5m7vuuU6vu9DZfKvs7X1qzwxYAsNvtt0Sij2TsvGbFPTPUvbN6orqR9Y1tDOccq3ceLq
+ Ho0HaQv2myd1bNg5Kczjvs23789+NjA+Or3OeX25zlYTAA==
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-The MSM HDMI driver is plagued with the long-standing bug. If HDMI cable
-is disconnected, in most of the cases cable reconnection will not be
-detected properly. We have been carrying the patch from [1] in our
-integration tree for ages. The time has come to fix the long-standing
-bug and implement proper HPD handling.
+According to the vendor kernel [1] , the alt_iface clock should be
+enabled together with the rest of HPD clocks, to make HPD to work
+properly.
 
-This series was tested on msm8996 and apq8064 boards. Previously HPD
-handling sometimes could trigger in the CRTC event handling, however I
-can no longer reproduce it now.
+[1] https://git.codelinaro.org/clo/la/kernel/msm-3.18/-/commit/e07a5487e521e57f76083c0a6e2f995414ac6d03
 
-[1] https://lore.kernel.org/linux-arm-msm/20171027105732.19235-2-architt@codeaurora.org/
-
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changes in v3:
-- Rebase on top of linux-next
-- Dropped the patches that were replaced by the HDMI Connector
-  framework
-- Picked up the mode_set -> atomic_pre_enable patch
-- Link to v2: https://lore.kernel.org/r/20240522-fd-hdmi-hpd-v2-0-c30bdb7c5c7e@linaro.org
+ drivers/gpu/drm/msm/hdmi/hdmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
----
-Dmitry Baryshkov (13):
-      drm/msm/hdmi: program HDMI timings during atomic_pre_enable
-      drm/msm/hdmi: move the alt_iface clock to the hpd list
-      drm/msm/hdmi: simplify extp clock handling
-      drm/msm/hdmi: drop clock frequency assignment
-      drm/msm/hdmi: switch to clk_bulk API
-      drm/msm/hdmi: switch to pm_runtime_resume_and_get()
-      drm/msm/hdmi: add runtime PM calls to DDC transfer function
-      drm/msm/hdmi: implement proper runtime PM handling
-      drm/msm/hdmi: rename hpd_clks to pwr_clks
-      drm/msm/hdmi: expand the HDMI_CFG macro
-      drm/msm/hdmi: drop hpd-gpios support
-      drm/msm/hdmi: ensure that HDMI is up if HPD is requested
-      drm/msm/hdmi: wire in hpd_enable/hpd_disable bridge ops
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
+index 8c6c9dffffd6..818c66efdfed 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
+@@ -234,9 +234,9 @@ static const struct hdmi_platform_config hdmi_tx_8960_config = {
+ };
+ 
+ static const char *pwr_reg_names_8x74[] = {"core-vdda", "core-vcc"};
+-static const char *pwr_clk_names_8x74[] = {"extp", "alt_iface"};
+-static const char *hpd_clk_names_8x74[] = {"iface", "core", "mdp_core"};
+-static unsigned long hpd_clk_freq_8x74[] = {0, 19200000, 0};
++static const char *pwr_clk_names_8x74[] = {"extp"};
++static const char *hpd_clk_names_8x74[] = {"iface", "core", "mdp_core", "alt_iface"};
++static unsigned long hpd_clk_freq_8x74[] = {0, 19200000, 0, 0};
+ 
+ static const struct hdmi_platform_config hdmi_tx_8974_config = {
+ 		HDMI_CFG(pwr_reg, 8x74),
 
- drivers/gpu/drm/msm/hdmi/hdmi.c        | 145 ++++++++++++++++-----------------
- drivers/gpu/drm/msm/hdmi/hdmi.h        |  26 ++----
- drivers/gpu/drm/msm/hdmi/hdmi_bridge.c |  73 ++++++++---------
- drivers/gpu/drm/msm/hdmi/hdmi_hpd.c    | 142 ++++++--------------------------
- drivers/gpu/drm/msm/hdmi/hdmi_i2c.c    |  14 +++-
- drivers/gpu/drm/msm/hdmi/hdmi_phy.c    |   6 +-
- 6 files changed, 150 insertions(+), 256 deletions(-)
----
-base-commit: d6beed9e425d272d4a332e6ee684ac457f91b570
-change-id: 20240522-fd-hdmi-hpd-e3868deb6ae0
-
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.39.2
 
