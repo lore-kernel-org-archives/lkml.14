@@ -1,149 +1,140 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF6A79C0
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 03:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CD779C0
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 03:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719026422; cv=none; b=mS17TzhNx1TvOa7qdYY/g6c2qEZ3tBKmSrzWPtxsrD1dEVL1O/JcZWHzLpScxHxM/fotHOyQWr4XEtE3B91S8YuAHCzjQHJNhuZQ8AiQaaaUqejTcJmrVORm2Ym/I0acElLe6vOveb386x5l7nNvu/VllPRb2nM4TXkZn7W3zNw=
+	t=1719026494; cv=none; b=PtMWV/5tqhqYzZm0u3ml3PadgWvNK5DbpoC+kDeuYY9yxqnB7VmPS1+Pr20ekJ7/xjfR5X+eDNwzDagTv3SN7+rZ5XLNVPqZnZs/zF7jPaVSuNQjoNEPq/uTF08gk7teaOZveWNc+zgQDH/eMb2FqxNss+pKmp0wgrklq74tTLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719026422; c=relaxed/simple;
-	bh=I2qpG19Op/YTmIetnh/fRS6hI0Rtx4zMgUsQuKkAgFM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pFtme+YrZFIvtlrQXWqGlyg+/SX/Wew7S9AVH1TrKCkpSPQbwyqbNz+PIScPSPwIZ7rFXtAvbmaIXMP7LAIP9Hc+NyLovO8eJYFPbBSHJ+MaG+dZ5zp8nT8Cx0B91QeyZbUP4AMZlXP17RpJIzsW2DIUXaqXuSf/tjHp93i26Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EUSbesyK; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719026494; c=relaxed/simple;
+	bh=Gpax3jT70tR7C/KsHMa7f8V5eajMmNfCtrTW6XYsBfk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=f/TMi9qreQ07Qk6oss+8ESw3QvQ+s/IOPO3CsJsIHscHZn9d67XDy9NYVjtlfPU/uvtKOB8fo8SOySL4eVq2ZRA3rJK5IoN2jfEnjsrsmu1NNoLZur8IR8PUiP9xZSxNhYcXviaO75FFCoKeOdw6mFGm6q7g5shCAPEHw8ajdjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0r23zWoj; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUSbesyK"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5c1da1f88dfso578327eaf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:20:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0r23zWoj"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-70663dee272so476160b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719026420; x=1719631220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=noIRKzwOenkJYlyIgDWrCHnrYGfNUC84Fg2QmqzIHaQ=;
-        b=EUSbesyKlQ+nxVpcEco8ZNhqYzu8RYff0vsfSk9YRCd+Fu9JC5bYVcXYbhewy1mUD5
-         SxjjZUpvMt5lC3TMKCOl2VRfxJIdqjG2376Up+lPg4gaeJIRCHP7qwY/VyJ73A5iF5F3
-         MJNAoSJlZrAFkz99oVVh3QhjCsUaM7SRQqPx+VtUp/EsWX5Pm8b3qwLMt7lMQrizJ00S
-         SCd4+DM8cMdQudc9itsPD7r8BT1EAVd2lNWvqL17Gzgz/lgHxovNQ7oJA4ZfRsKlmLU9
-         Bb1HNuFufwTuR2nv7axx7g4O0v8LkMAn+GUBc+VxAavBmzjN7gDdC1wKj8pXh+BOtDD3
-         BWVA==
+        d=google.com; s=20230601; t=1719026492; x=1719631292; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g1hZVwTyk3RKy3plKr/tqmfa2Bop0Xh/vK1vqULE1RA=;
+        b=0r23zWojI4vfTc8OiEssTaq+EfFPBr9Z54SrR5dCpoYZka/N/xiVW7nulj8GaR46fR
+         HXf3RAq6WRDXwA6tK9kXuJFXW12hWl49vW4Gq8nw89UDZA5Mqv9jR7FWnEvH+l6Vhu3y
+         b7snQTVinjIZZUVumsuGlTF1SG5pzkoXCQz4q08zhdheYC+uv1U7YHykg+KoDYQcENsi
+         l8hUxygZ+e9CdxGNstepigD2Ua0exMfFBUVyouKCWP57RqBC5OsVue66OLYx7zxgDdmb
+         fXqfS8M+keaCbwD6h+ShSWyJKA0HSlBocPzWFxOKyoq2wnZZ4nQfdF9+vU8PTL7WRJdz
+         CXjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719026420; x=1719631220;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=noIRKzwOenkJYlyIgDWrCHnrYGfNUC84Fg2QmqzIHaQ=;
-        b=PLSB9d9qG3eE3ePeD3tL+VaZnbO3yxh7xLUu5djyc5/9Qnsvlpu0cJdNcfRZdj89ri
-         xezRA3Dtlvq3ayurt+/scDppRAnuy+WuwPJLD2bfNxlsYQEAjWoPmB7MQyD9AohvSxFW
-         9vQxdEZ2arcugG6AliZO+KSLrk+v8Wg1938+lTLNx6XTSz0dUAI/egOWxv9TC3IHJUse
-         vghDhLDYimFt5OxcpS4fsffcXvhyf2naLGwsnxIUoPJJWqBuf8/+f9TSRMyEB0jI28hk
-         PwZEkklL8sXkBzDHP5bzBAbgdUqMpwsSpjjVpvMTfClOlL0d+tKo4rjvKNMTgkmzmJTc
-         Yb/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXzK0W30tc2TTkoIm6CX41pwHDyLc3laMdAuANfj/sc5zRPaO8/CWmxPilbAdjjDumgLT40xdzGdg+jg+W9tK24KMlgB+O6gxT6dGxv
-X-Gm-Message-State: AOJu0YwGEjFoTlJI2fcVROthPETonuNa2BvuEXj9tIm8Gao9OBtn0lHK
-	0IO9VN+Ma2rn+OClMONjYCC28TSRSIlZ1rn4A8ng/zunqwkuObcX
-X-Google-Smtp-Source: AGHT+IFzHnx7M3tBygs51isXq4OUoLtq5aQdebcrHujNqGD7L2U/YJtdQ0FFKqmCpZXizQf75nioOw==
-X-Received: by 2002:a05:6358:6f11:b0:19f:174c:7fa0 with SMTP id e5c5f4694b2df-1a1fd559d12mr1201106555d.24.1719026420184;
-        Fri, 21 Jun 2024 20:20:20 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c738c1bb81sm5388045a91.1.2024.06.21.20.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 20:20:19 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: david@redhat.com,
-	akpm@linux-foundation.org
-Cc: baolin.wang@linux.alibaba.com,
-	chrisl@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	mhocko@suse.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	surenb@google.com,
-	v-songbaohua@oppo.com,
-	willy@infradead.org,
-	ying.huang@intel.com,
-	yosryahmed@google.com,
-	yuanshuai@oppo.com,
-	yuzhao@google.com
-Subject: Re: [PATCH v2 2/3] mm: use folio_add_new_anon_rmap() if folio_test_anon(folio)==false
-Date: Sat, 22 Jun 2024 15:20:02 +1200
-Message-Id: <20240622032002.53033-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <02b87f01-69c9-4007-b0d0-5ce9ce35876d@redhat.com>
-References: <02b87f01-69c9-4007-b0d0-5ce9ce35876d@redhat.com>
+        d=1e100.net; s=20230601; t=1719026492; x=1719631292;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g1hZVwTyk3RKy3plKr/tqmfa2Bop0Xh/vK1vqULE1RA=;
+        b=lZdYQzw3myiVG9lycHLI6oNi14oPaRoyAZLjldYU2lFIlR+/NRJNSppSKCB23CZpm+
+         CAKgcn3eU+41yy/SESoAzTsq8hEetx6tpYHCyk7O3F74cL5btveZ2lV8SK8dfvFZyeG/
+         cswf1jryz4WGMUyfWbdpB1jLkoRZYcYD3Kqs1vmdTpn1C5/8AX88xXVzrPqkR/hXMupr
+         PvHrP1VOiXMWm4rD4TSfWzK5T0MhdtyPWmj8WjeZPJwF51BykAal1Aj9j1xDFXChpeh5
+         4PacjktgZWuw4OZjpHc3FCzXjBbetOZPA9GMYXyhREU0afuJCkUxrE6Oqmrkaszhv0Lu
+         9epA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0fS9QaId1VIEfdUR7q7W9TMvPe1pox9ijcniSeuD8LTAPqi+onrYqKzinW2a/n1T16PPJvVx4is4wpfVDZLC/5AsAe3Oo0A60QaHf
+X-Gm-Message-State: AOJu0YwlSIstVXSqxf+Kxkr/7TeWkQQ5KgB9Y/6RuBD1Lb7PdauI6zu/
+	QfdYzG/CSPThEqSbkw4nBM/JRZrRR8x3YwrPoAxl0jiM6UbNLFXHQeFUSSuV9Xem2Wp6xlHhv8Z
+	sAVtq9Er439hP2PPWqxPUXw==
+X-Google-Smtp-Source: AGHT+IFc532B87Htj7wUkk3FJ2X81U4kzmnKjAL0U1Lc0/IbQdUIwtbAk87DxmoksMCChtAph2/+gc86zl/tHC0ZLQ==
+X-Received: from yuting.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:317f])
+ (user=yutingtseng job=sendgmr) by 2002:a05:6a00:13a7:b0:706:6b52:4387 with
+ SMTP id d2e1a72fcca58-7066b52470emr424b3a.0.1719026491865; Fri, 21 Jun 2024
+ 20:21:31 -0700 (PDT)
+Date: Fri, 21 Jun 2024 20:16:01 -0700
+In-Reply-To: <20240618221347.106627-1-yutingtseng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240618221347.106627-1-yutingtseng@google.com>
+X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
+Message-ID: <20240622031600.3762859-3-yutingtseng@google.com>
+Subject: [PATCH v2] binder: frozen notification
+From: Yu-Ting Tseng <yutingtseng@google.com>
+To: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org
+Cc: arve@android.com, maco@android.com, joel@joelfernandes.org, 
+	brauner@kernel.org, surenb@google.com, aliceryhl@google.com, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	Yu-Ting Tseng <yutingtseng@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> >
-> > Since this is primarily a documentation update, I'll wait for two or
-> > three days to see if
-> > there are any more Linux-next reports before sending v3 combining these fixes
-> > together(I've already fixed another doc warn reported by lkp) and seek Andrew's
-> > assistance to drop v2 and apply v3.
->
-> Feel free to send fixup patches for such small stuff (for example, as
-> reply to this mail). Usually, no need for a new series. Andrew will
-> squash all fixups before merging it to mm-stable.
 
-Hi Andrew,
+Yu-Ting Tseng (1):
+  binder: frozen notification
 
-Can you please squash this change(another one suggested by David)?
+ drivers/android/binder.c            | 294 +++++++++++++++++++++++++++-
+ drivers/android/binder_internal.h   |  19 +-
+ include/uapi/linux/android/binder.h |  35 ++++
+ 3 files changed, 344 insertions(+), 4 deletions(-)
 
-From: Barry Song <v-songbaohua@oppo.com>
-Date: Sat, 22 Jun 2024 15:14:53 +1200
-Subject: [PATCH] enhance doc- mm: use folio_add_new_anon_rmap() if
- folio_test_anon(folio)==false
+> nit: typo in "state"
+Fixed
 
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- mm/memory.c   | 1 +
- mm/swapfile.c | 1 +
- 2 files changed, 2 insertions(+)
+> It might be cleaner to factor out this copy_form_user() part
+Done
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 00728ea95583..982d81c83d49 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4346,6 +4346,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 		 * here, we have to be careful.
- 		 */
- 		VM_WARN_ON_ONCE(folio_test_large(folio));
-+		VM_WARN_ON_FOLIO(!folio_test_locked(folio), folio);
- 		folio_add_new_anon_rmap(folio, vma, address, rmap_flags);
- 	} else {
- 		folio_add_anon_rmap_ptes(folio, page, nr_pages, vma, address,
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index b99b9f397c1c..ace2440ec0b7 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1923,6 +1923,7 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
- 		 */
- 		if (!folio_test_anon(folio)) {
- 			VM_WARN_ON_ONCE(folio_test_large(folio));
-+			VM_WARN_ON_FOLIO(!folio_test_locked(folio), folio);
- 			folio_add_new_anon_rmap(folio, vma, addr, rmap_flags);
- 		} else {
- 			folio_add_anon_rmap_pte(folio, page, vma, addr, rmap_flags);
+> avoid WARNs
+Done
+
+> Shouldn't this return -ENOMEM or something
+Done
+
+> This "BC_REQUEST_FREEZE_NOTIFICATION" can be in the string directly.
+Done
+
+> > +     struct binder_ref_freeze *freeze = NULL;
+> This doesn't need to be initialized.
+Done
+
+> This "BC_CLEAR_FREEZE_NOTIFICATION" can be in the string directly.
+Done
+
+> "freeze" has not been assigned here, right?
+Fixed
+
+> The preferred style for comments...
+Fixed
+
+> reversed christmas tree for variables
+Done
+
+> Why is entry on a new line
+Done
+
+> shorten the name of these functions
+Done
+
+> Do we need two different work types
+Merged the two
+
+> This should come after the variable declarations
+Done
+
+> write a short explanation of what this means to userspace instead
+Done
+
+> Use scripts/get_maintainer.pl
+Done
+
+> the corrisponding changes to userspace
+Please see https://android-review.googlesource.com/c/platform/frameworks/native/+/3070045
+
+> Multiple put_user() calls seems slow
+Changed to copy_to_user
+
+
+base-commit: 14d7c92f8df9c0964ae6f8b813c1b3ac38120825
 -- 
-2.34.1
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
-
-Thanks
-Barry
+2.45.2.741.gdbec12cfda-goog
 
