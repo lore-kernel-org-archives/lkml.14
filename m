@@ -1,172 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11DF2913
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 06:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE748BFD;
+	Sat, 22 Jun 2024 06:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719038497; cv=none; b=cTF4diL/sutGXYqr9bfcJYSj5q5Gio9lFgEymko4bRF/S58/Jtras7PpDDxmMzMNDPUgiR2BMtlZW3kk9TJI4Hw1yooSQ1pwji/e+0ypdJQCDbQOYutu9ZIgNsuiUUOgX8xJ6pyRjrZxxioBehc9luQn+nfSRHejl+PTcWt7PPs=
+	t=1719038693; cv=none; b=XuimOQvT4WvSqcqZZnrNlwuAm81CypGvOMvdlE9NVJjStZdk/XxOi0gbAjdwYM4s1vaqM2XJEyu4Vyj75ACCdsy+hjYw/vHzaqxXOy/FPeQCT/cSW5b3YSNv4Mr558Ay6Jgus0XXuzwDPOW6MPEyHT7OVMUX4ilzY+sfS4oKbI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719038497; c=relaxed/simple;
-	bh=YsgUZq0JgKZpe8Fb1tTYZ526tvi63AW7OiJlEjt9lkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AUa97T5gx5vEhEPXzDU6+8RQGPTJkaaIU+GLA8RkW96zP/dwXFNU7Y++w97aazMMaFYyhMsGL39GVwmsFQ0FTmfstAEKH005pm09t6dglQCfgY6GxJQXL6b6Z4T28AgBmaagJgIJ1ddljVu6iHD4Zh+8kKLgYCMRc47d0rn6v5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aiCE5CAA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719038693; c=relaxed/simple;
+	bh=UQb8Z+ujaHhhsuuhpwTwvPOB79Pihy/x2wORD1fIK6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gxp+OZGrJBwwglt1l3WRH674dqzKygFIFOHficifHrcP+GyV+uKItbQvIh8eIayT+XW0XR4Os3Sg4bLO01eOihCkyLqkFIOqqF4DcnzNAWX2jrsTLKQqjaCBuv0+dp6UpZ8J2U60X2OTYh6BPm+iv6D6IJupkSnhR96knlq9f50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TlqdmYZE; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aiCE5CAA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719038493;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9fjp/oT9DTpssKYT+E0cu4ifOyOy9kksnkNQv449Pmc=;
-	b=aiCE5CAAguXoDhCefVqA0DpHi8EM/JybDWtwPS/cS6q+TuN0KJdni20J3VNblcTl3sqNla
-	m01TiF7eZwE2vuJftwtX8ZkaE6DvvOzdoHWdA0ucCrRCQYUzVSaAkcBlsOnZuXxuZ44Zyu
-	EU+N8gO4QBsIori6ROFtxTeB43f6RgU=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-353-Ux9tN9auNk-PplXP28EUyw-1; Sat,
- 22 Jun 2024 02:41:31 -0400
-X-MC-Unique: Ux9tN9auNk-PplXP28EUyw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7FE521956083;
-	Sat, 22 Jun 2024 06:41:30 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB2F21956089;
-	Sat, 22 Jun 2024 06:41:29 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 6.10-rc5
-Date: Sat, 22 Jun 2024 02:41:28 -0400
-Message-ID: <20240622064128.135621-1-pbonzini@redhat.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TlqdmYZE"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45M6iixB122438;
+	Sat, 22 Jun 2024 01:44:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719038684;
+	bh=spi4GdNW9JTa5ptQraKQLzKCk03Loxxcxp8dMLIrZNY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=TlqdmYZELih3Jw4nYUqKZiT9NRELaqTORRtOogiEfUsELJG+t7Px+FY7fWjegT/83
+	 Weyiowdgs8C+eR12zY5sdQ44b0rfz/IbhUnuBA8oPuJTfIyCaZEs67OiQFFreY429J
+	 rlZedS0YhachLmkNT5BLmfg2FiVW0YKhuAXQ0zI8=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45M6iioF110193
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 22 Jun 2024 01:44:44 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 22
+ Jun 2024 01:44:44 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 22 Jun 2024 01:44:44 -0500
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45M6ieNS065637;
+	Sat, 22 Jun 2024 01:44:41 -0500
+Message-ID: <6b13bb6a-4378-4764-9a60-d25ee2914176@ti.com>
+Date: Sat, 22 Jun 2024 12:14:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j784s4-evm: Enable analog audio
+ support
+To: Jayesh Choudhary <j-choudhary@ti.com>, <linux-kernel@vger.kernel.org>,
+        <nm@ti.com>, <j-luthra@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <u-kumar1@ti.com>
+References: <20240619095253.290552-1-j-choudhary@ti.com>
+ <20240619095253.290552-4-j-choudhary@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20240619095253.290552-4-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Linus,
 
-The following changes since commit db574f2f96d0c9a245a9e787e3d9ec288fb2b445:
 
-  KVM: x86/mmu: Don't save mmu_invalidate_seq after checking private attr (2024-06-05 06:45:06 -0400)
+On 19/06/24 15:22, Jayesh Choudhary wrote:
+> &wkup_pmx2 {
+> @@ -881,6 +917,14 @@ exp1: gpio@20 {
+>  				  "PCIE0_4L_RC_RSTZ", "PCIE0_4L_EP_RST_EN", "PCIE1_4L_PRSNT#",
+>  				  "PCIE0_4L_PRSNT#", "CDCI1_OE1/OE4", "CDCI1_OE2/OE3",
+>  				  "AUDIO_MUX_SEL", "EXP_MUX2", "EXP_MUX3", "GESI_EXP_PHY_RSTZ";
+> +
+> +		p12-hog {
+> +			/* P12 - AUDIO_MUX_SEL */
+> +			gpio-hog;
+> +			gpios = <12 GPIO_ACTIVE_HIGH>;
+> +			output-low;
+> +			line-name = "AUDIO_MUX_SEL";
+> +		};
+>  	};
+>  
+>  	exp2: gpio@22 {
+> @@ -896,6 +940,22 @@ exp2: gpio@22 {
+>  				  "CANUART_MUX1_SEL1", "ENET1_EXP_PWRDN", "ENET1_EXP_RESETZ",
+>  				  "ENET1_I2CMUX_SEL", "ENET1_EXP_SPARE2", "ENET2_EXP_RESETZ",
+>  				  "USER_INPUT1", "USER_LED1", "USER_LED2";
+> +
+> +		p13-hog {
+> +			/* P13 - CANUART_MUX_SEL0 */
+> +			gpio-hog;
+> +			gpios = <13 GPIO_ACTIVE_HIGH>;
+> +			output-high;
+> +			line-name = "CANUART_MUX_SEL0";
+> +		};
+> +
+> +		p15-hog {
+> +			/* P15 - CANUART_MUX1_SEL1 */
+> +			gpio-hog;
+> +			gpios = <15 GPIO_ACTIVE_HIGH>;
+> +			output-high;
+> +			line-name = "CANUART_MUX1_SEL1";
+> +		};
+>  	};
+>  };
 
-are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+Does this break CAN instances already enabled in the dts? If you
+consider making this a overlay as defaults seem to be set for CAN
 
-for you to fetch changes up to e159d63e6940a2a16bb73616d8c528e93b84a6bb:
-
-  Merge tag 'kvm-riscv-fixes-6.10-2' of https://github.com/kvm-riscv/linux into HEAD (2024-06-21 12:48:44 -0400)
-
-----------------------------------------------------------------
-ARM:
-
-* Fix dangling references to a redistributor region if the vgic was
-  prematurely destroyed.
-
-* Properly mark FFA buffers as released, ensuring that both parties
-  can make forward progress.
-
-x86:
-
-* Allow getting/setting MSRs for SEV-ES guests, if they're using the pre-6.9
-  KVM_SEV_ES_INIT API.
-
-* Always sync pending posted interrupts to the IRR prior to IOAPIC
-  route updates, so that EOIs are intercepted properly if the old routing
-  table requested that.
-
-Generic:
-
-* Avoid __fls(0)
-
-* Fix reference leak on hwpoisoned page
-
-* Fix a race in kvm_vcpu_on_spin() by ensuring loads and stores are atomic.
-
-* Fix bug in __kvm_handle_hva_range() where KVM calls a function pointer
-  that was intended to be a marker only (nothing bad happens but kind of
-  a mine and also technically undefined behavior)
-
-* Do not bother accounting allocations that are small and freed before
-  getting back to userspace.
-
-Selftests:
-
-* Fix compilation for RISC-V.
-
-* Fix a "shift too big" goof in the KVM_SEV_INIT2 selftest.
-
-* Compute the max mappable gfn for KVM selftests on x86 using GuestMaxPhyAddr
-  from KVM's supported CPUID (if it's available).
-
-----------------------------------------------------------------
-Alexey Dobriyan (1):
-      kvm: do not account temporary allocations to kmem
-
-Andrew Jones (1):
-      KVM: selftests: Fix RISC-V compilation
-
-Babu Moger (1):
-      KVM: Stop processing *all* memslots when "null" mmu_notifier handler is found
-
-Bibo Mao (1):
-      KVM: Discard zero mask with function kvm_dirty_ring_reset
-
-Breno Leitao (1):
-      KVM: Fix a data race on last_boosted_vcpu in kvm_vcpu_on_spin()
-
-Colin Ian King (1):
-      KVM: selftests: Fix shift of 32 bit unsigned int more than 32 bits
-
-Marc Zyngier (1):
-      KVM: arm64: Disassociate vcpus from redistributor region on teardown
-
-Michael Roth (1):
-      KVM: SEV-ES: Fix svm_get_msr()/svm_set_msr() for KVM_SEV_ES_INIT guests
-
-Paolo Bonzini (4):
-      virt: guest_memfd: fix reference leak on hwpoisoned page
-      Merge tag 'kvmarm-fixes-6.10-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
-      Merge tag 'kvm-x86-fixes-6.10-rcN' of https://github.com/kvm-x86/linux into HEAD
-      Merge tag 'kvm-riscv-fixes-6.10-2' of https://github.com/kvm-riscv/linux into HEAD
-
-Sean Christopherson (2):
-      KVM: x86: Always sync PIR to IRR prior to scanning I/O APIC routes
-      MAINTAINERS: Drop Wanpeng Li as a Reviewer for KVM Paravirt support
-
-Tao Su (1):
-      KVM: selftests: x86: Prioritize getting max_gfn from GuestPhysBits
-
-Vincent Donnefort (1):
-      KVM: arm64: FFA: Release hyp rx buffer
-
- MAINTAINERS                                           |  1 -
- arch/arm64/kvm/hyp/nvhe/ffa.c                         | 12 ++++++++++++
- arch/arm64/kvm/vgic/vgic-init.c                       |  2 +-
- arch/arm64/kvm/vgic/vgic-mmio-v3.c                    | 15 +++++++++++++--
- arch/arm64/kvm/vgic/vgic.h                            |  2 +-
- arch/x86/kvm/svm/svm.c                                |  4 ++--
- arch/x86/kvm/x86.c                                    |  9 ++++-----
- .../testing/selftests/kvm/include/x86_64/processor.h  |  1 +
- tools/testing/selftests/kvm/lib/riscv/ucall.c         |  1 +
- tools/testing/selftests/kvm/lib/x86_64/processor.c    | 15 +++++++++++++--
- tools/testing/selftests/kvm/riscv/ebreak_test.c       |  1 +
- tools/testing/selftests/kvm/riscv/sbi_pmu_test.c      |  1 +
- tools/testing/selftests/kvm/x86_64/sev_init2_tests.c  |  4 ++--
- virt/kvm/dirty_ring.c                                 |  3 +++
- virt/kvm/guest_memfd.c                                |  5 +++--
- virt/kvm/kvm_main.c                                   | 19 ++++++++++---------
- 16 files changed, 68 insertions(+), 27 deletions(-)
-
+-- 
+Regards
+Vignesh
