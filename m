@@ -1,102 +1,90 @@
-Received: from mail.qrator.net (mail.qrator.net [178.248.233.8])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A25DDCD;
-	Sat, 22 Jun 2024 16:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.248.233.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D7FD524;
+	Sat, 22 Jun 2024 16:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719075047; cv=none; b=V1eY7Uw+HVZA9gXC/6CC96ACIpVgjaEso+GqGQxtFFRBg867D9WtFeMwSB0Gt03l61CSjpeCuIODU8zU5jnonjVX49VOcgZyIJSjQJRiaII8Z6dTiBzfMK3XxTIOpQY+39QMjH9BP8Bu8peKh1Rvt5fXmU2Ei8UA9BtpCUqefkg=
+	t=1719075537; cv=none; b=IFCjo4brLZuwe4bJUxiJrCie7CEeOu8cx4J7aNHxMavnt0qZwLXJVp5YAN4xRiNWpGvz5bnSOoFBh9jc6pF8x5VfoIjkH2AiPfelVpY5ddg5lVDLvnCy4jVIMQFZ20P9C/Qzwm+8F73dLeC4r5n7WISwEElj3VPokLmxMlDDVGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719075047; c=relaxed/simple;
-	bh=kh6JYxSlf07yLnXxLhAi0sbcHOymPJcE5oGvvUlhoJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sj0ZVFWs2wloeBht5caAO5DIRdVVN6aKXvTRn61VzxxmRTbrLsjp96wsgIT6gds+laxau1L+PNDxoyBdYzb9SxIw1c14a2KP4adY8zRn6mr4t26EPzI9KMwekzM8pZmwn9DBRmtvoNWjifm0JPA0TcCiwGhFxfZMTgnCK8YPmvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qrator.net; spf=pass smtp.mailfrom=qrator.net; arc=none smtp.client-ip=178.248.233.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qrator.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qrator.net
-Received: from localhost.localdomain (unknown [10.0.0.0])
-	by mail.qrator.net (Postfix) with ESMTP id 166208802F1A;
-	Sat, 22 Jun 2024 19:41:35 +0300 (MSK)
-From: Alexander Zubkov <green@qrator.net>
-To: linux-kernel@vger.kernel.org
-Cc: linux-newbie@vger.kernel.org,
-	Alexander Zubkov <green@qrator.net>
-Subject: [PATCH] Fix misspelling of "accept*"
-Date: Sat, 22 Jun 2024 18:40:14 +0200
-Message-ID: <20240622164013.24488-2-green@qrator.net>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1719075537; c=relaxed/simple;
+	bh=LzuEAz5ACZZ3Z9HVdqDIC9jT2azVEnV3YngE0bu/gbE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=ojbC1sNvJHQSxRxDjqaUuohhXsQbB8SC+GCr+Rgttlqjl3uINNdk5QHVI/xX0QN7vcpNwio3woEHnEwvAk+x6YVcpbBnwHgbGXaqw7t4kAXqp64c2NHfoaRTjd9o1cS3BWiyGgFiCtOLElpItbYNwIgIW0eqTNGE4dEXPHqH1i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HynXeE9z; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HynXeE9z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1719075502; x=1719680302; i=markus.elfring@web.de;
+	bh=TcDyN6ebGmrRSeGodLD7ggmlinGRC7WoNwqGNQbVxCI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HynXeE9zwyLTMwT3LvzNAqIBXOMeplJ7ZEygRxBvTDjFG32U8fPaMbm7Xywln3/t
+	 7PhhIgySwJ7tg93G5tIHvX/pnhW0aF+gzIuxyt4sLR59KJ7Bx5abEIV3iGVWIHAI+
+	 QqpUEm857O+H4Xt3oQ06oFPddSyNwkBo5v4x0Ky+deTpgRxAM7b/CrLAr2LFo4PT8
+	 Ej+w3ejH7eQ+rszoFzxw+ZnOoSkQ6t36ZGg3yNStWUqCaxizScye8Y68PnIwQIN56
+	 293Auh+CVxGu910cK4fxn1hb7628a25n9gt/t8hzyIKUJ+tE7x1WvCbK3le8qizft
+	 l8IkkASiskUA+VsdhQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N5UgI-1sRNVE0Rli-00vfMm; Sat, 22
+ Jun 2024 18:58:22 +0200
+Message-ID: <d929faec-a9a0-4076-b67f-31a083c71eaf@web.de>
+Date: Sat, 22 Jun 2024 18:58:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Huai-Yuan Liu <qq810974084@gmail.com>, linux-hippi@sunsite.dk,
+ netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jes Sorensen <jes@trained-monkey.org>, Paolo Abeni <pabeni@redhat.com>,
+ Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Jia-Ju Bai <baijiaju1990@gmail.com>
+References: <20240622063227.456107-1-qq810974084@gmail.com>
+Subject: Re: [PATCH V3] hippi: fix possible buffer overflow caused by bad DMA
+ value in rr_start_xmit()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240622063227.456107-1-qq810974084@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Yy3/QPWZOkPJsFXP2RMxyU9jhXTMPneS8qs+SA9CLZnPk0mJsGA
+ I4nyeoQ4z8sSkP7ZVwdybwkKpQAxo7cfjLa1rNTskGVCIZDka8h2XoKJFrPKU+CnEJ1+6gw
+ q57bx7ZUpqaZWNHy42lL+V+hUjrRpb7JSwrRaPhVqscKAo+mv4+5HE/QuDrfGNxOtt8jUT+
+ lKU1GtDv+i18d44so8OhA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Uhl6KWuMk94=;1Z7xWg8hA+IBBAfoKhZKesB9XQ1
+ dcNVJRMdNWpzBVxujF5AlJmgAoOjZtes5HpSgkgLY+qKJvIHa/RnAiy1qKI631Mw4/Sn83z4l
+ icDVIEZVEaQoRPoVSrIv9jQnBwTb7LioedbGjVv45BsA1PdJ2rJ/JU1Rge+33eV0cAaNv1/Qu
+ fb1ImM+1mDmutizbEjgurhpnt48l8J5pr3bMrEU2aKWQaTZI7GQopjE9HhqthOLRgZaTSoQP1
+ mlCp6IUHqrm7FwBuS1eP4ErziruBR6XgzKY5nP45kzbQwxNPUf6GAQIGJy2JdHMAUBxGstRAi
+ PzaReWRj49s4U5DapdZPI/Ec76+GisS9sWGAgRGLEgxMD27BFmctOXJMSIZg+QfK3Zw9l9s3B
+ QU3vfcQr7gYf8y5e02jy116NXJLiLYn6LeI2wQTYBhG6XgHPpwwHAWFTVJ8E5GHA5Bc4UHpBd
+ WPtlOF6iXkbgp0g80WRovrybAzc3knOll5qmAX6ZXqgju9bGHMdiFxF58DssiMXwyzUOeEv4g
+ ZGlt/ZD/f5pMGBuduKHw9TCxB9jkXToEXvvyE9CsLg2TX4EFRQpx1K26AVXcZqQFtqn10PiUB
+ li8Ya63EpaFZ0jDl0eXHWUtgDA6Ma5rdfaTI5O9xjKkM9qvkpGleTLTxBbcLnFiQQ7pBy/MGD
+ +zQ14QaiCT60lEAu8IOugDIGYgkAm8vGvkjxEdanPF8mkuilPun76kUeQqEk5yi6prUib3Cmp
+ j7GBxtGLpICacOMcZLkBZHRDNTR5djE36B0nMUGl/hG/A2h1sIR5VFLJSEbWd9CVPKWuUGK5w
+ g1lRhKY2m5NryRgnFrRoL+Qd8ivxnfWumvasy2GpN5Jns=
 
-Several files have "accept*" misspelled as "accpet*" in the comments.
-Fix all such occurrences.
+> =E2=80=A6. Becausetxctrl->pi is assigned to =E2=80=A6
 
-Signed-off-by: Alexander Zubkov <green@qrator.net>
----
- drivers/infiniband/hw/irdma/cm.c                              | 2 +-
- drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c | 4 ++--
- drivers/net/ethernet/natsemi/ns83820.c                        | 2 +-
- include/uapi/linux/udp.h                                      | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+     Word separation?
 
-diff --git a/drivers/infiniband/hw/irdma/cm.c b/drivers/infiniband/hw/irdma/cm.c
-index 36bb7e5ce..ce8d821bd 100644
---- a/drivers/infiniband/hw/irdma/cm.c
-+++ b/drivers/infiniband/hw/irdma/cm.c
-@@ -3631,7 +3631,7 @@ void irdma_free_lsmm_rsrc(struct irdma_qp *iwqp)
- /**
-  * irdma_accept - registered call for connection to be accepted
-  * @cm_id: cm information for passive connection
-- * @conn_param: accpet parameters
-+ * @conn_param: accept parameters
-  */
- int irdma_accept(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
- {
-diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c
-index 455a54708..96fd31d75 100644
---- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c
-+++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c
-@@ -342,8 +342,8 @@ static struct sk_buff *copy_gl_to_skb_pkt(const struct pkt_gl *gl,
- {
- 	struct sk_buff *skb;
- 
--	/* Allocate space for cpl_pass_accpet_req which will be synthesized by
--	 * driver. Once driver synthesizes cpl_pass_accpet_req the skb will go
-+	/* Allocate space for cpl_pass_accept_req which will be synthesized by
-+	 * driver. Once driver synthesizes cpl_pass_accept_req the skb will go
- 	 * through the regular cpl_pass_accept_req processing in TOM.
- 	 */
- 	skb = alloc_skb(gl->tot_len + sizeof(struct cpl_pass_accept_req)
-diff --git a/drivers/net/ethernet/natsemi/ns83820.c b/drivers/net/ethernet/natsemi/ns83820.c
-index 998586872..bea969dfa 100644
---- a/drivers/net/ethernet/natsemi/ns83820.c
-+++ b/drivers/net/ethernet/natsemi/ns83820.c
-@@ -2090,7 +2090,7 @@ static int ns83820_init_one(struct pci_dev *pci_dev,
- 	 */
- 	/* Ramit : 1024 DMA is not a good idea, it ends up banging
- 	 * some DELL and COMPAQ SMP systems
--	 * Turn on ALP, only we are accpeting Jumbo Packets */
-+	 * Turn on ALP, only we are accepting Jumbo Packets */
- 	writel(RXCFG_AEP | RXCFG_ARP | RXCFG_AIRL | RXCFG_RX_FD
- 		| RXCFG_STRIPCRC
- 		//| RXCFG_ALP
-diff --git a/include/uapi/linux/udp.h b/include/uapi/linux/udp.h
-index 1a0fe8b15..d85d671de 100644
---- a/include/uapi/linux/udp.h
-+++ b/include/uapi/linux/udp.h
-@@ -31,7 +31,7 @@ struct udphdr {
- #define UDP_CORK	1	/* Never send partially complete segments */
- #define UDP_ENCAP	100	/* Set the socket to accept encapsulated packets */
- #define UDP_NO_CHECK6_TX 101	/* Disable sending checksum for UDP6X */
--#define UDP_NO_CHECK6_RX 102	/* Disable accpeting checksum for UDP6 */
-+#define UDP_NO_CHECK6_RX 102	/* Disable accepting checksum for UDP6 */
- #define UDP_SEGMENT	103	/* Set GSO segmentation size */
- #define UDP_GRO		104	/* This socket can receive UDP GRO packets */
- 
--- 
-2.45.2
 
+> To address this issue, the index should be checked.
+
+Can an imperative wording be more desirable for such a change description?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc4#n94
+
+Regards,
+Markus
