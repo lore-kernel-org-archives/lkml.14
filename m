@@ -1,78 +1,80 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C54EB664
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 02:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3940615E8B
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 03:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719024938; cv=none; b=VFO5bUo+4gUf+oSeboRPFQ1Dzg873yO5KT1bN2P8S90TYXPDX+bdfztxQhBbp0YOg6PC4+TxpN7Knev9NJz1SzKUVTuazrtXYXmo2Ma3bkuIv/zE2ZN/F8zMBqyLQ9700ZmXWva55cYwK4x8mJRvzugUOUw0RCnIOSJMc0hpD4Q=
+	t=1719025395; cv=none; b=Qd29kV/iqV9dd7SAvOW5wtpoTeztdNqz/a5xbmnqOxOTSSuMBxbu6ofXK1NzHajae4DBorJJmU4rx1mtQhFzUscTUTXYQo42OIujceUmtvlS4Kr1NJ5Ra1E0S8Ha7vtTloLX7ozYp4eYnEqVNFdzAApNXZ+dVbXyxVEjRmwO+XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719024938; c=relaxed/simple;
-	bh=ZOWtweHS7udvJH6Mn7C/9cPFELBUkzp7ZxNE1v9xUiQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T/OEOO5dzNcPYNUsh8k5aXAFPC1dhHVRm5QxY4U77SE0laVv4pJ0kp/NmDgmO+DbON6w9Ho4t5O+H7ukxGImCADkm4vX6YIKGPLjzxzyIpJxFkr9u7BPcK4uyc2pCvkA/3jmgT7q/iIG7K6th3Xci7Cm6AOlOQeq6ZWmZGjwWOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=WkNKcA8Y; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1719025395; c=relaxed/simple;
+	bh=EHYQtmjxsgdG8M8GNOiN5E9bImvjxps5ecgF0RFLFl4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FYvPQq4DxUzu4KkFuSSP5QHG2lY6Eg6mDNKspNxKt7OvTn1uJvSqWC180R51i1KzE2Ro32fCBQknwYJyvXuk/azO9PQr6a1NV0DUnJQFgqgw2YHokhv8GaeDLQvME5JpWMIr3Kq40ZBzDaXBZtjcoqc7JsfYVlSeBPyvq3Ma78w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TC6Z4utj; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="WkNKcA8Y"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-376012bcc33so9761305ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 19:55:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TC6Z4utj"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70667943931so179905b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Jun 2024 20:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1719024935; x=1719629735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5if2KmJRWjBL76ROZgI/17GyYKcY5wCvGdrrlEk4u0Q=;
-        b=WkNKcA8Yd8T5SnOwVE0P8moQY95xxnxAL6stF+Hii1BF7qX2zka30u+6K5D6S+fJ4U
-         ULJokvgayforpdT6Z5o1HZNZcTsvXU2zSTRTeGC6ZmMQ+gLx2J2WIbasGHsC47RXNfx3
-         ZSLxMwDB3ReE70Qrwi9IVAL9Kh5qD3I0QIxPjfVlIGYeD5RJeT35CrayOkd8jV23YBbH
-         WmWa21cR6KvSuIrcej75EyvDjPTeZvCA9j5gbGQWjmGIIYPJMVfsOeDcQL2RhvqjONWQ
-         dCwPl2nz6EaS1SY1vbJwd9pIio4FibmK2zMQeYPsgpoeoVNtzgxxJTykBFccuZUd/po0
-         m54Q==
+        d=gmail.com; s=20230601; t=1719025393; x=1719630193; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=65NmH14GHPU7cpQuxZpTQNNeNlAoovyzm058ERg2Xuw=;
+        b=TC6Z4utjklXhQIP42q0z8krwY8EicTGuzfTYe9mWz98WS9ZLdobFX86dI3NJ3ywcot
+         jvJ6DL2/JDlpSxt9v6onsFdL0k/s5AHySvrh0i7RILodLoRqu6ycHWEXSuwiGP1PCfZX
+         UjdzLWl7IzNVELWcFj0qrG1Bt9tausG9UH6jUwR7CfRU6vMBFGVXAz3PpnSPEM74NoA/
+         QLxxL5JvgRR/6lLlEUHwGqF5IY37l1am72E3bfW0fP7/q6MLu6HBtyo53szR7LKZKwIj
+         lr/a84TVagUXS7ubf1sg95VBZrqIF+562blDBBfRreIUTLrEFZH4eEP+hz8Q5GLCUyPe
+         yelA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719024935; x=1719629735;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5if2KmJRWjBL76ROZgI/17GyYKcY5wCvGdrrlEk4u0Q=;
-        b=nzataVmlYv1p78Mo+oISiSsuRRvSeWTUf9ny0DBMxGzft7rJ8EcA+M0Yy03ngZDmwv
-         wteJCEVY9ZSXJXc1jwB0FBrkz8v2gWXfkblCZJnt4zGV/KoyCrcpCD5DgASBfbKxNRXR
-         ai03LfPmggQB8f4IKexP2vrO0AORWuECYm3HJP9W6o6pKTm0S7JM5bCcmsmbORU5sGuD
-         7rxzKGFNomAo6t9qfN9BIk1jT7tVkp2J01tpl6WVcSC4l8U4VsTR6ln6hU24md0Vq5lY
-         mdqh/UZ9fkyKeKmd9kT4LqqanFjj/ZZxeVL6U4IINKCJRaRGGoMSiI92NyEOJ9rst2+b
-         Jrlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAkph5A7x73/6nVklITHg2gaX5gPgHIuci/VqFEkQGMyUmGn+0VcDidKVUYd++XzI5Ebes9fVIj6OhqE7ADj/7fdWYJIfwbLzV3idc
-X-Gm-Message-State: AOJu0YzbQmFz2amJHhdljrG32Qmm/46ts3JlgBtYCChaNUlnPCI9LJth
-	menU5u1iMeGQ85Ct+HlI7lQgJfqMCExf9KAGoScgTGQCfh+U+hNZzurhsIuZEIc=
-X-Google-Smtp-Source: AGHT+IEDqRRjk5TKBUDCMz6j3upGcBor/M5o4HP05d0yYUEeFU9td2Hhs5KyDe0neUdvKGxG88q+Sg==
-X-Received: by 2002:a05:6e02:1808:b0:375:8a71:4cbf with SMTP id e9e14a558f8ab-3761d708893mr106035865ab.23.1719024935423;
-        Fri, 21 Jun 2024 19:55:35 -0700 (PDT)
-Received: from L6YN4KR4K9.bytedance.net ([139.177.225.253])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716ba7a0699sm1776286a12.67.2024.06.21.19.55.30
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 21 Jun 2024 19:55:35 -0700 (PDT)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: jesse@rivosinc.com,
-	jrtc27@jrtc27.com,
-	corbet@lwn.net,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	cleger@rivosinc.com,
-	evan@rivosinc.com,
-	conor.dooley@microchip.com,
-	cuiyunhui@bytedance.com,
-	costa.shul@redhat.com,
-	andy.chiu@sifive.com,
-	samitolvanen@google.com,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Palmer Dabbelt <palmer@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>
-Subject: [PATCH v3] RISC-V: Provide the frequency of time CSR via hwprobe
-Date: Sat, 22 Jun 2024 10:55:14 +0800
-Message-Id: <20240622025514.66537-1-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+        d=1e100.net; s=20230601; t=1719025393; x=1719630193;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=65NmH14GHPU7cpQuxZpTQNNeNlAoovyzm058ERg2Xuw=;
+        b=iXE8HyFsgSyU6NEilK9ZerIQbsBhb37vB3Mbz1kRatIr3gOOS9QPp7yGOkFKv4TxIi
+         lyOet3KZ6yaUHYuk0yf7CA+KMvh1XWv0qX50mMzqg8b95Aq32KHws2Lj7/gmYfNQFem5
+         F2513gq49kqryPdgnI39WcS3fqW1nuJQXywa/QddYOkf+dfLq1iPVWP/M9zECL4AcjJD
+         u8ydl1Nnw+DMeAAHw4NTI99BAb7Wi5tvGTN7nsyZzYGWCQeYp18+wPuCZwP2USc49rF7
+         1YDCT+TbzM8hk9AE/PXlHufq4e9ibL+l8CEoVzHmZd5M+koFVjIVpjxfcOJqVbl6+l/q
+         vKJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPbOTHrygzmV5Kt7dsxfdkTxjR+AUhR1y3VFOGvjPSMbqGC0cbRZiU+6N0adj/qq4kr++r/Nx3WFH8qBsz9yzqThLHPhhdYsYB7JkT
+X-Gm-Message-State: AOJu0YxrwLhnH0UXJlBytGJU5c4VBCYCQ+bufg0OPo4/6ld+8dkdCk12
+	1Y4LyeGnpHX4WVPR0v/h5rkC6GJoo5bZV2f/Du6vT+nCgTWfgGIS
+X-Google-Smtp-Source: AGHT+IHc/r6is/zY8phKNX+2LLsnBPGxaCP+UtI2f3FTXM0auYwzn5mRA7w5/PdKcGYLfzRjgrr4IA==
+X-Received: by 2002:a05:6a00:1d1c:b0:706:31d9:9c9d with SMTP id d2e1a72fcca58-70631d99de7mr10747841b3a.7.1719025393317;
+        Fri, 21 Jun 2024 20:03:13 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70651254c67sm2196086b3a.97.2024.06.21.20.03.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 20:03:12 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org
+Cc: baolin.wang@linux.alibaba.com,
+	chrisl@kernel.org,
+	david@redhat.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	mhocko@suse.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	willy@infradead.org,
+	ying.huang@intel.com,
+	yosryahmed@google.com,
+	yuanshuai@oppo.com,
+	yuzhao@google.com
+Subject: Re: [PATCH v2 1/3] mm: extend rmap flags arguments for folio_add_new_anon_rmap
+Date: Sat, 22 Jun 2024 15:02:56 +1200
+Message-Id: <20240622030256.43775-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240617231137.80726-2-21cnbao@gmail.com>
+References: <20240617231137.80726-2-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,80 +83,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Palmer Dabbelt <palmer@rivosinc.com>
+>
+> From: Barry Song <v-songbaohua@oppo.com>
+>
+> In the case of a swap-in, a new anonymous folio is not necessarily
+> exclusive. This patch updates the rmap flags to allow a new anonymous
+> folio to be treated as either exclusive or non-exclusive. To maintain
+> the existing behavior, we always use EXCLUSIVE as the default setting.
+>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> Tested-by: Shuai Yuan <yuanshuai@oppo.com>
+> ---
 
-A handful of user-visible behavior is based on the frequency of the
-time CSR.
+Hi Andrew,
 
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Reviewed-by: Evan Green <evan@rivosinc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
+Could you please help squash the following change (a documentation
+enhancement suggested by David) into this patch?
+
+From: Barry Song <v-songbaohua@oppo.com>
+Date: Sat, 22 Jun 2024 14:51:38 +1200
+Subject: [PATCH] mm: enhence doc for extend rmap flags arguments for
+ folio_add_new_anon_rmap
+
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 ---
- Documentation/arch/riscv/hwprobe.rst  | 2 ++
- arch/riscv/include/asm/hwprobe.h      | 2 +-
- arch/riscv/include/uapi/asm/hwprobe.h | 1 +
- arch/riscv/kernel/sys_hwprobe.c       | 5 +++++
- 4 files changed, 9 insertions(+), 1 deletion(-)
+ mm/rmap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index df5045103e73..ec3c99474ed7 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -233,3 +233,5 @@ The following keys are defined:
+diff --git a/mm/rmap.c b/mm/rmap.c
+index df1a43295c85..9a8d9c848168 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1394,7 +1394,9 @@ void folio_add_anon_rmap_pmd(struct folio *folio, struct page *page,
+  *
+  * Like folio_add_anon_rmap_*() but must only be called on *new* folios.
+  * This means the inc-and-test can be bypassed.
+- * The folio does not have to be locked.
++ * The folio doesn't necessarily need to be locked while it's exclusive
++ * unless two threads map it concurrently. However, the folio must be
++ * locked if it's shared.
+  *
+  * If the folio is pmd-mappable, it is accounted as a THP.
+  */
+@@ -1406,6 +1408,7 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
+ 	int nr_pmdmapped = 0;
  
- * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
-   represents the size of the Zicboz block in bytes.
-+
-+* :c:macro:`RISCV_HWPROBE_KEY_TIME_CSR_FREQ`: Frequency (in Hz) of `time CSR`.
-diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
-index 150a9877b0af..ef01c182af2b 100644
---- a/arch/riscv/include/asm/hwprobe.h
-+++ b/arch/riscv/include/asm/hwprobe.h
-@@ -8,7 +8,7 @@
- 
- #include <uapi/asm/hwprobe.h>
- 
--#define RISCV_HWPROBE_MAX_KEY 7
-+#define RISCV_HWPROBE_MAX_KEY 8
- 
- static inline bool riscv_hwprobe_key_is_valid(__s64 key)
- {
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index 2fb8a8185e7a..5053a9b18710 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -74,6 +74,7 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
- #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
- #define RISCV_HWPROBE_KEY_MISALIGNED_PERF	7
-+#define RISCV_HWPROBE_KEY_TIME_CSR_FREQ	8
- /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
- 
- /* Flags */
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index e4ec9166339f..3d47edc04a3f 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -8,6 +8,7 @@
- #include <asm/cacheflush.h>
- #include <asm/cpufeature.h>
- #include <asm/hwprobe.h>
-+#include <asm/delay.h>
- #include <asm/sbi.h>
- #include <asm/switch_to.h>
- #include <asm/uaccess.h>
-@@ -227,6 +228,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
- 			pair->value = riscv_cboz_block_size;
- 		break;
- 
-+	case RISCV_HWPROBE_KEY_TIME_CSR_FREQ:
-+		pair->value = riscv_timebase;
-+		break;
-+
- 	/*
- 	 * For forward compatibility, unknown keys don't fail the whole
- 	 * call, but get their element key set to -1 and value set to 0
+ 	VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
++	VM_WARN_ON_FOLIO(!exclusive && !folio_test_locked(folio), folio);
+ 	VM_BUG_ON_VMA(address < vma->vm_start ||
+ 			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
+ 	__folio_set_swapbacked(folio);
 -- 
-2.20.1
-
+2.34.1
