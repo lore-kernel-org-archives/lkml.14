@@ -1,90 +1,126 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2161CB660;
-	Sat, 22 Jun 2024 15:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D857014B965
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 15:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719069908; cv=none; b=sc2ELyi3pAekSNnKltqDLwgok5N6gc+aLrlrwtgrdBqO8Wijy5m7/o97Z0GfFOgmd6vrNtLc/tmaFtGfPBVteLmm2jNA39MbWwpbZog3P2EKZiGWh5f+vDZfeoJrNgCz9/V3sdEpBYrl5apqgNu6vz5j6LgKfw6fkJw8WtOmcCQ=
+	t=1719069953; cv=none; b=T5ZFqHcHAEYCep87FtVqVdBkdeFSKB8p0DwZWY51So7rZNuCDcNkFybdzNkbWk2xe0SU9okpQK+ny1uDbgHrVY9460Nny1FH7uGh2SlqU7pMFN1GI4SsKE4AHqk+Z9qWe4J2h9RvPrh30flSUC8VdRedcMMhtGVOy6Q6Q3274eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719069908; c=relaxed/simple;
-	bh=fUdDu2yoZ6+wNUWrwToAORtf2lLzJ28mpOYZoq94kRY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=neLcfQLlBrx37q32apQ6HXbXKBk2fHXrYeu0vykpGM8RdwmkX060/cedeODZY2VJJPKsOJMRTPTkqRFALgIn99fBHpwkeLdFtJt0vSsQSCklffwBkx6cTIlwMEzI0bweTXE5WVChnkMZERXWoh8654UdvxoXvVdJSdrFgK6I7j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=TiC6xX/q; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719069953; c=relaxed/simple;
+	bh=Yu8GOdoq+eJNpH+CNxbmQ50ulv255DXgrq/+0Sxpm4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h+BHFr+LUvkhtjtNo1IOGEyq7hpcvB5Ct3wmHGc4iJsTWFo6tASncX5o03S7WjARsNBQmbW4vsNnw8wUYC6GtPpvrBjIAPNjpSNRaJ0WI4sPRN/3YSe7U5JGygTSSDOo8jYz55YZ3wwm52CSy2+FSk8Wwc0htffNLnNNP3qywC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TABpHXSo; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="TiC6xX/q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719069870; x=1719674670; i=markus.elfring@web.de;
-	bh=WECqVRv0TZb8C3EeVUwSaylaWepEfohQXMBJFu7n5+E=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TiC6xX/qTiwXM7MccOqGzXJiM8o/dpIoCuaAGXGIu0lL3Z2+vQpe3lZNIgE2X7kS
-	 thJmUMEfvw1L2Brpg0vdQTpRABf137nKUrUTIWpAfhnCsgdIDftlMZZmWOJq1cQpy
-	 pNndir5cSc/kwWMvXonAnP9E9evOd4aV43k46dyNYeajDWrulZOTcHRPjTZtrkuAn
-	 AySA9dV5A2ClcTF+y9T4r6vChAFOpepBsiHdp0TJfOO2CknUodTj9OgM+O80n8Hai
-	 HHt3QZpVEil/Ho102vR/h+rf9qp7czrhCSRg1YVPXRr4siKGiOBkvcJE0zppEcaNh
-	 ++pne4RzU+7MgZjIkw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M6091-1sIZtd2lpL-00DHjP; Sat, 22
- Jun 2024 17:24:30 +0200
-Message-ID: <bb23a7b0-dce6-4359-995a-2c12cf30cfff@web.de>
-Date: Sat, 22 Jun 2024 17:24:25 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TABpHXSo"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4218008c613so25347425e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 08:25:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719069950; x=1719674750; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VbSodxAaiDtcKinNeLOLfj3D7ZLToasRWjY0Ib8lWzA=;
+        b=TABpHXSodCR8N/nrOFFlQ1epJrkBIom6kkndvCyXKlciv+kPose9ypDp4+jLsRjZkv
+         BRkxdZw3NTWsvzMLL491RxJtEbWGCa+IcWywwZPOydKHhugC8VloThGyBA3IKVseWopD
+         ELg7cV7Hco2EFjPfI0GqO7Pjtos7DWEPe5wniuO9XLYSgDG0F4ShSlanS+PdfyncHUtM
+         MoGoriDDeAk9D1YhdwYBPCvVlf1bbq1uc0CLkF2ScmzEjc9U6+JIo3pL8gwNwZLbF1ka
+         2RjRPeAm8SCFm7gxffyWB+AGreJgnC6bz5f3vJ8AOgn05DJ4AZ5c6AuyZWacMnLnyRVU
+         rClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719069950; x=1719674750;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VbSodxAaiDtcKinNeLOLfj3D7ZLToasRWjY0Ib8lWzA=;
+        b=l/KRMetowPrWEt2WEgWnUVqoNtKjOcRKa3BBaGM5l9abj3/wnNfcLhjz82PHYidyWK
+         pxaPY2IiM1YOI5R/fNfouM6JE6hbVFfm0CbEmUp2Lv5FeXF/mbg0lHEU9Q90we8PxqKj
+         6fkOsjs8fsHp4cQAgJ+gaIyLSJhrwZZixG24cBtf85F7/u3miqMQFhUnuyfg0RYMVpP+
+         4SkLNwnSttvmMHLKhn+dTnQ/z+80mx7F09daZyAwCaMaUGA50KlsG8YlnOFwTFcySB18
+         2rDtTdSUE6SEX3mdRBOk3SHO8DekkXGYDca8fHm38FgPODfTWU3HNWkDOfmdC/DFpQQC
+         pfdg==
+X-Gm-Message-State: AOJu0YyOQs6cglGEI9TxuP8D+k2NUj/lb6VIFGcRtVQbAjAGOHx+0+uj
+	EhipIt0SoEcWHwxpZivS3gq/6lxLl4R+c+tYCHYwh3xBC4FcsUAi/5bHO0Sz
+X-Google-Smtp-Source: AGHT+IH51O2rOHJnHQpU0hp8IG8Mkt+2PFJGTinb4XvfwotsyX2qmjfdZyYs3FFP2WhjjLvO8TaCJA==
+X-Received: by 2002:a05:600c:4186:b0:421:7c6b:4003 with SMTP id 5b1f17b1804b1-4248cc66c43mr2303975e9.38.1719069949770;
+        Sat, 22 Jun 2024 08:25:49 -0700 (PDT)
+Received: from sacco.. ([217.201.157.243])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d208b27sm108053655e9.30.2024.06.22.08.25.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Jun 2024 08:25:49 -0700 (PDT)
+From: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	javier.carrasco.cruz@gmail.com,
+	julia.lawall@inria.fr,
+	skhan@linuxfoundation.org,
+	Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+Subject: [PATCH 0/1 RFC] drivers: cacheinfo: introduce automatic cleanup
+Date: Sat, 22 Jun 2024 17:25:25 +0200
+Message-ID: <20240622152526.131974-1-vincenzo.mezzela@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, linux-aspeed@lists.ozlabs.org,
- linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Joel Stanley <joel@jms.id.au>, Neal Liu <neal_liu@aspeedtech.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240622095618.1890093-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] usb: gadget: aspeed_udc: validate endpoint index for ast
- udc
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240622095618.1890093-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yIDH9MnOrIf0xCjyLzgV99kn2dkVnUILL8Ig2mwCXjJ1DMn9JRf
- hwtJM/HMYJDzvWmRpWzeOVbgEWfOmdeqpLtVm6dy+WImF6+hxuh41iczAODFZj+4EjHeylD
- RWJTXrMJlJBKN5/aXx+aHfGF1vixbncCTvj6umHs2Vf0oeLQkx7xdhUDyhs9scmvZz+rlIc
- KrfidPgw7I1m/gpW/02/Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BtDLJqtpZP4=;YBAa051E6UtkLYeabXtx0bDWGu/
- O3XQy4Cw5LGx+hpgnHBQF7I1hj0zHDYrqkcxs0vfCcNBZ7MWjhJDV4XzO9n2OSExZMaCegZUX
- vEaznDvYvvI4Q6kIunFKmKtqeedik/tYOq1iyfwndJz0UB9YkQbpNQkg6SZW8rQ/uhX9V+fsU
- 0Oj9GMYfVFceTioDSTBp5MPOcXQGkSc+FFKsQsAvRSr9+OXiQpZgOFlZnZNFAvMvsYvMc6Lik
- KkTndu3bUBGdu1XsHLV7L1t8NlxoAZn5/666WLlY459CHusNOwHSf18g2hHo+sbSN9OoG5jjw
- X9kcDRBXaEJUCdONvGS/rQQpp5x8c+MP7JBEH6wkIhBRd7CytNABNLyUMKPURBPcRWztrY2AE
- PHWbs3SqMnpm2WFqOgjfoyTGWZ427jhDnJRzgZANAkD2Vv6oksEp0dgeYP8GOJ5dnyJnUluhw
- 3XaKyDVr7pfVxNcBcEcH6Umm1ypb22Mk5FZSfdT1MDgyJ55MNXHPMHHZNq0onLkY53unuZP/1
- kU68XdYcktGMkNnebqcZBQzhe1ZR4yJztjIPCmhGj2l/ttozoYQ11kBiHZbmmTXIAFTlG8Enh
- EzxzstMLsev/GzqPD1idi9+8P5gGvwoPTkStZ5j5a6NsIefh/fA5OL9PLiZuAK5e0sZlpMFHi
- kYlqQLs6SP0cOZh46dqHIPv2XP+bLl3u6e+l0MN0lofv5o7lWtXgjbFo+uwKCbnSNKIgGQNeL
- w+x9kUlgGE885pW5DbqiSdSJufJZfWP9pKdjggWsQ91JBcumc1hs0bnRzd1P+hJ/1D6rS3Jd8
- 5GmvR0yOUG+rLGwqv83NIZxwadLxHplV9kJP2OiEhni9g=
+Content-Transfer-Encoding: 8bit
 
-> We should verify the bound of the array to assure that host
-> may not manipulate the index to point past endpoint array.
+This patch introduces the automatic cleanup feature using the __free attribute
+in drivers/base/cacheinfo.c. With this enhancement, resources allocated
+with __free are automatically released at the end of their scope, improving
+code maintainability and reducing the risk of resource leaks.
 
-* Can an imperative wording be more desirable for such a change descriptio=
-n?
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/submitting-patches.rst?h=3Dv6.10-rc4#n94
+This work follows a previous patch [1] that introduced the same feature in
+drivers/base/arch_topology.c.
 
-* Will any tags (like =E2=80=9CFixes=E2=80=9D) become relevant here?
+To introduce this feature, some modifications to the code structure were
+necessary. The original pattern:
+```
+prev = np;
+while(...) {
+  [...]
+  np = of_find_next_cache_node(np);
+  of_node_put(prev);
+  prev = np;
+  [...]
+}
+```
+has been updated to:
+```
+while(...) {
+  [...]
+  struct device_node __free(device_node) *prev = np;
+  np =  of_find_next_cache_node(np)
+  [...]
+}
+```
+With this change, the previous node is automatically cleaned up at the end
+of the scope, allowing the elimination of all of_node_put() calls and some
+goto statements.
 
+The updated code has been compiled and run on QEMU. Debugging confirmed
+that of_node_put() is called appropriately. However, I was unable to hit
+all code paths during testing.
 
-Regards,
-Markus
+Sending this patch as RFC because I wasn't able to debug and test the
+code in the while loops on QEMU. I'm also getting some warning and
+errors from checkpatch but I believe these are false positives (?).
+
+Thanks,
+Vincenzo
+
+- [1] https://lore.kernel.org/lkml/20240607163350.392971-1-vincenzo.mezzela@gmail.com/
+
+Vincenzo Mezzela (1):
+  drivers: cacheinfo: use __free attribute instead of of_node_put()
+
+ drivers/base/cacheinfo.c | 41 +++++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 28 deletions(-)
+
+-- 
+2.43.0
+
