@@ -1,75 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from hall.aurel32.net (hall.aurel32.net [195.154.113.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36FA14D283;
-	Sat, 22 Jun 2024 10:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B6E14B09C;
+	Sat, 22 Jun 2024 10:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.113.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719052830; cv=none; b=onF4ppPOuAJQMIJSy+3rabOi36CXpw+GzfhNHOSxDlzH76LXxjPv9E/6AfqKOWe+GrHUISS+c5qYBsWsjyHiXjf++beQKfPXGeOObAtwLPCtAyv5BbjdNx3IQIFIctBzDL5qtgvaxm/ppw+Fge4WW1garQ3c1fncE8TuSVTntC0=
+	t=1719053013; cv=none; b=rLHsTEClA9l5leN4pSkcx/K8KELhqTWGse99RZhNtgZ2V55364Vhcx3qLscImfz0LtgbOHgAO+XtD934zwfzGJA5oFDeC/8YGZexx6tTzypJM+5g29L9CHg+uQFOS5SlaFAD47e5EJEUKp4DSx3e7nTidX10ZEtocMEZ83e8720=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719052830; c=relaxed/simple;
-	bh=mWJ94SzV2JikaOg+G2Vcy7tPZ0yWItKwK0O4bbaxP/E=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KZ4XKUH/3dv3aIewn1H3ypCn7xKLjVc3tvucq2qbvS1mnYwIx5W0ma8vQcHlsLnVEVVvjtkwdhjpTFMReK1JilrnNjYueTINhqkTroP18qu6Ivaou8BE6JtwaH4+jbMYWyuptIvmlWiDw09UQM4Wi0bmyuo7lIZyHrTTyi4hCxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCghPO1R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719053013; c=relaxed/simple;
+	bh=LVfYR8/jFkVpAgI5c9DnudXm1sPcC5/oQYIYNdp8Jys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mfrpAsHEHqTRB6X2IOHRVfQniHPxGcZi5b78H8RujVF4MC3xSNwrNBt6oed/IvZZUVqW61Zz5KHF5i8licOe1LfjmNmN82l98oQOaX7VOhbhrVOstYr8frNfSSfBFX0o6DUPAQmNTdA9swFnfUmn/qR4PApCX5VgKg8JLpwRI3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net; spf=pass smtp.mailfrom=aurel32.net; dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b=bTv1y0xU; arc=none smtp.client-ip=195.154.113.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurel32.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCghPO1R"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 65192C4AF0C;
-	Sat, 22 Jun 2024 10:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719052829;
-	bh=mWJ94SzV2JikaOg+G2Vcy7tPZ0yWItKwK0O4bbaxP/E=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=WCghPO1RdIH2p/jgw6g1NkZ1PsatWklPtnQyAGrT9256GyjsuC0pIyYe3ZffTDNm/
-	 br+t1tfR5hu8j+ESZnUH2mQho9xCxJfC2sZEcd1IyDydkx4rc/CVnGomMOXFSkchBW
-	 XYYwZO3JBZ6FVrME5ad7RYZPaCWD8pW4zN3BYbJmPv1o+kgsWF4LiMHCZCMjYDx4+P
-	 sq9f/W+wPlFdg0hNl9WrFL+wcv+iGafatxCmYSzQS/tsv73T2K093fTWSHU8nNZcAW
-	 8UXxG8lzsZ9NAi+Ac0CK9HMX/bYwF4ZRckIFjGkfvmm1SCzMvo9uKHJWWaL9PEnuNI
-	 7IUeva/3wSbnw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5B88DCF3B94;
-	Sat, 22 Jun 2024 10:40:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="bTv1y0xU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+	; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+	Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+	bh=L7GES3nlJ/mbxpjgjMloPbQ6xU28njSFXetD3IW/C9k=; b=bTv1y0xUMPOFAGcp8NXNG5sAri
+	9Wuf4Hr94UiZ7MZR0BqUJALKC7GisIpFxsW4LjUzSTu1FQa6X6/y1SDljDg3i+o2SYsmilCnpGMmt
+	CbkRrHufQlZoVG/xB9JElfWnkZp8zN4O9JUqJfB+BjT42Xt+9oCe/VUU5TuPkmepcyVGseWADjq2b
+	cj2nad8/d1eEV2nuXGQo+5U/ebwR2rLenZBgHimL1u9n/wlKqDQcyCZZCZY+GI+SnPDQFkaePavUf
+	KzQEhPT/Mso/7rXN/RH21FOxsdKDOYvAKYTGT2lc97Jjyt56u0C1qbY7b2LoeI6bbTsFUMb5cK9mp
+	KNunQfcw==;
+Received: from [2a01:e34:ec5d:a741:1ee1:92ff:feb4:5ec0] (helo=ohm.rr44.fr)
+	by hall.aurel32.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <aurelien@aurel32.net>)
+	id 1sKxVY-003oby-0i;
+	Sat, 22 Jun 2024 11:58:08 +0200
+Date: Sat, 22 Jun 2024 11:58:06 +0200
+From: Aurelien Jarno <aurelien@aurel32.net>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Anand Moon <linux.amoon@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] hwrng: add hwrng support for Rockchip RK3568
+Message-ID: <ZnagLpqZS4UjDR6T@aurel32.net>
+Mail-Followup-To: Daniel Golle <daniel@makrotopia.org>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Anand Moon <linux.amoon@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1718921174.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: xilinx: axienet: Enable multicast by default
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171905282937.9713.8828756778690498046.git-patchwork-notify@kernel.org>
-Date: Sat, 22 Jun 2024 10:40:29 +0000
-References: <20240620203943.813864-1-sean.anderson@linux.dev>
-In-Reply-To: <20240620203943.813864-1-sean.anderson@linux.dev>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: radhey.shyam.pandey@amd.com, netdev@vger.kernel.org, michal.simek@amd.com,
- kuba@kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1718921174.git.daniel@makrotopia.org>
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-Hello:
+Hi Daniel,
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Thu, 20 Jun 2024 16:39:43 -0400 you wrote:
-> We support multicast addresses, so enable it by default.
+On 2024-06-21 02:24, Daniel Golle wrote:
+> Rockchip SoCs used to have a random number generator as part of their
+> crypto device, and support for it has to be added to the corresponding
+> driver.
 > 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
+> However newer Rockchip SoCs like the RK3568 have an independent True
+> Random Number Generator device. This patchset adds a driver for it and
+> enable it in the device tree.
 > 
->  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 1 -
->  1 file changed, 1 deletion(-)
+> v2 of this patchset has been submitted by Aurelien Jarno in November
+> 2022. A follow-up submission addressing the comments received for v2
+> never happened.
 
-Here is the summary with links:
-  - [net-next] net: xilinx: axienet: Enable multicast by default
-    https://git.kernel.org/netdev/net-next/c/185d72112b95
+I didn't have the time or energy to continue working on this. Thanks for
+continuing the work, I'll give it a try at some point.
 
-You are awesome, thank you!
+Regards
+Aurelien
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                     http://aurel32.net
