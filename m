@@ -1,144 +1,126 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9466F4A20
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 10:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3A014A0A4
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 10:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719050495; cv=none; b=LFGk3RpJzUcFj8K3ZnW96sguf0iC3LY4FwnfbRYQEOJYNFECkKtulmngI3iv4ga121e0BQXdxmIRyJpxzkEW7DZP7wEg/HxIV25tNk2LmqXXn2yCx52KJ19mpFZwv9CcAVTeq0ppb393n5apcAdY6vb1GvaIlfLCkNS2Z3z7dbU=
+	t=1719051067; cv=none; b=mgrdm4vuq5OvpjY17xCX8nbjFV+vhB7UoXqk52GEvHptT9BuOyH42BtVgdSHfg6r3c16wS54hvtW4RgJzck7L804m/5k7IcCeceNYeNfyBkKjgSl/onhecGzqaYSJD7xx3OBbNr5wrAWhlyOXbezF70di3oBvn4z0ANIzSMOEqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719050495; c=relaxed/simple;
-	bh=SngcoCWwa17YMlF9y7iUlKcCdVe2vTc0YyJJ4ug3gkI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KMqOKc9ta7CEjzumycV1CEC9+pAUSs2ti1HJPBkWQhOFAPY8H8Ul56xijMHvOdqDK9Y0CbuWVClEIUbLGv1hc1a9eqSRn2dZPMCfWTBG+ZlueJcvN75mp0I5tfsMXzTYHI1buzbQolqYhy4Ts/wmw9Cz455/LF6QJr7Onby2a+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5/gZdx9; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719051067; c=relaxed/simple;
+	bh=xStPxu56NKR5AZX+Gj7MCK4+Fcx4CxuAPdTvEB6csKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g1agbHUDrVC+ViYydWDHEHJtK+uEpG0J5B1XddiE92i2hVWcW5pcRbkfc+YCBxW620SuLkUItDwdNHr29BT20nztqSxVJvuiF+2NCe30z8hp/iO9JWZU1T/Z4KdSpk2g6g1/+NveGAwYcIqtk0X79pfC9dlXFqvW4rqduUiGPgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oIVTEvze; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5/gZdx9"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7066a4a611dso168312b3a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 03:01:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oIVTEvze"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-424720e73e1so23567705e9.1
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 03:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719050494; x=1719655294; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XqMTUZuiEpOFDB1baLxpBZo9bkFoxkrSKRZCo1yWC2s=;
-        b=g5/gZdx9SN6qhecGh4WiOYKeRC9jRyCq7RsICtjOs2DGINeASaqfE3AVbidIFjye3x
-         JFthZbUkxt5nsT1DgKrpgXlEfn5N8pGicgRGWxru+qQbQtYpS1ftwnk8cn+XVELOTLw/
-         05MmvqRopj/dbtu2s6YRmauFrWRe5Lamn84lg+rIlOlmw1RjiqSGw3x0gS75pCPdkTla
-         dGIWv0hTyRvAR6xykZeAC5nuyYEQFPhqdYGKICYWxSQkJd2G4Ds2vCBOytrtlGgrw5T2
-         SKBjVEnSNGOozjbWxDx4xecEQ2I7Z5D6wX9SnClaDNqBsqr7hdhjEse7iu196Ug/2bxY
-         E+xA==
+        d=linaro.org; s=google; t=1719051062; x=1719655862; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RsQGvp+qGQjpw8YL28OmQskK7HTEsVWEKYoqU07XWo0=;
+        b=oIVTEvzerf7JKPbCXH4cjNUemQYHZjxow4hYGrcngX8o30KzU1zSZ0iXaY2PEY0VEC
+         NB3YLIdXVsnojhh6JGIEfOWdHSA1Q5vetD3FMmRPoZcX2IWywl5XF66W/mlLLyJw2jZ7
+         4POERxeFW7IRAld8jrKJzMA2x/Iymxm4FaBAk7u5E+I9OtQez4+b/IK0RGGaPCoFBCt3
+         yCL7ajQAtKfZGtvq/AoUXycFyaMma+BOcozpN8JQiMlBicHS+rkglwQChTF3IPbC4Sa+
+         P0YhR1m0y3O9Vd3KTFq9TfKhZchzQTuH8jhBq0hkHjZ+p78eOzX+yH6E3lrE4EFSKVpU
+         qOkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719050494; x=1719655294;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XqMTUZuiEpOFDB1baLxpBZo9bkFoxkrSKRZCo1yWC2s=;
-        b=BTcuZxCFla84+kygcPpuqtxWbZQxYy+/ufcLHzbIlFs04vkYQ7g2CEvc3tZ3zGVeK2
-         NH0JpQG2fx4Uys6pjO6IsB1gdF2hom6qKBvkzpy67bbdyIg8YnMQuypTXNXlowCBU+2U
-         gwqgM53xbjDD4yPEq2vTjl+a3n2LLbJvFNr2EnB6VpqNeRGvcuZY6UZzPDdi03a5c7O7
-         2lnnD5dy6MS2uJsxTHKyFZYa67jagoEZM6tEPoTeZNHs0rRMifgNgHAcueXHacMbhMlA
-         ug4Vc48wXJIx9YqhKQlkSkefLYYnCQFgJ5C9d6BSYdhhMfYBGKwbJVnqpwmVPZzHzBU5
-         IZCw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9xFrflQ7b8QwS2a7iHQGTSWlVouZzBJdrARexwLEqpJY01ggVCVQRHgQl1obgL5T4gYo/nbm26FKDbFjYLlWPb9XqdUkBOSk7sKXp
-X-Gm-Message-State: AOJu0YwRQmLy8OcKBYvQV5TvUoJI4T6vqU72WaGwk50H9cvWbUYuzdux
-	RsACsRvxLlrSvyJlKPR3g/vP6hqjwJKte8QKDSa0FUMRUFHboI7q
-X-Google-Smtp-Source: AGHT+IG5+gqUJ0pcMtEkBAAeVC8MQVAyDbxFzNmRYBsf3upGPEwH2mux8H1fv5kZLq2BlXcL6pgK2Q==
-X-Received: by 2002:a05:6a00:1701:b0:706:6c38:31f3 with SMTP id d2e1a72fcca58-7066c3833b6mr516508b3a.8.1719050493620;
-        Sat, 22 Jun 2024 03:01:33 -0700 (PDT)
-Received: from localhost.localdomain ([2403:2c80:6::3057])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065129b9edsm2838593b3a.148.2024.06.22.03.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 03:01:33 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-To: david@redhat.com,
-	akpm@linux-foundation.org
-Cc: 21cnbao@gmail.com,
-	baolin.wang@linux.alibaba.com,
-	fengwei.yin@intel.com,
-	ioworker0@gmail.com,
-	libang.li@antgroup.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	maskray@google.com,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	sj@kernel.org,
-	songmuchun@bytedance.com,
-	wangkefeng.wang@huawei.com,
-	willy@infradead.org,
-	xiehuan09@gmail.com,
-	ziy@nvidia.com,
-	zokeefe@google.com
-Subject: Re: [PATCH v8 3/3] mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
-Date: Sat, 22 Jun 2024 18:00:57 +0800
-Message-Id: <20240622100057.3352-1-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <e7c0aff1-b690-4926-9a34-4e32c9f3faaa@redhat.com>
-References: <e7c0aff1-b690-4926-9a34-4e32c9f3faaa@redhat.com>
+        d=1e100.net; s=20230601; t=1719051062; x=1719655862;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RsQGvp+qGQjpw8YL28OmQskK7HTEsVWEKYoqU07XWo0=;
+        b=IuVkqsK8+AtNyg4I9dgt2XmXb8ylN0GWp9Tx972eJhESe5eKMWp66AKvnzxAZVkjZp
+         SlZlH35cP3ptlgILsmVOb045tQ7yVm5m5JSBjV0XqoZBe+Zu1e2CrG/7PiwwRXHQCsrp
+         pVahOa2L7h3trwm+nS2iAZh3WtEIeU87OVzY538ycXHN7d9fr3abhCq8EE2sKx7vNy96
+         ayAIxWJEOdyngUE+Adb7faC5EGdRKjTNBuenm2NX0hRMnW3a1vfvxC3czBJ2I6SxezoB
+         d3ddIbY1oVSkDDfxLpw/XdPwYh9q9HDZXKTmnpxRf/Zbb80wDt0vLF9784QPUuilQCJq
+         4dzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAPIpjwmDUYyHBJFCmbijff5n65P52iZE8a3lniYNhiFiv9zumY2QZqLxZ/M2NKxc6xSsZdfIiuinKxIgkgti/xTXbR7007T/yYQfm
+X-Gm-Message-State: AOJu0YxJGkI8Nlcqdizjg7VZ2+BVCyck/lTR984uTt8IyWJhATRCel7Z
+	Ru+fxknkVVQvK4GmQ/dW4iWobJXx8h44gwWAV3REx2ywftN+ex7aAaCx454kNwrEgCEJCl2kwgw
+	L368=
+X-Google-Smtp-Source: AGHT+IGu1VMVHM1in3bew6TKF/LOVzW8ud+KEi2XpY8URRBQjXEnSYQfIbrIgVM07kRbmhpQ0baWuA==
+X-Received: by 2002:a05:600c:4896:b0:421:d8d4:75e3 with SMTP id 5b1f17b1804b1-4247529bcd9mr70390545e9.40.1719051062029;
+        Sat, 22 Jun 2024 03:11:02 -0700 (PDT)
+Received: from [172.20.10.4] (82-132-215-235.dab.02.net. [82.132.215.235])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4248179d3afsm62166325e9.5.2024.06.22.03.11.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Jun 2024 03:11:01 -0700 (PDT)
+Message-ID: <9af37f6c-cd44-4a57-8a34-969e23b0342f@linaro.org>
+Date: Sat, 22 Jun 2024 11:10:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvmem: core: limit cell sysfs permissions to main
+ attribute ones
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Marco Felsch <m.felsch@pengutronix.de>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240619-nvmem-cell-sysfs-perm-v1-1-e5b7882fdfa8@weissschuh.net>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <20240619-nvmem-cell-sysfs-perm-v1-1-e5b7882fdfa8@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Andrew,
 
-I made some minor changes suggested by David[1]. Could you please fold the
-following changes into this patch?
 
-[1] https://lore.kernel.org/linux-mm/e7c0aff1-b690-4926-9a34-4e32c9f3faaa@redhat.com/
+On 19/06/2024 19:09, Thomas Weißschuh wrote:
+> The cell sysfs attribute should not provide more access to the nvmem
+> data than the main attribute itself.
+> For example if nvme_config::root_only was set, the cell attribute
+> would still provide read access to everybody.
+> 
+> Mask out permissions not available on the main attribute.
+> 
+> Fixes: 0331c611949f ("nvmem: core: Expose cells through sysfs")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+> This was also discussed as part of
+> "[PATCH] nvmem: core: add sysfs cell write support" [0].
+> But there haven't been updates to that patch and this is arguably a
+> standalone bugfix.
+> 
+> [0] https://lore.kernel.org/lkml/20240223154129.1902905-1-m.felsch@pengutronix.de/
+> ---
+>   drivers/nvmem/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index e1ec3b7200d7..acfea1e56849 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -463,7 +463,7 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
+>   						    "%s@%x,%x", entry->name,
+>   						    entry->offset,
+>   						    entry->bit_offset);
+> -		attrs[i].attr.mode = 0444;
+> +		attrs[i].attr.mode = 0444 & nvmem_bin_attr_get_umode(nvmem);
+Why not just
+attrs[i].attr.mode = nvmem_bin_attr_get_umode(nvmem);
+?
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 4b2817bb2c7d..0cb52ae29259 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2693,21 +2693,11 @@ static bool __discard_anon_folio_pmd_locked(struct vm_area_struct *vma,
- 					    unsigned long addr, pmd_t *pmdp,
- 					    struct folio *folio)
- {
--	VM_WARN_ON_FOLIO(folio_test_swapbacked(folio), folio);
--	VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
--
- 	struct mm_struct *mm = vma->vm_mm;
- 	int ref_count, map_count;
- 	pmd_t orig_pmd = *pmdp;
- 	struct page *page;
- 
--	if (unlikely(!pmd_present(orig_pmd) || !pmd_trans_huge(orig_pmd)))
--		return false;
--
--	page = pmd_page(orig_pmd);
--	if (unlikely(page_folio(page) != folio))
--		return false;
--
- 	if (folio_test_dirty(folio) || pmd_dirty(orig_pmd))
- 		return false;
- 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index df1a43295c85..b358501fb7e8 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1678,9 +1678,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
- 
- 			if (flags & TTU_SPLIT_HUGE_PMD) {
- 				/*
--				 * We temporarily have to drop the PTL and start
--				 * once again from that now-PTE-mapped page
--				 * table.
-+				 * We temporarily have to drop the PTL and
-+				 * restart so we can process the PTE-mapped THP.
- 				 */
- 				split_huge_pmd_locked(vma, pvmw.address,
- 						      pvmw.pmd, false, folio);
--- 
-
-Thanks,
-Lance
+--srini
+>   		attrs[i].size = entry->bytes;
+>   		attrs[i].read = &nvmem_cell_attr_read;
+>   		attrs[i].private = entry;
+> 
+> ---
+> base-commit: 92e5605a199efbaee59fb19e15d6cc2103a04ec2
+> change-id: 20240619-nvmem-cell-sysfs-perm-156fde0d7460
+> 
+> Best regards,
