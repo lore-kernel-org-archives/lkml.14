@@ -1,401 +1,135 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 056334C6B;
-	Sat, 22 Jun 2024 07:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4372914C59C
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 07:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719040688; cv=none; b=rirn8/ENZmLwv7Qu1ANSwh41swoD8hkxqTeGZVIpslOtEQDj5MZcoVAnYEa1HisdoIuz3lRWv/j7kpPZZw5BemjBOfkP9gFGn0uarLYgfyoS3icedGCpRH8jJlRY4aie+j+5wWKFfSPXj//+w3aUfFqt/wZsM7YRNXrcVRCLF30=
+	t=1719040694; cv=none; b=Lu+y9dabzok8cJDmg8ywz27NLKhaEGu5nOvmJCx9+amJH8vWA+AtrGr34g67+SgPrxQvf7/FVmJTTmKzB4qv7HBllwMxjGXyUEMcWEUEfS4CSuxsngEDGj9GXaDr1B0AkpUZb7kf0XbBE6USpm41GpU/qMXJwa7zICbVru24tLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719040688; c=relaxed/simple;
-	bh=spvWJbedj093uLTNzrJN9s9a/T84DD78yey/AIugRPQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qioEFBJZdeg5kSD4JKVZrJLEoVbg81SQMDEtolBQwRzn3canOofy6InRNqNiWNpgmAMRcHBjQsO3kHdlZjxBUZnsKzBzi86IkAHx93PR5/qMvZG2DJOK1PCd4itbFO24Nh23cgrHEyJkYKSCbpeFCdVh5mECkUxKD4UyekzyMKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=J4fsIVaA; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719040694; c=relaxed/simple;
+	bh=Dwh3hngqTIwFb9W9PD6nYsx0EywIrvynYVJ8Zbfh+NY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uBrOtfTAy+MGG/2vKBfb3dlNOxm1qwL438xPy/UM1fysOj0vXU1ZV4eeF2wUoG7KLUPeqxGoAtcrxP95qJr8akGtLY0G2xJXyzy9kl/Nwa9qGjLA1B7EgIgiuJaX+FKs4WpvyY70G4Zi4gcMsy4EaOT0R0Qd1f1cuabr3iW9TIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uft+2Pf9; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="J4fsIVaA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=MHwCUrqFvaTbLTSbC2zSi9DEqElhDfe0ymagxR80BZs=;
-	b=J4fsIVaAFTshkpjD0TI6Q29CwERfaTgfN8+0OEn2hieLm5ppTTHh4lK7T8NxVc
-	uT0/BxCnMZxbn3hloNRNEe1XQJph/rTtBFIlSV0BVO0JBA2sO79iSF/C0XaRAqTO
-	+Qg0sVaF6/rlKuzp2qPX16NA4+bZHjtLcQLzCGpPxTm34=
-Received: from localhost (unknown [101.132.132.191])
-	by gzga-smtp-mta-g2-3 (Coremail) with SMTP id _____wD3_9vSeXZmqbwVAA--.6046S2;
-	Sat, 22 Jun 2024 15:14:26 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: tj@kernel.org,
-	longman@redhat.com
-Cc: mkoutny@suse.com,
-	lizefan.x@bytedance.com,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	Xavier <xavier_qy@163.com>
-Subject: [PATCH-cpuset v6 1/2] Union-Find: add a new module in kernel library
-Date: Sat, 22 Jun 2024 15:14:23 +0800
-Message-Id: <20240622071424.215778-2-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240622071424.215778-1-xavier_qy@163.com>
-References: <ZnXsUnAi7VnX0tZJ@slm.duckdns.org>
- <20240622071424.215778-1-xavier_qy@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uft+2Pf9"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52caebc6137so2904765e87.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 00:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719040690; x=1719645490; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8gk/WLnrU93BmHjjlJlU9hm1kE/s/S+tE20JTbJQLcY=;
+        b=uft+2Pf9nsEFjIor9cavmXcCshY19VLeboJsSUyAhRqR4/cRu89yH064Izsxtd9cEk
+         4uqBB3/IUx4aBy9X21kZfPrF5gaOKd5bmYIarSM3I6BMpdbwy2mnMMVGhLmUJBiRQuAC
+         ELjnE4HeiQYpmRHeq2I+A+dQERnu3JMVHhiYtMqU4tyIUnvlx/IssrRupyMEueD0C2I0
+         /wjcVeyESSt9Vq5o7k7ocuyvseXkiGKGBl2+23aQnhgVtIwKuC7ZAKkOy7fhK9ZwjhZW
+         rAWYfxm51zGsSFMA2eYVVeitMEE6OYs0HVRHsWVu0GpiwyxTA63h5/zH879N4QpYt3At
+         LxGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719040690; x=1719645490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8gk/WLnrU93BmHjjlJlU9hm1kE/s/S+tE20JTbJQLcY=;
+        b=sGV70sQrCh5wQUSwfXrjgEqzkBJYPoUrSTUWTpxMmJevmBqfHQf0k4e40YpTfLdC1x
+         13VQjaedOrzbNI1fdkKEguNkm/Hk17sr09YkhmFo6SMLNRw7n1cg4Ef5dLwa6wjsq8BL
+         NQhW40a62XEm/gQjVkno7vDzkqhK9o5ozNfxTwvUZhgT1QkP02zGsWSml3BPXhuJMhEs
+         vNRp4aUabaM/7sQNiZcKEl2amgW86j8dd0/rYFamMJdc0lakTK++qa6zDDebJnaOnaUk
+         TCALWH/HPKrZfRTQAd/iyj/vqEk34Pk1LwHqpIRFYoaMWTjIc6JGex8QyCWySzeadfpa
+         9sBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvZFuzTnK0M3WHg2JQiL7Eh8TLA+ojY7rlHjIeMhKSIom5ZHBkVLsav5ITZTiNb1PI1oJ3/uLKQ81FnF94Zp4alzQBeMMsWK4UeVmF
+X-Gm-Message-State: AOJu0YwDv9rHlIvkI9WaQUzrHcgDBO56D+L5GxfgLOJ6DDLxh7VEcWol
+	ffEQUg32jHudBzfRWHuEVsetJbXPXWP//bSuGvXuOmwpUBGzAYTlWBFnjhvA+aw=
+X-Google-Smtp-Source: AGHT+IGH6cKb0i17ESt2t11EWg7ayk6aCghT/OhE/tqOJdP/a/WQUFUKJeG5X8SncZ7fxcARxG/8OQ==
+X-Received: by 2002:a05:6512:3e02:b0:52c:5f12:5317 with SMTP id 2adb3069b0e04-52ccaa9268bmr8340293e87.44.1719040690325;
+        Sat, 22 Jun 2024 00:18:10 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd6454a96sm409678e87.303.2024.06.22.00.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Jun 2024 00:18:09 -0700 (PDT)
+Date: Sat, 22 Jun 2024 10:18:07 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: Simon Glass <sjg@chromium.org>, Rob Herring <robh+dt@kernel.org>, 
+	Frank Rowand <frowand.list@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Amrit Anand <quic_amrianan@quicinc.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Andy Gross <agross@kernel.org>, Doug Anderson <dianders@chromium.org>, 
+	Chen-Yu Tsai <wenst@chromium.org>, Julius Werner <jwerner@chromium.org>, 
+	"Humphreys, Jonathan" <j-humphreys@ti.com>, Sumit Garg <sumit.garg@linaro.org>, 
+	Michal Simek <michal.simek@amd.com>, boot-architecture@lists.linaro.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH RFC v3 0/9] dt-bindings: hwinfo: Introduce board-id
+Message-ID: <uz6f2tie4r4zlywt7vgeb44zl7hoxzdkmdsaluch2zlpp6cosi@jfhmdj4zbii2>
+References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
+ <CAFLszTjexpNEjo1sGVs67L0CAgGZLNkyn9RGfHRD7iHak_mtmg@mail.gmail.com>
+ <20240605100246481-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <CAFLszThbe_aUAq_5rCCiPV-bj60oq9UCc=vdDHwM3i6t44ohLw@mail.gmail.com>
+ <20240621142054973-0700.eberman@hu-eberman-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3_9vSeXZmqbwVAA--.6046S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWfJw48ury7Gw1ftw4kuFyxuFg_yoWkAF4kpF
-	sxGryfZa1DJ34Uury0krW5Aw4Sva1rGrWUGa1xG3W0yrnxAr10qF1jy34rtr95Gry2kF18
-	XF4agr15A3WUJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uyv35UUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiYwAGEGV4I4OGogAAss
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621142054973-0700.eberman@hu-eberman-lv.qualcomm.com>
 
-This patch implements a union-find data structure in the kernel library,
-which includes operations for allocating nodes, freeing nodes,
-finding the root of a node, and merging two nodes.
+On Fri, Jun 21, 2024 at 03:40:20PM GMT, Elliot Berman wrote:
+> Hi Simon,
+> 
+> On Thu, Jun 06, 2024 at 10:00:54AM -0600, Simon Glass wrote:
+> > On Wed, 5 Jun 2024 at 11:17, Elliot Berman <quic_eberman@quicinc.com> wrote:
+> > > On Wed, Jun 05, 2024 at 07:17:35AM -0600, Simon Glass wrote:
+> > > > Hi Elliot,
+> > > >
+> > > > I am just picking up the discussion here, which was started on another thread.
+> > > >
+> > > > I can't see why this new feature is needed. We should be able to use
+> > > > compatible strings, as we do now. I added a 'usage' section to the FIT
+> > > > spec [1] which might help. I also incorporated the board revision and
+> > > > variant information and some notes on how to add to the available
+> > > > suffixes.
+> > > >
+> > > > Does that handle your use case?
+> > >
+> > > -rev and -sku don't fit the versioning scheme for QTI devices, so this
+> > > isn't a generic enough approach. Patch 5 in this series describes the
+> > > versioning scheme for us.
+> > >
+> > > In the other thread, we had talked about using some regex based approach
+> > > for matching the root node compatible. I haven't had chance to work on
+> > > that proposal and will try to get to it in the next couple weeks.
+> > 
+> > OK, I look forward to it. Please do check the FIT best match approach
+> > and see how it might be extended to handle your requirements. So far I
+> > have not seen a need for regexes, but it is certainly a possibility.
+> > 
+> 
+> I spent some time collecting feedback from the team on using compatible
+> strings + regex-style approach and we're not able to add a regex library
+> into firmware, so this approach unfortunately won't work for us.
 
-Signed-off-by: Xavier <xavier_qy@163.com>
----
- Documentation/core-api/union_find.rst         | 110 ++++++++++++++++++
- .../zh_CN/core-api/union_find.rst             |  87 ++++++++++++++
- MAINTAINERS                                   |   9 ++
- include/linux/union_find.h                    |  30 +++++
- lib/Makefile                                  |   2 +-
- lib/union_find.c                              |  38 ++++++
- 6 files changed, 275 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/core-api/union_find.rst
- create mode 100644 Documentation/translations/zh_CN/core-api/union_find.rst
- create mode 100644 include/linux/union_find.h
- create mode 100644 lib/union_find.c
+Why? What is the size growth caused by the RegularExpressionDxe ?
 
-diff --git a/Documentation/core-api/union_find.rst b/Documentation/core-api/union_find.rst
-new file mode 100644
-index 0000000000..7109ad608a
---- /dev/null
-+++ b/Documentation/core-api/union_find.rst
-@@ -0,0 +1,110 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+====================
-+Union-Find in Linux
-+====================
-+
-+
-+:Date: June 21, 2024
-+:Author: Xavier <xavier_qy@163.com>
-+
-+What is Union-Find, and what is it used for?
-+------------------------------------------------
-+
-+Union-Find is a data structure used to handle the merging and querying
-+of disjoint sets. The primary operations supported by Union-Find are:
-+
-+	Initialization: Resetting each element as an individual set, with
-+		each set's initial parent node pointing to itself.
-+	Find: Determine which set a particular element belongs to, usually by
-+		returning a “representative element” of that set. This operation
-+		is used to check if two elements are in the same set.
-+	Union: Merge two sets into one.
-+
-+As a data structure used to maintain sets (groups), Union-Find is commonly
-+utilized to solve problems related to offline queries, dynamic connectivity,
-+and graph theory. It is also a key component in Kruskal's algorithm for
-+computing the minimum spanning tree, which is crucial in scenarios like
-+network routing. Consequently, Union-Find is widely referenced. Additionally,
-+Union-Find has applications in symbolic computation, register allocation,
-+and more.
-+
-+Space Complexity: O(n), where n is the number of nodes.
-+
-+Time Complexity: Using path compression can reduce the time complexity of
-+the find operation, and using union by rank can reduce the time complexity
-+of the union operation. These optimizations reduce the average time
-+complexity of each find and union operation to O(α(n)), where α(n) is the
-+inverse Ackermann function. This can be roughly considered a constant time
-+complexity for practical purposes.
-+
-+This document covers use of the Linux union-find implementation.  For more
-+information on the nature and implementation of Union-Find,  see:
-+
-+  Wikipedia entry on union-find
-+    https://en.wikipedia.org/wiki/Disjoint-set_data_structure
-+
-+Linux implementation of union-find
-+-----------------------------------
-+
-+Linux's union-find implementation resides in the file "lib/union_find.c".
-+To use it, "#include <linux/union_find.h>".
-+
-+The Union-Find data structure is defined as follows::
-+
-+	struct uf_node {
-+		struct uf_node *parent;
-+		unsigned int rank;
-+	};
-+
-+In this structure, parent points to the parent node of the current node.
-+For efficiency, it is initialized to NULL and is assigned to point to itself
-+during the first find operation. The rank field represents the height of the
-+current tree. During a union operation, the tree with the smaller rank is
-+attached under the tree with the larger rank to maintain balance.
-+
-+Creating Union-Find
-+--------------------
-+
-+To create a Union-Find structure, you only need to pass the number of nodes in
-+the Union-Find. No additional initialization is required, and it returns a
-+pointer to the node array.
-+Example::
-+
-+	struct uf_node *my_node = uf_nodes_alloc(num);
-+
-+Destroying Union-Find
-+---------------------
-+
-+To destroy the Union-Find structure, just pass the node pointer that was
-+returned during creation.
-+Example::
-+
-+	uf_nodes_free(my_node);
-+
-+Find the Root Node of Union-Find
-+--------------------------------
-+
-+This operation is mainly used to determine whether two nodes belong to the same
-+set in the Union-Find. If they have the same root, they are in the same set.
-+During the find operation, path compression is performed to improve the
-+efficiency of subsequent find operations.
-+Example::
-+
-+	int connected;
-+	struct uf_node *root1 = uf_find(&my_node[0]);
-+	struct uf_node *root2 = uf_find(&my_node[1]);
-+	if (root1 == root2)
-+		connected = 1;
-+	else
-+		connected = 0;
-+
-+Union Two Sets in Union-Find
-+----------------------------
-+
-+To union two sets in the Union-Find, you first find their respective root nodes
-+and then link the smaller node to the larger node based on the rank of the root
-+nodes.
-+Example::
-+
-+	uf_union(&my_node[0], &my_node[1]);
-diff --git a/Documentation/translations/zh_CN/core-api/union_find.rst b/Documentation/translations/zh_CN/core-api/union_find.rst
-new file mode 100644
-index 0000000000..071818e7db
---- /dev/null
-+++ b/Documentation/translations/zh_CN/core-api/union_find.rst
-@@ -0,0 +1,87 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/core-api/union_find.rst
-+
-+===========================
-+Linux中的并查集（Union-Find）
-+===========================
-+
-+
-+:日期: 2024年6月21日
-+:作者: Xavier <xavier_qy@163.com>
-+
-+何为并查集，它有什么用？
-+---------------------
-+
-+并查集是一种数据结构，用于处理一些不交集的合并及查询问题。并查集支持的主要操作：
-+	初始化：将每个元素初始化为单独的集合，每个集合的初始父节点指向自身
-+	查询：查询某个元素属于哪个集合，通常是返回集合中的一个“代表元素”。这个操作是为
-+		了判断两个元素是否在同一个集合之中。
-+	合并：将两个集合合并为一个。
-+
-+并查集作为一种用于维护集合（组）的数据结构，它通常用于解决一些离线查询、动态连通性和
-+图论等相关问题，同时也是用于计算最小生成树的克鲁斯克尔算法中的关键，由于最小生成树在
-+网络路由等场景下十分重要，并查集也得到了广泛的引用。此外，并查集在符号计算，寄存器分
-+配等方面也有应用。
-+
-+空间复杂度: O(n)，n为节点数。
-+
-+时间复杂度：使用路径压缩可以减少查找操作的时间复杂度，使用按秩合并可以减少合并操作的
-+时间复杂度，使得并查集每个查询和合并操作的平均时间复杂度仅为O(α(n))，其中α(n)是反阿
-+克曼函数，可以粗略地认为并查集的操作有常数的时间复杂度。
-+
-+本文档涵盖了对Linux并查集实现的使用方法。更多关于并查集的性质和实现的信息，参见：
-+
-+  维基百科并查集词条
-+    https://en.wikipedia.org/wiki/Disjoint-set_data_structure
-+
-+并查集的Linux实现
-+----------------
-+
-+Linux的并查集实现在文件“lib/union_find.c”中。要使用它，需要
-+“#include <linux/union_find.h>”。
-+
-+并查集的数据结构定义如下::
-+	struct uf_node {
-+		struct uf_node *parent;
-+		unsigned int rank;
-+	};
-+其中parent为当前节点的父节点，为了提高效率，初始化时为空，并在第一次查找时指向自身，
-+rank为当前树的高度，在合并时将rank小的节点接到rank大的节点下面以增加平衡性。
-+
-+创建并查集
-+---------
-+
-+创建并查集时只需要传入并查集的节点个数即可，无需额外初始化，返回节点数组指针。
-+示例::
-+	struct uf_node *my_node = uf_nodes_alloc(num);
-+
-+销毁并查集
-+---------
-+
-+销毁并查集时，只需传入创建时返回的节点数组指针即可。
-+示例::
-+	uf_nodes_free(my_node);
-+
-+查找并查集的根节点
-+----------------
-+
-+主要用于判断两个并查集是否属于一个集合，如果根相同，那么他们就是一个集合。在查找过程中
-+会对路径进行压缩，提高后续查找效率。
-+示例::
-+	int connected;
-+	struct uf_node *root1 = uf_find(&my_node[0]);
-+	struct uf_node *root2 = uf_find(&my_node[1]);
-+	if (root1 == root2)
-+		connected = 1;
-+	else
-+		connected = 0;
-+
-+合并两个并查集
-+-------------
-+
-+对于两个相交的并查集进行合并，会首先查找它们各自的根节点，然后根据根节点秩大小，将小的
-+节点连接到大的节点下面。
-+示例::
-+	uf_union(&my_node[0], &my_node[1]);
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7..a1a467c591 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23054,6 +23054,15 @@ F:	drivers/cdrom/cdrom.c
- F:	include/linux/cdrom.h
- F:	include/uapi/linux/cdrom.h
- 
-+UNION-FIND
-+M:	Xavier <xavier_qy@163.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/core-api/union_find.rst
-+F:	Documentation/translations/zh_CN/core-api/union_find.rst
-+F:	include/linux/union_find.h
-+F:	lib/union_find.c
-+
- UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER
- R:	Alim Akhtar <alim.akhtar@samsung.com>
- R:	Avri Altman <avri.altman@wdc.com>
-diff --git a/include/linux/union_find.h b/include/linux/union_find.h
-new file mode 100644
-index 0000000000..ca806f1531
---- /dev/null
-+++ b/include/linux/union_find.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_UNION_FIND_H
-+#define __LINUX_UNION_FIND_H
-+#include <linux/vmalloc.h>
-+
-+/* Define a union-find node struct */
-+struct uf_node {
-+	struct uf_node *parent;
-+	unsigned int rank;
-+};
-+
-+/* Allocate nodes and initialize to 0 */
-+static inline struct uf_node *uf_nodes_alloc(unsigned int node_num)
-+{
-+	return vzalloc(sizeof(struct uf_node) * node_num);
-+}
-+
-+/* Free nodes*/
-+static inline void uf_nodes_free(struct uf_node *nodes)
-+{
-+	vfree(nodes);
-+}
-+
-+/* find the root of a node*/
-+struct uf_node *uf_find(struct uf_node *node);
-+
-+/* Merge two intersecting nodes */
-+void uf_union(struct uf_node *node1, struct uf_node *node2);
-+
-+#endif /*__LINUX_UNION_FIND_H*/
-diff --git a/lib/Makefile b/lib/Makefile
-index 3b17690456..e1769e6f03 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -34,7 +34,7 @@ lib-y := ctype.o string.o vsprintf.o cmdline.o \
- 	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
- 	 earlycpio.o seq_buf.o siphash.o dec_and_lock.o \
- 	 nmi_backtrace.o win_minmax.o memcat_p.o \
--	 buildid.o objpool.o
-+	 buildid.o objpool.o union_find.o
- 
- lib-$(CONFIG_PRINTK) += dump_stack.o
- lib-$(CONFIG_SMP) += cpumask.o
-diff --git a/lib/union_find.c b/lib/union_find.c
-new file mode 100644
-index 0000000000..2f77bae1ca
---- /dev/null
-+++ b/lib/union_find.c
-@@ -0,0 +1,38 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/union_find.h>
-+
-+struct uf_node *uf_find(struct uf_node *node)
-+{
-+	struct uf_node *parent;
-+
-+	if (!node->parent) {
-+		node->parent = node;
-+		return node;
-+	}
-+
-+	/*Find the root node and perform path compression at the same time*/
-+	while (node->parent != node) {
-+		parent = node->parent;
-+		node->parent = parent->parent;
-+		node = parent;
-+	}
-+	return node;
-+}
-+
-+/*Function to merge two sets, using union by rank*/
-+void uf_union(struct uf_node *node1, struct uf_node *node2)
-+{
-+	struct uf_node *root1 = uf_find(node1);
-+	struct uf_node *root2 = uf_find(node2);
-+
-+	if (root1 != root2) {
-+		if (root1->rank < root2->rank) {
-+			root1->parent = root2;
-+		} else if (root1->rank > root2->rank) {
-+			root2->parent = root1;
-+		} else {
-+			root2->parent = root1;
-+			root1->rank++;
-+		}
-+	}
-+}
+> Because we have more axes of board identification than chromebook, using
+> FIT's compatible strings isn't a scalable solution for us. I don't think
+> we have incompatible problems, we only have more than 2-3 axes of
+> information.
+
+Well, not using compatibles / strings results in most of the phone
+vendors having just the 'MTP' as their platform id. It makes then
+impossible to have an image with several DTB files targeting different
+phone families from several vendors. What looks like a nice feature for
+MTP vs QRD vs HDK becomes useless with the end-user devices.
+
 -- 
-2.45.2
-
+With best wishes
+Dmitry
