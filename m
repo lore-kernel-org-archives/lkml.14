@@ -1,186 +1,127 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA131E871;
-	Sat, 22 Jun 2024 11:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8E58F5D
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 11:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719054040; cv=none; b=Bwd1EFOzDXo5KQzO+QmcZ/w22P+8PJsiuCskWg1rjDymRMXkPXksGCG1miozhxxaMP5JpVOLmqT6c2//Sib0ywTJZigJOc2IyIkzuvI1Oydoc2s2QD64NnHOzc92rGSZbv5GtneTXAstkC4abV2gGpwsxKKfWuJjx/zpV4OaO1I=
+	t=1719054110; cv=none; b=iVzQCyvDZVEdDBgsRLrBE9MnnEtAoq8prnsPCJX1MXsZfcZCYtJUn7ZCf5AXGgsl/axpqfUC7NlZ4HmuVDidjhbLk8PVGO6+CmOMdXbU0QDByJaJUMRO3XfHD6+a9VkApk/X9X9DyluVPgeX6X84rmuPDkZsk5TTv9fI9GrCqPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719054040; c=relaxed/simple;
-	bh=jZKMMHb1Scf+LoA5wMQap4Hh2SvydY9wTa+sLKebS1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t9a433ECgg7e8gAlbISI8V9KxoIEX6vk+ysMZxInYRX1Zn18NFqSEflrF0l+fgDL/DHqSE1x0/zJff3MiXHsR1hSYBGSqwPcM+i85OUEhIoNdjdUwEDmT1gRhgWePjnINDLSL89oNgtVfgzUYOrSwG46XwMvSQBI2DGCftKCaGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=laPrQx36; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1719054110; c=relaxed/simple;
+	bh=F3gqfRmiUj+bYI01JOgOi0+RTUtI8rxBBXSadyCmGJQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qkc9evHeqRxP1P56sli0qveiPsKE95D4FhRmooDgE8kcEUzge+FeqdUaf5bqgEpmtXcs8krz+6xIGLyN7A2QmgXfNoXi71LDB7R+sCNIyNZ43vdXl9v7gomtJqsX4XkCWoGFTpXdgxei/rkQZ5Sk6TRPzhemn5Nv5LfE7WKwYlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lYTzriPx; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="laPrQx36"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1719054029;
-	bh=jZKMMHb1Scf+LoA5wMQap4Hh2SvydY9wTa+sLKebS1Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=laPrQx36mxewqlSzNXdvqDIS29piPKgu9336MrbdIgNT3WC5NA0Ro9IxsDcNlLi+t
-	 P8WlXAIWI/x2Ns7ydjjjK8xZuiQFT62TB997/iP50gl2OGi3nNPJREndIzqzd1ZRpG
-	 7y7wx8028ms1cyGDyraw3wKfWcAHy34wrTs/AmPc=
-Received: from stargazer.. (unknown [113.200.174.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9093F67186;
-	Sat, 22 Jun 2024 07:00:25 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Xi Ruoyao <xry111@xry111.site>,
-	Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alejandro Colomar <alx@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] vfs: Add AT_EMPTY_PATH_NOCHECK as unchecked AT_EMPTY_PATH
-Date: Sat, 22 Jun 2024 18:56:08 +0800
-Message-ID: <20240622105621.7922-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lYTzriPx"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec50a5e230so13792061fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 04:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719054107; x=1719658907; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=jXRUkjHTIgJfjCnNrNY9R3/Ef3KcLvNtWkpIANt8d5Y=;
+        b=lYTzriPxM1sfMe/Rop+6du5w9ArSWsz3nMiIqmo/aAqRlX/ziRpi3C9NtvL+P52wxL
+         cEQ6rJL9oikIrnHapvX6swYeI05PpJ6HpPOkpIX3JXu+uxef21iYHoKeEix9UqYcSpRu
+         ZjnNpqSfAfAQWFa00QwKhOTQcfyKSpA2RPeSjJPjQub5q77knEx5yz3DvvOaqi2dVV8A
+         m/vvGYpxJ2ad2MU3wuTZAY9+/Ol3WFp/eR2fp14+XOhq3IFMLzcyS4M0W1cRdDureqPJ
+         oXDG+xseE0OCExUXZOcxPWJ97LXtTOjZmEz0oVpDN8iHvBYnay6xrhPuznW8Q+Fmelab
+         iMlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719054107; x=1719658907;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jXRUkjHTIgJfjCnNrNY9R3/Ef3KcLvNtWkpIANt8d5Y=;
+        b=Ol4SITIXgpFrL8Kg9bM7lbrddM3WSTx+qJECwtwG6GsE5mlHCQ1MCOtLeAneqEzrWC
+         MSHyYHAnJumwSgIv8DYzC5+fvq6A4jkEYjtK3x+8w7C+Tn+5B+/Yh4Up3lUuSevKhn5D
+         tRsuqmcKg6wrOQ2yKgq7Y3/8+efx4UKKjhe7wJbKwLrIC4FK9QHnbwYGb/rBQYpATm8r
+         uvC41BwKWFFC2jf+XmgPmP80w1tTzugqcGXuQQqxkIcYGz0lhHt59FgYFLjZ95kYTQNt
+         njw91DKXHw9BpGVX8kV3/VVJ/r5McZcLmggtyawK4A2ki6w4tDCL/E1UkgUvVKirpeGY
+         bQRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0SlzYDnbcGeMq/TqgtvHEf6yIWnuZ4KQNiNlrBnHo/UCM/INa3litHlbIXRjfxLKZQlEIQkbyJSFf26lyCdUbgBaUFZ4s7gJbMtR9
+X-Gm-Message-State: AOJu0YwQsf1XSmGQl3kKCFUg762eDytPsjQS5UWn+x+yGEijhUoqYPaA
+	eHTwMBV/Z7Hud+XAUjz00gwrLLdhIlpyLokRrD5Tjmw15iPFOnhztbTabXC9W0c=
+X-Google-Smtp-Source: AGHT+IELT1vMCmwY6Vjcb3xgEIns4r8I00un0bZsJ8ozJP+j+xXOEMQnAgsIe1WzzaO/HXffS/b/Ug==
+X-Received: by 2002:a2e:9785:0:b0:2ec:59d8:a7e6 with SMTP id 38308e7fff4ca-2ec59d8aa0dmr280051fa.30.1719054106934;
+        Sat, 22 Jun 2024 04:01:46 -0700 (PDT)
+Received: from [192.168.128.35] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d303da249sm2172422a12.14.2024.06.22.04.01.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Jun 2024 04:01:46 -0700 (PDT)
+Message-ID: <d508f8e5-8303-4f84-83d4-d63f6c612a02@linaro.org>
+Date: Sat, 22 Jun 2024 13:01:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] clk: qcom: dispcc-sm8650: drop TCXO from table when
+ using rcg2_shared_ops
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240621-topic-sm8650-upstream-fix-dispcc-v1-0-7b297dd9fcc1@linaro.org>
+ <20240621-topic-sm8650-upstream-fix-dispcc-v1-3-7b297dd9fcc1@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240621-topic-sm8650-upstream-fix-dispcc-v1-3-7b297dd9fcc1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-It's cheap to check if the path is empty in the userspace, but expensive
-to check if a userspace string is empty from the kernel.  So using statx
-and AT_EMPTY_PATH to implement fstat is slower than a "native" fstat
-call.  But for arch/loongarch fstat does not exist so we have to use
-statx, and on all 32-bit architectures we must use statx after 2037.
-And seccomp also cannot audit AT_EMPTY_PATH properly because it cannot
-check if path is empty.
+On 21.06.2024 4:01 PM, Neil Armstrong wrote:
+> Since those clocks are using rcg2_shared_ops to park on TCXO
+> instead of disable, no need to have TCXO in the frequency table.
+> 
+> Fixes: 9e939f008338 ("clk: qcom: add the SM8650 Display Clock Controller driver")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
 
-To resolve these issues, add a relaxed version of AT_EMPTY_PATH: it does
-not check if the path is empty, but just assumes the path is empty and
-then behaves like AT_EMPTY_PATH.
+I don't think that's correct.. some hardware can still run with the
+core clock @ 19.2 / 38.4 MHz
 
-Link: https://sourceware.org/pipermail/libc-alpha/2023-September/151364.html
-Link: https://lore.kernel.org/loongarch/599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name/
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Icenowy Zheng <uwu@icenowy.me>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: linux-arch@vger.kernel.org
-Cc: loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- fs/namei.c                 | 8 +++++++-
- fs/stat.c                  | 4 +++-
- include/linux/namei.h      | 4 ++++
- include/trace/misc/fs.h    | 1 +
- include/uapi/linux/fcntl.h | 3 +++
- 5 files changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 37fb0a8aa09a..0c44a7ea5961 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -147,7 +147,13 @@ getname_flags(const char __user *filename, int flags, int *empty)
- 	kname = (char *)result->iname;
- 	result->name = kname;
- 
--	len = strncpy_from_user(kname, filename, EMBEDDED_NAME_MAX);
-+	if (!(flags & LOOKUP_EMPTY_NOCHECK))
-+		len = strncpy_from_user(kname, filename, EMBEDDED_NAME_MAX);
-+	else {
-+		len = 0;
-+		kname[0] = '\0';
-+	}
-+
- 	if (unlikely(len < 0)) {
- 		__putname(result);
- 		return ERR_PTR(len);
-diff --git a/fs/stat.c b/fs/stat.c
-index 70bd3e888cfa..53944d3287cd 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -210,6 +210,8 @@ int getname_statx_lookup_flags(int flags)
- 		lookup_flags |= LOOKUP_AUTOMOUNT;
- 	if (flags & AT_EMPTY_PATH)
- 		lookup_flags |= LOOKUP_EMPTY;
-+	if (flags & AT_EMPTY_PATH_NOCHECK)
-+		lookup_flags |= LOOKUP_EMPTY | LOOKUP_EMPTY_NOCHECK;
- 
- 	return lookup_flags;
- }
-@@ -237,7 +239,7 @@ static int vfs_statx(int dfd, struct filename *filename, int flags,
- 	int error;
- 
- 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
--		      AT_STATX_SYNC_TYPE))
-+		      AT_STATX_SYNC_TYPE | AT_EMPTY_PATH_NOCHECK))
- 		return -EINVAL;
- 
- retry:
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 967aa9ea9f96..def6a8a1b531 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -45,9 +45,13 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
- #define LOOKUP_IN_ROOT		0x100000 /* Treat dirfd as fs root. */
- #define LOOKUP_CACHED		0x200000 /* Only do cached lookup */
- #define LOOKUP_LINKAT_EMPTY	0x400000 /* Linkat request with empty path. */
-+
- /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
- #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
- 
-+/* If this is set, LOOKUP_EMPTY must be set as well. */
-+#define LOOKUP_EMPTY_NOCHECK	0x800000 /* Consider path empty. */
-+
- extern int path_pts(struct path *path);
- 
- extern int user_path_at_empty(int, const char __user *, unsigned, struct path *, int *empty);
-diff --git a/include/trace/misc/fs.h b/include/trace/misc/fs.h
-index 738b97f22f36..24aec7ed6b0b 100644
---- a/include/trace/misc/fs.h
-+++ b/include/trace/misc/fs.h
-@@ -119,4 +119,5 @@
- 		{ LOOKUP_NO_XDEV,	"NO_XDEV" }, \
- 		{ LOOKUP_BENEATH,	"BENEATH" }, \
- 		{ LOOKUP_IN_ROOT,	"IN_ROOT" }, \
-+		{ LOOKUP_EMPTY_NOCHECK,	"EMPTY_NOCHECK" }, \
- 		{ LOOKUP_CACHED,	"CACHED" })
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index c0bcc185fa48..aa2f68d80820 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -113,6 +113,9 @@
- #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
- 
- #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
-+#define AT_EMPTY_PATH_NOCHECK	0x10000	/* Like AT_EMPTY_PATH, but the path
-+                                           is not checked and it's just
-+                                           assumed to be empty */
- 
- /* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits... */
- #define AT_HANDLE_FID		AT_REMOVEDIR	/* file handle is needed to
--- 
-2.45.2
-
+Konrad
