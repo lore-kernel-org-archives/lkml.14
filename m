@@ -1,98 +1,167 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE0214B950
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 11:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E9615382E;
+	Sat, 22 Jun 2024 11:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719056694; cv=none; b=F/ZQ0k8OpWa6FhMjf80/0qJYnv1WeLmArChRBcKCHTrE34/2iz2/mVEIiuGNKkYMUgpManb7c5YdHXdjlctnBhyoCtwqHi+buPy/lNdFSVfQiBwIH6zJPwM0N+5L/P7KTuXQepBLx+C5vq3ezyjq8HOk+yId6EORo5N5xsPdALw=
+	t=1719056697; cv=none; b=pkVkjN6u9B3uqU6CIsgcju1T4xowVROj4+vSOKOKM1Zf80kE64e6EwHNoZLAXZkH+HiceAjUsC30zY3PUp/fa/YemA1rVE7ZVT8zLdX/GOCQwwQqSZQCLc/isFPZULPFzP+YYRwpo/jyQBxWXt8UIe/yfYqQ6VVn0qvUAEjiA7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719056694; c=relaxed/simple;
-	bh=ILrMcRABfLu5odx0xmODTpZOJXAX3oCtYEXvGESWBRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUTlXow7kjhkMJnYtOqT+0mTNvxV/QT9WnAXaw2ttzslN3eP+mJecjps9YGwAs2mstjgPXFecWLHaIzWnX8ZfUwnopR09kn9l6m1VxgQoGIIe6JH2C/psBssZ/uknJ/skez3DiQ+oHt27yjN+6T+aA9H8lwg2vRxAhfmm7EbyLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LPzAKJUq; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPzAKJUq"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cdea1387eso427356e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 04:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719056689; x=1719661489; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ax1qSIZw8a9/jFifgEYbxj7FR9Vvqi+T0eMK+uliwIg=;
-        b=LPzAKJUqGJ7VjvpE4c2PPsMgiG5pltezr9qHYz+ZbfnFhjPrTnYmrosoFux9kG34up
-         knsTTGbMpb6a8lJZA7nKnmwtQ8NiembOY9m4n7fZA3wxvfDbEh2D+fH0PURJ85mn/P1f
-         wSxTGD9VaVpGjBQ0XvaPW3ldY6aEpXoSLTz3THTyb2TYYQ77zrrsdJl9yBMG/KIrcVla
-         1uF85LHfjXZ6EA6h/vJD9OM/Dmh+VSrwPMQ7Mhg5agy8WVGRMRrT/OUnSmc4PyyWFhAk
-         CpMM5bbAfU+UCcKp8WFDwZdBaIS+s17jnDPfYpMOf08ng+nmtZ+A//90KG2pSaYiXcVP
-         WCfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719056689; x=1719661489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ax1qSIZw8a9/jFifgEYbxj7FR9Vvqi+T0eMK+uliwIg=;
-        b=M6PHbHK537Cxk1zW6hgMU+AA/JiSUhQBpykbQiCNLKwDzt0G40KzlHsnmHRPl4wlLo
-         P84KXOYiOKtWW0H+B6eMOl1m/Gchny6z6RZPHs9kFgFMAJ4u6lExSfTDpu++wAVcJImL
-         JLICeLPWPAYuBq3jJZ6U1RWbjWKPxuhFf7VuVWirvNstqenslrymTCu6Tr1lQINwdIoy
-         3eVoNf7yyeZLbwJ8gOIRBPqLf83g9kv9h1dIBel+IsH6tyr+WBUB5VSngV++qa9SKmbs
-         hK9FUYvt2kzDJMNStOJ0p/VhNZ5hGF+oaUajk0sEafmLorZPHuVhJsqq/eqch4o/u+zZ
-         2HeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHAbeCbWYhYaKckdv0Y37TwCQvVUsg65INNtPJDlx+i1pDKK90PNMoeERq4mE/VsHwrfWU6IyQot9+DyFtDw3JxuvD9N/CTZbeyvq7
-X-Gm-Message-State: AOJu0YzrWZrtb1HB1rrmTbo+9EzqpenrofVFCoZ2yIsfhG/x0eMaLg6E
-	JY+7e+15f6WLhJBDEWOGhSuBmTkJjTXujPMxktmnihSM/2M4R3ekGC6futfYFXY=
-X-Google-Smtp-Source: AGHT+IEuZ2USoydSTh3MwiJDZ0wxf9ZiV0ueTgAhwf/h2tPzISGQ48W190i27F9kY7dhP1o1sgjyVw==
-X-Received: by 2002:a05:6512:3496:b0:52c:d96d:6c7a with SMTP id 2adb3069b0e04-52cd96d6d3bmr1871338e87.60.1719056689522;
-        Sat, 22 Jun 2024 04:44:49 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd63cd698sm469653e87.118.2024.06.22.04.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 04:44:49 -0700 (PDT)
-Date: Sat, 22 Jun 2024 14:44:47 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Danila Tikhonov <danila@jiaxyga.com>
-Cc: robdclark@gmail.com, quic_abhinavk@quicinc.com, sean@poorly.run, 
-	marijn.suijten@somainline.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, quic_rmccann@quicinc.com, 
-	konrad.dybcio@linaro.org, neil.armstrong@linaro.org, jonathan@marek.ca, 
-	swboyd@chromium.org, quic_khsieh@quicinc.com, quic_jesszhan@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] drm/msm/dpu: Add SM7150 support
-Message-ID: <oks3xgn3ks2fobtdys5b3ssw74fwn433q32glhebq37snz2df6@oc2h6pi34tlg>
-References: <20240614215855.82093-1-danila@jiaxyga.com>
- <20240614215855.82093-3-danila@jiaxyga.com>
+	s=arc-20240116; t=1719056697; c=relaxed/simple;
+	bh=Y7ZpAfhDTUE6U93lIBNlr/+c6AoW+cOzf76hzYC8mwI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HL9OPbQRQJtI7Is4wa5it8BvF2oDk1kYTYeMt3DVXgN5z4S6H+wONxGVP6rnM0DQUEQ2VsltoXorWFXXp/O7ietQeBfgT/y8h7Gzo6CSCla+JCCDVv1WAd1qCjVbqjswZHGlBs8msnYb0mHYImyDeNQg62IKxIOOK7W0qsjSbH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W5sjV4QPNzxSXn;
+	Sat, 22 Jun 2024 19:40:30 +0800 (CST)
+Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 11ED818007E;
+	Sat, 22 Jun 2024 19:44:46 +0800 (CST)
+Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
+ (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Sat, 22 Jun
+ 2024 19:44:45 +0800
+From: Chen Ridong <chenridong@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<longman@redhat.com>
+CC: <bpf@vger.kernel.org>, <cgroups@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup: fix uaf when proc_cpuset_show
+Date: Sat, 22 Jun 2024 11:38:14 +0000
+Message-ID: <20240622113814.120907-1-chenridong@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614215855.82093-3-danila@jiaxyga.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd100013.china.huawei.com (7.221.188.163)
 
-On Sat, Jun 15, 2024 at 12:58:53AM GMT, Danila Tikhonov wrote:
-> Add definitions for the display hardware used on the Qualcomm SM7150
-> platform.
-> 
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> ---
->  .../msm/disp/dpu1/catalog/dpu_5_2_sm7150.h    | 335 ++++++++++++++++++
->  .../gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |   1 +
->  .../gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |   1 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   1 +
->  4 files changed, 338 insertions(+)
->  create mode 100644 drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
-> 
+We found a refcount UAF bug as follows:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+BUG: KASAN: use-after-free in cgroup_path_ns+0x112/0x150
+Read of size 8 at addr ffff8882a4b242b8 by task atop/19903
 
+CPU: 27 PID: 19903 Comm: atop Kdump: loaded Tainted: GF
+Call Trace:
+ dump_stack+0x7d/0xa7
+ print_address_description.constprop.0+0x19/0x170
+ ? cgroup_path_ns+0x112/0x150
+ __kasan_report.cold+0x6c/0x84
+ ? print_unreferenced+0x390/0x3b0
+ ? cgroup_path_ns+0x112/0x150
+ kasan_report+0x3a/0x50
+ cgroup_path_ns+0x112/0x150
+ proc_cpuset_show+0x164/0x530
+ proc_single_show+0x10f/0x1c0
+ seq_read_iter+0x405/0x1020
+ ? aa_path_link+0x2e0/0x2e0
+ seq_read+0x324/0x500
+ ? seq_read_iter+0x1020/0x1020
+ ? common_file_perm+0x2a1/0x4a0
+ ? fsnotify_unmount_inodes+0x380/0x380
+ ? bpf_lsm_file_permission_wrapper+0xa/0x30
+ ? security_file_permission+0x53/0x460
+ vfs_read+0x122/0x420
+ ksys_read+0xed/0x1c0
+ ? __ia32_sys_pwrite64+0x1e0/0x1e0
+ ? __audit_syscall_exit+0x741/0xa70
+ do_syscall_64+0x33/0x40
+ entry_SYSCALL_64_after_hwframe+0x67/0xcc
 
+This is also reported by: https://syzkaller.appspot.com/bug?extid=9b1ff7be974a403aa4cd
+
+This can be reproduced by the following methods:
+1.add an mdelay(1000) before acquiring the cgroup_lock In the
+ cgroup_path_ns function.
+2.$cat /proc/<pid>/cpuset   repeatly.
+3.$mount -t cgroup -o cpuset cpuset /sys/fs/cgroup/cpuset/
+$umount /sys/fs/cgroup/cpuset/   repeatly.
+
+The race that cause this bug can be shown as below:
+
+(umount)		|	(cat /proc/<pid>/cpuset)
+css_release		|	proc_cpuset_show
+css_release_work_fn	|	css = task_get_css(tsk, cpuset_cgrp_id);
+css_free_rwork_fn	|	cgroup_path_ns(css->cgroup, ...);
+cgroup_destroy_root	|	mutex_lock(&cgroup_mutex);
+rebind_subsystems	|
+cgroup_free_root 	|
+			|	// cgrp was freed, UAF
+			|	cgroup_path_ns_locked(cgrp,..);
+
+When the cpuset is initialized, the root node top_cpuset.css.cgrp
+will point to &cgrp_dfl_root.cgrp. In cgroup v1, the mount operation will
+allocate cgroup_root, and top_cpuset.css.cgrp will point to the allocated
+&cgroup_root.cgrp. When the umount operation is executed,
+top_cpuset.css.cgrp will be rebound to &cgrp_dfl_root.cgrp.
+
+The problem is that when rebinding to cgrp_dfl_root, there are cases
+where the cgroup_root allocated by setting up the root for cgroup v1
+is cached. This could lead to a Use-After-Free (UAF) if it is
+subsequently freed. The descendant cgroups of cgroup v1 can only be
+freed after the css is released. However, the css of the root will never
+be released, yet the cgroup_root should be freed when it is unmounted.
+This means that obtaining a reference to the css of the root does
+not guarantee that css.cgrp->root will not be freed.
+
+To solve this issue, we have added a cgroup reference count in
+the proc_cpuset_show function to ensure that css.cgrp->root will not
+be freed prematurely. This is a temporary solution. Let's see if anyone
+has a better solution.
+
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ kernel/cgroup/cpuset.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index c12b9fdb22a4..782eaf807173 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -5045,6 +5045,7 @@ int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
+ 	char *buf;
+ 	struct cgroup_subsys_state *css;
+ 	int retval;
++	struct cgroup *root_cgroup = NULL;
+ 
+ 	retval = -ENOMEM;
+ 	buf = kmalloc(PATH_MAX, GFP_KERNEL);
+@@ -5052,9 +5053,28 @@ int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
+ 		goto out;
+ 
+ 	css = task_get_css(tsk, cpuset_cgrp_id);
++	rcu_read_lock();
++	/*
++	 * When the cpuset subsystem is mounted on the legacy hierarchy,
++	 * the top_cpuset.css->cgroup does not hold a reference count of
++	 * cgroup_root.cgroup. This makes accessing css->cgroup very
++	 * dangerous because when the cpuset subsystem is remounted to the
++	 * default hierarchy, the cgroup_root.cgroup that css->cgroup points
++	 * to will be released, leading to a UAF issue. To avoid this problem,
++	 * get the reference count of top_cpuset.css->cgroup first.
++	 *
++	 * This is ugly!!
++	 */
++	if (css == &top_cpuset.css) {
++		cgroup_get(css->cgroup);
++		root_cgroup = css->cgroup;
++	}
++	rcu_read_unlock();
+ 	retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
+ 				current->nsproxy->cgroup_ns);
+ 	css_put(css);
++	if (root_cgroup)
++		cgroup_put(root_cgroup);
+ 	if (retval == -E2BIG)
+ 		retval = -ENAMETOOLONG;
+ 	if (retval < 0)
 -- 
-With best wishes
-Dmitry
+2.34.1
+
