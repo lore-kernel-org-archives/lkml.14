@@ -1,135 +1,79 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4372914C59C
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 07:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DCC2B2CC;
+	Sat, 22 Jun 2024 07:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719040694; cv=none; b=Lu+y9dabzok8cJDmg8ywz27NLKhaEGu5nOvmJCx9+amJH8vWA+AtrGr34g67+SgPrxQvf7/FVmJTTmKzB4qv7HBllwMxjGXyUEMcWEUEfS4CSuxsngEDGj9GXaDr1B0AkpUZb7kf0XbBE6USpm41GpU/qMXJwa7zICbVru24tLA=
+	t=1719040902; cv=none; b=lsmFR8q2HGpNw6zdIWsOCbKxTBi4vrBFtvzSRit7ScN8igHkIch6Ic4wFF0p0QwD0koETmpQZ7In+B0WWpNzUOub5LGlzNVPReAvRKQM2zVZWGmIZRWanpmFWc0SRQtJLC4EqHFP9/fYKa8KzvGXOfK2doS7wjL+0CpC2jJfc94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719040694; c=relaxed/simple;
-	bh=Dwh3hngqTIwFb9W9PD6nYsx0EywIrvynYVJ8Zbfh+NY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uBrOtfTAy+MGG/2vKBfb3dlNOxm1qwL438xPy/UM1fysOj0vXU1ZV4eeF2wUoG7KLUPeqxGoAtcrxP95qJr8akGtLY0G2xJXyzy9kl/Nwa9qGjLA1B7EgIgiuJaX+FKs4WpvyY70G4Zi4gcMsy4EaOT0R0Qd1f1cuabr3iW9TIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uft+2Pf9; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719040902; c=relaxed/simple;
+	bh=BRgmF1SuWGxaSlfe9UasHg3POB9fYog1Hz1JNFO0V7s=;
+	h=Date:From:To:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r/wc5rg9qOwCcuOp0YmE67pYhJ38Fgrw+M8fugfBi4/spSaySaPeUV8IsAL1vVYR9r7yNVTAFcscLn6qUELnnLALpb9ATuRz9x+Ne1VVq7T7Ns79588S8wv4ak5FAAVW1VeeQ1Y04kyCqREIyTntJkmBZ47tNCyQmZJxlVJIYHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=Y09ult06; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uft+2Pf9"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52caebc6137so2904765e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 00:18:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719040690; x=1719645490; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8gk/WLnrU93BmHjjlJlU9hm1kE/s/S+tE20JTbJQLcY=;
-        b=uft+2Pf9nsEFjIor9cavmXcCshY19VLeboJsSUyAhRqR4/cRu89yH064Izsxtd9cEk
-         4uqBB3/IUx4aBy9X21kZfPrF5gaOKd5bmYIarSM3I6BMpdbwy2mnMMVGhLmUJBiRQuAC
-         ELjnE4HeiQYpmRHeq2I+A+dQERnu3JMVHhiYtMqU4tyIUnvlx/IssrRupyMEueD0C2I0
-         /wjcVeyESSt9Vq5o7k7ocuyvseXkiGKGBl2+23aQnhgVtIwKuC7ZAKkOy7fhK9ZwjhZW
-         rAWYfxm51zGsSFMA2eYVVeitMEE6OYs0HVRHsWVu0GpiwyxTA63h5/zH879N4QpYt3At
-         LxGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719040690; x=1719645490;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8gk/WLnrU93BmHjjlJlU9hm1kE/s/S+tE20JTbJQLcY=;
-        b=sGV70sQrCh5wQUSwfXrjgEqzkBJYPoUrSTUWTpxMmJevmBqfHQf0k4e40YpTfLdC1x
-         13VQjaedOrzbNI1fdkKEguNkm/Hk17sr09YkhmFo6SMLNRw7n1cg4Ef5dLwa6wjsq8BL
-         NQhW40a62XEm/gQjVkno7vDzkqhK9o5ozNfxTwvUZhgT1QkP02zGsWSml3BPXhuJMhEs
-         vNRp4aUabaM/7sQNiZcKEl2amgW86j8dd0/rYFamMJdc0lakTK++qa6zDDebJnaOnaUk
-         TCALWH/HPKrZfRTQAd/iyj/vqEk34Pk1LwHqpIRFYoaMWTjIc6JGex8QyCWySzeadfpa
-         9sBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvZFuzTnK0M3WHg2JQiL7Eh8TLA+ojY7rlHjIeMhKSIom5ZHBkVLsav5ITZTiNb1PI1oJ3/uLKQ81FnF94Zp4alzQBeMMsWK4UeVmF
-X-Gm-Message-State: AOJu0YwDv9rHlIvkI9WaQUzrHcgDBO56D+L5GxfgLOJ6DDLxh7VEcWol
-	ffEQUg32jHudBzfRWHuEVsetJbXPXWP//bSuGvXuOmwpUBGzAYTlWBFnjhvA+aw=
-X-Google-Smtp-Source: AGHT+IGH6cKb0i17ESt2t11EWg7ayk6aCghT/OhE/tqOJdP/a/WQUFUKJeG5X8SncZ7fxcARxG/8OQ==
-X-Received: by 2002:a05:6512:3e02:b0:52c:5f12:5317 with SMTP id 2adb3069b0e04-52ccaa9268bmr8340293e87.44.1719040690325;
-        Sat, 22 Jun 2024 00:18:10 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd6454a96sm409678e87.303.2024.06.22.00.18.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 00:18:09 -0700 (PDT)
-Date: Sat, 22 Jun 2024 10:18:07 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Elliot Berman <quic_eberman@quicinc.com>
-Cc: Simon Glass <sjg@chromium.org>, Rob Herring <robh+dt@kernel.org>, 
-	Frank Rowand <frowand.list@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Amrit Anand <quic_amrianan@quicinc.com>, 
-	Peter Griffin <peter.griffin@linaro.org>, Caleb Connolly <caleb.connolly@linaro.org>, 
-	Andy Gross <agross@kernel.org>, Doug Anderson <dianders@chromium.org>, 
-	Chen-Yu Tsai <wenst@chromium.org>, Julius Werner <jwerner@chromium.org>, 
-	"Humphreys, Jonathan" <j-humphreys@ti.com>, Sumit Garg <sumit.garg@linaro.org>, 
-	Michal Simek <michal.simek@amd.com>, boot-architecture@lists.linaro.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH RFC v3 0/9] dt-bindings: hwinfo: Introduce board-id
-Message-ID: <uz6f2tie4r4zlywt7vgeb44zl7hoxzdkmdsaluch2zlpp6cosi@jfhmdj4zbii2>
-References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
- <CAFLszTjexpNEjo1sGVs67L0CAgGZLNkyn9RGfHRD7iHak_mtmg@mail.gmail.com>
- <20240605100246481-0700.eberman@hu-eberman-lv.qualcomm.com>
- <CAFLszThbe_aUAq_5rCCiPV-bj60oq9UCc=vdDHwM3i6t44ohLw@mail.gmail.com>
- <20240621142054973-0700.eberman@hu-eberman-lv.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Y09ult06"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=0b04sSHMbcUZr86ZF4qTwtY++eMAXQb1yCBpSHbrK+k=; b=Y09ult06y0LucRVOeMjzyooo+G
+	DHp6/RaN/0A2yQi4DrNCpnCwDO1jPi1m06pJOeLa1dIC0sWFjGIntkThC4KQkcquwMzV3mS1DMBpL
+	FDy3x3LrYQnGPvsAHXPigubmezaijWRZ6eaKE3sdMnx28s4DwSt1v++zXlGeoXnDuSENdNNBOeqKE
+	lSDcuvSHEJabE6bEA7f6g30E+xkC+bx1uw3W4YK2vvtmdyKaZVCjpvu6QcCaH8l51UstNvIGUBlPa
+	2pSCAlUlhZtHAbA2jth+0PO7SY8uM+wv4gNLsXK68f2bO0YbztR9mGp9ZMBTMrvJJGx5BKmjGpRqD
+	OLvxz6vw==;
+Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1sKuau-003Qf9-2d;
+	Sat, 22 Jun 2024 08:51:30 +0200
+Date: Sat, 22 Jun 2024 08:51:28 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, o.rempel@pengutronix.de, andreas@kemnade.info,
+ u.kleine-koenig@pengutronix.de, hdegoede@redhat.com,
+ oliver.graute@kococonnector.com, ye.xingchen@zte.com.cn,
+ p.puschmann@pironex.com, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ andy.shevchenko@gmail.com, felix@kaechele.ca
+Subject: Re: [PATCH v3 0/2] Input: add ft5426
+Message-ID: <20240622085128.38a6feb1@aktux>
+In-Reply-To: <20240501204758.758537-1-andreas@kemnade.info>
+References: <20240501204758.758537-1-andreas@kemnade.info>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621142054973-0700.eberman@hu-eberman-lv.qualcomm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 21, 2024 at 03:40:20PM GMT, Elliot Berman wrote:
-> Hi Simon,
+ping
+
+On Wed,  1 May 2024 22:47:56 +0200
+Andreas Kemnade <andreas@kemnade.info> wrote:
+
+> Changes in v3:
+> - reorder compatible also in driver
 > 
-> On Thu, Jun 06, 2024 at 10:00:54AM -0600, Simon Glass wrote:
-> > On Wed, 5 Jun 2024 at 11:17, Elliot Berman <quic_eberman@quicinc.com> wrote:
-> > > On Wed, Jun 05, 2024 at 07:17:35AM -0600, Simon Glass wrote:
-> > > > Hi Elliot,
-> > > >
-> > > > I am just picking up the discussion here, which was started on another thread.
-> > > >
-> > > > I can't see why this new feature is needed. We should be able to use
-> > > > compatible strings, as we do now. I added a 'usage' section to the FIT
-> > > > spec [1] which might help. I also incorporated the board revision and
-> > > > variant information and some notes on how to add to the available
-> > > > suffixes.
-> > > >
-> > > > Does that handle your use case?
-> > >
-> > > -rev and -sku don't fit the versioning scheme for QTI devices, so this
-> > > isn't a generic enough approach. Patch 5 in this series describes the
-> > > versioning scheme for us.
-> > >
-> > > In the other thread, we had talked about using some regex based approach
-> > > for matching the root node compatible. I haven't had chance to work on
-> > > that proposal and will try to get to it in the next couple weeks.
-> > 
-> > OK, I look forward to it. Please do check the FIT best match approach
-> > and see how it might be extended to handle your requirements. So far I
-> > have not seen a need for regexes, but it is certainly a possibility.
-> > 
+> Changes in v2:
+> - reorder compatible
 > 
-> I spent some time collecting feedback from the team on using compatible
-> strings + regex-style approach and we're not able to add a regex library
-> into firmware, so this approach unfortunately won't work for us.
+> Andreas Kemnade (2):
+>   dt-bindings: input: touchscreen: edt-ft5x06: Add ft5426
+>   Input: edt-ft5x06 - add ft5426
+> 
+>  .../devicetree/bindings/input/touchscreen/edt-ft5x06.yaml        | 1 +
+>  drivers/input/touchscreen/edt-ft5x06.c                           | 1 +
+>  2 files changed, 2 insertions(+)
+> 
 
-Why? What is the size growth caused by the RegularExpressionDxe ?
-
-> Because we have more axes of board identification than chromebook, using
-> FIT's compatible strings isn't a scalable solution for us. I don't think
-> we have incompatible problems, we only have more than 2-3 axes of
-> information.
-
-Well, not using compatibles / strings results in most of the phone
-vendors having just the 'MTP' as their platform id. It makes then
-impossible to have an image with several DTB files targeting different
-phone families from several vendors. What looks like a nice feature for
-MTP vs QRD vs HDK becomes useless with the end-user devices.
-
--- 
-With best wishes
-Dmitry
