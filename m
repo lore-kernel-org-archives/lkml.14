@@ -1,323 +1,239 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF59B660;
-	Sat, 22 Jun 2024 15:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE31A25632;
+	Sat, 22 Jun 2024 15:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719070709; cv=none; b=UGutJ2wQyGV6tc6o40iml0M+dDqP4TyKRpwsQx/hvUkvm7jJN7k4rnF9GNgCrJOHtF5OnqWtPsXfAorRW2gB085mZRmD6VYjfhfwtdbFarVvr+c2f6/ZDXLJONYp0+uSeMxFdOtuJEwq/SQA15WuZsUtdDGQIHLoIXARBxyLUQc=
+	t=1719071404; cv=none; b=oTufNrARiFTmZDRVYd3sPk2kl6FKcNqGKvTANZ7wk9by/5qPb4TGRTxYkjZ1Dx+o5PGT0nocIkp2JSeJJQHW76IfVZziqll164LSJgT52sUUZsMa0EcpIz0Qvu6dd03VBFXxBYtVFOg6Vaj6RHdmfWYjHblYOwreBFtt3ze70LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719070709; c=relaxed/simple;
-	bh=gT9SKhzEYCq/WK0ydAPi++X6+w9UQanGgqS760UEHNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Oa2q7+9uKtQSEImKcnvVg/3CdfmC+Z9nSvxNVT7ph8nEvPd/49ODwUXAobAQpxyV8Z//EuSQD+a4hWTvIU7ilvgP0tdFk+ejqiWefIpJjN3UO2vKL59LPI6sfxSU5THAcuKRF6bv17qXbqexmTmb1TmoDl3ZRuCtkyVfnCSZRNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mAGR6Xl+; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719071404; c=relaxed/simple;
+	bh=PiaqyW9zCw3IuWMgFtwudi7RiWa4VrwoYcA8W8NA8PI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Agd3+u5vkSl2jnAsOqEfG0+X3s4PZmtZii/u92rcqleFe3Lyp7JPGjnnGw7f049Op/L7tAwqM5Mlc7rXfm+yROeQnyEueyT+Jrtx4avVTXMm+PnI5NUDPhXNnXrNwa1KEsgEH7sYSQV1u8aLhtgvPR2SYFFFmgLp0YNXD9TQPng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=ScS+b4sg; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAGR6Xl+"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c7da220252so2399688a91.1;
-        Sat, 22 Jun 2024 08:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719070707; x=1719675507; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bj/XTmmg7MF2I7Bw1ftzUeRXm7R4y2rYNK4ZrBR4ZfI=;
-        b=mAGR6Xl+6Kc9yKunifx1wZB/r0g6+yv6DGYJEn279pyQR6Dp49r9nqvLq03w6fKmmw
-         3O8UHKl9plYIoz4zDg4rehfuWIerxvSaZPeaJYoUWejARRvlZABkN2vW3f6u4wZnKOap
-         Vpy60pHSYDpb3Uryu9yqP/wr1NqwEZxYm5bsMkmqqpWEyyolV1Hzby43Ch+wVs7duYqS
-         RneJyL3BczGitCL3qraORYUlTM4zXwV0ws1toPx+5X1PTzhpTmTdAF6/7YWdxqpbQgnv
-         aloCqJly2Bn1rpoaKBeuhZV4WJErabLnMXRIsN44NcY2mvVYNkFp1J0/1vMm0L4G5TwQ
-         3Twg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719070707; x=1719675507;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bj/XTmmg7MF2I7Bw1ftzUeRXm7R4y2rYNK4ZrBR4ZfI=;
-        b=qGZWU/PO0ENKJ5A/tQs4ZY7a7mGwelCnvv8zPhVd/bmISrkhpn+JyhRengKme5K+Lv
-         +g9NMznbLWMhIU8RoMn8FkLRkhAIrU9epIuKo4Hn5xi5s4MAn34dw8/DogqHvvOYhSFE
-         YnvfiuPATzMVoWkvVDK4TKwj8ss3zUP3GTCwPamWk7Zw9MPxAgDkaudnc7Gv1oHFbQ0U
-         XFC73REY8XN7pXvh89bRgnZrgG1rIqhz7Vt54mB3ehOInJkYa6d/2ba/M4z51Rk3YK1W
-         wV4sXuPbAG8H/CHt09yZvRerHT77q1wIEdxUEv0OSr1sHacUsB7bO0CyD7+3zcbOKYPH
-         yuwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWYz3HM0faRZQpncfhY5MqdZqbJhkFq0SAqEfjwhxNfy9hxDpOn8h/jx8q1JQt4ACCSxhagqTqtIl7re8vbUTaTc3/X6119IIKcoQszc96ickVLv6pGV1AEvTD9Ref5atWmbdcdAPaSBx/qYrO/4tGC5kBDpbFMOUFpmOU/LnkNsGXH/LJK
-X-Gm-Message-State: AOJu0YzPhI5ORG3O7cqpHp/F2cXkMt9msRTCq4hIRYa0vsbLw2hbWTWo
-	X517MxAQSGLeFmneJwvPxZzuKcTLj8PhS+rofmZNSQN7pbdU5Oxe
-X-Google-Smtp-Source: AGHT+IGHZQpebHkYN4k5oJGo/Kixh/DAUUXiw8QholUSnCYyl+ZDY5eaFrNdxjZ0vCQMDU3s18hfRw==
-X-Received: by 2002:a17:90b:50c8:b0:2c0:238c:4ee6 with SMTP id 98e67ed59e1d1-2c86121446cmr216755a91.2.1719070707293;
-        Sat, 22 Jun 2024 08:38:27 -0700 (PDT)
-Received: from fedora.one.one.one.one ([2405:201:6013:c0b2:ea4b:30e0:4e3a:ab56])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c819dbb7c6sm3476737a91.40.2024.06.22.08.38.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 08:38:26 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: dt-bindings: realtek,rt5659: Convert to dtschema
-Date: Sat, 22 Jun 2024 21:07:47 +0530
-Message-ID: <20240622153752.94644-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="ScS+b4sg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1719071371; x=1719676171; i=deller@gmx.de;
+	bh=PiaqyW9zCw3IuWMgFtwudi7RiWa4VrwoYcA8W8NA8PI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ScS+b4sgDitUUwPKQJB6OoObzABhAsdgQ2ksC7sJrTCDlL/DTtfUHSQRvzs99HUU
+	 ZkatpHJSiXGdXUa/pVjGFFQRx6uGS2wDMMirqEDA9LF3PTyj+2jIcN/hU0oU2rEHW
+	 Pn3YkRoKrZZxhIcDTtE4hdaJRc5IgMzeFOYKv1QLWpfZ5oyZ3/UTeZ0kK4XGHXgp+
+	 UQufWXtTtFYOvU8yEGy0srU3JNe+02/KUSD8Bam7veB8b9UbBezoGyP7XwGqKExwB
+	 Tsk7CJ/8sJFkZBa+jOUjmAH1/kDthBWYrswcqSFOPqDV9tIUeLl/ePe0jklh3+C4z
+	 r8JCQbs/+DpJ1gBGMg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([109.250.63.133]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFbVu-1s8MDs3XJu-000CVO; Sat, 22
+ Jun 2024 17:49:30 +0200
+Message-ID: <48aa5db8-2605-42e3-a1e3-1bf3428380ee@gmx.de>
+Date: Sat, 22 Jun 2024 17:49:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 000/217] 6.1.95-rc1 review [parisc64/C3700 boot
+ failures]
+To: Guenter Roeck <linux@roeck-us.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ allen.lkml@gmail.com, broonie@kernel.org, Oleg Nesterov <oleg@redhat.com>,
+ linux-parisc@vger.kernel.org,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+References: <20240619125556.491243678@linuxfoundation.org>
+ <614d86a1-72c4-489b-94f9-fbe553c25f28@roeck-us.net>
+ <21d5c00f-a373-4173-84e5-33dbd6305b57@gmx.de>
+ <2760c168-974b-41da-9f1c-171a07bb60fb@roeck-us.net>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ xsFNBF3Ia3MBEAD3nmWzMgQByYAWnb9cNqspnkb2GLVKzhoH2QD4eRpyDLA/3smlClbeKkWT
+ HLnjgkbPFDmcmCz5V0Wv1mKYRClAHPCIBIJgyICqqUZo2qGmKstUx3pFAiztlXBANpRECgwJ
+ r+8w6mkccOM9GhoPU0vMaD/UVJcJQzvrxVHO8EHS36aUkjKd6cOpdVbCt3qx8cEhCmaFEO6u
+ CL+k5AZQoABbFQEBocZE1/lSYzaHkcHrjn4cQjc3CffXnUVYwlo8EYOtAHgMDC39s9a7S90L
+ 69l6G73lYBD/Br5lnDPlG6dKfGFZZpQ1h8/x+Qz366Ojfq9MuuRJg7ZQpe6foiOtqwKym/zV
+ dVvSdOOc5sHSpfwu5+BVAAyBd6hw4NddlAQUjHSRs3zJ9OfrEx2d3mIfXZ7+pMhZ7qX0Axlq
+ Lq+B5cfLpzkPAgKn11tfXFxP+hcPHIts0bnDz4EEp+HraW+oRCH2m57Y9zhcJTOJaLw4YpTY
+ GRUlF076vZ2Hz/xMEvIJddRGId7UXZgH9a32NDf+BUjWEZvFt1wFSW1r7zb7oGCwZMy2LI/G
+ aHQv/N0NeFMd28z+deyxd0k1CGefHJuJcOJDVtcE1rGQ43aDhWSpXvXKDj42vFD2We6uIo9D
+ 1VNre2+uAxFzqqf026H6cH8hin9Vnx7p3uq3Dka/Y/qmRFnKVQARAQABzRxIZWxnZSBEZWxs
+ ZXIgPGRlbGxlckBnbXguZGU+wsGRBBMBCAA7AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheA
+ FiEERUSCKCzZENvvPSX4Pl89BKeiRgMFAl3J1zsCGQEACgkQPl89BKeiRgNK7xAAg6kJTPje
+ uBm9PJTUxXaoaLJFXbYdSPfXhqX/BI9Xi2VzhwC2nSmizdFbeobQBTtRIz5LPhjk95t11q0s
+ uP5htzNISPpwxiYZGKrNnXfcPlziI2bUtlz4ke34cLK6MIl1kbS0/kJBxhiXyvyTWk2JmkMi
+ REjR84lCMAoJd1OM9XGFOg94BT5aLlEKFcld9qj7B4UFpma8RbRUpUWdo0omAEgrnhaKJwV8
+ qt0ULaF/kyP5qbI8iA2PAvIjq73dA4LNKdMFPG7Rw8yITQ1Vi0DlDgDT2RLvKxEQC0o3C6O4
+ iQq7qamsThLK0JSDRdLDnq6Phv+Yahd7sDMYuk3gIdoyczRkXzncWAYq7XTWl7nZYBVXG1D8
+ gkdclsnHzEKpTQIzn/rGyZshsjL4pxVUIpw/vdfx8oNRLKj7iduf11g2kFP71e9v2PP94ik3
+ Xi9oszP+fP770J0B8QM8w745BrcQm41SsILjArK+5mMHrYhM4ZFN7aipK3UXDNs3vjN+t0zi
+ qErzlrxXtsX4J6nqjs/mF9frVkpv7OTAzj7pjFHv0Bu8pRm4AyW6Y5/H6jOup6nkJdP/AFDu
+ 5ImdlA0jhr3iLk9s9WnjBUHyMYu+HD7qR3yhX6uWxg2oB2FWVMRLXbPEt2hRGq09rVQS7DBy
+ dbZgPwou7pD8MTfQhGmDJFKm2jvOwU0EXchrcwEQAOsDQjdtPeaRt8EP2pc8tG+g9eiiX9Sh
+ rX87SLSeKF6uHpEJ3VbhafIU6A7hy7RcIJnQz0hEUdXjH774B8YD3JKnAtfAyuIU2/rOGa/v
+ UN4BY6U6TVIOv9piVQByBthGQh4YHhePSKtPzK9Pv/6rd8H3IWnJK/dXiUDQllkedrENXrZp
+ eLUjhyp94ooo9XqRl44YqlsrSUh+BzW7wqwfmu26UjmAzIZYVCPCq5IjD96QrhLf6naY6En3
+ ++tqCAWPkqKvWfRdXPOz4GK08uhcBp3jZHTVkcbo5qahVpv8Y8mzOvSIAxnIjb+cklVxjyY9
+ dVlrhfKiK5L+zA2fWUreVBqLs1SjfHm5OGuQ2qqzVcMYJGH/uisJn22VXB1c48yYyGv2HUN5
+ lC1JHQUV9734I5cczA2Gfo27nTHy3zANj4hy+s/q1adzvn7hMokU7OehwKrNXafFfwWVK3OG
+ 1dSjWtgIv5KJi1XZk5TV6JlPZSqj4D8pUwIx3KSp0cD7xTEZATRfc47Yc+cyKcXG034tNEAc
+ xZNTR1kMi9njdxc1wzM9T6pspTtA0vuD3ee94Dg+nDrH1As24uwfFLguiILPzpl0kLaPYYgB
+ wumlL2nGcB6RVRRFMiAS5uOTEk+sJ/tRiQwO3K8vmaECaNJRfJC7weH+jww1Dzo0f1TP6rUa
+ fTBRABEBAAHCwXYEGAEIACAWIQRFRIIoLNkQ2+89Jfg+Xz0Ep6JGAwUCXchrcwIbDAAKCRA+
+ Xz0Ep6JGAxtdEAC54NQMBwjUNqBNCMsh6WrwQwbg9tkJw718QHPw43gKFSxFIYzdBzD/YMPH
+ l+2fFiefvmI4uNDjlyCITGSM+T6b8cA7YAKvZhzJyJSS7pRzsIKGjhk7zADL1+PJei9p9idy
+ RbmFKo0dAL+ac0t/EZULHGPuIiavWLgwYLVoUEBwz86ZtEtVmDmEsj8ryWw75ZIarNDhV74s
+ BdM2ffUJk3+vWe25BPcJiaZkTuFt+xt2CdbvpZv3IPrEkp9GAKof2hHdFCRKMtgxBo8Kao6p
+ Ws/Vv68FusAi94ySuZT3fp1xGWWf5+1jX4ylC//w0Rj85QihTpA2MylORUNFvH0MRJx4mlFk
+ XN6G+5jIIJhG46LUucQ28+VyEDNcGL3tarnkw8ngEhAbnvMJ2RTx8vGh7PssKaGzAUmNNZiG
+ MB4mPKqvDZ02j1wp7vthQcOEg08z1+XHXb8ZZKST7yTVa5P89JymGE8CBGdQaAXnqYK3/yWf
+ FwRDcGV6nxanxZGKEkSHHOm8jHwvQWvPP73pvuPBEPtKGLzbgd7OOcGZWtq2hNC6cRtsRdDx
+ 4TAGMCz4j238m+2mdbdhRh3iBnWT5yPFfnv/2IjFAk+sdix1Mrr+LIDF++kiekeq0yUpDdc4
+ ExBy2xf6dd+tuFFBp3/VDN4U0UfG4QJ2fg19zE5Z8dS4jGIbLg==
+In-Reply-To: <2760c168-974b-41da-9f1c-171a07bb60fb@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GZB47vhf+aJuVWZIF2Jh/JUss/bD2HbyXNGPXz83C8JY3LEIwhl
+ H3g4r3jA7XIptdoErvDc/sNBZcK713sU3eLmWKyQoUtyG8XKyHgIdhJl7LVHFU7Onl7vOGK
+ fhBH+SV291fB/r0pYB1yCWONOy+ZEJg4VtKk8to4PDFaq8CTwz/AgOlDAwCzpnGeXR4Gw0K
+ i1qGzPT3wpkWWctkT2J7Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JDngWE3DQ9c=;P6I8LsHGqZ0+2tBFw1gcoOaA9IW
+ halOAq1f7Cd1rXrTYgH9LcJpEP0nSjZw5qVXK9sF1I3tB+NaayUEY6TPgdD4Q1IbagSwm7DYk
+ DrjzhpkHjeyxk+2fHleMFY6KR5csOOxlqLLKORB61WcaHpokM574mxOCCcLyEA4AQ0rj9larT
+ wn7AA02pJIfdMltsE6NJJITuT7zqKxoVjoWB7hFxBlxOktrX/cJn+jOQnanjFL1Xx0wwj12uK
+ ZaOqj5fkJURnGjtkJ59uLgJl5IDvcyvSNiP3wLFmhdiK7elRJtMW+sxwnpXsfLhTYl/XWEUSa
+ f7qUAd7cbR2cJ1nmU5HvXR6zo4MAItEBTO5mkBgI3TPxFgs12P3ij5eB+GXDeLjbyu4HGH6ii
+ qrSw4NkD1WDmf01LhHwS76Y5K38KuoFItteO3jF5RuuNpS0I7NbN3X+mku2GEOeXNz/urEKPX
+ hvEIwLx4QgzdM5xn2qqAoSgCXoFUpoH5LxtBMe/el7xkOKLhDXUYd0rcVmjW7qVAkRyaov0pL
+ NCphSfoUHh2WILzUOU7InWoWM0TH9U0tawEdXB5L9jvQOxbmPX55cq6EdGzelzbbv77rxJwCp
+ 2o2RQZ7NFCYdj7TgFnETvz2xfyHPqLqP8iqIKuReHt5weakOrsPfDjCRaDylMxayqqo/eLr7z
+ q6V9iNDGI5ObtGlUPS9lboEyP87I1eIA13Kceb9bqGqNf+pSz9eunYYyty79fukasK4cXvjqo
+ 1+U/ArUyZsQ4DmF5C9NG5ecEYeYgQX8OnpsZzEqKwwiJGj7ymE/vSNN26JvGhVUVNL4MoqtBI
+ 1OEyH6PfB+/9+rTvAEi4MGx19YGKzzivl6q3rYRKgBS0w=
 
-Convert the RT5659/RT5658 audio CODEC bindings to DT schema.
+On 6/22/24 17:34, Guenter Roeck wrote:
+> On 6/22/24 08:13, Helge Deller wrote:
+>> On 6/22/24 16:58, Guenter Roeck wrote:
+>>> [ Copying parisc maintainers - maybe they can test on real hardware ]
+>>>
+>>> On 6/19/24 05:54, Greg Kroah-Hartman wrote:
+>>>> This is the start of the stable review cycle for the 6.1.95 release.
+>>>> There are 217 patches in this series, all will be posted as a respons=
+e
+>>>> to this one.=C2=A0 If anyone has any issues with these being applied,=
+ please
+>>>> let me know.
+>>>>
+>>>> Responses should be made by Fri, 21 Jun 2024 12:55:11 +0000.
+>>>> Anything received after that time might be too late.
+>>>>
+>>> ...
+>>>> Oleg Nesterov <oleg@redhat.com>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 zap_pid_ns_processes: clear TIF_NOTIFY_SIGNA=
+L along with TIF_SIGPENDING
+>>>>
+>>>
+>>> I can not explain it, but this patch causes all my parisc64 (C3700)
+>>> boot tests to crash. There are lots of memory corruption BUGs such as
+>>>
+>>> [=C2=A0=C2=A0=C2=A0 0.000000] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> [=C2=A0=C2=A0=C2=A0 0.000000] BUG kmalloc-96 (Not tainted): Padding ov=
+erwritten. 0x0000000043411dd0-0x0000000043411f5f @offset=3D3536
+>>>
+>>> ultimately followed by
+>>>
+>>> [=C2=A0=C2=A0=C2=A0 0.462562] Unaligned handler failed, ret =3D -14
+>>> ...
+>>> [=C2=A0=C2=A0=C2=A0 0.469160]=C2=A0 IAOQ[0]: idr_alloc_cyclic+0x48/0x1=
+18
+>>> [=C2=A0=C2=A0=C2=A0 0.469372]=C2=A0 IAOQ[1]: idr_alloc_cyclic+0x54/0x1=
+18
+>>> [=C2=A0=C2=A0=C2=A0 0.469548]=C2=A0 RP(r2): __kernfs_new_node.constpro=
+p.0+0x160/0x420
+>>> [=C2=A0=C2=A0=C2=A0 0.469782] Backtrace:
+>>> [=C2=A0=C2=A0=C2=A0 0.469928]=C2=A0 [<00000000404af108>] __kernfs_new_=
+node.constprop.0+0x160/0x420
+>>> [=C2=A0=C2=A0=C2=A0 0.470285]=C2=A0 [<00000000404b0cac>] kernfs_new_no=
+de+0xbc/0x118
+>>> [=C2=A0=C2=A0=C2=A0 0.470523]=C2=A0 [<00000000404b158c>] kernfs_create=
+_empty_dir+0x54/0xf0
+>>> [=C2=A0=C2=A0=C2=A0 0.470756]=C2=A0 [<00000000404b665c>] sysfs_create_=
+mount_point+0x4c/0xb0
+>>> [=C2=A0=C2=A0=C2=A0 0.470996]=C2=A0 [<00000000401181cc>] cgroup_init+0=
+x5b4/0x738
+>>> [=C2=A0=C2=A0=C2=A0 0.471213]=C2=A0 [<0000000040102220>] start_kernel+=
+0x1238/0x1308
+>>> [=C2=A0=C2=A0=C2=A0 0.471429]=C2=A0 [<0000000040107c90>] start_parisc+=
+0x188/0x1d0
+>>> ...
+>>> [=C2=A0=C2=A0=C2=A0 0.474956] Kernel panic - not syncing: Attempted to=
+ kill the idle task!
+>>> SeaBIOS wants SYSTEM RESET.
+>>>
+>>> This is with qemu v9.0.1.
+>>
+>> Just to be sure, did you tested the same kernel on physical hardware as=
+ well?
+>>
+>
+> No, I don't have hardware. I only have qemu. That is why I copied you an=
+d
+> the parisc mailing list.
 
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
----
- .../bindings/sound/realtek,rt5659.yaml        | 132 ++++++++++++++++++
- .../devicetree/bindings/sound/rt5659.txt      |  89 ------------
- 2 files changed, 132 insertions(+), 89 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/realtek,rt5659.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/rt5659.txt
+Yes, sorry, I saw your top line in the mail after I already sent my reply.=
+...
 
-diff --git a/Documentation/devicetree/bindings/sound/realtek,rt5659.yaml b/Documentation/devicetree/bindings/sound/realtek,rt5659.yaml
-new file mode 100644
-index 000000000000..da6966c65c02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/realtek,rt5659.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/realtek,rt5659.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RT5659/RT5658 audio CODEC
-+
-+maintainers:
-+  - Animesh Agarwal <animeshagarwal28@gmail.com>
-+
-+description: |
-+  This device supports I2C only.
-+
-+  Pins on the device (for linking into audio routes) for RT5659/RT5658:
-+    * DMIC L1
-+    * DMIC R1
-+    * DMIC L2
-+    * DMIC R2
-+    * IN1P
-+    * IN1N
-+    * IN2P
-+    * IN2N
-+    * IN3P
-+    * IN3N
-+    * IN4P
-+    * IN4N
-+    * HPOL
-+    * HPOR
-+    * SPOL
-+    * SPOR
-+    * LOUTL
-+    * LOUTR
-+    * MONOOUT
-+    * PDML
-+    * PDMR
-+    * SPDIF
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - realtek,rt5659
-+      - realtek,rt5658
-+
-+  reg:
-+    maxItems: 1
-+    description: The I2C address of the device.
-+
-+  interrupts:
-+    maxItems: 1
-+    description: The CODEC's interrupt output.
-+
-+  clocks:
-+    maxItems: 1
-+    description: phandle and clock specifier for codec MCLK.
-+
-+  clock-names:
-+    const: mclk
-+
-+  realtek,dmic1-data-pin:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum:
-+      - 0 # dmic1 is not used
-+      - 1 # using IN2N pin as dmic1 data pin
-+      - 2 # using GPIO5 pin as dmic1 data pin
-+      - 3 # using GPIO9 pin as dmic1 data pin
-+      - 4 # using GPIO11 pin as dmic1 data pin
-+    description: Specify which pin to be used as DMIC1 data pin.
-+
-+  realtek,dmic2-data-pin:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum:
-+      - 0 # dmic1 is not used
-+      - 1 # using IN2P pin as dmic1 data pin
-+      - 2 # using GPIO6 pin as dmic1 data pin
-+      - 3 # using GPIO10 pin as dmic1 data pin
-+      - 4 # using GPIO12 pin as dmic1 data pin
-+    description: Specify which pin to be used as DMIC2 data pin.
-+
-+  realtek,jd-src:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum:
-+      - 0 # No JD is used
-+      - 1 # using JD3 as JD source
-+      - 2 # JD source for Intel HDA header
-+    description: Specify which JD source be used.
-+
-+  realtek,ldo1-en-gpios:
-+    maxItems: 1
-+    description: The GPIO that controls the CODEC's LDO1_EN pin.
-+
-+  realtek,reset-gpios:
-+    maxItems: 1
-+    description: The GPIO that controls the CODEC's RESET pin.
-+
-+  sound-name-prefix: true
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+  port:
-+    $ref: audio-graph-port.yaml#
-+    unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        codec@1b {
-+            compatible = "realtek,rt5659";
-+            reg = <0x1b>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+            realtek,ldo1-en-gpios =
-+                <&gpio 3 GPIO_ACTIVE_HIGH>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/rt5659.txt b/Documentation/devicetree/bindings/sound/rt5659.txt
-deleted file mode 100644
-index 8f3f62c0226a..000000000000
---- a/Documentation/devicetree/bindings/sound/rt5659.txt
-+++ /dev/null
-@@ -1,89 +0,0 @@
--RT5659/RT5658 audio CODEC
--
--This device supports I2C only.
--
--Required properties:
--
--- compatible : One of "realtek,rt5659" or "realtek,rt5658".
--
--- reg : The I2C address of the device.
--
--- interrupts : The CODEC's interrupt output.
--
--Optional properties:
--
--- clocks: The phandle of the master clock to the CODEC
--- clock-names: Should be "mclk"
--
--- realtek,in1-differential
--- realtek,in3-differential
--- realtek,in4-differential
--  Boolean. Indicate MIC1/3/4 input are differential, rather than single-ended.
--
--- realtek,dmic1-data-pin
--  0: dmic1 is not used
--  1: using IN2N pin as dmic1 data pin
--  2: using GPIO5 pin as dmic1 data pin
--  3: using GPIO9 pin as dmic1 data pin
--  4: using GPIO11 pin as dmic1 data pin
--
--- realtek,dmic2-data-pin
--  0: dmic2 is not used
--  1: using IN2P pin as dmic2 data pin
--  2: using GPIO6 pin as dmic2 data pin
--  3: using GPIO10 pin as dmic2 data pin
--  4: using GPIO12 pin as dmic2 data pin
--
--- realtek,jd-src
--  0: No JD is used
--  1: using JD3 as JD source
--  2: JD source for Intel HDA header
--
--- realtek,ldo1-en-gpios : The GPIO that controls the CODEC's LDO1_EN pin.
--- realtek,reset-gpios : The GPIO that controls the CODEC's RESET pin.
--
--- sound-name-prefix: Please refer to dai-common.yaml
--
--- ports: A Codec may have a single or multiple I2S interfaces. These
--  interfaces on Codec side can be described under 'ports' or 'port'.
--  When the SoC or host device is connected to multiple interfaces of
--  the Codec, the connectivity can be described using 'ports' property.
--  If a single interface is used, then 'port' can be used. The usage
--  depends on the platform or board design.
--  Please refer to Documentation/devicetree/bindings/graph.txt
--
--Pins on the device (for linking into audio routes) for RT5659/RT5658:
--
--  * DMIC L1
--  * DMIC R1
--  * DMIC L2
--  * DMIC R2
--  * IN1P
--  * IN1N
--  * IN2P
--  * IN2N
--  * IN3P
--  * IN3N
--  * IN4P
--  * IN4N
--  * HPOL
--  * HPOR
--  * SPOL
--  * SPOR
--  * LOUTL
--  * LOUTR
--  * MONOOUT
--  * PDML
--  * PDMR
--  * SPDIF
--
--Example:
--
--rt5659 {
--	compatible = "realtek,rt5659";
--	reg = <0x1b>;
--	interrupt-parent = <&gpio>;
--	interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_HIGH>;
--	realtek,ldo1-en-gpios =
--		<&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_HIGH>;
--};
--- 
-2.45.2
+> I would hope that someone can either confirm that
+> this is a real problem or that it is qemu related. If it is qemu related=
+,
+> I'll just stop testing c3700 64-bit support with qemu on v6.1.y and othe=
+r
+> branches if/when the problem shows up there as well.
+
+I just booted 6.1.95 successfully in qemu and on my physical C3700 machine=
+.
+I assume the problem can be reproduced with your .config ?
+Please send it to me off-list, then I can try again.
+
+I know there are still some issues with the 64-bit hppa emulation in qemu,
+which are quite hard for me to trigger and to find the cause.
+So, maybe you now found one easier-to-trigger reproducer? :-)
+
+Helge
+
+>> Please note, that 64-bit hppa (C3700) support in qemu was just recently=
+ added
+>> and is still considered experimental.
+>> So, maybe it's not a bug in the source, but in qemu...?!?
+>>
+>
+> Sure, that is possible, though it is a bit unusual that it is only seen
+> in 6.1.95 and not in any other branches or releases.
+>
+> In summary, please see this report as "This is a problem seen in qemu.
+> It may or may not be seen on real hardware". Maybe I should add this as =
+a
+> common disclaimer to all my reports to avoid misunderstandings.
+>
+> Thanks,
+> Guenter
+>
 
