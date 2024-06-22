@@ -1,46 +1,45 @@
 Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A216155312
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 11:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C403D154BE7
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 11:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719054611; cv=none; b=oCyGkKOHGANLZ18jQDCnEyZqTsV6XdwepEsYcUP3Rj2v1GAm8928GTL7DVwDi6My9AzC2NSD9eVrAts9h1Pd/R1f3BITFC0ENDl7mTmwVBbIGGyaNH9QMSJkp8pU9Y00siJDrIZQECc6Xx+4pKQM1yfw3JVsv0ffKEz/4paN6RM=
+	t=1719054611; cv=none; b=XszfthrPJlmRl37hFHmMJLZt3Ml6J8Lh9Ft/riYkeYHNb7YBucgRFRUtLw8HWqQpwDFT1xH5Zd91fGHps/fQATMpT+SEtumwE5dbIu1zi/lUeKW22Vx37gdFMBgap4A8dPrbwFz5q4syBVWIlPQwAJB9njWd/Xpo/4Pn3nyajXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719054611; c=relaxed/simple;
-	bh=Z0MNFHa1dYgAiBPkmKkaSCueOk/dbLhFk++8+WiCink=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dBQamBv6LOBpZI0OBwV5rV1/+y9WezWdr4m4mQ2jFwdK8qJS3K0BLyNNgZiFG3wbGU4ERJKURlcxju1gp8ffofO9e1LnEj2FlhEXeF36MF2KCtZUy0HXtXlf8PdFce2GvfDsn5V84tCAwc5aCAem2Vo2LHYJrO0GjzI1WkwjpEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=h+NIe9FB; arc=none smtp.client-ip=198.47.19.141
+	bh=YWCls1yrm5bSnQ5kXXF3+XpXyfB408P7JCBmxY5M4To=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=shoAXXqQffJfugLuQFDZiUAslz0Q48qkALHVOkUR9v+O1dJugDN6ozkU7If/4ll6P/g5/P7RZ44inUd9aheUB2nv1LunOSrTprUfJRG/7VeyPp6oqYhOtjZlkGRoi3jhqEfoa+EYRV2aEfM+kLCYpXGRCQdmXeDKaCxNluegtDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KxBDG3zO; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h+NIe9FB"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45MB9Xup004926;
-	Sat, 22 Jun 2024 06:09:33 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KxBDG3zO"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45MB9Ux0004919;
+	Sat, 22 Jun 2024 06:09:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719054573;
-	bh=GEctsZEwlpy+/yLpHT9IsOxBMsbd+SrHYZnaQXFqqnY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=h+NIe9FBunufFYBtZY9WHmmHVgmbJIAixRb/Bb2FgPtcguvsxMHZ+Hl8D2u1PAJeK
-	 Oof2xjqLGZOQGlRBB9hgeIIxw6wip6QzkXioLhqzldPF75y1IwQbpvnHpX4YnB8oU5
-	 2FGV6s24pM40qcg+6gqvuju47feuR75z6dnyNNFc=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45MB9XHb003558
+	s=ti-com-17Q1; t=1719054570;
+	bh=bkW25KN0IuNiP7SM5s0jML7OoSGI178ormJ7ss1pHIo=;
+	h=From:To:CC:Subject:Date;
+	b=KxBDG3zOPqmOV8uEXEE5Uj/8AOmGJVgnUDR83kGh7Zp8PNR1NLu8Ggve0urebQMnk
+	 4CA2sunDdRPCi/U31nRl2wUhwU6xaN4WvDBPyiN9k0BMMxAaMiS6FeZSZ3L7+pqmr2
+	 T6nkq0LED21FifNKUMDg9N5wR47vog/VX5ospdUg=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45MB9UrG112563
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 22 Jun 2024 06:09:33 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+	Sat, 22 Jun 2024 06:09:30 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 22
- Jun 2024 06:09:33 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 06:09:30 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 22 Jun 2024 06:09:33 -0500
+ Frontend Transport; Sat, 22 Jun 2024 06:09:30 -0500
 Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45MB9WXm023101;
-	Sat, 22 Jun 2024 06:09:33 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45MB9Tn1023026;
+	Sat, 22 Jun 2024 06:09:30 -0500
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Tomi Valkeinen
@@ -77,12 +76,10 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
         Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
 	<j-luthra@ti.com>,
         Aradhya Bhatia <a-bhatia1@ti.com>
-Subject: [PATCH v4 02/11] drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()
-Date: Sat, 22 Jun 2024 16:39:20 +0530
-Message-ID: <20240622110929.3115714-3-a-bhatia1@ti.com>
+Subject: [PATCH v4 00/11] drm/bridge: cdns-dsi: Fix the color-shift issue
+Date: Sat, 22 Jun 2024 16:39:18 +0530
+Message-ID: <20240622110929.3115714-1-a-bhatia1@ti.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240622110929.3115714-1-a-bhatia1@ti.com>
-References: <20240622110929.3115714-1-a-bhatia1@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,102 +90,128 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Instead of manually finding the next bridge/panel, and maintaining the
-panel-bridge (in-case the next entity is a panel), switch to using the
-automatically managing devm_drm_of_get_bridge() API.
+Hello all,
 
-Drop the drm_panel support completely from the driver while at it.
+This series provides some crucial fixes and improvements for the Cadence's DSI
+TX (cdns-dsi) controller found commonly in Texas Instruments' J7 family of SoCs
+as well as in AM62P.
 
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
----
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 28 ++-----------------
- .../gpu/drm/bridge/cadence/cdns-dsi-core.h    |  2 --
- 2 files changed, 3 insertions(+), 27 deletions(-)
+Along with that, this series aims to fix the color-shift issue that has been
+going on with the DSI controller. This controller requires to be enabled before
+the previous entity enables its stream[0]. It's a strict requirement which, if
+not followed, causes the colors to "shift" on the display. The fix happens in
+2 steps.
 
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index b016f2ba06bb..5159c3f0853e 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -920,8 +920,6 @@ static int cdns_dsi_attach(struct mipi_dsi_host *host,
- 	struct cdns_dsi_output *output = &dsi->output;
- 	struct cdns_dsi_input *input = &dsi->input;
- 	struct drm_bridge *bridge;
--	struct drm_panel *panel;
--	struct device_node *np;
- 	int ret;
- 
- 	/*
-@@ -939,26 +937,10 @@ static int cdns_dsi_attach(struct mipi_dsi_host *host,
- 	/*
- 	 * The host <-> device link might be described using an OF-graph
- 	 * representation, in this case we extract the device of_node from
--	 * this representation, otherwise we use dsidev->dev.of_node which
--	 * should have been filled by the core.
-+	 * this representation.
- 	 */
--	np = of_graph_get_remote_node(dsi->base.dev->of_node, DSI_OUTPUT_PORT,
--				      dev->channel);
--	if (!np)
--		np = of_node_get(dev->dev.of_node);
--
--	panel = of_drm_find_panel(np);
--	if (!IS_ERR(panel)) {
--		bridge = drm_panel_bridge_add_typed(panel,
--						    DRM_MODE_CONNECTOR_DSI);
--	} else {
--		bridge = of_drm_find_bridge(np);
--		if (!bridge)
--			bridge = ERR_PTR(-EINVAL);
--	}
--
--	of_node_put(np);
--
-+	bridge = devm_drm_of_get_bridge(dsi->base.dev, dsi->base.dev->of_node,
-+					DSI_OUTPUT_PORT, dev->channel);
- 	if (IS_ERR(bridge)) {
- 		ret = PTR_ERR(bridge);
- 		dev_err(host->dev, "failed to add DSI device %s (err = %d)",
-@@ -968,7 +950,6 @@ static int cdns_dsi_attach(struct mipi_dsi_host *host,
- 
- 	output->dev = dev;
- 	output->bridge = bridge;
--	output->panel = panel;
- 
- 	/*
- 	 * The DSI output has been properly configured, we can now safely
-@@ -984,12 +965,9 @@ static int cdns_dsi_detach(struct mipi_dsi_host *host,
- 			   struct mipi_dsi_device *dev)
- {
- 	struct cdns_dsi *dsi = to_cdns_dsi(host);
--	struct cdns_dsi_output *output = &dsi->output;
- 	struct cdns_dsi_input *input = &dsi->input;
- 
- 	drm_bridge_remove(&input->bridge);
--	if (output->panel)
--		drm_panel_bridge_remove(output->bridge);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h
-index ca7ea2da635c..5db5dbbbcaad 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.h
-@@ -10,7 +10,6 @@
- 
- #include <drm/drm_bridge.h>
- #include <drm/drm_mipi_dsi.h>
--#include <drm/drm_panel.h>
- 
- #include <linux/bits.h>
- #include <linux/completion.h>
-@@ -21,7 +20,6 @@ struct reset_control;
- 
- struct cdns_dsi_output {
- 	struct mipi_dsi_device *dev;
--	struct drm_panel *panel;
- 	struct drm_bridge *bridge;
- 	union phy_configure_opts phy_opts;
- };
+    1. The bridge pre_enable calls have been shifted before the crtc_enable and
+       the bridge post_disable calls have been shifted after the crtc_disable.
+       This has been done as per the definition of bridge pre_enable.
+
+       "The display pipe (i.e. clocks and timing signals) feeding this bridge
+       will not yet be running when this callback is called".
+
+       Since CRTC is also a source feeding the bridge, it should not be enabled
+       before the bridges in the pipeline are pre_enabled.
+
+       The sequence of enable after this patch will look like:
+
+	        bridge[n]_pre_enable
+	        ...
+	        bridge[1]_pre_enable
+
+	        crtc_enable
+	        encoder_enable
+
+	        bridge[1]_enable
+	        ...
+	        bridge[n]_enable
+
+       and vice-versa for the bridge chain disable sequence.
+
+
+    2. The cdns-dsi enable / disable sequences have now been moved to pre_enable
+       and post_disable sequences. This is the only way to have cdns-dsi drivers
+       be up and ready before the previous entity is enables its streaming.
+
+The DSI also spec requires the Clock and Data Lanes be ready before the DSI TX
+enables its stream[0]. A patch has been added to make the code wait for that to
+happen. Going ahead with further DSI (and DSS configuration), while the lanes
+are not ready, has been found to be another reason for shift in colors.
+
+These patches have been tested with J721E based BeagleboneAI64 along with a
+RaspberryPi 7" DSI panel. The extra patches can be found in the
+"next_dsi-v4-tests" branch of my github fork[1] for anyone who would like to
+test them.
+
+Thanks,
+Aradhya
+
+
+[0]: Section 12.6.5.7.3: "Start-up Procedure" [For DSI TX controller]
+     in TDA4VM Technical Reference Manual https://www.ti.com/lit/zip/spruil1
+
+[1]: https://github.com/aradhya07/linux-ab/tree/next_dsi-v4-tests
+
+Change Log:
+
+  - Changes in v4:
+    - Add new patch, "drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()",
+      to update to an auto-managed way of finding next bridge in the chain.
+    - Drop patch "drm/bridge: cdns-dsi: Fix the phy_initialized variable" and
+      add "drm/bridge: cdns-dsi: Fix Phy _init() and _exit()" that properly
+      de-initializes the Phy and maintains the initialization state.
+    - Reword patch "drm/bridge: cdns-dsi: Reset the DCS write FIFO" to explain
+      the HW concerns better.
+    - Add R-b tag from Dmitry Baryshkov for patches 1/11 and 8/11.
+
+  - Changes in v3:
+    - Reword the commit message for patch "drm/bridge: cdns-dsi: Fix OF node
+      pointer".
+    - Add a new helper API to figure out DSI host input pixel format
+      in patch "drm/mipi-dsi: Add helper to find input format".
+    - Use a common function for bridge pre-enable and enable, and bridge disable
+      and post-disable, to avoid code duplication.
+    - Add T-b tag from Dominik Haller in patch 5/10. (Missed to add it in v2).
+    - Add R-b tag from Dmitry Baryshkov for patch 8/10.
+
+  - Changes in v2:
+    - Drop patch "drm/tidss: Add CRTC mode_fixup"
+    - Split patch "drm/bridge: cdns-dsi: Fix minor bugs" into 4 separate ones
+    - Drop support for early_enable/late_disable APIs and instead re-order the
+      pre_enable / post_disable APIs to be called before / after crtc_enable /
+      crtc_disable.
+    - Drop support for early_enable/late_disable in cdns-dsi and use
+      pre_enable/post_disable APIs instead to do bridge enable/disable.
+
+
+Previous versions:
+
+v1: https://lore.kernel.org/all/20240511153051.1355825-1-a-bhatia1@ti.com/
+v2: https://lore.kernel.org/all/20240530093621.1925863-1-a-bhatia1@ti.com/
+v3: https://lore.kernel.org/all/20240617105311.1587489-1-a-bhatia1@ti.com/
+
+Aradhya Bhatia (11):
+  drm/bridge: cdns-dsi: Fix OF node pointer
+  drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()
+  drm/bridge: cdns-dsi: Fix Phy _init() and _exit()
+  drm/bridge: cdns-dsi: Fix the link and phy init order
+  drm/bridge: cdns-dsi: Fix the clock variable for mode_valid()
+  drm/bridge: cdns-dsi: Wait for Clk and Data Lanes to be ready
+  drm/bridge: cdns-dsi: Reset the DCS write FIFO
+  drm/mipi-dsi: Add helper to find input format
+  drm/bridge: cdns-dsi: Support atomic bridge APIs
+  drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+  drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
+
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 105 ++++++-----
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.h    |   2 -
+ drivers/gpu/drm/drm_atomic_helper.c           | 165 ++++++++++++------
+ drivers/gpu/drm/drm_mipi_dsi.c                |  37 ++++
+ include/drm/drm_atomic_helper.h               |   7 +
+ include/drm/drm_mipi_dsi.h                    |   1 +
+ 6 files changed, 209 insertions(+), 108 deletions(-)
+
+
+base-commit: b992b79ca8bc336fa8e2c80990b5af80ed8f36fd
 -- 
 2.34.1
 
