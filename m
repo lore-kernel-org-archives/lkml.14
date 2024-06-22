@@ -1,52 +1,45 @@
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1990C537F8;
-	Sat, 22 Jun 2024 07:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E7924C6B;
+	Sat, 22 Jun 2024 07:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719040464; cv=none; b=medlVd0BhsPYWQ9HfcbfxgIGxdE01hWrIjbZEPOwXv/QqEhVTgpcdk3CONu/YLrruyQknTrbrec/Ac8O7YNrd0rohc1gkw/hGr0OCCgziybTCNfqNhrU46vRwxs2JCHDwseGuBhT/y0GsxYwVlDTK3RzqaP9C4hXk+n/msXGg8o=
+	t=1719040593; cv=none; b=PcyaTjtebj9ZxF1MDj/YB1fuiviEXU1nK4Coge0n4JllfebC6Z82cRNSfQ43IkGELwdOviNV12CGyyYwsAdwLpAxyPX9ZzlKk+Vb+7bHwiMZbMUhfAGOEbKDy74WnOhYf/S+mkhFuiKe7m6yGE+tHHIN9p7Wf77WwFP0ZeCqSNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719040464; c=relaxed/simple;
-	bh=o+9+J9YMKQ5edY0HHEWToSepgGfJ24sYi1botHS2wM0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NxL5B3kwefSn2jmWh4/tzhMPu4N24r83RYlKBjDeHznZlI3+JUkNSDq/xft0rEb0ni2PBQeG/se/h8t3GxD5pNRxbMxW4PTycP5je87aGC04ZvAL+ocV30LWp1zF1IMQiuOlqjScSGrNuniuKfydpWqPWAmV8nZF5a2SIfTzz1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=smE3l+DU; arc=none smtp.client-ip=80.12.242.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1719040593; c=relaxed/simple;
+	bh=TDCoAs/y9J2iOv6JYA2vREyxIp/36u4TOoNlpXdoDWw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RPFDipgBaZ9kOMbIPxdJC88IPY6KBeIP8l10Tx3TKGl0wbQkC3KwRVh5Mp5qstQGTPjFVQOR0ocs5jFbHFmNXaI71LflqOC+djmrUXj1FcCRI57R46wanCpQvi1BvECWt+/8/yRvwYi7aSJhZE9INUkTGZalX4uCNGkT6YVgZa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XGkkWXcT; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="smE3l+DU"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id KuntsjGzHYBZjKuo5snU8l; Sat, 22 Jun 2024 09:05:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1719039905;
-	bh=iP+T2nUGdzwqIY61OldE2CGAadfgcHPDOk3hUvLcllw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=smE3l+DU7iZemJAaglX1DgD6ScomIRoESFyU8l4n845t8kflqLlW7e9RORM8/JoYa
-	 /v+3RR1wQ0ZswYIIVSHJbICfVNnBxZn8/c1F8GeL2s5c8Ohn89unngG+Wj1drjYRBP
-	 sw7kzJfrqvU/QbNhXvvPh0KjgRZsUyIHGkaYdsj3e8rvWnLKBv3lD07lBHKrndFSAI
-	 6Q8cmevwXOFU3p8W9iY7xGsXXinmDmk4GkDzGqU+VIIeh+F6i86OJpL+cUyJHqipcF
-	 +0JUQW9/s4rdubJNb6qq2LFoT8CyXtYbfbzIhiTxQwmhYWL6fU0I3YYMX/ymeZSnxX
-	 KE2PfGoMXGCDg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 22 Jun 2024 09:05:05 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: linus.walleij@linaro.org,
-	sre@kernel.org,
-	jic23@kernel.org
-Cc: linux-pm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XGkkWXcT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=GW8Tk
+	ERinCU+bytAq4l8EDJCeWID0aHV/IFiGnAJHec=; b=XGkkWXcT7qfZcCE8hu+Y5
+	gmYxJsBzyt364Q4h3iyXUGun9fRVvL1J0XRDwUVE1eCw86q/rDZMNhfvZfn2Cee6
+	sW7lGP3uwkWwhJTyLnk2Gu/t2ZjDGl+VtbY+ifLFIDkH+lV468/DB+SJx0ceaPJo
+	Kwot7XTeUeNVnaRiayDavM=
+Received: from localhost (unknown [101.132.132.191])
+	by gzga-smtp-mta-g3-1 (Coremail) with SMTP id _____wD3H3jReXZmjSoVAA--.6022S2;
+	Sat, 22 Jun 2024 15:14:25 +0800 (CST)
+From: Xavier <xavier_qy@163.com>
+To: tj@kernel.org,
+	longman@redhat.com
+Cc: mkoutny@suse.com,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 3/3] power: supply: ab8500: Clean some error messages
-Date: Sat, 22 Jun 2024 09:04:26 +0200
-Message-ID: <e7ac0fa83c6100cbe4e0efa90cf99291c2423b10.1719037737.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1719037737.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1719037737.git.christophe.jaillet@wanadoo.fr>
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	Xavier <xavier_qy@163.com>
+Subject: [PATCH-cpuset v6 0/2] Add Union-Find and use it to optimize cpuset
+Date: Sat, 22 Jun 2024 15:14:22 +0800
+Message-Id: <20240622071424.215778-1-xavier_qy@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <ZnXsUnAi7VnX0tZJ@slm.duckdns.org>
+References: <ZnXsUnAi7VnX0tZJ@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,55 +47,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3H3jReXZmjSoVAA--.6022S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr1DJw18Zw4ftw4UtF1kXwb_yoW8GrWfpr
+	Z7KF98Aa1DGrW7C34fGrW3u34fAas7G398KanrJw1ayr17AFnYyr45Kwn0vr95Gr9rKF18
+	Xr43tw18uw1jyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UTrW7UUUUU=
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/xtbBchYGEGWXvwSdPQAAsb
 
-There is an useless extra comma at the end of some error messages, remove
-them.
+Hi all,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/power/supply/ab8500_charger.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Add a Union-Find data structure in library, and use it to to optimize the
+merging of cpumasks. It could potentially be used in network configuration
+and topology management to manage the connectivity between different devices
+or nodes, as well as in managing the merging and lookup operations of certain
+complex file clusters or blocks.
 
-diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply/ab8500_charger.c
-index 2f06b93682ac..93181ebfb324 100644
---- a/drivers/power/supply/ab8500_charger.c
-+++ b/drivers/power/supply/ab8500_charger.c
-@@ -491,7 +491,7 @@ static int ab8500_charger_get_ac_voltage(struct ab8500_charger *di)
- 		ret = iio_read_channel_processed_scale(di->adc_main_charger_v,
- 						       &vch, 1000);
- 		if (ret < 0) {
--			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
-+			dev_err(di->dev, "%s ADC conv failed\n", __func__);
- 			return ret;
- 		}
- 	} else {
-@@ -546,7 +546,7 @@ static int ab8500_charger_get_vbus_voltage(struct ab8500_charger *di)
- 		ret = iio_read_channel_processed_scale(di->adc_vbus_v,
- 						       &vch, 1000);
- 		if (ret < 0) {
--			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
-+			dev_err(di->dev, "%s ADC conv failed\n", __func__);
- 			return ret;
- 		}
- 	} else {
-@@ -572,7 +572,7 @@ static int ab8500_charger_get_usb_current(struct ab8500_charger *di)
- 		ret = iio_read_channel_processed_scale(di->adc_usb_charger_c,
- 						       &ich, 1000);
- 		if (ret < 0) {
--			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
-+			dev_err(di->dev, "%s ADC conv failed\n", __func__);
- 			return ret;
- 		}
- 	} else {
-@@ -598,7 +598,7 @@ static int ab8500_charger_get_ac_current(struct ab8500_charger *di)
- 		ret = iio_read_channel_processed_scale(di->adc_main_charger_c,
- 						       &ich, 1000);
- 		if (ret < 0) {
--			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
-+			dev_err(di->dev, "%s ADC conv failed\n", __func__);
- 			return ret;
- 		}
- 	} else {
+To Tejun,
+Since union_find operation does not require contiguous physical memory, I
+have replaced the previous allocation method with vzalloc.
+
+To Longman,
+Based on your patch, the overlapping check and merge operations for cpusets are
+skipped in the case of cgroup v2.
+
+Kindly review.
+
+Best Regards,
+Xavier
+
+Xavier (2):
+  Union-Find: add a new module in kernel library
+  cpuset: use Union-Find to optimize the merging of cpumasks
+
+ Documentation/core-api/union_find.rst         | 110 ++++++++++++++++++
+ .../zh_CN/core-api/union_find.rst             |  87 ++++++++++++++
+ MAINTAINERS                                   |   9 ++
+ include/linux/union_find.h                    |  30 +++++
+ kernel/cgroup/cpuset.c                        |  97 ++++++---------
+ lib/Makefile                                  |   2 +-
+ lib/union_find.c                              |  38 ++++++
+ 7 files changed, 313 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/core-api/union_find.rst
+ create mode 100644 Documentation/translations/zh_CN/core-api/union_find.rst
+ create mode 100644 include/linux/union_find.h
+ create mode 100644 lib/union_find.c
+
 -- 
 2.45.2
 
