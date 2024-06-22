@@ -1,145 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABEEA5F;
-	Sat, 22 Jun 2024 00:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC5D1FA5
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 00:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719017957; cv=none; b=Q/HTJaJ5AmNp3AMNc03BhS4ahc0XBCnha7BPtBCkVzMT/lCY6t4Gu22Vch9Ze/IGdYhrto44h6fbspMIBMTui58HltXQLZ0oqwXhf/CsaAHt8MsxPTGyFlNyK7s1ethbgxCjVkFuR+wW51E0nOKKcHsTKvtbF3b88tsJDplLEYc=
+	t=1719017981; cv=none; b=c5lysBUTMX7hv8FaDcG2o/bYOSJZuMoTnZ2Sv0vbHi4e5WDlseSrtQHtjtyUNbkWXKOcKfjxVlvDdXFouDcCM1KH7lDOriUBGoQ9PtE+YuBMJJFKOCQLCWbGrwYENw5OjLr9TfG6CywslSIl4rCpOTFYqTwb6S3dn0Nw4i3csQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719017957; c=relaxed/simple;
-	bh=FQ1S0HDz0vGglXBuV05rXrXWvmAMYzorAlIge6VS7nE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=enx6BJjFAUqP+EyfpmwpGkR925YuibQ5EwvmsJpJ06jSrwEPmPSFkZqUofdhZ0rVOnUXLfx7HwwVOOqMa7Jx2ls/gL8Xf5po7xSlYMff4FyD2raJndJ5/I5seb9UvrmlYyBwgLAmCKT/Eoj3jzJqnFyQIgyCiW2/Dt3auBAh4cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6p6yNc+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719017981; c=relaxed/simple;
+	bh=l6E+/pOFYoPz0/65BUpxauVRh7+RaH5Xm9C9eF+VW2I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Hb/aVygLWvyUDfmKtnULDhsTlbFvM5EvtoXNHIUl0I/4O22eupa71H4mpSgSo+wN23cWDqodoPHwxxmgJQ+A8CdFRed2ib4op4Ky+osBzHwH4ajgv+v7rJ2sqA3mqKV226y8Zn6nEKwrmwEtCQZVkIV2XThiSshFniA5ydhOWNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cOq92MGl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6p6yNc+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7ECC2BBFC;
-	Sat, 22 Jun 2024 00:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719017956;
-	bh=FQ1S0HDz0vGglXBuV05rXrXWvmAMYzorAlIge6VS7nE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e6p6yNc+6wYkOLheeXy5wx7XnlxNGY6XrTs3XFzZ11RSX/pOWaja5pXoi0pwvnqjl
-	 UBZ8Mti2dRn44UvUN6IbKwjKVl1EcdcrZRIuJDmF2uNbEIuJDCX7F8fKxqlFULHNuZ
-	 /VjBZb/gaKMZ2mANPL8NOLQXVIJ8Pxdz4s7jIez7FPVEvWfwUhpEFmkOQLqIYjRr0H
-	 UnFYkPw7qd8nh52b6hpwuBKAK2yEfdipX9QQowu0nn7sdgcXaGiAY2NUF5POlnpZtA
-	 aurDTD+pwSv7PEszXP8OVMbz+B7nPd1ZzGOCn62M4/B18FeivW2GqgNCg6l22lRy+i
-	 xn0moK+0q3hmw==
-Date: Sat, 22 Jun 2024 08:45:16 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Ard Biesheuvel <ardb@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH] riscv: enable HAVE_ARCH_STACKLEAK
-Message-ID: <ZnYenFigMU4Lxa0K@xhacker>
-References: <20240617123029.723-1-jszhang@kernel.org>
- <ZnX6YtFGfXd0ixwR@ghost>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cOq92MGl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5D3C3277B;
+	Sat, 22 Jun 2024 00:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1719017981;
+	bh=l6E+/pOFYoPz0/65BUpxauVRh7+RaH5Xm9C9eF+VW2I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cOq92MGlyu8ofUwJuq3p0k9a1CQ9ZHqycqJ41yF0KLkHNM/aPVxEILaBIc9abxNfO
+	 OByVRBpGAGCZiN2Lin6Iz8uQEx+5a3K0Diwx8XsCt9JEM/CuTsvIUomageXp/JpB4l
+	 DSSgJf3ZxFmZO9QnbuN5xyFEjVxCMfEzFgrGYZG0=
+Date: Fri, 21 Jun 2024 17:59:40 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+ hannes@cmpxchg.org, anna-maria@linutronix.de, tglx@linutronix.de
+Subject: Re: [PATCH] mm/vmstat: Fix -Wenum-enum-conversion warning in
+ vmstat.h
+Message-Id: <20240621175940.dd080730047a3f5f5a190ea0@linux-foundation.org>
+In-Reply-To: <ZnXC5Xa4R0Mp7FCB@casper.infradead.org>
+References: <20240621111604.25330-1-shivamurthy.shastri@linutronix.de>
+	<ZnXC5Xa4R0Mp7FCB@casper.infradead.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZnX6YtFGfXd0ixwR@ghost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 21, 2024 at 03:10:42PM -0700, Charlie Jenkins wrote:
-> On Mon, Jun 17, 2024 at 08:30:29PM +0800, Jisheng Zhang wrote:
-> > Add support for the stackleak feature. Whenever the kernel returns to user
-> > space the kernel stack is filled with a poison value.
-> > 
-> > At the same time, disables the plugin in EFI stub code because EFI stub
-> > is out of scope for the protection.
-> > 
-> > Tested on qemu and milkv duo:
-> > / # echo STACKLEAK_ERASING > /sys/kernel/debug/provoke-crash/DIRECT
-> > [   38.675575] lkdtm: Performing direct entry STACKLEAK_ERASING
-> > [   38.678448] lkdtm: stackleak stack usage:
-> > [   38.678448]   high offset: 288 bytes
-> > [   38.678448]   current:     496 bytes
-> > [   38.678448]   lowest:      1328 bytes
-> > [   38.678448]   tracked:     1328 bytes
-> > [   38.678448]   untracked:   448 bytes
-> > [   38.678448]   poisoned:    14312 bytes
-> > [   38.678448]   low offset:  8 bytes
-> > [   38.689887] lkdtm: OK: the rest of the thread stack is properly erased
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > ---
-> >  arch/riscv/Kconfig                    | 1 +
-> >  arch/riscv/kernel/entry.S             | 4 ++++
-> >  drivers/firmware/efi/libstub/Makefile | 3 ++-
-> >  3 files changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 0525ee2d63c7..9cbfdffec96c 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -118,6 +118,7 @@ config RISCV
-> >  	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
-> >  	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
-> >  	select HAVE_ARCH_SECCOMP_FILTER
-> > +	select HAVE_ARCH_STACKLEAK
-> 
-> When this is selected, stackleak.h include
-> arch/riscv/include/asm/thread_info.h without sizes.h and I hit:
-> 
-> ./arch/riscv/include/asm/thread_info.h:30:33: error: ‘SZ_4K’ undeclared here (not in a function)
->    30 | #define OVERFLOW_STACK_SIZE     SZ_4K
->       |                                 ^~~~~
-> 
-> Adding "#include <linux/sizes.h>" to thread_info.h resolves the issue.
-> I am testing this based on 6.10-rc4. Did you encounter this?
+On Fri, 21 Jun 2024 19:13:57 +0100 Matthew Wilcox <willy@infradead.org> wrote:
 
-I didn't meet this kind of compiler error when testing. Mind
-to share your .config file? It looks strange.
+> On Fri, Jun 21, 2024 at 01:16:04PM +0200, Shivamurthy Shastri wrote:
+> > A W=1 build with -Wenum-enum-conversion enabled, results in the
+> > following build warning due to an arithmetic operation between different
+> > enumeration types 'enum node_stat_item' and 'enum lru_list':
+> 
+> OK, but why do we want -Wenum-enum-conversion enabled?  The code looks
+> perfectly fine before, and now it looks ugly.  What bugs does this
+> warning catch?
+> 
+> >  static inline const char *lru_list_name(enum lru_list lru)
+> >  {
+> > -	return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+> > +	return node_stat_name(NR_LRU_BASE + (enum node_stat_item)lru) + 3; // skip "nr_"
+> >  }
+> 
+> and honestly, I'd convert it to an int instead of enum node_stat_item.
+> Because it is not a node_stat_item, and it wouldn't make sense to
+> add two node_stat_items together.  Just like it doesn't make sense to
+> add two pointers together (but it does make sense to add an integer to a
+> pointer).
 
-> 
-> - Charlie
-> 
-> >  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
-> >  	select HAVE_ARCH_TRACEHOOK
-> >  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if 64BIT && MMU
-> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> > index 68a24cf9481a..80ff55a26d13 100644
-> > --- a/arch/riscv/kernel/entry.S
-> > +++ b/arch/riscv/kernel/entry.S
-> > @@ -130,6 +130,10 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
-> >  #endif
-> >  	bnez s0, 1f
-> >  
-> > +#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
-> > +	call	stackleak_erase_on_task_stack
-> > +#endif
-> > +
-> >  	/* Save unwound kernel stack pointer in thread_info */
-> >  	addi s0, sp, PT_SIZE_ON_STACK
-> >  	REG_S s0, TASK_TI_KERNEL_SP(tp)
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > index 06f0428a723c..3a9521c57641 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -28,7 +28,8 @@ cflags-$(CONFIG_ARM)		+= -DEFI_HAVE_STRLEN -DEFI_HAVE_STRNLEN \
-> >  				   -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
-> >  				   -DEFI_HAVE_STRCMP -fno-builtin -fpic \
-> >  				   $(call cc-option,-mno-single-pic-base)
-> > -cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax
-> > +cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax \
-> > +				   $(DISABLE_STACKLEAK_PLUGIN)
-> >  cflags-$(CONFIG_LOONGARCH)	+= -fpie
-> >  
-> >  cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)	+= -I$(srctree)/scripts/dtc/libfdt
-> > -- 
-> > 2.43.0
-> > 
-> > 
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+Yeah, I suppose so.  The calling code iterates across enums with an
+int, imaginatively called `i'.
+
+Then again, it seems right that a function called lru_list_name() takes
+an enum lru_list.
+
+
