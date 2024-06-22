@@ -1,167 +1,192 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E9615382E;
-	Sat, 22 Jun 2024 11:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE72F28F4
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 11:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719056697; cv=none; b=pkVkjN6u9B3uqU6CIsgcju1T4xowVROj4+vSOKOKM1Zf80kE64e6EwHNoZLAXZkH+HiceAjUsC30zY3PUp/fa/YemA1rVE7ZVT8zLdX/GOCQwwQqSZQCLc/isFPZULPFzP+YYRwpo/jyQBxWXt8UIe/yfYqQ6VVn0qvUAEjiA7w=
+	t=1719056777; cv=none; b=dbsTr/stg9gW2zYkSVeAB+GAHXckZd9DfyrcfQCfKUb6FxcTpOhvd1C5S81Wll+zimBrYvzlMLy2GdveVUEI1jPdfAvk1S/10WPJ6eIkQhDfQlOgbvc+chIYyOQw374M7mwWg4kHkQ/Ljq9gAqKmWtvtcVRG1C1+xFJGD9wNKQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719056697; c=relaxed/simple;
-	bh=Y7ZpAfhDTUE6U93lIBNlr/+c6AoW+cOzf76hzYC8mwI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HL9OPbQRQJtI7Is4wa5it8BvF2oDk1kYTYeMt3DVXgN5z4S6H+wONxGVP6rnM0DQUEQ2VsltoXorWFXXp/O7ietQeBfgT/y8h7Gzo6CSCla+JCCDVv1WAd1qCjVbqjswZHGlBs8msnYb0mHYImyDeNQg62IKxIOOK7W0qsjSbH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W5sjV4QPNzxSXn;
-	Sat, 22 Jun 2024 19:40:30 +0800 (CST)
-Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11ED818007E;
-	Sat, 22 Jun 2024 19:44:46 +0800 (CST)
-Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
- (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Sat, 22 Jun
- 2024 19:44:45 +0800
-From: Chen Ridong <chenridong@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
-	<longman@redhat.com>
-CC: <bpf@vger.kernel.org>, <cgroups@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] cgroup: fix uaf when proc_cpuset_show
-Date: Sat, 22 Jun 2024 11:38:14 +0000
-Message-ID: <20240622113814.120907-1-chenridong@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719056777; c=relaxed/simple;
+	bh=+66agaYiiFnc9wda50Lfas0i4FmApAa6AwkKsCf/3+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k892Yl1Pin12bofOJANkJhGE2VBD2V+EuXFGU12ChSiMHQuPofb2FOqhky3hqcOkeyrKVl3l38D/jJScCOI77SUBDyVhWTxdOBPVjg6jZod/IILTqnM61BtQCzmE5HLV6G6aU+gC7qcz8iPCLeXikLTA6az3GQYA4JPpJ6q4cfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ezOxR5VG; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ezOxR5VG"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a72420e84feso13306266b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 04:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719056774; x=1719661574; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ex0tM6LxW25V2+wIZSeOGMpb5a0XLFOxkY4gbLUAZJ4=;
+        b=ezOxR5VGsKHZZ9635CGMveXRb0NTtDFNfNq5/BEdMUIGhJouI8h5jKpXrH7Oj/KO1I
+         pYYUEUTUAiLUq0qzFf8gzZNz9Vu9yJbOEEmVMIWMzAO899xhLyV/hXnaLYZislMW2EDo
+         15pF69GoWn7hq8rQ2ETDFw0w0/sDtX+yOVU5GVXE0F3ff2DxXJPiUp5tzsiXCZGezrZA
+         IMdKWEDBAzbF+W9QThgXNALvgiRO5WKYxCEec9JHPXtM8Xn4hTvH51AhRsJyuXE2ObLL
+         860GizdMVJ6uiBUEHyWqE8ciN6DqUvKLE8sbFLGu8pCWEnQC4kE2GOJV4Iv9AaJhJrno
+         03ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719056774; x=1719661574;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ex0tM6LxW25V2+wIZSeOGMpb5a0XLFOxkY4gbLUAZJ4=;
+        b=R5J1IbdB0c0R/CwaHDD1CPeqB13qVHDrLIxu2Nzq2c8V3w9IBH6P/g3uExvxREFVlM
+         +aJIhk5VGomGpB8iQmI0025tq5/OOcFBG5KzOhRFCbsQ4A3AUynVn3udHT7tyPU/C/zr
+         bQb4IwcojYNiO8OgpRr8D2ouUkWFtjqzbiHJEDYJJetcKmfChsuuvWgMTUrROuFjl6VX
+         yaSfNkb5zYDBT0AD5uXLMl6pdB577rA5QQ682u08UEIGGRLvY48T8ugu6DBrzeq8HfVT
+         QlCBOQXL21jLGQjO9o0EbqY8RW4gaPYm9tb9sj7BOQ8cFxjZnsJWqnakCGtywyoH5oUS
+         X/SA==
+X-Forwarded-Encrypted: i=1; AJvYcCXA3tLsmac7PgdG+RiQFvE6Ed35UDMa/OA92rygvhCSozcyOpcHwYk6o2v3PNe+zdlUJ6hECEDZIQ/1aQpuOAQFQeIe10LMeqjG5pXR
+X-Gm-Message-State: AOJu0YyAY3mYVZxfxg04XhVRbl1zEvji0v0c+2hOSYT7zfduCasOy+Qw
+	P+hPyaU/Egne7kE6DdXVLWanAZmX9Uq+P6VJtv9WTZXCoU33MWEbtwvwZrHMhTA=
+X-Google-Smtp-Source: AGHT+IG13RlR/h9teGk653CmpQ7usaf+YKjqH/yhLCC1Ebtglmw6+ywyyHzoCVz9ij/kluyQEMFntQ==
+X-Received: by 2002:a17:907:969e:b0:a72:42df:cd27 with SMTP id a640c23a62f3a-a7242dfcd78mr21027566b.71.1719056774060;
+        Sat, 22 Jun 2024 04:46:14 -0700 (PDT)
+Received: from [192.168.128.35] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf56073bsm185617566b.169.2024.06.22.04.46.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Jun 2024 04:46:13 -0700 (PDT)
+Message-ID: <6e7e7b44-3c06-42ce-9d9b-9dcc83387657@linaro.org>
+Date: Sat, 22 Jun 2024 13:46:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd100013.china.huawei.com (7.221.188.163)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] ARM: dts: qcom: msm8226: Add CPU frequency scaling
+ support
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20240619-msm8226-cpufreq-v1-0-85143f5291d1@lucaweiss.eu>
+ <20240619-msm8226-cpufreq-v1-5-85143f5291d1@lucaweiss.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240619-msm8226-cpufreq-v1-5-85143f5291d1@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-We found a refcount UAF bug as follows:
+On 19.06.2024 11:02 PM, Luca Weiss wrote:
+> Add a node for the a7pll with its frequencies. With this we can use the
+> apcs-kpss-global driver for the apcs node and use the apcs to scale the
+> CPU frequency according to the opp-table.
+> 
+> At the same time unfortunately we need to provide the gcc node xo_board
+> instead of the XO via rpmcc since otherwise we'll have a circular
+> dependency between apcs, gcc and the rpm.
 
-BUG: KASAN: use-after-free in cgroup_path_ns+0x112/0x150
-Read of size 8 at addr ffff8882a4b242b8 by task atop/19903
+Hm.. thinking of a solution to that, should we maybe split the mux/clk
+part of APCS into a subnode and bind the clk device to that?
 
-CPU: 27 PID: 19903 Comm: atop Kdump: loaded Tainted: GF
-Call Trace:
- dump_stack+0x7d/0xa7
- print_address_description.constprop.0+0x19/0x170
- ? cgroup_path_ns+0x112/0x150
- __kasan_report.cold+0x6c/0x84
- ? print_unreferenced+0x390/0x3b0
- ? cgroup_path_ns+0x112/0x150
- kasan_report+0x3a/0x50
- cgroup_path_ns+0x112/0x150
- proc_cpuset_show+0x164/0x530
- proc_single_show+0x10f/0x1c0
- seq_read_iter+0x405/0x1020
- ? aa_path_link+0x2e0/0x2e0
- seq_read+0x324/0x500
- ? seq_read_iter+0x1020/0x1020
- ? common_file_perm+0x2a1/0x4a0
- ? fsnotify_unmount_inodes+0x380/0x380
- ? bpf_lsm_file_permission_wrapper+0xa/0x30
- ? security_file_permission+0x53/0x460
- vfs_read+0x122/0x420
- ksys_read+0xed/0x1c0
- ? __ia32_sys_pwrite64+0x1e0/0x1e0
- ? __audit_syscall_exit+0x741/0xa70
- do_syscall_64+0x33/0x40
- entry_SYSCALL_64_after_hwframe+0x67/0xcc
+Dmitry, Bjorn, thoughts?
 
-This is also reported by: https://syzkaller.appspot.com/bug?extid=9b1ff7be974a403aa4cd
+[...]
+> +
+> +		opp-600000000 {
 
-This can be reproduced by the following methods:
-1.add an mdelay(1000) before acquiring the cgroup_lock In the
- cgroup_path_ns function.
-2.$cat /proc/<pid>/cpuset   repeatly.
-3.$mount -t cgroup -o cpuset cpuset /sys/fs/cgroup/cpuset/
-$umount /sys/fs/cgroup/cpuset/   repeatly.
+Can't find this one in the random msm-3.10 I have
 
-The race that cause this bug can be shown as below:
+> +			opp-hz = /bits/ 64 <600000000>;
+> +		};
+> +
+> +		opp-787200000 {
+> +			opp-hz = /bits/ 64 <787200000>;
+> +		};
+> +
+> +		/* Higher CPU frequencies need speedbin support */
 
-(umount)		|	(cat /proc/<pid>/cpuset)
-css_release		|	proc_cpuset_show
-css_release_work_fn	|	css = task_get_css(tsk, cpuset_cgrp_id);
-css_free_rwork_fn	|	cgroup_path_ns(css->cgroup, ...);
-cgroup_destroy_root	|	mutex_lock(&cgroup_mutex);
-rebind_subsystems	|
-cgroup_free_root 	|
-			|	// cgrp was freed, UAF
-			|	cgroup_path_ns_locked(cgrp,..);
+1190400 kHz seems to also be a supported-across-the-board one.. unless the
+watch edition shuffled things around with a newer tree
 
-When the cpuset is initialized, the root node top_cpuset.css.cgrp
-will point to &cgrp_dfl_root.cgrp. In cgroup v1, the mount operation will
-allocate cgroup_root, and top_cpuset.css.cgrp will point to the allocated
-&cgroup_root.cgrp. When the umount operation is executed,
-top_cpuset.css.cgrp will be rebound to &cgrp_dfl_root.cgrp.
 
-The problem is that when rebinding to cgrp_dfl_root, there are cases
-where the cgroup_root allocated by setting up the root for cgroup v1
-is cached. This could lead to a Use-After-Free (UAF) if it is
-subsequently freed. The descendant cgroups of cgroup v1 can only be
-freed after the css is released. However, the css of the root will never
-be released, yet the cgroup_root should be freed when it is unmounted.
-This means that obtaining a reference to the css of the root does
-not guarantee that css.cgrp->root will not be freed.
+> +	};
+> +
+>  	pmu {
+>  		compatible = "arm,cortex-a7-pmu";
+>  		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+> @@ -231,9 +262,75 @@ intc: interrupt-controller@f9000000 {
+>  			#interrupt-cells = <3>;
+>  		};
+>  
+> -		apcs: syscon@f9011000 {
+> -			compatible = "syscon";
+> +		apcs: mailbox@f9011000 {
+> +			compatible = "qcom,msm8226-apcs-kpss-global",
+> +				     "qcom,msm8916-apcs-kpss-global", "syscon";
+>  			reg = <0xf9011000 0x1000>;
+> +			#mbox-cells = <1>;
+> +			clocks = <&a7pll>, <&gcc GPLL0_VOTE>;
+> +			clock-names = "pll", "aux";
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		a7pll: clock@f9016000 {
+> +			compatible = "qcom,msm8226-a7pll";
+> +			reg = <0xf9016000 0x40>;
+> +			#clock-cells = <0>;
+> +			clocks = <&xo_board>;
+> +			clock-names = "xo";
+> +			operating-points-v2 = <&a7pll_opp_table>;
+> +
+> +			a7pll_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				opp-768000000 {
+> +					opp-hz = /bits/ 64 <768000000>;
+> +				};
 
-To solve this issue, we have added a cgroup reference count in
-the proc_cpuset_show function to ensure that css.cgrp->root will not
-be freed prematurely. This is a temporary solution. Let's see if anyone
-has a better solution.
+Looks like scaling this PLL should also scale some voltage domains:
+CPR (fed by pm8226_s2) and MX
 
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
----
- kernel/cgroup/cpuset.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Perhaps hook up MX to this one for now and add CPR to the CPU nodes( & OPP table)
+after that is brought up
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index c12b9fdb22a4..782eaf807173 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -5045,6 +5045,7 @@ int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
- 	char *buf;
- 	struct cgroup_subsys_state *css;
- 	int retval;
-+	struct cgroup *root_cgroup = NULL;
- 
- 	retval = -ENOMEM;
- 	buf = kmalloc(PATH_MAX, GFP_KERNEL);
-@@ -5052,9 +5053,28 @@ int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
- 		goto out;
- 
- 	css = task_get_css(tsk, cpuset_cgrp_id);
-+	rcu_read_lock();
-+	/*
-+	 * When the cpuset subsystem is mounted on the legacy hierarchy,
-+	 * the top_cpuset.css->cgroup does not hold a reference count of
-+	 * cgroup_root.cgroup. This makes accessing css->cgroup very
-+	 * dangerous because when the cpuset subsystem is remounted to the
-+	 * default hierarchy, the cgroup_root.cgroup that css->cgroup points
-+	 * to will be released, leading to a UAF issue. To avoid this problem,
-+	 * get the reference count of top_cpuset.css->cgroup first.
-+	 *
-+	 * This is ugly!!
-+	 */
-+	if (css == &top_cpuset.css) {
-+		cgroup_get(css->cgroup);
-+		root_cgroup = css->cgroup;
-+	}
-+	rcu_read_unlock();
- 	retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
- 				current->nsproxy->cgroup_ns);
- 	css_put(css);
-+	if (root_cgroup)
-+		cgroup_put(root_cgroup);
- 	if (retval == -E2BIG)
- 		retval = -ENAMETOOLONG;
- 	if (retval < 0)
--- 
-2.34.1
-
+Konrad
