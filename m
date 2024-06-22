@@ -1,186 +1,129 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85B64696;
-	Sat, 22 Jun 2024 06:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
+Received: from msa.smtpout.orange.fr (msa-210.smtpout.orange.fr [193.252.23.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC32963B9;
+	Sat, 22 Jun 2024 07:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719038922; cv=none; b=EoG5kPN0DmmtKp2VhJqQu0ekIQz2EfTQ4LuntFPSNiYYGa14wFDZtYH9cNggIZUzdqZMxI9U8yv4TK3ENLZwsfVf7+qEzMzHwdLEtJ+nyCPk3hpdWksKNdg1SlXo1MeDqPt2U2VgG6UURiSKWemzu+d3/6V0cS+Z2/oSuZLoT7c=
+	t=1719039910; cv=none; b=O0U6KEvbv0sAGt99KiEsVWHYQE8yREDDUnoRl+QPOIlebvvN6Q+IuTOGX6b7MEy0Va9QjpWchwnRic/bU892q9jeGNbWeTk0abAej8XCPkDF2oq5X2XO7BPWzfP4ab6y6hc+L/xqK8lwknaOiiqYDOzPgkRyyPXv3HgjIiQPHPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719038922; c=relaxed/simple;
-	bh=WMYndEbvL6OMXhVtHmvwY4g+jhYqACDm3KG11+egEbY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=p90JPw2OKKB1hL3DKn+Fl3VrVCWrw9QmLZwZM+9OOYFru7jrN3U43JK4D76UlrOUAP9fgWXfo6xfMyK5AiqR2Kw40pgjzzwQkTzNOrNM0EH+ekR9psn3blyKF3uVG1gHoB0khtylfGE3XVa5K8kXM+nBCYiygNNVVF5/ivoGwJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=D/eTzu26; arc=none smtp.client-ip=220.197.31.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1719039910; c=relaxed/simple;
+	bh=wl4Oh+/jcuV5dztmBE+rcwbtt7bJGwO1nNOfT6/79Tk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lAO5tnE7qaon0htXd3k0XGZI8hPZUL6Dp6koZU6EI0D+IMt4KjwtAc7ywRzjks1fsr6d8OFBEPl2eugAZroySOiZgC9og6EW0y/Q1ffwpX9LH8k80A+R8y+BIvquwH+k/bTdp8af4N0s58FbofPEqv5P+kIAGN5niUp73Rc6Kn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=szrI0ced; arc=none smtp.client-ip=193.252.23.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="D/eTzu26"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=4PQv0PvTVRL/ItON0f
-	L1teaBFOQB7W1EZ8kO5egpB0c=; b=D/eTzu26yO2HFv+BJzfEzXGSpFAl8iajwD
-	GAbph4rFmCFJAHeu3KgkSkYg8qnIu8Bd3rmez+K5SenSs77ctEsDdN1Xly4ksoze
-	eCe830XisU6FxLBg65QOCmWfZogVmQ1RL4CgVJCjOJoWTERFAYYX/8LwGV+uVKHu
-	Ekcfl5ijQ=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [118.242.3.34])
-	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDH7WCmc3ZmqHYEAA--.12787S2;
-	Sat, 22 Jun 2024 14:48:07 +0800 (CST)
-From: yangge1116@126.com
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="szrI0ced"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id KuntsjGzHYBZjKuo0snU85; Sat, 22 Jun 2024 09:05:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1719039900;
+	bh=nhyBkDq32jl+R9Ua8KZNEkN0tT+dJccJjgDIgm6fY2E=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=szrI0cedmpJldS4Bv9xGHjPWpAQMq/jSiAj9474O8uIbPwoAkcsR0x7hvQsYHiULS
+	 AaJerQLqJvwHfDd7zyJEijj+oU4M9FKKFG+tBADI07zW7rcZaSqpUxOOi48YKLNZ2E
+	 oCxAur1eK5shGwNJay6VETSN373gl2+5OxVfuuV7jQbcAvLXnJ8zQy5d+s0T+st4bq
+	 QudxjYzKRtSsmbDpLtIrBj7d4YsE9JAX0ZbgRHiprVf5NlZpt8nW0L5Tw1vQSxCAV2
+	 7KHtXzc1xWbFWfHNR2715B/37wAgYU3r2keayduESZ9Rw8JAtau1rVK3IkT1EvVhbR
+	 7GFjz/elkSNhA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 22 Jun 2024 09:05:00 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: linus.walleij@linaro.org,
+	sre@kernel.org,
+	jic23@kernel.org
+Cc: linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	21cnbao@gmail.com,
-	david@redhat.com,
-	baolin.wang@linux.alibaba.com,
-	liuzixing@hygon.cn,
-	yangge <yangge1116@126.com>
-Subject: [PATCH V2] mm/gup: Clear the LRU flag of a page before adding to LRU batch
-Date: Sat, 22 Jun 2024 14:48:04 +0800
-Message-Id: <1719038884-1903-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wDH7WCmc3ZmqHYEAA--.12787S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3WF4rXF4xZrWUGFWUJFyUtrb_yoW7XF1xpF
-	W7Gr9IqF4DGFnrWr47Xw15Jr1Yk393Xa1UJFWxGry7AF15Xw1qkF1xtw1UJa9xJryruFn3
-	Z3W8JF1vgF1UAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjLvNUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOggGG2VEw83b2AAAsD
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 1/3] power: supply: ab8500: Fix error handling when calling iio_read_channel_processed()
+Date: Sat, 22 Jun 2024 09:04:24 +0200
+Message-ID: <f9f65642331c9e40aaebb888589db043db80b7eb.1719037737.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1719037737.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1719037737.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: yangge <yangge1116@126.com>
+The ab8500_charger_get_[ac|vbus]_[current|voltage]() functions should
+return an error code on error.
 
-If a large number of CMA memory are configured in system (for example, the
-CMA memory accounts for 50% of the system memory), starting a virtual
-virtual machine, it will call pin_user_pages_remote(..., FOLL_LONGTERM,
-...) to pin memory.  Normally if a page is present and in CMA area,
-pin_user_pages_remote() will migrate the page from CMA area to non-CMA
-area because of FOLL_LONGTERM flag. But the current code will cause the
-migration failure due to unexpected page refcounts, and eventually cause
-the virtual machine fail to start.
+Up to now, an un-initialized value is returned.
+This makes the error handling of the callers un-reliable.
 
-If a page is added in LRU batch, its refcount increases one, remove the
-page from LRU batch decreases one. Page migration requires the page is not
-referenced by others except page mapping. Before migrating a page, we
-should try to drain the page from LRU batch in case the page is in it,
-however, folio_test_lru() is not sufficient to tell whether the page is
-in LRU batch or not, if the page is in LRU batch, the migration will fail.
+Return the error code instead, to fix the issue.
 
-To solve the problem above, we modify the logic of adding to LRU batch.
-Before adding a page to LRU batch, we clear the LRU flag of the page so
-that we can check whether the page is in LRU batch by folio_test_lru(page).
-Seems making the LRU flag of the page invisible a long time is no problem,
-because a new page is allocated from buddy and added to the lru batch,
-its LRU flag is also not visible for a long time.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: yangge <yangge1116@126.com>
+Fixes: 97ab78bac5d0 ("power: supply: ab8500_charger: Convert to IIO ADC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- mm/swap.c | 43 +++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+Compile tested only, but should be fine because it restores the behavior
+before 97ab78bac5d0.
+---
+ drivers/power/supply/ab8500_charger.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index dc205bd..9caf6b0 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -211,10 +211,6 @@ static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
- 	for (i = 0; i < folio_batch_count(fbatch); i++) {
- 		struct folio *folio = fbatch->folios[i];
- 
--		/* block memcg migration while the folio moves between lru */
--		if (move_fn != lru_add_fn && !folio_test_clear_lru(folio))
--			continue;
--
- 		folio_lruvec_relock_irqsave(folio, &lruvec, &flags);
- 		move_fn(lruvec, folio);
- 
-@@ -255,11 +251,16 @@ static void lru_move_tail_fn(struct lruvec *lruvec, struct folio *folio)
- void folio_rotate_reclaimable(struct folio *folio)
- {
- 	if (!folio_test_locked(folio) && !folio_test_dirty(folio) &&
--	    !folio_test_unevictable(folio) && folio_test_lru(folio)) {
-+	    !folio_test_unevictable(folio)) {
- 		struct folio_batch *fbatch;
- 		unsigned long flags;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
+diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply/ab8500_charger.c
+index 9b34d1a60f66..4b0ad1b4b4c9 100644
+--- a/drivers/power/supply/ab8500_charger.c
++++ b/drivers/power/supply/ab8500_charger.c
+@@ -488,8 +488,10 @@ static int ab8500_charger_get_ac_voltage(struct ab8500_charger *di)
+ 	/* Only measure voltage if the charger is connected */
+ 	if (di->ac.charger_connected) {
+ 		ret = iio_read_channel_processed(di->adc_main_charger_v, &vch);
+-		if (ret < 0)
++		if (ret < 0) {
+ 			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
++			return ret;
 +		}
-+
- 		local_lock_irqsave(&lru_rotate.lock, flags);
- 		fbatch = this_cpu_ptr(&lru_rotate.fbatch);
- 		folio_batch_add_and_move(fbatch, folio, lru_move_tail_fn);
-@@ -352,11 +353,15 @@ static void folio_activate_drain(int cpu)
- 
- void folio_activate(struct folio *folio)
- {
--	if (folio_test_lru(folio) && !folio_test_active(folio) &&
--	    !folio_test_unevictable(folio)) {
-+	if (!folio_test_active(folio) && !folio_test_unevictable(folio)) {
- 		struct folio_batch *fbatch;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
+ 	} else {
+ 		vch = 0;
+ 	}
+@@ -540,8 +542,10 @@ static int ab8500_charger_get_vbus_voltage(struct ab8500_charger *di)
+ 	/* Only measure voltage if the charger is connected */
+ 	if (di->usb.charger_connected) {
+ 		ret = iio_read_channel_processed(di->adc_vbus_v, &vch);
+-		if (ret < 0)
++		if (ret < 0) {
+ 			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
++			return ret;
 +		}
-+
- 		local_lock(&cpu_fbatches.lock);
- 		fbatch = this_cpu_ptr(&cpu_fbatches.activate);
- 		folio_batch_add_and_move(fbatch, folio, folio_activate_fn);
-@@ -700,6 +705,11 @@ void deactivate_file_folio(struct folio *folio)
- 		return;
- 
- 	folio_get(folio);
-+	if (!folio_test_clear_lru(folio)) {
-+		folio_put(folio);
-+		return;
-+	}
-+
- 	local_lock(&cpu_fbatches.lock);
- 	fbatch = this_cpu_ptr(&cpu_fbatches.lru_deactivate_file);
- 	folio_batch_add_and_move(fbatch, folio, lru_deactivate_file_fn);
-@@ -716,11 +726,16 @@ void deactivate_file_folio(struct folio *folio)
-  */
- void folio_deactivate(struct folio *folio)
- {
--	if (folio_test_lru(folio) && !folio_test_unevictable(folio) &&
--	    (folio_test_active(folio) || lru_gen_enabled())) {
-+	if (!folio_test_unevictable(folio) && (folio_test_active(folio) ||
-+	    lru_gen_enabled())) {
- 		struct folio_batch *fbatch;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
+ 	} else {
+ 		vch = 0;
+ 	}
+@@ -563,8 +567,10 @@ static int ab8500_charger_get_usb_current(struct ab8500_charger *di)
+ 	/* Only measure current if the charger is online */
+ 	if (di->usb.charger_online) {
+ 		ret = iio_read_channel_processed(di->adc_usb_charger_c, &ich);
+-		if (ret < 0)
++		if (ret < 0) {
+ 			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
++			return ret;
 +		}
-+
- 		local_lock(&cpu_fbatches.lock);
- 		fbatch = this_cpu_ptr(&cpu_fbatches.lru_deactivate);
- 		folio_batch_add_and_move(fbatch, folio, lru_deactivate_fn);
-@@ -737,12 +752,16 @@ void folio_deactivate(struct folio *folio)
-  */
- void folio_mark_lazyfree(struct folio *folio)
- {
--	if (folio_test_lru(folio) && folio_test_anon(folio) &&
--	    folio_test_swapbacked(folio) && !folio_test_swapcache(folio) &&
--	    !folio_test_unevictable(folio)) {
-+	if (folio_test_anon(folio) && folio_test_swapbacked(folio) &&
-+	    !folio_test_swapcache(folio) && !folio_test_unevictable(folio)) {
- 		struct folio_batch *fbatch;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
+ 	} else {
+ 		ich = 0;
+ 	}
+@@ -586,8 +592,10 @@ static int ab8500_charger_get_ac_current(struct ab8500_charger *di)
+ 	/* Only measure current if the charger is online */
+ 	if (di->ac.charger_online) {
+ 		ret = iio_read_channel_processed(di->adc_main_charger_c, &ich);
+-		if (ret < 0)
++		if (ret < 0) {
+ 			dev_err(di->dev, "%s ADC conv failed,\n", __func__);
++			return ret;
 +		}
-+
- 		local_lock(&cpu_fbatches.lock);
- 		fbatch = this_cpu_ptr(&cpu_fbatches.lru_lazyfree);
- 		folio_batch_add_and_move(fbatch, folio, lru_lazyfree_fn);
+ 	} else {
+ 		ich = 0;
+ 	}
 -- 
-2.7.4
+2.45.2
 
