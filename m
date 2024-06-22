@@ -1,182 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB80A16C445;
-	Sat, 22 Jun 2024 14:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4458C1E4A2;
+	Sat, 22 Jun 2024 14:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719067257; cv=none; b=EeWItNg4n6lEdI3nEs+G3lSX2mGTWrpR/hXN/LdXIl2fBtwRGemITyndJcfa1nfxozjis17QgU+EDwOQimpFFBrysr1iaSwjQd1FklUy+FIzsU6OGtoJAWU+TiOdYDv7TKO9kdA25bav1P3DPiqwFpuMwDvLihz8hG1Er+GmP8E=
+	t=1719068165; cv=none; b=KBdkPGDDqQpugZQyo6Z4sh4jbPVVJJqSSeTpQErFIaFApNMv47tDf3RZF0yJt33v+e5jnuHq39mBaJjqefUQB0CIEoeEhJNlXvraKXT/niFbxoXHce9sFt7NBlIagPiOFER2WzfeeXq7snOKGWRkqLWGIhPQ8/Kp6mW+8h57CXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719067257; c=relaxed/simple;
-	bh=vq98sH94Pp5ZZZ4Zj0kRxD4MHCwJr9PTtWONlriLyKE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=TLvqXlp4RmmO40KFHDJitKq6p13dIU+Q4deRhZvYnq4tLAqu5PnHZeim+EFu+WG78AXU/XP9WEDZ/DhdUvP3aN+/3qHI4skWr8i/N0kESDCTvM8xn0rObdQmoF49s87yihozovJ+dwEMZvalBdpNqcB3bchjS3Wyo84yCogVuZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEgBHuIo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719068165; c=relaxed/simple;
+	bh=NeoI3xvdLm7NoU1TbJs5tzVg8Bg6lxLZpLDuhK8t5GU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=BpTN9cKDawKd1XiS5gWknQI4pBpPQOGud+vb7fFWHPubVF5dlbUXFIQMJQNfLyiMpuNuB38/AB6zqESLS0ckTLUsf0Tll9rN3xmsPuH8wMc89jZnn0hUJ2oCSgUIA2LJuippHI1svYvsgmZg3aeFHptz2gITZ/DZZQFoQvvyOjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AIMJOJdR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEgBHuIo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27076C3277B;
-	Sat, 22 Jun 2024 14:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719067257;
-	bh=vq98sH94Pp5ZZZ4Zj0kRxD4MHCwJr9PTtWONlriLyKE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=uEgBHuIoBlARcmUd+XkQlKOaZQqKHE3hDqpua3dl29rr+fz+LT17/eciyj+DxJZiF
-	 SlgfTD+p7orMh/ZVTdNTlonfW/L11f6tU7OGdQZdb0+49i/vC38/+brc74AUGWMurS
-	 0Ea2UOQ4zBT0ZF+EG7srr+cUldAIPcGMEETCy2hda51lipGX4j7p5ObO7vllQU5OyK
-	 +1KuwDNsoS28XAoz8VVnKEYkKey3EhujL4CY+Q2/k7V3EZIQYp2sFmXZ80ir+2rNRr
-	 quCKbh35cOuwArM0Igiz/6ZwhHhpT6XNT3QfEeVnYD0pYKSXxqs6TaGR2yS4UBnNJU
-	 lGbnEjUXnTBJg==
-Date: Sat, 22 Jun 2024 07:40:55 -0700
-From: Kees Cook <kees@kernel.org>
-To: Michael Ellerman <mpe@ellerman.id.au>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Jonathan Corbet <corbet@lwn.net>,
- Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- ksummit@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/2=5D_Documentation=3A_be?=
- =?US-ASCII?Q?st_practices_for_using_Link_trailers?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <87v821d2kp.fsf@mail.lhotse>
-References: <20240619-docs-patch-msgid-link-v2-0-72dd272bfe37@linuxfoundation.org> <20240619-docs-patch-msgid-link-v2-2-72dd272bfe37@linuxfoundation.org> <87v821d2kp.fsf@mail.lhotse>
-Message-ID: <0BD32B85-22CF-45DF-A70E-FFE8E24469A4@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AIMJOJdR"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45M9dnsk016444;
+	Sat, 22 Jun 2024 14:55:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=5hTgnXM8mYs+52SiKJhSMX
+	/kzBTQLHCsOqadyvQNGnI=; b=AIMJOJdRZOBo+9jNFMZZvsXJd+rNPy2rZR9DX1
+	+y+KzEWqIM6hvqfKBScv78xHkZaFy5mC3WUK2okFeCC91WD9d/XnW8ufwAqsO4Ka
+	wFwq32JxPztyvIMzP79Y+nwG4WAAVu3XAkuEsfMD3Fgz/24n43Mtt/dk5kKh/aau
+	+/9Icp5x69BssIns5H9xBl5nJWrt2jaPuHdE9i3t3xps+EYBOqpHHIV3unloNv6I
+	3I6SUtygdkFENwZS0idvZYH7nfP4dtiDPKiCEvHpN8NqH9iRIIefVwqo1OzKiGXX
+	Evj3miCTKd1lpLbM4p/UxyXMIqxQg1UtXBGSlIYDWcqrz8KQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqce8kac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Jun 2024 14:55:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45MEtIII024121
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Jun 2024 14:55:18 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 22 Jun
+ 2024 07:55:09 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 22 Jun 2024 07:55:05 -0700
+Subject: [PATCH] selftests/fpu: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240622-md-i386-lib-test_fpu_glue-v1-1-a4e40b7b1264@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAMnldmYC/x3MQQqDMBBA0avIrDtgk6Btr1KKJGaiAzGVTCyCe
+ PemXb7F/wcIZSaBR3NApg8Lv1PF9dLAONs0EbKvBtUq03ZK4eKR9a3DyA4LSRnCug1T3AiN7u+
+ q98YG0lD7NVPg/f9+vqqdFUKXbRrn3zFy2nZcrBTKcJ5fJwEgvYoAAAA=
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Samuel Holland
+	<samuel.holland@sifive.com>
+CC: Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>, WANG Xuerui <git@xen0n.name>,
+        Will Deacon <will@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.14.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: oYICXAE-m-AOEtK5PCQ_K1820wuWYhZv
+X-Proofpoint-ORIG-GUID: oYICXAE-m-AOEtK5PCQ_K1820wuWYhZv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-22_10,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
+ mlxscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 spamscore=0
+ suspectscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406220108
 
+make allmodconfig && make W=1 C=1 now reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_fpu.o
 
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-On June 21, 2024 9:27:34 PM PDT, Michael Ellerman <mpe@ellerman=2Eid=2Eau>=
- wrote:
->Konstantin Ryabitsev <konstantin@linuxfoundation=2Eorg> writes:
->> Based on multiple conversations, most recently on the ksummit mailing
->> list [1], add some best practices for using the Link trailer, such as:
->>
->> - how to use markdown-like bracketed numbers in the commit message to
->> indicate the corresponding link
->> - when to use lore=2Ekernel=2Eorg vs patch=2Emsgid=2Elink domains
->>
->> Cc: ksummit@lists=2Elinux=2Edev
->> Link: https://lore=2Ekernel=2Eorg/20240617-arboreal-industrious-hedgeho=
-g-5b84ae@meerkat # [1]
->> Signed-off-by: Konstantin Ryabitsev <konstantin@linuxfoundation=2Eorg>
->> ---
->>  Documentation/process/maintainer-tip=2Erst | 30 ++++++++++++++++++++++=
---------
->>  1 file changed, 22 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/process/maintainer-tip=2Erst b/Documentation=
-/process/maintainer-tip=2Erst
->> index 64739968afa6=2E=2Eba312345d030 100644
->> --- a/Documentation/process/maintainer-tip=2Erst
->> +++ b/Documentation/process/maintainer-tip=2Erst
->> @@ -372,17 +372,31 @@ following tag ordering scheme:
->> =20
->>   - Link: ``https://link/to/information``
->> =20
->> -   For referring to an email on LKML or other kernel mailing lists,
->> -   please use the lore=2Ekernel=2Eorg redirector URL::
->> +   For referring to an email posted to the kernel mailing lists, pleas=
-e
->> +   use the lore=2Ekernel=2Eorg redirector URL::
->> =20
->> -     https://lore=2Ekernel=2Eorg/r/email-message@id
->> +     Link: https://lore=2Ekernel=2Eorg/email-message-id@here
->> =20
->> -   The kernel=2Eorg redirector is considered a stable URL, unlike othe=
-r email
->> -   archives=2E
->> +   This URL should be used when referring to relevant mailing list
->> +   topics, related patch sets, or other notable discussion threads=2E
->> +   A convenient way to associate ``Link:`` trailers with the commit
->> +   message is to use markdown-like bracketed notation, for example::
->> =20
->> -   Maintainers will add a Link tag referencing the email of the patch
->> -   submission when they apply a patch to the tip tree=2E This tag is u=
-seful
->> -   for later reference and is also used for commit notifications=2E
->> +     A similar approach was attempted before as part of a different
->> +     effort [1], but the initial implementation caused too many
->> +     regressions [2], so it was backed out and reimplemented=2E
->> +
->> +     Link: https://lore=2Ekernel=2Eorg/some-msgid@here # [1]
->> +     Link: https://bugzilla=2Eexample=2Eorg/bug/12345  # [2]
->
->Does it actually make sense to use the Link: prefix here? These sort of
->links are part of the prose, they're not something a script can download
->and make any sense of=2E
->
->I see some existing usage of the above style, but equally there's lots
->of examples of footnote-style links without the Link: tag, eg:
+Fixes: 9613736d852d ("selftests/fpu: move FP code to a separate translation unit")
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ lib/test_fpu_glue.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I moved from that to using Link: because checkpatch would complain about m=
-y long (URL) lines unless it had a Link tag :P
+diff --git a/lib/test_fpu_glue.c b/lib/test_fpu_glue.c
+index eef282a2715f..074f30301f29 100644
+--- a/lib/test_fpu_glue.c
++++ b/lib/test_fpu_glue.c
+@@ -59,4 +59,5 @@ static void __exit test_fpu_exit(void)
+ module_init(test_fpu_init);
+ module_exit(test_fpu_exit);
+ 
++MODULE_DESCRIPTION("Test cases for floating point operations");
+ MODULE_LICENSE("GPL");
 
->commit 40b561e501768ef24673d0e1d731a7b9b1bc6709
->Merge: d9f843fbd45e 31611cc8faa0
->Author: Arnd Bergmann <arnd@arndb=2Ede>
->Date:   Mon Apr 29 22:29:44 2024 +0200
->
->    Merge tag 'tee-ts-for-v6=2E10' of https://git=2Elinaro=2Eorg/people/j=
-ens=2Ewiklander/linux-tee into soc/drivers
->
->    TEE driver for Trusted Services
->
->    This introduces a TEE driver for Trusted Services [1]=2E
->
->    Trusted Services is a TrustedFirmware=2Eorg project that provides a
->    framework for developing and deploying device Root of Trust services =
-in
->    FF-A [2] Secure Partitions=2E The project hosts the reference
->    implementation of Arm Platform Security Architecture [3] for Arm
->    A-profile devices=2E
->
->    =2E=2E=2E
->
->    [1] https://www=2Etrustedfirmware=2Eorg/projects/trusted-services/
->    [2] https://developer=2Earm=2Ecom/documentation/den0077/
->    [3] https://www=2Earm=2Ecom/architecture/security-features/platform-s=
-ecurity
->
->
->The above style is standard markdown style for reference links (or as
->standard as markdown gets)=2E
+---
+base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+change-id: 20240622-md-i386-lib-test_fpu_glue-437927d4afe3
 
-It's a good point=2E If we're formalizing this, why not literally use mark=
-down instead? (I guess the answer is that out-of-line links/footnotes isn't=
- standardized=2E)
-
-Playing devil's advocate, outside of the kernel, these are the two most co=
-mmon styles I've seen:
-
-Foo[1]
-=2E=2E=2E
-[1]: https://=2E=2E=2E=2E
-
-and
-
-Bar[^1]
-=2E=2E=2E
-[^1] https://=2E=2E=2E
-
-Personally, I only want to have a single official way to do this, and don'=
-t care much what it is=2E I have a minor preference for what you've describ=
-ed:
-
-Baz[1]
-=2E=2E=2E
-[1] https://=2E=2E=2E
-
--Kees
-
---=20
-Kees Cook
