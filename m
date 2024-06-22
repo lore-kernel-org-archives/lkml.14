@@ -1,60 +1,38 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D713684A24;
-	Sat, 22 Jun 2024 23:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DECC12AAE0
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 23:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719098763; cv=none; b=KgYQ6242uqJo9deFKppxrqO38so0dmhEkYrHub9FzXKbKXYYADroJX4J3aUDoOYxa7l++9Kiv0FflkMYlolUaUyTtwTx/UNGLPRUsx5ywyEPciff6I61gKAcstBgb+qSqkdow9LZAWxm/YdD4UhvJ3kI2Oqkx84uJqWLWSFPyvs=
+	t=1719100125; cv=none; b=NJchMdG4XzbLurqnhCoboUz0b6HFXAzWX5xwm6otzv8EXRz8mImxS9lmFQbDGv13rM9TEUKNJfjDUpcCUpEoqjuVimlUztrXkHvdH+aPxFT0zZw+6z2nyayb35Up2X5HFQF6UQ9/za2xXFL+2lVzKZzmeNPnEOwOqay1Xh19wRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719098763; c=relaxed/simple;
-	bh=3ByRKPZCxRzOwxwLlWyit3OOc6nnUrkfnIT8Zo6676A=;
+	s=arc-20240116; t=1719100125; c=relaxed/simple;
+	bh=G7Bdwm2LgSzcu8hKez+YkvaF4kB0cS8V8sK1sTJqTBo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VxbLB4ES0iw8g95jJxXJ4H/QWJ/ytiUq0aCwIdPDW3JtFrmWLMu3/eeOr83fZa97wvr531l8COkIqpFHclPVqcVSCsMEiQ7EDhVo9EwcYRM2TGQNFkCR5my8FTISc9M7N1sagShcTCghUTijiG/wzmIEL4R6jlH4uSZ0kBcM4Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O+xVE3pH; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+xVE3pH"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-36226e98370so1916760f8f.3;
-        Sat, 22 Jun 2024 16:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719098760; x=1719703560; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9HxxfvJUbEcWAuUqzp/z3HeawFFFv82S2A3aKWCvEsY=;
-        b=O+xVE3pHpMTcjuTYrrxs2pwtWs5tRRch3fl5l39j7Pyr7gnxO4lcPl4d1UaLbpoihr
-         60kZXVFsbIRIZgzxWbUZsB1ev1ZbbStvkdvB31Oi2er53gQSL4Emu3wunwjtdcFDGxWp
-         PWMeROs1w0vgkC/ul9FaUefVbPYYqIgWYZu/erHlsj47quGrfFjrQ5kS2E7LZeoWhOf/
-         Wsl6vXE9ctRGnhqs/WBajljGtFVwow5gdsP0usVHUxOy+axmVycVSPrq9g8kDJdWfswc
-         xk7Y1QU9uTSHEPI29+pTR7QjtIyxQwmURbTsM4n88EhLnAc4e/2/tunEmymuwjdVAf9d
-         lP2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719098760; x=1719703560;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9HxxfvJUbEcWAuUqzp/z3HeawFFFv82S2A3aKWCvEsY=;
-        b=Pw071lcD8fWJESmCqntzTe5g4gwlRoQf9q9TAzvc4Y9J2wbw1/dvUntmU9CwEe8AhY
-         FcJSRc7YOwdLUOzPzG3bft+/c5CbcoNcYz/1Dx87g3F9uh9NVAxauc6LYooPEthKM6aU
-         uYcs7dsSuzedYtGnS6of+RflLGvgGOe/b2Ch5MtwDhT+dU3XmaEYTMhyK7SVMutpHeTQ
-         VWvlngs8oBspuZZ19/78qeyDzDZ1gMQVOMq5nEdTSAs6B9WiXbkabtqlhfx7ecl/vRKJ
-         dZ9LPUh1Gmnyh6PlLTf4v/KkXYnSmWnuwP3FTn7opQTKLflHMAHV+WBfPNUCq+fdl/Eh
-         bD7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUjpqPrVcQxJiXzcu3PjXj0x/8ZxdQlj0tYgo9EQkCPZ7r/c9v7yIGehGOhSRTfRTrk8ojZ+Er7mWZND9oAYAD15bTCAB7KV98UC4NMb55fbGYiVooad8jCqS8J78HpfUL6U5iHOnRc6A==
-X-Gm-Message-State: AOJu0YwxkR61UxUUJ3gjLYwZ3PiM6OeNQ+H8LK7ek33XtIynYQLwzM6k
-	nhyugvnsR4EI5NgxiS4oz46ke/eDv67E4yhI3Qq7fumqWZfogLgm
-X-Google-Smtp-Source: AGHT+IF+eQztVkaYxVTPniLTiN0Q2Wuwvs1PNUhkt+p/MWOEuEvm4JylLlMlCQKx4FGcg1T83BFCHA==
-X-Received: by 2002:a05:6000:2c2:b0:366:eb45:6d55 with SMTP id ffacd0b85a97d-366eb456ecemr217579f8f.49.1719098760243;
-        Sat, 22 Jun 2024 16:26:00 -0700 (PDT)
-Received: from [192.168.1.90] (20014C4E18129200DEAEE2020304A5A2.dsl.pool.telekom.hu. [2001:4c4e:1812:9200:deae:e202:304:a5a2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d2190desm120301875e9.48.2024.06.22.16.25.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 16:25:59 -0700 (PDT)
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <trabarni@gmail.com>
-Date: Sun, 23 Jun 2024 01:25:54 +0200
-Subject: [PATCH 4/4] drm/msm/dsi: Add phy configuration for MSM8937
+	 In-Reply-To:To:Cc; b=Jn8g6b90hGZTcpjWio0kLMtjfDNC1VPU6/PoEr2dPKKAbqShNb1t9+EEDnc+vKI2Tt7AZZ8DgSSZDrE3CQs5qUhOEI33jEfHsRCvI5MRFONnpu2aEHe1ZYxpN1yA4prnpURr9bt5APHz2bfkKnwqW1j4t5ua2FZZh+JgEBcl0pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1sLATD-0002cg-5F; Sun, 23 Jun 2024 01:48:35 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1sLATC-004Hke-HQ; Sun, 23 Jun 2024 01:48:34 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1sLATC-000IWx-37;
+	Sun, 23 Jun 2024 01:48:34 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Sun, 23 Jun 2024 01:48:31 +0200
+Subject: [PATCH v2 3/3] usb: gadget: uvc: set req_size and n_requests based
+ on the frame interval
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,93 +40,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240623-dsi-v1-4-4ab560eb5bd9@gmail.com>
-References: <20240623-dsi-v1-0-4ab560eb5bd9@gmail.com>
-In-Reply-To: <20240623-dsi-v1-0-4ab560eb5bd9@gmail.com>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krishna Manikandan <quic_mkrishn@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <trabarni@gmail.com>, 
- Daniil Titov <daniilt971@gmail.com>
-X-Mailer: b4 0.14.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240403-uvc_request_length_by_interval-v2-3-12690f7a2eff@pengutronix.de>
+References: <20240403-uvc_request_length_by_interval-v2-0-12690f7a2eff@pengutronix.de>
+In-Reply-To: <20240403-uvc_request_length_by_interval-v2-0-12690f7a2eff@pengutronix.de>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Daniel Scally <dan.scally@ideasonboard.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Avichal Rakesh <arakesh@google.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3182;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=G7Bdwm2LgSzcu8hKez+YkvaF4kB0cS8V8sK1sTJqTBo=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmd2LSvQDIFbhZh1nGSdlJ6iKp1YiKTCaR4Flr/
+ XaLR/EK/lKJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZndi0gAKCRC/aVhE+XH0
+ q9YFEADCdz7a9ExUObvtVWFP8ta1exn5yyW8RaWwyUPA0FbvgczUKbvDUSTkzLnSBXi1Sx/Vqgu
+ WLmzqGVZCEzJfrbYKNSduz9Rz0MyM1Pp5hE2zVqdp/4H3mxbHXSmfmfweHymsY8jdj7zSdrNSJr
+ y+j0/8Y7HU1bFyBlDzPtMDCSotGQ42VowD5JyFyxn/xvvTy2nXeJCBsaD0Ykyy5GqcLMfXIxbOR
+ dcrcWVaow/cOumdeQ3orgODjhQd5kE1nCUlrOsE46HfK+TyCBdsiTYUvH7vlg+gthsjFrgNruJZ
+ Z3WE53ZsZNkHy3oQTuiv5FzIaLqZs8bh91hX5Rhm9NIZ3vtbJGDjIgnmbSH8uavFDV1uucnZyzu
+ GziduKL0c37gx7CY0h6uVOh2XGUoyosqtP0M2VbtEyAj7BOeuWjfTDduDsoDYEB4pn0h4zABvLv
+ BNbh0kMg963Kazdl7eqQONd0fdHq/K7/N6mqFjtaPCA5M3FhZPXiNN/DScerhpFaTRchkbUqbdN
+ utQd3mcf8d7SJqNmMi8vF3OS9yKIxuPjcFvbEefwf62dAKKJB23nMNQRD8Q18kLr1yOTajAhYDp
+ FhIkw90X3Eb0JGL+Orgauu9xJeqwdbRtbcJjfxi6LMlWvWe5ZFFa9QN8zw3ZtAOfxBKjDDQmdF0
+ VqDx5VgtNsypwxg==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Daniil Titov <daniilt971@gmail.com>
+With the information of the interval frame length it is now possible to
+calculate the number of usb requests by the frame duration. Based on the
+request size and the imagesize we calculate the actual size per request.
+This has calculation has the benefit that the frame data is equally
+distributed over all allocated requests.
 
-Add phy configuration for 28nm dsi phy found on MSM8937 SoC. Only
-difference from existing msm8916 configuration is number of phy
-and io_start addresses.
+We keep the current req_size calculation as a fallback, if the interval
+callbacks did not set the interval property.
 
-Signed-off-by: Daniil Titov <daniilt971@gmail.com>
-Signed-off-by: Barnabás Czémán <trabarni@gmail.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c      |  2 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h      |  1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c | 18 ++++++++++++++++++
- 3 files changed, 21 insertions(+)
+v1 -> v2: - add headersize per request into calculation
+---
+ drivers/usb/gadget/function/uvc_queue.c | 30 +++++++++++++++++++++++-------
+ drivers/usb/gadget/function/uvc_video.c |  2 +-
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index 24a347fe2998..dd58bc0a49eb 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -545,6 +545,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
- 	  .data = &dsi_phy_28nm_lp_cfgs },
- 	{ .compatible = "qcom,dsi-phy-28nm-8226",
- 	  .data = &dsi_phy_28nm_8226_cfgs },
-+	{ .compatible = "qcom,dsi-phy-28nm-8937",
-+	  .data = &dsi_phy_28nm_8937_cfgs },
- #endif
- #ifdef CONFIG_DRM_MSM_DSI_20NM_PHY
- 	{ .compatible = "qcom,dsi-phy-20nm",
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index 5a5dc3faa971..a9b4eb2c0e8c 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -47,6 +47,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_28nm_hpm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_hpm_famb_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_lp_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8226_cfgs;
-+extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8937_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8960_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_20nm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs;
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
-index ceec7bb87bf1..3afc8b1c9bdf 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
-@@ -917,3 +917,21 @@ const struct msm_dsi_phy_cfg dsi_phy_28nm_8226_cfgs = {
- 	.num_dsi_phy = 1,
- 	.quirks = DSI_PHY_28NM_QUIRK_PHY_8226,
- };
+diff --git a/drivers/usb/gadget/function/uvc_queue.c b/drivers/usb/gadget/function/uvc_queue.c
+index ce51643fc4639..141e52e34c610 100644
+--- a/drivers/usb/gadget/function/uvc_queue.c
++++ b/drivers/usb/gadget/function/uvc_queue.c
+@@ -44,7 +44,7 @@ static int uvc_queue_setup(struct vb2_queue *vq,
+ {
+ 	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+ 	struct uvc_video *video = container_of(queue, struct uvc_video, queue);
+-	unsigned int req_size;
++	unsigned int req_size, max_req_size, header_size;
+ 	unsigned int nreq;
+ 
+ 	if (*nbuffers > UVC_MAX_VIDEO_BUFFERS)
+@@ -54,15 +54,31 @@ static int uvc_queue_setup(struct vb2_queue *vq,
+ 
+ 	sizes[0] = video->imagesize;
+ 
+-	req_size = video->ep->maxpacket
++	nreq = DIV_ROUND_UP(video->interval, video->ep->desc->bInterval * 1250);
 +
-+const struct msm_dsi_phy_cfg dsi_phy_28nm_8937_cfgs = {
-+	.has_phy_regulator = true,
-+	.regulator_data = dsi_phy_28nm_regulators,
-+	.num_regulators = ARRAY_SIZE(dsi_phy_28nm_regulators),
-+	.ops = {
-+		.enable = dsi_28nm_phy_enable,
-+		.disable = dsi_28nm_phy_disable,
-+		.pll_init = dsi_pll_28nm_init,
-+		.save_pll_state = dsi_28nm_pll_save_state,
-+		.restore_pll_state = dsi_28nm_pll_restore_state,
-+	},
-+	.min_pll_rate = VCO_MIN_RATE,
-+	.max_pll_rate = VCO_MAX_RATE,
-+	.io_start = { 0x1a94400, 0x1a96400 },
-+	.num_dsi_phy = 2,
-+	.quirks = DSI_PHY_28NM_QUIRK_PHY_LP,
-+};
++	header_size = nreq * UVCG_REQUEST_HEADER_LEN;
++
++	req_size = DIV_ROUND_UP(video->imagesize + header_size, nreq);
++
++	max_req_size = video->ep->maxpacket
+ 		 * max_t(unsigned int, video->ep->maxburst, 1)
+ 		 * (video->ep->mult);
+ 
+-	/* We divide by two, to increase the chance to run
+-	 * into fewer requests for smaller framesizes.
+-	 */
+-	nreq = DIV_ROUND_UP(DIV_ROUND_UP(sizes[0], 2), req_size);
+-	nreq = clamp(nreq, 4U, 64U);
++	if (!req_size) {
++		req_size = max_req_size;
++
++		/* We divide by two, to increase the chance to run
++		 * into fewer requests for smaller framesizes.
++		 */
++		nreq = DIV_ROUND_UP(DIV_ROUND_UP(sizes[0], 2), req_size);
++		nreq = clamp(nreq, 4U, 64U);
++	} else if (req_size > max_req_size) {
++		/* The prepared interval length and expected buffer size
++		 * is not possible to stream with the currently configured
++		 * isoc bandwidth
++		 */
++		return -EINVAL;
++	}
+ 
+ 	video->req_size = req_size;
+ 	video->uvc_num_requests = nreq;
+diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
+index 95bb64e16f3da..d197c46e93fb4 100644
+--- a/drivers/usb/gadget/function/uvc_video.c
++++ b/drivers/usb/gadget/function/uvc_video.c
+@@ -304,7 +304,7 @@ static int uvcg_video_usb_req_queue(struct uvc_video *video,
+ 		 */
+ 		if (list_empty(&video->req_free) || ureq->last_buf ||
+ 			!(video->req_int_count %
+-			DIV_ROUND_UP(video->uvc_num_requests, 4))) {
++			clamp(DIV_ROUND_UP(video->uvc_num_requests, 4), 4U, 16U))) {
+ 			video->req_int_count = 0;
+ 			req->no_interrupt = 0;
+ 		} else {
 
 -- 
-2.45.2
+2.39.2
 
