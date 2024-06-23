@@ -1,106 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-11.smtpout.orange.fr [193.252.22.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7496AF9F0;
-	Sun, 23 Jun 2024 15:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47BCF9F0;
+	Sun, 23 Jun 2024 15:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719157770; cv=none; b=FanhjgOIhUO1xesJ42CnaTjZ3o94vEgkf2UkpxUtxwZKd7H30PhBSHI+pOrC4P8basjK/NAucMA0fYhXvlLf3npYNv1RA+RHZuv0GnTILHgs0ZyiE42J2aomuNIZtmGdpuB+3eOa9XMjEFRpeT0aHaFmOollD2A9WlQs+USSneE=
+	t=1719157828; cv=none; b=TKsnAHxYh2nXo+CCbM8Nit9FXGH93Dc1VK1KskfwP2Su8XoQaoOP5JgoKJPFq5hyl+TJy8SxdoVKgvz7BH1zFOdszSJ5/Kay8iVXxxSJjILriVL1cNkraeO5uEO7v9JD7A26K+rfQfNQv1H6Mdfho493reK2G9Z3PcwPJIPfa/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719157770; c=relaxed/simple;
-	bh=yTJvxHgHRHuY1rMYzUx6RddPEDw9lS+t+x9ruVt783c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fqmcQWtUqbtIfB/x6PLuB1GjmURnklrb9Cd6os2biBdfEhb63ojlCGLY1JYKiGhMGX8SZSIYdJq1zZwND0NhB0CWggtT6guJD8KWIuMUq3PLGt16icMSgY8EqQzGXZVwCUcghFD9HLzA/Zf39If7M2TALQKuV+0rUyHGpgFki4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tw1v0+EG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719157828; c=relaxed/simple;
+	bh=VTtHoMRrh/CknLnrTiA6cISWe0B7QIazQmbA5Bs4n5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KzHjULzbzwBKM33nQCSa6m/YjLH6F6ptkUj/0r9bVNkQH1Ox4NQ6E6PMSfh/G7GIkJ95+pCBt9Z++8/Al8Tg04494wEE7eSRLXCPwwesFTatecy5jopJYfUhx09BmGWZAPHg6+iViTXNw51EnZgu0EWCDfHSZ3rWnHx6ZhxPpcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QCd1Vmfi; arc=none smtp.client-ip=193.252.22.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tw1v0+EG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E998CC2BD10;
-	Sun, 23 Jun 2024 15:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719157769;
-	bh=yTJvxHgHRHuY1rMYzUx6RddPEDw9lS+t+x9ruVt783c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tw1v0+EGLX3NUf0lMQL8wS1FwyD696x5mkkJvyRp2t/IwWTw9SY64HIKlTHRgGDWa
-	 1YFKCnf4ROfED72rq26laaN3LfgWlokAdIzsX95RQqyiCQjO8FghmsON7xaNSxUjy3
-	 lv/UNhLjjvZIg0Uh/WCQykls3oZ4JOtvkB6OircBhidbmhtxXmkBBcTwyUBJt29Scu
-	 Ehnw9cpjNDjsQQMTgsQ7VPZIbP6uPGE+v0uPe9jWfXUYPm+lEjRdbxccazcpPdtkxJ
-	 RlymGm5AtEiW6zWvukWvGQVY5Go8XZ7Vf5lip2OjNylk5fB7yls0fAl3y7nvWI0Wuu
-	 NC4BHFhheuzcw==
-Date: Sun, 23 Jun 2024 16:49:20 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Guillaume Stols <gstols@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Beniamin Bia <beniamin.bia@analog.com>, Stefan Popa
- <stefan.popa@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
- devicetree@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- jstephan@baylibre.com, dlechner@baylibre.com
-Subject: Re: [PATCH 9/9] iio: adc: ad7606: fix standby gpio state to match
- the documentation
-Message-ID: <20240623164920.48dda649@jic23-huawei>
-In-Reply-To: <20240618-cleanup-ad7606-v1-9-f1854d5c779d@baylibre.com>
-References: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
-	<20240618-cleanup-ad7606-v1-9-f1854d5c779d@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QCd1Vmfi"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id LOvzs9RlN2GQtLOvzsbDUH; Sun, 23 Jun 2024 17:15:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1719155719;
+	bh=6xc2xyXmsrpTItWg6IptTdpN90W19e46SCweNrwd4z4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=QCd1Vmfi7/8s3qsK8bcJq1V3dXy73L7NZiNWiMW2h/YlojSzlRfWprMCDw3ibhUk2
+	 W6vX3VEQsVlKfW1edVOsjY6V/EhNgQNszuWZH/BS9yyRwaR5+yQ93jQIHmSm/+j79y
+	 YOoAdA2eMSBy5sq7mRbob3AguiMoy95CsrbLvgDwD7u4z4DKAAaxq2diqhomNZoN+H
+	 eQ8JcyJ128zs2PY923RLqCPMgGbdeBEKLbcGAyV8G5PIc4fQuPgO7zgICNwhoFv+jv
+	 6muz8tudmTkaRTOLabI5bXCM2DXdgFRef7pHsEL4PUEvn7CllwapiA6mL99TA6Z+dZ
+	 N798nWjA/7hPw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 23 Jun 2024 17:15:19 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Cezary Rojewski <cezary.rojewski@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: sst: Constify struct intel_sst_ops
+Date: Sun, 23 Jun 2024 17:15:11 +0200
+Message-ID: <098acdf266b2f4a922d6a624e9032ec24a09093c.1719155688.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 18 Jun 2024 14:02:41 +0000
-Guillaume Stols <gstols@baylibre.com> wrote:
+'struct intel_sst_ops' is not modified in this driver.
 
-> The binding's documentation specifies that "As the line is active low, it
-> should be marked GPIO_ACTIVE_LOW". However, in the driver, it was handled
-> the opposite way. This commit sets the driver's behaviour in sync with the
-> documentation
-> 
-> Fixes: 722407a4e8c0 ("staging:iio:ad7606: Use GPIO descriptor API")
-> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
-This sound dangerous.  If anyone is using the driver before this an it's
-working they indeed have the pin inverted wrt to the docs, but
-as it works for them this will be a regression.
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  12250	   1000	    112	  13362	   3432	sound/soc/intel/atom/sst/sst.o
 
-So messy corner - do we fix the docs or the driver?  I'm not sure which
-is more painful. In theory the DT binding might be in use by another
-OS or similar which might have a non broken driver, but I suspect it isn't.
-Whereas perhaps the driver as it stands is in use on Linux.
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  12378	    888	    112	  13378	   3442	sound/soc/intel/atom/sst/sst.o
 
-AD folk: You will get the support calls, do you want to risk them or
-should we change the docs (and maybe add a note on it being 'odd' wrt
-to the documentation as we are treating it as an active !standy pin)
-> ---
->  drivers/iio/adc/ad7606.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 502344e019e0..05addea105f0 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -438,7 +438,7 @@ static int ad7606_request_gpios(struct ad7606_state *st)
->  		return PTR_ERR(st->gpio_range);
->  
->  	st->gpio_standby = devm_gpiod_get_optional(dev, "standby",
-> -						   GPIOD_OUT_HIGH);
-> +						   GPIOD_OUT_LOW);
->  	if (IS_ERR(st->gpio_standby))
->  		return PTR_ERR(st->gpio_standby);
->  
-> @@ -681,7 +681,7 @@ static int ad7606_suspend(struct device *dev)
->  
->  	if (st->gpio_standby) {
->  		gpiod_set_value(st->gpio_range, 1);
-> -		gpiod_set_value(st->gpio_standby, 0);
-> +		gpiod_set_value(st->gpio_standby, 1);
->  	}
->  
->  	return 0;
-> 
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only
+---
+ sound/soc/intel/atom/sst/sst.c | 2 +-
+ sound/soc/intel/atom/sst/sst.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/intel/atom/sst/sst.c b/sound/soc/intel/atom/sst/sst.c
+index e0357d257c6c..ff03fde12151 100644
+--- a/sound/soc/intel/atom/sst/sst.c
++++ b/sound/soc/intel/atom/sst/sst.c
+@@ -158,7 +158,7 @@ static int sst_save_dsp_context_v2(struct intel_sst_drv *sst)
+ }
+ 
+ 
+-static struct intel_sst_ops mrfld_ops = {
++static const struct intel_sst_ops mrfld_ops = {
+ 	.interrupt = intel_sst_interrupt_mrfld,
+ 	.irq_thread = intel_sst_irq_thread_mrfld,
+ 	.clear_interrupt = intel_sst_clear_intr_mrfld,
+diff --git a/sound/soc/intel/atom/sst/sst.h b/sound/soc/intel/atom/sst/sst.h
+index 126903e126e4..e0db7434543c 100644
+--- a/sound/soc/intel/atom/sst/sst.h
++++ b/sound/soc/intel/atom/sst/sst.h
+@@ -391,7 +391,7 @@ struct intel_sst_drv {
+ 	unsigned int		csr_value;
+ 	void			*fw_in_mem;
+ 	struct sst_sg_list	fw_sg_list, library_list;
+-	struct intel_sst_ops	*ops;
++	const struct intel_sst_ops	*ops;
+ 	struct sst_info		info;
+ 	struct pm_qos_request	*qos;
+ 	unsigned int		use_dma;
+-- 
+2.45.2
 
