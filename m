@@ -1,81 +1,119 @@
-Received: from out28-149.mail.aliyun.com (out28-149.mail.aliyun.com [115.124.28.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE8BA23;
-	Sun, 23 Jun 2024 02:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C1F64D
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 02:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719110516; cv=none; b=bIHse9GuLkmIei3YkmCOmBtYoqkCXe/yyV/EK1+yVNUiSHL1NcW3bsF3Qlr+kASQ2Y5eOfCJe510QkSpAwvZ+kjkEpEtctZC14wIqWMs/FBcB7kf4yhPoXONR66SDWhB7wdClkJNcJp7yU5OWCTV4Pz1eSZi+1H/Bn6WaZntg8c=
+	t=1719111358; cv=none; b=kD18FMZnlJl09Xf4gt5wtTmYzWIqFxMQqam1IQaOUFVq31rniQUD/PWEFrWoTXU/AgPKwAZMPsGA3kjghFfhkvw9T6EMvEYsjgiK/4ZxucVun1E6SX3xvCoGeg7hLGMb6oK7bVJRmljAgD6b1zrmAPFdixNB8ZSCOkOUr7ql4j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719110516; c=relaxed/simple;
-	bh=HiI9F3L1Thv7663MMmZOO+rudF2uZH75oGW+XT7h+MA=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WnCkxUpsJCm7gsZKA2DUXIDQAt9SS7eyVIF8UTmRjTo41ta7c4en+dfWjql2SYpvpwj2HN1DIWIiikrZRo31NC72a/oubf529+SMYqy/mJ2hOLiGZfYFmzAhdm6ENWDFVB1VrG8Pzl2LL2/v5AvW01yOntuyAj/y/E0rZgLnDzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=115.124.28.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.08635762|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.313904-0.00171844-0.684378;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033068155186;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Y7uvvUK_1719109571;
-Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.Y7uvvUK_1719109571)
-          by smtp.aliyun-inc.com;
-          Sun, 23 Jun 2024 10:26:12 +0800
-From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-To: bhelgaas@google.com,
-	zhoushengqing@ttyinfo.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] PCI: Enable io space 1k granularity for intel cpu root port
-Date: Sun, 23 Jun 2024 02:26:11 +0000
-Message-Id: <20240623022611.41696-1-zhoushengqing@ttyinfo.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240622175205.GA1432837@bhelgaas>
-References: <20240622175205.GA1432837@bhelgaas>
+	s=arc-20240116; t=1719111358; c=relaxed/simple;
+	bh=kk0dfKY/ENx9zMKY0Wwe7kBZPbykdaRiDaEX5FNLjfw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YAR0HCYupK2ZYllpJR/868/4KXIh2gtqnFipp3cWtd99ONwvpuu0DI56DXJsoo7zi8rXZGTkK/zPUV+uXapNKvMudiVyaA1VecCgowetL7qbUtB/hDF2TXrV7olaEfupIh6iJAFg6NJouQ6SeXmACTK//vMbB8OrtvlTMAESC5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuecHU3T; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuecHU3T"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a724b9b34b0so8908566b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 19:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719111356; x=1719716156; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d+dNGdqvPyMhPucHTr5/gO5LwLxeQdkY1pTtydDZXYM=;
+        b=MuecHU3TwNuhnn6NX4YHk+Uf5CxqczI/cHpHhW4BDruFBb/HRScMVoQCrBsyVAprqw
+         ojlUQweq+dt61wFBm+nW576dXZkfyuMAiHQD7qkvlyWqSkKy3Gt27MoQSsAB+/2C/HJ/
+         v0FxK0KnEmNqhG1eek94VhRQ3QG7mK0Dz3A+ezaj5adblo2GHs4xaRNDgt7xcz9HKwed
+         knSiptqyGPBi0Ee8G48OMHIw3TixdfNichc2beJH4L3UWMSofi0ZAKwpPKdg3vC531cK
+         NYFyXlLVLGfNdKHOfeYiHU9gx1v8TFY0P64tpeN+mI1AmwYKhSgEXh79FV0zULHtJ03r
+         QtAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719111356; x=1719716156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d+dNGdqvPyMhPucHTr5/gO5LwLxeQdkY1pTtydDZXYM=;
+        b=j8y64Evy4IFy+4QrPL5y24Z2AfK2dmcfpUIXyDUQNAZcnKsZIuR/BfnkNe8k5wNMuf
+         NnrxSNmuZGfOwOPN1pU3GT/+vyFWiaKe9+n0t3blTuhzhV+KYeQIuEdp3eFAc/Co4yFE
+         NGlDfzn5ZcVTw8RvRWQ6FGJJJDcQxXS7sg2QCpL+0uRacLDl8Lij5Fh/f96J+pVBrp9N
+         yKBh/wxD3fNtd3h8opoethT3BVUq24OleWAni+5NAcw1oJJaPsxB4vMLT7YlP7DlsQAH
+         Ai6NUgm1MAK+PIynFAu1FQAAaih+64xkYCg1HbkTmZqaWkwyrY2uQc+9xFfn/gEulqR5
+         GZRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUNmerkA2w4Uz+i0XlbL983kHxCGAzzzBM2vu5hFtn+p/7YFz1+ThtrUDuUDWm0DhjKCmQa0RjN8tt4b6oMkc8uEIx7EBG7TZuQKb8
+X-Gm-Message-State: AOJu0YwjrACkKcEkBTbKw3Cvg4veP/sKcHeHuLrPYsiezbDSeMggoHeV
+	ew+uxrX/6lAck8E4SPKHWGmtqQALnBT352WaxLGYpmP8gjK/gaoD47klJWmiQxwMVlgkdTnQphS
+	43+Qrv51xbS853Gqu3Sv5mqcYjOw=
+X-Google-Smtp-Source: AGHT+IEKf/HkETPEeYzE1trwKs/NC1T9SkiEZfGUqAoH7CdTHB7ab/SUVkf5pHuQJagpNs0bWjagrPmp2+e8SiSEWys=
+X-Received: by 2002:a17:907:168b:b0:a66:c338:65cc with SMTP id
+ a640c23a62f3a-a7245b8f006mr63395366b.19.1719111355198; Sat, 22 Jun 2024
+ 19:55:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+ <87msnem3i1.ffs@tglx> <CAAhV-H5TNnf+EMEtKmXk+Q9KXSZpW+9vd-7qqXDifsKfny+v=g@mail.gmail.com>
+ <87pls9z3g0.ffs@tglx> <CAAhV-H7noyrYJzyVML8y1gHPiB6qZzXy7j5L_AqjxwLZW2J06A@mail.gmail.com>
+ <87jzigznai.ffs@tglx>
+In-Reply-To: <87jzigznai.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Sun, 23 Jun 2024 10:55:43 +0800
+Message-ID: <CAAhV-H6u-5EHATP3O=23SM7mMw3-xqOwn22YE4vWtj=GFELC+A@mail.gmail.com>
+Subject: Re: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node()
+ instead of cpu_to_node()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->On Sat, Jun 22, 2024 at 11:06:18PM +0800, zhoushengqing@ttyinfo.com wrote:
->> >> This patch add 1k granularity for intel root port bridge.Intel latest
->>
->>
->>
->> >> server CPU support 1K granularity,And there is an BIOS setup item named
->>
->>
->>
->
->I don't know what your email agent is doing to add all these extra
->blank lines, but it makes it painful to read/reply:
->https://lore.kernel.org/all/2024062223061743562815@ttyinfo.com/
->
+Hi, Thomas,
 
-I'm sorry for the mistake I made in my email client settings.
-
->> >Can you implement this as a quirk similar to quirk_p64h2_1k_io()?
->> >
->> >I don't want to clutter the generic code with device-specific
->> >things like this.
->>
->> I have attempted to implement this patch in quirks.c.But there
->> doesn't seem to be a suitable DECLARE_PCI_FIXUP* to do this.because
->> the patch is not targeting the device itself, It targets other P2P
->> devices with the same bus number.
+On Sun, Jun 23, 2024 at 5:21=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
 >
->If I understand the patch correctly, if a [8086:09a2] device on a root
->bus has EN1K set, *every* bridge (every Root Port in this case because
->I assume this is a PCIe configuration) on the same bus supports 1K
->granularity?
+> Huacai!
 >
->That seems like a really broken kind of encapsulation.  I'd be
->surprised if there were not a bit in each of those Root Ports that
->indicates this.
+> On Sat, Jun 22 2024 at 19:23, Huacai Chen wrote:
+> > On Sat, Jun 22, 2024 at 6:17=E2=80=AFPM Thomas Gleixner <tglx@linutroni=
+x.de> wrote:
+> >> That does not make sense because it's exactly the same situation when
+> >> you compile a kernel with NR_CPU=3D8 and boot it on a system with 16
+> >> CPUs. Then early_cpu_to_node() does not give you anything either.
+> >>
+> >> So what's the technical problem you are trying to solve?
+> >
+> > Frankly, there are some drawbacks on our hardware. On a dual-bridge
+> > machine, there are two eiointc instances. Even if nr_cpus limits the
+> > "possible" CPUs, we still hope the eiointc driver can initialize
+> > correctly, otherwise the machine cannot boot.
+>
+> Hope does not help with technical limitations :)
+>
+> So if CONFIG_NR_CPUS is not big enough to map the second node, then the
+> machine can't boot.
+>
+> If nr_cpus limits it then early_cpu_to_node() because that mapping is
+> only limited by CONFIG_NR_CPUS.
+Yes, if NR_CPUS is not big enough, then we have no solution.
 
-Your understanding is completely correct.intel ICX SPR RMR (even GNR) 
-CPU EDS Vol2(register) spec says "This bit when set, enables 1K granularity
-for I/O space decode in each of the virtual P2P bridges corresponding to 
-root ports,and DMI ports." it targets all P2P bridges within the same root bus,
-not the root port itself.The root ports configuration space doesn't have a 
-"EN1K" bit. 
+>
+> Right?
+>
+> If so, then please explain all of this properly in the change log.
+OK, I will explain in detail.
+
+Huacai
+
+>
+> Thanks,
+>
+>         tglx
+>
+>
