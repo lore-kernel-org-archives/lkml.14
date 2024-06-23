@@ -1,103 +1,126 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8192113AA39;
-	Sun, 23 Jun 2024 11:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C63F13D8B0;
+	Sun, 23 Jun 2024 11:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719143282; cv=none; b=t6g/e2SpM81ScRyI6t3GDs5JcTPDYHwsA3dBLMmLvshSOLUrjGUY/JNx4sjC+WxNUBmYsc6ihFg89DDtbZpxnH1G3tdxSiaYNaN/YRETwEL2YR91RD3oVumXrm9Zm6WSJuMK8b7LFdx/DucWeCTXSs701rB5iBGh9VZVcmMq3zw=
+	t=1719143791; cv=none; b=QxJpOjO1sxcGf8kLth87bRDRx08r42GL85T6TBSo05GwWUSYZpjuU9JM3pw5CN3ntguqcqVpmJ9hm5fRCo2uNJSyXwfth5mKei+4+m1rmRdugENbLVjx7kzHQ2L4NLRAJsfJANzt1OHYnjQOpRfOY3auLRt7MpAO3diUvBcYlUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719143282; c=relaxed/simple;
-	bh=w+CDf5w2t977KxI8pwc/QoX7UorZ1kCyn3RckVK/bto=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=aINH7IBJFpy0awZ0JhVu17l4w5bNHwz5rYQ8/PKBrb5zHEeikL1Zvm+RTki/bfwO/dLUrYOI1KzcLStpxgafX21sGpnatUy2T7xm7UJdJ4zx9x73jtiRq5wTSXtjDAioauhflj0gLe1k/4O5TYeXrkg9tMRT2qh1I/yn3jQdf6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=hty961XI; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1719143791; c=relaxed/simple;
+	bh=uAE600xiIb96iQh6+8HJfPoX0sEcN+urA1yZyZSUwak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I7qQXlTl86oVipiPoEMaFHo8/Ug4x9T5WCP+cP8Ey0DFlT0C4YFgymGhbYQvCv946lb8B0nzQ21DROdckJQRhl6mlOlAP9FEnrMk+4GYY7JlJec/6lDVyHVDzsKSTOXrwac/rbr38Cizxc0KPV4JA/pHFPl9FFy86vRja64iTlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bok5LuwG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="hty961XI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bok5LuwG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D518C2BD10;
+	Sun, 23 Jun 2024 11:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719143790;
+	bh=uAE600xiIb96iQh6+8HJfPoX0sEcN+urA1yZyZSUwak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Bok5LuwGFAuOhddobD0Tbr0GcIEaiE5Udl6xD7GL/9nvHYg0adQAMxTk3HzDGrfgQ
+	 dcr50SNN7gbxh5bXiwtb204S/dkqCVA+zvAmii6DrTxW2UhQtwe0ZseToBZ/1+oY4i
+	 yUUakUiu85WUSDRA2jgRbR7FIVPe6kLG1kAmgxf0bbPcj4VsXu1mUWILZbLIOPLLrV
+	 A2Dd33VvislCEH1vV6KS7qmhWgC2dHSvz1HeVTRULwY+l3O+nqNyR83mZpPdH1A3kR
+	 wBRgiRIlQSeBTAA61JHsH/jOUc4C7riWNIfVHx9VAgycpOfotQyW0sNfrjNM88ygKJ
+	 /2dgeDW/OLOWg==
+Date: Sun, 23 Jun 2024 12:56:21 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Yasin Lee <yasin.lee.x@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ yasin.lee.x@outlook.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] iio: proximity: Add driver support for TYHX's
+ HX9023S capacitive proximity sensor
+Message-ID: <20240623125621.07d1617c@jic23-huawei>
+In-Reply-To: <20240621-add-tyhx-hx9023s-sensor-driver-v6-3-65196a9020f1@gmail.com>
+References: <20240621-add-tyhx-hx9023s-sensor-driver-v6-0-65196a9020f1@gmail.com>
+	<20240621-add-tyhx-hx9023s-sensor-driver-v6-3-65196a9020f1@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1719143275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yZOaYUoA97Ep2akKiluJXo61048Ck0byvoUwJNmlD6g=;
-	b=hty961XIXoBvEtYoWvvtAB6zK7d8snxmtmqhs4AqVp2gw3TC30vm8HF6cI0u2mXj4TJxJO
-	qvNAGUeGfecMkrperYCtVjAVDDwcqMhiH6CopcAefHqTn1Ff+YFz9DqP9sn5QsD7VpQocR
-	jMfRLNJOsjghVOPvfwH9WbBKW3dtgRDzKK4NV9Da/CjszS2c7TGGy+HtIS3mr7UgP00Br9
-	e3qGF+JjNR4FZ/7YpUswgtKRk8nyCJTPQQh78PtjYEnPLd9MjC1eDGPzJ4k+u8JTFyqMWP
-	0LBYR/vgWbO9fqNnOBYLeAjgmBR4wKXEhmG0TV1JwG7wnwURsrgLvxqBbsiGQg==
-Date: Sun, 23 Jun 2024 13:47:47 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Golle
- <daniel@makrotopia.org>, Aurelien Jarno <aurelien@aurel32.net>, Olivia
- Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Philipp
- Zabel <p.zabel@pengutronix.de>, Sebastian Reichel
- <sebastian.reichel@collabora.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
- linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] hwrng: add Rockchip SoC hwrng driver
-In-Reply-To: <395f8ebe-1392-4d8f-b91f-c9a8f5f48afe@debian.org>
-References: <cover.1719106472.git.daniel@makrotopia.org>
- <240db6e0ab07e8e2a86da99b0fc085eabaf9f0cc.1719106472.git.daniel@makrotopia.org>
- <612bd49c-c44a-41f2-89e9-c96e62e52a0a@kernel.org>
- <395f8ebe-1392-4d8f-b91f-c9a8f5f48afe@debian.org>
-Message-ID: <051d76a29de62b943b221cf0c7662ef1@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Uwe,
+On Fri, 21 Jun 2024 15:40:51 +0800
+Yasin Lee <yasin.lee.x@gmail.com> wrote:
 
-On 2024-06-23 11:46, Uwe Kleine-König wrote:
-> On 6/23/24 09:00, Krzysztof Kozlowski wrote:
->> On 23/06/2024 05:33, Daniel Golle wrote:
->>> +
->>> +	pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
->>> +	pm_runtime_use_autosuspend(dev);
->>> +	devm_pm_runtime_enable(dev);
->>> +
->>> +	ret = devm_hwrng_register(dev, &rk_rng->rng);
->>> +	if (ret)
->>> +		return dev_err_probe(&pdev->dev, ret, "Failed to register Rockchip 
->>> hwrng\n");
->>> +
->>> +	dev_dbg(&pdev->dev, "Registered Rockchip hwrng\n");
->> 
->> Drop, it is not useful at all. Srsly, we had already long enough talk,
->> [...]
+> A SAR sensor from NanjingTianyihexin Electronics Ltd.
 > 
-> And in this long talk using dev_dbg() was one of the suggestions for a
-> compromise. For me this is ok.
+> The device has the following entry points:
 > 
->> There is no single benefit of such debug statement. sysfs already
->> provides you this information. Simple entry/exit  is provided by
->> tracing. You duplicate existing interfaces without any benefit, 
->> because
->> this prints nothing more.
+> Usual frequency:
+> - sampling_frequency
 > 
-> There might be a (small) value if you want to know when during boot
-> the device becomes available. So having a dev_dbg() that can be
-> enabled dynamically (assuming DYNAMIC_DEBUG=y) and isn't in the way
-> otherwise might be justified. IMHO a dev_dbg is lightweight enough
-> that *I* won't continue the discussion.
+> Instant reading of current values for different sensors:
+> - in_proximity0_raw
+> - in_proximity1_raw
+> - in_proximity2_raw
+> - in_proximity3_raw
+> - in_proximity4_raw
+> and associated events in events/
+> 
+> Signed-off-by: Yasin Lee <yasin.lee.x@gmail.com>
 
-For anyone interested, below is an example that shows the usability
-of knowing when a device becomes available:
+Hi Yasin,
 
-https://gitlab.manjaro.org/manjaro-arm/packages/core/linux/-/issues/21
+Some good reviews in already for this version, so I only took a quick look
+this time. It seems to be in a reasonable state now.
+
+Jonathan
+
+> diff --git a/drivers/iio/proximity/hx9023s.c b/drivers/iio/proximity/hx9023s.c
+> new file mode 100644
+> index 000000000000..1d8cb9a05d8a
+> --- /dev/null
+> +++ b/drivers/iio/proximity/hx9023s.c
+>
+> +struct hx9023s_data {
+> +	struct iio_trigger *trig;
+> +	struct regmap *regmap;
+> +	unsigned long chan_prox_stat;
+> +	unsigned long chan_read;
+> +	unsigned long chan_event;
+> +	unsigned long ch_en_stat;
+> +	unsigned long chan_in_use;
+> +	unsigned int prox_state_reg;
+> +	bool trigger_enabled;
+> +
+> +	struct {
+> +		__le16 channels[HX9023S_CH_NUM];
+> +		s64 ts __aligned(8);
+> +	} buffer;
+> +
+> +	struct mutex mutex;
+
+Add a comment explaining the data this mutex is protecting
+(that may be in this structure, or for example on the device)
+
+> +	struct hx9023s_ch_data ch_data[HX9023S_CH_NUM];
+> +};
+
+
+> +
+> +static int hx9023s_sample(struct hx9023s_data *data)
+> +{
+...
+> +
+> +	for (i = 0; i < HX9023S_CH_NUM; i++) {
+> +		value = get_unaligned_le16(&rx_buf[i * data_size + 1]);
+> +		value = sign_extend32(value, 15);
+> +		data->ch_data[i].lp = 0;
+> +		data->ch_data[i].diff = 0;
+> +		if (data->ch_data[i].sel_lp == true)
+> +			data->ch_data[i].lp = value;
+> +		if (data->ch_data[i].sel_diff == true)
+> 
+Run checkpatch.pl --strict and it will probably moan about these.
+if (data->ch_data[i].sel_diff) is the same thing so just use that.
+
