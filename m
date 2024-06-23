@@ -1,97 +1,103 @@
-Received: from outgoing.selfhost.de (mordac.selfhost.de [82.98.82.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C387C17106D
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 11:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.98.82.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8192113AA39;
+	Sun, 23 Jun 2024 11:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719143188; cv=none; b=e3xCFxLZqIYZGA25Mjg/+GTlqXk4DpIltkfH8SS25Khv0SZG9SBchM3irJjYg5WEJKj8tfbgF77dbtMSx7Mq3eJqxOQRG2AgZOV2UTOx02A5DDwycGYSDBBewlFR60ZJCC7y+YkiEg9Ad9SKPqbCjaZv0oqRJZFe/87K6Eyn3W4=
+	t=1719143282; cv=none; b=t6g/e2SpM81ScRyI6t3GDs5JcTPDYHwsA3dBLMmLvshSOLUrjGUY/JNx4sjC+WxNUBmYsc6ihFg89DDtbZpxnH1G3tdxSiaYNaN/YRETwEL2YR91RD3oVumXrm9Zm6WSJuMK8b7LFdx/DucWeCTXSs701rB5iBGh9VZVcmMq3zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719143188; c=relaxed/simple;
-	bh=RskTX3L6IhrHwjdAZDc4inx6uRON4x4Azhmwv9WwHVA=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=hZxx2ERZYC8Te0N0e3/MkiRI4KZ1DCJsCmTzcVwbNkYhk9j76kLgzmAcBRnpzOe0XP02o9ryBGSTwUiIUNM3bisP4l6xT2+YwzraPebp6Ay1DSFXzA4uWTaV8mgn5OaSGARnN4UpmkOQ+w5q+kNmlieXTgfG9JS2gosqEtlzBhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=afaics.de; spf=none smtp.mailfrom=afaics.de; arc=none smtp.client-ip=82.98.82.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=afaics.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=afaics.de
-Received: (qmail 11617 invoked from network); 23 Jun 2024 11:39:41 -0000
-Received: from unknown (HELO mailhost.afaics.de) (postmaster@xqrsonfo.mail.selfhost.de@62.158.105.246)
-  by mailout.selfhost.de with ESMTPA; 23 Jun 2024 11:39:41 -0000
-X-Spam-Level: 
-X-Spam-Report: 
-	* -5.0 RCVD_IN_DNSWL_HI RBL: Sender listed at https://www.dnswl.org/, high
-	*      trust
-	*      [2003:e3:1f18:c802:68fd:ffff:fe6f:e76 listed in]
-	[list.dnswl.org]
-	*  0.5 HELO_NO_DOMAIN Relay reports its domain incorrectly
-	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
-	*      dynamic-looking rDNS
-	*  0.0 DMARC_MISSING Missing DMARC policy
-Received: from [IPV6:2003:e3:1f18:c802:68fd:ffff:fe6f:e76] (p200300e31f18c80268fdfffffe6f0e76.dip0.t-ipconnect.de [2003:e3:1f18:c802:68fd:ffff:fe6f:e76])
-	by marvin.afaics.de (OpenSMTPD) with ESMTP id ac1e92da;
-	Sun, 23 Jun 2024 13:39:41 +0200 (CEST)
-Message-ID: <6ca2b58c-f689-447f-abc8-4e8dd9bf677a@afaics.de>
-Date: Sun, 23 Jun 2024 13:39:41 +0200
+	s=arc-20240116; t=1719143282; c=relaxed/simple;
+	bh=w+CDf5w2t977KxI8pwc/QoX7UorZ1kCyn3RckVK/bto=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=aINH7IBJFpy0awZ0JhVu17l4w5bNHwz5rYQ8/PKBrb5zHEeikL1Zvm+RTki/bfwO/dLUrYOI1KzcLStpxgafX21sGpnatUy2T7xm7UJdJ4zx9x73jtiRq5wTSXtjDAioauhflj0gLe1k/4O5TYeXrkg9tMRT2qh1I/yn3jQdf6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=hty961XI; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="hty961XI"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-To: linux-kernel@vger.kernel.org
-From: Harald Dunkel <harri@afaics.de>
-Content-Language: en-US
-Subject: shutdown gets stuck on ancient Intel CPUs (>10 y)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1719143275;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yZOaYUoA97Ep2akKiluJXo61048Ck0byvoUwJNmlD6g=;
+	b=hty961XIXoBvEtYoWvvtAB6zK7d8snxmtmqhs4AqVp2gw3TC30vm8HF6cI0u2mXj4TJxJO
+	qvNAGUeGfecMkrperYCtVjAVDDwcqMhiH6CopcAefHqTn1Ff+YFz9DqP9sn5QsD7VpQocR
+	jMfRLNJOsjghVOPvfwH9WbBKW3dtgRDzKK4NV9Da/CjszS2c7TGGy+HtIS3mr7UgP00Br9
+	e3qGF+JjNR4FZ/7YpUswgtKRk8nyCJTPQQh78PtjYEnPLd9MjC1eDGPzJ4k+u8JTFyqMWP
+	0LBYR/vgWbO9fqNnOBYLeAjgmBR4wKXEhmG0TV1JwG7wnwURsrgLvxqBbsiGQg==
+Date: Sun, 23 Jun 2024 13:47:47 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Golle
+ <daniel@makrotopia.org>, Aurelien Jarno <aurelien@aurel32.net>, Olivia
+ Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Sebastian Reichel
+ <sebastian.reichel@collabora.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] hwrng: add Rockchip SoC hwrng driver
+In-Reply-To: <395f8ebe-1392-4d8f-b91f-c9a8f5f48afe@debian.org>
+References: <cover.1719106472.git.daniel@makrotopia.org>
+ <240db6e0ab07e8e2a86da99b0fc085eabaf9f0cc.1719106472.git.daniel@makrotopia.org>
+ <612bd49c-c44a-41f2-89e9-c96e62e52a0a@kernel.org>
+ <395f8ebe-1392-4d8f-b91f-c9a8f5f48afe@debian.org>
+Message-ID: <051d76a29de62b943b221cf0c7662ef1@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi folks,
+Hello Uwe,
 
-I've got quite a number of ancient systems that do not shut down
-gracefully. On "reboot" they get stuck instead, with these messages
-on the console (for example):
+On 2024-06-23 11:46, Uwe Kleine-König wrote:
+> On 6/23/24 09:00, Krzysztof Kozlowski wrote:
+>> On 23/06/2024 05:33, Daniel Golle wrote:
+>>> +
+>>> +	pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
+>>> +	pm_runtime_use_autosuspend(dev);
+>>> +	devm_pm_runtime_enable(dev);
+>>> +
+>>> +	ret = devm_hwrng_register(dev, &rk_rng->rng);
+>>> +	if (ret)
+>>> +		return dev_err_probe(&pdev->dev, ret, "Failed to register Rockchip 
+>>> hwrng\n");
+>>> +
+>>> +	dev_dbg(&pdev->dev, "Registered Rockchip hwrng\n");
+>> 
+>> Drop, it is not useful at all. Srsly, we had already long enough talk,
+>> [...]
+> 
+> And in this long talk using dev_dbg() was one of the suggestions for a
+> compromise. For me this is ok.
+> 
+>> There is no single benefit of such debug statement. sysfs already
+>> provides you this information. Simple entry/exit  is provided by
+>> tracing. You duplicate existing interfaces without any benefit, 
+>> because
+>> this prints nothing more.
+> 
+> There might be a (small) value if you want to know when during boot
+> the device becomes available. So having a dev_dbg() that can be
+> enabled dynamically (assuming DYNAMIC_DEBUG=y) and isn't in the way
+> otherwise might be justified. IMHO a dev_dbg is lightweight enough
+> that *I* won't continue the discussion.
 
-[3100272.289498] NMI watchdog: Watchdog detected hard LOCKUP on cpu 5
-[3100274.206164] NMI watchdog: Watchdog detected hard LOCKUP on cpu 6
-[3100274.432631] NMI watchdog: Watchdog detected hard LOCKUP on cpu 12
-[3100277.888319] NMI watchdog: Watchdog detected hard LOCKUP on cpu 11
-[3100278.939282] NMI watchdog: Watchdog detected hard LOCKUP on cpu 2
-[3100280.147329] rcu: INFO: rcu_preempt self-detected stall on CPU
-[3100280.590580] rcu:   14-...!: (5248 ticks this GP) idle=afe4/1/0x4000000000000000 softirq=85687678/85687678 fqs=38
-[3100280.713513] rcu: rcu_preempt kthread timer wakeup didn't happen for 5308 jiffies! g227828925 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[3100280.856203] rcu:   Possible timer handling issue on cpu=3 timer-softirq=46376324
-[3100280.945837] rcu: rcu_preempt kthread starved for 5367 jiffies! g227828925 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=3
-[3100281.077083] rcu:   Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-[3100281.188462] rcu: RCU grace-period kthread stack dump:
-[3100281.251112] rcu: Stack dump where RCU GP kthread last ran:
-[3100282.053462] NMI watchdog: Watchdog detected hard LOCKUP on cpu 10
-[3100284.061698] watchdog: BUG: soft lockup - CPU#8 stuck for 26s! [kworker/8:0:2191850]
-[3100284.065698] watchdog: BUG: soft lockup - CPU#9 stuck for 22s! [migration/9:62]
-[3100284.077698] watchdog: BUG: soft lockup - CPU#13 stuck for 22s! [migration/13:82]
-[3100285.095828] NMI watchdog: Watchdog detected hard LOCKUP on cpu 7
-[3100288.045764] watchdog: BUG: soft lockup - CPU#4 stuck for 23s! [etcd:1614]
-[3100291.949829] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [etcd:556385]
-[3100292.037830] watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [migration/1:21]
-[3100292.081831] watchdog: BUG: soft lockup - CPU#15 stuck for 23s! [etcd:1613]
-[3100293.997839] NMI watchdog: Watchdog detected hard LOCKUP on cpu 3
-[3100308.078097] watchdog: BUG: soft lockup - CPU#14 stuck for 48s! [rasdaemon:2267297]
-[3100312.062164] watchdog: BUG: soft lockup - CPU#8 stuck for 52s! [kworker/8:0:2191850]
-[3100312.066164] watchdog: BUG: soft lockup - CPU#9 stuck for 48s! [migration/9:62]
-[3100312.078164] watchdog: BUG: soft lockup - CPU#13 stuck for 48s! [migration/13:82]
-[3100316.046230] watchdog: BUG: soft lockup - CPU#4 stuck for 49s! [etcd:1614]
-[3100319.950295] watchdog: BUG: soft lockup - CPU#0 stuck for 48s! [etcd:556385]
-[3100320.038297] watchdog: BUG: soft lockup - CPU#1 stuck for 49s! [migration/1:21]
-[3100320.082297] watchdog: BUG: soft lockup - CPU#15 stuck for 49s! [etcd:1613]
+For anyone interested, below is an example that shows the usability
+of knowing when a device becomes available:
 
-These systems are >10 years old. The CPUs are Intel Xeon E5620 or similar. Kernel
-is 6.1.90. An old NAS running with an Atom CPU D525 and kernel 6.7.5 is affected
-as well.
-
-The problem is quite reproducible (esp on the NAS), but it requires a little bit
-of runtime. Immediately after startup the reboot works as expected. After a
-few days it doesn't.
-
-
-Every helpful comment is highly appreciated
-
-Harri
+https://gitlab.manjaro.org/manjaro-arm/packages/core/linux/-/issues/21
