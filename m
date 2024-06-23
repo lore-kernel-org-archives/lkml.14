@@ -1,109 +1,121 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75141369B4;
-	Sun, 23 Jun 2024 11:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDFE13775B;
+	Sun, 23 Jun 2024 11:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719142009; cv=none; b=jKCh7CxRJ1wiZG6XFzZNY3HBLgV+3dDxk9WpS4aWpvemamq/B+VHXperaTHkZJ54rT4nNW5SdxQ1mv57GE6hJIymRtQP2gaenfDl6XcwX46FDw8srHG2IkJRT8vVOtXrgUfsJv+eEi1Ged76qK/MGpRfM2ac8H46BQJUeiAUZow=
+	t=1719142011; cv=none; b=bHDqsYGx2HQs6Beamv7XakFZqHGgH5gAwNOLAwr7/SZUxhI5eYXTvNnDa7BWVQ1LFzv4wE1kRUJOLrzszndlOlqokrTQTBSn1lzH2HKvU1YPb7Vnx80+tGqOfAV9S+47DqJGiSB4WYPMLyomVaQARmnzpD/IQQDkHJ/WZIT6O0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719142009; c=relaxed/simple;
-	bh=Dd6YcmLb8o+G6RWqBuwSGvOw3f/TCS3z7u0PqBD9BPg=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=qHvxh4d9Q/XUmydvjiG+irW0eYuI/+OnFO20I5kZnkrT+6sWxD3AGlgEjyNR4Zu8LcS0CmDxe1mtD4LMiiLHdNgJ9RkNreaiuRl+1MmG712rRhp9VZknlLuEo5r5UqGYPrwsvhzXFbnqdmhBdnN2Wwbpn5Bc4qDdETG/fa2xDik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=artur-rojek.eu; spf=pass smtp.mailfrom=artur-rojek.eu; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=artur-rojek.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=artur-rojek.eu
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3C80BC0005;
-	Sun, 23 Jun 2024 11:26:38 +0000 (UTC)
+	s=arc-20240116; t=1719142011; c=relaxed/simple;
+	bh=OrLlJZLIdpu8469ekNLVgxT7+eFxGI9yqTN5LZeTdZg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YpueI2jehFqWQoTjmt7S9kljWFHkcP/wb8c4TmIqThb9OdRvC7zW0L8z4LAaQZMRlNjU+BL2a6gO5NqJppP9OEvntznbfTqIxSjXPRxuEDkRjsMuS4GQmB5A4GZ7os6Kgut3yrYCxxImB+ZpIXD7UMPM0Y8R1pUdxUpA3eaI7z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUuIeJrr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUuIeJrr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A83C32782;
+	Sun, 23 Jun 2024 11:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719142011;
+	bh=OrLlJZLIdpu8469ekNLVgxT7+eFxGI9yqTN5LZeTdZg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=fUuIeJrreq3hb97SXBQCpnlHZpUeS0dkR+e53R3tVQbKmx1RyfgraVPl0khleh5SH
+	 Zsi7jP94n+It2a1gCbSZPlaADPE3R6/D2X10ha3hfVVfKOXkOurCQXo18xSVhucyPh
+	 DD+6TXOlu3MnIY4+R7akZaU3KCLCRRZghe1NMt0A4K5gN02l/HjCiSCMKmuTcFcEKN
+	 k8Z7LSNdtWMP1AomIrysiuOa38rSbIaRtJvBY4uw4TfWK6qRLy5smptuKxLZoWnkT8
+	 huSUdI46HuBqzdHoEPq6n/e+CMmoIjFffNIe9TO+Ll/1i43adtQQhB3rbfmRHZgRNG
+	 129rdPTAmP8mg==
+From: Mark Brown <broonie@kernel.org>
+Date: Sun, 23 Jun 2024 12:23:50 +0100
+Subject: [PATCH RFT v6 8/9] selftests/clone3: Allow tests to flag if -E2BIG
+ is a valid error code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 23 Jun 2024 13:26:38 +0200
-From: Artur Rojek <contact@artur-rojek.eu>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Paul Cercueil <paul@crapouillou.net>, Sebastian Reichel
- <sre@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Sebastian
- Reichel <sebastian.reichel@collabora.com>, linux-mips@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [PATCH] power: supply: ingenic: Fix some error handling paths in
- ingenic_battery_get_property()
-In-Reply-To: <51e49c18574003db1e20c9299061a5ecd1661a3c.1719121781.git.christophe.jaillet@wanadoo.fr>
-References: <51e49c18574003db1e20c9299061a5ecd1661a3c.1719121781.git.christophe.jaillet@wanadoo.fr>
-Message-ID: <f3b7a454fbd761450303ea8128c888fa@artur-rojek.eu>
-X-Sender: contact@artur-rojek.eu
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: contact@artur-rojek.eu
+Message-Id: <20240623-clone3-shadow-stack-v6-8-9ee7783b1fb9@kernel.org>
+References: <20240623-clone3-shadow-stack-v6-0-9ee7783b1fb9@kernel.org>
+In-Reply-To: <20240623-clone3-shadow-stack-v6-0-9ee7783b1fb9@kernel.org>
+To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
+ "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, 
+ Daniel Bristot de Oliveira <bristot@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, 
+ Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
+ linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>, Kees Cook <kees@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1887; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=OrLlJZLIdpu8469ekNLVgxT7+eFxGI9yqTN5LZeTdZg=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmeAZEOoxjXEAkG0hIViajWG+I9U+cB9UUff/zNYM0
+ /8m4BrCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZngGRAAKCRAk1otyXVSH0HqlB/
+ 4hycTEhYrVKpxMlmbk9vT8IxxIZbTM+SmMjs9ow79mXaEA57UDoozZAcUqd0T1uK/l6dbb13GirVYX
+ PfECPlgiQZQx0JW+e7Ee0/XDu7UUWMDlwCwoZWgGm6GwVNgQOLMvFo3m43lJKiGJ1PCAogLS6JgYsy
+ DdiJkEnftzslMlEVJKGEGywBPOCrPWkMUzAJhJ5jXjw4dbL6iq+qUFqi0aTMAJAsfZnRjjxVdfo/8e
+ FRGkAbfdpoSyt05NhLV2hOftf63YcrbPrzmY44dqGUDaJ0TTXcp/kDXScVlTjx7HqbcwLczDzT68e2
+ TkhNshXpAz33zp2gHyHNU0MYKJ6HSU
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hi Christophe,
+The clone_args structure is extensible, with the syscall passing in the
+length of the structure. Inside the kernel we use copy_struct_from_user()
+to read the struct but this has the unfortunate side effect of silently
+accepting some overrun in the structure size providing the extra data is
+all zeros. This means that we can't discover the clone3() features that
+the running kernel supports by simply probing with various struct sizes.
+We need to check this for the benefit of test systems which run newer
+kselftests on old kernels.
 
-thanks for the patch, looking good.
+Add a flag which can be set on a test to indicate that clone3() may return
+-E2BIG due to the use of newer struct versions. Currently no tests need
+this but it will become an issue for testing clone3() support for shadow
+stacks, the support for shadow stacks is already present on x86.
 
-Acked-by: Artur Rojek <contact@artur-rojek.eu>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/clone3/clone3.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Cheers,
-Artur
+diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+index 3b3a08e6a34d..26221661e9ae 100644
+--- a/tools/testing/selftests/clone3/clone3.c
++++ b/tools/testing/selftests/clone3/clone3.c
+@@ -39,6 +39,7 @@ struct test {
+ 	size_t size;
+ 	size_function size_function;
+ 	int expected;
++	bool e2big_valid;
+ 	enum test_mode test_mode;
+ 	filter_function filter;
+ };
+@@ -153,6 +154,11 @@ static void test_clone3(const struct test *test)
+ 	ksft_print_msg("[%d] clone3() with flags says: %d expected %d\n",
+ 			getpid(), ret, test->expected);
+ 	if (ret != test->expected) {
++		if (test->e2big_valid && ret == -E2BIG) {
++			ksft_print_msg("Test reported -E2BIG\n");
++			ksft_test_result_skip("%s\n", test->name);
++			return;
++		}
+ 		ksft_print_msg(
+ 			"[%d] Result (%d) is different than expected (%d)\n",
+ 			getpid(), ret, test->expected);
 
-On 2024-06-23 07:50, Christophe JAILLET wrote:
-> If iio_read_channel_processed() fails, 'val->intval' is not updated, 
-> but it
-> is still *1000 just after. So, in case of error, the *1000 accumulate 
-> and
-> 'val->intval' becomes erroneous.
-> 
-> So instead of rescaling the value after the fact, use the dedicated 
-> scaling
-> API. This way the result is updated only when needed. In case of error, 
-> the
-> previous value is kept, unmodified.
-> 
-> This should also reduce any inaccuracies resulting from the scaling.
-> 
-> Finally, this is also slightly more efficient as it saves a function 
-> call
-> and a multiplication.
-> 
-> Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery 
-> driver.")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/power/supply/ingenic-battery.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/power/supply/ingenic-battery.c 
-> b/drivers/power/supply/ingenic-battery.c
-> index 2e7fdfde47ec..0a40f425c277 100644
-> --- a/drivers/power/supply/ingenic-battery.c
-> +++ b/drivers/power/supply/ingenic-battery.c
-> @@ -31,8 +31,9 @@ static int ingenic_battery_get_property(struct 
-> power_supply *psy,
-> 
->  	switch (psp) {
->  	case POWER_SUPPLY_PROP_HEALTH:
-> -		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> -		val->intval *= 1000;
-> +		ret = iio_read_channel_processed_scale(bat->channel,
-> +						       &val->intval,
-> +						       1000);
->  		if (val->intval < info->voltage_min_design_uv)
->  			val->intval = POWER_SUPPLY_HEALTH_DEAD;
->  		else if (val->intval > info->voltage_max_design_uv)
-> @@ -41,8 +42,9 @@ static int ingenic_battery_get_property(struct 
-> power_supply *psy,
->  			val->intval = POWER_SUPPLY_HEALTH_GOOD;
->  		return ret;
->  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> -		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> -		val->intval *= 1000;
-> +		ret = iio_read_channel_processed_scale(bat->channel,
-> +						       &val->intval,
-> +						       1000);
->  		return ret;
->  	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
->  		val->intval = info->voltage_min_design_uv;
+-- 
+2.39.2
+
