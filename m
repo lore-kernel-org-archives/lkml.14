@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4C82F25;
-	Sun, 23 Jun 2024 11:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B450D2BCE3;
+	Sun, 23 Jun 2024 11:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719140458; cv=none; b=nLnCUOYoJPsZXKnzmEKrDvuFBOzq/PJWe68wiTiQZOzF0YbY0aD7By5wfOlsCqyqL6zryidWk3p39VtBkU7OHLec/+ZhwLUsqiFrWXgzrtQwNJsQPQaykwGsQlEhcwthubE3sm8TwpL4CQo7zR4vZL7oQWxKdc9oQg8yITWfDbk=
+	t=1719140876; cv=none; b=l3BMhOCSl44FIhXfkQyt1neFKgdHLLCOJm6t7EkLbCjSv4GgrwIqqOFGJO8tIxeCCX11ivzL6kDPBqyBhNbnWV05Lii40r2K+ChlIFbDYnWQCisxUgq9mR9VtmuFNtrHMrYNQYQHKeJA0HlH66yMc2wyWWNEiJz+74FzC8B6XCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719140458; c=relaxed/simple;
-	bh=s9ktlOk5rgXLTV0qoIMyyFh2wcN/yDHTrOkU07p8qIs=;
+	s=arc-20240116; t=1719140876; c=relaxed/simple;
+	bh=+M4chnujTGXjSxADVGgYQyDo0ZhysUpMH08sqJDaoIA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kxQmK4Fqez/9uO1OeLRmguO6IYKJV2gMRR2PgpNcyfY9znDTDrvUocksN7p88ZzEMDJafqREhG0iUxku93jQkFVpZynABLeg57ejUxdSKNj1Cozp1FU2xNu8HbbpNDd8t+JplorPv2nnQwMMXbgVaIEkcJVArJ92RYGPNSpsgSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2yLDd/O; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DP+B5Kpgv5UTCXQBfC8YQxVTv86BfWGQoKV6AYn8ejfGOZ+G8lgJs6P4YCdBnQrhy4KGQaMNUndsxfqCqAjdQkQT/9TTm4W2p4u06guzafnqW/g2E0vhlwqtpjVcee7xLi23NzHqzUN+9d/kbAJU8yNDX090DWYtcJHkHLkrP2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aj7KS6CL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2yLDd/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DADC2BD10;
-	Sun, 23 Jun 2024 11:00:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aj7KS6CL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B726DC2BD10;
+	Sun, 23 Jun 2024 11:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719140458;
-	bh=s9ktlOk5rgXLTV0qoIMyyFh2wcN/yDHTrOkU07p8qIs=;
+	s=k20201202; t=1719140876;
+	bh=+M4chnujTGXjSxADVGgYQyDo0ZhysUpMH08sqJDaoIA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h2yLDd/ObKLK12CpZE+wCyc83k4+iC7iWie8ZvuVhUdnU7Fe16L7C8I3+Gp6s/1HL
-	 5il8b9FaQQ07DICugKEJM4samgCSFJQu+SzeFw5rk8lU6dQZzk+aMnED/F5EENV/Bs
-	 3PL9nqmizHh2VT1Mbm/Qg7tck49K88t0jJecEaInpgHzJ3L0n5ZHr4WlOJITe5jOsY
-	 t2UpAoHgPRAnuTZ3KbriSd7ZXGz1xPJfqddKzSALYc9iIKMW4rbqiiHfvGC4ALdkh+
-	 QI9Nxxnc4L11mGK2XGLcwckULHIaTJLj0R9zGOC7lQ3Q6w8fBuq83vyDAre2MzDraq
-	 +uXf3R1e9/+sw==
-Message-ID: <880ac2b8-c2d0-4d62-a723-5353588ce3ae@kernel.org>
-Date: Sun, 23 Jun 2024 13:00:52 +0200
+	b=aj7KS6CLYgjKAVhpExivrjQ98PXJ8c4eFVrJQ0JRTTnW5AnN9PfbPjqYAp3I3szV8
+	 gLeuBUMMTNQqUMqdgM7r+DClmt02oGIWbfzOIE0TNzPYujhQfqHM63IriO142XKuLx
+	 79hf8O22EoKcJAonpkW7VD5ZTZ8GJ2lm+AJr27bpMG+GwnfBHTv5L3K7t4SClRR6wO
+	 A2kwqWdXl815dH/x5LGqz0aH15Nkgll4/ECCbywslTtKt9yH5eGYIXojqhlJA4HBFH
+	 PrgKNQzr0Oy8KIN4J6dJ2MoZm4+fsPHv5bNZGimj5a/YzLdSuS43+pFqKAskLOkCAd
+	 M4G6y6ZfBc43w==
+Message-ID: <6fcbd97b-4172-48a9-bcdb-3bdf35aba8f7@kernel.org>
+Date: Sun, 23 Jun 2024 13:07:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: arm: qcom: Add msm8916 based LG devices
-To: Nikita Travkin <nikita@trvn.ru>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20240623-msm8916-lg-initial-v1-0-6fbcf714d69b@trvn.ru>
- <20240623-msm8916-lg-initial-v1-1-6fbcf714d69b@trvn.ru>
+Subject: Re: [PATCHv5 6/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
+ string for spdif
+To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>,
+ Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+ linuxppc-dev@lists.ozlabs.org,
+ Philip-Dylan <philip-dylan.gleonec@savoirfairelinux.com>
+References: <20240620132511.4291-1-elinor.montmasson@savoirfairelinux.com>
+ <20240620132511.4291-7-elinor.montmasson@savoirfairelinux.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,18 +100,124 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240623-msm8916-lg-initial-v1-1-6fbcf714d69b@trvn.ru>
+In-Reply-To: <20240620132511.4291-7-elinor.montmasson@savoirfairelinux.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/06/2024 11:26, Nikita Travkin wrote:
-> Add compatible values for the msm8916 based LG smartphones.
-> 
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 2 +
+On 20/06/2024 15:25, Elinor Montmasson wrote:
+> The S/PDIF audio card support was merged from imx-spdif into the
+> fsl-asoc-card driver, making it possible to use an S/PDIF with an ASRC.
+> Add the new compatible and update properties.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Please use standard email subjects, so with the PATCH keyword in the
+title. `git format-patch -v5` helps here to create proper versioned
+patches. Another useful tool is b4.
+
+> 
+> Signed-off-by: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+> ---
+>  .../bindings/sound/fsl-asoc-card.yaml         | 30 ++++++++++++++++---
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
+> index 9922664d5ccc..f2e28b32808e 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
+> +++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
+> @@ -33,6 +33,7 @@ properties:
+>        - items:
+>            - enum:
+>                - fsl,imx-sgtl5000
+> +              - fsl,imx-sabreauto-spdif
+>                - fsl,imx25-pdk-sgtl5000
+>                - fsl,imx53-cpuvo-sgtl5000
+>                - fsl,imx51-babbage-sgtl5000
+> @@ -54,6 +55,7 @@ properties:
+>                - fsl,imx6q-ventana-sgtl5000
+>                - fsl,imx6sl-evk-wm8962
+>                - fsl,imx6sx-sdb-mqs
+> +              - fsl,imx6sx-sdb-spdif
+>                - fsl,imx6sx-sdb-wm8962
+>                - fsl,imx7d-evk-wm8960
+>                - karo,tx53-audio-sgtl5000
+> @@ -65,6 +67,7 @@ properties:
+>                - fsl,imx-audio-sgtl5000
+>                - fsl,imx-audio-wm8960
+>                - fsl,imx-audio-wm8962
+> +              - fsl,imx-audio-spdif
+
+This does not look right. It's quite generic, so now you allow any
+variant to be used with this fallback.
+
+Please do not grow more this list of all possible combinations and
+instead add specific lists. Otherwise, please explain why this is valid
+hardware:
+"fsl,imx7d-evk-wm8960", "fsl,imx-audio-spdif"
+
+
+>        - items:
+>            - enum:
+>                - fsl,imx-audio-ac97
+> @@ -81,6 +84,7 @@ properties:
+>                - fsl,imx-audio-wm8960
+>                - fsl,imx-audio-wm8962
+>                - fsl,imx-audio-wm8958
+> +              - fsl,imx-audio-spdif
+
+Fallbacks should not be used alone. Why this is needed? The compatible
+is already documented, so now you create duplicated binding.
+
+This is very confusing.
+
+>  
+>    model:
+>      $ref: /schemas/types.yaml#/definitions/string
+> @@ -93,8 +97,15 @@ properties:
+>        need to add ASRC support via DPCM.
+>  
+>    audio-codec:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description: The phandle of an audio codec
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      The phandle of an audio codec.
+> +      With "fsl,imx-audio-spdif", either SPDIF audio codec spdif_transmitter,
+> +      spdif_receiver or both.
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      maxItems: 1
+>  
+>    audio-cpu:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+> @@ -150,8 +161,10 @@ properties:
+>      description: dai-link uses bit clock inversion.
+>  
+>    mclk-id:
+> -    $ref: /schemas/types.yaml#/definitions/uint32
+> -    description: main clock id, specific for each card configuration.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: Main clock id for each codec, specific for each card configuration.
+> +    minItems: 1
+> +    maxItems: 2
+>  
+>    mux-int-port:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -195,3 +208,12 @@ examples:
+>               "AIN2L", "Line In Jack",
+>               "AIN2R", "Line In Jack";
+>      };
+> +
+> +  - |
+> +    sound-spdif-asrc {
+> +      compatible = "fsl,imx-audio-spdif";
+> +      model = "spdif-asrc-audio";
+> +      audio-cpu = <&spdif>;
+> +      audio-asrc = <&easrc>;
+> +      audio-codec = <&spdifdit>, <&spdifdir>;
+> +    };
+
+Do not introduce another indentation style. Look what is above.
+
 
 Best regards,
 Krzysztof
