@@ -1,109 +1,103 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5A2F4A;
-	Sun, 23 Jun 2024 17:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A26D1836EA;
+	Sun, 23 Jun 2024 17:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719165098; cv=none; b=Rcl6Tkn7DDQCjQUOZBDDjYOfy/AibqmFez9kAh7JQE+610enF+DanZq2hd6qRBG/TDUQscRtN34VqCC9SkMDD1O3H62v7XE0rpYw8wb/3xoZtjCp7bpo+8Rw9b0mskQrVXQ+fX6nABQz0ppT+Dfsuhqagoe0tdpd1hqfT2mbxXc=
+	t=1719165135; cv=none; b=EW3WvIPb5YDGtNBG3+ya0OY3WDCcsh7I27sN0FW03PNfhvnNjH14nAQzuPBUEwyqDLMasYlqWg0mtwnVj0yDpMJkU7LKSBURoSrMHISFuffxhGjf3MJfytesJ71JQjPZ+8KlHMG+Zydn3nmijg5hB2CebnbvdqiuQrUN7wMFdEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719165098; c=relaxed/simple;
-	bh=3+cZbqVvTCMSaBm6siIJAOqPbV7AGVE9ISu2o8jcqXM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=thXm1IkeITwKNoRmBzUqv4ENUCIKYCri8JxSpNT7XmWDYCGXB97SxmuQH2sPZhZEZrF6ONnA4hsqM6Sak4HeDsb5QUwiqtE6K0vibTupPXbIScyv7J29E/TAv8La//P0s6g4k9NMURraFBjCC+3PzUWAikGsWgkt2LQplyVRblQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JXRik+r/; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719165135; c=relaxed/simple;
+	bh=3E+dhU8MornrDax96eHKNrBtDQWgrurbGgNm0wSy/JE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=dP6nelCJ/SGn9fg6mZWboL3P1Wl74yZt5/PUDsUQxsV01y3ynRMImC20xbTZcOTO2Vzys7AtwXAO4OtT9h/NDNkILaHA0BwRDnhYgQValuS36KsMCLHsRBCaz4z8mW5VHjuU4VOz6oRjekm5NosH+wKDn3BYW1IZa+wXBfqBhz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KAsyxJuz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bVEgE4nB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXRik+r/"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52bbf73f334so2653705e87.2;
-        Sun, 23 Jun 2024 10:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719165095; x=1719769895; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kdcreUxt3em3AD6YvcpNiMBlzrbyIyl8nuxvmtGXEdY=;
-        b=JXRik+r/8ICQHQp25aYkdxk4J+mvConajviSwz9SBxdNjR8apVCh1f3RdGc/Ynv9WK
-         I1W8UAOpe3lySVZMbh0w0MPuM8uMwy+weWQq94hiTQdhh8K0fDGKbB3pmRNR6EDa6W2J
-         Z9+YWL8p5pcCC51sNUle4ZrORhWatiQb6ShNi7fVjrrgy5fYor1/cJxzRvR8iymh3hzx
-         +A3+KZsM8MGYXFf1a9U0viwy0CjXyEPXPl7v+DPJ+TrAvp1qKIlI18SCViaKFpIXq3mt
-         BHywimPb6lhhQCjkJ1lnpzyOHFByLvO5xf5Z9lYciazl6efun4h1fFwJV3MozguWzibz
-         ezzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719165095; x=1719769895;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kdcreUxt3em3AD6YvcpNiMBlzrbyIyl8nuxvmtGXEdY=;
-        b=PPcisOQVuh6seMDFOdR4VVZ4LVYszZXePjNV2YS6y4dKCXU2RB5cZbytcE4uxL5zRc
-         elRRbbTtrqr5JcmPMEZnCEadQCIm79oIofpZYewHqDDM0RQMoRB7j1ThLlEi+iJyCWEc
-         z/rDTWaTuUII2zkxsPgydQzaO0GXkay2U73I8cRl2CePmZEdIjuDBmpw76BLq6ncamsL
-         MF1u2C/MLKfIT9i7zOfMGqVrYmb0x10gv+v6dtMquli6Cl73ZqqmX/CE+/bEGKPeKJlr
-         figmtLMqfQ2ifwBfmforSc7Qx4kbcS+iEkWJeu/GCJjCgCKjUwBsqWN9a6R+WJ3WR9vN
-         FGSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfUbRiGVDWNr/H7Gp43Xa9bWAMNdCnIZNpGbVaJnnYs+M1+6Rm2tYQXUJzjUvFoV4I00L7nkOp79GG0eC5t0/tu1F0uomMDBZRPOC3HVqt8kLhMgRy39I49TLT7+vwEIyrQX9T
-X-Gm-Message-State: AOJu0YxlzntOUMw2Ue1G0Y5hJyMbVcgloUp9vupdT8n8/Ih+0HuOnKXV
-	v5DjKFjTr9v0JWEHxL45sK2U46GAng2WU0sJBf2pEdryhxkw8GS5
-X-Google-Smtp-Source: AGHT+IEDs9kn2GAQdZwBasIOD1+F5HhqKnWQ7Vdp3GVBS7E9o1Z9R3kZ5rqtaCh9WMX65Fh4ViDg4g==
-X-Received: by 2002:a05:6512:2147:b0:52b:bee3:dcc6 with SMTP id 2adb3069b0e04-52cdf820929mr2018737e87.51.1719165094428;
-        Sun, 23 Jun 2024 10:51:34 -0700 (PDT)
-Received: from yifee.lan (IGLD-84-229-253-201.inter.net.il. [84.229.253.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424817a9667sm106010095e9.15.2024.06.23.10.51.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jun 2024 10:51:34 -0700 (PDT)
-From: Elad Yifee <eladwf@gmail.com>
-To: 
-Cc: eladwf@gmail.com,
-	daniel@makrotopia.org,
-	Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Mark Lee <Mark-MC.Lee@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net-next] net: ethernet: mtk_eth_soc: ppe: prevent ppe update for non-mtk devices
-Date: Sun, 23 Jun 2024 20:51:09 +0300
-Message-ID: <20240623175113.24437-1-eladwf@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KAsyxJuz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bVEgE4nB"
+Date: Sun, 23 Jun 2024 17:52:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719165132;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/29qM7O6lDLMe5PqTZX54H6QcnzzpaipnKUuaSApfdI=;
+	b=KAsyxJuzHMeSQZ/qfwE0fRm21Ye1nDKsl4w2K3gdCnVzA3JYnpy940A3ykGX/oYUcPKBn4
+	tUVB9LNCuH+n+3m6K8pcAnV5SyhoI5NQEJFDxAMjN/6fbIPs9q3uk841z9mLL4SwuhWJI1
+	sE5RzL1HzEXS95jQuaWhIu7V5vnpWOWnuikAoClcO7AFQKFYhJJAs4LtoHlxJatXJ7wdbx
+	vBJum6uYaGkBZwlEe/cVfiIOpJtJhGE0kBUdhen0DUyjURlvKOwBvVi6X/EQ+7+tZGXBPZ
+	cSRVfkHXPzYQKEZBlD0aoADcsEC1bQRfCmeIUIE5QfkMv+q/80N8w5HEV6USig==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719165132;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/29qM7O6lDLMe5PqTZX54H6QcnzzpaipnKUuaSApfdI=;
+	b=bVEgE4nBJ7aZgRAxnJf5D/m63KUybrDrSBh2Olk2z1buepleBC9poW1Shx//9tXNbmVOfO
+	0qv/y027pG6xJGAQ==
+From: "tip-bot2 for Antonio Borneo" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/core] arm64: Kconfig: Select STM32MP_EXTI on STM32 platforms
+Cc: Antonio Borneo <antonio.borneo@foss.st.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240620083115.204362-4-antonio.borneo@foss.st.com>
+References: <20240620083115.204362-4-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <171916513175.10875.5975034363289924969.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Introduce an additional validation to ensure that the PPE index
-is modified exclusively for mtk_eth ingress devices.
-This primarily addresses the issue related
-to WED operation with multiple PPEs.
+The following commit has been merged into the irq/core branch of tip:
 
-Fixes: dee4dd10c79a ("net: ethernet: mtk_eth_soc: ppe: add support for multiple PPEs")
-Signed-off-by: Elad Yifee <eladwf@gmail.com>
+Commit-ID:     00f07f97276d9c4c09526798d41cb825095d2319
+Gitweb:        https://git.kernel.org/tip/00f07f97276d9c4c09526798d41cb825095d2319
+Author:        Antonio Borneo <antonio.borneo@foss.st.com>
+AuthorDate:    Thu, 20 Jun 2024 10:31:10 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 23 Jun 2024 19:49:45 +02:00
+
+arm64: Kconfig: Select STM32MP_EXTI on STM32 platforms
+
+Use the new config flag to build the correct driver that will be
+extracted from the old code.
+
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240620083115.204362-4-antonio.borneo@foss.st.com
+
 ---
- drivers/net/ethernet/mediatek/mtk_ppe_offload.c | 2 +-
+ arch/arm64/Kconfig.platforms | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-index f80af73d0a1b..f20bb390df3a 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-@@ -266,7 +266,7 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
- 		flow_rule_match_meta(rule, &match);
- 		if (mtk_is_netsys_v2_or_greater(eth)) {
- 			idev = __dev_get_by_index(&init_net, match.key->ingress_ifindex);
--			if (idev) {
-+			if (idev && idev->netdev_ops == eth->netdev[0]->netdev_ops) {
- 				struct mtk_mac *mac = netdev_priv(idev);
- 
- 				if (WARN_ON(mac->ppe_idx >= eth->soc->ppe_num))
--- 
-2.45.1
-
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index a526180..be86298 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -309,7 +309,7 @@ config ARCH_STM32
+ 	select GPIOLIB
+ 	select PINCTRL
+ 	select PINCTRL_STM32MP257
+-	select STM32_EXTI
++	select STM32MP_EXTI
+ 	select ARM_SMC_MBOX
+ 	select ARM_SCMI_PROTOCOL
+ 	select COMMON_CLK_SCMI
