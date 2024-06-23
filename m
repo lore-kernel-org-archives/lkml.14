@@ -1,300 +1,109 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A701C8D1;
-	Sun, 23 Jun 2024 15:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98450183063;
+	Sun, 23 Jun 2024 15:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719156632; cv=none; b=XIO9B2S+CvCymVXlDyAejjco9lj9/Pb8StP3jVGfcz/P9xA+RH86HXzYTDgVarz6X1dbUzDabjLqEhXeST+4MIi/UOyjT+OW/nvpBlhFGFJV1J+aXPPiPMYsPqug2WPnQ/NmuEOe23AAstbLlVsrYJNbYaH+ftwQ8gx2F+RE924=
+	t=1719156635; cv=none; b=ALlT6oraUKLrNjQgyvAYgFRnrGsz1Bzh+sj3GN862L/mCh6tGaMnheUiuXBY6iuI6Quvgsw0mxEFN+GMZo0SHlGj3iXoTur04wfyyuw62e0oOSR3CJhyY4PTJKrdV7aaqz5dngldqAT4qHEd2ERy9ICIQ7GytNGRcLJEew8S6bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719156632; c=relaxed/simple;
-	bh=eTnpc4/lBhO4NPXsLTGXk1shgeCD1GxZQQL9IcYb96Y=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=XzDrF01D9g4Xdl0DeaiTRjpyzL90Hpxhf5HnAJHK7dCYmP/EPNWyCzhBUUxLYIUSYj415t7tQa0l1fivzN0Z45g4nMq6lGmQHHSNDw+jJ3/6SH3oHJ0tRVqzx+1ksDaTJayFgqjgrQ7BtkNWZQz5BTQzlYVum/VOo4mDfVkUa9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AleNaKA8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yAH66aHZ; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1719156635; c=relaxed/simple;
+	bh=06J0XButcTFwg9boZJLD8o6CIWK5rrPcdc0IxZRsHvk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=oFoWmIOQIh+fK/4YihZb3gKmT7OJg66VhX7jlodOFFWw8ntbrOTdDewK4N8a+gTcwXtiosikiAYPM+esiihviYxBU2W4ql3thWytkYw2PD41e4GtbDe7Vf1b+RqGKbzJyW65asBw+gb0WgG1ZUbwSpYO374UY+Prb+rpoKYLfsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CibfU1H0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LdS6f3Jf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AleNaKA8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yAH66aHZ"
-Date: Sun, 23 Jun 2024 15:30:27 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CibfU1H0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LdS6f3Jf"
+Date: Sun, 23 Jun 2024 15:30:29 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719156628;
+	s=2020; t=1719156630;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=Hs1UR8rn8OafnoOacTgQtaqlMyvCQuFsSgkEIQ4FoAM=;
-	b=AleNaKA8mGhoy7fhh4RGq53IGS3MeKyZ7oZ6yX5OFRY9SYC7cDvi2I110JMGGQAZSbXDoB
-	2BHC+ORec6GbVnBgRSf5OqbdfpXLXQIPS9CwgGff35/LVGOE76tDALA71lM2yrXsAA3PPM
-	LHqhBJxItmevkolKCKWMoE9tIZqPUlPXqFFGiNpAlzG+6z7xQrBh3S9MDUoxKgR61LDqdN
-	FWHqoL0Jprpf/zlOwqYR/MdNeAqZhS/nsRRvIiHrolKnM1it9LpQinlZPTco38Dn+jY8/d
-	BDt5Yg9fg3pPEiu33OrpbdxU8wbzC/WD7nrMzaCIt2ijZ+aZE1cpNhxYg5XcjA==
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=drTKFvo2zzFTkjI/M806bhYKKreeVDwfJ4TqHcuKHcA=;
+	b=CibfU1H01Aqu49A1u9tS21Jcf3kQ6roHZgOxqeOYSLEPuwJE7nmXMQc1NX3I/55ArluKKY
+	ga2CvMvyh6ywAPbeLgUzUoCzD/zjI6GMPdIyL4ElonHxS1jdh/3AzEdJ0ihRpbGZPvHJTu
+	1nmApGOyG+IHZ+DaI/teIUwQFNHRHQu19avTk6vtrlIIz6/0dfe/0vUkJgrtnEXFAd/70I
+	ewPOCCOIAqyCLoUA6fZTk02lHI8W5ZXHs5cAilGzyRbDAfSEM4HETOHGtrIVEhOr9UhHpD
+	Kdyz1f+tHazJ//MtOpI94AspW9LfJcE24Otr7pK+ZZKpG2Upb7qf0T9Xl9Xu7Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719156628;
+	s=2020e; t=1719156630;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=Hs1UR8rn8OafnoOacTgQtaqlMyvCQuFsSgkEIQ4FoAM=;
-	b=yAH66aHZE7irJKmlYKN43/6BlBLWOZbgB0rW9OFSPZIp/LW2cRKcCs2BXzb3l8AaAElGoW
-	ktdMscHYFGK25WBg==
-From: tip-bot2 for Pali =?utf-8?q?Roh=C3=A1r?= <tip-bot2@linutronix.de>
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=drTKFvo2zzFTkjI/M806bhYKKreeVDwfJ4TqHcuKHcA=;
+	b=LdS6f3JfktshVxpxb31rT15Ygm7CYkTmKwpdMeEgzheodJriyyGi6hHq34CELVXX6Tc8l1
+	jwgKz6mIXh8yeTDw==
+From: "tip-bot2 for Lad Prabhakar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/armada-370-xp: Add support for 32 MSI
- interrupts on non-IPI platforms
-Cc: pali@kernel.org, kabel@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Andrew Lunn <andrew@lunn.ch>, x86@kernel.org, linux-kernel@vger.kernel.org,
- maz@kernel.org
+Subject: [tip: irq/core] irqchip/renesas-rzg2l: Reorder function calls in
+ rzg2l_irqc_irq_disable()
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240606194813.676823-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240606194813.676823-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171915662810.10875.12977162387791349357.tip-bot2@tip-bot2>
+Message-ID: <171915662969.10875.494491471556789291.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     986b6ad0c4c653940fab7e5decf0d847670bf407
-Gitweb:        https://git.kernel.org/tip/986b6ad0c4c653940fab7e5decf0d847670=
-bf407
-Author:        Pali Roh=C3=A1r <pali@kernel.org>
-AuthorDate:    Fri, 21 Jun 2024 11:38:31 +02:00
+Commit-ID:     492eee82574b163fbb3f099c74ce3b4322d0af28
+Gitweb:        https://git.kernel.org/tip/492eee82574b163fbb3f099c74ce3b4322d0af28
+Author:        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+AuthorDate:    Thu, 06 Jun 2024 20:48:13 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Sun, 23 Jun 2024 17:23:08 +02:00
 
-irqchip/armada-370-xp: Add support for 32 MSI interrupts on non-IPI platforms
+irqchip/renesas-rzg2l: Reorder function calls in rzg2l_irqc_irq_disable()
 
-The doorbell interrupts have the following layout on IPI vs no-IPI
-platforms:
+The order of function calls in the disable operation should be the reverse
+of that in the enable operation. Thus, reorder the function calls to first
+disable the parent IRQ chip before disabling the TINT IRQ.
 
-                    |  0...7  |  8...15  |       16...31       |
-  ------------------+---------+----------+---------------------+
-       IPI platform |   IPI   |   n/a    |         MSI         |
-  ------------------+---------+----------+---------------------+
-   non-IPI platform |                   MSI                    |
-  ------------------+------------------------------------------+
-
-Currently the driver only allows for the upper 16...31 interrupts for
-MSI domain (i.e. the MSI domain has only 16 interrupts).
-
-On platforms where IPI is not available, we can use whole 32 MSI
-interrupts.
-
-Implement support also for the lower 16 MSI interrupts on non-IPI
-platforms.
-
-[ Marek: refactored, changed commit message ]
-
-Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com> # on RZ/G3S
+Link: https://lore.kernel.org/r/20240606194813.676823-1-prabhakar.mahadev-lad.rj@bp.renesas.com
 
 ---
- drivers/irqchip/irq-armada-370-xp.c | 77 ++++++++++++++++++++++------
- 1 file changed, 63 insertions(+), 14 deletions(-)
+ drivers/irqchip/irq-renesas-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada=
--370-xp.c
-index 94a81c5..dce2b80 100644
---- a/drivers/irqchip/irq-armada-370-xp.c
-+++ b/drivers/irqchip/irq-armada-370-xp.c
-@@ -13,6 +13,7 @@
-  * warranty of any kind, whether express or implied.
-  */
-=20
-+#include <linux/bits.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -136,6 +137,7 @@
-=20
- #define ARMADA_370_XP_MAX_PER_CPU_IRQS		(28)
-=20
-+/* IPI and MSI interrupt definitions for IPI platforms */
- #define IPI_DOORBELL_START                      (0)
- #define IPI_DOORBELL_END                        (8)
- #define IPI_DOORBELL_MASK                       0xFF
-@@ -144,6 +146,14 @@
- #define PCI_MSI_DOORBELL_END                    (32)
- #define PCI_MSI_DOORBELL_MASK                   0xFFFF0000
-=20
-+/* MSI interrupt definitions for non-IPI platforms */
-+#define PCI_MSI_FULL_DOORBELL_START		0
-+#define PCI_MSI_FULL_DOORBELL_NR		32
-+#define PCI_MSI_FULL_DOORBELL_END		32
-+#define PCI_MSI_FULL_DOORBELL_MASK		GENMASK(31, 0)
-+#define PCI_MSI_FULL_DOORBELL_SRC0_MASK		GENMASK(15, 0)
-+#define PCI_MSI_FULL_DOORBELL_SRC1_MASK		GENMASK(31, 16)
-+
- static void __iomem *per_cpu_int_base;
- static void __iomem *main_int_base;
- static struct irq_domain *armada_370_xp_mpic_domain;
-@@ -152,7 +162,7 @@ static int parent_irq;
- #ifdef CONFIG_PCI_MSI
- static struct irq_domain *armada_370_xp_msi_domain;
- static struct irq_domain *armada_370_xp_msi_inner_domain;
--static DECLARE_BITMAP(msi_used, PCI_MSI_DOORBELL_NR);
-+static DECLARE_BITMAP(msi_used, PCI_MSI_FULL_DOORBELL_NR);
- static DEFINE_MUTEX(msi_used_lock);
- static phys_addr_t msi_doorbell_addr;
- #endif
-@@ -168,6 +178,30 @@ static inline bool is_ipi_available(void)
- 	return parent_irq <=3D 0;
- }
-=20
-+static inline u32 msi_doorbell_mask(void)
-+{
-+	return is_ipi_available() ? PCI_MSI_DOORBELL_MASK :
-+				    PCI_MSI_FULL_DOORBELL_MASK;
-+}
-+
-+static inline unsigned int msi_doorbell_start(void)
-+{
-+	return is_ipi_available() ? PCI_MSI_DOORBELL_START :
-+				    PCI_MSI_FULL_DOORBELL_START;
-+}
-+
-+static inline unsigned int msi_doorbell_size(void)
-+{
-+	return is_ipi_available() ? PCI_MSI_DOORBELL_NR :
-+				    PCI_MSI_FULL_DOORBELL_NR;
-+}
-+
-+static inline unsigned int msi_doorbell_end(void)
-+{
-+	return is_ipi_available() ? PCI_MSI_DOORBELL_END :
-+				    PCI_MSI_FULL_DOORBELL_END;
-+}
-+
- static inline bool is_percpu_irq(irq_hw_number_t irq)
+diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+index 861a0e5..693ff28 100644
+--- a/drivers/irqchip/irq-renesas-rzg2l.c
++++ b/drivers/irqchip/irq-renesas-rzg2l.c
+@@ -271,8 +271,8 @@ static void rzg2l_tint_irq_endisable(struct irq_data *d, bool enable)
+ 
+ static void rzg2l_irqc_irq_disable(struct irq_data *d)
  {
- 	if (irq <=3D ARMADA_370_XP_MAX_PER_CPU_IRQS)
-@@ -225,7 +259,7 @@ static void armada_370_xp_compose_msi_msg(struct irq_data=
- *data, struct msi_msg=20
-=20
- 	msg->address_lo =3D lower_32_bits(msi_doorbell_addr);
- 	msg->address_hi =3D upper_32_bits(msi_doorbell_addr);
--	msg->data =3D BIT(cpu + 8) | (data->hwirq + PCI_MSI_DOORBELL_START);
-+	msg->data =3D BIT(cpu + 8) | (data->hwirq + msi_doorbell_start());
+-	rzg2l_tint_irq_endisable(d, false);
+ 	irq_chip_disable_parent(d);
++	rzg2l_tint_irq_endisable(d, false);
  }
-=20
- static int armada_370_xp_msi_set_affinity(struct irq_data *irq_data,
-@@ -258,7 +292,7 @@ static int armada_370_xp_msi_alloc(struct irq_domain *dom=
-ain, unsigned int virq,
- 	int hwirq, i;
-=20
- 	mutex_lock(&msi_used_lock);
--	hwirq =3D bitmap_find_free_region(msi_used, PCI_MSI_DOORBELL_NR,
-+	hwirq =3D bitmap_find_free_region(msi_used, msi_doorbell_size(),
- 					order_base_2(nr_irqs));
- 	mutex_unlock(&msi_used_lock);
-=20
-@@ -295,9 +329,10 @@ static void armada_370_xp_msi_reenable_percpu(void)
- 	u32 reg;
-=20
- 	/* Enable MSI doorbell mask and combined cpu local interrupt */
--	reg =3D readl(per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS)
--		| PCI_MSI_DOORBELL_MASK;
-+	reg =3D readl(per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
-+	reg |=3D msi_doorbell_mask();
- 	writel(reg, per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
-+
- 	/* Unmask local doorbell interrupt */
- 	writel(1, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
- }
-@@ -309,7 +344,7 @@ static int armada_370_xp_msi_init(struct device_node *nod=
-e,
- 		ARMADA_370_XP_SW_TRIG_INT_OFFS;
-=20
- 	armada_370_xp_msi_inner_domain =3D
--		irq_domain_add_linear(NULL, PCI_MSI_DOORBELL_NR,
-+		irq_domain_add_linear(NULL, msi_doorbell_size(),
- 				      &armada_370_xp_msi_domain_ops, NULL);
- 	if (!armada_370_xp_msi_inner_domain)
- 		return -ENOMEM;
-@@ -325,6 +360,10 @@ static int armada_370_xp_msi_init(struct device_node *no=
-de,
-=20
- 	armada_370_xp_msi_reenable_percpu();
-=20
-+	/* Unmask low 16 MSI irqs on non-IPI platforms */
-+	if (!is_ipi_available())
-+		writel(0, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
-+
- 	return 0;
- }
- #else
-@@ -613,20 +652,20 @@ static void armada_370_xp_handle_msi_irq(struct pt_regs=
- *regs, bool is_chained)
- 	u32 msimask, msinr;
-=20
- 	msimask =3D readl_relaxed(per_cpu_int_base +
--				ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS)
--		& PCI_MSI_DOORBELL_MASK;
-+				ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS);
-+	msimask &=3D msi_doorbell_mask();
-=20
- 	writel(~msimask, per_cpu_int_base +
- 	       ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS);
-=20
--	for (msinr =3D PCI_MSI_DOORBELL_START;
--	     msinr < PCI_MSI_DOORBELL_END; msinr++) {
-+	for (msinr =3D msi_doorbell_start();
-+	     msinr < msi_doorbell_end(); msinr++) {
- 		unsigned int irq;
-=20
- 		if (!(msimask & BIT(msinr)))
- 			continue;
-=20
--		irq =3D msinr - PCI_MSI_DOORBELL_START;
-+		irq =3D msinr - msi_doorbell_start();
-=20
- 		generic_handle_domain_irq(armada_370_xp_msi_inner_domain, irq);
- 	}
-@@ -655,7 +694,7 @@ static void armada_370_xp_mpic_handle_cascade_irq(struct =
-irq_desc *desc)
- 		if (!(irqsrc & ARMADA_370_XP_INT_IRQ_FIQ_MASK(cpuid)))
- 			continue;
-=20
--		if (irqn =3D=3D 1) {
-+		if (irqn =3D=3D 0 || irqn =3D=3D 1) {
- 			armada_370_xp_handle_msi_irq(NULL, true);
- 			continue;
- 		}
-@@ -716,6 +755,7 @@ static int armada_370_xp_mpic_suspend(void)
-=20
- static void armada_370_xp_mpic_resume(void)
- {
-+	bool src0, src1;
- 	int nirqs;
- 	irq_hw_number_t irq;
-=20
-@@ -755,9 +795,18 @@ static void armada_370_xp_mpic_resume(void)
- 	/* Reconfigure doorbells for IPIs and MSIs */
- 	writel(doorbell_mask_reg,
- 	       per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
--	if (is_ipi_available() && (doorbell_mask_reg & IPI_DOORBELL_MASK))
-+
-+	if (is_ipi_available()) {
-+		src0 =3D doorbell_mask_reg & IPI_DOORBELL_MASK;
-+		src1 =3D doorbell_mask_reg & PCI_MSI_DOORBELL_MASK;
-+	} else {
-+		src0 =3D doorbell_mask_reg & PCI_MSI_FULL_DOORBELL_SRC0_MASK;
-+		src1 =3D doorbell_mask_reg & PCI_MSI_FULL_DOORBELL_SRC1_MASK;
-+	}
-+
-+	if (src0)
- 		writel(0, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
--	if (doorbell_mask_reg & PCI_MSI_DOORBELL_MASK)
-+	if (src1)
- 		writel(1, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
-=20
- 	if (is_ipi_available())
+ 
+ static void rzg2l_irqc_irq_enable(struct irq_data *d)
