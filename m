@@ -1,71 +1,103 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6010BDDDF
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 04:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8969473;
+	Sun, 23 Jun 2024 04:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719115566; cv=none; b=oaAOt0/oqHJDd6pQYaEuDvIz8cNSLI1pTmT6fLKIr5AfhxoSdQs3PGa11tDTXNIcWUSYEy7TVYfq8tk81Ml5WQxvNhoPrIdCQ802UKOR7+fUmibqa5XTxE8zrwTmWjlqaLHdh2TZb4Y/pw1uIna5ej6qal2OG1+WwOrzhd5DLyU=
+	t=1719116378; cv=none; b=jgDW0hNIdywbnzuncg536aL5xVCj9knu9u2+BaIwsdH1xn7OQRD3zAtWHb3AHqLpS2uYBG2EBnyRnKAVz5QAjCbU9t0nshONHBjNki2dtGwhbdi6U2he3nrTtGb+krduUm9mQtKoVbGHc3vYv0y7Syr5DNS1TYvq7JM9t2UkUhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719115566; c=relaxed/simple;
-	bh=e8d4fjn5aqZ1GBew+ZPtB5P0C6mGEO6r65Q5E4Pog4g=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=CvUKTWrBDvO3xUPWnQxgszgxRfy3i7H0RDFTOnXfB23Sl+xP0R9Jom/p4vnQiKV67j/o55sVWSSgE0hvoXtXErJQCPVG8kvP044w2n3WPJscd8gSW5LE/PK5i4jo3oWWzidIjfbZoa8cpZgQq0mQDANYjFES9ChcJjwI9yTLLVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-375da994725so40298885ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Jun 2024 21:06:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719115563; x=1719720363;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EvUe17h2efKYK2GGiytoQnjGY4f2roRgaYl5pEae+E4=;
-        b=Y8vLH5y3I4mg2zv1ebrdOjGFccnDqTO3C75PSaWv5MJeEsKmcMRrY7p/Piz0Oomlkh
-         MSqYmtwtxJ+7OPJG+fcQ8GDlUmBnE/VN9m4ZURt87dajTrPeuFiiq1OQYk3BjelAlvCh
-         hdPNhslq3XR+OpYpTvtcTbRhVIZ2dRC9JecKETO5FsG+T04YLB87I5h3oLHy1yfm8tfZ
-         x74R2dae8vYvjV5I0G6U45SntxRrVyEjEdcMkqKxDlBvUxxjp1L4RFVTmHuj1n50dI6z
-         nO7fyR8YzjYdWSWD2uK+2h6xgEUFpNaW5WTSJUUF2b5Z/3YbcVlXsTeSalRiH3+0Ufjy
-         gmbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUqrrRBY3K25ZaDks/iPo48KZgWSq4rJeXxhkezcsQe3oxovzYf2aVGuFCjtAawfCavAc4qGZKNwfIiEjo/L52aXDJmDPAexdZWevTV
-X-Gm-Message-State: AOJu0YxFkrD8VRNWaEJtQ0xyuWQcwwjVU38aYqJL1e+567O6wGBmc5TP
-	ATnNRBuKLWdd3wue/BDUHWlvkxeiUewh5mQNxfRkyyGxUyn3ER+vVVvu/K+eJMvXN9HZMpDn64e
-	lTB8bb8aEypt1VdhwlfV0SYOtlz1qggguUIihMfFh/HKtWNVJkjPFDPY=
-X-Google-Smtp-Source: AGHT+IGTL8ll0ZVAo+i+2sW59xT7yvnZHhxBTIO3RMoH/dmzimKOr6x5yo72CYELk8Wv7G7jD1GjlrgVnQ51BpVBn00uRIU9h4r3
+	s=arc-20240116; t=1719116378; c=relaxed/simple;
+	bh=ZX6xRyUedSav6yevYaJTlPiWZyWdal2dD3pkCTH8nrE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=VO2PkT4sfIFII+5F80B8s8+ctzYCCru7FJeza+jonmjqX9aB4KXX0FD1gD7/NlMm18p177h18X72FTXoJXYiMz6OkqE4knhfSq/5NPsXyBOeEWd1SxMKVzGu03bqtTH8gLpg/4E4k2ThXqJkILaqexBGdEi00U0FhVKA7MjWEec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Qzc/0253; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Qzc/0253"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45N3359x027614;
+	Sun, 23 Jun 2024 04:19:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=wEz3z+/mJ/0BVpG/LmQvMe
+	EhE9kS3R/QfuAjEgIXPdc=; b=Qzc/0253j7EetjW1IC3BBGkGKfqd1raqmngk0v
+	fuBqz6IG0mlbbbplwDWwPMglqazm8oJ6KgOOObP4++il3Pwre9XR4WInxVmKIU71
+	CMThIOZ/dJGetAe/x6D6r0Gq3wXCGxBkplhe6zxS7GuoG2X+N4ha3oGa/ZxMCCpB
+	K3SOGsm2BSgr4JTEfkUxWHBkmbHR11G79RrFlvV88aHEpI7o8F8l1o/H3XHO6gor
+	5wGAyfSzspZC9YvK1FY3b2bDERK/pdk4mGxy055hrS22B6VJh7I2ynbRrsqzRIja
+	GETfbgp3JljFNbeQieIeJfaOOsKJ30dvTZ0pSCJbo0vjvcJw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqw998rc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Jun 2024 04:19:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45N4JRsl014458
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Jun 2024 04:19:27 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 22 Jun
+ 2024 21:19:26 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 22 Jun 2024 21:19:23 -0700
+Subject: [PATCH] crypto: arm/xor - add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12c6:b0:374:a2db:d6b0 with SMTP id
- e9e14a558f8ab-3763f5f1db8mr1643945ab.2.1719115563474; Sat, 22 Jun 2024
- 21:06:03 -0700 (PDT)
-Date: Sat, 22 Jun 2024 21:06:03 -0700
-In-Reply-To: <tencent_C4F16D10941CEB5AED86CD707A4E6F502F0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007d33c5061b86c88c@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: invalid-free in hci_req_sync_complete
-From: syzbot <syzbot+35ebc808442df6420eae@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240622-md-arm-arch-arm-lib-v1-1-753a8885da24@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAEqid2YC/x2MQQqDMBBFryKz7oDGULBXKV1k4tgMmLRMqgji3
+ Z26+PDf4r0dKqtwhUezg/IqVT7FoLs1EFMob0YZjcG1zrd35zCPGDTbYrrOLIQDdRP13g+uj2D
+ mV3mS7ao+X8YUKiNpKDH9W7OUZcMc6o8VjuMEvnPBf4QAAAA=
+To: Russell King <linux@armlinux.org.uk>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.14.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: soE3_H0FqfMlb1lpcaWiNILIWdLq86tl
+X-Proofpoint-GUID: soE3_H0FqfMlb1lpcaWiNILIWdLq86tl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-22_19,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=594 phishscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2406140001 definitions=main-2406230032
 
-Hello,
+With ARCH=arm and CONFIG_KERNEL_MODE_NEON=y, make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm/lib/xor-neon.o
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-Reported-and-tested-by: syzbot+35ebc808442df6420eae@syzkaller.appspotmail.com
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ arch/arm/lib/xor-neon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Tested on:
+diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
+index 522510baed49..cf57fca97908 100644
+--- a/arch/arm/lib/xor-neon.c
++++ b/arch/arm/lib/xor-neon.c
+@@ -8,6 +8,7 @@
+ #include <linux/raid/xor.h>
+ #include <linux/module.h>
+ 
++MODULE_DESCRIPTION("NEON accelerated XOR implementation");
+ MODULE_LICENSE("GPL");
+ 
+ #ifndef __ARM_NEON__
 
-commit:         2ccbdf43 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=156b6346980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8786f381e62940f
-dashboard link: https://syzkaller.appspot.com/bug?extid=35ebc808442df6420eae
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16f4a161980000
+---
+base-commit: 563a50672d8a86ec4b114a4a2f44d6e7ff855f5b
+change-id: 20240622-md-arm-arch-arm-lib-9b1fb344923c
 
-Note: testing is done by a robot and is best-effort only.
