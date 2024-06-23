@@ -1,133 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983AF183062;
-	Sun, 23 Jun 2024 15:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E82D383A2;
+	Sun, 23 Jun 2024 15:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719156635; cv=none; b=SWKjmBjvbrgDaXRxBW1cGkhVVTumdwIooloLfY03OjOQxLKnFhqknRi1sUCspgSVnaApLoZO6F9v5KjAplWUhEjMkTC3qsCDgLp7zIMXu7XBmPXm9RKa6f0vgm7DvFI8fx0hhwzVdq6dHUyCoqKaTSgM2BQ1RTRfIRl5cv6GAww=
+	t=1719156702; cv=none; b=gDt1hZIJcl6dOZT1Rw6dQH9dDE31oZa4vhaVd9r5qI6gSJj96GMkpgMQ5fnwCm579WPLYfMyCal98ztpjBpvnIqrlGwWcbeuVmfhmrsfoODHxb4e/Sx+GHgEuDnvXrfPQOr14wEY0MQyN2GCpo4qTBHlvSybeCQFPO2osYLrCME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719156635; c=relaxed/simple;
-	bh=cPWnJKlEq/y8yHdBQ02QH1AV+xGWcIzxChjkDYqWhGk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SL92+bJEfDpX+YUp/Tczd8yGyiq2xqozrsV1vTl3p0OhOyBeur00ae9s1vxftQ0ErGRaGJA4pmhPxheUL0H3kaxjNwJBAwBe7pMwUyRQVdAtWOyhcMNcsFSyvUGXeWdhsjng2rribMOzcvCh5ZPK67l7zv24YDuvKE6q0zLGpfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=01/BOlzS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ws9TaSpU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1719156702; c=relaxed/simple;
+	bh=8XdoNgWYoI5e8gBbGLxgz0jAyLcowmSamJHZsUEjQ70=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qCqJetEe0Lp4l3kDNspHAkWx5QMVgwfcVTq1pdRgEfCONvNdtQMANLqut6+DRczN/7hlzCFUiRR4GCQYsAtNm7r2gtbk2qoquGeg4e3LXGSCIsU+uMA2jh3tiU+16N703o+rf/8fgLQwhSWkpmGGUUHfjM0YiYHS6eBrj7mjyDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoK5qQBq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="01/BOlzS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ws9TaSpU"
-Date: Sun, 23 Jun 2024 15:30:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719156629;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aXTVerW/QvKm3OULcbwiBYVU4Gr8sYpFSVNaynawIT4=;
-	b=01/BOlzSbRUQ0rVs+MQPZMzzZIrUbV8rjVzQjdcHk9dDC+E6iL5UN/C3p+PlkiAfEHdMsJ
-	YOGOp19yqxYfahO72SWy9wVwDVVrQmSA5RXslpcQ5mbWVU4qIEZ4ExccKI8M/g0fq1gfWN
-	2jAFgyV12QJnXHiqFB/d01+2H7YC3FR7ydlS9YjC4iYVB9v9scKHxiNsS7WwV73gSRKn4O
-	DuJH3MKkM97rR+Yux+781VgxmllTSDiQ6Le+VgeQLqR/CCO50EWSX8vZsgiTGgcU+7TNC9
-	UV3Zr/PfmXIKiIJriq5cfiYCEXVuP4NIVLDPYkgM3MeB+ylWjrUQDKN23UU+9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719156629;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aXTVerW/QvKm3OULcbwiBYVU4Gr8sYpFSVNaynawIT4=;
-	b=ws9TaSpUFo3VzAx/T8slXUOUBxhHsY5gEE3CxV29TVXMBivMbD0ZuFTRyTGja7Yjxaleqm
-	q0W1g0C+23lWMaAA==
-From: "tip-bot2 for Jeff Johnson" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip: Add missing MODULE_DESCRIPTION() macros
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
- Thomas Gleixner <tglx@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240608-md-drivers-irqchip-v1-1-dd02c3229277@quicinc.com>
-References: <20240608-md-drivers-irqchip-v1-1-dd02c3229277@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoK5qQBq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F1EC2BD10;
+	Sun, 23 Jun 2024 15:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719156701;
+	bh=8XdoNgWYoI5e8gBbGLxgz0jAyLcowmSamJHZsUEjQ70=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XoK5qQBqXHUim0EAEUMCJKBdjW8MHVvnTS7Cb2+G5rfZZOapP8vNXhKsMsnEyTudd
+	 bHCNQ1JsZi3b/I4QUEl9OyQmHZl+d7LQ0tONivpNtjirCwrudNA63zRZIMjHjVPO7i
+	 eUd0phg2q+1usR4czExaICCmdW3EBhpW+UAxT2eWMfTJFwKO/eF8m5l6eJ1Jgigp7J
+	 mlFOZn90egIK4j+wtswRMUIq1Q9IXdFvMKaooyAgVtx9UKNWpx1MMeymukmGwtWPXg
+	 EJZyt2juJCy6MZ3lzcai0+s+dns0dB+jEl18jJrJs+99It1eqUFcgOEgXWA4ziLmNW
+	 +DQ8ZrAx9BJzw==
+Date: Sun, 23 Jun 2024 16:31:30 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Guillaume Stols <gstols@baylibre.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Beniamin Bia <beniamin.bia@analog.com>,
+ Stefan Popa <stefan.popa@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ devicetree@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ jstephan@baylibre.com, dlechner@baylibre.com
+Subject: Re: [PATCH 4/9] dt-bindings: iio: adc: adi,ad7606: add supply
+ properties
+Message-ID: <20240623163130.4a72707b@jic23-huawei>
+In-Reply-To: <20240618-spearfish-swear-213166c7224f@spud>
+References: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
+	<20240618-cleanup-ad7606-v1-4-f1854d5c779d@baylibre.com>
+	<20240618-eggnog-cusp-8b5a17313367@spud>
+	<12e5c4b4-e51d-4e69-8c63-3f6aefb574d9@baylibre.com>
+	<20240618-spearfish-swear-213166c7224f@spud>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171915662949.10875.14795836348233091091.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the irq/core branch of tip:
+On Tue, 18 Jun 2024 18:32:20 +0100
+Conor Dooley <conor@kernel.org> wrote:
 
-Commit-ID:     b1c387506d2738b655f0806d3ee3e6fc94ecb910
-Gitweb:        https://git.kernel.org/tip/b1c387506d2738b655f0806d3ee3e6fc94ecb910
-Author:        Jeff Johnson <quic_jjohnson@quicinc.com>
-AuthorDate:    Sat, 08 Jun 2024 09:14:37 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 23 Jun 2024 17:23:08 +02:00
+> On Tue, Jun 18, 2024 at 05:33:16PM +0200, Guillaume Stols wrote:
+> >=20
+> > On 6/18/24 17:12, Conor Dooley wrote: =20
+> > > On Tue, Jun 18, 2024 at 02:02:36PM +0000, Guillaume Stols wrote: =20
+> > > > Add voltage supplies =20
+> > > Are these available on all devices? =20
+> >=20
+> > Yes all chips from=C2=A0 AD7606 series (including AD7606B, AD7606C(-16,=
+-18),
+> > AD7605-4, AD7606 (-4,-8,-6), AD7607, AD7608, AD7609), as well as AD7616
+> > have a VDrive pin, as well as a RefSelect + RefIn/RefOut pin that takes
+> > an input voltage in case RefSelect is high, or outputs the internal
+> > reference voltage if RefSelect is low. =20
+>=20
+> Okay,
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> provided that...
 
-irqchip: Add missing MODULE_DESCRIPTION() macros
+Sounds like vdrive-supply is a requirement for the device to function but
+refin may be optional.
 
-On x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/irqchip/irq-ts4800.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/irqchip/irq-meson-gpio.o
+So add vdrive-supply to the required property list.
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro to all
-files which have a MODULE_LICENSE().  This includes a 3rd file,
-irq-mvebu-pic.c, which did not produce a warning with the x86
-allmodconfig, but which may cause this warning with other kernel
-configurations.
+Note the binding for supplies reflects what must be wired and ignores
+the ability of the linux regulator framework to get fake supplies when
+they are not provided in DT.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Link: https://lore.kernel.org/r/20240608-md-drivers-irqchip-v1-1-dd02c3229277@quicinc.com
+>=20
+> >  =20
+> > >  =20
+> > > > Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> > > > ---
+> > > >   Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 9 +++=
+++++++
+> > > >   1 file changed, 9 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.y=
+aml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> > > > index 80866940123c..e480c9a7c7ca 100644
+> > > > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> > > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> > > > @@ -35,6 +35,15 @@ properties:
+> > > >     avcc-supply: true
+> > > > +  vdrive-supply: =20
+>=20
+> The lack of a blank line here is an artifact of the reply
+>=20
+> > > > +    description:
+> > > > +      Determines the voltage level at which the interface logic pi=
+ns will
+> > > > +      operate.
+> > > > +
+> > > > +  refin-supply:
+> > > > +    description:
+> > > > +      The voltage supply for optional external reference voltage.
+> > > > +
+> > > >     interrupts:
+> > > >       description:
+> > > >         The BUSY pin falling edge indicates that the conversion is =
+over, and thus
+> > > >=20
+> > > > --=20
+> > > > 2.34.1
+> > > >  =20
 
----
- drivers/irqchip/irq-meson-gpio.c | 1 +
- drivers/irqchip/irq-mvebu-pic.c  | 1 +
- drivers/irqchip/irq-ts4800.c     | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index 9a17919..27e30ce 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -608,5 +608,6 @@ IRQCHIP_MATCH("amlogic,meson-gpio-intc", meson_gpio_irq_of_init)
- IRQCHIP_PLATFORM_DRIVER_END(meson_gpio_intc)
- 
- MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
-+MODULE_DESCRIPTION("Meson GPIO Interrupt Multiplexer driver");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:meson-gpio-intc");
-diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
-index d17d9c0..08b0cc8 100644
---- a/drivers/irqchip/irq-mvebu-pic.c
-+++ b/drivers/irqchip/irq-mvebu-pic.c
-@@ -193,6 +193,7 @@ module_platform_driver(mvebu_pic_driver);
- 
- MODULE_AUTHOR("Yehuda Yitschak <yehuday@marvell.com>");
- MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
-+MODULE_DESCRIPTION("Marvell Armada 7K/8K PIC driver");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:mvebu_pic");
- 
-diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
-index 57f610d..b5dddb3 100644
---- a/drivers/irqchip/irq-ts4800.c
-+++ b/drivers/irqchip/irq-ts4800.c
-@@ -163,5 +163,6 @@ static struct platform_driver ts4800_ic_driver = {
- module_platform_driver(ts4800_ic_driver);
- 
- MODULE_AUTHOR("Damien Riegel <damien.riegel@savoirfairelinux.com>");
-+MODULE_DESCRIPTION("Multiplexed-IRQs driver for TS-4800's FPGA");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:ts4800_irqc");
