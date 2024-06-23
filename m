@@ -1,81 +1,140 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from msa.smtpout.orange.fr (msa-215.smtpout.orange.fr [193.252.23.215])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470832F24;
-	Sun, 23 Jun 2024 21:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B22184106;
+	Sun, 23 Jun 2024 21:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.215
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719179305; cv=none; b=PU/uWQWP9GQB6vmCWrF92g4x+1RDzUu70+9p0WKGS+dBf+jqxtutpjAvezBHNZs076+clqC5uFYaV0luIWUpcOztHN6Xe5tZuyX+UTBteb0XxUL4isCDw+jg07a73aBagV10hGId8pLXW3fraj6sBGnTiaEHixAa5///RMZtvqQ=
+	t=1719179993; cv=none; b=iJAEjY1n6zYjgEd9KzN02kNyT9F3boIMWWOgzesBpoD/RAU1USskyceYBZYtkSxPi0aXeIOLNdA76h/NmTBcS5pU0oRCIl4a6Qxo2UOxBC59lHVS1ODcAjiqTZxi985fZMVl3SGY21eI4w/rl7simD52xyYR+vMCEet3BHVbAmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719179305; c=relaxed/simple;
-	bh=FjeT/4uo+MFGapGGQFRzLPu+u5xPvDN2JhdqP0sRZeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iKtr7rgqBKOGzFTw3ailzKKsV6SCdZC57mjyrDALpAghSVqbBlAbsYXHaMYgv1GW/kUi4YUWT5uOsuRBiRMq9qw4+1KgSUYg3WDkAffD9V3QxdKoKyKrmSUYNJxLdJvY9kefWQUOZFX6nexbJn2ghkJ+so8advKp4g6qj9k17tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=So6F7SV6; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719179993; c=relaxed/simple;
+	bh=v5DO2TAftI73ww3uvdwE1NNig1frErR46ykjHVHR9AA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kNHnBpH3STogmmA9TW+MJFn+oBuwKCVfjjBSdqOemNscGb4fScI62DNAfbC+r2IWKVidltkxyc1Q4rc3796Kc5r6rqBvnRboAJ/Ix4fwRkbzmrpotHyMGx6+ypPe3RJWXNwMndotPnVJwNlWA9AtDl1wbWmLplpGaLdjnMobmLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UBh1C89c; arc=none smtp.client-ip=193.252.23.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So6F7SV6"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52caebc6137so3585936e87.0;
-        Sun, 23 Jun 2024 14:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719179302; x=1719784102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FjeT/4uo+MFGapGGQFRzLPu+u5xPvDN2JhdqP0sRZeo=;
-        b=So6F7SV6LceXYeIT+K0RfvuwvboHUfYo99RzL+7AUqVue63H+9+Lj+hTwLqSiP76py
-         /nOqImnk230/3zlQWQBHdxPD/60WlKQD2Vx+43GwgZXuJk0hfVIeJAo2KzSlyhIskfSw
-         Z9G92SVTAPwqYf7Ck8nOptpNFeXW1Q4Il72WNx1j4JEbB+XZIr789f4F5VZ08OXQ0t/N
-         MPn3012SW5rS/dPeNxlIC6fallRxc+c5r0h+dhy9cz+UgC1x45CF8PEAI2sappyoIsxR
-         Q6EfUKJhVLBCqC9UMD9tOJyr6BqNvIowWVYYaWpWmeWTmnkCsv8qaPjL2dQwAG903LRE
-         SS/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719179302; x=1719784102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FjeT/4uo+MFGapGGQFRzLPu+u5xPvDN2JhdqP0sRZeo=;
-        b=JjOKyqJfBfQSQb8GMBpF+0th60a8CZM++aFnhyjnqN4847qz1pzMQ8VfVbppyQavEm
-         wQJMoYLbH+7UFLl9Lkj9uHn2d79VhLADGNZ8AKbadxvN98hh2IzROvpdq1150Ogm6lmu
-         pL2zFb23x85GjkGLlWWwlDrnGI8SJJGqFBeVKVlLF15lCG0bGQgSYyspkNoeGvGpLhIa
-         qBZqqcx2uxNREpxKZ7tpi2QJaoUSKqxDUIOQPOxNs9QDTsWC5BmT1a1zje0V+DMhumeg
-         xFQltMQpX4xr2LUnA4BLkm+h+rYCJRVrnKjXPvhR+/yyZHlY9bcQSXcTX1psKYQXrGSw
-         PODg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEIkUOUC4uyRlC+tVLuysKXunPdgZ2CJ4auOzddzgebO9SKfA6TmlJo2oR4Pgjucc36iR0LuQC/sF4KrYriFWXmUVIcGCB0sCEv7n+zPSdMJExccXClNY7VmCWbDMv5yqQnC3w42XZbrF0VbWlmPN7MG91lkX05Hl4dVpDsH1k1YKwUlC9FYYglqhyOvPpJF+OrFRgKqd5y8HAy+ObRHRmPiY9Zg==
-X-Gm-Message-State: AOJu0YxgS7of45obINR282vXe99brdOIw9+NkcAoMyzdluoccuOc8PAl
-	0cerDBztUv7O3eU6ga+laJpRP1tEyBGCi75t7rmNFoin1TJKBzsd/fKVENC1/mW4jRFv7/RzIa+
-	DnXz+8TZ3E8DvlJknhB+ek10lqOcibQ==
-X-Google-Smtp-Source: AGHT+IG2v51vvIgUNNJTJF1KPdnhSoN3nj5BJljBDTkt7B2Mh0IPSTaWFfVbtbghb5v+6nWKIQzNpI9gh8nC2rO/vvE=
-X-Received: by 2002:a05:6512:401a:b0:52c:8979:9627 with SMTP id
- 2adb3069b0e04-52ce1832541mr2141404e87.3.1719179302284; Sun, 23 Jun 2024
- 14:48:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UBh1C89c"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id LTPSshmixRlahLTPSsC1Ba; Sun, 23 Jun 2024 22:02:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1719172922;
+	bh=ynHaVTacZiZSj/BhHnX4o1QTUyOa26DsYCafYGhsZE4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=UBh1C89cSr13phxYPzXWS+0Ot+tiBxc+1D//5F9pDWUKU2erMXrOPuko/W6Qql2p3
+	 NOEoiOx5NdJ+mbGA6/42sOApPf+zKqcDN0K7NQ39kxvDPl7K7l4PGvijUqZbOfVyFC
+	 KKaRz9AeelJuqJsy6aNMo8hhly+Cr9lUDv0sOKO8HZ/DO1ekbTEs5zFKU9AB8FgxrB
+	 QGZ1Pj6p42rme96nG/H/b5LnRBwpfK7dZBGonlmU4/uICqSQMtMXME71fuI4ZUlaCM
+	 LqKcZm1AWPxFcqsIEX7iAYoyXqwzCnz/s6iQ6DofijotncrfiMrOqhhCTy6J76jQs2
+	 4U1wjig3mvGfg==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 23 Jun 2024 22:02:02 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next] can: m_can: Constify struct m_can_ops
+Date: Sun, 23 Jun 2024 22:01:50 +0200
+Message-ID: <a17b96d1be5341c11f263e1e45c9de1cb754e416.1719172843.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621-b4-sc7180-camss-v1-0-14937929f30e@gmail.com>
- <20240621-b4-sc7180-camss-v1-5-14937929f30e@gmail.com> <3660e37e-2716-4d9f-a9cf-b69568d4e77c@linaro.org>
-In-Reply-To: <3660e37e-2716-4d9f-a9cf-b69568d4e77c@linaro.org>
-From: george chan <gchan9527@gmail.com>
-Date: Mon, 24 Jun 2024 05:48:11 +0800
-Message-ID: <CADgMGSva0_DjYX0QVFL+i3YXmrPAuVa4gQVa-DNHCwg-UA3VNw@mail.gmail.com>
-Subject: Re: [PATCH 5/6] media: qcom: camss: Add sc7180 resources
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 22, 2024 at 7:18=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linaro=
-.org> wrote:
->
-> although I wasn't able to find
-> the matching clock rates
-The clk rate is in the camcc clk driver, isn't it? ;-)
+'struct m_can_ops' is not modified in these drivers.
+
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
+
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   4806	    520	      0	   5326	   14ce	drivers/net/can/m_can/m_can_pci.o
+
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+   4862	    464	      0	   5326	   14ce	drivers/net/can/m_can/m_can_pci.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only
+---
+ drivers/net/can/m_can/m_can.h          | 2 +-
+ drivers/net/can/m_can/m_can_pci.c      | 2 +-
+ drivers/net/can/m_can/m_can_platform.c | 2 +-
+ drivers/net/can/m_can/tcan4x5x-core.c  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/can/m_can/m_can.h b/drivers/net/can/m_can/m_can.h
+index 3a9edc292593..92b2bd8628e6 100644
+--- a/drivers/net/can/m_can/m_can.h
++++ b/drivers/net/can/m_can/m_can.h
+@@ -91,7 +91,7 @@ struct m_can_classdev {
+ 
+ 	ktime_t irq_timer_wait;
+ 
+-	struct m_can_ops *ops;
++	const struct m_can_ops *ops;
+ 
+ 	int version;
+ 	u32 irqstatus;
+diff --git a/drivers/net/can/m_can/m_can_pci.c b/drivers/net/can/m_can/m_can_pci.c
+index 45400de4163d..d72fe771dfc7 100644
+--- a/drivers/net/can/m_can/m_can_pci.c
++++ b/drivers/net/can/m_can/m_can_pci.c
+@@ -77,7 +77,7 @@ static int iomap_write_fifo(struct m_can_classdev *cdev, int offset,
+ 	return 0;
+ }
+ 
+-static struct m_can_ops m_can_pci_ops = {
++static const struct m_can_ops m_can_pci_ops = {
+ 	.read_reg = iomap_read_reg,
+ 	.write_reg = iomap_write_reg,
+ 	.write_fifo = iomap_write_fifo,
+diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
+index df0367124b4c..983ab80260dd 100644
+--- a/drivers/net/can/m_can/m_can_platform.c
++++ b/drivers/net/can/m_can/m_can_platform.c
+@@ -68,7 +68,7 @@ static int iomap_write_fifo(struct m_can_classdev *cdev, int offset,
+ 	return 0;
+ }
+ 
+-static struct m_can_ops m_can_plat_ops = {
++static const struct m_can_ops m_can_plat_ops = {
+ 	.read_reg = iomap_read_reg,
+ 	.write_reg = iomap_write_reg,
+ 	.write_fifo = iomap_write_fifo,
+diff --git a/drivers/net/can/m_can/tcan4x5x-core.c b/drivers/net/can/m_can/tcan4x5x-core.c
+index a42600dac70d..f15619d31065 100644
+--- a/drivers/net/can/m_can/tcan4x5x-core.c
++++ b/drivers/net/can/m_can/tcan4x5x-core.c
+@@ -357,7 +357,7 @@ static int tcan4x5x_get_gpios(struct m_can_classdev *cdev,
+ 	return 0;
+ }
+ 
+-static struct m_can_ops tcan4x5x_ops = {
++static const struct m_can_ops tcan4x5x_ops = {
+ 	.init = tcan4x5x_init,
+ 	.read_reg = tcan4x5x_read_reg,
+ 	.write_reg = tcan4x5x_write_reg,
+-- 
+2.45.2
+
