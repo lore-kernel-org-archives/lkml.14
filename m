@@ -1,120 +1,112 @@
-Received: from msa.smtpout.orange.fr (out-65.smtpout.orange.fr [193.252.22.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A7A18306F;
-	Sun, 23 Jun 2024 16:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111C91822D6;
+	Sun, 23 Jun 2024 16:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719159635; cv=none; b=WoPuEKz4wVt+YMSK2h5O7qOLbW7jfW8vZv+sfW53ZI+nvPlOi4quWRZzlMTeX+kXIx2eSrsZqufLTCExyJeun/9jW8ctEvsM8pXK3wBWyLtbDTLnmB9jy/dTmZef+gYQGtvIvUKVYGEVJcijeYyzUG7qQwLC6NZJyVcYww2GABs=
+	t=1719159644; cv=none; b=ql6A6P3ksURW39rubkBwnzHDqMUz6FN1GsbwGQvZVyrqHyAUDDn0ew2v7+plrBGaMzuwQ3knL93a5OSp/mJuHPVYa4uf4oSic96QMSx4XCjapIrz5Qe1KDodHbpNyW8J8TEx2xJ2LUQyVJN25sTNsgeD/KNOfIJ8MMrhK7ammkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719159635; c=relaxed/simple;
-	bh=xn/bYX9nXV2+s7Y5CdExXZOsyPxwtWyQZbAE9riVZzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d+VT04stH+aftlLYgs+YKSlx0ZWITB+kLcENOgz1S6FqczKNH+/12CUdTsJu97/OTQz7HJgB420RPz4hEWQkE5na1mTNFNbn2fajUbAFz1jc5d3mjMYuV9L3jt7H2Ecps3jPfd+sZWeOafkortmFCpe/YcXRmLZemkFSmy/Dy/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=bvT+Orc4; arc=none smtp.client-ip=193.252.22.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1719159644; c=relaxed/simple;
+	bh=ybsa2AlMObRZqjJio+sRTrCAG3J3AotfB3UICIYd5Zc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OsdGvHNoQE4gnOU24JtQTCf6VSbuJvj77zfGNSSpQyDE/IEScajGG1R84zE/7uBBIbLt1EZENrzldL2AyTwmAfL+kYVqIj27GNHy5/PJJWyFfGKhX5mNnn8Clmgc3w+FGSelpED6OpOhqnz3zco5932U6fZJutm1FK/7q8n1W90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g61aITPV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="bvT+Orc4"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id LPoWsaLbz6H4sLPoWsNZPd; Sun, 23 Jun 2024 18:11:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1719159098;
-	bh=kaFvdfIOWtupjnAleAY1qcroO+ccHQ2tdJGDcVUeyB0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=bvT+Orc4k44jsLDJdXNh9di3qYYz2iZG95kO6AFtXPVRP0jgZbnTB6le6kqgh8K0T
-	 mhSgBTM48vToFcXd22PzCMYvqcSONs3n+VjLbjBAVfAXfClWLn+/dhx1GeVC2T86YA
-	 E3hZZPlwiqdhdLaafvnlA8yXIwty7+dWFH9EcAKz1ICQaubHZeWb2VqpoMKFe4Eoir
-	 UBeT9UrUo+nk35l3AwxWnmImdtvgno63xaj5gL9UXgXt5JjFMlCPUcbGG5I/ZVShgo
-	 mWyGCojLFSKmdme3D14LrdT6Mqv8Z8zj5Us4wuVXiuSt+1kNkcS+QC7wnp8ZzFnebV
-	 ux/yAlzkbgZpg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 23 Jun 2024 18:11:38 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Nishanth Menon <nm@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] soc: ti: knav_qmss: Constify struct knav_range_ops
-Date: Sun, 23 Jun 2024 18:11:31 +0200
-Message-ID: <a8b4b428f97fc584f38bf45100aa9da241aeb935.1719159074.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g61aITPV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6117CC4AF0A;
+	Sun, 23 Jun 2024 16:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719159643;
+	bh=ybsa2AlMObRZqjJio+sRTrCAG3J3AotfB3UICIYd5Zc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=g61aITPVmyaQzzfWG7pI0GlENhPnv7Cw9Y5XjHJO8tYOpcoqBmnc7AIHg9n5kCKlj
+	 dqZOpS9KgjFAXUd3ChAPh0bCVhObRrY/+22SR7BFKcLxhT/enE5RbgeAk+Ah49WAqX
+	 9fCKafOdwttyTQ47U7SrNgscLZ54i0QfJ5audW2FqZB7psCFG/Exq54vqldg6h5ISk
+	 3Bc/zktN9Yh1kBTYhlhXcOkgEV6lbpp9ZIWKqsvaYuva/1KFG1ViiRYHIgZEYz2AVY
+	 xVOIVc+b4GlcedOlV/rpJBKTV1lrcvHwGBcP3Ad4wU7P4XwqSot24YOqX7BK5JvEeS
+	 /ubSvIpwBkkfQ==
+Date: Sun, 23 Jun 2024 17:20:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Kim Seer Paller <kimseer.paller@analog.com>,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, David Lechner <dlechner@baylibre.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Dimitri Fedrau <dima.fedrau@gmail.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Hennerich
+ <michael.hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <noname.nuno@gmail.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: dac: Add adi,ltc2672.yaml
+Message-ID: <20240623172033.4d821cff@jic23-huawei>
+In-Reply-To: <20240623-juror-ground-9a44d66a002b@spud>
+References: <20240619064904.73832-1-kimseer.paller@analog.com>
+	<20240619064904.73832-5-kimseer.paller@analog.com>
+	<20240619-vanity-crowd-24d93dda47b8@spud>
+	<20240623144339.6a5087cf@jic23-huawei>
+	<20240623-juror-ground-9a44d66a002b@spud>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-'struct knav_range_ops' is not modified in these drivers.
+On Sun, 23 Jun 2024 15:03:47 +0100
+Conor Dooley <conor@kernel.org> wrote:
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+> On Sun, Jun 23, 2024 at 02:43:39PM +0100, Jonathan Cameron wrote:
+> > On Wed, 19 Jun 2024 18:57:59 +0100
+> > Conor Dooley <conor@kernel.org> wrote:
+> >   
+> > > On Wed, Jun 19, 2024 at 02:49:03PM +0800, Kim Seer Paller wrote:  
+> > > > +patternProperties:
+> > > > +  "^channel@[0-4]$":
+> > > > +    type: object
+> > > > +    additionalProperties: false
+> > > > +
+> > > > +    properties:
+> > > > +      reg:
+> > > > +        description: The channel number representing the DAC output channel.
+> > > > +        maximum: 4
+> > > > +
+> > > > +      adi,toggle-mode:
+> > > > +        description:
+> > > > +          Set the channel as a toggle enabled channel. Toggle operation enables
+> > > > +          fast switching of a DAC output between two different DAC codes without
+> > > > +          any SPI transaction.
+> > > > +        type: boolean
+> > > > +
+> > > > +      adi,output-range-microamp:
+> > > > +        description: Specify the channel output full scale range.
+> > > > +        enum: [3125000, 6250000, 12500000, 25000000, 50000000, 100000000,
+> > > > +               200000000, 300000000]    
+> > > 
+> > > IIO folks, is this sort of thing common/likely to exist on other DACs?  
+> > 
+> > Fair point. It is probably time to conclude this is at least moderately common
+> > and generalize it - which will need a dac.yaml similar to the one we have for
+> > ADCs in adc/adc.yaml.  That will need to make this a per channel node
+> > property (same as the adc ones).  
+> 
+> Looks like it is already per channel node?
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-   7498	   1193	      0	   8691	   21f3	drivers/soc/ti/knav_qmss_acc.o
+Absolutely - but that is a bit fiddlier to do in a generic file so I just
+meant make sure to enforce that in a similar fashion to adc.yaml.
+> 
+> > I'd also expect it to always take 2 values. In many cases the first will be 0
+> > but that is fine.  
+> 
+> What would that first value represent?
+Hmm. For voltage equivalent they are often not zero based so it would be the
+negative. I have no idea if there are current dacs that act as both sources and sinks...
+So maybe voltage one which should be done in this series as well needs to be 2 value
+and current variant maybe not.
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-   7566	   1145	      0	   8711	   2207	drivers/soc/ti/knav_qmss_acc.o
+Jonathan
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only
----
- drivers/soc/ti/knav_qmss.h       | 2 +-
- drivers/soc/ti/knav_qmss_acc.c   | 2 +-
- drivers/soc/ti/knav_qmss_queue.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
-index a01eda720bf6..9325e8ce2e25 100644
---- a/drivers/soc/ti/knav_qmss.h
-+++ b/drivers/soc/ti/knav_qmss.h
-@@ -333,7 +333,7 @@ struct knav_range_info {
- 	void				*queue_base_inst;
- 	unsigned			flags;
- 	struct list_head		list;
--	struct knav_range_ops		*ops;
-+	const struct knav_range_ops	*ops;
- 	struct knav_acc_info		acc_info;
- 	struct knav_acc_channel	*acc;
- 	unsigned			num_irqs;
-diff --git a/drivers/soc/ti/knav_qmss_acc.c b/drivers/soc/ti/knav_qmss_acc.c
-index 3d388646ed43..269b4e75ae40 100644
---- a/drivers/soc/ti/knav_qmss_acc.c
-+++ b/drivers/soc/ti/knav_qmss_acc.c
-@@ -450,7 +450,7 @@ static int knav_acc_free_range(struct knav_range_info *range)
- 	return 0;
- }
- 
--static struct knav_range_ops knav_acc_range_ops = {
-+static const struct knav_range_ops knav_acc_range_ops = {
- 	.set_notify	= knav_acc_set_notify,
- 	.init_queue	= knav_acc_init_queue,
- 	.open_queue	= knav_acc_open_queue,
-diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-index 06fb5505c22c..f2055a76f84c 100644
---- a/drivers/soc/ti/knav_qmss_queue.c
-+++ b/drivers/soc/ti/knav_qmss_queue.c
-@@ -411,7 +411,7 @@ static int knav_gp_close_queue(struct knav_range_info *range,
- 	return 0;
- }
- 
--static struct knav_range_ops knav_gp_range_ops = {
-+static const struct knav_range_ops knav_gp_range_ops = {
- 	.set_notify	= knav_gp_set_notify,
- 	.open_queue	= knav_gp_open_queue,
- 	.close_queue	= knav_gp_close_queue,
--- 
-2.45.2
 
