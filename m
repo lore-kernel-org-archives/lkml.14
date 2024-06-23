@@ -1,209 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F953C38
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 02:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CD9322E
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 02:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719108137; cv=none; b=kcvB1IRfez2o16n8Fro+qFH8aN2ma4cUDJbjbacarrCENovyB5eTV15a29Wmt+QzAOeM34DLk9vs7DvH3YI0Z0J6w5zlxSATd/UfL4bOeneaVieabzGlpFoz3EqlwpVUOpNEASiUCCSuaYhlXZCY4YIju0siB4nMeX8Vn9hlJyI=
+	t=1719108457; cv=none; b=mpZYOwWV7ggcTXGZTye7mdG4pLGeh7B0wsfBZ+7E/c9eSj4sK4KnnC9kwmQYH6V2NKAwArM7Y3UOLK5yO33gVZPzcGpgwnROaKxNjkawXbjgaSYz2Dac7i5nnHeZhERNZE3vJEKh5b9F6gKiPsOsG1MEwF7bVEvETaGsJAlntTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719108137; c=relaxed/simple;
-	bh=yZHEElo6y2Fb3FJIa3A4lkk2Whbxb+o1CP5PTlOLARU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hM25LZqX3LlJx9dcZIxHitYD186GfTMPDW0sRzrBqQBNQroE3/vSoPA38QUW1/qYT+YUMhgQJCu4I9HKWJirE8rE5hDDBqzO0FYFd5z7Zs35O3mf7+N/PMVDAgVnS3GxYo/olfZkSnFA4HmaYwLkpKWHIj29iBDRf8SShNYQ8xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V5MrwW/q; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719108457; c=relaxed/simple;
+	bh=DL7ijj4f0JYdB7gx4ydP45fcJcjUOSJiftZ6sUEXcNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L/XaevrC5oVVfFavYx9BuH2VH9zCQHtEXJ0rXcsHVNPtXOTyd+EbGb21+8DehQ9OUczxf0SOAzcs577MVg+XauULhLRJcapH6j5swtugHTUrCi1m4Ww4ywovFAZXfpNJoFNz2KP+ST+UckPi0nUfFRpQdPQuKfR1C0Tgd0PmBTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=MucHfsGs; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V5MrwW/q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719108136; x=1750644136;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=yZHEElo6y2Fb3FJIa3A4lkk2Whbxb+o1CP5PTlOLARU=;
-  b=V5MrwW/qXvD/0gUKcng3jnXQZy1tBtqG7VkC+RF3eLZGM3RUkiwJzSM8
-   wjadaP87XC/ZT6keoTFf95PYS6LqBXKAG2ru+MMoQhTCTv9Pz+evhSSs+
-   DYnbX4csY1HGSqQqGa2rofv/T+Qvym0wiGmKuc9VAGJckN8KPJ6otiLUV
-   uG5knHJHC1BpRo0ZqbaUN52m3bPQ8gew0xgMSVTzTCladaQSNLuopsIQo
-   y5O+FIinduhtiPUIqf9JJYZtwpV31Szszd1XNGpBqTsZ0Y6JuAjzGYqc0
-   JxcG9FcPToSjNhoHdYUOgffmS3OtWeXPygGFXhCkZDd36p/Mt1lIaqzdR
-   Q==;
-X-CSE-ConnectionGUID: uZ2vZTLXQLKYTdRi4zu4Tw==
-X-CSE-MsgGUID: ttmNlxxUQ5u6jAjGqyESmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11111"; a="15938078"
-X-IronPort-AV: E=Sophos;i="6.08,259,1712646000"; 
-   d="scan'208";a="15938078"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2024 19:02:12 -0700
-X-CSE-ConnectionGUID: lKfGSFodTLWKliQlvnfR+Q==
-X-CSE-MsgGUID: 8AJ2sL7wQCKrQ5Xds/NU7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,259,1712646000"; 
-   d="scan'208";a="42921676"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 22 Jun 2024 19:02:10 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sLCYR-000A9g-27;
-	Sun, 23 Jun 2024 02:02:07 +0000
-Date: Sun, 23 Jun 2024 10:01:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>
-Subject: arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly
- requires more registers than available
-Message-ID: <202406230912.F6XFIyA6-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="MucHfsGs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1719108451;
+	bh=wjZLuNgx9By6ZqOtH117HEBJ1w7wnHQvmaXPVGYIMZc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MucHfsGsSlsy8pXHPmu849QMMmGwTUwAx0FD9y5+oYzCL5dRetg2UnjJkaT6LQep3
+	 Z/fn3rR/oYPHhZ93WSFHzFx6EqMHlfYCluG0DuLME0o4ahRsQFwxL+CkQ+dqLQ+thc
+	 Eiw6gU8ZZWjEQEtFmIcMhDIk3T3x1HIHTnr7QmYlK36swNcKf7isqo6cPXQGX/au10
+	 5A86YS75PYtPmmJ3Ciopdfn3/6DYLyAHV4DaRCAdB8/jqoyiaCtVdFCX0oLfPQ6+U4
+	 ZbMJ7tDNTLwoCtxNLB+pljkgL15xOCnVZY6pSAqtnBjFJRMzkClCH59vkqf7LuSQXB
+	 o8alUAztcfQNQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W6Dxt3cBSz4wbh;
+	Sun, 23 Jun 2024 12:07:30 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ nathanl@linux.ibm.com, viro@zeniv.linux.org.uk
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.10-3 tag
+Date: Sun, 23 Jun 2024 12:07:28 +1000
+Message-ID: <87sex4csyn.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5f583a3162ffd9f7999af76b8ab634ce2dac9f90
-commit: 95ece48165c136b96fae0f6144f55cbf8b24aeb9 locking/atomic/x86: Rewrite x86_32 arch_atomic64_{,fetch}_{and,or,xor}() functions
-date:   2 months ago
-config: i386-randconfig-061-20240623 (https://download.01.org/0day-ci/archive/20240623/202406230912.F6XFIyA6-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240623/202406230912.F6XFIyA6-lkp@intel.com/reproduce)
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406230912.F6XFIyA6-lkp@intel.com/
+Hi Linus,
 
-All errors (new ones prefixed by >>):
+Please pull some more powerpc fixes for 6.10:
 
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-     149 |         return __arch_try_cmpxchg64_emu(ptr, oldp, new);
-         |                ^
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   In file included from kernel/bpf/core.c:21:
-   In file included from include/linux/filter.h:8:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/x86/include/asm/atomic.h:8:
-   In file included from arch/x86/include/asm/cmpxchg.h:143:
->> arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-   arch/x86/include/asm/cmpxchg_32.h:131:15: note: expanded from macro '__arch_try_cmpxchg64_emu'
-     131 |         asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE                       \
-         |                      ^
-   arch/x86/include/asm/alternative.h:218:2: note: expanded from macro 'ALTERNATIVE'
-     218 |         OLDINSTR(oldinstr, 1)                                           \
-         |         ^
-   arch/x86/include/asm/alternative.h:168:2: note: expanded from macro 'OLDINSTR'
-     168 |         "# ALT: oldnstr\n"                                              \
-         |         ^
-   7 errors generated.
+The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
+
+  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.10-3
+
+for you to fetch changes up to a986fa57fd81a1430e00b3c6cf8a325d6f894a63:
+
+  KVM: PPC: Book3S HV: Prevent UAF in kvm_spapr_tce_attach_iommu_group() (2024-06-16 10:20:11 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 6.10 #3
+
+ - Prevent use-after-free in 64-bit KVM VFIO
+
+ - Add generated Power8 crypto asm to .gitignore
+
+Thanks to: Al Viro, Nathan Lynch.
+
+- ------------------------------------------------------------------
+Michael Ellerman (1):
+      KVM: PPC: Book3S HV: Prevent UAF in kvm_spapr_tce_attach_iommu_group()
+
+Nathan Lynch (1):
+      powerpc/crypto: Add generated P8 asm to .gitignore
 
 
-vim +149 arch/x86/include/asm/cmpxchg_32.h
+ arch/powerpc/crypto/.gitignore   |  2 ++
+ arch/powerpc/kvm/book3s_64_vio.c | 18 +++++++++++++-----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-aef95dac9ce4f2 Uros Bizjak 2024-04-08  146  
-aef95dac9ce4f2 Uros Bizjak 2024-04-08  147  static __always_inline bool arch_try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64 new)
-aef95dac9ce4f2 Uros Bizjak 2024-04-08  148  {
-aef95dac9ce4f2 Uros Bizjak 2024-04-08 @149  	return __arch_try_cmpxchg64_emu(ptr, oldp, new);
-aef95dac9ce4f2 Uros Bizjak 2024-04-08  150  }
-aef95dac9ce4f2 Uros Bizjak 2024-04-08  151  #define arch_try_cmpxchg64 arch_try_cmpxchg64
-aef95dac9ce4f2 Uros Bizjak 2024-04-08  152  
-
-:::::: The code at line 149 was first introduced by commit
-:::::: aef95dac9ce4f271cc43195ffc175114ed934cbe locking/atomic/x86: Introduce arch_try_cmpxchg64() for !CONFIG_X86_CMPXCHG64
-
-:::::: TO: Uros Bizjak <ubizjak@gmail.com>
-:::::: CC: Ingo Molnar <mingo@kernel.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAmZ3gucACgkQUevqPMjh
+pYC25xAAsSnTIzbZpHdg3Bdb0vqdgzQimS9TbXGm5Qnea6rZawXYcSEoLuUABWZY
+ZkNDoezJoL9nks7JGO1lbTICUNFKleFSlBLye4WgRn7NQBlgFP2GYiH1hXJIlE0C
+qNyqY8k9uhJQor6CYt4eygskVwjpdX6oeIcHcUNWQy7/p1jID48DFS7QHib0WWm+
+wwuiPhdqBwlbJCQUO0zBmDgg8rAhPmeGSR1iHWJxk69CIcEOoXK8sxv1ZTKuE0YN
+clOKeAPrlZ3dz2jDojcMUzckFxg9J/Wlozk+m4LVl4XVj5hV7TqBpT4BVJNoMk1i
+qWV00bVg7sEWXQ9CGR71NKpdeE4pIeiN4EAEkW+nSmlJ0x9htadNychode+9cakb
+E0U/fb/rB6T32UJsEUAFF2Dq8dG5wWXHPqn0rHh9v63tPvnteUisSFM9DN7Be9a4
+UziItFANSmt3AK0uvBMgoYk8HM2USLb4WvigWdqtW9j6AGmO5NYPl1PgrLCDkFBA
+Feevx5TAIs6GeGKrzbE5s9QHMAwtVhsN1g8lJgbCPZJfh9wcynIyrPI4K/Vu5J9A
+tpNbRXGsfk/MCsNF6kgm+pAoseavXUwjsSNteFwq7eMSqZUgeG5a1hx/36b5mHdW
++YANpMmzS3Ae2HscZ6E8xTGxzfmmWmr6SczN0i0lBCR5cjUo7Cw=
+=oWyE
+-----END PGP SIGNATURE-----
