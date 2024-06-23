@@ -1,215 +1,252 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6181DDD6
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 09:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D288438C;
+	Sun, 23 Jun 2024 09:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719135386; cv=none; b=NVGyX3DdA8JY4lD23X6UINptQFYe74EkZMqR13gUAYXaMvETAs+X5bH22QfY8podM0Lb9p2XmLP9UaV5R9wX/nGSaH6b35dtauzWqThTwoPDEC8q6dJXgON/gnLhxLic74xqJ/1svpNH1gD14553Ua2JP4hxf072D+c7IDCHRq8=
+	t=1719135753; cv=none; b=e2CourG6f4A9Ni/gPooc8qd9YRwx+Cf1FDtAak3B1T8Sm69FE4yBYef1rChHzuxgWygvBjZDk7w7XlXN2kEjhQsLQ31AIiwe8yFPIfWBdhLcfufXxgTRXBd7YxCkMbkTKxmqwF9HwjnfBfxDGsEfhzLV33WG0k5VYb23CDQre4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719135386; c=relaxed/simple;
-	bh=GDIuO3zgeL7Kl5+WuVPVtaND6Qt/YJy91wrUY8RBGIg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Sfy425PoIIuuZ2VLTatJHt8PKWpbipleib86GSjB9RAkRRQRXGFGStL7n4EmJ1PJwYtrsV55mpXymhGmsyV35Jmr7Nq1tlw0a1bkSF7rTVw1e4o4V6Jl5MNNi4InLlCCnWeFoXdwbIHwNXqirJy7KTRPTYdtM6Fcv1GH81Ezdrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-36db3bbf931so38752765ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 02:36:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719135384; x=1719740184;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NG1N8DyUmAHaYDrPPVdDaQoJNaPIoWzGqw/9+ysBFKE=;
-        b=nfM/K38NMaPfOLCiLZRLnqGwjU1wjEa4fs4gUVqLJXI2QHANbrKJwOX/vKHscOmrqv
-         pDbrLWfHDlRSo7/eb9R9HaGiFOXcCs0Y36pC/1LB/Yvrw7/fR1Srt7RSv+FCiNCHZ47Y
-         zN0Y8ied9GARK3kJ9beEJza9YsHJzHa6YYHGT27EC60gAtdJ92WyMvHxXHwnt3cJWPb7
-         LB6zgh+ce3vGE82p2DpfOHOER3RVWRSj8noHnxJBjk4UNfwxY1Hy19+ku7unhg18ZrBM
-         4cbOgMGS1OuzdJ3gC3niYNtuT+H6jtWIytKRIrmYcR4FzZ7sv9/A/ccqB+z9trcdhuJV
-         NXHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbgTn/ZD5eSQYmCZcrsmm1y+XixG+/byTWH0wsNps6vODqo2w4FERcfNhwz2unQYaE9Yb8vZaP5JHDkfwBREjSb5LSO5i62yEDQBpc
-X-Gm-Message-State: AOJu0Yxvqy2nxqxc4+MlrsTrf1+6mMen9vqktUzYLUOB0G5ToneRNbtU
-	EKVeJUTzrN1xkPWbz15r2nov7rwHJmpdEdvsC6Zedu22SzBjkXIKTZolQ2E1cdELoqco7GnC3gP
-	iB6SoaKpWSDv7/5kc2YDp0blrfmeCuFyVQcqRMNQgdv3Ju7yDypY9Afw=
-X-Google-Smtp-Source: AGHT+IFaQDUeiIT8h4iwC3zXY0mqgOwPCVIekKrLrDxlj2j0GMhy5IG1+eVpAUt8lSuZd5adyMlELI3bVpg8q6wjKd0ZM7IlScgh
+	s=arc-20240116; t=1719135753; c=relaxed/simple;
+	bh=zmniZvRHoh5jL1vf5EYtGQpxPG2Az2hORSfAnvblczI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Edxq8xRu35GMyb0Rdx0KIDQDNWjslicUh1AzYbY5RhWogAZx1Hvrv40kVZjbHjyg/tSZbkOVjniVIHDKmOyQTmWvu3TJaDxJf+ZyRDmCfE5AG4Ma4SSQjIOE5fbxI1KJho5CvzXvo+XHmsa6yQsX74rCHej6EikU2l3fmGRbND4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=XUbqly1N; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="XUbqly1N"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id 5661442238;
+	Sun, 23 Jun 2024 14:27:10 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1719134830; bh=zmniZvRHoh5jL1vf5EYtGQpxPG2Az2hORSfAnvblczI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=XUbqly1NREiOYgUvzIxAciOjSTqFq+/CoMieTM9Rmf73Z1/MZLhX25e9ne7Ca2vVY
+	 8PSCx97uKyXnRg3rAZI5AtlhRKAGh4mp+BSMeA8uKFNS5AzL+nXG/qrrdjOmUfonkl
+	 Yz8mOje8DR7ezcrh2Dc036qkXwaeMr+Ib/H6RKNtE81NCKLpQFtTlXbC7IHara1ijf
+	 uAW3j9Ucfw7MQ94EAbSkZtyb75M1d0VbqPnooi12WM0nSkjROJPMId+iG//9RU6RML
+	 1OstRxoZCU+o6Kl5ZcKGTLa57sWzhIBRLPiZrFxRnFtQkSzkjdJ5oB+g5J3AWPWSNI
+	 OSDfLyESVBjpw==
+From: Nikita Travkin <nikita@trvn.ru>
+Date: Sun, 23 Jun 2024 14:26:32 +0500
+Subject: [PATCH 3/3] arm64: dts: qcom: msm8916-lg-c50: add initial dts for
+ LG Leon LTE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c54b:0:b0:375:a50d:7f2d with SMTP id
- e9e14a558f8ab-3763f5c9fc5mr2100025ab.1.1719135383768; Sun, 23 Jun 2024
- 02:36:23 -0700 (PDT)
-Date: Sun, 23 Jun 2024 02:36:23 -0700
-In-Reply-To: <000000000000f07c2606165ff63a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dee3cc061b8b6538@google.com>
-Subject: Re: [syzbot] [hfs?] possible deadlock in hfs_extend_file (3)
-From: syzbot <syzbot+2a62f58f1a4951a549bb@syzkaller.appspotmail.com>
-To: aha310510@gmail.com, jack@suse.cz, jlayton@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240623-msm8916-lg-initial-v1-3-6fbcf714d69b@trvn.ru>
+References: <20240623-msm8916-lg-initial-v1-0-6fbcf714d69b@trvn.ru>
+In-Reply-To: <20240623-msm8916-lg-initial-v1-0-6fbcf714d69b@trvn.ru>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, Nikita Travkin <nikita@trvn.ru>, 
+ Anton Bambura <jenneron@postmarketos.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3842; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=bC4SZtN+AFLyi1JYMGkC2HvTobEFyqaaDyPlFLIZKfE=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBmd+ppFeSvpz1i9ux/cTpIbt6hiS4fahhBIh/88
+ mvE4hfNJ3mJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZnfqaQAKCRBDHOzuKBm/
+ dRMuEACfHQlU50aDd43dm3nTkZJKSdD/W5qyjZalh8XT2Dg7jSaB5Q9uv2JgO4kWZDG1iq4rL/Y
+ JD6WKaLrvvQWV+WNGDA6Yd8UNYM6e7/9XfCYc0ORAKHKjdlKRPkyk3zkBo8FyOXHIxjnG4kuVvx
+ WHBJpbaTZwIXiPDgiYHihyWN58tuIPSaaOnLT6MK5829rcQR3E+FINMy0d7jrozxFZJD4etOwie
+ fOQVvouRyZ3TrUf80XNC40sPpCu6yOPEtDseJmZ9wQY0duG5+GeT1V4ukAJnNY7XaWQ8g/AtBBa
+ kA7p0FR7L1KCHOSRQHJncBOgy+yI7p/kkl3BnhfD1K+6uCQ9U1tgg3hKesXVWT3SYEah0n/8crl
+ iY783Ctq7zsOqau4FNwbOyrgMiCb8WbMhhx6mRtp+RhlMc0q/LisSO+l+JUw+dAgN+Rw9/HqzJ0
+ PcfJ2ClCpZeLmx52uY361IhNk6jTT90NSQSEFkxE/t6oqmSBjwHMu8rjV71/YY+Fgg7rKDg5hdd
+ kHT0BK7vY6dq7QHWDOuWFHLc+1EZ46/LmTmTbElXLhw78/u9lwTNsO035VWxrfl4nzxhUleuiNc
+ bkpA9apYfEKYaVHBUAJpTNDjmKGIrVDRRGnyFsOIaKC19GlQ87JL6oVbYHe2ltWB32S9SHqIN6y
+ Xg60yUPk/Pu539w==
+X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
+ fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-syzbot has found a reproducer for the following issue on:
+From: Anton Bambura <jenneron@postmarketos.org>
 
-HEAD commit:    563a50672d8a Merge tag 'xfs-6.10-fixes-4' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11ca148e980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=12f98862a3c0c799
-dashboard link: https://syzkaller.appspot.com/bug?extid=2a62f58f1a4951a549bb
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1287d83e980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12cb8151980000
+Add initial device-tree for LG Leon LTE (lg-c50), currently supported
+features:
+- eMMC;
+- MicroSD;
+- usb in peripheral mode;
+- WiFi/BT;
+- vibration;
+- keys.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8f92c1547793/disk-563a5067.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/21bb27a22e67/vmlinux-563a5067.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/168847d060c0/bzImage-563a5067.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/048c1910668d/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/097a7c874267/mount_1.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2a62f58f1a4951a549bb@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 64
-======================================================
-WARNING: possible circular locking dependency detected
-6.10.0-rc4-syzkaller-00283-g563a50672d8a #0 Not tainted
-------------------------------------------------------
-syz-executor283/5110 is trying to acquire lock:
-ffff88805ee675f8 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xff/0x1450 fs/hfs/extent.c:397
-
-but task is already holding lock:
-ffff88802992a0b0 (&tree->tree_lock/1){+.+.}-{3:3}, at: hfs_find_init+0x16e/0x1f0
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&tree->tree_lock/1){+.+.}-{3:3}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
-       hfs_find_init+0x16e/0x1f0
-       hfs_ext_read_extent fs/hfs/extent.c:200 [inline]
-       hfs_extend_file+0x31b/0x1450 fs/hfs/extent.c:401
-       hfs_bmap_reserve+0xd9/0x400 fs/hfs/btree.c:234
-       hfs_cat_create+0x1e0/0x970 fs/hfs/catalog.c:104
-       hfs_create+0x66/0xe0 fs/hfs/dir.c:202
-       lookup_open fs/namei.c:3505 [inline]
-       open_last_lookups fs/namei.c:3574 [inline]
-       path_openat+0x1425/0x3280 fs/namei.c:3804
-       do_filp_open+0x235/0x490 fs/namei.c:3834
-       do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
-       do_sys_open fs/open.c:1420 [inline]
-       __do_sys_openat fs/open.c:1436 [inline]
-       __se_sys_openat fs/open.c:1431 [inline]
-       __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain+0x18e0/0x5900 kernel/locking/lockdep.c:3869
-       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
-       hfs_extend_file+0xff/0x1450 fs/hfs/extent.c:397
-       hfs_bmap_reserve+0xd9/0x400 fs/hfs/btree.c:234
-       __hfs_ext_write_extent+0x22e/0x4f0 fs/hfs/extent.c:121
-       __hfs_ext_cache_extent+0x6a/0x990 fs/hfs/extent.c:174
-       hfs_ext_read_extent fs/hfs/extent.c:202 [inline]
-       hfs_extend_file+0x344/0x1450 fs/hfs/extent.c:401
-       hfs_get_block+0x3e4/0xb60 fs/hfs/extent.c:353
-       __block_write_begin_int+0x50c/0x1a70 fs/buffer.c:2128
-       __block_write_begin fs/buffer.c:2177 [inline]
-       block_write_begin+0x9b/0x1e0 fs/buffer.c:2236
-       cont_write_begin+0x645/0x890 fs/buffer.c:2590
-       hfs_write_begin+0x8a/0xd0 fs/hfs/inode.c:53
-       generic_perform_write+0x322/0x640 mm/filemap.c:4015
-       generic_file_write_iter+0xaf/0x310 mm/filemap.c:4136
-       new_sync_write fs/read_write.c:497 [inline]
-       vfs_write+0xa72/0xc90 fs/read_write.c:590
-       ksys_write+0x1a0/0x2c0 fs/read_write.c:643
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&tree->tree_lock/1);
-                               lock(&HFS_I(tree->inode)->extents_lock);
-                               lock(&tree->tree_lock/1);
-  lock(&HFS_I(tree->inode)->extents_lock);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor283/5110:
- #0: ffff888029a14420 (sb_writers#9){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:2854 [inline]
- #0: ffff888029a14420 (sb_writers#9){.+.+}-{0:0}, at: vfs_write+0x227/0xc90 fs/read_write.c:586
- #1: ffff8880784d0fa8 (&sb->s_type->i_mutex_key#14){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:791 [inline]
- #1: ffff8880784d0fa8 (&sb->s_type->i_mutex_key#14){+.+.}-{3:3}, at: generic_file_write_iter+0x83/0x310 mm/filemap.c:4133
- #2: ffff8880784d0df8 (&HFS_I(inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xff/0x1450 fs/hfs/extent.c:397
- #3: ffff88802992a0b0 (&tree->tree_lock/1){+.+.}-{3:3}, at: hfs_find_init+0x16e/0x1f0
-
-stack backtrace:
-CPU: 1 PID: 5110 Comm: syz-executor283 Not tainted 6.10.0-rc4-syzkaller-00283-g563a50672d8a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain+0x18e0/0x5900 kernel/locking/lockdep.c:3869
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- __mutex_lock_common kernel/locking/mutex.c:608 [inline]
- __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
- hfs_extend_file+0xff/0x1450 fs/hfs/extent.c:397
- hfs_bmap_reserve+0xd9/0x400 fs/hfs/btree.c:234
- __hfs_ext_write_extent+0x22e/0x4f0 fs/hfs/extent.c:121
- __hfs_ext_cache_extent+0x6a/0x990 fs/hfs/extent.c:174
- hfs_ext_read_extent fs/hfs/extent.c:202 [inline]
- hfs_extend_file+0x344/0x1450 fs/hfs/extent.c:401
- hfs_get_block+0x3e4/0xb60 fs/hfs/extent.c:353
- __block_write_begin_int+0x50c/0x1a70 fs/buffer.c:2128
- __block_write_begin fs/buffer.c:2177 [inline]
- block_write_begin+0x9b/0x1e0 fs/buffer.c:2236
- cont_write_begin+0x645/0x890 fs/buffer.c:2590
- hfs_write_begin+0x8a/0xd0 fs/hfs/inode.c:53
- generic_perform_write+0x322/0x640 mm/filemap.c:4015
- generic_file_write_iter+0xaf/0x310 mm/filemap.c:4136
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0xa72/0xc90 fs/read_write.c:590
- ksys_write+0x1a0/0x2c0 fs/read_write.c:643
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe0c6fea2e9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 21 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffefba1b208 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fe0c6fea2e9
-RDX: 000000000000fea7 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 0000000000000000 R08: 00000000200005c0 R09: 00007ffefba1b240
-R10: 0000000000000280 R11: 0000000000000246 R12: 00007ffefba1b22c
-R13: 000000000000000b R14: 431bde82d7b634db R15: 00007ffefba1b260
- </TASK>
-
-
+Signed-off-by: Anton Bambura <jenneron@postmarketos.org>
+Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ arch/arm64/boot/dts/qcom/Makefile           |   1 +
+ arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts | 140 ++++++++++++++++++++++++++++
+ 2 files changed, 141 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index b35e46d75a1d..919dfcb26d15 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -31,6 +31,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-alcatel-idol347.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-asus-z00l.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-gplus-fl8005a.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-huawei-g7.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-lg-c50.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-lg-m216.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8910.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts b/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts
+new file mode 100644
+index 000000000000..a823a1c40208
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts
+@@ -0,0 +1,140 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/dts-v1/;
++
++#include "msm8916-pm8916.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "LG Leon LTE";
++	compatible = "lg,c50", "qcom,msm8916";
++	chassis-type = "handset";
++
++	aliases {
++		mmc0 = &sdhc_1; /* eMMC */
++		mmc1 = &sdhc_2; /* SD card */
++		serial0 = &blsp_uart2;
++	};
++
++	chosen {
++		stdout-path = "serial0";
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-0 = <&gpio_keys_default>;
++		pinctrl-names = "default";
++
++		label = "GPIO Buttons";
++
++		volume-up-button {
++			label = "Volume Up";
++			gpios = <&tlmm 108 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++
++		volume-down-button {
++			label = "Volume Down";
++			gpios = <&tlmm 107 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++	};
++
++	reg_sd_vmmc: regulator-sdcard-vmmc {
++		compatible = "regulator-fixed";
++		regulator-name = "sdcard-vmmc";
++		regulator-min-microvolt = <2950000>;
++		regulator-max-microvolt = <2950000>;
++
++		gpio = <&tlmm 60 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		startup-delay-us = <5000>;
++
++		pinctrl-0 = <&sd_vmmc_en_default>;
++		pinctrl-names = "default";
++	};
++};
++
++&blsp_uart2 {
++	status = "okay";
++};
++
++&pm8916_usbin {
++	status = "okay";
++};
++
++&pm8916_vib {
++	status = "okay";
++};
++
++&sdhc_1 {
++	status = "okay";
++};
++
++&sdhc_2 {
++	vmmc-supply = <&reg_sd_vmmc>;
++
++	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
++	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
++	pinctrl-names = "default", "sleep";
++
++	cd-gpios = <&tlmm 38 GPIO_ACTIVE_HIGH>;
++
++	status = "okay";
++};
++
++&usb {
++	dr_mode = "peripheral";
++	extcon = <&pm8916_usbin>;
++	status = "okay";
++};
++
++&usb_hs_phy {
++	extcon = <&pm8916_usbin>;
++};
++
++&venus {
++	status = "okay";
++};
++
++&venus_mem {
++	status = "okay";
++};
++
++&wcnss {
++	status = "okay";
++};
++
++&wcnss_iris {
++	compatible = "qcom,wcn3620";
++};
++
++&wcnss_mem {
++	status = "okay";
++};
++
++&tlmm {
++	gpio_keys_default: gpio-keys-default-state {
++		pins = "gpio107", "gpio108";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++
++	sd_vmmc_en_default: sd-vmmc-en-default-state {
++		pins = "gpio60";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	sdc2_cd_default: sdc2-cd-default-state {
++		pins = "gpio38";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++};
+
+-- 
+2.45.2
+
