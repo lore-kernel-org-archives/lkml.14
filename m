@@ -1,35 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C135155C1A;
-	Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D58E180A95
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719144030; cv=none; b=ZKQc8iCAkW+2qOVdAAGdKc4zkUoTZiBwqVzXR4zQXSF7Gy0F/46DCi4D8BuKpjscLS+/MdRtH8LeEdLPDi05WAKgo+tpbxf0UWTOG5OE6qN5bFcUERgw8sqHBbbL6C1mqI35wys1VEc3qRrvTvnTsaQo8Zv74USUy0Ve8C5jkIw=
+	t=1719144032; cv=none; b=fGgh5Nj+zaHlTb4M1Kf3z2rCKmEAgyaVih151/NH3sTq4tqIa8FnML0G+Nz8IdHIMi7bKY8o+S2WJ9p6bFqRUbgwUeciQAiSvfJKtP6r8RFoEedvqv/BPqkl59V7K/OmmrVIoWje1LwT373bzBs0ip0z7BT1RCGmRO5FwhWwePA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719144030; c=relaxed/simple;
-	bh=mAN44LwTX3XKIAEy4qNZFAmyTgjXBNzHHu7xGgTUnqk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=qB5vRGXkUjRknRdhyifxpVJXpgEC2q9Fvg5V9FfpljmlU7MFal0dzJO/OqugR5+1nGRSpKDkD99x7ZQFCdkSVrIAYuFbWAkUpSFVASApdBg++W8pvhAP6mDxD37WF1aMcG98LihjNT2gMrr/NP4uza2RaWEmGGDcU0AwNEhDtYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh9z/1Ul; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719144032; c=relaxed/simple;
+	bh=MQKKDaIGCGbRLN1AzCvjvVCiUpvORFMPwHtaVwKOtaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZp2I9OZMV0tk/y6E1qW62z7NmTpy1+y0CV8qY13NfIwlDeGxp9wLT4EoWsrQCliOJUZaPc4VPujbDpqxA/quzTT+/UykeGfshCZKpIChXm4ZXPo3TrTEi7JXUJw+9KBLBz3M3vbJe66wKkE8IYs/07pz3kvo15+tj41ZLB5cLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cryfDCVg; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh9z/1Ul"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 533B4C32782;
-	Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719144030;
-	bh=mAN44LwTX3XKIAEy4qNZFAmyTgjXBNzHHu7xGgTUnqk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Nh9z/1UlpjX8JpDF34aLyT2iVr8v8V4BlO7GwBSzwCJa6017lGcMS/fi1GhgJlrts
-	 P4YzUxGBARbwYPYyR/O+vIm4CiGAD6Ya4rbPgChAZ0CJodUqYqcFYnyJ243tP1rs8n
-	 uqPhCXt+BXHUbeY9l9aqF5mFpSPXbavokzhv/8GKWcGx7SD6mwiQaVL6F3mdfLa0WI
-	 WyHw+uL+TH82dXwt/9VCsVYWFnygwCjZqIIst1HjhZwaujLvMfG4oBzKw6FySNeXRP
-	 7uYYwVlTeQ9IbTGSX4BjYENQRXR/10NZOv3vdxDNQ6pJc/JrH+W1eMWXUsXqquxVvg
-	 jsaeAl1mBGkQw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3AADBC54BB3;
-	Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cryfDCVg"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42172ed3487so25412065e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 05:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719144029; x=1719748829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wq0GDSPoIp4+sLNJUnd9TkEoaORchJ/hKSadjq9Ps7M=;
+        b=cryfDCVgqCvZEUY0c+t7jEnyytH88L5XWsxgFbJfWN/k8P/G2AhX9oUVEcLdAI105c
+         Tt90mjbWsRN7DqTEolwunC2PFbtXmbuX4EHxgaMBv8OKGOziM/z7mKcRrlkX5/uz7bvf
+         Hx7l4ZhylyGJS16vzWXdZtmFL3eueuwo3bPkC7lBQmaqLXD3kXxPq5bSb9Ay3xkW0Bos
+         Jq8gXAaL/LXBhM4jVf3Z6gqXfh/EdAeyCUJuAi8S6AHUqepgiKr8UulUhVQ8wOMNtMG0
+         7XJQTkIov+8V3CMUJ0KQBOiHz1az365yFm5h+/4uEz4ouFRXeChL3ZuErX9NLgZ8m18m
+         WmMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719144029; x=1719748829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wq0GDSPoIp4+sLNJUnd9TkEoaORchJ/hKSadjq9Ps7M=;
+        b=ZE8fYW8/hua2jvQguVs8POmz669BdWADWWrSbEv+oJ098F94yKLW342zWuRmF+7lFj
+         l+Mq2dGrGtuAVb0OBULEXXCzeJent+mXrxGdmm4N4+uGgIxacEpsD1XtmcAYkdJwsfLa
+         bJkXGJAi8yqirG+6dFmOQT2zvioKcnvoEU7ptSw2owiEz4aExzJdrXT+OCPoO14sgqYB
+         S6k3lkN7oD/h6LH1LqqgC9qBgWnDjiZDQy0HWoHQ+TPOc7vjD4ZOpJwzbLxKcV/9KCDu
+         DMdhSPB9Wnu6jWGP5MZcKhYGDOs/jmCywA1VOq8BF4bpy2N65nlGCp0z9P+yCYxBAiw9
+         84WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTyG6YnLlcF03LuY0l10hFQKe6wjqHhA1/zRcsOoiCSLBvIizTEFxD8QuRjcGVUuE6fdGqB1WWY+Z/7TCvieUyQyWCQwoYwoKwRRWv
+X-Gm-Message-State: AOJu0YzN7nNKkEU4jcWK8BBNP04KrDKg4wCD+PJWY6bwJwAFOKlHBU8t
+	BbB43gC/3CFY1Kl//rgu9FFzm43VQC74P05KNjM/TKFZ44WxmY083tIiw2nrIyo=
+X-Google-Smtp-Source: AGHT+IENFAK7IVpV/k8lzPMo9UahIiF1uHLMk0nrZAmjoYC0Fijkz3aInqbbeS6fxxaaR/xdi+aTqA==
+X-Received: by 2002:a05:600c:b44:b0:424:784c:b13b with SMTP id 5b1f17b1804b1-42489e3ac94mr22668335e9.13.1719144029481;
+        Sun, 23 Jun 2024 05:00:29 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4248179d3basm105465515e9.4.2024.06.23.05.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Jun 2024 05:00:28 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: display/msm/gpu: constrain clocks in top-level
+Date: Sun, 23 Jun 2024 14:00:24 +0200
+Message-ID: <20240623120026.44198-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,42 +82,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 1/1] dt-bindings: net: fman: remove ptp-timer from required
- list
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171914403023.11613.628899711265897409.git-patchwork-notify@kernel.org>
-Date: Sun, 23 Jun 2024 12:00:30 +0000
-References: <20240621170000.2289596-1-Frank.Li@nxp.com>
-In-Reply-To: <20240621170000.2289596-1-Frank.Li@nxp.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- richardcochran@gmail.com, madalin.bucur@nxp.com, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
 
-Hello:
+We expect each schema with variable number of clocks, to have the widest
+constrains in top-level "properties:".  This is more readable and also
+makes binding stricter, if there is no "if:then:" block for given
+variant.
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/display/msm/gpu.yaml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On Fri, 21 Jun 2024 13:00:00 -0400 you wrote:
-> IEEE1588(ptp) is optional feature for network. Remove it from required
-> list to fix below CHECK_DTBS warning.
-> arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dtb: ethernet@f0000: 'ptp-timer' is a required property
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  Documentation/devicetree/bindings/net/fsl,fman-dtsec.yaml | 1 -
->  1 file changed, 1 deletion(-)
-
-Here is the summary with links:
-  - [1/1] dt-bindings: net: fman: remove ptp-timer from required list
-    https://git.kernel.org/netdev/net/c/8a67cbd47bf4
-
-You are awesome, thank you!
+diff --git a/Documentation/devicetree/bindings/display/msm/gpu.yaml b/Documentation/devicetree/bindings/display/msm/gpu.yaml
+index 40b5c6bd11f8..253e68d92779 100644
+--- a/Documentation/devicetree/bindings/display/msm/gpu.yaml
++++ b/Documentation/devicetree/bindings/display/msm/gpu.yaml
+@@ -32,9 +32,13 @@ properties:
+           - pattern: '^amd,imageon-200\.[0-1]$'
+           - const: amd,imageon
+ 
+-  clocks: true
++  clocks:
++    minItems: 2
++    maxItems: 7
+ 
+-  clock-names: true
++  clock-names:
++    minItems: 2
++    maxItems: 7
+ 
+   reg:
+     minItems: 1
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
