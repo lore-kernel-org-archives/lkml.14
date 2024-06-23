@@ -1,106 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC2212FB16;
-	Sun, 23 Jun 2024 11:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75141369B4;
+	Sun, 23 Jun 2024 11:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719142005; cv=none; b=O3cB8u7/DeJ6+FSuWX/gWwuSVQGEg/IJsP7YsMTu6rBQi0WWMS7v/PcN/ipoEAn+tS/+yrg182BtcIiynGH/+WI+8Mj4gmnPnkaBaCXAoBhZo9m3qjMAHTZJb+/5pf+VDd9wZ3jRlyX3yT5Z1nUGvwgNMe6tsmHXFKwN8ezALeY=
+	t=1719142009; cv=none; b=jKCh7CxRJ1wiZG6XFzZNY3HBLgV+3dDxk9WpS4aWpvemamq/B+VHXperaTHkZJ54rT4nNW5SdxQ1mv57GE6hJIymRtQP2gaenfDl6XcwX46FDw8srHG2IkJRT8vVOtXrgUfsJv+eEi1Ged76qK/MGpRfM2ac8H46BQJUeiAUZow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719142005; c=relaxed/simple;
-	bh=Ns+1fxdSm08kdtmE5k60TaoPkn5o0cedh5wov4OMD2s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZpfHfySnybt8lK3t7JuGe8t4eWz1YG3nl0zx3NjfA8Q0bmmbPRtrABawB7c5/tzDeCo/HMaYFkO9dUTYOLa2XFMbQ6wscZ5Uoh9YMusTkf1A2XoIj+hSMzVQKEeW7/9Kekutwd60h0cmo6nXjqzKICSFeAmyN/AD4I4mxlbtSqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFLZPbce; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFLZPbce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18E5C4AF07;
-	Sun, 23 Jun 2024 11:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719142005;
-	bh=Ns+1fxdSm08kdtmE5k60TaoPkn5o0cedh5wov4OMD2s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IFLZPbcetrCj5BKukxAaS+ERdRqTx9aaoOECDGIuHu1wh6+4VNQ/12T1gBSZSQiq/
-	 NnZZHjNHZk32/n2TMMuonqxRQLiIKOlJF9C1LxTq3jBcKbUG5FgiFxNwfFzTmnOwDM
-	 vYgpxyGEx8H2cpEl+SNelgzPz3vxpSrygcnt3DOrYvGnjqbMaaQNgmaaI7kBOmBcwd
-	 0qdOHw9lG/7fOzuqP0Dx/MdURLbX3695SVilwjOMxZpsr+nKSCwHMdu/dCWDPVNCIN
-	 R9+BrGdoFHFsnpGdYD+2vGVBpfDuITh04q0d7be2sL5PDq0QTAqe2wm6Mgd7xbvg5F
-	 10n/GfZciezZg==
-From: Mark Brown <broonie@kernel.org>
-Date: Sun, 23 Jun 2024 12:23:49 +0100
-Subject: [PATCH RFT v6 7/9] selftests/clone3: Explicitly handle child exits
- due to signals
+	s=arc-20240116; t=1719142009; c=relaxed/simple;
+	bh=Dd6YcmLb8o+G6RWqBuwSGvOw3f/TCS3z7u0PqBD9BPg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=qHvxh4d9Q/XUmydvjiG+irW0eYuI/+OnFO20I5kZnkrT+6sWxD3AGlgEjyNR4Zu8LcS0CmDxe1mtD4LMiiLHdNgJ9RkNreaiuRl+1MmG712rRhp9VZknlLuEo5r5UqGYPrwsvhzXFbnqdmhBdnN2Wwbpn5Bc4qDdETG/fa2xDik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=artur-rojek.eu; spf=pass smtp.mailfrom=artur-rojek.eu; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=artur-rojek.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=artur-rojek.eu
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3C80BC0005;
+	Sun, 23 Jun 2024 11:26:38 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Date: Sun, 23 Jun 2024 13:26:38 +0200
+From: Artur Rojek <contact@artur-rojek.eu>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Paul Cercueil <paul@crapouillou.net>, Sebastian Reichel
+ <sre@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Sebastian
+ Reichel <sebastian.reichel@collabora.com>, linux-mips@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Subject: Re: [PATCH] power: supply: ingenic: Fix some error handling paths in
+ ingenic_battery_get_property()
+In-Reply-To: <51e49c18574003db1e20c9299061a5ecd1661a3c.1719121781.git.christophe.jaillet@wanadoo.fr>
+References: <51e49c18574003db1e20c9299061a5ecd1661a3c.1719121781.git.christophe.jaillet@wanadoo.fr>
+Message-ID: <f3b7a454fbd761450303ea8128c888fa@artur-rojek.eu>
+X-Sender: contact@artur-rojek.eu
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240623-clone3-shadow-stack-v6-7-9ee7783b1fb9@kernel.org>
-References: <20240623-clone3-shadow-stack-v6-0-9ee7783b1fb9@kernel.org>
-In-Reply-To: <20240623-clone3-shadow-stack-v6-0-9ee7783b1fb9@kernel.org>
-To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
- "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, 
- Daniel Bristot de Oliveira <bristot@redhat.com>, 
- Valentin Schneider <vschneid@redhat.com>, 
- Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
- linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>, Kees Cook <kees@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1097; i=broonie@kernel.org;
- h=from:subject:message-id; bh=Ns+1fxdSm08kdtmE5k60TaoPkn5o0cedh5wov4OMD2s=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmeAZDuosQZSpfuY3XJTQ1dqm+pascfylx6In79ck1
- oArKUXGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZngGQwAKCRAk1otyXVSH0K8zB/
- 9L6I/i+8gYUI6kQtVp7l7ltMHJLuzpPbpQXr/49cOdLz3OIHrt4ya0tG/QYpqcTb62W2Nw3cdTs2ku
- K4SjKs6FTNzvF6CYCJR5OX0+YV4cZ5But9VUCNEY/ABMcDgGYNqoVHE9T6qS60opli5VQ3XW5+RYon
- NVlS0547Frnp0g/FtW8+qk8DF0eoWrudqtmWIQZ6jT4UIJYEC+iuEv9GI35ZJo79rfJOgBc02LTFm2
- XRzNoNQNMbpwWtvPZkY0pIR2EtW3pbCF1dCOOd3zAUTuYv1S5YZEy56gmJ1G3RcFr56I5ykv5jysrM
- BkpMZs71zcY9q13gbuH+063NebCnHA
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-GND-Sasl: contact@artur-rojek.eu
 
-In order to improve diagnostics and allow tests to explicitly look for
-signals check to see if the child exited due to a signal and if it did
-print the code and return it as a positive value, distinct from the
-negative errnos currently returned.
+Hi Christophe,
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/clone3/clone3.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+thanks for the patch, looking good.
 
-diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
-index e066b201fa64..3b3a08e6a34d 100644
---- a/tools/testing/selftests/clone3/clone3.c
-+++ b/tools/testing/selftests/clone3/clone3.c
-@@ -111,6 +111,13 @@ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
- 		ksft_print_msg("waitpid() returned %s\n", strerror(errno));
- 		return -errno;
- 	}
-+
-+	if (WIFSIGNALED(status)) {
-+		ksft_print_msg("Child exited with signal %d\n",
-+			       WTERMSIG(status));
-+		return WTERMSIG(status);
-+	}
-+
- 	if (!WIFEXITED(status)) {
- 		ksft_print_msg("Child did not exit normally, status 0x%x\n",
- 			       status);
+Acked-by: Artur Rojek <contact@artur-rojek.eu>
 
--- 
-2.39.2
+Cheers,
+Artur
 
+On 2024-06-23 07:50, Christophe JAILLET wrote:
+> If iio_read_channel_processed() fails, 'val->intval' is not updated, 
+> but it
+> is still *1000 just after. So, in case of error, the *1000 accumulate 
+> and
+> 'val->intval' becomes erroneous.
+> 
+> So instead of rescaling the value after the fact, use the dedicated 
+> scaling
+> API. This way the result is updated only when needed. In case of error, 
+> the
+> previous value is kept, unmodified.
+> 
+> This should also reduce any inaccuracies resulting from the scaling.
+> 
+> Finally, this is also slightly more efficient as it saves a function 
+> call
+> and a multiplication.
+> 
+> Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery 
+> driver.")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/power/supply/ingenic-battery.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/power/supply/ingenic-battery.c 
+> b/drivers/power/supply/ingenic-battery.c
+> index 2e7fdfde47ec..0a40f425c277 100644
+> --- a/drivers/power/supply/ingenic-battery.c
+> +++ b/drivers/power/supply/ingenic-battery.c
+> @@ -31,8 +31,9 @@ static int ingenic_battery_get_property(struct 
+> power_supply *psy,
+> 
+>  	switch (psp) {
+>  	case POWER_SUPPLY_PROP_HEALTH:
+> -		ret = iio_read_channel_processed(bat->channel, &val->intval);
+> -		val->intval *= 1000;
+> +		ret = iio_read_channel_processed_scale(bat->channel,
+> +						       &val->intval,
+> +						       1000);
+>  		if (val->intval < info->voltage_min_design_uv)
+>  			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+>  		else if (val->intval > info->voltage_max_design_uv)
+> @@ -41,8 +42,9 @@ static int ingenic_battery_get_property(struct 
+> power_supply *psy,
+>  			val->intval = POWER_SUPPLY_HEALTH_GOOD;
+>  		return ret;
+>  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> -		ret = iio_read_channel_processed(bat->channel, &val->intval);
+> -		val->intval *= 1000;
+> +		ret = iio_read_channel_processed_scale(bat->channel,
+> +						       &val->intval,
+> +						       1000);
+>  		return ret;
+>  	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
+>  		val->intval = info->voltage_min_design_uv;
