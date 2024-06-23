@@ -1,130 +1,166 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679A755C1A;
-	Sun, 23 Jun 2024 12:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580D9180A9B;
+	Sun, 23 Jun 2024 12:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719144225; cv=none; b=OE9hDQ3ou35EtINvZhAtUj/yP1/GkDRypZv4BcTPfYhsIJoSWTFBIS6VWKwJs1uBAgp33sNF9NQfFIQrHKq6bScEoHBLIeZoTT9mIItqwvgcpZ6czgs0HOEIRgYrJ8pVNvYUSF/NOrvraXoCm2uGYD/s2cpCU6z/8Gnun7VwbVg=
+	t=1719144227; cv=none; b=NeLj+Ji8wPU89yX9lGhhNB9py792V22maSHyBPZ5l2FVfrZ97cKEUIdixC2vpBA6nCmgPUIzcCcUos4vjf5XiDnwrUi2O3okT5hjQIXf64i074nBki4VOx3pN5/KVpNoJ+4g/kTO17wAnmxBOZ0+z1keShMKY4J9ti3MPeAuuos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719144225; c=relaxed/simple;
-	bh=1ejHMVfM/x1I9WH/AOfTOYsFcicOOrHVTNcQMO9V9T0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Swqlo3YQ/ugPNXUm8dla/adkQNL6WetRMwyvEtmgLSRJWlgr0eEBxRiQ+woBLyc3jvyQU6BUEMfLN7pqD8Cv+laByqykN198XGY/XCZFF36L4QkQUTGLZusp5VE8MXZUvUguvHJ1plwlZHFb2Njlfg2fWJ+Oy/ZZEqExEl2EhhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKNkwzgp; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719144227; c=relaxed/simple;
+	bh=Ldz1GN6+3Z7G8+L6Q7Yh9h7HRyzDV64bj3F+rO77G7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GmsV7V28PzW42zuJDg+V1gvOXw9FkTT1Rt7Qy4okN6P6QiVPlXbsbUCSOH0Jandi8nuDjqnpeSo7pl1Z1JwgnLkx5rsWkR12JdWRgjzF0pfby2DYxh9Z5/mdMUMEVJOFbb32kdkaY215A5gF3MGSxf12xVX+MukogVaSJi4w4IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFjOE7tY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKNkwzgp"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f862f7c7edso26336325ad.3;
-        Sun, 23 Jun 2024 05:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719144224; x=1719749024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gnQ+CeHuZXlYO167FONNTk6/FjCBP/TpIYsSm5694xc=;
-        b=JKNkwzgpdIdCAaS6JM06lmq811pEaKo5nHU9sQe6HWhOrZXBdlSAOcVqNQk61j3IJo
-         WT0RJlbU6QT7qsq66Sx1/BNUPR6DLRY6nJOO0AFqQEG0ijZpZAfUoDmYUr9gnCqySnwY
-         6FZihtuPa49liYqmaHoeRe3K7LRm1czzEJ2TiyhHKsm0JWLtmTYCTFj64hEPCJ/1qz2U
-         uJNAJMhmUAfCl4sOW83adfUP0U4FElAKbcTejGHDLWrIuMhPXQKcq1Emg0IwbdS7vGo7
-         wnVh5jGG3EOvSbNQoqICgShCm/xd4g3Yqq3oGzWxgQZhY9ewVbMhjFrxmUOuw5Lm547X
-         clrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719144224; x=1719749024;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gnQ+CeHuZXlYO167FONNTk6/FjCBP/TpIYsSm5694xc=;
-        b=p4AOJGvBn4hxxzreNgdhYZZ5bfIIequ67ETzSdsXBgIIUZjYlG1ZQ4b+mMi0mFPr3k
-         nadjg2YldvFnBvnJiy4bbpMcOLSywCfgJ1rP6TIqZ4ueF7T6ZecrYXHmKipLlt8trD85
-         IOKeoJoPqyE+ymakBWhMlhaHolR0+5CHsToqEtMwj5Zoo0bhG9YWdFDt7FacC7LLZdXC
-         BtrzesYZU0vb1tG7p+vY9i7GNCBsncCoIlIngcWa0gEwwhKtGvUnB5cFbw8qdpT+VWLH
-         C0P895prUCLSQHFWt2Tl9FlF53vMUXVyznqHJG/AMWk6k++8TMO4i62Ueh2NJL69tdLY
-         0juA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWGi/CQDw1O8LTLeNC7xOtL7qIsWhba033Jta65mkp/N7qPzTANQJr/QOGEpKpP74hlSWPnwb+gIsAiica7e/89njk1uBTXSvme4NVhghXi/npE4/DF7io/q6bZTOdIDhOArDyBOw2ww==
-X-Gm-Message-State: AOJu0YxVUCh1FcfkGeilfUy9zQcKywk5UnI+J8EDh51tj1xGUzMt27Wb
-	aTgsX6CLVA2lSWEBfRs+JKcZiVfU48x0c4zQjgWakrLRz3Cb2ruE6aCgVw==
-X-Google-Smtp-Source: AGHT+IEPb5xME3a9IS+fRFpSAE5BQuoZ6z9qef0vi9HrYc+oM9FrRBDiIFAhlEMXkvjwfyzWbKILkA==
-X-Received: by 2002:a17:902:f693:b0:1f9:a602:5e41 with SMTP id d9443c01a7336-1fa1d3b7218mr27947185ad.1.1719144223417;
-        Sun, 23 Jun 2024 05:03:43 -0700 (PDT)
-Received: from localhost.localdomain ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb7cf962sm44141545ad.231.2024.06.23.05.03.40
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 23 Jun 2024 05:03:42 -0700 (PDT)
-From: yskelg@gmail.com
-To: Harald Freudenberger <freude@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Cc: shjy180909@gmail.com,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yunseong Kim <yskelg@gmail.com>
-Subject: [PATCH] s390/zcrypt: optimize memory allocation in online_show()
-Date: Sun, 23 Jun 2024 21:01:49 +0900
-Message-ID: <20240623120147.35554-3-yskelg@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFjOE7tY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D09DC2BD10;
+	Sun, 23 Jun 2024 12:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719144226;
+	bh=Ldz1GN6+3Z7G8+L6Q7Yh9h7HRyzDV64bj3F+rO77G7A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SFjOE7tYSboRbmzbWgyT48Ah1/vEWsZ61y7RgQdabaMP/sUFH8lcpcfV6Ty1kg6G5
+	 LuaNtJrdpZTVgmao2HDLK0zGz5fRoJjySoVbzQtoiUcutHfEyxLdz4Yb0GoE2B379Q
+	 dN9GaKC+pcd/B6tRbe6VtlI89fXkmoGFYIUa6VgDN4xrSACazrSZ3Z34pn32VupmhD
+	 InImK/T0qbo6C8QGNtNWVlTxgIGp91v80XrZxq/cpfuw0pYI+OPAmawMe4Zkqdkm+Q
+	 s54W7zCF5mn15d1iovDv9t8JoIEbp7hhDcDT8Zaj/cw8OBViYm6AY7KSKQkPDle5Bj
+	 cPOy5Rj9HO+YQ==
+Date: Sun, 23 Jun 2024 13:03:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Lars-Peter Clausen
+ <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] iio: Add iio_read_channel_label to inkern API
+Message-ID: <20240623130339.535b96ba@jic23-huawei>
+In-Reply-To: <20240620211310.820579-2-sean.anderson@linux.dev>
+References: <20240620211310.820579-1-sean.anderson@linux.dev>
+	<20240620211310.820579-2-sean.anderson@linux.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Yunseong Kim <yskelg@gmail.com>
+On Thu, 20 Jun 2024 17:13:08 -0400
+Sean Anderson <sean.anderson@linux.dev> wrote:
 
-Previously, when setting the online state for a card, the code would
-allocate memory to store information about all attached queues,
-regardless of whether their online state actually changed.
-This patch improves efficiency by only allocating memory for the queues
-that are truly affected by the online state change.
+> It can be convenient for other in-kernel drivers to reuse IIO channel
+> labels. Export the iio_read_channel_label function to allow this. The
+> signature is different depending on where we are calling it from, so
+> the meat is moved to do_iio_read_channel_label.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 
-This allows for a more precise memory allocation (based on maxzqs) which
-can reduce memory usage.
+Seems like a useful addition to me. I'm not 100% what path this will
+take so if it goes via HWMON.
 
-Signed-off-by: Yunseong Kim <yskelg@gmail.com>
----
- drivers/s390/crypto/zcrypt_card.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-diff --git a/drivers/s390/crypto/zcrypt_card.c b/drivers/s390/crypto/zcrypt_card.c
-index 050462d95222..2c80be3f2a00 100644
---- a/drivers/s390/crypto/zcrypt_card.c
-+++ b/drivers/s390/crypto/zcrypt_card.c
-@@ -88,9 +88,10 @@ static ssize_t online_store(struct device *dev,
- 	 * the zqueue objects, we make sure they exist after lock release.
- 	 */
- 	list_for_each_entry(zq, &zc->zqueues, list)
--		maxzqs++;
-+		if (!!zq->online != !!online)
-+			maxzqs++;
- 	if (maxzqs > 0)
--		zq_uelist = kcalloc(maxzqs + 1, sizeof(*zq_uelist), GFP_ATOMIC);
-+		zq_uelist = kcalloc(maxzqs, sizeof(*zq_uelist), GFP_ATOMIC);
- 	list_for_each_entry(zq, &zc->zqueues, list)
- 		if (zcrypt_queue_force_online(zq, online))
- 			if (zq_uelist) {
-@@ -98,14 +99,11 @@ static ssize_t online_store(struct device *dev,
- 				zq_uelist[i++] = zq;
- 			}
- 	spin_unlock(&zcrypt_list_lock);
--	if (zq_uelist) {
--		for (i = 0; zq_uelist[i]; i++) {
--			zq = zq_uelist[i];
--			ap_send_online_uevent(&zq->queue->ap_dev, online);
--			zcrypt_queue_put(zq);
--		}
--		kfree(zq_uelist);
-+	while (i--) {
-+		ap_send_online_uevent(&zq->queue->ap_dev, online);
-+		zcrypt_queue_put(zq_uelist[i]);
- 	}
-+	kfree(zq_uelist);
- 
- 	return count;
- }
--- 
-2.45.2
+It may be messy and need an immutable branch however. I haven't
+checked for churn in this code yet.
+
+
+> ---
+> 
+>  drivers/iio/iio_core.h          |  4 ++++
+>  drivers/iio/industrialio-core.c | 23 ++++++++++++++---------
+>  drivers/iio/inkern.c            |  6 ++++++
+>  include/linux/iio/consumer.h    | 10 ++++++++++
+>  4 files changed, 34 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+> index 1a38b1915e7a..b7d5f4f0fada 100644
+> --- a/drivers/iio/iio_core.h
+> +++ b/drivers/iio/iio_core.h
+> @@ -34,6 +34,10 @@ void iio_device_ioctl_handler_register(struct iio_dev *indio_dev,
+>  				       struct iio_ioctl_handler *h);
+>  void iio_device_ioctl_handler_unregister(struct iio_ioctl_handler *h);
+>  
+> +ssize_t do_iio_read_channel_label(struct iio_dev *indio_dev,
+> +				  const struct iio_chan_spec *c,
+> +				  char *buf);
+> +
+>  int __iio_add_chan_devattr(const char *postfix,
+>  			   struct iio_chan_spec const *chan,
+>  			   ssize_t (*func)(struct device *dev,
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 2f185b386949..0f6cda7ffe45 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -727,22 +727,27 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
+>  }
+>  EXPORT_SYMBOL_GPL(iio_format_value);
+>  
+> -static ssize_t iio_read_channel_label(struct device *dev,
+> -				      struct device_attribute *attr,
+> -				      char *buf)
+> +ssize_t do_iio_read_channel_label(struct iio_dev *indio_dev,
+> +				  const struct iio_chan_spec *c,
+> +				  char *buf)
+>  {
+> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> -	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
+> -
+>  	if (indio_dev->info->read_label)
+> -		return indio_dev->info->read_label(indio_dev, this_attr->c, buf);
+> +		return indio_dev->info->read_label(indio_dev, c, buf);
+>  
+> -	if (this_attr->c->extend_name)
+> -		return sysfs_emit(buf, "%s\n", this_attr->c->extend_name);
+> +	if (c->extend_name)
+> +		return sysfs_emit(buf, "%s\n", c->extend_name);
+>  
+>  	return -EINVAL;
+>  }
+>  
+> +static ssize_t iio_read_channel_label(struct device *dev,
+> +				      struct device_attribute *attr,
+> +				      char *buf)
+> +{
+> +	return do_iio_read_channel_label(dev_to_iio_dev(dev),
+> +					 to_iio_dev_attr(attr)->c, buf);
+> +}
+> +
+>  static ssize_t iio_read_channel_info(struct device *dev,
+>  				     struct device_attribute *attr,
+>  				     char *buf)
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index 39cf26d69d17..9f484c94bc6e 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -1010,3 +1010,9 @@ ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
+>  			       chan->channel, buf, len);
+>  }
+>  EXPORT_SYMBOL_GPL(iio_write_channel_ext_info);
+> +
+> +ssize_t iio_read_channel_label(struct iio_channel *chan, char *buf)
+> +{
+> +	return do_iio_read_channel_label(chan->indio_dev, chan->channel, buf);
+> +}
+> +EXPORT_SYMBOL_GPL(iio_read_channel_label);
+> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> index e9910b41d48e..333d1d8ccb37 100644
+> --- a/include/linux/iio/consumer.h
+> +++ b/include/linux/iio/consumer.h
+> @@ -441,4 +441,14 @@ ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
+>  ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
+>  				   const char *buf, size_t len);
+>  
+> +/**
+> + * iio_read_channel_label() - read label for a given channel
+> + * @chan:		The channel being queried.
+> + * @buf:		Where to store the attribute value. Assumed to hold
+> + *			at least PAGE_SIZE bytes.
+> + *
+> + * Returns the number of bytes written to buf, or an error code.
+> + */
+> +ssize_t iio_read_channel_label(struct iio_channel *chan, char *buf);
+> +
+>  #endif
 
