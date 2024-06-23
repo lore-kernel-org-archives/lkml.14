@@ -1,141 +1,136 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74413146A7D
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 15:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C7383A2;
+	Sun, 23 Jun 2024 15:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719156566; cv=none; b=mQY3TfE3TVu1qXzN00TunKC9xrZRsvkqy8uv7I3tmDWlbXiYL9CGrZ6yxs9hL2ELqwRSZZueZKZO+PYOg1V/rjI83YsdDR1ctJAF3JN8eGvcaD+LKneLXT5D/kMXJevLtJZv4en87RP2Np+kCuUerqtj7++ZYopFy0kdyf0NYak=
+	t=1719156632; cv=none; b=grfrTKlAhWu4yMjjB3jhaaE/jsNti0n7ie7UP6CRG466pad0940vYu7LSsf6y7p/OQ65pHeL+TaSIOC06XvXgRqQaZqVYISYSRwovWiLcRmRZadprMdFR+QmzNwSuwoqqqUtSTFDEAa33ia6PGL8vjslGpzximOZlELiDgwTxqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719156566; c=relaxed/simple;
-	bh=5GzQNXCfF8EdbfC3H4E9VS+tvgTWS1crHKs96+wLw5I=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ro0hnM4ptuPgCLMbcH2xYiAtmt9XCLGocKQu3wBX+UbR3EfVJi4HLk3jtC7jpyVdQTltqz5gxnsusNPu1ujB8YmcYJmF46v8gCpEtSIxk1mpE2Jx1laFuURIYyYtn+IcU67jE6Adq3h2K2Z1yh2HBX4rCSpBloiRVeaBDuYe6E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-37624b11960so34865255ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 08:29:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719156564; x=1719761364;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EP0r5vjIqTOj5wt9p5RxoVOv4/EypeRrWumP8Iu8xTU=;
-        b=LUhd38FFRHLKqvRy8QlkfGv91L7nOIl9UxwwJmOfeVEHJBs1jZ2f8YayGu/N4LnEcf
-         KkdxE7j06pU67sruED0kB4mqJ2B9YCQEhVesVCIlFzSDVO0q28HP0/osIn4dAtjv+nTr
-         /T3vLtfTU/Nw0l8yKP+pmYozY7qSZQXft+J6N2nwNBMPxneIKSNuyPJS3Ee4Oy36kmRW
-         JhCSyoxgQ+RVlPMUAxLe+ukuOF08H/sCXgA67BktPOP4S7U8Vc1hTvU4Uxe4LZjoXbjr
-         rQIdayoO2iA2o7nwOHBlgxWdfsTQXkhZMMd2H6yjH+lVYudq25azld+BB5KLHOlRG9Xy
-         /1Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6IuI4pARdZwb2BVD/d2N06NzgXt1+oLpR3umIXDo7dZroFa4mQg+6txYEN/OVfZvEvs/d8XpRUBAwyeLK7FPrWLtNtz3K9TbKIHca
-X-Gm-Message-State: AOJu0YxypPUofS/7/IGCdDR/4YshxhO9x6gKcy/sS/rZG/galNaqICEz
-	nVKH5z/RcxncNtvQ3OwAyvY/lPMCr+WJUN8negOQsBa9Lh1xJKW8qLezyw42BRHHh2jy1FYZHuM
-	p7/bzSYr1LBddGOymxFVndr19y6ZMnUBcF1R4R0TeMupd4dnXd5ERe/A=
-X-Google-Smtp-Source: AGHT+IFqnPdpAhkaCMlzEMZuVA/C2S6JDfh8pY3BlYKXaqSV5TpYTSaMd5hwBP7t8YgYtHTf5gVQGwAtwWvzgO6DJ3GECpny+vp9
+	s=arc-20240116; t=1719156632; c=relaxed/simple;
+	bh=fLaAUdCXl3SPS7buADscQ+/GakcFK4FuWZzPincktaY=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=oZV144VvH+ybIpiX6SlqkBbYsPLs/fUi8r3N8fJPpDnAj3RzAeK/JD3a2i5fWQBlfTrKER2/GvWj6AOuNt9R0HDLXtJIWIBC48BXQTz2OjumTlCWONuTdy1pcxSEv3vxF7UkxJfnO6YDCslPoLqYFAAV1qAMl39igIjs54iyrq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AQqWomOv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Z6IuwZ9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AQqWomOv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Z6IuwZ9"
+Date: Sun, 23 Jun 2024 15:30:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719156629;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=MBEgOJIV2TUnqAdeE3D2MfTE7hGYI1Ehb4nANujx6OI=;
+	b=AQqWomOvEY7BoEDmAltZWmsdbiNmufZL2+2AcmJQIvpyDLggaESCHt0B1rN91bKZyNvBu2
+	QKN+5n4+dRYGMVlN9U6bYU3bUJ3CExpSc18551puWzED1aDwnRqbf3gYCmELPWT/VVI0p3
+	FlTo+RclAnq3kaoMv5AgO+zDNlt+IFUzm0sBbR5uxXEgh2gySMwyb9gy5pRZhC56wvkFHk
+	ISCxTPLOTOcYtJJEXMA6wSG1+WktTzo5Le1a7yfyRyP4TwIWT63JSfQjeS3w8wpEMpCkZw
+	/bl/nDUpi6G5QNfnW5Hss+buVVXtn+EES5GhzWoRxzl74mpCg2JMtaJw4KTlZw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719156629;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=MBEgOJIV2TUnqAdeE3D2MfTE7hGYI1Ehb4nANujx6OI=;
+	b=0Z6IuwZ98TzinplI33EvnkbXbQUKCfDyzIhiVq9bbkOZOtdA7VwfVvm4XISVwKu6CQbb9G
+	OCPNk4eXkITTZmAA==
+From: tip-bot2 for Pali =?utf-8?q?Roh=C3=A1r?= <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqchip/armada-370-xp: Do not touch IPI registers on
+ platforms without IPI
+Cc: pali@kernel.org, kabel@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Andrew Lunn <andrew@lunn.ch>, x86@kernel.org, linux-kernel@vger.kernel.org,
+ maz@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cd84:0:b0:36c:4b17:e05d with SMTP id
- e9e14a558f8ab-3763e16d8a6mr3431835ab.4.1719156564589; Sun, 23 Jun 2024
- 08:29:24 -0700 (PDT)
-Date: Sun, 23 Jun 2024 08:29:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000589156061b90544f@google.com>
-Subject: [syzbot] [can?] INFO: task hung in cangw_pernet_exit_batch (3)
-From: syzbot <syzbot+21ad8c05e3792b6ffd14@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, mkl@pengutronix.de, 
-	netdev@vger.kernel.org, pabeni@redhat.com, socketcan@hartkopp.net, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <171915662859.10875.17816084553826058337.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+The following commit has been merged into the irq/core branch of tip:
 
-syzbot found the following issue on:
+Commit-ID:     9d80f6bd3ad8f2b49651d4685bb391399ecf80a2
+Gitweb:        https://git.kernel.org/tip/9d80f6bd3ad8f2b49651d4685bb391399ec=
+f80a2
+Author:        Pali Roh=C3=A1r <pali@kernel.org>
+AuthorDate:    Fri, 21 Jun 2024 11:38:30 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 23 Jun 2024 17:23:08 +02:00
 
-HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16dd1f2e980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-dashboard link: https://syzkaller.appspot.com/bug?extid=21ad8c05e3792b6ffd14
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+irqchip/armada-370-xp: Do not touch IPI registers on platforms without IPI
 
-Unfortunately, I don't have any reproducer for this issue yet.
+On platforms where IPI is not available in the MPIC, the IPI registers
+instead represent an additional set of MSI interrupt registers (currently
+unused by the driver).
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
+Do not touch these registers on platforms where IPI is not available in the
+MPIC.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+21ad8c05e3792b6ffd14@syzkaller.appspotmail.com
+[ Marek: refactored, changed commit message ]
 
-INFO: task kworker/u8:1:12 blocked for more than 143 seconds.
-      Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/u8:1    state:D stack:18160 pid:12    tgid:12    ppid:2      flags:0x00004000
-Workqueue: netns cleanup_net
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5408 [inline]
- __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6837
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
- cangw_pernet_exit_batch+0x20/0x90 net/can/gw.c:1257
- ops_exit_list net/core/net_namespace.c:178 [inline]
- cleanup_net+0x89f/0xcc0 net/core/net_namespace.c:640
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
- kthread+0x2f2/0x390 kernel/kthread.c:389
- ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-INFO: task kworker/1:6:5181 blocked for more than 143 seconds.
-      Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/1:6     state:D stack:20976 pid:5181  tgid:5181  ppid:2      flags:0x00004000
-Workqueue: events_power_efficient crda_timeout_work
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5408 [inline]
- __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6837
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
- crda_timeout_work+0x15/0x50 net/wireless/reg.c:540
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
- kthread+0x2f2/0x390 kernel/kthread.c:389
- ret_from_fork+0x4
-
+Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/irqchip/irq-armada-370-xp.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada=
+-370-xp.c
+index deb4c9b..94a81c5 100644
+--- a/drivers/irqchip/irq-armada-370-xp.c
++++ b/drivers/irqchip/irq-armada-370-xp.c
+@@ -502,6 +502,9 @@ static void armada_xp_mpic_smp_cpu_init(void)
+ 	for (i =3D 0; i < nr_irqs; i++)
+ 		writel(i, per_cpu_int_base + ARMADA_370_XP_INT_SET_MASK_OFFS);
+=20
++	if (!is_ipi_available())
++		return;
++
+ 	/* Disable all IPIs */
+ 	writel(0, per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
+=20
+@@ -752,7 +755,7 @@ static void armada_370_xp_mpic_resume(void)
+ 	/* Reconfigure doorbells for IPIs and MSIs */
+ 	writel(doorbell_mask_reg,
+ 	       per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
+-	if (doorbell_mask_reg & IPI_DOORBELL_MASK)
++	if (is_ipi_available() && (doorbell_mask_reg & IPI_DOORBELL_MASK))
+ 		writel(0, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
+ 	if (doorbell_mask_reg & PCI_MSI_DOORBELL_MASK)
+ 		writel(1, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
+@@ -803,13 +806,18 @@ static int __init armada_370_xp_mpic_of_init(struct dev=
+ice_node *node,
+ 	BUG_ON(!armada_370_xp_mpic_domain);
+ 	irq_domain_update_bus_token(armada_370_xp_mpic_domain, DOMAIN_BUS_WIRED);
+=20
++	/*
++	 * Initialize parent_irq before calling any other functions, since it is
++	 * used to distinguish between IPI and non-IPI platforms.
++	 */
++	parent_irq =3D irq_of_parse_and_map(node, 0);
++
+ 	/* Setup for the boot CPU */
+ 	armada_xp_mpic_perf_init();
+ 	armada_xp_mpic_smp_cpu_init();
+=20
+ 	armada_370_xp_msi_init(node, main_int_res.start);
+=20
+-	parent_irq =3D irq_of_parse_and_map(node, 0);
+ 	if (parent_irq <=3D 0) {
+ 		irq_set_default_host(armada_370_xp_mpic_domain);
+ 		set_handle_irq(armada_370_xp_handle_irq);
