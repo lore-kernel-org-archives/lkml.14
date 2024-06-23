@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A26D1836EA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F267A1836EB;
 	Sun, 23 Jun 2024 17:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719165135; cv=none; b=EW3WvIPb5YDGtNBG3+ya0OY3WDCcsh7I27sN0FW03PNfhvnNjH14nAQzuPBUEwyqDLMasYlqWg0mtwnVj0yDpMJkU7LKSBURoSrMHISFuffxhGjf3MJfytesJ71JQjPZ+8KlHMG+Zydn3nmijg5hB2CebnbvdqiuQrUN7wMFdEY=
+	t=1719165135; cv=none; b=DQ3LXYPLlWeyWDomhRd5jKSCRDJ0YTIGquEtlrse3E9KUGFmzqFL4KxzNgZgSbq5dm6EQEavKkLsrKV0S2z7rvHxz4NEEOZCLncUxympEoRzs52FJZjYxRfDQ+1CBDWiRDBEb3QV7oMzW/ZGIg7/ZRGmQciSGiYVf8lG3Edhpb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719165135; c=relaxed/simple;
-	bh=3E+dhU8MornrDax96eHKNrBtDQWgrurbGgNm0wSy/JE=;
+	bh=gxcRrVgIJXC3jd60OIM8KJFMC6+1nHd/FrFyfGWIpDw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dP6nelCJ/SGn9fg6mZWboL3P1Wl74yZt5/PUDsUQxsV01y3ynRMImC20xbTZcOTO2Vzys7AtwXAO4OtT9h/NDNkILaHA0BwRDnhYgQValuS36KsMCLHsRBCaz4z8mW5VHjuU4VOz6oRjekm5NosH+wKDn3BYW1IZa+wXBfqBhz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KAsyxJuz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bVEgE4nB; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=b1eujb47tBx8aNQ2EPG77PNrm8OxCmHk8yTyZVinQHgNbDuD+a5gD/Zh+pgtEBDjC5AxFdMHkUUSJPZnX+QeabJVzRt9p+y2yqkgKt+R6StCwz0XK8MyZDDEttshnTi/MAqo2i/NsreHmSByIJjJTq1LFryW1Jt4nQKM3qxHLG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U7IoAodD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/uDGw5Hg; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KAsyxJuz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bVEgE4nB"
-Date: Sun, 23 Jun 2024 17:52:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U7IoAodD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/uDGw5Hg"
+Date: Sun, 23 Jun 2024 17:52:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1719165132;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/29qM7O6lDLMe5PqTZX54H6QcnzzpaipnKUuaSApfdI=;
-	b=KAsyxJuzHMeSQZ/qfwE0fRm21Ye1nDKsl4w2K3gdCnVzA3JYnpy940A3ykGX/oYUcPKBn4
-	tUVB9LNCuH+n+3m6K8pcAnV5SyhoI5NQEJFDxAMjN/6fbIPs9q3uk841z9mLL4SwuhWJI1
-	sE5RzL1HzEXS95jQuaWhIu7V5vnpWOWnuikAoClcO7AFQKFYhJJAs4LtoHlxJatXJ7wdbx
-	vBJum6uYaGkBZwlEe/cVfiIOpJtJhGE0kBUdhen0DUyjURlvKOwBvVi6X/EQ+7+tZGXBPZ
-	cSRVfkHXPzYQKEZBlD0aoADcsEC1bQRfCmeIUIE5QfkMv+q/80N8w5HEV6USig==
+	bh=tzeRjPNFkkxQzwCFqeeH3O/AXeARFTKXmMTi1D8iGtE=;
+	b=U7IoAodDkLQOLFthMQAka3QwMAbWXXv/UfxQVJuMYbeMnSDkeJELzJxQrOHQYaWqcyJQ+5
+	dfdhK9rIPd7CZbQD96KHPsSZ71nVV5WEmLyDbRONpuEXaRaO+jitA/lE523tNoz264NUSQ
+	JNXTQ/2OZtJv2ENkXXQQH8Ry9/cPHo8rTePTpHEl6/O+bXgZVBfSd0x/6wUOrKHW9DUbxT
+	RRSnllV80BvjRoS8k33SWVfGZCnKPRfr41G00DWm7Fe4QDyydupxkYhV9N/9K35ZUZ1HMc
+	ZSwywrmVYJ1PwfGnsT3F/102oBYeVs8Svc23edoeXDQSa7QSCP+tJ3ex9g89mw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1719165132;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/29qM7O6lDLMe5PqTZX54H6QcnzzpaipnKUuaSApfdI=;
-	b=bVEgE4nBJ7aZgRAxnJf5D/m63KUybrDrSBh2Olk2z1buepleBC9poW1Shx//9tXNbmVOfO
-	0qv/y027pG6xJGAQ==
+	bh=tzeRjPNFkkxQzwCFqeeH3O/AXeARFTKXmMTi1D8iGtE=;
+	b=/uDGw5HgIC6JHJuRz99SybPY0MW2js0/tJ+rWGEjwhvm8Asa/7K7gE5usWoEXTGoIWp+sI
+	RaVBFwBEHfaV3qDw==
 From: "tip-bot2 for Antonio Borneo" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: irq/core] arm64: Kconfig: Select STM32MP_EXTI on STM32 platforms
+ [tip: irq/core] ARM: stm32: Use different EXTI driver on ARMv7m and ARMv7a
 Cc: Antonio Borneo <antonio.borneo@foss.st.com>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240620083115.204362-4-antonio.borneo@foss.st.com>
-References: <20240620083115.204362-4-antonio.borneo@foss.st.com>
+In-Reply-To: <20240620083115.204362-3-antonio.borneo@foss.st.com>
+References: <20240620083115.204362-3-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171916513175.10875.5975034363289924969.tip-bot2@tip-bot2>
+Message-ID: <171916513209.10875.8628624919091956184.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,36 +68,36 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     00f07f97276d9c4c09526798d41cb825095d2319
-Gitweb:        https://git.kernel.org/tip/00f07f97276d9c4c09526798d41cb825095d2319
+Commit-ID:     721cdbd68c588a0e883d8a7658bc6a56237eaa71
+Gitweb:        https://git.kernel.org/tip/721cdbd68c588a0e883d8a7658bc6a56237eaa71
 Author:        Antonio Borneo <antonio.borneo@foss.st.com>
-AuthorDate:    Thu, 20 Jun 2024 10:31:10 +02:00
+AuthorDate:    Thu, 20 Jun 2024 10:31:09 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 23 Jun 2024 19:49:45 +02:00
+CommitterDate: Sun, 23 Jun 2024 19:49:44 +02:00
 
-arm64: Kconfig: Select STM32MP_EXTI on STM32 platforms
+ARM: stm32: Use different EXTI driver on ARMv7m and ARMv7a
 
-Use the new config flag to build the correct driver that will be
-extracted from the old code.
+Build the proper driver by selecting the appropriate config flag.
 
 Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240620083115.204362-4-antonio.borneo@foss.st.com
+Link: https://lore.kernel.org/r/20240620083115.204362-3-antonio.borneo@foss.st.com
 
 ---
- arch/arm64/Kconfig.platforms | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-stm32/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a526180..be86298 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -309,7 +309,7 @@ config ARCH_STM32
- 	select GPIOLIB
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index ae21a9f..a401a99 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -11,7 +11,8 @@ menuconfig ARCH_STM32
+ 	select CLKSRC_STM32
  	select PINCTRL
- 	select PINCTRL_STM32MP257
+ 	select RESET_CONTROLLER
 -	select STM32_EXTI
-+	select STM32MP_EXTI
- 	select ARM_SMC_MBOX
- 	select ARM_SCMI_PROTOCOL
- 	select COMMON_CLK_SCMI
++	select STM32MP_EXTI if ARCH_MULTI_V7
++	select STM32_EXTI if ARM_SINGLE_ARMV7M
+ 	select STM32_FIREWALL
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
