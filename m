@@ -1,133 +1,80 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B244D8AD
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 11:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1B364D
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 11:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719141580; cv=none; b=O0rC+i5NZA4ay3AV9wUle/xY2GUwGMM34Rf4lqiZWSsrSU0ndD/NoKAis1Pl8xgTa8b2PlbdSMrfpN84JEjEvJqvVLY3Iq5X9cD6jvY52Q3wFzIeB5y4VWDzJm89k8qIJznnO7cF1HABXhJAzjpKm5gt7cnc7YO7oCom1FblS0A=
+	t=1719141844; cv=none; b=WBblblFUFJMJcEZkxkOI/L2Uvupp+HTPd8ma3pZrjF4bivuAfJwd1usH7JNVESxhjJoyiq3s/y473tGlStPzBBmXGaEZaoawiNS/XNqDYWEjN4a4RxPK2aW9aNf/07pxKQ3w2NPNjYpWwih531qU6oEzjzYI4FLsBYHdCjHuVkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719141580; c=relaxed/simple;
-	bh=ljyVn6sr38jFgPDSUcIip0GOS0XdneIwPIrAqEZGroU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Znfi3gCUo6JVeCPrf5eCtj2pEUAWM3zsxYUTxL2HT31IqDgx7xfOqiaiKCUAfAXxQIyo+VQMJ5B0ruXk0i1D2qA8CiShkHsJRvnhZHdzWXmameAbEeN1fnzs7PplKcOMV6dcyI6wot4mQK+z2XHYGQ1vd/5QE9cx0YD/D7U3fDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DigYG/Q8; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1719141844; c=relaxed/simple;
+	bh=UYQIwztegm3GPLyi1hQoDaDZYjlZXTdmSuTvh1AEnDU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=N3GB8j3teLgUKOgz11mU7z9xvfzlC7nXbs+Avx4ArZdhCpRb0s/itEtmBMiD63LHZWaIMx7WpM2oFS+jDjgI5fYpXKqNc/RMhBTRwcjeGOx7TXKaXwtrvA2h1GCbzLB+dkr1LhHaZ6IROCHMtuuCopVy9kTCqo2yEbNdze3gTQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lrN6pUi4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6EqQR5r4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DigYG/Q8"
-X-Envelope-To: dtatulea@nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719141575;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lrN6pUi4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6EqQR5r4"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719141841;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lRG1uM3WBpbpg3xypH5GmXKA53Zu/bQzjXzygmQbgxU=;
-	b=DigYG/Q8xKuD3izwp/FP6cw0OBaL3fjO3FjEaWeadzNCm+alcSIbKcNdsrvJ4yRCmKq1y3
-	IhaYVsl6dF8pjGbLUyhLGE+DkmXu6dK4BPqEqkw3iGODSQUha2MRSK+2F4/mC5DZGFs06o
-	XsWENHpR5kfeW1yx+3nTmCYYBrMtEJ8=
-X-Envelope-To: mst@redhat.com
-X-Envelope-To: jasowang@redhat.com
-X-Envelope-To: xuanzhuo@linux.alibaba.com
-X-Envelope-To: eperezma@redhat.com
-X-Envelope-To: saeedm@nvidia.com
-X-Envelope-To: leon@kernel.org
-X-Envelope-To: tariqt@nvidia.com
-X-Envelope-To: si-wei.liu@oracle.com
-X-Envelope-To: virtualization@lists.linux.dev
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-rdma@vger.kernel.org
-X-Envelope-To: netdev@vger.kernel.org
-X-Envelope-To: cratiu@nvidia.com
-Message-ID: <aea8bc89-ca09-45d7-82ba-05c1fad8bebd@linux.dev>
-Date: Sun, 23 Jun 2024 19:19:24 +0800
+	bh=FBoUra/GyAeym75/LNPWqrCBSpEs3r36ctsPheHQLAI=;
+	b=lrN6pUi47ScJqvQXi0gaIWsFLe4vTfcBSBAYCl+b38MZDgMcRPmp1RGPwjU2vCykn+zS5Z
+	08EzelUi36Bt3/dGgku1Rsz5QBeEuj8XUAGOuF9GLhehEChsxHAm6Q79yXMkEsbLpV7g1d
+	8uH0AW5EmetdJIxBubNbycpzBENOU7FimdmNDA0of9gr/V+9TIKzJxr1WhgwWDpzEnmDHh
+	voKnCZLWNnNt1LjAOcTpIheGkTfeSDUHw0eRZymJIu2LZ+GH4TG/tmiB8aRE7Eyf8PKcFc
+	hLSGQJfuZzJialrjSTZ2U/xEZ9T/yyZVa47Jgg1fo7eBU8dwxjRHaMzI5rqpXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719141841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FBoUra/GyAeym75/LNPWqrCBSpEs3r36ctsPheHQLAI=;
+	b=6EqQR5r4UVYKPr45WuKKd1+wQPFwR5hs+yuxGJeT0Vwd4yr9/scoyQ6w/01qKDRDiTDH/l
+	KPN77EvDntfcIVCg==
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, John Stultz <jstultz@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Stephen Boyd
+ <sboyd@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Oleg Nesterov
+ <oleg@redhat.com>
+Subject: Re: [patch V3 00/51] posix-timers: Cure inconsistencies and the
+ SIG_IGN mess
+In-Reply-To: <87v82gufru.ffs@tglx>
+References: <20240610163452.591699700@linutronix.de> <87v82gufru.ffs@tglx>
+Date: Sun, 23 Jun 2024 13:24:01 +0200
+Message-ID: <87o77ryka6.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH vhost 18/23] vdpa/mlx5: Forward error in suspend/resume
- device
-To: Dragos Tatulea <dtatulea@nvidia.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
- Si-Wei Liu <si-wei.liu@oracle.com>
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- Cosmin Ratiu <cratiu@nvidia.com>
-References: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com>
- <20240617-stage-vdpa-vq-precreate-v1-18-8c0483f0ca2a@nvidia.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20240617-stage-vdpa-vq-precreate-v1-18-8c0483f0ca2a@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-在 2024/6/17 23:07, Dragos Tatulea 写道:
-> Start using the suspend/resume_vq() error return codes previously added.
-> 
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-> ---
->   drivers/vdpa/mlx5/net/mlx5_vnet.c | 12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> index f5d5b25cdb01..0e1c1b7ff297 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -3436,22 +3436,25 @@ static int mlx5_vdpa_suspend(struct vdpa_device *vdev)
->   {
->   	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
->   	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
-> +	int err;
+On Tue, Jun 11 2024 at 08:58, Thomas Gleixner wrote:
 
-Reverse Christmas Tree?
+> On Mon, Jun 10 2024 at 18:42, Thomas Gleixner wrote:
+>> The series is based on:
+>>
+>>     git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/urgent
+>>
+>> and is also available from git:
+>>
+>>     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git posixt-v3
+>
+> Please use:
+>
+>      git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git posixt-v3-1
+>
+> There was a typo in patch 39 which I missed to bring back from the test
+> box.
 
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+Updated to:
 
-Zhu Yanjun
->   
->   	mlx5_vdpa_info(mvdev, "suspending device\n");
->   
->   	down_write(&ndev->reslock);
->   	unregister_link_notifier(ndev);
-> -	suspend_vqs(ndev);
-> +	err = suspend_vqs(ndev);
->   	mlx5_vdpa_cvq_suspend(mvdev);
->   	mvdev->suspended = true;
->   	up_write(&ndev->reslock);
-> -	return 0;
-> +
-> +	return err;
->   }
->   
->   static int mlx5_vdpa_resume(struct vdpa_device *vdev)
->   {
->   	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
->   	struct mlx5_vdpa_net *ndev;
-> +	int err;
->   
->   	ndev = to_mlx5_vdpa_ndev(mvdev);
->   
-> @@ -3459,10 +3462,11 @@ static int mlx5_vdpa_resume(struct vdpa_device *vdev)
->   
->   	down_write(&ndev->reslock);
->   	mvdev->suspended = false;
-> -	resume_vqs(ndev);
-> +	err = resume_vqs(ndev);
->   	register_link_notifier(ndev);
->   	up_write(&ndev->reslock);
-> -	return 0;
-> +
-> +	return err;
->   }
->   
->   static int mlx5_set_group_asid(struct vdpa_device *vdev, u32 group,
-> 
-
+	git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git posixt-v3-2
