@@ -1,90 +1,252 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E4E13D8B0;
-	Sun, 23 Jun 2024 11:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F52C148301;
+	Sun, 23 Jun 2024 11:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719143819; cv=none; b=k0/bC33PpvuC4DMy5Me2oOVBbVAbP/0QAqrV0/odXnrnF3EYCV1+0XnlmNkLaJmUm60b5p4sYFNeSDAMqGSkQlrXZXgHfkD/hu2FxMjrs5ln/zMBuakgbyWfZ4W2Dy3/PxbOh9GmiZJTzmOo1Ku3//F2tSdRBY8uVBCwUUIee5M=
+	t=1719143948; cv=none; b=tQDr+eJxK8Xs5sqQHb1K5GOXQ4ryvLmQvy1ERDwnqHF582nxRrwFN/ajQ5uytem0TeGRyTj6kDV9g17XKFlyQUZRgdYowyA95WCBoof9J1PDOFsBDP/r5WDi8ZLHRQ3CTaJcDWPXtCYHONNhMk5xHYoG+dZqjwxoErf0PIrpkDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719143819; c=relaxed/simple;
-	bh=5/zHGnLi6HtSuAHDMiRrXIcpjy+pX6Bnuzv5Wt4fcAc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jyceU5XwSX1sE2T9cp7AzFaZPF4TOYtzANYqUPS1yD07QBTxTl8yN4fjBWl/AZwNw4QzJ03rAYmEuFL1tC9oAFN7EpfFZ3a6Eb3EJv4MwOL7u+T4PtR+aEVEqcDvyIN9ut07mGdKazPzzhYVo5nFx1BUkANbaWSi5EGbQuGScjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IRT8AZsN; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719143948; c=relaxed/simple;
+	bh=1QXQ3tMvStRgTMmgy0k027ECKfLBSakAWmhgATXXEmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NgJhPqAeP6WwEmQ7p8yG8RyOGZRv0WdjwGdFtQBcjO4WwaDhV/qbYmzijNl+TI58SZK0bmnMbI98POFGD+zqqA8OZlhIejYEBAdaEvGv/1FodjACawYOkI2vibHlLSZEmR76IGFHGapREAKrDZuk8BSBORtkRGNB9nmBD75mm9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzfVtlRt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IRT8AZsN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Oigqm
-	upiGhc0+bR7xGBbesPJ+Gm/pnkDnghE2ytQOPQ=; b=IRT8AZsNfjRu+rKE7ouv8
-	bWZUx0gt6dqGnBSGFLcgAqcukSaQYiABKFPSbtB7X5IIpwIbOEaHr+N/jLQwhw1y
-	+gNUfE9ONku8N6y9sqKiTEf1xpF41iIf38lxpVo3ryqtQtxHep+gzDx90NKwL42d
-	sajtXw6UupC8s04qlGlmzw=
-Received: from ProDesk.. (unknown [103.29.142.67])
-	by gzga-smtp-mta-g2-0 (Coremail) with SMTP id _____wDnL_AxDXhmbhirAA--.3562S2;
-	Sun, 23 Jun 2024 19:55:33 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: dsimic@manjaro.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	didi.debian@cknow.org,
-	Andy Yan <andyshrk@163.com>
-Subject: [PATCH v2] arm64: dts: rockchip: Fix the i2c address of es8316 on Cool Pi 4B
-Date: Sun, 23 Jun 2024 19:55:26 +0800
-Message-Id: <20240623115526.2154645-1-andyshrk@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzfVtlRt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C0FC2BD10;
+	Sun, 23 Jun 2024 11:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719143948;
+	bh=1QXQ3tMvStRgTMmgy0k027ECKfLBSakAWmhgATXXEmw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gzfVtlRt6ugbCI5tsFW83ZkCYyraPy2cl4ba2vdgTJc4PDTnfrGHxrgGpJA9iMsNK
+	 HhfeOW7qM9Z69MNzdW8hmPjsdZONGwwZqUPQ/MzZGV84HZc6dQfCMFo8eouK6wWwLE
+	 UTsO1Wbxzhs9oYQm5zZf2GEbOeBZ3kRg+CnW8s3rzNu3uVln1/4WCqMZfab+BUVBMu
+	 llwwnYF7+4X83hCLZ60Z7907qrqirxKja7COmuNT9AbB8dvHgeMQ2BSCz/el/m+5kL
+	 G1Cbsx/aBxL2fO7NNkBU24HZ1HtNecNRSKU5vdDco5y69y/+G1pTpOWQsGmSOqkb7b
+	 6KisDZo32UrQA==
+Date: Sun, 23 Jun 2024 12:59:01 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
+ linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Michal
+ Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] iio: xilinx-ams: Add labels
+Message-ID: <20240623125901.03f0fe6f@jic23-huawei>
+In-Reply-To: <20240620204842.817237-1-sean.anderson@linux.dev>
+References: <20240620204842.817237-1-sean.anderson@linux.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnL_AxDXhmbhirAA--.3562S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ary8JFy3GFyfXw4kCrWxWFg_yoW8XFW7pa
-	15ua9xJr1I9rWFgayqqanrXrsrCFs3tF4xCw17Gasayr47X34vqr17Xry3CFyjgF13Za1r
-	ur15Jr1DKa1DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pMD73UUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hsHXmWXyjN4YAAAsD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-According to the hardware design, the i2c address of audio codec es8316
-on Cool Pi 4B is 0x10.
+On Thu, 20 Jun 2024 16:48:42 -0400
+Sean Anderson <sean.anderson@linux.dev> wrote:
 
-This fix the read/write error like bellow:
-es8316 7-0011: ASoC: error at soc_component_write_no_lock on es8316.7-0011 for register: [0x0000000c] -6
-es8316 7-0011: ASoC: error at soc_component_write_no_lock on es8316.7-0011 for register: [0x00000003] -6
-es8316 7-0011: ASoC: error at soc_component_read_no_lock on es8316.7-0011 for register: [0x00000016] -6
-es8316 7-0011: ASoC: error at soc_component_read_no_lock on es8316.7-0011 for register: [0x00000016] -6
+> Label all the channels using names from the reference manual. Some of
+> the "control" channels are duplicates of other channels. The reference
+> manual describes it like:
+> 
+> > The AMS register set includes several measurement registers that are
+> > written to by the PS SYSMON unit using the single-channel mode
+> > (sequencer off). These voltage measurements are performed using the
+> > unipolar sampling circuit with a 0 to 3V range and do not have alarms
+> > or minimum/maximum registers.  
+> 
+> So I think these really are measuring the same voltages but in a
+> different location. In which case, sharing labels makes sense to me.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Hi Sean,
 
-Fixes: 3f5d336d64d6 ("arm64: dts: rockchip: Add support for rk3588s based board Cool Pi 4B")
-Signed-off-by: Andy Yan <andyshrk@163.com>
+This LGTM, but I'd like some feedback from others more familiar with the
+driver and device before I apply it.  If everyone is too busy and
+I don't get any replies for a few weeks I may pick it up anyway.
 
----
+Feel free to poke me if I seem to have forgotten in say 2 weeks.
 
-Changes in v2:
-- Also change the address after @ to 0x10
 
- arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Jonathan
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts b/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
-index 20a0a60acd16..b0259b0d5021 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
-@@ -300,9 +300,9 @@ &i2c7 {
- 	pinctrl-0 = <&i2c7m0_xfer>;
- 	status = "okay";
- 
--	es8316: audio-codec@11 {
-+	es8316: audio-codec@10 {
- 		compatible = "everest,es8316";
--		reg = <0x11>;
-+		reg = <0x10>;
- 		assigned-clocks = <&cru I2S0_8CH_MCLKOUT>;
- 		assigned-clock-rates = <12288000>;
- 		clocks = <&cru I2S0_8CH_MCLKOUT>;
--- 
-2.34.1
+> ---
+> 
+>  drivers/iio/adc/xilinx-ams.c | 107 +++++++++++++++++++----------------
+>  1 file changed, 59 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/xilinx-ams.c b/drivers/iio/adc/xilinx-ams.c
+> index aa05f24931f9..f051358d6b50 100644
+> --- a/drivers/iio/adc/xilinx-ams.c
+> +++ b/drivers/iio/adc/xilinx-ams.c
+> @@ -222,7 +222,7 @@ enum ams_ps_pl_seq {
+>  #define PL_SEQ(x)		(AMS_PS_SEQ_MAX + (x))
+>  #define AMS_CTRL_SEQ_BASE	(AMS_PS_SEQ_MAX * 3)
+>  
+> -#define AMS_CHAN_TEMP(_scan_index, _addr) { \
+> +#define AMS_CHAN_TEMP(_scan_index, _addr, _name) { \
+>  	.type = IIO_TEMP, \
+>  	.indexed = 1, \
+>  	.address = (_addr), \
+> @@ -232,9 +232,10 @@ enum ams_ps_pl_seq {
+>  	.event_spec = ams_temp_events, \
+>  	.scan_index = _scan_index, \
+>  	.num_event_specs = ARRAY_SIZE(ams_temp_events), \
+> +	.datasheet_name = _name, \
+>  }
+>  
+> -#define AMS_CHAN_VOLTAGE(_scan_index, _addr, _alarm) { \
+> +#define AMS_CHAN_VOLTAGE(_scan_index, _addr, _alarm, _name) { \
+>  	.type = IIO_VOLTAGE, \
+>  	.indexed = 1, \
+>  	.address = (_addr), \
+> @@ -243,21 +244,24 @@ enum ams_ps_pl_seq {
+>  	.event_spec = (_alarm) ? ams_voltage_events : NULL, \
+>  	.scan_index = _scan_index, \
+>  	.num_event_specs = (_alarm) ? ARRAY_SIZE(ams_voltage_events) : 0, \
+> +	.datasheet_name = _name, \
+>  }
+>  
+> -#define AMS_PS_CHAN_TEMP(_scan_index, _addr) \
+> -	AMS_CHAN_TEMP(PS_SEQ(_scan_index), _addr)
+> -#define AMS_PS_CHAN_VOLTAGE(_scan_index, _addr) \
+> -	AMS_CHAN_VOLTAGE(PS_SEQ(_scan_index), _addr, true)
+> +#define AMS_PS_CHAN_TEMP(_scan_index, _addr, _name) \
+> +	AMS_CHAN_TEMP(PS_SEQ(_scan_index), _addr, _name)
+> +#define AMS_PS_CHAN_VOLTAGE(_scan_index, _addr, _name) \
+> +	AMS_CHAN_VOLTAGE(PS_SEQ(_scan_index), _addr, true, _name)
+>  
+> -#define AMS_PL_CHAN_TEMP(_scan_index, _addr) \
+> -	AMS_CHAN_TEMP(PL_SEQ(_scan_index), _addr)
+> -#define AMS_PL_CHAN_VOLTAGE(_scan_index, _addr, _alarm) \
+> -	AMS_CHAN_VOLTAGE(PL_SEQ(_scan_index), _addr, _alarm)
+> +#define AMS_PL_CHAN_TEMP(_scan_index, _addr, _name) \
+> +	AMS_CHAN_TEMP(PL_SEQ(_scan_index), _addr, _name)
+> +#define AMS_PL_CHAN_VOLTAGE(_scan_index, _addr, _alarm, _name) \
+> +	AMS_CHAN_VOLTAGE(PL_SEQ(_scan_index), _addr, _alarm, _name)
+>  #define AMS_PL_AUX_CHAN_VOLTAGE(_auxno) \
+> -	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(_auxno)), AMS_REG_VAUX(_auxno), false)
+> -#define AMS_CTRL_CHAN_VOLTAGE(_scan_index, _addr) \
+> -	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(AMS_SEQ(_scan_index))), _addr, false)
+> +	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(_auxno)), AMS_REG_VAUX(_auxno), false, \
+> +			 "VAUX" #_auxno)
+> +#define AMS_CTRL_CHAN_VOLTAGE(_scan_index, _addr, _name) \
+> +	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(AMS_SEQ(_scan_index))), _addr, false, \
+> +			 _name)
+>  
+>  /**
+>   * struct ams - This structure contains necessary state for xilinx-ams to operate
+> @@ -505,6 +509,12 @@ static int ams_init_device(struct ams *ams)
+>  	return 0;
+>  }
+>  
+> +static int ams_read_label(struct iio_dev *indio_dev,
+> +			  struct iio_chan_spec const *chan, char *label)
+> +{
+> +	return sysfs_emit(label, "%s\n", chan->datasheet_name);
+> +}
+> +
+>  static int ams_enable_single_channel(struct ams *ams, unsigned int offset)
+>  {
+>  	u8 channel_num;
+> @@ -1116,37 +1126,37 @@ static const struct iio_event_spec ams_voltage_events[] = {
+>  };
+>  
+>  static const struct iio_chan_spec ams_ps_channels[] = {
+> -	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP),
+> -	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP_REMOTE, AMS_TEMP_REMOTE),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10),
+> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS),
+> +	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP, "Temp_LPD"),
+> +	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP_REMOTE, AMS_TEMP_REMOTE, "Temp_FPD"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, "VCC_PSINTLP"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, "VCC_PSINTFP"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, "VCC_PSAUX"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, "VCC_PSDDR"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, "VCC_PSIO3"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, "VCC_PSIO0"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, "VCC_PSIO1"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, "VCC_PSIO2"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, "PS_MGTRAVCC"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, "PS_MGTRAVTT"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, "VCC_PSADC"),
+>  };
+>  
+>  static const struct iio_chan_spec ams_pl_channels[] = {
+> -	AMS_PL_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFP, AMS_VREFP, false),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFN, AMS_VREFN, false),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VP_VN, AMS_VP_VN, false),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, true),
+> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, true),
+> +	AMS_PL_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP, "Temp_PL"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, true, "VCCINT"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, true, "VCCAUX"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFP, AMS_VREFP, false, "VREFP"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFN, AMS_VREFN, false, "VREFN"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, true, "VCCBRAM"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, true, "VCC_PSINTLP"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, true, "VCC_PSINTFP"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, true, "VCC_PSAUX"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, true, "VCCAMS"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VP_VN, AMS_VP_VN, false, "VP_VN"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, true, "VUser0"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, true, "VUser1"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, true, "VUser2"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, true, "VUser3"),
+>  	AMS_PL_AUX_CHAN_VOLTAGE(0),
+>  	AMS_PL_AUX_CHAN_VOLTAGE(1),
+>  	AMS_PL_AUX_CHAN_VOLTAGE(2),
+> @@ -1166,13 +1176,13 @@ static const struct iio_chan_spec ams_pl_channels[] = {
+>  };
+>  
+>  static const struct iio_chan_spec ams_ctrl_channels[] = {
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSPLL, AMS_VCC_PSPLL0),
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSBATT, AMS_VCC_PSPLL3),
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCINT, AMS_VCCINT),
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCBRAM, AMS_VCCBRAM),
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCAUX, AMS_VCCAUX),
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_PSDDRPLL, AMS_PSDDRPLL),
+> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_INTDDR, AMS_PSINTFPDDR),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSPLL, AMS_VCC_PSPLL0, "VCC_PSPLL"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSBATT, AMS_VCC_PSPLL3, "VCC_PSBATT"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCINT, AMS_VCCINT, "VCCINT"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCBRAM, AMS_VCCBRAM, "VCCBRAM"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCAUX, AMS_VCCAUX, "VCCAUX"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_PSDDRPLL, AMS_PSDDRPLL, "VCC_PSDDR_PLL"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_INTDDR, AMS_PSINTFPDDR, "VCC_PSINTFP_DDR"),
+>  };
+>  
+>  static int ams_get_ext_chan(struct fwnode_handle *chan_node,
+> @@ -1336,6 +1346,7 @@ static int ams_parse_firmware(struct iio_dev *indio_dev)
+>  }
+>  
+>  static const struct iio_info iio_ams_info = {
+> +	.read_label = ams_read_label,
+>  	.read_raw = &ams_read_raw,
+>  	.read_event_config = &ams_read_event_config,
+>  	.write_event_config = &ams_write_event_config,
 
