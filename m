@@ -1,32 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BB059B71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BE65A10B
 	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 08:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719133164; cv=none; b=ooAaCXwD07r7kSeVm45FwtTi5fb/sUCVwePu226NEPSexuZEhNqUg5xg2l7qHPsPTd8hkIl2F4SYwPcBwTxX93ykKhDJBlxmEcJgki5UPtFWyyIiu6BrItBfXnPrTo/1Rjii+Eh6gf+X+II/0hLtBkfiSxlG5Y1Zy66fkQ/vJfk=
+	t=1719133164; cv=none; b=iv9C0mogQmaNXbqESn4kljgf3qsxgkqe+W0qHhPJWhtWaPKijNoucnD974eXIklrMd80Z1a9BEGnkvmEsF7ERljsebzSlzhjTpknvl/TmKj5/xbFTS+iGAkb0JBitEHn48bA6TdS+JCYNYSZpKmq9fNiKDQljRc3N7XJUnebqAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719133164; c=relaxed/simple;
-	bh=zB2lHe/cxmaq3sEJTX39vzQps5Xljraxg3sewiB+Xv4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AxeaFU+kyMnU3hmnglIh7gYeTwAioadJboblSaOKfkrAXG5jaLILCDz6S+KbcMoZtwF/gaKI8LQT3nmwYYRFvDSWxokQ2L2hNXlx2S3oFIqRQPREsLTuKdJTy1iOQhhqDXH2VsvuLBQAEd6UCZoe3UtPJxaYqWO5KQNUG37adUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=EPVuytmQ; arc=none smtp.client-ip=159.69.126.157
+	bh=rczzmpjjlHlCtAKyfdbQlMnDUcEam5QWSyl/gkZmeUI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SLPeJhixoAg+Q76rQw3K2532oxcixbHnOmwQ6VqsD0Hr+9Dsr6SJnhhRKlmj4bjJpjdzIxd7MsdldwGrmHDXdwxV7he/uJU3N4RJWIQTU7Gm/66JWXNKp8DbMzvsiVqpxjYysigE7eO5n0l0R1bDeqkDBaTgGW836WAi6FkGdGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=T49NgJZI; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="EPVuytmQ"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="T49NgJZI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1719132689;
-	bh=zB2lHe/cxmaq3sEJTX39vzQps5Xljraxg3sewiB+Xv4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=EPVuytmQawb4QbbtMpIwLUtd1BUdP0idrchVzD9gAehNsFqyCWCq8p6jeuAIf5LtI
-	 Oszh/kVYFO031J5jQHlU7hRtfepvzrlfcyYKeAjIHSmyH5XmMEaP13KcN6EFyA7g3/
-	 BeKkxckBNBpat78/zwLluNhRRrzCP9bRB2OsX34g=
+	bh=rczzmpjjlHlCtAKyfdbQlMnDUcEam5QWSyl/gkZmeUI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=T49NgJZIev0c63fiplfhzGkAuWQ/paHKXJ9+oa1374Ic3GcSGWJf5myt32dEIH1qi
+	 3I/tomzIA9tRVYXA27wN9cxEZb+ye1RpFrC6JixWbFOOf0XIEaIE6+rSkbQ/x9dB2f
+	 BrUeKV4j2V9HgBpogKmho4NFjOqmPiJ9jCdr2/vc=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH v2 0/3] drm: backlight quirk infrastructure and lower
- minimum for Framework AMD 13
-Date: Sun, 23 Jun 2024 10:51:26 +0200
-Message-Id: <20240623-amdgpu-min-backlight-quirk-v2-0-cecf7f49da9b@weissschuh.net>
+Date: Sun, 23 Jun 2024 10:51:29 +0200
+Subject: [PATCH v2 3/3] drm/amd/display: Add support backlight quirks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,10 +34,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAA7id2YC/43NQQ6CMBCF4auQrh3TVkBg5T0MiwIDnSAFO4Aaw
- t2tnMDl/xbf2wSjJ2RRRJvwuBLT6ELoUyRqa1yHQE1ooaWOZaokmKHppgUGclCZun9QZ2d4LuR
- 7yGKp2ybD6yU1IgCTx5beB34vQ1viefSf42tVv/UvdlWggp3kWZ6YpNLm9kJi5tou9uxwFuW+7
- 184PZHbyQAAAA==
+Message-Id: <20240623-amdgpu-min-backlight-quirk-v2-3-cecf7f49da9b@weissschuh.net>
+References: <20240623-amdgpu-min-backlight-quirk-v2-0-cecf7f49da9b@weissschuh.net>
+In-Reply-To: <20240623-amdgpu-min-backlight-quirk-v2-0-cecf7f49da9b@weissschuh.net>
 To: Alex Deucher <alexander.deucher@amd.com>, 
  =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
  David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
@@ -53,74 +51,90 @@ Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org, Dustin Howett <dustin@howett.net>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719132688; l=2496;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719132688; l=2788;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=zB2lHe/cxmaq3sEJTX39vzQps5Xljraxg3sewiB+Xv4=;
- b=0x05OrASCwGcIIhqmTXoV+ChUICWHrXM8Z9UIIYNcCruuieBg6vTjCBfs6mo2eNPXUpI5W4k5
- Oemc98k/a8gCFqs5lAvZneIj1AHRCPlDTahSWgqSjSbzKCuwz0HJqaY
+ bh=rczzmpjjlHlCtAKyfdbQlMnDUcEam5QWSyl/gkZmeUI=;
+ b=91+X03/aUODL2GDH3ZqzK48/y08D6dI+XwyYt1sZeGqua4CMOayPkJrOzc+4B24uRR0caZ7vY
+ ikjqi1dxeVRA9O1UNQHhVY4kjP/r2qXpoz/32Jsw8BJnXBbylFYY6tY
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The value of "min_input_signal" returned from ATIF on a Framework AMD 13
-is "12". This leads to a fairly bright minimum display backlight.
+Not all platforms provide correct PWM backlight capabilities through ATIF.
+Use the generic drm backlight quirk infrastructure to override the
+capabilities where necessary.
 
-Add a generic quirk infrastructure for backlight configuration to
-override the settings provided by the firmware.
-Also add amdgpu as a user of that infrastructure and a quirk for the
-Framework 13 matte panel.
-Most likely this will also work for the glossy panel, but I can't test
-that.
-
-One solution would be a fixed firmware version, but given that the
-problem exists since the release of the hardware, it has been known for
-a month that the hardware can go lower and there was no acknowledgment
-from Framework in any way, I'd like to explore this alternative
-way forward.
-
-Notes:
-
-* Should the quirk infrastructure be part of drm_edid.c?
-* The current allocation of struct drm_edid in amdgpu is bad.
-  But it is done the same way in other parts of amdgpu.
-  I do have patches migrating amdgpu to proper usage of struct drm_edid [0]
-
-Mario:
-
-I intentionally left out the consideration of the firmware version.
-The quirk will stay correct even if the firmware starts reporting
-correct values.
-If there are strong opinions it would be easy to add, though.
-
-Based on amdgpu/drm-next.
-
-[0] https://lore.kernel.org/lkml/20240616-amdgpu-edid-bios-v1-1-2874f212b365@weissschuh.net/
-
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Changes in v2:
-- Introduce proper drm backlight quirk infrastructure
-- Quirk by EDID and DMI instead of only DMI
-- Limit quirk to only single Framework 13 matte panel
-- Link to v1: https://lore.kernel.org/r/20240610-amdgpu-min-backlight-quirk-v1-1-8459895a5b2a@weissschuh.net
-
----
-Thomas Weißschuh (3):
-      drm: Add panel backlight quirks
-      drm: panel-backlight-quirks: Add Framework 13 matte panel
-      drm/amd/display: Add support backlight quirks
-
- Documentation/gpu/drm-kms-helpers.rst             |  3 +
- drivers/gpu/drm/Kconfig                           |  4 ++
- drivers/gpu/drm/Makefile                          |  1 +
  drivers/gpu/drm/amd/amdgpu/Kconfig                |  1 +
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 28 +++++++++
- drivers/gpu/drm/drm_panel_backlight_quirks.c      | 76 +++++++++++++++++++++++
- include/drm/drm_utils.h                           | 11 ++++
- 7 files changed, 124 insertions(+)
----
-base-commit: 1ecef5589320fd56af599b624d59c355d162ac7b
-change-id: 20240610-amdgpu-min-backlight-quirk-8402fd8e736a
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 28 +++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-Best regards,
+diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
+index 692fa7cf8fd2..4fe0e8e74bb9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/Kconfig
++++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+@@ -25,6 +25,7 @@ config DRM_AMDGPU
+ 	select DRM_BUDDY
+ 	select DRM_SUBALLOC_HELPER
+ 	select DRM_EXEC
++	select DRM_PANEL_BACKLIGHT_QUIRKS
+ 	# amdgpu depends on ACPI_VIDEO when ACPI is enabled, for select to work
+ 	# ACPI_VIDEO's dependencies must also be selected.
+ 	select INPUT if ACPI
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 60404385d4d0..2d8a6d875170 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -93,6 +93,7 @@
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_eld.h>
++#include <drm/drm_utils.h>
+ #include <drm/drm_vblank.h>
+ #include <drm/drm_audio_component.h>
+ #include <drm/drm_gem_atomic_helper.h>
+@@ -3329,6 +3330,31 @@ static struct drm_mode_config_helper_funcs amdgpu_dm_mode_config_helperfuncs = {
+ 	.atomic_commit_setup = drm_dp_mst_atomic_setup_commit,
+ };
+ 
++static void amdgpu_dm_apply_backlight_quirks(struct amdgpu_dm_connector *aconnector,
++					     struct amdgpu_dm_backlight_caps *caps)
++{
++	const struct drm_panel_backlight_quirk *quirk;
++	const struct drm_edid *edid;
++
++	edid = drm_edid_alloc(aconnector->edid, EDID_LENGTH * (aconnector->edid->extensions + 1));
++	if (!edid)
++		return;
++
++	quirk = drm_get_panel_backlight_quirk(edid);
++
++	drm_edid_free(edid);
++
++	if (!quirk)
++		return;
++
++	if (quirk->overrides.pwm_min_brightness &&
++	    caps->min_input_signal != quirk->pwm_min_brightness) {
++		drm_info(aconnector->base.dev,
++			 "Quirk: backlight min_input_signal=%d\n", quirk->pwm_min_brightness);
++		caps->min_input_signal = quirk->pwm_min_brightness;
++	}
++}
++
+ static void update_connector_ext_caps(struct amdgpu_dm_connector *aconnector)
+ {
+ 	struct amdgpu_dm_backlight_caps *caps;
+@@ -3369,6 +3395,8 @@ static void update_connector_ext_caps(struct amdgpu_dm_connector *aconnector)
+ 		caps->aux_min_input_signal = 0;
+ 		caps->aux_max_input_signal = 512;
+ 	}
++
++	amdgpu_dm_apply_backlight_quirks(aconnector, caps);
+ }
+ 
+ void amdgpu_dm_update_connector_after_detect(
+
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.45.2
 
