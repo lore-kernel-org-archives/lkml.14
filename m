@@ -1,48 +1,77 @@
-Received: from msa.smtpout.orange.fr (smtp-72.smtpout.orange.fr [80.12.242.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DBC175AD;
-	Sun, 23 Jun 2024 06:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD44914294;
+	Sun, 23 Jun 2024 06:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719125219; cv=none; b=SiJSAgPPJf59aEqUrxmnhimZvEt5DQGU+x6QsVVM5hQlUvcnnhR5ZCSf5ttY6ZdFQjvHMTWmRd1khLSymak2ohJu/9eMxEGwPqWj3koputlOXwi+U1s7yExkuH1N1ZBS8I9g6KR+QnBRGbQqRUG0FQYuZcZFsrMJ/HETKO8jp0o=
+	t=1719125356; cv=none; b=EXY8nX49p0Az9ILg8cIhNcXZq8LmgZjq2PZhPouhxV7EUNUQ30TIm9GxYVR0/0GiFBsMrh2nDtNktbdWGOiBI4VJyxrWP9OgffUH25KFpYn2xmErewYyrnEbFwEuod04x54nV2WNdV+o0k621PimjqreyoGqyqBbWjLWTvEckTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719125219; c=relaxed/simple;
-	bh=dfq06tE3YCP5kQWMyxxEvvFd4AYUTchihWxC68Enxik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FwnxDgcn7CRWTM2irVzH/mm6vm9BlmW1zje3LHCa2SKGN9iJwRop6BP9wswZRCcglfCs9oP7b5HfJoYDdQIhBFqoamoYlPQ2Zzt7y6+3WiuPZCm1ndYZCE4WWbNxVU+g0rKTGr+RuvN798A9SNoB04V0DMYi5ZSCUKnav8ow3fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Elv+6aT9; arc=none smtp.client-ip=80.12.242.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1719125356; c=relaxed/simple;
+	bh=TNrQkppq23456E4mBiNJ1ZZ6N8RGVEuFD5g005xUDkw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JP/pY3PUqI5S82nHwtKisPs8lSR2J6QfGhPDROjUqUgcxh+AG9vhSjANi3uaHWWZqJJkH3XBrpqx+qif2ocytJDDgPHXk3Tpp+Ffq+7u7Vbbv8A64T/1scmBhAjf7p6lhsSh4LZ5i8Cj8TKstN957oXBZhjO0QVELsfgFZ3xt54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UHcJqmP3; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Elv+6aT9"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id LGyusGzbVjiKDLGyusn1NL; Sun, 23 Jun 2024 08:45:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1719125144;
-	bh=mvaiCxkajJYPoYk09ilckf4bnV5wjXJDRtKrJ6xsPmY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Elv+6aT9owWWgrVNEXrnNg3gMaBiiS/bbuR7YJpWiEUZL6+UuTgwLq2qebsNRBGZf
-	 pOKXm/714ZdUwou+L5kDeI3Gr8z/tsx1kHov1pyTkzTUJY9RIZlaVXgKx2LHoo1c6T
-	 DBU38JLfgnN2rksB6WrVt7EAv1mrp7HTW/5ifgnROrER2Hla/BGXy6Zxaz6XhpjbYb
-	 /RqWqfvQvLwvLIsURE1sYDH7gRBvRAitLNcoI9yGLuJoYKSKHAsI4ZiPBzMN9o1DOD
-	 L6zoD5IZTkW+tbFM/HdT05gRBmQbwOEO9dO9z0B5IvEK34g+HiegnWf+g+GJYBKZHX
-	 vlS3+07uyCS6w==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 23 Jun 2024 08:45:44 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: linus.walleij@linaro.org,
-	Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 1/2] power: supply: samsung-sdi-battery: Constify struct power_supply_vbat_ri_table
-Date: Sun, 23 Jun 2024 08:45:33 +0200
-Message-ID: <d01818abd880bf435d1106a9a6cc11a7a8a3e661.1719125040.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UHcJqmP3"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45N5uhqL007961;
+	Sun, 23 Jun 2024 06:49:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=SVxEI1Xo6AFLf
+	6kIIt2Gs7dNrEuAM0rikRzL+VZn28w=; b=UHcJqmP3S3YV0AWKPnJYBVHytTdDn
+	GCJUurSHxy6HXGpe0iQyT9UuF5CGXMCnLQlTobS5pbD8fL+P+/mSGjL+YVFDgctn
+	DA+w2BIwAfXPxUhO2d+qSSbM2SmVgT6zgdBqBxlHOQX1FPZJ2ba6tdkfwwOgZpQM
+	1SE/3+S6ADpVtcxwNfWsxC/9whroMiPM0lTdcmg5iU3hNQxt5onvDViuRW4MHIMf
+	wI3yDPSZy57oPMvGqb/e9daRFThkYQpx/cqV34ipl00WHCvChTQoCEJNvS0jGURS
+	VtgKaYdvgp/8mQkGB1FS7tRbeqGHqbhb8eUgGOdKhSDd+Rs3v/GI7xuBA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yxc93g7tp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Jun 2024 06:49:06 +0000 (GMT)
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45N6n6U0018324;
+	Sun, 23 Jun 2024 06:49:06 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yxc93g7tm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Jun 2024 06:49:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45N2gcdb019984;
+	Sun, 23 Jun 2024 06:49:05 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxb5m0scm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Jun 2024 06:49:05 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45N6mx4e32834064
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 23 Jun 2024 06:49:01 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9BCFF2004D;
+	Sun, 23 Jun 2024 06:48:59 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 35D432004F;
+	Sun, 23 Jun 2024 06:48:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.64.228])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 23 Jun 2024 06:48:57 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH V4 2/3] tools/perf: Use is_perf_pid_map_name helper function to check dso's of pattern /tmp/perf-%d.map
+Date: Sun, 23 Jun 2024 12:18:49 +0530
+Message-Id: <20240623064850.83720-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240623064850.83720-1-atrajeev@linux.vnet.ibm.com>
+References: <20240623064850.83720-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,183 +79,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: oKy7q-Ew-GUP27ocbsHDr59YNDT1J0WD
+X-Proofpoint-GUID: YafeZ3bdIcmVkcs3nhhbcRy0scaLX1zy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-23_01,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406230047
 
-'struct power_supply_vbat_ri_table' are not modified in this driver.
+commit 80d496be89ed ("perf report: Add support for profiling JIT
+generated code") added support for profiling JIT generated code.
+This patch handles dso's of form "/tmp/perf-$PID.map".
 
-Constifying these structures moves some data to a read-only section, so
-increase overall security.
+Some of the references doesn't check exactly for same pattern.
+some uses "if (!strncmp(dso_name, "/tmp/perf-", 10))". Fix
+this by using helper function perf_pid_map_tid and
+is_perf_pid_map_name which looks for proper pattern of
+form: "/tmp/perf-$PID.map" for these checks.
 
-In order to do it, some code also needs to be adjusted to this new const
-qualifier.
-
-On a x86_64, with allmodconfig:
-Before:
-======
-$ size drivers/power/supply/samsung-sdi-battery.o
-   text	   data	    bss	    dec	    hex	filename
-    955	   7664	      0	   8619	   21ab	drivers/power/supply/samsung-sdi-battery.o
-
-After:
-=====
-$ size drivers/power/supply/samsung-sdi-battery.o
-   text	   data	    bss	    dec	    hex	filename
-   4055	   4584	      0	   8639	   21bf	drivers/power/supply/samsung-sdi-battery.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
-Compile tested-only
+ tools/perf/util/dsos.c    | 2 +-
+ tools/perf/util/srcline.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v2
-  - Add Linus Walleij <linus.walleij@linaro.org> in Cc  [Sebastian Reichel]
-
-v1: https://lore.kernel.org/all/bab3f44b62275c91d039b82dac1c32167c0c3bad.1717253900.git.christophe.jaillet@wanadoo.fr/
----
- drivers/power/supply/power_supply_core.c   |  2 +-
- drivers/power/supply/samsung-sdi-battery.c | 24 +++++++++++-----------
- include/linux/power_supply.h               |  4 ++--
- 3 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index fefe938c9342..022d0e4bf621 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -1024,7 +1024,7 @@ EXPORT_SYMBOL_GPL(power_supply_temp2resist_simple);
- int power_supply_vbat2ri(struct power_supply_battery_info *info,
- 			 int vbat_uv, bool charging)
- {
--	struct power_supply_vbat_ri_table *vbat2ri;
-+	const struct power_supply_vbat_ri_table *vbat2ri;
- 	int table_len;
- 	int i, high, low;
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index ab3d0c01dd63..846828ea1f00 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -275,7 +275,7 @@ static void dso__set_basename(struct dso *dso)
+ 	char *base, *lname;
+ 	int tid;
  
-diff --git a/drivers/power/supply/samsung-sdi-battery.c b/drivers/power/supply/samsung-sdi-battery.c
-index b33daab798b9..725fbe09379e 100644
---- a/drivers/power/supply/samsung-sdi-battery.c
-+++ b/drivers/power/supply/samsung-sdi-battery.c
-@@ -25,7 +25,7 @@ struct samsung_sdi_battery {
-  * tables apply depending on whether we are charging or not.
-  */
+-	if (sscanf(dso__long_name(dso), "/tmp/perf-%d.map", &tid) == 1) {
++	if (perf_pid_map_tid(dso__long_name(dso), &tid)) {
+ 		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
+ 			return;
+ 	} else {
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 9d670d8c1c08..51eb78993fe2 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -39,7 +39,7 @@ static const char *srcline_dso_name(struct dso *dso)
+ 	if (dso_name[0] == '[')
+ 		return NULL;
  
--static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb_l1m7flu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb_l1m7flu[] = {
- 	{ .vbat_uv = 4240000, .ri_uohm = 160000 },
- 	{ .vbat_uv = 4210000, .ri_uohm = 179000 },
- 	{ .vbat_uv = 4180000, .ri_uohm = 183000 },
-@@ -53,7 +53,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb_l1m7flu
- 	{ .vbat_uv = 3300000, .ri_uohm = 339000 },
- };
+-	if (!strncmp(dso_name, "/tmp/perf-", 10))
++	if (is_perf_pid_map_name(dso_name))
+ 		return NULL;
  
--static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb_l1m7flu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb_l1m7flu[] = {
- 	{ .vbat_uv = 4302000, .ri_uohm = 230000 },
- 	{ .vbat_uv = 4276000, .ri_uohm = 345000 },
- 	{ .vbat_uv = 4227000, .ri_uohm = 345000 },
-@@ -73,7 +73,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb_l1m7flu[]
- 	{ .vbat_uv = 3590000, .ri_uohm = 164000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb425161la[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb425161la[] = {
- 	{ .vbat_uv = 4240000, .ri_uohm = 160000 },
- 	{ .vbat_uv = 4210000, .ri_uohm = 179000 },
- 	{ .vbat_uv = 4180000, .ri_uohm = 183000 },
-@@ -105,7 +105,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb425161la
- 	{ .vbat_uv = 3300000, .ri_uohm = 339000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb425161la[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb425161la[] = {
- 	{ .vbat_uv = 4345000, .ri_uohm = 230000 },
- 	{ .vbat_uv = 4329000, .ri_uohm = 238000 },
- 	{ .vbat_uv = 4314000, .ri_uohm = 225000 },
-@@ -182,7 +182,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb425161la[]
- 	{ .vbat_uv = 3590000, .ri_uohm = 164000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb425161lu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb425161lu[] = {
- 	{ .vbat_uv = 4240000, .ri_uohm = 160000 },
- 	{ .vbat_uv = 4210000, .ri_uohm = 179000 },
- 	{ .vbat_uv = 4180000, .ri_uohm = 183000 },
-@@ -214,7 +214,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb425161lu
- 	{ .vbat_uv = 3300000, .ri_uohm = 339000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb425161lu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb425161lu[] = {
- 	{ .vbat_uv = 4346000, .ri_uohm = 293000 },
- 	{ .vbat_uv = 4336000, .ri_uohm = 290000 },
- 	{ .vbat_uv = 4315000, .ri_uohm = 274000 },
-@@ -244,7 +244,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb425161lu[]
- 	{ .vbat_uv = 3590000, .ri_uohm = 164000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb485159lu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb485159lu[] = {
- 	{ .vbat_uv = 4240000, .ri_uohm = 160000 },
- 	{ .vbat_uv = 4210000, .ri_uohm = 179000 },
- 	{ .vbat_uv = 4180000, .ri_uohm = 183000 },
-@@ -271,7 +271,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb485159lu
- 	{ .vbat_uv = 3300000, .ri_uohm = 339000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb485159lu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb485159lu[] = {
- 	{ .vbat_uv = 4302000, .ri_uohm = 200000 },
- 	{ .vbat_uv = 4258000, .ri_uohm = 206000 },
- 	{ .vbat_uv = 4200000, .ri_uohm = 231000 },
-@@ -291,7 +291,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb485159lu[]
- 	{ .vbat_uv = 3590000, .ri_uohm = 164000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb535151vu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb535151vu[] = {
- 	{ .vbat_uv = 4071000, .ri_uohm = 158000 },
- 	{ .vbat_uv = 4019000, .ri_uohm = 187000 },
- 	{ .vbat_uv = 3951000, .ri_uohm = 191000 },
-@@ -311,7 +311,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb535151vu
- 	{ .vbat_uv = 3280000, .ri_uohm = 250000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb535151vu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb535151vu[] = {
- 	{ .vbat_uv = 4190000, .ri_uohm = 214000 },
- 	{ .vbat_uv = 4159000, .ri_uohm = 252000 },
- 	{ .vbat_uv = 4121000, .ri_uohm = 245000 },
-@@ -331,7 +331,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb535151vu[]
- 	{ .vbat_uv = 3510000, .ri_uohm = 228000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb585157lu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb585157lu[] = {
- 	{ .vbat_uv = 4194000, .ri_uohm = 121000 },
- 	{ .vbat_uv = 4169000, .ri_uohm = 188000 },
- 	{ .vbat_uv = 4136000, .ri_uohm = 173000 },
-@@ -401,7 +401,7 @@ static struct power_supply_vbat_ri_table samsung_vbat2res_discharging_eb585157lu
- 	{ .vbat_uv = 3161000, .ri_uohm = 452000 },
- };
- 
--static struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb585157lu[] = {
-+static const struct power_supply_vbat_ri_table samsung_vbat2res_charging_eb585157lu[] = {
- 	{ .vbat_uv = 4360000, .ri_uohm = 128000 },
- 	{ .vbat_uv = 4325000, .ri_uohm = 130000 },
- 	{ .vbat_uv = 4316000, .ri_uohm = 148000 },
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 65082ef75692..5061eeecf62e 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -755,9 +755,9 @@ struct power_supply_battery_info {
- 	int ocv_table_size[POWER_SUPPLY_OCV_TEMP_MAX];
- 	struct power_supply_resistance_temp_table *resist_table;
- 	int resist_table_size;
--	struct power_supply_vbat_ri_table *vbat2ri_discharging;
-+	const struct power_supply_vbat_ri_table *vbat2ri_discharging;
- 	int vbat2ri_discharging_size;
--	struct power_supply_vbat_ri_table *vbat2ri_charging;
-+	const struct power_supply_vbat_ri_table *vbat2ri_charging;
- 	int vbat2ri_charging_size;
- 	int bti_resistance_ohm;
- 	int bti_resistance_tolerance;
+ 	return dso_name;
 -- 
-2.45.2
+2.35.3
 
