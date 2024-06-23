@@ -1,81 +1,59 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE933372;
-	Sun, 23 Jun 2024 02:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C607257B
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 02:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719108015; cv=none; b=YerHTkB+3BNYj+CuBMQzmw2fjnTakNDKwrGno92ciPtFPhYxf2glXBFB2yGftlJSW0guyNy5jk4g8ZP5OHscU2cinCQhd3gt6Egc+ewg9IBv2VjhHtorsuroTjyWxw4attTGy5VVH4gZ0hqlXNEbXCwukAPts2e/xJtj3/j0H2U=
+	t=1719108135; cv=none; b=EUYJ20elcQ6Vg5HW4DZ/BXiPy66Eb9kTJaL0GK7FGUVgQvhVgmXfjOUxHEk7sLrQCKCX2EvxsoXBBwaIErDDyY3d8tBY+EHO26fWlemgdGKE5OiwX9W7lACgXjqUODVMqBnjEC6tInT5gy5KkPAribUXXgM0B5k0KwGjUcYyUwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719108015; c=relaxed/simple;
-	bh=eqz1nYUW2n1wPnD+OrSmxaH89giYF+r0uVidt7/uExM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P87kfeX3idYOcOPHahE56NTeV01v1NX6vcT06nD786rOvjFwZDLWGXWypAxw5HDmoXhkAeVQIUdEPqY0zKJWuhjdHGLfZREjj2Ck5mh9eXVbqh1mcRYU6z246RqOX4PyKnIGqpxMefg25az1PrnaWZ0XLi61TdrwFbW/zl5dcxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8coIPjl; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719108135; c=relaxed/simple;
+	bh=h1N9BbSsxrG7WSx3YjhjY6wHi48QSKB0RFaKMUWGCsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WjMTsXmXm/C3jH2zrnUbIHQ8J6v3lToihDdEnzF4O+LUNR9hULdze7L7BSx9cSgsXrA8hskvTHNfpm6Bq/UsO2eiI4eOSnhraFJKd6NDv2dYwXI252FSnZ/ADMQ/LTPdVQPEK9TJ0xMqw+Xmo2cSmnML/W/ovQCWPr736X1l7eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SIPF7IN2; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8coIPjl"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c9d70d93dbso2180638b6e.3;
-        Sat, 22 Jun 2024 19:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719108013; x=1719712813; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KVGgnXFuBXdUfPKL+5geh4O7aTo/c5rb9X3Ypx2XCbA=;
-        b=e8coIPjlMz9GLbS1Qpg93XnLcZJJJAORxyb1BCwWYlGIz4JJkqtfU6giCn5PMQe6uw
-         0I5l2ndB+z2O+Bbgw2ZprPvriZRvzoQy7NEKHU4Qhz0H+JYF2sxZ2F4shtyGR5/vg4lf
-         NNF+mAOtsvDw7ZOlXyuR9NcMC4ID1hYBUue9ozekrQOiKUFLMG9RlYyXAGrj6+bM2QJf
-         Q8UtAN6JmO978P8+TnPPsiB/8C7P8qXIw5XAWhSBRt0AWrU5fVwwDMeoenMFL6fT9+F9
-         iNB9hnKzRAzWKxnVSE5TfnlSnsRgA5f/hf3ZXpzoBZ79Z+pI6nF2sRqieKBXrjPT+nO1
-         vIqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719108013; x=1719712813;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KVGgnXFuBXdUfPKL+5geh4O7aTo/c5rb9X3Ypx2XCbA=;
-        b=Y+lHSHc0Niot8eTv/HPqq1Uav35vRg7a0ixLdCUxPVxBlnGKHuwSjMD9FRbVDk+UEd
-         CSbpU5a5mnjy4Aiv6742tVfRfCqWzJJTi9wmgXpnUKfVWUOlU39z7ke0GpBzriSb3rgB
-         BshK2q9ieelHXCAsdvBluMx1WcYmF/4UmCctCIVkS1nhoci/1RUBLWEiEwxtJqB34lIL
-         QpsL2valh12E+zmlke1pkQN7CFaDXYOC1WusyCIGGWar6K0OLwuwwd3Akzko9m1HB3Au
-         zXlbLlSszMVqf73b4KRwwZsxIhGnD3WtHa+LOToCoWugSyDVQrwwtacuHGzCOEH5dboa
-         5gLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXU0i48KflYhPAmQqL6Mn1LxpBNrF4cghIESi08q+6vBTAHy8L51ns5f3JOoimFE18UHg1IcmR0zFAtWXTQuCT5R9vuD68y+5z/OwDbJMnQ+rRepDLeVj7cdTuRGlbAOJj5
-X-Gm-Message-State: AOJu0Yws13A4arXxssXMPLAEdix6vhKgYs0dqTcjXsXckAB26+FHir8a
-	plvXU4JdBaVJQbGQ0g0iCGejRzPpVq6mPAXOT+pWaiSL7sF/hBXZ
-X-Google-Smtp-Source: AGHT+IGzqz6bzpwCOUAvh7s0zDmqCxafGtXwXCV7J66ZAG4Yj+vbnhVwsGYHiRZs+3+xWiBg/GqANw==
-X-Received: by 2002:a05:6808:f8e:b0:3d5:2bb7:867 with SMTP id 5614622812f47-3d54596af33mr1599564b6e.17.1719108012928;
-        Sat, 22 Jun 2024 19:00:12 -0700 (PDT)
-Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7066aeeaa5asm1652196b3a.29.2024.06.22.19.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 19:00:12 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Sat, 22 Jun 2024 16:00:10 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
-	joshdon@google.com, brho@google.com, pjt@google.com,
-	derkling@google.com, haoluo@google.com, dvernet@meta.com,
-	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
-	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
-	andrea.righi@canonical.com, joel@joelfernandes.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
-Message-ID: <ZneBqla93mBpGdH0@slm.duckdns.org>
-References: <CAHk-=wg88k=EsHyGrX9dKt10KxSygzcEGdKRYRTx9xtA_y=rqQ@mail.gmail.com>
- <871q4rpi2s.ffs@tglx>
- <CAHk-=wgN6DRks55fsqiJYE3uV=_QTgzdxOvh1ZZNgm_YooKdYA@mail.gmail.com>
- <87v822ocy2.ffs@tglx>
- <CAHk-=wiRgsFsrnTR8XShrS_-aYS--4DSrRPmaWtYJ55-fmjznA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SIPF7IN2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719108134; x=1750644134;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=h1N9BbSsxrG7WSx3YjhjY6wHi48QSKB0RFaKMUWGCsA=;
+  b=SIPF7IN2KbLJzCDLRLSkk3GsUHtiDOzBOmS4vvm0J0NIdDhuxoR9FJuH
+   +c+9PUEpOzP9yo7LKsmKUhrVVzHwTB+cYhBBzOJwTuPcPyN5VS1zx6Axo
+   xsWHfaQo9wpOgBIHbT9+GvdvDjoMOaADSyl0ERU9JvSIFF5RwoRjdNCdm
+   asFFtL1QkUbzGEuPgc9LoeqFw8hEmGo/HNgdQVpj5ywlkdB0SRZjk0o3h
+   46/ahbU7hpJDXMzDm2QK9hcG/TmetW6BB1U2iFV/PyfUk8zyAFbvXiPC+
+   Qs+8fHOnvM/KEihy2F042EKb3s1T6DLD2fv3LrwGJ1ChS94TX2NAY3OL3
+   w==;
+X-CSE-ConnectionGUID: kjcq3DQfROa9kA0oIo8iyQ==
+X-CSE-MsgGUID: igrgZzcmR6Sl9Cox10sUeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11111"; a="15938083"
+X-IronPort-AV: E=Sophos;i="6.08,259,1712646000"; 
+   d="scan'208";a="15938083"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2024 19:02:12 -0700
+X-CSE-ConnectionGUID: PmUJVu4HQzSGm8LdDAbaxg==
+X-CSE-MsgGUID: db0Yfp9qQ/ihglgjzfD3Qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,259,1712646000"; 
+   d="scan'208";a="42921677"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 22 Jun 2024 19:02:10 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sLCYR-000A9e-23;
+	Sun, 23 Jun 2024 02:02:07 +0000
+Date: Sun, 23 Jun 2024 10:01:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>
+Subject: arch/riscv/kvm/vcpu_sbi_sta.c:59:13: sparse: sparse: restricted
+ __le32 degrades to integer
+Message-ID: <202406230951.z2XjxdWg-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,23 +62,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiRgsFsrnTR8XShrS_-aYS--4DSrRPmaWtYJ55-fmjznA@mail.gmail.com>
 
-Hello,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   5f583a3162ffd9f7999af76b8ab634ce2dac9f90
+commit: f072b272aa27d57cf7fe6fdedb30fb50f391974e RISC-V: KVM: Use correct restricted types
+date:   5 months ago
+config: riscv-randconfig-r113-20240623 (https://download.01.org/0day-ci/archive/20240623/202406230951.z2XjxdWg-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce: (https://download.01.org/0day-ci/archive/20240623/202406230951.z2XjxdWg-lkp@intel.com/reproduce)
 
-On Fri, Jun 21, 2024 at 09:34:22AM -0700, Linus Torvalds wrote:
->  (b) the for_each_active_class() thing that I think would actually be
-> better off just being done explicitly in sched/core.c, but probably
-> only makes sense after integration
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406230951.z2XjxdWg-lkp@intel.com/
 
-Just posted a patchset to integrate sched_ext a bit better. I open coded
-for_balance_class_range() and moved for_each_active_class() and friends to
-kernel/sched/sched.h. If something else would look better, please let me
-know.
+sparse warnings: (new ones prefixed by >>)
+>> arch/riscv/kvm/vcpu_sbi_sta.c:59:13: sparse: sparse: restricted __le32 degrades to integer
+>> arch/riscv/kvm/vcpu_sbi_sta.c:59:13: sparse: sparse: restricted __le32 degrades to integer
+   arch/riscv/kvm/vcpu_sbi_sta.c:59:13: sparse: sparse: cast to restricted __le32
+   arch/riscv/kvm/vcpu_sbi_sta.c:65:13: sparse: sparse: restricted __le32 degrades to integer
+   arch/riscv/kvm/vcpu_sbi_sta.c:65:13: sparse: sparse: restricted __le32 degrades to integer
+>> arch/riscv/kvm/vcpu_sbi_sta.c:65:13: sparse: sparse: cast from restricted __le32
+>> arch/riscv/kvm/vcpu_sbi_sta.c:68:14: sparse: sparse: restricted __le64 degrades to integer
+>> arch/riscv/kvm/vcpu_sbi_sta.c:68:14: sparse: sparse: restricted __le64 degrades to integer
+   arch/riscv/kvm/vcpu_sbi_sta.c:68:14: sparse: sparse: cast to restricted __le64
+   arch/riscv/kvm/vcpu_sbi_sta.c:72:17: sparse: sparse: restricted __le64 degrades to integer
+   arch/riscv/kvm/vcpu_sbi_sta.c:72:17: sparse: sparse: restricted __le64 degrades to integer
+>> arch/riscv/kvm/vcpu_sbi_sta.c:72:17: sparse: sparse: cast from restricted __le64
+   arch/riscv/kvm/vcpu_sbi_sta.c:76:9: sparse: sparse: restricted __le32 degrades to integer
+   arch/riscv/kvm/vcpu_sbi_sta.c:76:9: sparse: sparse: restricted __le32 degrades to integer
+   arch/riscv/kvm/vcpu_sbi_sta.c:76:9: sparse: sparse: cast from restricted __le32
 
-  http://lkml.kernel.org/r/20240623015057.3383223-1-tj@kernel.org
+vim +59 arch/riscv/kvm/vcpu_sbi_sta.c
 
-Thanks.
+    24	
+    25	void kvm_riscv_vcpu_record_steal_time(struct kvm_vcpu *vcpu)
+    26	{
+    27		gpa_t shmem = vcpu->arch.sta.shmem;
+    28		u64 last_steal = vcpu->arch.sta.last_steal;
+    29		__le32 __user *sequence_ptr;
+    30		__le64 __user *steal_ptr;
+    31		__le32 sequence_le;
+    32		__le64 steal_le;
+    33		u32 sequence;
+    34		u64 steal;
+    35		unsigned long hva;
+    36		gfn_t gfn;
+    37	
+    38		if (shmem == INVALID_GPA)
+    39			return;
+    40	
+    41		/*
+    42		 * shmem is 64-byte aligned (see the enforcement in
+    43		 * kvm_sbi_sta_steal_time_set_shmem()) and the size of sbi_sta_struct
+    44		 * is 64 bytes, so we know all its offsets are in the same page.
+    45		 */
+    46		gfn = shmem >> PAGE_SHIFT;
+    47		hva = kvm_vcpu_gfn_to_hva(vcpu, gfn);
+    48	
+    49		if (WARN_ON(kvm_is_error_hva(hva))) {
+    50			vcpu->arch.sta.shmem = INVALID_GPA;
+    51			return;
+    52		}
+    53	
+    54		sequence_ptr = (__le32 __user *)(hva + offset_in_page(shmem) +
+    55				       offsetof(struct sbi_sta_struct, sequence));
+    56		steal_ptr = (__le64 __user *)(hva + offset_in_page(shmem) +
+    57				    offsetof(struct sbi_sta_struct, steal));
+    58	
+  > 59		if (WARN_ON(get_user(sequence_le, sequence_ptr)))
+    60			return;
+    61	
+    62		sequence = le32_to_cpu(sequence_le);
+    63		sequence += 1;
+    64	
+  > 65		if (WARN_ON(put_user(cpu_to_le32(sequence), sequence_ptr)))
+    66			return;
+    67	
+  > 68		if (!WARN_ON(get_user(steal_le, steal_ptr))) {
+    69			steal = le64_to_cpu(steal_le);
+    70			vcpu->arch.sta.last_steal = READ_ONCE(current->sched_info.run_delay);
+    71			steal += vcpu->arch.sta.last_steal - last_steal;
+  > 72			WARN_ON(put_user(cpu_to_le64(steal), steal_ptr));
+    73		}
+    74	
+    75		sequence += 1;
+    76		WARN_ON(put_user(cpu_to_le32(sequence), sequence_ptr));
+    77	
+    78		kvm_vcpu_mark_page_dirty(vcpu, gfn);
+    79	}
+    80	
 
 -- 
-tejun
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
