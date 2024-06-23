@@ -1,252 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F52C148301;
-	Sun, 23 Jun 2024 11:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C135155C1A;
+	Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719143948; cv=none; b=tQDr+eJxK8Xs5sqQHb1K5GOXQ4ryvLmQvy1ERDwnqHF582nxRrwFN/ajQ5uytem0TeGRyTj6kDV9g17XKFlyQUZRgdYowyA95WCBoof9J1PDOFsBDP/r5WDi8ZLHRQ3CTaJcDWPXtCYHONNhMk5xHYoG+dZqjwxoErf0PIrpkDk=
+	t=1719144030; cv=none; b=ZKQc8iCAkW+2qOVdAAGdKc4zkUoTZiBwqVzXR4zQXSF7Gy0F/46DCi4D8BuKpjscLS+/MdRtH8LeEdLPDi05WAKgo+tpbxf0UWTOG5OE6qN5bFcUERgw8sqHBbbL6C1mqI35wys1VEc3qRrvTvnTsaQo8Zv74USUy0Ve8C5jkIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719143948; c=relaxed/simple;
-	bh=1QXQ3tMvStRgTMmgy0k027ECKfLBSakAWmhgATXXEmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NgJhPqAeP6WwEmQ7p8yG8RyOGZRv0WdjwGdFtQBcjO4WwaDhV/qbYmzijNl+TI58SZK0bmnMbI98POFGD+zqqA8OZlhIejYEBAdaEvGv/1FodjACawYOkI2vibHlLSZEmR76IGFHGapREAKrDZuk8BSBORtkRGNB9nmBD75mm9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzfVtlRt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719144030; c=relaxed/simple;
+	bh=mAN44LwTX3XKIAEy4qNZFAmyTgjXBNzHHu7xGgTUnqk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=qB5vRGXkUjRknRdhyifxpVJXpgEC2q9Fvg5V9FfpljmlU7MFal0dzJO/OqugR5+1nGRSpKDkD99x7ZQFCdkSVrIAYuFbWAkUpSFVASApdBg++W8pvhAP6mDxD37WF1aMcG98LihjNT2gMrr/NP4uza2RaWEmGGDcU0AwNEhDtYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh9z/1Ul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzfVtlRt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C0FC2BD10;
-	Sun, 23 Jun 2024 11:59:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh9z/1Ul"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 533B4C32782;
+	Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719143948;
-	bh=1QXQ3tMvStRgTMmgy0k027ECKfLBSakAWmhgATXXEmw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gzfVtlRt6ugbCI5tsFW83ZkCYyraPy2cl4ba2vdgTJc4PDTnfrGHxrgGpJA9iMsNK
-	 HhfeOW7qM9Z69MNzdW8hmPjsdZONGwwZqUPQ/MzZGV84HZc6dQfCMFo8eouK6wWwLE
-	 UTsO1Wbxzhs9oYQm5zZf2GEbOeBZ3kRg+CnW8s3rzNu3uVln1/4WCqMZfab+BUVBMu
-	 llwwnYF7+4X83hCLZ60Z7907qrqirxKja7COmuNT9AbB8dvHgeMQ2BSCz/el/m+5kL
-	 G1Cbsx/aBxL2fO7NNkBU24HZ1HtNecNRSKU5vdDco5y69y/+G1pTpOWQsGmSOqkb7b
-	 6KisDZo32UrQA==
-Date: Sun, 23 Jun 2024 12:59:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
- linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Michal
- Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] iio: xilinx-ams: Add labels
-Message-ID: <20240623125901.03f0fe6f@jic23-huawei>
-In-Reply-To: <20240620204842.817237-1-sean.anderson@linux.dev>
-References: <20240620204842.817237-1-sean.anderson@linux.dev>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	s=k20201202; t=1719144030;
+	bh=mAN44LwTX3XKIAEy4qNZFAmyTgjXBNzHHu7xGgTUnqk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Nh9z/1UlpjX8JpDF34aLyT2iVr8v8V4BlO7GwBSzwCJa6017lGcMS/fi1GhgJlrts
+	 P4YzUxGBARbwYPYyR/O+vIm4CiGAD6Ya4rbPgChAZ0CJodUqYqcFYnyJ243tP1rs8n
+	 uqPhCXt+BXHUbeY9l9aqF5mFpSPXbavokzhv/8GKWcGx7SD6mwiQaVL6F3mdfLa0WI
+	 WyHw+uL+TH82dXwt/9VCsVYWFnygwCjZqIIst1HjhZwaujLvMfG4oBzKw6FySNeXRP
+	 7uYYwVlTeQ9IbTGSX4BjYENQRXR/10NZOv3vdxDNQ6pJc/JrH+W1eMWXUsXqquxVvg
+	 jsaeAl1mBGkQw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3AADBC54BB3;
+	Sun, 23 Jun 2024 12:00:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/1] dt-bindings: net: fman: remove ptp-timer from required
+ list
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171914403023.11613.628899711265897409.git-patchwork-notify@kernel.org>
+Date: Sun, 23 Jun 2024 12:00:30 +0000
+References: <20240621170000.2289596-1-Frank.Li@nxp.com>
+In-Reply-To: <20240621170000.2289596-1-Frank.Li@nxp.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ richardcochran@gmail.com, madalin.bucur@nxp.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
 
-On Thu, 20 Jun 2024 16:48:42 -0400
-Sean Anderson <sean.anderson@linux.dev> wrote:
+Hello:
 
-> Label all the channels using names from the reference manual. Some of
-> the "control" channels are duplicates of other channels. The reference
-> manual describes it like:
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Fri, 21 Jun 2024 13:00:00 -0400 you wrote:
+> IEEE1588(ptp) is optional feature for network. Remove it from required
+> list to fix below CHECK_DTBS warning.
+> arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dtb: ethernet@f0000: 'ptp-timer' is a required property
 > 
-> > The AMS register set includes several measurement registers that are
-> > written to by the PS SYSMON unit using the single-channel mode
-> > (sequencer off). These voltage measurements are performed using the
-> > unipolar sampling circuit with a 0 to 3V range and do not have alarms
-> > or minimum/maximum registers.  
-> 
-> So I think these really are measuring the same voltages but in a
-> different location. In which case, sharing labels makes sense to me.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Hi Sean,
-
-This LGTM, but I'd like some feedback from others more familiar with the
-driver and device before I apply it.  If everyone is too busy and
-I don't get any replies for a few weeks I may pick it up anyway.
-
-Feel free to poke me if I seem to have forgotten in say 2 weeks.
-
-
-Jonathan
-
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> 
->  drivers/iio/adc/xilinx-ams.c | 107 +++++++++++++++++++----------------
->  1 file changed, 59 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/xilinx-ams.c b/drivers/iio/adc/xilinx-ams.c
-> index aa05f24931f9..f051358d6b50 100644
-> --- a/drivers/iio/adc/xilinx-ams.c
-> +++ b/drivers/iio/adc/xilinx-ams.c
-> @@ -222,7 +222,7 @@ enum ams_ps_pl_seq {
->  #define PL_SEQ(x)		(AMS_PS_SEQ_MAX + (x))
->  #define AMS_CTRL_SEQ_BASE	(AMS_PS_SEQ_MAX * 3)
->  
-> -#define AMS_CHAN_TEMP(_scan_index, _addr) { \
-> +#define AMS_CHAN_TEMP(_scan_index, _addr, _name) { \
->  	.type = IIO_TEMP, \
->  	.indexed = 1, \
->  	.address = (_addr), \
-> @@ -232,9 +232,10 @@ enum ams_ps_pl_seq {
->  	.event_spec = ams_temp_events, \
->  	.scan_index = _scan_index, \
->  	.num_event_specs = ARRAY_SIZE(ams_temp_events), \
-> +	.datasheet_name = _name, \
->  }
->  
-> -#define AMS_CHAN_VOLTAGE(_scan_index, _addr, _alarm) { \
-> +#define AMS_CHAN_VOLTAGE(_scan_index, _addr, _alarm, _name) { \
->  	.type = IIO_VOLTAGE, \
->  	.indexed = 1, \
->  	.address = (_addr), \
-> @@ -243,21 +244,24 @@ enum ams_ps_pl_seq {
->  	.event_spec = (_alarm) ? ams_voltage_events : NULL, \
->  	.scan_index = _scan_index, \
->  	.num_event_specs = (_alarm) ? ARRAY_SIZE(ams_voltage_events) : 0, \
-> +	.datasheet_name = _name, \
->  }
->  
-> -#define AMS_PS_CHAN_TEMP(_scan_index, _addr) \
-> -	AMS_CHAN_TEMP(PS_SEQ(_scan_index), _addr)
-> -#define AMS_PS_CHAN_VOLTAGE(_scan_index, _addr) \
-> -	AMS_CHAN_VOLTAGE(PS_SEQ(_scan_index), _addr, true)
-> +#define AMS_PS_CHAN_TEMP(_scan_index, _addr, _name) \
-> +	AMS_CHAN_TEMP(PS_SEQ(_scan_index), _addr, _name)
-> +#define AMS_PS_CHAN_VOLTAGE(_scan_index, _addr, _name) \
-> +	AMS_CHAN_VOLTAGE(PS_SEQ(_scan_index), _addr, true, _name)
->  
-> -#define AMS_PL_CHAN_TEMP(_scan_index, _addr) \
-> -	AMS_CHAN_TEMP(PL_SEQ(_scan_index), _addr)
-> -#define AMS_PL_CHAN_VOLTAGE(_scan_index, _addr, _alarm) \
-> -	AMS_CHAN_VOLTAGE(PL_SEQ(_scan_index), _addr, _alarm)
-> +#define AMS_PL_CHAN_TEMP(_scan_index, _addr, _name) \
-> +	AMS_CHAN_TEMP(PL_SEQ(_scan_index), _addr, _name)
-> +#define AMS_PL_CHAN_VOLTAGE(_scan_index, _addr, _alarm, _name) \
-> +	AMS_CHAN_VOLTAGE(PL_SEQ(_scan_index), _addr, _alarm, _name)
->  #define AMS_PL_AUX_CHAN_VOLTAGE(_auxno) \
-> -	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(_auxno)), AMS_REG_VAUX(_auxno), false)
-> -#define AMS_CTRL_CHAN_VOLTAGE(_scan_index, _addr) \
-> -	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(AMS_SEQ(_scan_index))), _addr, false)
-> +	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(_auxno)), AMS_REG_VAUX(_auxno), false, \
-> +			 "VAUX" #_auxno)
-> +#define AMS_CTRL_CHAN_VOLTAGE(_scan_index, _addr, _name) \
-> +	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_SEQ(AMS_SEQ(_scan_index))), _addr, false, \
-> +			 _name)
->  
->  /**
->   * struct ams - This structure contains necessary state for xilinx-ams to operate
-> @@ -505,6 +509,12 @@ static int ams_init_device(struct ams *ams)
->  	return 0;
->  }
->  
-> +static int ams_read_label(struct iio_dev *indio_dev,
-> +			  struct iio_chan_spec const *chan, char *label)
-> +{
-> +	return sysfs_emit(label, "%s\n", chan->datasheet_name);
-> +}
-> +
->  static int ams_enable_single_channel(struct ams *ams, unsigned int offset)
->  {
->  	u8 channel_num;
-> @@ -1116,37 +1126,37 @@ static const struct iio_event_spec ams_voltage_events[] = {
->  };
->  
->  static const struct iio_chan_spec ams_ps_channels[] = {
-> -	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP),
-> -	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP_REMOTE, AMS_TEMP_REMOTE),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10),
-> -	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS),
-> +	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP, "Temp_LPD"),
-> +	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP_REMOTE, AMS_TEMP_REMOTE, "Temp_FPD"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, "VCC_PSINTLP"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, "VCC_PSINTFP"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, "VCC_PSAUX"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, "VCC_PSDDR"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, "VCC_PSIO3"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, "VCC_PSIO0"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, "VCC_PSIO1"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, "VCC_PSIO2"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, "PS_MGTRAVCC"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, "PS_MGTRAVTT"),
-> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, "VCC_PSADC"),
->  };
->  
->  static const struct iio_chan_spec ams_pl_channels[] = {
-> -	AMS_PL_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFP, AMS_VREFP, false),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFN, AMS_VREFN, false),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VP_VN, AMS_VP_VN, false),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, true),
-> -	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, true),
-> +	AMS_PL_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP, "Temp_PL"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, true, "VCCINT"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, true, "VCCAUX"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFP, AMS_VREFP, false, "VREFP"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFN, AMS_VREFN, false, "VREFN"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, true, "VCCBRAM"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, true, "VCC_PSINTLP"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, true, "VCC_PSINTFP"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, true, "VCC_PSAUX"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, true, "VCCAMS"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VP_VN, AMS_VP_VN, false, "VP_VN"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, true, "VUser0"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, true, "VUser1"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, true, "VUser2"),
-> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, true, "VUser3"),
->  	AMS_PL_AUX_CHAN_VOLTAGE(0),
->  	AMS_PL_AUX_CHAN_VOLTAGE(1),
->  	AMS_PL_AUX_CHAN_VOLTAGE(2),
-> @@ -1166,13 +1176,13 @@ static const struct iio_chan_spec ams_pl_channels[] = {
->  };
->  
->  static const struct iio_chan_spec ams_ctrl_channels[] = {
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSPLL, AMS_VCC_PSPLL0),
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSBATT, AMS_VCC_PSPLL3),
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCINT, AMS_VCCINT),
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCBRAM, AMS_VCCBRAM),
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCAUX, AMS_VCCAUX),
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_PSDDRPLL, AMS_PSDDRPLL),
-> -	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_INTDDR, AMS_PSINTFPDDR),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSPLL, AMS_VCC_PSPLL0, "VCC_PSPLL"),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSBATT, AMS_VCC_PSPLL3, "VCC_PSBATT"),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCINT, AMS_VCCINT, "VCCINT"),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCBRAM, AMS_VCCBRAM, "VCCBRAM"),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCAUX, AMS_VCCAUX, "VCCAUX"),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_PSDDRPLL, AMS_PSDDRPLL, "VCC_PSDDR_PLL"),
-> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_INTDDR, AMS_PSINTFPDDR, "VCC_PSINTFP_DDR"),
->  };
->  
->  static int ams_get_ext_chan(struct fwnode_handle *chan_node,
-> @@ -1336,6 +1346,7 @@ static int ams_parse_firmware(struct iio_dev *indio_dev)
->  }
->  
->  static const struct iio_info iio_ams_info = {
-> +	.read_label = ams_read_label,
->  	.read_raw = &ams_read_raw,
->  	.read_event_config = &ams_read_event_config,
->  	.write_event_config = &ams_write_event_config,
+>  Documentation/devicetree/bindings/net/fsl,fman-dtsec.yaml | 1 -
+>  1 file changed, 1 deletion(-)
+
+Here is the summary with links:
+  - [1/1] dt-bindings: net: fman: remove ptp-timer from required list
+    https://git.kernel.org/netdev/net/c/8a67cbd47bf4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
