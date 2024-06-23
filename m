@@ -1,50 +1,35 @@
-Received: from msa.smtpout.orange.fr (smtp-77.smtpout.orange.fr [80.12.242.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7B52AD22;
-	Sun, 23 Jun 2024 18:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF9B2AD22;
+	Sun, 23 Jun 2024 18:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719166163; cv=none; b=mdQgJt21YgiZfXTnqZO+7uRFRjClNld30A9Fuh8gnDSOrilOnd5Kbdifc4GvLnRD6kNn+JxyBqpYbq+LsJjS6a/ljkj+9+t9+CKfrgM8dgLY1W5+F/FK8PGfdorGgjom1Opios1SJUDrAiY4aUmqtU8CY9ZOhoEOLzoPrgaH6wE=
+	t=1719166228; cv=none; b=tvge8J4kUPo1TuOrICtiilYBXErGn55dO3HD1v9E0G/rXT9okyT+q6TjJNWST44oeR146N9laKQ9L9IwTAbT5zqpLS745VtsWF/6gSTKTf8Um8FM59kZcVm/NWAIxZ0/rk+01LfrybvQmoaeivDHNh4+PwUV4kNyJzew3ks6L24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719166163; c=relaxed/simple;
-	bh=J3vMmXnzQe6rhIKhDI1/B7ym+GQlPi5XIJq1ayivNTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F6T3cexrO39jfnQG1bPrIbz4/kYVOwqhU123427Rh0Em9mF9v1nBDJh+th/8/QPvNhetTV7itTwRki6ldDJ9u9NOXfPu86CvDHepzzIgMT+hArSnsKEuY+jo0WkKXB97TT0g9UYFbakshY/rp9cgvU/V3pFmOVaS1j3jZPaLEMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LOzMV2Ib; arc=none smtp.client-ip=80.12.242.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1719166228; c=relaxed/simple;
+	bh=50ecyUID+IcgYhdJqxEnwEQsRz1NsA8uh3n7Nc5SddM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=H9zAgGFVg0R00Ko1+n58nR60WQKxJPtvLKsrR4ASoALrxtNlf+m8KSE/WMGqmdwsyyHHiarM+dn8Ww/is+8pbN/ZZ1WHPKD/f09EKPJckHGI9QS71vdcCe7P/p389DUYV4dr8dEE/hjVAEabYWnk9kBSiKjkDXrVbnBuc0j95Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwQnrRF4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LOzMV2Ib"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id LRdBslRkGqHypLRdCsRNHd; Sun, 23 Jun 2024 20:08:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1719166082;
-	bh=zcGRcZWW7cYNaHFvJZxbefnI7dyccoMtktK8GbPAaWk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LOzMV2Ib3hYVdxzXTxRS/vIMWOcazC6+fi/DkneBn489NlGZycGOzJqEyKLhkU5xb
-	 i8goEQEaHn0Cu7eSsaag/QdckMG25TsdAo5iUkQX0ghm1GiGYqaidXoUDeEH2VhLMG
-	 b86ou9M9RHWerz2CUr8QVUkhDKS/V7oteqUklsPqPaO0BrvvJ/qCvnyrNv3kqTYhf+
-	 j6tdSDAEN6n94c4ZGUYeyatz9Hf1ShXgDaHA3u9Nz11hzTd9ctfJnSrm3Dd9gNHJlM
-	 vcY42aEGZMUZxNZZoRBPsESbZuWS+5U+71nem5bQrG0+gRqHdzJUrSHdMUPiAt3eWs
-	 9ztcuhYyLnQeA==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 23 Jun 2024 20:08:02 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <sfrench@samba.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-cifs@vger.kernel.org
-Subject: [PATCH] ksmbd: Constify struct ksmbd_transport_ops
-Date: Sun, 23 Jun 2024 20:07:58 +0200
-Message-ID: <c06ecbfde4cc106603285ed96febf3b887425286.1719160522.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwQnrRF4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EAD50C32786;
+	Sun, 23 Jun 2024 18:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719166228;
+	bh=50ecyUID+IcgYhdJqxEnwEQsRz1NsA8uh3n7Nc5SddM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=QwQnrRF4wsephOL6j9IXivwAzIfBKUQtLOUq29/uYquld9ij3nQ82DcXkJG2BYvqH
+	 5AP3eMxBLtxwhK0CW0D1HSgFYZNlRR899RHTVLGCdmiaChNbk1VlUrNjXDOnY9oe1n
+	 6vOZpIjmce67zBmTlIfHWB+fc78u37WtwBr6Q3eGAi1mXa6T3DV0OPQXSC7DfdzoKM
+	 i+u3fMa8vlYl2FkvwSvT4A1hWIzoCuqplmnu5L3AHAv4fvHT+s1UxuelbRopyIBZHZ
+	 LQYwdITWzvSdZxMGdZVMkmfhit1wqreUxhYsosCmz+cc677VGqLNr0vGaZhf1HscLG
+	 h1xCpULwKLHTQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D29A4CF3B80;
+	Sun, 23 Jun 2024 18:10:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,91 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [net PATCH] octeontx2-pf: Fix coverity and klockwork issues in octeon
+ PF driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171916622785.24104.1126101038206521333.git-patchwork-notify@kernel.org>
+Date: Sun, 23 Jun 2024 18:10:27 +0000
+References: <20240622064437.2919946-1-sumang@marvell.com>
+In-Reply-To: <20240622064437.2919946-1-sumang@marvell.com>
+To: Suman Ghosh <sumang@marvell.com>
+Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+ hkelam@marvell.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lcherian@marvell.com, jerinj@marvell.com,
+ rkannoth@marvell.com
 
-'struct ksmbd_transport_ops' is not modified in these drivers.
+Hello:
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  52184	   2085	    256	  54525	   d4fd	fs/smb/server/transport_rdma.o
+On Sat, 22 Jun 2024 12:14:37 +0530 you wrote:
+> From: Ratheesh Kannoth <rkannoth@marvell.com>
+> 
+> Fix unintended sign extension and klockwork issues. These are not real
+> issue but for sanity checks.
+> 
+> Signed-off-by: Ratheesh Kannoth <rkannoth@marvell.com>
+> Signed-off-by: Suman Ghosh <sumang@marvell.com>
+> 
+> [...]
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  52260	   2021	    256	  54537	   d509	fs/smb/server/transport_rdma.o
+Here is the summary with links:
+  - [net] octeontx2-pf: Fix coverity and klockwork issues in octeon PF driver
+    https://git.kernel.org/netdev/net/c/02ea312055da
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only
----
- fs/smb/server/connection.h     | 4 ++--
- fs/smb/server/transport_rdma.c | 4 ++--
- fs/smb/server/transport_tcp.c  | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/fs/smb/server/connection.h b/fs/smb/server/connection.h
-index 0e04cf8b1d89..5c2845e47cf2 100644
---- a/fs/smb/server/connection.h
-+++ b/fs/smb/server/connection.h
-@@ -133,8 +133,8 @@ struct ksmbd_transport_ops {
- };
- 
- struct ksmbd_transport {
--	struct ksmbd_conn		*conn;
--	struct ksmbd_transport_ops	*ops;
-+	struct ksmbd_conn			*conn;
-+	const struct ksmbd_transport_ops	*ops;
- };
- 
- #define KSMBD_TCP_RECV_TIMEOUT	(7 * HZ)
-diff --git a/fs/smb/server/transport_rdma.c b/fs/smb/server/transport_rdma.c
-index 8faa25c6e129..cf4418f72772 100644
---- a/fs/smb/server/transport_rdma.c
-+++ b/fs/smb/server/transport_rdma.c
-@@ -164,7 +164,7 @@ enum {
- 	SMB_DIRECT_MSG_DATA_TRANSFER
- };
- 
--static struct ksmbd_transport_ops ksmbd_smb_direct_transport_ops;
-+static const struct ksmbd_transport_ops ksmbd_smb_direct_transport_ops;
- 
- struct smb_direct_send_ctx {
- 	struct list_head	msg_list;
-@@ -2292,7 +2292,7 @@ bool ksmbd_rdma_capable_netdev(struct net_device *netdev)
- 	return rdma_capable;
- }
- 
--static struct ksmbd_transport_ops ksmbd_smb_direct_transport_ops = {
-+static const struct ksmbd_transport_ops ksmbd_smb_direct_transport_ops = {
- 	.prepare	= smb_direct_prepare,
- 	.disconnect	= smb_direct_disconnect,
- 	.shutdown	= smb_direct_shutdown,
-diff --git a/fs/smb/server/transport_tcp.c b/fs/smb/server/transport_tcp.c
-index 6633fa78e9b9..a84788396daa 100644
---- a/fs/smb/server/transport_tcp.c
-+++ b/fs/smb/server/transport_tcp.c
-@@ -37,7 +37,7 @@ struct tcp_transport {
- 	unsigned int			nr_iov;
- };
- 
--static struct ksmbd_transport_ops ksmbd_tcp_transport_ops;
-+static const struct ksmbd_transport_ops ksmbd_tcp_transport_ops;
- 
- static void tcp_stop_kthread(struct task_struct *kthread);
- static struct interface *alloc_iface(char *ifname);
-@@ -649,7 +649,7 @@ int ksmbd_tcp_set_interfaces(char *ifc_list, int ifc_list_sz)
- 	return 0;
- }
- 
--static struct ksmbd_transport_ops ksmbd_tcp_transport_ops = {
-+static const struct ksmbd_transport_ops ksmbd_tcp_transport_ops = {
- 	.read		= ksmbd_tcp_read,
- 	.writev		= ksmbd_tcp_writev,
- 	.disconnect	= ksmbd_tcp_disconnect,
+You are awesome, thank you!
 -- 
-2.45.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
