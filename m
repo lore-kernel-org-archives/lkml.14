@@ -1,125 +1,163 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED8E1802C0
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 15:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7977F1822C1;
+	Sun, 23 Jun 2024 15:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719157360; cv=none; b=KLOB28iUYFQafBQwmW2P/sHi/3AC1syGiDmvw16gs3JbyhI4eIk/p2/oBABq0tBi1xgW0axxdVY56+xU35XZVRHjD4Hzx6OflABqM29og1zZtyJDgfzHF2g/YjObvey+5olPuXkqBUthRfypermLOKPPb6s7yQlGcOltfUe3LjM=
+	t=1719157385; cv=none; b=sDeiA8yEtr1ERb8jh+30IfWNXXcKhuWy4HxXiAo1o5DTK7a+0fg4pjrNWgfDoC7J3qk6V0E0tCb2Zh4Y3FD9PqDdxbP/BxyeBOvIcP5V/HPk3uGzpxcFWZfw60UxCW5MwHBiEVaVBdvKUjiRvFbNFa1npove0MInvVkEuzsEFD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719157360; c=relaxed/simple;
-	bh=iFXcoknjEWe4avEoLfa0XtaegaueFZ48+goiOQFuMR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fGjgKVQTqwXm0wmb0eLMReUIcM9FWpKvtYvYuFSqC+lu8KEyH0QGE40nyro1x7LfPQRQL8La3p7MFJHhExpAaUJSUola+aelv10hyAGZZc1INRz9686AneffK26kINsjPzMntar+yvnocFNYAzImKQRnLgQPXOXtolWhrFs+kOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FaeDNicD; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1719157385; c=relaxed/simple;
+	bh=lOo+ByMOxJv+uOcBMeubi7V3Rm4GnZ1uYp8z+JG4D7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ltnAK0ng+EdQ4iMmyxYl1RJvjsFBujwEyP3yfympcE7yfi1YuXIOrK6o4K7YIVx1QNWo0NbfR7lUq3wFzbseYWholSP3fr6WX3NNl4sT9rb4EMwLg5rPm3dFxwZPj9hVk8WVPegt4Q2cu3U7ebQhl1Wie5EhJhPJdWkZXvZPMis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig2qEl3L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FaeDNicD"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso37993161fa.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 08:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1719157357; x=1719762157; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bwkVEJXxyiArkV9Jcvb+VVmKUfhm5RmA00AhRtW/JHw=;
-        b=FaeDNicDknuJ+QMOOjoGkFEy6zzaQR1q8iOZfi5T5q9/lAqtSxlbR/wVkLov6/Mkq4
-         JIPNsEu/E3HoqVLKb6xg4xWE6Ppa7Igg1DSFDtKrjAEzxWTfPbJAVR7W37jZBa63O943
-         +8oOdLXXoGUlVdiCkvVAr2uQTNNEWki4zgsD0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719157357; x=1719762157;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bwkVEJXxyiArkV9Jcvb+VVmKUfhm5RmA00AhRtW/JHw=;
-        b=qg0J1cNjncxKWLm4nQ34FAVSaRfORJZlnY0Pv147bmy6nK8aqDu8ddreZ+z6kOWPGc
-         OuM2lWbpvp2eQ9kRFiuWGkNvci4cW2aChaBdFrzk1dI/tiba7yAx8XNl3ZPMu2DVLhKZ
-         aJvK/l/VLlWylftcoUlgQOEF0D7kvmRh+2FxcQQPqoThJ/BHt3ouJaV9lFxlr4NV7noE
-         5v6scaujxo1zI87IzuOdAE59k+mIc6EAzDrwTSo9lp+BTqsKyhiR5kutuL4JPdnjQF9q
-         duLzmhlY8K2QC76jpWF7wsQjy99qFvPQLrIFg4RxYGeNZJT7gG3MroDkc7fxnSTNTEOO
-         5sPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXq/fA2UAl/hW3Z+j5u2H6LFUZ7XzHcfpZs3oV9EmaPjRv9wN+2GECPZHjYfaMy1IfUa7VnW2YpNZuSmTqeGdr0GY0ibWxF72ROO8In
-X-Gm-Message-State: AOJu0YxaLutsBRh49vx4TcAi8ORWrEgnkVA46lbv43cpdl6NxXmuAImJ
-	wo3j5sO+S60GmkvmBgDs3CYuCr/uxAVcmWx/Hc6XBB/3oGtiF43kHmw2wA3/l8RUoPK7bC2JTa2
-	6NFkQ1g==
-X-Google-Smtp-Source: AGHT+IGfMTWKPSjFJC+KeAcPrPv9sU8+1HGzJWurDwbxweWJ1PXkFCpXg2tGU9U7r5Cz/cqQq2E3Nw==
-X-Received: by 2002:a2e:9209:0:b0:2eb:ea62:179c with SMTP id 38308e7fff4ca-2ec59587b4amr16313221fa.53.1719157356645;
-        Sun, 23 Jun 2024 08:42:36 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30535010sm3630739a12.59.2024.06.23.08.42.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Jun 2024 08:42:35 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a724a8097deso44507166b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 08:42:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVEsuxARZzuysdpwNsgegE1S03Y4BBo3/BHlGXkm1mieDC/Kfsyx4UXRHuzrJ964bLqXLYEvweOO1oGhdi+SFmMnBSJZQ7mo8YemLOC
-X-Received: by 2002:a17:907:a4cc:b0:a6f:e8b4:9e59 with SMTP id
- a640c23a62f3a-a7242c9c1e4mr147616666b.24.1719157355462; Sun, 23 Jun 2024
- 08:42:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig2qEl3L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56C6C2BD10;
+	Sun, 23 Jun 2024 15:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719157385;
+	bh=lOo+ByMOxJv+uOcBMeubi7V3Rm4GnZ1uYp8z+JG4D7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ig2qEl3L4TVco7WlBwgMQUjId3RGZgfm6ZSQSHOUzIJt7J2AV7Kl9d399jRG/+/kk
+	 yMdLpjNVa+o4mc419wbWElR7rwCDvJ7Odk5KwyJgy+AYatwVFBCtVjSamnAmi4LMFN
+	 484fIdjkW+ZcWzV9AYNokqANEnZZjNRA2A/MfG37zTPPZunAVYCGVKw6ZVAe/mJDHG
+	 n0Dar0++YGiGAgaRGvenduDqIdQozpvXoQnbL/N/TLBDiG9WV79LnkqZ2Il8O+UqV9
+	 5Oeqnog/H75h1RByve23ecbkHVll3UcSUVnIP6kdJcX6RvSKWM+ts5ntO7bc+qra3d
+	 oUKygciaWfakQ==
+Date: Sun, 23 Jun 2024 16:42:59 +0100
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
+	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v7 08/16] riscv: add ISA parsing for Zca, Zcf, Zcd and Zcb
+Message-ID: <20240623-cornbread-preteen-4ec287aa165c@spud>
+References: <20240619113529.676940-1-cleger@rivosinc.com>
+ <20240619113529.676940-9-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202406230912.F6XFIyA6-lkp@intel.com> <CAFULd4YVOwxQ4JDaOdscX_vtJsqJBJ5zhd0RtXXutW=Eqh29Qw@mail.gmail.com>
-In-Reply-To: <CAFULd4YVOwxQ4JDaOdscX_vtJsqJBJ5zhd0RtXXutW=Eqh29Qw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 23 Jun 2024 11:42:18 -0400
-X-Gmail-Original-Message-ID: <CAHk-=wg1h4w_m=Op1U4JsyDjsvqG0Kw1EOVMQ+=5GX_XytdorQ@mail.gmail.com>
-Message-ID: <CAHk-=wg1h4w_m=Op1U4JsyDjsvqG0Kw1EOVMQ+=5GX_XytdorQ@mail.gmail.com>
-Subject: Re: arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly
- requires more registers than available
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Borislav Petkov <bp@alien8.de>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XCIoMUFlsNIN40u9"
+Content-Disposition: inline
+In-Reply-To: <20240619113529.676940-9-cleger@rivosinc.com>
 
-On Sun, 23 Jun 2024 at 06:14, Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> The referred patch actually mitigates the issue, as explained in
-> details here [1].
 
-Clearly not.
+--XCIoMUFlsNIN40u9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It might help things in theory, but in practice it clearly just makes
-things worse, and causes problems for clang.
+On Wed, Jun 19, 2024 at 01:35:18PM +0200, Cl=E9ment L=E9ger wrote:
+> The Zc* standard extension for code reduction introduces new extensions.
+> This patch adds support for Zca, Zcf, Zcd and Zcb. Zce, Zcmt and Zcmp
+> are left out of this patch since they are targeting microcontrollers/
+> embedded CPUs instead of application processors.
+>=20
+> Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  arch/riscv/include/asm/hwcap.h |  4 +++
+>  arch/riscv/kernel/cpufeature.c | 55 +++++++++++++++++++++++++++++++++-
+>  2 files changed, 58 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwca=
+p.h
+> index 18859277843a..b12ae3f2141c 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -87,6 +87,10 @@
+>  #define RISCV_ISA_EXT_ZVE64F		78
+>  #define RISCV_ISA_EXT_ZVE64D		79
+>  #define RISCV_ISA_EXT_ZIMOP		80
+> +#define RISCV_ISA_EXT_ZCA		81
+> +#define RISCV_ISA_EXT_ZCB		82
+> +#define RISCV_ISA_EXT_ZCD		83
+> +#define RISCV_ISA_EXT_ZCF		84
+> =20
+>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+> =20
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index a3af976f36c9..aa631fe49b7c 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -111,6 +111,9 @@ static int riscv_ext_zicboz_validate(const struct ris=
+cv_isa_ext_data *data,
+> =20
+>  #define __RISCV_ISA_EXT_DATA(_name, _id) _RISCV_ISA_EXT_DATA(_name, _id,=
+ NULL, 0, NULL)
+> =20
+> +#define __RISCV_ISA_EXT_DATA_VALIDATE(_name, _id, _validate) \
+> +			_RISCV_ISA_EXT_DATA(_name, _id, NULL, 0, _validate)
+> +
+>  /* Used to declare pure "lasso" extension (Zk for instance) */
+>  #define __RISCV_ISA_EXT_BUNDLE(_name, _bundled_exts) \
+>  	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, \
+> @@ -122,6 +125,37 @@ static int riscv_ext_zicboz_validate(const struct ri=
+scv_isa_ext_data *data,
+>  #define __RISCV_ISA_EXT_SUPERSET_VALIDATE(_name, _id, _sub_exts, _valida=
+te) \
+>  	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), _vali=
+date)
+> =20
+> +static int riscv_ext_zca_depends(const struct riscv_isa_ext_data *data,
 
-And the thing about practice is that it always trumps theory.
+It's super minor, but my OCD doesn't like this being called "depends"
+when the others are all called "validate".
 
-> So, without some interest from x86 maintainers, the issue will remain
-> unfixed. If they want x86_32 arch to die then inline locking
-> primitives involving cmpxchg8b are one of the nails in its coffin.
+> +				 const unsigned long *isa_bitmap)
+> +{
+> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZCA))
+> +		return 0;
+> +
+> +	return -EPROBE_DEFER;
+> +}
+> +static int riscv_ext_zcd_validate(const struct riscv_isa_ext_data *data,
+> +				  const unsigned long *isa_bitmap)
+> +{
+> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZCA) &&
+> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_d))
+> +		return 0;
+> +
+> +	return -EPROBE_DEFER;
+> +}
+> +
+> +static int riscv_ext_zcf_validate(const struct riscv_isa_ext_data *data,
+> +				  const unsigned long *isa_bitmap)
+> +{
+> +	if (IS_ENABLED(CONFIG_64BIT))
+> +		return -EINVAL;
+> +
+> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZCA) &&
+> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_f))
+> +		return 0;
+> +
+> +	return -EPROBE_DEFER;
+> +}
 
-What? No.
+--XCIoMUFlsNIN40u9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-That commit will get reverted. It caused problems, and now you are
-blaming others.
+-----BEGIN PGP SIGNATURE-----
 
-You can't just go "I caused issues, but the x86 maintainers aren't
-interested in this area, so it's their fault".
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnhCgwAKCRB4tDGHoIJi
+0ojNAP4zqID4s2fTIoOLI3MwCtAFLJWCKaU3UhLxLueoiVavOgD+I+moOCuXJqHu
+LFPQJbfCtkhdREIdkaCj+l4fuZIM5AI=
+=tBDW
+-----END PGP SIGNATURE-----
 
-And no, "improved code generation with one compiler version" does not
-then mean "other compilers don't matter".
-
-Now, I do suspect that the issue is some very random thing that could
-be fixed by massaging the inline asm a bit.
-
-For example, why does that 32-bit __arch_try_cmpxchg64() do this:
-
-        if (unlikely(!ret))                                             \
-                *(_oldp) = o.full;                                      \
-
-when I think it would be simpler and more straightforward to just do
-that *(_oldp) = o.full unconditionally? The "dereference" is purely
-syntactic, the intent is that the compiler will just use a register
-for this all (well, two registers on 32-bit), and making it
-conditional makes things worse, because now that "oldp" register
-cannot be the same as "o" itself.
-
-I didn't look very closely into this, but maybe that would just fix
-code generation. And maybe it wouldn't. If there's no other fix
-somebody comes up with, we just have to revert.
-
-                 Linus
+--XCIoMUFlsNIN40u9--
