@@ -1,195 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C219163D;
-	Sun, 23 Jun 2024 10:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325A323CE;
+	Sun, 23 Jun 2024 10:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719138420; cv=none; b=XwwkdIZ8yMBgPyW8pHc3tMMOIXYc97zWyAN0eRHOVVomCyueZvco/ZvAyVt+FMftbVpHKaGad6pyK6KvQdJC+8A8qLjBztogf514gU6kY4lXamAJ6HwoHLy1nkEjvzJKTDZEefnyXfb5nJjtTbuT50HXQAqMogwuipw7B9rDUhY=
+	t=1719138668; cv=none; b=gzr4s+pnnsPIZPOS4Afra0W3BVWiI5xWQlLdac1EEkLdzSBKgpAw6tkPqQGovUw3Kzf0+/rqja+WRPhNrPpP9bWs77m37gkhTDQQu6YsAIGG5YOpfaVtWbnQVpvsgOLksQyqLOAABOgQdfnQ+6TprRqUJO4yFgKooBeLx4Lz3QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719138420; c=relaxed/simple;
-	bh=Re7lgTywR+L12UXG91oTp5BPVhuOkLEgPrrb6/7KQZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dpFxGxfhJiYPzX9HMJloILEOHfy778e7gmxTQAkQ5D5xMI+kGNOfSqNYVxCJa/N63z0rRLFdsiPe+wplDvwq7MmJZ2nnZlZ0sv7iCjD8yj55ir6Q1bUfCcUX3vmrtSnRGUseuaIjj56KYDkdi0nNgVYI8iKYNyLR5I7ALYa1UCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0Ekh5L/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719138668; c=relaxed/simple;
+	bh=wViZSvXZ2xH06udrWPcq/3gYLrAALiDEpJ3Hk6oseJo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=a6Ouhe2GXZY5Hjcy+YttRq3F9W8G0X0J2ZpPKEhmhu7aqw7cnCOi53ebAFkIQVXQwgxcE/7Tcq4qKOvceO7Byqn2XvAJc5Y+Jv9/gFhI4Uh/Q+Ux2/5hcQkAp3GWWNFveprAN+mRao4f8NQDbpfmp6X5gHR5FT+9ivAzVW159sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ca6LqhZp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0ioXLibE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0Ekh5L/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3226C2BD10;
-	Sun, 23 Jun 2024 10:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719138420;
-	bh=Re7lgTywR+L12UXG91oTp5BPVhuOkLEgPrrb6/7KQZw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P0Ekh5L/FfCuBz1Tas/4dbfgQybES6dEyY0xZaGgq3K9FNmScffissyIZ3j+qGXJA
-	 b+XJntMIMilm/JzTuAu+QNwrBvfIGXfLTY2LcP2VGWlYftIHnAZWKlFvHt84Ev2eLv
-	 7s+KDB+kOLwywLN/L4b2JFFcQIjWRLwe41KIGcuey25toLzSe7bZdZRd/AlfkCAZ0+
-	 BcjYHkCX/+oBQBkJlDzbcePUEAKa4tvKBrvBdFN6TISnq1wcCacaQLXPNyfNVQAZt0
-	 7t93CzNJCs4xHEVnn10mISiqS7rpsHUnRTpl1FNlF4vbFo+ivmQw4QDlnLz7pgN94q
-	 /I//VCrMPN03Q==
-Date: Sun, 23 Jun 2024 11:26:49 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: Ramona Gradinariu <ramona.gradinariu@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Matti
- Vaittinen <mazziesaccount@gmail.com>, Jun Yan <jerrysteve1101@gmail.com>,
- Mehdi Djait <mehdi.djait.k@gmail.com>, Mario Limonciello
- <mario.limonciello@amd.com>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: accel: add ADXL380
-Message-ID: <20240623112649.12d7ab80@jic23-huawei>
-In-Reply-To: <20240621101756.27218-1-antoniu.miclaus@analog.com>
-References: <20240621101756.27218-1-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ca6LqhZp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ioXLibE"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719138660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gm1PT2B5gcmym7DNOK5dtDaWL67j08PCA1ocDIx73Po=;
+	b=Ca6LqhZpmOewYXkcxc+rnoGA2zK0mnFhXt7VwK+M5dLngmVkRzt73Lr5d+WGfAIpNXW+Yk
+	RyFp3qn+h88wHgw2TriWzbhwwAHC2NdIlnwkhONOSfd6A35yVFyhyVjiBitzxI2OCIjZux
+	UKW0vEdYeJBvFaPh+LTXsg0SC8wiz/7Wv5IZu7rGVozRk8gYra+sWnD+X1frEEl6qe70MK
+	up+ehfylvCueBURD/70vzhAE/kfdP7i18zgqcXFMainJIXossYDozOCE/XqdADRwVTfZlL
+	MHQ8Bz24rL85FeVK9pcGzVk7NcB81wraGK4Vx03nyubuoeqHpMwcArKCf3YxMA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719138660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gm1PT2B5gcmym7DNOK5dtDaWL67j08PCA1ocDIx73Po=;
+	b=0ioXLibEpOU+GARTz+GI1P6wvxq5YuPE2Yd2lCqcAFu6DgZljjkUB9haRe5vrLRqe0qrBI
+	LSlD2Bkxrn3av6Aw==
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Tejun Heo <tj@kernel.org>, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+ joshdon@google.com, brho@google.com, pjt@google.com, derkling@google.com,
+ haoluo@google.com, dvernet@meta.com, dschatzberg@meta.com,
+ dskarlat@cs.cmu.edu, riel@surriel.com, changwoo@igalia.com,
+ himadrics@inria.fr, memxor@gmail.com, andrea.righi@canonical.com,
+ joel@joelfernandes.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
+In-Reply-To: <CAHk-=wiRgsFsrnTR8XShrS_-aYS--4DSrRPmaWtYJ55-fmjznA@mail.gmail.com>
+References: <CAHk-=wg88k=EsHyGrX9dKt10KxSygzcEGdKRYRTx9xtA_y=rqQ@mail.gmail.com>
+ <871q4rpi2s.ffs@tglx>
+ <CAHk-=wgN6DRks55fsqiJYE3uV=_QTgzdxOvh1ZZNgm_YooKdYA@mail.gmail.com>
+ <87v822ocy2.ffs@tglx>
+ <CAHk-=wiRgsFsrnTR8XShrS_-aYS--4DSrRPmaWtYJ55-fmjznA@mail.gmail.com>
+Date: Sun, 23 Jun 2024 12:31:00 +0200
+Message-ID: <8734p4ymqj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Fri, 21 Jun 2024 13:17:03 +0300
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+Linus!
 
-> From: Ramona Gradinariu <ramona.gradinariu@analog.com>
->=20
-> Add dt-bindings for ADXL380/ADLX382 low noise density, low
-> power, 3-axis accelerometer with selectable measurement ranges.
->=20
-> Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
->  .../bindings/iio/accel/adi,adxl380.yaml       | 83 +++++++++++++++++++
->  MAINTAINERS                                   |  7 ++
->  2 files changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl3=
-80.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml=
- b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
-> new file mode 100644
-> index 000000000000..992e2ab841e2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/adi,adxl380.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADXL380/382 3-Axis Digital Accelerometer
-> +
-> +maintainers:
-> +  - Ramona Gradinariu <ramona.gradinariu@analog.com>
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  The ADXL380/ADXL382 is a low noise density, low power, 3-axis
-> +  accelerometer with selectable measurement ranges. The ADXL380
-> +  supports the =C2=B14 g, =C2=B18 g, and =C2=B116 g ranges, and the ADXL=
-382 supports
-> +  =C2=B115 g, =C2=B130 g, and =C2=B160 g ranges.
-> +  The ADXL380/ADXL382 offers industry leading noise, enabling precision
-> +  applications with minimal calibration. The low noise, and low power
-> +  ADXL380/ADXL382 enables accurate measurement in an environment with
-> +  high vibration, heart sounds and audio.
-> +
-> +  In addition to its low power consumption, the ADXL380/ADXL382 has
-> +  many features to enable true system level performance. These
-> +  include a built-in micropower temperature sensor, single / double /
-> +  triple tap detection and a state machine to prevent a false
-> +  triggering. In addition, the ADXL380/ADXL382 has provisions for
-> +  external control of the sampling time and/or an external clock.
-> +
-> +    https://www.analog.com/en/products/adxl380.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adxl380
-> +      - adi,adxl382
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
+On Fri, Jun 21 2024 at 09:34, Linus Torvalds wrote:
+> So if I don't see it, please point it out very very explicitly, and
+> using small words to make me understand.
 
-Picture in the datasheet has 2.  If that's wrong note that for now and
-remember to come back and update the comment when a real datasheet
-becomes available.
+I really let the scheduler people bring up their pain points now. There
+is no value in me being the mouthpiece when I want to achieve that folks
+talk to each other (again). It's not a me against you thing. If they
+fail to explain, so be it.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-No power? Magic device :)
+So I just use one trivial example to illustrate the approach and the
+message it emits, i.e. the technical and the social problem which makes
+all of this so unpleasant.
 
-In all seriousness, I want all new bindings for IIO devices at least to
-include the power supplies they require to operate and make them required
-properties.
-That datasheet is less than informative "Preliminary Data sheet", but it
-does mention a few in the text. vsupply and vddio
+It struck my eyes a few days ago when I deciphered the fork maze:
 
+struct sched_ext_entity {
+       .....
+	/* must be the last field, see init_scx_entity() */
+	struct list_head	tasks_node;
+};
 
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      accelerometer@54 {
-> +        compatible =3D "adi,adxl380";
-> +        reg =3D <0x54>;
-> +        interrupt-parent =3D <&gpio>;
-> +        interrupts =3D <25 IRQ_TYPE_LEVEL_HIGH>;
-> +      };
-> +    };
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      accelerometer@0 {
-> +        compatible =3D "adi,adxl380";
-> +        reg =3D <0>;
-> +        spi-max-frequency =3D <8000000>;
-> +        interrupt-parent =3D <&gpio>;
-> +        interrupts =3D <25 IRQ_TYPE_LEVEL_HIGH>;
-> +      };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index be590c462d91..1425182c85e2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -618,6 +618,13 @@ F:	drivers/iio/accel/adxl372.c
->  F:	drivers/iio/accel/adxl372_i2c.c
->  F:	drivers/iio/accel/adxl372_spi.c
-> =20
-> +ADXL380 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
-> +M:	Ramona Gradinariu <ramona.gradinariu@analog.com>
-> +M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +S:	Supported
-> +W:	https://ez.analog.com/linux-software-drivers
-> +F:	Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
-> +
->  AF8133J THREE-AXIS MAGNETOMETER DRIVER
->  M:	Ond=C5=99ej Jirman <megi@xff.cz>
->  S:	Maintained
+void init_scx_entity(struct sched_ext_entity *scx)
+{
+	/*
+	 * init_idle() calls this function again after fork sequence is
+	 * complete. Don't touch ->tasks_node as it's already linked.
+	 */
+	memset(scx, 0, offsetof(struct sched_ext_entity, tasks_node));
+...
+
+I immediately asked myself the obvious question: Why?
+
+It took me less than 10 minutes to figure out that the double invocation of
+__sched_fork() is bogus.
+
+fork_idle()
+   copy_process()
+      sched_fork()
+	__sched_fork()
+   init_idle()
+     __sched_fork()
+
+There is only one other call site of init_idle():
+
+     sched_init()
+       init_idle()
+
+to initialize the idle task of the boot CPU.
+
+Another 10 minutes later I had the obvious patch for this booted and
+validated. So overall that took me just 20 minutes and that's not because
+I'm the deep scheduler expert, it's because I care. 
+
+It's really not the job of the maintainer to point at that or figure it
+out especially not with the knowledge that our maintainer resources are
+anything else than abundant. Even if I can't figure it out on my own,
+then pointing it out and asking would have been the right thing to do.
+
+Instead of working around it and conveying the message "shrug, it's not in
+the scope of my project, why should I care?", it would have:
+
+   1) removed technical debt
+
+   2) not added more technical debt
+
+   3) followed what documentation asks people to do
+
+   4) told the scheduler people "hey, we care about working with you"
+
+It's a trivial detail, but it illustrates the tiny bits which contributed
+to the overall rift.
+
+Here I really pick RT, not for comparison, but for reference. RT was
+certainly exposed to resistance, ignorance and outright denial. We sorted
+it out by working with the people, by going the extra mile of mopping up
+technical debt. Setting this as expectation is not asked too much.
+
+As I said before: This is both a technical and a social problem.
+
+As the social problem became prevalent over time the technical problem
+solving got nowhere.
+
+As a matter of fact both sides contributed to that, and that cannot be
+resolved par ordre du mufti.
+
+The result of that would be a even deeper rift which turns 'work it out in
+tree' to 'work around each other in tree' or worse.
+
+There is interest from both sides to get this sorted. At least that's what
+was conveyed to me. I'll make sure to hear it from the source.
+
+Thanks,
+
+	tglx
+
+---
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4344,7 +4344,8 @@ int wake_up_state(struct task_struct *p,
+  * Perform scheduler related setup for a newly forked process p.
+  * p is forked by current.
+  *
+- * __sched_fork() is basic setup used by init_idle() too:
++ * __sched_fork() is basic setup which is also used by sched_init() to
++ * initialize the boot CPU's idle task.
+  */
+ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ {
+@@ -7579,8 +7580,6 @@ void __init init_idle(struct task_struct
+ 	struct rq *rq = cpu_rq(cpu);
+ 	unsigned long flags;
+ 
+-	__sched_fork(0, idle);
+-
+ 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
+ 	raw_spin_rq_lock(rq);
+ 
+@@ -7594,12 +7593,7 @@ void __init init_idle(struct task_struct
+ 	kthread_set_per_cpu(idle, cpu);
+ 
+ #ifdef CONFIG_SMP
+-	/*
+-	 * It's possible that init_idle() gets called multiple times on a task,
+-	 * in that case do_set_cpus_allowed() will not do the right thing.
+-	 *
+-	 * And since this is boot we can forgo the serialization.
+-	 */
++	/* No validation and serialization required at boot time. */
+ 	set_cpus_allowed_common(idle, &ac);
+ #endif
+ 	/*
+@@ -8407,6 +8401,7 @@ void __init sched_init(void)
+ 	 * but because we are the idle thread, we just pick up running again
+ 	 * when this runqueue becomes "idle".
+ 	 */
++	__sched_fork(0, current);
+ 	init_idle(current, smp_processor_id());
+ 
+ 	calc_load_update = jiffies + LOAD_FREQ;
+
 
