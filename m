@@ -1,657 +1,213 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15D418A953;
-	Sun, 23 Jun 2024 15:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B5B1DFD8;
+	Sun, 23 Jun 2024 15:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719155950; cv=none; b=nGBkBb3+xrPfUFuoSo1IQThf2T5inzTn2yBw/SapnbxDTOunPXuswuM78+XMx7hnS00ACzrQdbU7Q6hDKanAurxu733CjJNlnIFdJU1xzclwGlGLa2cUwn4DiGDWKwJOdjjnxSTdwpnJrWd1V/Z7jjQZSaT4GzzXEgvOkmoTHc8=
+	t=1719156079; cv=none; b=sDVTaFw62cE8Ureh6RR+RksO0qNk+bJ02OITZsD6w6t3lJes194T5ODjC/JX6Mx/xYG3/I5h0ov1t7QyCCIjUBpBfDWSxPDqPatsXSyix4lvru45m1LS+GJGmaBGwMENMvOW0WunbCxa59GxN0brUAPGJ9AcJYeLTVsPjXeCypw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719155950; c=relaxed/simple;
-	bh=9DZrvJr9niWPtLp2GLn/GYW08ebt4ChKTgeqwNwzKYk=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=OctiU2r15AA0Oh2fONLIVHSmq/cqvfu1da+DYSeSKR4RRmkJlaY+L0HxpvcXEvcX6ZHT1ssrQaFZENoU9WZSvfV/kSJF2Vxp8nUEUjmnEVPNv8IxYlzGElYY1cLLfjb4d6MXMMDO/fGS4x4mJ9X2H8HhJdU+g4abAx5lis3X1RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0CTSKoca; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yYT+yvLg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1719156079; c=relaxed/simple;
+	bh=8R5yRhx5HD3Qdpebye/X5fiOJqmtxqaT2hxCrl24IRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=THcjsGYu4OtYbBn9DAHdTQ3AW6rinYBjx7WumaZdMwsKJmzEkmbkYTBsZMoTzTRu+uf7HWefGkp6gAehOGYG8NRxwQftKxCQsrAo6zq7WP2XXodxQQ6ZW7aes1OCVzUp51yeWL5MQdiHv6eyUzNYzl1/H+UKnKpB4tCVUku5hbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NH88dh1l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0CTSKoca";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yYT+yvLg"
-Message-ID: <20240623142235.943295676@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719155946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=ZQ6kwV2rEFADhLjoTDD8CeWuxJFM5jJhMQ4OMpWSel0=;
-	b=0CTSKocaSmikcIpIlxZN79IV1KxMuVH7NLhjICiZWGv57xSF4U4Lx15JyVJZMFteVQmrKK
-	lLudFMtAhEU/w8vwYCeXGiHG61bd0P/36uSXEZrnb5c/H3NGxwAsByb/qeCyJR1F7WjxFx
-	krH1s8+/AuG4zttRcr7tHeyR/BGR4qBHryV6nOknw/c97SNxy66Ve/XOHsJhgxW2S3TMwG
-	eqgmkqzWq5xtNIXLlsIUvtycUzsUBk9NbAxa/dEkEe7Mn1nYwoa18FowJl5uaBRZVCrf4A
-	SeI6quHXDheP6Bz6n0flG1g9io8vu3OvxkfI+1cmbFZHj7B/OsIOz4Xg5UO6PA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719155946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=ZQ6kwV2rEFADhLjoTDD8CeWuxJFM5jJhMQ4OMpWSel0=;
-	b=yYT+yvLgWF49rdnGbfA6OIOF+8I/2A62mmWaAu2dF1jCw5ZinBpPgMaJBFtVV+hO0lE3GQ
-	UiTAuFT5JfHKbhDg==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- maz@kernel.org,
- tglx@linutronix.de,
- anna-maria@linutronix.de,
- shawnguo@kernel.org,
- s.hauer@pengutronix.de,
- festevam@gmail.com,
- bhelgaas@google.com,
- rdunlap@infradead.org,
- vidyas@nvidia.com,
- ilpo.jarvinen@linux.intel.com,
- apatel@ventanamicro.com,
- kevin.tian@intel.com,
- nipun.gupta@amd.com,
- den@valinux.co.jp,
- andrew@lunn.ch,
- gregory.clement@bootlin.com,
- sebastian.hesselbarth@gmail.com,
- gregkh@linuxfoundation.org,
- rafael@kernel.org,
- alex.williamson@redhat.com,
- will@kernel.org,
- lorenzo.pieralisi@arm.com,
- jgg@mellanox.com,
- ammarfaizi2@gnuweeb.org,
- robin.murphy@arm.com,
- lpieralisi@kernel.org,
- nm@ti.com,
- kristo@kernel.org,
- vkoul@kernel.org,
- okaya@kernel.org,
- agross@kernel.org,
- andersson@kernel.org,
- mark.rutland@arm.com,
- shameerali.kolothum.thodi@huawei.com,
- yuzenghui@huawei.com,
- shivamurthy.shastri@linutronix.de
-Subject: [patch V4 20/21] genirq/msi: Remove platform MSI leftovers
-References: <20240623142137.448898081@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NH88dh1l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15F4C2BD10;
+	Sun, 23 Jun 2024 15:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719156079;
+	bh=8R5yRhx5HD3Qdpebye/X5fiOJqmtxqaT2hxCrl24IRg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NH88dh1lxv1ZgGw2LykIVmIsCvg40jS4wnMhugJsHZjFjYJ9pLcnnASVl1lXt1MhS
+	 hgEeTDb//LFMRbykDgY6L3T6i63jABIAQ/2HZXNTSczhTc7aVZiFoDe3MpVi39w1gM
+	 mL5aTQH/Yw6CKQ8HVfp01PplV2PHALH1t1hJpXemfI2KCljBZRgbiZVGXbT5k3GrL9
+	 NjSs0AFwUWyvCOXHfdDrLpdCKYlloNwGac43KJK0z/wQzJEIPYhKUZ71PMA62LYYGa
+	 AhEBjcI5pIupwS9CiIWij5LO+U5H9lgFcDnACuPqKoC0yvFqt86kKnqBREGu3So07G
+	 R7TWKcvmm6pyQ==
+Date: Sun, 23 Jun 2024 16:21:10 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Olivier Moysan <olivier.moysan@foss.st.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 8/8] iio: adc: stm32-dfsdm: add scaling support to dfsdm
+Message-ID: <20240623162110.708032af@jic23-huawei>
+In-Reply-To: <20240618160836.945242-9-olivier.moysan@foss.st.com>
+References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
+	<20240618160836.945242-9-olivier.moysan@foss.st.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 23 Jun 2024 17:19:05 +0200 (CEST)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Tue, 18 Jun 2024 18:08:34 +0200
+Olivier Moysan <olivier.moysan@foss.st.com> wrote:
 
-No more users!
+> Add scaling support to STM32 DFSDM.
+Perhaps a short description here of how this works?  Where does the scale come
+from, what assumptions are made etc.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Signed-off-by: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Some minor stuff.
 
+> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> index 69b4764d7cba..93bf6035bd6d 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+urn 0;
+>  }
+>  
+> @@ -1060,7 +1072,7 @@ static int stm32_dfsdm_update_scan_mode(struct iio_dev *indio_dev,
+>  static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+> -	int ret;
+> +	int i = 0, ret;
 
----
- drivers/base/platform-msi.c | 350 +-----------------------------------
- include/linux/msi.h         |  30 ----
- kernel/irq/msi.c            |  75 +-------
- 3 files changed, 5 insertions(+), 450 deletions(-)
+Don't mix assigned and unassigned variable declarations. Just use a separate line
+as this can mean subtle assignment or lack of assignment issues sneak in.
 
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index 11f5fdf65b9e..0e60dd650b5e 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -4,346 +4,12 @@
-  *
-  * Copyright (C) 2015 ARM Limited, All Rights Reserved.
-  * Author: Marc Zyngier <marc.zyngier@arm.com>
-+ * Copyright (C) 2022 Linutronix GmbH
-  */
- 
- #include <linux/device.h>
--#include <linux/idr.h>
--#include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/msi.h>
--#include <linux/slab.h>
--
--/* Begin of removal area. Once everything is converted over. Cleanup the includes too! */
--
--#define DEV_ID_SHIFT	21
--#define MAX_DEV_MSIS	(1 << (32 - DEV_ID_SHIFT))
--
--/*
-- * Internal data structure containing a (made up, but unique) devid
-- * and the callback to write the MSI message.
-- */
--struct platform_msi_priv_data {
--	struct device			*dev;
--	void				*host_data;
--	msi_alloc_info_t		arg;
--	irq_write_msi_msg_t		write_msg;
--	int				devid;
--};
--
--/* The devid allocator */
--static DEFINE_IDA(platform_msi_devid_ida);
--
--#ifdef GENERIC_MSI_DOMAIN_OPS
--/*
-- * Convert an msi_desc to a globaly unique identifier (per-device
-- * devid + msi_desc position in the msi_list).
-- */
--static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
--{
--	u32 devid = desc->dev->msi.data->platform_data->devid;
--
--	return (devid << (32 - DEV_ID_SHIFT)) | desc->msi_index;
--}
--
--static void platform_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
--{
--	arg->desc = desc;
--	arg->hwirq = platform_msi_calc_hwirq(desc);
--}
--
--static int platform_msi_init(struct irq_domain *domain,
--			     struct msi_domain_info *info,
--			     unsigned int virq, irq_hw_number_t hwirq,
--			     msi_alloc_info_t *arg)
--{
--	return irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
--					     info->chip, info->chip_data);
--}
--
--static void platform_msi_set_proxy_dev(msi_alloc_info_t *arg)
--{
--	arg->flags |= MSI_ALLOC_FLAGS_PROXY_DEVICE;
--}
--#else
--#define platform_msi_set_desc		NULL
--#define platform_msi_init		NULL
--#define platform_msi_set_proxy_dev(x)	do {} while(0)
--#endif
--
--static void platform_msi_update_dom_ops(struct msi_domain_info *info)
--{
--	struct msi_domain_ops *ops = info->ops;
--
--	BUG_ON(!ops);
--
--	if (ops->msi_init == NULL)
--		ops->msi_init = platform_msi_init;
--	if (ops->set_desc == NULL)
--		ops->set_desc = platform_msi_set_desc;
--}
--
--static void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
--{
--	struct msi_desc *desc = irq_data_get_msi_desc(data);
--
--	desc->dev->msi.data->platform_data->write_msg(desc, msg);
--}
--
--static void platform_msi_update_chip_ops(struct msi_domain_info *info)
--{
--	struct irq_chip *chip = info->chip;
--
--	BUG_ON(!chip);
--	if (!chip->irq_mask)
--		chip->irq_mask = irq_chip_mask_parent;
--	if (!chip->irq_unmask)
--		chip->irq_unmask = irq_chip_unmask_parent;
--	if (!chip->irq_eoi)
--		chip->irq_eoi = irq_chip_eoi_parent;
--	if (!chip->irq_set_affinity)
--		chip->irq_set_affinity = msi_domain_set_affinity;
--	if (!chip->irq_write_msi_msg)
--		chip->irq_write_msi_msg = platform_msi_write_msg;
--	if (WARN_ON((info->flags & MSI_FLAG_LEVEL_CAPABLE) &&
--		    !(chip->flags & IRQCHIP_SUPPORTS_LEVEL_MSI)))
--		info->flags &= ~MSI_FLAG_LEVEL_CAPABLE;
--}
--
--/**
-- * platform_msi_create_irq_domain - Create a platform MSI interrupt domain
-- * @fwnode:		Optional fwnode of the interrupt controller
-- * @info:	MSI domain info
-- * @parent:	Parent irq domain
-- *
-- * Updates the domain and chip ops and creates a platform MSI
-- * interrupt domain.
-- *
-- * Returns:
-- * A domain pointer or NULL in case of failure.
-- */
--struct irq_domain *platform_msi_create_irq_domain(struct fwnode_handle *fwnode,
--						  struct msi_domain_info *info,
--						  struct irq_domain *parent)
--{
--	struct irq_domain *domain;
--
--	if (info->flags & MSI_FLAG_USE_DEF_DOM_OPS)
--		platform_msi_update_dom_ops(info);
--	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
--		platform_msi_update_chip_ops(info);
--	info->flags |= MSI_FLAG_DEV_SYSFS | MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS |
--		       MSI_FLAG_FREE_MSI_DESCS;
--
--	domain = msi_create_irq_domain(fwnode, info, parent);
--	if (domain)
--		irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
--
--	return domain;
--}
--EXPORT_SYMBOL_GPL(platform_msi_create_irq_domain);
--
--static int platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
--					irq_write_msi_msg_t write_msi_msg)
--{
--	struct platform_msi_priv_data *datap;
--	int err;
--
--	/*
--	 * Limit the number of interrupts to 2048 per device. Should we
--	 * need to bump this up, DEV_ID_SHIFT should be adjusted
--	 * accordingly (which would impact the max number of MSI
--	 * capable devices).
--	 */
--	if (!dev->msi.domain || !write_msi_msg || !nvec || nvec > MAX_DEV_MSIS)
--		return -EINVAL;
--
--	if (dev->msi.domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
--		dev_err(dev, "Incompatible msi_domain, giving up\n");
--		return -EINVAL;
--	}
--
--	err = msi_setup_device_data(dev);
--	if (err)
--		return err;
--
--	/* Already initialized? */
--	if (dev->msi.data->platform_data)
--		return -EBUSY;
--
--	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
--	if (!datap)
--		return -ENOMEM;
--
--	datap->devid = ida_alloc_max(&platform_msi_devid_ida,
--				     (1 << DEV_ID_SHIFT) - 1, GFP_KERNEL);
--	if (datap->devid < 0) {
--		err = datap->devid;
--		kfree(datap);
--		return err;
--	}
--
--	datap->write_msg = write_msi_msg;
--	datap->dev = dev;
--	dev->msi.data->platform_data = datap;
--	return 0;
--}
--
--static void platform_msi_free_priv_data(struct device *dev)
--{
--	struct platform_msi_priv_data *data = dev->msi.data->platform_data;
--
--	dev->msi.data->platform_data = NULL;
--	ida_free(&platform_msi_devid_ida, data->devid);
--	kfree(data);
--}
--
--/**
-- * platform_msi_domain_alloc_irqs - Allocate MSI interrupts for @dev
-- * @dev:		The device for which to allocate interrupts
-- * @nvec:		The number of interrupts to allocate
-- * @write_msi_msg:	Callback to write an interrupt message for @dev
-- *
-- * Returns:
-- * Zero for success, or an error code in case of failure
-- */
--static int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
--					  irq_write_msi_msg_t write_msi_msg)
--{
--	int err;
--
--	err = platform_msi_alloc_priv_data(dev, nvec, write_msi_msg);
--	if (err)
--		return err;
--
--	err = msi_domain_alloc_irqs_range(dev, MSI_DEFAULT_DOMAIN, 0, nvec - 1);
--	if (err)
--		platform_msi_free_priv_data(dev);
--
--	return err;
--}
--
--/**
-- * platform_msi_get_host_data - Query the private data associated with
-- *                              a platform-msi domain
-- * @domain:	The platform-msi domain
-- *
-- * Return: The private data provided when calling
-- * platform_msi_create_device_domain().
-- */
--void *platform_msi_get_host_data(struct irq_domain *domain)
--{
--	struct platform_msi_priv_data *data = domain->host_data;
--
--	return data->host_data;
--}
--
--static struct lock_class_key platform_device_msi_lock_class;
--
--/**
-- * __platform_msi_create_device_domain - Create a platform-msi device domain
-- *
-- * @dev:		The device generating the MSIs
-- * @nvec:		The number of MSIs that need to be allocated
-- * @is_tree:		flag to indicate tree hierarchy
-- * @write_msi_msg:	Callback to write an interrupt message for @dev
-- * @ops:		The hierarchy domain operations to use
-- * @host_data:		Private data associated to this domain
-- *
-- * Return: An irqdomain for @nvec interrupts on success, NULL in case of error.
-- *
-- * This is for interrupt domains which stack on a platform-msi domain
-- * created by platform_msi_create_irq_domain(). @dev->msi.domain points to
-- * that platform-msi domain which is the parent for the new domain.
-- */
--struct irq_domain *
--__platform_msi_create_device_domain(struct device *dev,
--				    unsigned int nvec,
--				    bool is_tree,
--				    irq_write_msi_msg_t write_msi_msg,
--				    const struct irq_domain_ops *ops,
--				    void *host_data)
--{
--	struct platform_msi_priv_data *data;
--	struct irq_domain *domain;
--	int err;
--
--	err = platform_msi_alloc_priv_data(dev, nvec, write_msi_msg);
--	if (err)
--		return NULL;
--
--	/*
--	 * Use a separate lock class for the MSI descriptor mutex on
--	 * platform MSI device domains because the descriptor mutex nests
--	 * into the domain mutex. See alloc/free below.
--	 */
--	lockdep_set_class(&dev->msi.data->mutex, &platform_device_msi_lock_class);
--
--	data = dev->msi.data->platform_data;
--	data->host_data = host_data;
--	domain = irq_domain_create_hierarchy(dev->msi.domain, 0,
--					     is_tree ? 0 : nvec,
--					     dev->fwnode, ops, data);
--	if (!domain)
--		goto free_priv;
--
--	platform_msi_set_proxy_dev(&data->arg);
--	err = msi_domain_prepare_irqs(domain->parent, dev, nvec, &data->arg);
--	if (err)
--		goto free_domain;
--
--	return domain;
--
--free_domain:
--	irq_domain_remove(domain);
--free_priv:
--	platform_msi_free_priv_data(dev);
--	return NULL;
--}
--
--/**
-- * platform_msi_device_domain_free - Free interrupts associated with a platform-msi
-- *				     device domain
-- *
-- * @domain:	The platform-msi device domain
-- * @virq:	The base irq from which to perform the free operation
-- * @nr_irqs:	How many interrupts to free from @virq
-- */
--void platform_msi_device_domain_free(struct irq_domain *domain, unsigned int virq,
--				     unsigned int nr_irqs)
--{
--	struct platform_msi_priv_data *data = domain->host_data;
--
--	msi_lock_descs(data->dev);
--	msi_domain_depopulate_descs(data->dev, virq, nr_irqs);
--	irq_domain_free_irqs_common(domain, virq, nr_irqs);
--	msi_free_msi_descs_range(data->dev, virq, virq + nr_irqs - 1);
--	msi_unlock_descs(data->dev);
--}
--
--/**
-- * platform_msi_device_domain_alloc - Allocate interrupts associated with
-- *				      a platform-msi device domain
-- *
-- * @domain:	The platform-msi device domain
-- * @virq:	The base irq from which to perform the allocate operation
-- * @nr_irqs:	How many interrupts to allocate from @virq
-- *
-- * Return 0 on success, or an error code on failure. Must be called
-- * with irq_domain_mutex held (which can only be done as part of a
-- * top-level interrupt allocation).
-- */
--int platform_msi_device_domain_alloc(struct irq_domain *domain, unsigned int virq,
--				     unsigned int nr_irqs)
--{
--	struct platform_msi_priv_data *data = domain->host_data;
--	struct device *dev = data->dev;
--
--	return msi_domain_populate_irqs(domain->parent, dev, virq, nr_irqs, &data->arg);
--}
--
--/* End of removal area */
--
--/* Real per device domain interfaces */
- 
- /*
-  * This indirection can go when platform_device_msi_init_and_alloc_irqs()
-@@ -357,7 +23,7 @@ static void platform_msi_write_msi_msg(struct irq_data *d, struct msi_msg *msg)
- 	cb(irq_data_get_msi_desc(d), msg);
- }
- 
--static void platform_msi_set_desc_byindex(msi_alloc_info_t *arg, struct msi_desc *desc)
-+static void platform_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
- {
- 	arg->desc = desc;
- 	arg->hwirq = desc->msi_index;
-@@ -373,7 +39,7 @@ static const struct msi_domain_template platform_msi_template = {
- 	},
- 
- 	.ops = {
--		.set_desc		= platform_msi_set_desc_byindex,
-+		.set_desc		= platform_msi_set_desc,
- 	},
- 
- 	.info = {
-@@ -408,10 +74,6 @@ int platform_device_msi_init_and_alloc_irqs(struct device *dev, unsigned int nve
- 	if (!domain || !write_msi_msg)
- 		return -EINVAL;
- 
--	/* Migration support. Will go away once everything is converted */
--	if (!irq_domain_is_msi_parent(domain))
--		return platform_msi_domain_alloc_irqs(dev, nvec, write_msi_msg);
--
- 	/*
- 	 * @write_msi_msg is stored in the resulting msi_domain_info::data.
- 	 * The underlying domain creation mechanism will assign that
-@@ -432,12 +94,6 @@ EXPORT_SYMBOL_GPL(platform_device_msi_init_and_alloc_irqs);
-  */
- void platform_device_msi_free_irqs_all(struct device *dev)
- {
--	struct irq_domain *domain = dev->msi.domain;
--
- 	msi_domain_free_irqs_all(dev, MSI_DEFAULT_DOMAIN);
--
--	/* Migration support. Will go away once everything is converted */
--	if (!irq_domain_is_msi_parent(domain))
--		platform_msi_free_priv_data(dev);
- }
- EXPORT_SYMBOL_GPL(platform_device_msi_free_irqs_all);
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 4ae036d0c7db..4c3462a6a97b 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -81,7 +81,6 @@ extern int pci_msi_ignore_mask;
- /* Helper functions */
- struct msi_desc;
- struct pci_dev;
--struct platform_msi_priv_data;
- struct device_attribute;
- struct irq_domain;
- struct irq_affinity_desc;
-@@ -231,14 +230,12 @@ struct msi_dev_domain {
- /**
-  * msi_device_data - MSI per device data
-  * @properties:		MSI properties which are interesting to drivers
-- * @platform_data:	Platform-MSI specific data
-  * @mutex:		Mutex protecting the MSI descriptor store
-  * @__domains:		Internal data for per device MSI domains
-  * @__iter_idx:		Index to search the next entry for iterators
-  */
- struct msi_device_data {
- 	unsigned long			properties;
--	struct platform_msi_priv_data	*platform_data;
- 	struct mutex			mutex;
- 	struct msi_dev_domain		__domains[MSI_MAX_DEVICE_IRQDOMAINS];
- 	unsigned long			__iter_idx;
-@@ -641,33 +638,6 @@ void msi_domain_free_irqs_all(struct device *dev, unsigned int domid);
- 
- struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
- 
--struct irq_domain *platform_msi_create_irq_domain(struct fwnode_handle *fwnode,
--						  struct msi_domain_info *info,
--						  struct irq_domain *parent);
--
--/* When an MSI domain is used as an intermediate domain */
--int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
--			    int nvec, msi_alloc_info_t *args);
--int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
--			     int virq, int nvec, msi_alloc_info_t *args);
--void msi_domain_depopulate_descs(struct device *dev, int virq, int nvec);
--
--struct irq_domain *
--__platform_msi_create_device_domain(struct device *dev,
--				    unsigned int nvec,
--				    bool is_tree,
--				    irq_write_msi_msg_t write_msi_msg,
--				    const struct irq_domain_ops *ops,
--				    void *host_data);
--
--#define platform_msi_create_device_tree_domain(dev, nvec, write, ops, data) \
--	__platform_msi_create_device_domain(dev, nvec, true, write, ops, data)
--
--int platform_msi_device_domain_alloc(struct irq_domain *domain, unsigned int virq,
--				     unsigned int nr_irqs);
--void platform_msi_device_domain_free(struct irq_domain *domain, unsigned int virq,
--				     unsigned int nvec);
--void *platform_msi_get_host_data(struct irq_domain *domain);
- /* Per device platform MSI */
- int platform_device_msi_init_and_alloc_irqs(struct device *dev, unsigned int nvec,
- 					    irq_write_msi_msg_t write_msi_msg);
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 2024f89baea4..8314b1d4a903 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -1088,8 +1088,8 @@ bool msi_match_device_irq_domain(struct device *dev, unsigned int domid,
- 	return ret;
- }
- 
--int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
--			    int nvec, msi_alloc_info_t *arg)
-+static int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
-+				   int nvec, msi_alloc_info_t *arg)
- {
- 	struct msi_domain_info *info = domain->host_data;
- 	struct msi_domain_ops *ops = info->ops;
-@@ -1097,77 +1097,6 @@ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
- 	return ops->msi_prepare(domain, dev, nvec, arg);
- }
- 
--int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
--			     int virq_base, int nvec, msi_alloc_info_t *arg)
--{
--	struct msi_domain_info *info = domain->host_data;
--	struct msi_domain_ops *ops = info->ops;
--	struct msi_ctrl ctrl = {
--		.domid	= MSI_DEFAULT_DOMAIN,
--		.first  = virq_base,
--		.last	= virq_base + nvec - 1,
--	};
--	struct msi_desc *desc;
--	struct xarray *xa;
--	int ret, virq;
--
--	msi_lock_descs(dev);
--
--	if (!msi_ctrl_valid(dev, &ctrl)) {
--		ret = -EINVAL;
--		goto unlock;
--	}
--
--	ret = msi_domain_add_simple_msi_descs(dev, &ctrl);
--	if (ret)
--		goto unlock;
--
--	xa = &dev->msi.data->__domains[ctrl.domid].store;
--
--	for (virq = virq_base; virq < virq_base + nvec; virq++) {
--		desc = xa_load(xa, virq);
--		desc->irq = virq;
--
--		ops->set_desc(arg, desc);
--		ret = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
--		if (ret)
--			goto fail;
--
--		irq_set_msi_desc(virq, desc);
--	}
--	msi_unlock_descs(dev);
--	return 0;
--
--fail:
--	for (--virq; virq >= virq_base; virq--) {
--		msi_domain_depopulate_descs(dev, virq, 1);
--		irq_domain_free_irqs_common(domain, virq, 1);
--	}
--	msi_domain_free_descs(dev, &ctrl);
--unlock:
--	msi_unlock_descs(dev);
--	return ret;
--}
--
--void msi_domain_depopulate_descs(struct device *dev, int virq_base, int nvec)
--{
--	struct msi_ctrl ctrl = {
--		.domid	= MSI_DEFAULT_DOMAIN,
--		.first  = virq_base,
--		.last	= virq_base + nvec - 1,
--	};
--	struct msi_desc *desc;
--	struct xarray *xa;
--	unsigned long idx;
--
--	if (!msi_ctrl_valid(dev, &ctrl))
--		return;
--
--	xa = &dev->msi.data->__domains[ctrl.domid].store;
--	xa_for_each_range(xa, idx, desc, ctrl.first, ctrl.last)
--		desc->irq = 0;
--}
--
- /*
-  * Carefully check whether the device can use reservation mode. If
-  * reservation mode is enabled then the early activation will assign a
--- 
-2.34.1
+>  
+>  	/* Reset adc buffer index */
+>  	adc->bufi = 0;
+> @@ -1071,6 +1083,15 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
+>  			return ret;
+>  	}
+>  
+> +	if (adc->backend) {
+> +		while (adc->backend[i]) {
 
+Could do similar to the suggestion below.
+Mostly I don't like the index variable manipulation.
 
+> +			ret = iio_backend_enable(&indio_dev->dev, adc->backend[i]);
+> +			if (ret < 0)
+> +				return ret;
+> +			i++;
+> +		}
+> +	}
+> +
+>  	ret = stm32_dfsdm_start_dfsdm(adc->dfsdm);
+>  	if (ret < 0)
+>  		goto err_stop_hwc;
+> @@ -1103,6 +1124,7 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
+>  static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
+>  {
+>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+> +	int i = 0;
+>  
+>  	stm32_dfsdm_stop_conv(indio_dev);
+>  
+> @@ -1110,6 +1132,13 @@ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
+>  
+>  	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
+>  
+> +	if (adc->backend) {
+> +		while (adc->backend[i]) {
+> +			iio_backend_disable(&indio_dev->dev, adc->backend[i]);
+> +			i++;
+> +		}
+Something like
+		struct iio_backend **be = &adc->backend[0];
+		do {
+			iio_backend_disable(&indio-dev->dev, be);
+		} while (be++);
+
+maybe. Up to you.
+		
+
+> +	}
+
+> @@ -1320,6 +1360,45 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+>  		*val = adc->sample_freq;
+>  
+>  		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/*
+> +		 * Scale is expressed in mV.
+> +		 * When fast mode is disabled, actual resolution may be lower
+> +		 * than 2^n, where n=realbits-1.
+
+As below, use a few more spaces.
+
+> +		 * This leads to underestimating input voltage. To
+> +		 * compensate this deviation, the voltage reference can be
+> +		 * corrected with a factor = realbits resolution / actual max
+> +		 */
+> +		if (adc->backend[idx]) {
+> +			iio_backend_read_raw(adc->backend[idx], val, val2, mask);
+> +
+> +			*val = div_u64((u64)*val * (u64)BIT(DFSDM_DATA_RES - 1), max);
+> +			*val2 = chan->scan_type.realbits;
+> +			if (chan->differential)
+> +				*val *= 2;
+> +		}
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		/*
+> +		 * DFSDM output data are in the range [-2^n,2^n],
+Use a few more spaces. [-2^2, 2^n]
+> +		 * with n=realbits-1.
+n = realbits - 1
+
+Just to keep it closer to the C coding style.
+
+> +		 * - Differential modulator:
+> +		 * Offset correspond to SD modulator offset.
+> +		 * - Single ended modulator:
+> +		 * Input is in [0V,Vref] range, where 0V corresponds to -2^n, and Vref to 2^n.
+
+Avoid that long line with a suitable line break.
+
+> +		 * Add 2^n to offset. (i.e. middle of input range)
+> +		 * offset = offset(sd) * vref / res(sd) * max / vref.
+> +		 */
+> +		if (adc->backend[idx]) {
+> +			iio_backend_read_raw(adc->backend[idx], val, val2, mask);
+> +
+> +			*val = div_u64((u64)max * *val, BIT(*val2 - 1));
+> +			if (!chan->differential)
+> +				*val += max;
+> +		}
+> +		return IIO_VAL_INT;
+>  	}
+>  
+>  	return -EINVAL;
+> @@ -1449,7 +1528,15 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev, struct iio_c
+>  	 * IIO_CHAN_INFO_RAW: used to compute regular conversion
+>  	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
+>  	 */
+> -	ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> +	if (child) {
+> +		ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +					BIT(IIO_CHAN_INFO_SCALE) |
+> +					BIT(IIO_CHAN_INFO_OFFSET);
+
+Indent looks a little odd. Maybe one more space neede?
+
+> +	} else {
+> +		/* Legacy. Scaling not supported */
+> +		ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> +	}
+> +
+>  	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+>  					BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  
+> @@ -1816,3 +1903,4 @@ module_platform_driver(stm32_dfsdm_adc_driver);
+>  MODULE_DESCRIPTION("STM32 sigma delta ADC");
+>  MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
+>  MODULE_LICENSE("GPL v2");
+> +MODULE_IMPORT_NS(IIO_BACKEND);
 
