@@ -1,89 +1,167 @@
-Received: from insw.cz (mail.insw.cz [83.167.247.81])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E0C146003
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 13:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.167.247.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2637A145FE5;
+	Sun, 23 Jun 2024 13:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719147804; cv=none; b=Xl414Boxxi0vVGKStTvH0lnYe8BT84YFbezYLpvEaZwcaeFzJ2X/TZOhKOeoDrbpJ4/+xN/ask/hnNm/y8enxpUsR9+ISVwP3053FHCnwvJJFA+umdUGIQ03QjcBhtTYrj9eFR4xDKq0mXwMKsZ9+vo6GzRau0If3sT0PGaAPDY=
+	t=1719148151; cv=none; b=cnrm0Tfo5ssV7BQ6SVgbLJy9vHi3cagWMtP0HSoMI5wyMXYititWh+cABoct1nsi7GKElQcQsuENgJLbngb5Z0IztBcquB03zDdlfJRAQaQmpsK1dqnLSvQMmGrec9dgajeRspmiDc/EKpZmBR7dMgAQe3wsSxiByDgJ/CE8hT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719147804; c=relaxed/simple;
-	bh=CYijQfKw6sxo3rxVVGuMozOA7miYk0CuOBZJW4UlfZI=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=mJNCO3c9fZFwBRprkjhDnzb3l/bxyNn7Fvr4QY1TnxSjvtlTWwaaaoLsYcDqlevyB030Q96OP5loEX9OZTDNeHzfJaAg1YUHnamIjcrwOdyaLGRoArDrbqXf8D+Zds8Rm//Hj+ebu7dUKJ8nDJiJDaEiK9LnYt1KjykYu3+wjpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bena.rocks; spf=pass smtp.mailfrom=bena.rocks; dkim=pass (1024-bit key) header.d=bena.rocks header.i=@bena.rocks header.b=YOwuYS0H; dkim=pass (1024-bit key) header.d=bena.rocks header.i=@bena.rocks header.b=334FGn50; arc=none smtp.client-ip=83.167.247.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bena.rocks
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bena.rocks
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bena.rocks header.i=@bena.rocks header.b="YOwuYS0H";
-	dkim=pass (1024-bit key) header.d=bena.rocks header.i=@bena.rocks header.b="334FGn50"
-Received: from localhost (tm-irc.org [127.0.0.1])
-	by insw.cz (Postfix) with ESMTP id 476C826E2E479
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 14:56:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bena.rocks; s=mail;
-	t=1719147416; bh=CYijQfKw6sxo3rxVVGuMozOA7miYk0CuOBZJW4UlfZI=;
-	h=Date:To:From:Subject;
-	b=YOwuYS0HkgZWUMEQhGzP9BviF+MeotVgHQC3ZzfuzQgLDjTbG2Ek9RDAvOxFl3N0m
-	 SZs5NZgMxz6cELL/J/4k0efFhbfvZdaM983ul/g5eF8VhBJb8v0Fx7dyYKmaiiAyVX
-	 iAq/duysiCPcmx0n+d7e99GKBovwABXLX3gCrGtg=
-X-Spam-Flag: NO
-X-Spam-Score: -1.201
-X-Spam-Level:
-Authentication-Results: insw.cz (amavisd-new); dkim=pass (1024-bit key)
-	header.d=bena.rocks
-Received: from insw.cz ([127.0.0.1])
-	by localhost (insw.cz [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 30nCMTELDnWw for <linux-kernel@vger.kernel.org>;
-	Sun, 23 Jun 2024 14:56:55 +0200 (CEST)
-Received: from [192.168.0.45] (ip-78-102-147-178.bb.vodafone.cz [78.102.147.178])
-	by insw.cz (Postfix) with ESMTPSA id CFC9A26E2E476
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 14:56:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bena.rocks; s=mail;
-	t=1719147415; bh=CYijQfKw6sxo3rxVVGuMozOA7miYk0CuOBZJW4UlfZI=;
-	h=Date:To:From:Subject;
-	b=334FGn50OAl+Z21SPEIKFzaHEte1K1Stm9srceM+uGVZd/qOKxDRjW18qCHhrLq4v
-	 kFtX0REBlWi66Ws5uY3vWXi6Afirz/IB3at3I5rGA21K48ncXO4qSzaESw0LJHKROh
-	 2RWulW4gdTkm7fV7926PXHuATWq7DJv3m9xxSFvI=
-Message-ID: <45d9cf65-7d23-475b-83d0-4bf649553b02@bena.rocks>
-Date: Sun, 23 Jun 2024 14:56:53 +0200
+	s=arc-20240116; t=1719148151; c=relaxed/simple;
+	bh=Glj3PVhq07s9ybEWPOZIinwXH1m+JqkijiqUrCCJCbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EOooGQuuBsJ9suhd8JFdl+OFD/d7DkLTi1fCD/nBXclOSabAY9h21AZZPMzI720NSjiqIE+fmHKIzu73KHIevMk6iUIXa6QT6wVOQ8QoU7lzuUSIc/R2Mptg1p0hkebzgNlPP8G3ZMAvI4/ehHaDDok/FRTpJE3Zqr+nB3s3Kok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1sLMxY-0000000081f-4C5p;
+	Sun, 23 Jun 2024 13:08:45 +0000
+Date: Sun, 23 Jun 2024 14:08:35 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Aurelien Jarno <aurelien@aurel32.net>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Dragan Simic <dsimic@manjaro.org>, Martin Kaiser <martin@kaiser.cx>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: rng: Add Rockchip RNG bindings
+Message-ID: <ZngeUxK6r0qqBj28@makrotopia.org>
+References: <cover.1719106472.git.daniel@makrotopia.org>
+ <b28ccedac0a51f8a437f7ceb5175e3b70696c8c2.1719106472.git.daniel@makrotopia.org>
+ <a31bc0f2-4f82-4e15-95b8-c17dc46e7bf5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org
-From: Petr Bena <petr@bena.rocks>
-Subject: Why is Dirty and Writeback part of "MemAvailable" in /proc/meminfo?
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a31bc0f2-4f82-4e15-95b8-c17dc46e7bf5@kernel.org>
 
-Hello,
+Hi Krzysztof,
 
-Apologies if this is already answered somewhere, but quick google search 
-returned nothing on-topic:
+thank you for your patiente and repeated review of this series.
 
-There is one thing that really puzzles me about /proc/meminfo (and 
-subsequently about data reported by all other tools, like free, top etc. 
-that take those numbers from same place) - why is "dirty" and 
-"writeback" part of "available" memory?
+On Sun, Jun 23, 2024 at 09:03:15AM +0200, Krzysztof Kozlowski wrote:
+> On 23/06/2024 05:32, Daniel Golle wrote:
+> > From: Aurelien Jarno <aurelien@aurel32.net>
+> > 
+> > Add the True Random Number Generator on the Rockchip RK3568 SoC.
+> > 
+> > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> 
+> My comments from v2, which I reminded at v3, were not addressed.
+> 
+> Respond to each of them and acknowledge that you are going to implement
+> the change.
 
-My understanding is that "available" was introduced to confuse less 
-users by relatively low amount of "free" memory, which is very often 
-occupied by disk and FS caches as it can be dropped almost any time as 
-needed, but that's not quite the case with writeback and dirty memory - 
-both of them have to be written to the disk first, which is not an 
-instant operation, in fact with slow storage it takes some time during 
-which memory is unusable, so there is nothing inherently "available" 
-about that memory.
+Your comments to v1which I'm aware of are:
+https://patchwork.kernel.org/comment/25087874/
 
-If you configure your kernel for aggressive caching and run some large 
-IO writing operations, most of your memory is going to be full by dirty 
-pages and should some program need to quickly allocate it, it would 
-fail, yet /proc/meminfo would be reporting plenty of available memory.
+> > +++ b/Documentation/devicetree/bindings/rng/rockchip-rng.yaml
+> Filename matching compatible, so "rockchip,rk3568-rng.yaml"
 
-Shouldn't this logic be changed? What's the reasoning behind that?
+I've changed the filename.
 
-Thanks
+> > +title: Rockchip TRNG bindings
 
+> Drop "bindings"
+
+I've changed the title accordingly (now: "Rockchip TRNG" in v4).
+
+> > +description:
+> > +  This driver interface with the True Random Number Generator present in some
+> 
+> Drop "This driver interface" and make it a proper sentence. Bindings are
+> not about drivers.
+
+This has been addressed by Aurelien and further improved by me in v3.
+
+> > +  clocks:
+> > +    minItems: 2
+
+> Drop minItems.
+
+Aurelien did that in v2.
+
+> > +  clock-names:
+> > +    items:
+> > +      - const: clk
+> > +      - const: hclk
+> 
+> You need to explain what are these in clocks. Also you need better
+> names. A clock name "clk" is useless.
+
+Clocks now have meaningful names and descriptions.
+
+> > +  reset-names:
+> > +    items:
+> > +      - const: reset
+> 
+> Drop reset-names entirely, not useful.
+
+Aurelien did so in v2.
+
+Your comments to v2 which I'm aware of are:
+https://patchwork.kernel.org/comment/25111597/
+
+> > Add the RNG bindings for the RK3568 SoC from Rockchip
+
+> Use subject prefixes matching the subsystem (git log --oneline -- ...),
+> so it is rng, not RNG. Also, you are not adding all-Rockhip RNG but a
+> specific device.
+> 
+> Subject: drop second, redundant "bindings".
+
+I've changed 'RNG' into 'rng' in the subject and spelled it out in the
+commit message.
+
+> > +description: True Random Number Generator for some Rockchip SoCs
+> 
+> s/for some Rockchip SoCs/on Rokchip RK3568 SoC/
+
+I've adopted your suggestion in v3 and then fixed the typo in v4.
+
+> 
+> > +  clock-names:
+> > +    items:
+> > +      - const: trng_clk
+> > +      - const: trng_hclk
+
+> These are too vague names. Everything is a clk in clock-names, so no
+> need usually to add it as name suffix. Give them some descriptive names,
+> e.g. core and ahb.
+
+If changed the names to the suggested 'core' and 'ahb'.
+
+Before sending another round of patches, just to make sure we are on
+the same page, please confirm that what remains is
+Subject: dt-bindings: rng: Add Rockchip RNG bindings
+which not only should be 'rng' in small letters but also name the exact
+chip, eg.:
+Subject: dt-bindings: rng: add TRNG on the Rockchip RK3568 SoC
+
+If there are any other comments you made which I'm not aware of, please
+point me to them.
+
+
+Cheers
+
+
+Daniel
