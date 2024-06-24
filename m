@@ -1,163 +1,95 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A3376E1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F8EE3BBF2;
+	Mon, 24 Jun 2024 07:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719213264; cv=none; b=R2WVaNi4nwki6p3z1ATmK+VT6W0nnLGoxMEXn+2YHfUNTA2DFl4SgNVJfWOl9OVt7AjQbQWfYwOnLtyihBOb3Qv7z0KHsrMHf2bKCJP7LCsriVuAlTQtmwaYaOkC7OckMj2LIQLROUBjyRxwbq7BIzj7067P33zrCAPzz2n2C9g=
+	t=1719213268; cv=none; b=DN2b204yk2IkzFHoPIKY9O0m6pg8QFETwtnsHWsRiV5Jqo/Ja904faxnxmsHqg3ykyTcZAqh2zTmD/Z8wGkhfgaAeS9FnLlUEAeUyZRaxOnJV7koN6OaBE9zP+UznZr4+MtjksnG1O+xOCT39LTrMG5bCp/mEOHluYgczyHTTQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719213264; c=relaxed/simple;
-	bh=TPwGeCbxaMvWhwasuexajYhtdGbtYaMDnzOCEVwhdAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dCeSCZkePtuoqCakChOBB6eTLaaWi8ObHmjThGrtWv2QHeWL88GvwKBVt2UuoO1d6GQGsk3QgQ75eB1erkWbvwBb8G7Vxi9iK2YK6t6WpFYqie/eLUHv7U/PxTkgkmtHOzyCm+hWSLHmUFLZK91tq9rXd4RHKR9rZlkFPRjVT6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lPGJU+FD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lPGJU+FD"
-Received: from [IPV6:2405:201:2015:f873:9278:2c85:fd02:c5f5] (unknown [IPv6:2405:201:2015:f873:9278:2c85:fd02:c5f5])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C3CEB7E0;
-	Mon, 24 Jun 2024 09:13:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1719213233;
-	bh=TPwGeCbxaMvWhwasuexajYhtdGbtYaMDnzOCEVwhdAY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lPGJU+FDKBl8q1dkkqYL779EAOsE1BApzA8jsoaem+hbbX20HEeToA1YUHFJHgkja
-	 WkXn2rVXBfurqQuLg1+PHPEJKBAKXR2kLRCWub7f9KXgbU4I0TVHFCj9vg3oK9EVbh
-	 zLDphaeVdUbDYRjo78FRZKbLX/GOszit2g3ifZiw=
-Message-ID: <246fef06-4759-4b2c-a515-933fece425da@ideasonboard.com>
-Date: Mon, 24 Jun 2024 12:44:11 +0530
+	s=arc-20240116; t=1719213268; c=relaxed/simple;
+	bh=5nNNwBKF40usngDFhlzxJZVkfQIOyHAzYjcY4WPZc4I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=edCdc8bpnGFqmQv8SM8NwXsSIKYYSDA+3qa+FKeMvlKknQ1bX33Be88k6kK9aiQCqj5F30jJHhmiopYhNz11hXyzkG+BLEwnMUNMeIoSaxM4eQv2mBkkiHPOrG2+nVS2hIU9bR66P7lZFK5WxQ7QZji8GBsbdn5YvfJ21Y9+o8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxvOrQHHlmC3EJAA--.37691S3;
+	Mon, 24 Jun 2024 15:14:24 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMTPHHlmftsuAA--.9847S4;
+	Mon, 24 Jun 2024 15:14:23 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Sean Christopherson <seanjc@google.com>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH v3 2/7] LoongArch: KVM: Select huge page only if secondary mmu supports it
+Date: Mon, 24 Jun 2024 15:14:17 +0800
+Message-Id: <20240624071422.3473789-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240624071422.3473789-1-maobibo@loongson.cn>
+References: <20240624071422.3473789-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] staging: vc04_services: vchiq_arm: Fix initialisation
- check
-Content-Language: en-US
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-rpi-kernel@lists.infradead.org, Stefan Wahren <wahrenst@gmx.net>
-Cc: Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Yang Li <yang.lee@linux.alibaba.com>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240620221046.2731704-1-kieran.bingham@ideasonboard.com>
-From: Umang Jain <umang.jain@ideasonboard.com>
-In-Reply-To: <20240620221046.2731704-1-kieran.bingham@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxMMTPHHlmftsuAA--.9847S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi Kieran,
+Currently page level selection about secondary mmu depends on memory
+slot and page level about host mmu. There will be problem if page level
+of secondary mmu is zero already. Huge page cannot be selected if there is
+normal page mapped in secondary mmu already, since it is not supported to
+merge normal pages into huge page now.
 
-On 21/06/24 3:40 am, Kieran Bingham wrote:
-> The vchiq_state used to be obtained through an accessor which would
-> validate that the VCHIQ had been initialised correctly with the remote,
-> or return a null state.
->
-> In commit 42a2f6664e18 ("staging: vc04_services: Move global g_state to
-> vchiq_state") the global state was moved to the vchiq_mgnt structures
-> stored as a vchiq instance specific context. This conversion removed the
-> helpers and instead replaced users of this helper with the assumption
-> that the state is always available and the remote connected.
->
-> The conversion does ensure that the state is always available, so some
-> remaining state null pointer checks that remain are unnecessary, but the
-> assumption that the remote is present and initialised is incorrect.
->
-> Fix this broken assumption by re-introducing the logic that was lost
-> during the conversion.
+So page level selection should depend on the following three conditions.
+ 1. Memslot is aligned for huge page and vm is not migrating.
+ 2. Page level of host mmu is huge page also.
+ 3. Page level of secondary mmu is suituable for huge page.
 
-Yes, the logic was broken. thanks for noticing this.
->
-> Fixes: 42a2f6664e18 ("staging: vc04_services: Move global g_state to vchiq_state")
-> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/mmu.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Reviewed-by: Umang Jain <umang.jain@ideasonboard.com>
->
-> ---
-> v2:
->   - Just a resend
->
-> v3:
->   - Downgrade vchiq_open() error path print to dbg
->   - Clarify commit message about unnecessary state checks.
->
->   .../staging/vc04_services/interface/vchiq_arm/vchiq_arm.c  | 4 ++--
->   .../staging/vc04_services/interface/vchiq_arm/vchiq_core.h | 5 +++++
->   .../staging/vc04_services/interface/vchiq_arm/vchiq_dev.c  | 7 ++++++-
->   3 files changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-> index 69daeba974f2..5f518e5a9273 100644
-> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-> @@ -707,7 +707,7 @@ int vchiq_initialise(struct vchiq_state *state, struct vchiq_instance **instance
->   	 * block forever.
->   	 */
->   	for (i = 0; i < VCHIQ_INIT_RETRIES; i++) {
-> -		if (state)
-> +		if (vchiq_remote_initialised(state))
->   			break;
->   		usleep_range(500, 600);
->   	}
-> @@ -1202,7 +1202,7 @@ void vchiq_dump_platform_instances(struct vchiq_state *state, struct seq_file *f
->   {
->   	int i;
->   
-> -	if (!state)
-> +	if (!vchiq_remote_initialised(state))
->   		return;
->   
->   	/*
-> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-> index 8af209e34fb2..382ec08f6a14 100644
-> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-> @@ -413,6 +413,11 @@ struct vchiq_state {
->   	struct opaque_platform_state *platform_state;
->   };
->   
-> +static inline bool vchiq_remote_initialised(const struct vchiq_state *state)
-> +{
-> +	return state->remote && state->remote->initialised;
-> +}
-> +
->   struct bulk_waiter {
->   	struct vchiq_bulk *bulk;
->   	struct completion event;
-> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c
-> index 67ba9ceaad3e..9cd2a64dce5e 100644
-> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c
-> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c
-> @@ -1170,6 +1170,11 @@ static int vchiq_open(struct inode *inode, struct file *file)
->   
->   	dev_dbg(state->dev, "arm: vchiq open\n");
->   
-> +	if (!vchiq_remote_initialised(state)) {
-> +		dev_dbg(state->dev, "arm: vchiq has no connection to VideoCore\n");
-> +		return -ENOTCONN;
-> +	}
-> +
->   	instance = kzalloc(sizeof(*instance), GFP_KERNEL);
->   	if (!instance)
->   		return -ENOMEM;
-> @@ -1200,7 +1205,7 @@ static int vchiq_release(struct inode *inode, struct file *file)
->   
->   	dev_dbg(state->dev, "arm: instance=%p\n", instance);
->   
-> -	if (!state) {
-> +	if (!vchiq_remote_initialised(state)) {
->   		ret = -EPERM;
->   		goto out;
->   	}
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index 9e39d28fec35..c6351d13ca1b 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -858,10 +858,20 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+ 
+ 	/* Disable dirty logging on HugePages */
+ 	level = 0;
+-	if (!fault_supports_huge_mapping(memslot, hva, write)) {
+-		level = 0;
+-	} else {
++	if (fault_supports_huge_mapping(memslot, hva, write)) {
++		/* Check page level about host mmu*/
+ 		level = host_pfn_mapping_level(kvm, gfn, memslot);
++		if (level == 1) {
++			/*
++			 * Check page level about secondary mmu
++			 * Disable hugepage if it is normal page on
++			 * secondary mmu already
++			 */
++			ptep = kvm_populate_gpa(kvm, NULL, gpa, 0);
++			if (ptep && !kvm_pte_huge(*ptep))
++				level = 0;
++		}
++
+ 		if (level == 1) {
+ 			gfn = gfn & ~(PTRS_PER_PTE - 1);
+ 			pfn = pfn & ~(PTRS_PER_PTE - 1);
+-- 
+2.39.3
 
