@@ -1,163 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2042.outbound.protection.outlook.com [40.107.244.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5324619AD45
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719240130; cv=none; b=D8UD5yxLVYdeqXwdr8G/WroxQALUHIpOV64JVR8jdv5Hyc2mXpBePLUdJril0Y7deNKfpTq6ZB2flEdPtgzYDqIBFWknjRkxawltLViJZIRLtHU3vsy1ZzjMNQoLqhzM+W54A7lWQN+WYIJjyaxvpFimnNz/THN91rhRw6yZA+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719240130; c=relaxed/simple;
-	bh=/fNP9lHtI2TK5RrwMbpkvfnkfdvJsuINBBNwCdflfCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2jJxiJ2ArkWTRBkjmh7PChA/B0lz6vDbgTZkK/9N3o1ZF7IHeWYrlmTEkxCdBUn/QJMYH0jx6kNErQy4cFsl0puk7GzXISOYRDLqBDgbU8e8BKAxjOsizfQcDg95AePZhD6CuqvK8ynUHfEyk8irMPIDvn2A1+CNiGJmMb2GXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G0MuKjJB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B5C148849
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719240149; cv=fail; b=da8vr+SQUGTrCzctzP9YPgTy8paaih8hNFZ6DEKLqcSk1s5tUnGdMTDPMuJyNf4WX1PIRGwBenGhm7vK2+y6EhFhw2p5yvwT3HKI0YslQLMsKFhgJbeyjlByCHf+c+TwsKMWuLsx8WPWPimdkd7GEIMbvNUqLJeJItSWIOEJNXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719240149; c=relaxed/simple;
+	bh=g2JX9QCN7gYGvYOSBygfBblrqIqZNvdnXVTcD6mufBc=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Mf4B/gz4nc8dg21qG38hhP9v7jfIAM6bv9DpYEsZEDNhZPJaZNYiTeYrAQ/orlgtDhIx91P9SlZE2+5C9GQ+aqN7N0hqRn2/wQGTDkYcHqQmIDamT7sRAXoUP3mkxY2hsC7YGhwkao8rF0qZbC2FOsmqN9QPu+F6EcgrXefS7r4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YhMujQ3k; arc=fail smtp.client-ip=40.107.244.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G0MuKjJB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719240126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2YSFwvfLTs34coaqSsJLjio1esrhhUEBzaPezL3zICw=;
-	b=G0MuKjJBn7tWo5mE1ECkgoOR70T7wD1hYHAdXQllXFNJ0kfpe/8XaYpg3O5FYAJ6QD84je
-	rie5jjJsvW+upC0Kk81pRTAgu5YgGmsIRbTkSojFVIeX8X9HrORUQDalvkPz/a97fwYObM
-	yRwTogLJqf1HalSIQeUpzW/lherd9qM=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-302--HTnCnsTM36tIPxse5xnSA-1; Mon, 24 Jun 2024 10:42:04 -0400
-X-MC-Unique: -HTnCnsTM36tIPxse5xnSA-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6b52c538d04so7192106d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:42:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719240124; x=1719844924;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2YSFwvfLTs34coaqSsJLjio1esrhhUEBzaPezL3zICw=;
-        b=QvATsNhT14rvwSCJ/gtiZHPXWBY46dN9e6Y8ynETeXX7k5pVebQLUJvE8RFlMOUnof
-         5NWhN/Md5F2KlhUoiKp/sTg8RdIEO9dcVIgXxF4qS9BJOD1p/S+WbwQtPJjnxvgWwjCw
-         T6dcNYG0PZB97ghcJJAScU/QztG3efbqN+3ABGbxL+080oZ+QkOnnEKKHO9gNtNzq0Vf
-         gEcaYp1CsuvsfD0pk2QyV6mQjqtF2DbG34fJ1LC7R0aFGS5wx4AxPSoYFwX2rsWDdDsI
-         1AejWyBOX6+AnfUXBdq75bXyeAEZGDVM2j5ewJQfeOM9f+4B2ZyJALlysw/PJWmILaZR
-         +OPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX//2OnJGUGA/OjRQ/+LkxzlQ4hTWmxcXvfTdtbTG1YrzmqGKua7oe2V6ZguGE9LWdfYlVUcRcAExeEsQ2erDgql1Wtqs/d0TkjcQLQ
-X-Gm-Message-State: AOJu0YxpnMpMlLu+78nrsnBuUfCRbq0WxzMFbciHAn76SFsKTkkybLTq
-	+6Tz9HGr9++xPESXtoDEqU/Z5IVrFvnvrx8WrNfCYpwyYPBmSX8YasVw5rrYizHvFidKPs1NeIf
-	fdL3M3lUK0lCn6sM5lLMuKnK7lwtWF3AAztyM1FdL8Ralc5zAzpPy8iEGe7G7dA==
-X-Received: by 2002:ac8:5753:0:b0:441:1de:8ab0 with SMTP id d75a77b69052e-444cf75fffbmr68513961cf.2.1719240124109;
-        Mon, 24 Jun 2024 07:42:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGggCmyM4O7AbDKTFNzE+M2A0XkOn8q4QKOyaCtAAJssRP1VcmWE+zk9J/aPMuu0F6mZDXJWw==
-X-Received: by 2002:ac8:5753:0:b0:441:1de:8ab0 with SMTP id d75a77b69052e-444cf75fffbmr68513631cf.2.1719240123513;
-        Mon, 24 Jun 2024 07:42:03 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c2b3689csm42757861cf.20.2024.06.24.07.42.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 07:42:03 -0700 (PDT)
-Date: Mon, 24 Jun 2024 10:42:00 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Audra Mitchell <audra@redhat.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	aarcange@redhat.com, akpm@linux-foundation.org,
-	rppt@linux.vnet.ibm.com, shli@fb.com, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, shuah@kernel.org,
-	linux-kselftest@vger.kernel.org, raquini@redhat.com
-Subject: Re: [PATCH v2 3/3] Turn off test_uffdio_wp if
- CONFIG_PTE_MARKER_UFFD_WP is not configured.
-Message-ID: <ZnmFuAR7yNG_6zp6@x1n>
-References: <20240621181224.3881179-1-audra@redhat.com>
- <20240621181224.3881179-3-audra@redhat.com>
- <ZnXwT_vkyVbIJefN@x1n>
- <Znl6dfM_qbH3hIvH@fedora>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YhMujQ3k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ubr2BQOymwpoCDxQorWMCkV2DXWq/KkGkOB4Csql7DZimB85LyjadsSk1a1RMifQCbzif2z/SmmaW5hoGb0F33+hr44Sjk4E49j6W1WyP5q+2G/YvhxBgU0nnQsQnv/IU7GL6DCP1rSUifdSKmzk+Owqa1K6wt8jtUT96d1AjP1Ui9uTylO5a4J8OVszI1/zt+EZAJCyuxpq32lGS/9NLZVhlYzXFGdhIiQ/9O+tM22IFxZ20Rqk0YDeTNQWT+JpfyyOQnGRsmm6iSm6nDdjLQ1Urw9BPno0eFAuv9saFNIwdKZECIbp8GhavkpIu9H9YDgWgJa1xzEexloUJpYm0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lenpssHttWTQ7LAOXb/Cv8rQkx6QbvfZ6Bgf/DOELFY=;
+ b=fXqR9fouMxcx4uSYhg2UBmsQkcBwUN6YIJsGCU+Ci0DvA05WzuwfWZdAd6iwDJ/iJ2vpELDP+9MxWn2iHKJSG0HJXxZDA/3voxgs0ORIM1Oy9bNu9lMQDeiLXe579pcSqUnutJCx3pdsJf1dRSAaSdzjJs5cttM48g6UetFZKutG8+y/C6JeUBnqmVSYMLeX/biGeYsPCURLT9WZmeqnmMEg9Wr+PJkgo+9KK8lNTdw6JChvBeAGx8ESGXcFzcJT/89Q5ZR42pKi40uDO0V+CWu2Djf/CuIQvNgVwE4SYjUveBjdzeNlQ1oyAvvrD/gL5B2kuzWEoOIBvrsuDA0Wdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lenpssHttWTQ7LAOXb/Cv8rQkx6QbvfZ6Bgf/DOELFY=;
+ b=YhMujQ3kbQSKcki+Fq0cNlu20dx+vfVA25aXMJRZcKY6UzqVElDcjWd7ZhVum/sGdRCC24+kBwh1hrdm6ZHysuaS0YrfJ6IYDqzbJ+ibxSmcpNDdru92igxr/6AzOSlNpkFm8tkBBOg9NJKNTKERVa2N4OjFpgACF7qU2uKy6fE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
+ by CY8PR12MB7538.namprd12.prod.outlook.com (2603:10b6:930:95::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
+ 2024 14:42:25 +0000
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52]) by BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52%7]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
+ 14:42:25 +0000
+Message-ID: <943ca570-0ea8-fa86-0d3a-38b3e8e96ab7@amd.com>
+Date: Mon, 24 Jun 2024 09:42:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 0/7] Provide support for RMPREAD and a segmented RMP
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+References: <cover.1719239831.git.thomas.lendacky@amd.com>
+In-Reply-To: <cover.1719239831.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0153.namprd13.prod.outlook.com
+ (2603:10b6:806:28::8) To BL1PR12MB5732.namprd12.prod.outlook.com
+ (2603:10b6:208:387::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Znl6dfM_qbH3hIvH@fedora>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|CY8PR12MB7538:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ce5ced7-4111-46c3-bbd3-08dc945bdd1a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|1800799021|366013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Mzl2S3NISjFBdStnYUM2MzlmVXcwNXMvejIrUEwrU05tbE4rZ1VWVSthSkhY?=
+ =?utf-8?B?WnllN2tNRWprZGhxK01zSWMyWnBuY2dNeUdPWVE1c1lmMWFhV0RJR0RFcllq?=
+ =?utf-8?B?enR5bDVUZHBOL3lnQSs4aUtYamxYUkY0S0o2YlRqaUJkc2tVeEJGZ3VTeDhR?=
+ =?utf-8?B?eHM4QUM0SXp4R1l2TGxGRUdTMUZ6d2VldDBLYmJ5OWYvWWJTMS9QZmc4ckR0?=
+ =?utf-8?B?ZE50M0RHR21RUVcwZG1lU2ljbUwzUjdVcy9MNmZQREJyYjFxWTBjaGxGQnNY?=
+ =?utf-8?B?a1BUUjFWZ2tlVTRJMC9uRjlVa2ZibFEvN1lJSmZZS0laSGZva3BvNTBiNThn?=
+ =?utf-8?B?YWpvK0pTMHNWeW9ZTkoyZHhORy8vQjd2Q0pOQThTSERFUjhTRmtqQ0JlaU9Z?=
+ =?utf-8?B?Z3dSc3RYeHlmeVl5Z050N3Y2bkYrZnBPKzVyN1EybmJGVVkwVGs1Z1ptcEhP?=
+ =?utf-8?B?VkhzdjU1SllVbm5PZEdIUCthME0rVUZXbWZNWkh0U0lSVVlGdHRrTnlVZXZV?=
+ =?utf-8?B?ZVRheWZIbnJ1VjJPc1hQUnU1YzVjRUgrZE80WmE2bE1ENmRPQ01JSFZVbS8v?=
+ =?utf-8?B?QmMzYnFEMnVseVlhYmxLRWNIbmlzK3lCdGRsRDh1RXJIYk1aYjNmQ0FETUtL?=
+ =?utf-8?B?a2ppTldKV1VaUzVuWDdxcmdVWTR1UDJGcHl3VGFKeSthdTQ2R0lRUVlZK3Rk?=
+ =?utf-8?B?RmExaGZuLzlnckJxa0VtUzlYWUxkTDNRQko5RXNsRWc2NzdPV095cFh2R0JJ?=
+ =?utf-8?B?Ni9TaVQydU5YOEozNnBqSVNvaDE1Y0dzTG45MXVUWDRFOUZTemVnQVRKNHRQ?=
+ =?utf-8?B?b1ZONm1mVzhST3pPUlNTM09GYVpOUWp1cFpCZWFkczNsSnJUM0NvSjl3RUZR?=
+ =?utf-8?B?QkxPMTZwSzlwZE9MeE1UbU92ZkYvdWhuYUZ3aXZ5SUttRlBxaHJVZkM0T2dz?=
+ =?utf-8?B?dWUrWjlXV0kxYWdjVlhkRHFnT09aZ2RJV0UwdWxXU1YzWUhoZEJrV2ZIVUpM?=
+ =?utf-8?B?ZDBhajRVWjVyVXpRVUxocER2WHhDem1MdldMMloxR3ZGc2dZNllOREx3amo4?=
+ =?utf-8?B?cFA4UHNsSDV5VzRva3diNEppa3hRVUQySnQyTHJYTzQ2dFlwYU5mcmVVOTc5?=
+ =?utf-8?B?SGlOME5yTW9LVDNFZ2ZIeGhibm82UEdDRVpud1VPQU9JeDNlQzdSMTlsOVZm?=
+ =?utf-8?B?alNGbm5HcHJLbTlqNHQrUDBFVzlrMW1sWXRiUThiVG9FcTAwSG01dVYvUTRD?=
+ =?utf-8?B?ZHZ2ZU9odVhlNEhxWTlNTmdqUzFqMmphSXF4NWMxaDZ4M09Eck9nMkZCUW9j?=
+ =?utf-8?B?cklKVDB2RTRBSStUYVNuNU9QRkhQVzFyWHZ4czRjem1SNXdFSWdicGllK1I1?=
+ =?utf-8?B?NXgxRUd3WGFNMnpEZ05uNkw2cUovbGJIQk4wUlZ4QnN6RElvK1MrUjZnVmNm?=
+ =?utf-8?B?V1JKcTZLRGFjcnZ4SWdpTi9sOExjdExrOWg4RjFwWjJVN2lhQlRWVC8wckFJ?=
+ =?utf-8?B?VTZVMHg4cXV5MG81eUFPakMwbzNSbnBGYUtZbzJFb2k4SHlnTHRiWU5qcXUx?=
+ =?utf-8?B?UStMUi9DWCt1ZnZXR0pIamtnVzZKQmNrcngyTTYvaVJrOU5SVThQbkoyVEpU?=
+ =?utf-8?B?VVMwZ1lDUEZuMUlmYi9qbURNS3IvUGhtYXVZeEt6bTFmOFRWYWNXWTZPZ0dt?=
+ =?utf-8?Q?PWHh5OYrmn4hE5P4QerV?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?LzJycUU1T0VKdDlMQ0c3cFViUFpLQnFCYnkrcWlOTzNDMWF4V0lQU2x3Sm14?=
+ =?utf-8?B?dklRZ3BUb2xDWUh0Z1JuK1F1Tkh2WTllM3kyQjQxZlUwZnJLZmFpK2ZpbzJ3?=
+ =?utf-8?B?VEFXTjZ4WUR4RDYvckYrWGpFQzBVT25mbFQ5YlRIWkFiL2srQXZhUGFMOUZj?=
+ =?utf-8?B?bE02N1BiNGxVeE83ZmhPaC9QOEdPTkd3VGNFbnFxaWFCb1gvTkc4Wno5Wi9Q?=
+ =?utf-8?B?RW9JN2pXaW9HK3U5a05vM0IwOXFQb1I0TFRKUVpsVW1sWEVVdzA0MXgyaTlD?=
+ =?utf-8?B?ZWlmUitrM2l6THAwc3IrUjFQcGNscTJiMzhJN2JJNDZISEhJaHVvVmhyY1l5?=
+ =?utf-8?B?QisyWFVELzl5bkZTOVFwVnFXT1QrWG9IVlBVL1FzK1lMZjhQRnlFeTFFSHpD?=
+ =?utf-8?B?bjM1MjAxSFMvcEFTc3NHVXJaeGM0dEhMQWNRb3NvZFkxUmxzU0EySmJCMGZV?=
+ =?utf-8?B?cjRlcG5sVmdVRXRDaXR0MGVXWnZKU1dsRnBYUk1sQ2NZYjNtQnBtTzVPVWFu?=
+ =?utf-8?B?RVpYQlQvNEhlZmlOdTZSaHJHckpkZ1U5dC9DNVMzUHdZWUxmb2N3Y1VpRTFa?=
+ =?utf-8?B?SENzNFI1RGxscW93M1NmZzZRdi85OXk2R0g2d1FTekJ0dms1MlJTZTQ1aVBL?=
+ =?utf-8?B?Nk9LVlAvV25UaEFwZkhoRkYvWjlpZkt2NzNSeHY5RnJueXE3alBmYWNUa3hk?=
+ =?utf-8?B?ZkplWHdqeGpETllvckV4c3liNjJTRi9pZVkwckV0RXFteXl6dU95ZTNqL2ds?=
+ =?utf-8?B?L2swTnNML1Q2bk1HTVl3ZVF3YWlxNkxqczVJQ3R2OGwxRENvcURJby84YmVU?=
+ =?utf-8?B?T1BGZU9mdHZGU1g3SW5wRk4rNCs4bnBEL0NwRUFQYm5FenkwRE8rclY4emZ3?=
+ =?utf-8?B?Y0xkZ3E1UHM5K1I3Uis3eHRmNUJ1M3N6NlRZejFMdVVQTHRrV3VrQWNaeEdq?=
+ =?utf-8?B?SGI2M095T0gxTGh2V2trQWFsSDNzQ0RvNy9WRXNIUVZVcGpIQU16MnRPUXdp?=
+ =?utf-8?B?WkR3bWJNaVFoNCtZZytWZ3JUMmFhNXRtT3BlVkI2VDd6TTdVbytjVE1FNEZo?=
+ =?utf-8?B?ZXBBQ244bzhSdFRWRlA0cStyR2h6SS9WWWx6WmxwaWlXYTcveGF3UUZKSnln?=
+ =?utf-8?B?dVMvc3NvZVBDZDErUHdMNGNKNVFKQ3VGNkV0Yk9jdktteGJTd3BDRlVPdy84?=
+ =?utf-8?B?SXA2ZUdtcXpxSzhEblNrcW90VHBXaytzUnBDR3YyS2l4NHBiRE1ERWhPbExR?=
+ =?utf-8?B?T1YzQXk0K09SQWtoV3hzamI3aUx5aENQR01QYk8zVWUyVHdnTEx1Y0RGYmZq?=
+ =?utf-8?B?TjQwaGgzNEw1cFV6UEpUbGNmTENBV3FQL3ZxQVZGUkNWT0cwOFhWZXBrSW9w?=
+ =?utf-8?B?Q0g3emFiMXhwdHNMVkxmRndCeHhOMC9FZXQ3RzZmRG9BamlmVVQxMG9MYXB5?=
+ =?utf-8?B?cHpyTVF3T0VhV1RtdlNEaGNycG9RSkxJSGY0WjlWMUlKdWZQSW9HaEJVOWE0?=
+ =?utf-8?B?TmwzTHQxYVhtS3hNVm9QVnVFaWpSbnZVdnlWNXQ3K2NJUXVKeTUzdlY1eXhP?=
+ =?utf-8?B?R0IwZUZSVTVkSXFTK2lQc05nbGNySnhnZU5kVVlIMnVLVW9GVWNiYmxsYnJG?=
+ =?utf-8?B?eHpTRlZ5VnFvTHZyekQ5enk4a3RRa1g5cEluaEhEdTZFNmp0ZHRZTTVsMEZN?=
+ =?utf-8?B?aUFqMkdCaisxQzgwOEI5M0VGaFdIODAyd3BHVHZabUJGZ3poWEE0Qm5ES3Fp?=
+ =?utf-8?B?cnU1clhQazZnUnYvYzZtKzc4MkxzUU1paUhXekRWM2hoOENvQUlLUmFsNnRQ?=
+ =?utf-8?B?a3Y2YzVsOTk5SnZiNGMvTGtrQ2xjTjdqOWxBcWZ0dEdXcTVFcUZ4dHEwaWg4?=
+ =?utf-8?B?bVlJMU5FRERoZ1ZNc2hVSytyY2JvRy9lQU85NVllclFKbGI2bURXMmp6M05m?=
+ =?utf-8?B?WnYwNWRWc1FEa1g4eHN6WnFpZUJSWE9OaW56a3diOXpMMy8xZGUwZWZLWTZC?=
+ =?utf-8?B?ZjQ1Y2ZBczRHUi9ZalpBL1JXMzJsK1VEbUFHZGxEaUV2dWR4aEhyamo2MThE?=
+ =?utf-8?B?VHJSd2h6akQrSE1OQmpXWTU0NHY1RWFYZ0owbTJzUDV3NUlTSWRNdHY4bXYw?=
+ =?utf-8?Q?/RISUGGRFULR9IJcOQkP7pJii?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ce5ced7-4111-46c3-bbd3-08dc945bdd1a
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 14:42:25.3686
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nZlM1RZzjHcefJQ0ADKnDFLAkYRDg36FAJ38ZeC3VgPEZ1FwtRMHMUBpdc7k5Hdf/e4H1OC+TxQrpZYtlwmbJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7538
 
-On Mon, Jun 24, 2024 at 09:53:57AM -0400, Audra Mitchell wrote:
-> On Fri, Jun 21, 2024 at 05:27:43PM -0400, Peter Xu wrote:
-> > On Fri, Jun 21, 2024 at 02:12:24PM -0400, Audra Mitchell wrote:
-> > > If CONFIG_PTE_MARKER_UFFD_WP is disabled, then testing with test_uffdio_up
-> > 
-> > Here you're talking about pte markers, then..
-> > 
-> > > enables calling uffdio_regsiter with the flag UFFDIO_REGISTER_MODE_WP. The
-> > > kernel ensures in vma_can_userfault() that if CONFIG_PTE_MARKER_UFFD_WP
-> > > is disabled, only allow the VM_UFFD_WP on anonymous vmas.
-> > > 
-> > > Signed-off-by: Audra Mitchell <audra@redhat.com>
-> > > ---
-> > >  tools/testing/selftests/mm/uffd-stress.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/tools/testing/selftests/mm/uffd-stress.c b/tools/testing/selftests/mm/uffd-stress.c
-> > > index b9b6d858eab8..2601c9dfadd6 100644
-> > > --- a/tools/testing/selftests/mm/uffd-stress.c
-> > > +++ b/tools/testing/selftests/mm/uffd-stress.c
-> > > @@ -419,6 +419,9 @@ static void parse_test_type_arg(const char *raw_type)
-> > >  	test_uffdio_wp = test_uffdio_wp &&
-> > >  		(features & UFFD_FEATURE_PAGEFAULT_FLAG_WP);
-> > >  
-> > > +	if (test_type != TEST_ANON && !(features & UFFD_FEATURE_WP_UNPOPULATED))
-> > > +		test_uffdio_wp = false;
-> > 
-> > ... here you're checking against wp_unpopulated.  I'm slightly confused.
-> > 
-> > Are you running this test over shmem/hugetlb when the WP feature isn't
-> > supported?
-> >
-> > I'm wondering whether you're looking for UFFD_FEATURE_WP_HUGETLBFS_SHMEM
-> > instead.
+On 6/24/24 09:37, Tom Lendacky wrote:
+> This series adds SEV-SNP support for a new instruction to read an RMP
+> entry and for a segmented RMP table.
 > 
-> I can confirm, its all really confusing... So in userfaultfd_api, we disable
-> three features if CONFIG_PTE_MARKER_UFFD_WP is not enabled- including 
-> UFFD_FEATURE_WP_UNPOPULATED:
 > 
-> #ifndef CONFIG_PTE_MARKER_UFFD_WP
->         uffdio_api.features &= ~UFFD_FEATURE_WP_HUGETLBFS_SHMEM;
->         uffdio_api.features &= ~UFFD_FEATURE_WP_UNPOPULATED;
->         uffdio_api.features &= ~UFFD_FEATURE_WP_ASYNC;
-> #endif
+> The series is based off of and tested against the tip tree:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
 > 
-> If you run the userfaultfd selftests with the run_vmtests script we get
-> several failures stemming from trying to call uffdio_regsiter with the flag 
-> UFFDIO_REGISTER_MODE_WP. However, the kernel ensures in vma_can_userfault() 
-> that if CONFIG_PTE_MARKER_UFFD_WP is disabled, only allow the VM_UFFD_WP -
-> which is set when you pass the UFFDIO_REGISTER_MODE_WP flag - on 
-> anonymous vmas.
-> 
-> In parse_test_type_arg() I added the features check against 
-> UFFD_FEATURE_WP_UNPOPULATED as it seemed the most well know feature/flag. I'm 
-> more than happy to take any suggestions and adapt them if you have any! 
+>   aedd5b6d65f7 ("Merge branch into tip/master: 'x86/percpu'")
 
-There're documents for these features in the headers:
+Forgot to update this before sending... the patches are actually based on:
 
-	 * UFFD_FEATURE_WP_HUGETLBFS_SHMEM indicates that userfaultfd
-	 * write-protection mode is supported on both shmem and hugetlbfs.
-	 *
-	 * UFFD_FEATURE_WP_UNPOPULATED indicates that userfaultfd
-	 * write-protection mode will always apply to unpopulated pages
-	 * (i.e. empty ptes).  This will be the default behavior for shmem
-	 * & hugetlbfs, so this flag only affects anonymous memory behavior
-	 * when userfault write-protection mode is registered.
-
-While in this context ("test_type != TEST_ANON") IIUC the accurate feature
-to check is UFFD_FEATURE_WP_HUGETLBFS_SHMEM.
-
-In most kernels they should behave the same indeed, but note that since
-UNPOPULATED was introduced later than shmem/hugetlb support, it means on
-some kernel the result of checking these two features will be different.
+    2846f42562f8 ("Merge branch into tip/master: 'x86/sev'")
 
 Thanks,
+Tom
 
--- 
-Peter Xu
-
+> 
+> ---
+> 
+> Tom Lendacky (7):
+>   x86/sev: Prepare for using the RMPREAD instruction to access the RMP
+>   x86/sev: Add support for the RMPREAD instruction
+>   x86/sev: Require the RMPREAD instruction after Fam19h
+>   x86/sev: Move the SNP probe routine out of the way
+>   x86/sev: Map only the RMP table entries instead of the full RMP range
+>   x86/sev: Treat the contiguous RMP table as a single RMP segment
+>   x86/sev: Add full support for a segmented RMP table
+> 
+>  arch/x86/include/asm/cpufeatures.h |   2 +
+>  arch/x86/include/asm/msr-index.h   |   9 +-
+>  arch/x86/kernel/cpu/amd.c          |   3 +-
+>  arch/x86/virt/svm/sev.c            | 633 ++++++++++++++++++++++++-----
+>  4 files changed, 549 insertions(+), 98 deletions(-)
+> 
