@@ -1,174 +1,175 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2112.outbound.protection.outlook.com [40.107.117.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B08E4AECE;
-	Mon, 24 Jun 2024 08:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217464; cv=fail; b=I6f/nEegv40kX8QCqeZd9D7TV+CCAGealjkW/ID0tYyrshqkXAkWjrsGcmSGW0EyOZmPY2JjPn9mnOsp0GpqR8nqWsMMaj4gfoUP9G5xpg004mTmGW11pjYhV2ZmdlYoz6jcNskRQ/yYoHl8VzhuQ8QEWpMBluK/i/iRXnBKQ5A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217464; c=relaxed/simple;
-	bh=zCaJ/XpOaJn7Eb4L5mVmG0pEaANRjFksDhUP1yLCRvw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PxyGY+ASgrw8C++hlAaX404A1+aJ9Zz69HEFy2UNgPV2WUrd54YnIept88cRUD9zooQnWg1+6oeavax6vySmsXgiUPTg1Y7RrDAVE+GgOnwNDM301Mf0XQPbTCCY8rTiNYQnMZInEYYTVKMyBU88M7shw15TsexHkafqx+x0Y2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.117.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gn7YPeYUK5E4t1gT9XcA5PoygykNZTDqj6EMGj0ZnkAaRIKFnnzqNY1ar19G2IYHCCnercmdy8V8PgPbHO2uZEX65HSLMrREm3oLs8TbR1J5ArpkzlVJ0jgk6T4ilMkxrelnXcaYE7AmIhh8PbGaRO5irucMXphVklgcSUj13oHaKmVpU/Tlpky1S9HnAT1xro9WxW9krm7D4iA6fZtEjyMjjMH2YX+wYjAxsSnh9kaRXvW0TOIJnKT3QbH4Xow3wVtYV9F28mFGxr77H2c2Yt25DHUFC1IgT95xYzH2M7Emr+qS7LiwCZwcbD5NSP5BUgAUw0OAdymuAptEM6P6pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O9trhTuPRCq9gQO7cQvzRswHrFojwncCECe2MITkmqU=;
- b=GSZSUSDVPK6Si7cMQ4hcBMoX67nz2BQaaNSUpc8ajH5CXPo5tQay+ugRpirqHnhB4mHd9deqijOKaDpigZuXH5Rp71tNSEstRUUCf3H/UyZz6/zrt+ys2YFTXuBR/1cl7WWRekGM+fW8opGq5uloshEpWvatgQ1Aa2mhsNaZX0Gc598fwhZ3EBfScpBczadN6Pu1n/mgdQl8qPQirKTWZVhx9kBD6K4QeNjYohbcp4qmOdrIqc2u/dv23qe6gF853WGuf0eHBYxBwH3OXKwPNMx5K27RPzh2uHmqEFHJb/eIvuksBucyuUd5gAEKwhvYcu/FPTZkMhMqyUxUVIpUhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
- dkim=pass header.d=wesion.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wesion.com;
-Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
- by OSQPR03MB8600.apcprd03.prod.outlook.com (2603:1096:604:290::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Mon, 24 Jun
- 2024 08:24:21 +0000
-Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
- ([fe80::78dd:5e68:1a9c:36c0]) by TYZPR03MB7001.apcprd03.prod.outlook.com
- ([fe80::78dd:5e68:1a9c:36c0%6]) with mapi id 15.20.7698.024; Mon, 24 Jun 2024
- 08:24:21 +0000
-From: Jacobe Zang <jacobe.zang@wesion.com>
-To: arend.vanspriel@broadcom.com
-Cc: kvalo@kernel.org,
-	duoming@zju.edu.cn,
-	bhelgaas@google.com,
-	minipli@grsecurity.net,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	megi@xff.cz,
-	robh@kernel.org,
-	efectn@protonmail.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	nick@khadas.com,
-	jagan@edgeble.ai,
-	dsimic@manjaro.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jacobe Zang <jacobe.zang@wesion.com>
-Subject: [PATCH v2 5/5] dt-bindings: net: wireless: brcm4329-fmac: add pci14e4,449d
-Date: Mon, 24 Jun 2024 16:19:06 +0800
-Message-Id: <20240624081906.1399447-6-jacobe.zang@wesion.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240624081906.1399447-1-jacobe.zang@wesion.com>
-References: <20240624081906.1399447-1-jacobe.zang@wesion.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0054.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::13) To TYZPR03MB7001.apcprd03.prod.outlook.com
- (2603:1096:400:26a::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC264AECE
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719217498; cv=none; b=UUcJVmC1jNvK1r/tv2oQsEbA7QfuvB71kKnMTOogFitLiqgGDNGL4IKS3A0uIM8KmDZp411TQzD3Rs2kzqDbGmjLJVK75ggtvvvwdxKQIl1/XjBU/Y18rhFgZ9TXzURKXbPNds3occlEKWpGF9FycYUTAi7etas3YQcCBLV9gOA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719217498; c=relaxed/simple;
+	bh=gDacbADE2SAmVHz0VzwJCGPbVzzt3W6DAEZWHfwk23E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SoNvVQnaHnVzYgF0iDm4q1jMHnZT7upNfO/fy7rbGODDiPMakcCdiAG0ZrZSiUkVPMWQH4Kanw3UFM57kRPFljViZu0o+HZNmVZa7Vi0bKgkGxyBL3/EqdcawNKacs3s6VRmfyY2j4s4cKuwStmLaL94MQeLWO8h2ivcjsHXd1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PSjCgbe5; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PSjCgbe5"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42111cf2706so5115445e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719217495; x=1719822295; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eHo51wuTRWiZIUYTemkhy4Fril3hMcATqvGkIagVwG8=;
+        b=PSjCgbe5yjz480PPzbxGmp8Jtyjoac9Pa/KyMQLmgii24PWKgwCMEn7QIc1HPhrhwJ
+         EDHXU21TR1mm75uJZ0TXsk/s+gPPZLyIQPrn7WowdOc5A72lnThflt/6ZYvgarP9eyCz
+         KDgGLKMD8aEHfIvtFKPCldsPaDQOjHrdsSfjgTyOL4Zhv3obbWRNfwQvpSrDZfqYgL/X
+         HN8GlDZmGFo9TsHvXMoonZTkGnOo361RzIWvTElJ98KIVOBEt5QnhgUFfrt/K0VnbHfk
+         3T5LiaQNc2WiSigK8oz3wgNRpzaCJQP0n6uKbDsoo5XTRX9iMxrltwDNqQILePIY0IQ3
+         vCAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719217495; x=1719822295;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eHo51wuTRWiZIUYTemkhy4Fril3hMcATqvGkIagVwG8=;
+        b=iVMO20kuX0KGeTdeOX/cT6kX4IaxO0tPt8b03dR9liYZSddfuIX2OJPg/0KY8jqOzH
+         LqcCV3fjXbJ8cZYjt+DVnpOoEdG8KIFK3YEDeuu1/4TQ9crGYWBHRk+SRXRzmDLpd+h6
+         vfCFLjnbbHEag7+Etusi2IV10gBRd4AgV8gGsCUPfnef5p+1hBwzhFYq6YFudvZsPaSi
+         lhuYf1YHWkDcQ9HOK6kLUt//HuKb/xE5Ou3UnkNTOyKXHB9LTlO9HnocajfW/AYX6fQU
+         oyDtVCXeBYLeBf65XagL+9yADHJSuZKEhnFWnytofb1RLwUtVfgpQ/QIXGj2E4GrsQi7
+         GkpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKMUfGlCxPiWM/PSZU29ldIV8qLPndkIZ+7a4xRVcD4jeFdnzE5lgSHze5eedQW/8XpZXF2Ol1StG+BwJXl3pfNCGPCoIMu+5wSPGz
+X-Gm-Message-State: AOJu0YzNzj2x03CUOvb/iMaE7Z45uxSCkDbanwoKFJYmZO13/VTTU04K
+	vBBZe5LpC3l183kmgiE6EoPBBjx6RaOmqhZ3Ak3pGoOwfB/xzdGULDkls9cgdBA=
+X-Google-Smtp-Source: AGHT+IHaJqmXxJcpAch8t7UdkOLrlv66b+VvjpHMvaM58a6QzEHIYabq9XOGzMv9in4jtgUGn43mVw==
+X-Received: by 2002:a05:600c:3b11:b0:424:8810:78b5 with SMTP id 5b1f17b1804b1-42488107bb0mr40633265e9.0.1719217494632;
+        Mon, 24 Jun 2024 01:24:54 -0700 (PDT)
+Received: from [192.168.61.172] ([37.166.182.152])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247101a955sm175619005e9.0.2024.06.24.01.24.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 01:24:54 -0700 (PDT)
+Message-ID: <c59a8897-34a1-4dc3-b68b-35dddf55c937@rivosinc.com>
+Date: Mon, 24 Jun 2024 10:24:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB7001:EE_|OSQPR03MB8600:EE_
-X-MS-Office365-Filtering-Correlation-Id: 946c6577-dc06-465d-b7c3-08dc94270c8c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|366013|52116011|7416011|376011|1800799021|38350700011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vBz2ntisGOAWjirzlr5/y2QXpRZsROKRE8hBkOFgn4Ieh7UmWmI+KWaWcqTR?=
- =?us-ascii?Q?ZMv5Ao+0XFuH2nWqfmEW6JdpEq5wQPFEI0q9ylvU0yMTNUjVdNUH/+WMV9H4?=
- =?us-ascii?Q?w0Na7VkCQBkY1m2vdw2Bwh8vgUxxDS/VRqV5cx9p8oCghO9Z81OHOsxBRCIr?=
- =?us-ascii?Q?njS5IXFf9SjAyGNyrMiMPU4oWsPOLnx8pcjT4pZ+e3pch7HI9YyAitHFsXD2?=
- =?us-ascii?Q?Z9yDCXScSrqfkrj+zrVr5kf3l9+Q7g3aybHol0k0nSVACmu+sFnZLPqGYHD2?=
- =?us-ascii?Q?0DIOR2MXG56epZHpGWdOkHFkVhTc/1b8fNIt7fM76TtOsxG3QvfcBUfDwcxk?=
- =?us-ascii?Q?pKX5Is+du84u2iAW4O5S+OjOxd7oN8r5NaE9qF0e5HrGQ8JFkW2wT0y90BQa?=
- =?us-ascii?Q?4/NfFEc/mD6qBy4Yx/r1mBEQSEj5iERFXynQoX1ZQ17iE62SdkePlGV8Pc4J?=
- =?us-ascii?Q?FicYODfBKJ4JhW7dJYfq/btR3p20veG4HVFEJEtc78Obx/lrv6miGOHYRN5d?=
- =?us-ascii?Q?nuSyV0KnZTridbwKlW9wdP0BSeqmOjG4VaKCyrBzbqPzMN9tloFjGqTxm6Hu?=
- =?us-ascii?Q?O3jb21rQaJCeWdgxWk6GFF81ar0FYH+6LpSbUb2RBO19uhqfr79v3q1YL3Ey?=
- =?us-ascii?Q?zO+d8Ch4MBr0xE8WUaUuya5noDh3laA/ZFH/rWI12kDya/fjaT9KWOdCRN1j?=
- =?us-ascii?Q?tJloafh0DZccBzllN/Z8TERttVi5dhrXSynTslnHNGhRazh+WoiLDswOwTy/?=
- =?us-ascii?Q?+VSvWfsmlUjQu2iZ5F6OfGVZTHKDp61EhWZTNuL24kzfNULTI4WBKdZcst13?=
- =?us-ascii?Q?unrkV+2sFNNQ4JYUYByrKJOB/gpfMpSGebMMRPpT+q9ooUhmsgw6IDEnFIsT?=
- =?us-ascii?Q?aRcUeThJGpBBH97Ugec5tnmL95oc5xkoz0zfuRWLlHBCi/1TujgsJK2w72HP?=
- =?us-ascii?Q?0bHVNCWu4JJJrGZzxG4/qVmOZNGLDlhRDnnc+BMO4uqA9pikyE6/vbRpY7/e?=
- =?us-ascii?Q?O/7Ik4EztYSKYZpGyZiS99dP8u6mfu43Rz/Udl54h3OpZIMXsC11tJucmczU?=
- =?us-ascii?Q?Pw9mCS6Ukfz1LWOPvtDTG5uJImGQsqbiizC+uY/r9kVuFSVi/XkDARBZQIcA?=
- =?us-ascii?Q?zS3ceKY4YbcFGonZJTHIC++wiQ4BUqj4ib6a4gqBSIWs185K247bjUBi+Vna?=
- =?us-ascii?Q?qxNWiP0oXBGF+xtrWnlWBCkg/VTT+qEANwtJhuPzGPCCjjcAUiabqsJvFYNL?=
- =?us-ascii?Q?K/ofOY0QLOxP0m9qwZwcytMYhLxJnvobRoMGzUOvwZO3HUAzDmz5ry2WQ1nz?=
- =?us-ascii?Q?y6d1dYM7lq9X+oWdySjJQ/ymtxpTY69vyzweiQ3vvH4hAk/0uNpBesfWKVif?=
- =?us-ascii?Q?pVvdRL0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(52116011)(7416011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DPjrPaSn8WrhMjXngdzN/DoSff4XjSsfQJWEalvES8Le3fqsAabMjatzhtY1?=
- =?us-ascii?Q?XpnL4qU4r93D6CX9vlsH7fsLOKVXq+ILOo3RtI3JLOygAkj0q69iO7FhRaZj?=
- =?us-ascii?Q?cRzEfaUQEpFuLDhIHXOYzg1d9NQV5Fs4GrK4jDPMjdT6U5SMY+J0aLZoBQkx?=
- =?us-ascii?Q?YFxGun6dTTyR7KWfsqh6BuLr3oCrYm+hgU6iFBvp/x8zGLabpVKXHPmQRBJB?=
- =?us-ascii?Q?hooBkvv2bPl9Z90g9M6VEQUI8Hvs0yTNmvDjX12X4B3DEV5gTK2A1ue13boJ?=
- =?us-ascii?Q?T09HyouV8ue7q0NfBMNFxvgOPDxw/iksZGFQVcmUhP0bP/c/omrGlwMvkqja?=
- =?us-ascii?Q?GlMcTx7B46IYgreSKLXNJPMQNhQcSr+TPj4VBeT5gyhXbAKfJkHbnpBfc2qW?=
- =?us-ascii?Q?mPM9d3RvdCiaYDhfX6nxBN8i3PIa7Np3PtjpnYB/NOWBmtxcJor9fbODpJUD?=
- =?us-ascii?Q?wuOWeGixT4DDAJyC9DKq+z/f21v8RsVodeByaM3BzN7Km8yIBlG9AbSSaKvX?=
- =?us-ascii?Q?vyDw/VN1iwuhmczsnW3Ei+b7KqhABGlc+lr/HIaBfBmXg4oOhd4IaQ3xIqtA?=
- =?us-ascii?Q?JrysK76hORWpKI9alSsf39sfJJlpVTF0v7RQRtrcv9QMqtXB2nwkQhz/XEa2?=
- =?us-ascii?Q?K5w4pkEGNxOLg7zrGPSBXW2xTQCItqPUvcoqDTL8UDUOvQB81rJF/hvqVsRC?=
- =?us-ascii?Q?zayaCUbq3prIU8np7tYWXnOkK5UMs+ee6C6lhn2g2+M48wxTWsdt0DPNp4/H?=
- =?us-ascii?Q?cxW/o7xYrfOLkPN6VkY2Hw2FRmMUZOghk7PEpN886LrRAjlawdsSr5QwH351?=
- =?us-ascii?Q?0zT1j92hQ5b8wSZWRD7m4yEvLoPUngGUYyUlkJpHdzxCxaZ7hUHvxAf8n1C7?=
- =?us-ascii?Q?AKea0v2DkHUGvUBzYU293KYS+JKlOGjF5OTrQBEE/qbSllRr+otf91HF2j6K?=
- =?us-ascii?Q?OUxBwYOjUDqSMNz5pbseys6AUVCcV2dxB+Ta3PKkCnqyKlqcvbcdXQ8vRXXQ?=
- =?us-ascii?Q?tBnmHuus8HeFcptNkr4MKNVXqb4ppATgwTD3M0KgraYQ0yc4gK7pRps/9bLd?=
- =?us-ascii?Q?hb22Emv9c88sUfC8jpuL2KJq0RbZOdfnKsiPD+AQxgeDZmI+v2f8qYCfvZFE?=
- =?us-ascii?Q?OwbUazeIf6a5XELlGcpWMn9B/7ieFOAqqIHjNDFsHgr33qwf235Vg7KkI13+?=
- =?us-ascii?Q?cGALVv3c23v//bp9cjALosUVtcBVr9H9e5XKJQK6Bs94eX9jlM42EbpXSMX8?=
- =?us-ascii?Q?/bSOmlGJ3cYCgEiKi/HmAgx3MiQ0g/yJZeQ0d6mletN+p2LOJDV2svHGlb8K?=
- =?us-ascii?Q?AnYRGLYW3I41NZcNzhPFX3tYTsw5SAdMvEG/4NyoXUO5lYzK/WR0Qo2uC+wW?=
- =?us-ascii?Q?uLXzWWPK8xQx4PPVmw7TqiyPXGqZqG11/DxMuBX+uYFdvWsTuHVTBSiepWAW?=
- =?us-ascii?Q?r8inrlbjjf+QmD4IRmfJ47W+3svaSs9lBfNyu/ac2+Y8nVU7QV+LqvXezPp1?=
- =?us-ascii?Q?Lcc+im0wOiN0H7eGYZxdArAf3o99ibO4Z2EKyeGrM0J1ZPkqRnuuKTjh9aW3?=
- =?us-ascii?Q?akgkmSGBZcYGi8flXA9iwHMdnD5XicSC2X6hMHcb?=
-X-OriginatorOrg: wesion.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 946c6577-dc06-465d-b7c3-08dc94270c8c
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 08:24:21.6847
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4Fo32Xp3omB9d/iP4xiFLiuA1Fs8jxRdncDGfe7T02oxqU/yd3kV8HjLIgcMwI7/pyFcqDyuIZ3d2SSpU9my9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR03MB8600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 08/16] riscv: add ISA parsing for Zca, Zcf, Zcd and Zcb
+To: Conor Dooley <conor@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
+ Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org,
+ Conor Dooley <conor.dooley@microchip.com>
+References: <20240619113529.676940-1-cleger@rivosinc.com>
+ <20240619113529.676940-9-cleger@rivosinc.com>
+ <20240623-cornbread-preteen-4ec287aa165c@spud>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20240623-cornbread-preteen-4ec287aa165c@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-AP6275P Wi-Fi module connected via the PCIe interface.
 
-Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
----
- .../devicetree/bindings/net/wireless/brcm,bcm4329-fmac.yaml      | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm4329-fmac.yaml b/Documentation/devicetree/bindings/net/wireless/brcm,bcm4329-fmac.yaml
-index b9e39a62c3b32..fd22ade92210c 100644
---- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm4329-fmac.yaml
-+++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm4329-fmac.yaml
-@@ -53,6 +53,7 @@ properties:
-           - pci14e4,4488  # BCM4377
-           - pci14e4,4425  # BCM4378
-           - pci14e4,4433  # BCM4387
-+          - pci14e4,449d  # BCM4329
- 
-   reg:
-     description: SDIO function number for the device (for most cases
--- 
-2.34.1
+On 23/06/2024 17:42, Conor Dooley wrote:
+> On Wed, Jun 19, 2024 at 01:35:18PM +0200, Clément Léger wrote:
+>> The Zc* standard extension for code reduction introduces new extensions.
+>> This patch adds support for Zca, Zcf, Zcd and Zcb. Zce, Zcmt and Zcmp
+>> are left out of this patch since they are targeting microcontrollers/
+>> embedded CPUs instead of application processors.
+>>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>> ---
+>>  arch/riscv/include/asm/hwcap.h |  4 +++
+>>  arch/riscv/kernel/cpufeature.c | 55 +++++++++++++++++++++++++++++++++-
+>>  2 files changed, 58 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+>> index 18859277843a..b12ae3f2141c 100644
+>> --- a/arch/riscv/include/asm/hwcap.h
+>> +++ b/arch/riscv/include/asm/hwcap.h
+>> @@ -87,6 +87,10 @@
+>>  #define RISCV_ISA_EXT_ZVE64F		78
+>>  #define RISCV_ISA_EXT_ZVE64D		79
+>>  #define RISCV_ISA_EXT_ZIMOP		80
+>> +#define RISCV_ISA_EXT_ZCA		81
+>> +#define RISCV_ISA_EXT_ZCB		82
+>> +#define RISCV_ISA_EXT_ZCD		83
+>> +#define RISCV_ISA_EXT_ZCF		84
+>>  
+>>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+>>  
+>> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+>> index a3af976f36c9..aa631fe49b7c 100644
+>> --- a/arch/riscv/kernel/cpufeature.c
+>> +++ b/arch/riscv/kernel/cpufeature.c
+>> @@ -111,6 +111,9 @@ static int riscv_ext_zicboz_validate(const struct riscv_isa_ext_data *data,
+>>  
+>>  #define __RISCV_ISA_EXT_DATA(_name, _id) _RISCV_ISA_EXT_DATA(_name, _id, NULL, 0, NULL)
+>>  
+>> +#define __RISCV_ISA_EXT_DATA_VALIDATE(_name, _id, _validate) \
+>> +			_RISCV_ISA_EXT_DATA(_name, _id, NULL, 0, _validate)
+>> +
+>>  /* Used to declare pure "lasso" extension (Zk for instance) */
+>>  #define __RISCV_ISA_EXT_BUNDLE(_name, _bundled_exts) \
+>>  	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, \
+>> @@ -122,6 +125,37 @@ static int riscv_ext_zicboz_validate(const struct riscv_isa_ext_data *data,
+>>  #define __RISCV_ISA_EXT_SUPERSET_VALIDATE(_name, _id, _sub_exts, _validate) \
+>>  	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), _validate)
+>>  
+>> +static int riscv_ext_zca_depends(const struct riscv_isa_ext_data *data,
+> 
+> It's super minor, but my OCD doesn't like this being called "depends"
+> when the others are all called "validate".
 
+Ok, let's make a deal. You review patch 14/16 and I'll make the machine
+part of you happy and call this function validate ;)
+
+Thanks,
+
+Clément
+
+> 
+>> +				 const unsigned long *isa_bitmap)
+>> +{
+>> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZCA))
+>> +		return 0;
+>> +
+>> +	return -EPROBE_DEFER;
+>> +}
+>> +static int riscv_ext_zcd_validate(const struct riscv_isa_ext_data *data,
+>> +				  const unsigned long *isa_bitmap)
+>> +{
+>> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZCA) &&
+>> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_d))
+>> +		return 0;
+>> +
+>> +	return -EPROBE_DEFER;
+>> +}
+>> +
+>> +static int riscv_ext_zcf_validate(const struct riscv_isa_ext_data *data,
+>> +				  const unsigned long *isa_bitmap)
+>> +{
+>> +	if (IS_ENABLED(CONFIG_64BIT))
+>> +		return -EINVAL;
+>> +
+>> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZCA) &&
+>> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_f))
+>> +		return 0;
+>> +
+>> +	return -EPROBE_DEFER;
+>> +}
