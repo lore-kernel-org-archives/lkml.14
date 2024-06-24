@@ -1,51 +1,45 @@
 Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C1A1361;
-	Mon, 24 Jun 2024 00:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016E810E9;
+	Mon, 24 Jun 2024 00:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719189493; cv=none; b=DPI6SJrde9ckXWl+oCnhWy6RI5Y222/hUAsyBiVVQ1uVL6AF8dNRi4HgflsK+matW7U8IvlK65gMD6Q4MYE9i8pk/kTC5SUQfMnmIHxTVdcFUB2v/YV42LTsKdWsZ6GjdEjavG8gHbc468ZkVTJLLzHJJIWUemdS2KLY9yIARgo=
+	t=1719190361; cv=none; b=e4d7tGeFCQvjkK7BFr3zBzv1LEvT8MOAXH1J3ojrui4sIfVR1XjhDvDEqS1NDCkD0u2xVx3oT1pBvVmUrXmaGVx17abVy9CTmydj8tXKaH8THCrMjYRpUMArjWyGhd0IIpS/2qr29WqsbgOt4jl2XhklkKPud+fbSl+fGVCGCzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719189493; c=relaxed/simple;
-	bh=DKEYpgz0d3KtkghyncW6fFCgulDpzB03f6swFpdnWE8=;
+	s=arc-20240116; t=1719190361; c=relaxed/simple;
+	bh=xFnTlCEXYNUtSI9aate1sM51RDE4KwtaTjPN+GQK0Qw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YhFpPb7K+FMpO0p39GQ1vl38CGZKgc3O0ymEUO2H/GQfq6rMDBl7lOixwsEJW8yJg/FMbiOuYYc3alkYngCfZa8fSvatPquc2uI5A5WZVlgf42jtlLM+f17xMje8RhN6lYE+IE52W4HRD2jA+eff6Dvqa7RzaBW4sat+3hJ7sTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=ikWtRn7y; arc=none smtp.client-ip=203.29.241.158
+	 Content-Type:MIME-Version; b=REfrY+6Xe2iKwir2T+a5t3pt3Wcv0HuXVeefpsiKN1PGyZQxy9I2Urtu4J7IQbj/UM/RwSMGMmhJS0/E7G/uDKHh0ZYGsxjUz0NAHZOxvD8CTVQb9U2/Uq+GKLBSQdLfUbKHCfu7THRv1FUGQRwOhg0X4YNtinbZQ5YwsqcASr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=meGrzdiu; arc=none smtp.client-ip=203.29.241.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="ikWtRn7y"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="meGrzdiu"
 Received: from [192.168.68.112] (ppp118-210-79-194.adl-adc-lon-bras32.tpg.internode.on.net [118.210.79.194])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5D51E2009F;
-	Mon, 24 Jun 2024 08:28:18 +0800 (AWST)
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 8D5012009F;
+	Mon, 24 Jun 2024 08:52:34 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1719188905;
-	bh=DKEYpgz0d3KtkghyncW6fFCgulDpzB03f6swFpdnWE8=;
+	d=codeconstruct.com.au; s=2022a; t=1719190357;
+	bh=NQqL7DsqxZzghaWKR/8rkG8Pl+N6DaWnsqVc3zJk2M0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ikWtRn7yN7Ise0vcKddcWtskvinN6xOYIvvgomBM0u3faQxCrY2BhN/6QG9cQYymI
-	 Alg6XDXdF2cal8IZz2T3NcoiHNf1jq3vV1eVaC1NPkmOm9MiFlD3FUqHrVKnIW+4rR
-	 tt/OZguADkA/5xfiWttYJ0l7RdJUTW0Zn4iyEFUoVwfEz3Zgi6f4xmaWoXv+lvkosu
-	 rz69u2eveZL7rzRWySQh9cW3dHe2Srdfv4eOslqM2tuMZ8dCX1i/Zh87NvBxgPLchk
-	 B1V0Gs9X5DvSkmbXBkaNMBlUTlOQtxETkNCbGsqMrTpUXEUFUJ6pgGyTZ0/TsNLdNc
-	 WAT3bpeO9l2Jw==
-Message-ID: <b522733009008a22dd8975a92ad6d0b1c038c452.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 01/10] iio: adc: aspeed_adc: use
- devm_regulator_get_enable_read_voltage()
+	b=meGrzdiu/WAEEFAf5g1Gp251Pa8oZo7y56P+pBNGGYEQSlGxKyJJzf4Ft5MxIPlTL
+	 56x9n73PsCInkrlWhxqfVp80Zstmo8KnP5PhseWejB7r9NUrgWxP4wFLm9d5j7fFNm
+	 ZFIq+PeRz/h4T8C5QhdglMBfj6Hp9W2+on0+14vfcItCCLGOTIAHiPF1pA3JKfKmWW
+	 0bwI5xL0INEg+H+mV/YGGS3Em/HWBF/ZKylB9YkjHp5GJLWpxlt+INFsk8ttNzvbnt
+	 2XSdB1LCrcEC2+yLkX3bhU08x6JZ1TqMrdv+62TALyj+TmzAKNfvENO0vx/kiZWB0A
+	 P+qptu4/hC2XQ==
+Message-ID: <f31f59cc4381a41c57b94d10560ec2a7356f8868.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] usb: gadget: aspeed_udc: validate endpoint index for
+ ast udc
 From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>
-Cc: Joel Stanley <joel@jms.id.au>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Andreas Klinger <ak@it-klinger.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  linux-iio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 24 Jun 2024 09:58:17 +0930
-In-Reply-To: <20240621-iio-regulator-refactor-round-2-v1-1-49e50cd0b99a@baylibre.com>
-References: 
-	<20240621-iio-regulator-refactor-round-2-v1-0-49e50cd0b99a@baylibre.com>
-	 <20240621-iio-regulator-refactor-round-2-v1-1-49e50cd0b99a@baylibre.com>
+To: Ma Ke <make24@iscas.ac.cn>, neal_liu@aspeedtech.com, 
+	gregkh@linuxfoundation.org, joel@jms.id.au
+Cc: linux-aspeed@lists.ozlabs.org, linux-usb@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Mon, 24 Jun 2024 10:22:34 +0930
+In-Reply-To: <20240622095618.1890093-1-make24@iscas.ac.cn>
+References: <20240622095618.1890093-1-make24@iscas.ac.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.4-2 
@@ -56,16 +50,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-06-21 at 17:11 -0500, David Lechner wrote:
-> This makes use of the devm_regulator_get_enable_read_voltage() helper
-> function to simplify the code.
+On Sat, 2024-06-22 at 17:56 +0800, Ma Ke wrote:
+> We should verify the bound of the array to assure that host
+> may not manipulate the index to point past endpoint array.
 >=20
-> The error return is moved closer to the function call to make it easier
-> to follow the logic. And a few blank lines are added for readability.
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>  drivers/usb/gadget/udc/aspeed_udc.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> diff --git a/drivers/usb/gadget/udc/aspeed_udc.c b/drivers/usb/gadget/udc=
+/aspeed_udc.c
+> index 3916c8e2ba01..95060592c231 100644
+> --- a/drivers/usb/gadget/udc/aspeed_udc.c
+> +++ b/drivers/usb/gadget/udc/aspeed_udc.c
+> @@ -1009,6 +1009,8 @@ static void ast_udc_getstatus(struct ast_udc_dev *u=
+dc)
+>  		break;
+>  	case USB_RECIP_ENDPOINT:
+>  		epnum =3D crq.wIndex & USB_ENDPOINT_NUMBER_MASK;
+> +		if (epnum >=3D USB_MAX_ENDPOINTS)
 
-Nice cleanup!
+Shouldn't this be `epnum >=3D AST_UDC_NUM_ENDPOINTS`? Further,
+USB_MAX_ENDPOINTS doesn't appear to be defined here?
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+What steps did you take to test this patch?
 
+Andrew
