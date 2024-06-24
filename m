@@ -1,121 +1,106 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840B45007
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5480C61FD0
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217278; cv=none; b=H/Dw4rwwdBmTrbX/tgqD1J/UozvEbA53hf+sU058qUN2i77F7vHy7N1hBfCNrCpqQMjNq1i+lho902yLM4Jv6ojlnXksj2indg6GS7HIJtc3pUDIOWrzjuFkFY3Q8Lwk7vTg4vLxY0lX1fWgeTlpCCsxq9AWvS0CkeUK9uJ8L7w=
+	t=1719217284; cv=none; b=K4pLG43AoX4nw630TPdnNViMFFTmUCoK11cdViqLP4KG+rGkrAYp8BZMyjC274BHswMyk31OOPBs5e05TSFhe2eLEUSjRnfikLXCjv62Emze0H8pQgJwZkz1aEBizEyPdkXGg30QBaQkky2u1tkcEQMZtWT2nzGEqdbJK+BI8/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217278; c=relaxed/simple;
-	bh=aXKsAl6poCZsD5YEtZcnymdeghAP24SIm0L6smSVRsQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=b+Dv0KEOblV7UluMb3CfeO+0d1r7YB8/B6U1gWqCMUIoYgEnD/JmRggJUIDtCSJ+/7LRwtGYBPNho5eHeS31NUBU6wOh7ZmW1W7ZAsSa+7cZjmQZ5rtnjXadoBQ8PXrKTAa9d5ahliOOVcwM/XSLZyN/2fJ3+bF6WfQd6so7Hkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mSQ+Giru; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mSQ+Giru"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52ce12707d9so1153719e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719217275; x=1719822075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S5VAOdkKdhcM8gT/1OHnhyjoCTyfpHHr5f/6gNRJOW8=;
-        b=mSQ+GiruqG0KUAy+6L4fSe/37lEFtrHEieaR03ZlWXYWgluxWp0kIQmQnCx9X6JoKx
-         8hFCXX/QURUZdMgwoiKMeKyivNLqOxfb643IvadBfY7SAVyjir5ez6dopfOtowe6doYE
-         deIi97WLNW6xO8SWveJVgUrY+AiUrTB9HdAG/efzISmGS59wHokLkPPD2YJrXc+Kevwr
-         hQtHTF+q96sN6RhCzH10VR4JjxMn8EW4OtypgpnMiPWrqhuSu6Mvgq4Yo6PzSWXS9Lsf
-         LxEQYzznyfe8rJsRzGGfPhrFaoJyuvCI7dlpqO+CNc2SQtSaMSGAFUqapr7ult75vQCZ
-         voOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719217275; x=1719822075;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S5VAOdkKdhcM8gT/1OHnhyjoCTyfpHHr5f/6gNRJOW8=;
-        b=nrr98WsZ8is+iOHcLkqGmKl6p5JZXXYyjyJIEVidiBlPXz4QHFP+y+pReSckuePUh6
-         ELBQcGIt4rCpdbkYzgbUB0QHuW9zFLC6mzZkLRfGwj//Yzx6Er/KDHQYx1rOcz/CbYQd
-         tXtm/AJksWnhoYrx8c6Lt771X1TXzwoDLJn/OOP2EZrp9osnJ/XwAj8R+xEeYY3gb/Yz
-         lH3T3tHV3OdQKQtJtuaoczqWDXUK8PyGC1ZmTfE9ZEW2z8H40T3Exh1jSXjiJn4WyU8H
-         4upi6u8Tn9rBxd9wO8TxOEHMuCEcmUMDO8mA+mnbXCTSK+PJMW1eJ4PB6HT+52voW4E0
-         I49A==
-X-Forwarded-Encrypted: i=1; AJvYcCUdSFKYHRk+92BuYeFTMb6zNtgFdtQQOpVgY3mTfwsv2hMIt0iVYmpbpw61+H1PivFn8OcBqijMht0g8zzMP1+lfJBHV0NYC1ONA5V8
-X-Gm-Message-State: AOJu0Yw4ERCnKFARbyJzenfudmtsIqLGBpIDajgdGW/YDRjatHErRmfj
-	lLYS07jD8YUZlIPmbp6mRx4aP3M3HdfV3sxY0QpnPO0f+qZw4faFgmGen8XTTEw=
-X-Google-Smtp-Source: AGHT+IFOM1tvmn28vCqfxsQmam8sAFtMLs0nKzQtQ0TNetL1dlK2e9z8H40izII7f+ZCOzp5EYKRJw==
-X-Received: by 2002:ac2:5617:0:b0:52c:b606:2b2 with SMTP id 2adb3069b0e04-52ce0673b84mr2508868e87.46.1719217274315;
-        Mon, 24 Jun 2024 01:21:14 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4248179d8e0sm132450205e9.3.2024.06.24.01.21.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 01:21:13 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Kevin Hilman <khilman@baylibre.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Christian Hewitt <christianshewitt@gmail.com>
-Cc: Emanuel Strobel <emanuel.strobel@yahoo.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240622140112.2609534-1-christianshewitt@gmail.com>
-References: <20240622140112.2609534-1-christianshewitt@gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add dream vendor prefix
-Message-Id: <171921727347.3499124.419809659570327061.b4-ty@linaro.org>
-Date: Mon, 24 Jun 2024 10:21:13 +0200
+	s=arc-20240116; t=1719217284; c=relaxed/simple;
+	bh=1Y4MD7O0Sn0caasI14iYSMxVj1Tw9koFFeMIeFBIh30=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d5AlTG1qRtKayqfZpygwgRZnDmZ5NCkevot/FFsTHTf/D0V++nMyXNu9yn3+BdFfhbvMGfelneKHIiwYkK0ceGr6gIsr8A7u5IZTd7J8H1hvNpox2k5XRokYBrEQ6kQXUAM2cnR4m1xrlDdLqlY6gF0ejLXmxunnXPCRveqT6jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 45O8LHvj021702
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 16:21:17 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 45O8KokQ018801;
+	Mon, 24 Jun 2024 16:20:50 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4W714q6z6qz2SwTfL;
+	Mon, 24 Jun 2024 16:16:11 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Mon, 24 Jun 2024 16:20:47 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
+        <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+        <qyousef@layalina.io>
+CC: <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <bristot@redhat.com>, <vschneid@redhat.com>,
+        <christian.loehle@arm.com>, <vincent.donnefort@arm.com>,
+        <ke.wang@unisoc.com>, <di.shen@unisoc.com>, <xuewen.yan94@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH V2 1/2] sched/fair: Prevent cpu_busy_time from exceeding actual_cpu_capacity
+Date: Mon, 24 Jun 2024 16:20:10 +0800
+Message-ID: <20240624082011.4990-2-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240624082011.4990-1-xuewen.yan@unisoc.com>
+References: <20240624082011.4990-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 45O8KokQ018801
 
-Hi,
+Commit 3e8c6c9aac42 ("sched/fair: Remove task_util from effective utilization in feec()")
+changed the PD's util from per-CPU to per-PD capping. But because
+the effective_cpu_util() would return a util which maybe bigger
+than the actual_cpu_capacity, this could cause the pd_busy_time
+calculation errors.
+So clamp the cpu_busy_time with the eenv->cpu_cap, which is
+the actual_cpu_capacity.
 
-On Sat, 22 Jun 2024 14:01:10 +0000, Christian Hewitt wrote:
-> Add a vendor prefix for Dream Property GmbH
-> 
-> 
+Fixes: 3e8c6c9aac42 ("sched/fair: Remove task_util from effective utilization in feec()")
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Tested-by: Christian Loehle <christian.loehle@arm.com>
+---
+V2:
+- change commit message.
+- remove the eenv->pd_cap capping in eenv_pd_busy_time(). (Dietmar)
+- add Tested-by.
+---
+ kernel/sched/fair.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
-
-[1/3] dt-bindings: add dream vendor prefix
-      https://git.kernel.org/amlogic/c/4132d13bfcdb3551b0d1a6a74e2063351b4bfcaa
-[2/3] dt-bindings: arm: amlogic: add support for Dreambox One/Two
-      https://git.kernel.org/amlogic/c/96cf7ca12bdcd44fcfdca74e56389c40ae47a7b1
-[3/3] arm64: dts: meson: add initial support for Dreambox One/Two
-      https://git.kernel.org/amlogic/c/83a6f4c62cb12aa902043fc1910fdbe483193f3c
-
-These changes has been applied on the intermediate git tree [1].
-
-The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 8a5b1ae0aa55..5ca6396ef0b7 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7864,16 +7864,17 @@ static inline void eenv_pd_busy_time(struct energy_env *eenv,
+ 				     struct cpumask *pd_cpus,
+ 				     struct task_struct *p)
+ {
+-	unsigned long busy_time = 0;
+ 	int cpu;
+ 
++	eenv->pd_busy_time = 0;
++
+ 	for_each_cpu(cpu, pd_cpus) {
+ 		unsigned long util = cpu_util(cpu, p, -1, 0);
+ 
+-		busy_time += effective_cpu_util(cpu, util, NULL, NULL);
++		util = effective_cpu_util(cpu, util, NULL, NULL);
++		util = min(eenv->cpu_cap, util);
++		eenv->pd_busy_time += util;
+ 	}
+-
+-	eenv->pd_busy_time = min(eenv->pd_cap, busy_time);
+ }
+ 
+ /*
 -- 
-Neil
+2.25.1
 
