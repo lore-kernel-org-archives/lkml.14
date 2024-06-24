@@ -1,109 +1,75 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D00319F460;
-	Mon, 24 Jun 2024 17:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A686A17BD8
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251165; cv=none; b=MMOhrKmXugZh3mHgoyRT6Vt6Dwk5uDnAdfivksF0fjLeHppIIS+ExXJsl8ASvQTiV2gzrv3BEz9gyRZjQ96TCQhllSkRxzjyRFEv+1LVjyASUPoH20A8yXws+AzaiKS9iylEgYABe5/x6zFVw4h34cdyxC1pMiVf/6dNMGao/0g=
+	t=1719251187; cv=none; b=ROBKRrALBy/kNcHI077EjeIn1LtNbcmQRXnX37ahDadNfNTTuCVGQMOKC8aGiW0YZd24Sz6rizafBQ2a6gzUl52aUAU/nyWElAKcDnkZuxltretqKuJ3BiSETaoaNJ9ubTFFJ+5i5j1uW2n1uPRxGJMUB1rJDyuiMqu7XkrNhUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251165; c=relaxed/simple;
-	bh=wnlrNGQMlnKCxKZZnq/IoYFHt1i1ApodOFEfFtEwzfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqA1BNI6b+Nfz0MzT2UBITWE5RWKPORUd+saXLaY5ZmlWOESI/Z0UDsxUpHe4RPP6wZLkyLKcKm2XDJK2li+1jkNNeDiP+FS6lW4oiXXpVNq5qcSdgxBcgLq360vrzCEBrp3GfVegXNycGC8HK+zI5X4r4Up7dPYiGF/XSyaH3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jvgWuTqF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1719251187; c=relaxed/simple;
+	bh=KJGCsFmhkqnxn3llCnTfuFfWP450qdCXSSwJxcawRIY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ing2pZpDlAhdJfB3l+Flz0zc96Hq1UJKQplz7PM1oHAPvKSWqjdhTbsS8rhFPY6Z7AxdZKFqxzf6JFnJ4byQRBtSpldgiNgBrRBKDonAcsZlv9GftZxTfvjMsjzTFnQ+5QLgRMvdSPUUCkWpo2Ugol4GHW5WEkX4RaVl90QJFEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ddbnn60w; arc=none smtp.client-ip=91.218.175.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jvgWuTqF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 935CC40E021A;
-	Mon, 24 Jun 2024 17:45:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Bo3Cj6EJxago; Mon, 24 Jun 2024 17:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719251155; bh=A0FFsYhCpP+dP8qHNI+qcpY3a4kmsg7NF0TjBowZK7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jvgWuTqFvY7DjYES3a6Zf3ZF36tLbjE9NPe9k+mJbSYNSOBYLFsdIP52otr/3cYCx
-	 wFvrinVOx3Ilr2BO9JK3a4y9/faHvtKdRS2bZ6jLaa21Is1b3yW/5drp7jci9o/YnK
-	 mguqzUX4QMtA4RsYIcs1gSux4I04qmiFme4UI4jR7MVh2tvr1GxiXdaGVXiP2QZvI+
-	 WK0NuMbRGYPi/SmfNJoU3X89V568QC/DEF+b9EepCGUtpxMFb7alzO63LzHreMjAfu
-	 WwxXZ0YJof2QdxZxmayEezgVne6WVZgN/UERWm5nBfpKybeTb1RKd8860+OS85zbGi
-	 e2RP+rq22uPvA6FwCshntsPU4tF/QQnt9RfOBfrs6PgJBd7E4db+rvlmFVwyGEWzOZ
-	 U+reCMjqcLv5Ut0AkJ65hkemyhQYKZ7BwOgtlTWk/1Upl2UBlnsXCMIuyzktj51+kX
-	 kHAmSeT4ib1VtbuAUXYelm3m8ThyUGfNlJYDjDa6CvmHlPwXvE24O+uWHF26OkdnRi
-	 HDKTmFTj6YabZr6uZ6egaOurRcWqmdF559PJn1creKmAnHopvGr56pSkxN1nqpJnTL
-	 bPmsfDBis9Ljh87jEXs9+WXs6Z50gIAr52JQQc21OkT34FW+ab9QVzkEfeijpO/zfZ
-	 hARq6BQlb+svA1tluOQP5LNg=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8F54F40E01D6;
-	Mon, 24 Jun 2024 17:45:45 +0000 (UTC)
-Date: Mon, 24 Jun 2024 19:45:38 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: rafael@kernel.org, viresh.kumar@linaro.org, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v2 1/2] x86/cpufeatures: Add HWP highest perf change
- feature flag
-Message-ID: <20240624174538.GGZnmwwt3K_J-FtpJA@fat_crate.local>
-References: <20240624161109.1427640-1-srinivas.pandruvada@linux.intel.com>
- <20240624161109.1427640-2-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ddbnn60w"
+X-Envelope-To: jic23@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719251183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qRmcQBFuWsPTqKpm4FXHlkVwKO5dFEa8B7NhZYqTzuQ=;
+	b=ddbnn60wckERqVd4VGyRRJrrKZfBhlCvFjLkdROpByRmeTigXeF/9c4dKbLOkcOAdC65DU
+	vyltokkbZwTGs2t6x/DEzdPLHO+GVWy+96tsk4uVlStaRHnoSzQ//e7iucRLjxE9meKBj9
+	cXkB2Pfg2FxAsKlNCtr4l6vQHWX0YN8=
+X-Envelope-To: jdelvare@suse.com
+X-Envelope-To: linux@roeck-us.net
+X-Envelope-To: linux-iio@vger.kernel.org
+X-Envelope-To: linux-hwmon@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: lars@metafoo.de
+X-Envelope-To: sean.anderson@linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	linux-iio@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH v2 0/2] hwmon: iio: Add labels
+Date: Mon, 24 Jun 2024 13:45:59 -0400
+Message-Id: <20240624174601.1527244-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240624161109.1427640-2-srinivas.pandruvada@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 24, 2024 at 09:11:08AM -0700, Srinivas Pandruvada wrote:
-> When CPUID[6].EAX[15] is set to 1, this CPU supports notification for
-> HWP (Hardware P-states) highest performance change.
-> 
-> Add a feature flag to check if the CPU supports HWP highest performance
-> change.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v2:
-> - Prevent display in /proc/cpuinfo flags as suggested by Borris
-> 
->  arch/x86/include/asm/cpufeatures.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 3c7434329661..4cf929c457bb 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -361,6 +361,7 @@
->  #define X86_FEATURE_HWP_ACT_WINDOW	(14*32+ 9) /* HWP Activity Window */
->  #define X86_FEATURE_HWP_EPP		(14*32+10) /* HWP Energy Perf. Preference */
->  #define X86_FEATURE_HWP_PKG_REQ		(14*32+11) /* HWP Package Level Request */
-> +#define X86_FEATURE_HWP_HIGHEST_PERF_CHANGE (14*32+15) /* "" HWP Highest perf change */
+Add support for using IIO channel labels for HWMON labels.
 
-Yeah, in the meantime I made it even simpler:
+Changes in v2:
+- Check if the label exists before creating the attribute
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/cpu&id=78ce84b9e0a54a0c91a7449f321c1f852c0cd3fc
+Sean Anderson (2):
+  iio: Add iio_read_channel_label to inkern API
+  hwmon: iio: Add labels from IIO channels
 
-so in case you have to send your patch again, you can drop the "" too.
-
-New flags are not exposed in /proc/cpuinfo by default after the above change.
-
-Thx.
+ drivers/hwmon/iio_hwmon.c       | 45 +++++++++++++++++++++++++++++----
+ drivers/iio/iio_core.h          |  4 +++
+ drivers/iio/industrialio-core.c | 23 ++++++++++-------
+ drivers/iio/inkern.c            |  6 +++++
+ include/linux/iio/consumer.h    | 10 ++++++++
+ 5 files changed, 74 insertions(+), 14 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.35.1.1320.gc452695387.dirty
 
-https://people.kernel.org/tglx/notes-about-netiquette
