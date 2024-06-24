@@ -1,299 +1,169 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6037F19DF93
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 16:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8E319AA7E;
+	Mon, 24 Jun 2024 16:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246837; cv=none; b=pxkJZpPYmM277uFjLeQTJJe+2zRBAElvfNQ2t4WvXhy6g0SFSS1j2RGzROg/g5IGSt4mQWGUDUJHVOKuxZHAaklzoj6AMokvjjmoS1huoCVjhquuXEBm07Q0YL37T4tquy7PeOVRnRwRFzfyvpLWPK6CxQULJ4kkIqr9E1sfgPs=
+	t=1719246896; cv=none; b=tZXoEkt6p2wMo/zLQuUvml+X5YG9EDjgx8q5Y3QYQwuITfdImoOoHHVN3Fto8jYtMHDjwcnoF9YggPQCYfKmlZPqP9POVENdrWIH9DXK/tYnaIhmrOMGJz/WHQBZjkWB6HlxHl/cNzsEEcRstK2kSrUXqBffiXhY27oKc5RY+vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246837; c=relaxed/simple;
-	bh=ePLTU3MVmoYysngJOsWhUdOR/IkiiLLf0YE6F/whMG8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=B7/cLYqaI0kQZDyzTSW7IIApl+rG2tVFJMpswul9TBP9CbPQW57pk2m+0JfFHdzdYRVy4wQjpDK8+dS+tTvVgBnI//kEpEcrvlAl6nByIGr/8oS3w7ffXaoAiPtSGZkwLqJymFZ5wwJ25ldbr6s6vs+lBE1wQzszSIJJQ5L1jSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BZ1FBJ+d; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719246896; c=relaxed/simple;
+	bh=xcCXb1OAJeu5YbHF3396C+1CaivyqQWq1obgNCA8UfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=duz7sMlDCFXgWHFiCBZXGvtjKw1E9bf9VKC5t8PO7zbPS8MnkPezBTOr+J04NU/4fPzls81nPa0JflQucoabwLP1FcMC9WuA6b5A6eHkegc25VeG5B6qRjR+Phg6M3bEk5oDwS9vuHRDcc1Ns/oB8UAIf8P1i4Vv5iNA/X1D9gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZ69Sbqu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BZ1FBJ+d"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42189d3c7efso49933585e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 09:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719246833; x=1719851633; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wPB8AEXrk7JwEaJcT35joxIm2q6uTszDlsxeaOMhunQ=;
-        b=BZ1FBJ+diHtsu4FKfuuOAYgBEO2Z74kwQcW6bvP2YZU8K5ptRJ7Koi9jU2FJ7mDrIS
-         72IFxi5XSOKnxr8VzXr0UzoxU/qHvpQv9t+P7gjsjNs9bHkIqr8M8JcMKYgIjddY1/2y
-         XooiQfa1kTzEvUAu81pUWpUy5PJJkJxJFHWEikJWzWrcACmoV+cN2yR5ym8NQNOPzTTN
-         2+GF4TbKLUBUb+z31IKolvSFg6PZkfkLBzIF058bc+6LeJKKlsYrH0HqO2mAZ99uiAAC
-         8rcU3Nrv1r7/Pae6V1pEBapiWE/UE/INnBfMvC1LhdDgYjkDKHVO9crsM1mdYnHemM2s
-         ZycQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719246833; x=1719851633;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wPB8AEXrk7JwEaJcT35joxIm2q6uTszDlsxeaOMhunQ=;
-        b=euHCk4x3qzEJPhj6mW3TKdOeHyEl070KE0bXoEkSiNObjDYfZE/Dh0Sc320rJFKo52
-         Nh0IiG7K7p2FHhsmbsj4WW3KD2mPG8YwpRPKE65oHhkCngW0rIHFVBXvI85EwiEn0anb
-         Lysrc585yDT/bzNLcmvaRwpLPqhWn10dlqP/v05ulKx97b66rY7z9yXmOSQLRAfEZGvR
-         GR0F8l0TaJQWDn0k8K38xrEnh1Nt4UjRC+jhgQP2THEJPVSCCMWgD6jvyNqQakpMkWit
-         EkZ3aLVdv/+YEmGb0tf7CnFugBrtASpJylYSxT9jTafF22SwSXcn8AvvnZfUKgYrQ8yC
-         6Liw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/7xd3kiaMXHMpHOOCumV6H+fR9FMJNKru86TcTIGOoinR7y10bZ8bgtKDMPvk/+MK6HucnX0fFmArxHsW2AHrGpGmpKaLMHH1aBvP
-X-Gm-Message-State: AOJu0YzfzZ+qEZmyYi39QAjheGznsoosa4meA4SZgc4ogNsihQX4Gm+f
-	eBPSZtY1D/hQ1gFepKktiuzCX00sSSj/JI0RA0uDmrJ7bvRh5PSFLKKupAu5N8c=
-X-Google-Smtp-Source: AGHT+IH6aHHAbz234y/LW0+FZWOgpjse2wJCMDlHm5Bpni+PpOamfKNE1xxUNOAddUF+INn4Tv6ruw==
-X-Received: by 2002:a05:600c:354f:b0:424:798a:f803 with SMTP id 5b1f17b1804b1-4248cc586f7mr42319465e9.30.1719246833492;
-        Mon, 24 Jun 2024 09:33:53 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0c5179sm177636375e9.26.2024.06.24.09.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 09:33:52 -0700 (PDT)
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Mon, 24 Jun 2024 17:33:41 +0100
-Subject: [PATCH] arm64: dts: qcom: x1e80100-qcp: add audio support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZ69Sbqu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0F1C2BBFC;
+	Mon, 24 Jun 2024 16:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719246895;
+	bh=xcCXb1OAJeu5YbHF3396C+1CaivyqQWq1obgNCA8UfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GZ69SbquEzYZrVfsPLrp2+IFRZ4bxPTRlG3SGbzMQqajqVKv8p3id27UupW5f67HX
+	 G/becUAkHu4ToDjdXErtqKmLRy+ZJerri1e/XrowN9r8W0kKit5Up9EPqOuEg5ojRu
+	 cVOBr3VlGGuvHTRSUWTmFK7nUVXUHhBUeXv+hn4QMtKt6IvD+fUcDuaE53lpgCTFqI
+	 p5h5sA5mTQrJ0RaBhjUU2M+D9LydZQYkgj38Ty3OQtCRh1o1C9v8X+6Q240PGDWiP3
+	 UKLplUXmx3xpoAKSN+ebCYrslsC5indQjIXICtlBb41BAsNQ6fMTLSIe/Vjd3aj4VP
+	 hgDM8xZouAs3A==
+Date: Mon, 24 Jun 2024 17:34:50 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+	"paulburton@kernel.org" <paulburton@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"mail@birger-koblitz.de" <mail@birger-koblitz.de>,
+	"bert@biot.com" <bert@biot.com>,
+	"john@phrozen.org" <john@phrozen.org>,
+	"sander@svanheule.net" <sander@svanheule.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"kabel@kernel.org" <kabel@kernel.org>,
+	"ericwouds@gmail.com" <ericwouds@gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: timer: Add schema for realtek,otto-timer
+Message-ID: <20240624-dining-bullseye-5397d0921701@spud>
+References: <20240621042737.674128-1-chris.packham@alliedtelesis.co.nz>
+ <20240621042737.674128-3-chris.packham@alliedtelesis.co.nz>
+ <20240622-dagger-willpower-8dc828553384@spud>
+ <2ed9ba19-ef0b-481c-b17a-5499cc0664ed@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240624-qcp-audio-v1-1-323a6b5e1fe5@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAOSfeWYC/x2NQQ6CQAxFr0K6tglOihqvYlwMbZEunIGOGhLC3
- R1Yvvz381Yo6qYF7s0Krj8rllOF86kBHmN6KZpUhtAGai+BcOYJ41csowgF4quQdjeofh+LYu8
- x8bg/Zs5vHLJj0uWz75PrYMvRejy37Q9Lq67eewAAAA==
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4810;
- i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
- bh=ePLTU3MVmoYysngJOsWhUdOR/IkiiLLf0YE6F/whMG8=;
- b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmeZ/w0SYAwP1bn1baA4OosqYp1rsFUYRiDgylo
- /pEOKZFvwaJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZnmf8AAKCRB6of1ZxzRV
- N3ehB/4gGk4RmImocaqA2JjLsDWZT0MqnyPqT0cRzlL9rXXJ7kYZjhP9bY/HKzi1JFSuaLBFM4z
- 8BKJgndZ9MUKf0wvkVOA5+B8+jzcwPt1HUv10ANE55KLRL755To/6SASUTTZ/Rkk3zRxJsmm3gA
- ouaTk32WimG3jPD/5sssGAf60qiRdB6STOMes1gicrZEFOoHun/3OVzduH84B3bW2ODCmRR5urV
- GZqvmfBm44A60/nYbi30SWsWgkNxCi8mQHe3oEXdoeYzAo/SAgZePwfhsgeHls7ifoZiKm73JqH
- gmvkONPp3HwU2OEPmGlb26+oEBT3ng1ug1lHNx1Gh9jDOFSW
-X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
- fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="72/0f+nl4k9+kRLS"
+Content-Disposition: inline
+In-Reply-To: <2ed9ba19-ef0b-481c-b17a-5499cc0664ed@alliedtelesis.co.nz>
 
-Add audio support to QCP platform which includes 2 x Speakers
-Headset Mic and Headset support.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 155 ++++++++++++++++++++++++++++++
- 1 file changed, 155 insertions(+)
+--72/0f+nl4k9+kRLS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index b045b7bac9e0..02d30c0ada80 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -19,6 +19,32 @@ aliases {
- 		serial0 = &uart21;
- 	};
- 
-+	wcd938x: audio-codec {
-+		compatible = "qcom,wcd9385-codec";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wcd_default>;
-+
-+		qcom,micbias1-microvolt = <1800000>;
-+		qcom,micbias2-microvolt = <1800000>;
-+		qcom,micbias3-microvolt = <1800000>;
-+		qcom,micbias4-microvolt = <1800000>;
-+		qcom,mbhc-buttons-vthreshold-microvolt = <75000 150000 237000 500000 500000 500000 500000 500000>;
-+		qcom,mbhc-headset-vthreshold-microvolt = <1700000>;
-+		qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
-+		qcom,rx-device = <&wcd_rx>;
-+		qcom,tx-device = <&wcd_tx>;
-+
-+		reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
-+
-+		vdd-buck-supply = <&vreg_l15b_1p8>;
-+		vdd-rxtx-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l15b_1p8>;
-+		vdd-mic-bias-supply = <&vreg_bob1>;
-+
-+		#sound-dai-cells = <1>;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -127,6 +153,66 @@ linux,cma {
- 		};
- 	};
- 
-+	sound {
-+		compatible = "qcom,x1e80100-sndcard";
-+		model = "X1E80100-QCP";
-+		audio-routing = "SpkrLeft IN", "WSA WSA_SPK1 OUT",
-+				"SpkrRight IN", "WSA WSA_SPK2 OUT",
-+				"IN1_HPHL", "HPHL_OUT",
-+				"IN2_HPHR", "HPHR_OUT",
-+				"AMIC2", "MIC BIAS2",
-+				"TX SWR_INPUT1", "ADC2_OUTPUT";
-+
-+		wcd-playback-dai-link {
-+			link-name = "WCD Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&wcd938x 0>, <&swr1 0>, <&lpass_rxmacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wcd-capture-dai-link {
-+			link-name = "WCD Capture";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai TX_CODEC_DMA_TX_3>;
-+			};
-+
-+			codec {
-+				sound-dai = <&wcd938x 1>, <&swr2 1>, <&lpass_txmacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wsa-dai-link {
-+			link-name = "WSA Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&left_spkr>, <&right_spkr>,
-+					    <&swr0 0>, <&lpass_wsamacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+	};
-+
- 	vph_pwr: vph-pwr-regulator {
- 		compatible = "regulator-fixed";
- 
-@@ -520,6 +606,16 @@ vreg_l3j_0p8: ldo3 {
- 	};
- };
- 
-+&lpass_tlmm {
-+	spkr_01_sd_n_active: spkr-01-sd-n-active-state {
-+		pins = "gpio12";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
- &mdss {
- 	status = "okay";
- };
-@@ -638,6 +734,57 @@ &smb2360_2_eusb2_repeater {
- 	vdd3-supply = <&vreg_l8b_3p0>;
- };
- 
-+&swr0 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&wsa_swr_active>, <&spkr_01_sd_n_active>;
-+	pinctrl-names = "default";
-+
-+	/* WSA8845, Left Speaker */
-+	left_spkr: speaker@0,0 {
-+		compatible = "sdw20217020400";
-+		reg = <0 0>;
-+		#sound-dai-cells = <0>;
-+		reset-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
-+		sound-name-prefix = "SpkrLeft";
-+		vdd-1p8-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l12b_1p2>;
-+	};
-+
-+	/* WSA8845, Right Speaker */
-+	right_spkr: speaker@0,1 {
-+		compatible = "sdw20217020400";
-+		reg = <0 1>;
-+		#sound-dai-cells = <0>;
-+		reset-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
-+		sound-name-prefix = "SpkrRight";
-+		vdd-1p8-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l12b_1p2>;
-+	};
-+};
-+
-+&swr1 {
-+	status = "okay";
-+
-+	/* WCD9385 RX */
-+	wcd_rx: codec@0,4 {
-+		compatible = "sdw20217010d00";
-+		reg = <0 4>;
-+		qcom,rx-port-mapping = <1 2 3 4 5>;
-+	};
-+};
-+
-+&swr2 {
-+	status = "okay";
-+
-+	/* WCD9385 TX */
-+	wcd_tx: codec@0,3 {
-+		compatible = "sdw20217010d00";
-+		reg = <0 3>;
-+		qcom,tx-port-mapping = <2 2 3 4>;
-+	};
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <33 3>, /* Unused */
- 			       <44 4>, /* SPI (TPM) */
-@@ -679,6 +826,14 @@ wake-n-pins {
- 		       bias-pull-up;
- 	       };
- 	};
-+
-+	wcd_default: wcd-reset-n-active-state {
-+		pins = "gpio191";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
- };
- 
- &uart21 {
+On Sun, Jun 23, 2024 at 09:23:55PM +0000, Chris Packham wrote:
+> (resend as plain text)
+>=20
+> On 23/06/24 00:11, Conor Dooley wrote:
+> > On Fri, Jun 21, 2024 at 04:27:33PM +1200, Chris Packham wrote:
+> >> Add the devicetree schema for the realtek,otto-timer present on a numb=
+er
+> >> of Realtek SoCs.
+> >>
+> >> Signed-off-by: Chris Packham<chris.packham@alliedtelesis.co.nz>
+> >> ---
+> >>   .../bindings/timer/realtek,otto-timer.yaml    | 54 +++++++++++++++++=
+++
+> >>   1 file changed, 54 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/timer/realtek,o=
+tto-timer.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/timer/realtek,otto-time=
+r.yaml b/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+> >> new file mode 100644
+> >> index 000000000000..b6e85aadbc99
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+> >> @@ -0,0 +1,54 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id:http://devicetree.org/schemas/timer/realtek,otto-timer.yaml#
+> >> +$schema:http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Realtek Otto SoCs Timer/Counter
+> >> +
+> >> +description:
+> >> +  Realtek SoCs support a number of timers/counters. These are used
+> >> +  as a per CPU clock event generator and an overall CPU clocksource.
+> >> +
+> >> +maintainers:
+> >> +  - Chris Packham<chris.packham@alliedtelesis.co.nz>
+> >> +
+> >> +properties:
+> >> +  $nodename:
+> >> +    pattern: "^timer@[0-9a-f]+$"
+> >> +
+> >> +  compatible:
+> >> +    items:
+> >> +      - enum:
+> >> +          - realtek,rtl930x-timer
+>=20
+> I'll change this to rtl9302
+>=20
+> >> +      - const: realtek,otto-timer
+> >> +  reg:
+> >> +    minItems: 5
+> >> +    maxItems: 5
+> > Since minitems =3D=3D maxitems, can you just make this a list, and defi=
+ne
+> > what they all are? Ditto interrupts.
+>=20
+> This is where more conditions might need to be added. The rtl9302 is a=20
+> single core SoC. So technically it only needs 2 timers (the hardware=20
+> still has 5 but 3 would be unused at the moment). The rtl9312 is a dual=
+=20
+> core SoC so needs 3 timers (I won't be looking at that platform for a=20
+> while). So I think maybe maxItems should stay at 5 but minItems should=20
+> be set based on the compatible.
 
----
-base-commit: 781025f172e19ca5682d7bfc5243e7aa74c4977f
-change-id: 20240624-qcp-audio-dd424c7d4e58
+Sounds good to me.
 
-Best regards,
--- 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > reg:
+> >    items:
+> >      - foo
+> >      - bar
+> >      - baz
+> >
+> > etc.
+>=20
+> I can do. But they'd all be something like cpuN-event. The way the=20
+> driver is written it grabs a timer for each CPU and uses the next one=20
+> for a global timer.
 
+I think it's fine if they all have very simplistic names, their roles
+should be documented somehow.
+
+Cheers,
+Conor.
+
+--72/0f+nl4k9+kRLS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnmgKgAKCRB4tDGHoIJi
+0meqAQC8j5BEwXHy4TeXKS37GL/K4+lldlY8ECFGCT/7scItCAEAiT0zRYX9JJix
+9JKuz3kg+oujYnMFPsUSFvVDAFt7/Qw=
+=Uzax
+-----END PGP SIGNATURE-----
+
+--72/0f+nl4k9+kRLS--
