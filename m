@@ -1,82 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758E113A876;
-	Mon, 24 Jun 2024 13:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5005013D88F
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719235067; cv=none; b=qqUUDl91EC8AEbTBNIzvSV7GFgKmyw8N7MVnVc5s6KfXATHgUjr8bsyOAAEcQ3CBk/iObORgBAUhNGNvib3w3WL6IB38XwNSgE1h0xAOi/eVuiSlvVFqvyUjEGtbm/9lZcyFtVx2d7GU7xL7mShPy5IefyS0QAfKmeNJ5SOdeB8=
+	t=1719235101; cv=none; b=Ic1S9T8z1L8XUIWk1GFgpXNfVR6k8prLeXuw74EeSXL+HKRQRVF1HgCZjmQ0k/ZKfDpngbIoxCrdw8o2Q6wljySlLgfe0WOcpfZ3qtTGtc/qjh+pnBt3nlJbmpc5iF1fyw69iqEYoK9WDI0VdQSceGgy+sphPKcXOUDDHiyfzgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719235067; c=relaxed/simple;
-	bh=x0qE1AbTE2E3Y2ugPMh1v8bbkWrZyWYuZzqqNaawNKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qaapJIucjMx7ZJrqaW/lxiXmyqGBiSKzouP0Z/q6E+69EYcXKVzMp8vUOrFU+QchMyJUdTYS/z4mJRt2rsPVI5IpN5YadtE/UrkYeTIkvKxi+VM3DmCSivr9ycVTuWdmd62kqNy/9MgCcp1yxXqttOTcGEPAa9Rj3Ii6AwFV/nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Jtxjl/lz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Jtxjl/lz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53F6C32781;
-	Mon, 24 Jun 2024 13:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719235066;
-	bh=x0qE1AbTE2E3Y2ugPMh1v8bbkWrZyWYuZzqqNaawNKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jtxjl/lzbjh2ajHo7DZeSnk5oGRUzKwen5oZ7MHu7GoBj41yYpkL5/s8jieKSyRO3
-	 tvHlY3bjlDgyFFDWjv24w+IBc4jq8RKsY90o+glvK0Bbltgn7dfVL3jBd6cHDa7gmN
-	 QCQ3mRyayi81qP6HC9d402qkSbAtii8eguP+EWq8=
-Date: Mon, 24 Jun 2024 15:17:43 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abhinav Jain <jain.abhinav177@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
-Subject: Re: [PATCH] staging: rtl8723bs: Align address to 4-byte boundary
-Message-ID: <2024062408-stash-gluten-ef19@gregkh>
-References: <20240614224256.43131-1-jain.abhinav177@gmail.com>
+	s=arc-20240116; t=1719235101; c=relaxed/simple;
+	bh=4NmMqpXaheoJ2eP+Xne1NUKxoz3niDAQu5BZtNNH2gU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=fN8dRRv3SvoIczuUt5TXyn10ZmDm0oqUsBGwnsnfO2HmJLJJivmb3o1crYTBCseuwv56cvc9fBHubx0D0zWq9bhxM4/kDxEzpgi5lb/bXXqWTMTFdixR5QUlq32yHhg+4hQIKQL+EQRM2L0eQTzJGohpRU1vzGzBvkGdnyqAues=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb7cf84c6cso543063739f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:18:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719235099; x=1719839899;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KUgcIyJliLtvlzg+fJF2Y49udiLnpDYPMvh9V/dPt3c=;
+        b=Vbt0Nz2gPoYRWbEpgHqBhT+zqIKN9ttXr8AtqDyPY7AArkqSeDYjXrRMpjfbZ7b/f+
+         Gyyx6bTim/OwcmJQFm6UPao57Tqh7+ky0NA03INhsrLS8a2uTMCx2M3Q2gnxkkuZVxtt
+         hEhxqw6irmq574vHl+nYWLnTKxMGp+71ZRdnlQcH94ep7am5QjSgNc9pspgmA4CNdCKH
+         7u+dr9sG4LJnmpkz7mBjSKmxiNilgvtTLIuEPt4rdj2NgavRd2mopaG4cQ6SnDl54skv
+         48ITXudnEeOmhd+WK2chUqDz49CTfwM4aZJBBhQKgpGxcRuTssuLpcNIX4NN6b151APa
+         yZIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKn4Sm2vuYGl4xD/yXPHVvIIuORJEu2CgufAEWhQx+mKHWcgOYv3/9hzDSNosuVrL36vWHLdbFj7m5lpCTLJ6TIoLpCV+oOv3ca5DP
+X-Gm-Message-State: AOJu0Yw/MvaTNqnCFE0djWyPi/WnXLBihaEsXG/Um5JVLRjZKg5lqBZu
+	tcXF7UiKVcBOhGGzMrMV9nIXo4cVgZlXvJ8DcyAIl3YXra+nYqBcPc+BliBQep1oynU+7V85oMN
+	iyTM03+dfPhNoai9Xonv/JzpRgkmI03zdon6xToV+turX72pL4kOXSr8=
+X-Google-Smtp-Source: AGHT+IG5jLSdDjyx8Re1F9TQ7Hravqbt2Fa9IJZVZaQE6ZebSOjuqXGqH7cAU2Qnvg1LpnMIVoJI6GgXiazIJVlOzjxJeNO3zgXB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614224256.43131-1-jain.abhinav177@gmail.com>
+X-Received: by 2002:a05:6602:1605:b0:7f3:a80e:8cec with SMTP id
+ ca18e2360f4ac-7f3a80e8da1mr11642639f.0.1719235099486; Mon, 24 Jun 2024
+ 06:18:19 -0700 (PDT)
+Date: Mon, 24 Jun 2024 06:18:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000063fd99061ba29d87@google.com>
+Subject: [syzbot] [nfs?] INFO: task hung in nfsd_nl_version_get_doit
+From: syzbot <syzbot+41bc60511c2884783c27@syzkaller.appspotmail.com>
+To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
+	kolga@netapp.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	neilb@suse.de, syzkaller-bugs@googlegroups.com, tom@talpey.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 14, 2024 at 10:42:56PM +0000, Abhinav Jain wrote:
-> Add address alignment in sdio_local_read, _sdio_local_read &
-> sdio_local_write functions as per the TODO.
+Hello,
 
-How was this tested?
+syzbot found the following issue on:
 
-> 
-> Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/hal/sdio_ops.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> index 107f427ee4aa..caee2d2043b3 100644
-> --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> @@ -478,9 +478,6 @@ void sdio_set_intf_ops(struct adapter *adapter, struct _io_ops *ops)
->  	ops->_write_port = &sdio_write_port;
->  }
->  
-> -/*
-> - * Todo: align address to 4 bytes.
-> - */
->  static s32 _sdio_local_read(
->  	struct adapter *adapter,
->  	u32 addr,
-> @@ -494,6 +491,7 @@ static s32 _sdio_local_read(
->  	u8 *tmpbuf;
->  	u32 n;
->  
-> +	addr = addr & ~3;
+HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a8c3de980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c79815c08cc14227
+dashboard link: https://syzkaller.appspot.com/bug?extid=41bc60511c2884783c27
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Are you sure you are allowed to do this?  Why?  And a comment about what
-you are doing, and why it is required to do so, is needed for this to be
-acceptable.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-thanks,
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9fb20954c51e/disk-2ccbdf43.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/06d78b3cf960/vmlinux-2ccbdf43.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/15e5b0a8df77/bzImage-2ccbdf43.xz
 
-greg k-h
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+41bc60511c2884783c27@syzkaller.appspotmail.com
+
+INFO: task syz-executor.2:26515 blocked for more than 144 seconds.
+      Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor.2  state:D stack:26328 pid:26515 tgid:26509 ppid:26207  flags:0x00000006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x1796/0x49d0 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+ __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
+ nfsd_nl_version_get_doit+0x181/0x780 fs/nfsd/nfsctl.c:1892
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2564
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
+ netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1361
+ netlink_sendmsg+0x8db/0xcb0 net/netlink/af_netlink.c:1905
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:745
+ ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
+ ___sys_sendmsg net/socket.c:2639 [inline]
+ __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7e21a7cea9
+RSP: 002b:00007f7e228320c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f7e21bb4120 RCX: 00007f7e21a7cea9
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 000000000000000c
+RBP: 00007f7e21aebff4 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000006e R14: 00007f7e21bb4120 R15: 00007ffcc0bd6078
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by pool_workqueue_/3:
+1 lock held by khungtaskd/30:
+ #0: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #0: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #0: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
+2 locks held by kworker/u8:6/1098:
+2 locks held by getty/4840:
+ #0: ffff88802abac0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc90002f0e2f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b5/0x1e10 drivers/tty/n_tty.c:2201
+2 locks held by syz-fuzzer/5091:
+3 locks held by kworker/0:0/15508:
+ #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
+ #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
+ #1: ffffc9000429fd00 (free_ipc_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
+ #1: ffffc9000429fd00 (free_ipc_work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
+ #2: ffffffff8e339378 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:323 [inline]
+ #2: ffffffff8e339378 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:939
+2 locks held by kworker/u8:14/18935:
+2 locks held by syz-executor.0/25819:
+ #0: ffffffff8f63b9d0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffffffff8e600748 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_listener_set_doit+0x12d/0x1a90 fs/nfsd/nfsctl.c:1966
+2 locks held by syz-executor.2/26515:
+ #0: ffffffff8f63b9d0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffffffff8e600748 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_version_get_doit+0x181/0x780 fs/nfsd/nfsctl.c:1892
+2 locks held by syz-executor.3/26579:
+ #0: ffffffff8f63b9d0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
+ #1: ffffffff8e600748 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_version_get_doit+0x181/0x780 fs/nfsd/nfsctl.c:1892
+1 lock held by syz-executor.2/28062:
+ #0: ffffffff8e339378 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:291 [inline]
+ #0: ffffffff8e339378 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x381/0x830 kernel/rcu/tree_exp.h:939
+1 lock held by syz-executor.3/28067:
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 30 Comm: khungtaskd Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
+ watchdog+0xfde/0x1020 kernel/hung_task.c:379
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 28056 Comm: syz-executor.0 Not tainted 6.10.0-rc3-syzkaller
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
