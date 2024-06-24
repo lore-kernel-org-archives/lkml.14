@@ -1,173 +1,137 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5E62C184;
-	Mon, 24 Jun 2024 06:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D38A3D96A;
+	Mon, 24 Jun 2024 06:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719210890; cv=none; b=G3JWYx0P3ruIhK1QQ9E2l+pLz6eh4lyjFycxTzk+CabZF4OkccgKn0qhQ2/8XOKw3DO9YcRvsI1mV0bf8jblBDj5HLXMFeBEQKmyvd7+5Nj+sdshLW6w95ujFPg6R1w0nN6OeMhs+iCrznuHWtG2H8X6/IxIuAxTxeYJK3RNyZQ=
+	t=1719210892; cv=none; b=pPeOReXPHfv5d/8lgURLAo+Cv+87is02ktgXdNswgFO4EBSrJoCeH7ntuSTFg68EjHqN/iyHaS+eU3+cuYINLfKNgWsG/gQW2N97HMOS1TiQmrEU14ULU1F7YiuRTRpuw7lad3Z+bXH9yFp2dIA1pz+tdc7336ZW3ns4izyPLiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719210890; c=relaxed/simple;
-	bh=BTTmT845z5VUe2vyJL2WoX9H47GZ9XveVl5s1okWUyE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H+pXnF+t0IfLPFWvqL4hilR4fzKvdrkhvAU59iS1/VjY+osllVP2OVJJmff0Y5s+kjWjJVnexmecF5Q93QcEnMAxdaMz7Ngg0OtBMegCWbSKJsbewMI8fJMpz0pE64QWsPPhW+GmwiHIRE82MnQnJnvOkfBlOnwJDiswXAd5jb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45O6YOBZ02851593, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45O6YOBZ02851593
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 14:34:24 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 24 Jun 2024 14:34:25 +0800
-Received: from RTDOMAIN (172.21.210.106) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 24 Jun
- 2024 14:34:24 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v21 10/13] rtase: Implement ethtool function
-Date: Mon, 24 Jun 2024 14:28:18 +0800
-Message-ID: <20240624062821.6840-11-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240624062821.6840-1-justinlai0215@realtek.com>
-References: <20240624062821.6840-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1719210892; c=relaxed/simple;
+	bh=5wWeGBPlm4+UHCYoNYSsMzwnp/gskQPkm5NlvO8iPyU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m9MIWIYKhSf3EDpCDVhaERrDHPF/L9XTXKLNSCMMZlY785Oj+D2EkqzJtW2cISsLJOI8ITT88qDqqdHezIB0u+NNITzh6bXq+hj6jCjbQJaKMjmPEVDXDnhaYFgw4oAEnrfoyb3i6tfpKEhGss5udtPXtzA1EUHWqNKaYh+vBBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ezu47ZH2; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ezu47ZH2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ezu47ZH2";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ezu47ZH2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F825219DA;
+	Mon, 24 Jun 2024 06:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1719210889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z3WhiZXNQHgFwvVrbBEz4za7o2pwZgL3jItNx6ibiys=;
+	b=ezu47ZH2GWQetljxo8W9EMriwjsho4BU3PlWB+8aiEKMaWvQymGY7PDS3xFAtCHsDSbpt9
+	/jXBzP0ap3MzYlxK12qCi5OC0LxQGKTXa8AG91Y54l2XqwOBZAxFQM3ar3pQgUtSe1buEH
+	3hcjzbmA91gHsacEtnDOCUiwnl/zWfs=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=ezu47ZH2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1719210889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z3WhiZXNQHgFwvVrbBEz4za7o2pwZgL3jItNx6ibiys=;
+	b=ezu47ZH2GWQetljxo8W9EMriwjsho4BU3PlWB+8aiEKMaWvQymGY7PDS3xFAtCHsDSbpt9
+	/jXBzP0ap3MzYlxK12qCi5OC0LxQGKTXa8AG91Y54l2XqwOBZAxFQM3ar3pQgUtSe1buEH
+	3hcjzbmA91gHsacEtnDOCUiwnl/zWfs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EC1DD13AA4;
+	Mon, 24 Jun 2024 06:34:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dGmJN4gTeWZnaQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 24 Jun 2024 06:34:48 +0000
+Message-ID: <988f62b6-642d-404e-ae1e-1c9a428c1eb9@suse.com>
+Date: Mon, 24 Jun 2024 08:34:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xen/manage: Constify struct shutdown_handler
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+References: <ca1e75f66aed43191cf608de6593c7d6db9148f1.1719134768.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <ca1e75f66aed43191cf608de6593c7d6db9148f1.1719134768.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 2F825219DA
+X-Spam-Score: -3.45
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.45 / 50.00];
+	BAYES_HAM(-2.95)[99.80%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MIXED_CHARSET(1.00)[subject];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[wanadoo.fr,kernel.org,epam.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[wanadoo.fr];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.com:dkim];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.com:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-Implement the ethtool function to support users to obtain network card
-information, including obtaining various device settings, Report whether
-physical link is up, Report pause parameters, Set pause parameters,
-Return extended statistics about the device.
+On 23.06.24 11:26, Christophe JAILLET wrote:
+> 'struct shutdown_handler' is not modified in this driver.
+> 
+> Constifying this structure moves some data to a read-only section, so
+> increase overall security.
+> 
+> On a x86_64, with allmodconfig:
+> Before:
+> ======
+>     text	   data	    bss	    dec	    hex	filename
+>     7043	    788	      8	   7839	   1e9f	drivers/xen/manage.o
+> 
+> After:
+> =====
+>     text	   data	    bss	    dec	    hex	filename
+>     7164	    676	      8	   7848	   1ea8	drivers/xen/manage.o
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 5585955e45fe..cbfd54a39e16 100755
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1746,9 +1746,101 @@ static void rtase_get_mac_address(struct net_device *dev)
- 	rtase_rar_set(tp, dev->dev_addr);
- }
- 
-+static void rtase_get_drvinfo(struct net_device *dev,
-+			      struct ethtool_drvinfo *drvinfo)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+
-+	strscpy(drvinfo->driver, KBUILD_MODNAME, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->bus_info, pci_name(tp->pdev), sizeof(drvinfo->bus_info));
-+}
-+
-+static int rtase_get_settings(struct net_device *dev,
-+			      struct ethtool_link_ksettings *cmd)
-+{
-+	u32 supported = SUPPORTED_MII | SUPPORTED_Pause | SUPPORTED_Asym_Pause;
-+
-+	ethtool_convert_legacy_u32_to_link_mode(cmd->link_modes.supported,
-+						supported);
-+	cmd->base.speed = SPEED_5000;
-+	cmd->base.duplex = DUPLEX_FULL;
-+	cmd->base.port = PORT_MII;
-+	cmd->base.autoneg = AUTONEG_DISABLE;
-+
-+	return 0;
-+}
-+
-+static void rtase_get_pauseparam(struct net_device *dev,
-+				 struct ethtool_pauseparam *pause)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u16 value = rtase_r16(tp, RTASE_CPLUS_CMD);
-+
-+	pause->autoneg = AUTONEG_DISABLE;
-+
-+	if ((value & (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN)) ==
-+	    (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN)) {
-+		pause->rx_pause = 1;
-+		pause->tx_pause = 1;
-+	} else if (value & RTASE_FORCE_TXFLOW_EN) {
-+		pause->tx_pause = 1;
-+	} else if (value & RTASE_FORCE_RXFLOW_EN) {
-+		pause->rx_pause = 1;
-+	}
-+}
-+
-+static int rtase_set_pauseparam(struct net_device *dev,
-+				struct ethtool_pauseparam *pause)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u16 value = rtase_r16(tp, RTASE_CPLUS_CMD);
-+
-+	if (pause->autoneg)
-+		return -EOPNOTSUPP;
-+
-+	value &= ~(RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN);
-+
-+	if (pause->tx_pause)
-+		value |= RTASE_FORCE_TXFLOW_EN;
-+
-+	if (pause->rx_pause)
-+		value |= RTASE_FORCE_RXFLOW_EN;
-+
-+	rtase_w16(tp, RTASE_CPLUS_CMD, value);
-+	return 0;
-+}
-+
-+static void rtase_get_eth_mac_stats(struct net_device *dev,
-+				    struct ethtool_eth_mac_stats *stats)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	const struct rtase_counters *counters;
-+
-+	counters = tp->tally_vaddr;
-+
-+	rtase_dump_tally_counter(tp);
-+
-+	stats->FramesTransmittedOK = le64_to_cpu(counters->tx_packets);
-+	stats->FramesReceivedOK = le64_to_cpu(counters->rx_packets);
-+	stats->FramesLostDueToIntMACXmitError =
-+		le64_to_cpu(counters->tx_errors);
-+	stats->BroadcastFramesReceivedOK = le64_to_cpu(counters->rx_broadcast);
-+}
-+
-+static const struct ethtool_ops rtase_ethtool_ops = {
-+	.get_drvinfo = rtase_get_drvinfo,
-+	.get_link = ethtool_op_get_link,
-+	.get_link_ksettings = rtase_get_settings,
-+	.get_pauseparam = rtase_get_pauseparam,
-+	.set_pauseparam = rtase_set_pauseparam,
-+	.get_eth_mac_stats = rtase_get_eth_mac_stats,
-+	.get_ts_info = ethtool_op_get_ts_info,
-+};
-+
- static void rtase_init_netdev_ops(struct net_device *dev)
- {
- 	dev->netdev_ops = &rtase_netdev_ops;
-+	dev->ethtool_ops = &rtase_ethtool_ops;
- }
- 
- static void rtase_reset_interrupt(struct pci_dev *pdev,
--- 
-2.34.1
+
+Juergen
 
