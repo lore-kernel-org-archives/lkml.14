@@ -1,219 +1,121 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C23819D087
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE9B143743;
+	Mon, 24 Jun 2024 15:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719242840; cv=none; b=dfVONcPV75HIDSLJAit+OURdobkkFTZ+wNzK2ZMEJBK+wp9jOcPZyJjD6c4KWI30sF6F62sDpU7uW9osLKGRx1t76QzGyeBpltoJO7rlIFWzTDyEFVeCDkx0L7rmvfrWRr9LY3X/sdq6fGWAccv99hBGgkC1lvCMVqVYgoV3VIE=
+	t=1719242860; cv=none; b=cNQKBtDpM3WOHSIkytAl5y2YFv8h5/WuLAUmZNbX7Bf5XLkJBtJk94Gq9lTdwIDgc6PfNMWPuqjFgdmdFa5fDvRcdHczVKZQbulEtmgm8OS9AoYPFWNPYRwzKXJXLupvob2huyt380u0g855JqgIN1vh4FPHcvsQf2p1XIP2AT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719242840; c=relaxed/simple;
-	bh=tzhoTUjn/DIergVJmRXfSBnxf5kvQx64qSKgWfdacmM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kruqBvNk0jbweznqFPOEuyBIbDLx6YfDNJ0RQT+AnIUdpxRGrxDSoCLdk9/hKeRvZkltFCE8rOXGwlHtoBJGWqgBSzpygCM3VVdf/EycBhkOxfUZP6P+DnW4QbwX3zMu501hjKv6lPW47b1FzLSPVgsPRsf9bF4ySjlF61v7+QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-37492fe22cdso34907065ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:27:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719242838; x=1719847638;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uv9QZyvFNQpJEReELh0/Si6IkTCCXel7hEP3gP0lOkQ=;
-        b=DodyTpykgju8q1doH1/z4JFESgoRfY6Pj87T1icC5FYWzeC5ASsPonN+I/i72Qdwcq
-         0ToGQKmjyEFu6DOPXfuKdktUUdy+7OT8jXQZuLkHY61UEYamEX8nQbYu5rKRvuDRmKVO
-         /t/11HaDSlvZ2YJX53HR1HnMHDF8ttjAvAfVXa2l8y9ba23HWsiB/4LMPH1zp2S8frXk
-         d5ajEgYamjTtF1oZm0SLsmdvpYq0v1JIUQnYhs9C88S0vyBDw/H8AZi52qwtIazy+h1i
-         87Jpz5aWvCq8KeCE0UB99F5SgGa4ruXDX3kezJ0rmdpb6qN42G/grT9CkcAH0mNIwUaI
-         ntVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUs0v8wLcBfYUYp3ZzcH2RLbeecQYJlptM8hrt22QRK+ohnkVnqCzRoAFKtPBMtngLeGB1mzGL8uDyUXsWRu9fYyw0ZeClDUiCxWel+
-X-Gm-Message-State: AOJu0YxVvn50/LbQppFNRURxuBbLtGtU6W3DVOclXLnDImG+kE+zw4t0
-	txDm0SmWCtcXja1ws7rx3KxNgq51GnlKV0fUPBFoEXiJ23Ry9mBtjU5WlEDP7AM6T8BvMojImwB
-	uZgV4FDvthPLiLf72og+ixNTVG/vBs/316ih5vDlUNF5IY6ISngO7XDI=
-X-Google-Smtp-Source: AGHT+IHEFj6JqrLDueAmnhIgvoBTRDCAK+g+ykmP/vctpJEyM0cQhmmCV5CRQCnajRFiwgRwjrYIAxdj3wGOMJKH4MaybYmYQQx1
+	s=arc-20240116; t=1719242860; c=relaxed/simple;
+	bh=R22VLvRBGqkcOaV5Abv9K10MsA60Th5z1YfGvmr06ks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RRNjfhslmTgxXiFq9tSeJ1PO3EHvldjCxljARXKXIPtEUxPGTPz1h5eQW6N5dKgkyd8i6Qr355lA0bqcROc7nUx9UMhFPn2n1IT/KzquhS9l8suLW3Gy+zs+IGhYizkeQhUsILA6wZ0geEkyyY+EhikZcRv99t3jmCf4k7DVskI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M8DeJhSY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=35/1reV0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M8DeJhSY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="35/1reV0"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719242857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ljmcA9yUQ7IuwfFMDJIXUw92GNp5/f/T73VWST4Pi+Q=;
+	b=M8DeJhSYnbNxdNL5DTiYDICJJkSxBdYkfHBFUb48/P8qUKVB4tT1Co8GRBM5Vm4l8EHJVX
+	0KNPLYHLjY1k7LyrMGoxo7XLX65dVqta8o4m229QiOr89+LOt2gXB3gQ/HYgjU6jxwy6PR
+	gc2p6c5Zaf2uE4IS3UHh60D29s5bSuMJmf9RcXauPzikAIUIBiKo6vvuXEGshs5U9ni99P
+	60RNvmN6AILhvHB4WT+TwcyWXZo5pkQEB16B8B135msLQOUQaMEMhCT/H9y0A3rya86AhD
+	PlM5GFm0cZJRjAW/qt3mBzjiJRW6VQMAxMh2h1mWVgEVg/WjjnVHQePYow8PEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719242857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ljmcA9yUQ7IuwfFMDJIXUw92GNp5/f/T73VWST4Pi+Q=;
+	b=35/1reV0BvAD2EtgNYKDl9fQXKRVrMsfshs+Zks/3Mj+XehCLKzkRrKl52WAJCfvuWJ6a0
+	VQ0zcgORsbuFheBA==
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang  <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4 0/6] perf: Make SIGTRAP and __perf_pending_irq() work on RT.
+Date: Mon, 24 Jun 2024 17:15:13 +0200
+Message-ID: <20240624152732.1231678-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c54a:0:b0:375:cfd0:393d with SMTP id
- e9e14a558f8ab-3763a2510c6mr5302435ab.2.1719242838497; Mon, 24 Jun 2024
- 08:27:18 -0700 (PDT)
-Date: Mon, 24 Jun 2024 08:27:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000abf2f0061ba46a1a@google.com>
-Subject: [syzbot] [lvs?] possible deadlock in start_sync_thread
-From: syzbot <syzbot+e929093395ec65f969c7@syzkaller.appspotmail.com>
-To: coreteam@netfilter.org, davem@davemloft.net, edumazet@google.com, 
-	horms@verge.net.au, ja@ssi.bg, kadlec@netfilter.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, lvs-devel@vger.kernel.org, 
-	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, pabeni@redhat.com, 
-	pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-syzbot found the following issue on:
+Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
+the signal gets delayed until event_sched_out() which then uses
+task_work_add() for its delivery. This breaks on PREEMPT_RT because the
+signal is delivered with disabled preemption.
 
-HEAD commit:    3226607302ca selftests: net: change shebang to bash in amt..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a2683e980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e78fc116033e0ab7
-dashboard link: https://syzkaller.appspot.com/bug?extid=e929093395ec65f969c7
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+While looking at this, I also stumbled upon __perf_pending_irq() which
+requires disabled interrupts but this is not the case on PREEMPT_RT.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+This series aim to address both issues while not introducing a new issue
+at the same time ;)
+Any testing is appreciated.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/125c85863435/disk-32266073.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4477ecab2e1f/vmlinux-32266073.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/43e28f6ce879/bzImage-32266073.xz
+v3=E2=80=A6v4: https://lore.kernel.org/all/20240322065208.60456-1-bigeasy@l=
+inutronix.de/
+   - Rebased on top of Frederic's series
+      (https://lore.kernel.org/all/20240621091601.18227-1-frederic@kernel.o=
+rg)
+   - Frederick pointed out that perf_pending_task() needs to
+     perf_swevent_get_recursion_context() in order not to recurse if
+     something within perf_swevent_.*_recursion_context() triggers a
+     software event. To address this, the counters have been moved to
+     the task_struct (#3 + #4) and preemt_disable() has been replaced
+     with a RCU-read lock (#5).
+   - The remaning logic same that means the event is pushed to task-work
+     instead of delivering from IRQ-work. The series was tested with
+     remove_on_exec as suggested by Marco Elver: On PREEMPT_RT a single
+     invocation passes, 100 parallel invocations report (for some)
+     unexpected SIGTRAPs and timeouts. This also observed on !RT
+     (without the series) with a higher task-count.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e929093395ec65f969c7@syzkaller.appspotmail.com
+v2=E2=80=A6v3: https://lore.kernel.org/all/20240312180814.3373778-1-bigeasy=
+@linutronix.de/
+    - Marco suggested to add a few comments
+      - Added a comment to __perf_event_overflow() to explain why irq_work
+        is raised in the in_nmi() case.
+      - Added a comment to perf_event_exit_event() to explain why the
+        pending event is deleted.
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.10.0-rc4-syzkaller-00837-g3226607302ca #0 Not tainted
-------------------------------------------------------
-syz-executor.4/10811 is trying to acquire lock:
-ffffffff8f5e6f48 (rtnl_mutex){+.+.}-{3:3}, at: start_sync_thread+0xdc/0x2dc0 net/netfilter/ipvs/ip_vs_sync.c:1761
+v1=E2=80=A6v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigeasy=
+@linutronix.de/
+    - Marco pointed me to the testsuite that showed two problems:
+      - Delayed task_work from NMI / missing events.
+        Fixed by triggering dummy irq_work to enforce an interrupt for
+	the exit-to-userland path which checks task_work
+      - Increased ref-count on clean up/ during exec.
+        Mostly addressed by the former change. There is still a window
+	if the NMI occurs during execve(). This is addressed by removing
+	the task_work before free_event().
+      The testsuite (remove_on_exec) fails sometimes if the event/
+      SIGTRAP is sent before the sighandler is installed.
 
-but task is already holding lock:
-ffff88805ba95750 (&smc->clcsock_release_lock){+.+.}-{3:3}, at: smc_setsockopt+0x1c3/0xe50 net/smc/af_smc.c:3064
+Sebastian
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&smc->clcsock_release_lock){+.+.}-{3:3}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
-       smc_switch_to_fallback+0x35/0xd00 net/smc/af_smc.c:902
-       smc_sendmsg+0x11f/0x530 net/smc/af_smc.c:2779
-       sock_sendmsg_nosec net/socket.c:730 [inline]
-       __sock_sendmsg+0x221/0x270 net/socket.c:745
-       __sys_sendto+0x3a4/0x4f0 net/socket.c:2192
-       __do_sys_sendto net/socket.c:2204 [inline]
-       __se_sys_sendto net/socket.c:2200 [inline]
-       __x64_sys_sendto+0xde/0x100 net/socket.c:2200
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (sk_lock-AF_INET){+.+.}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       lock_sock_nested+0x48/0x100 net/core/sock.c:3543
-       do_ip_setsockopt+0x1a2d/0x3cd0 net/ipv4/ip_sockglue.c:1078
-       ip_setsockopt+0x63/0x100 net/ipv4/ip_sockglue.c:1417
-       do_sock_setsockopt+0x3af/0x720 net/socket.c:2312
-       __sys_setsockopt+0x1ae/0x250 net/socket.c:2335
-       __do_sys_setsockopt net/socket.c:2344 [inline]
-       __se_sys_setsockopt net/socket.c:2341 [inline]
-       __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2341
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (rtnl_mutex){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain+0x18e0/0x5900 kernel/locking/lockdep.c:3869
-       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
-       start_sync_thread+0xdc/0x2dc0 net/netfilter/ipvs/ip_vs_sync.c:1761
-       do_ip_vs_set_ctl+0x442/0x13d0 net/netfilter/ipvs/ip_vs_ctl.c:2732
-       nf_setsockopt+0x295/0x2c0 net/netfilter/nf_sockopt.c:101
-       smc_setsockopt+0x275/0xe50 net/smc/af_smc.c:3072
-       do_sock_setsockopt+0x3af/0x720 net/socket.c:2312
-       __sys_setsockopt+0x1ae/0x250 net/socket.c:2335
-       __do_sys_setsockopt net/socket.c:2344 [inline]
-       __se_sys_setsockopt net/socket.c:2341 [inline]
-       __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2341
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  rtnl_mutex --> sk_lock-AF_INET --> &smc->clcsock_release_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&smc->clcsock_release_lock);
-                               lock(sk_lock-AF_INET);
-                               lock(&smc->clcsock_release_lock);
-  lock(rtnl_mutex);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor.4/10811:
- #0: ffff88805ba95750 (&smc->clcsock_release_lock){+.+.}-{3:3}, at: smc_setsockopt+0x1c3/0xe50 net/smc/af_smc.c:3064
-
-stack backtrace:
-CPU: 0 PID: 10811 Comm: syz-executor.4 Not tainted 6.10.0-rc4-syzkaller-00837-g3226607302ca #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain+0x18e0/0x5900 kernel/locking/lockdep.c:3869
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- __mutex_lock_common kernel/locking/mutex.c:608 [inline]
- __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
- start_sync_thread+0xdc/0x2dc0 net/netfilter/ipvs/ip_vs_sync.c:1761
- do_ip_vs_set_ctl+0x442/0x13d0 net/netfilter/ipvs/ip_vs_ctl.c:2732
- nf_setsockopt+0x295/0x2c0 net/netfilter/nf_sockopt.c:101
- smc_setsockopt+0x275/0xe50 net/smc/af_smc.c:3072
- do_sock_setsockopt+0x3af/0x720 net/socket.c:2312
- __sys_setsockopt+0x1ae/0x250 net/socket.c:2335
- __do_sys_setsockopt net/socket.c:2344 [inline]
- __se_sys_setsockopt net/socket.c:2341 [inline]
- __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2341
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f42d8a7d0a9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f42d98870c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 00007f42d8bb3f80 RCX: 00007f42d8a7d0a9
-RDX: 000000000000048b RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f42d8aec074 R08: 0000000000000018 R09: 0000000000000000
-R10: 0000000020000200 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f42d8bb3f80 R15: 00007ffde628d3a8
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
