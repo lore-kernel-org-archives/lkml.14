@@ -1,201 +1,184 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081AD18C38;
-	Mon, 24 Jun 2024 04:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3A31C280;
+	Mon, 24 Jun 2024 04:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719204589; cv=none; b=JCaaf6TknVLCLawRZCY6teKZqR4wHAiV7I8+eXCnNFI0HDY0PO3xEt8AeJ6U1EWALtSDiSt/sy/xT/rX9RzchmMGg1eWk2h9qyfHJnTi28q7GeL5mzn66NcvReZBGnbTrR4t0pkfj0t/c8drdfM6Crmg6jd8YYxAAb/GxBsqmpU=
+	t=1719204592; cv=none; b=iwNLHhmFbW4rvr6DUoSlsyOoXpkzSlSu2N6RjT3p7v7jKEtkS8Nxi3NES1Lrg5SxoIkXgyeKMtcRhE3j2m5M7Phh9G6JxZdaRgUGH+/CEhnfLkuKok/8YKN4tXTQYhIJjgOJn0nDzv6kettMDZX8Xtf2NxoTtpYKxCLCmU3hMVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719204589; c=relaxed/simple;
-	bh=snyKfFhqIkPeNvLC9b5uZM7RvIXwrn80AKMydgiX1Tk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MlQ9IIKN/JskRWlkPOABZsO3SeAjO6j4pDau4m0bExFJIO1k5Ep55VFtHTX/pSU16jc89OVtyLqYoNJj+DcG3hRo809TT8P/WujpwqELBtMnzYrJj3TjVP8Oj12+yz4uyW7qvFYU3q04gI+oDTjen0YyvZj3af2jp//CY742bgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UnHEdhFv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719204592; c=relaxed/simple;
+	bh=VaH3p3Wt08SZduLWzdttwcNli5xWlhzJY8l/GsaXuKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z1fg/deeprIL6gM3I2QW/GAb3sMbjp6DK447K+4j3ij2NBbcQXH6R9m6Xps39vJEXrcTTFSgmL8d/yb7zSRIIvJLmdOUjPu5qtdEQeeWiG38w4yDLR+z+sBRQhQuue600sxfcH2lxXaUxZhOq1hUzUQxUkEOzDg8ESY2kn3TsEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O4ILAnK0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UnHEdhFv"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45NKuDFa021259;
-	Mon, 24 Jun 2024 04:49:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JTQ7tdU5LPyWdZXKx4F/btOjz9+Ft9piuKQZ3RNj7js=; b=UnHEdhFv6GeD9tgG
-	J7Kz8Mb/PknBbajPFgLEjM6iAdTCGLBrgSaKeuJORyFwZPjOgdQGDDeIlU3vzTY/
-	0PbjWsbNYJv1eOR7x5b5xvAXqEjoL2PvWiJ/cfuOe913sZh93muf3o4KUg0qwzk3
-	e4v0Gf9jYKpLXa1SOa7nKSEAdOGT8QM+tYiEhDKQWSEng03dER4ob9p4rFw7yKbF
-	hE21DrHiOpfX6GvPUVZocaleuI5G4yTG/0NlfrfGVNI/GsXcAO6AEbXtPv5uG+TW
-	2oIEkYtBsCBXa0WWtfO4pafonsJdm4PBgok9YH49+hp9zwOqWuA1+aOPcM9uqFJD
-	9Axwyg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywnjrtss4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 04:49:39 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45O4ncNd025029
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 04:49:38 GMT
-Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 23 Jun 2024 21:49:30 -0700
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J .
- Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, Pavel Machek
-	<pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Andy
- Gross" <agross@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-CC: <linux-pm@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
-        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Ajit
- Pandey" <quic_ajipan@quicinc.com>
-Subject: [PATCH V7 3/5] clk: qcom: gdsc: Add set and get hwmode callbacks to switch GDSC mode
-Date: Mon, 24 Jun 2024 10:18:07 +0530
-Message-ID: <20240624044809.17751-4-quic_jkona@quicinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240624044809.17751-1-quic_jkona@quicinc.com>
-References: <20240624044809.17751-1-quic_jkona@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O4ILAnK0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09F6AC2BBFC;
+	Mon, 24 Jun 2024 04:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719204592;
+	bh=VaH3p3Wt08SZduLWzdttwcNli5xWlhzJY8l/GsaXuKk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=O4ILAnK05o4UmvQ55RUw9sq47RlEBRQzPxRWyVC+1piWc3XUGb+39LEsFIYfjoGJa
+	 o1VGZicV8aIXVfThpjGdWmxkh7PwPfqsNdztJjZT68PrjDA1KO9SOA4SqI8HEZEVjB
+	 ZlaoYgqFUP2sMEy/JCdZ9+IbUM894qxJAU2IRVRrIG4hfcUJaRHgNdMHkr+NbVyaCK
+	 A8QBOZMO0gOz+9wiiqHqGK/GFPu4e2zW19ZpK89VaYaFGWSFpqQpJpNoVNOGwcaWiB
+	 HHp41CHvpSEfcq2rehk9iTpj/TIzXbR/7g6YI4PNJMpIajCOhnjxFNuop5oqUqBEjW
+	 5GU8MwFHsXMwQ==
+Message-ID: <d65648d6-4e2b-4009-b0e0-7d1f9a926eb7@kernel.org>
+Date: Mon, 24 Jun 2024 06:49:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yHIvCLIuRLgfioIpy31TRzCRomLLoAhX
-X-Proofpoint-ORIG-GUID: yHIvCLIuRLgfioIpy31TRzCRomLLoAhX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_04,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406240036
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] dt-bindings: timer: Add schema for
+ realtek,otto-timer
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, tglx@linutronix.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ tsbogend@alpha.franken.de, daniel.lezcano@linaro.org, paulburton@kernel.org,
+ peterz@infradead.org, mail@birger-koblitz.de, bert@biot.com,
+ john@phrozen.org, sander@svanheule.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-mips@vger.kernel.org, kabel@kernel.org, ericwouds@gmail.com
+References: <20240624012300.1713290-1-chris.packham@alliedtelesis.co.nz>
+ <20240624012300.1713290-5-chris.packham@alliedtelesis.co.nz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240624012300.1713290-5-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Some GDSC client drivers require the GDSC mode to be switched dynamically
-to HW mode at runtime to gain the power benefits. Typically such client
-drivers require the GDSC to be brought up in SW mode initially to enable
-the required dependent clocks and configure the hardware to proper state.
-Once initial hardware set up is done, they switch the GDSC to HW mode to
-save power. At the end of usecase, they switch the GDSC back to SW mode
-and disable the GDSC.
+On 24/06/2024 03:22, Chris Packham wrote:
+> Add the devicetree schema for the realtek,otto-timer present on a number
+> of Realtek SoCs.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>     Changes in v2:
+>     - Use specific compatible
 
-Introduce HW_CTRL_TRIGGER flag to register the set_hwmode_dev and
-get_hwmode_dev callbacks for GDSC's whose respective client drivers
-require the GDSC mode to be switched dynamically at runtime using
-dev_pm_genpd_set_hwmode() API.
+Where? I do not see changes.
 
-Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Reviewed-by: Taniya Das <quic_tdas@quicinc.com>
----
- drivers/clk/qcom/gdsc.c | 41 +++++++++++++++++++++++++++++++++++++++++
- drivers/clk/qcom/gdsc.h |  1 +
- 2 files changed, 42 insertions(+)
+>     - Remove unnecessary label
+>     - Remove unused irq flags (interrupt controller is one-cell)
+>     - Set minItems for reg and interrupts based on compatible
+> 
+>  .../bindings/timer/realtek,otto-timer.yaml    | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml b/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+> new file mode 100644
+> index 000000000000..13ea7aa946fe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/realtek,otto-timer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek Otto SoCs Timer/Counter
+> +
+> +description:
+> +  Realtek SoCs support a number of timers/counters. These are used
+> +  as a per CPU clock event generator and an overall CPU clocksource.
+> +
+> +maintainers:
+> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^timer@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - realtek,rtl9302-timer
+> +      - const: realtek,otto-timer
+> +
+> +  reg:
+> +    maxItems: 5
 
-diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-index df9618ab7eea..fa5fe4c2a2ee 100644
---- a/drivers/clk/qcom/gdsc.c
-+++ b/drivers/clk/qcom/gdsc.c
-@@ -363,6 +363,43 @@ static int gdsc_disable(struct generic_pm_domain *domain)
- 	return 0;
- }
- 
-+static int gdsc_set_hwmode(struct generic_pm_domain *domain, struct device *dev, bool mode)
-+{
-+	struct gdsc *sc = domain_to_gdsc(domain);
-+	int ret;
-+
-+	ret = gdsc_hwctrl(sc, mode);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Wait for the GDSC to go through a power down and
-+	 * up cycle. If we poll the status register before the
-+	 * power cycle is finished we might read incorrect values.
-+	 */
-+	udelay(1);
-+
-+	/*
-+	 * When the GDSC is switched to HW mode, HW can disable the GDSC.
-+	 * When the GDSC is switched back to SW mode, the GDSC will be enabled
-+	 * again, hence we need to poll for GDSC to complete the power up.
-+	 */
-+	if (!mode)
-+		return gdsc_poll_status(sc, GDSC_ON);
-+
-+	return 0;
-+}
-+
-+static bool gdsc_get_hwmode(struct generic_pm_domain *domain, struct device *dev)
-+{
-+	struct gdsc *sc = domain_to_gdsc(domain);
-+	u32 val;
-+
-+	regmap_read(sc->regmap, sc->gdscr, &val);
-+
-+	return !!(val & HW_CONTROL_MASK);
-+}
-+
- static int gdsc_init(struct gdsc *sc)
- {
- 	u32 mask, val;
-@@ -451,6 +488,10 @@ static int gdsc_init(struct gdsc *sc)
- 		sc->pd.power_off = gdsc_disable;
- 	if (!sc->pd.power_on)
- 		sc->pd.power_on = gdsc_enable;
-+	if (sc->flags & HW_CTRL_TRIGGER) {
-+		sc->pd.set_hwmode_dev = gdsc_set_hwmode;
-+		sc->pd.get_hwmode_dev = gdsc_get_hwmode;
-+	}
- 
- 	ret = pm_genpd_init(&sc->pd, NULL, !on);
- 	if (ret)
-diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-index 803512688336..1e2779b823d1 100644
---- a/drivers/clk/qcom/gdsc.h
-+++ b/drivers/clk/qcom/gdsc.h
-@@ -67,6 +67,7 @@ struct gdsc {
- #define ALWAYS_ON	BIT(6)
- #define RETAIN_FF_ENABLE	BIT(7)
- #define NO_RET_PERIPH	BIT(8)
-+#define HW_CTRL_TRIGGER	BIT(9)
- 	struct reset_controller_dev	*rcdev;
- 	unsigned int			*resets;
- 	unsigned int			reset_count;
--- 
-2.43.0
+Nothing improved.
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 5
+
+Nothing improved.
+
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: realtek,rtl9302-timer
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +        interrupts:
+> +          minItems: 2
+
+No, that's just incorrect. You do not have more than one variant, so it
+is just 2 items. Or 5 items, not 2-5.
+
+
+Best regards,
+Krzysztof
 
