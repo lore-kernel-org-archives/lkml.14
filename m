@@ -1,109 +1,123 @@
-Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2911A2C03;
-	Mon, 24 Jun 2024 22:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23E11A2C0A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 22:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719267159; cv=none; b=LD9x7gJSc4Yt3SK84LK7rVFiHik/Anqy6s1sfoImTWChHa3sLJ7ClhtzDC8+ElNYyvajYAfjA8EsFr50YGZMAbPytiN94DymkLoRauHfJMuQxtHpyTmL04okHrm33TB0Xtud1H2OVkulyMIWVtznGEg7iwqgn32OSHK4NfEleOs=
+	t=1719267159; cv=none; b=ROGCadjf/tXJkQ93Y426yvpWN8g61JbVnhsckQZC7mFjt5B68BTMEizbzP8BC91gD4k7tWT0eabi8NX1R1q+TksUtzDeqBV9IvbOIqb8mLG+QVpRrXmVGkkTG4U/q/8xJwKGIPkcuAvv9Mq0sjWko6Ixnqe7M9DOMFQAllTmjFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719267159; c=relaxed/simple;
-	bh=YRsO8fG+tWrFqE5S9ft2lAKRu/1mvtsiDA/UMSSP0f8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KjS+uriWjUinEGDwL5HLWLKF/OCjGMuexvZNlHCAbZEq9YueF3ngEAbCJ39htTn74F6D2byi5k2Pje43hHsGj+tqMiOkRKfYJCbS6hDdsK/3z6pnz86c1kVUVCHAvDWZtR57wRBe8pUjx120J5XzveGnLOaxMc7PHzMWtDTW6xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=NcOofN60; arc=none smtp.client-ip=148.163.148.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	bh=4ci67SVFpkWmJkYCTkpx+ig9XBfHau+20YcfXOFnufI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KpaI6gag/R924WnGaI6elLwuBalXAjZzRRUN6akpexjNn5U6aONFMepB9qmdwB2rZs5wM9kyUw1G01goPfFlat2OaiyF2sUzI6Eyd9M+IngYAZuRkMoUj5JqUhOKFBNLBGrLBEYLO3GbZPjyRhRKF7vgFojhRoTeP6h3EuNLIRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G7/ciOLH; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="NcOofN60"
-Received: from pps.filterd (m0355088.ppops.net [127.0.0.1])
-	by m0355088.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 45OExZPE016200;
-	Mon, 24 Jun 2024 22:12:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=DKIM202306; bh=beDAkvKYsDlCVLz13QLf8oA
-	MscanV0EKlCxkUmhBfqk=; b=NcOofN60eggD0fDtyENxaoXl1pTKI3kjFo/BZUW
-	rDhrNO3IKgdPV3JNqsMKA/eT8il00pVvW420+O6x/TG9VtWXABKDFqec5HrUJawW
-	BRofFlq7rKojw1Bf5cC9oOdmA8PN2g3t3xbvl6Qd4h+an6DnZHbrqP1snVtWr2AM
-	3NZFYVAdR7b6avcv3eR6Y4XRE0nI36AhVqtk0tfNAeP4aGM8BhNnL601exSiy2Q7
-	gsFR+kE3N/kVz1fiRy4woTc1giQBXF+XaouC4Nfqj3KV9aJw2y2yowEExkvt9YnL
-	QNqTKvR3RDyKQk86jB3DZG1Cb+06dCbiEWiuUIVOtdDuGkg==
-Received: from ilclpfpp01.lenovo.com ([144.188.128.67])
-	by m0355088.ppops.net (PPS) with ESMTPS id 3yxbstk762-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 22:12:22 +0000 (GMT)
-Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ilclpfpp01.lenovo.com (Postfix) with ESMTPS id 4W7Mdd4Wdszcxq9;
-	Mon, 24 Jun 2024 22:12:21 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4W7Mdd16g3z2VbbV;
-	Mon, 24 Jun 2024 22:12:21 +0000 (UTC)
-Date: Mon, 24 Jun 2024 17:12:19 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: linux-mm@kvack.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Maxwell Bland <mbland@motorola.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/6] arm64: add APTable encoding to pagetable defs
-Message-ID: <z7v77vr34beigy6hy75mfsnssihc2gxzc4z4xioork343wki2n@gjv6kdxo6zxc>
-References: <2bcb3htsjhepxdybpw2bwot2jnuezl3p5mnj5rhjwgitlsufe7@xzhkyntridw3>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7/ciOLH"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1f9db3192d8so28497905ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719267157; x=1719871957; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=am7s8zTwG1CQ1DLlONdgBD04NQU7cty5c4MreVuPbFc=;
+        b=G7/ciOLH6m9StJN4nPtD4v+pJj9TGy3y8UqUf+YjvAuaE1ucF4ZbF508wSRz08VbtY
+         jY3Kic/eXE5cVf1xdwQbXrB9EyZt0eA7r4ATWiQvjdBEpcZg7qkUrgsIzAjyMY3g79l1
+         y5NWMYsB0ojXutD65UGhR5fnMThQtMNlyqijtfYecKVVm4n1JHrFnTNMKZa2sqwxYPMq
+         vagRnBLNs2X1hle4lWy0ZJ2SYcX516zHJrzeKx8EXNM152soJwF71uyttmJPo14IZ3ft
+         acwb2Zv3Lh6IS7H8PEomAIgSMq9U+noTOnL8bzbyel2/yEZEPHW6S73w9OanxDUVXCWx
+         RQWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719267157; x=1719871957;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=am7s8zTwG1CQ1DLlONdgBD04NQU7cty5c4MreVuPbFc=;
+        b=B2JCjmaUzyNzwA29dosi/pF4TkCOffjqXHMZCl7+zAKkhPRdiZqo0+1PzmYc2XxHpF
+         K7ISWUj6RQPRTos4TUHQP9vqmG66w4R5cXUWwKcstV87G0a2leZRgDEUZvIvXIHIanE3
+         Fc3sNctTieqtkKPqwMVMXv9c5/wc6/tT2/YF5n+PPm7a5O31CHo/8X24sA9oGHZDIuMP
+         D8npD3ZAr+3Q9kzd52UMhQMyZeZ2Y2DH2WAdUvwLFi1nPuU4JbdywoUu6ztrHEaHJecd
+         jTub8q9rIKGmpkwQjkRtm/3b7S4GykbyClv1ihjRxWxhmkozHGp8Er5FywIMlNxzykF1
+         FN7g==
+X-Forwarded-Encrypted: i=1; AJvYcCX2+8iw19V+wmZE+TIJs8T0Nr/NuQCbT3TPvj6kj0XHOCiS+zco7XHdkTboG8UqRwKofKKrWmCaOwCcxwitf97QU4/2tYrAaXcbIo3f
+X-Gm-Message-State: AOJu0YzRgShOwNuQAjNrBg/0pwVa5O+BeRteEfuRrelk57RvZt7no7K5
+	t4EarHtbLsUeaAVKBowgC81uzYyIf3iDAY2ax3vRSHUx3d/ErwvHTAVh5nC7vbky741AF8OCB6i
+	sCC3bLQMoTg==
+X-Google-Smtp-Source: AGHT+IGUdOx20r7NDEUvU1cytoPKAzBTVDx7VmCUnni5NL4Qq9RkQzd3oASNoeizoFcr889fkOjJmC0s/e4Cxw==
+X-Received: from ip.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:57f3])
+ (user=ipylypiv job=sendgmr) by 2002:a17:902:eccb:b0:1f9:cc3c:9dc with SMTP id
+ d9443c01a7336-1fa104968e4mr1692405ad.5.1719267157123; Mon, 24 Jun 2024
+ 15:12:37 -0700 (PDT)
+Date: Mon, 24 Jun 2024 22:12:08 +0000
+In-Reply-To: <20240624221211.2593736-1-ipylypiv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2bcb3htsjhepxdybpw2bwot2jnuezl3p5mnj5rhjwgitlsufe7@xzhkyntridw3>
-X-Proofpoint-ORIG-GUID: cBD7-o-fMElZ7gAEi_7CTo0KFY4fieW1
-X-Proofpoint-GUID: cBD7-o-fMElZ7gAEi_7CTo0KFY4fieW1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_19,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0 clxscore=1015
- mlxlogscore=715 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406240177
+Mime-Version: 1.0
+References: <20240624221211.2593736-1-ipylypiv@google.com>
+X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
+Message-ID: <20240624221211.2593736-5-ipylypiv@google.com>
+Subject: [PATCH v2 4/6] ata: libata-scsi: Do not pass ATA device id to ata_to_sense_error()
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>, Hannes Reinecke <hare@suse.de>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Jason Yan <yanaijie@huawei.com>, 
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Igor Pylypiv <ipylypiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add in the APTable permission bit encoding to describe table-level
-hierarchical access control
+ATA device id is not used in ata_to_sense_error().
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
+Fixes: ff8072d589dc ("ata: libata: remove references to non-existing error_handler()")
+Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
 ---
- arch/arm64/include/asm/pgtable-hwdef.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/ata/libata-scsi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-index 9943ff0af4c9..8c229fc96c0a 100644
---- a/arch/arm64/include/asm/pgtable-hwdef.h
-+++ b/arch/arm64/include/asm/pgtable-hwdef.h
-@@ -146,6 +146,11 @@
- #define PMD_SECT_UXN		(_AT(pmdval_t, 1) << 54)
- #define PMD_TABLE_PXN		(_AT(pmdval_t, 1) << 59)
- #define PMD_TABLE_UXN		(_AT(pmdval_t, 1) << 60)
-+/*
-+ * APTable[1:0] encoding for hierarchical data access control
-+ */
-+#define PMD_TABLE_KERN		(_AT(pmdval_t, 1) << 61)
-+#define PMD_TABLE_PRDONLY	(_AT(pmdval_t, 1) << 62)
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 1aeab6e1c8b3..e5669a296d81 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -785,7 +785,6 @@ static void ata_qc_set_pc_nbytes(struct ata_queued_cmd *qc)
  
- /*
-  * AttrIndx[2:0] encoding (mapping attributes defined in the MAIR* registers).
+ /**
+  *	ata_to_sense_error - convert ATA error to SCSI error
+- *	@id: ATA device number
+  *	@drv_stat: value contained in ATA status register
+  *	@drv_err: value contained in ATA error register
+  *	@sk: the sense key we'll fill out
+@@ -799,8 +798,8 @@ static void ata_qc_set_pc_nbytes(struct ata_queued_cmd *qc)
+  *	LOCKING:
+  *	spin_lock_irqsave(host lock)
+  */
+-static void ata_to_sense_error(unsigned id, u8 drv_stat, u8 drv_err, u8 *sk,
+-			       u8 *asc, u8 *ascq)
++static void ata_to_sense_error(u8 drv_stat, u8 drv_err, u8 *sk, u8 *asc,
++			       u8 *ascq)
+ {
+ 	int i;
+ 
+@@ -935,7 +934,7 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+ 	 */
+ 	if (qc->err_mask ||
+ 	    tf->status & (ATA_BUSY | ATA_DF | ATA_ERR | ATA_DRQ)) {
+-		ata_to_sense_error(qc->ap->print_id, tf->status, tf->error,
++		ata_to_sense_error(tf->status, tf->error,
+ 				   &sense_key, &asc, &ascq);
+ 		ata_scsi_set_sense(qc->dev, cmd, sense_key, asc, ascq);
+ 	} else {
+@@ -977,7 +976,7 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
+ 	 */
+ 	if (qc->err_mask ||
+ 	    tf->status & (ATA_BUSY | ATA_DF | ATA_ERR | ATA_DRQ)) {
+-		ata_to_sense_error(qc->ap->print_id, tf->status, tf->error,
++		ata_to_sense_error(tf->status, tf->error,
+ 				   &sense_key, &asc, &ascq);
+ 		ata_scsi_set_sense(dev, cmd, sense_key, asc, ascq);
+ 	} else {
 -- 
-2.43.0
-
+2.45.2.741.gdbec12cfda-goog
 
