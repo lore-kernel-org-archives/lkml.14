@@ -1,123 +1,233 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A0519FA83;
-	Mon, 24 Jun 2024 17:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8BF19F47C
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251298; cv=none; b=sqdMGSaOptUDm+3sA9jJfPD72f4/Lnb8IZodFD0OwoBMf/DbU835aoE5KeieMZnuygtRjqpllvDWHhvMh78BUrxa2N/DDYPaWF0jYQkkoKfAZjVp3WtvHmQD87hwxVLQ8V55OGoKbvnWU/lrYiCnNTLGVE7Ac5CBfq0xmCrSGdk=
+	t=1719251375; cv=none; b=pNPAqHsaXni3YqyNlY/kysntynr6Gzvt/ozb6ceK08x9uYL5uiMX+ll5q4xh18yw9xpSlTuIgkF+CojBI0u4KpAwrq75jfYDvqMUxP8dcDQPHudPKAo1NUt5UKFcQ3snbGFD11u75mAI4CwPTJO5TnxDtvZt1OXwrOghNrrECv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251298; c=relaxed/simple;
-	bh=dKhJSsA3/03pyvMW1VMivxWq0gl5lOjReogd7JhGkxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TjGsdsCW/qZnUP4DfV7Mb8ugYoX6gC2rZCAYh8U8RYtM5zk6n7ZXIffT0wUjXiyhDzbi+3jJ5sbMFxFvqZXLj0d0qetdk2AmOL7pIcqOxn3Ws2+l1NMWRNftAuB0st8AVwXHPg3P2Qj5gFcpkJRo8Dqj4Lp0LTrmHrGZNAbC5NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=v7KUkMzS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mbzILD+T; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1719251375; c=relaxed/simple;
+	bh=Bf9Guv1QNbjMVDwFxJHiYuhL1KV7H82L0MrTLCU+2YI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OlWCa9+0Gyg9l86M6P4f7W9qX6RfVhUhJ9MJnXcN/whTrEeTQKqJbAKqeu0B12ptj2hzzYugngrXt6fptHNJqk2mealH4KstPK6JJRuMypDrwhrSwnfgUpn8ZHPVIP6eNb2ckfNWhwvlVwelB/z4wBM7FBXINH+05gFwm1cf3KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=d31jN/H9; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="v7KUkMzS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mbzILD+T"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 2981718000A7;
-	Mon, 24 Jun 2024 13:48:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Jun 2024 13:48:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1719251294; x=1719337694; bh=DQqZBSRlw1
-	1TA9UCQzDY3rNG30Jucm240uJxEpV1QvA=; b=v7KUkMzSfRK3FcwklHHh+iwgs+
-	yeAU4342zmozsOOqTjLtOqdz/NRhQGgcMZRLvwhnrgnGPYBSeDgM9PkdBIBQ+W6G
-	/NaWZpOiw/8ldxE87pn6s7k5PwBYDILjkPVnB++vautCuZAAb7y8E6t1rtS8j2Rm
-	Ek6SD1aVcT5x+isqlh6Im0pnWrV/P16iUemCFWiG/FWinoYXuf3LzHpEX+MXJvj5
-	m6BhpRVkgbKUjIcc+WbW+KEMuSKqvO9LApO1fxjD1xeiTWdf2W4ztxaqtoOl/GlB
-	kDeoA1HEl/v8Lk26yz24/tZao2IJsn5ohNEuRqZHHK++ndvfTtncOSOimHsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1719251294; x=1719337694; bh=DQqZBSRlw11TA9UCQzDY3rNG30Ju
-	cm240uJxEpV1QvA=; b=mbzILD+TI3cLf6ebu1h/XlNbxZFsg/f13dWCK0slJLnB
-	MXUfeCfrkq3Re+XSPeuBAA+sULBSpj/aWj0jhl3C1tvMKuPBqYP/dbL+cHmlD/A3
-	65LA5JGonrU9qF+uFrIvG8RqVyy/CxE9kwpVczGSH6JYNZEarzKjrNRFORWwITAu
-	oIq6FICr36/kQAnD/3vXtZX0oeqpWOjMTap2KZCQ/XP3sjGpYf5VlWA2xWg8CXjQ
-	G9LPNjWwDEPUk+ny8yjB+TkOKgQK8dFPVfdjsJ6Gfuydxn6bWHR1zZVflOYGYeb1
-	+hDIDhn9j7xBrKKarSxFZFm13LKkcHGEkDY+FtY9yA==
-X-ME-Sender: <xms:XrF5Zj3Xy83Y-9bsoIC5B7WdYH2Naps9BsDTbayjRpUgDeL16vBBOg>
-    <xme:XrF5ZiGPXV2SVGmQF88wfpX16m2TXQ9GhNk_RhIHvuPRCyYGvzLU51-wi02V2yla4
-    X41d89AIMi20Q>
-X-ME-Received: <xmr:XrF5Zj7vOVca0QBpXNAfcaPpUWsUE484PDYR0USnArZ8K9cHg3n40-53CXcdbjJnpPq3fAs-EF7hvtqWTe8coC65RB2YzVMp9Cv0Kg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeguddguddukecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehge
-    dvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhroh
-    grhhdrtghomh
-X-ME-Proxy: <xmx:XrF5Zo39p8au5qVSs1-dlj3F1CWmbiz_t1BTBfIor3wnfvqBP42kPQ>
-    <xmx:XrF5ZmFnk8OLbWrn7gNs18CiD6REZ1wyy7FmSs1NrM5HWirUbvAELA>
-    <xmx:XrF5Zp_G9qAmrzqlPBZ3L8iK4M860MQKe0hDZqJTtQBoCYIhGxiOlg>
-    <xmx:XrF5Zjn9tq7Xq6eKi8wRiqDr8i2iFJ-VFexIfAXMhHKT3vFHPejD7A>
-    <xmx:XrF5Zu-Tlpcd3QrswlvLmmqWcGyNXoTKt7tk0YPsEhe766A_2BbemW2L>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Jun 2024 13:48:13 -0400 (EDT)
-Date: Mon, 24 Jun 2024 19:47:56 +0200
-From: Greg KH <greg@kroah.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: linux-next: manual merge of the driver-core tree with the reset
- tree
-Message-ID: <2024062443-runt-lard-fd07@gregkh>
-References: <Znmufb9L78FCoSSS@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="d31jN/H9"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec5779b423so23612561fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1719251372; x=1719856172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SbbAfpo2+pMau+1QdjEGlkS2E4OZnyRsc/b85mU5Vvg=;
+        b=d31jN/H9XfV+QTnqrFSjSR/Z58iD2vSnlVATBKEAz4vtBQZAL7Gwi7E4MNME7Kdh7p
+         HBmMZEPxbo/HApDx4doayGNSSZkzQh9FaoMI0uLDgiFUvATpTF2/iP6FW5QbNVx0dxHQ
+         BCtIJY30d3WLe9bgAuxV5ZpK4n6o1N9hp0ncVqje1jNLcyRH+2VZX5tgt7p5mzdq/ou2
+         cwBgmTjgs0W5Wzi66vXYvVKX8fsou4KnrLOQUxFkg05KLjfR3UR5MX4XXx7sck+iyU7S
+         AhcWDMgcqeGiyJyUujkUUMCCwKCe9Bh2PCwVrqUdPCs2gVFWG/toVuWMrpPbYciAw48E
+         BxPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719251372; x=1719856172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SbbAfpo2+pMau+1QdjEGlkS2E4OZnyRsc/b85mU5Vvg=;
+        b=Ov90d2hWYimV+Z7ZQRTl6oOyYTU428uB/UEE9PE4nqjn/8gMfBPmfyOfQBe0NB027m
+         P/NBM231J7Gjcp6iZK2BT4LLifVbDyJQlxnEFWcXLwGwENrHWXrnsk5uSyx8JvYpHzd8
+         EldQ+Q5OwdWVcslWqVQHBxavYk3SOJAFLj3ARh8itMiVbGRzFOup/pU7k+hQTcKcxbBF
+         tA6Q1jHTTE2QaLOent4Igh4XSNMw2zJsXqENtHQ0MO0cO4sFrxbtbBJUF1/URND9JnWb
+         SpUjGAQDTwXKHGj9Fj24fDl3lbhEFN59P3OoVFCyQiN6i43GIdh6O4JUOy1x2gDALqil
+         2gHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXj5f+b0lTN8XLHSTO8rujGNKdODUJGYikxCnUWLqqOX0viCd1rPbZ163Mr8aVCUK7DoOOCwTyZgQrqKCCQAbpbSzrgJk47vnDjMBbz
+X-Gm-Message-State: AOJu0YyA7OBwjncMqOTU8mid3YBbBzUwr+G9t5vKP4l4joRehhgvSllF
+	iPjjzsKUvajl6Z1cfcl3zDFO9jwy5F3CoTFwCPX3UxCuuR528nfhs42OcW86+tlvORsGa8+ssX1
+	ZQwsTCRxLGmGEB0A95rp5DnmfQQfmVwmNtFKysA==
+X-Google-Smtp-Source: AGHT+IH3pCfEpAMJvD46ojBZBA0m7JkKFkrZwsZS3r+xQwu70WEB/qS1C/CtVh4wZ7UKbN75NfSbPn/QZn+xXZNnu9M=
+X-Received: by 2002:a2e:87d3:0:b0:2ec:55b5:ed41 with SMTP id
+ 38308e7fff4ca-2ec5931d876mr41742601fa.16.1719251371796; Mon, 24 Jun 2024
+ 10:49:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Znmufb9L78FCoSSS@sirena.org.uk>
+References: <cover.1718919473.git.yan@cloudflare.com> <b8c183a24285c2ab30c51622f4f9eff8f7a4752f.1718919473.git.yan@cloudflare.com>
+ <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
+ <44ac34f6-c78e-16dd-14da-15d729fecb5b@iogearbox.net> <CAO3-PbrhnvmdYmQubNsTX3gX917o=Q+MBWTBkxUd=YWt4dNGuA@mail.gmail.com>
+ <e6553be1-4eaa-e90a-17f8-dece2bb95e7b@iogearbox.net> <CAO3-PboYruuLrF7D_rMiuG-AnWdR4BhsgP+MhVmOm-f3MzJFyQ@mail.gmail.com>
+ <6677db8b2ef78_33522729492@willemb.c.googlers.com.notmuch> <caecbff8-ffc4-976b-4516-dba41848ef30@iogearbox.net>
+In-Reply-To: <caecbff8-ffc4-976b-4516-dba41848ef30@iogearbox.net>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Mon, 24 Jun 2024 12:49:20 -0500
+Message-ID: <CAO3-PbpmS8=gTSb84X8wV4NiCA8JNXrEXYONJKmc6RoM4QQwYg@mail.gmail.com>
+Subject: Re: [RFC net-next 1/9] skb: introduce gro_disabled bit
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 06:35:57PM +0100, Mark Brown wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the driver-core tree got a conflict in:
-> 
->   drivers/reset/reset-meson-audio-arb.c
-> 
-> between commit:
-> 
->   0e8b3bca280a7 ("reset: meson-audio-arb: Use devm_clk_get_enabled()")
-> 
-> from the reset tree and commit:
-> 
->   b99e9c096148f ("reset: meson-audio-arb: Convert to platform remove callback returning void")
-> 
-> from the driver-core tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> diff --cc drivers/reset/reset-meson-audio-arb.c
-> index 894ad9d37a665,8740f5f6abf80..0000000000000
-> --- a/drivers/reset/reset-meson-audio-arb.c
-> +++ b/drivers/reset/reset-meson-audio-arb.c
+On Mon, Jun 24, 2024 at 8:30=E2=80=AFAM Daniel Borkmann <daniel@iogearbox.n=
+et> wrote:
+>
+> On 6/23/24 10:23 AM, Willem de Bruijn wrote:
+> > Yan Zhai wrote:
+> >> On Fri, Jun 21, 2024 at 11:41=E2=80=AFAM Daniel Borkmann <daniel@iogea=
+rbox.net> wrote:
+> >>> On 6/21/24 6:00 PM, Yan Zhai wrote:
+> >>>> On Fri, Jun 21, 2024 at 8:13=E2=80=AFAM Daniel Borkmann <daniel@ioge=
+arbox.net> wrote:
+> >>>>> On 6/21/24 2:15 PM, Willem de Bruijn wrote:
+> >>>>>> Yan Zhai wrote:
+> >>>>>>> Software GRO is currently controlled by a single switch, i.e.
+> >>>>>>>
+> >>>>>>>      ethtool -K dev gro on|off
+> >>>>>>>
+> >>>>>>> However, this is not always desired. When GRO is enabled, even if=
+ the
+> >>>>>>> kernel cannot GRO certain traffic, it has to run through the GRO =
+receive
+> >>>>>>> handlers with no benefit.
+> >>>>>>>
+> >>>>>>> There are also scenarios that turning off GRO is a requirement. F=
+or
+> >>>>>>> example, our production environment has a scenario that a TC egre=
+ss hook
+> >>>>>>> may add multiple encapsulation headers to forwarded skbs for load
+> >>>>>>> balancing and isolation purpose. The encapsulation is implemented=
+ via
+> >>>>>>> BPF. But the problem arises then: there is no way to properly off=
+load a
+> >>>>>>> double-encapsulated packet, since skb only has network_header and
+> >>>>>>> inner_network_header to track one layer of encapsulation, but not=
+ two.
+> >>>>>>> On the other hand, not all the traffic through this device needs =
+double
+> >>>>>>> encapsulation. But we have to turn off GRO completely for any ing=
+ress
+> >>>>>>> device as a result.
+> >>>>>>>
+> >>>>>>> Introduce a bit on skb so that GRO engine can be notified to skip=
+ GRO on
+> >>>>>>> this skb, rather than having to be 0-or-1 for all traffic.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> >>>>>>> ---
+> >>>>>>>     include/linux/netdevice.h |  9 +++++++--
+> >>>>>>>     include/linux/skbuff.h    | 10 ++++++++++
+> >>>>>>>     net/Kconfig               | 10 ++++++++++
+> >>>>>>>     net/core/gro.c            |  2 +-
+> >>>>>>>     net/core/gro_cells.c      |  2 +-
+> >>>>>>>     net/core/skbuff.c         |  4 ++++
+> >>>>>>>     6 files changed, 33 insertions(+), 4 deletions(-)
+> >>>>>>>
+> >>>>>>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.=
+h
+> >>>>>>> index c83b390191d4..2ca0870b1221 100644
+> >>>>>>> --- a/include/linux/netdevice.h
+> >>>>>>> +++ b/include/linux/netdevice.h
+> >>>>>>> @@ -2415,11 +2415,16 @@ struct net_device {
+> >>>>>>>        ((dev)->devlink_port =3D (port));                         =
+\
+> >>>>>>>     })
+> >>>>>>>
+> >>>>>>> -static inline bool netif_elide_gro(const struct net_device *dev)
+> >>>>>>> +static inline bool netif_elide_gro(const struct sk_buff *skb)
+> >>>>>>>     {
+> >>>>>>> -    if (!(dev->features & NETIF_F_GRO) || dev->xdp_prog)
+> >>>>>>> +    if (!(skb->dev->features & NETIF_F_GRO) || skb->dev->xdp_pro=
+g)
+> >>>>>>>                return true;
+> >>>>>>> +
+> >>>>>>> +#ifdef CONFIG_SKB_GRO_CONTROL
+> >>>>>>> +    return skb->gro_disabled;
+> >>>>>>> +#else
+> >>>>>>>        return false;
+> >>>>>>> +#endif
+> >>>>>>
+> >>>>>> Yet more branches in the hot path.
+> >>>>>>
+> >>>>>> Compile time configurability does not help, as that will be
+> >>>>>> enabled by distros.
+> >>>>>>
+> >>>>>> For a fairly niche use case. Where functionality of GRO already
+> >>>>>> works. So just a performance for a very rare case at the cost of a
+> >>>>>> regression in the common case. A small regression perhaps, but dea=
+th
+> >>>>>> by a thousand cuts.
+> >>>>>
+> >>>>> Mentioning it here b/c it perhaps fits in this context, longer time=
+ ago
+> >>>>> there was the idea mentioned to have BPF operating as GRO engine wh=
+ich
+> >>>>> might also help to reduce attack surface by only having to handle p=
+ackets
+> >>>>> of interest for the concrete production use case. Perhaps here meta=
+ data
+> >>>>> buffer could be used to pass a notification from XDP to exit early =
+w/o
+> >>>>> aggregation.
+> >>>>
+> >>>> Metadata is in fact one of our interests as well. We discussed using
+> >>>> metadata instead of a skb bit to carry this information internally.
+> >>>> Since metadata is opaque atm so it seems the only option is to have =
+a
+> >>>> GRO control hook before napi_gro_receive, and let BPF decide
+> >>>> netif_receive_skb or napi_gro_receive (echo what Paolo said). With B=
+PF
+> >>>> it could indeed be more flexible, but the cons is that it could be
+> >>>> even more slower than taking a bit on skb. I am actually open to
+> >>>> either approach, as long as it gives us more control on when to enab=
+le
+> >>>> GRO :)
+> >>>
+> >>> Oh wait, one thing that just came to mind.. have you tried u64 per-CP=
+U
+> >>> counter map in XDP? For packets which should not be GRO-aggregated yo=
+u
+> >>> add count++ into the meta data area, and this forces GRO to not aggre=
+gate
+> >>> since meta data that needs to be transported to tc BPF layer mismatch=
+es
+> >>> (and therefore the contract/intent is that tc BPF needs to see the di=
+fferent
+> >>> meta data passed to it).
+> >>
+> >> We did this before accidentally (we put a timestamp for debugging
+> >> purposes in metadata) and this actually caused about 20% of OoO for
+> >> TCP in production: all PSH packets are reordered. GRO does not fire
+> >> the packet to the upper layer when a diff in metadata is found for a
+> >> non-PSH packet, instead it is queued as a =E2=80=9Cnew flow=E2=80=9D o=
+n the GRO list
+> >> and waits for flushing. When a PSH packet arrives, its semantic is to
+> >> flush this packet immediately and thus precedes earlier packets of the
+> >> same flow.
+> >
+> > Is that a bug in XDP metadata handling for GRO?
+> >
+> > Mismatching metadata should not be taken as separate flows, but as a
+> > flush condition.
+>
+> Definitely a bug as it should flush. If noone is faster I can add it to m=
+y
+> backlog todo to fix it, but might probably take a week before I get to it=
+.
+>
+In theory we should flush if the same flow has different metadata.
+However "same flow" is not finally confirmed until GRO proceeds to the
+TCP layer in this case. So to achieve this flush semantic, metadata
+should be compared at the leaf protocol handlers instead of initially
+inside dev_gro_receive. I am not quite sure if it is worthwhile, or
+just allow skipping GRO from XDP, since it's the XDP program who sets
+this metadata.
 
+Yan
 
-
-No diff for the conflict?
-
-thanks,
-
-greg k-h
+> Thanks,
+> Daniel
