@@ -1,257 +1,89 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F06013B58D
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 12:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202D92E62F
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 12:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719231181; cv=none; b=CpLU5K7s4qlKHaOZoh8xQYOaTNAVlx+5QcqDyq8C3PAocxck0uDoTmIy5UPLD+fXHXp5WWI50Dy0EBCmDR5ggpSSTEU5yrFDeqF2AlpVb8gbQiDVIYqwmAUy9iOBK3942Nefe+Dw/g+0qokCeTIRLo6AKLy0BYaMME9yMY0eqhI=
+	t=1719231221; cv=none; b=AOFWYgO9nHFl0zAd4fAF5HemquAWl8KV4FSNWZZtLIs8Tgcl0Z5CGirvx+y5fIio6RGdjYlyytnMaWnB7ekBEqL5nPDDcQVrSxCGXjeIKbhFuvHdR+Gl9QVo1N4fMxi0Y+0fkU3KhICuF8RtjKOjiKZZ+z7UAw8XTR6P/HiNT54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719231181; c=relaxed/simple;
-	bh=MaefPGkP/eVC1BUq+bhf0BpCWTj09NkDwsi6DKIEHIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mNlznODy/sbvopcF9SkquOrXvT4udaL1Tx0lZLKHsoVGk+Ql+YBO9nPPSZE6Mxi2aeSnakV6Tq9S7wwUEDjoq1XLaiXpAq9aSsjQK4cdKgDngLRm9xykZuG5L9sz61z/tgumYHEwdQjoJ/+lJqqpuJKyIInRenqvJhhopnjLBYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZRK4lLLP; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719231221; c=relaxed/simple;
+	bh=GIxLdIsyWlZUZPcbyc0JyW6DAXfVqlQ2QrS9G9V95YE=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Q9s9FXTzn6gMlWRKp2wFxRXObaGqNCI7Ohur1eQb/z/dgmbUBwl85IwNQdSMugn7DHDJ6GiQMFKa2FRrALwHBOcFlJd1MWJi6CuGF+MWfLjaOtecbjvPw76Ikv0avGokwJnYovVKJ6bHCMbnyWc+RsjKKTfismkBovI1O/Vsjms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=NGtmbrsm; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZRK4lLLP"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-63258caaa91so38913117b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 05:12:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719231178; x=1719835978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H6qUn3B941SaKmnTlYImbJrnT+/A2pSZCbuhCNRlU2c=;
-        b=ZRK4lLLPWqp6jkirwho2CDdxFiJKsnvVIatJ96sYU0Al/42zMNItK2AYZB12Xq3Nz8
-         y2dbXFMMczcvt2YgaC96JZMWGxTwX13gcizB7i1XXzzuFcDavoFmqJAQj5MjDTadV/7m
-         WoDQcQQaNoLZkO+iQR0Nq4lipiaITNjNsj6bj5P89x5A6bBfFPqtE/k3nWsHnH8z/1jU
-         Fc0t/NfGd4ZARcT1uD7QdtfEzMoi+4SyQG7nyHkJxUvdpKkpLvrXuqq8wKfiicJwKII9
-         80YzT115mv/e5s7fsWyDZINglIjykzZtMA+g7BclE58NeLpqQ97/eLxYVmIyhK9F0IJk
-         5O0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719231178; x=1719835978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H6qUn3B941SaKmnTlYImbJrnT+/A2pSZCbuhCNRlU2c=;
-        b=OWVaJJG8So3VkO8cgQWDD6pY+Cdk4/l4gJBg7ai6l/uZKrx5/A4PWNl1LgLCbvioqm
-         9DBazdYqictOh2xh3wkB+BDebZWls4Z5Po7oXi8efLQlVHdRfAfo214fmUC3MmJAkB+E
-         /8CSq802LJtRVhYoh5WVLzsYXonjQHX67x9/W3wnLyyc9k2drxzsHCtqGy5nfXzTj1pm
-         Wtrwhw/uajEKnJTPSvYhGHdQYblyNM2vV+Km/c0NhBaEZ/DHg1DoSg6okwdDZhcUAJV0
-         tnZS8aPjJMkQx7fSZea9jYcuU0QQH8uJMR37VtTlE5I3jYAThF+kVdC5exE5IaMglF7S
-         4g1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW+5Zp3k8+zwbGlULuC+IVsWUADQsIr6DoAq+yY9vDp8Y/kPvpLGcg/DpSh+T3BKBkokdzt3IET6ctBFAlFL2kXpAU3f+sPRguRoSbI
-X-Gm-Message-State: AOJu0YwYQEYcHAHb1hFdg2f0N2guAbA99Km5PhmQp9+yULdojTOQZeiC
-	zcDzWCEKZrhLBH14lpW5VP017SkoBGtcZFIMQcr3My5GC/Ol2qzp3/UkqqjS9oBtEIOcDL+SB2J
-	J6jao75dxvGAInseeqkNg3gJyNkKjpRO2V6OInQ==
-X-Google-Smtp-Source: AGHT+IEF1HehGOmrnh5OAL93YehPGGcegJHyWkO5g5YUNrXsZWXxAzZkNA0qGBJHKUiwcOCe0R4VtMvMhRHHrQfF14k=
-X-Received: by 2002:a81:690b:0:b0:627:7f2a:3b0a with SMTP id
- 00721157ae682-6429aa00545mr43803277b3.31.1719231178522; Mon, 24 Jun 2024
- 05:12:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="NGtmbrsm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719231210; bh=wQQy1lAElZCsGxIm/cSRalwDRWHw4b4nb35rnkPOCks=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=NGtmbrsmcBRkpKS30i/U3CQsa9dvPFMNBe9yd+Y7FGdSj5/UJdv1bHgNQgk955b9n
+	 KSbe4EEs05SpJTyK+SLhTbO4znaMTiHUgM9tpF3LomzrUcqrg6YgTmeQrxrbfD1Hln
+	 sXTQmMJWEGkY96g5kJvvaT0tBASqpdqKb+MaQZGs=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 1DA34473; Mon, 24 Jun 2024 20:07:26 +0800
+X-QQ-mid: xmsmtpt1719230846t4o8h1laf
+Message-ID: <tencent_86BE4A6A74B1761566A83D5B36EC969C3609@qq.com>
+X-QQ-XMAILINFO: NY/MPejODIJVpgDJJE8wGTTIThhfHuhAQv7T0EqneHz83O9pShEBYr+OLZuxYA
+	 VlU5CapZR9DSHJ9t27WORziFZW7xsXrWmMBm9WfGcy5Qjmg9DsE16K5R/nBfESUVJKkQ3PaVRd/C
+	 HgKGAg/kyfpZP3hRQxlqZxLGzZuvD+e87TN0wKPrD7T+jih4VwKli8mKMoYo9eSOpgKIUJtvgJo8
+	 8J/MNS6x33jbjRSjWWzfYK9AZEtoISC732QARZ/weY9rX2c7LHzBkqE3lo8xwTc2PMy/PgNe8Otm
+	 i7YmFgbMuYjaxa/t9Gex66A1pWDHTeZlpYzQoLDLVvrbVfwr15r8FnzxxXJOU6I8uUapFetTRTBx
+	 mCKHUpSDeLkKAXTUHperBStdVdVzVPo6WufxyteLTlC7M+u8n928hAIkOBAMYdDqfUM3FduPEwsG
+	 HX/F7T6nQJ8MxvgpeNJ6uu7YL6RJPZgfrbi2SUhVOxj4IHp/zIlzfDEu+27ClhxJfVxWjusnfe61
+	 Ig0ivzIybTCVSeZWMCxWDcj6+JDoBY1u98qIiBMgqjOOQp8r5KJp38f5uOlyGJzQ4Ij6ZmQ1Rm/E
+	 QkUFlZ2bW+R06sgM3jLnyT8t3A3phnIYPRbWKpomrJSRIWCxygEumH4uNkwwWh58eTpro0AnWnuk
+	 vn64xetZ56z9Sld+YfjVpBdCZZLMedyCYzw6fsl6C2cLq9iBYB93DJctgPwpyquH5TodSWSC9/5J
+	 5DVUiAMXa9FQ2pL+7gI9h6cLw2OHSnxWFUjEjubgE3unXOfgXdWa9/uIK+cri05kuVcRUndIVSHG
+	 u0Vvq0WhBSnp3CaS7YWfHcjHOZ+okIgZ5TsQkz8rFywq12dekWcns9/fm/LwaZcAxFRtIsDmIkoT
+	 an1eU7PKrREZXuEhQ94U3E7CvJ2iKobwXGUIS9nvzWwuJ6W9auRRlNnvYazQtZ4rpHNYJCAHHK
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+35ebc808442df6420eae@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] KASAN: invalid-free in hci_req_sync_complete
+Date: Mon, 24 Jun 2024 20:07:26 +0800
+X-OQ-MSGID: <20240624120725.4062978-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000033a6e8061b3c6d4a@google.com>
+References: <00000000000033a6e8061b3c6d4a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624-mxc-lcdif-bridge-attach-v1-1-37e8c5d5d934@linaro.org>
- <859620673.0ifERbkFSE@steina-w> <CAA8EJppQtiDxZjLMk6VB0X_4VSuC8cNhPOMd8on2uQ3xo92vSg@mail.gmail.com>
- <1984704.yKVeVyVuyW@steina-w>
-In-Reply-To: <1984704.yKVeVyVuyW@steina-w>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 24 Jun 2024 15:12:45 +0300
-Message-ID: <CAA8EJpoKudfSF_BM9O3xXv0GV3wUkTz2x6nH3J4JzrXtk7ECzg@mail.gmail.com>
-Subject: Re: [PATCH] drm/lcdif: switch to DRM_BRIDGE_ATTACH_NO_CONNECTOR
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	dri-devel@lists.freedesktop.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Jun 2024 at 15:03, Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
->
-> Hi Dmitry,
->
-> Am Montag, 24. Juni 2024, 13:49:03 CEST schrieb Dmitry Baryshkov:
-> > On Mon, 24 Jun 2024 at 14:32, Alexander Stein
-> > <alexander.stein@ew.tq-group.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Am Montag, 24. Juni 2024, 12:31:46 CEST schrieb Dmitry Baryshkov:
-> > > > Existing in-kernel device trees use LCDIF with the dsim + adv7533, =
-dsim
-> > > > + tc358762 or with ldb + panel_bridge. All these combinations suppo=
-rt
-> > > > using DRM_BRIDGE_ATTACH_NO_CONNECTOR for bridge attachment.
-> > > >
-> > > > Change lcdif driver to use this flag when attaching the bridge and
-> > > > create drm_bridge_connector afterwards.
-> > > >
-> > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > ---
-> > > > Note: compile-tested only.
-> > >
-> > > I gave it a try, but it doesn't work. Despite DSI output it also brea=
-ks
-> > > HDMI output, where I at least some error messages:
-> > > [drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@32=
-c00000/hdmi@32fd8000 to encoder None-37: -22
-> > > [drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@32=
-c00000/display-bridge@32fc4000 to encoder None-37: -22
-> > > imx-lcdif 32fc6000.display-controller: error -EINVAL: Failed to attac=
-h bridge for endpoint0
-> > > imx-lcdif 32fc6000.display-controller: error -EINVAL: Cannot connect =
-bridge
-> > > imx-lcdif 32fc6000.display-controller: probe with driver imx-lcdif fa=
-iled with error -22
-> >
-> > Could you please try it with the following change:
-> >
-> > diff --git a/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c
-> > b/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c
-> > index 13bc570c5473..c87d3e55c00d 100644
-> > --- a/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c
-> > +++ b/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c
-> > @@ -94,6 +94,7 @@ static int imx8mp_dw_hdmi_probe(struct platform_devic=
-e *pdev)
-> >         plat_data->phy_name =3D "SAMSUNG HDMI TX PHY";
-> >         plat_data->priv_data =3D hdmi;
-> >         plat_data->phy_force_vendor =3D true;
-> > +       plat_data->output_port =3D 1;
-> >
-> >         hdmi->dw_hdmi =3D dw_hdmi_probe(pdev, plat_data);
-> >         if (IS_ERR(hdmi->dw_hdmi))
->
-> Okay, this does fix the HDMI probe errors. Nevertheless I get the errors:
-> [   13.429313] [drm] Initialized imx-lcdif 1.0.0 for 32e80000.display-con=
-troller on minor 1
-> [   13.439116] imx-lcdif 32e80000.display-controller: [drm] Cannot find a=
-ny crtc or sizes
-> [   13.448168] imx-lcdif 32e80000.display-controller: [drm] Cannot find a=
-ny crtc or sizes
-> [   15.519737] [drm] Initialized imx-lcdif 1.0.0 for 32fc6000.display-con=
-troller on minor 2
-> [   15.675672] imx-lcdif 32fc6000.display-controller: [drm] Cannot find a=
-ny crtc or sizes
->
-> just from the lcdif patch for both HDMI and DP.
+please test db free in hci_req_sync_complete
 
-It seems, because I'm stupid and I missed drm_connector_attach_encoder().
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 2ccbdf43d5e7
 
-Anyway, it looks like even if that fixes the issue, dw-hdmi needs more
-work to work with drm_bridge_connector without losing access to such
-features like YCbCr 420 and CEC. So thank you for the tests, but let's
-probably drop the patch / idea for now.
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 3862fa6bb288..4d5807fff946 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -121,6 +121,7 @@ int __hci_req_sync(struct hci_dev *hdev, int (*func)(struct hci_request *req,
+ {
+ 	struct hci_request req;
+ 	int err = 0;
++	struct sk_buff	*req_skb;
+ 
+ 	bt_dev_dbg(hdev, "start");
+ 
+@@ -182,8 +183,9 @@ int __hci_req_sync(struct hci_dev *hdev, int (*func)(struct hci_request *req,
+ 		break;
+ 	}
+ 
+-	kfree_skb(hdev->req_skb);
++	req_skb = hdev->req_skb;
+ 	hdev->req_skb = NULL;
++	kfree_skb(req_skb);
+ 	hdev->req_status = hdev->req_result = 0;
+ 
+ 	bt_dev_dbg(hdev, "end: err %d", err);
 
-
->
-> Best regards,
-> Alexander
->
-> >
-> > >
-> > > Best regards,
-> > > Alexander
-> > >
-> > > > ---
-> > > >  drivers/gpu/drm/mxsfb/lcdif_drv.c | 14 +++++++++++++-
-> > > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/mxsfb/lcdif_drv.c b/drivers/gpu/drm/mx=
-sfb/lcdif_drv.c
-> > > > index 0f895b8a99d6..1d5508449995 100644
-> > > > --- a/drivers/gpu/drm/mxsfb/lcdif_drv.c
-> > > > +++ b/drivers/gpu/drm/mxsfb/lcdif_drv.c
-> > > > @@ -16,6 +16,7 @@
-> > > >
-> > > >  #include <drm/drm_atomic_helper.h>
-> > > >  #include <drm/drm_bridge.h>
-> > > > +#include <drm/drm_bridge_connector.h>
-> > > >  #include <drm/drm_drv.h>
-> > > >  #include <drm/drm_encoder.h>
-> > > >  #include <drm/drm_fbdev_dma.h>
-> > > > @@ -48,6 +49,7 @@ static int lcdif_attach_bridge(struct lcdif_drm_p=
-rivate *lcdif)
-> > > >  {
-> > > >       struct device *dev =3D lcdif->drm->dev;
-> > > >       struct device_node *ep;
-> > > > +     struct drm_connector *connector;
-> > > >       struct drm_bridge *bridge;
-> > > >       int ret;
-> > > >
-> > > > @@ -96,13 +98,23 @@ static int lcdif_attach_bridge(struct lcdif_drm=
-_private *lcdif)
-> > > >                       return ret;
-> > > >               }
-> > > >
-> > > > -             ret =3D drm_bridge_attach(encoder, bridge, NULL, 0);
-> > > > +             ret =3D drm_bridge_attach(encoder, bridge, NULL, DRM_=
-BRIDGE_ATTACH_NO_CONNECTOR);
-> > > >               if (ret) {
-> > > >                       of_node_put(ep);
-> > > >                       return dev_err_probe(dev, ret,
-> > > >                                            "Failed to attach bridge=
- for endpoint%u\n",
-> > > >                                            of_ep.id);
-> > > >               }
-> > > > +
-> > > > +             connector =3D drm_bridge_connector_init(lcdif->drm, e=
-ncoder);
-> > > > +             if (IS_ERR(connector)) {
-> > > > +                     ret =3D PTR_ERR(connector);
-> > > > +                     of_node_put(ep);
-> > > > +
-> > > > +                     return dev_err_probe(dev, ret,
-> > > > +                                          "Failed to create bridge=
- connector for endpoint%u\n",
-> > > > +                                          of_ep.id);
-> > > > +             }
-> > > >       }
-> > > >
-> > > >       return 0;
-> > > >
-> > > > ---
-> > > > base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
-> > > > change-id: 20240624-mxc-lcdif-bridge-attach-60368807b2f9
-> > > >
-> > > > Best regards,
-> > > >
-> > >
-> > >
-> > > --
-> > > TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld=
-, Germany
-> > > Amtsgericht M=C3=BCnchen, HRB 105018
-> > > Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stef=
-an Schneider
-> > > http://www.tq-group.com/
-> > >
-> > >
-> >
-> >
-> >
->
->
-> --
-> TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Ge=
-rmany
-> Amtsgericht M=C3=BCnchen, HRB 105018
-> Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan S=
-chneider
-> http://www.tq-group.com/
->
->
-
-
---=20
-With best wishes
-Dmitry
