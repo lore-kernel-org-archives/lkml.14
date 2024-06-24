@@ -1,105 +1,94 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFC119E822
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D830419E822;
+	Mon, 24 Jun 2024 17:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251947; cv=none; b=PQI1Z8VcZAswZGTIAQW1LNQ7AxjDGBpww8ydKafopvwKQ0xL+kMMGYtRSRqbg25e1ByakP3ERC3HrVEKcwimGqZM+kd1EByA9kd6twFTeOgxXivZmIywvJYOKkWG/NYum97Yox4PvsuL4ByjtTcnPzCZDtmcBrnqetRruRNA6e0=
+	t=1719251983; cv=none; b=Idq5ZmbhwArEhTcFNwLbFMSydCYh/uis+EaXtyV3CeRCT2Q+HLyG0RSvX9LR38B5HXq+/186/gqGlSr0udqmHFz6+cYfb0Yw99VEY/g5JGqXGX9fHnN0vA2RtX/vSTHcw1Csjvc3rEJUwj9nQoWMec6M4dMxcqm1B1RZMgDV17s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251947; c=relaxed/simple;
-	bh=zkhh0W7So/DmsEzPKSMH58KDs1LV82zcrId2pWGoAMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UNG2zNNkpt8qoAsvZ5nbHfcbX7fLjQJLCUhGnkNLvqOWGUNV9oQuKin1Fv0Tb1cOCvM3VpuAxWf7N4lxKpbzUQg6Y7nSgnVNOR+OMqLKTWAsG1Cen0Yzq/T6KpXlQb8zdad5D/wkK+giigiBGmKHeiHeDql9FQgmdoIIOyP5Z6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=kWxtNnQa; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1719251983; c=relaxed/simple;
+	bh=yEqq7OAAdGbIWa5Fb3tN8AGSHXhZ5w7BihL4VSZ0IMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t/WTgxnJMde+tOL4KqQmy33FSWC4j6BFkegC1JEQJHWrOzqyzvAskPTs3OMt/KxmZGR/papyswTHswVU911OSgkbVUfOq+t0fN7nxd3J6IPGpIKT9Vlo8WCoT48oHiinmmXUGXlicDqgbGOHsL1HZdnLc2QG2Yb4O98L6LdLAlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6WDqBAF; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="kWxtNnQa"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70656b43fd4so2373117b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:59:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6WDqBAF"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3d2299e6650so2151621b6e.2;
+        Mon, 24 Jun 2024 10:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719251945; x=1719856745; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bUkG7WPXxoFCKENTQnYrOokr0PwEX3Pguw8rWa7FZAs=;
-        b=kWxtNnQanH8AWK79/BVJ5QnOP81vs2flmoBh7J5X0yTxVPGTvivvvylJZn/aCIJjHG
-         wVSwR3CzKUjbTvyp+vNywltGFT5sXHuFFGfhBBqnEhAGoc2QNGdyEAMtN8y00mKvafOF
-         h4syRyPeV1+n7QwfdYmwG8Xl4tFq9gvN2zgNtM18ARE/gnG0mu29wOC+5D7yJEa+Phpe
-         jLLmpNg1ZxL/iVyN7CCS1CkNhR6NZekzAakU1l3kc+lSVvKCUtlnWt6XfBugZPC7gwc9
-         AHet6ac3Cl9rt17EdsBo3n8P1NKVVlIzZSMWFk2fsktdSqkD/qYgoV32efpkR0OdaGqQ
-         ZNxQ==
+        d=gmail.com; s=20230601; t=1719251981; x=1719856781; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=udIR0UMVkGNqoJsb1nh98Jnf6cJepNi/RO4WOHtJ4G0=;
+        b=F6WDqBAFceU1Qa+tz1MJYDaXGUoM6/UTCpR5M3MSeeNbBiOzaa3Uu1JAAmAF+TLElg
+         rIimf3ctbH5veLc+j3jDQYBpBlAVUAc9FGLhtLm0YjcEuKlJI2WsskNyhzaGuOBS5OHt
+         MhItc12lV4eEiojll7dSdvu/p4UAv3bfUqMWlljdR+xf7+gX/ZfvOLBerKeY2zQpjHHE
+         WT2AVywL8WHSIZiDOYaHYK067O2Fhv6EyoEEFNR4S5FZhqcYlaoUchlDm1Mg7wZjfoRv
+         6lwqhcCJv3RCc6xjmdxyPItpOoj1zkPG/oToM7oB1VkU8USfooNPpxuIMyWC9EsMPl1n
+         4hXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719251945; x=1719856745;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bUkG7WPXxoFCKENTQnYrOokr0PwEX3Pguw8rWa7FZAs=;
-        b=llVuwCLRozKfFIn22ZGuafQNhplkJ159n0o78aMC8RY0IwGGY28g35vvwKlIRNzNu6
-         pfpAHNaEgNpSnPBO4ZwCoxvGpLPExVJiehCNaQU1ah2J3ErpR/9l5wf95Uft22YPN2ND
-         zcyTaoUKqOgCkQE78gSTslhJC7J+nB1Xm8bP65o5BQwv/IdfavJ/uJjydbNkIX039e5C
-         csKXxnGuyEZlm3+E2XWgP+h2FKVDoyUNi+RMPGWGi1ZCItJGnbc/x+6gYJ+a/JvY8YSY
-         LVROUSZWbhdPW6IJPCI4NTq/Aq1ipqOz5iqxcAi0Py+jqpAmzLEzTQnxDjkFVtqzz6pL
-         iu8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUlbmUaV7wiBHO+kzqe/lYEIkxhsmb5uDkNkj/2AD1aYABoNx8Te+8qb4uXUYvCP/8QJojQg+DYQ2FCXoVhhZWuVAhlaZPk4r2XTeO5
-X-Gm-Message-State: AOJu0YzjErKiXVrdt//iIawtU8Nfv7SzxxKBw7JdTo4gYJsUHQVP+XhP
-	xycRtixbvTBwQlM9gFUsluGuneA148I7V+xLsl7owkv1YgE8v8dM4mg4mVUIbpw=
-X-Google-Smtp-Source: AGHT+IFoTWqQll6E4ip1TtGr7Dbwsic1VXI2sT9nSLcFoaZZInI906/i2cJjCWfXScsnv9zLaHJ7JA==
-X-Received: by 2002:a05:6a20:8908:b0:1b5:3ffc:b3c9 with SMTP id adf61e73a8af0-1bcf7e2a56amr4065302637.13.1719251945206;
-        Mon, 24 Jun 2024 10:59:05 -0700 (PDT)
-Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7067bc13770sm2868633b3a.56.2024.06.24.10.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 10:59:04 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: elver@google.com,
-	dvyukov@google.com
-Cc: kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	paulmck@kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH v2] kcsan: Use min() to fix Coccinelle warning
-Date: Mon, 24 Jun 2024 19:57:28 +0200
-Message-ID: <20240624175727.88012-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1719251981; x=1719856781;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=udIR0UMVkGNqoJsb1nh98Jnf6cJepNi/RO4WOHtJ4G0=;
+        b=wVCNPK/J5V7TjgdEhggdGMPTEMtIU6MvepL7pquhlnXBL5gsRr65sDWCrnP1b6thdq
+         ROqIWkwaS6suSHN3oxuD/W2q4baGD23I6sjeUlfsa8vqYkvlEqc36UZxqnNv0mnIqSaH
+         JVt5Y7BUeKA+MRpq1gffCgVEUVnjez2WuGPhbCZJCGILXmy2rJV+N97ma6nptpehcruq
+         KAJhjXBXHUMwSBc0eOGffI6FUD8s7qX2HWd3JdZX3SiPQ9Kvjrd1xTTOSHqW/4j2wwMO
+         VElzo+5RkucueWnwKKEYRlZHm8ajZ1bb8BV0cuJFsZlSCZw1Y9t/NGfrdvbGAnwRk3x/
+         Q//w==
+X-Forwarded-Encrypted: i=1; AJvYcCWuvSNj7HQ6OalMhhGIdaQiyvMkuPsH1H8j6X07W/KV+Dw6S6TdZuBYpsNYmY9vsg72ZztUXqIPHUiq0BrfNocZnZEhDkhwazUCHQamxhneWdUHaSmlSxd6IcO/5jWKQey9yTadUOmLkw==
+X-Gm-Message-State: AOJu0YzafWfFRzMUSChHq0h4UTx4Ti8B87CRfDzCIoi+lfGuLK4J3tEd
+	rsRobywjRG0xp6wrCpI8WiS46FNt5xrcmqYI+im20SyQYvW3LHZTRwSF3OpMZMKSZsEof9XIlo5
+	y2JJ7Q18jBJQszekHswqtoGdio58=
+X-Google-Smtp-Source: AGHT+IGsa0ekhfheWgYZJZEC3mAEZFLrTDQL0oduY3DpXZHe74ETnOem/uHkpNav1SCQrYlhDpt27yJzZNakA2nDVms=
+X-Received: by 2002:a05:6808:1787:b0:3d5:2c01:9df6 with SMTP id
+ 5614622812f47-3d5459643f2mr5691339b6e.15.1719251980849; Mon, 24 Jun 2024
+ 10:59:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <4449f7d4eead787308300e2d1d37b88c9d1446b2.1717308862.git.dsimic@manjaro.org>
+ <ba9d41461f5d56947d7851473637722b@manjaro.org>
+In-Reply-To: <ba9d41461f5d56947d7851473637722b@manjaro.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Mon, 24 Jun 2024 21:59:29 +0400
+Message-ID: <CABjd4YziNk1NJb6p+AxAVK0CR7igE3-6h-sN4MEWwyoW2qaKfw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Delete the SoC variant dtsi for RK3399Pro
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes the following Coccinelle/coccicheck warning reported by
-minmax.cocci:
+On Mon, Jun 24, 2024 at 9:55=E2=80=AFPM Dragan Simic <dsimic@manjaro.org> w=
+rote:
+>
+> Hello all,
+>
+> Just checking, are there any comments on this patch?  Is there something
+> more I can do to have it accepted?
 
-	WARNING opportunity for min()
+Hi Dragan,
 
-Use const size_t instead of int for the result of min().
+Heiko has already applied it quietly a couple of days ago [1], and
+also merged the v5 thermal and OPP code that I rebased on top of this
+patch of yours.
 
-Compile-tested with CONFIG_KCSAN=y.
+Thanks a lot Heiko and Dragan!
 
-Reviewed-by: Marco Elver <elver@google.com>
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Add const and remove redundant parentheses as suggested by Marco Elver
----
- kernel/kcsan/debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
+Alexey
 
-diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index 1d1d1b0e4248..53b21ae30e00 100644
---- a/kernel/kcsan/debugfs.c
-+++ b/kernel/kcsan/debugfs.c
-@@ -225,7 +225,7 @@ debugfs_write(struct file *file, const char __user *buf, size_t count, loff_t *o
- {
- 	char kbuf[KSYM_NAME_LEN];
- 	char *arg;
--	int read_len = count < (sizeof(kbuf) - 1) ? count : (sizeof(kbuf) - 1);
-+	const size_t read_len = min(count, sizeof(kbuf) - 1);
- 
- 	if (copy_from_user(kbuf, buf, read_len))
- 		return -EFAULT;
--- 
-2.45.2
-
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.gi=
+t/commit/?h=3Dfor-next&id=3Ddef88eb4d8365a4aa064d28405d03550a9d0a3be
