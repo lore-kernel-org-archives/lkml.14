@@ -1,81 +1,96 @@
-Received: from a.ygenius.xyz (unknown [103.143.72.165])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 206F622F19
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.143.72.165
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7875219E1
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719210164; cv=none; b=mWqQD10rWEpLfany4OH54hM8enTDiU6syy74uYAVH6VK6kVQfdr0tVgx50CS3yL7KTdGxGaPBxoyH+qhD0GpMnIC+I0JEGgkX6Jjbl/BEHSLvORfTbSK5t3X/ZW5wyDKaZtndUW6VasbHkmlzkHquLndtrSfofyAvC1ZA7I011w=
+	t=1719210286; cv=none; b=qecqp2IhEGY0X4SyZiSre/f8uAyygOD0eJlcazesvuG0mzl2I9wvfx2/ePjdvrS0B9eCKglV1FEw9MsCG4qKJ9EJeK7+pvz2Ni39q8zgWpn8UPCLLt2yoO45wRiNSQ/rRYSG7nLT3HseYmceoN/9lQUpQ1EIMWz3YgFS4EJEZWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719210164; c=relaxed/simple;
-	bh=Z5vdSDK7UZHiwilnHeb6vWoyaH1WRxh7U7DodoNiKME=;
-	h=From:To:Subject:Date:MIME-Version:Content-Type:Message-ID; b=pZ6u6nFw+ewb38Tm+jcy5Grk/dfLWBkbyTA1y2Anzd2Ym29EGKvcki1m4E3mJh9mtZZiUMOd6Bv4upw4JhED3VeL+SwON8j607R4lWz/uAgHWuDQuURj1RVcwQr+YO56nhG+MKn387wjH57XIdHnTja6rK2lJgr403Te4yYLRLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=a.kperf.com.cn; spf=none smtp.mailfrom=a.kperf.com.cn; arc=none smtp.client-ip=103.143.72.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=a.kperf.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=a.kperf.com.cn
-Received: from PC-20240130SRIC (unknown [36.251.128.13])
-	by a.ygenius.xyz (Postfix) with ESMTPA id 5E9287612C2
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:50:26 +0800 (CST)
-From: =?UTF-8?Q?Aaron?= <ts1@a.kperf.com.cn>
-Reply-To: aaron@xyexpansion.com
-To: linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?A_factory_you_can_trust?=
-Date: Mon, 24 Jun 2024 13:50:34 +0800
+	s=arc-20240116; t=1719210286; c=relaxed/simple;
+	bh=vEuBW39i2ESfpxS5IkfIe5obDGQX0p9Z1+KkJNWA1mE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FvVX0CUBUAbR66Up11SSCqk+/idua5QVjGvFbOM5Be1qzXQeSEgC5zA2vWiVwN65jT6NRa+knEGBgqJ13F2MVyodTsVa7GHSRjnEhEBbwQwIsZOTtHvr3UjhxzwD7foh+BCPnKLW2buJz8yhA2Qrr6/7E+wVrz/HRGRP/mxsnF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=B+PIOJeL; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="B+PIOJeL"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-706524adf91so1892542b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 23:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719210284; x=1719815084; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Re2jmzBZzaiHeY0HiK6tmrvBhlVt4JnJIfW51t2WWYg=;
+        b=B+PIOJeLF+zgKH5dUV8HnHSQ18FgqKYfVOrhyiv+VUewAQx5btyhjl2LI95cM0xmQ6
+         XHrgezgUPlIfWaV8xWyOdM49hopRuZfo0d6OMVMgRYh91osqAVajyWLUkbssC5w09SkO
+         TJaXq3y2KexCI88wUTWZvd7D+EjL+/iezdiPFW7EaCP0phF60JPlysnDDyE+CUDdzD3c
+         bZ5yiCxf+U8V6HVdDKEOJ51g/k6558gzmQW7NOcjZMArRlZFc4MipGjH0tJo4URa48q9
+         xbZg4Z4VERmQpqtX8kjRE8fm6FN5Ol1T+CbTi3bz9p4ltyJlQZzkh6Y0y30B25qMSYW/
+         zHSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719210284; x=1719815084;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Re2jmzBZzaiHeY0HiK6tmrvBhlVt4JnJIfW51t2WWYg=;
+        b=emjrFJZqHZi985Yp0L8TboHZLsryyYMdGRWGSyeTPiCaw2Z9M9rxcNN1SHz+ISJDO6
+         /Mr1r1zWx+4wQDy+VP1u3vjPrcohZpfPEwWzbf8rNq25ibOpNPYqKWyEw1UxO1+aA6zR
+         vVh1jR6b+CNuYnMLT+5qoRW6mFDEFp3hK3muY3V0RkvwAm23D4UMckmtChglhAdmaZYi
+         K7/eh/3nd6fa5ch/+brofzsOLGrYiu7zlYpKHMb05hX/JSNUbKeDNv5orSsXNSsYDaws
+         gMks93/7XKryd1qT6P/CpwCzQQmAmq0uK9adp30JkgLRW3nmwJzjRUGgyM9Xed4uIyE3
+         enOA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1VBpSpVnVrRs3UDAFOTwtOzKvPHz1I12Z4bNFK6hKOkf3CQbn0mDL5MuGVVSJNRDTHxwlreDzrZv55sOF3jNlumNPbg0QXYLzEO1k
+X-Gm-Message-State: AOJu0YzU5cC5xUnCy93gutrPfT8CDW1HpOCsOvqvjjy+QVs7zAtCv8ss
+	N2P2Zd1/7g4rOmPmCsvOb+IfIEpLkZQm8785rktQ4GScWIhUBL4ldMw7T8ymSWQ=
+X-Google-Smtp-Source: AGHT+IGaCZkWeiHY1wWMLYMwLgHsSl99HxEXFfdyqdp+JjnUCXX1cbVt+4kzvW9e7WOResB0H4Nx0w==
+X-Received: by 2002:a05:6a20:6723:b0:1bc:ba80:3438 with SMTP id adf61e73a8af0-1bcf46515a8mr4441324637.60.1719210284013;
+        Sun, 23 Jun 2024 23:24:44 -0700 (PDT)
+Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065107b6a4sm5434743b3a.1.2024.06.23.23.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Jun 2024 23:24:39 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: jstultz@google.com,
+	tglx@linutronix.de,
+	sboyd@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] timekeeping: Use min() to fix Coccinelle warning
+Date: Mon, 24 Jun 2024 08:24:12 +0200
+Message-ID: <20240624062411.321995-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="Mark=_1009550050477508"
-X-Mailer: Foxmail 7, 2,53,  24[cn]
-Message-ID: <009A0B8C06180D3223344F799EF2@PC-20240130SRIC>
+Content-Transfer-Encoding: 8bit
 
-This is a multi-part message in MIME format.
+Fixes the following Coccinelle/coccicheck warning reported by
+minmax.cocci:
 
---Mark=_1009550050477508
-Content-Type: multipart/related; type="multipart/alternative";
-	boundary="Mark=_100955005047750803"
+	WARNING opportunity for min()
 
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ kernel/time/timekeeping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---Mark=_100955005047750803
-Content-Type: multipart/alternative; boundary="Mark=_10095500504775044"
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 4e18db1819f8..f1a9c52b7c66 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -799,7 +799,7 @@ static void timekeeping_forward_now(struct timekeeper *tk)
+ 
+ 	while (delta > 0) {
+ 		u64 max = tk->tkr_mono.clock->max_cycles;
+-		u64 incr = delta < max ? delta : max;
++		u64 incr = min(delta, max);
+ 
+ 		tk->tkr_mono.xtime_nsec += incr * tk->tkr_mono.mult;
+ 		tk->tkr_raw.xtime_nsec += incr * tk->tkr_raw.mult;
+-- 
+2.45.2
 
-
---Mark=_10095500504775044
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi  :
-       I hope your business is getting better!
-       We are a Very big production factory!  we produce high quality b=
-rand for swimwear and yoga and fitness and cycling and some t-shirts an=
-d beach shorts so on,
-       We have over 2500 workers in our factory.
-       There is no problem for any guest to require any audit report=E3=
-=80=82
-       I hope we can become as close as brothers and cooperate for a lo=
-ng time.
-       We have been doing clothing factory for more than 30 years, I wa=
-nt to find a few good brothers sincerely good cooperation. we develop t=
-ogether.and become real good brothers, are you willing ?
-         Whenever you come to China, remember to call me and get togeth=
-er to eat and talk.
-         I hope your business goes from strength to strength !!! keep i=
-n touch, my brother friend !
-
-
-Best regarding.
-Waitting for your reply.
-General Manager : Mr.Aaron
-Email : aaron@xyexpansion.com,
-Mobile: +86 18965665987
-Wechat ID : +86 18965665987
-Skype ID : yingtinggao9
-Address : Industrial Park,YingLin Town,
-JinJiang City,FuJian Province,China.
-Postal code : 362256.
-
---Mark=_10095500504775044--
-
---Mark=_100955005047750803--
-
---Mark=_1009550050477508--
