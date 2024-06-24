@@ -1,80 +1,81 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A6F44C9B;
-	Mon, 24 Jun 2024 07:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016C8FBEF;
+	Mon, 24 Jun 2024 07:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719214316; cv=none; b=A++CHCQscvI7KCYYbNQ2uiur6OHoFROKjWEZioQacU820nL8HfBVWHfvjmZ6u2hkdtc62yHk9IFr5iq87GGXCbSVk0a/0rMI7ZJZcOhdNtMMFxnu9Xm/RG7KS99gAmXaPI0g2Z9fG3TmdlUM+NTbvCDAaU3d+jhR8vRXZKsXJTA=
+	t=1719214482; cv=none; b=sRIhpHJbn59LTcrX2R/HBrY/QKiyINE6z9qIKGNNaotDh/NLo3o3RFDtz9mXAEg5MgjISDX4EzY2AInnXIrIG6ydT0A22qLCXxj3ghTtS9AF7kGWJ+0jEXeEXn3E0WF2iuU65FurQlheYXcR55rThMn+hz/Cp/J8jSavQXDp594=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719214316; c=relaxed/simple;
-	bh=WheDYIvSXPFHlJ+vjpFSdiYww6phbPNBqdRM6HpTPnc=;
+	s=arc-20240116; t=1719214482; c=relaxed/simple;
+	bh=IR9H7UT1JweXlJUcolJZltrVBI2Q1eMGx3A3+6e6XGI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QDWOk8Zo2EU5wI/xC3B1LCi3Wq/tpnXWVA7eBWIlMg0M881640Mjx344LhwL6DjPKP6NIcWKvjo9z/+Mj9+TjlDwNPEuzBB+IL42Ii5QvZzJul6Uim062mieTRs8apHuQg+HONq8K0xNgut26ZfGa0Xk6gKnErc2FFov7KHx7yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cGaALcot; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=F/nVGCQp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cGaALcot; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=F/nVGCQp; arc=none smtp.client-ip=195.135.223.131
+	 In-Reply-To:Content-Type; b=Rj3tmKql1QrpncV1mLmA9hY7f+g873iqX3yx6WWnnGybdDdAB11jM/d0+BmGzWjmX690ft3+KkTn55AuhTgooUawGDQ+kqM3A53s66tpSmHpSiX8Zv93hyyEL6TXgtaSdPutMj+M8WNUE+RtyN1AFvdOg4G9o9V6QonvaoEiAck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XVaHNUHq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Qd2K4LAK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DKSLEMpj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=JlzHUa78; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cGaALcot";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="F/nVGCQp";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cGaALcot";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="F/nVGCQp"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XVaHNUHq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Qd2K4LAK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DKSLEMpj";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="JlzHUa78"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7A8681F7B8;
-	Mon, 24 Jun 2024 07:31:52 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E640F1F7C0;
+	Mon, 24 Jun 2024 07:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719214312; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1719214479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wf4xdzLYLuHWo1JVz5hvLlR9WFrEMxWJf5gClzD7V9A=;
-	b=cGaALcotC+G2tl/AjrCaBRoTmir/FK0RFgGktls9x5Me9l91K/ctHwrGIV2EKNxFDWCHri
-	4f7zEAk3SKB4yMqTiP+RrfjvnfOBkOHdt4OQGoPBweh9xBo/19Fv36Yb5F4ROCXONAd6F1
-	8g+1ni7Aj96iSMF+MGn/91RjQ2JSwg0=
+	bh=n9uIGGVbJ8r8fxtPRtb3rTWtvj0CS+kX8qbLDmwrsbk=;
+	b=XVaHNUHq8Q2UDyjmR1Uc8c+pnb+1HlnOHUGI8PNeNyGJFxKSYtHiyRIzW91G5ViJJ/PVrY
+	Nsd8ZCzYSR/iZ1/BtTrXdiHblE37noVzbN1Tby/+PlVw7fOqU6fIKpaeLj1Q7jV/pBp4N6
+	bo6RtIdW41wxUtdIY1LuGZ/73sA+DXQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719214312;
+	s=susede2_ed25519; t=1719214479;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wf4xdzLYLuHWo1JVz5hvLlR9WFrEMxWJf5gClzD7V9A=;
-	b=F/nVGCQpLodoZ4nJO2LBlx9BDHhJwj7fo70TOZiGtdSlL70ejuGjvTKBN8b2jWAhuqvjMq
-	w19lxh7MUkHLRzBQ==
+	bh=n9uIGGVbJ8r8fxtPRtb3rTWtvj0CS+kX8qbLDmwrsbk=;
+	b=Qd2K4LAKLMK1Zg3tpCpF6loLPWVw2azJjp5tZm+NhagFm22xzd8MNaDsMH7p9uuGmGk8Fk
+	ADsxWdZgDjDzxfAQ==
 Authentication-Results: smtp-out2.suse.de;
-	none
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=DKSLEMpj;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=JlzHUa78
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719214312; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1719214478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wf4xdzLYLuHWo1JVz5hvLlR9WFrEMxWJf5gClzD7V9A=;
-	b=cGaALcotC+G2tl/AjrCaBRoTmir/FK0RFgGktls9x5Me9l91K/ctHwrGIV2EKNxFDWCHri
-	4f7zEAk3SKB4yMqTiP+RrfjvnfOBkOHdt4OQGoPBweh9xBo/19Fv36Yb5F4ROCXONAd6F1
-	8g+1ni7Aj96iSMF+MGn/91RjQ2JSwg0=
+	bh=n9uIGGVbJ8r8fxtPRtb3rTWtvj0CS+kX8qbLDmwrsbk=;
+	b=DKSLEMpjLtGSecYXX2VzYOP616fe91mMVkEWpuR7I86wyHAisOc1EbgJSYmMU02+TT6bl5
+	ynM6/TkjNnCowa7HxOAkxsWT6KRFzhABddxBXHnRwZKkCmomXEtc/X+6LRoPUDjOzEFR3b
+	Imgon5ufBfn74aU59k5LNWhzqoC+O7U=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719214312;
+	s=susede2_ed25519; t=1719214478;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wf4xdzLYLuHWo1JVz5hvLlR9WFrEMxWJf5gClzD7V9A=;
-	b=F/nVGCQpLodoZ4nJO2LBlx9BDHhJwj7fo70TOZiGtdSlL70ejuGjvTKBN8b2jWAhuqvjMq
-	w19lxh7MUkHLRzBQ==
+	bh=n9uIGGVbJ8r8fxtPRtb3rTWtvj0CS+kX8qbLDmwrsbk=;
+	b=JlzHUa78dHwS2tZCLD7XdUV7IlNQ1ON0WFTZUZwngjZ0XZhSDFg2EdDUzvSP6R9JxCnlE8
+	5PhprITz11gEutBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4869B13ACD;
-	Mon, 24 Jun 2024 07:31:52 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B26D813ACD;
+	Mon, 24 Jun 2024 07:34:38 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wgcwEeggeWYtfgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 24 Jun 2024 07:31:52 +0000
-Message-ID: <261612b9-e975-4c02-a493-7b83fa17c607@suse.cz>
-Date: Mon, 24 Jun 2024 09:31:51 +0200
+	id qB+lKo4heWb8fgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 24 Jun 2024 07:34:38 +0000
+Message-ID: <56e9564d-0b01-484c-a491-acd6d15e0b26@suse.cz>
+Date: Mon, 24 Jun 2024 09:34:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,20 +83,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 0/4] Introduce QPW for per-cpu operations
-To: Leonardo Bras <leobras@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, Marcelo Tosatti <mtosatti@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org
-References: <20240622035815.569665-1-leobras@redhat.com>
+Subject: Re: [PATCH v7 18/38] mm: slub: Disable KMSAN when checking the
+ padding bytes
 Content-Language: en-US
+To: Ilya Leoshkevich <iii@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
+ David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-s390@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Sven Schnelle <svens@linux.ibm.com>
+References: <20240621113706.315500-1-iii@linux.ibm.com>
+ <20240621113706.315500-19-iii@linux.ibm.com>
 From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -136,116 +143,102 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
  1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
  EP+ylKVEKb0Q2A==
-In-Reply-To: <20240622035815.569665-1-leobras@redhat.com>
+In-Reply-To: <20240621113706.315500-19-iii@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.79
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.79 / 50.00];
+X-Spamd-Result: default: False [-3.00 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
 	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[redhat.com,cmpxchg.org,kernel.org,linux.dev,linux-foundation.org,linux.com,google.com,lge.com,gmail.com,linutronix.de,infradead.org];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux.ibm.com,google.com,gmail.com,googlegroups.com,vger.kernel.org,kvack.org,arm.com,linux.dev];
 	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
 	TAGGED_RCPT(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.cz:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: E640F1F7C0
+X-Spam-Flag: NO
+X-Spam-Score: -3.00
+X-Spam-Level: 
 
-Hi,
+On 6/21/24 1:35 PM, Ilya Leoshkevich wrote:
+> Even though the KMSAN warnings generated by memchr_inv() are suppressed
+> by metadata_access_enable(), its return value may still be poisoned.
+> 
+> The reason is that the last iteration of memchr_inv() returns
+> `*start != value ? start : NULL`, where *start is poisoned. Because of
+> this, somewhat counterintuitively, the shadow value computed by
+> visitSelectInst() is equal to `(uintptr_t)start`.
+> 
+> One possibility to fix this, since the intention behind guarding
+> memchr_inv() behind metadata_access_enable() is to touch poisoned
+> metadata without triggering KMSAN, is to unpoison its return value.
+> However, this approach is too fragile. So simply disable the KMSAN
+> checks in the respective functions.
+> 
+> Reviewed-by: Alexander Potapenko <glider@google.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 
-you've included tglx, which is great, but there's also LOCKING PRIMITIVES
-section in MAINTAINERS so I've added folks from there in my reply.
-Link to full series:
-https://lore.kernel.org/all/20240622035815.569665-1-leobras@redhat.com/
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 6/22/24 5:58 AM, Leonardo Bras wrote:
-> The problem:
-> Some places in the kernel implement a parallel programming strategy
-> consisting on local_locks() for most of the work, and some rare remote
-> operations are scheduled on target cpu. This keeps cache bouncing low since
-> cacheline tends to be mostly local, and avoids the cost of locks in non-RT
-> kernels, even though the very few remote operations will be expensive due
-> to scheduling overhead.
+> ---
+>  mm/slub.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> On the other hand, for RT workloads this can represent a problem: getting
-> an important workload scheduled out to deal with remote requests is
-> sure to introduce unexpected deadline misses.
-> 
-> The idea:
-> Currently with PREEMPT_RT=y, local_locks() become per-cpu spinlocks.
-> In this case, instead of scheduling work on a remote cpu, it should
-> be safe to grab that remote cpu's per-cpu spinlock and run the required
-> work locally. Tha major cost, which is un/locking in every local function,
-> already happens in PREEMPT_RT.
-
-I've also noticed this a while ago (likely in the context of rewriting SLUB
-to use local_lock) and asked about it on IRC, and IIRC tglx wasn't fond of
-the idea. But I forgot the details about why, so I'll let the the locking
-experts reply...
-
-> Also, there is no need to worry about extra cache bouncing:
-> The cacheline invalidation already happens due to schedule_work_on().
-> 
-> This will avoid schedule_work_on(), and thus avoid scheduling-out an 
-> RT workload. 
-> 
-> For patches 2, 3 & 4, I noticed just grabing the lock and executing
-> the function locally is much faster than just scheduling it on a
-> remote cpu.
-> 
-> Proposed solution:
-> A new interface called Queue PerCPU Work (QPW), which should replace
-> Work Queue in the above mentioned use case. 
-> 
-> If PREEMPT_RT=n, this interfaces just wraps the current 
-> local_locks + WorkQueue behavior, so no expected change in runtime.
-> 
-> If PREEMPT_RT=y, queue_percpu_work_on(cpu,...) will lock that cpu's
-> per-cpu structure and perform work on it locally. This is possible
-> because on functions that can be used for performing remote work on
-> remote per-cpu structures, the local_lock (which is already
-> a this_cpu spinlock()), will be replaced by a qpw_spinlock(), which
-> is able to get the per_cpu spinlock() for the cpu passed as parameter.
-> 
-> Patch 1 implements QPW interface, and patches 2, 3 & 4 replaces the
-> current local_lock + WorkQueue interface by the QPW interface in
-> swap, memcontrol & slub interface.
-> 
-> Please let me know what you think on that, and please suggest
-> improvements.
-> 
-> Thanks a lot!
-> Leo
-> 
-> Leonardo Bras (4):
->   Introducing qpw_lock() and per-cpu queue & flush work
->   swap: apply new queue_percpu_work_on() interface
->   memcontrol: apply new queue_percpu_work_on() interface
->   slub: apply new queue_percpu_work_on() interface
-> 
->  include/linux/qpw.h | 88 +++++++++++++++++++++++++++++++++++++++++++++
->  mm/memcontrol.c     | 20 ++++++-----
->  mm/slub.c           | 26 ++++++++------
->  mm/swap.c           | 26 +++++++-------
->  4 files changed, 127 insertions(+), 33 deletions(-)
->  create mode 100644 include/linux/qpw.h
-> 
-> 
-> base-commit: 50736169ecc8387247fe6a00932852ce7b057083
+> diff --git a/mm/slub.c b/mm/slub.c
+> index b050e528112c..fcd68fcea4ab 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1176,9 +1176,16 @@ static void restore_bytes(struct kmem_cache *s, char *message, u8 data,
+>  	memset(from, data, to - from);
+>  }
+>  
+> -static int check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
+> -			u8 *object, char *what,
+> -			u8 *start, unsigned int value, unsigned int bytes)
+> +#ifdef CONFIG_KMSAN
+> +#define pad_check_attributes noinline __no_kmsan_checks
+> +#else
+> +#define pad_check_attributes
+> +#endif
+> +
+> +static pad_check_attributes int
+> +check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
+> +		       u8 *object, char *what,
+> +		       u8 *start, unsigned int value, unsigned int bytes)
+>  {
+>  	u8 *fault;
+>  	u8 *end;
+> @@ -1270,7 +1277,8 @@ static int check_pad_bytes(struct kmem_cache *s, struct slab *slab, u8 *p)
+>  }
+>  
+>  /* Check the pad bytes at the end of a slab page */
+> -static void slab_pad_check(struct kmem_cache *s, struct slab *slab)
+> +static pad_check_attributes void
+> +slab_pad_check(struct kmem_cache *s, struct slab *slab)
+>  {
+>  	u8 *start;
+>  	u8 *fault;
 
