@@ -1,207 +1,119 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8F213776F;
-	Mon, 24 Jun 2024 10:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F86213959B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719223538; cv=none; b=OGUt5sMR4ahmj/RGxWT18jpNGmC9B0zuA0aop+UYwnwf5HfamlYv3bGFioOm3z5PutnIpD80e6fNTVC1j0y84018GJTXOCAvSkCc/Yi77Mkeenoi28IhT/I+lnaVO56YarDhScmKpKTpGkX1TXNY8YhWiDipw2lt5nusobGPSM0=
+	t=1719223543; cv=none; b=bJfivbemX0dJ4nXZNBE/UgNRbvF2voKRrBpvLWcCbK7BWhWUfGAhxnkbf6l86h3EOBe6hekjarGygrgJutXAmm4K6mvg/wnYAGaJhpPmicHcvd9RmFYJw6i4C4G7bsoSLPq2mURVIT6c4KyOQm05ZuYFCHtdmAMu1aGSLb5zDmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719223538; c=relaxed/simple;
-	bh=Jy+iqPN5Zb7Kn9IXKcX6+h/JWaI/5Q1D63qOdm1UZHc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y3+LUcpbwxC0znBY6H2FsbxUYhDTP30F0AratiJ6Ch71AdL1pIwGQ02Oszcu3A9vI91fFHoPOChdVumB9ovj57x2BJLJFcu0xtksuN9UrUdPuE7kODYLdImK9IVeCMIpEnx3NULLwh2WWvSQc8+wU/Cf3UuZbsB42PMrdi0fKDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZqGsq+c8; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719223543; c=relaxed/simple;
+	bh=59Ceek29WST1fDSGduPHZlc7f0kSkPsfJjKjs8wR6EM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Liae3f23Rcmp6HaJwJq9tmFZQ1Kq1wzH1sFTRRFoKGJDRA54/wCr5mrAohfHnYnDJQwZgL0nmuBOSvxpl4TEFv8DD7Lf8giYjxUlZFhHHfwpss7y5WITUUWFTKkvKBQYG/y0xWykK5bzok+D3HPTv5XBOJ0zyNeHR4jFUVU6H/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iXgtj2TO; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZqGsq+c8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719223537; x=1750759537;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Jy+iqPN5Zb7Kn9IXKcX6+h/JWaI/5Q1D63qOdm1UZHc=;
-  b=ZqGsq+c8qD9uA0UaiX9SjoIE/BEJoXgS74L65PEb9B5M/C0eKeGS7qM2
-   DbYDWGEQKoqAYhKpR+Y6xVrqHatXQXAiBQraLjmIr3KbViSjQh1UM7q9I
-   wqNXRmmYgLEFroJE9POkmdLX4mXMaG9Yy6h2UmTRidNN6NA3PlWLcd7m7
-   FiNFcNqQb4lFL3ZOSWlCY2VqybSyYwa/ALN6GNBbbejfejIZedoOGV6ji
-   +eXLRyTQl5OuUYZBG9jlOzWxkT7do26xlqHgF/w+MP0Q2qsuF0dTJvnBX
-   R72jY37Hx+fSf853Sacelz//oYCdlt8NrxX4N+2Au4AZVQGnXS6RDG9UJ
-   A==;
-X-CSE-ConnectionGUID: gbDFkw3jSdy2cxhwngM2TQ==
-X-CSE-MsgGUID: PziRlTldTwCKcrczNWRR1A==
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="29041039"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 03:05:30 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 24 Jun 2024 03:05:20 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 03:05:12 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
-	<durai.manickamkr@microchip.com>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
-	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
-	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
-	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
- Muralidharan" <manikandan.m@microchip.com>
-Subject: [PATCH 4/5] dt-bindings: gpio: convert Atmel GPIO to json-schema
-Date: Mon, 24 Jun 2024 15:34:30 +0530
-Message-ID: <20240624100431.191172-5-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240624100431.191172-1-manikandan.m@microchip.com>
-References: <20240624100431.191172-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iXgtj2TO"
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-36279cf6414so3227044f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 03:05:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719223540; x=1719828340; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7YwHsXJujiD0iPTiagCaZU8j7Hkxo5Qj/O9XI+sxjQo=;
+        b=iXgtj2TOzWzi82xnt+sZcTBp7HP5FKXdvqcaKJiBeFOIHaunrZmotqyS1KJgtOSXZi
+         0WHJUxkn/s9GxL+BpaaBXUm++NCsETHDTbmr7ky+FznGxbpmEryL/cbEy1N+aQcfmSP2
+         ZW1vEKVcsFyec2TwWFYhydTqmBOKsQltg9Ghv1G7bv5bU2Wc3a3dpqs5BFjblv6sKQRP
+         RO4vF/CV5JEogLH5ICNC8G0zpbOLI/wc20WcQ+mWse2IinNY+QY8v73IcUlbB739aL78
+         ejr2Uj7fCx234paa9TZRBv8DME5GCL5oTxjUfF3AzpYanEfVZHrGYb662Uzd6B688BRW
+         XjnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719223540; x=1719828340;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7YwHsXJujiD0iPTiagCaZU8j7Hkxo5Qj/O9XI+sxjQo=;
+        b=P4U0jWHQ/ZPQptDL+poJimCin8OT+s0l5kBQCOMZx3E94MiBpXPbAO1RjaJLWgOOdJ
+         z7c0tHmL9QF8dITa7AWHwa5CSksNuUNjJ9pgrtQOReFaKYtZhse1iFk0OejimgVmflqK
+         jX/OJLybqF9snqSjIzhna7jV9bn5JZ8j5FSvhrfZxwJNO/d4P9RsCq/1zTzSIKIKQS5T
+         zeoVxvfpF00V/TjPqO1wVJIzR8VGhypI0P7ELL6QxkzTkot4/DkhjubjQtYBlEqwFux4
+         83Sze8jvbiKL7xWIfc6wRpFXhnPoZF+vgzDt/zytl3LdhxbZbR4S1k2g95qA/Cjjmakd
+         Rk0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV9BFgcRlvcK/u2s9lvJRzK/YYa0A0x2VopPzGf/J5jCDhbBHT2ZkcPUBpSInWU5Uxsl+DSTA8bS8vYOz4SalASDwPq1nNfOBy3QEPx
+X-Gm-Message-State: AOJu0Yx65sECxCIN/xlGFYBeP0zzKzt5fjlyj92Ctq/0MC4Sp3I4dDIZ
+	7RBDSuabttYKbMel2yQlhxudilb3Ep5zqdS22AUxJmIUA9n3pY+AytL3Uhcx3kc=
+X-Google-Smtp-Source: AGHT+IHQdmqz6uyjlSKsVponwiqLHfGjG3Nl2X4/xaxGmb+o+kzPfdjcq6JNP8vVbhGQSwbSFBWQdA==
+X-Received: by 2002:a05:6000:184f:b0:366:eb61:b47 with SMTP id ffacd0b85a97d-366eb610bafmr3041300f8f.8.1719223539762;
+        Mon, 24 Jun 2024 03:05:39 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366383f65bcsm9529360f8f.13.2024.06.24.03.05.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 03:05:39 -0700 (PDT)
+Message-ID: <c3240caf-a291-4f6b-a467-a424f1b3babb@linaro.org>
+Date: Mon, 24 Jun 2024 11:05:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/8] Add sc7180 camss subsys support
+To: gchan9527@gmail.com, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240624-b4-sc7180-camss-v2-0-0dfecdc50073@gmail.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240624-b4-sc7180-camss-v2-0-0dfecdc50073@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Convert the Atmel GPIO controller binding document to DT schema format
-using json-schema.
+On 24/06/2024 00:22, George Chan via B4 Relay wrote:
+> SM7125 is the SoC found in the Xiaomi Redmi Note 9 Pro(joyeuse) cellphone.
+> This series adds support to bring up the CSIPHY, CSID, VFE/RDI interfaces.
+> 
+> Since SM7125 is a low-speed variant of SC7180, SC7180 testers please
+> take a look and have a test as well.
+> 
+> sc7180 provides
+> 
+> - 2 x VFE
+> - 1 x VFE Lite
+> - 2 x CSID
+> - 1 x CSID Lite
+> - 4 x CSI PHY
+> 
+> The sc7180-camss binding should be comaptible with sdm845 yaml.
+> I've copied a new yaml from sdm845-camss.yaml, strip all _src clk and
+> put new maintainer information. If this is not desirable then i can add binding to
+> existing sdm845 yaml instead.
+> 
+> In addition, a bootable tree of sm7125/joyeuse is availble at:
+> https://github.com/99degree/linux/tree/camss
+>    
+> 
+> Signed-off-by: George Chan <gchan9527@gmail.com>
+> ---
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+Could you please rebase your series with
+
+https://lore.kernel.org/linux-arm-msm/20240522154659.510-1-quic_grosikop@quicinc.com/
+
+taken in ?
+
+I think your patchset ends up with less churn in it as a result.
+
 ---
- .../bindings/gpio/atmel,at91rm9200-gpio.yaml  | 78 +++++++++++++++++++
- .../devicetree/bindings/gpio/gpio_atmel.txt   | 31 --------
- 2 files changed, 78 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio_atmel.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml b/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
-new file mode 100644
-index 000000000000..3ace7ba687fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/atmel,at91rm9200-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip GPIO controller (PIO)
-+
-+maintainers:
-+  - Manikandan Muralidharan <manikandan.m@microchip.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - atmel,at91sam9x5-gpio
-+              - microchip,sam9x60-gpio
-+          - const: atmel,at91rm9200-gpio
-+      - items:
-+          - enum:
-+              - microchip,sam9x7-gpio
-+          - const: microchip,sam9x60-gpio
-+          - const: atmel,at91rm9200-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+  gpio-line-names: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#gpio-lines":
-+    description:
-+      Number of gpio, 32 by default if absent
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    pioA: gpio@fffff400 {
-+            compatible = "atmel,at91rm9200-gpio";
-+            reg = <0xfffff400 0x200>;
-+            interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
-+            #gpio-cells = <2>;
-+            gpio-controller;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+            clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt b/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
-deleted file mode 100644
-index 29416f9c3220..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--* Atmel GPIO controller (PIO)
--
--Required properties:
--- compatible: "atmel,<chip>-gpio", where <chip> is at91rm9200 or at91sam9x5.
--- reg: Should contain GPIO controller registers location and length
--- interrupts: Should be the port interrupt shared by all the pins.
--- #gpio-cells: Should be two.  The first cell is the pin number and
--  the second cell is used to specify optional parameters to declare if the GPIO
--  is active high or low. See gpio.txt.
--- gpio-controller: Marks the device node as a GPIO controller.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells: Should be two. The first cell is the pin number and the
--  second cell is used to specify irq type flags, see the two cell description
--  in interrupt-controller/interrupts.txt for details.
--
--optional properties:
--- #gpio-lines: Number of gpio if absent 32.
--
--
--Example:
--	pioA: gpio@fffff200 {
--		compatible = "atmel,at91rm9200-gpio";
--		reg = <0xfffff200 0x100>;
--		interrupts = <2 4>;
--		#gpio-cells = <2>;
--		gpio-controller;
--		#gpio-lines = <19>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--
--- 
-2.25.1
+bod
 
