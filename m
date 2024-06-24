@@ -1,180 +1,129 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C1AFBEF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09259FBEF;
+	Mon, 24 Jun 2024 21:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719263139; cv=none; b=p8PpjDmQlU/mjfY+7PCqCncujDRrSDB5ZSG7dtLzv+1COuBkWojbmfuBSR83YYhHSB6hixsJqkzyXfl1xm1ctUMm3FkBi4H9knzwtDgd9ZL6goFRTncLwJHLAgnx8NLpimgdah8Y1JigR18daRE71xNoqf5TJ7BX2FtcJQapeb0=
+	t=1719263421; cv=none; b=FsGCrIWE25zr3wwePdZ/MVf41D6/4wJ/jU/qVbPuVNucIx99XezVlALN6Xq8JnY+S4LLzM6PyjhTmAcSrnpJufFTBaSwTXRgq3ysR+pbql3RgBjNbnE+Zd3BjcR4mJRUpyPTkg99z+sYyE0oi44B/gxdUdxLlCT7A9b8pYlcx/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719263139; c=relaxed/simple;
-	bh=rc+uf24RV4wU1ZmPVkashso27WnRydS2+EKRJ3fw3uo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dehXwSCuWoaO0Jse10DHHOjGC9ibgBBadNKyIP18zC733DHf2mSZey2PO7/RLajSWr1MSO7mScqGcJFY6be6nzTAnrGjKpE0gqicEURGZItUpBtWtjRno1Ek5ZIlKgvon6z/MmQNyqbRgQZ32fRYxhbyI8ZBkZbDllX715A7EiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C7WKTJW9; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1719263421; c=relaxed/simple;
+	bh=zIXCk75aYHpcTxk2IWR/+FVXsSNkawGDCSBB195Y8Q0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YXN5qvOK4Aaw9Y7B9CvlNrKZjDLM4RJy80iFSvlKDbWUIG5m0z5lmtjxbkBXVp3yeBEyBPjzBVQwrijKURpMeOSq7k9K9JhWAwim5e8jzZ0eoNdRTNTL8z2P/rxDwZHZX6gmoUJRM4Gd9ii1wwHhSAlfNbtdourkcLurXJJHwEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C5mMH+P+; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C7WKTJW9"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c9c36db8eeso2515695b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:05:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5mMH+P+"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4217990f8baso42606925e9.2;
+        Mon, 24 Jun 2024 14:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719263137; x=1719867937; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F26ETBZiZjhwFkvNSbxGcmTBqIZI6iLTpohts+kXXh4=;
-        b=C7WKTJW9cwI2vuH4sFmGpGcgqjNbXB8oErJ9r9JAOGXmgSrBEmtvsX16gxG8dFXf7i
-         eeKhCjbtBk7PUcgLuotiFtRzJTqEfxHj4Ym+2z5j42fGz7Y0ZydKIaWwqXMwbHWfj5Z1
-         d48rlbUzIyu9tvTzfxrYAiMj80oaeNsYN1tzA=
+        d=gmail.com; s=20230601; t=1719263418; x=1719868218; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7h4Mx2Vzzy1/ph7K1w6trMWSYerI+1F9zFKh72PTopU=;
+        b=C5mMH+P+nDgR3umbV0Lm2065/kvjkfhC5vmpWMNmqgFDFrRSKJQehtViAXc+MBMHXW
+         +CxdcNBTxrDuGng/nmbuVssT6h07EfCdteL3Afx92Dm1ExzxeIiafp+vJ4BdOrFRQTjb
+         dGVeJpcOmm68L5bRipKS0SKSISHJLMCPy3Q4/lWL4UCstFQFjGM0jL3ekzkGAVT3Wjnv
+         oeuoLoSnunVHhwUZikPglZeEWrCX0YwEVm6CluRo/OSUMewduzVYVmhGJuVKscRV4ETM
+         HuZ6Pwr2uFFZTkW7QSphoVWm01M6NX9aGXLae578GRHEaZZVO42LReJPzZ9LwX1Q63eV
+         OxhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719263137; x=1719867937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F26ETBZiZjhwFkvNSbxGcmTBqIZI6iLTpohts+kXXh4=;
-        b=iyB51zJD5L2UuBUYyb5REvZpvJMKgY2Lsuny3gi2EeAAUyfE5hoJNFuw0TbWuzmwey
-         mB4ZTytWf4HCb/besox/R5MitvKtuEdP+e/vKa4PwN9bukGg1wOsKRdWRwi9Wf3W10CS
-         bL6Y6XFoh/KdtkZCzvEM4kubmH3NK5a6JDIM3vLPRjEHRAD82J+WortZw1r6dTo+gIR8
-         c9lKVoLv5DP7SUQeaoSbxoi6Ja+wuLOnRfpNchhev/HDWlsQ5nyRNdfS8JQCjREbtAgc
-         SaQUhcSdr8A7dNk+//+rxMtt7yiI5krClTLT4LZ99jtlvc7GOO3+Hsj/e7r4Yitefx06
-         WWZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwhOTbA4yKIZZPFfypQydEfkdgXeU9I8JitNknT6O0L15oUE1ETsX/kTPsksy9AG97xQCdLVEQkms2b3lQVagLg1zXxlFJ4WgUW2Xb
-X-Gm-Message-State: AOJu0Yy36S5GPzP/jIZCLMz1wfjeQFEceLIAlqwJ+je7/EE8VULiG3qn
-	2Eke0lyf7Gh8EB5rxgfayhBUnFtc+7dcRtlPIyWBSXFUJtduGCkoRF+B0q+uPtB6nahhfwtJ48s
-	=
-X-Google-Smtp-Source: AGHT+IG6KjfKbgAYuA15ESR9dDKLs3G/F25VY27spn4z5331K3FCbsnvte0xklVf0D+6c2yGrXJHbw==
-X-Received: by 2002:a0c:f051:0:b0:6b2:c94d:a02f with SMTP id 6a1803df08f44-6b54099d279mr66175186d6.13.1719262727656;
-        Mon, 24 Jun 2024 13:58:47 -0700 (PDT)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com. [209.85.160.171])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b52ac1028csm28965306d6.99.2024.06.24.13.58.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 13:58:46 -0700 (PDT)
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44056f72257so27771cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:58:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVpsXrqqrHUfMlZ0MR4Er/dTFZxuY78JYIqdEZ2nJXRSDmq3+4Fc7Dvbm50gbuWY21uccmg4oh/hYZZZQLwZUFny6jmEvRGYLeDSeah
-X-Received: by 2002:a05:622a:283:b0:442:1bc4:8fb2 with SMTP id
- d75a77b69052e-444f2566f1fmr919771cf.20.1719262726353; Mon, 24 Jun 2024
- 13:58:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719263418; x=1719868218;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7h4Mx2Vzzy1/ph7K1w6trMWSYerI+1F9zFKh72PTopU=;
+        b=ncqtz7UdN+zfboCK+OcxD5LiCDVKKk4NVruxq2ukUKrMpMSSPb5ZPaN1CiNsIu1CYX
+         ojMRjF8D7ndBSCO8dFSVY47UShhYHBZF0EaZ/JlFVfVcik8sILajtC1yJX0EeE5UTJya
+         qVA6qNFDYVc7MVrWDl+tyG1DnXU+QdPrZUyHdaWXf7wBEFDInfD7GS2zKnXGANdZzR1g
+         fgzCD7XNsLeuPB2zfd7z/j10b11Y0T0xW4EAkm1govc3rx6lF9T7ZkgToiPvktnOtXKP
+         GHjMYVyPb1+V9uIKZM/ERcjWDjv1Rn+pKCFLJgyddUsC/zYCmzGjIuVPqvzLaJmvvVWv
+         1LZA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0aYSMIODetbd1ViZj8CxVTywui36qgTLp6/NZUtXmJjvq+2PBB36hFBi0tDpI0qt02w4tI4rbGtwK/av1kd1OLSoHbW2HIPJIyQtdmdd1T8TVoO7yiBSOQYOOmaWoM9cxkzhI
+X-Gm-Message-State: AOJu0Yy5lYgcGMzmW+axRagfLpRMaWeo0b25imcQVtavv04Xh9AbsZ+U
+	atty+5mLWCs55Ad6HEZbX6jVlsVuVNCd6tKyZdqKty5aG7CBGlRMXwFMSVcX
+X-Google-Smtp-Source: AGHT+IFL2g9nbddRwxvFCZcjQygcMRWl9lESJW9Y7LWtGqJ2anOaUschGrkdt6Ny6ai/6teIVtnsCw==
+X-Received: by 2002:adf:fd87:0:b0:360:81d2:b06b with SMTP id ffacd0b85a97d-366e79fdfbcmr3360529f8f.18.1719263418139;
+        Mon, 24 Jun 2024 14:10:18 -0700 (PDT)
+Received: from [127.0.1.1] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36638f86566sm11110573f8f.64.2024.06.24.14.10.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 14:10:17 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Date: Mon, 24 Jun 2024 23:10:06 +0200
+Subject: [PATCH] usb: core: add missing of_node_put() in
+ usb_of_has_devices_or_graph
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610222515.3023730-1-dianders@chromium.org>
- <20240610152420.v4.7.I0f81a5baa37d368f291c96ee4830abca337e3c87@changeid> <ZnlilDj5UrvrVasv@hovoldconsulting.com>
-In-Reply-To: <ZnlilDj5UrvrVasv@hovoldconsulting.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 24 Jun 2024 13:58:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U=C+Myrb4cpGyV-J=RHn39C2aF1WT_Xt5M2vczbZ-AbA@mail.gmail.com>
-Message-ID: <CAD=FV=U=C+Myrb4cpGyV-J=RHn39C2aF1WT_Xt5M2vczbZ-AbA@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] serial: qcom-geni: Fix suspend while active UART xfer
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Tony Lindgren <tony@atomide.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
-	John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240624-usb_core_of_memleak-v1-1-af6821c1a584@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAK3geWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMyMT3dLipPjk/KLU+Py0+NzU3JzUxGxdc0tDM0MzI+MkM6NUJaDOgqL
+ UtMwKsKnRsbW1AJ+KZjllAAAA
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Stephen Boyd <swboyd@chromium.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719263416; l=1531;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=zIXCk75aYHpcTxk2IWR/+FVXsSNkawGDCSBB195Y8Q0=;
+ b=+ByHjcUALzgzweObJ0Ak9OHgaplq8/LAdvC9xDCh1inm6nL1TSPfW/zbMcSEfGTcAuQwNZ/oI
+ PGEVDaWv2upBwgyNRcBV6e447rk2NwklbZh7a14JEzGBzRbv9rWhR0b
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-Hi,
+The for_each_child_of_node() macro requires an explicit call to
+of_node_put() on early exits to decrement the child refcount and avoid a
+memory leak.
+The child node is not required outsie the loop, and the resource must be
+released before the function returns.
 
-On Mon, Jun 24, 2024 at 5:12=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Mon, Jun 10, 2024 at 03:24:25PM -0700, Douglas Anderson wrote:
-> > On devices using Qualcomm's GENI UART it is possible to get the UART
-> > stuck such that it no longer outputs data. Specifically, logging in
-> > via an agetty on the debug serial port (which was _not_ used for
-> > kernel console) and running:
-> >   cat /var/log/messages
-> > ...and then (via an SSH session) forcing a few suspend/resume cycles
-> > causes the UART to stop transmitting.
->
-> An easier way to trigger this old bug is to just run a command like
-> dmesg and hit ctrl-s in a serial console to stop tx. Interrupting the
-> command or hitting ctrl-q to restart tx then triggers the soft lockup.
->
-> > The root of the problems was with qcom_geni_serial_stop_tx_fifo()
-> > which is called as part of the suspend process. Specific problems with
-> > that function:
-> > - When an in-progress "tx" command is cancelled it doesn't appear to
-> >   fully drain the FIFO. That meant qcom_geni_serial_tx_empty()
-> >   continued to report that the FIFO wasn't empty. The
-> >   qcom_geni_serial_start_tx_fifo() function didn't re-enable
-> >   interrupts in this case so the driver would never start transferring
-> >   again.
-> > - When the driver cancelled the current "tx" command but it forgot to
-> >   zero out "tx_remaining". This confused logic elsewhere in the
-> >   driver.
-> > - From experimentation, it appears that cancelling the "tx" command
-> >   could drop some of the queued up bytes.
-> >
-> > While qcom_geni_serial_stop_tx_fifo() could be fixed to drain the FIFO
-> > and shut things down properly, stop_tx() isn't supposed to be a slow
-> > function. It is run with local interrupts off and is documented to
-> > stop transmitting "as soon as possible". Change the function to just
-> > stop new bytes from being queued. In order to make this work, change
-> > qcom_geni_serial_start_tx_fifo() to remove some conditions. It's
-> > always safe to enable the watermark interrupt and the IRQ handler will
-> > disable it if it's not needed.
-> >
-> > For system suspend the queue still needs to be drained. Failure to do
-> > so means that the hardware won't provide new interrupts until a
-> > "cancel" command is sent. Add draining logic (fixing the issues noted
-> > above) at suspend time.
->
-> So I spent the better part of the weekend looking at this driver and
-> this is one of the bits I worry about with your approach as relying on
-> draining anything won't work with hardware flow control.
->
-> Cancelling commands can result stalled TX in a number of ways and
-> there's still at least one that you don't handle. If you end up with
-> data in in the FIFO, the watermark interrupt may never fire when you try
-> to restart tx.
+Add the missing of_node_put().
 
-Ah, that's a good call. Right now it doesn't really happen since
-people tend to hook up the debug UART without flow control lines (as
-far as I've seen), but it's good to make sure it works.
+Cc: stable@vger.kernel.org
+Fixes: 82e82130a78b ("usb: core: Set connect_type of ports based on DT node")
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+This bug was found while doing some code analysis, and I could not test
+it with real hardware. Although the issue and it solution are
+straightforward, any validation beyond compilation and static analysis
+is always welcome.
+---
+ drivers/usb/core/of.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
+index f1a499ee482c..763e4122ed5b 100644
+--- a/drivers/usb/core/of.c
++++ b/drivers/usb/core/of.c
+@@ -84,9 +84,12 @@ static bool usb_of_has_devices_or_graph(const struct usb_device *hub)
+ 	if (of_graph_is_present(np))
+ 		return true;
+ 
+-	for_each_child_of_node(np, child)
+-		if (of_property_present(child, "reg"))
++	for_each_child_of_node(np, child) {
++		if (of_property_present(child, "reg")) {
++			of_node_put(child);
+ 			return true;
++		}
++	}
+ 
+ 	return false;
+ }
 
-> I'm leaning towards fixing the immediate hard lockup regression
-> separately and then we can address the older bugs and rework driver
-> without having to rush things.
+---
+base-commit: 62c97045b8f720c2eac807a5f38e26c9ed512371
+change-id: 20240624-usb_core_of_memleak-79161623b62e
 
-Yeah, that's fair. I've responded to your patch with a
-counter-proposal to fix the hard lockup regression, but I agree that
-should take priority.
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-
-> I've prepared a minimal three patch series which fixes most of the
-> discussed issues (hard and soft lockup and garbage characters) and that
-> should be backportable as well.
->
-> Currently, the diffstat is just:
->
->          drivers/tty/serial/qcom_geni_serial.c | 36 +++++++++++++++++++++=
-++++-----------
->          1 file changed, 25 insertions(+), 11 deletions(-)
-
-I'll respond more in dept to your patches, but I suspect that your
-patch series won't fix the issues that N=C3=ADcolas reported [1]. I also
-tested and your patch series doesn't fix the kdb issue talked about in
-my patch #8. Part of my reworking of stuff also changed the way that
-the console and the polling commands worked since they were pretty
-broken. Your series doesn't touch them.
-
-We'll probably need something in-between taking advantage of some of
-the stuff you figured out with "cancel" but also doing a bigger rework
-than you did.
-
-[1] https://lore.kernel.org/r/46f57349-1217-4594-85b2-84fa3a365c0c@notapian=
-o
