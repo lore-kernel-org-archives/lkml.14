@@ -1,213 +1,132 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC5B13B5A7;
-	Mon, 24 Jun 2024 12:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F347413B58D;
+	Mon, 24 Jun 2024 12:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719231104; cv=none; b=s6Gin/Pxw/+3dWT1NWLH0xcUgtDHqGESC+BAYbiYYNFJ9IFm2Ed7doOURUBr4BOfhiwi09sCeW9JhaSs9hZb3vLjLCMKmJLsTtE79fh0jaD0MJMjlFuwZVtCvE+prrG6pY0ME3prU+1g1PilL6gdqEDPgtcnNj7cJCvrg2pwR5Y=
+	t=1719231120; cv=none; b=J1POy5RL+3m0+wQrG3zNPuClzxEdxIQH58gjLI/n6I4c85JX+zA6bdcH/xS0eBb3Zn8erv51fWltDCseD+q35zWh/Nl/3ciDNRfs+JoFwMpPGykhzNZiPV9jmNkZF4vMuPOH7TrWIvZola65BASx9vqpmNrACJPnQS92LmDIFag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719231104; c=relaxed/simple;
-	bh=iUZMIDf1g4gQLe4V7W/eoO40Wv45y2qJEUXcUGDxSAk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OHiDRebgrV68qdZHfcOJMiSvUxIOBdL7d9r9N4y2kdekMgadTA/BTGadDftlrYhyX9yJQHcKqY57qg+Sy27qNErhYYbTVZyNWaeo6/FQ5eMi942ADUrl1vAdBDHUcBMAJvO1lGni0fZ8zxz0gYXgTdLIlxIzhH/5e3eIngdB/Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JpryBzst; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719231120; c=relaxed/simple;
+	bh=4Ot9tyWAtkoGaWuX0CtgzQSqJ/8GufECRvDvI/p6kFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ArZUClo3+GvraR+FIA/zUV/eAKOhl2/7F9Tvokml3HwbbYCiWKOhwQyAIqkV0Adcz4HnLlSuePjHOpEs4aBdfFQNCib3ygdNHyxXh4l/3a1X4ObvyHVkeTg0UkFRafSjKkyRMsCOrWZ5MAJLJZmGRpkeNFrEAwZQybzBzbizrAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwTcRMHm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JpryBzst"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OBTn1o001434;
-	Mon, 24 Jun 2024 12:11:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=xnvHat8p/H0lr
-	hVdrRpss/zDOVGdT1aSkMPN9LWYkaU=; b=JpryBzstb5QFE53fJAcYBHjAxMAm+
-	1pH51sc20XqEDnwDeM8x7oX5aQxNSPBLWnJmzy84ZvMo2scG+mSCTmVA+1vlYHUk
-	5Xpg0XwmU1cmgFM85tMRFHyrwk9rpwbHpV9JbNRQwrhGXgY67ZzJFl+ky26AN+Es
-	J0wCLMP7hjp/aorqFtm5Uy4aJGlJlXrR3aIgbj9Akhpp4rqlVDbk6YAXkpTeQ0+3
-	K8Z9LXdwllWOLiRQuksUdEFV86LaqN/7epb/pUzGsb/n+TYzywhn9PJYGvOz+j+8
-	ecyvj/GbuNXBR6cC50z3H+ptKSFe0ZMocem3Z8QZAG+j7bsFPBv1laLpA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7y0r38g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 12:11:23 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45OC3ITg028045;
-	Mon, 24 Jun 2024 12:11:23 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7y0r38c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 12:11:22 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45OAkMSj020074;
-	Mon, 24 Jun 2024 12:11:21 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxb5m8b3s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 12:11:21 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45OCBGAf32834050
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 12:11:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7460220043;
-	Mon, 24 Jun 2024 12:11:16 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3480D2004B;
-	Mon, 24 Jun 2024 12:11:13 +0000 (GMT)
-Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 24 Jun 2024 12:11:13 +0000 (GMT)
-From: Krishna Kumar <krishnak@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
-        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
-        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
-        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
-        mahesh.salgaonkar@in.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
-Subject: [PATCH v3 2/2] powerpc: hotplug driver bridge support
-Date: Mon, 24 Jun 2024 17:39:28 +0530
-Message-ID: <20240624121052.233232-3-krishnak@linux.ibm.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240624121052.233232-1-krishnak@linux.ibm.com>
-References: <20240624121052.233232-1-krishnak@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwTcRMHm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7395AC2BBFC;
+	Mon, 24 Jun 2024 12:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719231119;
+	bh=4Ot9tyWAtkoGaWuX0CtgzQSqJ/8GufECRvDvI/p6kFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dwTcRMHmDNowzrtF+b41zPBQKJ1E2Ai6fuks7di4uBrIo2bhbjFbsaAYKVsTmf5Bv
+	 k48hJuWaOLlmoaVeWsEuMb8Xbnk2WJgXnKqn9m0C7ZyR3dgYM1Jn+BFGuhgDyfWaMI
+	 bxLp66r6TBNv89+BWjv0u+6XLEUj6Za0mF1FJ8FkJ2gOlxSzL20Fg/fDSbROIc3YTc
+	 jklzhSeuc43dQDENgooKGiA4HaWzawbrSwqGLAME+cfgiX+FHeruN/tNTzxB8yVoQ9
+	 nSaQ6Ud1I1CnVoAm44KXnud641lqsZFTduxqBY1SreRw2GmVzSJ+17PL4ErSI3+uyc
+	 yDQE+H0P6b0bA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sLiYG-000000006Wl-1ZK9;
+	Mon, 24 Jun 2024 14:12:05 +0200
+Date: Mon, 24 Jun 2024 14:12:04 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	linux-arm-msm@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 7/8] serial: qcom-geni: Fix suspend while active UART
+ xfer
+Message-ID: <ZnlilDj5UrvrVasv@hovoldconsulting.com>
+References: <20240610222515.3023730-1-dianders@chromium.org>
+ <20240610152420.v4.7.I0f81a5baa37d368f291c96ee4830abca337e3c87@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 88M_4EJ97CbN7eemeRuehuUU9FlSvnZ3
-X-Proofpoint-ORIG-GUID: GqfoZ7rwesZsKJWL-5n-06r5qAQiGShw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_09,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 bulkscore=0 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2406240095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610152420.v4.7.I0f81a5baa37d368f291c96ee4830abca337e3c87@changeid>
 
-There is an issue with the hotplug operation when it's done on the
-bridge/switch slot. The bridge-port and devices behind the bridge, which
-become offline by hot-unplug operation, don't get hot-plugged/enabled by
-doing hot-plug operation on that slot. Only the first port of the bridge
-gets enabled and the remaining port/devices remain unplugged. The hot
-plug/unplug operation is done by the hotplug driver
-(drivers/pci/hotplug/pnv_php.c).
+On Mon, Jun 10, 2024 at 03:24:25PM -0700, Douglas Anderson wrote:
+> On devices using Qualcomm's GENI UART it is possible to get the UART
+> stuck such that it no longer outputs data. Specifically, logging in
+> via an agetty on the debug serial port (which was _not_ used for
+> kernel console) and running:
+>   cat /var/log/messages
+> ...and then (via an SSH session) forcing a few suspend/resume cycles
+> causes the UART to stop transmitting.
 
-Root Cause Analysis: This behavior is due to missing code for the
-switch/bridge. The existing driver depends on pci_hp_add_devices()
-function for device enablement. This function calls pci_scan_slot() on
-only one device-node/port of the bridge, not on all the siblings'
-device-node/port.
+An easier way to trigger this old bug is to just run a command like
+dmesg and hit ctrl-s in a serial console to stop tx. Interrupting the
+command or hitting ctrl-q to restart tx then triggers the soft lockup.
 
-The missing code needs to be added which will find all the sibling
-device-nodes/bridge-ports and will run explicit pci_scan_slot() on
-those.  A new function has been added for this purpose which gets
-invoked from pci_hp_add_devices(). This new function
-pci_traverse_sibling_nodes_and_scan_slot() gets all the sibling
-bridge-ports by traversal and explicitly invokes pci_scan_slot on them.
+> The root of the problems was with qcom_geni_serial_stop_tx_fifo()
+> which is called as part of the suspend process. Specific problems with
+> that function:
+> - When an in-progress "tx" command is cancelled it doesn't appear to
+>   fully drain the FIFO. That meant qcom_geni_serial_tx_empty()
+>   continued to report that the FIFO wasn't empty. The
+>   qcom_geni_serial_start_tx_fifo() function didn't re-enable
+>   interrupts in this case so the driver would never start transferring
+>   again.
+> - When the driver cancelled the current "tx" command but it forgot to
+>   zero out "tx_remaining". This confused logic elsewhere in the
+>   driver.
+> - From experimentation, it appears that cancelling the "tx" command
+>   could drop some of the queued up bytes.
+> 
+> While qcom_geni_serial_stop_tx_fifo() could be fixed to drain the FIFO
+> and shut things down properly, stop_tx() isn't supposed to be a slow
+> function. It is run with local interrupts off and is documented to
+> stop transmitting "as soon as possible". Change the function to just
+> stop new bytes from being queued. In order to make this work, change
+> qcom_geni_serial_start_tx_fifo() to remove some conditions. It's
+> always safe to enable the watermark interrupt and the IRQ handler will
+> disable it if it's not needed.
+> 
+> For system suspend the queue still needs to be drained. Failure to do
+> so means that the hardware won't provide new interrupts until a
+> "cancel" command is sent. Add draining logic (fixing the issues noted
+> above) at suspend time.
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Gaurav Batra <gbatra@linux.ibm.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Brian King <brking@linux.vnet.ibm.com>
+So I spent the better part of the weekend looking at this driver and
+this is one of the bits I worry about with your approach as relying on
+draining anything won't work with hardware flow control.
 
-Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
----
- arch/powerpc/include/asm/ppc-pci.h |  4 ++++
- arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
- arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 3 deletions(-)
+Cancelling commands can result stalled TX in a number of ways and
+there's still at least one that you don't handle. If you end up with
+data in in the FIFO, the watermark interrupt may never fire when you try
+to restart tx.
 
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index a8b7e8682f5b..83db8d0798ac 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -28,6 +28,10 @@ struct pci_dn;
- void *pci_traverse_device_nodes(struct device_node *start,
- 				void *(*fn)(struct device_node *, void *),
- 				void *data);
-+
-+void pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start,
-+					       struct pci_bus *bus);
-+
- extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
- 
- #if defined(CONFIG_IOMMU_API) && (defined(CONFIG_PPC_PSERIES) || \
-diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-index 0fe251c6ac2c..639a3d592fe2 100644
---- a/arch/powerpc/kernel/pci-hotplug.c
-+++ b/arch/powerpc/kernel/pci-hotplug.c
-@@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(pci_hp_remove_devices);
-  */
- void pci_hp_add_devices(struct pci_bus *bus)
- {
--	int slotno, mode, max;
-+	int mode, max;
- 	struct pci_dev *dev;
- 	struct pci_controller *phb;
- 	struct device_node *dn = pci_bus_to_OF_node(bus);
-@@ -129,8 +129,7 @@ void pci_hp_add_devices(struct pci_bus *bus)
- 		 * order for fully rescan all the way down to pick them up.
- 		 * They can have been removed during partial hotplug.
- 		 */
--		slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
--		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+		pci_traverse_sibling_nodes_and_scan_slot(dn, bus);
- 		max = bus->busn_res.start;
- 		/*
- 		 * Scan bridges that are already configured. We don't touch
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 38561d6a2079..bea612759832 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -493,4 +493,36 @@ static void pci_dev_pdn_setup(struct pci_dev *pdev)
- 	pdn = pci_get_pdn(pdev);
- 	pdev->dev.archdata.pci_data = pdn;
- }
-+
-+void pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start, struct pci_bus *bus)
-+{
-+	struct device_node *dn;
-+	int slotno;
-+
-+	u32 class = 0;
-+
-+	if (!of_property_read_u32(start->child, "class-code", &class)) {
-+		/* Call of pci_scan_slot for non-bridge/EP case */
-+		if (!((class >> 8) == PCI_CLASS_BRIDGE_PCI)) {
-+			slotno = PCI_SLOT(PCI_DN(start->child)->devfn);
-+			pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+			return;
-+		}
-+	}
-+
-+	/* Iterate all siblings */
-+	for_each_child_of_node(start, dn) {
-+		class = 0;
-+
-+		if (!of_property_read_u32(start->child, "class-code", &class)) {
-+			/* Call of pci_scan_slot on each sibling-nodes/bridge-ports */
-+			if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-+				slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-+				pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+			}
-+		}
-+	}
-+
-+}
-+
- DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, pci_dev_pdn_setup);
--- 
-2.45.0
+I'm leaning towards fixing the immediate hard lockup regression
+separately and then we can address the older bugs and rework driver
+without having to rush things.
 
+I've prepared a minimal three patch series which fixes most of the
+discussed issues (hard and soft lockup and garbage characters) and that
+should be backportable as well.
+
+Currently, the diffstat is just:
+
+	 drivers/tty/serial/qcom_geni_serial.c | 36 +++++++++++++++++++++++++-----------
+	 1 file changed, 25 insertions(+), 11 deletions(-)
+
+Fixing the hard lockup 6.10-rc1 regression is just a single line.
+
+Johan
