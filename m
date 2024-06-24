@@ -1,192 +1,112 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9535313D898
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AB513B58C;
+	Mon, 24 Jun 2024 13:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719235105; cv=none; b=u/vxd28riB9LsMUJ+XJ2yNLn7b+BjiQHg+pxuz9xQXBUYQKU/ECXyNTdyGOcytIdyy0dCFIDm5LE4wTYUHEe7N2ZsCFzKT9xTlNwECKhOGV26JH8u2TySBTQLqJIUziSlRCBEvTL6o0STeof/CRWvvd/NoMI4kpFXMNr3Sop7tQ=
+	t=1719235170; cv=none; b=t1d3MD+9vaBgymzkJYzC+e1L0hAC9pn89eqC8h17mGLfe8qgMkkbJlpw+//2m3JaUCuj62RYrkTDSR5vmBGXKAQFhTjGx+jsGtG4jFHENdJdJYug+rw1o0dm4X1oiHaR9AbvE6XhuzOzqL6S0Vciyek/V+vSnlERLWmL7WM4JvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719235105; c=relaxed/simple;
-	bh=VsJ4Axxe0lD9wiL7UkNBXbnaR995h96E/ihbsOZuk9E=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tjq4J9skdpKN49sjxFiZ+zuHE2NxR+5Xya5c3SUIUGpivCuj484NkXTjcgBXQaKv31U3Pf8nmViHDfU95veIRHLbWd1i73nMXhzpw1WGx1QWLhzqC3ohJ2m9s5wfrXuNQGxDA0RHx1lqJS7XaUjQaLVqxaiqDnrohRBNu94ChNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7eee4ffd19eso577103539f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:18:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719235100; x=1719839900;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=80o3vsdmOmtI6NOidvP3vTkB6hQktZz1ZWS/3Aeds7Y=;
-        b=wsccA/JZ84IQnjgjPq+pUfv2xviNDs1SQpookiTlpcerCq0a7o6yAKyzcXgHAcO0kr
-         Q6cnkU7FP+BLYAKMeypuVstKXK8AzgcDU8L4MmCdOVzCQfHVUIDGTCq1XlVanoD5F7qa
-         wWjRnv/vyIhcoFSJb82H7yfkxe5S/TAoOwgxR114IMVSDH3LDMaOi2XKmuzZg5cuyXgl
-         saLBUTWhew+OxekbC6AHfpF6Pp9u5rS2OdNz4TDr0MTwzOFFis4nogegOheS6619Ks82
-         9s4HsvA9XsHpGE2xSjdRLUT+NfaTGCgzX6qXPowZDzswnbu9lyeAH0L+gfHjxMHdvUec
-         eA+A==
-X-Forwarded-Encrypted: i=1; AJvYcCV4Vi7nLnt8T2dQsU/x06QtfY91W8mToxkGcbF3aQYJuXWDK2xsHZIFQ67d5uCwOQx38c9GulAFOFmwOdYzwe7R5jV+byMq5FTGEOQb
-X-Gm-Message-State: AOJu0Yzv/giQiYV+10bEVcWzKpE+VjaBqglMIHzhkWlfp5IFsihhxmn2
-	WnCf0PDSaimyJnB81hI5QXpk/ayihN3dfvCYmoWukqEMJK4znIC9+b37p7636BQvF/isHR2huPU
-	UQDBIb5ajdUKaZrfHO1egC2hhpMv8B56Xxkzi+wUYEsB4gunOUt9ZiLM=
-X-Google-Smtp-Source: AGHT+IFCfmG/DoiVKsD18IF4nTM6xnfMq1OCnpEjcZqud1jjFclLuDmWDKiqpfS5gjNPSCgflquSWSLtM82q/93IHEC48Wy++WJK
+	s=arc-20240116; t=1719235170; c=relaxed/simple;
+	bh=Jo7FN8PZZfU3wYqvnE4Sde5fBlaTUIlJtITuXHbLVMI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ph2ak+q/xdmb66o0/PM8AYajhZvNkvLURfYbKlXdMDhYrzUnwMPpHWfLq/QGJtrH4lnabvII8dyOaT1sdPYKQ5+E9DJEwUqw0y1TOc/F8mLK+/t052OCL6fD8p8nPM1YukcD28BRtOZPVnwoDAAeeRSLfHWiTjO1QDzV2oscGXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M2zdx745; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EqOxUKcl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M2zdx745";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EqOxUKcl"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719235164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sN+LBb66eM8b0W3aoSlv/AXVA+hQdwSwIferK2dDOUE=;
+	b=M2zdx745yT9xzMJKUkHwvgZIpZEQ7Ivblrav1JJmkg0WkEwwv3KFA5ujlyxicR/Ikn5IX6
+	l1kTLKN/RxUErfxqds4tcpcOaLsgGAHC7yWsEKal0oL8SVPA4Jcnt15qHcaOpyinkZs9nP
+	3vKHjxAUWf3BF6ve6jhCByt2/1A+dFn2GaCdeJV6UmJjMxR6N38DDR2IhR5ahdJfF5KOz+
+	jr9EMx7sm3mLTg+EVmZFeZPE/K0J7NiwaCulXT5rshCC9ve4+P4Vw327kuw2I9ZM7mCOsD
+	VqAOzX4Na5sRwzsQT27Vfe56ihSm/YHodjtiYrYDFd83T/4y6RFRi5vzBvIsog==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719235164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sN+LBb66eM8b0W3aoSlv/AXVA+hQdwSwIferK2dDOUE=;
+	b=EqOxUKclsl840xyR1Zx+ZDj2r+Volbz8vJgiqTQJSEwAweHSWqHWHIZJp2Y00Zvk6xToLU
+	1VuheovmJWWHefBg==
+To: Marcello Sylvester Bauer <marcello.bauer@9elements.com>,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, x86@kernel.org,
+ syzbot+c793a7eca38803212c61@syzkaller.appspotmail.com,
+ syzbot+5127feb52165f8ab165b@syzkaller.appspotmail.com,
+ oe-lkp@lists.linux.dev, bp@alien8.de, dave.hansen@linux.intel.com,
+ syzkaller-bugs@googlegroups.com
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Uwe
+ Kleine-Koenig <u.kleine-koenig@pengutronix.de>, gregkh@linuxfoundation.org,
+ hpa@zytor.com, mingo@redhat.com, stern@rowland.harvard.edu, Alan Stern
+ <stern@rowland.harvard.edu>, Matthias Stoeckl
+ <matthias.stoeckl@secunet.com>
+Subject: Re: Needed help: dummy_hcd: Fix stalls/inconsistent_lock_state due
+ to hrtimer migration
+In-Reply-To: <0eee9b08bf1f1889b3455099a68f9eed7f71c50e.camel@9elements.com>
+References: <000000000000f8112e0618995e6e@google.com>
+ <46cbe0a914065917ea1024636e864a1e2c982145.camel@9elements.com>
+ <0eee9b08bf1f1889b3455099a68f9eed7f71c50e.camel@9elements.com>
+Date: Mon, 24 Jun 2024 15:19:23 +0200
+Message-ID: <87y16u8omc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:248b:b0:4b9:6e74:bafb with SMTP id
- 8926c6da1cb9f-4b9e7a0451emr272859173.0.1719235099790; Mon, 24 Jun 2024
- 06:18:19 -0700 (PDT)
-Date: Mon, 24 Jun 2024 06:18:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000689a2b061ba29db3@google.com>
-Subject: [syzbot] [nfs?] INFO: task hung in nfsd_nl_threads_get_doit
-From: syzbot <syzbot+c0831b61d6ade1e2d098@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	kolga@netapp.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	neilb@suse.de, syzkaller-bugs@googlegroups.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Hello,
+On Mon, Jun 24 2024 at 12:25, Marcello Sylvester Bauer wrote:
+> I need some help evaluating and fixing a regression due to migration to
+> hztimer scheduler in dummy_hcd.
+>
+> About two months ago I was investigating poor performance for the mass
+> storage gadget (g_mass_storage) due to slow timings in the loopback hcd
+> driver (dummy_hcd). One of the reasons was that dummy_hcd used the old
+> timer API, where the interval is tied to the internal kernel timer
+> frequency. So I submitted the patch to migrate to the hrtimer API[^1],
+> which was quickly approved.
+>
+> Since then, syzbot[^2][^3] and intel's kernel test bot[^4] are
+> detecting rcu stalls/inconsistent_lock_state due to my patch, and I'm
+> trying to figure out how to fix it.
+>
+> Both bots indicate that the problem is around the usb_hcd_giveback_urb
+> function call and it's locking mechanism. 
+>
+> My patch just replaces the timer API calls without changing anything
+> else in the code, so I'm not sure if my patch is actually the root
+> cause here. And following the instructions to reproduce syzbot
+> regressions[^5] even with the provided assets (bzImage, disk image,
+> repro.c) it is quite inconsistent to cause this stall. I have also
+> tried to follow Alex Stern's advice, but have not been able to cause a
+> stall manually.
+>
+> So I don't know what to do next. Can someone with more expertise in
+> timers look into this?
+> Any hints or help in investigating or fixing this regression would be
+> greatly appreciated.
 
-syzbot found the following issue on:
+The main difference between the timer list timer and the hrtimer is that
+the timer list timer callback runs in soft interrupt context, but the
+hrtimer callback runs in hard interrupt context.
 
-HEAD commit:    cea2a26553ac mailmap: Add my outdated addresses to the map..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=118b1796980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8786f381e62940f
-dashboard link: https://syzkaller.appspot.com/bug?extid=c0831b61d6ade1e2d098
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+I really don't know whether it matters, but you can make the hrtimer
+expire in soft interrupt context with HRTIMER_MODE_REL_SOFT instead of
+HRTIMER_MODE_REL. If you have a reproducer then that should tell you
+quickly.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c2c55a2edceb/disk-cea2a265.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e3f36f58a11d/vmlinux-cea2a265.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0447e9647456/bzImage-cea2a265.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c0831b61d6ade1e2d098@syzkaller.appspotmail.com
-
-INFO: task syz-executor.2:20070 blocked for more than 143 seconds.
-      Not tainted 6.10.0-rc3-syzkaller-00022-gcea2a26553ac #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor.2  state:D stack:27840 pid:20070 tgid:20068 ppid:19010  flags:0x00000006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5408 [inline]
- __schedule+0xf15/0x5d00 kernel/sched/core.c:6745
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0xe7/0x350 kernel/sched/core.c:6837
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x5b8/0x9c0 kernel/locking/mutex.c:752
- nfsd_nl_threads_get_doit+0x1c6/0x7d0 fs/nfsd/nfsctl.c:1757
- genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2564
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
- netlink_unicast+0x542/0x820 net/netlink/af_netlink.c:1361
- netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1905
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0xab5/0xc90 net/socket.c:2585
- ___sys_sendmsg+0x135/0x1e0 net/socket.c:2639
- __sys_sendmsg+0x117/0x1f0 net/socket.c:2668
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8368c7cea9
-RSP: 002b:00007f8369a710c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f8368db3f80 RCX: 00007f8368c7cea9
-RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
-RBP: 00007f8368cebff4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f8368db3f80 R15: 00007ffc121dd2e8
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/30:
- #0: ffffffff8dbb1920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #0: ffffffff8dbb1920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #0: ffffffff8dbb1920 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x75/0x340 kernel/locking/lockdep.c:6614
-2 locks held by getty/4834:
- #0: ffff88802a5540a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
- #1: ffffc90002f062f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0xfc8/0x1490 drivers/tty/n_tty.c:2201
-1 lock held by syz-fuzzer/5075:
-3 locks held by kworker/0:4/10299:
- #0: ffff888015480948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x12bf/0x1b60 kernel/workqueue.c:3206
- #1: ffffc900032cfd80 (free_ipc_work){+.+.}-{0:0}, at: process_one_work+0x957/0x1b60 kernel/workqueue.c:3207
- #2: ffffffff8dbbd0b8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock+0x282/0x3b0 kernel/rcu/tree_exp.h:291
-2 locks held by syz-executor.0/19218:
- #0: ffffffff8f7e9d90 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8dfb2f48 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_listener_set_doit+0xe3/0x1b30 fs/nfsd/nfsctl.c:1966
-1 lock held by syz-executor.1/19451:
-3 locks held by kworker/u8:0/20032:
-2 locks held by syz-executor.2/20070:
- #0: ffffffff8f7e9d90 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8dfb2f48 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_threads_get_doit+0x1c6/0x7d0 fs/nfsd/nfsctl.c:1757
-3 locks held by syz-executor.4/20215:
- #0: ffff8880560b0d88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close+0x26/0x90 net/bluetooth/hci_core.c:554
- #1: ffff8880560b0078 (&hdev->lock){+.+.}-{3:3}, at: hci_dev_close_sync+0x339/0x1100 net/bluetooth/hci_sync.c:5050
- #2: ffffffff8f9adba8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_disconn_cfm include/net/bluetooth/hci_core.h:1982 [inline]
- #2: ffffffff8f9adba8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_hash_flush+0xc4/0x260 net/bluetooth/hci_conn.c:2584
-2 locks held by syz-executor.2/20315:
-3 locks held by syz-executor.3/20448:
- #0: ffff888063cf4d88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close+0x26/0x90 net/bluetooth/hci_core.c:554
- #1: ffff888063cf4078 (&hdev->lock){+.+.}-{3:3}, at: hci_dev_close_sync+0x339/0x1100 net/bluetooth/hci_sync.c:5050
- #2: ffffffff8f9adba8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_disconn_cfm include/net/bluetooth/hci_core.h:1982 [inline]
- #2: ffffffff8f9adba8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_hash_flush+0xc4/0x260 net/bluetooth/hci_conn.c:2584
-1 lock held by syz-executor.0/21407:
- #0: ffffffff8dbbd0b8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock+0x1a4/0x3b0 kernel/rcu/tree_exp.h:323
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 30 Comm: khungtaskd Not tainted 6.10.0-rc3-syzkaller-00022-gcea2a26553ac #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
- watchdog+0xf86/0x1240 kernel/hung_task.c:379
- kthread+0x2c1/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1 skipped: idling at native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
-NMI backtrace for cpu 1 skipped: idling at arch_safe_halt arch/x86/include/asm/irqflags.h:86 [inline]
-NMI backtrace for cpu 1 skipped: idling at acpi_safe_halt+0x1a/0x20 drivers/acpi/processor_idle.c:112
+        tglx
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
