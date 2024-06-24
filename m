@@ -1,667 +1,275 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A7C1A0702;
-	Mon, 24 Jun 2024 21:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2F71A08D0
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719264307; cv=none; b=gZzaWhVQc/AI4/6cCmGCOyxV7FIJZEpnuhWiPVi3Hmrgo2sGX5pABGso6QgulQNt0QScllWg6p1bAlgf5GlQHKUVmtAJZ2ApPvlp2jGVXpMukXwoh4QXNzUTv3QjWRYuEwDdzu1LVbBIqXlUft+CfD+JLvRMPqHVBzGmjpui0+U=
+	t=1719264982; cv=none; b=G8CxL9w+I9i0nW9e/gkKflNIEP5SxVEYzIoOt7L1Uxd+rdtsC7PJ1ly/XKi96+9HC3e2RAiXyL+i5KJwFmSMapzsW3JsweFkOLtX2vh0b9BNOIW1HzX339OWyrDldRIYLQTSrfjBd2eZiF4GzSm0WD4wO46F12r3MI9WVEOPz/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719264307; c=relaxed/simple;
-	bh=xlUl951miqMjfm7vdMSh252CPs/hwNbLk7V3MBE9mFw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MswsNS7ahUOc1rk6/d3N0kfD2ArQowhOLVXZng0u90utK6+UB+xeKnz2mmQwgMoCiUOlJ87q6zRtMqLB+wqDcrqdJKWeMO1ipsZFRmgegOi+HZWNUcstG5SroNBraOhXxI9iRGu4rOrkMMbpQDF4vpLxddfWFLSZrkrit6bnwnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAXpdo6n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719264982; c=relaxed/simple;
+	bh=gr0fn3ly5YlCf0sPq6whIbS+AGRd0PdQpxgdyN33ZbA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Da8zwSheYlfsdhntMruiaMdEc5KXsnv+wQZaT8P5P8cUJ558dbe5BMzosx9dyblq16BnaVONbTtUjqx5RjyVDOwh3oMjlhTcwtBFeBQvrYUgvqQJAMjwXQmeY1DR+4LOJFmzASENsEj2f8+8kDOsqqCvmwmhoj3OVeiQdJiuvng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vXEP8cIh; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAXpdo6n"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D8EA5C4AF0F;
-	Mon, 24 Jun 2024 21:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719264306;
-	bh=xlUl951miqMjfm7vdMSh252CPs/hwNbLk7V3MBE9mFw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oAXpdo6n5MINc05nOV2kZuEajit9t7yheQVEHgIw8yfRxxVrszfVZsty5zexmuIC0
-	 7sSN75WxhLvu3JOMV8IL2Wrvc0Z3+9DjonKLlLbq9yicG/E0gAqplJ5tcTPos5vV9u
-	 lpRIjFR6qPX/w944UZVkGly8oIYSRynLMZDdPkrGcPQnHgMuk/ooXdo5m+zsSUBnmy
-	 RRDq40bmEjMLr+Jybx8dsgL7NmlxVzu/3pADW79g2ZbVizlaW0pBrCadHK2Ts6Bjrd
-	 Lgawdvl8YRE+XkxCoBD204iCOwWP4xQPXtTAryl6zUGBvPnmZ0i4EzIrAp0A9Hur5O
-	 1aZRA8rab+BnA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AF1C3065A;
-	Mon, 24 Jun 2024 21:25:06 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Mon, 24 Jun 2024 23:25:13 +0200
-Subject: [PATCH v5 2/3] leds: sy7802: Add support for Silergy SY7802 flash
- LED controller
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vXEP8cIh"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-48f3d9a9905so1055439137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719264978; x=1719869778; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xKq29T9GzFzk14rirSzhrbJdI0z6ZTXvSPHWL0fuZH0=;
+        b=vXEP8cIhZsqBTAvNIONAcrJGLtv9pK5vVFhV7T61YlHEcZTLiEZ7M5lxSqLyw2PvBf
+         rdUZKJWdreL6kGjmOh9FQVRlvwzDMA8iRHOyaY2Z86sZhju+/wAGx3Nzj5yxd85Mwgs5
+         kSqcpe3rhYknMbF1+FQjh4N7wF3BhDmc3qUPvZqXjoU683ovuvbwo7YaywE9jR94xSof
+         fGuQCCdO2REUCr5RJSmIqNKoEtbhIl5ppLKdlMJ3cYoCCVP0pkvmJ4XcDgoEq3nL263T
+         KFPlUfGldRGyQDhegxWPftmmFnRbjkoVouyV/BZZ3SBpr5XJrYb18k8ksWQSf2IrkwAh
+         vE7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719264978; x=1719869778;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xKq29T9GzFzk14rirSzhrbJdI0z6ZTXvSPHWL0fuZH0=;
+        b=hMjKKO0ErGGOwJBNqkMQ0P8iVbBVsfGwtzDkfpccKhqHbB2F6K5Fdyqy4R/OmaK/LZ
+         L94be9J8enzwWh355NMvdRrPhJs50PBIukhPEveJciY06oilILw6FiYL9ekpz9saTOXH
+         JH1l61HLHbfoTYlrrMcj+3Hg6o9/8HMe/n43dprKYn3jkpHE4myLlWvVo1jlkS252Kjh
+         bg2xqADg2bg1m6cLLJGWucFFvDiHgNpECtpnsJbt0nPAamOTJkEirrYdJ/6jdVzPPVPt
+         gi6PA70ch26+Muy+DX8uA9W+n7lDkihzUJWbdeYFJXljvyC4DlXwa0fTPjynTV86KEFL
+         ZHoA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Jic/DNhtJsUFr0Du+j03l4b+DhLii+rk1p18aa1W1UpiTdbrKic/79gyHX//UvVLXzMuKd4okQ2mh0wQdCWmFYxT1MJngBj5QpKD
+X-Gm-Message-State: AOJu0YwNc+IV0V2W5dTacWThJdp8jRwUBPI1a4Hb+azyd7PZBJtRTMfp
+	SjdaFZYDlfIDMzrUVYBwGZwi9t07ATM8oqrpKl3EN/lzLMai9zwdcOCGdRbZnUExcHKcXSZj2Xe
+	pR9nTWVurBkJTSqCmdEMgCo/Y1jdU8tm8sNZHRQ==
+X-Google-Smtp-Source: AGHT+IHDbAm/AEof88fnWBqJ3pSHQTc4fkKO/4dtiaiSTKiB81NDfTn/ep2HTRXzpz93dGP4RpuBdkpiEmJm3pqGyQ0=
+X-Received: by 2002:a05:6102:2276:b0:48f:392a:f891 with SMTP id
+ ada2fe7eead31-48f4c0dcd51mr5580751137.21.1719264977853; Mon, 24 Jun 2024
+ 14:36:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240624-sy7802-v5-2-7abc9d96bfa6@apitzsch.eu>
-References: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
-In-Reply-To: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
- Trilok Soni <quic_tsoni@quicinc.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- phone-devel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719264314; l=17294;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=YofSPwfFeezmJP6PWVmV1Q0tOcJ3NqpdHHPWFC6a90c=;
- b=PwBFm1vdQfLgv7e0Sb0SFmWCvIu8MP11dUtKRzbwcHzrC+zdM4EEcN/MPErUGg3N7R7B51x1K
- mcVCH0T+P5mDWRC/KzjDLD53n4IKoQxpOQsXLsPvlhoygPbLgnF8Ggw
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+References: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org> <20240612-sm4250-lpi-v4-2-a0342e47e21b@linaro.org>
+In-Reply-To: <20240612-sm4250-lpi-v4-2-a0342e47e21b@linaro.org>
+From: Alexey Klimov <alexey.klimov@linaro.org>
+Date: Mon, 24 Jun 2024 22:36:07 +0100
+Message-ID: <CANgGJDqJZ-qUB4XOTEhRQrzim_-ecf6evbM=zz4SiEKMSBObzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 v4 2/2] pinctrl: qcom: Introduce SM4250 LPI pinctrl driver
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: André Apitzsch <git@apitzsch.eu>
+Hi Srini,
 
-The SY7802 is a current-regulated charge pump which can regulate two
-current levels for Flash and Torch modes.
+On Sat, 22 Jun 2024 at 17:49, Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> Add support for the pin controller block on SM4250 Low Power Island.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/Kconfig                    |   9 +
+>  drivers/pinctrl/qcom/Makefile                   |   1 +
+>  drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c | 236 ++++++++++++++++++++++++
+>  3 files changed, 246 insertions(+)
+>
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index 24619e80b2cc..dd9bbe8f3e11 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -68,6 +68,15 @@ config PINCTRL_SC7280_LPASS_LPI
+>           Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+>           (Low Power Island) found on the Qualcomm Technologies Inc SC7280 platform.
+>
+> +config PINCTRL_SM4250_LPASS_LPI
+> +       tristate "Qualcomm Technologies Inc SM4250 LPASS LPI pin controller driver"
+> +       depends on ARM64 || COMPILE_TEST
+> +       depends on PINCTRL_LPASS_LPI
+> +       help
+> +         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> +         Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+> +         (Low Power Island) found on the Qualcomm Technologies Inc SM4250 platform.
+> +
+>  config PINCTRL_SM6115_LPASS_LPI
+>         tristate "Qualcomm Technologies Inc SM6115 LPASS LPI pin controller driver"
+>         depends on ARM64 || COMPILE_TEST
+> diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
+> index e2e76071d268..eb04297b6388 100644
+> --- a/drivers/pinctrl/qcom/Makefile
+> +++ b/drivers/pinctrl/qcom/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
+>  obj-$(CONFIG_PINCTRL_SDX55) += pinctrl-sdx55.o
+>  obj-$(CONFIG_PINCTRL_SDX65) += pinctrl-sdx65.o
+>  obj-$(CONFIG_PINCTRL_SDX75) += pinctrl-sdx75.o
+> +obj-$(CONFIG_PINCTRL_SM4250_LPASS_LPI) += pinctrl-sm4250-lpass-lpi.o
+>  obj-$(CONFIG_PINCTRL_SM4450) += pinctrl-sm4450.o
+>  obj-$(CONFIG_PINCTRL_SM6115) += pinctrl-sm6115.o
+>  obj-$(CONFIG_PINCTRL_SM6115_LPASS_LPI) += pinctrl-sm6115-lpass-lpi.o
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+> new file mode 100644
+> index 000000000000..2d2c636a3e20
+> --- /dev/null
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+> @@ -0,0 +1,236 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2020, 2023 Linaro Ltd.
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "pinctrl-lpass-lpi.h"
+> +
+> +enum lpass_lpi_functions {
+> +       LPI_MUX_dmic01_clk,
+> +       LPI_MUX_dmic01_data,
+> +       LPI_MUX_dmic23_clk,
+> +       LPI_MUX_dmic23_data,
+> +       LPI_MUX_dmic4_clk,
+> +       LPI_MUX_dmic4_data,
+> +       LPI_MUX_ext_mclk0_a,
+> +       LPI_MUX_ext_mclk0_b,
+> +       LPI_MUX_ext_mclk1_a,
+> +       LPI_MUX_ext_mclk1_b,
+> +       LPI_MUX_ext_mclk1_c,
+> +       LPI_MUX_i2s1_clk,
+> +       LPI_MUX_i2s1_data,
+> +       LPI_MUX_i2s1_ws,
+> +       LPI_MUX_i2s2_clk,
+> +       LPI_MUX_i2s2_data,
+> +       LPI_MUX_i2s2_ws,
+> +       LPI_MUX_i2s3_clk,
+> +       LPI_MUX_i2s3_data,
+> +       LPI_MUX_i2s3_ws,
+> +       LPI_MUX_qup_io_00,
+> +       LPI_MUX_qup_io_01,
+> +       LPI_MUX_qup_io_05,
+> +       LPI_MUX_qup_io_10,
+> +       LPI_MUX_qup_io_11,
+> +       LPI_MUX_qup_io_25,
+> +       LPI_MUX_qup_io_21,
+> +       LPI_MUX_qup_io_26,
+> +       LPI_MUX_qup_io_31,
+> +       LPI_MUX_qup_io_36,
+> +       LPI_MUX_qua_mi2s_data,
+> +       LPI_MUX_qua_mi2s_sclk,
+> +       LPI_MUX_qua_mi2s_ws,
+> +       LPI_MUX_slim_clk,
+> +       LPI_MUX_slim_data,
+> +       LPI_MUX_sync_out,
+> +       LPI_MUX_swr_rx_clk,
+> +       LPI_MUX_swr_rx_data,
+> +       LPI_MUX_swr_tx_clk,
+> +       LPI_MUX_swr_tx_data,
+> +       LPI_MUX_swr_wsa_clk,
+> +       LPI_MUX_swr_wsa_data,
+> +       LPI_MUX_gpio,
+> +       LPI_MUX__,
+> +};
+> +
+> +static const struct pinctrl_pin_desc sm4250_lpi_pins[] = {
+> +       PINCTRL_PIN(0, "gpio0"),
+> +       PINCTRL_PIN(1, "gpio1"),
+> +       PINCTRL_PIN(2, "gpio2"),
+> +       PINCTRL_PIN(3, "gpio3"),
+> +       PINCTRL_PIN(4, "gpio4"),
+> +       PINCTRL_PIN(5, "gpio5"),
+> +       PINCTRL_PIN(6, "gpio6"),
+> +       PINCTRL_PIN(7, "gpio7"),
+> +       PINCTRL_PIN(8, "gpio8"),
+> +       PINCTRL_PIN(9, "gpio9"),
+> +       PINCTRL_PIN(10, "gpio10"),
+> +       PINCTRL_PIN(11, "gpio11"),
+> +       PINCTRL_PIN(12, "gpio12"),
+> +       PINCTRL_PIN(13, "gpio13"),
+> +       PINCTRL_PIN(14, "gpio14"),
+> +       PINCTRL_PIN(15, "gpio15"),
+> +       PINCTRL_PIN(16, "gpio16"),
+> +       PINCTRL_PIN(17, "gpio17"),
+> +       PINCTRL_PIN(18, "gpio18"),
+> +       PINCTRL_PIN(19, "gpio19"),
+> +       PINCTRL_PIN(20, "gpio20"),
+> +       PINCTRL_PIN(21, "gpio21"),
+> +       PINCTRL_PIN(22, "gpio22"),
+> +       PINCTRL_PIN(23, "gpio23"),
+> +       PINCTRL_PIN(24, "gpio24"),
+> +       PINCTRL_PIN(25, "gpio25"),
+> +       PINCTRL_PIN(26, "gpio26"),
+> +};
 
-It is a high-current synchronous boost converter with 2-channel high
-side current sources. Each channel is able to deliver 900mA current.
+This doesn't probe() on qrb4210 RB2 for me with the following trace:
 
-Acked-by: Lee Jones <lee@kernel.org>
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
----
- drivers/leds/flash/Kconfig       |  11 +
- drivers/leds/flash/Makefile      |   1 +
- drivers/leds/flash/leds-sy7802.c | 539 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 551 insertions(+)
-
-diff --git a/drivers/leds/flash/Kconfig b/drivers/leds/flash/Kconfig
-index 809b6d98bb3e..f39f0bfe6eef 100644
---- a/drivers/leds/flash/Kconfig
-+++ b/drivers/leds/flash/Kconfig
-@@ -121,4 +121,15 @@ config LEDS_SGM3140
- 	  This option enables support for the SGM3140 500mA Buck/Boost Charge
- 	  Pump LED Driver.
- 
-+config LEDS_SY7802
-+	tristate "LED support for the Silergy SY7802"
-+	depends on I2C && OF
-+	depends on GPIOLIB
-+	select REGMAP_I2C
-+	help
-+	  This option enables support for the SY7802 flash LED controller.
-+	  SY7802 includes torch and flash functions with programmable current.
-+
-+	  This driver can be built as a module, it will be called "leds-sy7802".
-+
- endif # LEDS_CLASS_FLASH
-diff --git a/drivers/leds/flash/Makefile b/drivers/leds/flash/Makefile
-index 91d60a4b7952..48860eeced79 100644
---- a/drivers/leds/flash/Makefile
-+++ b/drivers/leds/flash/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_LEDS_QCOM_FLASH)	+= leds-qcom-flash.o
- obj-$(CONFIG_LEDS_RT4505)	+= leds-rt4505.o
- obj-$(CONFIG_LEDS_RT8515)	+= leds-rt8515.o
- obj-$(CONFIG_LEDS_SGM3140)	+= leds-sgm3140.o
-+obj-$(CONFIG_LEDS_SY7802)	+= leds-sy7802.o
-diff --git a/drivers/leds/flash/leds-sy7802.c b/drivers/leds/flash/leds-sy7802.c
-new file mode 100644
-index 000000000000..ddac836762af
---- /dev/null
-+++ b/drivers/leds/flash/leds-sy7802.c
-@@ -0,0 +1,539 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Silergy SY7802 flash LED driver with an I2C interface
-+ *
-+ * Copyright 2024 André Apitzsch <git@apitzsch.eu>
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/led-class-flash.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+
-+#define SY7802_MAX_LEDS 2
-+#define SY7802_LED_JOINT 2
-+
-+#define SY7802_REG_ENABLE		0x10
-+#define SY7802_REG_TORCH_BRIGHTNESS	0xa0
-+#define SY7802_REG_FLASH_BRIGHTNESS	0xb0
-+#define SY7802_REG_FLASH_DURATION	0xc0
-+#define SY7802_REG_FLAGS		0xd0
-+#define SY7802_REG_CONFIG_1		0xe0
-+#define SY7802_REG_CONFIG_2		0xf0
-+#define SY7802_REG_VIN_MONITOR		0x80
-+#define SY7802_REG_LAST_FLASH		0x81
-+#define SY7802_REG_VLED_MONITOR		0x30
-+#define SY7802_REG_ADC_DELAY		0x31
-+#define SY7802_REG_DEV_ID		0xff
-+
-+#define SY7802_MODE_OFF		0
-+#define SY7802_MODE_TORCH	2
-+#define SY7802_MODE_FLASH	3
-+#define SY7802_MODE_MASK	GENMASK(1, 0)
-+
-+#define SY7802_LEDS_SHIFT	3
-+#define SY7802_LEDS_MASK(_id)	(BIT(_id) << SY7802_LEDS_SHIFT)
-+#define SY7802_LEDS_MASK_ALL	(SY7802_LEDS_MASK(0) | SY7802_LEDS_MASK(1))
-+
-+#define SY7802_TORCH_CURRENT_SHIFT	3
-+#define SY7802_TORCH_CURRENT_MASK(_id) \
-+	(GENMASK(2, 0) << (SY7802_TORCH_CURRENT_SHIFT * (_id)))
-+#define SY7802_TORCH_CURRENT_MASK_ALL \
-+	(SY7802_TORCH_CURRENT_MASK(0) | SY7802_TORCH_CURRENT_MASK(1))
-+
-+#define SY7802_FLASH_CURRENT_SHIFT	4
-+#define SY7802_FLASH_CURRENT_MASK(_id) \
-+	(GENMASK(3, 0) << (SY7802_FLASH_CURRENT_SHIFT * (_id)))
-+#define SY7802_FLASH_CURRENT_MASK_ALL \
-+	(SY7802_FLASH_CURRENT_MASK(0) | SY7802_FLASH_CURRENT_MASK(1))
-+
-+#define SY7802_TIMEOUT_DEFAULT_US	512000U
-+#define SY7802_TIMEOUT_MIN_US		32000U
-+#define SY7802_TIMEOUT_MAX_US		1024000U
-+#define SY7802_TIMEOUT_STEPSIZE_US	32000U
-+
-+#define SY7802_TORCH_BRIGHTNESS_MAX 8
-+
-+#define SY7802_FLASH_BRIGHTNESS_DEFAULT	14
-+#define SY7802_FLASH_BRIGHTNESS_MIN	0
-+#define SY7802_FLASH_BRIGHTNESS_MAX	15
-+#define SY7802_FLASH_BRIGHTNESS_STEP	1
-+
-+#define SY7802_FLAG_TIMEOUT			BIT(0)
-+#define SY7802_FLAG_THERMAL_SHUTDOWN		BIT(1)
-+#define SY7802_FLAG_LED_FAULT			BIT(2)
-+#define SY7802_FLAG_TX1_INTERRUPT		BIT(3)
-+#define SY7802_FLAG_TX2_INTERRUPT		BIT(4)
-+#define SY7802_FLAG_LED_THERMAL_FAULT		BIT(5)
-+#define SY7802_FLAG_FLASH_INPUT_VOLTAGE_LOW	BIT(6)
-+#define SY7802_FLAG_INPUT_VOLTAGE_LOW		BIT(7)
-+
-+#define SY7802_CHIP_ID	0x51
-+
-+static const struct reg_default sy7802_regmap_defs[] = {
-+	{ SY7802_REG_ENABLE, SY7802_LEDS_MASK_ALL },
-+	{ SY7802_REG_TORCH_BRIGHTNESS, 0x92 },
-+	{ SY7802_REG_FLASH_BRIGHTNESS, SY7802_FLASH_BRIGHTNESS_DEFAULT |
-+		SY7802_FLASH_BRIGHTNESS_DEFAULT << SY7802_FLASH_CURRENT_SHIFT },
-+	{ SY7802_REG_FLASH_DURATION, 0x6f },
-+	{ SY7802_REG_FLAGS, 0x0 },
-+	{ SY7802_REG_CONFIG_1, 0x68 },
-+	{ SY7802_REG_CONFIG_2, 0xf0 },
-+};
-+
-+struct sy7802_led {
-+	struct led_classdev_flash flash;
-+	struct sy7802 *chip;
-+	u8 led_id;
-+};
-+
-+struct sy7802 {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct mutex mutex;
-+
-+	struct gpio_desc *enable_gpio;
-+	struct regulator *vin_regulator;
-+
-+	unsigned int fled_strobe_used;
-+	unsigned int fled_torch_used;
-+	unsigned int leds_active;
-+	int num_leds;
-+	struct sy7802_led leds[] __counted_by(num_leds);
-+};
-+
-+static int sy7802_torch_brightness_set(struct led_classdev *lcdev, enum led_brightness brightness)
-+{
-+	struct sy7802_led *led = container_of(lcdev, struct sy7802_led, flash.led_cdev);
-+	struct sy7802 *chip = led->chip;
-+	u32 fled_torch_used_tmp;
-+	u32 led_enable_mask;
-+	u32 enable_mask;
-+	u32 torch_mask;
-+	u32 val;
-+	int ret;
-+
-+	mutex_lock(&chip->mutex);
-+
-+	if (chip->fled_strobe_used) {
-+		dev_warn(chip->dev, "Cannot set torch brightness whilst strobe is enabled\n");
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	if (brightness)
-+		fled_torch_used_tmp = chip->fled_torch_used | BIT(led->led_id);
-+	else
-+		fled_torch_used_tmp = chip->fled_torch_used & ~BIT(led->led_id);
-+
-+	led_enable_mask = led->led_id == SY7802_LED_JOINT ?
-+			  SY7802_LEDS_MASK_ALL :
-+			  SY7802_LEDS_MASK(led->led_id);
-+
-+	val = brightness ? led_enable_mask : SY7802_MODE_OFF;
-+	if (fled_torch_used_tmp)
-+		val |= SY7802_MODE_TORCH;
-+
-+	/* Disable torch to apply brightness */
-+	ret = regmap_update_bits(chip->regmap, SY7802_REG_ENABLE, SY7802_MODE_MASK,
-+				 SY7802_MODE_OFF);
-+	if (ret)
-+		goto unlock;
-+
-+	torch_mask = led->led_id == SY7802_LED_JOINT ?
-+		     SY7802_TORCH_CURRENT_MASK_ALL :
-+		     SY7802_TORCH_CURRENT_MASK(led->led_id);
-+
-+	/* Register expects brightness between 0 and MAX_BRIGHTNESS - 1 */
-+	if (brightness)
-+		brightness -= 1;
-+
-+	brightness |= (brightness << SY7802_TORCH_CURRENT_SHIFT);
-+
-+	ret = regmap_update_bits(chip->regmap, SY7802_REG_TORCH_BRIGHTNESS, torch_mask, brightness);
-+	if (ret)
-+		goto unlock;
-+
-+	enable_mask = SY7802_MODE_MASK | led_enable_mask;
-+	ret = regmap_update_bits(chip->regmap, SY7802_REG_ENABLE, enable_mask, val);
-+	if (ret)
-+		goto unlock;
-+
-+	chip->fled_torch_used = fled_torch_used_tmp;
-+
-+unlock:
-+	mutex_unlock(&chip->mutex);
-+	return ret;
-+}
-+
-+static int sy7802_flash_brightness_set(struct led_classdev_flash *fl_cdev, u32 brightness)
-+{
-+	struct sy7802_led *led = container_of(fl_cdev, struct sy7802_led, flash);
-+	struct led_flash_setting *s = &fl_cdev->brightness;
-+	u32 val = (brightness - s->min) / s->step;
-+	struct sy7802 *chip = led->chip;
-+	u32 flash_mask;
-+	int ret;
-+
-+	val |= (val << SY7802_FLASH_CURRENT_SHIFT);
-+	flash_mask = led->led_id == SY7802_LED_JOINT ?
-+		     SY7802_FLASH_CURRENT_MASK_ALL :
-+		     SY7802_FLASH_CURRENT_MASK(led->led_id);
-+
-+	mutex_lock(&chip->mutex);
-+	ret = regmap_update_bits(chip->regmap, SY7802_REG_FLASH_BRIGHTNESS, flash_mask, val);
-+	mutex_unlock(&chip->mutex);
-+
-+	return ret;
-+}
-+
-+static int sy7802_strobe_set(struct led_classdev_flash *fl_cdev, bool state)
-+{
-+	struct sy7802_led *led = container_of(fl_cdev, struct sy7802_led, flash);
-+	struct sy7802 *chip = led->chip;
-+	u32 fled_strobe_used_tmp;
-+	u32 led_enable_mask;
-+	u32 enable_mask;
-+	u32 val;
-+	int ret;
-+
-+	mutex_lock(&chip->mutex);
-+
-+	if (chip->fled_torch_used) {
-+		dev_warn(chip->dev, "Cannot set strobe brightness whilst torch is enabled\n");
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	if (state)
-+		fled_strobe_used_tmp = chip->fled_strobe_used | BIT(led->led_id);
-+	else
-+		fled_strobe_used_tmp = chip->fled_strobe_used & ~BIT(led->led_id);
-+
-+	led_enable_mask = led->led_id == SY7802_LED_JOINT ?
-+			  SY7802_LEDS_MASK_ALL :
-+			  SY7802_LEDS_MASK(led->led_id);
-+
-+	val = state ? led_enable_mask : SY7802_MODE_OFF;
-+	if (fled_strobe_used_tmp)
-+		val |= SY7802_MODE_FLASH;
-+
-+	enable_mask = SY7802_MODE_MASK | led_enable_mask;
-+	ret = regmap_update_bits(chip->regmap, SY7802_REG_ENABLE, enable_mask, val);
-+
-+	if (ret)
-+		goto unlock;
-+
-+	chip->fled_strobe_used = fled_strobe_used_tmp;
-+
-+unlock:
-+	mutex_unlock(&chip->mutex);
-+	return ret;
-+}
-+
-+static int sy7802_strobe_get(struct led_classdev_flash *fl_cdev, bool *state)
-+{
-+	struct sy7802_led *led = container_of(fl_cdev, struct sy7802_led, flash);
-+	struct sy7802 *chip = led->chip;
-+
-+	mutex_lock(&chip->mutex);
-+	*state = !!(chip->fled_strobe_used & BIT(led->led_id));
-+	mutex_unlock(&chip->mutex);
-+
-+	return 0;
-+}
-+
-+static int sy7802_timeout_set(struct led_classdev_flash *fl_cdev, u32 timeout)
-+{
-+	struct sy7802_led *led = container_of(fl_cdev, struct sy7802_led, flash);
-+	struct led_flash_setting *s = &fl_cdev->timeout;
-+	u32 val = (timeout - s->min) / s->step;
-+	struct sy7802 *chip = led->chip;
-+
-+	return regmap_write(chip->regmap, SY7802_REG_FLASH_DURATION, val);
-+}
-+
-+static int sy7802_fault_get(struct led_classdev_flash *fl_cdev, u32 *fault)
-+{
-+	struct sy7802_led *led = container_of(fl_cdev, struct sy7802_led, flash);
-+	struct sy7802 *chip = led->chip;
-+	u32 val, led_faults = 0;
-+	int ret;
-+
-+	/* NOTE: reading register clears fault status */
-+	ret = regmap_read(chip->regmap, SY7802_REG_FLAGS, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & (SY7802_FLAG_FLASH_INPUT_VOLTAGE_LOW | SY7802_FLAG_INPUT_VOLTAGE_LOW))
-+		led_faults |= LED_FAULT_INPUT_VOLTAGE;
-+
-+	if (val & SY7802_FLAG_THERMAL_SHUTDOWN)
-+		led_faults |= LED_FAULT_OVER_TEMPERATURE;
-+
-+	if (val & SY7802_FLAG_TIMEOUT)
-+		led_faults |= LED_FAULT_TIMEOUT;
-+
-+	*fault = led_faults;
-+	return 0;
-+}
-+
-+static const struct led_flash_ops sy7802_flash_ops = {
-+	.flash_brightness_set = sy7802_flash_brightness_set,
-+	.strobe_set = sy7802_strobe_set,
-+	.strobe_get = sy7802_strobe_get,
-+	.timeout_set = sy7802_timeout_set,
-+	.fault_get = sy7802_fault_get,
-+};
-+
-+static void sy7802_init_flash_brightness(struct led_classdev_flash *fl_cdev)
-+{
-+	struct led_flash_setting *s;
-+
-+	/* Init flash brightness setting */
-+	s = &fl_cdev->brightness;
-+	s->min = SY7802_FLASH_BRIGHTNESS_MIN;
-+	s->max = SY7802_FLASH_BRIGHTNESS_MAX;
-+	s->step = SY7802_FLASH_BRIGHTNESS_STEP;
-+	s->val = SY7802_FLASH_BRIGHTNESS_DEFAULT;
-+}
-+
-+static void sy7802_init_flash_timeout(struct led_classdev_flash *fl_cdev)
-+{
-+	struct led_flash_setting *s;
-+
-+	/* Init flash timeout setting */
-+	s = &fl_cdev->timeout;
-+	s->min = SY7802_TIMEOUT_MIN_US;
-+	s->max = SY7802_TIMEOUT_MAX_US;
-+	s->step = SY7802_TIMEOUT_STEPSIZE_US;
-+	s->val = SY7802_TIMEOUT_DEFAULT_US;
-+}
-+
-+static int sy7802_led_register(struct device *dev, struct sy7802_led *led,
-+			       struct device_node *np)
-+{
-+	struct led_init_data init_data = {};
-+	int ret;
-+
-+	init_data.fwnode = of_fwnode_handle(np);
-+
-+	ret = devm_led_classdev_flash_register_ext(dev, &led->flash, &init_data);
-+	if (ret) {
-+		dev_err(dev, "Couldn't register flash %d\n", led->led_id);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sy7802_init_flash_properties(struct device *dev, struct sy7802_led *led,
-+					struct device_node *np)
-+{
-+	struct led_classdev_flash *flash = &led->flash;
-+	struct led_classdev *lcdev = &flash->led_cdev;
-+	u32 sources[SY7802_MAX_LEDS];
-+	int i, num, ret;
-+
-+	num = of_property_count_u32_elems(np, "led-sources");
-+	if (num < 1) {
-+		dev_err(dev, "Not specified or wrong number of led-sources\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32_array(np, "led-sources", sources, num);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < num; i++) {
-+		if (sources[i] >= SY7802_MAX_LEDS)
-+			return -EINVAL;
-+		if (led->chip->leds_active & BIT(sources[i]))
-+			return -EINVAL;
-+		led->chip->leds_active |= BIT(sources[i]);
-+	}
-+
-+	/* If both channels are specified in 'led-sources', joint flash output mode is used */
-+	led->led_id = num == 2 ? SY7802_LED_JOINT : sources[0];
-+
-+	lcdev->max_brightness = SY7802_TORCH_BRIGHTNESS_MAX;
-+	lcdev->brightness_set_blocking = sy7802_torch_brightness_set;
-+	lcdev->flags |= LED_DEV_CAP_FLASH;
-+
-+	flash->ops = &sy7802_flash_ops;
-+
-+	sy7802_init_flash_brightness(flash);
-+	sy7802_init_flash_timeout(flash);
-+
-+	return 0;
-+}
-+
-+static int sy7802_chip_check(struct sy7802 *chip)
-+{
-+	struct device *dev = chip->dev;
-+	u32 chipid;
-+	int ret;
-+
-+	ret = regmap_read(chip->regmap, SY7802_REG_DEV_ID, &chipid);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read chip ID\n");
-+
-+	if (chipid != SY7802_CHIP_ID)
-+		return dev_err_probe(dev, -ENODEV, "Unsupported chip detected: %x\n", chipid);
-+
-+	return 0;
-+}
-+
-+static void sy7802_enable(struct sy7802 *chip)
-+{
-+	gpiod_set_value_cansleep(chip->enable_gpio, 1);
-+	usleep_range(200, 300);
-+}
-+
-+static void sy7802_disable(struct sy7802 *chip)
-+{
-+	gpiod_set_value_cansleep(chip->enable_gpio, 0);
-+}
-+
-+static int sy7802_probe_dt(struct sy7802 *chip)
-+{
-+	struct device_node *np = dev_of_node(chip->dev);
-+	int child_num;
-+	int ret;
-+
-+	regmap_write(chip->regmap, SY7802_REG_ENABLE, SY7802_MODE_OFF);
-+	regmap_write(chip->regmap, SY7802_REG_TORCH_BRIGHTNESS, LED_OFF);
-+
-+	child_num = 0;
-+	for_each_available_child_of_node_scoped(np, child) {
-+		struct sy7802_led *led = chip->leds + child_num;
-+
-+		led->chip = chip;
-+		led->led_id = child_num;
-+
-+		ret = sy7802_init_flash_properties(chip->dev, led, child);
-+		if (ret)
-+			return ret;
-+
-+		ret = sy7802_led_register(chip->dev, led, child);
-+		if (ret)
-+			return ret;
-+
-+		child_num++;
-+	}
-+	return 0;
-+}
-+
-+static void sy7802_chip_disable_action(void *data)
-+{
-+	struct sy7802 *chip = data;
-+
-+	sy7802_disable(chip);
-+}
-+
-+static void sy7802_regulator_disable_action(void *data)
-+{
-+	struct sy7802 *chip = data;
-+
-+	regulator_disable(chip->vin_regulator);
-+}
-+
-+static const struct regmap_config sy7802_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0xff,
-+	.cache_type = REGCACHE_MAPLE,
-+	.reg_defaults = sy7802_regmap_defs,
-+	.num_reg_defaults = ARRAY_SIZE(sy7802_regmap_defs),
-+};
-+
-+static int sy7802_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct sy7802 *chip;
-+	size_t count;
-+	int ret;
-+
-+	count = device_get_child_node_count(dev);
-+	if (!count || count > SY7802_MAX_LEDS)
-+		return dev_err_probe(dev, -EINVAL, "Invalid amount of LED nodes %zu\n", count);
-+
-+	chip = devm_kzalloc(dev, struct_size(chip, leds, count), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->num_leds = count;
-+
-+	chip->dev = dev;
-+	i2c_set_clientdata(client, chip);
-+
-+	chip->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
-+	ret = PTR_ERR_OR_ZERO(chip->enable_gpio);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request enable gpio\n");
-+
-+	chip->vin_regulator = devm_regulator_get(dev, "vin");
-+	ret = PTR_ERR_OR_ZERO(chip->vin_regulator);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request regulator\n");
-+
-+	ret = regulator_enable(chip->vin_regulator);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to enable regulator\n");
-+
-+	ret = devm_add_action_or_reset(dev, sy7802_regulator_disable_action, chip);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_mutex_init(dev, &chip->mutex);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&chip->mutex);
-+
-+	chip->regmap = devm_regmap_init_i2c(client, &sy7802_regmap_config);
-+	if (IS_ERR(chip->regmap)) {
-+		ret = PTR_ERR(chip->regmap);
-+		dev_err_probe(dev, ret, "Failed to allocate register map\n");
-+		goto error;
-+	}
-+
-+	ret = sy7802_probe_dt(chip);
-+	if (ret < 0)
-+		goto error;
-+
-+	sy7802_enable(chip);
-+
-+	ret = devm_add_action_or_reset(dev, sy7802_chip_disable_action, chip);
-+	if (ret)
-+		goto error;
-+
-+	ret = sy7802_chip_check(chip);
-+
-+error:
-+	mutex_unlock(&chip->mutex);
-+	return ret;
-+}
-+
-+static const struct of_device_id __maybe_unused sy7802_leds_match[] = {
-+	{ .compatible = "silergy,sy7802", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sy7802_leds_match);
-+
-+static struct i2c_driver sy7802_driver = {
-+	.driver = {
-+		.name = "sy7802",
-+		.of_match_table = of_match_ptr(sy7802_leds_match),
-+	},
-+	.probe = sy7802_probe,
-+};
-+module_i2c_driver(sy7802_driver);
-+
-+MODULE_AUTHOR("André Apitzsch <git@apitzsch.eu>");
-+MODULE_DESCRIPTION("Silergy SY7802 flash LED driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.45.2
+[   10.709014] ------------[ cut here ]------------
+[   10.719085] WARNING: CPU: 1 PID: 56 at
+drivers/pinctrl/qcom/pinctrl-lpass-lpi.c:446
+lpi_pinctrl_probe+0x308/0x388 [pinctrl_lpass_lpi]
+[   10.719108] Modules linked in: btqca qrtr btbcm qcom_q6v5_pas
+libarc4 qcom_pil_info llcc_qcom bluetooth snd_soc_sm8250 ocmem
+qcom_q6v5 snd_soc_qcom_sdw cfg80211 drm_exec qcom_sysmon
+snd_soc_qcom_common gpu_sched crct10dif_ce qcom_common soundwire_bus
+ecdh_generic qcom_glink_smem pinctrl_sm4250_lpass_lpi qcom_pmic_tcpm
+drm_dp_aux_bus ecc mdt_loader qcom_wdt pinctrl_lpass_lpi
+drm_display_helper qmi_helpers tcpm dispcc_sm6115 rfkill gpucc_sm6115
+aux_hpd_bridge qcom_usb_vbus_regulator nvmem_qcom_spmi_sdam
+qcom_spmi_temp_alarm qcom_pbs qcom_pon qcom_spmi_adc5 qcom_vadc_common
+spi_geni_qcom gpi qcom_stats icc_bwmon qcom_rng qcrypto authenc
+phy_qcom_qmp_usbc display_connector rpmsg_ctrl libdes typec rpmsg_char
+phy_qcom_qusb2 drm_kms_helper rmtfs_mem socinfo i2c_gpio fuse drm
+backlight dm_mod ip_tables x_tables ipv6
+[   10.719238] CPU: 1 PID: 56 Comm: kworker/u33:0 Not tainted
+6.10.0-rc2-00012-ge45ddb1f8d34-dirty #7
+[   10.719245] Hardware name: Qualcomm Technologies, Inc. QRB4210 RB2 (DT)
+[   10.719250] Workqueue: events_unbound deferred_probe_work_func
+[   10.719265] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   10.719271] pc : lpi_pinctrl_probe+0x308/0x388 [pinctrl_lpass_lpi]
+[   10.719278] lr : lpi_pinctrl_probe+0x44/0x388 [pinctrl_lpass_lpi]
+[   10.719284] sp : ffff80008035bb40
+[   10.719286] x29: ffff80008035bb40 x28: 0000000000000000 x27: 0000000000000000
+[   10.719294] x26: ffff7eea83029428 x25: ffffa0c480a67510 x24: ffff7eea83be5800
+[   10.719301] x23: ffff7eea83be5810 x22: 0000000000000000 x21: ffffa0c480a64030
+[   10.719308] x20: ffff7eea83be5810 x19: ffff7eea89e59880 x18: ffffffffffffffff
+[   10.719315] x17: 0000000000000000 x16: ffffa0c4f34949a4 x15: ffff80008035b7f0
+[   10.719321] x14: ffffffffffffffff x13: 006c7274636e6970 x12: 2e30303030633761
+[   10.719329] x11: 0101010101010101 x10: ffffa0c4f4b28ff2 x9 : 0000000000000008
+[   10.719335] x8 : 0000000000000008 x7 : ffffa0c4f3cfa640 x6 : 0000000000000020
+[   10.719342] x5 : 0000000000000020 x4 : 0000000000000000 x3 : ffffa0c480a67448
+[   10.719348] x2 : ffffa0c480a67468 x1 : ffff7eea838b8000 x0 : 000000000000001b
+[   10.719357] Call trace:
+[   10.719361]  lpi_pinctrl_probe+0x308/0x388 [pinctrl_lpass_lpi]
+[   10.719369]  platform_probe+0x68/0xc4
+[   10.719378]  really_probe+0xbc/0x29c
+[   10.719384]  __driver_probe_device+0x78/0x12c
+[   10.719390]  driver_probe_device+0xd8/0x15c
+[   10.719395]  __device_attach_driver+0xb8/0x134
+[   10.719401]  bus_for_each_drv+0x88/0xe8
+[   10.719407]  __device_attach+0xa0/0x190
+[   10.719412]  device_initial_probe+0x14/0x20
+[   10.719418]  bus_probe_device+0xac/0xb0
+[   10.719423]  deferred_probe_work_func+0x88/0xc0
+[   10.719429]  process_one_work+0x150/0x294
+[   10.719439]  worker_thread+0x2f8/0x408
+[   10.719445]  kthread+0x110/0x114
+[   10.719452]  ret_from_fork+0x10/0x20
+[   10.719459] ---[ end trace 0000000000000000 ]---
+[   10.719589] qcom-sm4250-lpass-lpi-pinctrl a7c0000.pinctrl: probe
+with driver qcom-sm4250-lpass-lpi-pinctrl failed with error -22
 
 
+[...]
+
+Thanks,
+Alexey
