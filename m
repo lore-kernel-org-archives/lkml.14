@@ -1,69 +1,65 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2128.outbound.protection.outlook.com [40.107.8.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6B63A8C0;
-	Mon, 24 Jun 2024 10:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA2D134410;
+	Mon, 24 Jun 2024 10:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.128
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719223441; cv=fail; b=IhSOurzDWKmIJlf/YtJ8HJn4bFfoXs5COySisey6oe5H1oH0mPD7FMlZFoiINr6sjVOzijf8pjYRnDHi31tt/3flANwum8HkTwptaNnVV1qK2ND6Y2o1jCnK6zsxiVryUZq17Yf3iahELqM07K4CBl0q2PudTpr2I16eljyQm/w=
+	t=1719223495; cv=fail; b=bfM7kjBKKgLe3kxuBjdzcJixirdgMIHhLZR2KpSC90aMtoQgt01ua1j+YcUjKhVfHkshvD7+CjrS3QqA/r1tb8eIM9ZmJtKxpZUKqzNMo3vGmi6h4kUyLG2Z4/rifaThjFJl+qBcU4rKhECTOIiQEfthknosECUEBxPdPo+Wb4E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719223441; c=relaxed/simple;
-	bh=bOwihgpc+9l7de8xxXlrzGi865mO3L7XWWf/FXmhK2o=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PksUg/ZxyKfbPzv5q//MHq31S8kbK0tb63KNDH9Nl68uunjsWzxefypvcePqigFf/BFazYdkKSKlJzyejfe+RK5yOQll4vjLQdzaEC4an5Gv5yVwx6TcU7Qw1IIvy0elp8LFpwBaKxDaRw0o+YYI6Za4RJoKs+TBZVU8/jY+h2o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=igu2GpDe; arc=fail smtp.client-ip=40.107.223.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1719223495; c=relaxed/simple;
+	bh=CBw1yDr2VawP8LeYd57fOrQ5lsqXpoGQn040OAjzrlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sddV8e1D6Y/GKK9MBjOFtgnxMvAdRtwPBae/MUnfZGh655qi2FrVKtsgUMS02HggTTKEO1XnDJToclQCtMyN9miKAhZPpjaVweB/QoBOlCfQMXCu5D6wZyGuL7zzCjmKaaH3WI/CtBHbYB+YSJ6HL1EaX+JZVZc5K+pEIuXsYd8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn; spf=pass smtp.mailfrom=supcom.tn; dkim=pass (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b=iI+eJMu7; arc=fail smtp.client-ip=40.107.8.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=supcom.tn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="igu2GpDe"
+	dkim=pass (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b="iI+eJMu7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nPGTXyR/kEzGwvXZL+4bfBnPPIAyikpDpDPL6pKCs9kX9PyUoPptrMCOAH0SD/pt71xKcHo50sdXbH+KkgZquzFSF+bWJwukwtwcRKv6gCRZpV7iF7f52vTFWlVZsyhsdl7q++jsZbCYXEGxYKe9DTxAUsbecruTYO1jd+r/T+elLPM16NTbUUOPMuGzTsDokAuH+EAuXNFxf/UN3VL7FCNgekdhjqpPS/0ceSG2sjnJqoq7+9KzhUccYU2+SXklichuDpF8sTnTw5YeCpFMVC0mCrBk2F4hlsHHRnkIsf0/KQqrnEmzfWwuW7WJFimV7y1Ub8mMMh2IccT+bDCpgA==
+ b=AefVipk9oa1o5dLw/wrWVyCOz1+MG2R/BXsf4uIR/y5UeMgHZfzCLJHQ9dOKgECMyqGNTbseaiSRbJf64kZIzSFBZzJrsRLnNRwmy57q85PsOHqohA+tl7R2+WevhlqC8EkOLm0Ujn73Ji4TquCnN7P1AIZkQyEsxQgSUjMCW5GsZJCdtQDubqxG1qfLhKUmLksQ2I7o8iIhwrHajnFbxFFq5rgV6LyqvjnbtWciu8hZyRpL1SCBrV0esKY6qsu3L4iiDBnoePxPgQmKKVUB3o0t4I+oaHyL8D9wAvDYhtxPOgUzHyOKWRHBrGXSY4Dy8szfLTMPjY0Ap32PD463tw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oejQyvo2uZ4MG2Un4eqQONFe4RQeeHtZPv41u00kemI=;
- b=DXKEeA34tZNT2eS2igwHqwHH6EaskbTPoKvB/biT3RQ6KiYe1CAjSA8EowzQ69Y9Ik5vSZNa4Cvm0zIqloiMoCJr6G4JZHvWh0pMXHmxRfY+JaIsZM51TA1CPro09NbhLOHuEFTT064KmvjYL2n6hOjFhp20WSzjSHZcWe1B2NIcQoF3cJqvmGQzIKClO3DtwQ5KCqNezXTCuCEqueWdtweEAPzj2HuMrXQnGoLEt5UihhMvnKXe1slH45Z4xHUW+v7fzISgeVhcCB3SY53p89S7CyMtVMJ3Ds00PCRU+eqFI5vOYAgCTkbNSAK6iq2oPu0jeJqUJZqsueI2vW5nSA==
+ bh=mru8r+vGChuSwWXvEqrNAmMLhzoWbFJ8wb6UsAUk/P8=;
+ b=alBHRTwS3Bvt4tBZmtjUXur3QA66wbjGNErKbIID8o3L0VIvXnFvemGyEdZHPvfUBSVt+I+NsT6As8Zovp1YZ/0LLC3Lko4sp4sMIvpV2xQ/TmfmJ1AYuzparWfmKBrMA42HGrEFKb/GZQHnzvK2MSL26riJ0I5tO465+G2QViCC1tPoylsR6CBwnxnJ8MOA+6/N8qxgNVqbMIWyZVk8UaSspwHDyG3bXdAK0T9J6s78SwkhXDGv8aQhbw4Z3NiwatNuVKkmX8Yv4RLtJdXB7qoOj8kEQJ4XebppAzwIPjZok6+nx6xLDtYwDffoX4RXQ1RuHLaEPzKrFMwRSH7NXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=supcom.tn; dmarc=pass action=none header.from=supcom.tn;
+ dkim=pass header.d=supcom.tn; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=supcom.onmicrosoft.com; s=selector2-supcom-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oejQyvo2uZ4MG2Un4eqQONFe4RQeeHtZPv41u00kemI=;
- b=igu2GpDehk7zYoSU+mtxQY7ZPinncqj4yMwSUHfcBiC2YVBQoKH2YaNMyNELRel9JjqWSAA7/l2nfdlAYf++mTGzJuo0xwyRI6PTVQrqEogbyK3hI1p12SjN2hKPSz8hvJvm3X9mFy03ONQG6uL7ZuBvjBWMuYzDj0eHnellakc=
+ bh=mru8r+vGChuSwWXvEqrNAmMLhzoWbFJ8wb6UsAUk/P8=;
+ b=iI+eJMu7RIwVTk417QHJm+3spgw7npVar1vs5w0L28eB76/qsOtjThqZRfBc+Pg7NU9y3RR4QXPtqLfcYi5L/Si9NL+6Bi+hk+VRrQQMwt/v33wus+T5OmxAptzKbcsocYOrNqIpxCXcyKzpcB/q3TEvPJlFINpFjqr1B3ErfRA=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6309.namprd12.prod.outlook.com (2603:10b6:8:96::19) by
- SA1PR12MB7409.namprd12.prod.outlook.com (2603:10b6:806:29c::11) with
+ header.d=none;dmarc=none action=none header.from=supcom.tn;
+Received: from AM8PR04MB7908.eurprd04.prod.outlook.com (2603:10a6:20b:24c::18)
+ by VI2PR04MB10114.eurprd04.prod.outlook.com (2603:10a6:800:22d::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Mon, 24 Jun
- 2024 10:03:55 +0000
-Received: from DS7PR12MB6309.namprd12.prod.outlook.com
- ([fe80::b890:920f:cf3b:5fec]) by DS7PR12MB6309.namprd12.prod.outlook.com
- ([fe80::b890:920f:cf3b:5fec%5]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 10:03:55 +0000
-Message-ID: <a97feb03-7bd6-2dd0-d22b-ebeda9895dd1@amd.com>
-Date: Mon, 24 Jun 2024 15:33:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Subject: Re: [PATCH v9 03/24] virt: sev-guest: Make payload a variable length
- array
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
- kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
- dave.hansen@linux.intel.com, pgonda@google.com, seanjc@google.com,
- pbonzini@redhat.com
-References: <20240531043038.3370793-1-nikunj@amd.com>
- <20240531043038.3370793-4-nikunj@amd.com>
- <20240621165410.GIZnWwMo80ZsPkFENV@fat_crate.local>
- <7586ae76-71ba-2d6b-aa00-24f5ff428905@amd.com>
- <20240624061117.GBZnkOBR5FVW8i6qsG@fat_crate.local>
-From: "Nikunj A. Dadhania" <nikunj@amd.com>
-In-Reply-To: <20240624061117.GBZnkOBR5FVW8i6qsG@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0P287CA0006.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:d9::12) To DS7PR12MB6309.namprd12.prod.outlook.com
- (2603:10b6:8:96::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Mon, 24 Jun
+ 2024 10:04:45 +0000
+Received: from AM8PR04MB7908.eurprd04.prod.outlook.com
+ ([fe80::eb8c:cdd5:a0a:757f]) by AM8PR04MB7908.eurprd04.prod.outlook.com
+ ([fe80::eb8c:cdd5:a0a:757f%5]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
+ 10:04:45 +0000
+Date: Mon, 24 Jun 2024 11:04:42 +0100
+From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+To: Luke Jones <luke@ljones.dev>
+Cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] platform/x86: asus-wmi: add support for vivobook
+ fan profiles
+Message-ID: <ZnlEuiP4Dgqpf51C@laptop>
+References: <20240609144849.2532-1-mohamed.ghanmi@supcom.tn>
+ <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
+ <9daef2c6-6df4-4f61-966c-239450de7b4e@app.fastmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9daef2c6-6df4-4f61-966c-239450de7b4e@app.fastmail.com>
+X-ClientProxiedBy: ZR2P278CA0037.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:47::19) To AM8PR04MB7908.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24c::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,135 +67,407 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6309:EE_|SA1PR12MB7409:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99f83e4c-e687-4c34-83ca-08dc9434f526
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7908:EE_|VI2PR04MB10114:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77c7d6a8-ab39-48e2-51c3-08dc9435129e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|376011|1800799021|366013;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|41320700010|366013|52116011|376011|1800799021|38350700011;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aXdNYXdLVFRmUlQ2akhsTUF2Z1dDNFphcWNvTmVZYTFoZ1VpQmJWQ21rU0pB?=
- =?utf-8?B?SDEvTktxcDBMREdEL3RSZVNBeCt3R2lpQWcza0dGU3FFTzg2R2lGak5hU2Fz?=
- =?utf-8?B?R0NodkcxV2oyeXVWRVRrV3A3V3ByT0xneGxwZzNsbjY0NU40M1ZCdzV5cWQz?=
- =?utf-8?B?bmpLaXB4YWpUVldDODA4R3V5SWgweVNaOVkwWTNQeTRiWG91T3FwK0g5Y0ow?=
- =?utf-8?B?b0d0NEZQSWlFMktZeWI3dk5yYk1vdnFwSHovcXo0L0ZvcDJOQUdBcnBBVXdm?=
- =?utf-8?B?Z2lNWTJWcGswbTVCWFpVN1U5NlF3NjNrcEUzbSszM09ZdGllTmZwaW95RWFL?=
- =?utf-8?B?Z3FQYm4rTytKS0tMcDN3RitaSGZML3Blai9MUVJpaFpoYWQ3TzRvWXJkNnJ1?=
- =?utf-8?B?dEtTMXAwTW8wSzNXUDZUeTFUbk5FNmhEV0pXYmJKcVN2Q0FoelcwY2IzL1JM?=
- =?utf-8?B?VHdHNGQwUHNPSzJGcUh6TDFnTjFGeE80ZzNVN3VlbWtid1BaVk5pNkZHbGUr?=
- =?utf-8?B?S1E5VklsQVJZWDBXYzV2ZWVzVEN5M09LdTQ4ZVM3Y0g4N1FJa2dyOGZ2c2pr?=
- =?utf-8?B?K3FxNmx1TjVYSkdTcW5nZTNYelhKenNVNzBaU09ieXlUL3JlOXgzWUFmRnM4?=
- =?utf-8?B?dllNU0prL2xZd1JhN1VRazdHakF3MHhMUDJpU3R5WFpFYWtDalBDcFY1bFY2?=
- =?utf-8?B?TCtMVjA4TEZWeElwYUhRYzB5U0labmNETEo4SjNQdlNOT2xvU0V1STBneURW?=
- =?utf-8?B?WFdSaEVlT1djdnZ5cU9YVDRqMXU0WnlsczF1R0FFTHNhbTNhdGRaQVhHTUFE?=
- =?utf-8?B?NVJEczJsK3AyYXVwVTFhRmtlTDc5VVE1bmFYQ0l6eUR5RUpSTE9CM3hubmJZ?=
- =?utf-8?B?WjRzdFU3YlpIaExhZlRTMkIxZW1rZTY1WFJVMFhpb1l6TVlRMldYWExSa2hF?=
- =?utf-8?B?K1YvZWoyU2VaOFM2ZVYzbjQ2WDdabGFWckNUNFZBY2xFWFhqUjR5WG9mSjB5?=
- =?utf-8?B?cWdONk9ycUMxS2tDRHJsSnBNSHo5NGVyT0tlK2tGbWNZN1FoQlEyTUdIb3Jp?=
- =?utf-8?B?Nml6NG5QOHMzRzk5bjVhbERtaHRzNXY2L25NSGkveTJicXdMKzhLKzBtaGhV?=
- =?utf-8?B?Vjd4Y09NYXp1Um5KOHZ6a1BROFpkV1RwSXAyQzJ3SnBuV3ZoQ1JxaE14c0Rz?=
- =?utf-8?B?V3hRbFNzWDRSdlhCQ3ZHUkNyUUtxR1MzU0tQZUpUUEl3TDdnK3dBR2gyd0du?=
- =?utf-8?B?UVFTN0ZsUnZJdDVNMWRGV09TVjdQWHBnQis2ZzlnUG1EMEJ2enRqRWx4Ukx1?=
- =?utf-8?B?M2dDc3V0TmcxYldaRlNpK0VNWHBQTkZoYkZRMXp3MjN1QlVDczMxOXRiWVFX?=
- =?utf-8?B?eFlGT1hvOUhKQ1dyamc0NEpFdmlKMUVnbU43SFV2SEZEQ3h6aW1KNFpRUENI?=
- =?utf-8?B?dGtnb0hkSHpRWURYNHJ0cDZyL0tyNVdJb29rNmROVnpMV2xicFhDOWk4aFpB?=
- =?utf-8?B?UFlQZktOSmo4WUs0WFhxSENUWm9URFNPeE9UL3hOaU5GdTQ4dzF3S2F5ejJn?=
- =?utf-8?B?WEorWW5KelFCZEVSREhRUDg2Vm9zSFViSi9CcENSbStYMWFPTzl4T3JUZlZZ?=
- =?utf-8?B?dUxmeDNQazIySk9wOTUvUWdNeEJoSDlkZnFjbnhzSjZYbUdjZzA3K0o2emx5?=
- =?utf-8?B?bGpFQi9FSVRzVEhxbTNYRG4va21hQVZNUmcyMC9BMlRVM1Y4anAxMktoZnN4?=
- =?utf-8?Q?LE7t9Fie6ilX8IMxAzUmvztKluB6i3tb7vBuABq?=
+	=?us-ascii?Q?gcGfBi+x61MJ0dcR/Hv00bVwEQBcWRaNMLMnvFgGxFGW0Z7AS+2BL9plfv54?=
+ =?us-ascii?Q?pnc57XA6SS4qGQGrU6g+9fAJRt/IFJXr4mQPOZYJ7WjvR/PfAWXtnkMRV6To?=
+ =?us-ascii?Q?9DleekDqTOJvFcdZzccl31eua4F4FyMRr+6erUxT97LVkR1G8XPIkuKC7fs0?=
+ =?us-ascii?Q?AaXkDbz3SJj3CGvvd61E7zvmLf6le4Q8leejgTNuxvlhMQ+RODvLxwZPqbH3?=
+ =?us-ascii?Q?acGCCK0s/tW2WBjNpDp8uzH639LRfvLG4/h2TvxKvXlDrfoc1wQyBoWPS2Ke?=
+ =?us-ascii?Q?YfZzZxDyBJVT5HMOEJF4XqrYj0uy+/p4TA1U3XVRq+SNEJcEIOldYjR4b5Q9?=
+ =?us-ascii?Q?jJhwevjerl8icR8dKw2+jHoVejr+pLOftxunvkkWivEQAVHhwOAL8/Pv9DnC?=
+ =?us-ascii?Q?dczArUGhCAQotP/CjZ7ukNXLsT0QGa1e15CPx2ot8waxPE3n7lREDD6ieuHG?=
+ =?us-ascii?Q?i5TmGumiQDoEftVN4YF7L1QG85qMMuT11Tc/2SOQFGmLx53ARS4SM6sMDbBG?=
+ =?us-ascii?Q?E7Yuu7ao4puMuMks4ZlMnxW53Xe6WCJB2nYfnpr8kzNWLJrSf2SB7pxkWwA0?=
+ =?us-ascii?Q?vsyIFisqI/yGhbug4j079jGgJ0ayWxEhU28TITOC6ufYa2QMMltsN/Nm0HhL?=
+ =?us-ascii?Q?iCSSTqXUI+KSmLx2ZX7puR9oupAwYwu5JZOUpZsQJZbvHRtTTgEEgerDBjuO?=
+ =?us-ascii?Q?J1GuOOEI1SFh/I2TRcEYUxH2icOk07RddRzZTr8MN1On98vUr3VD+mgTAvmp?=
+ =?us-ascii?Q?kF23aazHVne5TEC/HVgamvqtITAZFviWvQxeEscuYxmsNAPjY3Abu55DscwO?=
+ =?us-ascii?Q?hOK0vTwCKziz+izeMsPSzcB/4IB93HJCTel5wp0hIoW5xHYtkE2r5ULutUKc?=
+ =?us-ascii?Q?SqaIdV7GOhSVvdY0W/tBYYQQS/BUsPq+0ccc7GZSkWBRUG38Nx0CzzNzeIwA?=
+ =?us-ascii?Q?S2p1AzQeD3gJsV0LpIAiK0ZCpTYACYnyiKBWtWc2eHXmzlB/uF54pr7cK1UQ?=
+ =?us-ascii?Q?aayrXkVBNZTWbInVAoSflmQ4Bf6b197UItRR5odhescsooxvcIPIe+zJZQv1?=
+ =?us-ascii?Q?K+KiJ+jo4w+LYcjW5EqUrPCx9fD1E7Sjtx44Va6dVYoal64iy1aP42Jvuntc?=
+ =?us-ascii?Q?6izF8Y3PqITvVF7ueG6WAQfAqM244su67Xt4dFoh5c6lS1Rk3ANuEHh0Mns+?=
+ =?us-ascii?Q?WjwJIfNUSkPywCSnAsgF+WS2VhjVRTyheXc3Vi0H0VvijvIhBSkbCXGh8vXZ?=
+ =?us-ascii?Q?NGGy6rQhxkakkuNyWCH22udKCXDf6849qVNp60LDlCCjViFR3cWtR3cTGvSH?=
+ =?us-ascii?Q?R27t9H3QK8wP6KOhdUb0rkxzxYagE3VSKPoqMg8iAbwF1TGLEUVRNJFiE4+K?=
+ =?us-ascii?Q?197MgTc=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6309.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7908.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(41320700010)(366013)(52116011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NjZhTEdmRStwRk5HL1pMZXdXRzY2WXRWWkxkYVpQTTBPcWVaeXJpMlJUMkpB?=
- =?utf-8?B?dm4wRUdjSUxXNUhrREtoS2RLblk2S25xL2d3SWhLQmR2SUlLWUtMUjVTaTkx?=
- =?utf-8?B?WXJwb3YyL0V2aEJvdDUwclNzcmE4SmFUdmljSlIrQ2tYcDNvQ0NlODdIUzJp?=
- =?utf-8?B?dlJUR3ZNV2Z5MHhYajBxeGtpVTRCTWR6RnFZYUVxc1ZXMUVhYVRwNG9KMXI2?=
- =?utf-8?B?dlJpcTAxbHVGRVRrQVAzUktzM2dWM08vaHY1QWZJVmUxMXQwekZHVzZHRE9t?=
- =?utf-8?B?YzZVajRBMHQ5MytIWXJUbHVWejQ2dXdlY2puRDlGWWtGSzRvM09yT3RaVVFk?=
- =?utf-8?B?aVpTdHBvYytaY3BLYkw5aGkrRUNmOTV0NGZlWnpqNUlPVFJQVUdORlhBOHhu?=
- =?utf-8?B?ZERHMXZTejlmTmoxNGhVSGJtR2hlNTJmbExXd0VBTTV2SkJFYXlxaTM1dUR5?=
- =?utf-8?B?cVAraUc2U0VFM0hkNzdsTnBRSkpweFEwd2xuUEFGWWxCOHoreThjYThOS2Jp?=
- =?utf-8?B?cGtoeFUxaE9SRm9DR1E4SGtBL3NmbG1xdlQ4RFpiRERpSS9rVm02Skx5SktL?=
- =?utf-8?B?NmhacDNzd0c4eUFrRWxXclBzOFMwZmQ2WDM0TkgyNWlDc0lvbzJJdTNtUEFE?=
- =?utf-8?B?cDlkZS94TFg3dDZBMUpRM1RPTkEvczQ1cmw4czZmTDNSNDZET0p2d0VLcW5I?=
- =?utf-8?B?MlN2NjBTbGhMYVdSc3hKT24rRWJBaFNHbjFPbnNyQ1Z3MGdMMUQ2RUVnYkxo?=
- =?utf-8?B?MnNRbmV1WC96Q2V1RlFzUHdBOVdKSkIzeU1obS93YzRqWENsclpVMCsvTnhy?=
- =?utf-8?B?a29FOFBhejVadUViV2Fad3dWSnRPa2JFSGxQYVlWV0c5NmZmSmNBS1FDOXZz?=
- =?utf-8?B?bGtLRHJNWDhQQXZwUmVlWllydFVtcEpFUWY2RVFWWjloN0tnaHNVcEIwZ2Q5?=
- =?utf-8?B?VWZFTThKUkg0dzMvRU1GNjdxdE4ySmhsNFJxWnhKQkljQ1MxbGpIZ1phOFN2?=
- =?utf-8?B?djBPOUlnN01OSEpuNnljS1ZVOG5XR0tyUDFpcWE5KzVGODJPQ3h3cGZjTmxh?=
- =?utf-8?B?K1hpSW9Qb3Zuejh0bHJUWkFyMXFleXdrZXFCMjhBWU5mdUFGa0pRcXBMamRU?=
- =?utf-8?B?L1g0ZFN3YlJOMjNZaHVLQ2hIY2FQRGFOeTV4UXVHb05wY1d6LzQramJKL3JV?=
- =?utf-8?B?Sk5rZEJLRmRhOVB5WkQ1VG9OZ1Iwa1dUb21XenpFRWlhZUtvelJ6bWlFeC9R?=
- =?utf-8?B?bGFQTVc1Wll2VjZCb2Zob3dVYWFRVmwxT3J0anJIREZCZTVVMDVFckdHcll6?=
- =?utf-8?B?dExHa3duTUhVWVQ4NzNpQWtocEcxaWp2czl4SHRacFhFL1RLb0cySGplVGli?=
- =?utf-8?B?dHNDV1dlbERvaytqZG5xKzJ5RzA0MlMyRWJhNThJZ0JOVTNVSmtBRHMyclJi?=
- =?utf-8?B?bVRPdk80d3ZvMmYrenJCcXcvYXBZY2hZclI1czREc0FjN1lwQnVSNTFwOHNF?=
- =?utf-8?B?R2FTYTlKN3piSUE0VTRHMzlpMklsQTZoUVRwUVNyWHh5MEdDNzEza0wwTzNQ?=
- =?utf-8?B?by90RmhkS1lMd2N3MFZPMTVGYm8vc3k0blBCMzZWblNZd2JHNEJyTy9BZHE4?=
- =?utf-8?B?a24xWjBjcUFMWWFMUVQzMERYSFpzai9ObUtubEYzRnJadE9vME1VRFVLSGZN?=
- =?utf-8?B?QldkSmdXM2IzNnpiR0Z1MG5tTG1lN05UMDloTHlkWitvTzhkVEVqOWNScVZr?=
- =?utf-8?B?cHh4a0NCZ2lMbDRWcDBDNnU3a3Q1L3A0bFVndXFqa0RlSXdDMEZ0U05XU2o3?=
- =?utf-8?B?eHE0YUJQTVEwQjdLZXpNd0hPanpGYzUzY2tuWWtxZlZDTGJReS9IMGFKVTdN?=
- =?utf-8?B?S3NPYlRXK2JRS0FPR0lWaWJjQjMvbHdYRHJUS2loK1k4RkJRRkwrdEZZanRz?=
- =?utf-8?B?OGwyQWdlZ2w3U0JDcGxsZWlrVzVQUzhPU1l2UmhaM0l1U0IranJMdXlMY0pn?=
- =?utf-8?B?VU0rLzZXYU1qQ3l4eGRhckdLZGkvai9VcWJrbjV3dERkN01DY0N0WjcwbUlK?=
- =?utf-8?B?cXVKSTZTQXhpNUQvZk5SOHdjendvd3J6M3VHMHVvUFR0OU16M2dEeWNjMnQy?=
- =?utf-8?Q?zB5MsySffI+C+2imxD9xPlXMM?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99f83e4c-e687-4c34-83ca-08dc9434f526
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6309.namprd12.prod.outlook.com
+	=?us-ascii?Q?+Yp2DZRCdu6mekiQs58kbbyYLfoGxtpuRdC9hZpLGLKNUfIP1dn4imw5WPhZ?=
+ =?us-ascii?Q?DUaOUW2GtB05Toti5rHM7Yz/1OYm/SBRyQmgcaRPOwYw06QzNJz01kCIna2m?=
+ =?us-ascii?Q?jnFZH3nLrGmxkhfwqF+BqJBguJPzeqDKI8hCYTlHb9ZXrb//B0jXgTpoeHiz?=
+ =?us-ascii?Q?dCCl1lDFGla31EWWV5eKXkg84SNMMmr7xO5hy8azV3BYzDRJKSPgxHmXVXPy?=
+ =?us-ascii?Q?Snyv+KFR2PPdBGFax27RnLgGfc/GkqRDhhFYKs3yQiIsdQqOu+dJ8I92qnIQ?=
+ =?us-ascii?Q?JdkJmoG6m7bY3wHS6Ib81+TGQi1fqr564twMhPBSW6sIMZwdgKUGyeK6/AjP?=
+ =?us-ascii?Q?FjvQ5q7X/jcPTO8uvoqqLDT6V1d+KIHLKyvBHgQejZsbsfDkwAZE5fd4f2Wn?=
+ =?us-ascii?Q?d635LxiDuw+fLdSET0ecy/EsN82BnqTtuVD5R6LSU1W2rVkqEqLXkfkpr6Fl?=
+ =?us-ascii?Q?YzTeuMKXE+lAFHiM0OBlrwmb8bNaAr80jZT7QT3B0LGp/xAg76v8i8Q6PaUx?=
+ =?us-ascii?Q?D13szbvcfrYdAxvxBhLE/mYEKYyn5fnTNjxV7rSQldkCdiAgdCGeV6bZFZHD?=
+ =?us-ascii?Q?eIb4E8G+QpAYsKV7BpkqMajUDjUhocXB1IR1+ws3Ff8i8bMsTpzVo7iqGyvf?=
+ =?us-ascii?Q?fMK0KiwHKmdvLzBqTP3LfvklkHSoEUECbee/cuqdWF/tWhoKWqwkWr3kPqJi?=
+ =?us-ascii?Q?gkpS4nlMnn4yp8mFuzXqE/XF+SosMg/zV1ghswOXWX4h6jWhoGFMX/MJb5nL?=
+ =?us-ascii?Q?EzMJyYSDfWUv30iHYIwRt7/2Nf6mQqBnZcvCxp8lp1CN6+EKZG2P5jvhseAL?=
+ =?us-ascii?Q?a7anJPwq+ot2zzh56T1JchPyfCC9QHG0Cg86Ac+FrMrKQVujQgovk9Tt/O+m?=
+ =?us-ascii?Q?GL9CEeSoqjMRS5hCaJ7aFEqBGrQptfpSLbC+ujxmGBktDIuE7aFVUIstZAbn?=
+ =?us-ascii?Q?U/ehB5TKQ0oBfyZYn76HGZBWGeOk1PLNWPedD1yqy4Em9OqnXmkmr7g25Fsn?=
+ =?us-ascii?Q?Q2SPsV0G/JOEZ5I0h+G0By3ivFv5ovHDLM1LetP3xZpfOjNYrI+ZTgkFbMHF?=
+ =?us-ascii?Q?M2dD1McfSJbe1yhmkQAmquK7oJ+g2TfLu4au01fZkavUmP4ka2UAPeJN7261?=
+ =?us-ascii?Q?mKY0CqZJdWfD6l5GGghD0aukIcWoZ1spVu7z4e9aSuPqotb+PWTCZiD0fVEQ?=
+ =?us-ascii?Q?pjS26cXPw0e1aooMHmFvdNzytdlCPt7iLooErxXamTeHq/WlaUWq+HBzPZ9R?=
+ =?us-ascii?Q?L8IHKx6Bq5i4ETvBv6GiPvY6AYCgtHapXB8VrRIB0Gk6PVkV74BmvzI9Q6c7?=
+ =?us-ascii?Q?OKvN5jTehrl6JOPyfn6sGvcFVvyHqQyQDBYobyz7l6YvGG5SK5bFKDh/r+QD?=
+ =?us-ascii?Q?6LsxCd1X3Gm73syRoj5oLqQ4pDt18v892AD3SkwS309s4GeVTN96FVFXK/iA?=
+ =?us-ascii?Q?8ltF2WGSpNaBH2HEpec634CuWxmGKl3aR/IxcZoLgwQ5FO5LQbTDTtte1gvR?=
+ =?us-ascii?Q?K/jyNwtNGypVKvbxIrGuYdF0hmqHCcqp5Vsst7MzdGypxBaKIOtH4c/Ick70?=
+ =?us-ascii?Q?A9MDDi8YPa0JmFbHGZdvXydT5q6L3briWtXheuqFSVTIR9SH62TN9bGsXhGI?=
+ =?us-ascii?Q?lQ=3D=3D?=
+X-OriginatorOrg: supcom.tn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77c7d6a8-ab39-48e2-51c3-08dc9435129e
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7908.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 10:03:55.5398
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 10:04:45.0990
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 8f85f528-6195-4e97-8e41-f5a9ad3bed4a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fq9zcOIqu/HkAotZUuqFnoIu0xFJUgVI0H45s9f1TV/32ldHL0bYOkVmJ8qN/ZrDRd0rkNks8qAEdhd3j5Y5Rg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7409
+X-MS-Exchange-CrossTenant-UserPrincipalName: S+ZKdn2A2wGj3xMF740+OHkw2J5kA9GSzuwlAwLodx7vmCR9gJUybV22nR5gY5fej8rVmz4A5kTNrFRGd/495g/mztxrSY4VQDENDA18fLw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10114
 
-
-
-On 6/24/2024 11:41 AM, Borislav Petkov wrote:
-> On Sun, Jun 23, 2024 at 09:46:09PM +0530, Nikunj A. Dadhania wrote:
->> Yes, payload was earlier fixed at 4000 bytes, without considering the size
->> of snp_guest_msg.
+On Tue, Jun 11, 2024 at 05:31:46PM +1200, Luke Jones wrote:
 > 
-> Sorry, you'd need to try explaining this again. Who wasn't considering the
-> size of snp_guest_msg?
-
-Sorry, I meant snp_guest_msg_hdr here.
-
-snp_guest_msg includes header and payload. There is an implicit assumption 
-that the snp_guest_msg_hdr will always be 96 bytes, and with that assumption 
-the payload array size is set to 4000 bytes magic number. 
-
-
-> AFAICT, the code currently does sizeof(struct snp_guest_msg) which contains
-> both the header *and* the payload.
 > 
-> What could help is if you structure your commit message this way:
+> On Mon, 10 Jun 2024, at 2:48 AM, Mohamed Ghanmi wrote:
+> > Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
+> > to adjust power limits.
+> > 
+> > These fan profiles have a different device id than the ROG series
+> > and different order. This reorders the existing modes.
+> > 
+> > As part of keeping the patch clean the throttle_thermal_policy_available
+> > boolean stored in the driver struct is removed and
+> > throttle_thermal_policy_dev is used in place (as on init it is zeroed).
+> > 
+> > Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+> > Co-developed-by: Luke D. Jones <luke@ljones.dev>
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > ---
+> > drivers/platform/x86/asus-wmi.c            | 125 ++++++++++++---------
+> > include/linux/platform_data/x86/asus-wmi.h |   1 +
+> > 2 files changed, 76 insertions(+), 50 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> > index 3c61d75a3..2e3d8d8fb 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -97,6 +97,12 @@ module_param(fnlock_default, bool, 0444);
+> > #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST 1
+> > #define ASUS_THROTTLE_THERMAL_POLICY_SILENT 2
+> >  
+> > +#define ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO 0
+> > +#define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO 1
+> > +#define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO 2
+> > +
+> > +#define PLATFORM_PROFILE_MAX 2
+> > +
+> > #define USB_INTEL_XUSB2PR 0xD0
+> > #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI 0x9c31
+> >  
+> > @@ -293,8 +299,8 @@ struct asus_wmi {
+> > u32 kbd_rgb_dev;
+> > bool kbd_rgb_state_available;
+> >  
+> > - bool throttle_thermal_policy_available;
+> > u8 throttle_thermal_policy_mode;
+> > + u32 throttle_thermal_policy_dev;
+> >  
+> > bool cpu_fan_curve_available;
+> > bool gpu_fan_curve_available;
+> > @@ -3152,7 +3158,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+> > int err, fan_idx;
+> > u8 mode = 0;
+> >  
+> > - if (asus->throttle_thermal_policy_available)
+> > + if (asus->throttle_thermal_policy_dev)
+> > mode = asus->throttle_thermal_policy_mode;
+> > /* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
+> > if (mode == 2)
+> > @@ -3359,7 +3365,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
+> > * For machines with throttle this is the only way to reset fans
+> > * to default mode of operation (does not erase curve data).
+> > */
+> > - if (asus->throttle_thermal_policy_available) {
+> > + if (asus->throttle_thermal_policy_dev) {
+> > err = throttle_thermal_policy_write(asus);
+> > if (err)
+> > return err;
+> > @@ -3576,8 +3582,8 @@ static const struct attribute_group asus_fan_curve_attr_group = {
+> > __ATTRIBUTE_GROUPS(asus_fan_curve_attr);
+> >  
+> > /*
+> > - * Must be initialised after throttle_thermal_policy_check_present() as
+> > - * we check the status of throttle_thermal_policy_available during init.
+> > + * Must be initialised after throttle_thermal_policy_dev is set as
+> > + * we check the status of throttle_thermal_policy_dev during init.
+> >   */
+> > static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
+> > {
+> > @@ -3618,38 +3624,13 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
+> > }
+> >  
+> > /* Throttle thermal policy ****************************************************/
+> > -
+> > -static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
+> > -{
+> > - u32 result;
+> > - int err;
+> > -
+> > - asus->throttle_thermal_policy_available = false;
+> > -
+> > - err = asus_wmi_get_devstate(asus,
+> > -     ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
+> > -     &result);
+> > - if (err) {
+> > - if (err == -ENODEV)
+> > - return 0;
+> > - return err;
+> > - }
+> > -
+> > - if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
+> > - asus->throttle_thermal_policy_available = true;
+> > -
+> > - return 0;
+> > -}
+> > -
+> > static int throttle_thermal_policy_write(struct asus_wmi *asus)
+> > {
+> > - int err;
+> > - u8 value;
+> > + u8 value = asus->throttle_thermal_policy_mode;
+> > u32 retval;
+> > + int err;
+> >  
+> > - value = asus->throttle_thermal_policy_mode;
+> > -
+> > - err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
+> > + err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
+> >     value, &retval);
+> >  
+> > sysfs_notify(&asus->platform_device->dev.kobj, NULL,
+> > @@ -3679,7 +3660,7 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
+> >  
+> > static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
+> > {
+> > - if (!asus->throttle_thermal_policy_available)
+> > + if (!asus->throttle_thermal_policy_dev)
+> > return 0;
+> >  
+> > asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+> > @@ -3691,7 +3672,7 @@ static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
+> > u8 new_mode = asus->throttle_thermal_policy_mode + 1;
+> > int err;
+> >  
+> > - if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
+> > + if (new_mode > PLATFORM_PROFILE_MAX)
+> > new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+> >  
+> > asus->throttle_thermal_policy_mode = new_mode;
+> > @@ -3730,7 +3711,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
+> > if (result < 0)
+> > return result;
+> >  
+> > - if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
+> > + if (new_mode > PLATFORM_PROFILE_MAX)
+> > return -EINVAL;
+> >  
+> > asus->throttle_thermal_policy_mode = new_mode;
+> > @@ -3747,10 +3728,56 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
+> > return count;
+> > }
+> >  
+> > -// Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
+> > +/*
+> > + * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
+> > + */
+> > static DEVICE_ATTR_RW(throttle_thermal_policy);
+> >  
+> > /* Platform profile ***********************************************************/
+> > +static int asus_wmi_platform_profile_to_vivo(struct asus_wmi *asus,
+> > +   int mode)
+> 
+> Given the internals of this function I'm still not sure if this naming makes sense. Perhaps "maybe_platform_profile_to_vivo()"
+>
+you're right. this function doesn't only remap to vivo but if the laptop
+is a not a vivo (in our case a ROG) it doesn't change the mapping.
 
-How about the below commit message:
+The way I see it is that there is a logical mapping (the ROG mode
+mapping) which is stored in the asus_wmi struct and a physical mapping
+that is used when writing to the acpi device (the vivo in this case). 
+so maybe naming them asus_wmi_platform_profile_from_logical_mapping() 
+and asus_wmi_platform_profile_to_logical_mapping() is a better naming.
+in the future there will be other device ids for different laptops.
 
------------------------------------------------------------------------
-Currently, snp_guest_msg includes a message header (96 bytes) and a
-payload (4000 bytes). There is an implicit assumption here that the SNP
-message header will always be 96 bytes, and with that assumption the
-payload array size has been set to 4000 bytes magic number. If any new
-member is added to the SNP message header, the SNP guest message will
-span more than a page.
-
-Instead of using magic number '4000' for the payload array in the
-snp_guest_msg structure, use a variable length array for payload. Allocate 
-snp_guest_msg of constant size (SNP_GUEST_MSG_SIZE=4096). This will ensure
-that message size won't grow beyond the page size even if the message header
-size increases. Also, add SNP_GUEST_MSG_PAYLOAD_SIZE for checking buffer
-over runs.
-
-While at it, rename the local guest message variables for clarity.
------------------------------------------------------------------------
-
-Regards
-Nikunj
+sorry for the late reply
+> > +{
+> > + bool vivo;
+> > +
+> > + vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
+> > +
+> > + if (vivo) {
+> > + switch (mode) {
+> > + case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
+> > + return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO;
+> > + case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
+> > + return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO;
+> > + case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
+> > + return ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO;
+> > + }
+> > + }
+> > +
+> > + return mode;
+> > +
+> > +}
+> > +
+> > +static int asus_wmi_platform_profile_mode_from_vivo(struct asus_wmi *asus,
+> > +   int mode)
+> 
+> Same as the last function.
+> 
+same as the above
+> > +{
+> > + bool vivo;
+> > +
+> > + vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
+> > +
+> > + if (vivo) {
+> > + switch (mode) {
+> > + case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO:
+> > + return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+> > + case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO:
+> > + return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
+> > + case ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO:
+> > + return ASUS_THROTTLE_THERMAL_POLICY_SILENT;
+> > + }
+> > + }
+> > +
+> > + return mode;
+> > +
+> > +}
+> > +
+> > static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+> > enum platform_profile_option *profile)
+> > {
+> > @@ -3758,10 +3785,9 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+> > int tp;
+> >  
+> > asus = container_of(pprof, struct asus_wmi, platform_profile_handler);
+> > -
+> > tp = asus->throttle_thermal_policy_mode;
+> >  
+> > - switch (tp) {
+> > + switch (asus_wmi_platform_profile_mode_from_vivo(asus, tp)) {
+> > case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
+> > *profile = PLATFORM_PROFILE_BALANCED;
+> > break;
+> > @@ -3775,6 +3801,7 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+> > return -EINVAL;
+> > }
+> >  
+> > +
+> > return 0;
+> > }
+> >  
+> > @@ -3800,7 +3827,7 @@ static int asus_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+> > return -EOPNOTSUPP;
+> > }
+> >  
+> > - asus->throttle_thermal_policy_mode = tp;
+> > + asus->throttle_thermal_policy_mode = asus_wmi_platform_profile_to_vivo(asus, tp);
+> > return throttle_thermal_policy_write(asus);
+> > }
+> >  
+> > @@ -3813,7 +3840,7 @@ static int platform_profile_setup(struct asus_wmi *asus)
+> > * Not an error if a component platform_profile relies on is unavailable
+> > * so early return, skipping the setup of platform_profile.
+> > */
+> > - if (!asus->throttle_thermal_policy_available)
+> > + if (!asus->throttle_thermal_policy_dev)
+> > return 0;
+> >  
+> > dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
+> > @@ -4228,7 +4255,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+> > if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
+> > if (asus->fan_boost_mode_available)
+> > fan_boost_mode_switch_next(asus);
+> > - if (asus->throttle_thermal_policy_available)
+> > + if (asus->throttle_thermal_policy_dev)
+> > throttle_thermal_policy_switch_next(asus);
+> > return;
+> >  
+> > @@ -4436,7 +4463,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+> > else if (attr == &dev_attr_fan_boost_mode.attr)
+> > ok = asus->fan_boost_mode_available;
+> > else if (attr == &dev_attr_throttle_thermal_policy.attr)
+> > - ok = asus->throttle_thermal_policy_available;
+> > + ok = asus->throttle_thermal_policy_dev != 0;
+> > else if (attr == &dev_attr_ppt_pl2_sppt.attr)
+> > devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
+> > else if (attr == &dev_attr_ppt_pl1_spl.attr)
+> > @@ -4745,16 +4772,15 @@ static int asus_wmi_add(struct platform_device *pdev)
+> > else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
+> > asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
+> >  
+> > + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
+> > + asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
+> > + else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
+> > + asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
+> > +
+> > err = fan_boost_mode_check_present(asus);
+> > if (err)
+> > goto fail_fan_boost_mode;
+> >  
+> > - err = throttle_thermal_policy_check_present(asus);
+> > - if (err)
+> > - goto fail_throttle_thermal_policy;
+> > - else
+> > - throttle_thermal_policy_set_default(asus);
+> > -
+> > err = platform_profile_setup(asus);
+> > if (err)
+> > goto fail_platform_profile_setup;
+> > @@ -4849,7 +4875,6 @@ static int asus_wmi_add(struct platform_device *pdev)
+> > fail_input:
+> > asus_wmi_sysfs_exit(asus->platform_device);
+> > fail_sysfs:
+> > -fail_throttle_thermal_policy:
+> > fail_custom_fan_curve:
+> > fail_platform_profile_setup:
+> > if (asus->platform_profile_support)
+> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> > index 3eb5cd677..982a63774 100644
+> > --- a/include/linux/platform_data/x86/asus-wmi.h
+> > +++ b/include/linux/platform_data/x86/asus-wmi.h
+> > @@ -64,6 +64,7 @@
+> > #define ASUS_WMI_DEVID_SCREENPAD_LIGHT 0x00050032
+> > #define ASUS_WMI_DEVID_FAN_BOOST_MODE 0x00110018
+> > #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
+> > +#define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
+> >  
+> > /* Misc */
+> > #define ASUS_WMI_DEVID_PANEL_OD 0x00050019
+> > -- 
+> > 2.44.0
+> > 
+>  
+> If Hans and Ilpo don't have any requirements then:
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> 
