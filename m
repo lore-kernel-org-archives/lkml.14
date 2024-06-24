@@ -1,135 +1,117 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C33C567D
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 20:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825291A0717;
+	Mon, 24 Jun 2024 20:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719260299; cv=none; b=npEsaNL+LbpcL30rGBDfaR6033Yq8DRXTQy4PwDSmody1mzDSNwBBJaF96AzgENK4to6GCvgCEb40AWfFv41bbGCgpoIAla4WeWNBk5V/sNhX/5SUdz4gvH5Me/cVj72/A1piJdNEKasLML2mBHsFkZpmZ6ZZ5JeVn9vdff8juM=
+	t=1719260301; cv=none; b=TazONW3pyxI8Hm24dkYvpg49dFf6ThjzaE0CtMD7t1HnuYVHl01YHEHxGBvRCgVU/e0vNqd5gX81m8AvW+x/UxxJ2srirDp6xUWzN5eGqjKUaXrAQ6bVY4u3O2feNN5dK6BBGRn6Y44/SPjRvAHlx5KIYbk6YQjvH/SfqRW5oFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719260299; c=relaxed/simple;
-	bh=1HoRRBb0WPTrKBv38dDDSH+RHTgQc5/zb5ynIO/RJXA=;
+	s=arc-20240116; t=1719260301; c=relaxed/simple;
+	bh=DO3F18f5SP8f/MW8gwjfbWiSJPAYVs+z8iZoxQFISiI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aXl2c8vC7R+9dvP/34iChIGHMnwccwIBqyxtsjnER9p+AsOmE8IftHCt6W/lkpkBmFSvBSughZOJBq3GDewkSu/Oy9OSdHZYqyX2HH/K/4avTwf+3Lhr9/Px1U0Jp3vROpTLaGvnT29vFO2fvvHFIC2qS63yi3kHjTOjCa/j9yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ei00rqAk; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=ptRyn/7301eDuGO/cwEqR5nkmDxLBYOrO5dCR4E9iY7Lyqe+RYGDhP/gcylnoeTieYE6WrF3BQer//WuML0+H/9m2F6ejH04BEUrtAFdxEi4X0KLHz9Cj73wGqjoewTzyPRO/RFqp4psAFZnMG0rmsfamx2mVqnBNpv38Vgf+Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=giHbMji3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ei00rqAk"
-X-Envelope-To: yosryahmed@google.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719260295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VRd3PmTY5UDQojim7KON/1YaVpEPKqpnbeP6DbFTTdQ=;
-	b=Ei00rqAkiPH/30y5uW/S/EmogethEbiYnuAewFxlIUWu+NM8LqEEErboIcNNVu/1tXM4je
-	jkO/otYygv8cn2Q+/VpPUqEVU5OQMNvUqzZELT9/Sju0Yb1cn7V+b+B72Q1CGsL1+MoySO
-	bnxZwTpS+b5XslS41iLwlDohKacruX4=
-X-Envelope-To: hawk@kernel.org
-X-Envelope-To: tj@kernel.org
-X-Envelope-To: cgroups@vger.kernel.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: lizefan.x@bytedance.com
-X-Envelope-To: longman@redhat.com
-X-Envelope-To: kernel-team@cloudflare.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Mon, 24 Jun 2024 13:18:10 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>, tj@kernel.org, 
-	cgroups@vger.kernel.org, hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
-	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] cgroup/rstat: Avoid thundering herd problem by kswapd
- across NUMA nodes
-Message-ID: <a45ggqu6jcve44y7ha6m6cr3pcjc3xgyomu4ml6jbsq3zv7tte@oeovgtwh6ytg>
-References: <171923011608.1500238.3591002573732683639.stgit@firesoul>
- <CAJD7tkbHNvQoPO=8Nubrd5an7_9kSWM=5Wh5H1ZV22WD=oFVMg@mail.gmail.com>
- <tl25itxuzvjxlzliqsvghaa3auzzze6ap26pjdxt6spvhf5oqz@fvc36ntdeg4r>
- <CAJD7tkaKDcG+W+C6Po=_j4HLOYN23rtVnM0jmC077_kkrrq9xA@mail.gmail.com>
- <exnxkjyaslel2jlvvwxlmebtav4m7fszn2qouiciwhuxpomhky@ljkycu67efbx>
- <CAJD7tkaJXNfWQtoURyf-YWS7WGPMGEc5qDmZrxhH2+RE-LeEEg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="giHbMji3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6997C2BBFC;
+	Mon, 24 Jun 2024 20:18:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719260301;
+	bh=DO3F18f5SP8f/MW8gwjfbWiSJPAYVs+z8iZoxQFISiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=giHbMji3CYwfeiqD8pY4mqugoWrrhHgw1f0I5G/R/+73iM4AbHSlk1xqzuYBgIxqU
+	 DDiTPV4F/GgmGykqWHjliMsgEoMhxKVrGp1wlEfpBcyUob91Fqm8WlRIh/hEqvVZf8
+	 uHMhux0uUfvAYo9lYpB3D+BZZ7K/1co85GPpwUREey7A7LgLO8MweyOZkzToBfkbsO
+	 OMyU8L8YQbK4z8LTYPQiMgq4DLyyWwiBS327C0G4eAESnjFxiTksHaqWQh5Kc8malm
+	 O//xzbkwjW0/OuqWNjA+TwTGHDrO4+Wk0s3ArKJVpprzyI0326JZ0LinY1LHO5Ro6+
+	 LiXA2mYAT0cFA==
+Date: Mon, 24 Jun 2024 13:18:19 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nicolas Schier <nicolas@fjasle.eu>
+Subject: Re: [PATCH v2] kbuild: rpm-pkg: fix build error with CONFIG_MODULES=n
+Message-ID: <20240624201819.GA783641@thelio-3990X>
+References: <20240618110850.3510697-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJD7tkaJXNfWQtoURyf-YWS7WGPMGEc5qDmZrxhH2+RE-LeEEg@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240618110850.3510697-1-masahiroy@kernel.org>
 
-On Mon, Jun 24, 2024 at 12:37:30PM GMT, Yosry Ahmed wrote:
-> On Mon, Jun 24, 2024 at 12:29 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> >
-> > On Mon, Jun 24, 2024 at 10:40:48AM GMT, Yosry Ahmed wrote:
-> > > On Mon, Jun 24, 2024 at 10:32 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> > > >
-> > > > On Mon, Jun 24, 2024 at 05:46:05AM GMT, Yosry Ahmed wrote:
-> > > > > On Mon, Jun 24, 2024 at 4:55 AM Jesper Dangaard Brouer <hawk@kernel.org> wrote:
-> > > > >
-> > > > [...]
-> > > > > I am assuming this supersedes your other patch titled "[PATCH RFC]
-> > > > > cgroup/rstat: avoid thundering herd problem on root cgrp", so I will
-> > > > > only respond here.
-> > > > >
-> > > > > I have two comments:
-> > > > > - There is no reason why this should be limited to the root cgroup. We
-> > > > > can keep track of the cgroup being flushed, and use
-> > > > > cgroup_is_descendant() to find out if the cgroup we want to flush is a
-> > > > > descendant of it. We can use a pointer and cmpxchg primitives instead
-> > > > > of the atomic here IIUC.
-> > > > >
-> > > > > - More importantly, I am not a fan of skipping the flush if there is
-> > > > > an ongoing one. For all we know, the ongoing flush could have just
-> > > > > started and the stats have not been flushed yet. This is another
-> > > > > example of non deterministic behavior that could be difficult to
-> > > > > debug.
-> > > >
-> > > > Even with the flush, there will almost always per-cpu updates which will
-> > > > be missed. This can not be fixed unless we block the stats updaters as
-> > > > well (which is not going to happen). So, we are already ok with this
-> > > > level of non-determinism. Why skipping flushing would be worse? One may
-> > > > argue 'time window is smaller' but this still does not cap the amount of
-> > > > updates. So, unless there is concrete data that this skipping flushing
-> > > > is detrimental to the users of stats, I don't see an issue in the
-> > > > presense of periodic flusher.
-> > >
-> > > As you mentioned, the updates that happen during the flush are
-> > > unavoidable anyway, and the window is small. On the other hand, we
-> > > should be able to maintain the current behavior that at least all the
-> > > stat updates that happened *before* the call to cgroup_rstat_flush()
-> > > are flushed after the call.
-> > >
-> > > The main concern here is that the stats read *after* an event occurs
-> > > should reflect the system state at that time. For example, a proactive
-> > > reclaimer reading the stats after writing to memory.reclaim should
-> > > observe the system state after the reclaim operation happened.
-> >
-> > What about the in-kernel users like kswapd? I don't see any before or
-> > after events for the in-kernel users.
+On Tue, Jun 18, 2024 at 08:08:43PM +0900, Masahiro Yamada wrote:
+> When CONFIG_MODULES is disabled, 'make (bin)rpm-pkg' fails:
 > 
-> The example I can think of off the top of my head is the cache trim
-> mode scenario I mentioned when discussing your patch (i.e. not
-> realizing that file memory had already been reclaimed).
-
-Kswapd has some kind of cache trim failure mode where it decides to skip
-cache trim heuristic. Also for global reclaim there are couple more
-condition in play as well.
-
-> There is also
-> a heuristic in zswap that may writeback more (or less) pages that it
-> should to the swap device if the stats are significantly stale.
+>   $ make allnoconfig binrpm-pkg
+>     [ snip ]
+>   error: File not found: .../linux/rpmbuild/BUILDROOT/kernel-6.10.0_rc3-1.i386/lib/modules/6.10.0-rc3/kernel
+>   error: File not found: .../linux/rpmbuild/BUILDROOT/kernel-6.10.0_rc3-1.i386/lib/modules/6.10.0-rc3/modules.order
 > 
+> Specify the directory path, /lib/modules/%{KERNELRELEASE}, instead of
+> individual files to make it work irrespective of CONFIG_MODULES.
+> 
+> However, doing so would cause new warnings:
+> 
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.alias
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.alias.bin
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.builtin.alias.bin
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.builtin.bin
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.dep
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.dep.bin
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.devname
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.softdep
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.symbols
+>   warning: File listed twice: /lib/modules/6.10.0-rc3-dirty/modules.symbols.bin
+> 
+> These files exist in /lib/modules/%{KERNELRELEASE} and are also explicitly
+> marked as %ghost.
+> 
+> Suppress depmod because depmod-generated files are not packaged.
+> 
+> Fixes: 615b3a3d2d41 ("kbuild: rpm-pkg: do not include depmod-generated files")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Is this the ratio of MEMCG_ZSWAP_B and MEMCG_ZSWAPPED in
-zswap_shrinker_count()? There is already a target memcg flush in that
-function and I don't expect root memcg flush from there.
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-> I did not take a closer look to find more examples, but I think we
-> need to respect this condition at least for userspace readers.
+> ---
+> 
+> Changes in v2:
+>   - Do not run depmod
+> 
+>  scripts/package/kernel.spec | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+> index e095eb1e290e..fffc8af8deb1 100644
+> --- a/scripts/package/kernel.spec
+> +++ b/scripts/package/kernel.spec
+> @@ -57,7 +57,8 @@ patch -p1 < %{SOURCE2}
+>  %install
+>  mkdir -p %{buildroot}/lib/modules/%{KERNELRELEASE}
+>  cp $(%{make} %{makeflags} -s image_name) %{buildroot}/lib/modules/%{KERNELRELEASE}/vmlinuz
+> -%{make} %{makeflags} INSTALL_MOD_PATH=%{buildroot} modules_install
+> +# DEPMOD=true makes depmod no-op. We do not package depmod-generated files.
+> +%{make} %{makeflags} INSTALL_MOD_PATH=%{buildroot} DEPMOD=true modules_install
+>  %{make} %{makeflags} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
+>  cp System.map %{buildroot}/lib/modules/%{KERNELRELEASE}
+>  cp .config %{buildroot}/lib/modules/%{KERNELRELEASE}/config
+> @@ -70,10 +71,7 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEA
+>  %endif
+>  
+>  {
+> -	for x in System.map config kernel modules.builtin \
+> -			modules.builtin.modinfo modules.order vmlinuz; do
+> -		echo "/lib/modules/%{KERNELRELEASE}/${x}"
+> -	done
+> +	echo "/lib/modules/%{KERNELRELEASE}"
+>  
+>  	for x in alias alias.bin builtin.alias.bin builtin.bin dep dep.bin \
+>  					devname softdep symbols symbols.bin; do
+> -- 
+> 2.43.0
+> 
