@@ -1,212 +1,204 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE4E19D8AA;
-	Mon, 24 Jun 2024 15:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372D119E7F2
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719242864; cv=none; b=krTjlqwclpYTVTRCvkCbIJbO0jMK4uWJiT6EW5NVwDonxLmuF1lsadoyY30pMd+5mc+cv5XyIrn+Mo86xZ9Varlq2zn6Ka2RJCGD709T6PTctEYcDNARx6tkH973atsdA6vE4EhTFl6zdaoLmilC6QOIOZdE6e/dmFCXhHu9nHs=
+	t=1719242868; cv=none; b=W1QcbtBPoiSX0zinBQA1H9d1V3Zs/j6hKcnGLjRCZRsS/yWk/QIyjz57kqMe1OeVW+7h2lRwm5GN5eTmtj3y3iVJi3ZYBxEHbAWR4QDnyFGf80naFw2E90ofsetaguY0CQL/A5xXRsaWZjMaRC9FgVCBvdN0Yc6ZWMtoEfMpmV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719242864; c=relaxed/simple;
-	bh=OVQCYTW4L9yu0EDueyCBAY4a89Jd+rzlyMa52xLOMps=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kfLDgESflsSCW782OsRVYuYOm9xcdbLAWlNRluolMKATCQnGCe4QNBtcvZt5N9SfEKXvMbu44OtC4/899QbTgA1e/L5FQRzFpqrO3KT3UI8MC3LH7lugvtOfGwEqzBp9hENh+ovz+7eAn6q9EPi3sFwv0h42qhQvBa3pXFOKPZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1VW3jWei; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aEhsb9Kv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1719242868; c=relaxed/simple;
+	bh=9DwZ8C3KCly4h/zRNT3BmacUbsxmOjyY16JcnZMRjm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NzPwVx1XRTrWr24bCSKRjRpqB4ZbVuA7EvQPsm3vyQNaGFM9LblQQmcp+YCZPhGGSwlfnYQfR4POQU+tJwGklLVIwEwofIL/GYRuBkb28B/t8X/THEIu8TcXlMdof5Mj9W88kyR4i3u9YMxrIlDMJDyN7maeYcYUr5oD4jvkjzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RdJ5soiP; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1VW3jWei";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aEhsb9Kv"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719242859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iLt0LLfVcMa9a+gilIPNXUQswi86xUZORdJUsd8+HOo=;
-	b=1VW3jWeiz7NTiwDQyDjfCBLU79UznLlW3fIYX2vtm/5EPNKLmO0vNAP303ZZjCc7d00Whl
-	t5rFSOtUwFHSQ3VBewZMohJaeqH46MF5kTz6jriyA0KzYhRSdyNLS2JmOoxnUDACoV1MQZ
-	jVcaE7bj3DHkq5BTMKg3HI7HI5XtMNPdqEv3cT6opKux/bh9VjcgTgsfHZjHsYQ5XopVrT
-	/HJN+rd3WwsAXJDJB3qG3h+Pv/q2A0UUzd4g3dUVtxJBKuIzQl3c1mKluSIulqE8xKaoBd
-	7pb0X8a0TPUOvS2+fa4B6vqS9esmI4Vpit1Er+V8hab/UeUlMOl+2BtFzaO+cA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719242859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iLt0LLfVcMa9a+gilIPNXUQswi86xUZORdJUsd8+HOo=;
-	b=aEhsb9Kv+WZm8yWFi3PZ0NpKtcEJYhzfgkt2ZKfFfYinb3Y7eltunTYTGvDt6THjXA2/+2
-	elJFV18Ha+WgPDBg==
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang  <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 6/6] perf: Split __perf_pending_irq() out of perf_pending_irq()
-Date: Mon, 24 Jun 2024 17:15:19 +0200
-Message-ID: <20240624152732.1231678-7-bigeasy@linutronix.de>
-In-Reply-To: <20240624152732.1231678-1-bigeasy@linutronix.de>
-References: <20240624152732.1231678-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdJ5soiP"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52cdc4d221eso2789934e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719242864; x=1719847664; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zknmga5PBkgGw8TgH0HGAYjZwH1IzFooajhy3i9qJ1I=;
+        b=RdJ5soiPnkMutzNhPO+YI8iuYgNF+HWkcVXyef40fQ52NNTfSmv3q+VNbdhM6GPfhS
+         +zWzB3JFpRITm8ZpA23C/D0372+Fv8pPoiDg54WTpPDWRiLt8Pd1BNeAWmnSTPRfnYCP
+         zIbazzLHo55v64Oxqu3G+4lsIvthvtkNLVznbOU+J0PlCw5m4hjp9p1DwrEqUWlJsUrw
+         u4TQOI8A5SHeawv8h3O+4iIFZ9ArfsjJYUaHw4Qcq1ycrVqf5gnFHsMn8ypiW24VUTxy
+         bwlL6xFjL88HXS9v2ALIYS5EWT9PJUESUWvenopAwZWur0j/4E0KmFmXiDTY8afZNYnM
+         9caQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719242864; x=1719847664;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zknmga5PBkgGw8TgH0HGAYjZwH1IzFooajhy3i9qJ1I=;
+        b=vykGXIFY3GNg1tgOcKstiV/+eIbepRl6pnp47pQJ8kY1x9ZVLfDwzLwf6wufUk4hYp
+         yf40ZIOUl3Yk5LwdQgDT9RxiNY5d6O8vxBrKXl/iwDBGnmwZKuQ50cq6/5g/yOCVhcJi
+         rWV/7qW7OZewzMgKPelFIRI1laX15NEkME+4aE28ocer3X3fpju7z2BBWSfXbHDxEaA9
+         BHHcL/nRhvEl3nws31aW1sF6pF/KRhSyNYRVNxL6hKWOnQ+xfd7kK3gMoedznLE4131p
+         Ba8cpH5HZ48TJJMCB1yCXmYp94mhtsRVphFsPizw76BTkMCUvBwoqEhgh21GNLDLtlDj
+         /5IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJK0Gh/AeSZBJXZ8IlZ+jf7o6M/inFAz6jpHbdnDVyDlUkoyj/O8wy0KLffxP60bUNOP9ZMHMbYntho/sBSBxSXcL68XwHyPl5tZDe
+X-Gm-Message-State: AOJu0YyRUuJCpYK1xmfEkpdkzeGuwMCcmGDyJRoLdClqrIzhQKdGew/L
+	OV97ICNA650Fy5V7dsByC2JJ97qyKgXIDj/TSyIjnEedvfF5q3Hiq1elxz/VCxGKLE74Jgv6C7G
+	4Nqg=
+X-Google-Smtp-Source: AGHT+IHDKHZF641+eAwV/7qMCMAd3xlHkRDY+QbpVU6UAqq4KN7gdHrHBVq0n1HMXETpl9kIvQ0KeA==
+X-Received: by 2002:ac2:4882:0:b0:52c:e05f:f70c with SMTP id 2adb3069b0e04-52ce1835310mr2739405e87.26.1719242864274;
+        Mon, 24 Jun 2024 08:27:44 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdd9800a7sm710361e87.126.2024.06.24.08.27.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 08:27:43 -0700 (PDT)
+Date: Mon, 24 Jun 2024 18:27:41 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jikos@kernel.org, 
+	benjamin.tissoires@redhat.co, dianders@google.com, hsinyi@google.com, jagan@edgeble.ai, 
+	neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] drm/panel: panel-jadard-jd9365da-h3: use wrapped
+ MIPI DCS functions
+Message-ID: <zvkl2wyqp3iem4ln4qkbhgvxafsfn5wkkmqwhufabm2gqs3eqw@vmqs3lx72ekk>
+References: <20240624141926.5250-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240624141926.5250-4-lvzhaoxiong@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240624141926.5250-4-lvzhaoxiong@huaqin.corp-partner.google.com>
 
-perf_pending_irq() invokes perf_event_wakeup() and __perf_pending_irq().
-The former is in charge of waking any tasks which wait to be woken up
-while the latter disables perf-events.
+On Mon, Jun 24, 2024 at 10:19:24PM GMT, Zhaoxiong Lv wrote:
+> Remove conditional code and always use mipi_dsi_dcs_*multi() wrappers to
+> simplify driver's init/enable/exit code.
+> 
+> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+> ---
+>  .../gpu/drm/panel/panel-jadard-jd9365da-h3.c  | 793 +++++++++---------
+>  1 file changed, 390 insertions(+), 403 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> index a9c483a7b3fa..e836260338bf 100644
+> --- a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> +++ b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> @@ -19,17 +19,13 @@
+>  #include <linux/of.h>
+>  #include <linux/regulator/consumer.h>
+>  
+> -#define JD9365DA_INIT_CMD_LEN		2
+> -
+> -struct jadard_init_cmd {
+> -	u8 data[JD9365DA_INIT_CMD_LEN];
+> -};
+> +struct jadard;
+>  
+>  struct jadard_panel_desc {
+>  	const struct drm_display_mode mode;
+>  	unsigned int lanes;
+>  	enum mipi_dsi_pixel_format format;
+> -	const struct jadard_init_cmd *init_cmds;
+> +	int (*init)(struct jadard *jadard);
+>  	u32 num_init_cmds;
+>  };
+>  
+> @@ -50,46 +46,33 @@ static inline struct jadard *panel_to_jadard(struct drm_panel *panel)
+>  
+>  static int jadard_enable(struct drm_panel *panel)
+>  {
+> -	struct device *dev = panel->dev;
+>  	struct jadard *jadard = panel_to_jadard(panel);
+> -	struct mipi_dsi_device *dsi = jadard->dsi;
+> -	int err;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = jadard->dsi };
+>  
+>  	msleep(120);
+>  
+> -	err = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> -	if (err < 0)
+> -		DRM_DEV_ERROR(dev, "failed to exit sleep mode ret = %d\n", err);
+> +	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+>  
+> -	err =  mipi_dsi_dcs_set_display_on(dsi);
+> -	if (err < 0)
+> -		DRM_DEV_ERROR(dev, "failed to set display on ret = %d\n", err);
+> +	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+>  
+> -	return 0;
+> +	return dsi_ctx.accum_err;
+>  }
+>  
+>  static int jadard_disable(struct drm_panel *panel)
+>  {
+> -	struct device *dev = panel->dev;
+>  	struct jadard *jadard = panel_to_jadard(panel);
+> -	int ret;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = jadard->dsi };
+>  
+> -	ret = mipi_dsi_dcs_set_display_off(jadard->dsi);
+> -	if (ret < 0)
+> -		DRM_DEV_ERROR(dev, "failed to set display off: %d\n", ret);
+> +	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
+>  
+> -	ret = mipi_dsi_dcs_enter_sleep_mode(jadard->dsi);
+> -	if (ret < 0)
+> -		DRM_DEV_ERROR(dev, "failed to enter sleep mode: %d\n", ret);
+> +	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+>  
+> -	return 0;
+> +	return dsi_ctx.accum_err;
+>  }
+>  
+>  static int jadard_prepare(struct drm_panel *panel)
+>  {
+>  	struct jadard *jadard = panel_to_jadard(panel);
+> -	const struct jadard_panel_desc *desc = jadard->desc;
+> -	unsigned int i;
+>  	int ret;
+>  
+>  	ret = regulator_enable(jadard->vccio);
+> @@ -109,13 +92,9 @@ static int jadard_prepare(struct drm_panel *panel)
+>  	gpiod_set_value(jadard->reset, 1);
+>  	msleep(130);
+>  
+> -	for (i = 0; i < desc->num_init_cmds; i++) {
+> -		const struct jadard_init_cmd *cmd = &desc->init_cmds[i];
+> -
+> -		ret = mipi_dsi_dcs_write_buffer(dsi, cmd->data, JD9365DA_INIT_CMD_LEN);
 
-The irq_work perf_pending_irq(), while this an irq_work, the callback
-is invoked in thread context on PREEMPT_RT. This is needed because all
-the waking functions (wake_up_all(), kill_fasync()) acquire sleep locks
-which must not be used with disabled interrupts.
-Disabling events, as done by __perf_pending_irq(), expects a hardirq
-context and disabled interrupts. This requirement is not fulfilled on
-PREEMPT_RT.
+This function usesd mipi_dsi_dcs_write_buffer()...
 
-Split functionality based on perf_event::pending_disable into irq_work
-named `pending_disable_irq' and invoke it in hardirq context on
-PREEMPT_RT. Rename the split out callback to perf_pending_disable().
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> +	ret = jadard->desc->init(jadard);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return 0;
 
-Tested-by: Marco Elver <elver@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 31 +++++++++++++++++++++++--------
- 2 files changed, 24 insertions(+), 8 deletions(-)
+[...]
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 99a7ea1d29ed5..65ece0d5b4b6d 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -783,6 +783,7 @@ struct perf_event {
- 	unsigned int			pending_disable;
- 	unsigned long			pending_addr;	/* SIGTRAP */
- 	struct irq_work			pending_irq;
-+	struct irq_work			pending_disable_irq;
- 	struct callback_head		pending_task;
- 	unsigned int			pending_work;
- 	struct rcuwait			pending_work_wait;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f75aa9f14c979..8bba63ea9c686 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2451,7 +2451,7 @@ static void __perf_event_disable(struct perf_event *e=
-vent,
-  * hold the top-level event's child_mutex, so any descendant that
-  * goes to exit will block in perf_event_exit_event().
-  *
-- * When called from perf_pending_irq it's OK because event->ctx
-+ * When called from perf_pending_disable it's OK because event->ctx
-  * is the current context on this CPU and preemption is disabled,
-  * hence we can't get into perf_event_task_sched_out for this context.
-  */
-@@ -2491,7 +2491,7 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
- void perf_event_disable_inatomic(struct perf_event *event)
- {
- 	event->pending_disable =3D 1;
--	irq_work_queue(&event->pending_irq);
-+	irq_work_queue(&event->pending_disable_irq);
- }
-=20
- #define MAX_INTERRUPTS (~0ULL)
-@@ -5218,6 +5218,7 @@ static void perf_pending_task_sync(struct perf_event =
-*event)
- static void _free_event(struct perf_event *event)
- {
- 	irq_work_sync(&event->pending_irq);
-+	irq_work_sync(&event->pending_disable_irq);
- 	perf_pending_task_sync(event);
-=20
- 	unaccount_event(event);
-@@ -6760,7 +6761,7 @@ static void perf_sigtrap(struct perf_event *event)
- /*
-  * Deliver the pending work in-event-context or follow the context.
-  */
--static void __perf_pending_irq(struct perf_event *event)
-+static void __perf_pending_disable(struct perf_event *event)
- {
- 	int cpu =3D READ_ONCE(event->oncpu);
-=20
-@@ -6798,11 +6799,26 @@ static void __perf_pending_irq(struct perf_event *e=
-vent)
- 	 *				  irq_work_queue(); // FAILS
- 	 *
- 	 *  irq_work_run()
--	 *    perf_pending_irq()
-+	 *    perf_pending_disable()
- 	 *
- 	 * But the event runs on CPU-B and wants disabling there.
- 	 */
--	irq_work_queue_on(&event->pending_irq, cpu);
-+	irq_work_queue_on(&event->pending_disable_irq, cpu);
-+}
-+
-+static void perf_pending_disable(struct irq_work *entry)
-+{
-+	struct perf_event *event =3D container_of(entry, struct perf_event, pendi=
-ng_disable_irq);
-+	int rctx;
-+
-+	/*
-+	 * If we 'fail' here, that's OK, it means recursion is already disabled
-+	 * and we won't recurse 'further'.
-+	 */
-+	rctx =3D perf_swevent_get_recursion_context();
-+	__perf_pending_disable(event);
-+	if (rctx >=3D 0)
-+		perf_swevent_put_recursion_context(rctx);
- }
-=20
- static void perf_pending_irq(struct irq_work *entry)
-@@ -6825,8 +6841,6 @@ static void perf_pending_irq(struct irq_work *entry)
- 		perf_event_wakeup(event);
- 	}
-=20
--	__perf_pending_irq(event);
--
- 	if (rctx >=3D 0)
- 		perf_swevent_put_recursion_context(rctx);
- }
-@@ -9734,7 +9748,7 @@ static int __perf_event_overflow(struct perf_event *e=
-vent,
- 			 * is processed.
- 			 */
- 			if (in_nmi())
--				irq_work_queue(&event->pending_irq);
-+				irq_work_queue(&event->pending_disable_irq);
-=20
- 		} else if (event->attr.exclude_kernel && valid_sample) {
- 			/*
-@@ -11972,6 +11986,7 @@ perf_event_alloc(struct perf_event_attr *attr, int =
-cpu,
-=20
- 	init_waitqueue_head(&event->waitq);
- 	init_irq_work(&event->pending_irq, perf_pending_irq);
-+	event->pending_disable_irq =3D IRQ_WORK_INIT_HARD(perf_pending_disable);
- 	init_task_work(&event->pending_task, perf_pending_task);
- 	rcuwait_init(&event->pending_work_wait);
-=20
---=20
-2.45.2
+> +static int radxa_display_8hd_ad002_init_cmds(struct jadard *jadard)
+> +{
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = jadard->dsi };
+> +
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xE0, 0x00);
 
+... while your code uses mipi_dsi_dcs_write_seq_multi(), which
+internally calls mipi_dsi_generic_write_multi(). These two function use
+different packet types to send the payload. To be conservatite, please
+use mipi_dsi_dcs_write_buffer_multi().
+
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xE1, 0x93);
+> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xE2, 0x65);
+
+-- 
+With best wishes
+Dmitry
