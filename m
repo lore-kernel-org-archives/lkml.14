@@ -1,114 +1,96 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE1D1A01C1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 18:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E78225D9;
+	Mon, 24 Jun 2024 18:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719255251; cv=none; b=SazQ1wkBOEFJFh8mf0NDkEWoRakYRR0MRX/DlPorM3h62vUhAjlry3l0X2t45sS7QWU6lCGnwGoCH3SvYhqm1wFa+q+Rxzsb9lx8t3VptX9IxoLQdslj+Lr2XnpytlzgF2zsaGRb0VsdW9idO9XZNlZcaoOfYuRIQ/ABhS/N7GA=
+	t=1719255270; cv=none; b=mhZs3vOMgbgM1U6mDEZ72PlEMYHGGk/JEfduTvECJ528upzuuax1jWTWXu0Ynb3pJsTLDWGNGrGIOyIT7szXDoq2U96kmbOuvvE9RBrdjYDs5EDh/UrJpxMsJYJtfEErpnFstycPSfAjMIr1H1wJXRHZOPgohzCHolJJIL+x/3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719255251; c=relaxed/simple;
-	bh=JITYgpOr9aslHmnHx9NrvwoZeu+k4ldEze9CbONSH20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rxttIskr66DaEiS1FVBcQklq4Sqrg9gCGRHOc1lQswpPyAuNyeZUEfIJHNY/useIMFBbpBbDjbd07nCcrc557CjkUdNtzLCEOjU69+C4EGtQf/sMg843/eOjbWacf3eN9zqTD0xXvDzR8SCDsNYbiul9LzeFysNjMtCJYV8SQVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eja0Yu4X; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719255270; c=relaxed/simple;
+	bh=fzmtYv24eQZO1QGqbvDRhNoi7jf5Oueo76z6+lwR000=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JU0oQ5QCLFX9fg2425SoHxRyOSCvGgULm4kAc5UT22p3mfyr2W45mLpX4BBcq2SJjYPlq3yYZq5N4mt6BvKpgYpIOKcQ4Q9PHkchcdkc6aKskJLi+yQrKIaCNhfHqV7qcThpUnjj0zUDCxJGXvOsuF0vIHlS6fViJGuBWnbhHZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d87c12vY; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eja0Yu4X"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52cdf9f934fso2209649e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719255247; x=1719860047; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JITYgpOr9aslHmnHx9NrvwoZeu+k4ldEze9CbONSH20=;
-        b=eja0Yu4XvaFR2UVLG24rMr3SvhUj6zQMaeUIF+4LHX6JrJhViXyKxGHNzx2y/dDffQ
-         a4NVHW7z+PbVAajMlWJYHDGYb+EQLKL3/rzqYqVCFrOwGo3XWSSkNY229R1Pg8ZREDxt
-         rqhSz3M5cm5ifI/7233X1xLeYWETmpMYkS575YIk5nuiHKsYw68Gx+a95oXBJpDQX0LF
-         1zL1wXCobCXDZEKUrZMx5Sg7qG12WXnea7SCgLD/68e+tBGNZYlnh/XrjjpMmuGBQoW4
-         YC/5fWBDPy71dUXZoIumgGWXQPJYV+hMI4YcQezxYGA7f7PCk7iav4UwnZx6LNGuwWQf
-         qU5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719255247; x=1719860047;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JITYgpOr9aslHmnHx9NrvwoZeu+k4ldEze9CbONSH20=;
-        b=Wa/xnXBs/ncRqmgnSZugogy4zRhyeBvbON+kY7OCJUQo1DI8ttnLWS2J5fqqTx6Ya6
-         tYOYpaSh+8POGzfc9eUGVROuu4EwlKvsa38TPwNyzlCRSnKkykRkAFz1frMgcrHg4rfx
-         ztZP8HWjbcjHaVuk/6uga25RmpEAgAIHlvmHfYQUatL2ff7NuS42TNhrErv38hYpDWy2
-         8LaTcok/N3dfYqfta19WCpgu/45X0AR88Te1ZF3S9xqlC/ivLhVe14uHjNSstSmRH+88
-         obHRCGJynhIU0aD+hb68CDbNrEb/31MUEyQnDHL/xR3xAe8EX/YA1xFmo7qxVjbqRGlQ
-         l2HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6LuNnsnELxMXcVVjN8SN2SqreW4FzoVFZY42OsIVb6imS9AD8aodTWkJ1i/wJ3zRPvys5Zq8gTEENUPOGB95CUxt96IMfY9ojU8xb
-X-Gm-Message-State: AOJu0YzvMrLNAbJMLFEuxGoXYsZ1Ur0Ya22hq13qA519q5smWpjuunQX
-	FIUdmHaX5c3j3riQTXYceuC22KK+34uZ1sSJsTODTiaMNRzOnndM1OXdWGXv06qEswK3O5joAzZ
-	kyrj1wFhoznLvcqRa6yz1aj3KDhtNUCs0k6Fl
-X-Google-Smtp-Source: AGHT+IHN+UZEsY4/F0d/hc9WcI9bVuZWn15n0XvSIxPi4V2oZ1zThrKVoWzn+Cxvu/DteI9wNCqWv1/lFdtTFzA3stw=
-X-Received: by 2002:a05:6512:2083:b0:52c:e040:7d9 with SMTP id
- 2adb3069b0e04-52ce0680398mr3572378e87.59.1719255246629; Mon, 24 Jun 2024
- 11:54:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d87c12vY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=TzlUaFbysJxYqg4lFli1LHYXJm8gggtlo9u9TQd/iss=; b=d87c12vYIxHPF1bPYLUMuXQ9S3
+	wGlIDoB6w7W/hQ0e0piEKYxV1DvlIKBOW7JXbzODG4ngYSGGs0aBNncD5H+9Pp4WqB5pgx7pBN3DD
+	WZau1vtBf5PCWYKRor3THVohr1nYxdjqu7m0cOfYehZlWOGg9FvaMhWxpVkeBG/UscBVBM5TRsJ6X
+	P1y3Ls2Hqt9mOBlRkEMe12OlaKyCIQd2cUDjFsUoQ1pn/MHfwfCt8GWQ9Pj+UpR4DpJxYJc0+nNxu
+	xZA4BouKSI4Icz5gRFCgBPUtDEZcG63qagW6OSn22FHshH1Cu5Zh2wQ9k8QB7nGWcygRLvYIZ16nZ
+	Wsylqf8A==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sLopc-0000000ALXV-1LNO;
+	Mon, 24 Jun 2024 18:54:24 +0000
+Date: Mon, 24 Jun 2024 19:54:24 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: Yosry Ahmed <yosryahmed@google.com>,
+	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Nhat Pham <nphamcs@gmail.com>, David Hildenbrand <david@redhat.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Hugh Dickins <hughd@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master] [mm] 0fa2857d23:
+ WARNING:at_mm/page_alloc.c:#__alloc_pages_noprof
+Message-ID: <ZnnA4BswPcyedF2B@casper.infradead.org>
+References: <202406241651.963e3e78-oliver.sang@intel.com>
+ <CAJD7tkbqHyNUzQg_Qh+-ZryrKtMzdf5RE-ndT+4iURTqEo3o6A@mail.gmail.com>
+ <Znm74wW3xARhR2qN@casper.infradead.org>
+ <ad18c6fb-7d00-494b-a1f6-3d4acfbd2323@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202406241651.963e3e78-oliver.sang@intel.com> <CAJD7tkbqHyNUzQg_Qh+-ZryrKtMzdf5RE-ndT+4iURTqEo3o6A@mail.gmail.com>
- <Znm74wW3xARhR2qN@casper.infradead.org>
-In-Reply-To: <Znm74wW3xARhR2qN@casper.infradead.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 24 Jun 2024 11:53:30 -0700
-Message-ID: <CAJD7tkbF9NwKa4q5J0xq1oG6EkTDLz8UcbekSfP+DYfoDSqRhQ@mail.gmail.com>
-Subject: Re: [linux-next:master] [mm] 0fa2857d23: WARNING:at_mm/page_alloc.c:#__alloc_pages_noprof
-To: Matthew Wilcox <willy@infradead.org>
-Cc: kernel test robot <oliver.sang@intel.com>, Usama Arif <usamaarif642@gmail.com>, 
-	oe-lkp@lists.linux.dev, lkp@intel.com, 
-	Linux Memory Management List <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Nhat Pham <nphamcs@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, "Huang, Ying" <ying.huang@intel.com>, Hugh Dickins <hughd@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ad18c6fb-7d00-494b-a1f6-3d4acfbd2323@gmail.com>
 
-On Mon, Jun 24, 2024 at 11:33=E2=80=AFAM Matthew Wilcox <willy@infradead.or=
-g> wrote:
->
-> On Mon, Jun 24, 2024 at 05:05:56AM -0700, Yosry Ahmed wrote:
-> > On Mon, Jun 24, 2024 at 1:49=E2=80=AFAM kernel test robot <oliver.sang@=
-intel.com> wrote:
-> > > kernel test robot noticed "WARNING:at_mm/page_alloc.c:#__alloc_pages_=
-noprof" on:
-> > >
-> > > commit: 0fa2857d23aa170e5e28d13c467b303b0065aad8 ("mm: store zero pag=
-es to be swapped out in a bitmap")
-> > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git mast=
-er
-> >
-> > This is coming from WARN_ON_ONCE_GFP(order > MAX_PAGE_ORDER, gfp), and
-> > is triggered by the new bitmap_zalloc() call in the swapon path. For a
-> > sufficiently large swapfile, bitmap_zalloc() (which uses kmalloc()
-> > under the hood) cannot be used to allocate the bitmap.
->
-> Do we need to use a bitmap?
->
-> We could place a special entry in the swapcache instead (there's
-> XA_ZERO_ENTRY already defined, and if we need a different entry that's
-> not XA_ZERO_ENTRY, there's room for a few hundred more special entries).
+On Mon, Jun 24, 2024 at 09:50:21PM +0300, Usama Arif wrote:
+> On 24/06/2024 21:33, Matthew Wilcox wrote:
+> > On Mon, Jun 24, 2024 at 05:05:56AM -0700, Yosry Ahmed wrote:
+> > > On Mon, Jun 24, 2024 at 1:49 AM kernel test robot <oliver.sang@intel.com> wrote:
+> > > > kernel test robot noticed "WARNING:at_mm/page_alloc.c:#__alloc_pages_noprof" on:
+> > > > 
+> > > > commit: 0fa2857d23aa170e5e28d13c467b303b0065aad8 ("mm: store zero pages to be swapped out in a bitmap")
+> > > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > > This is coming from WARN_ON_ONCE_GFP(order > MAX_PAGE_ORDER, gfp), and
+> > > is triggered by the new bitmap_zalloc() call in the swapon path. For a
+> > > sufficiently large swapfile, bitmap_zalloc() (which uses kmalloc()
+> > > under the hood) cannot be used to allocate the bitmap.
+> > Do we need to use a bitmap?
+> > 
+> > We could place a special entry in the swapcache instead (there's
+> > XA_ZERO_ENTRY already defined, and if we need a different entry that's
+> > not XA_ZERO_ENTRY, there's room for a few hundred more special entries).
+> 
+> I was going for the most space-efficient and simplest data structure, which
+> is bitmap. I believe xarray is either pointer or integer between 0 and
+> LONG_MAX? We could convert the individual bits into integer and store them,
+> and have another function to extract the integer stored in xarray to a bit,
+> but I think thats basically a separate bitmap_xarray API (which would
+> probably take more space than a traditional bitmap API, and I dont want to
+> make this series dependent on something like that), so I would prefer to use
+> bitmap.
 
-After a page is swapped out during reclaim, __remove_mapping() will
-call __delete_from_swap_cache() to replace the swap cache entry with a
-shadow entry (which is an xa_value).
+But we already _have_ an xarray.  Instead of storing a swap entry in
+it, we could store an XA_ZERO_ENTRY.
 
-So I believe we cannot use a special xarray value without making
-fundamental changes. We can, perhaps, try to pack an extra bit in the
-shadow entry. In this case, we will need to change the swapin code to
-check for this magic bit when looking up a folio in the swap cache,
-and extra synchronization to make sure concurrent lookups do not
-allocate and zero separate folios.
-
-IOW, I think it's possible but probably with more complexity, and
-perhaps not worth it.
+If there are long runs of zero pages, then this may not be the best
+idea.  But then a bitmap isn't the best data structure for long runs
+either.
