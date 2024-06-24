@@ -1,117 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5435B19FA6F;
-	Mon, 24 Jun 2024 17:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A677913BC1E;
+	Mon, 24 Jun 2024 17:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251720; cv=none; b=EUVFRhEWKjgvA/zQ9c+AvwQlfx5FcgORP/QWJ52D9OUTKrEZxjEJCQSIrbZiuvO2xb3oAdmTslN6kns4zRcNVNX+Wa2Wv+/+MiRDuafqyItEd224jSIFm0bqYCaInu9guJtrWOGwzlZ2ab2ic4WFuX4p2/2hMul5Nfr70Kw126U=
+	t=1719251737; cv=none; b=mcqEPaj1wtXmoEspxrmBsUAfBrcSBF/PXJwiSggJgFvvt3HzweRjYybbnW2EV+8fZEAvW/eM79TQdNi7cGp9O0EbLqe+A+dgI63WLM65Y+CczKPtHtgBgF3r8Xcc/WxXYk7L62uJHlvnfjBeGHzE883ciJC3Oiav3gWANdXyqzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251720; c=relaxed/simple;
-	bh=Dsng+wl/JnpD45QyCVpIBvIgJ9Y7NDKt9V/oHYab9Co=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RQ2Up9TieW5FaW8xXZ//ew2uAZoEzFx3JhGwOew5nflwXtFl7g4RulHyRBddHaMM1MMZ7Lrm3zhnlzblUyk/ugXp1vz1waRf7tEX8YkhrGVj44tuUJogc2ghtYLAoMFauT8Mkx4bjzHpHwnaRXyx3KBmy7doYNhuMuCjmFtvjNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+/IXTZX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719251737; c=relaxed/simple;
+	bh=+Np1PfYtDOV+sfjb7kGbjp3FuCMuZlNsdpaOoDnTykU=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Ln7gCtcfAQalCZg9nyI7fpalWP15fwjbovfhOrlg0Bbtq72Wx3x0nyADBTIWkXYH5RMWaBJGbGpFDgIAEhyVWF/GN1q92HfLv8DaB4BgYy2N1EF8Xeb/2BZXQE6gmzJYJ5Zie3YgxeysI4G67J1R6uKUGAVnqgevn0boWmv2UOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=QLbUgLBZ; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+/IXTZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA936C2BBFC;
-	Mon, 24 Jun 2024 17:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719251719;
-	bh=Dsng+wl/JnpD45QyCVpIBvIgJ9Y7NDKt9V/oHYab9Co=;
-	h=Date:From:To:Cc:Subject:From;
-	b=c+/IXTZXQnIXX5XeyEK/y+kcEZ4jBpzwIcIVmDs2lam62zVSGEXa4f7dlZ7OEW/Tv
-	 cjGo/3Ytyl/Jexu425iXJ+I5OmYjiWOgUNyqzSexC9Aqg9cd/mqx2BDNMJqjOLlrqB
-	 Y0eY8cRiTpL2J1kfVvYN802pnNX/UrQcyQepKUN0CSOSySSeXnFYsh7VD4Y4WddnIz
-	 gLKYF403tuiRVpixsPjeg2tWzp6VYyNXEmesag6Oo0yNydSr9rQ5E+1dWtOl1wHRZr
-	 FM72R3ubEpG32NP/b4geV7OzcQPqNHvKKSVQtOj1K28C/AC3Z1M63Wc9sOhy5hkkEj
-	 NBO3oKjJomVcw==
-Date: Mon, 24 Jun 2024 18:55:15 +0100
-From: Mark Brown <broonie@kernel.org>
-To: William Breathitt Gray <wbg@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the counter-next tree with the
- counter-current tree
-Message-ID: <ZnmzA0nM0Sn2Awkn@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="QLbUgLBZ"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="40OqtuILxyApl9cd"
-Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1719251732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nMIDSnjT3PD/47d4+6ZJlG0hXn2fIBhyGjnU5O7IR3g=;
+	b=QLbUgLBZVcgVcpGaFpVUnU1mgrT8Tese8mogm39YN+x1kdgHCUBByBafzW3dJGeJkPcGhl
+	0DAvtJZXHlZgDSxRQHZj7Mon8lcOEMCmavE6odP2Bzbyk/GNYpMp9oavCNDecuBDlcDF00
+	YduP8cZGcBKVaymsZi848oV9hWvNScRqQIN5njrEQI2LM0WzEOLUdhs7xLW+t3eVGnecF8
+	WZvAjir1LCMTSWLCjlcsNAMxsE/N3+ESFdmCegfNR7bq7lKlLEinN0+4HjW6SArSetT/RP
+	oxbPjAQCnqF2nsPMjvU8DlKmuk1UWisuvxd2hOMfFbG1pAn0SCNInm6yzQHJBw==
+Date: Mon, 24 Jun 2024 19:55:31 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: linux-rockchip@lists.infradead.org
+Cc: heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, robh+dt@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, alchark@gmail.com
+Subject: Re: [PATCH] arm64: dts: rockchip: Delete the SoC variant dtsi for
+ RK3399Pro
+In-Reply-To: <4449f7d4eead787308300e2d1d37b88c9d1446b2.1717308862.git.dsimic@manjaro.org>
+References: <4449f7d4eead787308300e2d1d37b88c9d1446b2.1717308862.git.dsimic@manjaro.org>
+Message-ID: <ba9d41461f5d56947d7851473637722b@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+
+Hello all,
+
+Just checking, are there any comments on this patch?  Is there something
+more I can do to have it accepted?
 
 
---40OqtuILxyApl9cd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the counter-next tree got a conflict in:
-
-  drivers/counter/ti-eqep.c
-
-between commit:
-
-  0cf81c73e4c6a ("counter: ti-eqep: enable clock at probe")
-
-=66rom the counter-current tree and commit:
-
-  1c30c6d024726 ("counter: ti-eqep: implement over/underflow events")
-
-=66rom the counter-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc drivers/counter/ti-eqep.c
-index 825ae22c3ebc7,9742ba9fc3072..0000000000000
---- a/drivers/counter/ti-eqep.c
-+++ b/drivers/counter/ti-eqep.c
-@@@ -6,8 -6,8 +6,9 @@@
-   */
- =20
-  #include <linux/bitops.h>
- +#include <linux/clk.h>
-  #include <linux/counter.h>
-+ #include <linux/interrupt.h>
-  #include <linux/kernel.h>
-  #include <linux/mod_devicetable.h>
-  #include <linux/module.h>
-@@@ -377,8 -465,7 +466,8 @@@ static int ti_eqep_probe(struct platfor
-  	struct counter_device *counter;
-  	struct ti_eqep_cnt *priv;
-  	void __iomem *base;
- +	struct clk *clk;
-- 	int err;
-+ 	int err, irq;
- =20
-  	counter =3D devm_counter_alloc(dev, sizeof(*priv));
-  	if (!counter)
-
---40OqtuILxyApl9cd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ5swIACgkQJNaLcl1U
-h9AFVQgAgDJvCuLymRf+pSDaEA3ZixKP1r/fCMazx0wEx0iwce9qiKiW2yvGYRpq
-HiR3ZJCfbxzcyo6hF4iZoIyHW8Mz4wKUGrMTDSuceaMO1oWn50DSjj2kk3NeA7zY
-FTaI0UqJHVOiAkpiprgw9PgbYYaAzKFbFB6yRVdPTgacVnZMZET1jmOvJ46kicP6
-vOu0JhmkKrhtxGYwiVs8auZLcDIJkrUO77Fj4JBm4VOA5k1S9wSOeX1h8av6xKFz
-eF7jYbs9zwe66mnhIgOaBHQV+7hXhzbxUqRebm/eZ4pm3jcKr9jAWQrfY0SqP1EJ
-ExTWa6APtc9StQiXYoSlh478IT92zQ==
-=Y+J7
------END PGP SIGNATURE-----
-
---40OqtuILxyApl9cd--
+On 2024-06-02 08:25, Dragan Simic wrote:
+> The commit 587b4ee24fc7 ("arm64: dts: rockchip: add core dtsi file for
+> RK3399Pro SoCs") describes the RK3399Pro's PCI Express interface as the 
+> way
+> built-in NPU communicates with the rest of the SoC.  All available 
+> evidence
+> shows this not to be accurate, as described in detail below.  Moreover, 
+> the
+> rk3399pro.dtsi isn't used anywhere, so let's delete it.
+> 
+> The publicly available schematics of the Radxa Rock Pi N10 carrier 
+> board [1]
+> and the Vamrs VMARC RK3399Pro SoM, [2] which put together form the 
+> currently
+> single supported RK3399Pro-based board, clearly show that the PCI 
+> Express x4
+> interface of this SoC is fully functional and actually not used by the 
+> SoC
+> to communicate with the built-in NPU.  In more detail, the VMARC SoM 
+> exports
+> the SoC's PCI Express interface at its board-to-board connector, and 
+> the Rock
+> Pi N10 routes it to an M.2 M-key slot with four PCI Express lanes.
+> 
+> Both the Rockchip RK3399Pro datasheet, version 1.1, [3] and the 
+> Rockchip
+> RK3399Pro technical reference manual (TRM), first part of the version 
+> 1.0, [4]
+> don't describe that the SoC's PCI Express interface is reserved for the 
+> NPU.
+> Instead, the RK3399Pro TRM describes that the NPU uses AHB and AXI 
+> interfaces
+> as the host interface (HIF).  The RK3399Pro datasheet clearly describes 
+> that
+> the PCI Express x4 interface is available for general-purpose use, just 
+> like
+> it's the case with the standard Rockchip RK3399 SoC, [5] albeit with a 
+> bit
+> shorter feature list provided in the RK3399Pro datasheet.
+> 
+> Even the publicly available reference RK3399Pro schematic from Rockchip 
+> [6]
+> shows the availability of a standard PCI Express slot with four lanes, 
+> which
+> would be pretty much impossible if the PCI Express interface was 
+> reserved
+> for the communication with the built-in NPU.
+> 
+> Based on the RK3399Pro datasheet [3] and the board schematics, [2][6] 
+> the
+> built-in NPU actually exports NPU_PCIE as a separate PCI Express x2 
+> interface
+> that's partially pinmuxed with the NPU's separate USB 3.0 interface, 
+> which is
+> described further in the next paragraph.  However, the NPU's separate 
+> PCI
+> Express x2 interface is left undocumented in the publicly available 
+> RK3399Pro
+> documentation, in which it's clearly described as reserved for internal 
+> use
+> and not intended for the communication with the NPU.  Finally, the 
+> evidently
+> independent nature of the separate NPU_PCIE x2 interface makes ignoring 
+> it
+> safe when it comes to determining the nature and the availability of 
+> the
+> RK3399Pro's main PCI Express x4 interface.
+> 
+> The actual application-level communication with the built-in NPU, 
+> including
+> powering it up and down and uploading the NPU firmware, is performed 
+> through
+> the separate USB 2.0 and USB 3.0 interfaces exported by the NPU, [7] 
+> which
+> the VMARC SoM [2] and the reference board design from Rockchip [6] 
+> route to
+> the SoC's standard USB 2.0 and USB 3.0 interfaces, to make the NPU 
+> accessible
+> to software running on the SoC's ARM cores.
+> 
+> [1] 
+> https://dl.radxa.com/rockpin10/docs/hw/rockpi_n10_sch_v1.1_20190909.pdf
+> [2] 
+> https://dl.radxa.com/rockpin10/docs/hw/VMARC_RK3399Pro_sch_V1.1_20190619.pdf
+> [3] https://www.rockchip.fr/RK3399Pro%20datasheet%20V1.1.pdf
+> [4] 
+> https://www.rockchip.fr/Rockchip%20RK3399Pro%20TRM%20V1.0%20Part1.pdf
+> [5] https://www.rockchip.fr/RK3399%20datasheet%20V1.8.pdf
+> [6] 
+> https://opensource.rock-chips.com/images/e/e4/RK_EVB_RK3399PRO_LP3S178P332SD8_V11_20181113_RZF.pdf
+> [7] https://wiki.radxa.com/RockpiN10/dev/NPU-booting
+> 
+> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 22 ---------------------
+>  1 file changed, 22 deletions(-)
+>  delete mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> deleted file mode 100644
+> index bb5ebf6608b9..000000000000
+> --- a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> +++ /dev/null
+> @@ -1,22 +0,0 @@
+> -// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> -// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
+> -
+> -#include "rk3399.dtsi"
+> -
+> -/ {
+> -	compatible = "rockchip,rk3399pro";
+> -};
+> -
+> -/* Default to enabled since AP talk to NPU part over pcie */
+> -&pcie_phy {
+> -	status = "okay";
+> -};
+> -
+> -/* Default to enabled since AP talk to NPU part over pcie */
+> -&pcie0 {
+> -	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+> -	num-lanes = <4>;
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pcie_clkreqn_cpm>;
+> -	status = "okay";
+> -};
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
