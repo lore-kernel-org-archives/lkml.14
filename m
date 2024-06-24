@@ -1,80 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C42142625;
-	Mon, 24 Jun 2024 16:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF0019B590;
+	Mon, 24 Jun 2024 16:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246010; cv=none; b=VlRb0xx5tE3+mnqpCLpTUET9bBiw8/OvCwZsxRFzEfYI3fhS16u7/3rUU1zDKT7jtskWOecemPCq/5kKEEFnzxGR/JcBvqsH8qsnHjN+OEWRee88/4W5EGOggZ+U7l0yUBkSJQp05snPxYrB8eoag+sJBk5ki1k7MHnTQtcAaOE=
+	t=1719246029; cv=none; b=YlmSgcCTz96Lfro33d3xaS5xhGW/zqK+RrikQ6DtTfglUNF8ia5n2S2Qlqrn6+7rWd53KY7qE5CVQmS6n1uM8P7M4Nqmr32VBnwk01/VwGAgoidDm2M7yhl3mv2GQAIywR072GXANyuu59cNbll+TeCj+7rDcSBZWN5pv2LG2jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246010; c=relaxed/simple;
-	bh=AgvsOSPEnCgrZaz6W0t4pbDzzCo7NW6+3HZm5Pcx/KU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=m5o4v766t40Bd1xqd3Xcj4eAvaLEZS4kmmjGnuaVGTDx5PvqHBWkncIj4qpZRbJQAdaHYWma4yY0rNZz4Et7b4uuOvyyic6mwIc4sZ+bn+fw0asvC26SsqVueJOLtk/U3GshX3J0Dhj3vCzJJUGW37dSF3qyHUAWw0oFnLmotqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLjOTljl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLjOTljl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D20AC2BBFC;
-	Mon, 24 Jun 2024 16:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719246009;
-	bh=AgvsOSPEnCgrZaz6W0t4pbDzzCo7NW6+3HZm5Pcx/KU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=WLjOTljlnQZ9POS5c/v7SwB10AWJhRjXZajdh7ydjYjrtqE/yjpXSHglW00309NMS
-	 iTVJK+TD2hemAJ8IAK8uA1qGIG5ucb0hnNvR8/4KyiKoPniD3y/u7jRInqEB6GQ72Q
-	 sn99FL4si3ADfUfzMnYbajYp4km7crXhs4jG1NAq4DaYSwlZv5W/50Jz4zFkq1RY8x
-	 HevdKkWd4kH5iDe0bbByc4Y7kFMEp4/HrlI1J/TTMcQs1zfQ7RMCRoFLKQUuyCdUki
-	 GP0DsdfSMskicYpTu14j9CpAiCwygg6gkqFVmR3aOu5D1Y0PwP4GsmMGYYAfi4UZLS
-	 ijrFMw7jtaQRQ==
-Date: Mon, 24 Jun 2024 17:20:05 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Maxime Ripard <mripard@kernel.org>
-Subject: linux-next: build failure after merge of the drm-msm-lumag tree
-Message-ID: <ZnmctV78elxIFtCV@sirena.org.uk>
+	s=arc-20240116; t=1719246029; c=relaxed/simple;
+	bh=y5Z4U+TdeDs+v1Ueg6ZM+8HEr8gmOsAkl1mnLsVQsEM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G1fl+5ipDK08h1Eo/jJ3KvMDS2XJbihq7nM+Auon8xOcgDXsksUhVfXCS8bE/WPv5Dl9hv6M85WRQ5ld7f/oiBH+NZ/43ckkfaBheUEKLpbo/CbnwIn9kRdOGpNDCF4FvEeBZmncnJ+j0UiHJhFNOY7hw8qr9dVVpHcyFWGy6vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b6a.versanet.de ([83.135.91.106] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sLmQZ-0001wn-Qq; Mon, 24 Jun 2024 18:20:23 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Johan Jonker <jbx6244@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	robh@kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	conor+dt@kernel.org,
+	krzk+dt@kernel.org
+Subject: Re: [PATCH v1] ARM: dts: rockchip: enable hdmi_sound and i2s0 for mk808 hdmi
+Date: Mon, 24 Jun 2024 18:20:14 +0200
+Message-Id: <171924573800.612064.1539997666589623837.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <aa79ff87-ea94-4f6d-a81b-5110724243f4@gmail.com>
+References: <aa79ff87-ea94-4f6d-a81b-5110724243f4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OzhFpMnD5U+YYOyJ"
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+On Thu, 20 Jun 2024 16:11:38 +0200, Johan Jonker wrote:
+> Enable the hdmi_sound node and add i2s0 as sound source
+> for mk808 hdmi.
+> 
+> 
 
---OzhFpMnD5U+YYOyJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied, thanks!
 
-Hi all,
+[1/1] ARM: dts: rockchip: enable hdmi_sound and i2s0 for mk808 hdmi
+      commit: 99a2b6d16b37258bcbdc2e07eb55e129362a182f
 
-After merging the drm-msm-lumag tree, today's linux-next build
-(x86_64 allmodconfig) failed like this:
-
-ERROR: modpost: too long symbol "drm_atomic_helper_connector_hdmi_disable_audio_infoframe" [drivers/gpu/drm/msm/msm.ko]
-
-Caused by commit
-
-  000d1940c90984 ("drm/connector: hdmi: allow disabling Audio Infoframe")
-
-I used the version from 20240621 instead.
-
---OzhFpMnD5U+YYOyJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ5nLQACgkQJNaLcl1U
-h9Dyhwf/aE00dFlj/i85JoOZOI+HoeBOECCZ86tvhBvKOXwkqPXK0RJ/pda3pQTZ
-9pmQsEalJvLRMcIpAIIfQgWA6dd53MUesshXZwnlMxSRDszMxXFuwCTRpNdOmcTH
-qCOZREc5QaHaiaF6ABDKK+f6JVmOuoYk6ZljTDkhDazce4hOJIyWYgtC8si8MS4s
-K6HAX0wKNoVCIjeVD4YE2NT9RWsEbZZTlmNZQ3VTxxuMngPXTI81fr12H/F9W3C5
-AxQ0AtSGILqB/zbDicMsGZeo2rtG/nmbixeIh5PC5jUo2gn5BpZ3l7+/2yHNZZkx
-avod9t5pp6hTvZBrPOQNJ8hn+qoOFQ==
-=Bkdn
------END PGP SIGNATURE-----
-
---OzhFpMnD5U+YYOyJ--
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
