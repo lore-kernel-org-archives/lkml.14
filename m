@@ -1,132 +1,140 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0C0482C3;
-	Mon, 24 Jun 2024 07:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7743C488;
+	Mon, 24 Jun 2024 07:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719213178; cv=none; b=H1TbluJ7pwS8ZhP8e9ObGDI8Vqhh3DYzrtKLEyhYObPAff6tvGmf00pg8B+Xv0fMDRf6RhdzOxqYYSVMGDEiaJB8eztedAR3aVp/XBix8GXhpEEUXh67+Zi0vyhejXm7yltEs07eVwZl9kA6XG8Ex/3JBoMg1dKT6CCiFAOUDtQ=
+	t=1719213197; cv=none; b=jWg0bw6e4CRvwgdpGhzj3bOWRdAqEjXRKZ2WTIgReybEZYMNkOOwpfJBgUlQfVtUd5p28KmN9N1PusSPrdFaoWZ7ciHdnQVoCJiLTZAb8rpQzZA/Fg2lmwoWuiVG4cXloO0f2VYu3TuLycwMJ1h0+oOC3z6jaVT5Wx6PJzX7qrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719213178; c=relaxed/simple;
-	bh=jx2Lle67sF8Ye9IhyISsKOMZJj9OGpYsv7zvrSSDdSA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EH5FH4wUOc3Mwek7bSAO+j6rDTzIntfDgkJN9Z4Wxh6j1J2AHTklp9vdP73kct/4+8xAoh5OUFoaITIQI8paHoRp1OnB/n8Yoe/PJmyd/QrxJVyhSu6qDJrqiA95k+GUOrPuXYBGEPK5krPIdMIZLwRZL773qrVx+R86uI3HzAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=b+eZTLPo; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719213197; c=relaxed/simple;
+	bh=iTdtiEwt9/HJOLVwSAPvN2XojIrFY/KVShnhsvo1OKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMI3u9rxGm63yTqv0gBcYpWUusZByENjFAFTJ1tgrXsXUIOkz3GYkv08RRYodrcFywojtzQBlNsNLDQLKe2flfZOA7EU81213z12/J3qo68vYbKBOzd5wF2HR2Ru5T+al3h9NbTtE6O37KOdpqivwMGo4NqxeEGkgjU9RMfFzrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XuPjne2P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IQUWtLYK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XuPjne2P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IQUWtLYK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="b+eZTLPo"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45NEdBwo027079;
-	Mon, 24 Jun 2024 09:12:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	7QQp0ll7mULHxC80OBumXN8x5vwlpC7MjkT/JCmD22E=; b=b+eZTLPozRZezVUI
-	+H9TGuB8K749xxqRMe/tP6YWQ7N7DlqsNKIPoAAGfWFDgJ4V6iuPqZ9UH6bvsswk
-	8Ud9196dE76iWQ6Ml1GYDt/bB1UlKJq2RY/x1Ao4AoqrXBN5zBnbeBzXGXjeLnsR
-	X2kScg410kuR2yMAaoQAWNowIttyqIltBkInlAynUgsltcZDvIw+C9OyF8//dtTa
-	j/vHPFo4f0wsbtxMQhvS53Hs3SYI7TkP+K2At9QOECk4b+oXBEz/EO0ihA9L9A2N
-	hWQLZbE3PnxqmkLk/cUpmio8FE8FXJ/qJh8yNeTXd5G4NKV5SWGTKHjMmynbZK5B
-	n0w3Hg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywngd5f8q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 09:12:23 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 45E0540044;
-	Mon, 24 Jun 2024 09:12:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DCFED2115F0;
-	Mon, 24 Jun 2024 09:11:03 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 24 Jun
- 2024 09:11:03 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [net-next,PATCH v3 1/2] dt-bindings: net: add STM32MP25 compatible in documentation for stm32
-Date: Mon, 24 Jun 2024 09:10:51 +0200
-Message-ID: <20240624071052.118042-2-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240624071052.118042-1-christophe.roullier@foss.st.com>
-References: <20240624071052.118042-1-christophe.roullier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XuPjne2P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IQUWtLYK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XuPjne2P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IQUWtLYK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 111491F7B8;
+	Mon, 24 Jun 2024 07:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719213193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hGdwXDllEsEEQ9aIN8vKYDMClfAsoO/eykqwd28TUUY=;
+	b=XuPjne2PyEnx/QmjaV2VH09wnLKuzfWRUZDgbILUusIx8RpTMRM3Oy0gEL+cJORAdZY4cT
+	B30BsktTIx0plmkuGKGBpqpT8K43oyl3V9ayV7X31XiaRLjD8R9GQLJ8BzMbOfFcWvEWPQ
+	+oWlfpePxbm/2TKv5joEhtmReGFTslw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719213193;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hGdwXDllEsEEQ9aIN8vKYDMClfAsoO/eykqwd28TUUY=;
+	b=IQUWtLYKVJ88s/pwDMVLWk8DekxzAQGD1ArYT24w84Hqdu/YKuZGNh5m8bTqxHa0iamvX/
+	it1sVNVoYXZ5mkBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719213193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hGdwXDllEsEEQ9aIN8vKYDMClfAsoO/eykqwd28TUUY=;
+	b=XuPjne2PyEnx/QmjaV2VH09wnLKuzfWRUZDgbILUusIx8RpTMRM3Oy0gEL+cJORAdZY4cT
+	B30BsktTIx0plmkuGKGBpqpT8K43oyl3V9ayV7X31XiaRLjD8R9GQLJ8BzMbOfFcWvEWPQ
+	+oWlfpePxbm/2TKv5joEhtmReGFTslw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719213193;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hGdwXDllEsEEQ9aIN8vKYDMClfAsoO/eykqwd28TUUY=;
+	b=IQUWtLYKVJ88s/pwDMVLWk8DekxzAQGD1ArYT24w84Hqdu/YKuZGNh5m8bTqxHa0iamvX/
+	it1sVNVoYXZ5mkBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7DCAD13ACD;
+	Mon, 24 Jun 2024 07:13:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3YGmEIUceWZReAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Mon, 24 Jun 2024 07:13:09 +0000
+Date: Mon, 24 Jun 2024 09:13:06 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, 
+	Sagi Grimberg <sagi@grimberg.me>, Thomas Gleixner <tglx@linutronix.de>, 
+	Frederic Weisbecker <fweisbecker@suse.com>, Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
+	Sridhar Balaraman <sbalaraman@parallelwireless.com>, "brookxu.cn" <brookxu.cn@gmail.com>, 
+	Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 1/3] sched/isolation: Add io_queue housekeeping option
+Message-ID: <x2mjbnluozxykdtqns47f37ssdkziovkdzchon5zkcadgkuuif@qloym5wjwomm>
+References: <20240621-isolcpus-io-queues-v1-0-8b169bf41083@suse.de>
+ <20240621-isolcpus-io-queues-v1-1-8b169bf41083@suse.de>
+ <20240622051156.GA11303@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_06,2024-06-21_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240622051156.GA11303@lst.de>
+X-Spamd-Result: default: False [-2.26 / 50.00];
+	BAYES_HAM(-2.96)[99.81%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.dk,kernel.org,grimberg.me,linutronix.de,suse.com,suse.de,parallelwireless.com,gmail.com,redhat.com,vger.kernel.org,lists.infradead.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -2.26
+X-Spam-Level: 
 
-New STM32 SOC have 2 GMACs instances.
-GMAC IP version is SNPS 5.30
+On Sat, Jun 22, 2024 at 07:11:57AM GMT, Christoph Hellwig wrote:
+> > diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+> > index 2b461129d1fa..fe751d704e99 100644
+> > --- a/include/linux/sched/isolation.h
+> > +++ b/include/linux/sched/isolation.h
+> > @@ -16,6 +16,7 @@ enum hk_type {
+> >  	HK_TYPE_WQ,
+> >  	HK_TYPE_MANAGED_IRQ,
+> >  	HK_TYPE_KTHREAD,
+> > +	HK_TYPE_IO_QUEUE,
+> >  	HK_TYPE_MAX
+> >  };
+> 
+> It might be a good time to write comments explaining these types?
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Sure, will do.
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-index f6e5e0626a3f..bf23838fe6e8 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -23,12 +23,17 @@ select:
-           - st,stm32-dwmac
-           - st,stm32mp1-dwmac
-           - st,stm32mp13-dwmac
-+          - st,stm32mp25-dwmac
-   required:
-     - compatible
- 
- properties:
-   compatible:
-     oneOf:
-+      - items:
-+          - enum:
-+              - st,stm32mp25-dwmac
-+          - const: snps,dwmac-5.20
-       - items:
-           - enum:
-               - st,stm32mp1-dwmac
-@@ -121,8 +126,9 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - st,stm32mp1-dwmac
-               - st,stm32-dwmac
-+              - st,stm32mp1-dwmac
-+              - st,stm32mp25-dwmac
-     then:
-       properties:
-         st,syscon:
--- 
-2.25.1
-
+Do you think we should introduce a new type or just use the existing
+managed_irq for this?
