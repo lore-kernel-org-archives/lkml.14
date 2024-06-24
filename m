@@ -1,164 +1,175 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2135.outbound.protection.outlook.com [40.107.117.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194694C637
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217371; cv=none; b=oHgoMAzsjkLNvEqEIppJAeS8SR8tcL2uYT95ZVrGahTrHjmFh8/1MBGB9GRpXYJjVMeWUpRCHWSrMHY4ms7bAZLRZNPjteSMINFTA1i7rY2TqaX+GjyqAE2PcguRZS32TIAiAuFH68Sozh4SDNU3gkTEgbBAE5/vfRhu14zCHiw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217371; c=relaxed/simple;
-	bh=l8PxRcYIUV+BwhTr/9tnWDMOzSzkqoN1MtjHSsnguGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RtXTTehJq/u21iod7e51T4qj+qvdjVqvBWDy9dTchRteEeqm33IbCi8TgUq2aLa01tJejZVmQIcC3jE1aOsi5on/A6oyBmjvbw5C7Z0QZbXNaY/HYj5ehRWgXXm7oFr63aR+vrLug0/Nxltmlf7zF3O367dycT+4R813FhK1c48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=fxYpPcUZ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="fxYpPcUZ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9aa039327so32564295ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1719217369; x=1719822169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TKqXgp0PeCY7zVPXIYmvQu6WZY+HEs+Sn2Z47Kgx7oM=;
-        b=fxYpPcUZsuE9aiH3471SZiJQzzMoSlqLkowXosNEkyMWVlKz/QwPk+rVLeFOaDBOWt
-         N4PQkstLuhKl02eVi0yv9ZAkq/dSRCWjcVznar6vEWRu5Qg29be95rINkTgoKhlz7aqw
-         Xjp7AmCl41xYlm+SDDqkZzzxJVXbvURJs6mw/YJnjiBcat0Ut8xOyfmTdC70EkchrZG7
-         V7eojFfhBN7KsMGLKEmlQUt9dvYfj5QiHHzFvvGfsYQbtPbd/6lVGpyMLBtripypYIf+
-         ZJEs0UGYOl/fj+BwPZu3u5Yq1mugqVsgo8R9R2ZZPajgCrfFmjxg9Mxsn74g7BjK7r+l
-         r4tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719217369; x=1719822169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TKqXgp0PeCY7zVPXIYmvQu6WZY+HEs+Sn2Z47Kgx7oM=;
-        b=XR/YY5x/GBVyOkAqQ+yG3pblfp7rtiEL/DCyST1xbhUS51u7CkkZM0jDwqPoF32UvA
-         3E9NZWx1bNU/8YJkY3yednjJSUJOwLqpj3SkdlT8E2uIZ3S4Qng9BJpKNQO0k7Ldne3V
-         NgFwGKWTHxni01KmDe1o8k3sq5Lu71WTFSEzolsRxoGCXkBIDckR58OzutrgAg/4PA5N
-         LiNNrLBUs8V5Yvn4Fm+4mAHzOuAH2kPEojIYtBoq+pL/Zf2EwXzQXVlZzH06CHYaASMm
-         fxY5PCV3Pd71e034ZKMW6hdtGLqkxxO8sq5mOx1vPwdfL16zu0d4ibPFBPpqN6fSa6ve
-         P5Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzH6eHc1jeSL2MieldSKJ8imQTBnK2umpcugWMOFQDXbbfGZMC9yK+sbNbUdA0hUt3nSpdfB+40dxdSrYlw9VdPAlvfpcKvxY+TeSP
-X-Gm-Message-State: AOJu0YzylhQxKlGbgIW5zBTtk00zKVJivwS3F2qHw/3HAsnjGM8I9Jia
-	zJmlNFaCq8sStcMObailB+c0qka66sRsEKsm/O2KwDvcfntQORwRH+AX3J2npT0=
-X-Google-Smtp-Source: AGHT+IGkoHJq/Uha60iVDfgi2zLJGjHRCAI0OByy2xj9MuNZhuILpLYTi5YuR8zGMv4NTd34FPkw1Q==
-X-Received: by 2002:a17:902:ec91:b0:1f7:1b97:e91f with SMTP id d9443c01a7336-1fa1d5173d9mr51886265ad.26.1719217369112;
-        Mon, 24 Jun 2024 01:22:49 -0700 (PDT)
-Received: from localhost.localdomain ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f9eb3c8b5dsm57068405ad.181.2024.06.24.01.22.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 01:22:48 -0700 (PDT)
-From: Jian-Hong Pan <jhp@endlessos.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	David Box <david.e.box@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025173EA72;
+	Mon, 24 Jun 2024 08:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719217449; cv=fail; b=R7EcRr4t2Zn5GQ35+NZ+ieQVdwkNARrwZzQ/RQO+RtGTqNmYPAUOPNX4YOT7ykr0RAsT4Kzk2vfC8fwaXkACmR3q7y9M2J20VqiRFH+w+NZnVP/sNWJBfX18WVcfvO6t/+Z9j6p2GsgC3v1oGhTm6XJanOgGFgKPEAQd4KgAn1g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719217449; c=relaxed/simple;
+	bh=VOdonuoOdrk4MKDZNNvt1Bf1SSzBOLzWDsZOWVaQUKg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=RSk3V0oyfbOkDX3ur1dCU2kz0ZCAVRB/lQ/P6bhMsw+Wf1YZ5MsQ8IHFekybXlOMryR/enpQyFgJDrLcGQTQbCzJORUAqaQWM8//R9A+YOICIY7S7/hrQE6VOsLHGWHESuW4+n0fs5xrD1hGt6r427P53UdBHiq/XBjxnKjwBe4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.117.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mu+cuUNlbW5W/u4PDXm1a3VMYoSnEK7OTF5yO3sJPYmQ2YVnKchfJ203M3dyL9l7I9PW9065dolsWSJiw8vTd6lNfDTXA8hvp6fMMUeT/TD7SMXGgsb4lStvap+SD0eeYN1C0qqcjrY0Z4hTuIaP3rJyVXY2zhOtpFwauMy8iFp6tZmNgq5sXVwOGhRmaZMnI9w/KJXeSHnOic3N9IeYA2Gx5IMMQu/Y8+v0W+3bn3M19xj5tLPzNhreaM7Oy3yhMQHrxMQQM8/GJH69/pSzYrLof4O0rDiH/5MeLV5ONkrEam2tZjRAMrQN2TYSMG+viacSk3JmjHLPg6tSNMfqhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=juuH8EBk+Tic8J+hbt5CFfXz8AqP6gSIfPkz/EGfhv4=;
+ b=FWQwGzlGM0x5DGqzqQwEluJjMCrL255aAxiF2iho8gdlwNdkspAZ3no+QBB6ZEbhEOIjshPj9+rf4mtmC/dTO7lppiLtlOWNwgqU1D3y1HPgOKnxj9ENl84ab4EHHduyRezJhMg13t6+FYHQj7EIY0Zyi2vxBsY/2VU+grUWq+WbTa8pU2ice2KXeR3Rawzo8AvyO9G+xky//8kCytK8p3N60xnhh+zVy7cE8rSJpHi04MpuPiBjhLln4m5Tn+cbOTFnajYUImrK7ZNKz3yGb3Eg+PjAaFe6pB6oOCXRFZYjPdOCoZscMnErkvsLH9tg6TVAtean0HMXysjr3M2Nog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
+ dkim=pass header.d=wesion.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wesion.com;
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
+ by OSQPR03MB8600.apcprd03.prod.outlook.com (2603:1096:604:290::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Mon, 24 Jun
+ 2024 08:24:04 +0000
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::78dd:5e68:1a9c:36c0]) by TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::78dd:5e68:1a9c:36c0%6]) with mapi id 15.20.7698.024; Mon, 24 Jun 2024
+ 08:24:04 +0000
+From: Jacobe Zang <jacobe.zang@wesion.com>
+To: arend.vanspriel@broadcom.com
+Cc: kvalo@kernel.org,
+	duoming@zju.edu.cn,
+	bhelgaas@google.com,
+	minipli@grsecurity.net,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	megi@xff.cz,
+	robh@kernel.org,
+	efectn@protonmail.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	nick@khadas.com,
+	jagan@edgeble.ai,
+	dsimic@manjaro.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux@endlessos.org,
-	Jian-Hong Pan <jhp@endlessos.org>
-Subject: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after scan mapped PCI child bus
-Date: Mon, 24 Jun 2024 16:21:45 +0800
-Message-ID: <20240624082144.10265-2-jhp@endlessos.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240624081108.10143-2-jhp@endlessos.org>
-References: <20240624081108.10143-2-jhp@endlessos.org>
+	Jacobe Zang <jacobe.zang@wesion.com>
+Subject: [PATCH v2 0/5] Add AP6275P wireless support
+Date: Mon, 24 Jun 2024 16:19:01 +0800
+Message-Id: <20240624081906.1399447-1-jacobe.zang@wesion.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0054.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::13) To TYZPR03MB7001.apcprd03.prod.outlook.com
+ (2603:1096:400:26a::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB7001:EE_|OSQPR03MB8600:EE_
+X-MS-Office365-Filtering-Correlation-Id: 107295d6-c369-4a1f-0154-08dc94270232
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|366013|52116011|7416011|376011|1800799021|38350700011;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?teDlZdTw37l6+Ns/2o/8VA+e/b40AcZZ+gkA23iJA7CDW4zDpYkYQJjcoqSL?=
+ =?us-ascii?Q?6fD3g1kSf2A0c/MOAhEw5wez2uyqdHtX+YwfcX+iZ7A0SL8MyukVd7d691LK?=
+ =?us-ascii?Q?aVNnN3RG2/ME0WTl+Q4eidwHSCRsQx55KSbXNGmTA6J0LCbj6c/QvJ26/SDa?=
+ =?us-ascii?Q?Xj9E55ivSq9mfMVgu+wpxqKz9xOknCqV4AiswICHsJSvjEA4oy8a5vpEtuxn?=
+ =?us-ascii?Q?1x2MyDTpuuIM2noEO+1sySueZBSveaJB35pPPYiZ7wcD/h7c1Vq4MgQ58Nvg?=
+ =?us-ascii?Q?RB9qA4roRT/8TCoOP8hMbQ/nDbwuxEs+p4fZY+Bssum1RCUvr52v/qYaKkDU?=
+ =?us-ascii?Q?+7CcpyjUDC6esqR8/A4CSysY3T0klw6ayqBStppU6MuZYYKVAj6tTnAq9UPg?=
+ =?us-ascii?Q?uIMknpA+PsP6hfyIcGPrUIySzFdSpENFgM6KoDLHVKl72WrckOi+K/W1S52y?=
+ =?us-ascii?Q?Jjx365t9G7vdTLLRZojf5e+0fQisRa3bMgVRxTu0Dv96dIiIP97DHoqT7ozp?=
+ =?us-ascii?Q?NaO+jQgMNJEm0rNDBEqVSB8XRWNLYraAwXZXozNVLxziE0oi9ibPUnrivGtf?=
+ =?us-ascii?Q?SKJKnzKBIfeWDKZyDDvQ44tbYBJDYTRfl+0ARFYJto1j2i1K/AblaBaQw9Sr?=
+ =?us-ascii?Q?Br+4af/W4U9sp4Bz44qHjLNH5JQb0MID/qzhBpS6He4EFiJh5A+gaByC0ksq?=
+ =?us-ascii?Q?cNbM4fqiQ0QzHsK1Y36TWYXWSS74DhARZ/aol3JG6C/JFZZu7RTfe7/oiE5z?=
+ =?us-ascii?Q?AbZjoYOEaQE49CTwnbvuPocGHXzLkRctEdRbAsAlpwGXH8xtV8YHaBoO60kk?=
+ =?us-ascii?Q?q6IzsQr+EJ2Q3frerCq92O6JHWvZicLHbnH5hwK6oC/hLtKlbNQYQeJoHF1U?=
+ =?us-ascii?Q?bUaWf+qb38WSfy0CjHNAcx5ipC9NCS9jhzA/qP3jMug3EP0z4q/7bVFdFnLi?=
+ =?us-ascii?Q?0iblNUembwbPcgLjMI3MJFmsNjmVgeKxXN2Z1UhVlJwak4BgHUdxnfEI8CEb?=
+ =?us-ascii?Q?COGRK7G4ZmJrJTNdfFhtioDRPa3B6AZ9mTb12AEYtp7k2ILa5njFfRz52/EL?=
+ =?us-ascii?Q?Sg2YA4FMB4gJmQJjYLhfWRr1mvhELsbmdZQ39B2iZyvjsk3bQpNItTBZWKGZ?=
+ =?us-ascii?Q?w7Am/dSsNnv3NOyZRQ/SFW/duqg4Zed4FaEttKMgEnhNn3zSavOJE/JDMlcP?=
+ =?us-ascii?Q?jfXYaba8eab6k2Pk7bqsMexlhYppUiDUdwjr/hGI1s7eljfBr6eZOAxvZtYl?=
+ =?us-ascii?Q?FuLjrtxh2j49vc7kkqiHFnP2wjjpRhxMjgP6UGo4+HW0q74M5eU/XLTtjHwe?=
+ =?us-ascii?Q?HGKeo0mqA+IsfWJ9iFeJtrGh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(52116011)(7416011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?L8imPsVDQlyY3wUJWHH/ZtGUMWO9CHl2hM3YDutZKaLqrf7RB1VOSvvoQVke?=
+ =?us-ascii?Q?4GCOHzkyQ5NgyZZhavY3WniGYN2y3Cg60VAFGyyXZmsUKeyQHtlBfot6p004?=
+ =?us-ascii?Q?Nn0h6ZwE43808VhPVZjn/+J1bwsaR4NlXAtas59FgrTEXCPC09cf1Iuqt/K7?=
+ =?us-ascii?Q?W5hem4C9F6OOqBScwJSpONgIiqXZZT7zX4BIqXXiquLmF7c/SvkLApG5OL2A?=
+ =?us-ascii?Q?AQyAuJxiSxzbiSj15gD89kUuHGhE1RpkJvUtng1za9Xjraup43YVbqxrnIVA?=
+ =?us-ascii?Q?5oUjhizK9gw5aPpu4t7XMRalfJBAJ7GfEjofH/IaiWhvR74zuM8Qvdqz+f3B?=
+ =?us-ascii?Q?9rkJ23zoWD4vnqspHIfVfh+26GaSmqm2KS4EJxJuS/8LNTkEG83nshpmqx9N?=
+ =?us-ascii?Q?uKxSE8jGbv/MP4JZg+Nqb8izqWm3GbcVJBerof785PGnLJ6GPaFyE527/bB1?=
+ =?us-ascii?Q?KCuZXfNcE67JdztdUET65k8K2umASeXdQEa3/io9rln6tnG9X1iumXcEF+mw?=
+ =?us-ascii?Q?IifhRxpnaelE9WPJz818ciQt27ojmwBoXQ7el57s2KpuXBobRvw1d46P9Hgk?=
+ =?us-ascii?Q?jJ5LxAXzHgXNglNHQBthOKO2f/WA6BEBsj+Z15Npyp0JJjgslg133VH7XUWE?=
+ =?us-ascii?Q?Y4cPTd5VHkqmOZ8lL9rlkqZEKtCEZG+dwrc6Rj/Pu+50ZjeYAvw56DxDywd6?=
+ =?us-ascii?Q?APmTUYl5mYdaZSzw4Stbmv0EVAoNzlM6eHpKJa025Ho9B0Jt1X5BeXTDMbIR?=
+ =?us-ascii?Q?TsYWBDOrOivL2eZ0ALozE1z7z+LUSFD0LEjOE+Qo4upeMFvzwKhQDaEo2xZN?=
+ =?us-ascii?Q?kK3ARoB3QHXJLCZ3oQGRsNYjM4BZOXdFyKVlWz/NrsLiq6T/w3sNkvbgB+n2?=
+ =?us-ascii?Q?PgubSsn6T83mghuZPO48iJdKN2PyGHHRw/5V4mboEwIVPa8e04UWM3IBURsQ?=
+ =?us-ascii?Q?Ra56hTTGRHzisTwF89jFRoOKblcv+gLCqZo6y9hsB+IktZ8DyR3k39gTpz/O?=
+ =?us-ascii?Q?TxOmVy83CuUytj+M3gHvFadw5PPf037YOp3WeVS3xdSO13ddIGgPHXm3tVx0?=
+ =?us-ascii?Q?cwRZMWyxL4IIpzUuLYTj776wSAhX9/8wmB43Hz6Tj9Wqyey+qXnJ/B6eolNi?=
+ =?us-ascii?Q?jVGMEC1wW7NOIZ5SYTeU3BgICFd0zD8sdg5P8Jgy0SyWAxiZ/NDAWQ/PDLk3?=
+ =?us-ascii?Q?70/455MzVb4bWCoKnUyCcnoMfUOQwxzRYYyvbowcEhrPf82k4yQAABvRWGx5?=
+ =?us-ascii?Q?DbJY+zRQRXQeTFU+ZlG9SmhSh/oj4/A1+jyvt6JhWvfA5SVVBG2H7DZ8Vcm1?=
+ =?us-ascii?Q?QrE7OltcFd1e38UUne8dabGmx/rz598QJNhcWfiQ9ckOgSi4lgRL+FWD6JVI?=
+ =?us-ascii?Q?rSLWcE5DMyBiEfS0FzpAu4x8lsEx2d+ba+jzKcohe58pybiV5DYoYXgesvjb?=
+ =?us-ascii?Q?3yO0OtQsZ+p9HLwj6aiFkZ2aHwa7WLjnW+jXHiGbzP2cuF1WBhw1ReRzWETC?=
+ =?us-ascii?Q?328ZK/D8Re8NWHBOisL8YVE/wj0WWtCqNl057oELhH7Lia4E6CXVf3/VKDhf?=
+ =?us-ascii?Q?npS+/W5XQEVsAN74LoBWhSLffM8BDnqIpLqayVP+?=
+X-OriginatorOrg: wesion.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 107295d6-c369-4a1f-0154-08dc94270232
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 08:24:04.3179
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aZnNziaWusU6gYyaOrco5uChT/HppKa3swgKajHa12BTYnqxlczCsJxu12Jm2tWiFK031ma2hng14HQOqRCEPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR03MB8600
 
-According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the PCIe
-Root Port and the child device, they should be programmed with the same
-LTR1.2_Threshold value. However, they have different values on VMD mapped
-PCI child bus. For example, Asus B1400CEAE's VMD mapped PCI bridge and NVMe
-SSD controller have different LTR1.2_Threshold values:
+These add AP6275P wireless support on Khadas Edge2. Enable 32k clock 
+for Wi-Fi module and extend the hardware IDs table in the brcmfmac 
+driver for it to attach.
 
-10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
-    ...
-    Capabilities: [200 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
-        L1SubCtl2: T_PwrOn=50us
+Changes in v2:
+ - Add SoB tags for original developer.
+ - Add dt-bindings for pci14e4,449d and clocks.
+ - Replace dev_info to brcmf_dbg in pcie.c
 
-10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
-    ...
-    Capabilities: [900 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
-                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-                   T_CommonMode=0us LTR1.2_Threshold=0ns
-        L1SubCtl2: T_PwrOn=10us
+ - Link to v1: https://lore.kernel.org/all/20240620020015.4021696-1-jacobe.zang@wesion.com/
 
-After debug in detail, both of the VMD mapped PCI bridge and the NVMe SSD
-controller have been configured properly with the same LTR1.2_Threshold
-value. But, become misconfigured after reset the VMD mapped PCI bus which
-is introduced from commit 0a584655ef89 ("PCI: vmd: Fix secondary bus reset
-for Intel bridges") and commit 6aab5622296b ("PCI: vmd: Clean up domain
-before enumeration"). So, drop the resetting PCI bus action after scan VMD
-mapped PCI child bus.
+Jacobe Zang (5):
+  arm64: dts: rockchip: Add AP6275P wireless support to Khadas Edge 2
+  net: wireless: brcmfmac: Add optional 32k clock enable support
+  net: wireless: brcmfmac: Add support for AP6275P
+  dt-bindings: net: wireless: brcm4329-fmac: add clock description.
+  dt-bindings: net: wireless: brcm4329-fmac: add pci14e4,449d
 
-Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
----
-v6:
-- Introduced based on the discussion https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=Y2+1RrXFR2XWeqEhGTgdiw3XX0Jmw@mail.gmail.com/ 
+ .../bindings/net/wireless/brcm,bcm4329-fmac.yaml | 10 ++++++++++
+ .../boot/dts/rockchip/rk3588s-khadas-edge2.dts   | 16 ++++++++++++++++
+ .../wireless/broadcom/brcm80211/brcmfmac/pcie.c  | 15 ++++++++++++++-
+ .../broadcom/brcm80211/include/brcm_hw_ids.h     |  2 ++
+ 4 files changed, 42 insertions(+), 1 deletion(-)
 
- drivers/pci/controller/vmd.c | 20 --------------------
- 1 file changed, 20 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 5309afbe31f9..af413cdb4f4e 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	resource_size_t offset[2] = {0};
- 	resource_size_t membar2_offset = 0x2000;
- 	struct pci_bus *child;
--	struct pci_dev *dev;
- 	int ret;
- 
- 	/*
-@@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	pci_scan_child_bus(vmd->bus);
- 	vmd_domain_reset(vmd);
- 
--	/* When Intel VMD is enabled, the OS does not discover the Root Ports
--	 * owned by Intel VMD within the MMCFG space. pci_reset_bus() applies
--	 * a reset to the parent of the PCI device supplied as argument. This
--	 * is why we pass a child device, so the reset can be triggered at
--	 * the Intel bridge level and propagated to all the children in the
--	 * hierarchy.
--	 */
--	list_for_each_entry(child, &vmd->bus->children, node) {
--		if (!list_empty(&child->devices)) {
--			dev = list_first_entry(&child->devices,
--					       struct pci_dev, bus_list);
--			ret = pci_reset_bus(dev);
--			if (ret)
--				pci_warn(dev, "can't reset device: %d\n", ret);
--
--			break;
--		}
--	}
--
- 	pci_assign_unassigned_bus_resources(vmd->bus);
- 
- 	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
 -- 
-2.45.2
+2.34.1
 
