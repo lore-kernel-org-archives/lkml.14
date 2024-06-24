@@ -1,119 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE6213C901;
-	Mon, 24 Jun 2024 22:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D97F13C901
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 22:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719266790; cv=none; b=hatZzgSalZHCtChgURqb6Ee9GKcdUzNfJBllaRRoaZXCyzvRhTekIm9Ur4Uy0mtVQxA4Sqco/BndPvegNx8eZUV+E2t2pRNo6VR5MNVp8oqefvVbZJkBGqA1sQYdJajVpUX88KooxlUHUP4wdlKXC7tOpSFxCI7PW8DNsFQPGPA=
+	t=1719266875; cv=none; b=iTJrYO5RlEKPNFnj81OjwI6VanYx8r0xjCxkaf3c3bwuyG/MH2xCgd5R0dvc+tT0KuYNBE6CH8yYBtSrnyNikEtrLf/Hb+aQWDExFWcgb3FBL5IPeTxEKKsqFwqT4U73w8smj58FF+9g6YsVHq3WD1Nibpv8HXW9UP717UX4zJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719266790; c=relaxed/simple;
-	bh=v5EkkTErtysweJ6YBb/ej7mjjeGRSkbHCB9ia2QeuFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzvCMBG5EDWm7BBHiHm9jwpBleHBPvBKhb+5wmv6Eu9GFMBjwVb4CMnIRBpOs9XgBEmWicxGa5VUGeV7vH9iuhA042ZG1WhJ561CoknBZiir6DHgHY43w/9NpVDVU3SajYExuwsJATo6TAlVzgl0yQPrwev5IwXB/UzUJVLeCho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvjTQ5rg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719266875; c=relaxed/simple;
+	bh=opT9chxOr5SNeIuK8SI/neAZbgaJe17hZ4b9hMCiFJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WxZSFlDBbMXvyLnMLhCTmc/KJ12S6S59ZrEG9WOShXC5Qulb3Vd/CTwtUGd5dMw/2Qaqr6t5evLPjuoA3gQ0js1Jx/40taF0PtR21zleLdgDqfHHuhbt1QHVIcgk15ytlT3flMGoyvp+WXgSxgZDKkXUJbmUDR53NEkcBgPCft8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=FEVYhuYo; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvjTQ5rg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93567C2BBFC;
-	Mon, 24 Jun 2024 22:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719266790;
-	bh=v5EkkTErtysweJ6YBb/ej7mjjeGRSkbHCB9ia2QeuFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HvjTQ5rgu3zGt9wN2MRPnEvNll8mjcQ6CS1kmgzj5nt9VOwCAl4HVUoQSiy0WsPZf
-	 N+dvkL1GVSMPJCuLXXf0BfueooXspVvUMf3zCUq77PYwkytXL6RTxmuOcMK0kVoNtQ
-	 igxE/jSUPkfUPdK3EDumWTuzhXv088yN8ej/ISKT3/vQc1ZEHcWhEiwc/Ci4U45apT
-	 d4+/FmnxiSXdVe92T9/RYNhA7y5uQdCODpQ66bv5pUbcNqqLFW9EBCa69e3H4V/AwX
-	 R12FM2R2BIoChA2gnOClYF3E3LhMAHgGQclWvn3LcJTOZYQjBrOZWUxU4VJPB4KGXE
-	 2AhqYfkPYRI3A==
-Date: Mon, 24 Jun 2024 19:06:26 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
-	kan.liang@linux.intel.com, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] perf trace: Augment enum arguments with BTF
-Message-ID: <Znnt4sTOx6ANJZPV@x1>
-References: <20240624181345.124764-1-howardchu95@gmail.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="FEVYhuYo"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-643f3130ed1so18234277b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1719266872; x=1719871672; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fszxPVkXOEv4ipvfMeUYMBaHCtHM5VmJKexolLOZC+U=;
+        b=FEVYhuYoJJznA45oTekzWcNv7XJDGavcA/3HwyVgrfL4jS6mmMVPiskJvI5RJ6Vy8v
+         835pLpHtMZwIG4ctHgGh5977YNimJwPzLU3Q6D9CD96dgHYBQuNpndXkc9C6dOQprfbu
+         uLfkbG9J5l4SsJmeLMd0IDwLPY7IUkUn/yZLdX2v0YlP5wZ4R5SEYi0NHV5v7IaP/1hh
+         qb21VWUfuXQ7zMBb1ytR9XmGkkj/rGAQwpWV2E/F1XnOkLhYu9684ZosLUNnTi4nYhqD
+         N+ngFu0+ZpgoldrlBq1FR3OMWGBb7U1wiGxbcbTGixxf/p49QvEcKbQ+9KsnuZto4bSe
+         97IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719266872; x=1719871672;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fszxPVkXOEv4ipvfMeUYMBaHCtHM5VmJKexolLOZC+U=;
+        b=Hc2UvOG+m5tZzvM9AuH+z7bqxuzAwb4TvuPvucZUtU5Ks/7arH/BrMLYhuIemJqNbp
+         rTxliDZsvebxJbS2BDiUTNreBjhyxK+Wsf4AaD6xWIORUUT7cU5HhIhcKrVS+gpIFilL
+         PmOeacNiAi9klLBSEt3oocuXXsc94jOKK+p0EgebPgn8YDAG1d/5vViNVJ5jJom7UCD5
+         Annfjs88uabgzTLde90Ztg3nwwGY+v/wNQhR3Y1V9DAZl5znpt7En5mu3qAXCzkytRqW
+         2i/IIF/SRftadKnf6tXY3LtBB+hd6oekaWp/frqOkQtgatEwLBaMnW3v3G3oyIKiJab3
+         RgUw==
+X-Forwarded-Encrypted: i=1; AJvYcCXc3GaffW/Bm2El+vRV6YVyt3HCrYh/eSS28QUABQ7XRZAcEqeepwH3bSudikYAMvArtEjyt9fB2yhyOs4+wK4YFr2wMHadleNhXWK3
+X-Gm-Message-State: AOJu0YxOKvt8MyRGxYqifYolmphgqGt5edaUnHy5yt5qqXjYU9mOmBoH
+	+0suywxq6bAiVBjIc16XrE+I01ysHGT6EOWrZcwhaqW7JMsFDc8FA85p/UZWNwmNN1E8+xF2tpJ
+	mg76gfT2gbDd/u+ylk3lO97284FqwARvWQkYu
+X-Google-Smtp-Source: AGHT+IHOVgf6sPtvz7xkzuxIJIFBk7OeedDuU5iG83zGwr53aHKkAXP3cmaTbi55yIsmL38DOo+j8by+9wv8qdnxftY=
+X-Received: by 2002:a05:690c:f93:b0:633:8b49:f97c with SMTP id
+ 00721157ae682-6429c6db0bcmr54456627b3.37.1719266872555; Mon, 24 Jun 2024
+ 15:07:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624181345.124764-1-howardchu95@gmail.com>
+References: <20231215221636.105680-1-casey@schaufler-ca.com>
+ <20231215221636.105680-3-casey@schaufler-ca.com> <CAHC9VhQnzrHPRWKvWPSuFLWHhcXkwqeAfXsFbEdBBOMcACZorg@mail.gmail.com>
+In-Reply-To: <CAHC9VhQnzrHPRWKvWPSuFLWHhcXkwqeAfXsFbEdBBOMcACZorg@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 24 Jun 2024 18:07:41 -0400
+Message-ID: <CAHC9VhQeWF814h8+ho3uKuz+NvvFApwJo4FkdmoRvYpuTcrk4A@mail.gmail.com>
+Subject: Re: [PATCH v39 02/42] SM: Infrastructure management of the sock security
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: linux-security-module@vger.kernel.org, jmorris@namei.org, serge@hallyn.com, 
+	keescook@chromium.org, john.johansen@canonical.com, 
+	penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, 
+	linux-kernel@vger.kernel.org, mic@digikod.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 25, 2024 at 02:13:37AM +0800, Howard Chu wrote:
-> In this patch, BTF is used to turn enum value to the corresponding
-> enum variable name. There is only one system call that uses enum value
-> as its argument, that is `landlock_add_rule()`.
-> 
-> Enum arguments of non-syscall tracepoints can also be augmented, for
-> instance timer:hrtimer_start and timer:hrtimer_init's 'mode' argument.
-> 
-> Changes in v3:
+On Fri, Jun 21, 2024 at 4:31=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
+ote:
+> On Fri, Dec 15, 2023 at 5:18=E2=80=AFPM Casey Schaufler <casey@schaufler-=
+ca.com> wrote:
+> >
+> > Move management of the sock->sk_security blob out
+> > of the individual security modules and into the security
+> > infrastructure. Instead of allocating the blobs from within
+> > the modules the modules tell the infrastructure how much
+> > space is required, and the space is allocated there.
+> >
+> > Acked-by: Paul Moore <paul@paul-moore.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Reviewed-by: John Johansen <john.johansen@canonical.com>
+> > Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> > ---
+> >  include/linux/lsm_hooks.h         |  1 +
+> >  security/apparmor/include/net.h   |  3 +-
+> >  security/apparmor/lsm.c           | 20 +-------
+> >  security/apparmor/net.c           |  2 +-
+> >  security/security.c               | 36 ++++++++++++++-
+> >  security/selinux/hooks.c          | 76 ++++++++++++++-----------------
+> >  security/selinux/include/objsec.h |  5 ++
+> >  security/selinux/netlabel.c       | 23 +++++-----
+> >  security/smack/smack.h            |  5 ++
+> >  security/smack/smack_lsm.c        | 70 ++++++++++++++--------------
+> >  security/smack/smack_netfilter.c  |  4 +-
+> >  11 files changed, 131 insertions(+), 114 deletions(-)
+>
+> I had to do some minor merge fixups, but I just merged this into the
+> lsm/dev-staging branch to do some testing, assuming all goes well I'll
+> move this over to the lsm/dev branch; I'll send another note if/when
+> that happens.
 
-Did a quick test, from a quick look you did the adjustments we agreed
-(if (val == 0 && !trace->show_zeros && !arg->show_zero && arg->strtoul
-!= STUL_BTF_TYPE), etc), thanks!
+Everything looked good so I've merged this into lsm/dev.  Thanks all.
 
-And that is the way for collaboration we go on talking on the mailing
-list and sometimes writing code, making it available for review and
-adopting what we deem best at that point, rinse repeat.
-
-Now I think it would be great if someone like Namhyung or Ian could try
-this last patch.
-
-I have to comb thru it but, again, from a quick look and test, it seems
-great and probably ready for merging.
-
-Thanks a lot!
-
-- Arnaldo
- 
-> - Add trace__btf_scnprintf() helper function
-> - Remove is_enum memeber in struct syscall_arg_fmt, replace it with 
-> btf_is_enum()
-> - Add syscall_arg_fmt__cache_btf_enum() to cache btf_type only
-> - Resolve NO_LIBBPF=1 build error
-> - Skip BTF augmentation test if landlock_add_rule syscall and LIBBPF are not
-> available
-> - Rename landlock.c workload, add a comment to landlock.c workload
-> - Change the way of skipping 'enum ' prefix
-> - Add type_name member to struct syscall_arg
-> 
-> Changes in v2:
-> 
-> - Add trace_btf_enum regression test, and landlock workload
-> 
-> Arnaldo Carvalho de Melo (2):
->   perf trace: Introduce trace__btf_scnprintf()
->   perf trace: Remove arg_fmt->is_enum, we can get that from the BTF type
-> 
-> Howard Chu (6):
->   perf trace: Fix iteration of syscall ids in syscalltbl->entries
->   perf trace: BTF-based enum pretty printing for syscall args
->   perf trace: Augment non-syscall tracepoints with enum arguments with
->     BTF
->   perf trace: Filter enum arguments with enum names
->   perf test: Add landlock workload
->   perf test trace_btf_enum: Add regression test for the BTF augmentation
->     of enums in 'perf trace'
-> 
->  tools/perf/builtin-trace.c               | 229 ++++++++++++++++++++---
->  tools/perf/tests/builtin-test.c          |   1 +
->  tools/perf/tests/shell/trace_btf_enum.sh |  61 ++++++
->  tools/perf/tests/tests.h                 |   1 +
->  tools/perf/tests/workloads/Build         |   1 +
->  tools/perf/tests/workloads/landlock.c    |  39 ++++
->  tools/perf/trace/beauty/beauty.h         |   1 +
->  tools/perf/util/syscalltbl.c             |   7 +
->  tools/perf/util/syscalltbl.h             |   1 +
->  9 files changed, 317 insertions(+), 24 deletions(-)
->  create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
->  create mode 100644 tools/perf/tests/workloads/landlock.c
-> 
-> -- 
-> 2.45.2
+--=20
+paul-moore.com
