@@ -1,226 +1,333 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2840A13D88F
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2B51311A1
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719234373; cv=none; b=NMlOmNs4JDCOarmnUDlmIfABjx027NrRzCl2V1kFaezcPrBNNfs7mK7hKGGxcOfan3PcQpf0+bE03YYonGUnRUI32me03+oabtcDymyVGkuOb3A1r4RbSmK2iYmNFge+6hSTxoYPRLTOgsm4QKGnJhTbBkjwZPxkVT192uD2WAQ=
+	t=1719234515; cv=none; b=SKFdEqwnEzLOxPf8mCeqtsJjq76xJtno6OKRq0CDiaJqGMrP/eFR8RCRM9FycjMdjnFlByHd8fporhO2drNnOW8XFcBpHMD1B9sku6K1gQeCpy9gIVRKPTQgRzD0BwQSHk0qFa4QQnL+zgJaUikx8M1pd0IgpiHr+zLv7LSmdMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719234373; c=relaxed/simple;
-	bh=ex+7rt4pI1Xvmjbse0OMdVHPQn7ofhcny9ssr3PsAmI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QN42n4cRohs4Ox3kxjF+Mm0ONO33J6Tj5/DIy/R69TidNB1RCTo4QrUz+F20p30m76swkboaIUMNcrnglxSgO2PlB8j9wLSM4LZb8iRNbHRurRm+MDw4y7v0qJiMiTV4B8zxWbWBVN57cJBqMEGSKzI790hQgqV0nJgRdevnBy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=remote-tech.co.uk; spf=pass smtp.mailfrom=remote-tech.co.uk; dkim=pass (2048-bit key) header.d=remote-tech-co-uk.20230601.gappssmtp.com header.i=@remote-tech-co-uk.20230601.gappssmtp.com header.b=1gJjEIM0; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=remote-tech.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=remote-tech.co.uk
+	s=arc-20240116; t=1719234515; c=relaxed/simple;
+	bh=NSk42wQXT5/Xm/NXv1x7pyxV8bcBaiuQanGLDAOqvow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BydeDPMlVRztkpGMIaDFFNC51kpsx220O3KdrsnVgkb0UydSWiRuuDHRnpSVkD0y+WC17Ju91FCqcJ7Km0bb9yWyJA8xAId8mr5tbBqRNMoM6vgzOIoaSWxNPdJ0sB8uyT9TueTJmy5O63aSskCc+Ns/Gm4qvXOKg2j/d2W0SWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pf3phNxj; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=remote-tech-co-uk.20230601.gappssmtp.com header.i=@remote-tech-co-uk.20230601.gappssmtp.com header.b="1gJjEIM0"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso473496266b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:06:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pf3phNxj"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfa71ded97bso3335770276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:08:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=remote-tech-co-uk.20230601.gappssmtp.com; s=20230601; t=1719234369; x=1719839169; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NvHQSEsF8s98aDBqYQPy5qb2e+DikeQTdgIkHVK8CO4=;
-        b=1gJjEIM0RTWKvkfAyan+/yzlnQSQTTvI/747gjv6h6XkHmn98rj7gj6kOKjeJvdSLk
-         RcYKZI0cRBoJaLVCFKSO5FvonRkJwP/61DUBf3lScTCf1ZO+wdpBDKAPk8rHFkLWK/iE
-         /3EbJJG8NVrrMg2T6bpvz9l7voKl6om5UBOD8sY36Pn9mp43dGKVVrarKpoevZa3TgrR
-         HResjoFvpzHyGevCkuirJlsFNsPhi+6u/MPc7Wu1+IIDKOdAHFaNX/sEDMIq7t3YpYmB
-         Z2wUbitAw/pX6aUOlzs1lsVtTp/4lOPyGS+wdtpWyVT4HWLIC15rRf2Bx8YKgupt9Rgi
-         +jNA==
+        d=linaro.org; s=google; t=1719234512; x=1719839312; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iJ0GaeWHZJU3apbaE0PkNJm8vYB/Ehr9D/Vuo2kLMSY=;
+        b=pf3phNxjKs6enxhgGaf5LiavBYcKvhKZHABr5D3a8MkDwZTuHmHA3uz+lAgIkaIdKw
+         /CpkkMEnG8sgt5oL8DFb5R/XTs/6IOJSmPQoJ9mbVXF81M2eP1xeGsCFBKMHruAwUd2Q
+         Sr2uwxl8zE4vnx3fkQJp6U8/MK6f6ABqzL/wtmykqD3CMP64wjtQxMOA2UCfYglaiTvs
+         4ldV7g5h3nrVgO+VWuofqnzFMajU5jmDeQD/Pn8RigVlmXjvu6BpfuO2NTl6ryaWT5Fa
+         OhXbKCZEzPxdfXUuQSvz64VfxuU7hJG/+O/4S4flAqiEyG2JQfxsNY3DraOsPu1nF/fK
+         pfng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719234369; x=1719839169;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NvHQSEsF8s98aDBqYQPy5qb2e+DikeQTdgIkHVK8CO4=;
-        b=p6Tz93FtqpIFbVsc1tqSE07AWWTtub6Rja48onWdbvoXfuPgE6l4tML5a/Oz4gbcfe
-         qqsGQmprPjC7lDdquRScY90um6b9jeuCte5/zOkirT4XcP7P0Rg2eDwV9sOtc4z+jHAV
-         NV1M/P8PHUkWCH/1acnvYRRf/twvONNpvI+KugtCdWU+Ufk+s2ZsFJhsNHLrp3lAIO62
-         GvPcEPKrA5oC6jOSCLhXCidfi8/WwDKIrWXqUmCzILvg8VQi0YB4M6WFJVk2X2+pz4wW
-         wBzRJExKBlaHdd6xzxKsAHDvzhW5Tqu3jBpfx9KWuRdid2Z6d5GIhEdlLH3FWFpuwXez
-         j+VA==
-X-Forwarded-Encrypted: i=1; AJvYcCXakP/FaQ3ZJ81D6XvQK8WrKBab3A9ZBuEUc/De85wz1Uc04vXlhY+zX7x+/gYVpcEMD1ZWPrVhs7hgqSrqB10TvKKV1au6jBQRESnN
-X-Gm-Message-State: AOJu0YzPpDXddA29ahW7xW7lVn4omg63OhSWT7/n4nsLMJislFj1Ptbn
-	c+4mmksHhncsDdF3VujQks51m78RIg4jBZebghO/ijLxE+UQyCFWQj6iUibG4+4gcpLcsnWXYQw
-	W+cpvBtbSdrPs0IaP+SYfJr6BI/xS7xT05zB9g7UByyCbKlErnRrX7Hum35ylabTyi8pRhmftKu
-	VZWY46RN9LAvHS18T3iBlGPFCFOPE=
-X-Google-Smtp-Source: AGHT+IHLYhIo10rbRWz1dfrBxzGxpNEXMT580cBsYCelbQrN06els0yuR7g8+LyMgd9+sd/SRxin2w==
-X-Received: by 2002:a17:907:c78e:b0:a6f:bc02:a008 with SMTP id a640c23a62f3a-a7242c4de49mr335996166b.4.1719234369354;
-        Mon, 24 Jun 2024 06:06:09 -0700 (PDT)
-Received: from admins-Air ([2a02:810d:aec0:2a54:f136:1973:486:27b7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7240f37b16sm251177566b.109.2024.06.24.06.06.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 06:06:08 -0700 (PDT)
-Date: Mon, 24 Jun 2024 15:06:02 +0200
-From: Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-To: pavel@ucw.cz, lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add LED1202 LED Controller
-Message-ID: <ZnlvOuvMQmJFrfSX@admins-Air>
-References: <ZniNdGgKyUMV-hjq@admins-Air>
- <7a080980-a247-4d17-88f7-19899379e1a1@kernel.org>
+        d=1e100.net; s=20230601; t=1719234512; x=1719839312;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iJ0GaeWHZJU3apbaE0PkNJm8vYB/Ehr9D/Vuo2kLMSY=;
+        b=hJGsN7nd4KTSFIc/7DjKdKXC7xzwdPZnOFoJ37KW0nsbn963AHcNzZkOJ4Vj120T9d
+         t/PHtOJb1XAnVgD5eaugx0eQv0sdV/SkbzUnqJPaSXO7/s43zECq39lLR4fDhhCSjBd7
+         qta9zEzxN/vBbxCbWm2YRUUIIhW/tP6tnBflwkNGMSPHCc+Db1GVR56hUDLtnd0S387x
+         N5zKYnm7yt+2VR2BRxigIszvhwIux50TCV1EQJ7gjgyPc20Tbe9JezyrDxO/QwEuJ3Ts
+         FxgadogTozD5+lvnl3Q+g9AvmDBxMqPeWW8cD7y0cqxmrGO6FUzENw1ZQt2vn2Yhv2IB
+         6JFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTihV4s3ouXRsHhuoOIV8YiKD2irtmanXVCvYUy/eCOGAtQb1TyYc80nw0fxaG2CgTmu3crL7I+4zStMVR9cBmzPlCgAsqgDkUHax8
+X-Gm-Message-State: AOJu0YzS/oGODWHdOnBZQm7M5GCxUzn56dUd6W90Xk1l16wZqmY21srY
+	YVVdO+myqr8832w+vRZlJ1v+RdHW+kEsvZIRaodHPmKEzTuocn9tEgmf8cL9L74qNEKWcmwZ6bG
+	phmOAcFobVGOYpAeZ5Pdvnv6hTOWzB1kYjnZqWg==
+X-Google-Smtp-Source: AGHT+IE/6w9SX4vD+UyerjeEC2niu6U7wagAXCpv5/FdgO2Xn6aChU2WgKm6SQVmwy1mG2UdMHIk7z4HCPL2yG6vkn4=
+X-Received: by 2002:a05:6902:f0f:b0:dff:9d2:28c0 with SMTP id
+ 3f1490d57ef6-e02f9fcb425mr2801750276.21.1719234512544; Mon, 24 Jun 2024
+ 06:08:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a080980-a247-4d17-88f7-19899379e1a1@kernel.org>
+References: <20240624-b4-rb2-fixes-v1-0-8d763ee4e42e@linaro.org>
+ <20240624-b4-rb2-fixes-v1-3-8d763ee4e42e@linaro.org> <8411fee8-7e09-421a-a52b-487acd3a3e24@linaro.org>
+ <CAA8EJpoifd-Z175ZX6f6Pw+bQHY4F-rX05YoqJNr810_1KLm9Q@mail.gmail.com> <95a69492-afc2-4215-aa50-5d7aedbb1556@linaro.org>
+In-Reply-To: <95a69492-afc2-4215-aa50-5d7aedbb1556@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 24 Jun 2024 16:08:20 +0300
+Message-ID: <CAA8EJpodS=x9BZwpnOLN2eOVA31pNy9YT7rJjVfKqAKJ7c3O_A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: prefer host mode on dev boards
+To: neil.armstrong@linaro.org
+Cc: Caleb Connolly <caleb.connolly@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 24, 2024 at 07:02:12AM +0200, Krzysztof Kozlowski wrote:
-> On 23/06/2024 23:02, Vicentiu Galanopulo wrote:
-> > The LED1202 is a 12-channel low quiescent current LED driver with:
-> >   * Supply range from 2.6 V to 5 V
-> >   * 20 mA current capability per channel
-> >   * 1.8 V compatible I2C control interface
-> >   * 8-bit analog dimming individual control
-> >   * 12-bit local PWM resolution
-> >   * 8 programmable patterns
-> > 
-> > Signed-off-by: Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-> > ---
-> > 
-> > Changes in v2:
-> >   - renamed label to remove color from it
-> >   - add color property for each node
-> >   - add function and function-enumerator property for each node
-> 
-> Fix your email setup, because your broken or non-existing threading
-> messes with review process. See:
-> 
-> b4 diff '<ZniNdGgKyUMV-hjq@admins-Air>'
-> Grabbing thread from
-> lore.kernel.org/all/ZniNdGgKyUMV-hjq@admins-Air/t.mbox.gz
-> Checking for older revisions
-> Grabbing search results from lore.kernel.org
->   Added from v1: 1 patches
-> ---
-> Analyzing 3 messages in the thread
-> Looking for additional code-review trailers on lore.kernel.org
-> Preparing fake-am for v1: dt-bindings: leds: Add LED1202 LED Controller
-> ERROR: v1 series incomplete; unable to create a fake-am range
-> ---
-> Could not create fake-am range for lower series v1
-> 
-> 
-> > 
-> >  .../devicetree/bindings/leds/st,led1202.yml   | 162 ++++++++++++++++++
-> >  1 file changed, 162 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/st,led1202.yml
-> 
-> yaml, not yml
-ok, will change
-> 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/st,led1202.yml b/Documentation/devicetree/bindings/leds/st,led1202.yml
-> > new file mode 100644
-> > index 000000000000..1484b09c8eeb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/st,led1202.yml
-> > @@ -0,0 +1,162 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/leds/st,led1202.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ST LED1202 LED controllers
-> > +
-> > +maintainers:
-> > +  - Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-> > +
-> > +description:
-> > +  The LED1202 is a 12-channel low quiescent current LED controller
-> > +  programmable via I2C; The output current can be adjusted separately
-> > +  for each channel by 8-bit analog and 12-bit digital dimming control.
-> > +
-> > +  Datasheet available at
-> > +  https://www.st.com/en/power-management/led1202.html
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - st,led1202
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +patternProperties:
-> > +  "^led@[0-9a-f]+$":
-> > +    type: object
-> > +    $ref: common.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> > +    properties:
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 11
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/leds/common.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        led-controller@58 {
-> > +            compatible = "st,led1202";
-> > +            reg = <0x58>;
-> > +            address-cells = <1>;
-> > +            size-cells = <0>;
-> > +
-> > +            led@0 {
-> > +                reg = <0>;
-> > +                label = "led1";
-> > +                function = LED_FUNCTION_STATUS;
-> > +                color = <LED_COLOR_ID_RED>;
-> > +                function-enumerator = <1>;
-> > +                active = <1>;
-> 
-> This did not improve. First, which binding defines this field?
-> 
-it's a new field I added, but if you would like for me to use another
-please advise.
-Depending on this value, the enabled/disabled bit is set in the
-appropriate register, and the led appears with the label name in sysfs.
-Hope this extra info helps in helping me pick the appropiate binding. 
-
-> Second this was never tested.
+On Mon, 24 Jun 2024 at 15:33, <neil.armstrong@linaro.org> wrote:
 >
-are you referring to the automated test done by the kernel test robot?
+> On 24/06/2024 14:31, Dmitry Baryshkov wrote:
+> > On Mon, 24 Jun 2024 at 15:28, <neil.armstrong@linaro.org> wrote:
+> >>
+> >> On 24/06/2024 14:23, Caleb Connolly wrote:
+> >>> Generally, when given the choice these boards should prefer host mode
+> >>> since they're SBCs. When attached to a laptop (which is host-only) they
+> >>> should still fall back to peripheral mode.
+> >>
+> >> It's really not what I observed on sm8550/sm8650 QRD/HDK, as the power
+> >> is setup for peripheral by the bootloader and without an actual UCSI/PD
+> >> negociation it would only be functionnal as peripheral mode.
+> >>
+> >> So this is definitely untrue on sm8450/sm8550/sm8650 HDK/QRD/MTP.
+> >
+> > But we now have the UCSI support for those platforms, don't we?
+>
+> UCSI doesn't care about role-switch-default-mode, it's the default
+> fallback role to set when no role was explicitely set by UCSI.
+>
+> Setting host won't make it work because the power support is handled
+> by the UCSI firmware. setting role-switch-default-mode = "host" will
+> make the USB port unusable if UCSI fails to start since it's
+> physically set to peripheral mode.
 
- 
-> Third, where did you give me any chance to reply to your comment before
-> posting new version?
-> 
-I think I have a wrong understanding of the process or mutt client is missconfigured
-or missued on my side.
-I've been replying to your emails in the mutt client, but sending the patches with
-mutt -H.
-But the changes you mentioned related to function on color, I don't know what should have happend there.. 
-I sent a v2 with the changes you indicated.
+Let's not mix the source/sink and host/peripheral, those are
+independent. But I see your point. Neither TCPM nor UCSI check this
+property. So it seems it's incorrect to set it even for the TCPM
+hosts.
 
-Thanks,
-Vicentiu
+>
+> Neil
+>
+> >
+> >>
+> >> Neil
+> >>
+> >>>
+> >>> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> >>> Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+> >>> ---
+> >>>    arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 1 +
+> >>>    arch/arm64/boot/dts/qcom/qrb2210-rb1.dts     | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/qrb4210-rb2.dts     | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8150-hdk.dts      | 1 +
+> >>>    arch/arm64/boot/dts/qcom/sm8350-hdk.dts      | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8450-hdk.dts      | 1 +
+> >>>    arch/arm64/boot/dts/qcom/sm8550-hdk.dts      | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8550-mtp.dts      | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8550-qrd.dts      | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8650-hdk.dts      | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8650-mtp.dts      | 4 ++++
+> >>>    arch/arm64/boot/dts/qcom/sm8650-qrd.dts      | 4 ++++
+> >>>    12 files changed, 39 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> >>> index c4cde4328e3d..bac4ed5874b6 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> >>> @@ -657,8 +657,9 @@ &usb_1 {
+> >>>
+> >>>    &usb_1_dwc3 {
+> >>>        dr_mode = "otg";
+> >>>        usb-role-switch;
+> >>> +     role-switch-default-mode = "host";
+> >>>    };
+> >>>
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>> diff --git a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
+> >>> index e19790464a11..bece4896ca23 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
+> >>> @@ -593,8 +593,12 @@ &uart4 {
+> >>>    &usb {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_dwc3_hs {
+> >>>        remote-endpoint = <&pm4125_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+> >>> index 1c7de7f2db79..17d36f0ef5ab 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+> >>> @@ -661,8 +661,12 @@ &uart4 {
+> >>>    &usb {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_dwc3_hs {
+> >>>        remote-endpoint = <&pmi632_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8150-hdk.dts b/arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> >>> index bac08f00b303..fe548d795490 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> >>> @@ -695,8 +695,9 @@ &usb_2 {
+> >>>
+> >>>    &usb_1_dwc3 {
+> >>>        dr_mode = "otg";
+> >>>        usb-role-switch;
+> >>> +     role-switch-default-mode = "host";
+> >>>    };
+> >>>
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pm8150b_hs_in>;
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
+> >>> index e031ad4c19f4..20d5c54cfcf9 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
+> >>> @@ -847,8 +847,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8450-hdk.dts b/arch/arm64/boot/dts/qcom/sm8450-hdk.dts
+> >>> index a754b8fe9167..ebafcbe6859e 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8450-hdk.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8450-hdk.dts
+> >>> @@ -1098,8 +1098,9 @@ &usb_1 {
+> >>>
+> >>>    &usb_1_dwc3 {
+> >>>        dr_mode = "otg";
+> >>>        usb-role-switch;
+> >>> +     role-switch-default-mode = "host";
+> >>>    };
+> >>>
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> >>> index e0dc03a97771..1efda478b7b9 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> >>> @@ -1252,8 +1252,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> >>> index 26dfca0c3e05..7b05932f9c36 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> >>> @@ -945,8 +945,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> >>> index 361b0792db4f..744bdc846e70 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> >>> @@ -1211,8 +1211,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+> >>> index 092b78fd8a3b..f07a56583e7d 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+> >>> @@ -1300,8 +1300,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+> >>> index d6f91580ba8d..1a9a31423af4 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+> >>> @@ -839,8 +839,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+> >>> index bd60c2770da2..031b7ada8eb1 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+> >>> @@ -1285,8 +1285,12 @@ &ufs_mem_phy {
+> >>>    &usb_1 {
+> >>>        status = "okay";
+> >>>    };
+> >>>
+> >>> +&usb_1_dwc3 {
+> >>> +     role-switch-default-mode = "host";
+> >>> +};
+> >>> +
+> >>>    &usb_1_dwc3_hs {
+> >>>        remote-endpoint = <&pmic_glink_hs_in>;
+> >>>    };
+> >>>
+> >>>
+> >>
+> >
+> >
+>
 
-> 
-> Best regards,
-> Krzysztof
-> 
+
+-- 
+With best wishes
+Dmitry
