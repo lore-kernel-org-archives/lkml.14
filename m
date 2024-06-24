@@ -1,80 +1,71 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4B2646;
-	Mon, 24 Jun 2024 00:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C1A1361;
+	Mon, 24 Jun 2024 00:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719189311; cv=none; b=cs1c3uIcjs/YTFwSt6mrOdh9nWA5VCeZU1PMBHo0TjKDC60MjmwLYh2uhYPDGKsn+6/CNQ2oUD2x4UqZrKOobIlbqtNXjxIYN/wrUz5SQbtlUlLomUc0Z8nLLIYTXXgnBd3fLE75TDpNjGfW02WrrVEsDEYHnevLLiJ3+hr5JMY=
+	t=1719189493; cv=none; b=DPI6SJrde9ckXWl+oCnhWy6RI5Y222/hUAsyBiVVQ1uVL6AF8dNRi4HgflsK+matW7U8IvlK65gMD6Q4MYE9i8pk/kTC5SUQfMnmIHxTVdcFUB2v/YV42LTsKdWsZ6GjdEjavG8gHbc468ZkVTJLLzHJJIWUemdS2KLY9yIARgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719189311; c=relaxed/simple;
-	bh=3lSzublKdlhnIF8lHSe7BLk/CTyH+T1oOQ9ZcOTKUOs=;
-	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
-	 In-Reply-To:Content-Type; b=DjrXMqEkL8v7MHPOYpAcKOdEw7wz/1eSUNHCRZQJDYbGakdBRzbk27qfIYMS5TZn58kdZzfEbFD+Yiv9DWBD52A2n8mFbqUEGEhiPqC8CQuilqv/hzewXEVULzXYJ74c+bYRjn93bXu8cWoGua6oTpxDUiSoZ0wXY++47DEh550=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W6prd0wKlznX5W;
-	Mon, 24 Jun 2024 08:34:57 +0800 (CST)
-Received: from kwepemd500014.china.huawei.com (unknown [7.221.188.63])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9CBEC1400D6;
-	Mon, 24 Jun 2024 08:34:59 +0800 (CST)
-Received: from [10.67.121.2] (10.67.121.2) by kwepemd500014.china.huawei.com
- (7.221.188.63) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Mon, 24 Jun
- 2024 08:34:59 +0800
-Message-ID: <6678BF32.10609@hisilicon.com>
-Date: Mon, 24 Jun 2024 08:34:58 +0800
-From: Wei Xu <xuwei5@hisilicon.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
+	s=arc-20240116; t=1719189493; c=relaxed/simple;
+	bh=DKEYpgz0d3KtkghyncW6fFCgulDpzB03f6swFpdnWE8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YhFpPb7K+FMpO0p39GQ1vl38CGZKgc3O0ymEUO2H/GQfq6rMDBl7lOixwsEJW8yJg/FMbiOuYYc3alkYngCfZa8fSvatPquc2uI5A5WZVlgf42jtlLM+f17xMje8RhN6lYE+IE52W4HRD2jA+eff6Dvqa7RzaBW4sat+3hJ7sTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=ikWtRn7y; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="ikWtRn7y"
+Received: from [192.168.68.112] (ppp118-210-79-194.adl-adc-lon-bras32.tpg.internode.on.net [118.210.79.194])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5D51E2009F;
+	Mon, 24 Jun 2024 08:28:18 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1719188905;
+	bh=DKEYpgz0d3KtkghyncW6fFCgulDpzB03f6swFpdnWE8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ikWtRn7yN7Ise0vcKddcWtskvinN6xOYIvvgomBM0u3faQxCrY2BhN/6QG9cQYymI
+	 Alg6XDXdF2cal8IZz2T3NcoiHNf1jq3vV1eVaC1NPkmOm9MiFlD3FUqHrVKnIW+4rR
+	 tt/OZguADkA/5xfiWttYJ0l7RdJUTW0Zn4iyEFUoVwfEz3Zgi6f4xmaWoXv+lvkosu
+	 rz69u2eveZL7rzRWySQh9cW3dHe2Srdfv4eOslqM2tuMZ8dCX1i/Zh87NvBxgPLchk
+	 B1V0Gs9X5DvSkmbXBkaNMBlUTlOQtxETkNCbGsqMrTpUXEUFUJ6pgGyTZ0/TsNLdNc
+	 WAT3bpeO9l2Jw==
+Message-ID: <b522733009008a22dd8975a92ad6d0b1c038c452.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 01/10] iio: adc: aspeed_adc: use
+ devm_regulator_get_enable_read_voltage()
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>
+Cc: Joel Stanley <joel@jms.id.au>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Andreas Klinger <ak@it-klinger.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>,  linux-iio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,  linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Date: Mon, 24 Jun 2024 09:58:17 +0930
+In-Reply-To: <20240621-iio-regulator-refactor-round-2-v1-1-49e50cd0b99a@baylibre.com>
+References: 
+	<20240621-iio-regulator-refactor-round-2-v1-0-49e50cd0b99a@baylibre.com>
+	 <20240621-iio-regulator-refactor-round-2-v1-1-49e50cd0b99a@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Carvalho Chehab <mchehab+huawei@kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-CC: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: hisilicon: document hi3660-usb3-otg-bc
-References: <20240518204443.122586-1-krzysztof.kozlowski@linaro.org> <171914563307.48201.2100106894701016613.b4-ty@linaro.org>
-In-Reply-To: <171914563307.48201.2100106894701016613.b4-ty@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd500014.china.huawei.com (7.221.188.63)
 
-Hi Krzysztof,
+On Fri, 2024-06-21 at 17:11 -0500, David Lechner wrote:
+> This makes use of the devm_regulator_get_enable_read_voltage() helper
+> function to simplify the code.
+>=20
+> The error return is moved closer to the function call to make it easier
+> to follow the logic. And a few blank lines are added for readability.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-On 2024/6/23 20:27, Krzysztof Kozlowski wrote:
-> 
-> On Sat, 18 May 2024 22:44:42 +0200, Krzysztof Kozlowski wrote:
->> Add dedicated bindings for the Hisilicon Kirin 960 USB OTG Syscon,
->> to fully document the block and also fix dtbs_check warning:
->>
->>   hi3660-hikey960.dtb: usb3_otg_bc@ff200000: compatible: ['syscon', 'simple-mfd'] is too short
->>
->>
-> 
-> One month waiting, so I'll take this one as well.
-> 
-> Applied, thanks!
+Nice cleanup!
 
-Fine to me.
-Thanks!
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 
-Best Regards,
-Wei
-
-> 
-> [1/2] dt-bindings: soc: hisilicon: document hi3660-usb3-otg-bc
->       https://git.kernel.org/krzk/linux-dt/c/7613195d37d69ff92c9bc55599037615212ce19c
-> [2/2] arm64: dts: hisilicon: hi3660: add dedicated hi3660-usb3-otg-bc compatible
->       https://git.kernel.org/krzk/linux-dt/c/bc9ec165d066af29661ece91f9cbf74e18ec0a5a
-> 
-> Best regards,
-> 
