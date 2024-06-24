@@ -1,179 +1,241 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2065.outbound.protection.outlook.com [40.107.244.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A29137906;
-	Mon, 24 Jun 2024 11:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719227478; cv=fail; b=PXFsuUFWwDOnOodmStzRVnyZfzrJHk5EhpmBZM8GvDzja2mfBCVULzVOzZCtQKH1I3TRpgZRr8aQT6k9FED5kZaFnhDKsUS1Zov+LR5zdljrP3fbto7OkJC1QQS/jlALC3C6Up3B3E0uWCqGE9trKYqZ8gLnCG6h5B3j8XwuomY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719227478; c=relaxed/simple;
-	bh=MeXbAYJEhBVL3PjShFQGm20VmdVIzePkw/davPSfatI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GaisRPmVrAYQGKYlKI4422xoOLC7F+wmMWSbdwbQx5gGMLiWHuBq/7gRogEtP7P2eE9RVkYtiAb2i6t3hHU8otgaYpYP6uCSy3Xctn6aE1/SaK/lly9FSkfUp712t4tRLM58LgtetN7WmkY/Dei3rpW5620HYSYqdUE5WT+fnvg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GlqjA9KR; arc=fail smtp.client-ip=40.107.244.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B32912F360;
+	Mon, 24 Jun 2024 11:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719227540; cv=none; b=q8rIevpNCO7hIqmR4+ANvpSlchAFiVD6gBoKJ33GkQ8eF5Rx2om4oOQSyGgOkyuIdHqA3dZkeSFatxTevbICpFg870qsfQ0QBiQfUMamaDbDZr0gpNMQMZESLzZV7VgwmtTKvpInuLz46TbU3+zlk4YZtWxOAtF8vshyde5vKwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719227540; c=relaxed/simple;
+	bh=ZXKT/3KWbLoO/1so8mlAmDSqpch3CYn1bRPyJ4+5NAg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RrlMTLLJROiX2MJz8KAn6nbhEWygJKGOOjLRWMcHMZ4lXtqrDFDj8RZIM3l0DhxsYaLlgXgynVbkUeAFeaAcK64CBdJABc8nH9GMApWa5FdghK4udzSN6x7107+vdZqcI02WAwRFL+YVJ4lTiGBnBflwmA/J6zU700ztuCzQu2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLG0MI/A; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GlqjA9KR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZCkn5X6xx0T/KYDwVbBiC+B7get5X1utiRFtbcqy5MelclD39fNEE2x3hgabUcvgcBd61r3JCs5II+a4haBiFbnoos5Q2FVt0lE6HTPx6Ssk2fxufCS/A0aa630nJU1gcgOfn2tj4krrQUIQe0dxYKksN9FN0Xqz4JgagDKruxZGuxuK9aRfu1CJfxhz41Ula7hl7ynu/uM7EtNWsOzUUYuSqmmBDLHAmmYVNQ3Ks0VfrBmtpMabVx53iNbL3mJWNI1uTLbFzG5EYRVYGkumwqKZSv+RofqBIfv1ktOOhDB1Ck1HLYC0lyuVChOxnjt2UZA5plFYLkgyy8h966rQgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vpmeOYSvL/rtN/8yt9CORoSynVsqeDSldmvXtJ8YvnM=;
- b=UDoMUOWkwpiyH2UI5WFWOBj6JSLkbAq1M+tS6dh7mYLwienr+QhH7RgPsvorm8FVJw62ZUvNEiLNtreCKCJkCdQlMWRcni3YNRuMxfR1IfVPVpiNJH40pub8/AdbQ64f5FeqJkDlhwRKsPa6p1bg/lCd5sKl9zDlMgmyt4nJsbrnOixCkby3sIg6TNrzE57TLZxL2uyxLnJXMMmIRo3hsemu69VpNJOwQMCQRqSRZLSt+J9u4a9MJdnpzpkZ82QzNCl1fqhx/lZt4x1MsxQaDAs1sDaF9UoL6eAEHo7ErSPIGJUyxB+5ORyWQt6qv76MmFoQ+sBH2QnSXuW5uJPuKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vpmeOYSvL/rtN/8yt9CORoSynVsqeDSldmvXtJ8YvnM=;
- b=GlqjA9KRxEAU6MVvlT9OF/T7H5uG7ysrvWmFZgvQn4p8x0ZsX6VWgjct6Z4ioNoNTs5DVL2vj1pU3UzxzIgEnCHtNnIVgj8S50Nufql9B0xZkBxWrdpQpamKSlYD4liDR2YG1Rk7OLu3cYJZbuZOr4gAw1IUg6fyT4CfLRUAU7A=
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
- by CY8PR12MB7732.namprd12.prod.outlook.com (2603:10b6:930:87::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
- 2024 11:11:13 +0000
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::b25:4657:e9:cbc3%7]) with mapi id 15.20.7698.017; Mon, 24 Jun 2024
- 11:11:11 +0000
-From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "kw@linux.com" <kw@linux.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Gogada,
- Bharat Kumar" <bharat.kumar.gogada@amd.com>
-Subject: RE: [PATCH 0/2] Add support for Xilinx XDMA Soft IP as Root Port
-Thread-Topic: [PATCH 0/2] Add support for Xilinx XDMA Soft IP as Root Port
-Thread-Index: AQHaxibJMuZJsYxVN0i7Hh69+Yt78bHWwhEQ
-Date: Mon, 24 Jun 2024 11:11:11 +0000
-Message-ID:
- <SN7PR12MB72016D96FDE578C1A9CAE0FC8BD42@SN7PR12MB7201.namprd12.prod.outlook.com>
-References: <20240624110755.133625-1-thippesw@amd.com>
-In-Reply-To: <20240624110755.133625-1-thippesw@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|CY8PR12MB7732:EE_
-x-ms-office365-filtering-correlation-id: 4b33f284-dd1f-4d30-6529-08dc943e5b0b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|366013|376011|1800799021|38070700015;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?TYg9mFW8uZNncipU4rgNt32q/jpug0Xv4WxPg0Mf8aNuefM5MCWxpTSkUd4A?=
- =?us-ascii?Q?2CwucKkwrlcPmPrjcbrzlrlN4jbY4920xqxJhVAACro9TdCfuSkNbaz3BpQB?=
- =?us-ascii?Q?GVAKF8Os/y//HIBzXwEQkQtb4SpwGFZy9BimZtjxOy6KCHoAEQ92OHbnVaDm?=
- =?us-ascii?Q?+5T65u3QwBPO87KtEJUC1joTaZce3XqQGaovnWjd3vuJSX/bFZMd2m/s3fHv?=
- =?us-ascii?Q?QW3CP5suu1DntzfezyApW8jK5myMSuz2cFFNoBzaRyI+wVkGR1TS3wS1/dHt?=
- =?us-ascii?Q?NI7N3pKLo0rxG/IF0+ypfLchqwN/uCWFrSt30MYeFEMIlS8RruZsJcWuFhKG?=
- =?us-ascii?Q?kOjbIB6btmCV79FjV5ZiZVRcDLewsMKa3K9GIVsbOw0SHbpZDoks5t9WZwJi?=
- =?us-ascii?Q?yC3ztB6y5GZR+/B+9hjerlswCBrYX3U+LPCbVyrCRS4CTF8N9/qVHAl87H4N?=
- =?us-ascii?Q?Le3ouZRXYnCG2/MjSWNF6ntxMEDfnn7CD9okY4JJC3sCdFG6uw3NtHbXSHhT?=
- =?us-ascii?Q?7qnN/kE7JSgNbUaPfVd5gyvDPOAI/485Ehgik6nZTPBiOuFjV7nWkQfxF6l1?=
- =?us-ascii?Q?Dw9ZP5nuDavkMzD03IJdsRTxVnSrEdjxOFznr/HPd2rpB8XHyHKQQIAZ/iuk?=
- =?us-ascii?Q?PMOJIoyRrHSdGvHe2wRiH7sNizj9F1lAG1GHRz+qhAT6EZ1vgCsUU8I8E1MU?=
- =?us-ascii?Q?ItH5LpPWu9tHCMe1hcck+3WqT2XL/etutdYuHcbhxaxoZMlBTNofETJ30A3o?=
- =?us-ascii?Q?0hLn7ggO9O/5+UeY+8i1ivVCxuHsYf+/Uv++bnNtgJ72LBG7X9i9ddoygI3O?=
- =?us-ascii?Q?wbaF3Ti65bkEotscV9svmHVSRJK0DNGsknC6H79cENCcnA8jn0e7ZQpufYOH?=
- =?us-ascii?Q?Ruztjx12qBGP2zatHTXdYED/rCCV71S0Nudoo+zu/+L75G306uju4FaEsXrx?=
- =?us-ascii?Q?F4hwWd5dmITAUqdQ9tiKQaPjkGBaJZgC9Q/RY3QPPtsdtq+Sz0y2aZSMde+H?=
- =?us-ascii?Q?+EqSvyDKgLTNrHXfYuzcyNUBnnj4M4nUQk5pM7OFUmj7xpxndh67UiSKc4sK?=
- =?us-ascii?Q?Na84E4aqcTYZmQl69w/hYt9la1B7D/1qDdi+95qLyw60HbRz9X/Oc5g05pkl?=
- =?us-ascii?Q?9IBJeZW2RAjwgE48WwLKYY1ZsbwirX53A0JUVZ43RgNsWng2Bwlp1hK9TtLE?=
- =?us-ascii?Q?qwDuhbvs6bA0dEZnKVGuWLd561aXjPyStSgGOVmLfkLAgWjdObU9N9TwfUuf?=
- =?us-ascii?Q?U22vQKHEs7j6E+qVL6ESKgbMcUoWHsBiRCbypxvXFTBe4RoAPoHV3X3opMOK?=
- =?us-ascii?Q?UYVkYdYEvJs/4O3JCmI2V8RHMx6MJexpXw30WCmTBMiba3cMEiluVHwB3ioE?=
- =?us-ascii?Q?DOQt5No=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(1800799021)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?dP7wYdchYAWaA6YbbG9R/x2a4X+Y2eZR7YaINt21hMyKq6C98dH1vkNowe75?=
- =?us-ascii?Q?MdSMhVrsLYJoF0GM1KYoY8i43Pqe1Y+mTx04j/qVsJu/NUgVjtR5Tuq3p2xc?=
- =?us-ascii?Q?J81qBkyFgY/Os9Zpp3k7/pKGf0hfgTVmtR4PULX6BGRObMsid97StwPnvnVH?=
- =?us-ascii?Q?xWdFQEcKvhqLuDwF03uqMhUPQTrEOvwXMWDR/estmkXwTg8w8YcchI/fPPOo?=
- =?us-ascii?Q?aoaHY6OAxcikN9rG9Ozo2MTHesN7cbwgxmdq+VnVUYa3zE/lDmIRA+HAvsMB?=
- =?us-ascii?Q?ntSaDpEkKClaCPBi6YxOUSVhz+aePEmWWSpYqCtmhkpVQ7IaDXN7iUWZ2C4+?=
- =?us-ascii?Q?PiP4K/3OVJVj6uMkaUJ50Tv3IEk2FtqEpGjlrn7n0VkCkO9T9y2EvJn/dzA8?=
- =?us-ascii?Q?m5Ff93zFi1zibi6HDDdt3yiJAocjX1/4cR9sOk44B8Kj0aq13jBO8PLafdSd?=
- =?us-ascii?Q?7HCJmD8rIjbvMVQdX/peTE9+3GlZZ0rUoJ9SEaDE/BhroAYv82o8qIjDmWhl?=
- =?us-ascii?Q?FuMPfHvXSVt8Dc26hewdPX+fTyn0h0t7vsfhNy5mk0YOYTkiEmmlaV8QGnc/?=
- =?us-ascii?Q?4OWjks7iOboC5AfBOsSdM6cf8WQRl4SPZ2zrXwxUVrAHa3bt45m0UMfPLFsO?=
- =?us-ascii?Q?4xhNm646kBXwOEJ3JULfHxfdtyHuqkYXo+3H/OwR9zewLnHZrh09tqAGIY3R?=
- =?us-ascii?Q?AtGMl5nXIlxS3BtxcyPl8mPVRdq8aJtMOiuAY75AAGshHZfdyUb+xhhKvuGC?=
- =?us-ascii?Q?q02cvrVRv5MeU5G9oeHVgqKwIzwZ/7yHKgB88SCLu8GE3FSuU3uFavGfn/k0?=
- =?us-ascii?Q?hoGYxPJD5dGO5YzRa3/Toxnwd6rOvZTJl0uGEG56/TGGTQIaBdCz8LJLp4Gz?=
- =?us-ascii?Q?unuXxBEGFhvbuNy2YZ913W7E8DShBr4+fCU+Nl3HCxyJiHw9Z0t2v0do0bFC?=
- =?us-ascii?Q?f37Taxa4GgEECv+TGfluwmis0vdGxuwq+u92mv14zbPRc09/mEGFf62TU0RO?=
- =?us-ascii?Q?5xO1KOLgxGT+n3c3fzd508KYP6PyVBO1fk8oMcWtP0KHXqFNSb3D36TYIaHK?=
- =?us-ascii?Q?nwViab8FH0J3q/rvOzd4FmSIuVg5lxuhCPLVB2eBNL3yWxhC0xqJaGmjM2o+?=
- =?us-ascii?Q?w9RctN2G7xKtHu5oFJ1R9lmU+px70a8R8u++8t60/MejyC7ZakSWLIlIZXiN?=
- =?us-ascii?Q?CEZ4vIG7br4b7smAKwd1kB0Wo1OX1shEyR0kfrvVxskMmO/sYVHljc6fJaye?=
- =?us-ascii?Q?xb8mHze4gbL2AWpQO71tGz4Xt0J2MWSS8SvmdT9rSa71f3yXJz2d+QQfD8Ju?=
- =?us-ascii?Q?ZpL9fq3+ajYAjy00wTNWw9+EUyXmJaLGvT5JEJWJFEQaGlaqWJv8A+x7RuAx?=
- =?us-ascii?Q?sPjnO1RLJrni6ratkn/mTsipSkHUh/sBpixRx7ZOo7nIq9dHSmYhJJqNzdWC?=
- =?us-ascii?Q?Nres0THP91EnMbyAFJc72YX3sGIUtK2hN0p+gP3AIs8ctAqEfGsrpDFIIOcL?=
- =?us-ascii?Q?VFfdaMVHYYUtgZCI9F7h48zjIDORlbda+jEt3hRJsplalLmlUiCXPeKvzK0h?=
- =?us-ascii?Q?4e0x1k48d50DGgKFFYE=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLG0MI/A"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6fd513f18bso256246966b.3;
+        Mon, 24 Jun 2024 04:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719227536; x=1719832336; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jPfmjkaomaMj0CLLUzRPw9Nbvo5OKvh2ZAXCqjjbkP0=;
+        b=XLG0MI/AXdjioUy4o07++w2a61zwXLOwVk3Ko/Bo4iyDOPe6rTMRm/EYS6PjwjYGvI
+         mic+KM499f3z74ltjPT820SxOmBXLO3qcAcNett9rVkSQ0F1WoN8KyTsl9Bs9/eSxUjY
+         M+KCjn/KQYicKHatMFotwZLT4BwKv0T36y97z6DLoMzneWsJ3QAQ8EHnj97JSK4LTMbA
+         taS9DiG3HwRHkBVJf9MxhxcB0pNOnEK5C8Hg/bZKag1xOm3adRbEBWoY0/ueqAlkDfHA
+         HHJOq6ll5OCKTNBxe87zUwFrRCHW22pEquVreE/oURS9NtJATqGFxOuNcYDbBBLx3a7w
+         SxKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719227536; x=1719832336;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jPfmjkaomaMj0CLLUzRPw9Nbvo5OKvh2ZAXCqjjbkP0=;
+        b=VjCqWMdneynmAfLMkGgQ4sIciizJ/E00zDLajpZcBp2e6EmVopT840rsxObWXjptN7
+         zOLiLvVAWL2MdXd2n0Eb+XGpJ3P//qyDdVknmbTzAkWMJm9qPJ2CXI4NqFHiV446vuTE
+         wfTfBtY8kTqsjBjF8Rl/7pi3DCbBG7s5PIy/XmtzeOrHz3+c1tX+hD7u6HZYhWivnmVO
+         X76Be3HCQoT+QjScMDThZOYrlpTVYBcojrXkdhXhtXoxYbXaznJBBrwB/Mt96xX1PwWR
+         NUgIgbYCx098sbkhX32kunH2CPWjJjbjvlZriIj7Tjl75SOWDThHF8QPUaVSJ0zVjS+o
+         bP4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWM7BUM1Ppn8GvE/kpUEmh+wxzm3UgVLBWnYOR6Srz1jd03SKSoNu9ug0f7I4d3o8L6SlLBkMNVgmMWfsgEUa4d3+XHIoKyTbnzzEqh7oZBdRSd3AudG5Hp8Ugf3cRO2OtdqGJT0Es+T9M=
+X-Gm-Message-State: AOJu0Yy+q6y4g3XK4FXlCzOw3QDP1PWSr2HFrWStmnv1eqR6mCcAeLLZ
+	o0iiG4vJhHdu8sMI4dj+zsdpA/bR+Oq2eEyX4mwlZclQn+hSQxN+
+X-Google-Smtp-Source: AGHT+IHPhhAvyv2SV918fWeWD31jqvLQpnNThN8xHEVm4+yEDSSnmeCZluPB1ZB3fdOp9no7cYgmYw==
+X-Received: by 2002:a17:907:1682:b0:a72:544f:63e4 with SMTP id a640c23a62f3a-a72544f6476mr154323066b.24.1719227536313;
+        Mon, 24 Jun 2024 04:12:16 -0700 (PDT)
+Received: from ?IPv6:2001:a61:35f9:9001:40df:88bb:5090:7ab6? ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7261aece51sm16707766b.153.2024.06.24.04.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 04:12:15 -0700 (PDT)
+Message-ID: <2dbc797b5f541fa639beea95b2437a292d3c0007.camel@gmail.com>
+Subject: Re: [PATCH] adp5588-keys: Support for dedicated gpio operation
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: "Agarwal, Utsav" <Utsav.Agarwal@analog.com>, "dmitry.torokhov@gmail.com"
+	 <dmitry.torokhov@gmail.com>
+Cc: "Hennerich, Michael" <Michael.Hennerich@analog.com>, 
+ "linux-input@vger.kernel.org"
+	 <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "Artamonovs, Arturs"
+	 <Arturs.Artamonovs@analog.com>, "Bimpikas, Vasileios"
+	 <Vasileios.Bimpikas@analog.com>
+Date: Mon, 24 Jun 2024 13:12:15 +0200
+In-Reply-To: <SJ0PR03MB63430F59E256C45E0C658F509BD42@SJ0PR03MB6343.namprd03.prod.outlook.com>
+References: 
+	<SJ0PR03MB6343CB033C1005A36B102BF89BC92@SJ0PR03MB6343.namprd03.prod.outlook.com>
+	 <ZnaJbqXcABKGIj83@google.com>
+	 <SJ0PR03MB63430F59E256C45E0C658F509BD42@SJ0PR03MB6343.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b33f284-dd1f-4d30-6529-08dc943e5b0b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2024 11:11:11.5898
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Wk4kbbrACuvfq4Mg/DDlrJmheiK/5lOE/51QT50HT+eBWJCF/pVwqIy7gJlvgoE6BnN4XFaHenTwnlSsTvQCaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7732
 
-Ignore this patch series
+Hi Utsav,
 
-> -----Original Message-----
-> From: Thippeswamy Havalige <thippesw@amd.com>
-> Sent: Monday, June 24, 2024 4:38 PM
-> To: bhelgaas@google.com; kw@linux.com; robh@kernel.org;
-> krzk+dt@kernel.org; conor+dt@kernel.org; lpieralisi@kernel.org
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Gogada, Bharat Kumar
-> <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
-> <thippeswamy.havalige@amd.com>
-> Subject: [PATCH 0/2] Add support for Xilinx XDMA Soft IP as Root Port
+On Mon, 2024-06-24 at 10:43 +0000, Agarwal, Utsav wrote:
+> Hi Dmitry,
 >=20
-> This series of patch add support for Xilinx QDMA Soft IP as Root Port.
+> Thank you for your reply.
 >=20
-> The Xilinx QDMA Soft IP support's 32 bit and 64bit BAR's.
-> As Root Port it supports MSI and legacy interrupts.
+> > -----Original Message-----
+> > From: dmitry.torokhov@gmail.com=C2=A0<dmitry.torokhov@gmail.com>
+> > Sent: Saturday, June 22, 2024 9:21 AM
+> > To: Agarwal, Utsav <Utsav.Agarwal@analog.com>
+> > Cc: Hennerich, Michael <Michael.Hennerich@analog.com>; linux-
+> > input@vger.kernel.org; linux-kernel@vger.kernel.org; Artamonovs, Arturs
+> > <Arturs.Artamonovs@analog.com>; Bimpikas, Vasileios
+> > <Vasileios.Bimpikas@analog.com>
+> > Subject: Re: [PATCH] adp5588-keys: Support for dedicated gpio operation
+> >=20
+> > [External]
+> >=20
+> > Hi Utsav,
+> >=20
+> > On Fri, Jun 21, 2024 at 10:44:12AM +0000, Agarwal, Utsav wrote:
+> > > From: UtsavAgarwalADI <utsav.agarwal@analog.com>
+> > >=20
+> > > We have a SoC which uses ADP5587 exclusively as an I2C GPIO expander.
+> > > The current state of the driver for the ADP5588/87 only allows partia=
+l
+> > > I/O to be used as GPIO. This support was present before as a separate
+> > > gpio driver, which was dropped with the commit
+> > > 5ddc896088b0 ("gpio: gpio-adp5588: drop the driver") since the
+> > > functionality was deemed to have been merged with adp5588-keys.
+> > >=20
+> > > To restore this functionality, the "gpio-only" property allows
+> > > indicating if the device is to be used for GPIO only.
+> > > When specified, the driver skips relevant input device checks/parsing
+> > > and allows all GPINS to be registered as GPIO.
+> > >=20
+> > > Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
+> > > ---
+> > > =C2=A0drivers/input/keyboard/adp5588-keys.c | 30
+> > > ++++++++++++++++++++-------
+> > > =C2=A01 file changed, 23 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/drivers/input/keyboard/adp5588-keys.c
+> > > b/drivers/input/keyboard/adp5588-keys.c
+> > > index 1b0279393df4..78770b2dfe1b 100644
+> > > --- a/drivers/input/keyboard/adp5588-keys.c
+> > > +++ b/drivers/input/keyboard/adp5588-keys.c
+> > > @@ -719,7 +719,7 @@ static int adp5588_probe(struct i2c_client *clien=
+t)
+> > > =C2=A0	struct input_dev *input;
+> > > =C2=A0	struct gpio_desc *gpio;
+> > > =C2=A0	unsigned int revid;
+> > > -	int ret;
+> > > +	int ret, gpio_mode_only;
+> > > =C2=A0	int error;
+> > >=20
+> > > =C2=A0	if (!i2c_check_functionality(client->adapter,
+> > > @@ -739,13 +739,17 @@ static int adp5588_probe(struct i2c_client
+> > *client)
+> > > =C2=A0	kpad->client =3D client;
+> > > =C2=A0	kpad->input =3D input;
+> > >=20
+> > > -	error =3D adp5588_fw_parse(kpad);
+> > > -	if (error)
+> > > -		return error;
+> > > +	gpio_mode_only =3D device_property_present(&client->dev, "gpio-
+> > only");
+> >=20
+> > Do we really need a new property? Can we simply allow omitting
+> > keypad,num-rows/cols properties in case where we only want to have GPIO
+> > functionality?
+> >=20
+> > In any case this requires DT binding update.
 >=20
-> Thippeswamy Havalige (2):
->   dt-bindings: PCI: xilinx-xdma: Add schemas for Xilinx QDMA PCIe Root
->     Port Bridge
->   PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+> I agree that we may not require another property however there are the fo=
+llowing
+> two options to accomplish the same:
 >=20
->  .../devicetree/bindings/pci/xlnx,xdma-host.yaml    | 41 +++++++++++++++-
->  drivers/pci/controller/pcie-xilinx-dma-pl.c        | 56 ++++++++++++++++=
-++++-
-> -
->  2 files changed, 92 insertions(+), 5 deletions(-)
+> - The probe function utilizes a function called matrix_keypad_parse_prope=
+rties(),
+> which parses the rows and columns specified - which I would have to read =
+as well in
+> order to identify if all GPINS should be configured as GPIO. This would h=
+owever
+> mean that in case this is not a GPIO only mode, we would have redundant c=
+ode
+> execution.=20
 >=20
-> --
-> 1.8.3.1
+> - If we avoid that and just use the return value from the function, it wi=
+ll print
+> out a dev_err message :"number of keypad rows/columns not specified " mes=
+sage.
+>=20
+> How would you suggest I should proceed? I will add the DT bindings in the=
+ v2 patch.
+>=20
+> >=20
+> > > +	if (!gpio_mode_only) {
+> > > +		error =3D adp5588_fw_parse(kpad);
+> > > +		if (error)
+> > > +			return error;
+> > >=20
+> > > -	error =3D devm_regulator_get_enable(&client->dev, "vcc");
+> > > -	if (error)
+> > > -		return error;
+> > > +		error =3D devm_regulator_get_enable(&client->dev, "vcc");
+> > > +		if (error)
+> > > +			return error;
+> >=20
+> > Why regulator is not needed for the pure GPIO mode? Please add a
+> > comment.
+>=20
+> We don't specify a regulator for our kernel and the driver seems to work =
+without
+> it. I agree however that it may not be mutually exclusive to the same, I =
+will be
+> fixing the same in the v2 patch.
+>=20
+
+What you need to ask yourself is... can the part work without a power suppl=
+y :)? Note
+that if you don't specify a regulator in DT and call devm_regulator_get_ena=
+ble(), you
+don't get an error. Just a dummy regulator.
+
+> >=20
+> > > +
+> > > +	}
+> > >=20
+> > > =C2=A0	gpio =3D devm_gpiod_get_optional(&client->dev, "reset",
+> > GPIOD_OUT_HIGH);
+> > > =C2=A0	if (IS_ERR(gpio))
+> > > @@ -790,6 +794,11 @@ static int adp5588_probe(struct i2c_client *clie=
+nt)
+> > > =C2=A0	if (error)
+> > > =C2=A0		return error;
+> > >=20
+> > > +	if (!client->irq && gpio_mode_only) {
+> > > +		dev_info(&client->dev, "Rev.%d, started as GPIO only\n",
+> > revid);
+> > > +		return 0;
+> > > +	}
+> > > +
+> >=20
+> > What is the reason for requesting interrupt in pure GPIO mode? Can we
+> > program the controller to not raise attention in this case?
+>=20
+
+Wouldn't make sense to still allow it in a more relaxed way? I mean, even i=
+n "pure"
+gpio mode, we could still want to use gpio-keys for example, right? IMO, I =
+think we
+should make the IRQ optional got gpio mode and configure the gpiochip accor=
+dingly.
+Maybe this was exactly what you meant but I wasn't sure about it :)
+
+- Nuno S=C3=A1
+
 
