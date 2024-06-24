@@ -1,320 +1,555 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6428419B59A;
-	Mon, 24 Jun 2024 15:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241987; cv=fail; b=ugMX5TLEq/SX8gJiYk1cMVwDmjsIKf4t9j+XJ1GCEHwN53r38opLpdcj2t3ioa5kfnDG+JUR+OAVdxCDOs1FTbi8cjI1C/Wwj9CEDquDOs6wO8uKZCEjqqnZm8TqX02jybWnSHB8r/8wRWs7u1x1BIis7njswFykvEPLwZptIcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241987; c=relaxed/simple;
-	bh=Y2lxvCpktQ/ZRnDS25CIug47SZLiBhBIUtC+0JpRPNg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PxTQZPGLYlBbJgLbs20byEnsYJc7wHzacQnTYS2+44XE48KsR0Lc7cZ13OW6wV2rvEt85dpjS7kOpvxVcL1uT0A++vgy2Sz1ns7dhv2UPcZBy6+6YrCBCe/LRAXAs0MiE0KzsJlvZTfobYAKWKkiqoHs08lUtGgC8k67a77WhBw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nJYEWMV8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YzGBHQ2J; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2195219DF6F
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719241995; cv=none; b=WCduuoC95MR//YFeF6h1AiMyyiVmf53tGhhXZRO4uR8bsHM4iIfkURe+Pe0K8ri0aBF8Uizy1BOSGtb4Q07U33vjzWVf8TOlSd/HGGACVC8YWexC6+JswIQ1oEjSIZmQ+gZsu+/In4BovkboM71ZXU3y+M/3513ozVECtnHD1MU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719241995; c=relaxed/simple;
+	bh=EbvUhI6TnOt1pOp6/IX+Tt52ZjulXB3KrYG+OfhJmiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XCoDfDghxXSVFo/HN/0QCY9OfPtHaZ65JKpbfZxJ14kDk62lnfiMFN/DQ0MAop5wgTUr6ew4qcVBg3S3slT7KDEXfazANIFPv3Kgac9Zuw2qGQqqvgMgGTrDnPodNaS6SzLODhEvGDGOaFsAVlrwSZJx1t00IZShzrthxFSZeJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VvWFLOcT; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nJYEWMV8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YzGBHQ2J"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OEtO4W006272;
-	Mon, 24 Jun 2024 15:12:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	corp-2023-11-20; bh=XtwurnpAak3s7iFyzME1/4zOhQ9rxuX+xtS4b1Per64=; b=
-	nJYEWMV8WobHvhrsJqN/fQPVc/BHvYAd9frewR4E3Ttjxx39spA+J/zbceg5p5DT
-	3DH6TEr+rWVFN8Nqzz8QMX+4i4IKYZ6zXCNHtaZC18JOQy/2K02MCbyT1zNyG2dw
-	gx9Iv1rqa7grAZGY/D6FxO/VXIbmuOdkER5vWofksdaUcdSuKXt+C2dsleNjSVJo
-	CJmDAxcyUW7UaMycsJvX+ikRfSeH0gWTs8bx9Qq52SCg2JHwHY/He4L3/V7o7ZEV
-	e629aNc0J4IdzcQVbUTYzUkY7UwJfCHNnCYBK8EPy48+QqgtXMtKwdkxB8aY5uP2
-	sLYiZerqWlnAo965qaLIRg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ywq5stvk2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 15:12:56 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45OFBoRu017850;
-	Mon, 24 Jun 2024 15:12:55 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2047.outbound.protection.outlook.com [104.47.55.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ywn262thh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 15:12:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k2gHzchn1h+Wjv/qYaABz3MyawF0KP+SQcMPXOkQyoodY7wPIJ0Yjy2KKXEm1NESoMeNw3d/NwoXd7jjmr+21hSaCflq9dDJJF2xs8UD8L8HAivRzyR5vnC+nvQ0kAywXNKE03hWFM+MM9Jadu0M9201tk5IMHe7eyBliMVJ86JLgSt0oQ83ovTHIfz6/dxwZxChMbYS4lBDH6jsHnoNw00Difq8oflNbXxQk5XHsfzz1AyAWp/1I6xOP/4Ccaax1tZxG5cpffKnj69yLAvjUheXADpzQLClx51mY8JqR+MoG+9SbSINKVg6ZG/IZYwxt1CNoXwOXWdQuVCb+GK7Ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XtwurnpAak3s7iFyzME1/4zOhQ9rxuX+xtS4b1Per64=;
- b=nSzB/k+zyq2y97UM7dwejmySypMgoT72F+Px1s47E+x77v7UgDVZbVg3l4hLIqmy9sAu3KcdusSeciyuzwlwWjW1P2kigoHphGRFXz32nD60+sS29fdpk+O5/HKu4Oxa7X7Tc9aIz4ZiSB1dzfIzaRAB9WCxyATv58C9/zEq1QlltLnheX9A9vXJ0l1kOF2IfVvXF7Ud7vth8hmIGoYTplECs1f3ApfCyxJsOSVD2ibGt0kIajMc+B+JbdW9AXjYzhwnnvPw1slXU1iXbdlGMobClXD6ZMs5lLaO7l9h8oXasiILiizvm06bG5ewC//mYY5qMEMrInLk1DLWFwmvow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvWFLOcT"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6b2c6291038so35115506d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XtwurnpAak3s7iFyzME1/4zOhQ9rxuX+xtS4b1Per64=;
- b=YzGBHQ2J5gJt8P/EKGphFo8hoUYIBYxwpG43yRPELNm/MSJFbkRS72cUR8EwUNBfsB3PDyjqKksneWb07qPB31VKcl6uB5ez+Wv3EmsVLhzw199LQRYisWs1KFhsN3BHNcKrEgS57Pa6zFdHSvGqyzn+pbsmGauJY8Ud7hToe9Q=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by DS0PR10MB7223.namprd10.prod.outlook.com (2603:10b6:8:de::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
- 2024 15:12:53 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 15:12:53 +0000
-Message-ID: <6940956e-e2fe-4767-a539-825a345a9236@oracle.com>
-Date: Mon, 24 Jun 2024 16:12:48 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/13] xfs: Unmap blocks according to forcealign
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: chandan.babu@oracle.com, dchinner@redhat.com, hch@lst.de,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, catherine.hoang@oracle.com,
-        martin.petersen@oracle.com
-References: <20240621100540.2976618-1-john.g.garry@oracle.com>
- <20240621100540.2976618-11-john.g.garry@oracle.com>
- <20240621191247.GO3058325@frogsfrogsfrogs>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20240621191247.GO3058325@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P302CA0041.GBRP302.PROD.OUTLOOK.COM
- (2603:10a6:600:317::19) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=gmail.com; s=20230601; t=1719241992; x=1719846792; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9nYYzlPy5SI7PVhpCb/BENiLzYELRokf+ehigNOLV50=;
+        b=VvWFLOcTRYQOq17fCPnR14SHj8hJUEOSWhA93+6k/WE5VmxEHvGUZE2dJ07Ofp7kTB
+         ItUOxkDH2GYZa6Te1q2FDAhIkHhc6CGv2R+lC5Esdfpf1rU1cKeoyKdv0DTrfYmGNYUy
+         AZN7Yd0bOCQBhg8GxEAd+LnjhOxjoRSDPqp+iy5G5ruH0oP0CFIOI1HzhF2gF7SQML1C
+         NStb2Qkxu5HeG+Td0VAjAyYIZ1iKaD+NICblgdWU5DpDZvE+m0KTRjcsiqlQQzSNMqZy
+         8xcaL0IqbCTqvwwt2ZSy0cjfXx3+wNzFuD8qrJ+V6kV9dVxQmCZcROc1NhM05m9sGQ1J
+         VcQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719241992; x=1719846792;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9nYYzlPy5SI7PVhpCb/BENiLzYELRokf+ehigNOLV50=;
+        b=trSOyehKzB3yNCWSS4+Tj3xsSXaGOh8vA4ceF9nSpYNn7+Jc/P4S+EdzkWaeomDdqd
+         kz8DqAGiURvVEFZEjilUCVVvJEB8xC3zWPrlKl/sq4tckL6PWV0zdnudLmemgOu3HYDc
+         stb8DQROLewV+/oAbmvM013ams9zY1gvNne9QPblEZGXUxOwIenXd+84SX3Ra+xKrBf6
+         CbOBuS6jwFECWDS2/X2KkTK5bLeLrq6vuz1VVurRJs9Dbswhs4zn4RdGyf0OJlRPfNln
+         CLO5Q3QLek1ERugy/5pDAp3G5U3Iqoa+1m8wCbklUWlCWrc/gJknbkW7Ue24Z8a4zLKN
+         TWow==
+X-Forwarded-Encrypted: i=1; AJvYcCX67Q93kMPe1QRd+ZECbY1raXMtt0cAs+K4s7SJuO8zgWJSAb5ayTUA2lZofQW6iVeC0kMtRPr9EDv3dhFEY6J0l75nmhwQo5BtaKfO
+X-Gm-Message-State: AOJu0Yz+mmNourBXqpcw0Lejq2zx0KiJiUZj6eQEqfyC3EhkjFiZrLyf
+	4X2jowmhATmbPKs2B8J81FqH5vVDwoEYW36/SHn+T+e1GEnsFS8/
+X-Google-Smtp-Source: AGHT+IEprwN5h8WZ1/wkonQOxrwmg5w7UCx+KUVlukokHQdSgRbfniLRd92MnIdCJU/0QhN19UEuEg==
+X-Received: by 2002:ad4:5f8a:0:b0:6b5:5687:8f7a with SMTP id 6a1803df08f44-6b55687df85mr31921576d6.21.1719241992057;
+        Mon, 24 Jun 2024 08:13:12 -0700 (PDT)
+Received: from localhost.localdomain ([142.198.217.108])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b529eb3decsm27243976d6.12.2024.06.24.08.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 08:13:10 -0700 (PDT)
+From: Wu Hoi Pok <wuhoipok@gmail.com>
+To: 
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Wu Hoi Pok <wuhoipok@gmail.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/7] drm/radeon: rdev->ddev to rdev_to_drm(rdev) 4
+Date: Mon, 24 Jun 2024 11:10:49 -0400
+Message-ID: <20240624151122.23724-6-wuhoipok@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240624151122.23724-1-wuhoipok@gmail.com>
+References: <20240624151122.23724-1-wuhoipok@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DS0PR10MB7223:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ed5dfc6-4235-4fb6-6504-08dc94601e7b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|1800799021;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?ZUluODdoM0V2Qm9ySWNKeUFBQmZTZkIrSk5TMEtUR1RlOFRtU3hOemgxZnZ0?=
- =?utf-8?B?Z2Uvd0JLMEJmMUpxME1qUGFBUCtVYmVDTWdKbEI5TVRRbDhaQ3lwZ3ZkcCtm?=
- =?utf-8?B?NWk3QWYxbVlSbEs1UERXbGV3RHZ6VGxJV1ZIWC9xZGZhMW9iNERuUUorZWxD?=
- =?utf-8?B?VGZNeGROazdnaWpNRDJhb0RrWDBMTE41SG5tNFhNcER6T3VvYzJiRityR3lJ?=
- =?utf-8?B?RWxXY1RFSDRhUUdZYXBvZU8vUFByd0MzaEdlQTlXeXR1WVBBczhQZmljcEM5?=
- =?utf-8?B?K0ozb1lsNjdNNU9WVWUzRS9SQ21DUzlETUtRb2RySjFmSUVmQlZmdXgrRlhu?=
- =?utf-8?B?YndFNGFpN3RFUTRTR1ZMN1JKNmIvQkRNU01IM2RxdzNlcnB3YXNnWWw5ZW91?=
- =?utf-8?B?ZG9yUEE2SVE1eTJVSEtIalZtOTNIZ3BPSWFGN0xIOEMrRGo4a0JGTUxkdzRl?=
- =?utf-8?B?a1Z3Rm1xU01WTk8xN3A3MUpyditKMHR1SFhVSjJ0Wk8xZFYvZ0k1eDFEVGR1?=
- =?utf-8?B?NjQ0cERtWEtHV2M1WC8vb1E0UHN6TytEYXlPZENsNEJBL1pON242S0s1Z1c5?=
- =?utf-8?B?UFMvN24raTRoTTZ6RHRMSi94NUtrMHZWQStrelQ1WkZ4a1NqQTNKQkVmZ0Ft?=
- =?utf-8?B?Q0RXckZKQ0RaUDNrajhXQkZaZElpWWpLVzRXZElDN3dwQzBtOFk3UXFEUW9V?=
- =?utf-8?B?QU1taWlXdEFuUTFKdmNIQjVjOEg5VnpyRVV4eFBVZGhXWTJBcUhqd1dHdjBB?=
- =?utf-8?B?TWh5MnhOVkwvazFZVVZ0M293WWJ1eUJERmQvL0IxbjJwandZSExuR3NTRC9j?=
- =?utf-8?B?ZzA0SHhRREJBN0F5ZXRaOWZneS9jbkxINVZQTGtRZkNVb3Z5eGsreDl4eUhj?=
- =?utf-8?B?N0wzSUlnSUVBV2dRZVh2QWt5ZmQ2VHlOTjlkb3VFOWtnKzhnRTFwa3BOellq?=
- =?utf-8?B?RE9zNytQNFQ2Snk5UFdRZG1XQkFjbzU5RmsyR2JFRURBVHY5TTN5Z1lsOU1l?=
- =?utf-8?B?bWw2S3Z6cFJNMERjbmtTbW0rbVJCY1EvTWc1YzM1RVA1V2tob0RqMDFLYmRv?=
- =?utf-8?B?ZHhTZ3Y0OVlmUHliZzVpMTQ0V0hPYkdRRDRQUklnWVk3S2NyTnV4QTltT1ZB?=
- =?utf-8?B?clAxWEZjM3FJclJvQ2pLd051dVlJKzZuZ0F4OXhLT1Q3cFI4eWZ5QnRaYkFC?=
- =?utf-8?B?RWFwR0dDSjdMWUFhaWZ4b3RlclZJMUxxVFY2bnJkdmFubk1jZmtodUlxbGJw?=
- =?utf-8?B?YXZFT1ZSUnlLdXRTRWxHODdad3R2Z1BzODFpaGZocjMvUTdVR3A4Z2ZSaFRB?=
- =?utf-8?B?ZmdqVUtzbUc0Y1R0ZS9KZ2QrVlE3L01rSHE2ZkYzMmIwdjhlVEpHZEpTNi8z?=
- =?utf-8?B?cWk3dlJtd01tOGVxTGx4OEtpMWpIQ1NmRVdDbXFCMmd2ZVZwcXAxRkFCcGQz?=
- =?utf-8?B?aGlvK2V6VW5KL0F2NTJ5N0JnQSs2a1RyMlgwUGFHRlZDSEl3UjN3L2lrUVlq?=
- =?utf-8?B?S0FXa1NXSzFJazdTOVRIVHRrcEtFRHE0VUFPbWUzNSsza0hwQ3MvcWt1RFJk?=
- =?utf-8?B?SXhuNmZObjdPc2djbmprdXdXNVNaS3ZKZThvQXhuM3M4RWJPVW1xM054VzNG?=
- =?utf-8?B?NmJEKzJYVG1HbTkram9pelVGN3RyZ0laRWFDTVUzNmlTb3RTdnpOajRmQWlq?=
- =?utf-8?B?UTU4eVdvT01qNmZsY000amM0RTBtTlFTUDJKdjllUk5HamYzMWZKcWlnd0Nh?=
- =?utf-8?Q?s5M6Nf94QLw1w+9xh19scLfJ6Lrewk/vXzeSZde?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(1800799021);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?ZjJZckRscXlOVWc1V0RURXRacjdlaWtSNXZ5OHR5K2tqRUFhdE03SWMyWjVo?=
- =?utf-8?B?MUQ5N0FpMDNpbDZXeStzQVlBbTJ1VCtOOTJLYkwrMTU2WHJyS3FQTDdjSkk5?=
- =?utf-8?B?VlpmQTRQaU9yZEFDTkI5TGprbkhwa1h5b2c4NW9aYklZQ0xua0lzSWxlOTlG?=
- =?utf-8?B?cjdGUmNGWlF3L2h1Unc5K1Zoc1h4dVFRbk9zMzJYUHMyVlR6b3kxVWpIRXpO?=
- =?utf-8?B?ZVUrcVNHbnI4TzY1UVcwYWNFME0ydnkwYUdOMlZhSWtYckpxQ3lkTU0zL2FJ?=
- =?utf-8?B?cVk0cjZTNXord0dvc01RTHFCSXNJcmsvRWdsdTN4UGlzME0rV3dGNzJFdC9Z?=
- =?utf-8?B?SUZpL01ia2x3cmI4Nkt3eFA5bGc2aW1zSVA3czZuUjhKMXZKNjNSQnBRbHZI?=
- =?utf-8?B?UlUxVlNmd3VHa2lBdm9xamVnSDg4RjNuYllMcU1oajlSNUJuU0g5QlhyeXl1?=
- =?utf-8?B?VXRjaVpmMFlnUHZDUFJTdUxWRWNOS29SNEhtRTRDckZBOXYrQzQycW9PYTEw?=
- =?utf-8?B?NnpDa0ZYNXprYXBXcFRjRE54T1pLSGZkeUgyK3Fvd1EyZHNHYXRwRExVVjd4?=
- =?utf-8?B?QWlyVSs4a0hWODJrZWw2WFBkSm5VbnU5eDF4STVocTFFVitDZGVBcXoxRm11?=
- =?utf-8?B?SmxYZGNzaFhGMGxxd0x4Wk5URGwrTW82NjFkYWdzSUZhMWFFYjdEWmNOWWRa?=
- =?utf-8?B?WjNSY1paUmRpKzJLc0RjR2tkUFROaUFwaDlPd3o2eGFscEhGSEU5V01zdkV3?=
- =?utf-8?B?V3hMZFRMZXBZeFNrMWljbVZKY3FPaHp5OVRoYm1wVkQ3UkhVQ09JdXpqZDFt?=
- =?utf-8?B?M2NOaDZ5VkdjczJaNG5lcXFab25VMGRxSktZS2w0U0R0TG03S3ppSWdDS1dV?=
- =?utf-8?B?REZHdlM2ZlYrSTlHSHlReTc1d2Z6QTY0WHRza0dqSzErRWd4RTZsczZyS3ZS?=
- =?utf-8?B?Q3hURTJhQWxmRW5TNzFUVVBnSHZ3SXp5cWpKVnZHUkMvSWtsMlUxbTNRZkJT?=
- =?utf-8?B?L3R2QlVyV1YrNXVraUtaN0M3ZGVGTUxGWWhwd0M2Z21KNVYydzByWk1ZaGZq?=
- =?utf-8?B?RTlYTWcxNTFncWg2eWoyT29ldklCeForY1RWZEJucVNPTXJCZ2psbUgyL0V1?=
- =?utf-8?B?UWxJUUlWaWRZSFJseVVVZTRVSjhrN3RzcG45OG9Bd3cvRzA4MzUwOGQ1L1Fx?=
- =?utf-8?B?UUFhdmowMENVWWZKeXpNM3gzUW5NNWVLM2xwUmwvUEhmYjFGVnQrVk9PSSsr?=
- =?utf-8?B?azZjR0FZeGFzL2tOSVloaDFqOVprbzRkWGFXd0xsTTR2MkJZbk5IZTQ1Qk9i?=
- =?utf-8?B?WXZsbHNKRmM4WUdsb2lEcXZKNnk0Z3lYcHNVYUpNQ05CMDJWelNPd2ZHcWJs?=
- =?utf-8?B?a1RHM21pR21BN1ZJd3kyZTVrNDBDRXhIbTBObjdSUkNJYlJRUWhpVDBEMGhQ?=
- =?utf-8?B?QmpyTzBrKzlDZWhDRmFDVExVOEk5TU0vaXIrYU9rYm1TOEhsQzhJZ0tkMmVt?=
- =?utf-8?B?RkpSckM5ZCtveEVmb0xibnN6UzVxVGwwcnFyQnY3ZEV6QzRuWE8xVHRPc3BW?=
- =?utf-8?B?OC93YzRVT1dkR0pGT29wUU1oeFpRMXY3aTVPYzBFQk9HVjQ0ZmxPYlYrdUxS?=
- =?utf-8?B?U2E4ZUM3MnR0TmhtcitaRmxxZmdKY0VvU1JYNXB4N3JrUElYak96ZkdTVkg1?=
- =?utf-8?B?S29aejhYZjFOTC9wbS9pSHBlcE5WMFV6eUMyNUwwTW9oUmVFUm5QM0RROHc1?=
- =?utf-8?B?Tkh1YTRSYWxid1hmTTZHMGtFcENhTnMvRSs1dEJyVTVvRGlNYjV4YzFhQmVL?=
- =?utf-8?B?Mk1NcDFDWEFOd3ViOVA4elV0WnFyd0FmaEZhdFA0YzU0VllJY0g4Q01UbUZG?=
- =?utf-8?B?RnJycHF4WkhHVmZDWXZTTmc1RHpCSnBtYXUzUTR3WE1hMVJMTlZERmhlekhE?=
- =?utf-8?B?OWExaTJ2dUdCSkswMVdZbFZSS0kyTERuYkYybER3MmhreDNBOHBobFJtTkc4?=
- =?utf-8?B?YTlIVXNXTEgwWm1HV2wvbitkQ1VLd3huWkh1UmExUjVEckJuU2ExeHZ6OUZs?=
- =?utf-8?B?OTgyZjJmdldBWVk1TzZRWjNBakQ1MDAwQWg2eWFlZ0ZQKzNiK1Z3bmdjNG14?=
- =?utf-8?Q?ZUOYxDvXhnA82ZBykEDQbjg2J?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	8yVJjheKIZ9PXFyvWeHDLx05UGGFoMqa0D0CzAocA4jgQRC6ji5Jx2awwINAVyn+fvnE2pX8bp5bb4uSROGaHH2eiWcStx07ks/y4FV0cT7szUTuicTfSgyj9JeyFsRlm9D/qe2aY+ebZGZw8IZrZrzbYW996lRCDQofB1pPJyB3qpeHcXjUJsFVGFKIJSER7os2aW4nTYM1oz/Uo+PzZO3wvYpUyOICajj0FobThpHhRPP8hN1jLzBVwq2ikAIA7eHG+qU8XjCG5KQQckDqp6rWfR+ebRPh0soHJmrXOtNdckrU7M+uC+LQmtFEaFmpAlC/akAVff21gymMfLP4Dz8r614tHmizlyjSIjVI4wyQIqCagnOwfEFhf3npXG9cuFLvRweg3wea1Va5vKXTpXINPeV3a8CWmKxWz3jcdPbf0omxpUYr0QTWRLb0kcJsK6Y1ktWC5Qp3DIEqbp4OH9F3AlR3UnICtN6nNqf9tD7aKu35XAA1XqJLPt73YjPTIfzxUNNLT3gPTjgi6bcjP+AzZniIfT0A2Ro3B2eGXi/v3IiWBJ10VdjkYeD/BIFlPryuq4hKMDYeQkB1ixU3KReQ9N910Qsy/6O1YLZ+dxE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ed5dfc6-4235-4fb6-6504-08dc94601e7b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 15:12:53.1009
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F+N2Hwq/ueuFQgfdhUZHxKJITeoD12PKDaYCH62RDAclA8ZIQ125bB0Hwt+gS97wFgaGWndBlgdUs7NUWzYzDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7223
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_11,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
- phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
- definitions=main-2406240121
-X-Proofpoint-GUID: KbGH-suu8B1WFK_2epo18SqS_hyvUSYN
-X-Proofpoint-ORIG-GUID: KbGH-suu8B1WFK_2epo18SqS_hyvUSYN
+Content-Transfer-Encoding: 8bit
 
-On 21/06/2024 20:12, Darrick J. Wong wrote:
-> On Fri, Jun 21, 2024 at 10:05:37AM +0000, John Garry wrote:
->> For when forcealign is enabled, blocks in an inode need to be unmapped
->> according to extent alignment, like what is already done for rtvol.
->>
->> Signed-off-by: John Garry <john.g.garry@oracle.com>
->> ---
->>   fs/xfs/libxfs/xfs_bmap.c | 38 +++++++++++++++++++++++++++++++++-----
->>   1 file changed, 33 insertions(+), 5 deletions(-)
->>
->> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
->> index c9cf138e13c4..ebeb2969b289 100644
->> --- a/fs/xfs/libxfs/xfs_bmap.c
->> +++ b/fs/xfs/libxfs/xfs_bmap.c
->> @@ -5380,6 +5380,25 @@ xfs_bmap_del_extent_real(
->>   	return 0;
->>   }
->>   
->> +static xfs_extlen_t
->> +xfs_bunmapi_align(
->> +	struct xfs_inode	*ip,
->> +	xfs_fsblock_t		bno)
->> +{
->> +	struct xfs_mount	*mp = ip->i_mount;
->> +	xfs_agblock_t		agbno;
->> +
->> +	if (xfs_inode_has_forcealign(ip)) {
->> +		if (is_power_of_2(ip->i_extsize))
->> +			return bno & (ip->i_extsize - 1);
->> +
->> +		agbno = XFS_FSB_TO_AGBNO(mp, bno);
->> +		return do_div(agbno, ip->i_extsize);
-> 
-> Huh.  The inode verifier allows realtime forcealign files, but this code
-> will not handle that properly.  Either don't allow realtime files, or
-> make this handle them correctly:
+Please refer to patch 1.
 
-ok, so XFS_FSB_TO_AGBNO() is not always suitable
+Signed-off-by: Wu Hoi Pok <wuhoipok@gmail.com>
+---
+ drivers/gpu/drm/radeon/radeon_device.c  | 19 +++----
+ drivers/gpu/drm/radeon/radeon_display.c | 74 ++++++++++++-------------
+ drivers/gpu/drm/radeon/radeon_fbdev.c   | 26 ++++-----
+ drivers/gpu/drm/radeon/radeon_fence.c   |  8 +--
+ drivers/gpu/drm/radeon/radeon_gem.c     |  2 +-
+ drivers/gpu/drm/radeon/radeon_i2c.c     |  2 +-
+ 6 files changed, 63 insertions(+), 68 deletions(-)
 
-> 
-> 	if (XFS_IS_REALTIME_INODE(ip)) {
-> 		if (xfs_inode_has_forcealign(ip))
-> 			return offset_in_block(bno, ip->i_extsize);
-> 		return xfs_rtb_to_rtxoff(ip->i_mount, bno);
-> 	} else if (xfs_inode_has_forcealign(ip)) {
-> 		xfs_agblock_t	agbno = XFS_FSB_TO_AGBNO(mp, bno);
-> 
-> 		return offset_in_block(agbno, ip->i_extsize);
-> 	}
-> 
-> 	return 1; /* or assert, or whatever */
-> 
->> +	}
->> +	ASSERT(XFS_IS_REALTIME_INODE(ip));
->> +	return xfs_rtb_to_rtxoff(ip->i_mount, bno);
->> +}
->> +
->>   /*
->>    * Unmap (remove) blocks from a file.
->>    * If nexts is nonzero then the number of extents to remove is limited to
->> @@ -5402,6 +5421,7 @@ __xfs_bunmapi(
->>   	struct xfs_bmbt_irec	got;		/* current extent record */
->>   	struct xfs_ifork	*ifp;		/* inode fork pointer */
->>   	int			isrt;		/* freeing in rt area */
->> +	int			isforcealign;	/* freeing for inode with forcealign */
->>   	int			logflags;	/* transaction logging flags */
->>   	xfs_extlen_t		mod;		/* rt extent offset */
->>   	struct xfs_mount	*mp = ip->i_mount;
->> @@ -5439,6 +5459,8 @@ __xfs_bunmapi(
->>   	}
->>   	XFS_STATS_INC(mp, xs_blk_unmap);
->>   	isrt = xfs_ifork_is_realtime(ip, whichfork);
->> +	isforcealign = (whichfork != XFS_ATTR_FORK) &&
->> +			xfs_inode_has_forcealign(ip);
->>   	end = start + len;
->>   
->>   	if (!xfs_iext_lookup_extent_before(ip, ifp, &end, &icur, &got)) {
->> @@ -5490,11 +5512,10 @@ __xfs_bunmapi(
->>   		if (del.br_startoff + del.br_blockcount > end + 1)
->>   			del.br_blockcount = end + 1 - del.br_startoff;
->>   
->> -		if (!isrt || (flags & XFS_BMAPI_REMAP))
->> +		if ((!isrt && !isforcealign) || (flags & XFS_BMAPI_REMAP))
->>   			goto delete;
->>   
->> -		mod = xfs_rtb_to_rtxoff(mp,
->> -				del.br_startblock + del.br_blockcount);
->> +		mod = xfs_bunmapi_align(ip, del.br_startblock + del.br_blockcount);
->>   		if (mod) {
->>   			/*
->>   			 * Realtime extent not lined up at the end.
-> 
-> "Not aligned to allocation unit on the end." ?
-
-ok
-
-> 
->> @@ -5542,9 +5563,16 @@ __xfs_bunmapi(
->>   			goto nodelete;
->>   		}
->>   
->> -		mod = xfs_rtb_to_rtxoff(mp, del.br_startblock);
->> +		mod = xfs_bunmapi_align(ip, del.br_startblock);
->>   		if (mod) {
->> -			xfs_extlen_t off = mp->m_sb.sb_rextsize - mod;
->> +			xfs_extlen_t off;
->> +
->> +			if (isforcealign) {
->> +				off = ip->i_extsize - mod;
->> +			} else {
->> +				ASSERT(isrt);
->> +				off = mp->m_sb.sb_rextsize - mod;
->> +			}
->>   
->>   			/*
->>   			 * Realtime extent is lined up at the end but not
-> 
-> Same here -- now this code is handling more than just rt extents.
-> 
-
-ok
-
-Thanks!
+diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
+index afbb3a80c0c6..127d8fd7f7cd 100644
+--- a/drivers/gpu/drm/radeon/radeon_device.c
++++ b/drivers/gpu/drm/radeon/radeon_device.c
+@@ -760,7 +760,7 @@ bool radeon_boot_test_post_card(struct radeon_device *rdev)
+ 		if (rdev->is_atom_bios)
+ 			atom_asic_init(rdev->mode_info.atom_context);
+ 		else
+-			radeon_combios_asic_init(rdev->ddev);
++			radeon_combios_asic_init(rdev_to_drm(rdev));
+ 		return true;
+ 	} else {
+ 		dev_err(rdev->dev, "Card not posted and no BIOS - ignoring\n");
+@@ -980,7 +980,7 @@ int radeon_atombios_init(struct radeon_device *rdev)
+ 		return -ENOMEM;
+ 
+ 	rdev->mode_info.atom_card_info = atom_card_info;
+-	atom_card_info->dev = rdev->ddev;
++	atom_card_info->dev = rdev_to_drm(rdev);
+ 	atom_card_info->reg_read = cail_reg_read;
+ 	atom_card_info->reg_write = cail_reg_write;
+ 	/* needed for iio ops */
+@@ -1005,7 +1005,7 @@ int radeon_atombios_init(struct radeon_device *rdev)
+ 
+ 	mutex_init(&rdev->mode_info.atom_context->mutex);
+ 	mutex_init(&rdev->mode_info.atom_context->scratch_mutex);
+-	radeon_atom_initialize_bios_scratch_regs(rdev->ddev);
++	radeon_atom_initialize_bios_scratch_regs(rdev_to_drm(rdev));
+ 	atom_allocate_fb_scratch(rdev->mode_info.atom_context);
+ 	return 0;
+ }
+@@ -1049,7 +1049,7 @@ void radeon_atombios_fini(struct radeon_device *rdev)
+  */
+ int radeon_combios_init(struct radeon_device *rdev)
+ {
+-	radeon_combios_initialize_bios_scratch_regs(rdev->ddev);
++	radeon_combios_initialize_bios_scratch_regs(rdev_to_drm(rdev));
+ 	return 0;
+ }
+ 
+@@ -1267,8 +1267,6 @@ static const struct vga_switcheroo_client_ops radeon_switcheroo_ops = {
+  * radeon_device_init - initialize the driver
+  *
+  * @rdev: radeon_device pointer
+- * @ddev: drm dev pointer
+- * @pdev: pci dev pointer
+  * @flags: driver flags
+  *
+  * Initializes the driver info and hw (all asics).
+@@ -1276,18 +1274,15 @@ static const struct vga_switcheroo_client_ops radeon_switcheroo_ops = {
+  * Called at driver startup.
+  */
+ int radeon_device_init(struct radeon_device *rdev,
+-		       struct drm_device *ddev,
+-		       struct pci_dev *pdev,
+ 		       uint32_t flags)
+ {
++	struct pci_dev *pdev = rdev->pdev;
++	struct drm_device *ddev = rdev_to_drm(rdev);
+ 	int r, i;
+ 	int dma_bits;
+ 	bool runtime = false;
+ 
+ 	rdev->shutdown = false;
+-	rdev->dev = &pdev->dev;
+-	rdev->ddev = ddev;
+-	rdev->pdev = pdev;
+ 	rdev->flags = flags;
+ 	rdev->family = flags & RADEON_FAMILY_MASK;
+ 	rdev->is_atom_bios = false;
+@@ -1847,7 +1842,7 @@ int radeon_gpu_reset(struct radeon_device *rdev)
+ 
+ 	downgrade_write(&rdev->exclusive_lock);
+ 
+-	drm_helper_resume_force_mode(rdev->ddev);
++	drm_helper_resume_force_mode(rdev_to_drm(rdev));
+ 
+ 	/* set the power state here in case we are a PX system or headless */
+ 	if ((rdev->pm.pm_method == PM_METHOD_DPM) && rdev->pm.dpm_enabled)
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 843383f7237f..10fd58f400bc 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -302,13 +302,13 @@ void radeon_crtc_handle_vblank(struct radeon_device *rdev, int crtc_id)
+ 	if ((radeon_use_pflipirq == 2) && ASIC_IS_DCE4(rdev))
+ 		return;
+ 
+-	spin_lock_irqsave(&rdev->ddev->event_lock, flags);
++	spin_lock_irqsave(&rdev_to_drm(rdev)->event_lock, flags);
+ 	if (radeon_crtc->flip_status != RADEON_FLIP_SUBMITTED) {
+ 		DRM_DEBUG_DRIVER("radeon_crtc->flip_status = %d != "
+ 				 "RADEON_FLIP_SUBMITTED(%d)\n",
+ 				 radeon_crtc->flip_status,
+ 				 RADEON_FLIP_SUBMITTED);
+-		spin_unlock_irqrestore(&rdev->ddev->event_lock, flags);
++		spin_unlock_irqrestore(&rdev_to_drm(rdev)->event_lock, flags);
+ 		return;
+ 	}
+ 
+@@ -334,7 +334,7 @@ void radeon_crtc_handle_vblank(struct radeon_device *rdev, int crtc_id)
+ 	 */
+ 	if (update_pending &&
+ 	    (DRM_SCANOUTPOS_VALID &
+-	     radeon_get_crtc_scanoutpos(rdev->ddev, crtc_id,
++	     radeon_get_crtc_scanoutpos(rdev_to_drm(rdev), crtc_id,
+ 					GET_DISTANCE_TO_VBLANKSTART,
+ 					&vpos, &hpos, NULL, NULL,
+ 					&rdev->mode_info.crtcs[crtc_id]->base.hwmode)) &&
+@@ -347,7 +347,7 @@ void radeon_crtc_handle_vblank(struct radeon_device *rdev, int crtc_id)
+ 		 */
+ 		update_pending = 0;
+ 	}
+-	spin_unlock_irqrestore(&rdev->ddev->event_lock, flags);
++	spin_unlock_irqrestore(&rdev_to_drm(rdev)->event_lock, flags);
+ 	if (!update_pending)
+ 		radeon_crtc_handle_flip(rdev, crtc_id);
+ }
+@@ -370,14 +370,14 @@ void radeon_crtc_handle_flip(struct radeon_device *rdev, int crtc_id)
+ 	if (radeon_crtc == NULL)
+ 		return;
+ 
+-	spin_lock_irqsave(&rdev->ddev->event_lock, flags);
++	spin_lock_irqsave(&rdev_to_drm(rdev)->event_lock, flags);
+ 	work = radeon_crtc->flip_work;
+ 	if (radeon_crtc->flip_status != RADEON_FLIP_SUBMITTED) {
+ 		DRM_DEBUG_DRIVER("radeon_crtc->flip_status = %d != "
+ 				 "RADEON_FLIP_SUBMITTED(%d)\n",
+ 				 radeon_crtc->flip_status,
+ 				 RADEON_FLIP_SUBMITTED);
+-		spin_unlock_irqrestore(&rdev->ddev->event_lock, flags);
++		spin_unlock_irqrestore(&rdev_to_drm(rdev)->event_lock, flags);
+ 		return;
+ 	}
+ 
+@@ -389,7 +389,7 @@ void radeon_crtc_handle_flip(struct radeon_device *rdev, int crtc_id)
+ 	if (work->event)
+ 		drm_crtc_send_vblank_event(&radeon_crtc->base, work->event);
+ 
+-	spin_unlock_irqrestore(&rdev->ddev->event_lock, flags);
++	spin_unlock_irqrestore(&rdev_to_drm(rdev)->event_lock, flags);
+ 
+ 	drm_crtc_vblank_put(&radeon_crtc->base);
+ 	radeon_irq_kms_pflip_irq_put(rdev, work->crtc_id);
+@@ -408,7 +408,7 @@ static void radeon_flip_work_func(struct work_struct *__work)
+ 	struct radeon_flip_work *work =
+ 		container_of(__work, struct radeon_flip_work, flip_work);
+ 	struct radeon_device *rdev = work->rdev;
+-	struct drm_device *dev = rdev->ddev;
++	struct drm_device *dev = rdev_to_drm(rdev);
+ 	struct radeon_crtc *radeon_crtc = rdev->mode_info.crtcs[work->crtc_id];
+ 
+ 	struct drm_crtc *crtc = &radeon_crtc->base;
+@@ -1401,7 +1401,7 @@ static int radeon_modeset_create_props(struct radeon_device *rdev)
+ 
+ 	if (rdev->is_atom_bios) {
+ 		rdev->mode_info.coherent_mode_property =
+-			drm_property_create_range(rdev->ddev, 0 , "coherent", 0, 1);
++			drm_property_create_range(rdev_to_drm(rdev), 0, "coherent", 0, 1);
+ 		if (!rdev->mode_info.coherent_mode_property)
+ 			return -ENOMEM;
+ 	}
+@@ -1409,57 +1409,57 @@ static int radeon_modeset_create_props(struct radeon_device *rdev)
+ 	if (!ASIC_IS_AVIVO(rdev)) {
+ 		sz = ARRAY_SIZE(radeon_tmds_pll_enum_list);
+ 		rdev->mode_info.tmds_pll_property =
+-			drm_property_create_enum(rdev->ddev, 0,
++			drm_property_create_enum(rdev_to_drm(rdev), 0,
+ 					    "tmds_pll",
+ 					    radeon_tmds_pll_enum_list, sz);
+ 	}
+ 
+ 	rdev->mode_info.load_detect_property =
+-		drm_property_create_range(rdev->ddev, 0, "load detection", 0, 1);
++		drm_property_create_range(rdev_to_drm(rdev), 0, "load detection", 0, 1);
+ 	if (!rdev->mode_info.load_detect_property)
+ 		return -ENOMEM;
+ 
+-	drm_mode_create_scaling_mode_property(rdev->ddev);
++	drm_mode_create_scaling_mode_property(rdev_to_drm(rdev));
+ 
+ 	sz = ARRAY_SIZE(radeon_tv_std_enum_list);
+ 	rdev->mode_info.tv_std_property =
+-		drm_property_create_enum(rdev->ddev, 0,
++		drm_property_create_enum(rdev_to_drm(rdev), 0,
+ 				    "tv standard",
+ 				    radeon_tv_std_enum_list, sz);
+ 
+ 	sz = ARRAY_SIZE(radeon_underscan_enum_list);
+ 	rdev->mode_info.underscan_property =
+-		drm_property_create_enum(rdev->ddev, 0,
++		drm_property_create_enum(rdev_to_drm(rdev), 0,
+ 				    "underscan",
+ 				    radeon_underscan_enum_list, sz);
+ 
+ 	rdev->mode_info.underscan_hborder_property =
+-		drm_property_create_range(rdev->ddev, 0,
++		drm_property_create_range(rdev_to_drm(rdev), 0,
+ 					"underscan hborder", 0, 128);
+ 	if (!rdev->mode_info.underscan_hborder_property)
+ 		return -ENOMEM;
+ 
+ 	rdev->mode_info.underscan_vborder_property =
+-		drm_property_create_range(rdev->ddev, 0,
++		drm_property_create_range(rdev_to_drm(rdev), 0,
+ 					"underscan vborder", 0, 128);
+ 	if (!rdev->mode_info.underscan_vborder_property)
+ 		return -ENOMEM;
+ 
+ 	sz = ARRAY_SIZE(radeon_audio_enum_list);
+ 	rdev->mode_info.audio_property =
+-		drm_property_create_enum(rdev->ddev, 0,
++		drm_property_create_enum(rdev_to_drm(rdev), 0,
+ 					 "audio",
+ 					 radeon_audio_enum_list, sz);
+ 
+ 	sz = ARRAY_SIZE(radeon_dither_enum_list);
+ 	rdev->mode_info.dither_property =
+-		drm_property_create_enum(rdev->ddev, 0,
++		drm_property_create_enum(rdev_to_drm(rdev), 0,
+ 					 "dither",
+ 					 radeon_dither_enum_list, sz);
+ 
+ 	sz = ARRAY_SIZE(radeon_output_csc_enum_list);
+ 	rdev->mode_info.output_csc_property =
+-		drm_property_create_enum(rdev->ddev, 0,
++		drm_property_create_enum(rdev_to_drm(rdev), 0,
+ 					 "output_csc",
+ 					 radeon_output_csc_enum_list, sz);
+ 
+@@ -1578,29 +1578,29 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 	int i;
+ 	int ret;
+ 
+-	drm_mode_config_init(rdev->ddev);
++	drm_mode_config_init(rdev_to_drm(rdev));
+ 	rdev->mode_info.mode_config_initialized = true;
+ 
+-	rdev->ddev->mode_config.funcs = &radeon_mode_funcs;
++	rdev_to_drm(rdev)->mode_config.funcs = &radeon_mode_funcs;
+ 
+ 	if (radeon_use_pflipirq == 2 && rdev->family >= CHIP_R600)
+-		rdev->ddev->mode_config.async_page_flip = true;
++		rdev_to_drm(rdev)->mode_config.async_page_flip = true;
+ 
+ 	if (ASIC_IS_DCE5(rdev)) {
+-		rdev->ddev->mode_config.max_width = 16384;
+-		rdev->ddev->mode_config.max_height = 16384;
++		rdev_to_drm(rdev)->mode_config.max_width = 16384;
++		rdev_to_drm(rdev)->mode_config.max_height = 16384;
+ 	} else if (ASIC_IS_AVIVO(rdev)) {
+-		rdev->ddev->mode_config.max_width = 8192;
+-		rdev->ddev->mode_config.max_height = 8192;
++		rdev_to_drm(rdev)->mode_config.max_width = 8192;
++		rdev_to_drm(rdev)->mode_config.max_height = 8192;
+ 	} else {
+-		rdev->ddev->mode_config.max_width = 4096;
+-		rdev->ddev->mode_config.max_height = 4096;
++		rdev_to_drm(rdev)->mode_config.max_width = 4096;
++		rdev_to_drm(rdev)->mode_config.max_height = 4096;
+ 	}
+ 
+-	rdev->ddev->mode_config.preferred_depth = 24;
+-	rdev->ddev->mode_config.prefer_shadow = 1;
++	rdev_to_drm(rdev)->mode_config.preferred_depth = 24;
++	rdev_to_drm(rdev)->mode_config.prefer_shadow = 1;
+ 
+-	rdev->ddev->mode_config.fb_modifiers_not_supported = true;
++	rdev_to_drm(rdev)->mode_config.fb_modifiers_not_supported = true;
+ 
+ 	ret = radeon_modeset_create_props(rdev);
+ 	if (ret) {
+@@ -1618,11 +1618,11 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 
+ 	/* allocate crtcs */
+ 	for (i = 0; i < rdev->num_crtc; i++) {
+-		radeon_crtc_init(rdev->ddev, i);
++		radeon_crtc_init(rdev_to_drm(rdev), i);
+ 	}
+ 
+ 	/* okay we should have all the bios connectors */
+-	ret = radeon_setup_enc_conn(rdev->ddev);
++	ret = radeon_setup_enc_conn(rdev_to_drm(rdev));
+ 	if (!ret) {
+ 		return ret;
+ 	}
+@@ -1639,7 +1639,7 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 	/* setup afmt */
+ 	radeon_afmt_init(rdev);
+ 
+-	drm_kms_helper_poll_init(rdev->ddev);
++	drm_kms_helper_poll_init(rdev_to_drm(rdev));
+ 
+ 	/* do pm late init */
+ 	ret = radeon_pm_late_init(rdev);
+@@ -1650,11 +1650,11 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ void radeon_modeset_fini(struct radeon_device *rdev)
+ {
+ 	if (rdev->mode_info.mode_config_initialized) {
+-		drm_kms_helper_poll_fini(rdev->ddev);
++		drm_kms_helper_poll_fini(rdev_to_drm(rdev));
+ 		radeon_hpd_fini(rdev);
+-		drm_helper_force_disable_all(rdev->ddev);
++		drm_helper_force_disable_all(rdev_to_drm(rdev));
+ 		radeon_afmt_fini(rdev);
+-		drm_mode_config_cleanup(rdev->ddev);
++		drm_mode_config_cleanup(rdev_to_drm(rdev));
+ 		rdev->mode_info.mode_config_initialized = false;
+ 	}
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_fbdev.c b/drivers/gpu/drm/radeon/radeon_fbdev.c
+index 02bf25759059..fb70de29545c 100644
+--- a/drivers/gpu/drm/radeon/radeon_fbdev.c
++++ b/drivers/gpu/drm/radeon/radeon_fbdev.c
+@@ -67,7 +67,7 @@ static int radeon_fbdev_create_pinned_object(struct drm_fb_helper *fb_helper,
+ 	int height = mode_cmd->height;
+ 	u32 cpp;
+ 
+-	info = drm_get_format_info(rdev->ddev, mode_cmd);
++	info = drm_get_format_info(rdev_to_drm(rdev), mode_cmd);
+ 	cpp = info->cpp[0];
+ 
+ 	/* need to align pitch with crtc limits */
+@@ -148,15 +148,15 @@ static int radeon_fbdev_fb_open(struct fb_info *info, int user)
+ 	struct radeon_device *rdev = fb_helper->dev->dev_private;
+ 	int ret;
+ 
+-	ret = pm_runtime_get_sync(rdev->ddev->dev);
++	ret = pm_runtime_get_sync(rdev_to_drm(rdev)->dev);
+ 	if (ret < 0 && ret != -EACCES)
+ 		goto err_pm_runtime_mark_last_busy;
+ 
+ 	return 0;
+ 
+ err_pm_runtime_mark_last_busy:
+-	pm_runtime_mark_last_busy(rdev->ddev->dev);
+-	pm_runtime_put_autosuspend(rdev->ddev->dev);
++	pm_runtime_mark_last_busy(rdev_to_drm(rdev)->dev);
++	pm_runtime_put_autosuspend(rdev_to_drm(rdev)->dev);
+ 	return ret;
+ }
+ 
+@@ -165,8 +165,8 @@ static int radeon_fbdev_fb_release(struct fb_info *info, int user)
+ 	struct drm_fb_helper *fb_helper = info->par;
+ 	struct radeon_device *rdev = fb_helper->dev->dev_private;
+ 
+-	pm_runtime_mark_last_busy(rdev->ddev->dev);
+-	pm_runtime_put_autosuspend(rdev->ddev->dev);
++	pm_runtime_mark_last_busy(rdev_to_drm(rdev)->dev);
++	pm_runtime_put_autosuspend(rdev_to_drm(rdev)->dev);
+ 
+ 	return 0;
+ }
+@@ -236,7 +236,7 @@ static int radeon_fbdev_fb_helper_fb_probe(struct drm_fb_helper *fb_helper,
+ 		ret = -ENOMEM;
+ 		goto err_radeon_fbdev_destroy_pinned_object;
+ 	}
+-	ret = radeon_framebuffer_init(rdev->ddev, fb, &mode_cmd, gobj);
++	ret = radeon_framebuffer_init(rdev_to_drm(rdev), fb, &mode_cmd, gobj);
+ 	if (ret) {
+ 		DRM_ERROR("failed to initialize framebuffer %d\n", ret);
+ 		goto err_kfree;
+@@ -374,12 +374,12 @@ void radeon_fbdev_setup(struct radeon_device *rdev)
+ 	fb_helper = kzalloc(sizeof(*fb_helper), GFP_KERNEL);
+ 	if (!fb_helper)
+ 		return;
+-	drm_fb_helper_prepare(rdev->ddev, fb_helper, bpp_sel, &radeon_fbdev_fb_helper_funcs);
++	drm_fb_helper_prepare(rdev_to_drm(rdev), fb_helper, bpp_sel, &radeon_fbdev_fb_helper_funcs);
+ 
+-	ret = drm_client_init(rdev->ddev, &fb_helper->client, "radeon-fbdev",
++	ret = drm_client_init(rdev_to_drm(rdev), &fb_helper->client, "radeon-fbdev",
+ 			      &radeon_fbdev_client_funcs);
+ 	if (ret) {
+-		drm_err(rdev->ddev, "Failed to register client: %d\n", ret);
++		drm_err(rdev_to_drm(rdev), "Failed to register client: %d\n", ret);
+ 		goto err_drm_client_init;
+ 	}
+ 
+@@ -394,13 +394,13 @@ void radeon_fbdev_setup(struct radeon_device *rdev)
+ 
+ void radeon_fbdev_set_suspend(struct radeon_device *rdev, int state)
+ {
+-	if (rdev->ddev->fb_helper)
+-		drm_fb_helper_set_suspend(rdev->ddev->fb_helper, state);
++	if (rdev_to_drm(rdev)->fb_helper)
++		drm_fb_helper_set_suspend(rdev_to_drm(rdev)->fb_helper, state);
+ }
+ 
+ bool radeon_fbdev_robj_is_fb(struct radeon_device *rdev, struct radeon_bo *robj)
+ {
+-	struct drm_fb_helper *fb_helper = rdev->ddev->fb_helper;
++	struct drm_fb_helper *fb_helper = rdev_to_drm(rdev)->fb_helper;
+ 	struct drm_gem_object *gobj;
+ 
+ 	if (!fb_helper)
+diff --git a/drivers/gpu/drm/radeon/radeon_fence.c b/drivers/gpu/drm/radeon/radeon_fence.c
+index 4fb780d96f32..daff61586be5 100644
+--- a/drivers/gpu/drm/radeon/radeon_fence.c
++++ b/drivers/gpu/drm/radeon/radeon_fence.c
+@@ -150,7 +150,7 @@ int radeon_fence_emit(struct radeon_device *rdev,
+ 		       rdev->fence_context + ring,
+ 		       seq);
+ 	radeon_fence_ring_emit(rdev, ring, *fence);
+-	trace_radeon_fence_emit(rdev->ddev, ring, (*fence)->seq);
++	trace_radeon_fence_emit(rdev_to_drm(rdev), ring, (*fence)->seq);
+ 	radeon_fence_schedule_check(rdev, ring);
+ 	return 0;
+ }
+@@ -489,7 +489,7 @@ static long radeon_fence_wait_seq_timeout(struct radeon_device *rdev,
+ 		if (!target_seq[i])
+ 			continue;
+ 
+-		trace_radeon_fence_wait_begin(rdev->ddev, i, target_seq[i]);
++		trace_radeon_fence_wait_begin(rdev_to_drm(rdev), i, target_seq[i]);
+ 		radeon_irq_kms_sw_irq_get(rdev, i);
+ 	}
+ 
+@@ -511,7 +511,7 @@ static long radeon_fence_wait_seq_timeout(struct radeon_device *rdev,
+ 			continue;
+ 
+ 		radeon_irq_kms_sw_irq_put(rdev, i);
+-		trace_radeon_fence_wait_end(rdev->ddev, i, target_seq[i]);
++		trace_radeon_fence_wait_end(rdev_to_drm(rdev), i, target_seq[i]);
+ 	}
+ 
+ 	return r;
+@@ -995,7 +995,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(radeon_debugfs_gpu_reset_fops,
+ void radeon_debugfs_fence_init(struct radeon_device *rdev)
+ {
+ #if defined(CONFIG_DEBUG_FS)
+-	struct dentry *root = rdev->ddev->primary->debugfs_root;
++	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
+ 
+ 	debugfs_create_file("radeon_gpu_reset", 0444, root, rdev,
+ 			    &radeon_debugfs_gpu_reset_fops);
+diff --git a/drivers/gpu/drm/radeon/radeon_gem.c b/drivers/gpu/drm/radeon/radeon_gem.c
+index 2ef201a072f1..9dd4ff09d562 100644
+--- a/drivers/gpu/drm/radeon/radeon_gem.c
++++ b/drivers/gpu/drm/radeon/radeon_gem.c
+@@ -899,7 +899,7 @@ DEFINE_SHOW_ATTRIBUTE(radeon_debugfs_gem_info);
+ void radeon_gem_debugfs_init(struct radeon_device *rdev)
+ {
+ #if defined(CONFIG_DEBUG_FS)
+-	struct dentry *root = rdev->ddev->primary->debugfs_root;
++	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
+ 
+ 	debugfs_create_file("radeon_gem_info", 0444, root, rdev,
+ 			    &radeon_debugfs_gem_info_fops);
+diff --git a/drivers/gpu/drm/radeon/radeon_i2c.c b/drivers/gpu/drm/radeon/radeon_i2c.c
+index 3d174390a8af..1f16619ed06e 100644
+--- a/drivers/gpu/drm/radeon/radeon_i2c.c
++++ b/drivers/gpu/drm/radeon/radeon_i2c.c
+@@ -1011,7 +1011,7 @@ void radeon_i2c_add(struct radeon_device *rdev,
+ 		    struct radeon_i2c_bus_rec *rec,
+ 		    const char *name)
+ {
+-	struct drm_device *dev = rdev->ddev;
++	struct drm_device *dev = rdev_to_drm(rdev);
+ 	int i;
+ 
+ 	for (i = 0; i < RADEON_MAX_I2C_BUS; i++) {
+-- 
+2.45.2
 
