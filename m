@@ -1,125 +1,137 @@
-Received: from antelope.elm.relay.mailchannels.net (antelope.elm.relay.mailchannels.net [23.83.212.4])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B162136995;
-	Mon, 24 Jun 2024 16:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246327; cv=pass; b=QKcaNrXpRUyx92WgCINpmnPcWnN0G+gpY/Qq3lmSVud86cMQW+cIQrUhr8QmPjTm760XlI032+BadrkhRgnbJ2vQ3Cp36ceev6TKmNTbWxCBRqYG/B4Dq1iDfOQeONjfrK8w+6QIa6I4H7OIeWNtKOaU3wJ7gvaEvG2NBAPLOAM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246327; c=relaxed/simple;
-	bh=s/X7e9ND1LcgFkfYWET+NkfJ4rO2vGCLphX+LfaDXAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AECTnAGHD+YYiAQV3eJ0ki0nmwkGf6pp0aq4Sp69a3f5C3/7fuJ5CBbSw4iLIoyoJGsMf9BASrT58uhSv0osJDteKeqh+dKVIaZ5h7/7rVqZ55urXqJbzcWK+OfwUHYtLdOfE0F74fgEsXVUSAXzjWRTUDKj5KCAN5utY6QUskA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cvjfmSv/; arc=pass smtp.client-ip=23.83.212.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD69136995;
+	Mon, 24 Jun 2024 16:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719246348; cv=none; b=X7CZ+tg0GPxGFnFrQhWuII1ocEzv9bOG8krc1l0BHz6AmUQ09oU/YvC0Yj5CxPWyVPjk+wzhLtIBdbvT/JD+I7eEj8O+JjfEgxsOueYl2be1qKJuQuUgzYuRoH4KEUe7Za3WqQvio3YDpGOxw2i5rJ2IMPyAKr2Lp1tIDfWqmno=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719246348; c=relaxed/simple;
+	bh=zc7081Y21FlTdwB7r1y80IdIKdEYx/IpzSp3yAgMxRY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FW3RKJMMA+n8u/f7LhiJvR2tJ6h4yf4/iEDIug2t9oWXtq4hIb2E0gqdEU2aD/wGB0vP+ax3WvSXh8oWAFL6HET9R3QH+7c8fOyWCgUFmaWoI20w03oQbQGkKpsMirYMKnSuZNL1QgUUcd6IPWoLxvynM3+xEuQ1rWYDzQtweys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=ikAL02jY; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cvjfmSv/"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id E9C371021BD;
-	Mon, 24 Jun 2024 16:18:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 643D0102800;
-	Mon, 24 Jun 2024 16:18:46 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1719245926; a=rsa-sha256;
-	cv=none;
-	b=RxFOHkYAs8kHhM0JFi++tXHrqC2wFE3mGXUMYR9fALURWsGiHJNpw+cO69H/BEzikNvESp
-	B5TKPYoMLfZ0YICR/D90VlJ545haN5W65AByHNWI/D4aRoxbcDA4CmVeurTlcSbhWnZlUW
-	V87iD7iaXZZKCY+MFWV3G3hpYzV2zRfOUCmxkTAeTeDTZseEGovTxnXXOSTy3SEHLL9Ryw
-	41TJvNnW6ZW8QCdVKQTanCq/P5YA+nZudb/mjyRiLFI+T8uylza4YRi64Bl8bibK7vhIsH
-	D4e+/ZDpjv3KilokkrTlBs3Uy1PPYl13r0r39fcMGrzvjZtRQA5NiygU1z0lbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1719245926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=s/X7e9ND1LcgFkfYWET+NkfJ4rO2vGCLphX+LfaDXAk=;
-	b=cIgDMkwcTVVtRiD+kcXnOg1h56H9puTO0bi9dAPXbYFJ6iW3w4/MEvbE3CvZvsDh17eI5s
-	6tN4wfAB22kR5mwMro12wtgmxykrsRCTX5jiFV4bq/WHVnXHKo88abyMW2ctYCQmOlA1o0
-	7wVGf40UUJO52S1FmTFbn2hboUE8KTZCWhXTdy7J3X9EMZc6gVJWy7Vvx6MysawlCP3Xey
-	7mN6a6f+isbxgrnEkNHI0X7cDqX2G67ccee32K9arbzNuR9zJ3Q8ir2ea4dcDxkpLIgOxF
-	AVe/rlWQ7z/NN6ssEIeYN5AuccFvrIzDuKENmEmz1CSKvOO/ACg94+zYZQ19pA==
-ARC-Authentication-Results: i=1;
-	rspamd-7f76976655-7pwfm;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Lyrical-Supply: 4362dac010c41fcf_1719245926736_502416715
-X-MC-Loop-Signature: 1719245926736:1170366257
-X-MC-Ingress-Time: 1719245926735
-Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.97.207.198 (trex/6.9.2);
-	Mon, 24 Jun 2024 16:18:46 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="ikAL02jY"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4W7Cxc1b4Czll9bs;
+	Mon, 24 Jun 2024 16:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:content-language:references:subject:subject:from:from
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1719246327; x=1721838328; bh=5YRbJCfER9/t7o2py5oZPcEO
+	b9O2alYeZUroDpPtXOU=; b=ikAL02jYcnW8oADCx4MyOFEykz3GGfzi6eWwiW9Z
+	qiD+dR0/fHNfI+Q6K0nONWMiiVlJ+aAomIKaZSKGu22m5ca76dqZkTNzCzXVftDr
+	j0DYgelboKWwKWHnBg+NV9g5B+h9mdpeKGFBC9vYwx6dye62o4gF7YLMcCV3+xMy
+	cnnlClziVI0W0ib/ncr7xzIVqTP/82AlTek/vbofMTYNyQaw7t5/parPScAR+eIs
+	ZWUEAB6AU5kfaH2lpyKjHEugC6rLSzGQualGEX1d9T5ytrnrpbdAE0IzQvz6FYTd
+	0ng0XDcORkIuLC53eCL7RCfIuhaNHKotvbEgrm+nv0kfJg==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id fRVPZY9Z3RGh; Mon, 24 Jun 2024 16:25:27 +0000 (UTC)
+Received: from [100.96.154.26] (unknown [104.132.0.90])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4W7Cnd0KhMz83;
-	Mon, 24 Jun 2024 09:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1719245926;
-	bh=s/X7e9ND1LcgFkfYWET+NkfJ4rO2vGCLphX+LfaDXAk=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=cvjfmSv/xtxNiy1geC1B7ErlaIXuNCp8p579Rdgk7lRi/G9ZhaRI2JLftSKNd5X73
-	 dxExRW5C4jruL7j8VO6OFRy2XiBofKi3p2M02os7BN/Ld5kTyENlx6CFkqBJxU5MA2
-	 CUXL8qFb0L0N8lCGf9ci5F6wfWwIwgLbYA8NeT3bFzy0is0Q9pFSzPXQM5Hbw7OLdZ
-	 zrxuiJ+Uip9vPt0op9wg09W+0iUaE4NRWgpAVE5emse4vWozSRP47/YMrwNGeixqVZ
-	 ngGFAgPW1zQP2oVndUKmM/eOP9+rH4H5kG4FoSPiT7EQEWSN9Tx0InsNTRpaH8wi5P
-	 CS3V0/Gj6mWDA==
-Date: Mon, 24 Jun 2024 09:18:41 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Huang Ying <ying.huang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alison Schofield <alison.schofield@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bharata B Rao <bharata@amd.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v3 1/3] cxl/region: Fix a race condition in memory
- hotplug notifier
-Message-ID: <20240624161841.gekjnoksxrb4zd7x@offworld>
-References: <20240618084639.1419629-1-ying.huang@intel.com>
- <20240618084639.1419629-2-ying.huang@intel.com>
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4W7CxF1FMyzll9br;
+	Mon, 24 Jun 2024 16:25:20 +0000 (UTC)
+Message-ID: <4ea90738-afd1-486c-a9a9-f7e2775298ff@acm.org>
+Date: Mon, 24 Jun 2024 09:25:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240618084639.1419629-2-ying.huang@intel.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+From: Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
+ and request layer.
+To: Nitesh Shetty <nj.shetty@samsung.com>, Christoph Hellwig <hch@lst.de>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Jonathan Corbet <corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>,
+ Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>,
+ Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, martin.petersen@oracle.com, david@fromorbit.com,
+ hare@suse.de, damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
+ joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
+References: <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
+ <9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
+ <a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
+ <665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
+ <abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org> <20240601055931.GB5772@lst.de>
+ <d7ae00c8-c038-4bed-937e-222251bc627a@acm.org>
+ <20240604044042.GA29094@lst.de>
+ <4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
+ <20240605082028.GC18688@lst.de>
+ <CGME20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0@epcas5p3.samsung.com>
+ <6679526f.170a0220.9ffd.aefaSMTPIN_ADDED_BROKEN@mx.google.com>
+Content-Language: en-US
+In-Reply-To: <6679526f.170a0220.9ffd.aefaSMTPIN_ADDED_BROKEN@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 18 Jun 2024, Huang Ying wrote:
+On 6/24/24 3:44 AM, Nitesh Shetty wrote:
+> For reference, I have listed the approaches we have taken in the past.
+> 
+> a. Token/payload based approach:
+> 1. Here we allocate a buffer/payload.
+> 2. First source BIO is sent along with the buffer.
+> 3. Once the buffer reaches driver, it is filled with the source LBA
+> and length and namespace info. And the request is completed.
+> 4. Then destination BIO is sent with same buffer.
+> 5. Once the buffer reaches driver, it retrieves the source information from
+> the BIO and forms a copy command and sends it down to device.
+> 
+> We received feedback that putting anything inside payload which is not
+> data, is not a good idea[1].
 
->In the memory hotplug notifier function of the CXL region,
->cxl_region_perf_attrs_callback(), the node ID is obtained by checking
->the host address range of the region. However, the address range
->information is not available when the region is registered in
->devm_cxl_add_region(). Additionally, this information may be removed
->or added under the protection of cxl_region_rwsem during runtime. If
->the memory notifier is called for nodes other than that backed by the
->region, a race condition may occur, potentially leading to a NULL
->dereference or an invalid address range.
->
->The race condition is addressed by checking the availability of the
->address range information under the protection of cxl_region_rwsem. To
->enhance code readability and use guard(), the relevant code has been
->moved into a newly added function: cxl_region_nid().
+A token-based approach (pairing copy_src and copy_dst based on a token)
+is completely different from a payload-based approach (copy offload
+parameters stored in the bio payload). From [1] (I agree with what has
+been quoted): "In general every time we tried to come up with a request
+payload that is not just data passed to the device it has been a
+nightmare." [ ... ] "The only thing we'd need is a sequence number / idr
+/ etc to find an input and output side match up, as long as we
+stick to the proper namespace scope."
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> c. List/ctx based approach:
+> A new member is added to bio, bio_copy_ctx, which will a union with
+> bi_integrity. Idea is once a copy bio reaches blk_mq_submit_bio, it will
+> add the bio to this list.
+> 1. Send the destination BIO, once this reaches blk_mq_submit_bio, this
+> will add the destination BIO to the list inside bi_copy_ctx and return
+> without forming any request.
+> 2. Send source BIO, once this reaches blk_mq_submit_bio, this will
+> retrieve the destination BIO from bi_copy_ctx and form a request with
+> destination BIO and source BIO. After this request will be sent to
+> driver.
+> 
+> This work is still in POC phase[2]. But this approach makes lifetime
+> management of BIO complicated, especially during failure cases.
+
+Associating src and dst operations by embedding a pointer to a third
+data structure in struct bio is an implementation choice and is not the
+only possibility for assocating src and dst operations. Hence, the
+bio lifetime complexity mentioned above is not inherent to the list
+based approach but is a result of the implementation choice made for
+associating src and dst operations.
+
+Has it been considered to combine the list-based approach for managing
+unpaired copy operations with the token based approach for pairing copy
+src and copy dst operations?
+
+Thanks,
+
+Bart.
