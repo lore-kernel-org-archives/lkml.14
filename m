@@ -1,75 +1,109 @@
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB8319FA7C;
-	Mon, 24 Jun 2024 19:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D67619FA7C
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 19:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719258883; cv=none; b=KdPhk9yTK57rKzq3LoMBfgDAtZMPuNh2Wy7Z98rYeR//Q29AL7OQ9WVsBv4BBqznwvuH5KeSyS+7eNSHNesf03fRRfD17y8HjeXzT3ZdXDfJoYVjFF9K9MTcxOaCA8Hi5dR9OdgfRtloAu1PfgKMv+CXy8ouTKodfVsUgjxJCc8=
+	t=1719258973; cv=none; b=Ib+v1mFjCJ+L0cBxI2V/v8nh2CIvVpL1sECPQlGBrk49H3ofgsaH725wRuTBIFlzaOuWz6LQv4SSO4epXlDIvJlJjHrVj1yJDQtUeR8RiHt3ywfiJ7f7NyqFsB7R1THC5YZRLzI9LxJzyAQAyl2NeRdaQx/yXwAzQa1CBXl+Zz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719258883; c=relaxed/simple;
-	bh=YjeIZMTsd0omzx/GT5djMmpkMHF0TUzcmkFbGvfVmVI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=YN7C9H8tqeV7cKjhlniGzJZHpc2+RcPWq+izeA7XrTw9FAjWvQjtbcHBvuxR53k9OZReJ76k7t+f53LphWAMsxvAwwVSzSH0OV5yFcQMBq8ljSIQlTi9fJlbgOcsby2EysREUlQoHC6MEZGWIA6N2H5SDJ5p83XbT1FiIAYRKLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=mdn+WCiP; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+	s=arc-20240116; t=1719258973; c=relaxed/simple;
+	bh=0Ry5iW7yjh4+dkK5KfmVxe6kFHr27wLyHfv1FVt7WXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iHPI/DrQ75bLEz3bM+AKDE7xTcAUCEqigj3vyK4jjcUO+UJdb3CfHjNCxi0vU22rswbWKotIRy3i/qhwfsEC27rFGTKkE/2DNl6yqLNTGeGd8I5N1JLtQW8E8VUHrp+9hDL0k8JKLR1xnVI+0NZWt4tFFKKAv5alqhc7kSIk1Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=1TLiJhaT; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="mdn+WCiP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=YjeIZMTsd0omzx/GT5djMmpkMHF0TUzcmkFbGvfVmVI=; b=mdn+WCiPlUD/e/xuATkjETArAY
-	n6Eb+FlQbES0RDhy/Z7P/A2jM/xplHg2O+Coq12Rk8c09YT5qCkYewIvscGHj+QqLfriHkOuQTyQT
-	NE8+GzCVW/3cI/736SyYclnQR0kAxcXlBJWqgjwPuEoKXScJbcB31ObM4mWrhnDLgQbtyjMVR16MI
-	zqgzC1wMo3c4u+Tt2A/reaeYdcSCc7yvg/c8WvBqnMwC3JnIUxXaxuMgZj+8cXhVFSFOvm2SyGBAj
-	m3SIrNieBIMrBgitaOEoD1q91yZGsivZ3xyRfXaaBLl9tUTUwWMa2f3+csMT9rhpNyp9XjjiTrCr8
-	YSHocFnA==;
-Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1sLpP5-00AMSm-0E;
-	Mon, 24 Jun 2024 13:31:11 -0600
-Message-ID: <6e2dc59a-445d-435e-9066-4a00119acf02@deltatee.com>
-Date: Mon, 24 Jun 2024 13:31:01 -0600
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="1TLiJhaT"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9aeb96b93so33995385ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 12:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719258972; x=1719863772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3tqQIIuDCADHgpFY8cfM0SAO57n+ccJALQge0Cj32Ko=;
+        b=1TLiJhaTxEGzLEsso757SQ0WdBj5CFTFpJcLqshM0mSeDeAU80EcdNZ1pKw40IcNCb
+         JITd02bZ5k3WDqwpSLkBADxPj9C269gNpUKRVnzZCLVZq8pUOpQfvMszXFfpHU0aQkkx
+         +JdSQWnKgFxBnK8wrhPme5MC/rOzJQ23NOw6bvkCZUcmF1G0nfNQLrigXybIGGPozUp0
+         lm/WvX6lNnyn17kSN26N5Svgjiw9W86+S11poTvJdVanMUPa9RAu6u4qWVb8rqORVniD
+         DQGOAPcBdm7efpDk3mwNh+RrvNw+5nyL/oDzRvVbpa+45HrsXtomxfjbaV++i58e868G
+         /e3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719258972; x=1719863772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3tqQIIuDCADHgpFY8cfM0SAO57n+ccJALQge0Cj32Ko=;
+        b=qX+wHl0WyE3+f7J6NnB/wGnulrVquUqwAbJgrULV9AQNxEfIUcrdzKdsszSoJVQg9F
+         GUSoWZ08+hII9Qg3q9cW7LTtcswsicWiLoq4XWuK9I76+N6wTwWym636qcacz9fTDrHS
+         YiES/CnPPsrbtZIq+byzsHfddbk7HxfvxfsfGtOjkX+AoOegacWxSOnvpHVtQfjnUtfa
+         ziMwy9pNSjnDSvjmbkWaAzaNlBQM1F7OzDBnazet5HeN2Xpaf2kpY8c4PywjSeLyuvTy
+         Y4nUVfOrWiLmYmj+JEBHz4/y99ct1pY8zN26O+KXK6jboisXZAMScjJDabYvy8j+s/Mh
+         Vwqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIdAgWyp0DRPaXgYogtm4mqnnS7QxElp931WugToWwM4FZu4TULGMkjqNnmKtW69n9VAEwkxymyJy82N4odluqtOfFwfN9OriJrW55
+X-Gm-Message-State: AOJu0YwPyS1E4/fVI8nlnJSp7zxjqRNeccKmdwbU1bjkJjQnjpKzq15T
+	rJlc8zX/PSvzq198b5zAd/U3JWETVtn7Yg/5NODY3tfxvI8xeEj8vcmAwWuyG2t/h3Lf0QGo9LZ
+	eMvw=
+X-Google-Smtp-Source: AGHT+IGKGfFARVAVotDoRb++tXbqpiUnNusCVE2oSilNa9cJ0LvB+1RBjIPtkjrPvj4Lp3gTbojpBw==
+X-Received: by 2002:a17:902:6548:b0:1f7:167d:e291 with SMTP id d9443c01a7336-1fa23ef7e87mr57131195ad.47.1719258971650;
+        Mon, 24 Jun 2024 12:56:11 -0700 (PDT)
+Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3d5e63sm66161665ad.187.2024.06.24.12.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 12:56:11 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	yonghong.song@linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] bpf, btf: Make if test explicit to fix Coccinelle error
+Date: Mon, 24 Jun 2024 21:54:27 +0200
+Message-ID: <20240624195426.176827-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
- linux-kernel@vger.kernel.org, sumanesh.samanta@broadcom.com,
- sathya.prakash@broadcom.com
-References: <20240621205327.GA1374772@bhelgaas>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20240621205327.GA1374772@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 104.157.31.28
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, shivasharan.srikanteshwara@broadcom.com, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org, sumanesh.samanta@broadcom.com, sathya.prakash@broadcom.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 1/2] switch_discovery: Add new module to discover inter
- switch links between PCI-to-PCI bridges
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 
+Explicitly test the iterator variable i > 0 to fix the following
+Coccinelle/coccicheck error reported by itnull.cocci:
 
+	ERROR: iterator variable bound on line 4688 cannot be NULL
 
-On 2024-06-21 14:53, Bjorn Helgaas wrote:
-> [+cc Logan]
+Compile-tested only.
 
-My apologies. I'm dealing with some health issues at the moment and I'm
-not able to review this in a timely fashion.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ kernel/bpf/btf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll try to review this when I'm able but that may not be for a few weeks.
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 821063660d9f..7720f8967814 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -4687,7 +4687,7 @@ static void btf_datasec_show(const struct btf *btf,
+ 			    __btf_name_by_offset(btf, t->name_off));
+ 	for_each_vsi(i, t, vsi) {
+ 		var = btf_type_by_id(btf, vsi->type);
+-		if (i)
++		if (i > 0)
+ 			btf_show(show, ",");
+ 		btf_type_ops(var)->show(btf, var, vsi->type,
+ 					data + vsi->offset, bits_offset, show);
+-- 
+2.45.2
 
-Thanks,
-
-Logan
