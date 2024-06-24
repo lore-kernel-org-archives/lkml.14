@@ -1,106 +1,85 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126E113A25D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F095125D6
 	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719229318; cv=none; b=uMlOnBwxf06lA78waJykgw39mQ9mYOQcfLtJMkjAUFqdFjuFWRNj8wlekz2uuw0lmNFpN+tqn+Y+E7iB5mVadohroqrMygb0WA2V9V8pPW41xQy7VQ7mD5/pCkmI79tj4XsBuwUNvB1+X02Mg5iAZXfTQfkZCEU3st3ZX/pL8ns=
+	t=1719229319; cv=none; b=TIWHRfoMRyXDasKPpSulUgt7Fdjay9k7P/lz+2Eckt5J6wiL2VRMk5QES4Kr+Ovuct9BuadIQdtFVtK1fPX33880Lbu4ln5RmSF8qjeeOjHlsttLB7KaQskxy9ycp0n6d0M2YqcqRtrP9bY5LJjPig/VHxqJnyXG4QSJBlGiHDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719229318; c=relaxed/simple;
-	bh=C028/nFsGE40ydlmB9BxdAJi/8hIWgLolYvN+o5rEZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qBRFwFmKUM4/40VFmuRUZNDCiP3aoeXxryKpu4dCaLKcAZCxAXTadTxYiPxvZ+aKEbHDljKGOuB6eUX8QoF6vn4foheW8mTclH1ev+Es8ORjLiZoiSQbjq2q0cIOqu5DrNW1X/wCsT00I5ikDDvd4gd6R73s+hdwlcK9UusY11U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j1M/szUJ; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719229319; c=relaxed/simple;
+	bh=AijBxoAfmMIAkX73H7vl3+78cSiJ+jq7pp7HVYLFovg=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Vmx0HqSHL0WXmgp9Ia0JXMyGIPiOtEH9GhX3qW59ykrD8xVq03dvlZ9QjRUFoVjD5HG04FjMvARcDWxlM4MjyqqoEU7ntZCGcoc9XuZzQvva49O5JJngmZswDQdz5/aqceYD5t9W8viJmavAlgeM0Md0TfAPQkPKeLNzdIvL2BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=NDUT33qo; arc=none smtp.client-ip=91.26.50.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1M/szUJ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-366dcd21604so1492971f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719229315; x=1719834115; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T+jjro0681AEOFwhkhNhmaTtx8v0fmEZR11zlZ878gA=;
-        b=j1M/szUJ04JfmiXtzdUpbWOEGaymaHvffYUh0YgExeQe/9M5BcubEpewCPEuRVnJHy
-         d4NKbBIZFZgxkllY1Ie/chYOeZ5I/9G1YhKZ65eInOnAlx+EI77AuDYC5EqV8Ux+TnlB
-         /xyT5hHkn9nYwirYWVGZJQwikhxHQWkSBp0xaumLPdJjyxmfhHUnsecK6bEk+705gCcv
-         d0gvnxECWQ8fwtRCjWnjwzFLL17ItksMD3VG8pLpDtJBv5+Pitd/M4/jqwgaAW8nClJb
-         HAP9cNzgz8EROKUXAdwVpR6aKWusBVrH2qG/nK8ywxuDV2ZNTil55BWgf8Mah2lWHxVv
-         +nyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719229315; x=1719834115;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T+jjro0681AEOFwhkhNhmaTtx8v0fmEZR11zlZ878gA=;
-        b=efkTzn9PXsNFu4kt9Zx5gaLoCI02aiwKTFTkBynIMqea80WSX6n3AD8UkAHPxSg+tY
-         nTs9VWPsYrTv0mUPDwXYjcNd++ZZ+gX174YllhGzELEJC+b3nRohGN3cM4RASb+3DRmS
-         zSfY/tKfoOChhQFHuWmGJ9FUONASpKNS4kMbfodbNFjcHMKIukX45EQ5IYtpZLeBJ3Bu
-         DWgk9+47ZfboDtAMChVPNm9dJHg5w+edVWw4KHW7zhGleSqs1vEcKj8XVgYdVVoN9Cq5
-         LuCRA1y18y1Bzu1wkrFF+b+uet6fm5SQkSDSR1FDjtt4Q/+9JXtno/0c2TRFuX8E88BE
-         k2+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUR53i53CKXrna61JqcT7ICm2B7oNBBVN8+2Qk3V4t9u4cZ7qiDnBjip/e6elbDxGjeU4lOsVeZltpQobsM/tZ3+vl+2cV1xH5a6wIW
-X-Gm-Message-State: AOJu0YwhgYGzFtizOE+RnM+Q+HYDJYKJqfsc46JxY35WtmsEJ8AtjAf3
-	+K9Sgs02ETdw+xvAzSKX3wuatoQBcy2Pu6cZpDV0JyJe5vfYjI+9JmklCO86YiM=
-X-Google-Smtp-Source: AGHT+IHoGgWxVHYl9o9oDPZVH7R7MNNhC1mYVS4z9J3EY4whsBbRpKDAVx2h9mKJ84IvNeAFF6eWqA==
-X-Received: by 2002:a05:6000:1545:b0:366:e8cf:ef6d with SMTP id ffacd0b85a97d-366e8cff117mr4375611f8f.55.1719229315261;
-        Mon, 24 Jun 2024 04:41:55 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3663a8c7c6esm9839416f8f.103.2024.06.24.04.41.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 04:41:54 -0700 (PDT)
-Message-ID: <55bee27a-e4c8-4e4f-ac62-a581f46662ef@linaro.org>
-Date: Mon, 24 Jun 2024 12:41:53 +0100
+	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="NDUT33qo"
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
+	q=dns/txt; i=@phytec.de; t=1719229301; x=1721821301;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AijBxoAfmMIAkX73H7vl3+78cSiJ+jq7pp7HVYLFovg=;
+	b=NDUT33qo3EilyGayT3njKZnpW84oPETD3HZrFJoQLo41ts19bUoLinpqr12Qhrxt
+	Z7b8gHQV2JzI/X5NqMOJBIjzdz97iygTrkcsrafJDCKMtvdbqm+kWGVQltaILuWs
+	wymXOSCioZaw489NNs+A5h/X8iqpK2nbGBN6Q2ZfG2A=;
+X-AuditID: ac14000a-03251700000021bc-c4-66795b750406
+Received: from florix.phytec.de (Unknown_Domain [172.25.0.13])
+	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 93.C2.08636.57B59766; Mon, 24 Jun 2024 13:41:41 +0200 (CEST)
+Received: from Berlix.phytec.de (172.25.0.12) by Florix.phytec.de
+ (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Mon, 24 Jun
+ 2024 13:41:41 +0200
+Received: from Berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4]) by
+ berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4%4]) with mapi id 15.01.2507.006;
+ Mon, 24 Jun 2024 13:41:41 +0200
+From: Leonard Anderweit <L.Anderweit@phytec.de>
+To: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+	"arnd@arndb.de" <arnd@arndb.de>
+CC: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"upstream@phytec.de" <upstream@phytec.de>
+Subject: Question about [PATCH] [RFC] rtc: y2038: remove broken RTC_HCTOSYS
+ workaround
+Thread-Topic: Question about [PATCH] [RFC] rtc: y2038: remove broken
+ RTC_HCTOSYS workaround
+Thread-Index: AQHaxit7Na9swo4O+UmGER8BNQyYMw==
+Date: Mon, 24 Jun 2024 11:41:41 +0000
+Message-ID: <cf6ac9542f58a33b146ad7b0f5577e1dff3becab.camel@phytec.de>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0FEC28AE4A6F8B48B788FEA61D7C15EE@phytec.de>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] arm64: dts: qcom: x1e80100: Add soundwire controller
- resets
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240624-x1e-swr-reset-v1-0-da326d0733d4@linaro.org>
- <p6ooqgfwld7stzevozs7huztputc7vpc7652wx6rvg4cly5mj5@fwrzeu6alhgq>
- <ea57a3a1-1037-4d59-a384-50c98e1f9387@linaro.org>
- <mzcofsmnqkxgxarcbxh2gqtdusyzpxr4edjcpurerurzape7da@4dky45iy5iph>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <mzcofsmnqkxgxarcbxh2gqtdusyzpxr4edjcpurerurzape7da@4dky45iy5iph>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42JZI8nAq1saXZlmcGu9rkX7u2XsFn8nHWO3
+	uLxrDpvFsdVX2BxYPH7/msToMW9NtcfnTXIBzFFcNimpOZllqUX6dglcGTNefWUruMNScXLb
+	YpYGxjMsXYycHBICJhKv7p1k7mLk4hASWMIkceLxRyYI5z6jxIHrf6CcDYwSS38tYwJpYRPQ
+	l1i54ikziC0ikCbxvHMmI0gRs8BKRomPU5axdzFycAgLREh0v7OCqImVOHflNRtIWERAT2Ld
+	QwOQMIuAqkTXmbfsIDavgJvEo/btbCA2o4CsxIYN58HGMwuIS2x69p0V4lIBiSV7IOISAqIS
+	Lx//g4rLS5y4NY0JZDyzgKbE+l36EK0WEtN3v2KDsBUlpnQ/hFolKHFy5hOWCYyis5BsmIXQ
+	PQtJ9ywk3bOQdC9gZF3FKJSbmZydWpSZrVeQUVmSmqyXkrqJERRRIgxcOxj75ngcYmTiYDzE
+	KMHBrCTCO72+LE2INyWxsiq1KD++qDQntfgQozQHi5I47+qO4FQhgfTEktTs1NSC1CKYLBMH
+	p1QDo366lernqzz7nb7a5We3yRZt6JupGxDstzFq9XyrcE5lp81d3At/M827sO2VjknvjiXe
+	amJxaowrJDcxldk/YWdkUX9Q/0qr7KJpSvCz5kObntxauPuU1s5vXMEzI7lnTlzl/W+NznHl
+	WQUcc7zEmLfUMZZG7+/qZrN4vmmH54znkiZMzld/KrEUZyQaajEXFScCAPQzlQmWAgAA
 
-
-
-On 24/06/2024 12:22, Dmitry Baryshkov wrote:
-> On Mon, Jun 24, 2024 at 12:11:08PM GMT, Srinivas Kandagatla wrote:
->>
->>
->> On 24/06/2024 12:08, Dmitry Baryshkov wrote:
->>> On Mon, Jun 24, 2024 at 11:55:29AM GMT, Srinivas Kandagatla wrote:
->>>> Soundwire resets are missing in the existing dts, add resets for all the 4
->>>> instances of Soundwire controllers (WSA, WSA2, RX, TX).
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>
->>> Could you please point out the driver changes?
->> If you mean, soundwire controller driver, it already has the reset support.
-> 
-> No, I was looking for audiocc drivers.
-
-drivers/clk/qcom/lpasscc-sc8280xp.c needs no changes, other then the 
-dt-bindings changes that i will fix in v2.
-
---srini
-> 
+SGksDQoNCkkgZm91bmQgdGhpcyBwYXRjaCBbMV0gd2hpY2ggaXMgbmVjZXNzYXJ5IGZvciBhIHBy
+b2plY3QgSSdtIGN1cnJlbnRseQ0Kd29ya2luZyBvbi4gSSdtIHVzaW5nIHBoeWJvYXJkLXdlZ2Eg
+WzJdIHdpdGggYW4gYW0zMzUgQVJNIFNvQyB3aGljaCBJDQp3YW50IHRvIG1ha2UgeTIwMzggcHJv
+b2YuDQpJcyB0aGVyZSBhbnkgcmVhc29uIGl0IHdhcyBuZXZlciBhY2NlcHRlZD8NCg0KWzFdaHR0
+cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjIwOTA4MTE1MzM3LjE2MDQyNzctMS1hcm5kQGtl
+cm5lbC5vcmcvDQoNCg0KWzJdaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
+cm5lbC9naXQvc3RhYmxlL2xpbnV4LmdpdC90cmVlL2FyY2gvYXJtL2Jvb3QvZHRzL3RpL29tYXAv
+YW0zMzV4LXdlZ2EtcmRrLmR0cw0KDQpSZWdhcmRzDQpMZW9uYXJkDQo=
