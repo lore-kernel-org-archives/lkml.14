@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A2519DF77
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 16:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200FF19DF6F;
+	Mon, 24 Jun 2024 16:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246821; cv=none; b=f6YfIaAm/xTJ+G4Faou9754jJyflTyNheagn9gfCeDPLxvCfs3bChRge8DwUxWum/orZksG1/NPwl1uO26JHavWekfRfQwmaqMsuLqYsyY8p/Ddyfq2JhkXtlukYPYGFaRQqPFdBfI7RCZJy39uBRlBx0m/BNAqz7eQPHPwQ97A=
+	t=1719246832; cv=none; b=fWmhtW86UjMbGveLeyF63eUX4HDyJmXJn6iOuP2qd7V/fyI6Vop5kkAq8eE41iHbsOxAoWboaJY9rb5Aks4hQmAxbAYY9bjE8dqGr/Gp4KzQpr78qVspyRbaqQ06qHeaSLt50+U1RHvTK0lNNgY1pS/VuTDH214PH5TUai+E5mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246821; c=relaxed/simple;
-	bh=4gqQAbOK79zS1uKAm/hj5eq4OIA6n71bJj1tEIJvkBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UOmtaWZ9A+gcHb4FcJsTdI4y67QAo/jBmsVS9HUcSOxuZFcXu2hUL3FP9QqHnBk81pihttdp7DZ2BxTiNdNS8AABOYn4yFQcDqgR5NoYftninn33XrxQopfhmxhvDRRrI2IVZpnT+B99BQmWnqvrJirexihnviL9Fpz5B3aTXwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P5dG3G1P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719246832; c=relaxed/simple;
+	bh=IGbwXdFzVVVC8J3LcQvvs47dT5JIygTgPvdjH3cUZV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UDosmVnUsQ7PGTJXtOGpQ0hCoGTIj59QLoRadh23QX5xKzZLIAq7Nx1u3X+mzgrxeC7Xb6oCPIrEk14QnOpNnHc21r0029KJaB98p7bPsemUpyliXrM74L6AOKMAnCpWaH2+7S/LXgiS6qylVcm79Xu4oe0n/GDzXStypX/Q3pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mqc/hYk6; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5dG3G1P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719246819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dgN0dBgy6sR0oAWnnFjEXlGg9ErnyA+uGyeQrtdxBG8=;
-	b=P5dG3G1PG8LRV4t9ZxiMvqopEg8bmw191ao3j2Yd7WkCMqosXYtK0+MCVLrYtmQt2fb/P2
-	IkwFQnRUGoPWosMWYLzbQ9jojqbJV+v8KGEWkvVgXHNoB6PMWcmZpkbYEihkqUB+YO8U3l
-	XNI66ykQbxZfCIqXRwZ3xNU1yVjvurs=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-106-hyTBx4oRNMyFE2NshUZ6sw-1; Mon,
- 24 Jun 2024 12:33:34 -0400
-X-MC-Unique: hyTBx4oRNMyFE2NshUZ6sw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA53F1955E82;
-	Mon, 24 Jun 2024 16:33:31 +0000 (UTC)
-Received: from [10.22.17.135] (unknown [10.22.17.135])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC0AB19560BF;
-	Mon, 24 Jun 2024 16:33:28 +0000 (UTC)
-Message-ID: <d97e2e8f-0abc-49a7-bead-0501c1226040@redhat.com>
-Date: Mon, 24 Jun 2024 12:33:27 -0400
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mqc/hYk6"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45OGXhjW093075;
+	Mon, 24 Jun 2024 11:33:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719246823;
+	bh=LyzxEtnalIOT3X/WHYQzI/uymtmHBLKKY4oKDuw6WiQ=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=mqc/hYk6nq6ypK9kp0vNS2KHxHsmb2GU6CmBQhpgxNC2PiYJg82kTa/tRkVEcF5LR
+	 5gIznpo+KpiOAIlkuhzodn+YH/QspwG0YrtLzMG7MYlRIUEbxJ1osD+3xqlEhZuPSI
+	 z/CfcyBMSxqsTXu88SKSFoiSaQTsLsLZJg674fgo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45OGXhB0072426
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 24 Jun 2024 11:33:43 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 24
+ Jun 2024 11:33:42 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 24 Jun 2024 11:33:42 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45OGXgwd127091;
+	Mon, 24 Jun 2024 11:33:42 -0500
+Message-ID: <24c0ed06-3c32-4cc3-922c-4717d35a1112@ti.com>
+Date: Mon, 24 Jun 2024 11:33:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,79 +50,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memcg: Add a new sysctl parameter for automatically
- setting memory.high
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- Alex Kalenyuk <akalenyu@redhat.com>, Peter Hunt <pehunt@redhat.com>,
- linux-doc@vger.kernel.org
-References: <20240623204514.1032662-1-longman@redhat.com>
- <77d4299e-e1ee-4471-9b53-90957daa984d@redhat.com>
- <ZnmO8izZPwYfiaRz@castle.lan>
+Subject: Re: [PATCH 0/3] Add global CMA reserve area
+To: Randolph Sapp <rs@ti.com>, Devarsh Thakkar <devarsht@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>
+References: <20240613150902.2173582-1-devarsht@ti.com>
+ <D1ZXO8F3XN2I.3CTTE245I0TYY@ti.com>
 Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <ZnmO8izZPwYfiaRz@castle.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <D1ZXO8F3XN2I.3CTTE245I0TYY@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 6/24/24 11:21, Roman Gushchin wrote:
-> On Sun, Jun 23, 2024 at 04:52:00PM -0400, Waiman Long wrote:
->> Correct some email addresses.
+On 6/14/24 12:58 PM, Randolph Sapp wrote:
+> On Thu Jun 13, 2024 at 10:08 AM CDT, Devarsh Thakkar wrote:
+>> Add global CMA reserve area for AM62x, AM62A and AM62P SoCs.
+>> These SoCs do not have MMU and hence require contiguous memory pool to
+>> support various multimedia use-cases.
 >>
->> On 6/23/24 16:45, Waiman Long wrote:
->>> With memory cgroup v1, there is only a single "memory.limit_in_bytes"
->>> to be set to specify the maximum amount of memory that is allowed to
->>> be used. So a lot of memory cgroup using tools and applications allow
->>> users to specify a single memory limit. When they migrate to cgroup
->>> v2, they use the given memory limit to set memory.max and disregard
->>> memory.high for the time being.
->>>
->>> Without properly setting memory.high, these user space applications
->>> cannot make use of the memory cgroup v2 ability to further reduce the
->>> chance of OOM kills by throttling and early memory reclaim.
->>>
->>> This patch adds a new sysctl parameter "vm/memory_high_autoset_ratio"
->>> to enable setting "memory.high" automatically whenever "memory.max" is
->>> set as long as "memory.high" hasn't been explicitly set before. This
->>> will allow a system administrator or a middleware layer to greatly
->>> reduce the chance of memory cgroup OOM kills without worrying about
->>> how to properly set memory.high.
->>>
->>> The new sysctl parameter will allow a range of 0-100. The default value
->>> of 0 will disable memory.high auto setting. For any non-zero value "n",
->>> the actual ratio used will be "n/(n+1)". A user cannot set a fraction
->>> less than 1/2.
-> Hi Waiman,
->
-> I'm not sure that setting memory.high is always a good idea (it comes
-> with a certain cost, e.g. can increase latency), but even if it is,
-> why systemd or similar userspace tools can't do this?
+>> Brandon Brnich (1):
+>>    arm64: dts: ti: k3-am62p5-sk: Reserve 576 MiB of global CMA
+>>
+>> Devarsh Thakkar (2):
+>>    arm64: dts: ti: k3-am62x-sk-common: Reserve 128MiB of global CMA
+>>    arm64: dts: ti: k3-am62a7-sk: Reserve 576MiB of global CMA
+>>
+>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts        | 9 +++++++++
+>>   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts        | 7 +++++++
+>>   arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 8 ++++++++
+>>   3 files changed, 24 insertions(+)
+> 
+> I'm still a little torn about putting this allocation into the device tree
+> directly as the actual required allocation size depends on the task.
+> 
 
-We actually have a OOM problem with OpenShift which is based on 
-Kubernetes. AFAIK, the setting of memory.high is still in alpha for 
-Kubernetes. So a memory cgroup is set up just by setting memory.max at 
-the moment.
+That is the exact reason this does not belong in DT. For everyone *not*
+using the most extreme case (12x decodes at the same time), this is
+all wasted space. If one is running out of CMA, they can add more on
+the kernel cmdline.
 
-I also trace back the OOM problem to commit 14aa8b2d5c2e ("mm/mglru: 
-don't sync disk for each aging cycle") in the MGLRU code. So setting 
-memory.high automatically is one way to avoid premature OOM. That is the 
-motivation behind this patch.
+> If it's allowed though, this series is fine for introducing those changes. This
+> uses the long-tested values we've been using on our tree for a bit now. The only
+> thing that's a little worrying is the missing range definitions for devices with
+> more than 32bits of addressable memory as Brandon has pointed out. Once that's
+> addressed:
+> 
+> Reviewed-by: Randolph Sapp <rs@ti.com>
+> 
+> Specifying these regions using the kernel cmdline parameter via u-boot was
+> brought up as a potential workaround. This is fine until you get into distro
+> boot methods which will almost certainly attempt to override those. I don't
+> know. Still a little odd. Curious how the community feels about it.
+> 
+> Technically the user or distro can still override it with the cmdline parameter
+> if necessary, so this may be the best way to have a useful default.
+> 
 
->
-> I wonder what's special about your case if you do see a lot of OOMs
-> which can be avoided by setting memory.high? Do you have a bursty workload?
+The most useful default is one that doesn't eat 576 MiB of memory "just in case".
+Needing that much CMA is the exception case and should be the one that requires
+adding something to the kernel cmdline.
 
-In our case, the OOM kill can be triggered by writing a large data file 
-that exceeds memory.max to a NFS mounted filesystem as long as there is 
-enough free pages that the dirty_bytes/dirty_background_bytes mechanism 
-isn't triggered.
+If the kernel cmdline option does not work in some cases then we should
+fix that instead of hard-coding a workaround here in DT. We are robbing
+ourselves of a better solution here.
 
-Regards,
-Longman
-
-
+Andrew
