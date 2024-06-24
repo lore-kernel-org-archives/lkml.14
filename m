@@ -1,234 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C51719DF63;
-	Mon, 24 Jun 2024 16:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A119DF63;
+	Mon, 24 Jun 2024 16:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246131; cv=none; b=NYgvzaFd+DBYs+5KZnMxsAR5PTOgYdZR5BzeRyKvu5n5EYaMcX7oHUjpbg6FQaYEbrjhr5jtBlLB413OkJzl25A171n4rOwGFiZC/0aKf3b3cPG00gMUNBIcF4RPbftRlSKLscnPOnS+b/qoJJ4hItecgH7OXRVgDQOcGCcWLJU=
+	t=1719246142; cv=none; b=gqi7fvyXdJfLUYsMl7xl3DI0qVyVtazZ4qix4isDZ7CkIXw9mWC64f0bVHM/QLTmrqB0mzaC08dyJePjDlo+tUxu7jHX0Nx2ZJOPmKCSv9inCI9iwbP4Vt1c9Gw10iJko02O/XmAiGugPqirON8ez+Fr+QtOvLCB7MsTDwGOfCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246131; c=relaxed/simple;
-	bh=zMvz+Gv9NvgZTcXSP4I7e3sdMcxBeebAk4b31+F0GTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IlsmYCaTYKxDBumEU4Yx2p0NF1V//dSLVPonsm4X1TtQAEJWpKWia/HCXR3crVD4kEN57TLZjVV6/BytJD4qM7XiQHkHkthR0k9q8EQIreMW3hph1fcTlQWpg2/o4q+ahmMF2UADlcAjE9WHQggMnd8WqmeBUDO2aVKCA4621SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ng+jfuf/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719246142; c=relaxed/simple;
+	bh=F4+Y3cxc/O7I9mHF0Tndy0UmovZrdLKD0A9V49BygtI=;
+	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=nXuhygwfx39l/+x6EXaXsu9NiDpgW/cMVlwcgNSdCs0BLg2UTUhyjYOTdHJpgt5S7SmYu7VDib7+3qkZOHxmnDaeWqrt99RCmo2wEyTnzZjuNM2gmnMvfASUoSbDkgVghPeLKuek2q2p2jJNAEqxKWyWwUHjOAk6qNIN8ywPV5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eM1bwwsT; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ng+jfuf/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8E6BC4AF0C;
-	Mon, 24 Jun 2024 16:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719246130;
-	bh=zMvz+Gv9NvgZTcXSP4I7e3sdMcxBeebAk4b31+F0GTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ng+jfuf/zTupMgZ/PhIAT97RdB6bNRW8KuJ7R1puj32MOV1LRwwtTsAMuY3W2axtD
-	 LDKyjupLi8XpW/2q2w3um/sTmlEQnPkDFmhCHugo10uGXXvmChXC8Yh6wy2OoS1mjs
-	 kP56+v3/L1iNus3AVKz5zgTpOqHn2UcbuHvXObXO2Zdc5rL5RB1D+LdNt1WVHY7pvl
-	 gvnQcxpCuTzWkKoMcQKucc8G+vnFpK9mJQCwDXLPXRWrLwRNaJuGFOHtuTGRw3wZw1
-	 0lWmpX51uuhA+F3+eodURxPVaqz0U3s/LkW2WKI6Zy6QYs4xOSUAPSn/v/DmpePCsM
-	 J5KIr2t+eNa8Q==
-Date: Mon, 24 Jun 2024 17:22:04 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, arnd@arndb.de,
-	durai.manickamkr@microchip.com, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Hari.PrasathGE@microchip.com,
-	Balamanikandan.Gunasundar@microchip.com,
-	Nayabbasha.Sayed@microchip.com, Dharma.B@microchip.com,
-	Varshini.Rajendran@microchip.com, Balakrishnan.S@microchip.com,
-	Charan.Pedumuru@microchip.com
-Subject: Re: [PATCH 4/5] dt-bindings: gpio: convert Atmel GPIO to json-schema
-Message-ID: <20240624-divinity-gonad-e30bb4554403@spud>
-References: <20240624100431.191172-1-manikandan.m@microchip.com>
- <20240624100431.191172-5-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eM1bwwsT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719246142; x=1750782142;
+  h=from:date:to:cc:subject:message-id:mime-version;
+  bh=F4+Y3cxc/O7I9mHF0Tndy0UmovZrdLKD0A9V49BygtI=;
+  b=eM1bwwsTyLz961F2i2fWFMs5Hb7hpZ9n4YTirz3ZQh6RIYb0fU3ksSum
+   yDbVs2hm0ICAIhyADK8r5BmuVdz0S4NxRlzhbMBijqMfkOkJFyNgvw/Qq
+   5j5romH4MvkBS2vNpqXHeCT5CoFbdOyxemb3E4LbiRoDkt9f6NZ8WofOw
+   8ewXKJikSv0OWIpF6fUgMZzkarYbxq/JWfeOuLZ72GppjLMOOccpuWfxf
+   t6SgnsErOJxOT5oyUTfG93coGsOLtOYQJr+9CRBwIZya7+R8sESG4MY99
+   I4eNumFEid/GhJVURymVoxQ10/glSZaUjry0GY2UQ6cvP9ig9RzPe6EEs
+   Q==;
+X-CSE-ConnectionGUID: JA7CPWkbRBaIRtwIdsSpUg==
+X-CSE-MsgGUID: psOO9gwFS72skdqjCSkJLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="27637272"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="27637272"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 09:22:21 -0700
+X-CSE-ConnectionGUID: BYOU9KmYQaW5pzZiTrNtkw==
+X-CSE-MsgGUID: 0uzXkmujTjyvFcGh+4A4Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="47721812"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 09:22:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 24 Jun 2024 19:22:10 +0300 (EEST)
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+    Sebastian Reichel <sre@kernel.org>, 
+    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: branch between pdx86 lenovo c630 branch, power/supply and USB
+Message-ID: <0986fbac-7fba-56ea-cabb-c040ae12a795@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MdphJjn9xsPu5pcS"
-Content-Disposition: inline
-In-Reply-To: <20240624100431.191172-5-manikandan.m@microchip.com>
+Content-Type: text/plain; charset=US-ASCII
 
+Hi,
 
---MdphJjn9xsPu5pcS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is v2 of the lenovo c630 IB branch with the build fix for non-ARM64 
+platforms (built on top of the commits in the previous IB PR).
 
-On Mon, Jun 24, 2024 at 03:34:30PM +0530, Manikandan Muralidharan wrote:
-> Convert the Atmel GPIO controller binding document to DT schema format
-> using json-schema.
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
-This should mention that there are additional compatible strings added.
->=20
-> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-> ---
->  .../bindings/gpio/atmel,at91rm9200-gpio.yaml  | 78 +++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio_atmel.txt   | 31 --------
->  2 files changed, 78 insertions(+), 31 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/atmel,at91rm92=
-00-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio_atmel.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio=
-=2Eyaml b/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
-> new file mode 100644
-> index 000000000000..3ace7ba687fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/atmel,at91rm9200-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip GPIO controller (PIO)
-> +
-> +maintainers:
-> +  - Manikandan Muralidharan <manikandan.m@microchip.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - atmel,at91sam9x5-gpio
-> +              - microchip,sam9x60-gpio
-> +          - const: atmel,at91rm9200-gpio
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
-This is definitely wrong, cos it disallows having
-"atmel,at91rm9200-gpio" on it's own.
+are available in the Git repository at:
 
-> +      - items:
-> +          - enum:
-> +              - microchip,sam9x7-gpio
-> +          - const: microchip,sam9x60-gpio
-> +          - const: atmel,at91rm9200-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +  gpio-line-names: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  "#gpio-lines":
-> +    description:
-> +      Number of gpio, 32 by default if absent
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-ib-lenovo-c630-v6.11-2
 
-default: 32
+for you to fetch changes up to 13bbe1c83bc401c2538c758228d27b4042b08341:
 
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    pioA: gpio@fffff400 {
+  platform/arm64: build drivers even on non-ARM64 platforms (2024-06-24 18:22:15 +0300)
 
-The label here isn't needed.
+----------------------------------------------------------------
+Immutable branch between pdx86 lenovo c630 branch, power/supply and USB
+subsystems due for the v6.11 merge window.
 
-Thanks,
-Conor.
+platform-drivers-x86-ib-lenovo-c630-v6.11-2:
+  v6.10-rc1 + platform-drivers-x86-lenovo-c630
+for merging into the power/supply and USB subsystems for v6.11.
 
-> +            compatible =3D "atmel,at91rm9200-gpio";
-> +            reg =3D <0xfffff400 0x200>;
-> +            interrupts =3D <2 IRQ_TYPE_LEVEL_HIGH 1>;
-> +            #gpio-cells =3D <2>;
-> +            gpio-controller;
-> +            interrupt-controller;
-> +            #interrupt-cells =3D <2>;
-> +            clocks =3D <&pmc PMC_TYPE_PERIPHERAL 2>;
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt b/Docu=
-mentation/devicetree/bindings/gpio/gpio_atmel.txt
-> deleted file mode 100644
-> index 29416f9c3220..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -* Atmel GPIO controller (PIO)
-> -
-> -Required properties:
-> -- compatible: "atmel,<chip>-gpio", where <chip> is at91rm9200 or at91sam=
-9x5.
-> -- reg: Should contain GPIO controller registers location and length
-> -- interrupts: Should be the port interrupt shared by all the pins.
-> -- #gpio-cells: Should be two.  The first cell is the pin number and
-> -  the second cell is used to specify optional parameters to declare if t=
-he GPIO
-> -  is active high or low. See gpio.txt.
-> -- gpio-controller: Marks the device node as a GPIO controller.
-> -- interrupt-controller: Marks the device node as an interrupt controller.
-> -- #interrupt-cells: Should be two. The first cell is the pin number and =
-the
-> -  second cell is used to specify irq type flags, see the two cell descri=
-ption
-> -  in interrupt-controller/interrupts.txt for details.
-> -
-> -optional properties:
-> -- #gpio-lines: Number of gpio if absent 32.
-> -
-> -
-> -Example:
-> -	pioA: gpio@fffff200 {
-> -		compatible =3D "atmel,at91rm9200-gpio";
-> -		reg =3D <0xfffff200 0x100>;
-> -		interrupts =3D <2 4>;
-> -		#gpio-cells =3D <2>;
-> -		gpio-controller;
-> -		#gpio-lines =3D <19>;
-> -		interrupt-controller;
-> -		#interrupt-cells =3D <2>;
-> -	};
-> -
-> --=20
-> 2.25.1
->=20
+----------------------------------------------------------------
+Bjorn Andersson (1):
+      dt-bindings: platform: Add Lenovo Yoga C630 EC
 
---MdphJjn9xsPu5pcS
-Content-Type: application/pgp-signature; name="signature.asc"
+Dmitry Baryshkov (2):
+      platform: arm64: add Lenovo Yoga C630 WOS EC driver
+      platform/arm64: build drivers even on non-ARM64 platforms
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnmdLAAKCRB4tDGHoIJi
-0gfJAP43jmnUWzp4jHeAuoDgfOKxum6Vx7HG8U8ROvnUwO0DpwD9E4g40LqyDENj
-/oRX8/bfq4Od5JJyEuqmzXV00QCQNAc=
-=rC3a
------END PGP SIGNATURE-----
-
---MdphJjn9xsPu5pcS--
+ .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 ++++++
+ drivers/platform/Makefile                          |   2 +-
+ drivers/platform/arm64/Kconfig                     |  14 +
+ drivers/platform/arm64/Makefile                    |   1 +
+ drivers/platform/arm64/lenovo-yoga-c630.c          | 291 +++++++++++++++++++++
+ include/linux/platform_data/lenovo-yoga-c630.h     |  44 ++++
+ 6 files changed, 434 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/platform/lenovo,yoga-c630-ec.yaml
+ create mode 100644 drivers/platform/arm64/lenovo-yoga-c630.c
+ create mode 100644 include/linux/platform_data/lenovo-yoga-c630.h
