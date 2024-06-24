@@ -1,99 +1,61 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37701A0AE1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 20:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7631934CDD
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 20:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719261708; cv=none; b=XPGeN7Y3iWOk3L2J7al1RvUgg6NkxaRFQuf5l+M7jNGQGtmqzfTN5Uvpi0VD6xc6r606wvo0dwxUoeJyEm/VdA45yyspFoPFD+54zv5divEDrRbeW3U6KadzxRrWiz0CE4wrQuTefvKwnNNtqJrjYC9M1lTBUM34KJdfwr+KJts=
+	t=1719261760; cv=none; b=kpzgbBnb8C5bpCeE49rr8WXNSpeupncdphsT3Y+gEULEAF1H+IMwV3qbPE4tAXTepNBzBlkzce8AaB2M6Kgj8boMQnbPfGWurX0w0vx3r5e58Kgzjko6G7ZMVG1K02QWzSJvGBe6QlXvw9+1zZcNlr21e3/p+XOuADRMz29stC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719261708; c=relaxed/simple;
-	bh=TJYXUnEmRvQ3P5Iy0fK8m2XiYoFkyeN9sQ7dGAci6kg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q5aSQ9BImwpQyeSUBfEILm22vNySYMI6sL2ncVaYJ0jwlTIb7/kZDLT0UjlfGtMe2cWgLacD/HyuIZvra6kjCuRXnXDYIsKrigg48t+H0MoLY1XCraz0Z3/LeJkpCS7keiqNXwBrsREEK2PMeSgAm0q9WQBCZ0XFhnJ0IEYmEd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=WbQZOXCf; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1719261760; c=relaxed/simple;
+	bh=dVNWw7bYh14JFkIYcIyxlf/t6xd0npPsATaO9j0uo0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmywcbEVTPXTkZ8eCNbX/xFdClkV7KX8K/EqJ8VmEQbv44w7an7uqZQb3cuTpHmSpEtwz7mJhXHbF6gpsKYdOYFymShEB9GFhZXueklAf2gttzTp5Y1ddPX0CguVvAq/mSvvZunM+lnc7pseNLZRSYQbexsjO8HG5ShnkRBCcVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtg3yhfL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="WbQZOXCf"
-X-Envelope-To: val@packett.cool
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1719261704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hjt3C9pL92UZVTHccpVfXiMxQ9kX8axxehFDYvZWg4M=;
-	b=WbQZOXCfxxNpDlQsKDmAnAnvprp35IDeWA1DfhJpU35jWsGnotyp4UU6PXcdibnptQ/O8M
-	sYXc2DjwqQUj+KiFjXUaRkQQFmPsznFNa4Y1U9p9nKqcAP6Z+QUmlX+kJ73XhFG3CLGso7
-	qjlDUa+pFaZ5Fs6ekeu3c8eT0hpJJxhwIYPjSf6SSTauB8Wj77J9tU+pwCT7bH4mgGj4Oy
-	3TL7HXfg64HWuCbgeRwtibn+YMhjG7S6rS4VoS1/qwfDYomP+mMjlhBB4AS7wK+3gPpW8h
-	5Cy0D6T9iVHQ+0UPYZdv05URWthuH6tDLxe7HgqfN6jdXNIe8f8n5QyyDRSCtQ==
-X-Envelope-To: stable@vger.kernel.org
-X-Envelope-To: hjc@rock-chips.com
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: andy.yan@rock-chips.com
-X-Envelope-To: maarten.lankhorst@linux.intel.com
-X-Envelope-To: mripard@kernel.org
-X-Envelope-To: tzimmermann@suse.de
-X-Envelope-To: airlied@gmail.com
-X-Envelope-To: daniel@ffwll.ch
-X-Envelope-To: dri-devel@lists.freedesktop.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-To: 
-Cc: Val Packett <val@packett.cool>,
-	stable@vger.kernel.org,
-	Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] drm/rockchip: vop: enable VOP_FEATURE_INTERNAL_RGB on RK3066
-Date: Mon, 24 Jun 2024 17:40:49 -0300
-Message-ID: <20240624204054.5524-3-val@packett.cool>
-In-Reply-To: <20240624204054.5524-1-val@packett.cool>
-References: <20240624204054.5524-1-val@packett.cool>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtg3yhfL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD42C2BBFC;
+	Mon, 24 Jun 2024 20:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719261759;
+	bh=dVNWw7bYh14JFkIYcIyxlf/t6xd0npPsATaO9j0uo0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rtg3yhfLRjYeUhHcDZHguHkeQquZ6EuDCucFAUJqchXT9FjezaMpeNc0VLQJ0ezzL
+	 6V6fq1sb6zggHLgMYyrU2nhnF498g+jWCGXOFgqwmraE4yG1pThVzy2+YHlR6rzQlQ
+	 v4cN0VUZeyLlBnsikf4NllMuJlqrlnVEXmcCQLrOX1pnQS0biUFMZfeOcdh0jj1Zez
+	 Iqg6TchgvmMHqkfntWQZlJuWgnvBrZV56/h6XrEsPOLgx8W8P3kElhOvOmEoamkQuN
+	 axju5kxAU5xzBdz9leTVgHStgjYU0ozL3xyDN+3ZjsIwhYgWMPLKVNYaGRsY47XJO1
+	 1CykUG3LmOrcQ==
+Date: Mon, 24 Jun 2024 22:42:37 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] timer_migration: Split out state update of
+ tmigr_active_up()
+Message-ID: <ZnnaPW-PCbw3CL-i@pavilion.home>
+References: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
+ <20240624-tmigr-fixes-v2-3-3eb4c0604790@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240624-tmigr-fixes-v2-3-3eb4c0604790@linutronix.de>
 
-The RK3066 does have RGB display output, so it should be marked as such.
+Le Mon, Jun 24, 2024 at 04:53:55PM +0200, Anna-Maria Behnsen a écrit :
+> The functionality of the state update is split into __tmigr_active_up() to
+> be reusable by other callsites.
+> 
+> This is a preparation for a fix of a potential race when a CPU comes online
+> the first time and creates a new top level.
+> 
+> No functional change.
+> 
+> Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-Fixes: f4a6de8 ("drm: rockchip: vop: add rk3066 vop definitions")
-Cc: stable@vger.kernel.org
-Signed-off-by: Val Packett <val@packett.cool>
----
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index 9bcb40a64..e2c6ba26f 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -515,6 +515,7 @@ static const struct vop_data rk3066_vop = {
- 	.output = &rk3066_output,
- 	.win = rk3066_vop_win_data,
- 	.win_size = ARRAY_SIZE(rk3066_vop_win_data),
-+	.feature = VOP_FEATURE_INTERNAL_RGB,
- 	.max_output = { 1920, 1080 },
- };
- 
--- 
-2.45.2
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
