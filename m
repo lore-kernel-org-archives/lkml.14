@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF7319EEDD;
-	Mon, 24 Jun 2024 17:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEC219EEC4
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719250831; cv=none; b=dbShJF4l1QVIz6uqvaEKWRehT0U8eeQ8g8O6YSbYcRUXfn5ljQtt23DOk57uqD1+btmMFIBo5PIQZEmrDlaDMp0NfHo21OgH2uWU28ysLq737JmaydtSF77ExtNBBB9+A9d/DNv9H4oF/G1ebUHPIWqvw1wsYiAcFueTeU4fUwk=
+	t=1719250831; cv=none; b=cpeUQpMS2XfLEcbdIs7pgIuxkNLJN/sgIaRrUG5mr4aFFPSAFKpUAJrAd6GnO+z3soiNqdQDQu8/7H9QQq+PUeEO1LhTccxYH2XvXe5pOcvD7MywgfES88Zi/8LrgqGQ1zDhjEAoS/6eoDWtb2hiUiT9MWISLoX4UvJMpuDbrTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719250831; c=relaxed/simple;
-	bh=cVZguKETeKIYSegRsLSDsF+ocn6kUtTa2dnkN7qny8k=;
+	bh=UgjBZziCdN2Taf5eSsXXsJtqJ7kU4QpFWTH/FtVBLpI=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CpQ8yTYt5ZcfvKOd7sw0wGi0JWdrgbpKG06m9sO4pCRAWG2394Yvgw0KfeE/HJsbgaCQwPpG/hwcPKnuBhbbnm/BjyYbDDNxygg2RfFr+2QCugtcUZNswn3w6zRyo19yBwdrKzXL5pRY0uOtAPcWamqgMDbTsvQKUtetlzSzI0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPavk1N/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=O8AtLJHInTVD0wFaNnEIgoqvtrAFGaEVenXFxoKadxW+sqhZnY5sMA6adSp/Gpxw9UwCtg/qniP06Q8pFkvAeFNA82Wj7kvFZLJpVLke1XvHrG6gkebQWrZdGb9Q4CRC4mGqOM5a5EcvRepDi90dDrbajhgHbB97ImC7P/zJ0Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8TTt8NB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPavk1N/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 07D57C32789;
-	Mon, 24 Jun 2024 17:40:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8TTt8NB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E1E6C4AF09;
+	Mon, 24 Jun 2024 17:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1719250831;
-	bh=cVZguKETeKIYSegRsLSDsF+ocn6kUtTa2dnkN7qny8k=;
+	bh=UgjBZziCdN2Taf5eSsXXsJtqJ7kU4QpFWTH/FtVBLpI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=CPavk1N/CfgB5i6aKmd98eXP58YRJCznv0VMuBaHiSlqNPERXtcr5gKjJ4jJcv+49
-	 y1e1lYJ7BmNcr/IKlKU0Yu6n/FFldPUegW/xd4bindRky6ec3uL2OxiSAbbuBg2/zo
-	 RssF/NSP7BFMPL6k6wA8yUuiQBTBtWemwyaMI8ObZtGZnB2geY/Q61aeR1h+stBjck
-	 km1+cva12wyZ8ShxfawpeOSeH9ZAHIVy2vJyDM4GUNRCcgNa2LkCNJiRqLeHvwiWgK
-	 0/ppXqXkVmUjJQURzK4hfNT01ZXDb2a2b2tmmQAlGSL/uScAIDd6V05lGmFk4SNlQ4
-	 Ww37vgtplBjyA==
+	b=X8TTt8NB9+lbJ16LgMefXf5QzIdmNGecHO8hwaP+8t3elXmTKdtteoLgirIQfg18c
+	 EzdiiZoDHp+jh6CvkhANt+NWw8UjjokUyl1/G4llWyGnTSt6H+xvI/pgWGWuXw7dqp
+	 4yLum1Trx21XMUBzd8NP2hkpbFKJyu8Rw8kUe3bqqxSBkTZ+jTx1+PlIluE2XukFyp
+	 krtFb64IFyu6Je63O5AkemsJ4kVFqOQ2nYjWCDPPDfOqvwcTExBqnmHVxRXUI8bjyj
+	 vXSB5ADRN8entcQcFaCmVHVkVFf+1DeUiQfWWxQieGHabh1RRm+w31fEj+5DWjBI7f
+	 iTHNetKJ+bDgA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D89D1C43612;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E2A33C43616;
 	Mon, 24 Jun 2024 17:40:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,51 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: assign CURSEG_ALL_DATA_ATGC if blkaddr is
- valid
+Subject: Re: [f2fs-dev] [PATCH V2] f2fs: enable atgc dynamically if conditions
+ are met
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171925083088.4247.5859176757737434245.git-patchwork-notify@kernel.org>
+ <171925083092.4247.2292355325725216488.git-patchwork-notify@kernel.org>
 Date: Mon, 24 Jun 2024 17:40:30 +0000
-References: <20240618022334.1576056-1-jaegeuk@kernel.org>
-In-Reply-To: <20240618022334.1576056-1-jaegeuk@kernel.org>
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- stable@vger.kernel.org
+References: <1717750830-15423-1-git-send-email-zhiguo.niu@unisoc.com>
+In-Reply-To: <1717750830-15423-1-git-send-email-zhiguo.niu@unisoc.com>
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, ke.wang@unisoc.com,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ Hao_hao.Wang@unisoc.com
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Tue, 18 Jun 2024 02:23:34 +0000 you wrote:
-> mkdir /mnt/test/comp
-> f2fs_io setflags compression /mnt/test/comp
-> dd if=/dev/zero of=/mnt/test/comp/testfile bs=16k count=1
-> truncate --size 13 /mnt/test/comp/testfile
+On Fri, 7 Jun 2024 17:00:30 +0800 you wrote:
+> Now atgc can only be enabled when umounted->mounted device
+> even related conditions have reached. If the device has not
+> be umounted->mounted for a long time, atgc can not work.
 > 
-> In the above scenario, we can get a BUG_ON.
->  kernel BUG at fs/f2fs/segment.c:3589!
->  Call Trace:
->   do_write_page+0x78/0x390 [f2fs]
->   f2fs_outplace_write_data+0x62/0xb0 [f2fs]
->   f2fs_do_write_data_page+0x275/0x740 [f2fs]
->   f2fs_write_single_data_page+0x1dc/0x8f0 [f2fs]
->   f2fs_write_multi_pages+0x1e5/0xae0 [f2fs]
->   f2fs_write_cache_pages+0xab1/0xc60 [f2fs]
->   f2fs_write_data_pages+0x2d8/0x330 [f2fs]
->   do_writepages+0xcf/0x270
->   __writeback_single_inode+0x44/0x350
->   writeback_sb_inodes+0x242/0x530
->   __writeback_inodes_wb+0x54/0xf0
->   wb_writeback+0x192/0x310
->   wb_workfn+0x30d/0x400
+> So enable atgc dynamically when atgc_age_threshold is less than
+> elapsed_time and ATGC mount option is on.
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: assign CURSEG_ALL_DATA_ATGC if blkaddr is valid
-    https://git.kernel.org/jaegeuk/f2fs/c/8cb1f4080dd9
+  - [f2fs-dev,V2] f2fs: enable atgc dynamically if conditions are met
+    https://git.kernel.org/jaegeuk/f2fs/c/6efc3a05e613
 
 You are awesome, thank you!
 -- 
