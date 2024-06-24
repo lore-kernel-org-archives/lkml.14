@@ -1,63 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6CA319ADA6;
-	Mon, 24 Jun 2024 15:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4CF1DFD1;
+	Mon, 24 Jun 2024 15:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241345; cv=none; b=JLMmXC9QqUdh3TNBiQqx1yR6fp9dyuUKKes6+QuuYEKXRS3t+1r/5p9hcH0/pfM76rMYANYbGaWMadrvzJXg/iqvvQIOtqi7TTjsUI/afzxE0lPVUl3cW96/dYy9RU269Vig+q+MgavhhGQd48CB7BO0yuzJ5xpPKoHtpSNjI1o=
+	t=1719241403; cv=none; b=AdMS9AOq2lMvz9EMjxw5UdKiaMViSaXwyOrzUFazBoV/hNDM//TGiyBB3yQ7EfORQrm5KgHD3G63nfXBPi85AL47DMuC/UZe8Qrc4LEHvXWpPpeBJm7TE/kH0dyGAIFM8rkCHzXXaxlgjdaE6D9wxr5xEQursNMGWtOVNmffKHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241345; c=relaxed/simple;
-	bh=7/n0M37UbHanag3ZtvhTAiruyypQB04RHFuFUP75xTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TRh7LdyPWu3q4iwCFaP3aVX6Qedv9wsSpufL1cAETH7wMibxrctYJUnSlsVN7XPvO2Gkk+IwmaT4FM79yirrPCekOz/BWhfpIhQK2mUiyrl2kRO9E6D5kGwLl2l8x3TYSHYMFnASE7MMwjBfBmG5smv7m2b/AYw/gQT9stfjzbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C821DDA7;
-	Mon, 24 Jun 2024 08:02:46 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A8243F73B;
-	Mon, 24 Jun 2024 08:02:20 -0700 (PDT)
-Date: Mon, 24 Jun 2024 16:02:17 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Youwan Wang <youwan@nfschina.com>, catalin.marinas@arm.com
-Cc: guohanjun@huawei.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lpieralisi@kernel.org, rafael@kernel.org, will@kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4] ACPI / amba: Drop unnecessary check for registered
- amba_dummy_clk
-Message-ID: <ZnmKebiTxIbZHfSf@bogus>
-References: <20240620133758.319392-1-youwan@nfschina.com>
- <20240624023101.369633-1-youwan@nfschina.com>
+	s=arc-20240116; t=1719241403; c=relaxed/simple;
+	bh=B8JMyvMWFHz61nSn2gsE6oSBp9URmvYN5iI30R/r1T4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P738pdoyAx9YYlQ6o6jfgzxNfMXPBXixu1R/qckW5KBpaxdTTjZmEOqnU5Eji+GHvG51LoGSkqjROt1Zb0v1f4ttREI8EWFHaWYGEORuwN/9IljvbOmtJoXRJCFJxcFdRAoztqQm+nJICkA5b2zwTDKX3pL8p5zZaAbkYhZNxDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZOUgyQWA; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOUgyQWA"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52ce09b76e0so1444905e87.0;
+        Mon, 24 Jun 2024 08:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719241400; x=1719846200; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B8JMyvMWFHz61nSn2gsE6oSBp9URmvYN5iI30R/r1T4=;
+        b=ZOUgyQWAdJ7bcDjAztdI0ofJJvTnCukXoetsM/JNvnyPzRHxxaIYCD0tMcQMCQlyad
+         YqOysd7Fz6P/OE5nZ6c1WNNJhXBDyJy11X7aQ2gfgYorrcGxV8wlyw4Ceblkx3Yfi9+X
+         XRyf+i82XdqcMY1ChnZacHsqvUbWjjMsXy/Jl6ZHksu3ZP7jv6DRJ0puHWL8AjtFIFY6
+         XPjzbr1U+9r08WJQJekhqQyQ4toCC7twKe2UQ7gmFaelSw7/gSmVcDgeLXMLHLFlOO0j
+         s2PDGQff1V5/nTVNrWq2ZPmLVy5KzhM7oangDS8Odcy6ZEqWcnhwQ53s3p4XZxcx5NtU
+         yiAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719241400; x=1719846200;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B8JMyvMWFHz61nSn2gsE6oSBp9URmvYN5iI30R/r1T4=;
+        b=Zu/pGwe9xOdpAWjEiCkccK1YCZCNEdH73rDM/v1biRfGQHBkQAKBrpQkV/0+AOMoso
+         rq4Al5Q6Rv5G0URGjSzPa9PnsqWSramebaqBCon2xwbbVluGmDH/4ct3H0SIZtYCbOmb
+         22HJRbnGA5d6EmnoaIIS2yt67+lzkXa4bjAdt6/ud93TKNrqI+JGaXD/s2fYGiFnUyV9
+         4AX/Brxe1xMCrXRNxUgH1Pi0wprTbiPfVj6Qq1Mis4NF51n/KfFpzvhwOtiuO7YkVmp5
+         3jweWJb2OArO93pKL9oMiF0h3116mudNjKsQe+cExLy20gQ7zgLuj1etve8BbiJe7OU6
+         1LOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7F8Fi50RPP/YcAnDBEHkPi3d+48Ocz+dKSiON0hxVonK5KuA8mSUmniBQkp6fOf3SkfL9NakbBCyAsjx/690eVlGXxc8qwyBCtGFyqB4Gxjesw5fUqqbzqzf5AFeevBQGDMKN46mu37TIhzXEVzRGzBYpyPxU9NKzHrEOnaqRWK0fFfJekvmNgNi5UUNKLSDKeM2nSMW7BrCrE8IY4yumY6qAmQ==
+X-Gm-Message-State: AOJu0YxNKpIFnverLt2FAWU450seVXz+nsrFBE1rfuigGJKbY83WKmjZ
+	q3EjXowtzE3l+p0HfWSyCqTJuBR5f82+vR5YnbjaxAwHMs/L2sa3x9rEQaXc3h+bGUR9qvx5/H6
+	FIXETBO8tXFUESs/1EMKesZRv1uU=
+X-Google-Smtp-Source: AGHT+IGqfNPcAOIVjP63+QUUs0vjEMIhNqbBTC8yUZQsIbF7fBla7dK4hdC7TYVqp6tIqXdyqsHsFxxmquuTJDKpl4A=
+X-Received: by 2002:a19:9118:0:b0:52c:81ba:aeba with SMTP id
+ 2adb3069b0e04-52cdf344b79mr1667460e87.14.1719241399821; Mon, 24 Jun 2024
+ 08:03:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624023101.369633-1-youwan@nfschina.com>
+References: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com> <4d2f4a52-826e-44be-b242-55b50708692d@linaro.org>
+In-Reply-To: <4d2f4a52-826e-44be-b242-55b50708692d@linaro.org>
+From: george chan <gchan9527@gmail.com>
+Date: Mon, 24 Jun 2024 23:03:07 +0800
+Message-ID: <CADgMGSt2sRecrrYrG3t4RtgGn8QJzr1N+iRSWFKQVPgA6Pk8tw@mail.gmail.com>
+Subject: Re: [PATCH RFT v3 0/5] Add sc7180 camss subsys support
+To: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-media@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 10:31:01AM +0800, Youwan Wang wrote:
-> amba_register_dummy_clk() is called only once from acpi_amba_init()
-> and acpi_amba_init() itself is called once during the initialisation.
-> amba_dummy_clk can't be initialised before this in any other code
-> path and hence the check for already registered amba_dummy_clk is
-> not necessary. Drop the same.
-> 
-> Signed-off-by: Youwan Wang <youwan@nfschina.com>
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-> Acked-by: Hanjun Guo <guohanjun@huawei.com>
+On Mon, Jun 24, 2024 at 9:50=E2=80=AFPM Bryan O'Donoghue
+<bryan.odonoghue@linaro.org> wrote:
+>
+> On 24/06/2024 13:13, George Chan via B4 Relay wrote:
+> > - Add RFT tag to all patches, since no tested-by at all.
+>
+> Have you not tested this updated series ?
+>
 > ---
+> bod
 
-Hi Catalin,
+Do you wanna add my tested-by too? It just feels weird to add my
+tested-by that way.
 
-Can you please pick up this simple cleanup patch under ACPI changes ?
-It is very hard to follow the versions as it is messed up, but this
-version is good to take though.
+Tested:
+Linus tree 5f583a3162ffd9f7999af76b8ab634ce2dac9f90 +
+20240522154659.510-1-quic_grosikop@quicinc.com with mine patches
 
---
-Regards,
-Sudeep
+Not test:
+linux-next + 20240522154659.510-1-quic_grosikop@quicinc.com + mine
+
+Just for reference, last month i pushed grosikop's patch with mine to below=
+:
+https://github.com/99degree/linux/tree/camss-working
