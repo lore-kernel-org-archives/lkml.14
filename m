@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA05919B3F7
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6826919D06B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719240861; cv=none; b=CJHcow5ClRtRl26UDMS+z2fI+SjIicnUSVJMKjsvbhr1v3hkDrDj6hLmrSCsuaHTAizTMQlwnQSDVtF9ViwMKeLELHuzkoFmekb47Wa9OiyewM3TJhwhYH9RJreKFRWdE42+biRqDIJL8JAf94Y5PSxaPQZXQ50LD6JdUwDbylo=
+	t=1719240862; cv=none; b=MzNdAnZLZ7Iny/v6bVuUtmG2KsadAN9jTotGvRRF3pw8FcJW5Hiy6wyK8LEIUBJJEApJnQQRWBtSqdvcs7Hvyj/u9dq+aoTwm+3ea5ZhYRJA3HKlJu08aAlsEYgA3PYA9AX2liEtw25UgCss5B7SKizIoilqqRchCl9uiVbU1+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719240861; c=relaxed/simple;
-	bh=ZCv5paGxTG7crUbvML1vFLJHx5FyrLUJsMMZPSG3ywI=;
+	s=arc-20240116; t=1719240862; c=relaxed/simple;
+	bh=4yBjlfA0tuIAEuVSIqkRa/8T70pDH/sbNUKs5SlgSHE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uRB9ml4iAw+3iraELLlt0eHngyBVPjMTSgUuYDD1bNKW2CZW1hLDEiMasbxAw6DFLSEXmW0NNVFBhAfHqN6gSoWlNf28qNJG8lnifURSpZsfnSqUIdVmiuyLFEPxRPOezQbDHPVycRs+apxHRg/aU4ZyirTAvFF+6HlecTr+4Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zl9VGHM3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qoMeqJ4D; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=i/6KoaPjFkA5owUK9/Nsr6sLbP9PDY5peNLJrhDRUatsxQKD4fxt+5mKCM/M9Y3ZUr7s4BJcaKnILOYh9KlZ+LomqGH3xK7zkpNqgWhi9ea4dlOLrBH27d4gCETPDT9jqpMK7jGJncqY4LO1tmPsj+SRvtuy8F2LpzQJ7Ge3Yes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yqbeOPlP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j5EHRPt8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zl9VGHM3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qoMeqJ4D"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yqbeOPlP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j5EHRPt8"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1719240858;
@@ -24,24 +24,24 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jc+Xr3oxnKbk8xCRoHeTtoyZgCdu4Q1jJQGfCbv0wdA=;
-	b=Zl9VGHM3bYO6+ACHHHRbqnOsU+IUbDzo4sazZxXR0MOZLH5dTaRvHoMznZvPTbduZs/VDc
-	j6baRaC7YWr3PqJHDsbnZQUBkyRYP7BQL0nGWRnsYHMeIZ0ATmRdN1dkCIEMPYpQlpoMMg
-	Z97y2q8juI8H7kNBeaG8L9jMyTNZLcKjrRcBtIYGgvIWNxABKbk5KG0s/Rngb68L74hMu6
-	AdEjiDpPBuItgILMRP3jMo7zru2lmS1A59PJcnGcyi1b1PxaUeWkVPq1A9aCjUDbIE/Z/P
-	Ubu5697FfY6RQ7/BH5YhM/OaYzMeyn0rdt5F8shHoeF+Ex6aqYy0naAMkKo8ig==
+	bh=XQfLpd4KsucHQv4vv56t9DwxntT2d0zNXi6vClOfi/4=;
+	b=yqbeOPlP88EL8vhlLsfiDaJH8OX/MfrZTt0M457CTvKY/8ZfECuFjTPYOGFIJNOmQcS/iE
+	K8PrWfN/rvtzEaYcJrBgxFWy7VRiX1LmFUHIpC8ZHm/NjtXvBZxlBjzQH0rHdqXkM+In9v
+	iNNTAix2bnGedV7SOavx88ARayQPNyVOJdsFjGVBWvhDKiAOCpH3hw6EWBCWxqcxGI3b18
+	Z4RkX5RXY82zKRsiuuTYaHWHr03a/tvVyBwaYy/saXemXXT8/258Ef3jouF4Sll9yFCL0N
+	zHmKRETKIkpOT+ujG7XIGMVhzSL5JwlhALGjLYwxMyOrkBG2h7ZHDPiOZxadYA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1719240858;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jc+Xr3oxnKbk8xCRoHeTtoyZgCdu4Q1jJQGfCbv0wdA=;
-	b=qoMeqJ4DFic2sASBo64Wclns9x+1k1UseBD4lM3sO+3pos6UVQh7yWqjBstKjViu8MTnRz
-	X55IALn64Ly4UYCg==
-Date: Mon, 24 Jun 2024 16:53:53 +0200
-Subject: [PATCH v2 1/5] timer_migration: Do not rely always on
- group->parent
+	bh=XQfLpd4KsucHQv4vv56t9DwxntT2d0zNXi6vClOfi/4=;
+	b=j5EHRPt8ry18cHOtg2ynonAvD7DWnKhC8XRuOrve8z0V6hqf5LgcOUw1yPeN6rwVEJQ5xL
+	vkvMW6mznYS6vnBQ==
+Date: Mon, 24 Jun 2024 16:53:55 +0200
+Subject: [PATCH v2 3/5] timer_migration: Split out state update of
+ tmigr_active_up()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,130 +50,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240624-tmigr-fixes-v2-1-3eb4c0604790@linutronix.de>
+Message-Id: <20240624-tmigr-fixes-v2-3-3eb4c0604790@linutronix.de>
 References: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
 In-Reply-To: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
 To: Frederic Weisbecker <frederic@kernel.org>, 
  Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-When reading group->parent without holding the group lock it is racy
-against CPUs coming online the first time and thereby creating another
-level of the hierarchy. This is not a problem when this value is read once
-to decide whether to abort a propagation or not. The worst outcome is an
-unnecessary/early CPU wake up. But it is racy when reading it several times
-during a single 'action' (like activation, deactivation, checking for
-remote timer expiry,...) and relying on the consitency of this value
-without holding the lock. This happens at the moment e.g. in
-tmigr_inactive_up() which is also calling tmigr_udpate_events(). Code relys
-on group->parent not to change during this 'action'.
+The functionality of the state update is split into __tmigr_active_up() to
+be reusable by other callsites.
 
-Update parent struct member description to explain the above only
-once. Remove parent pointer checks when they are not mandatory (like update
-of data->childmask). Remove a warning, which would be nice but the trigger
-of this warning is not reliable and add expand the data structure member
-description instead. Expand a comment, why it is safe to rely on parent
-pointer here (inside hierarchy update).
+This is a preparation for a fix of a potential race when a CPU comes online
+the first time and creates a new top level.
+
+No functional change.
 
 Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
-Reported-by: Borislav Petkov <bp@alien8.de>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 ---
- kernel/time/timer_migration.c | 33 +++++++++++++++------------------
- kernel/time/timer_migration.h | 12 +++++++++++-
- 2 files changed, 26 insertions(+), 19 deletions(-)
+ kernel/time/timer_migration.c | 47 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 84413114db5c..d91efe1dc3bf 100644
+index 600c9e866fae..0e1c53dac390 100644
 --- a/kernel/time/timer_migration.c
 +++ b/kernel/time/timer_migration.c
-@@ -507,7 +507,14 @@ static void walk_groups(up_f up, void *data, struct tmigr_cpu *tmc)
-  *			(get_next_timer_interrupt())
-  * @firstexp:		Contains the first event expiry information when last
-  *			active CPU of hierarchy is on the way to idle to make
-- *			sure CPU will be back in time.
-+ *			sure CPU will be back in time. It is updated in top
-+ *			level group only. Be aware, there could occur a new top
-+ *			level of the hierarchy between the 'top level call' in
-+ *			tmigr_update_events() and the check for the parent group
-+ *			in walk_groups(). Then @firstexp might contain a value
-+ *			!= KTIME_MAX even if it was not the final top
-+ *			level. This is not a problem, as the worst outcome is a
-+ *			CPU which might wake up a little early.
-  * @evt:		Pointer to tmigr_event which needs to be queued (of idle
-  *			child group)
-  * @childmask:		childmask of child group
-@@ -649,7 +656,7 @@ static bool tmigr_active_up(struct tmigr_group *group,
+@@ -623,12 +623,38 @@ static u64 tmigr_next_groupevt_expires(struct tmigr_group *group)
+ 		return evt->nextevt.expires;
+ }
  
- 	} while (!atomic_try_cmpxchg(&group->migr_state, &curstate.state, newstate.state));
++static bool __tmigr_active_up(struct tmigr_group *group, bool *walk_done,
++			      union tmigr_state *curstate, u8 childmask)
++{
++	union tmigr_state newstate;
++
++	newstate = *curstate;
++	*walk_done = true;
++
++	if (newstate.migrator == TMIGR_NONE) {
++		newstate.migrator = childmask;
++
++		/* Changes need to be propagated */
++		*walk_done = false;
++	}
++
++	newstate.active |= childmask;
++	newstate.seq++;
++
++	if (atomic_try_cmpxchg(&group->migr_state, &curstate->state, newstate.state)) {
++		trace_tmigr_group_set_cpu_active(group, newstate, childmask);
++		return true;
++	}
++
++	return false;
++}
++
+ static bool tmigr_active_up(struct tmigr_group *group,
+ 			    struct tmigr_group *child,
+ 			    void *ptr)
+ {
+-	union tmigr_state curstate, newstate;
+ 	struct tmigr_walk *data = ptr;
++	union tmigr_state curstate;
+ 	bool walk_done;
+ 	u8 childmask;
  
--	if ((walk_done == false) && group->parent)
-+	if (walk_done == false)
- 		data->childmask = group->childmask;
+@@ -640,23 +666,8 @@ static bool tmigr_active_up(struct tmigr_group *group,
+ 	 */
+ 	curstate.state = atomic_read(&group->migr_state);
  
- 	/*
-@@ -1317,20 +1324,9 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
- 	/* Event Handling */
- 	tmigr_update_events(group, child, data);
- 
--	if (group->parent && (walk_done == false))
-+	if (walk_done == false)
- 		data->childmask = group->childmask;
- 
--	/*
--	 * data->firstexp was set by tmigr_update_events() and contains the
--	 * expiry of the first global event which needs to be handled. It
--	 * differs from KTIME_MAX if:
--	 * - group is the top level group and
--	 * - group is idle (which means CPU was the last active CPU in the
--	 *   hierarchy) and
--	 * - there is a pending event in the hierarchy
--	 */
--	WARN_ON_ONCE(data->firstexp != KTIME_MAX && group->parent);
+-	do {
+-		newstate = curstate;
+-		walk_done = true;
 -
- 	trace_tmigr_group_set_cpu_inactive(group, newstate, childmask);
+-		if (newstate.migrator == TMIGR_NONE) {
+-			newstate.migrator = childmask;
+-
+-			/* Changes need to be propagated */
+-			walk_done = false;
+-		}
+-
+-		newstate.active |= childmask;
+-		newstate.seq++;
+-
+-	} while (!atomic_try_cmpxchg(&group->migr_state, &curstate.state, newstate.state));
+-
+-	trace_tmigr_group_set_cpu_active(group, newstate, childmask);
++	while (!__tmigr_active_up(group, &walk_done, &curstate, childmask))
++		;
  
- 	return walk_done;
-@@ -1552,10 +1548,11 @@ static void tmigr_connect_child_parent(struct tmigr_group *child,
- 		data.childmask = child->childmask;
- 
- 		/*
--		 * There is only one new level per time. When connecting the
--		 * child and the parent and set the child active when the parent
--		 * is inactive, the parent needs to be the uppermost
--		 * level. Otherwise there went something wrong!
-+		 * There is only one new level per time (which is protected by
-+		 * tmigr_mutex). When connecting the child and the parent and
-+		 * set the child active when the parent is inactive, the parent
-+		 * needs to be the uppermost level. Otherwise there went
-+		 * something wrong!
- 		 */
- 		WARN_ON(!tmigr_active_up(parent, child, &data) && parent->parent);
- 	}
-diff --git a/kernel/time/timer_migration.h b/kernel/time/timer_migration.h
-index 6c37d94a37d9..494f68cc13f4 100644
---- a/kernel/time/timer_migration.h
-+++ b/kernel/time/timer_migration.h
-@@ -22,7 +22,17 @@ struct tmigr_event {
-  * struct tmigr_group - timer migration hierarchy group
-  * @lock:		Lock protecting the event information and group hierarchy
-  *			information during setup
-- * @parent:		Pointer to the parent group
-+ * @parent:		Pointer to the parent group. Pointer is updated when a
-+ *			new hierarchy level is added because of a CPU coming
-+ *			online the first time. Once it is set, the pointer will
-+ *			not be removed or updated. When accessing parent pointer
-+ *			lock less to decide whether to abort a propagation or
-+ *			not, it is not a problem. The worst outcome is an
-+ *			unnecessary/early CPU wake up. But do not access parent
-+ *			pointer several times in the same 'action' (like
-+ *			activation, deactivation, check for remote expiry,...)
-+ *			without holding the lock as it is not ensured that value
-+ *			will not change.
-  * @groupevt:		Next event of the group which is only used when the
-  *			group is !active. The group event is then queued into
-  *			the parent timer queue.
+ 	if (walk_done == false)
+ 		data->childmask = group->childmask;
 
 -- 
 2.39.2
