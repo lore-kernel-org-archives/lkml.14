@@ -1,146 +1,138 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01E819CD0B;
-	Mon, 24 Jun 2024 15:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC071EB48
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719243233; cv=none; b=Gqs5Dg9sQOEx2LJ0F9jJrI07JC03qvCtZ4/3Okv8ZlsFf7tpoHt0wpS8z5O5bMVHicVosFh489cywsqrWQRUntY8xDVmZ7CSG43GZ63EmaVWbu5zee2xrSdUDUNHXSO2YVbilSObhhrRLQSAKMIM8FNET0wME6bW7Pm8iWiuqfY=
+	t=1719243393; cv=none; b=YMeiMdJ1/Js+UTVPOQEfdP+2R/BGmV9CpsvpZ8doqkn9fRrdCiUNvoXRY4bWqGt6fqEZ2yryZjLUqEtL44F1vNZQaoaGP70Va3x69uN3iWmX7HQt55w+NF6ufXaJXAXs3ZL9f/+AaKbZsyRpc75t6oVAA8gqtqb7uwYXEcebjkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719243233; c=relaxed/simple;
-	bh=UTq25U8EovFIHY7zUXQYzBJ2OaikaCJHOw7txbFc8ak=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rFX3+PluhGh+dMARjz/g0O55j8QKSnZv7fYHkse9V4VgXWW+iHjTu4nfwC1mDOo7Vm4mwtYHn9C/tR5dwVSNd3RBjLqGS2zucSqYv80y0x2z/VRaU3fTYuJ3EXzWebjG9QtyrHoaLfysmnILGPlZi/6pEche2E2S0mhYt1BbRlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BSIL4hQE; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1719243393; c=relaxed/simple;
+	bh=IvzxzwoU9wgfno97OQYnGfsIOXaDQHq7IrJHTBf1rlk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F0k3BuGwh6PSsF5V7Y4BGSm1Wcn2eLQCNm6JnMHg0zR0QRnuv2e1oi/l7IZ0Z+69BhPro+6JYsc6iyysJBIedDJmJqG3MS+hkue3Srap2Hn4FsWLrV8454HVPmsdzW71isw7iZWjT9KJYbVWKprRna2OQEdZh/2/rlMwCd/mrLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXFGOj0e; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BSIL4hQE"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OEtPKj014510;
-	Mon, 24 Jun 2024 15:33:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=corp-2023-11-20; bh=LjwTv1x14K+YU+
-	i4bv9l/35xuqtm0L02zqCA66eU4EE=; b=BSIL4hQE0BFqR1g9372u8H9iMKdxix
-	/8gMrqJAC1Hjo7Mq+DaqP5UHUefb0Q+5ZkzLnrRODHu9es1YlzUmbZzMR5an9J0w
-	jgPT9IlSBFcqwVeZKlQWTl9ubBv7eq2xlDpq1TMyry/I+oHAYDC1vCqsTuRlVnTh
-	EVgB6sYiqN1gqYl4TQ5B6AeUEf4YJrp0w4SyWp7hsxI9b3Q4XOwaQNOICxFEM6/q
-	uDlsFkPz/Dd94R+VkQgcQvFKKv8lOscjnrtuWwoUqF2IyJhVOkMQGeG31+M/U5i4
-	5oQn9DLIot5KSlBiN+ca2t/9Z8byx4CKTiZdo57l7sXhWg6Cs+9ZbKfg==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ywp7saw6p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 15:33:40 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45OF61wk010772;
-	Mon, 24 Jun 2024 15:33:40 GMT
-Received: from aakhoje-ol.in.oracle.com (dhcp-10-76-47-230.vpn.oracle.com [10.76.47.230])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ywn2ckr8e-1;
-	Mon, 24 Jun 2024 15:33:39 +0000
-From: Anand Khoje <anand.a.khoje@oracle.com>
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc: saeedm@mellanox.com, leon@kernel.org, tariqt@nvidia.com,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        davem@davemloft.net
-Subject: [PATCH v5] net/mlx5: Reclaim max 50K pages at once
-Date: Mon, 24 Jun 2024 21:03:21 +0530
-Message-ID: <20240624153321.29834-1-anand.a.khoje@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXFGOj0e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719243392; x=1750779392;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IvzxzwoU9wgfno97OQYnGfsIOXaDQHq7IrJHTBf1rlk=;
+  b=EXFGOj0e+GgESddxE2ZgHh2pgpRj13nS9LbXPWDNFluSCKdcvDve8ojI
+   rrIr5y4Qz42pbueVpCiNkJlgN8+/ZnX7aXFEooQeqjyKA/+TJ0A9HeAXA
+   LdzKPOdqDaJvId8avhoAqLsYmZGdk5KVibS/aXen3Ocoxv+g36kdcWMtA
+   5Ik7Jus3f3AcjIDsFmSfoFILlEIzVdzkU+tR2Ido4bz1GpIRs6fPqh3g2
+   jUfXv8wUAKzvORze2HTn1QopwtBHDfu6ygX3kOdozNd+HJVuPwhn5Jkxn
+   tC0Qt1Ch7os0om6K2ATC5cT3ND3ACjpOod/ZgkEeJwp+9lTHNNzL7ot/j
+   w==;
+X-CSE-ConnectionGUID: x3g15t+USw6AI33h5RSOug==
+X-CSE-MsgGUID: XllAsDU7RzCgPnWnb/9ghA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16364067"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="16364067"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 08:36:31 -0700
+X-CSE-ConnectionGUID: O8JDtPZbS0iI3nh4th3Z/Q==
+X-CSE-MsgGUID: TDcpJABiRxG3Zs5kmQQWmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="43147551"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 08:36:31 -0700
+Received: from [10.212.44.172] (kliang2-mobl1.ccr.corp.intel.com [10.212.44.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 46F6920B5703;
+	Mon, 24 Jun 2024 08:36:29 -0700 (PDT)
+Message-ID: <7774dffe-4e1c-4a86-826e-dbac8e82dc74@linux.intel.com>
+Date: Mon, 24 Jun 2024 11:36:28 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 05/12] perf/x86: Add config_mask to represent
+ EVENTSEL bitmask
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com,
+ alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com, eranian@google.com,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20240618151044.1318612-1-kan.liang@linux.intel.com>
+ <20240618151044.1318612-6-kan.liang@linux.intel.com>
+ <20240620074402.GS31592@noisy.programming.kicks-ass.net>
+ <4cce9f37-7698-418d-a9c5-4aa1dc01b719@linux.intel.com>
+ <ff25c37f-cb62-4687-adaa-596e8fc3a52a@linux.intel.com>
+ <20240624082809.GC31592@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240624082809.GC31592@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_12,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- spamscore=0 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2406180000 definitions=main-2406240125
-X-Proofpoint-GUID: iF7jeR9rpyYUWUuIT3ZtspPVrNHaJmbH
-X-Proofpoint-ORIG-GUID: iF7jeR9rpyYUWUuIT3ZtspPVrNHaJmbH
+Content-Transfer-Encoding: 7bit
 
-In non FLR context, at times CX-5 requests release of ~8 million FW pages.
-This needs humongous number of cmd mailboxes, which to be released once
-the pages are reclaimed. Release of humongous number of cmd mailboxes is
-consuming cpu time running into many seconds. Which with non preemptible
-kernels is leading to critical process starving on that cpu’s RQ.
-To alleviate this, this change restricts the total number of pages
-a worker will try to reclaim maximum 50K pages in one go.
-The limit 50K is aligned with the current firmware capacity/limit of
-releasing 50K pages at once per MLX5_CMD_OP_MANAGE_PAGES + MLX5_PAGES_TAKE
-device command.
 
-Our tests have shown significant benefit of this change in terms of
-time consumed by dma_pool_free().
-During a test where an event was raised by HCA
-to release 1.3 Million pages, following observations were made:
 
-- Without this change:
-Number of mailbox messages allocated was around 20K, to accommodate
-the DMA addresses of 1.3 million pages.
-The average time spent by dma_pool_free() to free the DMA pool is between
-16 usec to 32 usec.
-           value  ------------- Distribution ------------- count
-             256 |                                         0
-             512 |@                                        287
-            1024 |@@@                                      1332
-            2048 |@                                        656
-            4096 |@@@@@                                    2599
-            8192 |@@@@@@@@@@                               4755
-           16384 |@@@@@@@@@@@@@@@                          7545
-           32768 |@@@@@                                    2501
-           65536 |                                         0
+On 2024-06-24 4:28 a.m., Peter Zijlstra wrote:
+> On Fri, Jun 21, 2024 at 02:34:35PM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 2024-06-20 12:16 p.m., Liang, Kan wrote:
+>>>
+>>>
+>>> On 2024-06-20 3:44 a.m., Peter Zijlstra wrote:
+>>>> On Tue, Jun 18, 2024 at 08:10:37AM -0700, kan.liang@linux.intel.com wrote:
+>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>>
+>>>>> Different vendors may support different fields in EVENTSEL MSR, such as
+>>>>> Intel would introduce new fields umask2 and eq bits in EVENTSEL MSR
+>>>>> since Perfmon version 6. However, a fixed mask X86_RAW_EVENT_MASK is
+>>>>> used to filter the attr.config.
+>>>>>
+>>>>
+>>>>> @@ -1231,6 +1233,11 @@ static inline int x86_pmu_num_counters_fixed(struct pmu *pmu)
+>>>>>  	return hweight64(hybrid(pmu, fixed_cntr_mask64));
+>>>>>  }
+>>>>>  
+>>>>> +static inline u64 x86_pmu_get_event_config(struct perf_event *event)
+>>>>> +{
+>>>>> +	return event->attr.config & hybrid(event->pmu, config_mask);
+>>>>> +}
+>>>>
+>>>> Seriously, we're going to be having such major event encoding
+>>>> differences between cores on a single chip?
+>>>
+>>> For LNL, no. But ARL-H may have an event encoding differences.
+>>> I will double check.
+>>
+>> There are two generations of e-core on ARL-H. The event encoding is
+>> different.
+>>
+>> The new fields umask2 and eq bits are enumerated by CPUID.(EAX=23H,
+>> ECX=0H):EBX. They are supported by CPU 11 but not CPU 12.
+>>
+>> CPU 11:
+>>    0x00000023 0x00: eax=0x0000000f ebx=0x00000003 ecx=0x00000008
+>> edx=0x00000000
+>> CPU 12:
+>>    0x00000023 0x00: eax=0x0000000b ebx=0x00000000 ecx=0x00000006
+>> edx=0x00000000
+>>
+> 
+> *groan*...
+> 
+> So we're going to be having 3 PMUs on that thing I suppose. Oh well.
 
-- With this change:
-Number of mailbox messages allocated was around 800; this was to
-accommodate DMA addresses of only 50K pages.
-The average time spent by dma_pool_free() to free the DMA pool in this case
-lies between 1 usec to 2 usec.
-           value  ------------- Distribution ------------- count
-             256 |                                         0
-             512 |@@@@@@@@@@@@@@@@@@                       346
-            1024 |@@@@@@@@@@@@@@@@@@@@@@                   435
-            2048 |                                         0
-            4096 |                                         0
-            8192 |                                         1
-           16384 |                                         0
+Yes, 3 PMUs. 1 PMU For p-core. The other 2 PMUs are for two different
+types of e-cores.
 
-Signed-off-by: Anand Khoje <anand.a.khoje@oracle.com>
----
-Changes in v5:
-  - Made changes as per a suggestion from Leon.
----
-
- drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-index d894a88..1fc583b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-@@ -608,6 +608,7 @@ enum {
- 	RELEASE_ALL_PAGES_MASK = 0x4000,
- };
- 
-+#define MAX_RECLAIM_NPAGES -50000
- static int req_pages_handler(struct notifier_block *nb,
- 			     unsigned long type, void *data)
- {
-@@ -639,7 +640,7 @@ static int req_pages_handler(struct notifier_block *nb,
- 
- 	req->dev = dev;
- 	req->func_id = func_id;
--	req->npages = npages;
-+	req->npages = max_t(s32, npages, MAX_RECLAIM_NPAGES);
- 	req->ec_function = ec_function;
- 	req->release_all = release_all;
- 	INIT_WORK(&req->work, pages_work_handler);
--- 
-1.8.3.1
+Thanks,
+Kan
 
