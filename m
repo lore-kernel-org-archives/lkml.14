@@ -1,108 +1,150 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C75220330;
-	Mon, 24 Jun 2024 14:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F10820330
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719237829; cv=none; b=Qhk/FgrtPSKn6aYMt1v0d7EktdTcX7Wk8kRe3qJiu8WHsd8PAhgiM/vtNBx+vHqHN/OfFvBvocFjLy2r0dP4OLqqbIDazEa58HahihuckDFjeymd8eE8IW8t/iHGF3mgMsJmlCu87yci2Ub5+mbf4q0KMwJCixpxQruGmKqc2l8=
+	t=1719237882; cv=none; b=GbEM+bEjgRPC5JOngVdBGfwLC7B7qjtusIaf5pQCl/fZ2Sj6+cWN3IDS21FdMeVT9j0PYx3MHVDDxRlLDaxGLBHfOgc4LllndTciNkgIf0fqsUT9cPfwCciGGudwiHDaWxzC91Id4LJ78V3bXs5yYer+IgK1NCaYsUSltwVqLo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719237829; c=relaxed/simple;
-	bh=cw6zbc293MdZHDKZhsU4MwSfLSAyulD6cdKbVuCr9ic=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=teqw4kCB8pIjZK/GhYjMo246at6rHCbuHI/GzTTKq3umer29MHBS+Br+fPd0ZpvtknrWa8kXvq+XHjiurBVdY+EHfzJfzms69GdDrLsq87TbiQ1bU4xZiEnhAi3JyS0GFgoWd08pi/wbBegIcsceaypLySO/h2tH/XZvTG+dwKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLECuc31; arc=none smtp.client-ip=209.85.222.178
+	s=arc-20240116; t=1719237882; c=relaxed/simple;
+	bh=/pz/OWJU4u8rErQuJM3R9XHlFgQ9DIUiyVSMMMb0jDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fMENLhucx3FJmZxRmUjaU8bik1ewVpa4mSeQtAPT3sua/6/dqv7shQYZIoisMz0SCPxJzY70jjPY//fgqtWqiCJF9ZNHUMg0k6WAmYd5sBPn6cLvnnKJpu6yCRTz7CTp1mE4oXYcGIkYOfzckqVjxMD/Is94FpXUGccX/OYRD7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCFq4pyT; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLECuc31"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-79767180a15so257141985a.1;
-        Mon, 24 Jun 2024 07:03:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCFq4pyT"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-797dcb558ebso272288785a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719237827; x=1719842627; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tRXqOoKCMQtByqtH5Ot9WPtr7SGsctCRaNE8KRf/9oM=;
-        b=ZLECuc31budP5cOx1iPyAiM3acbPXvmjDSW/JvnwRCmEirrXCTHApLTeBAEWPEzNKy
-         MI1kU0r7dy2oq1pP8mBITxSzkx65V6K+2CblcelzcoVD5vkAet/M/nQf8r9WLwNwUW0+
-         NvhDpYcfGa94h8NjOtnTNAGLdW9k7pm4a7/y8kwLh8HH2Og2dgB2oNNVYzj1ZiBKhISm
-         Z9PuiMM7QDVB+YCWbIce8te8f/fxSbCBj4VVS8lcTNVJ8mfS6hTr+6fyLjeUGh4D6TVi
-         ukyDFlEJCZBvWXDWJoPMWur5TrzIiCK/lwqQf7YcRYOyO/Gcfh33vX1rfE2UZgMVRlSU
-         rInw==
+        d=gmail.com; s=20230601; t=1719237880; x=1719842680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XxqQRI9qdKpXc+d6jBFsRb7em5oO7Aq+aq8gpL0ZAn4=;
+        b=TCFq4pyTe9KXtNkDae5LHgL/sRLG6bLOVbcVz4jmfPC1qWOk2aR0Hf0yqhN/TzEDKb
+         oNBh+EhspcTExSXBK6Bmn1BR0LtYYGwiSTWX7RJpcMyRubJFrx/7b6+d6MFbBwJnUCpV
+         yjBGAJlvs0+xUOSkFZhcug5TS8w49Xhm+vOuFF7HJUWZw2h0giiwXxavpFBOO7FGWOAx
+         8dYd/4HCJZ1fmVDz6+kRFxY6RTF7SVsHKHcDd6aDz4OFSl3ROeQf4n1Lqc9UD5BYNQgQ
+         7ZqU9Sf/Xk6X0t5Rno1AEuPLfJbNlbhkyM5zGI7yTsaqzw1HhR7BAeH3uuOj2r2dkcGK
+         DFyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719237827; x=1719842627;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tRXqOoKCMQtByqtH5Ot9WPtr7SGsctCRaNE8KRf/9oM=;
-        b=JDQcsF+XdBszGA3djiigt/sWoS2KtKV+9Th2zVzLI6PE3c+pWO8bb6K1VgcdmxLIFy
-         J1MHjIdxiR6hQbADs4LK1Jx6d41CUc77AgvKYUTtCWYJB31nv6m4KNokWl2OYOkp6gHw
-         Y9QL8rih1Y4rFRUP1qAfmjetVnOCCY1aVAf+zK65HS42j7V1Pvrqwe5/yxk6y6sdObau
-         qbI39Er9nFUSBuXVhZwrraCiY+pYHHcuUd1LUKSExvzmVNOaT7BNK9StkpnbqqLDdd+j
-         lizXlrjqA2mKLT9Pl58D/euVGltaLW9fWj6uUUijeJVMPxtJbBl+UqbEW1u94IfWZrEZ
-         kvRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQGpszk/3Nj+B7nDRP+7DVwvlagqTInVhzSCKAWOs0MeEYIlwpD5U7y4Qrtw0V/o8tFRMYtBjaJNb/AKLzHXdZXJDrns3v4Q/3Z8rr
-X-Gm-Message-State: AOJu0YxL9Bro1QR9x4OqbrJPoV5P7hBQZkrs31+XCNh7pJNYcHGHC+gg
-	V/HE1xX2cpf42we8cMjggwtKV+yDz+I9C9GAq5fDh+qT66RnjvlEu8PG1ddllK60BToRbzEpcZJ
-	AJcYIKAJJES5R72LRSlKjHm1rHLw=
-X-Google-Smtp-Source: AGHT+IEdcoVxO1iJxjpGg3jTYzJTgcSXIua8qNrQ7mS+EU2FQUAErqljhrmqVXaLvoKOQJOgOd5Y6nj9inRAE2YuGVM=
-X-Received: by 2002:a05:620a:454a:b0:79b:f3a3:9f38 with SMTP id
- af79cd13be357-79bf3a3a13bmr257427185a.20.1719237826730; Mon, 24 Jun 2024
- 07:03:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719237880; x=1719842680;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XxqQRI9qdKpXc+d6jBFsRb7em5oO7Aq+aq8gpL0ZAn4=;
+        b=w7kV0+Z6gpnMsTiR7kE7WsceBs1FcfMGCgjlax9+CNpSkJiG5x10eJr8yt0uaAJecZ
+         j1XntRCbMqehLBkWeX3986PSYC4YNvEo3Uk/vVdT0XByGttpC0TR4RKcBBUam6eGmbkP
+         UpeUPRU5lnbT9OfbldpZEoA/sb3pHIoLSfY9c1p7wrFfWGNot9VhQEtdIabDxvXqM4kJ
+         wFW/VLfUbcYvg88Gyo7iaB2Pvwzzceu5KkzIuhDCwz9adDUiNXaXERZ85IrTO6dtNcKP
+         NV6OWPao2bWPvOdLYkRvfwhK7T0A61mtIEHV0YddcXGxQZ4PK/7KkxuZ1vmu00vE8wqw
+         wHXg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2byXbsRmmXTkHi/9TneUbaUz0iMCzFzzY2uZ8/i6Gzcnj2cKT1dZSLhuRr5l+aduOxtTD7orm9OBPmipkfHNT4U0UfRDgGVcfKQw0
+X-Gm-Message-State: AOJu0YwmIqCNTLkwf+v19VApbmyAWoprBhDeCu2jw9YK1ezx0XHgZ7Kz
+	uyJhqXPnIDf2dzk9OJJlNkruVnWTno71DqxyMdBV9kxL+aC3GXOn
+X-Google-Smtp-Source: AGHT+IHiCP8v1Xw5+G3dthvuaYvZetHViclKdcF5bjTK3YToKN1dTLh1YEFrqDDDX2V7w6NDiU0MsQ==
+X-Received: by 2002:a05:620a:3907:b0:795:5d83:9f96 with SMTP id af79cd13be357-79be703800emr589502385a.57.1719237880328;
+        Mon, 24 Jun 2024 07:04:40 -0700 (PDT)
+Received: from localhost (fwdproxy-ash-006.fbsv.net. [2a03:2880:20ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bd0beb543sm295596485a.74.2024.06.24.07.04.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 07:04:39 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org,
+	shakeel.butt@linux.dev,
+	david@redhat.com,
+	ying.huang@intel.com,
+	hughd@google.com,
+	willy@infradead.org,
+	yosryahmed@google.com,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH v6 0/2] mm: store zero pages to be swapped out in a bitmap
+Date: Mon, 24 Jun 2024 15:01:27 +0100
+Message-ID: <20240624140427.1334871-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: liuhzy <liuhzy0329@gmail.com>
-Date: Mon, 24 Jun 2024 22:03:42 +0800
-Message-ID: <CAHRejUqn_wXsK+N92icbJtFDBzTD=EvwdXdr+CCfVzD9wWd-rA@mail.gmail.com>
-Subject: NFS-AIO-doesn-t-require-revert-iterator
-To: trondmy <trondmy@kernel.org>, anna <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000f29ced061ba33f75"
+Content-Transfer-Encoding: 8bit
 
---000000000000f29ced061ba33f75
-Content-Type: multipart/alternative; boundary="000000000000f29cea061ba33f73"
+As shown in the patchseries that introduced the zswap same-filled
+optimization [1], 10-20% of the pages stored in zswap are same-filled.
+This is also observed across Meta's server fleet.
+By using VM counters in swap_writepage (not included in this
+patchseries) it was found that less than 1% of the same-filled
+pages to be swapped out are non-zero pages.
 
---000000000000f29cea061ba33f73
-Content-Type: text/plain; charset="UTF-8"
+For conventional swap setup (without zswap), rather than reading/writing
+these pages to flash resulting in increased I/O and flash wear, a bitmap
+can be used to mark these pages as zero at write time, and the pages can
+be filled at read time if the bit corresponding to the page is set.
 
+When using zswap with swap, this also means that a zswap_entry does not
+need to be allocated for zero filled pages resulting in memory savings
+which would offset the memory used for the bitmap.
 
+A similar attempt was made earlier in [2] where zswap would only track
+zero-filled pages instead of same-filled.
+This patchseries adds zero-filled pages optimization to swap
+(hence it can be used even if zswap is disabled) and removes the
+same-filled code from zswap (as only 1% of the same-filled pages are
+non-zero), simplifying code.
 
---000000000000f29cea061ba33f73
-Content-Type: text/html; charset="UTF-8"
+This patchseries is based on mm-unstable.
 
-<div dir="ltr"><br></div>
+[1] https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d1344dde9fce0@epcms5p1/
+[2] https://lore.kernel.org/lkml/20240325235018.2028408-1-yosryahmed@google.com/
 
---000000000000f29cea061ba33f73--
---000000000000f29ced061ba33f75
-Content-Type: text/plain; charset="US-ASCII"; 
-	name="NFS-AIO-doesn-t-require-revert-iterator.patch"
-Content-Disposition: attachment; 
-	filename="NFS-AIO-doesn-t-require-revert-iterator.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lxt1s5bd0>
-X-Attachment-Id: f_lxt1s5bd0
+---
+v5 -> v6 (kernel test robot <oliver.sang@intel.com>):
+- change bitmap_zalloc/free to kvzalloc/free as a very large swap
+  file will result in the allocation order to exceed MAX_PAGE_ORDER
+  retulting in bitmap_zalloc to fail.
 
-RnJvbSA1OGQxYzk3MWIyZDQyODcxNDQxZTg4N2UzZWM0YTVhMjFjODNhYTk1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBsaXVoIDxsaXVodWFuMDFAa3lsaW5vcy5jbj4KRGF0ZTogTW9u
-LCAyNCBKdW4gMjAyNCAxNzo0OTowOCArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIE5GUzogQUlPIGRv
-ZXNuJ3QgcmVxdWlyZSByZXZlcnQgaXRlcmF0b3IKCkZvciBBSU8sIG5mc19kaXJlY3Rfd2FpdCBy
-ZXR1cm4gLUVJT0NCUVVFVUVEIHdvdWxkIGJlIGV4Y2VwdGVkLgpSZXZlcnQgaXRlciBpcyByZWR1
-bmRhbnQuCgpTaWduZWQtb2ZmLWJ5OiBsaXVoIDxsaXVodWFuMDFAa3lsaW5vcy5jbj4KLS0tCiBm
-cy9uZnMvZGlyZWN0LmMgfCA2ICsrKystLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9uZnMvZGlyZWN0LmMgYi9mcy9uZnMv
-ZGlyZWN0LmMKaW5kZXggYmIyZjU4M2ViLi4yNjI3NjlkYWUgMTAwNjQ0Ci0tLSBhL2ZzL25mcy9k
-aXJlY3QuYworKysgYi9mcy9uZnMvZGlyZWN0LmMKQEAgLTQ3MSw3ICs0NzEsOCBAQCBzc2l6ZV90
-IG5mc19maWxlX2RpcmVjdF9yZWFkKHN0cnVjdCBraW9jYiAqaW9jYiwgc3RydWN0IGlvdl9pdGVy
-ICppdGVyLAogCQkJcmVxdWVzdGVkIC09IHJlc3VsdDsKIAkJCWlvY2ItPmtpX3BvcyArPSByZXN1
-bHQ7CiAJCX0KLQkJaW92X2l0ZXJfcmV2ZXJ0KGl0ZXIsIHJlcXVlc3RlZCk7CisJCWlmIChpc19z
-eW5jX2tpb2NiKGlvY2IpKQorCQkJaW92X2l0ZXJfcmV2ZXJ0KGl0ZXIsIHJlcXVlc3RlZCk7CiAJ
-fSBlbHNlIHsKIAkJcmVzdWx0ID0gcmVxdWVzdGVkOwogCX0KQEAgLTEwMzAsNyArMTAzMSw4IEBA
-IHNzaXplX3QgbmZzX2ZpbGVfZGlyZWN0X3dyaXRlKHN0cnVjdCBraW9jYiAqaW9jYiwgc3RydWN0
-IGlvdl9pdGVyICppdGVyLAogCQkJLyogWFhYOiBzaG91bGQgY2hlY2sgdGhlIGdlbmVyaWNfd3Jp
-dGVfc3luYyByZXR2YWwgKi8KIAkJCWdlbmVyaWNfd3JpdGVfc3luYyhpb2NiLCByZXN1bHQpOwog
-CQl9Ci0JCWlvdl9pdGVyX3JldmVydChpdGVyLCByZXF1ZXN0ZWQpOworCQlpZiAoaXNfc3luY19r
-aW9jYihpb2NiKSkKKwkJCWlvdl9pdGVyX3JldmVydChpdGVyLCByZXF1ZXN0ZWQpOwogCX0gZWxz
-ZSB7CiAJCXJlc3VsdCA9IHJlcXVlc3RlZDsKIAl9Ci0tIAoyLjI3LjAKCg==
---000000000000f29ced061ba33f75--
+v4 -> v5 (Yosry):
+- Correct comment about using clear_bit instead of bitmp_clear.
+- Remove clearing the zeromap from swap_cluster_schedule_discard
+  and swap_do_scheduled_discard.
+
+v3 -> v4:
+- remove folio_start/end_writeback when folio is zero filled at
+  swap_writepage (Matthew)
+- check if a large folio is partially in zeromap and return without
+  folio_mark_uptodate so that an IO error is emitted, rather than
+  checking zswap/disk (Yosry)
+- clear zeromap in swap_free_cluster (Nhat)
+
+v2 -> v3:
+- Going back to the v1 version of the implementation (David and Shakeel)
+- convert unatomic bitmap_set/clear to atomic set/clear_bit (Johannes)
+- use clear_highpage instead of folio_page_zero_fill (Yosry)
+
+v1 -> v2:
+- instead of using a bitmap in swap, clear pte for zero pages and let
+  do_pte_missing handle this page at page fault. (Yosry and Matthew)
+- Check end of page first when checking if folio is zero filled as
+  it could lead to better performance. (Yosry)
+
+Usama Arif (2):
+  mm: store zero pages to be swapped out in a bitmap
+  mm: remove code to handle same filled pages
+
+ include/linux/swap.h |   1 +
+ mm/page_io.c         | 113 ++++++++++++++++++++++++++++++++++++++++++-
+ mm/swapfile.c        |  15 ++++++
+ mm/zswap.c           |  86 +++-----------------------------
+ 4 files changed, 136 insertions(+), 79 deletions(-)
+
+-- 
+2.43.0
+
