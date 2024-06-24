@@ -1,85 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264421A0AE4
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A3919FA81;
+	Mon, 24 Jun 2024 21:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719264255; cv=none; b=arWi78VkjrWuBhIr1QtOuPSkOylIDpGsYBmeYNiGiwhntS7JQoCxgTZt68LAAef1udm8emWC54cuwXsMqdYxnt7Yd+GFtbBd8VB1ckavEGU3uW5ZMB+Xq32E+fOaM68sswEm+s2meniz316lP+FY2mxOxxNflz3NLM191YKZjF0=
+	t=1719264307; cv=none; b=LAI/Bu10AAWWnvZn1N9C0gsT8GhC3Y58xG+ZONPWBBlVLfGM1tvt2tL0zCnqzChCuB2tJN19Q7ZKUz8e7yvxp4RaxodGxC1eu7DhkyQbx2fTXvMAWz0A9DRBfTGAdEUbdERNTeRFnHMkLJDDMZb+M0hQkzInYgHF9tW9L1lJn1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719264255; c=relaxed/simple;
-	bh=eA0l/+fsdLlzJj8Zk8hFYUQlaohMOtVyOubF+tbXBvw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pNih76n98HdKLsB7jofiBI5qlDg9llR6HKd9sNLMRzoqJA43/e2uYsRtXiuEvehsMyhLIJKLyVLoR2+OafIOcQCeTj61T9Phb0zfWgag5DCmHwktGh8yMbdM2YmuM/tQ+plKHfXXcpuDUjCKJnCCH9p+t4nzKqoAw40wIiRk4tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tz+gFrvu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HbupGoOK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1719264307; c=relaxed/simple;
+	bh=2/D3y84MWExMUe/+ohdAcL5JtZ0TFzz2ZC4d4ub2oGU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=W2TteI9ewFA/pI0Yh1kHmLmBVan9Jp1f4GfIBS2TEckMC09KHKeyJ8/eOmjqaobHadJG2Mlzk1iW+BOhS93YSlico+PfKOQ1RVOXPXrmcGhTNsabhpzVEFL51aCYXDeBA/OwdEJMCVeRsRDez7vbNLOV+IzE7OCE6mPQ4Av0Vw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwXHosJw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tz+gFrvu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HbupGoOK"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719264251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gr9WmSDhp5Pq84URL18JMexmAFXY3Csonubc3aMd8lQ=;
-	b=tz+gFrvuToWeWpYe3wCQRoEcGse3at8VZEQyWQ+k+EUUb9IDzCHDvlh5yB1X+rj0YIhB8a
-	HDBowP0IhCwJvGaicP02fjiXkRhuE6XhdUVdKiijkXqiy1DevLf+2+Lut0qCizemB7iAS9
-	j0eOQ3WSDJwJeowJT+ZOPAn39opOo04EwGlEpRv+KaOjhSlbryRHGOPcy3gIp54gIDI7LL
-	P+wLu0ktQQ1w/Ej20YAQrqFAWnWmm+hE5kI+JCIqzlylbi1JTVwHX6EIe6MuvoR8rryOPT
-	xlzHEcAJrMQe3wKjJ7Pp9dyDvgnoJNpfp9IbsAs10w5EEf4rtC6o8GvZfqQyJQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719264251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gr9WmSDhp5Pq84URL18JMexmAFXY3Csonubc3aMd8lQ=;
-	b=HbupGoOKwbs9B4LuupdDTvFxud2EW+UdhYv4hV27FKPOE5Ux6NByLKP9JG1pXAzXqms4gu
-	XgyAEEpj2K63AyAw==
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Tyrel Datwyler <tyreld@linux.ibm.com>, Michal Suchanek
- <msuchanek@suse.de>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>,
- Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
- "Nysal Jan K.A." <nysal@linux.ibm.com>
-Subject: Re: [PATCH 0/2] Skip offline cores when enabling SMT on PowerPC
-In-Reply-To: <11f9cc04-91eb-4a70-9ff0-5c6f24483cd3@linux.ibm.com>
-References: <20240612185046.1826891-1-nysal@linux.ibm.com>
- <875xudoz4d.fsf@mail.lhotse> <87ikxza01w.ffs@tglx>
- <11f9cc04-91eb-4a70-9ff0-5c6f24483cd3@linux.ibm.com>
-Date: Mon, 24 Jun 2024 23:24:11 +0200
-Message-ID: <87sex26nlw.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwXHosJw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E4BF4C4AF17;
+	Mon, 24 Jun 2024 21:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719264307;
+	bh=2/D3y84MWExMUe/+ohdAcL5JtZ0TFzz2ZC4d4ub2oGU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=cwXHosJwT/Na/x6XNpTVsjhLSuoIzS5QUDHdjk4TO4qEyTKrh7GhqCCXF7TlT74j3
+	 98QLXr5+/kfwaE3paHwNAkacx3FIcV6zWgseBB+cYWywP3c9Q8Cm8mNkTfcx9D867R
+	 Sesf5/4PQiiopGuM8vN94aTgKQEk59k1g4jQkzHyGQXwDHXeEKXSDM2bc3a9XBfvzJ
+	 ZR98vrHj0mY9y/7yr8ex+eyr3NEtYLj7KdHbriR5NSIGPgkJvPUP9cASoizKJB/z9V
+	 928kMcbd0eqablgPpV7SgAj+lWM8HlP4qJxIh1XYJ5lokigx72NLDGjOpa8QKKwWsP
+	 q6AkfM58ejksg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D657EC2BD09;
+	Mon, 24 Jun 2024 21:25:06 +0000 (UTC)
+From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
+Date: Mon, 24 Jun 2024 23:25:14 +0200
+Subject: [PATCH v5 3/3] arm64: dts: qcom: msm8939-longcheer-l9100: Add rear
+ flash
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240624-sy7802-v5-3-7abc9d96bfa6@apitzsch.eu>
+References: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
+In-Reply-To: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Trilok Soni <quic_tsoni@quicinc.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719264314; l=1408;
+ i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
+ bh=5PZFGehTShxKe3OFkYq1lO6OPdXhGy4wNq5owjXoJG0=;
+ b=oDPZXMmOvhZAvs35W+AMotHZ0o845LK2xy/6wJrfMoJEC9S9QIh9P4AKXB5Yphutt0FvIy5DU
+ l14UvbAQRItC7IXucDZiEx2vfROezgknXjhz19eMZnc6MNHfCo3ZQE6
+X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
+ pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
+X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
+ auth_id=142
+X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Reply-To: git@apitzsch.eu
 
-On Tue, Jun 25 2024 at 00:41, Shrikanth Hegde wrote:
-> On 6/24/24 1:44 AM, Thomas Gleixner wrote:
->> Right. So changing it not to online a thread when the full core is
->> offline should not really break stuff.
->> 
->> OTH, the mechanism to figure that out on x86 is definitely different and
->> more complicated than on power because the sibling threads are not
->> having consecutive CPU numbers.
->
-> wouldn't topology_sibling_cpumask have this info? 
-> If the mask is empty does it mean the core is offline? 
+From: André Apitzsch <git@apitzsch.eu>
 
-The mask is not yet available for the to be brought up CPU. That's
-established when the CPU boots. It might work because all threads are
-brought up during early boot for !~*&^!@% reasons, but then it won't
-work under all circumstances, e.g. 'maxcpus=$N'.
+The phone has a Silergy SY7802 flash LED controller.
 
-We could fix that now with the new topology enumeration code, but that's
-a larger scale project.
+Signed-off-by: André Apitzsch <git@apitzsch.eu>
+---
+ .../boot/dts/qcom/msm8939-longcheer-l9100.dts      | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Thanks,
+diff --git a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
+index e3404c4455cf..528737929274 100644
+--- a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
++++ b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
+@@ -159,6 +159,25 @@ led@2 {
+ 			};
+ 		};
+ 	};
++
++	flash-led-controller@53 {
++		compatible = "silergy,sy7802";
++		reg = <0x53>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		enable-gpios = <&tlmm 16 GPIO_ACTIVE_HIGH>;
++
++		pinctrl-0 = <&camera_rear_flash_default>;
++		pinctrl-names = "default";
++
++		led@0 {
++			reg = <0>;
++			function = LED_FUNCTION_FLASH;
++			color = <LED_COLOR_ID_WHITE>;
++			led-sources = <0>, <1>;
++		};
++	};
+ };
+ 
+ &blsp_i2c3 {
+@@ -318,6 +337,13 @@ camera_front_flash_default: camera-front-flash-default-state {
+ 		bias-disable;
+ 	};
+ 
++	camera_rear_flash_default: camera-rear-flash-default-state {
++		pins = "gpio9", "gpio16", "gpio51";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
+ 	gpio_hall_sensor_default: gpio-hall-sensor-default-state {
+ 		pins = "gpio20";
+ 		function = "gpio";
 
-        tglx
+-- 
+2.45.2
+
+
