@@ -1,345 +1,238 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2075.outbound.protection.outlook.com [40.107.95.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A20A19B3FB
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241724; cv=none; b=r0O1fSCwgXyv16tp6Lxak07vTBWe4tK/R95Wrrd3n+sYWOis2W4Qml3LDh9NGpBPru/7LTG6jnklnK0qzMMmnRgaDsZ7zIvBJHvgeXzDdCMEwx9HP6Y9j9XA1OlfIWxLYKXOuD70OxYc0utXeF2iGZpN2WmRUEWtmVPkNRfJnA8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241724; c=relaxed/simple;
-	bh=6OYh9GVmCFzlYYtPr1/rlWFN2LdtNayCv9r+cMa7gHA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rB6U/jQWTyUGtBhiKu1OVWefnYb5ri4OZoMoasDRnS3MyQ3hZ58yshEmROYU/7YyvMF1J6VS3e2qUxAX3rNoIgIHISAmF8ZNrOVgElc4tPuEJqXbm+wRgsl1+maon+Q78B3oJSQ7hzDb93eLazpeIsp6udfMWETCqMoRuvm/P+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OqYK+KWA; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2A119B3FB;
+	Mon, 24 Jun 2024 15:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719241732; cv=fail; b=HcuJ6aeDiMPnys7iiwtF+Gy/PfjMRUO6ltfhhWUJNA4A6KfpzmL0fYjiZQQ9pRn2JhCsHxXypsHvDsLs5uAhs2Q/+8idyFICTEZQfRzfBNrAX+BSAP591pJlm5ZF+4l26wMCi4DBKBFwiXNyG+eQPlFbqDKnMpnwaLt0Rs4t8SY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719241732; c=relaxed/simple;
+	bh=N4V7Ry8+2/8UoR9ARw2txcFt7sHlFPowpVrjrVCoBBg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QLUc3aebkUNEOlxDRuEXbudjL5fl0VtqzK0ouSwnqFBpLOSIEDJTyi9Dhr1qRvG2DvIGwCSZJS37pgRdA6OGPzhxfW1ecoUvn0whiJGWSMWBItyE0jrWZf3Nyr6R3wG5vd3yK8LO8BucFv4Sj35j3VM2DuDXGaKHv5nko/2ghY0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=V+ZUhwS0; arc=fail smtp.client-ip=40.107.95.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OqYK+KWA"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ce09b76e0so1451827e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719241720; x=1719846520; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4fNkTYJPvQWZmgLjYfNjuf35JHpZNSgZEp1wXGwNUwU=;
-        b=OqYK+KWAOXHOKr9k0qfN19HHR8t4/aTmSIDdJvVrQBYqZzFr622ZyE9hu9/VV5wgoL
-         TkjeFTxmH4NAQNKIPnEUeeknA3Nft9fjTbYRK7h8kzlAeYlXgaL9lN4bDb7Q8WdgTIAz
-         B81lAQzW9bcboIva3sgg1Vu5gZfmPM2KTCQLd3HDK3ywcrHPNriNk7fbP+H6r09vtio3
-         Kd9epPLHwAW1hAnFJO0q3cNg/8njlO9z78QWTY4lKxSeC/3T3u3+U3lcWW7+cfAI7FhJ
-         MlBOObh5ZRG0QnJf5BjBf/NRjlkcvlhCBS8r9oBIGsulXiHI7WI4JXG+z5bnNwVC2JAR
-         foDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719241720; x=1719846520;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4fNkTYJPvQWZmgLjYfNjuf35JHpZNSgZEp1wXGwNUwU=;
-        b=UxUg4lNVyDH7aluKfrkoiGFVqgoAjpgfc9iTBIU3Aj+QEdLCPv8cMf3HgmumhM0AvT
-         n5hlf7RKv4seeYOMqoiSq2AWCtxbakWvY46Iw4WiZ3UGDddIVtq7KejaZdhAVltnwkls
-         DEZHdQzIDsAR7gwLeQtmAS7UV566pQ4lwnhOctvQl0jBGeXhHRDlyBDhUrnf9DGWUbX8
-         a/AX+3CzVLVhd91uvp2REXkQT9vGd/HWSqTjBwIFHSIzq1ImP9Ni4vgsxaLtvDGewJz6
-         fBIihTHZ3FKfLmVypC0C2RueCi1uNuFdsh7YJF4Yku8i1TzBgA/aZ84IytdF1WJNFf61
-         0kog==
-X-Gm-Message-State: AOJu0Yxqn3supek7RM1xqqsJpqtKVy/Wleg9JkOUahUiCALa/PhCFykY
-	vyvafYPFtI99gP+yn6gkz1ga4kony8RB2NipMX9fJ9zTAEcF8wztwbzz3Eil5Qw=
-X-Google-Smtp-Source: AGHT+IGJJOO7DBibqLwx6Hc8BeWlnHSDRWgoKB3loXQyx2zDHel9Sd6tYg2Sfa480VSb8XhuJWknJg==
-X-Received: by 2002:a05:6512:2398:b0:52c:df4c:92d8 with SMTP id 2adb3069b0e04-52cdf4c93b3mr2306668e87.1.1719241720366;
-        Mon, 24 Jun 2024 08:08:40 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdbe1bcefsm840571e87.159.2024.06.24.08.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 08:08:40 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 24 Jun 2024 18:08:13 +0300
-Subject: [PATCH v9 2/2] usb: typec: ucsi: add Lenovo Yoga C630 glue driver
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="V+ZUhwS0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BVm5UVV0Aom2mp/j1K5wmfaHP7Oa5M3CjWEygCicu3ASWz++MNWLDVSNI+Hw8rsLsR6s97plMW4URYAadh3WWhGCi3Zq/OUxjYyFfJdz+6Ff+tFTNYutu2pCiT24Pprc3CsQkUEZLq+lOp2AAfh61jvOFrp06GBcvl/rwaRUFQbdfR2My2cw/7vtKJrEk7aV/G0pFGFy7G6Kbhdo1EOVKeDlL55KQOjFm18RS5tx1k5MSmwVjypdklUwHbI0D4aVbndCWwJXTGAyfpJrjla94YMTPb+hn0ClP7Lhf5chPEqbVcLumpuKKF0aNkkUoWZTjrzybjONnmWKNwKNuXnOpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2w43dsPLy469S81lnRZr2xbFgloHlGyXHn4jq4zuW0s=;
+ b=fL85HXCTwFIxHTJUGRpLTugWou5iquh2upr2Bm7FmZH9c55QrzM1Q/IqdOfYk946AyAtvtslDOb053Za16uWVIMieGLneFBWQNOD+Dx4vVgTXdy2rOiKvg+7/gjLE9A6kFjsH8qQ0zgSuyfs16EyLUM3xziVkWJrEW5Kj78FSL22XuvYFPtXRz+CLDzOWiquszhxj/lH2V4pKV2MeQXQEmu/auOdoWCq5e7RTf3X+hvSJ6jWu3A9M0er7hcYe+oiu4O0vxjqDtnUE3M2imQcPmIc3Pt3WRddLNq33rTSNjdybIqcsgA2OJjcJNRBBT0gzsOIz/rZEjJFP2qQijJe5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2w43dsPLy469S81lnRZr2xbFgloHlGyXHn4jq4zuW0s=;
+ b=V+ZUhwS0caXc/nSC/1Un41SPvKhUBU6SCwu9tJgzLt/t+Y4xrsja0YtJlstqsN/28kW1+3lxNbnKT136Yf8PkswaRTe6C0CnH+8fAApkjUixDbR19MQSxX1qVm0zpjnsVXzJnC3g5Ok4778p4R3MMcqehGsGi+bfDPqxfG0qiW8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB6380.namprd12.prod.outlook.com (2603:10b6:208:38d::18)
+ by DS7PR12MB6143.namprd12.prod.outlook.com (2603:10b6:8:99::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
+ 2024 15:08:47 +0000
+Received: from BL3PR12MB6380.namprd12.prod.outlook.com
+ ([fe80::66cf:5409:24d1:532b]) by BL3PR12MB6380.namprd12.prod.outlook.com
+ ([fe80::66cf:5409:24d1:532b%7]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
+ 15:08:47 +0000
+Message-ID: <f5133b75-5d71-4426-8447-b0ed391c4709@amd.com>
+Date: Mon, 24 Jun 2024 10:08:44 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/9] PCI/AER: Call AER CE handler before clearing AER
+ CE status register
+Content-Language: en-US
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, ming4.li@intel.com,
+ vishal.l.verma@intel.com, jim.harris@samsung.com,
+ ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+ <20240617200411.1426554-3-terry.bowman@amd.com>
+ <20240620123104.000029cf@Huawei.com>
+From: Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <20240620123104.000029cf@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0036.namprd11.prod.outlook.com
+ (2603:10b6:806:d0::11) To BL3PR12MB6380.namprd12.prod.outlook.com
+ (2603:10b6:208:38d::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240624-ucsi-yoga-ec-driver-v9-2-53af411a9bd6@linaro.org>
-References: <20240624-ucsi-yoga-ec-driver-v9-0-53af411a9bd6@linaro.org>
-In-Reply-To: <20240624-ucsi-yoga-ec-driver-v9-0-53af411a9bd6@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Nikita Travkin <nikita@trvn.ru>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7349;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=6OYh9GVmCFzlYYtPr1/rlWFN2LdtNayCv9r+cMa7gHA=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmeYvdhrwcwKivuj6eDm/PHIBmAdcmYYZD4QMUH
- a5KA5pWtSKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZnmL3QAKCRCLPIo+Aiko
- 1WVPB/4zVzvlBpnvJAp+CJkVqEfu6jHS41VDf/RmAalcN9mnGq/ANCXrNP2Gy3q+IIU9bw5tN1Z
- 4zBdimIovfPhlIa5w5UXyJM7GFoyGXvYLNyBcLXNziSSFoJeVjtNHZr+5YEZAHKXGGGZPnd5N6x
- 8ZoFUuyYa5x1ZC815FDAE6m6hWZu/wk9TfQkAeClbJqeyB2ZB+vOEy7MPeMwdSI/HFJvcH0M34S
- nsrKRaZ18/Vuk9Q+WqhudJRi99c2kvpyR4JGuWlpPw2g2ke0KwW6RBBdECjK3EEyHBMeYQc1mKZ
- TZbs1ZmZAWFcZzdxeMcxBizCA8dJJspDwQCBrgYwBMTvdjUi
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB6380:EE_|DS7PR12MB6143:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2a1c3f2a-c926-4b7c-f44b-08dc945f8bff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|376011|1800799021|366013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L2lTcEJpN092Z3BBMy9RNzRvRUJONTVyQnlESEczdk1wc01EMVFUa0FmYmNN?=
+ =?utf-8?B?Vkh4NmZPSEYva05qYjliQ3JYOFUxRmhvcytnQTZRTHd2dENuOFViZ1NMN1Rp?=
+ =?utf-8?B?TnBpSFRpa2E2SVg4UHZiVFhrOFJvc1R0Z2xDTlNKQjAyR1lWRkI4Q3I5YW54?=
+ =?utf-8?B?S0ZtN2JUZTlTOTBsZlhkbzRwTUVjUUFOMXIra0Vjb2lRWXVUa3NycFZuQ01B?=
+ =?utf-8?B?Y25oaGlFNVl5dmRGUVZRWjhMb0g4eFVLdVNtVXJUY256N1NnVHVzTjhsZ0lV?=
+ =?utf-8?B?MUNQQU95ZWcxOCtLMU9yaVRRd045VG5BclpHK3VONWh2Z3ZUYW94UGxsS01n?=
+ =?utf-8?B?ekU2c0J6bXlMclJ2QWxIWnRvWkZTRk8rVzltNkY1akxVQWVteXhSSjRPZ1dq?=
+ =?utf-8?B?aXZuT2QvR0dyVGJQUnA5Y3VLZGc0TWk5U0hqN2gzWldEQXg5V01PTmRBYkp6?=
+ =?utf-8?B?MExpMDFQaG5nM2VxVVo0ZnlvOTU0anJFR2pFMVdQcDdwM2Jkb1FRemFiOWFC?=
+ =?utf-8?B?RnhvTldrZm93MUFjWnVDZUx0N3ZWenU0T1FUUzJEaWovTk05bUxucXBjZ21C?=
+ =?utf-8?B?Y3BQMmtZaXJMOFRjd0ZzY2ZvUVV5RCtiRk1ZY3VIZHhBQXprKzlOSnpOd29I?=
+ =?utf-8?B?eGhNVjdYMHp6YzZrdklDZzAvV2hMekR6dm5UYnFDY1d5bEJWMFgzV1BUNWRI?=
+ =?utf-8?B?VCttUStmV0Rxa0phaGFSV0VuNWRLMEM4QTdCWENwdU91WURnWlZjZDMvMjEw?=
+ =?utf-8?B?MHFjd0E0a2FkT2FITmZ5QVAxWThGNlZraGJiaWhLdUhhVkFYdXltVnBkZXA0?=
+ =?utf-8?B?VzZva2ZrcWRVUmNvRzRETDBxSmxiajM1WnBXOU0wV0NpQ1R2MGdqL1N3SDVL?=
+ =?utf-8?B?cVVWb3lIZDdCeCtQdE1qSXZhbDl0aHMzMzFzblpKMVJRVWpGZjVzQmtxODdw?=
+ =?utf-8?B?dFhVT3hBYjEwb1ZYQVVCWlIzQ1dnMDh1VGV1U1pINXhjSFVTMG9EZzdYZ2Q2?=
+ =?utf-8?B?b0xIUWV5YS8yemprSkh0TVY4czFVR2Evdjg0ajZJaEljVzRNVlNCWWFxRHRR?=
+ =?utf-8?B?aTlWRkNidnk3amZwTC83VVhEcXRoVkl2Z1lWME1Ta3B3SWgrNWlra1AzS0Nw?=
+ =?utf-8?B?cysvL3JaRnl4TEw1VWJLTXZsVUhlKzZMYWNEUUh0WWpoWERrdFAyTGZSaGdn?=
+ =?utf-8?B?WjVLUWFpZ2lEUmFyRTNrdlA2R2U4Zm9kZWVraE5PR3N6R2pYSXRydmNDcGNL?=
+ =?utf-8?B?OG1HNlNqSWJVL1lvQXQrNFRwSytpV3dRL3VZaldHUmVENVRucTlNeldROXhw?=
+ =?utf-8?B?ZXBQQ1NXTnFtSkttdHpOSDRkdDV6SnlvcjVOSnlCUUdUa2JFQ0Fhb0RuNUtC?=
+ =?utf-8?B?TFJ6dmY5ZXdldDZoaXJ6Q3MvUkZFVGxycENPa3pOZXFYZmJxNk0yZ3ZYb3FS?=
+ =?utf-8?B?VzJZdDFpZUkwcE5ndHFXNG91ZmxFNjMvUnJiblZTMUc4SzFuUkk0TFI4THM3?=
+ =?utf-8?B?Qm41M3ZHUXNiaHBWR21zcWw3RUs5dVpaVUh1cTVuV3BZeThtM0pQMXI4eUp3?=
+ =?utf-8?B?N0toNHQzd0ZUV1htY1c2QXk0cmF4WVBKdGJRU2pMOWlzbmV6RlNMcnJTVUtt?=
+ =?utf-8?B?UTVqK1lzb3k4OE84eWJ2ZlY0MldQLzY1cjhaT01tNHZsZUtScElDSjh2ZVhk?=
+ =?utf-8?B?ZHJpVGlaNjVlT2oydFZBb0JtaEtremgzcDIyWkRTWmw3em1MSHpzc0Q2OG1o?=
+ =?utf-8?Q?VJWm0CpCoBlLRBGIYBKLmrUFoKTItDNqB0unjdA?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MzRPZmlUM25TNVpCTGhmeVNwRXhHb3l1UTdUamFzRHptS3U1QzBPZUtkdVJ5?=
+ =?utf-8?B?MFNHOGdUVytGLzZwVmR0Y054ZU52V0I5SkQ2d2hDcWdCWnl1WVpSUWxpWjMz?=
+ =?utf-8?B?VittT1ZjK0NoYllId2FoOWpMQ3VrTFZiTWpGRERYY1dlNUVkNUVXbzU4N3B0?=
+ =?utf-8?B?dEN6d1VZbEhNMmRVanlPZVE5YndqRCtxSWZ3SlhZcnBBWUlpekQ0WTQ0aVZO?=
+ =?utf-8?B?bTRaZUFESk5BSHFwYXU2aXBqNTdLaTVxSDJIK09Fb2kxVWpubGlKWnViY1ZO?=
+ =?utf-8?B?UzFiQktzVWoyT08vNFlxYVBqeHEyeXhQVGtYWk5pbzZ0UGpnNStXNUFTdFZv?=
+ =?utf-8?B?Um52UFZxdDNEUW5rY3pzQ2R4T25nVzlrYU1pZFNxU29lcHc3K2lvSGh3bkly?=
+ =?utf-8?B?SzJwMVlvSFM2MVA2VXVCZXluc3l6ZDA1Q0xwUmtCMEMwUFpWODd3UXBhcnJu?=
+ =?utf-8?B?ZmZqdTJQK2RhVFVhZkNTc0xTeFhDQm1kVjJjV0hiUjl4ZENRZUVMMjAyTzBV?=
+ =?utf-8?B?aFdLd1FhTzVzQkFwblVFN0hLYldWZy96Uno1TDlBenplZmhTVXhjdVJrVzhD?=
+ =?utf-8?B?WjBaQVozazBCVUxRNmEvc1l0eEQxSUlacjhaNWZ3cjRiT3Ywb3ZVQ253dXln?=
+ =?utf-8?B?K1pUOXZnZnpqVko4bEwrTFh6NlBRcmwyRHNLV1RpU21SWWF6eW5ZMklFczdI?=
+ =?utf-8?B?TW9ZZ2QwWkpHU0dkcEFwZHRDb0ZONnIwZFB0S0dKdE5tWXBwQUg2dnVVZE5j?=
+ =?utf-8?B?bVFCV1hEc2ovVlRPcWJYUjBCWURNdHZxWGZuREx1dmQ4bHJ4Um9WbzZYWUEz?=
+ =?utf-8?B?RFVpVloyb2x4c2JWbHZLYiszeXhEL29jUll4WjBPYmtMN2cwa1NoQ01yb1ZY?=
+ =?utf-8?B?dDRiT3QxRGpKa3hIdXZnT25tZUZtbDFpajJUREp4N1hFOC9qd3NIeUNOanB5?=
+ =?utf-8?B?S2dxdS9RNU81VDI1UDVXZHVxc1N1a1BDRTBjaU9WTGlkaXI0SXVIT09ZczV1?=
+ =?utf-8?B?WTk0OFpEWnk3Nm55TVdVbHFab01FY1BTdnN0Y3A0dW9vQkVaVVJTQ2RPb0tz?=
+ =?utf-8?B?U0FQUVpROEt0L21qeTJiekgzWXBNQXJUNXo3aDZXZmtkZTFCWFZsdkpaNG1P?=
+ =?utf-8?B?SFBWMzN5TWZnU0ovMXJzRzQ1ZFgzck1meElNaVBMNm0vQVNPS0haU2R2b3Ra?=
+ =?utf-8?B?VzIwZnl1SjdNcHJ5SzJhV3o0Y2E2a0RLUU9OSkpUQitGdkZzSDFtUm1NZUF1?=
+ =?utf-8?B?ZVdIY0tUOEhkMzhVZmgxU0hCTWppdDBuWkRvekdiYTRNNzlpaGNtY2RSYzZs?=
+ =?utf-8?B?RFJ5Nld6TXVwWmJPYXlmS0ZxYzBzSnBMNVgrRmh5Mm1ZMEk2Q1VPeWI2L01a?=
+ =?utf-8?B?Unh2V0VndVJ6aWswQ3FYMCtZcWFwK3FRZTREclR5RHNpaG9IMythNnZLMkdT?=
+ =?utf-8?B?V0NZaGtTRWdEcWlIVE0zQXN0aVpYUExCZjRqaStrVENlNlFuQVExSU1LcFpw?=
+ =?utf-8?B?TGRXakpxZDk5N2xzb0RyQXhMcXRkclY4SU1Db29NWEFyTC9WME5JWDVGL2Zs?=
+ =?utf-8?B?SjJXait4Z2pYcmxYOFpycEg1eDNzTnAzWnZQZ3dXcis5cHRUNmFkWHJPVmNo?=
+ =?utf-8?B?d0pZMm9yZktHWkZSS2ViRGlKdXI2OHpNR3N3TE5GZUdSSEI5VFZnMnlYczF0?=
+ =?utf-8?B?TUZoNURlbnNHZlF4ZkdENG5KSlhKbTFvZ1h2K2RHVzYzYWozRjVkY2FSTGpC?=
+ =?utf-8?B?TzdtR21TT0dvTzcvWEtkRUlYQTJjckRQTmFYOUZIWUpNRllBUVpDclVRWXJm?=
+ =?utf-8?B?S2d1V1lDZWxhWWNRVkNHeXp0UUlpNG5uMjhVQWNTSGdkWDMxYmVLNENSQldD?=
+ =?utf-8?B?ejRWM0RnNlAxbmtXdVRPQlk2OXQybGtORWVtYmZDbHRFWUJLNWYwWUErVmkv?=
+ =?utf-8?B?Y3lzT1p3cEtzU09LTm5XemRScUtZNVQ1ZVozdVFuN0NCbzdhZWRBUFdqUXNU?=
+ =?utf-8?B?QU01dkJQQjExMnNxenhlRWIvSzZXNklzUUtpU2NTakpsbEJDSm5JeDNiVURh?=
+ =?utf-8?B?L0UwblhlcEV4azBuc21CN2RJNHFSSWpZRHB0dElOcVlNWFlldmpUVnk1eGY0?=
+ =?utf-8?Q?PEGOFXxdkilHBMBiBQo9OVWeH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a1c3f2a-c926-4b7c-f44b-08dc945f8bff
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6380.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 15:08:47.2875
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /P02NIlPSiD8ERdbbXgFDiGQ8z60TDJseNjYnhDaQOxbXTjE9+E5zwUV77TKjD2tGjhB+MQR59G9QYfqgiKdBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6143
 
-The Lenovo Yoga C630 WOS laptop provides implements UCSI interface in
-the onboard EC. Add glue driver to interface the platform's UCSI
-implementation.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/usb/typec/ucsi/Kconfig          |   9 ++
- drivers/usb/typec/ucsi/Makefile         |   1 +
- drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 204 ++++++++++++++++++++++++++++++++
- 3 files changed, 214 insertions(+)
 
-diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
-index bdcb1764cfae..680e1b87b152 100644
---- a/drivers/usb/typec/ucsi/Kconfig
-+++ b/drivers/usb/typec/ucsi/Kconfig
-@@ -69,4 +69,13 @@ config UCSI_PMIC_GLINK
- 	  To compile the driver as a module, choose M here: the module will be
- 	  called ucsi_glink.
- 
-+config UCSI_LENOVO_YOGA_C630
-+	tristate "UCSI Interface Driver for Lenovo Yoga C630"
-+	depends on EC_LENOVO_YOGA_C630
-+	help
-+	  This driver enables UCSI support on the Lenovo Yoga C630 laptop.
-+
-+	  To compile the driver as a module, choose M here: the module will be
-+	  called ucsi_yoga_c630.
-+
- endif
-diff --git a/drivers/usb/typec/ucsi/Makefile b/drivers/usb/typec/ucsi/Makefile
-index b4679f94696b..aed41d23887b 100644
---- a/drivers/usb/typec/ucsi/Makefile
-+++ b/drivers/usb/typec/ucsi/Makefile
-@@ -21,3 +21,4 @@ obj-$(CONFIG_UCSI_ACPI)			+= ucsi_acpi.o
- obj-$(CONFIG_UCSI_CCG)			+= ucsi_ccg.o
- obj-$(CONFIG_UCSI_STM32G0)		+= ucsi_stm32g0.o
- obj-$(CONFIG_UCSI_PMIC_GLINK)		+= ucsi_glink.o
-+obj-$(CONFIG_UCSI_LENOVO_YOGA_C630)	+= ucsi_yoga_c630.o
-diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-new file mode 100644
-index 000000000000..8bee0b469041
---- /dev/null
-+++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-@@ -0,0 +1,204 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2022-2024, Linaro Ltd
-+ * Authors:
-+ *  Bjorn Andersson
-+ *  Dmitry Baryshkov
-+ */
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bitops.h>
-+#include <linux/completion.h>
-+#include <linux/container_of.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/string.h>
-+#include <linux/platform_data/lenovo-yoga-c630.h>
-+
-+#include "ucsi.h"
-+
-+struct yoga_c630_ucsi {
-+	struct yoga_c630_ec *ec;
-+	struct ucsi *ucsi;
-+	struct notifier_block nb;
-+	struct completion complete;
-+	unsigned long flags;
-+#define UCSI_C630_COMMAND_PENDING	0
-+#define UCSI_C630_ACK_PENDING		1
-+	u16 version;
-+};
-+
-+static int yoga_c630_ucsi_read(struct ucsi *ucsi, unsigned int offset,
-+			       void *val, size_t val_len)
-+{
-+	struct yoga_c630_ucsi *uec = ucsi_get_drvdata(ucsi);
-+	u8 buf[YOGA_C630_UCSI_READ_SIZE];
-+	int ret;
-+
-+	ret = yoga_c630_ec_ucsi_read(uec->ec, buf);
-+	if (ret)
-+		return ret;
-+
-+	if (offset == UCSI_VERSION) {
-+		memcpy(val, &uec->version, min(val_len, sizeof(uec->version)));
-+		return 0;
-+	}
-+
-+	switch (offset) {
-+	case UCSI_CCI:
-+		memcpy(val, buf, min(val_len, YOGA_C630_UCSI_CCI_SIZE));
-+		return 0;
-+	case UCSI_MESSAGE_IN:
-+		memcpy(val, buf + YOGA_C630_UCSI_CCI_SIZE,
-+		       min(val_len, YOGA_C630_UCSI_DATA_SIZE));
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int yoga_c630_ucsi_async_write(struct ucsi *ucsi, unsigned int offset,
-+				      const void *val, size_t val_len)
-+{
-+	struct yoga_c630_ucsi *uec = ucsi_get_drvdata(ucsi);
-+
-+	if (offset != UCSI_CONTROL ||
-+	    val_len != YOGA_C630_UCSI_WRITE_SIZE)
-+		return -EINVAL;
-+
-+	return yoga_c630_ec_ucsi_write(uec->ec, val);
-+}
-+
-+static int yoga_c630_ucsi_sync_write(struct ucsi *ucsi, unsigned int offset,
-+				     const void *val, size_t val_len)
-+{
-+	struct yoga_c630_ucsi *uec = ucsi_get_drvdata(ucsi);
-+	bool ack = UCSI_COMMAND(*(u64 *)val) == UCSI_ACK_CC_CI;
-+	int ret;
-+
-+	if (ack)
-+		set_bit(UCSI_C630_ACK_PENDING, &uec->flags);
-+	else
-+		set_bit(UCSI_C630_COMMAND_PENDING, &uec->flags);
-+
-+	reinit_completion(&uec->complete);
-+
-+	ret = yoga_c630_ucsi_async_write(ucsi, offset, val, val_len);
-+	if (ret)
-+		goto out_clear_bit;
-+
-+	if (!wait_for_completion_timeout(&uec->complete, 5 * HZ))
-+		ret = -ETIMEDOUT;
-+
-+out_clear_bit:
-+	if (ack)
-+		clear_bit(UCSI_C630_ACK_PENDING, &uec->flags);
-+	else
-+		clear_bit(UCSI_C630_COMMAND_PENDING, &uec->flags);
-+
-+	return ret;
-+}
-+
-+const struct ucsi_operations yoga_c630_ucsi_ops = {
-+	.read = yoga_c630_ucsi_read,
-+	.sync_write = yoga_c630_ucsi_sync_write,
-+	.async_write = yoga_c630_ucsi_async_write,
-+};
-+
-+static void yoga_c630_ucsi_notify_ucsi(struct yoga_c630_ucsi *uec, u32 cci)
-+{
-+	if (UCSI_CCI_CONNECTOR(cci))
-+		ucsi_connector_change(uec->ucsi, UCSI_CCI_CONNECTOR(cci));
-+
-+	if (cci & UCSI_CCI_ACK_COMPLETE &&
-+	    test_bit(UCSI_C630_ACK_PENDING, &uec->flags))
-+		complete(&uec->complete);
-+
-+	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
-+	    test_bit(UCSI_C630_COMMAND_PENDING, &uec->flags))
-+		complete(&uec->complete);
-+}
-+
-+static int yoga_c630_ucsi_notify(struct notifier_block *nb,
-+				 unsigned long action, void *data)
-+{
-+	struct yoga_c630_ucsi *uec = container_of(nb, struct yoga_c630_ucsi, nb);
-+	u32 cci;
-+	int ret;
-+
-+	switch (action) {
-+	case LENOVO_EC_EVENT_USB:
-+	case LENOVO_EC_EVENT_HPD:
-+		ucsi_connector_change(uec->ucsi, 1);
-+		return NOTIFY_OK;
-+
-+	case LENOVO_EC_EVENT_UCSI:
-+		ret = uec->ucsi->ops->read(uec->ucsi, UCSI_CCI, &cci, sizeof(cci));
-+		if (ret)
-+			return NOTIFY_DONE;
-+
-+		yoga_c630_ucsi_notify_ucsi(uec, cci);
-+
-+		return NOTIFY_OK;
-+
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
-+static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
-+				const struct auxiliary_device_id *id)
-+{
-+	struct yoga_c630_ec *ec = adev->dev.platform_data;
-+	struct yoga_c630_ucsi *uec;
-+	int ret;
-+
-+	uec = devm_kzalloc(&adev->dev, sizeof(*uec), GFP_KERNEL);
-+	if (!uec)
-+		return -ENOMEM;
-+
-+	uec->ec = ec;
-+	init_completion(&uec->complete);
-+	uec->nb.notifier_call = yoga_c630_ucsi_notify;
-+
-+	uec->ucsi = ucsi_create(&adev->dev, &yoga_c630_ucsi_ops);
-+	if (IS_ERR(uec->ucsi))
-+		return PTR_ERR(uec->ucsi);
-+
-+	ucsi_set_drvdata(uec->ucsi, uec);
-+
-+	uec->version = yoga_c630_ec_ucsi_get_version(uec->ec);
-+
-+	auxiliary_set_drvdata(adev, uec);
-+
-+	ret = yoga_c630_ec_register_notify(ec, &uec->nb);
-+	if (ret)
-+		return ret;
-+
-+	return ucsi_register(uec->ucsi);
-+}
-+
-+static void yoga_c630_ucsi_remove(struct auxiliary_device *adev)
-+{
-+	struct yoga_c630_ucsi *uec = auxiliary_get_drvdata(adev);
-+
-+	yoga_c630_ec_unregister_notify(uec->ec, &uec->nb);
-+	ucsi_unregister(uec->ucsi);
-+}
-+
-+static const struct auxiliary_device_id yoga_c630_ucsi_id_table[] = {
-+	{ .name = YOGA_C630_MOD_NAME "." YOGA_C630_DEV_UCSI, },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(auxiliary, yoga_c630_ucsi_id_table);
-+
-+static struct auxiliary_driver yoga_c630_ucsi_driver = {
-+	.name = YOGA_C630_DEV_UCSI,
-+	.id_table = yoga_c630_ucsi_id_table,
-+	.probe = yoga_c630_ucsi_probe,
-+	.remove = yoga_c630_ucsi_remove,
-+};
-+
-+module_auxiliary_driver(yoga_c630_ucsi_driver);
-+
-+MODULE_DESCRIPTION("Lenovo Yoga C630 UCSI");
-+MODULE_LICENSE("GPL");
+On 6/20/24 06:31, Jonathan Cameron wrote:
+> On Mon, 17 Jun 2024 15:04:04 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+> 
+>> The AER service driver clears the AER correctable error (CE) status before
+>> calling the correctable error handler. This results in the error's status
+>> not correctly reflected if read from the CE handler.
+>>
+>> The AER CE status is needed by the portdrv's CE handler. The portdrv's
+>> CE handler is intended to only call the registered notifier callbacks
+>> if the CE error status has correctable internal error (CIE) set.
+>>
+>> This is not a problem for AER uncorrrectbale errors (UCE). The UCE status
+> 
+> uncorrectable
+> 
 
--- 
-2.39.2
+Thank you.
 
+>> is still present in the AER capability and available for reading, if
+>> needed, when the UCE handler is called.
+> 
+> I'm seeing the clear in the DPC path for UCE. For other cases is
+> it a side effect of the reset?
+> 
+
+Depends on when its being read. I'm assuming this is after recovery in your case. 
+And after recovery it will be zeroed.
+
+Regards,
+Terry
+
+>>
+>> Change the order of clearing the CE status and calling the CE handler.
+>> Make it to call the CE handler first and then clear the CE status
+>> after returning.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: linux-pci@vger.kernel.org
+> Seems reasonable, but many gremlins around the ordering in these
+> flows, so I'm to particularly confident. With that in mind.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+> 
+>> ---
+>>  drivers/pci/pcie/aer.c | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index ac6293c24976..4dc03cb9aff0 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -1094,9 +1094,6 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>>  		 * Correctable error does not need software intervention.
+>>  		 * No need to go through error recovery process.
+>>  		 */
+>> -		if (aer)
+>> -			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+>> -					info->status);
+>>  		if (pcie_aer_is_native(dev)) {
+>>  			struct pci_driver *pdrv = dev->driver;
+>>  
+>> @@ -1105,6 +1102,10 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>>  				pdrv->err_handler->cor_error_detected(dev);
+>>  			pcie_clear_device_status(dev);
+>>  		}
+>> +		if (aer)
+>> +			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+>> +					info->status);
+>> +
+>>  	} else if (info->severity == AER_NONFATAL)
+>>  		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+>>  	else if (info->severity == AER_FATAL)
+> 
