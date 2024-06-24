@@ -1,130 +1,151 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BECC137C2E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36E913957E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719228186; cv=none; b=UvWIg0WvT5PlavfDsmE3HUQhZlfQvajHFUHT9NJm3qBGH6VbSUuyraFFi7RgcaCcBd3w+/AlVlRF7dQuGJMpQfO6ZK5lZArkmztFAqBeCko4/UQ4lAto6jwgRz6vBs4T/xXMdCX7Tuup8ALo6MadQCkQFbtU1eFl06wL4XA+oSg=
+	t=1719228194; cv=none; b=qgW3cCe+oVCQL3f3Fj8xQjeMDwk/jCdQ5UVS2ND+3jbFJragkuLIGpLpumw+xCBtYWouMswqMkMpmNpUOYbFU7WlqktIuo8oZD1YPbZ8pi66KSnG8YVwH1FPZmMpleZ+oaxoVEy3Xu8FCPc+/x+oQ7Dgdw58LYUM9AqAjKQqOyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719228186; c=relaxed/simple;
-	bh=S4Oa3Fi8IQljVdEYLI5O8zdfZsxp5YbWq8vVORk/zlM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jn3kn/i+eg36CD4vwIb4i+ZPIbqGsp8A8Cqrl3/+9wLZTMwFtcBChrzrpFnLYaAozY13pM4lkWlD/Xh5zfm0EF+POoq77vlWpxEeeYysXZwLLNuEygBrCWOiRBnzU/esOYMkzn98t1onoFxv7KrM3f+Gzq713nm+TgSB74FTU7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zu3kIjxz; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719228194; c=relaxed/simple;
+	bh=pz7sF+ZNbJ8Bz1RRTeSeApuW5zYwcOlxnuYNSLjnGG8=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=Xr7nnPGt0lP8Ma9bKml4awzyzayjnH76tPsE5qDCbaPSbDD24qtEO3uhhIed0Jf8SxQ27OzQF+T43Nhdhd95qpGi3lshoYytPhDALZjsYVr/MMAy94Yz560I6YQCpZC44Huv+zAbJMt94Ed8BGV4/FBZgi31KqipwAghgdbbx+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MnvohnQh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zu3kIjxz"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5c1a6daa04bso2205619eaf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719228184; x=1719832984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u30lLX5MsP/IKxn1NfwcAHsSmZJS+FIZz7/OFIlaO7I=;
-        b=Zu3kIjxzOftbaS3NAFWR008Jt3PeySACnJTg9Mo7KISu4z+38omBIFJvQyN++lv7cB
-         zU0dAVDZs14c8ST/sK65k9V3nxxHPyq3Avm16Upe1dQjbaYvj8xrF8ZrY2TFCnnWDJ+V
-         80Z9WBWkYVYcysLKNPrAistos06qhS5o6UZxaxOxKcKhJig5CTTgXwBEK0SSJCjqhbUM
-         WpprSZV0Nj1nhIK6sdCd/mdHnjekAtUazD6Zgfbof4AQwlf6cJ+nu9krgbZGJY024tJC
-         gbZgKtR2LdKjt1FglyrDKbvAxwApN0OG6Pq+WQu/gfmTErf4WW6MEv8+ASXQ9TvGUXYW
-         /vEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719228184; x=1719832984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u30lLX5MsP/IKxn1NfwcAHsSmZJS+FIZz7/OFIlaO7I=;
-        b=XtarkKnVmFuMzoybFSN1zLvZMy+NRSwNgRVkCvDGb0yT4Tu6/6f5GlY8pBGjVjTDcp
-         5bZgGAWcTBxvuQ3484MAmytKvrRIV6pGeI3uiLe3YaLhpaw5/ZctmlyqYHr62L9dpbAU
-         0uBpqIyU8Brvy0BkJCOK/NbcRC0L8EdsmmYIkmBZ1i53WW+031XfviGnsdAE6cQFb6ga
-         88P7GzQut0r1V339tq4qnQQxqZmvC523HWySe2+IFaVSqG9oH6VzvCRQ0hvaAFYJXfYH
-         KJnHRzKSqMYWWGA3mXDabpeGY2Jb68cQq6+5HphuZwpKRGah13/3JZG7mCp7DQWu0DIo
-         utpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxWMV/fUz7ZXtKVOIgbVDAqimBnqff5CPKPXCzUXQaje57JTsCidqPXPQl1vd6b1KR/kVSS8tHqmLVcZ0IZ3Y8IQbO4MRPzSprSySL
-X-Gm-Message-State: AOJu0Yx8bWOFd2LHaNHnVp965EMzrb0aFY18IFP1s7xU0d4nCYDt6qw2
-	Zhh4ATaCdPnU2mcP1vnbIDzA0KFnwfV6z2RI1qLcmWexll3O/ybEhA7LCF0BdRWzMshsCTYy4Y8
-	pTR/DPCI3Fme4c1YqSI6u7FuvgXijFcsyXMTWCQ==
-X-Google-Smtp-Source: AGHT+IEMLOPKjw5oHjHxY0zCeeuDJx6nBikXHAv0mrWk60i33NBz4cPxYEwhe+RUgp41xs0jTLpfBU3mUf65mTiLoME=
-X-Received: by 2002:a4a:345d:0:b0:5bb:3ab6:94d8 with SMTP id
- 006d021491bc7-5c1eed472c1mr4618521eaf.6.1719228184148; Mon, 24 Jun 2024
- 04:23:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MnvohnQh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719228191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LH3f+Un7sHJi2rr5Ob6HxSxGqRh20bSt/mtca6UvBrE=;
+	b=MnvohnQhdhxqg5A/XTh0H0XXqJO95GjA4tdHmGmqhXTUm1JU+sPuRaoyCxtxrA6WYwdPxz
+	dkPW2k/DEWbuoNiOrvXKlCeCRwCbyKMjuaFwCDiYBUhOqlOJ3/wAxJ2jyYOnsnZgo/+MZR
+	SF1z7bYX3SPcU8UYezo7tKd7JpLcvao=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-389-sVUMWg9KOmO8r1WqE1-FXA-1; Mon,
+ 24 Jun 2024 07:23:08 -0400
+X-MC-Unique: sVUMWg9KOmO8r1WqE1-FXA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97142195608A;
+	Mon, 24 Jun 2024 11:23:06 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.111])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 240671955E75;
+	Mon, 24 Jun 2024 11:23:02 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+    Matthew Wilcox <willy@infradead.org>
+cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+    netfs@lists.linux.dev, v9fs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] netfs: Fix netfs_page_mkwrite() to check folio->mapping is valid
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-usb-phy-gs101-v3-0-b66de9ae7424@linaro.org> <20240617-usb-phy-gs101-v3-3-b66de9ae7424@linaro.org>
-In-Reply-To: <20240617-usb-phy-gs101-v3-3-b66de9ae7424@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 24 Jun 2024 12:22:53 +0100
-Message-ID: <CADrjBPod9w5L_SNFCa8+=kzasnf8g6MmGC6m9E+kF8spu37Z8w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] phy: exynos5-usbdrd: convert core clocks to clk_bulk
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Sam Protsenko <semen.protsenko@linaro.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Will McVicker <willmcvicker@google.com>, Roy Luo <royluo@google.com>, kernel-team@android.com, 
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <614256.1719228181.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date: Mon, 24 Jun 2024 12:23:01 +0100
+Message-ID: <614257.1719228181@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi Andr=C3=A9,
+Fix netfs_page_mkwrite() to check that folio->mapping is valid once it has
+taken the folio lock (as filemap_page_mkwrite() does).  Without this,
+generic/247 occasionally oopses with something like the following:
 
-On Mon, 17 Jun 2024 at 17:45, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
- wrote:
->
-> Using the clk_bulk APIs, the clock handling for the core clocks becomes
-> much simpler. No need to check any flags whether or not certain clocks
-> exist or not. Further, we can drop the various handles to the
-> individual clocks in the driver data and instead simply treat them all
-> as one thing.
->
-> So far, this driver assumes that all platforms have a clock "ref". It
-> also assumes that the clocks "phy_pipe", "phy_utmi", and "itp" exist if
-> the platform data "has_common_clk_gate" is set to true. It then goes
-> and individually tries to acquire and enable and disable all the
-> individual clocks one by one. Rather than relying on these implicit
-> clocks and open-coding the clock handling, we can just explicitly spell
-> out the clock names in the different device data and use that
-> information to populate clk_bulk_data, allowing us to use the clk_bulk
-> APIs for managing the clocks.
->
-> As a side-effect, this change highlighted the fact that
-> exynos5_usbdrd_phy_power_on() forgot to check the result of the clock
-> enable calls. Using the clk_bulk APIs, the compiler now warns when
-> return values are not checked - therefore add the necessary check
-> instead of silently ignoring failures and continuing as if all is OK
-> when it isn't.
->
-> For consistency, also change a related dev_err() to dev_err_probe() in
-> exynos5_usbdrd_phy_clk_handle() to get consistent error message
-> formatting.
->
-> Finally, exynos5_usbdrd_phy_clk_handle() prints an error message in all
-> cases as necessary (except for -ENOMEM). There is no need to print
-> another message in its caller (the probe() function), and printing
-> errors during OOM conditions is usually discouraged. Drop the
-> duplicated message in exynos5_usbdrd_phy_probe().
->
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> ---
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor read access in kernel mode
+    #PF: error_code(0x0000) - not-present page
 
-Reviewed-by:  Peter Griffin <peter.griffin@linaro.org>
-and
-Tested-by: Peter Griffin <peter.griffin@linaro.org>
+    RIP: 0010:trace_event_raw_event_netfs_folio+0x61/0xc0
+    ...
+    Call Trace:
+     <TASK>
+     ? __die_body+0x1a/0x60
+     ? page_fault_oops+0x6e/0xa0
+     ? exc_page_fault+0xc2/0xe0
+     ? asm_exc_page_fault+0x22/0x30
+     ? trace_event_raw_event_netfs_folio+0x61/0xc0
+     trace_netfs_folio+0x39/0x40
+     netfs_page_mkwrite+0x14c/0x1d0
+     do_page_mkwrite+0x50/0x90
+     do_pte_missing+0x184/0x200
+     __handle_mm_fault+0x42d/0x500
+     handle_mm_fault+0x121/0x1f0
+     do_user_addr_fault+0x23e/0x3c0
+     exc_page_fault+0xc2/0xe0
+     asm_exc_page_fault+0x22/0x30
 
-Tested using my Pixel 6 pro device. USB comes up and it is possible to
-use adb from the host computer to the phone.
+This is due to the invalidate_inode_pages2_range() issued at the end of th=
+e
+DIO write interfering with the mmap'd writes.
 
-regards,
+Fixes: 102a7e2c598c ("netfs: Allow buffered shared-writeable mmap through =
+netfs_page_mkwrite()")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Matthew Wilcox <willy@infradead.org>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: linux-mm@kvack.org
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/netfs/buffered_write.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Peter
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index c36643c97cb5..6a6387b3aaff 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -497,6 +497,7 @@ vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, st=
+ruct netfs_group *netfs_gr
+ 	struct netfs_group *group;
+ 	struct folio *folio =3D page_folio(vmf->page);
+ 	struct file *file =3D vmf->vma->vm_file;
++	struct address_space *mapping =3D file->f_mapping;
+ 	struct inode *inode =3D file_inode(file);
+ 	struct netfs_inode *ictx =3D netfs_inode(inode);
+ 	vm_fault_t ret =3D VM_FAULT_RETRY;
+@@ -508,6 +509,10 @@ vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, s=
+truct netfs_group *netfs_gr
+ =
 
-[..]
+ 	if (folio_lock_killable(folio) < 0)
+ 		goto out;
++	if (folio->mapping !=3D mapping) {
++		ret =3D VM_FAULT_NOPAGE | VM_FAULT_LOCKED;
++		goto out;
++	}
+ =
+
+ 	if (folio_wait_writeback_killable(folio)) {
+ 		ret =3D VM_FAULT_LOCKED;
+@@ -523,7 +528,7 @@ vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, st=
+ruct netfs_group *netfs_gr
+ 	group =3D netfs_folio_group(folio);
+ 	if (group !=3D netfs_group && group !=3D NETFS_FOLIO_COPY_TO_CACHE) {
+ 		folio_unlock(folio);
+-		err =3D filemap_fdatawait_range(inode->i_mapping,
++		err =3D filemap_fdatawait_range(mapping,
+ 					      folio_pos(folio),
+ 					      folio_pos(folio) + folio_size(folio));
+ 		switch (err) {
+
