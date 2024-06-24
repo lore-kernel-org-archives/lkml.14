@@ -1,470 +1,1080 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BB3134410;
-	Mon, 24 Jun 2024 10:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB8A1369AF
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719223586; cv=none; b=tBH5gv695P814ohdX5hKzzOyvNeiTkPb8Sezq8d1ITWFR7f70/gQDeCU31vBGn0JcmNIRQtuEJdt8/seAPo0uv5OHrwYDHcT//vDWg7rwSx0pjylPjf8LpBFoGkssSFnUs71Hp9tSA9/3a9QIvrdHlS3NnBP1M0Pt53NyPIapgo=
+	t=1719223587; cv=none; b=Q9uQcjzw8FwKJnrfjA2R/xSW9uF0uzFXU8+SW63AlHntPRphmP6IbMMmXDU5itfUAfp9Dy9NnV3Oluukj5wpRomZfD9J7kAUsnYYBkPTyO0PM5cQS7OzeGMQA1uhDpbVFNqopU4m98CQGiGH0/ZLXUCc4DaZJey2gPBofjoWLtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719223586; c=relaxed/simple;
-	bh=lvbTAI0rTXEHWYPO4O7pbLFaE1pKeDFVwBFT1CU5tPk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HYyXhux8FOg9yosONyFA123/hROWWj3qzHCv6/m5GW6J7Jy5zEnDt437BvfxZ6vZKUelTsENZk+E5O2MUr/ujstJ1F8xGDtCr0Z52BNkgmnO+MNJ/MSzTpS7xH9eed3GT7muet0kVicEQWLEay4goNQxY6JHzStdVMMr/gcllas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pUniw+g9; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719223587; c=relaxed/simple;
+	bh=kC0KxY1SOanbHb1h55y9chmZJBgDMtmjItEPmlIWC0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XT6g120kFWlYq990KmO0vwsDO+j3OO1M9MJoYbATmODTOOYRQ2Lskv6EdA5OoFmNRf9wrqJacOuair699XUUmzQ8m2ibxoM4bph+lUYLlCs5TTiBHakkum63mqhQVlq5/gw6iTkPaxJa6wuSK4tlWzpiAwv/Y2sKJvA5n5xO7NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cot4bJqO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pUniw+g9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719223584; x=1750759584;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lvbTAI0rTXEHWYPO4O7pbLFaE1pKeDFVwBFT1CU5tPk=;
-  b=pUniw+g9dteK7TnuNX5BneWA9yV2x5J0s0lH7bAOCxE0X+FEHRjroRnf
-   ScomGJnN3Jh6BSzjPwK1Sq64MLnhzN7rJdeSn6Z6MgHggsaoX7HZNsMNQ
-   sewXIXGsclAS2UXbxpJsC7ub65rqrwx+n51zwO++d1QDv0Ckd90OO2Ka9
-   3miAX7NcJTymbqtEVOUM5/FTus/wKMMZKbo9cNW4fBb6nxhz0sf2pexfa
-   OTKV/brCWS+0tvI0uQ7cxKsRLIDZP0hm4QoyzFRkW/OWZDhe2YO21ihms
-   RMvMDpcgtZoFvgYFUOuV5nilYYdxVdpMYvS8AqoUts8l+9b0CIbE5dE5s
-   Q==;
-X-CSE-ConnectionGUID: 870JG7q4ROaAZq76WtdGwQ==
-X-CSE-MsgGUID: irsglmI6REalGvhYTVqQeA==
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="30938835"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 03:06:23 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 24 Jun 2024 03:05:29 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 03:05:21 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
-	<durai.manickamkr@microchip.com>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
-	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
-	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
-	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
- Muralidharan" <manikandan.m@microchip.com>
-Subject: [PATCH 5/5] dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl to json-schema
-Date: Mon, 24 Jun 2024 15:34:31 +0530
-Message-ID: <20240624100431.191172-6-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240624100431.191172-1-manikandan.m@microchip.com>
-References: <20240624100431.191172-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cot4bJqO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85257C4AF11
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719223586;
+	bh=kC0KxY1SOanbHb1h55y9chmZJBgDMtmjItEPmlIWC0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cot4bJqOSPGeAV1VC/WAebkbLRlVOEjYDtOYNDe4ohr3+wuvFa5TBrdEAljYQgLNR
+	 KYzC6yCJL4o7x0vFtZ6iq64kEHBj6VhhuLZ91KI08ja6UqhSZToNbiSjONXn3YUe6S
+	 viPfHTrA1N7Kw1x4w6ESMekzPu+E4NoxaAOMD9plJ0TUOm7Cg+xcrwGl07GG5Pp9wO
+	 MMScL5f0WxUV7Y/nPD8JKgs6lUYHqrj6VCRUXAN+MLq4Yt5Nn0v6Y4Q4ee/ob1BFxm
+	 6rb3EaZJ8m8syZ3s0EMKuTYIB11X2FTH9MiwW9n1B5SQ35zL+J4VdKjqRQgvKt4t3h
+	 ulvDdZMyutecg==
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3737dc4a669so16481495ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 03:06:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWeYqgLZQoTtY+ZUXnFDac3SPiLU6j4gyi2xEEAGOMmIqF+1p8frd1JcXdCHIwx4QRjmZ1MpzHTAIKKyeSDrzjiVNB/3S2m4HINiw25
+X-Gm-Message-State: AOJu0YxnTepwv8m7RJkwND3adS1bDE3ksZIwPnmAlnJxf/6eH/l4/Hku
+	wyrzAoso0O/qpTtLHHyvYhLck1rCm7LUiKQbka0QnzWrhtHWcIXyE2ujZKhp/Aj3wvEyu9qSgOX
+	v6nFSvE1mz78GFbWNhEdxR4ffPFmvChwYfqsh
+X-Google-Smtp-Source: AGHT+IGUkvMr1/qVRpOSOfUFRmfZgUwqvSbTs2uWsBrnJ3Ud5NON6uZ1HMtBNFiojnUG+BOkXHZvHRKGRpB7GXb+4ZE=
+X-Received: by 2002:a05:6e02:20e8:b0:375:ea33:1120 with SMTP id
+ e9e14a558f8ab-3763f5ca1cbmr54610005ab.2.1719223585503; Mon, 24 Jun 2024
+ 03:06:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240622071231.576056-1-21cnbao@gmail.com>
+In-Reply-To: <20240622071231.576056-1-21cnbao@gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Mon, 24 Jun 2024 03:06:13 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuMeorg8xa03X9DAKiCWr5UKCLWjqdYSyJmPpARb5K9dJA@mail.gmail.com>
+Message-ID: <CAF8kJuMeorg8xa03X9DAKiCWr5UKCLWjqdYSyJmPpARb5K9dJA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] tools/mm: Introduce a tool to assess swap entry
+ allocation for thp_swapout
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, ryan.roberts@arm.com, 
+	david@redhat.com, hughd@google.com, kaleshsingh@google.com, 
+	kasong@tencent.com, linux-kernel@vger.kernel.org, v-songbaohua@oppo.com, 
+	ying.huang@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert Atmel PIO3 pinctrl binding document to DT schema format
-json-schema.
+On Sat, Jun 22, 2024 at 12:12=E2=80=AFAM Barry Song <21cnbao@gmail.com> wro=
+te:
+>
+> From: Barry Song <v-songbaohua@oppo.com>
+>
+> -v2:
+>  * add swap-in which can either be aligned or not aligned, by "-a";
+>    Ying;
+>  * move the program to tools/mm; Ryan;
+>  * try to simulate the scenarios swap is full. Chris;
+>
+> -v1:
+>  https://lore.kernel.org/linux-mm/20240620002648.75204-1-21cnbao@gmail.co=
+m/
+>
+> I tested Ryan's RFC patchset[1] and Chris's v3[2] using this v2 tool:
+> [1] https://lore.kernel.org/linux-mm/20240618232648.4090299-1-ryan.robert=
+s@arm.com/
+> [2] https://lore.kernel.org/linux-mm/20240614-swap-allocator-v2-0-2a513b4=
+a7f2f@kernel.org/
+>
+> Obviously, we're rarely hitting 100% even in the worst case without "-a" =
+and with
+> "-s," which is good news!
+> If swapin is aligned w/ "-a" and w/o "-s", both Chris's and Ryan's patche=
+s show
+> a low fallback ratio though Chris's has the numbers above 0% but Ryan's a=
+re 0%
+> (value A).
+>
+> The bad news is that unaligned swapin can significantly increase the fall=
+back ratio,
+> reaching up to 85% for Ryan's patch and 95% for Chris's patchset without =
+"-s." Both
+> approaches approach 100% without "-a" and with "-s" (value B).
+>
+> I believe real workloads should yield a value between A and B. Without "-=
+a," and
+> lacking large folios swap-in, this tool randomly swaps in small folios wi=
+thout
+> considering spatial locality, which is a factor present in real workloads=
+. This
+> typically results in values higher than A and lower than B.
+>
+> Based on the below results, I believe that:
+> 1. We truly require large folio swap-in to achieve comparable results wit=
+h
+> aligned swap-in(based on the result w/o and w/ "-a")
+> 2. We need a method to prevent small folios from scattering indiscriminat=
+ely
+> (based on the result "-a -s")
+>
+> *
+> *  Test results on Ryan's patchset:
+> *
+>
+> 1. w/ -a
+> ./thp_swap_allocator_test -a
+> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 2: swpout inc: 231, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 3: swpout inc: 227, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 4: swpout inc: 222, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> ...
+> Iteration 100: swpout inc: 228, swpout fallback inc: 0, Fallback percenta=
+ge: 0.00%
+>
+> 2. w/o -a
+> ./thp_swap_allocator_test
+>
+> Iteration 1: swpout inc: 208, swpout fallback inc: 25, Fallback percentag=
+e: 10.73%
+> Iteration 2: swpout inc: 118, swpout fallback inc: 114, Fallback percenta=
+ge: 49.14%
+> Iteration 3: swpout inc: 63, swpout fallback inc: 163, Fallback percentag=
+e: 72.12%
+> Iteration 4: swpout inc: 45, swpout fallback inc: 178, Fallback percentag=
+e: 79.82%
+> Iteration 5: swpout inc: 42, swpout fallback inc: 184, Fallback percentag=
+e: 81.42%
+> Iteration 6: swpout inc: 31, swpout fallback inc: 193, Fallback percentag=
+e: 86.16%
+> Iteration 7: swpout inc: 27, swpout fallback inc: 201, Fallback percentag=
+e: 88.16%
+> Iteration 8: swpout inc: 30, swpout fallback inc: 198, Fallback percentag=
+e: 86.84%
+> Iteration 9: swpout inc: 32, swpout fallback inc: 194, Fallback percentag=
+e: 85.84%
+> ...
+> Iteration 91: swpout inc: 26, swpout fallback inc: 194, Fallback percenta=
+ge: 88.18%
+> Iteration 92: swpout inc: 35, swpout fallback inc: 196, Fallback percenta=
+ge: 84.85%
+> Iteration 93: swpout inc: 33, swpout fallback inc: 191, Fallback percenta=
+ge: 85.27%
+> Iteration 94: swpout inc: 26, swpout fallback inc: 193, Fallback percenta=
+ge: 88.13%
+> Iteration 95: swpout inc: 39, swpout fallback inc: 189, Fallback percenta=
+ge: 82.89%
+> Iteration 96: swpout inc: 28, swpout fallback inc: 196, Fallback percenta=
+ge: 87.50%
+> Iteration 97: swpout inc: 25, swpout fallback inc: 194, Fallback percenta=
+ge: 88.58%
+> Iteration 98: swpout inc: 31, swpout fallback inc: 196, Fallback percenta=
+ge: 86.34%
+> Iteration 99: swpout inc: 32, swpout fallback inc: 202, Fallback percenta=
+ge: 86.32%
+> Iteration 100: swpout inc: 33, swpout fallback inc: 195, Fallback percent=
+age: 85.53%
+>
+> 3. w/ -a and -s
+> ./thp_swap_allocator_test -a -s
+> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 2: swpout inc: 218, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 4: swpout inc: 220, swpout fallback inc: 6, Fallback percentage=
+: 2.65%
+> Iteration 5: swpout inc: 206, swpout fallback inc: 16, Fallback percentag=
+e: 7.21%
+> Iteration 6: swpout inc: 233, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 7: swpout inc: 224, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 8: swpout inc: 228, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 9: swpout inc: 217, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 10: swpout inc: 224, swpout fallback inc: 3, Fallback percentag=
+e: 1.32%
+> Iteration 11: swpout inc: 211, swpout fallback inc: 12, Fallback percenta=
+ge: 5.38%
+> Iteration 12: swpout inc: 200, swpout fallback inc: 32, Fallback percenta=
+ge: 13.79%
+> Iteration 13: swpout inc: 189, swpout fallback inc: 29, Fallback percenta=
+ge: 13.30%
+> Iteration 14: swpout inc: 195, swpout fallback inc: 31, Fallback percenta=
+ge: 13.72%
+> Iteration 15: swpout inc: 198, swpout fallback inc: 27, Fallback percenta=
+ge: 12.00%
+> Iteration 16: swpout inc: 201, swpout fallback inc: 17, Fallback percenta=
+ge: 7.80%
+> Iteration 17: swpout inc: 206, swpout fallback inc: 6, Fallback percentag=
+e: 2.83%
+> Iteration 18: swpout inc: 220, swpout fallback inc: 14, Fallback percenta=
+ge: 5.98%
+> Iteration 19: swpout inc: 181, swpout fallback inc: 45, Fallback percenta=
+ge: 19.91%
+> Iteration 20: swpout inc: 223, swpout fallback inc: 8, Fallback percentag=
+e: 3.46%
+> Iteration 21: swpout inc: 214, swpout fallback inc: 14, Fallback percenta=
+ge: 6.14%
+> Iteration 22: swpout inc: 195, swpout fallback inc: 31, Fallback percenta=
+ge: 13.72%
+> Iteration 23: swpout inc: 223, swpout fallback inc: 0, Fallback percentag=
+e: 0.00%
+> Iteration 24: swpout inc: 233, swpout fallback inc: 0, Fallback percentag=
+e: 0.00%
+> Iteration 25: swpout inc: 214, swpout fallback inc: 1, Fallback percentag=
+e: 0.47%
+> Iteration 26: swpout inc: 229, swpout fallback inc: 1, Fallback percentag=
+e: 0.43%
+> Iteration 27: swpout inc: 214, swpout fallback inc: 5, Fallback percentag=
+e: 2.28%
+> Iteration 28: swpout inc: 211, swpout fallback inc: 15, Fallback percenta=
+ge: 6.64%
+> Iteration 29: swpout inc: 188, swpout fallback inc: 40, Fallback percenta=
+ge: 17.54%
+> Iteration 30: swpout inc: 207, swpout fallback inc: 18, Fallback percenta=
+ge: 8.00%
+> Iteration 31: swpout inc: 215, swpout fallback inc: 10, Fallback percenta=
+ge: 4.44%
+> Iteration 32: swpout inc: 202, swpout fallback inc: 22, Fallback percenta=
+ge: 9.82%
+> Iteration 33: swpout inc: 223, swpout fallback inc: 0, Fallback percentag=
+e: 0.00%
+> Iteration 34: swpout inc: 218, swpout fallback inc: 10, Fallback percenta=
+ge: 4.39%
+> Iteration 35: swpout inc: 203, swpout fallback inc: 30, Fallback percenta=
+ge: 12.88%
+> Iteration 36: swpout inc: 214, swpout fallback inc: 14, Fallback percenta=
+ge: 6.14%
+> Iteration 37: swpout inc: 211, swpout fallback inc: 14, Fallback percenta=
+ge: 6.22%
+> Iteration 38: swpout inc: 193, swpout fallback inc: 28, Fallback percenta=
+ge: 12.67%
+> Iteration 39: swpout inc: 210, swpout fallback inc: 20, Fallback percenta=
+ge: 8.70%
+> Iteration 40: swpout inc: 223, swpout fallback inc: 5, Fallback percentag=
+e: 2.19%
+> Iteration 41: swpout inc: 224, swpout fallback inc: 7, Fallback percentag=
+e: 3.03%
+> Iteration 42: swpout inc: 200, swpout fallback inc: 23, Fallback percenta=
+ge: 10.31%
+> Iteration 43: swpout inc: 217, swpout fallback inc: 5, Fallback percentag=
+e: 2.25%
+> Iteration 44: swpout inc: 206, swpout fallback inc: 18, Fallback percenta=
+ge: 8.04%
+> Iteration 45: swpout inc: 210, swpout fallback inc: 11, Fallback percenta=
+ge: 4.98%
+> Iteration 46: swpout inc: 204, swpout fallback inc: 19, Fallback percenta=
+ge: 8.52%
+> Iteration 47: swpout inc: 228, swpout fallback inc: 0, Fallback percentag=
+e: 0.00%
+> Iteration 48: swpout inc: 219, swpout fallback inc: 2, Fallback percentag=
+e: 0.90%
+> Iteration 49: swpout inc: 212, swpout fallback inc: 6, Fallback percentag=
+e: 2.75%
+> Iteration 50: swpout inc: 207, swpout fallback inc: 15, Fallback percenta=
+ge: 6.76%
+> Iteration 51: swpout inc: 190, swpout fallback inc: 36, Fallback percenta=
+ge: 15.93%
+> Iteration 52: swpout inc: 212, swpout fallback inc: 17, Fallback percenta=
+ge: 7.42%
+> Iteration 53: swpout inc: 179, swpout fallback inc: 43, Fallback percenta=
+ge: 19.37%
+> Iteration 54: swpout inc: 225, swpout fallback inc: 0, Fallback percentag=
+e: 0.00%
+> Iteration 55: swpout inc: 224, swpout fallback inc: 2, Fallback percentag=
+e: 0.88%
+> Iteration 56: swpout inc: 220, swpout fallback inc: 8, Fallback percentag=
+e: 3.51%
+> Iteration 57: swpout inc: 203, swpout fallback inc: 25, Fallback percenta=
+ge: 10.96%
+> Iteration 58: swpout inc: 213, swpout fallback inc: 6, Fallback percentag=
+e: 2.74%
+> Iteration 59: swpout inc: 207, swpout fallback inc: 18, Fallback percenta=
+ge: 8.00%
+> Iteration 60: swpout inc: 216, swpout fallback inc: 14, Fallback percenta=
+ge: 6.09%
+> Iteration 61: swpout inc: 183, swpout fallback inc: 34, Fallback percenta=
+ge: 15.67%
+> Iteration 62: swpout inc: 184, swpout fallback inc: 39, Fallback percenta=
+ge: 17.49%
+> Iteration 63: swpout inc: 184, swpout fallback inc: 39, Fallback percenta=
+ge: 17.49%
+> Iteration 64: swpout inc: 210, swpout fallback inc: 15, Fallback percenta=
+ge: 6.67%
+> Iteration 65: swpout inc: 178, swpout fallback inc: 48, Fallback percenta=
+ge: 21.24%
+> Iteration 66: swpout inc: 188, swpout fallback inc: 30, Fallback percenta=
+ge: 13.76%
+> Iteration 67: swpout inc: 193, swpout fallback inc: 29, Fallback percenta=
+ge: 13.06%
+> Iteration 68: swpout inc: 202, swpout fallback inc: 22, Fallback percenta=
+ge: 9.82%
+> Iteration 69: swpout inc: 213, swpout fallback inc: 5, Fallback percentag=
+e: 2.29%
+> Iteration 70: swpout inc: 204, swpout fallback inc: 15, Fallback percenta=
+ge: 6.85%
+> Iteration 71: swpout inc: 180, swpout fallback inc: 45, Fallback percenta=
+ge: 20.00%
+> Iteration 72: swpout inc: 210, swpout fallback inc: 21, Fallback percenta=
+ge: 9.09%
+> Iteration 73: swpout inc: 216, swpout fallback inc: 7, Fallback percentag=
+e: 3.14%
+> Iteration 74: swpout inc: 209, swpout fallback inc: 19, Fallback percenta=
+ge: 8.33%
+> Iteration 75: swpout inc: 222, swpout fallback inc: 7, Fallback percentag=
+e: 3.06%
+> Iteration 76: swpout inc: 212, swpout fallback inc: 14, Fallback percenta=
+ge: 6.19%
+> Iteration 77: swpout inc: 188, swpout fallback inc: 41, Fallback percenta=
+ge: 17.90%
+> Iteration 78: swpout inc: 198, swpout fallback inc: 17, Fallback percenta=
+ge: 7.91%
+> Iteration 79: swpout inc: 209, swpout fallback inc: 16, Fallback percenta=
+ge: 7.11%
+> Iteration 80: swpout inc: 182, swpout fallback inc: 41, Fallback percenta=
+ge: 18.39%
+> Iteration 81: swpout inc: 217, swpout fallback inc: 1, Fallback percentag=
+e: 0.46%
+> Iteration 82: swpout inc: 225, swpout fallback inc: 3, Fallback percentag=
+e: 1.32%
+> Iteration 83: swpout inc: 222, swpout fallback inc: 8, Fallback percentag=
+e: 3.48%
+> Iteration 84: swpout inc: 201, swpout fallback inc: 21, Fallback percenta=
+ge: 9.46%
+> Iteration 85: swpout inc: 211, swpout fallback inc: 3, Fallback percentag=
+e: 1.40%
+> Iteration 86: swpout inc: 209, swpout fallback inc: 14, Fallback percenta=
+ge: 6.28%
+> Iteration 87: swpout inc: 181, swpout fallback inc: 42, Fallback percenta=
+ge: 18.83%
+> Iteration 88: swpout inc: 223, swpout fallback inc: 4, Fallback percentag=
+e: 1.76%
+> Iteration 89: swpout inc: 214, swpout fallback inc: 14, Fallback percenta=
+ge: 6.14%
+> Iteration 90: swpout inc: 192, swpout fallback inc: 33, Fallback percenta=
+ge: 14.67%
+> Iteration 91: swpout inc: 184, swpout fallback inc: 31, Fallback percenta=
+ge: 14.42%
+> Iteration 92: swpout inc: 201, swpout fallback inc: 32, Fallback percenta=
+ge: 13.73%
+> Iteration 93: swpout inc: 181, swpout fallback inc: 40, Fallback percenta=
+ge: 18.10%
+> Iteration 94: swpout inc: 211, swpout fallback inc: 14, Fallback percenta=
+ge: 6.22%
+> Iteration 95: swpout inc: 198, swpout fallback inc: 25, Fallback percenta=
+ge: 11.21%
+> Iteration 96: swpout inc: 205, swpout fallback inc: 22, Fallback percenta=
+ge: 9.69%
+> Iteration 97: swpout inc: 218, swpout fallback inc: 12, Fallback percenta=
+ge: 5.22%
+> Iteration 98: swpout inc: 203, swpout fallback inc: 25, Fallback percenta=
+ge: 10.96%
+> Iteration 99: swpout inc: 218, swpout fallback inc: 12, Fallback percenta=
+ge: 5.22%
+> Iteration 100: swpout inc: 195, swpout fallback inc: 34, Fallback percent=
+age: 14.85%
+>
+> 4. w/o -a and w/ -s
+> thp_swap_allocator_test  -s
+> Iteration 1: swpout inc: 173, swpout fallback inc: 60, Fallback percentag=
+e: 25.75%
+> Iteration 2: swpout inc: 85, swpout fallback inc: 147, Fallback percentag=
+e: 63.36%
+> Iteration 3: swpout inc: 39, swpout fallback inc: 195, Fallback percentag=
+e: 83.33%
+> Iteration 4: swpout inc: 13, swpout fallback inc: 220, Fallback percentag=
+e: 94.42%
+> Iteration 5: swpout inc: 10, swpout fallback inc: 215, Fallback percentag=
+e: 95.56%
+> Iteration 6: swpout inc: 9, swpout fallback inc: 219, Fallback percentage=
+: 96.05%
+> Iteration 7: swpout inc: 6, swpout fallback inc: 217, Fallback percentage=
+: 97.31%
+> Iteration 8: swpout inc: 6, swpout fallback inc: 215, Fallback percentage=
+: 97.29%
+> Iteration 9: swpout inc: 0, swpout fallback inc: 225, Fallback percentage=
+: 100.00%
+> Iteration 10: swpout inc: 1, swpout fallback inc: 229, Fallback percentag=
+e: 99.57%
+> Iteration 11: swpout inc: 2, swpout fallback inc: 216, Fallback percentag=
+e: 99.08%
+> Iteration 12: swpout inc: 2, swpout fallback inc: 229, Fallback percentag=
+e: 99.13%
+> Iteration 13: swpout inc: 4, swpout fallback inc: 211, Fallback percentag=
+e: 98.14%
+> Iteration 14: swpout inc: 1, swpout fallback inc: 221, Fallback percentag=
+e: 99.55%
+> Iteration 15: swpout inc: 2, swpout fallback inc: 223, Fallback percentag=
+e: 99.11%
+> Iteration 16: swpout inc: 3, swpout fallback inc: 224, Fallback percentag=
+e: 98.68%
+> Iteration 17: swpout inc: 2, swpout fallback inc: 231, Fallback percentag=
+e: 99.14%
+> ...
+>
+> *
+> *  Test results on Chris's v3 patchset:
+> *
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
- .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 ----------------
- .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 194 ++++++++++++++++++
- 2 files changed, 194 insertions(+), 178 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-deleted file mode 100644
-index 0aa1a53012d6..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-+++ /dev/null
-@@ -1,178 +0,0 @@
--* Atmel AT91 Pinmux Controller
--
--The AT91 Pinmux Controller, enables the IC
--to share one PAD to several functional blocks. The sharing is done by
--multiplexing the PAD input/output signals. For each PAD there are up to
--8 muxing options (called periph modes). Since different modules require
--different PAD settings (like pull up, keeper, etc) the controller controls
--also the PAD settings parameters.
--
--Please refer to pinctrl-bindings.txt in this directory for details of the
--common pinctrl bindings used by client devices, including the meaning of the
--phrase "pin configuration node".
--
--Atmel AT91 pin configuration node is a node of a group of pins which can be
--used for a specific device or function. This node represents both mux and config
--of the pins in that group. The 'pins' selects the function mode(also named pin
--mode) this pin can work on and the 'config' configures various pad settings
--such as pull-up, multi drive, etc.
--
--Required properties for iomux controller:
--- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
--		or "atmel,sama5d3-pinctrl" or "microchip,sam9x60-pinctrl"
--		or "microchip,sam9x7-pinctrl", "microchip,sam9x60-pinctrl"
--- atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
--  configured in this periph mode. All the periph and bank need to be describe.
--
--How to create such array:
--
--Each column will represent the possible peripheral of the pinctrl
--Each line will represent a pio bank
--
--Take an example on the 9260
--Peripheral: 2 ( A and B)
--Bank: 3 (A, B and C)
--=>
--
--  /*    A         B     */
--  0xffffffff 0xffc00c3b  /* pioA */
--  0xffffffff 0x7fff3ccf  /* pioB */
--  0xffffffff 0x007fffff  /* pioC */
--
--For each peripheral/bank we will describe in a u32 if a pin can be
--configured in it by putting 1 to the pin bit (1 << pin)
--
--Let's take the pioA on peripheral B
--From the datasheet Table 10-2.
--Peripheral B
--PA0	MCDB0
--PA1	MCCDB
--PA2
--PA3	MCDB3
--PA4	MCDB2
--PA5	MCDB1
--PA6
--PA7
--PA8
--PA9
--PA10	ETX2
--PA11	ETX3
--PA12
--PA13
--PA14
--PA15
--PA16
--PA17
--PA18
--PA19
--PA20
--PA21
--PA22	ETXER
--PA23	ETX2
--PA24	ETX3
--PA25	ERX2
--PA26	ERX3
--PA27	ERXCK
--PA28	ECRS
--PA29	ECOL
--PA30	RXD4
--PA31	TXD4
--
--=> 0xffc00c3b
--
--Required properties for pin configuration node:
--- atmel,pins: 4 integers array, represents a group of pins mux and config
--  setting. The format is atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
--  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
--  PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
--
--Bits used for CONFIG:
--PULL_UP		(1 << 0): indicate this pin needs a pull up.
--MULTIDRIVE	(1 << 1): indicate this pin needs to be configured as multi-drive.
--			Multi-drive is equivalent to open-drain type output.
--DEGLITCH	(1 << 2): indicate this pin needs deglitch.
--PULL_DOWN	(1 << 3): indicate this pin needs a pull down.
--DIS_SCHMIT	(1 << 4): indicate this pin needs to the disable schmitt trigger.
--DRIVE_STRENGTH (3 << 5): indicate the drive strength of the pin using the
--			following values:
--				00 - No change (reset state value kept)
--				01 - Low
--				10 - Medium
--				11 - High
--OUTPUT		(1 << 7): indicate this pin need to be configured as an output.
--OUTPUT_VAL	(1 << 8): output val (1 = high, 0 = low)
--SLEWRATE	(1 << 9): slew rate of the pin: 0 = disable, 1 = enable
--DEBOUNCE	(1 << 16): indicate this pin needs debounce.
--DEBOUNCE_VAL	(0x3fff << 17): debounce value.
--
--NOTE:
--Some requirements for using atmel,at91rm9200-pinctrl binding:
--1. We have pin function node defined under at91 controller node to represent
--   what pinmux functions this SoC supports.
--2. The driver can use the function node's name and pin configuration node's
--   name describe the pin function and group hierarchy.
--   For example, Linux at91 pinctrl driver takes the function node's name
--   as the function name and pin configuration node's name as group name to
--   create the map table.
--3. Each pin configuration node should have a phandle, devices can set pins
--   configurations by referring to the phandle of that pin configuration node.
--4. The gpio controller must be describe in the pinctrl simple-bus.
--
--For each bank the required properties are:
--- compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio" or
--  "microchip,sam9x60-gpio"
--  or "microchip,sam9x7-gpio", "microchip,sam9x60-gpio", "atmel,at91rm9200-gpio"
--- reg: physical base address and length of the controller's registers
--- interrupts: interrupt outputs from the controller
--- interrupt-controller: marks the device node as an interrupt controller
--- #interrupt-cells: should be 2; refer to ../interrupt-controller/interrupts.txt
--  for more details.
--- gpio-controller
--- #gpio-cells: should be 2; the first cell is the GPIO number and the second
--  cell specifies GPIO flags as defined in <dt-bindings/gpio/gpio.h>.
--- clocks: bank clock
--
--Examples:
--
--pinctrl@fffff400 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--	ranges;
--	compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
--	reg = <0xfffff400 0x600>;
--
--	pioA: gpio@fffff400 {
--		compatible = "atmel,at91sam9x5-gpio";
--		reg = <0xfffff400 0x200>;
--		interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
--		#gpio-cells = <2>;
--		gpio-controller;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
--	};
--
--	atmel,mux-mask = <
--	      /*    A         B     */
--	       0xffffffff 0xffc00c3b  /* pioA */
--	       0xffffffff 0x7fff3ccf  /* pioB */
--	       0xffffffff 0x007fffff  /* pioC */
--	      >;
--
--	/* shared pinctrl settings */
--	dbgu {
--		pinctrl_dbgu: dbgu-0 {
--			atmel,pins =
--				<1 14 0x1 0x0	/* PB14 periph A */
--				 1 15 0x1 0x1>;	/* PB15 periph A with pullup */
--		};
--	};
--};
--
--dbgu: serial@fffff200 {
--	compatible = "atmel,at91sam9260-usart";
--	reg = <0xfffff200 0x200>;
--	interrupts = <1 4 7>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_dbgu>;
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-new file mode 100644
-index 000000000000..12752416eb24
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-@@ -0,0 +1,194 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/atmel,at91rm9200-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip PIO3 Pinmux Controller
-+
-+maintainers:
-+  - Manikandan Muralidharan <manikandan.m@microchip.com>
-+
-+description:
-+  The AT91 Pinmux Controller, enables the IC to share one PAD to several
-+  functional blocks. The sharing is done by multiplexing the PAD input/output
-+  signals. For each PAD there are up to 8 muxing options (called periph modes).
-+  Since different modules require different PAD settings (like pull up, keeper,
-+  etc) the controller controls also the PAD settings parameters.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - atmel,at91rm9200-pinctrl
-+              - atmel,at91sam9x5-pinctrl
-+              - atmel,sama5d3-pinctrl
-+              - microchip,sam9x60-pinctrl
-+          - const: simple-mfd
-+      - items:
-+          - enum:
-+              - microchip,sam9x7-pinctrl
-+          - const: microchip,sam9x60-pinctrl
-+          - const: simple-mfd
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  ranges: true
-+
-+  atmel,mux-mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description: |
-+      Array of mask (periph per bank) to describe if a pin can be
-+      configured in this periph mode. All the periph and bank need to
-+      be described.
-+
-+      #How to create such array:
-+
-+      Each column will represent the possible peripheral of the pinctrl
-+      Each line will represent a pio bank
-+
-+      #Example:
-+
-+      In at91sam9260.dtsi,
-+      Peripheral: 2 ( A and B)
-+      Bank: 3 (A, B and C)
-+
-+      #    A          B
-+      0xffffffff 0xffc00c3b  # pioA
-+      0xffffffff 0x7fff3ccf  # pioB
-+      0xffffffff 0x007fffff  # pioC
-+
-+      For each peripheral/bank we will describe in a u32 if a pin can be
-+      configured in it by putting 1 to the pin bit (1 << pin)
-+
-+      Let's take the pioA on peripheral B whose value is 0xffc00c3b
-+      From the datasheet Table 10-2.
-+      Peripheral B
-+      PA0     MCDB0
-+      PA1     MCCDB
-+      PA2
-+      PA3     MCDB3
-+      PA4     MCDB2
-+      PA5     MCDB1
-+      PA6
-+      PA7
-+      PA8
-+      PA9
-+      PA10    ETX2
-+      PA11    ETX3
-+      PA12
-+      PA13
-+      PA14
-+      PA15
-+      PA16
-+      PA17
-+      PA18
-+      PA19
-+      PA20
-+      PA21
-+      PA22    ETXER
-+      PA23    ETX2
-+      PA24    ETX3
-+      PA25    ERX2
-+      PA26    ERX3
-+      PA27    ERXCK
-+      PA28    ECRS
-+      PA29    ECOL
-+      PA30    RXD4
-+      PA31    TXD4
-+
-+patternProperties:
-+  '^[a-z0-9-_]+$':
-+    description:
-+      A pinctrl node should contain at least one subnode representing the
-+      pinctrl group available on the machine.
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '^[a-z0-9-_]+$':
-+        type: object
-+        properties:
-+          atmel,pins:
-+            $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+            description: |
-+              Each entry consists of 4 integers and represents the pins
-+              mux and config setting.The format is
-+              atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
-+              Supported pin number and mux varies for different SoCs, and
-+              are defined in <include/dt-bindings/pinctrl/at91.h>.
-+              items:
-+                items:
-+                  - description:
-+                      Pin bank
-+                  - description:
-+                      Pin bank index
-+                  - description:
-+                      Peripheral function
-+                  - description:
-+                      Pad configuration
-+
-+        required:
-+          - atmel,pins
-+
-+        additionalProperties: false
-+
-+  'gpio@[0-9a-f]*$':
-+    $ref: "/schemas/gpio/atmel,at91rm9200-gpio.yaml"
-+    unevaluatedProperties: false
-+
-+allOf:
-+  - $ref: "pinctrl.yaml#"
-+
-+required:
-+  - compatible
-+  - ranges
-+  - "#address-cells"
-+  - "#size-cells"
-+  - atmel,mux-mask
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/pinctrl/at91.h>
-+
-+    pinctrl@fffff400 {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
-+      ranges = <0xfffff400 0xfffff400 0x600>;
-+
-+      atmel,mux-mask = <
-+        /*    A         B     */
-+        0xffffffff 0xffc00c3b  /* pioA */
-+        0xffffffff 0x7fff3ccf  /* pioB */
-+        0xffffffff 0x007fffff  /* pioC */
-+        >;
-+
-+      dbgu {
-+        pinctrl_dbgu: dbgu-0 {
-+                        atmel,pins =
-+                          <AT91_PIOB 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
-+                           AT91_PIOB 15 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+        };
-+      };
-+
-+      pioA: gpio@fffff400 {
-+              compatible = "atmel,at91rm9200-gpio";
-+              reg = <0xfffff400 0x200>;
-+              interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
-+              #gpio-cells = <2>;
-+              gpio-controller;
-+              interrupt-controller;
-+              #interrupt-cells = <2>;
-+              clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
-+      };
-+    };
-+...
--- 
-2.25.1
+> 1. w/ -a
+> ./thp_swap_allocator_test -a
+> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 2: swpout inc: 231, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 3: swpout inc: 227, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 4: swpout inc: 217, swpout fallback inc: 5, Fallback percentage=
+: 2.25%
+> Iteration 5: swpout inc: 215, swpout fallback inc: 12, Fallback percentag=
+e: 5.29%
+> Iteration 6: swpout inc: 213, swpout fallback inc: 14, Fallback percentag=
+e: 6.17%
+> Iteration 7: swpout inc: 207, swpout fallback inc: 15, Fallback percentag=
+e: 6.76%
+> Iteration 8: swpout inc: 193, swpout fallback inc: 33, Fallback percentag=
+e: 14.60%
+> Iteration 9: swpout inc: 214, swpout fallback inc: 13, Fallback percentag=
+e: 5.73%
+> Iteration 10: swpout inc: 199, swpout fallback inc: 25, Fallback percenta=
+ge: 11.16%
+> Iteration 11: swpout inc: 208, swpout fallback inc: 14, Fallback percenta=
+ge: 6.31%
+> Iteration 12: swpout inc: 203, swpout fallback inc: 31, Fallback percenta=
+ge: 13.25%
+> Iteration 13: swpout inc: 192, swpout fallback inc: 25, Fallback percenta=
+ge: 11.52%
+> Iteration 14: swpout inc: 193, swpout fallback inc: 36, Fallback percenta=
+ge: 15.72%
+> Iteration 15: swpout inc: 188, swpout fallback inc: 33, Fallback percenta=
+ge: 14.93%
 
+My working in progress allocator patch:
+linux# ../thp_swap_allocator_test -a
+Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 2: swpout inc: 231, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 3: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 4: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 5: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 6: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 7: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 8: swpout inc: 226, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 9: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 10: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 11: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 12: swpout inc: 234, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 13: swpout inc: 217, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 14: swpout inc: 229, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 15: swpout inc: 221, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 16: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 17: swpout inc: 232, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 18: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 19: swpout inc: 218, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 20: swpout inc: 227, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 21: swpout inc: 219, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 22: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 23: swpout inc: 228, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 24: swpout inc: 227, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 25: swpout inc: 212, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 26: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 27: swpout inc: 218, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 28: swpout inc: 226, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 29: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+...
+Fall back zero between.
+...
+Iteration 78: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 79: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 80: swpout inc: 230, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 81: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 82: swpout inc: 221, swpout fallback inc: 5, Fallback
+percentage: 2.21%
+Iteration 83: swpout inc: 221, swpout fallback inc: 2, Fallback
+percentage: 0.90%
+Iteration 84: swpout inc: 230, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 85: swpout inc: 228, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 86: swpout inc: 219, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 87: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 88: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 89: swpout inc: 232, swpout fallback inc: 1, Fallback
+percentage: 0.43%
+Iteration 90: swpout inc: 222, swpout fallback inc: 5, Fallback
+percentage: 2.20%
+Iteration 91: swpout inc: 217, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 92: swpout inc: 229, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 93: swpout inc: 220, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 94: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 95: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 96: swpout inc: 226, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 97: swpout inc: 226, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 98: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 99: swpout inc: 215, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 100: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+
+Occasionally I can get a full 0.00% run, the above is more typical.
+
+
+> ...
+>
+> It seems Chris's approach can be negatively affected even by aligned swap=
+in,
+> having a low fallback ratio but not 0% while Ryan's patchset hasn't this
+> issue.
+>
+> 2. w/o -a
+> ./thp_swap_allocator_test
+
+My WIP patch:
+linux# ../thp_swap_allocator_test
+Iteration 1: swpout inc: 233, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 2: swpout inc: 146, swpout fallback inc: 86, Fallback
+percentage: 37.07%
+Iteration 3: swpout inc: 75, swpout fallback inc: 151, Fallback
+percentage: 66.81%
+Iteration 4: swpout inc: 52, swpout fallback inc: 171, Fallback
+percentage: 76.68%
+Iteration 5: swpout inc: 47, swpout fallback inc: 179, Fallback
+percentage: 79.20%
+Iteration 6: swpout inc: 40, swpout fallback inc: 184, Fallback
+percentage: 82.14%
+Iteration 7: swpout inc: 40, swpout fallback inc: 188, Fallback
+percentage: 82.46%
+Iteration 8: swpout inc: 39, swpout fallback inc: 189, Fallback
+percentage: 82.89%
+Iteration 9: swpout inc: 38, swpout fallback inc: 188, Fallback
+percentage: 83.19%
+Iteration 10: swpout inc: 41, swpout fallback inc: 187, Fallback
+percentage: 82.02%
+Iteration 11: swpout inc: 32, swpout fallback inc: 197, Fallback
+percentage: 86.03%
+Iteration 12: swpout inc: 31, swpout fallback inc: 189, Fallback
+percentage: 85.91%
+Iteration 13: swpout inc: 31, swpout fallback inc: 197, Fallback
+percentage: 86.40%
+Iteration 14: swpout inc: 29, swpout fallback inc: 195, Fallback
+percentage: 87.05%
+Iteration 15: swpout inc: 32, swpout fallback inc: 194, Fallback
+percentage: 85.84%
+Iteration 16: swpout inc: 25, swpout fallback inc: 190, Fallback
+percentage: 88.37%
+Iteration 17: swpout inc: 31, swpout fallback inc: 198, Fallback
+percentage: 86.46%
+Iteration 18: swpout inc: 27, swpout fallback inc: 200, Fallback
+percentage: 88.11%
+Iteration 19: swpout inc: 29, swpout fallback inc: 189, Fallback
+percentage: 86.70%
+Iteration 20: swpout inc: 26, swpout fallback inc: 194, Fallback
+percentage: 88.18%
+Iteration 21: swpout inc: 24, swpout fallback inc: 201, Fallback
+percentage: 89.33%
+Iteration 22: swpout inc: 28, swpout fallback inc: 202, Fallback
+percentage: 87.83%
+Iteration 23: swpout inc: 31, swpout fallback inc: 198, Fallback
+percentage: 86.46%
+Iteration 24: swpout inc: 32, swpout fallback inc: 194, Fallback
+percentage: 85.84%
+Iteration 25: swpout inc: 30, swpout fallback inc: 199, Fallback
+percentage: 86.90%
+Iteration 26: swpout inc: 38, swpout fallback inc: 193, Fallback
+percentage: 83.55%
+Iteration 27: swpout inc: 28, swpout fallback inc: 195, Fallback
+percentage: 87.44%
+Iteration 28: swpout inc: 29, swpout fallback inc: 195, Fallback
+percentage: 87.05%
+Iteration 29: swpout inc: 34, swpout fallback inc: 191, Fallback
+percentage: 84.89%
+Iteration 30: swpout inc: 28, swpout fallback inc: 195, Fallback
+percentage: 87.44%
+Iteration 31: swpout inc: 36, swpout fallback inc: 184, Fallback
+percentage: 83.64%
+Iteration 32: swpout inc: 38, swpout fallback inc: 187, Fallback
+percentage: 83.11%
+Iteration 33: swpout inc: 37, swpout fallback inc: 192, Fallback
+percentage: 83.84%
+Iteration 34: swpout inc: 39, swpout fallback inc: 191, Fallback
+percentage: 83.04%
+Iteration 35: swpout inc: 30, swpout fallback inc: 197, Fallback
+percentage: 86.78%
+Iteration 36: swpout inc: 34, swpout fallback inc: 195, Fallback
+percentage: 85.15%
+Iteration 37: swpout inc: 35, swpout fallback inc: 182, Fallback
+percentage: 83.87%
+Iteration 38: swpout inc: 29, swpout fallback inc: 196, Fallback
+percentage: 87.11%
+Iteration 39: swpout inc: 33, swpout fallback inc: 190, Fallback
+percentage: 85.20%
+Iteration 40: swpout inc: 33, swpout fallback inc: 184, Fallback
+percentage: 84.79%
+Iteration 41: swpout inc: 30, swpout fallback inc: 188, Fallback
+percentage: 86.24%
+Iteration 42: swpout inc: 35, swpout fallback inc: 190, Fallback
+percentage: 84.44%
+Iteration 43: swpout inc: 30, swpout fallback inc: 193, Fallback
+percentage: 86.55%
+
+> Iteration 1: swpout inc: 209, swpout fallback inc: 24, Fallback percentag=
+e: 10.30%
+> Iteration 2: swpout inc: 100, swpout fallback inc: 132, Fallback percenta=
+ge: 56.90%
+> Iteration 3: swpout inc: 43, swpout fallback inc: 183, Fallback percentag=
+e: 80.97%
+> Iteration 4: swpout inc: 30, swpout fallback inc: 193, Fallback percentag=
+e: 86.55%
+> Iteration 5: swpout inc: 21, swpout fallback inc: 205, Fallback percentag=
+e: 90.71%
+> Iteration 6: swpout inc: 10, swpout fallback inc: 214, Fallback percentag=
+e: 95.54%
+> Iteration 7: swpout inc: 16, swpout fallback inc: 212, Fallback percentag=
+e: 92.98%
+> Iteration 8: swpout inc: 9, swpout fallback inc: 219, Fallback percentage=
+: 96.05%
+> Iteration 9: swpout inc: 6, swpout fallback inc: 220, Fallback percentage=
+: 97.35%
+> Iteration 10: swpout inc: 7, swpout fallback inc: 221, Fallback percentag=
+e: 96.93%
+> Iteration 11: swpout inc: 7, swpout fallback inc: 222, Fallback percentag=
+e: 96.94%
+> Iteration 12: swpout inc: 8, swpout fallback inc: 212, Fallback percentag=
+e: 96.36%
+> ..
+>
+> Ryan's fallback ratio(around 85%) seems to be a little better while both =
+are much
+> worse than "-a".
+>
+> 3. w/ -a and -s
+> ./thp_swap_allocator_test -a -s
+
+My WIP patch:
+linux# ../thp_swap_allocator_test -a -s
+Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 2: swpout inc: 218, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 4: swpout inc: 226, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 5: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 6: swpout inc: 233, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 7: swpout inc: 220, swpout fallback inc: 4, Fallback percentage: =
+1.79%
+Iteration 8: swpout inc: 228, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 9: swpout inc: 217, swpout fallback inc: 0, Fallback percentage: =
+0.00%
+Iteration 10: swpout inc: 226, swpout fallback inc: 1, Fallback
+percentage: 0.44%
+Iteration 11: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 12: swpout inc: 232, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 13: swpout inc: 218, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 14: swpout inc: 221, swpout fallback inc: 5, Fallback
+percentage: 2.21%
+Iteration 15: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 16: swpout inc: 218, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 17: swpout inc: 209, swpout fallback inc: 3, Fallback
+percentage: 1.42%
+Iteration 18: swpout inc: 233, swpout fallback inc: 1, Fallback
+percentage: 0.43%
+Iteration 19: swpout inc: 219, swpout fallback inc: 7, Fallback
+percentage: 3.10%
+Iteration 20: swpout inc: 225, swpout fallback inc: 6, Fallback
+percentage: 2.60%
+Iteration 21: swpout inc: 228, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 22: swpout inc: 226, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 23: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 24: swpout inc: 233, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 25: swpout inc: 215, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 26: swpout inc: 230, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 27: swpout inc: 219, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 28: swpout inc: 224, swpout fallback inc: 2, Fallback
+percentage: 0.88%
+Iteration 29: swpout inc: 225, swpout fallback inc: 3, Fallback
+percentage: 1.32%
+Iteration 30: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 31: swpout inc: 224, swpout fallback inc: 1, Fallback
+percentage: 0.44%
+Iteration 32: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 33: swpout inc: 221, swpout fallback inc: 2, Fallback
+percentage: 0.90%
+Iteration 34: swpout inc: 228, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 35: swpout inc: 229, swpout fallback inc: 4, Fallback
+percentage: 1.72%
+Iteration 36: swpout inc: 228, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 37: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 38: swpout inc: 220, swpout fallback inc: 1, Fallback
+percentage: 0.45%
+Iteration 39: swpout inc: 227, swpout fallback inc: 3, Fallback
+percentage: 1.30%
+Iteration 40: swpout inc: 223, swpout fallback inc: 5, Fallback
+percentage: 2.19%
+Iteration 41: swpout inc: 231, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 42: swpout inc: 221, swpout fallback inc: 2, Fallback
+percentage: 0.90%
+Iteration 43: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 44: swpout inc: 224, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 45: swpout inc: 219, swpout fallback inc: 2, Fallback
+percentage: 0.90%
+Iteration 46: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 47: swpout inc: 228, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 48: swpout inc: 220, swpout fallback inc: 1, Fallback
+percentage: 0.45%
+Iteration 49: swpout inc: 216, swpout fallback inc: 2, Fallback
+percentage: 0.92%
+Iteration 50: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 51: swpout inc: 226, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 52: swpout inc: 229, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 53: swpout inc: 220, swpout fallback inc: 2, Fallback
+percentage: 0.90%
+Iteration 54: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 55: swpout inc: 226, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 56: swpout inc: 223, swpout fallback inc: 5, Fallback
+percentage: 2.19%
+Iteration 57: swpout inc: 226, swpout fallback inc: 2, Fallback
+percentage: 0.88%
+Iteration 58: swpout inc: 215, swpout fallback inc: 4, Fallback
+percentage: 1.83%
+Iteration 59: swpout inc: 222, swpout fallback inc: 3, Fallback
+percentage: 1.33%
+Iteration 60: swpout inc: 227, swpout fallback inc: 3, Fallback
+percentage: 1.30%
+Iteration 61: swpout inc: 215, swpout fallback inc: 2, Fallback
+percentage: 0.92%
+Iteration 62: swpout inc: 214, swpout fallback inc: 9, Fallback
+percentage: 4.04%
+Iteration 63: swpout inc: 220, swpout fallback inc: 3, Fallback
+percentage: 1.35%
+Iteration 64: swpout inc: 220, swpout fallback inc: 5, Fallback
+percentage: 2.22%
+Iteration 65: swpout inc: 216, swpout fallback inc: 10, Fallback
+percentage: 4.42%
+Iteration 66: swpout inc: 213, swpout fallback inc: 5, Fallback
+percentage: 2.29%
+Iteration 67: swpout inc: 212, swpout fallback inc: 10, Fallback
+percentage: 4.50%
+Iteration 68: swpout inc: 216, swpout fallback inc: 8, Fallback
+percentage: 3.57%
+Iteration 69: swpout inc: 214, swpout fallback inc: 4, Fallback
+percentage: 1.83%
+Iteration 70: swpout inc: 209, swpout fallback inc: 10, Fallback
+percentage: 4.57%
+Iteration 71: swpout inc: 217, swpout fallback inc: 8, Fallback
+percentage: 3.56%
+Iteration 72: swpout inc: 231, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 73: swpout inc: 215, swpout fallback inc: 8, Fallback
+percentage: 3.59%
+Iteration 74: swpout inc: 221, swpout fallback inc: 7, Fallback
+percentage: 3.07%
+Iteration 75: swpout inc: 221, swpout fallback inc: 8, Fallback
+percentage: 3.49%
+Iteration 76: swpout inc: 219, swpout fallback inc: 7, Fallback
+percentage: 3.10%
+Iteration 76: swpout inc: 219, swpout fallback inc: 7, Fallback
+percentage: 3.10%
+Iteration 77: swpout inc: 221, swpout fallback inc: 8, Fallback
+percentage: 3.49%
+Iteration 78: swpout inc: 214, swpout fallback inc: 1, Fallback
+percentage: 0.47%
+Iteration 79: swpout inc: 223, swpout fallback inc: 2, Fallback
+percentage: 0.89%
+Iteration 80: swpout inc: 220, swpout fallback inc: 3, Fallback
+percentage: 1.35%
+Iteration 81: swpout inc: 216, swpout fallback inc: 2, Fallback
+percentage: 0.92%
+Iteration 82: swpout inc: 225, swpout fallback inc: 3, Fallback
+percentage: 1.32%
+Iteration 83: swpout inc: 228, swpout fallback inc: 2, Fallback
+percentage: 0.87%
+Iteration 84: swpout inc: 222, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 85: swpout inc: 214, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 86: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 87: swpout inc: 223, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 88: swpout inc: 227, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 89: swpout inc: 223, swpout fallback inc: 5, Fallback
+percentage: 2.19%
+Iteration 90: swpout inc: 225, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 91: swpout inc: 215, swpout fallback inc: 0, Fallback
+percentage: 0.00%
+Iteration 92: swpout inc: 228, swpout fallback inc: 5, Fallback
+percentage: 2.15%
+Iteration 93: swpout inc: 219, swpout fallback inc: 2, Fallback
+percentage: 0.90%
+Iteration 94: swpout inc: 221, swpout fallback inc: 4, Fallback
+percentage: 1.78%
+Iteration 95: swpout inc: 220, swpout fallback inc: 3, Fallback
+percentage: 1.35%
+Iteration 96: swpout inc: 211, swpout fallback inc: 16, Fallback
+percentage: 7.05%
+Iteration 97: swpout inc: 224, swpout fallback inc: 6, Fallback
+percentage: 2.61%
+Iteration 98: swpout inc: 223, swpout fallback inc: 5, Fallback
+percentage: 2.19%
+Iteration 99: swpout inc: 226, swpout fallback inc: 4, Fallback
+percentage: 1.74%
+Iteration 100: swpout inc: 228, swpout fallback inc: 1, Fallback
+percentage: 0.44%
+
+
+
+> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage=
+: 0.00%
+> Iteration 2: swpout inc: 213, swpout fallback inc: 5, Fallback percentage=
+: 2.29%
+> Iteration 3: swpout inc: 215, swpout fallback inc: 7, Fallback percentage=
+: 3.15%
+> Iteration 4: swpout inc: 210, swpout fallback inc: 16, Fallback percentag=
+e: 7.08%
+> Iteration 5: swpout inc: 212, swpout fallback inc: 10, Fallback percentag=
+e: 4.50%
+> Iteration 6: swpout inc: 215, swpout fallback inc: 18, Fallback percentag=
+e: 7.73%
+> Iteration 7: swpout inc: 181, swpout fallback inc: 43, Fallback percentag=
+e: 19.20%
+> Iteration 8: swpout inc: 173, swpout fallback inc: 55, Fallback percentag=
+e: 24.12%
+> Iteration 9: swpout inc: 163, swpout fallback inc: 54, Fallback percentag=
+e: 24.88%
+> Iteration 10: swpout inc: 168, swpout fallback inc: 59, Fallback percenta=
+ge: 25.99%
+> Iteration 11: swpout inc: 154, swpout fallback inc: 69, Fallback percenta=
+ge: 30.94%
+> Iteration 12: swpout inc: 166, swpout fallback inc: 66, Fallback percenta=
+ge: 28.45%
+> Iteration 13: swpout inc: 165, swpout fallback inc: 53, Fallback percenta=
+ge: 24.31%
+> Iteration 14: swpout inc: 158, swpout fallback inc: 68, Fallback percenta=
+ge: 30.09%
+> Iteration 15: swpout inc: 168, swpout fallback inc: 57, Fallback percenta=
+ge: 25.33%
+> Iteration 16: swpout inc: 165, swpout fallback inc: 53, Fallback percenta=
+ge: 24.31%
+> Iteration 17: swpout inc: 163, swpout fallback inc: 49, Fallback percenta=
+ge: 23.11%
+> Iteration 18: swpout inc: 172, swpout fallback inc: 62, Fallback percenta=
+ge: 26.50%
+> Iteration 19: swpout inc: 183, swpout fallback inc: 43, Fallback percenta=
+ge: 19.03%
+> Iteration 20: swpout inc: 158, swpout fallback inc: 73, Fallback percenta=
+ge: 31.60%
+> Iteration 21: swpout inc: 147, swpout fallback inc: 81, Fallback percenta=
+ge: 35.53%
+> Iteration 22: swpout inc: 140, swpout fallback inc: 86, Fallback percenta=
+ge: 38.05%
+> Iteration 23: swpout inc: 144, swpout fallback inc: 79, Fallback percenta=
+ge: 35.43%
+> Iteration 24: swpout inc: 132, swpout fallback inc: 101, Fallback percent=
+age: 43.35%
+> Iteration 25: swpout inc: 133, swpout fallback inc: 82, Fallback percenta=
+ge: 38.14%
+> Iteration 26: swpout inc: 152, swpout fallback inc: 78, Fallback percenta=
+ge: 33.91%
+> Iteration 27: swpout inc: 138, swpout fallback inc: 81, Fallback percenta=
+ge: 36.99%
+> Iteration 28: swpout inc: 152, swpout fallback inc: 74, Fallback percenta=
+ge: 32.74%
+> Iteration 29: swpout inc: 153, swpout fallback inc: 75, Fallback percenta=
+ge: 32.89%
+> Iteration 30: swpout inc: 151, swpout fallback inc: 74, Fallback percenta=
+ge: 32.89%
+> ...
+>
+> Chris's approach appears to be more susceptible to negative effects from
+> small folios.
+>
+> 4. w/o -a and w/ -s
+
+My current WIP patch:
+linux# ../thp_swap_allocator_test -s
+Iteration 1: swpout inc: 227, swpout fallback inc: 6, Fallback percentage: =
+2.58%
+Iteration 2: swpout inc: 91, swpout fallback inc: 141, Fallback
+percentage: 60.78%
+Iteration 3: swpout inc: 36, swpout fallback inc: 198, Fallback
+percentage: 84.62%
+Iteration 4: swpout inc: 19, swpout fallback inc: 214, Fallback
+percentage: 91.85%
+Iteration 5: swpout inc: 12, swpout fallback inc: 213, Fallback
+percentage: 94.67%
+Iteration 6: swpout inc: 11, swpout fallback inc: 217, Fallback
+percentage: 95.18%
+Iteration 7: swpout inc: 8, swpout fallback inc: 215, Fallback
+percentage: 96.41%
+Iteration 8: swpout inc: 8, swpout fallback inc: 213, Fallback
+percentage: 96.38%
+Iteration 9: swpout inc: 2, swpout fallback inc: 223, Fallback
+percentage: 99.11%
+Iteration 10: swpout inc: 7, swpout fallback inc: 223, Fallback
+percentage: 96.96%
+Iteration 11: swpout inc: 5, swpout fallback inc: 213, Fallback
+percentage: 97.71%
+Iteration 12: swpout inc: 8, swpout fallback inc: 223, Fallback
+percentage: 96.54%
+Iteration 13: swpout inc: 4, swpout fallback inc: 211, Fallback
+percentage: 98.14%
+Iteration 14: swpout inc: 6, swpout fallback inc: 216, Fallback
+percentage: 97.30%
+Iteration 15: swpout inc: 9, swpout fallback inc: 216, Fallback
+percentage: 96.00%
+Iteration 16: swpout inc: 9, swpout fallback inc: 218, Fallback
+percentage: 96.04%
+Iteration 17: swpout inc: 10, swpout fallback inc: 223, Fallback
+percentage: 95.71%
+Iteration 18: swpout inc: 7, swpout fallback inc: 211, Fallback
+percentage: 96.79%
+Iteration 19: swpout inc: 7, swpout fallback inc: 220, Fallback
+percentage: 96.92%
+Iteration 20: swpout inc: 7, swpout fallback inc: 220, Fallback
+percentage: 96.92%
+Iteration 21: swpout inc: 6, swpout fallback inc: 221, Fallback
+percentage: 97.36%
+Iteration 22: swpout inc: 5, swpout fallback inc: 227, Fallback
+percentage: 97.84%
+Iteration 23: swpout inc: 4, swpout fallback inc: 213, Fallback
+percentage: 98.16%
+Iteration 24: swpout inc: 6, swpout fallback inc: 218, Fallback
+percentage: 97.32%
+Iteration 25: swpout inc: 6, swpout fallback inc: 214, Fallback
+percentage: 97.27%
+Iteration 26: swpout inc: 7, swpout fallback inc: 221, Fallback
+percentage: 96.93%
+Iteration 27: swpout inc: 7, swpout fallback inc: 216, Fallback
+percentage: 96.86%
+Iteration 28: swpout inc: 7, swpout fallback inc: 214, Fallback
+percentage: 96.83%
+
+Chris
+
+> ./thp_swap_allocator_test -s
+> Iteration 1: swpout inc: 183, swpout fallback inc: 50, Fallback percentag=
+e: 21.46%
+> Iteration 2: swpout inc: 75, swpout fallback inc: 157, Fallback percentag=
+e: 67.67%
+> Iteration 3: swpout inc: 33, swpout fallback inc: 201, Fallback percentag=
+e: 85.90%
+> Iteration 4: swpout inc: 11, swpout fallback inc: 222, Fallback percentag=
+e: 95.28%
+> Iteration 5: swpout inc: 10, swpout fallback inc: 215, Fallback percentag=
+e: 95.56%
+> Iteration 6: swpout inc: 7, swpout fallback inc: 221, Fallback percentage=
+: 96.93%
+> Iteration 7: swpout inc: 2, swpout fallback inc: 221, Fallback percentage=
+: 99.10%
+> Iteration 8: swpout inc: 4, swpout fallback inc: 217, Fallback percentage=
+: 98.19%
+> Iteration 9: swpout inc: 0, swpout fallback inc: 225, Fallback percentage=
+: 100.00%
+> Iteration 10: swpout inc: 3, swpout fallback inc: 227, Fallback percentag=
+e: 98.70%
+> Iteration 11: swpout inc: 1, swpout fallback inc: 217, Fallback percentag=
+e: 99.54%
+> Iteration 12: swpout inc: 2, swpout fallback inc: 229, Fallback percentag=
+e: 99.13%
+> Iteration 13: swpout inc: 1, swpout fallback inc: 214, Fallback percentag=
+e: 99.53%
+> Iteration 14: swpout inc: 2, swpout fallback inc: 220, Fallback percentag=
+e: 99.10%
+> Iteration 15: swpout inc: 1, swpout fallback inc: 224, Fallback percentag=
+e: 99.56%
+> Iteration 16: swpout inc: 3, swpout fallback inc: 224, Fallback percentag=
+e: 98.68%
+> ...
+>
+> Barry Song (1):
+>   tools/mm: Introduce a tool to assess swap entry allocation for
+>     thp_swapout
+>
+>  tools/mm/Makefile                  |   2 +-
+>  tools/mm/thp_swap_allocator_test.c | 233 +++++++++++++++++++++++++++++
+>  2 files changed, 234 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/mm/thp_swap_allocator_test.c
+>
+> --
+> 2.34.1
+>
+>
