@@ -1,75 +1,99 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142BB34CDD;
-	Mon, 24 Jun 2024 08:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF8461FE0
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217542; cv=none; b=dJO6HvXn6vVs9XWWuBwVnhsvSLeohXvDGqd5rZsC1JDTrmrB2Srl+7rpth4MGCYKtqpsfWQ+MHYuXxWSAKLbMNgUsTbIzC0paRLbdrb7WoRuYfXtfsrXBMjMBdONykPSSPHQSVsrAR0JO6F+Hn6JDf2gop+KgcpRfxUt4AmbWdw=
+	t=1719217578; cv=none; b=sw5uqp1lhEBcjJw6CZQxBrZcy6A6jgjfjmYJEuYWZa6JugW4ZN5VPTizFbGJnhIOz5+etB/4hY69Bh1izCucUgh8uGmfhFioyu+iO2un1aI3R6wUGjp34majAnCx24z31UMeX3utZdSSRLdNdgw9mfWbAs2l3jzssmEW7Xg4S4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217542; c=relaxed/simple;
-	bh=GyOe0Bk1Qy0x3Zlayl0mhf95b8D33vUNBo/LqZn8X8U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cL/xiVbfxkyR/sLgfwFk0rLLA+pdTf6RCdLURWmLwij9bL4a4UXVKmEjFUteTFLsHhiKCo7CQJVjn+h8wZ0jAKBrCxYKn7FMAuX9qhuKSQaGnL5K9rRep/T+V8MO8rMHRGThg5faJLIIGyc8WuH3PoCxbKwUv7PtX6SJUYYv2VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W1lcaqnV; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719217578; c=relaxed/simple;
+	bh=zJ1CRPiWc2XXOn/ylPBVcF+KZN20HfgI7f293IYMdr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZ7gib5n72po2KWd5dmyd6Gu26IQJH6zTPuY6F3HEEWIVVOhfu899pGtNZK4pn5aWPzLf1Pp94gpl3sAchObjiJTNOT49Whl+CA9LWfEMQfyeErSSwaOFl8UtBzLKQY+lg5gZSA50NPHnygbXoISj7yHlSIGaJtRu5aaIc63ILQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CMIJ0yLW; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1lcaqnV"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7180308e90bso1560070a12.1;
-        Mon, 24 Jun 2024 01:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719217540; x=1719822340; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GyOe0Bk1Qy0x3Zlayl0mhf95b8D33vUNBo/LqZn8X8U=;
-        b=W1lcaqnVGyu82uRW6tbZlPEcR/YiZKRo6yUu+zPunVYRqh9SVC/mL3Kw61qv95Cqa5
-         KaQHBTEWTQpI/L26jOiCUxaLDsBgCUBe60ETuVeyZCxAAW/WkX7bn5fkYR5KukII8M4a
-         VmExvLLy27u3MJAl87rw/mFvgzboF7ptw0g8GI7mJj2S4HoBAOKirGHoTWWdNgbyaZ+Y
-         4a+XojSn0udnuG+WRgYVrrot2RinT+NzAIRTUIYVMl1kIzC5ydwME7D+9xdlVgint9CJ
-         JiThgdaKyOzQt4Ifg/K/AOe762DALusaMXbMwYXHpGr8G/mqCH+8eWcS5gBYQp4XeCCs
-         CADw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719217540; x=1719822340;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GyOe0Bk1Qy0x3Zlayl0mhf95b8D33vUNBo/LqZn8X8U=;
-        b=dnDgTFeU6kxNBauau2fHixRUIvXjMaASapnvbgW/niG5LWUwtxrUW8trAuCGN4u6Go
-         0P+le/BxME4ibx+fw46mCx5g2kkN6OuoqQmvIPaUX2WlKnZExTM+QrA8AA1gELEEpGxH
-         a4fxsDwbXnxbzRzMJg9o7YycU0aplpKXKnjIqXOh48VsQTqYXU7+5JRgSNjz6qR4GS2u
-         5Y3ihHHLQJESuy2nhN4YksR9J6PW0v60SAM6ToI1swJsjCiE0YleuLpMpnu//yaBN4q+
-         ejTXuXpIHW35+U92yrcLHXhr5W/JnBotRWReunIFedJPYSomvpgM7w5sAv8KYd/Rt9og
-         +idw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGXfcYRGXH3K3KkHGzUyH7BKA9kr4unfVSpqjZ4pUfQ0+SLS6wc1w+RNTAz5fKbNwjyG2CW8gK3XMWcfBxh50NOQjsby69L1/dRG55e0G2KWaXuOxsDByrdkMXIPT+s+r1/+JZBH+0qUM=
-X-Gm-Message-State: AOJu0YwbymTG44VFTnQ87RzpbuexqcXBtnUuXnmqh3R0v6VvnoEA/zxc
-	kz/osgk+yG0q0oROz8s8BIU+xjf2tgHPG1uKrD83ir3hlVPbLP+yLP7DOirbMQTYZPoUl3VouAk
-	G/fVJm+UUmpT7i9r5ekptMFtdHwU=
-X-Google-Smtp-Source: AGHT+IH3LtoObSSGd0RS8q2XD+O5g3y4osc0/P7Bukg9/CjaM2KmYXfvOjyoBTJLOJuktChRLOrA3O/E8uVnomjgyns=
-X-Received: by 2002:a17:90b:4c89:b0:2c5:249d:67be with SMTP id
- 98e67ed59e1d1-2c86126b700mr2556400a91.22.1719217540209; Mon, 24 Jun 2024
- 01:25:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CMIJ0yLW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TahS1pryTxPDBHZ8uKVn6M6E9+BT/j8XTxK77xn486k=; b=CMIJ0yLW7KpMW/z1TUMcbelvRB
+	C+v+OHj/ozsPqQVuWiKqyLxbGe9Ph3nSSvCN7RTFfVb3IVhSkiWBSasz5s7o+PWpOYHphT439bSf9
+	UvXo6OPWdisOe9w84Z6F/1RB4882OKmtPI48tkzwGTA3wkhvZ+WLgV1AiK2SCbO2uh/apmamOuiLN
+	sVBFzTCnaXGrYQzKUu6jrJKFQXqguZ7B0LQod6cpfXHOdLdi1mzrncCsEsXgVFmYyuBCxOLGbIrLl
+	l4/6HXdWDcJw6W7Z8kNVgVu6bMOfdZz9PMR9pkkd2RhdbHhe3cwesFNzUGdNw227Sskqm8rfqJ3eB
+	TUMJg4wg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sLf1e-00000009qcu-2wgL;
+	Mon, 24 Jun 2024 08:26:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 58682300754; Mon, 24 Jun 2024 10:26:10 +0200 (CEST)
+Date: Mon, 24 Jun 2024 10:26:10 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, eranian@google.com,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [RESEND PATCH 05/12] perf/x86: Add config_mask to represent
+ EVENTSEL bitmask
+Message-ID: <20240624082610.GB31592@noisy.programming.kicks-ass.net>
+References: <20240618151044.1318612-1-kan.liang@linux.intel.com>
+ <20240618151044.1318612-6-kan.liang@linux.intel.com>
+ <20240620074402.GS31592@noisy.programming.kicks-ass.net>
+ <4cce9f37-7698-418d-a9c5-4aa1dc01b719@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240615125457.167844-1-rauty@altlinux.org> <2c9ba341bc95d4b9010bf5f8794c0d14b1c57dc9.camel@irl.hu>
- <CAGpJQTHoBAixmxta2WuZfjHjiK9GXF=hkfPyV7PBD5rt9Z_0WA@mail.gmail.com>
-In-Reply-To: <CAGpJQTHoBAixmxta2WuZfjHjiK9GXF=hkfPyV7PBD5rt9Z_0WA@mail.gmail.com>
-From: Rauty <rautyrauty@gmail.com>
-Date: Mon, 24 Jun 2024 11:25:03 +0300
-Message-ID: <CAGpJQTGqxEkfp003QLsp-syUgzDFCmHSmNaoOaem0ZMVf7_=bg@mail.gmail.com>
-Subject: Re: [PATCH v2] ALSA: hda/realtek: Enable headset mic on IdeaPad
- 330-17IKB 81DM
-To: Gergo Koteles <soyer@irl.hu>, alsa-devel@alsa-project.org, tiwai@suse.com
-Cc: perex@perex.cz, kailang@realtek.com, sbinding@opensource.cirrus.com, 
-	luke@ljones.dev, shenghao-ding@ti.com, simont@opensource.cirrus.com, 
-	foss@athaariq.my.id, rf@opensource.cirrus.com, wzhd@ustc.edu, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cce9f37-7698-418d-a9c5-4aa1dc01b719@linux.intel.com>
 
-I haven't changed the patch yet, but it's already in the stable-queue:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.10/alsa-hda-realtek-enable-headset-mic-on-ideapad-330-1.patch
-Do you still need changes from me?
+On Thu, Jun 20, 2024 at 12:16:46PM -0400, Liang, Kan wrote:
+> 
+> 
+> On 2024-06-20 3:44 a.m., Peter Zijlstra wrote:
+> > On Tue, Jun 18, 2024 at 08:10:37AM -0700, kan.liang@linux.intel.com wrote:
+> >> From: Kan Liang <kan.liang@linux.intel.com>
+> >>
+> >> Different vendors may support different fields in EVENTSEL MSR, such as
+> >> Intel would introduce new fields umask2 and eq bits in EVENTSEL MSR
+> >> since Perfmon version 6. However, a fixed mask X86_RAW_EVENT_MASK is
+> >> used to filter the attr.config.
+> >>
+> > 
+> >> @@ -1231,6 +1233,11 @@ static inline int x86_pmu_num_counters_fixed(struct pmu *pmu)
+> >>  	return hweight64(hybrid(pmu, fixed_cntr_mask64));
+> >>  }
+> >>  
+> >> +static inline u64 x86_pmu_get_event_config(struct perf_event *event)
+> >> +{
+> >> +	return event->attr.config & hybrid(event->pmu, config_mask);
+> >> +}
+> > 
+> > Seriously, we're going to be having such major event encoding
+> > differences between cores on a single chip?
+> 
+> For LNL, no. But ARL-H may have an event encoding differences.
+> I will double check.
+> 
+> The problem is that there is no guarantee for the future platforms.
+> With the CPUID leaf 0x23, all the features are enumerated per CPU.
+> In theory, it's possible that different layout of the EVENTSEL MSR
+> between different types of core.
+> If we take the virtualization into account, that's even worse.
+
+Virt and hybrid is a trainwreck anyway :/
+
+> It should be a safe way to add the hybrid() check.
+
+Safe yes, sad also yes :-( It would be really nice if they all at least
+can commit to the same event format. Could you please check?
