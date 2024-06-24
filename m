@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2FC3BBEA;
-	Mon, 24 Jun 2024 07:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8CA03C684;
+	Mon, 24 Jun 2024 07:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719213268; cv=none; b=Add+48Uf3Wu+a2EsLZnt++2Q9w3HpDV76QapCMPhrudS2HuseHKosaitMvjM1CF1NmvBueWLL+seVBDBzvJw+klN5VnChz4Jy93VewFR8iFgkDYtcmQhbhMNdo8L2BgYuEemo/ZqhEnf+tbZExDPpQQHyEUkvfRHNFVuoxQzcJc=
+	t=1719213269; cv=none; b=f7/KPaiuD42TNoI2tpGsnFxDdZ1jitwvJ1MtMiUFP9m1ZocRrmz7QlZIt3cSrxKIJUpLWQZaovHB1G1cRNZs+6oSihbrr6oPESGt/ixEBDa6+d3hQjGJOsY1X2kBy/6eNarIkdlyMaVm9e4rLjyjOxc2WZegicORs8Cjr1BrqUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719213268; c=relaxed/simple;
-	bh=lsOu06EhnFac7DNeBexi+TfRtaEYDp5kQfCX+utdo6E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R7yTLXWAZU6R00OQqOAP+lPqnwNlbNVmB1ah6DcLPCg7kKY05KcV+Sd/vYZPApmp76w5MaO7hjyLKiBtv6BfvS/TXytkIw7Leboltqg2EWyrKX1CKRtI+IAxAHRqVFC+4wIO3ELXLYIrRqxHFecS9ot0iHHqKxD9J3o9MHRmAgQ=
+	s=arc-20240116; t=1719213269; c=relaxed/simple;
+	bh=p4K7YFd9BlwS4GqQ12d7WLwQ1xvfFQEqslZSuqL+560=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XSBjbGkIyguy9kCiHVUeZMYxqmaPE9emmtrmEQfA47CKI0+vKxcLHP9NcRf0K6LbGCcatFkCqDNPgVz/zuOAuSFggA2ol5fcfCBGg94jglSrRcBEo/Hw0jVyXPc4Hdfq7sPf1yHrn1nfuo3ft3fHMIcUke8eZuVLZ5DSjhB29Wg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxW+rPHHlmAnEJAA--.38419S3;
-	Mon, 24 Jun 2024 15:14:23 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax3erQHHlmEXEJAA--.38154S3;
+	Mon, 24 Jun 2024 15:14:24 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMTPHHlmftsuAA--.9847S2;
-	Mon, 24 Jun 2024 15:14:23 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMTPHHlmftsuAA--.9847S5;
+	Mon, 24 Jun 2024 15:14:24 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -26,10 +27,12 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH v3 0/7] LoongArch: KVM: VM migration enhancement
-Date: Mon, 24 Jun 2024 15:14:15 +0800
-Message-Id: <20240624071422.3473789-1-maobibo@loongson.cn>
+Subject: [PATCH v3 3/7] LoongArch: KVM: Discard dirty page tracking on readonly memslot
+Date: Mon, 24 Jun 2024 15:14:18 +0800
+Message-Id: <20240624071422.3473789-4-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240624071422.3473789-1-maobibo@loongson.cn>
+References: <20240624071422.3473789-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,65 +40,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMTPHHlmftsuAA--.9847S2
+X-CM-TRANSID:AQAAf8DxMMTPHHlmftsuAA--.9847S5
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-This patchset is to solve VM migration issues, the first six patches are
-mmu relative, the last patch is relative with vcpu interrupt status.
+For readonly memslot such as UEFI bios or UEFI var space, guest can
+not write this memory space directly. So it is not necessary to track
+dirty pages for readonly memslot. Here there is such optimization
+in function kvm_arch_commit_memory_region().
 
-It fixes potential issue about tlb flush of secondary mmu and huge page
-selection etc. Also it hardens LoongArch kvm mmu module.
-
-With this patchset, VM successfully migrates on my 3C5000 Dual-Way
-machine with 32 cores.
- 1. Pass to migrate when unixbench workload runs with 32 vcpus, for
-some unixbench testcases there is much IPI sending.
- 2. Pass to migrate with kernel compiling with 8 vcpus in VM
- 3. Fail to migrate with kernel compiling with 32 vcpus in VM, since
-there is to much memory writing operation, also there will be file
-system inode inconsistent error after migration.
-
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
-v2 ... v3:
- 1. Merge patch 7 into this patchset since it is relative with VM
-migration bugfix.
- 2. Sync pending interrupt when getting ESTAT register, SW ESTAT
-register is read after vcpu_put().
- 3. Add notation about smp_wmb() when update pmd entry, to elimate
-checkpatch warning.
- 4. Remove unnecessary modification about function kvm_pte_huge()
-in patch 2.
- 5. Add notation about secondary mmu tlb since it is firstly used here.
+ arch/loongarch/kvm/mmu.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-v1 ... v2:
- 1. Combine seperate patches into one patchset, all are relative with
-migration.
- 2. Mark page accessed without mmu_lock still, however with page ref
-added
----
-Bibo Mao (7):
-  LoongArch: KVM: Delay secondary mmu tlb flush until guest entry
-  LoongArch: KVM: Select huge page only if secondary mmu supports it
-  LoongArch: KVM: Discard dirty page tracking on readonly memslot
-  LoongArch: KVM: Add memory barrier before update pmd entry
-  LoongArch: KVM: Add dirty bitmap initially all set support
-  LoongArch: KVM: Mark page accessed and dirty with page ref added
-  LoongArch: KVM: Sync pending interrupt when getting ESTAT from user
-    mode
-
- arch/loongarch/include/asm/kvm_host.h |  5 ++
- arch/loongarch/include/asm/kvm_mmu.h  |  2 +-
- arch/loongarch/kvm/main.c             |  1 +
- arch/loongarch/kvm/mmu.c              | 67 ++++++++++++++++++++-------
- arch/loongarch/kvm/tlb.c              |  5 +-
- arch/loongarch/kvm/vcpu.c             | 29 ++++++++++++
- 6 files changed, 86 insertions(+), 23 deletions(-)
-
-
-base-commit: 50736169ecc8387247fe6a00932852ce7b057083
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index c6351d13ca1b..1690828bd44b 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -444,6 +444,17 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				   enum kvm_mr_change change)
+ {
+ 	int needs_flush;
++	u32 old_flags = old ? old->flags : 0;
++	u32 new_flags = new ? new->flags : 0;
++	bool log_dirty_pages = new_flags & KVM_MEM_LOG_DIRTY_PAGES;
++
++	/* only track memslot flags changed */
++	if (change != KVM_MR_FLAGS_ONLY)
++		return;
++
++	/* Discard dirty page tracking on readonly memslot */
++	if ((old_flags & new_flags) & KVM_MEM_READONLY)
++		return;
+ 
+ 	/*
+ 	 * If dirty page logging is enabled, write protect all pages in the slot
+@@ -454,9 +465,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 	 * MOVE/DELETE:	The old mappings will already have been cleaned up by
+ 	 *		kvm_arch_flush_shadow_memslot()
+ 	 */
+-	if (change == KVM_MR_FLAGS_ONLY &&
+-	    (!(old->flags & KVM_MEM_LOG_DIRTY_PAGES) &&
+-	     new->flags & KVM_MEM_LOG_DIRTY_PAGES)) {
++	if (!(old_flags & KVM_MEM_LOG_DIRTY_PAGES) && log_dirty_pages) {
+ 		spin_lock(&kvm->mmu_lock);
+ 		/* Write protect GPA page table entries */
+ 		needs_flush = kvm_mkclean_gpa_pt(kvm, new->base_gfn,
 -- 
 2.39.3
 
