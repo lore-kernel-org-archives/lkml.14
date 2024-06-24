@@ -1,130 +1,217 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FD8170834
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D711814D294;
+	Mon, 24 Jun 2024 14:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719239103; cv=none; b=PtEdjLLjUWjLEsrIfhvJLHNCPzrR06PR10EWEEtgF37ywISkkd8L513MF5oKIo4v4Ary8bB5/DeSU40q7abRgtswFsbB3npnHBc/1CRijWN/Z/dShQi68PrE4PHyq1fg68g18czZ0psmkTU33bt2OxnAZtfjQDNRCPUh8m+fVMI=
+	t=1719239127; cv=none; b=OeMEzCI+QRQQGteydijeOBoqYyyp260/19qWQB+fWExkc57C29c8zvQPwBYtoV51qDK1XkSfgOXWZzQpPsEngUoeDDCOeFiN4Yu/7qiEytqpOEn/VzLU9NGogSMBxL7mKwA36yzpyzQ9sSjfTEUoMGNWrzCvGsfGd5icz7HcNRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719239103; c=relaxed/simple;
-	bh=ydvc29uZPeUufls1MdORdbK86wNdSk4EEwEb/yEu8G0=;
+	s=arc-20240116; t=1719239127; c=relaxed/simple;
+	bh=Dgu+MZvdgu+zcSsdK2czgVKPWmgDHD+SOyksaJ4irsg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sdroctWZcf0g325ujTHSWrQbvWCqVeqEnudlD+9DcMfuAjDVeVsqegfz78Z4W3RRuGz1Z+dPUFiFbp9/Gv9DwRkVd/8guNpnMManPbasORUVNP7qbCkKFF6QM5t7NBlDF6FiP87h9SvzDnLsOTd9iZfThn7fJx0DD/Q1UNGqd9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dI5R5WlL; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=C/VoGyj3bqF+PEDkONts/vi36nPAmPokcCMlCegjX/3IBPoIYJSCElWFjDVcuQA+pTa/9oQIQh3AG1eqI1xzdZhyRtO7fxWgJvxsc8aV3WivszdiAPbLXxMbDLbz7UjzLQwJaRp5YV3MP5zhbJ6SOhSeG4IwzC6phkpDiOKAvIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hul6K5s0; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dI5R5WlL"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-356c4e926a3so4143295f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:25:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hul6K5s0"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57d1012e52fso5006916a12.3;
+        Mon, 24 Jun 2024 07:25:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719239100; x=1719843900; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719239124; x=1719843924; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UiSfvHfbv/5xU72/ZLgMFqI54d7nKylYdFIP+ugA6ms=;
-        b=dI5R5WlL4+ToHif5KJtUah3b1rrFboVfK7G4aoIZlJbcg4DnINnPnQsc5S/ZICa6sU
-         5EwZA/k6AX+bKvp+hePgesUfVMLlRmvy4H4J6KRhZ5D9GxX0Ho96RfbhBVLPYHL+3WAq
-         YgFWhaSh8SOUOHYn/s2qdr9+seVS3dCzYiqeWYUgPoDpm01RuLqPk7hmHvd7IyghGcOx
-         0yAHGqBi7uSqt3kJ/OkMy8pQSstHaBEMJ5ha83QrrWxN2nxBXcWUdXK7w4R0wg5WRvMc
-         p61sWSeFKKAKDSf8LzFN2Eb13ol9SfzCJlssqJI9fh9qbXEQA5x2zK6Y3/ARfEbnVDqx
-         0k9A==
+        bh=QXhcJIHJ6aL58Q+24L6xiELja+dHfuQGqa4Xai/mxrU=;
+        b=hul6K5s0VvlK6NsYEsbDbMFwLW3q/GZgVVwH7MqQaCtqh0pQ6Ug3Eke/QK0NPoQ5Bi
+         UTQVZX3bmccoxYt/MRns4Jkc9ADeLQp30lmLKXsoGuptG8IjKRkP6CbVYs96Lg03f1Dy
+         3WNMV5nnGqKmVAAUSPbUheHdBpVkERY3Z4DNreQ2y7ck0jt/6zhSpE7d9TEcPnDAMDpE
+         o/jyZ66TM+4svw2kUq461o0MfOI2Ui22F28XyozTeK6q2yWuLyMv3ROZBKirekQ7Bse5
+         PSlSq/vX8g1aJupeY2SsY1qWitM68jS6knkCt0PnPYxNKtyRxzkJMun+OIyBFsbyZmby
+         TscA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719239100; x=1719843900;
+        d=1e100.net; s=20230601; t=1719239124; x=1719843924;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UiSfvHfbv/5xU72/ZLgMFqI54d7nKylYdFIP+ugA6ms=;
-        b=WwTIvRhIbkdMiomEJF93JgtUTf0+onr3m9R4s6UJSwZQ2Ri1fmgkZi+2G65scCCKyL
-         iPLSO34o78BDnkBVWrDeu3EW5MOUG+oudFBjgVGRhPPpFxJMkX5qbVf69gmgYAhj5m6A
-         UAAJ6GrXwlAliaX61RWKdEa3hWcALGRPcyb7C0x4aa98020WlLj6Y10ILItK2AKIXoC9
-         72siuvDj1qduSgguYwIVYsWs/Bnh3xF5SVtWJ8J5d4//CU78KWKjluvnW6I/CB6Tg3b8
-         JEbKQka+2GYVx1A9zx5NpVEYUOXZhNEYiGPsGZdg1gDltWMG1FbzDzwEcDLe61EnUwL7
-         02pA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4IMDLcs3+wbeP2URkh77dSica2HW6IB/Y/Nr9r3BlJJVOCSug4cTI+D+FNji3l6eEY/daKwSHenCsB7AfjKCuWtPp/5H4mDKR1IaT
-X-Gm-Message-State: AOJu0YyNJXkZTspdO76pptM9rCRJ7wB1uYcVFrUTtQpHmaRbcz+lUgA4
-	n+gYwM1rcEiUNucFl0VGnCT0uJCOfcqInRzdYOOjAjvjK/JBu++y83bw0BqmfcVIwQOqN2dNWP9
-	MPnGcYJV3MFSCUF9l6wcU+k7wWxGQaKl3GX/v
-X-Google-Smtp-Source: AGHT+IF18T5l0y/8WaxjICwzgVTdu0fg0kna7EFCcFKG6GmypQyJ7UKdfCK2jSP3pwLln0Xl+RItGFCfe21mKIYk4v4=
-X-Received: by 2002:a5d:6d8f:0:b0:366:eb42:8745 with SMTP id
- ffacd0b85a97d-366eb428828mr3237982f8f.30.1719239099629; Mon, 24 Jun 2024
- 07:24:59 -0700 (PDT)
+        bh=QXhcJIHJ6aL58Q+24L6xiELja+dHfuQGqa4Xai/mxrU=;
+        b=KZn2PXgoRrH+d2hGwlBR4ZPwSfgMcABiQoNhcvzJiVWrTlRD6LC0u9tArhoTpubfna
+         aFCjgfe0vY5uJ1v9XTZqzzdEpEEuopSjbb4CcwdSLnkSnJm+Lc3N4wfbGohmr446xwJA
+         Cksir3JVSQRXYQhYbGg6IF8xzK0z15+JeX5IR7TbQM9ayOngznVQsK+Pq9T8JfnNupIV
+         XDQrLHACSVddLPqELxapDkrTOkozvEiGvkO6vwXdqivtuYvdZVTJYiyJHmUHM8200mkY
+         GtzwHaqi82BqI3mm1+304ndrD1qMFkh/qbDH2g8/Wwo51VHdzZVBe7tlDr07B6CoGix9
+         jGYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYBkcnG0MTND+x+vbF1xPK6Gq3ziirr5oGBuMR6ciV6hEgzxIeXcTm99pUwtyfgABWT/KeOpOpJm5axQg4Ctm3kQHhL71V28Y4vvZo73tYNvMX79DnZC/USOxb7bu+9fWc+NHcN0ncz8wKpQ==
+X-Gm-Message-State: AOJu0YxmY/4YxS2UeProJVR6cKu3MBk0gCOifXTVLeWYaOnLR12JvMwB
+	z0yVY9XoBJh9Qt6lAwYs6WZRPKLWkvVknV+scHRlen1hIA5zjT7DhCr3KYDHZiC/eCG96HA6EOd
+	x/UhMyeTg4Vt4UHep0Wq4g2zrIgw=
+X-Google-Smtp-Source: AGHT+IF68NrWtboqpp119GE7TUv2Lyjgd3LoOFLM9A15Bj8lLV1VtW17SedkyU29Crq5sxPUAkQJkhaJbtmwOyh0Tfk=
+X-Received: by 2002:a50:a417:0:b0:57a:4c22:c0 with SMTP id 4fb4d7f45d1cf-57d4bd6060amr2710437a12.10.1719239123716;
+ Mon, 24 Jun 2024 07:25:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618221347.106627-1-yutingtseng@google.com> <20240622031600.3762859-5-yutingtseng@google.com>
-In-Reply-To: <20240622031600.3762859-5-yutingtseng@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 24 Jun 2024 16:24:46 +0200
-Message-ID: <CAH5fLgjR7iLHaWGy0NAiKnOUKro7_fBLoqFFzkdjn926jUdyAA@mail.gmail.com>
-Subject: Re: [PATCH v2] binder: frozen notification
-To: Yu-Ting Tseng <yutingtseng@google.com>
-Cc: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org, 
-	arve@android.com, maco@android.com, joel@joelfernandes.org, 
-	brauner@kernel.org, surenb@google.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
+References: <20240623110753.141400-1-quic_akhilpo@quicinc.com> <20240623110753.141400-3-quic_akhilpo@quicinc.com>
+In-Reply-To: <20240623110753.141400-3-quic_akhilpo@quicinc.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Mon, 24 Jun 2024 07:25:11 -0700
+Message-ID: <CAF6AEGti-Qibmb0YCgWypx7S1sVmtu3287a1reMnUgYqMzTKsw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] drm/msm/adreno: Add support for X185 GPU
+To: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Cc: freedreno <freedreno@lists.freedesktop.org>, dri-devel@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 22, 2024 at 5:22=E2=80=AFAM Yu-Ting Tseng <yutingtseng@google.c=
-om> wrote:
+On Sun, Jun 23, 2024 at 4:08=E2=80=AFAM Akhil P Oommen <quic_akhilpo@quicin=
+c.com> wrote:
 >
-> Frozen processes present a significant challenge in binder transactions.
-> When a process is frozen, it cannot, by design, accept and/or respond to
-> binder transactions. As a result, the sender needs to adjust its
-> behavior, such as postponing transactions until the peer process
-> unfreezes. However, there is currently no way to subscribe to these
-> state change events, making it impossible to implement frozen-aware
-> behaviors efficiently.
+> Add support in drm/msm driver for the Adreno X185 gpu found in
+> Snapdragon X1 Elite chipset.
 >
-> Introduce a binder API for subscribing to frozen state change events.
-> This allows programs to react to changes in peer process state,
-> mitigating issues related to binder transactions sent to frozen
-> processes.
+> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+> ---
 >
-> Implementation details:
-> For a given binder_ref, the state of frozen notification can be one of
-> the followings:
-> 1. Userspace doesn't want a notification. binder_ref->freeze is null.
-> 2. Userspace wants a notification but none is in flight.
->    list_empty(&binder_ref->freeze->work.entry) =3D true
-> 3. A notification is in flight and waiting to be read by userspace.
->    binder_ref_freeze.sent is false.
-> 4. A notification was read by userspace and kernel is waiting for an ack.
->    binder_ref_freeze.sent is true.
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c      | 19 +++++++++++++++----
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c      |  6 ++----
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 14 ++++++++++++++
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  5 +++++
+>  4 files changed, 36 insertions(+), 8 deletions(-)
 >
-> When a notification is in flight, new state change events are coalesced i=
-nto
-> the existing binder_ref_freeze struct. If userspace hasn't picked up the
-> notification yet, the driver simply rewrites the state. Otherwise, the
-> notification is flagged as requiring a resend, which will be performed
-> once userspace acks the original notification that's inflight.
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/=
+adreno/a6xx_gmu.c
+> index 0e3dfd4c2bc8..168a4bddfaf2 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -830,8 +830,10 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, u=
+nsigned int state)
+>          */
+>         gmu_write(gmu, REG_A6XX_GMU_CM3_CFG, 0x4052);
 >
-> See https://android-review.googlesource.com/c/platform/frameworks/native/=
-+/3070045
-> for how userspace is going to use this feature.
+> +       if (adreno_is_x185(adreno_gpu)) {
+> +               chipid =3D 0x7050001;
+>         /* NOTE: A730 may also fall in this if-condition with a future GM=
+U fw update. */
+> -       if (adreno_is_a7xx(adreno_gpu) && !adreno_is_a730(adreno_gpu)) {
+> +       } else if (adreno_is_a7xx(adreno_gpu) && !adreno_is_a730(adreno_g=
+pu)) {
+>                 /* A7xx GPUs have obfuscated chip IDs. Use constant maj =
+=3D 7 */
+>                 chipid =3D FIELD_PREP(GENMASK(31, 24), 0x7);
 >
-> Signed-off-by: Yu-Ting Tseng <yutingtseng@google.com>
+> @@ -1329,9 +1331,18 @@ static int a6xx_gmu_rpmh_arc_votes_init(struct dev=
+ice *dev, u32 *votes,
+>         if (!pri_count)
+>                 return -EINVAL;
+>
+> -       sec =3D cmd_db_read_aux_data("mx.lvl", &sec_count);
+> -       if (IS_ERR(sec))
+> -               return PTR_ERR(sec);
+> +       /*
+> +        * Some targets have a separate gfx mxc rail. So try to read that=
+ first and then fall back
+> +        * to regular mx rail if it is missing
+> +        */
+> +       sec =3D cmd_db_read_aux_data("gmxc.lvl", &sec_count);
+> +       if (PTR_ERR_OR_ZERO(sec) =3D=3D -EPROBE_DEFER) {
+> +               return -EPROBE_DEFER;
+> +       } else if (IS_ERR(sec)) {
+> +               sec =3D cmd_db_read_aux_data("mx.lvl", &sec_count);
+> +               if (IS_ERR(sec))
+> +                       return PTR_ERR(sec);
+> +       }
+>
+>         sec_count >>=3D 1;
+>         if (!sec_count)
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
+adreno/a6xx_gpu.c
+> index 973872ad0474..97837f7f2a40 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -1319,9 +1319,7 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu=
+)
+>                 count =3D ARRAY_SIZE(a660_protect);
+>                 count_max =3D 48;
+>                 BUILD_BUG_ON(ARRAY_SIZE(a660_protect) > 48);
+> -       } else if (adreno_is_a730(adreno_gpu) ||
+> -                  adreno_is_a740(adreno_gpu) ||
+> -                  adreno_is_a750(adreno_gpu)) {
+> +       } else if (adreno_is_a7xx(adreno_gpu)) {
+>                 regs =3D a730_protect;
+>                 count =3D ARRAY_SIZE(a730_protect);
+>                 count_max =3D 48;
+> @@ -1891,7 +1889,7 @@ static int hw_init(struct msm_gpu *gpu)
+>         gpu_write(gpu, REG_A6XX_UCHE_CLIENT_PF, BIT(7) | 0x1);
+>
+>         /* Set weights for bicubic filtering */
+> -       if (adreno_is_a650_family(adreno_gpu)) {
+> +       if (adreno_is_a650_family(adreno_gpu) || adreno_is_x185(adreno_gp=
+u)) {
+>                 gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_0, 0);
+>                 gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_1,
+>                         0x3fe05ff4);
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm=
+/msm/adreno/adreno_device.c
+> index c3703a51287b..139c7d828749 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -568,6 +568,20 @@ static const struct adreno_info gpulist[] =3D {
+>                 .zapfw =3D "a740_zap.mdt",
+>                 .hwcg =3D a740_hwcg,
+>                 .address_space_size =3D SZ_16G,
+> +       }, {
+> +               .chip_ids =3D ADRENO_CHIP_IDS(0x43050c01), /* "C512v2" */
+> +               .family =3D ADRENO_7XX_GEN2,
+> +               .fw =3D {
+> +                       [ADRENO_FW_SQE] =3D "gen70500_sqe.fw",
+> +                       [ADRENO_FW_GMU] =3D "gen70500_gmu.bin",
+> +               },
+> +               .gmem =3D 3 * SZ_1M,
+> +               .inactive_period =3D DRM_MSM_INACTIVE_PERIOD,
+> +               .quirks =3D ADRENO_QUIRK_HAS_CACHED_COHERENT |
+> +                         ADRENO_QUIRK_HAS_HW_APRIV,
+> +               .init =3D a6xx_gpu_init,
+> +               .hwcg =3D a740_hwcg,
+> +               .address_space_size =3D SZ_16G,
 
-[...]
+I'm kinda thinking we should drop the address_space_size and add
+instead ADRENO_QUIRK_4G or something along those lines, since there
+are devices with 32 or 64G
 
-> +               /*
-> +                * There is already a freeze notification. Take it over a=
-nd rewrite
-> +                * the work type. If it was already sent, flag it for re-=
-sending;
-> +                * Otherwise it's pending and will be sent soon.
-> +                */
-> +               freeze->work.type =3D BINDER_WORK_CLEAR_DEATH_NOTIFICATIO=
-N;
+(a690 is incorrect in this way too)
 
-I have not done a comprehensive review yet, but this looks wrong.
+BR,
+-R
 
-Is there any chance that we could have a test in aosp that would have
-caught this?
-
-Alice
+>         }, {
+>                 .chip_ids =3D ADRENO_CHIP_IDS(0x43051401), /* "C520v2" */
+>                 .family =3D ADRENO_7XX_GEN3,
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/ms=
+m/adreno/adreno_gpu.h
+> index 77526892eb8c..d9ea8e0f6ad5 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -448,6 +448,11 @@ static inline int adreno_is_a750(struct adreno_gpu *=
+gpu)
+>         return gpu->info->chip_ids[0] =3D=3D 0x43051401;
+>  }
+>
+> +static inline int adreno_is_x185(struct adreno_gpu *gpu)
+> +{
+> +       return gpu->info->chip_ids[0] =3D=3D 0x43050c01;
+> +}
+> +
+>  static inline int adreno_is_a740_family(struct adreno_gpu *gpu)
+>  {
+>         if (WARN_ON_ONCE(!gpu->info))
+> --
+> 2.45.1
+>
