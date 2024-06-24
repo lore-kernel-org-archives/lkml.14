@@ -1,82 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DF4262A3;
-	Mon, 24 Jun 2024 20:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E6A262A3;
+	Mon, 24 Jun 2024 20:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719260366; cv=none; b=PSP6RLjI3lNRm8nBNx81UZYUc9c8SQSJI778Tl9FjYz/p+W2qgqtalrBpvazb8AYjoDViXqdRwi/M49DHsqFww/Z7AasMswddJ/bSNIObdypIU3Lall2TsY+VzhIu68zleDUpGJmZLpUNvv3cLXVAv5WrbO5UrJDIDjwEWterUI=
+	t=1719260409; cv=none; b=i7YgcLZ/Kxsgm2Ow5YinNVytx85HfD4nQIAHzYQ6NUWGodqwLeg/IcxdE8vPZA6mE1TGoHyv89jZuLUXxkhFHH1CdOMwUL9Vqgb4BrX9m8yfdP3QLprqZHukOFAGmM38ugt6cgXSPx6yPvgCOvVoaCGbkzAkc5TyQh1I78Xbe64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719260366; c=relaxed/simple;
-	bh=ZWI+WtIGvYR17UMqNz82vONbomXghatUFx41IPHG+Do=;
+	s=arc-20240116; t=1719260409; c=relaxed/simple;
+	bh=tAbvRsIY1ZRGz3ZBltZKorbmqsymD3xAmW5bX7SWz0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8OrEVA+P1dzeVcDIRynBSoFLZ5lm0c6VdEyhNeXR8+g+gquXKAHAogVYs3u0Xyarb7sPFCj3LdNtzfXKA6TSJTn9UNvhwttGjxkrWlxycGy+PdW9lkV9OGg2jDWLPmtTRjhaWpvFJLAhLGroeQR7axmZYEfWFewTXioCq7PEeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rsfj1GpF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksbiB8MYlu8NozWk3zyvU9mdRIOucCrlnynCflZ+/H0rS5l0RX+SFGALSJA08HZLFLnPWR2RlXmWOV0IcY4LRP6JQhup1g8JLnWWZ6kjbu5dqdbUn6Xj/5Yrt3QEffksawdWpSlBHe8EbuyrvTqdUqCDzQtNhHrCGxqd095ONQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kG4UjMzW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rsfj1GpF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D5BC2BBFC;
-	Mon, 24 Jun 2024 20:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kG4UjMzW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A344C2BBFC;
+	Mon, 24 Jun 2024 20:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719260365;
-	bh=ZWI+WtIGvYR17UMqNz82vONbomXghatUFx41IPHG+Do=;
+	s=k20201202; t=1719260409;
+	bh=tAbvRsIY1ZRGz3ZBltZKorbmqsymD3xAmW5bX7SWz0w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rsfj1GpF+DATbbyRJCT6poW+insoX30ZAW2hE8B0AcLmrqgtYhWql/E2S3P12ZVPW
-	 BD3y5cMyDr/INGeRkVRyOKe4+gM1Xt7xIWsVW1uRF2frmmU0xOrNZRn9QYWG+L6lKn
-	 7FMmBNu9p6VbC314s7ck3H6MSMNCAqT5krvuvpBIWJKwJaXGMEieKHPs9SRezzkMyt
-	 axgZMNt9X4U+PAgRPG+loxyu0ohtIu0gKUHh3JwkkFrjQNAGt/njBq6Nbq7oEokcSZ
-	 zPYJfpwtxH8u2o2IcM73gBuvpWKQNDLbZNcRge3ujbZsWqk/wPbZqNyRRJjFQj+kVy
-	 JYIw3pcH5uiYg==
-Date: Mon, 24 Jun 2024 21:19:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] spi: add
- EXPORT_SYMBOL_GPL(devm_spi_optimize_message)
-Message-ID: <b14f6796-8269-46e4-9ca6-af248af04ae5@sirena.org.uk>
-References: <20240624-devm_spi_optimize_message-v2-0-58155c0180c2@baylibre.com>
- <20240624-devm_spi_optimize_message-v2-1-58155c0180c2@baylibre.com>
+	b=kG4UjMzWgKqQiuAL6L8kJJl0l9QgfrYuqk1lu/FNf9omEVFDKK62+iwEcEHbfhrIw
+	 xu33wFmB95HERgacLucs8oOP5WnzpzKfKgbMvgG297XDsCIvphRvaUzGMsDF+RK+C/
+	 MwhLHecaZwfYujomPDGhMfMCqSG0b3UkGBt0s136Y+TcLGwHf4X6G9zUPIPNW/tZv1
+	 XmtTFlwKypGF01Kk7qcAM/ULUbdjpq7C7X9iQ6LWqkHKvognZpBkqzSa0q5PUc2zCD
+	 G/FdHO+oRsGHdqZKe93u4gT4H9VaCQk2gNE0EsPBxcE4vPdEBatKwlORhVEoW5XdQC
+	 iCNxw3D7xS1Jg==
+Date: Mon, 24 Jun 2024 14:20:07 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-gpio@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	linux-clk@vger.kernel.org, linux-mips@vger.kernel.org,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-kernel@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/9] Revert "dt-bindings: reset: mobileye,eyeq5-reset:
+ add bindings"
+Message-ID: <20240624202007.GA333492-robh@kernel.org>
+References: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
+ <20240620-mbly-olb-v3-2-5f29f8ca289c@bootlin.com>
+ <171890801579.3178249.13779438329936311446.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="klKchanc5XDrotyy"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240624-devm_spi_optimize_message-v2-1-58155c0180c2@baylibre.com>
-X-Cookie: Allow 6 to 8 weeks for delivery.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <171890801579.3178249.13779438329936311446.robh@kernel.org>
 
+On Thu, Jun 20, 2024 at 12:26:57PM -0600, Rob Herring (Arm) wrote:
+> 
+> On Thu, 20 Jun 2024 19:30:54 +0200, Théo Lebrun wrote:
+> > Switch from one sub-node per functionality in the system-controller to a
+> > single node representing the entire OLB instance. This is the
+> > recommended approach for controllers handling many different
+> > functionalities; it is a single controller and should be represented by
+> > a single devicetree node.
+> > 
+> > The reset bindings is removed and all properties will be described by:
+> > soc/mobileye/mobileye,eyeq5-olb.yaml
+> > 
+> > Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> > ---
+> >  .../bindings/reset/mobileye,eyeq5-reset.yaml       | 43 ----------------------
+> >  1 file changed, 43 deletions(-)
+> > 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/sound/st,stm32-sai.example.dtb: /example-0/sai@4400b000/audio-controller@4400b004: failed to match any schema with compatible: ['st,stm32-sai-sub-a']
+> Documentation/devicetree/bindings/net/wireless/qcom,ath11k.example.dtb: /example-0/remoteproc@cd00000: failed to match any schema with compatible: ['qcom,ipq8074-wcss-pil']
+> Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.example.dtb: /example-0/avs-monitor@7d5d2000: failed to match any schema with compatible: ['brcm,bcm2711-avs-monitor', 'syscon', 'simple-mfd']
+> Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dtb: /example-1/syscon@20e00000: failed to match any schema with compatible: ['sprd,sc9863a-glbregs', 'syscon', 'simple-mfd']
+> Documentation/devicetree/bindings/clock/milbeaut-clock.example.dtb: /example-2/serial@1e700010: failed to match any schema with compatible: ['socionext,milbeaut-usio-uart']
+> Documentation/devicetree/bindings/arm/hisilicon/controller/hi3798cv200-perictrl.example.dtb: /example-0/peripheral-controller@8a20000/phy@850: failed to match any schema with compatible: ['hisilicon,hi3798cv200-combphy']
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/arm/stm32/st,mlahb.example.dtb: ahb@38000000: Unevaluated properties are not allowed ('reg' was unexpected)
+> 	from schema $id: http://devicetree.org/schemas/arm/stm32/st,mlahb.yaml#
 
---klKchanc5XDrotyy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not sure what happened here, but this can be ignored.
 
-On Mon, Jun 24, 2024 at 03:10:30PM -0500, David Lechner wrote:
-
-> Fixes: 17436001a6bc ("spi: add devm_spi_optimize_message() helper")
-
-That's the merge commit for the branch, not the affected commit.
-
---klKchanc5XDrotyy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ51McACgkQJNaLcl1U
-h9BZ9wf+IIY2+Y7WZRhxJpLD8QVSVUWu5cYLBLaYaeTTxTIXwMW8ypwpi1B64DdC
-A54h+ludYMBKi6TajsFxkHhwEpxhijMIA1Pvq5UL1umhsCtjd6wQ6k+sfaHdStQ3
-A7kmwTpp9BmFEis0zer9oA7uaBQZUyGuY8p9J/zt/tyr4g1HW6pqZbm4YXzg4G2Y
-Nf5v7M2FPWnqT7BQmhmpHRVAHH9/LJzr/odZhwiGPUTzVFieQuUW4tFO9UR35ie1
-hMtclZteO0DmdWG8/GEHMMnDr30tCcA2K7HwCGC0mftxzbFu/kc6xk/yrEjW1GcG
-QcdQ3/5Fto6hyPa3yjIrmSEylF/V4A==
-=xY5J
------END PGP SIGNATURE-----
-
---klKchanc5XDrotyy--
+Rob
