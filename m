@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B5D19B5A5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3253419B5AA;
 	Mon, 24 Jun 2024 15:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719242861; cv=none; b=dKNoO0fNg6BqtgZDN+80OsmNupPbIvYh/Dzig4tgN5wynM0DxpdsIuvUjRcxaFgo06jBpa8HxgWOI5jBUH9RR2K2tC6wkActHT/+BJVLuiq05xmin7w21x4Ysl7TCJnso5Vm+rCBBBaWLcFFhdkxVlas01055OG/oY3oHeLHIKs=
+	t=1719242861; cv=none; b=RCpSFL9iFWMyigi9SDbbjbrdbkYNQzCupukNsCHLCvkl9dLTTumhdAVQFwf4W4L3jPt0kQRCGAR8ezLRbxtd5pLUc7gtMf9uhh3rB4b82lDhK6lb4dX8UjqD2L+WTAnh2cMdvKSncQQCWIUGNOoveHTlrV2OUJhO4RAQkHggy50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719242861; c=relaxed/simple;
-	bh=wfrZOAkXJz9f9Lfg42t9i9udnKgxHzF8ML/6Tpd7HJA=;
+	bh=W8z1M30YTNFFf1unU9Yf1sBCRXmAExyUCe/qYLJPfm0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tTO2MUQaHt6kuekqAZrJlsrEcIFBX/jq/YuTYKbcm8OBuKE++AeOqJbiuFS1dGd1p/tF7hcHXrx7UYIU9Xsu/ZeLRxFgBvW/aDWOhxjB/j4HmDg/HO/ieUgd3rFxvyt44pHJR68kw5R4DvnxecR97UQTneQ0OOb42pSC5sEQaKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ipLTj0pf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j3IKRUKL; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=bE1WuhkJJYPF+7F1wLgasUkBfPr9V+Mken7TBDDwCd85vtYp0ItIiJz3OJVX673TsUqKa0uQitEexKxJq43lu2b0KuN1c/HM7MTPnpBL/ePkGgfr0v4FDG5agKR6E0FS5glcdwrVIEi3+DRCqSKv0BEus8Hx+LdmSgKEAVZs+P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q1YoTxMD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qB8oFL22; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ipLTj0pf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j3IKRUKL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q1YoTxMD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qB8oFL22"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719242857;
+	s=2020; t=1719242858;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lxZaiy3N5qW+TR11v/Lgl5tgIwAatTer0ZvBOD6wEk4=;
-	b=ipLTj0pfs6Tgsf2A0QftwMz8aZxQ1P7tbKzrit+YCNUZEZnjthMgbvonRy7nMNr4SBOgFh
-	FRvhNRkSTZSmJAP3p92gqylbmxVQQ21fv5RjdV+uEpvzMR9LtGiAZV7N+0vnB1ZHqTowXM
-	+lEd2qI/BJSki3xgpnNxnx7/7qFXygYysqnjoh1F/j1MhFkGnRDDLU7iNMJIvSOkYnTBas
-	2oz18E1TOwL3xyOEViFKEat57+eBLpd6kbeLO8dQhPDel1g6HSYDIDoodrKXd7Jr7XbbmG
-	dwuFOw8GAj58rXUY+mnTiMFvUzJRxFVmHM7e/xireMi/pTQxa63gg6Hyp7vKkg==
+	bh=dl6TCnLAxo924LJNzlZpsS2eoCMgyhzA3J0zNzcmQnI=;
+	b=q1YoTxMDqWv7BxRziKVe9+hFV2CvOjNiKEG4PAW6ylNudnymdcqTl2KfRe5Bfhj9XZPjAu
+	53A5Dc2v+/dVVCioPmmHriIeIpg8z3/DSQO6VbzlRhhuTNI0YT2xFfg3ovrG4WwWdF1mnw
+	LniFylIJMdY05oG1fBHxMUQKqhpOrsAytp1qpg9lji6T4I7VqBV8emhIHOczNf5bzT+tuG
+	Z+YtUj4/eJ3p8VXbB20o++5FIM4T5ZFDrISR7EoWk0bMATllcyCqlrmRAWw1FHll2z8m6J
+	F07HaXKmXP4u5hDOOy+Bp1mZmv7jCdt6mAzEVc++eRCIV97tE74QUO/66UzROg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719242857;
+	s=2020e; t=1719242858;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lxZaiy3N5qW+TR11v/Lgl5tgIwAatTer0ZvBOD6wEk4=;
-	b=j3IKRUKLgfoVmBj3IodqxBCgMnHcdoqA9pWr9PjFQuomqiQfc/lX0s55ASwZp/42Y4XhwG
-	7rDarw9OjQUUlTBg==
+	bh=dl6TCnLAxo924LJNzlZpsS2eoCMgyhzA3J0zNzcmQnI=;
+	b=qB8oFL221LfRSsPlrxob8jJF4cuP7g0nNQw85RApItPhJy495NeFiY+WQa0dP04mQewUIq
+	Ap5HQGBMLK11x/Cw==
 To: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Adrian Hunter <adrian.hunter@intel.com>,
@@ -55,11 +55,10 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Date: Mon, 24 Jun 2024 17:15:15 +0200
-Message-ID: <20240624152732.1231678-3-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v4 4/6] perf: Move swevent_htable::recursion into task_struct.
+Date: Mon, 24 Jun 2024 17:15:17 +0200
+Message-ID: <20240624152732.1231678-5-bigeasy@linutronix.de>
 In-Reply-To: <20240624152732.1231678-1-bigeasy@linutronix.de>
 References: <20240624152732.1231678-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -70,137 +69,129 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A signal is delivered by raising irq_work() which works from any context
-including NMI. irq_work() can be delayed if the architecture does not
-provide an interrupt vector. In order not to lose a signal, the signal
-is injected via task_work during event_sched_out().
+The swevent_htable::recursion counter is used to avoid creating an
+swevent while an event is processed to avoid recursion. The counter is
+per-CPU and preemption must be disabled to have a stable counter.
+perf_pending_task() disables preemption to access the counter and then
+signal. This is problematic on PREEMPT_RT because sending a signal uses
+a spinlock_t which must not be acquired in atomic on PREEMPT_RT because
+it becomes a sleeping lock.
 
-Instead going via irq_work, the signal could be added directly via
-task_work. The signal is sent to current and can be enqueued on its
-return path to userland instead of triggering irq_work. A dummy IRQ is
-required in the NMI case to ensure the task_work is handled before
-returning to user land. For this irq_work is used. An alternative would
-be just raising an interrupt like arch_send_call_function_single_ipi().
+The atomic context can be avoided by moving the counter into the
+task_struct. There is a 4 byte hole between futex_state (usually always
+on) and the following perf pointer (perf_event_ctxp). After the
+recursion lost some weight it fits perfectly.
 
-During testing with `remove_on_exec' it become visible that the event
-can be enqueued via NMI during execve(). The task_work must not be kept
-because free_event() will complain later. Also the new task will not
-have a sighandler installed.
+Move swevent_htable::recursion into task_struct.
 
-Queue signal via task_work. Remove perf_event::pending_sigtrap and
-and use perf_event::pending_work instead. Raise irq_work in the NMI case
-for a dummy interrupt. Remove the task_work if the event is freed.
-
-Tested-by: Marco Elver <elver@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/perf_event.h |  3 +--
- kernel/events/core.c       | 36 +++++++++++++++---------------------
- 2 files changed, 16 insertions(+), 23 deletions(-)
+ include/linux/perf_event.h |  6 ------
+ include/linux/sched.h      |  7 +++++++
+ kernel/events/core.c       | 13 +++----------
+ kernel/events/internal.h   |  2 +-
+ 4 files changed, 11 insertions(+), 17 deletions(-)
 
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 393fb13733b02..ea0d82418d854 100644
+index ea0d82418d854..99a7ea1d29ed5 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -781,7 +781,6 @@ struct perf_event {
- 	unsigned int			pending_wakeup;
- 	unsigned int			pending_kill;
- 	unsigned int			pending_disable;
--	unsigned int			pending_sigtrap;
- 	unsigned long			pending_addr;	/* SIGTRAP */
- 	struct irq_work			pending_irq;
- 	struct callback_head		pending_task;
-@@ -963,7 +962,7 @@ struct perf_event_context {
- 	struct rcu_head			rcu_head;
+@@ -970,12 +970,6 @@ struct perf_event_context {
+ 	local_t				nr_pending;
+ };
 =20
- 	/*
--	 * Sum (event->pending_sigtrap + event->pending_work)
-+	 * Sum (event->pending_work + event->pending_work)
- 	 *
- 	 * The SIGTRAP is targeted at ctx->task, as such it won't do changing
- 	 * that until the signal is delivered.
+-/*
+- * Number of contexts where an event can trigger:
+- *	task, softirq, hardirq, nmi.
+- */
+-#define PERF_NR_CONTEXTS	4
+-
+ struct perf_cpu_pmu_context {
+ 	struct perf_event_pmu_context	epc;
+ 	struct perf_event_pmu_context	*task_epc;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 61591ac6eab6d..afb1087f5831b 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -734,6 +734,12 @@ enum perf_event_task_context {
+ 	perf_nr_task_contexts,
+ };
+=20
++/*
++ * Number of contexts where an event can trigger:
++ *      task, softirq, hardirq, nmi.
++ */
++#define PERF_NR_CONTEXTS	4
++
+ struct wake_q_node {
+ 	struct wake_q_node *next;
+ };
+@@ -1256,6 +1262,7 @@ struct task_struct {
+ 	unsigned int			futex_state;
+ #endif
+ #ifdef CONFIG_PERF_EVENTS
++	u8				perf_recursion[PERF_NR_CONTEXTS];
+ 	struct perf_event_context	*perf_event_ctxp;
+ 	struct mutex			perf_event_mutex;
+ 	struct list_head		perf_event_list;
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 647abeeaeeb02..6256a9593c3da 100644
+index f48ce05907042..fc9a78e1fb4aa 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2283,17 +2283,6 @@ event_sched_out(struct perf_event *event, struct per=
-f_event_context *ctx)
- 		state =3D PERF_EVENT_STATE_OFF;
- 	}
-=20
--	if (event->pending_sigtrap) {
--		event->pending_sigtrap =3D 0;
--		if (state !=3D PERF_EVENT_STATE_OFF &&
--		    !event->pending_work &&
--		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
--			event->pending_work =3D 1;
--		} else {
--			local_dec(&event->ctx->nr_pending);
--		}
--	}
+@@ -9779,11 +9779,7 @@ struct swevent_htable {
+ 	struct swevent_hlist		*swevent_hlist;
+ 	struct mutex			hlist_mutex;
+ 	int				hlist_refcount;
 -
- 	perf_event_set_state(event, state);
+-	/* Recursion avoidance in each contexts */
+-	u8				recursion[PERF_NR_CONTEXTS];
+ };
+-
+ static DEFINE_PER_CPU(struct swevent_htable, swevent_htable);
 =20
- 	if (!is_software_event(event))
-@@ -6787,11 +6776,6 @@ static void __perf_pending_irq(struct perf_event *ev=
-ent)
- 	 * Yay, we hit home and are in the context of the event.
- 	 */
- 	if (cpu =3D=3D smp_processor_id()) {
--		if (event->pending_sigtrap) {
--			event->pending_sigtrap =3D 0;
--			perf_sigtrap(event);
--			local_dec(&event->ctx->nr_pending);
--		}
- 		if (event->pending_disable) {
- 			event->pending_disable =3D 0;
- 			perf_event_disable_local(event);
-@@ -9735,18 +9719,28 @@ static int __perf_event_overflow(struct perf_event =
-*event,
+ /*
+@@ -9981,17 +9977,13 @@ DEFINE_PER_CPU(struct pt_regs, __perf_regs[4]);
 =20
- 		if (regs)
- 			pending_id =3D hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
--		if (!event->pending_sigtrap) {
--			event->pending_sigtrap =3D pending_id;
-+
-+		if (!event->pending_work &&
-+		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
-+			event->pending_work =3D pending_id;
- 			local_inc(&event->ctx->nr_pending);
+ int perf_swevent_get_recursion_context(void)
+ {
+-	struct swevent_htable *swhash =3D this_cpu_ptr(&swevent_htable);
+-
+-	return get_recursion_context(swhash->recursion);
++	return get_recursion_context(current->perf_recursion);
+ }
+ EXPORT_SYMBOL_GPL(perf_swevent_get_recursion_context);
 =20
- 			event->pending_addr =3D 0;
- 			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
- 				event->pending_addr =3D data->addr;
--			irq_work_queue(&event->pending_irq);
-+			/*
-+			 * The NMI path returns directly to userland. The
-+			 * irq_work is raised as a dummy interrupt to ensure
-+			 * regular return path to user is taken and task_work
-+			 * is processed.
-+			 */
-+			if (in_nmi())
-+				irq_work_queue(&event->pending_irq);
-+
- 		} else if (event->attr.exclude_kernel && valid_sample) {
- 			/*
- 			 * Should not be able to return to user space without
--			 * consuming pending_sigtrap; with exceptions:
-+			 * consuming pending_work; with exceptions:
- 			 *
- 			 *  1. Where !exclude_kernel, events can overflow again
- 			 *     in the kernel without returning to user space.
-@@ -9756,7 +9750,7 @@ static int __perf_event_overflow(struct perf_event *e=
-vent,
- 			 *     To approximate progress (with false negatives),
- 			 *     check 32-bit hash of the current IP.
- 			 */
--			WARN_ON_ONCE(event->pending_sigtrap !=3D pending_id);
-+			WARN_ON_ONCE(event->pending_work !=3D pending_id);
- 		}
- 	}
+ void perf_swevent_put_recursion_context(int rctx)
+ {
+-	struct swevent_htable *swhash =3D this_cpu_ptr(&swevent_htable);
+-
+-	put_recursion_context(swhash->recursion, rctx);
++	put_recursion_context(current->perf_recursion, rctx);
+ }
 =20
+ void ___perf_sw_event(u32 event_id, u64 nr, struct pt_regs *regs, u64 addr)
+@@ -13658,6 +13650,7 @@ int perf_event_init_task(struct task_struct *child,=
+ u64 clone_flags)
+ {
+ 	int ret;
+=20
++	memset(child->perf_recursion, 0, sizeof(child->perf_recursion));
+ 	child->perf_event_ctxp =3D NULL;
+ 	mutex_init(&child->perf_event_mutex);
+ 	INIT_LIST_HEAD(&child->perf_event_list);
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index f9a3244206b20..f0daaa6f2a33b 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -221,7 +221,7 @@ static inline int get_recursion_context(u8 *recursion)
+ 	return rctx;
+ }
+=20
+-static inline void put_recursion_context(u8 *recursion, int rctx)
++static inline void put_recursion_context(u8 *recursion, unsigned char rctx)
+ {
+ 	barrier();
+ 	recursion[rctx]--;
 --=20
 2.45.2
 
