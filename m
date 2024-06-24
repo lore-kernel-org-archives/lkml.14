@@ -1,214 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79F41A2C01
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 23:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F4E38F9A;
+	Mon, 24 Jun 2024 23:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719273336; cv=none; b=DGG57NqGxqOV2rlsNRmadn3WbpDNICu9J8DV6HzvWxM8epWyfTsXBVmOt8PNb4TlxPNf4AR6m3pKXtYSZVqj8iRKqNvw7YzvKvQfxeulNTAMXc8IHtvac6xNuV2A7ckxruPD5HdJt4bj3xk0SkZIxxQzoCwu7DguTx1Ed/Djg3o=
+	t=1719273546; cv=none; b=YoODOU5H5LheRuFYeWmXayxx42vm8ZgClEwAV7OT25yg2PxPSdXfEVZY8e7mh78ey+cBh2kpBW/ffCmxc4svBypJ4Ug13lU714ftAaXNHtVOkz58eza2ubMQ4NHjFrS3kp0EWS5F4Qp3VIBU3WWCQkWIjEmeeI0ik/1hbQone/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719273336; c=relaxed/simple;
-	bh=ACvZf18Hpp9edcVXTL0zhBkjKiullQ2QOtwa4yuKRMk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=fnUSq3kXJ4J3bl79G5o/4UKZcpsQM//XXke48UVLjxpZPdVNsAEzac/jFq31awZZAfVgHn0VBbwtDdbSaNRZwcSar91OM57vNduHTuN2BRg8uRqPMUFuaQbeTNBj9EcOAjm6n43HPRgGdFAqybqrK0iAP7z0LEjj4otA6sZiSjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dayYMUp+; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719273546; c=relaxed/simple;
+	bh=yf0TuOKYWLXbXTkdUahnzlNtME3QpThZc1YBYXYX5nM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/XeSIDm9+IqT7tomRhcua3lqbrPFvv1klSQg9X8UkmvbfajolGprls54Rj0AKwmdStIhliISO60ojLeT8QiAMNrHHutOpPElsJ6FvTqtJRCADeRGJk2PsGmoC1v3sJWS2U/45AzIn1Fy9Hnd1TDGVeio/hbDzd51+mtR7M9Z5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDoRlTwi; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dayYMUp+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719273335; x=1750809335;
-  h=date:from:to:cc:subject:message-id;
-  bh=ACvZf18Hpp9edcVXTL0zhBkjKiullQ2QOtwa4yuKRMk=;
-  b=dayYMUp+pQ+qXW/SCw9sUZ2VdZ9TeewEkZAdFg8HWOvY2g0mR1oIl6QY
-   8W13snA3BHyuYqyfLWcnfvAxRumwhZb/xBNmBdg+stF/SlXOtjfrZqurw
-   dwrR64Ii1g6KkWFiyUR5dzZbyfebOUI/2uatNw+c0RX/D7NSRwo/OaCWk
-   2NVbNbyp4jIcaGVkRxu8TsvFcSh54z4lFRS36XkQghDWNmIuRqK20+0JC
-   rFErPQH9YLtvNY127pOM12aM+x7ZfERvfD+ccsNp9l6vWHblTphP+EuwD
-   ytf6mA2M9Kk0wc5hojyEO/kNtZITOAmrnaMoC16Lvis/cIRiDLR5jkKQT
-   A==;
-X-CSE-ConnectionGUID: LLtk1lBzTgWtWVuVtTop+w==
-X-CSE-MsgGUID: EtKWGN88QH6OjEB7uJEFrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16412675"
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="16412675"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 16:55:34 -0700
-X-CSE-ConnectionGUID: WULACP7NQDSqWoTHLcQlXg==
-X-CSE-MsgGUID: v33N/40tQx+F+LdVkKDBFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="47996139"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 24 Jun 2024 16:55:33 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sLtX1-000Dpo-0s;
-	Mon, 24 Jun 2024 23:55:31 +0000
-Date: Tue, 25 Jun 2024 07:54:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/core] BUILD REGRESSION
- f2605e1715dd28e8943b557453fed3a40421d3b5
-Message-ID: <202406250742.F26xWOHt-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDoRlTwi"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70699b6afddso31269b3a.1;
+        Mon, 24 Jun 2024 16:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719273544; x=1719878344; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dmgfdC7zQabcYbLKBYbYqzfAC0NAOR9Eyj2mz5NydgM=;
+        b=dDoRlTwiiFRn8UlRGHGEXmfCOmuPYkk9lw0wkfSSbGb9JfDy0OoudhaB6XBN98NTD+
+         nsAu2RsHUjVBN9JvojseP3SysKzU3gShsgxaV+yvVBMCnJBRonOxqw9Kqag3oubFDkDc
+         G+E8JLXtQiHIDsoWHh3QTXgSEmPZuke4V06FCHm6COrq37vhuHgyjQtN9ib2KNGUEwY0
+         o3V5AnUoRNE9puBmOerNhEAyidiTiMD3VVNLiXVurYveBQkySeR/VDqsUxi24v4zqO6e
+         mvVglvRi7OslCtCRcMlHLuRLjC4O3jmVsPuxoeHd26uB4RWeSaqHU9EXrkCsyL7PWHz5
+         +86w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719273544; x=1719878344;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dmgfdC7zQabcYbLKBYbYqzfAC0NAOR9Eyj2mz5NydgM=;
+        b=Fvk+phq6QDM0b56qCt/sAd6WeP3zX0wv7lo+Tjh9I+cA7R+D9NDb95/IBz3qAkozdO
+         hEH75IUR9YSy8s5g4Yi+KqT7DFCQ0lx4/hfGLHRc50PcCFWi4dHUenxOHGWng0qiptw5
+         cWBe3Ej1+dCVNH3NRv7Ob8/Z7k7RFPClQvPFJZiJKmuID4OuTwYWDe+H/29gqvao+k9c
+         qzFZV4dp81Q6s2nBQP3Wap9ViNRaqYDuDhlO5983KbJ24ojlaXYj4fDT/4tYNUNuW36Z
+         ataNGCNwFg+h9jRtsBsTekFJWVafXkMuciCMKl3tT7z39PGfQLjZOHi4Mix7C37y+Ec7
+         eAJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzbnOQ7AMVeAhQ5mxWFq4dFPFe0b6Eg7W3u0M9+R/f5dlspVG8bGoaobFZLiHrDlYuRZA1Ew6+iRua9YKAUy/zmZTj7ZpkfMw3f/2N9VR7G2I0ew+Ber5E5MuZGlQa6DbT
+X-Gm-Message-State: AOJu0YxiZsXSWgZJbPzYMVIeLBjv+W/PaaJUjdD29n79PtK4fDmRN3FW
+	W03QZql2ln13d0PWV+H9KOQozqHBEJYHRsdkYPWqjL5CAWdXyMOL
+X-Google-Smtp-Source: AGHT+IEH533jJAHEVcfwhe7W0iYdHPHiDnyk5qw78599iuTw2cpRI/xUkJAFSWxEXKuZdZlACqnm5A==
+X-Received: by 2002:a05:6a20:b91e:b0:1bc:f2f7:cf73 with SMTP id adf61e73a8af0-1bcf464560amr4899248637.55.1719273544137;
+        Mon, 24 Jun 2024 16:59:04 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065107b62bsm7011138b3a.16.2024.06.24.16.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 16:59:03 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 24 Jun 2024 13:59:02 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	joshdon@google.com, brho@google.com, pjt@google.com,
+	derkling@google.com, haoluo@google.com, dvernet@meta.com,
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
+	andrea.righi@canonical.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH 04/39] sched: Add sched_class->reweight_task()
+Message-ID: <ZnoIRnCZaN_oHQ6N@slm.duckdns.org>
+References: <20240501151312.635565-1-tj@kernel.org>
+ <20240501151312.635565-5-tj@kernel.org>
+ <20240624102331.GI31592@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240624102331.GI31592@noisy.programming.kicks-ass.net>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-branch HEAD: f2605e1715dd28e8943b557453fed3a40421d3b5  arm64: Kconfig: Allow build irq-stm32mp-exti driver as module
+Hello, Peter.
 
-Error/Warning reports:
+On Mon, Jun 24, 2024 at 12:23:31PM +0200, Peter Zijlstra wrote:
+> This reminds me, I think we have a bug here...
+> 
+>   https://lkml.kernel.org/r/20240422094157.GA34453@noisy.programming.kicks-ass.net
+> 
+> I *think* we want something like the below, hmm?
+> 
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 0935f9d4bb7b..32a40d85c0b1 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1328,15 +1328,15 @@ int tg_nop(struct task_group *tg, void *data)
+>  void set_load_weight(struct task_struct *p, bool update_load)
+>  {
+>  	int prio = p->static_prio - MAX_RT_PRIO;
+> -	struct load_weight *load = &p->se.load;
+> +	unsigned long weight;
+> +	u32 inv_weight;
+>  
+> -	/*
+> -	 * SCHED_IDLE tasks get minimal weight:
+> -	 */
+>  	if (task_has_idle_policy(p)) {
+> -		load->weight = scale_load(WEIGHT_IDLEPRIO);
+> -		load->inv_weight = WMULT_IDLEPRIO;
+> -		return;
+> +		weight = scale_load(WEIGHT_IDLEPRIO);
+> +		inv_weight = WMULT_IDLEPRIO;
+> +	} else {
+> +		weight = scale_load(sched_prio_to_weight[prio]);
+> +		inv_weight = sched_prio_to_wmult[prio];
 
-https://lore.kernel.org/oe-kbuild-all/202406250214.WZEjWnnU-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202406250323.bMydP9v3-lkp@intel.com
+Hmmm... sorry but I'm a bit confused again. Isn't the code doing the same
+thing before and after?
 
-Error/Warning: (recently discovered and may have been fixed)
+Before, if @p is SCHED_IDLE, @p->se.load is set to idle values and the
+function returns. If @update_load && fair, calls reweight_task(). Otherwise,
+update @p->se.load is updated according to @prio. After the patch, @weight
+and @inv_weight calcuations are moved to set_load_weight() but it ends up
+with the same result for all three cases.
 
-drivers/irqchip/irq-dw-apb-ictl.c:206:18: error: use of undeclared identifier 'dw_apb_ictl_handle_irq'
-drivers/irqchip/irq-dw-apb-ictl.c:206:32: error: 'dw_apb_ictl_handle_irq' undeclared (first use in this function); did you mean 'dw_apb_ictl_init'?
-drivers/irqchip/irq-dw-apb-ictl.c:33:13: error: variable has incomplete type 'void'
-drivers/irqchip/irq-dw-apb-ictl.c:33:24: error: expected ';' after top level declarator
-drivers/irqchip/irq-dw-apb-ictl.c:33:25: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'dw_apb_ictl_handle_irq'
+Were you trying to say that if the idle policy were to implement
+->reweight_task(), it wouldn't be called?
 
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- i386-allmodconfig
-|   |-- drivers-irqchip-irq-dw-apb-ictl.c:error:dw_apb_ictl_handle_irq-undeclared-(first-use-in-this-function)
-|   `-- drivers-irqchip-irq-dw-apb-ictl.c:error:expected-asm-or-__attribute__-before-dw_apb_ictl_handle_irq
-|-- loongarch-allnoconfig
-|   |-- drivers-irqchip-irq-loongarch-avec.c:error:SMP_CLEAR_VECT-undeclared-(first-use-in-this-function)
-|   `-- drivers-irqchip-irq-loongarch-avec.c:error:implicit-declaration-of-function-loongson_send_ipi_single
-|-- loongarch-randconfig-001-20240624
-|   |-- drivers-irqchip-irq-loongarch-avec.c:error:SMP_CLEAR_VECT-undeclared-(first-use-in-this-function)
-|   `-- drivers-irqchip-irq-loongarch-avec.c:error:implicit-declaration-of-function-loongson_send_ipi_single
-`-- loongarch-randconfig-002-20240624
-    `-- drivers-irqchip-irq-loongarch-avec.c:error:implicit-declaration-of-function-loongson_send_ipi_single
-clang_recent_errors
-`-- x86_64-allyesconfig
-    |-- drivers-irqchip-irq-dw-apb-ictl.c:error:expected-after-top-level-declarator
-    |-- drivers-irqchip-irq-dw-apb-ictl.c:error:use-of-undeclared-identifier-dw_apb_ictl_handle_irq
-    `-- drivers-irqchip-irq-dw-apb-ictl.c:error:variable-has-incomplete-type-void
-
-elapsed time: 1500m
-
-configs tested: 107
-configs skipped: 2
-
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                   randconfig-001-20240624   gcc-13.2.0
-arc                   randconfig-002-20240624   gcc-13.2.0
-arm                   randconfig-001-20240624   clang-17
-arm                   randconfig-002-20240624   gcc-13.2.0
-arm                   randconfig-003-20240624   gcc-13.2.0
-arm                   randconfig-004-20240624   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                 randconfig-001-20240624   clang-19
-arm64                 randconfig-002-20240624   gcc-13.2.0
-arm64                 randconfig-003-20240624   gcc-13.2.0
-arm64                 randconfig-004-20240624   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                  randconfig-001-20240624   gcc-13.2.0
-csky                  randconfig-002-20240624   gcc-13.2.0
-hexagon                           allnoconfig   clang-19
-hexagon               randconfig-001-20240624   clang-19
-hexagon               randconfig-002-20240624   clang-19
-i386         buildonly-randconfig-001-20240624   gcc-8
-i386         buildonly-randconfig-002-20240624   gcc-13
-i386         buildonly-randconfig-003-20240624   clang-18
-i386         buildonly-randconfig-004-20240624   gcc-10
-i386         buildonly-randconfig-005-20240624   clang-18
-i386         buildonly-randconfig-006-20240624   clang-18
-i386                  randconfig-001-20240624   clang-18
-i386                  randconfig-002-20240624   clang-18
-i386                  randconfig-003-20240624   gcc-13
-i386                  randconfig-004-20240624   gcc-13
-i386                  randconfig-005-20240624   gcc-13
-i386                  randconfig-006-20240624   clang-18
-i386                  randconfig-011-20240624   clang-18
-i386                  randconfig-012-20240624   clang-18
-i386                  randconfig-013-20240624   gcc-9
-i386                  randconfig-014-20240624   clang-18
-i386                  randconfig-015-20240624   clang-18
-i386                  randconfig-016-20240624   gcc-9
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch             randconfig-001-20240624   gcc-13.2.0
-loongarch             randconfig-002-20240624   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                 randconfig-001-20240624   gcc-13.2.0
-nios2                 randconfig-002-20240624   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240624   gcc-13.2.0
-parisc                randconfig-002-20240624   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc               randconfig-001-20240624   clang-19
-powerpc               randconfig-002-20240624   gcc-13.2.0
-powerpc               randconfig-003-20240624   clang-16
-powerpc64             randconfig-001-20240624   clang-17
-powerpc64             randconfig-002-20240624   clang-19
-powerpc64             randconfig-003-20240624   clang-19
-riscv                             allnoconfig   gcc-13.2.0
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240624   clang-19
-riscv                 randconfig-002-20240624   gcc-13.2.0
-s390                              allnoconfig   clang-19
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240624   clang-15
-s390                  randconfig-002-20240624   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                    randconfig-001-20240624   gcc-13.2.0
-sh                    randconfig-002-20240624   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240624   gcc-13.2.0
-sparc64               randconfig-002-20240624   gcc-13.2.0
-um                                allnoconfig   clang-17
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240624   clang-19
-um                    randconfig-002-20240624   clang-19
-um                           x86_64_defconfig   clang-15
-x86_64       buildonly-randconfig-001-20240624   gcc-13
-x86_64       buildonly-randconfig-002-20240624   gcc-13
-x86_64       buildonly-randconfig-003-20240624   clang-18
-x86_64       buildonly-randconfig-004-20240624   clang-18
-x86_64       buildonly-randconfig-005-20240624   clang-18
-x86_64       buildonly-randconfig-006-20240624   clang-18
-x86_64                randconfig-001-20240624   clang-18
-x86_64                randconfig-002-20240624   clang-18
-x86_64                randconfig-003-20240624   clang-18
-x86_64                randconfig-004-20240624   clang-18
-x86_64                randconfig-005-20240624   gcc-11
-x86_64                randconfig-006-20240624   gcc-13
-x86_64                randconfig-011-20240624   clang-18
-x86_64                randconfig-012-20240624   gcc-8
-x86_64                randconfig-013-20240624   clang-18
-x86_64                randconfig-014-20240624   gcc-8
-x86_64                randconfig-015-20240624   gcc-13
-x86_64                randconfig-016-20240624   clang-18
-x86_64                randconfig-071-20240624   gcc-10
-x86_64                randconfig-072-20240624   gcc-10
-x86_64                randconfig-073-20240624   gcc-13
-x86_64                randconfig-074-20240624   gcc-13
-x86_64                randconfig-075-20240624   gcc-13
-x86_64                randconfig-076-20240624   gcc-8
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                randconfig-001-20240624   gcc-13.2.0
-xtensa                randconfig-002-20240624   gcc-13.2.0
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+tejun
