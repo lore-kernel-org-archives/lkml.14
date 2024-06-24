@@ -1,107 +1,125 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96D112E1D4
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7356F7FBA4
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719219565; cv=none; b=NpG9IEEE1fhabIejbyStmFWuMG3xypit6AX+dLfHU5jTtwns4Aif3ZRFu42xphHJ0icopc0mpx+BfmbsIHrhZAleOC6pYLMoYAkMlURDk8RXG2FJJYgqGgbAw7jRWMkYtiMHeNeTVtQOk+GaslRNJ+5Vs3O5coOhnLCXKG5Uv8Y=
+	t=1719219582; cv=none; b=eS+DDhMhF48ICFDBdYIfia2E/dTEK8UBjSqg/jSdpONkfXkk6/foJy8+UE8QBgErNcVVoP+FmZd9+erekAh1VYzG2s5CU9AnrmnSBdOE3paan4xeUhzLxTKLf0WzNvPbyx7CK2GWtluZXHgR9mUtjBUfxq3U+yi8BcUYnrHQ4Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719219565; c=relaxed/simple;
-	bh=hdsmDqmNgGZQgfRkYZ6dfoEvN0ahnTXGnc7hhzCQrmg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h9VPaHodaOp9chrPwp8Pq9vA10HsnQNSCvsunGWBin1STaviZtQP3Y9Stq7OP1J/QSQcIa3LTkSlxUQfBLEb21elqnHc7gQ8gj+o0YxIB5PveNegD/XZvjasGKl3ZsCP8c0qj9r+++qfacuAXY/F6tmZWd6kDrIhd9XhpBIPtPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=MzkgpNdA; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1719219582; c=relaxed/simple;
+	bh=4vbufuB4y4HcWNXeFKxHJ6i+FP3N4mNG2mVtr5aRhkc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Y1cjEjQOrVQnurKVTPkIGd1a8TZMJ+/4xxORMia1B5DJHyWqF5qG+Gs/VCQmPaLC5uBBC8ay9qQmXcrfc8voaAOEYonmTzZ8pegtiC5jGjHqESoN2HXDXGplmpzlhWc4ep2p+3cQ81giiomQPQcYSeCyUsB+bcWdXQtJvpKe/jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UZ1u9fIW; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="MzkgpNdA"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7955e1bf5f8so263680985a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:59:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZ1u9fIW"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4248ea53493so6994005e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1719219563; x=1719824363; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hdsmDqmNgGZQgfRkYZ6dfoEvN0ahnTXGnc7hhzCQrmg=;
-        b=MzkgpNdA+GFVqSzcGBdQV5+67hLPJQv//dxUXjRiCZwxk0Pbb6cUCEqgy4VTTNiygg
-         HGPX4tQv3bEkRG4s0S7lzRevYKJJqlsUjgFUQ2kXYqGa3nS5FxwDcKzyO2P5IP7QiFyh
-         hAxtVFyl4A11u3NhIa++NuzEn86CRqcT9K1Fbofl6/XvmFKQPityb2U0NEOr3pqr1Nay
-         bbeRukitLOAAgtaHOMtkJahG1QwhzuzBY4FtUUqiv2yfhBr03ojzwz/GB1i7gzAdxtIN
-         Xng3ZSw3PsyDedFYdaWwYsn1ASWr/KLdTRIxDOytqaOxM8K8rLBdvIE3YJuQVWWhVj2P
-         dp0g==
+        d=linaro.org; s=google; t=1719219579; x=1719824379; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qwfp/9sZTXGBVFvGswGxn/KcFzTCnphPWghJX77Bcj4=;
+        b=UZ1u9fIWQMUI7u4TH0jILOe7bTLPDQOW88mcewz5IuNfOzZOYN+5lRvCaiaLdUb/JC
+         cT7cX1WdPhEJiF5JjRXAQeQsuGxqccrS76D6iO2gKAxhfj13dVzNorL0zCkrb8WXFF70
+         3RO8TmlD6GXg+TjZBdeQYMUo99m6YbW/ayfnrohp3ec5v1yMXSdGl2oCqdxgU0h9dAps
+         ffNsHedgEhcwpCij9MfzWaN67amfcXVOUzda9NKI4JrPHk4u8lqjroDNjGG+bb7qLrf+
+         EWFCe8cjwobSr1Qm5JMtmh9Yn4Pp/+i53HRABKK5ZC+UE88znOqdIzLLogt5rKEPK9+Q
+         1atQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719219563; x=1719824363;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hdsmDqmNgGZQgfRkYZ6dfoEvN0ahnTXGnc7hhzCQrmg=;
-        b=RKIeJZHQ7xHNo0fjTzu0y+yPbCCPk+40pk1m1kDajvv74vYn+hneyXke/xHBaeKKKi
-         OyVnd+GIhu4QBezseA6bxDiLlVXyQgMl9+9RtoNh8gub3aTTZXGBVTe4+kzf2m/y527O
-         i75Dyqs/Xe/aS+ZauCz+EYSFdycUDZxI2Nt5SAHGxjk+R0kMfcjTXPYymfsGPqHH43N+
-         ykgRuID8GM4D0NFEEeIvaFol8+Q5OrSKrIC5CnJpioSqqGd42INRN7diysNEMpzi1a8o
-         HPMCPduhBrmc4mPRp81aXXqyxKIEMinTgDhVMxQf4lEvlGUWnbjR+7HRhoyQzt8Lerzp
-         242g==
-X-Forwarded-Encrypted: i=1; AJvYcCUMNnM+5ZEtyj3IvVhQNxOPFkW5IC8vFbOYgCNyxyDbFdd00myulDf7F3hwOsZ5bC+IbzZ+CbgZr+9Ox8M3crCoe2qfy/qIyj5Swy45
-X-Gm-Message-State: AOJu0Yxfv3vVdEO3QSw1e8Pki9GSIZIkPwth5uO4wI72lEdTsLFnbBst
-	vv661OzVWHozXqQTFx8NCw5uPjzf1UJqeiKnNtvBq+Pq56pVD4VCYLYNmAC4nl+MujQkSQ8XHZP
-	T9tlszWfYiocd3ObTkqtL0qdWwsA6mK2Pe77DQQ==
-X-Google-Smtp-Source: AGHT+IHJdukmHTX31XZGqN8Ya5O7xqbZeOSn9ad1olNhKCpFsHEHdPHP6m4H5tAF93YKuWVFl5Mnqdf3Ba8kIeeVBLc=
-X-Received: by 2002:a05:6214:4a45:b0:6b4:ff32:8287 with SMTP id
- 6a1803df08f44-6b5409be0b9mr37950676d6.22.1719219562855; Mon, 24 Jun 2024
- 01:59:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719219579; x=1719824379;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qwfp/9sZTXGBVFvGswGxn/KcFzTCnphPWghJX77Bcj4=;
+        b=noSB86hoHvFt4ui3M4StQF8/S2EnI+N3usjYI1RdQX7cm1b/1q25xRqSW6tvnAxifb
+         m6jaY96fC3acdHW46hYVqeE3awt30tQW726apPFq+6LDWOK/DgpnBQjfU+nSQds/xVCO
+         DN8uRGvhsXLTWoJn5kZtsbaXgof6IYfIHz3kifZ71EKDT5zkU2jVm3KB+vUZlVy8pYf1
+         U+MyaNQaMz09pm7U5GchlUkPQHlm1WF4l+ZuwGI/TuV48KZGhR+ZLOAK5p85eWzfbFrA
+         Mk7MZc7KQjH2rCkAcMs6JgtX9rg4AMVazJoKQjWOKeo5Ma4saB/lu5QE166zN6XJruDh
+         ca1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWlAc2Scdm0KfG2cLaf7OiJVLozQ0/riFKeVlclblouq5Uyr7bBomLBchz+w1WDBE8csP4fnnzKLk4hEPLHtkEGS1f+jxHbuznQC6sK
+X-Gm-Message-State: AOJu0YzJmBDgNJI3RO2N9/AAPrBGvOIffrnhJ1j0+7TDca3YM4aRwZAa
+	G4EHjVBumJptWgl41VxU7NgEuHP6uzPY3XDbpzjMpMLju3hL7If476CDNFolHRE=
+X-Google-Smtp-Source: AGHT+IHWiEG8wFKdZAg1jKI0iRl/ES1d+thsjyKmjiaWMU0FQ1O/QCzoZCZ7Pjlz3Pdnc4C07ShYrg==
+X-Received: by 2002:a05:6000:18a1:b0:366:eeda:c32d with SMTP id ffacd0b85a97d-366eedac457mr2823891f8f.31.1719219578473;
+        Mon, 24 Jun 2024 01:59:38 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424817b5554sm130779995e9.26.2024.06.24.01.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 01:59:38 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Mon, 24 Jun 2024 10:59:36 +0200
+Subject: [PATCH] arm64: dts: amlogic: ad402: fix thermal zone node name
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
- <20240620175657.358273-7-piotr.wojtaszczyk@timesys.com> <ZnkGcwd8M1QFfmxl@matsya>
-In-Reply-To: <ZnkGcwd8M1QFfmxl@matsya>
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Date: Mon, 24 Jun 2024 10:59:11 +0200
-Message-ID: <CAG+cZ06R5P1g+1Pk3gbQ6Yod0mBM41dFTgvnBWg61HZFUtmx-w@mail.gmail.com>
-Subject: Re: [Patch v4 06/10] dmaengine: Add dma router for pl08x in LPC32XX SoC
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, "J.M.B. Downing" <jonathan.downing@nautel.com>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Yangtao Li <frank.li@vivo.com>, Arnd Bergmann <arnd@arndb.de>, Li Zetao <lizetao1@huawei.com>, 
-	Chancel Liu <chancel.liu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-sound@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, Markus Elfring <Markus.Elfring@web.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240624-topic-amlogic-upstream-bindings-fixes-dts-round-2-v1-1-0a21f456eb8d@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAHc1eWYC/x2MywrDIBAAfyXsuQvRpoX0V0oPPla70Ki4JhRC/
+ j2S0zAwzA5ClUngNexQaWPhnLqo2wDua1IkZN8d9Kin8aknbLmwQ7P8cuxci7RKZkHLyXOKgoH
+ /JOibYM1r8qjx4cxslZrvNgTo31Lpivr2/TmOEy1lBcSDAAAA
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1185;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=4vbufuB4y4HcWNXeFKxHJ6i+FP3N4mNG2mVtr5aRhkc=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmeTV5cadVbmem+qAcU4856cQkb1UV3Xs3IR2j/1v2
+ rGqX3NCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZnk1eQAKCRB33NvayMhJ0VxaEA
+ ChHOr0kEAehT4NDtEaOE3JKHCdK00r1EBIEgdTnjHyH9stX4eWTrFpdm1g4I103XVb6HZ03oeMI+w8
+ ln66xeYRXK2C5OXFx/zCOKDgRbaPhlHzBSixmE96VdseDvrpYyCe0o6j84kDSgr7uAjokC1WcOtw7P
+ tDeHbb9FBbdVOWIbCLyUKb/efiLpW6vjMFafC8PftJBZVW5wXAJWSV3/S+VzsptfcL7ODoQCRrv+Tc
+ u6jQe8TK3NSjrHaclHHz6bGfKlO0vgwXhNT7bDM3GXaCEWt4jg+cvboA2cN1348L5fCWvuxxM6mh1a
+ P6AsMA8NZECf+zyReYEDLTcK8KybzY93adUsx5UpzRtuUhzORv6lmR2IDefMsBhwguBmUmJOaqcedA
+ KOp95Kz0zq+kgI7vnyblt40FyGjz36DbPltwhr+ZIilFBFfacOnSO9JV/HwR1WaGjzUve0IojjMErm
+ Cx7rDebMUJHm2ih6UHrk4szyU0gdKZIAd3ZfxTSQ4/2UVXio8/E+UbZ8f3FPV12F3MrhVk3FSRxr8w
+ sWH8BjWdzVtfShSQTfEBt9JKln0IOt2gp/0UJS1dT1SQ9zIEgxpfMGkpHsk5YtSqs89OYscQghnWbY
+ 939ljc83tSGUHj6Lc1BIR1U4JGRlurFSPOj1wyptScVVaB7umcPRMYEEkUDg==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Mon, Jun 24, 2024 at 7:39=E2=80=AFAM Vinod Koul <vkoul@kernel.org> wrote=
-:
-> Any reason why dmaengine parts cant be sent separately, why are they
-> clubbed together, I dont see any obvious dependencies...
+Fixes the following:
+thermal-zones: 'soc_thermal' does not match any of the regexes: '^[a-zA-Z][a-zA-Z0-9\\-]{1,12}-thermal$', 'pinctrl-[0-9]+'
+        from schema $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
 
-The I2S driver depends on the dmaengine parts
+Fixes: 593ab951232b ("arm64: dts: amlogic: ad402: setup thermal-zones")
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On 20-06-24, 19:56, Piotr Wojtaszczyk wrote:
-> > LPC32XX connects few of its peripherals to pl08x DMA thru a multiplexer=
-,
-> > this driver allows to route a signal request line thru the multiplexer =
-for
-> > given peripheral.
->
-> What is the difference b/w this and lpc18xx driver, why not reuse that
-> one?
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
+index 6883471a93b4..0d92f5253b64 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
+@@ -86,7 +86,7 @@ vddio_1v8: regulator-vddio-1v8 {
+ 	};
+ 
+ 	thermal-zones {
+-		soc_thermal: soc_thermal {
++		soc_thermal: soc-thermal {
+ 			polling-delay = <1000>;
+ 			polling-delay-passive = <100>;
+ 			sustainable-power = <130>;
 
-The lpc18xx used the same dma peripheral (pl08x) but the request signal
-multiplexer around pl08x is completely different - there are no common part=
-s.
+---
+base-commit: 202661addeb4130fbd99075ab7b4f5290a692542
+change-id: 20240624-topic-amlogic-upstream-bindings-fixes-dts-round-2-5ca9b1193bff
 
---=20
-Piotr Wojtaszczyk
-Timesys
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
