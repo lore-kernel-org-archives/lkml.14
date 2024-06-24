@@ -1,259 +1,231 @@
-Received: from mx0a-0024c301.pphosted.com (mx0a-0024c301.pphosted.com [148.163.149.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D780D19AA7F;
-	Mon, 24 Jun 2024 14:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.149.154
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719239558; cv=fail; b=Kj1gSGUTP3JgYraRV5UzgSaARfM5Ext+kHsiwgmx506GeIAqr0vCnN4BqS7xDnFcCLQJnxvMGOhYY0pKUkXnVEQ2tOiMJI2o0/A5zfuqUvakB3LIVVe72jqpw/3e3XsAjVbRoqy+cO5sfqmqbQrBypuHdmoTiXprWs74htGiIPM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719239558; c=relaxed/simple;
-	bh=UsHNUw7NnubdlyS+khngAJbLx9mDlzjwZUXC61i6N0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D+0kxg8j+iHbbQJz8hWznAhpbWopdhYnbT04hMC8HIvNd6sh5pCk9UWf1Ntd2T1yEdbSXMvnBexJatPf/RYnzyaOoZBib4D9wpQVFWj3AyHWmc2hsjoFm10VmjxYlxtfHRKlQDPtaMkh93dz+cZ3t49nsk4mt4LT1/RvMqEM4JM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=silabs.com; spf=pass smtp.mailfrom=silabs.com; dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b=Pw2olDuL; dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b=S2iMAbTu; arc=fail smtp.client-ip=148.163.149.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=silabs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=silabs.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0811E533
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719239628; cv=none; b=TsiWKFj8Qfmpkq+STwJjBNPVdKFQMcjyQVSSMiE0+aDEjQ7CSqBEe0w6uZYeGt+crb9nDjSRhoPD3AI/2HXCuxYg3fpUJSGHr6h/YU8d8ZlfO8F7A2mSoprGJgLjWiAyT+ohIbhmxI3q1537TRyYIcmZ+E4XRHYZkz9Gd4FEdOQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719239628; c=relaxed/simple;
+	bh=2VI0NwS4PTAe6qZD3g/nCiYEkNvTB0wEuZHFxMmw1HY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HhY5qQg6sP514w1Qj41OtlDyfm8xZ6DmghB+BtrKlzNM0OVeqy1wJU6y5QKkaXCs2oassSGaK2Fy3+rIEmm4lPrQfso1G0oMO83AnG3RWcukl39DPHUG0zpiI2nkSI+8uC2dGsPbTCl4Qr65XS+572BaQGygqubfDhu3sG+gUhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b7VjEjOQ; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b="Pw2olDuL";
-	dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b="S2iMAbTu"
-Received: from pps.filterd (m0101743.ppops.net [127.0.0.1])
-	by mx0a-0024c301.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ODYZZo011774;
-	Mon, 24 Jun 2024 09:16:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps12202023;
-	 bh=UsHNUw7NnubdlyS+khngAJbLx9mDlzjwZUXC61i6N0s=; b=Pw2olDuL9QR7
-	VXVazgOsidR5uO63veGalZQoeyLRZ5AcXV5mk0CD1nanaJeNkELcd6/UKgR7BseG
-	Y4YjwaXnVg0BiIhOsDXlXWxkWZSjYKSZhjvlm1vsZK88LbWlkAG7GLczmaInsmF/
-	31P3DRr4f6iBJTnshh7sV6RoC+6/a2We0mOtWtvpM+S74B6a+sfzzzhJNxDpAzjl
-	LuWgknocXZ17pm2a0wSDQg6ElLdjpfeUmgc684rBIdbSyROBJrj3oHFY09jpG05V
-	x6IJcFgNa7cA3syXs+mcldKcULS5xtZRA6OSVjU6m6GdaOCfY2h1fk93Gd9+R2MZ
-	j55MVZpXeg==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-	by mx0a-0024c301.pphosted.com (PPS) with ESMTPS id 3ywtx92e3d-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 09:16:56 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jkSvnmhQIqETa2vjAxxPVfCiRwY5KIKuwVWgikakUBdo/h6Xre4jNozaFXtZpLWNTnrgHxAQo3paakH+qksTDuZAJFiSnHcdO4fMq1hwuK2pME8jXWvNwLN8KEo7XzkCndiyI34JUvQ4So9cTJD89Oocj+rx+EaJzJwD9dWELpgify91OEgkq+bw4lfaaW0MGFjMPAA7NY6JSqATk2AMNb+uHGXbwk1U6IesLx5jZPTH6Psfvcx5JFHnRupxUMh1NQF5u3swqK3c41ydwuDjcOjWbXmM9o6t7D4NTS0iPXYq43az+Hxy/HimsGpIyF7i6pjMjAGwyPLSxUI3GVqycA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UsHNUw7NnubdlyS+khngAJbLx9mDlzjwZUXC61i6N0s=;
- b=WeHYiqeefQkemGNhWRMTJXv/FckMMA2UwIyoCmoj+udyCbFQl0yxtJfvM+Am0T21/WjZa5DT/zpgGLqxY3F6OTDM4Zj7etejXb1+HF67qwcs+gjzgVW4sRaYOAPJ6jz4zz5eIV8ZoDf80svoEyutvwjQQvoK9ld6O1aQzh50Fzc/68fThMln3g93k4f6HD+83QV+839S7YD325EKjkTl2ur3rGVYC06E4wqgFZGfFmZsbaOLKhqQo6RqdzFBggZP7KG6hDsdGpRXrx8fqWESOt3SK3chyrAv9Vote73r+jV7xC66oGivlWn4MDGtNkDQS4FdJgYF2aKlONrGHe3bng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UsHNUw7NnubdlyS+khngAJbLx9mDlzjwZUXC61i6N0s=;
- b=S2iMAbTuifCFSeuleEZYUAAN+C2H+B7Vf6Ap1uzES9TteW78QyzYOQah4oY7zp2NVw9jrgo+hHanN+QfK4ewhLnVhHt0PNIIopbIWBwpjTuR3unc1dSLZfwQOU2KcZQiEhRIaZ20cNixRltADV3BXmZNJYs1FJHUyDZjJykgfMg=
-Received: from MN2PR11MB4711.namprd11.prod.outlook.com (2603:10b6:208:24e::13)
- by LV3PR11MB8765.namprd11.prod.outlook.com (2603:10b6:408:21d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Mon, 24 Jun
- 2024 14:16:53 +0000
-Received: from MN2PR11MB4711.namprd11.prod.outlook.com
- ([fe80::592e:a53b:e0b4:5da7]) by MN2PR11MB4711.namprd11.prod.outlook.com
- ([fe80::592e:a53b:e0b4:5da7%5]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 14:16:53 +0000
-From: Mathis Marion <Mathis.Marion@silabs.com>
-To: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jerome.pouiller@silabs.com>,
-        Kylian Balan <kylian.balan@silabs.com>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Mathis Marion <mathis.marion@silabs.com>
-Subject: [PATCH v1 1/2] ipv6: introduce ipv6_rthdr_rcv_last()
-Date: Mon, 24 Jun 2024 16:15:32 +0200
-Message-ID: <20240624141602.206398-2-Mathis.Marion@silabs.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240624141602.206398-1-Mathis.Marion@silabs.com>
-References: <20240624141602.206398-1-Mathis.Marion@silabs.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0273.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:37a::10) To MN2PR11MB4711.namprd11.prod.outlook.com
- (2603:10b6:208:24e::13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7VjEjOQ"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfab4779d95so4306911276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719239626; x=1719844426; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=D/u3BMlJPeiARoM1tpxwj+BZ0FLuxy3mU9kUIPrDDyM=;
+        b=b7VjEjOQQDjdOUdiTWnFZls4mlR7qUD4tNIGC37Ai6bTaBCxWgoIEUMu+Qx6Ej2egQ
+         KtCwL2BhE5XT0NfwCMkliPpeuxcXUMWudTT4rCIcdCX7IiJExWw0TCOloS2csFKA/Ih/
+         5oCAfoR0YBmTypixlYuqrlzwFM4MKphpgUFpYAZx91JDsvruibxk0evGWNjQ/oGsqbGf
+         hybIgHE3hgRM80Kt55J+DWiQGlxcTTMEHTJo6sZAV9DwXWEsF58Aqne6BT6ZEk/gA5NP
+         XwhJZqAkxXspt9VqLpQGz6Q+OoZgZe9L4Xk/MNnp7f19uFEFLl2mRQZU4Sr8ju9YfTtG
+         CXxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719239626; x=1719844426;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D/u3BMlJPeiARoM1tpxwj+BZ0FLuxy3mU9kUIPrDDyM=;
+        b=a/EMzM93st6VD2XVHqtbwkH5KAtw/GmM94sNDlImFXllwhA0YmpQGLN2fOFVcIj1yD
+         +z45ePBRN8FuAnglZqf8SIlV7fDhlVIOYm8AL29Q8f0pYq84NCroYG7AfoCJkGF+vGNf
+         G/neDLHG+/Aa4KTRirjxsJtO990Jyv1s5nJHEegatuZAQkqRNUnE4x0am+L1Nd0EoOJN
+         pF3sJ7m5cNZEMV1kETDhVrC9tMEBbIOWBJ71XBmJDM8WfsSXntF8198HOXTOKbKmHGzQ
+         +Ba0beOG+vQkVHRp33bsBLylIxDDiS98DqemuuksjhPafFiqYO1cNFw61HTqi5UA4SJB
+         jSLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxNoTGfQvTNsgv3IRPOEAY3Ew34zxtUiTcFu4P0xBjhkmWM+Gbt1qtilRWpf20x9eZpNSybja++Wssc7DRH4jwzyr83WaJRbSP+iff
+X-Gm-Message-State: AOJu0YxQdcAid07grwRe/agTlcpqst6OwKHWKYrUQLXgDEO7k0Pqx4hX
+	chvwkRFlssMlIWUyjoIZMaRSL8m+HyvA2HWbAwrixQrLg8AX8Vy/IFfJ/Y13+1zNLTBnHdRkvm2
+	0ORhbEQ4ln2WbPurQ7ryKgBWbzur0TymsXZ54ng==
+X-Google-Smtp-Source: AGHT+IGyZF+YZa8ZILjWOQ9iFXAixiauuVV4PiOE9O257hOxlNlZ0bzCm3iS0nEiuBdkDzD+I1SsyVW/2AuH9kI2Sxo=
+X-Received: by 2002:a05:6902:345:b0:e02:b434:372e with SMTP id
+ 3f1490d57ef6-e0303f52530mr4775874276.22.1719239625559; Mon, 24 Jun 2024
+ 07:33:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR11MB4711:EE_|LV3PR11MB8765:EE_
-X-MS-Office365-Filtering-Correlation-Id: 710ed98b-e27a-41b5-fac1-08dc94584c48
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230037|366013|52116011|376011|1800799021|38350700011;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?4j+wvJtH8Ote7fKsdYMU+xss3LYNgbL3We97QP732lKID5wwxWaxJM2g/LFO?=
- =?us-ascii?Q?bZMAzW6yyjIEW6xPLfQE5yUynJGzvN7ldsBmKvprphYdyglLhWL+vfuQT2d7?=
- =?us-ascii?Q?yKnb+09ESqZRgmw0MsPLvTENyiBA3QIwsBLPx8qqmXSmX64iZK/LgHJRS4zQ?=
- =?us-ascii?Q?K8J0OzLwvvfqggpESnOQsohay28tJsMw1M1jy+t+rZuO/bvtrCE+8oyaAG5G?=
- =?us-ascii?Q?ir+U3cR6NNLO0UTLp2CflgptBaVHgMJxbuYtfJGfdjds6S3Cj376pwFi66Qz?=
- =?us-ascii?Q?ocRZBHBH9oDOTfQES4BUC7rZ9GIUG7YuX0P3zxJsOEY12EKVh/i88Ba3nW0X?=
- =?us-ascii?Q?kL7MMLyYlwqJWe94AmcfnI5t14N3a6WTZM4pEjEF2AhjGQMO85WWkvJSAsMF?=
- =?us-ascii?Q?nOrRk8EW3xz2bH4RqrgGU54Dwm6lzDWnvPHOhOJGLBEXYn9i4bnqCIzEfV14?=
- =?us-ascii?Q?a+osh+wSWbxhN5kex3kciIoimpLfm4npXXogJF6ssRJIgV1nyGfQXPS/mC8W?=
- =?us-ascii?Q?AAKB+YwELhKIEWXwLJAFdJlbubo7X5r9cFQo+Ds/p8Qh3oD0LzTNK9vLLoC+?=
- =?us-ascii?Q?TlfUZeWooKvIVBZcpuayYPWssVvn/GJxkrN1ldhoraymAIXQXm1c0RktAVcH?=
- =?us-ascii?Q?bsj5CyYT1Cqd5UweEXQxk1csjtUEQtoHETxK0RpY+4qH6eN49am/RExGw/1b?=
- =?us-ascii?Q?gQYhWCYTVjdbxEvmZ27O0dWgruH/ADPnFpuGeNVoCYukeWOumfWSZnNMqak1?=
- =?us-ascii?Q?+XhmL7BFjb3OrKgLA2ZfcbC5jOgj8SAi7gcyQBaCEv/YryGg25zZLq+RzjLz?=
- =?us-ascii?Q?RP+O7sXIWlS1nPOklzVM+ae5q8NWI/YjpkumFgjMkmmH3ZdkjJ10GVZQMase?=
- =?us-ascii?Q?wHZ3J5Su2L3EcpMKphiSoIWVmUfuBE8AbS9vFakmvQ64ZjignfUmXn2JdpUl?=
- =?us-ascii?Q?wXL1ffW8QCNgKipLo5wuyyiDFQacfyQBzZ9GtN7Ja4vaZRs9HD/heMbZkZ/U?=
- =?us-ascii?Q?0I1Ow9S+G1h5J09hz3/znBGFE74scjzlA+GmoBgP8X2IxuJC80AHCoVFE5c/?=
- =?us-ascii?Q?HsE67dN5GTf2FbOgjcklSgvo8q8V6NI3aQVLUy0kGqxIYTAtpJNBdi9u322q?=
- =?us-ascii?Q?+PHYVXRp5gPxgi/hSI3GH8/PhHJV5H3antC3R0UDHHvvgzphGB4Bgy9fhiB7?=
- =?us-ascii?Q?qtGJbmhsVdBUacx71OQyNSMvoTwZz2qXI+fLuDopj3HcNV0d/tw17/Zj9u3P?=
- =?us-ascii?Q?nnRlrPL1Yrda8qv2Srlf12Z6tk3QNx7Z+Bwxkj6+kJmc/ERh1PUCClBW27xS?=
- =?us-ascii?Q?sCYouYqwQFvybP3hFhTb0j3N9LFu15OdBOgSNqNaxHKq0LRU4te+Sn+iXXlm?=
- =?us-ascii?Q?EfLXd7A=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4711.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(52116011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?Hn5I/HmvBMRHyqfOj3ZhD6EPwjTrae/6+l5j2HWlC/Le99DYWR4Tn+Vvyy4G?=
- =?us-ascii?Q?eGDHLoFqO9yPchfWqZWTP+F0+qxEFJgMA4Hns9mnIFOTKsBZF3xty2gCnf/S?=
- =?us-ascii?Q?CazkN9RraRUIsa9XOeJ2s2ASe6UYXU4qQzM/V1nxJxR1CP7WVO66UZhqrABI?=
- =?us-ascii?Q?dFtpEwJZpxH+eECkAzbCAkjp0lQJ7S+EL8rTULws05VhEa0qoe1WXXcqptTz?=
- =?us-ascii?Q?9uWGRigAa/sF9zacU1QDy+/6LEXe7lU/5BLGhwuiNm0B5B1XinEeaoJi5TK0?=
- =?us-ascii?Q?3htUqj5n4KoXMaJMrNQE2H+PpHwKle39rQjqZbXalOEZeOk3M9XfHUq4nvc1?=
- =?us-ascii?Q?2zqZegIONkKuYpCB2xmmZP5gmqhlaOboJhZwkoheEuhCVSG73vJprP4rA+ax?=
- =?us-ascii?Q?j8FlzELA0Bj1y3jaV/yiVKjSLE45qK2MYZTFhbGUilLJRoKM3htBbLY5/6O4?=
- =?us-ascii?Q?EmzKS2dzzmWhEegfuVaiKwul2iBX+4w9TaZv0wsFB1MtRWJzIr0/0a6tSUfP?=
- =?us-ascii?Q?jsycI5VlLRDO4cb0n8WKxvQtcyxmuWwdpat9U6LBu2MUna1719gw8Log+txZ?=
- =?us-ascii?Q?ie8wvCGswVuMIlk/7GMIut2a5V3klufN323J4pJ12URGHwUtiavpEtGZoMDo?=
- =?us-ascii?Q?V7bC6kgGs/ZTyoFtEDyLgH8gLRqBg7KIJrIfYK9UBHBthabN2QJtH5XLKrpY?=
- =?us-ascii?Q?3MdeAI0T2oEV9bpiLsKS+hALfIKImQ2yUTVD/X/QZyouUeNVXI920eeA1zjy?=
- =?us-ascii?Q?1BvZ+7i0H9ach+LHurLzVvSa+cueRx6YLkFIJXz0CNboEV09yd7M4acPKxP3?=
- =?us-ascii?Q?Ryei/VBETttLyHFsusy+7N1dr+Pl94NxCk7ZXVcpQUjG5Bt4tmW2q7U1Is8+?=
- =?us-ascii?Q?EI7vihQRrWlni3kb6EoRRoJg/yLdkskTPqocBzFLuGy1ZDxbVHkqXS/INjRr?=
- =?us-ascii?Q?cnXY65+vwFz1bc3HDxlFEKIa+bC4wZ34TH9MXL8eiRIcvgDvmppFTPXWvYCd?=
- =?us-ascii?Q?hroVIlj6gB4cSMyJmcQ2uYpN8k+feciscNxMGWdlVG3uL/ZojSMdOQkqQNum?=
- =?us-ascii?Q?LYzgNcuSFQvhXNeEDVWM74Pu69d40pZQEDLt6wQHu0S+sNJVzM+ZD6VOfAjE?=
- =?us-ascii?Q?2A8lTrwEzMtJvsPrKtYGyupEr9c5azA9YcOVVWaBzjKWhV+Mny6HtjUaquOZ?=
- =?us-ascii?Q?59LeMus61lFRQAY+JGkGyUD+jIfwYWZ3UOK/7xT1NwmXxWq4JmJnjlpupZG+?=
- =?us-ascii?Q?w7hf1OWU5+hHc3Uaencz89DKxrF5iCa+yfmtx5goPD3u59t2rnZnzbi2+Xu5?=
- =?us-ascii?Q?NovXqwqzH80duj5YlMplrJV6c/AVJRnqFmDpp7CKJSovKpjTzIoMww44n0Q3?=
- =?us-ascii?Q?sZMYZp8norC8VD097Vf1v59skbO8WKccjHTlPd+2aR9BaDAnP2mAGLroVdZ8?=
- =?us-ascii?Q?E27JdY6qoLCuzrf6RSLkiDTk3YZXrr5BUJU3880uQpIC2nZo9HknS9t+mnQA?=
- =?us-ascii?Q?PKxradaZsy5J16iom/6KqpZHT4Db/Yj3XpB3gnyRcOQfYKkVjTa5fl0RIV75?=
- =?us-ascii?Q?+cZLazlo01gndMfov9SWCuZpwmJFe1x4mUXJZDgh?=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 710ed98b-e27a-41b5-fac1-08dc94584c48
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB4711.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 14:16:53.8726
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y/WDuVk/IRwa/SrRV38Zqpz3xETFeRe4tQWi26nqEsGiRn03IV7Fb9kQWjF27XA8rUavPcKgIcoO2rLZJp4rzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8765
-X-Proofpoint-GUID: UuVjjltVgkmlu-zlHvqjJoeYWaX6OYJG
-X-Proofpoint-ORIG-GUID: UuVjjltVgkmlu-zlHvqjJoeYWaX6OYJG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_11,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=980 mlxscore=0
- suspectscore=0 bulkscore=0 phishscore=0 adultscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406240114
+References: <20240510201244.2968152-1-jthies@google.com> <20240510201244.2968152-5-jthies@google.com>
+ <21d4a05a-3f64-447a-b8e3-772b60ef8423@nvidia.com> <7b46779f-3f44-45f4-8884-2f9f625485ae@nvidia.com>
+In-Reply-To: <7b46779f-3f44-45f4-8884-2f9f625485ae@nvidia.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 24 Jun 2024 17:33:32 +0300
+Message-ID: <CAA8EJprxHq65mAU6a9iGD6Yus-VB2x3WP5Z8JWN1oUwn+zQDfg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] usb: typec: ucsi: Always set number of alternate modes
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Jameson Thies <jthies@google.com>, heikki.krogerus@linux.intel.com, 
+	linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@google.com, 
+	abhishekpandit@chromium.org, andersson@kernel.org, 
+	fabrice.gasnier@foss.st.com, gregkh@linuxfoundation.org, hdegoede@redhat.com, 
+	neil.armstrong@linaro.org, rajaram.regupathy@intel.com, 
+	saranya.gopal@intel.com, linux-kernel@vger.kernel.org, 
+	Benson Leung <bleung@chromium.org>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-RnJvbTogTWF0aGlzIE1hcmlvbiA8bWF0aGlzLm1hcmlvbkBzaWxhYnMuY29tPgoKVGhpcyBmYWN0
-b3JpemVzIHNvbWUgY29kZSBiZXR3ZWVuIGlwdjZfc3JoX3JjdigpLCBpcHY2X3JwbF9zcmhfcmN2
-KCkKYW5kIGlwdjZfcnRoZHJfcmN2KCkuCgpOb3RlIHRoYXQ6CiAgLSBJUHY0LWluLUlQdjYgd2Fz
-IHByZXZpb3VzbHkgb25seSBzdXBwb3J0ZWQgYnkgaXB2Nl9zcmhfcmN2KCkuCiAgLSBJUHY2LWlu
-LUlQdjYgd2FzIHByZXZpb3VzbHkgbm90IHN1cHBvcnRlZCBpbiBpcHY2X3J0aGRyX3JjdigpLgoK
-U2lnbmVkLW9mZi1ieTogTWF0aGlzIE1hcmlvbiA8bWF0aGlzLm1hcmlvbkBzaWxhYnMuY29tPgot
-LS0KIG5ldC9pcHY2L2V4dGhkcnMuYyB8IDEwNyArKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCA2NSBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9uZXQvaXB2Ni9leHRoZHJzLmMgYi9uZXQvaXB2Ni9l
-eHRoZHJzLmMKaW5kZXggNjc4OTYyM2IyYjBkLi4wODNkYmJhZmIxNjYgMTAwNjQ0Ci0tLSBhL25l
-dC9pcHY2L2V4dGhkcnMuYworKysgYi9uZXQvaXB2Ni9leHRoZHJzLmMKQEAgLTM2Niw5ICszNjYs
-NDUgQEAgc3RhdGljIHZvaWQgc2VnNl91cGRhdGVfY3N1bShzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQog
-CQkJICAgKF9fYmUzMiAqKWFkZHIpOwogfQogCi1zdGF0aWMgaW50IGlwdjZfc3JoX3JjdihzdHJ1
-Y3Qgc2tfYnVmZiAqc2tiKQorc3RhdGljIGludCBpcHY2X3J0aGRyX3Jjdl9sYXN0KHN0cnVjdCBz
-a19idWZmICpza2IpCiB7CiAJc3RydWN0IGluZXQ2X3NrYl9wYXJtICpvcHQgPSBJUDZDQihza2Ip
-OworCXN0cnVjdCBuZXQgKm5ldCA9IGRldl9uZXQoc2tiLT5kZXYpOworCWNvbnN0IHN0cnVjdCBp
-cHY2X3J0X2hkciAqaGRyOworCisJaGRyID0gKHN0cnVjdCBpcHY2X3J0X2hkciAqKXNrYl90cmFu
-c3BvcnRfaGVhZGVyKHNrYik7CisKKwlpZiAoaGRyLT5uZXh0aGRyID09IE5FWFRIRFJfSVBWNiB8
-fCBoZHItPm5leHRoZHIgPT0gTkVYVEhEUl9JUFY0KSB7CisJCWludCBvZmZzZXQgPSAoaGRyLT5o
-ZHJsZW4gKyAxKSA8PCAzOworCisJCXNrYl9wb3N0cHVsbF9yY3N1bShza2IsIHNrYl9uZXR3b3Jr
-X2hlYWRlcihza2IpLAorCQkJCSAgIHNrYl9uZXR3b3JrX2hlYWRlcl9sZW4oc2tiKSk7CisJCXNr
-Yl9wdWxsKHNrYiwgb2Zmc2V0KTsKKwkJc2tiX3Bvc3RwdWxsX3Jjc3VtKHNrYiwgc2tiX3RyYW5z
-cG9ydF9oZWFkZXIoc2tiKSwgb2Zmc2V0KTsKKworCQlza2JfcmVzZXRfbmV0d29ya19oZWFkZXIo
-c2tiKTsKKwkJc2tiX3Jlc2V0X3RyYW5zcG9ydF9oZWFkZXIoc2tiKTsKKwkJc2tiLT5lbmNhcHN1
-bGF0aW9uID0gMDsKKwkJaWYgKGhkci0+bmV4dGhkciA9PSBORVhUSERSX0lQVjQpCisJCQlza2It
-PnByb3RvY29sID0gaHRvbnMoRVRIX1BfSVApOworCQlfX3NrYl90dW5uZWxfcngoc2tiLCBza2It
-PmRldiwgbmV0KTsKKworCQluZXRpZl9yeChza2IpOworCQlyZXR1cm4gLTE7CisJfQorCisJb3B0
-LT5zcmNydCA9IHNrYl9uZXR3b3JrX2hlYWRlcl9sZW4oc2tiKTsKKwlvcHQtPmxhc3RvcHQgPSBv
-cHQtPnNyY3J0OworCXNrYi0+dHJhbnNwb3J0X2hlYWRlciArPSAoaGRyLT5oZHJsZW4gKyAxKSA8
-PCAzOworCW9wdC0+ZHN0MCA9IG9wdC0+ZHN0MTsKKwlvcHQtPmRzdDEgPSAwOworCW9wdC0+bmhv
-ZmYgPSAoJmhkci0+bmV4dGhkcikgLSBza2JfbmV0d29ya19oZWFkZXIoc2tiKTsKKworCXJldHVy
-biAxOworfQorCitzdGF0aWMgaW50IGlwdjZfc3JoX3JjdihzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQor
-ewogCXN0cnVjdCBuZXQgKm5ldCA9IGRldl9uZXQoc2tiLT5kZXYpOwogCXN0cnVjdCBpcHY2X3Ny
-X2hkciAqaGRyOwogCXN0cnVjdCBpbmV0Nl9kZXYgKmlkZXY7CkBAIC0zOTUsMzQgKzQzMSw4IEBA
-IHN0YXRpYyBpbnQgaXB2Nl9zcmhfcmN2KHN0cnVjdCBza19idWZmICpza2IpCiAjZW5kaWYKIAog
-bG9vcGVkX2JhY2s6Ci0JaWYgKGhkci0+c2VnbWVudHNfbGVmdCA9PSAwKSB7Ci0JCWlmIChoZHIt
-Pm5leHRoZHIgPT0gTkVYVEhEUl9JUFY2IHx8IGhkci0+bmV4dGhkciA9PSBORVhUSERSX0lQVjQp
-IHsKLQkJCWludCBvZmZzZXQgPSAoaGRyLT5oZHJsZW4gKyAxKSA8PCAzOwotCi0JCQlza2JfcG9z
-dHB1bGxfcmNzdW0oc2tiLCBza2JfbmV0d29ya19oZWFkZXIoc2tiKSwKLQkJCQkJICAgc2tiX25l
-dHdvcmtfaGVhZGVyX2xlbihza2IpKTsKLQkJCXNrYl9wdWxsKHNrYiwgb2Zmc2V0KTsKLQkJCXNr
-Yl9wb3N0cHVsbF9yY3N1bShza2IsIHNrYl90cmFuc3BvcnRfaGVhZGVyKHNrYiksCi0JCQkJCSAg
-IG9mZnNldCk7Ci0KLQkJCXNrYl9yZXNldF9uZXR3b3JrX2hlYWRlcihza2IpOwotCQkJc2tiX3Jl
-c2V0X3RyYW5zcG9ydF9oZWFkZXIoc2tiKTsKLQkJCXNrYi0+ZW5jYXBzdWxhdGlvbiA9IDA7Ci0J
-CQlpZiAoaGRyLT5uZXh0aGRyID09IE5FWFRIRFJfSVBWNCkKLQkJCQlza2ItPnByb3RvY29sID0g
-aHRvbnMoRVRIX1BfSVApOwotCQkJX19za2JfdHVubmVsX3J4KHNrYiwgc2tiLT5kZXYsIG5ldCk7
-Ci0KLQkJCW5ldGlmX3J4KHNrYik7Ci0JCQlyZXR1cm4gLTE7Ci0JCX0KLQotCQlvcHQtPnNyY3J0
-ID0gc2tiX25ldHdvcmtfaGVhZGVyX2xlbihza2IpOwotCQlvcHQtPmxhc3RvcHQgPSBvcHQtPnNy
-Y3J0OwotCQlza2ItPnRyYW5zcG9ydF9oZWFkZXIgKz0gKGhkci0+aGRybGVuICsgMSkgPDwgMzsK
-LQkJb3B0LT5uaG9mZiA9ICgmaGRyLT5uZXh0aGRyKSAtIHNrYl9uZXR3b3JrX2hlYWRlcihza2Ip
-OwotCi0JCXJldHVybiAxOwotCX0KKwlpZiAoaGRyLT5zZWdtZW50c19sZWZ0ID09IDApCisJCXJl
-dHVybiBpcHY2X3J0aGRyX3Jjdl9sYXN0KHNrYik7CiAKIAlpZiAoaGRyLT5zZWdtZW50c19sZWZ0
-ID49IChoZHItPmhkcmxlbiA+PiAxKSkgewogCQlfX0lQNl9JTkNfU1RBVFMobmV0LCBpZGV2LCBJ
-UFNUQVRTX01JQl9JTkhEUkVSUk9SUyk7CkBAIC00ODIsNyArNDkyLDYgQEAgc3RhdGljIGludCBp
-cHY2X3NyaF9yY3Yoc3RydWN0IHNrX2J1ZmYgKnNrYikKIHN0YXRpYyBpbnQgaXB2Nl9ycGxfc3Jo
-X3JjdihzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogewogCXN0cnVjdCBpcHY2X3JwbF9zcl9oZHIgKmhk
-ciwgKm9oZHIsICpjaGRyOwotCXN0cnVjdCBpbmV0Nl9za2JfcGFybSAqb3B0ID0gSVA2Q0Ioc2ti
-KTsKIAlzdHJ1Y3QgbmV0ICpuZXQgPSBkZXZfbmV0KHNrYi0+ZGV2KTsKIAlzdHJ1Y3QgaW5ldDZf
-ZGV2ICppZGV2OwogCXN0cnVjdCBpcHY2aGRyICpvbGRoZHI7CkBAIC01MDYsMzMgKzUxNSw4IEBA
-IHN0YXRpYyBpbnQgaXB2Nl9ycGxfc3JoX3JjdihzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogbG9vcGVk
-X2JhY2s6CiAJaGRyID0gKHN0cnVjdCBpcHY2X3JwbF9zcl9oZHIgKilza2JfdHJhbnNwb3J0X2hl
-YWRlcihza2IpOwogCi0JaWYgKGhkci0+c2VnbWVudHNfbGVmdCA9PSAwKSB7Ci0JCWlmIChoZHIt
-Pm5leHRoZHIgPT0gTkVYVEhEUl9JUFY2KSB7Ci0JCQlpbnQgb2Zmc2V0ID0gKGhkci0+aGRybGVu
-ICsgMSkgPDwgMzsKLQotCQkJc2tiX3Bvc3RwdWxsX3Jjc3VtKHNrYiwgc2tiX25ldHdvcmtfaGVh
-ZGVyKHNrYiksCi0JCQkJCSAgIHNrYl9uZXR3b3JrX2hlYWRlcl9sZW4oc2tiKSk7Ci0JCQlza2Jf
-cHVsbChza2IsIG9mZnNldCk7Ci0JCQlza2JfcG9zdHB1bGxfcmNzdW0oc2tiLCBza2JfdHJhbnNw
-b3J0X2hlYWRlcihza2IpLAotCQkJCQkgICBvZmZzZXQpOwotCi0JCQlza2JfcmVzZXRfbmV0d29y
-a19oZWFkZXIoc2tiKTsKLQkJCXNrYl9yZXNldF90cmFuc3BvcnRfaGVhZGVyKHNrYik7Ci0JCQlz
-a2ItPmVuY2Fwc3VsYXRpb24gPSAwOwotCi0JCQlfX3NrYl90dW5uZWxfcngoc2tiLCBza2ItPmRl
-diwgbmV0KTsKLQotCQkJbmV0aWZfcngoc2tiKTsKLQkJCXJldHVybiAtMTsKLQkJfQotCi0JCW9w
-dC0+c3JjcnQgPSBza2JfbmV0d29ya19oZWFkZXJfbGVuKHNrYik7Ci0JCW9wdC0+bGFzdG9wdCA9
-IG9wdC0+c3JjcnQ7Ci0JCXNrYi0+dHJhbnNwb3J0X2hlYWRlciArPSAoaGRyLT5oZHJsZW4gKyAx
-KSA8PCAzOwotCQlvcHQtPm5ob2ZmID0gKCZoZHItPm5leHRoZHIpIC0gc2tiX25ldHdvcmtfaGVh
-ZGVyKHNrYik7Ci0KLQkJcmV0dXJuIDE7Ci0JfQorCWlmIChoZHItPnNlZ21lbnRzX2xlZnQgPT0g
-MCkKKwkJcmV0dXJuIGlwdjZfcnRoZHJfcmN2X2xhc3Qoc2tiKTsKIAogCW4gPSAoaGRyLT5oZHJs
-ZW4gPDwgMykgLSBoZHItPnBhZCAtICgxNiAtIGhkci0+Y21wcmUpOwogCXIgPSBkb19kaXYobiwg
-KDE2IC0gaGRyLT5jbXByaSkpOwpAQCAtNjQ4LDcgKzYzMiw2IEBAIHN0YXRpYyBpbnQgaXB2Nl9y
-cGxfc3JoX3JjdihzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogc3RhdGljIGludCBpcHY2X3J0aGRyX3Jj
-dihzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogewogCXN0cnVjdCBpbmV0Nl9kZXYgKmlkZXYgPSBfX2lu
-Nl9kZXZfZ2V0KHNrYi0+ZGV2KTsKLQlzdHJ1Y3QgaW5ldDZfc2tiX3Bhcm0gKm9wdCA9IElQNkNC
-KHNrYik7CiAJc3RydWN0IGluNl9hZGRyICphZGRyID0gTlVMTDsKIAlpbnQgbiwgaTsKIAlzdHJ1
-Y3QgaXB2Nl9ydF9oZHIgKmhkcjsKQEAgLTcwOSwxMyArNjkyLDcgQEAgc3RhdGljIGludCBpcHY2
-X3J0aGRyX3JjdihzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogCQlkZWZhdWx0OgogCQkJYnJlYWs7CiAJ
-CX0KLQotCQlvcHQtPmxhc3RvcHQgPSBvcHQtPnNyY3J0ID0gc2tiX25ldHdvcmtfaGVhZGVyX2xl
-bihza2IpOwotCQlza2ItPnRyYW5zcG9ydF9oZWFkZXIgKz0gKGhkci0+aGRybGVuICsgMSkgPDwg
-MzsKLQkJb3B0LT5kc3QwID0gb3B0LT5kc3QxOwotCQlvcHQtPmRzdDEgPSAwOwotCQlvcHQtPm5o
-b2ZmID0gKCZoZHItPm5leHRoZHIpIC0gc2tiX25ldHdvcmtfaGVhZGVyKHNrYik7Ci0JCXJldHVy
-biAxOworCQlyZXR1cm4gaXB2Nl9ydGhkcl9yY3ZfbGFzdChza2IpOwogCX0KIAogCXN3aXRjaCAo
-aGRyLT50eXBlKSB7Ci0tIAoyLjQzLjAKCg==
+On Mon, 24 Jun 2024 at 16:42, Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+>
+> On 24/06/2024 13:51, Jon Hunter wrote:
+> > Hi Jameson,
+> >
+> > On 10/05/2024 21:12, Jameson Thies wrote:
+> >> Providing the number of known alternate modes allows user space to
+> >> determine when device registration has completed. Always register a
+> >> number of known alternate modes for the partner and cable plug, even
+> >> when the number of supported alternate modes is 0.
+> >>
+> >> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> >> Reviewed-by: Benson Leung <bleung@chromium.org>
+> >> Signed-off-by: Jameson Thies <jthies@google.com>
+> >> ---
+> >> Changes in V5:
+> >> - None.
+> >>
+> >> Changes in V4:
+> >> - None.
+> >>
+> >> Changes in V3:
+> >> - None.
+> >>
+> >> Changes in V2:
+> >> - None.
+> >>
+> >>   drivers/usb/typec/ucsi/ucsi.c | 14 +++++++++++---
+> >>   1 file changed, 11 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/typec/ucsi/ucsi.c
+> >> b/drivers/usb/typec/ucsi/ucsi.c
+> >> index bb6e57064513d..52a14bfe4107e 100644
+> >> --- a/drivers/usb/typec/ucsi/ucsi.c
+> >> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> >> @@ -812,10 +812,11 @@ static int ucsi_check_altmodes(struct
+> >> ucsi_connector *con)
+> >>       /* Ignoring the errors in this case. */
+> >>       if (con->partner_altmode[0]) {
+> >>           num_partner_am = ucsi_get_num_altmode(con->partner_altmode);
+> >> -        if (num_partner_am > 0)
+> >> -            typec_partner_set_num_altmodes(con->partner,
+> >> num_partner_am);
+> >> +        typec_partner_set_num_altmodes(con->partner, num_partner_am);
+> >>           ucsi_altmode_update_active(con);
+> >>           return 0;
+> >> +    } else {
+> >> +        typec_partner_set_num_altmodes(con->partner, 0);
+> >>       }
+> >>       return ret;
+> >> @@ -1138,7 +1139,7 @@ static int ucsi_check_connection(struct
+> >> ucsi_connector *con)
+> >>   static int ucsi_check_cable(struct ucsi_connector *con)
+> >>   {
+> >>       u64 command;
+> >> -    int ret;
+> >> +    int ret, num_plug_am;
+> >>       if (con->cable)
+> >>           return 0;
+> >> @@ -1172,6 +1173,13 @@ static int ucsi_check_cable(struct
+> >> ucsi_connector *con)
+> >>               return ret;
+> >>       }
+> >> +    if (con->plug_altmode[0]) {
+> >> +        num_plug_am = ucsi_get_num_altmode(con->plug_altmode);
+> >> +        typec_plug_set_num_altmodes(con->plug, num_plug_am);
+> >> +    } else {
+> >> +        typec_plug_set_num_altmodes(con->plug, 0);
+> >> +    }
+> >> +
+> >>       return 0;
+> >>   }
+> >
+> > I am seeing the following panic on linux-next and bisect is pointing to
+> > this commit.
+> >
+> > [   16.411135] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000310
+> > [   16.411716] Mem abort info:
+> > [   16.411806]   ESR = 0x0000000096000044
+> > [   16.412147]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [   16.412465]   SET = 0, FnV = 0
+> > [   16.412530]   EA = 0, S1PTW = 0
+> > [   16.412778]   FSC = 0x04: level 0 translation fault
+> > [   16.413084] Data abort info:
+> > [   16.413149]   ISV = 0, ISS = 0x00000044, ISS2 = 0x00000000
+> > [   16.413534]   CM = 0, WnR = 1, TnD = 0, TagAccess = 0
+> > [   16.414163]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [   16.414649] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000101b2b000
+> > [   16.414784] [0000000000000310] pgd=0000000000000000,
+> > p4d=0000000000000000
+> > [   16.414940] Internal error: Oops: 0000000096000044 [#1] PREEMPT SMP
+> > [   16.414946] Modules linked in: tegra210_adma(+)
+> > snd_soc_tegra210_ahub(+) drm backlight snd_soc_tegra_audio_graph_card
+> > snd_soc_audio_graph_card ucsi_ccg typec_ucsi crct10dif_ce
+> > snd_soc_simple_card_utils typec pwm_fan snd_soc_rt5659(+) snd_soc_rl6231
+> > ina3221 pwm_tegra tegra_aconnect phy_tegra194_p2u snd_hda_codec_hdmi
+> > at24 snd_hda_tegra snd_hda_codec snd_hda_core lm90 tegra_xudc host1x
+> > pcie_tegra194 tegra_bpmp_thermal ip_tables x_tables ipv6
+> > [   16.415056] CPU: 0 PID: 290 Comm: kworker/0:4 Not tainted
+> > 6.10.0-rc4-next-20240617-g76db4c64526c #1
+> > [   16.415063] Hardware name: NVIDIA Jetson AGX Xavier Developer Kit (DT)
+> > [   16.415067] Workqueue: events_long ucsi_init_work [typec_ucsi]
+> > [   16.415082] pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS
+> > BTYPE=--)
+> > [   16.415091] pc : typec_plug_set_num_altmodes+0x18/0x6c [typec]
+> > [   16.415112] lr : ucsi_check_cable.part.0+0x228/0x280 [typec_ucsi]
+> > [   16.415120] sp : ffff8000848bbca0
+> > [   16.415123] x29: ffff8000848bbca0 x28: ffff000080e66000 x27:
+> > ffff80007adc96e8
+> > [   16.415140] x26: ffff80007adc96f8 x25: ffff0000834510c0 x24:
+> > ffff000080e66010
+> > [   16.415150] x23: ffff000080e6638c x22: ffff000080e664c0 x21:
+> > ffff000089c95800
+> > [   16.415160] x20: 0000000000000000 x19: 0000000000000000 x18:
+> > ffffffffffffffff
+> > [   16.415170] x17: 1e00000001000000 x16: c203000000000000 x15:
+> > 00656c6261632d30
+> > [   16.415180] x14: ffff800082c922d8 x13: 0000000000000040 x12:
+> > 0000000000000228
+> > [   16.415191] x11: 0000000000000000 x10: 0000000000000000 x9 :
+> > 0000000000000000
+> > [   16.415201] x8 : 3d45505954564544 x7 : 0063657079743d4d x6 :
+> > 0000000000000000
+> > [   16.415212] x5 : ffff0000835ee780 x4 : ffff000080e66288 x3 :
+> > 0000000000000000
+> > [   16.415223] x2 : 0000000000000000 x1 : 0000000000000000 x0 :
+> > 0000000000000000
+> > [   16.415233] Call trace:
+> > [   16.415236]  typec_plug_set_num_altmodes+0x18/0x6c [typec]
+> > [   16.415255]  ucsi_check_cable.part.0+0x228/0x280 [typec_ucsi]
+> > [   16.415264]  ucsi_init_work+0x8b4/0x9b8 [typec_ucsi]
+> > [   16.415271]  process_one_work+0x150/0x294
+> > [   16.415282]  worker_thread+0x2f4/0x3fc
+> > [   16.415289]  kthread+0x118/0x11c
+> > [   16.415296]  ret_from_fork+0x10/0x20
+> > [   16.415310] Code: a9be7bfd 910003fd f9000bf3 aa0003f3 (b9031001)
+> > [   16.521018] ata1: SATA link down (SStatus 0 SControl 300)
+> > [   16.524401] ---[ end trace 0000000000000000 ]---
+> >
+> >
+> > I have not looked any further yet, but wanted to report this. If you have
+> > any thoughts let me know.
+>
+>
+> It is crashing because 'con->plug' is not initialised when
+> typec_plug_set_num_altmodes() is called. Do we need to add a check to
+> see if 'con->plug' is valid in ucsi_check_cable()?
+
+Yes. Either of  con->calbe and con->plug can be NULL.
+
+
+-- 
+With best wishes
+Dmitry
