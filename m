@@ -1,74 +1,73 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5EB4A31
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C36CD272
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719202427; cv=none; b=l6BhPtlNHxPVmZyE9JHkgkB448FsTYxmykUUuhTngl1PVcVHTuiZWCpCSa5QiGQ8SkZebQowLQm3W3rBK028iPZj4WQ5Q2oqnECwrXFqDsDOzEfOWgADEXkISvcQTZVL/X6osU0K8g05dGWW5P3A2rSSVAM3AiB0ecx8lc5TWkQ=
+	t=1719202720; cv=none; b=uK5TJJ1171S1QjS+wBxP5pVvoPdV3JUC0KW4bcwzeqcGiFZYBEQO9wdKSSwTxDHdBNa0Si+odGGW5fIcsXtVm1nIHeRQlOBbtsA31hfiRejyzwuMTEEzrfl524H3CZLJbLaUVoX0w42vlqqihVEZTXM4cS2qvjvXYeO0AAlBASM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719202427; c=relaxed/simple;
-	bh=g40p/038wh7aZoKP0QQSTY6JQqMKagXDwC16tPe4zhA=;
+	s=arc-20240116; t=1719202720; c=relaxed/simple;
+	bh=QHptJpTf4CEpWUZfasWuXdrCC1FkI7Rinr8Lsy/90FQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgZ1lUHRi965WRaVj3Gy0mwIyHDX7sA4SYgozhaxeqcrATCf1A0pScNDEur6sQiyCHWMdYI66qof6dN3caov/emdq9ayXsEHawtsgPK93qlBqAU0Wic2d7Gjmq/LYKqolrFdbBYDsuiU8xENfbzVsObGBqKJsxXFQfTN/vnw310=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I8isRJ8W; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=hhzVPICw2VHAosqHHqbOA74gedSRyhrJ8DpTEIqpvZPPlAzPkZOUM6suCSru5PSu8iKK66SUDnVGLDouPeyMRQesntUueR49ejp13+dYdNySDioMRW2iiwibdBCuzPnI3JQuRW9BOE5Bc4B17vqHsnmA3AhRrxp5oDDygGtMYK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ymHNHAvC; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I8isRJ8W"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fa07e4f44eso13175935ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 21:13:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymHNHAvC"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-70666ac8f81so995630b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 21:18:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719202425; x=1719807225; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719202718; x=1719807518; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8cBzkTKbl++ipTccj+tqWjGiU8poirFQQErpQeRckjI=;
-        b=I8isRJ8WsI8CdsASd+vWuGIv/oixor/Z/MwVtLx8yClY+RYsZPdtyuEHU2mKIDm9p7
-         ly5m0XeNrc4m2J2c9DoDkGMyuDItKW8mo02K909+H0Zws7uLG4SjMU9xsql4ncfSEnqA
-         3ueL2YiJuzuJdPZaTnla1f98NeXbA7KUf/yedYkpnLikIQdrsKo/CboLpq0UhSSDNCRs
-         b7TlTaLdSUnejsAZQpD7TIeB9fid/ZfFasRTtIcPbdU/Ru5gz41gYZUzI2yFqs4olXaD
-         3yeabTv0fIb/qDDKu3Gbzgtbj671i1q32xLuLx4MBAC4xtVB3gGSnVqEa2mROCSBwF8T
-         L6iw==
+        bh=U38KLYsER4VbQ7nDCjAjQhTITw1TrupApnMGdM5CCg0=;
+        b=ymHNHAvCp/3/YlPDVbylG4DhMYeb0hEz3II2GO0OWsOU0UxD6hWFl42SPfac8NzBzY
+         1jMyDWlOsFckKvsqn5U4gL8QYxA/VJoXJ9I3O0jcKPC7qkBIhMJxUC/J7yUGt77R8jKa
+         6QyAZMYuk5/L9mOXGP+cMAn10e997eIMmlZ7zws7g19KVafbzofLn7Z0YZyB6wwsul7r
+         KZ2Ms2pqEOvTQBDDqbHQtdIYLJBs7rK/+YT3UldTkMG8FcmerEnckEm2fNsYWfyJfudU
+         anbLxgPsome/2Cz7vEjxA+PSWsxFbBy0S0DES0eQQKle20tiuEJLSAIE4U8GPuCctsHz
+         hfAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719202425; x=1719807225;
+        d=1e100.net; s=20230601; t=1719202718; x=1719807518;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8cBzkTKbl++ipTccj+tqWjGiU8poirFQQErpQeRckjI=;
-        b=bVVC/E3mdpPL/HW5V4+PDdTRD7VGOKTJkht2Rj9o05M1vdZHc3lzGNvEMbsgEf3bqY
-         7SCjWv8uCWZCRQhfu78tW/PKzJoV3to5zBf2ZmjQzrm1n9JeoyWwveSWcKbZtqkn1/m1
-         /p4sBOKPvcl5msP8qh70PpossJA+Mwe7PFIzLf6ijLiPf23T+CZfrHxzUyV7mRE4SNqu
-         D41FOLCpC2X6rDJV8vHt3vEncaSo3KCE8ItiLn9m988Hyyj3dihSrpbchc2nfoykss2g
-         XzMfpS92/OUj6MQsfnIbtcpGrWAF5P/7ZGFNgzzrfRc384e+Q+L5QIT4PjLacvKGDyO1
-         W9/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVWpFuJAkOpX2cGubKsMfnNl5U1MLeThOO5oz6vYFIZ3gqH8RiheesVQbzAp2LwzTA7Nw/Y6GvPmL1xO4gLG2YvOI2S6MPDx3RXDqS0
-X-Gm-Message-State: AOJu0YzLZb53CPdruvQpuSwTG8sGS50/WSQmCdBlDq204wP6gFRdH2ag
-	b9amQt9Jxp8u7ggoaCe17AK9p0r3R+lEeXE9m9S8nL2drQoWEmC6dDnybebeag==
-X-Google-Smtp-Source: AGHT+IEFH6u4Phxu4XFbcP6oZlGouPp6ySyJ7RzMJnUbJnrqSy6lUpugRFFKO7YbCnXWz8uf73KoHg==
-X-Received: by 2002:a17:902:cece:b0:1f4:9b2a:b337 with SMTP id d9443c01a7336-1fa238e4490mr46624255ad.3.1719202425410;
-        Sun, 23 Jun 2024 21:13:45 -0700 (PDT)
+        bh=U38KLYsER4VbQ7nDCjAjQhTITw1TrupApnMGdM5CCg0=;
+        b=RcMDphDVSgJcXr/1ucXJ/3bhn9a3q7WqjaIHdxd9Be5uzZwCEbXHtdCDzQkG/sTrKz
+         ULgWGM0enRGm0vl7nSh8k89+xOQc4bjrBM3aXk8URRrHZtJI7EEzFsvlUEWIcycrpvUm
+         RHRN5gtScWiIIID8SZfJXnIrHAgLHKLXxzjWknP0Q5PaWrRw0sahQSzxjjlHu7Ka9ecs
+         Ac2kJ3m9Cdv9tqMTbUtRjfJzgpVoqmn4z6NYG12soR6HWGQlizIq1i+hllGj6LsTwzTf
+         XEw3VqoYChrYvoZNqL8C9YLomqMsInay6g0r7iAtMvgywom2LJdHRPB3tBjzu/JaxDYI
+         3mrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpuPHEH7PHL7pTcYZAyQfziwUL+5vy9GXjylOq+nZ8mabd9NJjzUT6SN3rrhJZ/FwKTFlD2be6bQl6KgRGuSI8lf3L7XlxFBWrVKFz
+X-Gm-Message-State: AOJu0Yzvd0bkwZMd+FQDSVrQ+n3iikBlwFvXymguhOj/RdpjCHG1xqwA
+	ZfffUpIfgGGanqCKYGVvM/+EaDFGE0F00wJfQwhIwOQJhi9bf+g7YZAPAXoin2Fgqyv9xv1uOxc
+	=
+X-Google-Smtp-Source: AGHT+IG5aZRko6hoy4n7mlSFt0nA5iuRBGpg39pJxTLF4lHUvglFzZJoyPvuxRC4khbg4Fk9bjUkZA==
+X-Received: by 2002:a17:90a:428e:b0:2c8:6a6e:add6 with SMTP id 98e67ed59e1d1-2c86a6eae0amr2998315a91.31.1719202717595;
+        Sun, 23 Jun 2024 21:18:37 -0700 (PDT)
 Received: from thinkpad ([220.158.156.124])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3d8b7esm52445395ad.207.2024.06.23.21.13.41
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e4f03c4esm7805404a91.6.2024.06.23.21.18.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jun 2024 21:13:45 -0700 (PDT)
-Date: Mon, 24 Jun 2024 09:43:39 +0530
+        Sun, 23 Jun 2024 21:18:37 -0700 (PDT)
+Date: Mon, 24 Jun 2024 09:48:32 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
 	quic_kathirav@quicinc.com, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 3/8] dt-bindings: PCI: qcom: Add IPQ9574 PCIe
- controller
-Message-ID: <20240624041339.GC10250@thinkpad>
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 8/8] arm64: dts: qcom: ipq9574: add PCIe2 and PCIe3
+ nodes
+Message-ID: <20240624041832.GD10250@thinkpad>
 References: <20240501040800.1542805-1-mr.nuke.me@gmail.com>
- <20240501040800.1542805-13-mr.nuke.me@gmail.com>
+ <20240501040800.1542805-9-mr.nuke.me@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,103 +77,231 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240501040800.1542805-13-mr.nuke.me@gmail.com>
+In-Reply-To: <20240501040800.1542805-9-mr.nuke.me@gmail.com>
 
-On Tue, Apr 30, 2024 at 11:07:54PM -0500, Alexandru Gagniuc wrote:
-> IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
-> The difference is that the "iface" clock is replaced by the "snoc",
-> and "anoc". The "sleep" reset is replaced by an "aux" reset.
-> Document these differences along with the compatible string.
+On Tue, Apr 30, 2024 at 11:07:50PM -0500, Alexandru Gagniuc wrote:
+> On ipq9574, there are 4 PCIe controllers. Describe the pcie2 and pcie3
+> nodes, and their PHYs in devicetree.
+> 
+> The pcie0 and pcie1 controllers use a gen3x1 PHY, which is not
+> currently supported. Hence, only pcie2 and pcie3 are described. Only
+> pcie2 was tested because my devboard only has conenctions to pcie2.
 > 
 > Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
+>  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 178 +++++++++++++++++++++++++-
+>  1 file changed, 176 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index cf9a6910b542..ac6d2b1b8702 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -26,6 +26,7 @@ properties:
->            - qcom,pcie-ipq8064-v2
->            - qcom,pcie-ipq8074
->            - qcom,pcie-ipq8074-gen3
-> +          - qcom,pcie-ipq9574
->            - qcom,pcie-msm8996
->            - qcom,pcie-qcs404
->            - qcom,pcie-sdm845
-> @@ -161,6 +162,7 @@ allOf:
->              enum:
->                - qcom,pcie-ipq6018
->                - qcom,pcie-ipq8074-gen3
-> +              - qcom,pcie-ipq9574
->      then:
->        properties:
->          reg:
-> @@ -397,6 +399,39 @@ allOf:
->              - const: axi_m_sticky # AXI Master Sticky reset
->              - const: axi_s_sticky # AXI Slave Sticky reset
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,pcie-ipq9574
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 4
-> +          maxItems: 4
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> index 7f2e5cbf3bbb..c391886cf9ab 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> @@ -300,8 +300,8 @@ gcc: clock-controller@1800000 {
+>  				 <0>,
+>  				 <0>,
+>  				 <0>,
+> -				 <0>,
+> -				 <0>,
+> +				 <&pcie2_phy>,
+> +				 <&pcie3_phy>,
+>  				 <0>;
+>  			#clock-cells = <1>;
+>  			#reset-cells = <1>;
+> @@ -745,6 +745,180 @@ frame@b128000 {
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		pcie2_phy: phy@8c000 {
+> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
+> +			reg = <0x0008c000 0x14f4>;
+> +
+> +			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
+> +				 <&gcc GCC_PCIE2_AHB_CLK>,
+> +				 <&gcc GCC_PCIE2_PIPE_CLK>;
+> +			clock-names = "aux",
+> +				      "cfg_ahb",
+> +				      "pipe";
+> +
+> +			clock-output-names = "pcie_phy2_pipe_clk";
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +
+> +			resets = <&gcc GCC_PCIE2_PHY_BCR>,
+> +				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
+> +			reset-names = "phy",
+> +				      "common";
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie3_phy: phy@f4000 {
+> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
+> +			reg = <0x000f4000 0x14f4>;
+> +
+> +			clocks = <&gcc GCC_PCIE3_AUX_CLK>,
+> +				 <&gcc GCC_PCIE3_AHB_CLK>,
+> +				 <&gcc GCC_PCIE3_PIPE_CLK>;
+> +			clock-names = "aux",
+> +				      "cfg_ahb",
+> +				      "pipe";
+> +
+> +			clock-output-names = "pcie_phy3_pipe_clk";
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +
+> +			resets = <&gcc GCC_PCIE3_PHY_BCR>,
+> +				 <&gcc GCC_PCIE3PHY_PHY_BCR>;
+> +			reset-names = "phy",
+> +				      "common";
+> +			status = "disabled";
+> +		};
+> +
+> +		/* TODO: Populate pcie0/pcie1 when gen3x1 phy support is added. */
+> +
+> +		pcie2: pcie@20000000 {
+> +			compatible = "qcom,pcie-ipq9574";
+> +			reg = <0x20000000 0xf1d>,
+> +			      <0x20000f20 0xa8>,
+> +			      <0x20001000 0x1000>,
+> +			      <0x00088000 0x4000>,
+> +			      <0x20100000 0x1000>;
+> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
+> +
+> +			ranges = <0x81000000 0x0 0x20200000 0x20200000 0x0 0x00100000>,
+> +				 <0x82000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>;
 
-There are 6 clocks defined for this platform but binding just requires 4?
+Please cross check 'ranges' property with other platforms.
+
+> +
+> +			device_type = "pci";
+> +			linux,pci-domain = <3>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <2>;
+> +			max-link-speed = <3>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			phys = <&pcie2_phy>;
+> +			phy-names = "pciephy";
+> +
+> +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 0 164 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 2 &intc 0 0 165 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 3 &intc 0 0 186 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 4 &intc 0 0 187 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			clocks = <&gcc GCC_PCIE2_AXI_M_CLK>,
+> +				 <&gcc GCC_PCIE2_AXI_S_CLK>,
+> +				 <&gcc GCC_PCIE2_AXI_S_BRIDGE_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE2_2LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE2_2LANE_S_CLK>,
+> +				 <&gcc GCC_PCIE2_RCHNG_CLK>;
+> +			clock-names = "axi_m",
+> +				      "axi_s",
+> +				      "axi_bridge",
+> +				      "rchng";
+
+Why only 4 clock names?
+
+> +
+> +			resets = <&gcc GCC_PCIE2_PIPE_ARES>,
+> +				 <&gcc GCC_PCIE2_AUX_ARES>,
+> +				 <&gcc GCC_PCIE2_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE2_AXI_M_ARES>,
+> +				 <&gcc GCC_PCIE2_AXI_S_ARES>,
+> +				 <&gcc GCC_PCIE2_AXI_S_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE2_AXI_M_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE2_AHB_ARES>;
+> +			reset-names = "pipe",
+> +				      "aux",
+> +				      "sticky",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "axi_s_sticky",
+> +				      "axi_m_sticky",
+> +				      "ahb";
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie3: pcie@18000000 {
+> +			compatible = "qcom,pcie-ipq9574";
+> +			reg = <0x18000000 0xf1d>,
+> +			      <0x18000f20 0xa8>,
+> +			      <0x18001000 0x1000>,
+> +			      <0x000f0000 0x4000>,
+> +			      <0x18100000 0x1000>;
+> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
+> +
+> +			ranges = <0x81000000 0x0 0x18200000 0x18200000 0x0 0x00100000>,
+> +				 <0x82000000 0x0 0x18300000 0x18300000 0x0 0x07d00000>;
+> +
+> +			device_type = "pci";
+> +			linux,pci-domain = <4>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <2>;
+> +			max-link-speed = <3>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			phys = <&pcie3_phy>;
+> +			phy-names = "pciephy";
+> +
+> +			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 0 189 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 2 &intc 0 0 190 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 3 &intc 0 0 192 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 4 &intc 0 0 192 IRQ_TYPE_LEVEL_HIGH>;
+
+Cross check 'interrupt-map' as well.
 
 - Mani
 
-> +        clock-names:
-> +          items:
-> +            - const: axi_m # AXI Master clock
-> +            - const: axi_s # AXI Slave clock
-> +            - const: axi_bridge # AXI bridge clock
-> +            - const: anoc
-> +            - const: snoc
-> +            - const: rchng
-> +        resets:
-> +          minItems: 8
-> +          maxItems: 8
-> +        reset-names:
-> +          items:
-> +            - const: pipe # PIPE reset
-> +            - const: aux # AUX reset
-> +            - const: sticky # Core Sticky reset
-> +            - const: axi_m # AXI Master reset
-> +            - const: axi_s # AXI Slave reset
-> +            - const: axi_s_sticky # AXI Slave Sticky reset
-> +            - const: axi_m_sticky # AXI Master Sticky reset
-> +            - const: ahb # AHB Reset
 > +
->    - if:
->        properties:
->          compatible:
-> @@ -507,6 +542,7 @@ allOf:
->                  - qcom,pcie-ipq8064v2
->                  - qcom,pcie-ipq8074
->                  - qcom,pcie-ipq8074-gen3
-> +                - qcom,pcie-ipq9574
->                  - qcom,pcie-qcs404
->      then:
->        required:
-> @@ -566,6 +602,7 @@ allOf:
->                - qcom,pcie-ipq8064-v2
->                - qcom,pcie-ipq8074
->                - qcom,pcie-ipq8074-gen3
-> +              - qcom,pcie-ipq9574
->                - qcom,pcie-qcs404
->      then:
->        properties:
+> +			clocks = <&gcc GCC_PCIE3_AXI_M_CLK>,
+> +				 <&gcc GCC_PCIE3_AXI_S_CLK>,
+> +				 <&gcc GCC_PCIE3_AXI_S_BRIDGE_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE3_2LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE3_2LANE_S_CLK>,
+> +				 <&gcc GCC_PCIE3_RCHNG_CLK>;
+> +			clock-names = "axi_m",
+> +				      "axi_s",
+> +				      "axi_bridge",
+> +				      "anoc",
+> +				      "snoc",
+> +				      "rchng";
+> +
+> +			resets = <&gcc GCC_PCIE3_PIPE_ARES>,
+> +				 <&gcc GCC_PCIE3_AUX_ARES>,
+> +				 <&gcc GCC_PCIE3_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE3_AXI_M_ARES>,
+> +				 <&gcc GCC_PCIE3_AXI_S_ARES>,
+> +				 <&gcc GCC_PCIE3_AXI_S_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE3_AXI_M_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE3_AHB_ARES>;
+> +			reset-names = "pipe",
+> +				      "aux",
+> +				      "sticky",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "axi_s_sticky",
+> +				      "axi_m_sticky",
+> +				      "ahb";
+> +			status = "disabled";
+> +		};
+>  	};
+>  
+>  	thermal-zones {
 > -- 
 > 2.40.1
+> 
 > 
 
 -- 
