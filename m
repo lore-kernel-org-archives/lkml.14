@@ -1,70 +1,68 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E3C1386B3
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C7E137758;
+	Mon, 24 Jun 2024 11:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719228153; cv=none; b=njMLlclHIj5CHZZosOvzkvjPukly7/KZczd/ZPTro+KPC8z4Qj4gkoI6YE50LJbNsJxTOIk2GbKR/nZhakZS3Q7G1bTQ6LEvWmpzuMI8SfqjXBEdr+dswExVROk4MkUxsREAoBaT81FUXHV9Eu/Aw8XJ4Zr9PViR7jogdhDKJlc=
+	t=1719228186; cv=none; b=SvvWCz+7SPECVYdgq8AoeNiip2VphNLiBIXo/3qOPxeGnQQwkPhA0uvFV4qq/5Ea/1SAD6C96ZqyBckNIbYtihVR9CJW6GKQ5yvvZ2LlAEVbkWqZJmm1WuVFE6Gu/wrYJcCBKFjvaJ32D7ts3NC6oHSGcsw6jbBQn+2U94EAsus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719228153; c=relaxed/simple;
-	bh=tj/iTCzjdXvi/zfbFIrmimPnpDiaDxpS/wGQiHsbX3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h6ZrxhPTHj1D24l757OxdHzDhGa8aN2vZ3Wzu6HMtFaSQXzlwz9Hdi/Gp6qYVmeLGV2A4z1zA9L29+d5lVedMbWELdaDmEWSdnISiRcoZwgqujblzU0SuzSSVVPIM1lf/5jNwlKY8Eg5RGTE1VgwNo2QHXo17AxFZkXDST51Bxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QuCakSZD; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719228186; c=relaxed/simple;
+	bh=1wz1DO4+P9GXw81HrvYZRwiMbG8RW3ptYFK10YnWQYI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pX9Or4u1yrYi5esIy8u8yqB3SwLwG+raW0b0eE2Gdxxud2dHTtLHwCnsTADaG1TjCgppSpLUm/bCE42/wKElFcxeHQpCubkmtVj72NdZ9FJdkL8VQod9KowLTeA8VhvjXZDZm+2SmB5jSTbFDMmUfdUJCuIY4phkBtaX8CnRcy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfISkCRq; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuCakSZD"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec52fbb50cso20788711fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:22:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfISkCRq"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52cdf2c7454so2834479e87.1;
+        Mon, 24 Jun 2024 04:23:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719228150; x=1719832950; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719228183; x=1719832983; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gWZ/zkTzOz+4RUMc7GXfG9YQuN8dDai+AXES1QteZ/E=;
-        b=QuCakSZD1Nb6EUBu88msViSAVa7Kf/lGdqZ/5e+eTARfPfvkmVvFs3dXTolZMDLy2v
-         ftZiFe3HM8n4HOPK/R2kLuP7ulqJW8BFxZ7lf8OXAy1R2nikjUjqnp4EQGng3QoxAXBL
-         qv7IutSeLituCvkwX3WmKRgPS/0pfZI03I7ViumYAdoz4ENrihHdxKJXUu8np7ObDTKA
-         RMYEg0i+T769qcHseKVU1LHcqw0uxYw7krTeRjBF2eNXKV/Swp7Lj1sjUmdnmseqT/mc
-         M2WwiuJFZjC3OLUEY9VCNkmNbBs2b+Z8sx7WM83UbDcX4+hiEdccGsZbfMDriU2t7oJP
-         cZPA==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GuZakqcQ8P7/8zUig3bLggNmER3pcdpTwZQ0sDBpoFc=;
+        b=XfISkCRq9mHxRrTkuJ1eEU8ytNFflYnYpPWmbW/a3X4rtwHo5wJxc8TUkqTlrtp94u
+         nZPJSeDe+E8VQiIhJygZm7f9kw0rUxQ2FZRX+OrtBw5ZJKgaCiWGWJII67XdBeD4Pd1R
+         Qu8akQIq5SRAE4HWkYzCHS5Yr+ooQRwqvUZ7tAbykzqhHy4WVtYK+ppo6QizzbxFvzYU
+         RIZIw8L+AkMWDro9ygZsOHCJbIS38RApFOlTsqZ4Qb98XD89F1mapqBS8skXpVgSZnEZ
+         A343fX+NaAPqhi9hBIFzWK0UH5dW8+lWSSoA4nTC/QkV4Mjp9B/E5hmF2LBr7Fu8Vu9a
+         dLgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719228150; x=1719832950;
+        d=1e100.net; s=20230601; t=1719228183; x=1719832983;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gWZ/zkTzOz+4RUMc7GXfG9YQuN8dDai+AXES1QteZ/E=;
-        b=rLgF1VlvFQ4qqLOu1FHP/PZiQZO/vp73eKU613VRflzZA1gOqgQvUkvsux5qEC/8Fj
-         wLFfB2xO4i/5LoJE0oQDduCqqeHeQeTllo6SrlOFULgAmv+EOEgDQgvh7GWzNwQJX0iA
-         70Q4KTjeY21xyLVxA0icRGX3I1ws1KUdBuWq6xM5xZpuLerm5nlvZk0l1vvezrqx64zO
-         LO5jhJJP6g8HywhqoUMQa/pjcf3oVkcIzXUVK1Z0Nz7CQdLoXh1lGG3jrfL/QKGt0ejL
-         h3sj2jVpaaSh9agJYpJukOccgc68TVZ3dOhTj5pPH5FQ6DeF5XBcDPO0z8VaS3eIszyk
-         +akA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkmGHqr+UP+lNO0udgZPQH8aKtPxrqW4dNPSOPFoG2f1uFpRXgEOBeE4qIT54F3oDEzyhilnyXBAicMB9TArPF0qFgIUWafntLeXnd
-X-Gm-Message-State: AOJu0Ywf7ucuwZs2YMx+yXhyP4z7HSCA20O7CKxINrQOibLtS+P3Kruo
-	2qCFY/PjM33NwrqNnQ+8dAlP3iBUpFow2cZnanF1fSfzElAwTTFO70OGJX/UFUc=
-X-Google-Smtp-Source: AGHT+IEdzIJ3YjVg/cE36iG6t1bmSvgUzscBQ4gPJYkUm80mgCexRGGdLZEulw/LZtp3Pn6VrM7qhw==
-X-Received: by 2002:a2e:97d6:0:b0:2ec:5172:dbbc with SMTP id 38308e7fff4ca-2ec5b2844damr27182781fa.5.1719228150408;
-        Mon, 24 Jun 2024 04:22:30 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec520fc3b9sm7800581fa.114.2024.06.24.04.22.29
+        bh=GuZakqcQ8P7/8zUig3bLggNmER3pcdpTwZQ0sDBpoFc=;
+        b=Buf9aaQtx4UsAzJ4i35K1uWDthIIh2v31RRawMYnuifJTj3/H5apQsX4YptCIRXikY
+         Ty43I1a+hlKjpCoic3loFNcXZiYz+0r2WNCv6omVE8ty06dsRFrpPfD9v4ogA9mxtDk0
+         JYEDtVhjGm7WgDdiULYiPbDg1kvnaY18naxkEXGj4NrLRWoLrgHFiCTfH6jqgbtZs2Sw
+         7QkKjCfG476U6mVJzqczlqxNBh7QPcnaZH+ouM4RpxdB/bEP6EyJJ8OM7gmU9ySDw0r0
+         zUXPNi5p9jxjzFoviT9eKTP7QCONtoPvwPDnyoLAu6HrAABrvCwa6oqdKedPeEpl+NPx
+         ceyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEBZoyJGvGa8aTxPkcn5HwzZIONg09E6t+qgXKAuUYMY74yB8mGwZBKajZ+B41ivHTgZD4EdXit6UGxIbJToWnuKLkuSNfDC8O+sASXWGp1Ayjovif451upp9eNQSKcrPd
+X-Gm-Message-State: AOJu0Yz55vZr0aU+obsMaJB99iwS8mxjuIRQFbWeNfesN9T974l/eyYv
+	cRP+WY06xkCHrvdF+tdTEzCCvcQWpQrK1RMlUCh+6xhn/xvhjq2BQD9Pwg==
+X-Google-Smtp-Source: AGHT+IFFVh3a7Lk9TfHP/1hRO/050f5iXVyxCbY49eRmEy35wRdA+P/mkPt07Tee0w1T9Be/vxUe4Q==
+X-Received: by 2002:a05:6512:490:b0:52b:c195:5d9c with SMTP id 2adb3069b0e04-52ce185ce3dmr3369478e87.61.1719228182746;
+        Mon, 24 Jun 2024 04:23:02 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7251ace5besm125505566b.179.2024.06.24.04.23.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 04:22:30 -0700 (PDT)
-Date: Mon, 24 Jun 2024 14:22:28 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] arm64: dts: qcom: x1e80100: Add soundwire controller
- resets
-Message-ID: <mzcofsmnqkxgxarcbxh2gqtdusyzpxr4edjcpurerurzape7da@4dky45iy5iph>
-References: <20240624-x1e-swr-reset-v1-0-da326d0733d4@linaro.org>
- <p6ooqgfwld7stzevozs7huztputc7vpc7652wx6rvg4cly5mj5@fwrzeu6alhgq>
- <ea57a3a1-1037-4d59-a384-50c98e1f9387@linaro.org>
+        Mon, 24 Jun 2024 04:23:02 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 24 Jun 2024 13:23:00 +0200
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] build-id: require program headers to be right after
+ ELF header
+Message-ID: <ZnlXFF2sV-JNjGl2@krava>
+References: <0e13fa2e-2d1c-4dac-968e-b1a0c7a05229@p183>
+ <20240621100752.ea87e0868591dd3f49bbd271@linux-foundation.org>
+ <d58bc281-6ca7-467a-9a64-40fa214bd63e@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,23 +71,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea57a3a1-1037-4d59-a384-50c98e1f9387@linaro.org>
+In-Reply-To: <d58bc281-6ca7-467a-9a64-40fa214bd63e@p183>
 
-On Mon, Jun 24, 2024 at 12:11:08PM GMT, Srinivas Kandagatla wrote:
+ccing bpf list
+
+On Fri, Jun 21, 2024 at 09:39:33PM +0300, Alexey Dobriyan wrote:
+> Neither ELF spec not ELF loader require program header to be placed
+> right after ELF header, but build-id code very much assumes such placement:
 > 
+> See
 > 
-> On 24/06/2024 12:08, Dmitry Baryshkov wrote:
-> > On Mon, Jun 24, 2024 at 11:55:29AM GMT, Srinivas Kandagatla wrote:
-> > > Soundwire resets are missing in the existing dts, add resets for all the 4
-> > > instances of Soundwire controllers (WSA, WSA2, RX, TX).
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > 
-> > Could you please point out the driver changes?
-> If you mean, soundwire controller driver, it already has the reset support.
+> 	find_get_page(vma->vm_file->f_mapping, 0);
+> 
+> line and checks against PAGE_SIZE. 
+> 
+> Returns errors for now until someone rewrites build-id parser
+> to be more inline with load_elf_binary().
+> 
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> ---
+> 
+>  lib/buildid.c |   14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> --- a/lib/buildid.c
+> +++ b/lib/buildid.c
+> @@ -73,6 +73,13 @@ static int get_build_id_32(const void *page_addr, unsigned char *build_id,
+>  	Elf32_Phdr *phdr;
+>  	int i;
+>  
+> +	/*
+> +	 * FIXME
 
-No, I was looking for audiocc drivers.
+nit, FIXME is usually on the same line as the rest of the comment,
+otherwise looks good
 
--- 
-With best wishes
-Dmitry
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+
+> +	 * Neither ELF spec nor ELF loader require that program headers
+> +	 * start immediately after ELF header.
+> +	 */
+> +	if (ehdr->e_phoff != sizeof(Elf32_Ehdr))
+> +		return -EINVAL;
+>  	/* only supports phdr that fits in one page */
+>  	if (ehdr->e_phnum >
+>  	    (PAGE_SIZE - sizeof(Elf32_Ehdr)) / sizeof(Elf32_Phdr))
+> @@ -98,6 +105,13 @@ static int get_build_id_64(const void *page_addr, unsigned char *build_id,
+>  	Elf64_Phdr *phdr;
+>  	int i;
+>  
+> +	/*
+> +	 * FIXME
+> +	 * Neither ELF spec nor ELF loader require that program headers
+> +	 * start immediately after ELF header.
+> +	 */
+> +	if (ehdr->e_phoff != sizeof(Elf64_Ehdr))
+> +		return -EINVAL;
+>  	/* only supports phdr that fits in one page */
+>  	if (ehdr->e_phnum >
+>  	    (PAGE_SIZE - sizeof(Elf64_Ehdr)) / sizeof(Elf64_Phdr))
