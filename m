@@ -1,48 +1,48 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0861136649;
-	Mon, 24 Jun 2024 10:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8F213776F;
+	Mon, 24 Jun 2024 10:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719223534; cv=none; b=dK8dkzsm0nTQEXtGKIZ9hVLOv1m/YPC/Fy1RM76Y0Iw5ojGxREyih59pHzxsMTzDiC5KLBwTpVIa/90RS028AW2wapvX8JGLY/AwqeKmy0awCys+HUn1b13pkUymJ7SDpoJJhFt6Cdy7qvjcX7XKmUVOmsXSz4tSAChvgjZp2Yg=
+	t=1719223538; cv=none; b=OGUt5sMR4ahmj/RGxWT18jpNGmC9B0zuA0aop+UYwnwf5HfamlYv3bGFioOm3z5PutnIpD80e6fNTVC1j0y84018GJTXOCAvSkCc/Yi77Mkeenoi28IhT/I+lnaVO56YarDhScmKpKTpGkX1TXNY8YhWiDipw2lt5nusobGPSM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719223534; c=relaxed/simple;
-	bh=NrhQe7Ne47K5jyrTaH8U/Zc5bpaLZvP3p4urJqapRuY=;
+	s=arc-20240116; t=1719223538; c=relaxed/simple;
+	bh=Jy+iqPN5Zb7Kn9IXKcX6+h/JWaI/5Q1D63qOdm1UZHc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ca9g8GPZFdg/4VIq8etonRlnd8BqTOVP2EIrnCZ30Z0nPdUla/1b++dOQHLElMsWuYbdXdq9P2lmXv/YGlCRLUNxKZhas8fFnuSK/KZm+NyH2wPvtBS3yjCaXjx53l/R29/2werWtdVs5bDXhaT4RsCKPGb97XIdqFGqJm99riw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CXnYMfoK; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=Y3+LUcpbwxC0znBY6H2FsbxUYhDTP30F0AratiJ6Ch71AdL1pIwGQ02Oszcu3A9vI91fFHoPOChdVumB9ovj57x2BJLJFcu0xtksuN9UrUdPuE7kODYLdImK9IVeCMIpEnx3NULLwh2WWvSQc8+wU/Cf3UuZbsB42PMrdi0fKDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZqGsq+c8; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CXnYMfoK"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZqGsq+c8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719223532; x=1750759532;
+  t=1719223537; x=1750759537;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NrhQe7Ne47K5jyrTaH8U/Zc5bpaLZvP3p4urJqapRuY=;
-  b=CXnYMfoK4KSwJg7GCiZthfq7TImvs2oLiqeJaAB/pdz10TaH0tLeAVjd
-   OY0ubtM12AeFJzm19g71BGN9mZGpy4ZIMyQAz3W51eNpAs8/rO64ohKzE
-   OCywmNhLHa7nOv+gmyAgHcBBxhk0dlVcS672gPK/MZglR2OWoKfasPKjY
-   lMLYJWP1QiCimBLlm1PT0NjPA8lCWZ1WyTTXFXTM4mUGgSkavD3iH05U6
-   Ce5ESou3+xbnl+JFMCZz67ApyM/5vdKRiRqadZASQxoMztlZsRRjGRb/D
-   MPQF7LsQf85Vq2iK9PUZIr2atKP52dpGWrzLxw8Alj4VfgbYbJbHrnJ70
-   w==;
-X-CSE-ConnectionGUID: 3dTUNmvLQy2rS/y02F+uOA==
-X-CSE-MsgGUID: dPUpYaAKQCKSsH/pCdMRxg==
+  bh=Jy+iqPN5Zb7Kn9IXKcX6+h/JWaI/5Q1D63qOdm1UZHc=;
+  b=ZqGsq+c8qD9uA0UaiX9SjoIE/BEJoXgS74L65PEb9B5M/C0eKeGS7qM2
+   DbYDWGEQKoqAYhKpR+Y6xVrqHatXQXAiBQraLjmIr3KbViSjQh1UM7q9I
+   wqNXRmmYgLEFroJE9POkmdLX4mXMaG9Yy6h2UmTRidNN6NA3PlWLcd7m7
+   FiNFcNqQb4lFL3ZOSWlCY2VqybSyYwa/ALN6GNBbbejfejIZedoOGV6ji
+   +eXLRyTQl5OuUYZBG9jlOzWxkT7do26xlqHgF/w+MP0Q2qsuF0dTJvnBX
+   R72jY37Hx+fSf853Sacelz//oYCdlt8NrxX4N+2Au4AZVQGnXS6RDG9UJ
+   A==;
+X-CSE-ConnectionGUID: gbDFkw3jSdy2cxhwngM2TQ==
+X-CSE-MsgGUID: PziRlTldTwCKcrczNWRR1A==
 X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="259283597"
+   d="scan'208";a="29041039"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 03:05:24 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 03:05:30 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 24 Jun 2024 03:04:55 -0700
+ 15.1.2507.35; Mon, 24 Jun 2024 03:05:20 -0700
 Received: from che-lt-i67131.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 03:04:47 -0700
+ 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 03:05:12 -0700
 From: Manikandan Muralidharan <manikandan.m@microchip.com>
 To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
 	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
@@ -55,9 +55,9 @@ CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
 	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
 	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
  Muralidharan" <manikandan.m@microchip.com>
-Subject: [PATCH 1/5] ARM: dts: microchip: change to simple-mfd from simple-bus for PIO3 pinumux controller
-Date: Mon, 24 Jun 2024 15:34:27 +0530
-Message-ID: <20240624100431.191172-2-manikandan.m@microchip.com>
+Subject: [PATCH 4/5] dt-bindings: gpio: convert Atmel GPIO to json-schema
+Date: Mon, 24 Jun 2024 15:34:30 +0530
+Message-ID: <20240624100431.191172-5-manikandan.m@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240624100431.191172-1-manikandan.m@microchip.com>
 References: <20240624100431.191172-1-manikandan.m@microchip.com>
@@ -70,168 +70,138 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-The pinctrl subnodes that define the pin configuration of other devices
-under PIO3 pinmux controller are not simple memory mapped nodes.Ergo,
-change simple-bus to simple-mfd.
+Convert the Atmel GPIO controller binding document to DT schema format
+using json-schema.
 
 Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
 ---
- arch/arm/boot/dts/microchip/at91rm9200.dtsi  | 2 +-
- arch/arm/boot/dts/microchip/at91sam9260.dtsi | 2 +-
- arch/arm/boot/dts/microchip/at91sam9261.dtsi | 2 +-
- arch/arm/boot/dts/microchip/at91sam9263.dtsi | 2 +-
- arch/arm/boot/dts/microchip/at91sam9g45.dtsi | 2 +-
- arch/arm/boot/dts/microchip/at91sam9n12.dtsi | 2 +-
- arch/arm/boot/dts/microchip/at91sam9rl.dtsi  | 2 +-
- arch/arm/boot/dts/microchip/at91sam9x5.dtsi  | 2 +-
- arch/arm/boot/dts/microchip/sam9x60.dtsi     | 2 +-
- arch/arm/boot/dts/microchip/sama5d3.dtsi     | 2 +-
- arch/arm/boot/dts/microchip/sama5d4.dtsi     | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+ .../bindings/gpio/atmel,at91rm9200-gpio.yaml  | 78 +++++++++++++++++++
+ .../devicetree/bindings/gpio/gpio_atmel.txt   | 31 --------
+ 2 files changed, 78 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio_atmel.txt
 
-diff --git a/arch/arm/boot/dts/microchip/at91rm9200.dtsi b/arch/arm/boot/dts/microchip/at91rm9200.dtsi
-index 16c675e3a890..02a838541dc3 100644
---- a/arch/arm/boot/dts/microchip/at91rm9200.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91rm9200.dtsi
-@@ -225,7 +225,7 @@ macb0: ethernet@fffbc000 {
- 			pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x800>;
- 
- 				atmel,mux-mask = <
-diff --git a/arch/arm/boot/dts/microchip/at91sam9260.dtsi b/arch/arm/boot/dts/microchip/at91sam9260.dtsi
-index e56d5546554c..0038183e9a53 100644
---- a/arch/arm/boot/dts/microchip/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9260.dtsi
-@@ -170,7 +170,7 @@ tcb1: timer@fffdc000 {
- 			pinctrl: pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x600>;
- 
- 				atmel,mux-mask = <
-diff --git a/arch/arm/boot/dts/microchip/at91sam9261.dtsi b/arch/arm/boot/dts/microchip/at91sam9261.dtsi
-index 307b60658014..b57a7fd67197 100644
---- a/arch/arm/boot/dts/microchip/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9261.dtsi
-@@ -317,7 +317,7 @@ dbgu: serial@fffff200 {
- 			pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x600>;
- 
- 				atmel,mux-mask =
-diff --git a/arch/arm/boot/dts/microchip/at91sam9263.dtsi b/arch/arm/boot/dts/microchip/at91sam9263.dtsi
-index 75d8ff2d12c8..b95d4016ae9f 100644
---- a/arch/arm/boot/dts/microchip/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9263.dtsi
-@@ -167,7 +167,7 @@ poweroff@fffffd10 {
- 			pinctrl@fffff200 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff200 0xfffff200 0xa00>;
- 
- 				atmel,mux-mask = <
-diff --git a/arch/arm/boot/dts/microchip/at91sam9g45.dtsi b/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
-index 325c63a53118..c54eb21d5cba 100644
---- a/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
-@@ -190,7 +190,7 @@ dma: dma-controller@ffffec00 {
- 			pinctrl@fffff200 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff200 0xfffff200 0xa00>;
- 
- 				atmel,mux-mask = <
-diff --git a/arch/arm/boot/dts/microchip/at91sam9n12.dtsi b/arch/arm/boot/dts/microchip/at91sam9n12.dtsi
-index 8dc04e9031a6..9aa22195051d 100644
---- a/arch/arm/boot/dts/microchip/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9n12.dtsi
-@@ -226,7 +226,7 @@ dma: dma-controller@ffffec00 {
- 			pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x800>;
- 
- 				atmel,mux-mask = <
-diff --git a/arch/arm/boot/dts/microchip/at91sam9rl.dtsi b/arch/arm/boot/dts/microchip/at91sam9rl.dtsi
-index 7436b5c862b1..1fec9fcc7cd1 100644
---- a/arch/arm/boot/dts/microchip/at91sam9rl.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9rl.dtsi
-@@ -339,7 +339,7 @@ dbgu: serial@fffff200 {
- 			pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x800>;
- 
- 				atmel,mux-mask =
-diff --git a/arch/arm/boot/dts/microchip/at91sam9x5.dtsi b/arch/arm/boot/dts/microchip/at91sam9x5.dtsi
-index a7456c2191fa..d41d7c844200 100644
---- a/arch/arm/boot/dts/microchip/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91sam9x5.dtsi
-@@ -202,7 +202,7 @@ dma1: dma-controller@ffffee00 {
- 			pinctrl: pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x800>;
- 
- 				/* shared pinctrl settings */
-diff --git a/arch/arm/boot/dts/microchip/sam9x60.dtsi b/arch/arm/boot/dts/microchip/sam9x60.dtsi
-index 291540e5d81e..4e71ae63edf1 100644
---- a/arch/arm/boot/dts/microchip/sam9x60.dtsi
-+++ b/arch/arm/boot/dts/microchip/sam9x60.dtsi
-@@ -1223,7 +1223,7 @@ AT91_XDMAC_DT_PERID(28))>,
- 			pinctrl: pinctrl@fffff400 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "microchip,sam9x60-pinctrl", "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
-+				compatible = "microchip,sam9x60-pinctrl", "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-mfd";
- 				ranges = <0xfffff400 0xfffff400 0x800>;
- 
- 				/* mux-mask corresponding to sam9x60 SoC in TFBGA228L package */
-diff --git a/arch/arm/boot/dts/microchip/sama5d3.dtsi b/arch/arm/boot/dts/microchip/sama5d3.dtsi
-index d4fc0c1dfc10..f1614dcd7d28 100644
---- a/arch/arm/boot/dts/microchip/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama5d3.dtsi
-@@ -493,7 +493,7 @@ aic: interrupt-controller@fffff000 {
- 			pinctrl: pinctrl@fffff200 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-bus";
-+				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-mfd";
- 				ranges = <0xfffff200 0xfffff200 0xa00>;
- 				atmel,mux-mask = <
- 					/*   A          B          C  */
-diff --git a/arch/arm/boot/dts/microchip/sama5d4.dtsi b/arch/arm/boot/dts/microchip/sama5d4.dtsi
-index 58ceed997889..69dd4e7b4c14 100644
---- a/arch/arm/boot/dts/microchip/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama5d4.dtsi
-@@ -791,7 +791,7 @@ dbgu: serial@fc069000 {
- 			pinctrl: pinctrl@fc06a000 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-bus";
-+				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-mfd";
- 				ranges = <0xfc068000 0xfc068000 0x100
- 					  0xfc06a000 0xfc06a000 0x4000>;
- 				/* WARNING: revisit as pin spec has changed */
+diff --git a/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml b/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
+new file mode 100644
+index 000000000000..3ace7ba687fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/atmel,at91rm9200-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip GPIO controller (PIO)
++
++maintainers:
++  - Manikandan Muralidharan <manikandan.m@microchip.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - atmel,at91sam9x5-gpio
++              - microchip,sam9x60-gpio
++          - const: atmel,at91rm9200-gpio
++      - items:
++          - enum:
++              - microchip,sam9x7-gpio
++          - const: microchip,sam9x60-gpio
++          - const: atmel,at91rm9200-gpio
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  gpio-controller: true
++  gpio-line-names: true
++
++  "#gpio-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  "#gpio-lines":
++    description:
++      Number of gpio, 32 by default if absent
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - gpio-controller
++  - "#gpio-cells"
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/at91.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    pioA: gpio@fffff400 {
++            compatible = "atmel,at91rm9200-gpio";
++            reg = <0xfffff400 0x200>;
++            interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
++            #gpio-cells = <2>;
++            gpio-controller;
++            interrupt-controller;
++            #interrupt-cells = <2>;
++            clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt b/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+deleted file mode 100644
+index 29416f9c3220..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-* Atmel GPIO controller (PIO)
+-
+-Required properties:
+-- compatible: "atmel,<chip>-gpio", where <chip> is at91rm9200 or at91sam9x5.
+-- reg: Should contain GPIO controller registers location and length
+-- interrupts: Should be the port interrupt shared by all the pins.
+-- #gpio-cells: Should be two.  The first cell is the pin number and
+-  the second cell is used to specify optional parameters to declare if the GPIO
+-  is active high or low. See gpio.txt.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells: Should be two. The first cell is the pin number and the
+-  second cell is used to specify irq type flags, see the two cell description
+-  in interrupt-controller/interrupts.txt for details.
+-
+-optional properties:
+-- #gpio-lines: Number of gpio if absent 32.
+-
+-
+-Example:
+-	pioA: gpio@fffff200 {
+-		compatible = "atmel,at91rm9200-gpio";
+-		reg = <0xfffff200 0x100>;
+-		interrupts = <2 4>;
+-		#gpio-cells = <2>;
+-		gpio-controller;
+-		#gpio-lines = <19>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-
 -- 
 2.25.1
 
