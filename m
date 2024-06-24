@@ -1,84 +1,82 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6511A01AD
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 20:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DF4262A3;
+	Mon, 24 Jun 2024 20:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719260335; cv=none; b=ql8shsnodSInVZX5VxQXdMxpVvf+K/P+fhl6oyBJ1EQ5Wfm8F/dSnB3uCau3XwwD6cBDvb/WvcW6f/hf+E9FfBcsp+yimOP8bV61vmE+Ke8dWwQN5eiOU/xdPSKEmhv5bxqkOn/TQkA8ZBCtAzbWRfMHBpJ/YMxALe5yaiK5HnA=
+	t=1719260366; cv=none; b=PSP6RLjI3lNRm8nBNx81UZYUc9c8SQSJI778Tl9FjYz/p+W2qgqtalrBpvazb8AYjoDViXqdRwi/M49DHsqFww/Z7AasMswddJ/bSNIObdypIU3Lall2TsY+VzhIu68zleDUpGJmZLpUNvv3cLXVAv5WrbO5UrJDIDjwEWterUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719260335; c=relaxed/simple;
-	bh=CYPMKzKXzPtEKhl5KLn1rsXOXuPsd77VL4h50H+aCL0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bYO7GrYAPrEtU3JcLD47YSWaJRrKby0LNkeeSAKuJniztojAjYweuk6Bulho8HqHt3zOb7rGwKcZhvw9Jg+lD87oaEvSjtTeFnMwFR4kdHTI6KBrIspDEspIiEbNMCcHj7tspYUaUUK+WkKbzbv3ID73JaulEm3kpjc93uo11CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bh4tqL67; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719260366; c=relaxed/simple;
+	bh=ZWI+WtIGvYR17UMqNz82vONbomXghatUFx41IPHG+Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C8OrEVA+P1dzeVcDIRynBSoFLZ5lm0c6VdEyhNeXR8+g+gquXKAHAogVYs3u0Xyarb7sPFCj3LdNtzfXKA6TSJTn9UNvhwttGjxkrWlxycGy+PdW9lkV9OGg2jDWLPmtTRjhaWpvFJLAhLGroeQR7axmZYEfWFewTXioCq7PEeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rsfj1GpF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bh4tqL67"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57d1679ee6eso8307747a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719260332; x=1719865132; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CYPMKzKXzPtEKhl5KLn1rsXOXuPsd77VL4h50H+aCL0=;
-        b=bh4tqL67qwrLSvvomB0GYyaZRmfZ8C7/jtMJQbLXq+rTsGgIZuiWYFNpH++Al2dWQe
-         hbXXTwtmc/nJTyFciBIUyb/nFVP2i0yZv+cRV/AdaaBu5l+jIqgrzOhqtdqss228H7/9
-         i8h6A8Ur0MSfXq7LyHaH1OyNoZINRlrNnrD1blCrAB47CY7g8CVSdW+lyEBneNDoMjXe
-         W5zbLbwk2DQZz+HxdsIKlagFzxlicQN+NmlsCNiyY+6v5KtMiBtt3Enem/giGaJqHjpw
-         C+m8Ls3NamUo4rAwDvC3+9fqEAkj692/nhnSK8M6U0ZFwGzggR/PeALd2V1pYOe2ovRV
-         +0Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719260332; x=1719865132;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CYPMKzKXzPtEKhl5KLn1rsXOXuPsd77VL4h50H+aCL0=;
-        b=TkYd+hxloMuk+pNIoCF8/yI/rnt1CMkiyFt4hKaKLTGpMk+fe30rUF0Md6ywBjKIn7
-         2+4WDINRo/6VULyJPbgBZ7lFaHwbc0iHQFHzvhSvt2BR7ecAg8zP14+FUt9oqFJDPaFM
-         nGAjaJnA1fdydHx1RXg9rdD+tz2btZ5NjR4NnMGCFTr1E1UUiJsbapIwmX8HdOPdYkT0
-         oY0bzKvOsLOGIx4IOWjqMM1Xa1aleC55Phb9XAIBKzSLLB3W60uMPszZJvuV2pMWwIG5
-         1gWkP6TiNP7Y/4+N5wVNtEGWVNIHsGomUiXnQZJXKxP1O6OBdhA/I/l5b1HStgTiJyA+
-         3gdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVITVjwmFyFepi9gKUO9wuCbTy+GzvvTOCuJAdECL5V3thIGunH/+g8oGLJQQjX3lDZ0AkYPYJU6/KD5kPbf2XBu5PjcwRzB+JEFcPN
-X-Gm-Message-State: AOJu0Yy5Tzra+8Llx6zlPtY5+8SVCkHpc6bsncdC/XOwJ8uHyPGkDfFj
-	K0uo9O9EgMN5FZXvhDbKsSfUpaRUDDeAbtDYYo7A9zQhJLj1ND/uMXNMLlINQY8hTaQqTEDV9p4
-	c+CROv4KwXFdCmNSffhSF+tNIQ1S6guzfyPmaOQ==
-X-Google-Smtp-Source: AGHT+IHYKa/ycS20058DIxTuE4TPZj+Ne6GJbbNiJ5FbYcQC6EiSPJWgGfnJ/EyOzoXs+/hcdQEshUVAiI2Wx8GhYRs=
-X-Received: by 2002:a17:907:8b91:b0:a6f:6df5:a264 with SMTP id
- a640c23a62f3a-a70275ea47emr586904366b.1.1719260332160; Mon, 24 Jun 2024
- 13:18:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rsfj1GpF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D5BC2BBFC;
+	Mon, 24 Jun 2024 20:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719260365;
+	bh=ZWI+WtIGvYR17UMqNz82vONbomXghatUFx41IPHG+Do=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rsfj1GpF+DATbbyRJCT6poW+insoX30ZAW2hE8B0AcLmrqgtYhWql/E2S3P12ZVPW
+	 BD3y5cMyDr/INGeRkVRyOKe4+gM1Xt7xIWsVW1uRF2frmmU0xOrNZRn9QYWG+L6lKn
+	 7FMmBNu9p6VbC314s7ck3H6MSMNCAqT5krvuvpBIWJKwJaXGMEieKHPs9SRezzkMyt
+	 axgZMNt9X4U+PAgRPG+loxyu0ohtIu0gKUHh3JwkkFrjQNAGt/njBq6Nbq7oEokcSZ
+	 zPYJfpwtxH8u2o2IcM73gBuvpWKQNDLbZNcRge3ujbZsWqk/wPbZqNyRRJjFQj+kVy
+	 JYIw3pcH5uiYg==
+Date: Mon, 24 Jun 2024 21:19:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] spi: add
+ EXPORT_SYMBOL_GPL(devm_spi_optimize_message)
+Message-ID: <b14f6796-8269-46e4-9ca6-af248af04ae5@sirena.org.uk>
+References: <20240624-devm_spi_optimize_message-v2-0-58155c0180c2@baylibre.com>
+ <20240624-devm_spi_optimize_message-v2-1-58155c0180c2@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619113529.676940-1-cleger@rivosinc.com> <20240619113529.676940-15-cleger@rivosinc.com>
-In-Reply-To: <20240619113529.676940-15-cleger@rivosinc.com>
-From: Evan Green <evan@rivosinc.com>
-Date: Mon, 24 Jun 2024 13:18:16 -0700
-Message-ID: <CALs-HssLx_AZ_pBDECfVH7REoSkyz-=bECPYDeNZkfe59DdBGQ@mail.gmail.com>
-Subject: Re: [PATCH v7 14/16] riscv: hwprobe: export Zcmop ISA extension
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Anup Patel <anup@brainfault.org>, 
-	Shuah Khan <shuah@kernel.org>, Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="klKchanc5XDrotyy"
+Content-Disposition: inline
+In-Reply-To: <20240624-devm_spi_optimize_message-v2-1-58155c0180c2@baylibre.com>
+X-Cookie: Allow 6 to 8 weeks for delivery.
 
-On Wed, Jun 19, 2024 at 4:41=E2=80=AFAM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
-osinc.com> wrote:
->
-> Export Zcmop ISA extension through hwprobe.
->
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
 
-Reviewed-by: Evan Green <evan@rivosinc.com>
+--klKchanc5XDrotyy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jun 24, 2024 at 03:10:30PM -0500, David Lechner wrote:
+
+> Fixes: 17436001a6bc ("spi: add devm_spi_optimize_message() helper")
+
+That's the merge commit for the branch, not the affected commit.
+
+--klKchanc5XDrotyy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ51McACgkQJNaLcl1U
+h9BZ9wf+IIY2+Y7WZRhxJpLD8QVSVUWu5cYLBLaYaeTTxTIXwMW8ypwpi1B64DdC
+A54h+ludYMBKi6TajsFxkHhwEpxhijMIA1Pvq5UL1umhsCtjd6wQ6k+sfaHdStQ3
+A7kmwTpp9BmFEis0zer9oA7uaBQZUyGuY8p9J/zt/tyr4g1HW6pqZbm4YXzg4G2Y
+Nf5v7M2FPWnqT7BQmhmpHRVAHH9/LJzr/odZhwiGPUTzVFieQuUW4tFO9UR35ie1
+hMtclZteO0DmdWG8/GEHMMnDr30tCcA2K7HwCGC0mftxzbFu/kc6xk/yrEjW1GcG
+QcdQ3/5Fto6hyPa3yjIrmSEylF/V4A==
+=xY5J
+-----END PGP SIGNATURE-----
+
+--klKchanc5XDrotyy--
