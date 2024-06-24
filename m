@@ -1,138 +1,89 @@
-Received: from wflow4-smtp.messagingengine.com (wflow4-smtp.messagingengine.com [64.147.123.139])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3A81E4A9;
-	Mon, 24 Jun 2024 12:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FC91E4A9;
+	Mon, 24 Jun 2024 12:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719233151; cv=none; b=dxvdHlYFn0Fzitvk/yh5R2mXZEWfDWBvLe86K+3Up2rNPwhRkLw3VWxJnQXFyVcblcXv7cMGxLvVBlGQxXI/LNFyPdf32hSxa0iWy+VRL3vv99EXP6SaL6PS7vBU8oEWxd7GKtwHFK9eV4HQHe8oLpj8EyWnVoRqi8yz43VRHIA=
+	t=1719233201; cv=none; b=sJRMSog1MUDM2m3v4SN+lv7JAu7XW9wb7LxyZtr0UkCB/o82fcJjWtbcNy//oyf3lR9cGAfkHp3VW3nTdDyKDlirID9Dg7ShxBHqvaYSe0g0TekpmTQIh8zTZUAR2tPgwbfBjFHjv+KvdRoMJ/qmUGZv+N/sw3qoL/8uZa5txXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719233151; c=relaxed/simple;
-	bh=bHk7oVY4HJSJXdcXraPj+8uJig3F5xX26sfibOwI8eE=;
+	s=arc-20240116; t=1719233201; c=relaxed/simple;
+	bh=x/Rav4kxZkNpPcd3LV8acvhtCDwrh/yQ32I/Xpo03Ow=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gibUnF+4ayXkISZR7UR0xUNg2gJ7iM76stVn4YS7Y3Jx/VtYm2Us/xVssh6BztlfeY3PGB/yOipRT0z3g6YHZFgfvQYHvNDy5hQqMfIGyWg0yJCeydAOaIbnaM0jtUa0oapdketBdYgDNlNWXzqFoTA/1pmnqZL0FjLrkf9Vxoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=2S6rDUXA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=frRNYPVV; arc=none smtp.client-ip=64.147.123.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YwJSCi+OD6lf3zTE+q+3QpOae+QyVuYAypW9fwGQvmsxuk7TGC2zlN9yMFb/8SL0vPGl6T1L9C79hjkR/hnCxFfglEj06uaI3dDiUOZiKqIIU8XdPOobdd3cqwGcRmlvyIyWeatwxcA9MPbcS8xOjmD408j6Gz0BSNJ0nY+GUUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Kh80y12s; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="2S6rDUXA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="frRNYPVV"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailflow.west.internal (Postfix) with ESMTP id D38FB2CC00FE;
-	Mon, 24 Jun 2024 08:45:42 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Jun 2024 08:45:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1719233142;
-	 x=1719240342; bh=VYXob4vhayXt3Bmdcst9br5mK/yayifQnerAn2TAL6o=; b=
-	2S6rDUXAJzJNfiTEwjdnFBRJcsQiu7lpzuhnbS7SaKurMHzWXklj4gA/B2p5Vt3o
-	XUM+C4KKErcyqF+a6+IXnKD3q4HdO/oxeRQwZr2DY+2V57pVArBnyuGbqrWfGtQH
-	tJN5NbQs1ha9Pi9/ze/Ih+etMcljFpIgwNKt8EFECgqGkbd43++t5PakJrkAQD7c
-	QOBLFaqLBCTwaGxVq5ndkSCI38twUpEpj16cv6ENKTTmar2mhf2NoOJjt3DP1npH
-	1QmVuJ/wpEv3emEulsCuUZxswDhWuYIClxJYbZkMjMUe1+gD6E3ZIgDqDqQ8wNU7
-	GbLw29QnQxVjTeBAUL8SKw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719233142; x=
-	1719240342; bh=VYXob4vhayXt3Bmdcst9br5mK/yayifQnerAn2TAL6o=; b=f
-	rRNYPVV/EqGu77I3z4gxzgFZq2jcV99gSpQWSPmed1ICqRPfznUwiQ90Fm/rAeie
-	LJEoiBluZSJ0Ts9EMzS42YaUzlXXr4lO7Du0tEgESRue86aY3kixa+hthEaSVjaW
-	1lVGG+uUCU2HzhiYV0ebNWiCkFq7RvFU33EU7YVTUK71cr1B8OfWMWBQImXWmR4T
-	1KcBlGWB8o/3o6CPEAXEMfZ4908oDQfB7WHvyx1TR5mVu/5RrKp8Aq0kKAYwIlns
-	e3hfKUlSYN/q8AH/A4mG4LsjBpMB6/5tEv8mISyX5+IwgikXVxI+tUSvb/Z1mL9y
-	f2cKGNzrR6lUaVW3T+Gsw==
-X-ME-Sender: <xms:dmp5ZhDvel6ocBI6jPwwhS9zrM4QRjc74tRGKyoYfEcnAknrul8_fA>
-    <xme:dmp5ZvhF1jfZ8IGlKHQt7nXLNddjZtpwPwBjCDcMdb06YGsxruheDBNFw64wkWDt3
-    4Pwrh4zBHJNqA>
-X-ME-Received: <xmr:dmp5ZsnyGNEng4qlOTsAxDpHXb-kZSYOkR-8solMDOPHHeyRJGkS_J1YLBTtRJKxQ9owKLe8lVqkQWNYZuEYoQ09voen-Bdg79wbkw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeguddgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeelke
-    ehjeejieehjedvteehjeevkedugeeuiefgfedufefgfffhfeetueeikedufeenucffohhm
-    rghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:dmp5Zrxh79Ui8GtIN-vX5zQgPXmInzKsXaNl6zy_lCRG74tbsVcnRg>
-    <xmx:dmp5ZmRJT4Y9h0XoySEBLUtCn_ueaR5LFl9M1WTrBO_X0rmfrvRYVA>
-    <xmx:dmp5ZuazyEzbraA2iyHw1Sf-83siaKwmzLM2QVHObBUeL_iSvKY-7g>
-    <xmx:dmp5ZnTOusHuWZP5Jp3LAWg4gCcd3OLt2kcwiSUHFlyWg1ItRMaHdw>
-    <xmx:dmp5ZmJp-dg4Lw9dzogqq4oCJ9wEj-UYmf-V3nEA1KUZN5tGnZ5cKqMn>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Jun 2024 08:45:41 -0400 (EDT)
-Date: Mon, 24 Jun 2024 14:45:38 +0200
-From: Greg KH <greg@kroah.com>
-To: joeyli <jlee@suse.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>, linux-block@vger.kernel.org,
-	Chun-Yi Lee <joeyli.kernel@gmail.com>, stable@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jens Axboe <axboe@kernel.dk>, Justin Sanders <justin@coraid.com>,
-	Kirill Korotaev <dev@openvz.org>, Nicolai Stange <nstange@suse.com>,
-	Pavel Emelianov <xemul@openvz.org>
-Subject: Re: [PATCH v2] aoe: fix the potential use-after-free problem in more
- places
-Message-ID: <2024062433-maximum-purplish-4ccc@gregkh>
-References: <20240624064418.27043-1-jlee@suse.com>
- <b75a3e00-f3ec-4d06-8de8-6e93f74597e4@web.de>
- <20240624110137.GI7611@linux-l9pv.suse>
- <74d3454d-6141-462d-9de8-b11cf6ac814c@web.de>
- <20240624115445.GL7611@linux-l9pv.suse>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kh80y12s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cpFzClzAeAIEsTBtfWnHdCWGnwNHhoHvJL1XHMt4TcA=; b=Kh80y12sVLQLfaXoq16dd9rEl1
+	8isr7b3njLeC8CR3tp73fnZR38VoAtJpmCLCc1k4TbdMOWZB5lmecIXP0zg1eQfR2FQ0I5K2yputL
+	xzGuSknGG126HCDy6Gdwfmt4vomYyyJzt3tHkdiVQbMUUddl0fdCVdA7dZ40MNvFOyKqoQfhUvK4R
+	mo0WomAXB67Enh4YQjuaCwOlSxhbZZlaUq8om3pJEmsB8tNHxbpKsO8PmmG+90z9GTLXO9bUR7m9b
+	WkA+HGg4QsFmn3ZmGgNIVCEAF9kQFj2e6VNj74WwCkeD/R4YgiVZfnSdLPZkTvI4uHsAewvr3M1FZ
+	h5kbUWrA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sLj5P-00000008FCR-00Sb;
+	Mon, 24 Jun 2024 12:46:20 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9E29C300754; Mon, 24 Jun 2024 14:46:18 +0200 (CEST)
+Date: Mon, 24 Jun 2024 14:46:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	joshdon@google.com, brho@google.com, pjt@google.com,
+	derkling@google.com, haoluo@google.com, dvernet@meta.com,
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
+	andrea.righi@canonical.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com, David Vernet <void@manifault.com>
+Subject: Re: [PATCH 19/39] sched_ext: Print sched_ext info when dumping stack
+Message-ID: <20240624124618.GO31592@noisy.programming.kicks-ass.net>
+References: <20240501151312.635565-1-tj@kernel.org>
+ <20240501151312.635565-20-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240624115445.GL7611@linux-l9pv.suse>
+In-Reply-To: <20240501151312.635565-20-tj@kernel.org>
 
-On Mon, Jun 24, 2024 at 07:54:45PM +0800, joeyli wrote:
-> On Mon, Jun 24, 2024 at 01:43:25PM +0200, Markus Elfring wrote:
-> > >>>                   … So they should also use dev_hold() to increase the
-> > >>> refcnt of skb->dev.
-> > >> …
-> > >>
-> > >>   reference counter of “skb->dev”?
-> > >
-> > > Yes, I will update my wording.
-> > 
-> > Would you like to improve such a change description also with imperative wordings?
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.10-rc4#n94
-> > 
-> > 
-> > How do you think about the text “Prevent use-after-free issues at more places”
-> > for a summary phrase?
-> >
-> 
-> Thanks for your suggestion. I will update the wording in next version. 
+On Wed, May 01, 2024 at 05:09:54AM -1000, Tejun Heo wrote:
 
+> +static long jiffies_delta_msecs(unsigned long at, unsigned long now)
+> +{
+> +	if (time_after(at, now))
+> +		return jiffies_to_msecs(at - now);
+> +	else
+> +		return -(long)jiffies_to_msecs(now - at);
+> +}
 
-Hi,
+You have this weird superfluous else:
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+	if ()
+		return foo;
+	else
+		return bar;
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+pattern in multiple patches, please change that to:
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+	if ()
+		return foo;
+	return bar;
 
-thanks,
+Throughout the series.
 
-greg k-h's patch email bot
+Also, if we consider 2s complement, does the above actually make sense?
