@@ -1,127 +1,101 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BFB16F90F
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C20514D294;
+	Mon, 24 Jun 2024 14:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719238851; cv=none; b=U5Symm48HX0k7RAVtHyC7bsT0qvJh7MwTk84MGfcfH20dJDCNjQ8cMEZNzteY6BNmIF25rebV9+beh5oCsO5HqGmrFItn9g+xm40siaif36sd1989ETlLvYhi9cxQqONHHW5kmmggarwnAYd72oBzV+wktj3FZwzekEcdSuRRsw=
+	t=1719238878; cv=none; b=EUZg33I/2qEstAyKZMVtC+KblK1ZmzRig2I9vA37a4OiE4e9hrvTGCJXrMASUkikS7KeKWbjZLlBlGR5Qv2jXKVjiHiTx/QRzdviaXqm9g1eS6UT3aFE+AlouotGojHXtslYee8Q+1gzkuo+l6FmEfEcBV2g4JWfh5pVJar4Xlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719238851; c=relaxed/simple;
-	bh=8arzML0IG2sFbgXDqCLu6LPEnziu0B32300+4u9bdHg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=IhSOA3ULMt5tdHNsPybhUFD0fjKz67ngRjRgJTki0vSyL111T8FAnmJUmEe33luGlu0sXukLRKa2fj+KfGATN4Azs7hpGryUJQHXlI2YXkFXPSvkexHRp9n0OvgIVY4fHSqer9bdhOqqM7RumCeR+LhjWXH2LmUuTXB1iwTThRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=ARosYojM; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1719238878; c=relaxed/simple;
+	bh=Pjqrb8+wFHR1mGeMA625VXKLN5bcap7zHfFbkRKORj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmPXjn3DgzuFm48aM2aBVVMDLEeQqVUunHCKlmXYjrKqnFGX0nwoMSYHlsN4MNC0Fu2tacEaxBKxV52Csz3qgmj8VEPfyIlrXcgxEr2OcnqRQF0CRhkSjh7ZKmMVMM3q7znVZ3JPcUb1483bK2ekT8e4Gf3R/+NoL+jE/TRitDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BW33TQUy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="ARosYojM"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f480624d10so36360045ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1719238847; x=1719843647; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=M3QDpDGSiXVB6sCJx/S75ptPOlykstEPjTXSR09Xt04=;
-        b=ARosYojMEVHzEN+6Wlo/6NVOi9967RBTltHDI6vZWoKvGA7ZINg5SLpS/iTSLXw0OF
-         VGFoV/I96RHKy7cDiA+Q8tL3jaZyo2enMjc/VOCWRXNlfLiUsIiPDRgeW7bP5tb3HgkS
-         pDpV7ckJLrKlTS84pu04WdrPUY+Zm91WAx9ymTWrZNNsg3nBfGDts0LyYqPrtclgq62E
-         mWbPQaLOxm+uczo37lo5ixrDyMaWoRBgCSxy6QMuF49ZCrpk7xPQp8D5AvrsV4r8B5yJ
-         Vmr1LYsh+pyrS0+7yS9Pzldo5gPz+n+Z02qoNUewDdmVDW+k/uApMNeCfzcCE3jTkMwe
-         o+aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719238847; x=1719843647;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3QDpDGSiXVB6sCJx/S75ptPOlykstEPjTXSR09Xt04=;
-        b=NpokiSLPJU73VyRSjzOjxnqNbHrSVewdDosBn+pBbkfCEs1iSOY7eKmx0SUXy12qkZ
-         xNJtzKl/Hv1XHfbjIrBye5fWmRfmkVfVFaaCe8pApE/K38GAa8U1NBRQ9f8JiquF3t6x
-         K45hNy7n+KW1E8SPKvyTlNXKN0YHlFKc2o/HuVZV8ynMt01o8bf6ogX3qTde06alOPEz
-         71yO51l2UYvc+i88OPGo3Yjmz+9DPGtJyQZdIgnqRDiRwSrDT1tcniwgNjU1THnbZGsW
-         xAGEN9JVZHw1JqylBvhzwe4uqc+uRtZ5LuB8AvH2JjOiF16WFInXneRmXGhNZk/iYoXD
-         du5g==
-X-Forwarded-Encrypted: i=1; AJvYcCX4oaAIglL5DSfWyybbnZl+YTsepZWL8TtzpIZUaDPaKS1estP+M5gEv7ai5WIEQ1+iQ5laefLCLZLql68ntO1Z4c/TVv/ePqemNpXa
-X-Gm-Message-State: AOJu0YzBzaX/HesIcyAcepjnqKiSV2F7uXyxAEC636yYMJ6ZeC0aeCSm
-	oTJ9rwV0XMLtk7wq9gKGQZUdvntavEB2L7leGgvckxWM+WsNJ+IND+Vn+O6mpyY=
-X-Google-Smtp-Source: AGHT+IHz4Xp/LpklfhUfQXhOMNMuea5mCAmDWme6R/bx8xDnAu6GJ4Ix+irnGQPPp/6YUn4bmuc0BQ==
-X-Received: by 2002:a17:902:c086:b0:1f8:393e:8b88 with SMTP id d9443c01a7336-1fa1d6acb3fmr49875875ad.67.1719238846980;
-        Mon, 24 Jun 2024 07:20:46 -0700 (PDT)
-Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3d5fa9sm63243855ad.206.2024.06.24.07.20.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 07:20:46 -0700 (PDT)
-From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jikos@kernel.org,
-	benjamin.tissoires@redhat.co,
-	dianders@google.com,
-	hsinyi@google.com,
-	jagan@edgeble.ai,
-	neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	dmitry.baryshkov@linaro.org
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Subject: [PATCH v5 2/5] dt-bindings: display: panel: Add compatible for kingdisplay-kd101ne3
-Date: Mon, 24 Jun 2024 22:19:23 +0800
-Message-Id: <20240624141926.5250-3-lvzhaoxiong@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240624141926.5250-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-References: <20240624141926.5250-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BW33TQUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9769EC4AF0C;
+	Mon, 24 Jun 2024 14:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719238876;
+	bh=Pjqrb8+wFHR1mGeMA625VXKLN5bcap7zHfFbkRKORj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BW33TQUyWAv0krdvhK3ThO1kHwVz1Ijn+D89YF5vkpPsMtJqcJtqMFIIQnQ7ifqOV
+	 vkj9JFgWkLZwm/GiHUdz4L1QukNeI6GDvuL72rEgUYr/Rxz41/0fFQTzsl7eT23krn
+	 4+bM7aQoqB6MfhbBucAgLAuZJG5QAJS1Inv4Mvqo=
+Date: Mon, 24 Jun 2024 16:21:13 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: neal_liu@aspeedtech.com, joel@jms.id.au, andrew@codeconstruct.com.au,
+	linux-aspeed@lists.ozlabs.org, linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: gadget: aspeed_udc: validate endpoint index for
+ ast udc
+Message-ID: <2024062400-yearning-curfew-3c9d@gregkh>
+References: <20240624015314.2249128-1-make24@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240624015314.2249128-1-make24@iscas.ac.cn>
 
-The kingdisplay-kd101ne3 is a 10.1" WXGA TFT-LCD panel with
-jadard-jd9365da controller. Hence, we add a new compatible
-with panel specific config.
+On Mon, Jun 24, 2024 at 09:53:13AM +0800, Ma Ke wrote:
+> We should verify the bound of the array to assure that host
+> may not manipulate the index to point past endpoint array.
+> 
+> Found by static analysis.
+> 
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>  drivers/usb/gadget/udc/aspeed_udc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed_udc.c b/drivers/usb/gadget/udc/aspeed_udc.c
+> index 3916c8e2ba01..d972ef4644bc 100644
+> --- a/drivers/usb/gadget/udc/aspeed_udc.c
+> +++ b/drivers/usb/gadget/udc/aspeed_udc.c
+> @@ -1009,6 +1009,8 @@ static void ast_udc_getstatus(struct ast_udc_dev *udc)
+>  		break;
+>  	case USB_RECIP_ENDPOINT:
+>  		epnum = crq.wIndex & USB_ENDPOINT_NUMBER_MASK;
+> +		if (epnum >= AST_UDC_NUM_ENDPOINTS)
+> +			goto stall;
+>  		status = udc->ep[epnum].stopped;
+>  		break;
+>  	default:
+> -- 
+> 2.25.1
+> 
+> 
 
-Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
-Changes between V5 and V4:
-- 1. No changes.
-V4:https://lore.kernel.org/all/20240620080509.18504-3-lvzhaoxiong@huaqin.corp-partner.google.com/
+Hi,
 
-Changes between V4 and V3:
-- 1. Move positions to keep the list sorted.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-V3:https://lore.kernel.org/all/20240614145510.22965-3-lvzhaoxiong@huaqin.corp-partner.google.com/
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-Changes between V3 and V2:
-- 1. Abandon the V2 patch and add kingdisplay kd101ne3-40ti binding to 
--    jadard,jd9365da-h3.yaml again.
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-V2:https://lore.kernel.org/all/20240601084528.22502-2-lvzhaoxiong@huaqin.corp-partner.google.com/
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-Changes between V2 and V1:
--  Drop some properties that have already been defined in panel-common.
--  The header file 'dt-bindings/gpio/gpio.h' is not used, delete it
+thanks,
 
-V1: https://lore.kernel.org/all/20240418081548.12160-2-lvzhaoxiong@huaqin.corp-partner.google.com/
-
----
- .../devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml    | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml b/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
-index 41eb7fbf7715..2b977292dc48 100644
---- a/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
-@@ -17,6 +17,7 @@ properties:
-     items:
-       - enum:
-           - chongzhou,cz101b4001
-+          - kingdisplay,kd101ne3-40ti
-           - radxa,display-10hd-ad001
-           - radxa,display-8hd-ad002
-       - const: jadard,jd9365da-h3
--- 
-2.17.1
-
+greg k-h's patch email bot
