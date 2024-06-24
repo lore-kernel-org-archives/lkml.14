@@ -1,233 +1,322 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AD13BBEF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC645A4D5;
+	Mon, 24 Jun 2024 08:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719219065; cv=none; b=mfvLQO9BiH8rHzOeICWkI5FYkkMNQoB6rXn1wffiNM9Hl/Avg1eM4NNp3wxSC2kfYhKZwYTGf4kjRf6cBD9xNw3q/aBVJzLUsclnRvyV0ZjECWIfhO8yw6PAakbyZRIHzt1eiXhmpWkSlp7n1ensiaEXEyy8YAH/Z22IwGdVKSg=
+	t=1719219084; cv=none; b=gKWOgz28y646bIx1jRn4W0hZOdKpzniZYio9uBRiEhdVJmmhDdTZxxn20AwvlUbesF6epOn2rNSNd8qcFAfI5utsbajQLf5RF6F2DHuxTR2CB9nlQgcH8I5DBa2TdUU3vbDbunmQqUoVPLN0eAXfez9dlMdhoNE0u3eMAtSPbyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719219065; c=relaxed/simple;
-	bh=ka4gIJJHm53QZt1MhqOj80xQuE+i2CksGMCkJZ478ZQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vFni5kYmu9pZ1SQgIoHa7uSO0pU7BJiQmXz6mrzknpUIgm9K0ZcZFRRSm8IxIyJ60RNbgHkxArUgitRHxZyVoTQuuHNT0rNW47+XG6twau7gxpxYwCtLZEed8KEkQj456CIb19TyIe99receD1EfH5j4ug0Bwyuek1KlProaniw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4W71lz2kMbz1SDX3;
-	Mon, 24 Jun 2024 16:46:39 +0800 (CST)
-Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
-	by mail.maildlp.com (Postfix) with ESMTPS id B56BB18007C;
-	Mon, 24 Jun 2024 16:51:00 +0800 (CST)
-Received: from huawei.com (10.175.112.208) by kwepemf500003.china.huawei.com
- (7.202.181.241) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 24 Jun
- 2024 16:50:59 +0800
-From: Zhang Zekun <zhangzekun11@huawei.com>
-To: <robin.murphy@arm.com>, <joro@8bytes.org>, <will@kernel.org>,
-	<john.g.garry@oracle.com>
-CC: <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<zhangzekun11@huawei.com>
-Subject: [PATCH] iommu/iova: Bettering utilizing cpu_rcaches in no-strict mode
-Date: Mon, 24 Jun 2024 16:39:52 +0800
-Message-ID: <20240624083952.52612-1-zhangzekun11@huawei.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1719219084; c=relaxed/simple;
+	bh=bR/D0cZcNZxtUGrIbt3MJF86EwDDVoIYS//ABn9SvEw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aDL+rUcQuMgn/CT2OTZ56ARrWL6CVh643CSRlkHPC/k+5nl5iJ3/U5oLDXgwl6doltlWJXh3sUyPBNFGCwUtbnEeTpyDtcPr725ChH1Sa+Ma46sfEmy8UhvYNZSUWbMRBC6PyoAy/r/8i35V0NPKxhqL97j3HpfA1udxhNqUolg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Akb8+ceI; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Akb8+ceI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1719219079;
+	bh=bR/D0cZcNZxtUGrIbt3MJF86EwDDVoIYS//ABn9SvEw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Akb8+ceIjRPVLHXpOLTM5LSCrQTmXTpw0nD49ABxNEauFXmwyzS4SkmRwYHyFiIdb
+	 Uu0qNuhH/DOtGHnmTWO+xa8IO0XG/Aa7c4uIm9P/V2ODNJKgX7ottPvOxR6yvm7ZWS
+	 hOChv+on3LwOFg/7P8cVm5kdFTnXdgT1aulVqxsw=
+Received: from stargazer.. (unknown [113.200.174.117])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 8FC5666BF9;
+	Mon, 24 Jun 2024 04:51:13 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	Alejandro Colomar <alx@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] vfs: Shortcut AT_EMPTY_PATH early for statx, and add AT_NO_PATH for statx and fstatat
+Date: Mon, 24 Jun 2024 16:50:26 +0800
+Message-ID: <20240624085037.33442-2-xry111@xry111.site>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemf500003.china.huawei.com (7.202.181.241)
+Content-Transfer-Encoding: 8bit
 
-Currently, when iommu working in no-strict mode, fq_flush_timeout()
-will always try to free iovas on one cpu. Freeing the iovas from all
-cpus on one cpu is not cache-friendly to iova_rcache, because it will
-first filling up the cpu_rcache and then pushing iovas to the depot,
-iovas in the depot will finally goto the underlying rbtree if the
-depot_size is greater than num_online_cpus(). Let fq_flush_timeout()
-freeing iovas on cpus who call dma_unmap* APIs, can decrease the overall
-time caused by fq_flush_timeout() by better utilizing the iova_rcache,
-and minimizing the competition for the iova_rbtree_lock().
+It's cheap to check if the path is empty in the userspace, but expensive
+to check if a userspace string is empty from the kernel.  So it seems a
+waste to delay the check into the kernel, and using statx(AT_EMPTY_PATH)
+to implement fstat is slower than a "native" fstat call.
 
-Signed-off-by: Zhang Zekun <zhangzekun11@huawei.com>
+In the past there was a similar performance issue with several Glibc
+releases using fstatat(AT_EMPTY_PATH) for fstat.  That issue was fixed
+by Glibc with reverting back to plain fstat, and worked around by the
+kernel with a special fast code path for fstatat(AT_EMPTY_PATH) at
+commit 9013c51c630a ("vfs: mostly undo glibc turning 'fstat()' into
+'fstatat(AT_EMPTY_PATH)'").
+
+But for arch/loongarch fstat does not exist, so we have to use statx.
+And on all 32-bit architectures we must use statx for fstat after 2037
+since the plain fstat call uses 32-bit timestamp.  Thus Glibc uses statx
+for fstat on LoongArch and all 32-bit platforms, and these platforms
+still suffer the performance issue.
+
+So port the fstatat(AT_EMPTY_PATH) fast path to statx(AT_EMPTY_PATH) as
+well, and add AT_NO_PATH (the name is suggested by Mateusz) which makes
+statx and fstatat completely skip the path check and assume the path is
+empty.
+
+Benchmark on LoongArch Loongson 3A6000:
+
+1. Unpatched kernel, Glibc fstat, actually statx(AT_EMPTY_PATH):
+   2575328 ops/s
+2. Patched kernel, Glibc fstat, actually statx(AT_EMPTY_PATH):
+   5434782 ops/s, +111% from 1
+3. Patched kernel, statx(AT_NO_PATH): 5773672 ops/s, +124% from 1,
+   +6.2% from 2.
+
+Seccomp sandboxes can also green light fstatat/statx(AT_NO_PATH) easier
+than fstatat/statx(AT_EMPTY_PATH) for which the audition needs to check
+5434782543478254347825434782the path but seccomp BPF program cannot do that now.
+
+Link: https://sourceware.org/pipermail/libc-alpha/2023-September/151364.html
+Link: https://sourceware.org/git/?p=glibc.git;a=commit;h=e6547d635b99
+Link: https://sourceware.org/git/?p=glibc.git;a=commit;h=551101e8240b
+Link: https://lore.kernel.org/loongarch/599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name/
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Alejandro Colomar <alx@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Icenowy Zheng <uwu@icenowy.me>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- drivers/iommu/dma-iommu.c | 22 +++++++++++++---------
- drivers/iommu/iova.c      | 21 ++++++++++++++-------
- include/linux/iova.h      |  7 +++++++
- 3 files changed, 34 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 43520e7275cc..217b7c70d06c 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -145,7 +145,8 @@ static inline unsigned int fq_ring_add(struct iova_fq *fq)
- 	return idx;
- }
+Superseds
+https://lore.kernel.org/all/20240622105621.7922-1-xry111@xry111.site/.
+
+ fs/stat.c                  | 103 +++++++++++++++++++++++++------------
+ include/uapi/linux/fcntl.h |   3 ++
+ 2 files changed, 74 insertions(+), 32 deletions(-)
+
+diff --git a/fs/stat.c b/fs/stat.c
+index 70bd3e888cfa..2b7d4a22f971 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -208,7 +208,7 @@ int getname_statx_lookup_flags(int flags)
+ 		lookup_flags |= LOOKUP_FOLLOW;
+ 	if (!(flags & AT_NO_AUTOMOUNT))
+ 		lookup_flags |= LOOKUP_AUTOMOUNT;
+-	if (flags & AT_EMPTY_PATH)
++	if (flags & (AT_EMPTY_PATH | AT_NO_PATH))
+ 		lookup_flags |= LOOKUP_EMPTY;
  
--static void fq_ring_free_locked(struct iommu_dma_cookie *cookie, struct iova_fq *fq)
-+static void fq_ring_free_locked(struct iommu_dma_cookie *cookie, struct iova_fq *fq,
-+				int cpu)
+ 	return lookup_flags;
+@@ -217,7 +217,8 @@ int getname_statx_lookup_flags(int flags)
+ /**
+  * vfs_statx - Get basic and extra attributes by filename
+  * @dfd: A file descriptor representing the base dir for a relative filename
+- * @filename: The name of the file of interest
++ * @filename: The name of the file of interest, or NULL if the file of
++	      interest is dfd itself and dfd isn't AT_FDCWD
+  * @flags: Flags to control the query
+  * @stat: The result structure to fill in.
+  * @request_mask: STATX_xxx flags indicating what the caller wants
+@@ -232,42 +233,56 @@ int getname_statx_lookup_flags(int flags)
+ static int vfs_statx(int dfd, struct filename *filename, int flags,
+ 	      struct kstat *stat, u32 request_mask)
  {
- 	u64 counter = atomic64_read(&cookie->fq_flush_finish_cnt);
- 	unsigned int idx;
-@@ -158,20 +159,21 @@ static void fq_ring_free_locked(struct iommu_dma_cookie *cookie, struct iova_fq
- 			break;
+-	struct path path;
++	struct path path, *p;
++	struct fd f;
+ 	unsigned int lookup_flags = getname_statx_lookup_flags(flags);
+ 	int error;
  
- 		iommu_put_pages_list(&fq->entries[idx].freelist);
--		free_iova_fast(&cookie->iovad,
-+		free_iova_fast_cpu(&cookie->iovad,
- 			       fq->entries[idx].iova_pfn,
--			       fq->entries[idx].pages);
-+			       fq->entries[idx].pages, cpu);
+ 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
+-		      AT_STATX_SYNC_TYPE))
++		      AT_STATX_SYNC_TYPE | AT_NO_PATH))
+ 		return -EINVAL;
  
- 		fq->head = (fq->head + 1) & fq->mod_mask;
- 	}
- }
+ retry:
+-	error = filename_lookup(dfd, filename, lookup_flags, &path, NULL);
+-	if (error)
+-		goto out;
++	if (filename) {
++		p = &path;
++		error = filename_lookup(dfd, filename, lookup_flags, p,
++					NULL);
++		if (error)
++			goto out;
++	} else {
++		f = fdget_raw(dfd);
++		if (!f.file)
++			return -EBADF;
++		p = &f.file->f_path;
++	}
  
--static void fq_ring_free(struct iommu_dma_cookie *cookie, struct iova_fq *fq)
-+static void fq_ring_free(struct iommu_dma_cookie *cookie, struct iova_fq *fq,
-+			 int cpu)
- {
- 	unsigned long flags;
+-	error = vfs_getattr(&path, stat, request_mask, flags);
++	error = vfs_getattr(p, stat, request_mask, flags);
  
- 	spin_lock_irqsave(&fq->lock, flags);
--	fq_ring_free_locked(cookie, fq);
-+	fq_ring_free_locked(cookie, fq, cpu);
- 	spin_unlock_irqrestore(&fq->lock, flags);
- }
- 
-@@ -191,10 +193,11 @@ static void fq_flush_timeout(struct timer_list *t)
- 	fq_flush_iotlb(cookie);
- 
- 	if (cookie->options.qt == IOMMU_DMA_OPTS_SINGLE_QUEUE) {
--		fq_ring_free(cookie, cookie->single_fq);
-+		cpu = smp_processor_id();
-+		fq_ring_free(cookie, cookie->single_fq, cpu);
+ 	if (request_mask & STATX_MNT_ID_UNIQUE) {
+-		stat->mnt_id = real_mount(path.mnt)->mnt_id_unique;
++		stat->mnt_id = real_mount(p->mnt)->mnt_id_unique;
+ 		stat->result_mask |= STATX_MNT_ID_UNIQUE;
  	} else {
- 		for_each_possible_cpu(cpu)
--			fq_ring_free(cookie, per_cpu_ptr(cookie->percpu_fq, cpu));
-+			fq_ring_free(cookie, per_cpu_ptr(cookie->percpu_fq, cpu), cpu);
+-		stat->mnt_id = real_mount(path.mnt)->mnt_id;
++		stat->mnt_id = real_mount(p->mnt)->mnt_id;
+ 		stat->result_mask |= STATX_MNT_ID;
  	}
+ 
+-	if (path.mnt->mnt_root == path.dentry)
++	if (p->mnt->mnt_root == p->dentry)
+ 		stat->attributes |= STATX_ATTR_MOUNT_ROOT;
+ 	stat->attributes_mask |= STATX_ATTR_MOUNT_ROOT;
+ 
+ 	/* Handle STATX_DIOALIGN for block devices. */
+ 	if (request_mask & STATX_DIOALIGN) {
+-		struct inode *inode = d_backing_inode(path.dentry);
++		struct inode *inode = d_backing_inode(p->dentry);
+ 
+ 		if (S_ISBLK(inode->i_mode))
+ 			bdev_statx_dioalign(inode, stat);
+ 	}
+ 
+-	path_put(&path);
++	if (filename)
++		path_put(p);
++	else
++		fdput(f);
++
+ 	if (retry_estale(error, lookup_flags)) {
+ 		lookup_flags |= LOOKUP_REVAL;
+ 		goto retry;
+@@ -276,33 +291,53 @@ static int vfs_statx(int dfd, struct filename *filename, int flags,
+ 	return error;
  }
  
-@@ -205,6 +208,7 @@ static void queue_iova(struct iommu_dma_cookie *cookie,
- 	struct iova_fq *fq;
- 	unsigned long flags;
- 	unsigned int idx;
-+	int cpu = smp_processor_id();
+-int vfs_fstatat(int dfd, const char __user *filename,
+-			      struct kstat *stat, int flags)
++static struct filename *getname_statx(int dfd, const char __user *filename,
++				      int flags)
+ {
+-	int ret;
+-	int statx_flags = flags | AT_NO_AUTOMOUNT;
+-	struct filename *name;
++	int r;
++	char c;
++	bool no_path = false;
++
++	if (dfd < 0 && dfd != AT_FDCWD)
++		return ERR_PTR(-EBADF);
  
  	/*
- 	 * Order against the IOMMU driver's pagetable update from unmapping
-@@ -227,11 +231,11 @@ static void queue_iova(struct iommu_dma_cookie *cookie,
- 	 * flushed out on another CPU. This makes the fq_full() check below less
- 	 * likely to be true.
+-	 * Work around glibc turning fstat() into fstatat(AT_EMPTY_PATH)
++	 * Work around glibc turning fstat() into fstatat(AT_EMPTY_PATH) or
++	 * statx(AT_EMPTY_PATH)
+ 	 *
+ 	 * If AT_EMPTY_PATH is set, we expect the common case to be that
+ 	 * empty path, and avoid doing all the extra pathname work.
  	 */
--	fq_ring_free_locked(cookie, fq);
-+	fq_ring_free_locked(cookie, fq, cpu);
+-	if (dfd >= 0 && flags == AT_EMPTY_PATH) {
+-		char c;
++	if (flags & AT_NO_PATH)
++		no_path = true;
++	else if (flags & AT_EMPTY_PATH) {
++		r = get_user(c, filename);
++		if (unlikely(r))
++			return ERR_PTR(r);
++		no_path = likely(!c);
++	}
  
- 	if (fq_full(fq)) {
- 		fq_flush_iotlb(cookie);
--		fq_ring_free_locked(cookie, fq);
-+		fq_ring_free_locked(cookie, fq, cpu);
- 	}
+-		ret = get_user(c, filename);
+-		if (unlikely(ret))
+-			return ret;
++	if (no_path)
++		return dfd == AT_FDCWD ? getname_kernel("") : NULL;
  
- 	idx = fq_ring_add(fq);
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index d59d0ea2fd21..46a2188c263b 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -20,7 +20,7 @@
- 
- static bool iova_rcache_insert(struct iova_domain *iovad,
- 			       unsigned long pfn,
--			       unsigned long size);
-+			       unsigned long size, int cpu);
- static unsigned long iova_rcache_get(struct iova_domain *iovad,
- 				     unsigned long size,
- 				     unsigned long limit_pfn);
-@@ -423,12 +423,19 @@ EXPORT_SYMBOL_GPL(alloc_iova_fast);
- void
- free_iova_fast(struct iova_domain *iovad, unsigned long pfn, unsigned long size)
- {
--	if (iova_rcache_insert(iovad, pfn, size))
-+	free_iova_fast_cpu(iovad, pfn, size, smp_processor_id());
-+}
-+EXPORT_SYMBOL_GPL(free_iova_fast);
-+
-+void
-+free_iova_fast_cpu(struct iova_domain *iovad, unsigned long pfn,
-+		   unsigned long size, int cpu)
-+{
-+	if (iova_rcache_insert(iovad, pfn, size, cpu))
- 		return;
- 
- 	free_iova(iovad, pfn);
- }
--EXPORT_SYMBOL_GPL(free_iova_fast);
- 
- static void iova_domain_free_rcaches(struct iova_domain *iovad)
- {
-@@ -762,13 +769,13 @@ EXPORT_SYMBOL_GPL(iova_domain_init_rcaches);
-  */
- static bool __iova_rcache_insert(struct iova_domain *iovad,
- 				 struct iova_rcache *rcache,
--				 unsigned long iova_pfn)
-+				 unsigned long iova_pfn, int cpu)
- {
- 	struct iova_cpu_rcache *cpu_rcache;
- 	bool can_insert = false;
- 	unsigned long flags;
- 
--	cpu_rcache = raw_cpu_ptr(rcache->cpu_rcaches);
-+	cpu_rcache = per_cpu_ptr(rcache->cpu_rcaches, cpu);
- 	spin_lock_irqsave(&cpu_rcache->lock, flags);
- 
- 	if (!iova_magazine_full(cpu_rcache->loaded)) {
-@@ -799,14 +806,14 @@ static bool __iova_rcache_insert(struct iova_domain *iovad,
- }
- 
- static bool iova_rcache_insert(struct iova_domain *iovad, unsigned long pfn,
--			       unsigned long size)
-+			       unsigned long size, int cpu)
- {
- 	unsigned int log_size = order_base_2(size);
- 
- 	if (log_size >= IOVA_RANGE_CACHE_MAX_SIZE)
- 		return false;
- 
--	return __iova_rcache_insert(iovad, &iovad->rcaches[log_size], pfn);
-+	return __iova_rcache_insert(iovad, &iovad->rcaches[log_size], pfn, cpu);
- }
- 
- /*
-diff --git a/include/linux/iova.h b/include/linux/iova.h
-index d2c4fd923efa..91e4e3d5bcb3 100644
---- a/include/linux/iova.h
-+++ b/include/linux/iova.h
-@@ -93,6 +93,8 @@ struct iova *alloc_iova(struct iova_domain *iovad, unsigned long size,
- 	bool size_aligned);
- void free_iova_fast(struct iova_domain *iovad, unsigned long pfn,
- 		    unsigned long size);
-+void free_iova_fast_cpu(struct iova_domain *iovad, unsigned long pfn,
-+			unsigned long size, int cpu);
- unsigned long alloc_iova_fast(struct iova_domain *iovad, unsigned long size,
- 			      unsigned long limit_pfn, bool flush_rcache);
- struct iova *reserve_iova(struct iova_domain *iovad, unsigned long pfn_lo,
-@@ -134,6 +136,11 @@ static inline void free_iova_fast(struct iova_domain *iovad,
- {
- }
- 
-+static inline void free_iova_fast_cpu(struct iova_domain *iovad, unsigned long pfn,
-+				      unsigned long size, int cpu);
-+{
+-		if (likely(!c))
+-			return vfs_fstat(dfd, stat);
+-	}
++	return getname_flags(filename, getname_statx_lookup_flags(flags),
++			     NULL);
 +}
 +
- static inline unsigned long alloc_iova_fast(struct iova_domain *iovad,
- 					    unsigned long size,
- 					    unsigned long limit_pfn,
++int vfs_fstatat(int dfd, const char __user *filename,
++			      struct kstat *stat, int flags)
++{
++	int ret;
++	int statx_flags = flags | AT_NO_AUTOMOUNT;
++	struct filename *name = getname_statx(dfd, filename, flags);
++
++	if (IS_ERR(name))
++		return PTR_ERR(name);
+ 
+-	name = getname_flags(filename, getname_statx_lookup_flags(statx_flags), NULL);
+ 	ret = vfs_statx(dfd, name, statx_flags, stat, STATX_BASIC_STATS);
+-	putname(name);
++
++	if (name)
++		putname(name);
+ 
+ 	return ret;
+ }
+@@ -703,11 +738,15 @@ SYSCALL_DEFINE5(statx,
+ 		struct statx __user *, buffer)
+ {
+ 	int ret;
+-	struct filename *name;
++	struct filename *name = getname_statx(dfd, filename, flags);
++
++	if (IS_ERR(name))
++		return PTR_ERR(name);
+ 
+-	name = getname_flags(filename, getname_statx_lookup_flags(flags), NULL);
+ 	ret = do_statx(dfd, name, flags, mask, buffer);
+-	putname(name);
++
++	if (name)
++		putname(name);
+ 
+ 	return ret;
+ }
+diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+index c0bcc185fa48..470b5c77000c 100644
+--- a/include/uapi/linux/fcntl.h
++++ b/include/uapi/linux/fcntl.h
+@@ -113,6 +113,9 @@
+ #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
+ 
+ #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
++#define AT_NO_PATH		0x10000	/* Ignore relative pathname,
++					   behave as if AT_EMPTY_PATH and
++					   the relative pathname is empty */
+ 
+ /* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits... */
+ #define AT_HANDLE_FID		AT_REMOVEDIR	/* file handle is needed to
 -- 
-2.17.1
+2.45.2
 
