@@ -1,189 +1,140 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB16C1A0B14
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B581A2550
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719265629; cv=none; b=TIS1FPdRZLityvx/GvbynPD9kw1oP164Ki55AX58AlZDAynzJC5OjJJV2ZFommE39WCyQZ3M3Cu+Kz39l9guKXygXwmzxwO94N4k+/1xysD9GwJxcGLIOn74/yR6WpjaqrfwAKr+8yLlsNGhapv0wnNm5GoMgAAh/ple4ALYSH8=
+	t=1719265632; cv=none; b=DawTvI4fJFWkWYkL0z9LU5PaoA9q1mN3/MJSw/DAWk5oFu4/hWfrE07HT9fB72E4fygzJFu2tyxuwmIfUpth87vvgTWyUiAeTRt2LMyDuguJhRkFSZmadSaUhUctNS+SR8TNlAqT47ZZaA3Z/8MTeVJXLTwPOAkkNFM8xWnNxC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719265629; c=relaxed/simple;
-	bh=1uVEUqdRcUo/rJ5R+c++NPkM94ZB+DuQFRakCKBJoYE=;
+	s=arc-20240116; t=1719265632; c=relaxed/simple;
+	bh=PfU00K8ld15e3Ct7J5mqMcyH+tXcb47splfu3HxcPsA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=TxgwxnA0WlBQX6u3W9HbKCPg7Ob2yxv8wn9K0YKht6IIEOO3gy6celmgI263rq486XbHH62QMlo62KdXIPX7kiGtQAXWUmmKd1cLyor0YS1az2soPuBrpH6E2QjhkvU646Uei0J7QdWPjekVeWT7cSle/kTMsInc6uWEaXeAYTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p6MrxJ+j; arc=none smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=dWDqmWS+a2ee3CSMLrnSxb0S81ezME11gtIW7YUOColp97mAFSxoMMtiv4XhDe3+NypELkYgxeLiPmZcAGUUliJsXzAutP3Gg0KIA+BWXhej1cYAuAxQ5VB5qtjdhVoqBL2F/VnTd208fNFLtZ7U/LKsOpAD9woyHe1FEGQrmLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mHwY5I/4; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p6MrxJ+j"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f70ec6ff8bso27095ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:47:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mHwY5I/4"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a724cd0e9c2so191999966b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719265627; x=1719870427; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1719265628; x=1719870428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ryU5o2yVn1i6Iaousq7WSn7w6bux8oEB7sHmGtnV9uI=;
-        b=p6MrxJ+jFadwPQYB2bHJdf5etvquPE/wVv4H4PFnScMPuSlB/CVYR2Ud654BOpa0Xn
-         2dWTZ6vAIagU9M+Zs7ET+mXeOXs9Bwb24fZgEkIM7IS6hnqGvuLpmxoy96S6gQOPkG7v
-         Q2GtoHE3/KQ7ReSiMrIyysU64VRv7V93DpwMnL09085nDIbe+jNu93pyTry0RJiDWztD
-         aaMXEAWPODT4HfQSga2PE6Tp76pHDBiy1rZHDgk8IH+x2iVh6Pg3HNI4YJyvhSVa8MOM
-         nUXBzleVL1gYSPi2hxDU6r7dh7OQ65FJvubVyMeGTulzvYngqMNPyuKL7CPwI7QuqGok
-         KohA==
+        bh=zpHFOryNWFijkyNTFyyhIbAri5hCaElrVf1pJKE/RaA=;
+        b=mHwY5I/4r09BrKmXt2lj8LDXAhzQjRdEYUbANB8zqEPK1ginnf3LFHm/1kXwk+Sb8f
+         bUvHexHSG2atdHd8QXLqGjusaQVITUAERUv/qEdD8tT/pG28BH4e+P7779nAPe9AwhUJ
+         5lhWnQN3ufb9UZpyoY26Qx0PE4goFzbWF0rgFqHm1OC+YVSQszF++I96e37ueSK5qDWU
+         DZAwTtWOXxi934owmfhPp7+rk8hYjwu3+LO3K/ebOhSWF13CGlfNyxVNSM9Gu/YYbMik
+         VbYo7eB2q1SCIm1sSAlwuEy6pkxNa/K57QvnIZYs6E0+BKgbtiImtHl2xVrvDmwipAIY
+         K5hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719265627; x=1719870427;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1719265628; x=1719870428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ryU5o2yVn1i6Iaousq7WSn7w6bux8oEB7sHmGtnV9uI=;
-        b=wgJ6ue9OHGYSlqAS/0M2EdTMeoBHGrpGQw8vSJvbGaNeT4dU6DFV+DM/HSrRbZe2NA
-         qd8OVyWjzGoDrNG97QibnD58SZuE1Hn/uyfY+PTM+3CqYEI2Rpjfd1U1VdrWJXBnrOHu
-         ASQpFGUBrSs/Jh1lR2tJoJJ/h77cVxnlIF8CLbrZvoa0igQywibah11pBihWWbkVzFbX
-         HcFZExg2mmvy2SD5/9yjEuT310fw5C25lF9YJImyC6dl9pSEkOUTw5jLr4TxcKuu7yxB
-         dxwKA055chZORMChPmCCgOXch8w37tliuYPkcVB0ZXLvKUBJfsscmocRAOnHCxfLa0FM
-         Yn0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUxWjiS2DFyVcMnxq2ZUdRqQL3Jn53hpHY/y7J4RDqyDAUy27O51Dw99ZTLnlw9/SUSPfxSxV5V8cRfF07gys+6o4mkPtc9Bk6b/Nog
-X-Gm-Message-State: AOJu0YzMixb121nKxcqdwtnkuFYHKoOwwI/Djzv5H+pKssfL7AAAA99F
-	sWY4JBfhhs9KLJoYCFbdou8xWGPjtS19jMdzwK5ZXJH3St6jpb3C/qdIXpXZyMKy7Sza1VOpLPO
-	lpB83lKddbLYU8A0igKA76Kzc9PhT+v34nAsI
-X-Google-Smtp-Source: AGHT+IEJrMsRDVKc4wpx0FBdMJnJosYDDYfqfwciz733n6udVWvghsvDjxQCFEC37EnR/1LLitbb/jf7rxP7dJ9fEkQ=
-X-Received: by 2002:a17:902:bd47:b0:1f7:1c96:d2e8 with SMTP id
- d9443c01a7336-1fa68fb23efmr1044215ad.10.1719265626724; Mon, 24 Jun 2024
- 14:47:06 -0700 (PDT)
+        bh=zpHFOryNWFijkyNTFyyhIbAri5hCaElrVf1pJKE/RaA=;
+        b=HUAMe8wO2PeRemseP53t734LT1rSV9wsH6+n2klt4g979nCoGjlRLRY8sED0g2OsrH
+         XmYmSVHE68DQPWhJ+96/NyWSBDrRHE75O+3Og0U56vvkSrVMbwVwRkYwsAxANpRHlYhd
+         Tlct8ZXFByJsj7RQ3WELdugQGAd2Rj5haDWRZXjOiLpZH5odRqy/aZidbZPe/IDO/Ts5
+         UzYLSaZ84fzc5lxgk0NbrfQVUxy37QCEJ+yUHnQooimQAXWn9f+42sNjr8+u8SoqlRxB
+         7nlzDb06IUPb185fzp2Fc72bvpjFoDNwpbzloxE0SstqgdIGiuUqgOo2FeJCZzkCYuUE
+         S+lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzhmDVBvb1sjWTCquQ6FGg6zpq4VTqA+oUpxa5O24jKOeTKtoBJDuaZtKR1Ob0gybC81ekN4j2NJzMF1AbGynxz/D6vsIvueJm893N
+X-Gm-Message-State: AOJu0YyQwhN9amnAR03ktyo9syeEjL6gJpT/oKJSJm/Z/PA2ite+ol8t
+	cUzb5LG0gv/oHD7dCt7+4cvVkcPCu+ZHzrOkaxV3kBH4zDwfWIlA8Ac63C2lhYmOhttifaRjZ7n
+	XetFi+Z71eQH73X38+fKB5aq6W2n9gF8qUZpy
+X-Google-Smtp-Source: AGHT+IHfhIsQTn+36KvpTzSGdeSCdIpE31rK5PjUqd1FQKDYFZ2fswFe52Q+Vqr9RBc/Or+ypFOJY+v7hR2sCbTdb6M=
+X-Received: by 2002:a17:906:374b:b0:a6f:af58:efac with SMTP id
+ a640c23a62f3a-a7245b8f348mr356555966b.25.1719265627320; Mon, 24 Jun 2024
+ 14:47:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613233122.3564730-1-irogers@google.com>
-In-Reply-To: <20240613233122.3564730-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Jun 2024 14:46:54 -0700
-Message-ID: <CAP-5=fWZDZWvrysEzL7H2kAXNBhFd3=kcmz1N=W+HgwGPsBPDg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Refactor perf python module build
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Nick Terrell <terrelln@fb.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Kees Cook <keescook@chromium.org>, 
-	Andrei Vagin <avagin@google.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, coresight@lists.linaro.org, 
-	rust-for-linux@vger.kernel.org, bpf@vger.kernel.org
+References: <20240621054658.1220796-1-alexs@kernel.org>
+In-Reply-To: <20240621054658.1220796-1-alexs@kernel.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 24 Jun 2024 14:46:30 -0700
+Message-ID: <CAJD7tkbnmeVugfunffSovJf9FAgy9rhBVt_tx=nxUveLUfqVsA@mail.gmail.com>
+Subject: Re: [PATCH 00/15] add zpdesc memory descriptor for zswap.zpool
+To: alexs@kernel.org
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, minchan@kernel.org, willy@infradead.org, 
+	senozhatsky@chromium.org, david@redhat.com, 42.hyeyoo@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 4:31=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Thu, Jun 20, 2024 at 10:42=E2=80=AFPM <alexs@kernel.org> wrote:
 >
-> Refactor the perf python module build to instead of building C files
-> it links libraries. To support this make static libraries for tests,
-> ui, util and pmu-events. Doing this allows fewer functions to be
-> stubbed out, importantly parse_events is no longer stubbed out which
-> will improve the ability to work with heterogeneous cores.
+> From: Alex Shi <alexs@kernel.org>
 >
-> By not building .c files for the python module and for the build of
-> perf, this should also help build times.
+> According to Metthew's plan, the page descriptor will be replace by a 8
+> bytes mem_desc on destination purpose.
+> https://lore.kernel.org/lkml/YvV1KTyzZ+Jrtj9x@casper.infradead.org/
 >
-> Patch 1 adds '*.a' cleanup to the clean target.
+> Here is a implement on z3fold to replace page descriptor by zpdesc,
+> which is still overlay on struct page now. but it's a step move forward
+> above destination.
 >
-> Patches 2 to 6 add static libraries for existing parts of the perf
-> build.
->
-> Patch 7 adds the python build using libraries rather than C source
-> files.
->
-> Patch 8 cleans up the python dependencies and removes the no longer
-> needed python-ext-sources.
->
-> v3: Add missed xtensa directory for the util build. Remove adding the
->     arch directory to perf-y as it creates an empty object file that
->     breaks with GCC and LTO.
-> v2: Add '*.a' cleanup to clean target. Add reviewed-by James Clark.
+> To name the struct zpdesc instead of z3fold_desc, since there are 3 zpool
+> usages under zswap, zbud, z3fold, zsmalloc. It looks like we may extend t=
+he
+> zpdesc to zbud and zsmalloc, combined their usage into one.
 
-Ping.
+Please do not focus your development efforts on z3fold. We really want
+to deprecate/remove it, as well as zbud eventually. See [1].
 
-Thanks,
-Ian
+For zsmalloc, there is already an ongoing effort to split zsdesc from
+struct page [2].
 
-> Ian Rogers (8):
->   perf build: Add '*.a' to clean targets
->   perf ui: Make ui its own library
->   perf pmu-events: Make pmu-events a library
->   perf test: Make tests its own library
->   perf bench: Make bench its own library
->   perf util: Make util its own library
->   perf python: Switch module to linking libraries from building source
->   perf python: Clean up build dependencies
+[1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=3D2Ww13sCj4S3i4bN=
+ndqF+3+_Vg@mail.gmail.com/
+
+[2]https://lore.kernel.org/lkml/20230713042037.980211-1-42.hyeyoo@gmail.com=
+/
+
 >
->  tools/perf/Build                              |  14 +-
->  tools/perf/Makefile.config                    |   5 +
->  tools/perf/Makefile.perf                      |  83 +++-
->  tools/perf/arch/Build                         |   5 +-
->  tools/perf/arch/arm/Build                     |   4 +-
->  tools/perf/arch/arm/tests/Build               |   8 +-
->  tools/perf/arch/arm/util/Build                |  10 +-
->  tools/perf/arch/arm64/Build                   |   4 +-
->  tools/perf/arch/arm64/tests/Build             |   8 +-
->  tools/perf/arch/arm64/util/Build              |  20 +-
->  tools/perf/arch/csky/Build                    |   2 +-
->  tools/perf/arch/csky/util/Build               |   6 +-
->  tools/perf/arch/loongarch/Build               |   2 +-
->  tools/perf/arch/loongarch/util/Build          |   8 +-
->  tools/perf/arch/mips/Build                    |   2 +-
->  tools/perf/arch/mips/util/Build               |   6 +-
->  tools/perf/arch/powerpc/Build                 |   4 +-
->  tools/perf/arch/powerpc/tests/Build           |   6 +-
->  tools/perf/arch/powerpc/util/Build            |  24 +-
->  tools/perf/arch/riscv/Build                   |   2 +-
->  tools/perf/arch/riscv/util/Build              |   8 +-
->  tools/perf/arch/s390/Build                    |   2 +-
->  tools/perf/arch/s390/util/Build               |  16 +-
->  tools/perf/arch/sh/Build                      |   2 +-
->  tools/perf/arch/sh/util/Build                 |   2 +-
->  tools/perf/arch/sparc/Build                   |   2 +-
->  tools/perf/arch/sparc/util/Build              |   2 +-
->  tools/perf/arch/x86/Build                     |   6 +-
->  tools/perf/arch/x86/tests/Build               |  20 +-
->  tools/perf/arch/x86/util/Build                |  42 +-
->  tools/perf/arch/xtensa/Build                  |   2 +-
->  tools/perf/bench/Build                        |  46 +-
->  tools/perf/scripts/Build                      |   4 +-
->  tools/perf/scripts/perl/Perf-Trace-Util/Build |   2 +-
->  .../perf/scripts/python/Perf-Trace-Util/Build |   2 +-
->  tools/perf/tests/Build                        | 140 +++----
->  tools/perf/tests/workloads/Build              |  12 +-
->  tools/perf/ui/Build                           |  18 +-
->  tools/perf/ui/browsers/Build                  |  14 +-
->  tools/perf/ui/tui/Build                       |   8 +-
->  tools/perf/util/Build                         | 394 +++++++++---------
->  tools/perf/util/arm-spe-decoder/Build         |   2 +-
->  tools/perf/util/cs-etm-decoder/Build          |   2 +-
->  tools/perf/util/hisi-ptt-decoder/Build        |   2 +-
->  tools/perf/util/intel-pt-decoder/Build        |   2 +-
->  tools/perf/util/perf-regs-arch/Build          |  18 +-
->  tools/perf/util/python-ext-sources            |  53 ---
->  tools/perf/util/python.c                      | 271 +++++-------
->  tools/perf/util/scripting-engines/Build       |   4 +-
->  tools/perf/util/setup.py                      |  33 +-
->  50 files changed, 625 insertions(+), 729 deletions(-)
->  delete mode 100644 tools/perf/util/python-ext-sources
+> For zpdesc(page), z3fold just uses the 5th member zppage_flag, which
+> match with page.private. Potentially uses the first member flags for
+> headless PG_locked, list_head lru and page.mapping|PAGE_MAPPING_MOVABLE
+> for page migration.
+>
+> This patachset could save 26Kbyetes z3fold.o size, basely saving come
+> from the page to folio conversion.
+>
+> Thanks a lot!
+> Alex
+>
+> Alex Shi (15):
+>   mm/z3fold: add zpdesc struct and helper and use them in
+>     z3fold_page_isolate
+>   mm/z3fold: use zpdesc in z3fold_page_migrate
+>   mm/z3fold: use zpdesc in z3fold_page_putback
+>   mm/z3fold: use zpdesc in get/put_z3fold_header funcs
+>   mm/z3fold: use zpdesc in init_z3fold_page
+>   mm/z3fold: use zpdesc in free_z3fold_page
+>   mm/z3fold: convert page to zpdesc in __release_z3fold_page
+>   mm/z3fold: use zpdesc free_pages_work
+>   mm/z3fold: use zpdesc in z3fold_compact_page and do_compact_page
+>   mm/z3fold: use zpdesc in __z3fold_alloc
+>   mm/z3fold: use zpdesc in z3fold_alloc
+>   mm/z3fold: use zpdesc in free_z3fold_page and z3fold_free
+>   mm/z3fold: use zpdesc in z3fold_map/z3fold_unmap
+>   mm/z3fold: introduce __zpdesc_set_movable
+>   mm/z3fold: introduce __zpdesc_clear_movable
+>
+>  mm/z3fold.c | 190 +++++++++++++++++++++++++++-------------------------
+>  mm/zpdesc.h |  87 ++++++++++++++++++++++++
+>  2 files changed, 184 insertions(+), 93 deletions(-)
+>  create mode 100644 mm/zpdesc.h
 >
 > --
-> 2.45.2.627.g7a2c4fd464-goog
+> 2.43.0
+>
 >
