@@ -1,150 +1,91 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9181019E83A
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF7319EEDD;
+	Mon, 24 Jun 2024 17:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719250803; cv=none; b=gqK6RpbuLgB8wf7Z+PYufY4YDy1Botpq/jMfsyMIs29F3yENSRuzOLMYk0YKKo7DIj0KSwHMXCMKJ2S+s6yxpG/hrZEjBTMNSZtv0GDQiFdbgXp847D8myxNamgiyMd4bGTDZSRAjIUyRBS9f8ln6riI6Otvucgxhkhxj6B7ur4=
+	t=1719250831; cv=none; b=dbShJF4l1QVIz6uqvaEKWRehT0U8eeQ8g8O6YSbYcRUXfn5ljQtt23DOk57uqD1+btmMFIBo5PIQZEmrDlaDMp0NfHo21OgH2uWU28ysLq737JmaydtSF77ExtNBBB9+A9d/DNv9H4oF/G1ebUHPIWqvw1wsYiAcFueTeU4fUwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719250803; c=relaxed/simple;
-	bh=rFspHFmOyiFGXqZvDfFVtBS2+jLZUsqxipNk0i6GmJE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SKzcCW8voHaPxBOoRY2HZGW8USWCfBlR5+qfSQk4CrUwexwe2bPEM5wAVml8TYVe8YqeZ6MaYf8oSNUgm1xA1650d/lcS4Iq2UZbxe8TCIYaSgl5xGXW2QgWRKvuiGmxtqmu5AHFLgo7DpWnkcObZa7uvF4UB8V8sEVFqAXSodc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J9uB0i/A; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719250831; c=relaxed/simple;
+	bh=cVZguKETeKIYSegRsLSDsF+ocn6kUtTa2dnkN7qny8k=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CpQ8yTYt5ZcfvKOd7sw0wGi0JWdrgbpKG06m9sO4pCRAWG2394Yvgw0KfeE/HJsbgaCQwPpG/hwcPKnuBhbbnm/BjyYbDDNxygg2RfFr+2QCugtcUZNswn3w6zRyo19yBwdrKzXL5pRY0uOtAPcWamqgMDbTsvQKUtetlzSzI0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPavk1N/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J9uB0i/A"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ebed33cb65so51032631fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719250800; x=1719855600; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4I6nP/vTxwMdJ/dV3TQHmb3v1qJ/dluw5GaWCNXlms=;
-        b=J9uB0i/A+T0QJg8TIpsw5GqmgS5+XDK1TDR/QhsPR7OFiU8OwY6t2m3vKRsN9bgsjX
-         BAV1kKK8jJsMkV2r+0Pb5CD9Zep8VGXx1ifv7luzR8AInO3DavpkF1FejjGXq3QG3f3H
-         9Tjv5n5W5Wx+p3YflBoyFfDvTNnMDdmSD16t1MC3yDT70cGByqoWdCtjBVogJyAhvQuw
-         SkBKKny0zHGY2SwCqLce71OIjiH9WZsXtPDx+qSQmD8sn0GiGjs3I9WM2iqxb7kZV1lr
-         X1TgjVeF5Lz3b1b33iEcishtqU4vDKdT3sw6K47mcTRTawm9NzFO9gkujPuHKFqCE3lB
-         U8FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719250800; x=1719855600;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X4I6nP/vTxwMdJ/dV3TQHmb3v1qJ/dluw5GaWCNXlms=;
-        b=wL0DtptlcxaMb8if3Jg9kBKCfP37nluaadhwl1zVa9nKuqQUR2wb3CP7+vTm/QGSVP
-         /5vajtXieRymbX5TXm9LSPm5vTrvWbv0tHTH++QA2+jZi7Rdrhy/2hrMYZIbWzOaD/Aw
-         MKXypfq2G2JGjhOTGEzQAH6cF4NliGAldZJ3gUe6ODFNIlViFnWWksoL/SkU2DHZ8bcq
-         vSTV4LGOrrR9cPhKSVu8Qx3vGVkBSVbnVJ2g/XlnJPChOQep4snw4H9Y4pLvFj8NiD/2
-         eiWE+xPyP8DJYdbfb694EJZHa4Sy0G2QrzAI2ii+HB8j68EXlWxULzQqby9wf/Arx0SD
-         GSnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxcbSfKBOkVzGA1hOiKVgLlM6WSecR+JJIKkadx/fBteegJnGC7PzaMRn0s/CmeFbku+TVl5DxXErEB2aT2ZfzRqaTXKFaKOWjnIki
-X-Gm-Message-State: AOJu0Yx/htmbn1rZKqrQi59DtlH68ovvwjQTkydZyCaImxXXcs6zfrOL
-	XBMOXnWhi6w94pg0bzk6X1wReCfhCo1ZNXPV0upWGbEAOtHZCjVAd1CrgJBYzyIF9EGD0eMqy7a
-	tGvs=
-X-Google-Smtp-Source: AGHT+IEh/iyrIRntkObUotPBA+wdBYxw0BsT77HvhE4PadtEX9XW7b2sxv0RwYrWpQ0mB8zBTSgWgQ==
-X-Received: by 2002:a05:651c:2119:b0:2ec:681b:5b50 with SMTP id 38308e7fff4ca-2ec681b5f72mr4572391fa.11.1719250799656;
-        Mon, 24 Jun 2024 10:39:59 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec5d2c3446sm5120581fa.38.2024.06.24.10.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 10:39:59 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 24 Jun 2024 20:39:58 +0300
-Subject: [PATCH] drm/connector: hdmi: shorten too long function name
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPavk1N/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07D57C32789;
+	Mon, 24 Jun 2024 17:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719250831;
+	bh=cVZguKETeKIYSegRsLSDsF+ocn6kUtTa2dnkN7qny8k=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=CPavk1N/CfgB5i6aKmd98eXP58YRJCznv0VMuBaHiSlqNPERXtcr5gKjJ4jJcv+49
+	 y1e1lYJ7BmNcr/IKlKU0Yu6n/FFldPUegW/xd4bindRky6ec3uL2OxiSAbbuBg2/zo
+	 RssF/NSP7BFMPL6k6wA8yUuiQBTBtWemwyaMI8ObZtGZnB2geY/Q61aeR1h+stBjck
+	 km1+cva12wyZ8ShxfawpeOSeH9ZAHIVy2vJyDM4GUNRCcgNa2LkCNJiRqLeHvwiWgK
+	 0/ppXqXkVmUjJQURzK4hfNT01ZXDb2a2b2tmmQAlGSL/uScAIDd6V05lGmFk4SNlQ4
+	 Ww37vgtplBjyA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D89D1C43612;
+	Mon, 24 Jun 2024 17:40:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240624-hdmi-connector-shorten-name-v1-1-5bd3410138db@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAG2veWYC/x3MwQqDMAwA0F+RnA3UWNzYrwwPXRvXHExHKjIQ/
- 93i8V3eAZVNuMKrO8B4lypFG4a+g5iDfhklNQM58m4ijzmtgrGoctyKYc3FNlbUsDKOA1F6Ov+
- Z4gPa8DNe5H/v7/k8L1LoJTltAAAA
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3067;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=rFspHFmOyiFGXqZvDfFVtBS2+jLZUsqxipNk0i6GmJE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmea9uPJTjZRiOibJPcz5nFHytq9vOX0HcFPm1P
- jPg/exgeCOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZnmvbgAKCRCLPIo+Aiko
- 1WQDB/4zH94esAY7J/6Qv7nPTGRI9qb7iXNNoQI+f3yug4LgXeV2+rvQDDc2z7dPfb1VKWNFy6Y
- Et9nvs2Xv6lQ3QHh3xl0X3l/DqhzxOtfmg8XO7LhqRqS5KhWXA95CyrGzOLwuNgxVFC7R+GxX95
- qE18uh8iTr9U4iKLZ+FliIekM+kz+hAw8KkP3B7UqBU1PnTI7ZyerW6XS3Si6C6vcodm8E8gkwb
- IVljS88TG9+eOzSfUqrjqklLZYOsfQbGMnSZkrSHrXKFIN+fyj8y5QMfuSmVAmxOF4n0guNS81d
- CN7+Om6r/u9MJplaEeaang585QgXa4+pAvjXFD96gK+TNEIN
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH] f2fs: assign CURSEG_ALL_DATA_ATGC if blkaddr is
+ valid
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <171925083088.4247.5859176757737434245.git-patchwork-notify@kernel.org>
+Date: Mon, 24 Jun 2024 17:40:30 +0000
+References: <20240618022334.1576056-1-jaegeuk@kernel.org>
+In-Reply-To: <20240618022334.1576056-1-jaegeuk@kernel.org>
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ stable@vger.kernel.org
 
-If CONFIG_MODVERSIONS is enabled, then using the HDMI Connector
-framework can result in build failures. Rename the function to make it
-fit into the name requirements.
+Hello:
 
-ERROR: modpost: too long symbol "drm_atomic_helper_connector_hdmi_disable_audio_infoframe" [drivers/gpu/drm/msm/msm.ko]
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-Reported-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/display/drm_hdmi_state_helper.c | 6 +++---
- include/drm/display/drm_hdmi_state_helper.h     | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+On Tue, 18 Jun 2024 02:23:34 +0000 you wrote:
+> mkdir /mnt/test/comp
+> f2fs_io setflags compression /mnt/test/comp
+> dd if=/dev/zero of=/mnt/test/comp/testfile bs=16k count=1
+> truncate --size 13 /mnt/test/comp/testfile
+> 
+> In the above scenario, we can get a BUG_ON.
+>  kernel BUG at fs/f2fs/segment.c:3589!
+>  Call Trace:
+>   do_write_page+0x78/0x390 [f2fs]
+>   f2fs_outplace_write_data+0x62/0xb0 [f2fs]
+>   f2fs_do_write_data_page+0x275/0x740 [f2fs]
+>   f2fs_write_single_data_page+0x1dc/0x8f0 [f2fs]
+>   f2fs_write_multi_pages+0x1e5/0xae0 [f2fs]
+>   f2fs_write_cache_pages+0xab1/0xc60 [f2fs]
+>   f2fs_write_data_pages+0x2d8/0x330 [f2fs]
+>   do_writepages+0xcf/0x270
+>   __writeback_single_inode+0x44/0x350
+>   writeback_sb_inodes+0x242/0x530
+>   __writeback_inodes_wb+0x54/0xf0
+>   wb_writeback+0x192/0x310
+>   wb_workfn+0x30d/0x400
+> 
+> [...]
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-index 2dab3ad8ce64..7854820089ec 100644
---- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-@@ -716,7 +716,7 @@ drm_atomic_helper_connector_hdmi_update_audio_infoframe(struct drm_connector *co
- EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_update_audio_infoframe);
- 
- /**
-- * drm_atomic_helper_connector_hdmi_disable_audio_infoframe - Stop sending the Audio Infoframe
-+ * drm_atomic_helper_connector_hdmi_clear_audio_infoframe - Stop sending the Audio Infoframe
-  * @connector: A pointer to the HDMI connector
-  *
-  * This function is meant for HDMI connector drivers to stop sending their
-@@ -727,7 +727,7 @@ EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_update_audio_infoframe);
-  * Zero on success, error code on failure.
-  */
- int
--drm_atomic_helper_connector_hdmi_disable_audio_infoframe(struct drm_connector *connector)
-+drm_atomic_helper_connector_hdmi_clear_audio_infoframe(struct drm_connector *connector)
- {
- 	struct drm_connector_hdmi_infoframe *infoframe =
- 		&connector->hdmi.infoframes.audio;
-@@ -749,4 +749,4 @@ drm_atomic_helper_connector_hdmi_disable_audio_infoframe(struct drm_connector *c
- 
- 	return ret;
- }
--EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_disable_audio_infoframe);
-+EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_clear_audio_infoframe);
-diff --git a/include/drm/display/drm_hdmi_state_helper.h b/include/drm/display/drm_hdmi_state_helper.h
-index 285f366cf716..2d45fcfa4619 100644
---- a/include/drm/display/drm_hdmi_state_helper.h
-+++ b/include/drm/display/drm_hdmi_state_helper.h
-@@ -16,7 +16,7 @@ int drm_atomic_helper_connector_hdmi_check(struct drm_connector *connector,
- 
- int drm_atomic_helper_connector_hdmi_update_audio_infoframe(struct drm_connector *connector,
- 							    struct hdmi_audio_infoframe *frame);
--int drm_atomic_helper_connector_hdmi_disable_audio_infoframe(struct drm_connector *connector);
-+int drm_atomic_helper_connector_hdmi_clear_audio_infoframe(struct drm_connector *connector);
- int drm_atomic_helper_connector_hdmi_update_infoframes(struct drm_connector *connector,
- 						       struct drm_atomic_state *state);
- 
+Here is the summary with links:
+  - [f2fs-dev] f2fs: assign CURSEG_ALL_DATA_ATGC if blkaddr is valid
+    https://git.kernel.org/jaegeuk/f2fs/c/8cb1f4080dd9
 
----
-base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
-change-id: 20240624-hdmi-connector-shorten-name-3122d804b6c7
-
-Best regards,
+You are awesome, thank you!
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
