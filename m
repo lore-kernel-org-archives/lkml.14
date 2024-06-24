@@ -1,272 +1,176 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2054.outbound.protection.outlook.com [40.107.104.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0519D892
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719240441; cv=none; b=SPM6J+Xk/Bvst0jV456bz3XMukPH4d6P4ilZPv1sWGVoJpQXWmlvVnPga7jlnmD2Nod/l1FUlkFik/aqW+ktulvZDCHqyVMBqspOkpyOMC6NrZVaXkcb2FstsV6eoQxefMw7f1kOI1lo63kVVfiz/yvjgPFHtNqplgBd0GQrLIk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719240441; c=relaxed/simple;
-	bh=OHpbr2EW8Ehxc4cGWtKirj+0lOuzXeICYvz9BBmzSDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QYl3ndcKZsHSj0M4yOfebNPH2TUPyj1WhsUCrPnq3Q1jHJZEVt/WrJcrtMUEZNC4LztpuhUEl51HeIk+I7tBagYrULHva/cdoSBw6Jd/GLRpuMZSWPgTEp9wKHcdaSJE1NWaJcrf2CxxDtPZbrXvuKKJH+gQTWWzr/R2whmcqYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4W79kr2bkHz9vGV;
-	Mon, 24 Jun 2024 16:46:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id mljZycpqFe68; Mon, 24 Jun 2024 16:46:12 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4W79kh6WXLz9vFn;
-	Mon, 24 Jun 2024 16:46:04 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DA7A08B766;
-	Mon, 24 Jun 2024 16:46:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Ku0Pcz5vOux0; Mon, 24 Jun 2024 16:46:04 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.33])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 559438B768;
-	Mon, 24 Jun 2024 16:46:04 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EF219FA97;
+	Mon, 24 Jun 2024 14:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719240440; cv=fail; b=ik9r/7ozwbeyy6wrIOQYA2gx/Q5Fk2k1TngNLpBLs+p+BATp6O1PjZLfJeEzJakGSzOkW0kjvYAKWQf9JjoaPJfUVCLgIXCpCabVyyyoI9sNPtCJ8zoCFjJn+8GKdc8l5czzBEfnBkMMNJfQTGf+Yn/jEccSvTqvzcyyMsGRUE8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719240440; c=relaxed/simple;
+	bh=z6Hf1Yp+zK72VPsyGMaXPxWDTrjoGe5jqMYtJoUZKKE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=EFl7CM9X2kYJeJKxZelAWurxE0QtlMhlTjpSkR+QI1oIoUs64lUcCjbCl7Xk+z62iAE0NDVeR7rg7dyoESCo4oINX6b5+/9KyJRMMCQ5fY0QNAxXVzk1GVTtRS4VrCnaKmnrI/2aSvmTWngbHViyBJ4k5zEChBD9pHTi5P107jw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=olr4n3fz; arc=fail smtp.client-ip=40.107.104.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="olr4n3fz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CySzgmODrCgbgn66BSWr9xR84ErmyIxIc69Qn54diwybvW+lag2e6jeffXUpAzYRdUeyvmglEXap+0T2LEDbNd6ktZuTnXv2jwy1uGebiPIK5mhcuuC77rO0Y1flzIMKc8rMRb+pGFeooh2Vn7uZqIYGLqvhG/5U2by5H4mIkLm7R5NphK2hDE8oJMO8aFSiIQmV9jVT+zqWzXL9MxdTY9QHm5FUAbUFZBrj0VFSpTWHEDCQ6sIOuIwb3+2zZKv4EyNpTsoJ10N5Y8QBO9BH/Woi/MNuABGPMAb6/C/xOxYCfynwebnVOr0YwEkEQ3rN0WGsQpdap9i3eFaIQ2xQPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UKf58Qp+Q/d2Kpho8jxSODsXI1kyXdz+P/2HpUfmq1c=;
+ b=F48Gol0FWDWnzSforxtC810CPBmvpPpC7mMAJV0RJbAsmRPZ2Vjx7m80h/3igbIfFstmQkNDQtYCz0i2zt6/H+q8sir1Lo7QVz9pUADVeHa+ChQTI0ywvjTcDTwy6sFuyJX9dXvWgShkzp+terWujaoTXgR1jLcTkSjFYb8OqsONKCg1mSFRLJTFS/qLiBk/NxBLi8nG6Q3LySwT/7fqLYU1fRNA4Au0j77KWryYMTJb97QnvCIUjK+GBYKOgOQSu31vqS9ErStb9p9JOA0xkDKtVSIVy6eDzItpr3Z6onPuqz3wrMJQTieQxeAqQp5qedTkmFsE27Zn5N9eEBD9iA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UKf58Qp+Q/d2Kpho8jxSODsXI1kyXdz+P/2HpUfmq1c=;
+ b=olr4n3fzUf2qkR41GIXWkwKNoH3hTD/KhRSXZC2HFRIk6xqWAY/dXyv6o9Nn0LMQgL6NKdHuGLO/ld8lt2xboxXy4DJ9fA77JYZ496+Iq2U4jKgSlA9AS9UoXZ9I+K1kFHn6HhBgT8oNBby2/5q5Vq77esG3wASc++zbGBpleX8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI0PR04MB10253.eurprd04.prod.outlook.com (2603:10a6:800:23e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
+ 2024 14:47:15 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.020; Mon, 24 Jun 2024
+ 14:47:15 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: netdev@vger.kernel.org
+Cc: Frank.Li@nxp.com,
+	conor+dt@kernel.org,
+	davem@davemloft.net,
+	devicetree@vger.kernel.org,
+	edumazet@google.com,
+	imx@lists.linux.dev,
+	krzk+dt@kernel.org,
+	kuba@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v6 11/23] powerpc/mm: Allow hugepages without hugepd
-Date: Mon, 24 Jun 2024 16:45:37 +0200
-Message-ID: <cae434dd0f3bc54dc4a121cae2224beeb11e5109.1719240269.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1719240269.git.christophe.leroy@csgroup.eu>
-References: <cover.1719240269.git.christophe.leroy@csgroup.eu>
+	madalin.bucur@nxp.com,
+	pabeni@redhat.com,
+	richardcochran@gmail.com,
+	robh@kernel.org,
+	sean.anderson@seco.com,
+	yangbo.lu@nxp.com
+Subject: [PATCH 1/1] MAINTAINERS: Change fsl-fman.yaml to fsl,fman.yaml
+Date: Mon, 24 Jun 2024 10:46:55 -0400
+Message-Id: <20240624144655.801607-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0299.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::34) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719240334; l=6864; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=OHpbr2EW8Ehxc4cGWtKirj+0lOuzXeICYvz9BBmzSDA=; b=+ATNSpAzf8isw3Aa1tw0C+3ybmb6G6UdnToqaxV++RMET3/Bj6zUlz52UQeYITJq6fgQFXx8k A/zzeYXxEPBBe3ywKbg7K+BqBLBUCN71bTwMi0wpCmc77aFh81g1bbO
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10253:EE_
+X-MS-Office365-Filtering-Correlation-Id: 878b04ea-1dc8-4110-6d0f-08dc945c89c0
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230037|366013|52116011|7416011|376011|1800799021|38350700011;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?4PaM6gtN/ZdpDbcaFmJC5aEshU+flnHjNgcIlMZZklEm6pgPZAp9hOKg5CqY?=
+ =?us-ascii?Q?4uGOx87q2K1lfTgvl7vlA8At6zpM3zdO9ZmG6C1CB6Cq7IbhZm0MPHcqUn1G?=
+ =?us-ascii?Q?LcncVFZpi9Hu17hwNDkRSg3911G6eKvoW3QE8riVGXbZmaAv72wCy6C6SreG?=
+ =?us-ascii?Q?DN7s6M5e+HfegZItEb3gWGPRg21gk9UBLpKFgHAU1+2191EcC0TPJZaMy3g2?=
+ =?us-ascii?Q?zbrBy1CYxuofacsR4CniXpNlCrTqBB9/KcI+iesjv6AJCPxj1Q+NDUA4XyRT?=
+ =?us-ascii?Q?Mm+qIoatb4DKofXdEgUz/ERfpYGpxMKkY+o7UD28SFfFz2Vr1M5B5YOFB7jE?=
+ =?us-ascii?Q?ARnMA5oiQLAWA5F8g8tWXIs6Yi6yUvHHQwVmyo7fVPY1Z0XXgypbT2cTpcHy?=
+ =?us-ascii?Q?pi2fpSNUFAPgGA4LI/1PG0wkKk57Fy456Dx/xqop2xgUJ8VUOoPlux6/eaP8?=
+ =?us-ascii?Q?tFRBt4TqsjWmAk2ogSEhZE7SVCURleWNngevIZh3S8d+5U8hY9UpK386X/EU?=
+ =?us-ascii?Q?Kw5pHCorpTyoCItB3tp0xZTz/vPkhX/zfA6EnnzxP1uPZYVp5MzcCvoauA+4?=
+ =?us-ascii?Q?PUHc5psl2n7IscGA4Awd/W8DOqFq3RCRrtRQgYyG8nIBPd7LeAV4ER3JtN1N?=
+ =?us-ascii?Q?iIbEyTGQ0eaI6Vfe2bgACWy4lPeBBdz/4i4t6ygCdH8ovqQsUQU4Rix+ar5c?=
+ =?us-ascii?Q?k+6KU9TCzVWp7iy6SWgYTBXi1muUyA9o+j8lp8DDz9UtkV/ZtjMTtm19tsL5?=
+ =?us-ascii?Q?SmFhk6FnZOX/GLU1MWer7n4IVUpKqTeekzF0IdtOzii0buJ8qBi5M6klsnQv?=
+ =?us-ascii?Q?t0nFB7t2B0EIPMJzbEYYNwANjrJYeqHJZGzERlRVjgJ3iM7lCXaeMNUC60Pg?=
+ =?us-ascii?Q?8FDVmiYg1ml4vBn6RYTlkvpGaaWpnMmsp+eodYNZyU0CkQT6iJIqL4jwL2QZ?=
+ =?us-ascii?Q?LR1hvnugS17LcUSDjZd/o2kS7hlZfIN8D5FBYCuCFqcyp2KJDRPQGjkOtriJ?=
+ =?us-ascii?Q?39d8nifFRTmTA1G3DyqeMyDQwVCGFWtzYFGe3jA6KDdtnu5wBixURWs7kxNT?=
+ =?us-ascii?Q?rUL+bDKdyBg3Rjonm9yFUMU573KBXABXmXVz0Q3NEnaQ92bUA9Jpq7beWWYh?=
+ =?us-ascii?Q?eVd4sa+nuZLUgmKX+NxpNPV2ll2eH+dGLyrlOvCtviCiWuC1wuC4trgGqgwk?=
+ =?us-ascii?Q?z/A24GyWNmugrQIbbCTaAHTg/wfduRMwWTiB08i0vE87r0pRsN1oEk+HoESA?=
+ =?us-ascii?Q?Exi/PgXxlBJJ3FoclzD5gtHxgJFIOZR29Pp61z/mC5YuwEu4ljVHBdeDlT2l?=
+ =?us-ascii?Q?P+GKvUTcJYilNJui/pn0uTWB?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(52116011)(7416011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?VvZTebiFLsczoa10Zkv+PTJnQtZpU3mJWrSRBz1dfIP8uigaTv8rVjMZSn57?=
+ =?us-ascii?Q?3qwVgEBiCyelh+MPbBFbFQMsVsl2YhilYzl9TSGdlhohQ4953YX31be8RsyD?=
+ =?us-ascii?Q?xFApP1VYY2IO32Aw2z1KzHQv4MEWoJHEkT/2HGjhKjmksaTZBWPSzs/LncIp?=
+ =?us-ascii?Q?UVTjLo6FRgMuvLjvNAhalD+yBzfBhVDiNZBvmKaTRk0G0OZWbqUaXx7P1y5z?=
+ =?us-ascii?Q?/v2q1pATT3pfH1tli5FrAgQK04XQyidaI0flWgBFbTOYfeJAx9WQ+BD0Rnz0?=
+ =?us-ascii?Q?z1ZAf7UG9VmK/VRve1LgNdUhPPHfEAmWJFb9Y9eOb8CkMBKo3aZkL1gZ+aho?=
+ =?us-ascii?Q?XT6Wh7ZxoBc2IvEKEnrwuFlywn34xe42lmNRwQNiZyCMz5rC7jaAGYQzGrJc?=
+ =?us-ascii?Q?wFgH6LTbMGjycBhXq3GbgqA3Y4ijal007IrVaXujGo+n+VKnnjfsVS2kGKc8?=
+ =?us-ascii?Q?YxBxVjqGOZnTrhv6VwZsY3YEphmzTrNLvtyRZjlHiuW71pweYfaDcFB3atR+?=
+ =?us-ascii?Q?8yR6YrP8bOeQfOyiHaAdbIvOnE4RraT5dkzCV/YSoMVsQHJIbJ5gh9RdUukZ?=
+ =?us-ascii?Q?apR2LEgM7T9sZZt1ODcz5/GlxYIQYHwvvLyj3hFR1WtHkItDB0SphvZtgiQo?=
+ =?us-ascii?Q?4XV2D1oef06t3vthfYrWzRLe1WlNkGVc2o1a0xSXIoR+lVUbox2WWLFgS5GN?=
+ =?us-ascii?Q?M8PwKV6wxiTYQ4BsIBclyCgFZvEl91YYV7q+gLtJVS335bLn18Imbna5UwJs?=
+ =?us-ascii?Q?ivlD5sHu2xtTmh+2M1OH+f8mXOQlg6Haf+gsXDn12eWPmtS8b3B5kAoJRFWt?=
+ =?us-ascii?Q?5x4hfCBzB69r1PEHcgBYRbmcPP1Gjjxb0mEO32o41gNjCTB0EcS0YJmO87Bj?=
+ =?us-ascii?Q?5pkymPMmamZqo/W+a9WJARqKzupkPOWmIWL3cmW2nEZgVe76P32eb8utSgC0?=
+ =?us-ascii?Q?qjf2wmGuN6nXFx7LoCYIR+0lgBlbl7sD1odSPZknKWxND7WAstPgvKPFBl4Y?=
+ =?us-ascii?Q?v12Q7EzNAk7jB0C8dlP34iVbXjvtQmqUzrAnJ+XIXXg4wUhAz6kS/4s0r9dY?=
+ =?us-ascii?Q?taCtTBkgBxG0GdT69faz7NeUIXu/tqzzVd/nbSrQ/6kGHKMCAz++4ONXwpjx?=
+ =?us-ascii?Q?Xe6hy8rkTkkFzA6OjvSX5z42YdlVkapILGfEI1ikg3APpY0a2Hs4ciKZCEtV?=
+ =?us-ascii?Q?PA3LofZMd1rdnvtqaEsDzJB/Yj4yYEhr9+qgASKTJOiH/c9vP9Ae5gxiZOQC?=
+ =?us-ascii?Q?iQJRj3aUWqwIaD1F63m7VYLayA6xqBl+0/hL7CxvNxaAM/75VeHgz4U+SGc2?=
+ =?us-ascii?Q?YDxUqZ3l5B7gue0dhlhj6RWVQljDhctwooGgkuMRwNk19W6yR+ZC5Fu4l+Fl?=
+ =?us-ascii?Q?guWsUluyzCnqcLdjFh5KlNXmveKiNvzujC2NGAZ0G3dZus1JqNqSnv5gOtH4?=
+ =?us-ascii?Q?MFSFGX9h+oTqPpIL7d56gKvsI3NUbszHCEHVJsriVfZBSMq5Ms93moDrd3hu?=
+ =?us-ascii?Q?zgBdKLcNqqoQv7O6N1yIkAIAnn7218pzvP8GUNDUGI3Ui47TYrbOQF9FVLta?=
+ =?us-ascii?Q?IHgRbFKRY5N2dhZ/NfoAT0u6WLUhM+TvSruKyJu9?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 878b04ea-1dc8-4110-6d0f-08dc945c89c0
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 14:47:15.3208
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VsMsnoM54dksKoBrRMMj/W991PDNhM2Z8UjsDK095KPeOykyyQx1Qk7A8arwY5NfL5QIJyg23bTcOCDM1TeZtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10253
 
-In preparation of implementing huge pages on powerpc 8xx
-without hugepd, enclose hugepd related code inside an
-ifdef CONFIG_ARCH_HAS_HUGEPD
+fsl-fman.yaml is typo. "-" should be ",". Fix below warning.
 
-This also allows removing some stubs.
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/net/fsl-fman.yaml
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406211320.diuZ3XYk-lkp@intel.com/
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
-v3:
-- Prepare huge_pte_alloc() for full standard topology, not only for 2-level
-- Reordered last part of huge_pte_alloc()
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v4:
-- Rebased of v6.10-rc1
-
-v5:
-- Moved the Kconfig split in this patch.
----
- arch/powerpc/Kconfig                         |  1 -
- arch/powerpc/include/asm/book3s/32/pgalloc.h |  2 --
- arch/powerpc/include/asm/hugetlb.h           | 10 ++----
- arch/powerpc/include/asm/nohash/pgtable.h    |  2 +-
- arch/powerpc/mm/hugetlbpage.c                | 33 ++++++++++++++++++++
- arch/powerpc/mm/pgtable.c                    |  2 ++
- arch/powerpc/platforms/Kconfig.cputype       |  3 ++
- 7 files changed, 41 insertions(+), 12 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index c88c6d46a5bc..b60b6e991227 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -135,7 +135,6 @@ config PPC
- 	select ARCH_HAS_DMA_MAP_DIRECT 		if PPC_PSERIES
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
--	select ARCH_HAS_HUGEPD			if HUGETLB_PAGE
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_KERNEL_FPU_SUPPORT	if PPC64 && PPC_FPU
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
-diff --git a/arch/powerpc/include/asm/book3s/32/pgalloc.h b/arch/powerpc/include/asm/book3s/32/pgalloc.h
-index dc5c039eb28e..dd4eb3063175 100644
---- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
-@@ -47,8 +47,6 @@ static inline void pgtable_free(void *table, unsigned index_size)
- 	}
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 807feae089c4d..7da4c469c14d4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8874,7 +8874,7 @@ M:	Madalin Bucur <madalin.bucur@nxp.com>
+ R:	Sean Anderson <sean.anderson@seco.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/net/fsl-fman.yaml
++F:	Documentation/devicetree/bindings/net/fsl,fman.yaml
+ F:	drivers/net/ethernet/freescale/fman
  
--#define get_hugepd_cache_index(x)  (x)
--
- static inline void pgtable_free_tlb(struct mmu_gather *tlb,
- 				    void *table, int shift)
- {
-diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
-index ea71f7245a63..79176a499763 100644
---- a/arch/powerpc/include/asm/hugetlb.h
-+++ b/arch/powerpc/include/asm/hugetlb.h
-@@ -30,10 +30,12 @@ static inline int is_hugepage_only_range(struct mm_struct *mm,
- }
- #define is_hugepage_only_range is_hugepage_only_range
- 
-+#ifdef CONFIG_ARCH_HAS_HUGEPD
- #define __HAVE_ARCH_HUGETLB_FREE_PGD_RANGE
- void hugetlb_free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
- 			    unsigned long end, unsigned long floor,
- 			    unsigned long ceiling);
-+#endif
- 
- #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
- static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
-@@ -67,14 +69,6 @@ static inline void flush_hugetlb_page(struct vm_area_struct *vma,
- {
- }
- 
--#define hugepd_shift(x) 0
--static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
--				    unsigned pdshift)
--{
--	return NULL;
--}
--
--
- static inline void __init gigantic_hugetlb_cma_reserve(void)
- {
- }
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index f5f39d4f03c8..e7fc1314c23e 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -340,7 +340,7 @@ static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
- 
- #define pgprot_writecombine pgprot_noncached_wc
- 
--#ifdef CONFIG_HUGETLB_PAGE
-+#ifdef CONFIG_ARCH_HAS_HUGEPD
- static inline int hugepd_ok(hugepd_t hpd)
- {
- #ifdef CONFIG_PPC_8xx
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 594a4b7b2ca2..20fad59ff9f5 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -42,6 +42,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr, unsigned long s
- 	return __find_linux_pte(mm->pgd, addr, NULL, NULL);
- }
- 
-+#ifdef CONFIG_ARCH_HAS_HUGEPD
- static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
- 			   unsigned long address, unsigned int pdshift,
- 			   unsigned int pshift, spinlock_t *ptl)
-@@ -193,6 +194,36 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
- 
- 	return hugepte_offset(*hpdp, addr, pdshift);
- }
-+#else
-+pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
-+		      unsigned long addr, unsigned long sz)
-+{
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+
-+	addr &= ~(sz - 1);
-+
-+	p4d = p4d_offset(pgd_offset(mm, addr), addr);
-+	if (!mm_pud_folded(mm) && sz >= P4D_SIZE)
-+		return (pte_t *)p4d;
-+
-+	pud = pud_alloc(mm, p4d, addr);
-+	if (!pud)
-+		return NULL;
-+	if (!mm_pmd_folded(mm) && sz >= PUD_SIZE)
-+		return (pte_t *)pud;
-+
-+	pmd = pmd_alloc(mm, pud, addr);
-+	if (!pmd)
-+		return NULL;
-+
-+	if (sz >= PMD_SIZE)
-+		return (pte_t *)pmd;
-+
-+	return pte_alloc_huge(mm, pmd, addr);
-+}
-+#endif
- 
- #ifdef CONFIG_PPC_BOOK3S_64
- /*
-@@ -248,6 +279,7 @@ int __init alloc_bootmem_huge_page(struct hstate *h, int nid)
- 	return __alloc_bootmem_huge_page(h, nid);
- }
- 
-+#ifdef CONFIG_ARCH_HAS_HUGEPD
- #ifndef CONFIG_PPC_BOOK3S_64
- #define HUGEPD_FREELIST_SIZE \
- 	((PAGE_SIZE - sizeof(struct hugepd_freelist)) / sizeof(pte_t))
-@@ -505,6 +537,7 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb,
- 		}
- 	} while (addr = next, addr != end);
- }
-+#endif
- 
- bool __init arch_hugetlb_valid_size(unsigned long size)
- {
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index bce8a8619589..9010973f036c 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -496,8 +496,10 @@ pte_t *__find_linux_pte(pgd_t *pgdir, unsigned long ea,
- 	if (!hpdp)
- 		return NULL;
- 
-+#ifdef CONFIG_ARCH_HAS_HUGEPD
- 	ret_pte = hugepte_offset(*hpdp, ea, pdshift);
- 	pdshift = hugepd_shift(*hpdp);
-+#endif
- out:
- 	if (hpage_shift)
- 		*hpage_shift = pdshift;
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index b2d8c0da2ad9..0c3c69ebf19f 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -37,6 +37,7 @@ config PPC_85xx
- 
- config PPC_8xx
- 	bool "Freescale 8xx"
-+	select ARCH_HAS_HUGEPD if HUGETLB_PAGE
- 	select ARCH_SUPPORTS_HUGETLBFS
- 	select FSL_SOC
- 	select PPC_KUEP
-@@ -98,6 +99,7 @@ config PPC_BOOK3S_64
- 	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
- 	select ARCH_ENABLE_SPLIT_PMD_PTLOCK
- 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
-+	select ARCH_HAS_HUGEPD if HUGETLB_PAGE
- 	select ARCH_SUPPORTS_HUGETLBFS
- 	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select HAVE_MOVE_PMD
-@@ -290,6 +292,7 @@ config PPC_BOOK3S
- config PPC_E500
- 	select FSL_EMB_PERFMON
- 	bool
-+	select ARCH_HAS_HUGEPD if HUGETLB_PAGE
- 	select ARCH_SUPPORTS_HUGETLBFS if PHYS_64BIT || PPC64
- 	select PPC_SMP_MUXED_IPI
- 	select PPC_DOORBELL
+ FREESCALE QORIQ PTP CLOCK DRIVER
 -- 
-2.44.0
+2.34.1
 
