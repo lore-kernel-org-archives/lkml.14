@@ -1,127 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2F9719D077;
-	Mon, 24 Jun 2024 15:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68D819D062
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719243710; cv=none; b=eIv2j73BcB/zsLuGJ3xvS3Z1+cXDNkU26u6Z/PYZPDJhOVpEmyKQjHBU8KCJ9W0jXX0j95FElRXMtI18EQja6azrxFJTNPGBRJ5V6Flab0PDzhV1yIHNW94/QzdTHungAKSCTSY0E4SYuDx515QHtI7eRBAuFVTNq0J4nf4ffS0=
+	t=1719243715; cv=none; b=EuaVMtCSU5MpJ4uZfey4K1cQylsgit7yLMqj2x1G+f8WWp+2Rjs3XtZRInGzZz/gn8BtYuN6wbk9g24A4tczrBdbO2mBd4LKsphdEv8FzN37POlnSf33dFrAybZGrIjmcJyGfsZgtX22Hdbr/7wNzjTDQQW/Z/o3GChFrh9tk2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719243710; c=relaxed/simple;
-	bh=3dz1GFXIvgH5i6DZjwGNKWeBzYGIWxh02+vy/2Ekez0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kpvdlEZdkdz7Qe71SRdi/2q+uVAcKAQ4qisRuHD8tTLkKsSNFjAIFTUhEbXh/3hvVmmKVqlBFTuGZ10NTaKcr31OXcrqLjW1Z2NzI6bnRvHEsQTvAfzBZT479tq2mN5+egFulauqiolx8qaAZf8+1Bf2pz5ky6ss2OIX1fudrzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A71DDA7;
-	Mon, 24 Jun 2024 08:42:12 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DD2D3F73B;
-	Mon, 24 Jun 2024 08:41:44 -0700 (PDT)
-Date: Mon, 24 Jun 2024 16:41:42 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Elliot Berman <quic_eberman@quicinc.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"Mark Rutland" <mark.rutland@arm.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-	Melody Olvera <quic_molvera@quicinc.com>,
-	Shivendra Pratap <quic_spratap@quicinc.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	<linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH v5 3/4] firmware: psci: Read and use vendor reset types
-Message-ID: <ZnmTtmZB8epgbUTN@bogus>
-References: <20240617-arm-psci-system_reset2-vendor-reboots-v5-0-086950f650c8@quicinc.com>
- <20240617-arm-psci-system_reset2-vendor-reboots-v5-3-086950f650c8@quicinc.com>
- <20240619135143.kr2tx4ynxayc5v3a@bogus>
- <20240619080933071-0700.eberman@hu-eberman-lv.qualcomm.com>
- <20240620162547309-0700.eberman@hu-eberman-lv.qualcomm.com>
+	s=arc-20240116; t=1719243715; c=relaxed/simple;
+	bh=ZF0XxN8KntgJA+IVilUh/38LJzSDeR5q7xJSolLUjpo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tvbI2qEPbKjY+aEOoQ5LJig1kv4zHJEL4jM4XZhr/ILKdDl/HaqCoZ+hDkC6Mk0WzfwLzlloPxYF8z1Ufi600E+w4bm02OwBXVrftXIW/Oxd/3YdPwT25aEAVDH+xK5XChZralTya+IyzI8lJ1tKMs1OU3Akus8yqTQxWZC6UFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2nt5naGp; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2nt5naGp"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-48f409bd157so815961137.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719243713; x=1719848513; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XgB/DwN9cphENzre81i4QwsnPfETm68iWHx9Hxb0Rb4=;
+        b=2nt5naGp9oxCa/XLwgmwcjxgFaXjYWSB8SZP0UZcCgYgndMvLhQOdPIwSN2ix7iJc9
+         Iv0vfwYAUQ+u6pQhOWeTfhPNBzvO59h39OK2aV3dSJGeB8uejhLqA4eQ2R2XOmYd7k7O
+         BrG/+C8UljmcU0NlGeXLlA+juZFKZW5ULhhQVUNkhKqwwHP1wEyMbNHsrGJcttUEXxdY
+         L0Yr8B7+o4JwGR3ZfZyIYvjShk9RM7fnql+jIV2Dkeqaw0ft6PbgUqSbRfoGnjZYV0cO
+         6ynWLb11O5eldiuLuble748m0Yu90QeOTpryw1Vd7BsD+z1UDvVeKU7PIJfApJptQRjJ
+         /QfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719243713; x=1719848513;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XgB/DwN9cphENzre81i4QwsnPfETm68iWHx9Hxb0Rb4=;
+        b=C1o3pmAi6Kb12Y5BD5wy1TvACFahiixwU/ThSMU9GXHghbgWBZ9MhHqaYtrDZIyqlG
+         2MgOk8PUTOdupsFB8XcxfZI3e9qldsYK/KJh/Flbx4m6XJWCiR78vG0pAmms5U9egp4E
+         FMDHRp0hRg6+7FZrgZyUFSQgxrc7jFVxsBECG707szgyCNDDQjPUk85608WoIucfXIHo
+         yGDFjVJgNm7jEaQ1tFS3WuoHCkrrgBWQ3B1Oe++/ANApnSjo3Y1DEw43qfkdqmeys4Is
+         6XSSRxFtEEKGuVi2mb2IdGdtrH9jfue4cuxHW5SuJdZDZE0vSuZMT3zPsIFEEgScHjSe
+         BUew==
+X-Forwarded-Encrypted: i=1; AJvYcCVClszDB+WBBdUraCSWxI++3ARWgaQlCocftE/qf7i/0r7i7YZO80tiDqZyj6vZiVU7TJg6bqydbnRpaQMcQIjqs2Hv3iCOrlmSn6cb
+X-Gm-Message-State: AOJu0YwifCIrlrxT+8AII05oeibPRIn4KwIAkNq1Ac9jbx4zMzBX4XlG
+	Bpc0nEBnqC8LmrYj6DsLGDNgpgAJr20VYpK8lSmHiNMlg5cSmPSRN2RCsWB3kLuqmwwMcHGCKtX
+	AronPLKJphUaYJVNua47lliG4v8xzz3fdfoV4
+X-Google-Smtp-Source: AGHT+IGnuWw7iW2l+BtMoSMyKLPH1RIsnNPbQ5cNHSWZt2as3tbAnI2PoOeCh4RRwK6qwksnQG83NrdZXDBBrVL/jv0=
+X-Received: by 2002:a05:6102:34c1:b0:48f:4580:ca67 with SMTP id
+ ada2fe7eead31-48f52b8daa6mr4256576137.32.1719243712596; Mon, 24 Jun 2024
+ 08:41:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620162547309-0700.eberman@hu-eberman-lv.qualcomm.com>
+References: <f214f15e-4a0a-4f24-9bd7-8f84cbc12e5a@p183> <CANpmjNO=zv6D807cNLAQ3eGLrigUs9xtYNxoHhyuYvHkhhSUWg@mail.gmail.com>
+ <2aab04d1-c16b-44e4-a283-7bbf8cba28e7@p183> <CANpmjNMZU=T6J5OBpELxB=ZqOnrkou2iRG7zaqoNy7bCGgH9hA@mail.gmail.com>
+ <fb62163f-ba21-4661-be5b-bb5124abc87d@p183>
+In-Reply-To: <fb62163f-ba21-4661-be5b-bb5124abc87d@p183>
+From: Marco Elver <elver@google.com>
+Date: Mon, 24 Jun 2024 17:41:14 +0200
+Message-ID: <CANpmjNMbLBLgy4-BGQYLkDcYO+vOzgq3ht41xzasEJ=x=o18Kw@mail.gmail.com>
+Subject: Re: [PATCH v2] compiler.h: simplify data_race() macro
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 20, 2024 at 04:37:09PM -0700, Elliot Berman wrote:
-> Hi Sudeep and Sebastian,
-> 
-> On Wed, Jun 19, 2024 at 08:28:06AM -0700, Elliot Berman wrote:
-> > On Wed, Jun 19, 2024 at 02:51:43PM +0100, Sudeep Holla wrote:
-> > > On Mon, Jun 17, 2024 at 10:18:09AM -0700, Elliot Berman wrote:
-> > > > SoC vendors have different types of resets and are controlled through
-> > > > various registers. For instance, Qualcomm chipsets can reboot to a
-> > > > "download mode" that allows a RAM dump to be collected. Another example
-> > > > is they also support writing a cookie that can be read by bootloader
-> > > > during next boot. PSCI offers a mechanism, SYSTEM_RESET2, for these
-> > > > vendor reset types to be implemented without requiring drivers for every
-> > > > register/cookie.
-> > > > 
-> > > > Add support in PSCI to statically map reboot mode commands from
-> > > > userspace to a vendor reset and cookie value using the device tree.
-> > > > 
-> > > > A separate initcall is needed to parse the devicetree, instead of using
-> > > > psci_dt_init because mm isn't sufficiently set up to allocate memory.
-> > > > 
-> > > > Reboot mode framework is close but doesn't quite fit with the
-> > > > design and requirements for PSCI SYSTEM_RESET2. Some of these issues can
-> > > > be solved but doesn't seem reasonable in sum:
-> > > >  1. reboot mode registers against the reboot_notifier_list, which is too
-> > > >     early to call SYSTEM_RESET2. PSCI would need to remember the reset
-> > > >     type from the reboot-mode framework callback and use it
-> > > >     psci_sys_reset.
-> > > >  2. reboot mode assumes only one cookie/parameter is described in the
-> > > >     device tree. SYSTEM_RESET2 uses 2: one for the type and one for
-> > > >     cookie.
-> > > >  3. psci cpuidle driver already registers a driver against the
-> > > >     arm,psci-1.0 compatible. Refactoring would be needed to have both a
-> > > >     cpuidle and reboot-mode driver.
-> > > >
-> > > 
-> > > I need to think through it but when you first introduced the generic
-> > > Documentation/devicetree/bindings/power/reset/reboot-mode.yaml bindings
-> > > I also looked at drivers/power/reset/reboot-mode.c
-> > > 
-> > > I assumed this extension to that binding would reuse the same and
-> > > PSCI would just do reboot_mode_register(). I didn't expect to see these
-> > > changes. I might have missing something but since the bindings is still
-> > > quite generic with additional cells that act as additional cookie for
-> > > reboot call, I still think that should be possible.
-> > > 
-> > > What am I missing here then ?
-> > > 
-> > 
-> > Right, if that was only thing to "solve" to make it easy to use
-> > reboot-mode framework, I agree we should update reboot mode framework to
-> > work with the additional cells. There are a few other issues I mention
-> > above which, when combined, make me feel that PSCI is different enough
-> > from how reboot mode framework works that we shouldn't try to make PSCI
-> > work with the framework. Issues #1 and #2 are pretty easy to solve
-> > (whether they should be solved is different); I'm not sure a good
-> > approach to issue #3.
-> > 
-> 
-> Does the reasoning I mention in the commit text make sense why PSCI should
-> avoid using the reboot-mode.c framework?
+On Mon, 24 Jun 2024 at 17:39, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>
+> -Wdeclaration-after-statement used since forever required statement
+> expressions to inject __kcsan_disable_current(), __kcsan_enable_current()
+> to mark data race. Now that it is gone, make macro expansion simpler.
+>
+> __unqual_scalar_typeof() is wordy macro by itself.
+> "expr" is expanded twice.
+>
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 
-Sorry, I completely missed to see that you had already answered those
-in your commit message. As mentioned earlier I haven't looked at the
-reboot mode framework completely yet, so I can't comment on it yet.
+Reviewed-by: Marco Elver <elver@google.com>
 
-I don't want to be blocker though if others are happy with this.
-
---
-Regards,
-Sudeep
+> ---
+>
+>  include/linux/compiler.h |    6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -200,10 +200,8 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+>   */
+>  #define data_race(expr)                                                        \
+>  ({                                                                     \
+> -       __unqual_scalar_typeof(({ expr; })) __v = ({                    \
+> -               __kcsan_disable_current();                              \
+> -               expr;                                                   \
+> -       });                                                             \
+> +       __kcsan_disable_current();                                      \
+> +       __auto_type __v = (expr);                                       \
+>         __kcsan_enable_current();                                       \
+>         __v;                                                            \
+>  })
