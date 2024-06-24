@@ -1,38 +1,45 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01832134B0;
-	Mon, 24 Jun 2024 07:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E745F9D9;
+	Mon, 24 Jun 2024 07:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719213331; cv=none; b=FVo2181YebMv5RM1qLEx3Q+Ww3LAbkK9UGJzcPX7KRVpLLzttt+sXXNiwIa02s2r5UEDxsAJloXMnlpU/Pk/wBV7j0Mw558HjJwD/IDr8IBLGuoNFmJHDMsboLS2FrSdT4GHhC+gJgAgN1BZup0XZZBGhJqQS5YvsRcWsbn6FEk=
+	t=1719213479; cv=none; b=k3kBptwSkFj1gIYhAEsn/G52m3BESmSNL8IlpRqFA0CHukl8fLwVWjyZVEGiqtliNHSClkpGjQ611LtCnYjjn9oLukCRvI2q+G2WOH7dygLwKOmvzc3aM8bRLUMaDBpb+YkFOV52fSmSa7IUimMJUZgaQJay6vLN1c8lrNnbzwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719213331; c=relaxed/simple;
-	bh=s5RP6fAfPMX36ZkNaZ8PMuFgshW+se53erDIX1Zn0RM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pyY8AFxiRnO5QrsXyz+mTKsNxewaUAcbzdAvpRaXbN9ipiN8aWMzab7U/Trl1LBW+W/K5sh5rX6coxmvnhpgI8LDDeK9talIfZl8Ih3tABgA+9/X/mc1XT7+5H7W/EJtnqxckC9AT72zSINhrHYItPfzxsn2QWBfSPBqzezU36A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxLuvRHHlmHHEJAA--.37947S3;
-	Mon, 24 Jun 2024 15:14:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMTPHHlmftsuAA--.9847S7;
-	Mon, 24 Jun 2024 15:14:24 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Sean Christopherson <seanjc@google.com>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	s=arc-20240116; t=1719213479; c=relaxed/simple;
+	bh=6oS5SW09U8iQI6kzm5UHdHG/LGzrzqRPipDYAs+0mRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pc1pdKJWuXIBArXiUgy0LPzOM7+mEJpeZkL/gCqlbqfPc2o/N9jqsA80Mw86xKdjUyiBgjl4nnLhGF0y6PYSwEK4H3K726e079B/n0c5w/xKpr2UhnJDbSmRhM38aqz0l4fUu3IoxHyskKgjjAXXjVyKKmI46meAwsoHTqQrjnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I3rsCYgT; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I3rsCYgT"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 40086FF80A;
+	Mon, 24 Jun 2024 07:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719213468;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=o8kSx2joD+PfTxvQH91rVyfBDjegpaIQB2A5DqXaBqI=;
+	b=I3rsCYgTACtO0hu4hIlg+9neNw7RITs6XGjwsQOGBCTS3KAQPsDmjtUdYVqImJM13KpsF/
+	RGJujrYd8CV8EQFaPWEND7tNJtpchOVleEiSKXTPX9Xucs90AB/UFXXHLy1O6VCHBnO3D1
+	YlQAcpB82prKFHk8pdq3jp5wcX2uioVIxv3sPVyyhVNPw6nnfLSlUWfE9qNvDFVHq/IqU4
+	w6B45XwkT1iPc6umNDNPZxute9ApB8ih68/OAbi24ZJ9NoOk27AmyV+hckg+delXcxMs6u
+	rQT/jIaaCulIx6LOWpu0BafIOEwwPBXZ6Uu3X25pIsY19LBgxpG61EbzRdiDFg==
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH v3 5/7] LoongArch: KVM: Add dirty bitmap initially all set support
-Date: Mon, 24 Jun 2024 15:14:20 +0800
-Message-Id: <20240624071422.3473789-6-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240624071422.3473789-1-maobibo@loongson.cn>
-References: <20240624071422.3473789-1-maobibo@loongson.cn>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Christopher Cordahi <christophercordahi@nanometrics.ca>,
+	Bastien Curutchet <bastien.curutchet@bootlin.com>
+Subject: [PATCH] spi: davinci: Unset POWERDOWN bit when releasing resources
+Date: Mon, 24 Jun 2024 09:17:45 +0200
+Message-ID: <20240624071745.17409-1-bastien.curutchet@bootlin.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,53 +47,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxMMTPHHlmftsuAA--.9847S7
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Add KVM_DIRTY_LOG_INITIALLY_SET support on LoongArch system, this
-feature comes from other architectures like x86 and arm64.
+On the OMAPL138, the SPI reference clock is provided by the Power and
+Sleep Controller (PSC). The PSC's datasheet says that 'some peripherals
+have special programming requirements and additional recommended steps
+you must take before you can invoke the PSC module state transition'. I
+didn't find more details in documentation but it appears that PSC needs
+the SPI to clear the POWERDOWN bit before disabling the clock. Indeed,
+when this bit is set, the PSC gets stuck in transitions from enable to
+disable state.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Clear the POWERDOWN bit when releasing driver's resources
+
+Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
 ---
- arch/loongarch/include/asm/kvm_host.h | 3 +++
- arch/loongarch/kvm/mmu.c              | 7 +++++++
- 2 files changed, 10 insertions(+)
+Hi,
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 32c4948f534f..309ce329b747 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -37,6 +37,9 @@
- #define KVM_GUESTDBG_VALID_MASK		\
- 	(KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP | KVM_GUESTDBG_SINGLESTEP)
+I ran into this bug by enabling the 'cs-gpio' property. It causes the
+probe to fail at first with -EPROBE_DEFER because the gpio provider is
+not ready. So the clock gets disabled. In the clock controller's driver
+(drivers/clk/davinci/psc.c) the clock_disable() calls a
+regmap_read_poll_timeout() with an infinite timeout. This poll() polls
+a transition bit status that never goes down so we end stuck in the
+middle of the boot sequence.
+
+ drivers/spi/spi-davinci.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+index be3998104bfb..f7e8b5efa50e 100644
+--- a/drivers/spi/spi-davinci.c
++++ b/drivers/spi/spi-davinci.c
+@@ -984,6 +984,9 @@ static int davinci_spi_probe(struct platform_device *pdev)
+ 	return ret;
  
-+#define KVM_DIRTY_LOG_MANUAL_CAPS	\
-+	(KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | KVM_DIRTY_LOG_INITIALLY_SET)
+ free_dma:
++	/* This bit needs to be cleared to disable dpsi->clk */
++	clear_io_bits(dspi->base + SPIGCR1, SPIGCR1_POWERDOWN_MASK);
 +
- struct kvm_vm_stat {
- 	struct kvm_vm_stat_generic generic;
- 	u64 pages;
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 092c063e4e56..10da8a63cd3d 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -467,6 +467,13 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 *		kvm_arch_flush_shadow_memslot()
- 	 */
- 	if (!(old_flags & KVM_MEM_LOG_DIRTY_PAGES) && log_dirty_pages) {
-+		/*
-+		 * Initially-all-set does not require write protecting any page
-+		 * because they're all assumed to be dirty.
-+		 */
-+		if (kvm_dirty_log_manual_protect_and_init_set(kvm))
-+			return;
+ 	if (dspi->dma_rx) {
+ 		dma_release_channel(dspi->dma_rx);
+ 		dma_release_channel(dspi->dma_tx);
+@@ -1013,6 +1016,9 @@ static void davinci_spi_remove(struct platform_device *pdev)
+ 
+ 	spi_bitbang_stop(&dspi->bitbang);
+ 
++	/* This bit needs to be cleared to disable dpsi->clk */
++	clear_io_bits(dspi->base + SPIGCR1, SPIGCR1_POWERDOWN_MASK);
 +
- 		spin_lock(&kvm->mmu_lock);
- 		/* Write protect GPA page table entries */
- 		needs_flush = kvm_mkclean_gpa_pt(kvm, new->base_gfn,
+ 	if (dspi->dma_rx) {
+ 		dma_release_channel(dspi->dma_rx);
+ 		dma_release_channel(dspi->dma_tx);
 -- 
-2.39.3
+2.45.0
 
