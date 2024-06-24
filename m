@@ -1,58 +1,59 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3788513A252;
-	Mon, 24 Jun 2024 11:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126E113A25D
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719229208; cv=none; b=KvL3u6V05Sc1YHDh/6GAcpInIbQ11SDjcHFmuejMtNS1gqBd1N1lNygI+wm26+/GWqhFGEfOI5byj2zFNZxW9XUyJSSFUZpqWb+w15VR4tgtD/KucDPTzU5vnUo0Ve13w0jlqSnk1wYZbcFyeRuqNNqSEB6c2wkn3T8EI/E3JXc=
+	t=1719229318; cv=none; b=uMlOnBwxf06lA78waJykgw39mQ9mYOQcfLtJMkjAUFqdFjuFWRNj8wlekz2uuw0lmNFpN+tqn+Y+E7iB5mVadohroqrMygb0WA2V9V8pPW41xQy7VQ7mD5/pCkmI79tj4XsBuwUNvB1+X02Mg5iAZXfTQfkZCEU3st3ZX/pL8ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719229208; c=relaxed/simple;
-	bh=mLExQpEyH9EpHpOLkBEcwJgkvJOZidD8fSxj0EaqoFY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=HCfkQg82t7d8QfJQ8XGnblyPV2Fv+JXuA/bRbleturET1/N1Apa9CQt983FSvR77q4l4ZyjlXVqL1XY9TkILDD529uLZ4gI0ZEQPN6pajns4N5VTwKUuJDp/CEyf5c8REUfZ2IyU+4pxIR3vHPmTqRJ2lL6l76rjK9rki0qXM5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A+WCQ/Oo; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719229318; c=relaxed/simple;
+	bh=C028/nFsGE40ydlmB9BxdAJi/8hIWgLolYvN+o5rEZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qBRFwFmKUM4/40VFmuRUZNDCiP3aoeXxryKpu4dCaLKcAZCxAXTadTxYiPxvZ+aKEbHDljKGOuB6eUX8QoF6vn4foheW8mTclH1ev+Es8ORjLiZoiSQbjq2q0cIOqu5DrNW1X/wCsT00I5ikDDvd4gd6R73s+hdwlcK9UusY11U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j1M/szUJ; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+WCQ/Oo"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a725282b926so116318666b.0;
-        Mon, 24 Jun 2024 04:40:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1M/szUJ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-366dcd21604so1492971f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719229204; x=1719834004; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x2nxtEYTMtc39GIl327PDzD9Ljyt5YP8MxnbXGhepIY=;
-        b=A+WCQ/OoGOumlQzD9l9iKjcvMdKCQbW1wJBrsqsD+JQgg5ohVI4tdNk/Y4UMIA8Zk8
-         LJGj7JoWIuRLtPX3fnT7Ipv8zL5BXGtsSZIa1gvzy+E5Ydx/iAo1Gr68dnS4/WlToNut
-         o1wETDFhdS6fflpmikfWJR8VXohUyIW+LdAp40sV2jtIHPXeb10O/a1Y8DXx/ShIVplK
-         jK4Egbb9madUZW61NLyCzk5t4AiQtH1LKR/4a0xpxfRGOfm9dr36FOsOo3wIfVPPeo66
-         V2Hbw/DXb0a6V8IewxwDYN+HkF2xD+AlAsofwjZvliOI62NrdI2jWQC5c9M79QmJ5kSQ
-         5aJQ==
+        d=linaro.org; s=google; t=1719229315; x=1719834115; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T+jjro0681AEOFwhkhNhmaTtx8v0fmEZR11zlZ878gA=;
+        b=j1M/szUJ04JfmiXtzdUpbWOEGaymaHvffYUh0YgExeQe/9M5BcubEpewCPEuRVnJHy
+         d4NKbBIZFZgxkllY1Ie/chYOeZ5I/9G1YhKZ65eInOnAlx+EI77AuDYC5EqV8Ux+TnlB
+         /xyT5hHkn9nYwirYWVGZJQwikhxHQWkSBp0xaumLPdJjyxmfhHUnsecK6bEk+705gCcv
+         d0gvnxECWQ8fwtRCjWnjwzFLL17ItksMD3VG8pLpDtJBv5+Pitd/M4/jqwgaAW8nClJb
+         HAP9cNzgz8EROKUXAdwVpR6aKWusBVrH2qG/nK8ywxuDV2ZNTil55BWgf8Mah2lWHxVv
+         +nyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719229204; x=1719834004;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=x2nxtEYTMtc39GIl327PDzD9Ljyt5YP8MxnbXGhepIY=;
-        b=s6dNg/nIxsXOZvgQ7YQ/EVXIVY8wC1wqnnIFKH/BSkilTK+A6HhsU4GdRvwIXUGM7W
-         HRYFzCN9WL0uBMUz+FdDfF4XQJ0YMuK/uNLcwg0nsrrme3QoG4M3NFt7//x7dTWBk2BW
-         KtM3guoaumkmCShUPPeFI44xGBGmRmPlklDIN46qOvUKbKpUgXH0GPhtU0KlFrDaHoWt
-         mxm2gb3d5U8mCeO6wT+O3+s8fpUhtiKzALMqLTmxt2qxEgXN7W4UQQ9s9i9vnHFhKIF0
-         uRYy+S/z+zBKulfgLdEC4cYj0CNuu4TAf9yB8/cApjExixba0Eg4ZXTQRJhwS1k8Y94O
-         WMqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXh88REoXBAm5lui8AXGD0hOe9hzreyxD0fqWM05LK7kiu9UFeaCgydrJUnvAv+BKq+YRjhs32Z3jxOEAqzYIUium/ukHeIL/fE0Y+/IFds1dEPgH65IRrR/UblTTw/FbOFhVrEsUm0
-X-Gm-Message-State: AOJu0YyooXwWmOE0wqY5HoRh7s1h93dAUnaK/KCdlJ6IeKniUTNHJPV6
-	E7cXe/l3sqwba9CiZLsbLE+3TQt3k9Ml+eM0kYkHQWyeNxfded4x
-X-Google-Smtp-Source: AGHT+IE7ua8tr4fotElRzbb9ZE9N9J2SRRVzmmEB5E2CwHxAW1trh0N00sZtAm2FzIZ7aoBdEw0yzw==
-X-Received: by 2002:a17:906:a2da:b0:a6f:61c7:dea7 with SMTP id a640c23a62f3a-a7245ccdab7mr267050166b.18.1719229204264;
-        Mon, 24 Jun 2024 04:40:04 -0700 (PDT)
-Received: from ?IPV6:2a02:a449:4071:1:32d0:42ff:fe10:6983? (2a02-a449-4071-1-32d0-42ff-fe10-6983.fixed6.kpn.net. [2a02:a449:4071:1:32d0:42ff:fe10:6983])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7260566aaasm28542866b.18.2024.06.24.04.40.03
+        d=1e100.net; s=20230601; t=1719229315; x=1719834115;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T+jjro0681AEOFwhkhNhmaTtx8v0fmEZR11zlZ878gA=;
+        b=efkTzn9PXsNFu4kt9Zx5gaLoCI02aiwKTFTkBynIMqea80WSX6n3AD8UkAHPxSg+tY
+         nTs9VWPsYrTv0mUPDwXYjcNd++ZZ+gX174YllhGzELEJC+b3nRohGN3cM4RASb+3DRmS
+         zSfY/tKfoOChhQFHuWmGJ9FUONASpKNS4kMbfodbNFjcHMKIukX45EQ5IYtpZLeBJ3Bu
+         DWgk9+47ZfboDtAMChVPNm9dJHg5w+edVWw4KHW7zhGleSqs1vEcKj8XVgYdVVoN9Cq5
+         LuCRA1y18y1Bzu1wkrFF+b+uet6fm5SQkSDSR1FDjtt4Q/+9JXtno/0c2TRFuX8E88BE
+         k2+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUR53i53CKXrna61JqcT7ICm2B7oNBBVN8+2Qk3V4t9u4cZ7qiDnBjip/e6elbDxGjeU4lOsVeZltpQobsM/tZ3+vl+2cV1xH5a6wIW
+X-Gm-Message-State: AOJu0YwhgYGzFtizOE+RnM+Q+HYDJYKJqfsc46JxY35WtmsEJ8AtjAf3
+	+K9Sgs02ETdw+xvAzSKX3wuatoQBcy2Pu6cZpDV0JyJe5vfYjI+9JmklCO86YiM=
+X-Google-Smtp-Source: AGHT+IHoGgWxVHYl9o9oDPZVH7R7MNNhC1mYVS4z9J3EY4whsBbRpKDAVx2h9mKJ84IvNeAFF6eWqA==
+X-Received: by 2002:a05:6000:1545:b0:366:e8cf:ef6d with SMTP id ffacd0b85a97d-366e8cff117mr4375611f8f.55.1719229315261;
+        Mon, 24 Jun 2024 04:41:55 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3663a8c7c6esm9839416f8f.103.2024.06.24.04.41.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 04:40:03 -0700 (PDT)
-Message-ID: <1cd309fa-a4d3-4283-aa47-1330a40448a7@gmail.com>
-Date: Mon, 24 Jun 2024 13:40:03 +0200
+        Mon, 24 Jun 2024 04:41:54 -0700 (PDT)
+Message-ID: <55bee27a-e4c8-4e4f-ac62-a581f46662ef@linaro.org>
+Date: Mon, 24 Jun 2024 12:41:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,82 +61,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v1] clk: rockchip: rk3188: Drop CLK_NR_CLKS usage
-To: heiko@sntech.de
-Cc: mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] arm64: dts: qcom: x1e80100: Add soundwire controller
+ resets
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240624-x1e-swr-reset-v1-0-da326d0733d4@linaro.org>
+ <p6ooqgfwld7stzevozs7huztputc7vpc7652wx6rvg4cly5mj5@fwrzeu6alhgq>
+ <ea57a3a1-1037-4d59-a384-50c98e1f9387@linaro.org>
+ <mzcofsmnqkxgxarcbxh2gqtdusyzpxr4edjcpurerurzape7da@4dky45iy5iph>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <mzcofsmnqkxgxarcbxh2gqtdusyzpxr4edjcpurerurzape7da@4dky45iy5iph>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-In order to get rid of CLK_NR_CLKS and be able to drop it from the
-bindings, use rockchip_clk_find_max_clk_id helper to find the highest
-clock id.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- drivers/clk/rockchip/clk-rk3188.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
-index 9c8af4d1dae0..30e670c8afba 100644
---- a/drivers/clk/rockchip/clk-rk3188.c
-+++ b/drivers/clk/rockchip/clk-rk3188.c
-@@ -757,9 +757,11 @@ static const char *const rk3188_critical_clocks[] __initconst = {
- 	"sclk_mac_lbtest",
- };
+On 24/06/2024 12:22, Dmitry Baryshkov wrote:
+> On Mon, Jun 24, 2024 at 12:11:08PM GMT, Srinivas Kandagatla wrote:
+>>
+>>
+>> On 24/06/2024 12:08, Dmitry Baryshkov wrote:
+>>> On Mon, Jun 24, 2024 at 11:55:29AM GMT, Srinivas Kandagatla wrote:
+>>>> Soundwire resets are missing in the existing dts, add resets for all the 4
+>>>> instances of Soundwire controllers (WSA, WSA2, RX, TX).
+>>>>
+>>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>>
+>>> Could you please point out the driver changes?
+>> If you mean, soundwire controller driver, it already has the reset support.
+> 
+> No, I was looking for audiocc drivers.
 
--static struct rockchip_clk_provider *__init rk3188_common_clk_init(struct device_node *np)
-+static struct rockchip_clk_provider *__init rk3188_common_clk_init(struct device_node *np,
-+								   unsigned long soc_nr_clks)
- {
- 	struct rockchip_clk_provider *ctx;
-+	unsigned long common_nr_clks;
- 	void __iomem *reg_base;
+drivers/clk/qcom/lpasscc-sc8280xp.c needs no changes, other then the 
+dt-bindings changes that i will fix in v2.
 
- 	reg_base = of_iomap(np, 0);
-@@ -768,7 +770,9 @@ static struct rockchip_clk_provider *__init rk3188_common_clk_init(struct device
- 		return ERR_PTR(-ENOMEM);
- 	}
-
--	ctx = rockchip_clk_init(np, reg_base, CLK_NR_CLKS);
-+	common_nr_clks = rockchip_clk_find_max_clk_id(common_clk_branches,
-+						      ARRAY_SIZE(common_clk_branches)) + 1;
-+	ctx = rockchip_clk_init(np, reg_base, max(common_nr_clks, soc_nr_clks));
- 	if (IS_ERR(ctx)) {
- 		pr_err("%s: rockchip clk init failed\n", __func__);
- 		iounmap(reg_base);
-@@ -789,8 +793,11 @@ static struct rockchip_clk_provider *__init rk3188_common_clk_init(struct device
- static void __init rk3066a_clk_init(struct device_node *np)
- {
- 	struct rockchip_clk_provider *ctx;
-+	unsigned long soc_nr_clks;
-
--	ctx = rk3188_common_clk_init(np);
-+	soc_nr_clks = rockchip_clk_find_max_clk_id(rk3066a_clk_branches,
-+						   ARRAY_SIZE(rk3066a_clk_branches)) + 1;
-+	ctx = rk3188_common_clk_init(np, soc_nr_clks);
- 	if (IS_ERR(ctx))
- 		return;
-
-@@ -812,11 +819,14 @@ CLK_OF_DECLARE(rk3066a_cru, "rockchip,rk3066a-cru", rk3066a_clk_init);
- static void __init rk3188a_clk_init(struct device_node *np)
- {
- 	struct rockchip_clk_provider *ctx;
-+	unsigned long soc_nr_clks;
- 	struct clk *clk1, *clk2;
- 	unsigned long rate;
- 	int ret;
-
--	ctx = rk3188_common_clk_init(np);
-+	soc_nr_clks = rockchip_clk_find_max_clk_id(rk3188_clk_branches,
-+						   ARRAY_SIZE(rk3188_clk_branches)) + 1;
-+	ctx = rk3188_common_clk_init(np, soc_nr_clks);
- 	if (IS_ERR(ctx))
- 		return;
-
---
-2.39.2
-
+--srini
+> 
