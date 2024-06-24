@@ -1,94 +1,98 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959121422D2
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0435C1411C8
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719237432; cv=none; b=caBEyUq2b+W9FG0VPE386SSZJ0QtpZP4PtT7RA3JjT6ukqSO1dDaW4KvMZ7w69W/XxhPpnTTM1uA6mLhmqmosfkv4Y0xWDhvigPBhobyLvyh0rU9q52h107/48uF4lCV0a21WM3yqikMqNzwP1TsJKkWhAN9ThXaa1lALd7kYQs=
+	t=1719237464; cv=none; b=aDwCaUyp/epGDGfB3/4M9h2C0ys7bC9wtYc8MBydpyP0Y5PaYu9M/TEfbLmkudNAre6hUdcr1mW9z8tRkkaOL0FVjsshSA9mpwwStHkg/eB3WAp5h6iH7FjGaCIM30CJMV0Tuq1gI14Z1tLfb5lNSXYHo5JZwzHuCMNFcAsXlwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719237432; c=relaxed/simple;
-	bh=JcmBNUGTwoexd4d4Kt7dKugDN2tASyAOaxDUgR2FYt8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eyTXXWgMqtYrcKF3Du+uSrO1bCtN+ZesReCbynOZiQ3Fisrz2SSD02w2EEX2NTVGu/KfoK5g9tPZFQ9vT3t2NmngDu7zFE/TCv9K3yul61dR6gPjzmmAVpyh8K7gCEK42zgQoj8vOYOiFk6mjhRCApJqVBSCzLPWWkEOwQGp9zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zKSqq3tb; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719237464; c=relaxed/simple;
+	bh=GFIi6zv2aihNbVR53CK6RvA6zLzaLwbCY3qxAG56vbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oB6djadQYRUZGtbCrgPWoepAjSlfAKSKSc6MGPb1Ejkd1OBhhxruSb/C49+jps2JsVSYrUt4CSeCl95b0c893hlpmWtBF5ox+boYi7z/cLDKUHIIl1gAhRJ6A9laipYMyd4Rq+3vOHLzUu0iY9kCIqisS0HfMlfjlV8ucHRN7s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I/7c5BSw; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zKSqq3tb"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57d00a51b71so24193a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:57:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I/7c5BSw"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57d106e69a2so3965213a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719237429; x=1719842229; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JcmBNUGTwoexd4d4Kt7dKugDN2tASyAOaxDUgR2FYt8=;
-        b=zKSqq3tbKQHF6xoKyLxyN0BCC7BIOE8OriqJqlAx+ak1rHc818BjLW0eLEeL4/vXtQ
-         cUDdaoHBVk1s2RDDYorX7g64gvuhTHt008wBpmdujimn48GIepFPScIWgXKH1u2tjRHR
-         UbMNjp6VZe53F0O77pn1mK/88RfK1tsQnDR0bRTV3SNwIOBCF8eVjsn6nvFyX7tq54ue
-         jxRxbr8hjQPLb7SaCsbxu0TLsiNGqVvIYV1pxveVAsrIImXPQU3m2f0p5lYP3ddvH1n9
-         EBdnD+3izPVskyvaeOv0oQEo+nvTggR0xb+yb8egj5dd+QAccqciTRZ0Uj03jDAFzqNO
-         p19w==
+        d=linaro.org; s=google; t=1719237461; x=1719842261; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IHD4jJpcuG4tMgpp91267iJ5OoLxZWbXVFw4XaeFi2c=;
+        b=I/7c5BSwfn9ObTM+7DhxM5SwCs/sfajtsRjao/ThsS4aOUnlVS3Opzuxh7vep/otNS
+         kqhTSPtZLV8d0AmIJDRdSBmLrqEHbxDNRj/iQiJwWfo9wohdbtemYStZn505XqxZ4zv0
+         cEvP4xCBnmZUCUZPRn1DuaV11xJS2GORfOPJG6+APLHpDfgQiofxyinYJ+Anqh7pI0DY
+         /tuoEgZi55VVE6yqUes4Qf/izCjgCDY/ckcQ81sGSrfuw35nADZ1dDYlb6tiFyMCziqU
+         muhv0EcTMnXbs8UxwZkqdGlHeCdZ5zusDpelTHpluSGIvB24i+T6+WbmrCdFPtswH4ST
+         z/RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719237429; x=1719842229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JcmBNUGTwoexd4d4Kt7dKugDN2tASyAOaxDUgR2FYt8=;
-        b=M3WIunp/P0IhXkuvEUs8zW8HLG4H+lgXDdzIDgcfx79aJg8f6PnZFDIttflaooLsOq
-         GA8LewVT8d2JWmZZbIo8jSuW/XhwmqyYdbSv24bTG1RLiXHTSKKSPTG70xW3SQ3yk46I
-         uqggkAS3LDqYJbW+81yanmVbRQHNlckkv13hknkN8YiZ/iGyRAz38oAzSYw/TEhdp9fC
-         TnHQ9zJ/kWCmVmR410FgglBTcMCq6b/dXGPdtLXB+E4n/wm7HdDace6OdhWKHCO2qyCu
-         fNE6xaiS2f46NJpIIW8hWr0IsKd/KXsCLpKnhEejKM3JJp8BQ3L6zwi5M2LT29ni/fIa
-         Ls/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMp3es7W+d2u8KUUwuo9WGzVGoOWM56+rhA7v/8/TEusFye9pzQnbzmlpDoTnTxYYZxx3sDSiR1Pw/Fa4P146LHX0Mx9WXQ0YJWlgn
-X-Gm-Message-State: AOJu0YzWaEz3labsF5moCeLq9gsRgXOU1Hf+QrbJeJZPGzWBR+rCqmnE
-	A0pf+wYowo2Z3dTF6dWngqE8MEQuHz61VymVI0wHPY0Vu3tpQvmtbBessj9cPl4GbVyJyLq9X9p
-	CfVb3yW8lHdvynuRJugK0FxtptzXOjbJu9q5y
-X-Google-Smtp-Source: AGHT+IHbiy1mlgv62NpSfQr4qTZMGNLyyk2z/JSEgEj2oQ6KuAX1jpFmQzh/as79B6TsYRiexfxYk9JCRIbRT718SCg=
-X-Received: by 2002:a05:6402:3549:b0:57c:c5e2:2c37 with SMTP id
- 4fb4d7f45d1cf-57d419e2fdbmr270398a12.3.1719237428649; Mon, 24 Jun 2024
- 06:57:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719237461; x=1719842261;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IHD4jJpcuG4tMgpp91267iJ5OoLxZWbXVFw4XaeFi2c=;
+        b=t2s+0TimXDQlqHAgJ709d3xq3f9IwjEnkEy8ThObZ7CMfz3eEvqcXfKXP/LrbM0whS
+         GJrRdjRM3lsYPewYRhI8fG7S89K7WDJw9glb/smeNZ2zbRU6lVtwupqh3MebarDV2RJZ
+         xqP0AKiSSy9x6ogsZvJWbDAob/7kHpzjyYPx+FOqfSOF4Nrj86UtrsiUv6wGlDdT1u8f
+         f7kkJIFErdRHq61PoQ6n+2sp9DJcAGzIKMgvILfZZjIl5gMxQtKpicyVTS5ynT+civ5s
+         +LPcGvP5Q3AH9zgWxFqIT8/5Ueu9jfejzUZZEbGXI2v0C5GRE8CrPY6Hse3J7SX6KKHk
+         yYmg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4OH7JMPde2krPoeEqZzgr+m5uwWvSGTxFucYfKXtE5fZvwGPd07DA5reuROiFTW6QkcGc5+JOtoJXfrYIC6ydzjFy7amujydc0SMC
+X-Gm-Message-State: AOJu0Ywhoz/LjUNf8DMT49beRqgNSMjDwm9yWW2WZTN01ATMTPltPx+2
+	sH10Bj7lLjfIp31zIsrY1bP9H0TQxFojUDP01TmtZqQO0EwmOo8xRbZRGIVbD64=
+X-Google-Smtp-Source: AGHT+IGpGmgITj2Vbxhko8ZELCw5TU4oWE8gTzKLF+hMftNzpJ304FkSkyvJfotXe68/KgaWnf31Rg==
+X-Received: by 2002:a50:875e:0:b0:57d:4692:ba54 with SMTP id 4fb4d7f45d1cf-57d4692bb51mr4569953a12.6.1719237461074;
+        Mon, 24 Jun 2024 06:57:41 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:c03:9198:7df:6a16:3e8e:ed7b? ([2a00:f41:c03:9198:7df:6a16:3e8e:ed7b])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d66b04378sm405692a12.38.2024.06.24.06.57.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 06:57:40 -0700 (PDT)
+Message-ID: <f5ef4e3c-66e8-4833-86bb-c38658b923ae@linaro.org>
+Date: Mon, 24 Jun 2024 15:57:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621013929.1386815-1-luoxuanqiang@kylinos.cn>
-In-Reply-To: <20240621013929.1386815-1-luoxuanqiang@kylinos.cn>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 24 Jun 2024 15:56:57 +0200
-Message-ID: <CANn89i+mrA0CpNLvOCpNi4XS1XsftgAQu71jWb4Ahh++VUzkGA@mail.gmail.com>
-Subject: Re: [PATCH net v4] Fix race for duplicate reqsk on identical SYN
-To: luoxuanqiang <luoxuanqiang@kylinos.cn>
-Cc: kuniyu@amazon.com, kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
-	dccp@vger.kernel.org, dsahern@kernel.org, fw@strlen.de, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	alexandre.ferrieux@orange.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/3] arm64: dts: qcom: x1e80100: Add gpu support
+To: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+ freedreno <freedreno@lists.freedesktop.org>,
+ dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ Rob Clark <robdclark@gmail.com>, Bjorn Andersson <andersson@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240623110753.141400-1-quic_akhilpo@quicinc.com>
+ <20240623110753.141400-4-quic_akhilpo@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240623110753.141400-4-quic_akhilpo@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 21, 2024 at 3:39=E2=80=AFAM luoxuanqiang <luoxuanqiang@kylinos.=
-cn> wrote:
->
-> When bonding is configured in BOND_MODE_BROADCAST mode, if two identical
-> SYN packets are received at the same time and processed on different CPUs=
-,
-> it can potentially create the same sk (sock) but two different reqsk
-> (request_sock) in tcp_conn_request().
->
-> These two different reqsk will respond with two SYNACK packets, and since
-> the generation of the seq (ISN) incorporates a timestamp, the final two
-> SYNACK packets will have different seq values.
->
-> The consequence is that when the Client receives and replies with an ACK
-> to the earlier SYNACK packet, we will reset(RST) it.
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+
+On 6/23/24 13:06, Akhil P Oommen wrote:
+> Add the necessary dt nodes for gpu support in X1E80100.
+> 
+> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+> ---
+
+[...]
+
+> +
+> +				opp-1100000000 {
+> +					opp-hz = /bits/ 64 <1100000000>;
+> +					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+> +					opp-peak-kBps = <16500000>;
+
+No speedbins?
+
+Konrad
