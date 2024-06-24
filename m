@@ -1,48 +1,46 @@
-Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296B828DCB
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F30C210E9;
+	Mon, 24 Jun 2024 06:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719210671; cv=none; b=Qt4v61h48ZMjbS9oFFv45p3rRIIo9eTfnoIFjtfBdviVIcl334GSKRbGBXVgSkaKR5mTq0YM/kLETEfTxn/4exhymkNSxPNVr7GYBenHmLBYY3skZbN5tr868ELMmu4sKWDg4vyP+a5xQOKadJZSGi9mLQfPPUJacasH7WZXqag=
+	t=1719210689; cv=none; b=aJxe4/By2uuBDOHwq+oyDlOnQwIluWdyrSZULZ1GHiYsDr1ny0nWl6RC0A2hP7fEWVkNXxdDmEj3FVSSdW9E0WFm8ZSWc5vrS1hnj0UdGcsI/6G3945Vtp8p48HZx335lL+8FJwTOD6+EaDvSkcMtrkBD+KYybnD3mVxzoWZSAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719210671; c=relaxed/simple;
-	bh=de7de+rT9nbBMSSSnfOCoLPHya/yDwE8bC/DvKjslAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ltunD8BUzI3Y0vNZkWr3fFOwXw7FvLSx3rGDz8wwX2EN8DsxPVc9+N2bODuuDezkTbaBAfEWUmpGJW9Tfw8QwEeadfJq6fpNIzbxSZAx+IQ8cIKalJcBHkttsCu1OPHnS01FkKq55cey6ULOLIup0o41rT863w6cxHdOCArgH9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=i7obmKSx; arc=none smtp.client-ip=185.136.64.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="i7obmKSx"
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 20240624062052e62a7d89208ad9efd0
-        for <linux-kernel@vger.kernel.org>;
-        Mon, 24 Jun 2024 08:20:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=jan.kiszka@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=KrnFVQqPX0XMmlsqlUHcoKE2zhOTIf+F9SOvzEJf3Xw=;
- b=i7obmKSxnvrrjen1ef+GZO0hmc31P4vU69rd8yt8kvvkqIY7d3W4ai0VorRv6F/QvZvIGD
- 0efXOXjkCMwSnoppjMGJCN5ofHaNHPRO6lRcBDM12hzRa48DJSEntEFRG8BicOQbcfJEvZVP
- cwthpGE1yx9/GgupflfNmFQmAaqqg=;
-From: Jan Kiszka <jan.kiszka@siemens.com>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Bao Cheng Su <baocheng.su@siemens.com>,
-	Diogo Ivo <diogo.ivo@siemens.com>
-Subject: [PATCH 3/4] dt-bindings: soc: ti: am645-system-controller: add child nodes used by main domain
-Date: Mon, 24 Jun 2024 08:20:49 +0200
-Message-ID: <52848094062ea55b0063e6fc37f27e6ed5035aa8.1719210050.git.jan.kiszka@siemens.com>
-In-Reply-To: <cover.1719210050.git.jan.kiszka@siemens.com>
-References: <cover.1719210050.git.jan.kiszka@siemens.com>
+	s=arc-20240116; t=1719210689; c=relaxed/simple;
+	bh=c/eazRGHNDXqDo1NT5g1rFQOxAx0WoppSOhvrZFCueY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hwg01l/F0ezDl5DSShaIdVxrrZHACCuGzp7GAFHGEKcOfLc19YZ3znjHhMfLHhwKleR8F05w+iHxzn5mrPpbUN/FsMD8hia2w4dAxfFiaMjgwqRs6yvOp+q+uOnk6B17uioLOW2C/gYs/1X9Sq0ICVGhZL25kLbEEcT+xSifrJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45O6V1MX02837749, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45O6V1MX02837749
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Jun 2024 14:31:01 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 24 Jun 2024 14:31:02 +0800
+Received: from RTDOMAIN (172.21.210.106) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 24 Jun
+ 2024 14:31:01 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai
+	<justinlai0215@realtek.com>
+Subject: [PATCH net-next v21 04/13] rtase: Implement the interrupt routine and rtase_poll
+Date: Mon, 24 Jun 2024 14:28:12 +0800
+Message-ID: <20240624062821.6840-5-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240624062821.6840-1-justinlai0215@realtek.com>
+References: <20240624062821.6840-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,59 +48,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-294854:519-21489:flowmailer
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+1. Implement rtase_interrupt to handle txQ0/rxQ0, txQ4~txQ7 interrupts,
+and implement rtase_q_interrupt to handle txQ1/rxQ1, txQ2/rxQ2 and
+txQ3/rxQ3 interrupts.
+2. Implement rtase_poll to call ring_handler to process the tx or
+rx packet of each ring. If the returned value is budget,it means that
+there is still work of a certain ring that has not yet been completed.
 
-Expand bindings to cover both the MCU and the main usage of the AM654
-system controller.
-
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
- .../soc/ti/ti,am654-system-controller.yaml    | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 88 +++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
-index e79803e586ca..0eec807f38df 100644
---- a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
-+++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
-@@ -34,6 +34,35 @@ patternProperties:
-     type: object
-     $ref: /schemas/phy/ti,phy-gmii-sel.yaml#
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index ef0b4ff5db7c..e65f53f01bce 100755
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -584,6 +584,75 @@ static void rtase_hw_start(const struct net_device *dev)
+ 	rtase_enable_hw_interrupt(tp);
+ }
  
-+  "^mux-controller$":
-+    type: object
-+    description:
-+      This is the SERDES lane control mux.
++/*  the interrupt handler does RXQ0 and TXQ0, TXQ4~7 interrutp status
++ */
++static irqreturn_t rtase_interrupt(int irq, void *dev_instance)
++{
++	const struct rtase_private *tp;
++	struct rtase_int_vector *ivec;
++	u32 status;
 +
-+  "^clock@[0-9a-f]+$":
-+    type: object
-+    $ref: /schemas/mfd/syscon.yaml#
-+    properties:
-+      compatible:
-+        items:
-+          - const: ti,am654-serdes-ctrl
-+          - const: syscon
++	ivec = dev_instance;
++	tp = ivec->tp;
++	status = rtase_r32(tp, ivec->isr_addr);
 +
-+  "^dss-oldi-io-ctrl@[0-9a-f]+$":
-+    type: object
-+    $ref: /schemas/mfd/syscon.yaml#
-+    properties:
-+      compatible:
-+        items:
-+          - const: ti,am654-dss-oldi-io-ctrl
-+          - const: syscon
++	rtase_w32(tp, ivec->imr_addr, 0x0);
++	rtase_w32(tp, ivec->isr_addr, status & ~RTASE_FOVW);
 +
-+  "^clock-controller@[0-9a-f]+$":
-+    type: object
-+    $ref: /schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
-+    description:
-+      Clock provider for TI EHRPWM nodes.
++	if (napi_schedule_prep(&ivec->napi))
++		__napi_schedule(&ivec->napi);
 +
- required:
-   - compatible
-   - reg
++	return IRQ_HANDLED;
++}
++
++/*  the interrupt handler does RXQ1&TXQ1 or RXQ2&TXQ2 or RXQ3&TXQ3 interrupt
++ *  status according to interrupt vector
++ */
++static irqreturn_t rtase_q_interrupt(int irq, void *dev_instance)
++{
++	const struct rtase_private *tp;
++	struct rtase_int_vector *ivec;
++	u16 status;
++
++	ivec = dev_instance;
++	tp = ivec->tp;
++	status = rtase_r16(tp, ivec->isr_addr);
++
++	rtase_w16(tp, ivec->imr_addr, 0x0);
++	rtase_w16(tp, ivec->isr_addr, status);
++
++	if (napi_schedule_prep(&ivec->napi))
++		__napi_schedule(&ivec->napi);
++
++	return IRQ_HANDLED;
++}
++
++static int rtase_poll(struct napi_struct *napi, int budget)
++{
++	const struct rtase_int_vector *ivec;
++	const struct rtase_private *tp;
++	struct rtase_ring *ring;
++	int total_workdone = 0;
++
++	ivec = container_of(napi, struct rtase_int_vector, napi);
++	tp = ivec->tp;
++
++	list_for_each_entry(ring, &ivec->ring_list, ring_entry)
++		total_workdone += ring->ring_handler(ring, budget);
++
++	if (total_workdone >= budget)
++		return budget;
++
++	if (napi_complete_done(napi, total_workdone)) {
++		if (!ivec->index)
++			rtase_w32(tp, ivec->imr_addr, ivec->imr);
++		else
++			rtase_w16(tp, ivec->imr_addr, ivec->imr);
++	}
++
++	return total_workdone;
++}
++
+ static int rtase_open(struct net_device *dev)
+ {
+ 	struct rtase_private *tp = netdev_priv(dev);
+@@ -729,9 +798,28 @@ static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
+ 	rtase_w16(tp, RTASE_LBK_CTRL, RTASE_LBK_ATLD | RTASE_LBK_CLR);
+ }
+ 
++#ifdef CONFIG_NET_POLL_CONTROLLER
++/* Polling 'interrupt' - used by things like netconsole to send skbs
++ * without having to re-enable interrupts. It's not called while
++ * the interrupt routine is executing.
++ */
++static void rtase_netpoll(struct net_device *dev)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	const struct pci_dev *pdev = tp->pdev;
++
++	disable_irq(pdev->irq);
++	rtase_interrupt(pdev->irq, dev);
++	enable_irq(pdev->irq);
++}
++#endif
++
+ static const struct net_device_ops rtase_netdev_ops = {
+ 	.ndo_open = rtase_open,
+ 	.ndo_stop = rtase_close,
++#ifdef CONFIG_NET_POLL_CONTROLLER
++	.ndo_poll_controller = rtase_netpoll,
++#endif
+ };
+ 
+ static void rtase_get_mac_address(struct net_device *dev)
 -- 
-2.43.0
+2.34.1
 
