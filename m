@@ -1,113 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from antelope.elm.relay.mailchannels.net (antelope.elm.relay.mailchannels.net [23.83.212.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4EA19E7E2;
-	Mon, 24 Jun 2024 16:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719246307; cv=none; b=A5ip511682hN8wehktsJlI6K+K1xo/8oG6Cd4+SlR8BSkEhNHB52nkLVa0OOigE7FUT6r+dLlCF2XV53v2Xko/t0BLx97l8f/uMdS8jm6dZiVB0zVkGWYpCeI2Wq1CYQtAtf/FdIMZfxlRdv1u7+GXmvqYQyVc5up9dIND1uOUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719246307; c=relaxed/simple;
-	bh=fbCoAVw5u4SsXGsY9Q4TwtAMZSfeZ8xtbvxJxzRDzEQ=;
-	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=AGbJnL3xsktQvlZNW8g6Ppcx3g3JCGgEWyhjKlo8dNKj2KBo+IIGlD/6aLTZaHquL4EkkpzODjGLLd2Xzz7TY7xVzeu3o73Wiu4EypZnaP3+IAUcr2mRhOl12ipk8MFx96BNpb3o/kIy1lDhYXLD5UqqNxFPpDcPtRWDIMfHzwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zez7tI6q; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B162136995;
+	Mon, 24 Jun 2024 16:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719246327; cv=pass; b=QKcaNrXpRUyx92WgCINpmnPcWnN0G+gpY/Qq3lmSVud86cMQW+cIQrUhr8QmPjTm760XlI032+BadrkhRgnbJ2vQ3Cp36ceev6TKmNTbWxCBRqYG/B4Dq1iDfOQeONjfrK8w+6QIa6I4H7OIeWNtKOaU3wJ7gvaEvG2NBAPLOAM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719246327; c=relaxed/simple;
+	bh=s/X7e9ND1LcgFkfYWET+NkfJ4rO2vGCLphX+LfaDXAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AECTnAGHD+YYiAQV3eJ0ki0nmwkGf6pp0aq4Sp69a3f5C3/7fuJ5CBbSw4iLIoyoJGsMf9BASrT58uhSv0osJDteKeqh+dKVIaZ5h7/7rVqZ55urXqJbzcWK+OfwUHYtLdOfE0F74fgEsXVUSAXzjWRTUDKj5KCAN5utY6QUskA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cvjfmSv/; arc=pass smtp.client-ip=23.83.212.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zez7tI6q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719246306; x=1750782306;
-  h=from:date:to:cc:subject:message-id:mime-version;
-  bh=fbCoAVw5u4SsXGsY9Q4TwtAMZSfeZ8xtbvxJxzRDzEQ=;
-  b=Zez7tI6qo7n3L2ZjSbUbAi3SEDZQ3M/KSo7HG9UmNBxHKJ2hvOU8NlZo
-   95yJO/a1SmzqJOThzaSJqGshwcBu9Gw0X2vSpaS2V5+/JamaoKKSBCk0S
-   dAKMpndlu54k5eWYpwRh0BYI/VHpB3VFMQUkSnltXmd/mHmZ1RG1UxP+3
-   u4yzJyk7wGP5KFW7NdtD5+D4hwkWlMVwqh2Lx6zKWInBlCxwxA/3TTSb4
-   GKiuIlKRxODQgBidnT5xt759xBc+a2oCGsSUJXhobvvMsh4mkufG62G1V
-   7vG6yYSRRa/mg6mhmJOhUPQ2Akk5vB2l/01/7cfFX5QvMLQ3BXFgijCZS
-   w==;
-X-CSE-ConnectionGUID: 0c8P+Sn9QjieRCW7DaNIVA==
-X-CSE-MsgGUID: 6LIcOikfSwazQoxZ6v868g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16356537"
-X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="16356537"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 09:25:05 -0700
-X-CSE-ConnectionGUID: g4niJvsaQbGtyeXmdH28uw==
-X-CSE-MsgGUID: hqDaBJICQkeSfs4KYI8E2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="48520499"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 09:25:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 24 Jun 2024 19:24:55 +0300 (EEST)
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-    Sebastian Reichel <sre@kernel.org>, 
-    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, 
-    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
-    linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [GIT PULL RESEND] Immutable branch between pdx86 lenovo c630 branch,
- power/supply and USB
-Message-ID: <e42fb2e9-81d4-4e40-ff3a-f9d6a46d03f9@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cvjfmSv/"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E9C371021BD;
+	Mon, 24 Jun 2024 16:18:46 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 643D0102800;
+	Mon, 24 Jun 2024 16:18:46 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1719245926; a=rsa-sha256;
+	cv=none;
+	b=RxFOHkYAs8kHhM0JFi++tXHrqC2wFE3mGXUMYR9fALURWsGiHJNpw+cO69H/BEzikNvESp
+	B5TKPYoMLfZ0YICR/D90VlJ545haN5W65AByHNWI/D4aRoxbcDA4CmVeurTlcSbhWnZlUW
+	V87iD7iaXZZKCY+MFWV3G3hpYzV2zRfOUCmxkTAeTeDTZseEGovTxnXXOSTy3SEHLL9Ryw
+	41TJvNnW6ZW8QCdVKQTanCq/P5YA+nZudb/mjyRiLFI+T8uylza4YRi64Bl8bibK7vhIsH
+	D4e+/ZDpjv3KilokkrTlBs3Uy1PPYl13r0r39fcMGrzvjZtRQA5NiygU1z0lbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1719245926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=s/X7e9ND1LcgFkfYWET+NkfJ4rO2vGCLphX+LfaDXAk=;
+	b=cIgDMkwcTVVtRiD+kcXnOg1h56H9puTO0bi9dAPXbYFJ6iW3w4/MEvbE3CvZvsDh17eI5s
+	6tN4wfAB22kR5mwMro12wtgmxykrsRCTX5jiFV4bq/WHVnXHKo88abyMW2ctYCQmOlA1o0
+	7wVGf40UUJO52S1FmTFbn2hboUE8KTZCWhXTdy7J3X9EMZc6gVJWy7Vvx6MysawlCP3Xey
+	7mN6a6f+isbxgrnEkNHI0X7cDqX2G67ccee32K9arbzNuR9zJ3Q8ir2ea4dcDxkpLIgOxF
+	AVe/rlWQ7z/NN6ssEIeYN5AuccFvrIzDuKENmEmz1CSKvOO/ACg94+zYZQ19pA==
+ARC-Authentication-Results: i=1;
+	rspamd-7f76976655-7pwfm;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Lyrical-Supply: 4362dac010c41fcf_1719245926736_502416715
+X-MC-Loop-Signature: 1719245926736:1170366257
+X-MC-Ingress-Time: 1719245926735
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.207.198 (trex/6.9.2);
+	Mon, 24 Jun 2024 16:18:46 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4W7Cnd0KhMz83;
+	Mon, 24 Jun 2024 09:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1719245926;
+	bh=s/X7e9ND1LcgFkfYWET+NkfJ4rO2vGCLphX+LfaDXAk=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=cvjfmSv/xtxNiy1geC1B7ErlaIXuNCp8p579Rdgk7lRi/G9ZhaRI2JLftSKNd5X73
+	 dxExRW5C4jruL7j8VO6OFRy2XiBofKi3p2M02os7BN/Ld5kTyENlx6CFkqBJxU5MA2
+	 CUXL8qFb0L0N8lCGf9ci5F6wfWwIwgLbYA8NeT3bFzy0is0Q9pFSzPXQM5Hbw7OLdZ
+	 zrxuiJ+Uip9vPt0op9wg09W+0iUaE4NRWgpAVE5emse4vWozSRP47/YMrwNGeixqVZ
+	 ngGFAgPW1zQP2oVndUKmM/eOP9+rH4H5kG4FoSPiT7EQEWSN9Tx0InsNTRpaH8wi5P
+	 CS3V0/Gj6mWDA==
+Date: Mon, 24 Jun 2024 09:18:41 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Huang Ying <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alison Schofield <alison.schofield@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bharata B Rao <bharata@amd.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v3 1/3] cxl/region: Fix a race condition in memory
+ hotplug notifier
+Message-ID: <20240624161841.gekjnoksxrb4zd7x@offworld>
+References: <20240618084639.1419629-1-ying.huang@intel.com>
+ <20240618084639.1419629-2-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240618084639.1419629-2-ying.huang@intel.com>
+User-Agent: NeoMutt/20220429
 
-Hi,
+On Tue, 18 Jun 2024, Huang Ying wrote:
 
-This is v2 of the lenovo c630 IB branch with the build fix for non-ARM64 
-platforms (built on top of the commits in the previous IB PR). Resent with 
-full Subject line.
+>In the memory hotplug notifier function of the CXL region,
+>cxl_region_perf_attrs_callback(), the node ID is obtained by checking
+>the host address range of the region. However, the address range
+>information is not available when the region is registered in
+>devm_cxl_add_region(). Additionally, this information may be removed
+>or added under the protection of cxl_region_rwsem during runtime. If
+>the memory notifier is called for nodes other than that backed by the
+>region, a race condition may occur, potentially leading to a NULL
+>dereference or an invalid address range.
+>
+>The race condition is addressed by checking the availability of the
+>address range information under the protection of cxl_region_rwsem. To
+>enhance code readability and use guard(), the relevant code has been
+>moved into a newly added function: cxl_region_nid().
 
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
-
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-ib-lenovo-c630-v6.11-2
-
-for you to fetch changes up to 13bbe1c83bc401c2538c758228d27b4042b08341:
-
-  platform/arm64: build drivers even on non-ARM64 platforms (2024-06-24 18:22:15 +0300)
-
-----------------------------------------------------------------
-Immutable branch between pdx86 lenovo c630 branch, power/supply and USB
-subsystems due for the v6.11 merge window.
-
-platform-drivers-x86-ib-lenovo-c630-v6.11-2:
-  v6.10-rc1 + platform-drivers-x86-lenovo-c630
-for merging into the power/supply and USB subsystems for v6.11.
-
-----------------------------------------------------------------
-Bjorn Andersson (1):
-      dt-bindings: platform: Add Lenovo Yoga C630 EC
-
-Dmitry Baryshkov (2):
-      platform: arm64: add Lenovo Yoga C630 WOS EC driver
-      platform/arm64: build drivers even on non-ARM64 platforms
-
- .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 ++++++
- drivers/platform/Makefile                          |   2 +-
- drivers/platform/arm64/Kconfig                     |  14 +
- drivers/platform/arm64/Makefile                    |   1 +
- drivers/platform/arm64/lenovo-yoga-c630.c          | 291 +++++++++++++++++++++
- include/linux/platform_data/lenovo-yoga-c630.h     |  44 ++++
- 6 files changed, 434 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/platform/lenovo,yoga-c630-ec.yaml
- create mode 100644 drivers/platform/arm64/lenovo-yoga-c630.c
- create mode 100644 include/linux/platform_data/lenovo-yoga-c630.h
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
