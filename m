@@ -1,152 +1,134 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683ED137C2A;
-	Mon, 24 Jun 2024 12:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6A9137C2A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 12:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719231649; cv=none; b=AvbUgWcaFjiVC4hH20I2wsC2G2FCCYpMGlyNlzLAuhYSI9XeHDiBqeUF2CnO/GrOowc9RwJPna1JJrP8oypvHYAAsNCV03YoOFJ9I9AYNGQw14aUnG1hz7KyMRaKoSbQdn9MbxkZByfmRcDIL+/v2YlkT9KprNi/MwpdO+8EkPs=
+	t=1719231829; cv=none; b=lWwW/B03j80yUh/Y3UII/qaLmEF44Eyxm4Ui2T9cclkvQeRUtns2Zg0nS1h5MbgvLbJ7nv/DONmus1TsrxNnMtHqVCK7i8rT+TSFpCDqFY6CdZGx2YBk0UdDyrZz3Y5fM+P9bVlt8q0S41OKMm9TBeZ4m75W9CO4tUFtOmDC/kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719231649; c=relaxed/simple;
-	bh=BzYVs4L6KpDuCZziyHHbj2IqHKvwwMV1R9l33WlK0HU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQQ6/fLH+qv4iuyKsHMboxhzGwteKWLl5u+uUZeJhRe7U3Zs2JViTv4iytDMYhLXY5jc72PhgsxyCFxrejpgcdWfdeH77FB1OoUDweVyXdTJbLaivGNj3LpOh+JwZHQ1pJ62CgOcV5IiuXQbARmhLhox+NqwXmh5m1ZqYdcOlPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqX5dBrA; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719231829; c=relaxed/simple;
+	bh=nwe0JbEQAeUAP0BTZ+wS2amLU9j+G2W0CktghYoVRCM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ltLDX54heRPcDz9EjBuz3egI0STOMVRpnkVBPHiN+hmbANob//PNGzZiFVGwGiu8s4riZSBa8aI0zqFBenf9PAWQzKZ+KMN2p2v3T5FQU79PHHkVxAXQM4yc1m4J2p9Z5PR/w7BMGtPeyxbZdt+4jGK8nGaf3z4K+N9XPsB2rzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XemWGzD9; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqX5dBrA"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ec59193468so12134031fa.1;
-        Mon, 24 Jun 2024 05:20:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XemWGzD9"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d0699fd02so2200116a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 05:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719231645; x=1719836445; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TSI4KQV7tp+wxmh1FMoXKiaVJwFpmSl7UPXF+v3NqxA=;
-        b=hqX5dBrA0nEX343JqqaKg3iPY1WkqygULyJj2+jzunoTPIRTPSFIwgkZbQwDTOQnLM
-         5AT++9Uxle3cSIIzQlpEhvt5XhdQsATXes0fQHt5maTbpIplpIQA0/SPLczb4vnse4+A
-         a7y1DSUgC2Ifjoppy15VTZ5T8gHSRHaKCCX0vZDW1/zDrk1Qy4Yxj/5cUEph3b9elxKT
-         iMfyx5e4SdQtcHGh8f0vlRJJB2EHZ11avNasemQ4VRKM0lvrjgKSpRletYDsftaHWa0L
-         VR2xYKvm0LjOU/4BUnaNoXiBkMt1gN7L71ps1psqmRa4Yx0cYzxcVK46YRbMWdLXyJ3d
-         2mhQ==
+        d=linaro.org; s=google; t=1719231826; x=1719836626; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wSZE7wf/yd4vOrQ1gWWaEIjdsxjJ6hIagbVZFMYi44E=;
+        b=XemWGzD9dJB1w5Ah7FV72w7MRdNNPDvzsGT/qHRjIvv+1HMAIbXBNjibT5VrvAh4fx
+         QDZ/PIo299ruJT24fdxu6nfBMku5i4Td/mSwUfkVFWZi9KAWiYQLrxZdYVnp+00dpOL/
+         EBzcke5KdAewYw1Wnlq4ArT5k3TRdFGH5Ezdh5ExA3wfseI8SI0/sBygj2ohespUtI/W
+         7kOD+N9yWsYDp2krG8S054uoguIy0U/yYWwSWTOTE5nvqyNFREiYlTnWvoN2+auoFqB3
+         MvMSI0Tq2WHqj++CJHKl2er0jygjT37Xrcu/HVeFySmTOBwtCnEHbIpnq6OyG9ZyRPiN
+         dukA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719231645; x=1719836445;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TSI4KQV7tp+wxmh1FMoXKiaVJwFpmSl7UPXF+v3NqxA=;
-        b=BWpat0ts11UE1dfVngT+wlEY1PtZXoY6YD8dOicH5dm2Udw+4jdQKH5vT02lwAwbUc
-         y1cQgSs3miOHKADive2WjrU3MTlMKCYDnxbz7h6Au2Q3Q06K3rgrtYaKwWn91Rp6uL8h
-         2qlRNQKng9k8wDx+M9WEJZ4JWzypJYc6OHYig3beyxQw7LdWwKyNEaEGAUx+PvasQPFt
-         F+mqaOgdCJ7Wf+xFxVgzsTFyZj863zOT72TLUX8EXOGL96+QLSZ8Bn5exqzG+rU/ztky
-         EGNXCTaivWB6J5sQvhg3O5AVcFbaEqdoKjH6xgsO/AIhju2c65jbIPLDd4hjwbPYiCrI
-         FxHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPBXRD7PiWx2tLsSQoaZlPAtIfiUvFkMTO7cjKP8G3DGK3BVLa9Ku/Y1ycBU9hhg/IztLMYyVCw12zuWjDL5MxxQeVm+kX6D1Btg==
-X-Gm-Message-State: AOJu0YwXHIcK3IWeawxgygqegxz6VJ47McKb+7dZDLrGv1FaEfpF9aZX
-	Zexgibravqd4qRKFprMRYH2LFr4sfqH8k2IWxuCx4k9/gkkM0eaN
-X-Google-Smtp-Source: AGHT+IEOEr0sFekIupSP3xekgic9S7PT2e9fYoRzjDiwd7jQcu7Ky0Mjk2cBkuub50BcjRZKEkBxKQ==
-X-Received: by 2002:a2e:9b0b:0:b0:2ec:5364:c792 with SMTP id 38308e7fff4ca-2ec56c86e7cmr16601251fa.13.1719231645324;
-        Mon, 24 Jun 2024 05:20:45 -0700 (PDT)
-Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec63baecafsm1388471fa.122.2024.06.24.05.20.44
+        d=1e100.net; s=20230601; t=1719231826; x=1719836626;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wSZE7wf/yd4vOrQ1gWWaEIjdsxjJ6hIagbVZFMYi44E=;
+        b=C9NK/cjxZ525RtzBA6W21C78N50tgqHAV7y5phrdXGVR7ctMTK6T4fRsBdfQMMTAVI
+         xhnTf/aizZx33i74h5pN7TYgq59tP4y7p/DtOlSXCaWSF6Gc2qnjbtrUalFS2L+oS6+r
+         uW0V7XMP9FOpXC5F78mxPwQ+emXZPixZEu+XADdzWXLDMJRVhQ6I/VXjZM42UBAas42f
+         +G1BxAyapj5heowoFP6I4limoDFPnWCXQDlwJixyXV4AEf88gnqkGm+a+gfcfsRVO1Vq
+         /WB1wfM+YCLVPu20WnDP+O5nyyVEsLOXTn83SEgqhfcEuX+OHqET/86za41mZzyG01dG
+         Us7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXGIkDuGpr8M7+KhXzgQ1r9wAPvDsBrpze++w+CSpFeVsdBUMup/HRhBLQ3k6v/vPuoDVNi84AKZGIVyHmTX7u0dtpXIsjiTkTVn3/a
+X-Gm-Message-State: AOJu0YxkNSzmAwzmgLiRLT+m6uw9Sd5c2jmGOWkRcF6EZxtEzUFKtulO
+	2AumM4YYWRna0U8EEoIASP4cE5oBX7CrebXQz2r4CgYBoMUmpPmPwAfTNmMfDH8=
+X-Google-Smtp-Source: AGHT+IHNguip5UnHxzgyJ2YCA6WTa6ffyCb+h4kkD0q7OpO2ZBoe0LgFjUOdKen2ozQ0+3xKFutRdA==
+X-Received: by 2002:a50:99dd:0:b0:57c:5874:4f5c with SMTP id 4fb4d7f45d1cf-57d4bdcad82mr3349529a12.32.1719231825814;
+        Mon, 24 Jun 2024 05:23:45 -0700 (PDT)
+Received: from [192.168.0.113] ([2a02:8109:aa0d:be00::52af])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d45496336sm2946824a12.22.2024.06.24.05.23.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 05:20:44 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 24 Jun 2024 14:20:42 +0200
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <ZnlkmkDAi2CtgwDF@pc636>
-References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
- <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+        Mon, 24 Jun 2024 05:23:45 -0700 (PDT)
+From: Caleb Connolly <caleb.connolly@linaro.org>
+Subject: [PATCH 0/3] arm64: dts: qcom: make dev boards prefer usb host mode
+Date: Mon, 24 Jun 2024 14:23:41 +0200
+Message-Id: <20240624-b4-rb2-fixes-v1-0-8d763ee4e42e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE5leWYC/x3LTQqAIBBA4avErBuwUQq6SrTwZ6zZWChEIN49a
+ fnxeBUKZ+EC61Ah8yNFrtQxjQP406aDUUI3kCKjZjLoDGZHGOXlgpMNWvuwUNQW+nJn/kM/tr2
+ 1Dyo2zEBeAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Caleb Connolly <caleb.connolly@linaro.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1863;
+ i=caleb.connolly@linaro.org; h=from:subject:message-id;
+ bh=nwe0JbEQAeUAP0BTZ+wS2amLU9j+G2W0CktghYoVRCM=;
+ b=owEBbQKS/ZANAwAIAQWDMSsZX2S2AcsmYgBmeWVQCnjyuO8VCm5WfhtTubPOjl7BdTfG4jQl3
+ hWD203mDqSJAjMEAAEIAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCZnllUAAKCRAFgzErGV9k
+ to93EACVxbBPHfha/yfNAUYVr5EI+1I1iQuue2m85MHLjPw/k4fsqES94gnGW/HV5jYyC+SUHnE
+ Bpj+fwUCkD0+3bxDFyBvW/rTR8dfncYkvfrN7RM0DZ242acs/QayvUrtI4pXRak/fBPBcFo4JqA
+ E+TnXMjI+IUvrCa5HbybZt/4d64WrVccXyk1XnVC+BvHskaV1dcv80z8RPzNlGnoQ5oXrTgDXj6
+ WGM6WgaShbJpM1jZxvaOy3aVX+IxXnF1TIkSmn3/6cQFV3fDMxVxZDAfGDH0gVnVpoocDohJSOh
+ kLxl9idwbUiti7Oi8gemu6puYme8m+1pKzIzXx4CiyNnfzJA2rcYzz0u8L26aQQfGXXfjD3jBR5
+ +nif7y6n7R+3O/Ry5MQ+jLq85BNB/+5XRu0oerJ4PD4vvRwwEn8fT3ZBcZMJKWA+IJkE9dYKzmt
+ F0VQV4fQrylGIImW6B9iuMd1owHJ/+lDe3gOQQAWYzrdzM1U2xkwXMmRyicjrOPVSQ/EhJKRIi5
+ 088r9krmMVA/SFB7yJNDuwZTZb6OVm86dQ6miPXfEHPAeCJ2vrryBqTqRYg0NlMTGxx4WOOwv/r
+ pJ1KTVhIh1IkiqpSnwJiZT1Ve94tloqnaiMA4KQp1oC8tpWznqAa5LP0+btTYYhXug9NUwIZJVk
+ 1OjK6+EvFvTnczg==
+X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
+ fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-> On 2024-06-20 02:19, Nick Bowler wrote:
-> > After upgrading my sparc to 6.9.5 I noticed that attempting to run
-> > xfsdump instantly (within a couple seconds) and reliably crashes the
-> > kernel.  The same problem is also observed on 6.10-rc4.
-> [...]
-> >   062eacf57ad91b5c272f89dc964fd6dd9715ea7d is the first bad commit
-> >   commit 062eacf57ad91b5c272f89dc964fd6dd9715ea7d
-> >   Author: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> >   Date:   Thu Mar 30 21:06:38 2023 +0200
-> >   
-> >       mm: vmalloc: remove a global vmap_blocks xarray
-> 
-> I think I might see what is happening here.
-> 
-> On this machine, there are two CPUs numbered 0 and 2 (there is no CPU1).
-> 
-> The per-cpu variables in mm/vmalloc.c are initialized like this, in
-> vmalloc_init
-> 
->   for_each_possible_cpu(i) {
->     /* ... */
->     vbq = &per_cpu(vmap_block_queue, i);
->     /* initialize stuff in vbq */
->   }
-> 
-> This loops over the set bits of cpu_possible_mask, bits 0 and 2 are set,
-> so it initializes stuff with i=0 and i=2, skipping i=1 (I added prints to
-> confirm this).
-> 
-> Then, in vm_map_ram, with the problematic change it calls the new
-> function addr_to_vb_xa, which does this:
-> 
->   int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
->   return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> 
-> The num_possible_cpus() function counts the number of set bits in
-> cpu_possible_mask, so it returns 2.  Thus, index is either 0 or 1, which
-> does not correspond to what was initialized (0 or 2).  The crash occurs
-> when the computed index is 1 in this function.  In this case, the
-> returned value appears to be garbage (I added prints to confirm this).
-> 
-> If I change addr_to_vb_xa function to this:
-> 
->   int index = ((addr / VMAP_BLOCK_SIZE) & 1) << 1; /* 0 or 2 */
->   return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> 
-> xfsdump is working again.
-> 
-Could you please test below?
+Many of the Qualcomm development boards feature DRD capable
+type-c ports. However these boards differ from smartphones in their
+usage, and it's generally preferred that they would enter host mode by
+default when given the choice.
 
-<snip>
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 5d3aa2dc88a8..1733946f7a12 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
-         */
-        vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+This doesn't affect connection to a host-only PC, since the controller
+is still DRD capable.
 
--       for_each_possible_cpu(i) {
-+       /*
-+        * We use "nr_cpu_ids" here because some architectures
-+        * may have "gaps" in cpu-possible-mask. It is OK for
-+        * per-cpu approaches but is not OK for cases where it
-+        * can be used as hashes also.
-+        */
-+       for (i = 0; i < nr_cpu_ids; i++) {
-                struct vmap_block_queue *vbq;
-                struct vfree_deferred *p;
-<snip>
+The RB1/2 are a special case, since they feature an on-board USB hub and
+a manual dip switch to toggle between it and the type-c port. Preferring
+host mode offers a useful hint to the software if it doesn't feature a
+fully DRD capable USB controller driver, it can just use the default
+mode (rather than defaulting to peripheral mode unconditionally).
 
-Thank you in advance and i really appreciate for finding this
-issue!
+---
+Caleb Connolly (3):
+      arm64: dts: qcom: sm8650: move usb-role-switch to sm8650.dtsi
+      arm64: dts: qcom: sm8350: move usb-role-switch to sm8350.dtsi
+      arm64: dts: qcom: prefer host mode on dev boards
 
---
-Uladzislau Rezki
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 1 +
+ arch/arm64/boot/dts/qcom/qrb2210-rb1.dts     | 4 ++++
+ arch/arm64/boot/dts/qcom/qrb4210-rb2.dts     | 4 ++++
+ arch/arm64/boot/dts/qcom/sm8150-hdk.dts      | 1 +
+ arch/arm64/boot/dts/qcom/sm8350-hdk.dts      | 3 +--
+ arch/arm64/boot/dts/qcom/sm8350.dtsi         | 1 +
+ arch/arm64/boot/dts/qcom/sm8450-hdk.dts      | 1 +
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts      | 4 ++++
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts      | 4 ++++
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts      | 4 ++++
+ arch/arm64/boot/dts/qcom/sm8650-hdk.dts      | 3 +--
+ arch/arm64/boot/dts/qcom/sm8650-mtp.dts      | 3 +--
+ arch/arm64/boot/dts/qcom/sm8650-qrd.dts      | 3 +--
+ arch/arm64/boot/dts/qcom/sm8650.dtsi         | 1 +
+ 14 files changed, 29 insertions(+), 8 deletions(-)
+---
+change-id: 20240624-b4-rb2-fixes-1ad33cd72f3a
+base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
+
+// Caleb (they/them)
+
