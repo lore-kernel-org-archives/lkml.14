@@ -1,121 +1,113 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE92134410;
-	Mon, 24 Jun 2024 10:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D086F134410;
+	Mon, 24 Jun 2024 10:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719223513; cv=none; b=bdS0mPLWnqMMFMkQGUq5ka6NXWeT+Bl+aC14UfEMZ7cRXCjVlckuSJaNDp3bSFe/wQ4lGKCT199GiditRM3k1P/4bKwEEKUfbx+tTW6SViSP8lH4vNuzR12xxVFZgk4gXAIC3KWqYeGfvEYWjnk8vsQrxpYTA6stgyYJdeSzogA=
+	t=1719223531; cv=none; b=D3vrKZtNqWSJaRk21LvTwwxfgzu9xfjkfanMA++uM1zI9GYIXTLJj7wA5tTir6ICkc0J1y84yj1MN7BdxT4wb29pWzPmo9jJfBbXQB2caJRNwmsTszWKlCXMXW6LIKXYmw3X7P93IBnNvfA3oDkYfW2otJ0yiVo5tz8u+iJD87M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719223513; c=relaxed/simple;
-	bh=A7Fkj4mBCK5mp/zDLv2TuxMKh/LKlaVUT5j1NNeP9x8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueJhFPijpt9mw3b+43qy7obemHsqPsSTbw1EbcM8bz7NQc5uEBkEy49xjINBa05AMhqIEDBcV4Ki3g+/T4RucsklQWPl4H1CD9IOX2PUnaHVUYSeGUExcD4uChKbmArbrdasjzfm8sE64/rggFR67Vos6SKFj3RQuwJP+Xp1gCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e02da9b2db7so3614801276.3;
-        Mon, 24 Jun 2024 03:05:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719223509; x=1719828309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gjeZCMf2tIUIgStBOY6HxHTekamYnDUVhCcCFqii2pA=;
-        b=naJMCh2rkdG65jJeFWJlM66rOb/XWfLIIBLeY6Uwz7yo+nyWhJYhnhA3o8LBeBHBy1
-         5IIGeYLOi+s/2US83DcVR30obGwsHjzfJqqI7eCGWW6+TftgkAUjdeN4Jl6FRJxIhiTF
-         1K2ybOm6tT+3RE3aJi1HYhDQwLOUDfDCTRt2dVK9UeCZakN5X/DYa3DVPFceeWw2rCuk
-         n4WDF0NXbtHpdUeFDM3yLvJ/700khubhLHYcoStB04/BhrIwkIYltACNWg2f/PFXzKKP
-         gJ2HDHnQZaVDFDZgaaEAppZZS/QxqmCzdoX3qpG94snk37pOQSr7UAEUORneZ/VLSiXE
-         W62g==
-X-Forwarded-Encrypted: i=1; AJvYcCUE6ZaWtbU4QtKvig+M674lXpR2amTh/l0aRApsPHpBRoj7XH2ljN/C45FwQeTRDexku/SIqgagJDXiYDK29+QbehHl6Sna7Zs1kG9WQCHzHrRJ+MWmSIe6dxX2yg8PHljWxcI31t6SHilON53wAlrPrrKGmkMdQIrD4HpgDcryAeVxv3/L+c0N0a2v
-X-Gm-Message-State: AOJu0YySwrZgPYTJfRRBLuzL3tFoZQCDp9fSewojgVsaPCP+9dHYw1hr
-	5CQG2gRCkE312aLMtgVrwT3XRieZbWp6MjDU7qTBpn3xlCKx+r6uCw4gsVV0
-X-Google-Smtp-Source: AGHT+IF5Fu8GfgflM96x7irF6dr1JRaHjDrM72MKILWv5cFGAJEkWcPhSbUQbExxlQdABwl8wq1NMA==
-X-Received: by 2002:a25:a28b:0:b0:dfd:bd4d:c0d3 with SMTP id 3f1490d57ef6-e0304042deemr3569599276.58.1719223508697;
-        Mon, 24 Jun 2024 03:05:08 -0700 (PDT)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e02e6116b08sm3081467276.13.2024.06.24.03.05.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 03:05:08 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-63186c222eeso37677567b3.2;
-        Mon, 24 Jun 2024 03:05:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVEdK4K71Qrm8zsVr4L0+uVdmE5yIeqQMFftyKFpu71nIULk1/2Tb5VW9maImuT9myPL5d5Cz+xm42d/pGTkADz2flkF5xzIZFcr0UeO3euRZF0hWyGzIdY7HDIbhb5v7R0qg/BVKMOdKFPI99FvHsg4QMFBiTkn6rGg+lsMGQnN0aOta8h50ei0wHJ
-X-Received: by 2002:a81:7241:0:b0:618:1034:f4ef with SMTP id
- 00721157ae682-643aab82db0mr33174677b3.16.1719223508049; Mon, 24 Jun 2024
- 03:05:08 -0700 (PDT)
+	s=arc-20240116; t=1719223531; c=relaxed/simple;
+	bh=9OBXqXej2eo/ECybGZRzr+GyjPbUTDTKV+S2IMIaRsk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iVPMMInRBezyhFreYzxl6nsYNB7jh+wEAf67ScbzTh7SoUcoaj6wVrW26Nu7PtkQ0Oz8je+3xefU/35bK8XlzmiVW6zVz9az9gffSseYQ4YupVi1lQrIcrvebRItMcpMpbtVgHXyCfLvAQ0xC/Qp11IxegUl776kxaNkiVsoTVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OlX1y/UX; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OlX1y/UX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1719223530; x=1750759530;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9OBXqXej2eo/ECybGZRzr+GyjPbUTDTKV+S2IMIaRsk=;
+  b=OlX1y/UXPfAEqCtktSE0Zvzkx/AJRORyxhj1HKVhHQBIgfMybepC8CF0
+   bI5CFBvKS88QsLVwMjUwhos7+w5j8kESc4pgglTG9oapDewNcNDMfm9wN
+   9ew6ARxjLU2VUXfjg4U4VreHLHN49WC5Vqk/AUg21mxi6nFmjzYnz8gUK
+   Bl+hPi/wknYNqKPN9Dk73xOQpE2ih4ObltHP8dLv7mvOMIgS7dYRvXld7
+   m8Ssc6JkuLY4Agt0rBUrwD6CXQsr5CHuuNPy/k+sQys0/cTwhOqq64XyT
+   XR0JfyvSR2xDdF9PxYF1MKgutB5Rzs1nq5PPRIaxpb3IpH0ZCZHDwAjNz
+   w==;
+X-CSE-ConnectionGUID: 3dTUNmvLQy2rS/y02F+uOA==
+X-CSE-MsgGUID: wFd8GrMXQ9Sy/unGB633Gw==
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="259283588"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 03:05:23 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 24 Jun 2024 03:04:42 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 03:04:34 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
+	<durai.manickamkr@microchip.com>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
+	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
+	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
+	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
+ Muralidharan" <manikandan.m@microchip.com>
+Subject: [PATCH 0/5] Convert Atmel PIO3 Pinctrl and GPIO bindings to yaml
+Date: Mon, 24 Jun 2024 15:34:26 +0530
+Message-ID: <20240624100431.191172-1-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <bb6b85722d80d665779e3043d1499c4fc38f0ff3.1714562004.git.mirq-linux@rere.qmqm.pl>
- <CAMuHMdUy+e1vQRBUfo2paBJi4pro-tKf9hOe3YaddcB=OtRfJw@mail.gmail.com> <ZjOJyGQE1ze2WXh8@qmqm.qmqm.pl>
-In-Reply-To: <ZjOJyGQE1ze2WXh8@qmqm.qmqm.pl>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 24 Jun 2024 12:04:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWKcxh4TY-4=drdTDegUy_WYHFXm6g7dWaXH_Yh0j+Nvw@mail.gmail.com>
-Message-ID: <CAMuHMdWKcxh4TY-4=drdTDegUy_WYHFXm6g7dWaXH_Yh0j+Nvw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas/sh73a0: use rdev_get_drvdata()
-To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Micha=C5=82,
+This patch series cleans-up the compatible property of PIO3 Pinctrl
+and GPIO bank nodes in DT and includes the text to yaml conversion of
+Atmel PIO3 Pinctrl and GPIO bindings.
 
-On Thu, May 2, 2024 at 2:40=E2=80=AFPM Micha=C5=82 Miros=C5=82aw <mirq-linu=
-x@rere.qmqm.pl> wrote:
-> On Thu, May 02, 2024 at 09:56:39AM +0200, Geert Uytterhoeven wrote:
-> > On Wed, May 1, 2024 at 1:16=E2=80=AFPM Micha=C5=82 Miros=C5=82aw <mirq-=
-linux@rere.qmqm.pl> wrote:
-> > > Replace `reg_data` access with the official wrapper. The field is goi=
-ng
-> > > away soon.
-> >
-> > Thanks for your patch!
-> >
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202404301218.URkWO6dj-l=
-kp@intel.com/
-> >
-> > I am not sure these tags are needed, as the issue is not present in
-> > any tree yet?
-> >
-> > > Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Do you want me to pick this up (for v6.11), or do you want to queue
-> > this with the other patches from the series that removes reg_data?
-> > Please let me know.
-> > In case of the latter:
-> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> If you're ok with it going through the regulator tree, then I guess it
-> would be easier to manage as the series would build without observing
-> additional dependencies.
+yaml files are validated using the following commands
 
-I was wondering how the rest of the series is doing?
+make dt_binding_check DT_SCHEMA_FILES=<converted_yaml_file>
 
-If you want me to queue this for v6.11, the deadline for that is
-this Friday.
+make CHECK_DTBS=y DT_SCHEMA_FILES=<converted_yaml_file>
 
-Thanks!
+Manikandan Muralidharan (5):
+  ARM: dts: microchip: change to simple-mfd from simple-bus for PIO3
+    pinumux controller
+  ARM: dts: microchip: Remove additional compatible string from PIO3
+    pinctrl nodes
+  ARM: dts: microchip: sam9x60: Remove additional compatible string from
+    GPIO node
+  dt-bindings: gpio: convert Atmel GPIO to json-schema
+  dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl to json-schema
 
-Gr{oetje,eeting}s,
+ .../bindings/gpio/atmel,at91rm9200-gpio.yaml  |  78 +++++++
+ .../devicetree/bindings/gpio/gpio_atmel.txt   |  31 ---
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 ----------------
+ .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 194 ++++++++++++++++++
+ arch/arm/boot/dts/microchip/at91rm9200.dtsi   |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9260.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9261.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9263.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9g45.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9n12.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9rl.dtsi   |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9x5.dtsi   |   2 +-
+ arch/arm/boot/dts/microchip/sam9x60.dtsi      |  10 +-
+ arch/arm/boot/dts/microchip/sama5d3.dtsi      |   2 +-
+ arch/arm/boot/dts/microchip/sama5d4.dtsi      |   2 +-
+ 15 files changed, 287 insertions(+), 224 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
 
-                        Geert
+-- 
+2.25.1
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
