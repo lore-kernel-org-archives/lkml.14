@@ -1,130 +1,268 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B6D2EAE1;
-	Mon, 24 Jun 2024 07:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22062E634;
+	Mon, 24 Jun 2024 07:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719212464; cv=none; b=ZSucAQGsrEhSZ5Dkre4wHWBn/ztIDgHg/+l65MWYGo9NC3B5gZmbzq6cAbyn9jOLi9yTNRi88SuDeLM+SyJIm2LC4InfzW3buxgo20pDcPIH9c6kSoXp8S0Y7+Ttxtp6aBUNd1TxzYBKOk/ufGM+Fqzb5UzZ9I0sgetQcOyzECo=
+	t=1719212465; cv=none; b=D7uWyadBhDb6hssZZRpMlbVIyfVnXypB0mBQOz5TOPkWuum2zXkP28D2Hhrw5+m52vanXns1iUpDsrj4qJ3bwomlizs1cRCqiTMcULB5sknX8wToXn/HnCRlTo+tFH3UWxqBOdUu139J/2DGgjkonLGgHI0fVi9RMhXLnmvNo2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719212464; c=relaxed/simple;
-	bh=t0PxgEC6IJB2/OC++qZP4aNCPyTZC6dwIhUnM/Z799s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gIMJ/AbCKh7snQl7Q13yKMAuAWw7DKMOVzVHVeJV+oPv3c9/5Xeau9uGFMQyBCpcBpX4OLfTzndSpXHZdYzr3NT6sk4ZrAPs+euSxuKbkt8pio6jqZhnlusVZe1JN6zrxeJxNYVe+e3S0wGMQ+GZECxI/gpo0J37bk2OqIM2eWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maGnPLBh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719212465; c=relaxed/simple;
+	bh=vysncUCoKhlu8IYF+ovoiOg/W8vMI8Njteu+rthszIg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ft3CN4gkipJhdioTcMMRpIBbR14YduFcGOfor0eRO0KSuZXLwjnzDkWSRmq4syUugANoNCVqIDo+hfEBqsFMEtsbJofFqS5MNeFScAtB5pYa0cHJNSOr1LNoXywzJWUTcvYqhk0AjwGYqGHAwwYBDPFouMEXS8ClD4T2HVzE514=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFBbNy9N; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maGnPLBh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02BA2C2BBFC;
-	Mon, 24 Jun 2024 07:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719212464;
-	bh=t0PxgEC6IJB2/OC++qZP4aNCPyTZC6dwIhUnM/Z799s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=maGnPLBhS6GLTTrWPaNAsJcmvnSwbVahnrgqKGKE7uX12smJYBZbSZ6q9MZKomNlw
-	 X/DCuIumh4CNAP+l40NBOVcL1l7R9oxEhV5s4iOGYYwtA7HX1M+I1naSM7yy2fBn6C
-	 KZGHf1rBFhgNPggwwxM5bjgzSobTUudw1QoTWurfi7VeiPWFrNPsHg4D4JTWLaDLmR
-	 ZBYjVoWzwYkP4c/q0wSAfPFPueajHaoStGB3Yfvc9HCJNdmvx2rQIH4HnKLIRmP/MV
-	 fckx8yQeGqaUwY1z8SPWp9PV0RozD7DkXze1FQV2HbR8hy1+CrcQsCdIj3ShkGpOtk
-	 oeERESos6oqXQ==
-Message-ID: <4c3d4437-4c24-4db3-855d-f2ba7d0c6f8a@kernel.org>
-Date: Mon, 24 Jun 2024 09:00:56 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFBbNy9N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719212464; x=1750748464;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=vysncUCoKhlu8IYF+ovoiOg/W8vMI8Njteu+rthszIg=;
+  b=ZFBbNy9N+TeazYwYac9MGAsFNZOo8IpAlBmfvXHf8eu1vmd95Ig9gcQT
+   jnSLC3ltFDguZwVilRxqk7YoYDKpbSI19sVUMEt6nOqlCFlKUOgfE8Jic
+   tmyKbtpQqPCIY2+3+LsbKvYHaqXOUyCLax+lNgCMuMFowFMINpuiBP0Db
+   tEP7292qOTyLfpsiZDJcHdg8VK/IcbWiWmPCKOx1FBVShE2/1vA15DPXo
+   dqa/WhFXraezAil1HptJxt3zbevAKtA1mLW6nozdjD+M3Erbl3E72rPVq
+   IeeJlizcXLstH7Gvi7SQfGfs73N+IJiEhuGChDBHH9cBSVNtXEhj0MPt2
+   g==;
+X-CSE-ConnectionGUID: ZWcY7ZW9R6yICNfGahiAEg==
+X-CSE-MsgGUID: 2tM+ksI0TBqTt/Xuc5RMyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11112"; a="15859102"
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="15859102"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 00:01:03 -0700
+X-CSE-ConnectionGUID: 2G9ck0J0QrKUee6WV/mE4Q==
+X-CSE-MsgGUID: SaZ8xHkJRCS25xxymusKGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="47652596"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 00:01:00 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,  David Hildenbrand
+ <david@redhat.com>,  akpm@linux-foundation.org,  shuah@kernel.org,
+  linux-mm@kvack.org,  chrisl@kernel.org,  hughd@google.com,
+  kaleshsingh@google.com,  kasong@tencent.com,
+  linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,  Barry
+ Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH] selftests/mm: Introduce a test program to assess swap
+ entry allocation for thp_swapout
+In-Reply-To: <CAGsJ_4y9JinvzA6Wd2aXe_FRYhxED0vkkvU2HwWW8WBEX+8oqw@mail.gmail.com>
+	(Barry Song's message of "Mon, 24 Jun 2024 16:05:44 +1200")
+References: <20240620002648.75204-1-21cnbao@gmail.com>
+	<f3c18806-34ac-41d3-8c79-d7dd6504547e@arm.com>
+	<d0b20f47-384d-49f1-8449-0da6da11089c@redhat.com>
+	<b99c2f80-3b53-4b04-b610-a66179b928a9@arm.com>
+	<CAGsJ_4y_pjMpNOFzrPZ6u7=M83-CQ0umDCPt=ZDuSKJWssiCqA@mail.gmail.com>
+	<87cyoa1wgm.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAGsJ_4xX52FKG+o7vsjAwBLjvfPH=tg_36xqjCnwc5yGV=SaVg@mail.gmail.com>
+	<878qyv0zwk.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAGsJ_4y9JinvzA6Wd2aXe_FRYhxED0vkkvU2HwWW8WBEX+8oqw@mail.gmail.com>
+Date: Mon, 24 Jun 2024 14:59:09 +0800
+Message-ID: <871q4m25du.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/2] dt-bindings: net: wireless: qcom,ath11k: describe
- the ath11k on QCA6390
-To: Kalle Valo <kvalo@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, ath11k@lists.infradead.org,
- linux-kernel@vger.kernel.org, ath12k@lists.infradead.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240605122106.23818-2-brgl@bgdev.pl>
- <171862259099.4124983.18069958656274980613.kvalo@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <171862259099.4124983.18069958656274980613.kvalo@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 17/06/2024 13:09, Kalle Valo wrote:
-> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> 
->> Add a PCI compatible for the ATH11K module on QCA6390 and describe the
->> power inputs from the PMU that it consumes.
+Barry Song <21cnbao@gmail.com> writes:
+
+> On Mon, Jun 24, 2024 at 3:44=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
+> wrote:
 >>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
-> 
-> 2 patches applied to ath-next branch of ath.git, thanks.
+>> Barry Song <21cnbao@gmail.com> writes:
+>>
+>> > On Fri, Jun 21, 2024 at 9:24=E2=80=AFPM Huang, Ying <ying.huang@intel.=
+com> wrote:
+>> >>
+>> >> Barry Song <21cnbao@gmail.com> writes:
+>> >>
+>> >> > On Fri, Jun 21, 2024 at 7:25=E2=80=AFPM Ryan Roberts <ryan.roberts@=
+arm.com> wrote:
+>> >> >>
+>> >> >> On 20/06/2024 12:34, David Hildenbrand wrote:
+>> >> >> > On 20.06.24 11:04, Ryan Roberts wrote:
+>> >> >> >> On 20/06/2024 01:26, Barry Song wrote:
+>> >> >> >>> From: Barry Song <v-songbaohua@oppo.com>
+>> >> >> >>>
+>> >> >> >>> Both Ryan and Chris have been utilizing the small test program=
+ to aid
+>> >> >> >>> in debugging and identifying issues with swap entry allocation=
+. While
+>> >> >> >>> a real or intricate workload might be more suitable for assess=
+ing the
+>> >> >> >>> correctness and effectiveness of the swap allocation policy, a=
+ small
+>> >> >> >>> test program presents a simpler means of understanding the pro=
+blem and
+>> >> >> >>> initially verifying the improvements being made.
+>> >> >> >>>
+>> >> >> >>> Let's endeavor to integrate it into the self-test suite. Altho=
+ugh it
+>> >> >> >>> presently only accommodates 64KB and 4KB, I'm optimistic that =
+we can
+>> >> >> >>> expand its capabilities to support multiple sizes and simulate=
+ more
+>> >> >> >>> complex systems in the future as required.
+>> >> >> >>
+>> >> >> >> I'll try to summarize the thread with Huang Ying by suggesting =
+this test program
+>> >> >> >> is "neccessary but not sufficient" to exhaustively test the mTH=
+P swap-out path.
+>> >> >> >> I've certainly found it useful and think it would be a valuable=
+ addition to the
+>> >> >> >> tree.
+>> >> >> >>
+>> >> >> >> That said, I'm not convinced it is a selftest; IMO a selftest s=
+hould provide a
+>> >> >> >> clear pass/fail result against some criteria and must be able t=
+o be run
+>> >> >> >> automatically by (e.g.) a CI system.
+>> >> >> >
+>> >> >> > Likely we should then consider moving other such performance-rel=
+ated thingies
+>> >> >> > out of the selftests?
+>> >> >>
+>> >> >> Yes, that would get my vote. But of the 4 tests you mentioned that=
+ use
+>> >> >> clock_gettime(), it looks like transhuge-stress is the only one th=
+at doesn't
+>> >> >> have a pass/fail result, so is probably the only candidate for mov=
+ing.
+>> >> >>
+>> >> >> The others either use the times as a timeout and determines failur=
+e if the
+>> >> >> action didn't occur within the timeout (e.g. ksm_tests.c) or use i=
+t to add some
+>> >> >> supplemental performance information to an otherwise functionality=
+-oriented test.
+>> >> >
+>> >> > Thank you very much, Ryan. I think you've found a better home for t=
+his
+>> >> > tool . I will
+>> >> > send v2, relocating it to tools/mm and adding a function to swap in
+>> >> > either the whole
+>> >> > mTHPs or a portion of mTHPs by "-a"(aligned swapin).
+>> >> >
+>> >> > So basically, we will have
+>> >> >
+>> >> > 1. Use MADV_PAGEPUT for rapid swap-out, putting the swap allocation=
+ code under
+>> >> > high exercise in a short time.
+>> >> >
+>> >> > 2. Use MADV_DONTNEED to simulate the behavior of libc and Java heap=
+ in freeing
+>> >> > memory, as well as for munmap, app exits, or OOM killer scenarios. =
+This ensures
+>> >> > new mTHP is always generated, released or swapped out, similar to t=
+he behavior
+>> >> > on a PC or Android phone where many applications are frequently sta=
+rted and
+>> >> > terminated.
+>> >>
+>> >> MADV_DONTNEED 64KB memory, then memset() it, this just simulates the
+>> >> large folio swap-in exactly, which hasn't been merged by upstream.  I
+>> >> don't think that it's a good idea to make such kind of trick.
+>> >
+>> > I disagree. This is how userspace heaps can manage memory
+>> > deallocation.
+>>
+>> Sorry, I don't understand how.  Can you show some examples?  Such as
+>> strace log with 64KB aligned MADV_DONTNEED?
+>
+> In Java heap and memory allocators such as jemalloc and Scudo, memory is =
+freed
+> using the MADV_DONTNEED flag when either free() is called or garbage coll=
+ection
+> occurs. In Android, the Java heap is freed in chunks aligned to 64KB
+> or larger.
 
-Hi Kalle,
+Originally, I heard about that MADV_FREE is used by jemalloc.  Now, I
+know that they use MADV_DONTNEED too.  Thanks!
 
-Are you sure your tree is properly fed to linux-next? I cannot find
-these patches in linux-next and above repo is not listed in Next/Trees.
+Although I still suspect that libc/java allocator will free pages in
+exact 64KB size (IIUC, they should free pages in much larger trunk).  I
+agree that MADV_DONTNEED is a way to create fragmentation in swap
+devices.
 
-Every maintainer tree should (IMHO: *MUST*) be fed to linux-next.
+> In
+> Scudo and jemalloc, there is a configuration option to set the
+> management granularity.
+> This granularity is set to match the mTHP size(though the default
+> value is 16KB in the
+> latest Android if we don't run mTHP). Otherwise, you could end up with
+> millions of
+> partial unmap operations, which would severely degrade the performance of=
+ mTHP.
+>
+> Imagine libc/Java functioning like a slab allocator. When kfree() is
+> called, some pages
+> may become completely unoccupied and can be returned to the buddy allocat=
+or. In
+> userspace, memory is given back to the kernel in a similar manner,
+> typically using
+> MADV_DONTNEED. Therefore, MADV_DONTNEED is the most common memory
+> reclamation behavior in Android, coming with free(), delete() or GC.
+>
+> Imagine a system with extensive malloc, free, new, and delete
+> operations, where objects
+> are constantly being created and destroyed.
+>
+> On the other hand, whether libc/Java use MADV_DONTNEED to free memory is =
+not
+> crucial, although they do. We need a method to simulate the lifecycle
+> of applications
+> =E2=80=94exiting and starting anew=E2=80=94on PCs or Android phones. It d=
+oesn't matter if you
+> use MADV_DONTNEED or munmap to achieve this.
+>
+> It is important to note that mTHP currently operates on a one-shot
+> basis(after swap-out,
+> you never get them back as mTHP as we don't support large folios
+> swapin). For the test
+> program, we need a method to generate new mTHPs continuously. Without thi=
+s,
+> after the initial iterations, we would be left with only folios,
+> rendering the entire
+> test program *pointless*.
 
-You will also get LKP coverage for free, unless your tree is there due
-to scanning korg.
+I understand the requirements for new mTHPs.
 
-Please look at slides here and implement at least linux-next (although I
-also encourage to opt-in to transparency log and LKP):
-https://lpc.events/event/17/contributions/1498/
+>>
+>> > Additionally, in the event of an application exit, munmap, or OOM kill=
+er, the
+>> > amount of freed memory can be much larger than 64KB. The primary purpo=
+se
+>> > of using MADV_DONTNEED is to release anonymous memory and generate
+>> > new mTHP so that the iteration can continue. Otherwise, the test progr=
+am
+>> > becomes entirely pointless, as we only have large folios at the beginn=
+ing.
+>> > That is exactly why Chris has failed to find his bugs by using other s=
+mall
+>> > programs.
+>>
+>> Although I still don't understand how 64KB aligned MADV_DONTNEED is used
+>> for libc/java heap or munmap in a practical way.  After more thoughts, I
+>> think 64KB Aligned MADV_DONTNEED can simulate the fragmentation effect
+>> of processes exit at some degree if 64KB folios in these processes are
+>> swapped out without splitting.  If you have no other practical use
+>> cases, I suggest to make it explicit with comments in program.
+>>
 
-Best regards,
-Krzysztof
+[snip]
 
+--
+Best Regards,
+Huang, Ying
