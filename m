@@ -1,183 +1,239 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2058.outbound.protection.outlook.com [40.107.8.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88DD442C;
-	Mon, 24 Jun 2024 02:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719196498; cv=fail; b=lVwKVSfdnet8ZjfZ3hGXzDZsBycGbajIzrzytQMwWSHXbG5e6wMQpg+7FM9w5yuO0P3149zWiU5viTiCQyf4zEkOnL5NLPR2S7Bo8ko6AlfYfdlBiMtD1+S44UZOPvN1UcVJSw+yQL+EDIi5W8X1DNbBJ9Wl2l4l5BK76saQPZc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719196498; c=relaxed/simple;
-	bh=D7EQCKBO+Rz5rUVHnfRJPJQRJY8ZfZQ8zt/FU6hxAIk=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=KP0q7fZqjW3sXds8us1laj3ZNUfLTYEEXAQmED0Yhye1wIwRNJpbW9NZbV7xf74tIHoYyo0pqjhrLtxiFHA+ZsnoMhdTefnjgkkqwFZRE7RSvh4ouVOGOS4pxq0SCh6xtvcvfxzd1kgOU3+xiSRoLwamOjj7GLgWDIegXrzLeyA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=InJpB/u7; arc=fail smtp.client-ip=40.107.8.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="InJpB/u7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YHFkvVaH/n7dD8HJN70igCsMgEDe5c9ftrcsi3vkj6Gg8yegSXxS7Vdawe1D3c1cKhFtpL0bdMFbamJlQBMOqs4+3yO8orP3UV5F+5NR6zrGBsApqtlviOWVoiBAHAvzouNBMszrTQm2elVDRgcqEEx4su3jcs9bCONnt257cc8rMCHWtjrG5Wdg4s+RbrkBLSExzD00R82KjimLOvi93r1sqzHKo6CT133UfYdm20m3CUF9x3/LrvaDa2OJ7a3ZzjmWEBcbJk3rpyLDQ5HN4NAmNMCjvUJpxCm7t4HE3FrtwS8FCkTOzRmB92Tb2dCwG+PGgfZ+k955F8dXom6ugQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qj1C8uMM9mCl5UNe6//0tqzioHN+0eXZhd7GorEozAs=;
- b=ZMu0sVWt8ocDKAyQLblO/G5ROPzrgRS44usPTJe20SAYfx6NhOmTdvLcPdRbRom8CtkA0F9WNP35cPFV3R0k7GvFKGMszE4w1fJbeX4OsUDUg2Mr1sCChWTeWdYC6+DWpq3ZEffhrtp3GzxrwxGoNsnIAjsfGZnB4XpuO793HMxVNRuiYfz/LNBFt+mf8LTtfjUr30F0AL8JHymyYxR4m+bJckP0ti5xxKV7LhMjU4DeYYtlO4ChU8sIzyK/1DJdUa6fYrmI12ttfeoX7SjNE7/A7l2LvVHReHE1RRTORM+fTfhsNDScMMtSE8/TSCyh1P9mxDwjw3pGMt4C/m1Lzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qj1C8uMM9mCl5UNe6//0tqzioHN+0eXZhd7GorEozAs=;
- b=InJpB/u78bGgcCvZOZPyYTMUNRfBlESCbvPcoeiDmPNbwks1kD0oCMx3ImT4LD3yfDT1ny5nzvZIVsO2D3/t4YpEv5uExnv6P4BDlbRMPnny2xyW094DHGi276yqjLftVQUSD9qN0aly7NCaj5yglorBl6aGHLXlF309qOWwXD8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM6PR04MB5941.eurprd04.prod.outlook.com (2603:10a6:20b:9e::16)
- by PAWPR04MB9912.eurprd04.prod.outlook.com (2603:10a6:102:387::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
- 2024 02:34:53 +0000
-Received: from AM6PR04MB5941.eurprd04.prod.outlook.com
- ([fe80::9f4e:b695:f5f0:5256]) by AM6PR04MB5941.eurprd04.prod.outlook.com
- ([fe80::9f4e:b695:f5f0:5256%4]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 02:34:53 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: abelvesa@kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: imx@lists.linux.dev,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] clk: imx: composite-7ulp: Use NULL instead of 0
-Date: Mon, 24 Jun 2024 10:43:51 +0800
-Message-Id: <20240624024351.488492-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0016.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::20) To AM6PR04MB5941.eurprd04.prod.outlook.com
- (2603:10a6:20b:9e::16)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ADBA4A2D;
+	Mon, 24 Jun 2024 02:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719196517; cv=none; b=frqZAetGEqSG2oDNS/u14XsZ+2GuPthprap/qXRb6R4Xcoqr1bb9MIC6ZvsqOGDhQWh1NByfjgEpbCBz3DypBag36VMiXjIt59QgXF9ZR5IVgWl8mI9wg8BXXnY1E8AmkZcqHNBzQ/ximdF9S9O3RF5KxX8eq9eYZGueJNFq1cY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719196517; c=relaxed/simple;
+	bh=xoVds/qOHtFoyFcjhS6vbRZROf44bkXXy57L3K3vBM0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YuehocS5LSBrBB7rnvTgMie+QE/YRtfrnvp243NQrgEgvnLogwCWdITFxca0ZJ96GGSUUo0Bh/hRrpmjYX/FzbN/NRojSe9mdw12ShPVUU4YCOoCuT2ireZdJ43TXCfzLqu4q5M7cPO7czoT3Tk7aAV9L/oBPRKDJ3s+5oAbWMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cxe+pf23hmL2YJAA--.38183S3;
+	Mon, 24 Jun 2024 10:35:11 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqsZc23hmWpYuAA--.45425S3;
+	Mon, 24 Jun 2024 10:35:10 +0800 (CST)
+Subject: Re: [PATCH v2 1/6] LoongArch: KVM: Delay secondary mmu tlb flush
+ until guest entry
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240619080940.2690756-1-maobibo@loongson.cn>
+ <20240619080940.2690756-2-maobibo@loongson.cn>
+ <CAAhV-H7zF7zDZQ0tHtZndTmWDteaV=nAwXL3Q1P2zcJssVt7tA@mail.gmail.com>
+ <5df4d756-d261-2629-a938-c9bfdb9d2534@loongson.cn>
+ <CAAhV-H7m7b-yQLOCo9B0mGkBLMp9Xfpe6evJs33pmWvKykDKqw@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <40772a8d-e541-2f72-3c47-c2595172c3b6@loongson.cn>
+Date: Mon, 24 Jun 2024 10:35:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB5941:EE_|PAWPR04MB9912:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac97347d-0764-430b-96bb-08dc93f63a1a
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|366013|52116011|7416011|376011|1800799021|38350700011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wmYVOfc6XHc+zundsBFmvtAf/Jzm8gp13+tmyQf1kGAWKjvIda8+yeNK5WLo?=
- =?us-ascii?Q?9hqF3doxSexp+hFfnuiOTyzGD7FSpeKwgdUMGZdfSk5NhySt0SAp7LdU7Jgz?=
- =?us-ascii?Q?Fe3W8+lre4LSD+dw6yJZGjhKE39wSCwHKMdETGHIfSkvXJeSO5Z4e8DcZCsr?=
- =?us-ascii?Q?YfU9Dm9ZkCiHApTELC5DA4VI4LUvuThHi7LAR/S6KhqDk20iR3qZaSX1oBR1?=
- =?us-ascii?Q?DsEPVHz4odsgHbjmw5F4EuonZXpI7T3do9FeL3vhtlPzjjImg7qPYKzT5hUb?=
- =?us-ascii?Q?1GeNgj7AzG9QT+thuxt7uIGMF4Zj2WxvvoMfRQ9k8+v/YJ0Fn0ufiYPkL3wf?=
- =?us-ascii?Q?fuyE7FR9kO40Od/SY9eBaECWct3oHh/G+lPozR64iQTSEqlxlcZDQ07O/gd5?=
- =?us-ascii?Q?YnFhL7daauNvqGrIyZnT54j1JqQDh0PpmWkPA19DwtJYN/PsZwsQGSRpT8jW?=
- =?us-ascii?Q?BqJ49xuKTfHcPllLMACnOsHPMvtJR/Z9vslR4WuKePeclLWeJwSS4qg4HpAh?=
- =?us-ascii?Q?hsCS3Ozn9s8x6NXvngZs9OftRCQ79sQzt2QavZ5YeHY9IMVs9aihApV54nPP?=
- =?us-ascii?Q?kXnOO4I/01ex0/OKt4VMkT5Sdi8g1u9f+aUtf3MfNv1qIs0Zk1lYqMzriZkM?=
- =?us-ascii?Q?YOVJcg2lRjiiCqDGe2dyOsVTD6KDJ+QDbr0VwQyQuwjSk9/+azzGW44HTces?=
- =?us-ascii?Q?mLCWpHF/mBfZBDyvCLvwZqaz3Nz6eaRFc/bo19lqjGdTJu7WRzEA1hRcWBCl?=
- =?us-ascii?Q?UoCthrgeyGsVzMs+ELlmRjnIemO7PrnAR4HiqwVsVqSuA/2V8LfezBTAWEqf?=
- =?us-ascii?Q?f9T306656Dlv8Rdpw7tFQkRLt59guBLwPCnIx1rbNWvKLeqVlCt7ao+CO4hr?=
- =?us-ascii?Q?msJx1aHWtMsTdKMwdDC4ygcZlLWWaMVcaftDkvLdWtUcPl43VrAU+Zpaechp?=
- =?us-ascii?Q?UAY8rtTRgBoJubC3hJ5vDo4tQEXYAMdChJ/A9Nm44hStSFtBfCu4bMD+5sZ4?=
- =?us-ascii?Q?yvKlaa9BiwMLho7nWcDZt278Qnq2PdaZXPuuZc5Hze7x6StynXvlG81mbzM1?=
- =?us-ascii?Q?fICTsddbu16BmzMixBn4suoudFKuODnGg6ojiZrz7dSsVSgeW3xpoqMQ8+PH?=
- =?us-ascii?Q?8LkuZP82xc/OgI7UTJsNSoR6uFQpBDVBnR/Thrg29qoXN8ygGjI927CWZqWf?=
- =?us-ascii?Q?FkUKhLgH5ktoCIGPkD7aSEw3UK2CXDJrrxd4AiFwj1DAE1A2/791lz5xbwLK?=
- =?us-ascii?Q?ui9rmgkEle4suQZlM/nSgH7o3jwGeGbnc8uo5tYsazcUyO56Eba1EPgcG6jV?=
- =?us-ascii?Q?RWD3FTB95LISCOQUWx5fIIND?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5941.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(52116011)(7416011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DmbffPqRUZ9OrB65iAr51zUgmADCX1tPnezOB8ACFBLSUk9FRGlkQhSVqzpp?=
- =?us-ascii?Q?JUMEcdgre+/R8rO2MWALMVSC5q1FnB94lZAlKqFTX1UL7DWGzknyiCSbxs6l?=
- =?us-ascii?Q?w4XTAyecEHLubry0waaLpuVH8RFZttyseJMgRFVgg5wlL3R+Il02QF9D5Zpg?=
- =?us-ascii?Q?e9/GzoTYcQfVO/sjOeHWquNZoxhFE8y5XhzQoh9AR3H6vx3eZF9RFxHWg45A?=
- =?us-ascii?Q?59RztiRwJXTUpnA1wCaEA69dF3md3Rhb6Zzi4wrDlFga41z7c3vHciIKmL8M?=
- =?us-ascii?Q?7HNHSbu/Pod37Kn+eE6cNIW5KAotg5tMf+uhf1Maw1bfZXXlrgmGSIl+JUvz?=
- =?us-ascii?Q?OAspzY4ycP/NLXX2w1pMal2UGC8GSU6c1dWITKSl6G1YVhVoMXp6jXiOmAo8?=
- =?us-ascii?Q?65KbDUOzH8Qk3yLuLvJtMGAWvW5cApsC34r+ZdQ01Xo2Ts5mi13Ah3WLEOTl?=
- =?us-ascii?Q?uwZBxuGHLRSKSkn7pRcZeTFhwoBRaV5Gzdv3FXXjwYi4H2Ak6LhbSnuCsWaa?=
- =?us-ascii?Q?1pqMgRTxLOYS8scw6RKhuWQwYNBQ4dvc8TQl0je0SwBloysVR54QC7jK7Epc?=
- =?us-ascii?Q?GHadub+2tXZS0qJM+kMf3qzBLD+rd980yV7lmVCtllDAnDCUcS/G2IaKB3mF?=
- =?us-ascii?Q?tKhoilZBpRg7rn3ryTu4qMjz0RxnsmdhilyV/4otPruPLMbtCUwEq5HnA4RO?=
- =?us-ascii?Q?1WPrrehVdkmWU7vQb0bzIOvFxKEcNekPhDViRmsDltP8yY3KR9B+ZuE8Rh1b?=
- =?us-ascii?Q?KgB++aapHVHV28DANPyeae3IIp8Ty//YbMxU0DyXX+pJjymplYATKem/obKp?=
- =?us-ascii?Q?J7PGl9YkzCShkp9aFQqKti/X3AttVPDxZLQSwYuojwoBeaTLnmYmxP7O6IyZ?=
- =?us-ascii?Q?WqLSgZFw2ouK1Lap4YZ/46TFM/MU8RWAZqmhvbUSYj+7a3BporfjKMv/q+pF?=
- =?us-ascii?Q?+IeP/CmTJYzGLGQ9StILXXXlLDUVC1dUwLO5tIadN5kaAxfVUMeBuYjdTQQh?=
- =?us-ascii?Q?DrWrtovX35XniEF0t3rEBhixItXOwzR4IPyjj9P1l5QW1yrN77Ghh5P5LeBK?=
- =?us-ascii?Q?bsGRLyy9TQAEjjkEWscfL4Okve7KYUrZD5N0FXmgkpA+hUZ0yquw4QRuIc/7?=
- =?us-ascii?Q?SuArWghooLwTCHFP1+L0gEWjJhmpjZb1pPxpwv8VJBr66H+7IAgXnYm2TNor?=
- =?us-ascii?Q?blVFmcto7HNRpgbH1yeeW68l1ipzDrmEiK53g0/McPKDPDUWa2govyMXgijx?=
- =?us-ascii?Q?XngaZ1uwMntpLJo2YqCs0Z2jsXKxNyPOW811nQ0ntKe6dE6hdqLjE704jN5x?=
- =?us-ascii?Q?co5GrsGu6JoCw0RxYjlHN21hW32gZCng7dnFnuWIvXGG8WFCHXoKBR6JjCJG?=
- =?us-ascii?Q?NTkPIQHLVOzUwSpYhC0aAvnswbMBWy8mEJmEmXcRqwC/NeCRMY4x1TWiKJO0?=
- =?us-ascii?Q?AZk86H7e9BpJVdHB1D7Lmpx06PSzbrU0/G07zci91fM19PgfnkCrRenEbjis?=
- =?us-ascii?Q?eDUoqLDi+YgyO5YvyUMJvx+lzsgT2ecusTlhPpi6CGLbJXdp1JWEwLwMsxRu?=
- =?us-ascii?Q?0oqN+kYvw5GFTM2j7Mc5XjAaFiuPWjszRd+/GKQA?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac97347d-0764-430b-96bb-08dc93f63a1a
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5941.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 02:34:53.1286
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iPfsjFpvYH1SZBCo/HF6hOdC11pGuvCFBy7SYts26GZUwMKxE0Zo2AWNvTSGmniRnkx89+ApU70XLy7r1NXAIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9912
+In-Reply-To: <CAAhV-H7m7b-yQLOCo9B0mGkBLMp9Xfpe6evJs33pmWvKykDKqw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxqsZc23hmWpYuAA--.45425S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtFWxKr1xuF4kJFWUKryxtFc_yoWxXF4xpr
+	97uF1DCw48WryfJ342qwnYqrsFqrWkKr1xZFy7tFyFyr1qqFnrGr48CrWDuFyrJw1rCF1I
+	qFyrtr13uFW5twbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jF4E_UUUUU=
 
-From: Peng Fan <peng.fan@nxp.com>
 
-Address the sparse warnings "
-sparse warnings: (new ones prefixed by >>)
->> drivers/clk/imx/clk-composite-7ulp.c:85:24: sparse: sparse:
-Using plain integer as NULL pointer
-"
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406220536.JnAncjqz-lkp@intel.com/
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+On 2024/6/24 上午9:58, Huacai Chen wrote:
+> On Mon, Jun 24, 2024 at 9:23 AM maobibo <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/6/23 下午3:54, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Wed, Jun 19, 2024 at 4:09 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> If there is page fault for secondary mmu, there needs tlb flush
+>>> What does "secondary mmu" in this context mean? Maybe "guest mmu"?
+>> "secondary mmu" following x86 concepts, the weblink is:
+>>      https://lwn.net/Articles/977945/
+>>
+>> It is called stage-2 mmu on ARM64 also. "guest mmu" cannot represent
+>> whether it is gva to gpa, or gpa to hpa, or gva to hpa directly.
+> Then it is better to explain "what is secondary mmu" in the commit
+> message when it appears at the first time.
+Sure, will do in next patch.
 
-V1:
- Since the orignal patch is still in linux-next tree, so not add fixes tag
-
- drivers/clk/imx/clk-composite-7ulp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-composite-7ulp.c b/drivers/clk/imx/clk-composite-7ulp.c
-index db7f40b07d1a..8ed2e0ad2769 100644
---- a/drivers/clk/imx/clk-composite-7ulp.c
-+++ b/drivers/clk/imx/clk-composite-7ulp.c
-@@ -82,7 +82,7 @@ static struct clk_hw *imx_ulp_clk_hw_composite(const char *name,
- 	val = readl(reg);
- 	if (!(val & PCG_PR_MASK)) {
- 		pr_info("PCC PR is 0 for clk:%s, bypass\n", name);
--		return 0;
-+		return NULL;
- 	}
- 
- 	if (mux_present) {
--- 
-2.37.1
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> Huacai
+>>>
+>>>> operation indexed with fault gpa address and VMID. VMID is stored
+>>>> at register CSR_GSTAT and will be reload or recalculated during
+>>>> guest entry.
+>>>>
+>>>> Currently CSR_GSTAT is not saved and restored during vcpu context
+>>>> switch, it is recalculated during guest entry. So CSR_GSTAT is in
+>>>> effect only when vcpu runs in guest mode, however it may be not in
+>>>> effected if vcpu exits to host mode, since register CSR_GSTAT may
+>>>> be stale, it maybe records VMID of last scheduled vcpu, rather than
+>>>> current vcpu.
+>>>>
+>>>> Function kvm_flush_tlb_gpa() should be called with its real VMID,
+>>>> here move it to guest entrance. Also arch specific request id
+>>>> KVM_REQ_TLB_FLUSH_GPA is added to flush tlb, and it can be optimized
+>>>> if VMID is updated, since all guest tlb entries will be invalid if
+>>>> VMID is updated.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_host.h |  2 ++
+>>>>    arch/loongarch/kvm/main.c             |  1 +
+>>>>    arch/loongarch/kvm/mmu.c              |  4 ++--
+>>>>    arch/loongarch/kvm/tlb.c              |  5 +----
+>>>>    arch/loongarch/kvm/vcpu.c             | 18 ++++++++++++++++++
+>>>>    5 files changed, 24 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>> index c87b6ea0ec47..32c4948f534f 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>> @@ -30,6 +30,7 @@
+>>>>    #define KVM_PRIVATE_MEM_SLOTS          0
+>>>>
+>>>>    #define KVM_HALT_POLL_NS_DEFAULT       500000
+>>>> +#define KVM_REQ_TLB_FLUSH_GPA          KVM_ARCH_REQ(0)
+>>>>
+>>>>    #define KVM_GUESTDBG_SW_BP_MASK                \
+>>>>           (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
+>>>> @@ -190,6 +191,7 @@ struct kvm_vcpu_arch {
+>>>>
+>>>>           /* vcpu's vpid */
+>>>>           u64 vpid;
+>>>> +       gpa_t flush_gpa;
+>>>>
+>>>>           /* Frequency of stable timer in Hz */
+>>>>           u64 timer_mhz;
+>>>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>>>> index 86a2f2d0cb27..844736b99d38 100644
+>>>> --- a/arch/loongarch/kvm/main.c
+>>>> +++ b/arch/loongarch/kvm/main.c
+>>>> @@ -242,6 +242,7 @@ void kvm_check_vpid(struct kvm_vcpu *vcpu)
+>>>>                   kvm_update_vpid(vcpu, cpu);
+>>>>                   trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
+>>>>                   vcpu->cpu = cpu;
+>>>> +               kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+>>>>           }
+>>>>
+>>>>           /* Restore GSTAT(0x50).vpid */
+>>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+>>>> index 98883aa23ab8..9e39d28fec35 100644
+>>>> --- a/arch/loongarch/kvm/mmu.c
+>>>> +++ b/arch/loongarch/kvm/mmu.c
+>>>> @@ -908,8 +908,8 @@ int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>>>>                   return ret;
+>>>>
+>>>>           /* Invalidate this entry in the TLB */
+>>>> -       kvm_flush_tlb_gpa(vcpu, gpa);
+>>>> -
+>>>> +       vcpu->arch.flush_gpa = gpa;
+>>>> +       kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+>>>>           return 0;
+>>>>    }
+>>>>
+>>>> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+>>>> index 02535df6b51f..ebdbe9264e9c 100644
+>>>> --- a/arch/loongarch/kvm/tlb.c
+>>>> +++ b/arch/loongarch/kvm/tlb.c
+>>>> @@ -23,10 +23,7 @@ void kvm_flush_tlb_all(void)
+>>>>
+>>>>    void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+>>>>    {
+>>>> -       unsigned long flags;
+>>>> -
+>>>> -       local_irq_save(flags);
+>>>> +       lockdep_assert_irqs_disabled();
+>>>>           gpa &= (PAGE_MASK << 1);
+>>>>           invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
+>>>> -       local_irq_restore(flags);
+>>>>    }
+>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>> index 9e8030d45129..b747bd8bc037 100644
+>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>> @@ -51,6 +51,16 @@ static int kvm_check_requests(struct kvm_vcpu *vcpu)
+>>>>           return RESUME_GUEST;
+>>>>    }
+>>>>
+>>>> +static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +       lockdep_assert_irqs_disabled();
+>>>> +       if (kvm_check_request(KVM_REQ_TLB_FLUSH_GPA, vcpu))
+>>>> +               if (vcpu->arch.flush_gpa != INVALID_GPA) {
+>>>> +                       kvm_flush_tlb_gpa(vcpu, vcpu->arch.flush_gpa);
+>>>> +                       vcpu->arch.flush_gpa = INVALID_GPA;
+>>>> +               }
+>>>> +}
+>>>> +
+>>>>    /*
+>>>>     * Check and handle pending signal and vCPU requests etc
+>>>>     * Run with irq enabled and preempt enabled
+>>>> @@ -101,6 +111,13 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+>>>>                   /* Make sure the vcpu mode has been written */
+>>>>                   smp_store_mb(vcpu->mode, IN_GUEST_MODE);
+>>>>                   kvm_check_vpid(vcpu);
+>>>> +
+>>>> +               /*
+>>>> +                * Called after function kvm_check_vpid()
+>>>> +                * Since it updates csr_gstat used by kvm_flush_tlb_gpa(),
+>>>> +                * also it may clear KVM_REQ_TLB_FLUSH_GPA pending bit
+>>>> +                */
+>>>> +               kvm_late_check_requests(vcpu);
+>>>>                   vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
+>>>>                   /* Clear KVM_LARCH_SWCSR_LATEST as CSR will change when enter guest */
+>>>>                   vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
+>>>> @@ -994,6 +1011,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>>>>           struct loongarch_csrs *csr;
+>>>>
+>>>>           vcpu->arch.vpid = 0;
+>>>> +       vcpu->arch.flush_gpa = INVALID_GPA;
+>>>>
+>>>>           hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+>>>>           vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
+>>
 
