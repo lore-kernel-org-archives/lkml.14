@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA8810F7;
-	Mon, 24 Jun 2024 04:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91C4DDC1;
+	Mon, 24 Jun 2024 04:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719204424; cv=none; b=mDvwVrn+Ehp0pO+pyXXaZOdp6P7qv901Vmp65kzCWejmKi4QoBOVOcriztMXuIvesz36wruPDqTv6K6uxJYfxOEhN7xwrg1r+Vz0E5vVeLgYyD2NWcOLW7t/o5v/rICxed/nzKiMBQ04T+NQC51Cb2liO0QLyYXt+NJSdllboww=
+	t=1719204511; cv=none; b=smtq/5LXU3F81TrlLC43CPlP5MXkngmZ+mXeYyE26qdrVhPJLb3KTcdvKuMkUw2Pg3OtSsKhOuRhWDpv2oA+7qyYPVXezwLIsLR3gm7DlcSrwelSxruDd1XIBzFwLrgS8KP8i2KDtHb4M9UTnA03bGCwpwB+ZXVf8+N5WnvVtfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719204424; c=relaxed/simple;
-	bh=Zea9RsIa+T0i+Pkcf8g23nQDkknyPGDg3QGeblfUbMU=;
+	s=arc-20240116; t=1719204511; c=relaxed/simple;
+	bh=NDJaXB/nKzpYeop5UXLPi8qOuSov8fo+Km4a9y9Er+8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AZ+S+HAnt0SRuUC8YlTrFr9+ieSVNojPbQ7Ket2xRZGsCl7fGV8N4ZqfsVhPdn/wizTEf36yq+IPyM5phCnBXYnw/LXnMnHWL+nttlFu8m4mpLbv5Tavqmn045o+RsOIKs8towWC2qVGn6Gi41VQUb8um1Goyplt3oiVX1yBH40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4Cvt1O3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Q8K1HVIRAL0nZlWL6XKsPDWWyf0l5YPY8I6DjMYA8z67T+sGsDh6mcud8RlfLPh0AaBe4HnKb+fyK7ApYlxklxhRum5tkQfNVOYVixQpbLYAf40mkRjGaEfnHH+yufpohAE92booT6fhaLFKz3Q3TdVFKMokKIBPGfjTlx/7s/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDe9JP7w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4Cvt1O3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D22C2BBFC;
-	Mon, 24 Jun 2024 04:47:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDe9JP7w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F16DC2BBFC;
+	Mon, 24 Jun 2024 04:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719204423;
-	bh=Zea9RsIa+T0i+Pkcf8g23nQDkknyPGDg3QGeblfUbMU=;
+	s=k20201202; t=1719204510;
+	bh=NDJaXB/nKzpYeop5UXLPi8qOuSov8fo+Km4a9y9Er+8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r4Cvt1O3Knu6rEmcpo1rjullj3hNl8GMGSDucfMI3qxj2aPVmMAp4l4zn/yokI5jV
-	 wMh7yeFIQXkCTNhseZjfooGFWPt2ukhrpMSUzi5OACganUHMNqrMC3WfRKt2167yFg
-	 iaaRXPq3FAuQ4j3GG2Lt0luVjeAJN8BSjCkO+sJIQa1MZC8VwLkh7MESHlmeKqrVHG
-	 hUZAK+2g+8k+xBpuzxJoTz8gejey/Bnl0TA5wrlbNEv/DbZ/LY361lDuWhIgPpWnNG
-	 8CWjk0LYKl3lJtmNCx1f9ClN70rQuHBwYcDkYb3ScBJXTSbPcfFSgHuYBWMvO5msaQ
-	 A7ejX//8OnZBA==
-Message-ID: <8dabf3d1-2d23-4adc-a804-2b7aa5fe16e9@kernel.org>
-Date: Mon, 24 Jun 2024 06:46:57 +0200
+	b=MDe9JP7w3gmPyoICO906486pxbci3aIpLWkvlgbUatgTKmm6WMYJrZjb2bB+UND5i
+	 xYl31CNbmgI/UsGU90WUHgIdKT91caUnSeUHX3yXbwPEeF9SGgZZvTbQvIt21L5EYt
+	 vIEGOPWC1dSN1kLXagmxnlcYODZgXDur2O6dK9SPhM27h5aldRvUbEU1ys5ivipRiK
+	 tzCAa+tBQWBmilucBsJEOYEG2Di2p9v/ZBepnJsvIflRqjdMWMh/+eXVasXJLjIDBL
+	 inQebxyh+DzG39A67NKYFfn9SZMlsMYyWy23ZlMvKryRgrqkPAoxj4WjmtVRxmNqvh
+	 NpbFaA4GYnBqg==
+Message-ID: <e71780a1-8d53-44ae-ac0f-d406de7e26e8@kernel.org>
+Date: Mon, 24 Jun 2024 06:48:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm: dts: aspeed: Use standard 'i2c' bus node name
-To: Joel Stanley <joel@jms.id.au>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20240531193115.3814887-1-robh@kernel.org>
- <CACPK8Xes5vp+3YpQ3L5ix=LaDv7oWtqGFVc8moQf4D+o3rnLjg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: mips: realtek: Add rtl930x-soc
+ compatible
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, tglx@linutronix.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ tsbogend@alpha.franken.de, daniel.lezcano@linaro.org, paulburton@kernel.org,
+ peterz@infradead.org, mail@birger-koblitz.de, bert@biot.com,
+ john@phrozen.org, sander@svanheule.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-mips@vger.kernel.org, kabel@kernel.org, ericwouds@gmail.com
+References: <20240624012300.1713290-1-chris.packham@alliedtelesis.co.nz>
+ <20240624012300.1713290-4-chris.packham@alliedtelesis.co.nz>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,29 +91,48 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CACPK8Xes5vp+3YpQ3L5ix=LaDv7oWtqGFVc8moQf4D+o3rnLjg@mail.gmail.com>
+In-Reply-To: <20240624012300.1713290-4-chris.packham@alliedtelesis.co.nz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/06/2024 03:55, Joel Stanley wrote:
-> On Sat, 1 Jun 2024 at 05:01, Rob Herring (Arm) <robh@kernel.org> wrote:
->>
->> The standard node name for I2C buses is 'i2c'.
+On 24/06/2024 03:22, Chris Packham wrote:
+> Add the rtl930x-soc and RTL9302C board to the list of Realtek compatible
+
+930x or 9302?
+
+> strings.
 > 
-> Unfortunately this can't be merged, as it will break userspace. There
-> is a lot of code out there that looks up devices based on the device
-> tree node path:
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
 > 
-> https://github.com/openbmc/phosphor-state-manager/blob/3c1351cc2b63178876ef68f4107c9804d2e17dcc/meson.options#L140
+> Notes:
+>     Changes in v2:
+>     - Use specific compatible for rtl9302-soc
+>     - Fix to allow correct board, soc compatible
+> 
+>  Documentation/devicetree/bindings/mips/realtek-rtl.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/realtek-rtl.yaml b/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
+> index f8ac309d2994..05daa53417e5 100644
+> --- a/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
+> +++ b/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
+> @@ -20,5 +20,9 @@ properties:
+>            - enum:
+>                - cisco,sg220-26
+>            - const: realtek,rtl8382-soc
+> +      - items:
+> +          - enum:
+> +              - realtek,rtl9302c
 
-Eh, thanks for sharing.
+Why board has the name of SoC?
 
-That's totally stupid user-space. The sysfs path to /sys/devices, or
-some grep by compatible, would be fine, but iterating over firmware/DT
-is just wrong.
+> +          - const: realtek,rtl9302-soc
 
-Reminds me USB and ChromeOS. They could fix their userspace, so probably
-folks here can as well. I filled a bug.
+Drop the -soc suffix. The rtl9302 is the soc.
+
+>  
+>  additionalProperties: true
 
 Best regards,
 Krzysztof
