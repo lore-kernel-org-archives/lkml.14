@@ -1,47 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABA013AA2C
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C896613A876;
+	Mon, 24 Jun 2024 10:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719224667; cv=none; b=KJfbEt6RekzdfA7gYcgjEFF9inSNrepPWR0btuQScpe7897Wb9VJS47dClnqhzDOHMMN+I/aSD5wJiDTanSufBaaNvP2hOTLKQhPF3RptxFjshnirwJ9OGiWJrAg/hhwSlvOmSb3W7jnEs2mFZsflEErw/wOnRWvozV05xqUiTI=
+	t=1719224667; cv=none; b=doCqSeRlsT0uktXCuQiAaVu2IznXxskAAVgzA8t8ewG2lgL2IC6gy/e1V7L93iKK9pT5+eyOErbYz+1C3fBMRTceTkYym6ieO7Izgq7F8rzxKXpO7D7jK4JgXswp9eK+Mp0hL8rV1pGqc8TFUIQbkrvCNAIiMOdbIPH2RN2YbBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719224667; c=relaxed/simple;
-	bh=cQws8ortMF+x3AGFx4Uqqj8FnUiGqPelfHlVhi+4xhI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BzCcis+qZwpV0szsvG9DoxT8QnZvOG+vfhvgK8ZseLaVrNTjKr5fHKhNAb9sNTWBSRGr/tJIxRYzuveRyQLXmDOhVcBvJMabSAK6W3RUjY2Etq1tenFVF4YDG9mggIkfn19B4lECNpCqlCSmSgAPuRNBJtMWo8BpFS63YWzQjiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5188FDA7;
-	Mon, 24 Jun 2024 03:24:50 -0700 (PDT)
-Received: from e130256.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7122E3F766;
-	Mon, 24 Jun 2024 03:24:23 -0700 (PDT)
-From: Hongyan Xia <hongyan.xia2@arm.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>
-Cc: Qais Yousef <qyousef@layalina.io>,
-	Morten Rasmussen <morten.rasmussen@arm.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Pierre Gondois <pierre.gondois@arm.com>,
-	Youssef Esmat <youssefesmat@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] Propagate negative bias
-Date: Mon, 24 Jun 2024 11:23:56 +0100
-Message-Id: <60985d07acd8a2daf4f3adf31ce4bf3be2982306.1719223916.git.hongyan.xia2@arm.com>
+	bh=GqowOhh1vlxjA/QwGrQ83PREXBqOcjdEHfHKOM6lF74=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rci7qtX0LxTmxTyLa21APOo0sgJU4p0iRa+HDfYOIgEjmEDv0CzqL2wln0OXANmKhbbebk4p7Ajr+b1Dl/IzpqvyKSXRkyNGza92DBdQrHVb2glpXjvBcODaexKg/KOQHSB3KeC4+t9hSoz9zl4lJ3wGkT9utaXKYopvdsUAm7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Td2CIYn6; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Td2CIYn6"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec50a5e230so26800531fa.0;
+        Mon, 24 Jun 2024 03:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719224663; x=1719829463; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ekKBi6MrHwfRYGceosqnDXbAlm4M9GA0bgX77upakCs=;
+        b=Td2CIYn6msyy3gbqQQNmNsrnEQuKgFjRzaif9wJAh/hDSmygJzVap1EgaBC/SukfdP
+         kdqydgW+8/xKB+Vj7oV7gRI3lpIjZp4AhOzD3aQv3zJ9U1AX+EtCMoqfjGdGkmVWqc/9
+         oE+RyOexPcqIL0EZIbctLbHvaXvmVq9AgqaqzWz+fyb+YMyg25vSuMbIAzPfGFf58pLZ
+         O5ZeHywQI9vN8GCR+hzxZjT3k6iwWUQ6/rg1IMS6VIWstGOuGfdLNUYpD+4qg8c3IY7y
+         2zGDGbrpo6CuY0aol8Kyji1FY3M1vcQYtaoDD4o5ag7PhNcsMOHP6L/aBeWiW1Na3J8n
+         Vfxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719224663; x=1719829463;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ekKBi6MrHwfRYGceosqnDXbAlm4M9GA0bgX77upakCs=;
+        b=uPv+Ar7e8DgOHIEQBcX5q6PGkwGl1OtYF422oyoMn3eNuSF20niPgve2qABbfhGqMS
+         YKsW4LzXodeodOhknRXx1B5EnrRzhtY0oMNLnVI/YU7lKXZRcHLPeJrzynoi0bjlu7xZ
+         wShtlcOVUGfnO2sBHPdVJnkcH/RJ1iNydiW5McLqE4uoMBvULPr6SU+r4zMFZugJ6bTn
+         UeYnfGr3FBDC+5Yr1YEmAFln6uUt/tv8dcoS8HmimNais1wtL8XJ9AJiWIK8akrqWFCY
+         WToX4Lxg17HXHi1sDmO1pcXWOpRvKIraHCr8SOv6IzCZkyCTrhtOjYQBo96NqtKAnr6G
+         ScsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUabDH9wA1czsxawfqAKMDQh6EUYx5LAwvTH8obxH6Zv4WM3JoXpPQiGhChwmz8ppn/0kw8xrmsrckLoNLI6qMPdqjCyU0aKalGlEQcBAkhnVcQ993PmOGyvhbH2p3pAUYXTfXZeMtwJMSN0O0GABzgKgV5A19SW+6kYuRV4aHoS7G+Yy2Cmhf7
+X-Gm-Message-State: AOJu0YxQWFJVDOM9ZmJh8z7P1XVKV5PG6RW5zL1ICBrTC6jZCf9at2wy
+	ZE37v1XoFo08/EgN3fB4I3P5gtqr0OWNN/6zwXniGQc1MmQyxN2J
+X-Google-Smtp-Source: AGHT+IFZ8/haf4Bf93CZhsSeLLOTGiJWOMu05M9dF1kj8eyRSGH952acck0+RJsGkPmxQjYKVgEDgQ==
+X-Received: by 2002:ac2:5dd1:0:b0:52c:df86:68c6 with SMTP id 2adb3069b0e04-52ce183517dmr2260751e87.16.1719224662688;
+        Mon, 24 Jun 2024 03:24:22 -0700 (PDT)
+Received: from localhost.localdomain ([2001:b07:aac:705d:6ec5:53d3:2412:2d96])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a2f6af9sm9685315f8f.73.2024.06.24.03.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 03:24:21 -0700 (PDT)
+From: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+To: alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	shuah@kernel.org
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	jjang@nvidia.com,
+	kobak@nvidia.com,
+	mochs@nvidia.com
+Subject: [PATCH v1 0/2] Fixes for RX8310 RTC Configuration and rtctest Alarm
+Date: Mon, 24 Jun 2024 12:23:52 +0200
+Message-Id: <20240624102354.894871-1-ghidoliemanuele@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1719223916.git.hongyan.xia2@arm.com>
-References: <cover.1719223916.git.hongyan.xia2@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,91 +72,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Negative bias is interesting, because dequeuing such a task will
-actually increase utilization.
+From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-Solve by applying PELT decay to negative biases as well. This in fact
-can be implemented easily with some math tricks.
+Hi,
 
-Signed-off-by: Hongyan Xia <hongyan.xia2@arm.com>
----
- kernel/sched/fair.c  | 40 ++++++++++++++++++++++++++++++++++++++++
- kernel/sched/sched.h |  4 ++++
- 2 files changed, 44 insertions(+)
+I am submitting two patches related to the RX8310 RTC configuration:
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 3bb077df52ae..d09af6abf464 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4878,6 +4878,45 @@ static inline unsigned long root_cfs_util_uclamp(struct rq *rq)
- 
- 	return max(ret, 0L);
- }
-+
-+/*
-+ * Negative biases are tricky. If we remove them right away then dequeuing a
-+ * uclamp_max task has the interesting effect that dequeuing results in a higher
-+ * rq utilization. Solve this by applying PELT decay to the bias itself.
-+ *
-+ * Keeping track of a PELT-decayed negative bias is extra overhead. However, we
-+ * observe this interesting math property, where y is the decay factor and p is
-+ * the number of periods elapsed:
-+ *
-+ *	util_new = util_old * y^p - neg_bias * y^p
-+ *		 = (util_old - neg_bias) * y^p
-+ *
-+ * Therefore, we simply subtract the negative bias from util_avg the moment we
-+ * dequeue, then the PELT signal itself is the total of util_avg and the decayed
-+ * negative bias, and we no longer need to track the decayed bias separately.
-+ */
-+static void propagate_negative_bias(struct task_struct *p)
-+{
-+	if (task_util_bias(p) < 0 && !task_on_rq_migrating(p)) {
-+		unsigned long neg_bias = -task_util_bias(p);
-+		struct sched_entity *se = &p->se;
-+		struct cfs_rq *cfs_rq;
-+
-+		p->se.avg.util_avg_bias = 0;
-+
-+		for_each_sched_entity(se) {
-+			u32 divider, neg_sum;
-+
-+			cfs_rq = cfs_rq_of(se);
-+			divider = get_pelt_divider(&cfs_rq->avg);
-+			neg_sum = neg_bias * divider;
-+			sub_positive(&se->avg.util_avg, neg_bias);
-+			sub_positive(&se->avg.util_sum, neg_sum);
-+			sub_positive(&cfs_rq->avg.util_avg, neg_bias);
-+			sub_positive(&cfs_rq->avg.util_sum, neg_sum);
-+		}
-+	}
-+}
- #else
- static inline long task_util_bias(struct task_struct *p)
- {
-@@ -6869,6 +6908,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	/* At this point se is NULL and we are at root level*/
- 	sub_nr_running(rq, 1);
- 	util_bias_dequeue(rq, p);
-+	propagate_negative_bias(p);
- 
- 	/* balance early to pull high priority tasks */
- 	if (unlikely(!was_sched_idle && sched_idle_rq(rq)))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 59e5ea421a4c..9d14ef9c717e 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3140,6 +3140,10 @@ static inline void util_bias_dequeue(struct rq *rq, struct task_struct *p)
- {
- }
- 
-+static inline void propagate_negative_bias(struct task_struct *p)
-+{
-+}
-+
- #endif /* !CONFIG_UCLAMP_TASK */
- 
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+1. **Correct RX8310 RTC Features Configuration:**
+   - Sets one-minute alarm resolution.
+   - Disables update IRQ.
+   
+   Without this patch, if the interrupt is configured in the device tree, `hwclock` fails to read the RTC as it waits for the update IRQ.
+
+2. **Avoid rtctest Alarm Test Failures:**
+   - Ensures rtctest alarm tests do not fail on hardware that only supports one-minute alarm resolution.
+
+I know the second patch creates conflict with this one: https://lore.kernel.org/all/20240524013807.154338-1-jjang@nvidia.com/.
+I think that series can reuse the rtc_get_features function I implemented.
+
+Best regards,
+Emanuele Ghidoli
+
+Emanuele Ghidoli (2):
+  rtc: ds1307: set one-minute alarm resolution for rx_8130
+  selftests: rtc: rtctest: skip alarm test if alarm resolution is one
+    minute
+
+ drivers/rtc/rtc-ds1307.c              | 14 +++++++++++--
+ tools/testing/selftests/rtc/rtctest.c | 30 +++++++++++++++++++++++++++
+ 2 files changed, 42 insertions(+), 2 deletions(-)
+
 -- 
 2.34.1
 
