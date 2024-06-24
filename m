@@ -1,154 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76723143739;
-	Mon, 24 Jun 2024 13:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C92713A86A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719235901; cv=none; b=XeZxudDtavjODIut7deOK42g9NSVQzCJKnYMQmvHJTbE7nleck33D7RBynwS55V1y39Kg7/NKQg4lCeUHKxJPBvTZxiI3DxXdrDFxJB6slF8qS5l9hQj0xZNy8LcuobJ05PBSwwgnwD9ujgsTyO6DlYHB3Ztg9/T7xKgCw1dZS0=
+	t=1719235938; cv=none; b=X8LCJ5KSNObR9OP4xh8cSCsESU3uR13xVUmKv+ThWzWV+LtT02id6EUpGrmCvvxxMYasm8iuuYHJhguiRytHOZqUn+WJgMottINHifqBlg/cfm2zeJsIIr3WMNItlPEudnzQB3ccOwwUFC3x9SyLVQTipAfU/m3aizQeU4Oxk68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719235901; c=relaxed/simple;
-	bh=iaBx0pKDhCtH1GENa4aTAEo0/WKpJ6n5K95+bmY8LOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NDPggz2HsLIIh3d6L+ZVHwDN8UiVP5oe2zZxbex0qgyVdpk1N0fO9m9EsPIZBfyOyteE7w5kewJc4zgiEdEo9/MQGaQq7lnI3HGZT0hf49ILD6yLBQ7ld64koR3qIrxmrF6fbcW94Tv2Jub6/T6rtFGuGgFw0A3cxzgLIl4nLpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCzQE2Yg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCzQE2Yg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF43C4AF0C;
-	Mon, 24 Jun 2024 13:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719235901;
-	bh=iaBx0pKDhCtH1GENa4aTAEo0/WKpJ6n5K95+bmY8LOo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rCzQE2Yg0lqmETb8TJ1/zkmnO7Rp2BwFfitRhF7MALOvcaR910Dri3TO9I8yECWnS
-	 DVx66kwp7A5M524psW4+za38z6XGl2NyA7x70wHXZr2zPYmAsNMOdYXB83gDv+QKWi
-	 VSBQXAgJ1nUwtEaTW9gAUr/7+gibvDtk1KDF8Z0mvINUKZY5xsuko9Qt0WJY9L4VXs
-	 JF6EZY0d0mPJzgoU72DoYUyEwKwjkXZL6NbPX/EOFfpGJTPqrVeEjJmJgz0pnx1XQ4
-	 j15FUCc3IAK0VT7MSns6hINh4E7SbcReYGaMX8Yje0Ste21WOgihv8ywZJvaCDbAzS
-	 yrYsANG4GM1JQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1sLjnP-000000001wW-0HIo;
-	Mon, 24 Jun 2024 15:31:47 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/3] serial: qcom-geni: fix soft lockup on sw flow control and suspend
-Date: Mon, 24 Jun 2024 15:31:34 +0200
-Message-ID: <20240624133135.7445-3-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20240624133135.7445-1-johan+linaro@kernel.org>
-References: <20240624133135.7445-1-johan+linaro@kernel.org>
+	s=arc-20240116; t=1719235938; c=relaxed/simple;
+	bh=zrkwHiNIQ2L8lyXpvA3rc8HPF5KTBzpD1FEkTtXmBz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QbQRRX7SupWKVzwnSlCS7tOq2DSujylP6p96aOzB2q8ByebWUIx0J+fi1z2rYD6yTiHcZDkZxxxbyKG5h9HATgE2AucIXYNKtZTvX4im1UrHm5k5XHRXP8PG6kdZHVQlwpnPuWCsCosPqJOx9RB6ogBN8X8iEjlz7vzC27URcEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21F5FDA7;
+	Mon, 24 Jun 2024 06:32:40 -0700 (PDT)
+Received: from [10.57.74.124] (unknown [10.57.74.124])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 211473F6A8;
+	Mon, 24 Jun 2024 06:32:13 -0700 (PDT)
+Message-ID: <c4c44f66-fb9c-4d71-ac35-f3fef75832bd@arm.com>
+Date: Mon, 24 Jun 2024 14:32:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/iova: Bettering utilizing cpu_rcaches in no-strict
+ mode
+To: "zhangzekun (A)" <zhangzekun11@huawei.com>, joro@8bytes.org,
+ will@kernel.org, john.g.garry@oracle.com
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240624083952.52612-1-zhangzekun11@huawei.com>
+ <5149c162-cf38-4aa4-9e96-27c6897cad36@arm.com>
+ <0322849d-dc1f-4e1c-a47a-463f3c301bdc@huawei.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <0322849d-dc1f-4e1c-a47a-463f3c301bdc@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The stop_tx() callback is used to implement software flow control and
-must not discard data as the Qualcomm GENI driver is currently doing
-when there is an active TX command.
+On 2024-06-24 2:13 pm, zhangzekun (A) wrote:
+> 
+> 在 2024/6/24 18:56, Robin Murphy 写道:
+>> On 2024-06-24 9:39 am, Zhang Zekun wrote:
+>>> Currently, when iommu working in no-strict mode, fq_flush_timeout()
+>>> will always try to free iovas on one cpu. Freeing the iovas from all
+>>> cpus on one cpu is not cache-friendly to iova_rcache, because it will
+>>> first filling up the cpu_rcache and then pushing iovas to the depot,
+>>> iovas in the depot will finally goto the underlying rbtree if the
+>>> depot_size is greater than num_online_cpus().
+>>
+>> That is the design intent - if the excess magazines sit in the depot 
+>> long enough to be reclaimed then other CPUs didn't want them either. 
+>> We're trying to minimise the amount of unused cached IOVAs sitting 
+>> around wasting memory, since IOVA memory consumption has proven to be 
+>> quite significant on large systems.
+> 
+> Hi, Robin,
+> 
+> It does waste some memory after this change, but since we have been 
+> freeing iova on each cpu in strict-mode for years, I think this change 
+> seems reasonable to make the iova free logic identical to strict-mode.
+> This patch try to make the speed of allcating and freeing iova roughly 
+> same by better utilizing the iova_rcache, or we will more likely enter 
+> the slowpath. The save of memory consumption is actually at the cost of 
+> performance, I am not sure if we need such a optimization for no-strict 
+> mode which is mainly used for performance consideration.
+> 
+>>
+>> As alluded to in the original cover letter, 100ms for IOVA_DEPOT_DELAY 
+>> was just my arbitrary value of "long enough" to keep the initial 
+>> implementation straightforward - I do expect that certain workloads 
+>> might benefit from tuning it differently, but without proof of what 
+>> they are and what they want, there's little justification for 
+>> introducing extra complexity and potential user ABI yet.
+>>
+>>> Let fq_flush_timeout()
+>>> freeing iovas on cpus who call dma_unmap* APIs, can decrease the overall
+>>> time caused by fq_flush_timeout() by better utilizing the iova_rcache,
+>>> and minimizing the competition for the iova_rbtree_lock().
+>>
+>> I would have assumed that a single CPU simply throwing magazines into 
+>> the depot list from its own percpu cache is quicker, or at least no 
+>> slower, than doing the same while causing additional 
+>> contention/sharing by interfering with other percpu caches as well. 
+>> And where does the rbtree come into that either way? If an observable 
+>> performance issue actually exists here, I'd like a more detailed 
+>> breakdown to understand it.
+>>
+>> Thanks,
+>> Robin.
+>>
+> 
+> This patch is firstly intent to minimize the chance of softlock issue in 
+> fq_flush_timeout(), which is already dicribed erarlier in [1], which has 
+> beed applied in a commercial kernel[2] for years.
+> 
+> However, the later tests show that this single patch is not enough to 
+> fix the softlockup issue, since the root cause of softlockup is the 
+> underlying iova_rbtree_lock. In our softlockup scenarios, the average
+> time cost to get this spinlock is about 6ms.
 
-Cancelling an active command can also leave data in the hardware FIFO,
-which prevents the watermark interrupt from being enabled when TX is
-later restarted. This results in a soft lockup and is easily triggered
-by stopping TX using software flow control in a serial console but this
-can also happen after suspend.
+That should already be fixed, though. The only reason for 
+fq_flush_timeout() to interact with the rbtree at all was due to the 
+notion of a fixed-size depot which could become full. That no longer 
+exists since 911aa1245da8 ("iommu/iova: Make the rcache depot scale 
+better").
 
-Fix this by only stopping any active command, and effectively clearing
-the hardware fifo, when shutting down the port. Make sure to temporarily
-raise the watermark level so that the interrupt fires when TX is
-restarted.
-
-Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
-Cc: stable@vger.kernel.org	# 4.17
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/tty/serial/qcom_geni_serial.c | 28 +++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 1d5d6045879a..72addeb9f461 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -651,13 +651,8 @@ static void qcom_geni_serial_start_tx_fifo(struct uart_port *uport)
- {
- 	u32 irq_en;
- 
--	if (qcom_geni_serial_main_active(uport) ||
--	    !qcom_geni_serial_tx_empty(uport))
--		return;
--
- 	irq_en = readl(uport->membase +	SE_GENI_M_IRQ_EN);
- 	irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
--
- 	writel(DEF_TX_WM, uport->membase + SE_GENI_TX_WATERMARK_REG);
- 	writel(irq_en, uport->membase +	SE_GENI_M_IRQ_EN);
- }
-@@ -665,16 +660,28 @@ static void qcom_geni_serial_start_tx_fifo(struct uart_port *uport)
- static void qcom_geni_serial_stop_tx_fifo(struct uart_port *uport)
- {
- 	u32 irq_en;
--	struct qcom_geni_serial_port *port = to_dev_port(uport);
- 
- 	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
- 	irq_en &= ~(M_CMD_DONE_EN | M_TX_FIFO_WATERMARK_EN);
- 	writel(0, uport->membase + SE_GENI_TX_WATERMARK_REG);
- 	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
--	/* Possible stop tx is called multiple times. */
-+}
-+
-+static void qcom_geni_serial_clear_tx_fifo(struct uart_port *uport)
-+{
-+	struct qcom_geni_serial_port *port = to_dev_port(uport);
-+
- 	if (!qcom_geni_serial_main_active(uport))
- 		return;
- 
-+	/*
-+	 * Increase watermark level so that TX can be restarted and wait for
-+	 * sequencer to start to prevent lockups.
-+	 */
-+	writel(port->tx_fifo_depth, uport->membase + SE_GENI_TX_WATERMARK_REG);
-+	qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
-+					M_TX_FIFO_WATERMARK_EN, true);
-+
- 	geni_se_cancel_m_cmd(&port->se);
- 	if (!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
- 						M_CMD_CANCEL_EN, true)) {
-@@ -684,6 +691,8 @@ static void qcom_geni_serial_stop_tx_fifo(struct uart_port *uport)
- 		writel(M_CMD_ABORT_EN, uport->membase + SE_GENI_M_IRQ_CLEAR);
- 	}
- 	writel(M_CMD_CANCEL_EN, uport->membase + SE_GENI_M_IRQ_CLEAR);
-+
-+	port->tx_remaining = 0;
- }
- 
- static void qcom_geni_serial_handle_rx_fifo(struct uart_port *uport, bool drop)
-@@ -1069,11 +1078,10 @@ static void qcom_geni_serial_shutdown(struct uart_port *uport)
- {
- 	disable_irq(uport->irq);
- 
--	if (uart_console(uport))
--		return;
--
- 	qcom_geni_serial_stop_tx(uport);
- 	qcom_geni_serial_stop_rx(uport);
-+
-+	qcom_geni_serial_clear_tx_fifo(uport);
- }
- 
- static int qcom_geni_serial_port_setup(struct uart_port *uport)
--- 
-2.44.1
-
+Thanks,
+Robin.
