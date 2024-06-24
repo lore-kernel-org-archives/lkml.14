@@ -1,85 +1,135 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D3A19ADB3
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B9013C3CD
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241839; cv=none; b=f59Y547xQWHABU7zgoyLhlMObR+ONc/i8r1DHhPRiPvqg8RAVXU/Zj8i4LVIbMNc4XeQPTp1gvXRf3Cg8CltlJMfnVQb+UvfrdRkJBzd7wErMfHkV2er3OgTTWm4RPlZrGHex1jqNxOj2iU3xhYxJQnYyFSzKG/Wp1YCz/NlHPI=
+	t=1719241956; cv=none; b=sQR80t/pgDsEX9DngAJ1G8FdrWOmpM9Ub/2EvIaDUYfn8LZvekIyN5tFuAn4bRDK+A/MpJ//6gWijMtE0ey33hUbXcFArvq9TVn6Le2DD4kk2CdqZBf0ME2iv4zsqktPH1F3Ip2ZQRBPoItEBrsbqqKVRlkxpOOZ+wpYKJwNR9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241839; c=relaxed/simple;
-	bh=jKGyvta2G1uYVIlK5HNoVK9sdIrnIVmJnDbVOWaOOv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KQJs+Yj8lkChLz8QCf08xKZwL3DBBFmo69pe8JQXvgYJLDVQLL8gM4eQsHW5JRPE7hsiyJiyJmA2GUgvc2Ul2tGrW9tI4ToPDqZv9WT4VjAbum1ALjbdDP1zY+5rhWp9Ivcj3/2wU4Q3+pHwkY6m7w9Qg1WHhC2T69crIz0DWgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2iyrtr6V; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1719241956; c=relaxed/simple;
+	bh=Oy8b7DQM3L5FUcDpijV37Yo9Cn03WaVo/xs4vXVyAmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j9iTYQz4df4aJiRqY/vfD74USTapWMMnJWtXExFxZNbJL1TwWKnSpp+citaD4OsrMxF/cGPr00jSdFuX2J4wLlvkqvR8XM4WmbnrjNdRqAONTTlkS3TkEflxrBujmy11mWndKvH0KzT/KDOX8Qi47Z62DGAWupJn73kaa1C0nuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jRpD1Vl0; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2iyrtr6V"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=sIjcwJiRP5XNu8VuXIVIMMptG3Wg9vWUyczIJClgvZ8=; b=2iyrtr6VIc4eDAKSzQ55Z4hAiQ
-	8Q/VPLOVlk8Qop3b/t71XkHRPHEPJ8kkEf3cMXfupfokml4vPnIhyq4RTtbMmWLHirdRuaH1g6yTe
-	vWC9M/cLJy2w7pVAPxGWXjmt8wsoFygw2F0yRwwgNm7ChNuANOrqOuk+HB4x3vwo7iCs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sLlKm-000rVr-Ci; Mon, 24 Jun 2024 17:10:20 +0200
-Date: Mon, 24 Jun 2024 17:10:20 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Liu Wei <liuwei09@cestc.cn>
-Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, prarit@redhat.com, will@kernel.org
-Subject: Re: [PATCH V3] ACPI: Add acpi=nospcr to disable ACPI SPCR as default
- console on arm64
-Message-ID: <5741452f-2a54-4239-a5c3-f13286726780@lunn.ch>
-References: <f706cb73-4219-47fb-a075-e591502be7c2@lunn.ch>
- <20240624050404.84512-1-liuwei09@cestc.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRpD1Vl0"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b51ae173ceso16383246d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719241953; x=1719846753; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKUVei0D2VbiVNvKS5RQUkYlhAuK8XSzTDtmkdar2R4=;
+        b=jRpD1Vl0nU9No5hjdOLUXRNhv/NqNkNKhvSQPSarRaXHXq29YAiW6fbo4zm+DPhug4
+         FXCN11kcCZrFtwJYiEZQs5cja8hWl7tsa9PcAp+Q8qRARRcGsDslRIbn6FgZHz4A3xsK
+         Df3ic1XAe7wVBZ4LVOqsvfFM+YrP9U/zcDKqUrb10cesDWwr+fvw0LQ9yfaAYfSnI1VF
+         nKM2HsRtmafQp7rRtbWUge5wQzDvD5+Nc7n5hAEPST26Vg5nhJOYbaBWHbKIEuMLrWq4
+         kF9OfPGF8OnsGmIYnCSH4RenpknJyeCFMurccuFn/OmtCPZVEBDVkPgS3Bfd1UoIgrnx
+         //mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719241953; x=1719846753;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GKUVei0D2VbiVNvKS5RQUkYlhAuK8XSzTDtmkdar2R4=;
+        b=sJ+GCRym6MLkEh8jK0M0e3Y2Glh1rxTvtc0fkQHsrKLJOk7+r1qkTu3Eqwwbav7c3S
+         rrQyeoBCpWAeFWLF6X4aANbZwhmJKwJG1T7p7DhD0/ohpNyupop4nurZr1PTI4YfwPT6
+         gcoWrvU7qnXlKcu5mMxkPQEJyhNCV1jcJS4fec4skOD9wQirqDr6LcxTVHCkucglQf80
+         Q41BenKVCpuXlBZ4jbJB2HmfTBEJu/Hhul6ev2Fkgvg7SDe803ManNlOh7K17moB36Q5
+         cL7rPKH59ZiBydKwPo4+PLFj9Vg8KoN6scfqkWbicEgPNfWLYN6Ef/BTLZUIOeboqh77
+         QFTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUU0rQEc2h15GeZM/DsS6IUBeK5AWq6Qbi5IgM6w+y4gweojKSxKAAI2J31/lRf1dHXw986O88QBEhWd56LMK7epi6qQgxum/avG4vh
+X-Gm-Message-State: AOJu0YzsIEUR9jwg9GhECWdh114NhrfdU4BfHCTrvV+/abMUsDFH1AG1
+	Cy/1oa1MDesfpAn6XK9lMkbDPPx6r98cyUQGvP7zRhv6XWPvhMcg
+X-Google-Smtp-Source: AGHT+IGQkLZoZU22jL6ZeSbVX7Xh7HWjFnFtXQdEPeoe2xF6REBHYTUlxsEawbuUOvN4TCk0URPZbw==
+X-Received: by 2002:a05:6214:19e8:b0:6b4:ffc9:1e9e with SMTP id 6a1803df08f44-6b53bbbe20dmr60711066d6.3.1719241953657;
+        Mon, 24 Jun 2024 08:12:33 -0700 (PDT)
+Received: from localhost.localdomain ([142.198.217.108])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b529eb3decsm27243976d6.12.2024.06.24.08.12.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 08:12:33 -0700 (PDT)
+From: Wu Hoi Pok <wuhoipok@gmail.com>
+To: 
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Wu Hoi Pok <wuhoipok@gmail.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] drm/radeon: remove load callback
+Date: Mon, 24 Jun 2024 11:10:44 -0400
+Message-ID: <20240624151122.23724-1-wuhoipok@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624050404.84512-1-liuwei09@cestc.cn>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 24, 2024 at 01:04:04PM +0800, Liu Wei wrote:
-> From: Andrew Lunn <andrew@lunn.ch>
-> 
-> > On Sat, Jun 22, 2024 at 05:35:21PM +0800, Liu Wei wrote:
-> > > For varying privacy and security reasons, sometimes we would like to
-> > > completely silence the serial console, and only enable it when needed.
-> > > 
-> > > But there are many existing systems that depend on this console,
-> > > so add acpi=nospcr for this situation.
-> > 
-> > Maybe it is just me, but i see nospcr and my brain expands it to "no
-> > speaker". Adding to that, your commit message says "completely
-> > silence"...
-> > 
-> > > +			nospcr -- disable ACPI SPCR as default console on ARM64
-> > > +			For ARM64, ONLY "acpi=off", "acpi=on", "acpi=force" or
-> > > +			"acpi=nospcr" are available
-> > > +			For RISCV64, ONLY "acpi=off", "acpi=on" or "acpi=force"
-> > > +			are available
-> > 
-> > How about putting the word 'serial' in here somewhere, just to give
-> > users an additional clue you are not talking about a speaker, CTRL-G
-> > etc.
-> 
-> Thank you for your suggestion. 
-> 
-> You mean acpi=nospcr_serial or acpi=no_spcrserial? However, it appears 
-> somewhat unconventional compared to the original acpi=* parameter.
+Changes between v1 and v3:
 
-How about:
+1. add "ddev->dev_private = rdev;"
+2. include a cover letter
 
-nospcr -- disable ACPI SPCR as default _serial_ console on ARM64
+Wu Hoi Pok (7):
+  drm/radeon: remove load callback
+  drm/radeon: rdev->ddev to rdev_to_drm(rdev) 1
+  drm/radeon: rdev->ddev to rdev_to_drm(rdev) 2
+  drm/radeon: rdev->ddev to rdev_to_drm(rdev) 3
+  drm/radeon: rdev->ddev to rdev_to_drm(rdev) 4
+  drm/radeon: rdev->ddev to rdev_to_drm(rdev) 5
+  drm/radeon: rdev->ddev to rdev_to_drm(rdev) 6
 
-Please as Will suggested, add a definition somewhere.
+ drivers/gpu/drm/radeon/atombios_encoders.c |  2 +-
+ drivers/gpu/drm/radeon/cik.c               | 14 ++--
+ drivers/gpu/drm/radeon/dce6_afmt.c         |  2 +-
+ drivers/gpu/drm/radeon/evergreen.c         | 12 ++--
+ drivers/gpu/drm/radeon/ni.c                |  2 +-
+ drivers/gpu/drm/radeon/r100.c              | 24 +++----
+ drivers/gpu/drm/radeon/r300.c              |  6 +-
+ drivers/gpu/drm/radeon/r420.c              |  6 +-
+ drivers/gpu/drm/radeon/r520.c              |  2 +-
+ drivers/gpu/drm/radeon/r600.c              | 12 ++--
+ drivers/gpu/drm/radeon/r600_cs.c           |  2 +-
+ drivers/gpu/drm/radeon/r600_dpm.c          |  4 +-
+ drivers/gpu/drm/radeon/r600_hdmi.c         |  2 +-
+ drivers/gpu/drm/radeon/radeon.h            | 11 +++-
+ drivers/gpu/drm/radeon/radeon_acpi.c       | 10 +--
+ drivers/gpu/drm/radeon/radeon_agp.c        |  2 +-
+ drivers/gpu/drm/radeon/radeon_atombios.c   |  2 +-
+ drivers/gpu/drm/radeon/radeon_audio.c      |  4 +-
+ drivers/gpu/drm/radeon/radeon_combios.c    | 12 ++--
+ drivers/gpu/drm/radeon/radeon_device.c     | 19 ++----
+ drivers/gpu/drm/radeon/radeon_display.c    | 74 +++++++++++-----------
+ drivers/gpu/drm/radeon/radeon_drv.c        | 27 +++++---
+ drivers/gpu/drm/radeon/radeon_drv.h        |  1 -
+ drivers/gpu/drm/radeon/radeon_fbdev.c      | 26 ++++----
+ drivers/gpu/drm/radeon/radeon_fence.c      |  8 +--
+ drivers/gpu/drm/radeon/radeon_gem.c        |  2 +-
+ drivers/gpu/drm/radeon/radeon_i2c.c        |  2 +-
+ drivers/gpu/drm/radeon/radeon_ib.c         |  2 +-
+ drivers/gpu/drm/radeon/radeon_irq_kms.c    | 12 ++--
+ drivers/gpu/drm/radeon/radeon_kms.c        | 18 ++----
+ drivers/gpu/drm/radeon/radeon_object.c     |  2 +-
+ drivers/gpu/drm/radeon/radeon_pm.c         | 20 +++---
+ drivers/gpu/drm/radeon/radeon_ring.c       |  2 +-
+ drivers/gpu/drm/radeon/radeon_ttm.c        |  6 +-
+ drivers/gpu/drm/radeon/rs400.c             |  6 +-
+ drivers/gpu/drm/radeon/rs600.c             | 14 ++--
+ drivers/gpu/drm/radeon/rs690.c             |  2 +-
+ drivers/gpu/drm/radeon/rv515.c             |  4 +-
+ drivers/gpu/drm/radeon/rv770.c             |  2 +-
+ drivers/gpu/drm/radeon/si.c                |  4 +-
+ 40 files changed, 193 insertions(+), 191 deletions(-)
 
-       Andrew
+-- 
+2.45.2
+
