@@ -1,93 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8BE1EB56;
-	Mon, 24 Jun 2024 19:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4EE1EB56;
+	Mon, 24 Jun 2024 19:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719258555; cv=none; b=gOJ/+3leijZoCMWb1Dn5a8MOmgxasH+MXPPsFOvGiLjj4gkRmr0ngI7938LX+oWtHCW9lCWFVwqLR+lCrgzMi+9dMePxV2G4xdihAXLstwaa+SxXsD9+Z4/8DS6p6lQ3k/LKqGGY1lmDCNR21cUSdsfKjqcdm3DYPIgk3ucB3vo=
+	t=1719258650; cv=none; b=ovtXGEB5mAK2MxVzdCW+1BAOOE5qkWDU/UCuPOQI19Q8JSs7AVDsOga1qZGb+I88lptnKEOQwzcKZ6TjG0OGsjoLbrc1CGPi4uC8q7WQUApl9tSSnwP8QG2hLaSI1rX3RkcV6j3VJDFbj/RzzzdFU/6agzi4i7SPyCJqOMqcjB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719258555; c=relaxed/simple;
-	bh=bitaMLMQKsPB3ypqXTwY23B+hxKKZ4D/Ve0iLG51d5s=;
+	s=arc-20240116; t=1719258650; c=relaxed/simple;
+	bh=s+NHv3ns0rqlyrer4kI3azjaudKLNVpbnW/XG1CSgKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cBNo9zCRX5eGL5ufxeQpuEr8RhhIXWgjyTjM0GtQ82pse4xd3Dbw05O5Rv/mBI1wpSnzEx4ULNqcLJ7g0CWPaYIO4Amo7JI6cSkIN1KczKkTuJLNLRnuB+AZ5VKKg+dQ288Y1tdu0oabMqe05vAS2efH/HigsysPwwci7SEZZho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJodd4Bj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FP+Uup1xGujJSyHeQeoix9Brb0v8VzbA9mx9RhnHyeq/UJeOdgvMSgD0hLlSgol1jK9/zsfiu0M0kxAAXXbM+6o9KaLN3YkxCvfYTr/B7BlWxR75hnrYNBCOl1EqoNLhqAFDMOjKhJyLBqiwejK6fjgVFFzJX7swu7liLUryjuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DfVk7ryb; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJodd4Bj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2FF3C2BBFC;
-	Mon, 24 Jun 2024 19:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719258554;
-	bh=bitaMLMQKsPB3ypqXTwY23B+hxKKZ4D/Ve0iLG51d5s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rJodd4Bj7XmE4r73Uerxpla8Ds2P5QYdoxcVeQeWSe7jZIfQy6lKO56KXk08RRW/F
-	 VArZXItIkBweO64cxcM3TqbNU2Mj4mVsi0DZobeptHoLngqaYf00REqt07n07uOjVq
-	 PVRn0cnv6Ne1Zm/+V+v9n9Cvd1m+AlIB4VxKusZ8KEJiVZn/Kg2gFxtqp68df+IyeA
-	 auhYCDfsVgnBwwQwh2YGi38vtHPod06QnYV4PNcR5KYRqdsiugy5HMJZm5nfK5bEcE
-	 79B/Z35swG/Wz12mtoxv9X0S9mRB+AqRgfWoUR5XOer5KZPyKRetXrRp7pjTxPHbP3
-	 RKPnooTR3wc1A==
-Date: Mon, 24 Jun 2024 13:49:13 -0600
-From: Rob Herring <robh@kernel.org>
-To: Andrei Simion <andrei.simion@microchip.com>
-Cc: brgl@bgdev.pl, krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, arnd@arndb.de, gregkh@linuxfoundation.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: eeprom: at24: Add at24,mac02e4 and
- at24,mac02e6
-Message-ID: <20240624194913.GA267989-robh@kernel.org>
-References: <20240621121340.114486-1-andrei.simion@microchip.com>
- <20240621121340.114486-4-andrei.simion@microchip.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DfVk7ryb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=1HOmhYkqorxtw73lg/pG0orZL1FyfjnL9NoN4K798Og=; b=DfVk7rybxn+Cc8wqcCH/+tjnW7
+	WEsL9Bccp/JiwYUmuwjrkbC4Esa9isSp+GUVUE8MLHpF3hBD4q86WCPsxJPEn9yYtrxisP+41KOrD
+	0yOM9UcyfkldRSGfNj4JGDoJ8whIf+BJJzqTiWLwXNCt/xQc7s87t4IDb+ZpOI3SUpmQGrMavtOFc
+	GoUMoO7LEzVlh5raAjEtPBz36cSNDbkTFE6RvsypfaUK15YZJuXFl8coFVVxjgDXTcSWKY//EyPJB
+	pLJuLKyOlTXP8iTkVBMW3JEVO0+xLALfBF/KQguBBoRUUtJfriJRCf7PCfFAOduR9VE91+k0Asi4D
+	BCqE4Vvg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sLpi9-0000000AO9F-0rfX;
+	Mon, 24 Jun 2024 19:50:45 +0000
+Date: Mon, 24 Jun 2024 20:50:45 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	Usama Arif <usamaarif642@gmail.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Nhat Pham <nphamcs@gmail.com>, David Hildenbrand <david@redhat.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Hugh Dickins <hughd@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master] [mm] 0fa2857d23:
+ WARNING:at_mm/page_alloc.c:#__alloc_pages_noprof
+Message-ID: <ZnnOFSNKKMf5IpCU@casper.infradead.org>
+References: <202406241651.963e3e78-oliver.sang@intel.com>
+ <CAJD7tkbqHyNUzQg_Qh+-ZryrKtMzdf5RE-ndT+4iURTqEo3o6A@mail.gmail.com>
+ <Znm74wW3xARhR2qN@casper.infradead.org>
+ <CAJD7tkbF9NwKa4q5J0xq1oG6EkTDLz8UcbekSfP+DYfoDSqRhQ@mail.gmail.com>
+ <ZnnBVBItTNWZE42u@casper.infradead.org>
+ <CAJD7tkaC6d_RkhRhMpEeS1zTEtoQYw56J3LLdzD1aM9_qu-3BA@mail.gmail.com>
+ <ZnnId18scFvE_a6K@casper.infradead.org>
+ <CAJD7tkZZHxXR9cFE=ZHQOnYXakrhXg0+ScT2ExxihovSgDz7_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240621121340.114486-4-andrei.simion@microchip.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJD7tkZZHxXR9cFE=ZHQOnYXakrhXg0+ScT2ExxihovSgDz7_g@mail.gmail.com>
 
-On Fri, Jun 21, 2024 at 03:13:40PM +0300, Andrei Simion wrote:
-> Update regex check and add pattern to match both EEPROMs.
-
-The subject is wrong as 'at24' is not the vendor.
-
+On Mon, Jun 24, 2024 at 12:34:04PM -0700, Yosry Ahmed wrote:
+> On Mon, Jun 24, 2024 at 12:26 PM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Mon, Jun 24, 2024 at 11:57:45AM -0700, Yosry Ahmed wrote:
+> > > On Mon, Jun 24, 2024 at 11:56 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Mon, Jun 24, 2024 at 11:53:30AM -0700, Yosry Ahmed wrote:
+> > > > > After a page is swapped out during reclaim, __remove_mapping() will
+> > > > > call __delete_from_swap_cache() to replace the swap cache entry with a
+> > > > > shadow entry (which is an xa_value).
+> > > >
+> > > > Special entries are disjoint from shadow entries.  Shadow entries have
+> > > > the last two bits as 01 or 11 (are congruent to 1 or 3 modulo 4).
+> > > > Special entries have values below 4096 which end in 10 (are congruent
+> > > > to 2 modulo 4).
+> > >
+> > > You are implying that we would no longer have a shadow entry for such
+> > > zero folios, because we will be storing a special entry instead.
+> > > Right?
+> >
+> > umm ... maybe I have a misunderstanding here.
+> >
+> > I'm saying that there wouldn't be a _swap_ entry here because the folio
+> > wouldn't be stored anywhere on the swap device.  But there could be a
+> > _shadow_ entry.  Although if the page is full of zeroes, it was probably
+> > never referenced and doesn't really need a shadow entry.
 > 
-> Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
-> ---
-> v1 -> v2:
-> - change patter into "^atmel,(24(c|cs|mac)[a-z0-9]+|spd)$" to keep simpler
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> index 3c36cd0510de..f914ca37ceea 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -18,7 +18,7 @@ select:
->    properties:
->      compatible:
->        contains:
-> -        pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
-> +        pattern: "^atmel,(24(c|cs|mac)[a-z0-9]+|spd)$"
->    required:
->      - compatible
->  
-> @@ -37,8 +37,8 @@ properties:
->        - allOf:
->            - minItems: 1
->              items:
-> -              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|lc|mac)[0-9]+|spd)$"
-> -              - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
-> +              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|lc|mac)[a-z0-9]+|spd)$"
-> +              - pattern: "^atmel,(24(c|cs|mac)[a-z0-9]+|spd)$"
+> Is it possible to have a shadow entry AND a special entry (e.g.
+> XA_ZERO_ENTRY) at the same index? This is what would be required to
+> maintain the current behavior (assuming we really need the shadow
+> entries for such zeroed folios).
 
-Are these devices available from multiple vendors? If not, I think I'd 
-add specific compatible strings with the right vendor rather than adding 
-to this pattern. It's rather loosely defined because that's what was in 
-use already.
+No, just like it's not possible to have a swap entry and a shadow entry
+at the same location.  You have to choose.  But the zero entry is an
+alternative to the swap entry, not the shadow entry.
 
-Rob
+As I understand the swap cache, at the moment, you can have four
+possible results from a lookup:
+
+ - NULL
+ - a swap entry
+ - a shadow entry
+ - a folio
+
+Do I have that wrong?
