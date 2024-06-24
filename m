@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F8B2233B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 20:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766C719F464;
+	Mon, 24 Jun 2024 20:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719261444; cv=none; b=iOlk6prXXWLisPb2wKSxrU4zsVvQL+UGHKR/uDfAD/husOPkFZ1j8cega7S2Is8I7Djtdb5+ZvUonXKm5gkBoJU3kJsTV/MfxoM6/sI04bKxrRgbAbjX/zYQntHQ0ghzYk7PI4qzTPIcYx7R+k/fzkJ98iLsjL44Q6lkh/taq0E=
+	t=1719261460; cv=none; b=SPxDFvGvp+EGrjjui4MgV04q/tUoRj4ijNjcG4fW1ZdO79vboSJ4ylTRnVS4YMwuDyqIRdGMfV4sLBRkgRlsXX3Tc3QGhs4vNHLS9jugwBmPoMCIue3zVDz+bCrYz/BfltQE+dqKAxTxZHCl8+oDKZPyB6ug29V2hLRSqtoB/Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719261444; c=relaxed/simple;
-	bh=KlGZU6SbZVmmg8sVqf2JRY2V0nEEBJ7yWWIFaAlAT14=;
+	s=arc-20240116; t=1719261460; c=relaxed/simple;
+	bh=4d7T6+euO4Jf5/pqXj2ahpf0LXQbq2D9+js6pa3Ys5c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U8xbcQdpAgtuB8d+VeggYoTDlLUe8uigJcAsZxl/+T7C6yso2wmJ+98V8tFY0ZvxTvDy4wAsHVVNuHTsJ/tSWjYNVRzHMaEkWl4dm4n0AlX8+vKLeh/2Wp8tjZBLV6u03cgOC4Vzv1KSPJDHNzpu2Tr0Gk0xSwLFf/glwbVWzGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kd18yy4U; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hh8cTL3+Yc/Dtvlyz36AMzfb6s9iI213OS1ZKoWgo7wr9tiBV5K06jyaSsaMkdwunoGFjtrImCCMvnknH80l3TZnwiu3FbDp+mMjsPH7reRcVYNrg8EIZZGXYqV5/MBodYWQ0ao56RUGH1/oKS5+xJ8cGKt5+8T1z0ao9zHbXu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqZu5+jW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kd18yy4U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F598C2BBFC;
-	Mon, 24 Jun 2024 20:37:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqZu5+jW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA9CC2BBFC;
+	Mon, 24 Jun 2024 20:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719261443;
-	bh=KlGZU6SbZVmmg8sVqf2JRY2V0nEEBJ7yWWIFaAlAT14=;
+	s=k20201202; t=1719261460;
+	bh=4d7T6+euO4Jf5/pqXj2ahpf0LXQbq2D9+js6pa3Ys5c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kd18yy4Ua4f/Ynq+/Q9OmliElNV2k3MmeCBwjuZmG6tFNTODaQ3gT/51T5EZV7CUa
-	 WTXpVro70Wrl0HdQeO5Ct6DGTquyvhZ0syOJoWdayyiCn+xLs81NUBmhz+LCLceKzX
-	 zEGNwVL3J+fb14ZG6kDyzgwTNnVF5MH0TbjpSCyU2pht5//LmpTm5+DDz5cOrp8gHl
-	 YxmdFmTdxtBInthYnTm8LupOudPdnNu4os8SjA+t5YTpXYPj/ZO/egytaSAhpP3b0r
-	 lDoQ7MBfCXsvj8Emh+l/esoExboH+6MQCYquJRPabsKOARB704l3nv7AoVUwg0OX09
-	 i0JCq9qqFLIuQ==
-Date: Mon, 24 Jun 2024 22:37:20 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] timer_migration: Improve tracing
-Message-ID: <ZnnZAB0l8oGxZ0X8@pavilion.home>
-References: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
- <20240624-tmigr-fixes-v2-2-3eb4c0604790@linutronix.de>
+	b=aqZu5+jW4cutRb0RA+kDjk+v1FjtPQfv8BnJyck7sIlRjJlpIGfiTGW4vT1vg+N3m
+	 AB5AODAuQjpbwXjz/XaR8itvH4tMwQ2rJNsNfQ9emk5uo2XLFPbexM9omwJPAomDKe
+	 0qNkVVYShRIffBaEDGY0/6h39oRXFM3GBd7ONVNklQpOATjBLrs8dX8Jcw9seuLps9
+	 p15KCZ2deG4sA/9qxfuPgNPaH5PCZMI+0tOH/Dca5LQuC5D4DTJQzGKMNKAtosQe5x
+	 +BMlkmfT9+2iAzWc6wrxMD8bhzTtfyjpnxmLn3SaCXtuYnLujc1LO2nfr6LRu5dYcF
+	 nU8ay5ICL3hXQ==
+Date: Mon, 24 Jun 2024 14:37:38 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: mfd: Explain lack of child dependency in
+ simple-mfd
+Message-ID: <171926144609.373838.11321058105570847753.robh@kernel.org>
+References: <20240623134600.115098-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,23 +47,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240624-tmigr-fixes-v2-2-3eb4c0604790@linutronix.de>
+In-Reply-To: <20240623134600.115098-1-krzysztof.kozlowski@linaro.org>
 
-Le Mon, Jun 24, 2024 at 04:53:54PM +0200, Anna-Maria Behnsen a écrit :
-> Trace points of inactive and active propagation are located at the end of
-> the related functions. The interesting information of those trace points is
-> the updated group state. When trace points are not located directly at the
-> place where group state changed, order of trace points in traces could be
-> confusing.
-> 
-> Move inactive and active propagation trace points directly after update of
-> group state values.
-> 
-> This change is also a preparation to be able to split out update of group
-> state information easily into a separate function. Which in turn is
-> required to fix a possible race in setup code.
-> 
-> Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
-> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+On Sun, 23 Jun 2024 15:46:00 +0200, Krzysztof Kozlowski wrote:
+> Common mistake of usage of 'simple-mfd' compatible is a dependency of
+> children on resources acquired and managed by the parent, e.g. clocks.
+> Extend the simple-mfd documentation to cover this case.
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> 
+> Changes in v2:
+> 1. Rephrase the paragraph, as discussed with Lee.
+> 2. Add Rb tag.
+> ---
+>  Documentation/devicetree/bindings/mfd/mfd.txt | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
