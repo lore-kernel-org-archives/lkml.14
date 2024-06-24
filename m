@@ -1,288 +1,213 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2042.outbound.protection.outlook.com [40.107.93.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A4519E822;
-	Mon, 24 Jun 2024 17:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251548; cv=none; b=XbRzmQeboRgm43oNABfC0qMkr5JuQnhLR/8IAhEogvBKhtKhjsopdJtDgJZA1qzgHse/NOwEBcrw7A31z+4hG2UDhskl1xrkm+/v6v/TuoBH9TH8Zp9qliDr9XmhGZKzgKYr49yPOs4n61IxN2m0GP1Ma/ur7RN9XjnHDCL5pSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251548; c=relaxed/simple;
-	bh=Uiy9GqA3kD/mn5PsuWRqXxUJk/OTGXa94Bg//LfXQYI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dLE1qYW5dWekVxzsqI9vJd6d5Yr5XWZaaYycmTQYYL1UjUMOC//K37xWdqXwxZD7eAu1fYKDukmC6XDzg7889/ukqVFDjppQmW3U2ZBcriC+r+FQ1Hb0dc9/oU2ml7NcsqD1enWQuLrRpTOduVTkJyJ/IMARVXILSIz4YsQYDqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W7Fqk60Zlz6K9fG;
-	Tue, 25 Jun 2024 01:50:42 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 29DA71400DB;
-	Tue, 25 Jun 2024 01:52:22 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 24 Jun
- 2024 18:52:21 +0100
-Date: Mon, 24 Jun 2024 18:52:20 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: iio: adc: add AD4695 and similar
- ADCs
-Message-ID: <20240624185220.000044d8@Huawei.com>
-In-Reply-To: <204e6729-d5b0-4d44-85d5-e8de7541b689@baylibre.com>
-References: <20240617-iio-adc-ad4695-v2-0-63ef6583f25d@baylibre.com>
-	<20240617-iio-adc-ad4695-v2-2-63ef6583f25d@baylibre.com>
-	<187da75c-9af3-42a9-b31e-be731aaf63d2@baylibre.com>
-	<20240623173911.7ea5d518@jic23-huawei>
-	<204e6729-d5b0-4d44-85d5-e8de7541b689@baylibre.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF7019E822;
+	Mon, 24 Jun 2024 17:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719251567; cv=fail; b=Jxvo2zYM8EeWoNAXUpPiPrpxpbAvZDTVG6Jo5jmCIAPUSFSp/uXJ2vvRBc8w2GsLRE1Ru+booMYGCbJpwJmMit4ZdfneA2FOCepc4bV/NqovdDxqE4DQrloA3Vix/Fa+N5vH5EkqMUuYqXLSL5aBPL/+W09NJOz1wCyk8GZyCeg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719251567; c=relaxed/simple;
+	bh=4ck3w7VM+1Kxpcl2D5+3CgPPGLJkcar1wVWrPkbHjF0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z13hNOAGRidMu0l5XEbEzfWAIixIreqY/UEt7z5PfIvf8dUiNBWblxGWlxhjS3aRC3nLh/1YAO5Rt6oGSqOGmoNw4Ylc4VzYIT8jB8UuHqZDxWIeZPWbJCGjAnR3YE1k2uy6qoPoHQ1Die7WNk8ZBuCmBKlTHPWmGx4sgDkrHNA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZAYw0Vok; arc=fail smtp.client-ip=40.107.93.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZAYw0Vok"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g46TyivW0A4LBgtVS3X9rxSuiMUvL3DEbgjOizqu0AXECzuKXjiPd6zooo/6tHyfmbwXMyi8MNRQSDo9gGksiGfAWoFbbfYNrUlcAuyibroGwHexnGAzAKiSHjW0JY3y1/zFUhHJtR/mkm1EdE4pIrY56lWBZ/105Hdad3aujBZ0ga+baNOy4aVx2NX98xCPqnw7k1A5qcU2skBuZxxVoMfE/pBitoapLO5p9Z1VRq2zziiox80ZsbUldN6Y6utFFi1pj/LAcW3zuSFYBtAJl5taXaVUY2XQ3Hw3SZN8soprwX2jWzBMAntJiNJgVnCHLyMSA0hD+Aj6yFklCKr7sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ErS8hdpJoxO4q0KydJ7PQ2tO81x/w5HONh4RKs9DBpA=;
+ b=PoUUgcjmer0XZEKf9aaBCiibVqI6JYoStIUohW7oT7T0T9ZmAzbbdhXVJIKqLdz2UHAJMprsp7pyrBz/TMwZaqfEyKqPNQZZfirlyIvubK+LlZ2Thi2GHhEreLA71I3iOFVw4OsZR7I4uP2KFTZnTvO9RDO4sT6Nm29yCZbir3qT8i27FrplymPGn9Tj2Kjw5T7rUJAawpCyFwedmFOKk8f4fB7RLBR+Dzs9PuNkMD0j4WIPL6wH5BE25+pvzM9L3sEEWzNMsr1H56FMgR9+QGr0nB1vL0oYIZLXfvrJE6J3F8jMYkpWATo61wnJpY/2Ghr27exBkVYK8sIL3fGSlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ErS8hdpJoxO4q0KydJ7PQ2tO81x/w5HONh4RKs9DBpA=;
+ b=ZAYw0VokGoIJlrk7nu0+eK3QLxdk5AoytI42ZOsCXlGIuVvxEb0eqq2yTs6t/wqUt4O8s+b/ybsxaT3oBp4Go1P/ICXOlQM0KdOuA5BtIFq0Zj97QX5tCaO5ua1fwUXZ3K1eKMD423uUTDj7LdREzabHSMrRnas7IorkpVe7Eewwlz5gqdXOIXdbRjHLx/Ogj3RjPuGrcdpW1etL7GQ4/QOUHoKok9QYUDk6MpdJikngla6mXzeBI2pzpjii9znh34V85ixi2gSMGfAV84P2RK7GZqBMpC/SFDJ3CM0LWdhXjllMpLzgZD4YoX0pGfA/Ex/b8HtM3pAHU/nYV026Sw==
+Received: from BYAPR11CA0084.namprd11.prod.outlook.com (2603:10b6:a03:f4::25)
+ by MW4PR12MB7438.namprd12.prod.outlook.com (2603:10b6:303:219::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
+ 2024 17:52:42 +0000
+Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
+ (2603:10b6:a03:f4:cafe::1d) by BYAPR11CA0084.outlook.office365.com
+ (2603:10b6:a03:f4::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Mon, 24 Jun 2024 17:52:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7677.15 via Frontend Transport; Mon, 24 Jun 2024 17:52:42 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 24 Jun
+ 2024 10:52:27 -0700
+Received: from dev-r-vrt-156.mtr.labs.mlnx (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 24 Jun 2024 10:52:21 -0700
+From: Danielle Ratson <danieller@nvidia.com>
+To: <netdev@vger.kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <corbet@lwn.net>, <linux@armlinux.org.uk>,
+	<sdf@google.com>, <kory.maincent@bootlin.com>,
+	<maxime.chevallier@bootlin.com>, <vladimir.oltean@nxp.com>,
+	<przemyslaw.kitszel@intel.com>, <ahmed.zaki@intel.com>,
+	<richardcochran@gmail.com>, <shayagr@amazon.com>, <paul.greenwalt@intel.com>,
+	<jiri@resnulli.us>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <mlxsw@nvidia.com>, <idosch@nvidia.com>,
+	<petrm@nvidia.com>, Danielle Ratson <danieller@nvidia.com>
+Subject: [PATCH net-next v7 1/9] ethtool: Add ethtool operation to write to a transceiver module EEPROM
+Date: Mon, 24 Jun 2024 20:51:51 +0300
+Message-ID: <20240624175201.130522-2-danieller@nvidia.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240624175201.130522-1-danieller@nvidia.com>
+References: <20240624175201.130522-1-danieller@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|MW4PR12MB7438:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7c629c5-9936-44e9-0038-08dc9476723a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|7416011|82310400023|376011|1800799021|36860700010;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?foO/kHciKIF65/nk1Ppv8Pv+fTbxtOH8zT/4Co6ucUCQpdmVPMTVCCxRNsHo?=
+ =?us-ascii?Q?/0qyoyP6AuCfOjofIuGnvPGLJKXmORPTFR5koR7zq8kBaNl46NYywCI61t9r?=
+ =?us-ascii?Q?mSzNx27YbJshRQMCxIFEG4NIoaSd9glfFhtmM6U7ZI11+QCOvNKmMoEEiHH5?=
+ =?us-ascii?Q?q7AvJlLBgvSXQ4xpfYlxDSQl6u+MfbOq9lMJq41m/ZjP46mn4UaQLQjpCDvR?=
+ =?us-ascii?Q?yqlV/izct4sav0hmJeRtZ6mCdZhGd8sNMXXNgKOV3DgDR2EvoWU4pPkRIidV?=
+ =?us-ascii?Q?kchy/ymwPDFyAB+vG3J6/GmkW7LiB6dwDJiScr1CxJ341mJ7389f165IAt17?=
+ =?us-ascii?Q?u9p9R42EJwUWFX2S5yLsIP3fzj09OdRS6CyiKv8YTVTRooP4nrQt75TmbG2A?=
+ =?us-ascii?Q?PlHf+nLs0BeSlPv9gUohmloMbyED/s1XFO5AxiTRl5UTKJry4LDopOhmJdZv?=
+ =?us-ascii?Q?wsQ8uzVeF55edaJHhcwW6eDRlEBUHPo70Y1IEmtcsD+9Gv6jr49hpdNlSmuF?=
+ =?us-ascii?Q?6OtIuXe/Jofj53kF03gcWgXQ9eMB2n7tNkaL3aJoO2BMyHXW7QlZWGW72BcJ?=
+ =?us-ascii?Q?DgZq7L+jLnobrdlNiEwGkZFiaIkQ1eyBz+VxwNiAUEv4fJNC7ILJmwgXrbhk?=
+ =?us-ascii?Q?1xJNokoSE727kY+1kLJDUSkDlG4WjrNYnVgY/kNv3c0VvOralJMRBGsDIXLc?=
+ =?us-ascii?Q?ISjEjPU2h59JEGsEeRQHq9YedJzRksNEyg04A+WnvDTQi70/x34ZswT3zwd6?=
+ =?us-ascii?Q?+C+M5kxqXC4dmsr3/7eq5KYxkSTP8B3r2ycZz/waSYEx6e5tUBfT1qvNsSrY?=
+ =?us-ascii?Q?UlL9Uai/0RiSMdS1e1405P+uDmg9cIUhaCAskAILFpSIWoWjOCfVuWr86XCH?=
+ =?us-ascii?Q?PoB/ZoCyvcNWEfmYqG/5rXo/MZaC8L/9SzvTIrFNmzTdhg3K0FrhnFTfhS6h?=
+ =?us-ascii?Q?bNU/Dax2EorX8W9WB3PCO18cOi7+7ppFNIs1VIh05zne+gNrikqBjVlJY+Gh?=
+ =?us-ascii?Q?wyIWQ1Uncj8Km7iD/ZaM/L8FCIAmz8y03a74L0PJgR6oD782i/YvTYPc/cmF?=
+ =?us-ascii?Q?CuUK1gfkecVGO5X6gJk21zvMIomxC+NQgvx4iONcz+ZUPR3UMpBPGHKuaqy0?=
+ =?us-ascii?Q?Wfxa7iCu3zDE6o+ipN2tmZ0IrY2vpjSwYbdWfgrkg/g8YIze5bTVIzOyC8t9?=
+ =?us-ascii?Q?iePXOeQqECfTzRW0OUdmTRyfA8LpV+fUyXlpWhcLWVKCfdW0kQRCwVFYxvs+?=
+ =?us-ascii?Q?M37gy/CXc0OghRwUCwSGVbzMCnLKF/IQ1hMvYduhlQPHcmL4BfkKwsxfuwyd?=
+ =?us-ascii?Q?vmkZPrA73a3gVNvf6B7iSYYwdWR4dTZTDtqDpFUFa6FWmo8r/qTvMXLmSnRH?=
+ =?us-ascii?Q?RoiCW7VuQcI/vQgS1ijct49BqvibvyNnPnE+Myn5t9N9QAA+gg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230037)(7416011)(82310400023)(376011)(1800799021)(36860700010);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 17:52:42.2910
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7c629c5-9936-44e9-0038-08dc9476723a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D7.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7438
 
-On Mon, 24 Jun 2024 09:36:43 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+From: Ido Schimmel <idosch@nvidia.com>
 
-> On 6/23/24 11:39 AM, Jonathan Cameron wrote:
-> > On Tue, 18 Jun 2024 14:29:10 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >   
-> >> On 6/17/24 2:53 PM, David Lechner wrote:  
-> >>> Add device tree bindings for AD4695 and similar ADCs.
-> >>>
-> >>> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> >>> ---
-> >>>     
-> >> ...
-> >>  
-> >>> +
-> >>> +  interrupts:
-> >>> +    minItems: 1
-> >>> +    items:
-> >>> +      - description:
-> >>> +          Signal coming from the BSY_ALT_GP0 or GP3 pin that indicates a busy
-> >>> +          condition.
-> >>> +      - description:
-> >>> +          Signal coming from the BSY_ALT_GP0 or GP2 pin that indicates an alert
-> >>> +          condition.
-> >>> +
-> >>> +  interrupt-names:
-> >>> +    minItems: 1
-> >>> +    items:
-> >>> +      - const: busy
-> >>> +      - const: alert
-> >>> +    
-> >>
-> >> Since the interrupt can come from two different pins, it seems like we would
-> >> need an extra property to specify this. Is there a standard way to do this?
-> >>
-> >> Otherwise I will add something like:
-> >>
-> >> adi,busy-on-gp3:
-> >>   $ref: /schemas/types.yaml#/definitions/flag
-> >>   description:
-> >>     When present, the busy interrupt is coming from the GP3 pin, otherwise
-> >>     the interrupt is coming from the BSY_ALT_GP0 pin.
-> >>    
-> >> adi,alert-on-gp2:
-> >>   $ref: /schemas/types.yaml#/definitions/flag
-> >>   description:
-> >>     When present, the alert interrupt is coming from the GP2 pin, otherwise
-> >>     the interrupt is coming from the BSY_ALT_GP0 pin.  
-> > Cut and paste?  Or it ends up on the same pin as the bsy? In which case that's
-> > a single interrupt and it's up to software to decide how to use. I'll guess
-> > it comes on GP1?  
-> 
-> This is not a typo. The BSY_ALT_GP0 is a multi-purpose pin. The actual function
-> of the pin isn't selected explicitly, but rather there is an order of priority
-> (Table 25 in the datasheet).
-> 
-> Also, there are two packages the chip can come in, LFCSP and WLCSP. The former
-> only has GP0 and not GP1/2/3.
-> 
-> My thinking was that if both interrupts are provided in the DT and neither
-> adi,busy-on-gp3 or adi,alert-on-gp2 is given, then the driver would use
-> a shared interrupt and only allow enabling one function alert or busy
-> at a time.
+Ethtool can already retrieve information from a transceiver module
+EEPROM by invoking the ethtool_ops::get_module_eeprom_by_page operation.
+Add a corresponding operation that allows ethtool to write to a
+transceiver module EEPROM.
 
-Avoid the custom parameters They are not needed as software gets to decide
-how these pins are used (if I read you description correctly)
+The new write operation is purely an in-kernel API and is not exposed to
+user space.
 
-Do it as 3 interrupts of which an combination could be supplied and the
-driver gets to figure out what to use them for.
+The purpose of this operation is not to enable arbitrary read / write
+access, but to allow the kernel to write to specific addresses as part
+of transceiver module firmware flashing. In the future, more
+functionality can be implemented on top of these read / write
+operations.
 
-We are describing the wiring here for the interrupts, not what the driver
-is doing with them.   So if only GP0 is provided then shared interrupt
-it is with either alert or busy.
+Adjust the comments of the 'ethtool_module_eeprom' structure as it is
+no longer used only for read access.
 
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Signed-off-by: Danielle Ratson <danieller@nvidia.com>
+Reviewed-by: Petr Machata <petrm@nvidia.com>
+---
+ include/linux/ethtool.h | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-> 
-> >>  
-> > 
-> > More interrupt names.  We shouldn't restrict someone wiring all 4 if they want
-> > to - we'll just use 2 that we choose in the driver.
-> > 
-> > interrupt-names
-> >   minItems: 1
-> >   items:
-> >     - const: busy-gp0
-> >     - const: busy-gp1
-> >     - const: alert-gp2
-> >     - cosnt: alert-gp1  
-> 
-> This would actually need to be:
-> 
-> interrupt-names
->   minItems: 1
->   items:
->     - const: busy-gp0
->     - const: busy-gp3
->     - const: alert-gp0
->     - cosnt: alert-gp2
-> 
-> Or would it need to be this since there are two possible signals on the
-> same pin rather than trying to mess with a shared interrupt?
-> (Note: if both alert and busy are enabled at the same time on GP0, we
-> will only get the alert signal and busy signal is masked).
-> 
-> interrupt-names
->   minItems: 1
->   items:
->     - const: alert-busy-gp0
->     - const: busy-gp3
->     - cosnt: alert-gp2
-
-Don't describe the mode, just the pin in this case.
-There are other cases of this but normally they are called int1, int2
-or something like that rather than gpX.  They can have weird and complex
-constraints on what is possible to signal but that's a driver problem
-not a dt one.
-
-interrupt-names:
-  minItems: 1
-  items:
-    - const: gp0
-    - const: gp3
-    - const: gp2
-
-I'm not sure I understand if there are other constraints, but if there
-are I think they are on what can be used at the same time, not what can be wired.
-
-> 
-> > 
-> > T     
-> >>  
-> >>> +
-> >>> +patternProperties:
-> >>> +  "^channel@[0-9a-f]$":
-> >>> +    type: object
-> >>> +    $ref: adc.yaml
-> >>> +    unevaluatedProperties: false
-> >>> +    description:
-> >>> +      Describes each individual channel. In addition the properties defined
-> >>> +      below, bipolar from adc.yaml is also supported.
-> >>> +
-> >>> +    properties:
-> >>> +      reg:
-> >>> +        maximum: 15
-> >>> +
-> >>> +      diff-channels:
-> >>> +        description:
-> >>> +          Describes inputs used for differential channels. The first value must
-> >>> +          be an even numbered input and the second value must be the next
-> >>> +          consecutive odd numbered input.
-> >>> +        items:
-> >>> +          - minimum: 0
-> >>> +            maximum: 14
-> >>> +            multipleOf: 2
-> >>> +          - minimum: 1
-> >>> +            maximum: 15
-> >>> +            not:
-> >>> +              multipleOf: 2    
-> >>
-> >> After some more testing, it turns out that I misunderstood the datasheet and
-> >> this isn't actually fully differential, but rather pseudo-differential.
-> >>
-> >> So when pairing with the next pin, it is similar to pairing with the COM pin
-> >> where the negative input pin is connected to a constant voltage source.  
-> > 
-> > Ok. I'm curious, how does it actually differ from a differential channel?
-> > What was that test?  It doesn't cope with an actual differential pair and needs
-> > a stable value on the negative?  
-> 
-> In my initial testing, since I was only doing a direct read, I was using
-> constant voltages. But when I started working on buffered reads, then I
-> saw noisy data when using a fully differential (antiphase) signal.
-> 
-> This chip uses a multiplexer for channel so when an odd number pin is used
-> as the positive input (paired with REFGND or COM), it goes through one
-> multiplexer, but when an odd number pin is used as the negative input
-> it goes through the other multiplexer - the same one as REFGND and COM.
-> 
-> And burred in the middle of a paragraph on page 34 of 110 of the datasheet
-> is the only place in the entire datasheet where it actually says this is
-> a pseudo differential chip.
-
-Fair enough.  Sounds like the right test to me.  I guess
-that second mux has a slow tracking buffer or similar.
-Good work tracking this down.
-
-> 
-> >   
-> >>  
-> >>> +
-> >>> +      single-channel:
-> >>> +        minimum: 0
-> >>> +        maximum: 15
-> >>> +
-> >>> +      common-mode-channel:
-> >>> +        description:
-> >>> +          Describes the common mode channel for single channels. 0 is REFGND
-> >>> +          and 1 is COM. Macros are available for these values in
-> >>> +          dt-bindings/iio/adi,ad4695.h.
-> >>> +        minimum: 0
-> >>> +        maximum: 1
-> >>> +        default: 0    
-> >>
-> >> So I'm thinking the right thing to do here go back to using reg and the INx
-> >> number and only have common-mode-channel (no diff-channels or single-channel).
-> >>
-> >> common-mode-channel will need to be changed to allow INx numbers in addition
-> >> to COM and REFGND.
-> >>
-> >> This means that [PATCH v2 1/4] "dt-bindings: iio: adc: add common-mode-channel
-> >> dependency" would be wrong since we would be using common-mode-channel without
-> >> single-channel.
-> >>
-> >> It also means we will need an optional in1-supply: true for all odd numbered
-> >> inputs.  
-> > Ok. I'm not totally sure I see how this comes together but will wait for v3 rather
-> > than trying to figure it out now.
-> > 
-> > Jonathan
-> > 
-> >   
-> 
-> It should end up like other pseudo differential chips we have done recently.
-> I've got it worked out, so you'll be seeing it soon enough anyway.
-> 
-Cool
-
-Jonathan
-
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 6fd9107d3cc0..fa1a5d0e3213 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -504,17 +504,16 @@ struct ethtool_ts_stats {
+ #define ETH_MODULE_MAX_I2C_ADDRESS	0x7f
+ 
+ /**
+- * struct ethtool_module_eeprom - EEPROM dump from specified page
+- * @offset: Offset within the specified EEPROM page to begin read, in bytes.
+- * @length: Number of bytes to read.
+- * @page: Page number to read from.
+- * @bank: Page bank number to read from, if applicable by EEPROM spec.
++ * struct ethtool_module_eeprom - plug-in module EEPROM read / write parameters
++ * @offset: When @offset is 0-127, it is used as an address to the Lower Memory
++ *	(@page must be 0). Otherwise, it is used as an address to the
++ *	Upper Memory.
++ * @length: Number of bytes to read / write.
++ * @page: Page number.
++ * @bank: Bank number, if supported by EEPROM spec.
+  * @i2c_address: I2C address of a page. Value less than 0x7f expected. Most
+  *	EEPROMs use 0x50 or 0x51.
+  * @data: Pointer to buffer with EEPROM data of @length size.
+- *
+- * This can be used to manage pages during EEPROM dump in ethtool and pass
+- * required information to the driver.
+  */
+ struct ethtool_module_eeprom {
+ 	u32	offset;
+@@ -822,6 +821,8 @@ struct ethtool_rxfh_param {
+  * @get_module_eeprom_by_page: Get a region of plug-in module EEPROM data from
+  *	specified page. Returns a negative error code or the amount of bytes
+  *	read.
++ * @set_module_eeprom_by_page: Write to a region of plug-in module EEPROM,
++ *	from kernel space only. Returns a negative error code or zero.
+  * @get_eth_phy_stats: Query some of the IEEE 802.3 PHY statistics.
+  * @get_eth_mac_stats: Query some of the IEEE 802.3 MAC statistics.
+  * @get_eth_ctrl_stats: Query some of the IEEE 802.3 MAC Ctrl statistics.
+@@ -956,6 +957,9 @@ struct ethtool_ops {
+ 	int	(*get_module_eeprom_by_page)(struct net_device *dev,
+ 					     const struct ethtool_module_eeprom *page,
+ 					     struct netlink_ext_ack *extack);
++	int	(*set_module_eeprom_by_page)(struct net_device *dev,
++					     const struct ethtool_module_eeprom *page,
++					     struct netlink_ext_ack *extack);
+ 	void	(*get_eth_phy_stats)(struct net_device *dev,
+ 				     struct ethtool_eth_phy_stats *phy_stats);
+ 	void	(*get_eth_mac_stats)(struct net_device *dev,
+-- 
+2.45.0
 
