@@ -1,153 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1F96A347;
-	Mon, 24 Jun 2024 08:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281753F9FC;
+	Mon, 24 Jun 2024 08:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719219171; cv=none; b=oBr0nPfayxy4KOPGUogkYyGIzatR3RBvJnYY705td/t/V+/soq85nTusZQW4WgbmZUyvvNE6ZulCw8JYe0YzCqwpsMWEfUgLbJS4Dih4km/GQIqi3Pl56DAgzOUnadk8XcfxPS3svKuQZ/pPpNcUM48aJF33m6Go6LnZh+Vppk4=
+	t=1719219256; cv=none; b=pimljDXJ0dSDZP2MbtXDs67lFYZW7t9S/zoQhqPS47bCSSxy7OEPgXLpIw12GSVZLNFLqgfuSsVLu/c5v3lIvi9OTqUtWgNA/7AW3T+zT0V6a8O020kFiDCBeX5YH2HC2cGeO+tZspyZabytjmXCpfanXHFhzlJHXX6ZdluF+RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719219171; c=relaxed/simple;
-	bh=Jz2YPX0sMcFcT9gDrGUv+vNcyE/fgQCLh5AW7ZHQyYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DCfMz14qFLiWagLAjd37nTFxWzAD0Wqs/mhyA8s+XlYV7JeKzygzf9dYP35hEakd0lXfmfFaz6SMhOnj4YZlq/fPyACNsl+3t1z/fUFUhi45piH8LC4ozsl/9FH3JM6tDs7wNqzwn6sDEMpMaU4XpaGe0yAUxtsu3YE0tFmYd7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBOI14/o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719219256; c=relaxed/simple;
+	bh=ocOc6W3nfjA+v3b4b9fjy6xI5w/ljliH+Jjzy0nLkVM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=np2a4wCe5F2mgtmPsNxRRyMhh39WI9A4CHp6sawlmnvyzK2Qdzj1ABWX+Uz6JRlKXYEwUHYK4dtULmolkIH9YB7Q0P9NE66GaLJjEDwdkZIHg0JSKPUC7WZbjNcMxgcxTYb7fTw4l/yoj9xgTfCzunDQfaw/eBNqyW0LJcS2Tjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=AfhLmru7; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBOI14/o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A6A0C2BBFC;
-	Mon, 24 Jun 2024 08:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719219170;
-	bh=Jz2YPX0sMcFcT9gDrGUv+vNcyE/fgQCLh5AW7ZHQyYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YBOI14/oYPx8q48kf6Xxu1uDVeHExkrJB9bxubtil/4hi6VDo/3eSS814m7EqKNuE
-	 sAUGs9lNICAvuXWfcvd6d/qGekEWhRMKG8agxKIfjzXQWtvWNZ1s6/h4OY2L/v8gLu
-	 D/JR4UifvKjfzypXKqSI0zEuKwQpxuZXvZVUCOAOmrFvfWZ2ZdERiQoxBu+ruSxnY5
-	 Ao8bm9G96rz/dEl393pZtwgv20in3w3Z+0yuUOkTfQ4gfWEWgsqM/M6NWXWeHBBLVR
-	 w7Lq+bwWcvK5homVzrnhRt1Vf7IiL7il3wycrQWaSA5ladKWDgoZe0tvBuH+6RmWJ0
-	 386WOj5EUzWhw==
-Date: Mon, 24 Jun 2024 10:52:45 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH HID 06/12] HID: bpf: add HID-BPF hooks for
- hid_hw_output_report
-Message-ID: <zjcva76d6qk5hshkyf7x6jmkahmicboei4tbxxhrrfbemxcu6v@cv2vdhjszdsf>
-References: <20240621-hid_hw_req_bpf-v1-0-d7ab8b885a0b@kernel.org>
- <20240621-hid_hw_req_bpf-v1-6-d7ab8b885a0b@kernel.org>
- <CAADnVQ+us6cQepSGWbOB4K1bb_0Wh43Cpo4zXJxB2d+SVpYinQ@mail.gmail.com>
- <dcbgoe7gija3fn5zsooulnq3jey4twwqvsxjv4yjijacnrlt2h@q6obu65ifctt>
- <CAADnVQKE6RyGUhQbTiOfa15=D9B_vtAg=VMDv8cfYrUKOv5UFQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="AfhLmru7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1719219251;
+	bh=ocOc6W3nfjA+v3b4b9fjy6xI5w/ljliH+Jjzy0nLkVM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=AfhLmru7Qv3f7wTCe3qV9sByoGRlleaLUkuQKamVOOzyqE+CiUT09S7ACn/2mj3qQ
+	 7wsXwdY6YtcSkIrxy7xro2vZXJIj0cvB7/AKUQOm5KbxKQuT7UgvocAwq0KqA8zQyP
+	 2S1MuiNHwcx0saKlRuYtkls5WvXjV4brZ8z2GWj4=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id AD8DD66C03;
+	Mon, 24 Jun 2024 04:54:05 -0400 (EDT)
+Message-ID: <220432a52aecc31dea32178bf230bb2ce262b6e9.camel@xry111.site>
+Subject: Re: [PATCH v2] vfs: Shortcut AT_EMPTY_PATH early for statx, and add
+ AT_NO_PATH for statx and fstatat
+From: Xi Ruoyao <xry111@xry111.site>
+To: Christian Brauner <brauner@kernel.org>, Alexander Viro
+	 <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Mateusz Guzik
+	 <mjguzik@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Alejandro Colomar <alx@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Huacai Chen <chenhuacai@loongson.cn>, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,  Icenowy Zheng <uwu@icenowy.me>,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 24 Jun 2024 16:54:03 +0800
+In-Reply-To: <20240624085037.33442-2-xry111@xry111.site>
+References: <20240624085037.33442-2-xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQKE6RyGUhQbTiOfa15=D9B_vtAg=VMDv8cfYrUKOv5UFQ@mail.gmail.com>
 
-On Jun 21 2024, Alexei Starovoitov wrote:
-> On Fri, Jun 21, 2024 at 9:08 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
-> >
-> > On Jun 21 2024, Alexei Starovoitov wrote:
-> > > On Fri, Jun 21, 2024 at 1:56 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
-> > > >
-> > > > Same story than hid_hw_raw_requests:
-> > > >
-> > > > This allows to intercept and prevent or change the behavior of
-> > > > hid_hw_output_report() from a bpf program.
-> > > >
-> > > > The intent is to solve a couple of use case:
-> > > >   - firewalling a HID device: a firewall can monitor who opens the hidraw
-> > > >     nodes and then prevent or allow access to write operations on that
-> > > >     hidraw node.
-> > > >   - change the behavior of a device and emulate a new HID feature request
-> > > >
-> > > > The hook is allowed to be run as sleepable so it can itself call
-> > > > hid_hw_output_report(), which allows to "convert" one feature request into
-> > > > another or even call the feature request on a different HID device on the
-> > > > same physical device.
-> > > >
-> > > > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-> > > >
-> > > > ---
-> > > >
-> > > > Here checkpatch complains about:
-> > > > WARNING: use of RCU tasks trace is incorrect outside BPF or core RCU code
-> > > >
-> > > > However, we are jumping in BPF code, so I think this is correct, but I'd
-> > > > like to have the opinion on the BPF folks.
-> > > > ---
-> > > >  drivers/hid/bpf/hid_bpf_dispatch.c   | 37 ++++++++++++++++++++++++++++++++----
-> > > >  drivers/hid/bpf/hid_bpf_struct_ops.c |  1 +
-> > > >  drivers/hid/hid-core.c               | 10 ++++++++--
-> > > >  drivers/hid/hidraw.c                 |  2 +-
-> > > >  include/linux/hid.h                  |  3 ++-
-> > > >  include/linux/hid_bpf.h              | 24 ++++++++++++++++++++++-
-> > > >  6 files changed, 68 insertions(+), 9 deletions(-)
-> > > >
-> > > > diff --git a/drivers/hid/bpf/hid_bpf_dispatch.c b/drivers/hid/bpf/hid_bpf_dispatch.c
-> > > > index 8d6e08b7c42f..2a29a0625a3b 100644
-> > > > --- a/drivers/hid/bpf/hid_bpf_dispatch.c
-> > > > +++ b/drivers/hid/bpf/hid_bpf_dispatch.c
-> > > > @@ -111,6 +111,38 @@ int dispatch_hid_bpf_raw_requests(struct hid_device *hdev,
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(dispatch_hid_bpf_raw_requests);
-> > > >
-> > > > +int dispatch_hid_bpf_output_report(struct hid_device *hdev,
-> > > > +                                  __u8 *buf, u32 size, __u64 source,
-> > > > +                                  bool from_bpf)
-> > > > +{
-> > > > +       struct hid_bpf_ctx_kern ctx_kern = {
-> > > > +               .ctx = {
-> > > > +                       .hid = hdev,
-> > > > +                       .allocated_size = size,
-> > > > +                       .size = size,
-> > > > +               },
-> > > > +               .data = buf,
-> > > > +               .from_bpf = from_bpf,
-> > > > +       };
-> > > > +       struct hid_bpf_ops *e;
-> > > > +       int ret;
-> > > > +
-> > > > +       rcu_read_lock_trace();
-> > > > +       list_for_each_entry_rcu(e, &hdev->bpf.prog_list, list) {
-> > > > +               if (e->hid_hw_output_report) {
-> > > > +                       ret = e->hid_hw_output_report(&ctx_kern.ctx, source);
-> > > > +                       if (ret)
-> > > > +                               goto out;
-> > > > +               }
-> > > > +       }
-> > > > +       ret = 0;
-> > > > +
-> > > > +out:
-> > > > +       rcu_read_unlock_trace();
-> > >
-> > > same question.
-> >
-> > re What is this for?:
-> >
-> > e->hid_hw_output_report might sleep, so using a plain rcu_read_lock()
-> > introduces warnings.
-> 
-> Ok, but just replacing rcu_read_lock() with rcu_read_lock_trace()
-> doesn't fix it.
-> rcu and rcu_tasks_trace are different.
-> If you're using call_rcu to wait for GP to free an element in that
-> list the thing will go wrong.
-> 
-> If you really need rcu life times here use srcu. It's a much better fit.
-> There will be srcu_read_lock() here, paired with call_srcu().
+On Mon, 2024-06-24 at 16:50 +0800, Xi Ruoyao wrote:
+> Seccomp sandboxes can also green light fstatat/statx(AT_NO_PATH) easier
+> than fstatat/statx(AT_EMPTY_PATH) for which the audition needs to check
+> 5434782543478254347825434782the path but seccomp BPF program cannot do th=
+at now.
 
-OK, thanks for the explanation.
+Oops "5434782543478254347825434782" is meaningless.  Not sure how it
+ended up in my commit message.  I'll remove it in v3 but now just
+waiting for comments.
 
-I'll work on this for v2
-
-Cheers,
-Benjamin
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
