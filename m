@@ -1,160 +1,114 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98547FC08;
-	Mon, 24 Jun 2024 03:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C244C96
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 03:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719198462; cv=none; b=ZDXPc6b0DFePb/q06IWOvNkkSRG8llpeDEEWSLYjhdzo6W4oW8jOxcOJH5xIpIeN8RYrrd7PBG2ra4qQEFnLoIC+5SMCNzGTYUn7PQzTZJiRtYcJqgUINAu9cGbyz1jfKaEXeqBjWtsHNiN/rNGz/cy0/qWQnNdWQh6UoE+PafI=
+	t=1719198727; cv=none; b=AXRHA9eg+MSUPTBDMSR+7szGwNCWP28eA5b81tmzQymIhwfXL1Teg3+8aXnHYu1YpReebw8uEpzBaJrSuJVkLf73n/cCWj80Qi+C2pIbFKNE2VjznmvEN3GEhih3D9XeqvvdbF5sM5dwTdjyzBjW68tO3wPLlw2ivUAVla7IMm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719198462; c=relaxed/simple;
-	bh=iDeTlKAMZTGI/rcvTWmvET1oitZnGzPi11/Cywy/X7E=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Bbosd9/+9OKLU5TjS6vj8k/S60GG8U53HxOZY4YOQ+clGIUlCyrjGbGNWlMSeyrDvjkDgB/EHDfSLSx/ig8TX6KmzOt7bgtcuTe/hoM0MJD5szqCKyECBMfXGa5jFYu2kj0Jbc+xCl0YRPkNhSsx1GnOZ/WuFygKApBhpWT6kAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MCxluoEi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MW80LOAS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HYjSw+8O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P3R3uk6X; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719198727; c=relaxed/simple;
+	bh=s5eSxh3w5ru8v9B7MPhDa91a374easaRZEOALaDA1so=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dtPdIKRK/yo+dHnpRT/31vG4j+9kal8FV9sjBXPghrcFf9Lqxraouysfa/68/GyqyxyiGSY+/HCb3bB4OmMT1WxK8s3n89VFmjqSNztw1cgQ46qWCVf12yMqh9vW1dkqsOOIWbaeqfBYri6kbyWjN50rrBtMjEPN6kK9p1XdAXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=p2rJNopE; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MCxluoEi";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MW80LOAS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HYjSw+8O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P3R3uk6X"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D1E10219E1;
-	Mon, 24 Jun 2024 03:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719198453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zhy82VCQc8NYnvf05ol+V2ksrLtovCjP3VgqR99bqBo=;
-	b=MCxluoEiDo3kRMcLY5wd0J+vjZBK9gL6AlCSKth6rLrNzydRNylmop/nq6VZHGGVHT+Ed5
-	2eRBGlasPPPXCt6TW/8Wtj7juEkzAH9ZP+4edWGqYYF7GQABkTc9eiczCDuU63KzQ9SWkQ
-	f+A4BTgOzLg82/8gvTlCVh6hF0WUfCE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719198453;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zhy82VCQc8NYnvf05ol+V2ksrLtovCjP3VgqR99bqBo=;
-	b=MW80LOASf/G8s/D9ifiBmsuTjC3QLa8pCAIhSE6Zs714oZ55eh+cCYDlEJY+7xr/xRWliq
-	5AltQiJmR8tkDgCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719198452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zhy82VCQc8NYnvf05ol+V2ksrLtovCjP3VgqR99bqBo=;
-	b=HYjSw+8Ogh0laWZGrCR4xzYY045DpfD6AYoVaHYXOjGPcuRYcF0l5yuNn5iX1pHsoCqlAI
-	MesFQuusZxQ2iXha/qeb3pg6o/JztClmBMOQl+/DHehlrTOtKkEGQWWZRJYqbpSMOLkzoV
-	r5Z5RVEOOT2s04/zl+i7b9V7KIwbvh0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719198452;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zhy82VCQc8NYnvf05ol+V2ksrLtovCjP3VgqR99bqBo=;
-	b=P3R3uk6X0WrlWbNlf5OI9HQ1WTJ3FNLIcNwLbMxsaEEba64nZt8a/I386pVBDt3nIP0L2F
-	Wim5x9SW2g0yWcAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A290C13ACD;
-	Mon, 24 Jun 2024 03:07:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xxJPEe7ieGbILwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 24 Jun 2024 03:07:26 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="p2rJNopE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1719198722; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=h/k/C2qs1pKcv+sRC2nv2zMOr9MwmxizBcFEz86gVOo=;
+	b=p2rJNopEd7iWvJly9K0f5VwSwixke9OHgrAbWTVrPH8EZkR9sUtt5KEeqKMLDgcA2U4YI+UgDvGWI4qkYDXSKD+kd0pmZvjHP0AR3pHbmYhl5oU6U6NYwfJV7mIVqy03vey+QnWpG6ErHvZjdAKhJEC+5usIAZxjscPdkjuAUCI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W916qKp_1719198719;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W916qKp_1719198719)
+          by smtp.aliyun-inc.com;
+          Mon, 24 Jun 2024 11:12:02 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: harry.wentland@amd.com
+Cc: sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] drm/amd/display: Use ARRAY_SIZE for array length
+Date: Mon, 24 Jun 2024 11:11:58 +0800
+Message-Id: <20240624031158.98502-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Ma Ke" <make24@iscas.ac.cn>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
- Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org, anna@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Ma Ke" <make24@iscas.ac.cn>
-Subject: Re: [PATCH] SUNRPC: check mlen in ip_map_parse()
-In-reply-to: <20240624023118.2268917-1-make24@iscas.ac.cn>
-References: <20240624023118.2268917-1-make24@iscas.ac.cn>
-Date: Mon, 24 Jun 2024 13:07:17 +1000
-Message-id: <171919843728.14261.13994470964681717916@noble.neil.brown.name>
-X-Spamd-Result: default: False [-4.26 / 50.00];
-	BAYES_HAM(-2.96)[99.81%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -4.26
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Jun 2024, Ma Ke wrote:
-> We should check the parameter mlen before using 'mlen - 1'
-> expression for the 'mesg' array index.
+Use of macro ARRAY_SIZE to calculate array size minimizes
+the redundant code and improves code reusability.
 
-There is no need.  This function is only called from cache_do_downcall()
-and that function already checks for zero.
+./drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c:164:45-46: WARNING: Use ARRAY_SIZE.
+./drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c:183:47-48: WARNING: Use ARRAY_SIZE.
+./drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c:237:45-46: WARNING: Use ARRAY_SIZE.
+./drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c:257:47-48: WARNING: Use ARRAY_SIZE.
 
-That function is only called from cache_downcall() which checks the
-size_t count is not >= 32768 so the fact that it is cast to an int for
-the ->cache_parse function cannot cause and overflow.
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9405
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-I wouldn't object to ->cache_parse() and qword_get() and maybe others
-having their len parameter changed from int to size_t.  
-But adding this extra test on mlen add no value.
-
-Thanks,
-NeilBrown
-
-
-> 
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->  net/sunrpc/svcauth_unix.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-> index 04b45588ae6f..816bf56597dd 100644
-> --- a/net/sunrpc/svcauth_unix.c
-> +++ b/net/sunrpc/svcauth_unix.c
-> @@ -196,7 +196,7 @@ static int ip_map_parse(struct cache_detail *cd,
->  	struct auth_domain *dom;
->  	time64_t expiry;
->  
-> -	if (mesg[mlen-1] != '\n')
-> +	if (mlen && mesg[mlen - 1] != '\n')
->  		return -EINVAL;
->  	mesg[mlen-1] = 0;
->  
-> -- 
-> 2.25.1
-> 
-> 
+diff --git a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c
+index 1b2df97226a3..7ecf76aea950 100644
+--- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c
++++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c
+@@ -161,8 +161,7 @@ static enum mod_hdcp_status read(struct mod_hdcp *hdcp,
+ 		return MOD_HDCP_STATUS_DDC_FAILURE;
+ 
+ 	if (is_dp_hdcp(hdcp)) {
+-		int num_dpcd_addrs = sizeof(hdcp_dpcd_addrs) /
+-			sizeof(hdcp_dpcd_addrs[0]);
++		int num_dpcd_addrs = ARRAY_SIZE(hdcp_dpcd_addrs);
+ 		if (msg_id >= num_dpcd_addrs)
+ 			return MOD_HDCP_STATUS_DDC_FAILURE;
+ 
+@@ -180,8 +179,7 @@ static enum mod_hdcp_status read(struct mod_hdcp *hdcp,
+ 			data_offset += cur_size;
+ 		}
+ 	} else {
+-		int num_i2c_offsets = sizeof(hdcp_i2c_offsets) /
+-			sizeof(hdcp_i2c_offsets[0]);
++		int num_i2c_offsets = ARRAY_SIZE(hdcp_i2c_offsets);
+ 		if (msg_id >= num_i2c_offsets)
+ 			return MOD_HDCP_STATUS_DDC_FAILURE;
+ 
+@@ -234,8 +232,7 @@ static enum mod_hdcp_status write(struct mod_hdcp *hdcp,
+ 		return MOD_HDCP_STATUS_DDC_FAILURE;
+ 
+ 	if (is_dp_hdcp(hdcp)) {
+-		int num_dpcd_addrs = sizeof(hdcp_dpcd_addrs) /
+-			sizeof(hdcp_dpcd_addrs[0]);
++		int num_dpcd_addrs = ARRAY_SIZE(hdcp_dpcd_addrs);
+ 		if (msg_id >= num_dpcd_addrs)
+ 			return MOD_HDCP_STATUS_DDC_FAILURE;
+ 
+@@ -254,8 +251,7 @@ static enum mod_hdcp_status write(struct mod_hdcp *hdcp,
+ 			data_offset += cur_size;
+ 		}
+ 	} else {
+-		int num_i2c_offsets = sizeof(hdcp_i2c_offsets) /
+-			sizeof(hdcp_i2c_offsets[0]);
++		int num_i2c_offsets = ARRAY_SIZE(hdcp_i2c_offsets);
+ 		if (msg_id >= num_i2c_offsets)
+ 			return MOD_HDCP_STATUS_DDC_FAILURE;
+ 
+-- 
+2.20.1.7.g153144c
 
