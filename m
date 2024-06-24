@@ -1,67 +1,115 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (smtp-83.smtpout.orange.fr [80.12.242.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52D322313;
-	Mon, 24 Jun 2024 19:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEDF22313;
+	Mon, 24 Jun 2024 19:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719259048; cv=none; b=kdmM3DO8sSGZ0hcX7xFO16EnbWdtxZ6sAD7V7Mc4PIrANOpaAjcPU1FoC0q1NQ5a3FfmYNqiLYBLRnSYvPBc/+Jkfs3eS9Bk8+mqqw9grjK7bsV91u0uUAKUO3LHsEGtlvohYYcu7TzCuDnT/AxSqxVttgardQvTucDvYorW48I=
+	t=1719259191; cv=none; b=uiWo68J3BtipzZDE19PHSoTt0aSz9eT03Dmfa711E8qSH89yABVZmxrsE8ys9BwGpAsJVYDsOa+q5dOIM2voq4qrSSeVQqDw4/qKrGeoYHl8DhxQUxUXHO5xi+LOhhQnLrAUbbw+g8UO8g+iZjKUQJX6b3IYrXHWBxodxfWNd7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719259048; c=relaxed/simple;
-	bh=upgGjOgKxNvCRyAmYv5Ll2icNt+vDymQ3iTZeWE0qCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQOhwnElrGNpVh5jDw37mpc4SLuXDuFQzvNI66zXmmYnzzNzI3jvU6iwJ8FZQgYfBZNpb1cxvto5kKKdWxgYhMlT0847MO4JvP1Ywv4kT5p30SQRIEblPjd8rz47nZShVLydv4XpK09gA5yFCiZIOBbSBywuo4FWHBsyd5NHgFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5DhZ1MDG; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1719259191; c=relaxed/simple;
+	bh=vCqRmHL7cYxTlVI258Ronb2EAVfusmQTE3q/msKfOU0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mjwl3YKS/Yw3NTNTW/GYKwCR+FL0RNLqsupMtWbiW/uxTS5/d7cJ9d745rgKkw+DQhizPAheNEdSbwnD91rc7q4Fa/As9m6QhtQ/IhnVLGSZ/ORyBzPVG2EIBRkqrOGrJfPZ3c9DfZhGWo4uhu7hrBcHCB8Xpcd8nEQuw62rdb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=aqhg+JBN; arc=none smtp.client-ip=80.12.242.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5DhZ1MDG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Fb9cS9ErNodhZemY9huqhVErgGUP15fGMqWGrjz00UU=; b=5DhZ1MDGxSB6931aB2nA7spgfc
-	2G5SGizTpjCq8PmWtUoBDXwfmClahP1kr9XuVKhbPEnAogJFv0fWYytLI+1p2+zGKZLODMfiqKz6V
-	alwTrC2R01moO7XJ7x/YWyMTzFs/uHJffkJbwR678aLjARxVcrrAydHXJ8SnOtC9fgMk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sLpoN-000sl4-Tj; Mon, 24 Jun 2024 21:57:11 +0200
-Date: Mon, 24 Jun 2024 21:57:11 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Danielle Ratson <danieller@nvidia.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
-	linux@armlinux.org.uk, sdf@google.com, kory.maincent@bootlin.com,
-	maxime.chevallier@bootlin.com, vladimir.oltean@nxp.com,
-	przemyslaw.kitszel@intel.com, ahmed.zaki@intel.com,
-	richardcochran@gmail.com, shayagr@amazon.com,
-	paul.greenwalt@intel.com, jiri@resnulli.us,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mlxsw@nvidia.com, idosch@nvidia.com, petrm@nvidia.com
-Subject: Re: [PATCH net-next v7 8/9] ethtool: cmis_fw_update: add a layer for
- supporting firmware update using CDB
-Message-ID: <34a8b5b8-75ac-45b4-85d4-6b38aadf880c@lunn.ch>
-References: <20240624175201.130522-1-danieller@nvidia.com>
- <20240624175201.130522-9-danieller@nvidia.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="aqhg+JBN"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id Lpqrsf3K7qnVgLpqrsXGhT; Mon, 24 Jun 2024 21:59:46 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1719259186;
+	bh=PKvXmWL5ia+tMLrsPCdtaw8yQlKmPVzcIZ50EnxNumY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=aqhg+JBNDULyFJdYyzAawWk2UelUDJ7vZGWcpuDed6f1j963n0r7rQGpxDOc0LNuJ
+	 x0kQoBY+wTeKvUkka2MrNEKIX4sRKiMdhnLL+4YhyQMgduhDZgD7+5Xjrie5kO0TuX
+	 zHn41oG70Ybt0Aev6DzSLEsisnJ1KTkuyb32VplrZkyZvKHdFK1OeaqOvjrLsB+B6K
+	 0LgOjHSyE45ZLum68oKQtxu+5QN7jb2NLlH00Gml6LW3MqcMUbetckwGd6HJy0afQa
+	 yRHkQyunEGbdyuGXr4WzyxKmp3xsixlNpr+TyKxs5LxpHS6CTWZKKaL8mevX/vDqAS
+	 g+3HZ35IODryA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 24 Jun 2024 21:59:46 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Helge Deller <deller@gmx.de>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH] fbdev: mmp: Constify struct mmp_overlay_ops
+Date: Mon, 24 Jun 2024 21:59:42 +0200
+Message-ID: <c5c1a26fdbf0895d1b17010f1c2da44b18b4ae55.1719259171.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624175201.130522-9-danieller@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-> +static int cmis_fw_update_reset(struct net_device *dev)
-> +{
-> +	__u32 reset_data = ETH_RESET_PHY;
-> +
-> +	return dev->ethtool_ops->reset(dev, &reset_data);
+'struct mmp_overlay_ops' is not modified in this driver.
 
-Is there a test somewhere that this op is actually implemented?
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
-Maybe the next patch.
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  11798	    555	     16	  12369	   3051	drivers/video/fbdev/mmp/hw/mmp_ctrl.o
 
-      Andrew
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  11834	    507	     16	  12357	   3045	drivers/video/fbdev/mmp/hw/mmp_ctrl.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only
+---
+ drivers/video/fbdev/mmp/hw/mmp_ctrl.c | 2 +-
+ include/video/mmp_disp.h              | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+index 76b50b6c98ad..a20a2c408127 100644
+--- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
++++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+@@ -313,7 +313,7 @@ static void path_set_mode(struct mmp_path *path, struct mmp_mode *mode)
+ 	mutex_unlock(&path->access_ok);
+ }
+ 
+-static struct mmp_overlay_ops mmphw_overlay_ops = {
++static const struct mmp_overlay_ops mmphw_overlay_ops = {
+ 	.set_fetch = overlay_set_fetch,
+ 	.set_onoff = overlay_set_onoff,
+ 	.set_win = overlay_set_win,
+diff --git a/include/video/mmp_disp.h b/include/video/mmp_disp.h
+index a722dcbf5073..41354bd49895 100644
+--- a/include/video/mmp_disp.h
++++ b/include/video/mmp_disp.h
+@@ -156,7 +156,7 @@ struct mmp_overlay {
+ 	int status;
+ 	struct mutex access_ok;
+ 
+-	struct mmp_overlay_ops *ops;
++	const struct mmp_overlay_ops *ops;
+ };
+ 
+ /* panel type */
+@@ -299,7 +299,7 @@ struct mmp_path_info {
+ 	int overlay_num;
+ 	void (*set_mode)(struct mmp_path *path, struct mmp_mode *mode);
+ 	void (*set_onoff)(struct mmp_path *path, int status);
+-	struct mmp_overlay_ops *overlay_ops;
++	const struct mmp_overlay_ops *overlay_ops;
+ 	void *plat_data;
+ };
+ 
+-- 
+2.45.2
+
