@@ -1,145 +1,83 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8351224D1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F9622067
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719210009; cv=none; b=KkRen7uDdb0RzK2hXgCrKjjCKvvq89M8tI+1e/xIEc734W4Xp95cm4PNUc2tOW5FPahUaty2az4GuJHi7ZPPVad92g0JRr2cYdcrmujUoka+6iq5vhy2bhB5Qv1tABGYC7XRLwntbTf4tbrOpWJYKG7mJUHBBbHO1pGGvReXRcg=
+	t=1719210063; cv=none; b=gUdj5fJrsd0ds90mBtKqL4AsRbtqetJOZK6vdH+2/qD5qG39RafUeRa0Bs9ypiMq/0G1e6K5x1MIKBwNcRYVyqonJFZjChWwPuI5/4iQJanxIA/S3xIfA0R6BZH172HUY9Y1vUWql5os85ZJZhXuwm+7QLg0NqnHXSc2of2KbH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719210009; c=relaxed/simple;
-	bh=dc114DBr0hp3/V/MvPnKV+46r+FSgtDxvicsYQlctL8=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=MFQvHTCjl2VTFvM54hEFjiS/leKXcq0EEqp+PGIDsO5ZYi+idbIGOijgUFFmEoH0tXrAH63+t5z0S2EHGZt8jFG7LzhmVMklq4+bOH/TgVNyZRSdVQhjhHDK8YELvoYUcz+sQ/n38qYNbWk4f799c8vTIo+0+zGEDwzbvJniOf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZWWBXKgz; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1719210063; c=relaxed/simple;
+	bh=GBpWOXMsKL3GYxAb3Orjzf76eSvZ0XMeiMBTBZX3MI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mucTIXWlqcUmoabGsa0BovgK/e6DZF+rA6V3mmnRR9QExDvgd4F4KoWkm0yIlbw5yg0U5pr4c7xpg9Lgf+cRgaaI6zK19XBFq1smgRYkak5BZmGE7lhcyJ9muYH2a5uuXADRvuRPjHzh5BPBgnHiAyPg0OY7upP6PLW3wYFdOFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=J+N1DK0J; arc=none smtp.client-ip=185.136.65.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZWWBXKgz"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240624061959euoutp01814befc302731b0937be7ede527903f2~b3GLHOhQA1372213722euoutp01Y
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:19:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240624061959euoutp01814befc302731b0937be7ede527903f2~b3GLHOhQA1372213722euoutp01Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1719209999;
-	bh=PkrcwCTjaVnaGseSmaW6RB9ORmAgpdfIlDVHsVALsl8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ZWWBXKgzDufnFxqeP2Xr7FVPqbEMZCNKi8x7fU8oVG3AtDa02hw4vUShdwIA7/oTb
-	 fTTW6uZ89ZbASCTBWS5/jW0JlaN7+LhPq27GUW+inIRC0fr+LVS9wJHtHF7LuBT3OZ
-	 kqa4JBRQydnOLS/cFXon8kKa3uBs5YENHOZ8L9z4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240624061959eucas1p210874972e0651e08ead73d6b8494e75a~b3GLCbWuZ1452814528eucas1p2r;
-	Mon, 24 Jun 2024 06:19:59 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id D0.5B.09875.F0019766; Mon, 24
-	Jun 2024 07:19:59 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240624061959eucas1p2d7fe7d5a4b68fc349ce134504c76e8b1~b3GKx6Woz2046420464eucas1p2t;
-	Mon, 24 Jun 2024 06:19:59 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240624061959eusmtrp1de03f85c2da0765d25e57bb2436fcc21~b3GKxWbA82621926219eusmtrp1c;
-	Mon, 24 Jun 2024 06:19:59 +0000 (GMT)
-X-AuditID: cbfec7f4-11bff70000002693-55-6679100f67d4
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 48.FE.08810.F0019766; Mon, 24
-	Jun 2024 07:19:59 +0100 (BST)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240624061958eusmtip1542965ea45b4bdeef07ab2aae643611e~b3GKi9IK72380423804eusmtip19;
-	Mon, 24 Jun 2024 06:19:58 +0000 (GMT)
-Received: from localhost (106.110.32.44) by CAMSVWEXC01.scsc.local
-	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Mon, 24 Jun 2024 07:19:58 +0100
-Date: Fri, 21 Jun 2024 12:18:24 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Doug Anderson <dianders@chromium.org>
-CC: Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham
-	<kbingham@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: scripts/gdb: bring the "abspath" back
-Message-ID: <20240621101824.bzuupiqctfoeyqfh@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="J+N1DK0J"
+Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 2024062406205364d4b81c55c7bf89d4
+        for <linux-kernel@vger.kernel.org>;
+        Mon, 24 Jun 2024 08:20:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=jan.kiszka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=HX3rEphaegaz4eT+TeSVcevgXPEnRQToTXmTZCSA234=;
+ b=J+N1DK0JJeqEzorZgZTlNZXwKsX3KOhLUSnOWtz2coIFg+5ZdfjB0uG9lsqAOqRyVAhW4r
+ Y+VIs0B/2oxmhOlhIWaQvq4I8ERuIVQmU452Y2sKUCaGAwNyh9nLW31eH+nLyTn7AIaPa334
+ TCVJ3p9Lb8kGFEEUl+lI2LfR1N+ak=;
+From: Jan Kiszka <jan.kiszka@siemens.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Bao Cheng Su <baocheng.su@siemens.com>,
+	Diogo Ivo <diogo.ivo@siemens.com>
+Subject: [PATCH 4/4] arm64: dts: ti: k3-am65-main: add system controller compatible
+Date: Mon, 24 Jun 2024 08:20:50 +0200
+Message-ID: <919937773a001233b65fd1bac13370d410c43384.1719210050.git.jan.kiszka@siemens.com>
+In-Reply-To: <cover.1719210050.git.jan.kiszka@siemens.com>
+References: <cover.1719210050.git.jan.kiszka@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=U3=d91J+Jw50=xKexhyKYjUQQ_WXQ_UdOTZeou4_=n3A@mail.gmail.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduznOV1+gco0g1PvJC3OLjvIZnHv5k1m
-	i1Pdm5ksLu+aw2bx8MENVgdWj9kNF1k8Nq3qZPPYfnISk8fnTXIBLFFcNimpOZllqUX6dglc
-	GX9fT2MteMlecXv/D+YGxgVsXYycHBICJhI7pk5j72Lk4hASWMEo8WD1N0YI5wujxPmlL6Ey
-	nxklrl79xATT8vbLT6iq5YwSq+c/ZISr2rjhDRuEs5lR4uKhn0D9HBwsAqoS29qiQLrZBHQk
-	zr+5wwxiiwhoSjxreMkMUs8sMJNR4vnHNrCEsICTxJUnKxhBbF4BB4kJe+eyQ9iCEidnPmEB
-	mckM1Lx+lz6EKS2x/B8HSAWzgLxE89bZYFM4BQIlbh++zAJxtKLE18X3oOxaibXHzoB9JiFw
-	h0Pi9YVfrBAJF4nzs2AahCVeHd/CDmHLSJye3MMC0TCZUWL/vw9Q3asZJZY1foWGi7VEy5Un
-	UB2OEjvWPmcFuU5CgE/ixltBiOv4JCZtm84MEeaV6GgTmsCoMgvJZ7MQPpuF8NksJJ8tYGRZ
-	xSieWlqcm55abJSXWq5XnJhbXJqXrpecn7uJEZhmTv87/mUH4/JXH/UOMTJxMB5ilOBgVhLh
-	nV5flibEm5JYWZValB9fVJqTWnyIUZqDRUmcVzVFPlVIID2xJDU7NbUgtQgmy8TBKdXA5JPt
-	UzDhwAqNiU8vrV0eckSQe/cm1cAF/4rKlPY6nzx15nTpwdOvX2k7f23nlhaqPrJS5kXq6wNV
-	K4tO/D9fOXkd7/N/Uz7MuVx/JGzZ5wuZXJ495+4Xz990bIJgp+PT/niNdx8eGoRdfynIILJS
-	1zDk699nBr0vz0z6ILD/0Mt7TFGOD07USDNe5Lkmv0Bs87yLxwP8eLmto/qcv+vfbvLglD4l
-	Yr8o/PmcS6/XB68/m12p+DatpGDqvd8ma+vDSn493sS0/Z2Aj+6cjf7X83orb55fcTuZM+D1
-	i4CvpWpfH6/TXt/7KSZkVvxZ9noG3pW/K8+Xzs1g0eg/c+Tln/c8ynJe3TN3HGhq/WJw+cJ9
-	JZbijERDLeai4kQAFGbVE6IDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xu7r8ApVpBvt6WC3OLjvIZnHv5k1m
-	i1Pdm5ksLu+aw2bx8MENVgdWj9kNF1k8Nq3qZPPYfnISk8fnTXIBLFF6NkX5pSWpChn5xSW2
-	StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GX9fT2MteMlecXv/D+YGxgVs
-	XYycHBICJhJvv/xk7GLk4hASWMoo8enTd6iEjMTGL1dZIWxhiT/Xutggij4ySsy6c4IdwtnM
-	KNF15QlTFyMHB4uAqsS2tiiQBjYBHYnzb+4wg9giApoSzxpeMoPUMwtMZ5T49ncBWEJYwEni
-	ypMVjCA2r4CDxIS9c6GGPmeUmNp6jAkiIShxcuYTFpAFzECT1u/ShzClJZb/4wCpYBaQl2je
-	OhtsJKdAoMTtw5dZII5WlPi6+B6UXSvx6v5uxgmMIrOQDJ2FMHQWwtBZSIYuYGRZxSiSWlqc
-	m55bbKhXnJhbXJqXrpecn7uJERiD24793LyDcd6rj3qHGJk4GA8xSnAwK4nwTq8vSxPiTUms
-	rEotyo8vKs1JLT7EaAoMoInMUqLJ+cAkkFcSb2hmYGpoYmZpYGppZqwkzutZ0JEoJJCeWJKa
-	nZpakFoE08fEwSnVwLTluydrzsZ2Gw3N+y1SMrwVBr2163cd/hbwy2jmyc6wgKMsMrMyYmwX
-	86tFlX8Ve5HsGfOt2zdv5TSr24qe9R7m6dO5tHfVvZGfdZ/ByKvw0sKDYpXbDD7+CrvrbXmW
-	ZdY/l939Ene0j9bNuHz07JXgvMVHb4uXV8qXr10tVqZqxLL0VIH3lU1OvAznM+st3opysqzp
-	CK74JrOLe4kn1/roc/9suS2/nVzRqaARs8Lk6AauczZbpz04l/e6tf5NS5z07k2Va3+9dDXT
-	fCln9dDr4KealGbBn2xhusw3zBfWLFHie2T1eX+I1UQP/gWX1z2awminuqRj6qPi2pv+Dv2B
-	CvapEZrCyx8x3py2RYmlOCPRUIu5qDgRAAtMr6NKAwAA
-X-CMS-MailID: 20240624061959eucas1p2d7fe7d5a4b68fc349ce134504c76e8b1
-X-Msg-Generator: CA
-X-RootMTR: 20240620215200eucas1p1ec09426a22ba26b3ce5ee0a949ad3c9f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240620215200eucas1p1ec09426a22ba26b3ce5ee0a949ad3c9f
-References: <20240620-jag-fix_gdb_py_symlinks-v1-1-36a0f0217fbf@samsung.com>
-	<CGME20240620215200eucas1p1ec09426a22ba26b3ce5ee0a949ad3c9f@eucas1p1.samsung.com>
-	<CAD=FV=U3=d91J+Jw50=xKexhyKYjUQQ_WXQ_UdOTZeou4_=n3A@mail.gmail.com>
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-294854:519-21489:flowmailer
 
-On Thu, Jun 20, 2024 at 02:51:41PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Jun 20, 2024 at 12:48 PM Joel Granados via B4 Relay
-> <devnull+j.granados.samsung.com@kernel.org> wrote:
-> >
-> > From: Joel Granados <j.granados@samsung.com>
-> >
-> > Use the "abspath" call when symlinking the gdb python scripts in
-> > scripts/gdb/linux. This call is needed to avoid broken links when
-> > running the scripts_gdb target on a different build directory
-> > (O=builddir).
-> >
-> > Fixes: 659bbf7e1b08 ("kbuild: scripts/gdb: Replace missed $(srctree)/$(src) w/ $(src)")
-> > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > ---
-> >  scripts/gdb/linux/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Ah, good call. Yeah, this makes sense to me and also seems to produce
-> reasonable symlinks. Sorry for not coming up with this originally.
-No worries. Please tell me if you need me to do something else to
-upstream this 
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-Best
+Now that the TI K3 AM654 system controller bindings also cover the usage
+in the main domain, add its compatible to address dtbs_check complaints:
 
+  k3-am654-base-board.dtb: scm-conf@100000: compatible: ['syscon', 'simple-mfd'] is too short
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 30c514e458a3..fe90e84c34fc 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -471,7 +471,7 @@ sdhci1: mmc@4fa0000 {
+ 	};
+ 
+ 	scm_conf: scm-conf@100000 {
+-		compatible = "syscon", "simple-mfd";
++		compatible = "ti,am654-system-controller", "syscon", "simple-mfd";
+ 		reg = <0 0x00100000 0 0x1c000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
+2.43.0
 
-Joel Granados
