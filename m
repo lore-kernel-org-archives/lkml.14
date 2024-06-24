@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A2E13B5A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68C313B58D;
 	Mon, 24 Jun 2024 12:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719231235; cv=none; b=YyikkLvVfg4VFrCosBPzc9ShCk8cZdZgzOpljH91KlGO6BQffQsHCwLrrkj9sVDjDZ2sWZa2OyWwMH9FT9fzNCptFYA5B0e4KV64/RDTknNBA0LFJ3ySI/1p7uHikv/XI4/eKYPVM2Q2w8KtQG+OM0hF4+o6wg5TVfEMt3j2x+I=
+	t=1719231235; cv=none; b=B81KsLLRLod5fq/KSwELeUDMBxZDOGVZ/oJSJlKUP7IL1gjdX9mpLiBDQAbCcxP5eulbVinrojbQTWAI/n1s3vV+xYLtr9bVbUv+E9Wj9T27pTwJZxUETODU98n0rM3/pQ2qMpgIWGl3Yey7nryC+9OQ8Ft5Vw3O7oxxl1z5Jdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719231235; c=relaxed/simple;
-	bh=82brtYM7j12B8u7W2GcHMM+CZ57ivQ2zfZ4Z0iv8Tyw=;
+	bh=Hq24+yupkIz7CY1dz0spzH1e85Jg94Lx+nmtEjb7BDo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GMBgszDoZZdadkEbtWekzE8vjXHoA2Ai7NqhT7KSSMjGROynqQOF5ysjABxxWqTI/8VGYCJbkvFQLFh4onaQz98kGTBWEn69tmTC8/XpAzFfZoY4sl6KL0iSMhvYcBAIMhXAWxN5g1fu+UZsVeWvLciD+mb7EJvInJgEyLIRPmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtCIfn4g; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=c8ESMMv4pXWru4MEXU8zaCiV73fV8Tr0xTLjndCQjsU6pfRudcPWPmYZdystDRRgGfcu1H1XQKGq54VaCAq0V7uvxpAWtbaLspPh2Aifxt+D2tWg8MboLiUyiMSs6Qiy3b9GFJpU2EpzrMuvYNISv1Nt/UmUW4gZ5hBc5FkZGTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3sUbGUL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtCIfn4g"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 94F25C4AF17;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3sUbGUL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 77DBFC32782;
 	Mon, 24 Jun 2024 12:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1719231235;
-	bh=82brtYM7j12B8u7W2GcHMM+CZ57ivQ2zfZ4Z0iv8Tyw=;
+	bh=Hq24+yupkIz7CY1dz0spzH1e85Jg94Lx+nmtEjb7BDo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KtCIfn4gCyrLI+dL8GU6utsf+lnLwBpfNmd48u32yV5vczFQdabV7tRLZ5/ol4xbG
-	 wge7YZXL0Y+EY/dz+9y5o51RqoGAGRO8/Apa4d9+4tILnIqwCJif1IPTUrw1JDatFM
-	 1JIJJFeh1OWMWkqMhB0DzWucqwJGSp9rXKa3ZZ2OKOO+wrRZHttirfAF83899s7lIl
-	 sKEBdaEm/TD31Oq5fIip6VT6qmnHkS04jHg4RlphD+DZVgYGnO94XXnwFqpGCxM1MN
-	 BVpjLMaeRjPVAsiACfYX4DS+5WrSjQNpWY4yxACdxLw2mkSqyHa4AWAS6wBLgk3sek
-	 2zzf6uAFy0DtQ==
+	b=L3sUbGULbMgf18oueuZeOfzq9nzAo5Tfe3XA+rgPSOSXfDS+svaBMPfGdubmlt8t+
+	 fEAHIEi77smQmziJaxgo3POcbtivgFjWfsjCxVnDSDJ8CuH31BKhD7jj26SmfZQ02o
+	 PtuNJe+W3/kC/y/fX5xujChBZFpICR01T6X1oNDE1mJC9AuUjKNSS0HMuZuy4bStfk
+	 FAYi34Ucyuacac3FWlGG2xkTBzY7kXb2qWSJcpupNOC0ayxckYuzuLwwySr29EHJGr
+	 uNjjHaIS66KzFvsIDoeNhENDlmr354nLwIfuCh6ToeKqE+3scQWxUWy0lm292e7eqW
+	 gnCCGxQNfyLwA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89421C3064D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ED8C2D0D1;
 	Mon, 24 Jun 2024 12:13:55 +0000 (UTC)
 From: George Chan via B4 Relay <devnull+gchan9527.gmail.com@kernel.org>
-Date: Mon, 24 Jun 2024 20:13:15 +0800
-Subject: [PATCH RFT v3 4/5] media: qcom: camss: Add sc7180 resources
+Date: Mon, 24 Jun 2024 20:13:13 +0800
+Subject: [PATCH RFT v3 2/5] media: camss: csiphy-3ph: Add Gen2 v1.2.2
+ two-phase MIPI CSI-2 DPHY init
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240624-b4-sc7180-camss-v3-4-89ece6471431@gmail.com>
+Message-Id: <20240624-b4-sc7180-camss-v3-2-89ece6471431@gmail.com>
 References: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
 In-Reply-To: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
 To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
@@ -54,11 +55,11 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  George Chan <gchan9527@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719231232; l=6912;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719231232; l=7706;
  i=gchan9527@gmail.com; s=20240621; h=from:subject:message-id;
- bh=+8YENQxMt00FwdhDAnrxPsB/bJGJg/aEMbwelAZpgaE=;
- b=XNUC0ew7jgY+a/WjeGEYH7S0fevKnPNaSupLMdr6fzAf5rei1jQ8QVc6YCBHuy02cYVsMQ638
- zltz1CfqDndA3WXZShkXGbpVZlRfrX84TeAkp0qU9gv17y5BnA7+VGW
+ bh=NbmBjYKr5lRpZv7KeqzZo4iMsQiqW3p1yaxq+IYoLcg=;
+ b=hACCsWt0rsUMPeaMuxSANj5DkEPXsuoF8LaJYEdABk4f+QEJtyGRUpT3X2dXK4V1U+7Euy49w
+ 1vmhbDwAE68D8CWZxS3fVXGkcUmHrIUYb9d9GTnRZuuS9GKWPeruExm
 X-Developer-Key: i=gchan9527@gmail.com; a=ed25519;
  pk=Ac2fkTqgUBlj2sns9hRIWJTYhWHO1BsmHbdBb5UpUUY=
 X-Endpoint-Received: by B4 Relay for gchan9527@gmail.com/20240621 with
@@ -68,296 +69,190 @@ Reply-To: gchan9527@gmail.com
 
 From: George Chan <gchan9527@gmail.com>
 
-This commit describes the hardware layout for the sc7180 for the
-following hardware blocks:
+Add a PHY configuration sequence for the sc7180 which uses a Qualcomm
+Gen 2 version 1.2.2 CSI-2 PHY.
 
-- 2 x VFE
-- 1 x VFE Lite
-- 2 x CSID
-- 1 x CSID Lite
-- 4 x CSI PHY
+The PHY can be configured as two phase or three phase in C-PHY or D-PHY
+mode. This configuration supports two-phase D-PHY mode.
 
 Signed-off-by: George Chan <gchan9527@gmail.com>
 ---
- drivers/media/platform/qcom/camss/camss.c | 251 ++++++++++++++++++++++++++++++
- 1 file changed, 251 insertions(+)
+ .../platform/qcom/camss/camss-csiphy-3ph-1-0.c     | 135 +++++++++++++++++++++
+ drivers/media/platform/qcom/camss/camss.h          |   1 +
+ 2 files changed, 136 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 1f1f44f6fbb2..9ed810afc048 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -834,6 +834,244 @@ static const struct camss_subdev_resources vfe_res_845[] = {
- 	}
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+index df7e93a5a4f6..e2dd9b23f857 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+@@ -348,6 +348,136 @@ csiphy_reg_t lane_regs_sm8250[5][20] = {
+ 	},
  };
  
-+static const struct camss_subdev_resources csiphy_res_7180[] = {
-+	/* CSIPHY0 */
++/* GEN2 1.2.2 2PH */
++struct
++csiphy_reg_t lane_regs_sc7180[5][23] = {
 +	{
-+		.regulators = {},
-+		.clock = {
-+			"csiphy0",
-+			 "csiphy0_timer"
-+		},
-+		.clock_rate = {
-+			{ 150000000, 270000000, 360000000 },
-+			{ 300000000 },
-+		},
-+		.reg = { "csiphy0" },
-+		.interrupt = { "csiphy0" },
-+		.csiphy = {
-+			.hw_ops = &csiphy_ops_3ph_1_0,
-+			.formats = &csiphy_formats_sdm845
-+		}
++		{0x0030, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0904, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0910, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0900, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0908, 0x06, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0904, 0x07, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x002c, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0034, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0010, 0x50, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x001c, 0x0a, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0014, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0028, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x003c, 0xb8, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0000, 0x91, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0004, 0x0c, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0020, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0008, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++		{0x0010, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0038, 0xfe, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x005c, 0xc0, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0060, 0x0d, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0800, 0x02, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0000, 0x00, 0x00, CSIPHY_DNP_PARAMS},
 +	},
-+	/* CSIPHY1 */
 +	{
-+		.regulators = {},
-+		.clock = {
-+			"csiphy1",
-+			"csiphy1_timer"
-+		},
-+		.clock_rate = {
-+			{ 150000000, 270000000, 360000000 },
-+			{ 300000000 },
-+		},
-+		.reg = { "csiphy1" },
-+		.interrupt = { "csiphy1" },
-+		.csiphy = {
-+			.hw_ops = &csiphy_ops_3ph_1_0,
-+			.formats = &csiphy_formats_sdm845
-+		}
++		{0x0730, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c84, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c90, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c80, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c88, 0x06, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c84, 0x07, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x072c, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0734, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0710, 0x50, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x071c, 0x0a, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0714, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0728, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x073c, 0xb8, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0700, 0x80, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0704, 0x0c, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0720, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0708, 0x04, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++		{0x070c, 0xff, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0710, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0738, 0x1f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0800, 0x02, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0000, 0x00, 0x00, CSIPHY_DNP_PARAMS},
++		{0x0000, 0x00, 0x00, CSIPHY_DNP_PARAMS},
 +	},
-+	/* CSIPHY2 */
 +	{
-+		.regulators = {},
-+		.clock = {
-+			"csiphy2",
-+			"csiphy2_timer"
-+		},
-+		.clock_rate = {
-+			{ 150000000, 270000000, 360000000 },
-+			{ 300000000 },
-+		},
-+		.reg = { "csiphy2" },
-+		.interrupt = { "csiphy2" },
-+		.csiphy = {
-+			.hw_ops = &csiphy_ops_3ph_1_0,
-+			.formats = &csiphy_formats_sdm845
-+		}
++		{0x0230, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0a04, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0a10, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0a00, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0a08, 0x06, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0a04, 0x07, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x022c, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0234, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0210, 0x50, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x021c, 0x0a, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0214, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0228, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x023c, 0xb8, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0200, 0x91, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0204, 0x0c, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0220, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0208, 0x04, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++		{0x0210, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0238, 0xfe, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x025c, 0xc0, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0260, 0x0d, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0800, 0x02, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0000, 0x00, 0x00, CSIPHY_DNP_PARAMS},
 +	},
-+	/* CSIPHY3 */
 +	{
-+		.regulators = {},
-+		.clock = {
-+			"csiphy3",
-+			"csiphy3_timer"
-+		},
-+		.clock_rate = {
-+			{ 150000000, 270000000, 360000000 },
-+			{ 300000000 },
-+		},
-+		.reg = { "csiphy3" },
-+		.interrupt = { "csiphy3" },
-+		.csiphy = {
-+			.hw_ops = &csiphy_ops_3ph_1_0,
-+			.formats = &csiphy_formats_sdm845
-+		}
-+	}
++		{0x0430, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0b04, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0b10, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0b00, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0b08, 0x06, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0b04, 0x07, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x042c, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0434, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0410, 0x50, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x041c, 0x0a, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0414, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0428, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x043c, 0xb8, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0400, 0x91, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0404, 0x0c, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0420, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0408, 0x04, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++		{0x0410, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0438, 0xfe, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x045c, 0xc0, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0460, 0x0d, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0800, 0x02, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0000, 0x00, 0x00, CSIPHY_DNP_PARAMS},
++	},
++	{
++		{0x0630, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c04, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c10, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c00, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c08, 0x06, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0c04, 0x07, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x062c, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0634, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0610, 0x50, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x061c, 0x0a, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0614, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0628, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x063c, 0xb8, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0600, 0x91, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0604, 0x0c, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0620, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0608, 0x04, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++		{0x0610, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0638, 0xfe, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x065c, 0xc0, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0660, 0x0d, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0800, 0x02, 0x00, CSIPHY_DEFAULT_PARAMS},
++		{0x0000, 0x00, 0x00, CSIPHY_DNP_PARAMS},
++	},
 +};
 +
-+static const struct camss_subdev_resources csid_res_7180[] = {
-+	/* CSID0 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = {
-+			"soc_ahb",
-+			"vfe0",
-+			"vfe0_cphy_rx",
-+			"csi0"
-+		},
-+		.clock_rate = {
-+			{ 0 },
-+			{ 240000000, 360000000, 432000000, 600000000 },
-+			{ 150000000, 270000000, 360000000 },
-+			{ 150000000, 270000000, 360000000, 480000000 },
-+		},
-+		.reg = { "csid0" },
-+		.interrupt = { "csid0" },
-+		.csid = {
-+			.hw_ops = &csid_ops_gen2,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_gen2
-+		}
-+	},
-+	/* CSID1 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = {
-+			"soc_ahb",
-+			"vfe1",
-+			"vfe1_cphy_rx",
-+			"csi1",
-+		},
-+		.clock_rate = {
-+			{ 0 },
-+			{ 240000000, 360000000, 432000000, 600000000 },
-+			{ 150000000, 270000000, 360000000 },
-+			{ 150000000, 270000000, 360000000, 480000000 },
-+		},
-+		.reg = { "csid1" },
-+		.interrupt = { "csid1" },
-+		.csid = {
-+			.hw_ops = &csid_ops_gen2,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_gen2
-+		}
-+	},
-+	/* CSID2 */
-+	{
-+		.regulators = { "vdda-phy", "vdda-pll" },
-+		.clock = {
-+			"soc_ahb",
-+			"vfe_lite",
-+			"vfe_lite_cphy_rx",
-+			"csi2",
-+		},
-+		.clock_rate = {
-+			{ 0 },
-+			{ 240000000, 360000000, 432000000, 600000000 },
-+			{ 150000000, 270000000, 360000000 },
-+			{ 150000000, 270000000, 360000000, 480000000 },
-+		},
-+		.reg = { "csid2" },
-+		.interrupt = { "csid2" },
-+		.csid = {
-+			.is_lite = true,
-+			.hw_ops = &csid_ops_gen2,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_gen2
-+		}
-+	}
-+};
-+
-+static const struct camss_subdev_resources vfe_res_7180[] = {
-+	/* VFE0 */
-+	{
-+		.regulators = {},
-+		.clock = {
-+			"camnoc_axi",
-+			"cpas_ahb",
-+			"soc_ahb",
-+			"vfe0",
-+			"vfe0_axi",
-+			"csi0",
-+		},
-+		.clock_rate = {
-+			{ 0 },
-+			{ 0 },
-+			{ 0 },
-+			{ 19200000, 240000000, 360000000, 432000000, 600000000 },
-+			{ 0 },
-+			{ 150000000, 270000000, 360000000, 480000000 },
-+		},
-+		.reg = { "vfe0" },
-+		.interrupt = { "vfe0" },
-+		.vfe = {
-+			.line_num = 4,
-+			.has_pd = true,
-+			.pd_name = "ife0",
-+			.hw_ops = &vfe_ops_170,
-+			.formats_rdi = &vfe_formats_rdi_845,
-+			.formats_pix = &vfe_formats_pix_845
-+		}
-+	},
-+	/* VFE1 */
-+	{
-+		.regulators = {},
-+		.clock = {
-+			"camnoc_axi",
-+			"cpas_ahb",
-+			"soc_ahb",
-+			"vfe1",
-+			"vfe1_axi",
-+			"csi1",
-+		},
-+		.clock_rate = {
-+			{ 0 },
-+			{ 0 },
-+			{ 0 },
-+			{ 19200000, 240000000, 360000000, 432000000, 600000000 },
-+			{ 0 },
-+			{ 150000000, 270000000, 360000000, 480000000 },
-+		},
-+		.reg = { "vfe1" },
-+		.interrupt = { "vfe1" },
-+		.vfe = {
-+			.line_num = 4,
-+			.has_pd = true,
-+			.pd_name = "ife1",
-+			.hw_ops = &vfe_ops_170,
-+			.formats_rdi = &vfe_formats_rdi_845,
-+			.formats_pix = &vfe_formats_pix_845
-+		}
-+	},
-+	/* VFE-lite */
-+	{
-+		.regulators = {},
-+		.clock = {
-+			"camnoc_axi",
-+			"cpas_ahb",
-+			"soc_ahb",
-+			"vfe_lite",
-+			"csi2",
-+		},
-+		.clock_rate = {
-+			{ 0 },
-+			{ 0 },
-+			{ 0 },
-+			{ 19200000, 240000000, 360000000, 432000000, 600000000 },
-+			{ 150000000, 270000000, 360000000, 480000000 },
-+		},
-+		.reg = { "vfe_lite" },
-+		.interrupt = { "vfe_lite" },
-+		.vfe = {
-+			.is_lite = true,
-+			.line_num = 4,
-+			.hw_ops = &vfe_ops_170,
-+			.formats_rdi = &vfe_formats_rdi_845,
-+			.formats_pix = &vfe_formats_pix_845
-+		}
-+	}
-+};
-+
- static const struct camss_subdev_resources csiphy_res_8250[] = {
- 	/* CSIPHY0 */
- 	{
-@@ -2411,6 +2649,18 @@ static const struct camss_resources sdm845_resources = {
- 	.link_entities = camss_link_entities
- };
+ static void csiphy_hw_version_read(struct csiphy_device *csiphy,
+ 				   struct device *dev)
+ {
+@@ -509,6 +639,10 @@ static void csiphy_gen2_config_lanes(struct csiphy_device *csiphy,
+ 		r = &lane_regs_sdm845[0][0];
+ 		array_size = ARRAY_SIZE(lane_regs_sdm845[0]);
+ 		break;
++	case CAMSS_7180:
++		r = &lane_regs_sc7180[0][0];
++		array_size = ARRAY_SIZE(lane_regs_sc7180[0]);
++		break;
+ 	case CAMSS_8250:
+ 		r = &lane_regs_sm8250[0][0];
+ 		array_size = ARRAY_SIZE(lane_regs_sm8250[0]);
+@@ -558,6 +692,7 @@ static bool csiphy_is_gen2(u32 version)
  
-+static const struct camss_resources sc7180_resources = {
-+	.version = CAMSS_7180,
-+	.pd_name = "top",
-+	.csiphy_res = csiphy_res_7180,
-+	.csid_res = csid_res_7180,
-+	.vfe_res = vfe_res_7180,
-+	.csiphy_num = ARRAY_SIZE(csiphy_res_7180),
-+	.csid_num = ARRAY_SIZE(csid_res_7180),
-+	.vfe_num = ARRAY_SIZE(vfe_res_7180),
-+	.link_entities = camss_link_entities
-+};
-+
- static const struct camss_resources sm8250_resources = {
- 	.version = CAMSS_8250,
- 	.pd_name = "top",
-@@ -2445,6 +2695,7 @@ static const struct of_device_id camss_dt_match[] = {
- 	{ .compatible = "qcom,msm8996-camss", .data = &msm8996_resources },
- 	{ .compatible = "qcom,sdm660-camss", .data = &sdm660_resources },
- 	{ .compatible = "qcom,sdm845-camss", .data = &sdm845_resources },
-+	{ .compatible = "qcom,sc7180-camss", .data = &sc7180_resources },
- 	{ .compatible = "qcom,sm8250-camss", .data = &sm8250_resources },
- 	{ .compatible = "qcom,sc8280xp-camss", .data = &sc8280xp_resources },
- 	{ }
+ 	switch (version) {
+ 	case CAMSS_845:
++	case CAMSS_7180:
+ 	case CAMSS_8250:
+ 	case CAMSS_8280XP:
+ 		ret = true;
+diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
+index 73c47c07fc30..867e275db4be 100644
+--- a/drivers/media/platform/qcom/camss/camss.h
++++ b/drivers/media/platform/qcom/camss/camss.h
+@@ -77,6 +77,7 @@ enum camss_version {
+ 	CAMSS_8x96,
+ 	CAMSS_660,
+ 	CAMSS_845,
++	CAMSS_7180,
+ 	CAMSS_8250,
+ 	CAMSS_8280XP,
+ };
 
 -- 
 2.34.1
