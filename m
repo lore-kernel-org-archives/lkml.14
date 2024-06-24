@@ -1,103 +1,128 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68D819D062
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E3219CCFB
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719243715; cv=none; b=EuaVMtCSU5MpJ4uZfey4K1cQylsgit7yLMqj2x1G+f8WWp+2Rjs3XtZRInGzZz/gn8BtYuN6wbk9g24A4tczrBdbO2mBd4LKsphdEv8FzN37POlnSf33dFrAybZGrIjmcJyGfsZgtX22Hdbr/7wNzjTDQQW/Z/o3GChFrh9tk2g=
+	t=1719243761; cv=none; b=iO3RAt+ei09Xcasw4ADA1fJL8Xa7tTXeawUKgnBCnEvqixSM7Wr2pg9hKe6rcT5+3D6mdhmBVDOVSGi7FWdsZWZPEN7OYqrwKVetqpscbL4iSjNPWcBLX6rbi9XME4eZaZHEb+Mls0TjYOt73g1sT2fcKPk0AaM3GrSN3D9ERuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719243715; c=relaxed/simple;
-	bh=ZF0XxN8KntgJA+IVilUh/38LJzSDeR5q7xJSolLUjpo=;
+	s=arc-20240116; t=1719243761; c=relaxed/simple;
+	bh=4b2NR7ZU6RhCVAQiz4eoi6ItIYSKwVG9ISrse0aWNEo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tvbI2qEPbKjY+aEOoQ5LJig1kv4zHJEL4jM4XZhr/ILKdDl/HaqCoZ+hDkC6Mk0WzfwLzlloPxYF8z1Ufi600E+w4bm02OwBXVrftXIW/Oxd/3YdPwT25aEAVDH+xK5XChZralTya+IyzI8lJ1tKMs1OU3Akus8yqTQxWZC6UFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2nt5naGp; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=JNRpusgqKCQRmKtO30rPPladTZLbJPevqgVUTUUhWR9i5xqgOPxK5O8DV3iJONfWMctP/qZ9f6uL1tHOoU4rC7uL0Q+meTPKK0VU9X1+pU8tcYtrVPezpo620zCdRiRKUStFrPN6gn3xrp/tXnFyRtH/q0Za+MnoxTdZFBJ3xlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwMH0R9Q; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2nt5naGp"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-48f409bd157so815961137.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:41:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwMH0R9Q"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec17eb4493so61765451fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719243713; x=1719848513; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XgB/DwN9cphENzre81i4QwsnPfETm68iWHx9Hxb0Rb4=;
-        b=2nt5naGp9oxCa/XLwgmwcjxgFaXjYWSB8SZP0UZcCgYgndMvLhQOdPIwSN2ix7iJc9
-         Iv0vfwYAUQ+u6pQhOWeTfhPNBzvO59h39OK2aV3dSJGeB8uejhLqA4eQ2R2XOmYd7k7O
-         BrG/+C8UljmcU0NlGeXLlA+juZFKZW5ULhhQVUNkhKqwwHP1wEyMbNHsrGJcttUEXxdY
-         L0Yr8B7+o4JwGR3ZfZyIYvjShk9RM7fnql+jIV2Dkeqaw0ft6PbgUqSbRfoGnjZYV0cO
-         6ynWLb11O5eldiuLuble748m0Yu90QeOTpryw1Vd7BsD+z1UDvVeKU7PIJfApJptQRjJ
-         /QfA==
+        d=gmail.com; s=20230601; t=1719243759; x=1719848559; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4b2NR7ZU6RhCVAQiz4eoi6ItIYSKwVG9ISrse0aWNEo=;
+        b=JwMH0R9QsU06pXV1c2IbDViyu7hTLET6J9zlPfm05x0uQfezrreAhGsy1HEG3kwfUf
+         jxzoABB4hPR/gkcL/L+7vRixsjcez2MScBPS7GNjctpJkBcqXSqXwx8d3YTFB0KFcnXa
+         yBwh91jBZf6gaobTY9ulCuUJvn5LyMJj//TRvO02+fjFlHOr8GQMNBn3IGJK6gnjGgy/
+         kiVLKXl4gKgrv9/FP6HgmCjtGbc6AJ7zHqNRBB9VO7bafTL5B1u64Im/S6KplEs+MvTK
+         TK6kyruJtZqfGXVc8raMqIorXEjT9UNyKgJwYpVW5xubjkextMqkMMo4o2h95Sj06r32
+         EeDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719243713; x=1719848513;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XgB/DwN9cphENzre81i4QwsnPfETm68iWHx9Hxb0Rb4=;
-        b=C1o3pmAi6Kb12Y5BD5wy1TvACFahiixwU/ThSMU9GXHghbgWBZ9MhHqaYtrDZIyqlG
-         2MgOk8PUTOdupsFB8XcxfZI3e9qldsYK/KJh/Flbx4m6XJWCiR78vG0pAmms5U9egp4E
-         FMDHRp0hRg6+7FZrgZyUFSQgxrc7jFVxsBECG707szgyCNDDQjPUk85608WoIucfXIHo
-         yGDFjVJgNm7jEaQ1tFS3WuoHCkrrgBWQ3B1Oe++/ANApnSjo3Y1DEw43qfkdqmeys4Is
-         6XSSRxFtEEKGuVi2mb2IdGdtrH9jfue4cuxHW5SuJdZDZE0vSuZMT3zPsIFEEgScHjSe
-         BUew==
-X-Forwarded-Encrypted: i=1; AJvYcCVClszDB+WBBdUraCSWxI++3ARWgaQlCocftE/qf7i/0r7i7YZO80tiDqZyj6vZiVU7TJg6bqydbnRpaQMcQIjqs2Hv3iCOrlmSn6cb
-X-Gm-Message-State: AOJu0YwifCIrlrxT+8AII05oeibPRIn4KwIAkNq1Ac9jbx4zMzBX4XlG
-	Bpc0nEBnqC8LmrYj6DsLGDNgpgAJr20VYpK8lSmHiNMlg5cSmPSRN2RCsWB3kLuqmwwMcHGCKtX
-	AronPLKJphUaYJVNua47lliG4v8xzz3fdfoV4
-X-Google-Smtp-Source: AGHT+IGnuWw7iW2l+BtMoSMyKLPH1RIsnNPbQ5cNHSWZt2as3tbAnI2PoOeCh4RRwK6qwksnQG83NrdZXDBBrVL/jv0=
-X-Received: by 2002:a05:6102:34c1:b0:48f:4580:ca67 with SMTP id
- ada2fe7eead31-48f52b8daa6mr4256576137.32.1719243712596; Mon, 24 Jun 2024
- 08:41:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719243759; x=1719848559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4b2NR7ZU6RhCVAQiz4eoi6ItIYSKwVG9ISrse0aWNEo=;
+        b=C/4oOATWnbwKu3+MAKgR0D1XQf0yZ6FzRoJUy5WTAvZGtyFtD48P8hOcNpA9UzpqT0
+         Ezm7eNNc7THsxkKZz0ob8/Ptq5ZoqiLzQHgCRPa3C5yoWJCru1vPmHp5s4FCWD89RBDH
+         nbb0v5fzbIFBB+4j348gwt2/PkcjBm+BcwIIvXk7mVYeDLi+34UkwVJ9ygPr0Jy954aW
+         950M5HRwp8WSfw04R9l766Nf5LNZRuNwOQJagDX0OgxVGLDPXIhSppq88PDwNso+lWZb
+         oZJbwKAjQHdR5C2HTJh0tAdGy2z4AqwRN3S85+xZt0XZo4+m2Mb9mIu0YtM12tuwtQ+s
+         O3rA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWntyPg6Zr9pgs/n1r9K6aC7Yk2jW9BM9JiCm9Y5rbIpCKTzhjKSsLN2dzKgMSRBzugV/XAQTs8+TRXOjOlJXdZI04kfNHuQ01tfAU
+X-Gm-Message-State: AOJu0YzXbuGhzXuZf0VFfTKea0tAdSHVKupx0OaU3TuMwYRip471vj1M
+	ZKVePpCfPmkhWrqcuntWcRqyg1wBBxZsp48LqZFEDYkb5agAYZE4yQhU/tD9X6E0neFF878GT3r
+	MHNQUshzjaVdWGPGV1esRj90bHvw=
+X-Google-Smtp-Source: AGHT+IFBxn4USRqyPo0lzjb2M7Hs+SA4MriqfTierRf32hr1TE1t4qrkidUoMFdnifNpyyPHVkyMzoMzywo22FjadXE=
+X-Received: by 2002:a2e:9917:0:b0:2ec:4bb7:d7f6 with SMTP id
+ 38308e7fff4ca-2ec5b2c4daemr36931881fa.7.1719243758350; Mon, 24 Jun 2024
+ 08:42:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f214f15e-4a0a-4f24-9bd7-8f84cbc12e5a@p183> <CANpmjNO=zv6D807cNLAQ3eGLrigUs9xtYNxoHhyuYvHkhhSUWg@mail.gmail.com>
- <2aab04d1-c16b-44e4-a283-7bbf8cba28e7@p183> <CANpmjNMZU=T6J5OBpELxB=ZqOnrkou2iRG7zaqoNy7bCGgH9hA@mail.gmail.com>
- <fb62163f-ba21-4661-be5b-bb5124abc87d@p183>
-In-Reply-To: <fb62163f-ba21-4661-be5b-bb5124abc87d@p183>
-From: Marco Elver <elver@google.com>
-Date: Mon, 24 Jun 2024 17:41:14 +0200
-Message-ID: <CANpmjNMbLBLgy4-BGQYLkDcYO+vOzgq3ht41xzasEJ=x=o18Kw@mail.gmail.com>
-Subject: Re: [PATCH v2] compiler.h: simplify data_race() macro
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org
+References: <202406230912.F6XFIyA6-lkp@intel.com> <CAFULd4YVOwxQ4JDaOdscX_vtJsqJBJ5zhd0RtXXutW=Eqh29Qw@mail.gmail.com>
+ <CAHk-=wg1h4w_m=Op1U4JsyDjsvqG0Kw1EOVMQ+=5GX_XytdorQ@mail.gmail.com>
+ <CAFULd4YR-VkAOKiS5yxSUYi0YMzY1p=pkYe4dOkgFs+A=9AFFA@mail.gmail.com>
+ <CAHk-=wi_KMO_rJ6OCr8mAWBRg-irziM=T9wxGC+J1VVoQb39gw@mail.gmail.com>
+ <CAHk-=whPqqZVSeJiQsMvsAxtAmtR9iAuB4gg_1sUK2D-uBPpLw@mail.gmail.com>
+ <CAFULd4YAeF7=q7DYUh016kabxS8b32qRbFqDBJQrvLq6RjwEVg@mail.gmail.com>
+ <CAHk-=wiHo2YeA=TOUf8vxFLOc0+BoH8USaiT25fnX2ynXbrZkg@mail.gmail.com> <CAHk-=wgdCs0883dpvZpyna76q9eVcTMvvUVAaBuJMPyrgOhNig@mail.gmail.com>
+In-Reply-To: <CAHk-=wgdCs0883dpvZpyna76q9eVcTMvvUVAaBuJMPyrgOhNig@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Mon, 24 Jun 2024 17:42:32 +0200
+Message-ID: <CAFULd4ZW23_RNye6YGbsT0Uo-vOQBM_tBbSJRhh=0HZzXuC_8Q@mail.gmail.com>
+Subject: Re: arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly
+ requires more registers than available
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 24 Jun 2024 at 17:39, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+On Mon, Jun 24, 2024 at 4:18=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> -Wdeclaration-after-statement used since forever required statement
-> expressions to inject __kcsan_disable_current(), __kcsan_enable_current()
-> to mark data race. Now that it is gone, make macro expansion simpler.
+> On Mon, 24 Jun 2024 at 09:59, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Mon, 24 Jun 2024 at 03:36, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >
+> > > A real fix, not only a workaround, is to rewrite asm arguments to
+> > > something like (untested, but "should work"TM):
+> >
+> > Sadly, I already tried that, and it didn't help.
 >
-> __unqual_scalar_typeof() is wordy macro by itself.
-> "expr" is expanded twice.
+> Bah. I _had_ tried that, but I had tried it on __arch_cmpxchg64_emu(),
+> not on the "try" version.
 >
-> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> And no, it hadn't helped.
+>
+> But doing it *right*, and also doing __arch_try_cmpxchg64_emu() *does*
+> actually help.
+>
+> Well, at least the attached patch compiles with the bad config and clang.
+>
+> I'm not certain it does the right thing, because I did more than just
+> the %esi games to try to simplify it.
+>
+> It's *ENTIRELY* possible that I screwed up. Just in this thread, I
+> have looked at the wrong inline asm at least twice now, so I'm not
+> feeling super-competent right now.
+>
+> I'm sending the patch out in the hope that another set of eyes will
+> make it actually better.
 
-Reviewed-by: Marco Elver <elver@google.com>
++ _lock "cmpxchg8b 0(%[ptr])", X86_FEATURE_CX8) \
 
-> ---
->
->  include/linux/compiler.h |    6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -200,10 +200,8 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
->   */
->  #define data_race(expr)                                                        \
->  ({                                                                     \
-> -       __unqual_scalar_typeof(({ expr; })) __v = ({                    \
-> -               __kcsan_disable_current();                              \
-> -               expr;                                                   \
-> -       });                                                             \
-> +       __kcsan_disable_current();                                      \
-> +       __auto_type __v = (expr);                                       \
->         __kcsan_enable_current();                                       \
->         __v;                                                            \
->  })
+This can be just:
+
++ _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
+
+- if (unlikely(!ret)) \
+- *(_oldp) =3D o.full; \
++ *(_oldp) =3D o; \
+
+This one should really update only when cmpxchg fails. The relation
+between cmpxchg and try_cmpxchg is documented in
+Documentation/atomic_t.txt, section CMPXCHG vs TRY_CMPXCHG.
+
+Does the compilation still crash with the condition?
+
+Uros.
