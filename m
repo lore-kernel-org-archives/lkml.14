@@ -1,230 +1,150 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0935645025
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AE2136663
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719226991; cv=none; b=FbcQRjTde2BCaRJ8IO01JEv20yF14tO8vZ13Yp6NfPkzYoLDHCAIyogM9tLAtKcPMWgD6t5UFWRJXgd9wZ2r78h7YMvVgjGkAe+f+Sp+Rhz/UQFrpSSa7V9ThCUfDldwcTidx8WjOjg+DPxFOqk+JlWT45ug5BB0RoALo66k3Yo=
+	t=1719227096; cv=none; b=CKvoc5P7dqmCFJQ2pyMjyerFV1Z74y3HTvhRs4uwj6l0ekP+ldIWoE15XzBAFCGuFLLLGes5jYu8UcXfQzqqBxA7PjV/eAqvqbEF2JyoLoIyrMGw7345dHd33XEhGCckdL9sSPtDVKdJIxyz+d3j1y/Kdk2jrhwtN8DUS1WBkb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719226991; c=relaxed/simple;
-	bh=aBpS1pkDlNpJM7K9xxkzLUHegsLBeWyXpD5uLOOeVhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=czq5q7VFDNmTbC4Qm7jY2twk2gUA5v/mUE7Hxt0C2x/XXkz/tm1Qs9NVoQaMwLyQ05dENyeLzBt6Tg31Q5XoRFiYhaTaBJn1J66I7PJSnBVuSNfJqh9s8iJ/3U0s6JkYok3jjdC4nU58l8ug4Ipx2PamrhLT8ypCey/i2ZM7VWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JLflTxBU; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1719227096; c=relaxed/simple;
+	bh=ScPmTjF2579pHVSsz6jaMLkZu+Xg8dywXQLweA3pHi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXz1/SFiEDMYzaiX7tLEYwhQm7J2aHXIa3NYX8aH/PHLsj4yhbEFhmYEzwGzq/Xtd/OlUbUxjSRPp6QRDgIp3QCcwl+mfrHuwcz3w2iPzZGmu04z23Bcm1jV5SIL49SQd3LpONWCgJ3CbAtOmYTiWmB5GNFFNz9yK3BT2kh4tH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zul6obyl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JLflTxBU"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240624110306epoutp01b6d5949eee785568ae7898b5b04442d8~b69XP_nym2621626216epoutp01Z
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:03:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240624110306epoutp01b6d5949eee785568ae7898b5b04442d8~b69XP_nym2621626216epoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1719226986;
-	bh=uxpMOuA3IRgLqQWXX8+eqtJkWwddlx/GN7rdVWV2/6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JLflTxBU070L20Ugm/A+/Dt0F7x6DQp5L5lpX/pqEyk0zue6JVzb0+f1K50kGRwIF
-	 zOeDFNP1CNgOc1JkJCWsvapVrdeL2DSGMYsVVplCj6UNquW+ZgaIJcXBbeU7kio2Yz
-	 dmx8omQMkOOG2og1ZnMCbWcIR9nHh0fdSitznPU4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240624110304epcas5p4c8ab6937c499617cbbaaa96fc5a4769f~b69Vn-po40506905069epcas5p4q;
-	Mon, 24 Jun 2024 11:03:04 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4W74nL5C7Kz4x9Pt; Mon, 24 Jun
-	2024 11:03:02 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	24.C9.09989.66259766; Mon, 24 Jun 2024 20:03:02 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0~b6zG9Ypk82450824508epcas5p3C;
-	Mon, 24 Jun 2024 10:51:21 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240624105121epsmtrp130aa2d7a4474a6eba09309959ab71409~b6zG3AObb1223312233epsmtrp1c;
-	Mon, 24 Jun 2024 10:51:21 +0000 (GMT)
-X-AuditID: b6c32a4a-bffff70000002705-3d-6679526612e3
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	E4.9B.29940.9AF49766; Mon, 24 Jun 2024 19:51:21 +0900 (KST)
-Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240624105114epsmtip2b4e30650a5edb6427c3e9344921bba5e~b6zAu4Mi31228012280epsmtip2c;
-	Mon, 24 Jun 2024 10:51:14 +0000 (GMT)
-Date: Mon, 24 Jun 2024 16:14:07 +0530
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Bart Van Assche <bvanassche@acm.org>, Damien Le Moal
-	<dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, Jonathan Corbet
-	<corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>, Mike Snitzer
-	<snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>, Keith Busch
-	<kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
-	<kch@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
-	Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
-	damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
-	nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-Message-ID: <20240624103212.2donuac5apwwqaor@nj.shetty@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zul6obyl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE06C2BBFC;
+	Mon, 24 Jun 2024 11:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719227096;
+	bh=ScPmTjF2579pHVSsz6jaMLkZu+Xg8dywXQLweA3pHi0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zul6obylsMOWoO/B+ZQbVaneKjPg4sr+UKZU+ALHnjqcJRxU4uHe2MfXD6qKN10R6
+	 X1E445HzYgkQyU40uLhoZsxyYkuotmEE3MMk5Z7L6ejyJkNWrOwFs3CjLskdoLryei
+	 CqBL5NzqTNVXtDZa+R97d+t7n3z3NkVCodt2/GMJl2jesEsMmU3mpZNN6Nu2G27cTh
+	 JihShgZ9NPQ1jP5LBnYOgimZjGy0PKwNfdu1gVvpxtNAH5wZdybBAGgSZ45qR3vG49
+	 ZhoVYvFZ5d846qaU6uP+Xk/Vi1PZ3veoLpkGjN6MHtTiFoA0cGpIzzmuVQXAGnZrWW
+	 6N7XlY5qXuxJw==
+Date: Mon, 24 Jun 2024 13:04:53 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>, Narasimhan V <Narasimhan.V@amd.com>
+Subject: Re: [PATCH 0/3] timer_migration: Fix a possible race and improvements
+Message-ID: <ZnlS1QcFgHvJGm7J@lothringen>
+References: <20240621-tmigr-fixes-v1-0-8c8a2d8e8d77@linutronix.de>
+ <ZnWOswTMML6ShzYO@localhost.localdomain>
+ <87zfrag1jh.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240605082028.GC18688@lst.de>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TezBcdxTH53fv3buXic56lB8aNTeTZCReKx4/EZI2hlvRjKnRaZsRNvay
-	Brs7ux5lmnqE1CPeCWMboZh6pQyhg41SaiUEI0JCSyWlJSJIUn1k0OXSyX+f8z2P3++cM4fC
-	Ddr4ZlS4NJpVSEWRNKlLfN9rZWUT+lF8qL36AY0aBzQ4SsnbwFH9dC6JlnpfAFS0+g+O5rq/
-	Auj10AiOWjQzAM12nUTlFaUEmuxux9DtigIM1db3Yejr4ksY6ttaJlFBzwRA8+MqDHVOHUXf
-	XK4i0O3OuwQa67hOorJv5/moun8TQ/np4xhqm0sGqGFphUB3pszRyEY/79Q7zNiDM8xABWTa
-	VdN8ZmSmiWDGhmKY5roMkrlVlcgs3CoBjHoyiWQqcwp5TPal5yTTnvYrj1mbnyKYlR/GSSan
-	pQ4w98p/4vsZfhZxQsKKxKzCkpWGyMTh0jB3+ox/0OkgJ2d7oY3QFbnQllJRFOtOe/r62XiF
-	R2oHRFvGiiJjtJKfSKmk7TxOKGQx0aylRKaMdqdZuThS7ii3VYqilDHSMFspG31caG/v4KQN
-	DI6QPKzr48snLT5fy7rPSwIq00ygQ0GBI/z7+hQvE+hSBgI1gBnDMxhnvACwsbCd5Ix1AOsr
-	urG9lCcNVbtRnQC+nMgDnPESwP5Hs+R2FCE4CDc0an4moChScBQOblHbspGAhvNPh3biccEw
-	CTNUi/i2w1AQDJcH8nnbrCc4DRueP+JzrA/vlswR26wjsIbFqYM7yVDwuw4saV3BuS95wt6y
-	Nh7HhvBpfwufYzO4mHt5l+Ng7dUakktOBVD1UAU4x0mYNpC7UwgXSOCf7RW7hfbDawMNGKe/
-	BbNfz+32rwfbbuzxAXizsZzk2BRO/JW8ywxc6lojuLF8R8AbeXP8PGCheqMj1RvvcXwcZqym
-	aJnSsjms3qQ42Rj+PNZMcLIVbOywKwdkHTBl5cqoMFbpJHeQsnH/7zxEFtUMdk7oiE8beDy7
-	atsDMAr0AEjhtJFecWJsqIGeWBSfwCpkQYqYSFbZA5y028rHzd4OkWlvUBodJHR0tXd0dnZ2
-	dD3mLKRN9JbSSsUGgjBRNBvBsnJWsZeHUTpmSViryuXxoXsL+rUf+L6XzE9/NhJS16V+FXjB
-	7tr7M+fjE0BA+NRFz4yFL0267cStg8fKhgJ6fvF3e/KhxPKL0Ua3aqGJcSl12NvbxKLoj+HZ
-	bM+O0voLqfir3qIf/bxaazSTBz2dmvwT9xeMBGY7eI9nBRSfX3Itai431WgS0yvfDRqc8Lji
-	bxVXzRwIoD2fxQ8e9vDgZyxWjpjonjvrsFXKD6uB+r5SbFQhLfx3dH2fzELswpu56Y6bNzcl
-	ZeWqvTOTw+yj9k0nSGM/7lodDUw4t6zc8nEzu5KCZfetR2Sfihu2u+9l/UlHs91Fec7Z2uBu
-	v08PGY0vxltvsoXGv6kTfe7QhFIiEh7BFUrRfzJEnsTLBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxzG855zejjFoMdTL29pRdNpIqAo0W3vB68x6IvGeIlfqovQ2SMQ
-	oUJL6XTZQAG5TAXUQSzIXZQyQS4y7kqhMOgIItYIBkYZDQ6E4iXLFCla2DK+PXl+z/N/vvwZ
-	kosVuDMhqkherVKEymhXqrpFtnpj8aFzpze3TolRWWcbiS6mzpCoZCCFRuMtbwBKn3pPopFH
-	CQBNd3WTqKptEKChhztRbv4tCvU9qiVQQ/41AhWXmAiUmRFLINPsBI2uGZ8BZLPoCdTY743y
-	LhVSqKGxg0K9dVk0yimyuaA77Q4CpSVaCFQzcgGg0nE7hX7rl6DumXbBLinufXoAd+ZDXKsf
-	cMHdg+UU7u3S4gpDEo0rC6Pxy8qbANf3xdC44Op1Ab4SO0nj2vg/BPi1rZ/C9iYLja9WGQD+
-	PbfV5bDouOs2JR8aEsWrN+0IdA22FpRQ4W8l383eeyiIAT0rkoGQgexWOFxaSDg1x9YDmG3n
-	530xLJppJee1CBY7Rl2SgevnzGsAe5rMlBNQ7Do401b/GTAMzXpD8yzjtJexMmgb6wLOPMk+
-	oWHjg0yBE4jYQDjRmTan3dg9sHTy+b9H+0jYOhVHzIOlsOPmyNwAyX4Fsyut5LxeAV/0VlDO
-	MZKVwDuOuTEhuwFmxJlBKliqX9DWL2jrF7T1/7dzAWUAYj5cExYUpvEN91XxOh+NIkyjVQX5
-	nDobVgHm/sTLswb8apjyMQKCAUYAGVK2zC0jOuo056ZUnDvPq88GqLWhvMYIJAwlW+m28uUV
-	JccGKSL5Mzwfzqv/owQjdI8hKkwmd6tw2hKR5/FjkviLA8bpg7QuoTs7aktdAs+M9r/bZjpx
-	+YglxCw5KVovlZd/neZ312N3k277t2aD3+hs+2K5yfCD50FlYAkTcXvfPb/OBNhSdLQOJh+r
-	Pp/FLTekZy1xVJX/aU+ps8n3x9vE/2SO+W+Rft9jTdG+WPX4ho5jh/ePld33ePVL9cdF9T+T
-	uqyLggGHPEpIK4+mNhxrnvQY3rAx3hNX2Q0dlYnyDuUhf+6D9q61OW5iyJH5tC/RXMCtvRDR
-	tHc7aX0VII0cbNM/qJFvHvJeI/a6/KW03b9Z8CY4qWxc+fYv9u9vcuDeZz8Ne93Wr1FFB3B7
-	RM/TZZQmWOHrRao1ik966v6UlgMAAA==
-X-CMS-MailID: 20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0
-References: <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
-	<9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
-	<a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
-	<665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
-	<abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org>
-	<20240601055931.GB5772@lst.de>
-	<d7ae00c8-c038-4bed-937e-222251bc627a@acm.org>
-	<20240604044042.GA29094@lst.de>
-	<4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
-	<20240605082028.GC18688@lst.de>
-	<CGME20240624105121epcas5p3a5a8c73bd5ef19c02e922e5829a4dff0@epcas5p3.samsung.com>
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Description: 
+In-Reply-To: <87zfrag1jh.fsf@somnus>
 
-On 05/06/24 10:20AM, Christoph Hellwig wrote:
->On Tue, Jun 04, 2024 at 04:44:34AM -0700, Bart Van Assche wrote:
->> On 6/3/24 21:40, Christoph Hellwig wrote:
->>> There is no requirement to process them synchronously, there is just
->>> a requirement to preserve the order.  Note that my suggestion a few
->>> arounds ago also included a copy id to match them up.  If we don't
->>> need that I'm happy to leave it away.  If need it it to make stacking
->>> drivers' lifes easier that suggestion still stands.
->>
->> Including an ID in REQ_OP_COPY_DST and REQ_OP_COPY_SRC operations sounds
->> much better to me than abusing the merge infrastructure for combining
->> these two operations into a single request. With the ID-based approach
->> stacking drivers are allowed to process copy bios asynchronously and it
->> is no longer necessary to activate merging for copy operations if
->> merging is disabled (QUEUE_FLAG_NOMERGES).
->
->Again, we can decided on QUEUE_FLAG_NOMERGES per request type.  In fact
->I think we should not use it for discards as that just like copy
->is a very different kind of "merge".
->
->I'm in fact much more happy about avoiding the copy_id IFF we can.  It
->it a fair amout of extra overhead, so we should only add it if there
->is a real need for it
+On Mon, Jun 24, 2024 at 10:58:26AM +0200, Anna-Maria Behnsen wrote:
+> Frederic Weisbecker <frederic@kernel.org> writes:
+> > 0) Hierarchy has only 8 CPUs (single node for now with only CPU 0
+> >    as active.
+> >
+> >    
+> >                              [GRP1:0]
+> >                         migrator = TMIGR_NONE
+> >                         active   = NONE
+> >                         nextevt  = KTIME_MAX
+> >                                          \
+> >                  [GRP0:0]                  [GRP0:1]
+> >               migrator = 0              migrator = TMIGR_NONE
+> >               active   = 0              active   = NONE
+> >               nextevt  = KTIME_MAX      nextevt  = KTIME_MAX
+> >                 /         \                    |
+> >               0          1 .. 7                8
+> >           active         idle                !online
+> >
+> > 1) CPU 8 is booting and creates a new node and a new top. For now it's
+> >    only connected to GRP0:1, not yet to GRP0:0. Also CPU 8 hasn't called
+> >    __tmigr_cpu_activate() on itself yet.
+> 
+> NIT: In step 1) CPU8 is not yet connected to GRP0:1 as the second while
+> loop is not yet finished, but nevertheless...
 
-Christoph, Martin, Bart, Hannes, Damien
+Yes, I was in the second loop in my mind, but that didn't transcribe well :-)
 
-We have iterated over couple of designs for copy offload, but ended up
-with changing them owing to some drawbacks. I would like to take your
-opinion on how we can plumb copy offload in block and dm layer.
+> 
+> >
+> >                              [GRP1:0]
+> >                         migrator = TMIGR_NONE
+> >                         active   = NONE
+> >                         nextevt  = KTIME_MAX
+> >                        /                  \
+> >                  [GRP0:0]                  [GRP0:1]
+> >               migrator = 0              migrator = TMIGR_NONE
+> >               active   = 0              active   = NONE
+> >               nextevt  = KTIME_MAX      nextevt  = KTIME_MAX
+> >                 /         \                    |
+> >               0          1 .. 7                8
+> >           active         idle                active
+> >
+> > 2) CPU 8 connects GRP0:0 to GRP1:0 and observes while in
+> >    tmigr_connect_child_parent() that GRP0:0 is not TMIGR_NONE. So it
+> >    prepares to call tmigr_active_up() on it. It hasn't done it yet.
+> 
+> NIT: CPU8 keeps its state !online until step 5.
 
-For reference, I have listed the approaches we have taken in the past.
+Oops, copy paste hazards.
 
-a. Token/payload based approach:
-1. Here we allocate a buffer/payload.
-2. First source BIO is sent along with the buffer.
-3. Once the buffer reaches driver, it is filled with the source LBA
-and length and namespace info. And the request is completed.
-4. Then destination BIO is sent with same buffer.
-5. Once the buffer reaches driver, it retrieves the source information from
-the BIO and forms a copy command and sends it down to device.
+> Holding the lock will not help as the state is not protected by the
+> lock.
 
-We received feedback that putting anything inside payload which is not
-data, is not a good idea[1].
+No but any access happening before an UNLOCK is guaranteed to be visible
+after the next LOCK. This makes sure that either:
 
+1) If the remote CPU going inactive has passed tmigr_update_events() with
+its unlock of group->lock then the onlining CPU will see the TMIGR_NONE
 
-b. Plug based approach:
-1. We take a plug.
-2. Send a destination BIO, this forms a copy request and waits for source BIO
-to arrive.
-3. Send a source BIO, this merges with the copy request which was formed
-by destination BIO.
-4. We release the plug, then copy request reaches driver layer and forms
-a copy command.
+or:
 
-This approach won't work with stacked devices which has asynchronous
-submission.
-Overall taking plug and merging BIOs received not so good feedback from
-community.
+1) If the onlining CPU locks before the remote CPU calls tmigr_update_events(),
+   then the subsequent LOCK on group->lock in tmigr_update_events() will acquire
+   the new parent link and propagate the up the inactive state.
 
-c. List/ctx based approach:
-A new member is added to bio, bio_copy_ctx, which will a union with
-bi_integrity. Idea is once a copy bio reaches blk_mq_submit_bio, it will
-add the bio to this list.
-1. Send the destination BIO, once this reaches blk_mq_submit_bio, this
-will add the destination BIO to the list inside bi_copy_ctx and return
-without forming any request.
-2. Send source BIO, once this reaches blk_mq_submit_bio, this will
-retrieve the destination BIO from bi_copy_ctx and form a request with
-destination BIO and source BIO. After this request will be sent to
-driver.
+And yes there is an optimization case where we don't lock:
 
-This work is still in POC phase[2]. But this approach makes lifetime
-management of BIO complicated, especially during failure cases.
+		if (evt->ignore && !remote && group->parent)
+			return true;
 
-Thank You,
-Nitesh Shetty
-
-[1] https://lore.kernel.org/linux-block/20230605121732.28468-1-nj.shetty@samsung.com/
-[2] https://github.com/SamsungDS/linux/tree/feat/co/v21/ctx
-
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_
-Content-Type: text/plain; charset="utf-8"
+And that would fall through the cracks. So, forget about that lock idea.
 
 
-------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_b15cc_--
+> +static void tmigr_setup_active_up(struct tmigr_group *group, struct tmigr_group *child)
+> +{
+> +	union tmigr_state curstate, childstate;
+> +	bool walk_done;
+> +
+> +	/*
+> +	 * FIXME: Memory barrier is required here as the child state
+> +	 * could have changed in the meantime
+> +	 */
+> +	curstate.state = atomic_read_acquire(&group->migr_state);
+> +
+> +	for (;;) {
+> +		childstate.state = atomic_read(&child->migr_state);
+> +		if (!childstate.active)
+> +			return;
+
+Ok there could have been a risk that we miss the remote CPU going active. But
+again thanks to the lock this makes sure that either we observe the childstate
+as active or the remote CPU sees the link and propagates its active state. And
+the unlocked optimization tmigr_update_events() still works because either it
+sees the new parent and proceeds or it sees an intermediate parent and the next
+ones will be locked.
+
+Phew!
+
+I'll do a deeper review this evening but it _looks_ ok.
+
+Thanks.
