@@ -1,166 +1,167 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C005137C2E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B99B18654
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719228558; cv=none; b=twhVB1TCCyohNSQuoqCBN12NXcdG5oawUAsv6mVkW8vOEKYp28+adbkAUOAVSqABa+/oK5IHgx2nzxhJJxijiahoU39nhXThg9Gyxup8+lMtcSpMePrBYtgxCcE+wc8PvnJgEGRDB7kH5V5yf9NMBbVGOU/ben9zgVhO1waqbmk=
+	t=1719228751; cv=none; b=YTZlzlbtiR4PB8l0zjZLTRjRYs6s/bX+pDx0/hPxMC3jAUbnYjb6Ar2/9h55lYhvt8YSOFofw6LtOs5Y7MAD2KMOdQFJOnZ86yPUgYhtsYVnY/8Vu7vTdKBQdI3d7GEBFePyKGVgvz2BqcB6xu9zMEt41hbNsHES8ipxyZpopNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719228558; c=relaxed/simple;
-	bh=hTxLy8mO7Anc77JfGNkN5gSzBb+4yPjURLOhsckT0Vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A5kGtiEIyWefbfP6MMtONGGWGVZtjRMU5+5eejr49jg8wRkrFtt7Ov0oI8PIy346DUPHR4Eo7WOaV6KU7yv8Fxmu0zMY+yzIykBnNucSLeYrDKavG09+1sP6sm+CHxoxmaA0D6JNRAqoeQGty5eUPwGpdOwshMdb5wSF6l7IzBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=V+3exPVo; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1719228751; c=relaxed/simple;
+	bh=7jlo9vmhtWKTResIq0eDD/qPIJzSgx51/e3patMJCKM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qgQO4qj0aOb5dySqS678Kns3Ft/mBBX5gEHaN9OpNR9FJpOyCfrxnJFNqRKo4q4JWct5Gr4K8pby3tdLX8A5RXRa0jnwZFW2tM4GuVwYiqJwNHTZkaeluAaQ9h96tzW/1HvFA/LT8j6v/PT/iVm/iHKYhDWFZDCUh83wrO1is+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=jzk8zOGz; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=J/ZYT6ZZ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="V+3exPVo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719228554;
-	bh=hTxLy8mO7Anc77JfGNkN5gSzBb+4yPjURLOhsckT0Vc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V+3exPVo3fN28ivEtBAzZHG6zdNKfQzCR16LvupCem+0C9ynGEJ5dJ6Dn3/J9ekX9
-	 bYhYB5oim5Yx7yL1CO+Tse7c7WK97VjoiOkXnY9zfrRHrl/gMMA+4+IMNL1jzTzLC2
-	 YCi1Byh5ng8vkHKnsBHoAypLduDwNWasR20qs5pTmnZJu0U8pt8PbjaVcH0zzpGUoD
-	 gc/ECsw934Tv+8/XMRANn7oAP2YPcLTNSJD4QbVeu3jXUV0GaxpR2FOuxEWwD3iy0O
-	 sHD9UIi9PX1700bRnkFYgTWrsh7Ydym2zmmiQVZLhFE52sT3JDHUlvvD25QzvHt/GY
-	 9QdSp7Dv1DD4A==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3870C37804C6;
-	Mon, 24 Jun 2024 11:29:14 +0000 (UTC)
-Message-ID: <4e5d4362-4940-4ba0-95aa-627b82e21e41@collabora.com>
-Date: Mon, 24 Jun 2024 13:29:13 +0200
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="jzk8zOGz";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="J/ZYT6ZZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1719228748; x=1750764748;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HS0w/FAC4Vg1rsGlmB0DrwqRXeG8EmTG+BPwYRmz0Bo=;
+  b=jzk8zOGzp6uniq/W8e9ZG4hsjdCJBPScwQ/hyhcavWOsNn28FHtORJck
+   vT1hVLg+YYoz92Ulkc2zFj9zULhcj8U7X57WneeIIDAKvRqLGoAtWwhdw
+   Tv4mU2zOJfTuS9wyHY+FfKy8OKnZ5d+tnd1qoHsPRIi5DfCQ4zh5pTWHP
+   4B4XK9Jt/1k+dApVNGbIYTfhpoaDNSATMnNyqxMqpaTF7t3395qHGmB3y
+   8uhPkq2UlHSwWma84w6FLkLSQ42C7BM7ChY1vQ8SmU9kHIUFpH9nIVTMP
+   dKi4TzdQk57ELUkrepDZVbm2/fFaqGPeIWlkMd3KsLYlrfEHSRPrfUHss
+   A==;
+X-CSE-ConnectionGUID: xutlt1bvR1OPgmKEzE8qrw==
+X-CSE-MsgGUID: 0ZaALeZKQNuLTK+a8XFTmg==
+X-IronPort-AV: E=Sophos;i="6.08,261,1712613600"; 
+   d="scan'208";a="37550994"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 24 Jun 2024 13:32:26 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AA73B161461;
+	Mon, 24 Jun 2024 13:32:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1719228742;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=HS0w/FAC4Vg1rsGlmB0DrwqRXeG8EmTG+BPwYRmz0Bo=;
+	b=J/ZYT6ZZPm0j+qJ4XydMuPOr/DBjQtDvmdFLU+zCLT2h1BaF/9ZdN6AMbIEAcBFZHOufHo
+	dY71HZUtLEoVzDdVUenSGEbmC9Htj7QxPLqUzfdN4VEPC6+XmzXZ/wnv3zRAO9jfin2YbP
+	BTPYjfEK0tJXbllPhenw25hwg59vJ3BfVqrsD9tffJ6zY8lalYhJEWP2xkkzWNtXHr29IP
+	2omtKCwu6I5hltQ+s/T0yYI7+LslkgRXYZRal3CUsTjGdpUaDGgRs5lOzWG+54od/Pkme+
+	cFyVcHhTOZmaG51c+KlgFFdeOkjT9u1kB70EsnbN1e+OV529ORP8gwloyvVoTw==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH] drm/lcdif: switch to DRM_BRIDGE_ATTACH_NO_CONNECTOR
+Date: Mon, 24 Jun 2024 13:32:20 +0200
+Message-ID: <859620673.0ifERbkFSE@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20240624-mxc-lcdif-bridge-attach-v1-1-37e8c5d5d934@linaro.org>
+References: <20240624-mxc-lcdif-bridge-attach-v1-1-37e8c5d5d934@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mailbox: mtk-cmdq: Move pm_runimte_get and put to
- mbox_chan_ops API
-To: Jassi Brar <jassisinghbrar@gmail.com>,
- =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- =?UTF-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
- "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
- =?UTF-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
-References: <20240614040133.24967-1-jason-jh.lin@mediatek.com>
- <20240614040133.24967-3-jason-jh.lin@mediatek.com>
- <CABb+yY2bwj2BcdJLGe1ZYwCrnXL3LtcePMb=wQPaBKorBSs2yA@mail.gmail.com>
- <fc92d51cc6e55301c081ea2d589e1ba6cdd295ee.camel@mediatek.com>
- <CABb+yY1L+YGjf6O9UgPYkS2gWAdo=7QoojSAUNWC_8o7XtZQSg@mail.gmail.com>
- <1f815ff8-2b7a-48de-8b47-0bc9b3cb67ab@collabora.com>
- <CABb+yY1Yy8o3ofAiC-uV+gDrO3QDTWz3_XTUMai_2uyrnj-VrQ@mail.gmail.com>
- <b7ebc021d391452eaf2149976ea2d53fba3d89fc.camel@mediatek.com>
- <CABb+yY3+pnuXDK_jZMDYOAzahdSZ5iig51VqzM=FFHrFpK+9LA@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <CABb+yY3+pnuXDK_jZMDYOAzahdSZ5iig51VqzM=FFHrFpK+9LA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-Il 20/06/24 16:39, Jassi Brar ha scritto:
-> On Thu, Jun 20, 2024 at 1:33 AM Jason-JH Lin (林睿祥)
-> <Jason-JH.Lin@mediatek.com> wrote:
->>
->> On Wed, 2024-06-19 at 10:38 -0500, Jassi Brar wrote:
->>>
->>> External email : Please do not click links or open attachments until
->>> you have verified the sender or the content.
->>>   On Wed, Jun 19, 2024 at 3:18 AM AngeloGioacchino Del Regno
->>> <angelogioacchino.delregno@collabora.com> wrote:
->>>> Il 18/06/24 17:59, Jassi Brar ha scritto:
->>> .....
->>>
->>>> For example, when static content is displayed on screen, the CMDQ
->>> mailbox never
->>>> gets shut down, but no communication happens for a relatively long
->>> time; the
->>>> overhead of actually shutting down the mailbox and setting it back
->>> up would be
->>>> increasing latency in an unacceptable manner.
->>>>
->>> Hmm...  in your driver,  startup() is _empty_   and  shutdown() is
->>> all
->>> under a spin-lock with irqs disabled, so that too shouldn't be
->>> expensive. Right?
->>> Then what causes unacceptable latencies?
->>>
->>
->> I found that the BUG report only occurred when opening the camera APP.
->> Maybe something in imgsys_cmdq_sendtask() is too expensive or somewhere
->> else in imgsys driver.
->>
-> If you move anything from submit() into startup(), which is once per
-> lifetime of a channel, it will only make imgsys_cmdq_sendtask()
-> cheaper.
-> Btw, the imgsys code is not public, I don't know how it looks.
-> 
-> 
->> I'm wondering why this BUG report is not occurred in display use case
->> which is more frequent than imgsys use case.
->> Does this mean sleep() is not always called in pm_runtime_get_sync()
->> and if we can guarantee this sleep() won't be called, then using
->> pm_runtime_get_sync() in atomic context is OK?
->>
-> Instead of hacking around, maybe try using startup() and shutdown()
-> which is for such uses? Maybe request/release channel as part of RPM
-> in your client driver if you are worried about the noise?
-> 
-> 
->>>> This is why I opted for autosuspend - it's only bringing down
->>> certain clocks for
->>>> the CMDQ HW, adding up a bit of power saving to the mix which, for
->>> some use cases
->>>> such as mobile devices with relatively small batteries, is
->>> definitely important.
->>>>
->>>> I'll also briefly (and only briefly) mention that 120Hz displays
->>> are already a
->>>> common thing and in this case the gap between TX and ACK is ~8.33ms
->>> instead, let
->>>> alone that displays with a framerate of more than 120Hz also do
->>> exist even though
->>>> they're less common.
->>>>
->>> I don't know how even busier channels help your point.
->>>
->>>> All of the above describes a few of the reasons why autosuspend is
->>> a good choice
->>>> here, instead of a shutdown->startup flow.
->>>> And again - I can place some bets that PM would also be applicable
->>> to SoCs from
->>>> other vendors as well, with most probably different benefits (but
->>> still with some
->>>> power related benefits!) compared to MediaTek.
->>
->> I agree with Angelo's point!
->>
-> Ok, but you or Angelo still don't explain "unacceptable latencies"
-> when your startup() and shutdown() are empty. You just want api
-> changed, which we can but at least do you part and tell me where the
-> bottleneck (unexpected latency) comes from.
-> 
+Hi,
 
-"I want numbers" is a sensible request, honestly I would do the same so I totally
-understand that.
+Am Montag, 24. Juni 2024, 12:31:46 CEST schrieb Dmitry Baryshkov:
+> Existing in-kernel device trees use LCDIF with the dsim + adv7533, dsim
+> + tc358762 or with ldb + panel_bridge. All these combinations support
+> using DRM_BRIDGE_ATTACH_NO_CONNECTOR for bridge attachment.
+>=20
+> Change lcdif driver to use this flag when attaching the bridge and
+> create drm_bridge_connector afterwards.
+>=20
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> Note: compile-tested only.
 
-Jason, can you please perform latency measurements on 60Hz and *especially* ISP/cam
-cases while "continuously" calling startup() and shutdown() for every power saving
-operation?
+I gave it a try, but it doesn't work. Despite DSI output it also breaks
+HDMI output, where I at least some error messages:
+[drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@32c00000=
+/hdmi@32fd8000 to encoder None-37: -22
+[drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@32c00000=
+/display-bridge@32fc4000 to encoder None-37: -22
+imx-lcdif 32fc6000.display-controller: error -EINVAL: Failed to attach brid=
+ge for endpoint0
+imx-lcdif 32fc6000.display-controller: error -EINVAL: Cannot connect bridge
+imx-lcdif 32fc6000.display-controller: probe with driver imx-lcdif failed w=
+ith error -22
+
+Best regards,
+Alexander
+
+> ---
+>  drivers/gpu/drm/mxsfb/lcdif_drv.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/mxsfb/lcdif_drv.c b/drivers/gpu/drm/mxsfb/lc=
+dif_drv.c
+> index 0f895b8a99d6..1d5508449995 100644
+> --- a/drivers/gpu/drm/mxsfb/lcdif_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/lcdif_drv.c
+> @@ -16,6 +16,7 @@
+> =20
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_bridge.h>
+> +#include <drm/drm_bridge_connector.h>
+>  #include <drm/drm_drv.h>
+>  #include <drm/drm_encoder.h>
+>  #include <drm/drm_fbdev_dma.h>
+> @@ -48,6 +49,7 @@ static int lcdif_attach_bridge(struct lcdif_drm_private=
+ *lcdif)
+>  {
+>  	struct device *dev =3D lcdif->drm->dev;
+>  	struct device_node *ep;
+> +	struct drm_connector *connector;
+>  	struct drm_bridge *bridge;
+>  	int ret;
+> =20
+> @@ -96,13 +98,23 @@ static int lcdif_attach_bridge(struct lcdif_drm_priva=
+te *lcdif)
+>  			return ret;
+>  		}
+> =20
+> -		ret =3D drm_bridge_attach(encoder, bridge, NULL, 0);
+> +		ret =3D drm_bridge_attach(encoder, bridge, NULL, DRM_BRIDGE_ATTACH_NO_=
+CONNECTOR);
+>  		if (ret) {
+>  			of_node_put(ep);
+>  			return dev_err_probe(dev, ret,
+>  					     "Failed to attach bridge for endpoint%u\n",
+>  					     of_ep.id);
+>  		}
+> +
+> +		connector =3D drm_bridge_connector_init(lcdif->drm, encoder);
+> +		if (IS_ERR(connector)) {
+> +			ret =3D PTR_ERR(connector);
+> +			of_node_put(ep);
+> +
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to create bridge connector for endpoint%u\n",
+> +					     of_ep.id);
+> +		}
+>  	}
+> =20
+>  	return 0;
+>=20
+> ---
+> base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
+> change-id: 20240624-mxc-lcdif-bridge-attach-60368807b2f9
+>=20
+> Best regards,
+>=20
 
 
-Thanks,
-Angelo
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
