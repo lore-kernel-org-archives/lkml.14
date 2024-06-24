@@ -1,221 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79EA49620;
-	Mon, 24 Jun 2024 11:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928DF130A79;
+	Mon, 24 Jun 2024 11:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719227693; cv=none; b=A8ElDtB7Iy1iq9JKkCatCFlhNZxV8Fef8ResTEcvqAOrE9mR7hNJSC16/0yhEl/T09YrBAb8frZIMNK/4PPoIVPC4sbT45cNIGiDEqegofuFc72M9+DZdxz7fyaWfLZT6HhdE5MMnsoOsoVQlMLI2S5IONapNoGUYQzuD0QaWZM=
+	t=1719227713; cv=none; b=u1IDek2o8PCs/+uYuT7FOFz1Ki62GP6wIJK8y/nirbfHge6ri04Sz4rOC2ryy4tI+2c29+3sg5iigZCci7mE/TiDm24KZf60dOx2lF55hsi22ffwCMnCLRR1g7D01rcc4ajMeP3Kl16e1TkqvmNH2Dvqa5Tl2ug5VJi/UaxpAyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719227693; c=relaxed/simple;
-	bh=zD2eSo75ryZYFX1va5sIibpLycZqPyqdenRQ6fO/VY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WZqeDARkc7DrtCIVU6CRWAcEyoQAqCAG4ccjpbAJMP9tMrNiYTGzrnotzzBPV5lENean6FdKSj+8IqAVBULcpzGsQOmJTaAe+tBlG3ZYyh9rb3eVNGF/46/WExF/Wh2erRDqlwjyzbD+AV1yPNvWiuVODZJxVkrdyXHxxNhJpJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HL+PwkPn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HL+PwkPn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D08DC2BBFC;
-	Mon, 24 Jun 2024 11:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719227692;
-	bh=zD2eSo75ryZYFX1va5sIibpLycZqPyqdenRQ6fO/VY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HL+PwkPniPDdrLpWKapbrtdsjGL4duzCq43MmME/DrHp1kfG8QgQLNtwlvT+r+0bM
-	 g6jHuep8jV3IR+KqWP92cVjMYJYCN3mCm3kxqC/ac65+iU3+HIXuZH7cqaLKsGnwaU
-	 gjVP+3Jt53e0DihoHnHQKXAluUUU7g8yoZdwWxQSyn7JgP+cZ+IYSV857/a8JMzOc2
-	 BD37e7J2yhwYNfal/i78WGrisQTX5CVLOh8aazyNNds5w6TKBBAd2kexhNTw/49hFY
-	 7d5ZYPsZimodO08QDbvmmdPyHUjRwSraMEkn22wpb0xxuomngdnxk2eSdiSuidrukv
-	 bXxlPgy5vj+fg==
-Date: Mon, 24 Jun 2024 12:14:46 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Kees Cook <kees@kernel.org>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] leds: sy7802: Add support for Silergy SY7802
- flash LED controller
-Message-ID: <20240624111446.GT1318296@google.com>
-References: <20240616-sy7802-v4-0-789994180e05@apitzsch.eu>
- <20240616-sy7802-v4-2-789994180e05@apitzsch.eu>
- <20240621102656.GK1318296@google.com>
- <86f8110e8edc24d0df035b77a1aa68422e48bde1.camel@apitzsch.eu>
+	s=arc-20240116; t=1719227713; c=relaxed/simple;
+	bh=2z3Eqkol4JEiYQ5tJoZAaoWTE1bCIiqERw5USNnFyqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VHatrxKpMQxI5hFFKJKlCB+AO50kGtLYsXHjoI3bdkytS1AicgC4dUiPfp1+a3mcO/ygXhHBqdJRpBmxae/vLhCYR0SdhTX4PQcbN6xMx9IeUHHHTm4ktVf8S64hK/3J89kZABM9Cv4iGEUa9Z7XiINR2+rn4m+B0qDoSkavnG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
+Received: from mailer.emlix.com (cr-emlix.sta.goetel.net [81.20.112.87])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id 4D3855F869;
+	Mon, 24 Jun 2024 13:15:07 +0200 (CEST)
+From: Rolf Eike Beer <eb@emlix.com>
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Nicolas Schier <n.schier@avm.de>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: Use $(obj)/%.cc to fix host C++ module builds
+Date: Mon, 24 Jun 2024 13:14:58 +0200
+Message-ID: <4576559.LvFx2qVVIh@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To: <20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de>
+References: <20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86f8110e8edc24d0df035b77a1aa68422e48bde1.camel@apitzsch.eu>
+Content-Type: multipart/signed; boundary="nextPart2330569.ElGaqSPkdT";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Sat, 22 Jun 2024, André Apitzsch wrote:
+--nextPart2330569.ElGaqSPkdT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Rolf Eike Beer <eb@emlix.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 24 Jun 2024 13:14:58 +0200
+Message-ID: <4576559.LvFx2qVVIh@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To: <20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de>
+References: <20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de>
+MIME-Version: 1.0
 
-> Hello Lee,
-> 
-> Am Freitag, dem 21.06.2024 um 11:26 +0100 schrieb Lee Jones:
-> > On Sun, 16 Jun 2024, André Apitzsch via B4 Relay wrote:
-> > 
-> > > From: André Apitzsch <git@apitzsch.eu>
-> > > 
-> > > The SY7802 is a current-regulated charge pump which can regulate
-> > > two
-> > > current levels for Flash and Torch modes.
-> > > 
-> > > It is a high-current synchronous boost converter with 2-channel
-> > > high
-> > > side current sources. Each channel is able to deliver 900mA
-> > > current.
-> > > 
-> > > Signed-off-by: André Apitzsch <git@apitzsch.eu>
-> > > ---
-> > >  drivers/leds/flash/Kconfig       |  11 +
-> > >  drivers/leds/flash/Makefile      |   1 +
-> > >  drivers/leds/flash/leds-sy7802.c | 542
-> > > +++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 554 insertions(+)
-> > 
-> > Generally very nice.
-> > 
-> > Just a couple of teensy nits to fix then add my and resubmit please.
-> > 
-> > Acked-by: Lee Jones <lee@kernel.org>
-> > 
-> > > [...]
-> > > diff --git a/drivers/leds/flash/leds-sy7802.c
-> > > b/drivers/leds/flash/leds-sy7802.c
-> > > new file mode 100644
-> > > index 000000000000..c4bea55a62d0
-> > > --- /dev/null
-> > > +++ b/drivers/leds/flash/leds-sy7802.c
-> > > @@ -0,0 +1,542 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * Silergy SY7802 flash LED driver with I2C interface
-> > 
-> > "an I2C interface"
-> > 
-> > Or
-> > 
-> > "I2C interfaces"
-> > 
-> > > + * Copyright 2024 André Apitzsch <git@apitzsch.eu>
-> > > + */
-> > > +
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/i2c.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/led-class-flash.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/mutex.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > +
-> > > +#define SY7802_MAX_LEDS 2
-> > > +#define SY7802_LED_JOINT 2
-> > > +
-> > > +#define SY7802_REG_ENABLE		0x10
-> > > +#define SY7802_REG_TORCH_BRIGHTNESS	0xa0
-> > > +#define SY7802_REG_FLASH_BRIGHTNESS	0xb0
-> > > +#define SY7802_REG_FLASH_DURATION	0xc0
-> > > +#define SY7802_REG_FLAGS		0xd0
-> > > +#define SY7802_REG_CONFIG_1		0xe0
-> > > +#define SY7802_REG_CONFIG_2		0xf0
-> > > +#define SY7802_REG_VIN_MONITOR		0x80
-> > > +#define SY7802_REG_LAST_FLASH		0x81
-> > > +#define SY7802_REG_VLED_MONITOR		0x30
-> > > +#define SY7802_REG_ADC_DELAY		0x31
-> > > +#define SY7802_REG_DEV_ID		0xff
-> > > +
-> > > +#define SY7802_MODE_OFF		0
-> > > +#define SY7802_MODE_TORCH	2
-> > > +#define SY7802_MODE_FLASH	3
-> > > +#define SY7802_MODE_MASK	GENMASK(1, 0)
-> > > +
-> > > +#define SY7802_LEDS_SHIFT	3
-> > > +#define SY7802_LEDS_MASK(_id)	(BIT(_id) << SY7802_LEDS_SHIFT)
-> > > +#define SY7802_LEDS_MASK_ALL	(SY7802_LEDS_MASK(0) |
-> > > SY7802_LEDS_MASK(1))
-> > > +
-> > > +#define SY7802_TORCH_CURRENT_SHIFT	3
-> > > +#define SY7802_TORCH_CURRENT_MASK(_id) \
-> > > +	(GENMASK(2, 0) << (SY7802_TORCH_CURRENT_SHIFT * (_id)))
-> > > +#define SY7802_TORCH_CURRENT_MASK_ALL \
-> > > +	(SY7802_TORCH_CURRENT_MASK(0) |
-> > > SY7802_TORCH_CURRENT_MASK(1))
-> > > +
-> > > +#define SY7802_FLASH_CURRENT_SHIFT	4
-> > > +#define SY7802_FLASH_CURRENT_MASK(_id) \
-> > > +	(GENMASK(3, 0) << (SY7802_FLASH_CURRENT_SHIFT * (_id)))
-> > > +#define SY7802_FLASH_CURRENT_MASK_ALL \
-> > > +	(SY7802_FLASH_CURRENT_MASK(0) |
-> > > SY7802_FLASH_CURRENT_MASK(1))
-> > > +
-> > > +#define SY7802_TIMEOUT_DEFAULT_US	512000U
-> > > +#define SY7802_TIMEOUT_MIN_US		32000U
-> > > +#define SY7802_TIMEOUT_MAX_US		1024000U
-> > > +#define SY7802_TIMEOUT_STEPSIZE_US	32000U
-> > > +
-> > > +#define SY7802_TORCH_BRIGHTNESS_MAX 8
-> > > +
-> > > +#define SY7802_FLASH_BRIGHTNESS_DEFAULT	14
-> > > +#define SY7802_FLASH_BRIGHTNESS_MIN	0
-> > > +#define SY7802_FLASH_BRIGHTNESS_MAX	15
-> > > +#define SY7802_FLASH_BRIGHTNESS_STEP	1
-> > > +
-> > > +#define SY7802_FLAG_TIMEOUT			BIT(0)
-> > > +#define SY7802_FLAG_THERMAL_SHUTDOWN		BIT(1)
-> > > +#define SY7802_FLAG_LED_FAULT			BIT(2)
-> > > +#define SY7802_FLAG_TX1_INTERRUPT		BIT(3)
-> > > +#define SY7802_FLAG_TX2_INTERRUPT		BIT(4)
-> > > +#define SY7802_FLAG_LED_THERMAL_FAULT		BIT(5)
-> > > +#define SY7802_FLAG_FLASH_INPUT_VOLTAGE_LOW	BIT(6)
-> > > +#define SY7802_FLAG_INPUT_VOLTAGE_LOW		BIT(7)
-> > > +
-> > > +#define SY7802_CHIP_ID	0x51
-> > > +
-> > > +static const struct reg_default sy7802_regmap_defs[] = {
-> > > +	{ SY7802_REG_ENABLE, SY7802_LEDS_MASK_ALL },
-> > > +	{ SY7802_REG_TORCH_BRIGHTNESS, 0x92 },
-> > > +	{ SY7802_REG_FLASH_BRIGHTNESS,
-> > > SY7802_FLASH_BRIGHTNESS_DEFAULT |
-> > > +		SY7802_FLASH_BRIGHTNESS_DEFAULT <<
-> > > SY7802_FLASH_CURRENT_SHIFT },
-> > > +	{ SY7802_REG_FLASH_DURATION, 0x6f },
-> > > +	{ SY7802_REG_FLAGS, 0x0 },
-> > > +	{ SY7802_REG_CONFIG_1, 0x68 },
-> > > +	{ SY7802_REG_CONFIG_2, 0xf0 },
-> > 
-> > Not your fault, but this interface is frustrating since we have no
-> > idea
-> > what these register values mean.  IMHO, they should be defined and
-> > ORed
-> > together in some human readable way.
-> > 
-> > I say that it's not your fault because I see that this is the most
-> > common usage.
-> > 
-> 
-> I don't know how to interpret some bits of the default values. I don't
-> have the documentation and changing the bits and observing the behavior
-> of the device also didn't help.
+On Montag, 24. Juni 2024 13:12:14 MESZ Nicolas Schier wrote:
+> Use $(obj)/ instead of $(src)/ prefix when building C++ modules for
+> host, as explained in commit b1992c3772e6 ("kbuild: use $(src) instead
+> of $(srctree)/$(src) for source directory").  This fixes build failures
+> of 'xconfig':
+>=20
+>     $ make O=3Dbuild/ xconfig
+>     make[1]: Entering directory '/data/linux/kbuild-review/build'
+>       GEN     Makefile
+>     make[3]: *** No rule to make target '../scripts/kconfig/qconf-moc.cc',
+> needed by 'scripts/kconfig/qconf-moc.o'.  Stop.
+>=20
+> Fixes: b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src) for
+> source directory")
+> Reported-by: Rolf Eike Beer <eb@emlix.com>
+> Signed-off-by: Nicolas Schier <n.schier@avm.de>
 
-And this is the problem.
+Thanks, works for me.
 
-> Should I remove the entries from sy7802_regmap_defs, which have values
-> that we don't fully understand?
+Tested-by: Rolf Eike Beer <eb@emlix.com>
 
-No, as I say, it's not your fault.  Sadly this appears to be the norm.
+=2D-=20
+Rolf Eike Beer
 
--- 
-Lee Jones [李琼斯]
+emlix GmbH
+Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
+Phone +49 (0)551 30664-0, e-mail info@emlix.com
+District Court of G=C3=B6ttingen, Registry Number HR B 3160
+Managing Directors: Heike Jordan, Dr. Uwe Kracke
+VAT ID No. DE 205 198 055
+Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
+Office Bonn: Bachstr. 6, 53115 Bonn, Germany
+http://www.emlix.com
+
+emlix - your embedded Linux partner
+--nextPart2330569.ElGaqSPkdT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCZnlVMgAKCRCr5FH7Xu2t
+/Fq4BACjgFonAJrrWCLHfZuZXRuL9At20+vxLyztALiBItlEzmAZvFaoD++uwlh0
+JoqvNeHQWGkTPKfDvWO+T6Nnv1hMDBLNl4zG7e4Tc2htyXQr3WP1jA5ZLYV4Zqxg
+SYEuSqukITD7qy/uyGhPRT340SRbVjxCu4mXio+EASJsqoV1aA==
+=si0o
+-----END PGP SIGNATURE-----
+
+--nextPart2330569.ElGaqSPkdT--
+
+
+
