@@ -1,162 +1,147 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD4873501;
-	Mon, 24 Jun 2024 08:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8ED3F9FC;
+	Mon, 24 Jun 2024 08:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719219257; cv=none; b=Yo2enwfHjvRVf8B6fxtYYrZEdNaJLrycOkYkHqjs2zUmA5WQzkjJxogP4WJF1Sp9y4Buyi1FQrCdyYnG6wwOFG93V8koTer6Zdktm8zrieYWw5/9QGWFkNCAYRuTV0+Z56yxPsjynwyjoV0YxtvNOMhRXcm2PgIDCl4deT0FAuI=
+	t=1719219339; cv=none; b=N89rr/nxHE1pJP/sb7h+Q3iLbQmctq5ZblNMv1YAqaKUDmHA4ofxgDdRH68VTr/ThjJUOOQoR0qm+rRtWC3bWsqjsKnq6iV1vBN8fYTdpyGG5FeSViBuxfsSJ83/ncKfQ0N77P6Jp9+X3sh6l5SGoefj/TBgCuB57wjsmLAhwBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719219257; c=relaxed/simple;
-	bh=ohmEM9m42/wd/TxWYLsoFe7rjW2WX7rRc5MNewvWJ+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RPAixLgkZkEm9UsmI25YlvA7krNEIgsIwGMU166kS8wNzhAplxmSCjrv9uuKMbSWaVd2LVHkPQn9qw6Iph2U5ijCFNct9dXdERnDlUJdfkVur0uOrTC4055ZF4IQLFjwPaQatOlyZQtKzzKx/9C1K4glZz6VdGZLQMTWilre2C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDL3VUqo; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719219339; c=relaxed/simple;
+	bh=GZdM7RgAiulGjt8VwbxLG+6rinyzS20ZKJ2DX8G/7DA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XrvWoLaLUTexHHINhpRkE0zzQFAUKKOw908hLJtYZb1rvZGYZQ/eWW3PadCgWK+MmjkYD0UEjxQ0/g/EF+gsOb/HZAeg2rW+Ep3mIgDSnoJPstcuCG8giQXBpvU4BTG/dBSV3EjjHj3Seor7ae4VvWFbcrXIwIkDsmILgt+hMXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Trj3GrNK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDL3VUqo"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a725a918edaso64269866b.3;
-        Mon, 24 Jun 2024 01:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719219254; x=1719824054; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pv+RV8N0QpN1Ud2s2pIRCR72Ahfy/aJs1kgG36gGrLk=;
-        b=UDL3VUqoA0o0CECf0Y3473ua8ma8sNNOMM3PhMfWQcYF331ZjXIdk4aWTUqKvhkk7q
-         FGkPWQ7U6yEDDPN+OZVkyxtXNJ3wBY2JrHi236PeriKTC2L9Ww8M0VmjFoRsYAQADKSH
-         H/zJ79OBohLbBbuDFwZPaXInuNdMf291YacG7SIiD+Pe6TAURO00skz5NNVdbC6jmlQM
-         1v2hKpjuT3mWcTIER5nf4jRVqbVALUg+yHxs6O1QYnZ62Rn6l4hMhI4aXnm0zrbLVlRQ
-         PgoQb1y1J3r5IdGxhA5OOxGXJuMHX9LDkBb5HYut84YN4/VuVgXDVbxATt119VUMfENm
-         JPMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719219254; x=1719824054;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pv+RV8N0QpN1Ud2s2pIRCR72Ahfy/aJs1kgG36gGrLk=;
-        b=fIN3Vsh92j1jyjhG71Yck87/G3oYvPHQO8IywQLem9EtKyMP4bEJVJxroBM9zj5NX1
-         k3S/aKvAQvlavjLmWOq3hBGmYDMxoJxNNc17MVF94EQGqqAKImlKIyXflqK5YpGSD3lr
-         ilIQWnLHPKEQe3n80yujZEzq/ckv23mrFWy2bfEywvOFNTOkn1XfGlmALez0oO68H3CH
-         O4Ioad+XppV1j2bHx50YkLwJLDYZPOxw/Vc0JkwWPfdf4xwizNnWOQ1+LZ9AGWrItroN
-         FeiKowFPdvycpogeCSWIQDtb5xG/nKGCHWnGbqyz/5oPSb+D3EIeX4Ct2u/4nt4nw41h
-         PI3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWkqyP78VBcZ+NdAFiVgolqIyzkWmTU1oFWUJ7j3VS2UYhVNqAtxuDO+NLWtbM61AK0G0IxEp0pxZlMxX0zDhleO5SYbQm4+H4akg4EJ9067VIKiBWFIRJ6Rw4gZXAELhwNYi8IrlHf6tUHTw==
-X-Gm-Message-State: AOJu0Yyvaa8tfp1UNYtnyiIY3mssxgaEEbimOxcjnxaEyIO5OoMdeTiF
-	aRVCxAkVrGKpWx0uctVt3/kzK7rcBiu7E+Ct1WDp/3bEUsRZhEGideV43qpW
-X-Google-Smtp-Source: AGHT+IHxO+wFiekwRcIhzp1CPJgHEZF3oE57OtnkPZG236M1H3FMttHEXj+qYiiFlVl8qiHX6USccw==
-X-Received: by 2002:a17:906:80c2:b0:a6f:d867:4259 with SMTP id a640c23a62f3a-a7245ba3cb5mr260877866b.26.1719219253603;
-        Mon, 24 Jun 2024 01:54:13 -0700 (PDT)
-Received: from f.. (cst-prg-81-171.cust.vodafone.cz. [46.135.81.171])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724fe52345sm126046666b.53.2024.06.24.01.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 01:54:13 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: akpm@linux-foundation.org
-Cc: brauner@kernel.org,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v2] vfs: remove redundant smp_mb for thp handling in do_dentry_open
-Date: Mon, 24 Jun 2024 10:54:02 +0200
-Message-ID: <20240624085402.493630-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Trj3GrNK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05AB2C32782;
+	Mon, 24 Jun 2024 08:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719219339;
+	bh=GZdM7RgAiulGjt8VwbxLG+6rinyzS20ZKJ2DX8G/7DA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Trj3GrNKUfHKTAjwPPQW79NqukdD4xt/4ta/5b0rD6NUqDz+ZiT898NL5vostu/ug
+	 yZuBQsoaSZI8FNDvmJCMLmCpGwlCng/ZzollweZwlCP0OpuTT8kk0k177VZxOxRwke
+	 rHC4HnCDBdT140Eplr/JH654xdjrTX5h/m5gt9oB6JgsEkZ5IxvBQcharKmho45Rmf
+	 2GBzqIPmFOsIE2T88V/3w54m6GBDJcsd7gAWw9TmZSRbQ+RQo7KAkkrUR76Vr3N12B
+	 J2Q1SulPaP/GB4xN+6iutsEV0G38xwq6LxfJb8Pyulxe2Zj+NSJNLoGL1yKJ7mYI3X
+	 aSLB2Kfeh54Kw==
+Message-ID: <42b32958-89ee-43b6-96d1-f3e18c7d8955@kernel.org>
+Date: Mon, 24 Jun 2024 10:55:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv5 7/9] ASoC: dt-bindings: imx-audio-spdif: remove binding
+To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ shengjiu wang <shengjiu.wang@gmail.com>, Xiubo Lee <Xiubo.Lee@gmail.com>,
+ Nicolin Chen <nicoleotsuka@gmail.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linux-sound <linux-sound@vger.kernel.org>,
+ devicetree <devicetree@vger.kernel.org>, imx <imx@lists.linux.dev>,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ alsa-devel <alsa-devel@alsa-project.org>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux.com>
+References: <20240620132511.4291-1-elinor.montmasson@savoirfairelinux.com>
+ <20240620132511.4291-8-elinor.montmasson@savoirfairelinux.com>
+ <17a0efe3-72fa-4d13-b3b0-90e6640308f3@kernel.org>
+ <1566099232.1714447.1719219107779.JavaMail.zimbra@savoirfairelinux.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1566099232.1714447.1719219107779.JavaMail.zimbra@savoirfairelinux.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-opening for write performs:
+On 24/06/2024 10:51, Elinor Montmasson wrote:
+> From: "Krzysztof Kozlowski" <krzk@kernel.org>
+> Sent: Sunday, 23 June, 2024 13:09:33
+>> On 20/06/2024 15:25, Elinor Montmasson wrote:
+>>> imx-audio-spdif was merged into the fsl-asoc-card driver, and therefore
+>>> removed.
+>>
+>> So what happens with all existing users (e.g. DTS)? They become
+>> invalid/not supported?
+> 
+> 
+> Next commits, 8/9 and 9/9, update all DTS files that currently use
+> the "fsl,imx-audio-spdif" compatible.
 
-if (f->f_mode & FMODE_WRITE) {
-[snip]
-        smp_mb();
-        if (filemap_nr_thps(inode->i_mapping)) {
-[snip]
-        }
-}
+You mean in-tree. I mean all users, in- and out-of-tree. Other projects.
 
-filemap_nr_thps on kernels built without CONFIG_READ_ONLY_THP_FOR
-expands to 0, allowing the compiler to eliminate the entire thing, with
-exception of the fence (and the branch leading there).
+> From the users point of view, currently configured spdif audio cards
+> will behave just the same.
+> 
+> 
+>> After quick look, I do not see backwards compatibility in the driver and
+>> above commit msg tells me nothing about ABI break.
+> 
+> 
+> For the next version I will state in this commit message the upcoming modifications to DTS
+> and compatibility, why it will be done, and that support for existing DTS is not dropped.
+> 
+> Previous `imx-spdif` driver used the dummy codec instead of
+> using declared spdif codecs. It was discussed in previous version of this contribution
+> that using the dummy codec isn't good practice. So one to one backward compatibility
+> isn't really possible.
 
-So happens required synchronisation between i_writecount and nr_thps
-changes is already provided by the full fence coming from
-get_write_access -> atomic_inc_unless_negative, thus the smp_mb instance
-above can be removed regardless of CONFIG_READ_ONLY_THP_FOR.
+Heh, that's not good. This is improvement, cleanup. While it is
+important and useful, it should also not break existing users.
 
-While I updated commentary in places claiming to match the now-removed
-fence, I did not try to patch them to act on the compile option.
-
-I did not bother benchmarking it, not issuing a spurious full fence in
-the fast path does not warrant justification from perf standpoint.
-
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
-
-v2:
-- just whack the fence instead of ifdefing
-- change To recipient, the person who committed the original change is
-  no longer active
-
- fs/open.c       |  9 ++++-----
- mm/khugepaged.c | 10 +++++-----
- 2 files changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/fs/open.c b/fs/open.c
-index 28f2fcbebb1b..64976b6dc75f 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -986,12 +986,11 @@ static int do_dentry_open(struct file *f,
- 	 */
- 	if (f->f_mode & FMODE_WRITE) {
- 		/*
--		 * Paired with smp_mb() in collapse_file() to ensure nr_thps
--		 * is up to date and the update to i_writecount by
--		 * get_write_access() is visible. Ensures subsequent insertion
--		 * of THPs into the page cache will fail.
-+		 * Depends on full fence from get_write_access() to synchronize
-+		 * against collapse_file() regarding i_writecount and nr_thps
-+		 * updates. Ensures subsequent insertion of THPs into the page
-+		 * cache will fail.
- 		 */
--		smp_mb();
- 		if (filemap_nr_thps(inode->i_mapping)) {
- 			struct address_space *mapping = inode->i_mapping;
- 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 409f67a817f1..2e017585f813 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1997,9 +1997,9 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
- 	if (!is_shmem) {
- 		filemap_nr_thps_inc(mapping);
- 		/*
--		 * Paired with smp_mb() in do_dentry_open() to ensure
--		 * i_writecount is up to date and the update to nr_thps is
--		 * visible. Ensures the page cache will be truncated if the
-+		 * Paired with the fence in do_dentry_open() -> get_write_access()
-+		 * to ensure i_writecount is up to date and the update to nr_thps
-+		 * is visible. Ensures the page cache will be truncated if the
- 		 * file is opened writable.
- 		 */
- 		smp_mb();
-@@ -2187,8 +2187,8 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
- 	if (!is_shmem && result == SCAN_COPY_MC) {
- 		filemap_nr_thps_dec(mapping);
- 		/*
--		 * Paired with smp_mb() in do_dentry_open() to
--		 * ensure the update to nr_thps is visible.
-+		 * Paired with the fence in do_dentry_open() -> get_write_access()
-+		 * to ensure the update to nr_thps is visible.
- 		 */
- 		smp_mb();
- 	}
--- 
-2.43.0
+Best regards,
+Krzysztof
 
