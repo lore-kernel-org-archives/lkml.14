@@ -1,124 +1,196 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F24A4963E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C4C39FC5;
+	Mon, 24 Jun 2024 08:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719216700; cv=none; b=AjXGP+SjHrwZIOumtBAXvM+q3CRe36lOVfEcXDPrArwm0ZpvKh/lNWwnG3umXhEtyC1fUHux3v9St7yPVNe3ZJVOsurTpjTLL/b3c+8zgUdQE0lBWLgZyWS5a0M0+jvtYrcsfOzoZj8OOm8TK/dYRenFwWfpArBZOso9sepOeUI=
+	t=1719216789; cv=none; b=hBG7vg2g0HNRLA/P8B0je8cWP3ke7E7zh9Cpxm3n/6QD/TN4Ajm+0KxscZaX1I1j5jYnuCNudWNpJMVOTbnKBIFQWW/zHqAnO6U9N5AQATewxHBdJmI9GZ5G7Vaa5t+BjS+Yo+aU+2VutS9NnLZwSjHeHJb2AT5kF7ZBSrwYFIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719216700; c=relaxed/simple;
-	bh=7ksf9aEJgz40hmVhyKxMXv3XhkOYeMUS0Ab3WjDTLl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i3o77Fe4ontXn06sU9Gq170nleThmGwr/ID3vn/ZY4x6SLneZYRzLcbwAXI0nh4n3MaSoM4pkXzJ4R3rrUtT3Uqjp2lVzKGErx/GZJLpv6uI7ZZBNF9pRBnnNqssdSkMoexkIypYMwviR8XoNHc16OAKs4Xgu2EyAmejjG3OUYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=NFNVrUh8; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+	s=arc-20240116; t=1719216789; c=relaxed/simple;
+	bh=0k3lCk0xR5XDGDPmtPoBaQZLUx7WxxxeH6tvi+xWCeA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NHjrhV/c3/2w7KJr7Gept08eMXi+Kx0rHHepzUiUYfUvHwHxiQqgdZMX9CGe1nB2vY7xr+tG5MuovzfUi9we8cwy4aqfnsJKTnN5bYlWvCRMKwlgiv2796pFzMC6mPb7y8KELhX60yRYahbf81wp6Asf0kQ+Rt8gqSio5xs1WG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wtj7rRyX; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="NFNVrUh8"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6f9fbec4fd9so2212077a34.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:11:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wtj7rRyX"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42278f3aea4so33557965e9.1;
+        Mon, 24 Jun 2024 01:13:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1719216698; x=1719821498; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1bWqdbh6piHPKQhakpLxXBJ7wWL09Ug+BBJfp1dagVs=;
-        b=NFNVrUh8ypK+nqVCM4JPo/TGpR/ZF+XoFwVfcFvmESi08p7X7UHBMPyl4ZHggRjCGw
-         3W2vN4Wu/bmnJrPnfZYq6sCg+JjoTtGsPc+4H56ebOrJ4DokJvlbjb9qX+KV8ijFbkxK
-         Q8mBBId7nyyzM55g6E7DQWQYl9S1z/4at98m6oUuJlSl4oXemFV96Nsgy3Q4PUuFhF5M
-         fXPVAlMqSeo5gHPrRebmWcyZTilf/PnWTseUE9/9/HT7SP7hwfp10fIm4cyN74UcQthN
-         GuE5Y87p6Q5WMK7+8KBMfyDg9L1P2MG7GrctahdeTYvgCqGc41jV0IzSb0okk+9tagvR
-         7iHw==
+        d=gmail.com; s=20230601; t=1719216786; x=1719821586; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Axw9NwRqOxazU1/TmMUy1avR/1C75lna5YN/CpZeJG8=;
+        b=Wtj7rRyXuyL5AdkrR5aPYG2oPWMmYHZN7/q8cYYyEkVljWE3JQYsJ8qBnw8EXPcHVM
+         fHEWt3sfpB/KdwPNRIMM0ynP9ut9DssxF7L7aqgNQFMZ2Zb/r34IWJTIgaUhC+ZxaU7m
+         /EKHOXPnDJlSU6iAObgZc8HMnHABceNZkoy/eMuH9z7+PCNIX/Q3c3gESUHUq7kw+uRW
+         mckEnM2L1fKwoPxXI37q6XlBcixMugVZxmcLkkQvccbFQFH2ysQr1kI89zcIGloRObdY
+         U9BDL8zYegBofzwnG+oW/ob1173dFmTgRH8l8poofsF9Tw/6iEinKGkhVZCUCbJ8Fvs4
+         AWFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719216698; x=1719821498;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1bWqdbh6piHPKQhakpLxXBJ7wWL09Ug+BBJfp1dagVs=;
-        b=YhnB8D8CEH9j2jR3/kmwHwFu5fjQti7ZqG73iEwftuYNQg9tEnoZ0nKOh6bR/3z3E1
-         oBRZ5ltuZm/LGNybRSFFWr/A6rh3mkPy+x2gkp8lruu91lArHKMtjhhZmbRhbAO9uxam
-         qcWG1n7pAWclRHeE9ht90AaFTGfJJC7DxTSNMQL6ZVoO+eyTst+A8OpTufDk2V0ZwMGy
-         0+mDwLCXBuh/pxYlsWS6sFZ4qns6aZva0Z8TE2tWPmvwxsuPMzcirtK2ExPd/oqiwkXf
-         mB82eEjv9phOSFC7x+57V6QZygrqQ7j4vIGV+amEL+LtjxC4UQ0uJR5qdXuGZHVSx6iu
-         BKqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJsKbYJGy+jLt5HESEdEU9G4y6BxoUpj6Ny2/VouyJtqWA3z54YNJMdOpFSd5g0qoEaxeWGrcDuOsQs/OUP0LrCvOE2ixFZPfbv93E
-X-Gm-Message-State: AOJu0YxZOZoKcHc8l6WqLEYHQlhVS4rRTSSeA0yk0tlI9mZAR7gMfGX0
-	Au92ONy1u1VVuzzlXc3buxDj5+Asw68xdDxDNpc9bGUJDWBUpSpQd/3wHmRGPc8=
-X-Google-Smtp-Source: AGHT+IEaD5GBtPT/cw1JX323PXaFx8ViNSmytQEEvMG0JYhColsoY+4Z2lL2dbJKPQGt8NpfTxHGNw==
-X-Received: by 2002:a9d:5e19:0:b0:6f9:5e9b:66e4 with SMTP id 46e09a7af769-700b11d1d80mr4261590a34.15.1719216698044;
-        Mon, 24 Jun 2024 01:11:38 -0700 (PDT)
-Received: from localhost.localdomain ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-716bb22dffesm5029841a12.83.2024.06.24.01.11.35
+        d=1e100.net; s=20230601; t=1719216786; x=1719821586;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Axw9NwRqOxazU1/TmMUy1avR/1C75lna5YN/CpZeJG8=;
+        b=PJUEz8Ok6xaqdQSG40CKmx7+Z2BVoewvR0mCUehLUIqnbYQDboni9Emfa4H3ICPiCT
+         2wqrLJRxebPfK0/+zlHRGGZ7gMJZ6ea6iYMN062RwZGhY+psbWR38R4efL2uatsLT+oK
+         5SmwzGgmNefXRUt+qkwHaXHVoBJB8DHbYG797xfCxfuCQUymydDMixKDtb3BeSA7lsMO
+         iipZyc3XR5RA3giwT711KLWfbJI/gmDHdEyWEsb75H/dWY59umQ7JMsbMBd3olj5EVE2
+         h9i/6NcpLSIRkqiprfJsw3KWy8GNhUB0IXJdokUhHJbqoWLrEJcr44IIdiGErEbiZwWS
+         vTvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5hJfXJEVpqUCxc2J6+TNC3RNhc8zTh+g6z1qKH1km/QOzj/UJIyb3jhIZuxd/GQPWA6C/+xu+tgZuTbKnFPL1Kl3jAaViF6kmZjIqL4w1R09jIL3EXegQ2xXktgWc3jr2OLRpMnss
+X-Gm-Message-State: AOJu0YyFEFnKApxJ8kUWqVlM7V0+4r5haKgnxR0nRl3unjqAiEzHV86T
+	m7GTpEANLlCCejKKg0fTimUEyDelV16LQjsRtym6ahpKHzN+C2mp
+X-Google-Smtp-Source: AGHT+IHdeS8zdeGcqSiPU5vIU+KBaF/DajPj2HP8b1aF+fr+WL9uHKeoTUCxJOWAJQGHo31OSV1m0A==
+X-Received: by 2002:adf:f14a:0:b0:366:f5e6:a1af with SMTP id ffacd0b85a97d-366f5e6a304mr860166f8f.11.1719216786319;
+        Mon, 24 Jun 2024 01:13:06 -0700 (PDT)
+Received: from ?IPv6:2001:a61:35f9:9001:40df:88bb:5090:7ab6? ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366387cf44asm9243987f8f.26.2024.06.24.01.13.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 01:11:37 -0700 (PDT)
-From: Jian-Hong Pan <jhp@endlessos.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>,
-	David Box <david.e.box@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@endlessos.org,
-	Jian-Hong Pan <jhp@endlessos.org>
-Subject: [PATCH v6 0/3] PCI: vmd: Enable PCI PM's L1 substates of remapped PCIe Root Port and NVMe
-Date: Mon, 24 Jun 2024 16:11:09 +0800
-Message-ID: <20240624081108.10143-2-jhp@endlessos.org>
-X-Mailer: git-send-email 2.45.2
+        Mon, 24 Jun 2024 01:13:06 -0700 (PDT)
+Message-ID: <24eda02c59eb8a7c2d167af358364152a93b3440.camel@gmail.com>
+Subject: Re: [PATCH 2/8] iio: add enable and disable services to iio backend
+ framework
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Olivier MOYSAN <olivier.moysan@foss.st.com>, Nuno Sa
+ <nuno.sa@analog.com>,  Lars-Peter Clausen <lars@metafoo.de>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 24 Jun 2024 10:13:05 +0200
+In-Reply-To: <20240623145614.1639d5a4@jic23-huawei>
+References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
+	 <20240618160836.945242-3-olivier.moysan@foss.st.com>
+	 <5b7b8a7132934b77b43ffde0650c68c1dd9a5b7e.camel@gmail.com>
+	 <8c3de47c-bd72-4560-a43b-5275f2f7a059@foss.st.com>
+	 <1e38d2638a2cc62f8a73c6eaf4fd4f79637dbb47.camel@gmail.com>
+	 <20240623145614.1639d5a4@jic23-huawei>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1 substates
-capability, but they are disabled originally.
+On Sun, 2024-06-23 at 14:56 +0100, Jonathan Cameron wrote:
+> On Thu, 20 Jun 2024 12:07:47 +0200
+> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+>=20
+> > On Wed, 2024-06-19 at 17:59 +0200, Olivier MOYSAN wrote:
+> > > Hi Nuno,
+> > >=20
+> > > On 6/19/24 07:21, Nuno S=C3=A1 wrote:=C2=A0=20
+> > > > On Tue, 2024-06-18 at 18:08 +0200, Olivier Moysan wrote:=C2=A0=20
+> > > > > Add iio_backend_disable() and iio_backend_enable() APIs to allow
+> > > > > IIO backend consumer to request backend disabling and enabling.
+> > > > >=20
+> > > > > Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> > > > > ---=C2=A0=20
+> > > >=20
+> > > > Hi Olivier,
+> > > >=20
+> > > > small notes from me...
+> > > > =C2=A0=20
+> > > > > =C2=A0=C2=A0drivers/iio/industrialio-backend.c | 26 +++++++++++++=
++++++++++++++
+> > > > > =C2=A0=C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+> > > > > =C2=A0=C2=A02 files changed, 28 insertions(+)
+> > > > >=20
+> > > > > diff --git a/drivers/iio/industrialio-backend.c
+> > > > > b/drivers/iio/industrialio-
+> > > > > backend.c
+> > > > > index b950e30018ca..d3db048c086b 100644
+> > > > > --- a/drivers/iio/industrialio-backend.c
+> > > > > +++ b/drivers/iio/industrialio-backend.c
+> > > > > @@ -166,6 +166,32 @@ int devm_iio_backend_enable(struct device *d=
+ev,
+> > > > > struct
+> > > > > iio_backend *back)
+> > > > > =C2=A0=C2=A0}
+> > > > > =C2=A0=C2=A0EXPORT_SYMBOL_NS_GPL(devm_iio_backend_enable, IIO_BAC=
+KEND);
+> > > > > =C2=A0=20
+> > > > > +/**
+> > > > > + * iio_backend_enable - Backend enable
+> > > > > + * @dev: Consumer device for the backend
+> > > > > + * @back: Backend device
+> > > > > + *
+> > > > > + * RETURNS:
+> > > > > + * 0 on success, negative error number on failure.
+> > > > > + */
+> > > > > +int iio_backend_enable(struct device *dev, struct iio_backend *b=
+ack)
+> > > > > +{
+> > > > > +	return iio_backend_op_call(back, enable);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_NS_GPL(iio_backend_enable, IIO_BACKEND);=C2=A0=20
+> > > >=20
+> > > > We do already have devm_iio_backend_enable(). From a correctness st=
+and point
+> > > > and even
+> > > > scalability, that API should now call your new iio_backend_enable()=
+ instead
+> > > > of
+> > > > directly call iio_backend_op_call(). I guess that change could be i=
+n this
+> > > > patch.
+> > > > =C2=A0=20
+> > >=20
+> > > Sure. I have updated the patch.
+> > > =C2=A0=20
+> > > > > +
+> > > > > +/**
+> > > > > + * iio_backend_disable - Backend disable
+> > > > > + * @dev: Consumer device for the backend
+> > > > > + * @back: Backend device
+> > > > > + *
+> > > > > + */
+> > > > > +void iio_backend_disable(struct device *dev, struct iio_backend =
+*back)
+> > > > > +{
+> > > > > +	iio_backend_void_op_call(back, disable);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_NS_GPL(iio_backend_disable, IIO_BACKEND);
+> > > > > +=C2=A0=20
+> > > >=20
+> > > > We also have __iio_backend_disable() which is static since all user=
+s were
+> > > > using
+> > > > devm_iio_backend_enable(). I understand that's not suitable for you=
+ but I
+> > > > would
+> > > > instead rename the existing function to iio_backend_disable() and e=
+xport it.
+> > > > =C2=A0=20
+> > >=20
+> > > Just renaming is not sufficient. The reason is that=20
+> > > devm_add_action_or_reset() require an action with action(void *)=20
+> > > prototype. So the prototype of iio_backend_disable() has to be change=
+d=20
+> > > to void iio_backend_disable(void *back).
+> > > I placed the same arguments in enable and disable for symmetry, but *=
+dev=20
+> > > is not required for time being in disable API. So it can make sense t=
+o=20
+> > > change iio_backend_disable() prototype.
+> > > alternatively, we can call __iio_backend_disable() through this API.
+> > > Please, let me know is you have a preference.
+> > > =C2=A0=20
+> >=20
+> > Oh, yes, you're right. I would prefer your later option. Call
+> > __iio_backend_disable() from __iio_backend_disable() with a proper type=
+d
+> ?=C2=A0 That looks like an infinite loop :)=C2=A0=20
 
-Here is a failed example on ASUS B1400CEAE with enabled VMD:
+Ahaha, yes it looks. But hopefully you got what I really meant :)
 
-10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
-    ...
-    Capabilities: [200 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
-        L1SubCtl2: T_PwrOn=50us
-
-10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
-    ...
-    Capabilities: [900 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
-                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-                   T_CommonMode=0us LTR1.2_Threshold=0ns
-        L1SubCtl2: T_PwrOn=10us
-
-According to "PCIe r6.0, sec 5.5.4", to config the link between the PCIe
-Root Port and the child device correctly:
-* Ensure both devices are in D0 before enabling PCI-PM L1 PM Substates.
-* Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
-  LTR_L1.2_THRESHOLD are programmed properly on both devices before enable
-  bits for L1.2.
-
-Prepare this series to fix that.
-
-Jian-Hong Pan (3):
-  PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
-  PCI/ASPM: Add notes about enabling PCI-PM L1SS to
-    pci_enable_link_state(_locked)
-  PCI: vmd: Drop resetting PCI bus action after scan mapped PCI child
-    bus
-
- drivers/pci/controller/vmd.c | 33 +++++++++------------------------
- drivers/pci/pcie/aspm.c      |  6 ++++++
- 2 files changed, 15 insertions(+), 24 deletions(-)
-
--- 
-2.45.2
+- Nuno S=C3=A1
+>=20
 
