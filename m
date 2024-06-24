@@ -1,45 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0AB19B5AA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E7519D063
 	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719240861; cv=none; b=kO0IcTHj8xFqgdPg1cYNuoB7SiGoSQQP20QH8LpCBZfNiQw0xKvVQtconcu2N9mE50dBMCxcCOMhJfGC7cU9yml7xDLXiVGNrVPyocfQxrhnlJ1ZnRbE0briJFrapE+vKuYBfY2uzTlZ1Dq33MJ+jdEzILILQJ0N53CfCqJ8U3c=
+	t=1719240861; cv=none; b=A/uilJcuSyxJ/faVYmMweYe2EHcVH5DqTfebgExVGeiozEHmqvtB4A4CdnyqaGh0sWc52vPPQkF3Z8m0hmeTRm8zmvzOfMfpsV/gUPbfj+I8pWZl8qUOojVQr9NqCkN2PoAL1vX/8fiycI/jpC/lAhdAtYUyF+JVNv3ikkssFYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719240861; c=relaxed/simple;
-	bh=trZM8R7DoarjI8SaOB187M7Us4yWWK6gaFKH49ypgWE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tEfHFKQ7rUZ2/Q1v66gqsreOnz7bwbd9//gL392TZyPYLK5kLEcBfJlquF5/OEPz+l5IlmSLhPewIgQxHiIBQD2zcHrd4GJg5JDzl35oc7iqbVzMsyekAFqw3WGGixv++F02Ia6KOTNvd+lCJgHVg/2xrEqcfORigcxP0eSohu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PADTDCfv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GUWUdew6; arc=none smtp.client-ip=193.142.43.55
+	bh=NzMYnlU25XlcmunTuNeMNqwHFYLTvlMOwqg3Y6KHY+8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dmzHSuwmRQJT/dLv8crVN6mlruP5sF9xvXoswJhAD06oOnKRfAm/W1GxloGlmLnSJp64YoikW1r/Jpga+fFHnfORyFimyf10tyEMvWplMorKOv7ucUdRIQ5wqTI2T+HqRYIYP1hznjO/m16V/2f+YYyPdFWdCQAedCoyrsaU6rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QQ0wBYMT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VSv9lJ/A; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PADTDCfv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GUWUdew6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QQ0wBYMT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VSv9lJ/A"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719240857;
+	s=2020; t=1719240858;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=QdDkM9MMzZwt+lqTaUX2iXhM7rchJJ4GVD5AtbkakpU=;
-	b=PADTDCfvQYGAXCtw8bQCjA/JfJ3z0qluiOxVdmYJl9Jc4FIZ6RPFuHy4GHOo71AwVs5r5G
-	RJxz4OxQanaxxCB7ytixYc2aYc2rpqOVsyq0xyg3ckK9AKaKiUFDiF48P7PuXFfZVxJEQo
-	h2hjl+Imzfmhu28Z1f19o3qu4PGVdOkJlo5bxTB6I0p0S4gDBKuN1SAiVZzDtHKd66ALGA
-	CHomNjIlONM3I/2oDgUM4qypooHbB+azv78muxL/heg95RtTYSZM5+klZZnz7LmoI8Oe3/
-	BSzJb/82/craIyG/TmZJmt/cifPQA20Kl2ufeLAnlzfcBVd51zexHyjsjolScw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jRwb6bZH+C76mHYt3MDxKdtn1jFC4cvRGSrCMq7mXCs=;
+	b=QQ0wBYMTwJkEyIGivDQrQWLyruVTMPFqOMVSxCuskrTXzawKRI8IUPns3iq/cbrNfeD9Dw
+	Q9AcAziqyRdx27p+8QJwGv9vWCG3edDIFVwGJVuOOgczvNLnFYc19G2ZzxgFwonhkO0UIh
+	KQdvZOgtAAhgdku2aWE4qrRrxpAVT1iqQr5LvtS+Sqaf63qVuszFZm/1I5kRgLbC9uDJ4z
+	CmPHqQ0mzj8gwcYa5GezxlzHSiwIPSJoBD7U1gWtGQ0FtCBoYlbV5ms0VqeXrjYmc1a81M
+	VynFhsNGvVYrvj87umCXeYWtp1bJbpVbZtZszR5LnMoX1M/VWg3D0jFei/VcqA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719240857;
+	s=2020e; t=1719240858;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=QdDkM9MMzZwt+lqTaUX2iXhM7rchJJ4GVD5AtbkakpU=;
-	b=GUWUdew6js/pef5V9uaQNhhj4qcKq7IxYUsebrYOs892UtOfk7xPt2HKtD5SbvjTbqIpGd
-	CNcwSZXF9MZthZDQ==
-Subject: [PATCH v2 0/5] timer_migration: Fix two possible races and an
- improvement
-Date: Mon, 24 Jun 2024 16:53:52 +0200
-Message-Id: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jRwb6bZH+C76mHYt3MDxKdtn1jFC4cvRGSrCMq7mXCs=;
+	b=VSv9lJ/AQDL1mSFpFZbJc4viptpvb+gqENT54ulqh3u4MfKJXaUAA5DiYpNnWgwjTa/5x6
+	Ym2ug4XstfGgpWDA==
+Date: Mon, 24 Jun 2024 16:53:54 +0200
+Subject: [PATCH v2 2/5] timer_migration: Improve tracing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,63 +49,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAICIeWYC/22MQQ7CIBBFr9LMWgxM0KIr72G6aGDaTqJgAElNw
- 93Frl2+//PeBokiU4Jrt0GkwomDb4CHDuwy+pkEu8aAErU8oxL5yXMUE6+UhEN7UhNqddEWmvG
- KtB9NuA+NF045xM8eL+q3/u8UJaQw1ozoDBnX97cH+3eOwfN6dARDrfUL3WIXbKoAAAA=
+Message-Id: <20240624-tmigr-fixes-v2-2-3eb4c0604790@linutronix.de>
+References: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
+In-Reply-To: <20240624-tmigr-fixes-v2-0-3eb4c0604790@linutronix.de>
 To: Frederic Weisbecker <frederic@kernel.org>, 
  Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-Borislav reported a warning in timer migration deactive path
+Trace points of inactive and active propagation are located at the end of
+the related functions. The interesting information of those trace points is
+the updated group state. When trace points are not located directly at the
+place where group state changed, order of trace points in traces could be
+confusing.
 
-  https://lore.kernel.org/r/20240612090347.GBZmlkc5PwlVpOG6vT@fat_crate.local
+Move inactive and active propagation trace points directly after update of
+group state values.
 
-Sadly it doesn't reproduce directly. But with the change of timing (by
-adding a trace prinkt before the warning), it is possible to trigger the
-warning reliable at least in my test setup. The problem here is a racy
-check agains group->parent pointer. This is also used in other places in
-the code and fixing this racy usage is adressed by the first patch.
+This change is also a preparation to be able to split out update of group
+state information easily into a separate function. Which in turn is
+required to fix a possible race in setup code.
 
-There was another race reported by Frederic in setup path:
-
-  https://lore.kernel.org/r/ZnWOswTMML6ShzYO@localhost.localdomain
-
-It is addressed patch 2-4. Patch 2 is an already existing patch of v1
-(improve tracing) and makes the fix easier. Patch 3 is also a preparation
-patch for the final fix and Patch 4 is then the real fix. (I labelled all
-those three patches with Fixes tag to be easier selectable.)
-
-While working with the code, I saw that the update of per cpu group wakeup
-value could be improved. This improvement is adressed by the last patch.
-
-Patches are available here:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/anna-maria/linux-devel.git timers/misc
-
+Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 ---
-Changes in v2:
+ kernel/time/timer_migration.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-- Address another possible race in setup code (reported by Frederic) and
-  recycle therefore one improvement patch
-- Change order and move the already existing improvement patch to the end
-  of the queue
-- Existing patches didn't change
-- Link to v1: https://lore.kernel.org/r/20240621-tmigr-fixes-v1-0-8c8a2d8e8d77@linutronix.de
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index d91efe1dc3bf..600c9e866fae 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -656,6 +656,8 @@ static bool tmigr_active_up(struct tmigr_group *group,
+ 
+ 	} while (!atomic_try_cmpxchg(&group->migr_state, &curstate.state, newstate.state));
+ 
++	trace_tmigr_group_set_cpu_active(group, newstate, childmask);
++
+ 	if (walk_done == false)
+ 		data->childmask = group->childmask;
+ 
+@@ -673,8 +675,6 @@ static bool tmigr_active_up(struct tmigr_group *group,
+ 	 */
+ 	group->groupevt.ignore = true;
+ 
+-	trace_tmigr_group_set_cpu_active(group, newstate, childmask);
+-
+ 	return walk_done;
+ }
+ 
+@@ -1306,9 +1306,10 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
+ 
+ 		WARN_ON_ONCE((newstate.migrator != TMIGR_NONE) && !(newstate.active));
+ 
+-		if (atomic_try_cmpxchg(&group->migr_state, &curstate.state,
+-				       newstate.state))
++		if (atomic_try_cmpxchg(&group->migr_state, &curstate.state, newstate.state)) {
++			trace_tmigr_group_set_cpu_inactive(group, newstate, childmask);
+ 			break;
++		}
+ 
+ 		/*
+ 		 * The memory barrier is paired with the cmpxchg() in
+@@ -1327,8 +1328,6 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
+ 	if (walk_done == false)
+ 		data->childmask = group->childmask;
+ 
+-	trace_tmigr_group_set_cpu_inactive(group, newstate, childmask);
+-
+ 	return walk_done;
+ }
+ 
 
-Thanks,
-
-        Anna-Maria
-
----
-Anna-Maria Behnsen (5):
-      timer_migration: Do not rely always on group->parent
-      timer_migration: Improve tracing
-      timer_migration: Split out state update of tmigr_active_up()
-      timer_migration: Fix possible race in tmigr_active_up() in setup path
-      timer_migration: Spare write when nothing changed
-
- kernel/time/timer_migration.c | 137 ++++++++++++++++++++++++------------------
- kernel/time/timer_migration.h |  12 +++-
- 2 files changed, 90 insertions(+), 59 deletions(-)
+-- 
+2.39.2
 
