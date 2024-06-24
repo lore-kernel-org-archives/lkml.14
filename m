@@ -1,81 +1,106 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9B279DE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D7D804;
+	Mon, 24 Jun 2024 07:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719212307; cv=none; b=eBVJ+yLK/VHGAu8FCXzt1m0KrLtzpEpK+u1y5mbRK75PGLB23al8jhQ/mg5UsxwV6Z9f8YU57J9dWB6CH7tAMCXNYHyu0cYzGTMA7MtiRSX6phrQofl0b2NB1isUWN+yXk3RY9Gv8wpKvxdqA5NRDAcJVhCZdlQX6jNKaxo+rOw=
+	t=1719212444; cv=none; b=drp8aWUBBuTNeqnf+7wttWDy9CSALhWlNZxEdaHSXb7Xuxa5frLFMv0WwHg42OtFJlI3enw/6K3ObLAudz+GHTuoj3RUmfmle7eGHOC+y6kLHtsbDNAA87A5wU048OwJsAwOOhYEcKdh70AI6UYGEDPHOHja2iFqkokeO0tCR+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719212307; c=relaxed/simple;
-	bh=dd51Bi7B4iho9WSUK2ybNhdPYH2AijwKAorDmLuXRzY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SNP5rE1y5CjuTlqoeW3rQm4FnAwreqOAn4NQx44pXW/u/f68xTQ2LvNFxmmzMya5JM2GTdYFnVr3J/yEfujCvgY+1wBlpowYGGweQY1pziSWGddT49pMoZjVy2OW13KBotmEdA4LK7sP7K03l3ZUUQH4Laqn4WGvQsTA2yvuvwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lUp0ZZwz; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719212444; c=relaxed/simple;
+	bh=oyrEBVm3S1lEmozrtxvuovPMCO+zMUIMHBeaNvtY6vg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bUzZonZouPaidipR/FLztDgbt+dgjBgdBBlQ4dGs20/PnDY6KyTN0KSysoi2qA1nEhOQzX9oH7JDiagVRHJU+rLPZAfPH9x2e0bYwMwpiV5H6zv2ZYUIIMdHlEwmS+ZalSw5kjbhS4CCBXZoPRJmXz7zO96NMoMUK60csrYal+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=k5U//jms; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lUp0ZZwz"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4217136a74dso32064375e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 23:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719212302; x=1719817102; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dd51Bi7B4iho9WSUK2ybNhdPYH2AijwKAorDmLuXRzY=;
-        b=lUp0ZZwzkz+YrROsaIKc6adWzkvF/gue2MiXLnyTjnL6eu6uWBMEFt0WnCpZdGaPJN
-         Z0U5YxFP1ejIpGW11+l97uQNf7q2a53cizR0HcG/jbU0EZPuTVqICbSlzf1zvD5f6K7E
-         X2z2o7pXVDtATrd5GSp5HeTSMpqiH1lNjLQ/DEFEFynZ2r8bU6HhuI8Z3WiiZZ8dWefi
-         7RoBTufpoHF4ATsoWHK2eCaaa1KwFZpeduoN5TTVe4NREuwrEn9COZcBGs/Qo2pfnI4e
-         Ku7/60LS82161psokp93cBK1ABNAipW5oILVrD/elhZI/TMbZoZ3GVktfR2MxcGhuHjS
-         fggw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719212302; x=1719817102;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dd51Bi7B4iho9WSUK2ybNhdPYH2AijwKAorDmLuXRzY=;
-        b=hi7W221ED4z+sBsk2UaFgWWSVqIL+akM/rPdW0maoGO8zBk/1A8vtRSc+fFgi6XkOG
-         CkqfCJxxcG2ZiZ9j0nEFfm/qHUsVPECre02CCIllUhUxrGoGnvOTfs27D85e105yUATK
-         t/LEHLT6p7gPyumkfyoGy6ABm+2pJz0zGD5PjM4dmSU7+lCitwW3IPcLY8CFsi6vf7eP
-         PZAbxjyze8to+455r/PbSeiskF1B9Bfq9+c44NbiQCI5BQESvBjl17m0p765eD8BmIeD
-         nkwvebYw91M9pThUtGbHBGKoLwjfx6uNeNDEjay35HO7SxaHxDd+MLnbeJADpP30Aisb
-         B+0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWCtsataz72ZL+ik6MMNaTWNI65aijF8yHS/Q9C2q5mIzRoZ02HHdflJDCF3nxSxbCE9R+GCda5kPr8yOokl0S+QRdKDJMjDYkbVk3V
-X-Gm-Message-State: AOJu0YzBmf8ve0lzI4SHPd9V6MuGOkEnvGh+q1KUzcyhfrLtL9Bhz2fe
-	t4mUGavb+sZCQze7Zb3rCYpmaD3hYsCwVMFlJgAgPJhxXOTs+Jc55BYf0T8/cdw=
-X-Google-Smtp-Source: AGHT+IHzL3aUhtHKe/3Bjjj3+ND74b1Fr865qc1MmeRI2nhE716S8dlrF9T1bXooOlRfy9IW4F9mRg==
-X-Received: by 2002:a05:6000:459a:b0:363:7bbf:efcc with SMTP id ffacd0b85a97d-366e96bef86mr2104770f8f.62.1719212301575;
-        Sun, 23 Jun 2024 23:58:21 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:67a:d41c:43dd:a67f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0be818sm161647475e9.15.2024.06.23.23.58.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jun 2024 23:58:21 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,  Kevin Hilman
- <khilman@baylibre.com>,  Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>,
-  linux-arm-kernel@lists.infradead.org,  linux-amlogic@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  kernel@pengutronix.de
-Subject: Re: [PATCH] reset: meson-audio-arb: Use devm_clk_get_enabled()
-In-Reply-To: <20240621-reset-devm-clk-get-enabled-v1-1-8408c7962b6c@pengutronix.de>
-	(Philipp Zabel's message of "Fri, 21 Jun 2024 17:28:12 +0200")
-References: <20240621-reset-devm-clk-get-enabled-v1-1-8408c7962b6c@pengutronix.de>
-Date: Mon, 24 Jun 2024 08:58:20 +0200
-Message-ID: <1jfrt2esj7.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="k5U//jms"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B9A0640009;
+	Mon, 24 Jun 2024 07:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1719212432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b19k+/foFyMzoSDxq1RThplVOtb1XjVmJDOSBecBwtA=;
+	b=k5U//jmsb7SQzA1xVwp91Vdb/6n0HBtyxVKJJnfrQ9T5e34PnwanYqHLLOLusY1LuDX9BI
+	OBLtqjiyTLcxOXQNcHrNBuEWxFHgtGpN70z15/U6jRWZWqHpb1RhcoZYOBuHKiblzH/8e7
+	pxTA0hZxYbN5TvTDvvrb42iG5Isdbu5eI6X63Ff6lBKdVZgNCkf/N71Y7IvgUt2Y5+WE/s
+	yFI5aDKXeqoWnhMl69rXx6SqxejVebzQHOewlxSnw/yQFHyYNT8rEY+ZluEfZmZ/01NZQ3
+	UCewzl47uimWeqszuqbL4ZGbyIHABNGZKQaXyzSxC3CmAY4W9DtTJkdSw5208Q==
+Message-ID: <704f4b95-2aed-4b76-87cb-83002698471c@arinc9.com>
+Date: Mon, 24 Jun 2024 10:00:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: net: dsa: mediatek,mt7530: Minor grammar
+ fixes
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, andrew@lunn.ch,
+ f.fainelli@gmail.com, olteanv@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>
+References: <20240624025812.1729229-1-chris.packham@alliedtelesis.co.nz>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20240624025812.1729229-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Fri 21 Jun 2024 at 17:28, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+On 24/06/2024 05.58, Chris Packham wrote:
+> Update the mt7530 binding with some minor updates that make the document
+> easier to read.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>      I was referring to this dt binding and found a couple of places where
+>      the wording could be improved. I'm not exactly a techical writer but
+>      hopefully I've made things a bit better.
+> 
+>   .../devicetree/bindings/net/dsa/mediatek,mt7530.yaml        | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+> index 1c2444121e60..6c0abb020631 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+> +++ b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+> @@ -22,16 +22,16 @@ description: |
+>   
+>     The MT7988 SoC comes with a built-in switch similar to MT7531 as well as four
+>     Gigabit Ethernet PHYs. The switch registers are directly mapped into the SoC's
+> -  memory map rather than using MDIO. The switch got an internally connected 10G
+> +  memory map rather than using MDIO. The switch has an internally connected 10G
+>     CPU port and 4 user ports connected to the built-in Gigabit Ethernet PHYs.
+>   
+> -  MT7530 in MT7620AN, MT7620DA, MT7620DAN and MT7620NN SoCs has got 10/100 PHYs
+> +  MT7530 in MT7620AN, MT7620DA, MT7620DAN and MT7620NN SoCs have 10/100 PHYs
 
-> Use devm_clk_get_enabled() to reduce a bit of boilerplate and to
-> disable the clock in case devm_reset_controller_register() fails.
->
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+MT7530 is singular, the sentence is correct as it is.
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+>     and the switch registers are directly mapped into SoC's memory map rather than
+>     using MDIO. The DSA driver currently doesn't support MT7620 variants.
+>   
+>     There is only the standalone version of MT7531.
+>   
+> -  Port 5 on MT7530 has got various ways of configuration:
+> +  Port 5 on MT7530 supports various configurations:
+
+This is a rewrite, not a grammar fix.
+
+Arınç
