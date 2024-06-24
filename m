@@ -1,164 +1,119 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9AF49645;
-	Mon, 24 Jun 2024 08:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44B38DD6
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217212; cv=none; b=asA2WTtPnwn1wiWhnULlHEbCbWcflnXL8Y4CcJL4Hhnh9AmAdIETGTnj1gqFPXxknFsm2ijqRFmyBXDXCvrW/mZBG/sh1VO52g0mB7Tgdu5kTepQocutRSkuC9VabqUD49554x274Bd34uvGzcSQYtJzjKci1II6Rx+Fmnxdb9g=
+	t=1719217277; cv=none; b=cF1nSRo+DCCTW7OTJ2n1CAt+vY8xlLRO/8U3Ao5BBwHzyymww2rXb54RG1Y7SwNbUlRhp5/SX7qF1nTrXauqjYkUuM7rAu6E8IAmbB3R8xDA0e+spseBWjxpOkcoK5er2KCIDRIl+f8LGkE+GILa2GMIanW/LArlFEGZYPZMKHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217212; c=relaxed/simple;
-	bh=pq0cmcBY/X2RNBjl7vh86+Fi/2499fm8ZPDUFHIfztc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tn6tgIRmhvGMdUH8cgc8jacrL8kkwWObN/ESYqshQ2X6Oy4TbiM03fwoqEu5v3cRpbc17uh0ao4cKEC6Zctiym8gzDPLBtth6pzZbPPJRpwDXEan4KbSCkYmtBcV24yruG/FIMo9zqIzvHXY12SvG9xg6Va+kLdCcr8tsfb0a8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cxujiqvb; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1719217277; c=relaxed/simple;
+	bh=u251a/XP+o9tdpIJnyIXU0QRyZMFEyMwDU/ICP5xX+E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZJET2vdyLOTAuwoz7OXnl+EQJn6F4RPT2QvdEF6RoXxmH3QlXG1hKueVSW2eTsboAKltc75eTsDWRW8e1hE3CXwq34Af5kFTdyPm6yCQaU/DvW7jyzk1vBinZsuWBo7qPG99Rqk9IEnbWzIhRzVTjuLp5j9tFrxbBY2Dd3qoaEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gVWFRtnU; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cxujiqvb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5563FC0009;
-	Mon, 24 Jun 2024 08:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719217207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vpj1bjYXlBzUfYOefDTjh4xiC9L+rWuuQmo0xQfNisQ=;
-	b=cxujiqvbjQcjSYkwhcOwJAczyZeKLHaVrwYHhoxhQTlS84njHLtQU7WqYt0TVoLRyIsj/L
-	7b9nOKN5UR7d/5EIQAZ7hEEcyhn0Cq+6hJ3IfkQniOqC7/JJyuIgqQamKLH2mhQ7NOQuh9
-	Bwd3PaIEVlv/8MPvj+C2QLY6hLlABB1P+K4ceJxNEy59dzQIB8t9FyVXIKmlA3YikrJZmh
-	MtHsGb/kZflAGcFqL0O13KM/Hnm0pJ5l2xFN212IJL1m373ToUZfXE1Xq7oNN1cRC82Djb
-	9KGd+YUl4ms/PHS4Zds9ogBeUkZsyvcmGDX34hHAE1a5rk4uYg2iAebmKSH0qw==
-Date: Mon, 24 Jun 2024 10:20:03 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Simon Horman <horms@kernel.org>, Sai Krishna Gajula
- <saikrishnag@marvell.com>, Thomas Gleixner <tglx@linutronix.de>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp
- Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>,
- Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 18/19] mfd: Add support for LAN966x PCI device
-Message-ID: <20240624102003.3b11a8cc@bootlin.com>
-In-Reply-To: <CAHp75VdeoNXRTmMoK-S6qecU1nOQWDZVONeHU+imFiwcTxe8xg@mail.gmail.com>
-References: <20240527161450.326615-1-herve.codina@bootlin.com>
- <20240527161450.326615-19-herve.codina@bootlin.com>
- <ZmDJi__Ilp7zd-yJ@surfacebook.localdomain>
- <20240620175646.24455efb@bootlin.com>
- <CAHp75VdDkv-dxWa60=OLfXAQ8T5CkFiKALbDHaVVKQOK3gJehA@mail.gmail.com>
- <20240620184309.6d1a29a1@bootlin.com>
- <20240620191923.3d62c128@bootlin.com>
- <CAHp75VdeoNXRTmMoK-S6qecU1nOQWDZVONeHU+imFiwcTxe8xg@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gVWFRtnU"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec595d0acbso13886701fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719217274; x=1719822074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BlDb4mi6NTpX7sDJc09JrhEmbwE1hAUanv6O8UAsVHQ=;
+        b=gVWFRtnUCOWiEJiNtfTEUV4VGj7AIHgcxB30BN9LLH1Pt3GUrTwnte+Xa9NAXYzW2N
+         MolteNWjvc4S6QaUjlrKEL4R56RyXEwn6BxqNNsKlOAJu/+Frch5UU6OxwXpEEMHMqCh
+         EueKcJwFZXGCXQLXhFciIosyuBIqyHoXZo6g/Phl0tA604BUZ0Cys//02uKDODqAkKpk
+         VXiLSsSz5ZNp+DUOc58iefwTMFesix8ovC/dpLgoGV13TaMrN9uIKeFWGRou8aVwwvFK
+         qePWgPYFKsox4R2rFKhqgw6glNf9wWpipZ5Kh3PRE71U3ojmbibIvIDYKaITGOdyAhL+
+         /nyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719217274; x=1719822074;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BlDb4mi6NTpX7sDJc09JrhEmbwE1hAUanv6O8UAsVHQ=;
+        b=rhcYVhkRHf+D7IxH93OaakXTzNvbSCTQodNbH0EqpdFtg78r5LeARuxpL3UbRiERjj
+         CzmfO2o6Vttx+yKu5ODmZikxxBb3pJUhluBgTlUhz9faZoVkUKenq1Tv5T2cNcVMd2Lx
+         J6FZj1k1F8BRjLCSkWjhXteEhPozFoSDxta2gjLgvRXxJQX9egO7TtThhjolRTnCGZeA
+         S4lHC+qEz5pIyMaTrS5TCwFV/gwMf4s2F1whwfhMhjWqgOZ9Szawl1UHtVOmWYkqwj+0
+         ZDlBkN5H73n/bqvvFbXMaOKbuGWFpj/15z6lNHxzSnIQjMAe0jQNfDpjZUuF3sBnUU20
+         hywg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYgXYA52jZWt48K8X9qTlginBgkFpYbmrUVlG6VUGbd//I0KEmWi56NXdun8GzVnadt6gdw6ONNOQT/+xG9mJBvVlaG1ff26tBDAX9
+X-Gm-Message-State: AOJu0Yw8ZY5VtzUyQWigC/QTVJCaJOg5oFyg+zemZQYUeJg01qLufbLW
+	OTr+jBQnLwV7+eMZFk/00/WrU4ozMnddEpIgcctNgVVnYPQV2tngVYfNgvqkBI8=
+X-Google-Smtp-Source: AGHT+IFPKBuSxSa24ffNl0qmiOjXu2IewrcJ94Gg7qLXnxIIuPS9D7LNMxJIkCRpfUF0FuMsV3Vwkg==
+X-Received: by 2002:a2e:320a:0:b0:2ec:3d74:88c8 with SMTP id 38308e7fff4ca-2ec5b30bce2mr31274271fa.18.1719217273323;
+        Mon, 24 Jun 2024 01:21:13 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4248179d8e0sm132450205e9.3.2024.06.24.01.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 01:21:12 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Christian Hewitt <christianshewitt@gmail.com>
+Cc: Sam Nazarko <email@samnazarko.co.uk>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240622135117.2608890-1-christianshewitt@gmail.com>
+References: <20240622135117.2608890-1-christianshewitt@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add OSMC Vero 4K
+Message-Id: <171921727248.3499124.11397122409029609758.b4-ty@linaro.org>
+Date: Mon, 24 Jun 2024 10:21:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Fri, 21 Jun 2024 17:45:05 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Hi,
 
-> On Thu, Jun 20, 2024 at 7:19 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> > On Thu, 20 Jun 2024 18:43:09 +0200
-> > Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > On Thu, 20 Jun 2024 18:07:16 +0200
-> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> > > > On Thu, Jun 20, 2024 at 5:56 PM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > > > On Wed, 5 Jun 2024 23:24:43 +0300
-> > > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> > > > > > Mon, May 27, 2024 at 06:14:45PM +0200, Herve Codina kirjoitti:  
+On Sat, 22 Jun 2024 13:51:16 +0000, Christian Hewitt wrote:
+> Add support for the OSMC Vero 4K Linux-based STB
 > 
-> ...
 > 
-> > > > > > > +   if (!dev->of_node) {
-> > > > > > > +           dev_err(dev, "Missing of_node for device\n");
-> > > > > > > +           return -EINVAL;
-> > > > > > > +   }  
-> > > > > >
-> > > > > > Why do you need this? The code you have in _create_intr_ctrl() will take care
-> > > > > > already for this case.  
-> > > > >
-> > > > > The code in _create_intr_ctrl checks for fwnode and not an of_node.
-> > > > >
-> > > > > The check here is to ensure that an of_node is available as it will be use
-> > > > > for DT overlay loading.  
-> > > >
-> > > > So, what exactly do you want to check? fwnode check covers this.
-> > > >  
-> > > > > I will keep the check here and use dev_of_node() instead of dev->of_node.  
-> > > >
-> > > > It needs to be well justified as from a coding point of view this is a
-> > > > duplication.  
-> >
-> > On DT based system, if a fwnode is set it is an of_node.
-> > On ACPI, if a fwnode is set is is an acpi_node.
-> >
-> > The core PCI, when it successfully creates the DT node for a device
-> > (CONFIG_PCI_DYNAMIC_OF_NODES) set the of_node of this device.
-> > So we can have a device with:
-> >  - fwnode from ACPI
-> >  - of_node from core PCI creation  
-> 
-> Does PCI device creation not set fwnode?
 
-No and IMHO it is correct.
-This device has the fwnode that point to an ACPI node: The description used
-for device creation.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
 
-The of_node set is created based on PCI known information.
-This of_node, at PCI level is not used to create the PCI device but is created
-based on an already existing PCI device.
+[1/2] dt-bindings: arm: amlogic: add OSMC Vero 4K
+      https://git.kernel.org/amlogic/c/7d7dd631d1af471a6c909e197be2ef3df526d00f
+[2/2] arm64: dts: meson: add support for OSMC Vero 4K
+      https://git.kernel.org/amlogic/c/5feff053b08ce5d2167b9f44bcea3b466b5a81a0
 
-> 
-> > This driver needs the of_node to load the overlay.
-> > Even if the core PCI cannot create a DT node for the PCI device right
-> > now, I don't expect this LAN855x PCI driver updated when the core PCI
-> > is able to create this PCI device DT node.  
-> 
-> If it's really needed, I think the correct call here is is_of_node()
-> to show exactly why it's not a duplication. It also needs a comment on
-> top of this call.
+These changes has been applied on the intermediate git tree [1].
 
-is_of_node() will not returns the expected result.
-It will return false as the fwnode->ops of the device is not related to 
-of_node ops but ACPI node ops :(
+The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-What do you thing it I keep the of_node test using dev_of_node() and add the
-following comment:
-	--- 8< ---
-	/*
-	 * On ACPI system, fwnode can point to the ACPI node.
-	 * This driver needs an of_node to be used as the device-tree overlay
-	 * target. This of_node should be set by the PCI core if it succeeds in
-	 * creating it (CONFIG_PCI_DYNAMIC_OF_NODES feature).
-	 * Check here for the validity of the of_node.
-	 */
-	if (!dev_of_node(dev)) {
-		dev_err(dev, "Missing of_node for device\n");
-		return -EINVAL;
-	}
-	--- 8< ---
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
-Let me know if this can be ok.
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
 
-Hervé
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
+
