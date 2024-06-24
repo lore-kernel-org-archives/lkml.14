@@ -1,46 +1,48 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704A422097;
-	Mon, 24 Jun 2024 06:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296B828DCB
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719210649; cv=none; b=cCmcV9uwE1i5uAYR9cJgfPNab5FbWAeVV+v6buDvK6v6LD0+4t4LjOiqw1UZotRHJIw4Lc7ajLbCpCv8Vrcr37bLgXr83RATpj/zPjYeN/L0quEdSWF+dVQ9xs+B7jQtTibe+QRnRKHhwFauXb8gK5VolagqAQoXRmt2GvGcZLE=
+	t=1719210671; cv=none; b=Qt4v61h48ZMjbS9oFFv45p3rRIIo9eTfnoIFjtfBdviVIcl334GSKRbGBXVgSkaKR5mTq0YM/kLETEfTxn/4exhymkNSxPNVr7GYBenHmLBYY3skZbN5tr868ELMmu4sKWDg4vyP+a5xQOKadJZSGi9mLQfPPUJacasH7WZXqag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719210649; c=relaxed/simple;
-	bh=ugyVYwkES2Lk5tCgkNgZhFz5K7ZLRJ1gHFobe3Ted98=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qVKJaa8WasYfjHlV8FNN/f0yry7qKF/syZaocFKlb1qDKjyLGaodXOYMR0u41tEz9dHmF7qhFQITWP1bGMM2qIljN29zMgahg0p+x4hXDAwcKH33dZTGGnCELdEZj3qGn6SVklmiDyjd8C+NkZxwvJZlS4e3H+A9gmWDLpzx6so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45O6UPIq82837238, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45O6UPIq82837238
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 14:30:25 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 24 Jun 2024 14:30:26 +0800
-Received: from RTDOMAIN (172.21.210.106) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 24 Jun
- 2024 14:30:25 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v21 03/13] rtase: Implement the rtase_down function
-Date: Mon, 24 Jun 2024 14:28:11 +0800
-Message-ID: <20240624062821.6840-4-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240624062821.6840-1-justinlai0215@realtek.com>
-References: <20240624062821.6840-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1719210671; c=relaxed/simple;
+	bh=de7de+rT9nbBMSSSnfOCoLPHya/yDwE8bC/DvKjslAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ltunD8BUzI3Y0vNZkWr3fFOwXw7FvLSx3rGDz8wwX2EN8DsxPVc9+N2bODuuDezkTbaBAfEWUmpGJW9Tfw8QwEeadfJq6fpNIzbxSZAx+IQ8cIKalJcBHkttsCu1OPHnS01FkKq55cey6ULOLIup0o41rT863w6cxHdOCArgH9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=i7obmKSx; arc=none smtp.client-ip=185.136.64.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="i7obmKSx"
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 20240624062052e62a7d89208ad9efd0
+        for <linux-kernel@vger.kernel.org>;
+        Mon, 24 Jun 2024 08:20:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=jan.kiszka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=KrnFVQqPX0XMmlsqlUHcoKE2zhOTIf+F9SOvzEJf3Xw=;
+ b=i7obmKSxnvrrjen1ef+GZO0hmc31P4vU69rd8yt8kvvkqIY7d3W4ai0VorRv6F/QvZvIGD
+ 0efXOXjkCMwSnoppjMGJCN5ofHaNHPRO6lRcBDM12hzRa48DJSEntEFRG8BicOQbcfJEvZVP
+ cwthpGE1yx9/GgupflfNmFQmAaqqg=;
+From: Jan Kiszka <jan.kiszka@siemens.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Bao Cheng Su <baocheng.su@siemens.com>,
+	Diogo Ivo <diogo.ivo@siemens.com>
+Subject: [PATCH 3/4] dt-bindings: soc: ti: am645-system-controller: add child nodes used by main domain
+Date: Mon, 24 Jun 2024 08:20:49 +0200
+Message-ID: <52848094062ea55b0063e6fc37f27e6ed5035aa8.1719210050.git.jan.kiszka@siemens.com>
+In-Reply-To: <cover.1719210050.git.jan.kiszka@siemens.com>
+References: <cover.1719210050.git.jan.kiszka@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,193 +50,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-294854:519-21489:flowmailer
 
-Implement the rtase_down function to disable hardware setting
-and interrupt and clear descriptor ring.
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+Expand bindings to cover both the MCU and the main usage of the AM654
+system controller.
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 ---
- .../net/ethernet/realtek/rtase/rtase_main.c   | 150 ++++++++++++++++++
- 1 file changed, 150 insertions(+)
+ .../soc/ti/ti,am654-system-controller.yaml    | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index ed296d93331f..ef0b4ff5db7c 100755
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -192,6 +192,56 @@ static int rtase_alloc_desc(struct rtase_private *tp)
- 	return -ENOMEM;
- }
+diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+index e79803e586ca..0eec807f38df 100644
+--- a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
++++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+@@ -34,6 +34,35 @@ patternProperties:
+     type: object
+     $ref: /schemas/phy/ti,phy-gmii-sel.yaml#
  
-+static void rtase_unmap_tx_skb(struct pci_dev *pdev, u32 len,
-+			       struct rtase_tx_desc *desc)
-+{
-+	dma_unmap_single(&pdev->dev, le64_to_cpu(desc->addr), len,
-+			 DMA_TO_DEVICE);
-+	desc->opts1 = cpu_to_le32(RTK_OPTS1_DEBUG_VALUE);
-+	desc->opts2 = 0x00;
-+	desc->addr = cpu_to_le64(RTK_MAGIC_NUMBER);
-+}
++  "^mux-controller$":
++    type: object
++    description:
++      This is the SERDES lane control mux.
 +
-+static void rtase_tx_clear_range(struct rtase_ring *ring, u32 start, u32 n)
-+{
-+	struct rtase_tx_desc *desc_base = ring->desc;
-+	struct rtase_private *tp = ring->ivec->tp;
-+	u32 i;
++  "^clock@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/mfd/syscon.yaml#
++    properties:
++      compatible:
++        items:
++          - const: ti,am654-serdes-ctrl
++          - const: syscon
 +
-+	for (i = 0; i < n; i++) {
-+		u32 entry = (start + i) % RTASE_NUM_DESC;
-+		struct rtase_tx_desc *desc = desc_base + entry;
-+		u32 len = ring->mis.len[entry];
-+		struct sk_buff *skb;
++  "^dss-oldi-io-ctrl@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/mfd/syscon.yaml#
++    properties:
++      compatible:
++        items:
++          - const: ti,am654-dss-oldi-io-ctrl
++          - const: syscon
 +
-+		if (len == 0)
-+			continue;
++  "^clock-controller@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
++    description:
++      Clock provider for TI EHRPWM nodes.
 +
-+		rtase_unmap_tx_skb(tp->pdev, len, desc);
-+		ring->mis.len[entry] = 0;
-+		skb = ring->skbuff[entry];
-+		if (!skb)
-+			continue;
-+
-+		tp->stats.tx_dropped++;
-+		dev_kfree_skb_any(skb);
-+		ring->skbuff[entry] = NULL;
-+	}
-+}
-+
-+static void rtase_tx_clear(struct rtase_private *tp)
-+{
-+	struct rtase_ring *ring;
-+	u16 i;
-+
-+	for (i = 0; i < tp->func_tx_queue_num; i++) {
-+		ring = &tp->tx_ring[i];
-+		rtase_tx_clear_range(ring, ring->dirty_idx, RTASE_NUM_DESC);
-+		ring->cur_idx = 0;
-+		ring->dirty_idx = 0;
-+	}
-+}
-+
- static void rtase_mark_to_asic(union rtase_rx_desc *desc, u32 rx_buf_sz)
- {
- 	u32 eor = le32_to_cpu(desc->desc_cmd.opts1) & RTASE_RING_END;
-@@ -423,6 +473,80 @@ static void rtase_tally_counter_clear(const struct rtase_private *tp)
- 	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
- }
- 
-+static void rtase_irq_dis_and_clear(const struct rtase_private *tp)
-+{
-+	const struct rtase_int_vector *ivec = &tp->int_vector[0];
-+	u32 val1;
-+	u16 val2;
-+	u8 i;
-+
-+	rtase_w32(tp, ivec->imr_addr, 0);
-+	val1 = rtase_r32(tp, ivec->isr_addr);
-+	rtase_w32(tp, ivec->isr_addr, val1);
-+
-+	for (i = 1; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		rtase_w16(tp, ivec->imr_addr, 0);
-+		val2 = rtase_r16(tp, ivec->isr_addr);
-+		rtase_w16(tp, ivec->isr_addr, val2);
-+	}
-+}
-+
-+static void rtase_poll_timeout(const struct rtase_private *tp, u32 cond,
-+			       u32 sleep_us, u64 timeout_us, u16 reg)
-+{
-+	int err;
-+	u8 val;
-+
-+	err = read_poll_timeout(rtase_r8, val, val & cond, sleep_us,
-+				timeout_us, false, tp, reg);
-+
-+	if (err == -ETIMEDOUT)
-+		netdev_err(tp->dev, "poll reg 0x00%x timeout\n", reg);
-+}
-+
-+static void rtase_nic_reset(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u16 rx_config;
-+	u8 val;
-+
-+	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_0);
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config & ~RTASE_ACCEPT_MASK);
-+
-+	val = rtase_r8(tp, RTASE_MISC);
-+	rtase_w8(tp, RTASE_MISC, val | RTASE_RX_DV_GATE_EN);
-+
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val | RTASE_STOP_REQ);
-+	mdelay(2);
-+
-+	rtase_poll_timeout(tp, RTASE_STOP_REQ_DONE, 100, 150000,
-+			   RTASE_CHIP_CMD);
-+
-+	rtase_poll_timeout(tp, RTASE_TX_FIFO_EMPTY, 100, 100000,
-+			   RTASE_FIFOR);
-+
-+	rtase_poll_timeout(tp, RTASE_RX_FIFO_EMPTY, 100, 100000,
-+			   RTASE_FIFOR);
-+
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val & ~(RTASE_TE | RTASE_RE));
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val & ~RTASE_STOP_REQ);
-+
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config);
-+}
-+
-+static void rtase_hw_reset(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+
-+	rtase_irq_dis_and_clear(tp);
-+
-+	rtase_nic_reset(dev);
-+}
-+
- static void rtase_nic_enable(const struct net_device *dev)
- {
- 	const struct rtase_private *tp = netdev_priv(dev);
-@@ -526,6 +650,32 @@ static int rtase_open(struct net_device *dev)
- 	return ret;
- }
- 
-+static void rtase_down(struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	struct rtase_int_vector *ivec;
-+	struct rtase_ring *ring, *tmp;
-+	u32 i;
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		napi_disable(&ivec->napi);
-+		list_for_each_entry_safe(ring, tmp, &ivec->ring_list,
-+					 ring_entry)
-+			list_del(&ring->ring_entry);
-+	}
-+
-+	netif_tx_disable(dev);
-+
-+	netif_carrier_off(dev);
-+
-+	rtase_hw_reset(dev);
-+
-+	rtase_tx_clear(tp);
-+
-+	rtase_rx_clear(tp);
-+}
-+
- static int rtase_close(struct net_device *dev)
- {
- 	struct rtase_private *tp = netdev_priv(dev);
+ required:
+   - compatible
+   - reg
 -- 
-2.34.1
+2.43.0
 
