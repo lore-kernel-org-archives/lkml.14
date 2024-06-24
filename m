@@ -1,46 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089A51A01B6;
-	Mon, 24 Jun 2024 18:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759761A073F;
+	Mon, 24 Jun 2024 18:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719255202; cv=none; b=OzAQG241k6DpGMocSVNNnlO9z1x4TYSN9I+raULBNNw/0oWYDnLuMF969CpgIXZZXXNGKbCOwyftdJHUw9wflsP9QJivv4SkLUbW5O7zFzFV9Xhgv9i5PaNuPie8IPA4PIcDQX7xUZQwGHr8PaIsBpWPNilSwf6Dec3CxZ5jr0E=
+	t=1719255204; cv=none; b=ZSoPhRLlaoHzSlSPHtslr5lPHaW0zuAKxDuy+MP3exhHpVTPCPFnIU4PjXH0y23DkEKVKMnx8g3R1pJsg2qyghaW6Oc0NMx3WKzMiBSKiBtbiaDb+W82aDPCdTPjXW7dguuExkVSYAnjnbRuECmz9ZafPtuXUeQfkHdx0+70DgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719255202; c=relaxed/simple;
-	bh=bsgX1CZdQ7bAv/ZyedwgOWgKCDu8tkAKHzDRbVhGwKQ=;
+	s=arc-20240116; t=1719255204; c=relaxed/simple;
+	bh=+nbEkWVL58PcOho777Tkey6NWbXPb+PkAn/m+4dnTYQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJjHB7o5w4hu4jLWCzTjfkg0zVMYxQoOSopmTgt/0VPI2ZVjfYI6zYATvrnuqOfETBDM07Y5pw7S0u7aS82zO0HZKnYeSJEpZyBDTrQPiaoY6Iw+MWsla85uOOcBqIX/IfBYPPAscNHrit3mTdh4i5yFWY8RFoqntHHLbQMmZYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLJhs6QE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u3Dn0wf0fKcHQgPRIYE+XOM0km/EJpeRvh9HsQaxM4oykIPbxTcFQHR6k9IYUkdstDSKD6rJsDtOc9NsUptIVhiV9PLa/+5vtul7Hp1ZDMRGbPduFH752DnKsjQCpkjwTjbajlx7byGWLPwEybU7f7LerZa9wvXtJ6sHXUDN32Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VaxY+8Iv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLJhs6QE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BAB6C32789;
-	Mon, 24 Jun 2024 18:53:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VaxY+8Iv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA8EC32789;
+	Mon, 24 Jun 2024 18:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719255201;
-	bh=bsgX1CZdQ7bAv/ZyedwgOWgKCDu8tkAKHzDRbVhGwKQ=;
+	s=k20201202; t=1719255204;
+	bh=+nbEkWVL58PcOho777Tkey6NWbXPb+PkAn/m+4dnTYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fLJhs6QE3VGeFaJzqLwGtlNzoG8n/bzJ5DlzwyCVds6TyEQGeFK/xUEb36snxq+Fj
-	 FBePkeJ6+0FtPhls9agb5iP2w3r092jqJGz7fishcs3FWelXjH8nhq4gteVM2/FHP8
-	 NXxWZkjxdAXWn6XiCWIM0tXD1DDB8P6pUxv0rR752a+bptadL+OaiwmrBp4AvQwmAW
-	 nKsvve87uyemGGmsOtXH08oxg0tejienkTiyMtBDOK3vYK+pmTXByKfaHVsg7cfjsA
-	 laKsmlYQN5Vft4Pq52YKo2/m5QFpBFeQUwwrlWFPmGy5vo+FmB5/LYcTO+E5V3Hov5
-	 BMznH9KlybWnQ==
+	b=VaxY+8IvqTKVzCenWb5hO4ad6+tBvNH83oCkXB7OplNpVdE8feP9dblPCmV8ir10r
+	 6oKdcG8OadxdxONI8lm18I9p8Hggbna6CC5Ugu23OVdjCXBNlotTHgJQs2zvMRlduu
+	 2LScn4zeqB7/hn+2rbkvA2BfxIXUONOf4olLT5hGiDjbp4YYx6aW4eLeVVlsFoQUnG
+	 gNygmFTlulSK3QXrxnDra60nlXvDyCNuq+Lt9Vhe7pl2x4AWGSKwu26afbtXWfBQnK
+	 o3I+uEgI5Q9apQkXjMmzeTULvSf/NhLT8KWp8ws2TvIY3k8MygxiDH9wJafOaDbwzV
+	 BZ4TJMNO2cmpg==
 From: SeongJae Park <sj@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: SeongJae Park <sj@kernel.org>,
-	Federico Vaga <federico.vaga@vaga.pv.it>,
-	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
-	Avadhut Naik <avadhut.naik@amd.com>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
 	workflows@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] Docs: Move magic-number from process to staging
-Date: Mon, 24 Jun 2024 11:53:08 -0700
-Message-Id: <20240624185312.94537-4-sj@kernel.org>
+Subject: [PATCH 5/7] Docs/process/index: Remove unsorted docs section
+Date: Mon, 24 Jun 2024 11:53:10 -0700
+Message-Id: <20240624185312.94537-6-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240624185312.94537-1-sj@kernel.org>
 References: <20240624185312.94537-1-sj@kernel.org>
@@ -50,102 +44,35 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-'Other material' section on 'process/index' is for unsorted documents.
-However we also have a dedicated place for the purpose, 'staging/'.
-Move 'magic-number' from the section to 'staging/' directory.
+'Other material' section on 'process/index' is no more necessary since
+we have 'staging/' directory.  Also all documents on the section has
+moved to better places.  Remove the section.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- Documentation/process/index.rst                           | 1 -
- Documentation/staging/index.rst                           | 1 +
- Documentation/{process => staging}/magic-number.rst       | 0
- Documentation/translations/it_IT/process/magic-number.rst | 2 +-
- Documentation/translations/sp_SP/process/magic-number.rst | 2 +-
- Documentation/translations/zh_CN/process/magic-number.rst | 2 +-
- Documentation/translations/zh_TW/process/magic-number.rst | 2 +-
- 7 files changed, 5 insertions(+), 5 deletions(-)
- rename Documentation/{process => staging}/magic-number.rst (100%)
+ Documentation/process/index.rst | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/Documentation/process/index.rst b/Documentation/process/index.rst
-index 08b4eb1e9118..fb089bf9d6a8 100644
+index 1827e73f6376..6455eba3ef0c 100644
 --- a/Documentation/process/index.rst
 +++ b/Documentation/process/index.rst
-@@ -113,7 +113,6 @@ lack of a better place.
- .. toctree::
-    :maxdepth: 1
+@@ -107,13 +107,6 @@ developers:
+    kernel-docs
+    deprecated
  
--   magic-number
-    clang-format
- 
+-These are some overall technical guides that have been put here for now for
+-lack of a better place.
+-
+-.. toctree::
+-   :maxdepth: 1
+-
+-
  .. only::  subproject and html
-diff --git a/Documentation/staging/index.rst b/Documentation/staging/index.rst
-index 71592f3ce89b..77bae5e5328b 100644
---- a/Documentation/staging/index.rst
-+++ b/Documentation/staging/index.rst
-@@ -8,6 +8,7 @@ Unsorted Documentation
  
-    crc32
-    lzo
-+   magic-number
-    remoteproc
-    rpmsg
-    speculation
-diff --git a/Documentation/process/magic-number.rst b/Documentation/staging/magic-number.rst
-similarity index 100%
-rename from Documentation/process/magic-number.rst
-rename to Documentation/staging/magic-number.rst
-diff --git a/Documentation/translations/it_IT/process/magic-number.rst b/Documentation/translations/it_IT/process/magic-number.rst
-index ae92ab633c16..cd8f23571835 100644
---- a/Documentation/translations/it_IT/process/magic-number.rst
-+++ b/Documentation/translations/it_IT/process/magic-number.rst
-@@ -1,6 +1,6 @@
- .. include:: ../disclaimer-ita.rst
- 
--:Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
-+:Original: :ref:`Documentation/staging/magic-number.rst <magicnumbers>`
- :Translator: Federico Vaga <federico.vaga@vaga.pv.it>
- 
- .. _it_magicnumbers:
-diff --git a/Documentation/translations/sp_SP/process/magic-number.rst b/Documentation/translations/sp_SP/process/magic-number.rst
-index 32a99aac2f6c..beb4b4c1de11 100644
---- a/Documentation/translations/sp_SP/process/magic-number.rst
-+++ b/Documentation/translations/sp_SP/process/magic-number.rst
-@@ -1,6 +1,6 @@
- .. include:: ../disclaimer-sp.rst
- 
--:Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
-+:Original: :ref:`Documentation/staging/magic-number.rst <magicnumbers>`
- :Translator: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
- 
- .. _sp_magicnumbers:
-diff --git a/Documentation/translations/zh_CN/process/magic-number.rst b/Documentation/translations/zh_CN/process/magic-number.rst
-index 4e4aeaca796c..4ebc84cc0c54 100644
---- a/Documentation/translations/zh_CN/process/magic-number.rst
-+++ b/Documentation/translations/zh_CN/process/magic-number.rst
-@@ -1,6 +1,6 @@
- .. include:: ../disclaimer-zh_CN.rst
- 
--:Original: Documentation/process/magic-number.rst
-+:Original: Documentation/staging/magic-number.rst
- 
- :翻译:
- 
-diff --git a/Documentation/translations/zh_TW/process/magic-number.rst b/Documentation/translations/zh_TW/process/magic-number.rst
-index 199cd5d63973..5582df6d7ca7 100644
---- a/Documentation/translations/zh_TW/process/magic-number.rst
-+++ b/Documentation/translations/zh_TW/process/magic-number.rst
-@@ -4,7 +4,7 @@
- 
- .. include:: ../disclaimer-zh_TW.rst
- 
--:Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
-+:Original: :ref:`Documentation/staging/magic-number.rst <magicnumbers>`
- 
- 如果想評論或更新本文的內容，請直接發信到LKML。如果你使用英文交流有困難的話，也可
- 以向中文版維護者求助。如果本翻譯更新不及時或者翻譯存在問題，請聯繫中文版維護者::
+    Indices
 -- 
 2.39.2
 
