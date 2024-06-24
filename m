@@ -1,233 +1,261 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27BE62564
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719208845; cv=none; b=CSKTLHQHm0Qsh4gZUkWZsx7IAMt8pvoKHL5HYVEKzV1TPQHp2wd4QJ1Opdh5mKAcQzkNU21BML4Q3ZOFR0s2iaKCKTvBDT18/O995fE2OQ+LJ9FzyFW5yzYDYOYqRvYYmntVRXMI9Y6vgWoX+Z7cOHtpz6F2uBDhgxXbobxQpaA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719208845; c=relaxed/simple;
-	bh=lnUIAGpGezrkbBThtobhS90+6tFYz6MywL7+mhnalJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uh8YFhupmLPGeW73dqd/1bSAeBoWUvQTn5ouJiY8aINr3sPwiaNl3dzmvVnM5KPM8rhfJf2K6RDx5n3V2Y0tqUhCXy8j5Lu2yQ6gtRl+l9oZ26doIZhWdfTDB9bA9qgkRyjefNaePL0eL0gnJ8OumxahSGjLTIdKzlfBkP+qNUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.128.179])
-	by gateway (Coremail) with SMTP id _____8Dx2OmGC3lmvm0JAA--.25609S3;
-	Mon, 24 Jun 2024 14:00:39 +0800 (CST)
-Received: from mail-yw1-f179.google.com (unknown [209.85.128.179])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcaCC3lm0cYuAA--.46023S3;
-	Mon, 24 Jun 2024 14:00:35 +0800 (CST)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6316253dc52so27144257b3.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 23:00:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVCEi8RRKB7DtJ/2JE2AkIGYqgGboOcpL+ZekueTBg87dYag3ZrliI29mXEOpZnmhDDEqhfhhhLeUBFWaZZePck/zAqlWa3NOXiNiQx
-X-Gm-Message-State: AOJu0YxNqI7lmLaCL+N+gxQEatlIXhQIFVid3Z1Or1+zp624iqiPNHqC
-	25TqiNKdhY5SUITO0GurH9Y26anYzSnTWe9pOjMBArCog8WFvEXsXAt1n7HuWv+X49tZnfVXPuZ
-	VHbJOznl2/2ldU7AArpBr1PZ/KuhMTmoEEp3mKw==
-X-Google-Smtp-Source: AGHT+IEWUjupNHuM3RdDGeChoM6aWZ8jhq3FZacRC/PBQZ7E8+aUc5gejhVZY1pssbnBdzZmMRhB+xmByyg51iJe2L4=
-X-Received: by 2002:a05:690c:832:b0:628:c1f0:d8fd with SMTP id
- 00721157ae682-643ac42dff3mr28386827b3.52.1719208833604; Sun, 23 Jun 2024
- 23:00:33 -0700 (PDT)
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841F01B28D;
+	Mon, 24 Jun 2024 06:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719208862; cv=fail; b=hNJ6zrm/Ygko228cvgZPsbM5aMNo81O3C2n4awrBHxHIAdRRXcuQZ2doFdrDjQCIDQ1YFLImNwlIHXLF+x/cvVySXcUZ+q8fvx5nLNjDiXPDT/GAtQViAJfF8gQ3ECNyg4GpUH52fI4JWs/9k4OAHu2XG4hGpJskT88kOSch7o4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719208862; c=relaxed/simple;
+	bh=8ayQTd/qimBdn61F5QCpbR4M/6gGUQSWoz9lIWUkteY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lNk0zkxRCe4LgrEsEF18AMAqVEyqZsCQjTggPYOqHM1dN6WTxQ2Lj5eYOW5JXS9kqE985eR4qaOnKkBiRIvWHVDwWdH1Jv+mAiNyrLZHZDUWjjGLS0h2xcUr6NPWsz1mXHxFphblK2Ht3W1cL4wrvyhRjRQvSpnpz5jXUC4ymYk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZsglOjwx; arc=fail smtp.client-ip=40.107.223.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZsglOjwx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ajU2Vim2x2ThuclCG9VzT+qPaJjAZMf2ewl+I52RoQK+lkG82tvFqNoqR+ZOTEbpLeCz5XVQayyGiv9/PJogwuRylMrGEW81GgTBBMK9Fvyptg3uvqQxaVSc4glMBvuPKMp+F8wv9GXTWOtxn4NA91roMW/HoKYxrMWYdm0BI93XZZBVfTMN6f4IxS7ZZMPXSKEc/JpD+axRARVlNz9rNaylsURFFSAny6UzW/dRiT30uLn430PkB2YVhYLQujJLDfK7KriTj0tcwDhS9VXCEowKxM6+9Zl9aZVRkTx0jZ44m6fH5jMt4QUSMoO7S91MP3IYnj0yHY6uUIyIbg4W8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z1A1PMXRxwmFPpA2Kipxu5AUpAjeD2dSCqTpe8xo/ZU=;
+ b=ccEcr8/cg+Y4sqwBeGO9RJNItf95MSW4OmD9KJwRFpQ8u6QdSN6SVnDHSsz5vdE6LeT+M0OCxivbMT8M30FNOb3k6hyMcSUHAAeYcZu7sr7hD+D92tg+uxpvyMn6MB7C1xjTARNBEQDokVqquTR9Cf/h91ldPA1A3SQS2NEGag7wgZMyWzzSVADmt+8ZuH49mhRJlo0xlLqDIL8QxCg4buo6HwVT4jOiz5c5VPrbHOK04RChNgHupnPvjjwIrNv3mUr9qUBcaQD4WjLNVmYz7mD5an8Ssw9hIpcNipzDDbJRsRFxYp6uS1eZksTLzK/Dgqfq+b2mj+FafmjrgXiLPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z1A1PMXRxwmFPpA2Kipxu5AUpAjeD2dSCqTpe8xo/ZU=;
+ b=ZsglOjwxw0v+moRWRv9Zf6QbYbpWLpsiVqxzlotTqza5pk/G1UZgfIsjjYeuhYpMMxPmsOX6VkRjno/CFmCg6hmLoOwjQQcAp5gE8rtdwNXLKjexwBcYqMXznYKXgX3OymO1z1eazxQiMRSVa2OpOAAO+v3D2WmVSSzk1Gl2j/o=
+Received: from BL0PR0102CA0045.prod.exchangelabs.com (2603:10b6:208:25::22) by
+ DM4PR12MB6183.namprd12.prod.outlook.com (2603:10b6:8:a7::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7698.26; Mon, 24 Jun 2024 06:00:58 +0000
+Received: from BN2PEPF000055DC.namprd21.prod.outlook.com
+ (2603:10b6:208:25:cafe::23) by BL0PR0102CA0045.outlook.office365.com
+ (2603:10b6:208:25::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Mon, 24 Jun 2024 06:00:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000055DC.mail.protection.outlook.com (10.167.245.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7741.0 via Frontend Transport; Mon, 24 Jun 2024 06:00:57 +0000
+Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Jun
+ 2024 01:00:50 -0500
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <kees@kernel.org>, <gustavoars@kernel.org>,
+	<rui.zhang@intel.com>, <oleksandr@natalenko.name>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <ananth.narayan@amd.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <ravi.bangoria@amd.com>,
+	<sandipan.das@amd.com>, <linux-pm@vger.kernel.org>, Dhananjay Ugwekar
+	<Dhananjay.Ugwekar@amd.com>
+Subject: [PATCH v3 02/10] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+Date: Mon, 24 Jun 2024 05:58:59 +0000
+Message-ID: <20240624055907.7720-3-Dhananjay.Ugwekar@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240624055907.7720-1-Dhananjay.Ugwekar@amd.com>
+References: <20240624055907.7720-1-Dhananjay.Ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619080940.2690756-1-maobibo@loongson.cn> <20240619080940.2690756-5-maobibo@loongson.cn>
- <CAAhV-H74raJ9eEWEHr=aN6LhVvNUyP6TLEDH006M6AnoE8tkPg@mail.gmail.com>
- <58d34b7d-eaad-8aa8-46c3-9212664431be@loongson.cn> <CAAhV-H6CzPAxwymk16NfjPGO=oi+iBZJYsdSMiyp2N2cDsw54g@mail.gmail.com>
- <379d63cc-375f-3e97-006c-edf7edb4b202@loongson.cn> <CAAhV-H6vXMr5bviGoE1pojVswOkUWBkv9hOS4Jd-6Exb+G+1+g@mail.gmail.com>
-In-Reply-To: <CAAhV-H6vXMr5bviGoE1pojVswOkUWBkv9hOS4Jd-6Exb+G+1+g@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Mon, 24 Jun 2024 14:00:22 +0800
-X-Gmail-Original-Message-ID: <CAHirt9gKJdxoPCSB8dhNCTuyGOKFUZZkgQoOoQL4Wm64+CrdVA@mail.gmail.com>
-Message-ID: <CAHirt9gKJdxoPCSB8dhNCTuyGOKFUZZkgQoOoQL4Wm64+CrdVA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] LoongArch: KVM: Add memory barrier before update
- pmd entry
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: maobibo <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8BxWcaCC3lm0cYuAA--.46023S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw1xWry5Ar15AF4rJF13trc_yoWrCrWfpr
-	ZrAF4qyF4kJryUGws2q3Wjvr10qryktF18X34Fq3WDZr90vw15tr1UJryakF17Ar95C3W8
-	ZF4UKanxZ3WUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
-	UjIFyTuYvjxUwtC7UUUUU
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000055DC:EE_|DM4PR12MB6183:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d0aaa06-6bb6-494d-50f9-08dc9413044a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|376011|1800799021|82310400023|36860700010|7416011|921017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FyYSYCqwQC0SPgmER4WsgO88JVW8aXCytDRZftMOMjiQ9P/y/IjWruipFYk3?=
+ =?us-ascii?Q?HnOuouii0WIR3hy4ovlappRoaayEO1lVA4Jg6kdihKaPZVXkki1/MclW/qml?=
+ =?us-ascii?Q?eT2iJrgKLxt8FfrtMhr5SBUi0lzCV0chuAr3AG/xHMo+Lmpy+MJ4L3nVY0pH?=
+ =?us-ascii?Q?yhJBNqdyWJlf2jqYs87rGZB8KLluxFgLhF54mLggo0sMzk8dg3YQHU74u1lU?=
+ =?us-ascii?Q?pZNJFgvzo66XKeXaiPx6oZoE1VdyASJuIzidlMhMnrDCU0oiyMq9BlSfyeus?=
+ =?us-ascii?Q?qyHQUZmhIMAtg+iPznDEkEY1esWeXBlX1dtRFAEOmCOAEZ6yM0qHXLb5kLmU?=
+ =?us-ascii?Q?ESYRey8HnhQdRCtShXLYc8njm0ZvlXwYGy35C9nMCPMxY/qkF1gSrSen+mNq?=
+ =?us-ascii?Q?ghBSb0IvTpge93ipnHfPoiymEGjFyUIohSLYo5ajuKnF+ot1wLktKOrF/4dH?=
+ =?us-ascii?Q?UznfN5bsmyf8Bsn2vzTJhepwUIj78xjjOovJHwYKWNEQYffhfmAh3pDMfpqX?=
+ =?us-ascii?Q?Eo1y1dmZyLNYljpnUkLiHdwvnxMbbR9EwlGMuoGEamC+QaCsQgQ8UTpjc/Nq?=
+ =?us-ascii?Q?QhCt2mj3p6U0p93DDd3fCpcRwgP20dWTYXQu4Jb/i2lfM4x16EIDh8J6ShXW?=
+ =?us-ascii?Q?xkt0+MW4hhsoiaGgM4RCT0znwuz6/WXqaBZSj4OhgwJ1y86ahUfFtMnuOeDS?=
+ =?us-ascii?Q?Mf0jIWMKOuLBNSrRQNIF+oQCbD+qRH4wiFtrV/BnTUAB+6D3V9004JDtlE8D?=
+ =?us-ascii?Q?+5Rlmns9VEvPhyPHKF2GPgJfEwcUqCtbPm/XHq6aL46Nd3YNm1mUVcLFhfVa?=
+ =?us-ascii?Q?COjkJVgDI+IFgJG0zk7HzDYXV+eaxJmkDLRENAC1YIAWbp4uJRT2rE66M8jO?=
+ =?us-ascii?Q?+agYOODsWN8YJAFdsrBkxv9ZaqFaH7LBMM6bAZXb3JFRWDYCUDdx7fxIRlJ4?=
+ =?us-ascii?Q?k/nOzDIGcDK2jNWE2sE1Do5ko4szpg6OdeEeRbMBeymgnea3wmu7o1o3d5T8?=
+ =?us-ascii?Q?x6Rs8mxKc40OzG37U2I2SERIzqR9ipHrMKFlX6ijyJUcnKCROYkr59fXsO0d?=
+ =?us-ascii?Q?IPGMt794oxXq5vXLOOuegfTjH5sxYegefSF1QDc7Pjhaso50GYQQTOrcxRYF?=
+ =?us-ascii?Q?lw/I7E9QzDQPEAZrhw/Qf6oQq9BmaoubZ7W2V0OrJ0K4CRL5e2lQoMqYYOcD?=
+ =?us-ascii?Q?dXlx7fokf4GB0na80nBwRl/6JAA0gpKdPxqw0ODVhiVEjXmiCZ1PVVBOKnZG?=
+ =?us-ascii?Q?EjBr9fdNCMGg0sWuO//GlYH8dWmCBCEXQemALmqhZFZjImPCgDSzW2QBJdY9?=
+ =?us-ascii?Q?uSp4Q/BzmEC9pGydCLxnDH9bO3dUO60lrd+uL8R/hHiNB5b2JlKrlCnSv0ES?=
+ =?us-ascii?Q?FsySExjKU6MZfp3JtQSvL7ZF416s7FDcU9bxoY1zYYI4TOVGjosuH0XQVhTr?=
+ =?us-ascii?Q?2wDyOcGWg6w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(1800799021)(82310400023)(36860700010)(7416011)(921017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 06:00:57.6255
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d0aaa06-6bb6-494d-50f9-08dc9413044a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000055DC.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6183
 
-Hi,
+After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
+on AMD processors that support extended CPUID leaf 0x80000026, the
+topology_die_cpumask() and topology_logical_die_id() macros, no longer
+return the package cpumask and package id, instead they return the CCD
+(Core Complex Die) mask and id respectively. This leads to the energy-pkg
+event scope to be modified to CCD instead of package.
 
-On Mon, Jun 24, 2024 at 12:18=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
->
-> On Mon, Jun 24, 2024 at 10:21=E2=80=AFAM maobibo <maobibo@loongson.cn> wr=
-ote:
-> >
-> >
-> >
-> > On 2024/6/24 =E4=B8=8A=E5=8D=889:56, Huacai Chen wrote:
-> > > On Mon, Jun 24, 2024 at 9:37=E2=80=AFAM maobibo <maobibo@loongson.cn>=
- wrote:
-> > >>
-> > >>
-> > >>
-> > >> On 2024/6/23 =E4=B8=8B=E5=8D=886:18, Huacai Chen wrote:
-> > >>> Hi, Bibo,
-> > >>>
-> > >>> On Wed, Jun 19, 2024 at 4:09=E2=80=AFPM Bibo Mao <maobibo@loongson.=
-cn> wrote:
-> > >>>>
-> > >>>> When updating pmd entry such as allocating new pmd page or splitti=
-ng
-> > >>>> huge page into normal page, it is necessary to firstly update all =
-pte
-> > >>>> entries, and then update pmd entry.
-> > >>>>
-> > >>>> It is weak order with LoongArch system, there will be problem if o=
-ther
-> > >>>> vcpus sees pmd update firstly however pte is not updated. Here smp=
-_wmb()
-> > >>>> is added to assure this.
-> > >>> Memory barriers should be in pairs in most cases. That means you ma=
-y
-> > >>> lose smp_rmb() in another place.
-> > >> The idea adding smp_wmb() comes from function __split_huge_pmd_locke=
-d()
-> > >> in file mm/huge_memory.c, and the explanation is reasonable.
-> > >>
-> > >>                   ...
-> > >>                   set_ptes(mm, haddr, pte, entry, HPAGE_PMD_NR);
-> > >>           }
-> > >>           ...
-> > >>           smp_wmb(); /* make pte visible before pmd */
-> > >>           pmd_populate(mm, pmd, pgtable);
-> > >>
-> > >> It is strange that why smp_rmb() should be in pairs with smp_wmb(),
-> > >> I never hear this rule -:(
-> > > https://docs.kernel.org/core-api/wrappers/memory-barriers.html
-> > >
-> > > SMP BARRIER PAIRING
-> > > -------------------
-> > >
-> > > When dealing with CPU-CPU interactions, certain types of memory barri=
-er should
-> > > always be paired.  A lack of appropriate pairing is almost certainly =
-an error.
-> >     CPU 1                 CPU 2
-> >          =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D       =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >          WRITE_ONCE(a, 1);
-> >          <write barrier>
-> >          WRITE_ONCE(b, 2);     x =3D READ_ONCE(b);
-> >                                <read barrier>
-> >                                y =3D READ_ONCE(a);
-> >
-> > With split_huge scenery to update pte/pmd entry, there is no strong
-> > relationship between address ptex and pmd.
-> > CPU1
-> >       WRITE_ONCE(pte0, 1);
-> >       WRITE_ONCE(pte511, 1);
-> >       <write barrier>
-> >       WRITE_ONCE(pmd, 2);
-> >
-> > However with page table walk scenery, address ptep depends on the
-> > contents of pmd, so it is not necessary to add smp_rmb().
-> >          ptep =3D pte_offset_map_lock(mm, pmd, address, &ptl);
-> >          if (!ptep)
-> >                  return no_page_table(vma, flags, address);
-> >          pte =3D ptep_get(ptep);
-> >          if (!pte_present(pte))
-> >
-> > It is just my option, or do you think where smp_rmb() barrier should be
-> > added in page table reader path?
-> There are some possibilities:
-> 1. Read barrier is missing in some places;
-> 2. Write barrier is also unnecessary here;
-> 3. Read barrier is really unnecessary, but there is a better API to
-> replace the write barrier;
-> 4. Read barrier is really unnecessary, and write barrier is really the
-> best API here.
->
-> Maybe Rui Wang knows better here.
+Replacing these macros with their package counterparts fixes the
+energy-pkg event for AMD CPUs.
 
-It appears that reading the pte address is data-dependent on the pmd,
-rather than control-dependent. This creates an opportunity to omit the
-read-side memory barrier.
+However due to the difference between the scope of energy-pkg event for
+Intel and AMD CPUs, we have to replace these macros conditionally only for
+AMD CPUs.
 
-Cheers,
--Rui
+On a 12 CCD 1 Package AMD Zen4 Genoa machine:
 
+Before:
+$ cat /sys/devices/power/cpumask
+0,8,16,24,32,40,48,56,64,72,80,88.
 
->
-> Huacai
->
-> >
-> > Regards
-> > Bibo Mao
-> > >
-> > >
-> > > Huacai
-> > >
-> > >>
-> > >> Regards
-> > >> Bibo Mao
-> > >>>
-> > >>> Huacai
-> > >>>
-> > >>>>
-> > >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > >>>> ---
-> > >>>>    arch/loongarch/kvm/mmu.c | 2 ++
-> > >>>>    1 file changed, 2 insertions(+)
-> > >>>>
-> > >>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> > >>>> index 1690828bd44b..7f04edfbe428 100644
-> > >>>> --- a/arch/loongarch/kvm/mmu.c
-> > >>>> +++ b/arch/loongarch/kvm/mmu.c
-> > >>>> @@ -163,6 +163,7 @@ static kvm_pte_t *kvm_populate_gpa(struct kvm =
-*kvm,
-> > >>>>
-> > >>>>                           child =3D kvm_mmu_memory_cache_alloc(cac=
-he);
-> > >>>>                           _kvm_pte_init(child, ctx.invalid_ptes[ct=
-x.level - 1]);
-> > >>>> +                       smp_wmb(); /* make pte visible before pmd =
-*/
-> > >>>>                           kvm_set_pte(entry, __pa(child));
-> > >>>>                   } else if (kvm_pte_huge(*entry)) {
-> > >>>>                           return entry;
-> > >>>> @@ -746,6 +747,7 @@ static kvm_pte_t *kvm_split_huge(struct kvm_vc=
-pu *vcpu, kvm_pte_t *ptep, gfn_t g
-> > >>>>                   val +=3D PAGE_SIZE;
-> > >>>>           }
-> > >>>>
-> > >>>> +       smp_wmb();
-> > >>>>           /* The later kvm_flush_tlb_gpa() will flush hugepage tlb=
- */
-> > >>>>           kvm_set_pte(ptep, __pa(child));
-> > >>>>
-> > >>>> --
-> > >>>> 2.39.3
-> > >>>>
-> > >>
-> > >>
-> >
-> >
->
+The expected cpumask here is supposed to be just "0", as it is a package
+scope event, only one CPU will be collecting the event for all the CPUs in
+the package.
+
+After:
+$ cat /sys/devices/power/cpumask
+0
+
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
+---
+ arch/x86/events/rapl.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index b985ca79cf97..73be25e1f4b4 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -103,6 +103,10 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
+ 	.event_str	= str,							\
+ };
+ 
++#define rapl_pmu_is_pkg_scope()				\
++	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
++	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
++
+ struct rapl_pmu {
+ 	raw_spinlock_t		lock;
+ 	int			n_active;
+@@ -140,9 +144,21 @@ static unsigned int rapl_cntr_mask;
+ static u64 rapl_timer_ms;
+ static struct perf_msr *rapl_msrs;
+ 
++static inline unsigned int get_rapl_pmu_idx(int cpu)
++{
++	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
++					 topology_logical_die_id(cpu);
++}
++
++static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
++{
++	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
++					 topology_die_cpumask(cpu);
++}
++
+ static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+ {
+-	unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
++	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
+ 
+ 	/*
+ 	 * The unsigned check also catches the '-1' return value for non
+@@ -543,6 +559,7 @@ static struct perf_msr amd_rapl_msrs[] = {
+ 
+ static int rapl_cpu_offline(unsigned int cpu)
+ {
++	const struct cpumask *rapl_pmu_cpumask = get_rapl_pmu_cpumask(cpu);
+ 	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+ 	int target;
+ 
+@@ -552,7 +569,7 @@ static int rapl_cpu_offline(unsigned int cpu)
+ 
+ 	pmu->cpu = -1;
+ 	/* Find a new cpu to collect rapl events */
+-	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
++	target = cpumask_any_but(rapl_pmu_cpumask, cpu);
+ 
+ 	/* Migrate rapl events to the new target */
+ 	if (target < nr_cpu_ids) {
+@@ -565,6 +582,8 @@ static int rapl_cpu_offline(unsigned int cpu)
+ 
+ static int rapl_cpu_online(unsigned int cpu)
+ {
++	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
++	const struct cpumask *rapl_pmu_cpumask = get_rapl_pmu_cpumask(cpu);
+ 	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+ 	int target;
+ 
+@@ -579,14 +598,14 @@ static int rapl_cpu_online(unsigned int cpu)
+ 		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+ 		rapl_hrtimer_init(pmu);
+ 
+-		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
++		rapl_pmus->pmus[rapl_pmu_idx] = pmu;
+ 	}
+ 
+ 	/*
+ 	 * Check if there is an online cpu in the package which collects rapl
+ 	 * events already.
+ 	 */
+-	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
++	target = cpumask_any_and(&rapl_cpu_mask, rapl_pmu_cpumask);
+ 	if (target < nr_cpu_ids)
+ 		return 0;
+ 
+@@ -677,6 +696,9 @@ static int __init init_rapl_pmus(void)
+ {
+ 	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
+ 
++	if (rapl_pmu_is_pkg_scope())
++		nr_rapl_pmu = topology_max_packages();
++
+ 	rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus, nr_rapl_pmu), GFP_KERNEL);
+ 	if (!rapl_pmus)
+ 		return -ENOMEM;
+-- 
+2.34.1
 
