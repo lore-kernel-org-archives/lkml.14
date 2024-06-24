@@ -1,142 +1,116 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC34961FE1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3387412EBCC
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217284; cv=none; b=TEXIn8F+0G7U1NhfocP5eh6REdUDmPvj09NKVo7kC4YKnufhTZsxACepF1/bJahYPhAZPq6dq5AIiNxJb2FmcaOyvNIq30Dc2ubaVwn8ZUuglJc6j+vmkt18L20gLuInV7xEuDnqdxHhaFe/pMD94h97FD1Q9uQLcX6eg8RFzrE=
+	t=1719217293; cv=none; b=RsCi1B7azg2C6S1r+5VdFypwQN2fWxq7l/yrsJ/H2uDofgXLQE5TtgXGRh8SAECue0qEv/JdTOJ2LEWVc0+PC3KisPk0SW/tQtamq6t7MM0s9HLks9y0up+7X5Td3+jO/1Gae9uibf/ls5UjjMFffIEb6nMITBXZsaV+TpOC7VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217284; c=relaxed/simple;
-	bh=OGI/RW6LinusZct94/SSzXZaBON6c0uVVa057/4TXtQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YrF13G9SPZmf2FMDXFk0oXZD7P3/4/fL7S0oYmLYisRy5dMXHhsN+82g879ZoUyaze5lUHWNDyRrQTqOr+sO522m3JUHWmc3qjuf78LEpNHKIGpZdxZHNtKA6ZSMRA5HR9jut7ER/TWST+trpKXeLucapohlOAKkugXFlkH+t08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 45O8KsBk019217;
-	Mon, 24 Jun 2024 16:20:54 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4W714v3FNCz2SwTfL;
-	Mon, 24 Jun 2024 16:16:15 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 24 Jun 2024 16:20:50 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
-        <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
-        <qyousef@layalina.io>
-CC: <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-        <bristot@redhat.com>, <vschneid@redhat.com>,
-        <christian.loehle@arm.com>, <vincent.donnefort@arm.com>,
-        <ke.wang@unisoc.com>, <di.shen@unisoc.com>, <xuewen.yan94@gmail.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 2/2] sched/fair: Use actual_cpu_capacity everywhere in util_fits_cpu()
-Date: Mon, 24 Jun 2024 16:20:11 +0800
-Message-ID: <20240624082011.4990-3-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240624082011.4990-1-xuewen.yan@unisoc.com>
-References: <20240624082011.4990-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1719217293; c=relaxed/simple;
+	bh=d/7onzK25APsdWR1y2MGqqkPA2ZJXUYc1Kpw8PGQE+I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=D2mTMWRM4wlReD+NkKSJG+ZST0mIiFxBPoVJB2ekZVdt4vC1FcgPb1iXZMBt7lhdthiAWHg1h184Z6NHjyZiEoEJGMQfCb7+KldYpdSHpRZCnLaekS0ER+3t68dXCX7LzCEsGfHi6In3hRb03zstfvct61yhDluyb4y74dYn0rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xFbG7hMz; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xFbG7hMz"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52cdc4d221eso2311516e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719217289; x=1719822089; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I7NcOeCTe6QbjgqW/a6BuGeeL6JmiMXVqSTnEvXy5Q0=;
+        b=xFbG7hMzFvklonsMJLpHVl8PL/XcAez/tPNl9J5u590KkmL/gldm+tcunPPe0S6qIM
+         7vjEGxQstJmRKKuRBQQoXHvFo8eslZOvRTYB7TRY0T+krq4SwUE+GPZA1ZEOXzVNAwaY
+         JfQc/7ui3bEZMfCrGDgN8ADjWeFuIk0BezkINKojlEyi9Ic64DRi6/tuN0eJZpe2tSPC
+         7bLkw2Vrl/EhcOU3EoR00ntQpOKlcP6IcLcE1GXkuqV2gmPGRZX0HOknlQIKznR5SofH
+         1CR925gJORakaUhjLr1+0sAubpeq9rKmYHVT7vNmVv9UYfqFPDlambPFKta1+d/xhEnn
+         Ze1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719217289; x=1719822089;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I7NcOeCTe6QbjgqW/a6BuGeeL6JmiMXVqSTnEvXy5Q0=;
+        b=xOXzs/v3vSUlN3w2Ggfo3ToD6/q6XMkY0ZGb4eILfXVQ9EbcEta4MHUdq2ePy/oVHP
+         AtWWd5/ryxm9xX4ASHZQuC+0+y/eY1MKCeZO0AT8FZRdRT/zIeuBdxZJd73T0FyNL2QO
+         TSydNey78nVVOf5q3EdhV2MinZrkRh9ssbAxUYoxpQIu8j/YStcPzoJK8g1DWdagVHzy
+         47RVXnKyB9uwg3YoGlJxaMyhqi+KK8BC9eI72TAn5J69cxwr+IWe8Pi4F8keBABunMZT
+         uQT4Bto0yM+cJCrEE7zB9p6+bOL9l1EzRRQwo6qFNWzLpPWAxEsbE+UK3kriIU3NC1FR
+         8BYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVytUdRYRmtT368sn5B+qjk1mECI6asBhMK1PQetGkk6GNcOMzvOmYvPx8ofbKgrBO8NlxxMXXK5kiMW4EdxlOj9yTFCLSzR/I1BVZJ
+X-Gm-Message-State: AOJu0YxcPsEoEQCEcw4hQplgxAyI1/XG6mZp6xhHxNR/Fb08gzhvLOX7
+	Su+rsJTXFTJCpOZmpNfUav6RfwXEKm8w2/6FnEzzCA0DnN/Z8DDuX7b4yfbJOU4=
+X-Google-Smtp-Source: AGHT+IGNlOezhcfigWHR887LWxcT/h/hglmHb1ED9g6uw0MBIQ2/Hju9mHH0wEbb+SX8JpBxqzajXg==
+X-Received: by 2002:ac2:4838:0:b0:52b:79d6:5c28 with SMTP id 2adb3069b0e04-52ce185f6f8mr1966516e87.52.1719217288265;
+        Mon, 24 Jun 2024 01:21:28 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42481910fd4sm124758095e9.30.2024.06.24.01.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 01:21:27 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20240613-md-arm64-drivers-firmware-meson-v1-1-28e4138a8597@quicinc.com>
+References: <20240613-md-arm64-drivers-firmware-meson-v1-1-28e4138a8597@quicinc.com>
+Subject: Re: [PATCH] firmware: meson_sm: add missing MODULE_DESCRIPTION()
+ macro
+Message-Id: <171921728754.3499470.13684580570905229720.b4-ty@linaro.org>
+Date: Mon, 24 Jun 2024 10:21:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 45O8KsBk019217
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Commit f1f8d0a22422 ("sched/cpufreq: Take cpufreq feedback into account")
-introduced get_actual_cpu_capacity(), and it had aggregated the
-different pressures applied on the capacity of CPUs.
-And in util_fits_cpu(), it would return true when uclamp_max
-is smaller than SCHED_CAPACITY_SCALE, althought the uclamp_max
-is bigger than actual_cpu_capacity.
+Hi,
 
-So use actual_cpu_capacity everywhere in util_fits_cpu() to
-cover all cases.
+On Thu, 13 Jun 2024 14:18:48 -0700, Jeff Johnson wrote:
+> With ARCH=arm64, make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/meson/meson_sm.o
+> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
+> 
 
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
- kernel/sched/fair.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/drivers)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5ca6396ef0b7..9c16ae192217 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4980,7 +4980,7 @@ static inline int util_fits_cpu(unsigned long util,
- 				int cpu)
- {
- 	unsigned long capacity = capacity_of(cpu);
--	unsigned long capacity_orig;
-+	unsigned long capacity_actual;
- 	bool fits, uclamp_max_fits;
- 
- 	/*
-@@ -4992,15 +4992,15 @@ static inline int util_fits_cpu(unsigned long util,
- 		return fits;
- 
- 	/*
--	 * We must use arch_scale_cpu_capacity() for comparing against uclamp_min and
-+	 * We must use actual_cpu_capacity() for comparing against uclamp_min and
- 	 * uclamp_max. We only care about capacity pressure (by using
- 	 * capacity_of()) for comparing against the real util.
- 	 *
- 	 * If a task is boosted to 1024 for example, we don't want a tiny
- 	 * pressure to skew the check whether it fits a CPU or not.
- 	 *
--	 * Similarly if a task is capped to arch_scale_cpu_capacity(little_cpu), it
--	 * should fit a little cpu even if there's some pressure.
-+	 * Similarly if a task is capped to actual_cpu_capacity, it should fit
-+	 * the cpu even if there's some pressure.
- 	 *
- 	 * Only exception is for HW or cpufreq pressure since it has a direct impact
- 	 * on available OPP of the system.
-@@ -5011,7 +5011,7 @@ static inline int util_fits_cpu(unsigned long util,
- 	 * For uclamp_max, we can tolerate a drop in performance level as the
- 	 * goal is to cap the task. So it's okay if it's getting less.
- 	 */
--	capacity_orig = arch_scale_cpu_capacity(cpu);
-+	capacity_actual = get_actual_cpu_capacity(cpu);
- 
- 	/*
- 	 * We want to force a task to fit a cpu as implied by uclamp_max.
-@@ -5039,7 +5039,7 @@ static inline int util_fits_cpu(unsigned long util,
- 	 *     uclamp_max request.
- 	 *
- 	 *   which is what we're enforcing here. A task always fits if
--	 *   uclamp_max <= capacity_orig. But when uclamp_max > capacity_orig,
-+	 *   uclamp_max <= capacity_actual. But when uclamp_max > capacity_actual,
- 	 *   the normal upmigration rules should withhold still.
- 	 *
- 	 *   Only exception is when we are on max capacity, then we need to be
-@@ -5050,8 +5050,8 @@ static inline int util_fits_cpu(unsigned long util,
- 	 *     2. The system is being saturated when we're operating near
- 	 *        max capacity, it doesn't make sense to block overutilized.
- 	 */
--	uclamp_max_fits = (capacity_orig == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
--	uclamp_max_fits = !uclamp_max_fits && (uclamp_max <= capacity_orig);
-+	uclamp_max_fits = (capacity_actual == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
-+	uclamp_max_fits = !uclamp_max_fits && (uclamp_max <= capacity_actual);
- 	fits = fits || uclamp_max_fits;
- 
- 	/*
-@@ -5086,8 +5086,7 @@ static inline int util_fits_cpu(unsigned long util,
- 	 * handle the case uclamp_min > uclamp_max.
- 	 */
- 	uclamp_min = min(uclamp_min, uclamp_max);
--	if (fits && (util < uclamp_min) &&
--	    (uclamp_min > get_actual_cpu_capacity(cpu)))
-+	if (fits && (util < uclamp_min) && (uclamp_min > capacity_actual))
- 		return -1;
- 
- 	return fits;
+[1/1] firmware: meson_sm: add missing MODULE_DESCRIPTION() macro
+      https://git.kernel.org/amlogic/c/5375986e16207e573c0493009d25b0c01f44e01d
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.11/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
 -- 
-2.25.1
+Neil
 
