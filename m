@@ -1,276 +1,393 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3E519DF5B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0304B19EEAD
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719240352; cv=none; b=V4CrcYSZmnJDyJ7hx8CKcqkC/5CPNgDvvQ1IftOh9icP8vRiOuNQf0zDrI7TwmPp7ss/TzdMungC029AbWxcUhTI21zMd+yn1HHzQN1uDPPdcgHY4SD78cUrP7A+kGLY2jCwBClPGPvrHfRqGEro0qyrwt3Fsx0e8iK9c6Eo82k=
+	t=1719240371; cv=none; b=iJSI9uxabalRCLb/QnTnKvtURgI2sK0Y3laes1VgByROU5dXMkHXNEGu8X2XazXqrSphU3MiYJ29sPYBc/+fC20F88gGjdijFu/jNim3kFL7DlKwteSU453+JW2TPMESR+fIZVu/G91D5aWYNW+b0Jii5ZDi/DXBiPJ7A2yBnzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719240352; c=relaxed/simple;
-	bh=AKariYZoamo7pj3hiZ84Ef4FSb0oq08u+b0wljP9Wu4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=naAskvRsL8NwNrCPzGYN+IiEZEJ40hIap3NGsAJssbL0xvOYG+IUIQYMXtOoKzV9C5V7pU9gD07x99xSjmp9IL1M2QDMrtJOwnPTsO4sdLDU8/HxrMCS6N/9y8zNgPx7F34QGchNyRx4zgCyF5Sk++fHv9H/fBuY0Lr2g6BG4Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sLkx1-0002zZ-7H
-	for linux-kernel@vger.kernel.org; Mon, 24 Jun 2024 16:45:47 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sLkwy-004fqT-Jh
-	for linux-kernel@vger.kernel.org; Mon, 24 Jun 2024 16:45:44 +0200
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 4EA6D2F1A89
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:45:44 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id 6E3FE2F1A10;
-	Mon, 24 Jun 2024 14:45:38 +0000 (UTC)
-Received: from [192.168.178.131] (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 4ed554a5;
-	Mon, 24 Jun 2024 14:45:37 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Mon, 24 Jun 2024 16:45:12 +0200
-Subject: [PATCH v3 8/9] can: mcp251xfd: tef: prepare to workaround broken
- TEF FIFO tail index erratum
+	s=arc-20240116; t=1719240371; c=relaxed/simple;
+	bh=kHQEhINhbmsF2/yOOt9OedbuX2eA20Sp7q+sk7LuIWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HElBNPAErcMiFPI6iG0vTRuOLW9XIIn9Z8snHCnVbXJzAcZMNkoE/C0tkPHkfo7+ZcF6lQlpUBaYWildKrDJ5JcSMY9PY+PAeNT10H8ZGXqRcmj4v9R06XBp6FlkM0irzO2i9MFO+yHhi4CZZMuMQIEs4NagYNtGt4ADcsdtOME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4W79kc3TKKz9vFB;
+	Mon, 24 Jun 2024 16:46:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id VluBMLrOZH6Q; Mon, 24 Jun 2024 16:46:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4W79kb1hcSz9vDw;
+	Mon, 24 Jun 2024 16:45:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 351208B768;
+	Mon, 24 Jun 2024 16:45:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id FdoI1s7Iif9T; Mon, 24 Jun 2024 16:45:59 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.33])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 992808B766;
+	Mon, 24 Jun 2024 16:45:58 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v6 01/23] powerpc/64e: Remove unused IBM HTW code
+Date: Mon, 24 Jun 2024 16:45:27 +0200
+Message-ID: <532ca7c0715360ef6d1b1cebc0bf78f7f0212782.1719240269.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1719240269.git.christophe.leroy@csgroup.eu>
+References: <cover.1719240269.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719240333; l=10427; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=2h8pbz81hz7A9kWlbZomb+s/bHgtRVC1UTR2w333/4M=; b=KPBRLMGG9QLiHwdGAsj2KSasjhfkyuonViIZxOVY4CJcPAG1yoXxkOiXaJxE4y/52oOkb5ihZ GpVnl0leEAbAI+Z3itlqUsFr7CFYM2ghN1Q5nzNYHT6kR0kgG44ff9s
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240624-mcp251xfd-workaround-erratum-6-v3-8-caf7e5f27f60@pengutronix.de>
-References: <20240624-mcp251xfd-workaround-erratum-6-v3-0-caf7e5f27f60@pengutronix.de>
-In-Reply-To: <20240624-mcp251xfd-workaround-erratum-6-v3-0-caf7e5f27f60@pengutronix.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, 
- Thomas Kopp <thomas.kopp@microchip.com>, 
- =?utf-8?q?Stefan_Alth=C3=B6fer?= <Stefan.Althoefer@janztec.com>, 
- kernel@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>
-X-Mailer: b4 0.15-dev-13183
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6827; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=AKariYZoamo7pj3hiZ84Ef4FSb0oq08u+b0wljP9Wu4=;
- b=owEBbQGS/pANAwAKASg4oj56LbxvAcsmYgBmeYaNfA+r+Bsi6zgqVAn+aRwGnL4FT8uwALTU/
- ymwTl6M6aKJATMEAAEKAB0WIQRQQLqG4LYE3Sm8Pl8oOKI+ei28bwUCZnmGjQAKCRAoOKI+ei28
- b/g3B/91IgxShvAHI/XrC8XYc9HQaqfnKcQDORmRcB2pPl1v7gKhzAYYpbAEshPKVmZrZQMkxUE
- oL+oruALTyIXRvG23Bot19DNQhy7hIjbM7tZlsRiH2bbM1IZdK9w2W2VvHTZwGbEBcnBhY3bIjL
- Lagsr19Ocf2u9KAm5mubkk+LzAdzUvZcKIGgrZUohYxZr4ovDbBS8BrfGSgoTct2Fvsq2qHov4S
- Os8c0smfslH7LWfO8dyByUYb1Zc+5mH8esDeY14nk5HJOUrFMB4Jzjcl9BODz9/CsW9JEVGzFoT
- ojWFwpkpLmWCmNpsxzfAk1r47U4ZGEajob8UH0pObfRw5yId
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This is a preparatory patch to work around a problem similar to
-erratum DS80000789E 6 of the mcp2518fd, the other variants of the chip
-family (mcp2517fd and mcp251863) are probably also affected.
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-Erratum DS80000789E 6 says "reading of the FIFOCI bits in the FIFOSTA
-register for an RX FIFO may be corrupted". However observation shows
-that this problem is not limited to RX FIFOs but also effects the TEF
-FIFO.
+The nohash HTW_IBM (Hardware Table Walk) code is unused since support
+for A2 was removed in commit fb5a515704d7 ("powerpc: Remove platforms/
+wsp and associated pieces") (2014).
 
-When handling the TEF interrupt, the driver reads the FIFO header
-index from the TEF FIFO STA register of the chip.
+The remaining supported CPUs use either no HTW (data_tlb_miss_bolted),
+or the e6500 HTW (data_tlb_miss_e6500).
 
-In the bad case, the driver reads a too large head index. In the
-original code, the driver always trusted the read value, which caused
-old CAN transmit complete events that were already processed to be
-re-processed.
-
-Instead of reading and trusting the head index, read the head index
-and calculate the number of CAN frames that were supposedly received -
-replace mcp251xfd_tef_ring_update() with mcp251xfd_get_tef_len().
-
-The mcp251xfd_handle_tefif() function reads the CAN transmit complete
-events from the chip, iterates over them and pushes them into the
-network stack. The original driver already contains code to detect old
-CAN transmit complete events, that will be updated in the next patch.
-
-Cc: Stefan Althöfer <Stefan.Althoefer@janztec.com>
-Cc: Thomas Kopp <thomas.kopp@microchip.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c |  1 +
- drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c  | 52 +++++++++++++++++---------
- drivers/net/can/spi/mcp251xfd/mcp251xfd.h      | 13 ++-----
- 3 files changed, 39 insertions(+), 27 deletions(-)
+ arch/powerpc/include/asm/nohash/mmu-e500.h |   3 +-
+ arch/powerpc/mm/nohash/tlb.c               |  57 +-----
+ arch/powerpc/mm/nohash/tlb_low_64e.S       | 195 ---------------------
+ 3 files changed, 2 insertions(+), 253 deletions(-)
 
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c
-index de2322667a8d..07823afbbf2e 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c
-@@ -486,6 +486,7 @@ int mcp251xfd_ring_alloc(struct mcp251xfd_priv *priv)
- 		clear_bit(MCP251XFD_FLAGS_FD_MODE, priv->flags);
+diff --git a/arch/powerpc/include/asm/nohash/mmu-e500.h b/arch/powerpc/include/asm/nohash/mmu-e500.h
+index 6ddced0415cb..7dc24b8632d7 100644
+--- a/arch/powerpc/include/asm/nohash/mmu-e500.h
++++ b/arch/powerpc/include/asm/nohash/mmu-e500.h
+@@ -303,8 +303,7 @@ extern unsigned long linear_map_top;
+ extern int book3e_htw_mode;
+ 
+ #define PPC_HTW_NONE	0
+-#define PPC_HTW_IBM	1
+-#define PPC_HTW_E6500	2
++#define PPC_HTW_E6500	1
+ 
+ /*
+  * 64-bit booke platforms don't load the tlb in the tlb miss handler code.
+diff --git a/arch/powerpc/mm/nohash/tlb.c b/arch/powerpc/mm/nohash/tlb.c
+index 5ffa0af4328a..a5bb87ec8578 100644
+--- a/arch/powerpc/mm/nohash/tlb.c
++++ b/arch/powerpc/mm/nohash/tlb.c
+@@ -400,9 +400,8 @@ void tlb_flush_pgtable(struct mmu_gather *tlb, unsigned long address)
+ static void __init setup_page_sizes(void)
+ {
+ 	unsigned int tlb0cfg;
+-	unsigned int tlb0ps;
+ 	unsigned int eptcfg;
+-	int i, psize;
++	int psize;
+ 
+ #ifdef CONFIG_PPC_E500
+ 	unsigned int mmucfg = mfspr(SPRN_MMUCFG);
+@@ -471,50 +470,6 @@ static void __init setup_page_sizes(void)
+ 		goto out;
  	}
- 
-+	tx_ring->obj_num_shift_to_u8 = BITS_PER_TYPE(u8) - ilog2(tx_ring->obj_num);
- 	tx_ring->obj_size = tx_obj_size;
- 
- 	rem = priv->rx_obj_num;
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c
-index 4bc8d71fc491..f5f05e7baef2 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c
-@@ -2,7 +2,7 @@
- //
- // mcp251xfd - Microchip MCP251xFD Family CAN controller driver
- //
--// Copyright (c) 2019, 2020, 2021 Pengutronix,
-+// Copyright (c) 2019, 2020, 2021, 2023 Pengutronix,
- //               Marc Kleine-Budde <kernel@pengutronix.de>
- //
- // Based on:
-@@ -16,6 +16,11 @@
- 
- #include "mcp251xfd.h"
- 
-+static inline bool mcp251xfd_tx_fifo_sta_full(u32 fifo_sta)
-+{
-+	return !(fifo_sta & MCP251XFD_REG_FIFOSTA_TFNRFNIF);
-+}
-+
- static inline int
- mcp251xfd_tef_tail_get_from_chip(const struct mcp251xfd_priv *priv,
- 				 u8 *tef_tail)
-@@ -120,28 +125,40 @@ mcp251xfd_handle_tefif_one(struct mcp251xfd_priv *priv,
- 	return 0;
- }
- 
--static int mcp251xfd_tef_ring_update(struct mcp251xfd_priv *priv)
-+static int
-+mcp251xfd_get_tef_len(struct mcp251xfd_priv *priv, u8 *len_p)
- {
- 	const struct mcp251xfd_tx_ring *tx_ring = priv->tx;
--	unsigned int new_head;
--	u8 chip_tx_tail;
-+	const u8 shift = tx_ring->obj_num_shift_to_u8;
-+	u8 chip_tx_tail, tail, len;
-+	u32 fifo_sta;
- 	int err;
- 
--	err = mcp251xfd_tx_tail_get_from_chip(priv, &chip_tx_tail);
-+	err = regmap_read(priv->map_reg, MCP251XFD_REG_FIFOSTA(priv->tx->fifo_nr),
-+			  &fifo_sta);
- 	if (err)
- 		return err;
- 
--	/* chip_tx_tail, is the next TX-Object send by the HW.
--	 * The new TEF head must be >= the old head, ...
-+	if (mcp251xfd_tx_fifo_sta_full(fifo_sta)) {
-+		*len_p = tx_ring->obj_num;
-+		return 0;
-+	}
-+
-+	chip_tx_tail = FIELD_GET(MCP251XFD_REG_FIFOSTA_FIFOCI_MASK, fifo_sta);
-+
-+	err =  mcp251xfd_check_tef_tail(priv);
-+	if (err)
-+		return err;
-+	tail = mcp251xfd_get_tef_tail(priv);
-+
-+	/* First shift to full u8. The subtraction works on signed
-+	 * values, that keeps the difference steady around the u8
-+	 * overflow. The right shift acts on len, which is an u8.
+ #endif
+-
+-	tlb0cfg = mfspr(SPRN_TLB0CFG);
+-	tlb0ps = mfspr(SPRN_TLB0PS);
+-	eptcfg = mfspr(SPRN_EPTCFG);
+-
+-	/* Look for supported direct sizes */
+-	for (psize = 0; psize < MMU_PAGE_COUNT; ++psize) {
+-		struct mmu_psize_def *def = &mmu_psize_defs[psize];
+-
+-		if (tlb0ps & (1U << (def->shift - 10)))
+-			def->flags |= MMU_PAGE_SIZE_DIRECT;
+-	}
+-
+-	/* Indirect page sizes supported ? */
+-	if ((tlb0cfg & TLBnCFG_IND) == 0 ||
+-	    (tlb0cfg & TLBnCFG_PT) == 0)
+-		goto out;
+-
+-	book3e_htw_mode = PPC_HTW_IBM;
+-
+-	/* Now, we only deal with one IND page size for each
+-	 * direct size. Hopefully all implementations today are
+-	 * unambiguous, but we might want to be careful in the
+-	 * future.
+-	 */
+-	for (i = 0; i < 3; i++) {
+-		unsigned int ps, sps;
+-
+-		sps = eptcfg & 0x1f;
+-		eptcfg >>= 5;
+-		ps = eptcfg & 0x1f;
+-		eptcfg >>= 5;
+-		if (!ps || !sps)
+-			continue;
+-		for (psize = 0; psize < MMU_PAGE_COUNT; psize++) {
+-			struct mmu_psize_def *def = &mmu_psize_defs[psize];
+-
+-			if (ps == (def->shift - 10))
+-				def->flags |= MMU_PAGE_SIZE_INDIRECT;
+-			if (sps == (def->shift - 10))
+-				def->ind = ps + 10;
+-		}
+-	}
+-
+ out:
+ 	/* Cleanup array and print summary */
+ 	pr_info("MMU: Supported page sizes\n");
+@@ -543,10 +498,6 @@ static void __init setup_mmu_htw(void)
  	 */
--	new_head = round_down(priv->tef->head, tx_ring->obj_num) + chip_tx_tail;
--	if (new_head <= priv->tef->head)
--		new_head += tx_ring->obj_num;
-+	len = (chip_tx_tail << shift) - (tail << shift);
-+	*len_p = len >> shift;
  
--	/* ... but it cannot exceed the TX head. */
--	priv->tef->head = min(new_head, tx_ring->head);
+ 	switch (book3e_htw_mode) {
+-	case PPC_HTW_IBM:
+-		patch_exception(0x1c0, exc_data_tlb_miss_htw_book3e);
+-		patch_exception(0x1e0, exc_instruction_tlb_miss_htw_book3e);
+-		break;
+ #ifdef CONFIG_PPC_E500
+ 	case PPC_HTW_E6500:
+ 		extlb_level_exc = EX_TLB_SIZE;
+@@ -577,12 +528,6 @@ static void early_init_this_mmu(void)
+ 		mmu_pte_psize = MMU_PAGE_2M;
+ 		break;
+ 
+-	case PPC_HTW_IBM:
+-		mas4 |= MAS4_INDD;
+-		mas4 |=	BOOK3E_PAGESZ_1M << MAS4_TSIZED_SHIFT;
+-		mmu_pte_psize = MMU_PAGE_1M;
+-		break;
 -
--	return mcp251xfd_check_tef_tail(priv);
-+	return 0;
- }
+ 	case PPC_HTW_NONE:
+ 		mas4 |=	BOOK3E_PAGESZ_4K << MAS4_TSIZED_SHIFT;
+ 		mmu_pte_psize = mmu_virtual_psize;
+diff --git a/arch/powerpc/mm/nohash/tlb_low_64e.S b/arch/powerpc/mm/nohash/tlb_low_64e.S
+index 7e0b8fe1c279..b0eb3f7eaed1 100644
+--- a/arch/powerpc/mm/nohash/tlb_low_64e.S
++++ b/arch/powerpc/mm/nohash/tlb_low_64e.S
+@@ -893,201 +893,6 @@ virt_page_table_tlb_miss_whacko_fault:
+ 	TLB_MISS_EPILOG_ERROR
+ 	b	exc_data_storage_book3e
  
- static inline int
-@@ -182,13 +199,12 @@ int mcp251xfd_handle_tefif(struct mcp251xfd_priv *priv)
- 	u8 tef_tail, len, l;
- 	int err, i;
- 
--	err = mcp251xfd_tef_ring_update(priv);
-+	err = mcp251xfd_get_tef_len(priv, &len);
- 	if (err)
- 		return err;
- 
- 	tef_tail = mcp251xfd_get_tef_tail(priv);
--	len = mcp251xfd_get_tef_len(priv);
--	l = mcp251xfd_get_tef_linear_len(priv);
-+	l = mcp251xfd_get_tef_linear_len(priv, len);
- 	err = mcp251xfd_tef_obj_read(priv, hw_tef_obj, tef_tail, l);
- 	if (err)
- 		return err;
-@@ -223,6 +239,8 @@ int mcp251xfd_handle_tefif(struct mcp251xfd_priv *priv)
- 		struct mcp251xfd_tx_ring *tx_ring = priv->tx;
- 		int offset;
- 
-+		ring->head += len;
-+
- 		/* Increment the TEF FIFO tail pointer 'len' times in
- 		 * a single SPI message.
- 		 *
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd.h b/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-index d32ece3d7aee..dcbbd2b2fae8 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-@@ -524,6 +524,7 @@ struct mcp251xfd_tef_ring {
- 
- 	/* u8 obj_num equals tx_ring->obj_num */
- 	/* u8 obj_size equals sizeof(struct mcp251xfd_hw_tef_obj) */
-+	/* u8 obj_num_shift_to_u8 equals tx_ring->obj_num_shift_to_u8 */
- 
- 	union mcp251xfd_write_reg_buf irq_enable_buf;
- 	struct spi_transfer irq_enable_xfer;
-@@ -542,6 +543,7 @@ struct mcp251xfd_tx_ring {
- 	u8 nr;
- 	u8 fifo_nr;
- 	u8 obj_num;
-+	u8 obj_num_shift_to_u8;
- 	u8 obj_size;
- 
- 	struct mcp251xfd_tx_obj obj[MCP251XFD_TX_OBJ_NUM_MAX];
-@@ -882,17 +884,8 @@ static inline u8 mcp251xfd_get_tef_tail(const struct mcp251xfd_priv *priv)
- 	return priv->tef->tail & (priv->tx->obj_num - 1);
- }
- 
--static inline u8 mcp251xfd_get_tef_len(const struct mcp251xfd_priv *priv)
-+static inline u8 mcp251xfd_get_tef_linear_len(const struct mcp251xfd_priv *priv, u8 len)
- {
--	return priv->tef->head - priv->tef->tail;
--}
 -
--static inline u8 mcp251xfd_get_tef_linear_len(const struct mcp251xfd_priv *priv)
--{
--	u8 len;
+-/**************************************************************
+- *                                                            *
+- * TLB miss handling for Book3E with hw page table support    *
+- *                                                            *
+- **************************************************************/
 -
--	len = mcp251xfd_get_tef_len(priv);
 -
- 	return min_t(u8, len, priv->tx->obj_num - mcp251xfd_get_tef_tail(priv));
- }
- 
-
+-/* Data TLB miss */
+-	START_EXCEPTION(data_tlb_miss_htw)
+-	TLB_MISS_PROLOG
+-
+-	/* Now we handle the fault proper. We only save DEAR in normal
+-	 * fault case since that's the only interesting values here.
+-	 * We could probably also optimize by not saving SRR0/1 in the
+-	 * linear mapping case but I'll leave that for later
+-	 */
+-	mfspr	r14,SPRN_ESR
+-	mfspr	r16,SPRN_DEAR		/* get faulting address */
+-	srdi	r11,r16,44		/* get region */
+-	xoris	r11,r11,0xc
+-	cmpldi	cr0,r11,0		/* linear mapping ? */
+-	beq	tlb_load_linear		/* yes -> go to linear map load */
+-	cmpldi	cr1,r11,1		/* vmalloc mapping ? */
+-
+-	/* We do the user/kernel test for the PID here along with the RW test
+-	 */
+-	srdi.	r11,r16,60		/* Check for user region */
+-	ld	r15,PACAPGD(r13)	/* Load user pgdir */
+-	beq	htw_tlb_miss
+-
+-	/* XXX replace the RMW cycles with immediate loads + writes */
+-1:	mfspr	r10,SPRN_MAS1
+-	rlwinm	r10,r10,0,16,1		/* Clear TID */
+-	mtspr	SPRN_MAS1,r10
+-	ld	r15,PACA_KERNELPGD(r13)	/* Load kernel pgdir */
+-	beq+	cr1,htw_tlb_miss
+-
+-	/* We got a crappy address, just fault with whatever DEAR and ESR
+-	 * are here
+-	 */
+-	TLB_MISS_EPILOG_ERROR
+-	b	exc_data_storage_book3e
+-
+-/* Instruction TLB miss */
+-	START_EXCEPTION(instruction_tlb_miss_htw)
+-	TLB_MISS_PROLOG
+-
+-	/* If we take a recursive fault, the second level handler may need
+-	 * to know whether we are handling a data or instruction fault in
+-	 * order to get to the right store fault handler. We provide that
+-	 * info by keeping a crazy value for ESR in r14
+-	 */
+-	li	r14,-1	/* store to exception frame is done later */
+-
+-	/* Now we handle the fault proper. We only save DEAR in the non
+-	 * linear mapping case since we know the linear mapping case will
+-	 * not re-enter. We could indeed optimize and also not save SRR0/1
+-	 * in the linear mapping case but I'll leave that for later
+-	 *
+-	 * Faulting address is SRR0 which is already in r16
+-	 */
+-	srdi	r11,r16,44		/* get region */
+-	xoris	r11,r11,0xc
+-	cmpldi	cr0,r11,0		/* linear mapping ? */
+-	beq	tlb_load_linear		/* yes -> go to linear map load */
+-	cmpldi	cr1,r11,1		/* vmalloc mapping ? */
+-
+-	/* We do the user/kernel test for the PID here along with the RW test
+-	 */
+-	srdi.	r11,r16,60		/* Check for user region */
+-	ld	r15,PACAPGD(r13)		/* Load user pgdir */
+-	beq	htw_tlb_miss
+-
+-	/* XXX replace the RMW cycles with immediate loads + writes */
+-1:	mfspr	r10,SPRN_MAS1
+-	rlwinm	r10,r10,0,16,1			/* Clear TID */
+-	mtspr	SPRN_MAS1,r10
+-	ld	r15,PACA_KERNELPGD(r13)		/* Load kernel pgdir */
+-	beq+	htw_tlb_miss
+-
+-	/* We got a crappy address, just fault */
+-	TLB_MISS_EPILOG_ERROR
+-	b	exc_instruction_storage_book3e
+-
+-
+-/*
+- * This is the guts of the second-level TLB miss handler for direct
+- * misses. We are entered with:
+- *
+- * r16 = virtual page table faulting address
+- * r15 = PGD pointer
+- * r14 = ESR
+- * r13 = PACA
+- * r12 = TLB exception frame in PACA
+- * r11 = crap (free to use)
+- * r10 = crap (free to use)
+- *
+- * It can be re-entered by the linear mapping miss handler. However, to
+- * avoid too much complication, it will save/restore things for us
+- */
+-htw_tlb_miss:
+-#ifdef CONFIG_PPC_KUAP
+-	mfspr	r10,SPRN_MAS1
+-	rlwinm.	r10,r10,0,0x3fff0000
+-	beq-	htw_tlb_miss_fault /* KUAP fault */
+-#endif
+-	/* Search if we already have a TLB entry for that virtual address, and
+-	 * if we do, bail out.
+-	 *
+-	 * MAS1:IND should be already set based on MAS4
+-	 */
+-	PPC_TLBSRX_DOT(0,R16)
+-	beq	htw_tlb_miss_done
+-
+-	/* Now, we need to walk the page tables. First check if we are in
+-	 * range.
+-	 */
+-	rldicl.	r10,r16,64-PGTABLE_EADDR_SIZE,PGTABLE_EADDR_SIZE+4
+-	bne-	htw_tlb_miss_fault
+-
+-	/* Get the PGD pointer */
+-	cmpldi	cr0,r15,0
+-	beq-	htw_tlb_miss_fault
+-
+-	/* Get to PGD entry */
+-	rldicl	r11,r16,64-(PGDIR_SHIFT-3),64-PGD_INDEX_SIZE-3
+-	clrrdi	r10,r11,3
+-	ldx	r15,r10,r15
+-	cmpdi	cr0,r15,0
+-	bge	htw_tlb_miss_fault
+-
+-	/* Get to PUD entry */
+-	rldicl	r11,r16,64-(PUD_SHIFT-3),64-PUD_INDEX_SIZE-3
+-	clrrdi	r10,r11,3
+-	ldx	r15,r10,r15
+-	cmpdi	cr0,r15,0
+-	bge	htw_tlb_miss_fault
+-
+-	/* Get to PMD entry */
+-	rldicl	r11,r16,64-(PMD_SHIFT-3),64-PMD_INDEX_SIZE-3
+-	clrrdi	r10,r11,3
+-	ldx	r15,r10,r15
+-	cmpdi	cr0,r15,0
+-	bge	htw_tlb_miss_fault
+-
+-	/* Ok, we're all right, we can now create an indirect entry for
+-	 * a 1M or 256M page.
+-	 *
+-	 * The last trick is now that because we use "half" pages for
+-	 * the HTW (1M IND is 2K and 256M IND is 32K) we need to account
+-	 * for an added LSB bit to the RPN. For 64K pages, there is no
+-	 * problem as we already use 32K arrays (half PTE pages), but for
+-	 * 4K page we need to extract a bit from the virtual address and
+-	 * insert it into the "PA52" bit of the RPN.
+-	 */
+-	rlwimi	r15,r16,32-9,20,20
+-	/* Now we build the MAS:
+-	 *
+-	 * MAS 0   :	Fully setup with defaults in MAS4 and TLBnCFG
+-	 * MAS 1   :	Almost fully setup
+-	 *               - PID already updated by caller if necessary
+-	 *               - TSIZE for now is base ind page size always
+-	 * MAS 2   :	Use defaults
+-	 * MAS 3+7 :	Needs to be done
+-	 */
+-	ori	r10,r15,(BOOK3E_PAGESZ_4K << MAS3_SPSIZE_SHIFT)
+-
+-	srdi	r16,r10,32
+-	mtspr	SPRN_MAS3,r10
+-	mtspr	SPRN_MAS7,r16
+-
+-	tlbwe
+-
+-htw_tlb_miss_done:
+-	/* We don't bother with restoring DEAR or ESR since we know we are
+-	 * level 0 and just going back to userland. They are only needed
+-	 * if you are going to take an access fault
+-	 */
+-	TLB_MISS_EPILOG_SUCCESS
+-	rfi
+-
+-htw_tlb_miss_fault:
+-	/* We need to check if it was an instruction miss. We know this
+-	 * though because r14 would contain -1
+-	 */
+-	cmpdi	cr0,r14,-1
+-	beq	1f
+-	mtspr	SPRN_DEAR,r16
+-	mtspr	SPRN_ESR,r14
+-	TLB_MISS_EPILOG_ERROR
+-	b	exc_data_storage_book3e
+-1:	TLB_MISS_EPILOG_ERROR
+-	b	exc_instruction_storage_book3e
+-
+ /*
+  * This is the guts of "any" level TLB miss handler for kernel linear
+  * mapping misses. We are entered with:
 -- 
-2.43.0
-
+2.44.0
 
