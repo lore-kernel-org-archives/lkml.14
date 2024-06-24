@@ -1,93 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B2DB652;
-	Mon, 24 Jun 2024 08:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996745FEED;
+	Mon, 24 Jun 2024 08:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719218537; cv=none; b=nm6JTqB+TQPUOXjMwFSIbx5uB8xpbYPjUtySmzrJjTsneqQQ/PpLQxCix3Vs0Rl4ZYXxfTcBgH9aRXCA6cIOT5N/A1h5D/b7L2Yk+tCOIhuYCkfnTAGZFakMvW+8Pv4JvatDo3hy1TEJvp0VHFHamdqSiPXxDDvIfcWGzMk+W2c=
+	t=1719218578; cv=none; b=U8Wwi3X3KEZ+rsxZUm/zWov5Xx+dVzO2tyV/cWWTI9BMBTFDPoovcg6Qr4QRtvUJJtluKOPwvGBAofZJfyr7xDE9PVT6Dbx1gYHUprUHVz8zAtThZEBvOjKuF6dbkRnXN3bWFFLnKUki/y0drirJXwOJYs1Qp4PbxyoJVVHmnJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719218537; c=relaxed/simple;
-	bh=MHK2ICleu1n31j1RXk0H5PLm4xU8IgWHnDSyT09cnQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqlqnRMwqgv6/y20FC8cKH9M5SCUY67R9J8gY4uFKqOQDi4xrhxxvfvxAl0Ih0zWT/HusPKmePCgtcMRwBNYUPvGtGnwP9/JuATd97ShCjPu77bgavCI08TWiPJ8P5cXBC+E+kBXMCPVw2HMpxcnGMazbka0BKf8AEMdqgwxmFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BhRtFaeg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BhRtFaeg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C229BC2BBFC;
-	Mon, 24 Jun 2024 08:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719218537;
-	bh=MHK2ICleu1n31j1RXk0H5PLm4xU8IgWHnDSyT09cnQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BhRtFaegQ1hVL2NoUE9TjYHYEtX0xhAAWd1DVqvOBnFRT/zxqSE6GcIj9D05OThmz
-	 wagmtUJkYH4IqTN/HglxC3QFwYk3/CU5FaNF0fJ3yFe2BfSVKYeV1D7Sf2pKdql49t
-	 otQ9QXIM7OS4b7QXdUSVlb8fTBKh2HzVq5lZol8w=
-Date: Mon, 24 Jun 2024 10:42:14 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: lcx <lichunxiaona@mail.ustc.edu.cn>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: WARNING in usbtmc_probe/usb_submit_urb
-Message-ID: <2024062448-humble-pampers-6453@gregkh>
-References: <b7711597-2aab-4097-8772-bbf3c8a50215@mail.ustc.edu.cn>
+	s=arc-20240116; t=1719218578; c=relaxed/simple;
+	bh=uou/1X38TpOV1H5lzk1XUMo5zHQwtHBpEjhyhwTfJHY=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=CLAGUwDBK9o8jqf1uqhzOUaeezU+/UMF551hqKSpAlOqbegEmSxgxUkxMu7BPf7GBueijP5bfd8aJ2KjHtKxnY9FJRHOc+esCs0txDxGAtbtH71ihnBOX6sINGM0mmqS0T2SHiqxMb0md9U1yNctho8tRHnwlsjSe53mjhTFOxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=99192e773b=ms@dev.tdt.de>)
+	id 1sLesm-008vkJ-9h; Mon, 24 Jun 2024 10:17:00 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sLesk-00Ctb6-St; Mon, 24 Jun 2024 10:16:58 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 72BD9240053;
+	Mon, 24 Jun 2024 10:16:58 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id CF369240050;
+	Mon, 24 Jun 2024 10:16:57 +0200 (CEST)
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+	by mail.dev.tdt.de (Postfix) with ESMTP id 038F634826;
+	Mon, 24 Jun 2024 10:16:56 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7711597-2aab-4097-8772-bbf3c8a50215@mail.ustc.edu.cn>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Date: Mon, 24 Jun 2024 10:16:56 +0200
+From: Martin Schiller <ms@dev.tdt.de>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, tsbogend@alpha.franken.de,
+ rdunlap@infradead.org, robh@kernel.org, bhelgaas@google.com,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] MIPS: pci: lantiq: restore reset gpio polarity
+Organization: TDT AG
+In-Reply-To: <ZnN9rkNqucEYuXzR@google.com>
+References: <20240607090400.1816612-1-ms@dev.tdt.de>
+ <ZmnfQWFoIw5UCV-k@google.com> <7d34eb4017e809245daa342e3ccddf4f@dev.tdt.de>
+ <b6bea9239050ed39ce3a051a5985b86d@dev.tdt.de>
+ <6e4eed26-0a15-4ab4-8f3f-7ed0e223db5e@hauke-m.de>
+ <c1813503ba16e1d46a93382dd806ffa6@dev.tdt.de> <ZnN9rkNqucEYuXzR@google.com>
+Message-ID: <ce1ba2382d12010f960d3e4c04d78fb2@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.3.17
+Content-Transfer-Encoding: quoted-printable
+X-purgate-ID: 151534::1719217019-4697E746-1C37EBBB/0/0
+X-purgate: clean
+X-purgate-type: clean
 
-On Mon, Jun 24, 2024 at 04:30:26PM +0800, lcx wrote:
-> Dear Linux maintainers and reviewers:
-> 
-> We would like to report a linux kernel bug, found by a modified version of syzkaller.
-> 
-> Kernel Version: a3e18a540541325a8c8848171f71e0d45ad30b2c(6.10-rc3)
-> 
-> Kernel Config: see attach, config
-> 
-> reproducing program: see attach, repro.c
-> 
-> Feel free to email us if any other information is needed. Hope the provided materials will help finding and fixing the bug.
-> 
-> -------------------------
-> 
-> The full log crash log are as follows:
-> 
-> 
-> Syzkaller hit 'WARNING in usbtmc_probe/usb_submit_urb' bug.
-> 
-> usb 1-1: config 0 descriptor??
-> usb 1-1: usb_control_msg returned -71
-> usbtmc 1-1:0.0: can't read capabilities
-> ------------[ cut here ]------------
-> usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-> WARNING: CPU: 0 PID: 771 at drivers/usb/core/urb.c:503 usb_submit_urb+0xbf9/0x1490 drivers/usb/core/urb.c:503
-> Modules linked in:
-> CPU: 0 PID: 771 Comm: kworker/0:2 Not tainted 6.10.0-rc3-00021-g2ef5971ff345-dirty #4
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> Workqueue: usb_hub_wq hub_event
-> RIP: 0010:usb_submit_urb+0xbf9/0x1490 drivers/usb/core/urb.c:503
-> Code: 84 36 02 00 00 e8 97 16 2c fb 4c 89 f7 e8 df 3c f4 fe 45 89 e8 89 e9 4c 89 fa 48 89 c6 48 c7 c7 00 47 3e 8b e8 68 89 f1 fa 90 <0f> 0b 90 90 e9 61 fa ff ff e8 69 16 2c fb 49 81 c5 c8 05 00 00 e9
-> RSP: 0018:ffffc90003b87010 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: ffff888017a59800 RCX: 0000000000000000
-> RDX: ffff8880183c8000 RSI: ffffffff814af1dc RDI: 0000000000000001
-> RBP: 0000000000000001 R08: 0000000000000001 R09: ffffed1005905171
-> R10: ffff88802c828b8b R11: 0000000000000001 R12: ffff888017a5985c
-> R13: 0000000000000003 R14: ffff88801539a0a8 R15: ffff88801f75e220
-> FS:  0000000000000000(0000) GS:ffff88802c800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f00c72d30a0 CR3: 000000000cd74000 CR4: 00000000000006f0
-> Call Trace:
->  <TASK>
->  usbtmc_probe+0xd21/0x1a90 drivers/usb/class/usbtmc.c:2454
+On 2024-06-20 02:54, Dmitry Torokhov wrote:
+> On Fri, Jun 14, 2024 at 10:43:29AM +0200, Martin Schiller wrote:
+>> On 2024-06-13 22:06, Hauke Mehrtens wrote:
+>> > On 6/12/24 21:47, Martin Schiller wrote:
+>> > > On 2024-06-12 20:39, Martin Schiller wrote:
+>> > > > On 2024-06-12 19:47, Dmitry Torokhov wrote:
+>> > > > > Hi Marton,
+>> > > >
+>> > > > Hi Dmitry,
+>> > > >
+>> > > > >
+>> > > > > On Fri, Jun 07, 2024 at 11:04:00AM +0200, Martin Schiller wrot=
+e:
+>> > > > > > Commit 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using
+>> > > > > > gpiod API") not
+>> > > > > > only switched to the gpiod API, but also inverted /
+>> > > > > > changed the polarity
+>> > > > > > of the GPIO.
+>> > > > > >
+>> > > > > > According to the PCI specification, the RST# pin is an activ=
+e-low
+>> > > > > > signal. However, most of the device trees that have been
+>> > > > > > widely used for
+>> > > > > > a long time (mainly in the openWrt project) define this GPIO=
+ as
+>> > > > > > active-high and the old driver code inverted the signal inte=
+rnally.
+>> > > > > >
+>> > > > > > Apparently there are actually boards where the reset gpio mu=
+st be
+>> > > > > > operated inverted. For this reason, we cannot use the
+>> > > > > > GPIOD_OUT_LOW/HIGH
+>> > > > > > flag for initialization. Instead, we must explicitly set
+>> > > > > > the gpio to
+>> > > > > > value 1 in order to take into account any
+>> > > > > > "GPIO_ACTIVE_LOW" flag that
+>> > > > > > may have been set.
+>> > > > >
+>> > > > > Do you have example of such boards? They could not have
+>> > > > > worked before
+>> > > > > 90c2d2eb7ab5 because it was actively setting the reset line
+>> > > > > to physical
+>> > > > > high, which should leave the device in reset state if there is=
+ an
+>> > > > > inverter between the AP and the device.
+>> > > >
+>> > > > Oh, you're right. I totally missed that '__gpio_set_value' was
+>> > > > used in
+>> > > > the original code and that raw accesses took place without payin=
+g
+>> > > > attention to the GPIO_ACTIVE_* flags.
+>> > > >
+>> > > > You can find the device trees I am talking about in [1].
+>> > > >
+>> > > > @Thomas Bogendoerfer:
+>> > > > Would it be possible to stop the merging of this patch?
+>> > > > I think We have to do do some further/other changes.
+>> > > >
+>> > > > >
+>> > > > > >
+>> > > > > > In order to remain compatible with all these existing
+>> > > > > > device trees, we
+>> > > > > > should therefore keep the logic as it was before the commit.
+>> > > > >
+>> > > > > With gpiod API operating with logical states there's still
+>> > > > > difference in
+>> > > > > logic:
+>> > > > >
+>> > > > > =C2=A0=C2=A0=C2=A0=C2=A0gpiod_set_value_cansleep(reset_gpio, 1=
+);
+>> > > > >
+>> > > > > will leave GPIO at 1 if it is described as GPIO_ACTIVE_HIGH
+>> > > > > (which is
+>> > > > > apparently what you want for boards with broken DTS) but for b=
+oards
+>> > > > > that accurately describe GPIO as GPIO_ACTIVE_LOW it well
+>> > > > > drive GPIO to
+>> > > > > 0, leaving the card in reset state.
+>> > > > >
+>> > > > > You should either use gpiod_set_raw_value_calsleep() or we
+>> > > > > can try and
+>> > > > > quirk it in gpiolib (like we do for many other cases of
+>> > > > > incorrect GPIO
+>> > > > > polarity descriptions and which is my preference).
+>> > >
+>> > > So you mean we should add an entry for "lantiq,pci-xway" to the
+>> > > of_gpio_try_fixup_polarity()?
+>> > > Do you know any dts / device outside the openWrt universe which is
+>> > > using
+>> > > this driver.
+>> > >
+>> > > For the lantiq targets in openWrt, the devicetree blob is appended=
+ to
+>> > > the kernel image and therefore also updated when doing a firmware
+>> > > upgrade. So, maybe it would also be an option to fix the driver (u=
+sing
+>> > > GPIO_ACTIVE_* flag for the initial level and set it to 0 -> 1 -> 0=
+)
+>> > > and
+>> > > rework all the dts files to use GPIO_ACTIVE_LOW.
+>=20
+> Yes, cleaning up DTS files when it is possible is nice.
+>=20
+>> > >
+>> > > Then we won't need any quirks.
+>=20
+> Quirks are fairly cheap and we are not in a hot path here.
+>=20
+>> >
+>> > I am not aware that anyone is using a recent kernel on the VRX200
+>> > outside of OpenWrt. I am also not aware that anyone is *not* appendi=
+ng
+>> > the DTB to the kernel. The SoC is pretty old now, the successor of
+>> > this SoC was released about 10 years ago.
+>> >
+>>=20
+>> We're not just talking about VRX200 (VR9) here, but even older devices
+>> such as AR9 and Danube.
+>>=20
+>> > For me it would be fine if you fix the broken device device trees
+>> > shipped with the upstream kernel and with OpenWrt to make them work
+>> > with the PCI driver instead of investing too much time into handling
+>> > old DTBs.
+>> >
+>> > The PCI reset is inverted on some boards to handle a dying gasp. If
+>> > the power breaks down the reset should get triggered and the PCIe
+>> > device can send a dying gasp signal to the other side. This is done =
+on
+>> > the reference designs of some Lantiq PCIe DSL card for the VRX318 an=
+d
+>> > probably also some other components.
+>> >
+>> > Hauke
+>>=20
+>> What I missed so far is the fact that the driver used=20
+>> '__gpio_set_value'
+>> before Dmitry's commit and thus used raw access to the GPIO.
+>>=20
+>> This effectively means that every device that has worked with the=20
+>> driver
+>> so far must have an ACTIVE_LOW reset, no matter what was configured in
+>> the device tree.
+>>=20
+>>=20
+>> So renaming the property in the dts from "gpio-reset" to "reset-gpios"
+>> and setting the FLAGS to "GPIO_ACTIVE_LOW" should actually solve the
+>> problem.
+>=20
+> Right, luckily (to a definition of luckily) the driver and DTB used
+> "wrong" syntax for the gpio property, so we can quirk it and make
+> force ACTIVE_LOW polarity on old DTBs, and new DTBs with "reset-gpios"
+> property will follow polarity specified in DTB.
 
-Ah, the usbtmc driver.  Probably just needs to check for proper
-endpoints in the device descriptor.  Can you make up a patch for this?
+We have already adapted the device trees in openWrt. [1]
+Will you create a quirk patch for the old DTBs or should I create one?
 
-thanks,
+>=20
+>>=20
+>> What still bothers me about the driver itself are 2 things:
+>> 1. the initial value of GPIOD_OUT_LOW. This means that there is no=20
+>> real
+>>    defined HIGH -> LOW -> HIGH on reset.
+>=20
+> Is this actually needed? Typically a card requires certain time in=20
+> reset
+> state (with reset line active) before it can be released, however there
+> usually no restrictions on line being inactive beforehand. But=20
+> typically
+> it will be pulled up to avoid leakage...
+>=20
 
-greg k-h
+No, I don't think that's absolutely necessary. Several tests have so far
+shown that it works as it is at the moment.
+
+[1]=20
+https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dcommitdiff;h=3Df6fe1=
+9ed6dfaf0444cd80f530bf89f6878fd5936
+
