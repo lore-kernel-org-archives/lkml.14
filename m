@@ -1,98 +1,92 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C070419E81C
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 16:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4568B19B5A5
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 16:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719247578; cv=none; b=iDQOPeKkS+cfQ9a6LrLFxvkveP3EUz7MAWhV3eyoNp3raMTY8VU+1HnjsqIPWSQX/ljRzmRD+E9yLt6n27wKs0sURQo1FEPzgBbKeLlvCF8xo/9lQ6aRSN0+fuWCVdIUM+/xgvdQueTt5+nVF/jl0BsLnH7xAcdrelhSNwTMvMY=
+	t=1719247607; cv=none; b=j6YCJVvdHU9GXuYic6eMMNaFCRGO8LIDrpeWna6qpZ3tjrnUvaOGhPhRO0RzHuyx+xtVcOiR1FgYQoO7vhx7y9Zs2GekfDGCK4T1oyEp89FWwVanr1ZK2SkOTh3+J1SODVC68zhW9X0rg+KEsYK/adqwi5sevvYyx5j7ScopsXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719247578; c=relaxed/simple;
-	bh=j3mtCDro6szPMoGWAAjyIwhY8Z8hnROYefTX4WK/Chc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WOuAmyGxBPN8dVqhh4Dh37KY+9gLTbRzVXCFejh6cPXxex7+PcR8m1g4k9Z4/P1nKnAPro3uLy8J5XahS3GFCRFetlRsqW3ih/693aeTsX+bR8RnfzMAOeA+SAK2WOIfP8XtAlrK5KO1Mno/T+ELKwUJe58HHGk3q7O9Zh6osbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1zaXE/2O; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719247607; c=relaxed/simple;
+	bh=fKtutG1GdZlzjibolCmXSp5xe1fv3mZtm/w2hM6+lKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHY8QyX3xeMo/vqmHsG4/Wv4TENpKoqkBqS1XL/ztoO1y/NfVRPPH9F6V6cyxqfyXEuOVIDw30mZf40geDwm4tyjB1+xPpoTOS1wFnR74rBAedAB9jcmYRiBX/8ZmtvvPfyissFmMWi7y8MnbGM0qZ0LJ0jMtDaymO9OmJieGjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UqVzsasY; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1zaXE/2O"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-443586c2091so1101cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 09:46:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UqVzsasY"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a72459d8d6aso197075166b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 09:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719247575; x=1719852375; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMSaelTgm9+gZJLzvg/KOZGEZUTdUOqVskLSww0Rudo=;
-        b=1zaXE/2OmbLVH3YFlvHlhrCUNdqVIEoEgQbgiPzkP7DCI5I4nTGOH50t/YuZSEK9qi
-         HpcuI0bwf2BrNnccQ6Wc1aM+E+IELLJpNWRQcVLw4p72m1WlDz0cuZxqhBv0D+1b3rZl
-         vF/qOHLKcfCTSYSeUm7825gwkfw73ef5h+fItFYtr117Km0c1M4PF19F4GGcwvu19ko2
-         /TWa5T59en6SS4doQGbtMd77MEkjYgMm/Ufu2F9i/gyEiAtUmPZUqdkxBRisHFR2sYtX
-         DSyFsx8MNNngg9oyskxOsFXEH3QXHnkhb9MZETW5pZIiV8uorpsG24CRAE4GFqX9bh5T
-         +T9A==
+        d=suse.com; s=google; t=1719247603; x=1719852403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UdsQVLlx/h6bzQBw/PftMKrwboL2BwJ/wPUlBpBpDJU=;
+        b=UqVzsasYbbxyXI3D/wZwFkmWTyMpR7G356gHGr0m2JoO1S2sQ62EV0tvG7rL74m/Y3
+         M15OG3GRAutabSIm8kY9phVDTvPfT20TncYmL24PCASuBY7YqTpq4abGbskOQBF75uGS
+         uZNLFcL9wGrlMhiiQoE/e/kAxwxTyM2JUmr6hEljshGv8Zi7schkPfYOuvapYKnEzTT4
+         dRjyfodfHMIdjeNCFyImR+j+QOBioHCsJRXluIExAZRMaDeJaZ3DgO01qJxEmRndcNzY
+         7l1REdC4VVklMDBvERe+iyuO/B3WuL0i9MTmvhIhTE7hTsE5Cukbz4kzebAwspE+HHHm
+         xTUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719247575; x=1719852375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AMSaelTgm9+gZJLzvg/KOZGEZUTdUOqVskLSww0Rudo=;
-        b=G673WpCRUw48EXgrVKawM4FSucd8bR3WY/6PxLDZ26ihfdkXYJobvA4pLS+K9LoyKw
-         X+rs9p4dWG23mkLJ38FQj+NQjLLr4eyENqJcbmGxHZidiobq/rii02Y8HPU3IbvFVSjk
-         ELrmk7LJ4JHQJQMm+WWFi4MPEtPjKnlCjWq09ygxDQYJi2RfTuiBaf5SlhcwgXicUzlC
-         5Ih3pa2g85UIL3FxuT2KMChFnzAPhVFhPbdvtyypIsy/c4u60D1tEo4tLlhmOX386bFM
-         M78w2wlELknEmkr7eAWiJ1jAP/8GVbMebcJDBOCW6/OlH0TS6XGmMH7Q6CvSMze6swj3
-         LF6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXai3B3SXn8LEKu2FDi0G1nMiiM9Y0k3UfJdgxKALeJbdaGtkwt3K+lXBAeGPYbP/Ew/MRzBr6LdTJompJK4js3yBk3sVTGiKov2EgO
-X-Gm-Message-State: AOJu0Yx8l6K/wgSiVnwhYYyQTfKDpkG+xhaTXBgMXmZoOMoTKRDsWrxp
-	UGeYTosvrA7l061fjQuU4HdEnd9WIZO+bBXv7x727l1bXn2YZaHyKCr8Ugcr2Qj9nn/afNPDOh0
-	XC+MnrwIfUq4DTrJeBx3Fv8jxyR2ZJLOZjJmX
-X-Google-Smtp-Source: AGHT+IFjApab6MaKv6PsrlmopTYXcXjrUWTT++GwSbVbvFdm1I8gzP3WA9e+zP+3yfQBYNCgLHo0PSNfLdJekbpatUs=
-X-Received: by 2002:a05:622a:83:b0:441:54bb:50eb with SMTP id
- d75a77b69052e-444ce39fd5dmr5217641cf.28.1719247574572; Mon, 24 Jun 2024
- 09:46:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719247603; x=1719852403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UdsQVLlx/h6bzQBw/PftMKrwboL2BwJ/wPUlBpBpDJU=;
+        b=r2veGiSFn65+B3WG21+MNOuGPolSZzUpd0Sbu1rFJsFUfVebmvKvxuU4Eihkq6Lcp0
+         JjYBK4IKzPyg5wihYxvOXQfvJacDyKDs8320EpANusDcHBd4kqhJ7Kf4IYYsnmBs/qiF
+         vcriLgYQWEiHyTkA7ya84TyB6yeZoIIfY7d+IyEzDD/YmCXi8H0hu6So6SmISk7bviAx
+         RRAumCfaYdB+pnodBa2M5x1I8L3vT29LxbBDuJAY6PUlrbVPP/vfuSAAxOX+kqRVB6Dt
+         MGf9f5SyYoZ0I8TEHVzxqd9yqzFAbbHUUIlUKfsDvqKX76jSLN2OdhSBGP29pezucZ2L
+         e0mA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3494OUwop+Etv4E5dFEpMp0byJK2a0m/LlbxcVF3DktX0F+R6pEgdoYX5fJyxAjDppXCV1F1iYPuAuvM0wbos/8XY2RgtOmPwXfDR
+X-Gm-Message-State: AOJu0Yz+qjhplww7MwvOKcg8gedEDFpy+SOqU21LW12mouY0CzyprgD7
+	qB5dm/46TdW3GLNtZEHdnB8Atfxy0LnCwt6d7vpS60IJWUMoJvEmOPpbrmT4ik0=
+X-Google-Smtp-Source: AGHT+IEeKvPzfyNwPxeUyUIk7sVc3A7I3ZiIk2CwSjDSZ1RvoC7EvcXrLGH4uX/AhGcrQmx9KSgf9Q==
+X-Received: by 2002:a17:907:a809:b0:a70:7a10:de0b with SMTP id a640c23a62f3a-a7245b565b2mr352681166b.21.1719247603444;
+        Mon, 24 Jun 2024 09:46:43 -0700 (PDT)
+Received: from localhost (109-81-95-13.rct.o2.cz. [109.81.95.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7213f474e0sm273562966b.190.2024.06.24.09.46.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 09:46:43 -0700 (PDT)
+Date: Mon, 24 Jun 2024 18:46:42 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	Alex Kalenyuk <akalenyu@redhat.com>, Peter Hunt <pehunt@redhat.com>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH] memcg: Add a new sysctl parameter for automatically
+ setting memory.high
+Message-ID: <Znmi8lfORdPoI061@tiehlicka>
+References: <20240623204514.1032662-1-longman@redhat.com>
+ <77d4299e-e1ee-4471-9b53-90957daa984d@redhat.com>
+ <ZnmO8izZPwYfiaRz@castle.lan>
+ <d97e2e8f-0abc-49a7-bead-0501c1226040@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624141926.5250-1-lvzhaoxiong@huaqin.corp-partner.google.com> <20240624141926.5250-6-lvzhaoxiong@huaqin.corp-partner.google.com>
-In-Reply-To: <20240624141926.5250-6-lvzhaoxiong@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@google.com>
-Date: Mon, 24 Jun 2024 09:46:03 -0700
-Message-ID: <CAD=FV=XsRrB_Y=_rTTDhvzQPwxr+_LuY-YUjfm5H7mY8YgxG0w@mail.gmail.com>
-Subject: Re: [PATCH v5 5/5] drm/panel: jd9365da: Add the function of adjusting orientation
-To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Cc: dmitry.torokhov@gmail.com, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jikos@kernel.org, 
-	benjamin.tissoires@redhat.co, hsinyi@google.com, jagan@edgeble.ai, 
-	neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
-	dmitry.baryshkov@linaro.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d97e2e8f-0abc-49a7-bead-0501c1226040@redhat.com>
 
-Hi,
+On Mon 24-06-24 12:33:27, Waiman Long wrote:
+> I also trace back the OOM problem to commit 14aa8b2d5c2e ("mm/mglru: don't
+> sync disk for each aging cycle") in the MGLRU code. So setting memory.high
+> automatically is one way to avoid premature OOM. That is the motivation
+> behind this patch.
 
-On Mon, Jun 24, 2024 at 7:21=E2=80=AFAM Zhaoxiong Lv
-<lvzhaoxiong@huaqin.corp-partner.google.com> wrote:
->
-> This driver does not have the function to adjust the orientation,
-> so this function is added.
->
-> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-> ---
-> Changes between V5 and V4:
-> - 1. Change dev_err() to dev_err_probe().
->
-> V4:https://lore.kernel.org/all/20240620080509.18504-5-lvzhaoxiong@huaqin.=
-corp-partner.google.com/
->
-> Changes between V4 and V3:
-> - No changes.
->
-> ---
->  drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Please report this.
+-- 
+Michal Hocko
+SUSE Labs
