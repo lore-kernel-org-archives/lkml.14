@@ -1,133 +1,214 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812E31304B1;
-	Mon, 24 Jun 2024 09:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905EC13667F
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 09:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719220990; cv=none; b=Q/PpkjI7J6oUciyffsqeLMiNLFWdikXVfIy6h+s2r1E23+bmcJEhp1S374ouiBaZl+O1WgnoNnZiVP86V+vX12atWtfwKwJGpTRFSTIU9YInJZTQQankTxKEYfyEEhwWXHeSGI4As8l/oa88hY9MRx1BsMLkzX8g2eKBo8a/xDg=
+	t=1719220989; cv=none; b=ZSjXbfZQ83qbgqsrLwv+0eXIcV0q96H6pO1m9nGSFIzJXK4wcwCvpHGYKh8OX//uH9BqxgEeCDeWzNHNwt/yp5lPswWDhZvTd3Wv3PVTtw5hTfQ28MePsN/7P1OD/Nqyrt8O2tup102scpZHd0bTtEEoGcSSierGSlsjoMuBETg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719220990; c=relaxed/simple;
-	bh=VSdyIqcXKIeXywG64FX9bSiDwrUvzE9Hv8UawMJCHow=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iGKfTRXWlqQE+KVuWfsGq5H1+YUm0luS4hkxBFhSlTo9BbrLRF+XoT2Uq4jh/VdU+jmad9yOP/S8avVkZ/0eI7KTh8UGLda273gItm2jrCABb41TZ3wqioXexwEkY7eD7EDQuYaC1AHwfLnckhdwu2YvBIiEdRqpAK1yb3mXXrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fB1TAbm2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719220989; c=relaxed/simple;
+	bh=2DTLw1QgXTnhlJwnj5IgGQckRfw/H7CQujwKEKUfaa0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=giKgoJZO0KVB4jBcgfbsWY3ux/RAOFIZb53RQcmUiARjTdPur/phi6xjiC4TPy8SGR0eEHpy4mdA0im2l7FIFekLnq0x3SC3Oit5SgSAv2OQ7kswBUVzXqKbuwPjzFj7gV9hakB/qMR06K3zNoKSDAfRdzKr2ol7ZoR2Sw/6udU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m5xMock3; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fB1TAbm2"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45O8Yw49023757;
-	Mon, 24 Jun 2024 09:23:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5IyIy2raQyI/j8Y4tp3EjbrHtT/L8h4cYoQYDRAXN/I=; b=fB1TAbm2zsfQ3n1q
-	2GO+TCbkjGNeiukzbxHg/lPneBf5tyiuYbrxr03CapOLtZf/gK1msEqjg6KfNyT5
-	9rY2RiXCj2ms25oe+AQonqGfiL2bzVLaFp+YHlGExHkYgcr+tpVUfYwrtCBQVfGw
-	Pwt/3UPF3ots51EXpXacKwul1zLWObHdLWm7qiNPwxMXJ18a7mkEKsDH2ZAEnqNY
-	EdlzWJqItSyyF9w69lzwLhoBgFjL9J6GztZA1bWaC+fTVGnZipk77HQ404Gtvdon
-	r/dcL4lYti0C8basiJCcRH4+nFDx7SNIpTnYdlcq0UEHsVJMtOMZqGT/SXyKcA+W
-	rQCG+A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqshk56q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 09:23:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45O9N42I023535
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 09:23:04 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 24 Jun 2024 02:22:59 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <dmitry.baryshkov@linaro.org>, <srinivas.kandagatla@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
-        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>,
-        <abel.vesa@linaro.org>
-Subject: [PATCH V3 3/4] soc: qcom: icc-bwmon: Allow for interrupts to be shared across instances
-Date: Mon, 24 Jun 2024 14:52:13 +0530
-Message-ID: <20240624092214.146935-4-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240624092214.146935-1-quic_sibis@quicinc.com>
-References: <20240624092214.146935-1-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5xMock3"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-364cdfdaf91so3024356f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 02:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719220986; x=1719825786; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9P217sn9M/MJa4bSxNl7YInysiYF0hUm16+UxY3/mRM=;
+        b=m5xMock3ulSa3fz6xMHWRmnCrXOY/fE/xqZ1EIwPzCQoUn9iCk/pHpV2mqGLdVtytz
+         rdi9pxmA+ZD7sIh5Dbts82TNDEhJsHdEgV82qz3mMUKhT0+LL6nExXoVuEb1DVWclY5a
+         NAkB57F/8dXF8tmJw+aa3QF7nxKQeMwHg07dQGis0WW3x9ICxCmNoCc7JL74Zu98wUdh
+         gLHRM+KinhjIfQJWpVJ6DYK7VGd0W2PlkBKRNAumF/O47bndMmxSs3mzWGGY+z5NeawU
+         kdPZjM5ylWGz3AX12ElNPnpmYNhUzAvzDug+P0vebHi/FrqE8CV6yJGCfSi/WGJ590N0
+         GDSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719220986; x=1719825786;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9P217sn9M/MJa4bSxNl7YInysiYF0hUm16+UxY3/mRM=;
+        b=pe+Rpwz6KK6johKanRYMCxl4fp1jDfk4UPWTAbHzizDFXjlGmz0f6eMh4WmolaL4JU
+         RhhR6iFOqiSfH6iua6nH3ZPpRP98dn23xxDLo7OPz1EfDleGT79q54UgEPCKJShboyMY
+         qG46bCLkmQWJVnvUXkdClG1t5kcSUgXl8fdMj7B8UJLaUCcMWXuNtYhwDi5hqVMl0m/g
+         CE6d10khjrkMFVQaj2EQrtYG6FBnNzIpjQXetlKDKLJ6tbmlk6PfTmiwic7ojCnx5Jp5
+         SFTbCmCD4jmjAKKQ3E2sr6VQyzG6IYCzziYR5DAHemkdVneOZv2donUtxcNfGpg35PPp
+         9XCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQrSmCwZ7KHX9/STZ3X4vV87srNij/EiknoupCoc9mpUWlV/Ue1JzBiagVpEmGjgbi8fgIGn/OlzE9q9shg8lqlGwWTGTZgbd3Iqy9
+X-Gm-Message-State: AOJu0Yzvh2vmqqdVVi2125iVYhdbDYEqMeYsXwUJ46BduoZdiNUxYCux
+	LuOloCl4WRt4o8py7Fi4ClUrjxYI3/RYBMEI/IgirKO3eO0e+CWT8lhW9OnGxFw=
+X-Google-Smtp-Source: AGHT+IH3/ALEXbfYlT2sTHs08MgJbhu0VXcoE0ZN53qFZcym9IwtEXwpeKiTUO0P3AYufoyP3blVSg==
+X-Received: by 2002:adf:f3cd:0:b0:364:e963:bd1a with SMTP id ffacd0b85a97d-366e96c0d75mr2373056f8f.65.1719220985494;
+        Mon, 24 Jun 2024 02:23:05 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:cf01:774b:55fd:ab74? ([2a01:e0a:982:cbb0:cf01:774b:55fd:ab74])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424817a99fbsm125020125e9.16.2024.06.24.02.23.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 02:23:05 -0700 (PDT)
+Message-ID: <dd6f7a67-e338-4c08-8520-8e85a953834b@linaro.org>
+Date: Mon, 24 Jun 2024 11:23:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: LjVomsMhcbDicQrk_2pM4_klvla9gWVm
-X-Proofpoint-GUID: LjVomsMhcbDicQrk_2pM4_klvla9gWVm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_08,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406240075
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 1/8] drm: bridge: dw_hdmi: Call poweron/poweroff from
+ atomic enable/disable
+To: Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Robert Foss <rfoss@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240611155108.1436502-1-jonas@kwiboo.se>
+ <20240611155108.1436502-2-jonas@kwiboo.se>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240611155108.1436502-2-jonas@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The multiple BWMONv4 instances available on the X1E80100 SoC use the
-same interrupt number. Mark them are shared to allow for re-use across
-instances.
+On 11/06/2024 17:50, Jonas Karlman wrote:
+> Change to only call poweron/poweroff from atomic_enable/atomic_disable
+> ops instead of trying to keep a bridge_is_on state and poweron/off in
+> the hotplug irq handler.
+> 
+> A benefit of this is that drm mode_config mutex is always held at
+> poweron/off, something that may reduce the need for our own mutex.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 33 ++---------------------
+>   1 file changed, 2 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 9f2bc932c371..34bc6f4754b8 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -172,7 +172,6 @@ struct dw_hdmi {
+>   	enum drm_connector_force force;	/* mutex-protected force state */
+>   	struct drm_connector *curr_conn;/* current connector (only valid when !disabled) */
+>   	bool disabled;			/* DRM has disabled our bridge */
+> -	bool bridge_is_on;		/* indicates the bridge is on */
+>   	bool rxsense;			/* rxsense state */
+>   	u8 phy_mask;			/* desired phy int mask settings */
+>   	u8 mc_clkdis;			/* clock disable register */
+> @@ -2383,8 +2382,6 @@ static void initialize_hdmi_ih_mutes(struct dw_hdmi *hdmi)
+>   
+>   static void dw_hdmi_poweron(struct dw_hdmi *hdmi)
+>   {
+> -	hdmi->bridge_is_on = true;
+> -
+>   	/*
+>   	 * The curr_conn field is guaranteed to be valid here, as this function
+>   	 * is only be called when !hdmi->disabled.
+> @@ -2398,30 +2395,6 @@ static void dw_hdmi_poweroff(struct dw_hdmi *hdmi)
+>   		hdmi->phy.ops->disable(hdmi, hdmi->phy.data);
+>   		hdmi->phy.enabled = false;
+>   	}
+> -
+> -	hdmi->bridge_is_on = false;
+> -}
+> -
+> -static void dw_hdmi_update_power(struct dw_hdmi *hdmi)
+> -{
+> -	int force = hdmi->force;
+> -
+> -	if (hdmi->disabled) {
+> -		force = DRM_FORCE_OFF;
+> -	} else if (force == DRM_FORCE_UNSPECIFIED) {
+> -		if (hdmi->rxsense)
+> -			force = DRM_FORCE_ON;
+> -		else
+> -			force = DRM_FORCE_OFF;
+> -	}
 
-Using IRQF_SHARED coupled with devm_request_threaded_irq implies that
-the irq can still trigger during/after bwmon_remove due to other active
-bwmon instances. Handle this race by relying on bwmon_disable to disable
-the interrupt and coupled with explicit request/free irqs.
+This means we always poweron the bridge even if rxsense is false ?
 
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
+Neil
 
-v3:
-* Update commit message describing the race condition. [Bjorn]
-* Update comment in the bwmon driver. [Dmitry]
-
- drivers/soc/qcom/icc-bwmon.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/soc/qcom/icc-bwmon.c b/drivers/soc/qcom/icc-bwmon.c
-index ecddb60bd665..e7851974084b 100644
---- a/drivers/soc/qcom/icc-bwmon.c
-+++ b/drivers/soc/qcom/icc-bwmon.c
-@@ -783,9 +783,14 @@ static int bwmon_probe(struct platform_device *pdev)
- 	bwmon->dev = dev;
- 
- 	bwmon_disable(bwmon);
--	ret = devm_request_threaded_irq(dev, bwmon->irq, bwmon_intr,
--					bwmon_intr_thread,
--					IRQF_ONESHOT, dev_name(dev), bwmon);
-+
-+	/*
-+	 * SoCs with multiple cpu-bwmon instances can end up using a shared interrupt
-+	 * line. Using the devm_ variant might result in the IRQ handler being executed
-+	 * after bwmon_disable in bwmon_remove()
-+	 */
-+	ret = request_threaded_irq(bwmon->irq, bwmon_intr, bwmon_intr_thread,
-+				   IRQF_ONESHOT | IRQF_SHARED, dev_name(dev), bwmon);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "failed to request IRQ\n");
- 
-@@ -800,6 +805,7 @@ static void bwmon_remove(struct platform_device *pdev)
- 	struct icc_bwmon *bwmon = platform_get_drvdata(pdev);
- 
- 	bwmon_disable(bwmon);
-+	free_irq(bwmon->irq, bwmon);
- }
- 
- static const struct icc_bwmon_data msm8998_bwmon_data = {
--- 
-2.34.1
+> -
+> -	if (force == DRM_FORCE_OFF) {
+> -		if (hdmi->bridge_is_on)
+> -			dw_hdmi_poweroff(hdmi);
+> -	} else {
+> -		if (!hdmi->bridge_is_on)
+> -			dw_hdmi_poweron(hdmi);
+> -	}
+>   }
+>   
+>   /*
+> @@ -2546,7 +2519,6 @@ static void dw_hdmi_connector_force(struct drm_connector *connector)
+>   
+>   	mutex_lock(&hdmi->mutex);
+>   	hdmi->force = connector->force;
+> -	dw_hdmi_update_power(hdmi);
+>   	dw_hdmi_update_phy_mask(hdmi);
+>   	mutex_unlock(&hdmi->mutex);
+>   }
+> @@ -2955,7 +2927,7 @@ static void dw_hdmi_bridge_atomic_disable(struct drm_bridge *bridge,
+>   	mutex_lock(&hdmi->mutex);
+>   	hdmi->disabled = true;
+>   	hdmi->curr_conn = NULL;
+> -	dw_hdmi_update_power(hdmi);
+> +	dw_hdmi_poweroff(hdmi);
+>   	dw_hdmi_update_phy_mask(hdmi);
+>   	handle_plugged_change(hdmi, false);
+>   	mutex_unlock(&hdmi->mutex);
+> @@ -2974,7 +2946,7 @@ static void dw_hdmi_bridge_atomic_enable(struct drm_bridge *bridge,
+>   	mutex_lock(&hdmi->mutex);
+>   	hdmi->disabled = false;
+>   	hdmi->curr_conn = connector;
+> -	dw_hdmi_update_power(hdmi);
+> +	dw_hdmi_poweron(hdmi);
+>   	dw_hdmi_update_phy_mask(hdmi);
+>   	handle_plugged_change(hdmi, true);
+>   	mutex_unlock(&hdmi->mutex);
+> @@ -3073,7 +3045,6 @@ void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense)
+>   		if (hpd)
+>   			hdmi->rxsense = true;
+>   
+> -		dw_hdmi_update_power(hdmi);
+>   		dw_hdmi_update_phy_mask(hdmi);
+>   	}
+>   	mutex_unlock(&hdmi->mutex);
 
