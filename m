@@ -1,276 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F77F130A66;
-	Mon, 24 Jun 2024 09:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA99136E1B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 09:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719220790; cv=none; b=fG9qXT5RPI/oe24k9ysD0etj3DRclrRRIPhyXk5pP7uxcT0NOq2IEcLdubMa43NNt8t1Qfk+Lp7m+i1tScZL+5Pw2eBiBtJWmscc7kVNPFF3UK6bqHO4gZe7/RfyY4pBkaM4JQ4zLepK01lNdExobuOB7DgIdl0udrB29AdZCO4=
+	t=1719220803; cv=none; b=NSxWxmDhItTrlNER1fskXPDfLlxtmWme39pJkMvxNglXmygYpWidWFZb++mesYt5HRCctxXT/0AH2ofsv0GOOTyFt8ivQnaZVpgiBF1EZDyVfOdIee417tqiIQBs/WyLKY6h24BZrw2rQ3qOk7O4dkJMzyO1tvPCVrkZXEfG+hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719220790; c=relaxed/simple;
-	bh=BoVXMC3yh8YzrLfCFEPWdFRffhONX8GKgR3QpZgFYXQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bR1CrDNv1itTjTzqkTVnYnx/MmDTyP3aaUn613bCvXJgYFE5S3oFNg5Fn7Lmv/tZj+iDwVcaWf8ybiw8ePNfhD6gh/9hvOL/XxN4lSE3isKC52NcCvVfas/RuhW52Df+61yYLw6JWfQa9EopqRxokNSEat32jt5TRTyPBZIa0oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szwcnY/S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719220803; c=relaxed/simple;
+	bh=7yKVLPfkXYokvoegflBQ/9qEBP6GZwyR8ds15geBjR8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=btB2ZkbLOQhSZ9FDjRTe2B1se3vqLzQA8lWe54zhgWz7gjORsf4DwGgv9w0qOy+rzzpWR1TKMxOn/AqgN2DbTYmEB9nbO5sIXfDn+dy84+Gy/OYeRjEILy4+mXBrtCZnCwXymhVPH6h+wsZhf3DyVrxQmNLeKUcM0megzqRQsyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wRPsq/OZ; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szwcnY/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10310C4AF0B;
-	Mon, 24 Jun 2024 09:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719220790;
-	bh=BoVXMC3yh8YzrLfCFEPWdFRffhONX8GKgR3QpZgFYXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=szwcnY/SdZuOH/Ll6AVMKeBWITTGhwZ4/ZRvGPaHCLXQwFHXEvMG7jaKhVgeAX92r
-	 /hgcdsTVB4BUpxFnbHPV5GctE0NBrTf4rSZybxjfgon+4UquT0uGsjHQ7VTH9qAA4c
-	 ntvUllTYTHHQw7f6DqjesyqNSApspSDP0ZsgtH6D4iZ1KbHSfFACgUkkQWFr56WMFp
-	 qgyCMgKSqavDXBWogc5Aw7fcuTLVgEIrTiW34bNPLPlMFGrhme9ANvyoINE9weJycx
-	 iNYiVJAi9mqSS2gYYcN2YjNtvO/kVjoIX5NCZDnbNz4mCuYrSAsTU2W8zEq58QFbnw
-	 bYqe14lzwHSxw==
-Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
-	(envelope-from <mchehab@kernel.org>)
-	id 1sLfrX-000000085bn-24kM;
-	Mon, 24 Jun 2024 11:19:47 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: 
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Borislav Petkov" <bp@alien8.de>,
-	"James Morse" <james.morse@arm.com>,
-	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"Shiju Jose" <shiju.jose@huawei.com>,
-	"Tony Luck" <tony.luck@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	linux-acpi@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/4] efi/cper: align ARM CPER type with UEFI 2.9A/2.10 specs
-Date: Mon, 24 Jun 2024 11:19:20 +0200
-Message-ID: <b9354882f45a0c600e65df4bacee2f1080c4ba89.1719219886.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1719219886.git.mchehab+huawei@kernel.org>
-References: <cover.1719219886.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wRPsq/OZ"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-364b2f92388so2857908f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 02:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719220800; x=1719825600; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1rzhBjyz5jjvgMNRRPFm2knRSqWyQzc3/BQBCba6JkY=;
+        b=wRPsq/OZAMdCkpJ6bQl8Mch8TEIwAKiu5Q9RnL+bljskg+e+Dain14DHYGKLuY9UOu
+         IFw+TQbeCadqta9HSa79JzlNuvg8KXYsxGAj8gY1NIUGa6m1i9FjnvkbzCKZQNiA8gnc
+         WE3k/53jBmBOXtHBw6CEqginx1J6e03clHjA5f9dSH3bDi00gMikpmbxQKKBWba1c7UY
+         0hngtcn6T9v0y8eQpQEVz3au+1KORDMtAPY1omzgKMoMawA4EHbhGo1tH5KypFT3oDlJ
+         4xMutFknNpq+rFC+2rT/K9NYvITC7oeMiIbsoFP+6H75baOJkqSmSvnuHOaNIA4O5WAf
+         O7vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719220800; x=1719825600;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1rzhBjyz5jjvgMNRRPFm2knRSqWyQzc3/BQBCba6JkY=;
+        b=bThvoGLSDEaFDpBRFFkRVlwyzdB7vpKRk7sukPL3YPXu8wKkWnm8UI3GftSJP+8tMH
+         p5sPnAfrsjVitpD8hSTYIEvtHM7pO5EUfzQkemYRtn1gyROMeGrDJ09aYe6/LA195Yee
+         2jXjaPmVR4YpB1BpPc471yzE4K5Geb8UHS0wkdD1dqOPF6w6MzAo11eYLei6Mci9tck+
+         UfVYY8PgKc2EzoxLKSgDZNbmBxRwWfDZDqN9wR0aDLnHGHkiC3FCvvM7kFljL5xjdN+T
+         Yl9+4PDhUZzdh4XWsnipsITmADzhcrxi6q9O5nrb/xE5nJeha6ilEKw/ajROCgnk7mb0
+         vHow==
+X-Forwarded-Encrypted: i=1; AJvYcCXACb94xjc0u/vBgTTwJIuJdeVQO2TWHaKaqgbao+P9gJxnFqgM0N1GeR/Uj+2wZTwDjvJbCBXHQo6YpY//wLt9ZeEJgzCzFCY0Scb5
+X-Gm-Message-State: AOJu0Ywcmnzcz387vJrfs921cjaVLAva1ZRAJpsG8dYaL5FzCGuDd+/0
+	CVMWT2Gaj7op1IcCQEy1KMMGavLuGGY30mr+5jaFJz32nBrKiB2wUeLP1gVzc3I=
+X-Google-Smtp-Source: AGHT+IHRZ1tAaFSNfK8/s7Iexd9ivbkvRD5s+vKV1yQwTPEUSZoY/5RFg7cefOTs7oZfhcoSVW3q1g==
+X-Received: by 2002:a5d:5745:0:b0:364:81e7:3917 with SMTP id ffacd0b85a97d-366e946480fmr3098589f8f.3.1719220800019;
+        Mon, 24 Jun 2024 02:20:00 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:cf01:774b:55fd:ab74? ([2a01:e0a:982:cbb0:cf01:774b:55fd:ab74])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a8c7befsm9477398f8f.95.2024.06.24.02.19.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 02:19:59 -0700 (PDT)
+Message-ID: <a3a645a0-2d2f-4b6c-9878-f02764b686c1@linaro.org>
+Date: Mon, 24 Jun 2024 11:19:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 5/8] drm: bridge: dw_hdmi: Invalidate CEC phys addr from
+ connector detect
+To: Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Robert Foss <rfoss@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240611155108.1436502-1-jonas@kwiboo.se>
+ <20240611155108.1436502-6-jonas@kwiboo.se>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240611155108.1436502-6-jonas@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Up to UEFI spec, the type byte of CPER struct for ARM processor was
-defined simply as:
+On 11/06/2024 17:50, Jonas Karlman wrote:
+> Wait until the connector detect ops is called to invalidate CEC phys
+> addr instead of doing it directly from the irq handler.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 18 +++++++++++-------
+>   1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 9ecf038f551e..0814ca181f04 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2455,7 +2455,17 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+>   {
+>   	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+>   					     connector);
+> -	return dw_hdmi_detect(hdmi);
+> +	enum drm_connector_status status;
+> +
+> +	status = dw_hdmi_detect(hdmi);
+> +
+> +	if (status == connector_status_disconnected) {
+> +		mutex_lock(&hdmi->cec_notifier_mutex);
+> +		cec_notifier_phys_addr_invalidate(hdmi->cec_notifier);
+> +		mutex_unlock(&hdmi->cec_notifier_mutex);
+> +	}
+> +
+> +	return status;
+>   }
+>   
+>   static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> @@ -3066,12 +3076,6 @@ static irqreturn_t dw_hdmi_irq(int irq, void *dev_id)
+>   				       phy_stat & HDMI_PHY_HPD,
+>   				       phy_stat & HDMI_PHY_RX_SENSE);
+>   
+> -		if ((phy_stat & (HDMI_PHY_RX_SENSE | HDMI_PHY_HPD)) == 0) {
+> -			mutex_lock(&hdmi->cec_notifier_mutex);
+> -			cec_notifier_phys_addr_invalidate(hdmi->cec_notifier);
+> -			mutex_unlock(&hdmi->cec_notifier_mutex);
+> -		}
+> -
+>   		if (phy_stat & HDMI_PHY_HPD)
+>   			status = connector_status_connected;
+>   
 
-Type at byte offset 4:
-
-	- Cache error
-	- TLB Error
-	- Bus Error
-	- Micro-architectural Error
-	All other values are reserved
-
-Yet, there was no information about how this would be encoded.
-
-Spec 2.9A errata corrected it by defining:
-
-	- Bit 1 - Cache Error
-	- Bit 2 - TLB Error
-	- Bit 3 - Bus Error
-	- Bit 4 - Micro-architectural Error
-	All other values are reserved
-
-That actually aligns with the values already defined on older
-versions at N.2.4.1. Generic Processor Error Section.
-
-Spec 2.10 also preserve the same encoding as 2.9A
-
-Adjust CPER and GHES handling code for both generic and ARM
-processors to properly handle UEFI 2.9A and 2.10 encoding.
-
-Link: https://uefi.org/specs/UEFI/2.10/Apx_N_Common_Platform_Error_Record.html#arm-processor-error-information
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/acpi/apei/ghes.c        | 15 ++++++----
- drivers/firmware/efi/cper-arm.c | 50 ++++++++++++++++-----------------
- include/linux/cper.h            | 10 +++----
- 3 files changed, 38 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 623cc0cb4a65..de79cc0a0f1d 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -533,6 +533,7 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- {
- 	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
- 	int flags = sync ? MF_ACTION_REQUIRED : 0;
-+	char error_type[120];
- 	bool queued = false;
- 	int sec_sev, i;
- 	char *p;
-@@ -546,9 +547,8 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- 	p = (char *)(err + 1);
- 	for (i = 0; i < err->err_info_num; i++) {
- 		struct cper_arm_err_info *err_info = (struct cper_arm_err_info *)p;
--		bool is_cache = (err_info->type == CPER_ARM_CACHE_ERROR);
-+		bool is_cache = err_info->type & CPER_ARM_CACHE_ERROR;
- 		bool has_pa = (err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR);
--		const char *error_type = "unknown error";
- 
- 		/*
- 		 * The field (err_info->error_info & BIT(26)) is fixed to set to
-@@ -562,12 +562,15 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- 			continue;
- 		}
- 
--		if (err_info->type < ARRAY_SIZE(cper_proc_error_type_strs))
--			error_type = cper_proc_error_type_strs[err_info->type];
-+		cper_bits_to_str(error_type, sizeof(error_type),
-+				 FIELD_GET(CPER_ARM_ERR_TYPE_MASK, err_info->type),
-+				 cper_proc_error_type_strs,
-+				 ARRAY_SIZE(cper_proc_error_type_strs));
- 
- 		pr_warn_ratelimited(FW_WARN GHES_PFX
--				    "Unhandled processor error type: %s\n",
--				    error_type);
-+				    "Unhandled processor error type 0x%02x: %s%s\n",
-+				    err_info->type, error_type,
-+				    (err_info->type & ~CPER_ARM_ERR_TYPE_MASK) ? " with reserved bit(s)" : "");
- 		p += err_info->length;
- 	}
- 
-diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-arm.c
-index eb7ee6af55f2..52d18490b59e 100644
---- a/drivers/firmware/efi/cper-arm.c
-+++ b/drivers/firmware/efi/cper-arm.c
-@@ -93,15 +93,11 @@ static void cper_print_arm_err_info(const char *pfx, u32 type,
- 	bool proc_context_corrupt, corrected, precise_pc, restartable_pc;
- 	bool time_out, access_mode;
- 
--	/* If the type is unknown, bail. */
--	if (type > CPER_ARM_MAX_TYPE)
--		return;
--
- 	/*
- 	 * Vendor type errors have error information values that are vendor
- 	 * specific.
- 	 */
--	if (type == CPER_ARM_VENDOR_ERROR)
-+	if (type & CPER_ARM_VENDOR_ERROR)
- 		return;
- 
- 	if (error_info & CPER_ARM_ERR_VALID_TRANSACTION_TYPE) {
-@@ -116,43 +112,38 @@ static void cper_print_arm_err_info(const char *pfx, u32 type,
- 	if (error_info & CPER_ARM_ERR_VALID_OPERATION_TYPE) {
- 		op_type = ((error_info >> CPER_ARM_ERR_OPERATION_SHIFT)
- 			   & CPER_ARM_ERR_OPERATION_MASK);
--		switch (type) {
--		case CPER_ARM_CACHE_ERROR:
-+		if (type & CPER_ARM_CACHE_ERROR) {
- 			if (op_type < ARRAY_SIZE(arm_cache_err_op_strs)) {
--				printk("%soperation type: %s\n", pfx,
-+				printk("%scache error, operation type: %s\n", pfx,
- 				       arm_cache_err_op_strs[op_type]);
- 			}
--			break;
--		case CPER_ARM_TLB_ERROR:
-+		}
-+		if (type & CPER_ARM_TLB_ERROR) {
- 			if (op_type < ARRAY_SIZE(arm_tlb_err_op_strs)) {
--				printk("%soperation type: %s\n", pfx,
-+				printk("%sTLB error, operation type: %s\n", pfx,
- 				       arm_tlb_err_op_strs[op_type]);
- 			}
--			break;
--		case CPER_ARM_BUS_ERROR:
-+		}
-+		if (type & CPER_ARM_BUS_ERROR) {
- 			if (op_type < ARRAY_SIZE(arm_bus_err_op_strs)) {
--				printk("%soperation type: %s\n", pfx,
-+				printk("%sbus error, operation type: %s\n", pfx,
- 				       arm_bus_err_op_strs[op_type]);
- 			}
--			break;
- 		}
- 	}
- 
- 	if (error_info & CPER_ARM_ERR_VALID_LEVEL) {
- 		level = ((error_info >> CPER_ARM_ERR_LEVEL_SHIFT)
- 			 & CPER_ARM_ERR_LEVEL_MASK);
--		switch (type) {
--		case CPER_ARM_CACHE_ERROR:
-+		if (type & CPER_ARM_CACHE_ERROR)
- 			printk("%scache level: %d\n", pfx, level);
--			break;
--		case CPER_ARM_TLB_ERROR:
-+
-+		if (type & CPER_ARM_TLB_ERROR)
- 			printk("%sTLB level: %d\n", pfx, level);
--			break;
--		case CPER_ARM_BUS_ERROR:
-+
-+		if (type & CPER_ARM_BUS_ERROR)
- 			printk("%saffinity level at which the bus error occurred: %d\n",
- 			       pfx, level);
--			break;
--		}
- 	}
- 
- 	if (error_info & CPER_ARM_ERR_VALID_PROC_CONTEXT_CORRUPT) {
-@@ -241,6 +232,7 @@ void cper_print_proc_arm(const char *pfx,
- 	struct cper_arm_err_info *err_info;
- 	struct cper_arm_ctx_info *ctx_info;
- 	char newpfx[64], infopfx[ARRAY_SIZE(newpfx) + 1];
-+	char error_type[120];
- 
- 	printk("%sMIDR: 0x%016llx\n", pfx, proc->midr);
- 
-@@ -289,9 +281,15 @@ void cper_print_proc_arm(const char *pfx,
- 				       newpfx);
- 		}
- 
--		printk("%serror_type: %d, %s\n", newpfx, err_info->type,
--			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
--			cper_proc_error_type_strs[err_info->type] : "unknown");
-+		cper_bits_to_str(error_type, sizeof(error_type),
-+				 FIELD_GET(CPER_ARM_ERR_TYPE_MASK, err_info->type),
-+				 cper_proc_error_type_strs,
-+				 ARRAY_SIZE(cper_proc_error_type_strs));
-+
-+		printk("%serror_type: 0x%02x: %s%s\n", newpfx, err_info->type,
-+		       error_type,
-+		       (err_info->type & ~CPER_ARM_ERR_TYPE_MASK) ? " with reserved bit(s)" : "");
-+
- 		if (err_info->validation_bits & CPER_ARM_INFO_VALID_ERR_INFO) {
- 			printk("%serror_info: 0x%016llx\n", newpfx,
- 			       err_info->error_info);
-diff --git a/include/linux/cper.h b/include/linux/cper.h
-index c2f14b916bfb..fc62a80575e8 100644
---- a/include/linux/cper.h
-+++ b/include/linux/cper.h
-@@ -293,11 +293,11 @@ enum {
- #define CPER_ARM_INFO_FLAGS_PROPAGATED		BIT(2)
- #define CPER_ARM_INFO_FLAGS_OVERFLOW		BIT(3)
- 
--#define CPER_ARM_CACHE_ERROR			0
--#define CPER_ARM_TLB_ERROR			1
--#define CPER_ARM_BUS_ERROR			2
--#define CPER_ARM_VENDOR_ERROR			3
--#define CPER_ARM_MAX_TYPE			CPER_ARM_VENDOR_ERROR
-+#define CPER_ARM_ERR_TYPE_MASK			GENMASK(4,1)
-+#define CPER_ARM_CACHE_ERROR			BIT(1)
-+#define CPER_ARM_TLB_ERROR			BIT(2)
-+#define CPER_ARM_BUS_ERROR			BIT(3)
-+#define CPER_ARM_VENDOR_ERROR			BIT(4)
- 
- #define CPER_ARM_ERR_VALID_TRANSACTION_TYPE	BIT(0)
- #define CPER_ARM_ERR_VALID_OPERATION_TYPE	BIT(1)
--- 
-2.45.2
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
