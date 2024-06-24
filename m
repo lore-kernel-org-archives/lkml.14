@@ -1,62 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C6C19F47C;
-	Mon, 24 Jun 2024 17:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC9D1A01AD
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251385; cv=none; b=SigehmQ/Rvo/UO8Qa/syo2AF3IlpX5lqIT2nE+O3kXDlXnyq+KuUHZ0pSePDINozf/cwJoZ4V28ipAj1RHtXcmtl+FM0shY8VEDewFd8giMUlEPdu6uHgneTDhqUUpU6xG24yOvqbFfHA1KNJIJVA+2Ka3pLusOWST3UD6q96rE=
+	t=1719251388; cv=none; b=vE+h15vbUo2diBYJpotEHEnWiXVxGhGAXT9nccl6EzNlNPo2uInbcqxDPfaUMPnXDeMbleFAxB0iRep2LlKl20VY8il5HvCgG+b87FFOdE+w1ihK/jz2utTRxjGL/+mN8KxlkNMVdopbeQFHbwLP+LP4dRCgE/zc9Cx7gRuIfNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251385; c=relaxed/simple;
-	bh=fdcZmVQTvBKlzGtJB0rbs38IWJtKIbhwGdF0unBeKpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A0+/judMB+dBVp1NlmR6nBZb/W/eZK41vhWir1pg5iu2yMTnLXrisJfRvujKrzCwyard5O7IHHlkLZE6Lvdpr+dFQd/ecD4FxDW3oQchk9f0ghe0ykKszqHyjfHbmeJvxK7Rnh+3A1hYExvXGzVHeHF5yd3EIpjo7JKZgjN/b00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBJU53wA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719251388; c=relaxed/simple;
+	bh=Ssjb3Uo4Iut5+I8dmIRqobRAiZrYRNHEz6Ht7+Uda/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tm8XbFvWGV1ciJ9J8DZbcnwV44EofzjbrEQRo/zQviTLWzabw/n36l9+3RJr2lvMQzgiQKC2jStyuj7AxWxJONe9ZnM+KyryxYOYBcm6xZQy4VjTPg78f9+1GdncR5k1wCmfbL/L2u3mhHyyrdRUpkO1DR3IRPPdv6fPDp4N8Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jxty3GNU; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBJU53wA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF63C32782;
-	Mon, 24 Jun 2024 17:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719251384;
-	bh=fdcZmVQTvBKlzGtJB0rbs38IWJtKIbhwGdF0unBeKpA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IBJU53wAz4XP+wG1BOPEmkGio5xLvrfONcN/uG83NH2IJyp3y2sk7TN+kd6Pq88o0
-	 SpWkIFQaAKJ1gxm0zIE5VFeAcZit5DHRxEsdSDCDSvmCQpZqIWM+b8+q4zomqPR5k6
-	 B/eJC4RCG8wq059J9xD7nqJ73GSLocwM2tp6ctB+cXa324YuFvTWX3rxtU/lDAXzRJ
-	 IDKqLIJrHDAi+jUq2KkNweYhGGgTF3pEpLxzGirbmGfDMrT+AkLNRwOXPC4HtE4QFk
-	 vQqkgRO6MHCs7wkwW7QI1aFff9AIQFclHIdUcUXdn9UyMOFVBKhcF7K48l7UdXQJNa
-	 sLQC9zGbbPZdQ==
-Date: Mon, 24 Jun 2024 11:49:43 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
-	Jun Wu <jun.wu@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
-	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] dt-bindings: arm: cpus: Add new Cortex and Neoverse names
-Message-ID: <171925138023.25546.16081189790238958204.robh@kernel.org>
-References: <20240618160450.3168005-1-andre.przywara@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jxty3GNU"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70673c32118so1251892b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719251387; x=1719856187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mkH0vN6ua6Gjn09ocrkAPIaM9p5reMjO+llNAon/y1w=;
+        b=Jxty3GNUstZno9Rk3yheQPkMBR+REAhEfAw+VNBSFIES4+WADq0rT2AZz3F/k7pT6s
+         qebyO9pSmqklShva0U1kKBS31nFsfLqUuwFUww9+yztmDs+GckIaNCx4RQj9WzZnkC3C
+         c1jrKFbX+NaKGjavM2WcFdNGvcyiarIoYPxZVRuiQZ1bjds+2BNxpUn7bD0ohfvTBmia
+         xqT5GOrf3aqRCW6tltPQQR1YgN4dwBa3jfHISTh6s5gW7JhVYyZNeKFHqm4M4lV6IpSi
+         NWNqJj6nXiHD+m1mFmlmDN5LmX10PmMTCahfa8gjm3cRSknQ76feh2x7CQzusBCaAKOr
+         6weQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719251387; x=1719856187;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mkH0vN6ua6Gjn09ocrkAPIaM9p5reMjO+llNAon/y1w=;
+        b=S01U4RpWU0W3YUkMLVB9F4PDSJxv3+EL6Acc3te+w+/kb5/pPu2IBN1QuHJ0faraSh
+         NA5OuzOxAT5W1NOwjP2TWXDb7UI9C5KT60iZvySTRBTPz6Q8kgiPUjMm01NCnp78nGXl
+         NQ3OCk00H3YZ/6q4H322K3JY5eXz7F6ACPkKuPd57EU0ipXwPMN2O9MLXyjqSvcGZ49t
+         ZvcdDLdrTDJenoEM/ACJzmyKRRkzycP0wdPLyAmH01Dtjk3zPy/OGNLNlpKvsLN5TrpZ
+         bcaDSILrctxHT7cWXsMi+Jq998BYl7OmsureeFbfrHvG/tKSjKIx4LzC6w/g4JZd5rYc
+         rqOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSatxa+H39QDm3KUzjlIzaeEngX2HaedwdWecsirxEs9ui8jCT5RPjJBfzTzkAnPVALPR8L1hWq5KLI/k/0UgJ/7AXOMXVZcpVbQiS
+X-Gm-Message-State: AOJu0Yw0QXlvk0SUwrLQNOR54om4LkVORQPT1aLXr9g9dQJ9iWUEEYwP
+	W5e6CsbqgqPnoHP+0zotN14sxFpvUh1xmV1wXkzQwcFk//UFExdp
+X-Google-Smtp-Source: AGHT+IH+svNIq4Zyd95MOOzrn+9RVplI0PwbRSAbMW2J6ZziscrSXG44QMEcN53Xd1+ghzGSLAAj8Q==
+X-Received: by 2002:aa7:82c2:0:b0:706:6f39:1d63 with SMTP id d2e1a72fcca58-70674690fb3mr3975274b3a.22.1719251386616;
+        Mon, 24 Jun 2024 10:49:46 -0700 (PDT)
+Received: from localhost.localdomain ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065130078dsm6487825b3a.204.2024.06.24.10.49.44
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 24 Jun 2024 10:49:46 -0700 (PDT)
+From: yskelg@gmail.com
+To: "Michael S . Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+Cc: Austin Kim <austindh.kim@gmail.com>,
+	MichelleJin <shjy180909@gmail.com>,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yunseong Kim <yskelg@gmail.com>
+Subject: [PATCH RESEND v2] tools/virtio: creating pipe assertion in vringh_test
+Date: Tue, 25 Jun 2024 02:49:06 +0900
+Message-ID: <20240624174905.27980-2-yskelg@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618160450.3168005-1-andre.przywara@arm.com>
+Content-Transfer-Encoding: 8bit
 
+From: Yunseong Kim <yskelg@gmail.com>
 
-On Tue, 18 Jun 2024 17:04:50 +0100, Andre Przywara wrote:
-> Add compatible strings for the Arm Cortex-A725 and Cortex-A925 CPUs, as
-> well as new Neoverse cores: Arm Neoverse N3, Neoverse V2, Neoverse V3,
-> and Neoverse V3AE.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+parallel_test() function in vringh_test needs to verify
+the creation of the guest/host pipe.
 
-Applied, thanks!
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+---
+ tools/virtio/vringh_test.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/tools/virtio/vringh_test.c b/tools/virtio/vringh_test.c
+index 98ff808d6f0c..43d3a6aa1dcf 100644
+--- a/tools/virtio/vringh_test.c
++++ b/tools/virtio/vringh_test.c
+@@ -139,7 +139,7 @@ static int parallel_test(u64 features,
+ 			 bool fast_vringh)
+ {
+ 	void *host_map, *guest_map;
+-	int fd, mapsize, to_guest[2], to_host[2];
++	int pipe_ret, fd, mapsize, to_guest[2], to_host[2];
+ 	unsigned long xfers = 0, notifies = 0, receives = 0;
+ 	unsigned int first_cpu, last_cpu;
+ 	cpu_set_t cpu_set;
+@@ -161,8 +161,11 @@ static int parallel_test(u64 features,
+ 	host_map = mmap(NULL, mapsize, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 	guest_map = mmap(NULL, mapsize, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 
+-	pipe(to_guest);
+-	pipe(to_host);
++	pipe_ret = pipe(to_guest);
++	assert(!pipe_ret);
++
++	pipe_ret = pipe(to_host);
++	assert(!pipe_ret);
+ 
+ 	CPU_ZERO(&cpu_set);
+ 	find_cpus(&first_cpu, &last_cpu);
+-- 
+2.45.2
 
