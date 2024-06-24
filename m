@@ -1,57 +1,68 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8CF137753;
-	Mon, 24 Jun 2024 11:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BE1137743
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719227307; cv=none; b=A3nmsVtYd/d3cVxhSdN2y8eKy1alKUWC4FNEYKGG52MiAeEWrpuC9AtSAXZLVVGab+7BKu38grxfzdGrO//E6BYhsnVh69RmldEhfcJBRcpepZfeUtta8YnXyeZVdRZvKpFK0cw53HyGM80wy4PKLGb1QOZEt19I7uGG3cbRhHQ=
+	t=1719227309; cv=none; b=MO17ozSRxQBJhkjlHp/xs/qYx9PZMzJnDXRwgVADNtfQHhXa1JbLWgym0NP9cvQJ4xsKDES8jmlxxEdZZ08oKVmY8n0FTDz+KEWkFqAP5Gx4IkKiYKxryHjFsdG7ecqIte+XZ9oCdkZLpOrwJDVRJoGOFyLJ/l+8njV3ody/1dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719227307; c=relaxed/simple;
-	bh=Xa52x9ju8kZ0ATQQyiPw1QGg5UNV8SVxaBJmxKI3g6k=;
+	s=arc-20240116; t=1719227309; c=relaxed/simple;
+	bh=nRT7ZGm58wGoEypzFl//fJhXIDLeznBnwPBvoMnL0IQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V9szSxfoBvx18hz8lXsbDJ+eLNNBdquYhAjqJoardUdtGqzhMQdQAvy8/IFOllU6kMhB5GzMXhccwSa8cAQ70Cvq8TGDiYaAwZW8aGqBJ8rY9JZfyTy9s7ZKFcL1eG1Ub59usoeZBLd5uiocxPG4ov2Wt9Ddd8mDnVz588fD6Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UjlAMUwh; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUOI6bLuVAmhYxy77X32KixbB3Gqh7aaBSMwDSCca9IR0jqEokOe06QcckSDOvkCxTEw+icoJuP2LiOdKc8vgxqfu1zVbeIupMRNMeqpGKQ3KpzEqZ2oyQR1nCkSlOmKNH8jIule8dxTIBXVxi1jq/7yGgDv75eYyBGNmuLnu1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ko4Ls5uf; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UjlAMUwh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=IgHBmS9mm72gkhi4cETlocuOHSRdb4UBX7HvQNJvhx4=; b=UjlAMUwhJ2VF5EjiKB+POt6thX
-	L16QAvno7ML/B02SZtfH/L0KDReRQX2ClibVR2kJBlEmVbgMWOEMfT9aQgvdkFNnIVDa6Osn5Mo1v
-	Qsp2aGMauN2DMK/R6UTLK1Zq6QvIm5ZwfDvWICCqBhF1IkWgnYFA5TM9/DsH2kg6w50hyFdolgiCY
-	HIMdfVZwucUyFwpsIWMiQ6ikBEk+ZltEsAx5jb//VhUKDQyhFyxVBBk5VPHqNNo/S3pGe5zR5KDas
-	KBIm0zgww71lxhzsSrUGI4cHlfixSMHflSWbh8knsJd7ZXxTo5W7WcAEI2IEH3buJ593a1m8ubn86
-	rc5UJSBw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sLhWk-00000008EDj-3etW;
-	Mon, 24 Jun 2024 11:06:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0E455300754; Mon, 24 Jun 2024 13:06:24 +0200 (CEST)
-Date: Mon, 24 Jun 2024 13:06:24 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
-	joshdon@google.com, brho@google.com, pjt@google.com,
-	derkling@google.com, haoluo@google.com, dvernet@meta.com,
-	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
-	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
-	andrea.righi@canonical.com, joel@joelfernandes.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 05/39] sched: Add sched_class->switching_to() and expose
- check_class_changing/changed()
-Message-ID: <20240624110624.GJ31592@noisy.programming.kicks-ass.net>
-References: <20240501151312.635565-1-tj@kernel.org>
- <20240501151312.635565-6-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ko4Ls5uf"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ebe0a81dc8so52901861fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719227305; x=1719832105; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wPvm4lJx3Y3Rkllox7KVCNLAkZq8ExREmWQiAi70uaI=;
+        b=ko4Ls5ufG+2jfj+biz4ehTxoqX7PvEFoSNaKCx8ZN7bHx4Ig66vBuR9udTdo9uTFHX
+         CM00h2CJae4jtg/SwK3NtAIlZXddVZK/Idb2NdNBuur5IPjIUQi73yrRfkYuFgaB1moz
+         j+JMZI3b7oBXxOOmvP8Sf4SU1g9QjTCVaiZiPefati/8ctv0ElocpSRPb/nXU4RL28by
+         7tAAOW4u6nXgCm1U8qlOaX+SV6egfBl695mPWwjeykPOS5QeQh7ZBkTtlLkZhYO6m3Na
+         ziuuzan3Jz+Jj0KQVX8kKJ5YLZFqZDKrqtzUA3Bfel3WQ8amiqw4A0vvzjKinJ8iFMmm
+         mQ5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719227305; x=1719832105;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wPvm4lJx3Y3Rkllox7KVCNLAkZq8ExREmWQiAi70uaI=;
+        b=ZpiQa1jG1G+o1o3I4s3seipalbiLsD8SU/SYBtfAHyNbIHNqLtBTi3vsbBd/NJlO2t
+         i949qhF/40ArEV40iU2ZH+5vP9Mnpt/rJV8l8Psg7rkFx14kvsKdaRshwHQ5XwA6ANog
+         3EA13wc0LTHVPP7pTNrCfUSunjCDSjtBvvWCGz4ixBsLHo7urKJzrR0njPx9l35hlJp/
+         zuazF4L+hB6Yjj6kU9xfdEBJRcfg2NgYTrIa4xBGnL6nNZVUf+SKuF1bM5JVGzVl1LVa
+         GH4vV9lROpocZOrvzMm6cGh0nUT0PzBvSH/jrzIUo8fttUQyPA6fKIanLJdJnza8tBDp
+         Urzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtfZhGHl3hEQNJJWfDHIWDgrViXQXrRzShsq3t1PiaEqTdqjIvsTA0I36SyblDjnqBX+bCI/40XDIh3992dvElXs207XfbmLUVu1Fv
+X-Gm-Message-State: AOJu0YyDUWyWAOEsPW4uMig3bU7FLC2XFGut0MHJnx8NwmyVuGxGSIU5
+	g+yh0c2BgfA/i0y7nNw9/+jPCaJc/ZELbEAp4fHWWx7DFmdUT5QyUBVaK+yi52c=
+X-Google-Smtp-Source: AGHT+IFV8ttiZXZMs08z80WjYeaqP6Xm/Gjtumc4Wzne7zwY6tB6Xa1nJSC2UrM3dBloRJCTESbcig==
+X-Received: by 2002:a2e:b0f5:0:b0:2ec:53fb:39c8 with SMTP id 38308e7fff4ca-2ec5b2fc2a4mr34842691fa.10.1719227304839;
+        Mon, 24 Jun 2024 04:08:24 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec4d7090cfsm9639631fa.41.2024.06.24.04.08.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 04:08:24 -0700 (PDT)
+Date: Mon, 24 Jun 2024 14:08:22 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] arm64: dts: qcom: x1e80100: Add soundwire controller
+ resets
+Message-ID: <p6ooqgfwld7stzevozs7huztputc7vpc7652wx6rvg4cly5mj5@fwrzeu6alhgq>
+References: <20240624-x1e-swr-reset-v1-0-da326d0733d4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,183 +71,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240501151312.635565-6-tj@kernel.org>
+In-Reply-To: <20240624-x1e-swr-reset-v1-0-da326d0733d4@linaro.org>
 
-On Wed, May 01, 2024 at 05:09:40AM -1000, Tejun Heo wrote:
-> When a task switches to a new sched_class, the prev and new classes are
-> notified through ->switched_from() and ->switched_to(), respectively, after
-> the switching is done.
+On Mon, Jun 24, 2024 at 11:55:29AM GMT, Srinivas Kandagatla wrote:
+> Soundwire resets are missing in the existing dts, add resets for all the 4
+> instances of Soundwire controllers (WSA, WSA2, RX, TX).
 > 
-> A new BPF extensible sched_class will have callbacks that allow the BPF
-> scheduler to keep track of relevant task states (like priority and cpumask).
-> Those callbacks aren't called while a task is on a different sched_class.
-> When a task comes back, we wanna tell the BPF progs the up-to-date state
-> before the task gets enqueued, so we need a hook which is called before the
-> switching is committed.
-> 
-> This patch adds ->switching_to() which is called during sched_class switch
-> through check_class_changing() before the task is restored. Also, this patch
-> exposes check_class_changing/changed() in kernel/sched/sched.h. They will be
-> used by the new BPF extensible sched_class to implement implicit sched_class
-> switching which is used e.g. when falling back to CFS when the BPF scheduler
-> fails or unloads.
-> 
-> This is a prep patch and doesn't cause any behavior changes. The new
-> operation and exposed functions aren't used yet.
-> 
-> v2: Improve patch description w/ details on planned use.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reviewed-by: David Vernet <dvernet@meta.com>
-> Acked-by: Josh Don <joshdon@google.com>
-> Acked-by: Hao Luo <haoluo@google.com>
-> Acked-by: Barret Rhoden <brho@google.com>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 8e23f19e8096..99e292368d11 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2301,6 +2301,7 @@ struct sched_class {
->  	 * cannot assume the switched_from/switched_to pair is serialized by
->  	 * rq->lock. They are however serialized by p->pi_lock.
->  	 */
-> +	void (*switching_to) (struct rq *this_rq, struct task_struct *task);
->  	void (*switched_from)(struct rq *this_rq, struct task_struct *task);
->  	void (*switched_to)  (struct rq *this_rq, struct task_struct *task);
->  	void (*reweight_task)(struct rq *this_rq, struct task_struct *task,
+Could you please point out the driver changes?
 
-So I *think* that I can handle all the current cases in
-sched_class::{en,de}queue_task() if we add {EN,DE}QUEUE_CLASS flags.
-
-Would that work for the BPF thing as well?
-
-Something like the very much incomplete below... It would allow removing
-all these switch{ed,ing}_{to,from}() things entirely, instead of
-adding yet more.
-
----
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0935f9d4bb7b..da54c9f8f78d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6864,15 +6864,22 @@ int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flag
- }
- EXPORT_SYMBOL(default_wake_function);
- 
--void __setscheduler_prio(struct task_struct *p, int prio)
-+struct sched_class *__setscheduler_class(int prio)
- {
-+	struct sched_class *class;
-+
- 	if (dl_prio(prio))
--		p->sched_class = &dl_sched_class;
-+		class = &dl_sched_class;
- 	else if (rt_prio(prio))
--		p->sched_class = &rt_sched_class;
-+		class = &rt_sched_class;
- 	else
--		p->sched_class = &fair_sched_class;
-+		class = &fair_sched_class;
- 
-+	return class;
-+}
-+
-+void __setscheduler_prio(struct task_struct *p, int prio)
-+{
- 	p->prio = prio;
- }
- 
-@@ -6919,7 +6926,7 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- {
- 	int prio, oldprio, queued, running, queue_flag =
- 		DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
--	const struct sched_class *prev_class;
-+	const struct sched_class *prev_class, *class;
- 	struct rq_flags rf;
- 	struct rq *rq;
- 
-@@ -6977,6 +6984,10 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 		queue_flag &= ~DEQUEUE_MOVE;
- 
- 	prev_class = p->sched_class;
-+	class = __setscheduler_class(prio);
-+	if (prev_class != class)
-+		queue_flags |= DEQUEUE_CLASS;
-+
- 	queued = task_on_rq_queued(p);
- 	running = task_current(rq, p);
- 	if (queued)
-@@ -7014,6 +7025,7 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 			p->rt.timeout = 0;
- 	}
- 
-+	p->class = class;
- 	__setscheduler_prio(p, prio);
- 
- 	if (queued)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 62fd8bc6fd08..a03995d81c75 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2251,6 +2251,7 @@ extern const u32		sched_prio_to_wmult[40];
- #define DEQUEUE_MOVE		0x04 /* Matches ENQUEUE_MOVE */
- #define DEQUEUE_NOCLOCK		0x08 /* Matches ENQUEUE_NOCLOCK */
- #define DEQUEUE_MIGRATING	0x100 /* Matches ENQUEUE_MIGRATING */
-+#define DEQUEUE_CLASS		0x200 /* Matches ENQUEUE_CLASS */
- 
- #define ENQUEUE_WAKEUP		0x01
- #define ENQUEUE_RESTORE		0x02
-@@ -2266,6 +2267,7 @@ extern const u32		sched_prio_to_wmult[40];
- #endif
- #define ENQUEUE_INITIAL		0x80
- #define ENQUEUE_MIGRATING	0x100
-+#define ENQUEUE_CLASS		0x200
- 
- #define RETRY_TASK		((void *)-1UL)
- 
-@@ -3603,6 +3605,7 @@ static inline int rt_effective_prio(struct task_struct *p, int prio)
- 
- extern int __sched_setscheduler(struct task_struct *p, const struct sched_attr *attr, bool user, bool pi);
- extern int __sched_setaffinity(struct task_struct *p, struct affinity_context *ctx);
-+extern struct sched_class *__setscheduler_class(int prio);
- extern void __setscheduler_prio(struct task_struct *p, int prio);
- extern void set_load_weight(struct task_struct *p, bool update_load);
- extern void enqueue_task(struct rq *rq, struct task_struct *p, int flags);
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index ae1b42775ef9..dc104d996204 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -612,7 +612,7 @@ int __sched_setscheduler(struct task_struct *p,
- {
- 	int oldpolicy = -1, policy = attr->sched_policy;
- 	int retval, oldprio, newprio, queued, running;
--	const struct sched_class *prev_class;
-+	const struct sched_class *prev_class, *class;
- 	struct balance_callback *head;
- 	struct rq_flags rf;
- 	int reset_on_fork;
-@@ -783,6 +783,12 @@ int __sched_setscheduler(struct task_struct *p,
- 			queue_flags &= ~DEQUEUE_MOVE;
- 	}
- 
-+	class = prev_class = p->sched_class;
-+	if (!(attr->sched_flags & SCHED_FLAG_KEEP_PARAMS))
-+		class = __setscheduler_class(newprio);
-+	if (prev_class != class)
-+		queue_flags |= DEQUEUE_CLASS;
-+
- 	queued = task_on_rq_queued(p);
- 	running = task_current(rq, p);
- 	if (queued)
-@@ -790,10 +796,9 @@ int __sched_setscheduler(struct task_struct *p,
- 	if (running)
- 		put_prev_task(rq, p);
- 
--	prev_class = p->sched_class;
--
- 	if (!(attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)) {
- 		__setscheduler_params(p, attr);
-+		p->class = class;
- 		__setscheduler_prio(p, newprio);
- 	}
- 	__setscheduler_uclamp(p, attr);
+-- 
+With best wishes
+Dmitry
