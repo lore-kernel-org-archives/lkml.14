@@ -1,129 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EAA13A879;
-	Mon, 24 Jun 2024 11:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B00139D03
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719229335; cv=none; b=Vfxj/ICUfHhLTn9za8uFIudVn6iS26+zszMtC2GHdCK8jSbFd02Oz1WfkR26g1sC3UmFGYEFWpLwtuerHaorWLonOBfT9OdII8lWGF2x3sasMoHWzvUhNthY5Q9tRnX9Lo0mV07OsjgYMGXxk5j35fJrUQTAh2rEIj6PYXO+Yjs=
+	t=1719229410; cv=none; b=RffSYBpdSsqh0JN1Wm2s7cmf6go3Gc6UPF7h/uhu3X5eKV0GuKE0hCsQ77LObB5y7j6ybgNIbmXLX7AhtBvF8uKVeMZpeiQv4DCVrotF48E/5EXrSkoekR4/oEDJb8yj0rHGJO153q1tpnBu24h6G5yAioy/X4npWahUX8/bqqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719229335; c=relaxed/simple;
-	bh=Evn3CciU5+MT/8KiO0RjooJvNArmoH7Yzw9c2SS6Lek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JrsvLBJqw815QtRhSequhYZUpI9Llzi2Di/IwInph8jIQzrDoZ8qCbqYge6lwA5TLWrO6qdmpliM8Fl3UWaiwAqjxWqAAHTultgUtLTUtoPh5hq4chTpADhaPUgRwfdYFw8pswZ1TpDXS5i5Bq9NdWFGhtyPSL7uEjRmEAKKbGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrvvDsxS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1719229410; c=relaxed/simple;
+	bh=SciTnTEbsnJfT0rVQqYl7Yj98yDLsD7kqr/o0jvFwCQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=i3xeiu8Eb0Kva1myWw15Yq6Xh4Z4kCv9T3CIDAqzXRftQ0VnIgUGNgXdxQdml809hkiVxaItnEAoIB/1EvMQjU+HVVn2TMLq7VVekLQ5gVtwwXFEjQk2IsXIbVteOoa2JVRNega4rftuAJSEGGSNB+tluek2yv9ByfmdDG4ZDYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KbPieSv+; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrvvDsxS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719229334; x=1750765334;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Evn3CciU5+MT/8KiO0RjooJvNArmoH7Yzw9c2SS6Lek=;
-  b=JrvvDsxSatoPJd4Zm1HSDSovAS8Tegl5I+WJJt7yf9m+/jJNVyHbeKPb
-   Mj1CMVNGukLB35ms6OXE9WKneVT8KFwfE6i185rgtdcOwtTtr/uALXswm
-   WrHCftXTYzecPjmSbbmFAi8vexdAhE7TJPX//L3jBA8cLuxB8Isg+jepS
-   vcoV7CDnBbPd1dxUiJAOcGS28zFqvWtWrr4Tt4JN5TEhRM998HtHbMmcp
-   F5i8jceDKqHpIm9Ua/lvKamCVNrvAv2iKQrsjRO+NpDhB7fK0nc64bdpP
-   JRLRklHRONq82SqGYwps0acK4yKYjnsG4KuMOvNU1cU30psEmMJpfjRBK
-   w==;
-X-CSE-ConnectionGUID: dGrvE//ySz+XEEExBac2fQ==
-X-CSE-MsgGUID: YTiG0Ar4Q+qVsy+PlwLojA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11112"; a="20008076"
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="20008076"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 04:42:10 -0700
-X-CSE-ConnectionGUID: RcVLuAFdR8CNElsdiHLUjg==
-X-CSE-MsgGUID: 4Miheq5kR6mdDqAMKCQ2ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="74502457"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 24 Jun 2024 04:42:07 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 5C84E206; Mon, 24 Jun 2024 14:42:05 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCHv5 2/4] x86/tdx: Rename tdx_parse_tdinfo() to tdx_setup()
-Date: Mon, 24 Jun 2024 14:41:47 +0300
-Message-ID: <20240624114149.377492-3-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240624114149.377492-1-kirill.shutemov@linux.intel.com>
-References: <20240624114149.377492-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KbPieSv+"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45OBgChm044887;
+	Mon, 24 Jun 2024 06:42:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719229332;
+	bh=SciTnTEbsnJfT0rVQqYl7Yj98yDLsD7kqr/o0jvFwCQ=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=KbPieSv+fyXaLDsPihsQE+lhanZhEXOxmogN3J+6C+/jSM+vyMjVts3na99KzvAUj
+	 oyH6k1ob3+uGbVD/5yL8VtFYSgAtq1eFKFTEMea8O0OxI/5nVBDk9H7E51U3G07C9G
+	 iNRAUItZeS5fLPdF3HaeNEy71I6DY/aOOHf9iHGg=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45OBgCJx004871
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 24 Jun 2024 06:42:12 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 24
+ Jun 2024 06:42:11 -0500
+Received: from DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c]) by
+ DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c%18]) with mapi id
+ 15.01.2507.023; Mon, 24 Jun 2024 06:42:11 -0500
+From: "Ding, Shenghao" <shenghao-ding@ti.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: "broonie@kernel.org" <broonie@kernel.org>,
+        "lgirdwood@gmail.com"
+	<lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "pierre-louis.bossart@linux.intel.com"
+	<pierre-louis.bossart@linux.intel.com>,
+        "13916275206@139.com"
+	<13916275206@139.com>,
+        "judyhsiao@google.com" <judyhsiao@google.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Salazar, Ivan"
+	<i-salazar@ti.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "Chadha, Jasjot Singh" <j-chadha@ti.com>,
+        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
+        "bard.liao@intel.com" <bard.liao@intel.com>,
+        "yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
+        "Rao,
+ Dipa" <dipa@ti.com>, "yuhsuan@google.com" <yuhsuan@google.com>,
+        "tiwai@suse.de" <tiwai@suse.de>, "Xu, Baojun" <baojun.xu@ti.com>,
+        "soyer@irl.hu" <soyer@irl.hu>, "Baojun.Xu@fpt.com" <Baojun.Xu@fpt.com>,
+        "Navada Kanyana, Mukund" <navada@ti.com>,
+        "cujomalainey@google.com"
+	<cujomalainey@google.com>,
+        "Kutty, Aanya" <aanya@ti.com>,
+        "Mahmud, Nayeem"
+	<nayeem.mahmud@ti.com>
+Subject: RE: [EXTERNAL] Re: [PATCH v1] ASoc: tas2781: Add Calibration
+ Kcontrols and tas2563 digtial gain for Chromebook
+Thread-Topic: [EXTERNAL] Re: [PATCH v1] ASoc: tas2781: Add Calibration
+ Kcontrols and tas2563 digtial gain for Chromebook
+Thread-Index: AQHarDtfp06/EgvZKUCy2VuueNkSubGjev+AgDOBclA=
+Date: Mon, 24 Jun 2024 11:42:11 +0000
+Message-ID: <6b6a0af1e55241c4b2acde42e9966e3b@ti.com>
+References: <20240522112942.994-1-shenghao-ding@ti.com>
+ <Zk3eq0k2Eq-gtejq@smile.fi.intel.com>
+In-Reply-To: <Zk3eq0k2Eq-gtejq@smile.fi.intel.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Rename tdx_parse_tdinfo() to tdx_setup() and move setting NOTIFY_ENABLES
-there.
-
-The function will be extended to adjust TD configuration.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/coco/tdx/tdx.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 64717a96a936..08ce488b54d0 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -193,7 +193,7 @@ static void __noreturn tdx_panic(const char *msg)
- 		__tdx_hypercall(&args);
- }
- 
--static void tdx_parse_tdinfo(u64 *cc_mask)
-+static void tdx_setup(u64 *cc_mask)
- {
- 	struct tdx_module_args args = {};
- 	unsigned int gpa_width;
-@@ -218,6 +218,9 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
- 	gpa_width = args.rcx & GENMASK(5, 0);
- 	*cc_mask = BIT_ULL(gpa_width - 1);
- 
-+	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
-+	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
-+
- 	/*
- 	 * The kernel can not handle #VE's when accessing normal kernel
- 	 * memory.  Ensure that no #VE will be delivered for accesses to
-@@ -964,11 +967,11 @@ void __init tdx_early_init(void)
- 	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- 
- 	cc_vendor = CC_VENDOR_INTEL;
--	tdx_parse_tdinfo(&cc_mask);
--	cc_set_mask(cc_mask);
- 
--	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
--	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
-+	/* Configure the TD */
-+	tdx_setup(&cc_mask);
-+
-+	cc_set_mask(cc_mask);
- 
- 	/*
- 	 * All bits above GPA width are reserved and kernel treats shared bit
--- 
-2.43.0
-
+SGkgQW5keQ0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLiBGb2xsb3dpbmcgYXJlIG15IGFuc3dl
+cnMuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hl
+bmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQo+IFNlbnQ6IFdlZG5lc2Rh
+eSwgTWF5IDIyLCAyMDI0IDg6MDIgUE0NCj4gVG86IERpbmcsIFNoZW5naGFvIDxzaGVuZ2hhby1k
+aW5nQHRpLmNvbT4NCj4gQ2M6IGJyb29uaWVAa2VybmVsLm9yZzsgbGdpcmR3b29kQGdtYWlsLmNv
+bTsgcGVyZXhAcGVyZXguY3o7IHBpZXJyZS0NCj4gbG91aXMuYm9zc2FydEBsaW51eC5pbnRlbC5j
+b207IDEzOTE2Mjc1MjA2QDEzOS5jb207DQo+IGp1ZHloc2lhb0Bnb29nbGUuY29tOyBhbHNhLWRl
+dmVsQGFsc2EtcHJvamVjdC5vcmc7IFNhbGF6YXIsIEl2YW4gPGktDQo+IHNhbGF6YXJAdGkuY29t
+PjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQ2hhZGhhLCBKYXNqb3QgU2luZ2ggPGot
+DQo+IGNoYWRoYUB0aS5jb20+OyBsaWFtLnIuZ2lyZHdvb2RAaW50ZWwuY29tOyBiYXJkLmxpYW9A
+aW50ZWwuY29tOyB5dW5nLQ0KPiBjaHVhbi5saWFvQGxpbnV4LmludGVsLmNvbTsgUmFvLCBEaXBh
+IDxkaXBhQHRpLmNvbT47IEx1LCBLZXZpbiA8a2V2aW4tDQo+IGx1QHRpLmNvbT47IHl1aHN1YW5A
+Z29vZ2xlLmNvbTsgdGl3YWlAc3VzZS5kZTsgWHUsIEJhb2p1bg0KPiA8YmFvanVuLnh1QHRpLmNv
+bT47IHNveWVyQGlybC5odTsgQmFvanVuLlh1QGZwdC5jb207IE5hdmFkYSBLYW55YW5hLA0KPiBN
+dWt1bmQgPG5hdmFkYUB0aS5jb20+OyBjdWpvbWFsYWluZXlAZ29vZ2xlLmNvbTsgS3V0dHksIEFh
+bnlhDQo+IDxhYW55YUB0aS5jb20+OyBNYWhtdWQsIE5heWVlbSA8bmF5ZWVtLm1haG11ZEB0aS5j
+b20+DQo+IFN1YmplY3Q6IFtFWFRFUk5BTF0gUmU6IFtQQVRDSCB2MV0gQVNvYzogdGFzMjc4MTog
+QWRkIENhbGlicmF0aW9uIEtjb250cm9scw0KPiBhbmQgdGFzMjU2MyBkaWd0aWFsIGdhaW4gZm9y
+IENocm9tZWJvb2sNCj4gDQo+IE9uIFdlZCwgTWF5IDIyLCAyMDI0IGF0IDA3OuKAijI5OuKAijQx
+UE0gKzA4MDAsIFNoZW5naGFvIERpbmcgd3JvdGU6ID4NCj4gQ2FsaWJyYXRlZCBkYXRhIHdpbGwg
+YmUgc2V0IHRvIGRlZmF1bHQgYWZ0ZXIgbG9hZGluZyBEU1AgY29uZmlnIHBhcmFtcywgPg0KPiB3
+aGljaCB3aWxsIGNhdXNlIHNwZWFrZXIgcHJvdGVjdGlvbiB3b3JrIGFibm9ybWFsbHkuIFJlbG9h
+ZCBjYWxpYnJhdGVkID4NCj4gZGF0YSBhZnRlciBsb2FkaW5nIFpqUWNtUVJZRnBmcHRCYW5uZXJT
+dGFydCBUaGlzIG1lc3NhZ2Ugd2FzIHNlbnQgZnJvbQ0KPiBvdXRzaWRlIG9mIFRleGFzIEluc3Ry
+dW1lbnRzLg0KPiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3Mg
+eW91IHJlY29nbml6ZSB0aGUgc291cmNlIG9mIHRoaXMNCj4gZW1haWwgYW5kIGtub3cgdGhlIGNv
+bnRlbnQgaXMgc2FmZS4gSWYgeW91IHdpc2ggdG8gcmVwb3J0IHRoaXMgbWVzc2FnZSB0byBJVA0K
+PiBTZWN1cml0eSwgcGxlYXNlIGZvcndhcmQgdGhlIG1lc3NhZ2UgYXMgYW4gYXR0YWNobWVudCB0
+bw0KPiBwaGlzaGluZ0BsaXN0LnRpLmNvbQ0KPiANCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0K
+PiA+ICsJd2hpbGUgKHIgPiAxICsgbCkgew0KPiA+ICsJCW1pZCA9IChsICsgcikgLyAyOw0KPiA+
+ICsJCWFyX21pZCA9IGdldF91bmFsaWduZWRfYmUzMih0YXMyNTYzX2R2Y190YWJsZVttaWRdKTsN
+Cj4gPiArCQlpZiAodGFyZ2V0IDwgYXJfbWlkKQ0KPiA+ICsJCQlyID0gbWlkOw0KPiA+ICsJCWVs
+c2UNCj4gPiArCQkJbCA9IG1pZDsNCj4gPiArCX0NCj4gDQo+IEhtbS4uLiBJJ20gd29uZGVyaW5n
+IGlmIGJzZWFyY2goKSBjYW4gYmUgdXRpbGlzZWQgaGVyZS4NCkJzZWFyY2ggaXMgdG8gZmluZCBv
+dXQgdGhlIHZhbHVlLCBpbiB0aGlzIGZ1bmN0aW9uIGlzIHRvIGZpbmQgb3V0IHRoZSBtZW1iZXIg
+c2FtZSBhcyBvciBjbG9zZXIgdG8gdGhlIGlucHV0IHZhbHVlLg0KDQo+IA0KPiAuLi4NCj4gDQo+
+ID4gKwl1Y29udHJvbC0+dmFsdWUuaW50ZWdlci52YWx1ZVswXSA9DQo+ID4gKwkJYWJzKHRhcmdl
+dCAtIGFyX2wpIDw9IGFicyh0YXJnZXQgLSBhcl9yKSA/IGwgOiByOw0KPiANCj4gSSBkb24ndCB1
+bmRlcnN0YW5kIHdoeSBkbyB5b3UgbmVlZCAndGFyZ2V0JyB0byBiZSBpbiB0aGlzIGNoZWNrLg0K
+PiANCj4gLi4uDQo+IA0KPiA+ICsJdWluZm8tPnZhbHVlLmludGVnZXIubWF4ID0gKGludCl0YXNf
+cHJpdi0+bmRldiAtIDE7DQo+IA0KPiBXaHkgY2FzdGluZz8NCj4gDQo+IC4uLg0KPiANCj4gPiAr
+CXNjbnByaW50ZihhY3RpdmVfZGV2X25hbWUsIFNORFJWX0NUTF9FTEVNX0lEX05BTUVfTUFYTEVO
+LA0KPiANCj4gV2h5ICdjJyB2YXJpYW50IGluIHVzZT8gWW91IGFyZSBpZ25vcmluZyB0aGUgcmV0
+dXJuZWQgdmFsdWUuIElzbid0IHN0cnNjcHkoKSB5b3UNCj4gd2FudCBvciBtZW10b3N0cigpIChp
+biBib3RoIGNhc2VzIDIgcGFyYW1ldGVycyB2YXJpYW50KT8NCj4gDQo+ID4gKwkJIkFjdGl2YXRl
+IFRhc2RldmljZSBJZCIpOw0KPiANCj4gU2FtZSBRIHRvIGFsbCBzY25wcmludGYoKSBjYWxscy4N
+Cj4gDQo+IC4uLg0KPiANCj4gPiArCWNhbGlfZGF0YS0+ZGF0YSA9IGRldm1fa3phbGxvYyh0YXNf
+cHJpdi0+ZGV2LCB0YXNfcHJpdi0+bmRldiAqDQo+ID4gKwkJKGNhbGlfZGF0YS0+cmVnX2FycmF5
+X3N6ICogNCArIDEpLCBHRlBfS0VSTkVMKTsNCj4gDQo+IE5vIHdheS4gRmlyc3Qgb2YgYWxsLCB3
+ZSBoYXZlIGtjYWxsb2MoKSwgc2Vjb25kLCB0aGVyZSBpcyBhbiBvdmVyZmxvdy5oIHRoYXQgaGFz
+DQo+IG5lY2Vzc2FyeSBtYWNyb3MgdG8gY2FsY3VsYXRlIHNpemVzIGZvciBtZW1vcnkgYWxsb2Nh
+dGlvbnMuDQpNZW1vcnkgYWxsb2NhdGVkIHdpdGggZGV2bV9remFsbG9jIGlzIGF1dG9tYXRpY2Fs
+bHkgZnJlZWQgb24gZHJpdmVyIGRldGFjaCB3aGlsZSBrY2FsbG9jIGNhbuKAmXQNCj4gDQo+ID4g
+KwlpZiAoIWNhbGlfZGF0YS0+ZGF0YSkNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gDQo+IC4u
+Lg0KDQpCUg0KU2hlbmdoYW8gRGluZw0K
