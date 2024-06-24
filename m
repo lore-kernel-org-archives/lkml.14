@@ -1,186 +1,172 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43001E868
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30251D696
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719242096; cv=none; b=ZVkkldiwOT0VlzFSigRj1R7nmdR5ItOj9kGr3px7Phrcw5zBk9Z6KulsRNvP8J360bN+TDL2TGzNm+4bmRw9BRztZOh6z78ZgvJjs2jVKHqgNfaNaU3YowArBCSkDCVX5SGzYwic6Md1wYJN3Q3Fj5goDzyn1/xZcTKPXGVLDQE=
+	t=1719242123; cv=none; b=a/RSqE4///YUWCfnXk2nOUtIwlSJGMEHjRdZYBhzDghnywsG2eiBEPsCgW3/YGV0omBiEWPMsg5nIEMw4gQghWCmW01nOtL3uwY2UorepgMC4QrgEEPMP/T3/sO6ALwTY+fWJxz5gwoRBVcezCtqINa2SsxPZpvwFQwPKJQdmDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719242096; c=relaxed/simple;
-	bh=CuoOy1ii1cHDC1oCyNcHei++Uj4ZOjlT1SkHcX68MEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OoUTwxedi5PlfJxWvNszAbjynWdcxBxYRj4TMfB1M+E773EsKzFFdAL0BD5T1a8adRPgpQVqFcdPkHG0wKeWM8fcPIEAh8Uj8YDWOXwW2NibR2/1IkZX87Khoyxz4OowMBEfB/R06yV9Ei7G+fiAhUg82wpCpg6M+r9l8jNLzL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=Lx0qfk5d; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Lx0qfk5d"
-Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OC04tP006223;
-	Mon, 24 Jun 2024 15:13:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=UVoVfLIQz0S/jfoT/mip77x
-	/qe57T1fnytTchil6afs=; b=Lx0qfk5dM/n83TkOEZldZxrYvHBcG/n00QTbI58
-	ag2YqpALRB8pgbLwBbGkssS3vkI0AFmOOE7jiGrSl+1OFQc2ttgi8gjKv2xPkrKE
-	CHREU4DvowP1iUZTROo7GktQR42Cuk6rvrXqhnQetv0XvY1vS2+q0COzQZnHierA
-	2XX07mZGvvE2OLjP3NsOGzU9/BfQmb5hds/yypVbZS449oqv2RwlxRW6rp1n5tuG
-	ByKoUYJgLVhV9WD7xCKLEfQIuwwZOfRPOOI4WcPS7S+qJ9BsNfG4EyfA51oxi9ss
-	hqR4UoR4Q+whykF9PkPHLqNWtkzNHoS+cI/ovDrnY/0W0nA==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3yy8dx1r0s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 15:13:53 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 09C1A8005F7;
-	Mon, 24 Jun 2024 15:13:52 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id E6CAD809741;
-	Mon, 24 Jun 2024 15:13:46 +0000 (UTC)
-Date: Mon, 24 Jun 2024 10:13:44 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <ZnmNKAE5qT48yhrI@swahl-home.5wahls.com>
-References: <20240520183633.1457687-1-steve.wahl@hpe.com>
- <20240613152826.GKZmsQGnO3OthLH3Vu@fat_crate.local>
- <ZmsbZCF9rFzuB3rO@swahl-home.5wahls.com>
- <20240616202533.GDZm9KPZtpDKw5aXWX@fat_crate.local>
- <ZnBR6MgS-jzjgA8A@swahl-home.5wahls.com>
- <20240621131742.GEZnV9dn_0XVH0IZ58@fat_crate.local>
+	s=arc-20240116; t=1719242123; c=relaxed/simple;
+	bh=MNr/iW7hektiD1H3kRheYm/jFxPg/XU6IynSNsEZCbQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FjOYhZ94mTilzRPTo/zozbvnRC96aJYXlsfl6a2zUvoti1kBOFps2bm9pKfN7DeABaI/dvlLGuDEL9yv2olUgidSsIF4ZTakU0YpV2rnno+eEAsXu8N0PF1EdwwzBGSP49d//wIYRdd6M7Cw3UQCjSnLf/oBTq3xcj8POvRjg18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3737b3ae019so53892115ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:15:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719242121; x=1719846921;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ONAk/9gMOLl8MwIxQFP3SbpLQofEWlsXstY30enpvjw=;
+        b=plEGS21mbg0AMaUE+hegmafywHYiOMaWOyYC3RBTVTP5mVrdx+JubUwAX1+h07vr5S
+         sVz7c3snua4UO1BgeDSBGkYw8piHU2lVGh3nv7C7ZjSWzk0MKNKHEB7Wc2Qh4OIrjX6r
+         y6PTPt7esdOxEgBqnGyKDTqFQhv5hH3fWonXLPNnskbo2N5SHdenZl7FKmOfeUVN3nOM
+         ae18gXKGIYGvwd+nwbk8xti0tZ8NblKMlAesGCsCUUuEeEft9BwCHKakTYHfNkFqnTkn
+         rZLj4xkA+Wq+me6vAT/T6nyWC5h18EiNI6TmyKSoyYNOW4agkMOBNmQMGXnSi3Hvd5KC
+         JGxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX80kJqFDomVzmSkR7JA9dQmbA8v6oiF0hw9RQZCxswbO45dH4sbpteWhsB5f6RdRGrbepoQYyRoJQegiGtUtgHFmpi2hJx6f727fXY
+X-Gm-Message-State: AOJu0Yx1tyGQHUDpybEjnahJ2qehtTul46xaO0Tk5GdORXoOYue7eDLb
+	TXBRb76JRo7fMOw81oxufKrU78PoD/ptVeA/tTVYdyUg45rTORrU9iKSua9Vg8fwJZu6pxZAx9i
+	Rdzpax4Dvlq9sMRjHCjFap/6hWWgQOz16s4IojEgvxjs2rORnLdbeCtg=
+X-Google-Smtp-Source: AGHT+IEoIocCWQfOAZR+v0VwMf8y02t3JJsst6mQZtIsxeuPxTjIs24h6sQVoVN5ty+G51QWUkqIWxu0IRxfgynuMCksvDsLWLRH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621131742.GEZnV9dn_0XVH0IZ58@fat_crate.local>
-X-Proofpoint-GUID: oZMXOPHJ_L6TAGeX3kEnaIwDz8inBnsP
-X-Proofpoint-ORIG-GUID: oZMXOPHJ_L6TAGeX3kEnaIwDz8inBnsP
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_11,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 mlxscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2406240122
+X-Received: by 2002:a05:6e02:1988:b0:376:4441:9 with SMTP id
+ e9e14a558f8ab-376444101f9mr4206395ab.2.1719242121035; Mon, 24 Jun 2024
+ 08:15:21 -0700 (PDT)
+Date: Mon, 24 Jun 2024 08:15:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e85d76061ba43f6d@google.com>
+Subject: [syzbot] [net?] WARNING in dev_deactivate_many
+From: syzbot <syzbot+e9121deb112a224121e0@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, jhs@mojatatu.com, 
+	jiri@resnulli.us, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 21, 2024 at 03:17:42PM +0200, Borislav Petkov wrote:
-> On Mon, Jun 17, 2024 at 10:10:32AM -0500, Steve Wahl wrote:
-> > The first, hardest step is locate a system that is AMD based, SEV
-> > capable, with a BIOS that chooses to locate the CC_BLOB at addresses
-> > that do not share a 2M page with other chunks of memory the kernel
-> > currently adds to the kexec identity map. I.e. This is a stroke of
-> > luck,
-> 
-> Ya think?
-> 
-> It is more likely that I win the lottery than finding such a beast. ;-\
+Hello,
 
-Yes, that is the impression I was trying to impart!  :-)
+syzbot found the following issue on:
 
-> > and for all I know could depend on configuration such as memory
-> > size in addition to motherboard and BIOS version.  However, it does
-> > not seem to change from boot to boot; as system that has the problem
-> > seems to be consistent about it.
-> > 
-> > Second, boot linux including the "nogbpages" command line option.
-> > 
-> > Third, kexec -l <kernel image> --append=<command line options>
-> > --initrd=<initrd>.
-> > 
-> > Fourth, kexec -e.
-> > 
-> > Systems that have this problem successfully kexec without the
-> > "nogbpages" parameter, but fail and do a full reboot with the
-> > "nogbpages" parameter.  
-> > 
-> > I wish I could be more exact,
-> 
-> Yes, this doesn't really explain what the culprit is.
-> 
-> So, your 0th message says:
-> 
-> "But the community chose instead to avoid referencing this memory on
-> non-AMD systems where the problem was reported.
-> 
->     commit bee6cf1a80b5 ("x86/sev: Do not try to parse for the CC blob
->                           on non-AMD hardware")"
-> 
-> But that patch fixes !AMD systems.
-> 
-> Now you're basically saying that there are some AMD machines out there where
-> the EFI config table doesn't get mapped because it is somewhere else, outside
-> of the range of a 2M page or 1G page.
+HEAD commit:    819984a0dd36 kselftest: devices: Add of-fullname-regex pro..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=12779c82980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9ccd5ad0e0c891e3
+dashboard link: https://syzkaller.appspot.com/bug?extid=e9121deb112a224121e0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1680423e980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1690b5ea980000
 
-I haven't heard of one where using 1G pages doesn't include this EFI
-table.  But if you switch to 2M pages using "nogbpages", that's when
-you get into trouble.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/4a1c28712015/disk-819984a0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/be01b9b3db3a/vmlinux-819984a0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5c8994363c20/bzImage-819984a0.xz
 
-(Also trouble if you switch to using some 2M pages using patch #3,
-which is the point of the series.)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e9121deb112a224121e0@syzkaller.appspotmail.com
 
-> Or even if it is, "nogbpages" supplied on the cmdline would cause the
-> "overlapping 2M and 1G mapping to not happen, leaving the EFI config table
-> unmapped.
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+ref_tracker: freed in:
+ netdev_tracker_free include/linux/netdevice.h:4058 [inline]
+ netdev_put include/linux/netdevice.h:4075 [inline]
+ netdev_put include/linux/netdevice.h:4071 [inline]
+ dev_watchdog_down net/sched/sch_generic.c:570 [inline]
+ dev_deactivate_many+0x214/0xb40 net/sched/sch_generic.c:1362
+ dev_deactivate+0xf9/0x1c0 net/sched/sch_generic.c:1396
+ linkwatch_do_dev+0x11e/0x160 net/core/link_watch.c:175
+ __linkwatch_run_queue+0x233/0x690 net/core/link_watch.c:234
+ linkwatch_event+0x8f/0xc0 net/core/link_watch.c:277
+ process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 2496 at lib/ref_tracker.c:255 ref_tracker_free+0x61e/0x820 lib/ref_tracker.c:255
+Modules linked in:
+CPU: 0 PID: 2496 Comm: kworker/0:0 Not tainted 6.10.0-rc4-syzkaller-00053-g819984a0dd36 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:ref_tracker_free+0x61e/0x820 lib/ref_tracker.c:255
+Code: 00 44 8b 6b 18 31 ff 44 89 ee e8 4d d8 f1 fe 45 85 ed 0f 85 a6 00 00 00 e8 3f dd f1 fe 48 8b 34 24 48 89 ef e8 83 f3 32 04 90 <0f> 0b 90 bb ea ff ff ff e9 4e fd ff ff e8 20 dd f1 fe 4c 8d 6d 44
+RSP: 0018:ffffc900002d7298 EFLAGS: 00010202
+RAX: 0000000000000201 RBX: ffff8881137311c0 RCX: 0000000000000000
+RDX: 0000000000000202 RSI: ffffffff86c7d6e0 RDI: 0000000000000001
+RBP: ffff88811fc185e0 R08: 0000000000000001 R09: fffffbfff1997dae
+R10: ffffffff8ccbed77 R11: fffffffffffda9a0 R12: 1ffff9200005ae55
+R13: 0000000005a60115 R14: ffff8881137311d8 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8881f6400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fae50793120 CR3: 00000001026b6000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ netdev_tracker_free include/linux/netdevice.h:4058 [inline]
+ netdev_put include/linux/netdevice.h:4075 [inline]
+ netdev_put include/linux/netdevice.h:4071 [inline]
+ dev_watchdog_down net/sched/sch_generic.c:570 [inline]
+ dev_deactivate_many+0x214/0xb40 net/sched/sch_generic.c:1362
+ __dev_close_many+0x145/0x310 net/core/dev.c:1543
+ dev_close_many+0x24c/0x6a0 net/core/dev.c:1581
+ unregister_netdevice_many_notify+0x46d/0x19f0 net/core/dev.c:11194
+ unregister_netdevice_many net/core/dev.c:11277 [inline]
+ unregister_netdevice_queue+0x307/0x3f0 net/core/dev.c:11156
+ unregister_netdevice include/linux/netdevice.h:3119 [inline]
+ unregister_netdev+0x1c/0x30 net/core/dev.c:11295
+ usbnet_disconnect+0xed/0x500 drivers/net/usb/usbnet.c:1621
+ usb_unbind_interface+0x1e8/0x970 drivers/usb/core/driver.c:461
+ device_remove drivers/base/dd.c:568 [inline]
+ device_remove+0x122/0x170 drivers/base/dd.c:560
+ __device_release_driver drivers/base/dd.c:1270 [inline]
+ device_release_driver_internal+0x44a/0x610 drivers/base/dd.c:1293
+ bus_remove_device+0x22f/0x420 drivers/base/bus.c:574
+ device_del+0x396/0x9f0 drivers/base/core.c:3868
+ usb_disable_device+0x36c/0x7f0 drivers/usb/core/message.c:1418
+ usb_disconnect+0x2e1/0x920 drivers/usb/core/hub.c:2304
+ hub_port_connect drivers/usb/core/hub.c:5361 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5661 [inline]
+ port_event drivers/usb/core/hub.c:5821 [inline]
+ hub_event+0x1be4/0x4f50 drivers/usb/core/hub.c:5903
+ process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-I think so.  The EFI config table is being included by luck, not
-explicitly; "nogbpages" switches to using 2M pages only, greatly
-reducing the range of addresses unintentionally included in the map.
-So the EFI config table doesn't end up mapped.
 
-> Am I on the right track here?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I believe so.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Patch #3's intent is/was to reduce the amount of space unintentionally
-included in the identity map, to avoid speculation into areas that
-cause system halts on HPE's UV hardware.  It does so by using 1G pages
-for large areas and 2M pages for smaller areas.  It should have worked
-for systems in general, without being specific to UV, but when it got
-into the mainline kernel, it was found to cause a regression on these
-AMD systems, and was reverted.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-The regression turned out to be the EFI config table not being mapped.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-Patch #1 fixes this problem for the EFI config table, and patch #2
-fixes it for the CC BLOB that is also likely accessed.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-These accesses are a problem because they happen prior to establishing
-the page fault interrupt handler that would mend the identity map.  I
-know very little about the AMD SEV feature but reading the code I
-think it may be required to do this before setting up that handler.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Thanks,
-
---> Steve
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
-
+If you want to undo deduplication, reply with:
+#syz undup
