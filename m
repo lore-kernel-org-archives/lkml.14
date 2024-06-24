@@ -1,160 +1,180 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8B149650
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C1AFBEF
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 21:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719262932; cv=none; b=OEuVDL5ELG+mJ4qmkI+qqrWP/qUqMn8+usuVWmF5r5EofpgYizJsb0SVWOhDVd3a6h5QJFiAFbqW3Z3ayNSDUxjg6feSC36uubAYXLqsbCPn00wVoXZ5Y3uL5EhcYtA8nXHvdgPst79X0j9LABj/mZVEM1rsF6V5c58I5aKCTPw=
+	t=1719263139; cv=none; b=p8PpjDmQlU/mjfY+7PCqCncujDRrSDB5ZSG7dtLzv+1COuBkWojbmfuBSR83YYhHSB6hixsJqkzyXfl1xm1ctUMm3FkBi4H9knzwtDgd9ZL6goFRTncLwJHLAgnx8NLpimgdah8Y1JigR18daRE71xNoqf5TJ7BX2FtcJQapeb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719262932; c=relaxed/simple;
-	bh=gq8UWYtCwgpZFbFeaTyaBqOOi/ah9Bnx1Kxv5+ZyUdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lnIpRfxCU6vkFRQRnWORIURFreyCzcEGadxr/CidvWvE7KI2IZEePZA7z139upWc/EC5udEXPDyYTWlfJZdlyHFhb8AlE9qdn0qkXfbbot6tYISweOnFeotnWvpNlkikvLZvfcPcHLIR9RrDFm4nLyn4xJ3UN+I2UnnrpTVCCg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BXAPkxbo; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1719263139; c=relaxed/simple;
+	bh=rc+uf24RV4wU1ZmPVkashso27WnRydS2+EKRJ3fw3uo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dehXwSCuWoaO0Jse10DHHOjGC9ibgBBadNKyIP18zC733DHf2mSZey2PO7/RLajSWr1MSO7mScqGcJFY6be6nzTAnrGjKpE0gqicEURGZItUpBtWtjRno1Ek5ZIlKgvon6z/MmQNyqbRgQZ32fRYxhbyI8ZBkZbDllX715A7EiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C7WKTJW9; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BXAPkxbo"
-X-Envelope-To: willy@infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719262928;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LqCwlhhk7HAreetP8u9djrnWVZC/rtZIAaJkpetLXsM=;
-	b=BXAPkxbovgKKMxwLwrXlUk5BSkuGi42Xt0jUCsHXIKPYHYji9CNlIWCHg862/VUg/YxcC4
-	reI/TEXHcbEFvV+pYhbgL1sDy0rTy6a18eKpp7VhkKfIlTjDQzZn3yQMyneeP8WD07wfVG
-	fDBUli96uxmwdiJDDhSyf9UH3aczvxM=
-X-Envelope-To: yosryahmed@google.com
-X-Envelope-To: oliver.sang@intel.com
-X-Envelope-To: usamaarif642@gmail.com
-X-Envelope-To: oe-lkp@lists.linux.dev
-X-Envelope-To: lkp@intel.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: chengming.zhou@linux.dev
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: david@redhat.com
-X-Envelope-To: ying.huang@intel.com
-X-Envelope-To: hughd@google.com
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: ak@linux.intel.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Mon, 24 Jun 2024 14:02:02 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Yosry Ahmed <yosryahmed@google.com>, 
-	kernel test robot <oliver.sang@intel.com>, Usama Arif <usamaarif642@gmail.com>, oe-lkp@lists.linux.dev, 
-	lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Nhat Pham <nphamcs@gmail.com>, David Hildenbrand <david@redhat.com>, 
-	"Huang, Ying" <ying.huang@intel.com>, Hugh Dickins <hughd@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] [mm] 0fa2857d23:
- WARNING:at_mm/page_alloc.c:#__alloc_pages_noprof
-Message-ID: <wfsev2j7ehjsrwxacrbnokdfaozfgz7nnl56g4plcqhxgtglq3@3rwa3jbliafa>
-References: <CAJD7tkbqHyNUzQg_Qh+-ZryrKtMzdf5RE-ndT+4iURTqEo3o6A@mail.gmail.com>
- <Znm74wW3xARhR2qN@casper.infradead.org>
- <CAJD7tkbF9NwKa4q5J0xq1oG6EkTDLz8UcbekSfP+DYfoDSqRhQ@mail.gmail.com>
- <ZnnBVBItTNWZE42u@casper.infradead.org>
- <CAJD7tkaC6d_RkhRhMpEeS1zTEtoQYw56J3LLdzD1aM9_qu-3BA@mail.gmail.com>
- <ZnnId18scFvE_a6K@casper.infradead.org>
- <CAJD7tkZZHxXR9cFE=ZHQOnYXakrhXg0+ScT2ExxihovSgDz7_g@mail.gmail.com>
- <ZnnOFSNKKMf5IpCU@casper.infradead.org>
- <fv7c4554hex6vnnujhqz2fuxob6pqlumwxudx2zgrdeovq3vf4@vaypceu5y6po>
- <ZnncVRuHeeN7GnTJ@casper.infradead.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C7WKTJW9"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c9c36db8eeso2515695b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 14:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1719263137; x=1719867937; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F26ETBZiZjhwFkvNSbxGcmTBqIZI6iLTpohts+kXXh4=;
+        b=C7WKTJW9cwI2vuH4sFmGpGcgqjNbXB8oErJ9r9JAOGXmgSrBEmtvsX16gxG8dFXf7i
+         eeKhCjbtBk7PUcgLuotiFtRzJTqEfxHj4Ym+2z5j42fGz7Y0ZydKIaWwqXMwbHWfj5Z1
+         d48rlbUzIyu9tvTzfxrYAiMj80oaeNsYN1tzA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719263137; x=1719867937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F26ETBZiZjhwFkvNSbxGcmTBqIZI6iLTpohts+kXXh4=;
+        b=iyB51zJD5L2UuBUYyb5REvZpvJMKgY2Lsuny3gi2EeAAUyfE5hoJNFuw0TbWuzmwey
+         mB4ZTytWf4HCb/besox/R5MitvKtuEdP+e/vKa4PwN9bukGg1wOsKRdWRwi9Wf3W10CS
+         bL6Y6XFoh/KdtkZCzvEM4kubmH3NK5a6JDIM3vLPRjEHRAD82J+WortZw1r6dTo+gIR8
+         c9lKVoLv5DP7SUQeaoSbxoi6Ja+wuLOnRfpNchhev/HDWlsQ5nyRNdfS8JQCjREbtAgc
+         SaQUhcSdr8A7dNk+//+rxMtt7yiI5krClTLT4LZ99jtlvc7GOO3+Hsj/e7r4Yitefx06
+         WWZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwhOTbA4yKIZZPFfypQydEfkdgXeU9I8JitNknT6O0L15oUE1ETsX/kTPsksy9AG97xQCdLVEQkms2b3lQVagLg1zXxlFJ4WgUW2Xb
+X-Gm-Message-State: AOJu0Yy36S5GPzP/jIZCLMz1wfjeQFEceLIAlqwJ+je7/EE8VULiG3qn
+	2Eke0lyf7Gh8EB5rxgfayhBUnFtc+7dcRtlPIyWBSXFUJtduGCkoRF+B0q+uPtB6nahhfwtJ48s
+	=
+X-Google-Smtp-Source: AGHT+IG6KjfKbgAYuA15ESR9dDKLs3G/F25VY27spn4z5331K3FCbsnvte0xklVf0D+6c2yGrXJHbw==
+X-Received: by 2002:a0c:f051:0:b0:6b2:c94d:a02f with SMTP id 6a1803df08f44-6b54099d279mr66175186d6.13.1719262727656;
+        Mon, 24 Jun 2024 13:58:47 -0700 (PDT)
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com. [209.85.160.171])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b52ac1028csm28965306d6.99.2024.06.24.13.58.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 13:58:46 -0700 (PDT)
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44056f72257so27771cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 13:58:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVpsXrqqrHUfMlZ0MR4Er/dTFZxuY78JYIqdEZ2nJXRSDmq3+4Fc7Dvbm50gbuWY21uccmg4oh/hYZZZQLwZUFny6jmEvRGYLeDSeah
+X-Received: by 2002:a05:622a:283:b0:442:1bc4:8fb2 with SMTP id
+ d75a77b69052e-444f2566f1fmr919771cf.20.1719262726353; Mon, 24 Jun 2024
+ 13:58:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZnncVRuHeeN7GnTJ@casper.infradead.org>
-X-Migadu-Flow: FLOW_OUT
+References: <20240610222515.3023730-1-dianders@chromium.org>
+ <20240610152420.v4.7.I0f81a5baa37d368f291c96ee4830abca337e3c87@changeid> <ZnlilDj5UrvrVasv@hovoldconsulting.com>
+In-Reply-To: <ZnlilDj5UrvrVasv@hovoldconsulting.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 24 Jun 2024 13:58:34 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U=C+Myrb4cpGyV-J=RHn39C2aF1WT_Xt5M2vczbZ-AbA@mail.gmail.com>
+Message-ID: <CAD=FV=U=C+Myrb4cpGyV-J=RHn39C2aF1WT_Xt5M2vczbZ-AbA@mail.gmail.com>
+Subject: Re: [PATCH v4 7/8] serial: qcom-geni: Fix suspend while active UART xfer
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Tony Lindgren <tony@atomide.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
+	John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 09:51:33PM GMT, Matthew Wilcox wrote:
-> On Mon, Jun 24, 2024 at 01:39:45PM -0700, Shakeel Butt wrote:
-> > On Mon, Jun 24, 2024 at 08:50:45PM GMT, Matthew Wilcox wrote:
-> > > On Mon, Jun 24, 2024 at 12:34:04PM -0700, Yosry Ahmed wrote:
-> > > > On Mon, Jun 24, 2024 at 12:26 PM Matthew Wilcox <willy@infradead.org> wrote:
-> > > > >
-> > > > > On Mon, Jun 24, 2024 at 11:57:45AM -0700, Yosry Ahmed wrote:
-> > > > > > On Mon, Jun 24, 2024 at 11:56 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jun 24, 2024 at 11:53:30AM -0700, Yosry Ahmed wrote:
-> > > > > > > > After a page is swapped out during reclaim, __remove_mapping() will
-> > > > > > > > call __delete_from_swap_cache() to replace the swap cache entry with a
-> > > > > > > > shadow entry (which is an xa_value).
-> > > > > > >
-> > > > > > > Special entries are disjoint from shadow entries.  Shadow entries have
-> > > > > > > the last two bits as 01 or 11 (are congruent to 1 or 3 modulo 4).
-> > > > > > > Special entries have values below 4096 which end in 10 (are congruent
-> > > > > > > to 2 modulo 4).
-> > > > > >
-> > > > > > You are implying that we would no longer have a shadow entry for such
-> > > > > > zero folios, because we will be storing a special entry instead.
-> > > > > > Right?
-> > > > >
-> > > > > umm ... maybe I have a misunderstanding here.
-> > > > >
-> > > > > I'm saying that there wouldn't be a _swap_ entry here because the folio
-> > > > > wouldn't be stored anywhere on the swap device.  But there could be a
-> > > > > _shadow_ entry.  Although if the page is full of zeroes, it was probably
-> > > > > never referenced and doesn't really need a shadow entry.
-> > > > 
-> > > > Is it possible to have a shadow entry AND a special entry (e.g.
-> > > > XA_ZERO_ENTRY) at the same index? This is what would be required to
-> > > > maintain the current behavior (assuming we really need the shadow
-> > > > entries for such zeroed folios).
-> > > 
-> > > No, just like it's not possible to have a swap entry and a shadow entry
-> > > at the same location.  You have to choose.  But the zero entry is an
-> > > alternative to the swap entry, not the shadow entry.
-> > > 
-> > > As I understand the swap cache, at the moment, you can have four
-> > > possible results from a lookup:
-> > > 
-> > >  - NULL
-> > >  - a swap entry
-> > >  - a shadow entry
-> > >  - a folio
-> > > 
-> > > Do I have that wrong?
-> > 
-> > I don't think we have swap entry in the swapcache (underlying xarray).
-> > The swap entry is used as an index to find the folio or shadow entry.
-> 
-> Ah.  I think I understand the procedure now.
-> 
-> We store a swap entry in the page table entry.  That tells us both where
-> in the swap cache the folio might be found, and where in the swap device
-> the data can be found (because there is a very simple calculation for
-> both).  If the folio is not present, then there's a shadow entry which
-> summarises the LRU information that would be stored in the folio had it
-> not been evicted from the swapcache.
-> 
-> We can't know at the point where we unmap the page whether it's full
-> of zeroes or not, because we can't afford to scan its contents.  At the
-> point where we decide to swap out the folio, we can afford to make that
-> decision because the cost of doing the I/O is high enough.
-> 
-> So the question is whether we can afford to throw away the shadow
-> information and just store the information that this was a zero entry.
-> I think we can, but it is a more bold proposal than I realised I was
-> making.
+Hi,
 
-I agree that we can throw away shadow in the favor of zero entry but, as
-you already noted, it requires changes at mutiple places. At the moment
-I can think of:
+On Mon, Jun 24, 2024 at 5:12=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
+te:
+>
+> On Mon, Jun 10, 2024 at 03:24:25PM -0700, Douglas Anderson wrote:
+> > On devices using Qualcomm's GENI UART it is possible to get the UART
+> > stuck such that it no longer outputs data. Specifically, logging in
+> > via an agetty on the debug serial port (which was _not_ used for
+> > kernel console) and running:
+> >   cat /var/log/messages
+> > ...and then (via an SSH session) forcing a few suspend/resume cycles
+> > causes the UART to stop transmitting.
+>
+> An easier way to trigger this old bug is to just run a command like
+> dmesg and hit ctrl-s in a serial console to stop tx. Interrupting the
+> command or hitting ctrl-q to restart tx then triggers the soft lockup.
+>
+> > The root of the problems was with qcom_geni_serial_stop_tx_fifo()
+> > which is called as part of the suspend process. Specific problems with
+> > that function:
+> > - When an in-progress "tx" command is cancelled it doesn't appear to
+> >   fully drain the FIFO. That meant qcom_geni_serial_tx_empty()
+> >   continued to report that the FIFO wasn't empty. The
+> >   qcom_geni_serial_start_tx_fifo() function didn't re-enable
+> >   interrupts in this case so the driver would never start transferring
+> >   again.
+> > - When the driver cancelled the current "tx" command but it forgot to
+> >   zero out "tx_remaining". This confused logic elsewhere in the
+> >   driver.
+> > - From experimentation, it appears that cancelling the "tx" command
+> >   could drop some of the queued up bytes.
+> >
+> > While qcom_geni_serial_stop_tx_fifo() could be fixed to drain the FIFO
+> > and shut things down properly, stop_tx() isn't supposed to be a slow
+> > function. It is run with local interrupts off and is documented to
+> > stop transmitting "as soon as possible". Change the function to just
+> > stop new bytes from being queued. In order to make this work, change
+> > qcom_geni_serial_start_tx_fifo() to remove some conditions. It's
+> > always safe to enable the watermark interrupt and the IRQ handler will
+> > disable it if it's not needed.
+> >
+> > For system suspend the queue still needs to be drained. Failure to do
+> > so means that the hardware won't provide new interrupts until a
+> > "cancel" command is sent. Add draining logic (fixing the issues noted
+> > above) at suspend time.
+>
+> So I spent the better part of the weekend looking at this driver and
+> this is one of the bits I worry about with your approach as relying on
+> draining anything won't work with hardware flow control.
+>
+> Cancelling commands can result stalled TX in a number of ways and
+> there's still at least one that you don't handle. If you end up with
+> data in in the FIFO, the watermark interrupt may never fire when you try
+> to restart tx.
 
-1. Zero entry is not reclaimable like shadow entry.
-2. Need to decide the right place to allocate the zero folio on swapin.
-3. Should this be treated as major fault for stats purpose.
+Ah, that's a good call. Right now it doesn't really happen since
+people tend to hook up the debug UART without flow control lines (as
+far as I've seen), but it's good to make sure it works.
 
-Definitely I have missed more points as well.
+
+> I'm leaning towards fixing the immediate hard lockup regression
+> separately and then we can address the older bugs and rework driver
+> without having to rush things.
+
+Yeah, that's fair. I've responded to your patch with a
+counter-proposal to fix the hard lockup regression, but I agree that
+should take priority.
+
+
+> I've prepared a minimal three patch series which fixes most of the
+> discussed issues (hard and soft lockup and garbage characters) and that
+> should be backportable as well.
+>
+> Currently, the diffstat is just:
+>
+>          drivers/tty/serial/qcom_geni_serial.c | 36 +++++++++++++++++++++=
+++++-----------
+>          1 file changed, 25 insertions(+), 11 deletions(-)
+
+I'll respond more in dept to your patches, but I suspect that your
+patch series won't fix the issues that N=C3=ADcolas reported [1]. I also
+tested and your patch series doesn't fix the kdb issue talked about in
+my patch #8. Part of my reworking of stuff also changed the way that
+the console and the polling commands worked since they were pretty
+broken. Your series doesn't touch them.
+
+We'll probably need something in-between taking advantage of some of
+the stuff you figured out with "cancel" but also doing a bigger rework
+than you did.
+
+[1] https://lore.kernel.org/r/46f57349-1217-4594-85b2-84fa3a365c0c@notapian=
+o
