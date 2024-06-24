@@ -1,172 +1,118 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C47913D88B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D8B19B3EC
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241699; cv=none; b=GwCneah7i+4k0oyK70pcaD0H27/OFhgHRCCEuXLksB6U5HEfq+T1pYl8tvDIWQTMLvUZIrTGjSX4+4OhSjptxu/6SXirDZ8rubLaELOwDHy3+Zovy8pP0HVjU9I6/32OEqqWl05LjsQfkBoV6UsSv8xsyi+rDv+3gGLDgEjDdeI=
+	t=1719241723; cv=none; b=jYizV1zmoKaTc7PlrmfPPNdxkJT8S4VYefGbdqksE8PeCySQpJJ6A9sFdYv51lK7VO52OvO0jmNyVfb7V+0L1ey5biTKf8lsnAYfc0oIAfzx0T5v1V7bYTbBKdzsNljXE5NwZsMHoYxaK40ksnvzJOF2qSdrR9lnn6SRQ8nHnkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241699; c=relaxed/simple;
-	bh=ft4tT0UQ22Hu2W+Pyk0ebx25WCKyu/3L2mVuUHGIFQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PSmVVAm/mD6WElRLohov7SKcQTAFaFEvnQyMF+yUKFb6h+l2ClJQhI7FkgL2xl0VGSv5SbWTswxwR0yW864WT0GhHyzPOpItF/eg0TEI3WcEbHPlgAFY0NUWaPqlplPv6WQdB68H5HJOgQZgcfFhvLq2hUspTMbFAsvzV9pchP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vk8yt2ea; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719241723; c=relaxed/simple;
+	bh=8tKzwExQBw5uGrVk6EJMh5rj1XlrJN3GYv6ujg5VdWo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Bad81sTgxsWcOf4cKf91A0Kr9pZWPwZFEsrAj4LR/9AdbsNG8cz1zGHcewPq0SVYLLnoYsNtH15m1eJrZiVHi0uvRfBei+ilLPKFacOp+ezvXm2cumKf8lNJHcif+qcl7TDHA4SJilAQScaUWl+dL0pIdoasnFS9HsDkU565i4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VbkMOSAC; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vk8yt2ea"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4217c7eb6b4so36840845e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:08:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VbkMOSAC"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52cd9f9505cso3341409e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719241696; x=1719846496; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wafc/q0nXR3Ye8LsHgCDkHwmKjVfo3c4oHVHMDrj/Aw=;
-        b=vk8yt2eaYwhW7f72SDOl5261xikcP+xruoLxe5Waa65T4fHod2eYL07PLwJkHZtFbj
-         iEmxo391Ym00xAFQ0Hny9vlN0ugeZbWxselJdlxPAYAfbLXKnoUSZ53i5d5OJfytpFOW
-         +A78H60YWZlKw5fwmLjOW16OawSag/ECkZ7QJuiOVSDfSMb9j4G75fiHeIPezy0MvuVQ
-         CJxw8DfieKdKqTqyZnm9mYsrg+XNxd8iGgHLXjD6VNkS5n1SGvM1WLT0BbjXUN0uIfPv
-         CxeZ3QX4usQi4M/KMqU+YkL0f2cyFKyVMSir5EkSDUCjrr7+JsVM9Z8/eGeQDSgl3zjV
-         LsGA==
+        d=linaro.org; s=google; t=1719241720; x=1719846520; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5yftIHZLp8eHXmdT76tLth9/O15e8LEzT136xzEFdkw=;
+        b=VbkMOSACxfpY/8axgh+Mtj+KNZPTQm7zG/lBCQGGTEjtpMtP6G5TLhN8KPD34lumHt
+         cAMm/IARm+GfyYhbDQ0z1TCHr6B/gYbaxU6va2zPQE9UQhiqkrS4rPqH+6x5SWJXHR8g
+         j3wMnr6MLc3AOy2NaIEVvW8RNzCoD3PPdVtWNmg6Kth4yfOXlnOZjwQz5pZs0ESE4Hyb
+         2K/UG/WhTfjI6SW8okHZ7wvyzsEO5eZ9friwIlFUgwAh3Iii46ll5XnNwNmby0tE2JtV
+         bhZJUdThU6s6Mw4vNhER4oQPI8BNFQG2YqZdkdfXJrWMszWL3DbCmwJDk4yjcKFmK1Ir
+         OJCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719241696; x=1719846496;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wafc/q0nXR3Ye8LsHgCDkHwmKjVfo3c4oHVHMDrj/Aw=;
-        b=xQC/laKcrOAbYVvnKrWnDlwgSBn5ikjY7VTZlSEegfu7h5n4zsGLP0O86hJe688BGY
-         54b0aeWUTKbnraqK9TZ5OtI26tOqzlBtPq/B4vf19tqr8WvHyPlgLbI6Xplre8LadKDC
-         cfKdXxeQ4X26m8I2s+HFVT70YNnu/Phoolmpb63Y0/OlB6jrgyU0XdD5P07EFGK9pPGE
-         Jx8x5vdH3lZt/sU1bgejytCnwJztCC7gCAMpkIomEeFacjp+npS5dgQPGB2SyxWVpYir
-         EqxXcILqeZMSEeo3HIhRlmrHw+wsJOypAIBOarf3lzfE9UOy5f8IgVTPGsMYEyToCAE0
-         vhEA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6gIUpHpH+7AbhZoCnOpOYs5GReXQChqxFkPaJNZLVF3gChLRe6RZ+G0UkrdXNH4ElDneqDf/uDG0nEo5FLBW8rMlzbC7lpQuRFh8c
-X-Gm-Message-State: AOJu0YxH5EsQwnpYD9GI5rGYNm58sxBXWAmEE0ARj33JpCWFooeLN5+e
-	zrZGakwP4ckDTuBq00EbzKduV57+nBiQ579Klh7RmnVOzSUQAYC2sVnrkFMmQdM=
-X-Google-Smtp-Source: AGHT+IE5Azx1tp6IG+TkRkPA4t2eMISvGoO8x7MCXtH6yPnmaWLIdsqd5JLP1NfTp42KWcMq7VY1ag==
-X-Received: by 2002:a05:600c:68c:b0:421:de31:81 with SMTP id 5b1f17b1804b1-4248cc35d9cmr32718155e9.24.1719241695473;
-        Mon, 24 Jun 2024 08:08:15 -0700 (PDT)
-Received: from [10.2.5.170] (amontpellier-556-1-151-252.w109-210.abo.wanadoo.fr. [109.210.7.252])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4248191116fsm142780645e9.37.2024.06.24.08.08.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 08:08:15 -0700 (PDT)
-Message-ID: <62dadd31-5fd1-45b4-99e8-44ffb367bad5@baylibre.com>
-Date: Mon, 24 Jun 2024 17:08:14 +0200
+        d=1e100.net; s=20230601; t=1719241720; x=1719846520;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5yftIHZLp8eHXmdT76tLth9/O15e8LEzT136xzEFdkw=;
+        b=orlKAkyJR5UbwC9oWfZbobTd4Qpb9GbRupCABVFAInfSmJXORan+38vRQAVubr8ZNH
+         ow5daZ5u6fVa4MC3qLQrE9kuk8Sg0aHjiEzLTj0uIxdClkEETXkMsGFdmCJTvWpX2WXJ
+         hBKmnMLjyHAPsqIX9E5pehFSwF3i78mgNLuZWpzSjkIAFpW9JIHWsVIsHFiPml7hMYU+
+         Ej0dceoD1DLy/r6kygQnfM9R9DxdOKCIKZ3mMLk+J8uCT6qXELpCI5UfVlT0fCdiPdPj
+         gynMDvcYnmFcn0dd8HqRofzq1BJc+UXYyMafddJAFfOCv5AQWK6Iyp2ZWY/LqG9ZPm1Z
+         PJ8g==
+X-Gm-Message-State: AOJu0YwL+3IwGTvEoBseSel/GxYN2/iF2kwLA4DlnXVvs0u5YZ780aI5
+	2h2M7UsiScOJkPjYKNJbPAtKvAb2I5ISB33XUKNumXdf75+VykpX8Mb5FXUlvCQ=
+X-Google-Smtp-Source: AGHT+IELVkPKwVNxN4A8tjYiAj1+PNkuEIcPj1BT6h+vBIKPf78ibBEW/oj4NhDWMyCQQAB4BI1qfA==
+X-Received: by 2002:a05:6512:3e0a:b0:52c:8b03:99d6 with SMTP id 2adb3069b0e04-52cdf7e671cmr4534542e87.6.1719241719587;
+        Mon, 24 Jun 2024 08:08:39 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdbe1bcefsm840571e87.159.2024.06.24.08.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 08:08:39 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 24 Jun 2024 18:08:12 +0300
+Subject: [PATCH v9 1/2] platform/arm64: build drivers even on non-ARM64
+ platforms
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/9] iio: adc: ad7606: fix oversampling gpio array
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Beniamin Bia <beniamin.bia@analog.com>,
- Stefan Popa <stefan.popa@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
- devicetree@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- jstephan@baylibre.com, dlechner@baylibre.com
-References: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
- <20240618-cleanup-ad7606-v1-8-f1854d5c779d@baylibre.com>
- <20240623164542.53a9f2b1@jic23-huawei>
-Content-Language: en-US
-From: Guillaume Stols <gstols@baylibre.com>
-In-Reply-To: <20240623164542.53a9f2b1@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240624-ucsi-yoga-ec-driver-v9-1-53af411a9bd6@linaro.org>
+References: <20240624-ucsi-yoga-ec-driver-v9-0-53af411a9bd6@linaro.org>
+In-Reply-To: <20240624-ucsi-yoga-ec-driver-v9-0-53af411a9bd6@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Nikita Travkin <nikita@trvn.ru>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1049;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=8tKzwExQBw5uGrVk6EJMh5rj1XlrJN3GYv6ujg5VdWo=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmeYvdCXewCSCLSdXZcWMlvqcJCP+gz8j/wucKY
+ S9JOcrMdKCJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZnmL3QAKCRCLPIo+Aiko
+ 1SdLB/0YqnLB7JfF1aiZDS5x+Xb1N0rQq37UM2WWrB83zLSI+OgOmiMTBVzi+jU8MRm6LXmrDNG
+ Ld35FLuCVkZ2Mo6xirDXm54gJ2IF1a2YcjDVhHFEEfCoPV6P90XMnTlmABibiHowQB95UNDkbOQ
+ G+kAfll8P/solgJg0IsU90kkJnX7ltAg0+T7uc5fyIOGeQqkWNnpfRoaG87v0JxWFIFmCQBGu+n
+ 2WKIpVdFL3+7z6JOnjMng54qkQdo7IgjY4YRLkV9zN4hrFnIK4nmkt/JMFQMtNPjR19VuvnqXSd
+ U1JE40KQzJUh1X7GpY41fQOjdjuIK9CXn2DzEJZH7aH2BFyi
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Resend, previous mail was erroneously sent in HTML. I apologize for the 
-spamming.
+The Kconfig for platforms/arm64 has 'depends on ARM64 || COMPILE_TEST'.
+However due to Makefile having just obj-$(CONFIG_ARM64) the subdir will
+not be descended for !ARM64 platforms and thus the drivers won't get
+built. This breaks modular builds of other driver drivers which depend
+on arm64 platform drivers.
 
-On 6/23/24 17:45, Jonathan Cameron wrote:
+Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 363c8aea2572 ("platform: Add ARM64 platform directory")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/platform/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- > On Tue, 18 Jun 2024 14:02:40 +0000
- > Guillaume Stols <gstols@baylibre.com> wrote:
- >> gpiod_set_array_value was misused here: the implementation relied on the
- >> assumption that an unsigned long was required for each gpio, while the
- >> function expects a bit array stored in "as much unsigned long as needed
- >> for storing one bit per GPIO", i.e it is using a bit field.
- >>
- >> Fixes: d2a415c86c6b ("iio: adc: ad7606: Add support for AD7606B ADC")
- >> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
- > Always drag fixes to the start of a series.  Probably doesn't matter
- > in this case but we want it to be obvious there are no necessary 
-precursors
- > in this series for anyone backporting.
+diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+index fbbe4f77aa5d..837202842a6f 100644
+--- a/drivers/platform/Makefile
++++ b/drivers/platform/Makefile
+@@ -11,4 +11,4 @@ obj-$(CONFIG_OLPC_EC)		+= olpc/
+ obj-$(CONFIG_GOLDFISH)		+= goldfish/
+ obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
+ obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
+-obj-$(CONFIG_ARM64)		+= arm64/
++obj-$(CONFIG_ARM64_PLATFORM_DEVICES)	+= arm64/
 
-OK will do this change in the next version.
+-- 
+2.39.2
 
- >
- > What is the user visible outcome of this bug?  Superficially the numbers
- > all end up the same I think even though the code is clearly working
- > mostly by luck.  So might not warrant a fixes tag?
-
-This is leading into some issues I should maybe have better documented 
-in the commit message.
-
-See below
-
- >
- >> ---
- >>   drivers/iio/adc/ad7606.c     | 4 ++--
- >>   drivers/iio/adc/ad7606_spi.c | 5 +++--
- >>   2 files changed, 5 insertions(+), 4 deletions(-)
- >>
- >> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
- >> index e3426287edf6..502344e019e0 100644
- >> --- a/drivers/iio/adc/ad7606.c
- >> +++ b/drivers/iio/adc/ad7606.c
- >> @@ -235,9 +235,9 @@ static int ad7606_write_os_hw(struct iio_dev 
-*indio_dev, int val)
- >>       struct ad7606_state *st = iio_priv(indio_dev);
- >>       DECLARE_BITMAP(values, 3);
- >>   -    values[0] = val;
- >> +    values[0] = val & GENMASK(2, 0);
- >>   -    gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
- >> +    gpiod_set_array_value(st->gpio_os->ndescs, st->gpio_os->desc,
- >>                     st->gpio_os->info, values);
-
-ARRAY_SIZE(values) is 1 because DECLARE_BITMAP will declare a dimension 
-1 unsigned long array (more than enough for 3 bits !).
-We want to set 3 bits in gpiod_set_array_value, thus the first parameter 
-should be 3, not 1.
-
- >>         /* AD7616 requires a reset to update value */
- >> diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
- >> index 263a778bcf25..287a0591533b 100644
- >> --- a/drivers/iio/adc/ad7606_spi.c
- >> +++ b/drivers/iio/adc/ad7606_spi.c
- >> @@ -249,8 +249,9 @@ static int ad7616_sw_mode_config(struct iio_dev 
-*indio_dev)
- >>   static int ad7606B_sw_mode_config(struct iio_dev *indio_dev)
- >>   {
- >>       struct ad7606_state *st = iio_priv(indio_dev);
- >> -    unsigned long os[3] = {1};
- >> +    DECLARE_BITMAP(os, 3);
- >>   +    bitmap_fill(os, 3);
-
-Here we need 3 bits set HIGH in one unsigned long (i.e 0x07) and we get 
-3 times 0x01 instead.
-
-Thus, it will not switch to software mode if OS pins are not hardwired 
-(which is I must admit, rather unlikely).
-
- >>       /*
- >>        * Software mode is enabled when all three oversampling
- >>        * pins are set to high. If oversampling gpios are defined
- >> @@ -258,7 +259,7 @@ static int ad7606B_sw_mode_config(struct iio_dev 
-*indio_dev)
- >>        * otherwise, they must be hardwired to VDD
- >>        */
- >>       if (st->gpio_os) {
- >> -        gpiod_set_array_value(ARRAY_SIZE(os),
- >> +        gpiod_set_array_value(st->gpio_os->ndescs,
- >>                         st->gpio_os->desc, st->gpio_os->info, os);
- >>       }
- >>       /* OS of 128 and 256 are available only in software mode */
- >>
