@@ -1,77 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF2919EEC7
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8A819FA8C;
+	Mon, 24 Jun 2024 17:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719250831; cv=none; b=WZECA5sUtAu9K26F0q24hjoR4HOVmbzYLNQ1oRbsay64Z1hV4cQrQTIzIio5YZ8tvVwpNLNuzf0nihnlaLeS5j/FehLeIWMv4t9UXxE3KHjqnbXVIrf/qYWsT4vCcvpqMWLVwZgRA0oOaa3VOAcSu0j6gwxX7eucAbOVJAqnxdI=
+	t=1719250835; cv=none; b=A5K7XE+NyZ1m4ORU8QioNxSUYd9UT7UBHrWMlpbsBmXGTxaFTgWwpGxnvhpYs5f4Y2ZX4fepQ6SM9XfDN/FNwUFnFPbemsivR4ZgPkp53l22mGfiwfLw4n/1K9d7zX9mMuiUCXSgkD7PxiU4dgx6PGaScj8ikhAnaDTMGGJ5kWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719250831; c=relaxed/simple;
-	bh=y+3HBYbLlNGdn/StePP7MdTMbYY+NAYSYK1c+0uNZTc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Eh1vU40qb4Z8Ox0yCdgF5vxwWldyYttjN1gvB96oEmv8670HnGdbSQmR+8AU7i+Tj57AstGh0GVRZ/LLwZ3RLLfx54nRyxRSwFSaDAPOOtY+ngu5KIabaHANTTDjZpqhmDWp0WMA87A9VYfUWUPstH5bTVjlf313knO9lD9PE80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAoOntiP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719250835; c=relaxed/simple;
+	bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GQ2LVAcUWaaFf4x26dNFYcnLa0JDElS3tzh9zLbCf2yvgD8jYI4hMDGlNqhGE+lqROmaE9lhtRo3UKKExBhypuUxGxe+kGMkeIMZAdhgGrmaNTA93oIVDejRoBqGsJa9Nz+VZwQU8ADZh6lsJ2D+G/cKtNZGl2Q3s0pAfTUot7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=htW79obl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAoOntiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F5EAC4AF0B;
-	Mon, 24 Jun 2024 17:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719250831;
-	bh=y+3HBYbLlNGdn/StePP7MdTMbYY+NAYSYK1c+0uNZTc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jAoOntiPcsQXOh41dcTZrzJwHDLIccPkc442vDJm6/PQYfu/nXmMAN/CJxTBfZC5J
-	 7bQy/+pGcFzN+tH6IZlX/jnhYi/+bMtyJK/u+qG0DIJOdSvRphlqX+aB0Lk8BSl8Q9
-	 DP2T7F46I6GKkQ9P38868EtWy2ovPzia1l1gfWb+aExNDNw3JqdwCb6IT4aU8iMkTO
-	 hjgRXqsY4zyV/CpkJBpa/ZhrpQPMdJHCcZRch9z05lhaNc5smaOP5YRlJdAPX5BGyJ
-	 emxSkRK+bLzT2L9ctHJbYgzlk5jA12dZrqtH6OFJ/slQctABZdBKmYLft330iYWvQN
-	 lSzrpDG/Xr9+A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EF3AAC43613;
-	Mon, 24 Jun 2024 17:40:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="htW79obl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719250834; x=1750786834;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
+  b=htW79obldMqarSEjDgDvrRJo6aI1SEopNboKjcju+UC61Kg+2uuj79T/
+   6qnWQvndw2uDrgIFx0VlDN5OAP9wHJ42wea4o2pZlR8BCP88searE7aaW
+   Uy144pxud5h5F+hJ61X552H4/TwI+bFErAw1xQby0+OGmaeIw2ns5mNFv
+   sdNUBR0tTQSp5DGVPoISdIYeWYPJ4fPju8XkNG015HCgvCq1HZiiSEhk9
+   6/6Pzcq+y31lgCsF3eaClyabEyoKfNgP33T94D2VQ4RYB9rvJmT/NuVqm
+   H/GMiq6i8/zMG3QmSKLNkUwcTjLnYqb9T+ZVn60MjJkM8CoyB8aLttSaU
+   Q==;
+X-CSE-ConnectionGUID: 0fQj4BcaRZiptyj0Fhjbeg==
+X-CSE-MsgGUID: eMWXuGo9RDmAW73wuXmQhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16112068"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="16112068"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:31 -0700
+X-CSE-ConnectionGUID: kUyIY7jNQJmOglPawkpxNg==
+X-CSE-MsgGUID: P7YvPGmYRt2/E50zsz1kDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="43457395"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:27 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
+Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240624173116.31314-1-W_Armin@gmx.de>
+References: <20240624173116.31314-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2 0/2] platform/x86: wmi: Add driver_override support
+Message-Id: <171925082256.3544.1603018074608040428.b4-ty@linux.intel.com>
+Date: Mon, 24 Jun 2024 20:40:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to use mnt_{want,
- drop}_write_file replace file_{start, end}_wrtie
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <171925083097.4247.3362095080701103412.git-patchwork-notify@kernel.org>
-Date: Mon, 24 Jun 2024 17:40:30 +0000
-References: <1718271333-32179-1-git-send-email-zhiguo.niu@unisoc.com>
-In-Reply-To: <1718271333-32179-1-git-send-email-zhiguo.niu@unisoc.com>
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, ke.wang@unisoc.com,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- Hao_hao.Wang@unisoc.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Hello:
+On Mon, 24 Jun 2024 19:31:14 +0200, Armin Wolf wrote:
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
-
-On Thu, 13 Jun 2024 17:35:33 +0800 you wrote:
-> mnt_{want,drop}_write_file is more suitable than
-> file_{start,end}_wrtie and also is consistent with
-> other ioctl operations.
+> This patch series add support for using the driver_override sysfs
+> attribute with WMI devices. The reason for this is that there will
+> exist a couple of generic WMI drivers in the future for allowing
+> driver developers to directly access the underlying WMI device.
 > 
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> ---
->  fs/f2fs/file.c | 24 ++++++++++++++++--------
->  1 file changed, 16 insertions(+), 8 deletions(-)
+> Since those generic WMI drivers do not have an ID table, the
+> driver_override mechanism is used to bind them to WMI devices.
+> 
+> [...]
 
-Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to use mnt_{want, drop}_write_file replace file_{start, end}_wrtie
-    https://git.kernel.org/jaegeuk/f2fs/c/1efb7c8fd8bf
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
+The list of commits applied:
+[1/2] platform/x86: wmi: Add driver_override support
+      commit: 12046f8c77e0ed6d41beabde0edbb729499c970b
+[2/2] platform/x86: wmi: Add bus ABI documentation
+      commit: 618ba6abfc57bde2c2cea7c2b23e4c27fd5a04b4
+
+--
+ i.
 
