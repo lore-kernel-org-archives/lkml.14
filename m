@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D252413B5A2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C687A13B58C;
 	Mon, 24 Jun 2024 12:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719231235; cv=none; b=j+3WCA8qImsonYmWWWsgRU1iZP/uqCuPR7TSwE1ToZ3a421ekdzaamfRmmTDpGO4vx8nEo/K3s2VbqBtxWwcExKxn6VABCat+xa4eDExlBAK5h178AzkduFuElEwpXCf4wnPX6KYe31ABfqgcf8gngHs68sDB9IA5y5kuQEAHYQ=
+	t=1719231235; cv=none; b=P3zxfWCmUUCDXb4VvCtB4St7cRo/mS3Zj82HFDdgHHzO1USy6gg4eihjQUqKCdHjSEYIWPJD+bcVwXUeqag3gj+GAvwAf8f/0yB5HVMajl5q40ZErg3Utfh1BuFTjXW8UNO2EU7gVvae99YwNcf7s9k3rbmAG3gcd67T95GMy6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719231235; c=relaxed/simple;
-	bh=4lPmZq/kdKwByrrPEk0TO//GBNkLGA6Gl8rs5LnhRw4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aSFOpVxevOmOMDWMhu5c1v2WGIMGN5OSnLHLl9+miQvdpt24i26u59eu/ljvFXjkJCFY/RpbxLvDlMwf/pNGJH0g9+DwjlOI1MyLgjGPxqiuLc2NlWF1TWg5+BwSd1azAjbdpEeMuMLJTGubuBKJG/Rc/zSndzt4cm+3cvLYzcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNf5ERor; arc=none smtp.client-ip=10.30.226.201
+	bh=uy73nECnRMqzWXZWj+nUmjnDanqevHH++6Wp38u6IsU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T+8gnKHAChUGChKF5RX0PtWJ0ZrbuOij7lbwQr2jygocss7Dr3yKOyN19Ye0VwSBYAS0xVz7AcRdDGKCCImdGlXAthjuAS6C8Z/xNq0JnDt7Gw7ICIA2ZoYHUqVJ3liBP+xdgKTRv3jdPmCJ4VLJyS0sYIJnAPPLww+EbfzWZ0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwkXoAdg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNf5ERor"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 87B9FC32789;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwkXoAdg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5284DC2BBFC;
 	Mon, 24 Jun 2024 12:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1719231235;
-	bh=4lPmZq/kdKwByrrPEk0TO//GBNkLGA6Gl8rs5LnhRw4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oNf5ERorNO6AflrMkYk30l6tY5pd7iP8y5m7VSqxNgJnbFlmfwc4qAjiAFhep0s2o
-	 fNwuSi7VU7M/LO/mmLFqYatXQsRs7sQYnNTmiqOHWtxUNchpXvEhMqrtJcqFS3CXnR
-	 BrGxBAZZN9TFpytc4tGVdyA1QNJ2ttz1w7kfDwRcy47y4/WX/ZKJ8jjZlfOdcbYWwd
-	 E6J3IcUzCkkZIZ+uHOtJRzOpLSmPSTmWmy5uDVs+LvgmSUqzlAGHbDyO+mIQAQNfHk
-	 uyjigjXal5B62Zqm/dOBjePdjTWq37sNWQmUWGiqM//LsOlyecUbBc2uIWvkzv4Hye
-	 n1Suyoc+de4CA==
+	bh=uy73nECnRMqzWXZWj+nUmjnDanqevHH++6Wp38u6IsU=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=rwkXoAdgmp3Lk+q8iotjtH/uKcsjS4jetbliTbkCKmdwVUrRHlN2t75dKlPEbazk8
+	 JFitVuhq0XXgQeM5BUUmYk4g5XEYvHNoev3W+q6nCbNdts56WmOkt7+D4z9vrY9ac/
+	 3BGItGTfTfAferA+OMt3LeYwtAf6xuLMyVQCCXjHWDbc/1oSx5H41OUnSxibR2AoNY
+	 F4ItgfvxzvGom+F2QEvgHxK/EDjQwU5E10tf1az7L82om45BATr2g1eMQIjKMRHlnm
+	 ovP8CIysP/bYzIvYTfEwna1CAASNGwdWhssYvx8bYk5Ml7RImr5j3SuRA9H4+USVgE
+	 t/nVUG6N1dvVg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79474C2BD09;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457E2C2BD09;
 	Mon, 24 Jun 2024 12:13:55 +0000 (UTC)
 From: George Chan via B4 Relay <devnull+gchan9527.gmail.com@kernel.org>
-Date: Mon, 24 Jun 2024 20:13:14 +0800
-Subject: [PATCH RFT v3 3/5] media: qcom: camss: Add sc7180 support
+Subject: [PATCH RFT v3 0/5] Add sc7180 camss subsys support
+Date: Mon, 24 Jun 2024 20:13:11 +0800
+Message-Id: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +40,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240624-b4-sc7180-camss-v3-3-89ece6471431@gmail.com>
-References: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
-In-Reply-To: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
+X-B4-Tracking: v=1; b=H4sIANdieWYC/3WNywrCMBREf0Xu2sjNw9a4cuUHiDtxkd6kbcC2k
+ khQSv/dkFVBXM4M58wM0QXvIhw3MwSXfPTTmIPcboB6M3aOeZszCBQKK8FZo1ikmh+QkRliZGQ
+ tVU2FRjcKMvUMrvXvYrzB5XyFey57H19T+JSXxMv0V5g4Q8aVlrUWupXoTt1g/GNH01BcSax59
+ cuLzKNtHVnaI9ZyzS/L8gUgGIAC8wAAAA==
 To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
  Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -54,11 +55,11 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  George Chan <gchan9527@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719231232; l=927;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719231232; l=3098;
  i=gchan9527@gmail.com; s=20240621; h=from:subject:message-id;
- bh=HHQC0JVgXeyXDdUnnrDSAKGSUw92sGDdo0OWiCGXY4A=;
- b=umfuvpded0avpFTUHhmEzpvneVqWsGTZAuLmHe5JYrvY5KIJoCkrhuxCd4e+pbeLucHtbvXy3
- +t1mvLy+BZyCvLZebVTuTvtVX8/9IExLgBtABE5UMqQBOJucxDkOG6W
+ bh=uy73nECnRMqzWXZWj+nUmjnDanqevHH++6Wp38u6IsU=;
+ b=CM8dnmVud0cLkAU2X0elJCsTBQWq5F43ym08E/YAzq4NDa/eKKUvqirK5z6KNOcWs11O68zr5
+ hceLKbLVQWhDmpv30hJ/gbpsNUua+tN2dlJwEt6ltzZYba4MNOHphC/
 X-Developer-Key: i=gchan9527@gmail.com; a=ed25519;
  pk=Ac2fkTqgUBlj2sns9hRIWJTYhWHO1BsmHbdBb5UpUUY=
 X-Endpoint-Received: by B4 Relay for gchan9527@gmail.com/20240621 with
@@ -66,37 +67,81 @@ X-Endpoint-Received: by B4 Relay for gchan9527@gmail.com/20240621 with
 X-Original-From: George Chan <gchan9527@gmail.com>
 Reply-To: gchan9527@gmail.com
 
-From: George Chan <gchan9527@gmail.com>
+SM7125 is the SoC found in the Xiaomi Redmi Note 9 Pro(joyeuse) cellphone.
+This series adds support to bring up the CSIPHY, CSID, VFE/RDI interfaces.
 
-Add in functional logic throughout the code to support the sc7180.
+Since SM7125 is a low-speed variant of SC7180, SC7180 testers please
+take a look and have a test as well.
+
+sc7180 provides
+
+- 2 x VFE
+- 1 x VFE Lite
+- 2 x CSID
+- 1 x CSID Lite
+- 4 x CSI PHY
+
+The sc7180-camss binding should be comaptible with sdm845 yaml.
+I've copied a new yaml from sdm845-camss.yaml, strip all _src clk and
+put new maintainer information. If this is not desirable then i can add binding to
+existing sdm845 yaml instead.
+
+In addition, a bootable tree of sm7125/joyeuse is availble at:
+https://github.com/99degree/linux/tree/camss  
 
 Signed-off-by: George Chan <gchan9527@gmail.com>
 ---
- drivers/media/platform/qcom/camss/camss-vfe.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v3:
+- Rebased on 20240522154659.510-1-quic_grosikop@quicinc.com - Bryan
+- Align email title to sc8280xp series - krzk
+- Line-up dt-binding example ordering to same as qcom,sm8250-camss.yaml - krzk 
+- Drop non-related patches #5 #6 #7, I will send follow-up patches later
+- Add RFT tag to all patches, since no tested-by at all.
+- Drop required-opps node from dt
+- Link to v2: https://lore.kernel.org/r/20240624-b4-sc7180-camss-v2-0-0dfecdc50073@gmail.com
 
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
-index 83c5a36d071f..05191cc2c2f9 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.c
-@@ -336,6 +336,7 @@ static u32 vfe_src_pad_code(struct vfe_line *line, u32 sink_code,
- 	case CAMSS_8x96:
- 	case CAMSS_660:
- 	case CAMSS_845:
-+	case CAMSS_7180:
- 	case CAMSS_8250:
- 	case CAMSS_8280XP:
- 		switch (sink_code) {
-@@ -1693,6 +1694,7 @@ static int vfe_bpl_align(struct vfe_device *vfe)
- 
- 	switch (vfe->camss->res->version) {
- 	case CAMSS_845:
-+	case CAMSS_7180:
- 	case CAMSS_8250:
- 	case CAMSS_8280XP:
- 		ret = 16;
+Changes in v2:
+- Revised dt-binding title - krzk
+- Revised dt-binding maintainers - krzk
+- Drop all dt-binding minItems - krzk
+- Drops "|" symbol postfixed to description - krzk 
+- Accending order of dt-binding required list - krzk
+- Added dt-binding item power-domain-name - Bryan
+- Reformat dt-binding example - krzk
+- Move reg as 2nd property - krzk
+- Move reg-names as 3nd property - krzk
+- Reduce iommus maxItems to 3 - rob's bot
+- Reduce clocks maxItems to 24 - rob's bot
+- Combine patch #2 and #3 - krzk and Bryan
+- Split eror-print log for clk name from #5 - Konrad
+- Reformat dt-node - krzk
+- Corrected phy init sequence for v1.2.2 - Bryan
+- Added 3 more debug info for missing clk and low clk-rate issue.
+- Adding port info to ports sub-node
+- Adding required-opps node to dt
+- Link to v1: https://lore.kernel.org/r/20240621-b4-sc7180-camss-v1-0-14937929f30e@gmail.com
 
+---
+George Chan (5):
+      dt-bindings: media: camss: Add qcom,sc7180-camss
+      media: camss: csiphy-3ph: Add Gen2 v1.2.2 two-phase MIPI CSI-2 DPHY init
+      media: qcom: camss: Add sc7180 support
+      media: qcom: camss: Add sc7180 resources
+      arm64: dts: qcom: sc7180: camss: Add CAMSS block definition
+
+ .../bindings/media/qcom,sc7180-camss.yaml          | 328 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 133 +++++++++
+ .../platform/qcom/camss/camss-csiphy-3ph-1-0.c     | 135 +++++++++
+ drivers/media/platform/qcom/camss/camss-vfe.c      |   2 +
+ drivers/media/platform/qcom/camss/camss.c          | 251 ++++++++++++++++
+ drivers/media/platform/qcom/camss/camss.h          |   1 +
+ 6 files changed, 850 insertions(+)
+---
+base-commit: 28f69d2ea67db489d4a94e7d04c21b14e5aa6535
+change-id: 20240621-b4-sc7180-camss-cddc6b60a9b4
+
+Best regards,
 -- 
-2.34.1
+George Chan <gchan9527@gmail.com>
 
 
