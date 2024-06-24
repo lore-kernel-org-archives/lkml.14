@@ -1,246 +1,222 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50102561B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36342E822
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 06:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719209592; cv=none; b=okMzu4nUF9YgndszlTXoJd0Wi3faoqZJ7dl4IvVbtReTQHtU3QJlVc3c3cKiWnyYkJcJFnXiwChdj5rmUY/L01tK8QPS7m97a4QhxM4Ji+gsWU+CmTO79va8WuZ/Y1D20VAD52dAwgCJxVvowFZagb++7nA5rjAwkFKWvPCoYRQ=
+	t=1719209612; cv=none; b=VYoP3BqS9r00IW5mu/HdVYtg5E3MI/FCogWyyFu+PwRX7JXR7Ow5nSvM8gycEzBSGIAtBk44Y/olBIKYhTAsKR1l3Tgen36Zxldoj9OtTK56CAWhwifORtY4VA6QnPwkRyuX38WIvmMQzK+B7294bdst/3LUFjeD0d+GK8wCjDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719209592; c=relaxed/simple;
-	bh=LxHZIrSp1CnouL93gRMqN4Au5qi46r+19NEIeihUeYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X/p21uSLBb5gZPNHBoiom+HxjAQyY+MyOX/CurRiAqPCxJP1UOAZC6dFmI3kUvj7WPn+zHt1L1C4z2q6g//us6JO4OY2x6nxx4OFcGG50o8FuZ//jJmSH9XVrtGCSex74hg9UPYJQxpJOHlICqTFZEAkQTXsaZgqQT3gXpXuedU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UyK94JgK; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719209612; c=relaxed/simple;
+	bh=cdnBedZb4FOnW8quf2UL9Z1D5XyTNQVbVtUhSgGcCfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e9G/5+7KCZHJNyZqAX2UvuqVRt6hxGDs9BoSAuKtXiUDVEv/eX017KfS8jZcdVGFiMZXk68q2VSwUmTS+bBXXyYxAOQgOGF1rZBwChsjLB8CcSBP6oK/nSrnnDoRhyeTEv6jJj+oMQevcpQd3V4MpKGnjQnFNlNZBxmeZeXJlpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VRfb7lg8; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UyK94JgK"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so42092521fa.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 23:13:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719209589; x=1719814389; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B/qRlD3FVKL5iXIy13BpU+Kwpwg+2SoBUqkyXN31Zr4=;
-        b=UyK94JgKhfhTyuxq43ax1jSsClDx4gxGCUt4BO64KaVXhjmaCOnBlpaG7XzUM+LexD
-         rFkNKvm5ac1tc+6hBPsuIQb7fyAArktvcTwXdspdv+UFUnmp3avFd+PjVqg5fiJlmHfk
-         OeecKH+n555x31zJWbsR9Rm8VymVa25HOKSt3ic4+ojgtP5iusGpZJHIZ31g3ZN1RMoX
-         RV4CGclbZpuw/xYqywR0HKtJ9zc+wWsRLtmlU8TZNhQcZYTX0z/jhQt3BighPdU5v5tl
-         XazOmtvhLZUNMEubDi3htU+VJoUJpfaihD0/u+SWfdoIwxonMBbUcGCaLHjheYRAyikY
-         U3zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719209589; x=1719814389;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B/qRlD3FVKL5iXIy13BpU+Kwpwg+2SoBUqkyXN31Zr4=;
-        b=f7/MdTGqWoX4s1WD6bPoyBZPq/O9mmFqzhMmXF8gNOOuDNxl4bnG46yQQCV4bA740G
-         Bij3Ff3tegVKC+D1225PbHC6IicZ3934ISqPtxOj5StDabRv16OOfMgNOrQsiawWgiLS
-         ga0FX15FLaXESSSNxPGTTkvq1+5cQMDbFMCqQn5p97zoFDI6rcDNwzbpwMvHywsdoB9w
-         MR5xoIAL+wpkyGBI60urzGrQki5gpm2ViDLJbEM6LukMb4DRLcwGgQdy9JZy5AN29XOr
-         K5MnhvsXiMLTQKVul5PYWVknnLuL4fejKllAf6CDG/B54BXjpPHgCliMFFFvOr0NXVWW
-         cCog==
-X-Forwarded-Encrypted: i=1; AJvYcCXdWq3LSQaiTvSNfYcK8IQf+p2N29tZ8FVQ5D/VY0voNJgEMp1V84UQ1mO6SWL3py6isEx1HQYcBpovkszrbZqGNKVSbymvprDUTYXZ
-X-Gm-Message-State: AOJu0YxzEHUXAt1YfoGquUSKZqrjo7JdBXgeFGQSJ0siCeOgAMJraEDg
-	RiUy2E7A5IFnijqsC3mpUHQdGspi5An8i7FlawX9wwEpdFNrX6TKE4/ReJCymU8=
-X-Google-Smtp-Source: AGHT+IFl2QVb5+Ml2dJdo6naTCB0whKifzTd6jKoUynZMwmvr+54Ah3ay9voWlVFhwkF/YCas3qXBA==
-X-Received: by 2002:a2e:8416:0:b0:2ec:500c:b2db with SMTP id 38308e7fff4ca-2ec5b37a4bfmr18655871fa.22.1719209588710;
-        Sun, 23 Jun 2024 23:13:08 -0700 (PDT)
-Received: from linaro-pc.lan (40.37.82.80.dsl-dynamic.vsi.ru. [80.82.37.40])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec5d2c3446sm4011481fa.38.2024.06.23.23.13.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jun 2024 23:13:08 -0700 (PDT)
-From: Maxim Anisimov <maxim.anisimov.ua@gmail.com>
-To: 
-Cc: maxim.anisimov.ua@gmail.com,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Martin Kurbanov <mmkurbanov@salutedevices.com>,
-	Michael Walle <michael@walle.cc>,
-	Mark Brown <broonie@kernel.org>,
-	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: [PATCH] mtd: spinand: Add support for HeYangTek HYF1GQ4UDACAE
-Date: Mon, 24 Jun 2024 09:12:17 +0300
-Message-ID: <20240624061246.5292-1-maxim.anisimov.ua@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VRfb7lg8"
+X-Envelope-To: steven.price@arm.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719209608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mpJVGKzhAAnl+G7DVS/61CyVmA2jlS1pyMs6oQAf4UY=;
+	b=VRfb7lg8Hm1GPd9QTdSPPyHShzFE4b3gkYZWvz8OB14SOgVYNeJ+o8qx9V4yO4z1/KLz7b
+	g/TdznUFaPtxj0a3jIBg+iO8BLJ9eWuk4fWUm7rbNJwj/Mje3Bcnbrp5HW2Sxj1dfSEEwl
+	7qy95MipRQa7iyzEV93E4wAVu7VK/iM=
+X-Envelope-To: kvm@vger.kernel.org
+X-Envelope-To: kvmarm@lists.linux.dev
+X-Envelope-To: catalin.marinas@arm.com
+X-Envelope-To: maz@kernel.org
+X-Envelope-To: will@kernel.org
+X-Envelope-To: james.morse@arm.com
+X-Envelope-To: oliver.upton@linux.dev
+X-Envelope-To: suzuki.poulose@arm.com
+X-Envelope-To: yuzenghui@huawei.com
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: joey.gouly@arm.com
+X-Envelope-To: alexandru.elisei@arm.com
+X-Envelope-To: christoffer.dall@arm.com
+X-Envelope-To: tabba@google.com
+X-Envelope-To: linux-coco@lists.linux.dev
+X-Envelope-To: gankulkarni@os.amperecomputing.com
+Date: Mon, 24 Jun 2024 15:13:17 +0900
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+To: Steven Price <steven.price@arm.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [v2] Support for Arm CCA VMs on Linux
+Message-ID: <ZnkOfTVAaCJ_-_bG@vm3>
+References: <20240412084056.1733704-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412084056.1733704-1-steven.price@arm.com>
+X-Migadu-Flow: FLOW_OUT
 
-Add Support HeYangTek HYF1GQ4UDACAE SPI NAND.
+Hi Steven,
+On Fri, Apr 12, 2024 at 09:40:56AM +0100, Steven Price wrote:
+> We are happy to announce the second version of the Arm Confidential
+> Compute Architecture (CCA) support for the Linux stack. The intention is
+> to seek early feedback in the following areas:
+>  * KVM integration of the Arm CCA;
+>  * KVM UABI for managing the Realms, seeking to generalise the
+>    operations where possible with other Confidential Compute solutions;
+>  * Linux Guest support for Realms.
+> 
+> See the previous RFC[1] for a more detailed overview of Arm's CCA
+> solution, or visible the Arm CCA Landing page[2].
+> 
+> This series is based on the final RMM v1.0 (EAC5) specification[3].
+> 
+> Quick-start guide
+> =================
+> 
+> The easiest way of getting started with the stack is by using
+> Shrinkwrap[4]. Currently Shrinkwrap has a configuration for the initial
+> v1.0-EAC5 release[5], so the following overlay needs to be applied to
+> the standard 'cca-3world.yaml' file. Note that the 'rmm' component needs
+> updating to 'main' because there are fixes that are needed and are not
+> yet in a tagged release. The following will create an overlay file and
+> build a working environment:
+> 
+> cat<<EOT >cca-v2.yaml
+> build:
+>   linux:
+>     repo:
+>       revision: cca-full/v2
+>   kvmtool:
+>     repo:
+>       kvmtool:
+>         revision: cca/v2
+>   rmm:
+>     repo:
+>       revision: main
+>   kvm-unit-tests:
+>     repo:
+>       revision: cca/v2
+> EOT
+> 
+> shrinkwrap build cca-3world.yaml --overlay buildroot.yaml --btvar GUEST_ROOTFS='${artifact:BUILDROOT}' --overlay cca-v2.yaml
+> 
+> You will then want to modify the 'guest-disk.img' to include the files
+> necessary for the realm guest (see the documentation in cca-3world.yaml
+> for details of other options):
+> 
+>   cd ~/.shrinkwrap/package/cca-3world
+>   /sbin/e2fsck -fp rootfs.ext2 
+>   /sbin/resize2fs rootfs.ext2 256M
+>   mkdir mnt
+>   sudo mount rootfs.ext2 mnt/
+>   sudo mkdir mnt/cca
+>   sudo cp guest-disk.img KVMTOOL_EFI.fd lkvm Image mnt/cca/
+>   sudo umount mnt 
+>   rmdir mnt/
+> 
+> Finally you can run the FVP with the host:
+> 
+>   shrinkwrap run cca-3world.yaml --rtvar ROOTFS=$HOME/.shrinkwrap/package/cca-3world/rootfs.ext2
+> 
+> And once the host kernel has booted, login (user name 'root') and start
+> a realm guest:
+> 
+>   cd /cca
+>   ./lkvm run --realm --restricted_mem -c 2 -m 256 -k Image -p earlycon
+> 
+> Be patient and you should end up in a realm guest with the host's
+> filesystem mounted via p9.
+> 
+> It's also possible to use EFI within the realm guest, again see
+> cca-3world.yaml within Shrinkwrap for more details.
 
-Datasheet Link:
-- https://www.heyangtek.cn/previewfile.jsp?file=ABUIABA9GAAgwsvRnwYo-eDpsgc
+I am trying to see if libvirt can work with the CCA-aware KVM with minimal Ubuntu22.10 filesystem, however virt-install triggers a system failure:
 
-Signed-off-by: Maxim Anisimov <maxim.anisimov.ua@gmail.com>
----
- drivers/mtd/nand/spi/Makefile    |   4 +-
- drivers/mtd/nand/spi/core.c      |   1 +
- drivers/mtd/nand/spi/heyangtek.c | 112 +++++++++++++++++++++++++++++++
- include/linux/mtd/spinand.h      |   1 +
- 4 files changed, 116 insertions(+), 2 deletions(-)
- create mode 100644 drivers/mtd/nand/spi/heyangtek.c
+$ sudo virt-install -v --name f39 --ram 4096        --disk path=fedora40.img,cache=none --nographics --os-variant fedora38         --import --arch aarch64 --vcpus 4
+[sudo] password for realm:
+[ 3694.176579] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000e00
+[ 3694.176687] Mem abort info:
+[ 3694.176745]   ESR = 0x0000000096000004
+[ 3694.176817]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 3694.176907]   SET = 0, FnV = 0
+[ 3694.176978]   EA = 0, S1PTW = 0
+[ 3694.177049]   FSC = 0x04: level 0 translation fault
+[ 3694.177132] Data abort info:
+[ 3694.177189]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[ 3694.177276]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[ 3694.177370]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ 3694.177544] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000880f6e000
+[ 3694.177649] [0000000000000e00] pgd=0000000000000000, p4d=0000000000000000
+[ 3694.177788] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[ 3694.177887] Modules linked in:
+[ 3694.177966] CPU: 2 PID: 540 Comm: qemu-system-aar Not tainted 6.10.0-rc1-00058-gd901c27a1783 #149
+[ 3694.178105] Hardware name: FVP Base RevC (DT)
+[ 3694.178180] pstate: 61400009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[ 3694.178315] pc : kvm_vm_ioctl_check_extension+0x1fc/0x3c4
+[ 3694.178447] lr : kvm_vm_ioctl_check_extension_generic+0x34/0x12c
+[ 3694.178587] sp : ffff800081523cb0
+[ 3694.178657] x29: ffff800081523cb0 x28: 0000000000000051 x27: 0000000000000000
+[ 3694.178840] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+[ 3694.179019] x23: 000000000000000a x22: 0000000000000051 x21: ffff000801075f00
+[ 3694.179200] x20: ffff000801075f01 x19: 000000000000ae03 x18: 0000000000000000
+[ 3694.179383] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[ 3694.179565] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[ 3694.179745] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[ 3694.179923] x8 : 0000000000000000 x7 : ffff000801075f18 x6 : 00000000401c5820
+[ 3694.180106] x5 : 000000000000000a x4 : 0000000000000800 x3 : 0000000000000000
+[ 3694.180285] x2 : 000000000000000b x1 : 0000000100061001 x0 : 0000000000000001
+[ 3694.180465] Call trace:
+[ 3694.180523]  kvm_vm_ioctl_check_extension+0x1fc/0x3c4
+[ 3694.180656]  kvm_vm_ioctl_check_extension_generic+0x34/0x12c
+[ 3694.180794]  kvm_dev_ioctl+0x3c8/0x8b8
+[ 3694.180938]  __arm64_sys_ioctl+0xac/0xf0
+[ 3694.181079]  invoke_syscall+0x48/0x114
+[ 3694.181220]  el0_svc_common.constprop.0+0x40/0xe0
+[ 3694.181367]  do_el0_svc+0x1c/0x28
+[ 3694.181507]  el0_svc+0x34/0xd8
+[ 3694.181608]  el0t_64_sync_handler+0x120/0x12c
+[ 3694.181723]  el0t_64_sync+0x190/0x194
+[ 3694.181865] Code: 17ffffbd 97fffc9d 12001c00 17ffff91 (39780060)
+[ 3694.181955] ---[ end trace 0000000000000000 ]---
 
-diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
-index 19cc77288ebb..69d95fbdd0ce 100644
---- a/drivers/mtd/nand/spi/Makefile
-+++ b/drivers/mtd/nand/spi/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--spinand-objs := core.o alliancememory.o ato.o esmt.o foresee.o gigadevice.o macronix.o
--spinand-objs += micron.o paragon.o toshiba.o winbond.o xtx.o
-+spinand-objs := core.o alliancememory.o ato.o esmt.o foresee.o gigadevice.o heyangtek.o
-+spinand-objs += macronix.o micron.o paragon.o toshiba.o winbond.o xtx.o
- obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index e0b6715e5dfe..45795e5f1e49 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -942,6 +942,7 @@ static const struct spinand_manufacturer *spinand_manufacturers[] = {
- 	&esmt_c8_spinand_manufacturer,
- 	&foresee_spinand_manufacturer,
- 	&gigadevice_spinand_manufacturer,
-+	&heyangtek_spinand_manufacturer,
- 	&macronix_spinand_manufacturer,
- 	&micron_spinand_manufacturer,
- 	&paragon_spinand_manufacturer,
-diff --git a/drivers/mtd/nand/spi/heyangtek.c b/drivers/mtd/nand/spi/heyangtek.c
-new file mode 100644
-index 000000000000..d4a5dbca40fb
---- /dev/null
-+++ b/drivers/mtd/nand/spi/heyangtek.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Author:
-+ *      Andrey Zolotarev <andrey.zolotarev@keenetic.com> - the main driver logic
-+ *      Maxim Anisimov <maxim.anisimov.ua@gmail.com> - adaptation to mainline linux kernel
-+ *
-+ * Based on:
-+ *      https://github.com/keenetic/kernel-49/commit/bacade569fb12bc0ad31ba09bca9b890118fbca7
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/mtd/spinand.h>
-+
-+#define SPINAND_MFR_HEYANGTEK		0xC9
-+
-+#define STATUS_ECC_LIMIT_BITFLIPS	(3 << 4)
-+
-+static SPINAND_OP_VARIANTS(read_cache_variants,
-+		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(write_cache_variants,
-+		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(update_cache_variants,
-+		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
-+static int hyfxgq4uda_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				   struct mtd_oob_region *region)
-+{
-+	if (section > 3)
-+		return -ERANGE;
-+
-+	region->offset = section * 16 + 8;
-+	region->length = 8;
-+
-+	return 0;
-+}
-+
-+static int hyfxgq4uda_ooblayout_free(struct mtd_info *mtd, int section,
-+				   struct mtd_oob_region *region)
-+{
-+	if (section > 3)
-+		return -ERANGE;
-+
-+	/* ECC-protected user meta-data */
-+	region->offset = section * 16 + 4;
-+	region->length = 4;
-+
-+	return 0;
-+}
-+
-+static const struct mtd_ooblayout_ops hyfxgq4uda_ooblayout = {
-+	.ecc = hyfxgq4uda_ooblayout_ecc,
-+	.free = hyfxgq4uda_ooblayout_free,
-+};
-+
-+static int hyfxgq4uda_ecc_get_status(struct spinand_device *spinand,
-+				     u8 status)
-+{
-+	struct nand_device *nand = spinand_to_nand(spinand);
-+
-+	switch (status & STATUS_ECC_MASK) {
-+	case STATUS_ECC_NO_BITFLIPS:
-+		return 0;
-+
-+	case STATUS_ECC_UNCOR_ERROR:
-+		return -EBADMSG;
-+
-+	case STATUS_ECC_HAS_BITFLIPS:
-+		return nanddev_get_ecc_conf(nand)->strength >> 1;
-+
-+	case STATUS_ECC_LIMIT_BITFLIPS:
-+		return nanddev_get_ecc_conf(nand)->strength;
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct spinand_info heyangtek_spinand_table[] = {
-+	SPINAND_INFO("HYF1GQ4UDACAE",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x21),
-+		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&hyfxgq4uda_ooblayout,
-+				     hyfxgq4uda_ecc_get_status)),
-+};
-+
-+static const struct spinand_manufacturer_ops heyangtek_spinand_manuf_ops = {
-+};
-+
-+const struct spinand_manufacturer heyangtek_spinand_manufacturer = {
-+	.id = SPINAND_MFR_HEYANGTEK,
-+	.name = "HeYangTek",
-+	.chips = heyangtek_spinand_table,
-+	.nchips = ARRAY_SIZE(heyangtek_spinand_table),
-+	.ops = &heyangtek_spinand_manuf_ops,
-+};
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 5c19ead60499..06ee35a27e3b 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -265,6 +265,7 @@ extern const struct spinand_manufacturer ato_spinand_manufacturer;
- extern const struct spinand_manufacturer esmt_c8_spinand_manufacturer;
- extern const struct spinand_manufacturer foresee_spinand_manufacturer;
- extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
-+extern const struct spinand_manufacturer heyangtek_spinand_manufacturer;
- extern const struct spinand_manufacturer macronix_spinand_manufacturer;
- extern const struct spinand_manufacturer micron_spinand_manufacturer;
- extern const struct spinand_manufacturer paragon_spinand_manufacturer;
--- 
-2.45.1
+I'd appreciate it if you could take a look at it.
 
+Thanks,
+Itaru.
+
+
+
+> 
+> An branch of kvm-unit-tests including realm-specific tests is provided
+> here:
+>   https://gitlab.arm.com/linux-arm/kvm-unit-tests-cca/-/tree/cca/v2
+> 
+> [1] Previous RFC
+>     https://lore.kernel.org/r/20230127112248.136810-1-suzuki.poulose%40arm.com
+> [2] Arm CCA Landing page (See Key Resources section for various documentation)
+>     https://www.arm.com/architecture/security-features/arm-confidential-compute-architecture
+> [3] RMM v1.0-EAC5 specification
+>     https://developer.arm.com/documentation/den0137/1-0eac5/
+> [4] Shrinkwrap
+>     https://git.gitlab.arm.com/tooling/shrinkwrap
+> [5] Linux support for Arm CCA RMM v1.0-EAC5
+>     https://lore.kernel.org/r/fb259449-026e-4083-a02b-f8a4ebea1f87%40arm.com
