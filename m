@@ -1,130 +1,106 @@
-Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A4BFBEF;
-	Mon, 24 Jun 2024 20:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D859A567D;
+	Mon, 24 Jun 2024 20:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719260091; cv=none; b=VT6+4HfLIPz7gncVRsSl+t2jOLN9jLk5GiKwiVY8M7TXXRN5rdv/9WhxJpskne077xbosCdEJLm6FHlW6H2ju1b2ju2/ajWj2+xkK2IB7L9TiajDWbdSIBzZ6AuVDabUMeTBC19ZRbIo/Xi17B5baq+xzbOwIulPn0z8kSZYBEg=
+	t=1719260126; cv=none; b=hSDXd54Io0UaQTRoACbgxB3EqUhBhY9KnrHxSfoQF3LwewTjoxJqSXlXf+PpsGRZUnMsivriYAc30E40wl/rxViY0cvYaU32RBWx1GKLpMXb8MFrbNJAEkKPnCXLxThDHvOh+MPVN+13C9dB/Lk21BZpTbw9I9K2HMfvBkXl3Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719260091; c=relaxed/simple;
-	bh=fDp0bfLOTgweVFtXCjjNaHA/d2bWypmpiTDG5XkIAt4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MVfzaQD+iU7Tx6pCMaSxBH/diINiRppBWsJByz9wYxn3WlYwm8hhmiTbyL7MdzJbrJnLYrjv3jNUOKEchMU03BZPUp87WitQo9wcMnKr8MAnAxeKB27Bpiln2nJayNbDmyIrOeRzS1a75yaR1Xh+Bn5mOqEO0DAMV3+JRcPWg2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=FZfqrxAa; arc=none smtp.client-ip=80.12.242.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1719260126; c=relaxed/simple;
+	bh=aVkOK88AkhLmTVM6VEAF1SVUngOXxAhrap9TMQSyhOk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o+cB5TKggY96A20ACXT21cn9zHMXx5YSbx2cGaYFH9HeuzDAyEQS2GHNA03CXPB+r11BLMcPQBwosMuDiU/+8RAbI9AixI4xw8lmeNXOw9NiPLTnl4dCXNbLUbm+7vkuwRI67om3oz27CyDKqQoCxPgAOFJROxBKf/2ovOprQ8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TuCX+Mj7; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="FZfqrxAa"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id Lq4CsKPgR6xnbLq4CsCLm9; Mon, 24 Jun 2024 22:13:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1719260015;
-	bh=Elslo1pemTLslrrEitU31K06X28LN8QnqrN10QUJgz8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=FZfqrxAakQ6ncfePlzV7aPvu5uhH2TwEk70ZO7AglRqZkBeUP7AK5KXz1g1dyWNx/
-	 8v3NFKjMD+EzRejV3k1cCd30g4fFdf8NE9t8LKgiJAcGI2WVwfyzKvQK4WhZWDowu8
-	 3GsP1oe8/gEAT/T8hSEbyFLSjmBNd4paeDTn6fdYI6OB6jS1W9Ilrih3HUXTOjbbP/
-	 4csVnHtFUcYUL+YiB4H+Nk8NToQ6/QiG5ZTPd2ahNryAaNfGarlqFk/zmAj+p3gwqN
-	 7raITcddSY8tKh++LsEtFc7Pk1lW/hfxe03OMQkdYhB/+C0+2pmL7qbFtB4v5+FHMP
-	 RPFmJYCeocaKg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 24 Jun 2024 22:13:35 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH] RDMA/hfi1: Constify struct mmu_rb_ops
-Date: Mon, 24 Jun 2024 22:13:27 +0200
-Message-ID: <b826dd05eefa5f4d6a7a1b4d191eaf37c714ed04.1719259997.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuCX+Mj7"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-364a39824baso3497794f8f.1;
+        Mon, 24 Jun 2024 13:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719260122; x=1719864922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7XoPGrz+J640jf8Qz52xgWMn9YkrrI8mbi/FnE4/1pA=;
+        b=TuCX+Mj7jnvHHdQbece9WssB/rUpJGX0vewYpCf1jNFw1wKQ4pxXj3SOvWYI710+nv
+         7LWVqieMERpGur34lltb9jNplhFFHghgmJwH7nQEl7u8r5FmMOuGLMnCawZ4+ywCXGwj
+         EKP187OM+oqBgVx2iK1/nbs9Fnii6P/wTq0hSshDU41q+XZtTQNoIGpPGqrxEOElXMyv
+         LSdLPt8QvxU+KNIMoHSfZf+2ZnIuV7To5ze9smCTk/FEPcWDkUY3+WbC0EEA2FEoQepn
+         6FXb6FOrC0VolgCjRrVsC5eH7jA/w8w5pCaV54yd95azv9LeguxSn2H/nNokNWpTHMCS
+         dpCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719260122; x=1719864922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7XoPGrz+J640jf8Qz52xgWMn9YkrrI8mbi/FnE4/1pA=;
+        b=ot1y+u/ljAd3pgLqy5aaBCzm0evpIG2a5YF2Tk1VcxWs6BTzKBHFtelxqDjT3y7dyr
+         PIwMEQcL8Rydh6eDcjEM4ssy8/H9nfN3PoDDBqIF7fZksqoXa6hIMvpBG5VjAJ8IK9PO
+         z5JiL1WJycJ3VKJAepz7p1xyKHQmPRckI+6L7I5dOzGKpFv3EcjESmyItxeqBBcPzKJb
+         /9/ov/SEyBkqLClZrroMunhW9icT47HH/IOs3l07UQ2YvzjgPD5NLiRmk8JabnOAiuPD
+         x0bU4SFs2X5DC2+PYKOyv9EltjRmvoCuXm9EDU8GtdIJj+KpIdj+BXFS+vDxeeemE1i0
+         roUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGZHd57itBfe1T8kD2nu9nhS3SOTQuwF+4g/+PT4etFa+Fob3aU11wji0Uq9QE/NKo1tUcWtS24TZUohXXLmufrajHLYA5TZZTHgd72b9fz7t5wkl/l16fOVnXMlwMf0Dj
+X-Gm-Message-State: AOJu0YxK6aClXu2AYpmhRj11Pg5Tb8kOWKA4HtRDX5kf2V3+YpK0rU23
+	De/PwmSzyN21L2sxCg3lfHJ4x1deqOvzqivec1AIIJaYiNOMcp5eX8PGsN/dfawJ8t/HRObEfzL
+	mpvbPZi4lfqQi9iZEx4suIq8Gyqc=
+X-Google-Smtp-Source: AGHT+IHag9dlexMIAnzbwEYQHNUn7hDAVMEOkIXphuPM28zMNtn2XzmpEHyqSZXarRr6Zz5PEtyw4tnEhEnnh6R7qkI=
+X-Received: by 2002:adf:e412:0:b0:35f:2366:12c5 with SMTP id
+ ffacd0b85a97d-366e79fe9f5mr3827971f8f.23.1719260121970; Mon, 24 Jun 2024
+ 13:15:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240624195426.176827-2-thorsten.blum@toblux.com>
+In-Reply-To: <20240624195426.176827-2-thorsten.blum@toblux.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 24 Jun 2024 13:15:10 -0700
+Message-ID: <CAADnVQJ6A-BUwa85-4Fg7vn1vWb9e_mVgvegtd6WKYM0Opysmw@mail.gmail.com>
+Subject: Re: [PATCH] bpf, btf: Make if test explicit to fix Coccinelle error
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-'struct mmu_rb_ops' is not modified in this driver.
+On Mon, Jun 24, 2024 at 12:56=E2=80=AFPM Thorsten Blum <thorsten.blum@toblu=
+x.com> wrote:
+>
+> Explicitly test the iterator variable i > 0 to fix the following
+> Coccinelle/coccicheck error reported by itnull.cocci:
+>
+>         ERROR: iterator variable bound on line 4688 cannot be NULL
+>
+> Compile-tested only.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  kernel/bpf/btf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 821063660d9f..7720f8967814 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -4687,7 +4687,7 @@ static void btf_datasec_show(const struct btf *btf,
+>                             __btf_name_by_offset(btf, t->name_off));
+>         for_each_vsi(i, t, vsi) {
+>                 var =3D btf_type_by_id(btf, vsi->type);
+> -               if (i)
+> +               if (i > 0)
+>                         btf_show(show, ",");
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+Sorry, I don't think this is a sustainable approach.
+We cannot fix such things all over the kernel.
+Pls make cocci smarter instead.
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  10879	    164	      0	  11043	   2b23	drivers/infiniband/hw/hfi1/pin_system.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  10907	    140	      0	  11047	   2b27	drivers/infiniband/hw/hfi1/pin_system.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only
----
- drivers/infiniband/hw/hfi1/mmu_rb.c     | 2 +-
- drivers/infiniband/hw/hfi1/mmu_rb.h     | 4 ++--
- drivers/infiniband/hw/hfi1/pin_system.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/infiniband/hw/hfi1/mmu_rb.c b/drivers/infiniband/hw/hfi1/mmu_rb.c
-index d4a6acad0e65..67a5c410fb5e 100644
---- a/drivers/infiniband/hw/hfi1/mmu_rb.c
-+++ b/drivers/infiniband/hw/hfi1/mmu_rb.c
-@@ -40,7 +40,7 @@ static unsigned long mmu_node_last(struct mmu_rb_node *node)
- }
- 
- int hfi1_mmu_rb_register(void *ops_arg,
--			 struct mmu_rb_ops *ops,
-+			 const struct mmu_rb_ops *ops,
- 			 struct workqueue_struct *wq,
- 			 struct mmu_rb_handler **handler)
- {
-diff --git a/drivers/infiniband/hw/hfi1/mmu_rb.h b/drivers/infiniband/hw/hfi1/mmu_rb.h
-index 8e5d05454d70..3fa50dd64db6 100644
---- a/drivers/infiniband/hw/hfi1/mmu_rb.h
-+++ b/drivers/infiniband/hw/hfi1/mmu_rb.h
-@@ -42,7 +42,7 @@ struct mmu_rb_handler {
- 	/* Begin on a new cachline boundary here */
- 	struct rb_root_cached root ____cacheline_aligned_in_smp;
- 	void *ops_arg;
--	struct mmu_rb_ops *ops;
-+	const struct mmu_rb_ops *ops;
- 	struct list_head lru_list;
- 	struct work_struct del_work;
- 	struct list_head del_list;
-@@ -51,7 +51,7 @@ struct mmu_rb_handler {
- };
- 
- int hfi1_mmu_rb_register(void *ops_arg,
--			 struct mmu_rb_ops *ops,
-+			 const struct mmu_rb_ops *ops,
- 			 struct workqueue_struct *wq,
- 			 struct mmu_rb_handler **handler);
- void hfi1_mmu_rb_unregister(struct mmu_rb_handler *handler);
-diff --git a/drivers/infiniband/hw/hfi1/pin_system.c b/drivers/infiniband/hw/hfi1/pin_system.c
-index 384f722093e0..cce56134519b 100644
---- a/drivers/infiniband/hw/hfi1/pin_system.c
-+++ b/drivers/infiniband/hw/hfi1/pin_system.c
-@@ -26,7 +26,7 @@ static int sdma_rb_evict(void *arg, struct mmu_rb_node *mnode, void *arg2,
- 			 bool *stop);
- static void sdma_rb_remove(void *arg, struct mmu_rb_node *mnode);
- 
--static struct mmu_rb_ops sdma_rb_ops = {
-+static const struct mmu_rb_ops sdma_rb_ops = {
- 	.filter = sdma_rb_filter,
- 	.evict = sdma_rb_evict,
- 	.remove = sdma_rb_remove,
--- 
-2.45.2
-
+pw-bot: cr
