@@ -1,462 +1,195 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0414518042
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 05:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034CB17BCC;
+	Mon, 24 Jun 2024 05:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719207600; cv=none; b=NiEf4L4pK9eKQy7hyw+Em7IYLc8d7+Gocs6Mo/FmFQHwlLokUy4B76IaU83d5byIF0GAZHomXQhHIVnOsVs6I/Em3roWylACsCCqOm+Gomq9jLlDFoywme7mNgZI9pseZqsRQgNHVe9UE1JKUEurxKWI/QI8ld6hmlDgdsNQxmQ=
+	t=1719207685; cv=none; b=st1NqWWhGd2wAxIy91NFPOzLcIdrAqVLawdNwpc5KWWytF+iue5I2s5N9GSFYMMTVLZyhUvWN3qHXAeVrJOpB07y4Nq9GB+L0rXvxKUcuho+87lEaDo/7a8NewfhfmEznAbmz4Qh+EnAPlIMkfkRWmqEvjt6OlS5ryFbhjMA2po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719207600; c=relaxed/simple;
-	bh=kgjlpnUvAmxrz8uLydguyc1tBQh9ZQVIwtlRCp4K5eQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYOxdlGNrLUaLtvCdLQ+rmgrTya0QDFlHJ2+nBUAYMCuGPIO/Xt1bWnylpvTaVpionmExnG7pLev4TCj9wokZ9GTMhhlyqi22HIA3Mz+CFvqRIM1Txjs1gmsM4Y4f1bEavwDjuqkgUcGVANO9+htc47pvhQCUuf/3XufNbpj4us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4wGA6cPz; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719207685; c=relaxed/simple;
+	bh=BMn5gnd0iEBRVxEBmzCq3QYltM7If2QAyw9uRay0504=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rjJLF5/nGi5yerf2nBeugffzlTbowWKOjPRrVXIj7qB9CZ/lJBia4hVzJOpVHAwqwngSVNCYYf4K30Vy6NwgcXd9FdZpjtjIuQilyZOE7QmV/SfyHlugOdZ5bIPqnOmtBBV9T5h9/XqHf1YyiR5Sok4zGEyKcsRkPmM4MSlfsUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=Pr4ZuiZU; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4wGA6cPz"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-375fc24a746so379275ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 22:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719207598; x=1719812398; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OtJDCfF6HNodKIw335y5xnQZy2lqKbBth5LtqMRY0UQ=;
-        b=4wGA6cPzx/4p4Si91K9fqErOhMmyzilPSgrns7vH8RVj7b6TnwnyOS7BOsbOjDMklL
-         kTveHJR/UYOnQzatKl0CmnS6CstadvI6otyFVuzehPm/ZSpBZRD2/7ll6l+J/eOMXhPa
-         CcCMEHi4HtajYgCJh7Cvydyf1F9KslwfNEAzhWZaRDDBxvJH1+Uf3iK7oQ2ES89YfDsR
-         UUVXKs1Xc/MZEOWscNByNHFR58Doo+Ey56hLi7z8LlCi0gbJTqYB7AtrbVHfgg8NJxy7
-         WKsgWar/zBJA/5ec3Ge+nK90MhqOjuParN8WgCrwRNvtdzb+F3PQTBC7V6F0JaPVvncr
-         FaSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719207598; x=1719812398;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OtJDCfF6HNodKIw335y5xnQZy2lqKbBth5LtqMRY0UQ=;
-        b=EHfyWhf69TfiGWASKOH20CLQCJn3SMmrERtUMYCUwgUm4QS0zt7ZrMzt8jvcHDSoNk
-         n64fmNVtIW5UeqA4inXqL/kxLz8aaDewUDPc+5J3kxvpq6QEsp0DA94f8KSvqSzEqbRz
-         5eaGCvVikGLwTzkWPAOw41TRetnr4drrnk0jxaOJ9iEya1XqrwfgOb+19Np175wzisjI
-         1iZIib8g3wWRHiarTHy9Wpw6efqxxdbnTSkaafKFwgIV2qMfnz3w3/4CJh0Mga42+cTF
-         70oqHTW54FQ/G2eYOdcTAJ2qw0gZ2OS+i3QCVDnUUZHx7p7stcQ8AC9fM2uylO/b/UWt
-         +ltw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaoCqIz+CM3uQaGOSR5lhvf7DW7Otph8rbubOHs/gBn+HE53YZQNGWiFZ1ee0ADc+WBU56HkTNL8SZDaN1oYY/VGm1s/70vDFkIdl3
-X-Gm-Message-State: AOJu0Yz5UqNLynbLkO5iiKQKqhyxBCkwcZ4Hla1bAQ852hLhMc0iX47U
-	4brJg0/d2AW439pQcAwO+FXMhrxKTo1/+2/6x8/Hk588JmdqEJf7JsBGsyKH3g==
-X-Google-Smtp-Source: AGHT+IGeU5humV3Riu+YjtYEKG3bs3w4wg/OpCVJtBJ7LoNo0udp5ed8reNWhFCXf/mFKa+ZRzmNhg==
-X-Received: by 2002:a05:6e02:20cd:b0:376:37e7:c9b with SMTP id e9e14a558f8ab-3763819ede9mr3795415ab.29.1719207597913;
-        Sun, 23 Jun 2024 22:39:57 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2e28:6:75a9:86a4:602e:ea0a])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-376311b07efsm14685035ab.2.2024.06.23.22.39.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jun 2024 22:39:57 -0700 (PDT)
-Date: Sun, 23 Jun 2024 23:39:50 -0600
-From: Yu Zhao <yuzhao@google.com>
-To: Nanyong Sun <sunnanyong@huawei.com>
-Cc: David Rientjes <rientjes@google.com>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Matthew Wilcox <willy@infradead.org>, muchun.song@linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	anshuman.khandual@arm.com, wangkefeng.wang@huawei.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Yosry Ahmed <yosryahmed@google.com>,
-	Sourav Panda <souravpanda@google.com>
-Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
-Message-ID: <ZnkGps-vQbiynNwP@google.com>
-References: <20240113094436.2506396-1-sunnanyong@huawei.com>
- <ZbKjHHeEdFYY1xR5@arm.com>
- <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
- <20240207111252.GA22167@willie-the-truck>
- <ZcNnrdlb3fe0kGHK@casper.infradead.org>
- <ZcN1hTrAhy-B1P2_@arm.com>
- <44075bc2-ac5f-ffcd-0d2f-4093351a6151@huawei.com>
- <20240208131734.GA23428@willie-the-truck>
- <f8a643a9-4932-9ba4-94f1-4bc88ee27740@google.com>
- <22c14513-af78-0f1d-5647-384ff9cb5993@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="Pr4ZuiZU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1719207648; x=1719812448; i=quwenruo.btrfs@gmx.com;
+	bh=BMn5gnd0iEBRVxEBmzCq3QYltM7If2QAyw9uRay0504=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Pr4ZuiZU8RIftmgFuB+1KPwqzhxeX5oNC+Ot6U5A0GO8uebw+kgh++xwxUAVg+k9
+	 fDBortPYLtBiPKX1PAQwyh/WmHZY+Z3DzJmSsKBa5RXLLa8PWnA08l3/n7ynbJwKo
+	 DYAOydfPHcqxC6BpceLf4v5gm+kE+NlFz8iUF4jspcsrH+g9uVxbCX7T1Loi83xnn
+	 mkLV45nIH5uTDjZ2oOGbEL80cuAS/TrRhuTZNrCZ+UShp0wA6WB1AzaOOeGw0ma71
+	 Kz2P86I0eknTIRs8j5NgzsWBom/gtP9iwA+YXCt3wqejFdkZGlAN5IAv7Akf26fRA
+	 NJVIb2N4ziwBi2q96Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mv31W-1sdQJL2yiu-016zvi; Mon, 24
+ Jun 2024 07:40:48 +0200
+Message-ID: <c5646885-3368-4c49-9cbd-092d4b7b7551@gmx.com>
+Date: Mon, 24 Jun 2024 15:10:41 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <22c14513-af78-0f1d-5647-384ff9cb5993@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] btrfs: qgroup: fix slab-out-of-bounds in
+ btrfs_qgroup_inherit
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+To: Jeongjun Park <aha310510@gmail.com>, clm@fb.com, dsterba@suse.com,
+ josef@toxicpanda.com
+Cc: syzbot+a0d1f7e26910be4dc171@syzkaller.appspotmail.com, fdmanana@suse.com,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <20240624030720.137753-1-aha310510@gmail.com>
+ <a0840520-929a-4973-8ce9-91db07d6a9ec@gmx.com>
+Content-Language: en-US
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
+ pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
+ BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
+ XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
+ jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
+ LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
+ mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
+ CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
+ tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
+ INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
+ DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
+ iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
+In-Reply-To: <a0840520-929a-4973-8ce9-91db07d6a9ec@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GnIllGZb/weDZeiZI8Hf2ZHD9DKbCCJtuxcdHH3LaLuQH7xwY/y
+ hwfaS6zCHOeeK9JFv49A98OBucSk3Fex3vIxrlE7YP3MYXkmg4w8VKxhG+mw/uJUWyoyPqV
+ f9yGI6E3XHdETBgM6T0RKqo+2owqC4s6V2LN0OHxQkJ8vGheLYo97R/Vdp8jmEC1e4v1tzO
+ tu4vFij7MLjA4Vug6CJVA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:yKQD6dLTlfM=;YouROdscUQ2/YizEfomCjiNzE8q
+ A/SrEGee7hlAxQVUL8iqTMziizPYsYltpiAm8WXtd9fTrJbu1aKO5pSLZoGucVzJ+3uB6BgqS
+ ST6/ldNHYv+vkZM/GfN0X+MJD4Sr/etYjaKA/JWNTq0i6EGsXm/PJCBmAl82GG6SkwDQNarP+
+ 2wUDWYRgLODjXhhlFu31qV2T5hfmg+tOixrIcACirFkIrK0V0+LPDW0XyxtmFy5/GHHbaQl6m
+ OzywNdBvadPO42RMAL4kHG8dYgB4ID57PzL+FtiWWx5Y5w16kp97Iyahn9Hsw/H8D00RXSwen
+ 79PClBCX5/Sc2YsQSEbve+apX7SQhxg91rhuVXUh5vDSuBnpWZY31y8skDerdFFbenQEQXx3J
+ b+CqKN+Di0dX58XN3CK7G3HYni82meG30DgD2w/IbG54LhuxOt8es7HN4FdCPZn0oaODsZr5t
+ QkmAomz7E7hNKhp1eXQRuJuFB7nHEaR/K1rmilKqJL3E2G++IuaoHl40aHwqO4fE9GpMb2qpD
+ kHyL0wxDOt3Z1wXo4heU0x5mxF8aoCLlsChGuDDCqDh7i+lrIYzoCM138qiy2AXcA6Z2Gq6XO
+ qL3eYpvpVwZf6Ydc84f7o6OYKnph4nozTaHCx3NhJZu+9mm6KolfVUfYzvV+pJnclnTJDz+3o
+ NR1AAMluB9liRiS1rHfLr0rtviHyupdLvNP0dKtKXF+gTgtkd4i+MqvDDHax9FmkbmuoiLFb4
+ UWUoFFxov1flSBlEzdnL4e4ZVvLAhuTGDpLvyn6tiD2aUw/i2Cvu393pjRkyTMF7Qp9DeZNbq
+ 531Wu5N1bkS9JSPKbZ2e3bTEiFzrwyg5w+F3SKxHrLSBM=
 
-On Mon, Mar 25, 2024 at 11:24:34PM +0800, Nanyong Sun wrote:
-> On 2024/3/14 7:32, David Rientjes wrote:
-> 
-> > On Thu, 8 Feb 2024, Will Deacon wrote:
-> > 
-> > > > How about take a new lock with irq disabled during BBM, like:
-> > > > 
-> > > > +void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte)
-> > > > +{
-> > > > +     (NEW_LOCK);
-> > > > +    pte_clear(&init_mm, addr, ptep);
-> > > > +    flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-> > > > +    set_pte_at(&init_mm, addr, ptep, pte);
-> > > > +    spin_unlock_irq(NEW_LOCK);
-> > > > +}
-> > > I really think the only maintainable way to achieve this is to avoid the
-> > > possibility of a fault altogether.
-> > > 
-> > > Will
-> > > 
-> > > 
-> > Nanyong, are you still actively working on making HVO possible on arm64?
-> > 
-> > This would yield a substantial memory savings on hosts that are largely
-> > configured with hugetlbfs.  In our case, the size of this hugetlbfs pool
-> > is actually never changed after boot, but it sounds from the thread that
-> > there was an idea to make HVO conditional on FEAT_BBM.  Is this being
-> > pursued?
-> > 
-> > If so, any testing help needed?
-> I'm afraid that FEAT_BBM may not solve the problem here
 
-I think so too -- I came cross this while working on TAO [1].
 
-[1] https://lore.kernel.org/20240229183436.4110845-4-yuzhao@google.com/
+=E5=9C=A8 2024/6/24 14:40, Qu Wenruo =E5=86=99=E9=81=93:
+>
+>
+> =E5=9C=A8 2024/6/24 12:37, Jeongjun Park =E5=86=99=E9=81=93:
+>> If a value exists in inherit->num_ref_copies or inherit->num_excl_copie=
+s,
+>> an out-of-bounds vulnerability occurs.
+>>
+>
+> Thanks for the fix.
+>
+> Although I'm still not 100% sure what's going wrong.
+>
+> The original report
+> (https://lore.kernel.org/lkml/000000000000bc19ba061a67ca77@google.com/T/=
+)
+> is showing a backtrace when creating snapshot.
+>
+> In that case they should all go through __btrfs_ioctl_snap_create(), and
+> since it has qgroup_inherit, it can only come from
+> btrfs_ioctl_snap_create_v2().
+>
+> But in that function, we have just called btrfs_qgroup_check_inherit()
+> function and it already has the check on num_ref_copies/num_excl_copies.
+>
+> So in that case it should not even happen.
+>
+> I think the root cause is why the existing btrfs_qgroup_check_inherit()
+> doesn't catch the problem in the first place.
 
-> because from Arm
-> ARM,
-> I see that FEAT_BBM is only used for changing block size. Therefore, in this
-> HVO feature,
-> it can work in the split PMD stage, that is, BBM can be avoided in
-> vmemmap_split_pmd,
-> but in the subsequent vmemmap_remap_pte, the Output address of PTE still
-> needs to be
-> changed. I'm afraid FEAT_BBM is not competent for this stage. Perhaps my
-> understanding
-> of ARM FEAT_BBM is wrong, and I hope someone can correct me.
-> Actually, the solution I first considered was to use the stop_machine
-> method, but we have
-> products that rely on /proc/sys/vm/nr_overcommit_hugepages to dynamically
-> use hugepages,
-> so I have to consider performance issues. If your product does not change
-> the amount of huge
-> pages after booting, using stop_machine() may be a feasible way.
-> So far, I still haven't come up with a good solution.
+OK, the root cause is the qgroup enable/disable race and delayed
+snapshot creation. So that we can have a btrfs_qgroup_inherit structure
+passed in with qgroup disabled.
 
-I do have a patch that's similar to stop_machine() -- it uses NMI IPIs
-to pause/resume remote CPUs while the local one is doing BBM.
+But at transaction commitment, the qgroup is enabled, so some unchecked
+inherit structure is passed in.
 
-Note that the problem of updating vmemmap for struct page[], as I see
-it, is beyond hugeTLB HVO. I think it impacts virtio-mem and memory
-hot removal in general [2]. On arm64, we would need to support BBM on
-vmemmap so that we can fix the problem with offlining memory (or to be
-precise, unmapping offlined struct page[]), by mapping offlined struct
-page[] to a read-only page of dummy struct page[], similar to
-ZERO_PAGE(). (Or we would have to make extremely invasive changes to
-the reader side, i.e., all speculative PFN walkers.)
+In that case, the added check is not strong enough (lacks the structure
+size and flags checks etc).
 
-In case you are interested in testing my approach, you can swap your
-patch 2 with the following:
+A better fix would be only let btrfs_qgroup_check_inherit() to skip the
+source qgroup checks.
 
-[2] https://lore.kernel.org/20240621213717.1099079-1-yuzhao@google.com/
+I'll send a fix using the findings above.
 
-diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
-index 8ff5f2a2579e..1af1aa34a351 100644
---- a/arch/arm64/include/asm/pgalloc.h
-+++ b/arch/arm64/include/asm/pgalloc.h
-@@ -12,6 +12,7 @@
- #include <asm/processor.h>
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
-+#include <asm/cpu.h>
- 
- #define __HAVE_ARCH_PGD_FREE
- #define __HAVE_ARCH_PUD_FREE
-@@ -137,4 +138,58 @@ pmd_populate(struct mm_struct *mm, pmd_t *pmdp, pgtable_t ptep)
- 	__pmd_populate(pmdp, page_to_phys(ptep), PMD_TYPE_TABLE | PMD_TABLE_PXN);
- }
- 
-+#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-+
-+#define vmemmap_update_lock vmemmap_update_lock
-+static inline void vmemmap_update_lock(void)
-+{
-+	cpus_read_lock();
-+}
-+
-+#define vmemmap_update_unlock vmemmap_update_unlock
-+static inline void vmemmap_update_unlock(void)
-+{
-+	cpus_read_unlock();
-+}
-+
-+#define vmemmap_update_pte vmemmap_update_pte
-+static inline void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte)
-+{
-+	preempt_disable();
-+	pause_remote_cpus();
-+
-+	pte_clear(&init_mm, addr, ptep);
-+	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-+	set_pte_at(&init_mm, addr, ptep, pte);
-+
-+	resume_remote_cpus();
-+	preempt_enable();
-+}
-+
-+#define vmemmap_update_pmd vmemmap_update_pmd
-+static inline void vmemmap_update_pmd(unsigned long addr, pmd_t *pmdp, pte_t *ptep)
-+{
-+	preempt_disable();
-+	pause_remote_cpus();
-+
-+	pmd_clear(pmdp);
-+	flush_tlb_kernel_range(addr, addr + PMD_SIZE);
-+	pmd_populate_kernel(&init_mm, pmdp, ptep);
-+
-+	resume_remote_cpus();
-+	preempt_enable();
-+}
-+
-+#define vmemmap_flush_tlb_all vmemmap_flush_tlb_all
-+static inline void vmemmap_flush_tlb_all(void)
-+{
-+}
-+
-+#define vmemmap_flush_tlb_range vmemmap_flush_tlb_range
-+static inline void vmemmap_flush_tlb_range(unsigned long start, unsigned long end)
-+{
-+}
-+
-+#endif /* CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP */
-+
- #endif
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index efb13112b408..544b15948b64 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -144,6 +144,9 @@ bool cpus_are_stuck_in_kernel(void);
- extern void crash_smp_send_stop(void);
- extern bool smp_crash_stop_failed(void);
- 
-+void pause_remote_cpus(void);
-+void resume_remote_cpus(void);
-+
- #endif /* ifndef __ASSEMBLY__ */
- 
- #endif /* ifndef __ASM_SMP_H */
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 31c8b3094dd7..ae0a178db066 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -71,16 +71,25 @@ enum ipi_msg_type {
- 	IPI_RESCHEDULE,
- 	IPI_CALL_FUNC,
- 	IPI_CPU_STOP,
-+	IPI_CPU_PAUSE,
-+#ifdef CONFIG_KEXEC_CORE
- 	IPI_CPU_CRASH_STOP,
-+#endif
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- 	IPI_TIMER,
-+#endif
-+#ifdef CONFIG_IRQ_WORK
- 	IPI_IRQ_WORK,
-+#endif
- 	NR_IPI,
- 	/*
- 	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
- 	 * with trace_ipi_*
- 	 */
- 	IPI_CPU_BACKTRACE = NR_IPI,
-+#ifdef CONFIG_KGDB
- 	IPI_KGDB_ROUNDUP,
-+#endif
- 	MAX_IPI
- };
- 
-@@ -771,9 +780,16 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
- 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
- 	[IPI_CALL_FUNC]		= "Function call interrupts",
- 	[IPI_CPU_STOP]		= "CPU stop interrupts",
-+	[IPI_CPU_PAUSE]		= "CPU pause interrupts",
-+#ifdef CONFIG_KEXEC_CORE
- 	[IPI_CPU_CRASH_STOP]	= "CPU stop (for crash dump) interrupts",
-+#endif
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- 	[IPI_TIMER]		= "Timer broadcast interrupts",
-+#endif
-+#ifdef CONFIG_IRQ_WORK
- 	[IPI_IRQ_WORK]		= "IRQ work interrupts",
-+#endif
- };
- 
- static void smp_cross_call(const struct cpumask *target, unsigned int ipinr);
-@@ -832,6 +848,85 @@ void __noreturn panic_smp_self_stop(void)
- 	local_cpu_stop();
- }
- 
-+static DEFINE_SPINLOCK(cpu_pause_lock);
-+static cpumask_t paused_cpus;
-+static cpumask_t resumed_cpus;
-+
-+static void pause_local_cpu(void)
-+{
-+	int cpu = smp_processor_id();
-+
-+	cpumask_clear_cpu(cpu, &resumed_cpus);
-+	/*
-+	 * Paired with pause_remote_cpus() to confirm that this CPU not only
-+	 * will be paused but also can be reliably resumed.
-+	 */
-+	smp_wmb();
-+	cpumask_set_cpu(cpu, &paused_cpus);
-+	/* A typical example for sleep and wake-up functions. */
-+	smp_mb();
-+	while (!cpumask_test_cpu(cpu, &resumed_cpus)) {
-+		wfe();
-+		barrier();
-+	}
-+	barrier();
-+	cpumask_clear_cpu(cpu, &paused_cpus);
-+}
-+
-+void pause_remote_cpus(void)
-+{
-+	cpumask_t cpus_to_pause;
-+
-+	lockdep_assert_cpus_held();
-+	lockdep_assert_preemption_disabled();
-+
-+	cpumask_copy(&cpus_to_pause, cpu_online_mask);
-+	cpumask_clear_cpu(smp_processor_id(), &cpus_to_pause);
-+
-+	spin_lock(&cpu_pause_lock);
-+
-+	WARN_ON_ONCE(!cpumask_empty(&paused_cpus));
-+
-+	smp_cross_call(&cpus_to_pause, IPI_CPU_PAUSE);
-+
-+	while (!cpumask_equal(&cpus_to_pause, &paused_cpus)) {
-+		cpu_relax();
-+		barrier();
-+	}
-+	/*
-+	 * Paired pause_local_cpu() to confirm that all CPUs not only will be
-+	 * paused but also can be reliably resumed.
-+	 */
-+	smp_rmb();
-+	WARN_ON_ONCE(cpumask_intersects(&cpus_to_pause, &resumed_cpus));
-+
-+	spin_unlock(&cpu_pause_lock);
-+}
-+
-+void resume_remote_cpus(void)
-+{
-+	cpumask_t cpus_to_resume;
-+
-+	lockdep_assert_cpus_held();
-+	lockdep_assert_preemption_disabled();
-+
-+	cpumask_copy(&cpus_to_resume, cpu_online_mask);
-+	cpumask_clear_cpu(smp_processor_id(), &cpus_to_resume);
-+
-+	spin_lock(&cpu_pause_lock);
-+
-+	cpumask_setall(&resumed_cpus);
-+	/* A typical example for sleep and wake-up functions. */
-+	smp_mb();
-+	while (cpumask_intersects(&cpus_to_resume, &paused_cpus)) {
-+		sev();
-+		cpu_relax();
-+		barrier();
-+	}
-+
-+	spin_unlock(&cpu_pause_lock);
-+}
-+
- #ifdef CONFIG_KEXEC_CORE
- static atomic_t waiting_for_crash_ipi = ATOMIC_INIT(0);
- #endif
-@@ -911,6 +1006,11 @@ static void do_handle_IPI(int ipinr)
- 		local_cpu_stop();
- 		break;
- 
-+	case IPI_CPU_PAUSE:
-+		pause_local_cpu();
-+		break;
-+
-+#ifdef CONFIG_KEXEC_CORE
- 	case IPI_CPU_CRASH_STOP:
- 		if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
- 			ipi_cpu_crash_stop(cpu, get_irq_regs());
-@@ -918,6 +1018,7 @@ static void do_handle_IPI(int ipinr)
- 			unreachable();
- 		}
- 		break;
-+#endif
- 
- #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- 	case IPI_TIMER:
-@@ -939,9 +1040,11 @@ static void do_handle_IPI(int ipinr)
- 		nmi_cpu_backtrace(get_irq_regs());
- 		break;
- 
-+#ifdef CONFIG_KGDB
- 	case IPI_KGDB_ROUNDUP:
- 		kgdb_nmicallback(cpu, get_irq_regs());
- 		break;
-+#endif
- 
- 	default:
- 		pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
-@@ -971,9 +1074,14 @@ static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
- 
- 	switch (ipi) {
- 	case IPI_CPU_STOP:
-+	case IPI_CPU_PAUSE:
-+#ifdef CONFIG_KEXEC_CORE
- 	case IPI_CPU_CRASH_STOP:
-+#endif
- 	case IPI_CPU_BACKTRACE:
-+#ifdef CONFIG_KGDB
- 	case IPI_KGDB_ROUNDUP:
-+#endif
- 		return true;
- 	default:
- 		return false;
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 5113753f3ac9..da6f2a7d665e 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -46,6 +46,18 @@ struct vmemmap_remap_walk {
- 	unsigned long		flags;
- };
- 
-+#ifndef vmemmap_update_lock
-+static void vmemmap_update_lock(void)
-+{
-+}
-+#endif
-+
-+#ifndef vmemmap_update_unlock
-+static void vmemmap_update_unlock(void)
-+{
-+}
-+#endif
-+
- #ifndef vmemmap_update_pmd
- static inline void vmemmap_update_pmd(unsigned long addr,
- 				      pmd_t *pmdp, pte_t *ptep)
-@@ -194,10 +206,12 @@ static int vmemmap_remap_range(unsigned long start, unsigned long end,
- 
- 	VM_BUG_ON(!PAGE_ALIGNED(start | end));
- 
-+	vmemmap_update_lock();
- 	mmap_read_lock(&init_mm);
- 	ret = walk_page_range_novma(&init_mm, start, end, &vmemmap_remap_ops,
- 				    NULL, walk);
- 	mmap_read_unlock(&init_mm);
-+	vmemmap_update_unlock();
- 	if (ret)
- 		return ret;
- 
+Thanks,
+Qu
+
+>
+> Thanks,
+> Qu
+>
+>> Therefore, you need to add code to check the presence or absence of
+>> that value.
+>>
+>> Regards.
+>> Jeongjun Park.
+>>
+>> Reported-by: syzbot+a0d1f7e26910be4dc171@syzkaller.appspotmail.com
+>> Fixes: 3f5e2d3b3877 ("Btrfs: fix missing check in the
+>> btrfs_qgroup_inherit()")
+>> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+>> ---
+>> =C2=A0 fs/btrfs/qgroup.c | 4 ++++
+>> =C2=A0 1 file changed, 4 insertions(+)
+>>
+>> diff --git a/fs/btrfs/qgroup.c b /fs/btrfs/qgroup.c
+>> index fc2a7ea26354..23beac746637 100644
+>> --- a/fs/btrfs/qgroup.c
+>> +++ b/fs/btrfs/qgroup.c
+>> @@ -3270,6 +3270,10 @@ int btrfs_qgroup_inherit(struct
+>> btrfs_trans_handle *trans, u64 srcid,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (inherit) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (inherit->num_ref_copies=
+ > 0 || inherit->num_excl_copies >
+>> 0) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
+ =3D -EINVAL;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
+o out;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i_qgroups =3D (u=
+64 *)(inherit + 1);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nums =3D inherit=
+->num_qgroups + 2 * inherit->num_ref_copies +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 2 * inherit->num_excl_copies;
+>> --
+>>
+>
