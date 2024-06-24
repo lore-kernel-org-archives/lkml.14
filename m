@@ -1,213 +1,255 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87954AEDA;
-	Mon, 24 Jun 2024 15:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611FE143743
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719242730; cv=none; b=OAz7Pig9ncOH8nOhYFJoNZnJz9cizZQb4tRgOp0QBkTKV3xNyUkcUa8nirMuD+jgc6rQZrKb1fM+d5RQ5OtmYx3dRBcX4CGcU/qw2XAMWl8K2zgHC3/cTAWUQsjuM2j8YEyIjzxybKq93l4xf7imfPm+/toPMxBYT18lSI0sjGI=
+	t=1719242783; cv=none; b=Rp8c3AzOS3p1cCON68D/IUFFonMm/z989WtOw8cEsFGe81LKy7D/pRhk7PUHVy2w5uZGyQNN3Yr++eRg/bQEzArHADMgJxr/o773AlQ7Sco/IRGH8yn7mXkfcv1cK4DLlvjLwDCIUj3wlkRl+84qQ6taRVBsNEdpBHulMwMymg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719242730; c=relaxed/simple;
-	bh=8vvF8G6bkOZtXWk8JOMgHF4/zUuJ0Ub3kvj37ix4CRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=arF1eWuut/lt4f1c1guoJX1cYiKFDlbPyXizZkZai9qcJfsfwNoGyZN+CrmJ1+iSO9Z1B86NQPuiTpPvXPOkfilCj++DG+UBGco2ySv7N2RgaGWEA2GRJb6sTC382AfAwkiv9T+0Z1sCaoOLd9ItZyLDmjkMkrMwkIBa8W1Hbv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZFrBt93; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZFrBt93"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F71C2BBFC;
-	Mon, 24 Jun 2024 15:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719242730;
-	bh=8vvF8G6bkOZtXWk8JOMgHF4/zUuJ0Ub3kvj37ix4CRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eZFrBt93joTHiFr1wb93EMD2Efhnc5oCtDEH5XTGsfCCpNvi6XWIrXbGz2vy4U4e2
-	 HG4SQe4NF2aGnZfoQyddN5rfZl0V9re2a0UHR8Hdg1lVjsr7yIqmNCf9w3TuRpmZC4
-	 rGozSW9CS7AjgKw0W7RomM05miKcfm5OdJ/mcCspGz+udQh6u9LWpebbQBbR657mzE
-	 ZMI8+yNnksdH2OBVvMFZ0otc8g63Trac1V5w75CpBoBvDxWRSC7AA00y95Wh32o2hy
-	 NuCUK8VyZ7hp6VvaXL4CDTYIZZ6xCAnWL2/1tN+EBeYRRUeBJgeBWHrJLiPBOvVUmp
-	 Off/drZW8E6cg==
-Date: Mon, 24 Jun 2024 08:25:29 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: alexjlzheng@gmail.com
-Cc: chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, alexjlzheng@tencent.com
-Subject: Re: [PATCH] xfs: make xfs_log_iovec independent from xfs_log_vec and
- release it early
-Message-ID: <20240624152529.GD3058325@frogsfrogsfrogs>
-References: <20240623123119.3562031-1-alexjlzheng@tencent.com>
+	s=arc-20240116; t=1719242783; c=relaxed/simple;
+	bh=iQ0UuuGHEPJjr3ehYPkR3XeKuF6oD8PjrJe/BCpHm44=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HkQtifl0M+ZWeD4JXgtuqRo1fbvX7Lvq9CIseffQXAAmKiCl9Q3bI72F+8NQ0U0iq0lXjO4kh+MkrR0I3f3x4wd3VYTrjqV9Gu3H1ehEfaXpS6QNpBSMhtoFdSR9gkBxQxadopp1s0a04FuRO0iInvCLKJOc8vqjmvvdUh2zcGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7e94cac3c71so587512739f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:26:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719242780; x=1719847580;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nFFdHIOZp39OVQExOAEe9wgQYKr9eDnp1rLTkp8H9KQ=;
+        b=jJlKc8KXYLhkUP0RIOIA6Yz2iaSDQTBvFm/q9zWn6cCFgVmB7XR7+hjpN+tZzaOsps
+         +w2RKd7lH/BBZPUJIrFvUa/U2Zv2IcReZbUfbXMcfs9XRYWWGzxYJ2hynhNweWFOWDXB
+         StNX5y+zA0aKN5BqCyTH2aCuv4yWB2eAuNrXdpzn/gnAN5HKZoKRsj00FWFZbm7YF3d4
+         SObs+y10siMiFLeLMLGp9BKX9MUUdYD780/YtzP32BqtDK9K8GuKVobnK6bHu/W+t9kJ
+         Jg1+x0w8t4Zvs6fVgtRMq6zv/kBFGzm5g5gc8LSJbQK/l45jNqyMJKiJ1TftyQltBNQe
+         Kfrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWzpLqu4Slg8ezbQEbc94pea/kK2RL2Pz5ISmyGm0DOOHRi0o7xkvtLoLT7LzCq/EhVYxzngWptSyyxLPEt9IkevnngNZxrakgjJSH
+X-Gm-Message-State: AOJu0YwI1NFjOO49hly3VoNHKTIrB1fJgZI0smaNSU13czn5OES/ayNa
+	SmhlKCDKwXENeEEbFbYnR3pN2FoOVurSxv6Tsa8L6202/j8BObFk8bA763o0PPDND5ubUUIAcCP
+	LvpBuRCIS1y1PQCF0e7IVWqfI7Djnm/UDi0Sshd6C8DJ77gJlscn8uh4=
+X-Google-Smtp-Source: AGHT+IHzIQdaSRtqDhNc0EzvGsFhp5xf3njTT9lHaWhofrU0vPIC8gn4Yd9/oRQ9vWY79KV5Pj7cTWGILW7PAXNMyNLo6oefIdeY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240623123119.3562031-1-alexjlzheng@tencent.com>
+X-Received: by 2002:a05:6638:9611:b0:4b9:bdfd:f15b with SMTP id
+ 8926c6da1cb9f-4b9ece1ba70mr651223173.4.1719242780597; Mon, 24 Jun 2024
+ 08:26:20 -0700 (PDT)
+Date: Mon, 24 Jun 2024 08:26:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000387998061ba467ac@google.com>
+Subject: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in sk_skb_reason_drop
+From: syzbot <syzbot+f115fcf7e49b2ebc902d@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 23, 2024 at 08:31:19PM +0800, alexjlzheng@gmail.com wrote:
-> From: Jinliang Zheng <alexjlzheng@tencent.com>
-> 
-> In the current implementation, in most cases, the memory of xfs_log_vec
-> and xfs_log_iovec is allocated together. Therefore the life cycle of
-> xfs_log_iovec has to remain the same as xfs_log_vec.
-> 
-> But this is not necessary. When the content in xfs_log_iovec is written
-> to iclog by xlog_write(), it no longer needs to exist in the memory. But
-> xfs_log_vec is still useful, because after we flush the iclog into the
-> disk log space, we need to find the corresponding xfs_log_item through
-> the xfs_log_vec->lv_item field and add it to AIL.
-> 
-> This patch separates the memory allocation of xfs_log_iovec from
-> xfs_log_vec, and releases the memory of xfs_log_iovec in advance after
-> the content in xfs_log_iovec is written to iclog.
+Hello,
 
-Why would anyone care?  This makes lifecycle reasoning more complicated
-but no justification is provided.
+syzbot found the following issue on:
 
---D
+HEAD commit:    84562f9953ec Merge branch '100GbE' of git://git.kernel.org..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e1c2d6980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e78fc116033e0ab7
+dashboard link: https://syzkaller.appspot.com/bug?extid=f115fcf7e49b2ebc902d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1075608e980000
 
-> Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> ---
->  fs/xfs/xfs_log.c     |  2 ++
->  fs/xfs/xfs_log.h     |  8 ++++++--
->  fs/xfs/xfs_log_cil.c | 26 ++++++++++++++++----------
->  3 files changed, 24 insertions(+), 12 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index 416c15494983..f7af9550c17b 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -2526,6 +2526,8 @@ xlog_write(
->  			xlog_write_full(lv, ticket, iclog, &log_offset,
->  					 &len, &record_cnt, &data_cnt);
->  		}
-> +		if (lv->lv_flags & XFS_LOG_VEC_DYNAMIC)
-> +			kvfree(lv->lv_iovecp);
->  	}
->  	ASSERT(len == 0);
->  
-> diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
-> index d69acf881153..f052c7fdb3e9 100644
-> --- a/fs/xfs/xfs_log.h
-> +++ b/fs/xfs/xfs_log.h
-> @@ -6,6 +6,8 @@
->  #ifndef	__XFS_LOG_H__
->  #define __XFS_LOG_H__
->  
-> +#define XFS_LOG_VEC_DYNAMIC	(1 << 0)
-> +
->  struct xfs_cil_ctx;
->  
->  struct xfs_log_vec {
-> @@ -17,7 +19,8 @@ struct xfs_log_vec {
->  	char			*lv_buf;	/* formatted buffer */
->  	int			lv_bytes;	/* accounted space in buffer */
->  	int			lv_buf_len;	/* aligned size of buffer */
-> -	int			lv_size;	/* size of allocated lv */
-> +	int			lv_size;	/* size of allocated iovec + buffer */
-> +	int			lv_flags;	/* lv flags */
->  };
->  
->  #define XFS_LOG_VEC_ORDERED	(-1)
-> @@ -40,6 +43,7 @@ static inline void
->  xlog_finish_iovec(struct xfs_log_vec *lv, struct xfs_log_iovec *vec,
->  		int data_len)
->  {
-> +	struct xfs_log_iovec	*lvec = lv->lv_iovecp;
->  	struct xlog_op_header	*oph = vec->i_addr;
->  	int			len;
->  
-> @@ -69,7 +73,7 @@ xlog_finish_iovec(struct xfs_log_vec *lv, struct xfs_log_iovec *vec,
->  	vec->i_len = len;
->  
->  	/* Catch buffer overruns */
-> -	ASSERT((void *)lv->lv_buf + lv->lv_bytes <= (void *)lv + lv->lv_size);
-> +	ASSERT((void *)lv->lv_buf + lv->lv_bytes <= (void *)lvec + lv->lv_size);
->  }
->  
->  /*
-> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-> index f51cbc6405c1..3be9f86ce655 100644
-> --- a/fs/xfs/xfs_log_cil.c
-> +++ b/fs/xfs/xfs_log_cil.c
-> @@ -219,8 +219,7 @@ static inline int
->  xlog_cil_iovec_space(
->  	uint	niovecs)
->  {
-> -	return round_up((sizeof(struct xfs_log_vec) +
-> -					niovecs * sizeof(struct xfs_log_iovec)),
-> +	return round_up(niovecs * sizeof(struct xfs_log_iovec),
->  			sizeof(uint64_t));
->  }
->  
-> @@ -279,6 +278,7 @@ xlog_cil_alloc_shadow_bufs(
->  
->  	list_for_each_entry(lip, &tp->t_items, li_trans) {
->  		struct xfs_log_vec *lv;
-> +		struct xfs_log_iovec *lvec;
->  		int	niovecs = 0;
->  		int	nbytes = 0;
->  		int	buf_size;
-> @@ -339,18 +339,23 @@ xlog_cil_alloc_shadow_bufs(
->  			 * the buffer, only the log vector header and the iovec
->  			 * storage.
->  			 */
-> -			kvfree(lip->li_lv_shadow);
-> -			lv = xlog_kvmalloc(buf_size);
-> -
-> -			memset(lv, 0, xlog_cil_iovec_space(niovecs));
-> +			if (lip->li_lv_shadow) {
-> +				kvfree(lip->li_lv_shadow->lv_iovecp);
-> +				kvfree(lip->li_lv_shadow);
-> +			}
-> +			lv = xlog_kvmalloc(sizeof(struct xfs_log_vec));
-> +			memset(lv, 0, sizeof(struct xfs_log_vec));
-> +			lvec = xlog_kvmalloc(buf_size);
-> +			memset(lvec, 0, xlog_cil_iovec_space(niovecs));
->  
-> +			lv->lv_flags |= XFS_LOG_VEC_DYNAMIC;
->  			INIT_LIST_HEAD(&lv->lv_list);
->  			lv->lv_item = lip;
->  			lv->lv_size = buf_size;
->  			if (ordered)
->  				lv->lv_buf_len = XFS_LOG_VEC_ORDERED;
->  			else
-> -				lv->lv_iovecp = (struct xfs_log_iovec *)&lv[1];
-> +				lv->lv_iovecp = lvec;
->  			lip->li_lv_shadow = lv;
->  		} else {
->  			/* same or smaller, optimise common overwrite case */
-> @@ -366,9 +371,9 @@ xlog_cil_alloc_shadow_bufs(
->  		lv->lv_niovecs = niovecs;
->  
->  		/* The allocated data region lies beyond the iovec region */
-> -		lv->lv_buf = (char *)lv + xlog_cil_iovec_space(niovecs);
-> +		lv->lv_buf = (char *)lv->lv_iovecp +
-> +				xlog_cil_iovec_space(niovecs);
->  	}
-> -
->  }
->  
->  /*
-> @@ -502,7 +507,7 @@ xlog_cil_insert_format_items(
->  			/* reset the lv buffer information for new formatting */
->  			lv->lv_buf_len = 0;
->  			lv->lv_bytes = 0;
-> -			lv->lv_buf = (char *)lv +
-> +			lv->lv_buf = (char *)lv->lv_iovecp +
->  					xlog_cil_iovec_space(lv->lv_niovecs);
->  		} else {
->  			/* switch to shadow buffer! */
-> @@ -1544,6 +1549,7 @@ xlog_cil_process_intents(
->  		set_bit(XFS_LI_WHITEOUT, &ilip->li_flags);
->  		trace_xfs_cil_whiteout_mark(ilip);
->  		len += ilip->li_lv->lv_bytes;
-> +		kvfree(ilip->li_lv->lv_iovecp);
->  		kvfree(ilip->li_lv);
->  		ilip->li_lv = NULL;
->  
-> -- 
-> 2.39.3
-> 
-> 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e1edb6a0d5b1/disk-84562f99.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7df8d6218d93/vmlinux-84562f99.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/151998fb709d/bzImage-84562f99.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f115fcf7e49b2ebc902d@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: slab-use-after-free in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+BUG: KASAN: slab-use-after-free in refcount_read include/linux/refcount.h:136 [inline]
+BUG: KASAN: slab-use-after-free in skb_unref include/linux/skbuff.h:1228 [inline]
+BUG: KASAN: slab-use-after-free in __sk_skb_reason_drop net/core/skbuff.c:1196 [inline]
+BUG: KASAN: slab-use-after-free in sk_skb_reason_drop+0x44/0x3d0 net/core/skbuff.c:1224
+Read of size 4 at addr ffff8880659b7c24 by task syz-executor.0/5174
+
+CPU: 0 PID: 5174 Comm: syz-executor.0 Not tainted 6.10.0-rc4-syzkaller-00874-g84562f9953ec #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+ refcount_read include/linux/refcount.h:136 [inline]
+ skb_unref include/linux/skbuff.h:1228 [inline]
+ __sk_skb_reason_drop net/core/skbuff.c:1196 [inline]
+ sk_skb_reason_drop+0x44/0x3d0 net/core/skbuff.c:1224
+ kfree_skb_reason include/linux/skbuff.h:1260 [inline]
+ kfree_skb include/linux/skbuff.h:1269 [inline]
+ __hci_req_sync+0x631/0x950 net/bluetooth/hci_request.c:184
+ hci_req_sync+0xa9/0xd0 net/bluetooth/hci_request.c:206
+ hci_dev_cmd+0x4c5/0xa50 net/bluetooth/hci_core.c:787
+ sock_do_ioctl+0x158/0x460 net/socket.c:1222
+ sock_ioctl+0x629/0x8e0 net/socket.c:1341
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f933f27ce0b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007ffe546c6fc0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f933f27ce0b
+RDX: 00007ffe546c7038 RSI: 00000000400448dd RDI: 0000000000000003
+RBP: 000055558c4c3430 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+Allocated by task 4493:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:312 [inline]
+ __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:338
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3941 [inline]
+ slab_alloc_node mm/slub.c:4001 [inline]
+ kmem_cache_alloc_noprof+0x135/0x2a0 mm/slub.c:4008
+ skb_clone+0x20c/0x390 net/core/skbuff.c:2054
+ hci_send_cmd_sync net/bluetooth/hci_core.c:4123 [inline]
+ hci_cmd_work+0x2a2/0x670 net/bluetooth/hci_core.c:4143
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Freed by task 4493:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
+ poison_slab_object+0xe0/0x150 mm/kasan/common.c:240
+ __kasan_slab_free+0x37/0x60 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2196 [inline]
+ slab_free mm/slub.c:4437 [inline]
+ kmem_cache_free+0x145/0x350 mm/slub.c:4512
+ kfree_skb_reason include/linux/skbuff.h:1260 [inline]
+ kfree_skb include/linux/skbuff.h:1269 [inline]
+ hci_req_sync_complete+0xe8/0x290 net/bluetooth/hci_request.c:109
+ hci_event_packet+0xc75/0x1540 net/bluetooth/hci_event.c:7479
+ hci_rx_work+0x3e8/0xca0 net/bluetooth/hci_core.c:4074
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+The buggy address belongs to the object at ffff8880659b7b40
+ which belongs to the cache skbuff_head_cache of size 240
+The buggy address is located 228 bytes inside of
+ freed 240-byte region [ffff8880659b7b40, ffff8880659b7c30)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x659b7
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffefff(slab)
+raw: 00fff00000000000 ffff888018e98780 dead000000000122 0000000000000000
+raw: 0000000000000000 00000000000c000c 00000001ffffefff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x152cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5175, tgid 5175 (kworker/u9:2), ts 61702947833, free_ts 61656603903
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1468
+ prep_new_page mm/page_alloc.c:1476 [inline]
+ get_page_from_freelist+0x2e43/0x2f00 mm/page_alloc.c:3420
+ __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4678
+ __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+ alloc_slab_page+0x5f/0x120 mm/slub.c:2265
+ allocate_slab+0x5a/0x2f0 mm/slub.c:2428
+ new_slab mm/slub.c:2481 [inline]
+ ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3667
+ __slab_alloc+0x58/0xa0 mm/slub.c:3757
+ __slab_alloc_node mm/slub.c:3810 [inline]
+ slab_alloc_node mm/slub.c:3989 [inline]
+ kmem_cache_alloc_noprof+0x1c1/0x2a0 mm/slub.c:4008
+ skb_clone+0x20c/0x390 net/core/skbuff.c:2054
+ hci_send_cmd_sync net/bluetooth/hci_core.c:4123 [inline]
+ hci_cmd_work+0x2a2/0x670 net/bluetooth/hci_core.c:4143
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+page last free pid 5167 tgid 5167 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1088 [inline]
+ free_unref_page+0xd22/0xea0 mm/page_alloc.c:2583
+ vfree+0x186/0x2e0 mm/vmalloc.c:3346
+ kcov_put kernel/kcov.c:429 [inline]
+ kcov_close+0x2b/0x50 kernel/kcov.c:525
+ __fput+0x406/0x8b0 fs/file_table.c:422
+ task_work_run+0x24f/0x310 kernel/task_work.c:180
+ exit_task_work include/linux/task_work.h:38 [inline]
+ do_exit+0xa27/0x27e0 kernel/exit.c:874
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1023
+ get_signal+0x16a1/0x1740 kernel/signal.c:2909
+ arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:310
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xc9/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880659b7b00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
+ ffff8880659b7b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880659b7c00: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
+                               ^
+ ffff8880659b7c80: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880659b7d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
