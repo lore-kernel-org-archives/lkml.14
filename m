@@ -1,118 +1,136 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAC879DE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAD879DE;
+	Mon, 24 Jun 2024 07:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719214215; cv=none; b=EczZx/D0I2rQgdjR5WDdTvDGF04B5V9HSbD2LjSBjTPPMG2ZueqeSnIeJFHCFh4KUr70iA9akpZDmceSmqAPVXmXZTAn2+i2vXNRBvaBEfVCzPcpWhhUggPJjfhokDSZNJH8FuV13StdF3WiAnAHqy1H0FAAhuwPIyTbvqZKMrI=
+	t=1719214230; cv=none; b=aA4g4tbP82wAH9Ao2vrRDFW45bOsROXyaRLjDH7Lsze1ZgzVl09VxOtKvG3MPF2KMQVoVbAq/QZmqMWeEGcmhak/yG7jFUQHJLanFuJqlkleV7Mjd64PlFvMnEXTXfo+Pcl0gmfOeS6SpYLotXA//KnUBgAR9Ph8CAb5baCX3GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719214215; c=relaxed/simple;
-	bh=M8cE6CbrRSk+zbBBYOvmEABXXWGImsiVjoJ15IPiQ9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YUSR/D0qZFB58bZw2/u0Ybx2YwDNNX01FGS9E44RqbGoCFxFPuJ2E996twAVkm8mLYMkpR49YdEovBvy44RuyRpX77BpOyKaBRiFKF22T29rUbotIFPC8XMroEZwImjTSFB8/2kOcHEFxdz6wfFjJoY/TvAHuO5BvnUm8019Uic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x0SNrOUF; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719214230; c=relaxed/simple;
+	bh=ynRYMtPADK8VRITpBQRnva/MiSkd15kmJ7lBis0ul9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Udfh2JnaQdveaCqHU3ydQrwaMO0vF5Ca4AmGGfGcio7dIciZPDiDVaBXdkmeUU4nXw8phciIxOH167VEWdjvX2JgQgK9OABYYA2+6+ZAAhjL6RqUryQg+avkkEueB8DWi2IGQbSLYlcyR7YUCaK9VmsbUOpLz0lH6nx0/RWPcmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=EwfG/jU7; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x0SNrOUF"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52cdf9f934fso1477158e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 00:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719214212; x=1719819012; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c2wEfoJfSxKz/sP5VFQXU0+BbBfrArIiP6A90WvdI4U=;
-        b=x0SNrOUFIhOeee7pnT4+LMKAWKS2XFGoqMp0/gIMBFzHuj7oslGlfZyLt4/vKSMqag
-         ig2d9Uxvja/nlq0MlgmejjV5t2/3gFBS9CiMBfCPoZEAX4JUVehKsknZyW7mNpSkO03P
-         6sc+jCMs/51y7bw4kWpHsXdIQPGn7mQNZd4zdh58V0U2kQiGuq3HYGCKFH4FE6MLnxHy
-         8hDG0a18VzCan5rKW3qGkKzy5Z7JJFdYFfCNpWZwbLjfSBaQSWY6MkvC7o3CiLnJzHOK
-         2b0T34famoVkHZ6Q8NBWnPSBdaCNQ/k4SLRzbCSgduZsyq8ZY9LAgrzz5Br6ql4BabYw
-         g5bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719214212; x=1719819012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c2wEfoJfSxKz/sP5VFQXU0+BbBfrArIiP6A90WvdI4U=;
-        b=YaBPFXU8dbXyFt2p34ge62f3PmNdNPcXDk68Wc8pSV7ahgqEBDWoYFFXWefsNyxajS
-         VqgUTxtm0rGWVfoLQFYTkjgpJbo2nS5iKHYkfmBZmcisJvWmgotqzeDCMl1hcQeH0ijJ
-         9uLgqVAuCX02M/t/Y6UF2ppslheFG1Mj/OL8p430sT53kzthenEPqXHac7fzWdv/4Oba
-         2Zl+8YqKiS71+8qDGqRIA7pZ5j+TVEVDJiqAOcMInC3SLnceCR3s4TvpmGrHgIAf8B5V
-         vf09AAQoXXK6JBUGIt11hRqQ/8eBOxOqX0mBHfx08M2JjBJPib5LPejRIrh0z804cmKe
-         7miw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0FAw8PQrbuk+okoy2J9vQ2bWMs6JO7oEr2IjE01OVIuL5xHRrcYpAuqa1sICwbL0D8q6yOPdSohnEMbzJ9hbsXUiSreSLrtP4z2M7
-X-Gm-Message-State: AOJu0Yzvb8+uNnGY3TZfzdC7XkVfnoWhJi8idO4XPun4cnaLgzVTBWsH
-	R5qhJ8a9WKNuxIXBD0LaMx/sZzJp89wY1p8kIab9hwviGJ292YRyYKCzPx0gAkKHJTqtY6PeTAU
-	nMLwV281Nh2/3Ub79aqydejdsoIs+YtRKJ+6U7Q==
-X-Google-Smtp-Source: AGHT+IF3tAjzNOGGkT0tQNH/0umUeC6Wa2jKs0yWwYAUPb4y9n4wxhkW/20v+RSive8xdIdFYTIgYUauHnzqgbb41co=
-X-Received: by 2002:a05:6512:715:b0:52c:b008:3db8 with SMTP id
- 2adb3069b0e04-52ce064f483mr1977415e87.38.1719214212126; Mon, 24 Jun 2024
- 00:30:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EwfG/jU7"
+Received: from [192.168.7.205] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45O7TSkL121621
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 24 Jun 2024 00:29:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45O7TSkL121621
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1719214170;
+	bh=iAwJb7cjBRqYyohDh+qEg0sdRnD3nc0LDZ5X2diH884=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EwfG/jU7GHMqFBbhZZN5ggtklFnP4eFih/fKVFwkW2VeVBrWSDnqmfssaH8H9g7R7
+	 +Z84qCDMQT9FpH4ClM53y/yQr/bxVBLFhhV1LT8MiJXJCn0teDmZOKFBgTROROR3d6
+	 XzvUZqeFsVza9qO1HsiKEznDan+J+aBwNiiC2LJLjD3sM8/HxoO0KGsdwQoev9ExL6
+	 RJHJjS6wMKPqbgQDMOl+XXDVETfFV9u97XSIDeOgOWsB6a6OzqFCyMqyLctHYlURDn
+	 Cx96eVAUsb5FPGo0ReseGpMDR1rYpkSdmPRg29QKNnIm17wiDRYduuXBQZqdXUeaev
+	 IbuYXiVowDcVw==
+Message-ID: <bd08fb59-600a-4dc6-8157-2c432f209df4@zytor.com>
+Date: Mon, 24 Jun 2024 00:29:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624023612.2134144-1-ruanjinjie@huawei.com>
-In-Reply-To: <20240624023612.2134144-1-ruanjinjie@huawei.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 24 Jun 2024 09:30:00 +0200
-Message-ID: <CACRpkda-FZmyEyMJrKTdic4t8Zq_VSW8AVrvw6t=B25fiUZNKw@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: Add support for STACKLEAK gcc plugin
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, ardb@kernel.org, arnd@arndb.de, afd@ti.com, 
-	akpm@linux-foundation.org, rmk+kernel@armlinux.org.uk, 
-	eric.devolder@oracle.com, robh@kernel.org, kees@kernel.org, 
-	masahiroy@kernel.org, palmer@rivosinc.com, samitolvanen@google.com, 
-	xiao.w.wang@intel.com, alexghiti@rivosinc.com, nathan@kernel.org, 
-	jan.kiszka@siemens.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] x86/cpufeatures: Use AWK to generate
+ {REQUIRED|DISABLED}_MASK_BIT_SET
+To: Brian Gerst <brgerst@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+        acme@kernel.org, namhyung@kernel.org
+References: <20240622171435.3725548-1-xin@zytor.com>
+ <20240622171435.3725548-5-xin@zytor.com>
+ <CAMzpN2hMP8c9PXy=0YV4Ln+u_1n1spJP2jaYXKzEABWLh0+hkQ@mail.gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <CAMzpN2hMP8c9PXy=0YV4Ln+u_1n1spJP2jaYXKzEABWLh0+hkQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 24, 2024 at 4:33=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
- wrote:
+On 6/23/2024 1:28 PM, Brian Gerst wrote:
+> On Sat, Jun 22, 2024 at 1:14 PM Xin Li (Intel) <xin@zytor.com> wrote:
+>>
+>> Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
+>> script that generates the required and disabled feature mask header.
+>>
+>> Suggested-by: Brian Gerst <brgerst@gmail.com>
+>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+>> ---
+>>   arch/x86/include/asm/cpufeature.h | 69 -------------------------------
+>>   arch/x86/tools/featuremasks.awk   | 12 +++++-
+>>   2 files changed, 11 insertions(+), 70 deletions(-)
+>>
 
-> Add the STACKLEAK gcc plugin to arm32 by adding the helper used by
-> stackleak common code: on_thread_stack(). It initialize the stack with th=
-e
-> poison value before returning from system calls which improves the kernel
-> security. Additionally, this disables the plugin in EFI stub code and
-> decompress code, which are out of scope for the protection.
->
-> Before the test on Qemu versatilepb board:
->         # echo STACKLEAK_ERASING  > /sys/kernel/debug/provoke-crash/DIREC=
-T
->         lkdtm: Performing direct entry STACKLEAK_ERASING
->         lkdtm: XFAIL: stackleak is not supported on this arch (HAVE_ARCH_=
-STACKLEAK=3Dn)
->
-> After:
->         # echo STACKLEAK_ERASING  > /sys/kernel/debug/provoke-crash/DIREC=
-T
->         lkdtm: Performing direct entry STACKLEAK_ERASING
->         lkdtm: stackleak stack usage:
->           high offset: 80 bytes
->           current:     280 bytes
->           lowest:      696 bytes
->           tracked:     696 bytes
->           untracked:   192 bytes
->           poisoned:    7220 bytes
->           low offset:  4 bytes
->         lkdtm: OK: the rest of the thread stack is properly erased
->
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>> -               printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
+>> +               printf "\n#define %s_FEATURE(x)\t\t\t\t\\\n", s;
+>> +               printf "\t((\t\t\t\t\t";
+>> +               for (i = 0; i < ncapints; i++) {
+>> +                       if (masks[i])
+>> +                               printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
+>> +               }
+>> +               printf " 0\t\\\n";
+>> +               printf "\t) & (1 << ((x) & 31)))\n";
+> 
+> The original macro had 1UL here.  I don't know if it is strictly
+> necessary in this case since we're using 32-bit masks, but it would
+> probably be safer.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I did notice it, but don't think UL is needed.
 
-I was digging around to see if this would interfere with BPF
-trampolines, but the
-BPF code seems so generic that I assume it already takes stackleak into acc=
-ount.
+>> +
+>> +               printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
+>> +               printf "\t(%s_FEATURE(x) || BUILD_BUG_ON_ZERO(NCAPINTS != %d))\n\n", s, ncapints;
+> 
+> Checking NCAPINTS isn't necessary anymore.  It was needed when these
+> macros had to be manually updated, but now if cpufeatures.h changes
+> this header will be regenerated.
 
-Yours,
-Linus Walleij
+Right, it's no longer needed.  Let me update this patch.
+
+Thanks!
+     Xin
