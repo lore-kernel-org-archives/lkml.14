@@ -1,185 +1,165 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429C31386DA;
-	Mon, 24 Jun 2024 12:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCDB1386DA;
+	Mon, 24 Jun 2024 12:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719232721; cv=none; b=hvl/nhNVxx7ZNeTe1pAmuxbOHQKCMQNHpUdqRG62hKNaCLFZqwxrcg6lns/5L2RZitVJMRaWo2ylqi1fzCDvnknMBC4TE8KQRM4zMAzqQRXQrHFa+whDq5sB+MowEyE/2FC1QtCnf2W5y6wqKilrsfNP3LjI7a1cGBDMYv6Hx0c=
+	t=1719232728; cv=none; b=BadduWOi0XKVMbI8KFBpu/k/+qqXvlCb0iMFLXasO/PJFhX9xLVz7e2GrxBnfVcVFzajojmt2OhZFNKVeMpDMG1Tfw+6kxi+hFq1DhMm+rAdZ5wauBqg1zKayQjfC5ksHW0hZNGNEnsAGFUFhYAT65DSLGqBeFmHcjm8Nse9eSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719232721; c=relaxed/simple;
-	bh=Fy0Vwku4i/edg06rEdhL5d0t9NVWZcRpigQqhSDnT3k=;
-	h=Subject:From:To:Cc:Date:Message-ID:Content-Type:MIME-Version; b=Swmv+GZLNdr3jvsvlIvjpHQJW7fs3LmXpkKV0O0N23ZRCbDg1SoJMTypb8Rb7sbglqmMLgXIeaL0hbOUatlH5NecDRbGzR7wwVkYeg1TYgjyweospivKvOqM/4hv/S5d0AP8aO4UQJimXkT4h/Cv6OiCtGYGWjGVSVLgQstqF2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rqoK/l18; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719232728; c=relaxed/simple;
+	bh=5f271pDr1ahM5SqwJ/FdzIvWr5YTy8DEC+ubl041pkA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OfZ9jeqctqv7YAVbwiydU02ZH9Pa+R1JWoBIN4rSQdq95bT2btb/aMNuYsFiPbvToFEy6J7YyW4pjRe0MU/l+IFkcBrI1RawQjiNgdWcjkKKQgxBmHoTzyamxY6Plx4OkoDwcVcnFg/ld48/3gliuHNfW5CiJn5Net0hMabmdE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CcfiOsim; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=90Mqj0rn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CcfiOsim; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=90Mqj0rn; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rqoK/l18"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OCQRWH029828;
-	Mon, 24 Jun 2024 12:38:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	subject:from:to:cc:date:message-id:content-type
-	:content-transfer-encoding:mime-version; s=pp1; bh=Hvf40/4DRmlQ9
-	1blYNCyK9m/dwqfbQqI7vBUaRHYyg0=; b=rqoK/l18AdsFoiaJ/roNzrnHQ5DIt
-	hrmvGtFuM/6zDgAYH4m6VUho7K/aYwzxVjc9XvnI1VeZYaJkxdLpYnaibncp/2mH
-	GNjpVTu7bpjgmtMROsOzRj8BL/3s7U34zMwmfdGwzUMdm8M6iyBk7xwU1HYjwWmS
-	quPYwahqPiQxJ2s6xCft0K8G6v7DYZqBg1FzyxTsAiJQTFYHiLbFbLp3o1owCy3b
-	uQBZVYAXYKh3sU9brsQnyLQtWDJ2Y5h4wEAoX5sehNUJNzkwwOE8EgLQmFbL9rio
-	JfixG0xJWQZdK+bg+/F5oHrjG9ffwCvdBRLAKghGIjfaN0IOOxJ1d4v6g==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy72xgbh6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 12:38:19 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45OCcIZt020362;
-	Mon, 24 Jun 2024 12:38:18 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy72xgbh2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 12:38:18 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45OARoKF000685;
-	Mon, 24 Jun 2024 12:38:17 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yxaemrm6j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 12:38:17 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45OCcBVu15008022
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 12:38:14 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D46C22004B;
-	Mon, 24 Jun 2024 12:38:11 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7036820040;
-	Mon, 24 Jun 2024 12:38:08 +0000 (GMT)
-Received: from [172.17.0.2] (unknown [9.3.101.175])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 24 Jun 2024 12:38:08 +0000 (GMT)
-Subject: [PATCH v4 0/6] powerpc: pSeries: vfio: iommu: Re-enable support for
- SPAPR TCE VFIO
-From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-To: mpe@ellerman.id.au, tpearson@raptorengineering.com,
-        alex.williamson@redhat.com, linuxppc-dev@lists.ozlabs.org, aik@amd.com
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
-        naveen.n.rao@linux.ibm.com, gbatra@linux.vnet.ibm.com,
-        brking@linux.vnet.ibm.com, sbhat@linux.ibm.com, aik@ozlabs.ru,
-        jgg@ziepe.ca, ruscur@russell.cc, robh@kernel.org,
-        sanastasio@raptorengineering.com, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, kvm@vger.kernel.org, msuchanek@suse.de,
-        oohall@gmail.com, mahesh@linux.ibm.com, jroedel@suse.de,
-        vaibhav@linux.ibm.com, svaidy@linux.ibm.com
-Date: Mon, 24 Jun 2024 12:38:07 +0000
-Message-ID: <171923268781.1397.8871195514893204050.stgit@linux.ibm.com>
-User-Agent: StGit/1.5
-Content-Type: text/plain; charset="utf-8"
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4Eg-QjpYq1jt1FFXcOrWoVZgTo2BR1kZ
-X-Proofpoint-GUID: 7ktYKp9B7e3FR1syAWiiqnWMoAhoIetx
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CcfiOsim";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="90Mqj0rn";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CcfiOsim";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="90Mqj0rn"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 444611F80B;
+	Mon, 24 Jun 2024 12:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719232725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XbSage3HyrEVwFLtd/Vvui2tvoWIUIjXv/F2zE7Q6fM=;
+	b=CcfiOsimvtVMem5AXBI8XchBHjKtHK/2Z31AG7GcElIeKJ+98O7RfCWzkCbg42vVf30QMH
+	BqVRuh2YmnXYgijwdR1GET3WvLAPSXpDvxE3I7Im4Y2tn+Knw/CljYQ6AAMcwpDFUaNU/a
+	1GwF1vu/185iDIVPKfqtIGRHbkxpzZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719232725;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XbSage3HyrEVwFLtd/Vvui2tvoWIUIjXv/F2zE7Q6fM=;
+	b=90Mqj0rnCZbnLYmhZNvEDKpRJIvo15yJznxe+aLPbWoxEVOOkEFcaTqVJ792LZDZdWyek2
+	V/dXcDiHA9EWsoDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719232725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XbSage3HyrEVwFLtd/Vvui2tvoWIUIjXv/F2zE7Q6fM=;
+	b=CcfiOsimvtVMem5AXBI8XchBHjKtHK/2Z31AG7GcElIeKJ+98O7RfCWzkCbg42vVf30QMH
+	BqVRuh2YmnXYgijwdR1GET3WvLAPSXpDvxE3I7Im4Y2tn+Knw/CljYQ6AAMcwpDFUaNU/a
+	1GwF1vu/185iDIVPKfqtIGRHbkxpzZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719232725;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XbSage3HyrEVwFLtd/Vvui2tvoWIUIjXv/F2zE7Q6fM=;
+	b=90Mqj0rnCZbnLYmhZNvEDKpRJIvo15yJznxe+aLPbWoxEVOOkEFcaTqVJ792LZDZdWyek2
+	V/dXcDiHA9EWsoDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 03BD41384C;
+	Mon, 24 Jun 2024 12:38:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3XVJO9RoeWasZAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 24 Jun 2024 12:38:44 +0000
+Date: Mon, 24 Jun 2024 14:39:12 +0200
+Message-ID: <87cyo6plan.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>,
+	lars@metafoo.de,
+	perex@perex.cz,
+	tiwai@suse.com,
+	broonie@kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org
+Subject: Re: [RESEND PATCH] ALSA: dmaengine_pcm: terminate dmaengine before synchronize
+In-Reply-To: <CAA+D8APZ8-3NFceuQeTnEL-K4reUGGfrgyG63jyjydFA6o_4MA@mail.gmail.com>
+References: <1718851218-27803-1-git-send-email-shengjiu.wang@nxp.com>
+	<87frt82gj7.wl-tiwai@suse.de>
+	<CAA+D8APZ8-3NFceuQeTnEL-K4reUGGfrgyG63jyjydFA6o_4MA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_09,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- suspectscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- clxscore=1011 bulkscore=0 spamscore=0 mlxscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406240099
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -1.80
+X-Spam-Level: 
 
-The patches reimplement the iommu table_group_ops for pSeries
-for VFIO SPAPR TCE sub-driver thereby bringing consistency with
-PowerNV implementation and getting rid of limitations/bugs which
-were emanating from these differences on the earlier approach on
-pSeries.
+On Fri, 21 Jun 2024 04:21:19 +0200,
+Shengjiu Wang wrote:
+> 
+> On Thu, Jun 20, 2024 at 3:56 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > But, this may need more rework, too; admittedly it imposes the
+> > unnecessary resume of the stream although it shall be stopped and
+> > closed immediately after that.  We may have some optimization in
+> > addition.
+> 
+> The suspended_state is not cleared that the resume may be called again
+> at the end of stream.
 
-Structure of the patchset:
--------------------------
-The first and fifth patches just code movements.
+Right, that's the known side effect of this approach.
 
-Second patch takes care of collecting the TCE and DDW information
-for the vfio_iommu_spapr_tce_ddw_info during probe.
+> Will you push the code?
 
-Third patch fixes the convention of using table[1] for VFs on
-pSeries when used by the host driver.
+I'm rethinking of this again, and I'm inclined rather to take your
+patch for now.  The side-effect above would be much higher impact in
+theory, so I'm not quite sure whether the behavior is acceptable.
 
-Fourth patch fixes the VFIO to call TCE clear before unset window.
+Basically, a missing piece is the shortcut state change from SUSPENDED
+to CLOSED.  Most drivers don't care as the SUSPENDED state is almost
+equivalent with STOPPED state, and they don't support RESUME (hence
+the application needs to re-initialize via PREPARE).  But a case like
+dmaengine, there can be inconsistency as you pointed out.
 
-The last patch has the API reimplementations, please find the
-details on its commit description.
+By putting snd_pcm_resume() at the beginning of close procedure like
+my patch, the state change itself is corrected.  However, it imposes
+unnecessary resume, which should be avoided.
 
-Testing:
--------
-Tested with nested guest for NVME card, Mellanox multi-function
-card by attaching them to nested kvm guest running on a pSeries
-lpar.
-Also vfio-test [2] by Alex Willamson, was forked and updated to
-add support for pSeries guest and used to test these patches[3].
-
-Limitations/Known Issues:
-------------------------
-* The DMA window restrictions with SRIOV VF scenarios of having
-maximum 1 dma window is taken care in the current patches itself.
-However, the necessary changes required in
-vfio_iommu_spapr_tce_ddw_info to expose the default window being
-a 64-bit one and the qemu changes handle the same will be taken
-care in future versions.
-
-References:
-----------
-[1] https://lore.kernel.org/linuxppc-dev/171026724548.8367.8321359354119254395.stgit@linux.ibm.com/
-[2] https://github.com/awilliam/tests
-[3] https://github.com/nnmwebmin/vfio-ppc-tests/tree/vfio-ppc-ex
-
----
-Changelog:
-v3: https://lore.kernel.org/linuxppc-dev/171810893836.1721.2640631616827396553.stgit@linux.ibm.com/
- - Rebased to top of the tree.
- - In the first patch, spapr_tce_table_group_ops is only used locally in
-   the pseries/iommu.c file. So, made it static.
- - Fixed the test robot reported issues 202406121640.yr6LK5HJ-lkp@intel.com
-   and 202406142110.r97Ts8Xm-lkp@intel.com
- - Updated the commit messages
-
-v2: https://lore.kernel.org/linuxppc-dev/171450753489.10851.3056035705169121613.stgit@linux.ibm.com/
- - Rebased to upstream. So, required the explicit vmalloc.h inclusion as its
-   removed from the system header io.h now.
- - Fixed the DLPAR hotplugged device assignment case. The dma window
-   property is backed up before removal. That copy is restored when required.
- - Cleaned up bit more. Removed leftover debug prints and dump_stack()s.
- - The warning at remap_pfn_range_notrack() during kvm guest boot is no longer
-   seen after the rebase.
-
-v1: https://lore.kernel.org/linuxppc-dev/171026724548.8367.8321359354119254395.stgit@linux.ibm.com/
- - Rewrite as to stop borrowing the DMA windows and implemented
- the table_group_ops for pSeries.
- - Cover letter and Patch 6 has more details as this was a rewrite.
-
-Shivaprasad G Bhat (6):
-      powerpc/iommu: Move pSeries specific functions to pseries/iommu.c
-      powerpc/pseries/iommu: Fix the VFIO_IOMMU_SPAPR_TCE_GET_INFO ioctl output
-      powerpc/pseries/iommu: Use the iommu table[0] for IOV VF's DDW
-      vfio/spapr: Always clear TCEs before unsetting the window
-      powerpc/iommu: Move dev_has_iommu_table() to iommu.c
-      powerpc/iommu: Reimplement the iommu_table_group_ops for pSeries
+Ultimately, we may need some flag or conditional trigger for clearing
+this pending SUSPENDED state.  But it needs further consideration.
 
 
- arch/powerpc/include/asm/iommu.h          |  14 +-
- arch/powerpc/kernel/eeh.c                 |  16 -
- arch/powerpc/kernel/iommu.c               | 170 +-----
- arch/powerpc/platforms/powernv/pci-ioda.c |   6 +-
- arch/powerpc/platforms/pseries/iommu.c    | 704 +++++++++++++++++++++-
- drivers/vfio/vfio_iommu_spapr_tce.c       |  13 +-
- 6 files changed, 718 insertions(+), 205 deletions(-)
+thanks,
 
---
-Signature
-
+Takashi
