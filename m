@@ -1,91 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8A819FA8C;
-	Mon, 24 Jun 2024 17:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1B019EEDD
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719250835; cv=none; b=A5K7XE+NyZ1m4ORU8QioNxSUYd9UT7UBHrWMlpbsBmXGTxaFTgWwpGxnvhpYs5f4Y2ZX4fepQ6SM9XfDN/FNwUFnFPbemsivR4ZgPkp53l22mGfiwfLw4n/1K9d7zX9mMuiUCXSgkD7PxiU4dgx6PGaScj8ikhAnaDTMGGJ5kWk=
+	t=1719250888; cv=none; b=UGNTsPfZ8hzHWKaz4DwFbd9GkFR92gqL46jAqIUlyULcegSGV6Qf5J7uLN0TXTMVzbMkvnV9eCJukJYQRXJWixmn0Qfsn994mVlm7r//s9X8oXQq3zplv4azNLY7P1Ipa/Ak4ToPtrEEGDwQUddNI6HwSx0ZGbjOuGvyd31TO40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719250835; c=relaxed/simple;
-	bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GQ2LVAcUWaaFf4x26dNFYcnLa0JDElS3tzh9zLbCf2yvgD8jYI4hMDGlNqhGE+lqROmaE9lhtRo3UKKExBhypuUxGxe+kGMkeIMZAdhgGrmaNTA93oIVDejRoBqGsJa9Nz+VZwQU8ADZh6lsJ2D+G/cKtNZGl2Q3s0pAfTUot7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=htW79obl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719250888; c=relaxed/simple;
+	bh=6Xy0P0JjsXZxZJicveAS1RvVzevvMoz85YH/ChWlqVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jqN2ceHXAH3hSo4xlrWB3eZHNEoo1dp7wKq6qYf3bx18tuRONq0/qvZQ3/zkvOSYGkIWmSHT0scsvfL4OJkvng9Pzmbog3JniBIfve8MEXSI3OpYfRAP+PNLfvpp5tdHLMtUSS+LzwE9WtSgQtBwRljn7s5aMWwCiahxTY7LMoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ofi53Tf4; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="htW79obl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719250834; x=1750786834;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
-  b=htW79obldMqarSEjDgDvrRJo6aI1SEopNboKjcju+UC61Kg+2uuj79T/
-   6qnWQvndw2uDrgIFx0VlDN5OAP9wHJ42wea4o2pZlR8BCP88searE7aaW
-   Uy144pxud5h5F+hJ61X552H4/TwI+bFErAw1xQby0+OGmaeIw2ns5mNFv
-   sdNUBR0tTQSp5DGVPoISdIYeWYPJ4fPju8XkNG015HCgvCq1HZiiSEhk9
-   6/6Pzcq+y31lgCsF3eaClyabEyoKfNgP33T94D2VQ4RYB9rvJmT/NuVqm
-   H/GMiq6i8/zMG3QmSKLNkUwcTjLnYqb9T+ZVn60MjJkM8CoyB8aLttSaU
-   Q==;
-X-CSE-ConnectionGUID: 0fQj4BcaRZiptyj0Fhjbeg==
-X-CSE-MsgGUID: eMWXuGo9RDmAW73wuXmQhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16112068"
-X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="16112068"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:31 -0700
-X-CSE-ConnectionGUID: kUyIY7jNQJmOglPawkpxNg==
-X-CSE-MsgGUID: P7YvPGmYRt2/E50zsz1kDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="43457395"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
-Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240624173116.31314-1-W_Armin@gmx.de>
-References: <20240624173116.31314-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2 0/2] platform/x86: wmi: Add driver_override support
-Message-Id: <171925082256.3544.1603018074608040428.b4-ty@linux.intel.com>
-Date: Mon, 24 Jun 2024 20:40:22 +0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ofi53Tf4"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a724b3a32d2so183727266b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 10:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719250885; x=1719855685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Xy0P0JjsXZxZJicveAS1RvVzevvMoz85YH/ChWlqVE=;
+        b=Ofi53Tf4tQog+D8EO7dBIwI1LobLB8+JbK6ZS6iGpbFm+egs+eT0CX1f4glwrewQht
+         7IoHMdiGbJxNTIIOvfSCQrSq2/ctWaICOP8U7TdbCkY65G3e83e+0NKaw2wlkJxH1RsG
+         EYQyNweZPN95il8VJMgElC6lycs0xX12C5wzE3kOnA0QBE1PREOpTvqyYKxhnUOO04+o
+         I+HEKOk7twKHScoEjpbf0UPUq+EuRB0mqRXhQEOcYlICzZQR2442dAxy/Z9htaDFhE58
+         aKNtx8RXg/k6CJPVRGWar/5SfBlVfgPfadBMHFifDlt826z20ZTGRUwuRMbUHTYho5jW
+         rL2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719250885; x=1719855685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Xy0P0JjsXZxZJicveAS1RvVzevvMoz85YH/ChWlqVE=;
+        b=FeAYjDP4U+Cx97I0+ZtYM+kQP/fF29TaUJoyiUuOTT45TnEcNk5xehdPK1EdPWqI+S
+         /a7dLnucJD3PZzwKdtmuemV8S5Sky6iAqwNwFFfYs0/K3yr+KWRudoJzyxaE/FImyO49
+         +pgK9ocKNox18SjqNwj1I/getS2AS8l5rlcCXbdxvfTj1IfWgsiQVvpxZwz+RCd+yrIn
+         hrVwwrFgkvkKdcUoEAZhhd+U3GPuXNErL/7NseefBF+vPAwCbuTuR9njY4Sywb/7PUhH
+         GFjXUeeKnhYGjkwLyERwCbO/ZzypGPjWgxDxuapqGilTy8vEmmihE08yOlhdhb3M7Skq
+         CxEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdNEQ0nAJrukwz8+dH5P+Y7vSefz4ryxqGh2B7WHNhuGoImmqvzYkp0VvLnIznr2S6RoG7F6gJ+eiub/exi1WP+V7MzWbDEEutEZ5r
+X-Gm-Message-State: AOJu0Yz8uNSCJltsQ3j3mebajpO0lfRFWiJDkiVRUawZzSMr2s0y5nEc
+	cChBGav176BYC28fj8U8bIkL3jSks3nEdvcj0Zy/uHWkEbTDpPk22tI3pSPsDtuEmCrun9xe8U7
+	2/qUK4abCYM4wNwl0/DgcrNAQIhtm91FB9RlUljHtCyZWckLkWOFTpzI=
+X-Google-Smtp-Source: AGHT+IGN0kwEH305qXkCZ+rKKYQEXLaxOppsohbq8yTWO5V/Fuld5DFcgw2j47k12u8a0vEpENBk57Mi5GklK0CSoKI=
+X-Received: by 2002:a17:907:c301:b0:a6f:5f5d:e924 with SMTP id
+ a640c23a62f3a-a7245b4c9bcmr439831666b.6.1719250884154; Mon, 24 Jun 2024
+ 10:41:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+References: <171923011608.1500238.3591002573732683639.stgit@firesoul>
+ <CAJD7tkbHNvQoPO=8Nubrd5an7_9kSWM=5Wh5H1ZV22WD=oFVMg@mail.gmail.com> <tl25itxuzvjxlzliqsvghaa3auzzze6ap26pjdxt6spvhf5oqz@fvc36ntdeg4r>
+In-Reply-To: <tl25itxuzvjxlzliqsvghaa3auzzze6ap26pjdxt6spvhf5oqz@fvc36ntdeg4r>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 24 Jun 2024 10:40:48 -0700
+Message-ID: <CAJD7tkaKDcG+W+C6Po=_j4HLOYN23rtVnM0jmC077_kkrrq9xA@mail.gmail.com>
+Subject: Re: [PATCH V2] cgroup/rstat: Avoid thundering herd problem by kswapd
+ across NUMA nodes
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>, tj@kernel.org, cgroups@vger.kernel.org, 
+	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
+	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 24 Jun 2024 19:31:14 +0200, Armin Wolf wrote:
-
-> This patch series add support for using the driver_override sysfs
-> attribute with WMI devices. The reason for this is that there will
-> exist a couple of generic WMI drivers in the future for allowing
-> driver developers to directly access the underlying WMI device.
-> 
-> Since those generic WMI drivers do not have an ID table, the
-> driver_override mechanism is used to bind them to WMI devices.
-> 
+On Mon, Jun 24, 2024 at 10:32=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.d=
+ev> wrote:
+>
+> On Mon, Jun 24, 2024 at 05:46:05AM GMT, Yosry Ahmed wrote:
+> > On Mon, Jun 24, 2024 at 4:55=E2=80=AFAM Jesper Dangaard Brouer <hawk@ke=
+rnel.org> wrote:
+> >
 > [...]
+> > I am assuming this supersedes your other patch titled "[PATCH RFC]
+> > cgroup/rstat: avoid thundering herd problem on root cgrp", so I will
+> > only respond here.
+> >
+> > I have two comments:
+> > - There is no reason why this should be limited to the root cgroup. We
+> > can keep track of the cgroup being flushed, and use
+> > cgroup_is_descendant() to find out if the cgroup we want to flush is a
+> > descendant of it. We can use a pointer and cmpxchg primitives instead
+> > of the atomic here IIUC.
+> >
+> > - More importantly, I am not a fan of skipping the flush if there is
+> > an ongoing one. For all we know, the ongoing flush could have just
+> > started and the stats have not been flushed yet. This is another
+> > example of non deterministic behavior that could be difficult to
+> > debug.
+>
+> Even with the flush, there will almost always per-cpu updates which will
+> be missed. This can not be fixed unless we block the stats updaters as
+> well (which is not going to happen). So, we are already ok with this
+> level of non-determinism. Why skipping flushing would be worse? One may
+> argue 'time window is smaller' but this still does not cap the amount of
+> updates. So, unless there is concrete data that this skipping flushing
+> is detrimental to the users of stats, I don't see an issue in the
+> presense of periodic flusher.
 
+As you mentioned, the updates that happen during the flush are
+unavoidable anyway, and the window is small. On the other hand, we
+should be able to maintain the current behavior that at least all the
+stat updates that happened *before* the call to cgroup_rstat_flush()
+are flushed after the call.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+The main concern here is that the stats read *after* an event occurs
+should reflect the system state at that time. For example, a proactive
+reclaimer reading the stats after writing to memory.reclaim should
+observe the system state after the reclaim operation happened.
 
-The list of commits applied:
-[1/2] platform/x86: wmi: Add driver_override support
-      commit: 12046f8c77e0ed6d41beabde0edbb729499c970b
-[2/2] platform/x86: wmi: Add bus ABI documentation
-      commit: 618ba6abfc57bde2c2cea7c2b23e4c27fd5a04b4
+Please see [1] for more details about why this is important, which was
+the rationale for removing stats_flush_ongoing in the first place.
 
---
- i.
+[1]https://lore.kernel.org/lkml/20231129032154.3710765-6-yosryahmed@google.=
+com/
 
+>
+> >
+> > I tried a similar approach before where we sleep and wait for the
+> > ongoing flush to complete instead, without contending on the lock,
+> > using completions [1]. Although that patch has a lot of complexity,
+>
+> We can definitely add complexity but only if there are no simple good
+> enough mitigations.
+
+I agree that my patch was complicated. I am hoping we can have a
+simpler version here that just waits for ongoing flushers if the
+cgroup is a descendant of the cgroup already being flushed.
