@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B7F19B3E2;
-	Mon, 24 Jun 2024 15:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213AD19B3DA;
+	Mon, 24 Jun 2024 15:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241765; cv=none; b=tEl2mK9Yib1lSREiIpSntIZp5NV8BWkxQ5JsTrGxPu3LzciLLzXD3MlLzW0H5cQEMj7Lc81CK0Ih/s4d4F0ALMeH7gIKZLDkxInH84nWhy84qLUDoaaHBcjJKs2GUJ0DV/CHpabVi39qvYit+7Jyj/2XzIa/ZDZepqT0hyxLNcI=
+	t=1719241767; cv=none; b=o5Pci9YD+Coz5RO63XbrhJ9e8SkLb1vhdlhn3ZcwXZ+X1EyCWEeKCzhGF21JcfJrbKLRPB9mokJmDYsC29hHUKlT7vjVpMpuNYbQ9KWP9JB5XtbDRD8BJESkkUqayI4fZ9hGeI1+AE436rfnfidgB39pJ9S3J46XE17NkrDwNaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241765; c=relaxed/simple;
-	bh=B33U9LInxpwbLFxjKVZ3p1H9AflA1zF2QM6hEy6cm9Q=;
+	s=arc-20240116; t=1719241767; c=relaxed/simple;
+	bh=6FfByQlZ21B/zg1lo+K1K0EJXPAJpqXmfK1th12Hc5c=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ncFzUgCJOYX2g7G4fxUvDJ64ehsgAL2EjDlGI49oFqfLUhvKHSvbl4j8HxqygxlSGfTdkRaHIoF8PfApjUcOY3Mk1mIfXaOJJbVMDKcQo6BPUNOEnxFS0L36/LZneXYznuUl87MaEgBzJY/DMG0sorZMbL+AvrTlJ8cOLnk2/30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U3G6dwuF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yX/cb8Ql; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=BhTvHVm/UXdqW0kmKUgLC65Eu+Nkll+SoF55TLMmNLjTHBg/WRitS0Jg61lnoeU1PJGsXXrWbRllW7FAfZgfIyTFIQlc9Xoepsgok00/a4jbwOH2KfCM54ocM0DJX+5LamfwkUWwcPu3wtwpYF06z1fd4Gbo6hJDnaFkEcV25VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bgEfsI3o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1vUQpHWm; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U3G6dwuF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yX/cb8Ql"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bgEfsI3o";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1vUQpHWm"
 Date: Mon, 24 Jun 2024 15:09:20 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1719241760;
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hYzSZBgJRm8NxSjVkijuf3SECHc9RtDRQPUNB4zKPSY=;
-	b=U3G6dwuFCa/tpoBICMXBVgauBoEyk9xotq5li9ipG1kGm3sdXzLbabv6WrM9QmhKiZzmst
-	BmOw9HcjiFsuJur9XU9nHFysxeJ88dPxwwPEE9cDJWwfTkW2J1gNDPmLyJfbuUHEVjFbHW
-	AZj97GOzGF9fuAQgYdU2Mf9kHLUOhZH4Ulwen1fYeqdZXlHmC50p9dUHbzkKK3ae6Kcxl+
-	9cAxMtr7fsJKY+vi1mA2q10DphpeeMesh2qjPTXdajl44HK8t8v6Ga18jnlNugiUybJOby
-	/fVyHcXnQkTjp4D7yXZnGmRgK/W8Gg+E9SFBjBZobe59X9iTEv5xQgYEpFMFrA==
+	bh=g8N/R0wj61fkKwuXTPdkdAWln66Ai1LitCUiHI4iXMY=;
+	b=bgEfsI3o1BzqO0ogOM09ib+WCtyy/xAmlaqDG0UmaQA2ZTS469YoGmW2RpjKOBnUHa4a4b
+	ew52g8WGo1j+HQYLu5HJDH8FJlLiCcPzw68oTSDnSxGRoSZzzYuWQXf9pO9LZOgLHrs/9P
+	Xt0PCAlCuOg9BtCUmFikeBA3tITtBysgx25Ttw/H/crtsFrcEmXqlbkv9YSlB7C7C7Rn1k
+	gBJHBrsHZFcEBCisXXhzhAE9TC0gDOAuJlnobRSE3gczw+HmRTAjpYAL7Et0GR8lwhJRmi
+	slu2xhlHwmEKCGwmtHGj4luGRBqXUlgFADIImknZddVV7lmuuYqnqIJLX5duqw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1719241760;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,28 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hYzSZBgJRm8NxSjVkijuf3SECHc9RtDRQPUNB4zKPSY=;
-	b=yX/cb8QlcsuyZVblklkU0njUra2QiMCF3EyRYmFwN+zLz2I40dJBLDzcz7w1iACD4RaOYb
-	wYKuow93ZrEGwFBg==
+	bh=g8N/R0wj61fkKwuXTPdkdAWln66Ai1LitCUiHI4iXMY=;
+	b=1vUQpHWmTdr2Bj8LMCToWO0LW53hnNE+yEAPTlF1BbwxEkZ6Nc7FcpWc+NYyR72BHItfcr
+	5V612BJNSEwvl+Bw==
 From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/uncore: Apply the unit control RB tree to
- PCI uncore units
+Subject: [tip: perf/core] perf/x86/uncore: Cleanup unused unit structure
 Cc: Kan Liang <kan.liang@linux.intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Yunying Sun <yunying.sun@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240614134631.1092359-7-kan.liang@linux.intel.com>
-References: <20240614134631.1092359-7-kan.liang@linux.intel.com>
+In-Reply-To: <20240614134631.1092359-8-kan.liang@linux.intel.com>
+References: <20240614134631.1092359-8-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171924176031.10875.17039932923973171228.tip-bot2@tip-bot2>
+Message-ID: <171924176012.10875.13613360401273888783.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,343 +68,284 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f76a8420444beb1c3968504c8176a67d2d5fe18f
-Gitweb:        https://git.kernel.org/tip/f76a8420444beb1c3968504c8176a67d2d5fe18f
+Commit-ID:     15a4bd51853b9c67f49bb03c20b6b6cb60fd204f
+Gitweb:        https://git.kernel.org/tip/15a4bd51853b9c67f49bb03c20b6b6cb60fd204f
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 14 Jun 2024 06:46:29 -07:00
+AuthorDate:    Fri, 14 Jun 2024 06:46:30 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 17 Jun 2024 17:57:58 +02:00
+CommitterDate: Mon, 17 Jun 2024 17:57:59 +02:00
 
-perf/x86/uncore: Apply the unit control RB tree to PCI uncore units
+perf/x86/uncore: Cleanup unused unit structure
 
-The unit control RB tree has the unit control and unit ID information
-for all the PCI units. Use them to replace the box_ctls/pci_offsets to
-get an accurate unit control address for PCI uncore units.
-
-The UPI/M3UPI units in the discovery table are ignored. Please see the
-commit 65248a9a9ee1 ("perf/x86/uncore: Add a quirk for UPI on SPR").
-Manually allocate a unit control RB tree for UPI/M3UPI.
-Add cleanup_extra_boxes to release such manual allocation.
+The unit control and ID information are retrieved from the unit control
+RB tree. No one uses the old structure anymore. Remove them.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Tested-by: Yunying Sun <yunying.sun@intel.com>
-Link: https://lore.kernel.org/r/20240614134631.1092359-7-kan.liang@linux.intel.com
+Link: https://lore.kernel.org/r/20240614134631.1092359-8-kan.liang@linux.intel.com
 ---
- arch/x86/events/intel/uncore.c           | 53 +++++++++------------
- arch/x86/events/intel/uncore.h           |  4 ++-
- arch/x86/events/intel/uncore_discovery.c | 26 +++++++---
- arch/x86/events/intel/uncore_discovery.h |  2 +-
- arch/x86/events/intel/uncore_snbep.c     | 57 +++++++++++++++++------
- 5 files changed, 94 insertions(+), 48 deletions(-)
+ arch/x86/events/intel/uncore.c           |   7 +-
+ arch/x86/events/intel/uncore.h           |   2 +-
+ arch/x86/events/intel/uncore_discovery.c | 110 ++--------------------
+ arch/x86/events/intel/uncore_discovery.h |   5 +-
+ 4 files changed, 12 insertions(+), 112 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index b89c8e0..12c8f70 100644
+index 12c8f70..9e503d8 100644
 --- a/arch/x86/events/intel/uncore.c
 +++ b/arch/x86/events/intel/uncore.c
-@@ -969,6 +969,9 @@ static void uncore_type_exit(struct intel_uncore_type *type)
- 	if (type->cleanup_mapping)
- 		type->cleanup_mapping(type);
+@@ -868,7 +868,7 @@ static inline int uncore_get_box_id(struct intel_uncore_type *type,
+ 	if (type->boxes)
+ 		return intel_uncore_find_discovery_unit_id(type->boxes, -1, pmu->pmu_idx);
  
-+	if (type->cleanup_extra_boxes)
-+		type->cleanup_extra_boxes(type);
-+
- 	if (pmu) {
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
- 			uncore_pmu_unregister(pmu);
-@@ -1084,22 +1087,19 @@ static struct intel_uncore_pmu *
- uncore_pci_find_dev_pmu_from_types(struct pci_dev *pdev)
- {
- 	struct intel_uncore_type **types = uncore_pci_uncores;
-+	struct intel_uncore_discovery_unit *unit;
- 	struct intel_uncore_type *type;
--	u64 box_ctl;
--	int i, die;
-+	struct rb_node *node;
+-	return type->box_ids ? type->box_ids[pmu->pmu_idx] : pmu->pmu_idx;
++	return pmu->pmu_idx;
+ }
  
- 	for (; *types; types++) {
- 		type = *types;
--		for (die = 0; die < __uncore_max_dies; die++) {
--			for (i = 0; i < type->num_boxes; i++) {
--				if (!type->box_ctls[die])
--					continue;
--				box_ctl = type->box_ctls[die] + type->pci_offsets[i];
--				if (pdev->devfn == UNCORE_DISCOVERY_PCI_DEVFN(box_ctl) &&
--				    pdev->bus->number == UNCORE_DISCOVERY_PCI_BUS(box_ctl) &&
--				    pci_domain_nr(pdev->bus) == UNCORE_DISCOVERY_PCI_DOMAIN(box_ctl))
--					return &type->pmus[i];
--			}
-+
-+		for (node = rb_first(type->boxes); node; node = rb_next(node)) {
-+			unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
-+			if (pdev->devfn == UNCORE_DISCOVERY_PCI_DEVFN(unit->addr) &&
-+			    pdev->bus->number == UNCORE_DISCOVERY_PCI_BUS(unit->addr) &&
-+			    pci_domain_nr(pdev->bus) == UNCORE_DISCOVERY_PCI_DOMAIN(unit->addr))
-+				return &type->pmus[unit->pmu_idx];
- 		}
+ void uncore_get_alias_name(char *pmu_name, struct intel_uncore_pmu *pmu)
+@@ -980,10 +980,7 @@ static void uncore_type_exit(struct intel_uncore_type *type)
+ 		kfree(type->pmus);
+ 		type->pmus = NULL;
  	}
- 
-@@ -1375,28 +1375,25 @@ static struct notifier_block uncore_pci_notifier = {
- static void uncore_pci_pmus_register(void)
- {
- 	struct intel_uncore_type **types = uncore_pci_uncores;
-+	struct intel_uncore_discovery_unit *unit;
- 	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu;
-+	struct rb_node *node;
- 	struct pci_dev *pdev;
--	u64 box_ctl;
--	int i, die;
- 
- 	for (; *types; types++) {
- 		type = *types;
--		for (die = 0; die < __uncore_max_dies; die++) {
--			for (i = 0; i < type->num_boxes; i++) {
--				if (!type->box_ctls[die])
--					continue;
--				box_ctl = type->box_ctls[die] + type->pci_offsets[i];
--				pdev = pci_get_domain_bus_and_slot(UNCORE_DISCOVERY_PCI_DOMAIN(box_ctl),
--								   UNCORE_DISCOVERY_PCI_BUS(box_ctl),
--								   UNCORE_DISCOVERY_PCI_DEVFN(box_ctl));
--				if (!pdev)
--					continue;
--				pmu = &type->pmus[i];
--
--				uncore_pci_pmu_register(pdev, type, pmu, die);
--			}
+-	if (type->box_ids) {
+-		kfree(type->box_ids);
+-		type->box_ids = NULL;
+-	}
 +
-+		for (node = rb_first(type->boxes); node; node = rb_next(node)) {
-+			unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
-+			pdev = pci_get_domain_bus_and_slot(UNCORE_DISCOVERY_PCI_DOMAIN(unit->addr),
-+							   UNCORE_DISCOVERY_PCI_BUS(unit->addr),
-+							   UNCORE_DISCOVERY_PCI_DEVFN(unit->addr));
-+
-+			if (!pdev)
-+				continue;
-+			pmu = &type->pmus[unit->pmu_idx];
-+			uncore_pci_pmu_register(pdev, type, pmu, unit->die);
- 		}
- 	}
- 
+ 	kfree(type->events_group);
+ 	type->events_group = NULL;
+ }
 diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 0a49e30..05c429c 100644
+index 05c429c..027ef29 100644
 --- a/arch/x86/events/intel/uncore.h
 +++ b/arch/x86/events/intel/uncore.h
-@@ -99,6 +99,10 @@ struct intel_uncore_type {
- 	int (*get_topology)(struct intel_uncore_type *type);
- 	void (*set_mapping)(struct intel_uncore_type *type);
- 	void (*cleanup_mapping)(struct intel_uncore_type *type);
-+	/*
-+	 * Optional callbacks for extra uncore units cleanup
-+	 */
-+	void (*cleanup_extra_boxes)(struct intel_uncore_type *type);
- };
- 
- #define pmu_group attr_groups[0]
+@@ -62,7 +62,6 @@ struct intel_uncore_type {
+ 	unsigned fixed_ctr;
+ 	unsigned fixed_ctl;
+ 	unsigned box_ctl;
+-	u64 *box_ctls;	/* Unit ctrl addr of the first box of each die */
+ 	union {
+ 		unsigned msr_offset;
+ 		unsigned mmio_offset;
+@@ -76,7 +75,6 @@ struct intel_uncore_type {
+ 		u64 *pci_offsets;
+ 		u64 *mmio_offsets;
+ 	};
+-	unsigned *box_ids;
+ 	struct event_constraint unconstrainted;
+ 	struct event_constraint *constraints;
+ 	struct intel_uncore_pmu *pmus;
 diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index 076ec1e..866493f 100644
+index 866493f..571e44b 100644
 --- a/arch/x86/events/intel/uncore_discovery.c
 +++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -215,8 +215,8 @@ uncore_find_unit(struct rb_root *root, unsigned int id)
- 	return NULL;
+@@ -89,10 +89,6 @@ add_uncore_discovery_type(struct uncore_unit_discovery *unit)
+ 	if (!type)
+ 		return NULL;
+ 
+-	type->box_ctrl_die = kcalloc(__uncore_max_dies, sizeof(u64), GFP_KERNEL);
+-	if (!type->box_ctrl_die)
+-		goto free_type;
+-
+ 	type->units = RB_ROOT;
+ 
+ 	type->access_type = unit->access_type;
+@@ -102,12 +98,6 @@ add_uncore_discovery_type(struct uncore_unit_discovery *unit)
+ 	rb_add(&type->node, &discovery_tables, __type_less);
+ 
+ 	return type;
+-
+-free_type:
+-	kfree(type);
+-
+-	return NULL;
+-
  }
  
--static void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
--				 struct rb_root *root, u16 *num_units)
-+void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
-+			  struct rb_root *root, u16 *num_units)
+ static struct intel_uncore_discovery_type *
+@@ -230,13 +220,10 @@ void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
+ 
+ static void
+ uncore_insert_box_info(struct uncore_unit_discovery *unit,
+-		       int die, bool parsed)
++		       int die)
  {
- 	struct intel_uncore_discovery_unit *unit = uncore_find_unit(root, node->id);
+ 	struct intel_uncore_discovery_unit *node;
+ 	struct intel_uncore_discovery_type *type;
+-	unsigned int *ids;
+-	u64 *box_offset;
+-	int i;
  
-@@ -560,7 +560,7 @@ bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
- 	if (!box->pmu->type->boxes)
- 		return false;
+ 	if (!unit->ctl || !unit->ctl_offset || !unit->ctr_offset) {
+ 		pr_info("Invalid address is detected for uncore type %d box %d, "
+@@ -253,79 +240,21 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
+ 	node->id = unit->box_id;
+ 	node->addr = unit->ctl;
  
--	if (box->pci_dev || box->io_addr) {
-+	if (box->io_addr) {
- 		hwc->config_base = uncore_pci_event_ctl(box, hwc->idx);
- 		hwc->event_base  = uncore_pci_perf_ctr(box, hwc->idx);
- 		return true;
-@@ -570,16 +570,28 @@ bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
- 	if (!box_ctl)
- 		return false;
+-	if (parsed) {
+-		type = search_uncore_discovery_type(unit->box_type);
+-		if (!type) {
+-			pr_info("A spurious uncore type %d is detected, "
+-				"Disable the uncore type.\n",
+-				unit->box_type);
+-			kfree(node);
+-			return;
+-		}
+-
+-		uncore_find_add_unit(node, &type->units, &type->num_units);
+-
+-		/* Store the first box of each die */
+-		if (!type->box_ctrl_die[die])
+-			type->box_ctrl_die[die] = unit->ctl;
++	type = get_uncore_discovery_type(unit);
++	if (!type) {
++		kfree(node);
+ 		return;
+ 	}
  
-+	if (box->pci_dev) {
-+		box_ctl = UNCORE_DISCOVERY_PCI_BOX_CTRL(box_ctl);
-+		hwc->config_base = box_ctl + uncore_pci_event_ctl(box, hwc->idx);
-+		hwc->event_base  = box_ctl + uncore_pci_perf_ctr(box, hwc->idx);
-+		return true;
-+	}
-+
- 	hwc->config_base = box_ctl + box->pmu->type->event_ctl + hwc->idx;
- 	hwc->event_base  = box_ctl + box->pmu->type->perf_ctr + hwc->idx;
+-	type = get_uncore_discovery_type(unit);
+-	if (!type)
+-		goto free_node;
+-
+-	box_offset = kcalloc(type->num_boxes + 1, sizeof(u64), GFP_KERNEL);
+-	if (!box_offset)
+-		goto free_node;
+-
+-	ids = kcalloc(type->num_boxes + 1, sizeof(unsigned int), GFP_KERNEL);
+-	if (!ids)
+-		goto free_box_offset;
+-
+ 	uncore_find_add_unit(node, &type->units, &type->num_units);
  
- 	return true;
+ 	/* Store generic information for the first box */
+-	if (!type->num_boxes) {
+-		type->box_ctrl = unit->ctl;
+-		type->box_ctrl_die[die] = unit->ctl;
++	if (type->num_units == 1) {
+ 		type->num_counters = unit->num_regs;
+ 		type->counter_width = unit->bit_width;
+ 		type->ctl_offset = unit->ctl_offset;
+ 		type->ctr_offset = unit->ctr_offset;
+-		*ids = unit->box_id;
+-		goto end;
+ 	}
+-
+-	for (i = 0; i < type->num_boxes; i++) {
+-		ids[i] = type->ids[i];
+-		box_offset[i] = type->box_offset[i];
+-
+-		if (unit->box_id == ids[i]) {
+-			pr_info("Duplicate uncore type %d box ID %d is detected, "
+-				"Drop the duplicate uncore unit.\n",
+-				unit->box_type, unit->box_id);
+-			goto free_ids;
+-		}
+-	}
+-	ids[i] = unit->box_id;
+-	box_offset[i] = unit->ctl - type->box_ctrl;
+-	kfree(type->ids);
+-	kfree(type->box_offset);
+-end:
+-	type->ids = ids;
+-	type->box_offset = box_offset;
+-	type->num_boxes++;
+-	return;
+-
+-free_ids:
+-	kfree(ids);
+-
+-free_box_offset:
+-	kfree(box_offset);
+-
+-free_node:
+-	kfree(node);
  }
  
-+static inline int intel_pci_uncore_box_ctl(struct intel_uncore_box *box)
-+{
-+	return UNCORE_DISCOVERY_PCI_BOX_CTRL(intel_generic_uncore_box_ctl(box));
-+}
-+
- void intel_generic_uncore_pci_init_box(struct intel_uncore_box *box)
- {
- 	struct pci_dev *pdev = box->pci_dev;
--	int box_ctl = uncore_pci_box_ctl(box);
-+	int box_ctl = intel_pci_uncore_box_ctl(box);
+ static bool
+@@ -404,7 +333,7 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
+ 		if (uncore_ignore_unit(&unit, ignore))
+ 			continue;
  
- 	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
- 	pci_write_config_dword(pdev, box_ctl, GENERIC_PMON_BOX_CTL_INT);
-@@ -588,7 +600,7 @@ void intel_generic_uncore_pci_init_box(struct intel_uncore_box *box)
- void intel_generic_uncore_pci_disable_box(struct intel_uncore_box *box)
- {
- 	struct pci_dev *pdev = box->pci_dev;
--	int box_ctl = uncore_pci_box_ctl(box);
-+	int box_ctl = intel_pci_uncore_box_ctl(box);
+-		uncore_insert_box_info(&unit, die, *parsed);
++		uncore_insert_box_info(&unit, die);
+ 	}
  
- 	pci_write_config_dword(pdev, box_ctl, GENERIC_PMON_BOX_CTL_FRZ);
+ 	*parsed = true;
+@@ -474,7 +403,6 @@ void intel_uncore_clear_discovery_tables(void)
+ 			rb_erase(node, &type->units);
+ 			kfree(pos);
+ 		}
+-		kfree(type->box_ctrl_die);
+ 		kfree(type);
+ 	}
  }
-@@ -596,7 +608,7 @@ void intel_generic_uncore_pci_disable_box(struct intel_uncore_box *box)
- void intel_generic_uncore_pci_enable_box(struct intel_uncore_box *box)
+@@ -738,41 +666,23 @@ static bool uncore_update_uncore_type(enum uncore_access_type type_id,
+ 				      struct intel_uncore_discovery_type *type)
  {
- 	struct pci_dev *pdev = box->pci_dev;
--	int box_ctl = uncore_pci_box_ctl(box);
-+	int box_ctl = intel_pci_uncore_box_ctl(box);
+ 	uncore->type_id = type->type;
+-	uncore->num_boxes = type->num_boxes;
+ 	uncore->num_counters = type->num_counters;
+ 	uncore->perf_ctr_bits = type->counter_width;
+-	uncore->box_ids = type->ids;
++	uncore->perf_ctr = (unsigned int)type->ctr_offset;
++	uncore->event_ctl = (unsigned int)type->ctl_offset;
++	uncore->boxes = &type->units;
++	uncore->num_boxes = type->num_units;
  
- 	pci_write_config_dword(pdev, box_ctl, 0);
- }
-@@ -748,6 +760,8 @@ static bool uncore_update_uncore_type(enum uncore_access_type type_id,
- 		uncore->box_ctl = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl);
- 		uncore->box_ctls = type->box_ctrl_die;
- 		uncore->pci_offsets = type->box_offset;
-+		uncore->boxes = &type->units;
-+		uncore->num_boxes = type->num_units;
+ 	switch (type_id) {
+ 	case UNCORE_ACCESS_MSR:
+ 		uncore->ops = &generic_uncore_msr_ops;
+-		uncore->perf_ctr = (unsigned int)type->ctr_offset;
+-		uncore->event_ctl = (unsigned int)type->ctl_offset;
+-		uncore->box_ctl = (unsigned int)type->box_ctrl;
+-		uncore->msr_offsets = type->box_offset;
+-		uncore->boxes = &type->units;
+-		uncore->num_boxes = type->num_units;
+ 		break;
+ 	case UNCORE_ACCESS_PCI:
+ 		uncore->ops = &generic_uncore_pci_ops;
+-		uncore->perf_ctr = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl) + type->ctr_offset;
+-		uncore->event_ctl = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl) + type->ctl_offset;
+-		uncore->box_ctl = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl);
+-		uncore->box_ctls = type->box_ctrl_die;
+-		uncore->pci_offsets = type->box_offset;
+-		uncore->boxes = &type->units;
+-		uncore->num_boxes = type->num_units;
  		break;
  	case UNCORE_ACCESS_MMIO:
  		uncore->ops = &generic_uncore_mmio_ops;
+-		uncore->perf_ctr = (unsigned int)type->ctr_offset;
+-		uncore->event_ctl = (unsigned int)type->ctl_offset;
+-		uncore->box_ctl = (unsigned int)type->box_ctrl;
+-		uncore->box_ctls = type->box_ctrl_die;
+-		uncore->mmio_offsets = type->box_offset;
+ 		uncore->mmio_map_size = UNCORE_GENERIC_MMIO_SIZE;
+-		uncore->boxes = &type->units;
+-		uncore->num_boxes = type->num_units;
+ 		break;
+ 	default:
+ 		return false;
 diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index 4a7a7c8..0acf9b6 100644
+index 0acf9b6..0e94aa7 100644
 --- a/arch/x86/events/intel/uncore_discovery.h
 +++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -171,3 +171,5 @@ int intel_uncore_find_discovery_unit_id(struct rb_root *units, int die,
- 					unsigned int pmu_idx);
- bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
- 					  struct intel_uncore_box *box);
-+void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
-+			  struct rb_root *root, u16 *num_units);
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 8b1cabf..fde123a 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6199,6 +6199,24 @@ static u64 spr_upi_pci_offsets[SPR_UNCORE_UPI_NUM_BOXES] = {
- 	0, 0x8000, 0x10000, 0x18000
+@@ -124,18 +124,13 @@ struct intel_uncore_discovery_unit {
+ struct intel_uncore_discovery_type {
+ 	struct rb_node	node;
+ 	enum uncore_access_type	access_type;
+-	u64		box_ctrl;	/* Unit ctrl addr of the first box */
+-	u64		*box_ctrl_die;	/* Unit ctrl addr of the first box of each die */
+ 	struct rb_root	units;		/* Unit ctrl addr for all units */
+ 	u16		type;		/* Type ID of the uncore block */
+ 	u8		num_counters;
+ 	u8		counter_width;
+ 	u8		ctl_offset;	/* Counter Control 0 offset */
+ 	u8		ctr_offset;	/* Counter 0 offset */
+-	u16		num_boxes;	/* number of boxes for the uncore block */
+ 	u16		num_units;	/* number of units */
+-	unsigned int	*ids;		/* Box IDs */
+-	u64		*box_offset;	/* Box offset */
  };
  
-+static void spr_extra_boxes_cleanup(struct intel_uncore_type *type)
-+{
-+	struct intel_uncore_discovery_unit *pos;
-+	struct rb_node *node;
-+
-+	if (!type->boxes)
-+		return;
-+
-+	while (!RB_EMPTY_ROOT(type->boxes)) {
-+		node = rb_first(type->boxes);
-+		pos = rb_entry(node, struct intel_uncore_discovery_unit, node);
-+		rb_erase(node, type->boxes);
-+		kfree(pos);
-+	}
-+	kfree(type->boxes);
-+	type->boxes = NULL;
-+}
-+
- static struct intel_uncore_type spr_uncore_upi = {
- 	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
- 	.event_mask_ext		= SPR_RAW_EVENT_MASK_EXT,
-@@ -6213,10 +6231,11 @@ static struct intel_uncore_type spr_uncore_upi = {
- 	.num_counters		= 4,
- 	.num_boxes		= SPR_UNCORE_UPI_NUM_BOXES,
- 	.perf_ctr_bits		= 48,
--	.perf_ctr		= ICX_UPI_PCI_PMON_CTR0,
--	.event_ctl		= ICX_UPI_PCI_PMON_CTL0,
-+	.perf_ctr		= ICX_UPI_PCI_PMON_CTR0 - ICX_UPI_PCI_PMON_BOX_CTL,
-+	.event_ctl		= ICX_UPI_PCI_PMON_CTL0 - ICX_UPI_PCI_PMON_BOX_CTL,
- 	.box_ctl		= ICX_UPI_PCI_PMON_BOX_CTL,
- 	.pci_offsets		= spr_upi_pci_offsets,
-+	.cleanup_extra_boxes	= spr_extra_boxes_cleanup,
- };
- 
- static struct intel_uncore_type spr_uncore_m3upi = {
-@@ -6226,11 +6245,12 @@ static struct intel_uncore_type spr_uncore_m3upi = {
- 	.num_counters		= 4,
- 	.num_boxes		= SPR_UNCORE_UPI_NUM_BOXES,
- 	.perf_ctr_bits		= 48,
--	.perf_ctr		= ICX_M3UPI_PCI_PMON_CTR0,
--	.event_ctl		= ICX_M3UPI_PCI_PMON_CTL0,
-+	.perf_ctr		= ICX_M3UPI_PCI_PMON_CTR0 - ICX_M3UPI_PCI_PMON_BOX_CTL,
-+	.event_ctl		= ICX_M3UPI_PCI_PMON_CTL0 - ICX_M3UPI_PCI_PMON_BOX_CTL,
- 	.box_ctl		= ICX_M3UPI_PCI_PMON_BOX_CTL,
- 	.pci_offsets		= spr_upi_pci_offsets,
- 	.constraints		= icx_uncore_m3upi_constraints,
-+	.cleanup_extra_boxes	= spr_extra_boxes_cleanup,
- };
- 
- enum perf_uncore_spr_iio_freerunning_type_id {
-@@ -6517,10 +6537,11 @@ void spr_uncore_cpu_init(void)
- 
- static void spr_update_device_location(int type_id)
- {
-+	struct intel_uncore_discovery_unit *unit;
- 	struct intel_uncore_type *type;
- 	struct pci_dev *dev = NULL;
-+	struct rb_root *root;
- 	u32 device, devfn;
--	u64 *ctls;
- 	int die;
- 
- 	if (type_id == UNCORE_SPR_UPI) {
-@@ -6534,27 +6555,35 @@ static void spr_update_device_location(int type_id)
- 	} else
- 		return;
- 
--	ctls = kcalloc(__uncore_max_dies, sizeof(u64), GFP_KERNEL);
--	if (!ctls) {
-+	root = kzalloc(sizeof(struct rb_root), GFP_KERNEL);
-+	if (!root) {
- 		type->num_boxes = 0;
- 		return;
- 	}
-+	*root = RB_ROOT;
- 
- 	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
--		if (devfn != dev->devfn)
--			continue;
- 
- 		die = uncore_device_to_die(dev);
- 		if (die < 0)
- 			continue;
- 
--		ctls[die] = pci_domain_nr(dev->bus) << UNCORE_DISCOVERY_PCI_DOMAIN_OFFSET |
--			    dev->bus->number << UNCORE_DISCOVERY_PCI_BUS_OFFSET |
--			    devfn << UNCORE_DISCOVERY_PCI_DEVFN_OFFSET |
--			    type->box_ctl;
-+		unit = kzalloc(sizeof(*unit), GFP_KERNEL);
-+		if (!unit)
-+			continue;
-+		unit->die = die;
-+		unit->id = PCI_SLOT(dev->devfn) - PCI_SLOT(devfn);
-+		unit->addr = pci_domain_nr(dev->bus) << UNCORE_DISCOVERY_PCI_DOMAIN_OFFSET |
-+			     dev->bus->number << UNCORE_DISCOVERY_PCI_BUS_OFFSET |
-+			     devfn << UNCORE_DISCOVERY_PCI_DEVFN_OFFSET |
-+			     type->box_ctl;
-+
-+		unit->pmu_idx = unit->id;
-+
-+		uncore_find_add_unit(unit, root, NULL);
- 	}
- 
--	type->box_ctls = ctls;
-+	type->boxes = root;
- }
- 
- int spr_uncore_pci_init(void)
+ bool intel_uncore_has_discovery_tables(int *ignore);
