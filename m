@@ -1,268 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22062E634;
-	Mon, 24 Jun 2024 07:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552602EAF7
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 07:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719212465; cv=none; b=D7uWyadBhDb6hssZZRpMlbVIyfVnXypB0mBQOz5TOPkWuum2zXkP28D2Hhrw5+m52vanXns1iUpDsrj4qJ3bwomlizs1cRCqiTMcULB5sknX8wToXn/HnCRlTo+tFH3UWxqBOdUu139J/2DGgjkonLGgHI0fVi9RMhXLnmvNo2s=
+	t=1719212596; cv=none; b=nmDm5fbY6H22JT6dpU97/09k+nowu/sxh7GcStb6E1ajYgK2obSu1dochLpxrO4WF1MXhvWiI9zZQTGSP3j1WeZo9bHwHhlAwT3JihBQZy7G5UuDzE8Q2x5oTr9Io/IIc8So3pT/1M3dtSlHUpOhgRjpE7P94Ef0ynD2oHuIIfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719212465; c=relaxed/simple;
-	bh=vysncUCoKhlu8IYF+ovoiOg/W8vMI8Njteu+rthszIg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ft3CN4gkipJhdioTcMMRpIBbR14YduFcGOfor0eRO0KSuZXLwjnzDkWSRmq4syUugANoNCVqIDo+hfEBqsFMEtsbJofFqS5MNeFScAtB5pYa0cHJNSOr1LNoXywzJWUTcvYqhk0AjwGYqGHAwwYBDPFouMEXS8ClD4T2HVzE514=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFBbNy9N; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719212596; c=relaxed/simple;
+	bh=pL8yZo8v5PjzbxSmeKOeCvmB5j5lHAxtpjhhCTT405M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eSOLBEDnoxII1qUvHNl3EaaP2Ajp8kjCSdoBloZeKisZOqGRUdTEdzHGnIMqL39V+G95kIdaoG6blH03vjE6XoATpX2z2Mbids0PN8P6fnpbGvy9Gma7rqgc33tzBYYwc0cvtKZazY4dsR1enGttIK9FbzMy5uruDhrdLuvyz3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QaLpZfjB; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFBbNy9N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719212464; x=1750748464;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=vysncUCoKhlu8IYF+ovoiOg/W8vMI8Njteu+rthszIg=;
-  b=ZFBbNy9N+TeazYwYac9MGAsFNZOo8IpAlBmfvXHf8eu1vmd95Ig9gcQT
-   jnSLC3ltFDguZwVilRxqk7YoYDKpbSI19sVUMEt6nOqlCFlKUOgfE8Jic
-   tmyKbtpQqPCIY2+3+LsbKvYHaqXOUyCLax+lNgCMuMFowFMINpuiBP0Db
-   tEP7292qOTyLfpsiZDJcHdg8VK/IcbWiWmPCKOx1FBVShE2/1vA15DPXo
-   dqa/WhFXraezAil1HptJxt3zbevAKtA1mLW6nozdjD+M3Erbl3E72rPVq
-   IeeJlizcXLstH7Gvi7SQfGfs73N+IJiEhuGChDBHH9cBSVNtXEhj0MPt2
-   g==;
-X-CSE-ConnectionGUID: ZWcY7ZW9R6yICNfGahiAEg==
-X-CSE-MsgGUID: 2tM+ksI0TBqTt/Xuc5RMyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11112"; a="15859102"
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="15859102"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 00:01:03 -0700
-X-CSE-ConnectionGUID: 2G9ck0J0QrKUee6WV/mE4Q==
-X-CSE-MsgGUID: SaZ8xHkJRCS25xxymusKGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="47652596"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 00:01:00 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,  David Hildenbrand
- <david@redhat.com>,  akpm@linux-foundation.org,  shuah@kernel.org,
-  linux-mm@kvack.org,  chrisl@kernel.org,  hughd@google.com,
-  kaleshsingh@google.com,  kasong@tencent.com,
-  linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,  Barry
- Song <v-songbaohua@oppo.com>
-Subject: Re: [PATCH] selftests/mm: Introduce a test program to assess swap
- entry allocation for thp_swapout
-In-Reply-To: <CAGsJ_4y9JinvzA6Wd2aXe_FRYhxED0vkkvU2HwWW8WBEX+8oqw@mail.gmail.com>
-	(Barry Song's message of "Mon, 24 Jun 2024 16:05:44 +1200")
-References: <20240620002648.75204-1-21cnbao@gmail.com>
-	<f3c18806-34ac-41d3-8c79-d7dd6504547e@arm.com>
-	<d0b20f47-384d-49f1-8449-0da6da11089c@redhat.com>
-	<b99c2f80-3b53-4b04-b610-a66179b928a9@arm.com>
-	<CAGsJ_4y_pjMpNOFzrPZ6u7=M83-CQ0umDCPt=ZDuSKJWssiCqA@mail.gmail.com>
-	<87cyoa1wgm.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4xX52FKG+o7vsjAwBLjvfPH=tg_36xqjCnwc5yGV=SaVg@mail.gmail.com>
-	<878qyv0zwk.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4y9JinvzA6Wd2aXe_FRYhxED0vkkvU2HwWW8WBEX+8oqw@mail.gmail.com>
-Date: Mon, 24 Jun 2024 14:59:09 +0800
-Message-ID: <871q4m25du.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QaLpZfjB"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-254aec5a084so2321504fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 00:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1719212593; x=1719817393; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hus/Z8kWfB3zHpzLYZI2dy5Pgo4m4TR8rM+wRIiJmBY=;
+        b=QaLpZfjBm9XduronS4mLzHjTg5ZaNZZ2odg6OZMuchl8leUXOxkYIShTAACQ/sZzSM
+         m86OPGSkzpwoGkInOqq2/xzNqLArKWi1iR5o4cO6x8zAhcF1ym29z+X+gapye6v/D390
+         +mmGFQr/6wD7J8K+mELCZ0MGyDbQEHiFtH3IcWZ/EeZ/4HYZKzMKIn0lEdPGTCt8Vo9J
+         JpoOwOM0k8kROUj9gi7FajyiUrRkpE+Vi8UbQH/T6oggB1rFYAdZH3Gfsmj6fMPdRz8D
+         gILuqmCIu8uKPybrDVAe2dWpsdjezp/f/RIT/+7MaQX3zfnqkeaBjgt7PlIJFzRv5AYN
+         2ckQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719212593; x=1719817393;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hus/Z8kWfB3zHpzLYZI2dy5Pgo4m4TR8rM+wRIiJmBY=;
+        b=S/pfJTJ5pcik1cKTlpp2upqRo78lVB2iSdmqU6KYg+hcDLn7a8NCy2YBLD32dQHKik
+         jRGfO4KwWtzoJxKYKah2kBcyhpYEOIAxhxsPnRs78ouH/IkT+SfoLLwy9+UuL+5FeEGK
+         fomYKKAE/G8J3iKPVaLvXBAZOm2zlTdd5kW/ZSOOU+z67JSE0WLXyYVfWjjqBwscQqiZ
+         ZgO/thI+5uV2bieMTJt/6Qqm5VX9z5TYMBWEF9lNUn90lJtAGlCnLzTcn2xO3yLYXexZ
+         2aMeqLteB/WJ6Z0CwbWhCYCVWZwjJ7XYUSsYk+R+kAQi4h8NZlT38d3nW0vZitAG6i7F
+         jq8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVVMYoG9/61RpQ0G8eGkUd7mXDahhNpg77SIcpPW9CwuWi6i1qRkJLxGjELzbnqkI6IoVYZIjOFMQ2J1VWvc/7GRb8l/VVPaAprbUhK
+X-Gm-Message-State: AOJu0YzLVeYgjY0TqKoxke7HedgK4njU3qtAOBTUN6bgw6aveK3ciLlZ
+	oHvK18Bq4K5oeDNREYXbiYHJxGZnza37TKfjh2P2TqZiFsHQh+YqOT3kR6XdMiFvTd41QoajlYf
+	IbMGotmxIV5Xo5Ot5EzKVDfCsfXra1CkCaF7tYw==
+X-Google-Smtp-Source: AGHT+IE1ORNwhEJz9xcQatVNoa2I81qe/opkAq14DSskHVsG4ALLMZ8WWonbxzoRgSdJ/Sj4jh6h/2w3Ymhhfh56Nec=
+X-Received: by 2002:a05:6870:7b4c:b0:258:42be:ce5e with SMTP id
+ 586e51a60fabf-25d016c196emr4851607fac.16.1719212593253; Mon, 24 Jun 2024
+ 00:03:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240618120842.15159-1-cuiyunhui@bytedance.com>
+ <ZnTRbptoowL+1GOP@ghost> <CAEEQ3wnNZJviirqWCAG7mXsbynC+=Gq5q4jh6b4yamm8cnzMAw@mail.gmail.com>
+ <ZnTvArAQpfCm10tc@ghost> <CAEEQ3w=6EZMFsH2y7efZsX00CzytyMu+Be_RT8CicejMB6qAJA@mail.gmail.com>
+ <ZnUgLZow2ODPH7vp@ghost> <Znfl8NDWmL1NFANn@kernel.org>
+In-Reply-To: <Znfl8NDWmL1NFANn@kernel.org>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Mon, 24 Jun 2024 15:03:02 +0800
+Message-ID: <CAEEQ3w=YYyUdR3CRMv6+nURv3_kMf+dC3UGqv-UNsmxpVzmoWw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] RISC-V: cmdline: Add support for 'memmap' parameter
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alexghiti@rivosinc.com, akpm@linux-foundation.org, 
+	bhe@redhat.com, dawei.li@shingroup.cn, jszhang@kernel.org, 
+	namcao@linutronix.de, bjorn@rivosinc.com, vishal.moola@gmail.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Barry Song <21cnbao@gmail.com> writes:
+Hi Mike,
 
-> On Mon, Jun 24, 2024 at 3:44=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->> > On Fri, Jun 21, 2024 at 9:24=E2=80=AFPM Huang, Ying <ying.huang@intel.=
-com> wrote:
->> >>
->> >> Barry Song <21cnbao@gmail.com> writes:
->> >>
->> >> > On Fri, Jun 21, 2024 at 7:25=E2=80=AFPM Ryan Roberts <ryan.roberts@=
-arm.com> wrote:
->> >> >>
->> >> >> On 20/06/2024 12:34, David Hildenbrand wrote:
->> >> >> > On 20.06.24 11:04, Ryan Roberts wrote:
->> >> >> >> On 20/06/2024 01:26, Barry Song wrote:
->> >> >> >>> From: Barry Song <v-songbaohua@oppo.com>
->> >> >> >>>
->> >> >> >>> Both Ryan and Chris have been utilizing the small test program=
- to aid
->> >> >> >>> in debugging and identifying issues with swap entry allocation=
-. While
->> >> >> >>> a real or intricate workload might be more suitable for assess=
-ing the
->> >> >> >>> correctness and effectiveness of the swap allocation policy, a=
- small
->> >> >> >>> test program presents a simpler means of understanding the pro=
-blem and
->> >> >> >>> initially verifying the improvements being made.
->> >> >> >>>
->> >> >> >>> Let's endeavor to integrate it into the self-test suite. Altho=
-ugh it
->> >> >> >>> presently only accommodates 64KB and 4KB, I'm optimistic that =
-we can
->> >> >> >>> expand its capabilities to support multiple sizes and simulate=
- more
->> >> >> >>> complex systems in the future as required.
->> >> >> >>
->> >> >> >> I'll try to summarize the thread with Huang Ying by suggesting =
-this test program
->> >> >> >> is "neccessary but not sufficient" to exhaustively test the mTH=
-P swap-out path.
->> >> >> >> I've certainly found it useful and think it would be a valuable=
- addition to the
->> >> >> >> tree.
->> >> >> >>
->> >> >> >> That said, I'm not convinced it is a selftest; IMO a selftest s=
-hould provide a
->> >> >> >> clear pass/fail result against some criteria and must be able t=
-o be run
->> >> >> >> automatically by (e.g.) a CI system.
->> >> >> >
->> >> >> > Likely we should then consider moving other such performance-rel=
-ated thingies
->> >> >> > out of the selftests?
->> >> >>
->> >> >> Yes, that would get my vote. But of the 4 tests you mentioned that=
- use
->> >> >> clock_gettime(), it looks like transhuge-stress is the only one th=
-at doesn't
->> >> >> have a pass/fail result, so is probably the only candidate for mov=
-ing.
->> >> >>
->> >> >> The others either use the times as a timeout and determines failur=
-e if the
->> >> >> action didn't occur within the timeout (e.g. ksm_tests.c) or use i=
-t to add some
->> >> >> supplemental performance information to an otherwise functionality=
--oriented test.
->> >> >
->> >> > Thank you very much, Ryan. I think you've found a better home for t=
-his
->> >> > tool . I will
->> >> > send v2, relocating it to tools/mm and adding a function to swap in
->> >> > either the whole
->> >> > mTHPs or a portion of mTHPs by "-a"(aligned swapin).
->> >> >
->> >> > So basically, we will have
->> >> >
->> >> > 1. Use MADV_PAGEPUT for rapid swap-out, putting the swap allocation=
- code under
->> >> > high exercise in a short time.
->> >> >
->> >> > 2. Use MADV_DONTNEED to simulate the behavior of libc and Java heap=
- in freeing
->> >> > memory, as well as for munmap, app exits, or OOM killer scenarios. =
-This ensures
->> >> > new mTHP is always generated, released or swapped out, similar to t=
-he behavior
->> >> > on a PC or Android phone where many applications are frequently sta=
-rted and
->> >> > terminated.
->> >>
->> >> MADV_DONTNEED 64KB memory, then memset() it, this just simulates the
->> >> large folio swap-in exactly, which hasn't been merged by upstream.  I
->> >> don't think that it's a good idea to make such kind of trick.
->> >
->> > I disagree. This is how userspace heaps can manage memory
->> > deallocation.
->>
->> Sorry, I don't understand how.  Can you show some examples?  Such as
->> strace log with 64KB aligned MADV_DONTNEED?
+On Sun, Jun 23, 2024 at 5:10=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> In Java heap and memory allocators such as jemalloc and Scudo, memory is =
-freed
-> using the MADV_DONTNEED flag when either free() is called or garbage coll=
-ection
-> occurs. In Android, the Java heap is freed in chunks aligned to 64KB
-> or larger.
-
-Originally, I heard about that MADV_FREE is used by jemalloc.  Now, I
-know that they use MADV_DONTNEED too.  Thanks!
-
-Although I still suspect that libc/java allocator will free pages in
-exact 64KB size (IIUC, they should free pages in much larger trunk).  I
-agree that MADV_DONTNEED is a way to create fragmentation in swap
-devices.
-
-> In
-> Scudo and jemalloc, there is a configuration option to set the
-> management granularity.
-> This granularity is set to match the mTHP size(though the default
-> value is 16KB in the
-> latest Android if we don't run mTHP). Otherwise, you could end up with
-> millions of
-> partial unmap operations, which would severely degrade the performance of=
- mTHP.
+> On Thu, Jun 20, 2024 at 11:39:41PM -0700, Charlie Jenkins wrote:
+> > On Fri, Jun 21, 2024 at 02:02:18PM +0800, yunhui cui wrote:
+> > > Hi Charlie=EF=BC=8C
+> > >
+> > > On Fri, Jun 21, 2024 at 11:10=E2=80=AFAM Charlie Jenkins <charlie@riv=
+osinc.com> wrote:
+> > > >
+> > > > On Fri, Jun 21, 2024 at 10:08:39AM +0800, yunhui cui wrote:
+> > > > > Hi Charlie,
+> > > > >
+> > > > > On Fri, Jun 21, 2024 at 9:03=E2=80=AFAM Charlie Jenkins <charlie@=
+rivosinc.com> wrote:
+> > > > > >
+> > > > > > On Tue, Jun 18, 2024 at 08:08:42PM +0800, Yunhui Cui wrote:
+> > > > > > > Implement support for parsing 'memmap' kernel command line pa=
+rameter.
+> > > > > > >
+> > > > > > > This patch covers parsing of the following two formats for 'm=
+emmap'
+> > > > > > > parameter values:
+> > > > > > >
+> > > > > > > - nn[KMG]@ss[KMG]
+> > > > > > > - nn[KMG]$ss[KMG]
+> > > > > > >
+> > > > > > > ([KMG] =3D K M or G (kilo, mega, giga))
+> > > > > > >
+> > > > > > > These two allowed formats for parameter value are already doc=
+umented
+> > > > > > > in file kernel-parameters.txt in Documentation/admin-guide fo=
+lder.
+> > > > > > > Some architectures already support them, but Mips did not pri=
+or to
 >
-> Imagine libc/Java functioning like a slab allocator. When kfree() is
-> called, some pages
-> may become completely unoccupied and can be returned to the buddy allocat=
-or. In
-> userspace, memory is given back to the kernel in a similar manner,
-> typically using
-> MADV_DONTNEED. Therefore, MADV_DONTNEED is the most common memory
-> reclamation behavior in Android, coming with free(), delete() or GC.
+> I believe you should add RISCV to the list of supported architectures for
+> these options.
+
+Okay, I will update it on v2.
+
 >
-> Imagine a system with extensive malloc, free, new, and delete
-> operations, where objects
-> are constantly being created and destroyed.
+> > > > > > Copy-paste from a Mips patch? Should say riscv :)
+> > > > > >
+> > > > > > It looks like this code is duplicated from xtensa and is effect=
+ively the
+> > > > > > same as mips. Can this code be placed in a generic file so that=
+ the code
+> > > > > > can be shared between mips, riscv, and xtensa -- maybe a new co=
+nfig that
+> > > > > > gets selected by mips/riscv/xtensa?
+> > > > >
+> > > > > Yeah, that's actually what I was thinking. Which general file do =
+you
+> > > > > think would be more suitable to put it in?
+> > > >
+> > > > I am not sure the best place to put it. What do you think about
+> > > > mm/memblock.c next to the "memblock" early param?
+> > >
+> > > Is it inappropriate to put it in memblock? The implementation of mips
+> > > is different from that of xtensa, and early_mem is also distributed i=
+n
+> > > various archs, so we still put memmap in riscv/, and then I will
+> > > modify the commit log.
+> > > What do you think?
+> >
+> > The mips implementation is very close to being the same, but I am not
+> > sure if the differences would prevent standardization. xtensa and now
+> > riscv would have identical implementations though so a generic memmap
+> > implementation could be only applied to those two archs.
 >
-> On the other hand, whether libc/Java use MADV_DONTNEED to free memory is =
-not
-> crucial, although they do. We need a method to simulate the lifecycle
-> of applications
-> =E2=80=94exiting and starting anew=E2=80=94on PCs or Android phones. It d=
-oesn't matter if you
-> use MADV_DONTNEED or munmap to achieve this.
+> The memmap=3D is generally a hack to workaround issues with how firmware
+> describes memory to the kernel so in a way it belongs to arch/ code.
 >
-> It is important to note that mTHP currently operates on a one-shot
-> basis(after swap-out,
-> you never get them back as mTHP as we don't support large folios
-> swapin). For the test
-> program, we need a method to generate new mTHPs continuously. Without thi=
-s,
-> after the initial iterations, we would be left with only folios,
-> rendering the entire
-> test program *pointless*.
+> mips and xtensa already have different views on how this should be treate=
+d,
+> not mentioning x86 that handles memmap=3D on e820 level rather than with
+> memblock.
 
-I understand the requirements for new mTHPs.
+OK, let's continue to put it in arch/.
 
->>
->> > Additionally, in the event of an application exit, munmap, or OOM kill=
-er, the
->> > amount of freed memory can be much larger than 64KB. The primary purpo=
-se
->> > of using MADV_DONTNEED is to release anonymous memory and generate
->> > new mTHP so that the iteration can continue. Otherwise, the test progr=
-am
->> > becomes entirely pointless, as we only have large folios at the beginn=
-ing.
->> > That is exactly why Chris has failed to find his bugs by using other s=
-mall
->> > programs.
->>
->> Although I still don't understand how 64KB aligned MADV_DONTNEED is used
->> for libc/java heap or munmap in a practical way.  After more thoughts, I
->> think 64KB Aligned MADV_DONTNEED can simulate the fragmentation effect
->> of processes exit at some degree if 64KB folios in these processes are
->> swapped out without splitting.  If you have no other practical use
->> cases, I suggest to make it explicit with comments in program.
->>
+>
+> > > > > > > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > > > > > > index e3405e4b99af..7be7ec3092ad 100644
+> > > > > > > --- a/arch/riscv/mm/init.c
+> > > > > > > +++ b/arch/riscv/mm/init.c
+> > > > > > > @@ -208,6 +208,56 @@ static int __init early_mem(char *p)
+> > > > > > >  }
+> > > > > > >  early_param("mem", early_mem);
+> > > > > > >
+> > > > > > > +static void __init parse_memmap_one(char *p)
+> > > > > > > +{
+> > > > > > > +     char *oldp;
+> > > > > > > +     unsigned long start_at, mem_size;
+> > > > > > > +
+> > > > > > > +     if (!p)
+> > > > > > > +             return;
+> > > > > > > +
+> > > > > > > +     oldp =3D p;
+> > > > > > > +     mem_size =3D memparse(p, &p);
+> > > > > > > +     if (p =3D=3D oldp)
+> > > > > > > +             return;
+> > > > > > > +
+> > > > > > > +     switch (*p) {
+> > > > > > > +     case '@':
+> > > > > > > +             start_at =3D memparse(p + 1, &p);
+> > > > > > > +             memblock_add(start_at, mem_size);
+> > > > > > > +             break;
+> > > > > > > +
+> > > > > > > +     case '$':
+> > > > > > > +             start_at =3D memparse(p + 1, &p);
+> > > > > > > +             memblock_reserve(start_at, mem_size);
+>
+> This will add a region to memblock.reserved, but if there is no memory
+> there this information won't be available after boot, e.g. there won't be
+> struct pages with PG_Reserved for this region.
+> Is this your intention?
 
-[snip]
+Yeah, we should use memmap to reserve in the known memory range.
 
---
-Best Regards,
-Huang, Ying
+>
+> > > > > > > +             break;
+> > > > > > > +
+> > > > > > > +     case 0:
+> > > > > > > +             memblock_reserve(mem_size, -mem_size);
+>
+> This corresponds to the case memmap=3Dnn[KMG] and it is not documented in
+> kernel-parameters.txt.
+>
+> Not sure it's needed at all as the same result can be achieved with
+> memmap=3Dnn[KMG]$0.
+
+OK, just use case '$', because memblock_reserve() converts size to unsigned=
+.
+
+>
+> > > > > > > +             break;
+> > > > > > > +
+> > > > > > > +     default:
+> > > > > > > +             pr_warn("Unrecognized memmap syntax: %s\n", p);
+> > > > > > > +             break;
+> > > > > > > +     }
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static int __init parse_memmap_opt(char *str)
+> > > > > > > +{
+> > > > > > > +     while (str) {
+> > > > > > > +             char *k =3D strchr(str, ',');
+> > > > > > > +
+> > > > > > > +             if (k)
+> > > > > > > +                     *k++ =3D 0;
+> > > > > > > +
+> > > > > > > +             parse_memmap_one(str);
+> > > > > > > +             str =3D k;
+> > > > > > > +     }
+> > > > > > > +
+> > > > > > > +     return 0;
+> > > > > > > +}
+> > > > > > > +early_param("memmap", parse_memmap_opt);
+> > > > > > > +
+> > > > > > >  static void __init setup_bootmem(void)
+> > > > > > >  {
+> > > > > > >       phys_addr_t vmlinux_end =3D __pa_symbol(&_end);
+> > > > > > > --
+> > > > > > > 2.20.1
+> > > > > > >
+> > > > > > >
+> > > > > > > _______________________________________________
+> > > > > > > linux-riscv mailing list
+> > > > > > > linux-riscv@lists.infradead.org
+> > > > > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > > > >
+> > > > > Thanks,
+> > > > > Yunhui
+> > >
+> > > Thanks,
+> > > Yunhui
+>
+> --
+> Sincerely yours,
+> Mike.
+
+Thanks,
+Yunhui
