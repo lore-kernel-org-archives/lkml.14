@@ -1,232 +1,136 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8BC13774D;
-	Mon, 24 Jun 2024 09:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32A8130AD7;
+	Mon, 24 Jun 2024 09:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719220995; cv=none; b=mWKUUnJ9QwTcGlA7Fih+A4rqP/mRxs5IS7KarVtpZyAJ+1+m4QvJaT4tLtAUae026zxgkHFt5Je14jm+nuwsr34L/XCMVvttwJH+ETrVsMZjGeXypbygFvsnzj6qGj0rLZMsz2VBBxqzvUXRO8AsLtBqpdAK3zXAcMZZlAZQlRE=
+	t=1719221056; cv=none; b=NHCDxZ3MWQqYNkWjcjOm3cELmyK4VCdpTEPClJDvchhIoHWWxU4aM6tU469/yOTwYvhKOuKdoiZEr3YlGTzQT1T/shZbCknDS4OycEnVIeXjXgXRmFmQLVadU0L+bLdXIupUAxGj1Ro5x29OBXqIUShz45S4ErloFGsbFT4eB8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719220995; c=relaxed/simple;
-	bh=8cAgcwTvBnAla3NrneIEz71Zv7i1DEghBD644/nbOXc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fbLmx51oFXO5KcZlI4v+kiiDaVw4Kpx7QtAyOYAcn6LEx3RrpfNaWajQXxeqkgAQbo+oWFQphoastGJIwj7FvAP71EMCpcUZqsUH9Kgbx42uR3zc77TYAYThs1jK4oldd3v7AxEo/yFbEZeYMF3z0NksYJpChusSfmTJyIcdYfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h+PiHUrA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719221056; c=relaxed/simple;
+	bh=PoG110+Vg9Kgqy0v9zC+kNlBkxyCHRY9nhFLkjlrhKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ldiswHHBc0Nj53YJt7Dgef8eqt9hlIIUXhBiougKxpXWcY2dDdZEQhHgKaZ2rzc8uDRIiNe/8eOI4oCszK63h1pW0cXJL/r1ku+jicTuU0IzoUOym5C0G9MqISTH2f5DiC09rsTINio43ZwO2hIlVRNN8KRApjrMvTq73ePck48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=due3BtFl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h+PiHUrA"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45O8ZB9T024767;
-	Mon, 24 Jun 2024 09:23:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+wnsSYuLmoebBtSjmfB0yze6OSKIloZRMvRN0fi5T0s=; b=h+PiHUrAmGhcV+lI
-	y8KpHRlsRFhjfmWDdl3M7LYMOzXg740dObohaRstgPPZmiV4JQXwEArgfS0uwXgQ
-	Z/rFMHQdH6smuw2YL8kl76SnHuXCWlU/9hkEdYFfOBmzwGnKZGB5MIPIXAczPPNt
-	pkAs7lnUec3mtWQa1VI1JXyUaLe1jIr21lbLrVMni8Zw83x8HYQML4Dv0Y2WSpT6
-	7mRak2wR9uyyRD+DqGKEVyMvVLpdryNlb4d08fVFGtzm1TK4eyY9ZSCoLA5yNRYV
-	sf64aXUHjUM3ehtm+K7UOzbggY1m1JW4Asnn36s95+5ma2r+LUEfvd0wrJSoLFh9
-	PkKE9g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqshk570-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 09:23:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45O9N93i028388
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 09:23:10 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 24 Jun 2024 02:23:04 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <dmitry.baryshkov@linaro.org>, <srinivas.kandagatla@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
-        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>,
-        <abel.vesa@linaro.org>
-Subject: [PATCH V3 4/4] arm64: dts: qcom: x1e80100: Add BWMONs
-Date: Mon, 24 Jun 2024 14:52:14 +0530
-Message-ID: <20240624092214.146935-5-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240624092214.146935-1-quic_sibis@quicinc.com>
-References: <20240624092214.146935-1-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="due3BtFl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6499C2BBFC;
+	Mon, 24 Jun 2024 09:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719221056;
+	bh=PoG110+Vg9Kgqy0v9zC+kNlBkxyCHRY9nhFLkjlrhKE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=due3BtFlFpfgKEoERX3fWNf4oJKGPBMwIoryIkimKottOc66Ck0FU7HIwTfLlCARG
+	 G7Xdx+V9429rz5iPhEqY/+CegI4X+wEYm4yDrP3NwShzKh0dK3PeYSp5nWzMrnxQK8
+	 Fa3OrCbsREZxIuubaVRr2emrcHuwluCgtQnvMTcSZi4UOdoyMo0mQL9lAz/2zu2LFL
+	 5b5ZfpDvx9DGr12lX4IZKCLWoCP/TEQknzrz1DQdIA5wpWGIZOu7JgakX3wcxVkXqd
+	 XxY6Kbe+AlhjcuKHcdVPO44im+ERbE2roQFjgyxxHDuXb6AnM+T5H5ca4Ielm2Ks1I
+	 61To1rpQYfpqg==
+Message-ID: <1e26e816-5bb5-4592-8e2a-d5315bb7482d@kernel.org>
+Date: Mon, 24 Jun 2024 11:24:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uN-ldSSdi10HSsqLl5M_G7z40Y2iVGHa
-X-Proofpoint-GUID: uN-ldSSdi10HSsqLl5M_G7z40Y2iVGHa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_08,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406240075
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv5 7/9] ASoC: dt-bindings: imx-audio-spdif: remove binding
+To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ shengjiu wang <shengjiu.wang@gmail.com>, Xiubo Lee <Xiubo.Lee@gmail.com>,
+ Nicolin Chen <nicoleotsuka@gmail.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linux-sound <linux-sound@vger.kernel.org>,
+ devicetree <devicetree@vger.kernel.org>, imx <imx@lists.linux.dev>,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ alsa-devel <alsa-devel@alsa-project.org>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux.com>
+References: <20240620132511.4291-1-elinor.montmasson@savoirfairelinux.com>
+ <20240620132511.4291-8-elinor.montmasson@savoirfairelinux.com>
+ <17a0efe3-72fa-4d13-b3b0-90e6640308f3@kernel.org>
+ <1566099232.1714447.1719219107779.JavaMail.zimbra@savoirfairelinux.com>
+ <42b32958-89ee-43b6-96d1-f3e18c7d8955@kernel.org>
+ <1048207382.1714780.1719220717882.JavaMail.zimbra@savoirfairelinux.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1048207382.1714780.1719220717882.JavaMail.zimbra@savoirfairelinux.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add the CPU and LLCC BWMONs on X1E80100 SoCs.
+On 24/06/2024 11:18, Elinor Montmasson wrote:
+>>>
+>>> Previous `imx-spdif` driver used the dummy codec instead of
+>>> using declared spdif codecs. It was discussed in previous version of this
+>>> contribution
+>>> that using the dummy codec isn't good practice. So one to one backward
+>>> compatibility
+>>> isn't really possible.
+>>
+>> Heh, that's not good. This is improvement, cleanup. While it is
+>> important and useful, it should also not break existing users.
+> 
+> 
+> Should I introduce then the use of the dummy codec in `fsl-asoc-card` to
+> assure backward compatibility at least for a time ?
+> With maybe warning messages in code to indicate that spdif codecs drivers
+> should be declared and used in the future ?
+> 
 
-Tested-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
+If it is doable (reasonable code), then yes, please keep backwards
+compatibility with old DTS.
 
-v3:
-* Pickup Rb's and Tb's from the list.
-* Add a comment describing which cluster each bwmon instance belongs to. [Konrad]
-
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 123 +++++++++++++++++++++++++
- 1 file changed, 123 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 9944c654851e..f9355f616bf5 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -5299,6 +5299,129 @@ frame@1780d000 {
- 			};
- 		};
- 
-+		pmu@24091000 {
-+			compatible = "qcom,x1e80100-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
-+			reg = <0 0x24091000 0 0x1000>;
-+
-+			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interconnects = <&mc_virt MASTER_LLCC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ACTIVE_ONLY>;
-+
-+			operating-points-v2 = <&llcc_bwmon_opp_table>;
-+
-+			llcc_bwmon_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-0 {
-+					opp-peak-kBps = <800000>;
-+				};
-+
-+				opp-1 {
-+					opp-peak-kBps = <2188000>;
-+				};
-+
-+				opp-2 {
-+					opp-peak-kBps = <3072000>;
-+				};
-+
-+				opp-3 {
-+					opp-peak-kBps = <6220800>;
-+				};
-+
-+				opp-4 {
-+					opp-peak-kBps = <6835200>;
-+				};
-+
-+				opp-5 {
-+					opp-peak-kBps = <8371200>;
-+				};
-+
-+				opp-6 {
-+					opp-peak-kBps = <10944000>;
-+				};
-+
-+				opp-7 {
-+					opp-peak-kBps = <12748800>;
-+				};
-+
-+				opp-8 {
-+					opp-peak-kBps = <14745600>;
-+				};
-+
-+				opp-9 {
-+					opp-peak-kBps = <16896000>;
-+				};
-+			};
-+		};
-+
-+		/* cluster0 */
-+		pmu@240b3400 {
-+			compatible = "qcom,x1e80100-cpu-bwmon", "qcom,sdm845-bwmon";
-+			reg = <0 0x240b3400 0 0x600>;
-+
-+			interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &gem_noc SLAVE_LLCC QCOM_ICC_TAG_ACTIVE_ONLY>;
-+
-+			operating-points-v2 = <&cpu_bwmon_opp_table>;
-+
-+			cpu_bwmon_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-0 {
-+					opp-peak-kBps = <4800000>;
-+				};
-+
-+				opp-1 {
-+					opp-peak-kBps = <7464000>;
-+				};
-+
-+				opp-2 {
-+					opp-peak-kBps = <9600000>;
-+				};
-+
-+				opp-3 {
-+					opp-peak-kBps = <12896000>;
-+				};
-+
-+				opp-4 {
-+					opp-peak-kBps = <14928000>;
-+				};
-+
-+				opp-5 {
-+					opp-peak-kBps = <17064000>;
-+				};
-+			};
-+		};
-+
-+		/* cluster2 */
-+		pmu@240b5400 {
-+			compatible = "qcom,x1e80100-cpu-bwmon", "qcom,sdm845-bwmon";
-+			reg = <0 0x240b5400 0 0x600>;
-+
-+			interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &gem_noc SLAVE_LLCC QCOM_ICC_TAG_ACTIVE_ONLY>;
-+
-+			operating-points-v2 = <&cpu_bwmon_opp_table>;
-+		};
-+
-+		/* cluster1 */
-+		pmu@240b6400 {
-+			compatible = "qcom,x1e80100-cpu-bwmon", "qcom,sdm845-bwmon";
-+			reg = <0 0x240b6400 0 0x600>;
-+
-+			interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &gem_noc SLAVE_LLCC QCOM_ICC_TAG_ACTIVE_ONLY>;
-+
-+			operating-points-v2 = <&cpu_bwmon_opp_table>;
-+		};
-+
- 		system-cache-controller@25000000 {
- 			compatible = "qcom,x1e80100-llcc";
- 			reg = <0 0x25000000 0 0x200000>,
--- 
-2.34.1
+Best regards,
+Krzysztof
 
