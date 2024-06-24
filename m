@@ -1,97 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C03208B6;
-	Mon, 24 Jun 2024 06:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DD7219E1;
+	Mon, 24 Jun 2024 06:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719209029; cv=none; b=aXuMNd16uQVy+CQsW4ppOWycSWRxp1j0mrYOBMGdaL6nSMVwbzoVZOh9xsWyXkkDXN3tjnMIE/NIZ6Uc4eOBQ00/Ok17XEjEW5ljMaMyIWX9IxkZFzQzkUlX8jGOLdborN34hM5Xl93kecVb6XtS2BGp7Qlr+3rsZEBm9RgHodI=
+	t=1719209068; cv=none; b=gHgVjBQ0z8JW78MykfVqpzZe9aCjGwH8SUlrpqTCy9XlUfAzsg+0wwTyJuOevDXWPWYbwJyOJjrtvk3c24af6EPmRXxDbMca8ppf2Iax836PQPYBAPOYFJTykoV8ULY+hvi6xvUtIFeItHUJu5QYsuLckixE9KiKfAjS88wt/fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719209029; c=relaxed/simple;
-	bh=4MJAvZidXD59taQAHgNZO5Zgziq/Q/mwSOxc7RqrgI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=djTURJhbk3SycfCEdjwHMkfCJAg5YaN+xYzCWpwkdz0ZtKRxeiSeuO+6mfKkQpx6H9WuOh7nauHQQ42yk2zBqOHJTAMHX//aaybfn59wGo77+kRxH8XenePhZ4FSrRfbniV76j7VdCmK3AC+nT4qWEo66h0ZCbkFpQl0JL/6xKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQMmIajA; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQMmIajA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719209027; x=1750745027;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4MJAvZidXD59taQAHgNZO5Zgziq/Q/mwSOxc7RqrgI4=;
-  b=cQMmIajAA3y8scZfU6/JVdV/copf3sluSwItQbidk1pXufb1oDnoTssY
-   TBmNiM7h035DjiRVlt0HMIk/0k9C5lxL7QLxbywWP8DRq9MsEs//pBvc3
-   lOsOOGUSOdwNfHiKihlGUmC3nFgRmwvMQ3B+mNcX4JAPPJn29ijqANLCy
-   vY+YG4VaM6SLrERBqP8sICZ4z1Eywxim1BlFWjpnlwkroDFv/5tMZ4z6C
-   WSCPcyJB8LZ2AjmR2eaYTJ0dXJRhz3KlDkupruSJxV5q1zXBtggvgu7Pm
-   tSJmkLmest9GVQQ/k42lp9/O6pwhxtFNTzhnScWbBWItVPgV97H7qvYNN
-   w==;
-X-CSE-ConnectionGUID: eohXCTClSbCCi+qJn4cYYg==
-X-CSE-MsgGUID: T5XZQr0HScmp14Z8OmSEbA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11112"; a="19979355"
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="19979355"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2024 23:03:46 -0700
-X-CSE-ConnectionGUID: Y6zBlsyOQruZLaa+3/nJJg==
-X-CSE-MsgGUID: FUBJrCxISx+Z8BjVWr3htQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="43090360"
-Received: from yujie-x299.sh.intel.com ([10.239.159.77])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2024 23:03:44 -0700
-From: Yujie Liu <yujie.liu@intel.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH net] selftests: net: remove unneeded IP_GRE config
-Date: Mon, 24 Jun 2024 13:55:39 +0800
-Message-Id: <20240624055539.2092322-1-yujie.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719209068; c=relaxed/simple;
+	bh=U3Og0bqvlzhjzeHnpaabTo+HkClNM1LvbFB1gNzMx0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hmzsRJiPVrGXdo1ACJsry9bymQyxWheBBiKVRfrQysYuC5FFZa/NTqUIF4kl1rw9Fn/9L1BHftObYox+qp0mw1b8jrA4z83UUpeMDfXE7z4D0gi2IVEjGEqlQ9lLowetnSc9l+FyIchjNoZMdAJ4uzfufeoh1Il+Dh4PDHIXLpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; arc=none smtp.client-ip=78.46.3.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <ak@it-klinger.de>)
+	id 1sLcoQ-000N3v-1z;
+	Mon, 24 Jun 2024 08:04:22 +0200
+Received: from [31.220.119.164] (helo=mail.your-server.de)
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ak@it-klinger.de>)
+	id 1sLcoQ-0005xR-2g;
+	Mon, 24 Jun 2024 08:04:22 +0200
+Date: Mon, 24 Jun 2024 08:04:20 +0200
+From: Andreas Klinger <ak@it-klinger.de>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Andreas Klinger <ak@it-klinger.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Nuno Sa <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/10] iio: adc: hx711: remove hx711_remove()
+Message-ID: <ZnkMZIKpmn8HOKN8@mail.your-server.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="REpzHSWIu3PPM3Ri"
+Content-Disposition: inline
+In-Reply-To: <20240621-iio-regulator-refactor-round-2-v1-3-49e50cd0b99a@baylibre.com>
+X-Authenticated-Sender: ak@it-klinger.de
+X-Virus-Scanned: Clear (ClamAV 1.0.3/27315/Sun Jun 23 10:23:58 2024)
 
-It seems that there is no definition for config IP_GRE, and it is not a
-dependency of other configs, so remove it.
 
-linux$ find -name Kconfig | xargs grep "IP_GRE"
-<-- nothing
+--REpzHSWIu3PPM3Ri
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is a IPV6_GRE config defined in net/ipv6/Kconfig. It only depends
-on NET_IPGRE_DEMUX but not IP_GRE.
+On Fri, 2024-06-21 at 22:11 +0000, David Lechner wrote:
+> By using a few more devm_ functions, we can remove the hx711_remove()
+> function in the hx711 driver.
+>=20
+> platform_set_drvdata() is also removed since there are no more
+> callers of platform_get_drvdata().
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-Fixes: 04fe7c5029cb ("selftests: fill in some missing configs for net")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Yujie Liu <yujie.liu@intel.com>
----
- tools/testing/selftests/net/config | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Andreas Klinger <ak@it-klinger.de>
 
-diff --git a/tools/testing/selftests/net/config b/tools/testing/selftests/net/config
-index d4891f7a2bfa..f46e27cd1e70 100644
---- a/tools/testing/selftests/net/config
-+++ b/tools/testing/selftests/net/config
-@@ -26,7 +26,6 @@ CONFIG_INET_ESP=y
- CONFIG_INET_ESP_OFFLOAD=y
- CONFIG_NET_FOU=y
- CONFIG_NET_FOU_IP_TUNNELS=y
--CONFIG_IP_GRE=m
- CONFIG_NETFILTER=y
- CONFIG_NETFILTER_ADVANCED=y
- CONFIG_NF_CONNTRACK=m
--- 
-2.34.1
+--=20
 
+--REpzHSWIu3PPM3Ri
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEE7/NrAFtB/Pj7rTUyyHDM+xwPAVEFAmZ5DGQACgkQyHDM+xwP
+AVGUzAv/R+Kp1tZQvHmNgF6j1nIL6ZcD2WW4RaDqTbEY9EllGV7UJ4bLmF4ZbPvX
+dpsNoyNdv9RPd8vOArWgwy8u6nU+LksOKqUB+flj0mkIR92SOgcOSr/KfzqsleaM
+zrPw0h8Ez14MYi/DAkw53oiAjekA7dFiUlyaaHCjAenRYXbyR2HJhfAMHCnn9/q8
+5C/hafg5YF3DgvgBcp5P4UoVaeqJX7SCa3RCUfpjFhicuxljjqFEamhfA72OeIT8
+20XJL0e/VDWKU+xXU8lr8k8sQb07G4jY1c7brLbQxDj2Svy9Mts2FE5k2QgaVNTo
+yegqb8E0KvSwOO2vBT+Sp4axHfKwReD+ZJuZtlWY9DMptYh0if7Rnuc8Xu0QlJkI
+Q8UrrW9t4fxtiXZprKzExSt0alge1KjZT9TswcM4xNMiJ71nYh0vuyJkF3L0rzFZ
+NSZHw7VRTK1dFRFoAJXfElaWIP5fnv9hcWHdRo2CuEoj2dm6IYH0lvKlRjWanUzz
+fEC7SshG
+=d+/F
+-----END PGP SIGNATURE-----
+
+--REpzHSWIu3PPM3Ri--
