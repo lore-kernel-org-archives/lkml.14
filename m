@@ -1,157 +1,228 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17223EA7B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB622907
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719218831; cv=none; b=U6ZTlSL8kaGvFpZJJofXhK3KJwMVldA0UYQuJtpnMN4+Qs4JdlTRO5FJ2CJGEj5fqS46peZlWh1e74+jlRhFOA7AtxRjMPRpzmBXfhsQvEjtYR39Y9/irVWAbVT7cwlyozE8gMsU+H+4IpgeJPp8lgKfcR0FvUIX2+GrBUNBzT0=
+	t=1719218878; cv=none; b=ZZw0QzohqA8KtWcQ8c//58AGJqBb31yy/N0jzLU56E00X0sG/MMpFw2rbRZk6Czjg93TTwWqRG75LfBGJm0iqRtfwSVE04ErS0xDFOh7fmetjqbe9YHgWAf+ySGeXScvCXBGHqLdUoRL0dudDJZDuI/dU08Exm3KZOe7gJiu0eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719218831; c=relaxed/simple;
-	bh=eU4nMjyHqP9lDtrgeOyiukYnith+es5NNEOJEiDek94=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=D0958MeA+yS8WDoynL7H0SHfh4JFrNTWM7RC6npOqTkY702vqD5o/DeKg4VBDkK4tCQrgB3h26Z0eBNvKgrYjZa53CxRdZTYTh5/PzrJPFYOTU4J7MT8N38cflFuSrnsipUsudVwFhRSFFBpW+KX8IFhvzPCa116LpxVTLnhLiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EG5/4e10; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719218878; c=relaxed/simple;
+	bh=i3kZDMLWLd96gDc9K4Y6EHHzzcKLPUDlc3MNH5wNmtk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fWpFsC1WMgfEboF4TyR9NBLp29v5eHhEpK3FuOpkJmp+gTzw9cHj/45PvqLo4ZIyrMh7T2ShU9LdvmmXkJxj5NZfSbxhTtZuVcODrNxd6Wc+Etu6T33xPWS5cAFcwHHWGSRhmS1mCZ68IsHyvOlfnXx5F/irWWp1NYZRqMJMg1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x66/RpTL; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EG5/4e10"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3620ee2cdf7so2577548f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x66/RpTL"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3620ee2cdf7so2577920f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 01:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719218828; x=1719823628; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IOmYUVm2j5km1qbX8I7OKBLBGe3knpV1YYtkOnv6f2g=;
-        b=EG5/4e104hxgK4TG9b21b3m/kMAtjo0PuxsDvCBo0WoilKkyKFuKKyE1Us7/Hue5rz
-         EFFGCMOQ/bb1PC4eePJdcfHUsELm1/E+p8Gb3Iqjd+eDXbMGutlhAE3gWkDLJ1MouDHa
-         hWyNqGvV8IikKgIDVYjjaJNvmwpj93l+pkkMcK3YCrOp5uz/enOAHn+n5aegYeBv3OSY
-         4S+nEHh3WYeK0caBRTdWPl6O9LaUKWcI5BWh91dquDRRwk6nHVJGM8m6nJPYL0rHp+jF
-         7FSz6daspcE8rkQqVh4QDZd+wGxBF0nQMyLwSzyoigtliZrqKIQV6+C4LZTTxH+HErhR
-         xIgA==
+        d=google.com; s=20230601; t=1719218875; x=1719823675; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vELzHvwfYhfgaQfS4TW87Hdwhf+qF89/1wZ285PgAPE=;
+        b=x66/RpTLtnZEYxHRs5gMA+kOCWSNEHg4AjtC9fmhbjLx6bFdctvioj09EH5xeI7E0y
+         SJa2Zf/X9NGyS+A5qsAfxV7o6NJhZk7ixwe0Rr02miAo0is47o2PH/s5Y1NLsMc64jAT
+         tqT7ZUkScQF0COHiQdh4rslyN03aaRgIkbVbgim/1phKZ9knqD65N1GdTzudW0fhqUYj
+         jc9QtrbQBvnMgxhwWfShFAxKRSg5ElKVm24u3SHP1Wn7JAq9+IRq5dc8aOl6kBR79xnN
+         OGBamLvgBQHQNbcywPKPfTQWDlN1QMAbX7mStns3uLHABUFzgLW0EiPYTjXI0IBylaSD
+         ddeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719218828; x=1719823628;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IOmYUVm2j5km1qbX8I7OKBLBGe3knpV1YYtkOnv6f2g=;
-        b=W0fvQeU73kJIyPpNcjtO3X7tllIjO6v50sf0mkLXC6Iia+OjbMRY5pvw02ZRFRtAgV
-         3UIFhv6GBELshk18ypFNLJOjS2K7Z58Ge/IAe2ElSHcz3QR5xWK+ny3+0jRHr5LwGWgI
-         3b1KW71aUQy6iZoRCJk4ADoshWMFM6tDQhxEbswomfqQrTC+sf2/1NhsVfB2ZXAX4VrL
-         Smzs5MbzlLcmWDJzrFJYbCiPsFLLK385dIfSmr1hStS4ChTWA4+jZcnYRfvN90c70ZAY
-         L4GBmH95wTA3MZtN/Qego6poI4KIqCv0h2iPqj/TtgJGtSP3Ge+kQ/Hv19GlDjumJu+7
-         xlHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKx7FWFdj0+oKmhA2IBktfG7Ura5mOCqfEpGS+lssLcD9hl5pTvkK7mmd3cA3ccGA2d2bR5Fzo+McNqTmH6lvYiTqEHsAmXhrmTRHO
-X-Gm-Message-State: AOJu0YwvG9P6bSlJIw5CHX3dE2f9TwO55hi6chxdBGgsJ0YpixFdulXy
-	E0m9U+31EAvW+hlZBO9rsXbSCXGRsBQrhQql3BRx6gGEauWCVAejFxFDByPzpL4=
-X-Google-Smtp-Source: AGHT+IGZJ3/lyvL7w/mqQEND7dQl87CA7HzGwlUkfTzI+v57PMUoZkRRQtioHBzH3/TdjiQ7LrRo4w==
-X-Received: by 2002:a05:6000:154d:b0:366:e7b5:3b49 with SMTP id ffacd0b85a97d-366e7b540a8mr3975443f8f.54.1719218827851;
-        Mon, 24 Jun 2024 01:47:07 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:cf01:774b:55fd:ab74? ([2a01:e0a:982:cbb0:cf01:774b:55fd:ab74])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366bd575f6asm8741077f8f.6.2024.06.24.01.47.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 01:47:07 -0700 (PDT)
-Message-ID: <f1cc92b9-44ac-409b-bedb-95bc4908712a@linaro.org>
-Date: Mon, 24 Jun 2024 10:47:06 +0200
+        d=1e100.net; s=20230601; t=1719218875; x=1719823675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vELzHvwfYhfgaQfS4TW87Hdwhf+qF89/1wZ285PgAPE=;
+        b=iFs1yBveSuAaHMQZiW4Yk1WocLKnzEL3hRsFZezphFlpJPHo/u5zbyUezhk/hh5x4J
+         XJpsXxAMGqGLKTXaUmBenohfFvv9Y99UKbfYIacavxAeHayk73TmjL6AWpnPgPm5vT3W
+         FWcG+UT4iI+z1XvQVw2gtBsVkfA+lpMs8jvlCe83KLqSOkg6xn3t1Ql/81EyLqrPjOVO
+         zHLSj/R45C2WRQwcUNQwLW3SmVVMe27rzyv1ZGyBszwklk/guVSK/tmnKgGe4/2W5poQ
+         4wp0DIJJ6LQIsldAZV18MWgxsPMT32K39pV0a+G3TpAgqDg8pScZ+jfqrTPsLXSUTQvm
+         ce3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXcXw2nmlttVBdeNcii+pcMfLQf/atG8koqySyOo628JoWOQQGahhfmo5Z4pI+e2eCs2scV2g09S9HXNYAb+cBNTr/aONB8gpDUowPh
+X-Gm-Message-State: AOJu0Ywraazgfuf42NY3KiBAU3vy4gNUJW6excDnMPGY/yCOr2KoP2hC
+	AaEoBU8n2KELsGs90ieusau6tcWTMqqDKUrhbZDtMfGomFTA/vXgZV17Oh7Kbw2xpnCfgCNHw96
+	d92/URuBYw6QK5tORniyCR+sUrYpbqnMnPJYv
+X-Google-Smtp-Source: AGHT+IE9V99OcnVY2w5i3sRLtVONVJbuxlBrAVus/aJjTnXSg4b3TawmnAI8iMfxGKRXFJX0BoKOdvzCDWniQrAdAjY=
+X-Received: by 2002:a5d:58fa:0:b0:35f:1b73:1d83 with SMTP id
+ ffacd0b85a97d-366e7a08ba5mr3371333f8f.4.1719218874677; Mon, 24 Jun 2024
+ 01:47:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] dt-bindings: usb: dwc2: allow device sub-nodes
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-usb@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240605-topic-amlogic-upstream-bindings-fixes-dwc2-subnodes-v1-1-915893e0cb20@linaro.org>
- <20240606004001.GA3525173-robh@kernel.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240606004001.GA3525173-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240624030327.90301-1-ethan.twardy@gmail.com> <20240624030327.90301-5-ethan.twardy@gmail.com>
+In-Reply-To: <20240624030327.90301-5-ethan.twardy@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 24 Jun 2024 10:47:43 +0200
+Message-ID: <CAH5fLgjgMxZ5S-wLqu6pOz=HzrV6qJGe5N=2rrYNvo3uVPbVbA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] rust: macros: Enable the rest of the tests
+To: "Ethan D. Twardy" <ethan.twardy@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
+	Aswin Unnikrishnan <aswinunni01@gmail.com>, "open list:RUST" <rust-for-linux@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/06/2024 02:40, Rob Herring wrote:
-> On Wed, Jun 05, 2024 at 12:01:20PM +0200, Neil Armstrong wrote:
->> Allow the '#address-cells', '#size-cells' and subnodes as defined in
->> usb-hcd.yaml and used in the meson-gxbb-odroidc2 DT.
-> 
-> Doesn't referencing usb-hcd.yaml instead work? Or you need
-> unevaluatedProperties?
+On Mon, Jun 24, 2024 at 5:04=E2=80=AFAM Ethan D. Twardy <ethan.twardy@gmail=
+.com> wrote:
+>
+> Now that the rusttest target for the macros crate is compiled with the
+> kernel crate as a dependency, the rest of the rustdoc tests can be
+> enabled.
+>
+> Signed-off-by: Ethan D. Twardy <ethan.twardy@gmail.com>
+>
+> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> index 8afed8facb21..6d764099563b 100644
+> --- a/rust/macros/lib.rs
+> +++ b/rust/macros/lib.rs
+> @@ -102,7 +102,9 @@ pub fn module(ts: TokenStream) -> TokenStream {
+>  ///
+>  /// # Examples
+>  ///
+> -/// ```ignore
+> +/// ```rust
+> +/// # #[macro_use] extern crate macros;
+> +/// # #[macro_use] extern crate kernel;
 
-Yes unevaluatedProperties: false does the trick
+You also added these lines in patch 2, but you did not make them hidden the=
+re.
 
-Thanks,
-Neil
+>  /// use kernel::error::VTABLE_DEFAULT_ERROR;
+>  /// use kernel::prelude::*;
+>  ///
+> @@ -147,12 +149,28 @@ pub fn vtable(attr: TokenStream, ts: TokenStream) -=
+> TokenStream {
+>  ///
+>  /// # Examples
+>  ///
+> -/// ```ignore
+> -/// use kernel::macro::concat_idents;
+> +/// ```rust
+> +/// # const binder_driver_return_protocol_BR_OK: u32 =3D 0;
+> +/// # const binder_driver_return_protocol_BR_ERROR: u32 =3D 1;
+> +/// # const binder_driver_return_protocol_BR_TRANSACTION: u32 =3D 2;
+> +/// # const binder_driver_return_protocol_BR_REPLY: u32 =3D 3;
+> +/// # const binder_driver_return_protocol_BR_DEAD_REPLY: u32 =3D 4;
+> +/// # const binder_driver_return_protocol_BR_TRANSACTION_COMPLETE: u32 =
+=3D 5;
+> +/// # const binder_driver_return_protocol_BR_INCREFS: u32 =3D 6;
+> +/// # const binder_driver_return_protocol_BR_ACQUIRE: u32 =3D 7;
+> +/// # const binder_driver_return_protocol_BR_RELEASE: u32 =3D 8;
+> +/// # const binder_driver_return_protocol_BR_DECREFS: u32 =3D 9;
+> +/// # const binder_driver_return_protocol_BR_NOOP: u32 =3D 10;
+> +/// # const binder_driver_return_protocol_BR_SPAWN_LOOPER: u32 =3D 11;
+> +/// # const binder_driver_return_protocol_BR_DEAD_BINDER: u32 =3D 12;
+> +/// # const binder_driver_return_protocol_BR_CLEAR_DEATH_NOTIFICATION_DO=
+NE: u32 =3D 13;
+> +/// # const binder_driver_return_protocol_BR_FAILED_REPLY: u32 =3D 14;
+> +///
+> +/// use kernel::macros::concat_idents;
 
-> 
->>
->> The fixes the following:
->> meson-gxbb-odroidc2.dtb: usb@c9100000: '#address-cells', '#size-cells', 'hub@1' do not match any of the regexes: 'pinctrl-[0-9]+'
->> 	from schema $id: http://devicetree.org/schemas/usb/dwc2.yaml#
->>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->> ---
->>   Documentation/devicetree/bindings/usb/dwc2.yaml | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
->> index 4f36a22aa6d7..9e737f587664 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.yaml
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
->> @@ -177,6 +177,13 @@ properties:
->>       minItems: 1
->>       maxItems: 2
->>   
->> +  "#address-cells": true
->> +
->> +  "#size-cells": true
->> +
->> +patternProperties:
->> +  "^.*@[0-9a-f]{1,2}$": true
->> +
->>   dependencies:
->>     port: [ usb-role-switch ]
->>     role-switch-default-mode: [ usb-role-switch ]
->>
->> ---
->> base-commit: c3f38fa61af77b49866b006939479069cd451173
->> change-id: 20240605-topic-amlogic-upstream-bindings-fixes-dwc2-subnodes-4a68ead79624
->>
->> Best regards,
->> -- 
->> Neil Armstrong <neil.armstrong@linaro.org>
->>
+The empty line above this import should probably be removed to improve
+how this is rendered.
 
+>  ///
+>  /// macro_rules! pub_no_prefix {
+>  ///     ($prefix:ident, $($newname:ident),+) =3D> {
+> -///         $(pub(crate) const $newname: u32 =3D kernel::macros::concat_=
+idents!($prefix, $newname);)+
+> +///         $(pub(crate) const $newname: u32 =3D concat_idents!($prefix,=
+ $newname);)+
+>  ///     };
+>  /// }
+>  ///
+> @@ -198,8 +216,9 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream =
+{
+>  ///
+>  /// # Examples
+>  ///
+> -/// ```rust,ignore
+> -/// #[pin_data]
+> +/// ```rust
+> +/// # use std::{sync::Mutex, process::Command};
+> +/// #[kernel::macros::pin_data]
+>  /// struct DriverData {
+
+I'm pretty sure `#[pin_data]` is in our prelude and doesn't need an
+import in normal code. If it needs an import in the test, then please
+add a hidden import rather than using the full path.
+
+>  ///     #[pin]
+>  ///     queue: Mutex<Vec<Command>>,
+> @@ -207,7 +226,15 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream=
+ {
+>  /// }
+>  /// ```
+>  ///
+> -/// ```rust,ignore
+> +/// ```rust
+> +/// # use std::{sync::Mutex, process::Command};
+> +/// # use core::pin::Pin;
+> +/// # pub struct Info;
+> +/// # mod bindings {
+> +/// #     pub unsafe fn destroy_info(_ptr: *mut super::Info) {}
+> +/// # }
+> +/// use kernel::macros::{pin_data, pinned_drop};
+> +///
+>  /// #[pin_data(PinnedDrop)]
+>  /// struct DriverData {
+>  ///     #[pin]
+> @@ -222,6 +249,8 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream =
+{
+>  ///         unsafe { bindings::destroy_info(self.raw_info) };
+>  ///     }
+>  /// }
+> +///
+> +/// # fn main() {}
+>  /// ```
+>  ///
+>  /// [`pin_init!`]: ../kernel/macro.pin_init.html
+> @@ -237,13 +266,20 @@ pub fn pin_data(inner: TokenStream, item: TokenStre=
+am) -> TokenStream {
+>  ///
+>  /// # Examples
+>  ///
+> -/// ```rust,ignore
+> +/// ```rust
+> +/// # use macros::{pin_data, pinned_drop};
+> +/// # use std::{sync::Mutex, process::Command};
+> +/// # use core::pin::Pin;
+> +/// # mod bindings {
+> +/// #     pub struct Info;
+> +/// #     pub unsafe fn destroy_info(_ptr: *mut Info) {}
+> +/// # }
+>  /// #[pin_data(PinnedDrop)]
+>  /// struct DriverData {
+>  ///     #[pin]
+>  ///     queue: Mutex<Vec<Command>>,
+>  ///     buf: Box<[u8; 1024 * 1024]>,
+> -///     raw_info: *mut Info,
+> +///     raw_info: *mut bindings::Info,
+>  /// }
+>  ///
+>  /// #[pinned_drop]
+> @@ -408,7 +444,9 @@ pub fn paste(input: TokenStream) -> TokenStream {
+>  ///
+>  /// # Examples
+>  ///
+> -/// ```rust,ignore
+> +/// ```rust
+> +/// use kernel::macros::Zeroable;
+> +///
+>  /// #[derive(Zeroable)]
+>  /// pub struct DriverData {
+>  ///     id: i64,
+> --
+> 2.44.2
+>
