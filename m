@@ -1,130 +1,181 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFED168A9
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401F412B63;
+	Mon, 24 Jun 2024 04:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719204556; cv=none; b=GQaQJ6F3fpg6m6Xj7BQu5EA/76F3ELFKILEdMNAl1qwOjR4mXNYPhUDvVUjK5Jp+goLkZ9xXQsek1NLhL7jBExymKWHsPj7PJzwrrDOSRNJCLIKeDJGyQShvMAfuqJmfLo7z+peIW07vKwKSXJZMdMJpvN4g+JEDBJZTj/A4Z9I=
+	t=1719204569; cv=none; b=nwTpMCbmuue25MVFYtL8dggKJf2c+P7TlEo4rtOG51fwM33ez0aHrdS+gy1lCKXYT6AF3MGQaA9yaeJzPpjA+SzzsAHNhF39FrDjImvF45m1UucariPiYxq8D84n3O41wemwNnJYnbIvxXsOfvKRhxovnJmBir8tutBCMf+IVz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719204556; c=relaxed/simple;
-	bh=mni7Xjh+W9N8YsIN4sLCAw2EtVVl7YuRtFktOF8G9k0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gF4/yCX1VkP1n9la5VOsIa7uwwELvJtPCQdKc9lpX5zT3lV4nIOu12MXquIZzM5TOFJqU6SQRzbVD2TvId9bj+FkkP2M15iN8Lfrt6AfPfYB9SFN9Mx+jv0WqFSlODOxh6lamUQgDAmVvoglU7YIjsyUz2SgVv1rCmdzM1jLoJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=e/KSLxsT; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1719204569; c=relaxed/simple;
+	bh=pQXhsuPENZp3hn2RiM9MvxzB7FEhBOt0AXLDfl+srr0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZXhp5VenbCIonrES7cgdXp2CN45DsXM0gjG7bDwOXmgwPN1r2QQsK0gjzYbksC63vkpz677/1m5A+OPnsmXedoPqCOOmRodHdnv5Bm1Q+c79wvh1W435uyQooChq7lgEzT63XpV9WwQk2WuZ580j+YZqVKVt0zxql4Ng1yclqOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hMx3XzmX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="e/KSLxsT"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-706680d3a25so937920b3a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Jun 2024 21:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1719204553; x=1719809353; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5yCT5VxgAao2DKcwL/n1MwIFuYF06UPFj6XxxbzHuqM=;
-        b=e/KSLxsTcJSOMYUBonD4vtVQahTG/gVPLWTp5R8CfCGHQ3vDNRY01A1T+EZY63m8as
-         XgGUHGQAXPJqyFNoKOgpnrQ7QI2bSXWQIy0sS0e9LYPAPtF15J0sFUidx61egU2cGO+3
-         DmLFc7oLEOiZ+y8yQbBryQTIFYh2I3rWzCvoZwdMYDfpRJAADjzu5RU5QSBXWOMIEV3q
-         A3PQo+FFmDnBYF4K4QRKpoVjdbDIpmBI1wB2Fc+vRfsXWCPaAO6K80E1JZE6M6+fgqJp
-         TdOkBym0TmcoLRsfKBl4L5Tc3Ia0Inv1+equh4XdoIwjzX5u+CA0C7D3Uk4dT/Io0D4e
-         /U8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719204553; x=1719809353;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5yCT5VxgAao2DKcwL/n1MwIFuYF06UPFj6XxxbzHuqM=;
-        b=E99XC95DUmKYANGpbl7WIVO2LJxG72VJagifmJWzX7gzan4gWpnRQexwG9jcEmry4P
-         BzpnCVpWOBRVUKVoy5OSBQIsDQffUMxBr4lTrc5+S0Io7cC4yfhQJNJiguwmUHw+cWeo
-         IFpVwO70S4rrdTECeDS5NhHhqkaOObOJXhF8MDNw5R1udL+mk8D+n4IjYs2uLlqRPx9D
-         COIEkOqToMmXpES8Jbqc/c9qGGoYbsItWazz2rtNgwjKGY0HNdWa2mAbQuuZUcT+qJQe
-         TWpmS079z0VDhg6iF/0Itz57A3EyCOEvRWT/jVkLM8dCMvz+d8ThvBYm+kHORyWxlCdN
-         gBzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYFU6JqLhtmQpsrqzpCqAO40+1bx/2xgZMKBwryjWdbHPqsH8tpTw1BezjYe7yUlWnVSXa9uTaXz6FrRwOuLIiKoGTDap/aLakK9VP
-X-Gm-Message-State: AOJu0YwoU3MHNKf1jEMC8bL58PMeMgs/Sw7aagFjbdGrRyupQoSqddnS
-	0kCrxHaau95Wj2quxQDF4tmc5B6BUBTmfnNMd09h+WFOqSNlKUKqVF0rzrxYIc8=
-X-Google-Smtp-Source: AGHT+IFMV0C+R+NwkxEg9McBmus0ucAUY3nQfRaA6AfKEyZMnE1mK8ZXtSOnx+hXLXQWZw+NmSap4w==
-X-Received: by 2002:a05:6a00:69b7:b0:702:38ff:4a59 with SMTP id d2e1a72fcca58-70670e79d03mr4295625b3a.6.1719204553330;
-        Sun, 23 Jun 2024 21:49:13 -0700 (PDT)
-Received: from L4CR4519N7.bytedance.net ([2001:c10:ff04:0:1000:0:1:6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70651194776sm5254865b3a.67.2024.06.23.21.49.09
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 23 Jun 2024 21:49:12 -0700 (PDT)
-From: Rui Qi <qirui.001@bytedance.com>
-X-Google-Original-From: Rui Qi
-To: tony.luck@intel.com
-Cc: bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	qirui.001@bytedance.com,
-	tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [External] [PATCH] x86/mce: count the number of occurrences of each MCE severity
-Date: Mon, 24 Jun 2024 12:48:39 +0800
-Message-Id: <20240624044839.87035-1-qirui.001@bytedance.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
-In-Reply-To: <SJ1PR11MB6083E1173846A5C8B4529D25FCC82@SJ1PR11MB6083.namprd11.prod.outlook.com>
-References: <SJ1PR11MB6083E1173846A5C8B4529D25FCC82@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hMx3XzmX"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45NJsPDv010289;
+	Mon, 24 Jun 2024 04:49:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=KydZ88xOOx1QUleFVGviQM
+	OJBHWnnblmUF9HPkZpj20=; b=hMx3XzmXt9YKsC3H9gglyYLPQEROmfb/ASND0K
+	4NutJTFrNJ4QY4HJNlgRXNuzky4H6+GkTBPvr8tJBFXW/n1COLDp45M31FUuVqwp
+	pFaOzNKDyUZFBWITk+6+zLZPhqfWuMeY5THPZ5HuuLNg3Ba2CNzE0tn7A9/069UY
+	rLvgbvTArMsC2GsFtJOVjUi7ZmDku6kBeqvsfSffSKoIj+U8mtAvt5ghJH5PX7Yd
+	zX38nCTgKPSe8J7LbJWJkgkw6CJIC0jAN9WfrHTPnTnplAg4GDjwOjNNm5woPMAM
+	6wQOMzIvC0oYcEj80cL7CblozYpSYipI0pFXno9dhIIEJXdg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqshjnb5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 04:49:16 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45O4nFWZ027438
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 04:49:15 GMT
+Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 23 Jun 2024 21:49:07 -0700
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J .
+ Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>, Pavel Machek
+	<pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Andy
+ Gross" <agross@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+CC: <linux-pm@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        "Ajit
+ Pandey" <quic_ajipan@quicinc.com>
+Subject: [PATCH V7 0/5] Add control for switching back and forth to HW control
+Date: Mon, 24 Jun 2024 10:18:04 +0530
+Message-ID: <20240624044809.17751-1-quic_jkona@quicinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4wqzvm7BSsU_iEEUqt9m4phBgt-c0ThO
+X-Proofpoint-GUID: 4wqzvm7BSsU_iEEUqt9m4phBgt-c0ThO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-24_04,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2406240036
 
-From: Rui Qi <qirui.001@bytedance.com>
+This series adds support for dev_pm_genpd_set_hwmode() and dev_pm_genpd_get_hwmode() APIs
+and support in gdsc genpd provider drivers to register respective callbacks and a venus
+consumer driver example using above API to switch the power domain(GDSC) to HW/SW modes
+dynamically at runtime.
 
-Hi Tony,
+Changes in V7:
+- [PATCH 3/5]: Updated the comment description in gdsc_set_hwmode as per V6 review comments
+- Added R-By tags received on V6
+- Link to V6: https://lore.kernel.org/all/20240619141413.7983-1-quic_jkona@quicinc.com/
 
-> You seem to have problems with the e-mail infrastructure. I got a few extra copies
-> of this in HTML format. This one is in plain text, but the From: header says "$(name)"
-> 
+Changes in V6:
+- [PATCH 3/5]: Added details for 1usec delay in gdsc_set_hwmode()
+- [PATCH 4/5]: Updated commit text
+- Added R-By and T-By tags received on V5 RESEND
+- Link to V5 RESEND: https://lore.kernel.org/all/20240413152013.22307-1-quic_jkona@quicinc.com/
+- Link to V5: https://lore.kernel.org/all/20240315111046.22136-1-quic_jkona@quicinc.com/
 
-Sorry， some problem with my thunderbird mail agent. I will use git send-mail instead from now on.
-> 
->>> So you either covered a case in the severities table, or you didn't. Does it
->>> help to know that you covered a case multiple times?
->>>
->>
->> In the fault injection test in the laboratory, we inject errors multiple
->> times and need a counter to tell us how many times each case has
->> occurred and compare it with the expected number to determine the test
->> results
-> 
-> In my testing on Intel/x86 I don't always see a 1:1 mapping between my
-> test, and the severities rule. This is because of a h/w race between the
-> memory controller reporting the error when it sees an uncorrectable ECC
-> issue, and the core trying to consume the poisoned data. If the memory
-> controller signal wins the race, Linux takes the page offline and there isn't
-> a poison consumption error, just a page fault.
-> 
->> In the production environment, the counter can reflect the actual number
->> of times each MCE error type occurs, which can help us detect the MCE
->> error distribution of large-scale Data center infrastructure
-> 
-> That could be useful.
->
-Thank you for your expertise!
+Changes in V5:
+- Updated 1st patch as per V4 review comments to synchronize the initial HW mode state by
+  invoking ->get_hwmode_dev()callback in genpd_add_device()
+- With above change, SW cached hwmode will contain correct value initially, and it will be
+  updated everytime mode is changed in set_hwmode, hence updated dev_pm_genpd_get_hwmode()
+  to just return SW cached hwmode in 1st patch
+- Updated commit text for 1st, 3rd, 4th and 5th patches
+- Updated 3rd and 5th patches as per review comments received on V4 series
+- Added R-By tags received in older series to 1st and 2nd patches
+- Link to V4: https://lore.kernel.org/all/20240122-gdsc-hwctrl-v4-0-9061e8a7aa07@linaro.org/
 
->>>> Due to the limitation of char type, the maximum supported statistics are
->>>> currently 255 times
->>>>
->>
->> How about changing char to u64, which is enough for real-world
->> situations and won't waste a lot of memory?
-> 
-> u64 seems like serious overkill. A change from "unsigned char" to "unsigned int"
-> would keep track of 4 billion errors. That seems like plenty :-)
->> -Tony
-Yes, unsinged int is far enough.
+Changes in V4:
+ - Re-worded 1st patch commit message, as per Bjorn's suggestion, and added
+   Dmitry's R-b tag
+ - Added Bjorn's and Dmitry's R-b tags to the 2nd patch
+ - Re-worded 3rd patch commit message, to better explain the HW_CTRL_TRIGGER flag.
+ - Added mode transition delay when setting mode for GDSC
+ - Added status polling if GDSSC is enabled when transitioning from HW to SW
+ - Re-worded 4th patch commit message to better explain why the
+   HW_CTRL_TRIGGER needs to be used instead
+ - Drop changes to SC7180, SDM845 and SM8550 video CC drivers, as only
+   SC7280 and SM8250 have been tested so far. More platforms (with v6 venus)
+   will be added eventually.
+ - Call genpd set_hwmode API only for v6 and dropped the vcodec_pmdomains_hwctrl.
+ - Re-worded 5th patch commit message accordingly. 
+ - Link to V3: https://lore.kernel.org/lkml/20230823114528.3677667-1-abel.vesa@linaro.org/ 
 
-BTW, if you dont mind, I will send a V2 patch based on our discussion.
+Changes in V3:
+ - 5th patch has been squashed in the 4th one
+ - Link to V2: https://lore.kernel.org/lkml/20230816145741.1472721-1-abel.vesa@linaro.org/
 
+Changes in V2:
+ - patch for printing domain HW-managed mode in the summary
+ - patch that adds one consumer (venus)
+ - patch for gdsc with new (different) flag
+ - patch for videocc GDSC provider to update flags
+ - Link to V1: https://lore.kernel.org/all/20230628105652.1670316-1-abel.vesa@linaro.org/
+
+Abel Vesa (1):
+  PM: domains: Add the domain HW-managed mode to the summary
+
+Jagadeesh Kona (3):
+  clk: qcom: gdsc: Add set and get hwmode callbacks to switch GDSC mode
+  clk: qcom: videocc: Use HW_CTRL_TRIGGER for SM8250, SC7280 vcodec
+    GDSC's
+  venus: pm_helpers: Use dev_pm_genpd_set_hwmode to switch GDSC mode on
+    V6
+
+Ulf Hansson (1):
+  PM: domains: Allow devices attached to genpd to be managed by HW
+
+ drivers/clk/qcom/gdsc.c                       | 41 ++++++++++
+ drivers/clk/qcom/gdsc.h                       |  1 +
+ drivers/clk/qcom/videocc-sc7280.c             |  2 +-
+ drivers/clk/qcom/videocc-sm8250.c             |  4 +-
+ .../media/platform/qcom/venus/pm_helpers.c    | 39 ++++++----
+ drivers/pmdomain/core.c                       | 78 ++++++++++++++++++-
+ include/linux/pm_domain.h                     | 17 ++++
+ 7 files changed, 161 insertions(+), 21 deletions(-)
+
+-- 
+2.43.0
 
