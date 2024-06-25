@@ -1,110 +1,113 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68F816FF33;
-	Tue, 25 Jun 2024 16:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580A71CABB;
+	Tue, 25 Jun 2024 16:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719331685; cv=none; b=V7X/TBScixR71XUfHixejmwUoJsK9ciebpGnsvPd9DIozhHhtBdTXI7oXX3vv07YD4tth9w/pLq49STXuG3jRm4aO7orgeQczzlM0C7u0DBaiDJAj5mvQOnhFyjffZsG+2Djokm7HXZoP9nrjJpjHDyoynOZSiBeEy01iMSOxvU=
+	t=1719331857; cv=none; b=NaI1TxBWPBSLmbBS3chhNUSbawBVyDKJQvtub/q6RyDz8bsEOCpFLG1xWDO7Ik1ExdqpZ4Fs3KPoACDpAYTUecW+1x+NU2n/Ci8wQ5sRDBJvoG91P908F9l1nn49ITzG6sVVY58nPaYubhSdjmgEMH5XtZWG8FmgY8Wt1vK/UJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719331685; c=relaxed/simple;
-	bh=YFQd4AGBmj/dBhWp9vE7IpteCEtWvtn5T0veylKLQsQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jcyxPKk4zWKRic5IKNTZTAz+/2Ktx2+eycwWEdk7vhlxTeJibSJgr8FB3VPQbMvImUmlXLdKu+7ToOj4ZZaSGkbTSLSWJRkyqD39ahoaJGhCUfTq+rviPH0JvLgWxf8oS4CoJzTpgL4wG0wxso1omANPnkC+dmlwIpg3g+ma2PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pZ/R2Q18; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719331857; c=relaxed/simple;
+	bh=z8HswIvlQx7OU8ilJWOJ4zvCY+3qACFutDcOZeef8Ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U81nZv1i4IvOf1tz4hEsHvHP57iWAqXaFfgrFqBQxbeoQO9hoeV3oh0jVXJH9DABbcEeJau7NvkQoQvn7OugMTHwya3FryikA/QXWnsKMA/6lhr6eAwWt8REhxiRkC7jRz6qMHiilBIqO8NL6A96759EZbTCYo5UN/I5BfnNoyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qv8Bx59N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pZ/R2Q18"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45PG7h84089051;
-	Tue, 25 Jun 2024 11:07:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719331663;
-	bh=urAGycXTBoHdLtPtjfxHTcGyuwKBYenkT3TbkTOFkAk=;
-	h=From:To:CC:Subject:Date;
-	b=pZ/R2Q18HcSnlwK24ZMqS5X8GOW/1K66pkaCb90lP/QSzT+xUYvy24N6/blAUrZxw
-	 mYcxtdMAB73BIgdtA5ugVTDiAcw1rrdv0NbB7tRWn6GOMtl679zxZlS0sHme1/Dt8y
-	 zRtP2ut+/UPZ2AL/BiQfS/v0LIcFQh2QguM6YMU4=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45PG7hx2069246
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 25 Jun 2024 11:07:43 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 25
- Jun 2024 11:07:43 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 25 Jun 2024 11:07:43 -0500
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45PG7dxE122229;
-	Tue, 25 Jun 2024 11:07:40 -0500
-From: Udit Kumar <u-kumar1@ti.com>
-To: <vigneshr@ti.com>, <nm@ti.com>, <tony@atomide.com>
-CC: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <ronald.wahl@raritan.com>, <thomas.richard@bootlin.com>,
-        <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, Udit Kumar <u-kumar1@ti.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2] serial: 8250_omap: Fix Errata i2310 with RX FIFO level check
-Date: Tue, 25 Jun 2024 21:37:25 +0530
-Message-ID: <20240625160725.2102194-1-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qv8Bx59N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7963BC32781;
+	Tue, 25 Jun 2024 16:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719331856;
+	bh=z8HswIvlQx7OU8ilJWOJ4zvCY+3qACFutDcOZeef8Ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qv8Bx59NIiTNVrL1XrPJ0UUqqJl0/uDAY0EcYnpt7MF23VrL3+V2Hqbw8bR0Gm8XP
+	 8eRQMyKVM2GbOcrPj/8MI2uXuNAATdEQSi4J7gFWIL7DvXzM14qrmwC5ORvpDTWr8x
+	 5KUmY1DcBxnTY9U7L3u+TXwOQx5sf4EfqkHzVhebwErtZf9/y5MMPH2FpVjg/D8Dwa
+	 7EhDJTSeQZ5caBXLkVp33AfuUlUarHS+nWXJnv6+1nzch9Uf3mo9WIQIwVeIUhV9gD
+	 9ArIrzlCaBdtM+wuAVehh5lpA1tC5RZEk1+gYP9ykAO1AOe20+CFhiR2xHe1ONMYbm
+	 0gl4ZqPeVEoeg==
+Date: Tue, 25 Jun 2024 17:10:52 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Bao Cheng Su <baocheng.su@siemens.com>,
+	Diogo Ivo <diogo.ivo@siemens.com>
+Subject: Re: [PATCH 3/4] dt-bindings: soc: ti: am645-system-controller: add
+ child nodes used by main domain
+Message-ID: <20240625-stuffed-outgrow-702e37622fc6@spud>
+References: <cover.1719210050.git.jan.kiszka@siemens.com>
+ <52848094062ea55b0063e6fc37f27e6ed5035aa8.1719210050.git.jan.kiszka@siemens.com>
+ <20240624-hula-fever-74499b22784d@spud>
+ <0e0a9627-0e5c-4c39-b1f2-98f8095ba8c5@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HzLaPnRGBBlzqSMg"
+Content-Disposition: inline
+In-Reply-To: <0e0a9627-0e5c-4c39-b1f2-98f8095ba8c5@siemens.com>
 
-Errata i2310[0] says, Erroneous timeout can be triggered,
-if this Erroneous interrupt is not cleared then it may leads
-to storm of interrupts.
 
-Commit 9d141c1e6157 ("serial: 8250_omap: Implementation of Errata i2310")
-which added the workaround but missed ensuring RX FIFO is really empty
-before applying the errata workaround as recommended in the errata text.
-Fix this by adding back check for UART_OMAP_RX_LVL to be 0 for
-workaround to take effect.
+--HzLaPnRGBBlzqSMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[0] https://www.ti.com/lit/pdf/sprz536 page 23
+On Mon, Jun 24, 2024 at 10:23:37PM +0200, Jan Kiszka wrote:
+> On 24.06.24 18:24, Conor Dooley wrote:
+> > On Mon, Jun 24, 2024 at 08:20:49AM +0200, Jan Kiszka wrote:
+> >> From: Jan Kiszka <jan.kiszka@siemens.com>
+> >>
+> >> Expand bindings to cover both the MCU and the main usage of the AM654
+> >> system controller.
+> >>
+> >> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> >> ---
+> >>  .../soc/ti/ti,am654-system-controller.yaml    | 29 +++++++++++++++++++
+> >>  1 file changed, 29 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-=
+controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-=
+controller.yaml
+> >> index e79803e586ca..0eec807f38df 100644
+> >> --- a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-control=
+ler.yaml
+> >> +++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-control=
+ler.yaml
+> >> @@ -34,6 +34,35 @@ patternProperties:
+> >>      type: object
+> >>      $ref: /schemas/phy/ti,phy-gmii-sel.yaml#
+> >> =20
+> >> +  "^mux-controller$":
+> >> +    type: object
+> >> +    description:
+> >> +      This is the SERDES lane control mux.
+> >=20
+> > Where is this object described?
+> >=20
+>=20
+> Nowhere so far - I've only followed the pattern in
+> mfd/ti,j721e-system-controller.yaml. Would adding "ref:
+> /schemas/mux/reg-mux.yaml" be enough?
 
-Fixes: 9d141c1e6157 ("serial: 8250_omap: Implementation of Errata i2310")
-Cc: stable@vger.kernel.org
-Reported-by: Vignesh Raghavendra <vigneshr@ti.com>
-Closes: https://lore.kernel.org/all/e96d0c55-0b12-4cbf-9d23-48963543de49@ti.com/
-Signed-off-by: Udit Kumar <u-kumar1@ti.com>
----
-Testlogs
-https://gist.github.com/uditkumarti/4f5120f203a238fbebe411eb82b63753
+I think that would be okay, yea
 
-Changelog:
-Changes in v2
-- Update commit message, subject, Fixes tag
-link to v1:
-https://lore.kernel.org/all/20240625051338.2761599-1-u-kumar1@ti.com/
+--HzLaPnRGBBlzqSMg
+Content-Type: application/pgp-signature; name="signature.asc"
 
- drivers/tty/serial/8250/8250_omap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index ddac0a13cf84..1af9aed99c65 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -672,7 +672,8 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
- 	 * https://www.ti.com/lit/pdf/sprz536
- 	 */
- 	if (priv->habit & UART_RX_TIMEOUT_QUIRK &&
--		(iir & UART_IIR_RX_TIMEOUT) == UART_IIR_RX_TIMEOUT) {
-+	    (iir & UART_IIR_RX_TIMEOUT) == UART_IIR_RX_TIMEOUT &&
-+	    serial_port_in(port, UART_OMAP_RX_LVL) == 0) {
- 		unsigned char efr2, timeout_h, timeout_l;
- 
- 		efr2 = serial_in(up, UART_OMAP_EFR2);
--- 
-2.34.1
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnrsDAAKCRB4tDGHoIJi
+0kWxAP964V9Lk0QTCjeBj4XYhp9yppMMx1ApO1OCrtpbBjq5pQD7BKYT/UgapUTg
+PuhFZNyuMFXVagzZCesfL56uD9PAOw8=
+=ql76
+-----END PGP SIGNATURE-----
 
+--HzLaPnRGBBlzqSMg--
