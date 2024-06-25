@@ -1,300 +1,198 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E266013DDC6;
-	Tue, 25 Jun 2024 11:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB2B149C6A;
+	Tue, 25 Jun 2024 11:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719316149; cv=none; b=QWx3F3YoimKA5m8qOIlDGxYC62PjLSkxmgCmKPEmZj3koFPAZpLsUo7W2673JFWRYh299bWGJu/NARCW3+N8/z+dtrwnLiqImScjUWQUQkAGEU6a6cv82iwnHZXopuZc7lQZJn3DcsqbOXkGXn467zjII0o6fWP94UQ6SEtV2is=
+	t=1719316198; cv=none; b=HKqCxaMAvKKb77m7H/kC/0J1T7Wp2w+tYf6ydBRVEXm625m6z36FAMcZLUNmG7iTiTKTTnEGgvMDLXuH4Le1bbE9HOtMjr98IRQfQ7GXwcolfoMqSQAnR//Icj6xt2X1e4LXMPbQLrrIldkz/vVTKRr13zrJaUV4/rYmdjD7V6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719316149; c=relaxed/simple;
-	bh=2RVJmAEsGhuxdhdydanoYpOhdLdnrCswsnr/8U2j75Q=;
-	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
-	 References:To:MIME-Version; b=esmAYxYkpRuzJxNk1UV+5KRjX0iB3swXYILM3y6G00UMHtD+G3k3VSSqdfKsvZKUHbm5KuPIDR55ijqwfu9s47eZwW9LrtKq9OoDOFYSIEIl8faRdHnRt0WFG7UMXBMEscI89cR56lhPUvXoUu8aEFQGqC7aB5E4/SM0wl1DpA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LVjeXkbR; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1719316198; c=relaxed/simple;
+	bh=PyVHnjG73tg3bQgcCMZI90Xk84ZDk5HCikIcnPu7wuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p2l7GBYRGtiyufW1lO7Y/dxLQP8YSlKnhfdcrbDnvdIdBbiFVrgrB5za4Jm+EOyQjy3v0Oa9fCwi/CCpf0j8LEhdutTC3tiuBz3t4bv5MEaKEUPqUm8vDPglhWEXqZDCRW/Rxdz9h7iJoIaYAudmkNRrJjPFRnsD1qbAE/3kxjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFueCOhe; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LVjeXkbR"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PBeYGp025112;
-	Tue, 25 Jun 2024 11:48:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:subject:from:in-reply-to:date:cc:message-id
-	:references:to:content-transfer-encoding:mime-version; s=pp1;
-	 bh=Y2hhtNXdnOP2URjK6F8cNvjZytpeeXwrjcm6KAj53Bw=; b=LVjeXkbRiSVb
-	PNnpqhI/AQS/E1x+ZdTYg6RTMisFfB6qZDeUAnbCiU2jErwV48kcKbwdkrdHHgJZ
-	4wZ0iyh7CMK9bnkmqQBP9tWmf+DogKDoAyHuUJELnW9rn94kOaTB8sATbgSWP6cW
-	LoB6YeM4IVW66Nr26nua/sxhQWIwlMwamLa6ATMv043JP914A7oMwEHDzM2nLlVd
-	bojtg8m541dwOn6TAxt8LvF8ibaMbYFnlZV7+EMrYpsBQ8OUuEzZPECMU/omGBO4
-	ELGvflxvJdETmw+sTWHY4+oucYt+U3Se1t7dZONcAd1NFuqWqSQXEqPRTvgz2VLg
-	KI022QQH5A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyw21819n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 11:48:56 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45PBmtc9005441;
-	Tue, 25 Jun 2024 11:48:55 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyw21819h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 11:48:55 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45PBGRKf019602;
-	Tue, 25 Jun 2024 11:48:54 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9xpx5kw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 11:48:54 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45PBmmCI45875550
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Jun 2024 11:48:50 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 746CF20043;
-	Tue, 25 Jun 2024 11:48:48 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8233B20040;
-	Tue, 25 Jun 2024 11:48:45 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.30.249])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 25 Jun 2024 11:48:45 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [V4 00/16] Add data type profiling support for powerpc
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZnYVitG1tffUNTn6@google.com>
-Date: Tue, 25 Jun 2024 17:18:34 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
-Message-Id: <B34AF03E-FD05-4600-9548-ADDB33A534EF@linux.vnet.ibm.com>
-References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
- <C84A4D8E-3BCD-47A7-B41E-1B39744AECDF@linux.vnet.ibm.com>
- <ZnYVitG1tffUNTn6@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _z5g5GnrlNUwrrJan91ypYAkkS5LQD5T
-X-Proofpoint-GUID: vMLeO6i0WB3tQse4eVMru0MJLMYVJ24F
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFueCOhe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719316197; x=1750852197;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PyVHnjG73tg3bQgcCMZI90Xk84ZDk5HCikIcnPu7wuM=;
+  b=hFueCOheeUj5F0Dcg6Cue+Fwi9Z0khY4doawxtnq2OOon5utCuxztWjJ
+   YYs8Y8dRZIOiho6C7dnHJvroORhTYpnwzCCjNBMb2Y38GioIRrhSWD5ay
+   UNjdRn4RXUux1NymUvpWWxThQT5b++LC2bp3Eb8NUq2vJ98Km7wUlQ6LA
+   Ami+Sbd39jSpfZggF9iWb466JL64BRYqDTUQRYuElXbUH0VgxVV45LHm0
+   hEWGel8Lf6RZ0nr+zIs0sh6SmH22LT6rLhu4EMUexhff6yDuaPOZLZrSx
+   hbF+9JlcghI5/2X1KqKD20Q/WCPRX2WRNUE/UwUXH2NbxyBdYUcwz1Yyr
+   w==;
+X-CSE-ConnectionGUID: m+0HabCASXa4Bg+eF5Ixgg==
+X-CSE-MsgGUID: gkW3bNkjQ5i8L9toUJzLsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="20104375"
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="20104375"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 04:49:56 -0700
+X-CSE-ConnectionGUID: r02oWnKNSWuW+PAgD0UwPg==
+X-CSE-MsgGUID: nvvfCh2PTZ2pGXg5JsnOLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="43724716"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by orviesa009.jf.intel.com with ESMTP; 25 Jun 2024 04:49:53 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	David Ahern <dsahern@kernel.org>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/5] netdev_features: start cleaning netdev_features_t up
+Date: Tue, 25 Jun 2024 13:44:27 +0200
+Message-ID: <20240625114432.1398320-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_06,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- adultscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406250084
+Content-Transfer-Encoding: 8bit
 
+NETDEV_FEATURE_COUNT is currently 64, which means we can't add any new
+features as netdev_features_t is u64.
+As per several discussions, instead of converting netdev_features_t to
+a bitmap, which would mean A LOT of changes, we can try cleaning up
+netdev feature bits.
+There's a bunch of bits which don't really mean features, rather device
+attributes/properties that can't be changed via Ethtool in any of the
+drivers. Such attributes can be moved to netdev private flags without
+losing any functionality.
 
+Start converting some read-only netdev features to private flags from
+the ones that are most obvious, like lockless Tx, inability to change
+network namespace etc. I was able to reduce NETDEV_FEATURE_COUNT from
+64 to 60, which mean 4 free slots for new features. There are obviously
+more read-only features to convert, such as highDMA, "challenged VLAN",
+HSR (4 bits) - this will be done in subsequent series.
+Please note that netdev features are not uAPI/ABI by any means. Ethtool
+passes their names and bits to the userspace separately and there are no
+hardcoded names/bits in the userspace, so that new Ethtool could work
+on older kernels and vice versa. Even shell scripts won't most likely
+break since the removed bits were always read-only, meaning nobody would
+try touching them from a script.
 
-> On 22 Jun 2024, at 5:36=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> wr=
-ote:
->=20
-> Hello,
->=20
-> On Thu, Jun 20, 2024 at 09:01:01PM +0530, Athira Rajeev wrote:
->>=20
->>=20
->>> On 14 Jun 2024, at 10:56=E2=80=AFPM, Athira Rajeev <atrajeev@linux.vnet=
-.ibm.com> wrote:
->>>=20
->>> The patchset from Namhyung added support for data type profiling
->>> in perf tool. This enabled support to associate PMU samples to data
->>> types they refer using DWARF debug information. With the upstream
->>> perf, currently it possible to run perf report or perf annotate to
->>> view the data type information on x86.
->>>=20
->>> Initial patchset posted here had changes need to enable data type
->>> profiling support for powerpc.
->>>=20
->>> https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgrou=
-p.eu/T/
->>>=20
->>> Main change were:
->>> 1. powerpc instruction nmemonic table to associate load/store
->>> instructions with move_ops which is use to identify if instruction
->>> is a memory access one.
->>> 2. To get register number and access offset from the given
->>> instruction, code uses fields from "struct arch" -> objump.
->>> Added entry for powerpc here.
->>> 3. A get_arch_regnum to return register number from the
->>> register name string.
->>>=20
->>> But the apporach used in the initial patchset used parsing of
->>> disassembled code which the current perf tool implementation does.
->>>=20
->>> Example: lwz     r10,0(r9)
->>>=20
->>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
->>> registers names and offset. Also to find whether there is a memory
->>> reference in the operands, "memory_ref_char" field of objdump is used.
->>> For x86, "(" is used as memory_ref_char to tackle instructions of the
->>> form "mov  (%rax), %rcx".
->>>=20
->>> In case of powerpc, not all instructions using "(" are the only memory
->>> instructions. Example, above instruction can also be of extended form (X
->>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction catego=
-ry
->>> and extract the source/target registers, second patchset added support =
-to use
->>> raw instruction. With raw instruction, macros are added to extract opco=
-de
->>> and register fields.
->>> Link to second patchset:
->>> https://lore.kernel.org/all/20240506121906.76639-1-atrajeev@linux.vnet.=
-ibm.com/
->>>=20
->>> Example representation using --show-raw-insn in objdump gives result:
->>>=20
->>> 38 01 81 e8     ld      r4,312(r1)
->>>=20
->>> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
->>> this translates to instruction form: "ld RT,DS(RA)" and binary code
->>> as:
->>> _____________________________________
->>> | 58 |  RT  |  RA |      DS       | |
->>> -------------------------------------
->>> 0    6     11    16              30 31
->>>=20
->>> Second patchset used "objdump" again to read the raw instruction.
->>> But since there is no need to disassemble and binary code can be read
->>> directly from the DSO, third patchset (ie this patchset) uses below
->>> apporach. The apporach preferred in powerpc to parse sample for data
->>> type profiling in V3 patchset is:
->>> - Read directly from DSO using dso__data_read_offset
->>> - If that fails for any case, fallback to using libcapstone
->>> - If libcapstone is not supported, approach will use objdump
->>>=20
->>> Patchset adds support to pick the opcode and reg fields from this
->>> raw/binary instruction code. This approach came in from review comment
->>> by Segher Boessenkool and Christophe for the initial patchset.
->>>=20
->>> Apart from that, instruction tracking is enabled for powerpc and
->>> support function is added to find variables defined as registers
->>> Example, in powerpc, below two registers are
->>> defined to represent variable:
->>> 1. r13: represents local_paca
->>> register struct paca_struct *local_paca asm("r13");
->>>=20
->>> 2. r1: represents stack_pointer
->>> register void *__stack_pointer asm("r1");
->>>=20
->>> These are handled in this patchset.
->>>=20
->>> - Patch 1 is to rearrange register state type structures to header file
->>> so that it can referred from other arch specific files
->>> - Patch 2 is to make instruction tracking as a callback to"struct arch"
->>> so that it can be implemented by other archs easily and defined in arch
->>> specific files
->>> - Patch 3 adds support to capture and parse raw instruction in powerpc
->>> using dso__data_read_offset utility
->>> - Patch 4 adds logic to support using objdump when doing default "perf
->>> report" or "perf annotate" since it that needs disassembled instruction.
->>> - Patch 5 adds disasm_line__parse to parse raw instruction for powerpc
->>> - Patch 6 update parameters for reg extract functions to use raw
->>> instruction on powerpc
->>> - Patch 7 add support to identify memory instructions of opcode 31 in
->>> powerpc
->>> - Patch 8 adds more instructions to support instruction tracking in pow=
-erpc
->>> - Patch 9 and 10 handles instruction tracking for powerpc.
->>> - Patch 11, 12 and 13 add support to use libcapstone in powerpc
->>> - Patch 14 and patch 15 handles support to find global register variabl=
-es
->>> - Patch 16 handles insn-stat option for perf annotate
->>>=20
->>> Note:
->>> - There are remaining unknowns (25%) as seen in annotate Instruction st=
-ats
->>> below.
->>> - This patchset is not tested on powerpc32. In next step of enhancements
->>> along with handling remaining unknowns, plan to cover powerpc32 changes
->>> based on how testing goes.
->>>=20
->>> With the current patchset:
->>>=20
->>> ./perf record -a -e mem-loads sleep 1
->>> ./perf report -s type,typeoff --hierarchy --group --stdio
->>> ./perf annotate --data-type --insn-stat
->>>=20
->>> perf annotate logs:
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>=20
->>> Annotate Instruction stats
->>> total 609, ok 446 (73.2%), bad 163 (26.8%)
->>>=20
->>> Name/opcode:  Good   Bad
->>> -----------------------------------------------------------
->>> 58                  :   323    80
->>> 32                  :    49    43
->>> 34                  :    33    11
->>> OP_31_XOP_LDX       :     8    20
->>> 40                  :    23     0
->>> OP_31_XOP_LWARX     :     5     1
->>> OP_31_XOP_LWZX      :     2     3
->>> OP_31_XOP_LDARX     :     3     0
->>> 33                  :     0     2
->>> OP_31_XOP_LBZX      :     0     1
->>> OP_31_XOP_LWAX      :     0     1
->>> OP_31_XOP_LHZX      :     0     1
->>>=20
->>> perf report logs:
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>=20
->>> Total Lost Samples: 0
->>>=20
->>> Samples: 1K of event 'mem-loads'
->>> Event count (approx.): 937238
->>>=20
->>> Overhead  Data Type  Data Type Offset
->>> ........  .........  ................
->>>=20
->>> 48.60%  (unknown)  (unknown) +0 (no field)
->>> 12.85%  long unsigned int  long unsigned int +0 (current_stack_pointer)
->>>  4.68%  struct paca_struct  struct paca_struct +2312 (__current)
->>>  4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
->>>  2.69%  struct paca_struct  struct paca_struct +2808 (canary)
->>>  2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
->>>  2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
->>>  1.41%  struct vm_fault  struct vm_fault +0 (vma)
->>>  1.29%  struct task_struct  struct task_struct +276 (flags)
->>>  1.03%  struct pt_regs  struct pt_regs +264 (user_regs.msr)
->>>  0.90%  struct security_hook_list  struct security_hook_list +0 (list.n=
-ext)
->>>  0.76%  struct irq_desc  struct irq_desc +304 (irq_data.chip)
->>>  0.76%  struct rq  struct rq +2856 (cpu)
->>>=20
->>> Thanks
->>> Athira Rajeev
->>=20
->> Hi All
->>=20
->> Requesting for review comments for this patchset
->=20
-> Sorry about the delay, I was traveling and busy with other things.
-> I'll review this next week!
+Alexander Lobakin (5):
+  netdevice: convert private flags > BIT(31) to bitfields
+  netdev_features: remove unused __UNUSED_NETIF_F_1
+  netdev_features: convert NETIF_F_LLTX to dev->lltx
+  netdev_features: convert NETIF_F_NETNS_LOCAL to dev->netns_local
+  netdev_features: convert NETIF_F_FCOE_MTU to dev->fcoe_mtu
 
-Thanks Namhyung
->=20
-> Thanks,
-> Namhyung
+ Documentation/networking/netdev-features.rst  | 15 -------
+ Documentation/networking/netdevices.rst       |  4 +-
+ Documentation/networking/switchdev.rst        |  4 +-
+ drivers/net/ethernet/tehuti/tehuti.h          |  2 +-
+ include/linux/netdev_features.h               | 14 +------
+ include/linux/netdevice.h                     | 40 +++++++++++++------
+ drivers/net/amt.c                             |  4 +-
+ drivers/net/bareudp.c                         |  2 +-
+ drivers/net/bonding/bond_main.c               |  8 ++--
+ drivers/net/dummy.c                           |  3 +-
+ drivers/net/ethernet/adi/adin1110.c           |  2 +-
+ drivers/net/ethernet/chelsio/cxgb/cxgb2.c     |  3 +-
+ .../net/ethernet/chelsio/cxgb4/cxgb4_fcoe.c   |  6 +--
+ .../net/ethernet/freescale/dpaa/dpaa_eth.c    |  3 +-
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  |  3 +-
+ .../net/ethernet/intel/ixgbe/ixgbe_dcb_nl.c   |  2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c |  4 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c  |  2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 11 ++---
+ .../net/ethernet/intel/ixgbe/ixgbe_sriov.c    |  4 +-
+ .../ethernet/marvell/prestera/prestera_main.c |  3 +-
+ .../net/ethernet/mellanox/mlx5/core/en_main.c |  4 +-
+ .../net/ethernet/mellanox/mlx5/core/en_rep.c  |  3 +-
+ .../net/ethernet/mellanox/mlxsw/spectrum.c    |  6 ++-
+ .../ethernet/microchip/lan966x/lan966x_main.c |  2 +-
+ .../net/ethernet/netronome/nfp/nfp_net_repr.c |  3 +-
+ drivers/net/ethernet/pasemi/pasemi_mac.c      |  5 ++-
+ .../net/ethernet/qualcomm/rmnet/rmnet_vnd.c   |  2 +-
+ drivers/net/ethernet/rocker/rocker_main.c     |  3 +-
+ drivers/net/ethernet/sfc/ef100_rep.c          |  4 +-
+ drivers/net/ethernet/tehuti/tehuti.c          |  4 +-
+ drivers/net/ethernet/ti/cpsw_new.c            |  3 +-
+ drivers/net/ethernet/toshiba/spider_net.c     |  3 +-
+ drivers/net/geneve.c                          |  2 +-
+ drivers/net/gtp.c                             |  2 +-
+ drivers/net/hamradio/bpqether.c               |  2 +-
+ drivers/net/ipvlan/ipvlan_main.c              |  3 +-
+ drivers/net/loopback.c                        |  4 +-
+ drivers/net/macsec.c                          |  4 +-
+ drivers/net/macvlan.c                         |  6 ++-
+ drivers/net/net_failover.c                    |  4 +-
+ drivers/net/netkit.c                          |  3 +-
+ drivers/net/nlmon.c                           |  4 +-
+ drivers/net/ppp/ppp_generic.c                 |  2 +-
+ drivers/net/rionet.c                          |  2 +-
+ drivers/net/team/team_core.c                  |  8 ++--
+ drivers/net/tun.c                             |  5 ++-
+ drivers/net/veth.c                            |  2 +-
+ drivers/net/vrf.c                             |  4 +-
+ drivers/net/vsockmon.c                        |  4 +-
+ drivers/net/vxlan/vxlan_core.c                |  5 ++-
+ drivers/net/wireguard/device.c                |  2 +-
+ drivers/scsi/fcoe/fcoe.c                      |  4 +-
+ drivers/staging/octeon/ethernet.c             |  2 +-
+ lib/test_bpf.c                                |  3 +-
+ net/8021q/vlan_dev.c                          |  5 ++-
+ net/8021q/vlanproc.c                          |  2 +-
+ net/batman-adv/soft-interface.c               |  5 ++-
+ net/bridge/br_device.c                        |  6 ++-
+ net/core/dev.c                                |  8 ++--
+ net/core/dev_ioctl.c                          |  9 ++---
+ net/core/net-sysfs.c                          |  3 +-
+ net/core/rtnetlink.c                          |  2 +-
+ net/dsa/user.c                                |  3 +-
+ net/ethtool/common.c                          |  3 --
+ net/hsr/hsr_device.c                          | 12 +++---
+ net/ieee802154/6lowpan/core.c                 |  2 +-
+ net/ieee802154/core.c                         | 10 ++---
+ net/ipv4/ip_gre.c                             |  4 +-
+ net/ipv4/ip_tunnel.c                          |  2 +-
+ net/ipv4/ip_vti.c                             |  2 +-
+ net/ipv4/ipip.c                               |  2 +-
+ net/ipv4/ipmr.c                               |  2 +-
+ net/ipv6/ip6_gre.c                            |  7 ++--
+ net/ipv6/ip6_tunnel.c                         |  4 +-
+ net/ipv6/ip6mr.c                              |  2 +-
+ net/ipv6/sit.c                                |  4 +-
+ net/l2tp/l2tp_eth.c                           |  2 +-
+ net/openvswitch/vport-internal_dev.c          | 11 ++---
+ net/wireless/core.c                           | 10 ++---
+ net/xfrm/xfrm_interface_core.c                |  2 +-
+ tools/testing/selftests/net/forwarding/README |  2 +-
+ 82 files changed, 194 insertions(+), 190 deletions(-)
 
+---
+From RFC[0]:
+* drop:
+  * IFF_LOGICAL (as (LLTX | IFF_NO_QUEUE)) - will be discussed later;
+  * NETIF_F_HIGHDMA conversion - requires priv flags inheriting etc.,
+    maybe later;
+  * NETIF_F_VLAN_CHALLENGED conversion - same as above;
+* convert existing priv_flags > BIT(31) to bitfield booleans and define
+  new flags the same way (Jakub);
+* mention a couple times that netdev features are not uAPI/ABI by any
+  means (Andrew).
+
+[0] https://lore.kernel.org/netdev/20240405133731.1010128-1-aleksander.lobakin@intel.com
+-- 
+2.45.2
 
