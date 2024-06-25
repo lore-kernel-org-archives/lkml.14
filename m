@@ -1,80 +1,229 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4339117D8BE;
-	Tue, 25 Jun 2024 19:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC69917CA14;
+	Tue, 25 Jun 2024 19:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719345479; cv=none; b=J/BLgAbjZSaWnHpIpy85qSzgaElTo7ulwT7Tbt47Ogmfe+BPyWbNLexpq31kwR/RgBqBXkJYYZkNGuWavI/xnNcov/9GszvdlAYVG/1uOaMObD3eNwn4wTnY4zimW7HfEk8KlFvbPH/8E9aXzgxxxqY7EJcYf+WU1oHPJMWqci8=
+	t=1719345500; cv=none; b=nsiOr7kjLqzQ9HmjRDcfZXLDa9hr8NFQ28h6hA7vmFwhSnsg+mSgdvsTDywYO/sTEtX7roPqF8Ix/A/cpj0dz1ROym2sX7Ee5vC5tOR9x9uEQHR88eJLwzPzjczsjR50/By5FHUw5oOWyEDr+dSUmKrPI+EX1QSjgatOSm2TcQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719345479; c=relaxed/simple;
-	bh=5WXuGLJgM+QtAIwqwDjoNKPak65DDHF2eYjfAS6luTg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=trdKc/wcx9WuQiHNyRmllnAKxlkTkWI5k6KzeQ8KpJe2ezDjfA9Hul+8PY+m42NcwtpNxxqxVqiMRfuOKSHzDN/9OiQJ8D8lTka9csum5gimfu8gDFF6fdB37yTwehOfJYZ5iTs63e6m4l1VuIB68sPo8f5CjPygvCU5JO/8xJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=n3Wtluo9; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1719345500; c=relaxed/simple;
+	bh=MJNmCd7FhXym2f6PUkVcSe+TB7G6x66x130HhKzdzBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=teK+AkkjhdTiCD0SvPPyH8cNDsO0sowpOUoqBDV+k9G6eBrslLyO3QujPdCETVL2ae8n8RqaIikWfSFCYlHb5VhUQITyf5YBytxdEbhUCbJQKffSoIoATX4IkpIKyz7qqcUwItlXwW1L3cODO93nDSMQ21v9rEMs0Ss556a/EAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BuygBh4Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="n3Wtluo9"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id A053B1FACA;
-	Tue, 25 Jun 2024 21:57:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1719345472;
-	bh=mTXmTyJB6Z16tkKRKJPTeo4y+EeQ33t7StEL4G7pefM=; h=From:To:Subject;
-	b=n3Wtluo9CY/ZpmDsBaRaLJGIdRIlFtqyG8HeR+smMxSV4SlPj0P+LjDIYhrwdLzWw
-	 6fazspF2nXAI2Zv15SnmQqnoleC3a3yhzDeh86uF9FVfW3OJjCSSuexlvGVMR7hx3t
-	 GtCy9CfuTHTd4B8eIA0j/NMHk0GNe3bCzpx+sCfeoSIuGFI7+qA4wa6CQoabuE+JZn
-	 DZiDXBcLRGvr411TY4HVOVejjRPmCzXOe/HvGgXG8h7f2B+Lvr1bob8C9+DLbD4Zio
-	 p+f+kJjbBoqDv8sGNtE3/s8SSKnZp06CmXXdavn/fWb3bJVkD1iWCR3oDGUcRjACoq
-	 C8RASSzdAC6Ww==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] hwrng: Kconfig - Do not enable by default CN10K driver
-Date: Tue, 25 Jun 2024 21:57:46 +0200
-Message-Id: <20240625195746.48905-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BuygBh4Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B1A7C32781;
+	Tue, 25 Jun 2024 19:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719345500;
+	bh=MJNmCd7FhXym2f6PUkVcSe+TB7G6x66x130HhKzdzBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BuygBh4ZCADwmVWbcR1Tm3b+mek/WwltrRh5HjyR70z394+Q02IgnnoAxb3e4SYkm
+	 DirMrEAxuvGVTbKUEAzVHp1MkrHC9hKtazfRu85bqyP84aEqAz4luuReL+pMmX3Ok8
+	 QJgAq6gfDOOTZrXKn/3N+C6R4ybTgej/t+2ox0U76YYgSK3QXWxku2ADkQN6Q6sT6i
+	 rrYxNgLgJXwOJDx19MoKkMFFQKRRQKpPr3AdOp4dLEk1LiOPsBCSkjAXx0QyK16VsF
+	 vPGTyEFuLOU/hPY1/429W5cADDWqsswjMTBAQpuMOu8RmTKozMzGaqsa8Wzfr9ovy4
+	 Hh/a6ivDgnioQ==
+Date: Tue, 25 Jun 2024 13:03:33 -0700
+From: Bjorn Andersson <andersson@kernel.org>
+To: Komal Bajaj <quic_kbajaj@quicinc.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Melody Olvera <quic_molvera@quicinc.com>
+Subject: Re: [PATCH v3 3/4] remoteproc: qcom_q6v5_pas: Add support to attach
+ a DSP
+Message-ID: <g6jl6ookh2pdb5ef6nbjc5q673xo4fmg5iauwm7ewld7pizkkw@3xnegfivief6>
+References: <20240620120143.12375-1-quic_kbajaj@quicinc.com>
+ <20240620120143.12375-4-quic_kbajaj@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620120143.12375-4-quic_kbajaj@quicinc.com>
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Thu, Jun 20, 2024 at 05:31:42PM GMT, Komal Bajaj wrote:
+> From: Melody Olvera <quic_molvera@quicinc.com>
+> 
+> Some chipsets will have DSPs which will have begun running prior
+> to linux booting, so add support to late attach these DSPs by
+> adding support for:
+> - run-time checking of an offline or running DSP via rmb register
+> - a late attach framework to attach to the running DSP
+> - a handshake mechanism to ensure full and proper booting via rmb
 
-Do not enable by default the CN10K HW random generator driver.
+I don't fully understand what state we're going to find the remote side
+in during this attach.
 
-CN10K Random Number Generator is available only on some specific
-Marvell SoCs, however the driver is in practice enabled by default on
-all arm64 configs.
+I think that between commit message and comments in the code it should
+be clear what the expected flow is, why there is a 5 second timeout, why
+does Linux tell the DSP to "continue boot", etc.
 
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
-as an alternative I could propose
+Regards,
+Bjorn
 
-default HW_RANDOM if ARCH_THUNDER=y
-
----
- drivers/char/hw_random/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 442c40efb200..01e2e1ef82cf 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -555,7 +555,6 @@ config HW_RANDOM_ARM_SMCCC_TRNG
- config HW_RANDOM_CN10K
-        tristate "Marvell CN10K Random Number Generator support"
-        depends on HW_RANDOM && PCI && (ARM64 || (64BIT && COMPILE_TEST))
--       default HW_RANDOM
-        help
- 	 This driver provides support for the True Random Number
- 	 generator available in Marvell CN10K SoCs.
--- 
-2.39.2
-
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+> ---
+>  drivers/remoteproc/qcom_q6v5_pas.c | 102 +++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index b9759f6b2283..32d45c18e15e 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/firmware.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -258,6 +259,94 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  	return ret;
+>  }
+> 
+> +static int adsp_signal_q6v5(struct qcom_adsp *adsp)
+> +{
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (adsp->q6v5.rmb_base) {
+> +		ret = readl_poll_timeout(adsp->q6v5.rmb_base + RMB_BOOT_WAIT_REG,
+> +					 val, val, 20000,
+> +					 RMB_POLL_MAX_TIMES * 20000);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		writel_relaxed(1, adsp->q6v5.rmb_base + RMB_BOOT_CONT_REG);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int adsp_attach(struct rproc *rproc)
+> +{
+> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_q6v5_prepare(&adsp->q6v5);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = adsp_pds_enable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
+> +	if (ret < 0)
+> +		goto disable_irqs;
+> +
+> +	ret = clk_prepare_enable(adsp->xo);
+> +	if (ret)
+> +		goto disable_proxy_pds;
+> +
+> +	ret = clk_prepare_enable(adsp->aggre2_clk);
+> +	if (ret)
+> +		goto disable_xo_clk;
+> +
+> +	if (adsp->cx_supply) {
+> +		ret = regulator_enable(adsp->cx_supply);
+> +		if (ret)
+> +			goto disable_aggre2_clk;
+> +	}
+> +
+> +	if (adsp->px_supply) {
+> +		ret = regulator_enable(adsp->px_supply);
+> +		if (ret)
+> +			goto disable_cx_supply;
+> +	}
+> +
+> +	/* if needed, signal Q6 to continute booting */
+> +	ret = adsp_signal_q6v5(adsp);
+> +	if (ret < 0) {
+> +		dev_err(adsp->dev, "Didn't get rmb signal from  %s\n", rproc->name);
+> +		goto disable_px_supply;
+> +	};
+> +
+> +	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5000));
+> +	if (ret == -ETIMEDOUT) {
+> +		dev_err(adsp->dev, "start timed out\n");
+> +		qcom_scm_pas_shutdown(adsp->pas_id);
+> +		goto disable_px_supply;
+> +	}
+> +
+> +	return 0;
+> +
+> +disable_px_supply:
+> +	if (adsp->px_supply)
+> +		regulator_disable(adsp->px_supply);
+> +disable_cx_supply:
+> +	if (adsp->cx_supply)
+> +		regulator_disable(adsp->cx_supply);
+> +disable_aggre2_clk:
+> +	clk_disable_unprepare(adsp->aggre2_clk);
+> +disable_xo_clk:
+> +	clk_disable_unprepare(adsp->xo);
+> +disable_proxy_pds:
+> +	adsp_pds_disable(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
+> +disable_irqs:
+> +	qcom_q6v5_unprepare(&adsp->q6v5);
+> +
+> +	/* Remove pointer to the loaded firmware, only valid in adsp_load() & adsp_start() */
+> +	adsp->firmware = NULL;
+> +
+> +	return ret;
+> +}
+> +
+>  static int adsp_start(struct rproc *rproc)
+>  {
+>  	struct qcom_adsp *adsp = rproc->priv;
+> @@ -320,6 +409,13 @@ static int adsp_start(struct rproc *rproc)
+>  		goto release_pas_metadata;
+>  	}
+> 
+> +	/* if needed, signal Q6 to continute booting */
+> +	ret = adsp_signal_q6v5(adsp);
+> +	if (ret < 0) {
+> +		dev_err(adsp->dev, "Didn't get rmb signal from  %s\n", rproc->name);
+> +		goto release_pas_metadata;
+> +	}
+> +
+>  	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5000));
+>  	if (ret == -ETIMEDOUT) {
+>  		dev_err(adsp->dev, "start timed out\n");
+> @@ -432,6 +528,7 @@ static unsigned long adsp_panic(struct rproc *rproc)
+>  static const struct rproc_ops adsp_ops = {
+>  	.unprepare = adsp_unprepare,
+>  	.start = adsp_start,
+> +	.attach = adsp_attach,
+>  	.stop = adsp_stop,
+>  	.da_to_va = adsp_da_to_va,
+>  	.parse_fw = qcom_register_dump_segments,
+> @@ -442,6 +539,7 @@ static const struct rproc_ops adsp_ops = {
+>  static const struct rproc_ops adsp_minidump_ops = {
+>  	.unprepare = adsp_unprepare,
+>  	.start = adsp_start,
+> +	.attach = adsp_attach,
+>  	.stop = adsp_stop,
+>  	.da_to_va = adsp_da_to_va,
+>  	.parse_fw = qcom_register_dump_segments,
+> @@ -779,6 +877,10 @@ static int adsp_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto detach_proxy_pds;
+> 
+> +	if (adsp->q6v5.rmb_base &&
+> +			readl_relaxed(adsp->q6v5.rmb_base + RMB_Q6_BOOT_STATUS_REG))
+> +		rproc->state = RPROC_DETACHED;
+> +
+>  	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
+>  	qcom_add_smd_subdev(rproc, &adsp->smd_subdev);
+>  	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
+> --
+> 2.42.0
+> 
