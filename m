@@ -1,99 +1,70 @@
-Received: from esa10.hc2706-39.iphmx.com (esa10.hc2706-39.iphmx.com [216.71.140.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A9C148FE4
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.140.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29BF17B513
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340946; cv=none; b=f5llSdYdGAjPJlqW5kK8xX6A2a/9OxS6rAzVHT9xG+Uobb2ojonFIMGcfNmPtOUYhuC37kX6eHBGd2EYQ64DarV9Lzq3rYmrVmXALRtPiHkPDIA9fgP31A0bxGGrgWipgD5tJdceDLGWSkup76nTldlLbICk1yopqd7t/nevBl0=
+	t=1719340949; cv=none; b=mVZjWblReI+i+F6849R6G/yEjsjkgIimfqPL9bE1HpdoAoi3AH3v+wAvHctcltKjYx74dvSaC7qkUXLcRxiJ3Q1LrzgA7kI0e7sb2JcR3KSYeMSZPN8UyuSZd5wuZjtzCSxevYcsrM/qrB9j7Oo8KhzqOtejHdG0oFoFWacnel4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340946; c=relaxed/simple;
-	bh=SseNpeKyupeNkoRBEoJQBVJ+Qm2dZaiugoWwAtZR+mc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZBxMfeZ6eVdu9NVHjlrqtuC9KhHmPVevLRdXSeLNWoXzJyynbVQuC5yX7GJfSh5qJxPiWucEzgzJSaFdDt0bbb8y/ZaIEUjEDZaCzt8IZUECTgVJTqce5mLF7brA9DYYXQ24hlDujsMhQy6QtJCMzCgR+pt/sPXxua0L+jV/t2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bu.edu; spf=pass smtp.mailfrom=bu.edu; dkim=pass (2048-bit key) header.d=bu.edu header.i=@bu.edu header.b=RazgpQuQ; arc=none smtp.client-ip=216.71.140.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bu.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bu.edu
+	s=arc-20240116; t=1719340949; c=relaxed/simple;
+	bh=bFf47hFEVUuKOmXsiB4H2YqzJawoxVMdG5DGlAtPhD4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KkL/aw7Uof7Y2bCrEEPqBqLB8wXQ+TZ8gReB4EZFmihDkKRaAKDaIJgaCugyp+5CJ0lbQ/6bYrzj9HzYP2VFncSXXtM5df6dNy3SNDd+u7aLdBVg2LmdTa3KO7XJ7lfBEMyBf5RFnrTLyO+aTABZmmFsY4sjPDsE6CKmv2NnNr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=bN3vJuoE; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bu.edu header.i=@bu.edu header.b="RazgpQuQ"
-X-CSE-ConnectionGUID: 5GQsuF78QZmYM38xAmV43Q==
-X-CSE-MsgGUID: /JSZauU/RfywIyY2oRHZDQ==
-X-IronPort-RemoteIP: 209.85.160.70
-X-IronPort-MID: 375722550
-X-IronPort-Reputation: None
-X-IronPort-Listener: OutgoingMail
-X-IronPort-SenderGroup: RELAY_GSUITE
-X-IronPort-MailFlowPolicy: $RELAYED
-IronPort-Data: A9a23:PahF3a0bHjebefVKvPbD5YRwkn2cJEfYwER7XKvMYLTBsI5bp2QGy
- jccUTyDMq2INDajc9B0aITj8hsCv5eEnNZiTQJrqSg9HnlHl5H5CIXCJC8cHc8zwu4v7q5Dx
- 59DAjUVBJlsFhcwnj/0b/686yA6jfzVLlbFILasEjhrQgN5QzsWhxtmmuoo6qZlmtH8CA6W0
- T/Ii5S31GSNhXgsYgr414rZ8Ekz5Kqo5WtD1rADTasjUGH2xiF94K03ePnZw0vQGuF8AuO8T
- uDf+7C1lkux1wstEN6sjoHgeUQMRLPIVSDW4paBc/H/6vTqjnVaPpcTbZLwW28O49m6t4kZJ
- OF2iHCFYVxB0psgOQgqe0Iw/ylWZcWq8VJcSJS1mZX7I0buKhMAzxjyZa2f0EJxFutfWAlzG
- fIkxD8lMz+6nP+Yn+KCeOxdo59zPODuAt9EgyQ1pd3ZJa5OrZHrRqzL4Zpf1W51iJ8WW/nZY
- MUdZHxkaxGojx9nYA9GTsJj2r723j+gK1W0q3rMzUYzy3PazAV32pDnLZzYdsHiqcB9xRnF+
- Ticojmhav0cHJu98giM70/rvOHeggLqadgVLp2K2sc/1TV/wURWUnX6T2CTpfi/l177WN9FL
- UEQ0jQhoLJ090GxSNT5GRqirxa5UgU0XtNRF6g94VjIxPWMpQmeAWcAQ3hKb9lOWNIKeAHGH
- 2Shx7vBbQGDepXPIZ5B3t94dQ+PBBU=
-IronPort-HdrOrdr: A9a23:aZC2560sDgx6vLEv81tcfAqjBJEkLtp133Aq2lEZdPUzSKClfq
- GV88jzsCWetN9/Yh8dcLy7WZVoOEmskqKduLNhW4tKPjOW21dAXbsD0WKK+VSJcUDDH4hmpM
- JdmsNFeb/N5DZB/L3HyTj9P9E8wMSWtICE7N2utUuFlDsaEp2IOT0JcjpyFSBNNW17OaY=
-X-Talos-CUID: =?us-ascii?q?9a23=3AaVT2j2rZGgede/H7jJUwKhrmUZ0KS2bA4iiAGn2?=
- =?us-ascii?q?9OEMyGK28TGHMo5oxxg=3D=3D?=
-X-Talos-MUID: =?us-ascii?q?9a23=3ADFkd4w1VeewmtzWdIKGMbACpPzUjpIaVOkkQrNI?=
- =?us-ascii?q?8tdibFD1BYTCnrAabe9py?=
-Received: from mail-oa1-f70.google.com ([209.85.160.70])
-  by ob1.hc2706-39.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 14:41:14 -0400
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-25cb2c198ceso9985352fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:41:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bN3vJuoE"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52ce9ba0cedso2924091e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bu.edu; s=s1gsbu; t=1719340874; x=1719945674; darn=vger.kernel.org;
+        d=rasmusvillemoes.dk; s=google; t=1719340946; x=1719945746; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dcFRuze8aansEe6VFQfECvUgQS6Z3gD6NqAIG33MvOM=;
-        b=RazgpQuQdysuKi+GRbtSM/98ET/X7VpmHJIOqC73M7PnLe01Y1Rnh1MrsajvkiwL4w
-         Vw1bh5L7vtcIDUnrESjNo5IxLrMmcF1NCk1dZlZyqeteJbclfNBsKemfLL4GfOtLWh8n
-         ayowxrvT/YuMFp5/w9SG9G3HeHjco4ngs2LdXwVrnjSWAXFo8G8+VMvP7UC5Rst8vqVM
-         96sd+q5GkfRwcTOHGmMldYBK3Kk4Srptlu/TH336QH27oyQ5IP3qtzTvb/Xfmrtx26rn
-         MGvAhP/wEwzBq3FsoU/qgFVK0TCQep41nbPaGBGf6iEf3g0/Awce3rgirnotFNcoh8qb
-         Ceqg==
+        bh=fTRHmcetGLaYy17XrKZXgDqE5GMBbK+wOczjMxAfiWo=;
+        b=bN3vJuoENHZov+rE9nFpJ6n6P4T2gJ9iYrl6nfrosotzqqNG6XisYxCrbnmSf5O4Br
+         sSZc/HshQjU5yVEBr/JlK9DJ13D2u2kSt64XfjQBGzflPcNY6YSnyBSVAicuW+QokAjA
+         Rlz7tR/O/FmEWJIR3mdFm9Jut7fPqftrtJg7Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719340874; x=1719945674;
+        d=1e100.net; s=20230601; t=1719340946; x=1719945746;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dcFRuze8aansEe6VFQfECvUgQS6Z3gD6NqAIG33MvOM=;
-        b=kDNSchoegzVD501WHqtM+p7OXOsuZqxll6XQVqFTs5RbekpLm8EPolul1bk3aAiZlj
-         3B4o42HzWtAuNny6umMtyuD8co2SATIJS+meGLNm/x8Vrlq2nRW3HQrcEAICdyULQ/Hn
-         3kOGGJRP0yoTL5lVPSTisbsbTLbB55uG9xjod8dltehgYnI0IP8y+qoUo4BLu4eT9IXA
-         YZtSyqddV5nfT8jx8UyA2/FfR+mYPZMo4bjBVMpV39G6l6Wydtnci6REzQ9/RvKO+3qc
-         sttNjzxzmb3z4PQTVl22H4l5ACNLM5S0YTunikG+R3XPdhaCSvgTwK8fUZ125cBW2g9Y
-         xGDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdmQ8tEcApp9JObZjSZikgQkIZtyLysObt9Esbx1TqViz68XLfYZfYAp/dxhTAuDiJckGDcf96J9z/y6FBPwck5yTRDspVRgm5JK4u
-X-Gm-Message-State: AOJu0Yy00amtt3TWkW+q/bm9nqk8uTNDL6AIaHk9RIr3Ut/Ynhn/7VtY
-	D//frJuB8DZU30nqQpEijsugxb8H37M0/hQZcuuigkIj1olfBcffyXHAMmQ3twpDqFcx4vNP6c1
-	whMaXqV89hxpXIOGuqRmKEm9Krf2Lzb0NZJZDsKoAtWcULnFCO0aDBbJ2ECOxIz9++ZZvQMLLnz
-	+PhpswMGk5R+4=
-X-Received: by 2002:a05:6870:224b:b0:254:7936:e1df with SMTP id 586e51a60fabf-25cfcdf8cc9mr8781806fac.22.1719340873689;
-        Tue, 25 Jun 2024 11:41:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMjaZqBEw3QnKN/jkLH/CWyrMPXlL2Z/h7A4AzTdTKNt2Uva8R2TACxlMVyAMtKKywIzRWqw==
-X-Received: by 2002:a05:6870:224b:b0:254:7936:e1df with SMTP id 586e51a60fabf-25cfcdf8cc9mr8781785fac.22.1719340873309;
-        Tue, 25 Jun 2024 11:41:13 -0700 (PDT)
-Received: from dhcp-acadmin-128-197-176-198.bu.edu (dhcp-acadmin-128-197-176-198.bu.edu. [128.197.176.198])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bce8b18fbsm432373485a.39.2024.06.25.11.41.12
+        bh=fTRHmcetGLaYy17XrKZXgDqE5GMBbK+wOczjMxAfiWo=;
+        b=aX4wGp0Ky7mjOURAXF3tF4MiX8eI82ZqIVEi3cwAih55psjhNEO6uPV/R/rnXoj6wO
+         4vx5YXFpBizrsZuGOtJxK2Art5FaB+T+JKNy787xrFkvSIkWUNPeAeTuiQ08NX3Mo+sl
+         dc8HUox+UM5Cy+/wrzB2Quh6hde1Iovuhu7Mkj8HNNJN5A10lhJiW01olhxClQ4lL5Uy
+         sFnP/qTOh0Lkk0OWcV3LWXxvM48VNyMh36Tota2y2K96QJIxpr/kjpkxgN5MWQv3iu4B
+         xhyzvvhgZmV+lDE/fWBLpbH46T2vkNX6/kq2RndZbrXS3pvFAF8TZgOukI0OmR6ArRKq
+         uKwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/ia2Ul59bKbLA7SZjRK0dSQn4QxCffBorHkWXv0UvQHgjGgBjGTcbW6K3doLs2pP0W1rwWuphlhkADcOOvvx1LF59PA/QQ1ucBmmq
+X-Gm-Message-State: AOJu0YzGW/J2rsopeJvIQqOXNFM0Hn0GPzijWKSVicHpCWISfpvd6jdR
+	wbzbLljIETxBf3kQTc4Laj7UFd2g4mkU9uQU1V+Ci09vzPeLsXNEBcukzn5rnTeinPNAH1HONOB
+	o+XVcIQ==
+X-Google-Smtp-Source: AGHT+IHzd9Y3KJ+ekIIDdL14O7HCRFyG0RNRJ50heb9Bv7+zAcEg6cULMA2lGBbpiJbMQj4at+FLzg==
+X-Received: by 2002:ac2:4c41:0:b0:52c:e1cd:39bd with SMTP id 2adb3069b0e04-52ce1cd3a79mr8123147e87.13.1719340944752;
+        Tue, 25 Jun 2024 11:42:24 -0700 (PDT)
+Received: from localhost (77.33.185.10.dhcp.fibianet.dk. [77.33.185.10])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7261795c58sm154993866b.118.2024.06.25.11.42.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 11:41:12 -0700 (PDT)
-From: sahanlb <sahanb@bu.edu>
-To: mst@redhat.com,
-	jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com
-Cc: virtualization@lists.linux.dev,
+        Tue, 25 Jun 2024 11:42:23 -0700 (PDT)
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
-	drepper@redhat.com,
-	sahanlb <sahanb@bu.edu>
-Subject: [PATCH] virtio-pci: PCI extended capabilities for virtio
-Date: Tue, 25 Jun 2024 14:39:37 -0400
-Message-ID: <20240625184043.10658-1-sahanb@bu.edu>
-X-Mailer: git-send-email 2.42.0
+	linux-serial@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] serial: imx: ensure RTS signal is not left active after shutdown
+Date: Tue, 25 Jun 2024 20:42:05 +0200
+Message-ID: <20240625184206.508837-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -101,394 +72,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CES-GSUITE_AUTH: bf3aNvsZpxl8
 
-PCI legacy configuration space does not have sufficient space for a device
-that supports all kinds of virtio structures via PCI capabilities. This is
-especially true if one were to use virtio drivers with physical devices.
-Link: https://par.nsf.gov/servlets/purl/10463939
-A physical device may already have many capabilities in the legacy space.
+If a process is killed while writing to a /dev/ttymxc* device in RS485
+mode, we observe that the RTS signal is left high, thus making it
+impossible for other devices to transmit anything.
 
-This patch adds support to place virtio capabilities in the PCI extended
-configuration space and makes the driver search both legacy and extended
-PCI configuration spaces.
+Moreover, the ->tx_state variable is left in state SEND, which means
+that when one next opens the device and configures baud rate etc., the
+initialization code in imx_uart_set_termios dutifully ensures the RTS
+pin is pulled down, but since ->tx_state is already SEND, the logic in
+imx_uart_start_tx() does not in fact pull the pin high before
+transmitting, so nothing actually gets on the wire on the other side
+of the transceiver. Only when that transmission is allowed to complete
+is the state machine then back in a consistent state.
 
-Add new argument to vp_modern_map_capability to indicate whether mapping
-a legacy or extended capability.
-Add new function virtio_pci_find_ext_capability to walk extended
-capabilities and find virtio capabilities.
+This is completely reproducible by doing something as simple as
 
-Modify vp_modern_probe to search both legacy and extended configuration
-spaces.
-If virtio_pci_find_capability fails to find common, isr, notify, or device
-virtio structures, call virtio_pci_find_ext_capability.
+  seq 10000 > /dev/ttymxc0
 
-Notify virtio structure can get mapped either in vp_modern_probe or in
-vp_modern_map_vq_notify. Add new attribute 'notify_ecap' to
-struct virtio_pci_modern_device to indicate whether the notify capability
-is in the extended congiguration structure.
+and hitting ctrl-C, and watching with a logic analyzer.
 
-Add virtio extended capability structures to
-"include/uapi/linux/virtio_pci.h".
-Format for the extended structures derived from
-Link: https://lore.kernel.org/all/20220112055755.41011-2-jasowang@redhat.com/
-
-This patch has been validated using an FPGA development board to implement 
-a virtio interface.
-
-Signed-off-by: sahanlb <sahanb@bu.edu>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/virtio/virtio_pci_modern_dev.c | 174 ++++++++++++++++++++-----
- include/linux/virtio_pci_modern.h      |   1 +
- include/uapi/linux/virtio_pci.h        |  31 +++++
- 3 files changed, 175 insertions(+), 31 deletions(-)
+v2: Use dev_warn() instead of dev_WARN_ONCE().
 
-diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
-index 0d3dbfaf4b23..75d0555edc7a 100644
---- a/drivers/virtio/virtio_pci_modern_dev.c
-+++ b/drivers/virtio/virtio_pci_modern_dev.c
-@@ -15,26 +15,41 @@
-  * @size: map size
-  * @len: the length that is actually mapped
-  * @pa: physical address of the capability
-+ * @ecap: capability is in the extended config space
-  *
-  * Returns the io address of for the part of the capability
-  */
- static void __iomem *
- vp_modern_map_capability(struct virtio_pci_modern_device *mdev, int off,
- 			 size_t minlen, u32 align, u32 start, u32 size,
--			 size_t *len, resource_size_t *pa)
-+			 size_t *len, resource_size_t *pa, u8 ecap)
- {
- 	struct pci_dev *dev = mdev->pci_dev;
- 	u8 bar;
- 	u32 offset, length;
- 	void __iomem *p;
+v1: https://lore.kernel.org/lkml/20240524121246.1896651-1-linux@rasmusvillemoes.dk/
+
+A screen dump from a logic analyzer can be seen at:
+
+  https://ibb.co/xCcP7Jy
+
+This is on an imx8mp board, with /dev/ttymxc0 and /dev/ttymxc2 both
+configured for rs485 and connected to each other. I'm writing to
+/dev/ttymxc2. This demonstrates both bugs; that RTS is left high when
+a write is interrupted, and that a subsequent write actually fails to
+have RTS high while TX'ing.
+
+I'm not sure what commit to name as a Fixes:. This certainly happens
+on 6.6 and onwards, but I assume the problem exists since the tx_state
+machine was introduced in cb1a60923609 (serial: imx: implement rts
+delaying for rs485), and possibly even before that.
+
+
+ drivers/tty/serial/imx.c | 51 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 2eb22594960f..85c240e8c24e 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1551,6 +1551,7 @@ static void imx_uart_shutdown(struct uart_port *port)
+ 	struct imx_port *sport = (struct imx_port *)port;
+ 	unsigned long flags;
+ 	u32 ucr1, ucr2, ucr4, uts;
++	int loops;
  
--	pci_read_config_byte(dev, off + offsetof(struct virtio_pci_cap,
--						 bar),
--			     &bar);
--	pci_read_config_dword(dev, off + offsetof(struct virtio_pci_cap, offset),
--			     &offset);
--	pci_read_config_dword(dev, off + offsetof(struct virtio_pci_cap, length),
--			      &length);
-+	if (ecap) {
-+		pci_read_config_byte(dev, off + offsetof(struct virtio_pci_ecap,
-+							 bar),
-+				     &bar);
-+		pci_read_config_dword(dev, off + offsetof(struct virtio_pci_ecap,
-+							  offset),
-+				     &offset);
-+		pci_read_config_dword(dev, off + offsetof(struct virtio_pci_ecap,
-+							  length),
-+				      &length);
-+	} else {
-+		pci_read_config_byte(dev, off + offsetof(struct virtio_pci_cap,
-+							 bar),
-+				     &bar);
-+		pci_read_config_dword(dev, off + offsetof(struct virtio_pci_cap,
-+							  offset),
-+				     &offset);
-+		pci_read_config_dword(dev, off + offsetof(struct virtio_pci_cap,
-+							  length),
-+				      &length);
+ 	if (sport->dma_is_enabled) {
+ 		dmaengine_terminate_sync(sport->dma_chan_tx);
+@@ -1613,6 +1614,56 @@ static void imx_uart_shutdown(struct uart_port *port)
+ 	ucr4 &= ~UCR4_TCEN;
+ 	imx_uart_writel(sport, ucr4, UCR4);
+ 
++	/*
++	 * We have to ensure the tx state machine ends up in OFF. This
++	 * is especially important for rs485 where we must not leave
++	 * the RTS signal high, blocking the bus indefinitely.
++	 *
++	 * All interrupts are now disabled, so imx_uart_stop_tx() will
++	 * no longer be called from imx_uart_transmit_buffer(). It may
++	 * still be called via the hrtimers, and if those are in play,
++	 * we have to honour the delays.
++	 */
++	if (sport->tx_state == WAIT_AFTER_RTS || sport->tx_state == SEND)
++		imx_uart_stop_tx(port);
++
++	/*
++	 * In many cases (rs232 mode, or if tx_state was
++	 * WAIT_AFTER_RTS, or if tx_state was SEND and there is no
++	 * delay_rts_after_send), this will have moved directly to
++	 * OFF. In rs485 mode, tx_state might already have been
++	 * WAIT_AFTER_SEND and the hrtimer thus already started, or
++	 * the above imx_uart_stop_tx() call could have started it. In
++	 * those cases, we have to wait for the hrtimer to fire and
++	 * complete the transition to OFF.
++	 */
++	loops = port->rs485.flags & SER_RS485_ENABLED ?
++		port->rs485.delay_rts_after_send : 0;
++	while (sport->tx_state != OFF && loops--) {
++		uart_port_unlock_irqrestore(&sport->port, flags);
++		msleep(1);
++		uart_port_lock_irqsave(&sport->port, &flags);
 +	}
- 
- 	/* Check if the BAR may have changed since we requested the region. */
- 	if (bar >= PCI_STD_NUM_BARS || !(mdev->modern_bars & (1 << bar))) {
-@@ -142,6 +157,47 @@ static inline int virtio_pci_find_capability(struct pci_dev *dev, u8 cfg_type,
- 	return 0;
- }
- 
-+/**
-+ * virtio_pci_find_ext_capability - walk extended capabilities to find device info.
-+ * @dev: the pci device
-+ * @cfg_type: the VIRTIO_PCI_CAP_* value we seek
-+ * @ioresource_types: IORESOURCE_MEM and/or IORESOURCE_IO.
-+ * @bars: the bitmask of BARs
-+ *
-+ * Returns offset of the capability, or 0.
-+ */
-+static inline int virtio_pci_find_ext_capability(struct pci_dev *dev, u16 cfg_type,
-+						 u32 ioresource_types, int *bars)
-+{
-+	int pos;
 +
-+	for (pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VNDR);
-+	     pos > 0;
-+	     pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_VNDR)) {
-+		u16 type;
-+		u8  bar;
-+
-+		pci_read_config_word(dev, pos + offsetof(struct virtio_pci_ecap,
-+							 cfg_type),
-+				     &type);
-+		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_ecap,
-+							 bar),
-+				     &bar);
-+
-+		/* Ignore structures with reserved BAR values */
-+		if (bar >= PCI_STD_NUM_BARS)
-+			continue;
-+
-+		if (type == cfg_type) {
-+			if (pci_resource_len(dev, bar) &&
-+			    pci_resource_flags(dev, bar) & ioresource_types) {
-+				*bars |= (1 << bar);
-+				return pos;
-+			}
++	if (sport->tx_state != OFF) {
++		dev_warn(sport->port.dev, "unexpected tx_state %d\n",
++			 sport->tx_state);
++		/*
++		 * This machine may be busted, but ensure the RTS
++		 * signal is inactive in order not to block other
++		 * devices.
++		 */
++		if (port->rs485.flags & SER_RS485_ENABLED) {
++			ucr2 = imx_uart_readl(sport, UCR2);
++			if (port->rs485.flags & SER_RS485_RTS_AFTER_SEND)
++				imx_uart_rts_active(sport, &ucr2);
++			else
++				imx_uart_rts_inactive(sport, &ucr2);
++			imx_uart_writel(sport, ucr2, UCR2);
 +		}
-+	}
-+	return 0;
-+}
- /* This is part of the ABI.  Don't screw with it. */
- static inline void check_offsets(void)
- {
-@@ -226,7 +282,12 @@ int vp_modern_probe(struct virtio_pci_modern_device *mdev)
- 	int err, common, isr, notify, device;
- 	u32 notify_length;
- 	u32 notify_offset;
-+	u8 common_ecap, isr_ecap, notify_ecap, device_ecap;
- 	int devid;
-+	common_ecap = 0;
-+	isr_ecap    = 0;
-+	notify_ecap = 0;
-+	device_ecap = 0;
- 
- 	check_offsets();
- 
-@@ -257,18 +318,42 @@ int vp_modern_probe(struct virtio_pci_modern_device *mdev)
- 					    IORESOURCE_IO | IORESOURCE_MEM,
- 					    &mdev->modern_bars);
- 	if (!common) {
--		dev_info(&pci_dev->dev,
--			 "virtio_pci: leaving for legacy driver\n");
--		return -ENODEV;
-+		/* Check extended configuration space. */
-+		common = virtio_pci_find_ext_capability(pci_dev, VIRTIO_PCI_CAP_COMMON_CFG,
-+							IORESOURCE_IO | IORESOURCE_MEM,
-+							&mdev->modern_bars);
-+		if (!common) {
-+			dev_info(&pci_dev->dev,
-+				 "virtio_pci: leaving for legacy driver\n");
-+			return -ENODEV;
-+		}
-+		common_ecap = 1;
- 	}
- 
- 	/* If common is there, these should be too... */
-+	/* These also could be in the extended configuration space. */
- 	isr = virtio_pci_find_capability(pci_dev, VIRTIO_PCI_CAP_ISR_CFG,
- 					 IORESOURCE_IO | IORESOURCE_MEM,
- 					 &mdev->modern_bars);
-+	if (!isr) {
-+		isr = virtio_pci_find_ext_capability(pci_dev,
-+						     VIRTIO_PCI_CAP_ISR_CFG,
-+						     IORESOURCE_IO | IORESOURCE_MEM,
-+						     &mdev->modern_bars);
-+		isr_ecap = 1;
++		sport->tx_state = OFF;
 +	}
 +
- 	notify = virtio_pci_find_capability(pci_dev, VIRTIO_PCI_CAP_NOTIFY_CFG,
- 					    IORESOURCE_IO | IORESOURCE_MEM,
- 					    &mdev->modern_bars);
-+	if (!notify) {
-+		notify = virtio_pci_find_ext_capability(pci_dev,
-+							VIRTIO_PCI_CAP_NOTIFY_CFG,
-+							IORESOURCE_IO | IORESOURCE_MEM,
-+							&mdev->modern_bars);
-+		notify_ecap = 1;
-+	}
-+
- 	if (!isr || !notify) {
- 		dev_err(&pci_dev->dev,
- 			"virtio_pci: missing capabilities %i/%i/%i\n",
-@@ -290,6 +375,13 @@ int vp_modern_probe(struct virtio_pci_modern_device *mdev)
- 	device = virtio_pci_find_capability(pci_dev, VIRTIO_PCI_CAP_DEVICE_CFG,
- 					    IORESOURCE_IO | IORESOURCE_MEM,
- 					    &mdev->modern_bars);
-+	if (!device) {
-+		device = virtio_pci_find_ext_capability(pci_dev,
-+							VIRTIO_PCI_CAP_DEVICE_CFG,
-+							IORESOURCE_IO | IORESOURCE_MEM,
-+							&mdev->modern_bars);
-+		device_ecap = 1;
-+	}
+ 	uart_port_unlock_irqrestore(&sport->port, flags);
  
- 	err = pci_request_selected_regions(pci_dev, mdev->modern_bars,
- 					   "virtio-pci-modern");
-@@ -301,30 +393,48 @@ int vp_modern_probe(struct virtio_pci_modern_device *mdev)
- 			      sizeof(struct virtio_pci_common_cfg), 4, 0,
- 			      offsetofend(struct virtio_pci_modern_common_cfg,
- 					  admin_queue_num),
--			      &mdev->common_len, NULL);
-+			      &mdev->common_len, NULL, common_ecap);
- 	if (!mdev->common)
- 		goto err_map_common;
- 	mdev->isr = vp_modern_map_capability(mdev, isr, sizeof(u8), 1,
- 					     0, 1,
--					     NULL, NULL);
-+					     NULL, NULL, isr_ecap);
- 	if (!mdev->isr)
- 		goto err_map_isr;
- 
--	/* Read notify_off_multiplier from config space. */
--	pci_read_config_dword(pci_dev,
--			      notify + offsetof(struct virtio_pci_notify_cap,
--						notify_off_multiplier),
--			      &mdev->notify_offset_multiplier);
--	/* Read notify length and offset from config space. */
--	pci_read_config_dword(pci_dev,
--			      notify + offsetof(struct virtio_pci_notify_cap,
--						cap.length),
--			      &notify_length);
--
--	pci_read_config_dword(pci_dev,
--			      notify + offsetof(struct virtio_pci_notify_cap,
--						cap.offset),
--			      &notify_offset);
-+	if (notify_ecap) {
-+		/* Read notify_off_multiplier from config space. */
-+		pci_read_config_dword(pci_dev,
-+				      notify + offsetof(struct virtio_pci_notify_ecap,
-+							notify_off_multiplier),
-+				      &mdev->notify_offset_multiplier);
-+		/* Read notify length and offset from config space. */
-+		pci_read_config_dword(pci_dev,
-+				      notify + offsetof(struct virtio_pci_notify_ecap,
-+							cap.length),
-+				      &notify_length);
-+
-+		pci_read_config_dword(pci_dev,
-+				      notify + offsetof(struct virtio_pci_notify_ecap,
-+							cap.offset),
-+				      &notify_offset);
-+	} else {
-+		/* Read notify_off_multiplier from config space. */
-+		pci_read_config_dword(pci_dev,
-+				      notify + offsetof(struct virtio_pci_notify_cap,
-+							notify_off_multiplier),
-+				      &mdev->notify_offset_multiplier);
-+		/* Read notify length and offset from config space. */
-+		pci_read_config_dword(pci_dev,
-+				      notify + offsetof(struct virtio_pci_notify_cap,
-+							cap.length),
-+				      &notify_length);
-+
-+		pci_read_config_dword(pci_dev,
-+				      notify + offsetof(struct virtio_pci_notify_cap,
-+							cap.offset),
-+				      &notify_offset);
-+	}
- 
- 	/* We don't know how many VQs we'll map, ahead of the time.
- 	 * If notify length is small, map it all now.
-@@ -335,11 +445,13 @@ int vp_modern_probe(struct virtio_pci_modern_device *mdev)
- 							     2, 2,
- 							     0, notify_length,
- 							     &mdev->notify_len,
--							     &mdev->notify_pa);
-+							     &mdev->notify_pa,
-+							     notify_ecap);
- 		if (!mdev->notify_base)
- 			goto err_map_notify;
- 	} else {
- 		mdev->notify_map_cap = notify;
-+		mdev->notify_ecap = notify_ecap;
- 	}
- 
- 	/* Again, we don't know how much we should map, but PAGE_SIZE
-@@ -349,7 +461,7 @@ int vp_modern_probe(struct virtio_pci_modern_device *mdev)
- 		mdev->device = vp_modern_map_capability(mdev, device, 0, 4,
- 							0, PAGE_SIZE,
- 							&mdev->device_len,
--							NULL);
-+							NULL, device_ecap);
- 		if (!mdev->device)
- 			goto err_map_device;
- 	}
-@@ -718,7 +830,7 @@ void __iomem *vp_modern_map_vq_notify(struct virtio_pci_modern_device *mdev,
- 		return vp_modern_map_capability(mdev,
- 				       mdev->notify_map_cap, 2, 2,
- 				       off * mdev->notify_offset_multiplier, 2,
--				       NULL, pa);
-+				       NULL, pa, mdev->notify_ecap);
- 	}
- }
- EXPORT_SYMBOL_GPL(vp_modern_map_vq_notify);
-diff --git a/include/linux/virtio_pci_modern.h b/include/linux/virtio_pci_modern.h
-index c0b1b1ca1163..d9c2e66f23f4 100644
---- a/include/linux/virtio_pci_modern.h
-+++ b/include/linux/virtio_pci_modern.h
-@@ -41,6 +41,7 @@ struct virtio_pci_modern_device {
- 	size_t common_len;
- 
- 	int notify_map_cap;
-+	u8 notify_ecap;
- 
- 	u32 notify_offset_multiplier;
- 	int modern_bars;
-diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
-index a8208492e822..a7348ef8f61a 100644
---- a/include/uapi/linux/virtio_pci.h
-+++ b/include/uapi/linux/virtio_pci.h
-@@ -129,17 +129,43 @@ struct virtio_pci_cap {
- 	__le32 length;		/* Length of the structure, in bytes. */
- };
- 
-+/* PCI extended capability header */
-+struct virtio_pci_ecap {
-+	__le16 cap_vndr;      /* Generic PCI field: PCI_EXT_CAP_ID_VNDR */
-+	__le16 cap_rev:4;     /* Generic PCI field: capability version: 0x1 */
-+	__le16 cap_next:12;   /* Generic PCI field: next ptr */
-+	__le16 cfg_type;      /* Identifies the structure */
-+	__le16 cfg_rev:4;     /* Identifies the version of the structure: 0x1 */
-+	__le16 cap_len:12;    /* The bytes of the entire capability */
-+	__u8 bar;             /* Where to find it. */
-+	__u8 id;              /* Multiple capabilities of the same type */
-+	__u8 padding[2];      /* Pad to full dword. */
-+	__le32 offset;        /* Offset within bar. */
-+	__le32 length;        /* Length of the structure, in bytes. */
-+};
-+
- struct virtio_pci_cap64 {
- 	struct virtio_pci_cap cap;
- 	__le32 offset_hi;             /* Most sig 32 bits of offset */
- 	__le32 length_hi;             /* Most sig 32 bits of length */
- };
- 
-+struct virtio_pci_ecap64 {
-+	struct virtio_pci_ecap cap;
-+	__le32 offset_hi;             /* Most sig 32 bits of offset */
-+	__le32 length_hi;             /* Most sig 32 bits of length */
-+};
-+
- struct virtio_pci_notify_cap {
- 	struct virtio_pci_cap cap;
- 	__le32 notify_off_multiplier;	/* Multiplier for queue_notify_off. */
- };
- 
-+struct virtio_pci_notify_ecap {
-+	struct virtio_pci_ecap cap;
-+	__le32 notify_off_multiplier;	/* Multiplier for queue_notify_off. */
-+};
-+
- /* Fields in VIRTIO_PCI_CAP_COMMON_CFG: */
- struct virtio_pci_common_cfg {
- 	/* About the whole device. */
-@@ -186,6 +212,11 @@ struct virtio_pci_cfg_cap {
- 	__u8 pci_cfg_data[4]; /* Data for BAR access. */
- };
- 
-+struct virtio_pci_cfg_ecap {
-+	struct virtio_pci_ecap cap;
-+	__u8 pci_cfg_data[4]; /* Data for BAR access. */
-+};
-+
- /* Macro versions of offsets for the Old Timers! */
- #define VIRTIO_PCI_CAP_VNDR		0
- #define VIRTIO_PCI_CAP_NEXT		1
+ 	clk_disable_unprepare(sport->clk_per);
 -- 
-2.42.0
+2.45.2
 
