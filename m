@@ -1,114 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C5D1CABB;
-	Tue, 25 Jun 2024 15:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BCD16F29C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719330097; cv=none; b=o+2AQDGqRVlOjGU6HyLlEIfVSJTAfDMkEeUnejGc55xeulbAk3z8auJCj88iiaC+a9mEFxVDi7vMc3LqzDy2trZRP8JrPHgO3TxOVMkbazMx8bnGVQRJPUbhx8FNfJjZnNBF87D7+2njSpYwrEJuW6nbjWMOkktVM1PvvhW2LiI=
+	t=1719330126; cv=none; b=ZZyu6WYF4Hiu1xbplM5TJDU/aIPAAi5cLMWzx3CEiAhEJ2iU9leKc4rCBLwj4Shi56tQAsbY9NkcuPxmirBmUzb5anYpYZZ4zjQNKkH34f6mrGCtBp+7SvOvyxd4/up1hUiitmVEN2DF7lvQu4+WS5dPdPshXLYmi1hOm4+NXq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719330097; c=relaxed/simple;
-	bh=LiL5hKWe2xoajjxT1kgvhN8TLhkyWDzL+X2Uj2AAUzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dkqxmmzcGQDyUXWMlcBojuQpWkuExufBh0w+G31m8qcgwZl5zwvwIF+daCnPrv/n7G5oVsOqioZiu9RMYgAW76GepCs1uUJN2nzlZ3lOVoU8yg/vwhcbQXq5a3yMd280ypJOhe0YADRa1RYf1fDTY6Umg35e39ca2/6y4AX2zsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UpxxbCIz; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719330126; c=relaxed/simple;
+	bh=ywTSmI1rN04Q5ybrsMmQDMBK0EbrVLfbTfL/6R5ySSE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uBbejs1PJ+EDX9JL78yAXSY3TohHa/PEAMJ9e2Gsw0owUx41DMVUJJ+LpQ82pJdtY2ybyYLl7MDSJoK4k/estMDkjl1UzPIc77TdV5ABiYg7myy7r7aVNa0K+RUnSk58morEnd1A+r2A/dQyA+4ZQpDZv40rxxqhd3beDHZxMmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GHVM0hI4; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UpxxbCIz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719330096; x=1750866096;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LiL5hKWe2xoajjxT1kgvhN8TLhkyWDzL+X2Uj2AAUzM=;
-  b=UpxxbCIzjY7bXFSwYsa63TY707JDFPVrEsz5JvjRz8Szn8SVygq2Gxgn
-   B/OkTRTZ0isXa6i/nRpCe+VE3O2QhWeDlMfuV5X1umHe8vWzLXOlDik0i
-   tpHPALKdUJYGeDmQviJ3tG6mc22UrZj3EgURGT6IgsKts8Ven07op8MR6
-   AVr0LxAiA8IF30GviHsB6XF7fQfBT8l+jQw3bT1j0ztpUf4apTz1Vz7rl
-   kXyLQxs6NwXp6hdq53OSPUOZfKAaJZDAlTGJ6tV2zqoIyLM15rSQPstBD
-   72teLeOF8iCjcTT4ToBNbVSGz/LuoWBoCdBUq/vSdX6D/BDdpN8yi0z7A
-   A==;
-X-CSE-ConnectionGUID: +iyBdgLNRFm8ENFMtcZfnw==
-X-CSE-MsgGUID: fGTeIAeST9CoZ743/z4qFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="20240961"
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="20240961"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 08:41:36 -0700
-X-CSE-ConnectionGUID: 8pwsUsu1TMCAik3rgwzd6Q==
-X-CSE-MsgGUID: AvaPvVgVRNe7ygwyRm7Hcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="43507791"
-Received: from wenjun3x-mobl1.ccr.corp.intel.com (HELO [10.124.232.196]) ([10.124.232.196])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 08:41:32 -0700
-Message-ID: <f2f127fc-5098-4e86-b2b9-ade8b438a1e6@intel.com>
-Date: Tue, 25 Jun 2024 23:41:30 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GHVM0hI4"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1f9ae0b12f3so63549875ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:42:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719330124; x=1719934924; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RxxKgmeDgVKqFMmEwgOuCwbtERgNHDGH29QFhnmfwTc=;
+        b=GHVM0hI4ZLp3CA0D07FNSOYxRPsDQ7buGwfJIv9pwI+tARTA6WM1i5INgOQsTNgeNf
+         kMOzQR/x9sI2IH9q/GAjXBpIjc4W+kn1cTXNR3U1eJQ7WgQks7lGla9RantWyizHbMqm
+         08UAJg6ZUTlIcE6QyzkFD5j0K+IC1NBkShzWU1DhZJqzqObrEnrVC8cJGwGnICmNNHUe
+         b5Si+BGPiE0n3bPKOYytsVhoPUVQeCPZMOnzGK9eN58/Wycm3pWuJcbRtw+H9ZR5A5iF
+         FA4IwbKCOBnC8omrLmFTYcfkbNU17IQJsvuqEi+752aRPJqQesdKJgKZgiOXdCc+f1M6
+         eSEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719330124; x=1719934924;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RxxKgmeDgVKqFMmEwgOuCwbtERgNHDGH29QFhnmfwTc=;
+        b=PLm28oC+qbvLWwWjQAVzGUq7fbc1RkSJlY4w+7AknCwiCyWzLBV9GytdRMdDjAXB/V
+         5D8O0v4TAKjTL0a+JT2jOcN340OsYYn/G/QDhtZunzB+Q9yDU8Jz35xIN+S+PwPqTz7H
+         Q+c7a1ptguLAn/6CTopuGTeTYqKpZX8dKudGMHUhZLrlpDpcHSsfRnNr8nlXb5hAw0WF
+         UL1Zo6cOEhjcfDec98ssJ99TeFYec9U9yk6QMDqzP4UPxmJWCw3U4JMigj1h2EJFPjER
+         5+L1R/oItUxemCJjIl2sw97oUu2iqHL76wBcYP3L6VANZkvX4wWJFn+VCMKSwOzE4wAE
+         KvLQ==
+X-Gm-Message-State: AOJu0YzVQZijp1d0cP8WqEwyCr0unoOqyEnOzWo6+YGZKMFr2gYFvDwM
+	5CKbQt21l5QHeeiz3bbHU6xBzBHZEU2GK6VYfRdYysRXB8kDUvA7uqCGBYYNX/vigYeCXXnldmS
+	Dag==
+X-Google-Smtp-Source: AGHT+IFhgyKRWxYoop/sbDVEXMPn9+FnqK9mKH4shC/uBXK1i+8WbjRze/tcfgrhQ4mXRR9/220//c0nN/I=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d492:b0:1f6:8033:f361 with SMTP id
+ d9443c01a7336-1fa158de75cmr11068635ad.6.1719330124301; Tue, 25 Jun 2024
+ 08:42:04 -0700 (PDT)
+Date: Tue, 25 Jun 2024 08:42:02 -0700
+In-Reply-To: <20240625112056.GDZnqoGDXgYuWBDUwu@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] fs/file.c: conditionally clear full_fds
-To: Jan Kara <jack@suse.cz>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, mjguzik@gmail.com,
- edumazet@google.com, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com,
- tim.c.chen@intel.com, tim.c.chen@linux.intel.com, yu.ma@intel.com
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240622154904.3774273-1-yu.ma@intel.com>
- <20240622154904.3774273-3-yu.ma@intel.com>
- <20240625115442.kkrqy6yvy6qpct4y@quack3>
-Content-Language: en-US
-From: "Ma, Yu" <yu.ma@intel.com>
-In-Reply-To: <20240625115442.kkrqy6yvy6qpct4y@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <171878639288.10875.12927337921927674667.tip-bot2@tip-bot2>
+ <20240620084853.GAZnPs9Q94aakywkUn@fat_crate.local> <20240625112056.GDZnqoGDXgYuWBDUwu@fat_crate.local>
+Message-ID: <ZnrlShoW12JqWmUl@google.com>
+Subject: Re: [PATCH -v2] x86/alternatives, kvm: Fix a couple of CALLs without
+ a frame pointer
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>, x86@kernel.org, Michael Matz <matz@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 25, 2024, Borislav Petkov wrote:
+> ---
+> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+> Date: Tue, 18 Jun 2024 21:57:27 +0200
+> Subject: [PATCH] x86/alternatives, kvm: Fix a couple of CALLs without a f=
+rame pointer
+>=20
+> objtool complains:
+>=20
+>   arch/x86/kvm/kvm.o: warning: objtool: .altinstr_replacement+0xc5: call =
+without frame pointer save/setup
+>   vmlinux.o: warning: objtool: .altinstr_replacement+0x2eb: call without =
+frame pointer save/setup
+>=20
+> Make sure %rSP is an output operand to the respective asm() statements.
+>=20
+> The test_cc() hunk and ALT_OUTPUT_SP() courtesy of peterz. Also from him
+> add some helpful debugging info to the documentation.
+>=20
+> Now on to the explanations:
+>=20
+> tl;dr: The alternatives macros are pretty fragile.
+>=20
+> If I do ALT_OUTPUT_SP(output) in order to be able to package in a %rsp
+> reference for objtool so that a stack frame gets properly generated, the
+> inline asm input operand with positional argument 0 in clear_page():
+>=20
+> 	"0" (page)
+>=20
+> gets "renumbered" due to the added
+>=20
+> 	: "+r" (current_stack_pointer), "=3DD" (page)
+>=20
+> and then gcc says:
+>=20
+>   ./arch/x86/include/asm/page_64.h:53:9: error: inconsistent operand cons=
+traints in an =E2=80=98asm=E2=80=99
+>=20
+> The fix is to use an explicit "D" constraint which points to a singleton
+> register class (gcc terminology) which ends up doing what is expected
+> here: the page pointer - input and output - should be in the same %rdi
+> register.
+>=20
+> Other register classes have more than one register in them - example:
+> "r" and "=3Dr" or "A":
+>=20
+>   =E2=80=98A=E2=80=99
+> 	The =E2=80=98a=E2=80=99 and =E2=80=98d=E2=80=99 registers.  This class i=
+s used for
+> 	instructions that return double word results in the =E2=80=98ax:dx=E2=80=
+=99
+> 	register pair.  Single word values will be allocated either in
+> 	=E2=80=98ax=E2=80=99 or =E2=80=98dx=E2=80=99.
+>=20
+> so using "D" and "=3DD" just works in this particular case.
+>=20
+> And yes, one would say, sure, why don't you do "+D" but then:
+>=20
+>         : "+r" (current_stack_pointer), "+D" (page)
+>         : [old] "i" (clear_page_orig), [new1] "i" (clear_page_rep), [new2=
+] "i" (clear_page_erms),
+>         : "cc", "memory", "rax", "rcx")
+>=20
+> now find the Waldo^Wcomma which throws a wrench into all this.
+>=20
+> Because that silly macro has an "input..." consume-all last macro arg
+> and in it, one is supposed to supply input *and* clobbers, leading to
+> silly syntax snafus.
+>=20
+> Yap, they need to be cleaned up, one fine day...
+>=20
+> Cc: Michael Matz <matz@suse.de>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406141648.jO9qNGLa-lkp@i=
+ntel.com/
+> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+> ---
 
-On 6/25/2024 7:54 PM, Jan Kara wrote:
-> On Sat 22-06-24 11:49:03, Yu Ma wrote:
->> 64 bits in open_fds are mapped to a common bit in full_fds_bits. It is very
->> likely that a bit in full_fds_bits has been cleared before in
->> __clear_open_fds()'s operation. Check the clear bit in full_fds_bits before
->> clearing to avoid unnecessary write and cache bouncing. See commit fc90888d07b8
->> ("vfs: conditionally clear close-on-exec flag") for a similar optimization.
->> Together with patch 1, they improves pts/blogbench-1.1.0 read for 27%, and write
->> for 14% on Intel ICX 160 cores configuration with v6.10-rc4.
->>
->> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
->> Signed-off-by: Yu Ma <yu.ma@intel.com>
-> Nice. Feel free to add:
->
-> Reviewed-by: Jan Kara <jack@suse.cz>
->
-> 								Honza
-
-Copy that, thanks Honza :)
-
-
->> ---
->>   fs/file.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/file.c b/fs/file.c
->> index 50e900a47107..b4d25f6d4c19 100644
->> --- a/fs/file.c
->> +++ b/fs/file.c
->> @@ -268,7 +268,9 @@ static inline void __set_open_fd(unsigned int fd, struct fdtable *fdt)
->>   static inline void __clear_open_fd(unsigned int fd, struct fdtable *fdt)
->>   {
->>   	__clear_bit(fd, fdt->open_fds);
->> -	__clear_bit(fd / BITS_PER_LONG, fdt->full_fds_bits);
->> +	fd /= BITS_PER_LONG;
->> +	if (test_bit(fd, fdt->full_fds_bits))
->> +	    __clear_bit(fd, fdt->full_fds_bits);
->>   }
->>   
->>   static inline bool fd_is_open(unsigned int fd, const struct fdtable *fdt)
->> -- 
->> 2.43.0
->>
+Acked-by: Sean Christopherson <seanjc@google.com>
