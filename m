@@ -1,75 +1,108 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEE745030
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B2945030;
+	Tue, 25 Jun 2024 11:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719315064; cv=none; b=JpC3GSnzwwib7YenQaGcsZ/7MM2uAv5ZGv5eXmeac+VLnHCdWBQNCmN0Qa6OYjWf9hSwrNNJIpeHxxI9qb8inTyjMb2UUlGMM5ngWuWG4HqFURu4bqA7uQoe1MPEiPXjkPgFGRpVdCGoreZCBma39gcuS6CePRwQBZM/yVQuDrA=
+	t=1719315186; cv=none; b=BhHm29h1FxDaGFMOoIzozSAQnyDhGfv/6hqkke3PUHNC72fwUMBeRDGMCLSY3gLGno6m6ifECBwDfWArsTi+oAXbw2OTupIpIiKLTwJAw7oQxAleuHlhy9yI5oq0FB4v3jMgWNpzkIA+N6r5tlNAzMgIAcvAWJ4B1WEPEpoSm0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719315064; c=relaxed/simple;
-	bh=1wGwLs+D9zcH04GgdrvUC++YqhuEyyd24gL7Qe1C3jM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=fwUNK7LNC2ukVsBlcFpqgggam5oqTJF1/mW3ygcaPY6jHkIIFUi3jcr9Xs2zsk+VvfcsPzo+i0JOQ26H7FXb03WejUTP9iKZnoX7g6H2ybyBYH230XM7ro96cHYQkZn9mShMGGYIhFViXq06wKawZXwekH67A/zylpr2aiDCn98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7e20341b122so711763039f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 04:31:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719315062; x=1719919862;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5tzdhzTprBinh64eaia0xb3pkPffa6rhA+3q+0LvIU=;
-        b=RdZDGN4JG5TLRKX/gK5B1SwTdRhXL77XgbZ5j/12UDyLsxrSYyBUnWNq7j53LdDNDW
-         gxZXnGAt55RENQ7MxrOUbGkPRcqV9BB5Cvlj3xJ291gZMyAfAcdmHLGk3ZjErsyU/Vr1
-         35ogsYQvWDH4eBHv8+MLKne30H+QC9Z4jYeH65Oi45hnD9MQLpwKCftpYgug3iMbgaCc
-         PndTO3ygOVorpNjUepGS4ODkJwaJFNQ366OSfk+AFk5uSWjvrN4qNhRFI8RExgOPAv4V
-         4Qg7PdLKiu9HqgT0ikuCNV1RPCQAu6606iGjDemWL1bbYiQ5OSIG1+oT63qkTUp7IHk7
-         +JDQ==
-X-Gm-Message-State: AOJu0Yzb+IC4Wnb6RGFq/5ysbU9fdY+eFxS/njWWKJiuwHCgzranptha
-	9dVrk8NhOm9rmbRivnY9MN4yHjFEs4wyEdbf9fqx1eVNWpeO1e0ih9buig6j2wtJTV2l41TmZ6G
-	sbEd5dGQx0z+cEQfRHwii0cvNtIc+zPmNo98gC+w1XCFIdyNXSvCaj8o=
-X-Google-Smtp-Source: AGHT+IGYY+2GgZOfU10aVLrGZuSJLzxotD9CZHw78Uy/bkTyRp/iAYAzC2n+4oy0BRtAoaZaZ78tMh1EfdPilGT5Bmkyo2Xk9Tdw
+	s=arc-20240116; t=1719315186; c=relaxed/simple;
+	bh=vlT+s5VdBsOn58dABQJWG/biDqHMJxLfM62raEWUr28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zt7ar+cqI8StG6Na9OigSoKzlaRl7Btk39vf5JcAKJb9XQAXBeT1S5Ns8/vgLdpTaV2380kgKu+vX5++fbwHmd546joU6ftBM5GyBd3GWjpXlPrEhXEm6+bU4l/X8XbTh7TZi+qQyACK4MPvWJbNPu8aajjfcJCiDxTbb0RPiDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZuLgxSW1; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZuLgxSW1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=evcwJ4iY84vyTVwT6BoaU/MuOEgepiWQ8bZi3sFqHwU=; b=ZuLgxSW1t8pmfx6LuohN/rbkMJ
+	BJseIXdcbDmDDEhoiHQTwCErnngRBxMz/YHr4JVFV6s5MLBO7CIrC1qA2HvuLPfh161SjGJxL5HuK
+	SUFyxzhDzeJBS2P/6f7oYzM9WQXbqWZz7WWDdubwAcLZkMM4dkyr3PlQrKaFzkoaM+WQQGTGgZ807
+	R4hpENruTMqROtw6l5r8+QXF2W38HRsIEyVHC8D2qhexCc8khI7QSWJ+ap0UewaAF7oqzBTenoeIL
+	70iuCb2gqQihHf2ctzMIKDBqRjueDv2tglHjVbHexKHd4OlBW6Qhyv3dlvXD9iKJ7Zso9utLP16ks
+	eeoYgJXA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sM4Q0-00000002YIL-1cc0;
+	Tue, 25 Jun 2024 11:33:00 +0000
+Date: Tue, 25 Jun 2024 04:33:00 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: alexjlzheng@gmail.com
+Cc: chandan.babu@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alexjlzheng@tencent.com
+Subject: Re: [PATCH] xfs: make xfs_log_iovec independent from xfs_log_vec and
+ release it early
+Message-ID: <Znqq7GUFnwFj-SFI@infradead.org>
+References: <20240623123119.3562031-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:9513:b0:4b9:23bf:6fd5 with SMTP id
- 8926c6da1cb9f-4b9efbea2camr132410173.6.1719315062459; Tue, 25 Jun 2024
- 04:31:02 -0700 (PDT)
-Date: Tue, 25 Jun 2024 04:31:02 -0700
-In-Reply-To: <dd54a706e0d5ba7cb01e073a256b6855409684db.camel@9elements.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008e2400061bb53bba@google.com>
-Subject: Re: [syzbot] [usb?] INFO: rcu detected stall in schedule_timeout (6)
-From: syzbot <syzbot+c793a7eca38803212c61@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, marcello.bauer@9elements.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240623123119.3562031-1-alexjlzheng@tencent.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hello,
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -2526,6 +2526,8 @@ xlog_write(
+>  			xlog_write_full(lv, ticket, iclog, &log_offset,
+>  					 &len, &record_cnt, &data_cnt);
+>  		}
+> +		if (lv->lv_flags & XFS_LOG_VEC_DYNAMIC)
+> +			kvfree(lv->lv_iovecp);
 
-syzbot tried to test the proposed patch but the build/boot failed:
+This should porbably be a function paramter to xlog_write, with
+xlog_cil_write_chain asking for the iovecs to be freed because they
+are dynamically allocated, and the other two not becaue the iovecs
+are on-stack.  With that we don't need to grow a new field in
+struct xfs_log_vec.
 
-kernel clean failed: failed to run ["make" "-j" "64" "ARCH=x86_64" "distclean"]: exit status 2
-Makefile:83: *** Cannot find a vmlinux for VMLINUX_BTF at any of "  ../../vmlinux /sys/kernel/btf/vmlinux /boot/vmlinux-5.9.0-0.bpo.5-cloud-amd64".  Stop.
-make[2]: *** [Makefile:192: sched_ext_clean] Error 2
-make[1]: *** [/syzkaller/jobs-2/linux/kernel/Makefile:1361: sched_ext] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:240: __sub-make] Error 2
+>  	list_for_each_entry(lip, &tp->t_items, li_trans) {
+>  		struct xfs_log_vec *lv;
+> +		struct xfs_log_iovec *lvec;
+>  		int	niovecs = 0;
+>  		int	nbytes = 0;
+>  		int	buf_size;
+> @@ -339,18 +339,23 @@ xlog_cil_alloc_shadow_bufs(
+>  			 * the buffer, only the log vector header and the iovec
+>  			 * storage.
+>  			 */
+> -			kvfree(lip->li_lv_shadow);
+> -			lv = xlog_kvmalloc(buf_size);
+> -
+> -			memset(lv, 0, xlog_cil_iovec_space(niovecs));
+> +			if (lip->li_lv_shadow) {
+> +				kvfree(lip->li_lv_shadow->lv_iovecp);
+> +				kvfree(lip->li_lv_shadow);
+> +			}
+> +			lv = xlog_kvmalloc(sizeof(struct xfs_log_vec));
+> +			memset(lv, 0, sizeof(struct xfs_log_vec));
+> +			lvec = xlog_kvmalloc(buf_size);
+> +			memset(lvec, 0, xlog_cil_iovec_space(niovecs));
 
+This area can use quite a bit of a redo.  The xfs_log_vec is tiny,
+so it doesn't really need a vmalloc fallback but can simply use
+kmalloc.
 
+But more importantly there is no need to really it, you just
+need to allocate it.  So this should probably become:
 
-Tested on:
+	lv = lip->li_lv_shadow;
+	if (!lv) {
+		/* kmalloc and initialize, set lv_size to zero */
+	}
 
-commit:         62c97045 Add linux-next specific files for 20240624
-git tree:       linux-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccdd3ebd6715749a
-dashboard link: https://syzkaller.appspot.com/bug?extid=c793a7eca38803212c61
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16f96f51980000
+	if (buf_size > lv->lv_size) {
+		/* grow case that rallocates ->lv_iovecp */
+	} else {
+		/* same or smaller, optimise common overwrite case */
+		..
+	}
 
