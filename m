@@ -1,303 +1,203 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2124.outbound.protection.partner.outlook.cn [139.219.146.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3317F36A;
-	Tue, 25 Jun 2024 15:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719328302; cv=none; b=D0ozsB6w2fXZEeOOmhAeqBMn1zX82bjnqEWoxHkBT+oyDwPjrb6B8ZMJkAp+LMwuaOJ9KOjRxUO/k2KoD+nWAFQyd4M9vyjX1FPA+iMzUry0LEZ3TxOkRklCctFaAIBjia6OVS36w8fOJuknjvPa5mgM/MTFviZjm5nPV3rIxp4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719328302; c=relaxed/simple;
-	bh=Acp6ACPt1uraYFvaa/OJHDtdqsJEacYbhS0rBluPOfs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=psdQurq8KmStjrIHWqtNHsTLqFfFXt5oJgqkQftuhmezIxMx47mE8YJCTPpVj6vC5NEEsoNaq5CJNePQYE4D0tuc9A8lAXu0teU5iSVvfF7iUaQXqvgZCJXB9zkArvLQK8DTk/DwfExajGu6AlR8HakC8+aPOdGFsKO/LxUmPRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Es1tmai4; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Es1tmai4"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PCZSM7006217;
-	Tue, 25 Jun 2024 17:11:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	SQp3u+nN+zCQi0VdibgOzzsfRyOmMcWrz2WxaHs+YnA=; b=Es1tmai4i5ecqlnm
-	TFXGnkuQHV9d3pT3BX1gS0T15kclvcx6Ff7rUTuT08tl0lcDcyRrVqvXT2H37veN
-	nzYNI4qh8SoHiFi9L036DeGPRSJxwAQb6JbKh0tkUqhh4gj76k3DsJx2tJ5GTKRF
-	eBizXonc3hCPpn9Qlh/i16GIAq1nLDObLPO+TohGugM+iHPyrxOBt0Sys519v+zA
-	6stNetKffmMCrFlGfwM+YV6Uv8opm9vqjWry+aemPyEPWt3nb+VlMFomJG1l3XBC
-	Bp7Xr/dMKrEfvy3agt4K8uVV7ONPTq/me+1ZjMNkqAfWRr9iF1psNlczfjsNvXn4
-	Im734A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx860je3t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 17:11:19 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 34BE840044;
-	Tue, 25 Jun 2024 17:11:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C6E732207A5;
-	Tue, 25 Jun 2024 17:10:35 +0200 (CEST)
-Received: from localhost (10.252.26.63) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
- 2024 17:10:35 +0200
-From: Olivier Moysan <olivier.moysan@foss.st.com>
-To: <fabrice.gasnier@foss.st.com>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: Olivier Moysan <olivier.moysan@foss.st.com>, Nuno Sa <nuno.sa@analog.com>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 8/8] iio: adc: stm32-dfsdm: add scaling support to dfsdm
-Date: Tue, 25 Jun 2024 17:07:16 +0200
-Message-ID: <20240625150717.1038212-9-olivier.moysan@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
-References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C264178385;
+	Tue, 25 Jun 2024 15:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719328352; cv=fail; b=B3ZC2nETjCSnBrh3WtBGq3Q1647SLcTr6jduqw1c+U0tToCJR5hc6Qw3OArgqwYZ/I/8Uz2kY4SgfQj8EhEYkv/o/CGf3HUXN3l2KagvpVJyCh9a5HlQP5yZW58AFphg2xhV3SxqPsPqH871GP8EQsDY2lYEEk5lLA2/KEKBWQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719328352; c=relaxed/simple;
+	bh=h44alAIhm+wdotxkX3SW8SlUVRUCu+XyCIeJoGop1xA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ODik+Aj+9Us0EHR2JCG5BFnZ/4H272PkHBSO/AhEqk+Bfl3SoozliW7j3Q8uJ173Ku1JC0mmrspuCvRwS2zdTMUVe+8/L1i3T8COtaXGW2ZvWuVIQBgTozRg1Crnm9t12kkQI8ItYTd4kTFDx19ZVweTiXVDZxezJyqJDNq4CS0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HDubkIDt3PJGlbMTQg2ceSUVL3UVRbHeWgcpUpePLVAPtQmk36HPTf6xyI7WKYInULNhsc3+00qXHWlKg+L803nNo0seC31NtCWlcShDcVWOHeDEHs3xDknyDCMt0SHgfjwa/YiAyuSST6wdbT2o66QF4YZIIJnxsWwgIrcdfWdpjYOGHILseAzjCxbvqUAcS/HUc7y+PtCG3JMCfUkvsZKp1pF+VDPzqxKFT2h5TxqUqqjXQxuleJSW6++9yAyGuxdXg+4JxUYPq5SH0kNjkE91aSjj+ZbmYW251B3C/VTMMu3wjC7zMk7INsrgVdUrYzjr3Q+Q4UDxoGCNAn/TsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h44alAIhm+wdotxkX3SW8SlUVRUCu+XyCIeJoGop1xA=;
+ b=S2e0U89UUoqTlXWsVNsRvxGieLxJNomBeAIUXSbP3nvJiMrPoOK4KtKj4o0zgPHvJ0EBvfNrcp6YZqDcBJgtqWuRxdzM4q4X8nExrv6Ki31grHABdeZ2qbBj3g0F5Ne04dp2BvrnPN8bLKGnOSIG8oI/L5ToN/mKX056W+CMVIuw7cLJIXWaWhBCmr6LCU1ghKvbjtwHqK3pWidbmItG9Yvb/LSk6lXMaUr5+ihOHyBQivs6aPT1DAC1hS60oTx2giNNrmGtQk5shHkFaO1GwdHIBin/iCj1QjHZlNuU05htBx2FIXdnisFK2bAbsNIGV6FyAkyaE2+kHMmmg0Zpww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:1::6) by NTZPR01MB1116.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:8::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.33; Tue, 25 Jun
+ 2024 08:34:08 +0000
+Received: from NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
+ ([fe80::47b8:45b2:ce25:9c34]) by
+ NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn ([fe80::47b8:45b2:ce25:9c34%3])
+ with mapi id 15.20.7698.025; Tue, 25 Jun 2024 08:34:08 +0000
+From: Keith Zhao <keith.zhao@starfivetech.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: "andrzej.hajda@intel.com" <andrzej.hajda@intel.com>,
+	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>, "rfoss@kernel.org"
+	<rfoss@kernel.org>, "Laurent.pinchart@ideasonboard.com"
+	<Laurent.pinchart@ideasonboard.com>, "jonas@kwiboo.se" <jonas@kwiboo.se>,
+	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "hjc@rock-chips.com" <hjc@rock-chips.com>,
+	"heiko@sntech.de" <heiko@sntech.de>, "andy.yan@rock-chips.com"
+	<andy.yan@rock-chips.com>, Xingyu Wu <xingyu.wu@starfivetech.com>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, Jack Zhu
+	<jack.zhu@starfivetech.com>, Shengyang Chen
+	<shengyang.chen@starfivetech.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v4 08/10] drm/vs: add vs drm master driver
+Thread-Topic: [PATCH v4 08/10] drm/vs: add vs drm master driver
+Thread-Index: AQHaqyrFZ/LFL2PbyUq9SIEMaoRcK7GiMUeAgC/DA/CABBg0AIACL1PQ
+Date: Tue, 25 Jun 2024 08:34:08 +0000
+Message-ID:
+ <NTZPR01MB105085DD76CAB0B8C96FAF43EED52@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
+References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
+ <20240521105817.3301-9-keith.zhao@starfivetech.com>
+ <mbkrlg67jtggoqwecu6emymw3hgqoyf5pe55ho2fthq6pgnds2@ml7mbssrdr2x>
+ <NTZPR01MB1050CAD9457771A58217A58CEECB2@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
+ <uymjzpwsvlaoenftrc6y2colqpvtoniubuoncyslfychynom4i@3qvmcudgfrql>
+In-Reply-To: <uymjzpwsvlaoenftrc6y2colqpvtoniubuoncyslfychynom4i@3qvmcudgfrql>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: NTZPR01MB1050:EE_|NTZPR01MB1116:EE_
+x-ms-office365-filtering-correlation-id: 90020195-9c64-4c1c-2087-08dc94f194bd
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230037|7416011|41320700010|1800799021|366013|38070700015;
+x-microsoft-antispam-message-info:
+ tjcghwAGl70/WVP/OcpOz1bi4+aH17mRtq6wkoXOLYORpGLl5mT9EGu6RxrVMSxPih6mP91cswWbrSja8x5BtZn0NoGh21xVR1TR+Qf+uyU/6xRoz8qcE5ak296xknXpSj0F4AzOMJCB+6EJc5lDbJ653F4UO2jPitAQdIX0z5HOJE75PvWkXDEfZTEIIJGEfooFy79tcgH2+1ztAuQcHWFlBU7RVH0pZAxA8jQ6mZRFXo0Tl465IBeopUgeCltsi41FCLgAW2D1CtzND6KZBxgagK+V5EP8zTc4ZvNw3JsNmNgr6H+ENJaTVixAdq9G7PIA2pTcUKS1rLkwLxH7fJrc82WrKwdLm7gPPVDMbmx8LUt/BaJ64wLlETSdBRBEUBXRtzlckrYPAPpKTOlKOKixxnq1i9YRLCH60pQz9+Dy03tVlSN8nHcRtDZb/YUQDe9QAzGDZUlU7dZ9pz7iUUgJObx9okdNgSi4Y/ni/bOeOwgCwura1qEihuplCQ2afmtpL8lNiIkbPmIMrd716UEHiFFGPTzPfdBaNRu+aMWuZZVMZjS3oR3tLEnoVUn/2lZ/hnxEa+E9pyTLaHpV6CsGLBJU0fOe6JfFSTn3EcGrUnBThZjcDLZ8vdCZGoPQ
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230037)(7416011)(41320700010)(1800799021)(366013)(38070700015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ gYlDMyie4CFoJLejcDvgfAtwRlh4LT+1fRPb43/NEoNsxZh1wYsvFzbQ515a2cgXbavYyp3Fqb/1WKoivcCyQgz8EBMHxob5pHszSy0ux3qhEzFSeJHtUT0tb6vV02pB4/4JxnpGElFICmwIQTMs4qFurvNvopEi/a814/sB5kRKTsyY2REEsDJ/RFonCTCoAJeSPk/Ugfiuyx09o23Lr/RI12mtoDcwQerQFZT1ns5hmZ2rTbaZH5eHur0LMnMJ3+KIr7PetYyjSmwj5znUwbdzdx7r1tiJbWfpvcklbsFhG7RHWzBmcOklCanaVn9sdKSx17oXnGvbz1IiF25xifY5UchNpyF0Podj8BLpCiyHnJOspkWhsH7RGEayXIqg5ghBMnhM6uXE46GNfVY9c31XigBXxFR7SaQoBkq0UmY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_10,2024-06-25_01,2024-05-17_01
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90020195-9c64-4c1c-2087-08dc94f194bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2024 08:34:08.2988
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5JtdFmf67isjbppECEPXreVk0sT1tdHknlrAcORWteaXEVUKpXcsCDaAfZ5HGBarBQsFzCVJq988MDje0PWKbdA2oCK/LTA6FmfPJfokX+0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1116
 
-Add scaling support to STM32 DFSDM.
-
-When used in an analog context, a DFSDM filter typically converts the data
-from a sigma delta modulator. The IIO device associated to the DFSDM
-filter provides these data as raw data.
-The IIO device can provide scaling information (voltage and offset) to
-allow conversion of raw data into physical values.
-
-With the new binding based on IIO backend framework, the sigma delta
-modulators are defined as backends providing scaling information.
-
-The scaling is not supported with legacy binding.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
-Acked-by: Nuno Sa <nuno.sa@analog.com>
----
- drivers/iio/adc/Kconfig           |  1 +
- drivers/iio/adc/stm32-dfsdm-adc.c | 94 ++++++++++++++++++++++++++++++-
- 2 files changed, 93 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 634dc9842fb7..352ad585c534 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -1223,6 +1223,7 @@ config STM32_DFSDM_ADC
- 	select IIO_BUFFER
- 	select IIO_BUFFER_HW_CONSUMER
- 	select IIO_TRIGGERED_BUFFER
-+	select IIO_BACKEND
- 	help
- 	  Select this option to support ADCSigma delta modulator for
- 	  STMicroelectronics STM32 digital filter for sigma delta converter.
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 0df28c9dfa40..6a84ef3f32fd 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -9,6 +9,7 @@
- #include <linux/dmaengine.h>
- #include <linux/dma-mapping.h>
- #include <linux/iio/adc/stm32-dfsdm-adc.h>
-+#include <linux/iio/backend.h>
- #include <linux/iio/buffer.h>
- #include <linux/iio/hw-consumer.h>
- #include <linux/iio/sysfs.h>
-@@ -78,6 +79,7 @@ struct stm32_dfsdm_adc {
- 	/* ADC specific */
- 	unsigned int oversamp;
- 	struct iio_hw_consumer *hwc;
-+	struct iio_backend **backend;
- 	struct completion completion;
- 	u32 *buffer;
- 
-@@ -672,6 +674,8 @@ static int stm32_dfsdm_generic_channel_parse_of(struct stm32_dfsdm *dfsdm,
- 						struct fwnode_handle *node)
- {
- 	struct stm32_dfsdm_channel *df_ch;
-+	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-+	struct iio_backend *backend;
- 	const char *of_str;
- 	int ret, val;
- 
-@@ -721,6 +725,14 @@ static int stm32_dfsdm_generic_channel_parse_of(struct stm32_dfsdm *dfsdm,
- 	if (ret != -EINVAL)
- 		df_ch->alt_si = 0;
- 
-+	if (adc->dev_data->type == DFSDM_IIO) {
-+		backend = devm_iio_backend_fwnode_get(&indio_dev->dev, NULL, node);
-+		if (IS_ERR(backend))
-+			return dev_err_probe(&indio_dev->dev, PTR_ERR(backend),
-+					     "Failed to get backend\n");
-+		adc->backend[ch->scan_index] = backend;
-+	}
-+
- 	return 0;
- }
- 
-@@ -1056,6 +1068,7 @@ static int stm32_dfsdm_update_scan_mode(struct iio_dev *indio_dev,
- static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-+	int i = 0;
- 	int ret;
- 
- 	/* Reset adc buffer index */
-@@ -1067,6 +1080,15 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
- 			return ret;
- 	}
- 
-+	if (adc->backend) {
-+		while (adc->backend[i]) {
-+			ret = iio_backend_enable(adc->backend[i]);
-+			if (ret < 0)
-+				return ret;
-+			i++;
-+		}
-+	}
-+
- 	ret = stm32_dfsdm_start_dfsdm(adc->dfsdm);
- 	if (ret < 0)
- 		goto err_stop_hwc;
-@@ -1099,6 +1121,7 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
- static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-+	int i = 0;
- 
- 	stm32_dfsdm_stop_conv(indio_dev);
- 
-@@ -1106,6 +1129,13 @@ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
- 
- 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
- 
-+	if (adc->backend) {
-+		while (adc->backend[i]) {
-+			iio_backend_disable(adc->backend[i]);
-+			i++;
-+		}
-+	}
-+
- 	if (adc->hwc)
- 		iio_hw_consumer_disable(adc->hwc);
- 
-@@ -1278,7 +1308,14 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
- 				int *val2, long mask)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
--	int ret;
-+
-+	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
-+	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fl->fast];
-+	u32 max = flo->max << (flo->lshift - chan->scan_type.shift);
-+	int ret, idx = chan->scan_index;
-+
-+	if (flo->lshift < chan->scan_type.shift)
-+		max = flo->max >> (chan->scan_type.shift - flo->lshift);
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-@@ -1287,6 +1324,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
- 			return ret;
- 		if (adc->hwc)
- 			ret = iio_hw_consumer_enable(adc->hwc);
-+		if (adc->backend[idx])
-+			ret = iio_backend_enable(adc->backend[idx]);
- 		if (ret < 0) {
- 			dev_err(&indio_dev->dev,
- 				"%s: IIO enable failed (channel %d)\n",
-@@ -1297,6 +1336,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
- 		ret = stm32_dfsdm_single_conv(indio_dev, chan, val);
- 		if (adc->hwc)
- 			iio_hw_consumer_disable(adc->hwc);
-+		if (adc->backend[idx])
-+			iio_backend_disable(adc->backend[idx]);
- 		if (ret < 0) {
- 			dev_err(&indio_dev->dev,
- 				"%s: Conversion failed (channel %d)\n",
-@@ -1316,6 +1357,46 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
- 		*val = adc->sample_freq;
- 
- 		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		/*
-+		 * Scale is expressed in mV.
-+		 * When fast mode is disabled, actual resolution may be lower
-+		 * than 2^n, where n = realbits - 1.
-+		 * This leads to underestimating the input voltage.
-+		 * To compensate this deviation, the voltage reference can be
-+		 * corrected with a factor = realbits resolution / actual max
-+		 */
-+		if (adc->backend[idx]) {
-+			iio_backend_read_raw(adc->backend[idx], chan, val, val2, mask);
-+
-+			*val = div_u64((u64)*val * (u64)BIT(DFSDM_DATA_RES - 1), max);
-+			*val2 = chan->scan_type.realbits;
-+			if (chan->differential)
-+				*val *= 2;
-+		}
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+
-+	case IIO_CHAN_INFO_OFFSET:
-+		/*
-+		 * DFSDM output data are in the range [-2^n, 2^n],
-+		 * with n = realbits - 1.
-+		 * - Differential modulator:
-+		 * Offset correspond to SD modulator offset.
-+		 * - Single ended modulator:
-+		 * Input is in [0V, Vref] range,
-+		 * where 0V corresponds to -2^n, and Vref to 2^n.
-+		 * Add 2^n to offset. (i.e. middle of input range)
-+		 * offset = offset(sd) * vref / res(sd) * max / vref.
-+		 */
-+		if (adc->backend[idx]) {
-+			iio_backend_read_raw(adc->backend[idx], chan, val, val2, mask);
-+
-+			*val = div_u64((u64)max * *val, BIT(*val2 - 1));
-+			if (!chan->differential)
-+				*val += max;
-+		}
-+		return IIO_VAL_INT;
- 	}
- 
- 	return -EINVAL;
-@@ -1444,7 +1525,15 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev, struct iio_c
- 	 * IIO_CHAN_INFO_RAW: used to compute regular conversion
- 	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
- 	 */
--	ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-+	if (child) {
-+		ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+					 BIT(IIO_CHAN_INFO_SCALE) |
-+					 BIT(IIO_CHAN_INFO_OFFSET);
-+	} else {
-+		/* Legacy. Scaling not supported */
-+		ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-+	}
-+
- 	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
- 					BIT(IIO_CHAN_INFO_SAMP_FREQ);
- 
-@@ -1811,3 +1900,4 @@ module_platform_driver(stm32_dfsdm_adc_driver);
- MODULE_DESCRIPTION("STM32 sigma delta ADC");
- MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(IIO_BACKEND);
--- 
-2.25.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRG1pdHJ5IEJhcnlzaGtv
+diA8ZG1pdHJ5LmJhcnlzaGtvdkBsaW5hcm8ub3JnPg0KPiBTZW50OiAyMDI05bm0NuaciDI05pel
+IDU6MDgNCj4gVG86IEtlaXRoIFpoYW8gPGtlaXRoLnpoYW9Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4g
+Q2M6IGFuZHJ6ZWouaGFqZGFAaW50ZWwuY29tOyBuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnOyBy
+Zm9zc0BrZXJuZWwub3JnOw0KPiBMYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb207IGpv
+bmFzQGt3aWJvby5zZTsNCj4gamVybmVqLnNrcmFiZWNAZ21haWwuY29tOyBtYWFydGVuLmxhbmto
+b3JzdEBsaW51eC5pbnRlbC5jb207DQo+IG1yaXBhcmRAa2VybmVsLm9yZzsgdHppbW1lcm1hbm5A
+c3VzZS5kZTsgYWlybGllZEBnbWFpbC5jb207DQo+IGRhbmllbEBmZndsbC5jaDsgcm9iaEBrZXJu
+ZWwub3JnOyBrcnprK2R0QGtlcm5lbC5vcmc7IGNvbm9yK2R0QGtlcm5lbC5vcmc7DQo+IGhqY0By
+b2NrLWNoaXBzLmNvbTsgaGVpa29Ac250ZWNoLmRlOyBhbmR5LnlhbkByb2NrLWNoaXBzLmNvbTsg
+WGluZ3l1IFd1DQo+IDx4aW5neXUud3VAc3RhcmZpdmV0ZWNoLmNvbT47IHAuemFiZWxAcGVuZ3V0
+cm9uaXguZGU7IEphY2sgWmh1DQo+IDxqYWNrLnpodUBzdGFyZml2ZXRlY2guY29tPjsgU2hlbmd5
+YW5nIENoZW4NCj4gPHNoZW5neWFuZy5jaGVuQHN0YXJmaXZldGVjaC5jb20+OyBkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMDgvMTBdIGRybS92czogYWRkIHZz
+IGRybSBtYXN0ZXIgZHJpdmVyDQo+IA0KPiBPbiBTdW4sIEp1biAyMywgMjAyNCBhdCAwNzoxNjo1
+N0FNIEdNVCwgS2VpdGggWmhhbyB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgTWF5IDIxLCAyMDI0IGF0
+IDA2OjU4OjE1UE0gKzA4MDAsIGtlaXRoIHdyb3RlOg0KPiA+ID4gPiBBZGQgdnMgRFJNIG1hc3Rl
+ciBkcml2ZXIgZm9yIEpINzExMCBTb0MgQUREIERNQSBHRU0gZHJpdmVyDQo+ID4gPiA+DQo+ID4g
+PiA+IFNpZ25lZC1vZmYtYnk6IGtlaXRoIDxrZWl0aC56aGFvQHN0YXJmaXZldGVjaC5jb20+DQo+
+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL3ZlcmlzaWxpY29uL01ha2VmaWxl
+IHwgICAzICstDQo+ID4gPiA+ICBkcml2ZXJzL2dwdS9kcm0vdmVyaXNpbGljb24vdnNfZHJ2LmMg
+fCA3MTgNCj4gPiA+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAyIGZp
+bGVzIGNoYW5nZWQsIDcyMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pICBjcmVhdGUgbW9k
+ZQ0KPiA+ID4gPiAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3ZlcmlzaWxpY29uL3ZzX2Rydi5jDQo+
+ID4gPiA+DQo+IA0KPiA+ID4gQklUKERSTV9DT0xPUl9ZQ0JDUl9CVDIwMjApLA0KPiA+ID4gPiAr
+CQkuenBvcwkJCT0gMCwNCj4gPiA+DQo+ID4gPiBIb3cgYXJlIHRoZXNlIHpwb3MgcmVsYXRlZCB0
+byB0aGUgenBvcyBmcm9tIGRybV9wbGFuZV9zdGF0ZT8NCj4gPiBacG9zIHdhcyBhZGRlZCB0byBk
+cm1fcGxhbmVfc3RhdGUgYnkgY2FsbGluZw0KPiA+IGRybV9wbGFuZV9jcmVhdGVfenBvc19wcm9w
+ZXJ0eSBmdW5zLA0KPiA+DQo+ID4gdnNfcGxhbmVfcHJpbWFyeV9jcmVhdGUNCj4gPiAtLS0tLS0+
+IGRybV9wbGFuZV9jcmVhdGVfenBvc19wcm9wZXJ0eSguLi4uLi52c19wbGFuZV9wcmltYXJ5X2lu
+Zm8tPg0KPiA+IC0tLS0tLT4genBvcyApDQo+IA0KPiBZZXMuIEJ1dCB3aHkgZG8geW91IG5lZWQg
+enBvcyBoZXJlPyBFc3BlY2lhbGx5IGlmIGl0J3Mgc2V0IHRvIDAuDQoNCmlmIGFueSBwbGFuZSBo
+YXMgdGhlIHpwb3MgYXR0cmlidXRlICh3aGV0aGVyIHZhcmlhYmxlIG9yIGltbXV0YWJsZSksIA0K
+dGhlbiBhbGwgcGxhbmVzIHNob3VsZCBoYXZlIHRoZSB6cG9zIGF0dHJpYnV0ZSB0byBlbnN1cmUg
+Y29uc2lzdGVudCBzdGFja2luZyBvcmRlciBhbmQgYmVoYXZpb3IuDQpIZXJlIGlzIHRoZSBpbml0
+aWFsIHZhbHVlIG9mIHpwb3MgcHJvcGVydHkNClVzdWFsbHkgbWluIGNhbiBiZSBzZXQgdG8gMCBh
+bmQgSSBzZXQgdGhlIHpwb3Mgb2YgcHJpbWFyeSBwbGFuZSB0byAwLi4uLi4uDQoNCj4gDQoNCj4g
+PiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlkcm1fZGV2LT5tb2RlX2NvbmZpZy5taW5fd2lkdGgg
+PSBtaW5fd2lkdGg7DQo+ID4gPiA+ICsJZHJtX2Rldi0+bW9kZV9jb25maWcubWluX2hlaWdodCA9
+IG1pbl9oZWlndGg7DQo+ID4gPiA+ICsJZHJtX2Rldi0+bW9kZV9jb25maWcubWF4X3dpZHRoID0g
+bWF4X3dpZHRoOw0KPiA+ID4gPiArCWRybV9kZXYtPm1vZGVfY29uZmlnLm1heF9oZWlnaHQgPSBt
+YXhfaGVpZ2h0Ow0KPiA+ID4NCj4gPiA+IEkgdGhvdWdodCB0aGF0IEkgc2F3IG1vZGVfY29uZmln
+Lm1pbi9tYXggYmVpbmcgaW5pdGlhbGl6ZWQuDQo+ID4gWWVzIHRoZSBtb2RlX2NvbmZpZy5taW4v
+bWF4IGhhcyBiZWVuIGluaXRpYWxpemVk77yMDQo+ID4gVGhpcyBwbGFjZSBpcyBkb2luZyBhbiB1
+cGRhdGUgYWNjb3JkaW5nIHRvIGRldGFpbCBpbmZvLg0KPiANCj4gVGhlbiBwbGVhc2UgZHJvcCBw
+cmV2aW91cyBpbml0aWFsaXNhdGlvbi4gV2hpbGUgbG9va2luZyBhdCB0aGUgY29kZSBpdCdzDQo+
+IGltcG9zc2libGUgdG8gdW5kZXJzdGFuZCB3aGljaCBvbmUgaXMgY29ycmVjdC4NCk9rIGdvdCBp
+dC4NCj4gDQo+IA0KPiA+ID4gPiArDQo+ID4gPiA+ICtzdGF0aWMgc3RydWN0IGNvbXBvbmVudF9t
+YXRjaCAqdnNfYWRkX2V4dGVybmFsX2NvbXBvbmVudHMoc3RydWN0DQo+ID4gPiA+ICtkZXZpY2Ug
+KmRldikgew0KPiA+ID4gPiArCXN0cnVjdCBjb21wb25lbnRfbWF0Y2ggKm1hdGNoID0gTlVMTDsN
+Cj4gPiA+ID4gKwlpbnQgaTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWZvciAoaSA9IDA7IGkgPCBB
+UlJBWV9TSVpFKGRybV9zdWJfZHJpdmVycyk7ICsraSkgew0KPiA+ID4gPiArCQlzdHJ1Y3QgcGxh
+dGZvcm1fZHJpdmVyICpkcnYgPSBkcm1fc3ViX2RyaXZlcnNbaV07DQo+ID4gPiA+ICsJCXN0cnVj
+dCBkZXZpY2UgKnAgPSBOVUxMLCAqZDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCQl3aGlsZSAoKGQg
+PSBwbGF0Zm9ybV9maW5kX2RldmljZV9ieV9kcml2ZXIocCwgJmRydi0+ZHJpdmVyKSkpIHsNCj4g
+PiA+ID4gKwkJCXB1dF9kZXZpY2UocCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkJCWRybV9vZl9j
+b21wb25lbnRfbWF0Y2hfYWRkKGRldiwgJm1hdGNoLA0KPiA+ID4gY29tcG9uZW50X2NvbXBhcmVf
+b2YsDQo+ID4gPiA+ICsJCQkJCQkgICBkLT5vZl9ub2RlKTsNCj4gPiA+ID4gKwkJCXAgPSBkOw0K
+PiA+ID4gPiArCQl9DQo+ID4gPiA+ICsJCXB1dF9kZXZpY2UocCk7DQo+ID4gPg0KPiA+ID4gV2hh
+dCBhYm91dCBqdXN0IGdvaW5nIHRocm91Z2ggdGhlIGdyYXBoIGNvbm5lY3Rpb25zIGluc3RlYWQg
+YW5kIGFkZGluZw0KPiB0aGVtPw0KPiA+DQo+ID4gVGhlIHB1cnBvc2Ugb2YgdXNpbmcgY29tcG9u
+ZW50cyBpcyB0byBjcmVhdGUgZW5jb2RlciBhbmQgY29ubmVjdG9yIHRvIHRoZQ0KPiBkcm0gc3Vi
+c3lzdGVtIGJ5IGNhbGxpbmcgY29tcG9uZW50X2JpbmRfYWxsDQo+ID4NCj4gPiBncmFwaCBjb25u
+ZWN0aW9uIG5lZWRzIHRvIGJlIGJhc2VkIG9uIHdoZXRoZXIgdGhlcmUgaXMgYSBicmlkZ2UgYXQg
+cHJlc2VudC4NCj4gPiBJZiB0aGUgYnJpZGdlIGhhcyBiZWVuIGFkZGVkLCBpdCBjYW4gYmUgb2J0
+YWluZWQgdGhyb3VnaCBkcm1fb2ZfZ2V0X2JyaWRnZQ0KPiA+IENyZWF0ZSBhIGNvbm5lY3RvciBi
+YXNlZCBvbiB0aGUgb2J0YWluZWQgYnJpZGdlIGFuZCB0aGVuIGF0dGFjaCB0aGUNCj4gY29ubmVj
+dG9yIHRvIHRoZSBlbmNvZGVyLg0KPiA+IFRoZW4gZG8gZHJtX2Rldl9yZWdpc3Rlci4NCj4gPg0K
+PiA+IEkgZG9uJ3Qga25vdyBpZiBteSB1bmRlcnN0YW5kaW5nIGlzIGNvbnNpc3RlbnQgd2l0aCB5
+b3Vycy4gUGxlYXNlIGhlbHAgY29uZmlybQ0KPiBpdC4NCj4gPiBUaGFua3MNCj4gDQo+IFlvdXIg
+Y29kZSBpcyBsb29waW5nIG92ZXIgdGhlIHN1YmRyaXZlcnMsIGxvY2F0aW5nIGRldmljZXMgYW5k
+IHRoZW4NCj4gYWRkaW5nIHRoZW0gYXMgY29tcG9uZW50cy4gQ2FuIHlvdSBpbnN0ZWFkIHVzZSBk
+ZXZpY2Ugbm9kZXMgd2hpY2ggYXJlDQo+IGNvbm5lY3RlZCB0byB5b3VyIG1hc3RlciB2aWEgdGhl
+IE9GIGdyYXBoPyBJZiBJIHVuZGVyc3RhbmQgZXhhbXBsZXMgaW4NCj4geW91ciBEVCBiaW5kaW5n
+cyBjb3JyZWN0bHksIHRoaXMgYXBwcm9hY2ggc2hvdWxkIHdvcmsuDQoNClllcywgVGhlIE9GIGdy
+YXBoIG1ldGhvZCBhcHBlYXJzIHRvIGJlIG1vcmUgZWZmaWNpZW50IGFuZCBkb2VzIG5vdCByZXF1
+aXJlIHRyYXZlcnNhbC4NCkFmdGVyIGZpbmQgdGhlIGRldmljZSBub2RlICwgDQpMZXQgaXQgc3Rh
+cnQ6DQpkcm1fb2ZfY29tcG9uZW50X21hdGNoX2FkZChkZXYsICZtYXRjaCwgY29tcG9uZW50X2Nv
+bXBhcmVfb2YsIGRldmljZS0+b2Zfbm9kZSk7DQoNCj4gDQo+ID4gPiA+ICtzdGF0aWMgdm9pZCBf
+X2V4aXQgdnNfZHJtX2Zpbmkodm9pZCkNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKwlwbGF0Zm9ybV9k
+cml2ZXJfdW5yZWdpc3RlcigmdnNfZHJtX3BsYXRmb3JtX2RyaXZlcik7DQo+ID4gPiA+ICsJcGxh
+dGZvcm1fdW5yZWdpc3Rlcl9kcml2ZXJzKGRybV9zdWJfZHJpdmVycywNCj4gPiA+ID4gK0FSUkFZ
+X1NJWkUoZHJtX3N1Yl9kcml2ZXJzKSk7IH0NCj4gPiA+ID4gKw0KPiA+ID4gPiArbGF0ZV9pbml0
+Y2FsbF9zeW5jKHZzX2RybV9pbml0KTsNCj4gPiA+DQo+ID4gPiBXaHkgX3N5bmM/DQo+ID4NCj4g
+PiBsYXRlX2luaXRjYWxsX3N5bmMgd2lsbCBtYWtlIGl0IHN1Y2Nlc3MgLHdoZW4gZG8gZGV2bV9k
+cm1fb2ZfZ2V0X2JyaWRnZS4NCj4gPiBBbHNvIGl0IGNhbiB1c2UgdGhlICIgRVBST0JFX0RFRkVS
+ICIgdG8gYXZvaWQgaXQsDQo+IA0KPiBXaHkgZG8geW91IG5lZWQgdGhpcz8gSXQncyBwZXJmZWN0
+bHkgZmluZSB0byBoYXZlIERSTSBkZXZpY2VzIHByb2JlDQo+IGFzc3luY2hyb25vdXNseS4NCldp
+bGwgcmVwbGFjZSBpdCBieSBtb2R1bGVfaW5pdA0KDQo+IA0KPiA+ID4NCj4gPiA+ID4gK21vZHVs
+ZV9leGl0KHZzX2RybV9maW5pKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArTU9EVUxFX0RFU0NSSVBU
+SU9OKCJWZXJpU2lsaWNvbiBEUk0gRHJpdmVyIik7DQo+ID4gPiBNT0RVTEVfTElDRU5TRSgiR1BM
+Iik7DQo+ID4gPiA+IC0tDQo+ID4gPiA+IDIuMjcuMA0KPiA+ID4gPg0KPiANCj4gLS0NCj4gV2l0
+aCBiZXN0IHdpc2hlcw0KPiBEbWl0cnkNCg==
