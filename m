@@ -1,133 +1,135 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372AC11185
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDF717727;
+	Tue, 25 Jun 2024 01:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719279038; cv=none; b=KIGFAHOZ4s8bIHVygelXArA+YEH4s+DOi39Z58m2tIsksJ5rO+SzZkQ6vhwjQxDl+dd6kih23iecIVmFIgImd9HM+XUpO2Cz1l8ORAg51CKbOiMd5/3VkDKMJ2Sj2pOGSdIAv46Jfsd4oc9JF5quVD6qlHpeyCHRowd5ORDLTWc=
+	t=1719279287; cv=none; b=FrickQ+fMpAQ7E4BRLETv1HqkUcuiBm19upwITl8kj8J85/ExcXulK2Q4xQih+zGvLItQ/x/b5uqwZMRJT/ZOMLIgEkH4GfDndhnhMuOZvUIicMospoXSRqE55BrRd4QLLPVAsGJFU7ihUcA0keJgwOZFuuq7fLoxdryT4mNMNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719279038; c=relaxed/simple;
-	bh=K0q2teqzFGqOIGAcyKGjd3uTxhqQ+KoA87o0CIuExXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CrniMqQNZYEfVY4wUKbltSIvtZCttWJ1AcxPkySJ0AJg9vXuDIFW3QKJKe5XbqGxc+V7BnWPc9OcM1gGmnREZ5hUdJu7f+VW/7O44yfvm8cD6ROEeXfPVSAGcowpIMas+zfKa0LB68uR8PSJQovUxZdLOktRWdDMLjXt766OF+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W7RxM3fwszxT3v;
-	Tue, 25 Jun 2024 09:26:15 +0800 (CST)
-Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
-	by mail.maildlp.com (Postfix) with ESMTPS id C194B14011B;
-	Tue, 25 Jun 2024 09:30:33 +0800 (CST)
-Received: from [10.174.176.82] (10.174.176.82) by
- kwepemf500003.china.huawei.com (7.202.181.241) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 25 Jun 2024 09:30:33 +0800
-Message-ID: <c6ae28eb-69b6-4508-a516-1d419e950b37@huawei.com>
-Date: Tue, 25 Jun 2024 09:29:58 +0800
+	s=arc-20240116; t=1719279287; c=relaxed/simple;
+	bh=yYo8k4kUrpGzhRjzls2WGueKu0PGvyYBs46uyLt6T4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=In1ZpzjisNdajANvoJG4wk5IEV1J/MRQszzFtcmbrLUh3zA0MxbfXgICtdfywXuqNPbgDGa20ytKDXRkQ/wdbWrrKByjzJj4uH1+qDzbPcV5R7QtjK8gL4ykan9fOXRpc3MjX29RD4vmX/cdeY4M6+CEYzZi8zQPnwFxlNZC7Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RDScxk4y; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDScxk4y"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5c1ef5ac47eso1012730eaf.2;
+        Mon, 24 Jun 2024 18:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719279285; x=1719884085; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2O2TW7XbF5ae+IR/yu9jsK1asKpGRJzGj2qHQztnGWg=;
+        b=RDScxk4yjblGXPRl8Ttp3M2Gvpo/mnfDCdfjKF/b4lyByhG9weHlZtQqiBrpljiJ3M
+         Z5VD5OQWFqW+nqg20Shp3y6CLPPTO1CXnWemnlBGhprwD3cd8rRF55HQFE4GoxQ6ZxwL
+         xROXZe1RFHpc7g5A5DwOdbxNIdJNimO33mzZ53LSgqo2g0lHBbMKSxjGXyaHfbixFiFM
+         kEew2RoMwoQkceOqnULctsDMGiUrzAu1O4dk9o0jdeyZBOxs4exkjRsIRlm55Xm8p6cA
+         /qNQoeflwifVutk/vCV9wd20ukycA0x0KPY+TpaJCvLVpOMI7LoyOZHZnSVfqXAanyJ+
+         Ebww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719279285; x=1719884085;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2O2TW7XbF5ae+IR/yu9jsK1asKpGRJzGj2qHQztnGWg=;
+        b=cIcCsNVIt0Si6it15WopbcWsw1W3m61yYqRRPY8lv9NmY58e88dP0MWwKt7dBRiYze
+         EE+3KNn9+EYjeb1GTzmFhp9Ygug40eyPRwz85fJqYoR6MtwVbj8NJqwksK9H30MVXt5T
+         uYOb8vhypqy5zy/S3WrZdZuERJrOHW+b34dnkqKxHg05vAIO4+ADEsi6jXUfbiBPFtLN
+         XZZLPvCpQcMF/MSvZF43OXCCm2ikTIhvLN1uSELnjRS/9fuVXP2NDfVHX9Tq1QFC166d
+         xudbF5g8lw+cJvSt0uCM4tQd0C7aq9yNChlIaBju7uCHF+qA+8ySBUYdKKZkCm1AlvGd
+         adQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUoSuID6Oqd74iHQqW145gqeZKd6xGk7m7jGWlt4wEnUYCsmdvo6r+0Mb+SkI98RYzkytX0QCL7WfuEL8ymzBzrM0wexiAs8qtQRZZExRl1ssUjWAKbfN+YrhrzQQpIfTOKkmX/ydIkig==
+X-Gm-Message-State: AOJu0YxgXrKHZw1RNgkaicaPCDnn/m7yB+AFLCSeRYxxjjsh45A4QEB6
+	UAnb4jEkGPegJZBv/XniKQtK3wDUiBFDTFYayUaqd4tH+NbHCQOEaj8z9g==
+X-Google-Smtp-Source: AGHT+IGnmlhtAxgHfbyK08Mi8n5iC280q7zCZibuChaVXzMxvwHYN1zHlPlI2uxOgZmF9W/Oj4TFYA==
+X-Received: by 2002:a05:6358:340f:b0:1a2:3a1b:58b with SMTP id e5c5f4694b2df-1a23a1b065cmr694725155d.30.1719279284702;
+        Mon, 24 Jun 2024 18:34:44 -0700 (PDT)
+Received: from localhost.localdomain ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-718d5e33106sm4041921a12.59.2024.06.24.18.34.41
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 24 Jun 2024 18:34:44 -0700 (PDT)
+From: yskelg@gmail.com
+To: Harald Freudenberger <freude@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Markus Elfring <Markus.Elfring@web.de>
+Cc: MichelleJin <shjy180909@gmail.com>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yunseong Kim <yskelg@gmail.com>
+Subject: [PATCH v2] s390/raw3270: Handle memory allocation failures in raw3270_setup_console()
+Date: Tue, 25 Jun 2024 10:32:26 +0900
+Message-ID: <20240625013225.17076-2-yskelg@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/iova: Bettering utilizing cpu_rcaches in no-strict
- mode
-To: Robin Murphy <robin.murphy@arm.com>
-CC: <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>, "joro@8bytes.org"
-	<joro@8bytes.org>, <will@kernel.org>, John Garry <john.g.garry@oracle.com>
-References: <20240624083952.52612-1-zhangzekun11@huawei.com>
- <5149c162-cf38-4aa4-9e96-27c6897cad36@arm.com>
- <0322849d-dc1f-4e1c-a47a-463f3c301bdc@huawei.com>
- <c4c44f66-fb9c-4d71-ac35-f3fef75832bd@arm.com>
-From: "zhangzekun (A)" <zhangzekun11@huawei.com>
-In-Reply-To: <c4c44f66-fb9c-4d71-ac35-f3fef75832bd@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemf500003.china.huawei.com (7.202.181.241)
 
+From: Yunseong Kim <yskelg@gmail.com>
 
+A null pointer is stored in a local variable after a call of the function
+"kzalloc" failed. This pointer was passed to a subsequent call of the
+function "raw3270_setup_device" where an undesirable dereference will be
+performed then. Thus add corresponding return value checks.
+The allocated each memory areas are immediately overwritten by the called
+function zero-initialisation be omitted by calling the "kmalloc" instead.
+After "ccw_device_enable_console" succeeds, set the bit raw3270 flag to
+RAW3270_FLAGS_CONSOLE.
 
-在 2024/6/24 21:32, Robin Murphy 写道:
+Fixes: 33403dcfcdfd ("[S390] 3270 console: convert from bootmem to slab")
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+---
+ drivers/s390/char/raw3270.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
->> This patch is firstly intent to minimize the chance of softlock issue 
->> in fq_flush_timeout(), which is already dicribed erarlier in [1], 
->> which has beed applied in a commercial kernel[2] for years.
->>
->> However, the later tests show that this single patch is not enough to 
->> fix the softlockup issue, since the root cause of softlockup is the 
->> underlying iova_rbtree_lock. In our softlockup scenarios, the average
->> time cost to get this spinlock is about 6ms.
-> 
-> That should already be fixed, though. The only reason for 
-> fq_flush_timeout() to interact with the rbtree at all was due to the 
-> notion of a fixed-size depot which could become full. That no longer 
-> exists since 911aa1245da8 ("iommu/iova: Make the rcache depot scale 
-> better").
-> 
-> Thanks,
-> Robin.
-> 
-Hi, Robin,
+diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
+index c57694be9bd3..4f3f98bcbc83 100644
+--- a/drivers/s390/char/raw3270.c
++++ b/drivers/s390/char/raw3270.c
+@@ -811,18 +811,28 @@ struct raw3270 __init *raw3270_setup_console(void)
+ 	if (IS_ERR(cdev))
+ 		return ERR_CAST(cdev);
+ 
+-	rp = kzalloc(sizeof(*rp), GFP_KERNEL | GFP_DMA);
+-	ascebc = kzalloc(256, GFP_KERNEL);
++	rp = kmalloc(sizeof(*rp), GFP_KERNEL | GFP_DMA);
++	if (!rp)
++		return ERR_PTR(-ENOMEM);
++	ascebc = kmalloc(256, GFP_KERNEL);
++	if (!ascebc) {
++		kfree(rp);
++		return ERR_PTR(-ENOMEM);
++	}
+ 	rc = raw3270_setup_device(cdev, rp, ascebc);
+-	if (rc)
++	if (rc) {
++		kfree(ascebc);
++		kfree(rp);
+ 		return ERR_PTR(rc);
+-	set_bit(RAW3270_FLAGS_CONSOLE, &rp->flags);
+-
++	}
+ 	rc = ccw_device_enable_console(cdev);
+ 	if (rc) {
+ 		ccw_device_destroy_console(cdev);
++		kfree(ascebc);
++		kfree(rp);
+ 		return ERR_PTR(rc);
+ 	}
++	set_bit(RAW3270_FLAGS_CONSOLE, &rp->flags);
+ 
+ 	spin_lock_irqsave(get_ccwdev_lock(rp->cdev), flags);
+ 	do {
+-- 
+2.45.2
 
-The commit 911aa1245da8 ("iommu/iova: Make the rcache depot scale 
-better") can reduce the risks of softlockup, but can not fix it 
-entirely. We do solve a softlockup issue[1] with that patch, and that is
-why it has aleady been backported in our branch. The softlockup issue 
-which we met recently is a 5.10-based kernel with that patch already 
-backported, which can be found in [2].
-
-In 6.7-rc4, which has already applied patch  911aa1245da8 ("iommu/iova: 
-Make the rcache depot scale better"). We can also get the following
-call trace. It seems still existing the issue, and we fix this issue 
-using the patch in [3], when the call trace first came up.
-
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	85-....: (5249 ticks this GP) idle=4d04/1/0x4000000000000000 
-softirq=428240/428240 fqs=1882
-rcu: 	(t=5253 jiffies g=2005741 q=19446136 ncpus=128)
-CPU: 85 PID: 2401130 Comm: kpktgend_85 Kdump: loaded Tainted: G 
-  O       6.7.0-rc4+ #1
-
-pc : _raw_spin_unlock_irqrestore+0x14/0x78
-lr : fq_flush_timeout+0x94/0x118
-sp : ffff8000802abdf0
-x29: ffff8000802abdf0 x28: ffff20201142e480 x27: 0000000000000002
-x26: ffffdeeb67e82b20 x25: 0000000000000000 x24: ffffdeeb67e87400
-x23: ffffdeeb67e82ba0 x22: ffff202009db1c00 x21: ffffdeeb67e82f40
-x20: 0000000000000000 x19: ffffdbe06f0140a8 x18: 0000000000040000
-x17: 0000000000000001 x16: 0000000000000040 x15: ffffffffffffffff
-x14: 0000000000001fff x13: 000000000003ffff x12: 0000000000000259
-x11: 000000000007ffff x10: 000000000000000d x9 : ffffdeeb6549ec84
-x8 : ffff0020886e0000 x7 : 000000000000964d x6 : 000001afa2986acb
-x5 : 01ffffffffffffff x4 : 0000000000000000 x3 : ffff202006b57d70
-x2 : 0000000000000015 x1 : 0000000000000000 x0 : ffffdbe06f0140a8
-Call trace:
-  _raw_spin_unlock_irqrestore+0x14/0x78
-  call_timer_fn+0x3c/0x1d0
-  expire_timers+0xcc/0x190
-  run_timer_softirq+0xfc/0x268
-  __do_softirq+0x128/0x3dc
-  ____do_softirq+0x18/0x30
-  call_on_irq_stack+0x24/0x30
-  do_softirq_own_stack+0x24/0x38
-  irq_exit_rcu+0xc0/0xe8
-  el1_interrupt+0x48/0xc0
-  el1h_64_irq_handler+0x18/0x28
-  el1h_64_irq+0x78/0x80
-  __schedule+0xf28/0x12a0
-  schedule+0x3c/0x108
-  schedule_timeout+0xa0/0x1d0
-  pktgen_thread_worker+0x1180/0x15d0
-  kthread+0x120/0x130
-  ret_from_fork+0x10/0x20
-
-[1] https://gitee.com/openeuler/kernel/issues/I8KS9A
-[2] https://gitee.com/openeuler/kernel/tree/OLK-5.10/
-[3] https://lkml.org/lkml/2023/2/16/124
-
-Thanks,
-Zekun
