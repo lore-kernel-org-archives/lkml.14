@@ -1,98 +1,174 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24CD17E45E;
-	Tue, 25 Jun 2024 21:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DFF17E474
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719349776; cv=none; b=GxZoRDAyBEBhM9Hpc+QeI/WZrm7ObsbgMksrInSDDiqoNLChvRXmplx8wBNWcCBUXczVNY3cX053BakPmV3z55qwDdzrgPJjxjVXXy038s6lmGb4NO1CN/7ogEl3JB+Nn/Kn0UWDJMmt91J8qcFKYwSZbl9393yiFzkLQc1qgZA=
+	t=1719349778; cv=none; b=pbB9A9J+TCbUmsmiexH/vBkGxy9HtA9UOn2Gqc/yLVETudNMw4iUxoy9W52A3xazq04eyW0FoM5iwbIxQ5LMYLtTFLk6/wp7uUXRus0ACEIa7u0kyE2dUvPMjli5Xz83gGP3g4IT7JA6AVJEKbtMOzy9IMkrwjpTnWb9VOJ+CH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719349776; c=relaxed/simple;
-	bh=Xu45uIzQHdnypNu7DRxZUJKcaTZ3LfhhfhPhOKXp9W4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HczYaTwFUpSnqiB+Q7d38iOe/t19kKIikb/Tj+CbuuHYLYtlEpoGpdDvtDzs8BzoueYCSSo9O64jaS9ygKLPKEFel50PTOHLQdkqw4YincJ3zsmhfnvyPB9PyYjyU00tGP2rYfgGVsnYcfcDpD9Ly4FIHWV9mBWm7VPFdarZYkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdEj75Jo; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719349778; c=relaxed/simple;
+	bh=uxuAo7ar5aZdz8h+UruFtCuI2X7vKbOsL3DLGvmiiyE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d2qYxJJGvJsxZrUt1/xVxLjrxlsdXCNIYDYzunYB4ToTxPrL+8d0QGFrTZS6yKDVXb3gsw8nG/aJ4XpNvyr7O9p6hYiuTziqUX7/td83sVB2TTRLmwSGPSo0YeQaUsi3s0PhU3bXQrqB4l1Hs0bIRdLXIvo1H7hzWlQPqv0P460=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=lf3vaUkR; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdEj75Jo"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-36532d177a0so3903967f8f.2;
-        Tue, 25 Jun 2024 14:09:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lf3vaUkR"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f480624d0dso50750325ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719349773; x=1719954573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4iWDNUDVTphG1rgmjgNH/czm3AGoDZYTbFR5lheSg+0=;
-        b=OdEj75JoBW0EwJE0+CLOhYpWZlm2MjIh4K/F5ksgzgXavWJrxXI8QM/rWA5JgUiH+o
-         M7qSDe8Y73AZKjbmowdmB9qTYzG92vaPvWyiCh8voZdN2uNQw5Ead4xVhftqAc9BQocB
-         tlWIOBzRR3di2IOoo+2YpEoAizUOCnD+eWmmnI57GaI1YOP8PrSiA43pr0tgge5qkfbM
-         gcV27pCGZgT/zr2E0g+CpR7mQguWQfhwcqK3KxpLx0BVJNe93L3xrREqiuKedLd3CN0O
-         qGnuZAVA+utUb6zGH85IeKner/Yt9LVWSZAGaQ8azZ0SkUXKQ1jy7uoDXwJ9XlY6xxEj
-         hWlQ==
+        d=sifive.com; s=google; t=1719349776; x=1719954576; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EUBdVGV0+fMFwjwLM0qvSzcFICs4EkTcqE1zrLWEtEM=;
+        b=lf3vaUkRHuLrPzZG6r5ispOqUqyIrPOh1LdBkFk8U6+KTmFPtbEhv2zEZ2AP9OJX0e
+         oPLvwjlTFW2mXG+fPeYtrmLEWlR5Xyk7R5kc+lFmyrHa6s/Gj+VgX1yfQ/sS3/mB+Q5/
+         vG1j2Jgpe1WUfZggW1nL8xqzAEXuPiOLhFNyr6twfgjBiDkO1AEEJ9Kd62Im1ZrbATcO
+         yEW6SjurHWMDJGcMKgr2eLaiBrPAMt76uR/SLqNHgvLuTbqKz5Z3NoL9RH5vCdhSsH3b
+         zTFnuC1X5D4rBI1vk0vnr641hSTq6lKLR1DE2MvnuqzlbnvM2e9hkk+mGMtxcC1gWRpn
+         FsXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719349773; x=1719954573;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4iWDNUDVTphG1rgmjgNH/czm3AGoDZYTbFR5lheSg+0=;
-        b=RWwm0KqwYJGjGZFVm8xS1C0pVfoniYmEtTuqQkzRp2GeSkl0poa99w22x3auUbuILT
-         5kA9gdy4gLEyD6GkYcoKMorS+yFW99iEb5rp/JPED/3FKiXGOmrTfEBASqidhRu2bUON
-         Btwr95KkbRlzQLsfGBG220cM9WdUVEi0eB5VxPob2XoKcPdw0FgY8hwSycEqmu0qIEVn
-         r0C6g1GLS/KxN5qQkkwA8xKtwx3Kw99uSbZeK7INR9pYLyAJts5GvtzCALEkjq6KaPGK
-         VAodUeQqA3l3sZ/1nl24yhtpWwH2qUEAgFl/jF+5EVl05Kbhjcju7f5DSnBDBSPa1EYN
-         3FMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIzUR2Kx0NY9Scr6iuhw6NJ50tdkhAFB60GKAI/XZ/gxw4feZQFMdLXB8qFFeBnZ4XzYLpp/7VO7+UUfODehwIjmnDhYf7YvQrM4nIvklR0fOaWpG2V3rwTUbiBokQJKc15u2s
-X-Gm-Message-State: AOJu0YyIj4p7x2tPMU0J5y1aGPnNE8uQ5vHplmmymS/Qxcg6H+ejkxUU
-	Gc73ioo0bEYnZ5NFS9OwOxUWr0LeFnZC41mAnmIN72/VcN0eo4/R
-X-Google-Smtp-Source: AGHT+IGpkdza6v3HIR6EYmPjuP5pORubsucqBrjXsVVPRRFCfvTrd2WX5oxTGyVhmVlVtNHbyrBklQ==
-X-Received: by 2002:a5d:58ed:0:b0:362:f291:6f97 with SMTP id ffacd0b85a97d-366e4ed2eb5mr5801190f8f.18.1719349772647;
-        Tue, 25 Jun 2024 14:09:32 -0700 (PDT)
-Received: from [192.168.0.5] ([69.6.8.124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366dc9c855fsm13097320f8f.84.2024.06.25.14.09.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 14:09:31 -0700 (PDT)
-Message-ID: <62976019-1e36-4e2b-a0e1-9053abaa658c@gmail.com>
-Date: Wed, 26 Jun 2024 00:10:07 +0300
+        d=1e100.net; s=20230601; t=1719349776; x=1719954576;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EUBdVGV0+fMFwjwLM0qvSzcFICs4EkTcqE1zrLWEtEM=;
+        b=YIcilZPL4Mx0ZyARgKpTyjbE1eIcGD0qN3Hh+Sn/RMlCnOvGwJQlEZmckuJ+yfVz2i
+         cwk/naVZXeZOa0ML4LkGIXQJ+A+Fu2opSWh0hL246s7iRTDb/VMgRhCOSfFK0ZHhtyvm
+         sFrdFWIQPDzylW7u97d6My+dukodELDiCgTTqBvCmtXWUKSJENpUuwNMMSxDoN6Mls5A
+         +d7LS5XE+GZ2lachkRKGDceoKBoPbbkNHZK4pQmw6uO+w/chnn0cJJmoBL9iIJaVySar
+         953ceVnkVMRzHRPSW4p24EnylGYudJpIXlrbs1fO24k6jPSX638/zpk+SaAp8Ur3Ehxj
+         EI3A==
+X-Forwarded-Encrypted: i=1; AJvYcCU80Om81a2YvwdqsDmI8e0K0Gjw27qylnbeeM2oWqN4ZJ63PNRB3O6G8P3OkDTJe11KVZiyBgwiKS73ZcRFZdV/n3CI8rHUEIlG8V53
+X-Gm-Message-State: AOJu0Yyf34B9G6cIu3EW62NKnTqIr0pteGvb8pyhcDsYgO3IYvryPfkv
+	NxIWZZsCypOI7wNAbo3pGkCnYReA/KLQCqS0y8A/gticzUyjh/aY80zu2VpGGpA=
+X-Google-Smtp-Source: AGHT+IEaUHjDWO8+3ZFN6cPh1szoLNnMWbRTcCp8FoVAQAbCft2J13YEiKmHfYP2xrEiBrAdej61ww==
+X-Received: by 2002:a17:902:c10c:b0:1fa:a2a:221e with SMTP id d9443c01a7336-1fa23ef0d8bmr91219335ad.40.1719349775795;
+        Tue, 25 Jun 2024 14:09:35 -0700 (PDT)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb328f57sm85873455ad.110.2024.06.25.14.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 14:09:35 -0700 (PDT)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org
+Cc: devicetree@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>,
+	Conor Dooley <conor@kernel.org>,
+	kasan-dev@googlegroups.com,
+	Atish Patra <atishp@atishpatra.org>,
+	Evgenii Stepanov <eugenis@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v2 00/10] riscv: Userspace pointer masking and tagged address ABI
+Date: Tue, 25 Jun 2024 14:09:11 -0700
+Message-ID: <20240625210933.1620802-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v2 0/2] net: wwan: t7xx: Add t7xx debug port
-To: Jinjian Song <songjinjian@hotmail.com>
-Cc: pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
- davem@davemloft.net, johannes@sipsolutions.net, loic.poulain@linaro.org,
- ricardo.martinez@linux.intel.com, m.chetan.kumar@linux.intel.com,
- haijun.liu@mediatek.com, chiranjeevi.rapolu@linux.intel.com,
- chandrashekar.devegowda@intel.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <SYBP282MB35285822CB2270DAC2533DF0BBD52@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-In-Reply-To: <SYBP282MB35285822CB2270DAC2533DF0BBD52@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jinjian,
+RISC-V defines three extensions for pointer masking[1]:
+ - Smmpm: configured in M-mode, affects M-mode
+ - Smnpm: configured in M-mode, affects the next lower mode (S or U-mode)
+ - Ssnpm: configured in S-mode, affects the next lower mode (VS, VU, or U-mode)
 
-On 25.06.2024 11:45, Jinjian Song wrote:
-> Add support for t7xx WWAN device to debug by ADB (Android Debug Bridge)
-> port and MTK MIPCi (Modem Information Process Center) port.
-> 
-> Application can use ADB (Android Debg Bridge) port to implement
-> functions (shell, pull, push ...) by ADB protocol commands.
-> 
-> Application can use MIPC (Modem Information Process Center) port
-> to debug antenna tunner or noise profiling through this MTK modem
-> diagnostic interface.
+This series adds support for configuring Smnpm or Ssnpm (depending on
+which privilege mode the kernel is running in) to allow pointer masking
+in userspace (VU or U-mode), extending the PR_SET_TAGGED_ADDR_CTRL API
+from arm64. Unlike arm64 TBI, userspace pointer masking is not enabled
+by default on RISC-V. Additionally, the tag width (referred to as PMLEN)
+is variable, so userspace needs to ask the kernel for a specific tag
+width (which is interpreted as a lower bound on the number of tag bits).
 
-It looks like the mail server mangled the message id. Id supposed to be 
-'20240625084518.10041-1-songjinjian@hotmail.com', but it was replaced by 
-'SYBP282MB35285822CB2270DAC2533DF0BBD52@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM'. 
-So, the messages chain become broken. Could you check it please?
+This series also adds support for a tagged address ABI similar to arm64
+and x86. Since accesses from the kernel to user memory use the kernel's
+pointer masking configuration, not the user's, the kernel must untag
+user pointers in software before dereferencing them. And since the tag
+length is variable, as with LAM on x86, it must be the same across all
+threads in a process so untagged_addr_remote() can work.
 
---
-Sergey
+This series depends on my per-thread envcfg series[3].
+
+This series can be tested in QEMU by applying a patch set[2].
+
+KASAN support will be added in a separate patch series.
+
+[1]: https://github.com/riscv/riscv-j-extension/releases/download/pointer-masking-v1.0.0-rc2/pointer-masking-v1.0.0-rc2.pdf
+[2]: https://lore.kernel.org/qemu-devel/20240511101053.1875596-1-me@deliversmonkey.space/
+[3]: https://lore.kernel.org/linux-riscv/20240613171447.3176616-1-samuel.holland@sifive.com/
+
+Changes in v2:
+ - Drop patch 4 ("riscv: Define is_compat_thread()"), as an equivalent
+   patch was already applied
+ - Move patch 5 ("riscv: Split per-CPU and per-thread envcfg bits") to a
+   different series[3]
+ - Update pointer masking specification version reference
+ - Provide macros for the extension affecting the kernel and userspace
+ - Use the correct name for the hstatus.HUPMM field
+ - Rebase on riscv/linux.git for-next
+ - Add and use the envcfg_update_bits() helper function
+ - Inline flush_tagged_addr_state()
+ - Implement untagged_addr_remote()
+ - Restrict PMLEN changes once a process is multithreaded
+ - Rename "tags" directory to "pm" to avoid .gitignore rules
+ - Add .gitignore file to ignore the compiled selftest binary
+ - Write to a pipe to force dereferencing the user pointer
+ - Handle SIGSEGV in the child process to reduce dmesg noise
+ - Export Supm via hwprobe
+ - Export Smnpm and Ssnpm to KVM guests
+
+Samuel Holland (10):
+  dt-bindings: riscv: Add pointer masking ISA extensions
+  riscv: Add ISA extension parsing for pointer masking
+  riscv: Add CSR definitions for pointer masking
+  riscv: Add support for userspace pointer masking
+  riscv: Add support for the tagged address ABI
+  riscv: Allow ptrace control of the tagged address ABI
+  selftests: riscv: Add a pointer masking test
+  riscv: hwprobe: Export the Supm ISA extension
+  RISC-V: KVM: Allow Smnpm and Ssnpm extensions for guests
+  KVM: riscv: selftests: Add Smnpm and Ssnpm to get-reg-list test
+
+ Documentation/arch/riscv/hwprobe.rst          |   3 +
+ .../devicetree/bindings/riscv/extensions.yaml |  18 +
+ arch/riscv/Kconfig                            |  11 +
+ arch/riscv/include/asm/csr.h                  |  16 +
+ arch/riscv/include/asm/hwcap.h                |   7 +
+ arch/riscv/include/asm/mmu.h                  |   7 +
+ arch/riscv/include/asm/mmu_context.h          |   6 +
+ arch/riscv/include/asm/processor.h            |   8 +
+ arch/riscv/include/asm/switch_to.h            |  11 +
+ arch/riscv/include/asm/thread_info.h          |   3 +
+ arch/riscv/include/asm/uaccess.h              |  58 ++-
+ arch/riscv/include/uapi/asm/hwprobe.h         |   1 +
+ arch/riscv/include/uapi/asm/kvm.h             |   2 +
+ arch/riscv/kernel/cpufeature.c                |   3 +
+ arch/riscv/kernel/process.c                   | 164 +++++++++
+ arch/riscv/kernel/ptrace.c                    |  42 +++
+ arch/riscv/kernel/sys_hwprobe.c               |   3 +
+ arch/riscv/kvm/vcpu_onereg.c                  |   3 +
+ include/uapi/linux/elf.h                      |   1 +
+ include/uapi/linux/prctl.h                    |   3 +
+ .../selftests/kvm/riscv/get-reg-list.c        |   8 +
+ tools/testing/selftests/riscv/Makefile        |   2 +-
+ tools/testing/selftests/riscv/pm/.gitignore   |   1 +
+ tools/testing/selftests/riscv/pm/Makefile     |  10 +
+ .../selftests/riscv/pm/pointer_masking.c      | 330 ++++++++++++++++++
+ 25 files changed, 715 insertions(+), 6 deletions(-)
+ create mode 100644 tools/testing/selftests/riscv/pm/.gitignore
+ create mode 100644 tools/testing/selftests/riscv/pm/Makefile
+ create mode 100644 tools/testing/selftests/riscv/pm/pointer_masking.c
+
+-- 
+2.44.1
+
