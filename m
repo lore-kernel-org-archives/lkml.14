@@ -1,74 +1,86 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC3A16E863;
-	Tue, 25 Jun 2024 16:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE0713B59B;
+	Tue, 25 Jun 2024 16:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719334049; cv=none; b=VX6cyFLrst3kvdc/1kJ2wPkrVFGFHR1WMDGMXCRye582S6G5DTM3WZLmGROzbW7FyOAHFqjhBpB1rPSX/LBIFD57iQBBDkdsZhc5Ko2TzZ146TlmOThu1NpVbQ3HyJ1WSSqDgkDqalRzNBgDq/qaL26HDOJVqmLZUbZhUfc2Fjk=
+	t=1719334164; cv=none; b=p8q0aCqa2de5S+KqvfuxtK3d+LlyCoiFFNeQcscferE2UScjJMEKiVJK141+GzXKGiP5rMnk8Ww9BxEIEXX2reCLFSlVXRxFUIVUcSFyNEvCutIzw3+6cNij3zUBP96c81vEsAaF76ZMlAHt+end49fpxHW5gRK2GavqvmPrza4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719334049; c=relaxed/simple;
-	bh=auLPFsUwMAOX84W1PHZS+Fnr/WAtAk6hqRYSvkhLEuo=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=PfCfCFg9TLGOytyw+67HujMl5jnBkRhP5OfFAKCUXflF4ab/dUsdyO4+uSFaHa2sRGyfxfbDDR0ZJ7dcKaWp+GRpzxhhQwIenmsCsRQhQG4byt5m8EpgTjiJj8dSWZREWKQhZPxwIqFGMdVo+5FssTmju9fz4qzSTjuVycKr8jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l2wpGJ9p; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l2wpGJ9p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=pD8lAwlY54XK1J8UOK
-	tOe+VXizuIZB6XckcwJU5V9oE=; b=l2wpGJ9ppBIjCMChIyfUatO9DW9bhK936M
-	uhCVwYkaKsCcRUFi8HmvjMIetKUWzqcjuAC6mn05jxiUPfMg2+6LfLh5dNBcE+Ma
-	CSRCOkwdilRlyeSn8GTiFK4IGysxjvd+soRU3WdHw2lrj6R0+ugAaJCkelS/uNtX
-	zlJZDmuo0=
-Received: from localhost.localdomain (unknown [114.92.93.163])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wD3nxlb9Hpm6dHMAQ--.46011S2;
-	Wed, 26 Jun 2024 00:46:27 +0800 (CST)
-From: Lizhe <sensor1010@163.com>
-To: gregkh@linuxfoundation.org,
-	stern@rowland.harvard.edu,
-	hgajjar@de.adit-jv.com,
-	stanley_chang@realtek.com,
-	ricardo.canuelo@collabora.com,
-	johan+linaro@kernel.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lizhe <sensor1010@163.com>
-Subject: [PATCH] USB: hub:no need to obtain usb device
-Date: Tue, 25 Jun 2024 09:46:07 -0700
-Message-Id: <20240625164607.3367-1-sensor1010@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3nxlb9Hpm6dHMAQ--.46011S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Jw43Kr4xtrW7uF1Dtw17Awb_yoW3XFbE9a
-	1Uuayxuw18tFyxKr1UZw1FvrW2kw4avrnFvFZ0qry3ZFyYqr17urWDX392yF15ArW7Cr9x
-	JFyq9r15ur40vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRt189JUUUUU==
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/1tbiEAUJq2XAlnThXgAAsP
+	s=arc-20240116; t=1719334164; c=relaxed/simple;
+	bh=KU29cSyrpGCrZGGbLe3egrdUubbv/YWZgRMXLPSd0Fo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m2GDrFXOOFhVo9r47BdHnxtSZO+fQB4zaIFrxYpsDfzD6WOZRhzpiYxbiu7eP2WLmIxBxYGxPzVPEBcX9PfCLVQXptl/yWtCVSCl2H0s/covINx/zTTstrZCNUMTJYFSlfxyOooYEGLevZq0nyXDJfh7maqSWP6otjX7G3UiLTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CA7B339;
+	Tue, 25 Jun 2024 09:49:45 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CBC53F73B;
+	Tue, 25 Jun 2024 09:49:18 -0700 (PDT)
+Message-ID: <86fd1484-7b9a-4da3-8e1d-91e5881df832@arm.com>
+Date: Tue, 25 Jun 2024 17:49:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf arm-spe: Support multiple Arm SPE PMUs
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ James Clark <james.clark@arm.com>, Suzuki K Poulose
+ <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240623133437.222736-1-leo.yan@arm.com>
+ <20240623133437.222736-2-leo.yan@arm.com>
+ <CAP-5=fWgGR-L6V5RNNpTHdHyT0wTOqKd3CQ8xQSQDAJ1D2edYA@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <CAP-5=fWgGR-L6V5RNNpTHdHyT0wTOqKd3CQ8xQSQDAJ1D2edYA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-the usb device connected to the port has obtained.
-there is no need to obtain it again.
+Hi Ian,
 
-Signed-off-by: Lizhe <sensor1010@163.com>
----
- drivers/usb/core/hub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 6/24/24 17:16, Ian Rogers wrote:
+> On Sun, Jun 23, 2024 at 6:34 AM Leo Yan <leo.yan@arm.com> wrote:
+>>
+>> A platform can have more than one Arm SPE PMU. For example, a system
+>> with multiple clusters may have each cluster enabled with its own Arm
+>> SPE instance. In such case, the PMU devices will be named 'arm_spe_0',
+>> 'arm_spe_1', and so on.
+>>
+>> Currently, the tool only supports 'arm_spe_0'. This commit extends
+>> support to multiple Arm SPE PMUs by detecting the substring 'arm_spe'.
+>>
+>> Signed-off-by: Leo Yan <leo.yan@arm.com>
+>> ---
+>>   tools/perf/arch/arm/util/pmu.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
+>> index 8b7cb68ba1a8..29cfa1e427ed 100644
+>> --- a/tools/perf/arch/arm/util/pmu.c
+>> +++ b/tools/perf/arch/arm/util/pmu.c
+>> @@ -27,7 +27,7 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
+>>                  pmu->selectable = true;
+>>                  pmu->is_uncore = false;
+>>                  pmu->perf_event_attr_init_default = arm_spe_pmu_default_config;
+>> -               if (!strcmp(pmu->name, "arm_spe_0"))
+>> +               if (strstr(pmu->name, "arm_spe"))
+> 
+> Why not use strstarts?
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 4b93c0bd1d4b..f37b991fa86a 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -5358,7 +5358,7 @@ static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
- 	if (udev) {
- 		if (hcd->usb_phy && !hdev->parent)
- 			usb_phy_notify_disconnect(hcd->usb_phy, udev->speed);
--		usb_disconnect(&port_dev->child);
-+		usb_disconnect(&udev);
- 	}
- 
- 	/* We can forget about a "removed" device when there's a physical
--- 
-2.17.1
+Indeed, strstarts() is better, will spin for this.
 
+Thank for suggestion.
+Leo
