@@ -1,103 +1,147 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26239148848
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A872D176252
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719350715; cv=none; b=L+HC+T6nl0jJIseBTzYlT2PRcVjC3YIaMTBdd9CnagNQlwQfRaJMa/5cR1XU9irxMQnSnmmjYA/vA0U+BR/Ax4gd+c7ZE91U1ZJXi52dtGzFts1Dhwb7ySOcFBHsQuEmOtzd0ODiKDJPhPNaZ5HV7BUGIO67RHE716WZbQTQuOg=
+	t=1719350717; cv=none; b=KnPqeLgjjijQzf1l7fU5skDLBXgKwG/LypEhyRf3uGf6j8ru3WoY8I15Ir1/CS+QyKobS+bS9JqlVi2oA3egZQjGRv+YyLwzptj3dghBI/q4TU3QeeekkMEXGhtKELzZaBzmOc3VZyqGdyeSzW2HIbWkdHz0y2h8/Qo0Q+lF/7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719350715; c=relaxed/simple;
-	bh=pjCnSJI5wkLaPsKKzobjyBouBvkTV06ZYTrm2KLodxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AsRaKvCv2wEEWq8C+WL0IoxJ8yix8Ug7lqvbLd8hBT1fvCXBDQXiWydNibhC2F44AT7b/eTpsF05OCF/Zpqp+7uTeTFpC6+QkvyvCi1cR3DZ6NF+yeVMuDQ1JPhG0a9UdEjBuJ66hvT7RVzxxMgQvyxM7D1k4cy0lt5E6LF29hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Oj6T9aaG; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1719350717; c=relaxed/simple;
+	bh=r2nKpI1QhRDiz0AIUr6dLuT5KkDGFiB0nn/OHOxptIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mkelri10TTQsuhwWyUSpOAhY9QScMjxHiualYrB026M7FvEgBKy8eMK5MPV8USHvlKA4fYC7sIFgZxDT+FxUuc7MZYb1RxCgFh1nPALPX0iwOs0jp4Y2WRVROXnaWNmAdCRyxU2LPlAGCxprCjlEu3DmBspNPhyUXNWEzJGmJoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VuZaEtj5; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Oj6T9aaG"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7eb41831704so17144339f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:25:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VuZaEtj5"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6fe617966fso361222266b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1719350712; x=1719955512; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EylReHJRTyvw4qnns4SQL1C+bNXZftNvK2Yg8YJEAeI=;
-        b=Oj6T9aaGb5QEepBxo+wjFFnY60Eu972uy4+3AdKfY9BYk8dNocUIqKlBssGwYpIX+b
-         sHz7Mqq7g3YzzvK3IXw3RgBfGHWgOrvQ9hxEsIaCrHvB9zEa5nqTsZTUeOoF5OtD+Euy
-         M8aN2tQIPaP+K/8mcx7sJgWCXQWNZfkY1xLYM=
+        d=google.com; s=20230601; t=1719350714; x=1719955514; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r2nKpI1QhRDiz0AIUr6dLuT5KkDGFiB0nn/OHOxptIg=;
+        b=VuZaEtj5rfgztSxFp4VLSq2mADreuZPglhY3IxFBidggghNXJZ6qG8nMfpH84AGKEU
+         2pS9hZ5VDbJgaRbJsJ5O4a7Wjl07wDhKFTJ8zyIUET29jfZJOdRL9J5LxVdUEiz2UNkl
+         /wXqtq5QEuez9ASvfmrRqQrms8P3zYeUiL+6NLA3zKT+CkdppZ2Nlw/qxwbWlwnBqCtN
+         +nZQ57dmIUKmzbi0NBQ0VIWCpntBSrkZEx9JX/1WQ9kFcXqDboVVeaPNVJbPxZUQtl53
+         qVXjK7gWr3+UKRns4KlXjS7zQDzB56ntIX4rsk/34gXC5YXVwePgokZcj+dzZQz4DnZg
+         rBnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719350712; x=1719955512;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EylReHJRTyvw4qnns4SQL1C+bNXZftNvK2Yg8YJEAeI=;
-        b=v50rM7OG2owVrqwOujQHuwEp3RkLIgYKl7CL5abkOEOxvUjArLHAnDg6F+c8CrXl8s
-         MOZn0Zk+ER8RtETluaywcGZY45Igj9Z7Kb24ax0Jyt+d8dI77N89QRJQcUbH+xRl3Vad
-         ZpMOAdueXb1tbALkdnZsxTy3HWW6SNUvl1aPPR99tVYLFySOx2YkNoSMNH1d6oj/sS0n
-         lqJbXaumSO/XpgifI6E9IDvTAFpBPtE0wsw0it1jm3z3a/FIfusKG9wa0yDeJVQpcAT6
-         L6OzVA9AdS+B5Ffthjqc8TVBgFpPBZlcq/BrFLI1EURrS3d2DUNsP1kbDn28fPP24d/S
-         h9Og==
-X-Forwarded-Encrypted: i=1; AJvYcCWtN3480mXqHtljltlhs4ri06JlXJJ5myh2f3QTRFVLlmJG/J2kOqNgq4k82xBY7lbpc/97ZrS/Z0AAfpfPdjlzW8Z8PIFrIrOtv4Lh
-X-Gm-Message-State: AOJu0YxtMfCbjGitkSbU5aDsQf6MN5zG8dndFg4v+5H4/HPE9C/hdfbd
-	O7NcXyS+jHNvJIUEH00xgevvLD72fkzUv3qFRZHFkAokCbFGQCNYxWk3uIfYrnduS71iuAPhOZF
-	V
-X-Google-Smtp-Source: AGHT+IH14wzfXEp103dUuJgZp/zY+2GhxllN2ig5sbIdAStPyKNV6CKDnd3ffI59yJ1MhhKGpGDD5Q==
-X-Received: by 2002:a6b:4f0b:0:b0:7f3:cd61:32f5 with SMTP id ca18e2360f4ac-7f3cd613354mr35131239f.2.1719350712248;
-        Tue, 25 Jun 2024 14:25:12 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ba0069879dsm1182080173.71.2024.06.25.14.25.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 14:25:11 -0700 (PDT)
-Message-ID: <f65e8a9c-1674-4769-a11d-9a76076478d4@linuxfoundation.org>
-Date: Tue, 25 Jun 2024 15:25:11 -0600
+        d=1e100.net; s=20230601; t=1719350714; x=1719955514;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r2nKpI1QhRDiz0AIUr6dLuT5KkDGFiB0nn/OHOxptIg=;
+        b=edt/QHaQjkbNOnApD9c5icuIqRr/AGxRQxNFAIziqJ9YzU3lv+V1R0uGwlOYVYV0Wu
+         3mzOyGwIarPgHMaqyOLWPT2dGFGvFh6WpP1qlD1y03TLvve9SvN0gzMz7yyJDYj/PNdu
+         XagkOkyqFEySUobbfM1yVRrS4co3HKsHg5OvnzDRDLLy/JfUEH3psVpUiAP4x1Lf3JZM
+         UTHFyVcV0aUdNZIIzmopuQ66ywsahM47ITHMy0HDSYiRNbUtvj453xAkbkLlkf5n1y70
+         byuVlx5ilXE3PSxQj78o4fRyX1+olP38ZbhaLleE0zSI9ZGMZu1IuxEGNl0U6BazBk6F
+         ajpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPEtgzqAvNbV4tntrnGhdqUU8jt5IBxhFckD4KGX5hP6WbuFgYcrMIdbgHh4Og+Q7hL2euzlr4Vu1bu9tbM/BQoYtdX7IWOp+6z0tY
+X-Gm-Message-State: AOJu0YwIGJIIg+omGdqVScRTVSftxoz9SgPCd6kj1ivJiDklQDWtVKOT
+	8LBBkBfvno9Hy17o90DNhIWCtdACRwe24bniH92gWQHkAXYlwsWiSrBkV+q3myamBtAiZh32TO6
+	80kkKQW3PJ5QtWf7ny7anDhNVplmhjgDQnmp9
+X-Google-Smtp-Source: AGHT+IEH5SQT0BSWNwtzH1MmW/zob6h/XOBPfp32D/tXHtok0ERfuzb089Zk4lxI9x0o5cEi2GptQc64uRehiKZE0Os=
+X-Received: by 2002:a17:907:a60c:b0:a6f:e111:a152 with SMTP id
+ a640c23a62f3a-a7245c48345mr567878466b.62.1719350713495; Tue, 25 Jun 2024
+ 14:25:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/192] 6.6.36-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240625085537.150087723@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240625085537.150087723@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <a45ggqu6jcve44y7ha6m6cr3pcjc3xgyomu4ml6jbsq3zv7tte@oeovgtwh6ytg>
+ <CAJD7tkZT_2tyOFq5koK0djMXj4tY8BO3CtSamPb85p=iiXCgXQ@mail.gmail.com>
+ <qolg56e7mjloynou6j7ar7xzefqojp4cagzkb3r6duoj5i54vu@jqhi2chs4ecj>
+ <CAJD7tka0b52zm=SjqxO-gxc0XTib=81c7nMx9MFNttwVkCVmSg@mail.gmail.com>
+ <u3jrec5n42v35f3xiigfqabajjt4onh44eyfajewnzbfqxaekw@5x2daobkkbxh>
+ <CAJD7tkaMeevj2TS_aRj_WXVi26CuuBrprYwUfQmszJnwqqJrHw@mail.gmail.com>
+ <d3b5f10a-2649-446c-a6f9-9311f96e7569@kernel.org> <CAJD7tkZ0ReOjoioACyxQ848qNMh6a93hH616jNPgX3j72thrLg@mail.gmail.com>
+ <zo6shlmgicfgqdjlfbeylpdrckpaqle7gk6ksdik7kqq7axgl6@65q4m73tgnp3>
+ <CAJD7tkZ_aba9N9Qe8WeaLcp_ON_jQvuP9dg4tW0919QbCLLTMA@mail.gmail.com> <ntpnm3kdpqexncc4hz4xmfliay3tmbasxl6zatmsauo3sruwf3@zcmgz7oq5huy>
+In-Reply-To: <ntpnm3kdpqexncc4hz4xmfliay3tmbasxl6zatmsauo3sruwf3@zcmgz7oq5huy>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 25 Jun 2024 14:24:35 -0700
+Message-ID: <CAJD7tkYqF0pmnw+PqmzPGh7NLeM2KfCwKLMhkFw3sxBOZ3biAA@mail.gmail.com>
+Subject: Re: [PATCH V2] cgroup/rstat: Avoid thundering herd problem by kswapd
+ across NUMA nodes
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>, tj@kernel.org, cgroups@vger.kernel.org, 
+	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
+	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/25/24 03:31, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.36 release.
-> There are 192 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 27 Jun 2024 08:54:55 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.36-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Tue, Jun 25, 2024 at 2:20=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
+v> wrote:
+>
+> On Tue, Jun 25, 2024 at 01:45:00PM GMT, Yosry Ahmed wrote:
+> > On Tue, Jun 25, 2024 at 9:21=E2=80=AFAM Shakeel Butt <shakeel.butt@linu=
+x.dev> wrote:
+> > >
+> > > On Tue, Jun 25, 2024 at 09:00:03AM GMT, Yosry Ahmed wrote:
+> > > [...]
+> > > >
+> > > > My point is not about accuracy, although I think it's a reasonable
+> > > > argument on its own (a lot of things could change in a short amount=
+ of
+> > > > time, which is why I prefer magnitude-based ratelimiting).
+> > > >
+> > > > My point is about logical ordering. If a userspace program reads th=
+e
+> > > > stats *after* an event occurs, it expects to get a snapshot of the
+> > > > system state after that event. Two examples are:
+> > > >
+> > > > - A proactive reclaimer reading the stats after a reclaim attempt t=
+o
+> > > > check if it needs to reclaim more memory or fallback.
+> > > > - A userspace OOM killer reading the stats after a usage spike to
+> > > > decide which workload to kill.
+> > > >
+> > > > I listed such examples with more detail in [1], when I removed
+> > > > stats_flush_ongoing from the memcg code.
+> > > >
+> > > > [1]https://lore.kernel.org/lkml/20231129032154.3710765-6-yosryahmed=
+@google.com/
+> > >
+> > > You are kind of arbitrarily adding restrictions and rules here. Why n=
+ot
+> > > follow the rules of a well established and battle tested stats infra
+> > > used by everyone i.e. vmstats? There is no sync flush and there are
+> > > frequent async flushes. I think that is what Jesper wants as well.
+> >
+> > That's how the memcg stats worked previously since before rstat and
+> > until the introduction of stats_flush_ongoing AFAICT. We saw an actual
+> > behavioral change when we were moving from a pre-rstat kernel to a
+> > kernel with stats_flush_ongoing. This was the rationale when I removed
+> > stats_flush_ongoing in [1]. It's not a new argument, I am just
+> > reiterating what we discussed back then.
+>
+> In my reply above, I am not arguing to go back to the older
+> stats_flush_ongoing situation. Rather I am discussing what should be the
+> best eventual solution. From the vmstats infra, we can learn that
+> frequent async flushes along with no sync flush, users are fine with the
+> 'non-determinism'. Of course cgroup stats are different from vmstats
+> i.e. are hierarchical but I think we can try out this approach and see
+> if this works or not.
 
-Compiled and booted on my test system. No dmesg regressions.
+If we do not do sync flushing, then the same problem that happened
+with stats_flush_ongoing could occur again, right? Userspace could
+read the stats after an event, and get a snapshot of the system before
+that event.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Perhaps this is fine for vmstats if it has always been like that (I
+have no idea), or if no users make assumptions about this. But for
+cgroup stats, we have use cases that rely on this behavior.
 
-thanks,
--- Shuah
+>
+> BTW it seems like this topic should be discussed be discussed
+> face-to-face over vc or LPC. What do you folks thing?
+
+I am not going to be at LPC, but I am happy to discuss this over VC.
