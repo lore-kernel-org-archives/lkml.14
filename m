@@ -1,159 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128D015FA8A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 705BC16B397;
+	Tue, 25 Jun 2024 13:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719322413; cv=none; b=ZGe19jwXxH81aKeLrpou1whXH9Fa+hTEluto0uBLQJj/+rbMwhqrue3CAmWPPG8WeNbILzA2zMS7K2q/oH9p2rmCnBEhwg/6s1NyFDL+CoEP5fK+TO8VfEa9Vga1Ln62qXRzeWAVu3IdIfq3fLs4Oj5ebVcofeebq/BcD2qYIDU=
+	t=1719322422; cv=none; b=egWohO6JR3LyxH/VWdfH6oLVE6gGqhYzWm6wQoVML/o1VmMgZz2hctUQ+XaEZGc9iryv3S5dLZ1hWOOo0MEqoT9y7z9IUeVb4bu1Ms0Fi9viNOGWIEe0yxuyMRw4ikn2uWZeoAx2MrKoZNIVNcyuL6q2QdOlCrLFn4ciMLsR46g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719322413; c=relaxed/simple;
-	bh=alSlDhdkiJyvmI6ifHWRuAZIRHQHoXNo6fYGRI5E4GA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tiNPwnwbUkkJdynM2Z8FYyZeCaEiE9qn2DeHl4ETsy4nw7lN4GIF8y8vsCvg6dLsMFxFwmQ0r7R0mE8rRNA5mIc+l5IYvWUyU4e2sv3g35Gl07NxHXvG7CXL1hyHYYazbLTl2iL13NCvrFM/zZEsRz/tIriSNkBfeG5E24PCRhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eaCCKF6/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eaCCKF6/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719322411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b084P8R3rbMy/BJbC4aMnxh/+d0pYKaHDsv3RMDiIlU=;
-	b=eaCCKF6/dS5aVc9kJDB9btDzhYmBxW7D2c9/VwtGjTUj1FPMtoPpr51vgT1ReisFaqgUHL
-	E+TOxZncUv6j4wj8hqdlcbt2JJCeZhplp7nULHZHLmH7m8D/ross/oAIPlNP06T3rsTjQl
-	z7KjRByQbVImBw4bDEq4sTHXDXt3VF8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-k8AO3SgWMm2m2Rck5Pad4Q-1; Tue, 25 Jun 2024 09:33:29 -0400
-X-MC-Unique: k8AO3SgWMm2m2Rck5Pad4Q-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42196394b72so34008295e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 06:33:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719322408; x=1719927208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b084P8R3rbMy/BJbC4aMnxh/+d0pYKaHDsv3RMDiIlU=;
-        b=Tty3jeA3UpLetHOeYamqxCi9Bo/CzEbSUJNOVi4oZn3/V1/c8jXfG+6UX/MbCJPhUa
-         LLeQ3VWvY54c2Gb/4bwyxhmiSsKXOw/arHmPFspxB4jjXEW60EEUUWD3SgZq2ZZDZILk
-         8oZawugynqGkrAb1P0j61TPfEzfB0iTQ6FcdxWPCw3lNWRVXZolW0TDkmY7kMusmBDdV
-         uleo72+ZUVT8iRIS1DFPvY3f2qcc8dAQ6JHo0d8UfE791bRpOyFNKQfxid+e23AVB0Fp
-         9ZB2Ajw46S/ojM1f49/4q86sGtxY4McWe6a+j3d+Ga3HNAmNmOSLxQHyh7zPZmTtBS6f
-         d2Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcN9StstzbmOLXqx08SJleZuNH53S4zb5z8EgfxmYY3F7kSc8fwT1DNsK7cJlVAb12342wXo3As83koJvhAOmZ5tOH+7bMh4GEnuiG
-X-Gm-Message-State: AOJu0YzLBtdJX3biiNQ0caB9JOzwc/GmO3KMBLlgF8boZ5Tiz7yH9fNv
-	h3idhCFZmqtYkVYy9ww1YAb4qGh1pMifRH0Ub3zJv5r5tw4SmSpASToN+IjmsbB5UojU9PVjMqz
-	se9VYbrw/4YwRryLfE1GcA5cJJdnPVmKrxYEJLhruq298wwHKobLkRHpjYhQoaA==
-X-Received: by 2002:a05:600c:1c02:b0:424:8dba:4a3b with SMTP id 5b1f17b1804b1-4248dba4ccemr47873215e9.5.1719322408620;
-        Tue, 25 Jun 2024 06:33:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFynXqRqFfvBY+TB6vjUjM72qSVhbQKQIMBidJG6T3yjQSVdckLFQEsGIPL+9KksRFnlnNCpA==
-X-Received: by 2002:a05:600c:1c02:b0:424:8dba:4a3b with SMTP id 5b1f17b1804b1-4248dba4ccemr47872975e9.5.1719322408175;
-        Tue, 25 Jun 2024 06:33:28 -0700 (PDT)
-Received: from cassiopeiae ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a2f9924sm12980580f8f.72.2024.06.25.06.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 06:33:27 -0700 (PDT)
-Date: Tue, 25 Jun 2024 15:33:24 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Andreas Hindborg <nmi@metaspace.dk>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@samsung.com,
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
-	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com,
-	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 09/10] rust: pci: add basic PCI device / driver
- abstractions
-Message-ID: <ZnrHJKeHLGKqEgH6@cassiopeiae>
-References: <20240618234025.15036-1-dakr@redhat.com>
- <20240618234025.15036-10-dakr@redhat.com>
- <877cedi98j.fsf@metaspace.dk>
+	s=arc-20240116; t=1719322422; c=relaxed/simple;
+	bh=wFlpTBjQ7b6ixH+wxY/aRCo3v9tll5/p+Sl/xnV6xpw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=f2mL4meojZ/EDuqOvlRZPVoFCjx7i8Rvk6TXTBm6MVy8SnmYOSGFxJk+tHeO7KH3ApDm5WzsbsDvxEb1d3ne2O+SHkuBjP+bjYIBKvIsxDANkLvYdEFu1KLSJb6GUvKqqFLLWkdph/oghfYUufopl3hy3oBpncG6EDFIFNKbrqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A603CDA7;
+	Tue, 25 Jun 2024 06:34:05 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 57DE13F73B;
+	Tue, 25 Jun 2024 06:33:37 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com,
+	jszu@nvidia.com,
+	bwicaksono@nvidia.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v4 10/17] coresight: Clarify comments around the PID of the sink owner
+Date: Tue, 25 Jun 2024 14:30:53 +0100
+Message-Id: <20240625133105.671245-11-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240625133105.671245-1-james.clark@arm.com>
+References: <20240625133105.671245-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877cedi98j.fsf@metaspace.dk>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 25, 2024 at 12:53:48PM +0200, Andreas Hindborg wrote:
-> Hi Danilo,
-> 
-> Thanks for working on this. I just finished rebasing the Rust NVMe
-> driver on these patches, and I have just one observation for now.
-> 
-> Danilo Krummrich <dakr@redhat.com> writes:
-> 
-> [...]
-> 
-> > +pub trait Driver {
-> > +    /// Data stored on device by driver.
-> > +    ///
-> > +    /// Corresponds to the data set or retrieved via the kernel's
-> > +    /// `pci_{set,get}_drvdata()` functions.
-> > +    ///
-> > +    /// Require that `Data` implements `ForeignOwnable`. We guarantee to
-> > +    /// never move the underlying wrapped data structure.
-> > +    ///
-> > +    /// TODO: Use associated_type_defaults once stabilized:
-> > +    ///
-> > +    /// `type Data: ForeignOwnable = ();`
-> > +    type Data: ForeignOwnable;
-> > +
-> > +    /// The type holding information about each device id supported by the driver.
-> > +    ///
-> > +    /// TODO: Use associated_type_defaults once stabilized:
-> > +    ///
-> > +    /// type IdInfo: 'static = ();
-> > +    type IdInfo: 'static;
-> > +
-> > +    /// The table of device ids supported by the driver.
-> > +    const ID_TABLE: IdTable<'static, DeviceId, Self::IdInfo>;
-> > +
-> > +    /// PCI driver probe.
-> > +    ///
-> > +    /// Called when a new platform device is added or discovered.
-> > +    /// Implementers should attempt to initialize the device here.
-> > +    fn probe(dev: &mut Device, id: Option<&Self::IdInfo>) -> Result<Self::Data>;
-> 
-> Since you changed the `Device` representation to be basically an `ARef`,
-> the `&mut` makes no sense. I think we should either pass by value or
-> immutable reference.
+"Process being monitored" and "pid of the process to monitor" imply that
+this would be the same PID if there were two sessions targeting the same
+process. But this is actually the PID of the process that did the Perf
+event open call, rather than the target of the session. So update the
+comments to make this clearer.
 
-Agreed, I think we should just pass it by value.
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+ drivers/hwtracing/coresight/coresight-tmc.h     | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-I also noticed that I need to fix `set_master` and `enable_device_mem` to
-require a mutable reference.
-
-> 
-> 
-> Best regards,
-> Andreas
-> 
-> 
-> > +
-> > +    /// PCI driver remove.
-> > +    ///
-> > +    /// Called when a platform device is removed.
-> > +    /// Implementers should prepare the device for complete removal here.
-> > +    fn remove(data: &Self::Data);
-> > +}
-> > +
-> > +/// The PCI device representation.
-> > +///
-> > +/// A PCI device is based on an always reference counted `device:Device` instance. Cloning a PCI
-> > +/// device, hence, also increments the base device' reference count.
-> > +#[derive(Clone)]
-> > +pub struct Device(ARef<device::Device>);
-> > +
-> 
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index e75428fa1592..8962fc27d04f 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -36,7 +36,8 @@ struct etr_buf_hw {
+  * etr_perf_buffer - Perf buffer used for ETR
+  * @drvdata		- The ETR drvdaga this buffer has been allocated for.
+  * @etr_buf		- Actual buffer used by the ETR
+- * @pid			- The PID this etr_perf_buffer belongs to.
++ * @pid			- The PID of the session owner that etr_perf_buffer
++ *			  belongs to.
+  * @snaphost		- Perf session mode
+  * @nr_pages		- Number of pages in the ring buffer.
+  * @pages		- Array of Pages in the ring buffer.
+@@ -1662,7 +1663,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 		goto unlock_out;
+ 	}
+ 
+-	/* Get a handle on the pid of the process to monitor */
++	/* Get a handle on the pid of the session owner */
+ 	pid = etr_perf->pid;
+ 
+ 	/* Do not proceed if this device is associated with another session */
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index c77763b49de0..2671926be62a 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -171,8 +171,9 @@ struct etr_buf {
+  * @csdev:	component vitals needed by the framework.
+  * @miscdev:	specifics to handle "/dev/xyz.tmc" entry.
+  * @spinlock:	only one at a time pls.
+- * @pid:	Process ID of the process being monitored by the session
+- *		that is using this component.
++ * @pid:	Process ID of the process that owns the session that is using
++ *		this component. For example this would be the pid of the Perf
++ *		process.
+  * @buf:	Snapshot of the trace data for ETF/ETB.
+  * @etr_buf:	details of buffer used in TMC-ETR
+  * @len:	size of the available trace for ETF/ETB.
+-- 
+2.34.1
 
