@@ -1,100 +1,67 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CAB143C5A;
-	Tue, 25 Jun 2024 05:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4807F143C70;
+	Tue, 25 Jun 2024 05:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719292449; cv=none; b=o3CQvikM5NHX31TgTmg8sj3T4R/L4evk4Eyn1nCj3dcyajBIvrZNobbtIVJtTZ1nAJ12ZwcENDKHMSqw1SFJXn+3rA1CFu6SbiZ0Bv4DT5mPdX73u1CcK26biDyHjyWmlLVOxhRzQt9XG5Hi1QAO2X5VKps9FcDtzMUJFtKtObo=
+	t=1719292469; cv=none; b=FSBHOHafZ4uzPXcHoljn4cqS0ehEVexgOflXnDKMiUBtBEmzjbo85A0I5AJkwUFg6SBNAhoQRewfXE7WcsJ+UmnB+tTDlAVhEWVJv5rQ8oqRkzY/6nAA/TpbV7Zeiowy7kkTe2dm+65SH1y1Zn2jQpfM4TVNj9Vvxt11vp9ksNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719292449; c=relaxed/simple;
-	bh=BBjidLX4wCJ4bJu2ERUDqOPmnH03v0e8Y5wWJjYUxYE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gkbAOBD3/UGD+mjcLyEw0ZHIcP+g0hN18mdfpP9r/9AMva5R6+LJk9kUuRmRaBfr9nbIyEVUaOBiJ1/EY7m2JFewfCZRua4eQw9wG8vrCPqjJp+yxCmNrZxc4oHS9/4h4S7OLJvXRc145vDE9T0NByILyG/OYB8DvsT0XjDFOaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=m2FTDB2f; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m2FTDB2f"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45P5Dmct022509;
-	Tue, 25 Jun 2024 00:13:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719292428;
-	bh=fBU2x+vbwdBiGXkNVPBk+/aEoIBCo6MAZ+TjymLS+k4=;
-	h=From:To:CC:Subject:Date;
-	b=m2FTDB2fZKp8ZSJ02RWTjAa72p/vf4hefYht21EQCVgQbCyjGc8H12bx3w1oYhtLZ
-	 8BoXhoHi1+mjXsDARClnfZtSyus8+Kk32QHoIZiqu7xPaIuvecQ65/YSmTiN5Q6RPj
-	 dC3vPlmnExxRKtBWwjDnVDYOqh3JEYZ+VKpDDBI4=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45P5DmT0092945
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 25 Jun 2024 00:13:48 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 25
- Jun 2024 00:13:48 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 25 Jun 2024 00:13:48 -0500
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45P5Dig5042615;
-	Tue, 25 Jun 2024 00:13:44 -0500
-From: Udit Kumar <u-kumar1@ti.com>
-To: <vigneshr@ti.com>, <nm@ti.com>, <tony@atomide.com>
-CC: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <ronald.wahl@raritan.com>, <thomas.richard@bootlin.com>,
-        <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <ilpo.jarvinen@linux.intel.com>,
-        Udit Kumar
-	<u-kumar1@ti.com>, <stable@vger.kernel.org>
-Subject: [PATCH] serial: 8250_omap: Implementation of Errata i2310 adding fifo level check
-Date: Tue, 25 Jun 2024 10:43:38 +0530
-Message-ID: <20240625051338.2761599-1-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719292469; c=relaxed/simple;
+	bh=XMMOblrOLF5ByhGA8FgLvk6qk9PWWtZhqbgP38qjasw=;
+	h=From:To:Subject:Date:Message-Id; b=CbIDp1APVKcnsDN8ZTNbwMgbw6OW9k2T/YtokCSw6oAaDUxbvvLuqTN0dU50egR5s0DW2EC7VK0xPYKfsJas1eWVqWkWKBSIUkq6QGt/c7SI1SnMd5yaQezNKLFYvWBOdrl6DbSGrIVxUYgrFMHNfyo3jrsHHeioLM4Px22zQY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49DB5200570;
+	Tue, 25 Jun 2024 07:14:21 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F382B200559;
+	Tue, 25 Jun 2024 07:14:20 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id E1C34181D0FB;
+	Tue, 25 Jun 2024 13:14:18 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shengjiu.wang@gmail.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/3] arm64: dts: imx8mp: add audio XCVR sound card
+Date: Tue, 25 Jun 2024 12:56:52 +0800
+Message-Id: <1719291415-1168-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-As per Errata i2310[0], Erroneous timeout can be triggered,
-if this Erroneous interrupt is not cleared then it may leads
-to storm of interrupts.
+Add audio XCVR sound card, which support SPDIF TX & RX,
+eARC RX and ARC RX.
 
-This patch adding fifo empty check before applying errata.
+Shengjiu Wang (3):
+  ASoC: dt-bindings: fsl,xcvr: Adjust the number of interrupts
+  arm64: dts: imx8mp: Add audio XCVR device node
+  arm64: dts: imx8mp-evk: Add audio XCVR sound card
 
-[0] https://www.ti.com/lit/pdf/sprz536 page 23
+ .../devicetree/bindings/sound/fsl,xcvr.yaml   |  6 +++--
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts  | 27 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     | 26 ++++++++++++++++++
+ 3 files changed, 57 insertions(+), 2 deletions(-)
 
-Fixes: b67e830d38fa ("serial: 8250: 8250_omap: Fix possible interrupt storm on K3 SoCs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Udit Kumar <u-kumar1@ti.com>
----
-This is check is added on top of errata implementation v3 patch 
-https://lore.kernel.org/all/20240619105903.165434-1-u-kumar1@ti.com/
-
-
- drivers/tty/serial/8250/8250_omap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index ddac0a13cf84..1af9aed99c65 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -672,7 +672,8 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
- 	 * https://www.ti.com/lit/pdf/sprz536
- 	 */
- 	if (priv->habit & UART_RX_TIMEOUT_QUIRK &&
--		(iir & UART_IIR_RX_TIMEOUT) == UART_IIR_RX_TIMEOUT) {
-+	    (iir & UART_IIR_RX_TIMEOUT) == UART_IIR_RX_TIMEOUT &&
-+	    serial_port_in(port, UART_OMAP_RX_LVL) == 0) {
- 		unsigned char efr2, timeout_h, timeout_l;
- 
- 		efr2 = serial_in(up, UART_OMAP_EFR2);
 -- 
 2.34.1
 
