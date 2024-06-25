@@ -1,47 +1,47 @@
 Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2135.outbound.protection.outlook.com [40.107.93.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BD317E46B;
-	Tue, 25 Jun 2024 18:54:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B733417C9EA;
+	Tue, 25 Jun 2024 18:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.135
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719341669; cv=fail; b=L962bGxwrFTceJ/djuGP0VZy3XrgVRBfdBFkJb5NRtJ5N1Ile1aWpAv1CK1PyeuFABHUX6RQs+Tw9TmXCwaDg/h/hSOsAW6MMMFjxkwT4wRw+ROT+cnlgtdcxsU0pKHRmwtW2cSIIovezN6VxLWwh7u/6R9VLz9cEXmS4JbPwX4=
+	t=1719341667; cv=fail; b=tY4ZtziGyMF8oOh07KdpoYfS3Bp+5vM6EgTHiu9Or6opNFXIgWmLjIVTe/0bg5we7aDt9ampUtqJPZqibB2Om6cVdycarfpZi9QH6Np+R6EIbxMPQcfpWJ6C91MemqmmxJEYM7k6TnTIOMkNnu6LhLASNk4UYZv7GcdiEjnn65Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719341669; c=relaxed/simple;
-	bh=OImTvQatsPLMjRdtjaq6JPE5UTYtXsiDzq/lLJdtgwE=;
+	s=arc-20240116; t=1719341667; c=relaxed/simple;
+	bh=fgTWTGvsHXnaVX3L1Jwozp5PJoha7Wzj43DpRZaVCo8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UUVLc10ii4IQVuoadZ1EZsdw+XTdKKgQca0aLQlPgEgYr5f/cWzgWNRSThfNLSAh5Hj6hA98sxhWqT9MIlCaWwrXyJlQn1F75UtHphPris3bSIlOn1yiIQ3/FMuPMrqaINBCKYJWcdKuW/gNjfhRb5dA7two7JwMNVq6eJzUGo4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phytec.com; spf=pass smtp.mailfrom=phytec.com; dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b=QHnpEygV; arc=fail smtp.client-ip=40.107.93.135
+	 Content-Type:MIME-Version; b=uoNwx3QYR0lX8xRAusmwkLT8vr4GIA03MQ0E2892cj8ACexohxcIlTLn7ElrecUjjubykp2JFZ61TWkjKaqQ2rB4T7CiFMh6dx7/3lrVOjf0TtP5N57guWsaB+eqVtoFtennElC5oNwNM45VjDQIanaQr0DoKCCqGfvVZuI/azk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phytec.com; spf=pass smtp.mailfrom=phytec.com; dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b=J8j5l9QR; arc=fail smtp.client-ip=40.107.93.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phytec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b="QHnpEygV"
+	dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b="J8j5l9QR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Im6GAVjnBrNhyj9ZT9x0ZVeAa9KXyU/RPQqCnTvqEaYqiwgzM/V/yjoxpJS4hCpL62KjYd2zo30rLQIPP0bAbgqb+GgBz3KZZvac5eDAsP3D9qQXgy371CJ97VzMhJ7awEmMP0lg7bf1c1O5A37eRTat2ett1i+IKpJGuVjB+xRZ1pDimJtjUZlokHZw2WFelBUYnFtzhUiTessYUtf2f+dRFz2hLioy76mxfHhskKLQ2UoHiYuIdPK+DjKm5Do1h52GXfvyBmbFWsKnqbsmG0DjufaaKMCMES/r4HCI6HdCbrogUqKaP24cW9M32V7MiIiAsWregisGKUe7w+AeDw==
+ b=F1dEEdi9xluS9CcGMC8jxQGxYposQLzHHCHj91WSOfb8/VDGEBIK90JkO4SdKWxMFXs8ordd0QQKZ7C5BF4ajV97/y6lhSJOe4OmhfvPQ0837BOPhslXBVKmzEjGFcwGXsDXhpVy4vQL72Y2fUWAHQONrEMhECpKzdN3wPZHFvLQoWWZ26tGRRDjsvXdf+wLKSi+DwnUdXdU3/zDSUYQf1es8q5hqgEktdrzJjeerb1mucPuj7t5M+hXj0rzKuqEJ5vDNOtRGy/ZmccRnP7Aw29sD6G/oc3182xuHycCqj6SPOCJJvqAELdokw0mNVGyC9PGIgSw9Moxlwj6diZmvA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CeRMweAwVv68NYPh01dopHsPbUzhEI3qliwxY73QuHE=;
- b=ocPGJEMHnZB8cWaZv0HhwixwUlJDbR2OG3GJRGbx3CbQyTzXLnzg7lSuhIjZ9Uqa3OOuPDGaLyFeWvMHC+mWnxXl4YEVvPhTsRY+ORrPFLx7YSTsZH3M0p1Rm1HMNFhc/NTZBf75DCyNXVE3uJuw0WPJxz+mk/ZK2ty+E04LS/bGT4sTDfNDTX2KLP/70YYRrJ64nophaXCTIcZZwGB/wAegq7ngwjgrRYEo5t46O1CNW07e6uwywUO7Wm9LFaPSEB1DImYCle4M3oLaHBRcXwUhVbwGgeANRoEjvZ9l2+omadAUlwuDbKdq8B4xnsZtlN8Q6cIH9r2dSM35T7XwTw==
+ bh=Ua0BXbLR3aM8CkftHphBGrDrg8UpUc55dReUPDlo1MM=;
+ b=I2mmvNtExe09Rd0nMHXQ9ttBfD/BoJtd+ZfqSjEFH82kRZpwL2LZV/T4leNvL5JlOFX88ISc4geh3T7xgT2FFhAW3oWJaSB+hR7SwZmZxWS0ptK0YeMaEtpFwWEwAFXyfzHpe4dZdNRcwOo7+AN1RFnOSYFO1sU+7wR/VsB47q81TsUIe1DNPqGctYRzlUOsUJYaJ34s65Ib2YQPOG/ENLklIxLI7tVHEPkdHxubmMH4VDFqgINQITNfknx6O1DuCosgvulAJXKoZ37DIkp9algxCb3xv3FHF6+/JN/3HtrghvSpbcMBfIkwOBIEH2pwGTfX3WWxucMMbKmp1TwMwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=phytec.com; dmarc=pass action=none header.from=phytec.com;
  dkim=pass header.d=phytec.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CeRMweAwVv68NYPh01dopHsPbUzhEI3qliwxY73QuHE=;
- b=QHnpEygVFJKBr86yM3uPNsA5ul66kTyO3B624fYCb/fMsONgULpm419v0Rs9qhtzAGY6MicFGttkTnXRTYa8PkXHqTMLoh5KHkL5m/wVqggh7EBIo1CX8q6CcNusD6RdpdNsBUCgQAzPHs8RLytAiTccc/68sTt9dj4EQW3bmIc=
+ bh=Ua0BXbLR3aM8CkftHphBGrDrg8UpUc55dReUPDlo1MM=;
+ b=J8j5l9QRAY1TgWzXr4leNA5jloi+CEt5c2YDLVkAKxf2dQZLrmrY6uF2wwi3/Nv7YJ4D3BpjPinDyAGVc9EWCMLqXH/3MZfgTwmFaBo0iusNcmN5wFFSZDEioHrFEOj3C6OVZPHmDlQLD/0JawNuz3MTp7bzEVYbT79qVQ9PSMk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=phytec.com;
 Received: from SJ2PR22MB4354.namprd22.prod.outlook.com (2603:10b6:a03:537::8)
  by PH0PR22MB3911.namprd22.prod.outlook.com (2603:10b6:510:2a0::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Tue, 25 Jun
- 2024 18:54:21 +0000
+ 2024 18:54:17 +0000
 Received: from SJ2PR22MB4354.namprd22.prod.outlook.com
  ([fe80::789c:e41e:1367:383d]) by SJ2PR22MB4354.namprd22.prod.outlook.com
  ([fe80::789c:e41e:1367:383d%3]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
- 18:54:21 +0000
+ 18:54:17 +0000
 From: Garrett Giordano <ggiordano@phytec.com>
 To: nm@ti.com,
 	vigneshr@ti.com,
@@ -54,9 +54,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH 4/4] arm64: dts: ti: Add basic support for phyBOARD-Lyra-AM62Ax
-Date: Tue, 25 Jun 2024 11:54:02 -0700
-Message-Id: <20240625185402.1896623-4-ggiordano@phytec.com>
+Subject: [PATCH 2/4] arm64: dts: ti: Add am62x-phyboard-lyra carrier board
+Date: Tue, 25 Jun 2024 11:54:00 -0700
+Message-Id: <20240625185402.1896623-2-ggiordano@phytec.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240625185402.1896623-1-ggiordano@phytec.com>
 References: <20240625185402.1896623-1-ggiordano@phytec.com>
@@ -73,495 +73,1052 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SJ2PR22MB4354:EE_|PH0PR22MB3911:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e7f7938-0943-4b9b-0113-08dc95483959
+X-MS-Office365-Filtering-Correlation-Id: 323385fe-4a96-4e97-0177-08dc9548371c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230038|1800799022|366014|7416012|376012|52116012|38350700012;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JpRrLXo0OcJjovCOW3ygBYU3nXJJCONPEazera2WIWBA0vDGQZEVC9EuSBIf?=
- =?us-ascii?Q?ImambJWjfsrQTibSJWvB+orWTojmD0poyCRmzM97UzJ7EihHBA1n4NMI/OGI?=
- =?us-ascii?Q?lhdpaMQ+9bpE0s6BUqFbs8xzMOeABY7fkjYDHnOvfOv48Fsf0px+gaqapnz5?=
- =?us-ascii?Q?Mo/TAIZu4LUu/8b4DivQ2Ely7ZT1KWG733bO2J/Utu8u6l3zDh1JOUw/yUQ6?=
- =?us-ascii?Q?Inx5gvNDc431f2jSjDrSKsB6oOYIVyv+zj642ZwXaNAbpa+074o+5m3LeJAm?=
- =?us-ascii?Q?abT6zLWen3XRcqOOZKwP/mazhey26iM4uQtYn2GCLEbODtbiulzhl1aueLTh?=
- =?us-ascii?Q?wcFc0W8SnlxSq/0c0jUr2t+pFWy/t2Zg4kCDlGVrT+1Tl3DPxDiYmCmidGdm?=
- =?us-ascii?Q?u0VE6x0LvweitUeltQAyyJHNSTIPJNkCP0msypkR1ajtt/yqBBS0PHLD8BeV?=
- =?us-ascii?Q?12qZauFjjoftXz1h5r5azu81WK8Nh7hTBtrpZo9kZ23skMOvuLOW22iJgGgz?=
- =?us-ascii?Q?1Zjs+5z+0/nxXITVzOmgC9PtJEQ69LRRCWr6gz4IMPxyRv/D6sRfwZiCNn3t?=
- =?us-ascii?Q?gmqhbY1/6cfgqjerLUveuILh1nHxUvMLP9F1+b7omvlRCWiZllbtbbPNBYAy?=
- =?us-ascii?Q?SVZdVH9feqSWdrKoSdcUQ3AwuPmF3kSUDRhlt9paaXibKl/NzKHkJkDKj6PV?=
- =?us-ascii?Q?e62RyXMXDIEkrvOaOgoYzkN/hdWT0uc+hUtdk1y1DW16ZFZJzttGDtvXzKg0?=
- =?us-ascii?Q?TN/U6cns+OfAANvCDyOf3qRW3i/IRoWvvsFf/tgYfXBmt/7HNJMut4t8g2TW?=
- =?us-ascii?Q?RnqcB4xSZZYza8P3niP0exTlWeVdSiqRyN/9Ro7/VXMnTwAtNkYiOmpYLcg+?=
- =?us-ascii?Q?4PiDpusHJ/wzoTzULXpPFqyenzh3qZCbSRq2lfkjNIrMYnxGMMAHm15DRzYL?=
- =?us-ascii?Q?Yoh70GU+dGu+eHlZg+i5AZk0D+OEusDFo6OyckND5Ga4B1ixVRJW8F1TnC/6?=
- =?us-ascii?Q?VKtnmqEnbW8aalFt9mp2dJzvIq7Yj7mGVWZtDrJ8qOdNoUKvoaWhZk1XZzmH?=
- =?us-ascii?Q?VBpRnABCXyorcM6/wF9miYuZ1m9yWJyjLGYFvcXiduK0lA92j+JeifCsLMUA?=
- =?us-ascii?Q?Ez7KEuELwVdgcY7kthGmEZ5UiRfoKWRwMw5gg+lvUxnXKAGMeeNnIWWFxs8X?=
- =?us-ascii?Q?KLwMVHhSBrL7vGaoK9dOYYpW3d3dwxSeek4CWYRYWWTpTAp2LMlKBW+7lDoa?=
- =?us-ascii?Q?fHzKa3g9W3PVh3EjYzA45a35kqGxuPF63rtU4cOOak2hM9g7fvsMkzmBrzau?=
- =?us-ascii?Q?ra39EnPnL8ytm2KjfpZVNXh5?=
+	=?us-ascii?Q?+so2FQLBN/rZ4PqP7i9MXG90VRUobuzKOqyHhFU/5IknAWdKGtx7sZw3eiWn?=
+ =?us-ascii?Q?8nBiHysr/iI2h22kjSt1zm6HfK9kegSz85VBdMNsOSqVAcSKwfgnrdAmbVIH?=
+ =?us-ascii?Q?3+f5Dj1TVofDjtXnQv3AZoh8r+5zx9ZwadyyNIyh21ThJvIkufy4HTBvbfQW?=
+ =?us-ascii?Q?VqQyINQ7rey/rgonPYUfcoq0VllNgPKi5R71cbqeoiuQAMnOxGJQ7FI6mTJx?=
+ =?us-ascii?Q?uCxCaXAv6WWK1prvdaz8HD9bL8HuqLPNlIEZenpMnd3B9Z5GyhrZCvGE6oyN?=
+ =?us-ascii?Q?EMbWfnoY3LM4UHPDmiijyGoUdNp/57VyBszfGPThKyYoXjPuli/iUHbS8G59?=
+ =?us-ascii?Q?F25gyFeGNjVqFaSzRceTYz5/Y/lGqYQq9Z2OwJ5cbBqkh/wXJh7JyFZzzVuN?=
+ =?us-ascii?Q?IheZyHosS9V03WQvCmUsO2Zz4ORnyD8VKrBnw5aJxfRurkCxddWMEim8Fqft?=
+ =?us-ascii?Q?NzCYU6ODhqPqNEKBIYu9i/xRVkj2CqyV+gnvnzfEGwNRsFdy/hiPaBU/kzpL?=
+ =?us-ascii?Q?td2+Cr1zd9cCFDmxOJj4Vp+tmh+/oxqKXHEDLJy3Qb9XtyI+jxgPH88sH55L?=
+ =?us-ascii?Q?fqFrnCs/L/4dxFszeF2Z0kSKA/2VGhRlNELZcY6fV4+1n00LD7EEizcCiq7d?=
+ =?us-ascii?Q?7yb8J+8+sCjmsWgGgz6cgQ2Ko2x6mTNCu0TUsP9FlBwNz26K0bt4MqpF6Zvi?=
+ =?us-ascii?Q?9ENnxn+uE/rn3MWkONJ13mWfGEyJ9qC67dItnVj6CTnU0A30a6dO0G1FDgBI?=
+ =?us-ascii?Q?Qm6vmebX+1xliweqib5SD0MXM6l+qpLRjS5g9F6EhGgQr0Y93rDgcU6VLp5p?=
+ =?us-ascii?Q?DGDYMunLiJPtV4mvZu6wMn27WNoC+qC0wBSuqzQ58gafRHlB+C6f49333LNe?=
+ =?us-ascii?Q?ZGdjuH5QfAY4w/TJmYoIntMndI9M1+kwWSf1FHWVI228Y1OgRUruMsC6Ad7G?=
+ =?us-ascii?Q?Xw3fR2hqjLyhtdcU5vh0mkzbv9PumdKltjNYwQfjE/hEXDvaCbQfa4wEQFk/?=
+ =?us-ascii?Q?lQRLmV5Kf3cRugagYbkKMwOCrpg1PAhaSln1X1sigzN/PJcgQlvuzl8OTAkp?=
+ =?us-ascii?Q?S89BoHxLX1KLpu48TNooJx9Rw6GW4KorPdL72MMatvo+yauaeuULiaDCYGxh?=
+ =?us-ascii?Q?qy31d6/Zxvcrb3K0yfTiADLEF7zHYqMs+bGSHgGjfY1hJO2WohhvEQFLdtVh?=
+ =?us-ascii?Q?YrlO4o0CvTH2l6fAA+JU3waYmpSIfQLSMDX+feGoAPykiu+0EIfFS81AsrDX?=
+ =?us-ascii?Q?Yw6Dves/f+JxfBjtqsLZOG2AzkAPkjjMs9VTT6j5+rY/IdPByftKdgYe7JyW?=
+ =?us-ascii?Q?Ar/yiCM4usPB9CVbWKri9sQj?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR22MB4354.namprd22.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(1800799022)(366014)(7416012)(376012)(52116012)(38350700012);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oW42K/xGJ2ePZ4OEc+DV036cWqT7QXuDOBscu0pQgFyxbv89A2ieYmT80v5J?=
- =?us-ascii?Q?dOTd1Gpfpnd/8KXF98SyCJ63UIhwEYzD7S17adgOmmWqxnY06bEP6VO64bVs?=
- =?us-ascii?Q?SYG4Im/kD2iJNj8HDFK7zM1TnK6+lVWkwooWZeeNb3J3EsrQl6P+KYUx5qwZ?=
- =?us-ascii?Q?2buknA3h6IaZ6zz9Pdk2hWn+PBASjHsqNpYi8d/TDnXkvRAXoo8LlDgRyzuD?=
- =?us-ascii?Q?HrdTniJAryYhqUn679tBnCwqTWu6RHqMt9TGeGBMhdrG498E0OTGyf9Gm7+A?=
- =?us-ascii?Q?uzgeLHEzh8LcQ+p7zpDB95YnMVLIGJEjrcALloN7uVTYklQQ3+slMfIkab+s?=
- =?us-ascii?Q?M7YABk2MYPWDJzygtwLDbSwsWGhipSZEhfHmEy0LQI3HHs4mJ5GcndAGGQ5u?=
- =?us-ascii?Q?lC66NOTQaiIq4nX2RouUZHEPKgLA2M2grBFy9lyVDdEOjHM2gVwm6R3BUk4x?=
- =?us-ascii?Q?Xi+RshEGoApB4e/V7Tn+0MyKvdHm9+QjdGyCWj5i1K7F+yozLk/65t7nmbns?=
- =?us-ascii?Q?UGHUEKEdTQasBvMO8iR8VfitRQQk8rGX5AkcXsVb2NgxhZUtc6qrXn/jayLj?=
- =?us-ascii?Q?sS179DGVuwaTmHShNb1mccFhA3XolO1jduSKtXbAMeALhzW0G/VJIARmwAS7?=
- =?us-ascii?Q?/uh2nj46EIyFPiPG+JVL43k4AJUanY+Xkx4Sln1ocjBzPQU7mIaHy5y5pwqt?=
- =?us-ascii?Q?HBCGAwhWq3zp7cVS/40znDLtc9NmCjch4mVR8oxFivUs/y/9FhfN4tW2OtOH?=
- =?us-ascii?Q?6cYVKqLLbkyfTV/Yr2anPl3cgtq+95OrGftOJ78eKZpEPSh7SUkY/LikL8fK?=
- =?us-ascii?Q?oZBlyEcp2HbG9E5S9wfrldAD5yUQ8GADdswPjS5dZBvVW1cEnfW8KNuZamVn?=
- =?us-ascii?Q?Beysb5VbUoQi+gfDsA4hmqJrXoxi3iKsSkIi5sRjYU4UGrq0+sWMYKMG0BQ6?=
- =?us-ascii?Q?vuoI1aiU39Et7+wZUVr0XO5uKAFr4Vyycb1TCZhWx5pc6t2IWsEvEkMi9kum?=
- =?us-ascii?Q?iV/nw/Bpy4QtvtRmyE0I7dudYrAO8NWIP19cIJcA0Z+Bdde4QXw1UgoUI+W/?=
- =?us-ascii?Q?mkNQo4Q9E7m6d5bUTJgoaNv5dxTQK2lkrYKD+7bA0UlzAWO36o66xAdhHOQB?=
- =?us-ascii?Q?AHd96M8cKZ/qH6tDTgur/nLrCqHII9fOOe8WMg0LW70paNoNS1heug+ew+hC?=
- =?us-ascii?Q?HwsU3fWyZ3SNNcRdllB7SL7EfxuvtoY/q2mIZrrtQYG5k/hjaKdKFsAAgECt?=
- =?us-ascii?Q?hLZWU/HDp0pG9P6iI4xvGkpuy+1K8Mqa/gWxPGVBoqRxsIIKF4cn0a+TXWgF?=
- =?us-ascii?Q?nyPM2yUMLb+pWX6xMAxJ3pilbjvrqwt4OxiFST4iE2c1+pQJGoQcsuaWqEwT?=
- =?us-ascii?Q?h85Ejh8ZcC7EUb9f3k8Q7oq51u8Q8kzj/n1W/1T96Xg90VO6YEce5H2RSZKP?=
- =?us-ascii?Q?+5EwcbZgHVQqssxhrz7IoPBfubp6hNwjYfPMAD0SxpVB2sLt+T7I698ZWZ/3?=
- =?us-ascii?Q?LPmZHF73WKwirvd2FFykR0ByhQ5bjgT8DMPbLDMrea11Wc1I8gQLg4gCsnol?=
- =?us-ascii?Q?+AHqgORBD+PeejysKICwzaw5ruELtg77LWwp0McQ?=
+	=?us-ascii?Q?INcFL9A8afHsj7fWT1c31E/2LO03KkP7s7rjp4z6PjgptUTaoO+cER0HvWow?=
+ =?us-ascii?Q?VgSCh4KY1MYqGSjw3TR9sUw2IP4QMBbQ5jONtcB55xKnVCv//a6hl/upbBVD?=
+ =?us-ascii?Q?AdKPGeqSfHH4leg2aD7v5GfVwqdLx04syF+R1Wty+w592NTBGPAp5i6w/zfN?=
+ =?us-ascii?Q?2Ir6K4MAcEuqGgEqYUyRIZBIvDA33jjG2P2O1FKc4zxb+F8fz3E9AdBgaI6o?=
+ =?us-ascii?Q?3Oq1LLGgtI596An33O200Fgjunv95GoG2yuJUQzPXQfNxAjyVa2T/yyJqDhs?=
+ =?us-ascii?Q?H8wOmBRjugbVuuxSX1gznNq6fmbbtkMiXLrH/1+RVUHW/xD8VBZ24u7kr/4m?=
+ =?us-ascii?Q?t/Fj1Tmwk59fGY2OWbebw0TPs/pPNroyR2e/pSH5SK9dC2zRAQwwn2uCAZPt?=
+ =?us-ascii?Q?ZhCp7jNXRNfrxXB9SfkPsi/RXcvOGTUr7HeqbctxlAQunpG7btY113jgvw3U?=
+ =?us-ascii?Q?MfTjJVt8W+B8g3O25gi9Ac+W5DuLsPiISOAPpdMmeXOgQXMdu5t0FbXaTfvK?=
+ =?us-ascii?Q?hKE46fIQArCE/O/ha4YIXzNioNR0knqDILSf0jGMQeN57YEwD27gKJPESmgj?=
+ =?us-ascii?Q?3wS6mm9hlKw4pHuGa235TPhjbv63K53DKIZxjx8U0jqRCygNniUdERh4m7YY?=
+ =?us-ascii?Q?dDcwibLElhCJ37BRYgPwrxgG5tewuXAT6LkhLUlLfddEg1wY2xEZuYdEQ0WI?=
+ =?us-ascii?Q?G6jLBB/RsFrO9Kie5+qBzW29qqFG22OzjiTyDHD7vvtSw3+8nUOMTJgsxJhr?=
+ =?us-ascii?Q?yCyOHnK+aAaK9y5EOFIlJPU3MhYurF4sIVklIEn4wLjwltEIAfq9MTfrROtg?=
+ =?us-ascii?Q?QDuJJ6SimP13+OJiGmPM+NJ4aDDjNsQdudSPXUJudadjKJSWdENtsx/biY46?=
+ =?us-ascii?Q?34gLPA6waW9HN4mxKS9oI+vTEFwlFBtbAt4H/OribVMtftA9i9f1KuHv+Dfa?=
+ =?us-ascii?Q?vDdUU9a/gWDHxdZ8Nf8Je3efo+c2mBj3r1gUQwITZ3qxhl9KcDEpmIy5aBv6?=
+ =?us-ascii?Q?fw2856FXvAbkWsBZJPIBWeXsRqiNXx5br8yrJxXeV/wLz0ohQuE6O+nO/kPx?=
+ =?us-ascii?Q?E7JwdcgJzEv9asJqpF+70TfFLw50Cn2B0ZxCFj/sER8v+1KuZnkKftNSrU6I?=
+ =?us-ascii?Q?b2jYEdCFVySMWLksr2ES9NpLIsCgcNikdDQjvZIlEwdBYaIkUDePLOSLh8Id?=
+ =?us-ascii?Q?KE2+2pfnAGGWYgPaTV9Eye1MWa+uZlcjDo8GXvGxOTC9SZE0ZpkECT9UtJRH?=
+ =?us-ascii?Q?2dB3RgUcOIrNY7xrf8Zv5emc48lnVTelIyuv5DaGT46br5KeNNTFYNtt1gg5?=
+ =?us-ascii?Q?FXibJricg9WRkRkvnqAg/d7DR4tNumFDEeIR2DfHdddWrnEgUTJd+3JJ5QR9?=
+ =?us-ascii?Q?ayrG4IFfP74sGRZ6y6lWgwh732QqZlmznwj2oeQ4BK9+v0XGlRUJb/dbq2Dp?=
+ =?us-ascii?Q?xYa2mhjk3hNWM6JTAqB5seX/tTTDG24Wtqd0z4HgsOkpZ0dipwPYPvsm5jDR?=
+ =?us-ascii?Q?/WHAoJvm9FNRxMxPsUjZCsqHk6T8m1eyeL/QwY66wYgN9XV27KwKDt7vNPre?=
+ =?us-ascii?Q?u0jjf2TS65w8bUkEgECW5ZlCaXKCrTSAVG2Jpex3?=
 X-OriginatorOrg: phytec.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e7f7938-0943-4b9b-0113-08dc95483959
+X-MS-Exchange-CrossTenant-Network-Message-Id: 323385fe-4a96-4e97-0177-08dc9548371c
 X-MS-Exchange-CrossTenant-AuthSource: SJ2PR22MB4354.namprd22.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 18:54:21.3944
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 18:54:17.6621
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 67bcab1a-5db0-4ee8-86f4-1533d0b4b5c7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JBaM99LpQyu5vnRVczM+dW04woFYWm54aiaTOxxzu4KAbwtxi4kNmJ0mR+eFgnbUfo8Ih5V7IBBPEkph5AaaGQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: W3NtvQXj2w/Y+N/8QrTqKsJHx95GwYS3AD4LQdl6OSyWoIDUQDlAMwe5wgdNJCQChK8/jbTKwCclAIGTRtYRpg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR22MB3911
 
-The phyCORE-AM62Ax [1] is a SoM (System on Module) featuring TI's AM62Ax SoC.
-It can be used in combination with different carrier boards.
-This module can come with different sizes and models for
-DDR, eMMC, SPI NOR Flash and various SoCs from the AM62Ax family.
-
-A development Kit, called phyBOARD-Lyra [2] is used as a carrier board
-reference design with a mapper board being used to allow the phyCORE-AM62Ax
-to fit the phyBOARD-Lyra.
-
-Supported features:
-  * Debug UART
-  * SPI NOR Flash
-  * eMMC
-  * 2x Ethernet
-  * Micro SD card
-  * I2C EEPROM
-  * I2C RTC
-  * GPIO Expander
-  * LEDs
-  * USB
-  * HDMI
-  * USB-C
-  * Audio
-
-For more details, see:
-
-[1] Product page SoM: https://www.phytec.com/product/phycore-am62a
-[2] Product page CB: https://www.phytec.com/product/phyboard-am62a
+PHYTECs phyBOARD-Lyra carrier board is able to accomidate multiple SoMs.
+Refactor k3-am625-phyboard-lyra-rdk.dts into an include file so it can
+be reused in combination with our phyCORE-AM62Ax SoM.
 
 Signed-off-by: Garrett Giordano <ggiordano@phytec.com>
 ---
- arch/arm64/boot/dts/ti/Makefile               |   2 +
- .../boot/dts/ti/k3-am62a-phycore-som.dtsi     | 330 ++++++++++++++++++
- .../dts/ti/k3-am62a7-phyboard-lyra-rdk.dts    |  18 +
- 3 files changed, 350 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
+ .../dts/ti/k3-am625-phyboard-lyra-rdk.dts     | 467 +----------------
+ .../boot/dts/ti/k3-am62x-phyboard-lyra.dtsi   | 475 ++++++++++++++++++
+ 2 files changed, 476 insertions(+), 466 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra.dtsi
 
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 2c327cc320cf..cd6e14edbbea 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -27,6 +27,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62-lp-sk.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
+index 50d2573c840e..4fa5efdffcd7 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
+@@ -7,477 +7,12 @@
+  * https://www.phytec.com/product/phyboard-am62x
+  */
  
- # Boards with AM62Ax SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/input/input.h>
+-#include <dt-bindings/leds/common.h>
+-#include <dt-bindings/net/ti-dp83867.h>
+ #include "k3-am625.dtsi"
+ #include "k3-am62-phycore-som.dtsi"
++#include "k3-am62x-phyboard-lyra.dtsi"
  
- # Boards with AM62Px SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
-@@ -173,6 +174,7 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- # Enable support for device-tree overlays
- DTC_FLAGS_k3-am625-beagleplay += -@
- DTC_FLAGS_k3-am625-phyboard-lyra-rdk += -@
-+DTC_FLAGS_k3-am62a7-phyboard-lyra-rdk += -@
- DTC_FLAGS_k3-am625-sk += -@
- DTC_FLAGS_k3-am62-lp-sk += -@
- DTC_FLAGS_k3-am62a7-sk += -@
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
+ / {
+ 	compatible = "phytec,am625-phyboard-lyra-rdk",
+ 		     "phytec,am62-phycore-som", "ti,am625";
+ 	model = "PHYTEC phyBOARD-Lyra AM625";
+-
+-	aliases {
+-		serial2 = &main_uart0;
+-		serial3 = &main_uart1;
+-		mmc1 = &sdhci1;
+-		usb0 = &usb0;
+-		usb1 = &usb1;
+-		ethernet1 = &cpsw_port2;
+-	};
+-
+-	can_tc1: can-phy0 {
+-		compatible = "ti,tcan1042";
+-		#phy-cells = <0>;
+-		max-bitrate = <8000000>;
+-		standby-gpios = <&gpio_exp 1 GPIO_ACTIVE_HIGH>;
+-	};
+-
+-	hdmi0: connector-hdmi {
+-		compatible = "hdmi-connector";
+-		label = "hdmi";
+-		type = "a";
+-
+-		port {
+-			hdmi_connector_in: endpoint {
+-				remote-endpoint = <&sii9022_out>;
+-			};
+-		};
+-	};
+-
+-	keys {
+-		compatible = "gpio-keys";
+-		autorepeat;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&gpio_keys_pins_default>;
+-
+-		key-home {
+-			label = "home";
+-			linux,code = <KEY_HOME>;
+-			gpios = <&main_gpio1 23 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		key-menu {
+-			label = "menu";
+-			linux,code = <KEY_MENU>;
+-			gpios = <&gpio_exp 4 GPIO_ACTIVE_HIGH>;
+-		};
+-	};
+-
+-	sound {
+-		compatible = "simple-audio-card";
+-		simple-audio-card,name = "phyBOARD-Lyra";
+-		simple-audio-card,widgets =
+-			"Microphone",           "Mic Jack",
+-			"Headphone",            "Headphone Jack",
+-			"Speaker",              "External Speaker";
+-		simple-audio-card,routing =
+-			"MIC3R",                "Mic Jack",
+-			"Mic Jack",             "Mic Bias",
+-			"Headphone Jack",       "HPLOUT",
+-			"Headphone Jack",       "HPROUT",
+-			"External Speaker",     "SPOP",
+-			"External Speaker",     "SPOM";
+-		simple-audio-card,format = "dsp_b";
+-		simple-audio-card,bitclock-master = <&sound_master>;
+-		simple-audio-card,frame-master = <&sound_master>;
+-		simple-audio-card,bitclock-inversion;
+-
+-		simple-audio-card,cpu {
+-			sound-dai = <&mcasp2>;
+-		};
+-
+-		sound_master: simple-audio-card,codec {
+-				sound-dai = <&audio_codec>;
+-				clocks = <&audio_refclk1>;
+-		};
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&leds_pins_default>, <&user_leds_pins_default>;
+-
+-		led-1 {
+-			gpios = <&main_gpio0 32 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "mmc0";
+-		};
+-
+-		led-2 {
+-			gpios = <&gpio_exp 2 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "mmc1";
+-		};
+-	};
+-
+-	vcc_1v8: regulator-vcc-1v8 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "VCC_1V8";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+-
+-	vcc_3v3_mmc: regulator-vcc-3v3-mmc {
+-		compatible = "regulator-fixed";
+-		regulator-name = "VCC_3V3_MMC";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+-
+-	vcc_3v3_sw: regulator-vcc-3v3-sw {
+-		compatible = "regulator-fixed";
+-		regulator-name = "VCC_3V3_SW";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+-};
+-
+-&main_pmx0 {
+-	audio_ext_refclk1_pins_default: audio-ext-refclk1-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x0a0, PIN_OUTPUT, 1) /* (K25) GPMC0_WPn.AUDIO_EXT_REFCLK1 */
+-		>;
+-	};
+-
+-	gpio_keys_pins_default: gpio-keys-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x1d4, PIN_INPUT, 7) /* (B15) UART0_RTSn.GPIO1_23 */
+-		>;
+-	};
+-
+-	gpio_exp_int_pins_default: gpio-exp-int-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x244, PIN_INPUT, 7) /* (C17) MMC1_SDWP.GPIO1_49 */
+-		>;
+-	};
+-
+-	hdmi_int_pins_default: hdmi-int-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x040, PIN_INPUT, 7) /* (N23) GPMC0_AD1.GPIO0_16 */
+-		>;
+-	};
+-
+-	main_dss0_pins_default: main-dss0-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x0b8, PIN_OUTPUT, 0) /* (U22) VOUT0_DATA0 */
+-			AM62X_IOPAD(0x0bc, PIN_OUTPUT, 0) /* (V24) VOUT0_DATA1 */
+-			AM62X_IOPAD(0x0e0, PIN_OUTPUT, 0) /* (V20) VOUT0_DATA10 */
+-			AM62X_IOPAD(0x0e4, PIN_OUTPUT, 0) /* (AA23) VOUT0_DATA11 */
+-			AM62X_IOPAD(0x0e8, PIN_OUTPUT, 0) /* (AB25) VOUT0_DATA12 */
+-			AM62X_IOPAD(0x0ec, PIN_OUTPUT, 0) /* (AA24) VOUT0_DATA13 */
+-			AM62X_IOPAD(0x0f0, PIN_OUTPUT, 0) /* (Y22) VOUT0_DATA14 */
+-			AM62X_IOPAD(0x0f4, PIN_OUTPUT, 0) /* (AA21) VOUT0_DATA15 */
+-			AM62X_IOPAD(0x0c0, PIN_OUTPUT, 0) /* (W25) VOUT0_DATA2 */
+-			AM62X_IOPAD(0x0c4, PIN_OUTPUT, 0) /* (W24) VOUT0_DATA3 */
+-			AM62X_IOPAD(0x0c8, PIN_OUTPUT, 0) /* (Y25) VOUT0_DATA4 */
+-			AM62X_IOPAD(0x0cc, PIN_OUTPUT, 0) /* (Y24) VOUT0_DATA5 */
+-			AM62X_IOPAD(0x0d0, PIN_OUTPUT, 0) /* (Y23) VOUT0_DATA6 */
+-			AM62X_IOPAD(0x0d4, PIN_OUTPUT, 0) /* (AA25) VOUT0_DATA7 */
+-			AM62X_IOPAD(0x0d8, PIN_OUTPUT, 0) /* (V21) VOUT0_DATA8 */
+-			AM62X_IOPAD(0x0dc, PIN_OUTPUT, 0) /* (W21) VOUT0_DATA9 */
+-			AM62X_IOPAD(0x0fc, PIN_OUTPUT, 0) /* (Y20) VOUT0_DE */
+-			AM62X_IOPAD(0x0f8, PIN_OUTPUT, 0) /* (AB24) VOUT0_HSYNC */
+-			AM62X_IOPAD(0x104, PIN_OUTPUT, 0) /* (AC24) VOUT0_PCLK */
+-			AM62X_IOPAD(0x100, PIN_OUTPUT, 0) /* (AC25) VOUT0_VSYNC */
+-		>;
+-	};
+-
+-	main_i2c1_pins_default: main-i2c1-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x1e8, PIN_INPUT_PULLUP, 0) /* (B17) I2C1_SCL */
+-			AM62X_IOPAD(0x1ec, PIN_INPUT_PULLUP, 0) /* (A17) I2C1_SDA */
+-		>;
+-	};
+-
+-	main_mcan0_pins_default: main-mcan0-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x1dc, PIN_INPUT, 0) /* (E15) MCAN0_RX */
+-			AM62X_IOPAD(0x1d8, PIN_OUTPUT, 0) /* (C15) MCAN0_TX */
+-		>;
+-	};
+-
+-	main_mcasp2_pins_default: main-mcasp2-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x070, PIN_INPUT, 3) /* (T24) GPMC0_AD13.MCASP2_ACLKX */
+-			AM62X_IOPAD(0x06c, PIN_INPUT, 3) /* (T22) GPMC0_AD12.MCASP2_AFSX */
+-			AM62X_IOPAD(0x064, PIN_OUTPUT, 3) /* (T25) GPMC0_AD10.MCASP2_AXR2 */
+-			AM62X_IOPAD(0x068, PIN_INPUT, 3) /* (R21) GPMC0_AD11.MCASP2_AXR3 */
+-		>;
+-	};
+-
+-	main_mmc1_pins_default: main-mmc1-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x23c, PIN_INPUT_PULLUP, 0) /* (A21) MMC1_CMD */
+-			AM62X_IOPAD(0x234, PIN_INPUT_PULLDOWN, 0) /* (B22) MMC1_CLK */
+-			AM62X_IOPAD(0x230, PIN_INPUT_PULLUP, 0) /* (A22) MMC1_DAT0 */
+-			AM62X_IOPAD(0x22c, PIN_INPUT_PULLUP, 0) /* (B21) MMC1_DAT1 */
+-			AM62X_IOPAD(0x228, PIN_INPUT_PULLUP, 0) /* (C21) MMC1_DAT2 */
+-			AM62X_IOPAD(0x224, PIN_INPUT_PULLUP, 0) /* (D22) MMC1_DAT3 */
+-			AM62X_IOPAD(0x240, PIN_INPUT_PULLUP, 0) /* (D17) MMC1_SDCD */
+-		>;
+-	};
+-
+-	main_rgmii2_pins_default: main-rgmii2-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x184, PIN_INPUT, 0) /* (AE23) RGMII2_RD0 */
+-			AM62X_IOPAD(0x188, PIN_INPUT, 0) /* (AB20) RGMII2_RD1 */
+-			AM62X_IOPAD(0x18c, PIN_INPUT, 0) /* (AC21) RGMII2_RD2 */
+-			AM62X_IOPAD(0x190, PIN_INPUT, 0) /* (AE22) RGMII2_RD3 */
+-			AM62X_IOPAD(0x180, PIN_INPUT, 0) /* (AD23) RGMII2_RXC */
+-			AM62X_IOPAD(0x17c, PIN_INPUT, 0) /* (AD22) RGMII2_RX_CTL */
+-			AM62X_IOPAD(0x16c, PIN_OUTPUT, 0) /* (Y18) RGMII2_TD0 */
+-			AM62X_IOPAD(0x170, PIN_OUTPUT, 0) /* (AA18) RGMII2_TD1 */
+-			AM62X_IOPAD(0x174, PIN_OUTPUT, 0) /* (AD21) RGMII2_TD2 */
+-			AM62X_IOPAD(0x178, PIN_OUTPUT, 0) /* (AC20) RGMII2_TD3 */
+-			AM62X_IOPAD(0x168, PIN_OUTPUT, 0) /* (AE21) RGMII2_TXC */
+-			AM62X_IOPAD(0x164, PIN_OUTPUT, 0) /* (AA19) RGMII2_TX_CTL */
+-		>;
+-	};
+-
+-	main_uart0_pins_default: main-uart0-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x1c8, PIN_INPUT, 0) /* (D14) UART0_RXD */
+-			AM62X_IOPAD(0x1cc, PIN_OUTPUT, 0) /* (E14) UART0_TXD */
+-		>;
+-	};
+-
+-	main_uart1_pins_default: main-uart1-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x194, PIN_INPUT, 2) /* (B19) MCASP0_AXR3.UART1_CTSn */
+-			AM62X_IOPAD(0x198, PIN_OUTPUT, 2) /* (A19) MCASP0_AXR2.UART1_RTSn */
+-			AM62X_IOPAD(0x1ac, PIN_INPUT, 2) /* (E19) MCASP0_AFSR.UART1_RXD */
+-			AM62X_IOPAD(0x1b0, PIN_OUTPUT, 2) /* (A20) MCASP0_ACLKR.UART1_TXD */
+-		>;
+-	};
+-
+-	main_usb1_pins_default: main-usb1-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x258, PIN_OUTPUT, 0) /* (F18) USB1_DRVVBUS */
+-		>;
+-	};
+-
+-	user_leds_pins_default: user-leds-default-pins {
+-		pinctrl-single,pins = <
+-			AM62X_IOPAD(0x084, PIN_OUTPUT, 7) /* (L23) GPMC0_ADVn_ALE.GPIO0_32 */
+-		>;
+-	};
+-};
+-
+-&cpsw3g {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_rgmii1_pins_default>, <&main_rgmii2_pins_default>;
+-};
+-
+-&cpsw_port2 {
+-	phy-mode = "rgmii-rxid";
+-	phy-handle = <&cpsw3g_phy3>;
+-};
+-
+-&cpsw3g_mdio {
+-	cpsw3g_phy3: ethernet-phy@3 {
+-		compatible = "ethernet-phy-id2000.a231", "ethernet-phy-ieee802.3-c22";
+-		reg = <3>;
+-		ti,clk-output-sel = <DP83867_CLK_O_SEL_OFF>;
+-		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+-		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+-	};
+-};
+-
+-&dss {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_dss0_pins_default>;
+-	status = "okay";
+-};
+-
+-&dss_ports {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	/* VP2: DPI/HDMI Output */
+-	port@1 {
+-		reg = <1>;
+-
+-		dpi1_out: endpoint {
+-			remote-endpoint = <&sii9022_in>;
+-		};
+-	};
+-};
+-
+-&main_i2c1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_i2c1_pins_default>;
+-	clock-frequency = <100000>;
+-	status = "okay";
+-
+-	audio_codec: audio-codec@18 {
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&audio_ext_refclk1_pins_default>;
+-
+-		#sound-dai-cells = <0>;
+-		compatible = "ti,tlv320aic3007";
+-		reg = <0x18>;
+-		ai3x-micbias-vg = <2>;
+-
+-		AVDD-supply = <&vcc_3v3_sw>;
+-		IOVDD-supply = <&vcc_3v3_sw>;
+-		DRVDD-supply = <&vcc_3v3_sw>;
+-		DVDD-supply = <&vcc_1v8>;
+-	};
+-
+-	gpio_exp: gpio-expander@21 {
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&gpio_exp_int_pins_default>;
+-		compatible = "nxp,pcf8574";
+-		reg = <0x21>;
+-		interrupt-parent = <&main_gpio1>;
+-		interrupts = <49 0>;
+-		#gpio-cells = <2>;
+-		gpio-controller;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		gpio-line-names = "", "GPIO1_CAN0_nEN",
+-				  "GPIO2_LED2", "GPIO3_LVDS_GPIO",
+-				  "GPIO4_BUT2", "GPIO5_LVDS_BKLT_EN",
+-				  "GPIO6_ETH1_USER_RESET", "GPIO7_AUDIO_USER_RESET";
+-	};
+-
+-	usb-pd@22 {
+-		compatible = "ti,tps6598x";
+-		reg = <0x22>;
+-
+-		connector {
+-			compatible = "usb-c-connector";
+-			label = "USB-C";
+-			self-powered;
+-			data-role = "dual";
+-			power-role = "sink";
+-			port {
+-				usb_con_hs: endpoint {
+-					remote-endpoint = <&typec_hs>;
+-				};
+-			};
+-		};
+-	};
+-
+-	sii9022: bridge-hdmi@39 {
+-		compatible = "sil,sii9022";
+-		reg = <0x39>;
+-
+-		interrupt-parent = <&main_gpio0>;
+-		interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&hdmi_int_pins_default>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@0 {
+-				reg = <0>;
+-
+-				sii9022_in: endpoint {
+-					remote-endpoint = <&dpi1_out>;
+-				};
+-			};
+-
+-			port@1 {
+-				reg = <1>;
+-
+-				sii9022_out: endpoint {
+-					remote-endpoint = <&hdmi_connector_in>;
+-				};
+-			};
+-		};
+-	};
+-
+-	eeprom@51 {
+-		compatible = "atmel,24c02";
+-		pagesize = <16>;
+-		reg = <0x51>;
+-	};
+-};
+-
+-&main_mcan0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_mcan0_pins_default>;
+-	phys = <&can_tc1>;
+-	status = "okay";
+-};
+-
+-&main_uart0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_uart0_pins_default>;
+-	status = "okay";
+-};
+-
+-&main_uart1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_uart1_pins_default>;
+-	/* Main UART1 may be used by TIFS firmware */
+-	status = "okay";
+-};
+-
+-&mcasp2 {
+-	#sound-dai-cells = <0>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_mcasp2_pins_default>;
+-
+-	/* MCASP_IIS_MODE */
+-	op-mode = <0>;
+-	tdm-slots = <2>;
+-
+-	/* 0: INACTIVE, 1: TX, 2: RX */
+-	serial-dir = <
+-			0 0 1 2
+-			0 0 0 0
+-			0 0 0 0
+-			0 0 0 0
+-	>;
+-	tx-num-evt = <32>;
+-	rx-num-evt = <32>;
+-	status = "okay";
+-};
+-
+-&sdhci1 {
+-	vmmc-supply = <&vcc_3v3_mmc>;
+-	vqmmc-supply = <&vddshv5_sdio>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_mmc1_pins_default>;
+-	disable-wp;
+-	no-1-8-v;
+-	status = "okay";
+-};
+-
+-&usbss0 {
+-	ti,vbus-divider;
+-	status = "okay";
+-};
+-
+-&usbss1 {
+-	ti,vbus-divider;
+-	status = "okay";
+-};
+-
+-&usb0 {
+-	usb-role-switch;
+-
+-	port {
+-		typec_hs: endpoint {
+-			remote-endpoint = <&usb_con_hs>;
+-		};
+-	};
+-};
+-
+-&usb1 {
+-	dr_mode = "host";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&main_usb1_pins_default>;
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra.dtsi
 new file mode 100644
-index 000000000000..a5aceaa39670
+index 000000000000..e4633af87eb9
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
-@@ -0,0 +1,330 @@
++++ b/arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra.dtsi
+@@ -0,0 +1,475 @@
 +// SPDX-License-Identifier: GPL-2.0-only OR MIT
 +/*
-+ * Copyright (C) 2023 - 2024 PHYTEC America LLC
-+ * Author: Garrett Giordano <ggiordano@phytec.com>
++ * Copyright (C) 2022-2024 PHYTEC Messtechnik GmbH
++ * Author: Wadim Egorov <w.egorov@phytec.de>
 + *
-+ * Product homepage:
-+ * https://www.phytec.com/product/phycore-am62a
 + */
 +
 +#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
 +#include <dt-bindings/leds/common.h>
 +#include <dt-bindings/net/ti-dp83867.h>
 +
 +/ {
-+	model = "PHYTEC phyCORE-AM62Ax";
-+	compatible = "phytec,am62a-phycore-som", "ti,am62a7";
-+
 +	aliases {
-+		ethernet0 = &cpsw_port1;
-+		gpio0 = &main_gpio0;
-+		gpio1 = &main_gpio1;
-+		i2c0 = &main_i2c0;
-+		mmc0 = &sdhci0;
-+		rtc0 = &i2c_som_rtc;
-+		spi0 = &ospi0;
++		serial2 = &main_uart0;
++		serial3 = &main_uart1;
++		mmc1 = &sdhci1;
++		usb0 = &usb0;
++		usb1 = &usb1;
++		ethernet1 = &cpsw_port2;
++	};
++
++	can_tc1: can-phy0 {
++		compatible = "ti,tcan1042";
++		#phy-cells = <0>;
++		max-bitrate = <8000000>;
++		standby-gpios = <&gpio_exp 1 GPIO_ACTIVE_HIGH>;
++	};
++
++	hdmi0: connector-hdmi {
++		compatible = "hdmi-connector";
++		label = "hdmi";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&sii9022_out>;
++			};
++		};
++	};
++
++	keys {
++		compatible = "gpio-keys";
++		autorepeat;
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_pins_default>;
++
++		key-home {
++			label = "home";
++			linux,code = <KEY_HOME>;
++			gpios = <&main_gpio1 23 GPIO_ACTIVE_HIGH>;
++		};
++
++		key-menu {
++			label = "menu";
++			linux,code = <KEY_MENU>;
++			gpios = <&gpio_exp 4 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "phyBOARD-Lyra";
++		simple-audio-card,widgets =
++			"Microphone",           "Mic Jack",
++			"Headphone",            "Headphone Jack",
++			"Speaker",              "External Speaker";
++		simple-audio-card,routing =
++			"MIC3R",                "Mic Jack",
++			"Mic Jack",             "Mic Bias",
++			"Headphone Jack",       "HPLOUT",
++			"Headphone Jack",       "HPROUT",
++			"External Speaker",     "SPOP",
++			"External Speaker",     "SPOM";
++		simple-audio-card,format = "dsp_b";
++		simple-audio-card,bitclock-master = <&sound_master>;
++		simple-audio-card,frame-master = <&sound_master>;
++		simple-audio-card,bitclock-inversion;
++
++		simple-audio-card,cpu {
++			sound-dai = <&mcasp2>;
++		};
++
++		sound_master: simple-audio-card,codec {
++				sound-dai = <&audio_codec>;
++				clocks = <&audio_refclk1>;
++		};
 +	};
 +
 +	leds {
 +		compatible = "gpio-leds";
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&leds_pins_default>;
++		pinctrl-0 = <&leds_pins_default>, <&user_leds_pins_default>;
 +
-+		led-0 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			gpios = <&main_gpio0 13 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			function = LED_FUNCTION_HEARTBEAT;
++		led-1 {
++			gpios = <&main_gpio0 32 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc0";
++		};
++
++		led-2 {
++			gpios = <&gpio_exp 2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc1";
 +		};
 +	};
 +
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* 2G RAM */
-+		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* global cma region */
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0x00 0x24000000>;
-+			alloc-ranges = <0x00 0xc0000000 0x00 0x24000000>;
-+			linux,cma-default;
-+		};
-+
-+		secure_tfa_ddr: tfa@9e780000 {
-+			reg = <0x00 0x9e780000 0x00 0x80000>;
-+			alignment = <0x1000>;
-+			no-map;
-+		};
-+
-+		secure_ddr: optee@9e800000 {
-+			reg = <0x00 0x9e800000 0x00 0x01800000>; /* for OP-TEE */
-+			alignment = <0x1000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9c900000 0x00 0x01e00000>;
-+			no-map;
-+		};
-+	};
-+
-+	vcc_5v0_som: regulator-vcc-5v0-som {
++	vcc_1v8: regulator-vcc-1v8 {
 +		compatible = "regulator-fixed";
-+		regulator-name = "VCC_5V0_SOM";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
++		regulator-name = "VCC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vcc_3v3_mmc: regulator-vcc-3v3-mmc {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3_MMC";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vcc_3v3_sw: regulator-vcc-3v3-sw {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3_SW";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
 +		regulator-always-on;
 +		regulator-boot-on;
 +	};
 +};
 +
 +&main_pmx0 {
-+	leds_pins_default: leds-default-pins {
++	audio_ext_refclk1_pins_default: audio-ext-refclk1-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x034, PIN_OUTPUT, 7) /* (K20) OSPI0_CSN2.GPIO0_13 */
++			AM62X_IOPAD(0x0a0, PIN_OUTPUT, 1) /* (K25) GPMC0_WPn.AUDIO_EXT_REFCLK1 */
 +		>;
 +	};
 +
-+	main_i2c0_pins_default: main-i2c0-default-pins {
++	gpio_keys_pins_default: gpio-keys-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x1e0, PIN_INPUT_PULLUP, 0) /* (D17) I2C0_SCL */
-+			AM62AX_IOPAD(0x1e4, PIN_INPUT_PULLUP, 0) /* (E16) I2C0_SDA */
++			AM62X_IOPAD(0x1d4, PIN_INPUT, 7) /* (B15) UART0_RTSn.GPIO1_23 */
 +		>;
 +	};
 +
-+	main_mdio1_pins_default: main-mdio1-default-pins {
++	gpio_exp_int_pins_default: gpio-exp-int-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x160, PIN_OUTPUT, 0) /* (V12) MDIO0_MDC */
-+			AM62AX_IOPAD(0x15c, PIN_INPUT, 0) /* (V13) MDIO0_MDIO */
++			AM62X_IOPAD(0x244, PIN_INPUT, 7) /* (C17) MMC1_SDWP.GPIO1_49 */
 +		>;
 +	};
 +
-+	main_mmc0_pins_default: main-mmc0-default-pins {
++	hdmi_int_pins_default: hdmi-int-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x220, PIN_INPUT_PULLUP, 0) /* (Y6) MMC0_CMD */
-+			AM62AX_IOPAD(0x218, PIN_INPUT_PULLDOWN, 0) /* (AB7) MMC0_CLK */
-+			AM62AX_IOPAD(0x214, PIN_INPUT_PULLUP, 0) /* (AA6) MMC0_DAT0 */
-+			AM62AX_IOPAD(0x210, PIN_INPUT_PULLUP, 0) /* (AB6) MMC0_DAT1 */
-+			AM62AX_IOPAD(0x20c, PIN_INPUT_PULLUP, 0) /* (Y7) MMC0_DAT2 */
-+			AM62AX_IOPAD(0x208, PIN_INPUT_PULLUP, 0) /* (AA7) MMC0_DAT3 */
-+			AM62AX_IOPAD(0x204, PIN_INPUT_PULLUP, 0) /* (Y8) MMC0_DAT4 */
-+			AM62AX_IOPAD(0x200, PIN_INPUT_PULLUP, 0) /* (W7) MMC0_DAT5 */
-+			AM62AX_IOPAD(0x1fc, PIN_INPUT_PULLUP, 0) /* (W9) MMC0_DAT6 */
-+			AM62AX_IOPAD(0x1f8, PIN_INPUT_PULLUP, 0) /* (AB8) MMC0_DAT7 */
++			AM62X_IOPAD(0x040, PIN_INPUT, 7) /* (N23) GPMC0_AD1.GPIO0_16 */
 +		>;
 +	};
 +
-+	main_rgmii1_pins_default: main-rgmii1-default-pins {
++	main_dss0_pins_default: main-dss0-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x14c, PIN_INPUT, 0) /* (AB16) RGMII1_RD0 */
-+			AM62AX_IOPAD(0x150, PIN_INPUT, 0) /* (V15) RGMII1_RD1 */
-+			AM62AX_IOPAD(0x154, PIN_INPUT, 0) /* (W15) RGMII1_RD2 */
-+			AM62AX_IOPAD(0x158, PIN_INPUT, 0) /* (V14) RGMII1_RD3 */
-+			AM62AX_IOPAD(0x148, PIN_INPUT, 0) /* (AA16) RGMII1_RXC */
-+			AM62AX_IOPAD(0x144, PIN_INPUT, 0) /* (AA15) RGMII1_RX_CTL */
-+			AM62AX_IOPAD(0x134, PIN_OUTPUT, 0) /* (Y17) RGMII1_TD0 */
-+			AM62AX_IOPAD(0x138, PIN_OUTPUT, 0) /* (V16) RGMII1_TD1 */
-+			AM62AX_IOPAD(0x13c, PIN_OUTPUT, 0) /* (Y16) RGMII1_TD2 */
-+			AM62AX_IOPAD(0x140, PIN_OUTPUT, 0) /* (AA17) RGMII1_TD3 */
-+			AM62AX_IOPAD(0x130, PIN_OUTPUT, 0) /* (AB17) RGMII1_TXC */
-+			AM62AX_IOPAD(0x12c, PIN_OUTPUT, 0) /* (W16) RGMII1_TX_CTL */
++			AM62X_IOPAD(0x0b8, PIN_OUTPUT, 0) /* (U22) VOUT0_DATA0 */
++			AM62X_IOPAD(0x0bc, PIN_OUTPUT, 0) /* (V24) VOUT0_DATA1 */
++			AM62X_IOPAD(0x0e0, PIN_OUTPUT, 0) /* (V20) VOUT0_DATA10 */
++			AM62X_IOPAD(0x0e4, PIN_OUTPUT, 0) /* (AA23) VOUT0_DATA11 */
++			AM62X_IOPAD(0x0e8, PIN_OUTPUT, 0) /* (AB25) VOUT0_DATA12 */
++			AM62X_IOPAD(0x0ec, PIN_OUTPUT, 0) /* (AA24) VOUT0_DATA13 */
++			AM62X_IOPAD(0x0f0, PIN_OUTPUT, 0) /* (Y22) VOUT0_DATA14 */
++			AM62X_IOPAD(0x0f4, PIN_OUTPUT, 0) /* (AA21) VOUT0_DATA15 */
++			AM62X_IOPAD(0x0c0, PIN_OUTPUT, 0) /* (W25) VOUT0_DATA2 */
++			AM62X_IOPAD(0x0c4, PIN_OUTPUT, 0) /* (W24) VOUT0_DATA3 */
++			AM62X_IOPAD(0x0c8, PIN_OUTPUT, 0) /* (Y25) VOUT0_DATA4 */
++			AM62X_IOPAD(0x0cc, PIN_OUTPUT, 0) /* (Y24) VOUT0_DATA5 */
++			AM62X_IOPAD(0x0d0, PIN_OUTPUT, 0) /* (Y23) VOUT0_DATA6 */
++			AM62X_IOPAD(0x0d4, PIN_OUTPUT, 0) /* (AA25) VOUT0_DATA7 */
++			AM62X_IOPAD(0x0d8, PIN_OUTPUT, 0) /* (V21) VOUT0_DATA8 */
++			AM62X_IOPAD(0x0dc, PIN_OUTPUT, 0) /* (W21) VOUT0_DATA9 */
++			AM62X_IOPAD(0x0fc, PIN_OUTPUT, 0) /* (Y20) VOUT0_DE */
++			AM62X_IOPAD(0x0f8, PIN_OUTPUT, 0) /* (AB24) VOUT0_HSYNC */
++			AM62X_IOPAD(0x104, PIN_OUTPUT, 0) /* (AC24) VOUT0_PCLK */
++			AM62X_IOPAD(0x100, PIN_OUTPUT, 0) /* (AC25) VOUT0_VSYNC */
 +		>;
 +	};
 +
-+	ospi0_pins_default: ospi0-default-pins {
++	main_i2c1_pins_default: main-i2c1-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x000, PIN_OUTPUT, 0) /* (L22) OSPI0_CLK */
-+			AM62AX_IOPAD(0x02c, PIN_OUTPUT, 0) /* (H21) OSPI0_CSn0 */
-+			AM62AX_IOPAD(0x038, PIN_OUTPUT, 0) /* (G20) OSPI0_CSn3 */
-+			AM62AX_IOPAD(0x00c, PIN_INPUT, 0) /* (J21) OSPI0_D0 */
-+			AM62AX_IOPAD(0x010, PIN_INPUT, 0) /* (J18) OSPI0_D1 */
-+			AM62AX_IOPAD(0x014, PIN_INPUT, 0) /* (J19) OSPI0_D2 */
-+			AM62AX_IOPAD(0x018, PIN_INPUT, 0) /* (H18) OSPI0_D3 */
-+			AM62AX_IOPAD(0x01c, PIN_INPUT, 0) /* (K21) OSPI0_D4 */
-+			AM62AX_IOPAD(0x020, PIN_INPUT, 0) /* (H19) OSPI0_D5 */
-+			AM62AX_IOPAD(0x024, PIN_INPUT, 0) /* (J20) OSPI0_D6 */
-+			AM62AX_IOPAD(0x028, PIN_INPUT, 0) /* (J22) OSPI0_D7 */
-+			AM62AX_IOPAD(0x008, PIN_INPUT, 0) /* (L21) OSPI0_DQS */
++			AM62X_IOPAD(0x1e8, PIN_INPUT_PULLUP, 0) /* (B17) I2C1_SCL */
++			AM62X_IOPAD(0x1ec, PIN_INPUT_PULLUP, 0) /* (A17) I2C1_SDA */
 +		>;
 +	};
 +
-+	pmic_irq_pins_default: pmic-irq-default-pins {
++	main_mcan0_pins_default: main-mcan0-default-pins {
 +		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x1f4, PIN_INPUT, 0) /* (D16) EXTINTn */
++			AM62X_IOPAD(0x1dc, PIN_INPUT, 0) /* (E15) MCAN0_RX */
++			AM62X_IOPAD(0x1d8, PIN_OUTPUT, 0) /* (C15) MCAN0_TX */
++		>;
++	};
++
++	main_mcasp2_pins_default: main-mcasp2-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x070, PIN_INPUT, 3) /* (T24) GPMC0_AD13.MCASP2_ACLKX */
++			AM62X_IOPAD(0x06c, PIN_INPUT, 3) /* (T22) GPMC0_AD12.MCASP2_AFSX */
++			AM62X_IOPAD(0x064, PIN_OUTPUT, 3) /* (T25) GPMC0_AD10.MCASP2_AXR2 */
++			AM62X_IOPAD(0x068, PIN_INPUT, 3) /* (R21) GPMC0_AD11.MCASP2_AXR3 */
++		>;
++	};
++
++	main_mmc1_pins_default: main-mmc1-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x23c, PIN_INPUT_PULLUP, 0) /* (A21) MMC1_CMD */
++			AM62X_IOPAD(0x234, PIN_INPUT_PULLDOWN, 0) /* (B22) MMC1_CLK */
++			AM62X_IOPAD(0x230, PIN_INPUT_PULLUP, 0) /* (A22) MMC1_DAT0 */
++			AM62X_IOPAD(0x22c, PIN_INPUT_PULLUP, 0) /* (B21) MMC1_DAT1 */
++			AM62X_IOPAD(0x228, PIN_INPUT_PULLUP, 0) /* (C21) MMC1_DAT2 */
++			AM62X_IOPAD(0x224, PIN_INPUT_PULLUP, 0) /* (D22) MMC1_DAT3 */
++			AM62X_IOPAD(0x240, PIN_INPUT_PULLUP, 0) /* (D17) MMC1_SDCD */
++		>;
++	};
++
++	main_rgmii2_pins_default: main-rgmii2-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x184, PIN_INPUT, 0) /* (AE23) RGMII2_RD0 */
++			AM62X_IOPAD(0x188, PIN_INPUT, 0) /* (AB20) RGMII2_RD1 */
++			AM62X_IOPAD(0x18c, PIN_INPUT, 0) /* (AC21) RGMII2_RD2 */
++			AM62X_IOPAD(0x190, PIN_INPUT, 0) /* (AE22) RGMII2_RD3 */
++			AM62X_IOPAD(0x180, PIN_INPUT, 0) /* (AD23) RGMII2_RXC */
++			AM62X_IOPAD(0x17c, PIN_INPUT, 0) /* (AD22) RGMII2_RX_CTL */
++			AM62X_IOPAD(0x16c, PIN_OUTPUT, 0) /* (Y18) RGMII2_TD0 */
++			AM62X_IOPAD(0x170, PIN_OUTPUT, 0) /* (AA18) RGMII2_TD1 */
++			AM62X_IOPAD(0x174, PIN_OUTPUT, 0) /* (AD21) RGMII2_TD2 */
++			AM62X_IOPAD(0x178, PIN_OUTPUT, 0) /* (AC20) RGMII2_TD3 */
++			AM62X_IOPAD(0x168, PIN_OUTPUT, 0) /* (AE21) RGMII2_TXC */
++			AM62X_IOPAD(0x164, PIN_OUTPUT, 0) /* (AA19) RGMII2_TX_CTL */
++		>;
++	};
++
++	main_uart0_pins_default: main-uart0-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x1c8, PIN_INPUT, 0) /* (D14) UART0_RXD */
++			AM62X_IOPAD(0x1cc, PIN_OUTPUT, 0) /* (E14) UART0_TXD */
++		>;
++	};
++
++	main_uart1_pins_default: main-uart1-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x194, PIN_INPUT, 2) /* (B19) MCASP0_AXR3.UART1_CTSn */
++			AM62X_IOPAD(0x198, PIN_OUTPUT, 2) /* (A19) MCASP0_AXR2.UART1_RTSn */
++			AM62X_IOPAD(0x1ac, PIN_INPUT, 2) /* (E19) MCASP0_AFSR.UART1_RXD */
++			AM62X_IOPAD(0x1b0, PIN_OUTPUT, 2) /* (A20) MCASP0_ACLKR.UART1_TXD */
++		>;
++	};
++
++	main_usb1_pins_default: main-usb1-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x258, PIN_OUTPUT, 0) /* (F18) USB1_DRVVBUS */
++		>;
++	};
++
++	user_leds_pins_default: user-leds-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x084, PIN_OUTPUT, 7) /* (L23) GPMC0_ADVn_ALE.GPIO0_32 */
 +		>;
 +	};
 +};
 +
 +&cpsw3g {
-+	status = "okay";
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&main_rgmii1_pins_default>;
++	pinctrl-0 = <&main_rgmii1_pins_default>, <&main_rgmii2_pins_default>;
 +};
 +
-+&cpsw_port1 {
++&cpsw_port2 {
 +	phy-mode = "rgmii-rxid";
-+	phy-handle = <&cpsw3g_phy1>;
++	phy-handle = <&cpsw3g_phy3>;
 +};
 +
 +&cpsw3g_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_mdio1_pins_default>;
-+
-+	cpsw3g_phy1: ethernet-phy@1 {
++	cpsw3g_phy3: ethernet-phy@3 {
 +		compatible = "ethernet-phy-id2000.a231", "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
++		reg = <3>;
 +		ti,clk-output-sel = <DP83867_CLK_O_SEL_OFF>;
 +		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
 +		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
 +	};
 +};
 +
-+&fss {
++&dss {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_dss0_pins_default>;
 +	status = "okay";
 +};
 +
-+&main_i2c0 {
++&dss_ports {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	/* VP2: DPI/HDMI Output */
++	port@1 {
++		reg = <1>;
++
++		dpi1_out: endpoint {
++			remote-endpoint = <&sii9022_in>;
++		};
++	};
++};
++
++&main_i2c1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&main_i2c0_pins_default>;
-+	clock-frequency = <400000>;
++	pinctrl-0 = <&main_i2c1_pins_default>;
++	clock-frequency = <100000>;
 +	status = "okay";
 +
-+	pmic@30 {
-+		compatible = "ti,tps65219";
-+		reg = <0x30>;
-+		buck1-supply = <&vcc_5v0_som>;
-+		buck2-supply = <&vcc_5v0_som>;
-+		buck3-supply = <&vcc_5v0_som>;
-+		ldo1-supply = <&vdd_3v3>;
-+		ldo2-supply = <&vdd_1v8>;
-+		ldo3-supply = <&vcc_5v0_som>;
-+		ldo4-supply = <&vcc_5v0_som>;
-+
++	audio_codec: audio-codec@18 {
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq_pins_default>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-0 = <&audio_ext_refclk1_pins_default>;
++
++		#sound-dai-cells = <0>;
++		compatible = "ti,tlv320aic3007";
++		reg = <0x18>;
++		ai3x-micbias-vg = <2>;
++
++		AVDD-supply = <&vcc_3v3_sw>;
++		IOVDD-supply = <&vcc_3v3_sw>;
++		DRVDD-supply = <&vcc_3v3_sw>;
++		DVDD-supply = <&vcc_1v8>;
++	};
++
++	gpio_exp: gpio-expander@21 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_exp_int_pins_default>;
++		compatible = "nxp,pcf8574";
++		reg = <0x21>;
++		interrupt-parent = <&main_gpio1>;
++		interrupts = <49 0>;
++		#gpio-cells = <2>;
++		gpio-controller;
 +		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		ti,power-button;
-+		system-power-controller;
++		#interrupt-cells = <2>;
++		gpio-line-names = "", "GPIO1_CAN0_nEN",
++				  "GPIO2_LED2", "GPIO3_LVDS_GPIO",
++				  "GPIO4_BUT2", "GPIO5_LVDS_BKLT_EN",
++				  "GPIO6_ETH1_USER_RESET", "GPIO7_AUDIO_USER_RESET";
++	};
 +
-+		regulators {
-+			vdd_3v3: buck1 {
-+				regulator-name = "VDD_3V3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++	usb-pd@22 {
++		compatible = "ti,tps6598x";
++		reg = <0x22>;
 +
-+			vdd_1v8: buck2 {
-+				regulator-name = "VDD_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_lpddr4: buck3 {
-+				regulator-name = "VDD_LPDDR4";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vddshv5_sdio: ldo1 {
-+				regulator-name = "VDDSHV5_SDIO";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-allow-bypass;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vddr_core: ldo2 {
-+				regulator-name = "VDDR_CORE";
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdda_1v8: ldo3 {
-+				regulator-name = "VDDA_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_2v5: ldo4 {
-+				regulator-name = "VDD_2V5";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-boot-on;
-+				regulator-always-on;
++		connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			self-powered;
++			data-role = "dual";
++			power-role = "sink";
++			port {
++				usb_con_hs: endpoint {
++					remote-endpoint = <&typec_hs>;
++				};
 +			};
 +		};
 +	};
 +
-+	eeprom@50 {
-+		compatible = "atmel,24c32";
-+		pagesize = <32>;
-+		reg = <0x50>;
++	sii9022: bridge-hdmi@39 {
++		compatible = "sil,sii9022";
++		reg = <0x39>;
++
++		interrupt-parent = <&main_gpio0>;
++		interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmi_int_pins_default>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				sii9022_in: endpoint {
++					remote-endpoint = <&dpi1_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				sii9022_out: endpoint {
++					remote-endpoint = <&hdmi_connector_in>;
++				};
++			};
++		};
 +	};
 +
-+	i2c_som_rtc: rtc@52 {
-+		compatible = "microcrystal,rv3028";
-+		reg = <0x52>;
++	eeprom@51 {
++		compatible = "atmel,24c02";
++		pagesize = <16>;
++		reg = <0x51>;
 +	};
 +};
 +
-+&main_gpio0 {
-+	status = "okay";
-+};
-+
-+&main_gpio1 {
-+	status = "okay";
-+};
-+
-+&main_gpio_intr {
-+	status = "okay";
-+};
-+
-+&ospi0 {
++&main_mcan0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&ospi0_pins_default>;
++	pinctrl-0 = <&main_mcan0_pins_default>;
++	phys = <&can_tc1>;
 +	status = "okay";
-+
-+	serial_flash: flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0x0>;
-+		spi-tx-bus-width = <8>;
-+		spi-rx-bus-width = <8>;
-+		spi-max-frequency = <25000000>;
-+		cdns,tshsl-ns = <60>;
-+		cdns,tsd2d-ns = <60>;
-+		cdns,tchsh-ns = <60>;
-+		cdns,tslch-ns = <60>;
-+		cdns,read-delay = <0>;
-+	};
 +};
 +
-+&sdhci0 {
++&main_uart0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&main_mmc0_pins_default>;
++	pinctrl-0 = <&main_uart0_pins_default>;
++	status = "okay";
++};
++
++&main_uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_uart1_pins_default>;
++	/* Main UART1 may be used by TIFS firmware */
++	status = "okay";
++};
++
++&mcasp2 {
++	#sound-dai-cells = <0>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_mcasp2_pins_default>;
++
++	/* MCASP_IIS_MODE */
++	op-mode = <0>;
++	tdm-slots = <2>;
++
++	/* 0: INACTIVE, 1: TX, 2: RX */
++	serial-dir = <
++			0 0 1 2
++			0 0 0 0
++			0 0 0 0
++			0 0 0 0
++	>;
++	tx-num-evt = <32>;
++	rx-num-evt = <32>;
++	status = "okay";
++};
++
++&sdhci1 {
++	vmmc-supply = <&vcc_3v3_mmc>;
++	vqmmc-supply = <&vddshv5_sdio>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_mmc1_pins_default>;
 +	disable-wp;
-+	non-removable;
++	no-1-8-v;
 +	status = "okay";
 +};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-new file mode 100644
-index 000000000000..3b93409b23e7
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Copyright (C) 2023 - 2024 PHYTEC America LLC
-+ * Author: Garrett Giordano <ggiordano@phytec.com>
-+ *
-+ * Product homepage:
-+ * https://www.phytec.com/product/phyboard-am62a
-+ */
 +
-+#include "k3-am62a7.dtsi"
-+#include "k3-am62a-phycore-som.dtsi"
-+#include "k3-am62x-phyboard-lyra.dtsi"
++&usbss0 {
++	ti,vbus-divider;
++	status = "okay";
++};
 +
-+/ {
-+	compatible = "phytec,am62a7-phyboard-lyra-rdk",
-+		     "phytec,am62a-phycore-som", "ti,am62a7";
-+	model = "PHYTEC phyBOARD-Lyra AM62A7";
++&usbss1 {
++	ti,vbus-divider;
++	status = "okay";
++};
++
++&usb0 {
++	usb-role-switch;
++
++	port {
++		typec_hs: endpoint {
++			remote-endpoint = <&usb_con_hs>;
++		};
++	};
++};
++
++&usb1 {
++	dr_mode = "host";
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_usb1_pins_default>;
 +};
 -- 
 2.25.1
