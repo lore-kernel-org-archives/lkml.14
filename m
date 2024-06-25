@@ -1,165 +1,139 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8381494A4;
-	Tue, 25 Jun 2024 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8701494C9;
+	Tue, 25 Jun 2024 09:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719306491; cv=none; b=k+TiUvcp9ytIJ8sPwzVxQWdvf9ju9tIyQGL4nZZuIKWgD9TmfELsZTrWNDe9BJh8uIZZfS0yE33MTrOU7qjlosHmuVadDqOhPnGRjRPZtPyEj635lEU3IS+NxY3DArOGspzJoyR5QQIOQzVIbvwLgV+ihVXOXL5IfCBztE5/G2c=
+	t=1719306540; cv=none; b=W3K1X/K1iOOdQ8qYhdOYXW8HZ+Ym76zS9EmOSMLuz1o2Mc+dMEyMDOQMVH1g9V0SU/V5QBGNwI+klryg1UGJVv1DK0L7+mWubpXaTZxLw2tgaN1pMuKBp50vU8Jqr20ayC5dJJV3RTgcTPCqlqveMR+YzpXGYlqD62663Xlnk6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719306491; c=relaxed/simple;
-	bh=SEWBQUoZ7P8jkFskPK7Gv4C8r4RGvfOAgyM1UkPx54g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UNWsMrQIm5qp2GhhH2iOocwouKj9Y689mM9GXwr2XkIXSC80BwBr6zUd6gX1ZFwSvaWuOvy2/aDPoRMqtD/YS1AJQxpdfgRP6elAijRbCxSMDR85I/aqj12WbUzCdNWgRU/FWPd0PBalzLMLh+CIctmerlJ//nqBfNJ0Mb9z5Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CWfaSLo1; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719306540; c=relaxed/simple;
+	bh=J1CQ04JXkTjDdKV5EQmr1jYFf3jCx7BovP2+gRZXa+s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=vDy3u2oYnc5EVOvEq3w8uqcoT6EnEeOhSPb9wtJjiDrNByv73IKdevYHJ9JvwvJmwbOoDIsMsl2QSPpZ+rAQXGw/5Kg9GMNReRcskjVUDHeatS63MCdqQPQw4a8mveUSMI21bXfl3kA/DYof11qzl4F8HbcDYR9ihX5gnHaDXXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G51EA6FE; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWfaSLo1"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-80f551808e0so1391055241.1;
-        Tue, 25 Jun 2024 02:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719306488; x=1719911288; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0vB6dv/uw7lUtFFyv1iClQz2bRsrGe4g7MjZsks8EP0=;
-        b=CWfaSLo19GjERcSCA49sRECTfGd7bG9/Wqkgj/RrbyLN+LWAy2OEuIoIBfqTn09iCh
-         TnsfgAvP4QOiP6qgoGk/OO8Ak0j0xKpLT8gQisCHHAqfMpl0/WDmWcOcgtVU7xfac7k/
-         hT9bajVG5r9ZWTXNCPFAq7KotcsrdpeAgRSbYx6Qc8XbHoga+ys61j97EIAqXqwPHHBQ
-         +Rbl4frhzXssfFkvqaMmEKtZq+eW3C1bW2fQp2CtfS8aEO69Do8oJcn/+Wes9895WZhk
-         JDs6rDrPcKj243I9q+IKRMen4pJKLUYCVCM6ql/0UR231HFKcqVewWdQ7pnOZwDc5ovn
-         uLhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719306488; x=1719911288;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0vB6dv/uw7lUtFFyv1iClQz2bRsrGe4g7MjZsks8EP0=;
-        b=EZ4scuOd/IZPDXwuBj2qZiqs+k7Wce9W33Ev9/4hnEp429fpQPEQr0tJW2gUrUGYE0
-         DfCQd2vwRj6KeOAkywGduDt+zg5PZIWcCHuxDumLXMtCnpVxNiZ7FkxG+QQHWcKkLf5V
-         kanZEYWvltv/G2ucWZcLUW7OTj6MkjmpExaA3BRvrTkZQKwYqnRgQLgEfcb4LeSCtNZn
-         tejK8vPTFQVcWXp9iOfMfqQtsuDh8GDqkU7z9jWcws7Z8DXYxbioZ3+bi1rEelnOlO0j
-         vJUo+b0TZKoWDssN42kPNeh+XFGmsHbeOGavuKu8bX/A57EYW2dXVJifvcth9QE+k1Aj
-         zZ5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWEt4K6yqBXqid6UFfr+thIzktPqJk24/pS4INTosgC/2NrEGCJVnT5SVtw8oIpr+8GxvDTNi5ZmlMxnp36Wc6thhjbsqHtHpED9K+rbSEjMgZwTlTFseetGw4/8Z2Vv809PuwV+xt7n/Ju9mdFSu9Qiicv0FcbzHwGtSkMSy1EJLsa17dZzwL6QkBq3bs0C64ly1KLlRHPvaeTlViLFHDcSulpWgXi
-X-Gm-Message-State: AOJu0YzZcHQ75dhDW31Mu73J+MkyKCWqXrJnC/vTAtGwz508rdEjgTGy
-	Xp+BYW3vyGro3ADHkhqK2uKk/bZtw2bKUV8mkDrjQUW6c9KjvyrQ+gWZHtY0iPLNFn1Fgwwy0zh
-	p4mQYHb38zhmt4AqyBO+AuFR5Rzo=
-X-Google-Smtp-Source: AGHT+IEPkvu7Ma8dMRJoojx4z4jjbeIyB9PnWNm5uMVryrc0YvBpEpJ9eNGjDXhSynwmmXdXhSgkvNiJZIzG1Vd4uyQ=
-X-Received: by 2002:a05:6122:7ce:b0:4ef:5db8:fe15 with SMTP id
- 71dfb90a1353d-4ef6d829d18mr5835586e0c.9.1719306488344; Tue, 25 Jun 2024
- 02:08:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G51EA6FE"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P8uqHC029970;
+	Tue, 25 Jun 2024 09:08:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	p5H2MXzLdwRZQhyQI5zvK4voD55ZA3DbPa6NdRqopAE=; b=G51EA6FEYWSrIAs1
+	4mDrBjh88TNzxhZvFYWRKU+tIc58LRbfnR/7TQsZuQosp4d7mvNMZv1kZ77NfqS0
+	XR2yf/2DAauWnh1k5Pi1K30NhwnQAhFkbrxqiT/OJTOeEhJm0fkK6aUv7HVzlrz1
+	erc7obLkqpChOS8i+CjEdHZ2webrxrIwAI9BwrrR3cIC2ytyXJZtVCg8p4eN9lF3
+	Sae37u80fLK0Z7+QZq6ATEgV+KCfBeG+mX4TXeCkXQG7YAu+xZPie0i8S5kz6tsm
+	be9QfpbQkAxGuZhsa+rFBjNB+3bo+Ecuqf16/D2gXRbErQ5mdPu+kUKYxzkNf6I5
+	O8b7Pg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyqg8rk0m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:08:57 +0000 (GMT)
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45P98uEg018166;
+	Tue, 25 Jun 2024 09:08:56 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyqg8rk0g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:08:56 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45P6kf3P008196;
+	Tue, 25 Jun 2024 09:08:55 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9b0nqeh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:08:55 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45P98nZ953477862
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Jun 2024 09:08:51 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F11D2004B;
+	Tue, 25 Jun 2024 09:08:49 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6241620043;
+	Tue, 25 Jun 2024 09:08:49 +0000 (GMT)
+Received: from [9.152.224.141] (unknown [9.152.224.141])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 25 Jun 2024 09:08:49 +0000 (GMT)
+Message-ID: <6a4b95aa-f3d1-4da1-9017-976420af988b@linux.ibm.com>
+Date: Tue, 25 Jun 2024 11:08:49 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/netiucv: handle memory allocation failure in
+ conn_action_start()
+Content-Language: en-US
+To: Yunseong Kim <yskelg@gmail.com>, Markus Elfring <Markus.Elfring@web.de>,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        =?UTF-8?Q?Christian_Borntr=C3=A4ger?= <borntraeger@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, MichelleJin <shjy180909@gmail.com>
+References: <20240623131154.36458-2-yskelg@gmail.com>
+ <bb03a384-b2c4-438f-b36b-a4af33a95b60@web.de>
+ <880a70f0-89d6-4094-8a71-a9c331bab1ee@gmail.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <880a70f0-89d6-4094-8a71-a9c331bab1ee@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 4q3LhkXKYnOblU2uwBXfY9zww4XqU8o6
+X-Proofpoint-GUID: 5g2k-TDirpq0BMpEIfJ6bDX8LPhDlNic
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624153229.68882-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240624153229.68882-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdU0r+B_Jmh7E6sopRbfzzX7DtZKpY=Xte2vLDC-ORwdVA@mail.gmail.com>
- <CA+V-a8uhb1Visg9jUV-Te3ZHkfdRonM08s823RYa6k=KAHYgQw@mail.gmail.com> <CAMuHMdUkcJFv3JRUSpgEd4_zTd9dxD9e96JjxSco4tNU-rv6wA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUkcJFv3JRUSpgEd4_zTd9dxD9e96JjxSco4tNU-rv6wA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 25 Jun 2024 10:07:13 +0100
-Message-ID: <CA+V-a8vZyU+hpeaxWLUbZ5VA0K4S0wZV+XA8vhsebkSHDuzyZw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: mmc: renesas,sdhi: Document RZ/V2H(P) support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_04,2024-06-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ adultscore=0 malwarescore=0 lowpriorityscore=0 priorityscore=1501
+ bulkscore=0 clxscore=1015 phishscore=0 mlxlogscore=809 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250064
 
-Hi Geert,
 
-On Tue, Jun 25, 2024 at 10:02=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Jun 25, 2024 at 10:47=E2=80=AFAM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Tue, Jun 25, 2024 at 7:57=E2=80=AFAM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Mon, Jun 24, 2024 at 5:33=E2=80=AFPM Prabhakar <prabhakar.csengg@g=
-mail.com> wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > The SD/MMC block on the RZ/V2H(P) ("R9A09G057") SoC is similar to t=
-hat
-> > > > of the R-Car Gen3, but it has some differences:
-> > > > - HS400 is not supported.
-> > > > - It supports the SD_IOVS bit to control the IO voltage level.
-> > > > - It supports fixed address mode.
-> > > >
-> > > > To accommodate these differences, a SoC-specific 'renesas,sdhi-r9a0=
-9g057'
-> > > > compatible string is added.
-> > > >
-> > > > A 'vqmmc-regulator' object is introduced to handle the power enable=
- (PWEN)
-> > > > and voltage level switching for the SD/MMC.
-> > > >
-> > > > Additionally, the 'renesas,sdhi-use-internal-regulator' flag is int=
-roduced
-> > > > to indicate that an internal regulator is used instead of a
-> > > > GPIO-controlled regulator. This flag will help configure the intern=
-al
-> > > > regulator and avoid special handling when GPIO is used for voltage
-> > > > regulation instead of the SD_(IOVS/PWEN) pins.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > > v2->v3
-> > > > - Renamed vqmmc-r9a09g057-regulator object to vqmmc-regulator
-> > > > - Added regulator-compatible property for vqmmc-regulator
-> > > > - Added 'renesas,sdhi-use-internal-regulator' property
-> > >
-> > > Thanks for the update!
-> > >
-> > > > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > @@ -204,6 +207,31 @@ allOf:
-> > > >          sectioned off to be run by a separate second clock source =
-to allow
-> > > >          the main core clock to be turned off to save power.
-> > > >
-> > > > +  - if:
-> > > > +      properties:
-> > > > +        compatible:
-> > > > +          contains:
-> > > > +            const: renesas,sdhi-r9a09g057
-> > > > +    then:
-> > > > +      properties:
-> > > > +        renesas,sdhi-use-internal-regulator:
-> > > > +          $ref: /schemas/types.yaml#/definitions/flag
-> > > > +          description:
-> > > > +            Flag to indicate internal regulator is being used inst=
-ead of GPIO regulator.
-> > >
-> > > Do you really need this?
-> > For cases where the status is okay for the regulator but still the
-> > user has phandle for the GPIO regulator or shall I drop this case?
->
-> I think that case can be ignored.
-> The regulator subnode would be disabled by default in the .dtsi, right?
->
-Yes, agreed.
 
-> > > The status of the regulator subnode already indicates this.
-> > You mean to use of_device_is_available() ?
->
-> Exactly. I.e. only register the regulator when it is enabled.
->
-Okay I'll use of_device_is_available() and drop the
-'renesas,sdhi-use-internal-regulator' property.
+On 24.06.24 20:00, Yunseong Kim wrote:
+>> 5. Under which circumstances will development interests grow for increasing
+>>    the application of scope-based resource management?
+>>    https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup.h#L8
+> I am considering the environment in which the micro Virtual Machine
+> operates and testing the s390 architecture with QEMU on my Mac M2 PC.
+> I have been reviewing the code under the assumption of using a lot of
+> memory and having many micro Virtual Machines loaded simultaneously.
+> 
+>> Regards,
+>> Markus
+> I really appreciate code review Markus!
+> 
+> 
+> Best regards,
+> 
+> Yunseong Kim
 
-Cheers,
-Prabhakar
+(answering the V1 thread first. Content related comments will follow in V2 thread)
+
+s390/netiucv is more or less in maintenance mode and we are not aware of any users.
+The enterprise distros do not provide this module. Other iucv modules are more popular.
+But afaiu we cannot remove the source code, unless we can prove that nobody is using it.
+(Community advice is welcome).
+
+Yunseong, I'd be interested in why you are running this module with QEMU on your
+Mac PC?
+
+Alexandra
+
+BTW, your full name is shown in this reply, but not when you send
+the patches. See:
+https://lore.kernel.org/lkml/?q=s390%2Fnetiucv%3A+handle+memory+allocation+failure+in+conn_action_start%28%29
+You may want to check your settings.
