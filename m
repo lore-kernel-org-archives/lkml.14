@@ -1,106 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580A017D351
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8717625C;
+	Tue, 25 Jun 2024 15:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719328133; cv=none; b=UTMrtuWHsguw5jRjOpLKmYKEpERY/HyhCorRTR9FDEboOVD/vyt0eqEYlwS3r+ed7epGxeFa7LKJoReGAHTh66U/fO1ocr2eOL5gXLeLKDLGnotzNPwlv9tR/5sioq1RHR5GuDwrLi9dqqODw3LYvTFwqXImZYBzpyNtNTtnW8Y=
+	t=1719328139; cv=none; b=HRgYETYiiJScRAVcnCqDxT1KbItM6MiQDUBGoWAMNv++Oja19qsOCG1dZPUN8AyT7c90pqRYhc0i3RXEIKDIA9KoO5zgIpr6EEmkwQkBIrlbUeZ90DDWgN0T6O9alFB0hbhqxZI/hsGdxWsBtfE5YYEzAJmCHzAe063c3+HhupI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719328133; c=relaxed/simple;
-	bh=lGaxAjZvEV3dbJpHuohnFiYBEAdTg+tQEwP6KE/nRz4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tBL9h1tWzcneFy/BFWJXOCPy7eKR41K4kjXwi3BvKylPojnDhztqgVCeDZTWIBYjqPf7DqHt6WVyfWdvdXrDE7FpMS7DKbrVN4dIgXmW7cDfsFkcv4Cg971clT2JaVIAxARVcG95S8UfdUJ2VMnN97/JxUNDsTrTMhU13CpGRPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7dUx6U5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719328139; c=relaxed/simple;
+	bh=4BM+dW7bN2QAVhvQz8b/NJBQ+zu2K+L+6llL+5996MI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kyNOrOgV9FQzsRWrlLIbb7eN3fO3T7YbrlUHr3p/0tioSirVHxn6hWfYC1NJx1z0qwSqQcIlp9gtRAyCVjxB7wA2Wdrb1b9xApJsnGKWw+xMTWCCOICxwUyGPAXE4ROkXDzkx6j8+wyhwHUER+BZkiVckqYogNH1eosGq1se3rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VC0V27hb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7dUx6U5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEA1C32781
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:08:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VC0V27hb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1EEEC32782;
+	Tue, 25 Jun 2024 15:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719328132;
-	bh=lGaxAjZvEV3dbJpHuohnFiYBEAdTg+tQEwP6KE/nRz4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F7dUx6U5RiCv+jKViL89PQ7cmmz6kAiMNHhMlUh2ukjhami4a6lUMzECHTBgLNhVd
-	 dnA1Lhm7rjqHlt2cBChtFvHk4HfCuq4BU32S5li9ZL45F2kBp9zRFvjK05AnzSJDBd
-	 peauFnkYqBwDiCLNIc2SekA6AhSFHyA5YxvEh61Ikn49vgFmV2tvefEZTWo8JPBc4L
-	 hClbDu45aEQ2X3GjloqauJTem8cDTU0+J5e6lwuVXeDxGYHtiWku2soIWU0C65DY5o
-	 Wf4JFegUyuNvrF+CiygWMjFL0VNZBkUDVQRnAxW++QwNMHGT4dFjMGNLmxWvQ3lvvu
-	 xfzlif3CXDRCw==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so69457091fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:08:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/Vil4oK/LvmvRL4GVGJoKhDUOGX3V4Sc8rH4IOtniSxV8jGzF4XIhHfHjONkq7gvBz3peQjaspnQqSDjMOmS7/T7oGb3Kdtu8jv/h
-X-Gm-Message-State: AOJu0YxATLCuBc4NmQpHF5ju2ZNzRjPQwb1IxFfRJS7Bxx+FqlBYBPtL
-	m6XA1m1JFKb2eb7ZtMMhLXASS3VvGprE8BElP/GZa/ysDMxkyLdlCock8r0FkSMg3AyzIs6NUNb
-	0f6FwRxv2Nyxz4Q2xHqr0tqa3Vbs=
-X-Google-Smtp-Source: AGHT+IEGwkPRDCr4Py07NmScdo/sz6GLj+KG6FN0NXQ+1o93IVB5nvNWLoSqaQv/30Y1zZy8jKTil5/de5ay/uqGIUE=
-X-Received: by 2002:a2e:2e1a:0:b0:2ec:5357:b63a with SMTP id
- 38308e7fff4ca-2ec5b2f0343mr43601571fa.35.1719328131552; Tue, 25 Jun 2024
- 08:08:51 -0700 (PDT)
+	s=k20201202; t=1719328139;
+	bh=4BM+dW7bN2QAVhvQz8b/NJBQ+zu2K+L+6llL+5996MI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VC0V27hba5xYtjw4FGzUNmoTcOR0ttg+ERozLjBI07fWZmH/j/lTelZCLvk0+8fo1
+	 wjLAoYyQwuXSqy5cfA90p8Wa6qGXT8Wj0TiHd1ToweuOB5FF6dmuvLij3BoTSk0UQj
+	 ERLGQZ9a5LFLj5xScESFzRn/NT4aSXxm6UQ7he/lGwcTm0ZLlVgpT4yPD1cWxoH9ij
+	 FeggCmJMMK0bfszESJvsD5VzBxo72sJaFZmfqzJfiJM8y4qMznAJq2RS7WvHynAdwu
+	 nbheXs6kl/W7fv4RxVigVVLosdIlFvBCIMSEzMBpzNFbn3hgpkQRJ5b2W6K+z6pLcS
+	 mKlBK9rS1wAdw==
+Date: Tue, 25 Jun 2024 08:08:57 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexandra Winter <wintera@linux.ibm.com>
+Cc: Yunseong Kim <yskelg@gmail.com>, Markus Elfring <Markus.Elfring@web.de>,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian =?UTF-8?B?Qm9ybnRyw6RnZXI=?=
+ <borntraeger@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Sven
+ Schnelle <svens@linux.ibm.com>, Thorsten Winkler <twinkler@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>,
+ MichelleJin <shjy180909@gmail.com>
+Subject: Re: [PATCH] s390/netiucv: handle memory allocation failure in
+ conn_action_start()
+Message-ID: <20240625080857.46653437@kernel.org>
+In-Reply-To: <6a4b95aa-f3d1-4da1-9017-976420af988b@linux.ibm.com>
+References: <20240623131154.36458-2-yskelg@gmail.com>
+	<bb03a384-b2c4-438f-b36b-a4af33a95b60@web.de>
+	<880a70f0-89d6-4094-8a71-a9c331bab1ee@gmail.com>
+	<6a4b95aa-f3d1-4da1-9017-976420af988b@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620-jag-fix_gdb_py_symlinks-v1-1-36a0f0217fbf@samsung.com>
- <CGME20240620215200eucas1p1ec09426a22ba26b3ce5ee0a949ad3c9f@eucas1p1.samsung.com>
- <CAD=FV=U3=d91J+Jw50=xKexhyKYjUQQ_WXQ_UdOTZeou4_=n3A@mail.gmail.com> <20240621101824.bzuupiqctfoeyqfh@joelS2.panther.com>
-In-Reply-To: <20240621101824.bzuupiqctfoeyqfh@joelS2.panther.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 26 Jun 2024 00:08:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQi2DSddEOk8v0wQQYsNC0DVXq5H_KUWrpWoH3Vgsfv3Q@mail.gmail.com>
-Message-ID: <CAK7LNAQi2DSddEOk8v0wQQYsNC0DVXq5H_KUWrpWoH3Vgsfv3Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: scripts/gdb: bring the "abspath" back
-To: Joel Granados <j.granados@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Kieran Bingham <kbingham@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 24, 2024 at 3:20=E2=80=AFPM Joel Granados <j.granados@samsung.c=
-om> wrote:
->
-> On Thu, Jun 20, 2024 at 02:51:41PM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Jun 20, 2024 at 12:48=E2=80=AFPM Joel Granados via B4 Relay
-> > <devnull+j.granados.samsung.com@kernel.org> wrote:
-> > >
-> > > From: Joel Granados <j.granados@samsung.com>
-> > >
-> > > Use the "abspath" call when symlinking the gdb python scripts in
-> > > scripts/gdb/linux. This call is needed to avoid broken links when
-> > > running the scripts_gdb target on a different build directory
-> > > (O=3Dbuilddir).
+On Tue, 25 Jun 2024 11:08:49 +0200 Alexandra Winter wrote:
+> s390/netiucv is more or less in maintenance mode and we are not aware of any users.
+> The enterprise distros do not provide this module. Other iucv modules are more popular.
+> But afaiu we cannot remove the source code, unless we can prove that nobody is using it.
+> (Community advice is welcome).
 
-For preciseness, please rephrase it to something like this:
-
- running the scripts_gdb target on a build directory located
- directly under the source tree (e.g., O=3Dbuilddir).
-
-
-
-
-
-
-O=3Dfoo/builddir does not cause this issue because
-$(src) is already an absolute path.
-
-This issue occurs only when the output directory is
-a direct subdirectory of the source tree, in other words,
-srctree is '..'
-
-
-See this line:
-
-https://github.com/torvalds/linux/blob/v6.10-rc5/Makefile#L254
-
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+If you have strong reason to believe this driver is unused, and can't
+find any proof otherwise - let's remove it. We can always "revert it
+back in", if needed. We have done it in the past.
