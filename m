@@ -1,126 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B3517107C;
-	Tue, 25 Jun 2024 15:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BA7171668;
+	Tue, 25 Jun 2024 15:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327849; cv=none; b=qWtBu3/K2qcTWXd0NMkLetjJ/RrpBOKxMerXlnimBh/22yzYr873bP5ksQzME3TK1JjHfYX0rGNe4jHlqvQxegIXaUoakD35z+gDCAWMqOJT4zo2eglh8XLs2e7GC61ynVqjKJHzsnrJm800uV2m0Hu3n0nZW/WIhN9s0Iwx94Y=
+	t=1719327853; cv=none; b=VO/n4UG6X7I64IbaLd0Zba9ykmkaoBpbx1Q8E372+kk0QHkDHG1xWtCjDA/Q+ve65VU/mP+G/cSBdxLJTP5C48+El9IEY7JRSwHyN71D7Wzpo4gVuVl0sDkTDr7k+Sdkf2OC4wsEKYuQPRMmwhAlOfKHemUj0o48wzw/UA+vVIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327849; c=relaxed/simple;
-	bh=b9Gx7QUiEPIAdR9RNFo057BasR3/TeEIE9B40jmDJ/c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HQ/bLY6t7JywL8YVu+AETVCQeaO7vusqiCcikTgVJI3ejVxd4SlK7o4v4G5HKx6V4rRBrwuLkGrVvwO1QIrSmBFdnjtjcqGF3anNhuhu0pUI38EuKYhW5dbNQ4cfoCW20Hb4oXViK/55WGsBphlXOAHndhAo0ZbgjeFGVeFYeX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tavxR+nK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719327853; c=relaxed/simple;
+	bh=JCvd4rZMOaaN102kR77kI64aSz22B2UiXs5usMz1fmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpKzEXBDKlHGSBlHalmXbcJZBT1uvbMmfncchHT49CCJriKup+iu0BmvZ+RQirZqphSJ2nn+SIwiSZSehrUctdxZ5P+ldJ2DOnGLGFGoOlj8DdN7BKTrpMeq//ZQeel8HaDWhr8+4WTavofRxgvXtZAu2GLpVogiHtsR5hB8FkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EC7JKyaV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tavxR+nK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1362BC32781;
-	Tue, 25 Jun 2024 15:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719327849;
-	bh=b9Gx7QUiEPIAdR9RNFo057BasR3/TeEIE9B40jmDJ/c=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tavxR+nKLIiH02ssJeoEROBXmOsCstTILDhWkKXxGu60OsgiMLuDIKVo0pL6GtCmE
-	 igPSP6RIQSQWfikzRMGnE1Kg/67CHxNork4mRYKI3D96sfMbYWvsSFQl3IOmRa/Sf4
-	 mRBbETLNbBhApzSodjPWF64W2dhM+zeIMkgpyuJ/OGB/QVYcC8rdr+Gm2ZH2a9dTQO
-	 +ie8cUyHrEBDEw9rUgJ52SuTROV/Atv37rarClR6qcQhAf0oPjoMDxiJZAhnY63WRF
-	 10koRgwnGojMJHrP7lJKHTgsKkLjfX59wpBQd7C+FiFvMud/7otZgv4IbZEzQvVpJG
-	 zIHRIuySEFbYA==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 25 Jun 2024 15:57:57 +0100
-Subject: [PATCH v9 29/39] selftests/clone3: Enable arm64 shadow stack
- testing
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EC7JKyaV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECECC32781;
+	Tue, 25 Jun 2024 15:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719327852;
+	bh=JCvd4rZMOaaN102kR77kI64aSz22B2UiXs5usMz1fmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EC7JKyaV6zPO+6SOr+lxepS4w7pdtnBhuh4K7zl3YEa3Ni+Tbyu5JPN8BWCvf0CGg
+	 lCFDESG71WlabGvggULEKmMZl0tjSRejyMg0WquPCyn+BfwMGYggClqLLE0D4gqTTJ
+	 tyzMDr8xxE8DU8vH6R/PWy/HToCQTFhmN94XIHZI=
+Date: Tue, 25 Jun 2024 17:04:10 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Guenter Roeck <linux@roeck-us.net>, chuck.lever@oracle.com
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 5.10 000/770] 5.10.220-rc1 review
+Message-ID: <2024062543-magnifier-licking-ab9e@gregkh>
+References: <20240618123407.280171066@linuxfoundation.org>
+ <e8c38e1c-1f9a-47e2-bdf5-55a5c6a4d4ec@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240625-arm64-gcs-v9-29-0f634469b8f0@kernel.org>
-References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
- Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
- Shuah Khan <shuah@kernel.org>, 
- "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
- Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
-Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
- Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
- Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1471; i=broonie@kernel.org;
- h=from:subject:message-id; bh=b9Gx7QUiEPIAdR9RNFo057BasR3/TeEIE9B40jmDJ/c=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmetuJPYum8zU2drU0QkG0Oevd9R7hfLQlztVXJmOP
- AMNcKOSJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbiQAKCRAk1otyXVSH0BxTB/
- 9RAJG8vNMCnKeW0ZaJ2eAuj74/NV9s5bUsk5CVhSS9OmMa/aJ+gGWY94HaF0LO0M1jlnry4Je6LXUz
- N04y86o4L+9c3XkvE+GTl1jJ/1Gkna5RVE2LXbIbT8mRZiwGQSJdDveYSoa2Bj37DHov5V1RP25uMZ
- wGWAuPensfQp/ZFhSyZUpW4mSTgmdApUyOm6005OB6HsSqlcTKdRwjD6o7DEhh+iNAcTBm4+UR8ROm
- 936rXsxL2yXXYX24fQXH0f8hiOJNgnDfmeHYMdbPZxh/xgFapx45UVH2J4t9am/rGr4blvsGhgPbUV
- BEAqQPu/bmkwHrSC+EwrYkGwBWaNjY
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8c38e1c-1f9a-47e2-bdf5-55a5c6a4d4ec@roeck-us.net>
 
-In order to test shadow stack support in clone3() the clone3() selftests
-need to have a fully inline clone3() call, provide one for arm64.
+On Tue, Jun 25, 2024 at 07:48:00AM -0700, Guenter Roeck wrote:
+> On 6/18/24 05:27, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.10.220 release.
+> > There are 770 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 20 Jun 2024 12:32:00 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> [ ... ]
+> > Chuck Lever <chuck.lever@oracle.com>
+> >      SUNRPC: Prepare for xdr_stream-style decoding on the server-side
+> > 
+> The ChromeOS patches robot reports a number of fixes for the patches
+> applied in 5.5.220. This is one example, later fixed with commit
+> 90bfc37b5ab9 ("SUNRPC: Fix svcxdr_init_decode's end-of-buffer
+> calculation"), but there are more. Are those fixes going to be
+> applied in a subsequent release of v5.10.y, was there a reason to
+> not include them, or did they get lost ?
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/clone3/clone3_selftests.h | 26 +++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+I saw this as well, but when I tried to apply a few, they didn't, so I
+was guessing that Chuck had merged them together into the series.
 
-diff --git a/tools/testing/selftests/clone3/clone3_selftests.h b/tools/testing/selftests/clone3/clone3_selftests.h
-index 38d82934668a..e32915085333 100644
---- a/tools/testing/selftests/clone3/clone3_selftests.h
-+++ b/tools/testing/selftests/clone3/clone3_selftests.h
-@@ -69,6 +69,32 @@ static pid_t __always_inline sys_clone3(struct __clone_args *args, size_t size)
- 
- 	return ret;
- }
-+#elif defined(__aarch64__)
-+static pid_t __always_inline sys_clone3(struct __clone_args *args, size_t size)
-+{
-+	register long _num  __asm__ ("x8") = __NR_clone3;
-+	register long _args __asm__ ("x0") = (long)(args);
-+	register long _size __asm__ ("x1") = (long)(size);
-+	register long arg2 __asm__ ("x2") = 0;
-+	register long arg3 __asm__ ("x3") = 0;
-+	register long arg4 __asm__ ("x4") = 0;
-+
-+	__asm__ volatile (
-+		"svc #0\n"
-+		: "=r"(_args)
-+		: "r"(_args), "r"(_size),
-+		  "r"(_num), "r"(arg2),
-+		  "r"(arg3), "r"(arg4)
-+		: "memory", "cc"
-+	);
-+
-+	if ((int)_args < 0) {
-+		errno = -((int)_args);
-+		return -1;
-+	}
-+
-+	return _args;
-+}
- #else
- static pid_t sys_clone3(struct __clone_args *args, size_t size)
- {
+I'll defer to Chuck on this, this release was all his :)
 
--- 
-2.39.2
+thanks,
 
+greg k-h
