@@ -1,130 +1,76 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08981494D1
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7306148838
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719307422; cv=none; b=JXaSTE47A7/kn5oPojU+4JDxERlzJ88pfKPSL76q5zepz4Vt1i4Z8G86mlEhZ8moblrU9cGHl0VIpDokEFVJNVgafFoLoIr6SMIf8vsdv/osgByKQTEkOMbgnVScLx7rtxCMjd7R1+MjEc1ukAMZFvchJddQn0kPc4LsC96S8NE=
+	t=1719307508; cv=none; b=Sl0ITVPix/H1FAaJZ/1NOGvAPflQxQKQzQp/M6D2+183sbdnI2rsFdNLoPw356CCnjKr7sKOo4dkPWbpxsAbFs/H7ja0pQ/5iWlUk7L1PJ74MVzLUrB2v7dOxlsPTWSLKVzy/GpDUaROfTl5RNZoYSH+dEYhMEdUApNI3tyNVsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719307422; c=relaxed/simple;
-	bh=rOUdR4UXlPv0HMOIols1rL3X/KRjDi1uSyCL6yzW3zY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oU+u0ChYGbrVQgOA1NTXAOIjpEeeZeQQVGdi+nCUTfhcYK7pHSTAFyHRjQBoOkOVaZnHW9YgG1VwUFHpTAFCDhpWpnxXrYHu11nz+eUYrovK37/w2faFkRGQ3bJME0kabcC8Ux87eWohIrl4FJv9i6UNPnJN+fnkW6a5D/+PAds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V41gf9nu; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V41gf9nu"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3d5288e6513so2735348b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 02:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719307420; x=1719912220; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uVGzFd5q8l7ZZf1kAdLFB+K/N7ZL5du4NsuCLhAw664=;
-        b=V41gf9nugabNO+AK/QGfHKZ6xhPj+Y0p2xXMAZgj52sM92QHcMwoJg8cfJtzffZYNm
-         vhuqeTUKT2Jfuq+KGcx5ie4jdsF8WyYID4t2hIaNSzh3R7YvmXMBW9efwx39z+uWkZPZ
-         Rjw/welp8xSz34CKQWnGJygi4mGCbwrezXupNQgRU98UmnFA9cFTOeecKDYD7+ksvlDG
-         Xovi5GEHo3keUuLbfnsuHX6D+lUq7MNam1vICile/RODSD/GAtAErV8pMO3+BjvXt9Fw
-         JYoUMqQiYAtLGccrkXpOoyzvJlmbxYlQjARvPbygglEW4W/KufzjaJumpuNkP5Mnw3ZD
-         xrAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719307420; x=1719912220;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uVGzFd5q8l7ZZf1kAdLFB+K/N7ZL5du4NsuCLhAw664=;
-        b=d8mbO4wAlmF7f7A+gk/725zeOsF9JT2MvFX/KSFWQgcDBjpUnvUM9dkCarTJ5gik6B
-         skSdwkWNk2IPGId+xe93CpG7OXSjn7ybFNwQqyJY2CgQ9OD4PUFzukbfuTvKD4sMO9AQ
-         AVGd5MKgHpnokbxWBaRW6bHW6dLk1hLUjGHZ835vtovKiG4vmwWm2izl6fQgOkb/bBgE
-         LNKW5IqfK1jFGva1lkB/EaS0jAfnKZ8iwtbXEptkg/BaMbJ0/PWUjWpFkimpZK/59t8q
-         dvrWMlP/8Piib07ZA52o3mKjqmF8E55KGRwMRX72MeEGB8rEG8ykLtw6dyqVMluxVxGz
-         2srQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5evjV/3asEnOkWMHCTO1gAT6a2aSUbl4B19daOHRsT0MCzsZ4uri47If3F2p85KyiPi11XmdUYcLfyrtSpwqOUGMF5CVcgBcQaTmY
-X-Gm-Message-State: AOJu0YxybhzGrSbyHNehRtu1f9O8BbmQlFU0hQIj6voXZHrt0NBPlZD9
-	7m0yrmDk8IbeLoIOR98M/OICFMGbN3Z61JitzlQwQEqGRGZqTcbjfS4c2ChGlQ==
-X-Google-Smtp-Source: AGHT+IF/TD8QJ6PBiGj+PIp+ZPQnfxQrPZRAsnw7JmWE9Cx2usjPK36heD0+jTYNL7QGRrft9W9G1Q==
-X-Received: by 2002:a05:6808:17a2:b0:3d2:3e31:6cd9 with SMTP id 5614622812f47-3d54599437dmr8266510b6e.26.1719307419614;
-        Tue, 25 Jun 2024 02:23:39 -0700 (PDT)
-Received: from thinkpad ([117.193.213.113])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065129b9edsm7840159b3a.148.2024.06.25.02.23.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 02:23:38 -0700 (PDT)
-Date: Tue, 25 Jun 2024 14:53:32 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Slark Xiao <slark_xiao@163.com>
-Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Loic Poulain <loic.poulain@linaro.org>, ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net, netdev@vger.kernel.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: Re: [PATCH v2 1/2] bus: mhi: host: Import mux_id item
-Message-ID: <20240625092332.GE2642@thinkpad>
-References: <20240612094609.GA58302@thinkpad>
- <87aecf24-cdbb-70d2-a3d1-8d1cacf18401@quicinc.com>
- <20240612145147.GB58302@thinkpad>
- <CAMZdPi-6GPWkj-wu4_mRucRBWXR03eYXu4vgbjtcns6mr0Yk9A@mail.gmail.com>
- <c275ee49-ac59-058c-7482-c8a92338e7a2@quicinc.com>
- <5055db15.37d8.19038cc602c.Coremail.slark_xiao@163.com>
- <20240623134430.GD58184@thinkpad>
- <6365d9b8.265a.1904d287cfa.Coremail.slark_xiao@163.com>
- <20240625074449.GB2642@thinkpad>
- <6dfe6dac.89aa.1904e82ae8c.Coremail.slark_xiao@163.com>
+	s=arc-20240116; t=1719307508; c=relaxed/simple;
+	bh=iwWMLnxsyiJ99LgfwKEducRDSs/Du+DFckUPSgl7l1E=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WTo1aid5byTHFUB4eCh1MtxffJPNN70TZMeqC8ssp8y35z2PcWxiENaHXKMsCtQ93DT1UrC56y6SZGC2yeL6prwob+GQBXrs3jewnWXCSAoyzhF6JioHVHeWVKlmKgri4YfwZ2oA5prw0cut0DHXmF715evaoimW59TJ9s4RwRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W7fT76qW3z2CkbL;
+	Tue, 25 Jun 2024 17:20:59 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 053C7140360;
+	Tue, 25 Jun 2024 17:24:59 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 25 Jun
+ 2024 17:24:58 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
+	<tglx@linutronix.de>, <peterz@infradead.org>, <luto@kernel.org>,
+	<kees@kernel.org>, <wad@chromium.org>, <ruanjinjie@huawei.com>,
+	<rostedt@goodmis.org>, <arnd@arndb.de>, <ardb@kernel.org>,
+	<broonie@kernel.org>, <mark.rutland@arm.com>, <rick.p.edgecombe@intel.com>,
+	<leobras@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 0/3]  arm64: entry: Convert to generic entry
+Date: Tue, 25 Jun 2024 17:27:56 +0800
+Message-ID: <20240625092759.1533875-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6dfe6dac.89aa.1904e82ae8c.Coremail.slark_xiao@163.com>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Tue, Jun 25, 2024 at 04:28:25PM +0800, Slark Xiao wrote:
+Currently, x86, Riscv, Loongarch use the generic entry. Convert arm64
+to use the generic entry infrastructure from kernel/entry/*. The generic
+entry makes maintainers' work easier and codes more elegant, which aslo
+removed a lot of duplicate code.
 
-[...]
+Jinjie Ruan (3):
+  entry: Add some arch funcs to support arm64 to use generic entry
+  arm64: Prepare to switch to generic entry
+  arm64: entry: Convert to generic entry
 
-> >Hmm, sadly we shouldn't have used the same controller config for all these
-> >devices across different product families. I didn't really paid attention to the
-> >device name which is supposed to be unique (that's my bad).
-> >
-> >For instance, because of the controller config reuse, your SDX62 modem would
-> >print:
-> >
-> >"MHI PCI device found: foxconn-sdx65"
-> >
-> >which clearly is misleading the users...
-> >
-> >I've submitted a patch that uses unique product name across the product families
-> >[1]. Please take a look. After this patch, you can use the modem name to
-> >differentiate in client drivers.
-> >
-> >- Mani
-> >
-> >[1] https://lore.kernel.org/mhi/20240625074148.7412-1-manivannan.sadhasivam@linaro.org/
-> >
-> >-- 
-> >மணிவண்ணன் சதாசிவம்
-> For same chip platform, I don't think it's necessary to separate into different parts.
-> Like t99w368 and DW5932e, all things are same except the 'name'. For previous
-> mux_id settings, we would like to add it for sdx72/sdx75 platforms, but shall
-> no difference on T99W515 and DW5934e. 
-> Otherwise, we must to update both mhi and wwan side if we have a new foxconn
-> SDX72 device support since the name is different with foxconn-t99w515 or
-> foxconn-dw5934e.
-> 
-
-Name is an important factor for an end user. Because, even though both products
-are same in functionality, they are marketed as different products. So the users
-should be provided with the actual product name, not baseline.
-
-Even though it requires an update to the pci_generic driver, it ought to happen
-for correctness.
-
-- Mani
+ arch/arm64/Kconfig                    |   1 +
+ arch/arm64/include/asm/entry-common.h |  60 +++++
+ arch/arm64/include/asm/ptrace.h       |   5 +
+ arch/arm64/include/asm/stacktrace.h   |   5 +-
+ arch/arm64/include/asm/syscall.h      |   6 +-
+ arch/arm64/include/asm/thread_info.h  |  23 +-
+ arch/arm64/kernel/entry-common.c      | 355 ++++++--------------------
+ arch/arm64/kernel/ptrace.c            |  78 +++---
+ arch/arm64/kernel/signal.c            |   3 +-
+ arch/arm64/kernel/syscall.c           |  18 +-
+ include/linux/entry-common.h          |  51 ++++
+ kernel/entry/common.c                 |  49 +++-
+ 12 files changed, 294 insertions(+), 360 deletions(-)
+ create mode 100644 arch/arm64/include/asm/entry-common.h
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.34.1
+
