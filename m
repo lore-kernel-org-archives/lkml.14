@@ -1,216 +1,136 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1865E14D2BD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC87914D2BD;
+	Tue, 25 Jun 2024 12:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319073; cv=none; b=bMB02lfFO84iol+HKdFcxgnkcJPr9eusbTg7va6Jk5ONZtw1cEpPiB0m14TBgpROsPVPr7IwsMdw0D/lhBBHHgeYSpQDgUxy7d1Hi6k7G5pmaAsFcmWrCQeJdlTxUKWxz5s36eTK8Xe4dhb9zAGAK2Opu3PfnKbuj4B8k3MmYuU=
+	t=1719319154; cv=none; b=WmFtdKe7sPoFg0osefzyavQXE2mjwjyG+8kPsYb8mTglgf7cCBLbx/ZWicFCkRjiWFpuk5SB2Q4y+LDsBfWZ0Wb3+CbIAJxUSNsRwIsmlHp0Ou8G5mTtpAngC1Z1tpZcGX4F4jStg3HpcLK1CooJJlmEfL8+GPj8yWp8/2Q5gks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319073; c=relaxed/simple;
-	bh=/Xfp8edqkjj8hGQJckb13xAE7nHpXhBNXLK6lu/C9EE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LxKNCmVHGBtWqZrqaRBbclP4FKMKnZ74mzIfewSDadEtlU90U+MLvuNq/ZX0ykI4dQ5nFxUyk1YnEoZhq8AGWgT7ZZbqY+705tldB/9Zc4RYo9Oun3Ko9Pme/mUAax9piz0LgkNaVFMgLu3Nkp2WOAwvNXXigSGt1bfG93xS5Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Yw/Vi+Ox; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1719319154; c=relaxed/simple;
+	bh=D/DTZDdhp483468UdHXbB3SeAnPkikehybNHbu2tzLU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CfvDqQUbQvvqEsJAsaUU9siUacne+bIIgiQLqHB5OR1ohQqLiWsB3UKkWZ8y2vjGX6Xp0f3TjTKAswNVVfUN2+t9AkbECyCFHPV1Kk/eltgiSRv4R/3bzsaMas0Jkv9lFSj3G+/XaKmW17eXcbngf6ywFKK6DYGNeXGNSXNaSC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=N7HP0Wvn; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Yw/Vi+Ox"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719319063; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bJn97TumoRX3Pu50ftatVSkCYSiOnpy7WcOfg1YpSwM=;
-	b=Yw/Vi+OxHe7tNONf65DwI2WsY8EO9T222ofvXJacppRYAtLGOUXYvT1mpIlNbt8tPqd5MUFeb2leeozZ1MwUvbyZEy+ECHpxeZA77iwLZoJwAXj8vHh5jxnFWeOBInYbRdNxtlvS6rRV7fRSJY64gB1k6kKMzRmTN50vP1ffRyM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=28;SR=0;TI=SMTPD_---0W9Fpw2x_1719319059;
-Received: from 30.97.56.75(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9Fpw2x_1719319059)
-          by smtp.aliyun-inc.com;
-          Tue, 25 Jun 2024 20:37:40 +0800
-Message-ID: <43a5986a-52ea-4090-9333-90af137a4735@linux.alibaba.com>
-Date: Tue, 25 Jun 2024 20:37:39 +0800
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="N7HP0Wvn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1719319153; x=1750855153;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=D/DTZDdhp483468UdHXbB3SeAnPkikehybNHbu2tzLU=;
+  b=N7HP0WvnRuITRrZjgXD7Ri2ROOv1G4v75fg2erq7nW0N459E4P9YXg9q
+   okbuQJaFUP8dg3g3a8lIhWsICzFMJJXzbhZrr5mM+5cD9F1/jLn/NWV83
+   66BarQZz6w8DFV3YAhSOGbe6AtnTACFqci1LSJOTXuyhtkqpJEfqAOhxq
+   lvutIHxe6UoXPDuvRwr3Xtog1B3MYbEIm0Fzlqf5Dl8vpwlCUFNo4UXQn
+   oEbOhr1BD9PqkL36y/POklQsLFleH6FivRLj4QUbqzKpu7MDvy7a46Mwv
+   bmlMpxkjQQHJylTdyzE1g7ipT8MHx91plxATbY00pXzIHQZ6yRH+DtBRa
+   Q==;
+X-CSE-ConnectionGUID: txch52YOQf2qALM7aM1iOQ==
+X-CSE-MsgGUID: Jp7v6NhiSmiD1LzDVHmD/Q==
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="28472715"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 05:39:12 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 25 Jun 2024 05:38:44 -0700
+Received: from daire-X570.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 25 Jun 2024 05:38:40 -0700
+From: <daire.mcnamara@microchip.com>
+To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
+	<ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v5 1/3] PCI: microchip: Fix outbound address translation tables
+Date: Tue, 25 Jun 2024 13:38:43 +0100
+Message-ID: <20240625123845.3747764-2-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240625123845.3747764-1-daire.mcnamara@microchip.com>
+References: <20240625123845.3747764-1-daire.mcnamara@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 18/18] arm64/mm: Automatically fold contpte mappings
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
- David Hildenbrand <david@redhat.com>, John Hubbard <jhubbard@nvidia.com>,
- Zi Yan <ziy@nvidia.com>, Barry Song <21cnbao@gmail.com>,
- Alistair Popple <apopple@nvidia.com>, Yang Shi <shy828301@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Yin, Fengwei" <fengwei.yin@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240215103205.2607016-1-ryan.roberts@arm.com>
- <20240215103205.2607016-19-ryan.roberts@arm.com>
- <1285eb59-fcc3-4db8-9dd9-e7c4d82b1be0@huawei.com>
- <8d57ed0d-fdd0-4fc6-b9f1-a6ac11ce93ce@arm.com>
- <018b5e83-789e-480f-82c8-a64515cdd14a@huawei.com>
- <b75aa60d-e058-4b5c-877a-9c0cd295e96f@linux.alibaba.com>
- <b6b485ee-7af0-42b8-b0ca-5a75f76a69e2@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <b6b485ee-7af0-42b8-b0ca-5a75f76a69e2@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
+On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
+three general-purpose Fabric Interface Controller (FIC) buses that
+encapsulate an AXI-M interface. That FIC is responsible for managing
+the translations of the upper 32-bits of the AXI-M address. On MPFS,
+the Root Port driver needs to take account of that outbound address
+translation done by the parent FIC bus before setting up its own
+outbound address translation tables.  In all cases on MPFS,
+the remaining outbound address translation tables are 32-bit only.
 
-On 2024/6/25 19:40, Ryan Roberts wrote:
-> On 25/06/2024 08:23, Baolin Wang wrote:
->>
->>
->> On 2024/6/25 11:16, Kefeng Wang wrote:
->>>
->>>
->>> On 2024/6/24 23:56, Ryan Roberts wrote:
->>>> + Baolin Wang and Yin Fengwei, who maybe able to help with this.
->>>>
->>>>
->>>> Hi Kefeng,
->>>>
->>>> Thanks for the report!
->>>>
->>>>
->>>> On 24/06/2024 15:30, Kefeng Wang wrote:
->>>>> Hi Ryan,
->>>>>
->>>>> A big regression on page-fault3("Separate file shared mapping page
->>>>> fault") testcase from will-it-scale on arm64, no issue on x86,
->>>>>
->>>>> ./page_fault3_processes -t 128 -s 5
->>>>
->>>> I see that this program is mkstmp'ing a file at "/tmp/willitscale.XXXXXX". Based
->>>> on your description, I'm inferring that /tmp is backed by ext4 with your large
->>>> folio patches enabled?
->>>
->>> Yes, mount /tmp by ext4, sorry to forget to mention that.
->>>
->>>>
->>>>>
->>>>> 1) large folio disabled on ext4:
->>>>>      92378735
->>>>> 2) large folio  enabled on ext4 +  CONTPTE enabled
->>>>>      16164943
->>>>> 3) large folio  enabled on ext4 +  CONTPTE disabled
->>>>>      80364074
->>>>> 4) large folio  enabled on ext4 +  CONTPTE enabled + large folio mapping
->>>>> enabled
->>>>> in finish_fault()[2]
->>>>>      299656874
->>>>>
->>>>> We found *contpte_convert* consume lots of CPU(76%) in case 2),
->>>>
->>>> contpte_convert() is expensive and to be avoided; In this case I expect it is
->>>> repainting the PTEs with the PTE_CONT bit added in, and to do that it needs to
->>>> invalidate the tlb for the virtual range. The code is there to mop up user space
->>>> patterns where each page in a range is temporarily made RO, then later changed
->>>> back. In this case, we want to re-fold the contpte range once all pages have
->>>> been serviced in RO mode.
->>>>
->>>> Of course this path is only intended as a fallback, and the more optimium
->>>> approach is to set_ptes() the whole folio in one go where possible - kind of
->>>> what you are doing below.
->>>>
->>>>> and disappeared
->>>>> by following change[2], it is easy to understood the different between case 2)
->>>>> and case 4) since case 2) always map one page
->>>>> size, but always try to fold contpte mappings, which spend a lot of
->>>>> time. Case 4) is a workaround, any other better suggestion?
->>>>
->>>> See below.
->>>>
->>>>>
->>>>> Thanks.
->>>>>
->>>>> [1] https://github.com/antonblanchard/will-it-scale
->>>>> [2] enable large folio mapping in finish_fault()
->>>>>
->>>>> diff --git a/mm/memory.c b/mm/memory.c
->>>>> index 00728ea95583..5623a8ce3a1e 100644
->>>>> --- a/mm/memory.c
->>>>> +++ b/mm/memory.c
->>>>> @@ -4880,7 +4880,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
->>>>>            * approach also applies to non-anonymous-shmem faults to avoid
->>>>>            * inflating the RSS of the process.
->>>>>            */
->>>>> -       if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma))) {
->>>>> +       if (unlikely(userfaultfd_armed(vma))) {
->>>>
->>>> The change to make finish_fault() handle multiple pages in one go are new; added
->>>> by Baolin Wang at [1]. That extra conditional that you have removed is there to
->>>> prevent RSS reporting bloat. See discussion that starts at [2].
->>>>
->>>> Anyway, it was my vague understanding that the fault around mechanism
->>>> (do_fault_around()) would ensure that (by default) 64K worth of pages get mapped
->>>> together in a single set_ptes() call, via filemap_map_pages() ->
->>>> filemap_map_folio_range(). Looking at the code, I guess fault around only
->>>> applies to read faults. This test is doing a write fault.
->>>>
->>>> I guess we need to do a change a bit like what you have done, but also taking
->>>> into account fault_around configuration?
->>
->> For the writable mmap() of tmpfs, we will use mTHP interface to control the size
->> of folio to allocate, as discussed in previous meeting [1], so I don't think
->> fault_around configuration will be helpful for tmpfs.
-> 
-> Yes agreed. But we are talking about ext4 here.
-> 
->>
->> For other filesystems, like ext4, I did not found the logic to determin what
->> size of folio to allocate in writable mmap() path
-> 
-> Yes I'd be keen to understand this to. When I was doing contpte, page cache
-> would only allocate large folios for readahead. So that's why I wouldn't have
+Limit the outbound address translation tables to 32-bit only.
 
-You mean non-large folios, right?
+This necessitates changing a size_t in mc_pcie_setup_window
+to a resource_size_t to avoid a compile error on 32-bit platforms.
 
-> seen this.
-> 
->> (Kefeng, please correct me if
->> I missed something). If there is a control like mTHP, we can rely on that
->> instead of 'fault_around'?
-> 
-> Page cache doesn't currently expose any controls for folio allocation size.
-> Personally, I'd like to see some in future becaudse I suspect it will be
-> neccessary to limit physical fragmentation. But that is another conversation...
+Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe controller driver")
+Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+---
+ drivers/pci/controller/pcie-microchip-host.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Yes, agree. If writable mmap() path wants to allocate large folios, we 
-should rely on some controls or hints (maybe mTHP?).
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+index 137fb8570ba2..47c397ae515a 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/pcie-microchip-host.c
+@@ -23,6 +23,8 @@
+ /* Number of MSI IRQs */
+ #define MC_MAX_NUM_MSI_IRQS			32
+ 
++#define MC_OUTBOUND_TRANS_TBL_MASK		GENMASK(31, 0)
++
+ /* PCIe Bridge Phy and Controller Phy offsets */
+ #define MC_PCIE1_BRIDGE_ADDR			0x00008000u
+ #define MC_PCIE1_CTRL_ADDR			0x0000a000u
+@@ -933,7 +935,7 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
+ 
+ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 				 phys_addr_t axi_addr, phys_addr_t pci_addr,
+-				 size_t size)
++				 resource_size_t size)
+ {
+ 	u32 atr_sz = ilog2(size) - 1;
+ 	u32 val;
+@@ -983,7 +985,8 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
+ 		if (resource_type(entry->res) == IORESOURCE_MEM) {
+ 			pci_addr = entry->res->start - entry->offset;
+ 			mc_pcie_setup_window(bridge_base_addr, index,
+-					     entry->res->start, pci_addr,
++					     entry->res->start & MC_OUTBOUND_TRANS_TBL_MASK,
++					     pci_addr,
+ 					     resource_size(entry->res));
+ 			index++;
+ 		}
+@@ -1117,9 +1120,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	int ret;
+ 
+ 	/* Configure address translation table 0 for PCIe config space */
+-	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
+-			     cfg->res.start,
+-			     resource_size(&cfg->res));
++	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & MC_OUTBOUND_TRANS_TBL_MASK,
++			     0, resource_size(&cfg->res));
+ 
+ 	/* Need some fixups in config space */
+ 	mc_pcie_enable_msi(port, cfg->win);
+-- 
+2.34.1
 
->> [1] https://lore.kernel.org/all/f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com/
->>
->>> Yes, the current changes is not enough, I hint some issue and still debugging,
->>> so our direction is trying to map large folio for do_shared_fault(), right?
-> 
-> We just need to make sure that if finish_fault() has a (non-shmem) large folio,
-> it never maps more than fault_around_pages, and it does it in a way that is
-> naturally aligned in virtual space (like do_fault_around() does).
-> do_fault_around() actually tries to get other folios from the page cache to map.
-> We don't want to do that; we just want to make sure that we don't inflate a
-> process's RSS by mapping unbounded large folios.
-> 
-> Another (orthogonal, longer term) strategy would be to optimize
-> contpte_convert(). arm64 has a feature called "BBM level 2"; we could
-> potentially elide the TLBIs for systems that support this. But ultimately its
-> best to avoid the need for folding in the first place.
-> 
-> Thanks,
-> Ryan
-> 
->>
->> I think this is the right direction to do. I add this '!vma_is_anon_shmem(vma)'
->> conditon to gradually implement support for large folio mapping buidling,
->> especially for writable mmap() support in tmpfs.
->>
-
-[snip]
