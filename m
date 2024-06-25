@@ -1,57 +1,57 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9347B1581E5;
-	Tue, 25 Jun 2024 12:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E058B152780;
+	Tue, 25 Jun 2024 12:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719318070; cv=none; b=VRIJOPv8MBwRotiWfcCMuUDTLSlr6/cpwcufEwuRzV0WJFBphfaKJDXnXsrsynZGBuJGyVH0ZewbpZCyy0vW6OSEV+TTVA8qGEhA4gTz46fBMqEPO7QZX/yP4VSmrzsS8u4n3KIwgQke9ZRd4j3wGFYxjXgQH50hIy6l+vJ2/uw=
+	t=1719318074; cv=none; b=MOcPQ+1AXtWoCaxXfCWxjeTwx6hI69o3yEndMDNypBzJmqOWIfvJAJs3RMZNULm6PB2+NLfgTF82zcjvU2+5XKl2nBesswQejqyekQrFCabw2LDANFpT42mKMDHGsS+aRHpiwdeqSw/4lvVGhLmsRgNAxDidy0iPx2ZsC4ekklw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719318070; c=relaxed/simple;
-	bh=si+QcG6m2C7oEN8bRk2delYbedXnGccQI3/h8D8tJe0=;
+	s=arc-20240116; t=1719318074; c=relaxed/simple;
+	bh=5lXq8p5pk5rbK8uHbRt0ytYVF2tdyL2YC+93mqvE/Qw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JQbhEmQBXk8agsgxCRJ/HA+5IpPInLQR3ijYqvuPNRGaYums1Z/b7kF6KhiitpLWyqfFAg/HFYIedDYSM6ufJm2+tqptMtNet53JkQpfkyx2meVGn9p6oEfBsvvyFUy4JCG9zVrR0aVJPKwL/XdiwZxqjpYWGIG0RC1dHcohjJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJ946K/E; arc=none smtp.client-ip=209.85.166.182
+	 MIME-Version; b=A31wJbjk5QyhZu4StgtW7PoTFMDKKZ7Ht6FiH8AAiuKdslOA02Wcg1JEjo1/Q2SumeVBKE2d3W6fWvtd5Syz7+ekBTPiAIo4NHTXCW5CeD7BMz3fipHZNNC4CZRf8EzxdHveRFXYkWlD7eDcZOF43I82VzxzCDGeEgyKiHJGaMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pv9kyThn; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJ946K/E"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36dd6110186so21259195ab.0;
-        Tue, 25 Jun 2024 05:21:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pv9kyThn"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7067a2e9607so2037093b3a.3;
+        Tue, 25 Jun 2024 05:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719318068; x=1719922868; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719318072; x=1719922872; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Zx72SI7/2IoQxOX1b/fnYis0HzPlfSdpK4NVpZfxV7Q=;
-        b=FJ946K/EwKY/ZwX6H0tgwRrc8Q3Uc+6WJ6DetJw+/loNyZ3yEm3MbUE+8FE7XnQ50b
-         n/4D18JyjKxmgPADvuzB7bwtE47ARvI6Ek1Oaxe19rgCBo+xUKOXjgi3enCbjv0WseoJ
-         EiBk2tSpkljSTlK1GixarnecOEdL5cfoVDikuOIdGcHKYWdne6EBYxs0XLL974SgFlxC
-         47KVjd9Tbx0e9VQCJis/YHbh4bMeVjQFoPIW6CWFs6WfCoRWD9qsioP6WhrBgidMTUGl
-         smPcGy19SRiTxqrVIVoDg3P2AHSKlBrdamR6OOBFO27whHgQltUyV0aPYSMbcLm9Ryjj
-         9Jmg==
+        bh=R1+ZY9MnH9MSIo3P/myoXe4SqRYQt+K5cKi8iBD/pYg=;
+        b=Pv9kyThnfSCry2Qhp80rrdPCDIyHJeb9yyJEl3lJwfoSMcJkzomoDWfEkp/vj62s4D
+         5L+L0HuZ5NoWGxRIEjlqQNJnETO7vZ8D0f3mN6QFYXdzdOZ5LAHOkjNht11u8Tmu/6f8
+         K1xP5kKDCxxYgyp4G6gUPaNfPWbHNFl6Bek/E8oQPYKXKdy7Cvr+QZW2Fs6ugcjy/31x
+         z8X5vcd56L1NFj3UzCunlybMM1RixKGzC5606FsFGnpnAcGeWUkNSMBKHFwoLlkumgKv
+         Mi0o9770WzkCR4cdEsaZAClTXXSAwEkcowjyJuojyu3gzilKyLp8RJJaDZ7/auNMyKdd
+         Vayg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719318068; x=1719922868;
+        d=1e100.net; s=20230601; t=1719318072; x=1719922872;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Zx72SI7/2IoQxOX1b/fnYis0HzPlfSdpK4NVpZfxV7Q=;
-        b=VQM4LDVwWu6updFYz0AS8uP63Q0l0V8UdEOflYTSfJmphXdw+hhmDPM0oEVNnMGiRv
-         GOlu/EUKGhSfwy5RFgoGU+1ExlSYsaPq19mgOKBMK9spp4gytMm3NOp0UGLXKucSXTsC
-         PlIAf3m00O3ougpqDTFKBvNBYlRu7nafpChYJkaoQ3LyW23YOHhrHHHhf0BpvPSIWkCh
-         +fsKDZBXkWbQ/6S+uydaGvzpu/bgZOHmM/oK71EVm+wPTL8qTE3iazb3CrhzHgAs+m6k
-         Ca5MWP/GgyDVA5WPmJSFGI5nVyYZgRpBacoQHChPTnDqjMjprqv4woTePeGPFl8Q7zJk
-         JQrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgcyBe5T2KUwLt0DnxWoVqQ9nH2oHdRGu6YI615xl8PZ+88JXFkYcBTKhPp99IHu2lJtSvPk+rifBIe09o9qXwghBYzcsPsiYZzOgSQuQEBOtvJJ+/WvqTTzd1wAR1WEDq/bVb8bnuQw==
-X-Gm-Message-State: AOJu0Yy8DtRVqYGiZcnkwy4Za98DjTQybjfjfrbgDHHg22IquDvXs/p4
-	UHxdYbrN7AxOQvcduyTnVxNTb2FcnvChr4keXBSy53j2PbavzjvB
-X-Google-Smtp-Source: AGHT+IHOZoufCr8RHeLNcTuCCK9wtsYm/Zv5j+dnx22Bzhr+SOZilu3p95OTzvWMtGuQrrJqvyzVsQ==
-X-Received: by 2002:a05:6e02:1d0f:b0:375:b57b:877b with SMTP id e9e14a558f8ab-3763f60dc49mr91838265ab.10.1719318067752;
-        Tue, 25 Jun 2024 05:21:07 -0700 (PDT)
+        bh=R1+ZY9MnH9MSIo3P/myoXe4SqRYQt+K5cKi8iBD/pYg=;
+        b=Ufw0pbQciBEN3XSliIXfkD+CP5ShegoyG2Kn8BpkzKbO7pBix2ssYx+Ahq8E4T45ov
+         z8MvG16EMIsGOZT94+hahByl97eHvSkysfakRQvX2rGOWivHdgMS0W/EMQoFi/8kj5lY
+         mS5K47T09rNMUhIGPgcSJI9fdXcLobl486qqzOeiRgH/gumDpMfDzTZ33ZZ5omnXXqbY
+         OZ7JVyXN1p2bCRg23sqMI6U+wvdkW0nPrc+hULWLQwZ9AW2L1FbNaAfrhOrWZ0pS1FS8
+         ubbG1YT+AV6zaiY63pLD5CCKTfE7v+gGwKf8PJ4waBHXulYFQerey9Zx7nv0UhPlzg4O
+         tc3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVmPgAl7sUbZUbTVN+8nDxSGl/4nQg9fJTnl5bGPHB5u4t4nSXGLcjZChFQDtEngDmDCvgFnMwXVAaWXFCvIgoUeQZ6DHhXEWWkestxN96r6YktD4GMLnbt7BsLZLc7Q3+hxGAs9aUUxQ==
+X-Gm-Message-State: AOJu0YyRaH7ra/VIKKznIuV3b8jdRT2wgxHgTvf2L8donPwk9Iv7FRnc
+	1j5z2ZibvGEc7B5NAodEiqJYv++nVhkAPesUOet3K4Kkn2BuuRFj
+X-Google-Smtp-Source: AGHT+IFHqLhGUImj+b/k14mrq94/fo0odtjnw+y814qaRfArf+OENLnysBYzvY6GBeeoij1w+51Yqw==
+X-Received: by 2002:a05:6a00:180c:b0:704:1ac0:bf16 with SMTP id d2e1a72fcca58-70670e8fc2bmr9825666b3a.5.1719318072233;
+        Tue, 25 Jun 2024 05:21:12 -0700 (PDT)
 Received: from obliging-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70650e312e4sm7978146b3a.0.2024.06.25.05.21.05
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70650e312e4sm7978146b3a.0.2024.06.25.05.21.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 05:21:07 -0700 (PDT)
+        Tue, 25 Jun 2024 05:21:11 -0700 (PDT)
 From: Yang Chen <yangchen.openbmc@gmail.com>
 To: joel@jms.id.au,
 	andrew@codeconstruct.com.au,
@@ -62,9 +62,9 @@ To: joel@jms.id.au,
 	devicetree@vger.kernel.org
 Cc: Jerry.Lin@quantatw.com,
 	yangchen.openbmc@gmail.com
-Subject: [PATCH 13/17] ARM: dts: minerva: add power monitor xdp710
-Date: Tue, 25 Jun 2024 20:18:31 +0800
-Message-Id: <20240625121835.751013-14-yangchen.openbmc@gmail.com>
+Subject: [PATCH 15/17] ARM: dts: aspeed: minerva: Switch the i2c bus number
+Date: Tue, 25 Jun 2024 20:18:33 +0800
+Message-Id: <20240625121835.751013-16-yangchen.openbmc@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240625121835.751013-1-yangchen.openbmc@gmail.com>
 References: <20240625121835.751013-1-yangchen.openbmc@gmail.com>
@@ -78,29 +78,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Yang Chen <yang.chen@quantatw.com>
 
-Add HSC xdp710 on i2c bus0.
+Switch the i2c bus number to map the i2c tag according to the hardware design.
 
 Signed-off-by: Yang Chen <yang.chen@quantatw.com>
 ---
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-index 7f6df8750953..dd8240279ed4 100644
+index ba67422a49b2..8dd2bbb15576 100644
 --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
 +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-@@ -175,6 +175,11 @@ power-monitor@68 {
- 		reg = <0x68>;
- 	};
+@@ -405,7 +405,7 @@ temperature-sensor@4b {
+ 			};
+ 		};
  
-+	power-monitor@43 {
-+		compatible = "infineon,xdp710";
-+		reg = <0x43>;
-+	};
-+
- 	leds_gpio: gpio@19 {
- 		compatible = "nxp,pca9555";
- 		reg = <0x19>;
+-		imux20: i2c@4 {
++		imux20: i2c@5 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <4>;
+@@ -451,7 +451,7 @@ temperature-sensor@4b {
+ 			};
+ 		};
+ 
+-		imux21: i2c@5 {
++		imux21: i2c@4 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <5>;
 -- 
 2.34.1
 
