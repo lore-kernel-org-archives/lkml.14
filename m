@@ -1,101 +1,138 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AD9158861;
-	Tue, 25 Jun 2024 14:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29FE16A382
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719325089; cv=none; b=ezBTI361jytX5BF/T1WF1/Ql3VW22qvDtjswYsiDKNSDErw76/PLkwRB1/vFlltlzSoAWASv8y7uyvsUBjxQCDFhXiB//Y3nDagW3CY2R+dsE7q71W/oh4QI8MR0w4Ncr+q7ZCXxspc/YEXyZK63gganYLTteiYPdo+hZuf80fY=
+	t=1719325092; cv=none; b=DKQ2v6s5K+orVeX9D+Uk2k44hJdzCBno1fiFgCViY/fNqCI9SzMVHFVVzT47vMLEGjUbUWTwiIVKTyKS6SHOmN8psHHXFjRQb84XV9w7CRtLCtayFePy0VvJwcT46HYocXUA7rFcqP3cvSGQaUuJkzFnpOrgb2sxfHZNa9+cpio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719325089; c=relaxed/simple;
-	bh=BaYfxqnOObdNpzn2swt4a13d8uBre3Ho9RtZd1PZMnI=;
+	s=arc-20240116; t=1719325092; c=relaxed/simple;
+	bh=258aHTwJ8PHNVShdBmlRwFk5MhWBCxeonA2f0yI3uGw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i5cCNp085TZrmKRTw5vo32mHxehrYL3etLjQX89G2A5OqIpzjI1px7hDo6QXI7Vj4YXOjKFAkttAqMmujx1hAEbZaccHwCpNRnM5FqqWc8PATkWxSXpntPMPGEBuulZ4F5tbXuyaigOZpsQ5VoBtJjCMd3mNDmwMPJoi1Z41HIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=S9jtBhjS; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	 In-Reply-To:Content-Type; b=KMVFKiU0sw+ELMC5YUE+rZqvVhTfXfcU1S5+Dm9sUGnB5S9tG1frLXVdNDmK4sVB7LjHlgKDRkl0eUzFrptE0XijR5Jf0HTdBbl9yDVtTUBcooWTMdAxAK6+V0URHFyYRdNWu0nWqDM7ewVWoVAV7QD5M4SbR0vpmjcIuZ1ATLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D7jfrKHX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S9jtBhjS"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ec50d4e47bso41902001fa.2;
-        Tue, 25 Jun 2024 07:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1719325086; x=1719929886; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/ORvOd9QIO0A27sD0yjzAJaWM3oVFw7Nj8mJgN4e+RI=;
-        b=S9jtBhjS0+v14plPKwxa3JgazpdfPYZNueUWFtGoYrr/Apa88ZfluQRAsSmvas39h8
-         ko6ZsgbFhS8aUw8vSH6orZROFhFn7EHb0lGhv3Im06QVD4u8ohwiQWp51sH0mwA9w1oK
-         CCr1pEj5W2iWTBdIAia41Izl7TK7npjAWfK3ZtdgsczNkM1Oh2Mjad6IoLK6bOCAfjgc
-         qw1KYnPk7CM0bnybEbc8OVNN4QGMtKKqkDsZXptBap555XdQWW2hfh3+aHVjPgPKVe6F
-         6okM7R5mApdg2ecM3ygcgVkhfidlesgEhKLvgSOGrC9yFcJlAwFEqhSRa+DzOogNzYTi
-         seBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719325086; x=1719929886;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ORvOd9QIO0A27sD0yjzAJaWM3oVFw7Nj8mJgN4e+RI=;
-        b=YqOucRFnoxCt1pJAF6eoRMyhkB2meYGDMVH1+f9h9bl6GhWpUyFXv43iKH7SK6YTaH
-         W3dqptqLBwWRpqI+lOIxrGKjqZcNk7fhclsGUlLSd4kQxclHtkTOg56RBguHXiANT/4c
-         /buKEwc4SN5aREhXHjsf0VvLjb2DlzyvYRQFd3iGrA67KqpdWT/2mP1XIuYsGN2Ljc1L
-         03djoVt21sWLs5m1xGtDPVJUTHztt0RR3wbMOV6ihM5c7/Gw9Z9XIWpb4jJMhpYUzCdQ
-         YNWSN/XqJMxAEE1PZMxzuoYNKN/DaZaiNK6MO1yevDRscKWvmje2c/8hhvPfWL08K+tx
-         vo7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWDa+Her12Y8ptrLuvaR41FTEO7bA9mV2niOWzMUyag7LmIsy9BX3qyr1FbP4uS2eqgH5mKkoEI28hslKiYHILjEs2w8EmGHPYn5eQIxtHVjAvWV8800bHrDcnC2bmD5k137bwS
-X-Gm-Message-State: AOJu0Yzhj98E9kJyf7qWY/NCrA40Q4BG2rPuhhMH47bn/NMW7HUnT8FE
-	vszMAGWAp/6/MaA0n8XB/+E8QaLguIJcvK9b/9VOa6/M9x/yRGY=
-X-Google-Smtp-Source: AGHT+IGmK41bcBWbwZqPaNcNgMM9gGnHoWpBcPBIBZOXSb2Ippp2x4oNHo1MwNsemFX0W8yC03jJUQ==
-X-Received: by 2002:a2e:9d88:0:b0:2ea:7e50:6c94 with SMTP id 38308e7fff4ca-2ec5b27e7f9mr48469431fa.16.1719325086080;
-        Tue, 25 Jun 2024 07:18:06 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2b4a32.dip0.t-ipconnect.de. [91.43.74.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30427976sm5979314a12.33.2024.06.25.07.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 07:18:05 -0700 (PDT)
-Message-ID: <f09ccc14-fa33-4887-a443-669d8e50242a@googlemail.com>
-Date: Tue, 25 Jun 2024 16:18:03 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7jfrKHX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719325089;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JDJanHJKnbiJNPYotPkVO2c6RbIzDk3MVlTTgVCykxk=;
+	b=D7jfrKHXD7lofxEME6N+W0ZyxVBygWH0uJLyQeqWmno+xog0XlOonD+g/MpHYyGRMUNM4i
+	sxOeXXRSk+74MDB9V9KlHY5lzOMmVFZItwGQZ1U4fWMEGAGJ2yS0hGX6vn9yY7E7xXQ0Of
+	eKizPs8HYmYDIFambNwRWd6yqQoFKuo=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-458-KsnVk9qGMTCAI2eoQhCkRg-1; Tue,
+ 25 Jun 2024 10:18:04 -0400
+X-MC-Unique: KsnVk9qGMTCAI2eoQhCkRg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F28E318DB6FA;
+	Tue, 25 Jun 2024 14:17:14 +0000 (UTC)
+Received: from [10.22.10.23] (unknown [10.22.10.23])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9BD18301BD32;
+	Tue, 25 Jun 2024 14:16:16 +0000 (UTC)
+Message-ID: <80e87513-aa48-4548-893e-ed339690c941@redhat.com>
+Date: Tue, 25 Jun 2024 10:16:15 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.9 000/250] 6.9.7-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240625085548.033507125@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20240625085548.033507125@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] cgroup: fix uaf when proc_cpuset_show
+To: chenridong <chenridong@huawei.com>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>
+Cc: tj@kernel.org, lizefan.x@bytedance.com, hannes@cmpxchg.org,
+ bpf@vger.kernel.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240622113814.120907-1-chenridong@huawei.com>
+ <19648b9c-6df7-45cd-a5ae-624a3e4d860f@redhat.com>
+ <52f72d1d-602e-4dca-85a3-adade925b056@huawei.com>
+ <71a9cc3a-1b58-4051-984b-dd4f18dabf84@redhat.com>
+ <8f83ecb3-4afa-4e0b-be37-35b168eb3c7c@huawei.com>
+ <ee30843f-2579-4dcf-9688-6541fd892678@redhat.com>
+ <3322ce46-78a1-45c5-ad07-a982dec21c8e@huawei.com>
+ <gke4hn67e2js2wcia4gopr6u26uy5epwpu7r6sepjwvp5eetql@nuwvwzg2k4dy>
+ <920bbfaa-bb76-4aa1-bd07-9a552e3bfdf2@huawei.com>
+Content-Language: en-US
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <920bbfaa-bb76-4aa1-bd07-9a552e3bfdf2@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Am 25.06.2024 um 11:29 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.9.7 release.
-> There are 250 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 6/25/24 10:11, chenridong wrote:
+>
+>
+> On 2024/6/25 18:10, Michal Koutný wrote:
+>> Hello.
+>>
+>> On Tue, Jun 25, 2024 at 11:12:20AM GMT, chenridong<chenridong@huawei.com>  wrote:
+>>> I am considering whether the cgroup framework has a method to fix this
+>>> issue, as other subsystems may also have the same underlying problem.
+>>> Since the root css will not be released, but the css->cgrp will be
+>>> released.
+>> <del>First part is already done in
+>> 	d23b5c5777158 ("cgroup: Make operations on the cgroup root_list RCU safe")
+>> second part is that</del>
+>> you need to take RCU read lock and check for NULL, similar to
+>> 	9067d90006df0 ("cgroup: Eliminate the need for cgroup_mutex in proc_cgroup_show()")
+>>
+>> Does that make sense to you?
+>>
+>> A Fixes: tag would be nice, it seems at least
+>> 	a79a908fd2b08 ("cgroup: introduce cgroup namespaces")
+>> played some role. (Here the RCU lock is not for cgroup_roots list but to
+>> preserve the root cgrp itself css_free_rwork_fn/cgroup_destroy_root.
+>>
+>> HTH,
+>> Michal
+>
+> Thank you, Michal, that is a good idea. Do you mean as below?
+>
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+>
+> index c12b9fdb22a4..2ce0542067f1 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -5051,10 +5051,17 @@ int proc_cpuset_show(struct seq_file *m, 
+> struct pid_namespace *ns,
+>         if (!buf)
+>                 goto out;
+>
+> +       rcu_read_lock();
+> +       spin_lock_irq(&css_set_lock);
+>         css = task_get_css(tsk, cpuset_cgrp_id);
+> -       retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
+> - current->nsproxy->cgroup_ns);
+> +
+> +       retval = cgroup_path_ns_locked(css->cgroup, buf, PATH_MAX,
+> +               current->nsproxy->cgroup_ns);
+>         css_put(css);
+> +
+> +       spin_unlock_irq(&css_set_lock);
+> +       cgroup_unlock();
+> +
+>         if (retval == -E2BIG)
+>                 retval = -ENAMETOOLONG;
+>
+>         if (retval < 0)
+>
+That should work. However, I would suggest that you take task_get_css() 
+and css_put() outside of the critical section. The task_get_css() is a 
+while loop that may take a while to execute and you don't want run it 
+with interrupt disabled.
 
-Builds, boots and works fine w/o regressions on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. 
-Up and running and compiling 6.1.96-rc1 under it now...
+Cheers,
+Longman
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
