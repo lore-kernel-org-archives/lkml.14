@@ -1,203 +1,135 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D98148851
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34153149DEF
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719309089; cv=none; b=GfEofFqVzYZPSJ1dG5j/E/u54AyY6AltagimsEt4N1hc5e4HvM9kZizssz7bN3xYLDW1YDlZQ626bQk3Id5yD7KmqH9Gvzdnq3tefn3xxHfhnyYUo099wvhYcyXNovb2cIM7tlkZgZSTfZ/8H57GFkmYtk+OeHDh5tiq6kLO9S0=
+	t=1719309197; cv=none; b=Y3nPtRGHeqqdYnbKj1BnBYXB9WAcc0LdXLF//p7p0cCLT9x+FfZyH9obQBNP6RCclDzUVrhx+frMXKblv9dXVTB5yZ+qDFagDjAvDwGoKnTfMfJHqgzPYgma3MZxZIEjaobN4cIyasGDmusVdHJRXB2GRfQFkJqmi3gsdfnFqvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719309089; c=relaxed/simple;
-	bh=B4W3npsQqWsNe71waP9UxXWJ75KMgfRdLtiNZrBsKtE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hd5AJnxHArq2P69dQ4FV7Ga8/vQwHwff+qfFzG+MP2h6E9UyhQwXWO0GQ9LcKdYZXR4YWfdFOrAebst96Ks8aBQw5GGe4Xmgn5woZgwJnjnkKjVTKi08xplkCJAAEveaMTyzO+eUs7Cc4CrymGuwdYQVhRbNfb3d7cq0exhoh1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yneEkd9N; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719309197; c=relaxed/simple;
+	bh=5fOsMfA//a10gbMrFTNNN7q0nF/8Yis07sAIUeCpLTw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ke94Wyu2EuhC/YLnSvLKGARqeqTpmwm7QDzHkx2wDnmW6/yhrrRrtcKsHp0AJ9OnEn9P5EmRj56Ero8yFnkFpyeO2F4oGPj90J2mFQlqLUkK9aD23JZ6yUUGXGl3GeJbKS8SmjudS9akE51e9WTgb5YiKd7gOlWz/SsOEWGZm4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=i07AcjVU; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yneEkd9N"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45P9opYp100324;
-	Tue, 25 Jun 2024 04:50:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719309051;
-	bh=GpCCOPLHRWQFDvg6W/jqIEVVoGNYbgT+7gouRoV8IG8=;
-	h=From:To:CC:Subject:Date;
-	b=yneEkd9NEdZVD54gHUSsK94f21pp+h37tlEhkr6emxByq5/tkL2e1q9m4lw/ORlgM
-	 aUI5GefF2tQxwB5sloUPac3ytu74AX81QGiKnOheesaGequPgbuz5Ak2Wa7ug3L+dO
-	 upzk4/2m89Beu+dci4LXJz1P3DhwfDvoZnNBXgBo=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45P9opq7029790
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 25 Jun 2024 04:50:51 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 25
- Jun 2024 04:50:51 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 25 Jun 2024 04:50:51 -0500
-Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45P9ooV3083186;
-	Tue, 25 Jun 2024 04:50:50 -0500
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Tomi Valkeinen
-	<tomi.valkeinen@ideasonboard.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman
-	<jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg
-	<sam@ravnborg.org>
-CC: DRI Development List <dri-devel@lists.freedesktop.org>,
-        Linux Kernel List
-	<linux-kernel@vger.kernel.org>,
-        Aradhya Bhatia <a-bhatia1@ti.com>, Devarsh
- Thakkar <devarsht@ti.com>,
-        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
-	<j-luthra@ti.com>
-Subject: [PATCH] drm/bridge: display-connector: Fix atomic_get_input_bus_fmt hook
-Date: Tue, 25 Jun 2024 15:20:49 +0530
-Message-ID: <20240625095049.328461-1-a-bhatia1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="i07AcjVU"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52cd9f9505cso4234388e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 02:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719309192; x=1719913992; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9RqUVVAOM1tDnUN3dY9Htp5pIdnqRxsviToP8WQQNb8=;
+        b=i07AcjVUs1neguNqZa0t2Uk+lRdQUR12OZIMEny1LnLpwJNQSVAQKDtmpOG53FOZAb
+         5vVOyxDAFEqR8icqhSjV6nQBJdZBN8XULJEDO2QkOL0YFhB9AEGMOKr20FHxrNkYGgYE
+         390iWRbr5Z8iqutVqaMPutTZQTuZQr7fV6GVLpQzkA3MdHiax9X8PXF9QP1nw2i6nTLG
+         q0qnilEDcE3v0O7DBgg4DM34KAIoe7WyK35iolAD/v7D1IpgKplxTM4IElxtfSJ1PP26
+         cLYo3ZSAkYnOjYdHgSa17uX75+I6JEXRT9uzi5mMSMncFDMOqENf4S8NRXbZwaDsYHuT
+         1hnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719309192; x=1719913992;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9RqUVVAOM1tDnUN3dY9Htp5pIdnqRxsviToP8WQQNb8=;
+        b=Eywy7ikgIrckGAfWD2l7nnvqRbI6fnCwS92ZXxzoFeuolesLGe6DmNAB8XQKZ/QYPY
+         qk2GPAfA3kgFiPcls8gF39OIBKMtm0Db9nBS93O9bL7I3/VkB0Dzy5Kt8zas3nRwe7B5
+         Sjp47OSZRgWP4D4c8BZtu/CI+MC2tZXRCvJ6vV5oGEJ22FsBqO498IUa63sp008t+Fcm
+         Y7JUoEDo5BEkRnUFaKmHVojsUyDAWdFaKaBaMjQYM7U9P0sTpEvIlchzu+unUKLnQ4dm
+         Q44OHa9/LlUEEKa/3+0w1xeq444Hhqs4MDb8S7rC5aKTTBwn4LK0GdVfwkzaA8ZJdYPR
+         Lvlg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3iSqbiVe7T+i9a5nMvG7o3QBs4y4ZUnQQukBG/biNOGvOp/NN22GeQ6ojgGhEuV3oPgUoduBWLnagSSKkBN33wC1dwYpN3rrFEW4B
+X-Gm-Message-State: AOJu0YxRN99G7b3gm42uiy536P6KpU0tu0meyBcBATrBZDWMk6Lh+qhw
+	gUSQn7Tr0Ls1zrnOPc9lJZft+WPpYgVwVcAjmq2s/8BbbQdl7vzNwX1VfcM9rQk=
+X-Google-Smtp-Source: AGHT+IHpM8BunwwPdvPiWNmjKmtzMLfC9/Piq1T7ZczlkFsx69QObhWgnzrhF+eLaMHFOp00zaHOrA==
+X-Received: by 2002:a05:6512:2399:b0:52c:e36f:369b with SMTP id 2adb3069b0e04-52ce36f3750mr4669582e87.17.1719309192280;
+        Tue, 25 Jun 2024 02:53:12 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1b57:b4a1:3d50:32a2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4248179d8e0sm174183925e9.3.2024.06.25.02.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 02:53:11 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>,  Lars-Peter Clausen
+ <lars@metafoo.de>,  Kevin Hilman <khilman@baylibre.com>,
+  linux-kernel@vger.kernel.org,  linux-amlogic@lists.infradead.org,
+  linux-iio@vger.kernel.org,  Rob Herring <robh@kernel.org>,  Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,
+  linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 0/2] iio: frequency: add iio support for Amlogic clock
+ measure
+In-Reply-To: <52fab9b5-2b44-49c0-8b90-cb2a74eb6633@linaro.org> (Neil
+	Armstrong's message of "Tue, 25 Jun 2024 11:38:44 +0200")
+References: <20240624173105.909554-1-jbrunet@baylibre.com>
+	<52fab9b5-2b44-49c0-8b90-cb2a74eb6633@linaro.org>
+Date: Tue, 25 Jun 2024 11:53:11 +0200
+Message-ID: <1jzfr9gxh4.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The display-connector acts as a pass-through bridge. To truly reflect
-that, this bridge should accept the same input format, as it expects to
-output. That in turn should be the same as what the preceding bridge has
-to output.
+On Tue 25 Jun 2024 at 11:38, Neil Armstrong <neil.armstrong@linaro.org> wrote:
 
-While the get_output_fmt hook does exactly that by calling the same hook
-of the previous bridge, the get_input_fmt hook should simply propagate
-the expected output format as its required input format.
+> Hi,
+>
+> [+cc people from linux-msm]
+>
+> On 24/06/2024 19:31, Jerome Brunet wrote:
+>> Add support for the HW found in most Amlogic SoC dedicated to measure
+>> system clocks.
+>> This drivers aims to replace the one found in
+>> drivers/soc/amlogic/meson-clk-measure.c with following improvements:
+>> * Access to the measurements through the IIO API:
+>>    Easier re-use of the results in userspace and other drivers
+>> * Controllable scale with raw measurements
+>> * Higher precision with processed measurements
+>> Jerome Brunet (2):
+>>    dt-bindings: iio: frequency: add clock measure support
+>>    iio: frequency: add amlogic clock measure support
+>>   .../iio/frequency/amlogic,clk-msr-io.yaml     |  50 ++
+>>   drivers/iio/frequency/Kconfig                 |  15 +
+>>   drivers/iio/frequency/Makefile                |   1 +
+>>   drivers/iio/frequency/amlogic-clk-msr-io.c    | 802 ++++++++++++++++++
+>>   4 files changed, 868 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/frequency/amlogic,clk-msr-io.yaml
+>>   create mode 100644 drivers/iio/frequency/amlogic-clk-msr-io.c
+>> 
+>
+> While I really appreciate the effort, and the code looks cool, the clkmsr is really
+> a debug tool, and I'm not sure IIO is the right place for such debug tool ?
 
-Let's say bridge(n) converts YUV bus format to RGB before transmitting
-the video signals. B is supposed to be RGB and A is YUV. The
-get_input_fmt hook of bridge(n) should receive RGB as its expected
-output format for it to select YUV as its required input format.
+The reason why I went through the trouble of doing an IIO port is
+because I need that for other purposes than debug. I need to to be able
+to check a frequency from another driver. I don't see a reason to invent
+another API when IIO provide a perfectly good one.
 
-Moreover, since the display-connector is a pass-through bridge, X and Y
-should both be RGB as well.
+The HW does measurements. IIO seems like the best place for it.
 
-    +-------------+            +-------------+
-A   |             |   B    X   |             |   Y
---->|  Bridge(n)  +--->    --->| Display     +--->
-    |             |            | Connector   |
-    |             |            |             |
-    +-------------+            +-------------+
+For the record, I need this for a eARC support.
+eARC has a PLL that locks on incoming stream. eARC registers show wether
+the PLL is locked or not, but not at which rate. That information is
+needed in ASoC. Fortunately the eARC PLL is one of measured clock, which
+is a life saver in that case.
 
-But that's not what's happening at the moment.
+Everything that was available through the old driver still is, with more
+precision and more control.
 
-The core will call get_output_fmt hook of display-connector, which will
-call the same hook of bridge(n). Y will get set to RGB because B is RGB.
+>
+> There's almost the same interface on qcom SoCs (https://github.com/linux-msm/debugcc) but
+> they chose to keep it in userspace until we find an appropriate way to expose
+> this from the kernel the right way.
+>
+> If it enabled us to monitor a frequency input for a product use-case, IIO would be
+> the appropriate interface, but AFAIK it's only internal clocks and thus I'm worried
+> it's not the best way to expose those clocks.
+>
+> Neil
 
-Now the core will call get_input_fmt hook of display-connector with Y =
-RGB as its expected output format. This hook will in turn call the
-get_input_fmt hook of bridge(n), with expected output as RGB. This hook
-will then return YUV as its required input format, which will set X =
-YUV.
-
-This is where things get off the track. The core will then call
-bridge(n)'s get_input_fmt hook but this time the expected output will
-have changed to X = YUV, instead of what ideally should have been X =
-RGB. We don't know how bridge(n)'s input format requirement will change
-now that its expected output format isn't RGB but YUV.
-
-Ideally, formats Y, X, B need to be the same and the get_input_fmt hook
-for bridge(n) should be called with these as its expected output format.
-Calling that hook twice can potentially change the expected output
-format - which can then change the required input format again, or it
-might just throw an -ENOTSUPP error.
-
-While many bridges don't utilize these APIs, or in a lot of cases A and
-B are same anyway, it is not the biggest problem, but one that should be
-fixed anyway.
-
-Fix this.
-
-Fixes: 7cd70656d128 ("drm/bridge: display-connector: implement bus fmts callbacks")
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
----
- drivers/gpu/drm/bridge/display-connector.c | 40 +---------------------
- 1 file changed, 1 insertion(+), 39 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/display-connector.c b/drivers/gpu/drm/bridge/display-connector.c
-index ab8e00baf3f1..eebf1fbcdd23 100644
---- a/drivers/gpu/drm/bridge/display-connector.c
-+++ b/drivers/gpu/drm/bridge/display-connector.c
-@@ -131,50 +131,12 @@ static u32 *display_connector_get_output_bus_fmts(struct drm_bridge *bridge,
- 							      num_output_fmts);
- }
- 
--/*
-- * Since this bridge is tied to the connector, it acts like a passthrough,
-- * so concerning the input bus formats, either pass the bus formats from the
-- * previous bridge or MEDIA_BUS_FMT_FIXED (like select_bus_fmt_recursive())
-- * when atomic_get_input_bus_fmts is not supported.
-- * This supports negotiation if the bridge chain has all bits in place.
-- */
--static u32 *display_connector_get_input_bus_fmts(struct drm_bridge *bridge,
--					struct drm_bridge_state *bridge_state,
--					struct drm_crtc_state *crtc_state,
--					struct drm_connector_state *conn_state,
--					u32 output_fmt,
--					unsigned int *num_input_fmts)
--{
--	struct drm_bridge *prev_bridge = drm_bridge_get_prev_bridge(bridge);
--	struct drm_bridge_state *prev_bridge_state;
--
--	if (!prev_bridge || !prev_bridge->funcs->atomic_get_input_bus_fmts) {
--		u32 *in_bus_fmts;
--
--		*num_input_fmts = 1;
--		in_bus_fmts = kmalloc(sizeof(*in_bus_fmts), GFP_KERNEL);
--		if (!in_bus_fmts)
--			return NULL;
--
--		in_bus_fmts[0] = MEDIA_BUS_FMT_FIXED;
--
--		return in_bus_fmts;
--	}
--
--	prev_bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
--							    prev_bridge);
--
--	return prev_bridge->funcs->atomic_get_input_bus_fmts(prev_bridge, prev_bridge_state,
--							     crtc_state, conn_state, output_fmt,
--							     num_input_fmts);
--}
--
- static const struct drm_bridge_funcs display_connector_bridge_funcs = {
- 	.attach = display_connector_attach,
- 	.detect = display_connector_detect,
- 	.edid_read = display_connector_edid_read,
- 	.atomic_get_output_bus_fmts = display_connector_get_output_bus_fmts,
--	.atomic_get_input_bus_fmts = display_connector_get_input_bus_fmts,
-+	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,
- 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
- 	.atomic_reset = drm_atomic_helper_bridge_reset,
-
-base-commit: 62c97045b8f720c2eac807a5f38e26c9ed512371
 -- 
-2.34.1
-
+Jerome
