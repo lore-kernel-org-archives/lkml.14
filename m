@@ -1,47 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46751494D5;
-	Tue, 25 Jun 2024 09:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3303314A0BC;
+	Tue, 25 Jun 2024 09:09:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719306575; cv=none; b=sfuLmS71UUbdjvLs6UJQwhZ3+ZnlX8HIrDkr07qFVNaioHWOi/pl8A378Pyhsgo/63ulJVazTvxFlMZGksB38tw74EkTGG4ZlmW1FwGX3eX9iYmorAsAfyq17ASA1W9ubbPdMhlzXzmAJy5/7/Ew1sNtK7W9zNv6eQ+ERFHFZ+A=
+	t=1719306576; cv=none; b=QGcjee/npcTw1SGl/nnEIaRhWQdIjSCS3fyM2mkIRU6eNjTckeSCPy4i9D+kos15Lmvt9CvLF/Hnm88FZnnmckg+dquzfZloJ9N92Bv8Is87XXZAp5FYjgKeFpx+j2WYj/ovD+gBv7OC/H4D+KCjtKK+0lk1lCmJfm0S0bywzWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719306575; c=relaxed/simple;
-	bh=r6fuS4iXNYY0gxO3bxmrjdmcyomSmCDYU0r8I6w8lSU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Di3Al8RU5lGUoTTzUC9GQOZNKuML06s/P0JdiAo/9vDkt6wtMZHNjb8wnm9j3R4gAh+jfPeqE/dvkOheW2q4vv3JD0xNMUTawJzKGqIIxHkLz2MlkFk8d3gtJPL/lcwvblOXXhedUd15kMO8gB4/QyWM9nBK9I3dpXzDieRCntA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1yCPyd2c; arc=none smtp.client-ip=68.232.154.123
+	s=arc-20240116; t=1719306576; c=relaxed/simple;
+	bh=JKCpk5dk6D/SobJZSKKYeEwrkj1EvysciZO75GXo7IY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HA9lrVwz3YFSZza24j1XqsFYdCNt+MHAQLuTQRZg0Or+2N1A/XlaVUX2nL04bfNatqqJnvddwxYAWPzIQdyFcLaWBavKy6Xo90tfk5Y4p6iuDFjiCJqa08fk3BTouC2DpcQLsLHpZPoIiY99kEcgISLK9c3g0DOq4QZM4fmakrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VuZ9+nxV; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1yCPyd2c"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VuZ9+nxV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719306573; x=1750842573;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=r6fuS4iXNYY0gxO3bxmrjdmcyomSmCDYU0r8I6w8lSU=;
-  b=1yCPyd2c729omtzIJr5/U3I9gzsLeBWwqAnbbp7eyEaedRZWn8yGMUbX
-   xZnYDJb/JpTjlGYpSn/gpLs1OIsHDQjNqF4gcAwuZlHiUh5hWzho95RAF
-   5Sc7cWFKJfBXBChumcanlj2evjMtEOXDuElblEVooJfrQaWrUCKiZo6nl
-   aK8Q00C4eq3vLBEjVI7iWoVQkT8tIoGr7tr9kTywnlu0bMXFHRUOvrVkQ
-   4eminv2JS82oS00842j7WCN8pd1b3+IzIDKH4GsEq6uB3SOmya74OE2vA
-   Zq5JxNvAZjVhKw+1SNTIUxb0tV9sBjq7u+aS5wTTfPldiUg9eaSDU9wEL
-   g==;
+  t=1719306575; x=1750842575;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JKCpk5dk6D/SobJZSKKYeEwrkj1EvysciZO75GXo7IY=;
+  b=VuZ9+nxVb9x8kYDuPvT2+dzRtOieAwd4bsOMVxn3cEMPn9q097Y86Gnh
+   B2elPqSyFVdtrxwbZgLGGmhDKCE0vVnQRj3QBqiUDzxiprDz38DKnaHZX
+   RP+3u6FQAyRjryEzCM/n6Z9UWdsYODd5rZceirzVeFzr0IP1JLaKd5LmP
+   lyLE2R/ivx9JlxxNB3oSJ8JrMBODze581zfTZ2gutU+q9tfxiAGpsOtys
+   T9ZorOHkBriBTEZ/eGCPIplbmS7PQlcIgzY6/7ApIX34PuYSwl0G1RZHU
+   WEjttjXF6HPR8o8dU8T3MW7cqsQbEspthHTGRwSFmsSPlpspPxezvLIwZ
+   w==;
 X-CSE-ConnectionGUID: VUslT87US1uPmx+Nea0QOA==
-X-CSE-MsgGUID: ptazfcsATBqRk1hUoXo57g==
+X-CSE-MsgGUID: MRhWt4BEQDqSog1AnAJX2w==
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="29096475"
+   d="scan'208";a="29096477"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 02:09:31 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 02:09:32 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 25 Jun 2024 02:09:01 -0700
+ 15.1.2507.35; Tue, 25 Jun 2024 02:09:11 -0700
 Received: from che-lt-i67131.microchip.com (10.10.85.11) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 25 Jun 2024 02:08:55 -0700
+ 15.1.2507.35 via Frontend Transport; Tue, 25 Jun 2024 02:09:04 -0700
 From: Manikandan Muralidharan <manikandan.m@microchip.com>
 To: <megi@xff.cz>, <javierm@redhat.com>, <neil.armstrong@linaro.org>,
 	<quic_jesszhan@quicinc.com>, <maarten.lankhorst@linux.intel.com>,
@@ -50,10 +51,12 @@ To: <megi@xff.cz>, <javierm@redhat.com>, <neil.armstrong@linaro.org>,
 	<conor+dt@kernel.org>, <dri-devel@lists.freedesktop.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <manikandan.m@microchip.com>
-Subject: [PATCH 0/4] Panel HIMAX support for Microchip's AC40T08A MIPI display
-Date: Tue, 25 Jun 2024 14:38:49 +0530
-Message-ID: <20240625090853.343176-1-manikandan.m@microchip.com>
+Subject: [PATCH 1/4] dt-bindings: display: himax-hx8394: remove reset-gpio from required properties
+Date: Tue, 25 Jun 2024 14:38:50 +0530
+Message-ID: <20240625090853.343176-2-manikandan.m@microchip.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240625090853.343176-1-manikandan.m@microchip.com>
+References: <20240625090853.343176-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,23 +66,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This patch series adds panel himax display controller support for the
-Microchip's AC40T08A MIPI display.
+Remove "reset-gpio" property from required properties list and
+make it optional.When interfaced with some boards where reset line is not
+populated it leads to driver probe issues.
 
-Manikandan Muralidharan (4):
-  dt-bindings: display: himax-hx8394: remove reset-gpio from required
-    properties
-  drm/panel: himax-hx8394: switch to devm_gpiod_get_optional() for
-    reset_gpio
-  dt-bindings: display: himax-hx8394: Add Microchip AC40T08A MIPI
-    Display panel
-  drm/panel: himax-hx8394: Add Support for Microchip AC40T08A MIPI
-    Display Panel
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+---
+ .../devicetree/bindings/display/panel/himax,hx8394.yaml          | 1 -
+ 1 file changed, 1 deletion(-)
 
- .../bindings/display/panel/himax,hx8394.yaml  |   2 +-
- drivers/gpu/drm/panel/panel-himax-hx8394.c    | 153 +++++++++++++++++-
- 2 files changed, 153 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx8394.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx8394.yaml
+index 644387e4fb6f..017cb19ed64f 100644
+--- a/Documentation/devicetree/bindings/display/panel/himax,hx8394.yaml
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx8394.yaml
+@@ -46,7 +46,6 @@ properties:
+ required:
+   - compatible
+   - reg
+-  - reset-gpios
+   - backlight
+   - port
+   - vcc-supply
 -- 
 2.25.1
 
