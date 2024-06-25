@@ -1,130 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C979216FF52;
-	Tue, 25 Jun 2024 15:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BEB17E45F;
+	Tue, 25 Jun 2024 15:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327746; cv=none; b=LBzWmf7glyBkgP/8Znz1EDN67TSUrkx61GL+CaUSsBZyS7VAOY0xaEVTlD0yh5VQYvSyoijowYdouYDdewfYzM61xsdEvp/tKLlNRwMx200CT2uiTLiahsgpsKx12lqYwamJL1jsctw9ovUv2nQC+GBCDXQsYXao66QN5mz6Qjo=
+	t=1719327749; cv=none; b=kRIK1UyOQgBuAaxoa+L+HVpi6uOoKIDn98wWr7KNZ/fAlT0kfpDCbgNT/xfRTaoS8OEhl7I81q/tTj05tCWppSUXmdMKA927CLLiU/vTdytAg+P+AJd59NyW4qNyfn+IzdTfP38p81NdUkgswJCkpbs0gFhWNO9tTaQE12IygHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327746; c=relaxed/simple;
-	bh=TArF8eu7bR+kdEQcw0PtiH938ElhCp6XbYhZJoxTCrM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kouCM8jMEV4cPKBzsia/pMN1/25XozqOEiI+5Y+DD9mxzt+9V1AjEPKr8J3QAryK2s9PIHBeNwTURrzcNfe1oD4uv/8S6wWAPawRJAhEMuqAqd+uOWA9+zDcwwDZ2zdfiTrENjYyXZOgtJiD+ni+ZY8WyCLXc8eYAVBqDSbjHdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1tf4EPZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719327749; c=relaxed/simple;
+	bh=cQwiOqtjV6/LzwjVLbeFZMGFz4XLbTBs1wQo2HzADdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZA5QymXGU/kPiERDPkrey4xYyiYCXHDJn+nWbFWTUN6F9uYnn/b25YzzFPZQ2zsmTnAtwET5mEUXwTe7wxLiU8LgtTXEcv1A+fTvHc0yyZEFzDFMnCyq1OWlnOkOufJ7mjeQpvzyEROyulqy6NXM0oEr7HxHVMCIZZwEAZnTRHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/FAZIg5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1tf4EPZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4C9C32781;
-	Tue, 25 Jun 2024 15:02:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/FAZIg5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F0FC4AF09;
+	Tue, 25 Jun 2024 15:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719327746;
-	bh=TArF8eu7bR+kdEQcw0PtiH938ElhCp6XbYhZJoxTCrM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=T1tf4EPZxQepBQJZ+2P0ysocX15TlkKsctCglrLlJlpjTmopmLVcDgRZfo2fIdmZD
-	 Lv/NFHftNTdwBf3DqfZoSYfV6WuoyPIQEs2TNGXOriUMN11am9Hf5vq5ldwCQf9dmn
-	 0E6qSnfvlSNhImxN7J/5Esjy55MKMRoTeQxGdu/7rc+s6RaBqycPQCbJ1TvVIWnutd
-	 b0q5gHzn3xZPm6Kw8+HEdwKQCSqhFutpjECRBpgQ1baiTggkrS2AIXDeYXF3KKOsEf
-	 YDaxMulmfJyDO7V7EcDfLhjZVhoJxdoOD6NAE0/79RPpuNfB41K0JcAzwYXIXZ95se
-	 U9cnQ8VrLX3Iw==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 25 Jun 2024 15:57:43 +0100
-Subject: [PATCH v9 15/39] arm64/idreg: Add overrride for GCS
+	s=k20201202; t=1719327748;
+	bh=cQwiOqtjV6/LzwjVLbeFZMGFz4XLbTBs1wQo2HzADdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g/FAZIg5g9GspsRS1oZEUx1XMb7JnV6OPKtwjj7pzqlVVTB1YRhHRxjcWtSMN9o7Y
+	 cxRrgpPomRRAopypxPfFIGKcXfiaUB6xmCM3j0WDYtCQsN5QKB2ISGDa5JFrbfKpjj
+	 GvwNiLfqWihb+V3LHzIknd7QAMIXwU0KP/blfj3kogEzfR8tmV/gXL5sS0w8G9hUNV
+	 car9avFTq71nw51eIbox7DSAU9X+SiyW+fqDAwpaftpWSxmUhY2PQBOwOhOcgVUqVc
+	 1Yh01wHIcKzraKAbm9DqLSdA9q96hiVWbzR+VEvJdANSF8KcHuUHpnUdJgMxxJ30vo
+	 8pP5iKqEvd3lw==
+Date: Tue, 25 Jun 2024 17:02:25 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Luke Jones <luke@ljones.dev>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] hid-asus: use hid for brightness control on
+ keyboard
+Message-ID: <efd7izqwobohv644j63oeruf5suwo4gcw7r5wvvh5koqn7lwgu@3m3aczbbwhrg>
+References: <20240607040532.1074379-1-luke@ljones.dev>
+ <20240607040532.1074379-2-luke@ljones.dev>
+ <dd0a211a-bef1-4eb2-8d1f-2d63799af94c@app.fastmail.com>
+ <9e4ee526-2b94-45f3-9fe9-0f1d0918916b@app.fastmail.com>
+ <nycvar.YFH.7.76.2406191639360.24940@cbobk.fhfr.pm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240625-arm64-gcs-v9-15-0f634469b8f0@kernel.org>
-References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
- Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
- Shuah Khan <shuah@kernel.org>, 
- "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
- Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
-Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
- Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
- Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2079; i=broonie@kernel.org;
- h=from:subject:message-id; bh=TArF8eu7bR+kdEQcw0PtiH938ElhCp6XbYhZJoxTCrM=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmett9kBlIGznTOvZYNu30sR1HSi39oURagt2PuqvD
- Y/xML0+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbfQAKCRAk1otyXVSH0KppB/
- 9h/NsU5ZbvEakpJLVgdEkxvY5UpqOW1ugkUmSI7i1GKJvwyAjnAS2GjipTcPYY971hQbCdfHwZcLlW
- cGE4g62zQz3KJInv2E7a5LvVkEoEx9xQoaz4HTnvgXRkvw7mt57wnleIJzA434vuYSF783mIrrb/33
- UM4KkpS3btWvRrCRi2VY8VDuFhRhvl/BAYFalo/nvTDQt/Bivon71MD9KXQCaREWjPFWn45DqF5xqc
- fgB9TM3IcC9LyqQXwPr+ng36ckx4ht13tLxNrKJmclwsKt2v/DvuX9vgsKXW5FMhSnNTPvaVjaVXuC
- UWd9Pvf2d8i4vTpWJR3H1tCTBLdgiV
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.2406191639360.24940@cbobk.fhfr.pm>
 
-Hook up an override for GCS, allowing it to be disabled from the command
-line by specifying arm64.nogcs in case there are problems.
+On Jun 19 2024, Jiri Kosina wrote:
+> On Sun, 16 Jun 2024, Luke Jones wrote:
+> 
+> > > I thought this was finalised but I'm still getting conflicting 
+> > > reports. Please don't merge until I confirm the fix.
+> > 
+> > This is ready for merge now. I have more confirmation that the single 
+> > patch with no adjustment to report_id works well.
+> 
+> Applied, thanks.
 
-Reviewed-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
- arch/arm64/kernel/pi/idreg-override.c           | 2 ++
- 2 files changed, 8 insertions(+)
+This patch should have been taken through the platform x86 tree [0].
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b600df82669d..c1151d547b81 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -437,9 +437,15 @@
- 	arm64.nobti	[ARM64] Unconditionally disable Branch Target
- 			Identification support
- 
-+	arm64.nogcs	[ARM64] Unconditionally disable Guarded Control Stack
-+			support
-+
- 	arm64.nomops	[ARM64] Unconditionally disable Memory Copy and Memory
- 			Set instructions support
- 
-+	arm64.nopauth	[ARM64] Unconditionally disable Pointer Authentication
-+			support
-+
- 	arm64.nomte	[ARM64] Unconditionally disable Memory Tagging Extension
- 			support
- 
-diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
-index 29d4b6244a6f..2bb709d78405 100644
---- a/arch/arm64/kernel/pi/idreg-override.c
-+++ b/arch/arm64/kernel/pi/idreg-override.c
-@@ -133,6 +133,7 @@ static const struct ftr_set_desc pfr1 __prel64_initconst = {
- 	.override	= &id_aa64pfr1_override,
- 	.fields		= {
- 		FIELD("bt", ID_AA64PFR1_EL1_BT_SHIFT, NULL ),
-+		FIELD("gcs", ID_AA64PFR1_EL1_GCS_SHIFT, NULL),
- 		FIELD("mte", ID_AA64PFR1_EL1_MTE_SHIFT, NULL),
- 		FIELD("sme", ID_AA64PFR1_EL1_SME_SHIFT, pfr1_sme_filter),
- 		{}
-@@ -215,6 +216,7 @@ static const struct {
- 	{ "arm64.nosve",		"id_aa64pfr0.sve=0" },
- 	{ "arm64.nosme",		"id_aa64pfr1.sme=0" },
- 	{ "arm64.nobti",		"id_aa64pfr1.bt=0" },
-+	{ "arm64.nogcs",		"id_aa64pfr1.gcs=0" },
- 	{ "arm64.nopauth",
- 	  "id_aa64isar1.gpi=0 id_aa64isar1.gpa=0 "
- 	  "id_aa64isar1.api=0 id_aa64isar1.apa=0 "
+I have now reverted it (and it was buggy, it failed to compile on
+linux-next).
 
--- 
-2.39.2
+Cheers,
+Benjamin
 
+[0] https://lore.kernel.org/all/b0d8eebc-5abb-4ec0-898c-af7eedc730d9@redhat.com/
+
+> 
+> -- 
+> Jiri Kosina
+> SUSE Labs
+> 
