@@ -1,83 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8B345038;
-	Tue, 25 Jun 2024 08:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33D8148FFA;
+	Tue, 25 Jun 2024 08:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719305123; cv=none; b=Itasc2rfBa4o59Kb/Wk+QekN4yMlqo94Ls3vXa0Ds6Hnosg0Qwu5i3p1ifJYCdfsPmDKy6dAeIoV4zaqsileOW3vTzeaIE8McbhHUzknYGMYCH7c/you0PyoS6+jXp4pO2WGhfTpxvQ7jP7WJXHHDS84z6bN8XHILy7rrMkaIBw=
+	t=1719305126; cv=none; b=sEPPLnDSFFXyFSc2A118ijkU9xssUyGeNZ4sjtCJyj6Tl2IPT2bnZrlNh87piu2DhX++5ntB1Fqcb1s4Y+FYZ6IDPNY9+SY3eOr1/N4Bah47A3mdHV6P8jRcNDbXinX8znAjESPZWrlsYjtgpdkEg97nIq/pZIDv3lHiIy05Zi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719305123; c=relaxed/simple;
-	bh=mj1NnDHMlm+CMxrJ5SMFcXe/X9knYSfeszcPN6HgYhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QWPVHdoO/fEP0KJOX78Pb/zv0RkJwHf9pN6eJ7P6LPL1eFcpOZ74Fs1kOuly3Fxa4BdMsWJEUAxEKiLI9g1Z/cL+e1sWb9Etp8nakYQA3BfqjRBEb830hDrVHxW/bM2mJj2xk+4Kc4xV5Hr9Q3JZ1CVLC7aYo/E4UKm7QKEIm/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tc/NBH7M; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719305126; c=relaxed/simple;
+	bh=eI9Erle9UcKxqH2WkzFZglnfw0o+JeSD4gtyn2dU42o=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ShE/Tf/5Tiv2oACsj4B5hXPP2DqSN3mMV797ZbWXzq0V/8EgOk5TtHtZVl4haI9ZEGOnkvINf3pYom5XrMAKVUm34wZeO5J0ugJ5B8A0axepYSNylI3KtEuZC0Wut1OSUFFB1vWR3AavMYtT4fLnbtJOD4+yuOqiiyfeteYf9iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPRWSPgM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tc/NBH7M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719305122; x=1750841122;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mj1NnDHMlm+CMxrJ5SMFcXe/X9knYSfeszcPN6HgYhY=;
-  b=Tc/NBH7MZfEZLK8i+6+wdGr2/4u1NWw8c7IjhZB3CniFgsuWbzX3spQd
-   Z4nJ2cT/mYt17vIhGMclf4C9/2zHlMAMzu3Y1UcKrFzd+u+k3Mp9tuhbi
-   Rnw7GC3xCT886WnFB3YAn/qJm7NTVRWnHX/eC360BqAnldF1l0h0YkGNZ
-   iO9bR13FNRKIDW2CrQFuLYTWGo9GawczzdNRuyphVpfbGXDWF4uVCjChe
-   vf3mqOmTQV/AsfpeLqWQyXxZwfcU9+FbAFIZ9voRGL8Df+vxXURYl6XAQ
-   0RqzqyDC8taQ4w8ZGKJFBH3/XmQ8Ka6lnU9eQSCHr1qVCDFjvEaPzQ+Tv
-   g==;
-X-CSE-ConnectionGUID: KefOEmrWT02qV2dY3l+SHQ==
-X-CSE-MsgGUID: OBEj+FEFQiO9E/5qKt+ERw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="33764658"
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="33764658"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 01:45:21 -0700
-X-CSE-ConnectionGUID: Q9+y8qckTQeEaohFZcpPng==
-X-CSE-MsgGUID: PIFM/bOSTtW4gaN6GRZ+DQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="43561242"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 01:45:19 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id EC8AF11FA94;
-	Tue, 25 Jun 2024 11:45:16 +0300 (EEST)
-Date: Tue, 25 Jun 2024 08:45:16 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Wentong Wu <wentong.wu@intel.com>
-Cc: tomas.winkler@intel.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jason Chen <jason.z.chen@intel.com>
-Subject: Re: [PATCH v4 1/5] mei: vsc: Enhance IVSC chipset stability during
- warm reboot
-Message-ID: <ZnqDnDisvzc9FTyH@kekkonen.localdomain>
-References: <20240625081047.4178494-1-wentong.wu@intel.com>
- <20240625081047.4178494-2-wentong.wu@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPRWSPgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53173C4AF0B;
+	Tue, 25 Jun 2024 08:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719305126;
+	bh=eI9Erle9UcKxqH2WkzFZglnfw0o+JeSD4gtyn2dU42o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tPRWSPgM6GX6upuePGBCzptdgPI2BZ128lg0GkgecbL+jqDOc4iul6oDf6MK3S6nk
+	 K71bF+LGJe1y71z19LaTlgTJ9ANHt1JFJ8swNLvtqBGKvJG77SiL3UsvjKNnwSVDCB
+	 Gxo8cdVIaOtx4UcBhu7+753wXenL0aanp2mRxfZKvypNFfL6dqo45GtYYAv5vq/7/o
+	 4p8zyM8CB9HzL8+QjEBJ+gwAD64ybtRVgHqcHt7q6AGgz3LjS7/WUOkhBvuxgPm+mY
+	 oMYZcTyEb6DLyu4U97Ap//yT89Dbp7j6JmXjoakzgAkWhiozw3W+FtRLZGIUUHg9V0
+	 tgwkjogD4xyBw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sM1nn-0075QY-V6;
+	Tue, 25 Jun 2024 09:45:24 +0100
+Date: Tue, 25 Jun 2024 09:45:22 +0100
+Message-ID: <86v81xif6l.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Roman Kagan <rkagan@amazon.de>
+Cc: <linux-arm-kernel@lists.infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	<nh-open-source@amazon.com>,
+	<linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] irqchip/gicv3-its: Workaround for GIC-700 erratum 2195890
+In-Reply-To: <20240624165541.1286227-1-rkagan@amazon.de>
+References: <20240624165541.1286227-1-rkagan@amazon.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625081047.4178494-2-wentong.wu@intel.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rkagan@amazon.de, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org, nh-open-source@amazon.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, corbet@lwn.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Jun 25, 2024 at 04:10:43PM +0800, Wentong Wu wrote:
-> During system shutdown, incorporate reset logic to ensure the IVSC
-> chipset remains in a valid state. This adjustment guarantees that
-> the IVSC chipset operates in a known state following a warm reboot.
+On Mon, 24 Jun 2024 17:55:41 +0100,
+Roman Kagan <rkagan@amazon.de> wrote:
 > 
-> Fixes: 566f5ca97680 ("mei: Add transport driver for IVSC device")
-> Cc: stable@vger.kernel.org # for 6.8+
-> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
-> Tested-by: Jason Chen <jason.z.chen@intel.com>
+> According to Arm CoreLink GIC-700 erratum 2195890, on GIC revisions
+> r0p0, r0p1, r1p0 under certain conditions LPIs may remain in the Pending
+> Table until one of a number of external events occurs.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Please add a link to the errata document.
+
+> 
+> No LPIs are lost but they may not be delivered in a finite time.
+> 
+> The workaround is to issue an INV using GICR_INVLPIR to an unused, in
+> range LPI ID to retrigger the search.
+> 
+> Add this workaround to the quirk table.  When the quirk is applicable,
+> carve out one LPI ID from the available range and run periodic work to
+> do INV to it, in order to prevent GIC from stalling.
+
+The errata document says a lot more:
+
+<quote>
+For physical LPIs the workaround is to issue an INV using GICR_INVLPIR
+to an unused, in range LPI ID to retrigger the search. This could be
+done periodically, for example, in line with a residency change, or as
+part of servicing LPIs.  If using LPIs as the event, then the
+GICR_INVLPIR write could be issued after servicing every LPI.
+
+However, it only needs to be issued if:
+
+* At least 4 interrupts in the block of 32 are enabled and mapped to
+  the current PE or, if easier,
+
+* At least 4 interrupts in the block of 32 are enabled and mapped to
+  any PE
+</quote>
+
+> 
+> TT: https://t.corp.amazon.com/D82032616
+
+Gniii????
+
+> Signed-off-by: Elad Rosner <eladros@amazon.com>
+> Signed-off-by: Mohamed Mediouni <mediou@amazon.com>
+> Signed-off-by: Roman Kagan <rkagan@amazon.de>
+
+Who is the author?
+
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c            | 70 ++++++++++++++++++++-
+>  Documentation/arch/arm64/silicon-errata.rst |  2 +
+>  arch/arm64/Kconfig                          | 18 ++++++
+>  3 files changed, 89 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 3c755d5dad6e..53cf50dd8e13 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/percpu.h>
+>  #include <linux/slab.h>
+>  #include <linux/syscore_ops.h>
+> +#include <linux/workqueue.h>
+>  
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> @@ -49,6 +50,7 @@
+>  #define RD_LOCAL_MEMRESERVE_DONE                BIT(2)
+>  
+>  static u32 lpi_id_bits;
+> +static u32 lpi_id_base __initdata = 8192;
+>  
+>  /*
+>   * We allocate memory for PROPBASE to cover 2 ^ lpi_id_bits LPIs to
+> @@ -2136,7 +2138,7 @@ static int __init its_lpi_init(u32 id_bits)
+>  	 * Initializing the allocator is just the same as freeing the
+>  	 * full range of LPIs.
+>  	 */
+> -	err = free_lpi_range(8192, lpis);
+> +	err = free_lpi_range(lpi_id_base, lpis - lpi_id_base + 8192);
+>  	pr_debug("ITS: Allocator initialized for %u LPIs\n", lpis);
+>  	return err;
+>  }
+> @@ -4763,6 +4765,61 @@ static bool its_set_non_coherent(void *data)
+>  	return true;
+>  }
+>  
+> +#define ITS_QUIRK_GIC700_2195890_PERIOD_MSEC 1000
+
+Use MSEC_PER_SEC.
+
+> +static struct {
+> +	u32 lpi;
+> +	struct delayed_work work;
+> +} its_quirk_gic700_2195890_data __maybe_unused;
+> +
+> +static void __maybe_unused its_quirk_gic700_2195890_work_handler(struct work_struct *work)
+> +{
+> +	int cpu;
+> +	void __iomem *rdbase;
+> +	u64 gicr_invlpir_val;
+> +
+> +	for_each_online_cpu(cpu) {
+
+The errata document doesn't say that this need to happen for *every*
+RD. Can you please clarify this?
+
+> +		rdbase = gic_data_rdist_cpu(cpu)->rd_base;
+> +		if (!rdbase) {
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Prod the respective GIC with an INV for an otherwise unused
+> +		 * LPI.  This is only to resume the stalled processing, so
+> +		 * there's no need to wait for invalidation to complete.
+> +		 */
+> +		gicr_invlpir_val =
+> +			FIELD_PREP(GICR_INVLPIR_INTID,
+> +				   its_quirk_gic700_2195890_data.lpi);
+
+Don't split assignments.
+
+> +		raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
+> +		gic_write_lpir(gicr_invlpir_val, rdbase + GICR_INVLPIR);
+> +		raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
+
+No synchronisation? How is that supposed to work?
+
+Also, if you need to dig into the internals of the driver, extract a
+helper from __direct_lpi_inv().
+
+
+> +	}
+> +
+> +	schedule_delayed_work(&its_quirk_gic700_2195890_data.work,
+> +		msecs_to_jiffies(ITS_QUIRK_GIC700_2195890_PERIOD_MSEC));
+
+It would be pretty easy to detect whether an LPI was ack'ed since the
+last pass, and not issue the invalidate.
+
+> +}
+> +
+> +static bool __maybe_unused its_enable_quirk_gic700_2195890(void *data)
+> +{
+> +	struct its_node *its = data;
+> +
+> +	if (its_quirk_gic700_2195890_data.lpi)
+> +		return true;
+> +
+> +	/*
+> +	 * Use one LPI INTID from the start of the LPI range for GIC prodding,
+> +	 * and make it unavailable for regular LPI use later.
+> +	 */
+> +	its_quirk_gic700_2195890_data.lpi = lpi_id_base++;
+> +
+> +	INIT_DELAYED_WORK(&its_quirk_gic700_2195890_data.work,
+> +			  its_quirk_gic700_2195890_work_handler);
+> +	schedule_delayed_work(&its_quirk_gic700_2195890_data.work, 0);
+> +
+> +	return true;
+> +}
+
+It is a bit odd to hook this on an ITS being probed when the ITS isn't
+really involved. Not a big deal, but a bit clumsy.
+
+> +
+>  static const struct gic_quirk its_quirks[] = {
+>  #ifdef CONFIG_CAVIUM_ERRATUM_22375
+>  	{
+> @@ -4822,6 +4879,17 @@ static const struct gic_quirk its_quirks[] = {
+>  		.property = "dma-noncoherent",
+>  		.init   = its_set_non_coherent,
+>  	},
+> +#ifdef CONFIG_ARM64_ERRATUM_2195890
+> +	{
+> +		.desc	= "ITS: GIC-700 erratum 2195890",
+> +		/*
+> +		 * Applies to r0p0, r0p1, r1p0: iidr_var(bits 16..19) == 0 or 1
+> +		 */
+> +		.iidr	= 0x0400043b,
+> +		.mask	= 0xfffeffff,
+> +		.init	= its_enable_quirk_gic700_2195890,
+
+This catches r0p0 and r1p0, but not r0p1 (you require that bits 15:12
+are 0).
+
+Overall, this requires a bit of rework. Notably, this could be
+significantly relaxed to match the requirements of the published
+workaround.
+
+Thanks,
+
+	M.
 
 -- 
-Sakari Ailus
+Without deviation from the norm, progress is not possible.
