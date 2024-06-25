@@ -1,151 +1,99 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D571B176FA7;
-	Tue, 25 Jun 2024 14:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FB316C445
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719325557; cv=none; b=huceT+1VPbfkjV13Ou3+dY4DL+mpdItmYxxAqFCwWOVmyqg/dmVzJyGYlFe3dfPc9ifdvDvQ6t/wBIF5x8G1ol3hlc/pmADhDceyVSnavtfNCMHTxY38r7MmCFkrmmwIrL3arbLaXE1WIAYGHirb9dyL9JRQTPOUli7w8bgXjgk=
+	t=1719325580; cv=none; b=FjZG6nl5ZSvsMFLIPm6zdnfef0/50CEwqe8lDN2saakoo+XGsm7uL3y3TwIu/yCN8XVwC242QytB4K4ky5eX+D7lg4qkPJnOK/YuFSsmDJgildylE2Nd1hQ0oq3oGOTGw+YVa3YPADIjpJ9HBxaYqn7K7OwcvCrdOvurm59yiXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719325557; c=relaxed/simple;
-	bh=m6PWOWp/hNkt3iN22+iRD/P4J010HMxBMpdZByi81YM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I4/80F0IYh6BtvQ6hStEbON0CqRA8PhP6pDTJ7Oj6w+V7P4c4J4Az1YgBZhJWOfTm21HGZeqqmbZrmYUtQ0toxeBYqmrZYdV2yZQuBQQMqYUun65DUt8TQxtQtTUhLCTS0MjBY2UM/0HKvN2hWBh4UiLL6D1V3CIwYy2gMSssME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=118XsX4c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5x0tBgGB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=118XsX4c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5x0tBgGB; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719325580; c=relaxed/simple;
+	bh=LCSdddfJ7Z4mnK+aitn1PNeqaIztUYavzKGIhHHipts=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vf/514UqSedOAIPJOn6Z22V3YUewEc1PTl1hwOtlIY2LIW1aymt02CTmJ1RQu9oMsN/QpxEH2K5JHs2AiRqPWEQCOoPR24nEqhk4VoX5sHadqoMHx+aA0GPCCDmyxFxeCUXoweNyF4VE1a/B1rhvNnEX6ed5Bnuor937Mj0ISiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=FRb4xkr0; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="118XsX4c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5x0tBgGB";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="118XsX4c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5x0tBgGB"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F41241F88B;
-	Tue, 25 Jun 2024 14:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719325554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R/zhzKQU/pPdoICo/ozlTnhxdzCab8RfWqCotEqhN9A=;
-	b=118XsX4cUv5qk7X5aWXsBfHPVGoPwUTUVsKIlDjzmDt3XwP88Pa8JcBlc5A3dGziaj+j6U
-	0eSK/wRHBpiqgI6LmvVPcgkEWuzvXsHCr70E0OOXkae4n3PrSkbxjgKSym1Li7WreSVtIj
-	6NLcdWwwXJp6YJa93cZYbK0UUKZWv+s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719325554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R/zhzKQU/pPdoICo/ozlTnhxdzCab8RfWqCotEqhN9A=;
-	b=5x0tBgGBedVEaWjkEfLNW8O5i7KvLOG4jN4jX9mV6d1NfaYUB6clNU2a73IbQF72NpQgXO
-	t/Q3LJAEcfpxsOAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719325554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R/zhzKQU/pPdoICo/ozlTnhxdzCab8RfWqCotEqhN9A=;
-	b=118XsX4cUv5qk7X5aWXsBfHPVGoPwUTUVsKIlDjzmDt3XwP88Pa8JcBlc5A3dGziaj+j6U
-	0eSK/wRHBpiqgI6LmvVPcgkEWuzvXsHCr70E0OOXkae4n3PrSkbxjgKSym1Li7WreSVtIj
-	6NLcdWwwXJp6YJa93cZYbK0UUKZWv+s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719325554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R/zhzKQU/pPdoICo/ozlTnhxdzCab8RfWqCotEqhN9A=;
-	b=5x0tBgGBedVEaWjkEfLNW8O5i7KvLOG4jN4jX9mV6d1NfaYUB6clNU2a73IbQF72NpQgXO
-	t/Q3LJAEcfpxsOAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BF8F31384C;
-	Tue, 25 Jun 2024 14:25:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1qomLnHTembfKwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 25 Jun 2024 14:25:53 +0000
-Date: Tue, 25 Jun 2024 16:26:21 +0200
-Message-ID: <87msn9ksj6.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Rauty <rautyrauty@gmail.com>
-Cc: wzhd@ustc.edu,
-	Gergo Koteles <soyer@irl.hu>,
-	alsa-devel@alsa-project.org,
-	tiwai@suse.com,
-	perex@perex.cz,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	luke@ljones.dev,
-	shenghao-ding@ti.com,
-	simont@opensource.cirrus.com,
-	foss@athaariq.my.id,
-	rf@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ALSA: hda/realtek: Enable headset mic on IdeaPad 330-17IKB 81DM
-In-Reply-To: <CAGpJQTGR5WKuHUFGFUC286TUkOXYgcqigZRDb4K5deyE9uuz8w@mail.gmail.com>
-References: <20240615125457.167844-1-rauty@altlinux.org>
-	<2c9ba341bc95d4b9010bf5f8794c0d14b1c57dc9.camel@irl.hu>
-	<CAGpJQTHoBAixmxta2WuZfjHjiK9GXF=hkfPyV7PBD5rt9Z_0WA@mail.gmail.com>
-	<CAGpJQTGqxEkfp003QLsp-syUgzDFCmHSmNaoOaem0ZMVf7_=bg@mail.gmail.com>
-	<c0a9e15e7926e098bdea97a7d31c32427e0910c9.camel@irl.hu>
-	<871q4lm9dp.wl-tiwai@suse.de>
-	<CAGpJQTFF=gKN2h105dGhBOEhN0Q1Tpj5hJWpSdQ_-nCoUTzj5A@mail.gmail.com>
-	<87tthhktdz.wl-tiwai@suse.de>
-	<87sex1kt6t.wl-tiwai@suse.de>
-	<CAGpJQTGR5WKuHUFGFUC286TUkOXYgcqigZRDb4K5deyE9uuz8w@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="FRb4xkr0"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4217926991fso48579555e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719325577; x=1719930377; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nnbM/UqNU7kz2IjENEyTCA2M982ffhA9NZXJCqFpGNo=;
+        b=FRb4xkr0a0LWth+QZtZh+hhgoP++LkDP8dRqhbdSTF2XYvREVzCpzPQe8foWX78p6a
+         fx4Hui0/aK5If36o/KfaOjuaEkXUQyD1TgDC0kIklEVbgRt3Dnl2BoEqQnc/fvt7KM1R
+         2tdM22LF2/ZVElbYmLhGEbwdc2V/e03xuThftC1mOpCxQGqYU6LQUGEzYx/c9HiSJVVp
+         p5x5VjGEJhf2a29/EWkfaPQ4LU9WeiR94qpcoODnXLYEpl0wunPmsOhBu15ngKrG2TDP
+         nLW4qC5hqcJruZRZfyC2VMepI0/nUVnHJj3phNCK7uorGmssLR8SxjAKcbmUVDvO7yPe
+         drOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719325577; x=1719930377;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nnbM/UqNU7kz2IjENEyTCA2M982ffhA9NZXJCqFpGNo=;
+        b=SSw9sAN2EUv09jOwfc7NVvxEYue7UbnrPn3LLYLx7rfdQXwVFa5EYUsXCsEfC9rBrq
+         GZ4gao3SKbTp+WwpSQkrlL0QgBpwKbq3HIr7DZpRnZEFzw+goHRUxDqbTa+njS4HVBiO
+         ADNF2p4lXI5bgUmlo/usAN6LAjkI5kGwMX/8yoEpGdPiwyj9oIDwsE9WaIbAVkFvnwa2
+         dwCjfZ0LbVUS1rbTe6m/cOlq6PHH/KbO1CnSFQgg0B38A1iBqSThOS8fMGR1PtszwvBe
+         3Df1Ym/d/of3G8ZD/dCX5rggK7nJZ8TRJpaN79yXyBagrNSMHMkM0Q8WK+lBomAdI+y9
+         wU1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXkXK79Gwhfhai6g0vsWnUy1QSOfMXet2oHQUJOOZpc0c2GdvRtek1jKPqDl5ZwReRNsCrRCrshyikYSc6sbTwxW+BRDuoeKxZvt2t4
+X-Gm-Message-State: AOJu0Ywgxq5qCliKkLMvX9BrpEZct96jrcrnjx3neVRUq7tRr6B1JjeG
+	EePnc6KI+22OXAKq8/yZeBSyFa5PTtbbZX/zFz0n7attgzUAHLdBIKuAnuyosOw=
+X-Google-Smtp-Source: AGHT+IHBC8yMvfpBU0+onzKrlaDVCnHDVjQCoibye6hJmIGdRXQU3TAea+VE4GZP205tIEuuyYEmpg==
+X-Received: by 2002:a05:600c:4853:b0:422:6765:2726 with SMTP id 5b1f17b1804b1-4248b9cb18dmr53858545e9.30.1719325576775;
+        Tue, 25 Jun 2024 07:26:16 -0700 (PDT)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:b30c:4c5e:f49e:ab33])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4247d211881sm213770685e9.46.2024.06.25.07.26.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 07:26:16 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH 0/3] drm: panel: add support lincoln LCD197 panel
+Date: Tue, 25 Jun 2024 16:25:47 +0200
+Message-ID: <20240625142552.1000988-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	URIBL_BLOCKED(0.00)[suse.de:email,alsa-info.sh:url,imap1.dmz-prg2.suse.org:helo];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,alsa-info.sh:url,alsa-project.org:url,imap1.dmz-prg2.suse.org:helo]
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Jun 2024 16:16:56 +0200,
-Rauty wrote:
-> 
-> On Tue, 25 Jun 2024 at 17:11, Takashi Iwai <tiwai@suse.de> wrote:
-> > Zihao, do you still have the access to this machine?
-> > If yes, could you give alsa-info.sh output, or a proc file output?
-> 
-> He sent it to me:
-> https://alsa-project.org/db/?f=268601dbdb76f9a4c18d71e210091ffed4bf2818
+This patchset adds support for the Lincoln LCD197 1080x1920 DSI panel.
 
-Great.  Could you also give the one for IdeaPad 330?
+Jerome Brunet (3):
+  dt-bindings: vendor-prefixes: add prefix for lincoln
+  dt-bindings: panel-simple-dsi: add lincoln LCD197 panel bindings
+  drm/panel: add lincoln lcd197 support
 
+ .../display/panel/panel-simple-dsi.yaml       |   2 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/gpu/drm/panel/Kconfig                 |  11 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-lincoln-lcd197.c  | 333 ++++++++++++++++++
+ 5 files changed, 349 insertions(+)
+ create mode 100644 drivers/gpu/drm/panel/panel-lincoln-lcd197.c
 
-thanks,
+-- 
+2.43.0
 
-Takashi
