@@ -1,177 +1,233 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2104.outbound.protection.partner.outlook.cn [139.219.146.104])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A1C148FFA;
-	Tue, 25 Jun 2024 09:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.104
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719306436; cv=fail; b=rsczfpanzqmNlaMZ+Wpn0DFhF2s3y081y9Z9bwaeh0gcjVp3aXHklm97mDUEX+81AbunuNWil8YvMAfK0G0tV9EXkXtgszZjiGBBCtl0PBOmX4OO3xsvMwMYXCZW3aly1e3J730TkVXi83qU1s3nhIEQugoicsL0gbWqUAqQ7Ws=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719306436; c=relaxed/simple;
-	bh=B0BS3+NgjhwRO9sW2/vXlQRPjWokhtoEnZ0cTgY3YSw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rrP0Y8f6GK6CoHMhs4xgWZ1+rzAchHNmIT3sLCgAdwQSl1ZOjDDNBLcgWN35XzvafHzvJgMXE7YpZ35EISjX9nUj4FFhx11eCWgjs7JFhGEjgkg8pFYC9JMS9PB77NorBCbxrHZouvrfLCYeQyHtrIrHKE7dpSXHA+/YM77kqxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dipOAadrQ3X84u4d2LQiov0OunnqiGApz92nCM7VpzpvRdfzS8kHDIS8Weih4Xy26RVFphx1rnXb2jHrnSi7zjcGS0pxW+PhL3y96+QE4KQ5ijwRXgMc2dk1w6qB80rjSlMoPC8SLOMNFkyq8uK1SlZTwYnA9qJofeDOdJbgzj1fmNxkNpLbQoS+fFTd0S9ertFSjbewWJtUoU6vxngvYkihkCAZtfybRvyZxMBUseAfo7xZbBcIXyj05DTZTk74/pqU3/JgArbydG0Bh0hsepu9z0xXFW28tOc4GlGQ+gHK5nJxw4EyATY3dghoyJPeUFNwChsTY3h/DsjPa0u0vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B0BS3+NgjhwRO9sW2/vXlQRPjWokhtoEnZ0cTgY3YSw=;
- b=FWqwPx15mRdLgP1Sb9lxMkXeXF7S6sd3gk2Rd36SG6YjZAmGbQJLDV745b7BO2RMUZ1WtzQNwHuRhy7xxbFxgtqJzBP6p3Onu85+YDYTXXOyO35sGlauww5RwLFu7IF6wvsFyDR10TZ7kqUpKNJC1V+CJ48SCYqUxxdem4JPWyZgYVxRRDjrOxRKvwtgrxvFk/S2w7mXO/OeoG4+barobe7tdnPpRPoGnpiCbai6D9/9A33qcbCys4UgiPDAO1EimSL/QGmI7jeqD/tKr19VuhuXOq0b0Phlg+47G5/n2eXJEY0/mTFvO7OqkQW1DcPhTtva/rfDEO51Wh3voN10hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:1::6) by NTZPR01MB1020.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.37; Tue, 25 Jun
- 2024 08:32:49 +0000
-Received: from NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
- ([fe80::47b8:45b2:ce25:9c34]) by
- NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn ([fe80::47b8:45b2:ce25:9c34%3])
- with mapi id 15.20.7698.025; Tue, 25 Jun 2024 08:32:49 +0000
-From: Keith Zhao <keith.zhao@starfivetech.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: "andrzej.hajda@intel.com" <andrzej.hajda@intel.com>,
-	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>, "rfoss@kernel.org"
-	<rfoss@kernel.org>, "Laurent.pinchart@ideasonboard.com"
-	<Laurent.pinchart@ideasonboard.com>, "jonas@kwiboo.se" <jonas@kwiboo.se>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "hjc@rock-chips.com" <hjc@rock-chips.com>,
-	"heiko@sntech.de" <heiko@sntech.de>, "andy.yan@rock-chips.com"
-	<andy.yan@rock-chips.com>, Xingyu Wu <xingyu.wu@starfivetech.com>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, Jack Zhu
-	<jack.zhu@starfivetech.com>, Shengyang Chen
-	<shengyang.chen@starfivetech.com>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v4 04/10] drm/vs: Add hardware funcs for vs.
-Thread-Topic: [PATCH v4 04/10] drm/vs: Add hardware funcs for vs.
-Thread-Index: AQHaqyrCpZvO4/uSGEiTh57WFeY1YLGiKtEAgCsaiBCACMKCAIACUqHw
-Date: Tue, 25 Jun 2024 08:32:49 +0000
-Message-ID:
- <NTZPR01MB1050031B004FD13D167DE3C4EED52@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
-References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
- <20240521105817.3301-5-keith.zhao@starfivetech.com>
- <24bxty2zmlmrjmfi2qtfolkea3acghbhmkxnkxmcroovsz57jq@q5ynybr65z7f>
- <NTZPR01MB105049A5A7FD4ECAAECFC403EECB2@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
- <ogrcyxroz77zu6raq3lzmjt2k72uxxeayseyhvkivtsxn2kfix@ioupv56oa6lc>
-In-Reply-To: <ogrcyxroz77zu6raq3lzmjt2k72uxxeayseyhvkivtsxn2kfix@ioupv56oa6lc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NTZPR01MB1050:EE_|NTZPR01MB1020:EE_
-x-ms-office365-filtering-correlation-id: d7d57373-d7c5-4f93-38ac-08dc94f1659a
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230037|1800799021|366013|41320700010|7416011|38070700015;
-x-microsoft-antispam-message-info:
- n0jBUFoRc1y6gluUAEf+IPPcO+dnbXypMCrTQ+3JlgFrpu+eCgkX60w2+vurUYEup8d2N/Epwbc/6RIdIFAgYgk9BlKT7QIz02h12xkG3LU/kg7zm9PX+wWNglTIFy8GxwMdmELAL8wpaj3jNCBXmPZT33Qf1Ks7o/9B/ockk3fHf10PvSwIY1tZoU/a326v+KLeENfgEjg8o949ku+MEWySw5H5Jzyge7Sa3j7q4hEFeS+/M2nApvCWbea0xoMocRvwEHNuf0/z9rH1HU9JUovQGphqfK0hx8wB+Qe7qtNntte1rme4hBHbrj72MO7qIodLev1txBKc4ToPw+UR8MK1FVE45y/Utnd2RILcaorkyQxDKsyQbBd/w1gLtS/4stbTs76coSOwVncVxFKsUR1vqCSINkIGHWRHcOWXL9JojrhecedEibznhn/JbkkmG2qPmLj5L75khAbyOxdqyOPsUwxlW9YC7ToofL0gA3lR1S/HYmN+xyBNYFCK1VTsLb1vP5thm7wIO6sZpSkeyOhMyfiylYeZEhiD141epI7XVWduj/+PCIomWsemWMp8P85QNNCCNhWaupFaeF8T1bPka/Y3HIlQZT6ot1qSLAjI0prM3090D2sKhhqLNSTY
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(41320700010)(7416011)(38070700015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- WH4+4KhWKhLcW84fRe65EMFmgp6gZFXkzMULPQGb6XNO/LK9xAbRLxqNr8mQ3QGbvgc9LHlw0RspwmkPbTcVvEycopJPAxprIfTKk8gD8Kl9FoHZ9TAXOhxekKv0ByPJdhAgCv9NI7mZk9d1VFfuj83yrdTgc1iCspR6aEaBMUW+Ts7GpJ9EIg3bBbzNuCPJ8Au9kp5XaCog+CLyrMwbzKsYfBjHeCQng+wC0JkAjv7HhadNVJJmTQDyM8ixNW7G59okf+U9is4NIJQg/rFkCPcXxQ7fO2uJlI8Itj1mL1nbzdwNP1rsKv0sp7PX1kSH2J5IrpNnjDFqS3mvi3YFVuVtotNCbFjRwx/J9WO95sXEbirURc8cBJsOzLiuLCzpi4ayzTVwqreW2tE0G8PMmxio+3ZHRIvKASCCe09Qlgg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EF01494D5
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719306443; cv=none; b=nhX/qRO2sjVqRJsiv3SXB460fO+Y4LnqcMqh3YlednLRg7Ud/bVbKWOI4RGCVhCF+X9P89dAj8dFi/zNJjTvBrWTz4q6tMPf5uYORuqnXklfDsOaPSvMRS3r/fqn76IiWKjWRSF5jWbUVuORv+A6mEFhqOwXANmLDdJ704rGSec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719306443; c=relaxed/simple;
+	bh=ZGfj4GR2TZboiw4CW0qAZwxYBJWKBD1WvDxia8p52VA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fHxHHllGYtiUQepc13EEmIPcvCSnHMQJsgxuh8r9dCNBv13gQawu0X/Q9Sy53trXmOglgd10I/UQ2w6UU2fG4gxZ5JfzdKuXx+UoRiBUAPTzC4o/Blr7M8biym6+9cE+nYH/UEaeBPbpMGSoibA0mjz8ql2LK4HK9NTWMZ2uVkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LDniicGj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LDniicGj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719306439;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HhE9Ca9CX/1k2IL1D3853ePqCbKiPcGhrbBvznh+l8I=;
+	b=LDniicGjQcLu+upXeY+q5u9WlXIvKv4JGcDNKE6aNZORoN+Q/dHtFJzhyJ3nPv3vUTC6or
+	GC50HsCpz1HaP9znqAXnuuLdVfw9DaxsqgsrPG8CRLP4hMyCbN2EegRKnUAB+QuX414Fud
+	x3E3VsAV06slEQo2IhdiKtVm0f6vKB8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-271-kCbIwANPM0iHMkxZZDZyqw-1; Tue,
+ 25 Jun 2024 05:07:12 -0400
+X-MC-Unique: kCbIwANPM0iHMkxZZDZyqw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B4991955E72;
+	Tue, 25 Jun 2024 09:07:11 +0000 (UTC)
+Received: from gshan-thinkpadx1nanogen2.remote.csb (unknown [10.67.24.180])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22ABA1955E82;
+	Tue, 25 Jun 2024 09:07:03 +0000 (UTC)
+From: Gavin Shan <gshan@redhat.com>
+To: linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	david@redhat.com,
+	djwong@kernel.org,
+	willy@infradead.org,
+	akpm@linux-foundation.org,
+	hughd@google.com,
+	torvalds@linux-foundation.org,
+	zhenyzha@redhat.com,
+	shan.gavin@gmail.com
+Subject: [PATCH 0/4] mm/filemap: Limit page cache size to that supported by xarray
+Date: Tue, 25 Jun 2024 19:06:42 +1000
+Message-ID: <20240625090646.1194644-1-gshan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7d57373-d7c5-4f93-38ac-08dc94f1659a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2024 08:32:49.2215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WW5F/nEmbQqa/7r4Vtr6aKtXtq+ZJuHP6day9lLWMBS7MvUCa4HSwnN7pAqzPFa8sQjAoRp5+CCyqOlCrTo6NRnABeND4XqtiI8oNPBnlbE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1020
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRG1pdHJ5IEJhcnlzaGtv
-diA8ZG1pdHJ5LmJhcnlzaGtvdkBsaW5hcm8ub3JnPg0KPiBTZW50OiAyMDI05bm0NuaciDI05pel
-IDQ6NTENCj4gVG86IEtlaXRoIFpoYW8gPGtlaXRoLnpoYW9Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4g
-Q2M6IGFuZHJ6ZWouaGFqZGFAaW50ZWwuY29tOyBuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnOyBy
-Zm9zc0BrZXJuZWwub3JnOw0KPiBMYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb207IGpv
-bmFzQGt3aWJvby5zZTsNCj4gamVybmVqLnNrcmFiZWNAZ21haWwuY29tOyBtYWFydGVuLmxhbmto
-b3JzdEBsaW51eC5pbnRlbC5jb207DQo+IG1yaXBhcmRAa2VybmVsLm9yZzsgdHppbW1lcm1hbm5A
-c3VzZS5kZTsgYWlybGllZEBnbWFpbC5jb207DQo+IGRhbmllbEBmZndsbC5jaDsgcm9iaEBrZXJu
-ZWwub3JnOyBrcnprK2R0QGtlcm5lbC5vcmc7IGNvbm9yK2R0QGtlcm5lbC5vcmc7DQo+IGhqY0By
-b2NrLWNoaXBzLmNvbTsgaGVpa29Ac250ZWNoLmRlOyBhbmR5LnlhbkByb2NrLWNoaXBzLmNvbTsg
-WGluZ3l1IFd1DQo+IDx4aW5neXUud3VAc3RhcmZpdmV0ZWNoLmNvbT47IHAuemFiZWxAcGVuZ3V0
-cm9uaXguZGU7IEphY2sgWmh1DQo+IDxqYWNrLnpodUBzdGFyZml2ZXRlY2guY29tPjsgU2hlbmd5
-YW5nIENoZW4NCj4gPHNoZW5neWFuZy5jaGVuQHN0YXJmaXZldGVjaC5jb20+OyBkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMDQvMTBdIGRybS92czogQWRkIGhh
-cmR3YXJlIGZ1bmNzIGZvciB2cy4NCj4gDQo+IEhpIEtlaXRoLA0KPiANCj4gT24gU3VuLCBKdW4g
-MjMsIDIwMjQgYXQgMDc6MTY6NDdBTSBHTVQsIEtlaXRoIFpoYW8gd3JvdGU6DQo+ID4gPiBPbiBU
-dWUsIE1heSAyMSwgMjAyNCBhdCAwNjo1ODoxMVBNICswODAwLCBrZWl0aCB3cm90ZToNCj4gPiA+
-ID4gK30NCj4gPiA+ID4gKw0KPiA+ID4gPiArc3RhdGljIGlubGluZSB2b2lkIGRjX3NldF9jbGVh
-cihzdHJ1Y3QgZGNfaHcgKmh3LCB1MzIgcmVnLCB1MzINCj4gPiA+ID4gK3NldCwgdTMyIGNsZWFy
-KSB7DQo+ID4gPiA+ICsJdTMyIHZhbHVlID0gZGNfcmVhZChodywgcmVnKTsNCj4gPiA+ID4gKw0K
-PiA+ID4gPiArCXZhbHVlICY9IH5jbGVhcjsNCj4gPiA+ID4gKwl2YWx1ZSB8PSBzZXQ7DQo+ID4g
-PiA+ICsJZGNfd3JpdGUoaHcsIHJlZywgdmFsdWUpOw0KPiA+ID4NCj4gPiA+IHJlZ21hcF91cGRh
-dGVfYml0cz8NCj4gPg0KPiA+IHJlZ21hcF91cGRhdGVfYml0cyBmb2xsb3dzIDQgc3RlcHM6DQo+
-ID4NCj4gPiAx44CBcmV0ID0gX3JlZ21hcF9yZWFkKG1hcCwgcmVnLCAmb3JpZyk7IC4uLi4uLi4u
-Lg0KPiA+DQo+ID4gMuOAgXRtcCA9IG9yaWcgJiB+bWFzazsNCj4gPiAz44CBdG1wIHw9IHZhbCAm
-IG1hc2s7DQo+ID4gLi4uLi4uDQo+ID4gNOOAgXJldCA9IF9yZWdtYXBfd3JpdGUobWFwLCByZWcs
-IHRtcCk7DQo+ID4gSWYgdGhlIHZhbHVlIG91dCBvZiBtYXNrIHJhbmdlDQo+ID4gSXQgd2lsbCBq
-dXN0IGNsZWFyIHRoZSBtYXNrIGJpcg0KPiA+DQo+ID4gZGNfc2V0X2NsZWFyIHdpbGwgZG8gY2xl
-YXIgYW5kIHNldCB3aXRob3V0IGxpbWl0Lg0KPiA+DQo+ID4gTWF5YmUgdGhlIG5hbWUgc2hvdWxk
-IGJlIGRjX2NsZWFyX3NldA0KPiANCj4gVGhpcyBpcyBub3QgcmVhbGx5IGJldHRlci4gcmVnbWFw
-X3VwZGF0ZV9iaXRzKCkgaGFzIGNsZWFyIHNlbWFudGljcyBvZiB1cGRhdGluZyBhDQo+IHZhbHVl
-IGluIHRoZSBmaWVsZCB0aGF0IGlzIGRlZmluZWQgYnkgYSBtYXNrLiBZb3UgZnVuY3Rpb24gaXMg
-anVzdCBjbGVhcmluZyBzb21lIGJpdHMNCj4gYW5kIHNldHRpbmcgb3RoZXIgYml0cy4gSXQncyBu
-b3Qgb2J2aW91cyB3aGV0aGVyIGl0IGlzIGEgbWFzayBhbmQgdmFsdWUsIHNldmVyYWwNCj4gY29u
-Y3VycmVudCBmbGFncyBvciBzb21ldGhpbmcgZWxzZS4NCj4gDQo+IEV2ZW4gaWYgeW91IGFyZSBu
-b3QgZ29pbmcgdG8gc3dpdGNoIHRvIHJlZ21hcHMgKHlvdSBkb24ndCBoYXZlIHRvKSwgcGxlYXNl
-IHVzZQ0KPiBtYXNrICYgdmFsdWUgaW5zdGVhZC4NCj4gDQpPayBnb3QgaXQNCj4gPiAJCX0NCj4g
-PiA+ID4gK3N0YXRpYyB2b2lkIGxvYWRfcmdiX3RvX3l1dihzdHJ1Y3QgZGNfaHcgKmh3LCB1MzIg
-b2Zmc2V0LCBzMTYNCj4gPiA+ID4gKyp0YWJsZSkNCj4gPiA+DQo+ID4gPiBJcyB0aGVyZSBhbnkg
-cmVhc29uIHdoeSBsb2FkX3JnYl90b195dXYgZGlmZmVycyBmcm9tIHR3byBvdGhlcg0KPiA+ID4g
-ZnVuY3Rpb25zPw0KPiA+ID4NCj4gPiBsb2FkX3JnYl90b195dXYgbWF0Y2hlcyBjcnRjcw0KPiA+
-DQo+ID4gbG9hZF95dXZfdG9fcmdiIG1hdGNoZXMgcGxhbmVzDQo+ID4gbG9hZF9yZ2JfdG9fcmdi
-IG1hdGNoZXMgcGxhbmVzDQo+IA0KPiBUaGVuIHRoZXNlIGZ1bmN0aW5zIHNob3VsZCBoYXZlIHRo
-YXQgcmVmbGVjdGVkIGluIHRoZWlyIG5hbWVzIChhbmQgYWxzbw0KPiBkb2N1bWVudGVkLCB3aHkp
-LiBJZiB0aGUgQ1NDIHByb2dyYW1taW5nIGludGVyZmFjZSBpcyBzaW1pbGFyLCBwbGVhc2Ugc3Bs
-aXQgdGhlDQo+IGltcGxlbWVudGF0aW9uIHRvIGhhdmUgY29tbW9uIGNvZGUgYW5kIGRpZmZlcmVu
-dCBkYXRhIHRvIGJlIHVzZWQgZm9yDQo+IHByb2dyYW1taW5nLg0KPiANCk9rIGdvdCBpdA0KDQo+
-ID4gdGhlIGNvZWZmaWNpZW50KHRhYmxlKSBpcyBkaWZmIGJldHdlZW4gbG9hZF9yZ2JfdG9feXV2
-IGFuZA0KPiA+IGxvYWRfeXV2X3RvX3JnYg0KPiANCj4gPiA+ID4gK3ZvaWQgcGxhbmVfaHdfdXBk
-YXRlX3NjYWxlKHN0cnVjdCB2c19kYyAqZGMsIHN0cnVjdCBkcm1fcmVjdA0KPiA+ID4gPiArKnNy
-Yywgc3RydWN0DQo+ID4gPiBkcm1fcmVjdCAqZHN0LA0KPiA+ID4gPiArCQkJICAgdTggaWQsIHU4
-IGRpc3BsYXlfaWQsIHVuc2lnbmVkIGludCByb3RhdGlvbik7IHZvaWQNCj4gPiA+ID4gK3BsYW5l
-X2h3X3VwZGF0ZV9ibGVuZChzdHJ1Y3QgdnNfZGMgKmRjLCB1MTYgYWxwaGEsIHUxNg0KPiA+ID4g
-cGl4ZWxfYmxlbmRfbW9kZSwNCj4gPiA+ID4gKwkJCSAgIHU4IGlkLCB1OCBkaXNwbGF5X2lkKTsN
-Cj4gPiA+DQo+ID4gPiBDb3VsZCB5b3UgcGxlYXNlIHNldHRsZSBvbiBhIHNpbmdsZSBwcmVmaXgg
-Zm9yIGFsbCB5b3VyIGZ1bmN0aW9uIG5hbWVzPw0KPiA+ID4gSWRlYWxseSBpdCBzaG91bGQgYmUg
-Y2xvc2UgdG8gdGhlIGRyaXZlciBuYW1lLiBJdCdzIGhhcmQgdG8NCj4gPiA+IHVuZGVyc3RhbmQg
-dGhhdCB0aGUgZnVuY3Rpb24gY29tZXMgZnJvbSB0aGUgdmVyaXNpbGljb24gZHJpdmVyIGlmDQo+
-ID4gPiBpdHMgbmFtZSBzdGFydHMgZnJvbSBkY18gb3IgZXNwZWNpYWxseSB3aXRoIHBsYW5lXy4N
-Cj4gPiBZZXMgIHN0YXJ0aW5nIHdpdGggcGxhbmVfIGlzIG5vdCBhIGdvb2QgaWRlYSAsaSB3aWxs
-IGFkZCB2c18gXyAsDQo+ID4gdGhhbmtzDQo+ID4gPg0KPiA+ID4gSSdkIHN0cm9uZ2x5IHN1Z2dl
-c3QgdG8gc3RvcCBkZWZpbmluZyBhbnl0aGluZyBvdXRzaWRlIG9mIHRoZQ0KPiA+ID4gc2VsZWN0
-ZWQNCj4gPiBJIGRvbid0IHF1aXRlIHVuZGVyc3RhbmQgd2hhdCAidGhlIHNlbGVjdGVkIiBtZWFu
-cywgSSBob3BlIHlvdSBjYW4NCj4gPiBmaWxsIGluIHNvbWUgc3BlY2lmaWMgZGV0YWlscyBhYm91
-dCBpdCBUaGFua3MNCj4gDQo+ICJ0aGUgc2VsZWN0ZWQgdnNfIG5hbWVzcGFjZSIuIFNvIHByZWZp
-eCBhbGwgZnVuY3Rpb24gbmFtZXMgYW5kIGFsbCBzdHJ1Y3R1cmVzDQo+IHdpdGggdnNfDQpPaywg
-Z290IGl0Lg0KPiANCj4gDQo+IC0tDQo+IFdpdGggYmVzdCB3aXNoZXMNCj4gRG1pdHJ5DQo=
+Currently, xarray can't support arbitrary page cache size. More details
+can be found from the WARN_ON() statement in xas_split_alloc(). In our
+test whose code is attached below, we hit the WARN_ON() on ARM64 system
+where the base page size is 64KB and huge page size is 512MB. The issue
+was reported long time ago and some discussions on it can be found here
+[1].
+
+[1] https://www.spinics.net/lists/linux-xfs/msg75404.html 
+
+In order to fix the issue, we need to adjust MAX_PAGECACHE_ORDER to one
+supported by xarray and avoid PMD-sized page cache if needed. The code
+changes are suggested by David Hildenbrand.
+
+PATCH[1] adjusts MAX_PAGECACHE_ORDER to that supported by xarray
+PATCH[2-3] avoids PMD-sized page cache in the synchronous readahead path
+PATCH[4] avoids PMD-sized page cache for shmem files if needed
+
+Test program
+============
+# cat test.c
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <sys/syscall.h>
+#include <sys/mman.h>
+
+#define TEST_XFS_FILENAME	"/tmp/data"
+#define TEST_SHMEM_FILENAME	"/dev/shm/data"
+#define TEST_MEM_SIZE		0x20000000
+
+int main(int argc, char **argv)
+{
+	const char *filename;
+	int fd = 0;
+	void *buf = (void *)-1, *p;
+	int pgsize = getpagesize();
+	int ret;
+
+	if (pgsize != 0x10000) {
+		fprintf(stderr, "64KB base page size is required\n");
+		return -EPERM;
+	}
+
+	system("echo force > /sys/kernel/mm/transparent_hugepage/shmem_enabled");
+	system("rm -fr /tmp/data");
+	system("rm -fr /dev/shm/data");
+	system("echo 1 > /proc/sys/vm/drop_caches");
+
+	/* Open xfs or shmem file */
+	filename = TEST_XFS_FILENAME;
+	if (argc > 1 && !strcmp(argv[1], "shmem"))
+		filename = TEST_SHMEM_FILENAME;
+
+	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC);
+	if (fd < 0) {
+		fprintf(stderr, "Unable to open <%s>\n", filename);
+		return -EIO;
+	}
+
+	/* Extend file size */
+	ret = ftruncate(fd, TEST_MEM_SIZE);
+	if (ret) {
+		fprintf(stderr, "Error %d to ftruncate()\n", ret);
+		goto cleanup;
+	}
+
+	/* Create VMA */
+	buf = mmap(NULL, TEST_MEM_SIZE,
+		   PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+	if (buf == (void *)-1) {
+		fprintf(stderr, "Unable to mmap <%s>\n", filename);
+		goto cleanup;
+	}
+
+	fprintf(stdout, "mapped buffer at 0x%p\n", buf);
+	ret = madvise(buf, TEST_MEM_SIZE, MADV_HUGEPAGE);
+        if (ret) {
+		fprintf(stderr, "Unable to madvise(MADV_HUGEPAGE)\n");
+		goto cleanup;
+	}
+
+	/* Populate VMA */
+	ret = madvise(buf, TEST_MEM_SIZE, MADV_POPULATE_WRITE);
+	if (ret) {
+		fprintf(stderr, "Error %d to madvise(MADV_POPULATE_WRITE)\n", ret);
+		goto cleanup;
+	}
+
+	/* Punch the file to enforce xarray split */
+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
+        		TEST_MEM_SIZE - pgsize, pgsize);
+	if (ret)
+		fprintf(stderr, "Error %d to fallocate()\n", ret);
+
+cleanup:
+	if (buf != (void *)-1)
+		munmap(buf, TEST_MEM_SIZE);
+	if (fd > 0)
+		close(fd);
+
+	return 0;
+}
+
+# gcc test.c -o test
+# cat /proc/1/smaps | grep KernelPageSize | head -n 1
+KernelPageSize:       64 kB
+# ./test shmem
+   :
+------------[ cut here ]------------
+WARNING: CPU: 17 PID: 5253 at lib/xarray.c:1025 xas_split_alloc+0xf8/0x128
+Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib  \
+nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct    \
+nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4    \
+ip_set nf_tables rfkill nfnetlink vfat fat virtio_balloon          \
+drm fuse xfs libcrc32c crct10dif_ce ghash_ce sha2_ce sha256_arm64  \
+virtio_net sha1_ce net_failover failover virtio_console virtio_blk \
+dimlib virtio_mmio
+CPU: 17 PID: 5253 Comm: test Kdump: loaded Tainted: G W 6.10.0-rc5-gavin+ #12
+Hardware name: QEMU KVM Virtual Machine, BIOS edk2-20240524-1.el9 05/24/2024
+pstate: 83400005 (Nzcv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+pc : xas_split_alloc+0xf8/0x128
+lr : split_huge_page_to_list_to_order+0x1c4/0x720
+sp : ffff80008a92f5b0
+x29: ffff80008a92f5b0 x28: ffff80008a92f610 x27: ffff80008a92f728
+x26: 0000000000000cc0 x25: 000000000000000d x24: ffff0000cf00c858
+x23: ffff80008a92f610 x22: ffffffdfc0600000 x21: 0000000000000000
+x20: 0000000000000000 x19: ffffffdfc0600000 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000018000000000 x15: 3374004000000000
+x14: 0000e00000000000 x13: 0000000000002000 x12: 0000000000000020
+x11: 3374000000000000 x10: 3374e1c0ffff6000 x9 : ffffb463a84c681c
+x8 : 0000000000000003 x7 : 0000000000000000 x6 : ffff00011c976ce0
+x5 : ffffb463aa47e378 x4 : 0000000000000000 x3 : 0000000000000cc0
+x2 : 000000000000000d x1 : 000000000000000c x0 : 0000000000000000
+Call trace:
+ xas_split_alloc+0xf8/0x128
+ split_huge_page_to_list_to_order+0x1c4/0x720
+ truncate_inode_partial_folio+0xdc/0x160
+ shmem_undo_range+0x2bc/0x6a8
+ shmem_fallocate+0x134/0x430
+ vfs_fallocate+0x124/0x2e8
+ ksys_fallocate+0x4c/0xa0
+ __arm64_sys_fallocate+0x24/0x38
+ invoke_syscall.constprop.0+0x7c/0xd8
+ do_el0_svc+0xb4/0xd0
+ el0_svc+0x44/0x1d8
+ el0t_64_sync_handler+0x134/0x150
+ el0t_64_sync+0x17c/0x180
+
+Gavin Shan (4):
+  mm/filemap: Make MAX_PAGECACHE_ORDER acceptable to xarray
+  mm/filemap: Skip to allocate PMD-sized folios if needed
+  mm/readahead: Limit page cache size in page_cache_ra_order()
+  mm/shmem: Disable PMD-sized page cache if needed
+
+ include/linux/pagemap.h | 11 +++++++++--
+ mm/filemap.c            |  2 +-
+ mm/readahead.c          |  8 ++++----
+ mm/shmem.c              | 15 +++++++++++++--
+ 4 files changed, 27 insertions(+), 9 deletions(-)
+
+-- 
+2.45.1
+
