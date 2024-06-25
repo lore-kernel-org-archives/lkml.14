@@ -1,85 +1,111 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B83149DF4;
-	Tue, 25 Jun 2024 11:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ECA149DF4;
+	Tue, 25 Jun 2024 11:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719316743; cv=none; b=H6ZxmtKoVI2wzzy0Spj56F4E2H1UO5c17DIgyVZ0xMms+fz6/W4Dfb0rpEMX8IQ0RYfW6jdZSduMvoJ/XWhdmKkzkPkGEmooINphSMj8+O1AHBp3B/rIbhDfxSCu9jBxluV/pJIByv8mMj73dthgQi5s72XsITrl/k1Q9ydN/6k=
+	t=1719316751; cv=none; b=pL7E8BywpwaGx1XjIUY3Q3/37CMdS/MNdipWSh4qN7VAb6cIGN1v7q4sk6hbhoI9NOp9SUt0Njvv8w1mX39PWTF7I0L/ylkxX73YETgoMExSmlGibK5S9h6bhvhLuUdJYfW9X5q+KRvKKTnh8jFkfViOejaqOodIsMuiI3xiyMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719316743; c=relaxed/simple;
-	bh=v0YC4IeTECyIp/iC9IzRXR1jeJv45OgY1qqRU0qP1lU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HcsPnAELSBrxlXNLk/ykaJBwr8zYQoZGqGCq9QO1WNzIzPq+cBSsCmkfLp2TkDL/7EV/PR10cAKNFG9Zq4fCmOeUHxQ8g8V9515QXLACCEVkxZiDj0xGE0DQN2fUqce4bYdXdzxzw4Lf+wGDV0LS561L6+ocpL98xJeGZrIjIeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=c2REllb/; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1719316751; c=relaxed/simple;
+	bh=Hrfq+maSEj3WxB6vB3cQGQLr956uhgW13951p1ffbds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h6lu9G5+uEU8Gj8ElEb0JQyDUZytQ8pYjUf3TGuBdXkFoVrGXV8IvpM55J6lUQfO2bUuf1f7owo8YK+PPgu9DAU7nGi4BNnWFFD9iB5Pa5JXUMW4S0jXSaUTmMmwjzX0BXQJl2sIbtpgaKzJkwbGPT0nRxwaOSsyMOSwdchRBUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HRMqsVsK; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="c2REllb/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719316739;
-	bh=v0YC4IeTECyIp/iC9IzRXR1jeJv45OgY1qqRU0qP1lU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c2REllb//m9B0CzKO4teapGYlRuuC5wdlwTQVUxOVNywTkT+Rol6OF9qXOfWt7r7X
-	 rK4PSMunCHcnd6aZX+6NV6NG7CZzyJ+oKi3RzRfnGrKCcNGbozfyvopYqfcFZUI2Ds
-	 GvhWkJ6XnIOx3wkQGKvTpNZVJOpyqKLRnPuhJlt2VZ97Rrf1eR3wRvWNqs1uqGxaCV
-	 srDtzAGvRYORyX4IhYtxICKfBtlU9WG55L24LV0QwAaiycFMr/eiaDDHfwP0zfUkOe
-	 4iVX01DULKVcsHp5gJBhMg9bLF3k+l3SAh+GJKjv4cd2MAZW0PRTVoU0jiz/vnSjwL
-	 9iI0oH9RLrqhw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5B790378216A;
-	Tue, 25 Jun 2024 11:58:58 +0000 (UTC)
-Message-ID: <39ed7b8c-b19a-40de-9b30-a731ac83ad20@collabora.com>
-Date: Tue, 25 Jun 2024 13:58:57 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HRMqsVsK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+gy/BrN3plSDRuoejybnMPbKrZg1ii0jthWvzT4Keuk=; b=HRMqsVsK6KtfIJ+AhJTGPBu8WD
+	FkIKIbX8KH/L1dUAXOTOGgncK2CAGq2KF3rnzfMgo0rgOIuP7RTel+hBMlfl0fMv5GTIzhzo0HSDq
+	/I+yWPDn992eHHrayab0mD8Ndk8sODlSgZ7j+45IhBzfJxjm6GDZTtQvF4bBcrLhpQZtJprOot/4O
+	LcCHlcHJZP9eXLp44UZsbXZrWzs0UpHn/ygNPGyUNqVhr4l3uNJreI4a07Ko8EITs2ahxK4/FdKrn
+	4HdMY+RPdWzfcYKExj9dJzCs2RlmdaK8qvBTliCdwWh97ZTby7zQ1xh4HWzLhQOYaDuUYMuEh6O2G
+	dCvqkI4A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sM4ns-00000008P5z-14sL;
+	Tue, 25 Jun 2024 11:58:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0387730036F; Tue, 25 Jun 2024 13:57:35 +0200 (CEST)
+Date: Tue, 25 Jun 2024 13:57:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: sandipan.das@amd.com, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, leit@meta.com,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf/x86/amd: Warn only on new bits set
+Message-ID: <20240625115734.GX31592@noisy.programming.kicks-ass.net>
+References: <20240524141021.3889002-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/7] MediaTek DVFSRC Bus Bandwidth and Regulator knobs
-To: Mark Brown <broonie@kernel.org>
-Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, lgirdwood@gmail.com, keescook@chromium.org,
- gustavoars@kernel.org, henryc.chen@mediatek.com, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- kernel@collabora.com, wenst@chromium.org, amergnat@baylibre.com,
- djakov@kernel.org
-References: <20240610085735.147134-1-angelogioacchino.delregno@collabora.com>
- <f7b4cd98-1acf-4f6b-a7e0-57419abadba1@collabora.com>
- <57cf8f9f-4320-4c55-a9f8-a4c1facabfe8@sirena.org.uk>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <57cf8f9f-4320-4c55-a9f8-a4c1facabfe8@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240524141021.3889002-1-leitao@debian.org>
 
-Il 25/06/24 12:25, Mark Brown ha scritto:
-> On Tue, Jun 25, 2024 at 10:32:30AM +0200, AngeloGioacchino Del Regno wrote:
+On Fri, May 24, 2024 at 07:10:20AM -0700, Breno Leitao wrote:
+> Warning at every leaking bits can cause a flood of message, triggering
+> vairous stall-warning mechanisms to fire, including CSD locks, which
+> makes the machine to be unusable.
 > 
->> Mark, I assume that this series is ok from your perspective, since this has got
->> your acks and r-b -- but in order to pick the soc/mediatek stuff I need all of
->> the dependent bindings to be in as well .. and this includes the regulator one!
->>
->> The main issue here is that the main soc/mediatek dvfsrc binding
->> dt-bindings: soc: mediatek: Add DVFSRC bindings for MT8183 and MT8195
->> does use the others, so I can't pick this one without the others being present
->> or the validation obviously fails.
->>
->> So... gentle ping :-)
+> Track the bits that are being leaked, and only warn when a new bit is
+> set.
 > 
-> I can't tell what you want from me here.
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  arch/x86/events/amd/core.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 1fc4ce44e743..df0ba2382d13 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -941,11 +941,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+>  static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	static atomic64_t status_warned = ATOMIC64_INIT(0);
+> +	u64 reserved, status, mask, new_bits;
+>  	struct perf_sample_data data;
+>  	struct hw_perf_event *hwc;
+>  	struct perf_event *event;
+>  	int handled = 0, idx;
+> -	u64 reserved, status, mask;
+>  	bool pmu_enabled;
+>  
+>  	/*
+> @@ -1010,7 +1011,11 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  	 * the corresponding PMCs are expected to be inactive according to the
+>  	 * active_mask
+>  	 */
+> -	WARN_ON(status > 0);
+> +	if (status > 0) {
+> +		new_bits = atomic64_fetch_or(status, &status_warned) ^ atomic64_read(&status_warned);
+> +		// A new bit was set for the very first time.
+> +		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
+> +	}
 
-I'm asking you to pick the regulator patches :-)
+Why not just a WARN_ON_ONCE() instead? This really shouldn't be
+happening in the first place.
 
-    dt-bindings: regulator: Add bindings for MediaTek DVFSRC Regulators
-    regulator: Remove mtk-dvfsrc-regulator.c
-    regulator: Add refactored mtk-dvfsrc-regulator driver
-
-^^^ These ones.
